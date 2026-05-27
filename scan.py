@@ -295,7 +295,7 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
-    # 🎯 核心升级：流氓级宽容正则抓取周期和止损
+    # 🎯 核心升级：流氓级宽容正则 + 终极暴力兜底
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
@@ -312,16 +312,25 @@ if __name__ == "__main__":
             
             if tag == "Core_Dragon":
                 for block in blocks:
-                    # 确保匹配到对应的股票区块
-                    if item['Ticker'] in block:
-                        # 极度宽容正则：不论全角半角冒号、不管有无方括号、不管有没有空格
-                        period_match = re.search(r'周期\s*[:：]\s*\[?([^|，,\]<]+)', block)
-                        sl_match = re.search(r'止损\s*[:：]\s*\[?([^\]<]+)', block)
+                    if item['Ticker'] in block or item['Name'] in block:
+                        # 1. 尝试常规宽容匹配
+                        period_match = re.search(r'周期\s*[:：]\s*([^|<，,]+)', block)
+                        sl_match = re.search(r'止损\s*[:：]\s*([^<]+)', block)
                         
-                        if period_match: 
-                            item['Hold_Period'] = period_match.group(1).strip()
-                        if sl_match: 
-                            item['Stop_Loss'] = sl_match.group(1).strip()
+                        if period_match: item['Hold_Period'] = period_match.group(1).strip(' []【】')
+                        if sl_match: item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
+                        
+                        # 2. 🚨 终极兜底：如果常规匹配全军覆没（AI没写周期/止损），直接整段暴力抓取！
+                        if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
+                            fallback = re.search(r'风控底线.*?</span>([^<]+)', block)
+                            if fallback:
+                                raw_text = fallback.group(1).strip()
+                                # 尝试按 | 切割，切不成直接全塞进 Stop_Loss，保证数据不丢
+                                if '|' in raw_text:
+                                    item['Hold_Period'] = raw_text.split('|')[0].strip(' []')
+                                    item['Stop_Loss'] = raw_text.split('|')[1].strip(' []')
+                                else:
+                                    item['Stop_Loss'] = raw_text 
                         break
             
             chosen.append(item)
