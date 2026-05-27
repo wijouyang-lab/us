@@ -7,6 +7,8 @@ import smtplib
 import time
 import requests
 import re
+import yfinance as yf
+import tushare as ts
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from google import genai 
@@ -20,92 +22,91 @@ if today >= 5:
 TARGET_MODEL = 'gemini-3.1-pro-preview' 
 TARGET_REGION = "美国市场"
 
-# 🔑 从 GitHub Secrets 读取收件人邮箱
+# 🔑 读取关键环境变量
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
+TS_TOKEN = os.environ.get("TUSHARE_TOKEN")
+
 if not SUPER_ADMIN:
-    print("🚨 致命错误：未检测到目标收件邮箱！请检查 GitHub Secrets 中的 TARGET_EMAILS！")
+    print("🚨 致命错误：未检测到 TARGET_EMAILS！请检查 GitHub Secrets！")
+    exit(1)
+if not TS_TOKEN:
+    print("🚨 致命错误：未检测到 TUSHARE_TOKEN！请检查 GitHub Secrets！")
     exit(1)
 
 print(f"🚀 启动：相对强度(Alpha)强制排序引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
 
 # ==========================================
-# 🔑 绝密：从环境变量读取 FMP 密钥
-# ==========================================
-FMP_KEYS = [
-    os.environ.get("FMP_KEY_1"),
-    os.environ.get("FMP_KEY_2")
-]
-FMP_KEYS = [k for k in FMP_KEYS if k]
-
-if not FMP_KEYS:
-    print("🚨 致命错误：未检测到 FMP API 密钥！请检查 GitHub Secrets！")
-    exit(1)
-
-_key_index = 0
-def get_api_key():
-    global _key_index
-    key = FMP_KEYS[_key_index % len(FMP_KEYS)]
-    _key_index += 1
-    return key
-
-# ==========================================
-# 📊 1. 获取标的池 (绕过付费墙，使用免费成分股接口)
+# 📊 1. 获取标的池 (Tushare 驱动，筛选成交活跃 Top 100)
 # ==========================================
 def get_scan_pool():
     tickers = {}
-    print("📡 正在调用 FMP 抓取标的池 (使用免费白名单接口)...")
+    print("📡 正在调用 Tushare 获取美股高活跃标的池...")
+    ts.set_token(TS_TOKEN)
+    pro = ts.pro_api()
+    
     try:
-        # 1. 抓取纳斯达克 100 (科技股主战场)
-        url1 = f"https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey={get_api_key()}"
-        res1 = requests.get(url1, timeout=10).json()
-        if isinstance(res1, dict) and "Error Message" in res1:
-            print(f"⚠️ 纳斯达克接口受限: {res1['Error Message']}")
-        elif isinstance(res1, list):
-            # 取前 50 只纳斯达克头部
-            for s in res1[:50]: tickers[s['symbol']] = s['name']
+        # 往前推几天，寻找最近一个有数据的交易日
+        for i in range(1, 10):
+            trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
+            df = pro.us_daily(trade_date=trade_date)
             
-        # 2. 抓取标普 500 (蓝筹主战场)
-        url2 = f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={get_api_key()}"
-        res2 = requests.get(url2, timeout=10).json()
-        if isinstance(res2, dict) and "Error Message" in res2:
-            print(f"⚠️ 标普接口受限: {res2['Error Message']}")
-        elif isinstance(res2, list):
-            # 再取前 40 只标普头部 (控制总数在 90 以内，保护 250 次/天的免费额度)
-            for s in res2[:40]:
-                if s['symbol'] not in tickers: # 自动去重
-                    tickers[s['symbol']] = s['name']
-        
-        if not tickers: raise ValueError("返回数据为空，请检查 API Key 状态")
-        print(f"✅ 成功锁定 {len(tickers)} 只核心标的。")
-        
+            if df is not None and not df.empty:
+                print(f"✅ 成功获取 {trade_date} 美股行情，正在按成交量筛选 Top 100...")
+                df_sorted = df.sort_values('vol', ascending=False).head(100)
+                raw_tickers = df_sorted['ts_code'].tolist()
+                
+                # 尝试获取公司名称
+                try:
+                    basic = pro.us_basic()
+                    name_map = dict(zip(basic['ts_code'], basic['enname']))
+                except:
+                    name_map = {}
+                    
+                for t in raw_tickers:
+                    clean_ticker = t.split('.')[0] if '.' in t else t
+                    tickers[clean_ticker] = name_map.get(t, clean_ticker)
+                break
+                
+        if not tickers:
+            raise ValueError("Tushare 返回为空，触发备用池。")
+            
     except Exception as e:
-        print(f"⚠️ 筛选器异常，启用核心备用池: {e}")
-        tickers = {"NVDA":"英伟达", "AAPL":"苹果", "MSFT":"微软", "AMZN":"亚马逊", "TSLA":"特斯拉", "META":"Meta", "AVGO":"博通", "AMD":"超威", "NFLX":"奈飞", "GOOGL":"谷歌"}
-        
+        print(f"⚠️ Tushare 数据拉取受限 ({e})，启用备用美股超级核心池...")
+        tickers = {
+            "NVDA": "NVIDIA", "AAPL": "Apple", "MSFT": "Microsoft", "AMZN": "Amazon", 
+            "TSLA": "Tesla", "META": "Meta Platforms", "AVGO": "Broadcom", "AMD": "AMD", 
+            "NFLX": "Netflix", "GOOGL": "Alphabet", "MSTR": "MicroStrategy", "COIN": "Coinbase",
+            "SMCI": "Super Micro", "PLTR": "Palantir", "ARM": "Arm Holdings", "TSM": "TSMC"
+        }
     return tickers
 
 ACTIVE_STOCKS = get_scan_pool()
 
-# 🛡️ 增加重试机制和安全的休眠时间，防止拉取 K 线时 API 瘫痪
+# ==========================================
+# 📈 2. 深度 K 线拉取 (YFinance 免费引擎驱动)
+# ==========================================
 def get_kline_data(ticker):
-    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?timeseries=100&apikey={get_api_key()}"
+    # 使用 yfinance 获取长线 K 线，完全免费、无频控
     for attempt in range(3): 
         try:
-            time.sleep(0.5) 
-            res = requests.get(url, timeout=5).json()
-            if 'historical' in res:
-                df = pd.DataFrame(res['historical'])
-                df = df.iloc[::-1].reset_index(drop=True)
-                df.rename(columns={'date':'Date', 'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume':'Volume'}, inplace=True)
-                df['Date'] = pd.to_datetime(df['Date'])
-                df.set_index('Date', inplace=True)
-                return df
+            stock = yf.Ticker(ticker)
+            df = stock.history(period="6mo")
+            if df.empty or len(df) < 40:
+                return pd.DataFrame()
+                
+            df.reset_index(inplace=True)
+            df.rename(columns={'Date':'Date', 'Open':'Open', 'High':'High', 'Low':'Low', 'Close':'Close', 'Volume':'Volume'}, inplace=True)
+            # 处理时区问题，防止 pandas_ta 报错
+            if df['Date'].dt.tz is not None:
+                df['Date'] = df['Date'].dt.tz_localize(None)
+            df.set_index('Date', inplace=True)
+            return df
         except Exception:
-            time.sleep(2) 
+            time.sleep(1) 
     return pd.DataFrame()
 
 # ==========================================
-# 🧠 2. 全量相对打分引擎 (绝不空仓)
+# 🧠 3. 全量相对打分引擎 (绝不空仓)
 # ==========================================
 def run_quant_filter(tickers):
     scored_stocks = []
@@ -154,13 +155,13 @@ def run_quant_filter(tickers):
 top_3, next_7, traps = run_quant_filter(ACTIVE_STOCKS)
 
 # ==========================================
-# 🤖 3. 3.1 Pro 深度推演 (美股定制排版)
+# 🤖 4. 3.1 Pro 深度推演 (美股定制排版)
 # ==========================================
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 ai_generated_html = ""
 if not top_3:
-    ai_generated_html = "<div class='top-card'>API数据源完全瘫痪，且重试均失败，无法获取任何K线数据。</div>"
+    ai_generated_html = "<div class='top-card'>数据源拉取异常，无法获取K线数据。</div>"
 else:
     print(f"🧠 触发 3.1 Pro 引擎：执行【相对强度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
@@ -188,7 +189,7 @@ else:
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
                 <li><b>建议行权价与到期日：</b>(明确建议)</li>
                 <li><b>期权组合构建：</b>(单腿买入还是价差防守策略？)</li>
-                <li><b>风控核单单：</b>(止损纪律与财报避险)</li>
+                <li><b>风控核对单：</b>(止损纪律与财报避险)</li>
             </ul>
         </div>
     </div>
@@ -200,7 +201,7 @@ else:
         <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核单单：</b>(...)</li></ul>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
         </div>
     </div>
     
@@ -211,7 +212,7 @@ else:
         <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核单单：</b>(...)</li></ul>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
         </div>
     </div>
 
@@ -245,7 +246,7 @@ else:
         ai_generated_html = f"<div class='top-card'><div class='top-title'>❌ API 崩溃</div><p>日志：{str(e)}</p></div>"
 
 # ==========================================
-# 🎨 4. HTML 封装
+# 🎨 5. HTML 封装
 # ==========================================
 style = """
 <style>
@@ -269,7 +270,7 @@ style = """
 full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>"
 
 # ==========================================
-# 📧 5. 邮件分发与强制保存
+# 📧 6. 邮件分发与强制保存
 # ==========================================
 def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
