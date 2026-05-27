@@ -294,52 +294,50 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
-    # 🎯 终极杀手锏：洗掉所有 HTML 标签，用纯文本提取，专治大模型各种花式排版！
+    # 🎯 终极杀手锏：拆除“安检门”！只要量化引擎选出来的股票，无条件强制入库！
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
     
+    # 🚨 注意：这里直接循环遍历，删掉了之前那个坑人的 if item['Ticker'] in ai_generated_html 拦截器！
     for item in all_scanned:
-        if item['Ticker'] in ai_generated_html:
-            tag = "Trap_Warning" 
-            if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
-            elif any(x['Ticker'] == item['Ticker'] for x in next_7): tag = "Observation"
-            
-            item['Tag'] = tag
-            item['Hold_Period'] = "N/A"
-            item['Stop_Loss'] = "N/A"
-            
-            if tag == "Core_Dragon":
-                for block in blocks:
-                    if item['Ticker'] in block or item['Name'] in block:
-                        # 🚨 关键净化：把这段代码里所有的 <标签> 全部扒掉，只留纯文字！
-                        # 这样哪怕 AI 偷偷加了 <b>周期</b>，也会变成干干净净的文字！
-                        clean_text = re.sub(r'<[^>]+>', '', block) 
-                        clean_text = clean_text.replace('\n', ' ').replace('&nbsp;', ' ')
+        tag = "Trap_Warning" 
+        if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
+        elif any(x['Ticker'] == item['Ticker'] for x in next_7): tag = "Observation"
+        
+        item['Tag'] = tag
+        item['Hold_Period'] = "N/A"
+        item['Stop_Loss'] = "N/A"
+        
+        if tag == "Core_Dragon":
+            for block in blocks:
+                # 哪怕 AI 乱排版，只要代码或名字在区块里，就强行去扫
+                if str(item['Ticker']) in block or str(item.get('Name', '')) in block:
+                    # 物理净化所有 HTML 标签
+                    clean_text = re.sub(r'<[^>]+>', '', block) 
+                    clean_text = clean_text.replace('\n', ' ').replace('&nbsp;', ' ')
+                    
+                    period_match = re.search(r'周期\s*[:：]\s*([^|]+)', clean_text)
+                    sl_match = re.search(r'止损\s*[:：]\s*(.*?)(?=🎲|美股|期权|$)', clean_text)
+                    
+                    if period_match: 
+                        item['Hold_Period'] = period_match.group(1).strip(' []【】')
+                    if sl_match: 
+                        item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
                         
-                        # 现在文本非常干净，类似："...风控底线: 周期: 5-8天 | 止损: 跌破26.00 🎲 美股专属..."
-                        period_match = re.search(r'周期\s*[:：]\s*([^|]+)', clean_text)
-                        # 匹配到“🎲”或者“美股”字样前停止，防止抓太多
-                        sl_match = re.search(r'止损\s*[:：]\s*(.*?)(?=🎲|美股|期权|$)', clean_text)
-                        
-                        if period_match: 
-                            item['Hold_Period'] = period_match.group(1).strip(' []【】')
-                        if sl_match: 
-                            item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
-                            
-                        # 兜底：如果上面还是挂了，直接把“风控底线”后面的整句话塞进去
-                        if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
-                            fallback = re.search(r'风控底线\s*[:：]\s*(.*?)(?=🎲|美股|期权|$)', clean_text)
-                            if fallback:
-                                raw_text = fallback.group(1).strip()
-                                if '|' in raw_text:
-                                    item['Hold_Period'] = raw_text.split('|')[0].replace('周期:', '').replace('周期：', '').strip(' []')
-                                    item['Stop_Loss'] = raw_text.split('|')[1].replace('止损:', '').replace('止损：', '').strip(' []')
-                                else:
-                                    item['Stop_Loss'] = raw_text 
-                        break
-            
-            chosen.append(item)
+                    if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
+                        fallback = re.search(r'风控底线\s*[:：]\s*(.*?)(?=🎲|美股|期权|$)', clean_text)
+                        if fallback:
+                            raw_text = fallback.group(1).strip()
+                            if '|' in raw_text:
+                                item['Hold_Period'] = raw_text.split('|')[0].replace('周期:', '').replace('周期：', '').strip(' []')
+                                item['Stop_Loss'] = raw_text.split('|')[1].replace('止损:', '').replace('止损：', '').strip(' []')
+                            else:
+                                item['Stop_Loss'] = raw_text 
+                    break
+        
+        # 无条件入库！
+        chosen.append(item)
     
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
