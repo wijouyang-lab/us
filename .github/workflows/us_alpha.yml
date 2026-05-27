@@ -33,6 +33,8 @@ jobs:
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        # 👇 新增这行，把目标邮箱传给 Python
+        TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
       run: |
         CURRENT_HOUR=$(date +'%H')
         if [ "$CURRENT_HOUR" -ge 10 ] && [ "$CURRENT_HOUR" -le 16 ]; then
