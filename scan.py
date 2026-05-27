@@ -7,7 +7,6 @@ import smtplib
 import time
 import requests
 import re
-import yfinance as yf
 import tushare as ts
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -25,18 +24,24 @@ TARGET_REGION = "美国市场"
 # 🔑 读取关键环境变量
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 TS_TOKEN = os.environ.get("TUSHARE_TOKEN")
+FMP_KEYS = [os.environ.get("FMP_KEY_1"), os.environ.get("FMP_KEY_2")]
+FMP_KEYS = [k for k in FMP_KEYS if k]
 
-if not SUPER_ADMIN:
-    print("🚨 致命错误：未检测到 TARGET_EMAILS！请检查 GitHub Secrets！")
+if not SUPER_ADMIN or not TS_TOKEN or not FMP_KEYS:
+    print("🚨 致命错误：API 密钥不全，请检查 GitHub Secrets (需 TARGET_EMAILS, TUSHARE_TOKEN, FMP_KEY_1)！")
     exit(1)
-if not TS_TOKEN:
-    print("🚨 致命错误：未检测到 TUSHARE_TOKEN！请检查 GitHub Secrets！")
-    exit(1)
+
+_key_index = 0
+def get_api_key():
+    global _key_index
+    key = FMP_KEYS[_key_index % len(FMP_KEYS)]
+    _key_index += 1
+    return key
 
 print(f"🚀 启动：相对强度(Alpha)强制排序引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
 
 # ==========================================
-# 📊 1. 获取标的池 (Tushare 驱动，筛选成交活跃 Top 100)
+# 📊 1. 获取标的池 (Tushare 驱动，避开 FMP 付费拦截)
 # ==========================================
 def get_scan_pool():
     tickers = {}
@@ -81,25 +86,23 @@ def get_scan_pool():
 ACTIVE_STOCKS = get_scan_pool()
 
 # ==========================================
-# 📈 2. 深度 K 线拉取 (YFinance 免费引擎驱动)
+# 📈 2. 深度 K 线拉取 (FMP 免费接口驱动，避开 YFinance 封IP)
 # ==========================================
 def get_kline_data(ticker):
-    for attempt in range(3): 
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?timeseries=100&apikey={get_api_key()}"
+    for attempt in range(3):
         try:
-            stock = yf.Ticker(ticker)
-            df = stock.history(period="6mo")
-            if df.empty or len(df) < 40:
-                return pd.DataFrame()
-                
-            df.reset_index(inplace=True)
-            df.rename(columns={'Date':'Date', 'Open':'Open', 'High':'High', 'Low':'Low', 'Close':'Close', 'Volume':'Volume'}, inplace=True)
-            
-            if df['Date'].dt.tz is not None:
-                df['Date'] = df['Date'].dt.tz_localize(None)
-            df.set_index('Date', inplace=True)
-            return df
+            time.sleep(0.1) # FMP 允许较快请求
+            res = requests.get(url, timeout=5).json()
+            if 'historical' in res:
+                df = pd.DataFrame(res['historical'])
+                df = df.iloc[::-1].reset_index(drop=True)
+                df.rename(columns={'date':'Date', 'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume':'Volume'}, inplace=True)
+                df['Date'] = pd.to_datetime(df['Date'])
+                df.set_index('Date', inplace=True)
+                return df
         except Exception:
-            time.sleep(1) 
+            time.sleep(1)
     return pd.DataFrame()
 
 # ==========================================
@@ -294,12 +297,11 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
-    # 🎯 终极杀手锏：拆除“安检门”！只要量化引擎选出来的股票，无条件强制入库！
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
     
-    # 🚨 注意：这里直接循环遍历，删掉了之前那个坑人的 if item['Ticker'] in ai_generated_html 拦截器！
+    # 无条件强制入库！
     for item in all_scanned:
         tag = "Trap_Warning" 
         if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
@@ -311,9 +313,7 @@ if __name__ == "__main__":
         
         if tag == "Core_Dragon":
             for block in blocks:
-                # 哪怕 AI 乱排版，只要代码或名字在区块里，就强行去扫
                 if str(item['Ticker']) in block or str(item.get('Name', '')) in block:
-                    # 物理净化所有 HTML 标签
                     clean_text = re.sub(r'<[^>]+>', '', block) 
                     clean_text = clean_text.replace('\n', ' ').replace('&nbsp;', ' ')
                     
@@ -336,7 +336,6 @@ if __name__ == "__main__":
                                 item['Stop_Loss'] = raw_text 
                     break
         
-        # 无条件入库！
         chosen.append(item)
     
     log_file = "trade_history.csv"
