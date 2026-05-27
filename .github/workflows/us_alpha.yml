@@ -24,12 +24,12 @@ jobs:
         python-version: '3.12'
 
     - name: Install Libs
-      # 🚀 核心更新：引入了 Tushare 和 Yfinance
+      # 🚀 依赖库：纯 Tushare 驱动，保留 yfinance 备用
       run: pip install pandas pandas-ta requests google-genai tushare yfinance
 
     - name: ⏱️ Run Script Based on Time (智能分流)
       env:
-        # 👇 彻底抛弃 FMP，全权使用你的 2000 积分 Tushare 账号！
+        # 👇 纯血 Tushare 环境变量，彻底抛弃受限的海外接口
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
@@ -37,13 +37,16 @@ jobs:
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
       run: |
         CURRENT_HOUR=$(date +'%H')
-        if [ "$CURRENT_HOUR" -ge 0 ] && [ "$CURRENT_HOUR" -le 23 ]; then
-          echo "🌙 临时强制触发【纯Tushare版盘前选股】引擎..."
+        # 恢复正常：UTC 11点~15点 (北京时间 19:00~23:00) 跑盘前选股 scan.py
+        if [ "$CURRENT_HOUR" -ge 11 ] && [ "$CURRENT_HOUR" -le 15 ]; then
+          echo "🌙 触发【盘前选股】引擎 (北京时间 20:00)..."
           python scan.py
+        # 其他时间 (比如早晨 6:00) 跑盘后复盘 review.py
         else
           echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
           python review.py || true
         fi
+
     - name: 💾 Save Logs & Sync to GitHub
       run: |
         git config --local user.email "action@github.com"
