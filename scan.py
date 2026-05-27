@@ -69,20 +69,22 @@ def get_scan_pool():
 
 ACTIVE_STOCKS = get_scan_pool()
 
+# 🛡️ 核心升级：增加重试机制和安全的休眠时间，防止 API 瘫痪
 def get_kline_data(ticker):
-    time.sleep(0.1) 
     url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?timeseries=100&apikey={get_api_key()}"
-    try:
-        res = requests.get(url, timeout=5).json()
-        if 'historical' in res:
-            df = pd.DataFrame(res['historical'])
-            df = df.iloc[::-1].reset_index(drop=True)
-            df.rename(columns={'date':'Date', 'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume':'Volume'}, inplace=True)
-            df['Date'] = pd.to_datetime(df['Date'])
-            df.set_index('Date', inplace=True)
-            return df
-    except Exception:
-        pass
+    for attempt in range(3): # 最多尝试 3 次
+        try:
+            time.sleep(0.5) # 延长休眠时间，降低触发 FMP 频率限制的风险
+            res = requests.get(url, timeout=5).json()
+            if 'historical' in res:
+                df = pd.DataFrame(res['historical'])
+                df = df.iloc[::-1].reset_index(drop=True)
+                df.rename(columns={'date':'Date', 'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume':'Volume'}, inplace=True)
+                df['Date'] = pd.to_datetime(df['Date'])
+                df.set_index('Date', inplace=True)
+                return df
+        except Exception:
+            time.sleep(2) # 如果报错，停顿 2 秒后再重试
     return pd.DataFrame()
 
 # ==========================================
@@ -147,7 +149,7 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 ai_generated_html = ""
 if not top_3:
-    ai_generated_html = "<div class='top-card'>API数据源完全瘫痪，无法获取任何K线数据。</div>"
+    ai_generated_html = "<div class='top-card'>API数据源完全瘫痪，且重试均失败，无法获取任何K线数据。</div>"
 else:
     print(f"🧠 触发 3.1 Pro 引擎：执行【相对强度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
