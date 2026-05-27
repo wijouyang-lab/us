@@ -3,10 +3,7 @@ name: US Alpha Radar
 on:
   workflow_dispatch:
   schedule:
-    # 任务1：美股盘前选股 (北京时间 20:00，对应 UTC 12:00, 周一至周五)
     - cron: '0 12 * * 1-5'
-    # 任务2：美股盘后复盘 (北京时间 06:00，对应 UTC 22:00, 周一至周五)
-    # 注意: UTC时间的周一到周五晚上22点，正好是北京时间的周二到周六早上6点！(完美覆盖美股收盘后)
     - cron: '0 22 * * 1-5'
 
 jobs:
@@ -22,14 +19,14 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.10'
+        # 🌟 关键修复：直接升级到 Python 3.11，完美兼容最新版 pandas 库
+        python-version: '3.11'
         
     - name: Install Libs
-      run: |
-        pip install pandas requests google-genai
-        pip install git+https://github.com/twopirllc/pandas-ta.git@development
+      # 🌟 关键修复：恢复标准的 pandas-ta 安装名 (安装用连字符，代码里 import 用下划线)
+      run: pip install pandas pandas-ta requests google-genai
       
-    - name: ⏱️ Run Script Based on Time (智能分流)
+    - name: ⏱️ Run Script Based on Time
       env:
         FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
         FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
@@ -37,15 +34,10 @@ jobs:
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
       run: |
-        # 获取当前的 UTC 小时 (00-23)
         CURRENT_HOUR=$(date +'%H')
-        
-        # 逻辑判断：如果 UTC 时间在 10点~16点之间 (即北京时间 18:00~00:00)，跑选股！
         if [ "$CURRENT_HOUR" -ge 10 ] && [ "$CURRENT_HOUR" -le 16 ]; then
           echo "🌙 触发【盘前选股】引擎 (北京时间 20:00)..."
           python scan.py
-          
-        # 其他时间 (包括早上 6 点)，跑复盘！
         else
           echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
           python review.py || true
