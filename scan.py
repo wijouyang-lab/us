@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import pandas_ta as ta
+import pandas_ta as ta  # 这里必须是 pandas_ta，且名字是 ta
 import datetime
 import os
 import smtplib
