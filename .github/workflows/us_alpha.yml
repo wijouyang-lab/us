@@ -1,16 +1,13 @@
 name: US Alpha Radar
 
 on:
-  workflow_dispatch: # 允许你手动点击运行
+  workflow_dispatch:
   schedule:
-    # 每天北京时间早上 6:00 (UTC 22:00) 自动运行 (此时美股刚好收盘)
     - cron: '0 22 * * 1-5'
 
 jobs:
   run-quant:
     runs-on: ubuntu-latest
-    
-    # 🚨 极其重要：赋予机器人写文件的权限，用来保存你的账本
     permissions:
       contents: write
       
@@ -24,12 +21,13 @@ jobs:
         python-version: '3.10'
         
     - name: Install Libs
-      # 专门为你美股代码配备的依赖库
       run: pip install pandas pandas-ta requests google-genai
       
     - name: Run US Scan & Options Board
       env:
-        # 读取你之前存在 Secrets 里的密钥
+        # 👇 把所有的钥匙全从保险箱里拿出来，绝对不留明文
+        FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
+        FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
@@ -39,7 +37,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Alpha Bot"
-        # 即使刚开始没有文件也不报错，抓取所有生成的账本和网页
         git add -A
         git diff --quiet && git diff --staged --quiet || git commit -m "Auto update US scan log"
         git push
