@@ -36,17 +36,8 @@ jobs:
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
       run: |
-        CURRENT_HOUR=$(date +'%H')
-        # 如果是 UTC 时间 11点~15点 之间 (北京时间晚盘前)，跑选股！
-        if [ "$CURRENT_HOUR" -ge 11 ] && [ "$CURRENT_HOUR" -le 15 ]; then
-          echo "🌙 触发【盘前选股】引擎 (北京时间 20:00)..."
-          python scan.py
-        # 其他时间跑复盘！
-        else
-          echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
-          python review.py || true
-        fi
-
+        echo "🌙 临时强制触发【盘前选股】引擎..."
+        python scan.py
     - name: 💾 Save Logs & Sync to GitHub
       run: |
         git config --local user.email "action@github.com"
