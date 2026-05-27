@@ -29,10 +29,8 @@ jobs:
 
     - name: ⏱️ Run Script Based on Time (智能分流)
       env:
+        # 👇 彻底抛弃 FMP，全权使用你的 2000 积分 Tushare 账号！
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        # 👇 核心：加回 FMP 的 Key
-        FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
-        FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
@@ -40,7 +38,7 @@ jobs:
       run: |
         CURRENT_HOUR=$(date +'%H')
         if [ "$CURRENT_HOUR" -ge 0 ] && [ "$CURRENT_HOUR" -le 23 ]; then
-          echo "🌙 临时强制触发【盘前选股】引擎..."
+          echo "🌙 临时强制触发【纯Tushare版盘前选股】引擎..."
           python scan.py
         else
           echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
