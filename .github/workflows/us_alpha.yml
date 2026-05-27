@@ -19,11 +19,11 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        # 🌟 关键修复：直接升级到 Python 3.11，完美兼容最新版 pandas 库
-        python-version: '3.11'
+        # 🌟 终极绝杀：直接升级到目前最新的 Python 3.12！
+        python-version: '3.12'
         
     - name: Install Libs
-      # 🌟 关键修复：恢复标准的 pandas-ta 安装名 (安装用连字符，代码里 import 用下划线)
+      # 🌟 安装用横杠 pandas-ta，完美匹配 PyPI 的官方名称
       run: pip install pandas pandas-ta requests google-genai
       
     - name: ⏱️ Run Script Based on Time
