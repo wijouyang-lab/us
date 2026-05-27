@@ -150,7 +150,7 @@ else:
         <div class="top-title" style="color: #d32f2f;">1. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (剖析催化剂与基本面逻辑)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (结合乖离率与MACD说明技术形态)</p>
-        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> (必须明确【预计持股周期(如3-8天)】和【具体止损价位】)</p>
+        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -166,7 +166,7 @@ else:
         <div class="top-title" style="color: #d32f2f;">2. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (...)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (...)</p>
-        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> (必须明确【预计持股周期(天数)】和【具体止损价位】)</p>
+        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
@@ -177,7 +177,7 @@ else:
         <div class="top-title" style="color: #d32f2f;">3. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (...)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (...)</p>
-        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> (必须明确【预计持股周期(天数)】和【具体止损价位】)</p>
+        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
@@ -245,7 +245,6 @@ def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
     if not user: return
     
-    # 支持多个收件人逗号分隔
     to_list = [email.strip() for email in to_emails.split(',')]
     
     msg = MIMEMultipart(); msg['From'] = user; msg['Subject'] = subject
@@ -259,26 +258,49 @@ def send_mail(to_emails, subject, content):
 
 if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
-    send_mail(SUPER_ADMIN, mail_subject, full_html)
     
+    # 🎯 核心升级：利用严谨正则抓取美股的周期和止损
     chosen = []
+    blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
+    
     for item in all_scanned:
         if item['Ticker'] in ai_generated_html:
             tag = "Trap_Warning" 
             if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
             elif any(x['Ticker'] == item['Ticker'] for x in next_7): tag = "Observation"
+            
             item['Tag'] = tag
+            item['Hold_Period'] = "N/A"
+            item['Stop_Loss'] = "N/A"
+            
+            # 美股 Top 3 是单独成卡片的，从中提取周期和止损
+            if tag == "Core_Dragon":
+                for block in blocks:
+                    if item['Ticker'] in block or item['Name'] in block:
+                        period_match = re.search(r'风控底线:</span>\s*周期:\[?([^\s|<,\]]+)', block)
+                        sl_match = re.search(r'止损:\[?([^<\]]+)', block)
+                        if not sl_match:
+                            sl_match = re.search(r'风控底线:</span>\s*周期:[^|,<]+[|,<]\s*([^<]+)', block)
+                        
+                        if period_match: item['Hold_Period'] = period_match.group(1).strip()
+                        if sl_match: 
+                            raw_sl = sl_match.group(1).strip()
+                            item['Stop_Loss'] = re.sub(r'</?p>', '', raw_sl).strip()
+                        break
+            
             chosen.append(item)
     
+    # 🗂️ 写入带风控参数的历史账本
     log_file = "trade_history.csv"
+    need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
         with open(log_file, "a", encoding="utf-8") as f:
-            if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
-                f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias\n")
+            if need_header:
+                f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss\n")
             ts = datetime.datetime.now().strftime('%Y-%m-%d')
             for i in chosen: 
-                f.write(f"{ts},{i['Ticker']},{i['Name']},{i['Tag']},{i['Score']},{i['Price']},{i.get('RSI',0)},{i.get('Bias',0)}\n")
+                f.write(f"{ts},{i['Ticker']},{i['Name']},{i['Tag']},{i['Score']},{i['Price']},{i.get('RSI',0)},{i.get('Bias',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
     except Exception as e:
         pass
 
@@ -287,3 +309,5 @@ if __name__ == "__main__":
             f.write(full_html)
     except Exception as e:
         pass
+        
+    send_mail(SUPER_ADMIN, mail_subject, full_html)
