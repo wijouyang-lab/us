@@ -86,7 +86,7 @@ def get_kline_data(ticker):
     return pd.DataFrame()
 
 # ==========================================
-# 🧠 2. 严苛技术面筛选
+# 🧠 2. 放宽条件：水至清则无鱼 (打分制)
 # ==========================================
 def run_quant_filter(tickers):
     scored_stocks = []
@@ -104,14 +104,18 @@ def run_quant_filter(tickers):
             
             latest, prev = df.iloc[-1], df.iloc[-2]
             bias = abs((latest['Close'] - latest['MA20']) / latest['MA20'])
-            if bias > 0.15: continue
             
-            macd_buy = (latest['MACDh'] > prev['MACDh']) or (latest['MACDh'] > 0 and prev['MACDh'] < 0)
-            if not macd_buy: continue
+            # 🐟 放宽：只剔除乖离率极端离谱的(>25%)
+            if bias > 0.25: continue
             
-            score = 40 if latest['MACDh'] > 0 else 20
-            if 40 < latest['RSI'] < 65: score += 30  
-            score += (0.15 - bias) * 200 
+            score = 0
+            # 不再硬性要求必须金叉，改为加分制
+            macd_trend = (latest['MACDh'] > prev['MACDh'])
+            if macd_trend: score += 40
+            elif latest['MACDh'] > 0: score += 15
+            
+            if 40 < latest['RSI'] < 70: score += 30  
+            score += (0.25 - bias) * 100 
             
             scored_stocks.append({
                 "Ticker": ticker, "Name": name, "Price": round(latest['Close'], 2), 
@@ -130,12 +134,13 @@ top_3, next_7, traps = run_quant_filter(ACTIVE_STOCKS)
 # ==========================================
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
+ai_generated_html = ""
 if not top_3:
-    ai_generated_html = "<div class='top-card'>无符合苛刻条件的标的，今日空仓。</div>"
+    ai_generated_html = "<div class='top-card'>经过放宽条件，今日依然无符合波段模型的标的，空仓休息。</div>"
 else:
     print(f"🧠 触发 3.1 Pro 引擎：执行【美股前3深度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
-    你是华尔街顶级量化游资操盘手及高级期权策略师。今日系统筛选出了符合“MACD金叉/绿柱缩短 + 乖离率<15%”的美股标的。
+    你是华尔街顶级量化游资操盘手及高级期权策略师。今日系统基于量化得分筛选出了美股标的。
     请结合你的宏观和消息面数据库，对这批标的进行深度排版输出。看涨需标红(#d32f2f)，看跌需标绿(#388e3c)。
 
     【排版与字数指令】（必须严格直出以下 HTML 代码骨架，不得加 markdown 外框）：
@@ -206,7 +211,6 @@ else:
     🎖️ 观察池 (Rank 4-10): {next_7}
     🚨 诱多池 (Rank 11-12): {traps}
     """
-    
     try:
         res = client.models.generate_content(model=TARGET_MODEL, contents=prompt, config=types.GenerateContentConfig(temperature=0.25))
         ai_generated_html = res.text.replace("```html", "").replace("```", "").strip()
@@ -239,14 +243,13 @@ style = """
 full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>"
 
 # ==========================================
-# 📧 5. 邮件分发与保存
+# 📧 5. 邮件分发与强制保存
 # ==========================================
 def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
     if not user: return
     
     to_list = [email.strip() for email in to_emails.split(',')]
-    
     msg = MIMEMultipart(); msg['From'] = user; msg['Subject'] = subject
     msg.attach(MIMEText(content, 'html'))
     try:
@@ -257,7 +260,16 @@ def send_mail(to_emails, subject, content):
     except Exception as e: print(f"❌ 发送失败 ({to_emails}): {e}")
 
 if __name__ == "__main__":
+    # 🌟 强制先存 HTML 到本地，确保绝对生成 report.html
+    try:
+        with open("report.html", "w", encoding="utf-8") as f:
+            f.write(full_html)
+        print("✅ report.html 已成功强制存入本地！")
+    except Exception as e:
+        print(f"🚨 report.html 写入失败: {e}")
+
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
+    send_mail(SUPER_ADMIN, mail_subject, full_html)
     
     # 🎯 核心升级：利用严谨正则抓取美股的周期和止损
     chosen = []
@@ -274,7 +286,6 @@ if __name__ == "__main__":
             item['Hold_Period'] = "N/A"
             item['Stop_Loss'] = "N/A"
             
-            # 美股 Top 3 是单独成卡片的，从中提取周期和止损
             if tag == "Core_Dragon":
                 for block in blocks:
                     if item['Ticker'] in block or item['Name'] in block:
@@ -302,12 +313,4 @@ if __name__ == "__main__":
             for i in chosen: 
                 f.write(f"{ts},{i['Ticker']},{i['Name']},{i['Tag']},{i['Score']},{i['Price']},{i.get('RSI',0)},{i.get('Bias',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
     except Exception as e:
-        pass
-
-    try:
-        with open("report.html", "w", encoding="utf-8") as f:
-            f.write(full_html)
-    except Exception as e:
-        pass
-        
-    send_mail(SUPER_ADMIN, mail_subject, full_html)
+        print(f"⚠️ 账本写入失败: {e}")
