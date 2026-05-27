@@ -26,7 +26,7 @@ if not SUPER_ADMIN:
     print("🚨 致命错误：未检测到目标收件邮箱！请检查 GitHub Secrets 中的 TARGET_EMAILS！")
     exit(1)
 
-print(f"🚀 启动：相对强度(Alpha)排位赛引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
+print(f"🚀 启动：相对强度(Alpha)强制排序引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
 
 # ==========================================
 # 🔑 绝密：从环境变量读取 FMP 密钥
@@ -63,7 +63,7 @@ def get_scan_pool():
         if not tickers: raise ValueError("Empty response")
         print(f"✅ 成功锁定 {len(tickers)} 只流动性最强标的。")
     except Exception as e:
-        print(f"⚠️ 筛选器异常: {e}")
+        print(f"⚠️ 筛选器异常，启用核心备用池: {e}")
         tickers = {"NVDA":"英伟达", "AAPL":"苹果", "MSFT":"微软", "AMZN":"亚马逊", "TSLA":"特斯拉", "META":"Meta", "AVGO":"博通"}
     return tickers
 
@@ -86,11 +86,11 @@ def get_kline_data(ticker):
     return pd.DataFrame()
 
 # ==========================================
-# 🧠 2. 放宽条件：水至清则无鱼 (打分制)
+# 🧠 2. 全量相对打分引擎 (绝不空仓)
 # ==========================================
 def run_quant_filter(tickers):
     scored_stocks = []
-    print(f"🌊 启动波段评分引擎，扫描 {len(tickers)} 只标的...")
+    print(f"🌊 启动波段评分引擎，采用【全市场强制排序】，扫描 {len(tickers)} 只标的...")
     for ticker, name in tickers.items():
         try:
             df = get_kline_data(ticker)
@@ -103,19 +103,23 @@ def run_quant_filter(tickers):
             if len(df) < 6: continue
             
             latest, prev = df.iloc[-1], df.iloc[-2]
-            bias = abs((latest['Close'] - latest['MA20']) / latest['MA20'])
-            
-            # 🐟 放宽：只剔除乖离率极端离谱的(>25%)
-            if bias > 0.25: continue
+            bias = (latest['Close'] - latest['MA20']) / latest['MA20']
+            abs_bias = abs(bias)
             
             score = 0
-            # 不再硬性要求必须金叉，改为加分制
-            macd_trend = (latest['MACDh'] > prev['MACDh'])
-            if macd_trend: score += 40
+            # 🚫 彻底取消一票否决，全部改为加减分机制
+            # 1. MACD 动能判定
+            if latest['MACDh'] > prev['MACDh']: score += 40
             elif latest['MACDh'] > 0: score += 15
+            else: score -= 20 # 绿柱放大扣分
             
-            if 40 < latest['RSI'] < 70: score += 30  
-            score += (0.25 - bias) * 100 
+            # 2. RSI 状态判定
+            if 40 <= latest['RSI'] <= 70: score += 30  
+            elif latest['RSI'] > 70: score -= 20 # 超买区风险扣分
+            elif latest['RSI'] < 40: score -= 20 # 弱势区风险扣分
+            
+            # 3. 乖离率判定 (偏离 20日线越远，扣分越狠)
+            score += (0.15 - abs_bias) * 100 
             
             scored_stocks.append({
                 "Ticker": ticker, "Name": name, "Price": round(latest['Close'], 2), 
@@ -124,8 +128,15 @@ def run_quant_filter(tickers):
         except Exception: 
             continue
         
+    # 按照分数从高到低强制排序
     scored_stocks = sorted(scored_stocks, key=lambda x: x['Score'], reverse=True)
-    return scored_stocks[:3], scored_stocks[3:10], scored_stocks[10:12] 
+    
+    # 无论多烂，强制返回相对最好的前3、前10，和倒数的坑货
+    top = scored_stocks[:3]
+    mid = scored_stocks[3:10]
+    bottom = scored_stocks[-2:] if len(scored_stocks) >= 12 else []
+    
+    return top, mid, bottom
 
 top_3, next_7, traps = run_quant_filter(ACTIVE_STOCKS)
 
@@ -136,21 +147,23 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 ai_generated_html = ""
 if not top_3:
-    ai_generated_html = "<div class='top-card'>经过放宽条件，今日依然无符合波段模型的标的，空仓休息。</div>"
+    ai_generated_html = "<div class='top-card'>API数据源完全瘫痪，无法获取任何K线数据。</div>"
 else:
-    print(f"🧠 触发 3.1 Pro 引擎：执行【美股前3深度分析 + 持股周期 + 期权看板】...")
+    print(f"🧠 触发 3.1 Pro 引擎：执行【相对强度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
-    你是华尔街顶级量化游资操盘手及高级期权策略师。今日系统基于量化得分筛选出了美股标的。
+    你是华尔街顶级量化游资操盘手及高级期权策略师。
+    今日系统采用了【相对强度全市场横向对比】，即使在极端行情下，也为你“矮子里拔高个”筛选出了目前资金最活跃、相对形态最优的标的。
     请结合你的宏观和消息面数据库，对这批标的进行深度排版输出。看涨需标红(#d32f2f)，看跌需标绿(#388e3c)。
+    注意：如果标的的波段评分较低或为负数，请在点评中明确指出当前是弱势行情，并在风控底线中给出极度保守的防守建议。
 
     【排版与字数指令】（必须严格直出以下 HTML 代码骨架，不得加 markdown 外框）：
 
     <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
-        <h3 style="margin-top: 0; color: #0d47a1;">🌍 宏观资金定调与 Alpha 评级</h3>
-        <p>(结合美股当前流动性或产业周期，输出今日大盘风向)</p>
+        <h3 style="margin-top: 0; color: #0d47a1;">🌍 宏观资金定调与 Alpha 相对评级</h3>
+        <p>(结合美股当前流动性、大盘走势，点评今日选股名单的整体强度)</p>
     </div>
 
-    <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 核心优选 (Top 1-3)</h2>
+    <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 相对强度优选 (Top 1-3)</h2>
     <div class="top-card core-card">
         <div class="top-title" style="color: #d32f2f;">1. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (剖析催化剂与基本面逻辑)</p>
@@ -161,7 +174,7 @@ else:
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
                 <li><b>建议行权价与到期日：</b>(明确建议)</li>
-                <li><b>期权组合构建：</b>(单腿买入还是价差策略？)</li>
+                <li><b>期权组合构建：</b>(单腿买入还是价差防守策略？)</li>
                 <li><b>风控核对单：</b>(止损纪律与财报避险)</li>
             </ul>
         </div>
@@ -201,15 +214,15 @@ else:
     <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
         <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（严禁接盘）</h3>
         <ul>
-            <li><b>11. [中文股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> (...)</li>
-            <li><b>12. [中文股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> (...)</li>
+            <li><b>倒数1. [中文股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> (...)</li>
+            <li><b>倒数2. [中文股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> (...)</li>
         </ul>
     </div>
 
     【注入的数据源】：
-    🥇 核心前三名 (Top 1-3): {top_3}
+    🥇 相对最强前三名 (Top 1-3): {top_3}
     🎖️ 观察池 (Rank 4-10): {next_7}
-    🚨 诱多池 (Rank 11-12): {traps}
+    🚨 全市场最弱垫底 (Traps): {traps}
     """
     try:
         res = client.models.generate_content(model=TARGET_MODEL, contents=prompt, config=types.GenerateContentConfig(temperature=0.25))
