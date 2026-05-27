@@ -29,15 +29,23 @@ jobs:
 
     - name: ⏱️ Run Script Based on Time (智能分流)
       env:
-        # 🚀 核心更新：引入了 TUSHARE_TOKEN
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        # 👇 核心：加回 FMP 的 Key
+        FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
+        FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
       run: |
-        echo "🌙 临时强制触发【盘前选股】引擎..."
-        python scan.py
+        CURRENT_HOUR=$(date +'%H')
+        if [ "$CURRENT_HOUR" -ge 0 ] && [ "$CURRENT_HOUR" -le 23 ]; then
+          echo "🌙 临时强制触发【盘前选股】引擎..."
+          python scan.py
+        else
+          echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
+          python review.py || true
+        fi
     - name: 💾 Save Logs & Sync to GitHub
       run: |
         git config --local user.email "action@github.com"
