@@ -25,7 +25,9 @@ jobs:
         python-version: '3.10'
         
     - name: Install Libs
-      run: pip install pandas requests google-genai pandas_ta --index-url https://pypi.org/simple
+      run: |
+        pip install pandas requests google-genai
+        pip install git+https://github.com/twopirllc/pandas-ta.git@development
       
     - name: ⏱️ Run Script Based on Time (智能分流)
       env:
