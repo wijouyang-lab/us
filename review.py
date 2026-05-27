@@ -42,7 +42,7 @@ if not os.path.exists(log_file):
     exit(0)
 
 try:
-    df = pd.read_csv(log_file)
+    df = pd.read_csv(log_file, names=["Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias", "Hold_Period", "Stop_Loss"], header=0)
     df['Date'] = pd.to_datetime(df['Date'])
     # 筛选出最近 3 天的推荐记录
     cutoff_date = datetime.datetime.now() - datetime.timedelta(days=5)
