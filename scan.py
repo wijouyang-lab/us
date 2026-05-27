@@ -1,0 +1,274 @@
+# -*- coding: utf-8 -*-
+import pandas as pd
+import pandas_ta as ta
+import datetime
+import os
+import smtplib
+import time
+import requests
+import re
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from google import genai 
+from google.genai import types
+
+today = datetime.datetime.now().weekday()
+if today >= 5:
+    print(f"[{datetime.datetime.now()}] 周末休市，脚本自动跳过。")
+    exit()
+
+TARGET_MODEL = 'gemini-3.1-pro-preview' 
+TARGET_REGION = "美国市场"
+SUPER_ADMIN = "907359319@qq.com"
+
+print(f"🚀 启动：相对强度(Alpha)排位赛引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
+
+# ==========================================
+# 🔑 绝密：从环境变量读取 FMP 密钥
+# ==========================================
+FMP_KEYS = [
+    os.environ.get("FMP_KEY_1"),
+    os.environ.get("FMP_KEY_2")
+]
+# 过滤掉空的键
+FMP_KEYS = [k for k in FMP_KEYS if k]
+
+if not FMP_KEYS:
+    print("🚨 致命错误：未检测到 FMP API 密钥！请检查 GitHub Secrets！")
+    exit(1)
+
+_key_index = 0
+def get_api_key():
+    global _key_index
+    key = FMP_KEYS[_key_index % len(FMP_KEYS)]
+    _key_index += 1
+    return key
+
+# ==========================================
+# 📊 1. 获取当日成交额 Top 100
+# ==========================================
+def get_scan_pool():
+    tickers = {}
+    print("📡 正在调用 FMP 双引擎抓取美股高成交额标的...")
+    try:
+        url = f"https://financialmodelingprep.com/api/v3/stock-screener?marketCapMoreThan=1000000000&volumeMoreThan=5000000&exchange=NYSE,NASDAQ&limit=200&apikey={get_api_key()}"
+        res = requests.get(url, timeout=10).json()
+        sorted_stocks = sorted(res, key=lambda x: x.get('price', 0) * x.get('volume', 0), reverse=True)[:100]
+        for s in sorted_stocks:
+            tickers[s['symbol']] = s['companyName']
+        if not tickers: raise ValueError("Empty response")
+        print(f"✅ 成功锁定 {len(tickers)} 只流动性最强标的。")
+    except Exception as e:
+        print(f"⚠️ 筛选器异常: {e}")
+        tickers = {"NVDA":"英伟达", "AAPL":"苹果", "MSFT":"微软", "AMZN":"亚马逊", "TSLA":"特斯拉", "META":"Meta", "AVGO":"博通"}
+    return tickers
+
+ACTIVE_STOCKS = get_scan_pool()
+
+def get_kline_data(ticker):
+    time.sleep(0.1) 
+    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?timeseries=100&apikey={get_api_key()}"
+    try:
+        res = requests.get(url, timeout=5).json()
+        if 'historical' in res:
+            df = pd.DataFrame(res['historical'])
+            df = df.iloc[::-1].reset_index(drop=True)
+            df.rename(columns={'date':'Date', 'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume':'Volume'}, inplace=True)
+            df['Date'] = pd.to_datetime(df['Date'])
+            df.set_index('Date', inplace=True)
+            return df
+    except Exception:
+        pass
+    return pd.DataFrame()
+
+# ==========================================
+# 🧠 2. 严苛技术面筛选
+# ==========================================
+def run_quant_filter(tickers):
+    scored_stocks = []
+    print(f"🌊 启动波段评分引擎，扫描 {len(tickers)} 只标的...")
+    for ticker, name in tickers.items():
+        try:
+            df = get_kline_data(ticker)
+            if df is None or df.empty or len(df) < 40: continue
+            
+            df['MACDh'] = ta.macd(df['Close']).iloc[:, 1] 
+            df['RSI'] = ta.rsi(df['Close'], length=14)
+            df['MA20'] = ta.sma(df['Close'], length=20)
+            df = df.dropna()
+            if len(df) < 6: continue
+            
+            latest, prev = df.iloc[-1], df.iloc[-2]
+            bias = abs((latest['Close'] - latest['MA20']) / latest['MA20'])
+            if bias > 0.15: continue
+            
+            macd_buy = (latest['MACDh'] > prev['MACDh']) or (latest['MACDh'] > 0 and prev['MACDh'] < 0)
+            if not macd_buy: continue
+            
+            score = 40 if latest['MACDh'] > 0 else 20
+            if 40 < latest['RSI'] < 65: score += 30  
+            score += (0.15 - bias) * 200 
+            
+            scored_stocks.append({
+                "Ticker": ticker, "Name": name, "Price": round(latest['Close'], 2), 
+                "Score": round(score, 1), "RSI": round(latest['RSI'], 1), "Bias": round(bias * 100, 2)
+            })
+        except Exception: 
+            continue
+        
+    scored_stocks = sorted(scored_stocks, key=lambda x: x['Score'], reverse=True)
+    return scored_stocks[:3], scored_stocks[3:10], scored_stocks[10:12] 
+
+top_3, next_7, traps = run_quant_filter(ACTIVE_STOCKS)
+
+# ==========================================
+# 🤖 3. 3.1 Pro 深度推演 (美股定制排版)
+# ==========================================
+client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+
+if not top_3:
+    ai_generated_html = "<div class='top-card'>无符合苛刻条件的标的，今日空仓。</div>"
+else:
+    print(f"🧠 触发 3.1 Pro 引擎：执行【美股前3深度分析 + 期权看板 + 避雷组】...")
+    prompt = f"""
+    你是华尔街顶级量化游资操盘手及高级期权策略师。今日系统筛选出了符合“MACD金叉/绿柱缩短 + 乖离率<15%”的美股标的。
+    请结合你的宏观和消息面数据库，对这批标的进行深度排版输出。看涨需标红(#d32f2f)，看跌需标绿(#388e3c)。
+
+    【排版与字数指令】（必须严格直出以下 HTML 代码骨架，不得加 markdown 外框）：
+
+    <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
+        <h3 style="margin-top: 0; color: #0d47a1;">🌍 宏观资金定调与 Alpha 评级</h3>
+        <p>(结合美股当前流动性或产业周期，输出今日大盘风向)</p>
+    </div>
+
+    <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 核心优选 (Top 1-3)</h2>
+    <div class="top-card core-card">
+        <div class="top-title" style="color: #d32f2f;">1. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
+        <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (剖析催化剂与基本面逻辑)</p>
+        <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (结合乖离率与MACD说明技术形态)</p>
+        
+        <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
+            <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+                <li><b>建议行权价与到期日：</b>(明确建议)</li>
+                <li><b>期权组合构建：</b>(单腿买入还是价差策略？)</li>
+                <li><b>风控核对单：</b>(止损纪律与财报避险)</li>
+            </ul>
+        </div>
+    </div>
+    <div class="top-card core-card">
+        <div class="top-title" style="color: #d32f2f;">2. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
+        <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (...)</p>
+        <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (...)</p>
+        <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
+            <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
+        </div>
+    </div>
+    <div class="top-card core-card">
+        <div class="top-title" style="color: #d32f2f;">3. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
+        <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (...)</p>
+        <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (...)</p>
+        <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
+            <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
+        </div>
+    </div>
+
+    <div class="compare-card">
+        <div class="compare-title">🎖️ 满编观察池及硬伤诊断 (Rank 4-10)</div>
+        <ul>
+            <li><b>4. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">硬伤：</span>(...)</li>
+            <li><b>5. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">硬伤：</span>(...)</li>
+            <li><b>6. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">硬伤：</span>(...)</li>
+        </ul>
+    </div>
+
+    <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
+        <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（严禁接盘）</h3>
+        <ul>
+            <li><b>11. [中文股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> (...)</li>
+            <li><b>12. [中文股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> (...)</li>
+        </ul>
+    </div>
+
+    【注入的数据源】：
+    🥇 核心前三名 (Top 1-3): {top_3}
+    🎖️ 观察池 (Rank 4-10): {next_7}
+    🚨 诱多池 (Rank 11-12): {traps}
+    """
+    
+    try:
+        res = client.models.generate_content(model=TARGET_MODEL, contents=prompt, config=types.GenerateContentConfig(temperature=0.25))
+        ai_generated_html = res.text.replace("```html", "").replace("```", "").strip()
+        print("✅ 3.1 Pro 美股期权波段审查完毕。")
+    except Exception as e: 
+        ai_generated_html = f"<div class='top-card'><div class='top-title'>❌ API 崩溃</div><p>日志：{str(e)}</p></div>"
+
+# ==========================================
+# 🎨 4. HTML 封装
+# ==========================================
+style = """
+<style>
+    body { font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; background-color: #f0f2f5; padding: 20px; color: #2c3e50; line-height: 1.7;}
+    .container { max-width: 950px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+    h1 { text-align: center; color: #1a237e; border-bottom: 3px solid #1a237e; padding-bottom: 15px; margin-bottom: 35px; font-size: 28px; font-weight: 800; }
+    .top-card { padding: 25px; margin-bottom: 30px; border-radius: 10px; background: #fafafa; border: 1px solid #e0e0e0; border-left: 6px solid #78909c; }
+    .core-card { border-left: 6px solid #d32f2f; background: #fffcfc; box-shadow: 0 4px 15px rgba(211, 47, 47, 0.08); }
+    .top-title { font-size: 20px; font-weight: 800; color: #37474f; border-bottom: 1px dashed #cfd8dc; padding-bottom: 10px; margin-bottom: 15px; }
+    .highlight-label { display: inline-block; font-weight: bold; color: #fff; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-size: 13px;}
+    .bg-red { background: #d32f2f; }
+    .bg-blue { background: #1976d2; }
+    .compare-card { border-left: 5px solid #ff9800; background: #fffdf7; padding: 25px; margin-bottom: 25px; border-radius: 10px; border: 1px solid #ffe0b2;}
+    .compare-title { font-size: 19px; color: #e65100; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #ffe0b2; padding-bottom: 10px;}
+    ul { padding-left: 22px; margin-top: 0;}
+    li { margin-bottom: 10px; font-size: 15px; }
+</style>
+"""
+
+full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>"
+
+# ==========================================
+# 📧 5. 邮件分发与保存
+# ==========================================
+def send_mail(to, subject, content):
+    user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
+    if not user: return
+    msg = MIMEMultipart(); msg['From'] = user; msg['To'] = to; msg['Subject'] = subject
+    msg.attach(MIMEText(content, 'html'))
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
+            s.login(user, pwd); s.send_message(msg)
+            print(f"✅ 内参已精准发送至: {to}")
+    except Exception as e: print(f"❌ 发送失败 ({to}): {e}")
+
+if __name__ == "__main__":
+    mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
+    send_mail(SUPER_ADMIN, mail_subject, full_html)
+    
+    chosen = []
+    all_scanned = top_3 + next_7 + traps
+    for item in all_scanned:
+        if item['Ticker'] in ai_generated_html:
+            tag = "Trap_Warning" 
+            if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
+            elif any(x['Ticker'] == item['Ticker'] for x in next_7): tag = "Observation"
+            item['Tag'] = tag
+            chosen.append(item)
+    
+    log_file = "trade_history.csv"
+    try:
+        with open(log_file, "a", encoding="utf-8") as f:
+            if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
+                f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias\n")
+            ts = datetime.datetime.now().strftime('%Y-%m-%d')
+            for i in chosen: 
+                f.write(f"{ts},{i['Ticker']},{i['Name']},{i['Tag']},{i['Score']},{i['Price']},{i.get('RSI',0)},{i.get('Bias',0)}\n")
+    except Exception as e:
+        pass
+
+    try:
+        with open("report.html", "w", encoding="utf-8") as f:
+            f.write(full_html)
+    except Exception as e:
+        pass
