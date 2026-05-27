@@ -1,9 +1,11 @@
-name: US Alpha Radar
+name: US-Share Alpha Radar
 
 on:
   workflow_dispatch:
   schedule:
+    # 任务1: 美股盘前选股 (北京时间 20:00，UTC 12:00)
     - cron: '0 12 * * 1-5'
+    # 任务2: 美股盘后复盘 (北京时间 06:00，UTC 22:00)
     - cron: '0 22 * * 1-5'
 
 jobs:
@@ -11,47 +13,44 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
-      
+
     - name: Setup Python
       uses: actions/setup-python@v5
       with:
-        # 🌟 终极绝杀：直接升级到目前最新的 Python 3.12！
         python-version: '3.12'
-        
+
     - name: Install Libs
-      # 🌟 安装用横杠 pandas-ta，完美匹配 PyPI 的官方名称
-      run: pip install pandas pandas-ta requests google-genai
-      
-    - name: ⏱️ Run Script Based on Time
+      # 🚀 核心更新：引入了 Tushare 和 Yfinance
+      run: pip install pandas pandas-ta requests google-genai tushare yfinance
+
+    - name: ⏱️ Run Script Based on Time (智能分流)
       env:
-        FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
-        FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
+        # 🚀 核心更新：引入了 TUSHARE_TOKEN
+        TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        # 👇 新增这行，把目标邮箱传给 Python
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
       run: |
         CURRENT_HOUR=$(date +'%H')
-        if [ "$CURRENT_HOUR" -ge 10 ] && [ "$CURRENT_HOUR" -le 16 ]; then
+        # 如果是 UTC 时间 11点~15点 之间 (北京时间晚盘前)，跑选股！
+        if [ "$CURRENT_HOUR" -ge 11 ] && [ "$CURRENT_HOUR" -le 15 ]; then
           echo "🌙 触发【盘前选股】引擎 (北京时间 20:00)..."
           python scan.py
+        # 其他时间跑复盘！
         else
           echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
           python review.py || true
         fi
-      
+
     - name: 💾 Save Logs & Sync to GitHub
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Alpha Bot"
-        # -A 参数会自动把所有新生成的文件（包括更新后的 CSV）全部打包，无需改动
         git add -A
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update quant logs"
-        git push
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update quant logs"
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update US-share logs"
         git push
