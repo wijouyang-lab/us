@@ -283,9 +283,8 @@ if __name__ == "__main__":
     chosen = []
     all_scanned = top_3 + next_7 + traps
     
-    # 将整个邮件 HTML 洗白成纯文本，方便正则全局暴力抓取
     clean_html = re.sub(r'<[^>]+>', ' ', ai_generated_html) 
-    clean_html = re.sub(r'\s+', ' ', clean_html) # 压缩多余空格
+    clean_html = re.sub(r'\s+', ' ', clean_html) 
     
     for item in all_scanned:
         tag = "Trap_Warning" 
@@ -297,26 +296,24 @@ if __name__ == "__main__":
         item['Stop_Loss'] = "N/A"
         
         ticker_str = str(item['Ticker'])
-        # 在纯净文本中定位这只股票的位置
         idx = clean_html.find(ticker_str)
         
         if idx != -1:
-            # 往后截取 400 个字符（确保只抓取当前股票的数据，不会越界抓到下一只）
-            chunk = clean_html[idx:idx+400]
+            # 🚀 致命修复：把 400 字符放大到 1500 字符！
+            # 前三名的基本面和技术面字数非常多，视野必须开阔！
+            chunk = clean_html[idx:idx+1500] 
             
-            # 抓取周期：匹配 "周期:" 和 "|" 之间的所有字
             period_match = re.search(r'周期\s*[:：]\s*(.*?)(?=\|)', chunk)
             if period_match:
                 item['Hold_Period'] = period_match.group(1).strip(' []【】')
                 
-            # 抓取止损：匹配 "止损:" 后面的连续非空白字符（如 $26.00 或 跌破26）
-            sl_match = re.search(r'止损\s*[:：]\s*(\S+)', chunk)
+            # 优化：一直抓取直到碰见下一个大标题，完美解决带有空格的价格
+            sl_match = re.search(r'止损\s*[:：]\s*(.*?)(?=美股专属|期权实战|逻辑硬伤|诱多陷阱|🎲|$)', chunk)
             if sl_match:
                 item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
                 
-            # 终极兜底
             if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
-                fallback = re.search(r'风控底线\s*[:：]\s*(.*?)(?=🎲|美股|硬伤|诱多|$)', chunk)
+                fallback = re.search(r'风控底线\s*[:：]\s*(.*?)(?=美股专属|期权实战|逻辑硬伤|诱多陷阱|🎲|$)', chunk)
                 if fallback:
                     raw_text = fallback.group(1).strip()
                     if '|' in raw_text:
