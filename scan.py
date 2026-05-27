@@ -45,7 +45,6 @@ def get_scan_pool():
     pro = ts.pro_api()
     
     try:
-        # 往前推几天，寻找最近一个有数据的交易日
         for i in range(1, 10):
             trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
             df = pro.us_daily(trade_date=trade_date)
@@ -295,7 +294,7 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
-    # 🎯 核心升级：流氓级宽容正则 + 终极暴力兜底
+    # 🎯 核心升级：强力初始化 + 流氓级宽容正则 + 终极暴力兜底
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
@@ -306,6 +305,7 @@ if __name__ == "__main__":
             if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
             elif any(x['Ticker'] == item['Ticker'] for x in next_7): tag = "Observation"
             
+            # 🚨 绝对初始化：强行把键先写进字典里，防止后面没抓到报错
             item['Tag'] = tag
             item['Hold_Period'] = "N/A"
             item['Stop_Loss'] = "N/A"
@@ -320,12 +320,11 @@ if __name__ == "__main__":
                         if period_match: item['Hold_Period'] = period_match.group(1).strip(' []【】')
                         if sl_match: item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
                         
-                        # 2. 🚨 终极兜底：如果常规匹配全军覆没（AI没写周期/止损），直接整段暴力抓取！
+                        # 2. 🚨 终极兜底：如果常规匹配全军覆没，直接整段暴力抓取！
                         if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
                             fallback = re.search(r'风控底线.*?</span>([^<]+)', block)
                             if fallback:
                                 raw_text = fallback.group(1).strip()
-                                # 尝试按 | 切割，切不成直接全塞进 Stop_Loss，保证数据不丢
                                 if '|' in raw_text:
                                     item['Hold_Period'] = raw_text.split('|')[0].strip(' []')
                                     item['Stop_Loss'] = raw_text.split('|')[1].strip(' []')
@@ -341,8 +340,9 @@ if __name__ == "__main__":
         with open(log_file, "a", encoding="utf-8") as f:
             if need_header:
                 f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss\n")
-            ts = datetime.datetime.now().strftime('%Y-%m-%d')
+            ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
             for i in chosen: 
-                f.write(f"{ts},{i['Ticker']},{i['Name']},{i['Tag']},{i['Score']},{i['Price']},{i.get('RSI',0)},{i.get('Bias',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
+                # 🛡️ 终极安全写入：所有字段都使用 .get() 方法，字典里就算真没有也不会报错！
+                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','')},{i.get('Price','')},{i.get('RSI',0)},{i.get('Bias',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
     except Exception as e:
         print(f"⚠️ 账本写入失败: {e}")
