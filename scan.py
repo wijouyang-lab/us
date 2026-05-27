@@ -49,32 +49,49 @@ def get_api_key():
     return key
 
 # ==========================================
-# 📊 1. 获取当日成交额 Top 100
+# 📊 1. 获取标的池 (绕过付费墙，使用免费成分股接口)
 # ==========================================
 def get_scan_pool():
     tickers = {}
-    print("📡 正在调用 FMP 双引擎抓取美股高成交额标的...")
+    print("📡 正在调用 FMP 抓取标的池 (使用免费白名单接口)...")
     try:
-        url = f"https://financialmodelingprep.com/api/v3/stock-screener?marketCapMoreThan=1000000000&volumeMoreThan=5000000&exchange=NYSE,NASDAQ&limit=200&apikey={get_api_key()}"
-        res = requests.get(url, timeout=10).json()
-        sorted_stocks = sorted(res, key=lambda x: x.get('price', 0) * x.get('volume', 0), reverse=True)[:100]
-        for s in sorted_stocks:
-            tickers[s['symbol']] = s['companyName']
-        if not tickers: raise ValueError("Empty response")
-        print(f"✅ 成功锁定 {len(tickers)} 只流动性最强标的。")
+        # 1. 抓取纳斯达克 100 (科技股主战场)
+        url1 = f"https://financialmodelingprep.com/api/v3/nasdaq_constituent?apikey={get_api_key()}"
+        res1 = requests.get(url1, timeout=10).json()
+        if isinstance(res1, dict) and "Error Message" in res1:
+            print(f"⚠️ 纳斯达克接口受限: {res1['Error Message']}")
+        elif isinstance(res1, list):
+            # 取前 50 只纳斯达克头部
+            for s in res1[:50]: tickers[s['symbol']] = s['name']
+            
+        # 2. 抓取标普 500 (蓝筹主战场)
+        url2 = f"https://financialmodelingprep.com/api/v3/sp500_constituent?apikey={get_api_key()}"
+        res2 = requests.get(url2, timeout=10).json()
+        if isinstance(res2, dict) and "Error Message" in res2:
+            print(f"⚠️ 标普接口受限: {res2['Error Message']}")
+        elif isinstance(res2, list):
+            # 再取前 40 只标普头部 (控制总数在 90 以内，保护 250 次/天的免费额度)
+            for s in res2[:40]:
+                if s['symbol'] not in tickers: # 自动去重
+                    tickers[s['symbol']] = s['name']
+        
+        if not tickers: raise ValueError("返回数据为空，请检查 API Key 状态")
+        print(f"✅ 成功锁定 {len(tickers)} 只核心标的。")
+        
     except Exception as e:
         print(f"⚠️ 筛选器异常，启用核心备用池: {e}")
-        tickers = {"NVDA":"英伟达", "AAPL":"苹果", "MSFT":"微软", "AMZN":"亚马逊", "TSLA":"特斯拉", "META":"Meta", "AVGO":"博通"}
+        tickers = {"NVDA":"英伟达", "AAPL":"苹果", "MSFT":"微软", "AMZN":"亚马逊", "TSLA":"特斯拉", "META":"Meta", "AVGO":"博通", "AMD":"超威", "NFLX":"奈飞", "GOOGL":"谷歌"}
+        
     return tickers
 
 ACTIVE_STOCKS = get_scan_pool()
 
-# 🛡️ 核心升级：增加重试机制和安全的休眠时间，防止 API 瘫痪
+# 🛡️ 增加重试机制和安全的休眠时间，防止拉取 K 线时 API 瘫痪
 def get_kline_data(ticker):
     url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?timeseries=100&apikey={get_api_key()}"
-    for attempt in range(3): # 最多尝试 3 次
+    for attempt in range(3): 
         try:
-            time.sleep(0.5) # 延长休眠时间，降低触发 FMP 频率限制的风险
+            time.sleep(0.5) 
             res = requests.get(url, timeout=5).json()
             if 'historical' in res:
                 df = pd.DataFrame(res['historical'])
@@ -84,7 +101,7 @@ def get_kline_data(ticker):
                 df.set_index('Date', inplace=True)
                 return df
         except Exception:
-            time.sleep(2) # 如果报错，停顿 2 秒后再重试
+            time.sleep(2) 
     return pd.DataFrame()
 
 # ==========================================
@@ -109,18 +126,14 @@ def run_quant_filter(tickers):
             abs_bias = abs(bias)
             
             score = 0
-            # 🚫 彻底取消一票否决，全部改为加减分机制
-            # 1. MACD 动能判定
             if latest['MACDh'] > prev['MACDh']: score += 40
             elif latest['MACDh'] > 0: score += 15
-            else: score -= 20 # 绿柱放大扣分
+            else: score -= 20 
             
-            # 2. RSI 状态判定
             if 40 <= latest['RSI'] <= 70: score += 30  
-            elif latest['RSI'] > 70: score -= 20 # 超买区风险扣分
-            elif latest['RSI'] < 40: score -= 20 # 弱势区风险扣分
+            elif latest['RSI'] > 70: score -= 20 
+            elif latest['RSI'] < 40: score -= 20 
             
-            # 3. 乖离率判定 (偏离 20日线越远，扣分越狠)
             score += (0.15 - abs_bias) * 100 
             
             scored_stocks.append({
@@ -130,10 +143,8 @@ def run_quant_filter(tickers):
         except Exception: 
             continue
         
-    # 按照分数从高到低强制排序
     scored_stocks = sorted(scored_stocks, key=lambda x: x['Score'], reverse=True)
     
-    # 无论多烂，强制返回相对最好的前3、前10，和倒数的坑货
     top = scored_stocks[:3]
     mid = scored_stocks[3:10]
     bottom = scored_stocks[-2:] if len(scored_stocks) >= 12 else []
@@ -177,7 +188,7 @@ else:
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
                 <li><b>建议行权价与到期日：</b>(明确建议)</li>
                 <li><b>期权组合构建：</b>(单腿买入还是价差防守策略？)</li>
-                <li><b>风控核对单：</b>(止损纪律与财报避险)</li>
+                <li><b>风控核单单：</b>(止损纪律与财报避险)</li>
             </ul>
         </div>
     </div>
@@ -189,7 +200,7 @@ else:
         <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核单单：</b>(...)</li></ul>
         </div>
     </div>
     
@@ -200,7 +211,7 @@ else:
         <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
+            <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核单单：</b>(...)</li></ul>
         </div>
     </div>
 
@@ -275,7 +286,6 @@ def send_mail(to_emails, subject, content):
     except Exception as e: print(f"❌ 发送失败 ({to_emails}): {e}")
 
 if __name__ == "__main__":
-    # 🌟 强制先存 HTML 到本地，确保绝对生成 report.html
     try:
         with open("report.html", "w", encoding="utf-8") as f:
             f.write(full_html)
@@ -286,7 +296,6 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
-    # 🎯 核心升级：利用严谨正则抓取美股的周期和止损
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
@@ -317,7 +326,6 @@ if __name__ == "__main__":
             
             chosen.append(item)
     
-    # 🗂️ 写入带风控参数的历史账本
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
