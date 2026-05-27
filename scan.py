@@ -5,7 +5,6 @@ import datetime
 import os
 import smtplib
 import time
-import requests
 import re
 import tushare as ts
 from email.mime.text import MIMEText
@@ -19,36 +18,27 @@ if today >= 5:
     exit()
 
 TARGET_MODEL = 'gemini-3.1-pro-preview' 
-TARGET_REGION = "美国市场"
+TARGET_REGION = "美国市场 (纯 Tushare 引擎)"
 
 # 🔑 读取关键环境变量
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 TS_TOKEN = os.environ.get("TUSHARE_TOKEN")
-FMP_KEYS = [os.environ.get("FMP_KEY_1"), os.environ.get("FMP_KEY_2")]
-FMP_KEYS = [k for k in FMP_KEYS if k]
 
-if not SUPER_ADMIN or not TS_TOKEN or not FMP_KEYS:
-    print("🚨 致命错误：API 密钥不全，请检查 GitHub Secrets (需 TARGET_EMAILS, TUSHARE_TOKEN, FMP_KEY_1)！")
+if not SUPER_ADMIN or not TS_TOKEN:
+    print("🚨 致命错误：未检测到 TARGET_EMAILS 或 TUSHARE_TOKEN！请检查 GitHub Secrets！")
     exit(1)
-
-_key_index = 0
-def get_api_key():
-    global _key_index
-    key = FMP_KEYS[_key_index % len(FMP_KEYS)]
-    _key_index += 1
-    return key
 
 print(f"🚀 启动：相对强度(Alpha)强制排序引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
 
 # ==========================================
-# 📊 1. 获取标的池 (Tushare 驱动，避开 FMP 付费拦截)
+# 📊 1. 获取标的池 (Tushare 驱动，筛选成交活跃 Top 100)
 # ==========================================
+ts.set_token(TS_TOKEN)
+pro = ts.pro_api()
+
 def get_scan_pool():
     tickers = {}
     print("📡 正在调用 Tushare 获取美股高活跃标的池...")
-    ts.set_token(TS_TOKEN)
-    pro = ts.pro_api()
-    
     try:
         for i in range(1, 10):
             trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
@@ -67,53 +57,52 @@ def get_scan_pool():
                     
                 for t in raw_tickers:
                     clean_ticker = t.split('.')[0] if '.' in t else t
-                    tickers[clean_ticker] = name_map.get(t, clean_ticker)
+                    tickers[t] = name_map.get(t, clean_ticker) # 使用真实 ts_code 作为 key
                 break
                 
         if not tickers:
             raise ValueError("Tushare 返回为空，触发备用池。")
             
     except Exception as e:
-        print(f"⚠️ Tushare 数据拉取受限 ({e})，启用备用美股超级核心池...")
-        tickers = {
-            "NVDA": "NVIDIA", "AAPL": "Apple", "MSFT": "Microsoft", "AMZN": "Amazon", 
-            "TSLA": "Tesla", "META": "Meta Platforms", "AVGO": "Broadcom", "AMD": "AMD", 
-            "NFLX": "Netflix", "GOOGL": "Alphabet", "MSTR": "MicroStrategy", "COIN": "Coinbase",
-            "SMCI": "Super Micro", "PLTR": "Palantir", "ARM": "Arm Holdings", "TSM": "TSMC"
-        }
+        print(f"⚠️ Tushare 数据拉取受限 ({e})，启用备用核心池...")
+        tickers = {"NVDA": "NVIDIA", "AAPL": "Apple", "MSFT": "Microsoft", "TSLA": "Tesla"}
     return tickers
 
 ACTIVE_STOCKS = get_scan_pool()
 
 # ==========================================
-# 📈 2. 深度 K 线拉取 (FMP 免费接口驱动，避开 YFinance 封IP)
+# 📈 2. 深度 K 线拉取 (依然是 Tushare！绝不封IP)
 # ==========================================
-def get_kline_data(ticker):
-    url = f"https://financialmodelingprep.com/api/v3/historical-price-full/{ticker}?timeseries=100&apikey={get_api_key()}"
+def get_kline_data(ts_code):
+    end_dt = datetime.datetime.now().strftime('%Y%m%d')
+    start_dt = (datetime.datetime.now() - datetime.timedelta(days=150)).strftime('%Y%m%d')
+    
     for attempt in range(3):
         try:
-            time.sleep(0.1) # FMP 允许较快请求
-            res = requests.get(url, timeout=5).json()
-            if 'historical' in res:
-                df = pd.DataFrame(res['historical'])
-                df = df.iloc[::-1].reset_index(drop=True)
-                df.rename(columns={'date':'Date', 'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'volume':'Volume'}, inplace=True)
-                df['Date'] = pd.to_datetime(df['Date'])
+            time.sleep(0.2) # 防止调用过快被 Tushare 限流
+            df = pro.us_daily(ts_code=ts_code, start_date=start_dt, end_date=end_dt)
+            if df is not None and not df.empty:
+                # 转换列名以适配 pandas_ta
+                df['Date'] = pd.to_datetime(df['trade_date'])
                 df.set_index('Date', inplace=True)
+                df.rename(columns={'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'vol':'Volume'}, inplace=True)
+                
+                # 🚨 极其关键：Tushare 数据默认是倒序，必须按时间升序重排，否则 MACD/RSI 全部算反！
+                df.sort_index(ascending=True, inplace=True)
                 return df
         except Exception:
             time.sleep(1)
     return pd.DataFrame()
 
 # ==========================================
-# 🧠 3. 全量相对打分引擎 (绝不空仓)
+# 🧠 3. 全量相对打分引擎
 # ==========================================
 def run_quant_filter(tickers):
     scored_stocks = []
-    print(f"🌊 启动波段评分引擎，采用【全市场强制排序】，扫描 {len(tickers)} 只标的...")
-    for ticker, name in tickers.items():
+    print(f"🌊 启动纯血 Tushare 波段评分引擎，扫描 {len(tickers)} 只标的...")
+    for ts_code, name in tickers.items():
         try:
-            df = get_kline_data(ticker)
+            df = get_kline_data(ts_code)
             if df is None or df.empty or len(df) < 40: continue
             
             df['MACDh'] = ta.macd(df['Close']).iloc[:, 1] 
@@ -137,8 +126,9 @@ def run_quant_filter(tickers):
             
             score += (0.15 - abs_bias) * 100 
             
+            clean_ticker = ts_code.split('.')[0] if '.' in ts_code else ts_code
             scored_stocks.append({
-                "Ticker": ticker, "Name": name, "Price": round(latest['Close'], 2), 
+                "Ticker": clean_ticker, "Name": name, "Price": round(latest['Close'], 2), 
                 "Score": round(score, 1), "RSI": round(latest['RSI'], 1), "Bias": round(bias * 100, 2)
             })
         except Exception: 
@@ -155,13 +145,13 @@ def run_quant_filter(tickers):
 top_3, next_7, traps = run_quant_filter(ACTIVE_STOCKS)
 
 # ==========================================
-# 🤖 4. 3.1 Pro 深度推演 (美股定制排版)
+# 🤖 4. 3.1 Pro 深度推演 (HTML 保持不变)
 # ==========================================
 client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 
 ai_generated_html = ""
 if not top_3:
-    ai_generated_html = "<div class='top-card'>数据源拉取异常，无法获取K线数据。</div>"
+    ai_generated_html = "<div class='top-card'>Tushare 数据源拉取异常，无法获取K线数据。</div>"
 else:
     print(f"🧠 触发 3.1 Pro 引擎：执行【相对强度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
@@ -183,7 +173,6 @@ else:
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (剖析催化剂与基本面逻辑)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (结合乖离率与MACD说明技术形态)</p>
         <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
-        
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
@@ -270,7 +259,7 @@ style = """
 full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>"
 
 # ==========================================
-# 📧 6. 邮件分发与强制保存
+# 📧 6. 邮件分发与强制入库
 # ==========================================
 def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
