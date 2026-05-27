@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
-import pandas_ta as ta  # 这里必须是 pandas_ta，且名字是 ta
+import pandas_ta as ta  
 import datetime
 import os
 import smtplib
@@ -19,7 +19,12 @@ if today >= 5:
 
 TARGET_MODEL = 'gemini-3.1-pro-preview' 
 TARGET_REGION = "美国市场"
-SUPER_ADMIN = "907359319@qq.com"
+
+# 🔑 从 GitHub Secrets 读取收件人邮箱
+SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
+if not SUPER_ADMIN:
+    print("🚨 致命错误：未检测到目标收件邮箱！请检查 GitHub Secrets 中的 TARGET_EMAILS！")
+    exit(1)
 
 print(f"🚀 启动：相对强度(Alpha)排位赛引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
 
@@ -30,7 +35,6 @@ FMP_KEYS = [
     os.environ.get("FMP_KEY_1"),
     os.environ.get("FMP_KEY_2")
 ]
-# 过滤掉空的键
 FMP_KEYS = [k for k in FMP_KEYS if k]
 
 if not FMP_KEYS:
@@ -129,7 +133,7 @@ client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
 if not top_3:
     ai_generated_html = "<div class='top-card'>无符合苛刻条件的标的，今日空仓。</div>"
 else:
-    print(f"🧠 触发 3.1 Pro 引擎：执行【美股前3深度分析 + 期权看板 + 避雷组】...")
+    print(f"🧠 触发 3.1 Pro 引擎：执行【美股前3深度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
     你是华尔街顶级量化游资操盘手及高级期权策略师。今日系统筛选出了符合“MACD金叉/绿柱缩短 + 乖离率<15%”的美股标的。
     请结合你的宏观和消息面数据库，对这批标的进行深度排版输出。看涨需标红(#d32f2f)，看跌需标绿(#388e3c)。
@@ -146,6 +150,7 @@ else:
         <div class="top-title" style="color: #d32f2f;">1. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (剖析催化剂与基本面逻辑)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (结合乖离率与MACD说明技术形态)</p>
+        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> (必须明确【预计持股周期(如3-8天)】和【具体止损价位】)</p>
         
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -156,19 +161,23 @@ else:
             </ul>
         </div>
     </div>
+    
     <div class="top-card core-card">
         <div class="top-title" style="color: #d32f2f;">2. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (...)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (...)</p>
+        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> (必须明确【预计持股周期(天数)】和【具体止损价位】)</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
         </div>
     </div>
+    
     <div class="top-card core-card">
         <div class="top-title" style="color: #d32f2f;">3. [中文股票名] ([代码]) | 波段评分: [Score]分</div>
         <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> (...)</p>
         <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> (...)</p>
+        <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> (必须明确【预计持股周期(天数)】和【具体止损价位】)</p>
         <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
             <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
             <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li><li><b>风控核对单：</b>(...)</li></ul>
@@ -219,6 +228,7 @@ style = """
     .highlight-label { display: inline-block; font-weight: bold; color: #fff; padding: 3px 8px; border-radius: 4px; margin-right: 6px; font-size: 13px;}
     .bg-red { background: #d32f2f; }
     .bg-blue { background: #1976d2; }
+    .bg-orange { background: #e64a19; }
     .compare-card { border-left: 5px solid #ff9800; background: #fffdf7; padding: 25px; margin-bottom: 25px; border-radius: 10px; border: 1px solid #ffe0b2;}
     .compare-title { font-size: 19px; color: #e65100; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #ffe0b2; padding-bottom: 10px;}
     ul { padding-left: 22px; margin-top: 0;}
@@ -231,16 +241,21 @@ full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><bo
 # ==========================================
 # 📧 5. 邮件分发与保存
 # ==========================================
-def send_mail(to, subject, content):
+def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
     if not user: return
-    msg = MIMEMultipart(); msg['From'] = user; msg['To'] = to; msg['Subject'] = subject
+    
+    # 支持多个收件人逗号分隔
+    to_list = [email.strip() for email in to_emails.split(',')]
+    
+    msg = MIMEMultipart(); msg['From'] = user; msg['Subject'] = subject
     msg.attach(MIMEText(content, 'html'))
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-            s.login(user, pwd); s.send_message(msg)
-            print(f"✅ 内参已精准发送至: {to}")
-    except Exception as e: print(f"❌ 发送失败 ({to}): {e}")
+            s.login(user, pwd); 
+            s.sendmail(user, to_list, msg.as_string())
+            print(f"✅ 内参已精准密送至: {to_emails}")
+    except Exception as e: print(f"❌ 发送失败 ({to_emails}): {e}")
 
 if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
