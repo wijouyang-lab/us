@@ -294,19 +294,17 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
-    # 🎯 核心逻辑：这就是你说的“扫描邮件内容”，放入表格！
+    # 🎯 终极杀手锏：洗掉所有 HTML 标签，用纯文本提取，专治大模型各种花式排版！
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
     
     for item in all_scanned:
-        # 扫描邮件源码，看这只股票在不在里面
         if item['Ticker'] in ai_generated_html:
             tag = "Trap_Warning" 
             if any(x['Ticker'] == item['Ticker'] for x in top_3): tag = "Core_Dragon"
             elif any(x['Ticker'] == item['Ticker'] for x in next_7): tag = "Observation"
             
-            # 🚨 绝对初始化：强行把键先写进字典里
             item['Tag'] = tag
             item['Hold_Period'] = "N/A"
             item['Stop_Loss'] = "N/A"
@@ -314,21 +312,29 @@ if __name__ == "__main__":
             if tag == "Core_Dragon":
                 for block in blocks:
                     if item['Ticker'] in block or item['Name'] in block:
-                        # 扫描这块邮件 HTML 里的周期和止损
-                        period_match = re.search(r'周期\s*[:：]\s*([^|<，,]+)', block)
-                        sl_match = re.search(r'止损\s*[:：]\s*([^<]+)', block)
+                        # 🚨 关键净化：把这段代码里所有的 <标签> 全部扒掉，只留纯文字！
+                        # 这样哪怕 AI 偷偷加了 <b>周期</b>，也会变成干干净净的文字！
+                        clean_text = re.sub(r'<[^>]+>', '', block) 
+                        clean_text = clean_text.replace('\n', ' ').replace('&nbsp;', ' ')
                         
-                        if period_match: item['Hold_Period'] = period_match.group(1).strip(' []【】')
-                        if sl_match: item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
+                        # 现在文本非常干净，类似："...风控底线: 周期: 5-8天 | 止损: 跌破26.00 🎲 美股专属..."
+                        period_match = re.search(r'周期\s*[:：]\s*([^|]+)', clean_text)
+                        # 匹配到“🎲”或者“美股”字样前停止，防止抓太多
+                        sl_match = re.search(r'止损\s*[:：]\s*(.*?)(?=🎲|美股|期权|$)', clean_text)
                         
-                        # 终极兜底：如果没扫到，就直接扫“风控底线”后面的整句话
+                        if period_match: 
+                            item['Hold_Period'] = period_match.group(1).strip(' []【】')
+                        if sl_match: 
+                            item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
+                            
+                        # 兜底：如果上面还是挂了，直接把“风控底线”后面的整句话塞进去
                         if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
-                            fallback = re.search(r'风控底线.*?</span>([^<]+)', block)
+                            fallback = re.search(r'风控底线\s*[:：]\s*(.*?)(?=🎲|美股|期权|$)', clean_text)
                             if fallback:
                                 raw_text = fallback.group(1).strip()
                                 if '|' in raw_text:
-                                    item['Hold_Period'] = raw_text.split('|')[0].strip(' []')
-                                    item['Stop_Loss'] = raw_text.split('|')[1].strip(' []')
+                                    item['Hold_Period'] = raw_text.split('|')[0].replace('周期:', '').replace('周期：', '').strip(' []')
+                                    item['Stop_Loss'] = raw_text.split('|')[1].replace('止损:', '').replace('止损：', '').strip(' []')
                                 else:
                                     item['Stop_Loss'] = raw_text 
                         break
@@ -343,7 +349,6 @@ if __name__ == "__main__":
                 f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss\n")
             ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
             for i in chosen: 
-                # 🛡️ 终极防弹写入：使用 .get()，哪怕前面的扫描全军覆没，这里也绝不报错！
                 f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','')},{i.get('Price','')},{i.get('RSI',0)},{i.get('Bias',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
     except Exception as e:
         print(f"⚠️ 账本写入失败: {e}")
