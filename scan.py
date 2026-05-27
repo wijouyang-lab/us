@@ -55,7 +55,6 @@ def get_scan_pool():
                 df_sorted = df.sort_values('vol', ascending=False).head(100)
                 raw_tickers = df_sorted['ts_code'].tolist()
                 
-                # 尝试获取公司名称
                 try:
                     basic = pro.us_basic()
                     name_map = dict(zip(basic['ts_code'], basic['enname']))
@@ -86,7 +85,6 @@ ACTIVE_STOCKS = get_scan_pool()
 # 📈 2. 深度 K 线拉取 (YFinance 免费引擎驱动)
 # ==========================================
 def get_kline_data(ticker):
-    # 使用 yfinance 获取长线 K 线，完全免费、无频控
     for attempt in range(3): 
         try:
             stock = yf.Ticker(ticker)
@@ -96,7 +94,7 @@ def get_kline_data(ticker):
                 
             df.reset_index(inplace=True)
             df.rename(columns={'Date':'Date', 'Open':'Open', 'High':'High', 'Low':'Low', 'Close':'Close', 'Volume':'Volume'}, inplace=True)
-            # 处理时区问题，防止 pandas_ta 报错
+            
             if df['Date'].dt.tz is not None:
                 df['Date'] = df['Date'].dt.tz_localize(None)
             df.set_index('Date', inplace=True)
@@ -297,6 +295,7 @@ if __name__ == "__main__":
     mail_subject = f"🔥【纯美股期权版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
     
+    # 🎯 核心升级：流氓级宽容正则抓取周期和止损
     chosen = []
     blocks = re.split(r'<div class="top-card', ai_generated_html)
     all_scanned = top_3 + next_7 + traps
@@ -313,16 +312,16 @@ if __name__ == "__main__":
             
             if tag == "Core_Dragon":
                 for block in blocks:
-                    if item['Ticker'] in block or item['Name'] in block:
-                        period_match = re.search(r'风控底线:</span>\s*周期:\[?([^\s|<,\]]+)', block)
-                        sl_match = re.search(r'止损:\[?([^<\]]+)', block)
-                        if not sl_match:
-                            sl_match = re.search(r'风控底线:</span>\s*周期:[^|,<]+[|,<]\s*([^<]+)', block)
+                    # 确保匹配到对应的股票区块
+                    if item['Ticker'] in block:
+                        # 极度宽容正则：不论全角半角冒号、不管有无方括号、不管有没有空格
+                        period_match = re.search(r'周期\s*[:：]\s*\[?([^|，,\]<]+)', block)
+                        sl_match = re.search(r'止损\s*[:：]\s*\[?([^\]<]+)', block)
                         
-                        if period_match: item['Hold_Period'] = period_match.group(1).strip()
+                        if period_match: 
+                            item['Hold_Period'] = period_match.group(1).strip()
                         if sl_match: 
-                            raw_sl = sl_match.group(1).strip()
-                            item['Stop_Loss'] = re.sub(r'</?p>', '', raw_sl).strip()
+                            item['Stop_Loss'] = sl_match.group(1).strip()
                         break
             
             chosen.append(item)
