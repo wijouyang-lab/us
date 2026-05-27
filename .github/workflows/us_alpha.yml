@@ -49,6 +49,9 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "Alpha Bot"
+        # -A 参数会自动把所有新生成的文件（包括更新后的 CSV）全部打包，无需改动
         git add -A
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update quant logs"
+        git push
         git diff --quiet && git diff --staged --quiet || git commit -m "Auto update quant logs"
         git push
