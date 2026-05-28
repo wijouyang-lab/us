@@ -18,61 +18,70 @@
 </head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：美国市场 (纯 Tushare 引擎)</h1>
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #0d47a1;">🌍 宏观资金定调与 Alpha 相对评级</h3>
-    <p>今日美股盘面呈现出典型的“杠铃策略”流动性特征：资金一方面在向具备强劲现金流和AI基础设施垄断地位的巨头（如AMZN）中寻找避风港，另一方面在中小盘题材股（如BBAI、ONDS）中进行高Beta的游资博弈。从量化相对强度系统来看，加密货币与新能源板块（WULF, PLUG）短期乖离率过高，面临极强的均值回归压力；而传统零售巨头（WMT）则遭遇机构资金的无情抛售。今日策略定调为：<b>重仓锚定核心科技巨头低吸，轻仓利用期权杠杆参与中小盘AI与硬科技的右侧动量，严格规避高乖离诱多标的。</b></p>
+    <p>当前美股市场流动性充裕，但板块轮动与资金分歧正在剧烈加剧。从今日系统筛选的13只标的来看，市场呈现出极端的“哑铃型”特征：一端是如亚马逊（AMZN）等核心科技巨头与新兴市场宽基（EEM）在稳健的量价结构中持续吸筹，展现出极强的Alpha确定性；另一端则是大量微盘股、毛票（如NCPL、QTTB）在极度超买的RSI和夸张的乖离率下上演“击鼓传花”的诱多逼空。作为量化游资，我们的核心策略是：<b>重仓拥抱具备基本面支撑与健康技术形态的核心资产，利用期权杠杆放大收益；同时对高乖离、无流动性的异常标的（如RGBP）和缩量诱多盘坚决亮起红灯，绝不接盘。</b></p>
 </div>
 
 <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 相对强度优选 (Top 1-3)</h2>
-<div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">1. 亚马逊 (AMZN) | 波段评分: 84.2分</div>
-    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> AWS云业务受AI算力需求驱动持续超预期，电商基本盘在降本增效下利润率不断扩张。作为科技七巨头中估值与成长性匹配度极高的标的，机构底仓配置意愿极强。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> 当前 RSI 为 56.6，处于极其健康的温和多头区间；乖离率 (Bias) 为 -0.75%，说明股价刚刚完成对短期均线的良性回踩，洗盘充分，量价配合完美，是绝佳的右侧起涨点。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:10-15天 | 止损:跌破 255.00 美元（约-4%）</p>
+<div class="top-card core-card" style="margin-bottom: 20px;">
+    <div class="top-title" style="color: #d32f2f; font-size: 18px; font-weight: bold; margin-bottom: 10px;">1. Regen BioPharma (RGBP) | 波段评分: 0分 (系统数据异常警报)</div>
+    <p><span class='highlight-label bg-red' style="background: #ffebee; color: #c62828; padding: 3px 6px; border-radius: 4px; font-weight: bold;">🔥 基本面与消息面:</span> 本标的为粉单市场微盘股，当前报价为0.0，系统评分失效（NaN）。此类标的通常面临退市、破产重组或流动性彻底枯竭，毫无机构资金关注，属于量化风控模型中的“黑名单”资产。</p>
+    <p><span class='highlight-label bg-blue' style="background: #e3f2fd; color: #1565c0; padding: 3px 6px; border-radius: 4px; font-weight: bold;">📈 技术面与量价:</span> RSI仅为37.8处于弱势阴跌区，乖离率数据缺失。盘面呈现死水状态，无任何有效量价配合可言，技术分析在此类标的上完全失效，极易遭遇流动性陷阱。</p>
+    <p><span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 3px 6px; border-radius: 4px; font-weight: bold;">⚠️ 潜伏与风控底线:</span> 周期:坚决空仓 | 止损:绝对规避</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入 30-45天后到期，行权价为 265 美元的平值看涨期权 (ATM Call)。</li><li><b>期权组合构建：</b>构建<b>牛市看涨价差 (Bull Call Spread)</b>。买入 265 Call 的同时，卖出 275 Call。此举可大幅降低权利金成本，对冲隐含波动率下降的风险，锁定波段利润。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+            <li><b>建议行权价与到期日：</b>无期权链，严禁任何衍生品交易。</li>
+            <li><b>期权组合构建：</b>放弃关注，将资金效率留给核心优质标的。</li>
+        </ul>
     </div>
 </div>
 
-<div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">2. BIGBEAR AI HOLDINGS (BBAI) | 波段评分: 83.9分</div>
-    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> 作为AI国防与企业级数据分析的小盘妖股，近期受军工信息化订单及AI边缘计算概念催化，游资接力意愿强烈，属于典型的高弹性情绪标的。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> RSI 录得 54.3，乖离率 1.12%。在经历前期爆炒后，指标已修复至中性偏强区域，横盘蓄势特征明显，主力资金在均线附近密集换手，随时可能启动下一波主升浪。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:3-5天 | 止损:跌破 3.80 美元（破位即走，严禁死扛）</p>
+<div class="top-card core-card" style="margin-bottom: 20px;">
+    <div class="top-title" style="color: #d32f2f; font-size: 18px; font-weight: bold; margin-bottom: 10px;">2. 亚马逊 (AMZN) | 波段评分: 83.5分</div>
+    <p><span class='highlight-label bg-red' style="background: #ffebee; color: #c62828; padding: 3px 6px; border-radius: 4px; font-weight: bold;">🔥 基本面与消息面:</span> AWS云业务与AI变现持续超预期，电商基本盘利润率稳步提升。作为科技七巨头（Magnificent 7）中的核心压舱石，机构资金抱团逻辑坚不可摧，具备极强的抗宏观波动能力。</p>
+    <p><span class='highlight-label bg-blue' style="background: #e3f2fd; color: #1565c0; padding: 3px 6px; border-radius: 4px; font-weight: bold;">📈 技术面与量价:</span> 现价271.85，RSI 62.7处于极其健康的多头蓄力区间。乖离率仅为1.47%，说明股价贴近均线稳步推升，未出现透支性超买，MACD水上金叉发散，量价配合堪称教科书级别。</p>
+    <p><span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 3px 6px; border-radius: 4px; font-weight: bold;">⚠️ 潜伏与风控底线:</span> 周期:15-30天 | 止损:跌破260美元核心支撑位</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入 30天后到期，行权价为 4.00 美元的实值看涨期权 (ITM Call)。</li><li><b>期权组合构建：</b>单腿买入 <b>Long Call</b>。由于标的股价极低，直接买入实值期权代替正股，既能享受高Delta带来的爆发收益，又能将最大亏损严格限制在权利金范围内。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+            <li><b>建议行权价与到期日：</b>买入45天后到期，行权价为275美元的Call，同时卖出同到期日285美元的Call。</li>
+            <li><b>期权组合构建：</b>构建牛市看涨价差（Bull Call Spread）。此策略可有效对冲大盘高位震荡带来的隐含波动率（IV）回落风险，以极高的盈亏比博弈其突破前高。</li>
+        </ul>
     </div>
 </div>
 
-<div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">3. ONDAS HOLDINGS (ONDS) | 波段评分: 83.2分</div>
-    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> 主营专网无线电与自动化无人机网络，受益于工业自动化与低空经济概念的溢出效应。市值较小，容易受单一利好消息刺激产生脉冲式拉升。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> RSI 为 50.7，乖离率 1.75%。技术形态呈现经典的“多头揉搓线”结构，动能指标处于绝对中性，说明多空双方在此价位达成短暂平衡，向上变盘的阻力极小。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:5-8天 | 止损:跌破 8.90 美元</p>
+<div class="top-card core-card" style="margin-bottom: 20px;">
+    <div class="top-title" style="color: #d32f2f; font-size: 18px; font-weight: bold; margin-bottom: 10px;">3. 新兴市场ETF (EEM) | 波段评分: 81.3分</div>
+    <p><span class='highlight-label bg-red' style="background: #ffebee; color: #c62828; padding: 3px 6px; border-radius: 4px; font-weight: bold;">🔥 基本面与消息面:</span> 随着美元指数高位震荡显露疲态，全球宏观资金开始进行高低切，向估值洼地的新兴市场溢出。EEM作为承接外资回流的核心宽基，具备极强的宏观Beta属性。</p>
+    <p><span class='highlight-label bg-blue' style="background: #e3f2fd; color: #1565c0; padding: 3px 6px; border-radius: 4px; font-weight: bold;">📈 技术面与量价:</span> 现价68.39，RSI 64.2动能充沛。乖离率3.69%显示突破有效且未过度透支，均线系统呈现完美的多头排列，底部筹码锁定良好，属于典型的右侧主升浪形态。</p>
+    <p><span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 3px 6px; border-radius: 4px; font-weight: bold;">⚠️ 潜伏与风控底线:</span> 周期:20-45天 | 止损:日线收盘跌破65.5美元</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入 45天后到期，行权价为 10.00 美元的虚值看涨期权 (OTM Call)。</li><li><b>期权组合构建：</b>采用 <b>日历价差 (Calendar Spread)</b> 或直接单腿买入。若预期短期震荡后爆发，可卖出近月 10.00 Call，买入远月 10.00 Call，降低持仓成本并赚取时间价值。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
+            <li><b>建议行权价与到期日：</b>买入60天后到期，行权价为68美元的平值看涨期权（ATM Call）。</li>
+            <li><b>期权组合构建：</b>单腿买入实值/平值Call替代正股（Stock Replacement）。由于ETF波动率较低，直接买入Call资金占用小，且能完美吃到趋势向上的Delta收益，下行风险仅限权利金。</li>
+        </ul>
     </div>
 </div>
 
-<div class="compare-card">
-    <div class="compare-title">🎖️ 满编观察池及硬伤诊断 (Rank 4-10)</div>
-    <ul>
-        <li><b>4. SCO (SCO) - 评分:81.7分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>作为原油两倍做空ETF，当前 RSI 仅 47.1，动能偏弱。地缘政治不确定性极高，做空原油的宏观胜率在当前节点并不稳固。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:2-4天短打 | 止损:跌破 6.30 美元</li>
-        <li><b>5. 特斯拉 (TSLA) - 评分:79.8分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率达到 5.24%，RSI 60.8。短期受Robotaxi及政策预期炒作涨幅过大，面临获利盘兑现压力，需等待回踩20日均线确认支撑。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:观望等待回撤 | 止损:跌破 415.00 美元</li>
-        <li><b>6. UIPATH (PATH) - 评分:79.5分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 5.47% 偏高，上方套牢盘沉重。虽然RSI(56.7)尚可，但缺乏强有力的基本面反转催化剂，容易冲高回落。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:5-7天 | 止损:跌破 10.20 美元</li>
-        <li><b>7. 派乐腾 (PTON) - 评分:77.4分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>RSI 高达 64.9 逼近超买，乖离率 7.57%。困境反转逻辑已被部分计价，短期资金博弈过热，追高极易被套。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:观望 | 止损:跌破 5.20 美元</li>
-        <li><b>8. OPENDOOR (OPEN) - 评分:76.8分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 -8.18%，RSI 40.8。典型的左侧下降通道，高息环境对房地产科技股压制仍在，属于“接飞刀”形态，切勿盲目抄底。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:坚决观望 | 止损:若持有则跌破 4.00 必须斩仓</li>
-        <li><b>9. TERAWULF (WULF) - 评分:74.0分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率高达 11.02%，严重透支短期涨幅。作为加密货币挖矿股，受比特币波动影响极大，当前技术面极度超伸，随时面临暴跌洗盘。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:1-2天极短线 | 止损:跌破 23.50 美元</li>
-        <li><b>10. 普拉格能源 (PLUG) - 评分:73.3分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 11.68%，全场最高之一。基本面持续烧钱且盈利遥遥无期，近期的拉升纯属空头回补与垃圾股炒作，动能无法持续。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:观望 | 止损:跌破 3.50 美元</li>
+<div class="compare-card" style="margin-bottom: 25px;">
+    <div class="compare-title" style="font-size: 18px; font-weight: bold; color: #2e7d32; margin-bottom: 15px;">🎖️ 满编观察池及硬伤诊断 (Rank 4-10)</div>
+    <ul style="line-height: 1.8;">
+        <li style="margin-bottom: 10px;"><b>4. AIM IMMUNOTECH (AIM) - 评分:78.9分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>股价仅0.4美元的生物医药仙股，流动性极差，基本面高度依赖单一临床数据盲盒，极易受庄家操控，不确定性极高。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:观望 | 止损:不建议参与</li>
+        <li style="margin-bottom: 10px;"><b>5. 特斯拉 (TSLA) - 评分:78.9分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>现价440.36美元处于历史高位密集套牢区，乖离率6.05%偏高，短期面临获利盘抛压。需警惕马斯克相关政治/商业消息面扰动带来的剧烈洗盘。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:3-5天短打 | 止损:跌破420美元</li>
+        <li style="margin-bottom: 10px;"><b>6. 彭博原油两倍做空ETF (SCO) - 评分:78.2分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>作为杠杆损耗型ETF，仅适合日内或极短线对冲，长期持有面临严重的震荡损耗（Beta Slippage），且受中东地缘政治突发消息影响极大。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:日内/隔夜 | 止损:跌破6.5美元</li>
+        <li style="margin-bottom: 10px;"><b>7. 捷蓝航空 (JBLU) - 评分:74.3分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>乖离率高达10.72%，短期反弹涨幅过大。航空业受高油价预期和宏观消费数据压制，业绩实质性修复存疑，极易冲高回落。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:观望 | 止损:跌破5.0美元</li>
+        <li style="margin-bottom: 10px;"><b>8. Ondas Holdings (ONDS) - 评分:72.7分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>乖离率12.3%严重超买，作为小盘科技股缺乏机构资金持续接力，当前形态属于典型的游资拉高，追高盈亏比极差。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:观望 | 止损:跌破9.5美元</li>
+        <li style="margin-bottom: 10px;"><b>9. Marathon Digital (MARA) - 评分:72.7分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>比特币挖矿概念股，乖离率12.32%，与加密货币走势高度绑定。当前期权隐含波动率（IV）极高，买方成本昂贵，极易遭遇“杀杀跌”双杀。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:1-3天动量交易 | 止损:跌破13.5美元</li>
+        <li style="margin-bottom: 10px;"><b>10. DVLT (DVLT) - 评分:72.0分:</b> <span style="color: #388e3c; font-weight: bold;">逻辑硬伤：</span>价格仅0.47美元，RSI 40.0且乖离率-13.04%，处于明显的下降通道和破位状态，属于典型的左侧接飞刀，毫无止跌企稳迹象。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:坚决空仓 | 止损:绝对规避</li>
     </ul>
 </div>
 
 <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
     <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（严禁接盘）</h3>
-    <ul>
-        <li><b>倒数1. 沃尔玛 (WMT):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> 评分 -33.2，RSI 仅 31.8，乖离率 -8.19%。看似“跌出价值”，实则机构资金正在坚决派发筹码。在没有出现底部放量长阳吞没形态前，任何反弹都是诱多出货，切勿被“防御性蓝筹”的光环蒙蔽。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:坚决空仓 | 止损:绝对规避</li>
-        <li><b>倒数2. CPS TECHNOLOGIES (CPSH):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> 评分 -91.7（极度恶劣），RSI 飙升至 82.0（严重超买），乖离率竟高达 126.66%！这是教科书级别的“杀猪盘”或极端逼空末期形态。股价已完全脱离基本面与均线引力，随时可能出现单日腰斩的断头铡刀走势。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:坚决空仓 | 止损:绝对规避</li>
+    <ul style="line-height: 1.8;">
+        <li style="margin-bottom: 15px;"><b>倒数1. QTTB (QTTB):</b> ❌ <span style="color: #388e3c; font-weight: bold;">诱多陷阱：</span> RSI高达83.5极度超买，乖离率达到极其夸张的112.73%。这是典型的资金盘拉高出货形态，股价已完全脱离基本面地心引力，随时面临断头铡刀式的暴跌洗盘。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:坚决空仓 | 止损:绝对规避</li>
+        <li><b>倒数2. NCPL (NCPL):</b> ❌ <span style="color: #388e3c; font-weight: bold;">诱多陷阱：</span> RSI达到离谱的93.2，乖离率近200%（197.35%）。属于极端的逼空末期，庄家派发筹码意图明显，击鼓传花游戏即将崩盘，散户此时进场无异于火中取栗。 <br> <span class='highlight-label bg-orange' style="background: #fff3e0; color: #ef6c00; padding: 2px 4px; border-radius: 3px; font-size: 13px;">⚠️ 潜伏与风控底线:</span> 周期:坚决空仓 | 止损:绝对规避</li>
     </ul>
 </div>
 <p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>
