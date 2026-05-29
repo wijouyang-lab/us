@@ -9,18 +9,16 @@ import re
 import tushare as ts
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from google import genai 
-from google.genai import types
+import anthropic
 
 today = datetime.datetime.now().weekday()
 if today >= 5:
     print(f"[{datetime.datetime.now()}] 周末休市，脚本自动跳过。")
     exit()
 
-TARGET_MODEL = 'gemini-3.1-pro-preview' 
+TARGET_MODEL = 'claude-opus-4-7'
 TARGET_REGION = "美国市场 (纯 Tushare 引擎)"
 
-# 🔑 读取关键环境变量
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 TS_TOKEN = os.environ.get("TUSHARE_TOKEN")
 
@@ -30,9 +28,6 @@ if not SUPER_ADMIN or not TS_TOKEN:
 
 print(f"🚀 启动：相对强度(Alpha)强制排序引擎 | 当前市场: {TARGET_REGION} | 引擎: {TARGET_MODEL}")
 
-# ==========================================
-# 📊 1. 获取标的池 (Tushare 驱动，筛选成交活跃 Top 100)
-# ==========================================
 ts.set_token(TS_TOKEN)
 pro = ts.pro_api()
 
@@ -70,9 +65,6 @@ def get_scan_pool():
 
 ACTIVE_STOCKS = get_scan_pool()
 
-# ==========================================
-# 📈 2. 深度 K 线拉取 (依然是 Tushare！绝不封IP)
-# ==========================================
 def get_kline_data(ts_code):
     end_dt = datetime.datetime.now().strftime('%Y%m%d')
     start_dt = (datetime.datetime.now() - datetime.timedelta(days=150)).strftime('%Y%m%d')
@@ -85,17 +77,12 @@ def get_kline_data(ts_code):
                 df['Date'] = pd.to_datetime(df['trade_date'])
                 df.set_index('Date', inplace=True)
                 df.rename(columns={'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'vol':'Volume'}, inplace=True)
-                
-                # 🚨 极其关键：Tushare 数据默认是倒序，必须按时间升序重排，否则 MACD/RSI 全部算反！
                 df.sort_index(ascending=True, inplace=True)
                 return df
         except Exception:
             time.sleep(1)
     return pd.DataFrame()
 
-# ==========================================
-# 🧠 3. 全量相对打分引擎
-# ==========================================
 def run_quant_filter(tickers):
     scored_stocks = []
     print(f"🌊 启动纯血 Tushare 波段评分引擎，扫描 {len(tickers)} 只标的...")
@@ -144,15 +131,18 @@ def run_quant_filter(tickers):
 top_3, next_7, traps = run_quant_filter(ACTIVE_STOCKS)
 
 # ==========================================
-# 🤖 4. 3.1 Pro 深度推演 (强制所有标的输出周期与止损)
+# 🤖 4. Claude 深度推演
 # ==========================================
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
+client = anthropic.Anthropic(
+    api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+    base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+)
 
 ai_generated_html = ""
 if not top_3:
     ai_generated_html = "<div class='top-card'>Tushare 数据源拉取异常，无法获取K线数据。</div>"
 else:
-    print(f"🧠 触发 3.1 Pro 引擎：执行【相对强度分析 + 持股周期 + 期权看板】...")
+    print(f"🧠 触发 Claude 引擎：执行【相对强度分析 + 持股周期 + 期权看板】...")
     prompt = f"""
     你是华尔街顶级量化游资操盘手及高级期权策略师。
     今日系统采用了【相对强度全市场横向对比】，为你筛选出了 13 只标的。
@@ -205,6 +195,10 @@ else:
             <li><b>4. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
             <li><b>5. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
             <li><b>6. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
+            <li><b>7. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
+            <li><b>8. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
+            <li><b>9. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
+            <li><b>10. [中文股票名] ([代码]) - 评分:[Score]分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>(...) <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天或观望] | 止损:[具体价格或跌破多少]</li>
         </ul>
     </div>
 
@@ -222,9 +216,14 @@ else:
     🚨 全市场最弱垫底 (Traps): {traps}
     """
     try:
-        res = client.models.generate_content(model=TARGET_MODEL, contents=prompt, config=types.GenerateContentConfig(temperature=0.25))
-        ai_generated_html = res.text.replace("```html", "").replace("```", "").strip()
-        print("✅ 3.1 Pro 美股期权波段审查完毕。")
+        message = client.messages.create(
+            model=TARGET_MODEL,
+            max_tokens=4096,
+            temperature=0.25,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        ai_generated_html = message.content[0].text.replace("```html", "").replace("```", "").strip()
+        print("✅ Claude 美股期权波段审查完毕。")
     except Exception as e: 
         ai_generated_html = f"<div class='top-card'><div class='top-title'>❌ API 崩溃</div><p>日志：{str(e)}</p></div>"
 
@@ -253,7 +252,7 @@ style = """
 full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>"
 
 # ==========================================
-# 📧 6. 邮件分发与强制入库 (全量无差别扫描)
+# 📧 6. 邮件分发与强制入库
 # ==========================================
 def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
@@ -284,7 +283,7 @@ if __name__ == "__main__":
     all_scanned = top_3 + next_7 + traps
     
     clean_html = re.sub(r'<[^>]+>', ' ', ai_generated_html) 
-    clean_html = re.sub(r'\s+', ' ', clean_html) 
+    clean_html = re.sub(r'\s+', ' ', clean_html)
     
     for item in all_scanned:
         tag = "Trap_Warning" 
@@ -294,24 +293,29 @@ if __name__ == "__main__":
         item['Tag'] = tag
         item['Hold_Period'] = "N/A"
         item['Stop_Loss'] = "N/A"
-        
+
+        # Trap 直接写死
+        if tag == "Trap_Warning":
+            item['Hold_Period'] = "坚决空仓"
+            item['Stop_Loss'] = "绝对规避"
+            chosen.append(item)
+            continue
+
         ticker_str = str(item['Ticker'])
         idx = clean_html.find(ticker_str)
         
         if idx != -1:
-            # 🚀 致命修复：把 400 字符放大到 1500 字符！
-            # 前三名的基本面和技术面字数非常多，视野必须开阔！
-            chunk = clean_html[idx:idx+1500] 
+            chunk = clean_html[idx:idx+1500]
             
-            period_match = re.search(r'周期\s*[:：]\s*(.*?)(?=\|)', chunk)
+            period_match = re.search(r'周期\s*[:：]\s*\[?(\d+[-~]\d+天|\d+天|观望)', chunk)
             if period_match:
-                item['Hold_Period'] = period_match.group(1).strip(' []【】')
+                item['Hold_Period'] = period_match.group(1).strip()
                 
-            # 优化：一直抓取直到碰见下一个大标题，完美解决带有空格的价格
-            sl_match = re.search(r'止损\s*[:：]\s*(.*?)(?=美股专属|期权实战|逻辑硬伤|诱多陷阱|🎲|$)', chunk)
+            sl_match = re.search(r'止损\s*[:：]\s*\[?(\$?[\d\.]+[元%]?|-[\d\.]+%?|跌破[\d\.]+)', chunk)
             if sl_match:
-                item['Stop_Loss'] = sl_match.group(1).strip(' []【】')
-                
+                item['Stop_Loss'] = sl_match.group(1).strip()
+
+            # 兜底
             if item['Hold_Period'] == "N/A" and item['Stop_Loss'] == "N/A":
                 fallback = re.search(r'风控底线\s*[:：]\s*(.*?)(?=美股专属|期权实战|逻辑硬伤|诱多陷阱|🎲|$)', chunk)
                 if fallback:
@@ -320,7 +324,7 @@ if __name__ == "__main__":
                         item['Hold_Period'] = raw_text.split('|')[0].replace('周期:', '').replace('周期：', '').strip(' []')
                         item['Stop_Loss'] = raw_text.split('|')[1].replace('止损:', '').replace('止损：', '').strip(' []')
                     else:
-                        item['Stop_Loss'] = raw_text 
+                        item['Stop_Loss'] = raw_text
         
         chosen.append(item)
     
