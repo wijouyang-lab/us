@@ -7,15 +7,14 @@ import time
 import requests
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from google import genai
-from google.genai import types
+import anthropic
 
 # 周末不执行
 if datetime.datetime.now().weekday() >= 5:
     exit()
 
-TARGET_MODEL = 'gemini-3.1-pro-preview'
-SUPER_ADMIN = "907359319@qq.com"
+TARGET_MODEL = 'claude-opus-4-7'
+SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 
 # ==========================================
 # 🔑 密钥读取
@@ -44,7 +43,6 @@ if not os.path.exists(log_file):
 try:
     df = pd.read_csv(log_file, names=["Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias", "Hold_Period", "Stop_Loss"], header=0)
     df['Date'] = pd.to_datetime(df['Date'])
-    # 筛选出最近 3 天的推荐记录
     cutoff_date = datetime.datetime.now() - datetime.timedelta(days=5)
     recent_picks = df[df['Date'] >= cutoff_date].copy()
     if recent_picks.empty:
@@ -74,6 +72,8 @@ for index, row in recent_picks.iterrows():
                 "Ticker": ticker,
                 "Name": row['Name'],
                 "Tag": row['Tag'],
+                "Hold_Period": row.get('Hold_Period', 'N/A'),
+                "Stop_Loss": row.get('Stop_Loss', 'N/A'),
                 "Rec_Price": recommend_price,
                 "Cur_Price": current_price,
                 "PnL": round(pnl_pct, 2)
@@ -84,13 +84,16 @@ for index, row in recent_picks.iterrows():
 if not review_data: exit(0)
 
 # ==========================================
-# 🧠 3. Gemini 归因分析与纪律拷问
+# 🧠 3. Claude 归因分析与纪律拷问
 # ==========================================
-client = genai.Client(api_key=os.environ.get("GEMINI_API_KEY"))
-print("🧠 触发 3.1 Pro 执行盘后归因...")
+client = anthropic.Anthropic(
+    api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+    base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+)
+print("🧠 触发 Claude 执行盘后归因...")
 
 prompt = f"""
-你是量化风控总监。以下是系统近几日推荐的美股标的及截止目前的真实盈亏表现：
+你是量化风控总监。以下是系统近几日推荐的美股标的及截止目前的真实盈亏表现（含持股周期和止损价）：
 {review_data}
 
 请严格按以下 HTML 骨架输出复盘报告（直出HTML，禁加markdown框，看涨/盈利标红，看跌/亏损标绿）：
@@ -103,13 +106,20 @@ prompt = f"""
 <h2 style="color: #37474f; border-bottom: 2px solid #cfd8dc; padding-bottom: 5px;">📊 核心标的独立归因</h2>
 <div style="background: #fff; padding: 20px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
     <h3 style="margin: 0 0 10px 0;">[推演日期] | [股票名称] ([代码])</h3>
+    <p><b>预计周期:</b> [Hold_Period] | <b>止损位:</b> [Stop_Loss]</p>
     <p><b>推荐价:</b> $[价格] ➔ <b>现价:</b> $[价格] | <b>实际盈亏:</b> <span style="font-weight: bold; color: [盈利填#d32f2f, 亏损填#388e3c];">[PnL]%</span></p>
-    <p><span style="background: #607d8b; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">风控动作指令</span> (基于盈亏情况，犀利给出应对：例如“已跌破3%无条件止损”、“盈利超5%建议期权平半仓”等纪律指令)</p>
+    <p><span style="background: #607d8b; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">风控动作指令</span> (基于现价是否跌破止损位，给出最冷血的纪律应对：如"触发止损无条件出局"、"持股周期内正常洗盘"、"达到预期建议止盈")</p>
 </div>
 """
+
 try:
-    res = client.models.generate_content(model=TARGET_MODEL, contents=prompt, config=types.GenerateContentConfig(temperature=0.1))
-    ai_html = res.text.replace("```html", "").replace("```", "").strip()
+    message = client.messages.create(
+        model=TARGET_MODEL,
+        max_tokens=4096,
+        temperature=0.1,
+        messages=[{"role": "user", "content": prompt}]
+    )
+    ai_html = message.content[0].text.replace("```html", "").replace("```", "").strip()
 except Exception as e:
     ai_html = f"<p>复盘生成失败: {e}</p>"
 
@@ -121,12 +131,14 @@ full_html = f"<!DOCTYPE html><html><head><style>{style}</style></head><body><div
 
 def send_mail():
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
-    if not user: return
-    msg = MIMEMultipart(); msg['From'] = user; msg['To'] = SUPER_ADMIN; msg['Subject'] = f"🛡️【盘后清算】美股策略复盘与风控纪律 ({datetime.date.today()})"
+    if not user or not SUPER_ADMIN: return
+    msg = MIMEMultipart(); msg['From'] = user; msg['Subject'] = f"🛡️【盘后清算】美股策略复盘与风控纪律 ({datetime.date.today()})"
     msg.attach(MIMEText(full_html, 'html'))
+    targets = [e.strip() for e in SUPER_ADMIN.split(',')]
     try:
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-            s.login(user, pwd); s.send_message(msg)
+            s.login(user, pwd)
+            s.sendmail(user, targets, msg.as_string())
             print("✅ 复盘报告发送成功！")
     except Exception as e: print(f"❌ 发送失败: {e}")
 
