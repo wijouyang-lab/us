@@ -2,9 +2,9 @@ name: US-Share Alpha Radar
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * 1-5'   # 美股盘前选股
-    - cron: '0 22 * * 1-5'   # 美股盘后复盘
-    - cron: '0 11 * * 5'     # 每周五 UTC 11:00 触发进化
+    - cron: '0 12 * * 1-5'
+    - cron: '0 22 * * 1-5'
+    - cron: '0 11 * * 5'
 
 jobs:
   run-quant:
@@ -24,7 +24,7 @@ jobs:
     - name: Install Libs
       run: pip install pandas pandas-ta requests anthropic tushare
 
-    - name: ⏱️ Run Script Based on Time (智能分流)
+    - name: Run Script
       env:
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
@@ -38,20 +38,20 @@ jobs:
         CURRENT_HOUR=$(date +'%H')
         CURRENT_DAY=$(date +'%u')
         if [ "$CURRENT_HOUR" -ge 11 ] && [ "$CURRENT_HOUR" -le 15 ]; then
-          echo "🌙 触发【盘前选股】引擎..."
+          echo "Scan"
           python scan.py
         elif [ "$CURRENT_DAY" -eq 5 ] && [ "$CURRENT_HOUR" -eq 11 ]; then
-          echo "🧬 触发【美股自动进化】引擎..."
-          python evolve_us.py
+          echo "Evolve"
+          python evolve.py
         else
-          echo "🌅 触发【盘后复盘】引擎..."
+          echo "Review"
           python review.py || true
         fi
 
-    - name: 💾 Save Logs & Sync to GitHub
+    - name: Save Logs
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "Alpha Bot"
         git add -A
-        git diff --quiet && git diff --staged --quiet || git commit -m "🧬 Auto evolve US scan.py"
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update US logs"
         git push
