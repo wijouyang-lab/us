@@ -16,6 +16,9 @@ if datetime.datetime.now().weekday() >= 5:
 TARGET_MODEL = 'claude-opus-4-7'
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 
+def get_now():
+    return datetime.datetime.now().strftime('%Y-%m-%d')
+
 # ==========================================
 # 🔑 密钥读取
 # ==========================================
@@ -33,7 +36,7 @@ def get_api_key():
 print("🔍 启动美股盘后复盘引擎 (Review Engine)...")
 
 # ==========================================
-# 📂 1. 读取历史账本 (只看最近 3 个交易日的推荐)
+# 📂 1. 读取历史账本
 # ==========================================
 log_file = "trade_history.csv"
 if not os.path.exists(log_file):
@@ -53,13 +56,15 @@ except Exception as e:
     exit(1)
 
 # ==========================================
-# 📈 2. 调取 FMP 现价，计算盈亏 (PnL)
+# 📈 2. 调取 FMP 现价，计算盈亏
 # ==========================================
 review_data = []
 print("📡 正在核对近期推荐标的当前表现...")
 for index, row in recent_picks.iterrows():
     ticker = row['Ticker']
     recommend_price = float(row['Price'])
+    rec_date = row['Date'].strftime('%Y-%m-%d')
+    days_held = (datetime.datetime.now() - row['Date']).days
     url = f"https://financialmodelingprep.com/api/v3/quote/{ticker}?apikey={get_api_key()}"
     try:
         time.sleep(0.1)
@@ -68,7 +73,7 @@ for index, row in recent_picks.iterrows():
             current_price = res[0]['price']
             pnl_pct = ((current_price - recommend_price) / recommend_price) * 100
             review_data.append({
-                "Date": row['Date'].strftime('%Y-%m-%d'),
+                "Date": rec_date,
                 "Ticker": ticker,
                 "Name": row['Name'],
                 "Tag": row['Tag'],
@@ -76,6 +81,7 @@ for index, row in recent_picks.iterrows():
                 "Stop_Loss": row.get('Stop_Loss', 'N/A'),
                 "Rec_Price": recommend_price,
                 "Cur_Price": current_price,
+                "Days_Held": days_held,
                 "PnL": round(pnl_pct, 2)
             })
     except Exception as e:
@@ -84,7 +90,7 @@ for index, row in recent_picks.iterrows():
 if not review_data: exit(0)
 
 # ==========================================
-# 🧠 3. Claude 归因分析与纪律拷问
+# 🧠 3. Claude 归因分析
 # ==========================================
 client = anthropic.Anthropic(
     api_key=os.environ.get("CLAWSOCKET_API_KEY"),
@@ -106,7 +112,7 @@ prompt = f"""
 <h2 style="color: #37474f; border-bottom: 2px solid #cfd8dc; padding-bottom: 5px;">📊 核心标的独立归因</h2>
 <div style="background: #fff; padding: 20px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
     <h3 style="margin: 0 0 10px 0;">[推演日期] | [股票名称] ([代码])</h3>
-    <p><b>预计周期:</b> [Hold_Period] | <b>止损位:</b> [Stop_Loss]</p>
+    <p><b>预计周期:</b> [Hold_Period] | <b>止损位:</b> [Stop_Loss] | <b>已持仓:</b> [Days_Held]天</p>
     <p><b>推荐价:</b> $[价格] ➔ <b>现价:</b> $[价格] | <b>实际盈亏:</b> <span style="font-weight: bold; color: [盈利填#d32f2f, 亏损填#388e3c];">[PnL]%</span></p>
     <p><span style="background: #607d8b; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">风控动作指令</span> (基于现价是否跌破止损位，给出最冷血的纪律应对：如"触发止损无条件出局"、"持股周期内正常洗盘"、"达到预期建议止盈")</p>
 </div>
@@ -124,29 +130,33 @@ except Exception as e:
     ai_html = f"<p>复盘生成失败: {e}</p>"
 
 # ==========================================
-# 📧 4. 封装发送
+# 📊 4. 复盘结果写入 review_history.csv
 # ==========================================
-style = "body{font-family:sans-serif; background:#f4f6f9; padding:20px; color:#333; line-height:1.6} .container{max-width:900px; margin:0 auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.05)}"
-full_html = f"<!DOCTYPE html><html><head><style>{style}</style></head><body><div class='container'><h1 style='color:#37474f; text-align:center;'>🛡️ Alpha 雷达美股盘后复盘</h1>{ai_html}</div></body></html>"
-
-# 把复盘盈亏结果写回账本
 review_log = "review_history.csv"
 need_header = not os.path.exists(review_log) or os.path.getsize(review_log) == 0
 try:
     with open(review_log, "a", encoding="utf-8") as f:
         if need_header:
             f.write("Review_Date,Ticker,Name,Tag,Rec_Date,Rec_Price,Cur_Price,Days_Held,PnL_Pct,Hold_Period,Stop_Loss\n")
-        review_date = get_bj_time().strftime('%Y-%m-%d')
+        review_date = get_now()
         for item in review_data:
-            f.write(f"{review_date},{item['代码']},{item['名称']},{item['标签']},{item['推荐日期']},{item['推荐价']},{item['现价']},{item['已持仓天数']},{item['盈亏']},{item['持股周期']},{item['止损价']}\n")
+            f.write(f"{review_date},{item['Ticker']},{item['Name']},{item['Tag']},{item['Date']},{item['Rec_Price']},{item['Cur_Price']},{item['Days_Held']},{item['PnL']},{item['Hold_Period']},{item['Stop_Loss']}\n")
     print("✅ 复盘结果已写入 review_history.csv")
 except Exception as e:
     print(f"⚠️ 复盘写入失败: {e}")
 
+# ==========================================
+# 📧 5. 封装发送
+# ==========================================
+style = "body{font-family:sans-serif; background:#f4f6f9; padding:20px; color:#333; line-height:1.6} .container{max-width:900px; margin:0 auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.05)}"
+full_html = f"<!DOCTYPE html><html><head><style>{style}</style></head><body><div class='container'><h1 style='color:#37474f; text-align:center;'>Alpha 雷达美股盘后复盘</h1>{ai_html}</div></body></html>"
+
 def send_mail():
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
     if not user or not SUPER_ADMIN: return
-    msg = MIMEMultipart(); msg['From'] = user; msg['Subject'] = f"🛡️【盘后清算】美股策略复盘与风控纪律 ({datetime.date.today()})"
+    msg = MIMEMultipart()
+    msg['From'] = user
+    msg['Subject'] = f"【盘后清算】美股策略复盘与风控纪律 ({datetime.date.today()})"
     msg.attach(MIMEText(full_html, 'html'))
     targets = [e.strip() for e in SUPER_ADMIN.split(',')]
     try:
@@ -154,6 +164,7 @@ def send_mail():
             s.login(user, pwd)
             s.sendmail(user, targets, msg.as_string())
             print("✅ 复盘报告发送成功！")
-    except Exception as e: print(f"❌ 发送失败: {e}")
+    except Exception as e:
+        print(f"❌ 发送失败: {e}")
 
 send_mail()
