@@ -129,6 +129,20 @@ except Exception as e:
 style = "body{font-family:sans-serif; background:#f4f6f9; padding:20px; color:#333; line-height:1.6} .container{max-width:900px; margin:0 auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.05)}"
 full_html = f"<!DOCTYPE html><html><head><style>{style}</style></head><body><div class='container'><h1 style='color:#37474f; text-align:center;'>🛡️ Alpha 雷达美股盘后复盘</h1>{ai_html}</div></body></html>"
 
+# 把复盘盈亏结果写回账本
+review_log = "review_history.csv"
+need_header = not os.path.exists(review_log) or os.path.getsize(review_log) == 0
+try:
+    with open(review_log, "a", encoding="utf-8") as f:
+        if need_header:
+            f.write("Review_Date,Ticker,Name,Tag,Rec_Date,Rec_Price,Cur_Price,Days_Held,PnL_Pct,Hold_Period,Stop_Loss\n")
+        review_date = get_bj_time().strftime('%Y-%m-%d')
+        for item in review_data:
+            f.write(f"{review_date},{item['代码']},{item['名称']},{item['标签']},{item['推荐日期']},{item['推荐价']},{item['现价']},{item['已持仓天数']},{item['盈亏']},{item['持股周期']},{item['止损价']}\n")
+    print("✅ 复盘结果已写入 review_history.csv")
+except Exception as e:
+    print(f"⚠️ 复盘写入失败: {e}")
+
 def send_mail():
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
     if not user or not SUPER_ADMIN: return
