@@ -1,5 +1,4 @@
 name: US-Share Alpha Radar
-
 on:
   workflow_dispatch:
   schedule:
@@ -24,24 +23,23 @@ jobs:
         python-version: '3.12'
 
     - name: Install Libs
-      # 🚀 依赖库：纯 Tushare 驱动，保留 yfinance 备用
-      run: pip install pandas pandas-ta requests google-genai tushare yfinance
+      run: pip install pandas pandas-ta requests anthropic tushare
 
     - name: ⏱️ Run Script Based on Time (智能分流)
       env:
-        # 👇 纯血 Tushare 环境变量，彻底抛弃受限的海外接口
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+        CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+        FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
+        FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
       run: |
         CURRENT_HOUR=$(date +'%H')
-        # 恢复正常：UTC 11点~15点 (北京时间 19:00~23:00) 跑盘前选股 scan.py
         if [ "$CURRENT_HOUR" -ge 11 ] && [ "$CURRENT_HOUR" -le 15 ]; then
           echo "🌙 触发【盘前选股】引擎 (北京时间 20:00)..."
           python scan.py
-        # 其他时间 (比如早晨 6:00) 跑盘后复盘 review.py
         else
           echo "🌅 触发【盘后复盘】引擎 (北京时间 06:00)..."
           python review.py || true
