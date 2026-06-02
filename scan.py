@@ -16,7 +16,7 @@ if today >= 5:
     print(f"[{datetime.datetime.now()}] 周末休市，脚本自动跳过。")
     exit()
 
-TARGET_MODEL = 'claude-opus-4-7'
+TARGET_MODEL = 'claude-opus-4-8'
 TARGET_REGION = "美国市场 (纯 Tushare 引擎)"
 
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
