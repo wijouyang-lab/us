@@ -2,9 +2,9 @@ name: US-Share Alpha Radar
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 12 * * 1-5'
-    - cron: '0 22 * * 1-5'
-    - cron: '0 11 * * 5'
+    - cron: '0 12 * * 1-5'   # 美股盘前选股 UTC 12:00
+    - cron: '0 2 * * 2-6'    # 美股盘后复盘 UTC 02:00 = 北京时间10:00
+    - cron: '0 11 * * 5'     # 每周五进化
 
 jobs:
   run-quant:
@@ -29,8 +29,6 @@ jobs:
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
         CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-        FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
-        FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
