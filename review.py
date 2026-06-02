@@ -3,11 +3,10 @@ import pandas as pd
 import datetime
 import os
 import smtplib
-import time
-import requests
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import anthropic
+import tushare as ts
 
 # 周末不执行
 if datetime.datetime.now().weekday() >= 5:
@@ -18,17 +17,6 @@ SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 
 def get_now():
     return datetime.datetime.now().strftime('%Y-%m-%d')
-
-FMP_KEYS = [os.environ.get("FMP_KEY_1"), os.environ.get("FMP_KEY_2")]
-FMP_KEYS = [k for k in FMP_KEYS if k]
-if not FMP_KEYS: exit(1)
-
-_key_index = 0
-def get_api_key():
-    global _key_index
-    key = FMP_KEYS[_key_index % len(FMP_KEYS)]
-    _key_index += 1
-    return key
 
 print("启动美股盘后复盘引擎...")
 
@@ -88,43 +76,65 @@ if not summary_list:
     exit(0)
 
 # ==========================================
-# 3. 调取 FMP 现价，计算盈亏
+# 3. 用 Tushare 获取美股最新收盘价
+# ==========================================
+ts.set_token(os.environ.get("TUSHARE_TOKEN"))
+pro = ts.pro_api()
+
+price_map = {}
+for i in range(1, 5):
+    trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
+    try:
+        df_daily = pro.us_daily(trade_date=trade_date)
+        if df_daily is not None and not df_daily.empty:
+            print(f"✅ 获取到 {trade_date} 美股收盘价")
+            for _, row in df_daily.iterrows():
+                clean_ticker = row['ts_code'].split('.')[0] if '.' in row['ts_code'] else row['ts_code']
+                price_map[clean_ticker] = row['close']
+            break
+    except Exception as e:
+        print(f"⚠️ {trade_date} 数据拉取失败: {e}")
+
+if not price_map:
+    print("⚠️ 无法获取美股价格数据，退出。")
+    exit(0)
+
+# ==========================================
+# 4. 合并现价，计算真实盈亏
 # ==========================================
 review_data = []
 print("正在核对近期推荐标的当前表现...")
 for item in summary_list:
     ticker = item['Ticker']
     rec_price = item['First_Rec_Price']
-    url = f"https://financialmodelingprep.com/api/v3/quote/{ticker}?apikey={get_api_key()}"
-    try:
-        time.sleep(0.1)
-        res = requests.get(url, timeout=5).json()
-        if res and len(res) > 0:
-            current_price = res[0]['price']
-            pnl_pct = ((current_price - rec_price) / rec_price) * 100
-            review_data.append({
-                "Ticker": ticker,
-                "Name": item['Name'],
-                "Tag": item['Tag'],
-                "Hold_Period": item['Hold_Period'],
-                "Stop_Loss": item['Stop_Loss'],
-                "First_Rec_Date": item['First_Rec_Date'],
-                "Rec_Price": rec_price,
-                "Cur_Price": current_price,
-                "Days_Held": item['Days_Held'],
-                "Rec_Count": item['Rec_Count'],
-                "PnL": round(pnl_pct, 2)
-            })
-    except Exception as e:
-        print(f"⚠️ {ticker} 现价拉取失败: {e}")
+    cur_price = price_map.get(ticker)
+
+    if cur_price:
+        pnl_pct = ((cur_price - rec_price) / rec_price) * 100
+        review_data.append({
+            "Ticker": ticker,
+            "Name": item['Name'],
+            "Tag": item['Tag'],
+            "Hold_Period": item['Hold_Period'],
+            "Stop_Loss": item['Stop_Loss'],
+            "First_Rec_Date": item['First_Rec_Date'],
+            "Rec_Price": rec_price,
+            "Cur_Price": cur_price,
+            "Days_Held": item['Days_Held'],
+            "Rec_Count": item['Rec_Count'],
+            "PnL": round(pnl_pct, 2)
+        })
+    else:
+        print(f"⚠️ {ticker} 未找到价格数据")
 
 if not review_data:
+    print("⚠️ 未匹配到价格数据，退出。")
     exit(0)
 
 print(f"✅ 共复盘 {len(review_data)} 只标的")
 
 # ==========================================
-# 4. Claude 归因分析
+# 5. Claude 归因分析
 # ==========================================
 client = anthropic.Anthropic(
     api_key=os.environ.get("CLAWSOCKET_API_KEY"),
@@ -174,7 +184,7 @@ except Exception as e:
     ai_html = f"<p>复盘生成失败: {e}</p>"
 
 # ==========================================
-# 5. 复盘结果写入 review_history.csv
+# 6. 复盘结果写入 review_history.csv
 # ==========================================
 review_log = "review_history.csv"
 need_header = not os.path.exists(review_log) or os.path.getsize(review_log) == 0
@@ -190,7 +200,7 @@ except Exception as e:
     print(f"⚠️ 复盘写入失败: {e}")
 
 # ==========================================
-# 6. 封装发送
+# 7. 封装发送
 # ==========================================
 style = "body{font-family:sans-serif; background:#f4f6f9; padding:20px; color:#333; line-height:1.6} .container{max-width:900px; margin:0 auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.05)}"
 full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'><style>{style}</style></head><body><div class='container'><h1 style='color:#37474f; text-align:center;'>Alpha 雷达美股盘后复盘</h1>{ai_html}</div></body></html>"
