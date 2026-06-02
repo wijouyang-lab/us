@@ -37,10 +37,10 @@ jobs:
       run: |
         CURRENT_HOUR=$(date +'%H')
         CURRENT_DAY=$(date +'%u')
-        if [ "$CURRENT_HOUR" -ge 11 ] && [ "$CURRENT_HOUR" -le 15 ]; then
+        if [ "$CURRENT_HOUR" -ge 12 ] && [ "$CURRENT_HOUR" -le 21 ]; then
           echo "Scan"
           python scan.py
-        elif [ "$CURRENT_DAY" -eq 5 ] && [ "$CURRENT_HOUR" -eq 11 ]; then
+        elif [ "$CURRENT_DAY" -eq 5 ] && [ "$CURRENT_HOUR" -ge 9 ] && [ "$CURRENT_HOUR" -le 11 ]; then
           echo "Evolve"
           python evolve.py
         else
