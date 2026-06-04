@@ -1,0 +1,41 @@
+name: US-Share Evolve
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 11 * * 5'
+
+jobs:
+  run-evolve:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install Libs
+      run: pip install pandas pandas-ta requests anthropic tushare
+
+    - name: Run Evolve
+      env:
+        TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+        CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+        EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+        TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
+      run: python evolve.py || true
+
+    - name: Save Logs
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "Alpha Bot"
+        git add -A
+        git diff --quiet && git diff --staged --quiet || git commit -m "Auto evolve US"
+        git push
