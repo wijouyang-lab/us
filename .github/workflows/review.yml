@@ -2,7 +2,7 @@ name: US-Share Review
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 2 * * 2-6'
+    - cron: '0 21 * * 2-6'
 
 jobs:
   run-review:
