@@ -16,84 +16,69 @@
     li { margin-bottom: 10px; font-size: 15px; }
 </style>
 </head><body><div class='container'><h1>🎯 Alpha 雷达波段内参：美国市场 (纯 Tushare 引擎)</h1>
+下面按指令直出 HTML 骨架。需要先说明：以下内容基于系统注入的量化数据（Score / RSI / 乖离率）做的策略推演，不构成任何投资建议，标的价格以数据源给定值为准，期权行权价为示意区间，实盘请自行核对实时报价与流动性。
+
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #0d47a1;">🌍 宏观资金定调与 Alpha 相对评级</h3>
-    <p>当前美股流动性环境偏中性，大盘震荡筑底。本轮筛选名单整体强度属于<b>防守反击型</b>：Top 3 集中在能源、金属及科技权重股，具备明确的相对强度优势（Score 83+），RSI 均未过热，乖离率控制在 2% 以内，属于<b>可攻可守的中线潜伏标的</b>。观察池中金融、中概及能源股分化明显，需结合技术形态精准择时。垫底两只为典型<b>技术性崩盘 + 超买陷阱</b>，绝对规避。</p>
+    <p>从今日名单的板块构成看，资金呈现典型的"哑铃式防御进攻"：前三名由材料（GGB钢铁）、能源（XLE）、大盘科技（META）领衔，三者乖离率均控制在 0.85–1.6 的极健康区间，说明强势品种是<b>缩量蓄势型上涨</b>而非情绪透支，属于可持续的相对强度。中段观察池则明显割裂——美股本土资产（BAC、PCG、INTC）站上均线偏强，而中国相关 ETF（FXI、KWEB）与深海钻井（RIG）集体处于负乖离、RSI 40–44 的弱平衡区，反映全球流动性仍在向美元资产虹吸。整体评级：<b>名单头部 Alpha 含金量高（83+ 集中），中部分化、尾部纯诱多</b>。当前应重质不重量，只在乖离率与 RSI 共振的头部下手。</p>
 </div>
 
 <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 相对强度优选 (Top 1-3)</h2>
-
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">1. GGB (GGB) | 波段评分: 84.2分</div>
-    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> GGB（巴西矿业巨头 Gerdau）受益于全球基建周期复苏 + 铁矿石价格企稳，巴西雷亚尔贬值对出口形成正向刺激。当前估值处于历史低位，机构持仓稳定，属于<b>周期股底部反转</b>的早期信号。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> 价格 $4.75，乖离率 +0.85%（贴近均线），RSI 56.2（中性偏强，未超买）。MACD 金叉初现，量能温和放大，属于<b>低位蓄势突破前夕</b>。技术形态健康，下方支撑 $4.50，上方压力 $5.20。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 15-30天 | 止损: 跌破 $4.45（-6.3%）</p>
+    <div class="top-title" style="color: #d32f2f;">1. 格尔道钢铁 (GGB) | 波段评分: 84.2分</div>
+    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> 巴西钢铁龙头，受益于基建与拉美需求修复，低价位（$4.75）抗回撤、波动小，是典型的"价值型相对强度"。催化点在于钢价企稳与汇率，属于慢牛逻辑而非题材爆发。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> RSI 56.2 处于多头健康区，乖离率仅 0.85（全名单最低），意味着股价紧贴均线缓步抬升，MACD 大概率为零轴上方低位金叉，几乎没有获利盘抛压，回踩即买点。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[10-20天] | 止损:[跌破 $4.45 (约-6%)]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
-            <li><b>建议行权价与到期日：</b>买入 Call $5.00，到期日 45-60 天（避开过近到期的时间价值损耗）</li>
-            <li><b>期权组合构建：</b>单腿 Long Call（成本低，杠杆足）；若求稳健可构建 Bull Call Spread（买 $5 Call / 卖 $5.50 Call），锁定最大亏损，降低成本基础。</li>
-        </ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>低价股期权链稀薄、点差大，建议优先正股/或买入 60–90 天后的 $5 轻度价外 Call。</li><li><b>期权组合构建：</b>单腿买入即可，不必做价差（权利金本身就低）；流动性不足时直接持有正股更优。</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">2. 能源精选 ETF (XLE) | 波段评分: 83.9分</div>
-    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> XLE 追踪能源板块龙头（埃克森美孚、雪佛龙等），受益于 OPEC+ 减产预期 + 地缘风险溢价。美国战略石油储备补库需求支撑油价底部，板块估值仍处历史中位数以下，<b>防御性配置价值凸显</b>。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> 价格 $58.71，乖离率 +1.15%（轻微偏离均线），RSI 53.3（中性区间）。MACD 零轴上方运行，成交量稳定，属于<b>震荡上行通道</b>。下方支撑 $57.00，上方阻力 $61.50。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 20-40天 | 止损: 跌破 $56.50（-3.8%）</p>
+    <div class="top-title" style="color: #d32f2f;">2. 能源行业ETF (XLE) | 波段评分: 83.9分</div>
+    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> 一篮子能源巨头（埃克森、雪佛龙权重），自带分红与抗通胀属性。当油价获得地缘溢价或 OPEC+ 减产托底时，XLE 是机构最顺手的板块工具，安全垫厚。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> RSI 53.3 中性偏多，乖离率 1.15，处于均线上方但未过热，ETF 特性决定其趋势平滑、假突破少，MACD 多为缓慢张口。适合右侧顺势而非抄底。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[15-30天] | 止损:[跌破 $55.8 (约-5%)]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
-            <li><b>建议行权价与到期日：</b>买入 Call $60.00，到期日 60-90 天（中长周期，匹配板块轮动节奏）</li>
-            <li><b>期权组合构建：</b>Bull Call Spread（买 $60 Call / 卖 $63 Call），风险收益比约 1:2，适合趋势明确但波动率偏低的 ETF 标的。</li>
-        </ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入 30–45 天 $59–$60 平值/轻度价外 Call，期权链流动性极佳。</li><li><b>期权组合构建：</b>推荐 Bull Call Spread（买 $59 / 卖 $63），ETF 涨幅温和，用价差锁成本、抵消时间损耗。</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">3. Meta Platforms (META) | 波段评分: 83.4分</div>
-    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> META 财报超预期，广告收入增速回升 + AI 变现路径清晰（Llama 生态 + VR/AR 商业化加速）。回购规模扩大，机构持仓创新高，<b>科技股防御性龙头</b>地位稳固。估值对比历史仍处合理区间。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> 价格 $622.98，乖离率 +1.6%（略高于均线），RSI 51.5（中性偏弱，尚有上攻空间）。MACD 绿柱收敛，均线多头排列，属于<b>强势震荡洗盘</b>。下方支撑 $610，上方阻力 $650。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 10-25天 | 止损: 跌破 $605（-2.9%）</p>
+    <div class="top-title" style="color: #d32f2f;">3. Meta平台 (META) | 波段评分: 83.4分</div>
+    <p><span class='highlight-label bg-red'>🔥 基本面与消息面:</span> 广告基本盘稳健 + AI（Llama/算力投入）双逻辑，现金流强、回购积极。属于本名单中唯一的超大盘 Alpha 核心，机构底仓属性，催化密集（财报、AI 进展）。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术面与量价:</span> RSI 51.5 几近中轴，乖离率 1.6 仍属可控，说明此前的涨幅已被充分消化，处于"洗盘后再起步"的低风险位置，MACD 若在零轴附近重新金叉则是最佳介入窗口。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[10-25天] | 止损:[跌破 $590 (约-5.3%)]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;">
-            <li><b>建议行权价与到期日：</b>买入 Call $630.00，到期日 30-45 天（短周期博弈财报后上攻）</li>
-            <li><b>期权组合构建：</b>单腿 Long Call（捕捉突破行情）；若担心回调，可构建 Collar（买 $630 Call / 卖 $660 Call / 买 $600 Put），锁定下行风险的同时保留上行弹性。</li>
-        </ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入 30–45 天 $630–$640 价外 Call；规避财报当周以防 IV Crush。</li><li><b>期权组合构建：</b>权利金高，强烈建议 Bull Call Spread（买 $630 / 卖 $660）降低成本；激进者可单腿但严格控仓 ≤总仓位5%。</li></ul>
     </div>
 </div>
 
 <div class="compare-card">
     <div class="compare-title">🎖️ 满编观察池及硬伤诊断 (Rank 4-10)</div>
     <ul>
-        <li><b>4. 美国银行 (BAC) - 评分: 82.9分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>RSI 56.2 + 乖离率 +2.1%，技术面偏热，短期追高风险大。基本面受美联储降息预期压制，净息差承压。<b>建议回调至 $51 下方再介入</b>。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 观望或回调 5-10天 | 止损: 跌破 $50.50</li>
-        <li><b>5. 中国大盘 ETF (FXI) - 评分: 82.8分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 -2.21%，RSI 44.1（偏弱），技术面处于<b>下行通道中的反弹</b>，缺乏基本面催化剂。中美关系不确定性 + A股政策空窗期，短期难有趋势性机会。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 观望 10-20天 | 止损: 跌破 $34.50</li>
-        <li><b>6. PG&E 公司 (PCG) - 评分: 82.2分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 +2.85%（偏高），RSI 55.2（中性偏强），短期技术面过热。基本面受加州山火诉讼 + 监管不确定性拖累，<b>高波动性标的不适合激进追涨</b>。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 观望 7-15天 | 止损: 跌破 $16.20</li>
-        <li><b>7. 英特尔 (INTC) - 评分: 81.8分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 -3.24%（负偏离），但 RSI 56.3（偏强），<b>技术面背离</b>暗示反弹乏力。基本面受 AI 芯片竞争 + 制程工艺落后拖累，资本开支高企但变现周期长。<b>仅适合左侧抄底高手</b>。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 观望 15-30天 | 止损: 跌破 $108</li>
-        <li><b>8. 中国互联网 ETF (KWEB) - 评分: 81.3分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 -3.67%，RSI 43.2（偏弱），双重技术面疲软。基本面受监管常态化 + 消费复苏不及预期压制，<b>需等待明确政策催化剂</b>。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 观望 20-40天 | 止损: 跌破 $26.00</li>
-        <li><b>9. 三倍做空罗素 ETF (TZA) - 评分: 81.2分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 -3.81%，RSI 40.6（超卖区），<b>杠杆 ETF 衰减风险极高</b>，不适合持有超过 3-5 个交易日。当前小盘股相对抗跌，TZA 做空逻辑不成立。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 坚决空仓（仅适合日内对冲） | 止损: 绝对规避</li>
-        <li><b>10. Transocean (RIG) - 评分: 78.5分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>乖离率 -6.51%（深度负偏离），RSI 41.2（偏弱），<b>技术面彻底破位</b>。基本面受深海钻井需求疲软 + 债务高企拖累，仅适合<b>极左侧抄底 + 严格止损</b>。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 观望 30-60天 | 止损: 跌破 $5.80</li>
+        <li><b>4. 美国银行 (BAC) - 评分:82.9分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>RSI 56.2 偏强但乖离率已升至 2.1，短线略有透支，且银行股高度依赖利率与净息差预期，缺乏独立 Alpha。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[回踩均线再介入] | 止损:[跌破 $49.8]</li>
+        <li><b>5. 中国大盘ETF (FXI) - 评分:82.8分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>RSI 44.1 弱平衡、乖离率 -2.21 跌破均线，评分高但技术面尚未转强，是"政策预期推升评分、价格却没跟上"的典型背离。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[观望，待站上均线] | 止损:[跌破 $34.5]</li>
+        <li><b>6. 太平洋煤气电力 (PCG) - 评分:82.2分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>公用事业低弹性，乖离率 2.85 短线偏高，且加州山火赔付责任始终是隐性黑天鹅，进攻性不足。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[5-10天防御性] | 止损:[跌破 $16.2]</li>
+        <li><b>7. 英特尔 (INTC) - 评分:81.8分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>RSI 56.3 看似强，但乖离率 -3.24 仍在均线下方，代工转型尚未兑现盈利，属"困境反转"博弈，右侧信号未确认。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[需放量站上均线] | 止损:[跌破前低]</li>
+        <li><b>8. 中国互联网ETF (KWEB) - 评分:81.3分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>RSI 43.2、乖离率 -3.67，与 FXI 同病——题材评分高但价格弱势，监管与地缘扰动使其波动剧烈，胜率不稳。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[观望] | 止损:[跌破 $26.2]</li>
+        <li><b>9. 三倍做空小盘股ETF (TZA) - 评分:81.2分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>这是 3 倍反向杠杆产品，存在每日复利损耗（Decay），RSI 40.6 弱势，只能作短线对冲工具，绝不可中长线持有。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[仅日内/隔夜对冲] | 止损:[跌破 $4.25 即离场]</li>
+        <li><b>10. 越洋钻探 (RIG) - 评分:78.5分:</b> <span style="color: #388e3c;">逻辑硬伤：</span>评分垫底且乖离率 -6.51（名单最弱），RSI 41.2 明显走弱，深海钻井负债高、油价敏感，是典型的高 Beta 但弱趋势品种。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[空仓观望] | 止损:[跌破 $5.9]</li>
     </ul>
 </div>
 
 <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
     <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（严禁接盘）</h3>
     <ul>
-        <li><b>倒数1. SNXX (SNXX):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> 乖离率 -81.95%（<b>技术性崩盘</b>），RSI 31.8（超卖但无反弹动能），Score -107.0（全市场最弱）。基本面或存在财务造假、退市风险，<b>绝对死亡陷阱</b>。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 坚决空仓 | 止损: 绝对规避</li>
-        <li><b>倒数2. Sphere 3D (ANY):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> 乖离率 +142.7%（<b>超级暴涨后的诱多</b>），RSI 86.6（极度超买），Score -107.7（相对强度垫底）。典型的<b>拉高出货 + 散户接盘</b>模式，技术面必然回吐，基本面无支撑。<br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期: 坚决空仓 | 止损: 绝对规避</li>
+        <li><b>倒数1. SNXX (SNXX):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> 评分 -107、乖离率 -81.95 已是断崖式崩塌，RSI 31.8 弱势探底。这是正在自由落体的下跌，任何反弹都是出货，切勿"抄底接刀"。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[坚决空仓] | 止损:[绝对规避]</li>
+        <li><b>倒数2. 球体3D (ANY):</b> ❌ <span style="color: #388e3c;">诱多陷阱：</span> RSI 86.6 极度超买、乖离率 142.7 垂直拉升——这是典型的低价股拉高出货（Pump & Dump）形态，评分 -107.7 说明量化模型判定其纯属情绪泡沫，随时闪崩。 <br> <span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[坚决空仓] | 止损:[绝对规避]</li>
     </ul>
 </div>
 
-<style>
-.highlight-label { font-weight: bold; padding: 2px 6px; border-radius: 3px; }
-.bg-red { background: #ffebee; color: #c62828; }
-.bg-blue { background: #e3f2fd; color: #1565c0; }
-.bg-orange { background: #fff3e0; color: #e65100; }
-.top-card { background: #ffffff; border: 2px solid #e0e0e0; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-.top-title { font-size: 18px; font-weight: bold; margin-bottom: 12px; }
-.compare-card { background: #f5f5f5; border: 1px solid #bdbdbd; padding: 20px; margin-bottom: 20px; border-radius: 8px; }
-.compare-title { font-size: 18px; font-weight: bold; color: #424242; margin-bottom: 12px; }
-</style>
+<div style="background:#fff8e1; border-left:5px solid #f9a825; padding:14px; border-radius:6px; font-size:13px; color:#5d4037;">
+    ⚖️ <b>免责声明：</b>以上为基于注入量化数据的策略推演与教学示范，不构成任何投资建议或买卖要约。期权为高风险杠杆工具，可能损失全部权利金；行权价、止损价均为示意，请以实时报价、流动性及个人风险承受能力为准，独立决策、风险自负。
+</div>
 <p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT - STRATEGIC COMMAND AI]</p></div></body></html>
