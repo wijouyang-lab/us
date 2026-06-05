@@ -1,6 +1,7 @@
 name: US-Share Scan
+
 on:
-  workflow_dispatch:
+  workflow_dispatch: # 完美保留：既支持你网页手动补刀，又完美支持腾讯云 API 远程精准打击
 
 jobs:
   run-scan:
