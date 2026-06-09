@@ -9,7 +9,6 @@ from email.mime.multipart import MIMEMultipart
 import anthropic
 import tushare as ts
 
-# 周末不执行
 if datetime.datetime.now().weekday() >= 5:
     exit()
 
@@ -21,9 +20,6 @@ def get_now():
 
 print("启动美股盘后复盘引擎...")
 
-# ==========================================
-# 1. 读取账本
-# ==========================================
 log_file = "trade_history.csv"
 if not os.path.exists(log_file):
     print("⚠️ 尚未生成交易账本，跳过复盘。")
@@ -41,25 +37,15 @@ except Exception as e:
     print(f"⚠️ 账本读取失败: {e}")
     exit(1)
 
-# ==========================================
-# 2. 用 Tushare 获取美股历史价格和最新收盘价
-# ==========================================
 ts.set_token(os.environ.get("TUSHARE_TOKEN"))
 pro = ts.pro_api()
 
-# 拉取最近35天历史价格，用于查询期满日价格
-all_tickers_raw = recent_picks['Ticker'].unique().tolist()
 start_hist = (datetime.datetime.now() - datetime.timedelta(days=35)).strftime('%Y%m%d')
 end_hist = datetime.datetime.now().strftime('%Y%m%d')
 
 df_hist_all = pd.DataFrame()
 try:
-    # 美股需要加后缀，先尝试带后缀查询
-    ts_codes = [t if '.' in t else t for t in all_tickers_raw]
-    df_hist_all = pro.us_daily(
-        start_date=start_hist,
-        end_date=end_hist
-    )
+    df_hist_all = pro.us_daily(start_date=start_hist, end_date=end_hist)
     if df_hist_all is not None and not df_hist_all.empty:
         df_hist_all['clean_ticker'] = df_hist_all['ts_code'].apply(
             lambda x: x.split('.')[0] if '.' in x else x
@@ -68,7 +54,6 @@ try:
 except Exception as e:
     print(f"⚠️ 历史价格拉取失败: {e}")
 
-# 获取最新收盘价
 price_map = {}
 for i in range(1, 5):
     trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
@@ -109,10 +94,10 @@ def get_price_on_date(ticker, target_date_str):
     return float(valid.iloc[-1]['close'])
 
 # ==========================================
-# 3. 按票聚合，过滤不需要追踪的票
+# 按票聚合，过滤不需要追踪的票
 # ==========================================
-active_list = []    # 持仓中（周期内）
-expired_list = []   # 已超期（归档）
+active_list = []
+expired_list = []
 
 for ticker, group in recent_picks.groupby('Ticker'):
     group = group.sort_values('Date')
@@ -120,7 +105,6 @@ for ticker, group in recent_picks.groupby('Ticker'):
     latest_row = group.iloc[-1]
     days_held = (datetime.datetime.now() - first_row['Date']).days
 
-    # 跳过 Trap_Warning
     latest_tag = str(latest_row.get('Tag', '')).strip()
     if latest_tag == 'Trap_Warning':
         print(f"跳过 Trap_Warning: {ticker}")
@@ -138,7 +122,6 @@ for ticker, group in recent_picks.groupby('Ticker'):
             stop_loss = r['Stop_Loss']
             break
 
-    # 没有持仓周期的跳过
     hold_days = parse_hold_days(hold_period_str)
     if hold_days is None:
         print(f"跳过无持仓周期: {ticker}")
@@ -198,7 +181,7 @@ if not active_list and not expired_list:
     exit(0)
 
 # ==========================================
-# 4. Claude 归因分析
+# Claude 归因分析（流式输出）
 # ==========================================
 client = anthropic.Anthropic(
     api_key=os.environ.get("CLAWSOCKET_API_KEY"),
@@ -212,12 +195,12 @@ prompt = f"""
 【持仓中（周期内，需要给出风控指令）】：
 {active_list}
 
-【已超期（本次归档，只做策略复盘评价）】：
+【已超期（本次归档，只做策略复盘评价，不需要风控指令）】：
 {expired_list}
 
 字段说明：
-- Rec_Price：首次推荐价，即买入成本
-- Hold_Period：建议持仓周期（第一次推荐时固定）
+- Rec_Price：首次推荐价，即买入成本，后续重复推荐不改变此基准
+- Hold_Period：建议持仓周期（第一次推荐时固定，不被后续推荐覆盖）
 - Stop_Loss：止损位（第一次推荐时固定）
 - Remaining_Days：距离期满还有多少天（持仓中才有）
 - Maturity_PnL：期满日的真实盈亏（已超期才有，这才是策略真实表现）
@@ -262,7 +245,7 @@ with client.messages.stream(
 ai_html = ai_html.replace("```html", "").replace("```", "").strip()
 
 # ==========================================
-# 5. 写入 review_history.csv
+# 写入 review_history.csv
 # ==========================================
 review_log = "review_history.csv"
 need_header = not os.path.exists(review_log) or os.path.getsize(review_log) == 0
@@ -284,7 +267,7 @@ except Exception as e:
     print(f"⚠️ 复盘写入失败: {e}")
 
 # ==========================================
-# 6. 封装发送
+# 封装发送
 # ==========================================
 style = "body{font-family:sans-serif; background:#f4f6f9; padding:20px; color:#333; line-height:1.6} .container{max-width:900px; margin:0 auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 4px 15px rgba(0,0,0,0.05)}"
 full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'><style>{style}</style></head><body><div class='container'><h1 style='color:#37474f; text-align:center;'>Alpha 雷达美股盘后复盘</h1>{ai_html}</div></body></html>"
