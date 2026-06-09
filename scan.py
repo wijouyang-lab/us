@@ -36,18 +36,37 @@ pro = ts.pro_api()
 # 1. 获取全球宏观新闻
 # ==========================================
 def get_latest_macro_news():
-    print("正在抓取盘前最新全球宏观与财经快讯...")
-    try:
-        df_news = pro.news(src='sina', limit=15)
-        if df_news is not None and not df_news.empty:
-            news_lines = []
-            for _, row in df_news.iterrows():
-                news_lines.append(f"- {row['datetime'][11:16]}: {row['title']}")
-            print("盘前快讯抓取成功！")
-            return "\n".join(news_lines)
-    except Exception as e:
-        print(f"盘前新闻拉取受限: {e}")
-    return "暂无实时盘前新闻，请基于昨收盘及底层产业逻辑进行推演。"
+    print("正在抓取 CNBC/Reuters 英文财经快讯...")
+    import urllib.request
+    import xml.etree.ElementTree as ET
+    
+    sources = [
+        ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
+        ("Reuters", "https://feeds.reuters.com/reuters/businessNews"),
+    ]
+    
+    news_lines = []
+    for source_name, url in sources:
+        try:
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=10) as response:
+                xml_data = response.read()
+            root = ET.fromstring(xml_data)
+            items = root.findall('.//item')[:5]
+            for item in items:
+                title = item.find('title')
+                pub_date = item.find('pubDate')
+                if title is not None:
+                    time_str = pub_date.text[:16] if pub_date is not None else ""
+                    news_lines.append(f"[{source_name}] {time_str} - {title.text}")
+        except Exception as e:
+            print(f"⚠️ {source_name} 抓取失败: {e}")
+    
+    if news_lines:
+        print(f"✅ 成功抓取 {len(news_lines)} 条英文财经快讯")
+        return "\n".join(news_lines)
+    
+    return "暂无实时英文财经新闻，请基于昨收盘及底层产业逻辑进行推演。"
 
 # ==========================================
 # 2. 获取美股标的池（成交量 Top 60）
