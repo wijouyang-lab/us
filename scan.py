@@ -9,6 +9,7 @@ import re
 import random
 import requests
 import yfinance as yf
+import io  # <--- 新增这行，用于处理文本流
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from email.mime.text import MIMEText
@@ -128,7 +129,7 @@ def get_scan_pool():
     def fetch_wiki_tickers(url):
         try:
             html = session.get(url, timeout=15).text
-            tables = pd.read_html(html)
+            tables = pd.read_html(io.StringIO(html))  # <--- 修改这里，用 io.StringIO 包裹
             for df in tables:
                 sym_col = next((col for col in df.columns if col in ['Symbol', 'Ticker', 'Ticker symbol']), None)
                 name_col = next((col for col in df.columns if col in ['Security', 'Company', 'Name']), None)
@@ -153,7 +154,8 @@ def get_scan_pool():
 
     print(f"✅ 成功获取三大指数共 {len(tickers_list)} 只去重标的。正在获取今日成交量，过滤出 Top 60...")
     
-    data = yf.download(tickers_list, period="1d", group_by='ticker', auto_adjust=True, progress=False, session=session)
+    # 增加 threads=False 关闭并发，避免瞬间触发 429 IP 封禁
+    data = yf.download(tickers_list, period="1d", group_by='ticker', auto_adjust=True, progress=False, session=session, threads=False)
     
     vols = {}
     for t in tickers_list:
