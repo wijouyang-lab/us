@@ -6,7 +6,11 @@ import os
 import smtplib
 import time
 import re
-import tushare as ts
+import random
+import requests
+import yfinance as yf
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import anthropic
@@ -16,28 +20,44 @@ if today >= 5:
     print(f"[{datetime.datetime.now()}] 周末休市，脚本自动跳过。")
     exit()
 
+# 已修正：严格执行模型引擎要求 (Pro / Flash)
 TARGET_MODEL = 'claude-opus-4-8'
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
-TS_TOKEN = os.environ.get("TUSHARE_TOKEN")
 
-if not SUPER_ADMIN or not TS_TOKEN:
-    print("致命错误：未检测到 TARGET_EMAILS 或 TUSHARE_TOKEN！")
+if not SUPER_ADMIN:
+    print("致命错误：未检测到 TARGET_EMAILS！")
     exit(1)
 
 print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
 
-ts.set_token(TS_TOKEN)
-pro = ts.pro_api()
+# ==========================================
+# 核心反爬组件：构造高健壮性的 Session
+# ==========================================
+def get_robust_session():
+    """生成带有 User-Agent 轮换和自动重试机制的请求会话"""
+    session = requests.Session()
+    retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
+    adapter = HTTPAdapter(max_retries=retry)
+    session.mount('http://', adapter)
+    session.mount('https://', adapter)
+    
+    user_agents = [
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
+        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15",
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0",
+        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    ]
+    session.headers.update({"User-Agent": random.choice(user_agents)})
+    return session
 
 # ==========================================
 # 1. 宏观新闻（CNBC + Reuters RSS）
 # ==========================================
 def get_latest_macro_news():
     print("正在抓取 CNBC/Reuters 英文财经快讯...")
-    import urllib.request
     import xml.etree.ElementTree as ET
 
     sources = [
@@ -46,13 +66,12 @@ def get_latest_macro_news():
         ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/"),
     ]
 
+    session = get_robust_session()
     news_lines = []
     for source_name, url in sources:
         try:
-            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-            with urllib.request.urlopen(req, timeout=10) as response:
-                xml_data = response.read()
-            root = ET.fromstring(xml_data)
+            response = session.get(url, timeout=10)
+            root = ET.fromstring(response.content)
             items = root.findall('.//item')[:5]
             for item in items:
                 title = item.find('title')
@@ -70,19 +89,15 @@ def get_latest_macro_news():
     return "暂无实时英文财经新闻，请基于昨收盘及底层产业逻辑进行推演。"
 
 # ==========================================
-# 2. 个股新闻（Yahoo Finance RSS，按 ticker 抓取）
+# 2. 个股新闻（Yahoo Finance RSS + 随机休眠）
 # ==========================================
 def get_stock_news(ticker, max_items=3):
-    """抓取单只股票的最新新闻标题，来源 Yahoo Finance RSS"""
-    import urllib.request
     import xml.etree.ElementTree as ET
-
+    session = get_robust_session()
     url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US"
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=8) as response:
-            xml_data = response.read()
-        root = ET.fromstring(xml_data)
+        response = session.get(url, timeout=8)
+        root = ET.fromstring(response.content)
         items = root.findall('.//item')[:max_items]
         headlines = []
         for item in items:
@@ -94,64 +109,80 @@ def get_stock_news(ticker, max_items=3):
         return []
 
 def enrich_pool_with_news(pool):
-    """为标的池里每只票补充个股新闻，Top 40 全部抓取"""
     print(f"正在抓取 {len(pool)} 只标的的个股新闻...")
     for item in pool:
         ticker = item['Ticker']
         headlines = get_stock_news(ticker)
         item['个股新闻'] = headlines if headlines else ["暂无最新新闻"]
-        time.sleep(0.3)  # 避免请求过快被封
+        time.sleep(random.uniform(0.5, 1.5))  # 动态随机休眠，防反爬
     print("✅ 个股新闻补充完毕")
     return pool
 
 # ==========================================
-# 3. 获取美股标的池（成交量 Top 60）
+# 3. 获取美股标的池（全免费：三大指数 + 成交量过滤）
 # ==========================================
 def get_scan_pool():
-    tickers = {}
-    print("正在调用 Tushare 获取美股高活跃标的池...")
-    try:
-        for i in range(1, 10):
-            trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
-            df = pro.us_daily(trade_date=trade_date)
-            if df is not None and not df.empty:
-                print(f"成功获取 {trade_date} 美股行情，按成交量筛选 Top 60...")
-                df_sorted = df.sort_values('vol', ascending=False).head(60)
-                raw_tickers = df_sorted['ts_code'].tolist()
-                try:
-                    basic = pro.us_basic()
-                    name_map = dict(zip(basic['ts_code'], basic['enname']))
-                except:
-                    name_map = {}
-                for t in raw_tickers:
-                    clean_ticker = t.split('.')[0] if '.' in t else t
-                    tickers[t] = name_map.get(t, clean_ticker)
-                break
-        if not tickers:
-            raise ValueError("Tushare 返回为空，触发备用池。")
-    except Exception as e:
-        print(f"Tushare 数据拉取受限 ({e})，启用备用核心池...")
-        tickers = {"NVDA": "NVIDIA", "AAPL": "Apple", "MSFT": "Microsoft", "TSLA": "Tesla"}
-    return tickers
+    print("正在通过维基百科获取三大指数 (标普500, 纳指100, 道指) 标的池...")
+    session = get_robust_session()
+    
+    def fetch_wiki_tickers(url):
+        try:
+            html = session.get(url, timeout=15).text
+            tables = pd.read_html(html)
+            for df in tables:
+                sym_col = next((col for col in df.columns if col in ['Symbol', 'Ticker', 'Ticker symbol']), None)
+                name_col = next((col for col in df.columns if col in ['Security', 'Company', 'Name']), None)
+                if sym_col and name_col:
+                    symbols = df[sym_col].astype(str).tolist()
+                    names = df[name_col].astype(str).tolist()
+                    return {s.replace('.', '-'): n for s, n in zip(symbols, names)}
+        except Exception as e:
+            print(f"抓取 {url.split('/')[-1]} 失败: {e}")
+        return {}
+
+    sp500 = fetch_wiki_tickers('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
+    ndx100 = fetch_wiki_tickers('https://en.wikipedia.org/wiki/Nasdaq-100')
+    dji = fetch_wiki_tickers('https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average')
+    
+    all_tickers_dict = {**sp500, **ndx100, **dji}
+    tickers_list = list(all_tickers_dict.keys())
+    
+    if not tickers_list:
+        print("维基百科拉取受限，启用备用核心池...")
+        return {"NVDA": "NVIDIA", "AAPL": "Apple", "MSFT": "Microsoft", "TSLA": "Tesla"}
+
+    print(f"✅ 成功获取三大指数共 {len(tickers_list)} 只去重标的。正在获取今日成交量，过滤出 Top 60...")
+    
+    data = yf.download(tickers_list, period="1d", group_by='ticker', auto_adjust=True, progress=False, session=session)
+    
+    vols = {}
+    for t in tickers_list:
+        try:
+            vol = data[t]['Volume'].iloc[-1]
+            if pd.notna(vol):
+                vols[t] = vol
+        except:
+            continue
+            
+    top_60 = pd.Series(vols).nlargest(60).index.tolist()
+    final_dict = {t: all_tickers_dict[t] for t in top_60}
+    return final_dict
 
 # ==========================================
-# 4. 拉取 K 线，计算技术指标
+# 4. 拉取 K 线，计算技术指标 (yfinance接入)
 # ==========================================
 def get_kline_data(ts_code):
-    end_dt = datetime.datetime.now().strftime('%Y%m%d')
-    start_dt = (datetime.datetime.now() - datetime.timedelta(days=150)).strftime('%Y%m%d')
+    session = get_robust_session()
     for attempt in range(3):
         try:
-            time.sleep(0.2)
-            df = pro.us_daily(ts_code=ts_code, start_date=start_dt, end_date=end_dt)
+            df = yf.download(ts_code, period="6mo", progress=False, session=session)
             if df is not None and not df.empty:
-                df['Date'] = pd.to_datetime(df['trade_date'])
-                df.set_index('Date', inplace=True)
-                df.rename(columns={'open':'Open', 'high':'High', 'low':'Low', 'close':'Close', 'vol':'Volume'}, inplace=True)
-                df.sort_index(ascending=True, inplace=True)
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+                df.index.name = 'Date'
                 return df
         except Exception:
-            time.sleep(1)
+            time.sleep(random.uniform(1, 3))
     return pd.DataFrame()
 
 def build_stock_pool(tickers):
@@ -191,7 +222,7 @@ def build_stock_pool(tickers):
     return pool_sorted[:40]
 
 # ==========================================
-# 5. Claude 宏观驱动深度推演（流式）
+# 5. Claude/Gemini 宏观驱动深度推演（流式）
 # ==========================================
 def generate_ai_report(pool_data, macro_news_text):
     print("开始调用 AI 大脑（宏观先行，技术风控，个股新闻预警）...")
@@ -201,7 +232,6 @@ def generate_ai_report(pool_data, macro_news_text):
     )
     today_str = datetime.datetime.now().strftime('%Y年%m月%d日')
 
-    # 格式化标的池，把个股新闻嵌入进去
     pool_text_lines = []
     for item in pool_data:
         news_str = " | ".join(item.get('个股新闻', ['暂无']))
@@ -230,7 +260,7 @@ def generate_ai_report(pool_data, macro_news_text):
 
 【核心推演任务】：
 第一步（宏观选将）：深刻阅读盘前宏观新闻，判断今日美股的主线逻辑，从标的池中挑出与主线最契合的标的。
-第二步（个股新闻排雷）：审查每只候选标的的个股新闻。若发现负面新闻（监管风险、业绩下调、内部人抛售、诉讼、CEO离职等），即使技术面健康也必须列入诱多对照组或降级处理。
+第二步（个股新闻排雷）：审查每只候选标队的个股新闻。若发现负面新闻（监管风险、业绩下调、内部人抛售、诉讼、CEO离职等），即使技术面健康也必须列入诱多对照组或降级处理。
 第三步（技术风控）：对通过新闻排雷的标的进行技术审查。
 - 技术面安全（乖离率<12%，RSI<75）→ 列为核心Top1-3或观察池Rank4-10
 - 技术极度危险（乖离率>15%或RSI>80）→ 列入诱多对照组
