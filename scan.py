@@ -37,21 +37,15 @@ print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
 # ==========================================
 # 核心反爬组件：构造高健壮性的 Session
 # ==========================================
+# 在 get_robust_session 中添加代理配置
 def get_robust_session():
-    """生成带有 User-Agent 轮换和自动重试机制的请求会话"""
     session = requests.Session()
-    retry = Retry(total=3, backoff_factor=1, status_forcelist=[429, 500, 502, 503, 504])
-    adapter = HTTPAdapter(max_retries=retry)
-    session.mount('http://', adapter)
-    session.mount('https://', adapter)
-    
-    user_agents = [
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36",
-        "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15",
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:123.0) Gecko/20100101 Firefox/123.0",
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-    ]
-    session.headers.update({"User-Agent": random.choice(user_agents)})
+    # 尝试使用免费的旋转代理池（如果无法使用，请删掉 proxies 部分）
+    # 或者直接使用 yfinance 官方提供的 proxy 参数
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+        "Referer": "https://finance.yahoo.com/" # 雅虎现在要求referer
+    })
     return session
 
 # ==========================================
