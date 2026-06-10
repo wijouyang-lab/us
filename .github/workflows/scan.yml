@@ -19,11 +19,12 @@ jobs:
         python-version: '3.12'
 
     - name: Install Libs
-      run: pip install pandas pandas-ta requests anthropic tushare
+      # 移除了 tushare，新增了 yfinance, lxml 和 html5lib
+      run: pip install pandas pandas-ta requests anthropic yfinance lxml html5lib
 
     - name: Run Scan
       env:
-        TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
+        # 移除了失效的 TUSHARE_TOKEN
         CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
         CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
