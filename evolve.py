@@ -119,7 +119,7 @@ prompt = f"""
 # 流式输出，避免524超时
 raw_output = ""
 with client.messages.stream(
-    model="claude-opus-4-8",
+    model="claude-fable-5",
     max_tokens=8000,
     temperature=0.2,
     messages=[{"role": "user", "content": prompt}]
