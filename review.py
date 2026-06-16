@@ -12,7 +12,7 @@ import tushare as ts
 if datetime.datetime.now().weekday() >= 5:
     exit()
 
-TARGET_MODEL = 'claude-fable-5'
+TARGET_MODEL = 'claude-opus-4-8'
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 
 def get_now():
