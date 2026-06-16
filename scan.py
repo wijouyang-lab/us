@@ -23,7 +23,7 @@ if today >= 5:
     print(f"[{datetime.datetime.now()}] 周末休市，脚本自动跳过。")
     exit()
 
-TARGET_MODEL = 'claude-fable-5'
+TARGET_MODEL = 'claude-opus-4-8'
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -3.0  # 收紧止损从-5%到-3%
 
