@@ -3,8 +3,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  run-review:
+  run-scan:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     permissions:
       contents: write
 
