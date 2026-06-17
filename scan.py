@@ -239,46 +239,60 @@ def generate_ai_report(pool_data, macro_news_text):
     pool_formatted = "\n".join(pool_text_lines)
 
     prompt = f"""
-你是华尔街顶级游资主力量化操盘手及高级期权策略师。你的交易哲学是：【宏观定方向，产业定主线，个股新闻排雷，技术定买卖】。
+你是华尔街顶级产业链研究员兼游资操盘手。你的选股方法论是：
+
+【三步选股法】：
+第一步（事件驱动）：从宏观新闻中提炼出今日最强的1-2条产业链主线。
+例如：
+- AI算力爆发 → GPU需求激增 → HBM/DRAM内存长期供应紧张（2025-2028缺货） → 美光(MU)、Arm(ARM)
+- 美联储降息预期升温 → 资金回流成长股 → 科技/半导体板块受益
+- 地缘冲突缓和 → 原油回落 → 航空(DAL/UAL)、航运成本下降受益的零售商(AMZN)
+
+第二步（产业链传导）：沿着主线找到直接受益的上中下游标的。
+关键是找"二级受益者"——不是最直接受益的，而是护城河更强、估值更低的：
+- 英伟达GPU热销 → 不买英伟达（已过热），买内存供应商MU（供需缺口持续到2028）
+- AI数据中心扩张 → 不买AI芯片（贵），买给数据中心供电的电力设备商（POWL/VRT）
+
+第三步（技术确认）：
+只有满足以下条件才能列为核心推荐，否则只能列观察池等待回调：
+- 乖离率 < 12%（没有严重偏离均线）
+- RSI < 75（没有严重超买）
+- MACD走强（动能向上）
+若产业链逻辑极好但技术已经极度超买（乖离率>20%，RSI>80），列入诱多对照组，等回调再说。
+
 今天是{today_str}。
 
-【盘前宏观与全球重大快讯（最高优先级）】：
+【盘前宏观与全球重大快讯】：
 {macro_news_text}
 
-【今日美股成交最活跃的 Top 40 标的池】（含技术数据 + 个股最新新闻）：
+【今日成交活跃的 Top 40 标的池】（含技术数据 + 个股最新新闻）：
 {pool_formatted}
 
-字段说明：
-- 乖离率(%)：偏离20日均线的幅度，绝对值越小越安全，超过15%需警惕
-- RSI：超过75为超买危险区，低于30为超卖
-- MACD趋势：走强代表动能向上，走弱代表动能减弱
-- 最新新闻：该股票最近的新闻标题，用于排查个股风险（如监管调查、业绩预警、CEO离职、诉讼等）
+【你的任务】：
+1. 从宏观新闻中提炼出今日1-2条最强产业链主线
+2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者）
+3. 用技术面确认入场时机
+4. 个股新闻排雷（负面新闻降级处理）
+5. 按以下HTML骨架输出报告
 
-【核心推演任务】：
-第一步（宏观选将）：深刻阅读盘前宏观新闻，判断今日美股的主线逻辑，从标的池中挑出与主线最契合的标的。
-第二步（个股新闻排雷）：审查每只候选标队的个股新闻。若发现负面新闻（监管风险、业绩下调、内部人抛售、诉讼、CEO离职等），即使技术面健康也必须列入诱多对照组或降级处理。
-第三步（技术风控）：对通过新闻排雷的标的进行技术审查。
-- 技术面安全（乖离率<12%，RSI<75）→ 列为核心Top1-3或观察池Rank4-10
-- 技术极度危险（乖离率>15%或RSI>80）→ 列入诱多对照组
+注意：如果标的池里没有完美符合产业链逻辑的票，宁可说"今日无强逻辑标的，等待回调"，也不要强行凑数推荐。
 
-【硬性纪律】：
-1. 同一只股票绝对不能在报告中重复出现
-2. 风控底线必须明确输出"周期:[X-Y天] | 止损:[具体价格或百分比]"
-3. 个股新闻中若有任何负面信号，必须在分析中点名说明
-4. 严格按以下HTML骨架直出，不加markdown外框：
+【严格按以下HTML骨架直出，不加markdown外框】：
 
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
-    <h3 style="margin-top: 0; color: #0d47a1;">🌍 宏观资金定调与主线研判</h3>
-    <p>(深度穿透盘前快讯，明确指出今日美股应进攻的产业主线和必须回避的雷区，不少于150字)</p>
+    <h3 style="margin-top: 0; color: #0d47a1;">🌍 今日产业链主线研判</h3>
+    <p><b>主线1：</b>(事件 → 传导逻辑 → 直接受益 → 二级受益，不少于100字)</p>
+    <p><b>主线2：</b>(同上，如无第二条主线则说明)</p>
+    <p><b>今日雷区：</b>(哪些板块/标的因宏观逆风或技术超买必须回避)</p>
 </div>
 
-<h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 宏观主线优选 (Top 1-3)</h2>
+<h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 产业链主线优选 (Top 1-3)</h2>
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">1. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔥 宏观驱动与主线逻辑:</span> (说明为什么它最契合今天的宏观主线)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面安全垫:</span> (引用乖离率、RSI、MACD说明买点安全性)</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (说明该股近期新闻是否有风险，若无负面则说明新闻面干净)</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD是否确认入场时机安全)</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (近期新闻是否干净，有无负面风险)</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
         <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(明确建议)</li><li><b>期权组合构建：</b>(单腿买入还是价差防守？)</li></ul>
@@ -287,10 +301,10 @@ def generate_ai_report(pool_data, macro_news_text):
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">2. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔥 宏观驱动与主线逻辑:</span> (...)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面安全垫:</span> (...)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
         <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li></ul>
@@ -299,10 +313,10 @@ def generate_ai_report(pool_data, macro_news_text):
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">3. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔥 宏观驱动与主线逻辑:</span> (...)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术面安全垫:</span> (...)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 潜伏与风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
         <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li></ul>
@@ -310,23 +324,23 @@ def generate_ai_report(pool_data, macro_news_text):
 </div>
 
 <div class="compare-card">
-    <div class="compare-title">🎖️ 观察池及硬伤诊断 (Rank 4-10)</div>
+    <div class="compare-title">🎖️ 观察池 - 逻辑对但技术未到位 (Rank 4-10)</div>
     <ul>
-        <li><b>4. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">宏观或技术硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
-        <li><b>5. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
-        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
-        <li><b>7. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
-        <li><b>8. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
-        <li><b>9. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
-        <li><b>10. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[X-Y天或观望] | 止损:[具体价格]</li>
+        <li><b>4. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
+        <li><b>5. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>7. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>8. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>9. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>10. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
     </ul>
 </div>
 
 <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
-    <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（严禁接盘）</h3>
+    <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（逻辑好但技术超买，等回调）</h3>
     <ul>
-        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">宏观、技术或个股新闻硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓] | 止损:[绝对规避]</li>
-        <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">宏观、技术或个股新闻硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓] | 止损:[绝对规避]</li>
+        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">超买或负面新闻硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
+        <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">超买或负面新闻硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
     </ul>
 </div>
 """
