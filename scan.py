@@ -265,7 +265,7 @@ def generate_ai_report(pool_data, macro_news_text):
 【盘前宏观与全球重大快讯】：
 {macro_news_text}
 
-【今日成交活跃的 Top 40 标的池】（含技术数据 + 个股最新新闻）：
+【今日成交活跃的 Top 300 标的池】（含技术数据 + 个股最新新闻）：
 {pool_formatted}
 
 【你的任务】：
