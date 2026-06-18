@@ -32,7 +32,6 @@ except Exception as e:
     print(f"⚠️ 复盘账本读取失败: {e}")
     exit(1)
 
-# 只统计真正执行买卖的标签，排除观望的 Observation
 overall_win_rate = 0
 if 'PnL_Pct' in recent.columns:
     recent['PnL_Pct'] = pd.to_numeric(recent['PnL_Pct'], errors='coerce')
@@ -81,6 +80,8 @@ client = anthropic.Anthropic(
 prompt = f"""
 你是一个美股量化策略优化专家。以下是当前系统的真实持仓盈亏数据和代码。
 
+系统的核心选股哲学是【产业链逻辑驱动】：从宏观事件提炼产业链主线，找到二级受益标的，技术面只作为入场时机确认，不是选股的主要依据。
+
 【近30天真实持仓表现】：
 整体胜率：{overall_win_rate}%（目标>60%）
 各标签细分：{stats}
@@ -92,20 +93,22 @@ prompt = f"""
 
 【任务】：
 基于真实持仓盈亏数据分析胜率低的原因，调整参数或逻辑，输出改进后的完整代码。
-可以调整：RSI阈值、乖离率门槛、MACD权重、评分公式、筛选条件等。
-不要改变代码的整体结构、API调用方式、邮件发送逻辑、入库逻辑。
+重要约束：
+1. 不要把选股逻辑退回纯技术指标驱动，产业链逻辑推演必须保留为第一步
+2. 可以调整的是：技术确认的阈值（RSI、乖离率门槛）、新闻排雷的严格程度、止损止盈的计算方式
+3. 不要改变代码的整体结构、API调用方式、邮件发送逻辑、入库逻辑
 
 【严格按以下格式输出，不要加任何其他内容】：
 
 ===REPORT_START===
 <div style="background:#e8f5e9; border-left:6px solid #388e3c; padding:20px; border-radius:8px; margin-bottom:20px;">
 <h3 style="color:#1b5e20; margin-top:0;">🔬 胜率诊断</h3>
-<p>(基于真实盈亏数据说明胜率低的核心原因)</p>
+<p>(基于真实盈亏数据说明胜率低的核心原因，是产业链逻辑判断错误，还是技术确认阈值不合理，还是止损设置有问题)</p>
 </div>
 <div style="background:#e3f2fd; border-left:6px solid #1976d2; padding:20px; border-radius:8px;">
 <h3 style="color:#0d47a1; margin-top:0;">🔧 本次改进内容</h3>
 <ul>
-<li>(改动1：具体参数变化)</li>
+<li>(改动1：具体参数变化，需说明为什么不破坏产业链逻辑选股的核心方法论)</li>
 <li>(改动2：...)</li>
 </ul>
 </div>
@@ -116,7 +119,6 @@ prompt = f"""
 ===CODE_END===
 """
 
-# 流式输出，避免524超时
 raw_output = ""
 with client.messages.stream(
     model="claude-opus-4-8",
