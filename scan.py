@@ -9,7 +9,7 @@ import re
 import random
 import requests
 import yfinance as yf
-import io  # <--- 新增这行，用于处理文本流
+import io
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from email.mime.text import MIMEText
@@ -21,7 +21,6 @@ if today >= 5:
     print(f"[{datetime.datetime.now()}] 周末休市，脚本自动跳过。")
     exit()
 
-# 已修正：严格执行模型引擎要求 (Pro / Flash)
 TARGET_MODEL = 'claude-opus-4-8'
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
@@ -34,17 +33,11 @@ if not SUPER_ADMIN:
 
 print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
 
-# ==========================================
-# 核心反爬组件：构造高健壮性的 Session
-# ==========================================
-# 在 get_robust_session 中添加代理配置
 def get_robust_session():
     session = requests.Session()
-    # 尝试使用免费的旋转代理池（如果无法使用，请删掉 proxies 部分）
-    # 或者直接使用 yfinance 官方提供的 proxy 参数
     session.headers.update({
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-        "Referer": "https://finance.yahoo.com/" # 雅虎现在要求referer
+        "Referer": "https://finance.yahoo.com/"
     })
     return session
 
@@ -85,8 +78,9 @@ def get_latest_macro_news():
 
 # ==========================================
 # 2. 个股新闻（Yahoo Finance RSS + 随机休眠）
+# 提高条数到 6 条，给 AI 更多素材做详细新闻面分析
 # ==========================================
-def get_stock_news(ticker, max_items=3):
+def get_stock_news(ticker, max_items=6):
     import xml.etree.ElementTree as ET
     session = get_robust_session()
     url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US"
@@ -109,7 +103,7 @@ def enrich_pool_with_news(pool):
         ticker = item['Ticker']
         headlines = get_stock_news(ticker)
         item['个股新闻'] = headlines if headlines else ["暂无最新新闻"]
-        time.sleep(random.uniform(0.5, 1.5))  # 动态随机休眠，防反爬
+        time.sleep(random.uniform(0.5, 1.5))
     print("✅ 个股新闻补充完毕")
     return pool
 
@@ -119,11 +113,11 @@ def enrich_pool_with_news(pool):
 def get_scan_pool():
     print("正在通过维基百科获取三大指数 (标普500, 纳指100, 道指) 标的池...")
     session = get_robust_session()
-    
+
     def fetch_wiki_tickers(url):
         try:
             html = session.get(url, timeout=15).text
-            tables = pd.read_html(io.StringIO(html))  # <--- 修改这里，用 io.StringIO 包裹
+            tables = pd.read_html(io.StringIO(html))
             for df in tables:
                 sym_col = next((col for col in df.columns if col in ['Symbol', 'Ticker', 'Ticker symbol']), None)
                 name_col = next((col for col in df.columns if col in ['Security', 'Company', 'Name']), None)
@@ -138,19 +132,18 @@ def get_scan_pool():
     sp500 = fetch_wiki_tickers('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')
     ndx100 = fetch_wiki_tickers('https://en.wikipedia.org/wiki/Nasdaq-100')
     dji = fetch_wiki_tickers('https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average')
-    
+
     all_tickers_dict = {**sp500, **ndx100, **dji}
     tickers_list = list(all_tickers_dict.keys())
-    
+
     if not tickers_list:
         print("维基百科拉取受限，启用备用核心池...")
         return {"NVDA": "NVIDIA", "AAPL": "Apple", "MSFT": "Microsoft", "TSLA": "Tesla"}
 
     print(f"✅ 成功获取三大指数共 {len(tickers_list)} 只去重标的。正在获取今日成交量，过滤出 Top 60...")
-    
-    # 增加 threads=False 关闭并发，避免瞬间触发 429 IP 封禁
+
     data = yf.download(tickers_list, period="1d", group_by='ticker', auto_adjust=True, progress=False, session=session, threads=False)
-    
+
     vols = {}
     for t in tickers_list:
         try:
@@ -159,13 +152,13 @@ def get_scan_pool():
                 vols[t] = vol
         except:
             continue
-            
+
     top_60 = pd.Series(vols).nlargest(60).index.tolist()
     final_dict = {t: all_tickers_dict[t] for t in top_60}
     return final_dict
 
 # ==========================================
-# 4. 拉取 K 线，计算技术指标 (yfinance接入)
+# 4. 拉取 K 线，计算技术指标（仅作参考，不预先淘汰）
 # ==========================================
 def get_kline_data(ts_code):
     session = get_robust_session()
@@ -183,7 +176,7 @@ def get_kline_data(ts_code):
 
 def build_stock_pool(tickers):
     pool = []
-    print(f"正在计算技术面风控数据，扫描 {len(tickers)} 只标的...")
+    print(f"正在计算技术面参考数据，扫描 {len(tickers)} 只标的...")
     for ts_code, name in tickers.items():
         try:
             df = get_kline_data(ts_code)
@@ -214,14 +207,14 @@ def build_stock_pool(tickers):
         except Exception:
             continue
 
-    pool_sorted = sorted(pool, key=lambda x: abs(x['RSI'] - 55))
-    return pool_sorted[:40]
+    print(f"✅ 技术面数据计算完毕，共 {len(pool)} 只标的进入新闻+逻辑分析阶段。")
+    return pool
 
 # ==========================================
-# 5. Claude/Gemini 宏观驱动深度推演（流式）
+# 5. Claude 宏观+个股新闻驱动深度推演（流式，Top5详细分析）
 # ==========================================
 def generate_ai_report(pool_data, macro_news_text):
-    print("开始调用 AI 大脑（宏观先行，技术风控，个股新闻预警）...")
+    print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析）...")
     client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
         base_url=os.environ.get("CLAWSOCKET_BASE_URL")
@@ -237,6 +230,7 @@ def generate_ai_report(pool_data, macro_news_text):
             f"最新新闻: {news_str}"
         )
     pool_formatted = "\n".join(pool_text_lines)
+    pool_count = len(pool_data)
 
     prompt = f"""
 你是华尔街顶级产业链研究员兼游资操盘手。你的选股方法论是：
@@ -248,62 +242,63 @@ def generate_ai_report(pool_data, macro_news_text):
 - 美联储降息预期升温 → 资金回流成长股 → 科技/半导体板块受益
 - 地缘冲突缓和 → 原油回落 → 航空(DAL/UAL)、航运成本下降受益的零售商(AMZN)
 
-第二步（产业链传导）：沿着主线找到直接受益的上中下游标的。
-关键是找"二级受益者"——不是最直接受益的，而是护城河更强、估值更低的：
+第二步（产业链传导 + 个股新闻排雷）：
+沿着主线找到直接受益的上中下游标的，关键是找"二级受益者"——护城河更强、估值更低的：
 - 英伟达GPU热销 → 不买英伟达（已过热），买内存供应商MU（供需缺口持续到2028）
 - AI数据中心扩张 → 不买AI芯片（贵），买给数据中心供电的电力设备商（POWL/VRT）
+同时，必须逐一审查候选标的的"最新新闻"字段（每只票最多6条标题）。若发现负面新闻（监管调查、业绩预警、CEO离职、诉讼、内部人大额抛售等），即使产业链逻辑再好，也必须降级处理或移入诱多对照组。新闻面排雷的优先级高于技术面。
 
 第三步（技术确认）：
-只有满足以下条件才能列为核心推荐，否则只能列观察池等待回调：
+只有通过新闻排雷且满足以下条件才能列为核心推荐，否则只能列观察池等待回调：
 - 乖离率 < 12%（没有严重偏离均线）
 - RSI < 75（没有严重超买）
 - MACD走强（动能向上）
-若产业链逻辑极好但技术已经极度超买（乖离率>20%，RSI>80），列入诱多对照组，等回调再说。
+若产业链逻辑和新闻面都好但技术已经极度超买（乖离率>20%，RSI>80），列入诱多对照组，等回调再说。
 
 今天是{today_str}。
 
 【盘前宏观与全球重大快讯】：
 {macro_news_text}
 
-【今日成交活跃的 Top 300 标的池】（含技术数据 + 个股最新新闻）：
+【今日成交活跃的 Top {pool_count} 标的池】（含技术数据 + 个股最新新闻，每只票最多6条新闻标题）：
 {pool_formatted}
 
 【你的任务】：
 1. 从宏观新闻中提炼出今日1-2条最强产业链主线
-2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者）
+2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者），逐一核查其个股新闻是否有负面信号
 3. 用技术面确认入场时机
-4. 个股新闻排雷（负面新闻降级处理）
+4. 对核心入选的【前5只】标的（Top 1-5）进行展开式详细分析，每只票的产业链逻辑、新闻核查、技术确认都要写得具体、有数据支撑，不要写空话套话
 5. 按以下HTML骨架输出报告
 
-注意：如果标的池里没有完美符合产业链逻辑的票，宁可说"今日无强逻辑标的，等待回调"，也不要强行凑数推荐。
+注意：如果标的池里没有5只能完美符合产业链逻辑且新闻面干净的票，可以少于5只进入核心区，把空出来的名额放入观察池详细说明原因，不要为了凑数硬塞逻辑不充分的票进核心区。
 
-【严格按以下HTML骨架直出，不加markdown外框】：
+【严格按以下HTML骨架直出，不加markdown外框，Top1-5每只都要按这个模板写满】：
 
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #0d47a1;">🌍 今日产业链主线研判</h3>
-    <p><b>主线1：</b>(事件 → 传导逻辑 → 直接受益 → 二级受益，不少于100字)</p>
+    <p><b>主线1：</b>(事件 → 传导逻辑 → 直接受益 → 二级受益，不少于150字)</p>
     <p><b>主线2：</b>(同上，如无第二条主线则说明)</p>
-    <p><b>今日雷区：</b>(哪些板块/标的因宏观逆风或技术超买必须回避)</p>
+    <p><b>今日雷区：</b>(哪些板块/标的因宏观逆风、负面新闻或技术超买必须回避)</p>
 </div>
 
-<h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 产业链主线优选 (Top 1-3)</h2>
+<h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 产业链主线优选 (Top 1-5 详细分析)</h2>
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">1. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD是否确认入场时机安全)</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (近期新闻是否干净，有无负面风险)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者，不少于100字)</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (基于提供的新闻标题，逐条点评是否有风险，至少提及2-3条具体新闻内容)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD数值具体分析，说明为何这个时点是安全的入场点)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(明确建议)</li><li><b>期权组合构建：</b>(单腿买入还是价差防守？)</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(明确建议，给出具体strike和expiry时间窗口)</li><li><b>期权组合构建：</b>(单腿买入还是价差防守，说明理由)</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">2. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (...)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -313,9 +308,33 @@ def generate_ai_report(pool_data, macro_news_text):
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">3. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (...)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+    <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
+        <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li></ul>
+    </div>
+</div>
+
+<div class="top-card core-card">
+    <div class="top-title" style="color: #d32f2f;">4. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+    <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
+        <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li></ul>
+    </div>
+</div>
+
+<div class="top-card core-card">
+    <div class="top-title" style="color: #d32f2f;">5. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -324,23 +343,23 @@ def generate_ai_report(pool_data, macro_news_text):
 </div>
 
 <div class="compare-card">
-    <div class="compare-title">🎖️ 观察池 - 逻辑对但技术未到位 (Rank 4-10)</div>
+    <div class="compare-title">🎖️ 观察池 - 逻辑对但技术未到位 (Rank 6-12)</div>
     <ul>
-        <li><b>4. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
-        <li><b>5. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
-        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
-        <li><b>7. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
-        <li><b>8. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
-        <li><b>9. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
-        <li><b>10. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑) <span style="color: #2e7d32;">新闻面：</span>(是否干净) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
+        <li><b>7. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>8. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>9. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>10. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>11. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        <li><b>12. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
     </ul>
 </div>
 
 <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
-    <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（逻辑好但技术超买，等回调）</h3>
+    <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（逻辑或技术或新闻面有硬伤，严禁接盘）</h3>
     <ul>
-        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">超买或负面新闻硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
-        <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">超买或负面新闻硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
+        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
+        <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
     </ul>
 </div>
 """
@@ -348,7 +367,7 @@ def generate_ai_report(pool_data, macro_news_text):
     ai_html = ""
     with client.messages.stream(
         model=TARGET_MODEL,
-        max_tokens=4096,
+        max_tokens=8000,
         temperature=0.25,
         messages=[{"role": "user", "content": prompt}]
     ) as stream:
@@ -406,7 +425,6 @@ if __name__ == "__main__":
         print("数据池为空，跳过执行。")
         exit(0)
 
-    # 补充个股新闻
     pool_data = enrich_pool_with_news(pool_data)
 
     ai_generated_html = generate_ai_report(pool_data, macro_news)
@@ -440,9 +458,9 @@ if __name__ == "__main__":
         context = clean_html[max(0, idx-300):idx] + chunk[:200]
 
         tag = None
-        if "宏观主线优选" in context or "core-card" in context or "Top 1" in context or "Top 2" in context or "Top 3" in context:
+        if "宏观主线优选" in context or "core-card" in context or "Top 1" in context or "Top 2" in context or "Top 3" in context or "Top 4" in context or "Top 5" in context:
             tag = "Core_Dragon"
-        elif "观察池" in context or "Rank 4" in context or "Rank 5" in context or "Rank 6" in context or "Rank 7" in context or "Rank 8" in context or "Rank 9" in context or "Rank 10" in context:
+        elif "观察池" in context or "Rank 6" in context or "Rank 7" in context or "Rank 8" in context or "Rank 9" in context or "Rank 10" in context or "Rank 11" in context or "Rank 12" in context:
             tag = "Observation"
         elif "诱多" in context or "坚决空仓" in context:
             tag = "Trap_Warning"
