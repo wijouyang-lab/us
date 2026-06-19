@@ -94,12 +94,28 @@ def get_price_on_date(ticker, target_date_str):
     return float(valid.iloc[-1]['close'])
 
 # ==========================================
+# 读取已有 review_history.csv，建立"已归档"去重集合
+# 避免同一笔交易的最终结果被反复记录
+# ==========================================
+already_archived = set()
+review_log_path = "review_history.csv"
+if os.path.exists(review_log_path) and os.path.getsize(review_log_path) > 0:
+    try:
+        existing_review = pd.read_csv(review_log_path, on_bad_lines='skip')
+        if {'Status', 'Ticker', 'Rec_Date'}.issubset(existing_review.columns):
+            archived_rows = existing_review[existing_review['Status'] == '已超期归档']
+            already_archived = set(zip(archived_rows['Ticker'].astype(str), archived_rows['Rec_Date'].astype(str)))
+            print(f"📌 已读取历史归档记录，共 {len(already_archived)} 笔交易此前已完成归档，本次将跳过重复记录")
+    except Exception as e:
+        print(f"⚠️ 读取历史归档记录失败，将不做去重: {e}")
+
+# ==========================================
 # 按票聚合，过滤不需要追踪的票
 # ==========================================
 active_list = []
 expired_list = []
+skipped_duplicate = 0
 
-# 新版scan.py只有Core_Dragon才会真正入库带止损止盈，Observation本身就是观望不追踪
 SKIP_TAGS = ['Trap_Warning', 'Observation']
 
 for ticker, group in recent_picks.groupby('Ticker'):
@@ -115,6 +131,7 @@ for ticker, group in recent_picks.groupby('Ticker'):
 
     hold_period_str = 'N/A'
     stop_loss = 'N/A'
+    score_str = 'N/A'
     for _, r in group.iterrows():
         if str(r.get('Hold_Period', 'N/A')).strip() not in ['N/A', 'nan', '', '坚决空仓', '观望', '观望等回调']:
             hold_period_str = r['Hold_Period']
@@ -123,6 +140,12 @@ for ticker, group in recent_picks.groupby('Ticker'):
         if str(r.get('Stop_Loss', 'N/A')).strip() not in ['N/A', 'nan', '', '坚决空仓', '绝对规避', '观望']:
             stop_loss = r['Stop_Loss']
             break
+    for _, r in group.iterrows():
+        # 旧版本scan.py曾把Score硬编码为0，0视为"未真实评分"的占位符，跳过不当作有效评分
+        raw_score = str(r.get('Score', 'N/A')).strip()
+        if raw_score not in ['N/A', 'nan', '', '0', '0.0']:
+            score_str = r['Score']
+            break
 
     hold_days = parse_hold_days(hold_period_str)
     if hold_days is None:
@@ -130,10 +153,15 @@ for ticker, group in recent_picks.groupby('Ticker'):
         continue
 
     rec_price = float(first_row['Price'])
+    rec_date_str = first_row['Date'].strftime('%Y-%m-%d')
     maturity_date_dt = first_row['Date'] + datetime.timedelta(days=hold_days)
     maturity_date = maturity_date_dt.strftime('%Y-%m-%d')
 
     if maturity_date_dt <= datetime.datetime.now():
+        if (str(ticker), rec_date_str) in already_archived:
+            skipped_duplicate += 1
+            continue
+
         maturity_price = get_price_on_date(ticker, maturity_date)
         maturity_pnl = round(((maturity_price - rec_price) / rec_price) * 100, 2) if maturity_price else None
 
@@ -141,9 +169,10 @@ for ticker, group in recent_picks.groupby('Ticker'):
             "Ticker": ticker,
             "Name": first_row['Name'],
             "Tag": latest_tag,
+            "Score": score_str,
             "Hold_Period": hold_period_str,
             "Stop_Loss": stop_loss,
-            "First_Rec_Date": first_row['Date'].strftime('%Y-%m-%d'),
+            "First_Rec_Date": rec_date_str,
             "Rec_Price": rec_price,
             "Maturity_Date": maturity_date,
             "Maturity_Price": maturity_price if maturity_price else "无数据",
@@ -163,9 +192,10 @@ for ticker, group in recent_picks.groupby('Ticker'):
             "Ticker": ticker,
             "Name": first_row['Name'],
             "Tag": latest_tag,
+            "Score": score_str,
             "Hold_Period": hold_period_str,
             "Stop_Loss": stop_loss,
-            "First_Rec_Date": first_row['Date'].strftime('%Y-%m-%d'),
+            "First_Rec_Date": rec_date_str,
             "Rec_Price": rec_price,
             "Cur_Price": cur_price,
             "Days_Held": days_held,
@@ -174,7 +204,10 @@ for ticker, group in recent_picks.groupby('Ticker'):
             "Rec_Count": len(group),
         })
 
-print(f"✅ 持仓中: {len(active_list)} 只 | 已超期(本次归档): {len(expired_list)} 只")
+if skipped_duplicate > 0:
+    print(f"📌 跳过 {skipped_duplicate} 只已归档过的到期交易，避免重复计入统计")
+
+print(f"✅ 持仓中: {len(active_list)} 只 | 已超期(本次新归档): {len(expired_list)} 只")
 
 if not active_list and not expired_list:
     print("⚠️ 无需复盘的标的，退出。")
@@ -195,11 +228,12 @@ prompt = f"""
 【持仓中（周期内，需要给出风控指令）】：
 {active_list}
 
-【已超期（本次归档，只做策略复盘评价，不需要风控指令）】：
+【已超期（本次新归档，只做策略复盘评价，不需要风控指令）】：
 {expired_list}
 
 字段说明：
 - Tag：Core_Dragon表示当时基于产业链逻辑入选的核心标的
+- Score：选股引擎当初给出的1-100信心分数（N/A表示该批次还未启用评分系统）
 - Rec_Price：首次推荐价，即买入成本，后续重复推荐不改变此基准
 - Hold_Period：建议持仓周期（第一次推荐时固定，不被后续推荐覆盖）
 - Stop_Loss：止损位（第一次推荐时固定）
@@ -207,29 +241,31 @@ prompt = f"""
 - Maturity_PnL：期满日的真实盈亏（已超期才有，这才是策略真实表现）
 - Rec_Count：系统连续推荐次数，次数越多说明产业链逻辑持续验证有效
 
+在风控判断或策略复盘时，请结合Score进行验证：高分票（80分以上）如果出现明显亏损，需要特别指出"高信心预期未兑现"；低分票（60分以下）如果反而盈利良好，也需要指出"评分体系可能过于保守"。
+
 请严格按以下 HTML 骨架输出复盘报告（直出HTML，禁加markdown框，盈利标红，亏损标绿）：
 
 <div style="background: #eceff1; border-left: 6px solid #455a64; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #263238;">⚖️ 盘后总体风控审查</h3>
-    <p>(总结持仓中标的整体盈亏，以及已超期标的的产业链逻辑胜率评估)</p>
+    <p>(总结持仓中标的整体盈亏，以及本次新归档标的的产业链逻辑胜率评估，特别指出评分与实际表现是否存在明显反差)</p>
 </div>
 
 <h2 style="color: #1565c0; border-bottom: 2px solid #1565c0; padding-bottom: 5px;">📊 持仓中 - 风控纪律核对单</h2>
 <div style="background: #fff; padding: 20px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
-    <h3 style="margin: 0 0 10px 0;">[First_Rec_Date] | [Name] ([Ticker]) | 系统连续推荐[Rec_Count]次 | 还剩[Remaining_Days]天到期</h3>
+    <h3 style="margin: 0 0 10px 0;">[First_Rec_Date] | [Name] ([Ticker]) | 评分[Score]/100 | 系统连续推荐[Rec_Count]次 | 还剩[Remaining_Days]天到期</h3>
     <p><b>持股周期:</b> [Hold_Period] | <b>止损位:</b> [Stop_Loss]</p>
     <p><b>买入成本:</b> $[Rec_Price] ➔ <b>现价:</b> $[Cur_Price] | <b>当前盈亏:</b> <span style="font-weight:bold; color:[盈利#d32f2f/亏损#388e3c];">[PnL]%</span></p>
     <p><span style="background: #607d8b; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">风控动作指令</span>
-    (判断：现价是否跌破止损位？产业链逻辑是否仍在持续验证？给出持有/止损/减仓指令)</p>
+    (判断：现价是否跌破止损位？产业链逻辑是否仍在持续验证？当初评分是否与现状吻合？给出持有/止损/减仓指令)</p>
 </div>
 
 <h2 style="color: #37474f; border-bottom: 2px solid #cfd8dc; padding-bottom: 5px; margin-top: 40px;">📁 已超期归档 - 策略复盘评价</h2>
 <div style="background: #f5f5f5; padding: 20px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #e0e0e0;">
-    <h3 style="margin: 0 0 10px 0;">[First_Rec_Date] | [Name] ([Ticker]) | 期满日:[Maturity_Date]</h3>
+    <h3 style="margin: 0 0 10px 0;">[First_Rec_Date] | [Name] ([Ticker]) | 评分[Score]/100 | 期满日:[Maturity_Date]</h3>
     <p><b>持股周期:</b> [Hold_Period] | <b>止损位:</b> [Stop_Loss]</p>
     <p><b>买入成本:</b> $[Rec_Price] → <b>期满日价格:</b> $[Maturity_Price] | <b>策略实际盈亏:</b> <span style="font-weight:bold; color:[盈利#d32f2f/亏损#388e3c];">[Maturity_PnL]%</span></p>
     <p><span style="background: #455a64; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">策略复盘</span>
-    (评价这次产业链逻辑判断是否成功，归因分析盈亏原因，此票不再追踪)</p>
+    (评价这次产业链逻辑判断是否成功，归因分析盈亏原因，明确点评评分与实际结果是否吻合，此票不再追踪)</p>
 </div>
 """
 
@@ -246,22 +282,34 @@ with client.messages.stream(
 ai_html = ai_html.replace("```html", "").replace("```", "").strip()
 
 # ==========================================
-# 写入 review_history.csv
+# 写入 review_history.csv（新增Score列，自动迁移表头）
 # ==========================================
 review_log = "review_history.csv"
-need_header = not os.path.exists(review_log) or os.path.getsize(review_log) == 0
+new_header = "Review_Date,Ticker,Name,Tag,Rec_Date,Rec_Price,Cur_Price,Days_Held,PnL_Pct,Maturity_PnL,Hold_Period,Stop_Loss,Rec_Count,Status,Score\n"
+review_file_exists = os.path.exists(review_log) and os.path.getsize(review_log) > 0
+review_need_header = not review_file_exists
+
+if review_file_exists:
+    with open(review_log, "r", encoding="utf-8") as f:
+        review_lines = f.readlines()
+    if review_lines and "Score" not in review_lines[0]:
+        review_lines[0] = new_header
+        with open(review_log, "w", encoding="utf-8") as f:
+            f.writelines(review_lines)
+        print("⚠️ 检测到旧版review_history.csv缺少Score列，已自动升级表头")
+
 try:
     with open(review_log, "a", encoding="utf-8") as f:
-        if need_header:
-            f.write("Review_Date,Ticker,Name,Tag,Rec_Date,Rec_Price,Cur_Price,Days_Held,PnL_Pct,Maturity_PnL,Hold_Period,Stop_Loss,Rec_Count,Status\n")
+        if review_need_header:
+            f.write(new_header)
         review_date = get_now()
 
         for item in active_list:
-            f.write(f"{review_date},{item['Ticker']},{item['Name']},{item['Tag']},{item['First_Rec_Date']},{item['Rec_Price']},{item['Cur_Price']},{item['Days_Held']},{item['PnL']},,{item['Hold_Period']},{item['Stop_Loss']},{item['Rec_Count']},持仓中\n")
+            f.write(f"{review_date},{item['Ticker']},{item['Name']},{item['Tag']},{item['First_Rec_Date']},{item['Rec_Price']},{item['Cur_Price']},{item['Days_Held']},{item['PnL']},,{item['Hold_Period']},{item['Stop_Loss']},{item['Rec_Count']},持仓中,{item['Score']}\n")
 
         for item in expired_list:
             maturity_pnl = item['Maturity_PnL'] if item['Maturity_PnL'] != "无数据" else ""
-            f.write(f"{review_date},{item['Ticker']},{item['Name']},{item['Tag']},{item['First_Rec_Date']},{item['Rec_Price']},{item['Maturity_Price']},{item['Days_Held']},{maturity_pnl},{maturity_pnl},{item['Hold_Period']},{item['Stop_Loss']},{item['Rec_Count']},已超期归档\n")
+            f.write(f"{review_date},{item['Ticker']},{item['Name']},{item['Tag']},{item['First_Rec_Date']},{item['Rec_Price']},{item['Maturity_Price']},{item['Days_Held']},{maturity_pnl},{maturity_pnl},{item['Hold_Period']},{item['Stop_Loss']},{item['Rec_Count']},已超期归档,{item['Score']}\n")
 
     print("✅ 复盘结果已写入 review_history.csv")
 except Exception as e:
