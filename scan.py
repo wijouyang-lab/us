@@ -10,6 +10,7 @@ import random
 import requests
 import yfinance as yf
 import io
+import hashlib
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from email.mime.text import MIMEText
@@ -32,6 +33,45 @@ if not SUPER_ADMIN:
     exit(1)
 
 print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
+
+# ==========================================
+# 版本标记：检测 scan.py 内容是否变化，记录"当前版本"起始日期
+# 供 evolve.py 做公平评估时过滤数据，避免新旧版本混在一起算胜率
+# ==========================================
+def update_version_marker():
+    version_file = "scan_version.txt"
+    try:
+        with open("scan.py", "rb") as f:
+            current_hash = hashlib.md5(f.read()).hexdigest()
+    except Exception as e:
+        print(f"⚠️ 版本标记读取自身失败，跳过: {e}")
+        return
+
+    old_hash = None
+    if os.path.exists(version_file):
+        try:
+            with open(version_file, "r", encoding="utf-8") as f:
+                content = f.read().strip()
+                if content:
+                    old_hash = content.split(",")[0]
+        except Exception:
+            pass
+
+    if old_hash != current_hash:
+        today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+        with open(version_file, "w", encoding="utf-8") as f:
+            f.write(f"{current_hash},{today_str}")
+        print(f"📌 检测到 scan.py 内容已变化，记录新版本起始日期: {today_str}")
+    else:
+        try:
+            with open(version_file, "r", encoding="utf-8") as f:
+                existing = f.read().strip()
+            version_date = existing.split(",")[1] if "," in existing else "未知"
+            print(f"📌 scan.py 版本未变化，当前版本起始日期: {version_date}")
+        except Exception:
+            pass
+
+update_version_marker()
 
 def get_robust_session():
     session = requests.Session()
@@ -78,7 +118,6 @@ def get_latest_macro_news():
 
 # ==========================================
 # 2. 个股新闻（Yahoo Finance RSS + 随机休眠）
-# 提高条数到 6 条，给 AI 更多素材做详细新闻面分析
 # ==========================================
 def get_stock_news(ticker, max_items=6):
     import xml.etree.ElementTree as ET
@@ -211,10 +250,10 @@ def build_stock_pool(tickers):
     return pool
 
 # ==========================================
-# 5. Claude 宏观+个股新闻驱动深度推演（流式，Top5详细分析）
+# 5. Claude 宏观+个股新闻驱动深度推演（流式，Top5详细分析+1-100评分）
 # ==========================================
 def generate_ai_report(pool_data, macro_news_text):
-    print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析）...")
+    print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
         base_url=os.environ.get("CLAWSOCKET_BASE_URL")
@@ -255,6 +294,13 @@ def generate_ai_report(pool_data, macro_news_text):
 - MACD走强（动能向上）
 若产业链逻辑和新闻面都好但技术已经极度超买（乖离率>20%，RSI>80），列入诱多对照组，等回调再说。
 
+第四步（推荐评分，1-100分，核心要求）：
+对每一只进入【核心区】（Top 1-5）的标的，必须给出一个1-100的综合评分，评分依据：
+- 产业链逻辑是否直接（直接受益方通常80分以上，二三手受益方但护城河更强可以70-85分，逻辑过于间接的应低于60分）
+- 个股新闻是否强力佐证（有正面新闻共振+10~15分，新闻面干净不扣分，有任何负面信号应直接降到观察池）
+- 技术面是否健康（乖离率和RSI越接近安全区间越加分，临近超买阈值应扣分）
+评分必须客观区分质量差异，禁止5只全部给相近分数，必须体现你对不同标的确信程度的真实差异。
+
 今天是{today_str}。
 
 【盘前宏观与全球重大快讯】：
@@ -267,10 +313,15 @@ def generate_ai_report(pool_data, macro_news_text):
 1. 从宏观新闻中提炼出今日1-2条最强产业链主线
 2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者），逐一核查其个股新闻是否有负面信号
 3. 用技术面确认入场时机
-4. 对核心入选的【前5只】标的（Top 1-5）进行展开式详细分析，每只票的产业链逻辑、新闻核查、技术确认都要写得具体、有数据支撑，不要写空话套话
+4. 对核心入选的【前5只】标的（Top 1-5）进行展开式详细分析，每只票的产业链逻辑、新闻核查、技术确认、推荐评分都要写得具体、有数据支撑，不要写空话套话
 5. 按以下HTML骨架输出报告
 
 注意：如果标的池里没有5只能完美符合产业链逻辑且新闻面干净的票，可以少于5只进入核心区，把空出来的名额放入观察池详细说明原因，不要为了凑数硬塞逻辑不充分的票进核心区。
+
+【硬性纪律】：
+1. 评分格式必须严格为：评分:[XX]/100（XX是1-100的整数，必须用这个精确格式，不要写成"XX分"等变体）。
+2. 同一只股票绝对不能重复出现。
+3. 风控底线格式：周期:[X-Y天] | 止损:[具体价格或百分比]。
 
 【严格按以下HTML骨架直出，不加markdown外框，Top1-5每只都要按这个模板写满】：
 
@@ -287,6 +338,7 @@ def generate_ai_report(pool_data, macro_news_text):
     <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者，不少于100字)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (基于提供的新闻标题，逐条点评是否有风险，至少提及2-3条具体新闻内容)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD数值具体分析，说明为何这个时点是安全的入场点)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — [一句话说明评分理由：逻辑链是否直接、新闻是否强力佐证、技术是否健康]</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -299,6 +351,7 @@ def generate_ai_report(pool_data, macro_news_text):
     <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -311,6 +364,7 @@ def generate_ai_report(pool_data, macro_news_text):
     <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -323,6 +377,7 @@ def generate_ai_report(pool_data, macro_news_text):
     <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -335,6 +390,7 @@ def generate_ai_report(pool_data, macro_news_text):
     <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
@@ -393,6 +449,7 @@ style = """
     .bg-blue { background: #1976d2; }
     .bg-orange { background: #e64a19; }
     .bg-green { background: #2e7d32; }
+    .bg-teal { background: #00897b; }
     .compare-card { border-left: 5px solid #ff9800; background: #fffdf7; padding: 25px; margin-bottom: 25px; border-radius: 10px; border: 1px solid #ffe0b2;}
     .compare-title { font-size: 19px; color: #e65100; font-weight: bold; margin-bottom: 15px; border-bottom: 1px solid #ffe0b2; padding-bottom: 10px;}
     ul { padding-left: 22px; margin-top: 0;}
@@ -477,13 +534,17 @@ if __name__ == "__main__":
         if tag == "Observation":
             hold_period = "观望"
             stop_loss = "观望"
+            score = "N/A"
         else:
             hold_period = period_match.group(1).strip() if period_match else "5-10天"
             stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + DEFAULT_STOP_LOSS_PCT / 100), 2)}"
+            score_match = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\s*/\s*100', chunk)
+            score = score_match.group(1).strip() if score_match else "N/A"
 
         item['Tag'] = tag
         item['Hold_Period'] = hold_period
         item['Stop_Loss'] = stop_loss
+        item['Score'] = score
         chosen.append(item)
 
     log_file = "trade_history.csv"
@@ -494,7 +555,7 @@ if __name__ == "__main__":
                 f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss\n")
             ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
             for i in chosen:
-                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},0,{i.get('Price','')},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
+                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Price','')},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
         print(f"共安全记账 {len(chosen)} 条核心数据。")
     except Exception as e:
         print(f"账本写入失败: {e}")
