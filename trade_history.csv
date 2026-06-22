@@ -171,3 +171,8 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss
 2026-06-19,HOOD,Robinhood Markets,Core_Dragon,N/A,105.2,69.4,21.76,10-20天,$965
 2026-06-19,MSTR,MicroStrategy,Core_Dragon,N/A,116.56,35.7,-15.29,10-20天,$965
 2026-06-19,ARM,Arm Holdings,Observation,N/A,418.88,66.7,18.61,观望,观望
+2026-06-22,PFE,Pfizer,Core_Dragon,92,25.21,39.3,-2.47,5-15天,$395
+2026-06-22,MU,Micron Technology,Observation,N/A,1133.99,66.4,17.44,观望,观望
+2026-06-22,PLTR,Palantir Technologies,Core_Dragon,92,128.47,41.2,-6.92,5-15天,$395
+2026-06-22,AVGO,Broadcom,Core_Dragon,92,411.35,51.3,-0.58,5-15天,$395
+2026-06-22,ACN,Accenture,Core_Dragon,92,127.98,20.9,-26.12,5-15天,$395
