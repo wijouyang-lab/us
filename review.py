@@ -4,10 +4,13 @@ import datetime
 import os
 import re
 import smtplib
+import time
+import random
+import requests
+import yfinance as yf
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import anthropic
-import tushare as ts
 
 if datetime.datetime.now().weekday() >= 5:
     exit()
@@ -37,40 +40,92 @@ except Exception as e:
     print(f"⚠️ 账本读取失败: {e}")
     exit(1)
 
-ts.set_token(os.environ.get("TUSHARE_TOKEN"))
-pro = ts.pro_api()
+# ==========================================
+# 用 yfinance 拉取历史价格（跟 scan.py 同源，无需 Tushare 权限）
+# ==========================================
+all_tickers = recent_picks['Ticker'].unique().tolist()
+print(f"正在通过 yfinance 拉取 {len(all_tickers)} 只标的的历史价格...")
 
-start_hist = (datetime.datetime.now() - datetime.timedelta(days=35)).strftime('%Y%m%d')
-end_hist = datetime.datetime.now().strftime('%Y%m%d')
+def get_robust_session():
+    session = requests.Session()
+    session.headers.update({
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        "Referer": "https://finance.yahoo.com/"
+    })
+    return session
 
+session = get_robust_session()
+
+# 拉取最近60天历史价格，用于查询期满日价格
 df_hist_all = pd.DataFrame()
 try:
-    df_hist_all = pro.us_daily(start_date=start_hist, end_date=end_hist)
-    if df_hist_all is not None and not df_hist_all.empty:
-        df_hist_all['clean_ticker'] = df_hist_all['ts_code'].apply(
-            lambda x: x.split('.')[0] if '.' in x else x
-        )
-        df_hist_all = df_hist_all.sort_values(['clean_ticker', 'trade_date'])
+    raw = yf.download(
+        all_tickers,
+        period="60d",
+        group_by='ticker',
+        auto_adjust=True,
+        progress=False,
+        session=session,
+        threads=False
+    )
+    # 整理成长表格式
+    rows = []
+    for ticker in all_tickers:
+        try:
+            if len(all_tickers) == 1:
+                ticker_df = raw
+            else:
+                ticker_df = raw[ticker]
+            if ticker_df is not None and not ticker_df.empty:
+                for date, row in ticker_df.iterrows():
+                    if pd.notna(row.get('Close')):
+                        rows.append({
+                            'ticker': ticker,
+                            'date': pd.to_datetime(date).date(),
+                            'close': float(row['Close'])
+                        })
+        except Exception:
+            continue
+    if rows:
+        df_hist_all = pd.DataFrame(rows)
+        df_hist_all['date'] = pd.to_datetime(df_hist_all['date'])
+        df_hist_all = df_hist_all.sort_values(['ticker', 'date'])
+        print(f"✅ 成功拉取 {len(df_hist_all['ticker'].unique())} 只标的历史价格")
 except Exception as e:
-    print(f"⚠️ 历史价格拉取失败: {e}")
+    print(f"⚠️ 历史价格批量拉取失败: {e}")
 
+# 获取最新收盘价
 price_map = {}
-for i in range(1, 5):
-    trade_date = (datetime.datetime.now() - datetime.timedelta(days=i)).strftime('%Y%m%d')
-    try:
-        df_daily = pro.us_daily(trade_date=trade_date)
-        if df_daily is not None and not df_daily.empty:
-            print(f"✅ 获取到 {trade_date} 美股收盘价")
-            for _, row in df_daily.iterrows():
-                clean_ticker = row['ts_code'].split('.')[0] if '.' in row['ts_code'] else row['ts_code']
-                price_map[clean_ticker] = row['close']
-            break
-    except Exception as e:
-        print(f"⚠️ {trade_date} 数据拉取失败: {e}")
+try:
+    latest_raw = yf.download(
+        all_tickers,
+        period="5d",
+        group_by='ticker',
+        auto_adjust=True,
+        progress=False,
+        session=session,
+        threads=False
+    )
+    for ticker in all_tickers:
+        try:
+            if len(all_tickers) == 1:
+                t_df = latest_raw
+            else:
+                t_df = latest_raw[ticker]
+            if t_df is not None and not t_df.empty:
+                last_close = t_df['Close'].dropna().iloc[-1]
+                if pd.notna(last_close):
+                    price_map[ticker] = float(last_close)
+        except Exception:
+            continue
+    print(f"✅ 获取到 {len(price_map)} 只标的最新收盘价")
+except Exception as e:
+    print(f"⚠️ 最新价格拉取失败: {e}")
 
 if not price_map:
     print("⚠️ 无法获取美股价格数据，退出。")
     exit(0)
+
 
 def parse_hold_days(hold_period_str):
     if not hold_period_str or hold_period_str in ['N/A', 'nan', '坚决空仓', '观望', '观望等回调']:
@@ -80,22 +135,22 @@ def parse_hold_days(hold_period_str):
         return int(nums[-1])
     return None
 
+
 def get_price_on_date(ticker, target_date_str):
     if df_hist_all.empty:
         return None
-    ticker_data = df_hist_all[df_hist_all['clean_ticker'] == ticker].copy()
+    ticker_data = df_hist_all[df_hist_all['ticker'] == ticker].copy()
     if ticker_data.empty:
         return None
-    ticker_data['trade_date'] = pd.to_datetime(ticker_data['trade_date'])
     target_date = pd.to_datetime(target_date_str)
-    valid = ticker_data[ticker_data['trade_date'] <= target_date]
+    valid = ticker_data[ticker_data['date'] <= target_date]
     if valid.empty:
         return None
     return float(valid.iloc[-1]['close'])
 
+
 # ==========================================
 # 读取已有 review_history.csv，建立"已归档"去重集合
-# 避免同一笔交易的最终结果被反复记录
 # ==========================================
 already_archived = set()
 review_log_path = "review_history.csv"
@@ -105,12 +160,12 @@ if os.path.exists(review_log_path) and os.path.getsize(review_log_path) > 0:
         if {'Status', 'Ticker', 'Rec_Date'}.issubset(existing_review.columns):
             archived_rows = existing_review[existing_review['Status'] == '已超期归档']
             already_archived = set(zip(archived_rows['Ticker'].astype(str), archived_rows['Rec_Date'].astype(str)))
-            print(f"📌 已读取历史归档记录，共 {len(already_archived)} 笔交易此前已完成归档，本次将跳过重复记录")
+            print(f"📌 已读取历史归档记录，共 {len(already_archived)} 笔交易此前已完成归档")
     except Exception as e:
-        print(f"⚠️ 读取历史归档记录失败，将不做去重: {e}")
+        print(f"⚠️ 读取历史归档记录失败: {e}")
 
 # ==========================================
-# 按票聚合，过滤不需要追踪的票
+# 按票聚合，区分持仓中和已超期
 # ==========================================
 active_list = []
 expired_list = []
@@ -141,7 +196,6 @@ for ticker, group in recent_picks.groupby('Ticker'):
             stop_loss = r['Stop_Loss']
             break
     for _, r in group.iterrows():
-        # 旧版本scan.py曾把Score硬编码为0，0视为"未真实评分"的占位符，跳过不当作有效评分
         raw_score = str(r.get('Score', 'N/A')).strip()
         if raw_score not in ['N/A', 'nan', '', '0', '0.0']:
             score_str = r['Score']
@@ -205,7 +259,7 @@ for ticker, group in recent_picks.groupby('Ticker'):
         })
 
 if skipped_duplicate > 0:
-    print(f"📌 跳过 {skipped_duplicate} 只已归档过的到期交易，避免重复计入统计")
+    print(f"📌 跳过 {skipped_duplicate} 只已归档过的到期交易")
 
 print(f"✅ 持仓中: {len(active_list)} 只 | 已超期(本次新归档): {len(expired_list)} 只")
 
@@ -282,7 +336,7 @@ with client.messages.stream(
 ai_html = ai_html.replace("```html", "").replace("```", "").strip()
 
 # ==========================================
-# 写入 review_history.csv（新增Score列，自动迁移表头）
+# 写入 review_history.csv
 # ==========================================
 review_log = "review_history.csv"
 new_header = "Review_Date,Ticker,Name,Tag,Rec_Date,Rec_Price,Cur_Price,Days_Held,PnL_Pct,Maturity_PnL,Hold_Period,Stop_Loss,Rec_Count,Status,Score\n"
@@ -323,7 +377,8 @@ full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'><style>{style}</s
 
 def send_mail():
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
-    if not user or not SUPER_ADMIN: return
+    if not user or not SUPER_ADMIN:
+        return
     msg = MIMEMultipart()
     msg['From'] = user
     msg['Subject'] = f"【盘后清算】美股策略复盘与风控纪律 ({datetime.date.today()})"
