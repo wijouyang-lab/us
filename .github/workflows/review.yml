@@ -20,7 +20,7 @@ jobs:
         python-version: '3.12'
 
     - name: Install Libs
-      run: pip install pandas pandas-ta requests anthropic tushare
+      run: pip install pandas pandas-ta requests anthropic tushare yfinance
 
     - name: Run Review
       env:
