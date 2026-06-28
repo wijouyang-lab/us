@@ -11,6 +11,7 @@ import requests
 import yfinance as yf
 import io
 import hashlib
+import json
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 from email.mime.text import MIMEText
@@ -115,6 +116,50 @@ def get_latest_macro_news():
         return "\n".join(news_lines)
 
     return "暂无实时英文财经新闻，请基于昨收盘及底层产业逻辑进行推演。"
+
+
+# ==========================================
+# 新增功能：引入全球大宗商品、国债收益率及核心大盘指数的多维宏观数据
+# ==========================================
+def get_macro_market_data():
+    print("正在拉取全球大宗商品与美债收益率等核心宏观数据...")
+    macro_tickers = {
+        "美10年国债收益率": "^TNX",
+        "美2年国债收益率": "^IRX",
+        "恐慌指数VIX": "^VIX",
+        "黄金期货": "GC=F",
+        "白银期货": "SI=F",
+        "高级铜期货": "HG=F",
+        "WTI原油期货": "CL=F",
+        "布伦特原油期货": "BZ=F",
+        "标普500指数": "^GSPC",
+        "纳斯达克指数": "^IXIC"
+    }
+    
+    session = get_robust_session()
+    lines = []
+    for name, ticker in macro_tickers.items():
+        try:
+            df = yf.download(ticker, period="5d", progress=False, session=session)
+            if df is not None and not df.empty:
+                if isinstance(df.columns, pd.MultiIndex):
+                    df.columns = df.columns.get_level_values(0)
+                latest_close = df['Close'].iloc[-1]
+                prev_close = df['Close'].iloc[-2]
+                pct_change = ((latest_close - prev_close) / prev_close) * 100
+                
+                if "^" in ticker and "VIX" not in name and "指数" not in name:
+                    lines.append(f"- {name} ({ticker}): 当前收益率 {round(latest_close, 3)}% | 当日变动幅度: {round(pct_change, 2)}%")
+                else:
+                    lines.append(f"- {name} ({ticker}): 当前价/值 {round(latest_close, 2)} | 当日涨跌幅: {round(pct_change, 2)}%")
+        except Exception as e:
+            print(f"⚠️ 宏观因子 {name}({ticker}) 抓取受阻: {e}")
+            
+    if lines:
+        print(f"✅ 成功提取 {len(lines)} 项全球关键宏观底层指标数据")
+        return "\n".join(lines)
+    return "暂无实时大宗商品与国债收益率宏观数据。"
+
 
 # ==========================================
 # 2. 个股新闻（Yahoo Finance RSS + 随机休眠）
@@ -249,10 +294,166 @@ def build_stock_pool(tickers):
     print(f"✅ 技术面数据计算完毕，共 {len(pool)} 只标的进入新闻+逻辑分析阶段。")
     return pool
 
+
+# ==========================================
+# 新增功能：盘前现有持仓排雷审查相位（Phase 0）
+# ==========================================
+def pre_scan_portfolio_review(macro_news_text, macro_market_text):
+    log_file = "trade_history.csv"
+    if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
+        print("📌 交易账本不存在或为空，自动跳过盘前现有持仓审查。")
+        return set()
+        
+    try:
+        df = pd.read_csv(log_file)
+    except Exception as e:
+        print(f"⚠️ 读取 trade_history.csv 失败: {e}")
+        return set()
+        
+    # 自动向后兼容升级账本表头
+    required_cols = ["Exit_Date", "Exit_Price", "Status"]
+    headers_need_rewrite = False
+    for col in required_cols:
+        if col not in df.columns:
+            df[col] = "Active" if col == "Status" else "N/A"
+            headers_need_rewrite = True
+            
+    if headers_need_rewrite:
+        df.to_csv(log_file, index=False, encoding="utf-8")
+        
+    # 筛选处于活跃持仓状态的股票
+    active_rows = df[df['Status'] == 'Active']
+    if active_rows.empty:
+        print("📌 当前无可执行风控追踪的活跃持仓标的。")
+        return set()
+        
+    print(f"🔍 识别到 {len(active_rows)} 个活跃追踪头寸，开始提取个股最新动态进行宏观风控审查...")
+    active_tickers = active_rows['Ticker'].unique().tolist()
+    session = get_robust_session()
+    
+    # 获取实时现价作为可能卖出的执行参考价
+    current_prices = {}
+    try:
+        price_data = yf.download(active_tickers, period="1d", progress=False, session=session)
+        for t in active_tickers:
+            try:
+                if len(active_tickers) == 1:
+                    val = price_data['Close'].iloc[-1]
+                else:
+                    val = price_data['Close'][t].iloc[-1]
+                if pd.notna(val):
+                    current_prices[t] = round(float(val), 2)
+            except:
+                pass
+    except Exception as e:
+        print(f"⚠️ 提取活跃持仓最新价格失败: {e}")
+        
+    # 填充当前价格备用
+    for t in active_tickers:
+        if t not in current_prices:
+            # 回退到最初录入的价格
+            match_row = active_rows[active_rows['Ticker'] == t].iloc[-1]
+            current_prices[t] = match_row['Price']
+
+    # 汇编个股持仓状况与最新的个股爆料快讯
+    positions_lines = []
+    for idx, row in active_rows.iterrows():
+        t = row['Ticker']
+        cur_p = current_prices.get(t, row['Price'])
+        headlines = get_stock_news(t, max_items=4)
+        news_str = " | ".join(headlines) if headlines else "暂无个股重大消息披露"
+        positions_lines.append(
+            f"- 标的: {row['Name']} ({t}) | 推荐买入价: ${row['Price']} | 实时现价: ${cur_p} | 分类标签: {row['Tag']} | 头条新闻: {news_str}"
+        )
+    active_positions_text = "\n".join(positions_lines)
+    
+    print("🧠 提请 AI 专家开展盘前持仓排雷研判...")
+    client = anthropic.Anthropic(
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+    )
+    
+    review_prompt = f"""
+你是华尔街资深风控总监与首席宏观策略师。现在我们需要对目前的活跃持仓进行盘前紧急风控排雷。
+
+【今日宏观财经快讯】：
+{macro_news_text}
+
+【实时全球宏观经济指标（国债收益率、大宗商品、主要指数涨跌）】：
+{macro_market_text}
+
+【当前活跃持仓列表】：
+{active_positions_text}
+
+【风控审查任务】：
+请密切结合今天的整体宏观环境（例如美债收益率大涨大跌、关键经济数据如PCE或CPI对指数带来的严重冲击、金银铜油等大宗商品的异常突破或见顶反转）以及个股最新的新闻动向，客观评估哪些活跃持仓标的已经发生突发利空、逻辑全面证伪或系统性负面冲击，应当立即予以【彻底抛弃/斩仓出局 (Dropped)】；哪些并无实质硬伤，可以【继续追踪持仓 (Active)】。
+
+特别提示：你需要理性审视类似昨晚PCE数据引发的大盘指数回调，这究竟是短线情绪面的正常噪音释放，还是中长周期宏观紧缩/宽松逻辑的根本性方向逆转？若属于短线噪声干扰且个股产业链底层依然健康，请保持 Active。若个股头条触发硬伤负面或宏观逻辑逆风无法逆转，请果断判罚 Dropped。
+
+【输出纪律】：
+为了方便程序自动无缝解析，请严格、且仅能输出标准的 JSON 数据，绝对不要包含任何 markdown 语法外框（如 ```json）或任何前言解释性叙述、后记总结文字：
+{{
+  "decision": {{
+    "TICKER1": "Dropped",
+    "TICKER2": "Active"
+  }},
+  "reason": "清仓或保留的统一核心风控考量依据（150字以内简述）"
+}}
+"""
+    # 记录下所有当前已经在追踪的股票，返回给主程序进行新推荐隔离，防止重复扫描
+    restricted_tickers = set(active_tickers)
+    
+    try:
+        response = client.messages.create(
+            model=TARGET_MODEL,
+            max_tokens=2000,
+            temperature=0.1,
+            messages=[{"role": "user", "content": review_prompt}]
+        )
+        resp_text = response.content[0].text.strip()
+        
+        # 清洗可能夹带的冗余外壳
+        start_idx = resp_text.find('{')
+        end_idx = resp_text.rfind('}')
+        if start_idx != -1 and end_idx != -1:
+            resp_text = resp_text[start_idx:end_idx+1]
+            
+        decision_data = json.loads(resp_text)
+        decisions = decision_data.get("decision", {})
+        reason_summary = decision_data.get("reason", "未提供具体原由")
+        
+        print(f"📊 AI 风控风向标结论：{reason_summary}")
+        
+        today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+        updated_count = 0
+        
+        # 逐条更新账本状态，不删除行，而是改状态并追加卖出记录
+        for idx, row in df.iterrows():
+            if row['Status'] == 'Active':
+                t = row['Ticker']
+                if t in decisions and decisions[t] == "Dropped":
+                    df.at[idx, 'Status'] = "Dropped"
+                    df.at[idx, 'Exit_Date'] = today_str
+                    df.at[idx, 'Exit_Price'] = current_prices.get(t, row['Price'])
+                    print(f"🚨 斩仓风控响应：{row['Name']}({t}) 存在突发风控逆风，状态变更为 [Dropped]。保留买入价 ${row['Price']}，卖出收盘结算价 ${current_prices.get(t, row['Price'])}")
+                    updated_count += 1
+                    
+        if updated_count > 0:
+            df.to_csv(log_file, index=False, encoding="utf-8")
+            print(f"💾 账本已精准同步，本次共风险对冲丢弃 {updated_count} 只标的，保留原始交易路径。")
+        else:
+            print("✅ 现有活跃头寸均安全通过宏观与个股风控排雷，继续保持追踪。")
+            
+    except Exception as e:
+        print(f"⚠️ 持仓雷区决策在执行自动解析时发生异常: {e}，持仓状态将维持原状。")
+        
+    return restricted_tickers
+
+
 # ==========================================
 # 5. Claude 宏观+个股新闻驱动深度推演（流式，Top5详细分析+1-100评分）
 # ==========================================
-def generate_ai_report(pool_data, macro_news_text):
+def generate_ai_report(pool_data, macro_news_text, macro_market_text):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
@@ -275,7 +476,8 @@ def generate_ai_report(pool_data, macro_news_text):
 你是华尔街顶级产业链研究员兼游资操盘手。你的选股方法论是：
 
 【三步选股法】：
-第一步（事件驱动）：从宏观新闻中提炼出今日最强的1-2条产业链主线。
+第一步（事件驱动）：从宏观新闻与全球底层资产（国债收益率走势、PCE等关键宏观变量带来的大盘剧烈波动、金银铜油等大宗商品价格走势）中提炼出今日最强的1-2条产业链主线。
+特别注意：需要敏锐剖析宏观数据（如PCE数据导致的指数下跌）代表的本质。分析此次指数下跌究竟是短暂的情绪面过度反应（提供了黄金黄金买点），还是底层趋势已经发生不可逆的改变？
 例如：
 - AI算力爆发 → GPU需求激增 → HBM/DRAM内存长期供应紧张（2025-2028缺货） → 美光(MU)、Arm(ARM)
 - 美联储降息预期升温 → 资金回流成长股 → 科技/半导体板块受益
@@ -306,11 +508,14 @@ def generate_ai_report(pool_data, macro_news_text):
 【盘前宏观与全球重大快讯】：
 {macro_news_text}
 
+【实时全球宏观经济指标（国债收益率、大宗商品、主要指数涨跌）】：
+{macro_market_text}
+
 【今日成交活跃的 Top {pool_count} 标的池】（含技术数据 + 个股最新新闻，每只票最多6条新闻标题）：
 {pool_formatted}
 
 【你的任务】：
-1. 从宏观新闻中提炼出今日1-2条最强产业链主线
+1. 从宏观新闻和全球债市、商品市场中提炼出今日1-2条最强产业链主线，并对宏观波动的可持续性做出研判。
 2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者），逐一核查其个股新闻是否有负面信号
 3. 用技术面确认入场时机
 4. 对核心入选的【前5只】标的（Top 1-5）进行展开式详细分析，每只票的产业链逻辑、新闻核查、技术确认、推荐评分都要写得具体、有数据支撑，不要写空话套话
@@ -399,7 +604,7 @@ def generate_ai_report(pool_data, macro_news_text):
 </div>
 
 <div class="compare-card">
-    <div class="compare-title">🎖️ 观察池 - 逻辑对但技术未到位 (Rank 6-12)</div>
+    <div class="compare-title">🎖️ 观察池 - 逻辑对 but 技术未到位 (Rank 6-12)</div>
     <ul>
         <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑) <span style="color: #2e7d32;">新闻面：</span>(是否干净) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
         <li><b>7. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
@@ -475,16 +680,25 @@ def send_mail(to_emails, subject, content):
 
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
+    macro_market = get_macro_market_data()
+    
+    # 步骤 0：执行活跃头寸突发雷向风控核查，获取需要被暂停扫描的股票清单
+    restricted_tickers = pre_scan_portfolio_review(macro_news, macro_market)
+
     raw_tickers = get_scan_pool()
-    pool_data = build_stock_pool(raw_tickers)
+    
+    # 风控阻断：过滤掉当下属于活跃持仓或者今日因利空被丢弃的股票，避免产生逻辑追踪混淆
+    filtered_tickers = {t: n for t, n in raw_tickers.items() if t not in restricted_tickers}
+
+    pool_data = build_stock_pool(filtered_tickers)
 
     if not pool_data:
-        print("数据池为空，跳过执行。")
+        print("无合规扫描数据，今日扫描提前安全熔断。")
         exit(0)
 
     pool_data = enrich_pool_with_news(pool_data)
 
-    ai_generated_html = generate_ai_report(pool_data, macro_news)
+    ai_generated_html = generate_ai_report(pool_data, macro_news, macro_market)
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
     try:
@@ -497,7 +711,7 @@ if __name__ == "__main__":
     mail_subject = f"【宏观驱动美股版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
 
-    # 入库
+    # 入库入账
     chosen = []
     clean_html = re.sub(r'<[^>]+>', ' ', ai_generated_html)
     clean_html = re.sub(r'\s+', ' ', clean_html)
@@ -552,10 +766,10 @@ if __name__ == "__main__":
     try:
         with open(log_file, "a", encoding="utf-8") as f:
             if need_header:
-                f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss\n")
+                f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_Price,Status\n")
             ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
             for i in chosen:
-                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Price','')},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')}\n")
-        print(f"共安全记账 {len(chosen)} 条核心数据。")
+                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Price','')},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')},N/A,N/A,Active\n")
+        print(f"共安全记账 {len(chosen)} 条全新核心优选数据。")
     except Exception as e:
-        print(f"账本写入失败: {e}")
+        print(f"新推荐数据入账失败: {e}")
