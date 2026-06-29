@@ -84,6 +84,26 @@ if __name__ == "__main__":
         exit()
         
     df = pd.read_csv(HISTORY_FILE)
+
+    # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
+    # 旧版本记录缺少这三个字段，视为无效行，不纳入复盘与胜率计算。
+    _INVALID_R = {'', 'n/a', 'nan', 'none'}
+    for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
+        if _col not in df.columns:
+            df[_col] = ''
+    _valid_mask_r = (
+        df['Hold_Period'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R) &
+        df['Stop_Loss'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R) &
+        df['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R)
+    )
+    _dropped_r = (~_valid_mask_r).sum()
+    if _dropped_r > 0:
+        print(f"🗂️ 三字段过滤：剔除 {_dropped_r} 条旧版本/不完整记录（Hold_Period/Stop_Loss/Score 任意缺失），不纳入复盘。")
+    df = df[_valid_mask_r].copy()
+
+    if df.empty:
+        print("⚠️ 过滤后无有效新版本记录，复盘取消。")
+        exit()
     tickers = df['Ticker'].unique().tolist()
     prices = get_latest_prices(tickers)
     
