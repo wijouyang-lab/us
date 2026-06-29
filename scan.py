@@ -302,13 +302,13 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     log_file = "trade_history.csv"
     if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
         print("📌 交易账本不存在或为空，自动跳过盘前现有持仓审查。")
-        return set()
+        return set(), {}
         
     try:
         df = pd.read_csv(log_file)
     except Exception as e:
         print(f"⚠️ 读取 trade_history.csv 失败: {e}")
-        return set()
+        return set(), {}
         
     # 自动向后兼容升级账本表头
     required_cols = ["Exit_Date", "Exit_Price", "Status"]
@@ -325,7 +325,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     active_rows = df[df['Status'] == 'Active'].copy()
     if active_rows.empty:
         print("📌 当前无可执行风控追踪的活跃持仓标的。")
-        return set()
+        return set(), {}
 
     # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
     # 旧版本记录缺少这三个字段，视为无效持仓，不纳入风控审查。
@@ -345,7 +345,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
 
     if active_rows.empty:
         print("📌 [阶段0] 过滤后无有效新版本持仓，跳过持仓审查。")
-        return set()
+        return set(), {}
         
     print(f"🔍 识别到 {len(active_rows)} 个活跃追踪头寸，开始提取个股最新动态进行宏观风控审查...")
     active_tickers = active_rows['Ticker'].unique().tolist()
@@ -422,7 +422,9 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
 """
     # 记录下所有当前已经在追踪的股票，返回给主程序进行新推荐隔离，防止重复扫描
     restricted_tickers = set(active_tickers)
-    
+    # dropped_info: {ticker: {"name": ..., "reason": ...}} 供邮件卡片展示
+    dropped_info = {}
+
     try:
         response = client.messages.create(
             model=TARGET_MODEL,
@@ -456,6 +458,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
                     df.at[idx, 'Exit_Date'] = today_str
                     df.at[idx, 'Exit_Price'] = current_prices.get(t, row['Price'])
                     print(f"🚨 斩仓风控响应：{row['Name']}({t}) 存在突发风控逆风，状态变更为 [Dropped]。保留买入价 ${row['Price']}，卖出收盘结算价 ${current_prices.get(t, row['Price'])}")
+                    dropped_info[t] = {"name": row.get('Name', t), "reason": reason_summary}
                     updated_count += 1
                     
         if updated_count > 0:
@@ -467,13 +470,13 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     except Exception as e:
         print(f"⚠️ 持仓雷区决策在执行自动解析时发生异常: {e}，持仓状态将维持原状。")
         
-    return restricted_tickers
+    return restricted_tickers, dropped_info
 
 
 # ==========================================
 # 5. Claude 宏观+个股新闻驱动深度推演（流式，Top5详细分析+1-100评分）
 # ==========================================
-def generate_ai_report(pool_data, macro_news_text, macro_market_text):
+def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
@@ -656,7 +659,25 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text):
             ai_html += text
 
     print("AI 宏观穿透报告生成完毕")
-    return ai_html.replace("```html", "").replace("```", "").strip()
+    ai_html = ai_html.replace("```html", "").replace("```", "").strip()
+
+    # ── 将阶段0斩仓标的以醒目卡片注入报告最顶部 ──
+    if dropped_info:
+        items_html = ""
+        for t, info in dropped_info.items():
+            items_html += f"<li><b>{info['name']} ({t})</b> — {info['reason']}</li>"
+        dropped_card = f"""
+<div style="background:#fff3e0; border-left:6px solid #e65100; padding:20px; margin-bottom:25px; border-radius:8px;">
+    <h3 style="margin:0 0 12px 0; color:#bf360c;">🚨 今日盘前风控斩仓标的（已停止追踪，买卖价已归档）</h3>
+    <ul style="margin:0; padding-left:20px; line-height:2;">
+        {items_html}
+    </ul>
+    <p style="margin:12px 0 0 0; font-size:13px; color:#6d4c41;">以上标的已在盘前风控审查中被强制斩仓，今日报告及后续扫描均不再追踪，历史买入价与卖出价已录入账本供胜率统计。</p>
+</div>
+"""
+        ai_html = dropped_card + ai_html
+
+    return ai_html
 
 # ==========================================
 # 6. HTML 封装
@@ -703,7 +724,7 @@ if __name__ == "__main__":
     macro_market = get_macro_market_data()
     
     # 步骤 0：执行活跃头寸突发雷向风控核查，获取需要被暂停扫描的股票清单
-    restricted_tickers = pre_scan_portfolio_review(macro_news, macro_market)
+    restricted_tickers, dropped_info = pre_scan_portfolio_review(macro_news, macro_market)
 
     raw_tickers = get_scan_pool()
     
@@ -718,7 +739,7 @@ if __name__ == "__main__":
 
     pool_data = enrich_pool_with_news(pool_data)
 
-    ai_generated_html = generate_ai_report(pool_data, macro_news, macro_market)
+    ai_generated_html = generate_ai_report(pool_data, macro_news, macro_market, dropped_info)
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
     try:
