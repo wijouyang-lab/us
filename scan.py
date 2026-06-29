@@ -322,9 +322,29 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
         df.to_csv(log_file, index=False, encoding="utf-8")
         
     # 筛选处于活跃持仓状态的股票
-    active_rows = df[df['Status'] == 'Active']
+    active_rows = df[df['Status'] == 'Active'].copy()
     if active_rows.empty:
         print("📌 当前无可执行风控追踪的活跃持仓标的。")
+        return set()
+
+    # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
+    # 旧版本记录缺少这三个字段，视为无效持仓，不纳入风控审查。
+    _INVALID_P0 = {'', 'n/a', 'nan', 'none'}
+    for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
+        if _col not in active_rows.columns:
+            active_rows[_col] = ''
+    _valid_mask_p0 = (
+        active_rows['Hold_Period'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_P0) &
+        active_rows['Stop_Loss'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_P0) &
+        active_rows['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_P0)
+    )
+    _dropped_p0 = (~_valid_mask_p0).sum()
+    if _dropped_p0 > 0:
+        print(f"📌 [阶段0] 三字段过滤：剔除 {_dropped_p0} 条旧版本/不完整持仓记录，不纳入风控审查。")
+    active_rows = active_rows[_valid_mask_p0].copy()
+
+    if active_rows.empty:
+        print("📌 [阶段0] 过滤后无有效新版本持仓，跳过持仓审查。")
         return set()
         
     print(f"🔍 识别到 {len(active_rows)} 个活跃追踪头寸，开始提取个股最新动态进行宏观风控审查...")
@@ -764,12 +784,40 @@ if __name__ == "__main__":
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
+        # ── 写账前过滤：剔除已 Dropped（斩仓出局）的 ticker，历史行保留不动供胜率计算 ──
+        # 同时过滤三字段不完整的 chosen 项，确保只有新版本有效推荐才写入。
+        frozen_tickers: set = set()
+        FROZEN_STATUSES = {'Dropped'}
+        _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
+        if not need_header:
+            try:
+                df_hist_check = pd.read_csv(log_file, on_bad_lines='skip')
+                if 'Status' in df_hist_check.columns and 'Ticker' in df_hist_check.columns:
+                    frozen_tickers = set(
+                        df_hist_check.loc[df_hist_check['Status'].isin(FROZEN_STATUSES), 'Ticker'].astype(str)
+                    )
+                    if frozen_tickers:
+                        print(f"🔒 写账过滤：检测到 {len(frozen_tickers)} 只已斩仓标的 {frozen_tickers}，本次不追加新行（历史买卖价保留）")
+            except Exception as e:
+                print(f"⚠️ 写账过滤读取 trade_history.csv 失败，不执行冻结过滤: {e}")
+
+        chosen_to_write = [
+            i for i in chosen
+            if str(i.get('Ticker', '')) not in frozen_tickers
+            and str(i.get('Hold_Period', '')).strip().lower() not in _INVALID_W
+            and str(i.get('Stop_Loss', '')).strip().lower() not in _INVALID_W
+            and str(i.get('Score', '')).strip().lower() not in {'', 'n/a', 'nan', 'none'}
+        ]
+        skipped = len(chosen) - len(chosen_to_write)
+        if skipped > 0:
+            print(f"⏭️ 写账过滤：跳过 {skipped} 条（已斩仓或三字段不完整），不写入新追踪记录。")
+
         with open(log_file, "a", encoding="utf-8") as f:
             if need_header:
                 f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_Price,Status\n")
             ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
-            for i in chosen:
+            for i in chosen_to_write:
                 f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Price','')},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')},N/A,N/A,Active\n")
-        print(f"共安全记账 {len(chosen)} 条全新核心优选数据。")
+        print(f"共安全记账 {len(chosen_to_write)} 条全新核心优选数据（过滤后）。")
     except Exception as e:
         print(f"新推荐数据入账失败: {e}")
