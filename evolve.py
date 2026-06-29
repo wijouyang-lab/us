@@ -105,5 +105,25 @@ if __name__ == "__main__":
         exit()
         
     df = pd.read_csv(HISTORY_FILE)
+
+    # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
+    # 旧版本记录缺少这三个字段，视为无效行，不纳入胜率统计与进化分析。
+    _INVALID_E = {'', 'n/a', 'nan', 'none'}
+    for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
+        if _col not in df.columns:
+            df[_col] = ''
+    _valid_mask_e = (
+        df['Hold_Period'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_E) &
+        df['Stop_Loss'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_E) &
+        df['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_E)
+    )
+    _dropped_e = (~_valid_mask_e).sum()
+    if _dropped_e > 0:
+        print(f"🗂️ 三字段过滤：剔除 {_dropped_e} 条旧版本/不完整记录，不纳入胜率统计。")
+    df = df[_valid_mask_e].copy()
+
+    if df.empty:
+        print("⚠️ 过滤后无有效新版本记录，策略进化中止。")
+        exit()
     metrics = calculate_metrics(df)
     evolve_strategy(metrics)
