@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import faulthandler
+faulthandler.enable()  # 一旦再发生底层段错误(segfault)，会在stderr打印Python调用栈定位到具体哪一行，而不是只有“exit code 139”
 import pandas as pd
 import pandas_ta as ta
 import datetime
@@ -136,11 +138,10 @@ def get_macro_market_data():
         "纳斯达克指数": "^IXIC"
     }
     
-    session = get_robust_session()
     lines = []
     for name, ticker in macro_tickers.items():
         try:
-            df = yf.download(ticker, period="5d", progress=False, session=session)
+            df = yf.download(ticker, period="5d", progress=False)
             if df is not None and not df.empty:
                 if isinstance(df.columns, pd.MultiIndex):
                     df.columns = df.columns.get_level_values(0)
@@ -226,7 +227,7 @@ def get_scan_pool():
 
     print(f"✅ 成功获取三大指数共 {len(tickers_list)} 只去重标的。正在获取今日成交量，过滤出 Top 60...")
 
-    data = yf.download(tickers_list, period="1d", group_by='ticker', auto_adjust=True, progress=False, session=session, threads=False)
+    data = yf.download(tickers_list, period="1d", group_by='ticker', auto_adjust=True, progress=False, threads=False)
 
     vols = {}
     for t in tickers_list:
@@ -245,10 +246,9 @@ def get_scan_pool():
 # 4. 拉取 K 线，计算技术指标（仅作参考，不预先淘汰）
 # ==========================================
 def get_kline_data(ts_code):
-    session = get_robust_session()
     for attempt in range(3):
         try:
-            df = yf.download(ts_code, period="6mo", progress=False, session=session)
+            df = yf.download(ts_code, period="6mo", progress=False)
             if df is not None and not df.empty:
                 if isinstance(df.columns, pd.MultiIndex):
                     df.columns = df.columns.get_level_values(0)
@@ -290,6 +290,8 @@ def build_stock_pool(tickers):
             })
         except Exception:
             continue
+        finally:
+            time.sleep(random.uniform(0.3, 0.7))
 
     print(f"✅ 技术面数据计算完毕，共 {len(pool)} 只标的进入新闻+逻辑分析阶段。")
     return pool
@@ -302,13 +304,13 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     log_file = "trade_history.csv"
     if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
         print("📌 交易账本不存在或为空，自动跳过盘前现有持仓审查。")
-        return set(), {}
+        return set(), {}, {}
         
     try:
-        df = pd.read_csv(log_file)
+        df = pd.read_csv(log_file, keep_default_na=False)
     except Exception as e:
         print(f"⚠️ 读取 trade_history.csv 失败: {e}")
-        return set(), {}
+        return set(), {}, {}
         
     # 自动向后兼容升级账本表头
     required_cols = ["Exit_Date", "Exit_Price", "Status"]
@@ -317,7 +319,15 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
         if col not in df.columns:
             df[col] = "Active" if col == "Status" else "N/A"
             headers_need_rewrite = True
-            
+
+    # 强制把 Exit_Date / Exit_Price 锁定为 object dtype：
+    # 这两列目前可能全部是占位字符串 "N/A"，若不显式锁定，pandas会把整列推断为
+    # float64（配合 keep_default_na=False 则反过来推断为纯字符串 str dtype），
+    # 之后无论写入真实日期字符串还是真实卖出价(float)，都会触发严格的dtype类型检查报错。
+    # 锁定为 object 后，同一列可以混存字符串"N/A"和后续真实写入的字符串/浮点值，不再受限。
+    for col in ["Exit_Date", "Exit_Price"]:
+        df[col] = df[col].astype(object)
+
     if headers_need_rewrite:
         df.to_csv(log_file, index=False, encoding="utf-8")
         
@@ -325,7 +335,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     active_rows = df[df['Status'] == 'Active'].copy()
     if active_rows.empty:
         print("📌 当前无可执行风控追踪的活跃持仓标的。")
-        return set(), {}
+        return set(), {}, {}
 
     # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
     # 旧版本记录缺少这三个字段，视为无效持仓，不纳入风控审查。
@@ -345,31 +355,31 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
 
     if active_rows.empty:
         print("📌 [阶段0] 过滤后无有效新版本持仓，跳过持仓审查。")
-        return set(), {}
+        return set(), {}, {}
         
     print(f"🔍 识别到 {len(active_rows)} 个活跃追踪头寸，开始提取个股最新动态进行宏观风控审查...")
     active_tickers = active_rows['Ticker'].unique().tolist()
-    session = get_robust_session()
-    
+
     # 获取实时现价作为可能卖出的执行参考价
     # 优先级：
     #   1. yf.Ticker.fast_info["last_price"] —— 实时/盘前价，只要市场有成交就有数据
     #   2. yf.download(period="1d") iloc[-1]  —— 盘后收盘价，盘前可能为空
     #   3. 买入价兜底                          —— 打印警告，盈亏=0
     current_prices = {}
-    session = get_robust_session()
 
     # 方案1：逐只用 fast_info 拿实时价（含盘前/盘后延伸交易时段）
     realtime_success = []
     for t in active_tickers:
         try:
-            info = yf.Ticker(t, session=session).fast_info
+            info = yf.Ticker(t).fast_info
             price = info.get("last_price") or info.get("lastPrice")
             if price and float(price) > 0:
                 current_prices[t] = round(float(price), 2)
                 realtime_success.append(t)
         except Exception:
             pass
+        finally:
+            time.sleep(random.uniform(0.2, 0.5))
 
     if realtime_success:
         print(f"✅ 实时价拉取成功（fast_info），覆盖 {len(realtime_success)}/{len(active_tickers)} 只持仓")
@@ -378,7 +388,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     missing = [t for t in active_tickers if t not in current_prices]
     if missing:
         try:
-            price_data = yf.download(missing, period="1d", progress=False, session=session, auto_adjust=True)
+            price_data = yf.download(missing, period="1d", progress=False, auto_adjust=True)
             for t in missing:
                 try:
                     if len(missing) == 1:
@@ -497,7 +507,10 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     except Exception as e:
         print(f"⚠️ 持仓雷区决策在执行自动解析时发生异常: {e}，持仓状态将维持原状。")
         
-    return restricted_tickers, dropped_info
+    # current_prices 在此一并返回，供 __main__ 阶段0b 直接复用——
+    # 避免对同一批持仓再发起一轮 yf.Ticker(...).fast_info 请求，
+    # 减少对 yfinance(curl_cffi) 的总调用次数。
+    return restricted_tickers, dropped_info, current_prices
 
 
 # ==========================================
@@ -734,7 +747,7 @@ def check_rule_based_sell_signals(current_prices_map, exclude_tickers=None):
         return [], []
 
     try:
-        df = pd.read_csv(log_file)
+        df = pd.read_csv(log_file, keep_default_na=False)
         df['Date'] = pd.to_datetime(df['Date'])
         holdings = df[df['Status'] == 'Active'].copy()
         if holdings.empty:
@@ -827,7 +840,12 @@ def check_rule_based_sell_signals(current_prices_map, exclude_tickers=None):
 
     # 锁定 trade_history.csv 标签
     try:
-        df_orig = pd.read_csv(log_file)
+        df_orig = pd.read_csv(log_file, keep_default_na=False)
+        # 同阶段0a：锁定为object dtype，避免"N/A"占位符让pandas把整列推断成
+        # 不兼容写入真实日期/价格的严格dtype（float64或str），导致下面的赋值报错。
+        for col in ["Exit_Date", "Exit_Price"]:
+            if col in df_orig.columns:
+                df_orig[col] = df_orig[col].astype(object)
         for s in sell_signals:
             tag_to_set = 'Stop_Loss_Hit' if s['signal_type'] == '止损触发' else 'Period_Matured'
             df_orig.loc[df_orig['Ticker'] == s['ticker'], 'Status'] = tag_to_set
@@ -918,30 +936,14 @@ if __name__ == "__main__":
     macro_market = get_macro_market_data()
     
     # 步骤 0a：AI 宏观/消息面驱动的持仓强制清仓审查
-    restricted_tickers, dropped_info = pre_scan_portfolio_review(macro_news, macro_market)
+    # current_prices 是阶段0a已经为全部活跃持仓拉取好的实时价，阶段0b直接复用，不再重新请求一轮
+    restricted_tickers, dropped_info, current_prices = pre_scan_portfolio_review(macro_news, macro_market)
 
     # 步骤 0b：规则驱动卖出信号检测（止损触发 / 持有到期）
-    # 需要先拉一次持仓的实时价格供规则判断使用
-    holding_price_map = {}
-    try:
-        log_file_tmp = "trade_history.csv"
-        if os.path.exists(log_file_tmp):
-            df_tmp = pd.read_csv(log_file_tmp)
-            active_tmp = df_tmp[df_tmp['Status'] == 'Active']['Ticker'].dropna().unique().tolist()
-            session_tmp = get_robust_session()
-            for t in active_tmp:
-                try:
-                    info = yf.Ticker(t, session=session_tmp).fast_info
-                    price = info.get("last_price") or info.get("lastPrice")
-                    if price and float(price) > 0:
-                        holding_price_map[t] = round(float(price), 2)
-                except Exception:
-                    pass
-    except Exception as e:
-        print(f"⚠️ 阶段0b 价格预拉取失败: {e}")
-
+    # exclude_tickers 只应排除"本轮阶段0a刚强清掉的"标的（dropped_info），
+    # 不能传 restricted_tickers（那是全部当前持仓，传错会导致这里对谁都不生效）。
     rule_sell_signals, removed_tickers_rule = check_rule_based_sell_signals(
-        holding_price_map, exclude_tickers=list(restricted_tickers)
+        current_prices, exclude_tickers=list(dropped_info.keys())
     )
     # 将规则卖出的 ticker 也加入隔离集，避免今日被重新推荐
     restricted_tickers.update(removed_tickers_rule)
@@ -1042,7 +1044,7 @@ if __name__ == "__main__":
         _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
         if not need_header:
             try:
-                df_hist_check = pd.read_csv(log_file, on_bad_lines='skip')
+                df_hist_check = pd.read_csv(log_file, on_bad_lines='skip', keep_default_na=False)
                 if 'Status' in df_hist_check.columns and 'Ticker' in df_hist_check.columns:
                     frozen_tickers = set(
                         df_hist_check.loc[df_hist_check['Status'].isin(FROZEN_STATUSES), 'Ticker'].astype(str)
