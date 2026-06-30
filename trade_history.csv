@@ -1,199 +1,199 @@
-Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss
-2026-05-27,AMZN,AMAZON.COM,Core_Dragon,84.2,265.29,56.6,-0.75,10-15天,跌破 255.00 美元（约-4%）
-2026-05-27,BBAI,BIGBEAR AI HOLDINGS,Core_Dragon,83.9,4.18,54.3,1.12,10-15天,跌破 255.00 美元（约-4%）
-2026-05-27,ONDS,ONDS,Core_Dragon,83.2,9.77,50.7,1.75,10-15天,跌破 255.00 美元（约-4%）
-2026-05-27,SCO,SCO,Observation,81.7,6.65,47.1,3.27,2-4天短打,跌破 6.30 美元 5. 特斯拉 (TSLA) - 评分:79.8分:
-2026-05-27,TSLA,TSLA,Observation,79.8,433.59,60.8,5.24,观望等待回撤,跌破 415.00 美元 6. UIPATH (PATH) - 评分:79.5分:
-2026-05-27,PATH,PATH,Observation,79.5,11.09,56.7,5.47,5-7天,跌破 10.20 美元 7. 派乐腾 (PTON) - 评分:77.4分:
-2026-05-27,PTON,PTON,Observation,77.4,5.77,64.9,7.57,观望,跌破 5.20 美元 8. OPENDOOR (OPEN) - 评分:76.8分:
-2026-05-27,OPEN,OPEN,Observation,76.8,4.48,40.8,-8.18,坚决观望,若持有则跌破 4.00 必须斩仓 9. TERAWULF (WULF) - 评分:74.0分:
-2026-05-27,WULF,WULF,Observation,74.0,25.18,63.9,11.02,10-15天,跌破 255.00 美元（约-4%）
-2026-05-27,PLUG,PLUG,Observation,73.3,3.84,63.4,11.68,10-15天,跌破 255.00 美元（约-4%）
-2026-05-27,WMT,WMT,Trap_Warning,-33.2,118.57,31.8,-8.19,10-15天,跌破 255.00 美元（约-4%）
-2026-05-27,CPSH,CPS TECHNOLOGIES,Trap_Warning,-91.7,11.12,82.0,126.66,坚决空仓,绝对规避
-2026-05-28,RGBP,RGBP,Core_Dragon,nan,0.0,37.8,nan,坚决空仓,绝对规避
-2026-05-28,AMZN,AMAZON.COM,Core_Dragon,83.5,271.85,62.7,1.47,坚决空仓,绝对规避
-2026-05-28,EEM,EEM,Core_Dragon,81.3,68.39,64.2,3.69,坚决空仓,绝对规避
-2026-05-28,AIM,AIM IMMUNOTECH,Observation,78.9,0.4,49.8,6.1,观望,不建议参与 5. 特斯拉 (TSLA) - 评分:78.9分:
-2026-05-28,TSLA,TSLA,Observation,78.9,440.36,63.0,6.05,3-5天短打,跌破420美元 6. 彭博原油两倍做空ETF (SCO) - 评分:78.2分:
-2026-05-28,SCO,SCO,Observation,78.2,6.87,50.6,6.78,日内/隔夜,跌破6.5美元 7. 捷蓝航空 (JBLU) - 评分:74.3分:
-2026-05-28,JBLU,JBLU,Observation,74.3,5.4,60.4,10.72,观望,跌破5.0美元 8. Ondas Holdings (ONDS) - 评分:72.7分:
-2026-05-28,ONDS,ONDS,Observation,72.7,10.8,57.6,12.3,观望,跌破9.5美元 9. Marathon Digital (MARA) - 评分:72.7分:
-2026-05-28,MARA,MARA,Observation,72.7,14.33,68.5,12.32,1-3天动量交易,跌破13.5美元 10. DVLT (DVLT) - 评分:72.0分:
-2026-05-28,DVLT,DVLT,Observation,72.0,0.47,40.0,-13.04,坚决空仓,绝对规避 🚨 诱多对照组（严禁接盘） 倒数1. QTTB (QTTB): ❌
-2026-05-28,QTTB,QTTB,Trap_Warning,-77.7,12.85,83.5,112.73,坚决空仓,绝对规避
-2026-05-28,NCPL,NCPL,Trap_Warning,-162.3,1.57,93.2,197.35,坚决空仓,绝对规避
-2026-06-02,WBD,WBD,Core_Dragon,84.6,27.25,52.9,0.45,N/A,N/A
-2026-06-02,TLT,TLT,Core_Dragon,84.4,85.47,51.5,0.62,N/A,N/A
-2026-06-02,TSDD,TSDD,Core_Dragon,84.2,7.68,46.3,0.85,N/A,N/A
-2026-06-02,DNN,DNN,Observation,83.5,3.43,46.7,-1.55,N/A,N/A
-2026-06-02,SRXH,SRXH,Observation,83.4,0.12,48.3,-1.64,N/A,N/A
-2026-06-02,EEM,EEM,Observation,80.1,70.08,69.2,4.94,N/A,N/A
-2026-06-02,BYND,BEYOND MEAT,Observation,80.0,0.78,46.6,-4.99,N/A,N/A
-2026-06-02,LYFT,LYFT,Observation,77.2,14.86,63.8,7.8,N/A,N/A
-2026-06-02,AVGO,BROADCOM,Observation,76.7,459.97,69.8,8.27,N/A,N/A
-2026-06-02,UUUU,UUUU,Observation,75.5,17.62,41.5,-9.47,N/A,N/A
-2026-06-02,AIM,AIM IMMUNOTECH,Trap_Warning,-97.9,0.9,72.5,132.86,坚决空仓,绝对规避
-2026-06-02,OTLK,OTLK,Trap_Warning,-104.3,0.84,87.8,139.32,坚决空仓,绝对规避
-2026-06-02,WBD,WBD,Core_Dragon,84.6,27.25,52.9,0.45,5-12天,-5%
-2026-06-02,TLT,TLT,Core_Dragon,84.4,85.47,51.5,0.62,5-12天,-5%
-2026-06-02,TSDD,TSDD,Core_Dragon,84.2,7.68,46.3,0.85,5-12天,-5%
-2026-06-02,DNN,DNN,Observation,83.5,3.43,46.7,-1.55,观望,N/A
-2026-06-02,SRXH,SRXH,Observation,83.4,0.12,48.3,-1.64,观望,N/A
-2026-06-02,EEM,EEM,Observation,80.1,70.08,69.2,4.94,观望,N/A
-2026-06-02,BYND,BEYOND MEAT,Observation,80.0,0.78,46.6,-4.99,观望,N/A
-2026-06-02,LYFT,LYFT,Observation,77.2,14.86,63.8,7.8,观望,N/A
-2026-06-02,AVGO,BROADCOM,Observation,76.7,459.97,69.8,8.27,5-12天,-5%
-2026-06-02,UUUU,UUUU,Observation,75.5,17.62,41.5,-9.47,观望,N/A
-2026-06-02,AIM,AIM IMMUNOTECH,Trap_Warning,-97.9,0.9,72.5,132.86,坚决空仓,绝对规避
-2026-06-02,OTLK,OTLK,Trap_Warning,-104.3,0.84,87.8,139.32,坚决空仓,绝对规避
-2026-06-03,FXI,FXI,Core_Dragon,84.9,36.36,51.5,-0.08,5-15天,N/A
-2026-06-03,GRAB,GRAB,Core_Dragon,84.8,3.6,46.3,-0.19,5-15天,N/A
-2026-06-03,NVDA,NVDA,Core_Dragon,82.8,222.82,58.8,2.22,5-15天,N/A
-2026-06-03,SRXH,SRXH,Observation,78.9,0.13,54.2,6.12,观望,N/A
-2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,观望,N/A
-2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,N/A
-2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,N/A
-2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,N/A
-2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,仅作现金替代配置,非交易标的，无需设止损 10. Amaze控股 (AMZE) - 评分:55.8分:
-2026-06-03,AMZE,AMAZE HOLDINGS (ASE),Observation,55.8,0.16,49.6,4.23,纯观望不参与,不建议任何仓位 🚨 诱多对照组（严禁接盘） 倒数1. MicroVision (MVIS): ❌
-2026-06-03,MVIS,MVIS,Trap_Warning,-59.0,0.41,29.5,-34.03,坚决空仓,绝对规避
-2026-06-03,HIRU,HIRU,Trap_Warning,nan,0.0,15.4,nan,坚决空仓,绝对规避
-2026-06-03,FXI,FXI,Core_Dragon,84.9,36.36,51.5,-0.08,5-15天,$34.80
-2026-06-03,GRAB,GRAB,Core_Dragon,84.8,3.6,46.3,-0.19,5-15天,$34.80
-2026-06-03,NVDA,NVDA,Core_Dragon,82.8,222.82,58.8,2.22,5-15天,$34.80
-2026-06-03,SRXH,SRXH,Observation,78.9,0.13,54.2,6.12,观望,$0.11
-2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,N/A,$4.50
-2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,$34.80
-2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,$34.80
-2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,$34.80
-2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,N/A,$22.30
-2026-06-03,AMZE,AMAZE HOLDINGS (ASE),Observation,55.8,0.16,49.6,4.23,不建议参与,若执意进场，亏损超$0.02立即止损 🚨 诱多对照组（严禁接盘） 倒数1. MicroVision (MVIS): ❌
-2026-06-03,MVIS,MVIS,Trap_Warning,-59.0,0.41,29.5,-34.03,坚决空仓,绝对规避
-2026-06-03,HIRU,HIRU,Trap_Warning,nan,0.0,15.4,nan,坚决空仓,绝对规避
-2026-06-04,GGB,GGB,Core_Dragon,84.2,4.75,56.2,0.85,15-30天,N/A
-2026-06-04,XLE,XLE,Core_Dragon,83.9,58.71,53.3,1.15,20-40天,N/A
-2026-06-04,META,META,Core_Dragon,83.4,622.98,51.5,1.6,10-25天,N/A
-2026-06-04,BAC,BANK OF AMERICA,Observation,82.9,52.4,56.2,2.1,观望,N/A
-2026-06-04,FXI,FXI,Observation,82.8,35.54,44.1,-2.21,观望,N/A
-2026-06-04,PCG,PCG,Observation,82.2,16.85,55.2,2.85,观望,N/A
-2026-06-04,INTC,INTC,Observation,81.8,112.71,56.3,-3.24,观望,N/A
-2026-06-04,KWEB,KWEB,Observation,81.3,27.22,43.2,-3.67,观望,N/A
-2026-06-04,TZA,TZA,Observation,81.2,4.43,40.6,-3.81,观望,N/A
-2026-06-04,RIG,RIG,Observation,78.5,6.18,41.2,-6.51,观望,N/A
-2026-06-04,SNXX,SNXX,Trap_Warning,-107.0,31.1,31.8,-81.95,坚决空仓,绝对规避
-2026-06-04,ANY,SPHERE 3D,Trap_Warning,-107.7,5.65,86.6,142.7,坚决空仓,绝对规避
-2026-06-04,GGB,GGB,Core_Dragon,84.2,4.75,56.2,0.85,10-20天,N/A
-2026-06-04,XLE,XLE,Core_Dragon,83.9,58.71,53.3,1.15,10-20天,N/A
-2026-06-04,META,META,Core_Dragon,83.4,622.98,51.5,1.6,10-20天,N/A
-2026-06-04,BAC,BANK OF AMERICA,Observation,82.9,52.4,56.2,2.1,10-20天,N/A
-2026-06-04,FXI,FXI,Observation,82.8,35.54,44.1,-2.21,10-20天,N/A
-2026-06-04,PCG,PCG,Observation,82.2,16.85,55.2,2.85,10-20天,N/A
-2026-06-04,INTC,INTC,Observation,81.8,112.71,56.3,-3.24,10-20天,N/A
-2026-06-04,KWEB,KWEB,Observation,81.3,27.22,43.2,-3.67,10-20天,N/A
-2026-06-04,TZA,TZA,Observation,81.2,4.43,40.6,-3.81,仅日内/隔夜对冲,跌破 $4.25 即离场] 10. 越洋钻探 (RIG) - 评分:78.5分:
-2026-06-04,RIG,RIG,Observation,78.5,6.18,41.2,-6.51,10-20天,N/A
-2026-06-04,SNXX,SNXX,Trap_Warning,-107.0,31.1,31.8,-81.95,坚决空仓,绝对规避
-2026-06-04,ANY,SPHERE 3D,Trap_Warning,-107.7,5.65,86.6,142.7,坚决空仓,绝对规避
-2026-06-05,BYND,BEYOND MEAT,Core_Dragon,84.9,0.79,48.8,-0.06,3-7天,$0.68
-2026-06-05,AUUD,AUDDIA,Core_Dragon,84.3,1.48,45.5,-0.74,3-7天,$0.68
-2026-06-05,SCHD,SCHD,Core_Dragon,83.7,32.59,63.3,1.35,10-20天,$31.50
-2026-06-05,UBER,UBER,Observation,83.3,72.21,46.4,-1.74,3-7天,$0.68
-2026-06-05,OWL,OWL,Observation,83.0,10.19,54.0,2.0,5-10天,$9.60
-2026-06-05,META,META,Observation,82.8,627.57,53.1,2.23,3-7天,$0.68
-2026-06-05,SRXH,SRXH,Observation,80.2,0.13,53.7,4.84,观望,$4.20
-2026-06-05,BTG,B2GOLD (ASE),Observation,79.7,4.58,45.5,-5.34,5-10天,$4.20
-2026-06-05,SNAP,SNAP,Observation,79.2,6.07,59.3,5.77,观望,N/A
-2026-06-05,EDGM,EDGM,Observation,nan,0.0,6.7,nan,永久回避,不适用(禁止建仓) 🚨 诱多对照组（严禁接盘） 倒数1. VIVK (VIVK): ❌
-2026-06-05,VIVK,VIVK,Trap_Warning,-64.7,0.85,36.5,-39.69,坚决空仓,绝对规避
-2026-06-05,INDP,INDP,Trap_Warning,-132.9,4.75,82.4,167.91,坚决空仓,绝对规避
-2026-06-08,SPDN,SPDN,Core_Dragon,83.7,8.84,50.8,1.25,3-7天,N/A
-2026-06-08,XLF,XLF,Core_Dragon,83.4,52.3,58.2,1.56,3-7天,N/A
-2026-06-08,TZA,TZA,Core_Dragon,82.6,4.7,49.3,2.37,3-7天,N/A
-2026-06-08,SQQQ,SQQQ,Observation,79.1,43.19,47.3,5.93,3-7天,N/A
-2026-06-08,BCDA,BIOCARDIA,Observation,79.0,1.03,53.5,5.97,观望,N/A
-2026-06-08,MU,MU,Observation,58.3,864.01,55.2,1.67,观望,N/A
-2026-06-08,F,F,Observation,57.1,14.9,54.3,2.85,3-7天,N/A
-2026-06-08,SRXH,SRXH,Observation,56.4,0.12,48.3,-3.61,坚决观望,绝对不参与，流动性陷阱 9. 超微电脑 (SMCI) - 评分:50.0分:
-2026-06-08,SMCI,SMCI,Observation,50.0,41.64,58.3,9.96,3-7天,N/A
-2026-06-08,MRVL,MRVL,Observation,33.6,263.47,65.0,26.35,3-7天,N/A
-2026-06-08,HL,HL,Trap_Warning,-42.1,14.78,33.8,-17.1,坚决空仓,绝对规避
-2026-06-08,OPTT,OPTT,Trap_Warning,-43.4,0.29,35.3,-18.42,坚决空仓,绝对规避
-2026-06-09,XLF,XLF,Observation,0,51.97,54.3,0.85,观望,观望
-2026-06-09,INTC,INTC,Core_Dragon,0,110.27,53.1,-4.25,3-7天,$105.00
-2026-06-09,EWY,EWY,Core_Dragon,0,185.64,49.8,-3.52,3-7天,$105.00
-2026-06-09,MU,MU,Observation,0,949.28,60.8,10.39,观望,观望
-2026-06-09,NOTV,NOTV,Core_Dragon,0,0.11,33.8,-55.56,3-7天,$105.00
-2026-06-10,NVDA,NVIDIA,Core_Dragon,0,206.16,45.0,-5.12,3-7天,$195.00
-2026-06-10,XOM,ExxonMobil,Core_Dragon,0,150.68,49.1,-1.01,3-8天,$146.50
-2026-06-10,GOOG,Alphabet Inc. (Class C),Observation,0,364.33,46.5,-3.53,观望,观望
-2026-06-10,WMT,Walmart,Observation,0,119.0,42.3,-2.7,观望,观望
-2026-06-10,SLB,Schlumberger,Observation,0,56.28,53.0,0.32,观望,观望
-2026-06-10,DVN,Devon Energy,Core_Dragon,0,46.38,50.1,-0.08,3-8天,$44.50
-2026-06-10,KHC,Kraft Heinz,Observation,0,23.97,61.3,3.65,观望,观望
-2026-06-11,DVN,Devon Energy,Core_Dragon,0,46.6,50.9,0.37,3-8天,$44.50
-2026-06-11,KEY,KeyCorp,Observation,0,21.98,59.8,3.48,观望,观望
-2026-06-11,C,Citigroup,Core_Dragon,0,133.38,61.0,4.53,3-8天,$44.50
-2026-06-11,BAC,Bank of America,Observation,0,54.54,67.4,5.52,观望,观望
-2026-06-12,SATS,EchoStar,Observation,0,128.13,53.8,1.08,观望,观望
-2026-06-12,CCL,Carnival Corporation,Core_Dragon,0,28.12,56.3,5.39,5-10天,$26.50
-2026-06-12,INTC,Intel,Observation,0,116.96,57.8,3.28,观望,观望
-2026-06-12,NCLH,Norwegian Cruise Line Holdings,Observation,0,19.06,57.8,9.24,观望,观望
-2026-06-12,HAL,Halliburton,Core_Dragon,0,39.76,48.0,-2.03,5-10天,$26.50
-2026-06-12,DVN,Devon Energy,Core_Dragon,0,44.61,43.8,-3.68,5-10天,$26.50
-2026-06-12,XOM,ExxonMobil,Core_Dragon,0,146.6,43.0,-3.57,5-10天,$26.50
-2026-06-16,CCL,Carnival Corporation,Core_Dragon,0,29.18,60.5,8.52,5-10天,$27.30
-2026-06-16,CSX,CSX Corporation,Observation,0,47.57,62.7,2.72,观望,观望
-2026-06-16,HAL,Halliburton,Core_Dragon,0,39.6,47.1,-2.24,5-10天,$27.30
-2026-06-16,DVN,Devon Energy,Core_Dragon,0,44.99,46.6,-1.96,5-10天,$27.30
-2026-06-16,NCLH,Norwegian Cruise Line Holdings,Observation,0,20.14,63.7,12.81,观望,观望
-2026-06-16,XOM,ExxonMobil,Core_Dragon,0,147.01,43.7,-3.15,5-10天,$27.30
-2026-06-17,QCOM,Qualcomm,Core_Dragon,0,214.07,51.3,-3.99,15-30天,203.37
-2026-06-17,MU,Micron Technology,Core_Dragon,0,1020.76,60.5,9.97,15-30天,969.72
-2026-06-17,F,Ford Motor Company,Core_Dragon,0,14.41,49.4,-4.53,15-30天,13.69
-2026-06-17,NVDA,Nvidia,Observation,0,207.41,47.5,-2.67,观望,观望
-2026-06-17,HPE,Hewlett Packard Enterprise,Core_Dragon,0,48.88,64.7,11.88,15-30天,46.44
-2026-06-17,HOOD,Robinhood Markets,Core_Dragon,0,98.12,65.3,16.99,15-30天,93.21
-2026-06-18,NVDA,Nvidia,Core_Dragon,0,204.65,45.5,-3.61,10-20天,194.42
-2026-06-18,HOOD,Robinhood Markets,Core_Dragon,0,105.2,69.4,21.76,10-20天,99.94
-2026-06-18,MRVL,Marvell Technology,Observation,0,289.54,61.2,15.17,观望,观望
-2026-06-18,MU,Micron Technology,Core_Dragon,0,1043.19,61.7,10.33,10-20天,991.03
-2026-06-18,F,Ford Motor Company,Observation,0,13.96,45.4,-7.79,观望,观望
-2026-06-18,SLB,Schlumberger,Observation,0,50.33,33.8,-9.44,观望,观望
-2026-06-18,NCLH,Norwegian Cruise Line Holdings,Observation,0,19.83,60.2,8.01,观望,观望
-2026-06-18,DVN,Devon Energy,Observation,0,42.58,39.0,-5.27,观望,观望
-2026-06-18,XOM,ExxonMobil,Observation,0,140.74,36.5,-5.49,观望,观望
-2026-06-18,KLAC,KLA Corporation,Observation,0,238.73,64.2,13.11,观望,观望
-2026-06-19,MRVL,Marvell Technology,Observation,N/A,289.54,61.2,15.17,观望,观望
-2026-06-19,F,Ford Motor Company,Core_Dragon,N/A,13.96,45.4,-7.79,10-20天,$965
-2026-06-19,PFE,Pfizer,Core_Dragon,N/A,25.92,49.8,0.17,10-20天,$965
-2026-06-19,MU,Micron Technology,Core_Dragon,N/A,1043.19,61.7,10.33,10-20天,$965
-2026-06-19,HOOD,Robinhood Markets,Core_Dragon,N/A,105.2,69.4,21.76,10-20天,$965
-2026-06-19,MSTR,MicroStrategy,Core_Dragon,N/A,116.56,35.7,-15.29,10-20天,$965
-2026-06-19,ARM,Arm Holdings,Observation,N/A,418.88,66.7,18.61,观望,观望
-2026-06-22,PFE,Pfizer,Core_Dragon,92,25.21,39.3,-2.47,5-15天,$395
-2026-06-22,MU,Micron Technology,Observation,N/A,1133.99,66.4,17.44,观望,观望
-2026-06-22,PLTR,Palantir Technologies,Core_Dragon,92,128.47,41.2,-6.92,5-15天,$395
-2026-06-22,AVGO,Broadcom,Core_Dragon,92,411.35,51.3,-0.58,5-15天,$395
-2026-06-22,ACN,Accenture,Core_Dragon,92,127.98,20.9,-26.12,5-15天,$395
-2026-06-23,INTC,Intel,Core_Dragon,N/A,140.94,67.3,19.98,15-30天,$15.80
-2026-06-23,AAPL,Apple,Observation,N/A,297.01,49.9,-1.98,观望,观望
-2026-06-23,PFE,Pfizer,Core_Dragon,N/A,25.08,37.8,-2.81,15-30天,$15.80
-2026-06-23,ORCL,Oracle Corporation,Core_Dragon,N/A,175.07,39.0,-14.38,15-30天,$15.80
-2026-06-23,UBER,Uber,Core_Dragon,N/A,71.43,48.3,0.5,15-30天,$15.80
-2026-06-23,CSCO,Cisco,Observation,N/A,121.53,58.5,0.05,观望,观望
-2026-06-23,PCG,PG&E Corporation,Core_Dragon,N/A,16.63,50.2,0.19,15-30天,$15.80
-2026-06-23,SATS,EchoStar,Core_Dragon,N/A,106.4,38.1,-11.33,15-30天,$15.80
-2026-06-24,MU,Micron Technology,Core_Dragon,N/A,1051.77,57.0,4.85,5-10天,999.18
-2026-06-24,CTSH,Cognizant,Core_Dragon,N/A,40.95,22.2,-20.12,5-10天,38.9
-2026-06-24,ACN,Accenture,Core_Dragon,N/A,127.01,22.4,-24.38,5-10天,120.66
-2026-06-24,MSTR,MicroStrategy,Core_Dragon,N/A,103.84,30.5,-19.73,5-10天,98.65
-2026-06-25,PFE,Pfizer,Core_Dragon,N/A,24.04,27.7,-6.29,5-10天,$980
-2026-06-25,MU,Micron Technology,Core_Dragon,N/A,1048.51,56.8,3.74,5-10天,$980
-2026-06-25,SLB,Schlumberger,Core_Dragon,N/A,46.61,26.3,-13.15,5-10天,44.28
-2026-06-25,HAL,Halliburton,Core_Dragon,N/A,33.9,26.9,-11.69,5-10天,$980
-2026-06-25,BSX,Boston Scientific,Core_Dragon,N/A,44.46,29.7,-6.11,5-10天,$980
-2026-06-26,MU,Micron Technology,Observation,N/A,1213.56,64.5,18.4,观望,观望
-2026-06-26,ORCL,Oracle Corporation,Core_Dragon,N/A,152.46,30.9,-23.55,10-20天,$505
-2026-06-26,AMD,Advanced Micro Devices,Core_Dragon,N/A,532.57,58.5,3.97,10-20天,$505
-2026-06-26,LRCX,Lam Research,Observation,N/A,401.82,64.8,14.0,观望,观望
+Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_Price,Status
+2026-05-27,AMZN,AMAZON.COM,Core_Dragon,84.2,265.29,56.6,-0.75,10-15天,跌破 255.00 美元（约-4%）,N/A,N/A,Active
+2026-05-27,BBAI,BIGBEAR AI HOLDINGS,Core_Dragon,83.9,4.18,54.3,1.12,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,3.6,Stop_Loss_Hit
+2026-05-27,ONDS,ONDS,Core_Dragon,83.2,9.77,50.7,1.75,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,8.02,Stop_Loss_Hit
+2026-05-27,SCO,SCO,Observation,81.7,6.65,47.1,3.27,2-4天短打,跌破 6.30 美元 5. 特斯拉 (TSLA) - 评分:79.8分:,N/A,N/A,Active
+2026-05-27,TSLA,TSLA,Observation,79.8,433.59,60.8,5.24,观望等待回撤,跌破 415.00 美元 6. UIPATH (PATH) - 评分:79.5分:,2026-06-30,411.84,Stop_Loss_Hit
+2026-05-27,PATH,PATH,Observation,79.5,11.09,56.7,5.47,5-7天,跌破 10.20 美元 7. 派乐腾 (PTON) - 评分:77.4分:,2026-06-30,10.68,Period_Matured
+2026-05-27,PTON,PTON,Observation,77.4,5.77,64.9,7.57,观望,跌破 5.20 美元 8. OPENDOOR (OPEN) - 评分:76.8分:,N/A,N/A,Active
+2026-05-27,OPEN,OPEN,Observation,76.8,4.48,40.8,-8.18,坚决观望,若持有则跌破 4.00 必须斩仓 9. TERAWULF (WULF) - 评分:74.0分:,N/A,N/A,Active
+2026-05-27,WULF,WULF,Observation,74.0,25.18,63.9,11.02,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,25.58,Stop_Loss_Hit
+2026-05-27,PLUG,PLUG,Observation,73.3,3.84,63.4,11.68,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,2.59,Stop_Loss_Hit
+2026-05-27,WMT,WMT,Trap_Warning,-33.2,118.57,31.8,-8.19,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,114.6,Stop_Loss_Hit
+2026-05-27,CPSH,CPS TECHNOLOGIES,Trap_Warning,-91.7,11.12,82.0,126.66,坚决空仓,绝对规避,2026-06-30,5.57,Dropped
+2026-05-28,RGBP,RGBP,Core_Dragon,nan,0.0,37.8,nan,坚决空仓,绝对规避,N/A,N/A,Active
+2026-05-28,AMZN,AMAZON.COM,Core_Dragon,83.5,271.85,62.7,1.47,坚决空仓,绝对规避,N/A,N/A,Active
+2026-05-28,EEM,EEM,Core_Dragon,81.3,68.39,64.2,3.69,坚决空仓,绝对规避,N/A,N/A,Active
+2026-05-28,AIM,AIM IMMUNOTECH,Observation,78.9,0.4,49.8,6.1,观望,不建议参与 5. 特斯拉 (TSLA) - 评分:78.9分:,2026-06-30,0.3,Dropped
+2026-05-28,TSLA,TSLA,Observation,78.9,440.36,63.0,6.05,3-5天短打,跌破420美元 6. 彭博原油两倍做空ETF (SCO) - 评分:78.2分:,2026-06-30,411.84,Stop_Loss_Hit
+2026-05-28,SCO,SCO,Observation,78.2,6.87,50.6,6.78,日内/隔夜,跌破6.5美元 7. 捷蓝航空 (JBLU) - 评分:74.3分:,N/A,N/A,Active
+2026-05-28,JBLU,JBLU,Observation,74.3,5.4,60.4,10.72,观望,跌破5.0美元 8. Ondas Holdings (ONDS) - 评分:72.7分:,N/A,N/A,Active
+2026-05-28,ONDS,ONDS,Observation,72.7,10.8,57.6,12.3,观望,跌破9.5美元 9. Marathon Digital (MARA) - 评分:72.7分:,2026-06-30,8.02,Stop_Loss_Hit
+2026-05-28,MARA,MARA,Observation,72.7,14.33,68.5,12.32,1-3天动量交易,跌破13.5美元 10. DVLT (DVLT) - 评分:72.0分:,2026-06-30,14.03,Period_Matured
+2026-05-28,DVLT,DVLT,Observation,72.0,0.47,40.0,-13.04,坚决空仓,绝对规避 🚨 诱多对照组（严禁接盘） 倒数1. QTTB (QTTB): ❌,2026-06-30,0.33,Dropped
+2026-05-28,QTTB,QTTB,Trap_Warning,-77.7,12.85,83.5,112.73,坚决空仓,绝对规避,N/A,N/A,Active
+2026-05-28,NCPL,NCPL,Trap_Warning,-162.3,1.57,93.2,197.35,坚决空仓,绝对规避,2026-06-30,0.58,Dropped
+2026-06-02,WBD,WBD,Core_Dragon,84.6,27.25,52.9,0.45,N/A,N/A,2026-06-30,27.13,Period_Matured
+2026-06-02,TLT,TLT,Core_Dragon,84.4,85.47,51.5,0.62,N/A,N/A,2026-06-30,87.45,Period_Matured
+2026-06-02,TSDD,TSDD,Core_Dragon,84.2,7.68,46.3,0.85,N/A,N/A,2026-06-30,7.32,Period_Matured
+2026-06-02,DNN,DNN,Observation,83.5,3.43,46.7,-1.55,N/A,N/A,N/A,N/A,Active
+2026-06-02,SRXH,SRXH,Observation,83.4,0.12,48.3,-1.64,N/A,N/A,2026-06-30,0.09,Dropped
+2026-06-02,EEM,EEM,Observation,80.1,70.08,69.2,4.94,N/A,N/A,N/A,N/A,Active
+2026-06-02,BYND,BEYOND MEAT,Observation,80.0,0.78,46.6,-4.99,N/A,N/A,2026-06-30,0.71,Period_Matured
+2026-06-02,LYFT,LYFT,Observation,77.2,14.86,63.8,7.8,N/A,N/A,N/A,N/A,Active
+2026-06-02,AVGO,BROADCOM,Observation,76.7,459.97,69.8,8.27,N/A,N/A,2026-06-30,372.45,Stop_Loss_Hit
+2026-06-02,UUUU,UUUU,Observation,75.5,17.62,41.5,-9.47,N/A,N/A,N/A,N/A,Active
+2026-06-02,AIM,AIM IMMUNOTECH,Trap_Warning,-97.9,0.9,72.5,132.86,坚决空仓,绝对规避,2026-06-30,0.3,Dropped
+2026-06-02,OTLK,OTLK,Trap_Warning,-104.3,0.84,87.8,139.32,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-02,WBD,WBD,Core_Dragon,84.6,27.25,52.9,0.45,5-12天,-5%,2026-06-30,27.13,Period_Matured
+2026-06-02,TLT,TLT,Core_Dragon,84.4,85.47,51.5,0.62,5-12天,-5%,2026-06-30,87.45,Period_Matured
+2026-06-02,TSDD,TSDD,Core_Dragon,84.2,7.68,46.3,0.85,5-12天,-5%,2026-06-30,7.32,Period_Matured
+2026-06-02,DNN,DNN,Observation,83.5,3.43,46.7,-1.55,观望,N/A,N/A,N/A,Active
+2026-06-02,SRXH,SRXH,Observation,83.4,0.12,48.3,-1.64,观望,N/A,2026-06-30,0.09,Dropped
+2026-06-02,EEM,EEM,Observation,80.1,70.08,69.2,4.94,观望,N/A,N/A,N/A,Active
+2026-06-02,BYND,BEYOND MEAT,Observation,80.0,0.78,46.6,-4.99,观望,N/A,2026-06-30,0.71,Period_Matured
+2026-06-02,LYFT,LYFT,Observation,77.2,14.86,63.8,7.8,观望,N/A,N/A,N/A,Active
+2026-06-02,AVGO,BROADCOM,Observation,76.7,459.97,69.8,8.27,5-12天,-5%,2026-06-30,372.45,Stop_Loss_Hit
+2026-06-02,UUUU,UUUU,Observation,75.5,17.62,41.5,-9.47,观望,N/A,N/A,N/A,Active
+2026-06-02,AIM,AIM IMMUNOTECH,Trap_Warning,-97.9,0.9,72.5,132.86,坚决空仓,绝对规避,2026-06-30,0.3,Dropped
+2026-06-02,OTLK,OTLK,Trap_Warning,-104.3,0.84,87.8,139.32,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-03,FXI,FXI,Core_Dragon,84.9,36.36,51.5,-0.08,5-15天,N/A,2026-06-30,31.71,Stop_Loss_Hit
+2026-06-03,GRAB,GRAB,Core_Dragon,84.8,3.6,46.3,-0.19,5-15天,N/A,2026-06-30,3.74,Stop_Loss_Hit
+2026-06-03,NVDA,NVDA,Core_Dragon,82.8,222.82,58.8,2.22,5-15天,N/A,N/A,N/A,Active
+2026-06-03,SRXH,SRXH,Observation,78.9,0.13,54.2,6.12,观望,N/A,2026-06-30,0.09,Dropped
+2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,观望,N/A,N/A,N/A,Active
+2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,N/A,2026-06-30,45.91,Period_Matured
+2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,N/A,2026-06-30,16.81,Stop_Loss_Hit
+2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,N/A,2026-06-30,24.83,Stop_Loss_Hit
+2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,仅作现金替代配置,非交易标的，无需设止损 10. Amaze控股 (AMZE) - 评分:55.8分:,N/A,N/A,Active
+2026-06-03,AMZE,AMAZE HOLDINGS (ASE),Observation,55.8,0.16,49.6,4.23,纯观望不参与,不建议任何仓位 🚨 诱多对照组（严禁接盘） 倒数1. MicroVision (MVIS): ❌,2026-06-30,0.13,Dropped
+2026-06-03,MVIS,MVIS,Trap_Warning,-59.0,0.41,29.5,-34.03,坚决空仓,绝对规避,2026-06-30,0.3,Dropped
+2026-06-03,HIRU,HIRU,Trap_Warning,nan,0.0,15.4,nan,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-03,FXI,FXI,Core_Dragon,84.9,36.36,51.5,-0.08,5-15天,$34.80,2026-06-30,31.71,Stop_Loss_Hit
+2026-06-03,GRAB,GRAB,Core_Dragon,84.8,3.6,46.3,-0.19,5-15天,$34.80,2026-06-30,3.74,Stop_Loss_Hit
+2026-06-03,NVDA,NVDA,Core_Dragon,82.8,222.82,58.8,2.22,5-15天,$34.80,N/A,N/A,Active
+2026-06-03,SRXH,SRXH,Observation,78.9,0.13,54.2,6.12,观望,$0.11,2026-06-30,0.09,Dropped
+2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,N/A,$4.50,N/A,N/A,Active
+2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,$34.80,2026-06-30,45.91,Period_Matured
+2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,$34.80,2026-06-30,16.81,Stop_Loss_Hit
+2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,$34.80,2026-06-30,24.83,Stop_Loss_Hit
+2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,N/A,$22.30,N/A,N/A,Active
+2026-06-03,AMZE,AMAZE HOLDINGS (ASE),Observation,55.8,0.16,49.6,4.23,不建议参与,若执意进场，亏损超$0.02立即止损 🚨 诱多对照组（严禁接盘） 倒数1. MicroVision (MVIS): ❌,2026-06-30,0.13,Dropped
+2026-06-03,MVIS,MVIS,Trap_Warning,-59.0,0.41,29.5,-34.03,坚决空仓,绝对规避,2026-06-30,0.3,Dropped
+2026-06-03,HIRU,HIRU,Trap_Warning,nan,0.0,15.4,nan,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-04,GGB,GGB,Core_Dragon,84.2,4.75,56.2,0.85,15-30天,N/A,N/A,N/A,Active
+2026-06-04,XLE,XLE,Core_Dragon,83.9,58.71,53.3,1.15,20-40天,N/A,N/A,N/A,Active
+2026-06-04,META,META,Core_Dragon,83.4,622.98,51.5,1.6,10-25天,N/A,2026-06-30,562.6,Period_Matured
+2026-06-04,BAC,BANK OF AMERICA,Observation,82.9,52.4,56.2,2.1,观望,N/A,N/A,N/A,Active
+2026-06-04,FXI,FXI,Observation,82.8,35.54,44.1,-2.21,观望,N/A,2026-06-30,31.71,Stop_Loss_Hit
+2026-06-04,PCG,PCG,Observation,82.2,16.85,55.2,2.85,观望,N/A,N/A,N/A,Active
+2026-06-04,INTC,INTC,Observation,81.8,112.71,56.3,-3.24,观望,N/A,2026-06-30,131.72,Period_Matured
+2026-06-04,KWEB,KWEB,Observation,81.3,27.22,43.2,-3.67,观望,N/A,N/A,N/A,Active
+2026-06-04,TZA,TZA,Observation,81.2,4.43,40.6,-3.81,观望,N/A,2026-06-30,3.85,Stop_Loss_Hit
+2026-06-04,RIG,RIG,Observation,78.5,6.18,41.2,-6.51,观望,N/A,N/A,N/A,Active
+2026-06-04,SNXX,SNXX,Trap_Warning,-107.0,31.1,31.8,-81.95,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-04,ANY,SPHERE 3D,Trap_Warning,-107.7,5.65,86.6,142.7,坚决空仓,绝对规避,2026-06-30,2.71,Dropped
+2026-06-04,GGB,GGB,Core_Dragon,84.2,4.75,56.2,0.85,10-20天,N/A,N/A,N/A,Active
+2026-06-04,XLE,XLE,Core_Dragon,83.9,58.71,53.3,1.15,10-20天,N/A,N/A,N/A,Active
+2026-06-04,META,META,Core_Dragon,83.4,622.98,51.5,1.6,10-20天,N/A,2026-06-30,562.6,Period_Matured
+2026-06-04,BAC,BANK OF AMERICA,Observation,82.9,52.4,56.2,2.1,10-20天,N/A,N/A,N/A,Active
+2026-06-04,FXI,FXI,Observation,82.8,35.54,44.1,-2.21,10-20天,N/A,2026-06-30,31.71,Stop_Loss_Hit
+2026-06-04,PCG,PCG,Observation,82.2,16.85,55.2,2.85,10-20天,N/A,N/A,N/A,Active
+2026-06-04,INTC,INTC,Observation,81.8,112.71,56.3,-3.24,10-20天,N/A,2026-06-30,131.72,Period_Matured
+2026-06-04,KWEB,KWEB,Observation,81.3,27.22,43.2,-3.67,10-20天,N/A,N/A,N/A,Active
+2026-06-04,TZA,TZA,Observation,81.2,4.43,40.6,-3.81,仅日内/隔夜对冲,跌破 $4.25 即离场] 10. 越洋钻探 (RIG) - 评分:78.5分:,2026-06-30,3.85,Stop_Loss_Hit
+2026-06-04,RIG,RIG,Observation,78.5,6.18,41.2,-6.51,10-20天,N/A,N/A,N/A,Active
+2026-06-04,SNXX,SNXX,Trap_Warning,-107.0,31.1,31.8,-81.95,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-04,ANY,SPHERE 3D,Trap_Warning,-107.7,5.65,86.6,142.7,坚决空仓,绝对规避,2026-06-30,2.71,Dropped
+2026-06-05,BYND,BEYOND MEAT,Core_Dragon,84.9,0.79,48.8,-0.06,3-7天,$0.68,2026-06-30,0.71,Period_Matured
+2026-06-05,AUUD,AUDDIA,Core_Dragon,84.3,1.48,45.5,-0.74,3-7天,$0.68,2026-06-30,1.26,Period_Matured
+2026-06-05,SCHD,SCHD,Core_Dragon,83.7,32.59,63.3,1.35,10-20天,$31.50,2026-06-30,31.93,Period_Matured
+2026-06-05,UBER,UBER,Observation,83.3,72.21,46.4,-1.74,3-7天,$0.68,2026-06-30,75.5,Period_Matured
+2026-06-05,OWL,OWL,Observation,83.0,10.19,54.0,2.0,5-10天,$9.60,2026-06-30,8.52,Stop_Loss_Hit
+2026-06-05,META,META,Observation,82.8,627.57,53.1,2.23,3-7天,$0.68,2026-06-30,562.6,Period_Matured
+2026-06-05,SRXH,SRXH,Observation,80.2,0.13,53.7,4.84,观望,$4.20,2026-06-30,0.09,Dropped
+2026-06-05,BTG,B2GOLD (ASE),Observation,79.7,4.58,45.5,-5.34,5-10天,$4.20,2026-06-30,3.79,Stop_Loss_Hit
+2026-06-05,SNAP,SNAP,Observation,79.2,6.07,59.3,5.77,观望,N/A,N/A,N/A,Active
+2026-06-05,EDGM,EDGM,Observation,nan,0.0,6.7,nan,永久回避,不适用(禁止建仓) 🚨 诱多对照组（严禁接盘） 倒数1. VIVK (VIVK): ❌,N/A,N/A,Active
+2026-06-05,VIVK,VIVK,Trap_Warning,-64.7,0.85,36.5,-39.69,坚决空仓,绝对规避,2026-06-30,0.34,Dropped
+2026-06-05,INDP,INDP,Trap_Warning,-132.9,4.75,82.4,167.91,坚决空仓,绝对规避,2026-06-30,3.06,Dropped
+2026-06-08,SPDN,SPDN,Core_Dragon,83.7,8.84,50.8,1.25,3-7天,N/A,N/A,N/A,Active
+2026-06-08,XLF,XLF,Core_Dragon,83.4,52.3,58.2,1.56,3-7天,N/A,N/A,N/A,Active
+2026-06-08,TZA,TZA,Core_Dragon,82.6,4.7,49.3,2.37,3-7天,N/A,2026-06-30,3.85,Stop_Loss_Hit
+2026-06-08,SQQQ,SQQQ,Observation,79.1,43.19,47.3,5.93,3-7天,N/A,N/A,N/A,Active
+2026-06-08,BCDA,BIOCARDIA,Observation,79.0,1.03,53.5,5.97,观望,N/A,N/A,N/A,Active
+2026-06-08,MU,MU,Observation,58.3,864.01,55.2,1.67,观望,N/A,N/A,N/A,Active
+2026-06-08,F,F,Observation,57.1,14.9,54.3,2.85,3-7天,N/A,N/A,N/A,Active
+2026-06-08,SRXH,SRXH,Observation,56.4,0.12,48.3,-3.61,坚决观望,绝对不参与，流动性陷阱 9. 超微电脑 (SMCI) - 评分:50.0分:,2026-06-30,0.09,Dropped
+2026-06-08,SMCI,SMCI,Observation,50.0,41.64,58.3,9.96,3-7天,N/A,N/A,N/A,Active
+2026-06-08,MRVL,MRVL,Observation,33.6,263.47,65.0,26.35,3-7天,N/A,N/A,N/A,Active
+2026-06-08,HL,HL,Trap_Warning,-42.1,14.78,33.8,-17.1,坚决空仓,绝对规避,N/A,N/A,Active
+2026-06-08,OPTT,OPTT,Trap_Warning,-43.4,0.29,35.3,-18.42,坚决空仓,绝对规避,2026-06-30,0.27,Dropped
+2026-06-09,XLF,XLF,Observation,0,51.97,54.3,0.85,观望,观望,N/A,N/A,Active
+2026-06-09,INTC,INTC,Core_Dragon,0,110.27,53.1,-4.25,3-7天,$105.00,2026-06-30,131.72,Period_Matured
+2026-06-09,EWY,EWY,Core_Dragon,0,185.64,49.8,-3.52,3-7天,$105.00,2026-06-30,197.5,Period_Matured
+2026-06-09,MU,MU,Observation,0,949.28,60.8,10.39,观望,观望,N/A,N/A,Active
+2026-06-09,NOTV,NOTV,Core_Dragon,0,0.11,33.8,-55.56,3-7天,$105.00,2026-06-30,0.08,Dropped
+2026-06-10,NVDA,NVIDIA,Core_Dragon,0,206.16,45.0,-5.12,3-7天,$195.00,N/A,N/A,Active
+2026-06-10,XOM,ExxonMobil,Core_Dragon,0,150.68,49.1,-1.01,3-8天,$146.50,2026-06-30,136.06,Period_Matured
+2026-06-10,GOOG,Alphabet Inc. (Class C),Observation,0,364.33,46.5,-3.53,观望,观望,N/A,N/A,Active
+2026-06-10,WMT,Walmart,Observation,0,119.0,42.3,-2.7,观望,观望,2026-06-30,114.6,Stop_Loss_Hit
+2026-06-10,SLB,Schlumberger,Observation,0,56.28,53.0,0.32,观望,观望,N/A,N/A,Active
+2026-06-10,DVN,Devon Energy,Core_Dragon,0,46.38,50.1,-0.08,3-8天,$44.50,2026-06-30,41.99,Period_Matured
+2026-06-10,KHC,Kraft Heinz,Observation,0,23.97,61.3,3.65,观望,观望,N/A,N/A,Active
+2026-06-11,DVN,Devon Energy,Core_Dragon,0,46.6,50.9,0.37,3-8天,$44.50,2026-06-30,41.99,Period_Matured
+2026-06-11,KEY,KeyCorp,Observation,0,21.98,59.8,3.48,观望,观望,N/A,N/A,Active
+2026-06-11,C,Citigroup,Core_Dragon,0,133.38,61.0,4.53,3-8天,$44.50,2026-06-30,142.49,Period_Matured
+2026-06-11,BAC,Bank of America,Observation,0,54.54,67.4,5.52,观望,观望,N/A,N/A,Active
+2026-06-12,SATS,EchoStar,Observation,0,128.13,53.8,1.08,观望,观望,N/A,N/A,Active
+2026-06-12,CCL,Carnival Corporation,Core_Dragon,0,28.12,56.3,5.39,5-10天,$26.50,2026-06-30,29.19,Period_Matured
+2026-06-12,INTC,Intel,Observation,0,116.96,57.8,3.28,观望,观望,2026-06-30,131.72,Period_Matured
+2026-06-12,NCLH,Norwegian Cruise Line Holdings,Observation,0,19.06,57.8,9.24,观望,观望,N/A,N/A,Active
+2026-06-12,HAL,Halliburton,Core_Dragon,0,39.76,48.0,-2.03,5-10天,$26.50,2026-06-30,34.09,Period_Matured
+2026-06-12,DVN,Devon Energy,Core_Dragon,0,44.61,43.8,-3.68,5-10天,$26.50,2026-06-30,41.99,Period_Matured
+2026-06-12,XOM,ExxonMobil,Core_Dragon,0,146.6,43.0,-3.57,5-10天,$26.50,2026-06-30,136.06,Period_Matured
+2026-06-16,CCL,Carnival Corporation,Core_Dragon,0,29.18,60.5,8.52,5-10天,$27.30,2026-06-30,29.19,Period_Matured
+2026-06-16,CSX,CSX Corporation,Observation,0,47.57,62.7,2.72,观望,观望,N/A,N/A,Active
+2026-06-16,HAL,Halliburton,Core_Dragon,0,39.6,47.1,-2.24,5-10天,$27.30,2026-06-30,34.09,Period_Matured
+2026-06-16,DVN,Devon Energy,Core_Dragon,0,44.99,46.6,-1.96,5-10天,$27.30,2026-06-30,41.99,Period_Matured
+2026-06-16,NCLH,Norwegian Cruise Line Holdings,Observation,0,20.14,63.7,12.81,观望,观望,N/A,N/A,Active
+2026-06-16,XOM,ExxonMobil,Core_Dragon,0,147.01,43.7,-3.15,5-10天,$27.30,2026-06-30,136.06,Period_Matured
+2026-06-17,QCOM,Qualcomm,Core_Dragon,0,214.07,51.3,-3.99,15-30天,203.37,2026-06-30,188.72,Stop_Loss_Hit
+2026-06-17,MU,Micron Technology,Core_Dragon,0,1020.76,60.5,9.97,15-30天,969.72,N/A,N/A,Active
+2026-06-17,F,Ford Motor Company,Core_Dragon,0,14.41,49.4,-4.53,15-30天,13.69,N/A,N/A,Active
+2026-06-17,NVDA,Nvidia,Observation,0,207.41,47.5,-2.67,观望,观望,N/A,N/A,Active
+2026-06-17,HPE,Hewlett Packard Enterprise,Core_Dragon,0,48.88,64.7,11.88,15-30天,46.44,2026-06-30,44.41,Stop_Loss_Hit
+2026-06-17,HOOD,Robinhood Markets,Core_Dragon,0,98.12,65.3,16.99,15-30天,93.21,N/A,N/A,Active
+2026-06-18,NVDA,Nvidia,Core_Dragon,0,204.65,45.5,-3.61,10-20天,194.42,N/A,N/A,Active
+2026-06-18,HOOD,Robinhood Markets,Core_Dragon,0,105.2,69.4,21.76,10-20天,99.94,N/A,N/A,Active
+2026-06-18,MRVL,Marvell Technology,Observation,0,289.54,61.2,15.17,观望,观望,N/A,N/A,Active
+2026-06-18,MU,Micron Technology,Core_Dragon,0,1043.19,61.7,10.33,10-20天,991.03,N/A,N/A,Active
+2026-06-18,F,Ford Motor Company,Observation,0,13.96,45.4,-7.79,观望,观望,N/A,N/A,Active
+2026-06-18,SLB,Schlumberger,Observation,0,50.33,33.8,-9.44,观望,观望,N/A,N/A,Active
+2026-06-18,NCLH,Norwegian Cruise Line Holdings,Observation,0,19.83,60.2,8.01,观望,观望,N/A,N/A,Active
+2026-06-18,DVN,Devon Energy,Observation,0,42.58,39.0,-5.27,观望,观望,2026-06-30,41.99,Period_Matured
+2026-06-18,XOM,ExxonMobil,Observation,0,140.74,36.5,-5.49,观望,观望,2026-06-30,136.06,Period_Matured
+2026-06-18,KLAC,KLA Corporation,Observation,0,238.73,64.2,13.11,观望,观望,N/A,N/A,Active
+2026-06-19,MRVL,Marvell Technology,Observation,N/A,289.54,61.2,15.17,观望,观望,N/A,N/A,Active
+2026-06-19,F,Ford Motor Company,Core_Dragon,N/A,13.96,45.4,-7.79,10-20天,$965,N/A,N/A,Active
+2026-06-19,PFE,Pfizer,Core_Dragon,N/A,25.92,49.8,0.17,10-20天,$965,2026-06-30,24.37,Stop_Loss_Hit
+2026-06-19,MU,Micron Technology,Core_Dragon,N/A,1043.19,61.7,10.33,10-20天,$965,N/A,N/A,Active
+2026-06-19,HOOD,Robinhood Markets,Core_Dragon,N/A,105.2,69.4,21.76,10-20天,$965,N/A,N/A,Active
+2026-06-19,MSTR,MicroStrategy,Core_Dragon,N/A,116.56,35.7,-15.29,10-20天,$965,N/A,N/A,Active
+2026-06-19,ARM,Arm Holdings,Observation,N/A,418.88,66.7,18.61,观望,观望,N/A,N/A,Active
+2026-06-22,PFE,Pfizer,Core_Dragon,92,25.21,39.3,-2.47,5-15天,$395,2026-06-30,24.37,Stop_Loss_Hit
+2026-06-22,MU,Micron Technology,Observation,N/A,1133.99,66.4,17.44,观望,观望,N/A,N/A,Active
+2026-06-22,PLTR,Palantir Technologies,Core_Dragon,92,128.47,41.2,-6.92,5-15天,$395,2026-06-30,115.7,Stop_Loss_Hit
+2026-06-22,AVGO,Broadcom,Core_Dragon,92,411.35,51.3,-0.58,5-15天,$395,2026-06-30,372.45,Stop_Loss_Hit
+2026-06-22,ACN,Accenture,Core_Dragon,92,127.98,20.9,-26.12,5-15天,$395,2026-06-30,124.74,Stop_Loss_Hit
+2026-06-23,INTC,Intel,Core_Dragon,N/A,140.94,67.3,19.98,15-30天,$15.80,2026-06-30,131.72,Period_Matured
+2026-06-23,AAPL,Apple,Observation,N/A,297.01,49.9,-1.98,观望,观望,N/A,N/A,Active
+2026-06-23,PFE,Pfizer,Core_Dragon,N/A,25.08,37.8,-2.81,15-30天,$15.80,2026-06-30,24.37,Stop_Loss_Hit
+2026-06-23,ORCL,Oracle Corporation,Core_Dragon,N/A,175.07,39.0,-14.38,15-30天,$15.80,N/A,N/A,Active
+2026-06-23,UBER,Uber,Core_Dragon,N/A,71.43,48.3,0.5,15-30天,$15.80,2026-06-30,75.5,Period_Matured
+2026-06-23,CSCO,Cisco,Observation,N/A,121.53,58.5,0.05,观望,观望,N/A,N/A,Active
+2026-06-23,PCG,PG&E Corporation,Core_Dragon,N/A,16.63,50.2,0.19,15-30天,$15.80,N/A,N/A,Active
+2026-06-23,SATS,EchoStar,Core_Dragon,N/A,106.4,38.1,-11.33,15-30天,$15.80,N/A,N/A,Active
+2026-06-24,MU,Micron Technology,Core_Dragon,N/A,1051.77,57.0,4.85,5-10天,999.18,N/A,N/A,Active
+2026-06-24,CTSH,Cognizant,Core_Dragon,N/A,40.95,22.2,-20.12,5-10天,38.9,N/A,N/A,Active
+2026-06-24,ACN,Accenture,Core_Dragon,N/A,127.01,22.4,-24.38,5-10天,120.66,2026-06-30,124.74,Stop_Loss_Hit
+2026-06-24,MSTR,MicroStrategy,Core_Dragon,N/A,103.84,30.5,-19.73,5-10天,98.65,N/A,N/A,Active
+2026-06-25,PFE,Pfizer,Core_Dragon,N/A,24.04,27.7,-6.29,5-10天,$980,2026-06-30,24.37,Stop_Loss_Hit
+2026-06-25,MU,Micron Technology,Core_Dragon,N/A,1048.51,56.8,3.74,5-10天,$980,N/A,N/A,Active
+2026-06-25,SLB,Schlumberger,Core_Dragon,N/A,46.61,26.3,-13.15,5-10天,44.28,N/A,N/A,Active
+2026-06-25,HAL,Halliburton,Core_Dragon,N/A,33.9,26.9,-11.69,5-10天,$980,2026-06-30,34.09,Period_Matured
+2026-06-25,BSX,Boston Scientific,Core_Dragon,N/A,44.46,29.7,-6.11,5-10天,$980,N/A,N/A,Active
+2026-06-26,MU,Micron Technology,Observation,N/A,1213.56,64.5,18.4,观望,观望,N/A,N/A,Active
+2026-06-26,ORCL,Oracle Corporation,Core_Dragon,N/A,152.46,30.9,-23.55,10-20天,$505,N/A,N/A,Active
+2026-06-26,AMD,Advanced Micro Devices,Core_Dragon,N/A,532.57,58.5,3.97,10-20天,$505,N/A,N/A,Active
+2026-06-26,LRCX,Lam Research,Observation,N/A,401.82,64.8,14.0,观望,观望,N/A,N/A,Active
