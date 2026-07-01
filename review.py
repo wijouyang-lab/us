@@ -17,18 +17,27 @@ HISTORY_FILE = "trade_history.csv"
 def get_latest_prices(tickers):
     if not tickers:
         return {}
+    # 清洗 ticker：去掉 yfinance 不认识的 $ 前缀，然后建立"原始→清洗后"的映射，
+    # 确保回填价格时用的还是 trade_history.csv 里原始的 ticker 格式
+    clean_map = {t: t.lstrip('$') for t in tickers}
+    clean_tickers = list(set(clean_map.values()))
+
     prices = {}
     try:
-        df = yf.download(tickers, period="1d", progress=False)
-        for t in tickers:
+        df = yf.download(clean_tickers, period="1d", progress=False, auto_adjust=True)
+        for orig_t, clean_t in clean_map.items():
             try:
-                val = df['Close'][t].iloc[-1] if len(tickers) > 1 else df['Close'].iloc[-1]
-                if pd.notna(val):
-                    prices[t] = round(float(val), 2)
-            except:
+                val = df['Close'][clean_t].iloc[-1] if len(clean_tickers) > 1 else df['Close'].iloc[-1]
+                if pd.notna(val) and float(val) > 0:
+                    prices[orig_t] = round(float(val), 2)
+            except Exception:
                 pass
     except Exception as e:
         print(f"价格批量获取失败: {e}")
+
+    missing = [t for t in tickers if t not in prices]
+    if missing:
+        print(f"⚠️ 以下 {len(missing)} 只标的无法获取现价（可能已退市或 ticker 有误），复盘中将以买入价代替现价：{missing}")
     return prices
 
 def generate_review_report(df, current_prices):
@@ -42,19 +51,52 @@ def generate_review_report(df, current_prices):
     stats_lines = []
     for idx, row in df.iterrows():
         t = row['Ticker']
-        buy_price = row['Price']
-        status = row.get('Status', 'Active')
-        
+        status = str(row.get('Status', 'Active')).strip()
+
+        # buy_price 安全转换：数据脏行 Price=0 或 "N/A" 时跳过，避免后续除以 0
+        try:
+            buy_price = float(row['Price'])
+            if buy_price <= 0:
+                print(f"⚠️ 跳过 {t}：买入价为 {buy_price}，无法计算盈亏")
+                continue
+        except (ValueError, TypeError):
+            print(f"⚠️ 跳过 {t}：买入价不是有效数字（{row['Price']}）")
+            continue
+
+        cur_price = current_prices.get(t, buy_price)  # 拿不到现价时用买入价（盈亏=0%）
+
         if status == 'Active':
-            cur_price = current_prices.get(t, buy_price)
             profit_pct = round((cur_price - buy_price) / buy_price * 100, 2)
-            stats_lines.append(f"[{status}] {row['Name']}({t}) | 推荐价: ${buy_price} -> 现价: ${cur_price} | 浮动盈亏: {profit_pct}%")
-        elif status == 'Dropped':
-            exit_price = row.get('Exit_Price', buy_price)
-            cur_price = current_prices.get(t, exit_price)
-            # 计算如果没抛弃，现在会亏/赚多少，以验证风控有效性
-            prevented_loss = round((exit_price - cur_price) / exit_price * 100, 2)
-            stats_lines.append(f"[{status}] {row['Name']}({t}) | 抛弃价: ${exit_price} -> 现价(事后): ${cur_price} | 成功规避后续回撤: {prevented_loss}%")
+            price_note = "（现价为买入价估算，可能已退市）" if t not in current_prices else ""
+            stats_lines.append(f"[Active] {row['Name']}({t}) | 买入价: ${buy_price} → 现价: ${cur_price}{price_note} | 浮动盈亏: {profit_pct}%")
+
+        elif status in ('Dropped', 'Stop_Loss_Hit', 'Period_Matured', 'Forced_Exit'):
+            # 安全转换 Exit_Price：可能是 "N/A" 字符串或空值
+            try:
+                exit_price = float(row.get('Exit_Price', buy_price))
+                if exit_price <= 0:
+                    exit_price = buy_price
+            except (ValueError, TypeError):
+                exit_price = buy_price
+
+            pnl_pct = round((exit_price - buy_price) / buy_price * 100, 2)
+            post_exit_price = current_prices.get(t, exit_price)
+            prevented = round((exit_price - post_exit_price) / exit_price * 100, 2) if exit_price > 0 else 0.0
+
+            label_map = {
+                'Dropped':        '宏观利空强清',
+                'Stop_Loss_Hit':  '止损触发清仓',
+                'Period_Matured': '持有到期清仓',
+                'Forced_Exit':    '突发事件强清',
+            }
+            label = label_map.get(status, status)
+            stats_lines.append(
+                f"[{label}] {row['Name']}({t}) | 买入: ${buy_price} → 清仓: ${exit_price} | 实现盈亏: {pnl_pct}% | 清仓后继续变化: {prevented}%（验证风控有效性）"
+            )
+
+        else:
+            # 未知状态，仅展示基础信息，不做计算
+            stats_lines.append(f"[{status}] {row['Name']}({t}) | 买入价: ${buy_price}")
 
     report_data = "\n".join(stats_lines)
     
@@ -83,7 +125,7 @@ if __name__ == "__main__":
         print("未检测到交易记录，复盘取消。")
         exit()
         
-    df = pd.read_csv(HISTORY_FILE)
+    df = pd.read_csv(HISTORY_FILE, keep_default_na=False)
 
     # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
     # 旧版本记录缺少这三个字段，视为无效行，不纳入复盘与胜率计算。
@@ -109,8 +151,6 @@ if __name__ == "__main__":
     
     report_html = generate_review_report(df, prices)
     
-    # 使用 Flash 模型进行快速的 HTML 标签检查与结构压缩
-    print(f"正在调用 {REVIEW_MODEL_FLASH} 引擎进行报告格式化校验...")
     
     full_html = f"""
     <!DOCTYPE html><html><head><meta charset='utf-8'>
