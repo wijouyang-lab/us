@@ -1,0 +1,594 @@
+
+    <!DOCTYPE html><html><head><meta charset='utf-8'>
+    <style>
+        body { font-family: sans-serif; background: #f4f6f8; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    </style></head>
+    <body>
+        <div class='card'>
+            <h2 style='color: #2c3e50;'>📊 资产全景复盘报告</h2>
+            <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>量化交易复盘报告</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #F7F4EF;
+    color: #1F2421;
+    line-height: 1.6;
+    padding: 3rem 1.5rem;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 3.5rem;
+  }
+  
+  .eyebrow {
+    display: inline-block;
+    background: #F2E3D6;
+    color: #C4612F;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    margin-bottom: 1.2rem;
+  }
+  
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 2.8rem;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.8rem;
+    line-height: 1.2;
+  }
+  
+  h1 em {
+    font-style: italic;
+    color: #C4612F;
+  }
+  
+  .subtitle {
+    font-size: 1.1rem;
+    color: #5C635D;
+    font-weight: 300;
+  }
+  
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+  
+  .metric-card {
+    background: #FFFFFF;
+    border: 1px solid #E7E1D7;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 2px 8px rgba(31, 36, 33, 0.04);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  
+  .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(31, 36, 33, 0.08);
+  }
+  
+  .metric-label {
+    font-size: 0.85rem;
+    color: #5C635D;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  
+  .metric-value {
+    font-size: 2.2rem;
+    font-weight: 500;
+    margin-bottom: 0.3rem;
+  }
+  
+  .metric-value.positive {
+    color: #2D7A4F;
+  }
+  
+  .metric-value.negative {
+    color: #C4612F;
+  }
+  
+  .metric-value.neutral {
+    color: #1F2421;
+  }
+  
+  .metric-context {
+    font-size: 0.9rem;
+    color: #5C635D;
+    font-weight: 300;
+  }
+  
+  .section {
+    background: #FFFFFF;
+    border: 1px solid #E7E1D7;
+    border-radius: 16px;
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(31, 36, 33, 0.04);
+  }
+  
+  h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #E7E1D7;
+  }
+  
+  h2 em {
+    font-style: italic;
+    color: #C4612F;
+  }
+  
+  .position-grid {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .position-row {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1.5fr 1fr;
+    gap: 1rem;
+    align-items: center;
+    padding: 1rem;
+    background: #FBF9F5;
+    border: 1px solid #E7E1D7;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  
+  .position-row.winner {
+    background: linear-gradient(to right, #f0f9f4, #FBF9F5);
+    border-left: 3px solid #2D7A4F;
+  }
+  
+  .position-row.loser {
+    background: linear-gradient(to right, #fef5f1, #FBF9F5);
+    border-left: 3px solid #C4612F;
+  }
+  
+  .ticker {
+    font-weight: 600;
+    color: #1F2421;
+    font-size: 1rem;
+  }
+  
+  .price-info {
+    color: #5C635D;
+    font-weight: 300;
+  }
+  
+  .pnl {
+    font-weight: 600;
+    font-size: 1.05rem;
+    text-align: right;
+  }
+  
+  .pnl.positive {
+    color: #2D7A4F;
+  }
+  
+  .pnl.negative {
+    color: #C4612F;
+  }
+  
+  .status-chip {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+  }
+  
+  .status-chip.active {
+    background: #F2E3D6;
+    color: #C4612F;
+  }
+  
+  .status-chip.stopped {
+    background: #E7E1D7;
+    color: #5C635D;
+  }
+  
+  .status-chip.expired {
+    background: #F7F4EF;
+    color: #5C635D;
+  }
+  
+  .status-chip.forced {
+    background: #1F2421;
+    color: #FFFFFF;
+  }
+  
+  .dropped-analysis {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: #FBF9F5;
+    border-left: 3px solid #C4612F;
+    border-radius: 8px;
+  }
+  
+  .dropped-item {
+    margin-bottom: 1.2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid #E7E1D7;
+  }
+  
+  .dropped-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  
+  .dropped-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .dropped-ticker {
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  
+  .dropped-pnl {
+    font-weight: 600;
+    color: #C4612F;
+  }
+  
+  .dropped-verdict {
+    padding: 0.8rem 1rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+  }
+  
+  .dropped-verdict.validated {
+    background: #e8f5e9;
+    color: #2D7A4F;
+    border: 1px solid #c8e6c9;
+  }
+  
+  .dropped-verdict.regret {
+    background: #fef5f1;
+    color: #C4612F;
+    border: 1px solid #f4d9cc;
+  }
+  
+  .icon-indicator {
+    display: inline-block;
+    margin-right: 0.4rem;
+    font-size: 1.1rem;
+  }
+  
+  .recommendations {
+    margin-top: 2rem;
+  }
+  
+  .recommendation-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .recommendation-list li {
+    padding: 1rem 1.2rem;
+    margin-bottom: 0.8rem;
+    background: #FBF9F5;
+    border-left: 3px solid #C4612F;
+    border-radius: 8px;
+    font-weight: 300;
+  }
+  
+  .recommendation-list li strong {
+    font-weight: 500;
+    color: #C4612F;
+  }
+  
+  .highlight-box {
+    background: #F2E3D6;
+    border: 1px solid #C4612F;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .highlight-box p {
+    margin: 0;
+    font-weight: 400;
+    color: #1F2421;
+  }
+  
+  @media (max-width: 768px) {
+    body {
+      padding: 2rem 1rem;
+    }
+    
+    h1 {
+      font-size: 2rem;
+    }
+    
+    .position-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+    
+    .pnl {
+      text-align: left;
+    }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="eyebrow">QUANTITATIVE REVIEW</div>
+      <h1>本期交易<em>复盘</em>分析</h1>
+      <p class="subtitle">基于实盘数据的风控有效性评估与策略优化建议</p>
+    </div>
+    
+    <div class="summary-grid">
+      <div class="metric-card">
+        <div class="metric-label">整体持仓数</div>
+        <div class="metric-value neutral">111 笔</div>
+        <div class="metric-context">活跃 32 | 已平 79</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">活跃持仓胜率</div>
+        <div class="metric-value positive">56.25%</div>
+        <div class="metric-context">18 盈 / 14 亏</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">已平仓胜率</div>
+        <div class="metric-value negative">30.38%</div>
+        <div class="metric-context">24 盈 / 55 亏</div>
+      </div>
+      
+      <div class="metric-card">
+        <div class="metric-label">风控有效率</div>
+        <div class="metric-value positive">78.57%</div>
+        <div class="metric-context">33/42 次斩仓后继续下跌</div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>活跃持仓<em>表现</em>分析</h2>
+      <div class="position-grid">
+        <div class="position-row winner">
+          <div class="ticker">SCO</div>
+          <div class="price-info">$6.65 → $35.02</div>
+          <div class="pnl positive">+426.62%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row winner">
+          <div class="ticker">SCO</div>
+          <div class="price-info">$6.87 → $35.02</div>
+          <div class="pnl positive">+409.75%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row winner">
+          <div class="ticker">OTLK</div>
+          <div class="price-info">$0.84 → $1.59</div>
+          <div class="pnl positive">+89.29%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row winner">
+          <div class="ticker">SNXX</div>
+          <div class="price-info">$31.10 → $42.05</div>
+          <div class="pnl positive">+35.21%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row winner">
+          <div class="ticker">KLAC</div>
+          <div class="price-info">$238.73 → $301.71</div>
+          <div class="pnl positive">+26.38%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row winner">
+          <div class="ticker">MU</div>
+          <div class="price-info">$949.28 → $1154.29</div>
+          <div class="pnl positive">+21.60%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+      </div>
+      
+      <div class="highlight-box">
+        <p><strong>关键发现：</strong>SCO（原油反向ETF）两笔持仓收益率超过 400%，成为本期绝对明星标的，证明宏观对冲策略在能源市场波动中的有效性。科技股 KLAC、MU 表现优异，半导体板块反弹强劲。</p>
+      </div>
+      
+      <h3 style="font-size: 1.2rem; margin-top: 2rem; margin-bottom: 1rem; color: #5C635D;">主要亏损持仓</h3>
+      <div class="position-grid">
+        <div class="position-row loser">
+          <div class="ticker">SATS</div>
+          <div class="price-info">$128.13 → $101.50</div>
+          <div class="pnl negative">-20.78%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row loser">
+          <div class="ticker">SLB</div>
+          <div class="price-info">$56.28 → $46.49</div>
+          <div class="pnl negative">-17.40%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row loser">
+          <div class="ticker">AMZN</div>
+          <div class="price-info">$271.85 → $238.34</div>
+          <div class="pnl negative">-12.33%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+        <div class="position-row loser">
+          <div class="ticker">AMZN</div>
+          <div class="price-info">$265.29 → $238.34</div>
+          <div class="pnl negative">-10.16%</div>
+          <div class="status-chip active">活跃</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>风控斩仓<em>有效性</em>验证</h2>
+      <p style="margin-bottom: 1.5rem; color: #5C635D; font-weight: 300;">通过追踪斩仓后的价格走势，验证风控决策的准确性。<strong>正向验证</strong>指清仓后继续下跌，<strong>反向打脸</strong>指清仓后反弹上涨。</p>
+      
+      <div class="dropped-analysis">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: #1F2421;">止损触发清仓（22笔）</h3>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">PLUG</span>
+            <span class="dropped-pnl">-32.55%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$3.84 → $2.59 清仓</div>
+          <div class="dropped-verdict validated">
+            <span class="icon-indicator">✓</span> <strong>风控有效：</strong>清仓后继续下跌 -4.63%，成功规避进一步损失
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">ONDS</span>
+            <span class="dropped-pnl">-25.74%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$10.80 → $8.02 清仓</div>
+          <div class="dropped-verdict validated">
+            <span class="icon-indicator">✓</span> <strong>风控有效：</strong>清仓后继续下跌 -2.74%
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">AVGO</span>
+            <span class="dropped-pnl">-19.03%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$459.97 → $372.45 清仓</div>
+          <div class="dropped-verdict validated">
+            <span class="icon-indicator">✓</span> <strong>风控有效：</strong>清仓后继续下跌 -1.42%
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">WULF</span>
+            <span class="dropped-pnl">+1.59%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$25.18 → $25.58 清仓（微盈利触发止盈）</div>
+          <div class="dropped-verdict regret">
+            <span class="icon-indicator">✗</span> <strong>过早离场：</strong>清仓后继续上涨 +3.44%，错失潜在收益
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">WMT</span>
+            <span class="dropped-pnl">-3.35%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$118.57 → $114.60 清仓</div>
+          <div class="dropped-verdict regret">
+            <span class="icon-indicator">✗</span> <strong>误杀：</strong>清仓后反弹 +1.17%，止损过于敏感
+          </div>
+        </div>
+      </div>
+      
+      <div class="dropped-analysis" style="margin-top: 1.5rem;">
+        <h3 style="font-size: 1.1rem; margin-bottom: 1rem; color: #1F2421;">宏观利空强制清仓（20笔）</h3>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">AIM</span>
+            <span class="dropped-pnl">-66.67%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$0.90 → $0.30 清仓</div>
+          <div class="dropped-verdict regret">
+            <span class="icon-indicator">✗</span> <strong>清仓后反弹：</strong>+6.67%，但考虑到 -66.67% 的巨亏，及时止损仍然必要
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">NCPL</span>
+            <span class="dropped-pnl">-63.06%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$1.57 → $0.58 清仓</div>
+          <div class="dropped-verdict regret">
+            <span class="icon-indicator">✗</span> <strong>清仓后反弹：</strong>+6.90%，但已规避退市风险
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">CPSH</span>
+            <span class="dropped-pnl">-49.91%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$11.12 → $5.57 清仓</div>
+          <div class="dropped-verdict regret">
+            <span class="icon-indicator">✗</span> <strong>小幅反弹：</strong>+0.90%，但宏观风险已释放，清仓合理
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">MVIS</span>
+            <span class="dropped-pnl">-26.83%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$0.41 → $0.30 清仓</div>
+          <div class="dropped-verdict validated">
+            <span class="icon-indicator">✓</span> <strong>风控有效：</strong>清仓后继续下跌 -10.00%，避免更大损失
+          </div>
+        </div>
+        
+        <div class="dropped-item">
+          <div class="dropped-header">
+            <span class="dropped-ticker">DVLT</span>
+            <span class="dropped-pnl">-29.79%</span>
+          </div>
+          <div style="color: #5C635D; font-size: 0.85rem; margin-bottom: 0.3rem;">$0.47 → $0.33 清仓</div>
+          <div class="dropped-verdict validated">
+            <span class="icon-indicator">✓</span> <strong>风控有效：</strong>清仓后继续下跌 -6.06%
+          </div>
+        </div>
+      </div>
+      
+      <div class="highlight-box" style="margin-top: 2rem;">
+        <p><strong>风控有效性总结：</strong>42 笔斩仓操作中，33 笔（78.57%）验证了风控有效性，清仓后继续下跌。9 笔（21.43%）出现反弹"打脸"，但多数为小幅反弹（<3%），且发生在巨额亏损标的上（如 AIM、NCPL），及时止损避免了更大的系统性风险。</p>
+      </div>
+    </div>
+    
+    <div class="section">
+      <h2>后续<em>优化</em>策略</h2>
+      <div class="recommendations">
+        <ul class="recommendation-list">
+          <li><strong>仓位管理优化：</strong>SCO 作为对冲工
+        </div>
+    </body></html>
+    
