@@ -120,6 +120,27 @@ def generate_review_report(df, current_prices):
     )
     return response.content[0].text.strip()
 
+def send_mail(to_emails, subject, content):
+    user = os.environ.get("EMAIL_ACCOUNT")
+    pwd = os.environ.get("EMAIL_PASSWORD")
+    if not user or not pwd:
+        print("⚠️ 未检测到 EMAIL_ACCOUNT / EMAIL_PASSWORD，跳过邮件发送。")
+        return
+    to_list = [e.strip() for e in to_emails.split(',')]
+    msg = MIMEMultipart()
+    msg['From'] = user
+    msg['To'] = to_emails
+    msg['Subject'] = subject
+    msg.attach(MIMEText(content, 'html', 'utf-8'))
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
+            s.login(user, pwd)
+            s.sendmail(user, to_list, msg.as_string())
+            print(f"✅ 复盘报告已发送至: {to_emails}")
+    except Exception as e:
+        print(f"❌ 邮件发送失败: {e}")
+
+
 if __name__ == "__main__":
     if not os.path.exists(HISTORY_FILE):
         print("未检测到交易记录，复盘取消。")
@@ -168,5 +189,11 @@ if __name__ == "__main__":
     
     with open("review_report.html", "w", encoding="utf-8") as f:
         f.write(full_html)
-        
-    print("✅ 复盘生成完毕，请查收 review_report.html")
+
+    print("✅ 复盘生成完毕，正在发送邮件...")
+
+    if SUPER_ADMIN:
+        today_str = datetime.datetime.now().strftime('%Y-%m-%d')
+        send_mail(SUPER_ADMIN, f"📊 美股持仓复盘报告 {today_str}", full_html)
+    else:
+        print("⚠️ TARGET_EMAILS 未设置，已跳过邮件发送，报告已保存至 review_report.html")
