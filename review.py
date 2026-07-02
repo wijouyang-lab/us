@@ -99,26 +99,60 @@ def generate_review_report(df, current_prices):
             stats_lines.append(f"[{status}] {row['Name']}({t}) | 买入价: ${buy_price}")
 
     report_data = "\n".join(stats_lines)
-    
+
+    # 防止超时：report_data 过大会导致 Anthropic API 响应超过 Cloudflare 120s 硬限制（524错误）
+    # 按字符数截断，保留最新的记录（head保最新，tail保最旧——这里我们要最新的在前）
+    MAX_REPORT_CHARS = 8000
+    if len(report_data) > MAX_REPORT_CHARS:
+        report_data = report_data[:MAX_REPORT_CHARS]
+        last_newline = report_data.rfind('\n')
+        if last_newline > 0:
+            report_data = report_data[:last_newline]
+        report_data += f"\n... （已截断，仅展示最近 {len(stats_lines)} 条中的前若干条，完整数据见 trade_history.csv）"
+        print(f"⚠️ report_data 超过 {MAX_REPORT_CHARS} 字符，已截断以防止API超时")
+
     prompt = f"""
 你是首席定量分析师，请根据以下最新提取的交易记录，进行本期操作的回顾与复盘。
 要求：
 1. 分析 Active 持仓的整体胜率与盈亏分布。
-2. 重点评估 Dropped 斩仓操作的有效性（斩仓后该股是继续下跌证明了风控有效，还是反弹打脸了我们的风控？）。
-3. 给出后续优化策略。
-输出格式要求直接为精美的 HTML 片段（无 markdown 外框）。
+2. 重点评估已清仓操作的有效性（清仓后该股是继续下跌证明了风控有效，还是反弹说明过早离场？）。
+3. 给出后续优化策略（不超过3条，要具体可执行）。
+输出格式要求直接为精美的 HTML 片段（无 markdown 外框），控制在1500字以内。
 
 【持仓与风控拦截数据】：
 {report_data}
 """
-    
-    response = client.messages.create(
-        model=REVIEW_MODEL_PRO,
-        max_tokens=4000,
-        temperature=0.2,
-        messages=[{"role": "user", "content": prompt}]
-    )
-    return response.content[0].text.strip()
+
+    # 重试逻辑：最多3次，指数退避，每次失败后降低 max_tokens 减少响应时长
+    import time as _time
+    last_err = None
+    for attempt in range(3):
+        try:
+            tokens = [2000, 1500, 1000][attempt]  # 每次重试降低token上限，缩短响应时间
+            response = client.messages.create(
+                model=REVIEW_MODEL_PRO,
+                max_tokens=tokens,
+                temperature=0.2,
+                messages=[{"role": "user", "content": prompt}]
+            )
+            return response.content[0].text.strip()
+        except Exception as e:
+            last_err = e
+            wait = 2 ** attempt * 5  # 5s, 10s, 20s
+            print(f"⚠️ API调用失败（第{attempt+1}次），{wait}秒后重试: {type(e).__name__}: {str(e)[:120]}")
+            _time.sleep(wait)
+
+    # 三次都失败：返回简易降级报告，不崩溃，邮件仍然发出
+    print(f"❌ AI复盘API三次调用均失败，使用降级文字报告。最后错误: {last_err}")
+    active_count = sum(1 for l in stats_lines if l.startswith('[Active]'))
+    closed_count = len(stats_lines) - active_count
+    return f"""
+<div style="background:#fff3e0;border-left:4px solid #ff9800;padding:15px;border-radius:6px;">
+    <h3>⚠️ AI复盘引擎暂时不可用（API超时）</h3>
+    <p>当前持仓 <b>{active_count}</b> 只 | 已清仓记录 <b>{closed_count}</b> 条</p>
+    <p>原始数据已保存在 trade_history.csv，请稍后手动触发 review.py 或等待下次自动运行。</p>
+    <pre style="font-size:12px;background:#f5f5f5;padding:10px;overflow:auto;max-height:400px;">{report_data[:3000]}</pre>
+</div>"""
 
 def send_mail(to_emails, subject, content):
     user = os.environ.get("EMAIL_ACCOUNT")
