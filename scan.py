@@ -516,7 +516,123 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
 # ==========================================
 # 5. Claude 宏观+个股新闻驱动深度推演（流式，Top5详细分析+1-100评分）
 # ==========================================
-def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None):
+def get_us_sector_performance():
+    """
+    抓取昨日美股主要板块ETF的涨跌幅。
+    用于生成今日板块联动封禁清单：某板块ETF昨日大跌，则该板块个股今日禁止进入Top5。
+    数据源：stooq.com（无需API key，稳定性好于直接访问Yahoo）
+    """
+    print("🇺🇸 [板块数据] 正在抓取昨日美股板块ETF表现...")
+    sector_map = {
+        "SOXX": "半导体板块",
+        "SMH":  "半导体制造(费城)",
+        "XLK":  "科技板块（软件/硬件/云）",
+        "ARKK": "创新科技（AI/基因/自驾）",
+        "XLF":  "金融板块（银行/保险/券商）",
+        "XLE":  "能源板块（石油/天然气）",
+        "XLV":  "医疗健康板块",
+        "XLY":  "非必需消费（零售/汽车）",
+        "XLI":  "工业板块（航空/防务/制造）",
+        "XLB":  "材料板块（矿业/化工）",
+    }
+    results = []
+    import urllib.request
+    yesterday = (datetime.datetime.now() - datetime.timedelta(days=1)).strftime('%Y-%m-%d')
+    three_days_ago = (datetime.datetime.now() - datetime.timedelta(days=4)).strftime('%Y-%m-%d')
+
+    for ticker, desc in sector_map.items():
+        try:
+            url = f"https://stooq.com/q/d/l/?s={ticker.lower()}.us&d1={three_days_ago.replace('-','')}&d2={yesterday.replace('-','')}&i=d"
+            req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=8) as resp:
+                content = resp.read().decode('utf-8')
+            lines = [l.strip() for l in content.strip().split('\n') if l.strip()]
+            if len(lines) >= 3:
+                last = lines[-1].split(',')
+                prev = lines[-2].split(',')
+                if len(last) >= 5 and len(prev) >= 5:
+                    close = float(last[4])
+                    prev_close = float(prev[4])
+                    pct = round((close - prev_close) / prev_close * 100, 2)
+                    sign = "📈" if pct > 0 else "📉"
+                    results.append(f"{sign} {ticker}: {pct:+.2f}% — {desc}")
+            time.sleep(0.3)
+        except Exception:
+            results.append(f"❓ {ticker}: 抓取失败 — {desc}")
+
+    if results:
+        print(f"✅ 板块数据获取完毕：{len(results)} 个板块")
+        return "\n".join(results)
+    return "暂无板块数据"
+
+
+# ETF → 美股个股所属板块关键词映射
+US_SECTOR_EMBARGO_MAP = {
+    "SOXX": ["semiconductor", "chip", "wafer", "fab", "NVDA", "AMD", "INTC", "MU", "AMAT", "LRCX", "KLAC", "MRVL", "AVGO", "TXN", "QCOM", "半导体"],
+    "SMH":  ["semiconductor", "chip", "NVDA", "AMD", "INTC", "MU", "TSM", "ASML", "半导体"],
+    "XLK":  ["tech", "software", "cloud", "AI", "data center", "MSFT", "AAPL", "GOOGL", "META", "CRM", "NOW", "SNOW"],
+    "ARKK": ["AI", "genomics", "autonomous", "fintech", "TSLA", "ROKU", "COIN", "PATH", "EXAS"],
+    "XLF":  ["bank", "insurance", "broker", "JPM", "BAC", "GS", "MS", "WFC", "BRK"],
+    "XLE":  ["oil", "gas", "energy", "XOM", "CVX", "COP", "SLB", "HAL"],
+    "XLV":  ["pharma", "biotech", "health", "JNJ", "UNH", "LLY", "MRK", "ABBV"],
+    "XLY":  ["retail", "auto", "consumer", "AMZN", "TSLA", "HD", "MCD", "NKE"],
+    "XLI":  ["industrial", "aerospace", "defense", "GE", "HON", "CAT", "BA", "RTX", "LMT"],
+    "XLB":  ["materials", "mining", "chemical", "LIN", "APD", "ECL", "NEM", "FCX"],
+}
+
+EMBARGO_THRESHOLD_PCT = -1.5  # 跌幅超过此值触发封禁
+
+def parse_us_sector_embargo(sector_text):
+    """
+    解析板块ETF涨跌数据，生成今日不可推荐的板块封禁清单和注入AI prompt的封禁通知。
+    跌幅 >= -3%: 强封（高度联动，情绪不可抗拒）
+    跌幅 -1.5% ~ -3%: 预警封禁
+    """
+    if not sector_text or "暂无" in sector_text:
+        return [], ""
+
+    embargo_keywords = []
+    embargo_lines = []
+
+    for line in sector_text.strip().split('\n'):
+        if '📉' not in line:
+            continue
+        try:
+            etf = line.replace('📉', '').strip().split(':')[0].strip()
+            pct = float(line.split(':')[1].strip().split('%')[0])
+        except Exception:
+            continue
+        if pct >= EMBARGO_THRESHOLD_PCT:
+            continue
+        kw_list = US_SECTOR_EMBARGO_MAP.get(etf, [])
+        if not kw_list:
+            continue
+        embargo_keywords.extend(kw_list)
+        strength = "⛔ 强封（跌幅≥3%）" if pct <= -3.0 else "🚫 预警封禁（跌幅≥1.5%）"
+        embargo_lines.append(
+            f"  {strength} {etf} 昨日 {pct:+.2f}% → 相关板块/个股今日禁入Top5"
+        )
+
+    if not embargo_lines:
+        return [], ""
+
+    embargo_keywords = list(dict.fromkeys(embargo_keywords))
+    text = f"""
+🚨【昨日板块大跌封禁名单 —— 硬性纪律，无例外】：
+{chr(10).join(embargo_lines)}
+
+执行规则（不可违反）：
+1. 以上封禁板块内的任何标的，今日一律不得进入【核心区 Top1-5】。
+2. 即使技术面健康、个股新闻利好、逻辑通顺，也绝对禁止。"有独立逻辑"不是例外理由——板块昨日大跌后，情绪面压制会在今日盘中形成强烈阻力，追入必然被套。
+3. 今日宏观事件导致某板块大跌（如 Meta 宣布自建算力→冲击半导体需求预期），该事件的逻辑冲击不会因一天就结束，短期持续1-5天，避免接飞刀。
+4. 可以出现在"今日雷区"里做点名分析，但不能进入推荐区。
+封禁相关关键词：{', '.join(embargo_keywords[:20])}
+"""
+    print(f"🚫 美股封禁触发：{len(embargo_lines)}个板块，关键词共{len(embargo_keywords)}个")
+    return embargo_keywords, text
+
+
+def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None, embargo_text=""):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
@@ -573,6 +689,8 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
 
 【实时全球宏观经济指标（国债收益率、大宗商品、主要指数涨跌）】：
 {macro_market_text}
+
+{embargo_text}
 
 【今日成交活跃的 Top {pool_count} 标的池】（含技术数据 + 个股最新新闻，每只票最多6条新闻标题）：
 {pool_formatted}
@@ -952,7 +1070,11 @@ if __name__ == "__main__":
     sell_signal_card_html = build_sell_signal_card(dropped_info, rule_sell_signals)
 
     raw_tickers = get_scan_pool()
-    
+
+    # 步骤1.5：抓取昨日板块ETF表现并生成今日板块封禁清单
+    sector_text = get_us_sector_performance()
+    _embargo_kw, embargo_text = parse_us_sector_embargo(sector_text)
+
     # 风控阻断：过滤掉当下属于活跃持仓或者今日因利空被丢弃的股票，避免产生逻辑追踪混淆
     filtered_tickers = {t: n for t, n in raw_tickers.items() if t not in restricted_tickers}
 
@@ -969,7 +1091,7 @@ if __name__ == "__main__":
     pool_data = enrich_pool_with_news(pool_data)
 
     # 生成报告时 dropped_info 已经通过卡片注入，不再重复注入
-    ai_generated_html = generate_ai_report(pool_data, macro_news, macro_market, dropped_info)
+    ai_generated_html = generate_ai_report(pool_data, macro_news, macro_market, dropped_info, embargo_text)
     # 卖出信号卡片插在最顶部（优先级高于 AI 报告内容）
     ai_generated_html = sell_signal_card_html + ai_generated_html
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT]</p></div></body></html>"
