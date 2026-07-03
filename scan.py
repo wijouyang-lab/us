@@ -120,6 +120,62 @@ def get_latest_macro_news():
     return "暂无实时英文财经新闻，请基于昨收盘及底层产业逻辑进行推演。"
 
 
+def get_megacap_breaking_news():
+    """
+    用 yfinance .news 抓取 mega-cap 公司最近 36 小时内的新闻标题。
+
+    为什么需要这个：
+    - CNBC/Reuters RSS 通常只有通稿摘要，彭博/华尔街日报的独家内容很少出现在免费 RSS 里。
+    - 但彭博的报道会在数小时内被 Yahoo Finance 新闻流引用（带标题），yfinance .news 能抓到这层。
+    - 对于"Meta 宣布自建算力"这类公司级消息，直接看 META 的新闻 feed 比看宏观 RSS 灵敏得多。
+    - 这些 mega-cap 的任何重大公告都可能引发板块联动（META 建算力 → 减少 GPU 外购 → 半导体需求下降）。
+
+    覆盖范围：AI/云算力/半导体产业链上最具影响力的 10 家公司。
+    输出：过去 36h 内的新闻标题（含来源、时间），供 analyze_news_for_sector_embargo() 做 AI 分析。
+    """
+    MEGACAP_TICKERS = {
+        "META":  "Meta（算力/AI/社交）",
+        "NVDA":  "NVIDIA（GPU/AI芯片）",
+        "MSFT":  "Microsoft（Azure/AI/云）",
+        "GOOGL": "Alphabet（云/AI/搜索）",
+        "AMZN":  "Amazon（AWS/电商/AI）",
+        "AAPL":  "Apple（消费电子/芯片）",
+        "TSLA":  "Tesla（电动车/AI/储能）",
+        "AMD":   "AMD（CPU/GPU/数据中心）",
+        "INTC":  "Intel（代工/PC芯片）",
+        "MU":    "Micron（内存/HBM）",
+    }
+
+    cutoff_ts = time.time() - 36 * 3600  # 36小时前的unix timestamp
+    news_lines = []
+    fetched = 0
+
+    for ticker, desc in MEGACAP_TICKERS.items():
+        try:
+            raw_news = yf.Ticker(ticker).news or []
+            for item in raw_news[:8]:  # 每只票最多取8条
+                pub_ts = item.get("providerPublishTime", 0)
+                if pub_ts < cutoff_ts:
+                    continue  # 超过36小时的跳过
+                title = item.get("title", "").strip()
+                publisher = item.get("publisher", "").strip()
+                if not title:
+                    continue
+                pub_time = datetime.datetime.fromtimestamp(pub_ts).strftime("%m-%d %H:%M")
+                news_lines.append(f"[{ticker}/{desc}] [{publisher}] {pub_time} — {title}")
+                fetched += 1
+            time.sleep(random.uniform(0.2, 0.5))
+        except Exception as e:
+            print(f"⚠️ {ticker} 新闻抓取失败: {e}")
+
+    if news_lines:
+        print(f"✅ mega-cap 公司新闻：抓取 {fetched} 条（过去36小时内），覆盖 {len(MEGACAP_TICKERS)} 只标的")
+        return "\n".join(news_lines)
+    return ""
+
+
+
+
 # ==========================================
 # 新增功能：引入全球大宗商品、国债收益率及核心大盘指数的多维宏观数据
 # ==========================================
@@ -581,6 +637,207 @@ US_SECTOR_EMBARGO_MAP = {
 }
 
 EMBARGO_THRESHOLD_PCT = -1.5  # 跌幅超过此值触发封禁
+
+def analyze_market_signals(combined_news_text, client):
+    """
+    全市场双向信号解读引擎，在主推荐 AI 之前运行。
+
+    核心设计原则：新闻不只产生风险，也暴露机会。
+    同一事件对不同板块可以同时产生截然相反的信号。
+    关键是判断"基本面有没有真正改变"——没变就是买入机会，变了才是回避信号。
+
+    五类信号：
+      AVOID            基本面确实受损，需求/盈利真实下降 → 今日不买
+      BUY_DIP          情绪/联动导致的错杀，基本面未变 → 加仓机会
+      POSITIVE_CATALYST 新闻直接利好某板块需求或盈利 → 积极关注
+      ROTATION         资金从 A 流出必然流向 B → 识别 B
+      CONTRARIAN       市场反应明显过度 → 关注反转
+
+    Meta 算力案例的正确解读（示范）：
+      ❌ 错误：Meta 出租算力 → 半导体需求下降 → AVOID 半导体
+      ✅ 正确：Meta 只是一家公司资源错配，NVDA 的收入来自 Microsoft/Google/Amazon 等整个生态，
+               这些超大规模厂商的 AI capex 计划完全没变。SOXX 的下跌是情绪传染，不是基本面。
+               → 半导体应判断为 BUY_DIP，不是 AVOID。
+               → 真正的 AVOID 是云厂商（AWS/Azure/GCP）被英伟达直租模式去中间化。
+    """
+    if not combined_news_text or len(combined_news_text.strip()) < 50:
+        return {"signals": []}
+
+    try:
+        prompt = f"""你是顶级对冲基金的跨市场策略研究员，覆盖全球所有主要资产类别。
+你的职责是识别新闻背后的真实信号，并判断哪些是"基本面改变"（AVOID），
+哪些是"情绪/联动错杀机会"（BUY_DIP），哪些是正向催化、轮动或过度反应。
+
+【今日新闻（过去36小时）】：
+{combined_news_text[:6000]}
+
+════════════════════════════════════════════
+【分析框架】
+════════════════════════════════════════════
+
+第一步：基本面判断（最关键）
+  问：这条新闻是否真正改变了某个板块的需求/收入/利润基本面？
+  
+  判断方法：
+  · 如果影响的是"整个行业的需求结构" → 基本面改变 → AVOID
+  · 如果影响的是"单一公司的资源配置" → 基本面未变 → BUY_DIP（如果该板块因此下跌）
+  · 如果是"新的需求/政策/技术催化" → POSITIVE_CATALYST
+  · 如果资金因此从 A 流出必然流向 B → ROTATION
+  · 如果市场反应幅度明显超过事件本身 → CONTRARIAN
+
+  陷阱示例（务必避免）：
+  ❌ Meta 出租闲置算力 → 错判为"算力需求下降 → AVOID 半导体"
+  ✅ 正确：Meta 只是自己资源错配，NVDA/AMD 的需求来自整个超大规模厂商生态，
+           微软/谷歌/亚马逊的 AI capex 完全未变。这是 BUY_DIP 信号，不是 AVOID。
+  ✅ 真正的 AVOID：英伟达直租模式 → 云厂商被去中间化 → AWS/Azure/GCP 毛利真正受压
+
+第二步：精确到子板块
+  同一板块内不同子板块方向可能相反，必须区分。
+  例：半导体整体 SOXX 下跌，但：
+  · GPU/数据中心芯片：视具体新闻判断
+  · 汽车芯片/工业芯片/消费芯片：需求驱动独立，联动跌反而是机会
+
+第三步：覆盖所有行业（不只是科技/半导体）
+  扫描范围：semiconductor / cloud / AI / energy / financials / healthcare / 
+  consumer / industrials / materials / real_estate / utilities / defense / 
+  biotech / crypto / bonds / commodities / forex / China / emerging_markets
+
+════════════════════════════════════════════
+必须只返回以下 JSON，不输出任何其他文字：
+{{
+  "signals": [
+    {{
+      "type": "AVOID 或 BUY_DIP 或 POSITIVE_CATALYST 或 ROTATION 或 CONTRARIAN",
+      "sector": "板块英文",
+      "sector_cn": "板块中文",
+      "affected_subsectors": ["精确到受影响的子板块，如 cloud_providers, GPU_datacenter"],
+      "unaffected_subsectors": ["明确不受影响的子板块，如 auto_chips, industrial_semis"],
+      "surface_news": "新闻表面说了什么（一句话）",
+      "real_signal": "真实业务含义——基本面有没有变？为什么？（这是核心，两句话以内）",
+      "transmission_chain": "A → B → C 传导链",
+      "reasoning": "为什么是这个类型？特别是 BUY_DIP 必须说明基本面为何未变",
+      "actionable": "具体可执行建议（如：等 SOXX 跌至 200MA 附近分批建仓汽车芯片）",
+      "confidence": "high 或 medium 或 low",
+      "duration_days": 信号有效天数（整数）
+    }}
+  ]
+}}
+
+若今日新闻无结构性信号，返回 {{"signals": []}}。"""
+
+        response = client.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=2000,
+            temperature=0,
+            messages=[{"role": "user", "content": prompt}]
+        )
+        text = response.content[0].text.strip()
+        start = text.find('{')
+        end = text.rfind('}') + 1
+        if start == -1 or end == 0:
+            return {"signals": []}
+        data = json.loads(text[start:end])
+        signals = data.get("signals", [])
+
+        icons = {"AVOID":"🔴","BUY_DIP":"💚","POSITIVE_CATALYST":"✨","ROTATION":"🔄","CONTRARIAN":"⚡"}
+        if signals:
+            print(f"📡 [市场信号] 识别到 {len(signals)} 个跨市场信号：")
+            for s in signals:
+                icon = icons.get(s.get("type",""), "❓")
+                print(f"   {icon} [{s.get('type')}] {s.get('sector_cn','')} | {s.get('real_signal','')[:70]}")
+        else:
+            print("✅ [市场信号] 未识别到结构性信号")
+        return {"signals": signals}
+
+    except Exception as ex:
+        print(f"⚠️ [市场信号] 调用失败，降级为空: {ex}")
+        return {"signals": []}
+
+
+def build_market_signal_text(analysis_result):
+    """
+    把五类信号转换成主推荐 AI 的上下文文本（放在候选池之前）。
+    AVOID → 硬性封禁（约束）
+    BUY_DIP → 错杀加仓机会（正向参考）
+    POSITIVE_CATALYST / ROTATION / CONTRARIAN → 各类机会提示
+    """
+    if not analysis_result:
+        return []
+    signals = analysis_result.get("signals", [])
+    if not signals:
+        return []
+
+    icons = {"AVOID":"🔴","BUY_DIP":"💚","POSITIVE_CATALYST":"✨","ROTATION":"🔄","CONTRARIAN":"⚡"}
+    grouped = {}
+    for s in signals:
+        grouped.setdefault(s.get("type","AVOID"), []).append(s)
+
+    avoid_keywords = []
+    sections = []
+
+    if "AVOID" in grouped:
+        lines = []
+        for s in grouped["AVOID"]:
+            avoid_keywords += [s.get("sector",""), s.get("sector_cn","")] + s.get("affected_subsectors",[])
+            unsub = s.get("unaffected_subsectors",[])
+            lines.append(
+                f"  🔴 {s.get('sector_cn','')}({s.get('sector','')})\n"
+                f"    真实信号: {s.get('real_signal','')}\n"
+                f"    传导链: {s.get('transmission_chain','')}\n"
+                f"    受影响子板块: {', '.join(s.get('affected_subsectors',[]) or ['全板块'])}\n"
+                + (f"    ⚠️ 不受影响子板块（勿误杀）: {', '.join(unsub)}\n" if unsub else "")
+                + f"    预计持续: {s.get('duration_days','?')}天 | 置信度: {s.get('confidence','?')}"
+            )
+        sections.append(
+            "🚨【今日回避（AVOID）—— 基本面受损，不得进入推荐 Top1-5】：\n\n"
+            + "\n\n".join(lines)
+            + f"\n\n封禁关键词: {', '.join(dict.fromkeys(avoid_keywords))}"
+        )
+
+    if "BUY_DIP" in grouped:
+        lines = []
+        for s in grouped["BUY_DIP"]:
+            lines.append(
+                f"  💚 {s.get('sector_cn','')}({s.get('sector','')})\n"
+                f"    为何是错杀: {s.get('real_signal','')}\n"
+                f"    基本面未变的原因: {s.get('reasoning','')}\n"
+                f"    具体机会子板块: {', '.join(s.get('unaffected_subsectors',[]) or [s.get('sector_cn','')])}\n"
+                f"    可执行建议: {s.get('actionable','')}\n"
+                f"    信号有效: {s.get('duration_days','?')}天 | 置信度: {s.get('confidence','?')}"
+            )
+        sections.append(
+            "💚【逢低买入（BUY_DIP）—— 情绪/联动错杀，基本面未变，可积极关注】：\n\n"
+            + "\n\n".join(lines)
+        )
+
+    for t, label in [
+        ("POSITIVE_CATALYST", "✨【正向催化（POSITIVE_CATALYST）—— 直接利好，优先关注】："),
+        ("ROTATION",          "🔄【资金轮动（ROTATION）—— 承接流出资金的方向】："),
+        ("CONTRARIAN",        "⚡【反向机会（CONTRARIAN）—— 市场过度反应，关注反转】："),
+    ]:
+        if t not in grouped:
+            continue
+        lines = []
+        for s in grouped[t]:
+            lines.append(
+                f"  {icons[t]} {s.get('sector_cn','')}({s.get('sector','')})\n"
+                f"    逻辑: {s.get('real_signal','')}\n"
+                f"    传导链: {s.get('transmission_chain','')}\n"
+                f"    建议: {s.get('actionable','')}"
+            )
+        sections.append(label + "\n\n" + "\n\n".join(lines))
+
+    header = (
+        "════════════════════════════════════════\n"
+        "【跨市场信号分析（请先阅读本节再看候选池）】\n"
+        "注意：同一板块内子板块信号可能相反，请勿一刀切。\n"
+        "════════════════════════════════════════"
+    )
+    full_text = header + "\n\n" + "\n\n─────────────────────\n\n".join(sections)
+    return [full_text, avoid_keywords]
+
+
+
 
 def parse_us_sector_embargo(sector_text):
     """
@@ -1051,11 +1308,30 @@ def send_mail(to_emails, subject, content):
 
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
+
+    # 补充 mega-cap 公司级新闻（过去36h），捕获彭博/WSJ等在RSS里出现不完整的关键报道
+    # 例如"Meta 自建算力"这类重大战略公告，通过 yfinance .news 能在发布后数小时内抓到
+    megacap_news = get_megacap_breaking_news()
+    combined_news = macro_news
+    if megacap_news:
+        combined_news = macro_news + "\n\n【Mega-Cap 公司最新动态（过去36h，含彭博/WSJ等外部来源引用）】：\n" + megacap_news
+
+    # 前置 AI 新闻分析：专职判断今日新闻是否意味着某个板块应被封禁
+    # 弥补"ETF 价格反映总是滞后于新闻发布"的结构性盲区
+    # 用最轻量的 Haiku 模型完成，几秒即可出结果，不影响整体运行时间
+    _embargo_client = anthropic.Anthropic(
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+    )
+    news_analysis = analyze_news_for_sector_embargo(combined_news, _embargo_client)
+    news_embargo_result = build_news_embargo_text(news_analysis)
+    news_embargo_text = news_embargo_result[0] if news_embargo_result else ""
+
     macro_market = get_macro_market_data()
-    
-    # 步骤 0a：AI 宏观/消息面驱动的持仓强制清仓审查
+
+    # 步骤 0a：AI 宏观/消息面驱动的持仓强制清仓审查（传入更丰富的新闻上下文）
     # current_prices 是阶段0a已经为全部活跃持仓拉取好的实时价，阶段0b直接复用，不再重新请求一轮
-    restricted_tickers, dropped_info, current_prices = pre_scan_portfolio_review(macro_news, macro_market)
+    restricted_tickers, dropped_info, current_prices = pre_scan_portfolio_review(combined_news, macro_market)
 
     # 步骤 0b：规则驱动卖出信号检测（止损触发 / 持有到期）
     # exclude_tickers 只应排除"本轮阶段0a刚强清掉的"标的（dropped_info），
@@ -1071,9 +1347,15 @@ if __name__ == "__main__":
 
     raw_tickers = get_scan_pool()
 
-    # 步骤1.5：抓取昨日板块ETF表现并生成今日板块封禁清单
+    # 步骤1.5：抓取昨日板块ETF表现并生成价格驱动封禁清单
     sector_text = get_us_sector_performance()
-    _embargo_kw, embargo_text = parse_us_sector_embargo(sector_text)
+    _etf_embargo_kw, etf_embargo_text = parse_us_sector_embargo(sector_text)
+
+    # 合并两类封禁：新闻驱动（预判）+ ETF 价格驱动（滞后确认）
+    # 新闻驱动放在前面，因为它是更早的信号
+    combined_embargo_text = "\n".join(filter(None, [news_embargo_text, etf_embargo_text]))
+    if not combined_embargo_text:
+        combined_embargo_text = ""
 
     # 风控阻断：过滤掉当下属于活跃持仓或者今日因利空被丢弃的股票，避免产生逻辑追踪混淆
     filtered_tickers = {t: n for t, n in raw_tickers.items() if t not in restricted_tickers}
@@ -1091,7 +1373,7 @@ if __name__ == "__main__":
     pool_data = enrich_pool_with_news(pool_data)
 
     # 生成报告时 dropped_info 已经通过卡片注入，不再重复注入
-    ai_generated_html = generate_ai_report(pool_data, macro_news, macro_market, dropped_info, embargo_text)
+    ai_generated_html = generate_ai_report(pool_data, combined_news, macro_market, dropped_info, combined_embargo_text)
     # 卖出信号卡片插在最顶部（优先级高于 AI 报告内容）
     ai_generated_html = sell_signal_card_html + ai_generated_html
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT]</p></div></body></html>"
