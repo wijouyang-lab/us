@@ -102,7 +102,7 @@ def generate_review_report(df, current_prices):
 
     # 防止超时：report_data 过大会导致 Anthropic API 响应超过 Cloudflare 120s 硬限制（524错误）
     # 按字符数截断，保留最新的记录（head保最新，tail保最旧——这里我们要最新的在前）
-    MAX_REPORT_CHARS = 8000
+    MAX_REPORT_CHARS = 16000
     if len(report_data) > MAX_REPORT_CHARS:
         report_data = report_data[:MAX_REPORT_CHARS]
         last_newline = report_data.rfind('\n')
