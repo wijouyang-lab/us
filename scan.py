@@ -1323,8 +1323,8 @@ if __name__ == "__main__":
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
         base_url=os.environ.get("CLAWSOCKET_BASE_URL")
     )
-    news_analysis = analyze_news_for_sector_embargo(combined_news, _embargo_client)
-    news_embargo_result = build_news_embargo_text(news_analysis)
+    news_analysis = analyze_market_signals(combined_news, _embargo_client)
+    news_embargo_result = build_market_signal_text(news_analysis)
     news_embargo_text = news_embargo_result[0] if news_embargo_result else ""
 
     macro_market = get_macro_market_data()
