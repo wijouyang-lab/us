@@ -18,15 +18,13 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 2rem;
+            padding: 20px;
             line-height: 1.6;
         }
-        
-        .report-container {
+        .container {
             max-width: 1200px;
             margin: 0 auto;
             background: white;
@@ -34,322 +32,260 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
         }
-        
         .header {
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
-            padding: 2.5rem 2rem;
+            padding: 32px;
             text-align: center;
         }
-        
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
         }
-        
-        .header .subtitle {
-            font-size: 0.95rem;
+        .header p {
+            font-size: 14px;
             opacity: 0.9;
         }
-        
         .content {
-            padding: 2rem;
+            padding: 32px;
         }
-        
+        .section {
+            margin-bottom: 32px;
+        }
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3c72;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 3px solid #667eea;
+        }
         .metrics-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
+            gap: 16px;
+            margin-bottom: 24px;
         }
-        
         .metric-card {
             background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem;
+            padding: 20px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-        
-        .metric-card .label {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 0.5rem;
-            font-weight: 500;
+        .metric-label {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
         }
-        
-        .metric-card .value {
-            font-size: 1.8rem;
+        .metric-value {
+            font-size: 28px;
             font-weight: 700;
-            color: #1e293b;
+            color: #1e3c72;
         }
-        
-        .metric-card .value.positive {
+        .metric-value.positive {
             color: #10b981;
         }
-        
-        .metric-card .value.negative {
+        .metric-value.negative {
             color: #ef4444;
         }
-        
-        .section {
-            margin-bottom: 2rem;
-        }
-        
-        .section-title {
-            font-size: 1.4rem;
-            color: #1e293b;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 3px solid #667eea;
-            font-weight: 600;
-        }
-        
         .analysis-block {
-            background: #f8fafc;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
-            border-left: 4px solid #667eea;
-        }
-        
-        .analysis-block h3 {
-            color: #334155;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        
-        .analysis-block p {
-            color: #475569;
-            margin-bottom: 0.8rem;
-            font-size: 0.95rem;
-        }
-        
-        .highlight-box {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            padding: 1.2rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            border-left: 4px solid #f59e0b;
-        }
-        
-        .highlight-box strong {
-            color: #92400e;
-        }
-        
-        .recommendations {
-            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 4px solid #3b82f6;
-        }
-        
-        .recommendations h3 {
-            color: #1e40af;
-            margin-bottom: 1rem;
-            font-size: 1.2rem;
-        }
-        
-        .recommendations ol {
-            padding-left: 1.5rem;
-            color: #1e40af;
-        }
-        
-        .recommendations li {
-            margin-bottom: 1rem;
-            font-size: 0.95rem;
-        }
-        
-        .recommendations li strong {
-            color: #1e3a8a;
-        }
-        
-        .data-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 1rem 0;
-            font-size: 0.9rem;
-        }
-        
-        .data-table th {
-            background: #334155;
-            color: white;
-            padding: 0.8rem;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .data-table td {
-            padding: 0.8rem;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .data-table tr:hover {
-            background: #f8fafc;
-        }
-        
-        .tag {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
+            background: #f9fafb;
+            padding: 20px;
             border-radius: 12px;
-            font-size: 0.8rem;
+            border-left: 4px solid #667eea;
+            margin-bottom: 16px;
+        }
+        .analysis-block h3 {
+            font-size: 16px;
             font-weight: 600;
-            margin-right: 0.5rem;
+            color: #1e3c72;
+            margin-bottom: 12px;
         }
-        
-        .tag.success {
-            background: #d1fae5;
-            color: #065f46;
+        .analysis-block ul {
+            list-style: none;
+            padding-left: 0;
         }
-        
-        .tag.danger {
+        .analysis-block li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        .analysis-block li:before {
+            content: "▸";
+            position: absolute;
+            left: 8px;
+            color: #667eea;
+            font-weight: bold;
+        }
+        .strategy-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 16px;
+        }
+        .strategy-box h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #c2410c;
+            margin-bottom: 12px;
+        }
+        .strategy-item {
+            background: white;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .strategy-item:last-child {
+            margin-bottom: 0;
+        }
+        .strategy-item strong {
+            color: #1e3c72;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .risk-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .risk-high {
             background: #fee2e2;
             color: #991b1b;
         }
-        
-        .tag.warning {
+        .risk-medium {
             background: #fef3c7;
             color: #92400e;
+        }
+        .risk-low {
+            background: #d1fae5;
+            color: #065f46;
         }
     </style>
 </head>
 <body>
-    <div class="report-container">
+    <div class="container">
         <div class="header">
-            <h1>📊 交易操作复盘报告</h1>
-            <p class="subtitle">量化策略执行效果分析与优化建议</p>
+            <h1>📊 交易复盘分析报告</h1>
+            <p>基于本期持仓与清仓数据的量化分析</p>
         </div>
         
         <div class="content">
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="label">总交易笔数</div>
-                    <div class="value">104</div>
-                </div>
-                <div class="metric-card">
-                    <div class="label">已清仓笔数</div>
-                    <div class="value">79</div>
-                </div>
-                <div class="metric-card">
-                    <div class="label">当前持仓</div>
-                    <div class="value">25</div>
-                </div>
-                <div class="metric-card">
-                    <div class="label">整体胜率</div>
-                    <div class="value positive">41.77%</div>
-                </div>
-                <div class="metric-card">
-                    <div class="label">平均收益率</div>
-                    <div class="value negative">-5.61%</div>
+            <div class="section">
+                <h2 class="section-title">一、核心绩效指标</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">已清仓交易总数</div>
+                        <div class="metric-value">79笔</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">整体胜率</div>
+                        <div class="metric-value positive">37.97%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">平均盈利</div>
+                        <div class="metric-value positive">+84.51%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">平均亏损</div>
+                        <div class="metric-value negative">-17.62%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">盈亏比</div>
+                        <div class="metric-value positive">4.80</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">在仓持仓数</div>
+                        <div class="metric-value">11笔</div>
+                    </div>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title">一、持仓结构与盈亏分析</h2>
-                
+                <h2 class="section-title">二、持仓结构分析</h2>
                 <div class="analysis-block">
-                    <h3>🔴 Active持仓整体状况</h3>
-                    <p>当前25个活跃持仓中，<strong>仅6个盈利（24%）</strong>，19个亏损（76%），呈现显著的负偏态分布。整体浮动亏损集中在科技半导体板块（NVDA、MRVL、KLAC、AMZN平均亏损-10.14%），而金融板块表现相对稳健（XLF、BAC、KEY平均盈利+7.97%）。</p>
-                    
-                    <div class="highlight-box">
-                        <strong>关键发现：</strong>科技股持仓占比过高且集中踩雷（3个NVDA仓位合计亏损-12.42%），缺乏有效的板块对冲机制。Marvell（MRVL）单笔浮亏-20.32%已触及风险预警线。
-                    </div>
-                    
-                    <p><strong>盈利持仓TOP3：</strong>HOOD +15.06%、BAC +9.75%、XLF +7.85%（均为金融板块）<br>
-                    <strong>亏损持仓TOP3：</strong>MRVL -20.32%、NVDA -11.62%、AMZN -9.52%（均为科技板块）</p>
+                    <h3>🔵 Active持仓表现（11笔）</h3>
+                    <ul>
+                        <li><strong>盈利持仓（4笔，36.4%）：</strong>XLF (+5.77%)、OPEN (+6.92%)、BAC (+6.89%)、CSX (+2.35%)、KEY (+3.0%)，主要集中在金融板块与价值股，展现出防御性特征</li>
+                        <li><strong>亏损持仓（7笔，63.6%）：</strong>两笔AMZN合计浮亏-9.28%，NCLH三笔合计-6.08%，科技与消费类个股承压明显</li>
+                        <li><strong>风险敞口：</strong>AMZN双仓位叠加导致单一标的风险集中，若继续下行将显著拖累整体收益</li>
+                    </ul>
                 </div>
 
                 <div class="analysis-block">
-                    <h3>📉 已清仓操作胜率分布</h3>
-                    <p>79笔清仓操作中，33笔盈利（41.77%），46笔亏损（58.23%）。<strong>止损触发清仓</strong>27笔，平均亏损-9.21%；<strong>宏观利空强清</strong>32笔，平均亏损-22.84%（含3笔极端亏损NCPL -63.06%、AIM -66.67%×2）；<strong>持有到期清仓</strong>20笔，平均亏损-3.29%，表现最稳定。</p>
-                    
-                    <table class="data-table">
-                        <thead>
-                            <tr>
-                                <th>清仓类型</th>
-                                <th>笔数</th>
-                                <th>平均收益率</th>
-                                <th>胜率</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><span class="tag warning">止损触发</span></td>
-                                <td>27</td>
-                                <td>-9.21%</td>
-                                <td>18.52%</td>
-                            </tr>
-                            <tr>
-                                <td><span class="tag danger">宏观利空强清</span></td>
-                                <td>32</td>
-                                <td>-22.84%</td>
-                                <td>18.75%</td>
-                            </tr>
-                            <tr>
-                                <td><span class="tag success">持有到期</span></td>
-                                <td>20</td>
-                                <td>-3.29%</td>
-                                <td>40.00%</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h3>🟢 清仓操作有效性验证</h3>
+                    <ul>
+                        <li><strong>风控成功案例（清仓后继续下跌）：</strong>
+                            <br>• AVGO (-19.03%) → 清仓后再跌-4.36%，避免了-23.39%的损失
+                            <br>• FXI (-12.79%) → 清仓后再跌-5.46%，累计规避-18.25%
+                            <br>• PLTR (-9.94%) → 清仓后暴跌-14.28%，成功止损保护本金
+                            <br>• ACN (-2.53%) → 清仓后深跌-9.98%，早期预判准确
+                        </li>
+                        <li><strong>过早离场案例（清仓后反弹）：</strong>
+                            <br>• SCO (+435.64%) → 清仓后仍涨+11.09%，本应持有至+446.73%
+                            <br>• INTC (+19.45%) → 清仓后继续涨+16.31%，错失+35.76%收益
+                            <br>• MARA (-2.09%) → 清仓后暴涨+14.33%，止损时机过早
+                            <br>• CCL (+3.81%) → 清仓后再涨+12.16%，持有到期策略不适合强势股
+                        </li>
+                        <li><strong>灾难性损失控制：</strong>NCPL (-63.06%)、AIM (-66.67%)、VIVK (-60.0%)、PLUG (-32.55%)等在宏观利空强清或止损后均未出现深度反弹，证明<span class="highlight">风控阈值设置合理</span></li>
+                    </ul>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title">二、风控清仓有效性验证</h2>
-                
+                <h2 class="section-title">三、关键发现与风险点</h2>
                 <div class="analysis-block">
-                    <h3>✅ 风控决策正确性：68.35%</h3>
-                    <p>通过清仓后股价变化验证，79笔清仓中<strong>54笔证明决策正确</strong>（清仓后继续下跌或小幅反弹<5%），25笔判断失误（清仓后大幅反弹）。</p>
-                    
-                    <div class="highlight-box">
-                        <strong>典型成功案例：</strong>
-                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
-                            <li>PLTR：止损清仓后继续暴跌-16.14%，避免更大损失</li>
-                            <li>ACN：止损清仓后再跌-13.95%，风控精准</li>
-                            <li>MVIS：宏观强清后续跌-26.67%，宏观判断正确</li>
-                            <li>SRXH：强清后暴跌-1400%，极端风控救命</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="highlight-box" style="background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); border-left-color: #dc2626;">
-                        <strong style="color: #991b1b;">典型失误案例（过早离场）：</strong>
-                        <ul style="margin-top: 0.5rem; padding-left: 1.5rem; color: #991b1b;">
-                            <li>WULF：止损清仓后反弹+20.88%，错失收益</li>
-                            <li>CIFR：止损清仓后反弹+17.56%，过早止损</li>
-                            <li>INTC：到期清仓+19.45%后续涨+16.19%，未享受完整收益</li>
-                            <li>MARA：到期清仓后反弹+14.11%，持有周期不足</li>
-                        </ul>
-                    </div>
-                    
-                    <p><strong>关键洞察：</strong>「宏观利空强清」准确率达75%（24/32），但「止损触发清仓」仅59.26%（16/27），说明技术止损阈值设置过于敏感，容易在正常波动中被洗出。</p>
+                    <h3>⚠️ 核心问题诊断</h3>
+                    <ul>
+                        <li><strong>问题1：极端案例扭曲统计 <span class="risk-indicator risk-high">高风险</span></strong>
+                            <br>SCO的+435.64%和+418.49%两笔交易贡献了绝大部分收益，剔除后实际平均盈利仅+12.3%，<span class="highlight">盈亏比从4.80骤降至0.70</span>，系统性盈利能力存疑
+                        </li>
+                        <li><strong>问题2：宏观利空强清触发过于激进 <span class="risk-indicator risk-medium">中风险</span></strong>
+                            <br>32笔宏观强清中，INDP、SPHERE 3D、HL等清仓后反弹10%+，过度依赖宏观信号导致对个股基本面判断缺失
+                        </li>
+                        <li><strong>问题3：持有到期策略失效 <span class="risk-indicator risk-medium">中风险</span></strong>
+                            <br>27笔持有到期清仓中，仅9笔盈利（33.3%胜率），INTC、CCL、MARA等清仓后继续大涨，说明<span class="highlight">到期日与市场节奏脱节</span>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
             <div class="section">
-                <h2 class="section-title">三、后续优化策略</h2>
-                
-                <div class="recommendations">
-                    <h3>🎯 三大核心改进方向</h3>
-                    <ol>
-                        <li>
-                            <strong>动态止损阈值优化：</strong>将技术止损阈值从固定百分比改为「ATR自适应模型」。具体执行：高波动标的（科技股）采用1.5×ATR止损空间，低波动标的（公用事业）用0.8×ATR，避免在正常波动中被误触发。对WULF/CIFR类案例，回测显示该方法可减少32%过早离场。
-                        </li>
-                        <li>
-                            <strong>板块对冲机制强化：</strong>立即减持科技板块至总仓位40%以下（当前约60%），同步加仓防御性板块（XLF等金融ETF、消费必需品）。针对当前MRVL -20.32%重仓亏损，执行「半仓止损+半仓持有+买入看跌期权对冲」策略，锁定最大损失在-25%。
-                        </li>
-                        <li>
-                            <strong>持有周期延长与分批离场：</strong>对盈利标的（如INTC、MARA）改为「分三批离场」：首次触及+15%止盈卖出1/3，+25%卖出1/3，剩余1/3设移动止损跟踪。回测显示该策略可使INTC案例收益从+19.45%提升至+28.3%。宏观强清策略保持不变，技术止损仅在ATR突破时触发。
-                        </li>
-                    </ol>
+                <h2 class="section-title">四、后续优化策略</h2>
+                <div class="strategy-box">
+                    <h3>🎯 三大可执行改进方案</h3>
+                    
+                    <div class="strategy-item">
+                        <strong>策略1：引入动态止盈机制</strong>
+                        针对SCO、INTC、MARA等高收益标的，当浮盈超过+15%时启动移动止盈（Trailing Stop），设置回撤-8%触发清仓。例如SCO在+435%时，若后续回撤至+401%（-8%）则自动离场，既锁定大部分收益又保留上涨空间。技术实现：在现有风控系统中增加`dynamic_trailing_stop(entry_price, current_price, threshold=0.15, drawdown=0.08)`函数。
+                    </div>
+                    
+                    <div class="strategy-item">
+                        <strong>策略2：细化清仓触发条件分级</strong>
+                        将"宏观利空强清"拆解为三级：L1-行业性利空（个股独立评估，仅减仓50%）、L2-板块性利空（全清高Beta标的）、L3-系统性风险（全市场清仓）。以INDP为例，若归类为L1，则保留50%仓位捕捉其后+19.93%的反弹。技术实现：构建`macro_risk_classifier()`结合VIX、行业指数相关性、新闻情绪NLP打分进行分级。
+                    </div>
+                    
+                    <div class="strategy-item">
+                        <strong>策略3：替换持有到期为趋势强度触发</strong>
+                        废弃固定到期日，改用RSI、MACD、成交量等技术指标组合判断。当标的同时满足：(1)RSI<30或>70持续3日、(2)MACD金叉/死叉、(3)成交量异常放大，则触发清仓复核。对于MARA这类在到期前3天RSI已突破70且成交量激增的标的，提前3日清仓可避免错失+14.33%的后续涨幅。技术实现：集成`ta-lib`库，设置`trend_strength_score()`阈值≥8分触发。
+                    </div>
                 </div>
             </div>
 
-            <div style="text-align: center; color: #64748b; font-size: 0.85rem; margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
-                <p>本报告基于实际交易数据生成 | 量化分析引擎 v2.0 | 生成时间：2026-01</p>
+            <div class="analysis-block" style="margin-top: 24px; border-left-color: #10b981;">
+                <h3>💡 结论</h3>
+                <p>当前系统在<strong>极端行情捕捉</strong>与<strong>灾难性损失控制</strong>方面表现优异，但<span class="highlight">常规市场环境下的盈利稳定性不足</span>。剔除SCO异常收益后，实际盈亏比为负，暴露出对趋势延续性判断的系统性缺陷。建议优先实施动态止盈与趋势触发机制，将胜率从38%提升至45%以上，同时将平均盈利从+12.3%提升至+18%，以实现可持续的Alpha生成能力。</p>
             </div>
         </div>
     </div>
