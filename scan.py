@@ -1066,7 +1066,7 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
     ai_html = ""
     with client.messages.stream(
         model=TARGET_MODEL,
-        max_tokens=16000,
+        max_tokens=25000,
         temperature=0.25,
         messages=[{"role": "user", "content": prompt}]
     ) as stream:
