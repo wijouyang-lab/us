@@ -55,7 +55,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,N/A,2026-06-30,45.91,Period_Matured
 2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,N/A,2026-06-30,16.81,Stop_Loss_Hit
 2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,N/A,2026-06-30,24.83,Stop_Loss_Hit
-2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,仅作现金替代配置,非交易标的，无需设止损 10. Amaze控股 (AMZE) - 评分:55.8分:,N/A,N/A,Active
+2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,仅作现金替代配置,非交易标的，无需设止损 10. Amaze控股 (AMZE) - 评分:55.8分:,2026-07-10,22.6,Dropped
 2026-06-03,AMZE,AMAZE HOLDINGS (ASE),Observation,55.8,0.16,49.6,4.23,纯观望不参与,不建议任何仓位 🚨 诱多对照组（严禁接盘） 倒数1. MicroVision (MVIS): ❌,2026-06-30,0.13,Dropped
 2026-06-03,MVIS,MVIS,Trap_Warning,-59.0,0.41,29.5,-34.03,坚决空仓,绝对规避,2026-06-30,0.3,Dropped
 2026-06-03,HIRU,HIRU,Trap_Warning,nan,0.0,15.4,nan,坚决空仓,绝对规避,N/A,N/A,Active
@@ -67,7 +67,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,$34.80,2026-06-30,45.91,Period_Matured
 2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,$34.80,2026-06-30,16.81,Stop_Loss_Hit
 2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,$34.80,2026-06-30,24.83,Stop_Loss_Hit
-2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,N/A,$22.30,N/A,N/A,Active
+2026-06-03,GOVT,GOVT,Observation,60.0,22.7,46.9,0.02,N/A,$22.30,2026-07-10,22.6,Dropped
 2026-06-03,AMZE,AMAZE HOLDINGS (ASE),Observation,55.8,0.16,49.6,4.23,不建议参与,若执意进场，亏损超$0.02立即止损 🚨 诱多对照组（严禁接盘） 倒数1. MicroVision (MVIS): ❌,2026-06-30,0.13,Dropped
 2026-06-03,MVIS,MVIS,Trap_Warning,-59.0,0.41,29.5,-34.03,坚决空仓,绝对规避,2026-06-30,0.3,Dropped
 2026-06-03,HIRU,HIRU,Trap_Warning,nan,0.0,15.4,nan,坚决空仓,绝对规避,N/A,N/A,Active
