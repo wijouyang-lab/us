@@ -10,290 +10,392 @@
             <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { 
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-    background: #F7F4EF; 
-    color: #1F2421; 
-    line-height: 1.6;
-    padding: 2rem 1rem;
-  }
-  .container { 
-    max-width: 920px; 
-    margin: 0 auto; 
-    background: #FFFFFF; 
-    border-radius: 16px; 
-    box-shadow: 0 2px 12px rgba(31, 36, 33, 0.08);
-    overflow: hidden;
-  }
-  .header { 
-    background: #1F2421; 
-    color: #FBF9F5; 
-    padding: 2.5rem 2rem 2rem;
-    border-bottom: 3px solid #C4612F;
-  }
-  .header h1 { 
-    font-family: 'Fraunces', Georgia, serif; 
-    font-size: 2rem; 
-    font-weight: 400; 
-    letter-spacing: -0.02em; 
-    margin-bottom: 0.5rem;
-  }
-  .header h1 em { 
-    color: #C4612F; 
-    font-style: italic; 
-  }
-  .eyebrow { 
-    display: inline-block; 
-    background: #F2E3D6; 
-    color: #C4612F; 
-    font-size: 0.75rem; 
-    font-weight: 500; 
-    padding: 0.35rem 0.9rem; 
-    border-radius: 999px; 
-    text-transform: uppercase; 
-    letter-spacing: 0.05em;
-    margin-bottom: 1rem;
-  }
-  .content { padding: 2rem; }
-  .section { margin-bottom: 2.5rem; }
-  .section-title { 
-    font-family: 'Fraunces', Georgia, serif; 
-    font-size: 1.5rem; 
-    font-weight: 400; 
-    color: #1F2421; 
-    margin-bottom: 1.2rem;
-    letter-spacing: -0.01em;
-  }
-  .metric-grid { 
-    display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-    gap: 1.2rem; 
-    margin-bottom: 1.5rem;
-  }
-  .metric-card { 
-    background: #FBF9F5; 
-    border: 1px solid #E7E1D7; 
-    border-radius: 12px; 
-    padding: 1.3rem; 
-    transition: transform 0.2s ease;
-  }
-  .metric-card:hover { transform: translateY(-2px); }
-  .metric-label { 
-    font-size: 0.8rem; 
-    color: #5C635D; 
-    text-transform: uppercase; 
-    letter-spacing: 0.05em; 
-    margin-bottom: 0.4rem;
-  }
-  .metric-value { 
-    font-size: 1.8rem; 
-    font-weight: 500; 
-    color: #1F2421;
-  }
-  .metric-value.positive { color: #2D7A4F; }
-  .metric-value.negative { color: #C4612F; }
-  .insight-box { 
-    background: #FBF9F5; 
-    border-left: 3px solid #C4612F; 
-    padding: 1.3rem 1.5rem; 
-    margin: 1.2rem 0; 
-    border-radius: 0 8px 8px 0;
-  }
-  .insight-box strong { color: #C4612F; font-weight: 500; }
-  .table-container { 
-    overflow-x: auto; 
-    margin: 1.5rem 0;
-    border: 1px solid #E7E1D7;
-    border-radius: 8px;
-  }
-  table { 
-    width: 100%; 
-    border-collapse: collapse; 
-    font-size: 0.9rem;
-  }
-  th { 
-    background: #F2E3D6; 
-    color: #1F2421; 
-    font-weight: 500; 
-    padding: 0.9rem 1rem; 
-    text-align: left; 
-    border-bottom: 2px solid #E7E1D7;
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-  }
-  td { 
-    padding: 0.9rem 1rem; 
-    border-bottom: 1px solid #E7E1D7;
-  }
-  tr:last-child td { border-bottom: none; }
-  tr:hover { background: #FBF9F5; }
-  .chip { 
-    display: inline-block; 
-    padding: 0.25rem 0.7rem; 
-    border-radius: 999px; 
-    font-size: 0.75rem; 
-    font-weight: 500;
-  }
-  .chip.success { background: #E8F5E9; color: #2D7A4F; }
-  .chip.warning { background: #FFF3E0; color: #C4612F; }
-  .chip.danger { background: #FFEBEE; color: #B71C1C; }
-  .recommendation { 
-    background: #FFFFFF; 
-    border: 1px solid #E7E1D7; 
-    border-radius: 12px; 
-    padding: 1.3rem 1.5rem; 
-    margin-bottom: 1rem;
-    transition: box-shadow 0.2s ease;
-  }
-  .recommendation:hover { 
-    box-shadow: 0 3px 12px rgba(196, 97, 47, 0.12);
-  }
-  .recommendation h4 { 
-    color: #C4612F; 
-    font-weight: 500; 
-    margin-bottom: 0.6rem;
-    font-size: 1rem;
-  }
-  .recommendation p { 
-    color: #5C635D; 
-    font-size: 0.95rem; 
-    font-weight: 300;
-  }
-  .footer-note { 
-    text-align: center; 
-    color: #5C635D; 
-    font-size: 0.85rem; 
-    padding: 1.5rem 2rem; 
-    border-top: 1px solid #E7E1D7;
-    font-weight: 300;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 2rem;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+        .content {
+            padding: 2rem;
+        }
+        .section {
+            margin-bottom: 2rem;
+        }
+        .section-title {
+            font-size: 1.4rem;
+            color: #2a5298;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #667eea;
+            font-weight: 600;
+        }
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .metric-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 1.2rem;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .metric-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+        .metric-value.positive { color: #10b981; }
+        .metric-value.negative { color: #ef4444; }
+        .metric-value.neutral { color: #6366f1; }
+        .metric-label {
+            font-size: 0.9rem;
+            color: #64748b;
+            font-weight: 500;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        th, td {
+            padding: 0.9rem;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+        }
+        tbody tr {
+            border-bottom: 1px solid #e2e8f0;
+            transition: background 0.2s;
+        }
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+        .profit { color: #10b981; font-weight: 600; }
+        .loss { color: #ef4444; font-weight: 600; }
+        .tag {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .tag-stop { background: #fee2e2; color: #dc2626; }
+        .tag-macro { background: #fef3c7; color: #d97706; }
+        .tag-expire { background: #dbeafe; color: #2563eb; }
+        .insight-box {
+            background: #fef9c3;
+            border-left: 4px solid #eab308;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            border-radius: 6px;
+        }
+        .insight-box strong {
+            color: #a16207;
+        }
+        .strategy-list {
+            list-style: none;
+            padding: 0;
+        }
+        .strategy-list li {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+        .strategy-list li strong {
+            color: #047857;
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+        .footer {
+            background: #f8fafc;
+            padding: 1.5rem;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.85rem;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">
-    <span class="eyebrow">Q1 2025 交易复盘</span>
-    <h1>本期交易<em>策略</em>评估报告</h1>
-  </div>
+    <div class="container">
+        <div class="header">
+            <h1>📊 交易复盘分析报告</h1>
+            <p>定量分析 · 胜率评估 · 风控验证</p>
+        </div>
 
-  <div class="content">
-    <!-- 整体概览 -->
-    <div class="section">
-      <h2 class="section-title">整体持仓表现</h2>
-      <div class="metric-grid">
-        <div class="metric-card">
-          <div class="metric-label">活跃持仓数</div>
-          <div class="metric-value">11</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">清仓操作数</div>
-          <div class="metric-value">94</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">平均实现盈亏</div>
-          <div class="metric-value negative">-8.12%</div>
-        </div>
-        <div class="metric-card">
-          <div class="metric-label">止损触发胜率</div>
-          <div class="metric-value positive">68.4%</div>
-        </div>
-      </div>
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">一、核心业绩指标</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-value neutral">11</div>
+                        <div class="metric-label">活跃持仓</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value negative">-2.01%</div>
+                        <div class="metric-label">平均浮动盈亏</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value neutral">102</div>
+                        <div class="metric-label">已清仓笔数</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value negative">-8.41%</div>
+                        <div class="metric-label">已实现平均收益</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value positive">35.3%</div>
+                        <div class="metric-label">整体胜率</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-value positive">79.4%</div>
+                        <div class="metric-label">风控有效率</div>
+                    </div>
+                </div>
 
-      <div class="insight-box">
-        <strong>关键发现：</strong>本期组合以防御为主，清仓操作占比达89.5%，显示市场波动较大。活跃持仓中浮亏标的占比63.6%，但金融与科技板块出现分化回暖迹象(XLF +6.87%, BAC +8.64%)。
-      </div>
+                <div class="insight-box">
+                    <strong>关键发现：</strong>虽整体胜率偏低(35.3%)，但风控机制高度有效(79.4%清仓后标的继续下行或微涨)。SCO两笔操作实现400%+超额收益严重拉升平均盈亏，剔除后实际平均亏损-12.7%，显示选股端存在系统性偏差。
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">二、清仓操作有效性分析</h2>
+                
+                <h3 style="color: #10b981; font-size: 1.1rem; margin: 1.5rem 0 0.8rem;">✅ 高有效清仓案例(清仓后标的跌幅>5%)</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>股票</th>
+                                <th>清仓类型</th>
+                                <th>实现盈亏</th>
+                                <th>清仓后变化</th>
+                                <th>避损金额</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>SRXH</td>
+                                <td><span class="tag tag-macro">宏观强清</span></td>
+                                <td class="loss">-30.77%</td>
+                                <td class="loss">-2344.44%</td>
+                                <td class="profit">+极高</td>
+                            </tr>
+                            <tr>
+                                <td>META</td>
+                                <td><span class="tag tag-expire">到期清仓</span></td>
+                                <td class="loss">-10.35%</td>
+                                <td class="loss">-18.95%</td>
+                                <td class="profit">+8.6%</td>
+                            </tr>
+                            <tr>
+                                <td>AVGO</td>
+                                <td><span class="tag tag-stop">止损清仓</span></td>
+                                <td class="loss">-19.03%</td>
+                                <td class="loss">-7.39%</td>
+                                <td class="profit">+避免深套</td>
+                            </tr>
+                            <tr>
+                                <td>PATH</td>
+                                <td><span class="tag tag-expire">到期清仓</span></td>
+                                <td class="loss">-3.7%</td>
+                                <td class="loss">-9.36%</td>
+                                <td class="profit">+5.66%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 style="color: #ef4444; font-size: 1.1rem; margin: 1.5rem 0 0.8rem;">⚠️ 过早离场案例(清仓后标的涨幅>10%)</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>股票</th>
+                                <th>清仓类型</th>
+                                <th>实现盈亏</th>
+                                <th>清仓后涨幅</th>
+                                <th>错失收益</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INTC</td>
+                                <td><span class="tag tag-expire">到期清仓</span></td>
+                                <td class="profit">+19.45%</td>
+                                <td class="profit">+16.61%</td>
+                                <td class="loss">-16.61%</td>
+                            </tr>
+                            <tr>
+                                <td>WULF</td>
+                                <td><span class="tag tag-stop">止损清仓</span></td>
+                                <td class="profit">+1.59%</td>
+                                <td class="profit">+14.11%</td>
+                                <td class="loss">-14.11%</td>
+                            </tr>
+                            <tr>
+                                <td>PLUG</td>
+                                <td><span class="tag tag-stop">止损清仓</span></td>
+                                <td class="loss">-32.55%</td>
+                                <td class="profit">+13.9%</td>
+                                <td class="loss">-13.9%</td>
+                            </tr>
+                            <tr>
+                                <td>QTTB</td>
+                                <td><span class="tag tag-macro">宏观强清</span></td>
+                                <td class="profit">+0.08%</td>
+                                <td class="profit">+12.83%</td>
+                                <td class="loss">-12.83%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="insight-box">
+                    <strong>风控验证结论：</strong>81笔清仓后标的走势符合预期(继续下跌或微涨<3%)，验证止损与宏观强清机制高度有效。但21笔过早离场案例(占20.6%)暴露问题：<br>
+                    1️⃣ INTC等盈利股到期清仓后继续大涨，表明持有期限设置过于保守<br>
+                    2️⃣ PLUG在深度亏损-32.55%后被止损，随后反弹13.9%，暴露熊市中过早止损的典型错误<br>
+                    3️⃣ WULF微盈清仓后暴涨14%，说明小盘股波动率未被充分考虑
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">三、活跃持仓健康度诊断</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>股票</th>
+                                <th>买入价</th>
+                                <th>现价</th>
+                                <th>浮动盈亏</th>
+                                <th>风险评级</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style="background: #fee2e2;">
+                                <td>AMZN(重仓)</td>
+                                <td>$271.85</td>
+                                <td>$245.34</td>
+                                <td class="loss">-9.75%</td>
+                                <td>🔴 高危</td>
+                            </tr>
+                            <tr style="background: #fee2e2;">
+                                <td>AMZN</td>
+                                <td>$265.29</td>
+                                <td>$245.34</td>
+                                <td class="loss">-7.52%</td>
+                                <td>🔴 高危</td>
+                            </tr>
+                            <tr>
+                                <td>BAC</td>
+                                <td>$54.54</td>
+                                <td>$59.67</td>
+                                <td class="profit">+9.41%</td>
+                                <td>🟢 健康</td>
+                            </tr>
+                            <tr>
+                                <td>XLF</td>
+                                <td>$51.97</td>
+                                <td>$55.71</td>
+                                <td class="profit">+7.2%</td>
+                                <td>🟢 健康</td>
+                            </tr>
+                            <tr>
+                                <td>OPEN</td>
+                                <td>$4.48</td>
+                                <td>$4.76</td>
+                                <td class="profit">+6.25%</td>
+                                <td>🟢 健康</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="insight-box">
+                    <strong>严重警示：</strong>AMZN双仓位合计亏损-17.27%占活跃仓位总数18%，成为最大风险敞口。金融板块(BAC/XLF/KEY)表现亮眼平均盈利+7.5%，科技成长股(AMZN/GOOG/EEM)全面承压平均亏损-6.49%。
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">四、后续优化策略</h2>
+                <ul class="strategy-list">
+                    <li>
+                        <strong>策略1：动态止损阈值 + 反弹确认机制</strong>
+                        针对21笔过早离场问题，建议：止损后若标的5日内反弹>8%且成交量放大30%以上,触发"二次建仓"信号(仓位减半),避免错失PLUG/WULF类深V反转机会。同时将小盘股(市值<50亿)止损阈值从-15%放宽至-20%,适应高波动特性。
+                    </li>
+                    <li>
+                        <strong>策略2：盈利持仓延长持有周期</strong>
+                        INTC盈利19.45%后到期清仓,随后续涨16.61%,暴露机械化到期清仓缺陷。建议对浮盈>15%且趋势未破(20日均线未跌破)的持仓,自动延长30个交易日,并设置移动止盈(最高点回撤8%止盈),充分捕捉趋势性行情。
+                    </li>
+                    <li>
+                        <strong>策略3：AMZN双仓位紧急对冲</strong>
+                        立即建立AMZN对应比例的纳指看跌期权(QQQ PUT)或反向ETF(PSQ)进行Delta对冲,锁定当前-17%亏损,避免科技股系统性崩盘导致单一持仓亏损扩大至-30%以上。同时暂停新增科技股,将子弹转向已验证有效的金融板块(XLF/BAC/KEY)。
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer">
+            报告生成时间：2026年1月 | 数据来源：实时持仓系统 | 分析方法：定量统计+风控回测
+        </div>
     </div>
-
-    <!-- 清仓操作有效性分析 -->
-    <div class="section">
-      <h2 class="section-title">风控决策质量评估</h2>
-      
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>清仓类型</th>
-              <th>操作数</th>
-              <th>平均盈亏</th>
-              <th>清仓后均变</th>
-              <th>决策有效率</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><span class="chip warning">止损触发</span></td>
-              <td>26</td>
-              <td style="color: #C4612F; font-weight: 500;">-9.28%</td>
-              <td style="color: #2D7A4F;">-0.21%</td>
-              <td><strong style="color: #2D7A4F;">68.4%</strong></td>
-            </tr>
-            <tr>
-              <td><span class="chip danger">宏观利空强清</span></td>
-              <td>38</td>
-              <td style="color: #C4612F; font-weight: 500;">-5.13%</td>
-              <td style="color: #C4612F;">-49.12%</td>
-              <td><strong style="color: #C4612F;">36.8%</strong></td>
-            </tr>
-            <tr>
-              <td><span class="chip success">持有到期清仓</span></td>
-              <td>30</td>
-              <td style="color: #2D7A4F;">-1.52%</td>
-              <td style="color: #2D7A4F;">+1.87%</td>
-              <td><strong style="color: #2D7A4F;">73.3%</strong></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <div class="insight-box">
-        <strong>止损机制有效性验证：</strong>触发止损后标的平均继续下跌0.21%,证明及时止损避免了更大损失。但WULF、PLUG等在清仓后反弹8-9%,显示部分快速反转行情捕捉不足。
-      </div>
-
-      <div class="insight-box" style="margin-top: 1rem;">
-        <strong>宏观强清问题突出：</strong>SRXH清仓后暴跌-2711%(疑似数据异常或退市),NCPL、AIM等清仓后反弹12-18%,说明宏观判断过于激进,未给予标的充分修复时间。建议将宏观信号与个股基本面结合研判。
-      </div>
-
-      <div class="insight-box" style="margin-top: 1rem;">
-        <strong>持有到期策略最优：</strong>平均亏损仅1.52%,清仓后标的走势与预期一致(+1.87%),显示完整持有周期能有效平滑短期波动。INTC(+19.45%)、HOOD(+15.06%)等验证了耐心持有的价值。
-      </div>
-    </div>
-
-    <!-- 板块分化 -->
-    <div class="section">
-      <h2 class="section-title">板块表现分化</h2>
-      
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>板块</th>
-              <th>代表标的</th>
-              <th>当前盈亏</th>
-              <th>状态判断</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>金融</td>
-              <td>XLF, BAC, KEY</td>
-              <td style="color: #2D7A4F; font-weight: 500;">+6.87%</td>
-              <td><span class="chip success">强势回暖</span></td>
-            </tr>
-            <tr>
-              <td>科技大盘</td>
-              <td>AMZN, GOOG</td>
-              <td style="color: #C4612F; font-weight: 500;">-6.07%</td>
-              <td><span class="chip warning">承压筑底</span></td>
-            </tr>
-            <tr>
-              <td>新兴科技</td>
-              <td>PTON, OPEN</td>
-              <td style="color: #2D7A4F; font-wei
+</body>
+</html>
         </div>
     </body></html>
     
