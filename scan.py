@@ -319,11 +319,11 @@ def build_stock_pool(tickers):
     print(f"正在计算技术面参考数据，扫描 {len(tickers)} 只标的...")
     for ts_code, name in tickers.items():
         try:
+            # ── 日线数据（6个月）──
             df = get_kline_data(ts_code)
             if df is None or df.empty or len(df) < 40:
                 continue
 
-            # ── 已有指标 ──
             df['MACDh'] = ta.macd(df['Close']).iloc[:, 1]
             df['RSI']   = ta.rsi(df['Close'], length=14)
             df['MA20']  = ta.sma(df['Close'], length=20)
@@ -333,15 +333,50 @@ def build_stock_pool(tickers):
 
             latest, prev = df.iloc[-1], df.iloc[-2]
             bias       = (latest['Close'] - latest['MA20']) / latest['MA20']
-            macd_trend = "走强" if latest['MACDh'] > prev['MACDh'] else "走弱"
+            h_last     = float(latest['MACDh'])
+            h_prev     = float(prev['MACDh'])
+            h_prev2    = float(df.iloc[-3]['MACDh'])
+            macd_trend = "走强" if h_last > h_prev else "走弱"
 
-            # ── MACD绿柱缩短 ──
-            h_last = float(latest['MACDh'])
-            h_prev = float(prev['MACDh'])
-            h_prev2= float(df.iloc[-3]['MACDh'])
-            macd_green_shrink = bool(h_last < 0 and h_last > h_prev and h_prev < h_prev2)
+            # ── MACD 精准判断：金叉 or 刚开始上行（绿柱缩短）──
+            # MACD线和信号线
+            macd_df    = ta.macd(df['Close'])
+            macd_line  = macd_df.iloc[:, 0]   # MACD line (fast-slow EMA)
+            signal_line= macd_df.iloc[:, 2]   # Signal line
+            macd_cross = False
+            macd_green_shrink = False
+            if len(macd_line) >= 3:
+                # 金叉：MACD线今天在信号线上方，昨天在下方
+                macd_cross = bool(
+                    float(macd_line.iloc[-1]) > float(signal_line.iloc[-1]) and
+                    float(macd_line.iloc[-2]) <= float(signal_line.iloc[-2])
+                )
+                # 即将金叉或刚启动：柱为负且持续向0收敛（连续2日）
+                macd_green_shrink = bool(
+                    h_last < 0 and h_last > h_prev and h_prev < h_prev2
+                )
 
-            # ── KDJ（手动迭代，通用且无版本依赖）──
+            # ── 周线计算（共振过滤）──
+            weekly_bullish = False
+            try:
+                df_w = yf.download(ts_code, period="1y", interval="1wk", progress=False, auto_adjust=True)
+                if df_w is not None and not df_w.empty and len(df_w) >= 12:
+                    if isinstance(df_w.columns, pd.MultiIndex):
+                        df_w.columns = df_w.columns.get_level_values(0)
+                    w_close = df_w['Close'].values.astype(float)
+                    # 周线MA5 > MA10（周线均线多头排列）
+                    wma5  = float(pd.Series(w_close).rolling(5).mean().iloc[-1])
+                    wma10 = float(pd.Series(w_close).rolling(10).mean().iloc[-1])
+                    # 周线MACD柱向上
+                    w_exp1 = pd.Series(w_close).ewm(span=12, adjust=False).mean()
+                    w_exp2 = pd.Series(w_close).ewm(span=26, adjust=False).mean()
+                    w_hist = ((w_exp1 - w_exp2) - (w_exp1 - w_exp2).ewm(span=9, adjust=False).mean()) * 2
+                    w_hist_rising = float(w_hist.iloc[-1]) > float(w_hist.iloc[-2])
+                    weekly_bullish = bool(wma5 > wma10 and w_hist_rising)
+            except Exception:
+                weekly_bullish = False
+
+            # ── KDJ（手动迭代）──
             closes = df['Close'].values.astype(float)
             highs  = df['High'].values.astype(float)
             lows   = df['Low'].values.astype(float)
@@ -362,52 +397,47 @@ def build_stock_pool(tickers):
             kdj_j_oversold = bool(j_prev2 < 20)
 
             # ── 量能放大 ──
-            vols = df['Volume'].values.astype(float)
-            avg5 = float(pd.Series(vols[:-1]).tail(5).mean())
+            vols      = df['Volume'].values.astype(float)
+            avg5      = float(pd.Series(vols[:-1]).tail(5).mean())
             vol_today = float(vols[-1])
             vol_ratio = round(vol_today / (avg5 + 1e-9), 2)
             vol_surge = bool(avg5 > 0 and vol_today >= avg5 * 1.3)
 
             # ── 看涨K线形态 ──
-            opens_arr  = df['Open'].values.astype(float)
-            highs_arr  = df['High'].values.astype(float)
-            lows_arr   = df['Low'].values.astype(float)
-            o, c, h_c, l_c = opens_arr[-1], closes[-1], highs_arr[-1], lows_arr[-1]
-            o1, c1         = opens_arr[-2], closes[-2]
-            body       = abs(c - o)
-            rng        = h_c - l_c + 1e-9
-            lower_shd  = min(o, c) - l_c
-            upper_shd  = h_c - max(o, c)
-            patterns   = []
-            # 看涨吞没
+            opens_arr = df['Open'].values.astype(float)
+            o, c      = opens_arr[-1], closes[-1]
+            o1, c1    = opens_arr[-2], closes[-2]
+            h_c, l_c  = highs[-1], lows[-1]
+            body      = abs(c - o)
+            rng       = h_c - l_c + 1e-9
+            lower_shd = min(o, c) - l_c
+            upper_shd = h_c - max(o, c)
+            patterns  = []
             if c1 < o1 and c > o and o <= c1 and c >= o1:
                 patterns.append("看涨吞没")
-            # 锤子线
             if body / rng < 0.35 and lower_shd >= 2 * body and upper_shd <= body * 0.5:
                 patterns.append("锤子线")
-            # 刺穿线
             if c1 < o1 and c > o and o < c1 and c > (o1 + c1) / 2 and c < o1:
                 patterns.append("刺穿线")
-            # 启明星
-            if len(df) >= 3:
+            if len(opens_arr) >= 3:
                 o2, c2 = opens_arr[-3], closes[-3]
-                body2  = abs(c2 - o2)
-                body1  = abs(c1 - o1)
-                if c2 < o2 and body2 > rng * 0.3 and body1 < body2 * 0.4 and c > o and c > (o2 + c2) / 2:
+                if abs(c2-o2) > rng*0.3 and c2 < o2 and abs(c1-o1) < abs(c2-o2)*0.4 and c > o and c > (o2+c2)/2:
                     patterns.append("启明星")
 
             clean_ticker = ts_code.split('.')[0] if '.' in ts_code else ts_code
             pool.append({
-                "Ticker":       clean_ticker,
-                "ts_code":      ts_code,
-                "Name":         name,
-                "Price":        round(latest['Close'], 2),
-                "RSI":          round(latest['RSI'], 1),
-                "乖离率(%)":    round(bias * 100, 2),
-                "MACD趋势":     macd_trend,
+                "Ticker":          clean_ticker,
+                "ts_code":         ts_code,
+                "Name":            name,
+                "Price":           round(latest['Close'], 2),
+                "RSI":             round(latest['RSI'], 1),
+                "乖离率(%)":       round(bias * 100, 2),
+                "MACD趋势":        macd_trend,
                 "MACD_HIST_LAST":  round(h_last, 4),
                 "MACD_HIST_PREV":  round(h_prev, 4),
+                "MACD金叉":        macd_cross,
                 "MACD绿柱缩短":    macd_green_shrink,
+                "周线共振":        weekly_bullish,
                 "KDJ_J":           round(j_last, 2),
                 "KDJ_J回升":       kdj_j_rising,
                 "KDJ_J超卖":       kdj_j_oversold,
@@ -424,66 +454,50 @@ def build_stock_pool(tickers):
     return pool
 
 
-
-# ── 常用美股GICS板块映射（快速分类，不发网络请求）──
+# ── 常用美股GICS板块映射 ──
 _US_SECTOR_MAP = {
-    # Technology
     "AAPL":"Technology","MSFT":"Technology","NVDA":"Technology","AMD":"Technology",
     "INTC":"Technology","AVGO":"Technology","QCOM":"Technology","TXN":"Technology",
     "MU":"Technology","AMAT":"Technology","LRCX":"Technology","KLAC":"Technology",
-    "MRVL":"Technology","ON":"Technology","STX":"Technology","WDC":"Technology",
-    "CRM":"Technology","ORCL":"Technology","SAP":"Technology","SNOW":"Technology",
-    "NOW":"Technology","PLTR":"Technology","PATH":"Technology","PANW":"Technology",
+    "MRVL":"Technology","ON":"Technology","PLTR":"Technology","PANW":"Technology",
     "CRWD":"Technology","ZS":"Technology","FTNT":"Technology","DDOG":"Technology",
-    # Communication / AI
+    "CRM":"Technology","ORCL":"Technology","SNOW":"Technology","NOW":"Technology",
     "META":"Communication","GOOGL":"Communication","GOOG":"Communication",
-    "NFLX":"Communication","TMUS":"Communication","T":"Communication","VZ":"Communication",
-    "DIS":"Communication","PARA":"Communication","WBD":"Communication",
-    # Consumer Discretionary
+    "NFLX":"Communication","DIS":"Communication","T":"Communication","VZ":"Communication",
     "AMZN":"Consumer Discretionary","TSLA":"Consumer Discretionary",
     "HD":"Consumer Discretionary","MCD":"Consumer Discretionary",
-    "NKE":"Consumer Discretionary","SBUX":"Consumer Discretionary",
-    "BKNG":"Consumer Discretionary","ABNB":"Consumer Discretionary",
-    "GM":"Consumer Discretionary","F":"Consumer Discretionary",
-    # Consumer Staples
+    "NKE":"Consumer Discretionary","BKNG":"Consumer Discretionary",
     "WMT":"Consumer Staples","COST":"Consumer Staples","PG":"Consumer Staples",
-    "KO":"Consumer Staples","PEP":"Consumer Staples","MDLZ":"Consumer Staples",
-    "PM":"Consumer Staples","MO":"Consumer Staples",
-    # Financials
+    "KO":"Consumer Staples","PEP":"Consumer Staples",
     "JPM":"Financials","BAC":"Financials","WFC":"Financials","GS":"Financials",
-    "MS":"Financials","C":"Financials","BRK.B":"Financials","AXP":"Financials",
-    "V":"Financials","MA":"Financials","PYPL":"Financials","COIN":"Financials",
-    # Healthcare
+    "MS":"Financials","V":"Financials","MA":"Financials","PYPL":"Financials",
     "LLY":"Healthcare","JNJ":"Healthcare","UNH":"Healthcare","MRK":"Healthcare",
-    "ABBV":"Healthcare","PFE":"Healthcare","TMO":"Healthcare","ABT":"Healthcare",
-    "DHR":"Healthcare","AMGN":"Healthcare","GILD":"Healthcare","BIIB":"Healthcare",
-    "MRNA":"Healthcare","BNTX":"Healthcare","REGN":"Healthcare","VRTX":"Healthcare",
-    # Industrials
-    "GE":"Industrials","HON":"Industrials","CAT":"Industrials","DE":"Industrials",
-    "RTX":"Industrials","LMT":"Industrials","BA":"Industrials","UPS":"Industrials",
-    "FDX":"Industrials","NOC":"Industrials","GD":"Industrials",
-    # Energy
-    "XOM":"Energy","CVX":"Energy","COP":"Energy","SLB":"Energy","HAL":"Energy",
-    "OXY":"Energy","PSX":"Energy","VLO":"Energy","MPC":"Energy",
-    # Materials
-    "LIN":"Materials","APD":"Materials","ECL":"Materials","NEM":"Materials","FCX":"Materials",
-    # Real Estate
+    "ABBV":"Healthcare","PFE":"Healthcare","AMGN":"Healthcare","GILD":"Healthcare",
+    "MRNA":"Healthcare","REGN":"Healthcare","VRTX":"Healthcare",
+    "GE":"Industrials","HON":"Industrials","CAT":"Industrials","RTX":"Industrials",
+    "LMT":"Industrials","BA":"Industrials","NOC":"Industrials","GD":"Industrials",
+    "XOM":"Energy","CVX":"Energy","COP":"Energy","SLB":"Energy","OXY":"Energy",
+    "LIN":"Materials","NEM":"Materials","FCX":"Materials",
     "AMT":"Real Estate","PLD":"Real Estate","EQIX":"Real Estate",
-    # Utilities
-    "NEE":"Utilities","DUK":"Utilities","SO":"Utilities","AEP":"Utilities",
-    "POWL":"Utilities","VRT":"Utilities",
+    "NEE":"Utilities","DUK":"Utilities","POWL":"Utilities","VRT":"Utilities",
+    "COIN":"Financials","ARM":"Technology","SMCI":"Technology","VST":"Utilities",
 }
 
 
 def screen_technical_setups(pool_data):
     """
-    对候选池全部标的做客观技术形态评分（满分40分）并按GICS板块归类。
+    技术形态筛选：0-40分客观评分 + 周日共振过滤。
 
-    评分明细（与A股版本一致，保持体系统一）：
-      MACD绿柱缩短（柱值<0且连续收敛）          0-10分
-      KDJ的J值从低位/超卖区回升                  0-10分
-      量能放大（量比≥1.3，今量>5日均量30%）      0-10分
-      看涨K线形态（吞没/启明星/刺穿/锤子）       0-10分
+    评分规则（满分40分）：
+      MACD金叉或刚启动（绿柱连续收敛）  0-15分  ← 核心信号权重最高
+      KDJ的J值从低位/超卖区回升          0-10分
+      量能放大（量比≥1.3）               0-10分
+      看涨K线形态                          0-5分
+
+    周日共振要求（过滤器，非加分）：
+      weekly_bullish=True（周线MA5>MA10 且 周线MACD柱上行）时，
+      技术评分×1.25加成（上限仍为40）；
+      weekly_bullish=False时，技术评分×0.6惩罚（日线信号但周线逆势）。
     """
     sector_groups = {}
 
@@ -491,19 +505,22 @@ def screen_technical_setups(pool_data):
         tech_score   = 0
         tech_reasons = []
 
-        # 1. MACD绿柱缩短
-        if stock.get("MACD绿柱缩短"):
+        # 1. MACD信号（权重最高）
+        if stock.get("MACD金叉"):
+            tech_score += 15
+            tech_reasons.append("MACD金叉(+15)")
+        elif stock.get("MACD绿柱缩短"):
             h_last = stock.get("MACD_HIST_LAST", 0)
             h_prev = stock.get("MACD_HIST_PREV", 0)
-            if h_last < 0 and abs(h_last) < abs(h_prev) * 0.9:
-                tech_score += 10
-                tech_reasons.append("MACD绿柱持续缩短(+10)")
+            if h_last < 0 and abs(h_last) < abs(h_prev) * 0.85:
+                tech_score += 12
+                tech_reasons.append("MACD绿柱快速收敛(+12)")
             else:
-                tech_score += 6
-                tech_reasons.append("MACD绿柱初现缩短(+6)")
+                tech_score += 8
+                tech_reasons.append("MACD绿柱初现缩短(+8)")
         elif stock.get("MACD趋势") == "走强" and stock.get("MACD_HIST_LAST", 0) > 0:
-            tech_score += 3
-            tech_reasons.append("MACD红柱走强(+3)")
+            tech_score += 4
+            tech_reasons.append("MACD红柱走强(+4)")
 
         # 2. KDJ J值回升
         j_val      = stock.get("KDJ_J", 50)
@@ -517,8 +534,8 @@ def screen_technical_setups(pool_data):
                 tech_score += 7
                 tech_reasons.append(f"KDJ低位回升J={j_val:.0f}(+7)")
             else:
-                tech_score += 4
-                tech_reasons.append(f"KDJ中位回升J={j_val:.0f}(+4)")
+                tech_score += 3
+                tech_reasons.append(f"KDJ中位回升J={j_val:.0f}(+3)")
 
         # 3. 量能放大
         vol_ratio = stock.get("量比", 1.0)
@@ -530,42 +547,52 @@ def screen_technical_setups(pool_data):
         # 4. 看涨K线形态
         patterns = stock.get("看涨形态", [])
         if patterns:
-            score_map = {"看涨吞没": 10, "启明星": 9, "刺穿线": 7, "锤子线": 6}
-            base = max(score_map.get(p, 5) for p in patterns)
-            if len(patterns) > 1:
-                base = min(base + 2, 10)
+            score_map = {"看涨吞没": 5, "启明星": 5, "刺穿线": 4, "锤子线": 3}
+            base = max(score_map.get(p, 2) for p in patterns)
             tech_score += base
             tech_reasons.append(f"{'&'.join(patterns)}形态(+{base})")
+
+        # 5. 周日共振加成/惩罚
+        weekly = stock.get("周线共振", False)
+        if weekly:
+            tech_score = min(int(tech_score * 1.25), 40)
+            tech_reasons.append("✅周日共振加成×1.25")
+        elif tech_score > 0:
+            tech_score = int(tech_score * 0.6)
+            tech_reasons.append("⚠️周线逆势惩罚×0.6")
 
         tech_score = min(tech_score, 40)
         stock["技术评分"]  = tech_score
         stock["技术信号"]  = tech_reasons
+        stock["周线共振"]  = weekly
 
-        # 板块归类
-        sector = _US_SECTOR_MAP.get(stock.get("Ticker", ""), "Other")
+        sector = _US_SECTOR_MAP.get(stock.get("Ticker",""), "Other")
         sector_groups.setdefault(sector, []).append({
-            "名称": stock["Name"],
-            "代码": stock["Ticker"],
-            "技术评分": tech_score,
-            "技术信号": tech_reasons,
+            "名称": stock["Name"], "代码": stock["Ticker"],
+            "技术评分": tech_score, "技术信号": tech_reasons,
         })
 
-    # 只保留有得分的板块
     sector_summary = {
         sec: sorted(stks, key=lambda x: x["技术评分"], reverse=True)
         for sec, stks in sector_groups.items()
         if any(s["技术评分"] > 0 for s in stks)
     }
 
-    top_tech = sorted(pool_data, key=lambda x: x.get("技术评分", 0), reverse=True)[:10]
+    top_tech = sorted(pool_data, key=lambda x: x.get("技术评分",0), reverse=True)[:10]
     print("📊 [技术筛选] Top10技术评分：")
     for s in top_tech:
         if s.get("技术评分", 0) > 0:
-            print(f"   {s['Name']}({s['Ticker']}) 技术{s['技术评分']}分 | {' + '.join(s.get('技术信号', []))}")
-
+            weekly_tag = "🟢周日共振" if s.get("周线共振") else "🔴仅日线"
+            print(f"   {s['Name']}({s['Ticker']}) 技术{s['技术评分']}分 {weekly_tag} | {' + '.join(s.get('技术信号',[]))}")
     return sector_summary
 
 
+
+
+# ==========================================
+# 新增功能：盘前现有持仓排雷审查相位（Phase 0）
+# ==========================================
+def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     log_file = "trade_history.csv"
     if not os.path.exists(log_file) or os.path.getsize(log_file) == 0:
         print("📌 交易账本不存在或为空，自动跳过盘前现有持仓审查。")
@@ -935,7 +962,7 @@ def analyze_market_signals(combined_news_text, client):
 若今日新闻无结构性信号，返回 {{"signals": []}}。"""
 
         response = client.messages.create(
-            model="claude-haiku-4-5-20251001",
+            model="claude-opus-4-8",   # haiku在此代理不可用，统一用opus
             max_tokens=2000,
             temperature=0,
             messages=[{"role": "user", "content": prompt}]
@@ -1108,39 +1135,40 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
 
     pool_text_lines = []
     for item in pool_data:
-        news_str  = " | ".join(item.get('个股新闻', ['暂无']))
-        tech_score= item.get("技术评分", 0)
-        tech_sigs = " / ".join(item.get("技术信号", [])) or "无技术信号"
-        patterns  = " / ".join(item.get("看涨形态", [])) or "无"
+        news_str   = " | ".join(item.get('个股新闻', ['暂无']))
+        tech_score = item.get("技术评分", 0)
+        tech_sigs  = " / ".join(item.get("技术信号", [])) or "无"
+        patterns   = " / ".join(item.get("看涨形态", [])) or "无"
+        weekly_tag = "🟢周日共振" if item.get("周线共振") else "🔴仅日线"
         pool_text_lines.append(
-            f"[{item['Ticker']}] {item['Name']} | 价格:${item['Price']} | RSI:{item['RSI']} | "
+            f"[{item['Ticker']}] {item['Name']} | ${item['Price']} | RSI:{item['RSI']} | "
             f"乖离率:{item['乖离率(%)']}% | MACD:{item['MACD趋势']} | "
             f"KDJ_J:{item.get('KDJ_J','N/A')} | 量比:{item.get('量比','N/A')} | "
-            f"看涨形态:{patterns} | "
+            f"K线:{patterns} | {weekly_tag} | "
             f"技术评分:{tech_score}/40({tech_sigs}) | "
-            f"最新新闻: {news_str}"
+            f"新闻: {news_str}"
         )
     pool_formatted = "\n".join(pool_text_lines)
-    pool_count = len(pool_data)
+    pool_count     = len(pool_data)
 
-    # 技术板块共振摘要
     tech_sector_block = ""
     if sector_tech_data:
         lines = []
         for sec, stks in sorted(sector_tech_data.items(),
                                  key=lambda x: max(s["技术评分"] for s in x[1]), reverse=True)[:8]:
-            top3 = [f"{s['名称']}({s['代码']})技术{s['技术评分']}分" for s in stks[:3] if s["技术评分"] > 0]
+            top3 = [f"{s['名称']}({s['代码']})技术{s['技术评分']}分"
+                    for s in stks[:3] if s["技术评分"] > 0]
             if top3:
                 lines.append(f"  {sec}: {' / '.join(top3)}")
         if lines:
-            tech_sector_block = "【技术形态板块共振归类（今日有技术信号的标的按GICS板块汇总）】：\n" + "\n".join(lines)
+            tech_sector_block = "【技术形态板块共振归类（周日共振且技术评分>0，按GICS板块汇总）】：\n" + "\n".join(lines)
 
     prompt = f"""
 你是华尔街顶级产业链研究员兼游资操盘手。你的选股方法论是：
 
 【三步选股法】：
 第一步（事件驱动）：从宏观新闻与全球底层资产（国债收益率走势、PCE等关键宏观变量带来的大盘剧烈波动、金银铜油等大宗商品价格走势）中提炼出今日最强的1-2条产业链主线。
-特别注意：需要敏锐剖析宏观数据（如PCE数据导致的指数下跌）代表的本质。分析此次指数下跌究竟是短暂的情绪面过度反应（提供了黄金买点），还是底层趋势已经发生不可逆的改变？
+特别注意：需要敏锐剖析宏观数据（如PCE数据导致的指数下跌）代表的本质。分析此次指数下跌究竟是短暂的情绪面过度反应（提供了黄金黄金买点），还是底层趋势已经发生不可逆的改变？
 例如：
 - AI算力爆发 → GPU需求激增 → HBM/DRAM内存长期供应紧张（2025-2028缺货） → 美光(MU)、Arm(ARM)
 - 美联储降息预期升温 → 资金回流成长股 → 科技/半导体板块受益
@@ -1152,30 +1180,39 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
 - AI数据中心扩张 → 不买AI芯片（贵），买给数据中心供电的电力设备商（POWL/VRT）
 同时，必须逐一审查候选标的的"最新新闻"字段（每只票最多6条标题）。若发现负面新闻（监管调查、业绩预警、CEO离职、诉讼、内部人大额抛售等），即使产业链逻辑再好，也必须降级处理或移入诱多对照组。新闻面排雷的优先级高于技术面。
 
-第三步（技术面双向验证）：
-每只候选标的数据里已附带「技术评分:XX/40」和具体触发信号，这是代码客观计算的，你不得修改这些数值。
-你的任务是判断技术信号与产业链逻辑是否共振：
-  ✅ 三重共振（加成推荐）：技术底部回升信号 + 产业链逻辑直接 + 量能放大配合
-  ⚠️ 背离警告（必须降级）：乖离率>20% 且 RSI>80 的极度超买标的，列入「今日雷区」
-  💚 BUY_DIP逻辑（重要）：技术信号回升但近期跟随板块情绪下跌 → 正是错杀买点，提高推荐权重
+第三步（技术面双向验证 + 周日共振过滤）：
+每只候选标的已附带「技术评分:XX/40」「🟢周日共振 / 🔴仅日线」标签，这是代码客观计算的，你不得修改这些数值。
+
+【核心过滤规则】：
+✅ 优先推荐：技术评分≥20 且 🟢周日共振（周线MA5>MA10 + 周线MACD柱上行 + 日线MACD金叉/绿柱缩短）
+🟡 次级候选：技术评分10-20，仅日线信号但宏观/消息面极强时可入
+🔴 禁止推荐：🔴仅日线标签 + 技术评分<10，即使消息面再好也不进Top5
+⚠️ 强制降级：乖离率>20% 且 RSI>80，即使技术分高也列入雷区
+
+MACD信号优先级（从高到低）：
+  1. MACD金叉（今天MACD线上穿信号线）→ 最强入场信号
+  2. MACD绿柱连续收敛（柱值为负但持续向0靠拢）→ 即将金叉的预信号
+  3. MACD红柱走强 → 趋势延续，已在途中
 
 第四步（双维度综合评分，1-100分）：
 
-【评分权重体系 — 总分100分，两个维度独立计算后相加】：
+【评分权重体系 — 总分100分】：
 
-■ 技术面（40分，代码已计算，直接读取「技术评分」字段）：
-  · MACD绿柱缩短（柱值<0且向0收敛）    0-10分
-  · KDJ的J值从低位/超卖区回升          0-10分（超卖区回头=满分）
-  · 量能放大（量比≥1.3）               0-10分（量比≥2.0=满分）
-  · 看涨K线形态（吞没/启明星/锤子等）   0-10分
+■ 技术面（40分，直接读取「技术评分」字段，你不能修改）：
+  · MACD金叉           0-15分（最强信号）
+  · MACD绿柱快速收敛   0-12分
+  · KDJ超卖区回头      0-10分（超卖满分）
+  · 量能放大           0-10分（量比≥2倍满分）
+  · K线形态            0-5分
+  · 周日共振加成×1.25 / 仅日线惩罚×0.6（已计入）
 
 ■ 消息面（60分，由你评估）：
-  · 产业链逻辑直接度                     0-25分（直接受益=满分，二手受益=15-20分）
-  · 个股新闻共振度                       0-25分（正面公告=满分；无消息但逻辑通=15分；负面=-10分）
-  · 技术面与逻辑面共振加成               0-10分（三重共振额外奖励）
+  · 产业链逻辑直接度      0-25分（直接受益=满分，二手受益=15-20分）
+  · 个股新闻共振度        0-25分（正面公告=满分；干净=15分；负面=-10分）
+  · 技术与逻辑三重共振奖  0-10分（金叉+量能+产业链同向=额外加分）
 
-评分格式必须严格为：评分:[XX]/100（XX为1-100整数）
-示例：技术评分28分的标的，消息面你给45分，写 评分:[73]/100
+评分格式：评分:[XX]/100（XX为整数）
+例：技术评分26分 + 消息面48分 → 写 评分:[74]/100
 
 今天是{today_str}。
 
@@ -1189,13 +1226,13 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
 
 {tech_sector_block}
 
-【今日成交活跃的 Top {pool_count} 标的池】（含技术评分+个股最新新闻）：
+【今日成交活跃的 Top {pool_count} 标的池】（含技术评分+周日共振+个股新闻）：
 {pool_formatted}
 
 【你的任务】：
 1. 从宏观新闻和全球债市、商品市场中提炼出今日1-2条最强产业链主线，并对宏观波动的可持续性做出研判。
 2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者），逐一核查其个股新闻是否有负面信号
-3. 用技术评分+形态信号确认入场时机，技术评分≥20的标的优先列为候选，≥30的直接加权推荐
+3. 用技术面确认入场时机
 4. 对核心入选的【前5只】标的（Top 1-5）进行展开式详细分析，每只票的产业链逻辑、新闻核查、技术确认、推荐评分都要写得具体、有数据支撑，不要写空话套话
 5. 按以下HTML骨架输出报告
 
@@ -1610,7 +1647,7 @@ if __name__ == "__main__":
             send_mail(SUPER_ADMIN, f"【美股卖出信号】{datetime.date.today()}", fallback_html)
         exit(0)
 
-    # 技术形态筛选：计算40分客观评分并按GICS板块归类
+    # 技术形态筛选：40分客观评分 + 周日共振过滤 + GICS板块归类
     sector_tech_data = screen_technical_setups(pool_data)
 
     pool_data = enrich_pool_with_news(pool_data)
