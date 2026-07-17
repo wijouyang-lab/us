@@ -1,129 +1,358 @@
 # -*- coding: utf-8 -*-
+"""
+美股策略进化引擎 evolve_us.py
+
+真正的进化闭环（与 A股版完全对等）：
+  trade_history.csv → 多维度绩效分析 → AI识别规律
+  → evolved_rules.json → scan.py 注入 prompt → 更好的选股
+"""
+
 import pandas as pd
 import os
 import json
 import anthropic
 import datetime
 
-# 严格执行引擎配置：策略回测与迭代需要高强度逻辑推理
-EVOLVE_MODEL = 'claude-opus-4-8'
+EVOLVE_MODEL   = "claude-opus-4-8"
+HISTORY_FILE   = "trade_history.csv"
+EVOLVE_LOG     = "strategy_evolution.json"
+EVOLVED_RULES  = "evolved_rules.json"
 
-HISTORY_FILE = "trade_history.csv"
-EVOLVE_LOG = "strategy_evolution.json"
+MIN_CLOSED = 8   # 最小已平仓样本数
 
-def calculate_metrics(df):
-    total_trades = len(df)
-    if total_trades == 0:
+CLOSED_STATUSES = {"Dropped", "Stop_Loss_Hit", "Period_Matured", "Forced_Exit"}
+ACTIVE_STATUSES = {"Active"}
+PRICE_COL  = "Price"
+EXIT_COL   = "Exit_Price"
+SCORE_COL  = "Score"
+
+
+# ============================================================
+# 1. 多维度绩效指标计算
+# ============================================================
+def safe_float(val, default=None):
+    try:
+        v = float(str(val).strip().replace(",", "").replace("$", ""))
+        return v if v > 0 else default
+    except Exception:
+        return default
+
+
+def calculate_metrics(df: pd.DataFrame) -> dict | None:
+    if df.empty:
         return None
-        
-    # 模拟计算简易胜率 (假设 Exit_Price > Price 为胜)
-    closed_trades = df[df['Status'] == 'Dropped'].copy()
-    if closed_trades.empty:
-        return {"total": total_trades, "win_rate": "N/A", "msg": "当前无已闭环交易数据。"}
-        
-    closed_trades['Profit'] = pd.to_numeric(closed_trades['Exit_Price']) - pd.to_numeric(closed_trades['Price'])
-    winning_trades = closed_trades[closed_trades['Profit'] > 0]
-    
-    win_rate = len(winning_trades) / len(closed_trades) * 100
-    avg_profit = closed_trades['Profit'].mean()
-    
+
+    status_col = "Status" if "Status" in df.columns else "Tag"
+    closed = df[df[status_col].isin(CLOSED_STATUSES)].copy()
+    active = df[df[status_col].isin(ACTIVE_STATUSES)].copy()
+
+    if len(closed) < MIN_CLOSED:
+        print(f"⚠️ 已平仓记录仅 {len(closed)} 条，不足 {MIN_CLOSED} 条，暂缓进化。")
+        return None
+
+    rows = []
+    for _, row in closed.iterrows():
+        buy  = safe_float(row.get(PRICE_COL))
+        sell = safe_float(row.get(EXIT_COL))
+        if buy is None or sell is None:
+            continue
+        pnl_pct = round((sell - buy) / buy * 100, 2)
+
+        # 技术信号字段（若存在则纳入分析）
+        rows.append({
+            "ticker":        str(row.get("Ticker", "")),
+            "name":          str(row.get("Name", "")),
+            "status":        str(row.get(status_col, "")),
+            "score":         safe_float(row.get(SCORE_COL), default=50),
+            "pnl_pct":       pnl_pct,
+            "buy":           buy,
+            "sell":          sell,
+            "macd_cross":    str(row.get("MACD金叉", "")),
+            "weekly_sync":   str(row.get("周线共振", "")),
+            "kdj_rising":    str(row.get("KDJ_J回升", "")),
+            "vol_surge":     str(row.get("量能放大", "")),
+            "tech_score":    safe_float(row.get("技术评分"), default=0),
+        })
+
+    if not rows:
+        print("⚠️ 平仓记录无有效买入/卖出价。")
+        return None
+
+    df_c = pd.DataFrame(rows)
+    wins     = (df_c["pnl_pct"] > 0).sum()
+    total    = len(df_c)
+    wr       = round(wins / total * 100, 1)
+    avg_pnl  = round(df_c["pnl_pct"].mean(), 2)
+    best     = df_c.loc[df_c["pnl_pct"].idxmax()]
+    worst    = df_c.loc[df_c["pnl_pct"].idxmin()]
+
+    # ── 按评分区间拆分 ──
+    def score_bucket(s):
+        if s is None:    return "未知"
+        if s >= 80:      return "80-100(高信心)"
+        elif s >= 65:    return "65-79(中信心)"
+        elif s >= 50:    return "50-64(低信心)"
+        else:            return "<50(勉强入选)"
+
+    df_c["score_bucket"] = df_c["score"].apply(score_bucket)
+    score_stats = {}
+    for bk, grp in df_c.groupby("score_bucket"):
+        if len(grp) < 2: continue
+        score_stats[bk] = {
+            "样本数": len(grp),
+            "胜率":   round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
+            "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
+        }
+
+    # ── 按技术评分区间拆分（验证40分技术面是否有效）──
+    def tech_bucket(s):
+        if s is None: return "无技术评分"
+        if s >= 30:   return "30-40(强技术)"
+        elif s >= 20: return "20-29(中技术)"
+        elif s >= 10: return "10-19(弱技术)"
+        else:         return "0-9(无信号)"
+
+    df_c["tech_bucket"] = df_c["tech_score"].apply(tech_bucket)
+    tech_score_stats = {}
+    for bk, grp in df_c.groupby("tech_bucket"):
+        if len(grp) < 2: continue
+        tech_score_stats[bk] = {
+            "样本数": len(grp),
+            "胜率":   round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
+            "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
+        }
+
+    # ── 按技术信号拆分（判断MACD金叉/周线共振是否真的有效）──
+    signal_stats = {}
+    for sig_col, label in [("macd_cross", "MACD金叉"), ("weekly_sync", "周线共振"),
+                            ("kdj_rising", "KDJ回升"), ("vol_surge", "量能放大")]:
+        if sig_col not in df_c.columns:
+            continue
+        for val, grp in df_c.groupby(sig_col):
+            if len(grp) < 2: continue
+            key = f"{label}={'是' if str(val).lower() in ('true','1','yes') else '否'}"
+            signal_stats[key] = {
+                "样本数": len(grp),
+                "胜率":   round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
+                "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
+            }
+
+    # ── 按退出方式拆分 ──
+    exit_stats = {}
+    exit_map = {"Stop_Loss_Hit": "止损触发", "Period_Matured": "持有到期",
+                "Forced_Exit": "突发强清", "Dropped": "主动斩仓"}
+    for tag, grp in df_c.groupby("status"):
+        if len(grp) < 1: continue
+        label = exit_map.get(tag, tag)
+        exit_stats[label] = {
+            "次数": len(grp),
+            "胜率": round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
+            "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
+        }
+
+    # 上一轮规则
+    prev_rules = []
+    if os.path.exists(EVOLVE_LOG):
+        try:
+            with open(EVOLVE_LOG, "r", encoding="utf-8") as f:
+                history = json.load(f)
+                if history:
+                    prev_rules = history[-1].get("applied_rules", [])
+        except Exception:
+            pass
+
+    # 当前持仓
+    active_summary = [
+        f"{r.get('Name','')}({r.get('Ticker','')}) 评分{r.get(SCORE_COL,'-')}"
+        for _, r in active.iterrows()
+    ]
+
     return {
-        "total_closed": len(closed_trades),
-        "win_rate": round(win_rate, 2),
-        "avg_profit_per_trade": round(avg_profit, 2)
+        "total_closed":       total,
+        "overall_win_rate":   wr,
+        "avg_pnl_pct":        avg_pnl,
+        "best_trade":         f"{best['name']}({best['ticker']}) +{best['pnl_pct']}%",
+        "worst_trade":        f"{worst['name']}({worst['ticker']}) {worst['pnl_pct']}%",
+        "score_stats":        score_stats,
+        "tech_score_stats":   tech_score_stats,
+        "signal_stats":       signal_stats,
+        "exit_stats":         exit_stats,
+        "active_count":       len(active),
+        "active_summary":     active_summary[:10],
+        "prev_rules":         prev_rules,
     }
 
-def evolve_strategy(metrics):
-    if not metrics or metrics.get('win_rate') == 'N/A':
-        print("数据不足，无法开启进化进程。")
-        return
 
-    print(f"正在启动 {EVOLVE_MODEL} 模型进行策略自适应优化计算...")
+# ============================================================
+# 2. AI 分析 + 生成规则补丁
+# ============================================================
+def evolve_strategy(metrics: dict):
+    print(f"🧬 启动策略进化引擎（{EVOLVE_MODEL}）...")
     client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
-        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
     )
-    
+
     prompt = f"""
-你是一个正在进行自我迭代的量化交易模型。请根据当前的客观统计数据，分析当前的选股策略表现，并输出对主程序 scan.py 的提示词 (Prompt) 的迭代建议。
+你是一个美股量化策略进化系统。根据以下交易绩效数据，生成具体可执行的选股规则补丁。
 
-【当前周期闭环指标】：
-- 闭环交易总数：{metrics['total_closed']}
-- 历史胜率：{metrics['win_rate']}%
-- 单笔平均盈亏绝对值：${metrics['avg_profit_per_trade']}
+【当前绩效报告】：
+- 已平仓：{metrics['total_closed']} 笔 | 总体胜率：{metrics['overall_win_rate']}% | 平均盈亏：{metrics['avg_pnl_pct']}%
+- 最佳：{metrics['best_trade']} | 最差：{metrics['worst_trade']}
+- 当前持仓：{metrics['active_count']} 只
 
-【指令任务】：
-1. 评估当前胜率是否达标（及格线 60%）。
-2. 如果胜率偏低，请推测可能的逻辑盲点（如：未充分考虑宏观数据、对某类指标过拟合）。
-3. 生成一小段“进化规则”，以便下次可以作为约束条件加入到扫描引擎中。
-必须输出 JSON 格式。
+【AI综合评分（0-100）胜率分布】（判断高分是否真的对应高胜率）：
+{json.dumps(metrics['score_stats'], ensure_ascii=False, indent=2)}
 
+【技术评分（0-40分）胜率分布】（判断技术面40分权重是否设置合理）：
+{json.dumps(metrics['tech_score_stats'], ensure_ascii=False, indent=2)}
+
+【技术信号有效性分析】（判断MACD金叉/周线共振等信号是否真的有效）：
+{json.dumps(metrics['signal_stats'], ensure_ascii=False, indent=2)}
+
+【退出方式分布】（判断止损位/持股周期是否合理）：
+{json.dumps(metrics['exit_stats'], ensure_ascii=False, indent=2)}
+
+【上一轮已应用规则】：
+{json.dumps(metrics['prev_rules'], ensure_ascii=False, indent=2) if metrics['prev_rules'] else "无（首次进化）"}
+
+【分析思路】：
+1. 如果高技术评分（30-40分）的胜率 < 低技术评分（0-9分），说明技术面权重过高（40分），需要降低
+2. 如果MACD金叉=是的胜率远高于=否，说明金叉信号有效，应该提高MACD金叉的推荐权重
+3. 如果止损触发次数多且亏损较大，说明止损位设得太紧，建议适当放宽
+4. 如果整体胜率<50%，先检查是否存在系统性偏差（如总是在市场高位入场）
+
+必须只返回以下 JSON，不要输出其他文字：
 {{
-    "assessment": "胜率评估简述",
-    "identified_flaws": "发现的逻辑缺陷",
-    "new_prompt_rule": "生成的1条强力提示词补丁（例如：'严禁在VIX大于25时推荐高β科技股'）"
+    "assessment": "总体策略表现评估（3句话以内，要有数据）",
+    "key_findings": [
+        "发现1（数据支撑）",
+        "发现2",
+        "发现3"
+    ],
+    "identified_flaws": "最关键的逻辑缺陷（指出根因）",
+    "applied_rules": [
+        {{
+            "rule_id": "rule_{datetime.date.today().strftime('%Y%m%d')}_001",
+            "type": "TECH_WEIGHT_ADJUST 或 SIGNAL_BOOST 或 STOPLOSS_ADJUST 或 HOLD_PERIOD_ADJUST 或 CONDITION_ADD 或 CONDITION_REMOVE",
+            "description": "规则说明",
+            "prompt_patch": "注入 scan.py AI prompt 的具体文字（可执行，如：'历史数据显示MACD金叉标的胜率达71%，当出现MACD金叉信号时，消息面评分可适当上浮5-8分；无金叉但技术评分>25的标的，谨慎对待'）",
+            "evidence": "支撑数据",
+            "expires_after_trades": 20
+        }}
+    ],
+    "next_focus": "下一轮进化应重点观察什么"
 }}
 """
+
     try:
         response = client.messages.create(
             model=EVOLVE_MODEL,
-            max_tokens=1000,
-            temperature=0.4,
-            messages=[{"role": "user", "content": prompt}]
+            max_tokens=2000,
+            temperature=0.3,
+            messages=[{"role": "user", "content": prompt}],
         )
-        
-        resp_text = response.content[0].text.strip()
-        start_idx = resp_text.find('{')
-        end_idx = resp_text.rfind('}')
-        if start_idx != -1 and end_idx != -1:
-            resp_text = resp_text[start_idx:end_idx+1]
-            
-        evolution_data = json.loads(resp_text)
-        evolution_data["date"] = datetime.datetime.now().strftime('%Y-%m-%d')
-        evolution_data["win_rate"] = metrics['win_rate']
-        
-        # 追加保存进化日志
+        text = response.content[0].text.strip()
+        start = text.find("{")
+        end   = text.rfind("}") + 1
+        if start == -1 or end == 0:
+            print("❌ AI 未返回有效 JSON")
+            return
+
+        result = json.loads(text[start:end])
+        result["date"]    = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        result["metrics"] = {k: v for k, v in metrics.items()
+                             if k not in ("prev_rules", "active_summary")}
+
+        # 追加进化日志
         log_data = []
         if os.path.exists(EVOLVE_LOG):
-            with open(EVOLVE_LOG, "r", encoding="utf-8") as f:
-                log_data = json.load(f)
-                
-        log_data.append(evolution_data)
-        
+            try:
+                with open(EVOLVE_LOG, "r", encoding="utf-8") as f:
+                    log_data = json.load(f)
+            except Exception:
+                pass
+        log_data.append(result)
         with open(EVOLVE_LOG, "w", encoding="utf-8") as f:
-            json.dump(log_data, f, ensure_ascii=False, indent=4)
-            
-        print("✅ 策略进化完成！新生成的规则补丁：")
-        print(f"👉 {evolution_data['new_prompt_rule']}")
-        
-    except Exception as e:
-        print(f"进化引擎运行出错: {e}")
+            json.dump(log_data, f, ensure_ascii=False, indent=2)
+        print(f"📚 进化日志已追加（历史共 {len(log_data)} 轮）")
 
+        # 写入 evolved_rules.json（scan.py 启动时读取）
+        all_rules = []
+        total_now = metrics["total_closed"]
+        for entry in log_data:
+            for rule in entry.get("applied_rules", []):
+                created_at = entry.get("metrics", {}).get("total_closed", 0)
+                expires    = rule.get("expires_after_trades", 20)
+                if total_now - created_at < expires:
+                    all_rules.append(rule)
+
+        seen = {}
+        for r in reversed(all_rules):
+            seen.setdefault(r["rule_id"], r)
+        deduped = list(reversed(seen.values()))
+
+        evolved_output = {
+            "last_updated":            result["date"],
+            "total_closed_at_update":  total_now,
+            "overall_win_rate":        metrics["overall_win_rate"],
+            "active_rules":            deduped,
+            "prompt_patches":          [r["prompt_patch"] for r in deduped],
+        }
+        with open(EVOLVED_RULES, "w", encoding="utf-8") as f:
+            json.dump(evolved_output, f, ensure_ascii=False, indent=2)
+
+        print(f"\n✅ 进化完成！共 {len(deduped)} 条有效规则 → {EVOLVED_RULES}")
+        for i, rule in enumerate(deduped, 1):
+            print(f"  规则{i} [{rule['type']}] {rule['description']}")
+            print(f"    证据: {rule.get('evidence','')}")
+        print(f"\n📋 评估: {result.get('assessment','')}")
+        print(f"🎯 下轮重点: {result.get('next_focus','')}")
+
+    except json.JSONDecodeError as e:
+        print(f"❌ JSON 解析失败: {e}")
+    except Exception as e:
+        print(f"❌ 进化引擎出错: {e}")
+
+
+# ============================================================
+# 主入口
+# ============================================================
 if __name__ == "__main__":
     if not os.path.exists(HISTORY_FILE):
-        print("未检测到 trade_history.csv，策略进化中止。")
+        print(f"未检测到 {HISTORY_FILE}，进化中止。")
         exit()
-        
-    df = pd.read_csv(HISTORY_FILE)
 
-    # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
-    # 旧版本记录缺少这三个字段，视为无效行，不纳入胜率统计与进化分析。
-    _INVALID_E = {'', 'n/a', 'nan', 'none'}
-    for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
-        if _col not in df.columns:
-            df[_col] = ''
-    _valid_mask_e = (
-        df['Hold_Period'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_E) &
-        df['Stop_Loss'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_E) &
-        df['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_E)
+    df_raw = pd.read_csv(HISTORY_FILE, keep_default_na=False)
+
+    _INVALID = {"", "n/a", "nan", "none"}
+    for col in ["Hold_Period", "Stop_Loss", SCORE_COL]:
+        if col not in df_raw.columns:
+            df_raw[col] = ""
+    valid_mask = (
+        df_raw["Hold_Period"].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID) &
+        df_raw["Stop_Loss"].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID) &
+        df_raw[SCORE_COL].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID)
     )
-    _dropped_e = (~_valid_mask_e).sum()
-    if _dropped_e > 0:
-        print(f"🗂️ 三字段过滤：剔除 {_dropped_e} 条旧版本/不完整记录，不纳入胜率统计。")
-    df = df[_valid_mask_e].copy()
+    dropped = (~valid_mask).sum()
+    if dropped > 0:
+        print(f"🗂️ 过滤 {dropped} 条不完整记录。")
+    df = df_raw[valid_mask].copy()
 
     if df.empty:
-        print("⚠️ 过滤后无有效新版本记录，策略进化中止。")
+        print("⚠️ 过滤后无有效记录，进化中止。")
         exit()
+
     metrics = calculate_metrics(df)
+    if metrics is None:
+        exit()
+
+    print(f"\n📊 绩效概览：")
+    print(f"  已平仓 {metrics['total_closed']} 笔 | 胜率 {metrics['overall_win_rate']}% | 平均盈亏 {metrics['avg_pnl_pct']}%")
+    print(f"  当前持仓 {metrics['active_count']} 只")
+    if metrics["tech_score_stats"]:
+        print(f"  技术评分分层胜率: {metrics['tech_score_stats']}")
+    if metrics["signal_stats"]:
+        print(f"  信号有效性: {metrics['signal_stats']}")
+
     evolve_strategy(metrics)
