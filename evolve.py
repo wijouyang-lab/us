@@ -81,10 +81,18 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
     df_c = pd.DataFrame(rows)
     wins     = (df_c["pnl_pct"] > 0).sum()
     total    = len(df_c)
-    wr       = round(wins / total * 100, 1)
-    avg_pnl  = round(df_c["pnl_pct"].mean(), 2)
+    wr       = round(float(wins / total * 100), 1)
+    avg_pnl  = round(float(df_c["pnl_pct"].mean()), 2)
     best     = df_c.loc[df_c["pnl_pct"].idxmax()]
     worst    = df_c.loc[df_c["pnl_pct"].idxmin()]
+
+    def _stats(grp):
+        """统一转为Python原生类型，避免np.float64导致json.dumps失败"""
+        return {
+            "样本数":    int(len(grp)),
+            "胜率":      round(float((grp["pnl_pct"] > 0).sum() / len(grp) * 100), 1),
+            "平均盈亏%": round(float(grp["pnl_pct"].mean()), 2),
+        }
 
     # ── 按评分区间拆分 ──
     def score_bucket(s):
@@ -95,16 +103,9 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         else:            return "<50(勉强入选)"
 
     df_c["score_bucket"] = df_c["score"].apply(score_bucket)
-    score_stats = {}
-    for bk, grp in df_c.groupby("score_bucket"):
-        if len(grp) < 2: continue
-        score_stats[bk] = {
-            "样本数": len(grp),
-            "胜率":   round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
-            "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
-        }
+    score_stats = {bk: _stats(g) for bk, g in df_c.groupby("score_bucket") if len(g) >= 2}
 
-    # ── 按技术评分区间拆分（验证40分技术面是否有效）──
+    # ── 按技术评分区间拆分 ──
     def tech_bucket(s):
         if s is None: return "无技术评分"
         if s >= 30:   return "30-40(强技术)"
@@ -113,42 +114,28 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         else:         return "0-9(无信号)"
 
     df_c["tech_bucket"] = df_c["tech_score"].apply(tech_bucket)
-    tech_score_stats = {}
-    for bk, grp in df_c.groupby("tech_bucket"):
-        if len(grp) < 2: continue
-        tech_score_stats[bk] = {
-            "样本数": len(grp),
-            "胜率":   round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
-            "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
-        }
+    tech_score_stats = {bk: _stats(g) for bk, g in df_c.groupby("tech_bucket") if len(g) >= 2}
 
-    # ── 按技术信号拆分（判断MACD金叉/周线共振是否真的有效）──
+    # ── 按技术信号拆分 ──
     signal_stats = {}
     for sig_col, label in [("macd_cross", "MACD金叉"), ("weekly_sync", "周线共振"),
                             ("kdj_rising", "KDJ回升"), ("vol_surge", "量能放大")]:
         if sig_col not in df_c.columns:
             continue
         for val, grp in df_c.groupby(sig_col):
-            if len(grp) < 2: continue
+            if len(grp) < 2:
+                continue
             key = f"{label}={'是' if str(val).lower() in ('true','1','yes') else '否'}"
-            signal_stats[key] = {
-                "样本数": len(grp),
-                "胜率":   round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
-                "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
-            }
+            signal_stats[key] = _stats(grp)
 
     # ── 按退出方式拆分 ──
-    exit_stats = {}
     exit_map = {"Stop_Loss_Hit": "止损触发", "Period_Matured": "持有到期",
                 "Forced_Exit": "突发强清", "Dropped": "主动斩仓"}
-    for tag, grp in df_c.groupby("status"):
-        if len(grp) < 1: continue
-        label = exit_map.get(tag, tag)
-        exit_stats[label] = {
-            "次数": len(grp),
-            "胜率": round((grp["pnl_pct"] > 0).sum() / len(grp) * 100, 1),
-            "平均盈亏%": round(grp["pnl_pct"].mean(), 2),
-        }
+    exit_stats = {
+        exit_map.get(tag, tag): _stats(g)
+        for tag, g in df_c.groupby("status")
+        if len(g) >= 1
+    }
 
     # 上一轮规则
     prev_rules = []
@@ -252,7 +239,12 @@ def evolve_strategy(metrics: dict):
             temperature=0.3,
             messages=[{"role": "user", "content": prompt}],
         )
-        text = response.content[0].text.strip()
+        # claude-opus-4-8 可能返回 ThinkingBlock（内部推理），需要过滤出 TextBlock
+        text_block = next((b for b in response.content if hasattr(b, "text")), None)
+        if text_block is None:
+            print("❌ AI 未返回文本内容（只有 ThinkingBlock）")
+            return
+        text = text_block.text.strip()
         start = text.find("{")
         end   = text.rfind("}") + 1
         if start == -1 or end == 0:
