@@ -757,7 +757,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     try:
         response = client.messages.create(
             model=TARGET_MODEL,
-            max_tokens=20000,
+            max_tokens=2000,
             temperature=0.1,
             messages=[{"role": "user", "content": review_prompt}]
         )
@@ -1125,6 +1125,45 @@ def parse_us_sector_embargo(sector_text):
     return embargo_keywords, text
 
 
+def load_evolved_rules() -> str:
+    """
+    读取 evolve_us.py 生成的 evolved_rules.json，把有效规则注入 AI 选股 prompt。
+    这是进化闭环的最后一步：
+      evolve.py 分析历史交易 → 写 evolved_rules.json
+      scan.py   读取该文件   → 注入 prompt → 影响今日选股
+    文件不存在时静默返回空字符串。
+    """
+    rules_file = "evolved_rules.json"
+    if not os.path.exists(rules_file):
+        return ""
+    try:
+        with open(rules_file, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        patches      = data.get("prompt_patches", [])
+        active_rules = data.get("active_rules", [])
+        if not patches:
+            return ""
+        last_updated = data.get("last_updated", "未知")
+        win_rate     = data.get("overall_win_rate", "未知")
+        lines = [
+            f"【📈 历史绩效驱动进化规则（上次更新: {last_updated} | 历史胜率: {win_rate}%）】",
+            "以下规则由策略进化引擎基于真实交易数据自动生成，必须严格遵守：",
+            ""
+        ]
+        for i, (rule, patch) in enumerate(zip(active_rules, patches), 1):
+            lines.append(f"规则{i}【{rule.get('type','')}】{rule.get('description','')}")
+            if rule.get("evidence"):
+                lines.append(f"  数据依据: {rule['evidence']}")
+            lines.append(f"  执行要求: {patch}")
+            lines.append("")
+        lines.append("（以上规则优先级高于一般选股偏好，但低于今日突发事件强制封禁）")
+        print(f"📜 [进化规则] 已加载 {len(patches)} 条规则（历史胜率: {win_rate}%）")
+        return "\n".join(lines)
+    except Exception as e:
+        print(f"⚠️ [进化规则] 读取失败: {e}")
+        return ""
+
+
 def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None, embargo_text="", sector_tech_data=None):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
@@ -1162,6 +1201,9 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
                 lines.append(f"  {sec}: {' / '.join(top3)}")
         if lines:
             tech_sector_block = "【技术形态板块共振归类（周日共振且技术评分>0，按GICS板块汇总）】：\n" + "\n".join(lines)
+
+    # 进化规则（来自历史交易数据，evolve_us.py生成）
+    evolved_rules_block = load_evolved_rules()
 
     prompt = f"""
 你是华尔街顶级产业链研究员兼游资操盘手。你的选股方法论是：
@@ -1221,6 +1263,8 @@ MACD信号优先级（从高到低）：
 
 【实时全球宏观经济指标（国债收益率、大宗商品、主要指数涨跌）】：
 {macro_market_text}
+
+{evolved_rules_block}
 
 {embargo_text}
 
