@@ -123,7 +123,7 @@ def generate_review_report(df, current_prices):
     last_err = None
     for attempt in range(3):
         try:
-            tokens = [2000, 1500, 1000][attempt]
+            tokens = [8000, 7000, 6000][attempt]
             response = client.messages.create(
                 model=REVIEW_MODEL_PRO,
                 max_tokens=tokens,
