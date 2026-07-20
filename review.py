@@ -175,20 +175,25 @@ if __name__ == "__main__":
         
     df = pd.read_csv(HISTORY_FILE, keep_default_na=False)
 
-    # ── 新版本标记过滤：Hold_Period / Stop_Loss / Score 三字段缺一不可 ──
+    # ── 版本过滤：只用 Score 区分新旧版本，Stop_Loss/Hold_Period 允许为 N/A ──
+    # review.py 职责是"追踪当前持仓"，不是"统计胜率"（那是 evolve.py 的职责）。
+    # 今日新推荐若 Stop_Loss=N/A（AI未给或解析失败），仍应被追踪和复盘。
     _INVALID_R = {'', 'n/a', 'nan', 'none'}
     for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
         if _col not in df.columns:
             df[_col] = ''
-    _valid_mask_r = (
-        df['Hold_Period'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R) &
-        df['Stop_Loss'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R) &
-        df['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R)
-    )
-    _dropped_r = (~_valid_mask_r).sum()
+
+    # 只要 Score 有效就纳入复盘
+    _score_valid = df['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R)
+    _dropped_r = (~_score_valid).sum()
     if _dropped_r > 0:
-        print(f"🗂️ 三字段过滤：剔除 {_dropped_r} 条旧版本/不完整记录（Hold_Period/Stop_Loss/Score 任意缺失），不纳入复盘。")
-    df = df[_valid_mask_r].copy()
+        print(f"🗂️ 版本过滤：剔除 {_dropped_r} 条无评分的旧版本记录，不纳入复盘。")
+    df = df[_score_valid].copy()
+
+    # Stop_Loss=N/A 的记录提示但不剔除
+    _no_sl = df['Stop_Loss'].astype(str).str.strip().str.lower().isin(_INVALID_R)
+    if _no_sl.sum() > 0:
+        print(f"⚠️ {_no_sl.sum()} 条记录 Stop_Loss=N/A，继续追踪但无法做止损价核查。")
 
     if df.empty:
         print("⚠️ 过滤后无有效新版本记录，复盘取消。")
