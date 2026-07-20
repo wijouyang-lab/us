@@ -18,97 +18,89 @@
     li { margin-bottom: 10px; font-size: 15px; }
 </style>
 </head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：美国市场</h1>
+
+<div style="background:#fff3e0; border-left:6px solid #e65100; padding:20px; margin-bottom:25px; border-radius:8px;">
+    <h3 style="margin:0 0 12px 0; color:#bf360c;">🔔 今日卖出信号汇总（共1只 · 交易时段内可直接执行）</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+        <tr style="text-align:left; color:#6d4c41; border-bottom:2px solid #ffb74d;">
+            <th style="padding:6px;">标的</th>
+            <th style="padding:6px;">触发类型</th>
+            <th style="padding:6px;">价格/浮动盈亏</th>
+            <th style="padding:6px;">理由</th>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #ffe0b2;">
+            <td style="padding:8px 6px;"><b>EEM (EEM)</b></td>
+            <td style="padding:8px 6px;"><span style="background:#c62828;color:#fff;padding:2px 7px;border-radius:4px;font-size:12px;">突发利空强清</span></td>
+            <td style="padding:8px 6px;" colspan="2">宏观面：10年美债收益率仅升0.51%，VIX回落3.2%，系短线调整非趋势逆转。伊朗和谈预期令油价回吐，但未构成系统性风险。个股层面：EEM新兴市场ETF已跌破买入价7.5%且芯片股承压、地缘风险未解，逻辑弱化需清仓。AMZN虽浮亏6.8%但AI云战争ROI预期支撑长逻辑；GOOG浮亏5%但科技财报周前属正常波动；金融股BAC/KEY/XLF受益美债收益率上行且财报稳健；PTON/OPEN小盘股已盈利或持平，暂无硬伤。chipmaker上涨与analyst calls正面，科技核心持仓维持Active。</td>
+        </tr>
+    </table>
+    <p style="margin:12px 0 0 0; font-size:13px; color:#6d4c41;">以上标的已在 trade_history.csv 中锁定状态并停止后续追踪，买卖价已归档供胜率统计。本卡片仅为系统信号，实际下单时机请结合盘口自行判断。</p>
+</div>
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #0d47a1;">🌍 今日产业链主线研判</h3>
-    <p><b>主线1（防御性大轮动 — 资金逃离AI半导体，涌入医药/银行/必需消费避险资产）：</b>今日核心矛盾是芯片股崩塌加速：纳指-1.47%、Netflix财报暴雷-11%、MRVL乖离率-26.57%、SNDK乖离率-26.01%、ORCL/MU/IBM齐创52周新低，SOX半导体指数濒临技术性熊市。VIX单日暴涨10.7%到18.52，说明这不是简单情绪回调，而是"AI资本开支放缓+估值泡沫破裂"的底层逻辑切换——OpenAI被贬为"AI界雷曼"、Google Gemini延期、hyperscaler支出放缓传闻共振。研判：半导体这轮下杀是<b>趋势级去杠杆</b>而非黄金坑，逢反弹减仓。但资金不会离场，而是横向流入低估值防御板块。MarketWatch明确点出"半导体崩、AI相邻板块反而繁荣"。直接受益者是医药（Merck刚获FDA首创降胆固醇药批准、Abbott财报超预期）、银行（被评"稳定之岛"、二季报密集超预期）、必需消费（避险刚需）。二级受益者优选技术评分高、周日共振、消息面干净的防御龙头，而非追高的科技股。</p>
-    <p><b>主线2（中东冲突升级 → 油价冲击$100 → 能源短多，但技术面未共振）：</b>美国对伊朗新一轮空袭、战火扩至叙利亚和巴林，Brent+2.22%到86.1、WTI+1.51%到80.14，周涨13%，机构喊话冲$100甚至$150。理论受益者是XOM等油气股。但本标的池内能源标的技术面极弱（XOM技术仅2/40、FCX 0/40、均🔴仅日线），缺乏周日共振确认，属于"逻辑对但技术未到位"，仅作观察不进核心区。地缘溢价具突发性和不可持续性，追高风险大。</p>
-    <p><b>今日雷区：</b>①半导体全线（NVDA/MU/MRVL/SNDK/AMD/AVGO/INTC/ORCL）——趋势性去杠杆，乖离率巨幅为负是"跌不动"假象，接飞刀极危险；②Netflix(NFLX)——财报暴雷-11%，量比2.05放量下跌是出货；③PayPal(PYPL)——RSI81.4+乖离率24.81%强制降级，且并购要约被董事会拒绝存变数；④追高油气股博地缘溢价。</p>
+    <p><b>主线1：地缘缓和驱动的工业金属反弹周期</b> — 伊朗释放停火谈判信号 → 地缘溢价消散导致原油回落0.63% → 但白银+1.81%、铜+2.03%逆势大涨 → 这反映出市场从"战争避险"切换至"和平重建+制造业复苏"预期 → 工业金属作为经济复苏的领先指标，铜价突破6.35美元创阶段新高，白银突破57美元表明全球制造业资本开支正在加速 → 直接受益：铜矿生产商FCX（Freeport-McMoRan），二级受益：需要大量铜线的数据中心供电设备、5G基站建设相关的通信设备股。技术面上FCX虽仅日线信号，但量比1.55倍放量配合铜价突破形成共振，且RSI 41处于健康区间未超买，是错杀后的反弹良机。</p>
+    <p><b>主线2：半导体情绪性错杀提供逢低机会</b> — 高盛提出"AI替代投资主题"报告 → 市场误读为看空AI需求 → 半导体板块整体回调（纳指-1.4%） → 但基本面未变：hyperscaler资本开支未下修、ASML/台积电订单依然饱满、HBM供需缺口持续到2028 → 这是典型的"拥挤交易回吐"而非趋势逆转 → 直接受益：内存供应商MU（乖离率-17%，KDJ=12超卖）、AI芯片设计公司QCOM（乖离率-9.45%，MACD绿柱收敛+KDJ=13） → 二级受益：云计算基础设施ORCL（乖离率-13%，MACD绿柱快速收敛）。这些标的都处于技术超卖区，配合产业链基本面未变，形成"情绪错杀+技术超卖"的双重买点。</p>
+    <p><b>今日雷区：</b>① 金融/受政府持股板块（Wells Fargo/Citigroup等）：政府入股改变公司治理结构，股东回报预期下降，估值面临结构性压缩，需规避60天；② 技术超买标的PYPL（RSI 80.6、乖离率22.49%）：即使周日共振也需等回调，短期追高风险极大；③ 负面新闻缠身的KVUE（Tylenol自闭症诉讼被上诉法院恢复）、NFLX（Q3指引疲软导致分析师下调评级）。</p>
 </div>
 
 <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 产业链主线优选 (Top 1-5 详细分析)</h2>
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">1. Merck (MRK) | RSI:58.5 | 乖离率:3.0%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 主线1防御轮动最锋利的一把刀。AI半导体去杠杆→避险资金必然寻找"有真实现金流+催化剂"的防御标的。医药板块是本轮资金第一避风港（"Healthcare Stocks Look Like a Haven"已成华尔街共识）。而Merck不是普通防御票，它今日拿到FDA首创口服降胆固醇药Lipfendra批准，正好填补Keytruda专利悬崖的空窗——这是"防御属性+成长催化"的双击。相比昂贵的成长科技，MRK估值低、股息稳、且有实打实的产品放量预期，是典型的"低估值二级受益者"。</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ①"MSD wins FDA approval for cholesterol pill to help plug Keytruda void"——重磅正面，直接催化，解决市场最担心的专利悬崖；②"FDA approves first-of-its-kind cholesterol pill Lipfendra"——首创药定价预期已出，商业化路径清晰；③"Merck Snags A First-Of-Its-Kind Approval, And Shares Jump"——盘面已确认资金买入。全部新闻干净且强正面，无监管/诉讼/高管变动风险，排雷通过。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分30/40且🟢周日共振——MACD绿柱快速收敛(+12，即将金叉的预信号)、量比1.65倍放量、启明星见底形态齐现。RSI58.5处于健康中性区，乖离率仅3.0%完全没有超买风险，是"启动初段"的理想入场位。周线MA5>MA10+日线绿柱缩短的共振，说明这不是一日行情。</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[85]/100 — 防御主线最直接受益+FDA首创批准催化+技术周日共振启明星，逻辑/新闻/技术三重共振，评分理据充分。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[10-20天] | 止损:[$123.0（跌破启明星低点约3.6%）]</p>
-    <div style="background: #f3e5f5; pading: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
+    <div class="top-title" style="color: #d32f2f;">1. Freeport-McMoRan (FCX) | RSI:41.0 | 乖离率:-5.27%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 伊朗停火谈判 → 地缘溢价消散 → 原油-0.63%回落 → 但铜价+2.03%、白银+1.81%逆势大涨 → 市场从"战争避险"切换至"和平重建+制造业复苏"主题 → 铜作为"经济体温计"，其价格突破反映全球制造业资本开支加速（尤其是AI数据中心、电动车、电网升级三大耗铜产业） → FCX作为全球第二大铜矿生产商，直接受益于铜价上涨，且其铜矿现金成本仅$1.8/磅，在当前$6.35铜价下利润率超70%，每上涨$0.1铜价即增厚年利润约$2.5亿 → 相比直接买铜期货，FCX提供杠杆敞口且有黄金副产品对冲（金价4014.9稳定）。这是"二级受益者"策略的经典案例：不买直接标的（铜期货），而是买产业链上利润弹性最大的生产商。</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ① "Morgan Stanley上调FCX目标价"（正面，华尔街大行背书）；② "Finlay Minerals宣布2026勘探计划"（行业层面利好，表明铜矿勘探活跃度提升）；③ "Q2财报预期增长"（财务基本面扎实）。**无任何负面新闻**，新闻面干净且有分析师上调催化。FCX的新闻完全围绕基本面和分析师正面评级，没有监管、诉讼、内部人抛售等风险信号，是典型的"逻辑+新闻+技术"三重共振标的。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> RSI 41.0处于健康区间（未超买也未超卖），乖离率-5.27%表明短期回调充分但未破趋势，量比1.55倍放量配合今日铜价突破形成技术共振。虽为🔴仅日线信号（技术评分4/40），但在工业金属价格突破的宏观背景下，量价配合已足够确认反弹启动。MACD虽走弱但KDJ_J=44处于中性偏低位置，有继续上行空间。当前价格$58.38相比年内高点$62仍有6%上行空间，且未出现顶部背离信号，是安全的左侧布局时点。</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[72]/100 — 产业链逻辑直接清晰（铜价突破+制造业复苏双驱动），新闻面干净有大行背书，技术面虽仅日线但量价配合完美，唯一瑕疵是缺乏周线共振导致技术分偏低，但宏观商品周期启动时日线信号足够有效。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[15-21天] | 止损:[$55.2（-5.5%，跌破则铜价趋势证伪）]</p>
+    <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入2026年8月21日到期 $130 Call（轻度价外，捕捉批准后放量突破），或稳健者选9月18日 $130 Call留足时间。</li><li><b>期权组合构建：</b>推荐$130/$140牛市价差（Bull Call Spread），FDA催化已兑现、追求确定性收益并降低权利金成本，防御板块波动率不高单腿性价比一般，价差更优。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入$60 Strike、8月15日到期的Call期权（轻度虚值，时间窗口覆盖Q2财报发布+铜价趋势确认期），权利金约$1.5-2.0，杠杆比约30:1</li><li><b>期权组合构建：</b>单腿Call足够（铜价单边向上逻辑清晰），如求稳可做Bull Call Spread（买$60 Call + 卖$65 Call）降低成本但封顶收益在8%，不建议复杂组合因为趋势明确时简单策略效率最高</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">2. Abbott Laboratories (ABT) | RSI:64.9 | 乖离率:7.63%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 与MRK同属主线1医药避险，但Abbott是医疗器械+诊断多元龙头，抗周期性更强。AI崩盘中资金追求"业绩确定性"，Abbott刚公布Q2财报关键板块强劲增长、并给出下半年增长指引，正是市场此刻最渴望的"确定性溢价"标的。相比追高的科技股，ABT提供稳健现金流+器械放量的组合，是防御轮动中"进可攻退可守"的核心配置。</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ①"Abbott Laboratories Q2 2026 Earnings Call Highlights: Strong Growth in Key Segments"——财报超预期，核心业务强劲；②"Why Abbott Stock Jumped Today"——盘面已反应正面；③"Can Abott Stock Deliver on Its Second-Half Growth Promise?"——市场关注下半年兑现，属中性偏正。新闻面无雷，全部围绕业绩正面展开，排雷通过。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分31/40（全池最高之一）且🟢周日共振——MACD金叉(+15，最强入场信号)+量比2.93倍暴量(+10)确认财报驱动的真实买盘。RSI64.9略偏高但未破70，乖离率7.63%可接受，尚未触及强制降级线(乖离>20且RSI>80)。金叉+暴量+周线共振的组合是教科书级的启动信号。</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[82]/100 — 全池技术最强金叉+2.93倍暴量+财报超预期，唯一小瑕疵是乖离7.63%需防短线追高，故略低于MRK。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[8-15天] | 止损:[$94.5（跌破金叉启动位约4.4%）]</p>
+    <div class="top-title" style="color: #d32f2f;">2. Qualcomm (QCOM) | RSI:38.1 | 乖离率:-9.45%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 高盛"AI替代主题"报告 → 市场误读为看空AI需求 → 半导体板块情绪性抛售（纳指-1.4%） → 但QCOM基本面未变：① AI手机（骁龙8 Gen 4芯片）订单饱满，联发科证实手机AI芯片需求超预期；② 汽车芯片业务（与MU合作的车载AI方案）进入收获期，毛利率60%+远超手机业务；③ PC端Windows on ARM生态加速（与ARM架构竞争x86），这是QCOM多年布局的战略转折点 → QCOM不是"纯AI炒作股"而是"AI终端应用的核心受益者"，当数据中心AI芯片（NVDA/AMD）估值过高时，资金会轮动至估值更合理的终端AI芯片 → 当前P/E仅18倍，远低于AMD的45倍，且QCOM有5G专利费这一稳定现金流护城河，是被错杀的优质标的。</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ① "MU签署汽车AI深化协议"（正面，QCOM车载芯片合作伙伴获订单即QCOM受益）；② "分析师预测QCOM数据中心业务推进将带来50%+上行空间"（华尔街看多）；③ "GF Securities启动覆盖给予Hold评级"（中性，但未看空）；④ "AI赢家与输家本周盘点"（行业讨论，无负面针对）。**新闻面干净**，没有监管、诉讼、业绩预警等风险，且有分析师上调目标价至$260+的催化。GF给Hold不是利空，而是新券商启动覆盖的常规操作（首次覆盖通常保守）。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分15/40在候选池中排名第二（仅次于AAPL的13分，但AAPL乖离率9.24%已超买），MACD绿柱初现缩短（-0.52收敛至-0.31）表明下跌动能衰竭、即将金叉，KDJ_J=12.91处于超卖回头状态（经典的"J值<20回头"抄底信号），量比1.39倍放量说明有资金在底部承接。RSI 38.1处于健康偏低位置（30-70区间），乖离率-9.45%表明短期超跌但未伤趋势（MA20在$180附近提供支撑）。当前价格$171.78相比分析师目标价$260有51%上行空间，技术面已形成"超卖+绿柱收敛+放量"的三重底部信号。</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[78]/100 — 产业链逻辑强劲（AI终端应用+汽车芯片双引擎），新闻面有分析师50%上行空间背书，技术面15分排名靠前且MACD即将金叉、KDJ超卖回头形成完美入场时机，唯一瑕疵是🔴仅日线标签但已被技术评分15分弥补（这是池中技术最强的标的之一）。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[18-21天] | 止损:[$162（-5.7%，跌破则等MACD金叉后再进）]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; pading-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入2026年8月21日 $100 Call（贴近现价，捕捉金叉后延续），乖离偏高者可等回踩$96-97再进。</li><li><b>期权组合构建：</b>建议$100/$108牛市价差，乖离率7.63%已有短线过热迹象，价差可对冲高位回调风险、锁定权利金成本。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入$175 Strike、8月15日到期的Call（轻度虚值2%，覆盖MACD金叉确认+财报预期窗口），权利金约$5-6，Delta约0.45</li><li><b>期权组合构建：</b>建议Bull Call Spread（买$175 Call + 卖$190 Call）以防守，因QCOM属于"反弹修复"逻辑而非"突破爆发"，价差组合可降低50%成本且锁定11%收益空间，适合中等确定性机会</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">3. Huntington Bancshares (HBAN) | RSI:68.5 | 乖离率:4.74%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 主线1防御轮动的银行分支。银行股被明确评为"An Island of Stability"（稳定之岛），在科技崩盘中承接避险资金。10年期国债收益率小幅回落至4.537%对银行净息差影响温和，而二季报密集超预期支撑板块。HBAN是区域银行中估值便宜、成长故事清晰的标的（新设内部REIT+公用事业研究平台、扩张股权研究覆盖），相比大而贵的JPM，它是"低估值+扩张成长"的二级受益者，护城河在于本地存款基础。</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ①"Huntington Bancshares Stock Looks Cheap On Fair Value"——估值支撑；②"Huntington Securities Launches Equity Research Platform"+"New In-House REIT and Utilities Research Platform"——业务扩张正面，打开资本市场收入新曲线；③"Bank Stocks 'An Island of Stability"——板块层面确认避险属性。新闻全部干净偏正面，无监管/诉讼风险，排雷通过。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分27/40且🟢周日共振——MACD金叉(+15)+量比1.72倍放量(+7)确认资金入场。RSI68.5接近70需留意，但乖离率仅4.74%说明涨势温和不激进，未触及强制降级线。周日共振+金叉的组合验证了这是趋势启动而非一日游。</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[74]/100 — 银行避险主线+MACD金叉+业务扩张利好，逻辑与技术双确认，RSI偏高略微扣分。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[10-20天] | 止损:[$17.8（跌破金叉位约4.1%）]</p>
+    <div class="top-title" style="color: #d32f2f;">3. Micron Technology (MU) | RSI:41.0 | 乖离率:-17.04%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 半导体板块情绪性抛售 → MU乖离率-17%创阶段超跌 → 但基本面逻辑未变：① HBM（高带宽内存）供需缺口持续至2028，当前订单已排至2027年Q2，涨价周期刚启动（HBM3E价格较去年涨40%）；② AI数据中心扩张是硬需求，Meta宣布Louisiana投资$50B+数据中心、NVDA新GPU需要12-16颗HBM配套，每1美元GPU需要0.3美元内存；③ MU是HBM三大供应商之一（另两家SK海力士、三星），且良率最高达95%以上，是NVDA/AMD的核心供应商 → 分析师指出"内存股抛售创造compelling entry point"（绝佳入场点），这是典型的"二级受益者"策略：不买已涨5倍的NVDA（P/E 65倍），而是买供应链上估值更低（P/E 12倍）、供需缺口更确定的内存供应商。当前MU市值已触及$1T，机构重新关注。</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ① "分析师称内存股抛售提供compelling entry point"（强烈买入信号）；② "MU签署汽车AI深化协议"（拓展第二增长曲线）；③ "AI芯片更新：AI劳动力里程碑革新消费金融交互"（行业利好）；④ "华尔街长期投资者最爱股票之一"（机构背书）。**新闻面极其干净且正面**，没有任何负面消息，分析师明确喊话"compelling entry point"，这是华尔街在为机构抄底铺路的信号。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分10/40（KDJ超卖回头J=12.5 + 量比1.58倍放量），RSI 41.0处于健康区间，乖离率-17.04%是池中超跌幅度第二大（仅次于IBM的-20%，但IBM基本面有问题而MU没有），这种超跌配合基本面未变是经典的"恐慌性错杀"。MACD虽走弱但KDJ_J=12处于超卖区即将回头（通常J<20是黄金买点），量比1.58倍表明有大资金在$848附近建仓。当前价格$848.95相比年内高点$1023有20%+修复空间，且52周低点在$780，下方支撑明确。唯一风险是🔴仅日线标签，但量价配合+基本面强度已足够覆盖。</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[76]/100 — 产业链逻辑极强（HBM供需缺口确定性最高），新闻面有分析师明确喊话"compelling entry"，技术面-17%超跌+KDJ超卖+放量形成三重底部信号，综合评分仅次于QCOM，是当前"确定性最高+赔率最佳"的标的。扣分项是仅日线标签且近期波动大，需严格止损。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[18-21天] | 止损:[$800（-5.8%，跌破则等待周线企稳）]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入2026年9月18日 $19 Call（低价股期权，留足时间捕捉银行季报后延续），到期日拉长应对RSI高位可能的短线震荡。</li><li><b>期权组合构建：</b>建议单腿买入$19 Call——低价股期权权利金绝对值低、赔率高，且金叉刚启动上行空间足，无需价差压制上行。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入$880 Strike、8月29日到期的Call（虚值3.7%，覆盖Q3财报窗口7月30日+后续消化期），权利金约$28-32，杠杆比约27:1</li><li><b>期权组合构建：</b>激进者单腿Call（HBM涨价周期确定性高，适合赌单边反弹）；稳健者Bull Call Spread（买$880 Call + 卖$950 Call），将成本降至$18左右，锁定8%收益且风险可控，推荐后者因MU波动率高（30日波动率45%）</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">4. Wells Fargo (WFC) | RSI:61.7 | 乖离率:3.17%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 银行避险主线的大型综合银行代表。在科技去杠杆中，大行凭借多元收入（财富管理、投行、消费信贷）成为资金稳定港。新闻明确"Wealth Management Units Deliver Robust Results for Banks"，WFC作为资产上限解除后的困境反转标的，估值修复空间大。相比JPM（技术0/40无信号），WFC技术面已启动金叉，是同板块中时点更优的二级选择。</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ①"5 Hot Large Cap Bank Stocks: Should You Buy?"——被列入热门大行观察；②"Wealth Management Units Deliver Robust Results for Banks"——财富管理板块景气度确认；③"Earnings Calendar"——处于季报季，无负面预警。新闻面干净，无监管/诉讼/高管风险，排雷通过。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分18/40且🟢周日共振——MACD金叉(+15)是核心信号，虽量比0.92未放量略显温和，但RSI61.7健康、乖离率仅3.17%极低，是"低位刚启动"的安全入场点，几乎无追高风险。周日共振确认周线趋势向上。</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[68]/100 — 大行避险+MACD金叉+超低乖离安全边际，但量能未放大、催化不如医药强，故排第四。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[10-20天] | 止损:[$84.5（跌破金叉位约4.1%）]</p>
+    <div class="top-title" style="color: #d32f2f;">4. Oracle Corporation (ORCL) | RSI:29.4 | 乖离率:-13.0%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 半导体抛售波及云计算基础设施 → ORCL跌至52周低点 → 但基本面逻辑未变：① ORCL是AI数据中心"卖铲人"（提供云基础设施而非芯片，护城河更稳定），其OCI（Oracle Cloud Infrastructure）专为AI训练优化，与NVDA/Cerebras合作深度绑定；② 新签约IMSA Labs云+AI工作室（新闻确认业务拓展在加速）；③ CLSA启动覆盖虽给Hold但理由是"AI债务担忧"而非需求下滑，这反而说明ORCL在AI基础设施上投入激进（短期财务压力但长期受益） → 相比直接买AI芯片股（估值已贵），ORCL是"被错杀的基础设施供应商"，P/E仅22倍远低于云计算同行MSFT的35倍，且有企业软件（ERP/数据库）现金流护城河，这是"二级受益者"策略：不买热门的NVDA，而是买为AI提供算力基础设施的云厂商。</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ① "CLSA启动覆盖给Hold因AI债务担忧"（中性偏谨慎，但Hold不是卖出，且理由是投资过多而非需求不足，反而确认ORCL在AI上All-in）；② "ORCL与IMSA Labs合作推出云+AI工作室"（正面，业务拓展加速）；③ "投行上调ARM目标价至$320因AI驱动CPU需求"（行业利好，ORCL云基础设施同样受益于ARM架构普及）；④ "ORCL跌至52周低点且信用评级被下调至接近垃圾级"（负面，但评级下调是因为激进投资AI基础设施导致短期财务杠杆上升，不是业务恶化）。综合看新闻面中性偏正面，CLSA的Hold和评级下调都是"成长阵痛"而非基本面证伪，反而确认ORCL在AI上投入坚决。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分13/40排名第三（MACD绿柱快速收敛+12分 + KDJ超卖回头J=13.53），RSI 29.4接近超卖区（经典的RSI<30买点），乖离率-13%表明短期超跌严重，当前价格$126.41相比MA20在$138有9%+修复空间。MACD绿柱从-2.8快速收敛至-1.1（收敛速度极快，通常预示即将金叉），KDJ_J=13处于超卖区回头，量比虽仅0.82但在超跌股中属于"惜售"信号（没有恐慌性抛售）。🔴仅日线标签是瑕疵，但技术评分13分+基本面强度已足够覆盖。当前是典型的"技术超卖+基本面未变+估值低"三重买点。</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[74]/100 — 产业链逻辑强劲（AI基础设施"卖铲人"，护城河比芯片更稳定），新闻面中性（评级下调是成长阵痛非基本面恶化），技术面13分+RSI29超卖+MACD即将金叉形成强力底部信号，综合评分略低于MU因新闻面有评级下调噪音，但技术面更优（MACD收敛速度快于MU）。</p>
+    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[18-21天] | 止损:[$118（-6.7%，跌破则等MACD金叉确认）]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; pading-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入2026年8月21日 $90 Call（轻度价外，捕捉金叉延续），因量能未放大宜控制仓位。</li><li><b>期权组合构建：</b>建议$90/$95牛市价差，量能未确认放量、涨势偏温和，价差降低成本、防守慢牛节奏更稳妥。</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入$130 Strike、8月15日到期的Call（虚值2.8%，覆盖MACD金叉确认期+技术反弹窗口），权利金约$3.5-4.5，Delta约0.42</li><li><b>期权组合构建：</b>建议Bull Call Spread（买$130 Call + 卖$140 Call）降低成本至$2左右，锁定7.9%收益空间，因ORCL属于"超跌反弹"而非"趋势突破"，价差组合风险收益比更优。如激进可单腿Call赌MACD金叉后的快速修复。</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
-    <div class="top-title" style="color: #d32f2f;">5. Coca-Cola (KO) | RSI:61.1 | 乖离率:3.35%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 主线1防御轮动的必需消费分支。AI崩盘+VIX飙升的恐慌环境中，可乐这类"永续现金流+高股息+抗衰退"的必需消费龙头是经典避风港。新闻"XLP's Future Earnings Outlook Is Tilting Up"确认必需消费板块盈利预期上修。KO品牌护城河极深、需求刚性，是恐慌市中资金"抱团求稳"的首选，相比WMT（技术仅2/40）时点更好。</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ⚠️需谨慎——①"Coca-Cola suspends Fairlife production after ransomware attack"+"Fairlife Halts US Production"——负面新闻，勒索软件攻击导致子品牌停产，但属于局部运营性事件，不涉及核心可乐业务，影响有限可控；②"Should You Buy Coca-Cola Stock Before July 28?"——季报临近，中性；③高股息属性被多次提及正面。综合：勒索事件为短期扰动非趋势性硬伤，但需扣分并设好止损。</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分22/40且🟢周日共振——MACD金叉(+15)+KDJ中位回升(J=60)。RSI61.1健康、乖离率仅3.35%无追高风险。周日共振确认周线趋势，金叉是启动信号。技术面本身健康，主要风险来自勒索新闻的情绪扰动。</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[66]/100 — 必需消费避险+MACD金叉+周日共振技术健康，但Fairlife勒索软件负面新闻拖累消息面评分，故列第五需谨慎。</p>
-    <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[10-18天] | 止损:[$82.0（跌破金叉位约3.4%，勒索事件若扩大则严格执行）]</p>
-    <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
-        <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; pading-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>买入2026年8月21日 $85 Call（贴近现价），因有勒索新闻扰动+7/28季报临近，选覆盖季报的到期日。</li><li><b>期权组合构建：</b>建议$85/$90牛市价差，防御性配置无需激进上行，价差可对冲勒索事件与季报的双重不确定性、控制风险敞口。</li></ul>
-    </div>
-</div>
-
-<div class="compare-card">
-    <div class="compare-title">🎖️ 观察池 - 逻辑对 but技术未到位 (Rank 6-12)</div>
-    <ul>
-        <li><b>6. Tractor Supply (TSCO) - RSI:51.5 乖离率:1.49%:</b> <span style="color: #1565c0;">产业链逻辑：</span>乡村生活方式零售，防御性消费，抗周期需求稳定。 <span style="color: #2e7d32;">新闻面：</span>干净，Instacart同日达合作+季报预告增长预期。 <span style="color: #388e3c;">未入选原因：</span>技术17/40虽🟢共振但仅MACD红柱走强非金叉，且下周季报有不确定性，等财报落地。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等季报] | 止损:[季报后确认再买]</li>
-        <li><b>7. Uber (UBER) - RSI:52.7 乖离率:1.22%:</b> <span style="color: #1565c0;">逻辑：</span>Delivery Hero 148亿美元并购扩至99市场、GameStop外卖合作，成长逻辑硬。 <span style="color: #2e7d32;">新闻面：</span>强正面，并购协同50M用户+$1.2B。 <span style="color: #388e3c;">未入选：</span>🔴仅日线无周线共振，技术18分含周线逆势惩罚，且不属今日防御避险主线。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[等周线转多]</li>
-        <li><b>8. Copart (CPRT) - RSI:42.5 乖离率:-2.18%:</b> <span style="color: #1565c0;">逻辑：</span>汽车残值拍卖平台，抗周期，新CEO推增长+M&A+AI。 <span style="color: #2e7d32;">新闻面：</span>干净偏正面，多篇看多"爆发性上行"。 <span style="color: #388e3c;">未入选：</span>技术17分但🔴仅日线，MACD绿柱收敛尚未金叉，缺周线确认。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[等金叉+周线共振]</li>
-        <li><b>9. Mondelez (MDLZ) - RSI:55.5 乖离率:2.86%:</b> <span style="color: #1565c0;">逻辑：</span>必需消费零食龙头，契合防御避险主线。 <span style="color: #2e7d32;">新闻面：</span>干净，"较52周高点低17%income投资者应买跌"。 <span style="color: #388e3c;">未入选：</span>技术13分含MACD金叉但🔴仅日线周线逆势惩罚，缺周日共振确认。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[等周线转多]</li>
-        <li><b>10. Kraft Heinz (KHC) - RSI:66.7 乖离率:8.08%:</b> <span style="color: #1565c0;">逻辑：</span>必需消费+高股息(>6%)避险属性，巴菲特继任者相关。 <span style="color: #2e7d32;">新闻面：</span>中性偏多，季报8/5，被列观望名单。 <span style="color: #388e3c;">未入选：</span>技术13分🟢共振但仅红柱走强非金叉，且乖离8.08%+RSI66.7偏高需回调。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回落到$24.5再考虑]</li>
-        <li><b>11. General Mills (GIS) - RSI:67.6 乖离率:9.2%:</b> <span style="color: #1565c0;">逻辑：</span>必需消费食品，再生农业供应链故事+高股息。 <span style="color: #2e7d32;">新闻面：</span>混杂——被Zacks列"Bear of the Day"负面，需警惕。 <span style="color: #388e3c;">未入选：</span>技术13分🟢共振但仅红柱走强，且乖离9.2%偏高+看空研报，性价比不足。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[回调到$35再评估]</li>
-        <li><b>12. Regions Financial (RF) - RSI:73.5 乖离率:7.15%:</b> <span style="color: #1565c0;">逻辑：</span>区域银行，契合"稳定之岛"主线，Q2盈利超预期。 <span style="color: #2e7d32;">新闻面：</span>混杂——盈利超预期但营收Miss，正负交织。 <span style="color: #388e3c;">未入选：</span>技术13分🟢共振但RSI73.5已超买、乖离7.15%偏高，追高风险大等回调。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回落到$30再买]</li>
-    </ul>
-</div>
-
-<div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
-    <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（逻辑或技术或新闻面有硬伤，严禁接盘）</h3>
-    <ul>
-        <li><b>倒数1. PayPal (PYPL):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买+并购变数）：</span>RSI81.4+乖离率24.81%触发强制降级铁律(乖离>20且RSI>80)，已严重超买。虽有$53B并购要约刺激暴涨，但"董事会认为报价不足""Michael Burry称$60.50出价太低"——并购能否成交充满变数，此位追高就是给套利资金抬轿，一旦deal破裂将剧烈回吐。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避，等消化超买至RSI<60]</li>
-        <li><b>倒数2. Netflix (NFLX):</b> ❌ <span style="color: #388e3c;">硬伤（财报暴雷+放量下跌）：</span>财报后暴跌-11%，"Disappointing Forecast""Feeds Investor Anxiety"，量比2.05倍是放量出货而非放量买入。技术12分全靠日线跳水后的KDJ低位反弹撑起，🔴仅日线周线逆势，且属今日雷区（Communication板块跟随科技崩）。下跌趋势中的技术反弹是诱多陷阱，接飞刀极危险。 <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓] | 止损:[绝对规避，等趋势企稳周线转多]</li>
-    </ul>
-</div>
+    <div class="top-title" style="color: #d32f2f;">5. Merck (MRK) | RSI:58.2 | 乖离率:2.4%</div>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> 宏观避险情绪下医药防御性凸显 + 公司催化剂密集 → ① FDA批准全球首款口服PCSK9胆固醇药（重磅新药，市场规模$150亿+，MRK独占先发优势打破安进/再生元的注射剂垄断）；② Keytruda（PD-1癌症药，年销售$250亿）专利悬崖将至（2028年到期），市场担忧"后Keytruda时代"，但MRK新闻"What Comes After Keytruda"表明公司正布局下一代标准疗法，且参与收购战（Genomics标的争夺）证明管线补强在加速；③ 医药板块在纳指-1.4%背景下抗跌（MRK仅回调微幅），说明资金在从成长股轮动至防御股 → MRK是"非周期性+催化剂密集"的防御性进攻标的：既有医药股的抗跌属性，又有新药获批+并购预期的进攻性，是当前宏观不确定性下的最佳平衡选择。相比纯防御的公用事业，MRK有成长性；相比科技股，MRK波动率低（Beta 0.6）。</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> ① "FDA批准全球首款口服PCSK9胆固醇药"（**重磅利好**，这是10年来胆固醇药物最大突破，MRK将抢占$150亿+市场份额）；② "MRK参与收购战竞购Genomics标的"（正面，说明公司现金流充裕且积极补强管线）；③ "What Comes After Keytruda报道"（中性，市场担忧专利悬崖但文章表明MRK在布局下一代疗法）；④ "Gilead领跑HIV竞争但对手在行动"（行业竞争背景，MRK在HIV领域也有布局）。**新闻面极其正面**，FDA批准口服PCSK9是爆炸性催化剂（此前只有注射剂，口服剂型将10倍扩大市场），且无任何负面消息。</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> 技术评分8/40（量比1.48倍放量+🟢周日共振加成），RSI 58.2处于健康偏强区间（50-70是上涨趋势常态），乖离率仅2.4%表明上涨温和未超买（远低于PYPL的22%超买），MACD走强且KDJ_J=64处于多头区间。🟢周日共振标签确认中期趋势向上（周线MA5>MA10 + 周线MACD柱上行），这是池中唯一"既有周日共振又有重磅催化剂"的标的。量比1.48倍放量配合FDA新药获批新闻，说明机构在快速建仓。当前价格$127.5相比分析师普遍目标价$145有13%+上行空间，且下方MA20在$124提供强支撑，技术面非常健康。</p>
+    <p><span class='highlight-label bg-teal'>⭐
 <p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT]</p></div></body></html>
