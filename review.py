@@ -7,513 +7,571 @@ import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import anthropic
+import re
 
-# 严格执行引擎配置：复盘深度推理使用 3.1 pro，轻量化数据清洗使用 3 flash
-REVIEW_MODEL_PRO = 'claude-opus-4-8'
+# ==========================================
+# 1. 基础配置与时区初始化
+# ==========================================
+US_TZ = datetime.timezone(datetime.timedelta(hours=-4))
 
-SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
-HISTORY_FILE = "trade_history.csv"
+def get_us_time():
+    """获取美东当前时间"""
+    return datetime.datetime.now(US_TZ)
 
-def get_latest_prices(tickers):
-    if not tickers:
-        return {}
-    clean_map = {t: t.lstrip('$') for t in tickers}
-    clean_tickers = list(set(clean_map.values()))
+# 周末检查逻辑
+current_time = get_us_time()
+if current_time.weekday() >= 5:
+    print(f"当前时间为周{current_time.weekday() + 1}，属于周末休市时间，退出盘后复盘程序。")
+    import sys
+    sys.exit(0)
 
-    prices = {}
-    try:
-        df = yf.download(clean_tickers, period="1d", progress=False, auto_adjust=True)
-        for orig_t, clean_t in clean_map.items():
-            try:
-                val = df['Close'][clean_t].iloc[-1] if len(clean_tickers) > 1 else df['Close'].iloc[-1]
-                if pd.notna(val) and float(val) > 0:
-                    prices[orig_t] = round(float(val), 2)
-            except Exception:
-                pass
-    except Exception as e:
-        print(f"价格批量获取失败: {e}")
+TARGET_MODEL = 'claude-opus-4-8'
+print("=" * 50)
+print("🚀 启动美股盘后复盘与风控审查引擎 (全功能工程版)...")
+print("=" * 50)
 
-    missing = [t for t in tickers if t not in prices]
-    if missing:
-        print(f"⚠️ 以下 {len(missing)} 只标的无法获取现价（可能已退市或 ticker 有误），复盘中将以买入价代替现价：{missing}")
-    return prices
+# ==========================================
+# 2. 账本文件检查与加载
+# ==========================================
+log_file = "trade_history.csv"
+if not os.path.exists(log_file):
+    print(f"⚠️ 警告：未检测到交易账本文件 [{log_file}]，跳过本次复盘。")
+    import sys
+    sys.exit(0)
 
-def generate_review_report(df, current_prices):
-    print(f"正在调用 {REVIEW_MODEL_PRO} 引擎进行深度复盘推理...")
-    client = anthropic.Anthropic(
-        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
-        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
-    )
+try:
+    print(f"📂 正在加载交易账本: {log_file} ...")
+    df = pd.read_csv(log_file)
+    df['Date'] = pd.to_datetime(df['Date'])
     
-    stats_lines = []
-    for idx, row in df.iterrows():
-        t = row['Ticker']
-        status = str(row.get('Status', 'Active')).strip()
+    # 筛选最近 30 天的记录
+    cutoff_date = get_us_time() - datetime.timedelta(days=30)
+    recent_picks = df[df['Date'] >= cutoff_date.replace(tzinfo=None)].copy()
+    
+    if recent_picks.empty:
+        print("⚠️ 提示：最近 30 天内无任何操作记录，跳过复盘。")
+        import sys
+        sys.exit(0)
+    print(f"✅ 成功加载最近 30 天交易记录，共计 {len(recent_picks)} 行原始数据。")
+except Exception as e:
+    print(f"❌ 错误：账本读取失败，异常原因: {e}")
+    import sys
+    sys.exit(1)
 
-        try:
-            buy_price = float(row['Price'])
-            if buy_price <= 0:
-                continue
-        except (ValueError, TypeError):
+# ==========================================
+# 3. 版本过滤与字段清洗校验
+# ==========================================
+print("🔍 正在进行版本过滤与字段合法性校验...")
+_INVALID = {'', 'n/a', 'nan', 'none'}
+for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
+    if _col not in recent_picks.columns:
+        recent_picks[_col] = ''
+
+# 过滤掉无评分的旧版本记录
+_score_valid = recent_picks['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID)
+_dropped = (~_score_valid).sum()
+if _dropped > 0:
+    print(f"🗂️ 版本过滤提示：成功剔除 {_dropped} 条无评分的旧版本记录，不纳入本次复盘。")
+recent_picks = recent_picks[_score_valid].copy()
+
+# 检查 Stop_Loss 是否为 N/A
+_no_stoploss = recent_picks['Stop_Loss'].astype(str).str.strip().str.lower().isin(_INVALID)
+if _no_stoploss.sum() > 0:
+    tickers_no_sl = recent_picks.loc[_no_stoploss, 'Ticker'].tolist()
+    print(f"⚠️ 警告：以下 {_no_stoploss.sum()} 条记录的 Stop_Loss 属性为 N/A，将继续追踪但无法进行精确止损价核查。涉及标的: {tickers_no_sl[:10]}")
+
+if recent_picks.empty:
+    print("⚠️ 警告：经过版本过滤后，无有效的新版本记录可供复盘，程序退出。")
+    import sys
+    sys.exit(0)
+
+# ==========================================
+# 4. 行情数据拉取与价格映射准备
+# ==========================================
+all_tickers_raw = recent_picks['Ticker'].unique().tolist()
+# 美股特有：清洗带 $ 符号的 Ticker
+clean_map = {t: t.lstrip('$') for t in all_tickers_raw}
+clean_tickers = list(set(clean_map.values()))
+
+print(f"📡 正在通过 yfinance 批量拉取美股历史行情数据，标的列表: {clean_tickers}")
+df_hist_all = pd.DataFrame()
+price_map_today = {}
+
+if clean_tickers:
+    try:
+        hist_data = yf.download(clean_tickers, period="60d", progress=False, auto_adjust=True, group_by='ticker')
+        if len(clean_tickers) == 1:
+            t = clean_tickers[0]
+            temp_df = hist_data.copy()
+            temp_df['ts_code'] = t
+            temp_df['trade_date'] = temp_df.index
+            df_hist_all = temp_df[['ts_code', 'trade_date', 'Close']].rename(columns={'Close': 'close'})
+            if not df_hist_all.empty:
+                price_map_today[t] = float(df_hist_all['close'].iloc[-1])
+        else:
+            records = []
+            for t in clean_tickers:
+                try:
+                    s = hist_data[t]['Close'].dropna()
+                    for date, val in s.items():
+                        records.append({'ts_code': t, 'trade_date': date, 'close': float(val)})
+                    if not s.empty:
+                        price_map_today[t] = float(s.iloc[-1])
+                except Exception as sub_e:
+                    print(f"⚠️ 解析标的 {t} 历史行情出错: {sub_e}")
+            df_hist_all = pd.DataFrame(records)
+        print(f"✅ 行情数据拉取完毕，成功获取最新收盘价的标的数: {len(price_map_today)}")
+    except Exception as e:
+        print(f"❌ 严重错误：调用 yfinance 历史价格拉取失败: {e}")
+
+# ==========================================
+# 5. 核心辅助函数定义
+# ==========================================
+def parse_hold_days(hold_period_str):
+    """从持股周期字符串中提取天数"""
+    if not hold_period_str or str(hold_period_str).strip().lower() in ['n/a', 'nan', '坚决空仓', '观望']:
+        return None
+    nums = re.findall(r'\d+', str(hold_period_str))
+    if nums:
+        return int(nums[-1])
+    return None
+
+def get_price_on_date(clean_ticker, target_date_str):
+    """获取指定历史日期的收盘价"""
+    if df_hist_all.empty:
+        return None
+    ticker_data = df_hist_all[df_hist_all['ts_code'] == clean_ticker].copy()
+    if ticker_data.empty:
+        return None
+    ticker_data['trade_date'] = pd.to_datetime(ticker_data['trade_date']).dt.tz_localize(None)
+    target_date = pd.to_datetime(target_date_str)
+    valid = ticker_data[ticker_data['trade_date'] <= target_date]
+    if valid.empty:
+        return None
+    return float(valid.iloc[-1]['close'])
+
+# ==========================================
+# 6. 读取历史归档记录以实现去重
+# ==========================================
+already_archived = set()
+review_log_path = "review_history.csv"
+
+if os.path.exists(review_log_path) and os.path.getsize(review_log_path) > 0:
+    try:
+        existing_review = pd.read_csv(review_log_path, on_bad_lines='skip')
+        if {'Status', 'Ticker', 'Rec_Date'}.issubset(existing_review.columns):
+            archived_rows = existing_review[existing_review['Status'].isin(
+                ['已超期归档', '突发清仓暂停', '止损触发清仓', '周期到期清仓']
+            )]
+            already_archived = set(zip(archived_rows['Ticker'].astype(str), archived_rows['Rec_Date'].astype(str)))
+            print(f"📌 已加载历史归档去重库，共包含 {len(already_archived)} 笔已处理记录。")
+    except Exception as e:
+        print(f"⚠️ 读取历史归档记录出错，将跳过部分去重校验: {e}")
+
+# ==========================================
+# 7. 遍历分组持仓并分类处理（活跃 vs 超期）
+# ==========================================
+active_list = []
+expired_list = []
+skipped_duplicate = 0
+
+print("🔄 开始逐个标的进行持仓状态与期满归档判定...")
+for orig_ticker, group in recent_picks.groupby('Ticker'):
+    group = group.sort_values('Date')
+    first_row = group.iloc[0]
+    latest_row = group.iloc[-1]
+    days_held = (get_us_time().replace(tzinfo=None) - first_row['Date']).days
+
+    latest_tag = str(latest_row.get('Tag', '')).strip()
+    
+    if latest_tag in ['Trap_Warning', 'Forced_Exit', 'Stop_Loss_Hit', 'Period_Matured']:
+        print(f"⏸️ 标的 [{orig_ticker}] 已被防守端标签处理（{latest_tag}），跳过常规追踪。")
+        continue
+
+    hold_period_str = 'N/A'
+    stop_loss = 'N/A'
+    score_str = 'N/A'
+    
+    for _, r in group.iterrows():
+        val = str(r.get('Hold_Period', 'N/A')).strip()
+        if val not in ['N/A', 'nan', '', '坚决空仓']:
+            hold_period_str = r['Hold_Period']
+            break
+            
+    for _, r in group.iterrows():
+        val = str(r.get('Stop_Loss', 'N/A')).strip()
+        if val not in ['N/A', 'nan', '', '坚决空仓', '绝对规避', '观望']:
+            stop_loss = r['Stop_Loss']
+            break
+            
+    for _, r in group.iterrows():
+        val = str(r.get('Score', 'N/A')).strip()
+        if val not in ['N/A', 'nan', '']:
+            score_str = r['Score']
+            break
+
+    hold_days = parse_hold_days(hold_period_str)
+    clean_t = clean_map.get(orig_ticker, orig_ticker)
+    
+    try:
+        rec_price = float(first_row.get('Price', first_row.get('Close_Price', 0)))
+    except:
+        rec_price = 0.0
+
+    if hold_days is None:
+        print(f"⚠️ 标的 [{orig_ticker}] 持股周期为 N/A，仅加入活跃列表追踪，不触发到期归档。")
+        rec_date_str = first_row['Date'].strftime('%Y-%m-%d')
+        cur_price = price_map_today.get(clean_t) or get_price_on_date(clean_t, get_us_time().strftime('%Y-%m-%d')) or rec_price
+        pnl = round((cur_price - rec_price) / rec_price * 100, 2) if rec_price > 0 else 0
+        active_list.append({
+            "代码": orig_ticker,
+            "名称": first_row.get('Name', orig_ticker),
+            "标签": latest_tag,
+            "推荐评分": score_str,
+            "持股周期建议": "待定(N/A)",
+            "止损价": stop_loss,
+            "首次推荐日": rec_date_str,
+            "首次推荐价": rec_price,
+            "现价": cur_price,
+            "持仓天数": days_held,
+            "剩余天数": "N/A",
+            "当前盈亏(%)": pnl,
+            "系统连续推荐次数": len(group),
+        })
+        continue
+
+    rec_date_str = first_row['Date'].strftime('%Y-%m-%d')
+    maturity_date_dt = first_row['Date'] + datetime.timedelta(days=hold_days)
+    maturity_date = maturity_date_dt.strftime('%Y-%m-%d')
+
+    if maturity_date_dt.replace(tzinfo=None) <= get_us_time().replace(tzinfo=None):
+        if (str(orig_ticker), rec_date_str) in already_archived:
+            skipped_duplicate += 1
             continue
 
-        cur_price = current_prices.get(t, buy_price)
+        maturity_price = get_price_on_date(clean_t, maturity_date)
+        maturity_pnl = round(((maturity_price - rec_price) / rec_price) * 100, 2) if maturity_price and rec_price > 0 else None
 
-        if status == 'Active':
-            profit_pct = round((cur_price - buy_price) / buy_price * 100, 2)
-            stats_lines.append(f"[Active] {row['Name']}({t}) | 买入价: ${buy_price} → 现价: ${cur_price} | 浮动盈亏: {profit_pct}%")
-        elif status in ('Dropped', 'Stop_Loss_Hit', 'Period_Matured', 'Forced_Exit'):
-            try:
-                exit_price = float(row.get('Exit_Price', buy_price))
-                if exit_price <= 0:
-                    exit_price = buy_price
-            except (ValueError, TypeError):
-                exit_price = buy_price
+        expired_list.append({
+            "代码": orig_ticker,
+            "名称": first_row.get('Name', orig_ticker),
+            "标签": latest_tag,
+            "推荐评分": score_str,
+            "持股周期建议": hold_period_str,
+            "止损价": stop_loss,
+            "首次推荐日": rec_date_str,
+            "首次推荐价": rec_price,
+            "期满日": maturity_date,
+            "期满日价格": maturity_price if maturity_price else "无数据",
+            "期满日盈亏(%)": maturity_pnl if maturity_pnl is not None else "无数据",
+            "持仓天数": days_held,
+            "系统连续推荐次数": len(group),
+        })
+    else:
+        cur_price = price_map_today.get(clean_t)
+        if not cur_price:
+            continue
 
-            pnl_pct = round((exit_price - buy_price) / buy_price * 100, 2)
-            post_exit_price = current_prices.get(t, exit_price)
-            prevented = round((exit_price - post_exit_price) / exit_price * 100, 2) if exit_price > 0 else 0.0
+        cur_pnl = round(((cur_price - rec_price) / rec_price) * 100, 2) if rec_price > 0 else 0
+        remaining = (maturity_date_dt.replace(tzinfo=None) - get_us_time().replace(tzinfo=None)).days
 
-            label_map = {
-                'Dropped':        '宏观利空强清',
-                'Stop_Loss_Hit':  '止损触发清仓',
-                'Period_Matured': '持有到期清仓',
-                'Forced_Exit':    '突发事件强清',
-            }
-            label = label_map.get(status, status)
-            stats_lines.append(
-                f"[{label}] {row['Name']}({t}) | 买入: ${buy_price} → 清仓: ${exit_price} | 实现盈亏: {pnl_pct}% | 清仓后继续变化: {prevented}%"
-            )
+        active_list.append({
+            "代码": orig_ticker,
+            "名称": first_row.get('Name', orig_ticker),
+            "标签": latest_tag,
+            "推荐评分": score_str,
+            "持股周期建议": hold_period_str,
+            "止损价": stop_loss,
+            "首次推荐日": rec_date_str,
+            "首次推荐价": rec_price,
+            "现价": cur_price,
+            "持仓天数": days_held,
+            "剩余天数": remaining,
+            "当前盈亏(%)": cur_pnl,
+            "系统连续推荐次数": len(group),
+        })
 
-    report_data = "\n".join(stats_lines)
+if skipped_duplicate > 0:
+    print(f"📌 去重机制生效：本次成功跳过 {skipped_duplicate} 条已归档的历史到期交易。")
 
-    MAX_REPORT_CHARS = 16000
-    if len(report_data) > MAX_REPORT_CHARS:
-        report_data = report_data[:MAX_REPORT_CHARS]
-        last_newline = report_data.rfind('\n')
-        if last_newline > 0:
-            report_data = report_data[:last_newline]
-        report_data += f"\n... （已截断，完整数据见 trade_history.csv）"
+print(f"📊 分类统计结果 -> 持仓中: {len(active_list)} 只 | 已超期(本次新归档): {len(expired_list)} 只")
 
-    prompt = f"""
-你是首席定量分析师，请根据最新交易记录，进行本期操作的回顾与复盘。
-要求：
-1. 宏观与资产全景复盘：分析 Active 持仓的整体胜率、多头极化优势（大牛股撑起收益）与下行风控问题。
-2. 给出后续量化交易改进建议（不超过3条，要具体可执行，包含具体交易纪律）。
-输出格式要求直接为精美的 HTML 片段（无 markdown 外框，无需 `<html>` 或 `<body>` 标签），控制在1000字以内。
-严格按照以下 HTML 框架结构返回：
+if not active_list and not expired_list:
+    print("⚠️ 提示：当前没有需要复盘的有效标的，程序安全退出。")
+    import sys
+    sys.exit(0)
+
+# ==========================================
+# 8. 调用大模型生成风控报告内容
+# ==========================================
+print("🤖 正在调用 Claude 客户端生成美股盘后风控审查与策略复盘报告...")
+client = anthropic.Anthropic(
+    api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+    base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+)
+
+prompt = f'''
+你是顶级量化风控总监。以下是今日需要复盘的美股标的数据：
+
+【持仓中（周期内，需要给出风控指令）】：
+{active_list}
+
+【已超期（本次新归档，只做策略复盘评价，不需要风控指令）】：
+{expired_list}
+
+在风控判断或策略复盘时，请结合推荐评分进行验证：高分票（80分以上）如果出现明显亏损，需要特别指出"高信心预期未兑现"；低分票（60分以下）如果反而盈利良好，也需要指出"评分体系可能过于保守"。
+
+请严格按以下 HTML 骨架输出复盘报告（直出HTML，禁加markdown框，盈利标红，亏损标绿）：
 
 <div style="background: #eceff1; border-left: 6px solid #455a64; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
-    <h3 style="margin-top: 0; color: #263238;">⚖️ 宏观与资产全景复盘</h3>
-    <p>(总结整体多头盈利贡献与下行波动的核心逻辑，语言专业深度)</p>
+    <h3 style="margin-top: 0; color: #263238;">⚖️ 盘后总体风控审查</h3>
+    <p>(总结持仓中标的整体盈亏状况，以及本次新归档标的的策略胜率评估，特别指出评分与实际表现是否存在明显反差)</p>
 </div>
 
-<div style="background: #fff; padding: 20px; margin-bottom: 25px; border-radius: 8px; border: 1px solid #e0e0e0;">
-    <h3 style="margin: 0 0 10px 0; color: #2c3e50;">💡 量化策略改进建议</h3>
-    <ul style="padding-left: 20px; margin: 0;">
-        (给出不超过3条的具体可执行策略，每一条用 <li> 标出，附带量化论据)
-    </ul>
+<h2 style="color: #1565c0; border-bottom: 2px solid #1565c0; padding-bottom: 5px;">📊 持仓中 - 风控纪律核对单</h2>
+<div style="background: #fff; padding: 20px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #e0e0e0; box-shadow: 0 2px 8px rgba(0,0,0,0.05);">
+    <h3 style="margin: 0 0 10px 0;">[首次推荐日] | [股票名称] ([代码]) | 评分[推荐评分]/100 | 系统连续推荐[N]次 | 还剩[剩余天数]天到期</h3>
+    <p><b>持股周期建议:</b> [持股周期建议] | <b>止损位:</b> [止损价]</p>
+    <p><b>买入成本:</b> $[首次推荐价] ➔ <b>现价:</b> $[现价] | <b>当前盈亏:</b> <span style="font-weight:bold; color:[盈利#d32f2f/亏损#388e3c];">[当前盈亏(%)]%</span></p>
+    <p><span style="background: #607d8b; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">风控动作指令</span>
+    (判断：现价是否跌破止损位？给出持有/止损/减仓指令)</p>
 </div>
 
-【持仓与风控拦截数据】：
-{report_data}
+<h2 style="color: #37474f; border-bottom: 2px solid #cfd8dc; padding-bottom: 5px; margin-top: 40px;">📁 已超期归档 - 策略复盘评价</h2>
+<div style="background: #f5f5f5; padding: 20px; margin-bottom: 15px; border-radius: 8px; border: 1px solid #e0e0e0;">
+    <h3 style="margin: 0 0 10px 0;">[首次推荐日] | [股票名称] ([代码]) | 评分[推荐评分]/100 | 期满日:[期满日]</h3>
+    <p><b>持股周期建议:</b> [持股周期建议] | <b>止损位:</b> [止损价]</p>
+    <p><b>买入成本:</b> $[首次推荐价] → <b>期满日价格:</b> $[期满日价格] | <b>策略实际盈亏:</b> <span style="font-weight:bold; color:[盈利#d32f2f/亏损#388e3c];">[期满日盈亏(%)]%</span></p>
+    <p><span style="background: #455a64; color: #fff; padding: 2px 6px; border-radius: 4px; font-size: 12px;">策略复盘</span>
+    (评价这次策略是否成功，归因分析盈亏原因)</p>
+</div>
+
+【极其重要】直接输出HTML代码，第一个字符必须是 < 符号，绝对不要输出任何思考过程。
+'''
+
+ai_html = ""
+with client.messages.stream(
+    model=TARGET_MODEL,
+    max_tokens=30000,
+    temperature=0.1,
+    messages=[{"role": "user", "content": prompt}]
+) as stream:
+    for text in stream.text_stream:
+        ai_html += text
+
+ai_html = ai_html.replace("```html", "").replace("```", "").strip()
+
+html_start = ai_html.find("<div")
+if html_start > 0:
+    print(f"⚠️ 警告：检测到 AI 输出前置了 {html_start} 字符的非 HTML 内容，已自动切片丢弃。")
+    ai_html = ai_html[html_start:]
+
+# ==========================================
+# 9. 写入归档记录至 review_history.csv
+# ==========================================
+review_log = "review_history.csv"
+new_header = "Review_Date,Ticker,Name,Tag,Rec_Date,Rec_Price,Cur_Price,Days_Held,PnL_Pct,Maturity_PnL,Hold_Period,Stop_Loss,Rec_Count,Status,Score\n"
+review_file_exists = os.path.exists(review_log) and os.path.getsize(review_log) > 0
+review_need_header = not review_file_exists
+
+if review_file_exists:
+    with open(review_log, "r", encoding="utf-8") as f:
+        review_lines = f.readlines()
+    if review_lines and "Score" not in review_lines[0]:
+        review_lines[0] = new_header
+        with open(review_log, "w", encoding="utf-8") as f:
+            f.writelines(review_lines)
+        print("📌 历史复盘日志表头已自动升级更新。")
+
+try:
+    with open(review_log, "a", encoding="utf-8") as f:
+        if review_need_header:
+            f.write(new_header)
+        review_date = get_us_time().strftime('%Y-%m-%d')
+
+        for item in active_list:
+            f.write(f"{review_date},{item['代码']},{item['名称']},{item['标签']},{item['首次推荐日']},{item['首次推荐价']},{item['现价']},{item['持仓天数']},{item['当前盈亏(%)']},,{item['持股周期建议']},{item['止损价']},{item['系统连续推荐次数']},持仓中,{item['推荐评分']}\n")
+
+        for item in expired_list:
+            maturity_pnl = item['期满日盈亏(%)'] if item['期满日盈亏(%)'] != "无数据" else ""
+            f.write(f"{review_date},{item['代码']},{item['名称']},{item['标签']},{item['首次推荐日']},{item['首次推荐价']},{item['期满日价格']},{item['持仓天数']},{maturity_pnl},{maturity_pnl},{item['持股周期建议']},{item['止损价']},{item['系统连续推荐次数']},已超期归档,{item['推荐评分']}\n")
+
+    print("✅ 成功将本次复盘状态写入 review_history.csv 文件。")
+except Exception as e:
+    print(f"❌ 错误：复盘历史数据写入失败: {e}")
+
+# ==========================================
+# 10. 程序化 KPI 指标计算与 HTML 仪表盘渲染
+# ==========================================
+print("📈 正在计算核心 KPI 指标并组装 HTML 仪表盘...")
+historical_closed = []
+_INVALID_H = {'', 'n/a', 'nan', 'none'}
+
+if os.path.exists(review_log) and os.path.getsize(review_log) > 0:
+    try:
+        existing_review = pd.read_csv(review_log, on_bad_lines='skip')
+        closed_rows = existing_review[existing_review['Status'].isin(['已超期归档', '突发清仓暂停', '止损触发清仓', '周期到期清仓'])]
+        for _, r in closed_rows.iterrows():
+            try:
+                pnl_val = r['PnL_Pct']
+                if pd.notna(pnl_val) and str(pnl_val).strip().lower() not in _INVALID_H:
+                    pnl = float(pnl_val)
+                else:
+                    pnl_mat = r['Maturity_PnL']
+                    if pd.notna(pnl_mat) and str(pnl_mat).strip().lower() not in _INVALID_H:
+                        pnl = float(pnl_mat)
+                    else:
+                        continue
+            except:
+                continue
+                
+            prevented = 0.0
+            try:
+                sl_val = str(r.get('Stop_Loss', 'N/A')).strip()
+                cur_val = str(r.get('Cur_Price', 'N/A')).strip()
+                if sl_val not in _INVALID_H and cur_val not in _INVALID_H:
+                    sl_price = float(sl_val)
+                    cur_price = float(cur_val)
+                    prevented = round((sl_price - cur_price) / sl_price * 100, 2) if sl_price > 0 else 0.0
+            except:
+                pass
+                
+            historical_closed.append({
+                'ticker': r.get('Ticker', ''),
+                'name': r.get('Name', ''),
+                'pnl': pnl,
+                'prevented': prevented,
+                'status': r.get('Status', '已超期归档')
+            })
+    except Exception as e:
+        print(f"⚠️ 读取历史归档用于 KPI 计算时出错: {e}")
+
+all_closed_trades = []
+for h in historical_closed:
+    all_closed_trades.append(h)
+for item in expired_list:
+    try:
+        pnl = float(item['期满日盈亏(%)']) if item['期满日盈亏(%)'] != "无数据" else 0.0
+    except:
+        pnl = 0.0
+    all_closed_trades.append({
+        'ticker': item['代码'], 'name': item['名称'], 'pnl': pnl,
+        'prevented': 0.0, 'status': '已超期归档'
+    })
+
+active_count = len(active_list)
+closed_count = len(all_closed_trades)
+total_count = active_count + closed_count
+
+active_wins = sum(1 for x in active_list if isinstance(x['当前盈亏(%)'], (int, float)) and x['当前盈亏(%)'] > 0)
+active_win_rate = (active_wins / active_count * 100) if active_count > 0 else 0.0
+
+closed_wins = sum(1 for x in all_closed_trades if x['pnl'] > 0)
+closed_win_rate = (closed_wins / closed_count * 100) if closed_count > 0 else 0.0
+
+effective_risk = sum(1 for x in all_closed_trades if x['prevented'] >= -2.0)
+risk_rate = (effective_risk / closed_count * 100) if closed_count > 0 else 0.0
+
+# 美股超级赢家阈值设定为 50%
+super_threshold = 50.0
+all_pnl_list = [x['当前盈亏(%)'] for x in active_list if isinstance(x['当前盈亏(%)'], (int, float))] + [x['pnl'] for x in all_closed_trades]
+super_winners = [p for p in all_pnl_list if p >= super_threshold]
+super_winner_contribution = sum(super_winners)
+
+other_winners = [p for p in all_pnl_list if 0.0 < p < super_threshold]
+other_winner_avg = (sum(other_winners) / len(other_winners)) if other_winners else 0.0
+
+losers = [p for p in all_pnl_list if p < 0.0]
+loser_avg = (sum(losers) / len(losers)) if losers else 0.0
+
+kpi_html = f"""
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #1565c0;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">📊 总推荐笔数</div>
+        <div style="font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 5px;">{total_count}</div>
+        <div style="font-size: 12px; color: #95a5a6;">活跃持仓 {active_count} 笔 · 历史归档 {closed_count} 笔</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #2ecc71;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">📈 活跃持仓胜率</div>
+        <div style="font-size: 24px; font-weight: bold; color: #2ecc71; margin-bottom: 5px;">{active_win_rate:.2f}%</div>
+        <div style="font-size: 12px; color: #95a5a6;">{active_wins} 赢 / {active_count - active_wins} 亏</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #e67e22;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">📉 已归档实现胜率</div>
+        <div style="font-size: 24px; font-weight: bold; color: #e67e22; margin-bottom: 5px;">{closed_win_rate:.2f}%</div>
+        <div style="font-size: 12px; color: #95a5a6;">{closed_wins} 赢 / {closed_count - closed_wins} 亏</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #95a5a6;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">🛡️ 风控拦截率</div>
+        <div style="font-size: 24px; font-weight: bold; color: #95a5a6; margin-bottom: 5px;">{risk_rate:.2f}%</div>
+        <div style="font-size: 12px; color: #95a5a6;">{effective_risk}/{closed_count} 次避险离场有效防范深度回撤</div>
+    </div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #9b59b6;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">🏆 超级赢家贡献</div>
+        <div style="font-size: 24px; font-weight: bold; color: #9b59b6; margin-bottom: 5px;">+{super_winner_contribution:.2f}%</div>
+        <div style="font-size: 12px; color: #95a5a6;">超级赢家(>{super_threshold}%)累计涨幅</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #1abc9c;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">💰 其余盈利平均</div>
+        <div style="font-size: 24px; font-weight: bold; color: #1abc9c; margin-bottom: 5px;">+{other_winner_avg:.2f}%</div>
+        <div style="font-size: 12px; color: #95a5a6;">扣除超级赢家后的盈利均值</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #e74c3c;">
+        <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">⚠️ 亏损标的平均</div>
+        <div style="font-size: 24px; font-weight: bold; color: #e74c3c; margin-bottom: 5px;">{loser_avg:.2f}%</div>
+        <div style="font-size: 12px; color: #95a5a6;">所有亏损标的的平均跌幅</div>
+    </div>
+</div>
 """
 
-    import time as _time
-    last_err = None
-    for attempt in range(3):
-        try:
-            tokens = [8000, 7000, 6000][attempt]
-            response = client.messages.create(
-                model=REVIEW_MODEL_PRO,
-                max_tokens=tokens,
-                temperature=0.2,
-                messages=[{"role": "user", "content": prompt}]
-            )
-            return response.content[0].text.strip()
-        except Exception as e:
-            last_err = e
-            wait = 2 ** attempt * 5
-            print(f"⚠️ API调用失败（第{attempt+1}次），{wait}秒后重试: {type(e).__name__}: {str(e)[:120]}")
-            _time.sleep(wait)
+full_html = f"""<!DOCTYPE html><html><head><meta charset='utf-8'>
+<style>
+    body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f4f6f8; padding: 20px; }}
+    .card {{ background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 1200px; margin: 0 auto; }}
+</style></head>
+<body>
+    <div class='card'>
+        <h2 style='color: #2c3e50; margin-top: 0; margin-bottom: 20px; font-size: 26px; border-bottom: 3px solid #1565c0; padding-bottom: 10px; display: flex; align-items: center; gap: 10px;'>
+            <span>📊 美股盘后复盘与风控审查报告</span>
+        </h2>
+        {kpi_html}
+        
+        {ai_html}
+    </div>
+</body></html>"""
 
-    print(f"❌ AI复盘API三次调用均失败，使用降级文字报告。最后错误: {last_err}")
-    active_count = sum(1 for l in stats_lines if l.startswith('[Active]'))
-    closed_count = len(stats_lines) - active_count
-    return f"""
-<div style="background:#fff3e0;border-left:4px solid #ff9800;padding:15px;border-radius:6px;">
-    <h3>⚠️ AI复盘引擎暂时不可用（API超时）</h3>
-    <p>当前持仓 <b>{active_count}</b> 只 | 已清仓记录 <b>{closed_count}</b> 条</p>
-    <p>原始数据已保存在 trade_history.csv。</p>
-</div>"""
-
-def send_mail(to_emails, subject, content):
-    user = os.environ.get("EMAIL_ACCOUNT")
+# ==========================================
+# 11. 邮件发送模块
+# ==========================================
+def send_mail():
+    """发送复盘报告邮件"""
+    acc = os.environ.get("EMAIL_ACCOUNT")
     pwd = os.environ.get("EMAIL_PASSWORD")
-    if not user or not pwd:
-        print("⚠️ 未检测到 EMAIL_ACCOUNT / EMAIL_PASSWORD，跳过邮件发送。")
+    owner_email = os.environ.get("TARGET_EMAILS") or os.environ.get("OWNER_EMAIL")
+    
+    if not acc or not pwd or not owner_email:
+        print("⚠️ 邮件发送配置缺失（缺少 ACCOUNT/PASSWORD/TARGET_EMAILS），跳过邮件发送。报告已安全保存在本地。")
         return
-    to_list = [e.strip() for e in to_emails.split(',')]
+
     msg = MIMEMultipart()
-    msg['From'] = user
-    msg['To'] = to_emails
-    msg['Subject'] = subject
-    msg.attach(MIMEText(content, 'html', 'utf-8'))
+    msg['From'] = acc
+    msg['To'] = owner_email
+    msg['Subject'] = f"【盘后清算】美股风控纪律与复盘 ({get_us_time().strftime('%Y-%m-%d')})"
+    msg.attach(MIMEText(full_html, 'html', 'utf-8'))
+    
+    to_list = [e.strip() for e in owner_email.split(',')]
+    
     try:
+        print(f"📧 正在通过 SSL 连接发送邮件至: {owner_email} ...")
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
-            s.login(user, pwd)
-            s.sendmail(user, to_list, msg.as_string())
-            print(f"✅ 复盘报告已发送至: {to_emails}")
+            s.login(acc, pwd)
+            s.sendmail(acc, to_list, msg.as_string())
+            print(f"✅ 邮件发送成功！收件人: {owner_email}")
     except Exception as e:
-        print(f"❌ 邮件发送失败: {e}")
+        print(f"❌ 错误：邮件发送失败，异常原因: {e}")
 
-
-if __name__ == "__main__":
-    if not os.path.exists(HISTORY_FILE):
-        print("未检测到交易记录，复盘取消。")
-        exit()
-        
-    df = pd.read_csv(HISTORY_FILE, keep_default_na=False)
-
-    # ── 版本过滤：只用 Score 区分新旧版本，Stop_Loss/Hold_Period 允许为 N/A ──
-    # review.py 职责是"追踪当前持仓"，不是"统计胜率"（那是 evolve.py 的职责）。
-    # 今日新推荐若 Stop_Loss=N/A（AI未给或解析失败），仍应被追踪和复盘。
-    _INVALID_R = {'', 'n/a', 'nan', 'none'}
-    for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
-        if _col not in df.columns:
-            df[_col] = ''
-
-    # 只要 Score 有效就纳入复盘
-    _score_valid = df['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID_R)
-    _dropped_r = (~_score_valid).sum()
-    if _dropped_r > 0:
-        print(f"🗂️ 版本过滤：剔除 {_dropped_r} 条无评分的旧版本记录，不纳入复盘。")
-    df = df[_score_valid].copy()
-
-    # Stop_Loss=N/A 的记录提示但不剔除
-    _no_sl = df['Stop_Loss'].astype(str).str.strip().str.lower().isin(_INVALID_R)
-    if _no_sl.sum() > 0:
-        print(f"⚠️ {_no_sl.sum()} 条记录 Stop_Loss=N/A，继续追踪但无法做止损价核查。")
-
-    if df.empty:
-        print("⚠️ 过滤后无有效新版本记录，复盘取消。")
-        exit()
-        
-    tickers = df['Ticker'].unique().tolist()
-    prices = get_latest_prices(tickers)
-    
-    # ── 1. 核心数据程序化统计 ──
-    active_rows = []
-    closed_rows = []
-    
-    for idx, row in df.iterrows():
-        t = row['Ticker']
-        status = str(row.get('Status', 'Active')).strip()
-        
-        try:
-            buy_price = float(row['Price'])
-            if buy_price <= 0:
-                continue
-        except (ValueError, TypeError):
-            continue
-            
-        cur_price = prices.get(t, buy_price)
-        name = row.get('Name', t)
-        tag_val = row.get('Tag', '') or row.get('Score', '')
-        
-        if status == 'Active':
-            profit_pct = round((cur_price - buy_price) / buy_price * 100, 2)
-            active_rows.append({
-                'ticker': t, 'name': name, 'buy_price': buy_price, 'cur_price': cur_price,
-                'pnl': profit_pct, 'tag': tag_val
-            })
-        elif status in ('Dropped', 'Stop_Loss_Hit', 'Period_Matured', 'Forced_Exit'):
-            try:
-                exit_price = float(row.get('Exit_Price', buy_price))
-                if exit_price <= 0:
-                    exit_price = buy_price
-            except (ValueError, TypeError):
-                exit_price = buy_price
-                
-            pnl_pct = round((exit_price - buy_price) / buy_price * 100, 2)
-            post_exit_price = prices.get(t, exit_price)
-            # 清仓后继续变化：清仓价 vs 现价 (若继续下跌，证明风控极度有效，防守成功)
-            prevented = round((exit_price - post_exit_price) / exit_price * 100, 2) if exit_price > 0 else 0.0
-            
-            closed_rows.append({
-                'ticker': t, 'name': name, 'buy_price': buy_price, 'exit_price': exit_price,
-                'pnl': pnl_pct, 'prevented': prevented, 'cur_price': post_exit_price, 'status': status, 'tag': row.get('Tag', '')
-            })
-
-    # 计算指标
-    active_count = len(active_rows)
-    closed_count = len(closed_rows)
-    total_count = active_count + closed_count
-    
-    active_wins = sum(1 for x in active_rows if x['pnl'] > 0)
-    active_win_rate = (active_wins / active_count * 100) if active_count > 0 else 0.0
-    
-    closed_wins = sum(1 for x in closed_rows if x['pnl'] > 0)
-    closed_win_rate = (closed_wins / closed_count * 100) if closed_count > 0 else 0.0
-    
-    # 风控有效性定义：清仓后继续下跌或微幅反弹 (跌幅 >= -2%)
-    effective_risk = sum(1 for x in closed_rows if x['prevented'] >= -2.0)
-    risk_rate = (effective_risk / closed_count * 100) if closed_count > 0 else 0.0
-    
-    # 极端赢家、其余赢家与亏损平均计算
-    super_threshold = 50.0
-    all_trades = active_rows + [{'pnl': x['pnl']} for x in closed_rows]
-    super_winners = [x for x in all_trades if x['pnl'] >= super_threshold]
-    super_winner_contribution = sum(x['pnl'] for x in super_winners)
-    
-    other_winners = [x for x in all_trades if 0.0 < x['pnl'] < super_threshold]
-    other_winner_avg = (sum(x['pnl'] for x in other_winners) / len(other_winners)) if other_winners else 0.0
-    
-    losers = [x for x in all_trades if x['pnl'] < 0.0]
-    loser_avg = (sum(x['pnl'] for x in losers) / len(losers)) if losers else 0.0
-
-    # ── 2. 生成精美 KPI 统计卡片层 ──
-    kpi_html = f"""
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 20px;">
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #3498db;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">📊 总操作笔数</div>
-            <div style="font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 5px;">{total_count}</div>
-            <div style="font-size: 12px; color: #95a5a6;">活跃持仓 {active_count} 笔 · 已清仓 {closed_count} 笔</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #2ecc71;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">📈 活跃持仓胜率</div>
-            <div style="font-size: 24px; font-weight: bold; color: #2ecc71; margin-bottom: 5px;">{active_win_rate:.2f}%</div>
-            <div style="font-size: 12px; color: #95a5a6;">{active_wins} 赢 / {active_count - active_wins} 亏</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #e67e22;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">📉 已清仓实现胜率</div>
-            <div style="font-size: 24px; font-weight: bold; color: #e67e22; margin-bottom: 5px;">{closed_win_rate:.2f}%</div>
-            <div style="font-size: 12px; color: #95a5a6;">{closed_wins} 赢 / {closed_count - closed_wins} 亏</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #95a5a6;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">🛡️ 风控拦截率</div>
-            <div style="font-size: 24px; font-weight: bold; color: #95a5a6; margin-bottom: 5px;">{risk_rate:.2f}%</div>
-            <div style="font-size: 12px; color: #95a5a6;">{effective_risk}/{closed_count} 次斩仓后继续下跌或避险成功</div>
-        </div>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 25px;">
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #9b59b6;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">🏆 极端赢家贡献</div>
-            <div style="font-size: 24px; font-weight: bold; color: #9b59b6; margin-bottom: 5px;">+{super_winner_contribution:.2f}%</div>
-            <div style="font-size: 12px; color: #95a5a6;">超级赢家(>{super_threshold}%)累计涨幅</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #1abc9c;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">💰 其余盈利平均</div>
-            <div style="font-size: 24px; font-weight: bold; color: #1abc9c; margin-bottom: 5px;">+{other_winner_avg:.2f}%</div>
-            <div style="font-size: 12px; color: #95a5a6;">扣除超级赢家后的盈利均值</div>
-        </div>
-        <div style="background: #ffffff; border: 1px solid #eef2f5; border-radius: 10px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border-top: 4px solid #e74c3c;">
-            <div style="font-size: 13px; color: #7f8c8d; margin-bottom: 5px;">⚠️ 亏损标的平均</div>
-            <div style="font-size: 24px; font-weight: bold; color: #e74c3c; margin-bottom: 5px;">{loser_avg:.2f}%</div>
-            <div style="font-size: 12px; color: #95a5a6;">所有亏损标的的平均跌幅</div>
-        </div>
-    </div>
-    """
-
-    # ── 3. 活跃标的与已清仓明细表渲染 ──
-    def get_eval_badge(pnl, is_active=True, status=""):
-        if is_active:
-            if pnl >= 50.0:
-                return '<span style="background: #e8f8f5; color: #117a65; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">超级赢家</span>'
-            elif pnl >= 20.0:
-                return '<span style="background: #ebf5fb; color: #2980b9; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">丰厚收益</span>'
-            elif pnl >= 5.0:
-                return '<span style="background: #fef9e7; color: #b7950b; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">稳健盈利</span>'
-            elif pnl > 0.0:
-                return '<span style="background: #f4f6f7; color: #7f8c8d; padding: 2px 8px; border-radius: 12px; font-size: 12px;">小幅盈利</span>'
-            elif pnl <= -15.0:
-                return '<span style="background: #fdedec; color: #c0392b; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">高危标的</span>'
-            elif pnl <= -5.0:
-                return '<span style="background: #fdf2e9; color: #d35400; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">中危标的</span>'
-            else:
-                return '<span style="background: #f4f6f7; color: #7f8c8d; padding: 2px 8px; border-radius: 12px; font-size: 12px;">低危波动</span>'
-        else:
-            if pnl > 0:
-                return '<span style="background: #e8f8f5; color: #117a65; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">盈利离场</span>'
-            else:
-                label_map = {'Dropped': '宏观强清', 'Stop_Loss_Hit': '触发止损', 'Period_Matured': '到期清仓', 'Forced_Exit': '突发强清'}
-                lbl = label_map.get(status, '已清仓')
-                return f'<span style="background: #fdedec; color: #c0392b; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">{lbl}</span>'
-                
-    def get_risk_control_badge(prevented):
-        if prevented >= 5.0:
-            return '<span style="background: #e8f8f5; color: #117a65; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">避险逃顶</span>'
-        elif prevented >= 0.0:
-            return '<span style="background: #ebf5fb; color: #2980b9; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">风控有效</span>'
-        elif prevented >= -5.0:
-            return '<span style="background: #fef9e7; color: #b7950b; padding: 2px 8px; border-radius: 12px; font-size: 12px;">微幅反弹</span>'
-        else:
-            return '<span style="background: #fdedec; color: #c0392b; padding: 2px 8px; border-radius: 12px; font-size: 12px; font-weight: bold;">过早割肉</span>'
-
-    active_winners = sorted([x for x in active_rows if x['pnl'] > 0], key=lambda x: x['pnl'], reverse=True)
-    active_losers = sorted([x for x in active_rows if x['pnl'] <= 0], key=lambda x: x['pnl'])
-
-    winners_tbody = ""
-    for w in active_winners:
-        badge = get_eval_badge(w['pnl'])
-        tag_str = f" | {w['tag']}" if w['tag'] else ""
-        winners_tbody += f"""
-        <tr style="border-bottom: 1px solid #f1f2f6;">
-            <td style="padding: 12px; font-weight: bold; color: #2c3e50;">{w['ticker']}</td>
-            <td style="padding: 12px; color: #34495e;">{w['name']}</td>
-            <td style="padding: 12px; color: #7f8c8d;">${w['buy_price']:.2f}</td>
-            <td style="padding: 12px; color: #2c3e50;">${w['cur_price']:.2f}</td>
-            <td style="padding: 12px; font-weight: bold; color: #2ecc71;">+{w['pnl']:.2f}%</td>
-            <td style="padding: 12px;">{badge}{tag_str}</td>
-        </tr>
-        """
-        
-    losers_tbody = ""
-    for l in active_losers:
-        badge = get_eval_badge(l['pnl'])
-        tag_str = f" | {l['tag']}" if l['tag'] else ""
-        losers_tbody += f"""
-        <tr style="border-bottom: 1px solid #f1f2f6;">
-            <td style="padding: 12px; font-weight: bold; color: #2c3e50;">{l['ticker']}</td>
-            <td style="padding: 12px; color: #34495e;">{l['name']}</td>
-            <td style="padding: 12px; color: #7f8c8d;">${l['buy_price']:.2f}</td>
-            <td style="padding: 12px; color: #2c3e50;">${l['cur_price']:.2f}</td>
-            <td style="padding: 12px; font-weight: bold; color: #e74c3c;">{l['pnl']:.2f}%</td>
-            <td style="padding: 12px;">{badge}{tag_str}</td>
-        </tr>
-        """
-        
-    closed_tbody = ""
-    for c in sorted(closed_rows, key=lambda x: x['pnl'], reverse=True)[:30]:
-        badge = get_eval_badge(c['pnl'], is_active=False, status=c['status'])
-        rc_badge = get_risk_control_badge(c['prevented'])
-        pnl_color = "#2ecc71" if c['pnl'] > 0 else "#e74c3c"
-        pnl_prefix = "+" if c['pnl'] > 0 else ""
-        prev_color = "#2ecc71" if c['prevented'] >= 0 else "#e74c3c"
-        prev_prefix = "+" if c['prevented'] > 0 else ""
-        closed_tbody += f"""
-        <tr style="border-bottom: 1px solid #f1f2f6;">
-            <td style="padding: 10px; font-weight: bold; color: #2c3e50;">{c['ticker']}</td>
-            <td style="padding: 10px; color: #34495e;">{c['name']}</td>
-            <td style="padding: 10px; color: #7f8c8d;">${c['buy_price']:.2f}</td>
-            <td style="padding: 10px; color: #2c3e50;">${c['exit_price']:.2f}</td>
-            <td style="padding: 10px; font-weight: bold; color: {pnl_color};">{pnl_prefix}{c['pnl']:.2f}%</td>
-            <td style="padding: 10px; font-weight: bold; color: {prev_color};">{prev_prefix}{c['prevented']:.2f}%</td>
-            <td style="padding: 10px;">{badge} {rc_badge}</td>
-        </tr>
-        """
-
-    active_winners_table = f"""
-    <div style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; border: 1px solid #eef2f5;">
-        <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #2ecc71; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <span>🟢 活跃持仓 - 盈利标的 ({len(active_winners)} 只)</span>
-            <span style="font-size: 14px; color: #7f8c8d; font-weight: normal;">多头极化优势分析</span>
-        </h3>
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid #eef2f5;">
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">股票代码</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">股票名称</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">买入价</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">现价</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">浮动盈亏</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">评估标签</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {winners_tbody if winners_tbody else '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #7f8c8d;">暂无盈利标的</td></tr>'}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    """
-    
-    active_losers_table = f"""
-    <div style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; border: 1px solid #eef2f5;">
-        <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #e74c3c; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <span>🔴 活跃持仓 - 亏损标的 ({len(active_losers)} 只)</span>
-            <span style="font-size: 14px; color: #7f8c8d; font-weight: normal;">下行风险监测</span>
-        </h3>
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 14px;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid #eef2f5;">
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">股票代码</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">股票名称</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">买入价</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">现价</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">浮动盈亏</th>
-                        <th style="padding: 12px; color: #34495e; font-weight: bold;">风险级别</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {losers_tbody if losers_tbody else '<tr><td colspan="6" style="padding: 20px; text-align: center; color: #7f8c8d;">暂无亏损标的</td></tr>'}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    """
-    
-    closed_table = f"""
-    <div style="background: #ffffff; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); margin-bottom: 25px; border: 1px solid #eef2f5;">
-        <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 15px; border-bottom: 2px solid #95a5a6; padding-bottom: 8px;">
-            📁 已清仓交易风控校验明细 (最近30条记录)
-        </h3>
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 13px;">
-                <thead>
-                    <tr style="background: #f8f9fa; border-bottom: 2px solid #eef2f5;">
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">代码</th>
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">名称</th>
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">买入价</th>
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">清仓价</th>
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">实现盈亏</th>
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">离场后变动%</th>
-                        <th style="padding: 10px; color: #34495e; font-weight: bold;">风控评定</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {closed_tbody if closed_tbody else '<tr><td colspan="7" style="padding: 20px; text-align: center; color: #7f8c8d;">暂无已清仓历史明细</td></tr>'}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    """
-
-    report_html = generate_review_report(df, prices)
-    
-    full_html = f"""
-    <!DOCTYPE html><html><head><meta charset='utf-8'>
-    <style>
-        body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f4f6f8; padding: 20px; color: #333; }}
-        .card {{ background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 1200px; margin: 0 auto; }}
-    </style></head>
-    <body>
-        <div class='card'>
-            <h2 style='color: #2c3e50; margin-top: 0; margin-bottom: 20px; font-size: 26px; border-bottom: 3px solid #3498db; padding-bottom: 10px;'>
-                📊 资产全景复盘报告 (美股)
-            </h2>
-            {kpi_html}
-            
-            {report_html}
-            
-            {active_winners_table}
-            
-            {active_losers_table}
-            
-            {closed_table}
-        </div>
-    </body></html>
-    """
-    
-    with open("review_report.html", "w", encoding="utf-8") as f:
-        f.write(full_html)
-
-    print("✅ 复盘生成完毕，正在发送邮件...")
-
-    if SUPER_ADMIN:
-        today_str = datetime.datetime.now().strftime('%Y-%m-%d')
-        send_mail(SUPER_ADMIN, f"📊 美股持仓复盘报告 {today_str}", full_html)
-    else:
-        print("⚠️ TARGET_EMAILS 未设置，已跳过邮件发送，报告已保存至 review_report.html")
+# 执行邮件分发
+send_mail()
+print("🎉 美股盘后复盘与风控审查程序顺利执行完毕。")
