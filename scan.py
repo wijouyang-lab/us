@@ -174,8 +174,6 @@ def get_megacap_breaking_news():
     return ""
 
 
-
-
 # ==========================================
 # 新增功能：引入全球大宗商品、国债收益率及核心大盘指数的多维宏观数据
 # ==========================================
@@ -430,6 +428,7 @@ def build_stock_pool(tickers):
                 "ts_code":         ts_code,
                 "Name":            name,
                 "Price":           round(latest['Close'], 2),
+                "Open_Price":      round(latest['Open'], 2),  # 修正：补充当天的开盘价格字段
                 "RSI":             round(latest['RSI'], 1),
                 "乖离率(%)":       round(bias * 100, 2),
                 "MACD趋势":        macd_trend,
@@ -585,8 +584,6 @@ def screen_technical_setups(pool_data):
             weekly_tag = "🟢周日共振" if s.get("周线共振") else "🔴仅日线"
             print(f"   {s['Name']}({s['Ticker']}) 技术{s['技术评分']}分 {weekly_tag} | {' + '.join(s.get('技术信号',[]))}")
     return sector_summary
-
-
 
 
 # ==========================================
@@ -834,7 +831,7 @@ def get_us_sector_performance():
 
     for ticker, desc in sector_map.items():
         try:
-            url = f"https://stooq.com/q/d/l/?s={ticker.lower()}.us&d1={three_days_ago.replace('-','')}&d2={yesterday.replace('-','')}&i=d"
+            url = f"[https://stooq.com/q/d/l/?s=](https://stooq.com/q/d/l/?s=){ticker.lower()}.us&d1={three_days_ago.replace('-','')}&d2={yesterday.replace('-','')}&i=d"
             req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
             with urllib.request.urlopen(req, timeout=8) as resp:
                 content = resp.read().decode('utf-8')
@@ -1611,6 +1608,64 @@ def build_sell_signal_card(dropped_info, rule_sell_signals):
 """
 
 
+# ==========================================
+# 0d. 统一渲染"当前活跃持仓"卡片
+# ==========================================
+def build_current_holdings_card(current_prices_map):
+    """
+    读取活跃持仓并生成卡片，解决"当天显示的持仓也没有"的问题。
+    """
+    log_file = "trade_history.csv"
+    if not os.path.exists(log_file):
+        return ""
+    try:
+        df = pd.read_csv(log_file, keep_default_na=False)
+        active_rows = df[df['Status'] == 'Active']
+        if active_rows.empty:
+            return ""
+        rows_html = ""
+        for _, row in active_rows.iterrows():
+            ticker = row['Ticker']
+            try:
+                buy_price = float(row['Price']) if str(row['Price']).strip() else 0.0
+            except ValueError:
+                buy_price = 0.0
+                
+            cur_price = current_prices_map.get(ticker, buy_price)
+            pnl_pct = round(((cur_price - buy_price) / buy_price) * 100, 2) if buy_price > 0 else 0.0
+            pnl_color = "#d32f2f" if pnl_pct >= 0 else "#388e3c"
+            
+            rows_html += f'''
+            <tr style="border-bottom:1px solid #c8e6c9;">
+                <td style="padding:8px 6px;"><b>{row.get("Name", ticker)} ({ticker})</b></td>
+                <td style="padding:8px 6px;">${buy_price}</td>
+                <td style="padding:8px 6px;">${cur_price} (<span style="color:{pnl_color};font-weight:bold;">{pnl_pct:+.2f}%</span>)</td>
+                <td style="padding:8px 6px;">{row["Date"]}</td>
+                <td style="padding:8px 6px;">{row.get("Hold_Period", "N/A")}</td>
+                <td style="padding:8px 6px;">{row.get("Stop_Loss", "N/A")}</td>
+            </tr>'''
+            
+        return f'''
+<div style="background:#e8f5e9; border-left:6px solid #2e7d32; padding:20px; margin-bottom:25px; border-radius:8px;">
+    <h3 style="margin:0 0 12px 0; color:#1b5e20;">🛡️ 当前活跃持仓 (Active Holdings)</h3>
+    <table style="width:100%; border-collapse:collapse; font-size:14px;">
+        <tr style="text-align:left; color:#1b5e20; border-bottom:2px solid #a5d6a7;">
+            <th style="padding:6px;">标的</th>
+            <th style="padding:6px;">买入价(开盘)</th>
+            <th style="padding:6px;">现价 (盈亏)</th>
+            <th style="padding:6px;">买入日期</th>
+            <th style="padding:6px;">持股周期</th>
+            <th style="padding:6px;">止损价</th>
+        </tr>
+        {rows_html}
+    </table>
+</div>
+'''
+    except Exception as e:
+        print(f"⚠️ 生成持仓卡片失败: {e}")
+        return ""
+
+
 def send_mail(to_emails, subject, content):
     user, pwd = os.environ.get("EMAIL_ACCOUNT"), os.environ.get("EMAIL_PASSWORD")
     if not user: return
@@ -1654,7 +1709,7 @@ if __name__ == "__main__":
     # current_prices 是阶段0a已经为全部活跃持仓拉取好的实时价，阶段0b直接复用，不再重新请求一轮
     restricted_tickers, dropped_info, current_prices = pre_scan_portfolio_review(combined_news, macro_market)
 
-    # 步骤 0b：规则驱动卖出信号检测（止损触发 / 持有到期）
+    # 步骤 0b：规则驱动卖出信号检测（止损触发 /持有到期）
     # exclude_tickers 只应排除"本轮阶段0a刚强清掉的"标的（dropped_info），
     # 不能传 restricted_tickers（那是全部当前持仓，传错会导致这里对谁都不生效）。
     rule_sell_signals, removed_tickers_rule = check_rule_based_sell_signals(
@@ -1665,6 +1720,9 @@ if __name__ == "__main__":
 
     # 步骤 0c：生成卖出信号卡片（两类信号合并）
     sell_signal_card_html = build_sell_signal_card(dropped_info, rule_sell_signals)
+
+    # 步骤 0d：生成当前活跃持仓卡片
+    current_holdings_card_html = build_current_holdings_card(current_prices)
 
     raw_tickers = get_scan_pool()
 
@@ -1685,10 +1743,10 @@ if __name__ == "__main__":
 
     if not pool_data:
         print("无合规扫描数据，今日扫描提前安全熔断。")
-        # 兜底：即使主选股流程因数据问题中止，只要有卖出信号也要单独发邮件
-        if sell_signal_card_html:
-            fallback_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>⚠️ 今日选股流程未完成，仅推送卖出信号</h1>{sell_signal_card_html}</div></body></html>"
-            send_mail(SUPER_ADMIN, f"【美股卖出信号】{datetime.date.today()}", fallback_html)
+        # 兜底：即使主选股流程因数据问题中止，只要有卖出信号或持仓数据也要单独发邮件
+        if sell_signal_card_html or current_holdings_card_html:
+            fallback_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>⚠️ 今日选股流程未完成，仅推送风控信号与持仓</h1>{sell_signal_card_html}{current_holdings_card_html}</div></body></html>"
+            send_mail(SUPER_ADMIN, f"【美股风控信号与持仓】{datetime.date.today()}", fallback_html)
         exit(0)
 
     # 技术形态筛选：40分客观评分 + 周日共振过滤 + GICS板块归类
@@ -1698,8 +1756,8 @@ if __name__ == "__main__":
 
     # 生成报告时 dropped_info 已经通过卡片注入，不再重复注入
     ai_generated_html = generate_ai_report(pool_data, combined_news, macro_market, dropped_info, combined_embargo_text, sector_tech_data)
-    # 卖出信号卡片插在最顶部（优先级高于 AI 报告内容）
-    ai_generated_html = sell_signal_card_html + ai_generated_html
+    # 卖出信号卡片和持仓卡片插在最顶部（优先级高于 AI 报告内容）
+    ai_generated_html = sell_signal_card_html + current_holdings_card_html + ai_generated_html
     full_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>\n{ai_generated_html}\n<p style='text-align:center; color:#999; font-size:12px; margin-top:40px;'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
     try:
@@ -1798,7 +1856,8 @@ if __name__ == "__main__":
                 f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_Price,Status\n")
             ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
             for i in chosen_to_write:
-                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Price','')},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')},N/A,N/A,Active\n")
+                # 在第 6 个字段（原本是 Price）精准写入 Open_Price 确保为开盘价入账
+                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Open_Price', i.get('Price',''))},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')},N/A,N/A,Active\n")
         print(f"共安全记账 {len(chosen_to_write)} 条全新核心优选数据（过滤后）。")
     except Exception as e:
         print(f"新推荐数据入账失败: {e}")
