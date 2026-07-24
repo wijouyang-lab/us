@@ -6,7 +6,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-05-27,TSLA,TSLA,Observation,79.8,433.59,60.8,5.24,观望等待回撤,跌破 415.00 美元 6. UIPATH (PATH) - 评分:79.5分:,2026-06-30,411.84,Stop_Loss_Hit
 2026-05-27,PATH,PATH,Observation,79.5,11.09,56.7,5.47,5-7天,跌破 10.20 美元 7. 派乐腾 (PTON) - 评分:77.4分:,2026-06-30,10.68,Period_Matured
 2026-05-27,PTON,PTON,Observation,77.4,5.77,64.9,7.57,观望,跌破 5.20 美元 8. OPENDOOR (OPEN) - 评分:76.8分:,N/A,N/A,Active
-2026-05-27,OPEN,OPEN,Observation,76.8,4.48,40.8,-8.18,坚决观望,若持有则跌破 4.00 必须斩仓 9. TERAWULF (WULF) - 评分:74.0分:,N/A,N/A,Active
+2026-05-27,OPEN,OPEN,Observation,76.8,4.48,40.8,-8.18,坚决观望,若持有则跌破 4.00 必须斩仓 9. TERAWULF (WULF) - 评分:74.0分:,2026-07-24,3.85,Dropped
 2026-05-27,WULF,WULF,Observation,74.0,25.18,63.9,11.02,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,25.58,Stop_Loss_Hit
 2026-05-27,PLUG,PLUG,Observation,73.3,3.84,63.4,11.68,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,2.59,Stop_Loss_Hit
 2026-05-27,WMT,WMT,Trap_Warning,-33.2,118.57,31.8,-8.19,10-15天,跌破 255.00 美元（约-4%）,2026-06-30,114.6,Stop_Loss_Hit
@@ -51,7 +51,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-06-03,GRAB,GRAB,Core_Dragon,84.8,3.6,46.3,-0.19,5-15天,N/A,2026-06-30,3.74,Stop_Loss_Hit
 2026-06-03,NVDA,NVDA,Core_Dragon,82.8,222.82,58.8,2.22,5-15天,N/A,2026-07-08,196.93,Period_Matured
 2026-06-03,SRXH,SRXH,Observation,78.9,0.13,54.2,6.12,观望,N/A,2026-06-30,0.09,Dropped
-2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,观望,N/A,N/A,N/A,Active
+2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,观望,N/A,2026-07-24,3.85,Dropped
 2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,N/A,2026-06-30,45.91,Period_Matured
 2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,N/A,2026-06-30,16.81,Stop_Loss_Hit
 2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,N/A,2026-06-30,24.83,Stop_Loss_Hit
@@ -63,7 +63,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-06-03,GRAB,GRAB,Core_Dragon,84.8,3.6,46.3,-0.19,5-15天,$34.80,2026-06-30,3.74,Stop_Loss_Hit
 2026-06-03,NVDA,NVDA,Core_Dragon,82.8,222.82,58.8,2.22,5-15天,$34.80,2026-07-08,196.93,Period_Matured
 2026-06-03,SRXH,SRXH,Observation,78.9,0.13,54.2,6.12,观望,$0.11,2026-06-30,0.09,Dropped
-2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,N/A,$4.50,N/A,N/A,Active
+2026-06-03,OPEN,OPEN,Observation,72.5,5.41,63.3,12.53,N/A,$4.50,2026-07-24,3.85,Dropped
 2026-06-03,IREN,IREN,Observation,70.7,66.6,63.1,14.34,5-15天,$34.80,2026-06-30,45.91,Period_Matured
 2026-06-03,RIVN,RIVN,Observation,66.3,17.29,69.0,18.72,5-15天,$34.80,2026-06-30,16.81,Stop_Loss_Hit
 2026-06-03,CIFR,CIPHER MINING,Observation,64.7,26.29,68.8,20.31,5-15天,$34.80,2026-06-30,24.83,Stop_Loss_Hit
