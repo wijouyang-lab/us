@@ -1721,8 +1721,8 @@ if __name__ == "__main__":
     # 步骤 0c：生成卖出信号卡片（两类信号合并）
     sell_signal_card_html = build_sell_signal_card(dropped_info, rule_sell_signals)
 
-    # 步骤 0d：生成当前活跃持仓卡片
-    current_holdings_card_html = build_current_holdings_card(current_prices)
+    # 步骤 0d：当前活跃持仓卡片已取消在盘前邮件中展示（build_current_holdings_card 函数保留，未来如需恢复可直接调用）
+    current_holdings_card_html = ""
 
     raw_tickers = get_scan_pool()
 
