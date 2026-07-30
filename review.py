@@ -62,17 +62,24 @@ except Exception as e:
 # 3. 版本过滤与字段清洗校验
 # ==========================================
 print("🔍 正在进行版本过滤与字段合法性校验...")
+# 改用 Hold_Period 判断是否为新版本完整记录（原来用 Score，但 Score 解析曾有正则bug
+# 导致恒为N/A，会把本该正常追踪的记录当"旧版本"误删；Hold_Period 没受过那个bug影响）。
 _INVALID = {'', 'n/a', 'nan', 'none'}
 for _col in ['Hold_Period', 'Stop_Loss', 'Score']:
     if _col not in recent_picks.columns:
         recent_picks[_col] = ''
 
-# 过滤掉无评分的旧版本记录
-_score_valid = recent_picks['Score'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID)
-_dropped = (~_score_valid).sum()
+_schema_valid = recent_picks['Hold_Period'].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID)
+_dropped = (~_schema_valid).sum()
 if _dropped > 0:
-    print(f"🗂️ 版本过滤提示：成功剔除 {_dropped} 条无评分的旧版本记录，不纳入本次复盘。")
-recent_picks = recent_picks[_score_valid].copy()
+    print(f"🗂️ 版本过滤提示：成功剔除 {_dropped} 条 Hold_Period 缺失的旧版本/不完整记录，不纳入本次复盘。")
+recent_picks = recent_picks[_schema_valid].copy()
+
+# Score=N/A 仅提示，不剔除（可能只是历史评分bug导致这一列是N/A）
+_no_score = recent_picks['Score'].astype(str).str.strip().str.lower().isin(_INVALID)
+if _no_score.sum() > 0:
+    tickers_no_score = recent_picks.loc[_no_score, 'Ticker'].tolist()
+    print(f"⚠️ 提示：以下 {_no_score.sum()} 条记录 Score=N/A（可能是历史评分bug所致），仍会继续追踪：{tickers_no_score[:10]}")
 
 # 检查 Stop_Loss 是否为 N/A
 _no_stoploss = recent_picks['Stop_Loss'].astype(str).str.strip().str.lower().isin(_INVALID)
