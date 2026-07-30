@@ -1682,6 +1682,104 @@ def send_mail(to_emails, subject, content):
     except Exception as e:
         print(f"发送失败 ({to_emails}): {e}")
 
+# ==========================================
+# 5b. 入库入账：把 AI 报告逐项匹配回 pool_data（结构化切块版）
+# ==========================================
+def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
+    """
+    原来的实现是在整篇清洗后的纯文本里 find 票名/代码，再用"前300字符+后200字符"的
+    固定窗口去猜这只票属于 Top1-5 / 观察池 / 诱多对照组中的哪一块。这在 Top1-5 小节里
+    只有开头一次"Top 1-5"字样、后面几张卡片离标题太远时会导致 Top2-5 全部判不到标签
+    （连候选池 chosen 都进不去），评分正则也没处理"评分:[74]/100"里的方括号，导致
+    Score 恒为 N/A、写账时又被过滤掉——两个问题叠加，Top1-5 基本无法正常入账。
+
+    这里改成按 HTML 结构先切成"核心区 / 观察池 / 诱多对照组"三个互不重叠的区域，
+    核心区再按每张 <div class="top-card..."> 卡片切块，观察池/诱多对照组按每个
+    <li> 切块，然后只在每只票"自己的"那一小块里查找和解析，不再靠字符数猜。
+    """
+    def clean_fragment(text):
+        t = re.sub(r'<[^>]+>', ' ', text)
+        return re.sub(r'\s+', ' ', t).strip()
+
+    def title_hit(fragment, name, ticker):
+        # 括号包代码是最强信号（"(NVDA)"基本不会在别家票的正文分析里出现）；
+        # 名称兜底收紧到最前约30字符，只覆盖标题行，避免正文提到别家票名时串号。
+        head = fragment[:110]
+        if f"({ticker})" in head:
+            return True
+        if '.' in ticker and f"({ticker.split('.')[0]})" in head:
+            return True
+        return name in fragment[:30]
+
+    obs_start = ai_generated_html.find('class="compare-card"')
+    if obs_start == -1:
+        obs_start = ai_generated_html.find('观察池')
+    if obs_start == -1:
+        obs_start = len(ai_generated_html)
+
+    trap_start = ai_generated_html.find('诱多对照组')
+    if trap_start == -1 or trap_start < obs_start:
+        trap_start = len(ai_generated_html)
+
+    core_zone_raw = ai_generated_html[:obs_start]
+    obs_zone_raw = ai_generated_html[obs_start:trap_start]
+    trap_zone_raw = ai_generated_html[trap_start:]
+
+    core_cards = [clean_fragment(c) for c in re.split(r'(?=<div class="top-card)', core_zone_raw) if 'top-card' in c]
+    obs_items = [clean_fragment(c) for c in re.split(r'(?=<li>)', obs_zone_raw) if c.strip().startswith('<li>')]
+    trap_items = [clean_fragment(c) for c in re.split(r'(?=<li>)', trap_zone_raw) if c.strip().startswith('<li>')]
+
+    print(f"📎 报告结构切分：核心卡片 {len(core_cards)} 张 | 观察池 {len(obs_items)} 条 | 诱多对照组 {len(trap_items)} 条")
+
+    chosen = []
+    for item in pool_data:
+        name, ticker = str(item['Name']), str(item['Ticker'])
+
+        tag, chunk = None, None
+        for card in core_cards:
+            if title_hit(card, name, ticker):
+                tag, chunk = "Core_Dragon", card
+                break
+        if tag is None:
+            for li in obs_items:
+                if title_hit(li, name, ticker):
+                    tag, chunk = "Observation", li
+                    break
+        if tag is None:
+            for li in trap_items:
+                if title_hit(li, name, ticker):
+                    tag, chunk = "Trap_Warning", li
+                    break
+
+        if tag is None:
+            continue
+        if tag == "Trap_Warning":
+            continue
+
+        period_match = re.search(r'周期\s*[:：]\s*\[?(\d+[-~]\d+天|\d+天|观望)', chunk)
+        sl_match = re.search(r'止损\s*[:：]\s*\[?(\$?[\d\.]+[元%]?|-[\d\.]+%?)', chunk)
+
+        if tag == "Observation":
+            hold_period = "观望"
+            stop_loss = "观望"
+            score = "N/A"
+        else:
+            hold_period = period_match.group(1).strip() if period_match else "5-10天"
+            stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + default_stop_loss_pct / 100), 2)}"
+            # 修复：原正则 \[?(\d{1,3})\s*/\s*100 没处理"评分:[74]/100"里数字后面的"]"，
+            # 导致 AI 严格按要求写的带方括号格式永远匹配不上，Score 恒为 N/A。这里补上可选的 \]?。
+            score_match = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\]?\s*/\s*100', chunk)
+            score = score_match.group(1).strip() if score_match else "N/A"
+
+        item['Tag'] = tag
+        item['Hold_Period'] = hold_period
+        item['Stop_Loss'] = stop_loss
+        item['Score'] = score
+        chosen.append(item)
+
+    return chosen
+
+
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
 
@@ -1721,7 +1819,8 @@ if __name__ == "__main__":
     # 步骤 0c：生成卖出信号卡片（两类信号合并）
     sell_signal_card_html = build_sell_signal_card(dropped_info, rule_sell_signals)
 
-    # 步骤 0d：当前活跃持仓卡片已取消在盘前邮件中展示（build_current_holdings_card 函数保留，未来如需恢复可直接调用）
+    # 步骤 0d：当前活跃持仓卡片已按要求取消在盘前邮件中展示
+    # （build_current_holdings_card 函数保留，未来如需恢复只需还原下一行为函数调用）
     current_holdings_card_html = ""
 
     raw_tickers = get_scan_pool()
@@ -1770,55 +1869,8 @@ if __name__ == "__main__":
     mail_subject = f"【宏观驱动美股版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
 
-    # 入库入账
-    chosen = []
-    clean_html = re.sub(r'<[^>]+>', ' ', ai_generated_html)
-    clean_html = re.sub(r'\s+', ' ', clean_html)
-
-    for item in pool_data:
-        ticker_str = str(item['Name'])
-        idx = clean_html.find(ticker_str)
-        if idx == -1:
-            ticker_str = str(item['Ticker'])
-            idx = clean_html.find(ticker_str)
-        if idx == -1:
-            continue
-
-        chunk = clean_html[idx:idx+1500]
-        context = clean_html[max(0, idx-300):idx] + chunk[:200]
-
-        tag = None
-        if "宏观主线优选" in context or "core-card" in context or "Top 1" in context or "Top 2" in context or "Top 3" in context or "Top 4" in context or "Top 5" in context:
-            tag = "Core_Dragon"
-        elif "观察池" in context or "Rank 6" in context or "Rank 7" in context or "Rank 8" in context or "Rank 9" in context or "Rank 10" in context or "Rank 11" in context or "Rank 12" in context:
-            tag = "Observation"
-        elif "诱多" in context or "坚决空仓" in context:
-            tag = "Trap_Warning"
-
-        if tag is None:
-            continue
-
-        if tag == "Trap_Warning":
-            continue
-
-        period_match = re.search(r'周期\s*[:：]\s*\[?(\d+[-~]\d+天|\d+天|观望)', chunk)
-        sl_match = re.search(r'止损\s*[:：]\s*\[?(\$?[\d\.]+[元%]?|-[\d\.]+%?)', chunk)
-
-        if tag == "Observation":
-            hold_period = "观望"
-            stop_loss = "观望"
-            score = "N/A"
-        else:
-            hold_period = period_match.group(1).strip() if period_match else "5-10天"
-            stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + DEFAULT_STOP_LOSS_PCT / 100), 2)}"
-            score_match = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\s*/\s*100', chunk)
-            score = score_match.group(1).strip() if score_match else "N/A"
-
-        item['Tag'] = tag
-        item['Hold_Period'] = hold_period
-        item['Stop_Loss'] = stop_loss
-        item['Score'] = score
-        chosen.append(item)
+    # 入库入账（结构化切块匹配，见 match_pool_to_report 函数注释）
+    chosen = match_pool_to_report(pool_data, ai_generated_html, DEFAULT_STOP_LOSS_PCT)
 
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
