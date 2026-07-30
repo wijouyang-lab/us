@@ -241,7 +241,7 @@ for orig_ticker, group in recent_picks.groupby('Ticker'):
         rec_price = 0.0
 
     if hold_days is None:
-        print(f"⚠️ 标的 [{orig_ticker}] 持股周期为 N/A，按要求从复盘中剔除，不纳入活跃列表。")
+        print(f"⏭️ 标的 [{orig_ticker}] 持股周期为 N/A，按要求从复盘列表中剔除。")
         continue
 
     rec_date_str = first_row['Date'].strftime('%Y-%m-%d')
