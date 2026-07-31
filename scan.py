@@ -1384,7 +1384,7 @@ MACD信号优先级（从高到低）：
     ai_html = ""
     with client.messages.stream(
         model=TARGET_MODEL,
-        max_tokens=80000,
+        max_tokens=50000,
         temperature=0.25,
         messages=[{"role": "user", "content": prompt}]
     ) as stream:
@@ -1875,10 +1875,13 @@ if __name__ == "__main__":
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
-        # ── 写账前过滤：剔除已 Dropped（斩仓出局）的 ticker，历史行保留不动供胜率计算 ──
+        # ── 写账前过滤：剔除已永久冻结的 ticker，历史行保留不动供胜率计算 ──
         # 同时过滤三字段不完整的 chosen 项，确保只有新版本有效推荐才写入。
+        # 冻结政策与A股一侧保持一致：到期(Period_Matured)是正常退出，不冻结、允许后续重新入选；
+        # Dropped（AI判定突发利空/逻辑证伪强制离场）和 Stop_Loss_Hit（止损离场）都是"出了问题"才退出，
+        # 永久冻结。原来这里只冻结了 Dropped，Stop_Loss_Hit 一直没被冻结，这次一并补上。
         frozen_tickers: set = set()
-        FROZEN_STATUSES = {'Dropped'}
+        FROZEN_STATUSES = {'Dropped', 'Stop_Loss_Hit'}
         _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
         if not need_header:
             try:
@@ -1888,7 +1891,7 @@ if __name__ == "__main__":
                         df_hist_check.loc[df_hist_check['Status'].isin(FROZEN_STATUSES), 'Ticker'].astype(str)
                     )
                     if frozen_tickers:
-                        print(f"🔒 写账过滤：检测到 {len(frozen_tickers)} 只已斩仓标的 {frozen_tickers}，本次不追加新行（历史买卖价保留）")
+                        print(f"🔒 写账过滤：检测到 {len(frozen_tickers)} 只永久冻结标的（斩仓/止损）{frozen_tickers}，本次不追加新行（历史买卖价保留）")
             except Exception as e:
                 print(f"⚠️ 写账过滤读取 trade_history.csv 失败，不执行冻结过滤: {e}")
 
