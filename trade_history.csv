@@ -196,10 +196,15 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-06-26,MU,Micron Technology,Observation,N/A,1213.56,64.5,18.4,观望,观望,2026-07-06,975.56,Stop_Loss_Hit
 2026-06-26,ORCL,Oracle Corporation,Core_Dragon,N/A,152.46,30.9,-23.55,10-20天,$505,N/A,N/A,Active
 2026-06-26,AMD,Advanced Micro Devices,Core_Dragon,N/A,532.57,58.5,3.97,10-20天,$505,N/A,N/A,Active
-2026-06-26,LRCX,Lam Research,Observation,N/A,401.82,64.8,14.0,观望,观望,N/A,N/A,Active
+2026-06-26,LRCX,Lam Research,Observation,N/A,401.82,64.8,14.0,观望,观望,2026-08-03,293.02,Dropped
 2026-07-30,KVUE,Kenvue,Core_Dragon,83,19.58,64.5,2.67,21-28天,$18.50,N/A,N/A,Active
 2026-07-30,FCX,Freeport-McMoRan,Core_Dragon,71,60.8,44.8,-1.39,7-14天,$56.50,N/A,N/A,Active
 2026-07-30,MDLZ,Mondelez International,Core_Dragon,82,63.79,66.4,7.8,14-21天,$61.50,N/A,N/A,Active
 2026-07-30,GEHC,GE HealthCare,Core_Dragon,88,69.32,68.8,12.47,14-21天,$64.00,N/A,N/A,Active
 2026-07-31,INTC,Intel,Core_Dragon,72,86.51,40.5,-10.66,14-21天,$86.5,N/A,N/A,Active
-2026-07-31,LRCX,Lam Research,Core_Dragon,74,318.29,44.5,-6.88,7-14天,$283,N/A,N/A,Active
+2026-07-31,LRCX,Lam Research,Core_Dragon,74,318.29,44.5,-6.88,7-14天,$283,2026-08-03,293.02,Dropped
+2026-08-03,GOOG,Alphabet Inc. (Class C),Core_Dragon,75,340.07,55.2,2.8,14-21天,$340,N/A,N/A,Active
+2026-08-03,CMCSA,Comcast,Core_Dragon,72,23.44,53.0,1.96,14-21天,$22.1,N/A,N/A,Active
+2026-08-03,VTRS,Viatris,Core_Dragon,71,17.65,59.1,2.76,14-21天,$16.2,N/A,N/A,Active
+2026-08-03,WFC,Wells Fargo,Core_Dragon,70,86.0,53.1,-0.24,14-21天,$79.5,N/A,N/A,Active
+2026-08-03,BMY,Bristol Myers Squibb,Core_Dragon,78,65.0,71.4,8.05,14-21天,$60.5,N/A,N/A,Active
