@@ -1284,32 +1284,32 @@ MACD信号优先级（从高到低）：
 2. 同一只股票绝对不能重复出现。
 3. 风控底线格式：周期:[X-Y天] | 止损:[具体价格或百分比]。
 
-【严格按以下HTML骨架直出，不加markdown外框，Top1-5每只都要按这个模板写满】：
+【严格按以下HTML骨架直出，不加markdown外框，Top1-5每只都要按这个模板写满；括号里的字数是上限不是下限，越精简越好，禁止凑字数】：
 
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #0d47a1;">🌍 今日产业链主线研判</h3>
-    <p><b>主线1：</b>(事件 → 传导逻辑 → 直接受益 → 二级受益，不少于150字)</p>
-    <p><b>主线2：</b>(同上，如无第二条主线则说明)</p>
-    <p><b>今日雷区：</b>(哪些板块/标的因宏观逆风、负面新闻或技术超买必须回避)</p>
+    <p><b>主线1：</b>(事件 → 传导逻辑 → 直接受益 → 二级受益，80字以内)</p>
+    <p><b>主线2：</b>(同上，如无第二条主线则说明，40字以内)</p>
+    <p><b>今日雷区：</b>(哪些板块/标的因宏观逆风、负面新闻或技术超买必须回避，40字以内)</p>
 </div>
 
 <h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 产业链主线优选 (Top 1-5 详细分析)</h2>
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">1. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者，不少于100字)</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (基于提供的新闻标题，逐条点评是否有风险，至少提及2-3条具体新闻内容)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD数值具体分析，说明为何这个时点是安全的入场点)</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — [一句话说明评分理由：逻辑链是否直接、新闻是否强力佐证、技术是否健康]</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者，50字以内)</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (基于提供的新闻标题，点评是否有风险，提及1-2条最关键的新闻内容，25字以内)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD数值具体分析，说明为何这个时点是安全的入场点，25字以内)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — [一句话说明评分理由，15字以内]</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(明确建议，给出具体strike和expiry时间窗口)</li><li><b>期权组合构建：</b>(单腿买入还是价差防守，说明理由)</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(明确给出具体strike和expiry时间窗口，20字以内)</li><li><b>期权组合构建：</b>(单腿买入还是价差防守，说明理由，20字以内)</li></ul>
     </div>
 </div>
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">2. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度，50字以内)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
@@ -1322,7 +1322,7 @@ MACD信号优先级（从高到低）：
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">3. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度，50字以内)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
@@ -1335,7 +1335,7 @@ MACD信号优先级（从高到低）：
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">4. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度，50字以内)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
@@ -1348,7 +1348,7 @@ MACD信号优先级（从高到低）：
 
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">5. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度)</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (同上详细程度，50字以内)</p>
     <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
     <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
     <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
@@ -1362,7 +1362,7 @@ MACD信号优先级（从高到低）：
 <div class="compare-card">
     <div class="compare-title">🎖️ 观察池 - 逻辑对 but 技术未到位 (Rank 6-12)</div>
     <ul>
-        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑) <span style="color: #2e7d32;">新闻面：</span>(是否干净) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
+        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑，15字以内) <span style="color: #2e7d32;">新闻面：</span>(是否干净，10字以内) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱，10字以内) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
         <li><b>7. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
         <li><b>8. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
         <li><b>9. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
@@ -1375,11 +1375,12 @@ MACD信号优先级（从高到低）：
 <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
     <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（逻辑或技术或新闻面有硬伤，严禁接盘）</h3>
     <ul>
-        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
+        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(15字以内) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
         <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
     </ul>
 </div>
 """
+
 
     ai_html = ""
     with client.messages.stream(
@@ -1875,29 +1876,47 @@ if __name__ == "__main__":
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
-        # ── 写账前过滤：剔除已永久冻结的 ticker，历史行保留不动供胜率计算 ──
-        # 同时过滤三字段不完整的 chosen 项，确保只有新版本有效推荐才写入。
-        # 冻结政策与A股一侧保持一致：到期(Period_Matured)是正常退出，不冻结、允许后续重新入选；
-        # Dropped（AI判定突发利空/逻辑证伪强制离场）和 Stop_Loss_Hit（止损离场）都是"出了问题"才退出，
-        # 永久冻结。原来这里只冻结了 Dropped，Stop_Loss_Hit 一直没被冻结，这次一并补上。
-        frozen_tickers: set = set()
+        # ── 写账前过滤：与A股一侧保持一致的冻结政策 ──
+        # 不再是"曾经Dropped/止损过就永久拉黑"，改成不限时间、但要求这次评分超过它
+        # 历史所有"离场失败"记录里最高分 + REQUALIFY_MARGIN 才能重新入选。
+        # Period_Matured（到期，正常退出）不计入"失败"，不受此限制，本来就没被冻结过。
+        # 若历史失败记录 Score 缺失（比如踩到了之前的评分正则bug）无法验证是否达标，
+        # 保守起见记为需要 inf 分（等于继续锁死）。
         FROZEN_STATUSES = {'Dropped', 'Stop_Loss_Hit'}
+        REQUALIFY_MARGIN = 10  # 需要比历史最高失败分再高出多少分才能重新入选，可调整
         _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
+        frozen_min_score: dict = {}
         if not need_header:
             try:
                 df_hist_check = pd.read_csv(log_file, on_bad_lines='skip', keep_default_na=False)
-                if 'Status' in df_hist_check.columns and 'Ticker' in df_hist_check.columns:
-                    frozen_tickers = set(
-                        df_hist_check.loc[df_hist_check['Status'].isin(FROZEN_STATUSES), 'Ticker'].astype(str)
-                    )
-                    if frozen_tickers:
-                        print(f"🔒 写账过滤：检测到 {len(frozen_tickers)} 只永久冻结标的（斩仓/止损）{frozen_tickers}，本次不追加新行（历史买卖价保留）")
+                if {'Status', 'Ticker', 'Score'}.issubset(df_hist_check.columns):
+                    bad_exits = df_hist_check[df_hist_check['Status'].isin(FROZEN_STATUSES)].copy()
+                    bad_exits['Score_num'] = pd.to_numeric(bad_exits['Score'], errors='coerce')
+                    for tk, g in bad_exits.groupby('Ticker'):
+                        tk = str(tk)
+                        if g['Score_num'].notna().any():
+                            frozen_min_score[tk] = float(g['Score_num'].max()) + REQUALIFY_MARGIN
+                        else:
+                            frozen_min_score[tk] = float('inf')
+                    if frozen_min_score:
+                        locked = sum(1 for v in frozen_min_score.values() if v == float('inf'))
+                        print(f"🔒 写账过滤：{len(frozen_min_score)} 只曾斩仓/止损标的需评分达标才能重新入选（其中 {locked} 只因历史评分缺失暂无法解冻）")
             except Exception as e:
                 print(f"⚠️ 写账过滤读取 trade_history.csv 失败，不执行冻结过滤: {e}")
 
+        def _requalifies(item):
+            tk = str(item.get('Ticker', ''))
+            if tk not in frozen_min_score:
+                return True
+            try:
+                cur_score = float(str(item.get('Score', '')).strip())
+            except (ValueError, TypeError):
+                return False
+            return cur_score >= frozen_min_score[tk]
+
         chosen_to_write = [
             i for i in chosen
-            if str(i.get('Ticker', '')) not in frozen_tickers
+            if _requalifies(i)
             and str(i.get('Hold_Period', '')).strip().lower() not in _INVALID_W
             and str(i.get('Stop_Loss', '')).strip().lower() not in _INVALID_W
             and str(i.get('Score', '')).strip().lower() not in {'', 'n/a', 'nan', 'none'}
