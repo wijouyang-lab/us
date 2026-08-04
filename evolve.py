@@ -51,10 +51,12 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         return None
 
     rows = []
+    skipped_no_price = []
     for _, row in closed.iterrows():
         buy  = safe_float(row.get(PRICE_COL))
         sell = safe_float(row.get(EXIT_COL))
         if buy is None or sell is None:
+            skipped_no_price.append(f"{row.get('Name','')}({row.get('Ticker','')})[{row.get(status_col,'')}]")
             continue
         pnl_pct = round((sell - buy) / buy * 100, 2)
 
@@ -77,6 +79,9 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
     if not rows:
         print("⚠️ 平仓记录无有效买入/卖出价。")
         return None
+
+    if skipped_no_price:
+        print(f"⚠️ {len(skipped_no_price)} 条已平仓记录缺 Price/Exit_Price，被排除在胜率统计外: {skipped_no_price[:15]}")
 
     df_c = pd.DataFrame(rows)
     wins     = (df_c["pnl_pct"] > 0).sum()
@@ -317,15 +322,22 @@ if __name__ == "__main__":
 
     df_raw = pd.read_csv(HISTORY_FILE, keep_default_na=False)
 
+    # 修复：原来要求 Hold_Period/Stop_Loss/Score 三个字段都有效才纳入统计，但历史上
+    # 评分正则曾有bug导致大量记录 Score=N/A（Hold_Period/Stop_Loss 没受影响）。这批记录
+    # 里包含了不少已经止损/到期的真实交易，用旧过滤条件会被整批剔除出胜率统计，导致
+    # 统计出来的胜率虚高（相当于选择性地漏掉了一部分止损/到期样本）。改成只要求
+    # Hold_Period/Stop_Loss 有效，Score 缺失不再作为剔除依据。
     _INVALID = {"", "n/a", "nan", "none"}
     for col in ["Hold_Period", "Stop_Loss", SCORE_COL]:
         if col not in df_raw.columns:
             df_raw[col] = ""
     valid_mask = (
         df_raw["Hold_Period"].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID) &
-        df_raw["Stop_Loss"].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID) &
-        df_raw[SCORE_COL].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID)
+        df_raw["Stop_Loss"].astype(str).str.strip().str.lower().map(lambda v: v not in _INVALID)
     )
+    no_score_count = df_raw[SCORE_COL].astype(str).str.strip().str.lower().isin(_INVALID).sum()
+    if no_score_count > 0:
+        print(f"⚠️ {no_score_count} 条记录 Score=N/A（可能是历史评分bug所致），仍纳入胜率统计。")
     dropped = (~valid_mask).sum()
     if dropped > 0:
         print(f"🗂️ 过滤 {dropped} 条不完整记录。")
