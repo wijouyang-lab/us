@@ -295,6 +295,13 @@ for orig_ticker, group in recent_picks.groupby('Ticker'):
             if not cur_price:
                 cur_price = live_last or live_open
 
+        # 修复：trade_history.csv 里 Price 列在盘前扫描时写入的是能拿到的最近一次收盘价
+        # （不是真正的"今天买入价"，因为扫描发生在开盘前）。今天新增的推荐，如果这里
+        # 成功拿到了当天真实开盘价，就用它覆盖 rec_price——否则"首次推荐价"和盈亏
+        # 都是拿旧收盘价当买入价在算，会算出跟实际持仓完全对不上的盈亏结果。
+        if is_new_today and today_open_price:
+            rec_price = today_open_price
+
         if not cur_price:
             # 实时查询也失败，最后兜底用推荐价本身，保证该标的仍会出现在复盘报告里
             # （而不是被静默跳过），同时明确打印警告方便排查。
