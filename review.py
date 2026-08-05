@@ -31,6 +31,140 @@ print("🚀 启动美股盘后复盘与风控审查引擎 (全功能工程版)..
 print("=" * 50)
 
 # ==========================================
+# 【新增】1.5 补充美股成交记录（从盘前待确认文件）
+# ==========================================
+def supplement_us_stocks_from_pending():
+    """
+    ✅ 【改动】美股版review.py特有函数
+    查找并读取盘前 scan_us.py 生成的美股待确认文件 us_stocks_pending_[YYYYMMDD].csv
+    用盘后的完整行情数据补充写入 trade_history.csv
+    
+    原因：美股有盘前、正常交易、盘后三个时段
+    盘中数据不完整，必须等到盘后才能记账
+    """
+    log_file = "trade_history.csv"
+    
+    # 生成今天的日期（美东时间）
+    today_us = get_us_time()
+    today_date_str = today_us.strftime('%Y-%m-%d')
+    today_date_file = today_us.strftime('%Y%m%d')
+    
+    pending_file = f"us_stocks_pending_{today_date_file}.csv"
+    
+    if not os.path.exists(pending_file):
+        print(f"📋 [盘后补充] 未发现美股待确认文件 {pending_file}，跳过美股补充。")
+        return
+    
+    print(f"📋 [盘后补充] 发现美股待确认文件 {pending_file}，开始用盘后完整数据补充...")
+    
+    try:
+        # 读取待确认文件
+        df_pending = pd.read_csv(pending_file)
+        
+        if df_pending.empty:
+            print(f"⚠️ 待确认文件为空，跳过。")
+            return
+        
+        print(f"📡 [盘后补充] 正在拉取美股盘后完整行情数据...")
+        us_tickers = df_pending['Ticker'].unique().tolist()
+        us_tickers_clean = [t.lstrip('$') for t in us_tickers]
+        
+        price_map_close = {}  # 收盘价
+        
+        if us_tickers_clean:
+            try:
+                hist_data = yf.download(us_tickers_clean, period="5d", progress=False, auto_adjust=True, group_by='ticker')
+                
+                if len(us_tickers_clean) == 1:
+                    t = us_tickers_clean[0]
+                    if not hist_data.empty:
+                        price_map_close[t] = float(hist_data['Close'].iloc[-1])
+                else:
+                    for t in us_tickers_clean:
+                        try:
+                            close_series = hist_data[t]['Close'].dropna()
+                            if not close_series.empty:
+                                price_map_close[t] = float(close_series.iloc[-1])
+                        except:
+                            pass
+            except Exception as e:
+                print(f"⚠️ yfinance 行情拉取失败: {e}，将使用推荐价格作为成交价")
+        
+        # 读取现有账本
+        df_existing = pd.DataFrame()
+        if os.path.exists(log_file) and os.path.getsize(log_file) > 0:
+            df_existing = pd.read_csv(log_file, on_bad_lines='skip')
+            df_existing['Date'] = pd.to_datetime(df_existing['Date'])
+        
+        new_us_records = []
+        
+        for _, row in df_pending.iterrows():
+            ticker = row['Ticker']
+            ticker_clean = ticker.lstrip('$')
+            
+            # 检查重复
+            if not df_existing.empty:
+                existing = df_existing[
+                    (df_existing['Date'] == pd.to_datetime(today_date_str)) &
+                    (df_existing['Ticker'] == ticker)
+                ]
+                if not existing.empty:
+                    print(f"⏭️ {ticker} 已在账本中，跳过重复")
+                    continue
+            
+            # 使用盘后收盘价
+            close_price = price_map_close.get(ticker_clean, row['Recommended_Price'])
+            
+            try:
+                rec_price = float(row['Recommended_Price'])
+                pct_chg = round((close_price - rec_price) / rec_price * 100, 2)
+            except:
+                pct_chg = 0.0
+            
+            new_us_records.append({
+                'Date': today_date_str,
+                'Ticker': ticker,
+                'Name': row['Name'],
+                'Tag': row['Tag'],
+                'Industry': row['Industry'],
+                'Close_Price': close_price,
+                'Amount': row['Amount'],
+                'Daily_Pct': pct_chg,
+                'Hold_Period': row['Hold_Period'],
+                'Stop_Loss': row['Stop_Loss'],
+                'Score': row['Score']
+            })
+        
+        if new_us_records:
+            # 新建或追加写入
+            new_header = "Date,Ticker,Name,Tag,Industry,Close_Price,Amount,Daily_Pct,Hold_Period,Stop_Loss,Score\n"
+            need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+            
+            with open(log_file, "a", encoding="utf-8") as f:
+                if need_header:
+                    f.write(new_header)
+                for record in new_us_records:
+                    f.write(f"{record['Date']},{record['Ticker']},{record['Name']},{record['Tag']},{record['Industry']},{record['Close_Price']},{record['Amount']},{record['Daily_Pct']},{record['Hold_Period']},{record['Stop_Loss']},{record['Score']}\n")
+            
+            print(f"✅ [盘后补充] 成功补充美股成交记录 {len(new_us_records)} 条（使用盘后收盘价）")
+            
+            # 备份待确认文件
+            processed_file = f"{pending_file}.processed"
+            try:
+                os.rename(pending_file, processed_file)
+                print(f"📦 待确认文件已备份为 {processed_file}")
+            except:
+                pass
+        else:
+            print(f"⚠️ 待确认文件中的美股都已在账本，无新增")
+    
+    except Exception as e:
+        print(f"❌ 补充美股成交记录出错: {e}")
+
+# 盘后程序启动时自动执行
+supplement_us_stocks_from_pending()
+
+# ==========================================
 # 2. 账本文件检查与加载
 # ==========================================
 log_file = "trade_history.csv"
