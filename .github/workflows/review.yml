@@ -1,41 +1,56 @@
-name: US-Share Review
+name: 美股盘后复盘
+
 on:
+  schedule:
+    - cron: '30 20 * * 1-5'
   workflow_dispatch:
 
 jobs:
-  run-scan:
+  review:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    permissions:
-      contents: write
-
+    
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: 检出代码
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
+      - name: 拉取最新代码
+        run: git pull origin main --ff-only
 
-    - name: Install Libs
-      run: pip install pandas pandas-ta requests anthropic tushare yfinance
+      - name: 设置Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Run Review
-      env:
-        TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
-        CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
-        CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-        EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
-      run: python review.py || true
+      - name: 安装依赖
+        run: |
+          pip install pandas yfinance anthropic requests lxml html5lib
 
-    - name: Save Logs
-      run: |
-        git config --global user.email "action@github.com"
-        git config --global user.name "Alpha Bot"
-        git add -A
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update US logs"
-        git push
+      - name: 配置Git
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+
+      - name: 运行美股盘后复盘
+        env:
+          TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
+          EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python review.py
+
+      - name: 提交账本和处理记录
+        run: |
+          git add trade_history.csv review_history.csv
+          
+          if ls us_stocks_pending_*.csv.processed 1> /dev/null 2>&1; then
+            git add us_stocks_pending_*.csv.processed
+          fi
+          
+          git rm -f us_stocks_pending_*.csv 2>/dev/null || true
+          
+          git commit -m "chore: 美股盘后补充成交 $(date +%Y-%m-%d)" || echo "无变更"
+          git push
+          echo "✅ 美股成交记录已提交"
