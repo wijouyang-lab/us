@@ -1925,13 +1925,35 @@ if __name__ == "__main__":
         if skipped > 0:
             print(f"⏭️ 写账过滤：跳过 {skipped} 条（已斩仓或三字段不完整），不写入新追踪记录。")
 
-        with open(log_file, "a", encoding="utf-8") as f:
-            if need_header:
-                f.write("Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_Price,Status\n")
-            ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
-            for i in chosen_to_write:
-                # 在第 6 个字段（原本是 Price）精准写入 Open_Price 确保为开盘价入账
-                f.write(f"{ts_date},{i.get('Ticker','')},{i.get('Name','')},{i.get('Tag','')},{i.get('Score','N/A')},{i.get('Open_Price', i.get('Price',''))},{i.get('RSI',0)},{i.get('乖离率(%)',0)},{i.get('Hold_Period','N/A')},{i.get('Stop_Loss','N/A')},N/A,N/A,Active\n")
-        print(f"共安全记账 {len(chosen_to_write)} 条全新核心优选数据（过滤后）。")
+        # ✅ 【改动】美股盘中写入待确认文件，盘后由 review_us.py 补充写入正式账本
+        # 原因：美股有盘前、正常交易、盘后三个时段，盘中数据不完整
+        ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
+        ts_date_file = datetime.datetime.now().strftime('%Y%m%d')
+        
+        if chosen_to_write:
+            pending_file = f"us_stocks_pending_{ts_date_file}.csv"
+            pending_header = "Date,Ticker,Name,Tag,Industry,Recommended_Price,Amount,Daily_Pct,Hold_Period,Stop_Loss,Score,Status\n"
+            with open(pending_file, "w", encoding="utf-8") as f:
+                f.write(pending_header)
+                for i in chosen_to_write:
+                    # 统一成待确认文件格式
+                    ticker = i.get('Ticker', '')
+                    name = i.get('Name', '')
+                    tag = i.get('Tag', '')
+                    industry = i.get('Industry', '科技')
+                    recommended_price = i.get('Open_Price', i.get('Price', ''))
+                    amount = i.get('Volume', 0)
+                    daily_pct = i.get('涨跌幅(%)', 0)
+                    hold_period = i.get('Hold_Period', 'N/A')
+                    stop_loss = i.get('Stop_Loss', 'N/A')
+                    score = i.get('Score', 'N/A')
+                    
+                    f.write(f"{ts_date},{ticker},{name},{tag},{industry},{recommended_price},{amount},{daily_pct},{hold_period},{stop_loss},{score},pending\n")
+            
+            print(f"✅ 共生成 {len(chosen_to_write)} 条美股推荐记录（已保存至 {pending_file}）")
+            print(f"⏳ 成交确认将在盘后 review_us.py 执行时补充写入 trade_history.csv")
+        else:
+            print(f"⚠️ 未生成任何推荐记录（全部被过滤）")
+
     except Exception as e:
         print(f"新推荐数据入账失败: {e}")
