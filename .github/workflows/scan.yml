@@ -1,43 +1,50 @@
-name: US-Share Scan
+name: 美股盘中扫描
 
 on:
-  workflow_dispatch: # 完美保留：既支持你网页手动补刀，又完美支持腾讯云 API 远程精准打击
+  schedule:
+    - cron: '45 13 * * 1-5'
+  workflow_dispatch:
 
 jobs:
-  run-scan:
+  scan:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-    permissions:
-      contents: write
-
+    
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
+      - name: 检出代码
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
+      - name: 设置Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-    - name: Install Libs
-      # 移除了 tushare，新增了 yfinance, lxml 和 html5lib
-      run: pip install pandas pandas-ta requests anthropic yfinance lxml html5lib
+      - name: 安装依赖
+        run: |
+          pip install pandas pandas-ta yfinance anthropic requests lxml html5lib
 
-    - name: Run Scan
-      env:
-        # 移除了失效的 TUSHARE_TOKEN
-        CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
-        CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-        EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
-        EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-        TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
-      run: python scan.py
+      - name: 配置Git
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
 
-    - name: Save Logs
-      run: |
-        git config --global user.email "action@github.com"
-        git config --global user.name "Alpha Bot"
-        git add -A
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto update US logs"
-        git push
+      - name: 运行美股盘中扫描
+        env:
+          TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
+          EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scan.py
+
+      - name: 提交待确认文件
+        run: |
+          if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
+            git add us_stocks_pending_*.csv
+            git commit -m "chore: 美股盘中待确认 $(date +%Y-%m-%d)"
+            git push
+            echo "✅ 美股待确认文件已提交"
+          else
+            echo "⚠️ 未生成美股待确认文件"
+          fi
