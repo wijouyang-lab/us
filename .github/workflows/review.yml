@@ -6,7 +6,7 @@ on:
 jobs:
   review:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: 检出代码
         uses: actions/checkout@v3
@@ -20,7 +20,7 @@ jobs:
       - name: 设置Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
       - name: 安装依赖
         run: |
@@ -43,13 +43,13 @@ jobs:
       - name: 提交账本和处理记录
         run: |
           git add trade_history.csv review_history.csv
-          
+
           if ls us_stocks_pending_*.csv.processed 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv.processed
           fi
-          
+
           git rm -f us_stocks_pending_*.csv 2>/dev/null || true
-          
+
           git commit -m "chore: 美股盘后补充成交 $(date +%Y-%m-%d)" || echo "无变更"
           git push
           echo "✅ 美股成交记录已提交"
