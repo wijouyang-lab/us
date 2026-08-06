@@ -9,6 +9,11 @@ from email.mime.multipart import MIMEMultipart
 import anthropic
 import re
 
+# 启动前置校验：AI 凭证（缺失则立即报错退出，避免跑完前面的复盘数据整理逻辑后才在AI调用阶段崩溃）
+if not os.environ.get("ANTHROPIC_API_KEY"):
+    print("致命错误：未检测到环境变量 ANTHROPIC_API_KEY！请检查 GitHub Actions 仓库的 Secrets 配置（Settings → Secrets and variables → Actions），并确认 workflow yml 中已通过 env: 正确传递。")
+    import sys; sys.exit(1)
+
 # ==========================================
 # 1. 基础配置与时区初始化
 # ==========================================
@@ -478,8 +483,8 @@ if not active_list and not expired_list:
 # ==========================================
 print("🤖 正在调用 Claude 客户端生成美股盘后风控审查与策略复盘报告...")
 client = anthropic.Anthropic(
-    api_key=os.environ.get("CLAWSOCKET_API_KEY"),
-    base_url=os.environ.get("CLAWSOCKET_BASE_URL")
+    api_key=os.environ.get("ANTHROPIC_API_KEY"),
+    base_url=os.environ.get("ANTHROPIC_BASE_URL")
 )
 
 prompt = f'''
