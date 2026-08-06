@@ -1,8 +1,6 @@
 name: 美股盘中扫描
 
 on:
-  schedule:
-    - cron: '45 13 * * 1-5'
   workflow_dispatch:
 
 jobs:
