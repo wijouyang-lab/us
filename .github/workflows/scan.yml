@@ -35,7 +35,8 @@ jobs:
           TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
           EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python scan.py
 
       - name: 提交待确认文件
