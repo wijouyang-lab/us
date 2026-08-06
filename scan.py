@@ -36,8 +36,9 @@ if not SUPER_ADMIN:
     exit(1)
 
 # 启动前置校验：AI 凭证（缺失则立即报错退出，避免跑完前面耗时的数据抓取阶段后才在AI调用阶段崩溃）
-if not os.environ.get("ANTHROPIC_API_KEY"):
-    print("致命错误：未检测到环境变量 ANTHROPIC_API_KEY！请检查 GitHub Actions 仓库的 Secrets 配置（Settings → Secrets and variables → Actions），并确认 workflow yml 中已通过 env: 正确传递。")
+_missing_env = [k for k in ("CLAWSOCKET_API_KEY", "CLAWSOCKET_BASE_URL") if not os.environ.get(k)]
+if _missing_env:
+    print(f"致命错误：未检测到环境变量 {', '.join(_missing_env)}！请检查 GitHub Actions 仓库的 Secrets 配置（Settings → Secrets and variables → Actions），并确认 workflow yml 中已通过 env: 正确传递。")
     exit(1)
 
 print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
@@ -720,8 +721,8 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     
     print("🧠 提请 AI 专家开展盘前持仓排雷研判...")
     client = anthropic.Anthropic(
-        api_key=os.environ.get("ANTHROPIC_API_KEY"),
-        base_url=os.environ.get("ANTHROPIC_BASE_URL")
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
     )
     
     review_prompt = f"""
@@ -1169,8 +1170,8 @@ def load_evolved_rules() -> str:
 def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None, embargo_text="", sector_tech_data=None):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
-        api_key=os.environ.get("ANTHROPIC_API_KEY"),
-        base_url=os.environ.get("ANTHROPIC_BASE_URL")
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
     )
     today_str = datetime.datetime.now().strftime('%Y年%m月%d日')
 
@@ -1800,8 +1801,8 @@ if __name__ == "__main__":
     # 弥补"ETF 价格反映总是滞后于新闻发布"的结构性盲区
     # 用最轻量的 Haiku 模型完成，几秒即可出结果，不影响整体运行时间
     _embargo_client = anthropic.Anthropic(
-        api_key=os.environ.get("ANTHROPIC_API_KEY"),
-        base_url=os.environ.get("ANTHROPIC_BASE_URL")
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL")
     )
     news_analysis = analyze_market_signals(combined_news, _embargo_client)
     news_embargo_result = build_market_signal_text(news_analysis)
