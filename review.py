@@ -3,6 +3,7 @@ import pandas as pd
 import yfinance as yf
 import datetime
 import os
+import glob
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -39,118 +40,244 @@ print("=" * 50)
 # ==========================================
 # 1.5 补充美股成交记录（从盘前待确认文件）
 # ==========================================
-def supplement_us_stocks_from_pending():
-    log_file = "trade_history.csv"
+def get_live_quote_bootstrap(clean_ticker):
+    """
+    实时行情兜底（仅用于'今天'这份待确认文件、且当天全市场历史行情还没来得及发布的情况）。
+    和下面第276行左右的 get_live_quote 是同一套逻辑，这里提前放一份是因为
+    supplement_us_stocks_from_pending() 在文件最开头就会被调用，比原定义位置更早。
+    """
+    try:
+        fi = yf.Ticker(clean_ticker).fast_info
+        try:
+            open_p = float(fi["open"])
+        except Exception:
+            open_p = None
+        try:
+            last_p = float(fi["last_price"])
+        except Exception:
+            last_p = None
+        return open_p, last_p
+    except Exception as e:
+        print(f"实时行情兜底查询失败 [{clean_ticker}]: {e}")
+        return None, None
 
-    today_us = get_us_time()
-    today_date_str = today_us.strftime('%Y-%m-%d')
-    today_date_file = today_us.strftime('%Y%m%d')
 
-    pending_file = f"us_stocks_pending_{today_date_file}.csv"
-
-    if not os.path.exists(pending_file):
-        print(f"[盘后补充] 未发现美股待确认文件 {pending_file}，跳过美股补充。")
+def _migrate_trade_history_add_close_price(log_file):
+    """
+    trade_history.csv 表头升级：老数据没有 Close_Price 列，也没有 evolve.py 实际会读的
+    5 个技术信号列（技术评分/MACD金叉/周线共振/KDJ_J回升/量能放大——这几个字段
+    scan.py 早就算出来了，但从来没有接到 trade_history.csv 里，导致 evolve.py 里
+    "技术信号有效性分析"和"技术评分分层胜率"这两部分一直是拿空值在跑）。
+    全部加在表末尾，迁移很简单——每条老数据行末尾补齐对应数量的空字段即可。
+    """
+    if not (os.path.exists(log_file) and os.path.getsize(log_file) > 0):
+        return
+    with open(log_file, "r", encoding="utf-8") as f:
+        old_lines = f.readlines()
+    if not old_lines:
         return
 
-    print(f"[盘后补充] 发现美股待确认文件 {pending_file}，开始用盘后完整数据补充...")
+    trailing_cols = ["Close_Price", "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大"]
+    missing_cols = [c for c in trailing_cols if c not in old_lines[0]]
+    if not missing_cols:
+        return
+
+    migrated = [old_lines[0].rstrip("\n") + "," + ",".join(missing_cols) + "\n"]
+    for line in old_lines[1:]:
+        if not line.strip():
+            continue
+        migrated.append(line.rstrip("\n") + "," * len(missing_cols) + "\n")
+
+    with open(log_file, "w", encoding="utf-8") as f:
+        f.writelines(migrated)
+    print(f"⚠️ 检测到旧版trade_history.csv缺少 {missing_cols} 列，已自动升级表头并补齐 {len(migrated) - 1} 行历史数据（老数据这些列留空，不影响后续追踪）")
+
+
+def _fetch_open_close(tickers_clean, target_date_str):
+    """
+    用 yfinance 拉取一批标的在 target_date_str（YYYY-MM-DD）当天的开盘价+收盘价。
+    找不到当天数据（节假日/刚上市等）时会自动往前多取几天窗口兜底。
+    返回 (open_map, close_map)，key 是去掉 $ 前缀的干净代码。
+    """
+    open_map, close_map = {}, {}
+    if not tickers_clean:
+        return open_map, close_map
+
+    target_dt = datetime.datetime.strptime(target_date_str, '%Y-%m-%d')
+    start = (target_dt - datetime.timedelta(days=6)).strftime('%Y-%m-%d')
+    end = (target_dt + datetime.timedelta(days=1)).strftime('%Y-%m-%d')
 
     try:
-        df_pending = pd.read_csv(pending_file)
+        hist_data = yf.download(tickers_clean, start=start, end=end, progress=False,
+                                 auto_adjust=True, group_by='ticker')
+    except Exception as e:
+        print(f"⚠️ yfinance 批量拉取失败: {e}")
+        return open_map, close_map
 
-        if df_pending.empty:
-            print(f"待确认文件为空，跳过。")
-            return
+    if hist_data is None or hist_data.empty:
+        return open_map, close_map
 
-        print(f"[盘后补充] 正在拉取美股盘后完整行情数据...")
-        us_tickers = df_pending['Ticker'].unique().tolist()
-        us_tickers_clean = [t.lstrip('$') for t in us_tickers]
+    for t in tickers_clean:
+        try:
+            sub = hist_data[t] if len(tickers_clean) > 1 else hist_data
+            sub = sub.dropna(subset=['Open', 'Close'])
+            if sub.empty:
+                continue
+            sub = sub[sub.index <= pd.Timestamp(target_date_str)]
+            if sub.empty:
+                continue
+            last_row = sub.iloc[-1]
+            open_map[t] = float(last_row['Open'])
+            close_map[t] = float(last_row['Close'])
+        except Exception:
+            continue
 
-        price_map_close = {}
+    return open_map, close_map
 
-        if us_tickers_clean:
-            try:
-                hist_data = yf.download(us_tickers_clean, period="5d", progress=False, auto_adjust=True, group_by='ticker')
 
-                if len(us_tickers_clean) == 1:
-                    t = us_tickers_clean[0]
-                    if not hist_data.empty:
-                        price_map_close[t] = float(hist_data['Close'].iloc[-1])
-                else:
-                    for t in us_tickers_clean:
-                        try:
-                            close_series = hist_data[t]['Close'].dropna()
-                            if not close_series.empty:
-                                price_map_close[t] = float(close_series.iloc[-1])
-                        except:
-                            pass
-            except Exception as e:
-                print(f"yfinance 行情拉取失败: {e}，将使用推荐价格作为成交价")
+def supplement_us_stocks_from_pending():
+    """
+    ✅ 【根因修复】原来的版本只找"今天"日期的待确认文件——一旦某天处理失败
+    （比如 yfinance 临时抽风、网络问题等），那份文件就会永远留在原地、不会被
+    后续任何一次运行重试。这里改成扫描所有还没带 .processed 后缀的待确认文件。
 
-        df_existing = pd.DataFrame()
-        if os.path.exists(log_file) and os.path.getsize(log_file) > 0:
-            df_existing = pd.read_csv(log_file, on_bad_lines='skip')
-            df_existing['Date'] = pd.to_datetime(df_existing['Date'])
+    ✅ 【根因修复二 · 更重要】原来这个函数写入 trade_history.csv 用的表头是
+    "Date,Ticker,Name,Tag,Industry,Close_Price,Amount,Daily_Pct,Hold_Period,Stop_Loss,Score"
+    （11列，是从A股版本照搬过来的），但 trade_history.csv 实际的表头早就是
+    "Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_Price,Status"
+    （13列，Active/Dropped 生命周期模型）。两边列名对不上，之前用旧函数追加的
+    那几行（可以在 trade_history.csv 里看到 Score 显示成"科技"、Status 是空的）
+    实际上是把 11 个值硬塞进 13 列表头，从第5列开始全部错位——Industry 的值
+    "科技"顶替了 Score，Status 因为多出的2列直接空着，导致这些标的从未被
+    识别为"持仓中"（下游所有逻辑都是按 Status=='Active' 来找持仓的）。
 
-        new_us_records = []
+    这里改成按 trade_history.csv 真实的列结构来写，新增标的 Status 正确写成
+    'Active'，Price 用盘后真实开盘价（而不是盘前的参考价），并新增一列
+    Close_Price 记录当天真实收盘价。
+    """
+    log_file = "trade_history.csv"
 
-        for _, row in df_pending.iterrows():
-            ticker = row['Ticker']
-            ticker_clean = ticker.lstrip('$')
+    pending_files = sorted(
+        f for f in glob.glob("us_stocks_pending_*.csv")
+        if not f.endswith(".processed")
+    )
 
-            if not df_existing.empty:
-                existing = df_existing[
-                    (df_existing['Date'] == pd.to_datetime(today_date_str)) &
-                    (df_existing['Ticker'] == ticker)
-                ]
-                if not existing.empty:
-                    print(f"{ticker} 已在账本中，跳过重复")
-                    continue
+    if not pending_files:
+        print(f"[盘后补充] 未发现任何美股待确认文件，跳过美股补充。")
+        return
 
-            close_price = price_map_close.get(ticker_clean, row['Recommended_Price'])
+    print(f"[盘后补充] 发现 {len(pending_files)} 份美股待确认文件（含历史遗留未处理的）：{pending_files}")
 
-            try:
-                rec_price = float(row['Recommended_Price'])
-                pct_chg = round((close_price - rec_price) / rec_price * 100, 2)
-            except:
-                pct_chg = 0.0
+    _migrate_trade_history_add_close_price(log_file)
+    new_header_cols = ["Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias",
+                        "Hold_Period", "Stop_Loss", "Exit_Date", "Exit_Price", "Status", "Close_Price",
+                        "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大"]
+    new_header = ",".join(new_header_cols) + "\n"
 
-            new_us_records.append({
-                'Date': today_date_str,
-                'Ticker': ticker,
-                'Name': row['Name'],
-                'Tag': row['Tag'],
-                'Industry': row['Industry'],
-                'Close_Price': close_price,
-                'Amount': row['Amount'],
-                'Daily_Pct': pct_chg,
-                'Hold_Period': row['Hold_Period'],
-                'Stop_Loss': row['Stop_Loss'],
-                'Score': row['Score']
-            })
+    for pending_file in pending_files:
+        m = re.search(r"us_stocks_pending_(\d{8})\.csv", pending_file)
+        if not m:
+            print(f"⚠️ 无法从文件名解析交易日期，跳过: {pending_file}")
+            continue
+        file_date_str = m.group(1)
+        target_date_str = f"{file_date_str[:4]}-{file_date_str[4:6]}-{file_date_str[6:]}"
+        is_today = (target_date_str == get_us_time().strftime('%Y-%m-%d'))
 
-        if new_us_records:
-            new_header = "Date,Ticker,Name,Tag,Industry,Close_Price,Amount,Daily_Pct,Hold_Period,Stop_Loss,Score\n"
-            need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+        print(f"[盘后补充] 正在处理 {pending_file}（交易日 {target_date_str}）...")
 
-            with open(log_file, "a", encoding="utf-8") as f:
-                if need_header:
-                    f.write(new_header)
-                for record in new_us_records:
-                    f.write(f"{record['Date']},{record['Ticker']},{record['Name']},{record['Tag']},{record['Industry']},{record['Close_Price']},{record['Amount']},{record['Daily_Pct']},{record['Hold_Period']},{record['Stop_Loss']},{record['Score']}\n")
+        try:
+            df_pending = pd.read_csv(pending_file)
 
-            print(f"[盘后补充] 成功补充美股成交记录 {len(new_us_records)} 条（使用盘后收盘价）")
+            if df_pending.empty:
+                print(f"{pending_file} 为空，直接标记为已处理。")
+                os.rename(pending_file, f"{pending_file}.processed")
+                continue
+
+            us_tickers = df_pending['Ticker'].astype(str).unique().tolist()
+            us_tickers_clean = [t.lstrip('$') for t in us_tickers]
+
+            open_map, close_map = _fetch_open_close(us_tickers_clean, target_date_str)
+
+            df_existing = pd.DataFrame()
+            if os.path.exists(log_file) and os.path.getsize(log_file) > 0:
+                df_existing = pd.read_csv(log_file, on_bad_lines='skip')
+                df_existing['Date'] = pd.to_datetime(df_existing['Date'])
+
+            new_records = []
+            missing_price_tickers = []
+
+            for _, row in df_pending.iterrows():
+                ticker = str(row['Ticker'])
+                ticker_clean = ticker.lstrip('$')
+
+                if not df_existing.empty:
+                    existing = df_existing[
+                        (df_existing['Date'] == pd.to_datetime(target_date_str)) &
+                        (df_existing['Ticker'] == ticker)
+                    ]
+                    if not existing.empty:
+                        print(f"{ticker} 已在账本中，跳过重复")
+                        continue
+
+                open_price = open_map.get(ticker_clean)
+                close_price = close_map.get(ticker_clean)
+
+                # 批量快照没有的话（新上市/停牌/数据延迟等），只有处理"今天"这份文件时
+                # 用实时行情接口兜底（历史遗留文件对应的是过去的交易日，实时行情帮不上忙）
+                if (open_price is None or close_price is None) and is_today:
+                    live_open, live_last = get_live_quote_bootstrap(ticker_clean)
+                    if open_price is None:
+                        open_price = live_open
+                    if close_price is None:
+                        close_price = live_last or live_open
+
+                if open_price is None or close_price is None:
+                    missing_price_tickers.append(ticker)
+
+                new_records.append({
+                    'Date': target_date_str,
+                    'Ticker': ticker,
+                    'Name': row.get('Name', ''),
+                    'Tag': row.get('Tag', ''),
+                    'Score': row.get('Score', 'N/A'),
+                    'Price': '' if open_price is None else open_price,
+                    'RSI': row.get('RSI', ''),
+                    'Bias': row.get('Bias', ''),
+                    'Hold_Period': row.get('Hold_Period', 'N/A'),
+                    'Stop_Loss': row.get('Stop_Loss', 'N/A'),
+                    'Exit_Date': '',
+                    'Exit_Price': '',
+                    'Status': 'Active',
+                    'Close_Price': '' if close_price is None else close_price,
+                    '技术评分': row.get('技术评分', ''),
+                    'MACD金叉': row.get('MACD金叉', ''),
+                    '周线共振': row.get('周线共振', ''),
+                    'KDJ_J回升': row.get('KDJ_J回升', ''),
+                    '量能放大': row.get('量能放大', ''),
+                })
+
+            if missing_price_tickers:
+                print(f"⚠️ 以下标的未取到开盘价/收盘价，已按空值写入账本，建议后续手动核对: {missing_price_tickers}")
+
+            if new_records:
+                need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
+                with open(log_file, "a", encoding="utf-8") as f:
+                    if need_header:
+                        f.write(new_header)
+                    for record in new_records:
+                        f.write(",".join(str(record[c]) for c in new_header_cols) + "\n")
+
+                print(f"[盘后补充] {pending_file} 成功补充 {len(new_records)} 条美股成交记录（含开盘价+收盘价，Status=Active）")
+            else:
+                print(f"{pending_file} 中的美股都已在账本，无新增")
 
             processed_file = f"{pending_file}.processed"
-            try:
-                os.rename(pending_file, processed_file)
-                print(f"待确认文件已备份为 {processed_file}")
-            except:
-                pass
-        else:
-            print(f"待确认文件中的美股都已在账本，无新增")
+            os.rename(pending_file, processed_file)
+            print(f"{pending_file} 已处理，备份为 {processed_file}")
 
-    except Exception as e:
-        print(f"补充美股成交记录出错: {e}")
+        except Exception as e:
+            print(f"❌ 处理 {pending_file} 出错，保留原文件以便下次自动重试: {e}")
+
 
 supplement_us_stocks_from_pending()
 
