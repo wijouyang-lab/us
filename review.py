@@ -40,6 +40,33 @@ print("=" * 50)
 # ==========================================
 # 1.5 补充美股成交记录（从盘前待确认文件）
 # ==========================================
+def _recalibrate_stop_loss_us(stop_loss_str, scan_ref_price, real_open_price):
+    """
+    止损位校准：Stop_Loss 的数字是 scan.py 在盘前用 Scan_Ref_Price（latest['Open']/['Close']，
+    盘前参考价）算出来的兜底公式（参考价*(1+默认止损百分比)）。参考价和真实开盘价一旦有偏差，
+    止损位这个"锚点"从一开始就偏了。这里按比例（真实开盘价/盘前参考价）平移止损位，保留原始
+    "$XX.XX"格式，任何一步解析失败都原样返回。
+    """
+    try:
+        s = str(stop_loss_str).strip()
+        if not s or s.lower() in ('n/a', 'nan', 'none', '观望'):
+            return stop_loss_str
+        has_dollar = s.startswith('$')
+        body = s.lstrip('$')
+        nums = re.findall(r'\d+\.?\d*', body)
+        if not nums:
+            return stop_loss_str
+        old_val = float(nums[0])
+        ref = float(scan_ref_price)
+        new_open = float(real_open_price)
+        if ref <= 0 or new_open <= 0 or old_val <= 0:
+            return stop_loss_str
+        new_val = round(old_val * (new_open / ref), 2)
+        return f"${new_val}" if has_dollar else str(new_val)
+    except (ValueError, TypeError, ZeroDivisionError):
+        return stop_loss_str
+
+
 def get_live_quote_bootstrap(clean_ticker):
     """
     实时行情兜底（仅用于'今天'这份待确认文件、且当天全市场历史行情还没来得及发布的情况）。
@@ -234,6 +261,12 @@ def supplement_us_stocks_from_pending():
                 if open_price is None or close_price is None:
                     missing_price_tickers.append(ticker)
 
+                calibrated_stop_loss = row.get('Stop_Loss', 'N/A')
+                if open_price is not None:
+                    calibrated_stop_loss = _recalibrate_stop_loss_us(
+                        row.get('Stop_Loss', 'N/A'), row.get('Scan_Ref_Price'), open_price
+                    )
+
                 new_records.append({
                     'Date': target_date_str,
                     'Ticker': ticker,
@@ -244,7 +277,7 @@ def supplement_us_stocks_from_pending():
                     'RSI': row.get('RSI', ''),
                     'Bias': row.get('Bias', ''),
                     'Hold_Period': row.get('Hold_Period', 'N/A'),
-                    'Stop_Loss': row.get('Stop_Loss', 'N/A'),
+                    'Stop_Loss': calibrated_stop_loss,
                     'Exit_Date': '',
                     'Exit_Price': '',
                     'Status': 'Active',
