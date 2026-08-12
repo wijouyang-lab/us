@@ -1542,11 +1542,18 @@ def check_rule_based_sell_signals(current_prices_map, exclude_tickers=None):
         for col in ["Exit_Date", "Exit_Price"]:
             if col in df_orig.columns:
                 df_orig[col] = df_orig[col].astype(object)
+        # ✅ 【修复】原来按 Ticker 一个条件匹配、没管 Status 是不是还是 Active——如果这只票
+        # 之前已经平仓过一次（有一行历史 Stop_Loss_Hit/Dropped），这次是它重新入选后的
+        # 新一轮持仓触发退出，会把旧的那行也一起改写 Status/Exit_Date/Exit_Price，等于
+        # 历史成交记录被今天的价格覆盖掉了（这也是当前 trade_history.csv 里 MU 一只票
+        # 有9行全部标成 Stop_Loss_Hit 的原因）。加上 Status=='Active' 这个条件，只改
+        # 当前真正还在持仓中的那一行/几行。
         for s in sell_signals:
             tag_to_set = 'Stop_Loss_Hit' if s['signal_type'] == '止损触发' else 'Period_Matured'
-            df_orig.loc[df_orig['Ticker'] == s['ticker'], 'Status'] = tag_to_set
-            df_orig.loc[df_orig['Ticker'] == s['ticker'], 'Exit_Date'] = datetime.datetime.now().strftime('%Y-%m-%d')
-            df_orig.loc[df_orig['Ticker'] == s['ticker'], 'Exit_Price'] = s['current_price']
+            _mask = (df_orig['Ticker'] == s['ticker']) & (df_orig['Status'] == 'Active')
+            df_orig.loc[_mask, 'Status'] = tag_to_set
+            df_orig.loc[_mask, 'Exit_Date'] = datetime.datetime.now().strftime('%Y-%m-%d')
+            df_orig.loc[_mask, 'Exit_Price'] = s['current_price']
         df_orig.to_csv(log_file, index=False, encoding="utf-8")
         print(f"🔒 [阶段0b] 已锁定 {len(sell_signals)} 只标的状态（止损触发/持有到期），停止后续追踪")
     except Exception as e:
