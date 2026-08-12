@@ -1835,7 +1835,7 @@ if __name__ == "__main__":
 
         if chosen_to_write:
             pending_file = f"us_stocks_pending_{ts_date_file}.csv"
-            # ✅ 【改动】不再写入价格：这里的 Open_Price/Price 是盘前拿到的最近一次行情
+            # ✅ 【改动】不再写入"买入价"：这里的 Open_Price/Price 是盘前拿到的最近一次行情
             # （build_stock_pool 里 latest['Open']/latest['Close']），不是今天的真实开盘/收盘价，
             # 写进待确认文件会被当成买入成本使用，导致盈亏算错。真实开盘价+收盘价改由盘后
             # review.py 用 yfinance 的完整行情数据统一补齐写入 trade_history.csv。
@@ -1843,7 +1843,13 @@ if __name__ == "__main__":
             # 写了也到不了账本），改成写 RSI/Bias 以及 evolve.py 真正会用到、但之前从没被
             # 传下去过的 5 个技术信号字段（技术评分/MACD金叉/周线共振/KDJ_J回升/量能放大——
             # 这些值在 screen_technical_setups 里已经算好了，只是没接进 pending 文件）。
-            pending_header = "Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status\n"
+            #
+            # ✅ 【新增】Scan_Ref_Price 同样不是给人看的"价格"，是给 review.py 校准止损位用的
+            # 内部锚点：Stop_Loss 本身也是在这里、用同一个盘前参考价算出来的兜底公式
+            # （item['Price'] * (1+default_stop_loss_pct/100)，见 match_pool_to_report）。
+            # 参考价不准，止损位这个"锚点"从一开始就偏了。review.py 拿到真实开盘价后会按比例
+            # （真实开盘价/Scan_Ref_Price）平移止损位，这个字段只用于那一次计算。
+            pending_header = "Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price\n"
             with open(pending_file, "w", encoding="utf-8") as f:
                 f.write(pending_header)
                 for i in chosen_to_write:
@@ -1860,7 +1866,8 @@ if __name__ == "__main__":
                     hold_period = i.get('Hold_Period', 'N/A')
                     stop_loss = i.get('Stop_Loss', 'N/A')
                     score = i.get('Score', 'N/A')
-                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending\n")
+                    scan_ref_price = i.get('Price', i.get('Open_Price', ''))
+                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price}\n")
 
             print(f"✅ 共生成 {len(chosen_to_write)} 条美股推荐记录（已保存至 {pending_file}，不含价格）")
             print(f"⏳ 开盘价/收盘价将在盘后 review.py 执行时用完整行情数据补充写入 trade_history.csv")
