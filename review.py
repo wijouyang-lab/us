@@ -655,7 +655,7 @@ prompt = (
 ai_html = ""
 with client.messages.stream(
     model=TARGET_MODEL,
-    max_tokens=30000,
+    max_tokens=50000,
     temperature=0.1,
     messages=[{"role": "user", "content": prompt}]
 ) as stream:
