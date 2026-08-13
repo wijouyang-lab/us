@@ -28,6 +28,11 @@ if today >= 5:
 TARGET_MODEL = 'claude-opus-4-8'
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
+# ✅ 【新增】ATR止损倍数：止损距离 = ATR_Pct(该股14日真实波幅占价格的百分比) × 这个倍数，
+# 取代所有票不分波动大小统一用固定-5%。上下限(3%~12%)防止极端值。
+ATR_STOP_MULTIPLIER = 2.0
+ATR_STOP_FLOOR_PCT = 3.0
+ATR_STOP_CEIL_PCT = 12.0
 
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 
@@ -218,7 +223,13 @@ def get_macro_market_data():
 
     if lines:
         print(f"✅ 成功提取 {len(lines)} 项全球关键宏观底层指标数据")
-        return "\n".join(lines)
+        # ✅ 【新增】让AI自己根据每支股票的行业(_US_SECTOR_MAP/Industry)判断商品数据相关性，
+        # 而不是不分行业统一套用——油价对Energy行业直接相关，对多数其他行业相关性很低。
+        guidance = ("\n【使用提示】以上大宗商品数据对不同行业相关性差异很大：原油/WTI/Brent"
+                    "主要影响Energy（能源）及部分Industrials/Materials行业，对Technology、"
+                    "Healthcare、Consumer等多数行业相关性很低，请结合每支标的自己的行业分类"
+                    "判断，不要不分行业地把油价波动同等代入所有个股的评分。")
+        return "\n".join(lines) + guidance
     return "暂无实时大宗商品与国债收益率宏观数据。"
 
 
@@ -336,6 +347,9 @@ def build_stock_pool(tickers):
             df['MACDh'] = ta.macd(df['Close']).iloc[:, 1]
             df['RSI']   = ta.rsi(df['Close'], length=14)
             df['MA20']  = ta.sma(df['Close'], length=20)
+            # ✅ 【新增】ATR（真实波幅均值，14日，pandas_ta默认用Wilder平滑/RMA，和RSI同一套平滑法）
+            # 用于按该股自己的历史波动动态算止损，而不是所有票不分波动大小统一用固定-5%
+            df['ATR']   = ta.atr(df['High'], df['Low'], df['Close'], length=14)
             df = df.dropna()
             if len(df) < 6:
                 continue
@@ -441,6 +455,7 @@ def build_stock_pool(tickers):
                 "Price":           round(latest['Close'], 2),
                 "Open_Price":      round(latest['Open'], 2),  # 修正：补充当天的开盘价格字段
                 "RSI":             round(latest['RSI'], 1),
+                "ATR_Pct":         round((float(latest['ATR']) / float(latest['Close'])) * 100, 2) if latest['Close'] else 5.0,
                 "乖离率(%)":       round(bias * 100, 2),
                 "MACD趋势":        macd_trend,
                 "MACD_HIST_LAST":  round(h_last, 4),
@@ -1710,7 +1725,11 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
             score = "N/A"
         else:
             hold_period = period_match.group(1).strip() if period_match else "5-10天"
-            stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + default_stop_loss_pct / 100), 2)}"
+            # ✅ 【改动】兜底止损从固定-5%改成按该股ATR动态算，波动大的给更宽空间，
+            # 波动小的给更紧空间，上下限3%~12%防止极端值。
+            atr_pct = item.get('ATR_Pct', 5.0)
+            dynamic_stop_pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr_pct * ATR_STOP_MULTIPLIER))
+            stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + dynamic_stop_pct / 100), 2)}"
             score_match = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\]?\s*/\s*100', chunk)
             score = score_match.group(1).strip() if score_match else "N/A"
 
