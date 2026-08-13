@@ -1153,9 +1153,15 @@ def load_evolved_rules() -> str:
         if not patches:
             return ""
         last_updated = data.get("last_updated", "未知")
-        win_rate     = data.get("overall_win_rate", "未知")
+        # ✅ 【改动】同A股版：优先展示"最近一次进化之后"的胜率，不是混合全部历史
+        # （包括进化前原始策略）的总胜率，避免误导AI以为自己上一轮调整没用/有用。
+        recent = data.get("recent_win_rate")
+        if recent and recent.get("胜率") is not None:
+            win_rate_display = f"{recent['胜率']}%（最近{recent.get('样本数','?')}笔，当前规则的真实表现）"
+        else:
+            win_rate_display = f"{data.get('overall_win_rate', '未知')}%（全部历史混合，仅供参考）"
         lines = [
-            f"【📈 历史绩效驱动进化规则（上次更新: {last_updated} | 历史胜率: {win_rate}%）】",
+            f"【📈 历史绩效驱动进化规则（上次更新: {last_updated} | 胜率: {win_rate_display}）】",
             "以下规则由策略进化引擎基于真实交易数据自动生成，必须严格遵守：",
             ""
         ]
@@ -1166,7 +1172,7 @@ def load_evolved_rules() -> str:
             lines.append(f"  执行要求: {patch}")
             lines.append("")
         lines.append("（以上规则优先级高于一般选股偏好，但低于今日突发事件强制封禁）")
-        print(f"📜 [进化规则] 已加载 {len(patches)} 条规则（历史胜率: {win_rate}%）")
+        print(f"📜 [进化规则] 已加载 {len(patches)} 条规则（{win_rate_display}）")
         return "\n".join(lines)
     except Exception as e:
         print(f"⚠️ [进化规则] 读取失败: {e}")
