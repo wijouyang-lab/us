@@ -236,3 +236,8 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-08-12,KO,Coca-Cola,Core_Dragon,70,85.77999877929688,57.1,1.52,14-21天,$81.34,,,Active,86.70999908447266,4,False,False,True,False
 2026-08-12,PCG,PG&E Corporation,Core_Dragon,65,17.360000610351562,49.7,-1.12,14-21天,$16.56,,,Active,17.3799991607666,10,False,False,True,False
 2026-08-12,MDT,Medtronic,Core_Dragon,72,88.95999908447266,70.3,6.57,10-14天,$83.39,,,Active,90.76000213623047,13,False,True,False,True
+2026-08-13,CSCO,Cisco,Core_Dragon,73,113.92500305175781,63.1,6.61,14-21天,$106.68,,,Active,113.47000122070312,17,False,True,False,True
+2026-08-13,MRVL,Marvell Technology,Core_Dragon,68,217.67999267578125,51.9,9.01,14天,$203.56,,,Active,222.17999267578125,8,False,False,True,True
+2026-08-13,O,Realty Income,Core_Dragon,70,62.77000045776367,45.0,-2.15,14-28天,$59.17,,,Active,62.95000076293945,9,False,False,False,True
+2026-08-13,COHR,Coherent Corp.,Core_Dragon,62,344.8800048828125,57.1,19.01,10-14天,$318.08,,,Active,327.2300109863281,8,False,False,True,True
+2026-08-13,MRK,Merck,Core_Dragon,65,133.86000061035156,63.8,2.92,14-21天,$125.88,,,Active,135.5500030517578,8,False,True,False,True
