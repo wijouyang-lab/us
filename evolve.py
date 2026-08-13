@@ -38,6 +38,62 @@ def safe_float(val, default=None):
         return default
 
 
+def _load_evolution_boundaries():
+    """
+    从 strategy_evolution.json 读取历次进化发生的时间点，作为"世代"分界线。
+    第0代 = 第一次进化之前的所有交易（原始策略）；第N代 = 第N次进化生效之后的交易。
+    """
+    if not os.path.exists(EVOLVE_LOG):
+        return []
+    try:
+        with open(EVOLVE_LOG, "r", encoding="utf-8") as f:
+            history = json.load(f)
+        dates = [entry.get("date", "")[:10] for entry in history if entry.get("date")]
+        return sorted(set(d for d in dates if d))
+    except Exception:
+        return []
+
+
+def _segment_by_generation(df_c, boundaries):
+    """
+    按"进化世代"拆分胜率：如果只看混合了全部历史的总胜率，早期策略的表现会
+    和最近几轮进化后的表现混在一起，看不出最新规则到底有没有让胜率变好，
+    对刚调整过规则的这一段也不公平（样本会被更早期的历史表现稀释）。
+    """
+    if not boundaries or "date" not in df_c.columns:
+        return {}, None
+
+    df_c = df_c.copy()
+    df_c["_dt"] = pd.to_datetime(df_c["date"], errors="coerce")
+    bounds_dt = [pd.to_datetime(b) for b in boundaries]
+    edges = [pd.Timestamp.min] + bounds_dt + [pd.Timestamp.max]
+
+    segments = {}
+    for i in range(len(edges) - 1):
+        label = "第0代-进化前(原始策略)" if i == 0 else f"第{i}代-进化后"
+        seg = df_c[(df_c["_dt"] >= edges[i]) & (df_c["_dt"] < edges[i + 1])]
+        if len(seg) >= 2:
+            segments[label] = {
+                "样本数":    int(len(seg)),
+                "胜率":      round(float((seg["pnl_pct"] > 0).sum() / len(seg) * 100), 1),
+                "平均盈亏%": round(float(seg["pnl_pct"].mean()), 2),
+            }
+
+    since_last = None
+    if len(edges) > 2:
+        seg = df_c[df_c["_dt"] >= edges[-2]]
+        if len(seg) >= 2:
+            since_last = {
+                "样本数":    int(len(seg)),
+                "胜率":      round(float((seg["pnl_pct"] > 0).sum() / len(seg) * 100), 1),
+                "平均盈亏%": round(float(seg["pnl_pct"].mean()), 2),
+            }
+        elif len(seg) > 0:
+            since_last = {"样本数": int(len(seg)), "提示": "样本数不足2笔，暂不单独计算胜率"}
+
+    return segments, since_last
+
+
 def calculate_metrics(df: pd.DataFrame) -> dict | None:
     if df.empty:
         return None
@@ -74,6 +130,7 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
             "kdj_rising":    str(row.get("KDJ_J回升", "")),
             "vol_surge":     str(row.get("量能放大", "")),
             "tech_score":    safe_float(row.get("技术评分"), default=0),
+            "date":          str(row.get("Date", "")),
         })
 
     if not rows:
@@ -159,6 +216,9 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         for _, r in active.iterrows()
     ]
 
+    generation_boundaries = _load_evolution_boundaries()
+    generation_stats, since_last_evolution = _segment_by_generation(df_c, generation_boundaries)
+
     return {
         "total_closed":       total,
         "overall_win_rate":   wr,
@@ -169,6 +229,8 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         "tech_score_stats":   tech_score_stats,
         "signal_stats":       signal_stats,
         "exit_stats":         exit_stats,
+        "generation_stats":   generation_stats,
+        "since_last_evolution": since_last_evolution,
         "active_count":       len(active),
         "active_summary":     active_summary[:10],
         "prev_rules":         prev_rules,
@@ -189,9 +251,16 @@ def evolve_strategy(metrics: dict):
 你是一个美股量化策略进化系统。根据以下交易绩效数据，生成具体可执行的选股规则补丁。
 
 【当前绩效报告】：
-- 已平仓：{metrics['total_closed']} 笔 | 总体胜率：{metrics['overall_win_rate']}% | 平均盈亏：{metrics['avg_pnl_pct']}%
+- 已平仓：{metrics['total_closed']} 笔 | 总体胜率（全部历史混合，仅供参考）：{metrics['overall_win_rate']}% | 平均盈亏：{metrics['avg_pnl_pct']}%
 - 最佳：{metrics['best_trade']} | 最差：{metrics['worst_trade']}
 - 当前持仓：{metrics['active_count']} 只
+
+【按进化世代拆分胜率】（重点看这个，而不是上面混合了所有历史的总胜率——
+能看出每一轮规则调整之后胜率到底是变好还是变差了）：
+{json.dumps(metrics['generation_stats'], ensure_ascii=False, indent=2) if metrics['generation_stats'] else "尚无进化历史，这是第一轮"}
+
+【最近一次进化之后的战绩】（当前生效规则的真实表现，样本量可能还小）：
+{json.dumps(metrics['since_last_evolution'], ensure_ascii=False, indent=2) if metrics['since_last_evolution'] else "尚无数据或样本不足"}
 
 【AI综合评分（0-100）胜率分布】（判断高分是否真的对应高胜率）：
 {json.dumps(metrics['score_stats'], ensure_ascii=False, indent=2)}
@@ -209,6 +278,8 @@ def evolve_strategy(metrics: dict):
 {json.dumps(metrics['prev_rules'], ensure_ascii=False, indent=2) if metrics['prev_rules'] else "无（首次进化）"}
 
 【分析思路】：
+0. 优先看"按进化世代拆分胜率"：如果最近一代相比上一代胜率下降了，说明上一轮规则
+   可能是错的或用力过猛，这一轮应考虑撤销或调整方向，而不是继续在错的方向加码。
 1. 如果高技术评分（30-40分）的胜率 < 低技术评分（0-9分），说明技术面权重过高（40分），需要降低
 2. 如果MACD金叉=是的胜率远高于=否，说明金叉信号有效，应该提高MACD金叉的推荐权重
 3. 如果止损触发次数多且亏损较大，说明止损位设得太紧，建议适当放宽
@@ -352,8 +423,12 @@ if __name__ == "__main__":
         exit()
 
     print(f"\n📊 绩效概览：")
-    print(f"  已平仓 {metrics['total_closed']} 笔 | 胜率 {metrics['overall_win_rate']}% | 平均盈亏 {metrics['avg_pnl_pct']}%")
+    print(f"  已平仓 {metrics['total_closed']} 笔 | 总体胜率(全部历史) {metrics['overall_win_rate']}% | 平均盈亏 {metrics['avg_pnl_pct']}%")
     print(f"  当前持仓 {metrics['active_count']} 只")
+    if metrics["generation_stats"]:
+        print(f"  按进化世代拆分：{metrics['generation_stats']}")
+    if metrics["since_last_evolution"]:
+        print(f"  最近一次进化之后：{metrics['since_last_evolution']}")
     if metrics["tech_score_stats"]:
         print(f"  技术评分分层胜率: {metrics['tech_score_stats']}")
     if metrics["signal_stats"]:
