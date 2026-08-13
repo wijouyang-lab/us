@@ -364,6 +364,7 @@ def evolve_strategy(metrics: dict):
             "last_updated":            result["date"],
             "total_closed_at_update":  total_now,
             "overall_win_rate":        metrics["overall_win_rate"],
+            "recent_win_rate":         metrics.get("since_last_evolution"),
             "active_rules":            deduped,
             "prompt_patches":          [r["prompt_patch"] for r in deduped],
         }
