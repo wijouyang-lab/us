@@ -1412,6 +1412,14 @@ MACD信号优先级（从高到低）：
         <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
     </ul>
 </div>
+
+【严格输出纪律 · 必读】：
+这份报告会直接原文发送给用户邮箱，不会有任何人工审核或二次编辑。
+从你输出的第一个字符开始就必须是HTML标签（如 <div），中间和结尾也一样。
+绝对不要输出任何选股思路、筛选过程、候选对比、评分推导等叙述性文字——
+所有分析结论只能以上面模板里规定的HTML卡片形式呈现，不要在HTML标签之外
+用自然语言"想"或"讲"你是怎么得出这些结论的。如果你需要梳理思路，请只在
+内部完成，不要把这个思考过程写进要输出的文字里。
 """
 
 
@@ -1425,8 +1433,20 @@ MACD信号优先级（从高到低）：
         for text in stream.text_stream:
             ai_html += text
 
+    ai_html = ai_html.replace("```html", "").replace("```", "").strip()
+
+    # ✅ 【修复】A股版本早就有这个防护，美股版本一直没有——这就是邮件里会混进AI原始
+    # 思考过程（英文大段自言自语）的直接原因。stream()调用没有开thinking参数，所以
+    # 混进来的不是正式的ThinkingBlock，而是模型把推理过程写进了正文，text_stream会把
+    # 这些也当成普通文本一起流式吐出来。这里做兜底：找到第一个真正的HTML标签，
+    # 之前的内容（不管是不是思考文字）一律丢弃。
+    html_start = ai_html.find("<div")
+    if html_start > 0:
+        print(f"⚠️ 检测到AI输出前置了 {html_start} 字符的非HTML内容（可能是思考过程），已自动截断丢弃")
+        ai_html = ai_html[html_start:]
+
     print("AI 宏观穿透报告生成完毕")
-    return ai_html.replace("```html", "").replace("```", "").strip()
+    return ai_html
 
 
 # ==========================================
