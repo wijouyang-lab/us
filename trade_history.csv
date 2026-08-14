@@ -241,3 +241,8 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-08-13,O,Realty Income,Core_Dragon,70,62.77000045776367,45.0,-2.15,14-28天,$59.17,,,Active,62.95000076293945,9,False,False,False,True
 2026-08-13,COHR,Coherent Corp.,Core_Dragon,62,344.8800048828125,57.1,19.01,10-14天,$318.08,,,Active,327.2300109863281,8,False,False,True,True
 2026-08-13,MRK,Merck,Core_Dragon,65,133.86000061035156,63.8,2.92,14-21天,$125.88,,,Active,135.5500030517578,8,False,True,False,True
+2026-08-14,MU,Micron Technology,Core_Dragon,72,979.6400146484375,54.5,7.46,10-14天,$830.26,,,Active,971.6599731445312,2,False,False,False,False
+2026-08-14,AMD,Advanced Micro Devices,Core_Dragon,70,487.6000061035156,47.4,-2.09,10-14天,$413.9,,,Active,514.3900146484375,4,False,False,True,False
+2026-08-14,KMI,Kinder Morgan,Core_Dragon,73,32.22999954223633,55.1,1.22,14-21天,$27.43,,,Active,32.81999969482422,15,True,False,False,True
+2026-08-14,VICI,Vici Properties,Core_Dragon,68,26.3799991607666,47.1,-0.76,14-21天,$22.43,,,Active,26.360000610351562,11,False,False,False,True
+2026-08-14,META,Meta Platforms,Core_Dragon,76,596.97998046875,49.2,-0.42,14-21天,$506.71,,,Active,589.8499755859375,18,True,True,False,False
