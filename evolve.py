@@ -131,6 +131,7 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
             "vol_surge":     str(row.get("量能放大", "")),
             "tech_score":    safe_float(row.get("技术评分"), default=0),
             "date":          str(row.get("Date", "")),
+            "atr_pct":       safe_float(row.get("ATR_Pct"), default=None),
         })
 
     if not rows:
@@ -177,6 +178,18 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
 
     df_c["tech_bucket"] = df_c["tech_score"].apply(tech_bucket)
     tech_score_stats = {bk: _stats(g) for bk, g in df_c.groupby("tech_bucket") if len(g) >= 2}
+
+    # ✅ 【新增】按ATR波动率分层——验证"止损从固定-5%换成ATR动态算"这个改动有没有用：
+    # 高波动股票（本来固定-5%很容易被正常波动扫损）如果在ATR动态止损下胜率明显提升，
+    # 说明方向对了；没区别甚至更差，说明该调整倍数或撤回。
+    def atr_bucket(a):
+        if a is None:  return "无ATR数据(旧记录)"
+        if a < 2.5:    return "低波动(ATR<2.5%)"
+        elif a < 4.5:  return "中波动(ATR 2.5%-4.5%)"
+        else:          return "高波动(ATR>4.5%)"
+
+    df_c["atr_bucket"] = df_c["atr_pct"].apply(atr_bucket)
+    atr_stats = {bk: _stats(g) for bk, g in df_c.groupby("atr_bucket") if len(g) >= 2 and bk != "无ATR数据(旧记录)"}
 
     # ── 按技术信号拆分 ──
     signal_stats = {}
@@ -227,6 +240,7 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         "worst_trade":        f"{worst['name']}({worst['ticker']}) {worst['pnl_pct']}%",
         "score_stats":        score_stats,
         "tech_score_stats":   tech_score_stats,
+        "atr_stats":          atr_stats,
         "signal_stats":       signal_stats,
         "exit_stats":         exit_stats,
         "generation_stats":   generation_stats,
@@ -267,6 +281,10 @@ def evolve_strategy(metrics: dict):
 
 【技术评分（0-40分）胜率分布】（判断技术面40分权重是否设置合理）：
 {json.dumps(metrics['tech_score_stats'], ensure_ascii=False, indent=2)}
+
+【按ATR波动率分层胜率】（验证止损从固定-5%改成ATR动态算这个改动有没有用——如果
+高波动分层的胜率明显提升，说明方向正确；样本还太少时先别下结论）：
+{json.dumps(metrics['atr_stats'], ensure_ascii=False, indent=2) if metrics['atr_stats'] else "样本不足或还没有ATR数据的已平仓记录"}
 
 【技术信号有效性分析】（判断MACD金叉/周线共振等信号是否真的有效）：
 {json.dumps(metrics['signal_stats'], ensure_ascii=False, indent=2)}
