@@ -204,6 +204,7 @@ def get_macro_market_data():
     }
 
     lines = []
+    vix_value = None
     for name, ticker in macro_tickers.items():
         try:
             df = yf.download(ticker, period="5d", progress=False)
@@ -213,6 +214,9 @@ def get_macro_market_data():
                 latest_close = df['Close'].iloc[-1]
                 prev_close = df['Close'].iloc[-2]
                 pct_change = ((latest_close - prev_close) / prev_close) * 100
+
+                if ticker == "^VIX":
+                    vix_value = float(latest_close)
 
                 if "^" in ticker and "VIX" not in name and "指数" not in name:
                     lines.append(f"- {name} ({ticker}): 当前收益率 {round(latest_close, 3)}% | 当日变动幅度: {round(pct_change, 2)}%")
@@ -229,6 +233,18 @@ def get_macro_market_data():
                     "主要影响Energy（能源）及部分Industrials/Materials行业，对Technology、"
                     "Healthcare、Consumer等多数行业相关性很低，请结合每支标的自己的行业分类"
                     "判断，不要不分行业地把油价波动同等代入所有个股的评分。")
+        # ✅ 【新增】VIX数据本来就在抓，但之前只是丢给AI当参考数字，没有转成明确规则。
+        # VIX>25通常代表市场处于偏恐慌/高波动状态，历史上这种环境下追高型技术形态的
+        # 失败率明显更高——这是有共识的市场常识，不是针对具体某支股票的预测。
+        if vix_value is not None:
+            if vix_value >= 30:
+                guidance += (f"\n【VIX风控提示】当前VIX={round(vix_value,1)}，处于极度恐慌区间"
+                             f"（>=30）。这种环境下追高型/突破型技术形态失败率显著偏高，"
+                             f"请大幅提高评分门槛，优先考虑防御性板块或明确的超跌反转设置，"
+                             f"减少激进追涨型推荐的数量。")
+            elif vix_value >= 25:
+                guidance += (f"\n【VIX风控提示】当前VIX={round(vix_value,1)}，处于偏高波动区间"
+                             f"（>=25）。请相应提高评分门槛，对追高型技术形态更加谨慎。")
         return "\n".join(lines) + guidance
     return "暂无实时大宗商品与国债收益率宏观数据。"
 
@@ -1875,6 +1891,65 @@ if __name__ == "__main__":
         if skipped > 0:
             print(f"⏭️ 写账过滤：跳过 {skipped} 条（已斩仓或三字段不完整），不写入新追踪记录。")
 
+        # ✅ 【新增】财报日期风险检查：技术面/新闻面再干净，财报本身是独立的二元事件
+        # 风险——业绩不及预期照样跳空大跌，跟RSI/MACD反映的完全是两类风险。这里只做
+        # 检查+标注，不做硬性剔除（财报期的强setup也可能是刻意的博弈机会），让使用者
+        # 自己决定要不要在持有期跨过财报的标的上降低仓位或收紧止损。
+        earnings_warnings = []
+        for i in chosen_to_write:
+            ticker = str(i.get('Ticker', ''))
+            hold_period_str = str(i.get('Hold_Period', ''))
+            days_match = re.findall(r'\d+', hold_period_str)
+            max_hold_days = max(int(d) for d in days_match) if days_match else 14
+            try:
+                edates = yf.Ticker(ticker).get_earnings_dates(limit=4)
+                if edates is not None and not edates.empty:
+                    now_ts = pd.Timestamp.now(tz=edates.index.tz) if edates.index.tz else pd.Timestamp.now()
+                    upcoming = edates.index[(edates.index >= now_ts) & (edates.index <= now_ts + pd.Timedelta(days=max_hold_days))]
+                    if len(upcoming) > 0:
+                        edate_str = upcoming[0].strftime('%Y-%m-%d')
+                        earnings_warnings.append(f"{i.get('Name','')}({ticker}) 预计{edate_str}公布财报")
+                        i['_earnings_risk'] = edate_str
+            except Exception as e:
+                print(f"⚠️ 财报日期查询失败 [{ticker}]: {e}（不影响正常流程，仅跳过该项风险标注）")
+
+        if earnings_warnings:
+            print(f"⚠️ 财报期风险：{earnings_warnings}")
+            earnings_html = (
+                f"<div style='background:#fce4ec;border-left:5px solid #c2185b;padding:15px 20px;"
+                f"margin:15px 0;border-radius:8px;'>"
+                f"<b>📅 财报日期风险提示：</b>以下标的预计在建议持有期内公布财报，"
+                f"财报是独立于技术面的二元事件风险（业绩不及预期可能跳空下跌，与技术形态无关）："
+                f"<br>{'<br>'.join(earnings_warnings)}</div>"
+            )
+            full_html = full_html.replace("[END_OF_QUANT_REPORT]", f"{earnings_html}\n[END_OF_QUANT_REPORT]")
+
+        # ✅ 【新增】板块集中度警示：AI是逐支独立打分的，没有机制去看"今天选出来的
+        # 几支股票是不是全押在同一个板块/主题上"——表面上是N个独立仓位，如果板块
+        # 高度集中，实际上是1个集中仓位，单一利空能同时打到全部。这里不做硬性阻挡
+        # （有时候集中在一个主题是刻意判断），只是让集中度可见，写进邮件里。
+        if len(chosen_to_write) >= 2:
+            sector_counts = {}
+            for i in chosen_to_write:
+                sec = _US_SECTOR_MAP.get(str(i.get('Ticker', '')), '未分类')
+                sector_counts.setdefault(sec, []).append(f"{i.get('Name','')}({i.get('Ticker','')})")
+            max_sector, max_list = max(sector_counts.items(), key=lambda kv: len(kv[1]))
+            concentration_pct = len(max_list) / len(chosen_to_write) * 100
+            if len(max_list) >= 3 or concentration_pct >= 60:
+                concentration_html = (
+                    f"<div style='background:#fff3e0;border-left:5px solid #f57c00;padding:15px 20px;"
+                    f"margin:15px 0;border-radius:8px;'>"
+                    f"<b>⚠️ 板块集中度提示：</b>今日 {len(chosen_to_write)} 支推荐中有 "
+                    f"{len(max_list)} 支（{round(concentration_pct)}%）集中在 <b>{max_sector}</b> 板块："
+                    f"{', '.join(max_list)}。这些仓位对同一板块利空的敞口是叠加的，不是完全独立的"
+                    f"{len(max_list)}笔风险，请自行评估是否需要分散。</div>"
+                )
+                full_html = full_html.replace(
+                    "[END_OF_QUANT_REPORT]",
+                    f"{concentration_html}\n[END_OF_QUANT_REPORT]"
+                )
+                print(f"⚠️ 板块集中度提示：{max_sector} 板块占今日推荐的 {round(concentration_pct)}%（{len(max_list)}/{len(chosen_to_write)}）")
+
         ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
         ts_date_file = datetime.datetime.now().strftime('%Y%m%d')
 
@@ -1894,7 +1969,8 @@ if __name__ == "__main__":
             # （item['Price'] * (1+default_stop_loss_pct/100)，见 match_pool_to_report）。
             # 参考价不准，止损位这个"锚点"从一开始就偏了。review.py 拿到真实开盘价后会按比例
             # （真实开盘价/Scan_Ref_Price）平移止损位，这个字段只用于那一次计算。
-            pending_header = "Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price\n"
+            # ✅ 【新增】ATR_Pct 也带上，让evolve.py之后能验证ATR动态止损是不是真的比固定-5%好
+            pending_header = "Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct\n"
             with open(pending_file, "w", encoding="utf-8") as f:
                 f.write(pending_header)
                 for i in chosen_to_write:
@@ -1912,7 +1988,8 @@ if __name__ == "__main__":
                     stop_loss = i.get('Stop_Loss', 'N/A')
                     score = i.get('Score', 'N/A')
                     scan_ref_price = i.get('Price', i.get('Open_Price', ''))
-                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price}\n")
+                    atr_pct_val = i.get('ATR_Pct', '')
+                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price},{atr_pct_val}\n")
 
             print(f"✅ 共生成 {len(chosen_to_write)} 条美股推荐记录（已保存至 {pending_file}，不含价格）")
             print(f"⏳ 开盘价/收盘价将在盘后 review.py 执行时用完整行情数据补充写入 trade_history.csv")
