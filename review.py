@@ -94,7 +94,9 @@ def _migrate_trade_history_add_close_price(log_file):
     trade_history.csv 表头升级：老数据没有 Close_Price 列，也没有 evolve.py 实际会读的
     5 个技术信号列（技术评分/MACD金叉/周线共振/KDJ_J回升/量能放大——这几个字段
     scan.py 早就算出来了，但从来没有接到 trade_history.csv 里，导致 evolve.py 里
-    "技术信号有效性分析"和"技术评分分层胜率"这两部分一直是拿空值在跑）。
+    "技术信号有效性分析"和"技术评分分层胜率"这两部分一直是拿空值在跑），也没有
+    ATR_Pct（新加的ATR动态止损用来算止损距离的波动率依据，不带上没法用evolve.py
+    验证止损从固定-5%换成ATR动态算这件事到底有没有用）。
     全部加在表末尾，迁移很简单——每条老数据行末尾补齐对应数量的空字段即可。
     """
     if not (os.path.exists(log_file) and os.path.getsize(log_file) > 0):
@@ -104,7 +106,7 @@ def _migrate_trade_history_add_close_price(log_file):
     if not old_lines:
         return
 
-    trailing_cols = ["Close_Price", "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大"]
+    trailing_cols = ["Close_Price", "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大", "ATR_Pct"]
     missing_cols = [c for c in trailing_cols if c not in old_lines[0]]
     if not missing_cols:
         return
@@ -198,7 +200,7 @@ def supplement_us_stocks_from_pending():
     _migrate_trade_history_add_close_price(log_file)
     new_header_cols = ["Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias",
                         "Hold_Period", "Stop_Loss", "Exit_Date", "Exit_Price", "Status", "Close_Price",
-                        "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大"]
+                        "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大", "ATR_Pct"]
     new_header = ",".join(new_header_cols) + "\n"
 
     for pending_file in pending_files:
@@ -287,6 +289,7 @@ def supplement_us_stocks_from_pending():
                     '周线共振': row.get('周线共振', ''),
                     'KDJ_J回升': row.get('KDJ_J回升', ''),
                     '量能放大': row.get('量能放大', ''),
+                    'ATR_Pct': row.get('ATR_Pct', ''),
                 })
 
             if missing_price_tickers:
@@ -655,7 +658,7 @@ prompt = (
 ai_html = ""
 with client.messages.stream(
     model=TARGET_MODEL,
-    max_tokens=50000,
+    max_tokens=30000,
     temperature=0.1,
     messages=[{"role": "user", "content": prompt}]
 ) as stream:
