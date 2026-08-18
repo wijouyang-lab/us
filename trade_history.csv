@@ -251,3 +251,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-08-17,AMAT,Applied Materials,Core_Dragon,67,518.0,44.9,-3.26,10-14天,$475.94,,,Active,535.3099975585938,4,False,False,False,True,7.04
 2026-08-17,SLB,Schlumberger,Core_Dragon,70,53.97999954223633,61.8,6.83,8-12天,$49.69,,,Active,53.86000061035156,11,False,True,False,False,3.06
 2026-08-17,WDC,Western Digital,Core_Dragon,75,525.5250244140625,50.4,1.97,10-14天,$483.38,,,Active,536.010009765625,9,True,False,False,False,9.29
+2026-08-18,RDDT,Reddit,Core_Dragon,80,166.10000610351562,55.3,7.39,7-14天,$153.89,,,Active,158.25,15,True,False,False,True,6.81
+2026-08-18,V,Visa Inc.,Core_Dragon,79,359.6199951171875,56.2,0.5,10-14天,$343.67,,,Active,364.25,4,False,False,False,True,1.96
+2026-08-18,KDP,Keurig Dr Pepper,Core_Dragon,69,30.700000762939453,56.7,3.2,14-28天,$29.1,,,Active,30.790000915527344,9,True,False,False,False,3.18
+2026-08-18,QCOM,Qualcomm,Core_Dragon,65,157.88999938964844,47.1,1.59,10-21天,$150.47,,,Active,160.19000244140625,5,False,False,False,False,4.69
