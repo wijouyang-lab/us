@@ -1,0 +1,6 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct
+2026-08-19,PPL,PPL Corporation,Core_Dragon,49.8,0.09,6,False,False,False,True,14-21天,$33.5,69,pending,35.62,1.93
+2026-08-19,CRM,Salesforce,Core_Dragon,59.2,5.62,8,False,True,True,False,10-14天,$183,72,pending,196.14,4.1
+2026-08-19,KLAC,KLA Corporation,Core_Dragon,44.8,-1.24,4,False,False,False,True,10-14天,$182,66,pending,194.79,6.44
+2026-08-19,PG,Procter & Gamble,Core_Dragon,42.5,-1.65,15,False,False,True,True,14-21天,$138,64,pending,143.45,1.99
+2026-08-19,NEE,NextEra Energy,Core_Dragon,45.4,-0.91,4,False,False,False,True,14-21天,$81,68,pending,86.22,1.76
