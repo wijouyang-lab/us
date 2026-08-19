@@ -255,3 +255,8 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-08-18,V,Visa Inc.,Core_Dragon,79,359.6199951171875,56.2,0.5,10-14天,$343.67,,,Active,364.25,4,False,False,False,True,1.96
 2026-08-18,KDP,Keurig Dr Pepper,Core_Dragon,69,30.700000762939453,56.7,3.2,14-28天,$29.1,,,Active,30.790000915527344,9,True,False,False,False,3.18
 2026-08-18,QCOM,Qualcomm,Core_Dragon,65,157.88999938964844,47.1,1.59,10-21天,$150.47,,,Active,160.19000244140625,5,False,False,False,False,4.69
+2026-08-19,PPL,PPL Corporation,Core_Dragon,69,35.90999984741211,49.8,0.09,14-21天,$33.77,,,Active,35.4900016784668,6,False,False,False,True,1.93
+2026-08-19,CRM,Salesforce,Core_Dragon,72,194.2100067138672,59.2,5.62,10-14天,$181.2,,,Active,206.08999633789062,8,False,True,True,False,4.1
+2026-08-19,KLAC,KLA Corporation,Core_Dragon,66,196.43499755859375,44.8,-1.24,10-14天,$183.54,,,Active,187.27000427246094,4,False,False,False,True,6.44
+2026-08-19,PG,Procter & Gamble,Core_Dragon,64,144.3000030517578,42.5,-1.65,14-21天,$138.82,,,Active,144.3800048828125,15,False,False,True,True,1.99
+2026-08-19,NEE,NextEra Energy,Core_Dragon,68,86.54000091552734,45.4,-0.91,14-21天,$81.3,,,Active,85.91000366210938,4,False,False,False,True,1.76
