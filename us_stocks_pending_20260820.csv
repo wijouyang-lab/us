@@ -1,0 +1,6 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct
+2026-08-20,NFLX,Netflix,Core_Dragon,63.9,8.05,11,False,True,False,False,10-14天,$74,72,pending,80.22,3.12
+2026-08-20,NOW,ServiceNow,Core_Dragon,62.2,9.12,15,False,True,True,False,10-14天,$117,76,pending,127.2,5.23
+2026-08-20,MSFT,Microsoft,Core_Dragon,63.5,4.59,12,False,True,True,False,10-14天,$446,71,pending,484.31,2.74
+2026-08-20,COIN,Coinbase,Core_Dragon,53.8,4.14,16,True,False,True,True,7-10天,$147,74,pending,160.2,5.59
+2026-08-20,EL,Estée Lauder Companies (The),Core_Dragon,72.7,14.22,40,True,True,True,True,10-14天,$90,87,pending,98.01,3.49
