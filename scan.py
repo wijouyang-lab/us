@@ -1551,44 +1551,55 @@ def check_rule_based_sell_signals(current_prices_map, exclude_tickers=None):
     removed_tickers = []
 
     for _, row in holdings.iterrows():
-        ticker = str(row['Ticker'])
-        buy_price = float(row['Price'])
-        buy_date = row['Date']
-        hold_days = _parse_hold_days(row.get('Hold_Period'))
-        stop_loss_val = _parse_stop_loss_price(row.get('Stop_Loss'))
-        cur_price = current_prices_map.get(ticker, buy_price)
+        # ✅ 【新增】单只票处理失败（比如 Price 缺失/格式异常——之前的修复
+        # 里，拿不到真实开盘价时会留空而不是造假，所以这种情况现在是
+        # 合法可能出现的）不应该让其余所有持仓的止损/到期检测全部跟着
+        # 失败。原来这里没有任何 try/except，一支票数据有问题会让整个
+        # 函数抛出未捕获异常，调用处也没有包try/except，等于会让整个
+        # scan.py 主流程崩溃，导致当天所有本该触发的卖出信号全部检测不到。
+        try:
+            ticker = str(row['Ticker'])
+            buy_price = float(row['Price'])
+            buy_date = row['Date']
+            hold_days = _parse_hold_days(row.get('Hold_Period'))
+            stop_loss_val = _parse_stop_loss_price(row.get('Stop_Loss'))
+            cur_price = current_prices_map.get(ticker, buy_price)
 
-        signal_type = None
-        reason = ""
-        if stop_loss_val is not None and cur_price <= stop_loss_val:
-            signal_type = "止损触发"
-            reason = f"现价${cur_price}已跌破止损位${stop_loss_val}，按风控纪律应立即止损离场"
-        elif hold_days is not None:
-            maturity_date = buy_date + datetime.timedelta(days=hold_days)
-            if now >= maturity_date:
-                signal_type = "持有到期"
-                days_held_now = (now - buy_date).days
-                reason = f"已持有{days_held_now}天，达到/超过建议持股周期（{row.get('Hold_Period')}）上限，按纪律应清仓离场"
+            signal_type = None
+            reason = ""
+            if stop_loss_val is not None and cur_price <= stop_loss_val:
+                signal_type = "止损触发"
+                reason = f"现价${cur_price}已跌破止损位${stop_loss_val}，按风控纪律应立即止损离场"
+            elif hold_days is not None:
+                maturity_date = buy_date + datetime.timedelta(days=hold_days)
+                if now >= maturity_date:
+                    signal_type = "持有到期"
+                    days_held_now = (now - buy_date).days
+                    reason = f"已持有{days_held_now}天，达到/超过建议持股周期（{row.get('Hold_Period')}）上限，按纪律应清仓离场"
 
-        if signal_type is None:
+            if signal_type is None:
+                continue
+
+            pnl_pct = round(((cur_price - buy_price) / buy_price) * 100, 2)
+            sell_signals.append({
+                "ticker": ticker,
+                "name": str(row.get('Name', ticker)),
+                "signal_type": signal_type,
+                "buy_price": buy_price,
+                "buy_date": buy_date.strftime('%Y-%m-%d'),
+                "current_price": cur_price,
+                "pnl_pct": pnl_pct,
+                "days_held": (now - buy_date).days,
+                "hold_period": row.get('Hold_Period', 'N/A'),
+                "stop_loss": row.get('Stop_Loss', 'N/A'),
+                "score": row.get('Score', 'N/A'),
+                "reason": reason,
+            })
+            removed_tickers.append(ticker)
+        except Exception as e:
+            print(f"⚠️ [阶段0b] {row.get('Ticker','?')} 止损/到期检测出错，跳过该标的（不影响其余持仓的检测）: {e}")
             continue
 
-        pnl_pct = round(((cur_price - buy_price) / buy_price) * 100, 2)
-        sell_signals.append({
-            "ticker": ticker,
-            "name": str(row.get('Name', ticker)),
-            "signal_type": signal_type,
-            "buy_price": buy_price,
-            "buy_date": buy_date.strftime('%Y-%m-%d'),
-            "current_price": cur_price,
-            "pnl_pct": pnl_pct,
-            "days_held": (now - buy_date).days,
-            "hold_period": row.get('Hold_Period', 'N/A'),
-            "stop_loss": row.get('Stop_Loss', 'N/A'),
-            "score": row.get('Score', 'N/A'),
-            "reason": reason,
-        })
-        removed_tickers.append(ticker)
 
     if not sell_signals:
         print("✅ [阶段0b] 规则审查：当前持仓无止损触发或持有到期信号。")
