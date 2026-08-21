@@ -1443,7 +1443,6 @@ MACD信号优先级（从高到低）：
     with client.messages.stream(
         model=TARGET_MODEL,
         max_tokens=80000,
-        temperature=0.25,
         messages=[{"role": "user", "content": prompt}]
     ) as stream:
         for text in stream.text_stream:
