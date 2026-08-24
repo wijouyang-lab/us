@@ -1,0 +1,6 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct
+2026-08-24,MRNA,Moderna,Core_Dragon,71.6,99.99,33,False,True,False,True,3-10天,$138,76,pending,145.13,10.26
+2026-08-24,BSX,Boston Scientific,Core_Dragon,56.9,2.33,25,False,True,True,True,7-14天,$48,71,pending,50.37,3.46
+2026-08-24,MOS,Mosaic Company (The),Core_Dragon,63.3,7.94,27,True,True,False,True,5-14天,$22.5,78,pending,24.41,4.11
+2026-08-24,C,Citigroup,Core_Dragon,43.9,-2.05,10,False,False,True,True,5-10天,$125,65,pending,131.65,2.47
+2026-08-24,AES,AES Corporation,Core_Dragon,64.2,0.42,8,False,True,False,True,10-21天,$13.8,68,pending,14.77,0.36
