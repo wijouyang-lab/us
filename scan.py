@@ -1003,7 +1003,7 @@ def analyze_market_signals(combined_news_text, client):
 
         response = client.messages.create(
             model="claude-opus-4-8",   # haiku在此代理不可用，统一用opus
-            max_tokens=2000,
+            max_tokens=80000,
             temperature=0,
             messages=[{"role": "user", "content": prompt}]
         )
