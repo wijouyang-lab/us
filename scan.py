@@ -399,6 +399,7 @@ def build_stock_pool(tickers):
 
             # ── 周线计算（共振过滤）──
             weekly_bullish = False
+            weekly_macd_rising = False  # 【新增】初始化周线MACD上升状态
             try:
                 df_w = yf.download(ts_code, period="1y", interval="1wk", progress=False, auto_adjust=True)
                 if df_w is not None and not df_w.empty and len(df_w) >= 12:
@@ -414,9 +415,10 @@ def build_stock_pool(tickers):
                     w_hist = ((w_exp1 - w_exp2) - (w_exp1 - w_exp2).ewm(span=9, adjust=False).mean()) * 2
                     w_hist_rising = float(w_hist.iloc[-1]) > float(w_hist.iloc[-2])
                     weekly_bullish = bool(wma5 > wma10 and w_hist_rising)
-            weekly_macd_rising = w_hist_rising  # 【新增】存储周线MACD柱状线上升状态
+                    weekly_macd_rising = w_hist_rising  # 【新增】存储周线MACD柱状线上升状态
             except Exception:
                 weekly_bullish = False
+                weekly_macd_rising = False
 
             # ── KDJ（手动迭代）──
             closes = df['Close'].values.astype(float)
