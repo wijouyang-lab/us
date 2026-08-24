@@ -194,7 +194,8 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
     # ── 按技术信号拆分 ──
     signal_stats = {}
     for sig_col, label in [("macd_cross", "MACD金叉"), ("weekly_sync", "周线共振"),
-                            ("kdj_rising", "KDJ回升"), ("vol_surge", "量能放大")]:
+                            ("kdj_rising", "KDJ回升"), ("vol_surge", "量能放大"),
+                            ("period_resonance", "周期共振")]:
         if sig_col not in df_c.columns:
             continue
         for val, grp in df_c.groupby(sig_col):
@@ -329,7 +330,7 @@ def evolve_strategy(metrics: dict):
     try:
         response = client.messages.create(
             model=EVOLVE_MODEL,
-            max_tokens=2000,
+            max_tokens=50000,
             temperature=0.3,
             messages=[{"role": "user", "content": prompt}],
         )
