@@ -106,7 +106,7 @@ def _migrate_trade_history_add_close_price(log_file):
     if not old_lines:
         return
 
-    trailing_cols = ["Close_Price", "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大", "ATR_Pct"]
+    trailing_cols = ["Close_Price", "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大", "ATR_Pct", "周期共振"]
     missing_cols = [c for c in trailing_cols if c not in old_lines[0]]
     if not missing_cols:
         return
@@ -200,7 +200,7 @@ def supplement_us_stocks_from_pending():
     _migrate_trade_history_add_close_price(log_file)
     new_header_cols = ["Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias",
                         "Hold_Period", "Stop_Loss", "Exit_Date", "Exit_Price", "Status", "Close_Price",
-                        "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大", "ATR_Pct"]
+                        "技术评分", "MACD金叉", "周线共振", "KDJ_J回升", "量能放大", "ATR_Pct", "周期共振"]
     new_header = ",".join(new_header_cols) + "\n"
 
     for pending_file in pending_files:
@@ -290,6 +290,7 @@ def supplement_us_stocks_from_pending():
                     'KDJ_J回升': row.get('KDJ_J回升', ''),
                     '量能放大': row.get('量能放大', ''),
                     'ATR_Pct': row.get('ATR_Pct', ''),
+                    '周期共振': row.get('周期共振', ''),
                 })
 
             if missing_price_tickers:
@@ -658,7 +659,7 @@ prompt = (
 ai_html = ""
 with client.messages.stream(
     model=TARGET_MODEL,
-    max_tokens=30000,
+    max_tokens=50000,
     messages=[{"role": "user", "content": prompt}]
 ) as stream:
     for text in stream.text_stream:
