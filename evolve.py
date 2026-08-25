@@ -38,20 +38,42 @@ def safe_float(val, default=None):
         return default
 
 
+def _load_scan_version_boundaries():
+    """读取 scan.py 版本标记文件，把代码逻辑变更日也视为世代分界"""
+    version_file = "scan_version.txt"
+    if not os.path.exists(version_file):
+        return []
+    try:
+        with open(version_file, "r", encoding="utf-8") as f:
+            content = f.read().strip()
+        if content and "," in content:
+            date_str = content.split(",")[1]
+            if date_str and len(date_str) == 10:
+                return [date_str]
+    except Exception:
+        pass
+    return []
+
+
 def _load_evolution_boundaries():
     """
     从 strategy_evolution.json 读取历次进化发生的时间点，作为"世代"分界线。
     第0代 = 第一次进化之前的所有交易（原始策略）；第N代 = 第N次进化生效之后的交易。
+    同时接入 scan.py 代码版本变更日，确保 scan 逻辑大改（如加入 ATR 止损、周期共振）
+    后产生的交易被独立评估，不与旧代码数据混算。
     """
-    if not os.path.exists(EVOLVE_LOG):
-        return []
-    try:
-        with open(EVOLVE_LOG, "r", encoding="utf-8") as f:
-            history = json.load(f)
-        dates = [entry.get("date", "")[:10] for entry in history if entry.get("date")]
-        return sorted(set(d for d in dates if d))
-    except Exception:
-        return []
+    boundaries = []
+    if os.path.exists(EVOLVE_LOG):
+        try:
+            with open(EVOLVE_LOG, "r", encoding="utf-8") as f:
+                history = json.load(f)
+            dates = [entry.get("date", "")[:10] for entry in history if entry.get("date")]
+            boundaries.extend(dates)
+        except Exception:
+            pass
+    # 把 scan.py 代码版本变更日也纳为分代边界
+    boundaries.extend(_load_scan_version_boundaries())
+    return sorted(set(d for d in boundaries if d))
 
 
 def _segment_by_generation(df_c, boundaries):
@@ -132,6 +154,7 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
             "tech_score":    safe_float(row.get("技术评分"), default=0),
             "date":          str(row.get("Date", "")),
             "atr_pct":       safe_float(row.get("ATR_Pct"), default=None),
+            "period_resonance": str(row.get("周期共振", "")),
         })
 
     if not rows:
