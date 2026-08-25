@@ -13,6 +13,7 @@ import requests
 import yfinance as yf
 import io
 import hashlib
+import email.utils  # 【新增】解析RSS日期，过滤过期新闻
 import json
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
@@ -102,6 +103,25 @@ def get_latest_macro_news():
     print("正在抓取 CNBC/Reuters 英文财经快讯...")
     import xml.etree.ElementTree as ET
 
+    # 【新增】RSS日期解析 + 72小时时效过滤，防止旧新闻当新主线
+    def _parse_rss_date(date_str):
+        if not date_str:
+            return None
+        try:
+            dt = email.utils.parsedate_to_datetime(date_str.strip())
+            if dt.tzinfo is None:
+                dt = dt.replace(tzinfo=datetime.timezone.utc)
+            return dt.astimezone(datetime.timezone.utc)
+        except Exception:
+            return None
+
+    def _is_recent_news(date_str, max_hours=72):
+        dt = _parse_rss_date(date_str)
+        if dt is None:
+            return True  # 解析失败不过滤，避免漏掉
+        now = datetime.datetime.now(datetime.timezone.utc)
+        return (now - dt).total_seconds() <= max_hours * 3600
+
     sources = [
         ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
         ("Reuters", "https://feeds.reuters.com/reuters/businessNews"),
@@ -110,26 +130,32 @@ def get_latest_macro_news():
 
     session = get_robust_session()
     news_lines = []
+    skipped_old = 0
     for source_name, url in sources:
         try:
             response = session.get(url, timeout=10)
             root = ET.fromstring(response.content)
-            items = root.findall('.//item')[:5]
+            items = root.findall('.//item')[:8]  # 【改】多取几条，过滤后可能不够
             for item in items:
                 title = item.find('title')
                 pub_date = item.find('pubDate')
                 if title is not None:
-                    time_str = pub_date.text[:16] if pub_date is not None else ""
-                    news_lines.append(f"[{source_name}] {time_str} - {title.text}")
+                    time_str = pub_date.text[:25] if pub_date is not None else ""
+                    if not _is_recent_news(time_str, max_hours=72):
+                        skipped_old += 1
+                        continue
+                    news_lines.append(f"[{source_name}] {time_str[:16]} - {title.text}")
         except Exception as e:
             print(f"⚠️ {source_name} 抓取失败: {e}")
+
+    if skipped_old > 0:
+        print(f"📰 过滤掉 {skipped_old} 条超过72小时的旧新闻")
 
     if news_lines:
         print(f"✅ 成功抓取 {len(news_lines)} 条宏观财经快讯")
         return "\n".join(news_lines)
 
     return "暂无实时英文财经新闻，请基于昨收盘及底层产业逻辑进行推演。"
-
 
 def get_megacap_breaking_news():
     """
@@ -259,13 +285,27 @@ def get_stock_news(ticker, max_items=6):
     try:
         response = session.get(url, timeout=8)
         root = ET.fromstring(response.content)
-        items = root.findall('.//item')[:max_items]
+        items = root.findall('.//item')[:max_items + 3]  # 【改】多取几条，过滤后可能不够
         headlines = []
+        skipped_old = 0
         for item in items:
             title = item.find('title')
+            pub_date = item.find('pubDate')
             if title is not None and title.text:
+                # 【新增】过滤超过48小时的旧新闻
+                if pub_date is not None and pub_date.text:
+                    dt = email.utils.parsedate_to_datetime(pub_date.text.strip()) if hasattr(email.utils, 'parsedate_to_datetime') else None
+                    if dt:
+                        if dt.tzinfo is None:
+                            dt = dt.replace(tzinfo=datetime.timezone.utc)
+                        now = datetime.datetime.now(datetime.timezone.utc)
+                        if (now - dt).total_seconds() > 48 * 3600:
+                            skipped_old += 1
+                            continue
                 headlines.append(title.text.strip())
-        return headlines
+        if skipped_old > 0:
+            print(f"📰 [{ticker}] 过滤掉 {skipped_old} 条超过48小时的旧新闻")
+        return headlines[:max_items]
     except Exception:
         return []
 
@@ -586,10 +626,20 @@ def screen_technical_setups(pool_data):
         stock["周期共振"] = is_resonance
         stock["共振形态"] = resonance_patterns
 
-        # 1. MACD信号（权重最高）
+        # 1. MACD信号（权重最高）——【改】零轴细分，抑制高位金叉追高
         if stock.get("MACD金叉"):
-            tech_score += 15
-            tech_reasons.append("MACD金叉(+15)")
+            h_last = stock.get("MACD_HIST_LAST", 0)
+            if h_last < -0.5:
+                # 零轴下方金叉 = 底背离，最高优先级
+                tech_score += 18
+                tech_reasons.append(f"MACD零轴下金叉底背离({h_last:.2f})(+18)")
+            elif abs(h_last) <= 0.5:
+                tech_score += 14
+                tech_reasons.append(f"MACD零轴附近金叉({h_last:.2f})(+14)")
+            else:
+                # 零轴上方高位金叉 = 追高风险，降低分数
+                tech_score += 6
+                tech_reasons.append(f"⚠️MACD高位金叉({h_last:.2f})(+6)")
         elif stock.get("MACD绿柱缩短"):
             h_last = stock.get("MACD_HIST_LAST", 0)
             h_prev = stock.get("MACD_HIST_PREV", 0)
@@ -600,8 +650,14 @@ def screen_technical_setups(pool_data):
                 tech_score += 8
                 tech_reasons.append("MACD绿柱初现缩短(+8)")
         elif stock.get("MACD趋势") == "走强" and stock.get("MACD_HIST_LAST", 0) > 0:
-            tech_score += 4
-            tech_reasons.append("MACD红柱走强(+4)")
+            h_last = stock.get("MACD_HIST_LAST", 0)
+            if h_last > 3:
+                # 红柱已很高 = 追高风险
+                tech_score += 2
+                tech_reasons.append(f"⚠️MACD红柱高位({h_last:.2f})(+2)")
+            else:
+                tech_score += 4
+                tech_reasons.append(f"MACD红柱走强({h_last:.2f})(+4)")
 
         # 2. KDJ J值回升
         j_val      = stock.get("KDJ_J", 50)
@@ -842,7 +898,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     try:
         response = client.messages.create(
             model=TARGET_MODEL,
-            max_tokens=80000,
+            max_tokens=2000,
             temperature=0.1,
             messages=[{"role": "user", "content": review_prompt}]
         )
