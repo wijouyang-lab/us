@@ -103,7 +103,7 @@ def get_latest_macro_news():
     print("正在抓取 CNBC/Reuters 英文财经快讯...")
     import xml.etree.ElementTree as ET
 
-    # 【新增】RSS日期解析 + 72小时时效过滤，防止旧新闻当新主线
+    # 【改】RSS日期解析 + 时效权重标签，今日新闻权重最高，逐日递减
     def _parse_rss_date(date_str):
         if not date_str:
             return None
@@ -115,12 +115,23 @@ def get_latest_macro_news():
         except Exception:
             return None
 
-    def _is_recent_news(date_str, max_hours=72):
+    def _get_news_age_tag(date_str):
+        """返回新闻时效标签和权重提示"""
         dt = _parse_rss_date(date_str)
         if dt is None:
-            return True  # 解析失败不过滤，避免漏掉
+            return "[时间未知]"
         now = datetime.datetime.now(datetime.timezone.utc)
-        return (now - dt).total_seconds() <= max_hours * 3600
+        delta_hours = (now - dt).total_seconds() / 3600
+        if delta_hours <= 6:
+            return "[🔥今日最新-权重最高]"
+        elif delta_hours <= 24:
+            return "[📰今日-高权重]"
+        elif delta_hours <= 48:
+            return "[📄昨日-中等权重]"
+        elif delta_hours <= 72:
+            return "[📑前日-低权重]"
+        else:
+            return None  # 超过72小时直接丢弃
 
     sources = [
         ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
@@ -135,16 +146,17 @@ def get_latest_macro_news():
         try:
             response = session.get(url, timeout=10)
             root = ET.fromstring(response.content)
-            items = root.findall('.//item')[:8]  # 【改】多取几条，过滤后可能不够
+            items = root.findall('.//item')[:12]  # 多取几条，过滤+权重分级后可能不够
             for item in items:
                 title = item.find('title')
                 pub_date = item.find('pubDate')
                 if title is not None:
                     time_str = pub_date.text[:25] if pub_date is not None else ""
-                    if not _is_recent_news(time_str, max_hours=72):
+                    age_tag = _get_news_age_tag(time_str)
+                    if age_tag is None:
                         skipped_old += 1
                         continue
-                    news_lines.append(f"[{source_name}] {time_str[:16]} - {title.text}")
+                    news_lines.append(f"{age_tag}[{source_name}] {time_str[:16]} - {title.text}")
         except Exception as e:
             print(f"⚠️ {source_name} 抓取失败: {e}")
 
@@ -285,26 +297,34 @@ def get_stock_news(ticker, max_items=6):
     try:
         response = session.get(url, timeout=8)
         root = ET.fromstring(response.content)
-        items = root.findall('.//item')[:max_items + 3]  # 【改】多取几条，过滤后可能不够
+        items = root.findall('.//item')[:max_items + 5]  # 多取几条，分级后可能不够
         headlines = []
-        skipped_old = 0
         for item in items:
             title = item.find('title')
             pub_date = item.find('pubDate')
             if title is not None and title.text:
-                # 【新增】过滤超过48小时的旧新闻
+                # 【改】给每条新闻加时效力标签，而不是简单过滤
+                age_tag = ""
                 if pub_date is not None and pub_date.text:
-                    dt = email.utils.parsedate_to_datetime(pub_date.text.strip()) if hasattr(email.utils, 'parsedate_to_datetime') else None
-                    if dt:
+                    try:
+                        dt = email.utils.parsedate_to_datetime(pub_date.text.strip())
                         if dt.tzinfo is None:
                             dt = dt.replace(tzinfo=datetime.timezone.utc)
                         now = datetime.datetime.now(datetime.timezone.utc)
-                        if (now - dt).total_seconds() > 48 * 3600:
-                            skipped_old += 1
-                            continue
-                headlines.append(title.text.strip())
-        if skipped_old > 0:
-            print(f"📰 [{ticker}] 过滤掉 {skipped_old} 条超过48小时的旧新闻")
+                        delta_hours = (now - dt).total_seconds() / 3600
+                        if delta_hours <= 6:
+                            age_tag = "[🔥最新]"
+                        elif delta_hours <= 24:
+                            age_tag = "[📰今日]"
+                        elif delta_hours <= 48:
+                            age_tag = "[📄昨日]"
+                        elif delta_hours <= 72:
+                            age_tag = "[📑前日]"
+                        else:
+                            continue  # 超过72小时丢弃
+                    except Exception:
+                        age_tag = ""
+                headlines.append(f"{age_tag}{title.text.strip()}")
         return headlines[:max_items]
     except Exception:
         return []
@@ -1374,9 +1394,14 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
 每只候选标的已附带「技术评分:XX/40」「🟢周日共振 / 🔴仅日线」标签，这是代码客观计算的，你不得修改这些数值。
 
 【核心过滤规则】（基于回测验证结果）：
-1. 新闻定板块（时效性硬约束）：
+1. 新闻定板块（时效性权重递减）：
    · 你必须先从宏观新闻中提炼出1-2条最强产业链主线，然后**只在这些主线板块中寻找标的**。
-   · **时效性红线**：只认过去48-72小时内首次披露、且尚未被股价充分反应的重大催化。如果某条新闻（如Moderna癌症疫苗、某公司业绩超预期）在3个交易日前就已经出现在 headlines 中，或该板块/个股在过去5个交易日已上涨超过12%，则视为"已充分定价/已发酵完毕"，**不得将其作为今日主线**。
+   · **新闻时效权重规则**（每条新闻前面已标注时效标签，你必须严格遵守）：
+     - [🔥今日最新-权重最高]：6小时内刚披露的重大催化，消息面评分可给满分（25分）
+     - [📰今日-高权重]：24小时内的新闻，消息面评分给80%权重（20分）
+     - [📄昨日-中等权重]：24-48小时的新闻，消息面评分给50%权重（12分），且必须确认该板块/个股尚未因这条新闻而大涨（过去3日涨幅<8%）
+     - [📑前日-低权重]：48-72小时的新闻，消息面评分给20%权重（5分），**仅作为辅助参考，不能作为主线逻辑的核心依据**
+   · **时效性红线**：超过72小时的新闻，或该板块/个股在过去5个交易日已上涨超过12%，则视为"已充分定价/已发酵完毕"，**不得将其作为今日主线**。
    · 对已发酵新闻的正确处理：可以在"今日雷区"中提一句"XX板块因上周XX事件已累积较大涨幅，短期追高风险高"，但**绝不能把它排进Top1-5的主线逻辑**。
 
 2. 技术选个股：在主线板块中，**必须优先选择【周期共振】为 True 的标的**（即代码已自动识别满足：日线MACD↑ + 周线MACD↑ + 看涨吞没/启明星/刺穿线/锤子线）。
@@ -1758,9 +1783,13 @@ def build_sell_signal_card(dropped_info, rule_sell_signals):
     for s in rule_sell_signals:
         pnl_color = "#d32f2f" if s['pnl_pct'] >= 0 else "#388e3c"
         badge_bg = "#e64a19" if s['signal_type'] == '止损触发' else "#607d8b"
-        rows_html += f'<tr style="border-bottom:1px solid #ffe0b2;"><td style="padding:8px 6px;"><b>{s["name"]} ({s["ticker"]})</b></td><td style="padding:8px 6px;"><span style="background:{badge_bg};color:#fff;padding:2px 7px;border-radius:4px;font-size:12px;">{s["signal_type"]}</span></td><td style="padding:8px 6px;">买入${s["buy_price"]} → 现价${s["current_price"]}，<span style="color:{pnl_color};font-weight:bold;">{s["pnl_pct"]:+.2f}%</span></td><td style="padding:8px 6px;">{s["reason"]}</td></tr>'
+        # 【改】价格格式化为2位小数，避免yfinance浮点精度垃圾
+        buy_p = round(float(s["buy_price"]), 2)
+        cur_p = round(float(s["current_price"]), 2)
+        rows_html += f'<tr style="border-bottom:1px solid #ffe0b2;"><td style="padding:8px 6px;"><b>{s["name"]} ({s["ticker"]})</b></td><td style="padding:8px 6px;"><span style="background:{badge_bg};color:#fff;padding:2px 7px;border-radius:4px;font-size:12px;">{s["signal_type"]}</span></td><td style="padding:8px 6px;">买入${buy_p:.2f} → 现价${cur_p:.2f}，<span style="color:{pnl_color};font-weight:bold;">{s["pnl_pct"]:+.2f}%</span></td><td style="padding:8px 6px;">{s["reason"]}</td></tr>'
     total = len(dropped_info or {}) + len(rule_sell_signals)
-    return f'<div style="background:#fff3e0; border-left:6px solid #e65100; padding:20px; margin-bottom:25px; border-radius:8px;"><h3 style="margin:0 0 12px 0; color:#bf360c;">🔔 今日卖出信号汇总（共{total}只 · 交易时段内可直接执行）</h3><table style="width:100%; border-collapse:collapse; font-size:14px;"><tr style="text-align:left; color:#6d4c41; border-bottom:2px solid #ffb74d;"><th style="padding:6px;">标的</th><th style="padding:6px;">触发类型</th><th style="padding:6px;">价格/浮动盈亏</th><th style="padding:6px;">理由</th></tr>{rows_html}</table><p style="margin:12px 0 0 0; font-size:13px; color:#6d4c41;">以上标的已在 trade_history.csv 中锁定状态并停止后续追踪，买卖价已归档供胜率统计。本卡片仅为系统信号，实际下单时机请结合盘口自行判断。</p></div>'
+    # 【改】添加 max-height + overflow-y:auto 实现滚动
+    return f'<div style="background:#fff3e0; border-left:6px solid #e65100; padding:20px; margin-bottom:25px; border-radius:8px; max-height:380px; overflow-y:auto;"><h3 style="margin:0 0 12px 0; color:#bf360c;">🔔 今日卖出信号汇总（共{total}只 · 交易时段内可直接执行）</h3><table style="width:100%; border-collapse:collapse; font-size:14px;"><tr style="text-align:left; color:#6d4c41; border-bottom:2px solid #ffb74d;"><th style="padding:6px;">标的</th><th style="padding:6px;">触发类型</th><th style="padding:6px;">价格/浮动盈亏</th><th style="padding:6px;">理由</th></tr>{rows_html}</table><p style="margin:12px 0 0 0; font-size:13px; color:#6d4c41;">以上标的已在 trade_history.csv 中锁定状态并停止后续追踪，买卖价已归档供胜率统计。本卡片仅为系统信号，实际下单时机请结合盘口自行判断。</p></div>'
 
 
 def build_current_holdings_card(current_prices_map):
@@ -1782,8 +1811,12 @@ def build_current_holdings_card(current_prices_map):
             cur_price = current_prices_map.get(ticker, buy_price)
             pnl_pct = round(((cur_price - buy_price) / buy_price) * 100, 2) if buy_price > 0 else 0.0
             pnl_color = "#d32f2f" if pnl_pct >= 0 else "#388e3c"
-            rows_html += f'<tr style="border-bottom:1px solid #c8e6c9;"><td style="padding:8px 6px;"><b>{row.get("Name", ticker)} ({ticker})</b></td><td style="padding:8px 6px;">${buy_price}</td><td style="padding:8px 6px;">${cur_price} (<span style="color:{pnl_color};font-weight:bold;">{pnl_pct:+.2f}%</span>)</td><td style="padding:8px 6px;">{row["Date"]}</td><td style="padding:8px 6px;">{row.get("Hold_Period", "N/A")}</td><td style="padding:8px 6px;">{row.get("Stop_Loss", "N/A")}</td></tr>'
-        return f'<div style="background:#e8f5e9; border-left:6px solid #2e7d32; padding:20px; margin-bottom:25px; border-radius:8px;"><h3 style="margin:0 0 12px 0; color:#1b5e20;">🛡️ 当前活跃持仓 (Active Holdings)</h3><table style="width:100%; border-collapse:collapse; font-size:14px;"><tr style="text-align:left; color:#1b5e20; border-bottom:2px solid #a5d6a7;"><th style="padding:6px;">标的</th><th style="padding:6px;">买入价(开盘)</th><th style="padding:6px;">现价 (盈亏)</th><th style="padding:6px;">买入日期</th><th style="padding:6px;">持股周期</th><th style="padding:6px;">止损价</th></tr>{rows_html}</table></div>'
+            # 【改】价格格式化为2位小数
+            buy_p_fmt = f"${buy_price:.2f}" if buy_price > 0 else "N/A"
+            cur_p_fmt = f"${cur_price:.2f}" if cur_price > 0 else "N/A"
+            rows_html += f'<tr style="border-bottom:1px solid #c8e6c9;"><td style="padding:8px 6px;"><b>{row.get("Name", ticker)} ({ticker})</b></td><td style="padding:8px 6px;">{buy_p_fmt}</td><td style="padding:8px 6px;">{cur_p_fmt} (<span style="color:{pnl_color};font-weight:bold;">{pnl_pct:+.2f}%</span>)</td><td style="padding:8px 6px;">{row["Date"]}</td><td style="padding:8px 6px;">{row.get("Hold_Period", "N/A")}</td><td style="padding:8px 6px;">{row.get("Stop_Loss", "N/A")}</td></tr>'
+        # 【改】添加 max-height + overflow-y:auto 实现滚动
+        return f'<div style="background:#e8f5e9; border-left:6px solid #2e7d32; padding:20px; margin-bottom:25px; border-radius:8px; max-height:320px; overflow-y:auto;"><h3 style="margin:0 0 12px 0; color:#1b5e20;">🛡️ 当前活跃持仓 (Active Holdings)</h3><table style="width:100%; border-collapse:collapse; font-size:14px;"><tr style="text-align:left; color:#1b5e20; border-bottom:2px solid #a5d6a7;"><th style="padding:6px;">标的</th><th style="padding:6px;">买入价(开盘)</th><th style="padding:6px;">现价 (盈亏)</th><th style="padding:6px;">买入日期</th><th style="padding:6px;">持股周期</th><th style="padding:6px;">止损价</th></tr>{rows_html}</table></div>'
     except Exception as e:
         print(f"⚠️ 生成持仓卡片失败: {e}")
         return ""
