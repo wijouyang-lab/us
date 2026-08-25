@@ -330,7 +330,7 @@ def evolve_strategy(metrics: dict):
     try:
         response = client.messages.create(
             model=EVOLVE_MODEL,
-            max_tokens=50000,
+            max_tokens=2000,
             temperature=0.3,
             messages=[{"role": "user", "content": prompt}],
         )
