@@ -274,3 +274,7 @@ Date,Ticker,Name,Tag,Score,Price,RSI,Bias,Hold_Period,Stop_Loss,Exit_Date,Exit_P
 2026-08-24,MOS,Mosaic Company (The),Core_Dragon,78,24.6200008392334,63.3,7.94,5-14天,$22.69,,,Active,24.0,27,True,True,False,True,4.11,
 2026-08-24,C,Citigroup,Core_Dragon,65,131.38499450683594,43.9,-2.05,5-10天,$124.75,,,Active,131.72000122070312,10,False,False,True,True,2.47,
 2026-08-24,AES,AES Corporation,Core_Dragon,68,14.75,64.2,0.42,10-21天,$13.78,,,Active,14.75,8,False,True,False,True,0.36,
+2026-08-25,GOOGL,Alphabet Inc. (Class A),Core_Dragon,72,349.375,50.2,-0.36,5-14天,$296.33,,,Active,346.9599914550781,17,True,True,False,False,2.53,
+2026-08-25,ORCL,Oracle Corporation,Core_Dragon,68,143.3000030517578,51.9,1.66,7-14天,$121.77,,,Active,144.75999450683594,12,False,True,True,False,4.6,
+2026-08-25,UBER,Uber,Core_Dragon,63,79.37999725341797,64.1,6.66,5-10天,$67.51,,,Active,80.3499984741211,6,False,True,False,False,3.2,
+2026-08-25,UPS,United Parcel Service,Core_Dragon,65,103.08000183105469,48.5,0.77,5-14天,$87.67,,,Active,105.13999938964844,11,True,False,False,False,2.14,
