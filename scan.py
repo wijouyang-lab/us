@@ -2148,7 +2148,7 @@ if __name__ == "__main__":
                     score = i.get('Score', 'N/A')
                     scan_ref_price = i.get('Price', i.get('Open_Price', ''))
                     atr_pct_val = i.get('ATR_Pct', '')
-                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price},{atr_pct_val}\n")
+                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price},{atr_pct_val},{is_resonance}\n")
 
             print(f"✅ 共生成 {len(chosen_to_write)} 条美股推荐记录（已保存至 {pending_file}，不含价格）")
             print(f"⏳ 开盘价/收盘价将在盘后 review.py 执行时用完整行情数据补充写入 trade_history.csv")
