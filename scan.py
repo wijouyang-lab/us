@@ -435,6 +435,8 @@ def build_stock_pool(tickers):
             h_last     = float(latest['MACDh'])
             h_prev     = float(prev['MACDh'])
             h_prev2    = float(df.iloc[-3]['MACDh'])
+            # 【新增】日线 MACD 柱线 V 型反转：先跌后升（P-2 > P-1 < P）
+            daily_v_reverse = (h_prev2 > h_prev) and (h_prev < h_last)
             macd_trend = "走强" if h_last > h_prev else "走弱"
             # 【新增】日线MACD柱状线是否上升（回测核心因子）
             daily_macd_rising = h_last > h_prev
@@ -476,9 +478,18 @@ def build_stock_pool(tickers):
                     w_hist_rising = float(w_hist.iloc[-1]) > float(w_hist.iloc[-2])
                     weekly_bullish = bool(wma5 > wma10 and w_hist_rising)
                     weekly_macd_rising = w_hist_rising  # 【新增】存储周线MACD柱状线上升状态
+                    # 【新增】周线 MACD 柱线 V 型反转：先跌后升
+                    if len(w_hist) >= 3:
+                        w_last  = float(w_hist.iloc[-1])
+                        w_prev  = float(w_hist.iloc[-2])
+                        w_prev2 = float(w_hist.iloc[-3])
+                        weekly_v_reverse = (w_prev2 > w_prev) and (w_prev < w_last)
+                    else:
+                        weekly_v_reverse = False
             except Exception:
                 weekly_bullish = False
                 weekly_macd_rising = False
+                weekly_v_reverse = False
 
             # ── KDJ（手动迭代）──
             closes = df['Close'].values.astype(float)
@@ -553,6 +564,9 @@ def build_stock_pool(tickers):
                 # 【新增】回测验证的周期共振核心因子
                 "日线MACD上升": daily_macd_rising,
                 "周线MACD上升": weekly_macd_rising,
+                # 【新增】日周双周期 MACD 柱线 V 型反转
+                "日线MACD_V型反转": daily_v_reverse,
+                "周线MACD_V型反转": weekly_v_reverse,
             })
         except Exception:
             continue
@@ -720,7 +734,20 @@ def screen_technical_setups(pool_data):
 
         tech_score = min(tech_score, 40)
 
-        # 【新增】如果满足周期共振，直接加15分（且不破坏40分上限）
+        # 【新增】日周双周期 MACD 柱线 V 型反转共振评分
+        daily_v = stock.get("日线MACD_V型反转", False)
+        weekly_v = stock.get("周线MACD_V型反转", False)
+        if daily_v and weekly_v:
+            tech_score = min(tech_score + 20, 40)
+            tech_reasons.append("🔥日周双V型反转共振(+20)")
+        elif daily_v:
+            tech_score = min(tech_score + 8, 40)
+            tech_reasons.append("日线V型反转(+8)")
+        elif weekly_v:
+            tech_score = min(tech_score + 4, 40)
+            tech_reasons.append("周线V型反转(+4)")
+
+                # 【新增】如果满足周期共振，直接加15分（且不破坏40分上限）
         if is_resonance:
             tech_score = min(tech_score + 15, 40)
             tech_reasons.append("🔥周期共振(+15)")
