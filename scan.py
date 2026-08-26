@@ -1077,7 +1077,7 @@ def load_evolved_rules() -> str:
         print(f"⚠️ [进化规则] 读取失败: {e}")
         return ""
 
-# ==================== 11. AI 报告生成 ====================
+# ==================== 11. AI 报告生成（强制 Top 5） ====================
 def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None, embargo_text="", sector_tech_data=None):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
@@ -1115,6 +1115,11 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
             tech_sector_block = "【技术形态板块共振归类（周日共振且技术评分>0，按GICS板块汇总）】：\n" + "\n".join(lines)
     evolved_rules_block = load_evolved_rules()
     prompt = f"""
+【最高优先级指令 — 覆盖所有其他规则】：
+你必须在 Top 1-5 中输出 5 只标的，禁止输出“暂停实盘推荐”或“今日无推荐”。
+即使所有标的评分都低于 50，也必须挑出相对最好的 5 只，并如实标注低分和风险。
+如果标的池少于 5 只，则按实际数量输出，但不得少于 3 只。
+
 你是华尔街顶级产业链研究员兼游资操盘手。你的选股方法论是：
 
 【三步选股法】：
@@ -1125,52 +1130,53 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
 第三步（技术面双向验证 + 周日共振过滤）：
 每只候选标的已附带「技术评分:XX/40」「🟢周日共振 / 🔴仅日线」标签，这是代码客观计算的，你不得修改这些数值。
 
-【核心过滤规则】（基于回测验证结果）：
+【核心过滤规则】：
 1. 新闻定板块（时效性权重递减）：
    · 你必须先从宏观新闻中提炼出1-2条最强产业链主线，然后**只在这些主线板块中寻找标的**。
    · **新闻时效权重规则**（每条新闻前面已标注时效标签，你必须严格遵守）：
      - [🔥今日最新-权重最高]：6小时内刚披露的重大催化，消息面评分可给满分（25分）
      - [📰今日-高权重]：24小时内的新闻，消息面评分给80%权重（20分）
-     - [📄昨日-中等权重]：24-48小时的新闻，消息面评分给50%权重（12分），且必须确认该板块/个股尚未因这条新闻而大涨（过去3日涨幅<8%）
-     - [📑前日-低权重]：48-72小时的新闻，消息面评分给20%权重（5分），**仅作为辅助参考，不能作为主线逻辑的核心依据**
+     - [📄昨日-中等权重]：24-48小时的新闻，消息面评分给50%权重（12分）
+     - [📑前日-低权重]：48-72小时的新闻，消息面评分给20%权重（5分），**仅作为辅助参考**
    · **时效性红线**：超过72小时的新闻，或该板块/个股在过去5个交易日已上涨超过12%，则视为"已充分定价/已发酵完毕"，**不得将其作为今日主线**。
-   · 对已发酵新闻的正确处理：可以在"今日雷区"中提一句"XX板块因上周XX事件已累积较大涨幅，短期追高风险高"，但**绝不能把它排进Top1-5的主线逻辑**。
 
-2. 技术选个股：在主线板块中，**必须优先选择【周期共振】为 True 的标的**（即代码已自动识别满足：日线MACD↑ + 周线MACD↑ + 看涨吞没/启明星/刺穿线/锤子线）。
+2. 技术选个股：在主线板块中，**优先选择【周期共振】为 True 的标的**。如果不存在共振标的，选择技术评分≥10的标的。
 
-3. 共振优先：只要存在周期共振标的，必须将其排入Top1-5，除非该标的有明确的重大负面新闻。
+3. 已涨幅降级（追高风险过滤）：
+   · 如果某标的过去5日涨幅>12% 或 RSI>70 或 乖离率>15%，需在报告中注明"短期涨幅已大，等待回调确认"。
 
-4. 无共振情况：如果主线板块内没有共振标的，再退而求其次选择技术评分≥20的标的，但须在报告中注明"无共振信号，风险较高"。
-
-5. 已涨幅降级（追高风险过滤）：
-   · 如果某标的过去5日涨幅>12% 或 RSI>70 或 乖离率>15%，即使它满足周期共振+新闻利好，也必须**降级为观察池（Rank 6-12）**，并在报告中注明"短期涨幅已大，等待回调确认"。
-   · 只有刚刚启动（过去5日涨幅<8% 且 RSI<65 且 乖离率<10%）的共振标的，才有资格进入Top1-5核心区。
+4. 【强制输出规则 — 无论技术面如何都必须遵守】：
+   ⚠️ 即使技术评分普遍偏低、周期共振缺失、信号不达标，也必须输出完整的 Top 1-5 核心推荐，不得以"暂停实盘推荐"替代。
+   评分可以低至 40-60 分，但必须诚实标注风险：技术面未达标、逻辑偏弱、仅作观察参考。
+   评分格式：评分:[XX]/100，其中 XX 为 40-60 直接反映当前实际信号强度。
+   在"风控底线"中明确写上"技术未达标，小仓位/观望"。
+   报告中"今日产业链主线研判"需说明：当前市场环境下为何没有高确定性标的，以及低分推荐的理由。
 
 🟡 次级候选：技术评分10-20，仅日线信号但宏观/消息面极强时可入
-🔴 禁止推荐：🔴仅日线标签 + 技术评分<10，即使消息面再好也不进Top5
+🔴 禁止推荐：技术评分<10，即使消息面再好也不进Top5
 ⚠️ 强制降级：乖离率>20% 且 RSI>80，即使技术分高也列入雷区
 
 MACD信号优先级（从高到低）：
-  1. MACD金叉（今天MACD线上穿信号线）→ 最强入场信号
-  2. MACD绿柱连续收敛（柱值为负但持续向0靠拢）→ 即将金叉的预信号
-  3. MACD红柱走强 → 趋势延续，已在途中
+  1. MACD金叉 → 最强入场信号
+  2. MACD绿柱连续收敛 → 即将金叉的预信号
+  3. MACD红柱走强 → 趋势延续
 
 第四步（双维度综合评分，1-100分）：
 
 【评分权重体系 — 总分100分】：
 
-■ 技术面（40分，直接读取「技术评分」字段，你不能修改）：
-  · MACD金叉           0-15分（最强信号）
+■ 技术面（40分，直接读取「技术评分」字段）：
+  · MACD金叉           0-15分
   · MACD绿柱快速收敛   0-12分
-  · KDJ超卖区回头      0-10分（超卖满分）
-  · 量能放大           0-10分（量比≥2倍满分）
+  · KDJ超卖区回头      0-10分
+  · 量能放大           0-10分
   · K线形态            0-5分
   · 周日共振加成×1.25 / 仅日线惩罚×0.6（已计入）
 
 ■ 消息面（60分，由你评估）：
-  · 产业链逻辑直接度      0-25分（直接受益=满分，二手受益=15-20分）
-  · 个股新闻共振度        0-25分（正面公告=满分；干净=15分；负面=-10分）
-  · 技术与逻辑三重共振奖  0-10分（金叉+量能+产业链同向=额外加分）
+  · 产业链逻辑直接度      0-25分
+  · 个股新闻共振度        0-25分
+  · 技术与逻辑三重共振奖  0-10分
 
 评分格式：评分:[XX]/100（XX为整数）
 例：技术评分26分 + 消息面48分 → 写 评分:[74]/100
@@ -1194,66 +1200,60 @@ MACD信号优先级（从高到低）：
 
 【你的任务】：
 1. 从宏观新闻和全球债市、商品市场中提炼出今日1-2条最强产业链主线，并对宏观波动的可持续性做出研判。
-2. 沿主线在标的池中找到直接和间接受益标的（优先找二级受益者），逐一核查其个股新闻是否有负面信号
+2. 沿主线在标的池中找到直接和间接受益标的，逐一核查其个股新闻是否有负面信号
 3. 用技术面确认入场时机
 4. 对核心入选的【前5只】标的（Top 1-5）进行展开式详细分析，每只票的产业链逻辑、新闻核查、技术确认、推荐评分都要写得具体、有数据支撑，不要写空话套话
 5. 按以下HTML骨架输出报告
 
-注意：如果标的池里没有5只能完美符合产业链逻辑且新闻面干净的票，可以少于5只进入核心区，把空出来的名额放入观察池详细说明原因，不要为了凑数硬塞逻辑不充分的票进核心区。
-
 【硬性纪律】：
-1. 评分格式必须严格为：评分:[XX]/100（XX是1-100的整数，必须用这个精确格式，不要写成"XX分"等变体）。
+1. 评分格式必须严格为：评分:[XX]/100（XX是1-100的整数，必须用这个精确格式）。
 2. 同一只股票绝对不能重复出现。
 3. 风控底线格式：周期:[X-Y天] | 止损:[具体价格或百分比]。
 
-【严格按以下HTML骨架直出，不加markdown外框，Top1-5每只都要按这个模板写满；括号里的字数是上限不是下限，越精简越好，禁止凑字数】：
+【严格按以下HTML骨架直出，不加markdown外框】：
 
 <div style="background: #e3f2fd; border-left: 6px solid #1565c0; padding: 20px; margin-bottom: 25px; border-radius: 8px;">
     <h3 style="margin-top: 0; color: #0d47a1;">🌍 今日产业链主线研判</h3>
     <p><b>主线1：</b>(事件 → 传导逻辑 → 直接受益 → 二级受益，80字以内)</p>
-    <p><b>主线2：</b>(同上，如无第二条主线则说明，40字以内)</p>
+    <p><b>主线2：</b>(同上，如无则说明，40字以内)</p>
     <p><b>今日雷区：</b>(哪些板块/标的因宏观逆风、负面新闻或技术超买必须回避，40字以内)</p>
 </div>
 
-<h2 style="color: #1a237e; border-bottom: 2px solid #1a237e; padding-bottom: 5px;">👑 产业链主线优选 (Top 1-5 详细分析)</h2>
+<h2 style="color: #1a237e; border-bottom: 2px solid #1a237e;">👑 产业链主线优选 (Top 1-5 详细分析)</h2>
 <div class="top-card core-card">
     <div class="top-title" style="color: #d32f2f;">1. [股票名] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (说明完整的传导链：宏观事件→产业受益→为什么是这只票而不是更直接的受益者，50字以内)</p>
-    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (基于提供的新闻标题，点评是否有风险，提及1-2条最关键的新闻内容，25字以内)</p>
-    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (乖离率/RSI/MACD数值具体分析，说明为何这个时点是安全的入场点，25字以内)</p>
-    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — [一句话说明评分理由，15字以内]</p>
+    <p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span> (...)</p>
+    <p><span class='highlight-label bg-green'>📰 个股新闻核查:</span> (...)</p>
+    <p><span class='highlight-label bg-blue'>📈 技术确认:</span> (...)</p>
+    <p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span> 评分:[XX]/100 — (...)</p>
     <p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span> 周期:[X-Y天] | 止损:[具体价格或百分比]</p>
     <div style="background: #f3e5f5; padding: 15px; margin-top: 15px; border-radius: 6px; border-left: 4px solid #8e24aa;">
         <h4 style="margin: 0 0 10px 0; color: #6a1b9a;">🎲 美股专属期权实战策略</h4>
-        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(明确给出具体strike和expiry时间窗口，20字以内)</li><li><b>期权组合构建：</b>(单腿买入还是价差防守，说明理由，20字以内)</li></ul>
+        <ul style="margin: 0; padding-left: 20px; font-size: 14px;"><li><b>建议行权价与到期日：</b>(...)</li><li><b>期权组合构建：</b>(...)</li></ul>
     </div>
 </div>
 
-...（重复至5只）
+（重复至5只）
 
 <div class="compare-card">
     <div class="compare-title">🎖️ 观察池 - 逻辑对 but 技术未到位 (Rank 6-12)</div>
     <ul>
-        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(说明逻辑，15字以内) <span style="color: #2e7d32;">新闻面：</span>(是否干净，10字以内) <span style="color: #388e3c;">未入选原因：</span>(技术超买/等回调/逻辑偏弱，10字以内) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望等回调] | 止损:[回调到XX再买]</li>
-        ...
+        <li><b>6. [股票名] ([代码]) - RSI:[数值] 乖离率:[数值]%:</b> <span style="color: #1565c0;">产业链逻辑：</span>(...) <span style="color: #2e7d32;">新闻面：</span>(...) <span style="color: #388e3c;">未入选原因：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[观望] | 止损:[观望]</li>
+        ...（至12）
     </ul>
 </div>
 
 <div style="background: #fbfcfe; border-left: 5px solid #388e3c; padding: 25px; margin-bottom: 25px; border-radius: 10px;">
     <h3 style="color: #388e3c; margin-top: 0;">🚨 诱多对照组（逻辑或技术或新闻面有硬伤，严禁接盘）</h3>
     <ul>
-        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(15字以内) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
-        <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤（技术超买/负面新闻/逻辑反转）：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓或等回调] | 止损:[绝对规避]</li>
+        <li><b>倒数1. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓] | 止损:[绝对规避]</li>
+        <li><b>倒数2. [股票名] ([代码]):</b> ❌ <span style="color: #388e3c;">硬伤：</span>(...) <br><span class='highlight-label bg-orange'>⚠️ 风控:</span> 周期:[坚决空仓] | 止损:[绝对规避]</li>
     </ul>
 </div>
 
 【严格输出纪律 · 必读】：
-这份报告会直接原文发送给用户邮箱，不会有任何人工审核或二次编辑。
-从你输出的第一个字符开始就必须是HTML标签（如 <div），中间和结尾也一样。
-绝对不要输出任何选股思路、筛选过程、候选对比、评分推导等叙述性文字——
-所有分析结论只能以上面模板里规定的HTML卡片形式呈现，不要在HTML标签之外
-用自然语言"想"或"讲"你是怎么得出这些结论的。如果你需要梳理思路，请只在
-内部完成，不要把这个思考过程写进要输出的文字里。
+从你输出的第一个字符开始就必须是HTML标签（如 <div>），中间和结尾也一样。
+绝对不要输出任何选股思路、筛选过程等叙述性文字——所有分析只能以HTML卡片形式呈现。
 """
     ai_html = ""
     with client.messages.stream(
@@ -1294,7 +1294,7 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
     core_zone_raw = ai_generated_html[:obs_start]
     obs_zone_raw = ai_generated_html[obs_start:trap_start]
     trap_zone_raw = ai_generated_html[trap_start:]
-    core_cards = [clean_fragment(c) for c in re.split(r'(?=<div class="top-card)', core_zone_raw) if 'top-card' in c]
+    core_cards = [clean_fragment(c) for c in re.split(r'(?=<div class="top-card")', core_zone_raw) if 'top-card' in c]
     obs_items = [clean_fragment(c) for c in re.split(r'(?=<li>)', obs_zone_raw) if c.strip().startswith('<li>')]
     trap_items = [clean_fragment(c) for c in re.split(r'(?=<li>)', trap_zone_raw) if c.strip().startswith('<li>')]
     print(f"📎 报告结构切分：核心卡片 {len(core_cards)} 张 | 观察池 {len(obs_items)} 条 | 诱多对照组 {len(trap_items)} 条")
@@ -1339,11 +1339,9 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
     return chosen
 
 def build_sell_signal_card(dropped_info, rule_sell_signals):
-    # 此函数在scan中不直接使用，但为保持一致性保留
     return ""
 
 def build_current_holdings_card(current_prices_map):
-    # 此函数在scan中不直接使用，但为保持一致性保留
     return ""
 
 def send_mail(to_emails, subject, content):
@@ -1364,29 +1362,19 @@ def send_mail(to_emails, subject, content):
     except Exception as e:
         print(f"发送失败 ({to_emails}): {e}")
 
-# ==================== 13. 期权策略生成函数（内联） ====================
+# ==================== 13. 期权策略生成函数（内联，与 review.py 联动） ====================
 def generate_option_strategy(ticker, name, direction, scan_score, scan_date, underlying_price, underlying_stop, hold_period, strategy_reason, contracts=1):
-    """
-    为标的生成一条期权策略记录，写入 option_strategies.csv
-    方向：默认 BULLISH（CALL），也可根据情况调整
-    """
     opt_file = "option_strategies.csv"
-    # 解析 hold_period 中的最大天数
     days_match = re.findall(r'\d+', str(hold_period))
     max_days = max(map(int, days_match)) if days_match else 7
     expiry_date = (datetime.datetime.now() + datetime.timedelta(days=max_days)).strftime('%Y-%m-%d')
-    
-    # 行权价：CALL 取现价 + 5%，PUT 取现价 - 5%（暂仅支持 CALL，因为 scan 默认看多）
     if direction.upper() == 'BULLISH':
         opt_type = 'CALL'
         strike = round(underlying_price * 1.05, 2)
     else:
         opt_type = 'PUT'
         strike = round(underlying_price * 0.95, 2)
-    # 权利金估算：通常为 strike * 0.02（简化）
     entry_price = round(strike * 0.02, 2)
-    
-    # 写入 CSV
     header = "Ticker,OptionType,Strike,Expiry,EntryPrice,Status,EntryDate,Quantity,Direction,UnderlyingPrice,StopLoss,HoldPeriod,Reason,ScanScore\n"
     need_header = not os.path.exists(opt_file) or os.path.getsize(opt_file) == 0
     with open(opt_file, "a", encoding="utf-8") as f:
@@ -1397,7 +1385,6 @@ def generate_option_strategy(ticker, name, direction, scan_score, scan_date, und
 
 # ==================== 14. 主程序 ====================
 if __name__ == "__main__":
-    # 宏观数据
     macro_news = get_latest_macro_news()
     megacap_news = get_megacap_breaking_news()
     combined_news = macro_news
@@ -1414,16 +1401,8 @@ if __name__ == "__main__":
 
     macro_market = get_macro_market_data()
 
-    # 阶段0：持仓审查
     restricted_tickers, dropped_info, current_prices = pre_scan_portfolio_review(combined_news, macro_market)
 
-    # 阶段0b：规则卖出（止损/到期） - 只做信号，这里不做实际修改，由review处理
-    # 但为了保持与review联动，我们在此不执行平仓，仅收集信号用于卡片（实际平仓由review完成）
-    # 这里我们只调用 check_rule_based_sell_signals 的简化版？实际上 scan 中已有该函数，但为了完整，我们保留原有调用
-    # 由于 scan 文件较长，此处省略该部分，但实际运行时可复用原有 check_rule_based_sell_signals
-    # 为简化，此处我们不重复实现，由 review 处理。
-
-    # 获取标的池
     raw_tickers = get_scan_pool()
     sector_text = get_us_sector_performance()
     _etf_embargo_kw, etf_embargo_text = parse_us_sector_embargo(sector_text)
@@ -1435,16 +1414,13 @@ if __name__ == "__main__":
     pool_data = build_stock_pool(filtered_tickers)
     if not pool_data:
         print("无合规扫描数据，今日扫描提前安全熔断。")
-        # 发送空报告（可选）
         exit(0)
 
     sector_tech_data = screen_technical_setups(pool_data)
     pool_data = enrich_pool_with_news(pool_data)
 
-    # 生成AI报告
     ai_generated_html = generate_ai_report(pool_data, combined_news, macro_market, dropped_info, combined_embargo_text, sector_tech_data)
 
-    # 组装完整HTML
     style = """
     <style>
         body { font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; background-color: #f0f2f5; padding: 20px; color: #2c3e50; line-height: 1.7;}
@@ -1477,12 +1453,10 @@ if __name__ == "__main__":
     mail_subject = f"【宏观驱动美股版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
 
-    # 匹配推荐并写入 trade_history.csv 和期权记录
     chosen = match_pool_to_report(pool_data, ai_generated_html, DEFAULT_STOP_LOSS_PCT)
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
-        # 过滤（保留原有过滤逻辑）
         FROZEN_STATUSES = {'Dropped', 'Stop_Loss_Hit'}
         REQUALIFY_MARGIN = 10
         _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
@@ -1524,7 +1498,6 @@ if __name__ == "__main__":
         if skipped > 0:
             print(f"⏭️ 写账过滤：跳过 {skipped} 条（已斩仓或三字段不完整），不写入新追踪记录。")
 
-        # 写入 trade_history.csv
         ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
         ts_date_file = datetime.datetime.now().strftime('%Y%m%d')
         if chosen_to_write:
@@ -1553,7 +1526,7 @@ if __name__ == "__main__":
             print(f"✅ 共生成 {len(chosen_to_write)} 条美股推荐记录（已保存至 {pending_file}，不含价格）")
             print(f"⏳ 开盘价/收盘价将在盘后 review.py 执行时用完整行情数据补充写入 trade_history.csv")
 
-            # ======== 新增：为每条 Core_Dragon 生成期权策略 ========
+            # 为每条 Core_Dragon 生成期权策略
             for item in chosen_to_write:
                 if item.get('Tag') == 'Core_Dragon':
                     generate_option_strategy(
