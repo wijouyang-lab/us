@@ -1077,7 +1077,46 @@ def load_evolved_rules() -> str:
         print(f"⚠️ [进化规则] 读取失败: {e}")
         return ""
 
-# ==================== 11. AI 报告生成（强制 Top 5） ====================
+# ==================== 11. 【新增】读取昨日止损联动警告 ====================
+def get_stop_loss_hit_warning():
+    """
+    读取 trade_history.csv，提取近期被标记为 Stop_Loss_Hit 的标的，
+    生成一条风险警告文本，供 AI 提示词使用。
+    """
+    log_file = "trade_history.csv"
+    if not os.path.exists(log_file):
+        return ""
+
+    try:
+        df = pd.read_csv(log_file, keep_default_na=False)
+        if 'Tag' not in df.columns or 'Exit_Date' not in df.columns:
+            return ""
+
+        hit_df = df[df['Tag'].astype(str).str.strip() == 'Stop_Loss_Hit'].copy()
+        if hit_df.empty:
+            return ""
+
+        hit_df = hit_df.sort_values('Exit_Date', ascending=False).head(5)
+        tickers = hit_df['Ticker'].unique().tolist()
+        if not tickers:
+            return ""
+
+        details = []
+        for _, row in hit_df.iterrows():
+            name = row.get('Name', row['Ticker'])
+            exit_date = row.get('Exit_Date', '未知日期')
+            details.append(f"{name}({row['Ticker']}) @ {exit_date}")
+
+        return (
+            f"\n⚠️ 【昨日/近期止损风控联动警告】：以下标的在最近交易中被系统标记为「止损触发清仓」（Stop_Loss_Hit），"
+            f"今日选股严禁将其列入 Top 1-5 核心推荐，仅允许在「诱多对照组」中作为反面案例提及。\n"
+            f"涉及标的：{', '.join(details)}\n"
+        )
+    except Exception as e:
+        print(f"⚠️ 读取止损警告失败: {e}")
+        return ""
+
+# ==================== 12. AI 报告生成（强制 Top 5 + 联动警告） ====================
 def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_info=None, embargo_text="", sector_tech_data=None):
     print("开始调用 AI 大脑（宏观先行，个股新闻排雷，技术面确认，Top5详细分析+评分）...")
     client = anthropic.Anthropic(
@@ -1114,6 +1153,10 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
         if lines:
             tech_sector_block = "【技术形态板块共振归类（周日共振且技术评分>0，按GICS板块汇总）】：\n" + "\n".join(lines)
     evolved_rules_block = load_evolved_rules()
+
+    # 【新增】读取昨日止损联动警告
+    stop_loss_warning = get_stop_loss_hit_warning()
+
     prompt = f"""
 【最高优先级指令 — 覆盖所有其他规则】：
 你必须在 Top 1-5 中输出 5 只标的，禁止输出“暂停实盘推荐”或“今日无推荐”。
@@ -1152,42 +1195,7 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
    在"风控底线"中明确写上"技术未达标，小仓位/观望"。
    报告中"今日产业链主线研判"需说明：当前市场环境下为何没有高确定性标的，以及低分推荐的理由。
 
-🟡 次级候选：技术评分10-20，仅日线信号但宏观/消息面极强时可入
-🔴 禁止推荐：技术评分<10，即使消息面再好也不进Top5
-⚠️ 强制降级：乖离率>20% 且 RSI>80，即使技术分高也列入雷区
-
-MACD信号优先级（从高到低）：
-  1. MACD金叉 → 最强入场信号
-  2. MACD绿柱连续收敛 → 即将金叉的预信号
-  3. MACD红柱走强 → 趋势延续
-
-第四步（双维度综合评分，1-100分）：
-
-【评分权重体系 — 总分100分】：
-
-■ 技术面（40分，直接读取「技术评分」字段）：
-  · MACD金叉           0-15分
-  · MACD绿柱快速收敛   0-12分
-  · KDJ超卖区回头      0-10分
-  · 量能放大           0-10分
-  · K线形态            0-5分
-  · 周日共振加成×1.25 / 仅日线惩罚×0.6（已计入）
-
-■ 消息面（60分，由你评估）：
-  · 产业链逻辑直接度      0-25分
-  · 个股新闻共振度        0-25分
-  · 技术与逻辑三重共振奖  0-10分
-
-评分格式：评分:[XX]/100（XX为整数）
-例：技术评分26分 + 消息面48分 → 写 评分:[74]/100
-
-今天是{today_str}。
-
-【盘前宏观与全球重大快讯】：
-{macro_news_text}
-
-【实时全球宏观经济指标（国债收益率、大宗商品、主要指数涨跌）】：
-{macro_market_text}
+{stop_loss_warning}
 
 {evolved_rules_block}
 
@@ -1271,7 +1279,7 @@ MACD信号优先级（从高到低）：
     print("AI 宏观穿透报告生成完毕")
     return ai_html
 
-# ==================== 12. 工具函数（匹配、卡片、邮件） ====================
+# ==================== 13. 工具函数（匹配、卡片、邮件） ====================
 def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
     def clean_fragment(text):
         t = re.sub(r'<[^>]+>', ' ', text)
@@ -1339,9 +1347,11 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
     return chosen
 
 def build_sell_signal_card(dropped_info, rule_sell_signals):
+    # 此函数在scan中不直接使用（由review生成），但为保持一致性保留空壳
     return ""
 
 def build_current_holdings_card(current_prices_map):
+    # 此函数在scan中不直接使用（由review生成），但为保持一致性保留空壳
     return ""
 
 def send_mail(to_emails, subject, content):
@@ -1362,7 +1372,7 @@ def send_mail(to_emails, subject, content):
     except Exception as e:
         print(f"发送失败 ({to_emails}): {e}")
 
-# ==================== 13. 期权策略生成函数（内联，与 review.py 联动） ====================
+# ==================== 14. 期权策略生成函数（内联，与 review.py 联动） ====================
 def generate_option_strategy(ticker, name, direction, scan_score, scan_date, underlying_price, underlying_stop, hold_period, strategy_reason, contracts=1):
     opt_file = "option_strategies.csv"
     days_match = re.findall(r'\d+', str(hold_period))
@@ -1383,7 +1393,7 @@ def generate_option_strategy(ticker, name, direction, scan_score, scan_date, und
         f.write(f"{ticker},{opt_type},{strike},{expiry_date},{entry_price},Active,{scan_date},{contracts},{direction},{underlying_price},{underlying_stop},{hold_period},{strategy_reason},{scan_score}\n")
     print(f"📝 期权策略记录：{ticker} {opt_type} {strike} @ {expiry_date}")
 
-# ==================== 14. 主程序 ====================
+# ==================== 15. 主程序 ====================
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
     megacap_news = get_megacap_breaking_news()
@@ -1414,6 +1424,17 @@ if __name__ == "__main__":
     pool_data = build_stock_pool(filtered_tickers)
     if not pool_data:
         print("无合规扫描数据，今日扫描提前安全熔断。")
+        # 发送空报告（可选）
+        # 注意：即使无推荐，也应生成最小报告
+        style = """
+        <style>
+            body { font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; background-color: #f0f2f5; padding: 20px; color: #2c3e50; line-height: 1.7;}
+            .container { max-width: 950px; margin: 0 auto; background: #ffffff; padding: 35px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); }
+            h1 { text-align: center; color: #1a237e; border-bottom: 3px solid #1a237e; padding-bottom: 15px; margin-bottom: 35px; font-size: 28px; font-weight: 800; }
+        </style>
+        """
+        empty_html = f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>⚠️ 今日扫描无有效标的，已暂停推荐</h1><p>原因：所有标的已被排除或技术数据不足。</p></div></body></html>"
+        send_mail(SUPER_ADMIN, f"【美股扫描】{datetime.date.today()} 无推荐", empty_html)
         exit(0)
 
     sector_tech_data = screen_technical_setups(pool_data)
@@ -1453,6 +1474,7 @@ if __name__ == "__main__":
     mail_subject = f"【宏观驱动美股版】{TARGET_REGION} 核心打分与实战 ({datetime.date.today()})"
     send_mail(SUPER_ADMIN, mail_subject, full_html)
 
+    # 匹配推荐并写入 trade_history.csv 和期权记录
     chosen = match_pool_to_report(pool_data, ai_generated_html, DEFAULT_STOP_LOSS_PCT)
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
