@@ -1,6 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price
-2026-08-14,MU,Micron Technology,Core_Dragon,54.5,7.46,2,False,False,False,False,10-14天,$805,72,pending,949.83
-2026-08-14,AMD,Advanced Micro Devices,Core_Dragon,47.4,-2.09,4,False,False,True,False,10-14天,$410,70,pending,483.01
-2026-08-14,KMI,Kinder Morgan,Core_Dragon,55.1,1.22,15,True,False,False,True,14-21天,$27.3,73,pending,32.08
-2026-08-14,VICI,Vici Properties,Core_Dragon,47.1,-0.76,11,False,False,False,True,14-21天,$22.4,68,pending,26.34
-2026-08-14,META,Meta Platforms,Core_Dragon,49.2,-0.42,18,True,True,False,False,14-21天,$505,76,pending,594.97
