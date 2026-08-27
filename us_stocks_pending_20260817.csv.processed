@@ -1,6 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct
-2026-08-17,F,Ford Motor Company,Core_Dragon,55.2,1.26,15,False,True,False,True,10-14天,$13.2,72,pending,14.37,3.15
-2026-08-17,SNDK,Sandisk,Core_Dragon,57.0,21.25,6,False,False,False,True,7-10天,$1510,66,pending,1641.11,10.23
-2026-08-17,AMAT,Applied Materials,Core_Dragon,44.9,-3.26,4,False,False,False,True,10-14天,$466,67,pending,507.18,7.04
-2026-08-17,SLB,Schlumberger,Core_Dragon,61.8,6.83,11,False,True,False,False,8-12天,$49.5,70,pending,53.77,3.06
-2026-08-17,WDC,Western Digital,Core_Dragon,50.4,1.97,9,True,False,False,False,10-14天,$468,75,pending,508.8,9.29
