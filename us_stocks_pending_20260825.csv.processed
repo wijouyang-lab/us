@@ -1,5 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct
-2026-08-25,GOOGL,Alphabet Inc. (Class A),Core_Dragon,50.2,-0.36,17,True,True,False,False,5-14天,$296,72,pending,348.99,2.53
-2026-08-25,ORCL,Oracle Corporation,Core_Dragon,51.9,1.66,12,False,True,True,False,7-14天,$123.7,68,pending,145.57,4.6
-2026-08-25,UBER,Uber,Core_Dragon,64.1,6.66,6,False,True,False,False,5-10天,$67.9,63,pending,79.84,3.2
-2026-08-25,UPS,United Parcel Service,Core_Dragon,48.5,0.77,11,True,False,False,False,5-14天,$88.5,65,pending,104.06,2.14
