@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-美股盘前扫描引擎（修复版）
-- 修复写账过滤导致推荐被丢弃的问题
+美股盘前扫描引擎（修复版 - 强制生成 pending）
+- 增强解析鲁棒性，确保 Core_Dragon 三字段有效
+- 放宽写账过滤，强制生成 pending 文件
 - 观察池强制写入，不再要求三字段完整
 - 评分解析失败时自动兜底
 - 移除 API temperature 参数
@@ -1339,16 +1340,42 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
             stop_loss = "观望"
             score = "N/A"
         else:
-            hold_period = period_match.group(1).strip() if period_match else "5-10天"
-            atr_pct = item.get('ATR_Pct', 5.0)
-            dynamic_stop_pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr_pct * ATR_STOP_MULTIPLIER))
-            stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + dynamic_stop_pct / 100), 2)}"
+            # 解析 Hold_Period，若无效则用默认值
+            if period_match:
+                hp_raw = period_match.group(1).strip()
+                # 如果解析结果是"观望"，也当作无效，使用默认值
+                if hp_raw.lower() == '观望':
+                    hold_period = "5-10天"
+                    print(f"⚠️ {ticker} Hold_Period 解析为 '观望'，自动使用默认值 '5-10天'")
+                else:
+                    hold_period = hp_raw
+            else:
+                hold_period = "5-10天"
+                print(f"⚠️ {ticker} Hold_Period 解析失败，使用默认值 '5-10天'")
+            
+            # 解析 Stop_Loss，若无效则用 ATR 动态止损
+            if sl_match:
+                sl_raw = sl_match.group(1).strip()
+                if sl_raw.lower() not in ['观望', 'n/a', 'nan']:
+                    stop_loss = sl_raw
+                else:
+                    atr_pct = item.get('ATR_Pct', 5.0)
+                    dynamic_stop_pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr_pct * ATR_STOP_MULTIPLIER))
+                    stop_loss = f"${round(item['Price'] * (1 + dynamic_stop_pct / 100), 2)}"
+                    print(f"⚠️ {ticker} Stop_Loss 无效，使用 ATR 动态止损: {stop_loss}")
+            else:
+                atr_pct = item.get('ATR_Pct', 5.0)
+                dynamic_stop_pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr_pct * ATR_STOP_MULTIPLIER))
+                stop_loss = f"${round(item['Price'] * (1 + dynamic_stop_pct / 100), 2)}"
+                print(f"⚠️ {ticker} Stop_Loss 解析失败，使用 ATR 动态止损: {stop_loss}")
+            
             # 修复评分解析：若无法解析，则用技术评分+50兜底
             score_match = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\]?\s*/\s*100', chunk)
             score = score_match.group(1).strip() if score_match else "N/A"
-            if score == "N/A":
+            if score == "N/A" or score == "":
                 tech_score = item.get('技术评分', 0)
                 score = str(min(100, tech_score + 50))
+                print(f"⚠️ {ticker} Score 解析失败，使用技术评分+50: {score}")
         item['Tag'] = tag
         item['Hold_Period'] = hold_period
         item['Stop_Loss'] = stop_loss
@@ -1485,86 +1512,74 @@ if __name__ == "__main__":
     log_file = "trade_history.csv"
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
-        FROZEN_STATUSES = {'Dropped', 'Stop_Loss_Hit'}
-        REQUALIFY_MARGIN = 5  # 从 10 降到 5，降低重新入选门槛
+        # ============================================================
+        # 【修复】强制写入：任何解析出的 Core_Dragon 都写入 pending 文件
+        # ============================================================
         _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
-        frozen_min_score = {}
-        if not need_header:
-            try:
-                df_hist_check = pd.read_csv(log_file, on_bad_lines='skip', keep_default_na=False)
-                if {'Status', 'Ticker', 'Score'}.issubset(df_hist_check.columns):
-                    bad_exits = df_hist_check[df_hist_check['Status'].isin(FROZEN_STATUSES)].copy()
-                    bad_exits['Score_num'] = pd.to_numeric(bad_exits['Score'], errors='coerce')
-                    for tk, g in bad_exits.groupby('Ticker'):
-                        tk = str(tk)
-                        if g['Score_num'].notna().any():
-                            frozen_min_score[tk] = float(g['Score_num'].max()) + REQUALIFY_MARGIN
-                        else:
-                            frozen_min_score[tk] = float('inf')
-                    if frozen_min_score:
-                        locked = sum(1 for v in frozen_min_score.values() if v == float('inf'))
-                        print(f"🔒 写账过滤：{len(frozen_min_score)} 只曾斩仓/止损标的需评分达标才能重新入选（其中 {locked} 只因历史评分缺失暂无法解冻）")
-            except Exception as e:
-                print(f"⚠️ 写账过滤读取 trade_history.csv 失败，不执行冻结过滤: {e}")
-        def _requalifies(item):
-            tk = str(item.get('Ticker', ''))
-            if tk not in frozen_min_score:
-                return True
-            try:
-                cur_score = float(str(item.get('Score', '')).strip())
-            except (ValueError, TypeError):
-                return False
-            return cur_score >= frozen_min_score[tk]
-
-        # 【修复】写账过滤：观察池不要求三字段完整，直接写入；Core_Dragon 必须有完整的 Hold_Period/Stop_Loss/Score
-        chosen_to_write = []
-        for i in chosen:
-            if not _requalifies(i):
-                continue
-            tag = str(i.get('Tag', '')).strip()
-            # 观察池：只检查是否被斩仓过，不要求三字段完整
-            if tag == 'Observation':
-                chosen_to_write.append(i)
-                continue
-            # Core_Dragon：严格要求三字段完整
-            if (str(i.get('Hold_Period', '')).strip().lower() not in _INVALID_W and
-                str(i.get('Stop_Loss', '')).strip().lower() not in _INVALID_W and
-                str(i.get('Score', '')).strip().lower() not in {'', 'n/a', 'nan', 'none'}):
-                chosen_to_write.append(i)
-        skipped = len(chosen) - len(chosen_to_write)
-        if skipped > 0:
-            print(f"⏭️ 写账过滤：跳过 {skipped} 条（观察池已写入或三字段不完整），不写入新追踪记录。")
-
+        
+        # 直接生成 pending 文件，不再做复杂的过滤
         ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
         ts_date_file = datetime.datetime.now().strftime('%Y%m%d')
-        if chosen_to_write:
+        
+        # 筛选需要写入的标的：Core_Dragon 和 Observation
+        to_write = []
+        for item in chosen:
+            tag = str(item.get('Tag', '')).strip()
+            if tag == 'Core_Dragon' or tag == 'Observation':
+                # 强制确保三字段有效
+                if tag == 'Core_Dragon':
+                    # 强制填充缺失字段
+                    hp = str(item.get('Hold_Period', '')).strip().lower()
+                    if hp in _INVALID_W or hp == '':
+                        item['Hold_Period'] = '5-10天'
+                        print(f"⚠️ {item.get('Ticker')} Hold_Period 缺失，自动填充为 '5-10天'")
+                    
+                    sl = str(item.get('Stop_Loss', '')).strip().lower()
+                    if sl in _INVALID_W or sl == '' or sl == '观望':
+                        atr_pct = item.get('ATR_Pct', 5.0)
+                        dynamic_stop_pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr_pct * ATR_STOP_MULTIPLIER))
+                        price = item.get('Price', 0)
+                        item['Stop_Loss'] = f"${round(price * (1 + dynamic_stop_pct / 100), 2)}"
+                        print(f"⚠️ {item.get('Ticker')} Stop_Loss 缺失，自动填充为 {item['Stop_Loss']}")
+                    
+                    sc = str(item.get('Score', '')).strip().lower()
+                    if sc in _INVALID_W or sc == '':
+                        tech_score = item.get('技术评分', 0)
+                        item['Score'] = str(min(100, tech_score + 50))
+                        print(f"⚠️ {item.get('Ticker')} Score 缺失，自动填充为 {item['Score']}")
+                
+                to_write.append(item)
+        
+        if to_write:
             pending_file = f"us_stocks_pending_{ts_date_file}.csv"
             pending_header = "Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct\n"
             with open(pending_file, "w", encoding="utf-8") as f:
                 f.write(pending_header)
-                for i in chosen_to_write:
-                    ticker = i.get('Ticker', '')
-                    name = i.get('Name', '')
-                    tag = i.get('Tag', '')
-                    rsi = i.get('RSI', '')
-                    bias = i.get('乖离率(%)', '')
-                    tech_score = i.get('技术评分', 0)
-                    macd_cross = i.get('MACD金叉', False)
-                    weekly_sync = i.get('周线共振', False)
-                    kdj_rising = i.get('KDJ_J回升', False)
-                    vol_surge = i.get('量能放大', False)
-                    hold_period = i.get('Hold_Period', 'N/A')
-                    stop_loss = i.get('Stop_Loss', 'N/A')
-                    score = i.get('Score', 'N/A')
-                    scan_ref_price = i.get('Price', i.get('Open_Price', ''))
-                    atr_pct_val = i.get('ATR_Pct', '')
-                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price},{atr_pct_val}\n")
-
-            print(f"✅ 共生成 {len(chosen_to_write)} 条美股推荐记录（已保存至 {pending_file}，不含价格）")
+                for item in to_write:
+                    ticker = item.get('Ticker', '')
+                    name = item.get('Name', '')
+                    tag = item.get('Tag', '')
+                    rsi = item.get('RSI', '')
+                    bias = item.get('乖离率(%)', '')
+                    tech_score = item.get('技术评分', 0)
+                    macd_cross = item.get('MACD金叉', False)
+                    weekly_sync = item.get('周线共振', False)
+                    kdj_rising = item.get('KDJ_J回升', False)
+                    vol_surge = item.get('量能放大', False)
+                    hold_period = item.get('Hold_Period', 'N/A')
+                    stop_loss = item.get('Stop_Loss', 'N/A')
+                    score = item.get('Score', 'N/A')
+                    scan_ref_price = item.get('Price', item.get('Open_Price', ''))
+                    atr_pct_val = item.get('ATR_Pct', '')
+                    # 将周期共振转为字符串
+                    period_resonance = str(item.get('周期共振', False))
+                    f.write(f"{ts_date},{ticker},{name},{tag},{rsi},{bias},{tech_score},{macd_cross},{weekly_sync},{kdj_rising},{vol_surge},{hold_period},{stop_loss},{score},pending,{scan_ref_price},{atr_pct_val},{period_resonance}\n")
+            
+            print(f"✅ 共生成 {len(to_write)} 条美股推荐记录（已保存至 {pending_file}）")
             print(f"⏳ 开盘价/收盘价将在盘后 review.py 执行时用完整行情数据补充写入 trade_history.csv")
-
+            
             # 为每条 Core_Dragon 生成期权策略
-            for item in chosen_to_write:
+            for item in to_write:
                 if item.get('Tag') == 'Core_Dragon':
                     generate_option_strategy(
                         ticker=item['Ticker'],
@@ -1579,7 +1594,7 @@ if __name__ == "__main__":
                         contracts=1
                     )
         else:
-            print(f"⚠️ 未生成任何推荐记录（全部被过滤）")
+            print(f"⚠️ 未生成任何推荐记录（chosen 为空或全部为 Trap_Warning）")
 
     except Exception as e:
         print(f"新推荐数据入账失败: {e}")
