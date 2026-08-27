@@ -1,6 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price
-2026-08-12,T,AT&T,Core_Dragon,64.3,5.35,5,False,True,False,False,10-14天,$23.2,68,pending,24.5
-2026-08-12,HBAN,Huntington Bancshares,Core_Dragon,55.1,0.94,9,True,False,False,False,7-10天,$16.8,64,pending,17.77
-2026-08-12,KO,Coca-Cola,Core_Dragon,57.1,1.52,4,False,False,True,False,14-21天,$82,70,pending,86.48
-2026-08-12,PCG,PG&E Corporation,Core_Dragon,49.7,-1.12,10,False,False,True,False,14-21天,$16.5,65,pending,17.3
-2026-08-12,MDT,Medtronic,Core_Dragon,70.3,6.57,13,False,True,False,True,10-14天,$85,72,pending,90.68
