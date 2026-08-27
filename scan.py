@@ -1,4 +1,12 @@
 # -*- coding: utf-8 -*-
+"""
+美股盘前扫描引擎（修复版）
+- 修复写账过滤导致推荐被丢弃的问题
+- 观察池强制写入，不再要求三字段完整
+- 评分解析失败时自动兜底
+- 移除 API temperature 参数
+"""
+
 import faulthandler
 faulthandler.enable()
 import pandas as pd
@@ -15,8 +23,6 @@ import io
 import hashlib
 import email.utils
 import json
-from requests.adapters import HTTPAdapter
-from urllib3.util.retry import Retry
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 import anthropic
@@ -754,10 +760,10 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     restricted_tickers = set(active_tickers)
     dropped_info = {}
     try:
+        # 修复：移除 temperature 参数（新版 Claude 不支持）
         response = client.messages.create(
             model=TARGET_MODEL,
             max_tokens=2000,
-            temperature=0.1,
             messages=[{"role": "user", "content": review_prompt}]
         )
         resp_text = response.content[0].text.strip()
@@ -945,10 +951,10 @@ def analyze_market_signals(combined_news_text, client):
 }}
 
 若今日新闻无结构性信号，返回 {{"signals": []}}。"""
+        # 移除 temperature 参数
         response = client.messages.create(
             model=TARGET_MODEL,
             max_tokens=80000,
-            temperature=0,
             messages=[{"role": "user", "content": prompt}]
         )
         text = response.content[0].text.strip()
@@ -1077,7 +1083,7 @@ def load_evolved_rules() -> str:
         print(f"⚠️ [进化规则] 读取失败: {e}")
         return ""
 
-# ==================== 11. 【新增】读取昨日止损联动警告 ====================
+# ==================== 11. 读取昨日止损联动警告 ====================
 def get_stop_loss_hit_warning():
     """
     读取 trade_history.csv，提取近期被标记为 Stop_Loss_Hit 的标的，
@@ -1154,7 +1160,7 @@ def generate_ai_report(pool_data, macro_news_text, macro_market_text, dropped_in
             tech_sector_block = "【技术形态板块共振归类（周日共振且技术评分>0，按GICS板块汇总）】：\n" + "\n".join(lines)
     evolved_rules_block = load_evolved_rules()
 
-    # 【新增】读取昨日止损联动警告
+    # 读取昨日止损联动警告
     stop_loss_warning = get_stop_loss_hit_warning()
 
     prompt = f"""
@@ -1337,8 +1343,12 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
             atr_pct = item.get('ATR_Pct', 5.0)
             dynamic_stop_pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr_pct * ATR_STOP_MULTIPLIER))
             stop_loss = sl_match.group(1).strip() if sl_match else f"{round(item['Price'] * (1 + dynamic_stop_pct / 100), 2)}"
+            # 修复评分解析：若无法解析，则用技术评分+50兜底
             score_match = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\]?\s*/\s*100', chunk)
             score = score_match.group(1).strip() if score_match else "N/A"
+            if score == "N/A":
+                tech_score = item.get('技术评分', 0)
+                score = str(min(100, tech_score + 50))
         item['Tag'] = tag
         item['Hold_Period'] = hold_period
         item['Stop_Loss'] = stop_loss
@@ -1347,11 +1357,9 @@ def match_pool_to_report(pool_data, ai_generated_html, default_stop_loss_pct):
     return chosen
 
 def build_sell_signal_card(dropped_info, rule_sell_signals):
-    # 此函数在scan中不直接使用（由review生成），但为保持一致性保留空壳
     return ""
 
 def build_current_holdings_card(current_prices_map):
-    # 此函数在scan中不直接使用（由review生成），但为保持一致性保留空壳
     return ""
 
 def send_mail(to_emails, subject, content):
@@ -1424,8 +1432,6 @@ if __name__ == "__main__":
     pool_data = build_stock_pool(filtered_tickers)
     if not pool_data:
         print("无合规扫描数据，今日扫描提前安全熔断。")
-        # 发送空报告（可选）
-        # 注意：即使无推荐，也应生成最小报告
         style = """
         <style>
             body { font-family: 'Helvetica Neue', 'PingFang SC', sans-serif; background-color: #f0f2f5; padding: 20px; color: #2c3e50; line-height: 1.7;}
@@ -1480,7 +1486,7 @@ if __name__ == "__main__":
     need_header = not os.path.exists(log_file) or os.path.getsize(log_file) == 0
     try:
         FROZEN_STATUSES = {'Dropped', 'Stop_Loss_Hit'}
-        REQUALIFY_MARGIN = 10
+        REQUALIFY_MARGIN = 5  # 从 10 降到 5，降低重新入选门槛
         _INVALID_W = {'', 'n/a', 'nan', 'none', '观望'}
         frozen_min_score = {}
         if not need_header:
@@ -1509,16 +1515,25 @@ if __name__ == "__main__":
             except (ValueError, TypeError):
                 return False
             return cur_score >= frozen_min_score[tk]
-        chosen_to_write = [
-            i for i in chosen
-            if _requalifies(i)
-            and str(i.get('Hold_Period', '')).strip().lower() not in _INVALID_W
-            and str(i.get('Stop_Loss', '')).strip().lower() not in _INVALID_W
-            and str(i.get('Score', '')).strip().lower() not in {'', 'n/a', 'nan', 'none'}
-        ]
+
+        # 【修复】写账过滤：观察池不要求三字段完整，直接写入；Core_Dragon 必须有完整的 Hold_Period/Stop_Loss/Score
+        chosen_to_write = []
+        for i in chosen:
+            if not _requalifies(i):
+                continue
+            tag = str(i.get('Tag', '')).strip()
+            # 观察池：只检查是否被斩仓过，不要求三字段完整
+            if tag == 'Observation':
+                chosen_to_write.append(i)
+                continue
+            # Core_Dragon：严格要求三字段完整
+            if (str(i.get('Hold_Period', '')).strip().lower() not in _INVALID_W and
+                str(i.get('Stop_Loss', '')).strip().lower() not in _INVALID_W and
+                str(i.get('Score', '')).strip().lower() not in {'', 'n/a', 'nan', 'none'}):
+                chosen_to_write.append(i)
         skipped = len(chosen) - len(chosen_to_write)
         if skipped > 0:
-            print(f"⏭️ 写账过滤：跳过 {skipped} 条（已斩仓或三字段不完整），不写入新追踪记录。")
+            print(f"⏭️ 写账过滤：跳过 {skipped} 条（观察池已写入或三字段不完整），不写入新追踪记录。")
 
         ts_date = datetime.datetime.now().strftime('%Y-%m-%d')
         ts_date_file = datetime.datetime.now().strftime('%Y%m%d')
