@@ -5,6 +5,7 @@
 - 期权持仓自动平仓（到期日≤今日）
 - AI 生成风控报告（含股票 + 期权）
 - 与 scan.py 的 pending 文件联动
+- 今日新增标的纳入胜率统计
 """
 
 import pandas as pd
@@ -323,7 +324,7 @@ if not os.path.exists(log_file):
     sys.exit(0)
 
 try:
-    df = pd.read_csv(log_file)
+    df = pd.read_csv(log_file, keep_default_na=False)
     df['Date'] = pd.to_datetime(df['Date'])
     cutoff_date = get_us_time() - datetime.timedelta(days=30)
     recent_picks = df[df['Date'] >= cutoff_date.replace(tzinfo=None)].copy()
@@ -356,7 +357,7 @@ clean_map = {t: t.lstrip('$') for t in all_tickers_raw}
 clean_tickers = list(set(clean_map.values()))
 print(f"获取 {len(clean_tickers)} 只标的价格与OHLC...")
 price_map_today = {}
-ohlc_map_today = {}   # 存储当日的 Open, High, Low, Close
+ohlc_map_today = {}
 
 try:
     hist_data = yf.download(clean_tickers, period="60d", progress=False, auto_adjust=True, group_by='ticker')
@@ -409,7 +410,7 @@ except Exception as e:
     print(f"行情拉取失败: {e}")
     df_hist_all = pd.DataFrame()
 
-# 补全缺失价格（使用实时接口仅获取最新价，但无法补 Low，对于缺失的票我们使用收盘价作为 low 的近似）
+# 补全缺失价格
 for t in clean_tickers:
     if t not in price_map_today or price_map_today[t] is None:
         _, last = get_live_quote_bootstrap(t)
@@ -417,7 +418,6 @@ for t in clean_tickers:
             price_map_today[t] = last
             ohlc_map_today[t] = {'open': last, 'high': last, 'low': last, 'close': last}
         else:
-            # 若依然缺失，用买入价代替（后续止损判断可能失效）
             match_row = recent_picks[recent_picks['Ticker'] == t].iloc[-1]
             price_map_today[t] = float(match_row.get('Price', 0))
             ohlc_map_today[t] = {'open': price_map_today[t], 'high': price_map_today[t], 'low': price_map_today[t], 'close': price_map_today[t]}
@@ -430,7 +430,7 @@ if option_closed_records:
     print(f"✅ 期权平仓 {len(option_closed_records)} 笔。")
 
 # ==========================================
-# 6. 股票硬止损 & 分类（使用 Low 判断）
+# 6. 股票硬止损 & 分类
 # ==========================================
 def parse_hold_days(s):
     if not s or str(s).strip().lower() in ['n/a', 'nan', '坚决空仓', '观望']:
@@ -449,7 +449,7 @@ def update_trade_history_status(ticker, buy_date_str, new_status, exit_price):
     if not os.path.exists(log_file):
         return
     df_orig = pd.read_csv(log_file, keep_default_na=False)
-    # 确保 Exit_Date 和 Exit_Price 列为 object 类型，允许混合类型（字符串和数字）
+    # 【修复】确保 Exit_Date 和 Exit_Price 列为 object 类型，允许混合类型
     for col in ['Exit_Date', 'Exit_Price']:
         if col in df_orig.columns:
             df_orig[col] = df_orig[col].astype(object)
@@ -478,7 +478,7 @@ if os.path.exists(review_log_path) and os.path.getsize(review_log_path) > 0:
 
 active_list = []
 expired_list = []
-stopped_list = []   # 股票止损
+stopped_list = []
 skipped_duplicate = 0
 
 print("开始股票风控检查（触及即止损，基于当日最低价）...")
@@ -521,7 +521,6 @@ for orig_ticker, group in recent_picks.groupby('Ticker'):
     # 获取今日 OHLC
     ohlc = ohlc_map_today.get(clean_t)
     if ohlc is None:
-        # 兜底：用 price_map_today
         cur_price = price_map_today.get(clean_t, rec_price)
         ohlc = {'open': cur_price, 'high': cur_price, 'low': cur_price, 'close': cur_price}
     today_low = ohlc['low']
@@ -557,7 +556,6 @@ for orig_ticker, group in recent_picks.groupby('Ticker'):
         if (str(orig_ticker), rec_date_str) in already_archived:
             skipped_duplicate += 1
             continue
-        # 获取到期日价格（使用历史数据）
         if not df_hist_all.empty:
             ticker_hist = df_hist_all[df_hist_all['ts_code'] == clean_t].copy()
             if not ticker_hist.empty:
@@ -650,7 +648,6 @@ try:
         for item in expired_list:
             pnl = item['期满日盈亏(%)'] if item['期满日盈亏(%)'] != "无数据" else ""
             f.write(f"{review_date},{item['代码']},{item['名称']},{item['标签']},{item['首次推荐日']},{item['首次推荐价']},{item['期满日价格']},{item['持仓天数']},{pnl},{pnl},{item['持股周期建议']},{item['止损价']},{item['系统连续推荐次数']},已超期归档,{item['推荐评分']},,,,\n")
-        # 期权平仓记录
         for opt in option_closed_records:
             name = opt['ticker']
             f.write(f"{review_date},{opt['ticker']},{name},期权平仓,{opt['expiry']},{opt['entry_price']},{opt['close_price']},,{opt['pnl']},{opt['pnl']},,{opt['strike']},,期权平仓,{opt['reason']},{opt['option_type']},{opt['strike']},{opt['expiry']}\n")
@@ -684,7 +681,7 @@ prompt = f"""
 
 在分析时注意：
 - 高分票（80以上）若亏损需指出高预期未兑现；低分票（60以下）若盈利需指出评分可能保守。
-- 今日新增标的（今日新增=是）几乎无实际波动，请勿按亏损/止损逻辑处理。
+- 今日新增标的（今日新增=是）已有完整交易日数据，应计入正常盈亏分析。
 - 止损触发标的已按止损价结算，请评价止损纪律执行情况（尤其触及即止损）。
 - 期权平仓记录包含行权/归零结果，请点评期权策略的有效性。
 
@@ -763,9 +760,10 @@ active_count = len(active_list)
 total_count = active_count + closed_count
 new_today_count = sum(1 for x in active_list if x.get('今日新增') == '是')
 
-_win_pool = [x for x in active_list if x.get('今日新增') != '是']
-active_wins = sum(1 for x in _win_pool if x['当前盈亏(%)'] > 0)
-active_win_rate = (active_wins / len(_win_pool) * 100) if _win_pool else 0.0
+# 【修复】今日新增的标的已有完整交易日数据，应纳入胜率统计
+_win_rate_pool = [x for x in active_list if isinstance(x['当前盈亏(%)'], (int, float))]
+active_wins = sum(1 for x in _win_rate_pool if x['当前盈亏(%)'] > 0)
+active_win_rate = (active_wins / len(_win_rate_pool) * 100) if _win_rate_pool else 0.0
 
 closed_wins = sum(1 for x in historical_closed if x['pnl'] > 0)
 closed_win_rate = (closed_wins / closed_count * 100) if closed_count > 0 else 0.0
@@ -789,7 +787,7 @@ kpi_html = f"""
     <div style="background: #fff; border:1px solid #eef2f5; border-radius:10px; padding:15px; border-top:4px solid #2ecc71;">
         <div style="font-size:13px; color:#7f8c8d;">持仓胜率</div>
         <div style="font-size:24px; font-weight:bold; color:#2ecc71;">{active_win_rate:.2f}%</div>
-        <div style="font-size:12px;">{active_wins} 赢 / {len(_win_pool)-active_wins} 亏（不含今日新增）</div>
+        <div style="font-size:12px;">{active_wins} 赢 / {len(_win_rate_pool)-active_wins} 亏（含今日新增 {new_today_count} 笔）</div>
     </div>
     <div style="background: #fff; border:1px solid #eef2f5; border-radius:10px; padding:15px; border-top:4px solid #e67e22;">
         <div style="font-size:13px; color:#7f8c8d;">已了结胜率</div>
