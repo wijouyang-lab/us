@@ -449,9 +449,10 @@ def update_trade_history_status(ticker, buy_date_str, new_status, exit_price):
     if not os.path.exists(log_file):
         return
     df_orig = pd.read_csv(log_file, keep_default_na=False)
+    # 确保 Exit_Date 和 Exit_Price 列为 object 类型，允许混合类型（字符串和数字）
     for col in ['Exit_Date', 'Exit_Price']:
-        if col not in df_orig.columns:
-            df_orig[col] = ''
+        if col in df_orig.columns:
+            df_orig[col] = df_orig[col].astype(object)
     mask = (df_orig['Ticker'] == ticker) & (df_orig['Date'] == buy_date_str) & (df_orig['Status'] == 'Active')
     if mask.any():
         df_orig.loc[mask, 'Status'] = new_status
@@ -557,7 +558,6 @@ for orig_ticker, group in recent_picks.groupby('Ticker'):
             skipped_duplicate += 1
             continue
         # 获取到期日价格（使用历史数据）
-        # 这里简化：使用到期日当天收盘价，若无法获取则用当前价
         if not df_hist_all.empty:
             ticker_hist = df_hist_all[df_hist_all['ts_code'] == clean_t].copy()
             if not ticker_hist.empty:
