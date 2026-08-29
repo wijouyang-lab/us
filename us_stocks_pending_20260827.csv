@@ -1,8 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct
-2026-08-27,NVDA,Nvidia,Core_Dragon,46.3,-2.74,4,False,False,False,True,14-21天,$174,78,pending,209.66,2.98,False
-2026-08-27,PFE,Pfizer,Observation,69.6,5.64,0,False,True,False,False,观望,观望,N/A,pending,28.3,2.06,False
-2026-08-27,AAPL,Apple Inc.,Observation,51.5,1.06,10,True,False,True,False,观望,观望,N/A,pending,313.45,2.29,False
-2026-08-27,SMCI,Supermicro,Observation,58.9,9.33,0,False,True,False,False,观望,观望,N/A,pending,37.39,6.65,False
-2026-08-27,SCHW,Charles Schwab Corporation,Observation,56.0,0.43,6,False,False,False,True,观望,观望,N/A,pending,109.39,2.09,False
-2026-08-27,HAL,Halliburton,Observation,52.6,2.7,3,False,False,False,False,观望,观望,N/A,pending,34.44,2.92,False
-2026-08-27,INTU,Intuit,Observation,55.3,1.6,12,False,True,False,True,观望,观望,N/A,pending,345.88,4.49,False
