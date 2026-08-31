@@ -1,0 +1,11 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-08-31,CNP,CenterPoint Energy,Core_Dragon,40.3,-0.95,34,True,False,True,False,5-10天,$37.92,84,pending,39.57,2.08,True
+2026-08-31,ULTA,Ulta Beauty,Core_Dragon,55.9,1.28,30,False,True,True,False,5-10天,$500.7,80,pending,538.04,3.47,False
+2026-08-31,TSLA,Tesla  Inc.,Core_Dragon,57.2,6.69,29,False,False,True,False,5-10天,$336.8,79,pending,363.71,3.7,True
+2026-08-31,WMT,Walmart,Core_Dragon,37.9,-4.81,28,False,False,True,False,5-10天,$99.25,78,pending,104.47,2.5,True
+2026-08-31,EW,Edwards Lifesciences,Core_Dragon,54.2,0.0,27,False,True,False,False,5-10天,$86.98,77,pending,90.87,2.14,False
+2026-08-31,VEEV,Veeva Systems,Core_Dragon,77.5,16.99,26,False,True,False,False,5-10天,$264.26,76,pending,286.55,3.89,True
+2026-08-31,WEC,WEC Energy Group,Core_Dragon,41.4,-1.18,22,False,False,True,False,5-10天,$102.85,72,pending,106.45,1.69,False
+2026-08-31,ORLY,O'Reilly Automotive,Core_Dragon,46.8,-2.18,21,False,False,True,False,5-10天,$84.78,71,pending,88.96,2.35,False
+2026-08-31,TXN,Texas Instruments,Core_Dragon,40.6,-4.01,19,False,False,True,False,5-10天,$242.61,69,pending,260.93,3.51,False
+2026-08-31,KIM,Kimco Realty,Core_Dragon,32.9,-2.05,18,False,False,True,False,5-10天,$23.02,68,pending,23.73,1.47,False
