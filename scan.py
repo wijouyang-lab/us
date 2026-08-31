@@ -164,7 +164,6 @@ def get_latest_macro_news():
     print("📡 [阶段1] 正在抓取 CNBC/Reuters/MarketWatch 全球财经快讯...")
     sources = [
         ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
-        ("Yahoo Finance", "https://feeds.finance.yahoo.com/rss/2.0/news?format=xml"),
         ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/"),
         ("Google News Macro", "https://news.google.com/rss/search?q=Federal+Reserve+inflation+tariff+economy+markets&hl=en-US&gl=US&ceid=US:en"),
     ]
@@ -701,31 +700,7 @@ def get_key_people_policy_news():
 
 
 # ==================== 6.6 美联储关键经济数据（无付费 API 依赖） ====================
-def _fetch_fred_series_csv(series_id, timeout=15):
-    """读取 FRED CSV；单个序列失败只影响该序列。增加重试和指数退避。"""
-    url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
-    session = get_robust_session()
-    last_err = None
-    for attempt in range(3):
-        try:
-            resp = session.get(url, timeout=timeout)
-            resp.raise_for_status()
-            df = pd.read_csv(io.StringIO(resp.text))
-            if 'observation_date' not in df.columns or series_id not in df.columns:
-                return pd.DataFrame()
-            df['observation_date'] = pd.to_datetime(df['observation_date'], errors='coerce')
-            df[series_id] = pd.to_numeric(df[series_id], errors='coerce')
-            return df.dropna(subset=['observation_date', series_id]).sort_values('observation_date')
-        except Exception as e:
-            last_err = e
-            wait = 2 ** attempt  # 1, 2, 4 秒退避
-            print(f"   ⏳ FRED {series_id} 第{attempt+1}次尝试失败，{wait}s后重试: {e}")
-            time.sleep(wait)
-    print(f"   ⚠️ FRED {series_id} 最终失败: {last_err}")
-    return pd.DataFrame()
 
-
-def _fetch_bls_latest(series_id, timeout=15):
     """BLS 公共 API 作为 CPI/失业率等 FRED 失败时的备用数据源。增加重试。"""
     url = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
     payload = json.dumps({
@@ -784,173 +759,90 @@ def _fetch_yahoo_scalar(ticker, timeout=8):
 
 
 def get_us_economic_data():
-    print("📊 [阶段2.5] 正在抓取美国关键经济数据（CPI/PCE/失业率/政策利率）...")
-    # 说明：FRED 不再串行阻塞；失败时对 CPI/核心CPI/失业率使用 BLS 备用源。
-    series_map = {
+    """
+    美国经济数据获取 —— Yahoo Finance 优先模式。
+    利率数据全部从 Yahoo 获取（快速可靠，通常 <3秒）；
+    CPI/PCE/失业率从 FRED 快速单次获取（3秒超时，失败不阻塞、不重试）；
+    联邦基金利率优先用 Yahoo ^IRX，失败再用纽约联储。
+    """
+    print("📊 [阶段2.5] 正在抓取美国关键经济数据（Yahoo Finance 优先模式）...")
+    data = {}
+    lines = []
+
+    # ===== 1. 利率数据：全部从 Yahoo Finance 获取（首选，通常 <3秒）=====
+    yahoo_rates = {
+        "10Y国债": "^TNX",
+        "5Y国债": "^FVX",
+        "13周国债": "^IRX",
+    }
+    for label, ticker in yahoo_rates.items():
+        val, prev, dt = _fetch_yahoo_scalar(ticker)
+        if val is not None:
+            data[label] = {"value": val, "prev": prev, "date": dt.strftime('%Y-%m-%d'), "source": "Yahoo Finance"}
+            lines.append(f"- {label}：{val:.3f}%（Yahoo Finance，数据期 {dt.strftime('%Y-%m-%d')}）")
+            print(f"   ✅ {label}: Yahoo Finance {val:.3f}%")
+
+    # ===== 2. CPI/核心CPI/核心PCE/失业率：快速单次尝试 FRED（3秒超时，零重试）=====
+    # 这些宏观经济统计 Yahoo 没有直接提供；Regime Gate 主要依赖新闻文本，这些仅作辅助确认
+    fred_series = {
         "CPI指数": "CPIAUCSL",
         "核心CPI指数": "CPILFESL",
         "核心PCE指数": "PCEPILFE",
         "失业率": "UNRATE",
-        "联邦基金有效利率": "EFFR",
-        "10Y国债": "DGS10",
-        "2Y国债": "DGS2",
-    }
-    data = {}
-    lines = []
-
-    def one(label_sid):
-        label, sid = label_sid
-        try:
-            return label, sid, _fetch_fred_series_csv(sid, timeout=15), None
-        except Exception as e:
-            return label, sid, pd.DataFrame(), str(e)
-
-    # 限制并发数为 3，避免对 FRED 服务器造成过大压力，同时减少超时阻塞
-    with ThreadPoolExecutor(max_workers=3) as ex:
-        futures = [ex.submit(one, x) for x in series_map.items()]
-        results = [f.result() for f in as_completed(futures)]
-
-    fallback_bls = {
-        "CPI指数": "CUUR0000SA0",
-        "核心CPI指数": "CUSR0000SA0L1E",
-        "失业率": "LNS14000000",
     }
 
-    for label, sid, df, err in results:
-        if df.empty:
-            if label in fallback_bls:
-                try:
-                    val, prev, dt = _fetch_bls_latest(fallback_bls[label], timeout=8)
-                    if val is not None:
-                        item = {"value": val, "date": dt.strftime('%Y-%m-%d'), "source": "BLS"}
-                        if label in {"CPI指数", "核心CPI指数"}:
-                            # BLS CPI 序列也是指数，转同比。
-                            # 这里只保留当前指数；同比由最近13个月数据不足时不强算。
-                            item["yoy"] = None
-                            lines.append(f"- {label}：指数 {val:.3f}（BLS备用，数据期 {item['date']}）")
-                        else:
-                            lines.append(f"- {label}：{val:.3f}（BLS备用，数据期 {item['date']}）")
-                        item["prev"] = prev
-                        data[label] = item
-                        print(f"   ✅ {label}: 使用 BLS 备用数据")
-                        continue
-                except Exception as e:
-                    err = f"FRED失败；BLS备用也失败: {e}"
-            print(f"   ⚠️ {label}({sid}) 抓取失败：{err or '无数据'}")
-            continue
-
-        last = df.iloc[-1]
-        value = float(last[sid])
-        date = last['observation_date'].strftime('%Y-%m-%d')
-        item = {"value": value, "date": date, "source": "FRED"}
-        if sid in {"CPIAUCSL", "CPILFESL", "PCEPILFE"} and len(df) >= 13:
-            prev12 = float(df.iloc[-13][sid])
-            yoy = (value / prev12 - 1) * 100 if prev12 else None
-            item["yoy"] = yoy
-            if yoy is not None:
-                lines.append(f"- {label}：{yoy:.2f}% YoY（FRED，数据期 {date}）")
-            else:
-                lines.append(f"- {label}：指数 {value:.3f}（FRED，数据期 {date}）")
-        else:
-            lines.append(f"- {label}：{value:.3f}（FRED，数据期 {date}）")
-        data[label] = item
-
-    # 多源利率兜底：Treasury XML feed -> Yahoo 作为最终备用
-    def _fetch_treasury_curve_xml():
-        """从 Treasury XML feed 获取收益率曲线数据。"""
-        year = datetime.datetime.now().year
-        url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/"
-               f"pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value={year}")
+    def _quick_fred(sid):
+        """快速单次 FRED 获取，3秒超时，零重试，失败立即返回 None。"""
         try:
-            resp = get_robust_session().get(url, timeout=15)
+            url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
+            resp = get_robust_session().get(url, timeout=3)
             resp.raise_for_status()
-            root = ET.fromstring(resp.content)
-            # Treasury XML 使用 Atom/ OData 格式，entry 中包含数据
-            ns = {'atom': 'http://www.w3.org/2005/Atom'}
-            entries = root.findall('.//atom:entry', ns)
-            if not entries:
-                # 尝试无命名空间
-                entries = root.findall('.//entry')
-            rows = []
-            for entry in entries:
-                # 提取 properties 中的字段
-                props = entry.find('.//{http://schemas.microsoft.com/ado/2007/08/dataservices/metadata}properties')
-                if props is None:
-                    props = entry.find('.//properties')
-                if props is None:
-                    continue
-                row = {}
-                for child in props:
-                    tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
-                    row[tag] = child.text
-                if row.get('NEW_DATE'):
-                    rows.append(row)
-            if not rows:
+            df = pd.read_csv(io.StringIO(resp.text))
+            if 'observation_date' not in df.columns or sid not in df.columns:
                 return None
-            df_t = pd.DataFrame(rows)
-            df_t['NEW_DATE'] = pd.to_datetime(df_t['NEW_DATE'], errors='coerce')
-            df_t = df_t.dropna(subset=['NEW_DATE']).sort_values('NEW_DATE')
-            # 将利率列转为数值
-            for col in ['BC_2YEAR', 'BC_10YEAR', 'BC_5YEAR', 'BC_30YEAR']:
-                if col in df_t.columns:
-                    df_t[col] = pd.to_numeric(df_t[col], errors='coerce')
-            return df_t
-        except Exception as e:
-            print(f"   ⚠️ U.S. Treasury XML 收益率曲线获取失败：{e}")
+            df['observation_date'] = pd.to_datetime(df['observation_date'], errors='coerce')
+            df[sid] = pd.to_numeric(df[sid], errors='coerce')
+            df = df.dropna(subset=['observation_date', sid]).sort_values('observation_date')
+            if df.empty:
+                return None
+            last = df.iloc[-1]
+            return {
+                "value": float(last[sid]),
+                "date": last['observation_date'].strftime('%Y-%m-%d'),
+                "df": df
+            }
+        except Exception:
             return None
 
-    curve = _fetch_treasury_curve_xml()
-    if curve is not None and not curve.empty:
-        last = curve.iloc[-1]
-        dt = last['NEW_DATE']
-        for label, col in [("10Y国债", "BC_10YEAR"), ("2Y国债", "BC_2YEAR")]:
-            if label not in data and col in curve.columns and pd.notna(last[col]):
-                val = float(last[col])
-                prev_val = float(curve.iloc[-2][col]) if len(curve) >= 2 and pd.notna(curve.iloc[-2][col]) else None
-                data[label] = {"value": val, "prev": prev_val, "date": dt.strftime('%Y-%m-%d'), "source": "U.S. Treasury XML"}
-                lines.append(f"- {label}：{val:.3f}（U.S. Treasury XML，数据期 {dt.strftime('%Y-%m-%d')}）")
-                print(f"   ✅ {label}: 使用 U.S. Treasury XML 数据")
+    for label, sid in fred_series.items():
+        result = _quick_fred(sid)
+        if result:
+            val = result["value"]
+            date = result["date"]
+            item = {"value": val, "date": date, "source": "FRED"}
+            df = result["df"]
+            if sid in {"CPIAUCSL", "CPILFESL", "PCEPILFE"} and len(df) >= 13:
+                prev12 = float(df.iloc[-13][sid])
+                yoy = (val / prev12 - 1) * 100 if prev12 else None
+                item["yoy"] = yoy
+                if yoy is not None:
+                    lines.append(f"- {label}：{yoy:.2f}% YoY（FRED，数据期 {date}）")
+                else:
+                    lines.append(f"- {label}：指数 {val:.3f}（FRED，数据期 {date}）")
+            else:
+                lines.append(f"- {label}：{val:.3f}（FRED，数据期 {date}）")
+            data[label] = item
+            print(f"   ✅ {label}: FRED 成功")
+        else:
+            print(f"   ⏭️ {label}: FRED 快速跳过（网络不通或超时）")
 
-    # Yahoo最终兜底。注意：^IRX 是13周，不再冒充2Y。
-    yahoo_rate_fallback = {"10Y国债": "^TNX", "2Y国债": "^FVX"}
-    for label, ticker in yahoo_rate_fallback.items():
-        if label not in data:
-            val, prev, dt = _fetch_yahoo_scalar(ticker)
-            if val is not None:
-                source_label = "Yahoo代理(^FVX=5Y，非严格2Y)" if ticker == "^FVX" else "Yahoo(^TNX)"
-                data[label] = {"value": val, "prev": prev, "date": dt.strftime('%Y-%m-%d'), "source": source_label}
-                lines.append(f"- {label}：{val:.3f}（{source_label}，数据期 {dt.strftime('%Y-%m-%d')}）")
-
-    # 核心PCE：FRED失败时尝试BEA NIPA API（官方来源）；失败再保留缺失，不伪造。
-    if "核心PCE指数" not in data:
+    # ===== 3. 联邦基金利率：如果 Yahoo ^IRX 没有拿到，快速尝试纽约联储 =====
+    if "13周国债" not in data:
         try:
-            year = datetime.datetime.now().year
-            bea_url = ("https://apps.bea.gov/api/data/?UserID=samplekey&method=GETDATA"
-                       f"&datasetname=NIPA&TableName=T20804&Frequency=M&Year={year}&ResultFormat=JSON")
-            resp = get_robust_session().get(bea_url, timeout=8)
-            resp.raise_for_status()
-            obj = resp.json()
-            rows = obj.get("BEAAPI", {}).get("Results", {}).get("Data", [])
-            candidates = []
-            for r in rows:
-                desc = str(r.get("LineDescription", "")).lower()
-                if "personal consumption expenditures price index" in desc and "food and energy" not in desc:
-                    try: candidates.append((r.get("TimePeriod"), float(r.get("DataValue"))))
-                    except Exception: pass
-            if candidates:
-                candidates.sort(key=lambda x: x[0])
-                tp, val = candidates[-1]
-                data["核心PCE指数"] = {"value": val, "date": str(tp), "source": "BEA", "yoy": None}
-                lines.append(f"- 核心PCE指数：{val:.3f}（BEA备用，数据期 {tp}）")
-                print("   ✅ 核心PCE指数: 使用 BEA 备用数据")
-        except Exception as e:
-            print(f"   ⚠️ BEA核心PCE备用失败：{e}")
-
-    # EFFR：FRED失败时尝试纽约联储公开接口。
-    if "联邦基金有效利率" not in data:
-        try:
-            ny_url = "https://markets.newyorkfed.org/api/rates/unsecured/effr/search.json?startDate=" + (datetime.datetime.now()-datetime.timedelta(days=10)).strftime('%Y-%m-%d') + "&endDate=" + datetime.datetime.now().strftime('%Y-%m-%d')
-            resp = get_robust_session().get(ny_url, timeout=8)
+            ny_url = ("https://markets.newyorkfed.org/api/rates/unsecured/effr/search.json?startDate="
+                      + (datetime.datetime.now()-datetime.timedelta(days=10)).strftime('%Y-%m-%d')
+                      + "&endDate=" + datetime.datetime.now().strftime('%Y-%m-%d'))
+            resp = get_robust_session().get(ny_url, timeout=5)
             resp.raise_for_status()
             obj = resp.json()
             rows = obj.get("refRates", obj.get("rates", []))
@@ -961,16 +853,19 @@ def get_us_economic_data():
                 dt = r.get("effectiveDate", r.get("date"))
                 if val is not None:
                     data["联邦基金有效利率"] = {"value": float(val), "date": str(dt), "source": "New York Fed"}
-                    lines.append(f"- 联邦基金有效利率：{float(val):.3f}（New York Fed，数据期 {dt}）")
-                    print("   ✅ 联邦基金有效利率: 使用 New York Fed 备用数据")
+                    lines.append(f"- 联邦基金有效利率：{float(val):.3f}%（New York Fed，数据期 {dt}）")
+                    print(f"   ✅ 联邦基金利率: New York Fed 成功")
         except Exception as e:
-            print(f"   ⚠️ New York Fed EFFR备用失败：{e}")
+            print(f"   ⏭️ New York Fed EFFR 跳过: {e}")
 
+    # ===== 4. Regime 确认行 =====
     cpi_yoy = data.get("CPI指数", {}).get("yoy")
     core_cpi_yoy = data.get("核心CPI指数", {}).get("yoy")
     core_pce_yoy = data.get("核心PCE指数", {}).get("yoy")
     unemployment = data.get("失业率", {}).get("value")
-    effr = data.get("联邦基金有效利率", {}).get("value")
+    effr = data.get("13周国债", {}).get("value") or data.get("联邦基金有效利率", {}).get("value")
+    ten_y = data.get("10Y国债", {}).get("value")
+
     if core_pce_yoy is not None:
         lines.append(f"【Regime确认】核心PCE同比={core_pce_yoy:.2f}%")
     if core_cpi_yoy is not None:
@@ -979,13 +874,15 @@ def get_us_economic_data():
         lines.append(f"【Regime确认】失业率={unemployment:.1f}%")
     if effr is not None:
         lines.append(f"【Regime确认】有效联邦基金利率={effr:.2f}%")
+    if ten_y is not None:
+        lines.append(f"【Regime确认】10Y国债收益率={ten_y:.2f}%")
+
     if not lines:
         return "暂无结构化美国宏观经济数据。", data
-    print(f"✅ 美国经济数据抓取完成：{len(data)} 项")
+    print(f"✅ 美国经济数据抓取完成：{len(data)} 项（Yahoo优先，FRED零重试）")
     return "\n".join(lines), data
 
 
-def _anthropic_text(response):
     """兼容新版 Claude 的 TextBlock / ThinkingBlock 返回结构。"""
     parts = []
     for block in getattr(response, "content", []) or []:
