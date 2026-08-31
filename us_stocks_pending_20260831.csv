@@ -1,0 +1,6 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-08-31,WMB,Williams Companies,Observation,55.9,2.6,2,False,False,False,False,观望,观望,N/A,pending,74.62,2.76,False
+2026-08-31,EQT,EQT Corporation,Observation,55.8,1.05,0,False,True,False,False,观望,观望,N/A,pending,54.14,2.63,False
+2026-08-31,OKE,Oneok,Observation,59.4,2.87,13,False,True,False,False,观望,观望,N/A,pending,95.25,2.48,False
+2026-08-31,APA,APA Corporation,Observation,62.2,4.51,0,False,True,False,False,观望,观望,N/A,pending,42.58,3.52,False
+2026-08-31,LHX,L3Harris,Observation,38.2,-4.06,4,False,False,False,False,观望,观望,N/A,pending,266.0,2.51,False
