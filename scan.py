@@ -204,6 +204,7 @@ def get_latest_macro_news():
 
 
 def get_megacap_breaking_news():
+    """Mega-Cap 新闻：优先使用 Yahoo Finance RSS headline feed，失败时安全降级。"""
     megacap = {
         "META": "Meta（AI/算力/社交）", "NVDA": "NVIDIA（GPU/AI芯片）",
         "MSFT": "Microsoft（Azure/AI）", "GOOGL": "Alphabet（云/AI）",
@@ -213,19 +214,43 @@ def get_megacap_breaking_news():
     }
     cutoff = time.time() - 36 * 3600
     out = []
+    session = get_robust_session()
+
     for ticker, desc in megacap.items():
         try:
-            for item in (yf.Ticker(ticker).news or [])[:8]:
-                ts = item.get("providerPublishTime", 0)
-                if ts < cutoff:
-                    continue
-                title = str(item.get("title", "")).strip()
-                publisher = str(item.get("publisher", "Yahoo")).strip()
+            # 首选：Yahoo Finance RSS headline feed
+            url = f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US"
+            resp = session.get(url, timeout=8)
+            resp.raise_for_status()
+            root = ET.fromstring(resp.content)
+            for item in root.findall(".//item")[:8]:
+                title = item.findtext("title", default="").strip()
+                pub = item.findtext("pubDate", default="")
+                dt = _parse_rss_date(pub)
+                if dt:
+                    ts = dt.timestamp()
+                    if ts < cutoff:
+                        continue
+                    pub_time = dt.astimezone(US_TZ).strftime("%m-%d %H:%M")
+                else:
+                    pub_time = "时间未知"
                 if title:
-                    pub_time = datetime.datetime.fromtimestamp(ts, tz=US_TZ).strftime("%m-%d %H:%M")
-                    out.append(f"[{ticker}/{desc}] [{publisher}] {pub_time} — {title}")
+                    out.append(f"[{ticker}/{desc}] [Yahoo] {pub_time} — {title}")
         except Exception as e:
-            print(f"⚠️ {ticker} 新闻抓取失败: {e}")
+            print(f"⚠️ {ticker} RSS 新闻抓取失败: {e}")
+            # 备用：尝试 yfinance news（如果可用）
+            try:
+                for item in (yf.Ticker(ticker).news or [])[:5]:
+                    ts = item.get("providerPublishTime", 0)
+                    if ts < cutoff:
+                        continue
+                    title = str(item.get("title", "")).strip()
+                    publisher = str(item.get("publisher", "Yahoo")).strip()
+                    if title:
+                        pub_time = datetime.datetime.fromtimestamp(ts, tz=US_TZ).strftime("%m-%d %H:%M")
+                        out.append(f"[{ticker}/{desc}] [{publisher}] {pub_time} — {title}")
+            except Exception:
+                pass
     print(f"✅ Mega-Cap 公司新闻：{len(out)} 条")
     return "\n".join(out[:60])
 
@@ -643,34 +668,42 @@ def screen_technical_setups(pool_data):
 
 # ==================== 6.5 重要人物讲话与宏观预期变化 ====================
 def _rss_search_google(query, max_items=8):
-    """通过 Google News RSS 抓取指定人物/政策关键词的近期新闻；失败时安全降级。"""
+    """通过 Google News RSS 抓取指定人物/政策关键词的近期新闻；503时重试，失败时安全降级。"""
     session = get_robust_session()
     q = requests.utils.quote(query)
     url = f"https://news.google.com/rss/search?q={q}&hl=en-US&gl=US&ceid=US:en"
     out = []
-    try:
-        resp = session.get(url, timeout=10)
-        resp.raise_for_status()
-        root = ET.fromstring(resp.content)
-        for item in root.findall('.//item')[:max_items * 2]:
-            title = item.findtext('title', default='').strip()
-            pub = item.findtext('pubDate', default='')
-            dt = _parse_rss_date(pub)
-            tag = _news_age_tag(dt)
-            if not title or tag is None:
-                continue
-            ts = dt.astimezone(US_TZ).strftime('%m-%d %H:%M') if dt else '时间未知'
-            out.append((dt, f"{tag}[Google News] {ts} - {title}"))
-    except Exception as e:
-        print(f"   ⚠️ Google News 查询失败 {query}: {e}")
+    last_err = None
+    for attempt in range(2):  # 503 时重试 1 次
+        try:
+            resp = session.get(url, timeout=10)
+            resp.raise_for_status()
+            root = ET.fromstring(resp.content)
+            for item in root.findall('.//item')[:max_items * 2]:
+                title = item.findtext('title', default='').strip()
+                pub = item.findtext('pubDate', default='')
+                dt = _parse_rss_date(pub)
+                tag = _news_age_tag(dt)
+                if not title or tag is None:
+                    continue
+                ts = dt.astimezone(US_TZ).strftime('%m-%d %H:%M') if dt else '时间未知'
+                out.append((dt, f"{tag}[Google News] {ts} - {title}"))
+            break  # 成功则跳出重试
+        except Exception as e:
+            last_err = e
+            if attempt == 0:
+                time.sleep(2)  # 503 时等待 2 秒后重试
+    if not out and last_err:
+        print(f"   ⚠️ Google News 查询失败 {query}: {last_err}")
     out.sort(key=lambda x: x[0] or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc), reverse=True)
     return [x[1] for x in out[:max_items]]
 
 
-def get_key_people_policy_news():
+def get_key_people_policy_news(macro_news_text=""):
     """
     重要人物/政策预期监控：重点覆盖 Fed 官员、特朗普及市场高度敏感政策表述。
     不直接把人物名字当成利空；真正的方向判断交给 Regime Gate + AI。
+    Google News 失败时，从已抓取的宏观新闻中过滤备用。
     """
     print("🎙️ [阶段2.4] 正在抓取重要人物讲话与政策预期变化...")
     queries = [
@@ -690,8 +723,21 @@ def get_key_people_policy_news():
                 continue
             seen.add(key)
             rows.append(line)
-        time.sleep(0.2)
-    # 优先保留带有 Fed / Warsh / Powell / inflation / rates 等高信息密度的条目
+        time.sleep(1.0)  # 增加间隔到 1 秒，减少 503 概率
+
+    # 如果 Google News 全部失败，从已抓取的宏观新闻中过滤备用
+    if not rows and macro_news_text:
+        print("   🔄 Google News 全部失败，从宏观新闻中过滤人物讲话...")
+        priority_terms = ("warsh", "powell", "waller", "bowman", "federal reserve", "rate", "inflation", "tariff", "hawkish", "dovish")
+        for line in macro_news_text.split("\n"):
+            line_lower = line.lower()
+            if any(t in line_lower for t in priority_terms):
+                key = re.sub(r"[^a-z0-9]+", "", line_lower)
+                if key not in seen:
+                    seen.add(key)
+                    rows.append(line)
+
+    # 优先保留高信息密度条目
     priority_terms = ("warsh", "powell", "waller", "bowman", "federal reserve", "rate", "inflation", "tariff", "hawkish", "dovish")
     rows.sort(key=lambda x: sum(t in x.lower() for t in priority_terms), reverse=True)
     rows = rows[:50]
@@ -758,7 +804,7 @@ def _fetch_yahoo_scalar(ticker, timeout=8):
         return None, None, None
 
 
-def get_us_economic_data():
+def get_us_economic_data(combined_news_text=""):
     """
     美国经济数据获取 —— 多层备用方案：
     1. 利率：Yahoo Finance（首选，<3秒）
@@ -869,7 +915,7 @@ def get_us_economic_data():
         else:
             print(f"   ❌ {label}: 所有备用源均失败")
 
-    # ===== 3. 核心PCE：FRED → Google News 提取 =====
+    # ===== 3. 核心PCE：FRED → 新闻文本提取 → Google News 提取 =====
     pce_result = _quick_fred("PCEPILFE")
     if pce_result:
         val, date, df = pce_result["value"], pce_result["date"], pce_result["df"]
@@ -887,14 +933,21 @@ def get_us_economic_data():
         data["核心PCE指数"] = item
         print(f"   ✅ 核心PCE指数: FRED 成功")
     else:
-        # Google News 提取核心PCE
-        result = _fetch_macro_from_google_news("核心PCE指数")
-        if result:
-            data["核心PCE指数"] = result
-            lines.append(f"- 核心PCE指数：{result['value']:.2f}{result.get('unit', '%')}（Google News 提取，数据期 {result['date']}）")
-            print(f"   ✅ 核心PCE指数: Google News 提取成功")
+        # 备用 1: 从已抓取的新闻文本中提取
+        pce_from_news = _extract_pce_from_news(combined_news_text if 'combined_news_text' in dir() else "")
+        if pce_from_news:
+            data["核心PCE指数"] = pce_from_news
+            lines.append(f"- 核心PCE指数：{pce_from_news['value']:.2f}%（新闻文本提取，数据期 {pce_from_news['date']}）")
+            print(f"   ✅ 核心PCE指数: 新闻文本提取成功")
         else:
-            print(f"   ❌ 核心PCE指数: 所有备用源均失败")
+            # 备用 2: Google News 提取
+            result = _fetch_macro_from_google_news("核心PCE指数")
+            if result:
+                data["核心PCE指数"] = result
+                lines.append(f"- 核心PCE指数：{result['value']:.2f}{result.get('unit', '%')}（Google News 提取，数据期 {result['date']}）")
+                print(f"   ✅ 核心PCE指数: Google News 提取成功")
+            else:
+                print(f"   ❌ 核心PCE指数: 所有备用源均失败")
 
     # ===== 4. 联邦基金利率：Yahoo ^IRX → New York Fed =====
     if "13周国债" not in data:
@@ -1076,6 +1129,26 @@ def _fetch_bls_webpage(label):
                 return {"value": val, "date": "最新", "source": "BLS 首页"}
     except Exception:
         pass
+    return None
+
+
+def _extract_pce_from_news(news_text):
+    """从已抓取的新闻文本中提取核心PCE数据。"""
+    if not news_text:
+        return None
+    patterns = [
+        r"core\s*PCE.*?([\d.]+)\s*%",
+        r"PCE\s*price\s*index.*?([\d.]+)\s*%",
+        r"personal\s*consumption\s*expenditures.*?([\d.]+)\s*%",
+        r"core\s*personal\s*consumption.*?([\d.]+)\s*%",
+        r"excluding\s*food\s*and\s*energy.*?([\d.]+)\s*%",
+    ]
+    for pattern in patterns:
+        m = re.search(pattern, news_text, re.I)
+        if m:
+            val = float(m.group(1))
+            if 0 <= val <= 15:  # 合理性检查
+                return {"value": val, "date": "最新", "source": "新闻文本提取", "unit": "%"}
     return None
 
 
@@ -1821,8 +1894,8 @@ def safe_generate_option_strategy(item):
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
     megacap_news = get_megacap_breaking_news()
-    key_people_news = get_key_people_policy_news()
-    economic_text, economic_structured = get_us_economic_data()
+    key_people_news = get_key_people_policy_news(macro_news)
+    economic_text, economic_structured = get_us_economic_data(combined_news)
     combined_news = macro_news
     if megacap_news:
         combined_news += "\n\n【Mega-Cap 最新动态】\n" + megacap_news
