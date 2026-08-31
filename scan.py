@@ -1160,6 +1160,12 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     for col in ["Exit_Date","Exit_Price","Status","Price"]:
         if col not in df.columns:
             df[col] = "Active" if col == "Status" else ("" if col != "Price" else 0)
+    # pandas 3.x 可能把空字符串列推断为 StringDtype；后续需要写入数值价格，
+    # 因此明确把可变价格列转换成 object，避免 StringDtype 拒绝 float。
+    for _col in ["Exit_Date", "Exit_Price"]:
+        if _col in df.columns:
+            df[_col] = df[_col].astype(object)
+
     active = df[df["Status"].astype(str).str.strip() == "Active"].copy()
     if active.empty:
         return set(), {}, {}
