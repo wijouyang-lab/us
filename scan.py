@@ -760,16 +760,18 @@ def _fetch_yahoo_scalar(ticker, timeout=8):
 
 def get_us_economic_data():
     """
-    美国经济数据获取 —— Yahoo Finance 优先模式。
-    利率数据全部从 Yahoo 获取（快速可靠，通常 <3秒）；
-    CPI/PCE/失业率从 FRED 快速单次获取（3秒超时，失败不阻塞、不重试）；
-    联邦基金利率优先用 Yahoo ^IRX，失败再用纽约联储。
+    美国经济数据获取 —— 多层备用方案：
+    1. 利率：Yahoo Finance（首选，<3秒）
+    2. CPI/核心CPI/失业率：FRED → BLS API → BLS 网页 → Google News 提取
+    3. 核心PCE：FRED → Google News 提取
+    4. 联邦基金利率：Yahoo ^IRX → New York Fed
+    每层失败立即进入下一层，不阻塞主流程。
     """
-    print("📊 [阶段2.5] 正在抓取美国关键经济数据（Yahoo Finance 优先模式）...")
+    print("📊 [阶段2.5] 正在抓取美国关键经济数据（多层备用方案）...")
     data = {}
     lines = []
 
-    # ===== 1. 利率数据：全部从 Yahoo Finance 获取（首选，通常 <3秒）=====
+    # ===== 1. 利率数据：Yahoo Finance =====
     yahoo_rates = {
         "10Y国债": "^TNX",
         "5Y国债": "^FVX",
@@ -782,46 +784,20 @@ def get_us_economic_data():
             lines.append(f"- {label}：{val:.3f}%（Yahoo Finance，数据期 {dt.strftime('%Y-%m-%d')}）")
             print(f"   ✅ {label}: Yahoo Finance {val:.3f}%")
 
-    # ===== 2. CPI/核心CPI/核心PCE/失业率：快速单次尝试 FRED（3秒超时，零重试）=====
-    # 这些宏观经济统计 Yahoo 没有直接提供；Regime Gate 主要依赖新闻文本，这些仅作辅助确认
-    fred_series = {
+    # ===== 2. CPI / 核心CPI / 失业率：多层备用 =====
+    # 2a. FRED 快速尝试（3秒超时）
+    fred_map = {
         "CPI指数": "CPIAUCSL",
         "核心CPI指数": "CPILFESL",
-        "核心PCE指数": "PCEPILFE",
         "失业率": "UNRATE",
     }
-
-    def _quick_fred(sid):
-        """快速单次 FRED 获取，3秒超时，零重试，失败立即返回 None。"""
-        try:
-            url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
-            resp = get_robust_session().get(url, timeout=3)
-            resp.raise_for_status()
-            df = pd.read_csv(io.StringIO(resp.text))
-            if 'observation_date' not in df.columns or sid not in df.columns:
-                return None
-            df['observation_date'] = pd.to_datetime(df['observation_date'], errors='coerce')
-            df[sid] = pd.to_numeric(df[sid], errors='coerce')
-            df = df.dropna(subset=['observation_date', sid]).sort_values('observation_date')
-            if df.empty:
-                return None
-            last = df.iloc[-1]
-            return {
-                "value": float(last[sid]),
-                "date": last['observation_date'].strftime('%Y-%m-%d'),
-                "df": df
-            }
-        except Exception:
-            return None
-
-    for label, sid in fred_series.items():
+    fred_missing = {}
+    for label, sid in fred_map.items():
         result = _quick_fred(sid)
         if result:
-            val = result["value"]
-            date = result["date"]
+            val, date, df = result["value"], result["date"], result["df"]
             item = {"value": val, "date": date, "source": "FRED"}
-            df = result["df"]
-            if sid in {"CPIAUCSL", "CPILFESL", "PCEPILFE"} and len(df) >= 13:
+            if sid in {"CPIAUCSL", "CPILFESL"} and len(df) >= 13:
                 prev12 = float(df.iloc[-13][sid])
                 yoy = (val / prev12 - 1) * 100 if prev12 else None
                 item["yoy"] = yoy
@@ -834,9 +810,93 @@ def get_us_economic_data():
             data[label] = item
             print(f"   ✅ {label}: FRED 成功")
         else:
-            print(f"   ⏭️ {label}: FRED 快速跳过（网络不通或超时）")
+            fred_missing[label] = sid
+            print(f"   ⏭️ {label}: FRED 失败，进入 BLS 备用")
 
-    # ===== 3. 联邦基金利率：如果 Yahoo ^IRX 没有拿到，快速尝试纽约联储 =====
+    # 2b. BLS API 备用（仅对 FRED 失败的项）
+    bls_map = {
+        "CPI指数": "CUUR0000SA0",
+        "核心CPI指数": "CUSR0000SA0L1E",
+        "失业率": "LNS14000000",
+    }
+    bls_missing = {}
+    for label, sid in fred_missing.items():
+        if label in bls_map:
+            val, prev, dt = _fetch_bls_api(bls_map[label])
+            if val is not None:
+                item = {"value": val, "date": dt.strftime('%Y-%m-%d'), "source": "BLS API", "prev": prev}
+                if label in {"CPI指数", "核心CPI指数"}:
+                    # BLS 返回的是指数值，尝试从网页获取同比
+                    yoy = _fetch_bls_yoy_from_web(label)
+                    if yoy is not None:
+                        item["yoy"] = yoy
+                        lines.append(f"- {label}：{yoy:.2f}% YoY（BLS API+网页，数据期 {dt.strftime('%Y-%m-%d')}）")
+                    else:
+                        lines.append(f"- {label}：指数 {val:.3f}（BLS API，数据期 {dt.strftime('%Y-%m-%d')}）")
+                else:
+                    lines.append(f"- {label}：{val:.3f}（BLS API，数据期 {dt.strftime('%Y-%m-%d')}）")
+                data[label] = item
+                print(f"   ✅ {label}: BLS API 成功")
+            else:
+                bls_missing[label] = sid
+                print(f"   ⏭️ {label}: BLS API 失败，进入网页爬取")
+        else:
+            bls_missing[label] = sid
+
+    # 2c. BLS 网页爬取（仅对 BLS API 也失败的 CPI/核心CPI/失业率）
+    for label in list(bls_missing.keys()):
+        if label in {"CPI指数", "核心CPI指数", "失业率"}:
+            result = _fetch_bls_webpage(label)
+            if result:
+                data[label] = result
+                if result.get("yoy") is not None:
+                    lines.append(f"- {label}：{result['yoy']:.2f}% YoY（BLS 网页，数据期 {result['date']}）")
+                else:
+                    lines.append(f"- {label}：{result['value']:.3f}（BLS 网页，数据期 {result['date']}）")
+                print(f"   ✅ {label}: BLS 网页爬取成功")
+                del bls_missing[label]
+            else:
+                print(f"   ⏭️ {label}: BLS 网页失败，进入 Google News 提取")
+
+    # 2d. Google News 提取（最后的备用）
+    for label in list(bls_missing.keys()):
+        result = _fetch_macro_from_google_news(label)
+        if result:
+            data[label] = result
+            lines.append(f"- {label}：{result['value']:.2f}{result.get('unit', '%')}（Google News 提取，数据期 {result['date']}）")
+            print(f"   ✅ {label}: Google News 提取成功")
+            del bls_missing[label]
+        else:
+            print(f"   ❌ {label}: 所有备用源均失败")
+
+    # ===== 3. 核心PCE：FRED → Google News 提取 =====
+    pce_result = _quick_fred("PCEPILFE")
+    if pce_result:
+        val, date, df = pce_result["value"], pce_result["date"], pce_result["df"]
+        item = {"value": val, "date": date, "source": "FRED"}
+        if len(df) >= 13:
+            prev12 = float(df.iloc[-13]["PCEPILFE"])
+            yoy = (val / prev12 - 1) * 100 if prev12 else None
+            item["yoy"] = yoy
+            if yoy is not None:
+                lines.append(f"- 核心PCE指数：{yoy:.2f}% YoY（FRED，数据期 {date}）")
+            else:
+                lines.append(f"- 核心PCE指数：指数 {val:.3f}（FRED，数据期 {date}）")
+        else:
+            lines.append(f"- 核心PCE指数：{val:.3f}（FRED，数据期 {date}）")
+        data["核心PCE指数"] = item
+        print(f"   ✅ 核心PCE指数: FRED 成功")
+    else:
+        # Google News 提取核心PCE
+        result = _fetch_macro_from_google_news("核心PCE指数")
+        if result:
+            data["核心PCE指数"] = result
+            lines.append(f"- 核心PCE指数：{result['value']:.2f}{result.get('unit', '%')}（Google News 提取，数据期 {result['date']}）")
+            print(f"   ✅ 核心PCE指数: Google News 提取成功")
+        else:
+            print(f"   ❌ 核心PCE指数: 所有备用源均失败")
+
+    # ===== 4. 联邦基金利率：Yahoo ^IRX → New York Fed =====
     if "13周国债" not in data:
         try:
             ny_url = ("https://markets.newyorkfed.org/api/rates/unsecured/effr/search.json?startDate="
@@ -858,7 +918,7 @@ def get_us_economic_data():
         except Exception as e:
             print(f"   ⏭️ New York Fed EFFR 跳过: {e}")
 
-    # ===== 4. Regime 确认行 =====
+    # ===== 5. Regime 确认行 =====
     cpi_yoy = data.get("CPI指数", {}).get("yoy")
     core_cpi_yoy = data.get("核心CPI指数", {}).get("yoy")
     core_pce_yoy = data.get("核心PCE指数", {}).get("yoy")
@@ -870,6 +930,8 @@ def get_us_economic_data():
         lines.append(f"【Regime确认】核心PCE同比={core_pce_yoy:.2f}%")
     if core_cpi_yoy is not None:
         lines.append(f"【Regime确认】核心CPI同比={core_cpi_yoy:.2f}%")
+    if cpi_yoy is not None:
+        lines.append(f"【Regime确认】CPI同比={cpi_yoy:.2f}%")
     if unemployment is not None:
         lines.append(f"【Regime确认】失业率={unemployment:.1f}%")
     if effr is not None:
@@ -879,20 +941,212 @@ def get_us_economic_data():
 
     if not lines:
         return "暂无结构化美国宏观经济数据。", data
-    print(f"✅ 美国经济数据抓取完成：{len(data)} 项（Yahoo优先，FRED零重试）")
+    print(f"✅ 美国经济数据抓取完成：{len(data)} 项（多层备用）")
     return "\n".join(lines), data
 
 
-    """兼容新版 Claude 的 TextBlock / ThinkingBlock 返回结构。"""
-    parts = []
-    for block in getattr(response, "content", []) or []:
-        text = getattr(block, "text", None)
-        if text:
-            parts.append(str(text))
-    return "\n".join(parts).strip()
+def _quick_fred(sid):
+    """快速单次 FRED 获取，3秒超时，零重试。"""
+    try:
+        url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
+        resp = get_robust_session().get(url, timeout=3)
+        resp.raise_for_status()
+        df = pd.read_csv(io.StringIO(resp.text))
+        if 'observation_date' not in df.columns or sid not in df.columns:
+            return None
+        df['observation_date'] = pd.to_datetime(df['observation_date'], errors='coerce')
+        df[sid] = pd.to_numeric(df[sid], errors='coerce')
+        df = df.dropna(subset=['observation_date', sid]).sort_values('observation_date')
+        if df.empty:
+            return None
+        last = df.iloc[-1]
+        return {
+            "value": float(last[sid]),
+            "date": last['observation_date'].strftime('%Y-%m-%d'),
+            "df": df
+        }
+    except Exception:
+        return None
 
 
-def _anthropic_stream_text(client, **kwargs):
+def _fetch_bls_api(series_id, timeout=10):
+    """BLS 公共 API。之前日志证明在此网络环境下可用。"""
+    url = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+    payload = json.dumps({
+        "seriesid": [series_id],
+        "startyear": str(datetime.datetime.now().year - 2),
+        "endyear": str(datetime.datetime.now().year),
+    })
+    try:
+        resp = get_robust_session().post(url, data=payload, timeout=timeout, headers={"Content-Type": "application/json"})
+        resp.raise_for_status()
+        obj = resp.json()
+        rows = obj.get("Results", {}).get("series", [{}])[0].get("data", [])
+        parsed = []
+        for row in rows:
+            try:
+                period = row.get("period", "")
+                if period.startswith("M"):
+                    dt = pd.Timestamp(f"{row['year']}-{period[1:]}-01")
+                else:
+                    continue
+                parsed.append((dt, float(row["value"])))
+            except Exception:
+                continue
+        if not parsed:
+            return None, None, None
+        parsed.sort(key=lambda x: x[0])
+        dt, val = parsed[-1]
+        prev = parsed[-2][1] if len(parsed) >= 2 else None
+        return val, prev, dt
+    except Exception:
+        return None, None, None
+
+
+def _fetch_bls_yoy_from_web(label):
+    """从 BLS CPI 首页爬取最新同比数据。"""
+    try:
+        session = get_robust_session()
+        resp = session.get("https://www.bls.gov/cpi/", timeout=8)
+        resp.raise_for_status()
+        text = resp.text
+        if label == "CPI指数":
+            # 查找 "rose X.X percent over the last 12 months" 或类似模式
+            m = re.search(r"CPI for All Urban Consumers.*?rose [\\d.]+ percent.*?over the last 12 months.*?up ([\\d.]+) percent", text, re.S|re.I)
+            if m:
+                return float(m.group(1))
+            m = re.search(r"All items.*?([\\d.]+)%", text)
+            if m:
+                return float(m.group(1))
+        elif label == "核心CPI指数":
+            m = re.search(r"all items less food and energy.*?up ([\\d.]+) percent", text, re.S|re.I)
+            if m:
+                return float(m.group(1))
+            m = re.search(r"less food and energy.*?([\\d.]+)%", text)
+            if m:
+                return float(m.group(1))
+    except Exception:
+        pass
+    return None
+
+
+def _fetch_bls_webpage(label):
+    """从 BLS 网页爬取 CPI/失业率数据。"""
+    try:
+        session = get_robust_session()
+        if label == "CPI指数":
+            resp = session.get("https://www.bls.gov/cpi/", timeout=8)
+            resp.raise_for_status()
+            text = resp.text
+            # 提取 All items 12-month percent change
+            m = re.search(r"All items.*?([\\d.]+)%", text)
+            if m:
+                yoy = float(m.group(1))
+                # 尝试提取日期
+                dm = re.search(r"(\w+ \d{4})", text)
+                date_str = dm.group(1) if dm else "未知"
+                return {"value": yoy, "yoy": yoy, "date": date_str, "source": "BLS 网页"}
+        elif label == "核心CPI指数":
+            resp = session.get("https://www.bls.gov/cpi/", timeout=8)
+            resp.raise_for_status()
+            text = resp.text
+            m = re.search(r"less food and energy.*?up ([\\d.]+) percent", text, re.S|re.I)
+            if m:
+                yoy = float(m.group(1))
+                dm = re.search(r"(\w+ \d{4})", text)
+                date_str = dm.group(1) if dm else "未知"
+                return {"value": yoy, "yoy": yoy, "date": date_str, "source": "BLS 网页"}
+        elif label == "失业率":
+            resp = session.get("https://www.bls.gov/web/empsit/cpseea01.htm", timeout=8)
+            resp.raise_for_status()
+            text = resp.text
+            # 失业率通常在表格中
+            m = re.search(r"Unemployment rate.*?([\\d.]+)", text, re.S|re.I)
+            if m:
+                val = float(m.group(1))
+                dm = re.search(r"(\w+ \d{4})", text)
+                date_str = dm.group(1) if dm else "未知"
+                return {"value": val, "date": date_str, "source": "BLS 网页"}
+            # 备用：从 BLS 首页 Latest Numbers 提取
+            resp = session.get("https://www.bls.gov/", timeout=8)
+            text = resp.text
+            m = re.search(r"Unemployment Rate:\\s*([\\d.]+)%", text)
+            if m:
+                val = float(m.group(1))
+                return {"value": val, "date": "最新", "source": "BLS 首页"}
+    except Exception:
+        pass
+    return None
+
+
+def _fetch_macro_from_google_news(label):
+    """从 Google News 搜索提取最新宏观经济数据数值。"""
+    queries = {
+        "CPI指数": "US CPI inflation rate latest 2026",
+        "核心CPI指数": "US core CPI inflation rate latest 2026",
+        "核心PCE指数": "US core PCE inflation rate latest 2026",
+        "失业率": "US unemployment rate latest 2026",
+    }
+    query = queries.get(label)
+    if not query:
+        return None
+    try:
+        session = get_robust_session()
+        q = requests.utils.quote(query)
+        url = f"https://news.google.com/rss/search?q={q}&hl=en-US&gl=US&ceid=US:en"
+        resp = session.get(url, timeout=8)
+        resp.raise_for_status()
+        root = ET.fromstring(resp.content)
+        # 遍历前 10 条新闻，尝试提取数值
+        patterns = {
+            "CPI指数": [
+                r"CPI.*?([\\d.]+)\\s*%",
+                r"inflation.*?([\\d.]+)\\s*%",
+                r"consumer price.*?([\\d.]+)\\s*%",
+            ],
+            "核心CPI指数": [
+                r"core CPI.*?([\\d.]+)\\s*%",
+                r"core inflation.*?([\\d.]+)\\s*%",
+                r"excluding food and energy.*?([\\d.]+)\\s*%",
+            ],
+            "核心PCE指数": [
+                r"core PCE.*?([\\d.]+)\\s*%",
+                r"PCE.*?([\\d.]+)\\s*%",
+            ],
+            "失业率": [
+                r"unemployment rate.*?([\\d.]+)\\s*%",
+                r"jobless rate.*?([\\d.]+)\\s*%",
+                r"unemployment.*?([\\d.]+)\\s*%",
+            ],
+        }
+        for item in root.findall(".//item")[:10]:
+            title = item.findtext("title", default="").strip()
+            desc = item.findtext("description", default="").strip()
+            combined = f"{title} {desc}".lower()
+            for pattern in patterns.get(label, []):
+                m = re.search(pattern, combined, re.I)
+                if m:
+                    val = float(m.group(1))
+                    # 合理性检查
+                    if label == "失业率" and not (2 <= val <= 15):
+                        continue
+                    if label in {"CPI指数", "核心CPI指数", "核心PCE指数"} and not (0 <= val <= 15):
+                        continue
+                    pub = item.findtext("pubDate", default="")
+                    dt = _parse_rss_date(pub)
+                    date_str = dt.strftime("%Y-%m-%d") if dt else "未知"
+                    return {
+                        "value": val,
+                        "date": date_str,
+                        "source": "Google News 提取",
+                        "unit": "%",
+                        "raw_title": title,
+                    }
+    except Exception:
+        pass
+    return None
+
+
     """统一使用 stream，规避长请求的 SDK 超时限制。"""
     out = []
     with client.messages.stream(**kwargs) as stream:
