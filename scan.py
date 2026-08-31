@@ -30,6 +30,8 @@ import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import xml.etree.ElementTree as ET
+import urllib.request
+import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -244,7 +246,7 @@ def get_macro_market_data():
     print("🌐 [阶段2] 正在抓取全球大宗、利率、美元替代代理和指数数据...")
     tickers = {
         "美10年国债收益率": "^TNX",
-        "美2年国债收益率": "^IRX",
+        "美5年国债收益率": "^FVX",
         "恐慌指数VIX": "^VIX",
         "黄金期货": "GC=F",
         "白银期货": "SI=F",
@@ -834,16 +836,96 @@ def get_us_economic_data():
             lines.append(f"- {label}：{value:.3f}（FRED，数据期 {date}）")
         data[label] = item
 
-    # 10Y/2Y 如果 FRED 仍失败，补 Yahoo；DGS2/DGS10 的用途是“价格确认”，不是替代官方历史序列。
-    yahoo_rate_fallback = {"10Y国债": "^TNX", "2Y国债": "^IRX"}
+    # 多源利率兜底：Treasury官方收益率曲线 -> Yahoo仅作最后价格代理。
+    def _fetch_treasury_curve():
+        year = datetime.datetime.now().year
+        url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/"
+               f"daily-treasury-rates.csv/{year}/all?type=daily_treasury_yield_curve&field_tdr_date_value={year}")
+        try:
+            resp = get_robust_session().get(url, timeout=8)
+            resp.raise_for_status()
+            df_t = pd.read_csv(io.StringIO(resp.text))
+            date_col = next((c for c in df_t.columns if str(c).lower() == 'date'), None)
+            if date_col is None: return None
+            df_t[date_col] = pd.to_datetime(df_t[date_col], errors='coerce')
+            return df_t.sort_values(date_col).dropna(subset=[date_col])
+        except Exception as e:
+            print(f"   ⚠️ U.S. Treasury收益率曲线获取失败：{e}")
+            return None
+
+    curve = _fetch_treasury_curve()
+    if curve is not None and not curve.empty:
+        col10 = next((c for c in curve.columns if str(c).strip().lower() in {'10 yr','10-year','10 yr.'}), None)
+        col2 = next((c for c in curve.columns if str(c).strip().lower() in {'2 yr','2-year','2 yr.'}), None)
+        date_col = next((c for c in curve.columns if str(c).lower() == 'date'), None)
+        last = curve.iloc[-1]
+        for label, col in [("10Y国债", col10), ("2Y国债", col2)]:
+            if label not in data and col is not None:
+                try:
+                    val = float(str(last[col]).replace('N/A','nan'))
+                    if pd.notna(val):
+                        prev_val = None
+                        if len(curve) >= 2: prev_val = float(str(curve.iloc[-2][col]).replace('N/A','nan'))
+                        dt = pd.Timestamp(last[date_col])
+                        data[label] = {"value": val, "prev": prev_val, "date": dt.strftime('%Y-%m-%d'), "source": "U.S. Treasury"}
+                        lines.append(f"- {label}：{val:.3f}（U.S. Treasury，数据期 {dt.strftime('%Y-%m-%d')}）")
+                except Exception:
+                    pass
+
+    # Yahoo最终兜底。注意：^IRX 是13周，不再冒充2Y。
+    yahoo_rate_fallback = {"10Y国债": "^TNX", "2Y国债": "^FVX"}
     for label, ticker in yahoo_rate_fallback.items():
         if label not in data:
             val, prev, dt = _fetch_yahoo_scalar(ticker)
             if val is not None:
-                # ^IRX 是13周，而非严格2Y，仅作为网络故障时的短端代理，明确标注。
-                source_label = "Yahoo代理(^IRX=13周利率)" if ticker == "^IRX" else "Yahoo"
+                source_label = "Yahoo代理(^FVX=5Y，非严格2Y)" if ticker == "^FVX" else "Yahoo(^TNX)"
                 data[label] = {"value": val, "prev": prev, "date": dt.strftime('%Y-%m-%d'), "source": source_label}
                 lines.append(f"- {label}：{val:.3f}（{source_label}，数据期 {dt.strftime('%Y-%m-%d')}）")
+
+    # 核心PCE：FRED失败时尝试BEA NIPA API（官方来源）；失败再保留缺失，不伪造。
+    if "核心PCE指数" not in data:
+        try:
+            year = datetime.datetime.now().year
+            bea_url = ("https://apps.bea.gov/api/data/?UserID=samplekey&method=GETDATA"
+                       f"&datasetname=NIPA&TableName=T20804&Frequency=M&Year={year}&ResultFormat=JSON")
+            resp = get_robust_session().get(bea_url, timeout=8)
+            resp.raise_for_status()
+            obj = resp.json()
+            rows = obj.get("BEAAPI", {}).get("Results", {}).get("Data", [])
+            candidates = []
+            for r in rows:
+                desc = str(r.get("LineDescription", "")).lower()
+                if "personal consumption expenditures price index" in desc and "food and energy" not in desc:
+                    try: candidates.append((r.get("TimePeriod"), float(r.get("DataValue"))))
+                    except Exception: pass
+            if candidates:
+                candidates.sort(key=lambda x: x[0])
+                tp, val = candidates[-1]
+                data["核心PCE指数"] = {"value": val, "date": str(tp), "source": "BEA", "yoy": None}
+                lines.append(f"- 核心PCE指数：{val:.3f}（BEA备用，数据期 {tp}）")
+                print("   ✅ 核心PCE指数: 使用 BEA 备用数据")
+        except Exception as e:
+            print(f"   ⚠️ BEA核心PCE备用失败：{e}")
+
+    # EFFR：FRED失败时尝试纽约联储公开接口。
+    if "联邦基金有效利率" not in data:
+        try:
+            ny_url = "https://markets.newyorkfed.org/api/rates/unsecured/effr/search.json?startDate=" + (datetime.datetime.now()-datetime.timedelta(days=10)).strftime('%Y-%m-%d') + "&endDate=" + datetime.datetime.now().strftime('%Y-%m-%d')
+            resp = get_robust_session().get(ny_url, timeout=8)
+            resp.raise_for_status()
+            obj = resp.json()
+            rows = obj.get("refRates", obj.get("rates", []))
+            rows = [r for r in rows if str(r.get("type", "")).lower() in {"effr", "effective federal funds rate", ""}]
+            if rows:
+                r = rows[-1]
+                val = r.get("percentRate", r.get("effectiveRate", r.get("rate")))
+                dt = r.get("effectiveDate", r.get("date"))
+                if val is not None:
+                    data["联邦基金有效利率"] = {"value": float(val), "date": str(dt), "source": "New York Fed"}
+                    lines.append(f"- 联邦基金有效利率：{float(val):.3f}（New York Fed，数据期 {dt}）")
+                    print("   ✅ 联邦基金有效利率: 使用 New York Fed 备用数据")
+        except Exception as e:
+            print(f"   ⚠️ New York Fed EFFR备用失败：{e}")
 
     cpi_yoy = data.get("CPI指数", {}).get("yoy")
     core_cpi_yoy = data.get("核心CPI指数", {}).get("yoy")
@@ -978,19 +1060,13 @@ def build_event_regime_gate(macro_news_text, macro_market_text, sector_text, key
         if sector not in gate["hard_avoid_sectors"]:
             gate["buy_dip_sectors"].append(sector)
 
-    # BUY_DIP 与硬回避互斥：若当前已有 AVOID 判定，不能同时显示 BUY_DIP。
-    gate["buy_dip_sectors"] = [x for x in gate["buy_dip_sectors"] if x not in gate["hard_avoid_sectors"]]
-    gate["watch_sectors"] = [x for x in gate["watch_sectors"] if x not in gate["hard_avoid_sectors"]]
-
-    # 若材料当前下跌且鹰派高等级确认，Materials 直接进入当前日硬回避
+    # 若材料/贵金属当前下跌且鹰派高等级确认，Materials 直接进入当前日硬回避
     if hawkish_confirmed and "Materials" in negative and "Materials" not in gate["hard_avoid_sectors"]:
         gate["hard_avoid_sectors"].append("Materials")
         gate["reasons"].append("鹰派重定价+材料ETF当前走弱，禁止把商品单日上涨当作主线确认")
 
     for key in ("hard_avoid_sectors","watch_sectors","buy_dip_sectors"):
         gate[key] = list(dict.fromkeys(gate[key]))
-    gate["watch_sectors"] = [x for x in gate["watch_sectors"] if x not in gate["hard_avoid_sectors"]]
-    gate["buy_dip_sectors"] = [x for x in gate["buy_dip_sectors"] if x not in gate["hard_avoid_sectors"]]
     return gate
 
 
@@ -1166,12 +1242,6 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     for col in ["Exit_Date","Exit_Price","Status","Price"]:
         if col not in df.columns:
             df[col] = "Active" if col == "Status" else ("" if col != "Price" else 0)
-    # pandas 3.x 可能把空字符串列推断为 StringDtype；后续需要写入数值价格，
-    # 因此明确把可变价格列转换成 object，避免 StringDtype 拒绝 float。
-    for _col in ["Exit_Date", "Exit_Price"]:
-        if _col in df.columns:
-            df[_col] = df[_col].astype(object)
-
     active = df[df["Status"].astype(str).str.strip() == "Active"].copy()
     if active.empty:
         return set(), {}, {}
@@ -1466,80 +1536,48 @@ def build_full_email_html(ai_html):
     return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
 # ==================== 17. 期权策略 ====================
-def generate_option_strategy(ticker, name, direction, scan_score, scan_date, underlying_price, underlying_stop, hold_period, strategy_reason, contracts=1):
-    """保留原版内联期权记录功能；即使独立 option engine 不可用也能落盘。"""
-    opt_file = "option_strategies.csv"
+def _write_option_strategy_fallback(item):
+    """外部期权引擎不可用时，保留原版内联逻辑写入 option_strategies.csv。"""
     try:
-        days_match = re.findall(r"\d+", str(hold_period))
-        max_days = max(map(int, days_match)) if days_match else 7
-        expiry_date = (get_us_time() + datetime.timedelta(days=max_days)).strftime("%Y-%m-%d")
-        if str(direction).upper() == "BULLISH":
-            opt_type = "CALL"
-            strike = round(float(underlying_price) * 1.05, 2)
-        else:
-            opt_type = "PUT"
-            strike = round(float(underlying_price) * 0.95, 2)
+        opt_file = "option_strategies.csv"
+        hp = str(item.get("Hold_Period", "5-10天"))
+        nums = [int(x) for x in re.findall(r"\d+", hp)]
+        max_days = max(nums) if nums else 7
+        expiry = (get_us_time() + datetime.timedelta(days=max_days)).strftime("%Y-%m-%d")
+        price = float(item.get("Price", 0) or 0)
+        stop = item.get("Stop_Loss", "N/A")
+        strike = round(price * 1.05, 2)
         entry_price = round(strike * 0.02, 2)
-        header = ("Ticker,OptionType,Strike,Expiry,EntryPrice,Status,EntryDate,Quantity,"
-                  "Direction,UnderlyingPrice,StopLoss,HoldPeriod,Reason,ScanScore\n")
-        need_header = not os.path.exists(opt_file) or os.path.getsize(opt_file) == 0
-        with open(opt_file, "a", encoding="utf-8") as f:
+        header = "Ticker,OptionType,Strike,Expiry,EntryPrice,Status,EntryDate,Quantity,Direction,UnderlyingPrice,StopLoss,HoldPeriod,Reason,ScanScore\n"
+        need_header = (not os.path.exists(opt_file)) or os.path.getsize(opt_file) == 0
+        with open(opt_file, "a", encoding="utf-8", newline="") as f:
             if need_header:
                 f.write(header)
-            safe_reason = str(strategy_reason).replace("\n", " ").replace(",", " ")
-            f.write(f"{ticker},{opt_type},{strike},{expiry_date},{entry_price},Active,{scan_date},{contracts},"
-                    f"{direction},{underlying_price},{underlying_stop},{hold_period},{safe_reason},{scan_score}\n")
-        print(f"📝 期权策略记录：{ticker} {opt_type} {strike} @ {expiry_date}")
+            reason = "美股 scan 核心精选：事件/Regime/技术共振，偏多。"
+            safe_reason = reason.replace(",", "；")
+            f.write(f"{item.get('Ticker','')},CALL,{strike},{expiry},{entry_price},Active,{today_us_str()},1,BULLISH,{price},{stop},{hp},{safe_reason},{item.get('Score','N/A')}\n")
+        print(f"📝 [期权备用] {item.get('Ticker','')} CALL {strike} @ {expiry}")
         return True
     except Exception as e:
-        print(f"⚠️ {ticker} 期权策略记录失败：{e}")
+        print(f"⚠️ {item.get('Ticker','')} 期权备用策略失败：{e}")
         return False
+
 
 def safe_generate_option_strategy(item):
-    try:
-        ticker = str(item.get("Ticker", ""))
-        name = str(item.get("Name", ticker))
-        result = False
-        if append_option_strategy is not None:
-            try:
-                result = bool(append_option_strategy(
-                    ticker=ticker,
-                    name=name,
-                    direction="BULLISH",
-                    scan_score=item.get("Score", "N/A"),
-                    scan_date=today_us_str(),
-                    underlying_price=item.get("Price", 0),
-                    underlying_stop=item.get("Stop_Loss", "N/A"),
-                    hold_period=item.get("Hold_Period", "5-10天"),
-                    strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。",
-                    contracts=1,
-                ))
-            except Exception as e:
-                print(f"⚠️ {ticker} 外部期权引擎失败，回退内联记录：{e}")
-        if result:
-            return True
-        return generate_option_strategy(
-            ticker=ticker,
-            name=name,
-            direction="BULLISH",
-            scan_score=item.get("Score", "N/A"),
-            scan_date=today_us_str(),
-            underlying_price=item.get("Price", 0),
-            underlying_stop=item.get("Stop_Loss", "N/A"),
-            hold_period=item.get("Hold_Period", "5-10天"),
-            strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。",
-            contracts=1,
-        )
-    except Exception as e:
-        print(f"⚠️ {item.get('Ticker','')} 期权策略失败：{e}")
-        return False
-
-# 保留原版的空壳函数，避免外部 review/工作流调用时报 NameError
-def build_sell_signal_card(dropped_info, rule_sell_signals):
-    return ""
-
-def build_current_holdings_card(current_prices_map):
-    return ""
+    if append_option_strategy is not None:
+        try:
+            result = append_option_strategy(
+                ticker=item["Ticker"], name=item["Name"], direction="BULLISH",
+                scan_score=item.get("Score","N/A"), scan_date=today_us_str(),
+                underlying_price=item.get("Price",0), underlying_stop=item.get("Stop_Loss","N/A"),
+                hold_period=item.get("Hold_Period","5-10天"),
+                strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。", contracts=1,
+            )
+            if result:
+                return True
+        except Exception as e:
+            print(f"⚠️ {item.get('Ticker','')} 外部期权引擎失败，切换内联备用：{e}")
+    return _write_option_strategy_fallback(item)
 
 # ==================== 主程序 ====================
 if __name__ == "__main__":
@@ -1587,7 +1625,6 @@ if __name__ == "__main__":
     gate_hard = (event_regime or {}).get("hard_avoid_sectors", [])
     gate_text = event_regime_text + "\n当前硬回避行业必须阻止进入Top1-5：" + (", ".join(gate_hard) if gate_hard else "无")
 
-    # 将 Regime Gate 作为硬性但条件化的行业门控；历史低胜率本身不得永久封禁。
     ai_html = generate_ai_report(
         pool_data,
         combined_news,
