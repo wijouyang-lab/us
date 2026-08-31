@@ -27,6 +27,7 @@ import random
 import re
 import smtplib
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
 import xml.etree.ElementTree as ET
 from concurrent.futures import ThreadPoolExecutor, as_completed
@@ -698,8 +699,8 @@ def get_key_people_policy_news():
 
 
 # ==================== 6.6 美联储关键经济数据（无付费 API 依赖） ====================
-def _fetch_fred_series_csv(series_id, timeout=10):
-    """读取 FRED 公共 CSV。没有 API key，适合 GitHub Actions 使用。"""
+def _fetch_fred_series_csv(series_id, timeout=8):
+    """读取 FRED CSV；单个序列失败只影响该序列。"""
     url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
     session = get_robust_session()
     resp = session.get(url, timeout=timeout)
@@ -712,13 +713,59 @@ def _fetch_fred_series_csv(series_id, timeout=10):
     return df.dropna(subset=['observation_date', series_id]).sort_values('observation_date')
 
 
+def _fetch_bls_latest(series_id, timeout=8):
+    """BLS 公共 API 作为 CPI/失业率等 FRED 失败时的备用数据源。"""
+    url = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+    payload = json.dumps({
+        "seriesid": [series_id],
+        "startyear": str(datetime.datetime.now().year - 2),
+        "endyear": str(datetime.datetime.now().year),
+    })
+    resp = get_robust_session().post(url, data=payload, timeout=timeout, headers={"Content-Type": "application/json"})
+    resp.raise_for_status()
+    obj = resp.json()
+    rows = obj.get("Results", {}).get("series", [{}])[0].get("data", [])
+    parsed = []
+    for row in rows:
+        try:
+            period = row.get("period", "")
+            if period.startswith("M"):
+                dt = pd.Timestamp(f"{row['year']}-{period[1:]}-01")
+            else:
+                continue
+            parsed.append((dt, float(row["value"])))
+        except Exception:
+            continue
+    if not parsed:
+        return None, None, None
+    parsed.sort(key=lambda x: x[0])
+    dt, val = parsed[-1]
+    prev = parsed[-2][1] if len(parsed) >= 2 else None
+    return val, prev, dt
+
+
+def _fetch_yahoo_scalar(ticker, timeout=8):
+    """Yahoo 作为利率/指数的轻量备用源。"""
+    try:
+        df = yf.download(ticker, period="5d", progress=False, auto_adjust=False, threads=False)
+        if df is None or df.empty:
+            return None, None, None
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+        closes = pd.to_numeric(df['Close'], errors='coerce').dropna()
+        if closes.empty:
+            return None, None, None
+        dt = pd.Timestamp(df.index[-1])
+        val = float(closes.iloc[-1])
+        prev = float(closes.iloc[-2]) if len(closes) >= 2 else None
+        return val, prev, dt
+    except Exception:
+        return None, None, None
+
+
 def get_us_economic_data():
-    """
-    获取 Regime Gate 需要的结构化美国宏观数据：
-    CPI YoY、核心 CPI YoY、核心 PCE YoY、失业率、联邦基金有效利率、10Y。
-    失败项不会让 Scan 中止，只会显示 N/A。
-    """
     print("📊 [阶段2.5] 正在抓取美国关键经济数据（CPI/PCE/失业率/政策利率）...")
+    # 说明：FRED 不再串行阻塞；失败时对 CPI/核心CPI/失业率使用 BLS 备用源。
     series_map = {
         "CPI指数": "CPIAUCSL",
         "核心CPI指数": "CPILFESL",
@@ -726,36 +773,78 @@ def get_us_economic_data():
         "失业率": "UNRATE",
         "联邦基金有效利率": "EFFR",
         "10Y国债": "DGS10",
+        "2Y国债": "DGS2",
     }
     data = {}
     lines = []
-    for label, sid in series_map.items():
+
+    def one(label_sid):
+        label, sid = label_sid
         try:
-            df = _fetch_fred_series_csv(sid)
-            if df.empty:
-                print(f"   ⚠️ {label}: 无结构化数据")
-                continue
-            last = df.iloc[-1]
-            value = float(last[sid])
-            date = last['observation_date'].strftime('%Y-%m-%d')
-            item = {"value": value, "date": date}
-            # CPI/PCE 指数转同比，失业率/利率直接取值
-            if sid in {"CPIAUCSL", "CPILFESL", "PCEPILFE"} and len(df) >= 13:
-                prev12 = float(df.iloc[-13][sid])
-                yoy = (value / prev12 - 1) * 100 if prev12 else None
-                item["yoy"] = yoy
-                if yoy is not None:
-                    lines.append(f"- {label}：{yoy:.2f}% YoY（数据期 {date}）")
-                else:
-                    lines.append(f"- {label}：指数 {value:.3f}（数据期 {date}）")
-            else:
-                lines.append(f"- {label}：{value:.3f}（数据期 {date}）")
-            data[label] = item
+            return label, sid, _fetch_fred_series_csv(sid, timeout=8), None
         except Exception as e:
-            print(f"   ⚠️ {label}({sid}) 抓取失败：{e}")
-    if not lines:
-        return "暂无结构化美国宏观经济数据。", data
-    # 用于事件确认的显式结论，帮助模型避免只看一条新闻
+            return label, sid, pd.DataFrame(), str(e)
+
+    with ThreadPoolExecutor(max_workers=7) as ex:
+        futures = [ex.submit(one, x) for x in series_map.items()]
+        results = [f.result() for f in as_completed(futures)]
+
+    fallback_bls = {
+        "CPI指数": "CUUR0000SA0",
+        "核心CPI指数": "CUSR0000SA0L1E",
+        "失业率": "LNS14000000",
+    }
+
+    for label, sid, df, err in results:
+        if df.empty:
+            if label in fallback_bls:
+                try:
+                    val, prev, dt = _fetch_bls_latest(fallback_bls[label], timeout=8)
+                    if val is not None:
+                        item = {"value": val, "date": dt.strftime('%Y-%m-%d'), "source": "BLS"}
+                        if label in {"CPI指数", "核心CPI指数"}:
+                            # BLS CPI 序列也是指数，转同比。
+                            # 这里只保留当前指数；同比由最近13个月数据不足时不强算。
+                            item["yoy"] = None
+                            lines.append(f"- {label}：指数 {val:.3f}（BLS备用，数据期 {item['date']}）")
+                        else:
+                            lines.append(f"- {label}：{val:.3f}（BLS备用，数据期 {item['date']}）")
+                        item["prev"] = prev
+                        data[label] = item
+                        print(f"   ✅ {label}: 使用 BLS 备用数据")
+                        continue
+                except Exception as e:
+                    err = f"FRED失败；BLS备用也失败: {e}"
+            print(f"   ⚠️ {label}({sid}) 抓取失败：{err or '无数据'}")
+            continue
+
+        last = df.iloc[-1]
+        value = float(last[sid])
+        date = last['observation_date'].strftime('%Y-%m-%d')
+        item = {"value": value, "date": date, "source": "FRED"}
+        if sid in {"CPIAUCSL", "CPILFESL", "PCEPILFE"} and len(df) >= 13:
+            prev12 = float(df.iloc[-13][sid])
+            yoy = (value / prev12 - 1) * 100 if prev12 else None
+            item["yoy"] = yoy
+            if yoy is not None:
+                lines.append(f"- {label}：{yoy:.2f}% YoY（FRED，数据期 {date}）")
+            else:
+                lines.append(f"- {label}：指数 {value:.3f}（FRED，数据期 {date}）")
+        else:
+            lines.append(f"- {label}：{value:.3f}（FRED，数据期 {date}）")
+        data[label] = item
+
+    # 10Y/2Y 如果 FRED 仍失败，补 Yahoo；DGS2/DGS10 的用途是“价格确认”，不是替代官方历史序列。
+    yahoo_rate_fallback = {"10Y国债": "^TNX", "2Y国债": "^IRX"}
+    for label, ticker in yahoo_rate_fallback.items():
+        if label not in data:
+            val, prev, dt = _fetch_yahoo_scalar(ticker)
+            if val is not None:
+                # ^IRX 是13周，而非严格2Y，仅作为网络故障时的短端代理，明确标注。
+                source_label = "Yahoo代理(^IRX=13周利率)" if ticker == "^IRX" else "Yahoo"
+                data[label] = {"value": val, "prev": prev, "date": dt.strftime('%Y-%m-%d'), "source": source_label}
+                lines.append(f"- {label}：{val:.3f}（{source_label}，数据期 {dt.strftime('%Y-%m-%d')}）")
+
     cpi_yoy = data.get("CPI指数", {}).get("yoy")
     core_cpi_yoy = data.get("核心CPI指数", {}).get("yoy")
     core_pce_yoy = data.get("核心PCE指数", {}).get("yoy")
@@ -769,8 +858,29 @@ def get_us_economic_data():
         lines.append(f"【Regime确认】失业率={unemployment:.1f}%")
     if effr is not None:
         lines.append(f"【Regime确认】有效联邦基金利率={effr:.2f}%")
+    if not lines:
+        return "暂无结构化美国宏观经济数据。", data
     print(f"✅ 美国经济数据抓取完成：{len(data)} 项")
     return "\n".join(lines), data
+
+
+def _anthropic_text(response):
+    """兼容新版 Claude 的 TextBlock / ThinkingBlock 返回结构。"""
+    parts = []
+    for block in getattr(response, "content", []) or []:
+        text = getattr(block, "text", None)
+        if text:
+            parts.append(str(text))
+    return "\n".join(parts).strip()
+
+
+def _anthropic_stream_text(client, **kwargs):
+    """统一使用 stream，规避长请求的 SDK 超时限制。"""
+    out = []
+    with client.messages.stream(**kwargs) as stream:
+        for text in stream.text_stream:
+            out.append(text)
+    return "".join(out).strip()
 
 
 # ==================== 6.7 事件证据汇总 ====================
@@ -953,8 +1063,7 @@ def analyze_market_signals(combined_news_text, client):
 }}
 """
     try:
-        resp = client.messages.create(model=TARGET_MODEL, max_tokens=12000, messages=[{"role":"user","content":prompt}])
-        text = resp.content[0].text.strip()
+        text = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=12000, messages=[{"role":"user","content":prompt}])
         a, b = text.find("{"), text.rfind("}")
         if a < 0 or b < 0:
             return {"signals": []}
@@ -1101,8 +1210,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     decisions = {}
     reason = ""
     try:
-        r = client.messages.create(model=TARGET_MODEL, max_tokens=3000, messages=[{"role":"user","content":prompt}])
-        txt = r.content[0].text.strip()
+        txt = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=3000, messages=[{"role":"user","content":prompt}])
         a,b = txt.find("{"), txt.rfind("}")
         obj = json.loads(txt[a:b+1])
         decisions = obj.get("decision", {})
@@ -1171,6 +1279,8 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 【结构化美国经济数据】
 {economic_block}
 
+【数据可靠性纪律】FRED单项失败不得伪造数值；优先使用BLS备用或Yahoo利率代理，并标明来源。
+
 【板块表现】
 {embargo_text}
 
@@ -1185,13 +1295,14 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 
 【强制决策顺序】
 1. 先 Regime Gate：高等级事件+宏观价格确认优先于单一商品方向。
-2. 行业硬回避不得进 Top1-5；但 BUY_DIP/CONTRARIAN 可以作为观察逻辑，除非当前又出现新的基本面证伪。
-3. 不能因为周线共振就忽略行业当前下跌；行业价格环境是个股技术之前的确认层。
-4. 先从事件得到1-2个产业链主线，再选个股。
-5. 个股新闻优先于纯技术信号做排雷。
-6. RSI>70、Bias>15%、5日已大涨属于追高风险，不得无条件追涨。
-7. 过去低胜率板块只在当前同样的失败条件重新出现时降权，不允许永久封板。
-8. 高等级 Fed/Warsh 鹰派事件如果与通胀/利率数据同向，必须明确降低 Technology/Communication 等高久期资产权重；若 Materials 当前也同步大跌，则不得因为单一铜价夜盘上涨而重新推荐 Materials。
+2. Regime Gate 是当前交易状态，不是历史黑名单；硬回避只在当前事件+行业价格共同确认时生效。
+3. 行业硬回避不得进 Top1-5；但 BUY_DIP/CONTRARIAN 可以作为观察逻辑，除非当前又出现新的基本面证伪。
+4. 不能因为周线共振就忽略行业当前下跌；行业价格环境是个股技术之前的确认层。
+5. 先从事件得到1-2个产业链主线，再选个股。
+6. 个股新闻优先于纯技术信号做排雷。
+7. RSI>70、Bias>15%、5日已大涨属于追高风险，不得无条件追涨。
+8. 过去低胜率板块只在当前同样的失败条件重新出现时降权，不允许永久封板。
+9. 高等级 Fed/Warsh 鹰派事件如果与通胀/利率数据同向，必须明确降低 Technology/Communication 等高久期资产权重；若 Materials 当前也同步大跌，则不得因为单一铜价夜盘上涨而重新推荐 Materials。
 
 【HTML 输出格式】
 从第一个字符开始必须是HTML。
@@ -1229,8 +1340,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 只输出HTML，不输出解释性前言。
 """
     try:
-        resp = client.messages.create(model=TARGET_MODEL, max_tokens=30000, messages=[{"role":"user","content":prompt}])
-        out = resp.content[0].text.strip().replace("```html","").replace("```","").strip()
+        out = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=30000, messages=[{"role":"user","content":prompt}]).replace("```html","").replace("```","").strip()
         idx = out.find("<div")
         if idx > 0:
             out = out[idx:]
