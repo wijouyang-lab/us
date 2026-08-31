@@ -1895,12 +1895,13 @@ if __name__ == "__main__":
     macro_news = get_latest_macro_news()
     megacap_news = get_megacap_breaking_news()
     key_people_news = get_key_people_policy_news(macro_news)
-    economic_text, economic_structured = get_us_economic_data(combined_news)
-    combined_news = macro_news
+    preliminary_news = macro_news
     if megacap_news:
-        combined_news += "\n\n【Mega-Cap 最新动态】\n" + megacap_news
+        preliminary_news += "\n\n【Mega-Cap 最新动态】\n" + megacap_news
     if key_people_news:
-        combined_news += "\n\n【重要人物讲话/政策预期】\n" + key_people_news
+        preliminary_news += "\n\n【重要人物讲话/政策预期】\n" + key_people_news
+    economic_text, economic_structured = get_us_economic_data(preliminary_news)
+    combined_news = preliminary_news
     if economic_text:
         combined_news += "\n\n【结构化美国经济数据】\n" + economic_text
 
