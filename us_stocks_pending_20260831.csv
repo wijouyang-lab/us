@@ -1,0 +1,6 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-08-31,OKE,Oneok,Observation,62.3,4.1,13,False,True,False,False,观望,观望,N/A,pending,96.45,2.45,False
+2026-08-31,EQT,EQT Corporation,Observation,60.8,2.16,3,False,True,True,False,观望,观望,N/A,pending,54.77,2.53,False
+2026-08-31,APA,APA Corporation,Observation,63.1,5.09,0,False,True,False,False,观望,观望,N/A,pending,42.83,3.48,False
+2026-08-31,FANG,Diamondback Energy,Observation,51.1,0.13,6,False,False,True,False,观望,观望,N/A,pending,200.37,2.94,False
+2026-08-31,EXE,Expand Energy,Observation,64.8,3.58,5,False,True,False,False,观望,观望,N/A,pending,98.75,2.39,False
