@@ -164,7 +164,7 @@ def get_latest_macro_news():
     print("📡 [阶段1] 正在抓取 CNBC/Reuters/MarketWatch 全球财经快讯...")
     sources = [
         ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
-        ("Reuters", "https://feeds.reuters.com/reuters/businessNews"),
+        ("Yahoo Finance", "https://feeds.finance.yahoo.com/rss/2.0/news?format=xml"),
         ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/"),
         ("Google News Macro", "https://news.google.com/rss/search?q=Federal+Reserve+inflation+tariff+economy+markets&hl=en-US&gl=US&ceid=US:en"),
     ]
@@ -701,49 +701,67 @@ def get_key_people_policy_news():
 
 
 # ==================== 6.6 美联储关键经济数据（无付费 API 依赖） ====================
-def _fetch_fred_series_csv(series_id, timeout=8):
-    """读取 FRED CSV；单个序列失败只影响该序列。"""
+def _fetch_fred_series_csv(series_id, timeout=15):
+    """读取 FRED CSV；单个序列失败只影响该序列。增加重试和指数退避。"""
     url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
     session = get_robust_session()
-    resp = session.get(url, timeout=timeout)
-    resp.raise_for_status()
-    df = pd.read_csv(io.StringIO(resp.text))
-    if 'observation_date' not in df.columns or series_id not in df.columns:
-        return pd.DataFrame()
-    df['observation_date'] = pd.to_datetime(df['observation_date'], errors='coerce')
-    df[series_id] = pd.to_numeric(df[series_id], errors='coerce')
-    return df.dropna(subset=['observation_date', series_id]).sort_values('observation_date')
+    last_err = None
+    for attempt in range(3):
+        try:
+            resp = session.get(url, timeout=timeout)
+            resp.raise_for_status()
+            df = pd.read_csv(io.StringIO(resp.text))
+            if 'observation_date' not in df.columns or series_id not in df.columns:
+                return pd.DataFrame()
+            df['observation_date'] = pd.to_datetime(df['observation_date'], errors='coerce')
+            df[series_id] = pd.to_numeric(df[series_id], errors='coerce')
+            return df.dropna(subset=['observation_date', series_id]).sort_values('observation_date')
+        except Exception as e:
+            last_err = e
+            wait = 2 ** attempt  # 1, 2, 4 秒退避
+            print(f"   ⏳ FRED {series_id} 第{attempt+1}次尝试失败，{wait}s后重试: {e}")
+            time.sleep(wait)
+    print(f"   ⚠️ FRED {series_id} 最终失败: {last_err}")
+    return pd.DataFrame()
 
 
-def _fetch_bls_latest(series_id, timeout=8):
-    """BLS 公共 API 作为 CPI/失业率等 FRED 失败时的备用数据源。"""
+def _fetch_bls_latest(series_id, timeout=15):
+    """BLS 公共 API 作为 CPI/失业率等 FRED 失败时的备用数据源。增加重试。"""
     url = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
     payload = json.dumps({
         "seriesid": [series_id],
         "startyear": str(datetime.datetime.now().year - 2),
         "endyear": str(datetime.datetime.now().year),
     })
-    resp = get_robust_session().post(url, data=payload, timeout=timeout, headers={"Content-Type": "application/json"})
-    resp.raise_for_status()
-    obj = resp.json()
-    rows = obj.get("Results", {}).get("series", [{}])[0].get("data", [])
-    parsed = []
-    for row in rows:
+    last_err = None
+    for attempt in range(2):
         try:
-            period = row.get("period", "")
-            if period.startswith("M"):
-                dt = pd.Timestamp(f"{row['year']}-{period[1:]}-01")
-            else:
-                continue
-            parsed.append((dt, float(row["value"])))
-        except Exception:
-            continue
-    if not parsed:
-        return None, None, None
-    parsed.sort(key=lambda x: x[0])
-    dt, val = parsed[-1]
-    prev = parsed[-2][1] if len(parsed) >= 2 else None
-    return val, prev, dt
+            resp = get_robust_session().post(url, data=payload, timeout=timeout, headers={"Content-Type": "application/json"})
+            resp.raise_for_status()
+            obj = resp.json()
+            rows = obj.get("Results", {}).get("series", [{}])[0].get("data", [])
+            parsed = []
+            for row in rows:
+                try:
+                    period = row.get("period", "")
+                    if period.startswith("M"):
+                        dt = pd.Timestamp(f"{row['year']}-{period[1:]}-01")
+                    else:
+                        continue
+                    parsed.append((dt, float(row["value"])))
+                except Exception:
+                    continue
+            if not parsed:
+                return None, None, None
+            parsed.sort(key=lambda x: x[0])
+            dt, val = parsed[-1]
+            prev = parsed[-2][1] if len(parsed) >= 2 else None
+            return val, prev, dt
+        except Exception as e:
+            last_err = e
+            time.sleep(1)
+    print(f"   ⚠️ BLS {series_id} 最终失败: {last_err}")
+    return None, None, None
 
 
 def _fetch_yahoo_scalar(ticker, timeout=8):
@@ -783,11 +801,12 @@ def get_us_economic_data():
     def one(label_sid):
         label, sid = label_sid
         try:
-            return label, sid, _fetch_fred_series_csv(sid, timeout=8), None
+            return label, sid, _fetch_fred_series_csv(sid, timeout=15), None
         except Exception as e:
             return label, sid, pd.DataFrame(), str(e)
 
-    with ThreadPoolExecutor(max_workers=7) as ex:
+    # 限制并发数为 3，避免对 FRED 服务器造成过大压力，同时减少超时阻塞
+    with ThreadPoolExecutor(max_workers=3) as ex:
         futures = [ex.submit(one, x) for x in series_map.items()]
         results = [f.result() for f in as_completed(futures)]
 
@@ -836,41 +855,61 @@ def get_us_economic_data():
             lines.append(f"- {label}：{value:.3f}（FRED，数据期 {date}）")
         data[label] = item
 
-    # 多源利率兜底：Treasury官方收益率曲线 -> Yahoo仅作最后价格代理。
-    def _fetch_treasury_curve():
+    # 多源利率兜底：Treasury XML feed -> Yahoo 作为最终备用
+    def _fetch_treasury_curve_xml():
+        """从 Treasury XML feed 获取收益率曲线数据。"""
         year = datetime.datetime.now().year
         url = (f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/"
-               f"daily-treasury-rates.csv/{year}/all?type=daily_treasury_yield_curve&field_tdr_date_value={year}")
+               f"pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value={year}")
         try:
-            resp = get_robust_session().get(url, timeout=8)
+            resp = get_robust_session().get(url, timeout=15)
             resp.raise_for_status()
-            df_t = pd.read_csv(io.StringIO(resp.text))
-            date_col = next((c for c in df_t.columns if str(c).lower() == 'date'), None)
-            if date_col is None: return None
-            df_t[date_col] = pd.to_datetime(df_t[date_col], errors='coerce')
-            return df_t.sort_values(date_col).dropna(subset=[date_col])
+            root = ET.fromstring(resp.content)
+            # Treasury XML 使用 Atom/ OData 格式，entry 中包含数据
+            ns = {'atom': 'http://www.w3.org/2005/Atom'}
+            entries = root.findall('.//atom:entry', ns)
+            if not entries:
+                # 尝试无命名空间
+                entries = root.findall('.//entry')
+            rows = []
+            for entry in entries:
+                # 提取 properties 中的字段
+                props = entry.find('.//{http://schemas.microsoft.com/ado/2007/08/dataservices/metadata}properties')
+                if props is None:
+                    props = entry.find('.//properties')
+                if props is None:
+                    continue
+                row = {}
+                for child in props:
+                    tag = child.tag.split('}')[-1] if '}' in child.tag else child.tag
+                    row[tag] = child.text
+                if row.get('NEW_DATE'):
+                    rows.append(row)
+            if not rows:
+                return None
+            df_t = pd.DataFrame(rows)
+            df_t['NEW_DATE'] = pd.to_datetime(df_t['NEW_DATE'], errors='coerce')
+            df_t = df_t.dropna(subset=['NEW_DATE']).sort_values('NEW_DATE')
+            # 将利率列转为数值
+            for col in ['BC_2YEAR', 'BC_10YEAR', 'BC_5YEAR', 'BC_30YEAR']:
+                if col in df_t.columns:
+                    df_t[col] = pd.to_numeric(df_t[col], errors='coerce')
+            return df_t
         except Exception as e:
-            print(f"   ⚠️ U.S. Treasury收益率曲线获取失败：{e}")
+            print(f"   ⚠️ U.S. Treasury XML 收益率曲线获取失败：{e}")
             return None
 
-    curve = _fetch_treasury_curve()
+    curve = _fetch_treasury_curve_xml()
     if curve is not None and not curve.empty:
-        col10 = next((c for c in curve.columns if str(c).strip().lower() in {'10 yr','10-year','10 yr.'}), None)
-        col2 = next((c for c in curve.columns if str(c).strip().lower() in {'2 yr','2-year','2 yr.'}), None)
-        date_col = next((c for c in curve.columns if str(c).lower() == 'date'), None)
         last = curve.iloc[-1]
-        for label, col in [("10Y国债", col10), ("2Y国债", col2)]:
-            if label not in data and col is not None:
-                try:
-                    val = float(str(last[col]).replace('N/A','nan'))
-                    if pd.notna(val):
-                        prev_val = None
-                        if len(curve) >= 2: prev_val = float(str(curve.iloc[-2][col]).replace('N/A','nan'))
-                        dt = pd.Timestamp(last[date_col])
-                        data[label] = {"value": val, "prev": prev_val, "date": dt.strftime('%Y-%m-%d'), "source": "U.S. Treasury"}
-                        lines.append(f"- {label}：{val:.3f}（U.S. Treasury，数据期 {dt.strftime('%Y-%m-%d')}）")
-                except Exception:
-                    pass
+        dt = last['NEW_DATE']
+        for label, col in [("10Y国债", "BC_10YEAR"), ("2Y国债", "BC_2YEAR")]:
+            if label not in data and col in curve.columns and pd.notna(last[col]):
+                val = float(last[col])
+                prev_val = float(curve.iloc[-2][col]) if len(curve) >= 2 and pd.notna(curve.iloc[-2][col]) else None
+                data[label] = {"value": val, "prev": prev_val, "date": dt.strftime('%Y-%m-%d'), "source": "U.S. Treasury XML"}
+                lines.append(f"- {label}：{val:.3f}（U.S. Treasury XML，数据期 {dt.strftime('%Y-%m-%d')}）")
+                print(f"   ✅ {label}: 使用 U.S. Treasury XML 数据")
 
     # Yahoo最终兜底。注意：^IRX 是13周，不再冒充2Y。
     yahoo_rate_fallback = {"10Y国债": "^TNX", "2Y国债": "^FVX"}
@@ -1009,8 +1048,8 @@ def build_event_regime_gate(macro_news_text, macro_market_text, sector_text, key
         except Exception:
             return None
 
-    pce = num(r"(?:core\s*pce|核心pce|pce)[^0-9]{0,30}([0-9]+(?:\.[0-9]+)?)\s*%?")
-    cpi = num(r"(?:cpi|消费者价格)[^0-9]{0,30}([0-9]+(?:\.[0-9]+)?)\s*%?")
+    pce = num(r"(?:core[\s]*pce|核心pce|pce)[^0-9]{0,30}([0-9]+(?:\.[0-9]+)?)[\s]*%?")
+    cpi = num(r"(?:cpi|消费者价格)[^0-9]{0,30}([0-9]+(?:\.[0-9]+)?)[\s]*%?")
     ten = num(r"(?:10y|10-year|10年|10年期)[^0-9+-]{0,30}([0-9]+(?:\.[0-9]+)?)")
     vix = num(r"(?:vix)[^0-9]{0,15}([0-9]+(?:\.[0-9]+)?)")
 
@@ -1043,7 +1082,7 @@ def build_event_regime_gate(macro_news_text, macro_market_text, sector_text, key
     }
     negative = set()
     for line in str(sector_text or "").splitlines():
-        m = re.search(r"(?:📉|📈)\s*([A-Z]+)\s*:\s*([+-]?[0-9]+(?:\.[0-9]+)?)%", line)
+        m = re.search(r"(?:📉|📈)[\s]*([A-Z]+)[\s]*:[\s]*([+-]?[0-9]+(?:\.[0-9]+)?)%", line)
         if not m:
             continue
         etf, pct = m.group(1), float(m.group(2))
@@ -1399,8 +1438,8 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 8. 过去低胜率板块只在当前同样的失败条件重新出现时降权，不允许永久封板。
 9. 高等级 Fed/Warsh 鹰派事件如果与通胀/利率数据同向，必须明确降低 Technology/Communication 等高久期资产权重；若 Materials 当前也同步大跌，则不得因为单一铜价夜盘上涨而重新推荐 Materials。
 
-【HTML 输出格式】
-从第一个字符开始必须是HTML。
+【HTML 输出格式 - 严格遵循】
+从第一个字符开始必须是HTML，不要输出任何 markdown 代码块标记（如 ```html）。
 
 <div class="header-card">
 <h2>🌍 今日宏观事件与 Regime Gate</h2>
@@ -1412,25 +1451,41 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 
 <h2>👑 核心精选 Top 1-5</h2>
 
+<!-- 每只标的必须用这个精确格式，Ticker 必须放在括号中 -->
 <div class="top-card core-card">
-<div class="top-title">1. [名称] ([代码]) | RSI:[数值] | 乖离率:[数值]%</div>
-<p><span class='highlight-label bg-red'>🔗 产业链逻辑:</span>...</p>
-<p><span class='highlight-label bg-green'>📰 个股新闻核查:</span>...</p>
-<p><span class='highlight-label bg-blue'>📈 技术确认:</span>...</p>
-<p><span class='highlight-label bg-teal'>⭐ 推荐评分:</span>评分:[XX]/100 — ...</p>
-<p><span class='highlight-label bg-orange'>⚠️ 风控底线:</span>周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+<div class="top-title">1. [公司名称] ([TICKER]) | RSI:[数值] | 乖离率:[数值]%</div>
+<p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>...</p>
+<p><span class="highlight-label bg-green">📰 个股新闻核查:</span>...</p>
+<p><span class="highlight-label bg-blue">📈 技术确认:</span>...</p>
+<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...</p>
+<p><span class="highlight-label bg-orange">⚠️ 风控底线:</span>周期:[X-Y天] | 止损:[具体价格或百分比]</p>
 <div><h4>🎲 美股专属期权实战策略</h4><ul><li><b>建议行权价与到期日：</b>...</li><li><b>期权组合构建：</b>...</li></ul></div>
 </div>
 
-重复至5只。
+<!-- 重复上述 div 结构至第5只，确保每只都有 class="top-card core-card" -->
 
 <div class="compare-card">
-<div class="compare-title">🎖️ 观察池 - Rank 6-12</div><ul><li>...</li></ul>
+<div class="compare-title">🎖️ 观察池 - Rank 6-12</div>
+<ul>
+<li>[公司名称] ([TICKER]) | 理由...</li>
+<li>[公司名称] ([TICKER]) | 理由...</li>
+</ul>
 </div>
 
 <div class="trap-card">
-<h3>🚨 诱多对照组</h3><ul><li>...</li><li>...</li></ul>
+<h3>🚨 诱多对照组</h3>
+<ul>
+<li>[公司名称] ([TICKER]) | 风险...</li>
+<li>[公司名称] ([TICKER]) | 风险...</li>
+</ul>
 </div>
+
+【格式纪律】
+1. 核心精选每只必须用 <div class="top-card core-card"> 包裹
+2. 标题行必须包含 "([TICKER])" 格式，如 "NVIDIA (NVDA)"
+3. 观察池和诱多池必须用 <li> 包裹，且包含 "([TICKER])"
+4. 不要输出 ```html 或 ``` 标记
+5. 从第一个字符开始就是 <div
 
 只输出HTML，不输出解释性前言。
 """
@@ -1490,16 +1545,16 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
         if tag == "Observation":
             hp, sl, score = "观望", "观望", "N/A"
         else:
-            m = re.search(r'周期\s*[:：]\s*\[?(\d+[-~]\d+天|\d+天)', chunk)
+            m = re.search(r'周期[\s]*[:：][\s]*\[?(\d+[-~]\d+天|\d+天)', chunk)
             hp = m.group(1) if m else "5-10天"
-            sm = re.search(r'止损\s*[:：]\s*\[?(\$?\d+(?:\.\d+)?%?)', chunk)
+            sm = re.search(r'止损[\s]*[:：][\s]*\[?(\$?\d+(?:\.\d+)?%?)', chunk)
             if sm:
                 sl = sm.group(1)
             else:
                 atr = item.get("ATR_Pct",5.0)
                 pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr*ATR_STOP_MULTIPLIER))
                 sl = f"${round(item['Price']*(1+pct/100),2)}"
-            sc = re.search(r'评分\s*[:：]\s*\[?(\d{1,3})\]?\s*/\s*100', chunk)
+            sc = re.search(r'评分[\s]*[:：][\s]*\[?(\d{1,3})\]?[\s]*/[\s]*100', chunk)
             score = sc.group(1) if sc else str(min(100, int(item.get("技术评分",0))+50))
 
         item = dict(item)
@@ -1656,6 +1711,24 @@ if __name__ == "__main__":
     send_mail(SUPER_ADMIN, f"【宏观驱动美股版】{TARGET_REGION} 核心打分与实战 ({today_us_str()})", full_html)
 
     chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT)
+
+    # Fallback: 如果 AI HTML 匹配完全失败，直接从技术评分 Top10 中取标的
+    if not chosen:
+        print("⚠️ AI HTML 匹配失败，启用技术评分 Fallback...")
+        top_pool = sorted(pool_data, key=lambda x: x.get("技术评分", 0), reverse=True)[:10]
+        for item in top_pool:
+            if item.get("技术评分", 0) <= 0:
+                continue
+            copy_item = dict(item)
+            copy_item["Tag"] = "Core_Dragon"
+            atr = copy_item.get("ATR_Pct", 5.0)
+            pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr * ATR_STOP_MULTIPLIER))
+            copy_item["Stop_Loss"] = f"${round(copy_item['Price']*(1+pct/100),2)}"
+            copy_item["Hold_Period"] = "5-10天"
+            copy_item["Score"] = str(min(100, int(copy_item.get("技术评分", 0)) + 50))
+            chosen.append(copy_item)
+            print(f"   🔄 Fallback 选中: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
+
     log_file = "trade_history.csv"
     to_write = []
     for item in chosen:
