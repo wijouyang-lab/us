@@ -1242,6 +1242,14 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     for col in ["Exit_Date","Exit_Price","Status","Price"]:
         if col not in df.columns:
             df[col] = "Active" if col == "Status" else ("" if col != "Price" else 0)
+
+    # pandas 2.x 可能将混合列推断为 StringDtype；后续风控需要向 Exit_Price 写入数值，
+    # 因此这里显式使用 object，避免“Invalid value ... for dtype 'str'”崩溃。
+    df["Exit_Date"] = df["Exit_Date"].astype(object)
+    df["Exit_Price"] = df["Exit_Price"].astype(object)
+    df["Status"] = df["Status"].astype(object)
+    df["Price"] = pd.to_numeric(df["Price"], errors="coerce").fillna(0.0).astype(object)
+
     active = df[df["Status"].astype(str).str.strip() == "Active"].copy()
     if active.empty:
         return set(), {}, {}
@@ -1308,7 +1316,12 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
         if row.get("Status") == "Active" and decisions.get(t) == "Dropped":
             df.at[idx,"Status"] = "Dropped"
             df.at[idx,"Exit_Date"] = today_us_str()
-            df.at[idx,"Exit_Price"] = prices.get(t, row.get("Price",0))
+            exit_price = prices.get(t, row.get("Price", 0))
+            try:
+                exit_price = float(exit_price)
+            except (TypeError, ValueError):
+                exit_price = 0.0
+            df.at[idx,"Exit_Price"] = exit_price
             dropped[t] = {"name":row.get("Name",t),"reason":reason or "当前事件风险"}
             changed = True
     if changed:
