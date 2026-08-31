@@ -978,13 +978,19 @@ def build_event_regime_gate(macro_news_text, macro_market_text, sector_text, key
         if sector not in gate["hard_avoid_sectors"]:
             gate["buy_dip_sectors"].append(sector)
 
-    # 若材料/贵金属当前下跌且鹰派高等级确认，Materials 直接进入当前日硬回避
+    # BUY_DIP 与硬回避互斥：若当前已有 AVOID 判定，不能同时显示 BUY_DIP。
+    gate["buy_dip_sectors"] = [x for x in gate["buy_dip_sectors"] if x not in gate["hard_avoid_sectors"]]
+    gate["watch_sectors"] = [x for x in gate["watch_sectors"] if x not in gate["hard_avoid_sectors"]]
+
+    # 若材料当前下跌且鹰派高等级确认，Materials 直接进入当前日硬回避
     if hawkish_confirmed and "Materials" in negative and "Materials" not in gate["hard_avoid_sectors"]:
         gate["hard_avoid_sectors"].append("Materials")
         gate["reasons"].append("鹰派重定价+材料ETF当前走弱，禁止把商品单日上涨当作主线确认")
 
     for key in ("hard_avoid_sectors","watch_sectors","buy_dip_sectors"):
         gate[key] = list(dict.fromkeys(gate[key]))
+    gate["watch_sectors"] = [x for x in gate["watch_sectors"] if x not in gate["hard_avoid_sectors"]]
+    gate["buy_dip_sectors"] = [x for x in gate["buy_dip_sectors"] if x not in gate["hard_avoid_sectors"]]
     return gate
 
 
@@ -1460,26 +1466,80 @@ def build_full_email_html(ai_html):
     return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
 # ==================== 17. 期权策略 ====================
-def safe_generate_option_strategy(item):
-    if append_option_strategy is None:
-        return False
+def generate_option_strategy(ticker, name, direction, scan_score, scan_date, underlying_price, underlying_stop, hold_period, strategy_reason, contracts=1):
+    """保留原版内联期权记录功能；即使独立 option engine 不可用也能落盘。"""
+    opt_file = "option_strategies.csv"
     try:
-        result = append_option_strategy(
-            ticker=item["Ticker"],
-            name=item["Name"],
+        days_match = re.findall(r"\d+", str(hold_period))
+        max_days = max(map(int, days_match)) if days_match else 7
+        expiry_date = (get_us_time() + datetime.timedelta(days=max_days)).strftime("%Y-%m-%d")
+        if str(direction).upper() == "BULLISH":
+            opt_type = "CALL"
+            strike = round(float(underlying_price) * 1.05, 2)
+        else:
+            opt_type = "PUT"
+            strike = round(float(underlying_price) * 0.95, 2)
+        entry_price = round(strike * 0.02, 2)
+        header = ("Ticker,OptionType,Strike,Expiry,EntryPrice,Status,EntryDate,Quantity,"
+                  "Direction,UnderlyingPrice,StopLoss,HoldPeriod,Reason,ScanScore\n")
+        need_header = not os.path.exists(opt_file) or os.path.getsize(opt_file) == 0
+        with open(opt_file, "a", encoding="utf-8") as f:
+            if need_header:
+                f.write(header)
+            safe_reason = str(strategy_reason).replace("\n", " ").replace(",", " ")
+            f.write(f"{ticker},{opt_type},{strike},{expiry_date},{entry_price},Active,{scan_date},{contracts},"
+                    f"{direction},{underlying_price},{underlying_stop},{hold_period},{safe_reason},{scan_score}\n")
+        print(f"📝 期权策略记录：{ticker} {opt_type} {strike} @ {expiry_date}")
+        return True
+    except Exception as e:
+        print(f"⚠️ {ticker} 期权策略记录失败：{e}")
+        return False
+
+def safe_generate_option_strategy(item):
+    try:
+        ticker = str(item.get("Ticker", ""))
+        name = str(item.get("Name", ticker))
+        result = False
+        if append_option_strategy is not None:
+            try:
+                result = bool(append_option_strategy(
+                    ticker=ticker,
+                    name=name,
+                    direction="BULLISH",
+                    scan_score=item.get("Score", "N/A"),
+                    scan_date=today_us_str(),
+                    underlying_price=item.get("Price", 0),
+                    underlying_stop=item.get("Stop_Loss", "N/A"),
+                    hold_period=item.get("Hold_Period", "5-10天"),
+                    strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。",
+                    contracts=1,
+                ))
+            except Exception as e:
+                print(f"⚠️ {ticker} 外部期权引擎失败，回退内联记录：{e}")
+        if result:
+            return True
+        return generate_option_strategy(
+            ticker=ticker,
+            name=name,
             direction="BULLISH",
-            scan_score=item.get("Score","N/A"),
+            scan_score=item.get("Score", "N/A"),
             scan_date=today_us_str(),
-            underlying_price=item.get("Price",0),
-            underlying_stop=item.get("Stop_Loss","N/A"),
-            hold_period=item.get("Hold_Period","5-10天"),
+            underlying_price=item.get("Price", 0),
+            underlying_stop=item.get("Stop_Loss", "N/A"),
+            hold_period=item.get("Hold_Period", "5-10天"),
             strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。",
             contracts=1,
         )
-        return bool(result)
     except Exception as e:
         print(f"⚠️ {item.get('Ticker','')} 期权策略失败：{e}")
         return False
+
+# 保留原版的空壳函数，避免外部 review/工作流调用时报 NameError
+def build_sell_signal_card(dropped_info, rule_sell_signals):
+    return ""
+
+def build_current_holdings_card(current_prices_map):
+    return ""
 
 # ==================== 主程序 ====================
 if __name__ == "__main__":
@@ -1527,6 +1587,7 @@ if __name__ == "__main__":
     gate_hard = (event_regime or {}).get("hard_avoid_sectors", [])
     gate_text = event_regime_text + "\n当前硬回避行业必须阻止进入Top1-5：" + (", ".join(gate_hard) if gate_hard else "无")
 
+    # 将 Regime Gate 作为硬性但条件化的行业门控；历史低胜率本身不得永久封禁。
     ai_html = generate_ai_report(
         pool_data,
         combined_news,
