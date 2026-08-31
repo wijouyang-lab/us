@@ -1,0 +1,4 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-08-31,USB,U.S. Bancorp,Observation,45.4,-1.86,6,False,False,True,False,观望,观望,N/A,pending,62.47,1.68,False
+2026-08-31,MET,MetLife,Observation,55.9,0.06,0,False,False,False,False,观望,观望,N/A,pending,96.51,1.78,False
+2026-08-31,EXE,Expand Energy,Observation,63.4,3.22,5,False,True,False,False,观望,观望,N/A,pending,98.16,2.48,False
