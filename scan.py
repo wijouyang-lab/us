@@ -1155,6 +1155,25 @@ def _fetch_macro_from_google_news(label):
     return "".join(out).strip()
 
 
+def _anthropic_text(response):
+    """兼容新版 Claude 的 TextBlock / ThinkingBlock 返回结构。"""
+    parts = []
+    for block in getattr(response, "content", []) or []:
+        text = getattr(block, "text", None)
+        if text:
+            parts.append(str(text))
+    return "\n".join(parts).strip()
+
+
+def _anthropic_stream_text(client, **kwargs):
+    """统一使用 stream，规避长请求的 SDK 超时限制。"""
+    out = []
+    with client.messages.stream(**kwargs) as stream:
+        for text in stream.text_stream:
+            out.append(text)
+    return "".join(out).strip()
+
+
 # ==================== 6.7 事件证据汇总 ====================
 def build_event_evidence_text(key_people_text, economic_text, macro_market_text):
     """将人物讲话、结构化经济数据、市场价格放入同一证据层，供 Regime Gate 与 AI 共用。"""
@@ -1863,22 +1882,31 @@ if __name__ == "__main__":
 
     chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT)
 
-    # Fallback: 如果 AI HTML 匹配完全失败，直接从技术评分 Top10 中取标的
+    # Fallback: 如果 AI HTML 匹配完全失败，从技术评分 Top10 中分层取标的
     if not chosen:
         print("⚠️ AI HTML 匹配失败，启用技术评分 Fallback...")
-        top_pool = sorted(pool_data, key=lambda x: x.get("技术评分", 0), reverse=True)[:10]
-        for item in top_pool:
-            if item.get("技术评分", 0) <= 0:
-                continue
+        top_pool = sorted(
+            [x for x in pool_data if x.get("技术评分", 0) > 0],
+            key=lambda x: x.get("技术评分", 0), reverse=True
+        )
+        # Top 5 作为 Core_Dragon，6-10 作为 Observation
+        for rank, item in enumerate(top_pool[:10], 1):
             copy_item = dict(item)
-            copy_item["Tag"] = "Core_Dragon"
-            atr = copy_item.get("ATR_Pct", 5.0)
-            pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr * ATR_STOP_MULTIPLIER))
-            copy_item["Stop_Loss"] = f"${round(copy_item['Price']*(1+pct/100),2)}"
-            copy_item["Hold_Period"] = "5-10天"
-            copy_item["Score"] = str(min(100, int(copy_item.get("技术评分", 0)) + 50))
+            if rank <= 5:
+                copy_item["Tag"] = "Core_Dragon"
+                atr = copy_item.get("ATR_Pct", 5.0)
+                pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr * ATR_STOP_MULTIPLIER))
+                copy_item["Stop_Loss"] = f"${round(copy_item['Price']*(1+pct/100),2)}"
+                copy_item["Hold_Period"] = "5-10天"
+                copy_item["Score"] = str(min(100, int(copy_item.get("技术评分", 0)) + 50))
+                print(f"   🔄 Fallback Core: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
+            else:
+                copy_item["Tag"] = "Observation"
+                copy_item["Hold_Period"] = "观望"
+                copy_item["Stop_Loss"] = "观望"
+                copy_item["Score"] = "N/A"
+                print(f"   👁️ Fallback 观察: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
             chosen.append(copy_item)
-            print(f"   🔄 Fallback 选中: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
 
     log_file = "trade_history.csv"
     to_write = []
