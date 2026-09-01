@@ -7,10 +7,10 @@
 2. 自动修复 pending 中 Ticker 被写成公司名称的问题
 3. yfinance 下载失败不会导致整个 review.py 崩溃
 4. 缺失价格安全回退，不再对空字符串执行 float('')
-5. 股票硬止损：当日 Low <= Stop_Loss 即触发
-6. 股票到期归档
+5. 股票采用 MA20/MA50 + ATR + MACD/KDJ 移动止损：当日 Low <= 前一交易日保护线即触发
+6. 股票不再按固定持仓天数强制归档，趋势破坏/移动止损才退出
 7. 今日新增标的正常计入盈亏/胜率
-8. 期权到期自动平仓
+8. 期权到期自动平仓（股票不使用持仓期限）
 9. review_history.csv 自动归档
 10. KPI / 胜率统计
 11. Claude 生成 HTML 风控报告
@@ -32,6 +32,8 @@ from zoneinfo import ZoneInfo
 import anthropic
 import pandas as pd
 import yfinance as yf
+import pandas_ta as ta
+import pandas_ta as ta
 
 
 # ============================================================
@@ -538,9 +540,10 @@ def ensure_trade_history_columns():
     """
     required = [
         "Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias",
-        "Hold_Period", "Stop_Loss", "Exit_Date", "Exit_Price", "Status",
-        "Close_Price", "技术评分", "MACD金叉", "周线共振", "KDJ_J回升",
-        "量能放大", "ATR_Pct", "周期共振"
+        "Hold_Period", "Stop_Loss", "Stop_Method", "Trail_Stop", "Exit_Date", "Exit_Price", "Status",
+        "Close_Price", "技术评分", "估值评分", "PE_TTM", "PE_Forward", "EPS_TTM", "PB",
+        "MA20", "MA50", "ATR_Pct", "MACD金叉", "周线共振", "KDJ_J回升",
+        "量能放大", "周期共振"
     ]
 
     if not os.path.exists(TRADE_HISTORY) or os.path.getsize(TRADE_HISTORY) == 0:
@@ -896,6 +899,8 @@ def supplement_us_stocks_from_pending():
                         "N/A",
                     ),
                     "Stop_Loss": calibrated_stop,
+                    "Stop_Method": clean_text(row.get("Stop_Method"), "移动止损"),
+                    "Trail_Stop": calibrated_stop,
                     "Exit_Date": "",
                     "Exit_Price": "",
                     "Status": "Active",
@@ -905,6 +910,13 @@ def supplement_us_stocks_from_pending():
                         else ""
                     ),
                     "技术评分": clean_text(row.get("技术评分")),
+                    "估值评分": clean_text(row.get("估值评分")),
+                    "PE_TTM": clean_text(row.get("PE_TTM")),
+                    "PE_Forward": clean_text(row.get("PE_Forward")),
+                    "EPS_TTM": clean_text(row.get("EPS_TTM")),
+                    "PB": clean_text(row.get("PB")),
+                    "MA20": "",
+                    "MA50": "",
                     "MACD金叉": clean_text(row.get("MACD金叉")),
                     "周线共振": clean_text(row.get("周线共振")),
                     "KDJ_J回升": clean_text(row.get("KDJ_J回升")),
@@ -928,10 +940,10 @@ def supplement_us_stocks_from_pending():
                 required_cols = [
                     "Date", "Ticker", "Name", "Tag", "Score",
                     "Price", "RSI", "Bias", "Hold_Period",
-                    "Stop_Loss", "Exit_Date", "Exit_Price",
-                    "Status", "Close_Price", "技术评分",
-                    "MACD金叉", "周线共振", "KDJ_J回升",
-                    "量能放大", "ATR_Pct", "周期共振"
+                    "Stop_Loss", "Stop_Method", "Trail_Stop", "Exit_Date", "Exit_Price",
+                    "Status", "Close_Price", "技术评分", "估值评分", "PE_TTM", "PE_Forward", "EPS_TTM", "PB",
+                    "MA20", "MA50", "ATR_Pct", "MACD金叉", "周线共振", "KDJ_J回升",
+                    "量能放大", "周期共振"
                 ]
 
                 for col in required_cols:
@@ -1040,21 +1052,7 @@ for col in [
         recent_picks[col] = ""
 
 
-valid_mask = (
-    recent_picks["Hold_Period"]
-    .astype(str)
-    .str.strip()
-    .str.lower()
-    .map(lambda x: x not in INVALID_STRINGS)
-)
-
-recent_picks = recent_picks[
-    valid_mask
-].copy()
-
-if recent_picks.empty:
-    print("无有效持仓，退出。")
-    sys.exit(0)
+recent_picks["Hold_Period"] = "动态持有"
 
 
 # ============================================================
@@ -1647,6 +1645,62 @@ if (
 
 
 # ============================================================
+# 16.5 移动止损：MA20/MA50 + ATR + MACD/KDJ
+# ============================================================
+def get_trailing_stop_context(ticker, entry_date=None, current_stop=None, before_date=None):
+    try:
+        hist=yf.download(ticker,period="6mo",progress=False,auto_adjust=True,threads=False)
+        if hist is None or hist.empty: return None
+        if isinstance(hist.columns,pd.MultiIndex): hist.columns=hist.columns.get_level_values(0)
+        hist=hist.dropna(subset=["Open","High","Low","Close"]).copy(); hist.index=pd.to_datetime(hist.index).tz_localize(None)
+        if entry_date is not None: hist=hist[hist.index>=pd.Timestamp(entry_date)]
+        if len(hist)<35: return None
+        ref=pd.Timestamp(before_date).normalize() if before_date is not None else hist.index[-1]
+        d=hist[hist.index<ref].copy()
+        if d.empty: return None
+        d["MA20"]=ta.sma(d["Close"],length=20); d["MA50"]=ta.sma(d["Close"],length=50); d["ATR14"]=ta.atr(d["High"],d["Low"],d["Close"],length=14)
+        m=ta.macd(d["Close"])
+        if m is not None and not m.empty: d["MACD"]=m.iloc[:,0]; d["MACD_SIGNAL"]=m.iloc[:,2]; d["MACD_HIST"]=m.iloc[:,1]
+        else: d["MACD"]=d["MACD_SIGNAL"]=d["MACD_HIST"]=float("nan")
+        h=d["High"].to_numpy(float); l=d["Low"].to_numpy(float); c=d["Close"].to_numpy(float); K=D=50.0; js=[]
+        for i in range(len(c)):
+            if i<8: js.append(3*K-2*D); continue
+            h9=max(h[i-8:i+1]); l9=min(l[i-8:i+1]); rsv=(c[i]-l9)/(h9-l9+1e-9)*100; K=2/3*K+1/3*rsv; D=2/3*D+1/3*K; js.append(3*K-2*D)
+        d["KDJ_J"]=js; r=d.iloc[-1]; close=float(r["Close"]); atr=float(r["ATR14"]) if pd.notna(r["ATR14"]) else close*0.05
+        ma20=float(r["MA20"]) if pd.notna(r["MA20"]) else close; ma50=float(r["MA50"]) if pd.notna(r["MA50"]) else ma20; pct=max(0.03,min(0.12,2*atr/max(close,1e-9)));
+        candidate=max(close*(1-pct),ma20-atr,ma50-1.5*atr)
+        macd_bear=bool(pd.notna(r["MACD"]) and pd.notna(r["MACD_SIGNAL"]) and float(r["MACD"])<float(r["MACD_SIGNAL"])); kdj_falling=bool(len(d)>=2 and float(d["KDJ_J"].iloc[-1])<float(d["KDJ_J"].iloc[-2]))
+        if macd_bear and kdj_falling: candidate=max(candidate,close-1.5*atr)
+        candidate=min(candidate,close*0.98); old=safe_float(current_stop)
+        if old and old>0: candidate=max(old,candidate)
+        return {"exec_stop":round(candidate,2),"ma20":round(ma20,2),"ma50":round(ma50,2),"atr_pct":round(atr/close*100,2) if close else None,"macd_hist":round(float(r["MACD_HIST"]),4) if pd.notna(r["MACD_HIST"]) else None,"macd_bear":macd_bear,"kdj_j":round(float(r["KDJ_J"]),2),"kdj_falling":kdj_falling,"trend_ok":bool(close>=ma20 and ma20>=ma50)}
+    except Exception as e:
+        print(f"⚠️ 移动止损计算失败 {ticker}: {e}"); return None
+
+
+def update_trade_history_trailing_stop(ticker,buy_date,stop_price,ctx):
+    if not os.path.exists(TRADE_HISTORY): return
+    try:
+        d=pd.read_csv(TRADE_HISTORY,dtype=str,keep_default_na=False)
+        for col in ["Stop_Loss","Stop_Method","Trail_Stop","MA20","MA50","ATR_Pct"]:
+            if col not in d.columns: d[col]=""
+        dates=pd.to_datetime(d["Date"],errors="coerce"); mask=(d["Ticker"].astype(str).str.upper()==str(ticker).upper())&(dates.dt.strftime("%Y-%m-%d")==str(buy_date))&(d["Status"].astype(str).str.strip()=="Active")
+        if mask.any():
+            d.loc[mask,"Stop_Loss"]=str(stop_price); d.loc[mask,"Trail_Stop"]=str(stop_price); d.loc[mask,"Stop_Method"]="MA20/MA50 + ATR + MACD/KDJ"; d.loc[mask,"MA20"]=str(ctx.get("ma20","")); d.loc[mask,"MA50"]=str(ctx.get("ma50","")); d.loc[mask,"ATR_Pct"]=str(ctx.get("atr_pct","")); d.to_csv(TRADE_HISTORY,index=False,encoding="utf-8")
+    except Exception as e: print(f"⚠️ 更新移动止损失败 {ticker}: {e}")
+
+
+def load_active_options_snapshot(price_map):
+    d=load_option_positions()
+    if d.empty: return []
+    out=[]
+    for _,r in d.iterrows():
+        t=resolve_ticker(r.get("Ticker")); cur=price_map.get(t)
+        if cur is None: _,cur=get_live_quote_bootstrap(t)
+        out.append({"ticker":t,"option_type":clean_text(r.get("OptionType")).upper(),"strike":safe_float(r.get("Strike")),"expiry":clean_text(r.get("Expiry")),"entry_price":safe_float(r.get("EntryPrice")),"current_underlying":cur,"quantity":safe_float(r.get("Quantity"),1),"stop_loss":clean_text(r.get("StopLoss")),"reason":clean_text(r.get("Reason"))})
+    return out
+
+# ============================================================
 # 17. 股票风控
 # ============================================================
 
@@ -1658,392 +1712,37 @@ skipped_duplicate = 0
 missing_entry_price = []
 
 
-print(
-    "开始股票风控检查："
-    "当日最低价触及止损即清仓..."
-)
+print("开始股票风控检查：采用 MA20/MA50 + ATR + MACD/KDJ 移动止损，不设置股票到期日...")
 
-
-for orig_ticker, group in recent_picks.groupby(
-    "Ticker",
-    sort=False,
-):
-
-    group = group.sort_values("Date").copy()
-
-    if group.empty:
-        continue
-
-    ticker = resolve_ticker(
-        orig_ticker,
-        clean_text(group.iloc[0].get("Name")),
-    )
-
-    if not ticker:
-        continue
-
-    first_row = group.iloc[0]
-    latest_row = group.iloc[-1]
-
-    rec_date = normalize_date(
-        first_row.get("Date")
-    )
-
-    if rec_date is None:
-        continue
-
-    rec_date_str = rec_date.strftime(
-        "%Y-%m-%d"
-    )
-
-    days_held = (
-        get_us_time()
-        .replace(tzinfo=None)
-        - rec_date
-    ).days
-
-    latest_tag = clean_text(
-        latest_row.get("Tag")
-    )
-
-    if latest_tag in {
-        "Trap_Warning",
-        "Forced_Exit",
-        "Stop_Loss_Hit",
-        "Period_Matured",
-    }:
-        continue
-
-    hold_period_str = get_first_valid_value(
-        group,
-        "Hold_Period",
-        extra_invalid={
-            "坚决空仓",
-        },
-    )
-
-    stop_loss_str = get_first_valid_value(
-        group,
-        "Stop_Loss",
-        extra_invalid={
-            "坚决空仓",
-            "绝对规避",
-        },
-    )
-
-    score_str = get_first_valid_value(
-        group,
-        "Score",
-    )
-
-    hold_days = parse_hold_days(
-        hold_period_str
-    )
-
-    if hold_days is None:
-        print(
-            f"⏭️ {ticker} "
-            f"Hold_Period 无法解析，跳过。"
-        )
-        continue
-
-    rec_price = safe_record_price(
-        first_row
-    )
-
-    if rec_price is None or rec_price <= 0:
-        missing_entry_price.append(
-            ticker
-        )
-        print(
-            f"⚠️ {ticker} 缺少有效建仓价格，"
-            f"跳过风控计算但不会崩溃。"
-        )
-        continue
-
-    ohlc = ohlc_map_today.get(
-        ticker
-    )
-
+for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
+    group=group.sort_values("Date").copy()
+    if group.empty: continue
+    ticker=resolve_ticker(orig_ticker,clean_text(group.iloc[0].get("Name")))
+    if not ticker: continue
+    first=group.iloc[0]; latest=group.iloc[-1]; rec_date=normalize_date(first.get("Date"))
+    if rec_date is None: continue
+    if clean_text(latest.get("Status")) not in {"", "Active", "pending"}: continue
+    rec_date_str=rec_date.strftime("%Y-%m-%d"); rec_price=safe_record_price(first)
+    if rec_price is None or rec_price<=0: missing_entry_price.append(ticker); continue
+    ohlc=ohlc_map_today.get(ticker)
     if ohlc is None:
-        cur = price_map_today.get(
-            ticker
-        )
-
-        if cur is None:
-            print(
-                f"⚠️ {ticker} 无今日行情，"
-                f"跳过，不伪造价格。"
-            )
-            continue
-
-        ohlc = {
-            "open": cur,
-            "high": cur,
-            "low": cur,
-            "close": cur,
-        }
-
-    today_low = safe_float(
-        ohlc.get("low")
-    )
-
-    cur_price = safe_float(
-        ohlc.get("close")
-    )
-
-    today_open = safe_float(
-        ohlc.get("open")
-    )
-
-    if None in (
-        today_low,
-        cur_price,
-    ):
-        print(
-            f"⚠️ {ticker} 今日 OHLC 不完整，"
-            f"跳过。"
-        )
-        continue
-
-    # ========================================================
-    # 17.1 硬止损
-    # ========================================================
-
-    stop_loss_num = parse_stop_loss_price(
-        stop_loss_str
-    )
-
-    if (
-        stop_loss_num is not None
-        and today_low <= stop_loss_num
-    ):
-
-        exit_price = stop_loss_num
-
-        pnl_pct = round(
-            (
-                (exit_price - rec_price)
-                / rec_price
-            ) * 100,
-            2,
-        )
-
-        stopped_list.append({
-            "代码": ticker,
-            "名称": clean_text(
-                first_row.get(
-                    "Name",
-                    ticker,
-                ),
-                ticker,
-            ),
-            "标签": latest_tag,
-            "推荐评分": score_str,
-            "持股周期建议": hold_period_str,
-            "止损价": stop_loss_str,
-            "首次推荐日": rec_date_str,
-            "首次推荐价": rec_price,
-            "止损触发日": today_us_str(),
-            "止损结算价": exit_price,
-            "止损盈亏(%)": pnl_pct,
-            "持仓天数": days_held,
-            "系统连续推荐次数": len(group),
-            "触发方式": "盘中最低价触及止损",
-        })
-
-        update_trade_history_status(
-            ticker,
-            rec_date_str,
-            "Stop_Loss_Hit",
-            exit_price,
-        )
-
-        continue
-
-    # ========================================================
-    # 17.2 到期
-    # ========================================================
-
-    maturity_date = (
-        rec_date
-        + datetime.timedelta(
-            days=hold_days
-        )
-    )
-
-    now_naive = (
-        get_us_time()
-        .replace(tzinfo=None)
-    )
-
-    if (
-        maturity_date
-        <= now_naive
-    ):
-
-        archive_key = (
-            str(ticker),
-            rec_date_str,
-        )
-
-        if archive_key in already_archived:
-            skipped_duplicate += 1
-            continue
-
-        maturity_price = None
-
-        if (
-            not df_hist_all.empty
-            and "Ticker" in df_hist_all.columns
-        ):
-
-            ticker_hist = df_hist_all[
-                df_hist_all["Ticker"] == ticker
-            ].copy()
-
-            if not ticker_hist.empty:
-                ticker_hist["Date"] = pd.to_datetime(
-                    ticker_hist["Date"],
-                    errors="coerce",
-                )
-
-                ticker_hist = ticker_hist.dropna(
-                    subset=["Date"]
-                )
-
-                valid = ticker_hist[
-                    ticker_hist["Date"]
-                    <= pd.Timestamp(
-                        maturity_date
-                    )
-                ].sort_values("Date")
-
-                if not valid.empty:
-                    maturity_price = safe_float(
-                        valid.iloc[-1].get(
-                            "close"
-                        )
-                    )
-
-        maturity_pnl = None
-
-        if (
-            maturity_price is not None
-            and rec_price > 0
-        ):
-            maturity_pnl = round(
-                (
-                    (
-                        maturity_price
-                        - rec_price
-                    )
-                    / rec_price
-                )
-                * 100,
-                2,
-            )
-
-        expired_list.append({
-            "代码": ticker,
-            "名称": clean_text(
-                first_row.get(
-                    "Name",
-                    ticker,
-                ),
-                ticker,
-            ),
-            "标签": latest_tag,
-            "推荐评分": score_str,
-            "持股周期建议": hold_period_str,
-            "止损价": stop_loss_str,
-            "首次推荐日": rec_date_str,
-            "首次推荐价": rec_price,
-            "期满日": maturity_date.strftime(
-                "%Y-%m-%d"
-            ),
-            "期满日价格": (
-                maturity_price
-                if maturity_price is not None
-                else "无数据"
-            ),
-            "期满日盈亏(%)": (
-                maturity_pnl
-                if maturity_pnl is not None
-                else "无数据"
-            ),
-            "持仓天数": days_held,
-            "系统连续推荐次数": len(group),
-        })
-
-        continue
-
-    # ========================================================
-    # 17.3 活跃持仓
-    # ========================================================
-
-    is_new_today = (
-        rec_date_str == today_us_str()
-    )
-
-    effective_rec_price = rec_price
-
-    if (
-        is_new_today
-        and today_open is not None
-        and today_open > 0
-    ):
-        effective_rec_price = today_open
-
-    remaining = (
-        maturity_date
-        - now_naive
-    ).days
-
-    cur_pnl = round(
-        (
-            (
-                cur_price
-                - effective_rec_price
-            )
-            / effective_rec_price
-        )
-        * 100,
-        2,
-    )
-
-    active_list.append({
-        "代码": ticker,
-        "名称": clean_text(
-            first_row.get(
-                "Name",
-                ticker,
-            ),
-            ticker,
-        ),
-        "标签": latest_tag,
-        "推荐评分": score_str,
-        "持股周期建议": hold_period_str,
-        "止损价": stop_loss_str,
-        "首次推荐日": rec_date_str,
-        "首次推荐价": effective_rec_price,
-        "今日开盘价": (
-            round(today_open, 2)
-            if is_new_today
-            and today_open is not None
-            else "N/A"
-        ),
-        "现价": cur_price,
-        "持仓天数": days_held,
-        "剩余天数": remaining,
-        "当前盈亏(%)": cur_pnl,
-        "系统连续推荐次数": len(group),
-        "今日新增": (
-            "是"
-            if is_new_today
-            else "否"
-        ),
-    })
+        cur=price_map_today.get(ticker)
+        if cur is None: continue
+        ohlc={"open":cur,"high":cur,"low":cur,"close":cur}
+    low=safe_float(ohlc.get("low")); closep=safe_float(ohlc.get("close")); openp=safe_float(ohlc.get("open"))
+    if low is None or closep is None: continue
+    old_stop=safe_float(first.get("Stop_Loss")); ctx=get_trailing_stop_context(ticker,rec_date,old_stop,today_us_str()); exec_stop=ctx.get("exec_stop") if ctx else old_stop
+    if exec_stop is not None and exec_stop>0 and low<=exec_stop:
+        exitp=openp if openp is not None and openp<exec_stop else exec_stop; pnl=round((exitp-rec_price)/rec_price*100,2)
+        stopped_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":exec_stop,"首次推荐日":rec_date_str,"首次推荐价":rec_price,"止损触发日":today_us_str(),"止损结算价":exitp,"止损盈亏(%)":pnl,"持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":len(group),"触发方式":"移动止损：前一交易日保护线","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"})
+        update_trade_history_status(ticker,rec_date_str,"Stop_Loss_Hit",exitp); continue
+    next_ctx=get_trailing_stop_context(ticker,rec_date,exec_stop,None); next_stop=next_ctx.get("exec_stop") if next_ctx else exec_stop
+    if next_stop is not None and next_stop>0: update_trade_history_trailing_stop(ticker,rec_date_str,next_stop,next_ctx or ctx or {})
+    c=next_ctx or ctx or {}; risk=[]
+    if c.get("macd_bear"): risk.append("MACD弱势")
+    if c.get("kdj_falling"): risk.append("KDJ回落")
+    days=(pd.Timestamp(today_us_str())-rec_date).days
+    active_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,"今日开盘价":openp if openp is not None else "N/A","现价":closep,"持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),"系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),"KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),"趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱","风险提示":"、".join(risk) if risk else "趋势未出现同步转弱"})
 
 
 print(
@@ -2063,7 +1762,6 @@ if missing_entry_price:
 
 if not any([
     active_list,
-    expired_list,
     stopped_list,
     option_closed_records,
 ]):
@@ -2163,8 +1861,10 @@ for item in active_list:
         "Days_Held": item["持仓天数"],
         "PnL_Pct": item["当前盈亏(%)"],
         "Maturity_PnL": "",
-        "Hold_Period": item["持股周期建议"],
+        "Hold_Period": "动态持有",
         "Stop_Loss": item["止损价"],
+        "Stop_Method": item.get("止损方法", "MA20/MA50 + ATR + MACD/KDJ"),
+        "Trail_Stop": item.get("止损价", ""),
         "Rec_Count": item["系统连续推荐次数"],
         "Status": "持仓中",
         "Score": item["推荐评分"],
@@ -2185,43 +1885,20 @@ for item in stopped_list:
         "Days_Held": item["持仓天数"],
         "PnL_Pct": item["止损盈亏(%)"],
         "Maturity_PnL": item["止损盈亏(%)"],
-        "Hold_Period": item["持股周期建议"],
+        "Hold_Period": "动态持有",
         "Stop_Loss": item["止损价"],
+        "Stop_Method": item.get("止损方法", "MA20/MA50 + ATR + MACD/KDJ"),
+        "Trail_Stop": item.get("止损价", ""),
         "Rec_Count": item["系统连续推荐次数"],
-        "Status": "止损触发清仓",
+        "Status": "移动止损清仓",
         "Score": item["推荐评分"],
         "Option_Type": "",
         "Strike": "",
         "Expiry": "",
     })
 
-for item in expired_list:
-    pnl = (
-        item["期满日盈亏(%)"]
-        if item["期满日盈亏(%)"] != "无数据"
-        else ""
-    )
+# 股票不再按固定期限生成 expired_list 新记录；仅保留历史兼容读取。
 
-    review_rows.append({
-        "Review_Date": review_date,
-        "Ticker": item["代码"],
-        "Name": item["名称"],
-        "Tag": item["标签"],
-        "Rec_Date": item["首次推荐日"],
-        "Rec_Price": item["首次推荐价"],
-        "Cur_Price": item["期满日价格"],
-        "Days_Held": item["持仓天数"],
-        "PnL_Pct": pnl,
-        "Maturity_PnL": pnl,
-        "Hold_Period": item["持股周期建议"],
-        "Stop_Loss": item["止损价"],
-        "Rec_Count": item["系统连续推荐次数"],
-        "Status": "已超期归档",
-        "Score": item["推荐评分"],
-        "Option_Type": "",
-        "Strike": "",
-        "Expiry": "",
-    })
 
 for opt in option_closed_records:
     review_rows.append({
@@ -2273,6 +1950,8 @@ client = anthropic.Anthropic(
     ),
 )
 
+active_option_snapshot = load_active_options_snapshot(price_map_today)
+
 prompt = f"""
 你是顶级量化风控总监。
 
@@ -2281,11 +1960,14 @@ prompt = f"""
 【股票持仓中】
 {active_list}
 
-【股票止损触发清仓】
+【股票因移动止损退出】
 {stopped_list}
 
-【股票已超期】
-{expired_list}
+【期权当前活跃持仓】
+{active_option_snapshot}
+
+【期权当前活跃持仓】
+{active_option_snapshot}
 
 【期权自动平仓】
 {option_closed_records}
@@ -2295,7 +1977,7 @@ prompt = f"""
 1. 高分票（80以上）若亏损，要指出高预期未兑现。
 2. 低分票（60以下）若盈利，要指出评分可能偏保守。
 3. 今日新增标的要纳入正常盈亏分析。
-4. 止损触发必须评价硬止损纪律。
+4. 移动止损触发必须评价执行纪律，并检查止损是否随趋势抬升。
 5. 期权要点评价策略有效性。
 6. 不要编造不存在的数据。
 7. 如果某只股票价格数据缺失，不要自行猜价格。
@@ -2310,23 +1992,24 @@ prompt = f"""
 <p>总结今日整体表现。</p>
 </div>
 
-<h2>持仓中 - 风控纪律核对单</h2>
+<h2>持仓中 - 动态风控核对单</h2>
+<p>股票不设置固定持仓到期日；持仓天数仅做统计，退出以移动止损和趋势破坏为准。</p>
 
 对每一只 active_list 输出：
 - 推荐日期
 - 评分
 - 系统连续推荐次数
-- 持股周期
-- 止损位
+- 动态持有状态（不设置固定到期天数）
+- 当前移动止损位及止损方法
 - 买入成本
 - 当前价格
 - 当前盈亏
-- 持仓天数
-- 剩余天数
+- 持仓天数（仅记录，不作为退出条件）
+- MA20/MA50、MACD、KDJ 状态
 - 今日新增
 - 风控动作指令
 
-<h2>止损触发清仓 - 策略复盘</h2>
+<h2>移动止损清仓 - 策略复盘</h2>
 
 说明：
 - 止损触发原因
@@ -2335,9 +2018,9 @@ prompt = f"""
 - 评分
 - 是否执行纪律
 
-<h2>已超期归档 - 策略复盘评价</h2>
+<h2>趋势转弱复盘</h2>
 
-逐只评价。
+逐只评价；不因持仓天数达到某个值而强制卖出。
 
 <h2>期权持仓风控 - 平仓复盘</h2>
 
@@ -2427,6 +2110,7 @@ if (
             "已超期归档",
             "突发清仓暂停",
             "止损触发清仓",
+            "移动止损清仓",
             "周期到期清仓",
             "期权平仓",
         }
