@@ -442,6 +442,118 @@ def get_scan_pool():
     print(f"✅ 标的池完成：{len(result)} 只")
     return result
 
+# ==================== 4.5 基本面估值 ====================
+def _safe_info_float(info, *keys):
+    for key in keys:
+        try:
+            v = info.get(key) if hasattr(info, "get") else None
+            if v is None:
+                continue
+            v = float(v)
+            if pd.notna(v):
+                return v
+        except Exception:
+            continue
+    return None
+
+
+def _fetch_fundamental_one(ticker):
+    """轻量读取估值指标；失败只返回缺失，不影响主扫描。"""
+    try:
+        info = yf.Ticker(ticker).info
+        return ticker, {
+            "PE_TTM": _safe_info_float(info, "trailingPE"),
+            "PE_Forward": _safe_info_float(info, "forwardPE"),
+            "EPS_TTM": _safe_info_float(info, "trailingEps", "epsTrailingTwelveMonths"),
+            "PB": _safe_info_float(info, "priceToBook"),
+            "EPS_Forward": _safe_info_float(info, "epsForward"),
+            "Earnings_Growth": _safe_info_float(info, "earningsGrowth"),
+        }
+    except Exception as e:
+        return ticker, {"error": str(e)}
+
+
+def enrich_pool_with_fundamentals(pool_data, limit=80):
+    """
+    在技术筛选之后补充 PE / EPS / PB。
+    只对技术面最强的一小部分调用 yfinance info，避免 Top300 逐只请求过慢。
+    """
+    if not pool_data:
+        return pool_data
+
+    ranked = sorted(pool_data, key=lambda x: x.get("技术评分", 0), reverse=True)
+    targets = ranked[:max(20, min(limit, len(ranked)))]
+    fund_map = {}
+    workers = min(10, max(4, len(targets)))
+    print(f"💰 [估值] 并行获取 {len(targets)} 只技术候选的 PE/EPS/PB...")
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(_fetch_fundamental_one, x["Ticker"]) for x in targets]
+        for future in as_completed(futures):
+            try:
+                ticker, data = future.result()
+                fund_map[ticker] = data
+            except Exception:
+                pass
+
+    # 先写入原始指标，再计算行业内相对估值评分
+    by_sector = {}
+    for item in pool_data:
+        t = item["Ticker"]
+        d = fund_map.get(t, {})
+        for k in ("PE_TTM", "PE_Forward", "EPS_TTM", "EPS_Forward", "PB", "Earnings_Growth"):
+            item[k] = d.get(k)
+        sector = _US_SECTOR_MAP.get(t, "Other")
+        by_sector.setdefault(sector, []).append(item)
+
+    for sector_items in by_sector.values():
+        pe_vals = [x["PE_Forward"] for x in sector_items if isinstance(x.get("PE_Forward"), (int,float)) and x["PE_Forward"] > 0]
+        pb_vals = [x["PB"] for x in sector_items if isinstance(x.get("PB"), (int,float)) and x["PB"] > 0]
+        pe_ttm_vals = [x["PE_TTM"] for x in sector_items if isinstance(x.get("PE_TTM"), (int,float)) and x["PE_TTM"] > 0]
+        pe_med = float(pd.Series(pe_vals).median()) if pe_vals else None
+        pb_med = float(pd.Series(pb_vals).median()) if pb_vals else None
+        pe_ttm_med = float(pd.Series(pe_ttm_vals).median()) if pe_ttm_vals else None
+
+        for item in sector_items:
+            fs = 0
+            labels = []
+            eps = item.get("EPS_TTM")
+            pe_f = item.get("PE_Forward")
+            pe_t = item.get("PE_TTM")
+            pb = item.get("PB")
+            eg = item.get("Earnings_Growth")
+
+            if isinstance(eps, (int,float)) and eps > 0:
+                fs += 5; labels.append("EPS盈利")
+            elif isinstance(eps, (int,float)) and eps < 0:
+                fs -= 4; labels.append("EPS为负")
+
+            if isinstance(pe_f, (int,float)) and pe_f > 0:
+                if pe_med is not None and pe_f <= pe_med * 1.15:
+                    fs += 5; labels.append("远期PE低于行业中枢")
+                elif pe_f <= 25:
+                    fs += 3; labels.append("远期PE尚可")
+                elif pe_f > 45:
+                    fs -= 3; labels.append("远期PE偏高")
+            
+            if isinstance(pb, (int,float)) and pb > 0:
+                if pb_med is not None and pb <= pb_med * 1.15:
+                    fs += 4; labels.append("PB低于行业中枢")
+                elif pb > 12:
+                    fs -= 2; labels.append("PB偏高")
+
+            if isinstance(pe_t, (int,float)) and pe_t > 0 and pe_t_med is not None and pe_t <= pe_ttm_med * 1.15:
+                fs += 3; labels.append("TTM PE合理")
+            if isinstance(eg, (int,float)) and eg > 0.10:
+                fs += 2; labels.append("盈利增长>10%")
+
+            item["估值评分"] = int(max(0, min(20, fs)))
+            item["估值结论"] = "、".join(labels) if labels else "估值数据不足/偏贵待核实"
+            item["综合基础评分"] = int(item.get("技术评分", 0)) + item["估值评分"]
+
+    print("✅ 估值补充完成：PE / EPS / PB 已纳入候选池")
+    return pool_data
+
+
 # ==================== 5. K线与技术指标 ====================
 def get_kline_data(ticker):
     for attempt in range(3):
@@ -1620,7 +1732,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
     pool_lines = []
     for x in pool_data:
         pool_lines.append(
-            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} | 周日共振:{'是' if x.get('周线共振') else '否'} | 技术:{x.get('技术评分',0)}/40 | 新闻:{' | '.join(x.get('个股新闻',[]))}"
+            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} | 周日共振:{'是' if x.get('周线共振') else '否'} | 技术:{x.get('技术评分',0)}/40 | 估值:{x.get('估值评分',0)}/20 | PE_TTM:{x.get('PE_TTM')} | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 估值结论:{x.get('估值结论','数据不足')} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
         )
     evolved = load_evolved_rules()
     key_people_block = str(key_people_text or "暂无重要人物讲话数据")
@@ -1678,8 +1790,10 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 5. 先从事件得到1-2个产业链主线，再选个股。
 6. 个股新闻优先于纯技术信号做排雷。
 7. RSI>70、Bias>15%、5日已大涨属于追高风险，不得无条件追涨。
-8. 过去低胜率板块只在当前同样的失败条件重新出现时降权，不允许永久封板。
-9. 高等级 Fed/Warsh 鹰派事件如果与通胀/利率数据同向，必须明确降低 Technology/Communication 等高久期资产权重；若 Materials 当前也同步大跌，则不得因为单一铜价夜盘上涨而重新推荐 Materials。
+8. 基本面估值必须参与最终排序：至少核对 PE(TTM/Forward)、EPS、PB；估值明显过高且盈利无法匹配时降权，便宜但基本面恶化时也不得仅凭低PE加分。
+9. 股票不设固定持仓天数；只要 MA20/MA50 趋势仍在、MACD/KDJ 未同步破坏且移动止损未触发，可以继续持有，避免过早卖出。
+10. 过去低胜率板块只在当前同样的失败条件重新出现时降权，不允许永久封板。
+11. 高等级 Fed/Warsh 鹰派事件如果与通胀/利率数据同向，必须明确降低 Technology/Communication 等高久期资产权重；若 Materials 当前也同步大跌，则不得因为单一铜价夜盘上涨而重新推荐 Materials。
 
 【HTML 输出格式 - 严格遵循】
 从第一个字符开始必须是HTML，不要输出任何 markdown 代码块标记（如 ```html）。
@@ -1701,7 +1815,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 <p><span class="highlight-label bg-green">📰 个股新闻核查:</span>...</p>
 <p><span class="highlight-label bg-blue">📈 技术确认:</span>...</p>
 <p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...</p>
-<p><span class="highlight-label bg-orange">⚠️ 风控底线:</span>周期:[X-Y天] | 止损:[具体价格或百分比]</p>
+<p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
 <div><h4>🎲 美股专属期权实战策略</h4><ul><li><b>建议行权价与到期日：</b>...</li><li><b>期权组合构建：</b>...</li></ul></div>
 </div>
 
@@ -1788,8 +1902,7 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
         if tag == "Observation":
             hp, sl, score = "观望", "观望", "N/A"
         else:
-            m = re.search(r'周期[\s]*[:：][\s]*\[?(\d+[-~]\d+天|\d+天)', chunk)
-            hp = m.group(1) if m else "5-10天"
+            hp = "动态持有"
             sm = re.search(r'止损[\s]*[:：][\s]*\[?(\$?\d+(?:\.\d+)?%?)', chunk)
             if sm:
                 sl = sm.group(1)
@@ -1851,9 +1964,11 @@ def _write_option_strategy_fallback(item):
     """外部期权引擎不可用时，保留原版内联逻辑写入 option_strategies.csv。"""
     try:
         opt_file = "option_strategies.csv"
-        hp = str(item.get("Hold_Period", "5-10天"))
+        # 期权到期日独立于股票持仓逻辑；股票已经改为动态持有。
+        hp = str(item.get("Hold_Period", "动态持有"))
         nums = [int(x) for x in re.findall(r"\d+", hp)]
-        max_days = max(nums) if nums else 7
+        max_days = max(nums) if nums else 45
+        max_days = max(30, min(60, max_days))
         expiry = (get_us_time() + datetime.timedelta(days=max_days)).strftime("%Y-%m-%d")
         price = float(item.get("Price", 0) or 0)
         stop = item.get("Stop_Loss", "N/A")
@@ -1881,7 +1996,7 @@ def safe_generate_option_strategy(item):
                 ticker=item["Ticker"], name=item["Name"], direction="BULLISH",
                 scan_score=item.get("Score","N/A"), scan_date=today_us_str(),
                 underlying_price=item.get("Price",0), underlying_stop=item.get("Stop_Loss","N/A"),
-                hold_period=item.get("Hold_Period","5-10天"),
+                hold_period="45天",
                 strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。", contracts=1,
             )
             if result:
@@ -1931,6 +2046,7 @@ if __name__ == "__main__":
         sys.exit(0)
 
     sector_tech_data = screen_technical_setups(pool_data)
+    pool_data = enrich_pool_with_fundamentals(pool_data, limit=80)
     pool_data = enrich_pool_with_news(pool_data)
 
     # 将 Regime Gate 硬回避行业转成 AI 明确的硬约束文字
@@ -1961,7 +2077,7 @@ if __name__ == "__main__":
         print("⚠️ AI HTML 匹配失败，启用技术评分 Fallback...")
         top_pool = sorted(
             [x for x in pool_data if x.get("技术评分", 0) > 0],
-            key=lambda x: x.get("技术评分", 0), reverse=True
+            key=lambda x: (x.get("综合基础评分", x.get("技术评分", 0)), x.get("技术评分", 0)), reverse=True
         )
         # Top 5 作为 Core_Dragon，6-10 作为 Observation
         for rank, item in enumerate(top_pool[:10], 1):
@@ -1971,8 +2087,8 @@ if __name__ == "__main__":
                 atr = copy_item.get("ATR_Pct", 5.0)
                 pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr * ATR_STOP_MULTIPLIER))
                 copy_item["Stop_Loss"] = f"${round(copy_item['Price']*(1+pct/100),2)}"
-                copy_item["Hold_Period"] = "5-10天"
-                copy_item["Score"] = str(min(100, int(copy_item.get("技术评分", 0)) + 50))
+                copy_item["Hold_Period"] = "动态持有"
+                copy_item["Score"] = str(min(100, 40 + int(copy_item.get("技术评分", 0)) + int(copy_item.get("估值评分", 0))))
                 print(f"   🔄 Fallback Core: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
             else:
                 copy_item["Tag"] = "Observation"
@@ -1990,13 +2106,13 @@ if __name__ == "__main__":
         item = dict(item)
         if item.get("Tag") == "Core_Dragon":
             if not item.get("Hold_Period") or item.get("Hold_Period") in {"观望","N/A"}:
-                item["Hold_Period"] = "5-10天"
+                item["Hold_Period"] = "动态持有"
             if not item.get("Stop_Loss") or item.get("Stop_Loss") in {"观望","N/A"}:
                 atr = item.get("ATR_Pct",5.0)
                 pct = -max(ATR_STOP_FLOOR_PCT,min(ATR_STOP_CEIL_PCT,atr*ATR_STOP_MULTIPLIER))
                 item["Stop_Loss"] = f"${round(item['Price']*(1+pct/100),2)}"
             if not item.get("Score") or item.get("Score") in {"N/A","观望"}:
-                item["Score"] = str(min(100,int(item.get("技术评分",0))+50))
+                item["Score"] = str(min(100,40 + int(item.get("技术评分",0)) + int(item.get("估值评分",0))))
         to_write.append(item)
 
     if os.path.exists(log_file) and to_write:
@@ -2013,16 +2129,17 @@ if __name__ == "__main__":
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
         header_cols = [
-            "Date","Ticker","Name","Tag","RSI","Bias","技术评分","MACD金叉","周线共振","KDJ_J回升","量能放大","Hold_Period","Stop_Loss","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振"
+            "Date","Ticker","Name","Tag","RSI","Bias","技术评分","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","MACD金叉","周线共振","KDJ_J回升","量能放大","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振"
         ]
         with open(pending_file,"w",encoding="utf-8",newline="") as f:
             f.write(",".join(header_cols)+"\n")
             for item in to_write:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
-                    item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("MACD金叉",False),
-                    item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("Hold_Period",""),
-                    item.get("Stop_Loss",""), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")),
+                    item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("估值评分",0),
+                    item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""),
+                    item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("Hold_Period","动态持有"),
+                    item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")),
                     item.get("ATR_Pct",""), item.get("周期共振",False)
                 ]
                 safe_vals = [str(v).replace(","," ").replace("\n"," ") for v in vals]
