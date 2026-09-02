@@ -32,8 +32,6 @@ from zoneinfo import ZoneInfo
 import anthropic
 import pandas as pd
 import yfinance as yf
-import pandas_ta as ta
-import pandas_ta as ta
 
 
 # ============================================================
@@ -1647,57 +1645,180 @@ if (
 # ============================================================
 # 16.5 移动止损：MA20/MA50 + ATR + MACD/KDJ
 # ============================================================
+
+def _calc_atr(df, length=14):
+    """纯 pandas 实现 ATR（Average True Range）"""
+    high = df["High"]
+    low = df["Low"]
+    close = df["Close"]
+    prev_close = close.shift(1)
+    tr1 = high - low
+    tr2 = (high - prev_close).abs()
+    tr3 = (low - prev_close).abs()
+    tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
+    atr = tr.rolling(window=length, min_periods=length).mean()
+    return atr
+
+
+def _calc_macd(close, fast=12, slow=26, signal=9):
+    """纯 pandas 实现 MACD（12,26,9）"""
+    ema_fast = close.ewm(span=fast, adjust=False).mean()
+    ema_slow = close.ewm(span=slow, adjust=False).mean()
+    macd_line = ema_fast - ema_slow
+    signal_line = macd_line.ewm(span=signal, adjust=False).mean()
+    hist = macd_line - signal_line
+    return pd.DataFrame({
+        "MACD": macd_line,
+        "MACD_SIGNAL": signal_line,
+        "MACD_HIST": hist,
+    })
+
+
+def _calc_kdj(df, n=9):
+    """纯 pandas/NumPy 实现 KDJ（K, D, J）"""
+    h = df["High"].to_numpy(float)
+    l = df["Low"].to_numpy(float)
+    c = df["Close"].to_numpy(float)
+    K = 50.0
+    D = 50.0
+    ks = []
+    ds = []
+    js = []
+    for i in range(len(c)):
+        if i < n - 1:
+            ks.append(K)
+            ds.append(D)
+            js.append(3 * K - 2 * D)
+            continue
+        h_n = h[max(0, i - n + 1):i + 1].max()
+        l_n = l[max(0, i - n + 1):i + 1].min()
+        rsv = (c[i] - l_n) / (h_n - l_n + 1e-9) * 100 if (h_n - l_n) != 0 else 50.0
+        K = 2 / 3 * K + 1 / 3 * rsv
+        D = 2 / 3 * D + 1 / 3 * K
+        ks.append(K)
+        ds.append(D)
+        js.append(3 * K - 2 * D)
+    return pd.DataFrame({"K": ks, "D": ds, "J": js}, index=df.index)
+
+
 def get_trailing_stop_context(ticker, entry_date=None, current_stop=None, before_date=None):
     try:
-        hist=yf.download(ticker,period="6mo",progress=False,auto_adjust=True,threads=False)
-        if hist is None or hist.empty: return None
-        if isinstance(hist.columns,pd.MultiIndex): hist.columns=hist.columns.get_level_values(0)
-        hist=hist.dropna(subset=["Open","High","Low","Close"]).copy(); hist.index=pd.to_datetime(hist.index).tz_localize(None)
-        if entry_date is not None: hist=hist[hist.index>=pd.Timestamp(entry_date)]
-        if len(hist)<35: return None
-        ref=pd.Timestamp(before_date).normalize() if before_date is not None else hist.index[-1]
-        d=hist[hist.index<ref].copy()
-        if d.empty: return None
-        d["MA20"]=ta.sma(d["Close"],length=20); d["MA50"]=ta.sma(d["Close"],length=50); d["ATR14"]=ta.atr(d["High"],d["Low"],d["Close"],length=14)
-        m=ta.macd(d["Close"])
-        if m is not None and not m.empty: d["MACD"]=m.iloc[:,0]; d["MACD_SIGNAL"]=m.iloc[:,2]; d["MACD_HIST"]=m.iloc[:,1]
-        else: d["MACD"]=d["MACD_SIGNAL"]=d["MACD_HIST"]=float("nan")
-        h=d["High"].to_numpy(float); l=d["Low"].to_numpy(float); c=d["Close"].to_numpy(float); K=D=50.0; js=[]
-        for i in range(len(c)):
-            if i<8: js.append(3*K-2*D); continue
-            h9=max(h[i-8:i+1]); l9=min(l[i-8:i+1]); rsv=(c[i]-l9)/(h9-l9+1e-9)*100; K=2/3*K+1/3*rsv; D=2/3*D+1/3*K; js.append(3*K-2*D)
-        d["KDJ_J"]=js; r=d.iloc[-1]; close=float(r["Close"]); atr=float(r["ATR14"]) if pd.notna(r["ATR14"]) else close*0.05
-        ma20=float(r["MA20"]) if pd.notna(r["MA20"]) else close; ma50=float(r["MA50"]) if pd.notna(r["MA50"]) else ma20; pct=max(0.03,min(0.12,2*atr/max(close,1e-9)));
-        candidate=max(close*(1-pct),ma20-atr,ma50-1.5*atr)
-        macd_bear=bool(pd.notna(r["MACD"]) and pd.notna(r["MACD_SIGNAL"]) and float(r["MACD"])<float(r["MACD_SIGNAL"])); kdj_falling=bool(len(d)>=2 and float(d["KDJ_J"].iloc[-1])<float(d["KDJ_J"].iloc[-2]))
-        if macd_bear and kdj_falling: candidate=max(candidate,close-1.5*atr)
-        candidate=min(candidate,close*0.98); old=safe_float(current_stop)
-        if old and old>0: candidate=max(old,candidate)
-        return {"exec_stop":round(candidate,2),"ma20":round(ma20,2),"ma50":round(ma50,2),"atr_pct":round(atr/close*100,2) if close else None,"macd_hist":round(float(r["MACD_HIST"]),4) if pd.notna(r["MACD_HIST"]) else None,"macd_bear":macd_bear,"kdj_j":round(float(r["KDJ_J"]),2),"kdj_falling":kdj_falling,"trend_ok":bool(close>=ma20 and ma20>=ma50)}
+        hist = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
+        if hist is None or hist.empty:
+            return None
+        if isinstance(hist.columns, pd.MultiIndex):
+            hist.columns = hist.columns.get_level_values(0)
+        hist = hist.dropna(subset=["Open", "High", "Low", "Close"]).copy()
+        hist.index = pd.to_datetime(hist.index).tz_localize(None)
+        if entry_date is not None:
+            hist = hist[hist.index >= pd.Timestamp(entry_date)]
+        if len(hist) < 35:
+            return None
+
+        ref = pd.Timestamp(before_date).normalize() if before_date is not None else hist.index[-1]
+        d = hist[hist.index < ref].copy()
+        if d.empty:
+            return None
+
+        # 纯 pandas 指标计算
+        d["MA20"] = d["Close"].rolling(window=20, min_periods=20).mean()
+        d["MA50"] = d["Close"].rolling(window=50, min_periods=50).mean()
+        d["ATR14"] = _calc_atr(d, length=14)
+
+        macd_df = _calc_macd(d["Close"])
+        d["MACD"] = macd_df["MACD"]
+        d["MACD_SIGNAL"] = macd_df["MACD_SIGNAL"]
+        d["MACD_HIST"] = macd_df["MACD_HIST"]
+
+        kdj_df = _calc_kdj(d, n=9)
+        d["KDJ_J"] = kdj_df["J"]
+
+        r = d.iloc[-1]
+        close = float(r["Close"])
+        atr = float(r["ATR14"]) if pd.notna(r["ATR14"]) else close * 0.05
+        ma20 = float(r["MA20"]) if pd.notna(r["MA20"]) else close
+        ma50 = float(r["MA50"]) if pd.notna(r["MA50"]) else ma20
+        pct = max(0.03, min(0.12, 2 * atr / max(close, 1e-9)))
+        candidate = max(close * (1 - pct), ma20 - atr, ma50 - 1.5 * atr)
+
+        macd_bear = bool(
+            pd.notna(r["MACD"]) and pd.notna(r["MACD_SIGNAL"]) and float(r["MACD"]) < float(r["MACD_SIGNAL"])
+        )
+        kdj_falling = bool(
+            len(d) >= 2 and float(d["KDJ_J"].iloc[-1]) < float(d["KDJ_J"].iloc[-2])
+        )
+
+        if macd_bear and kdj_falling:
+            candidate = max(candidate, close - 1.5 * atr)
+
+        candidate = min(candidate, close * 0.98)
+        old = safe_float(current_stop)
+        if old and old > 0:
+            candidate = max(old, candidate)
+
+        return {
+            "exec_stop": round(candidate, 2),
+            "ma20": round(ma20, 2),
+            "ma50": round(ma50, 2),
+            "atr_pct": round(atr / close * 100, 2) if close else None,
+            "macd_hist": round(float(r["MACD_HIST"]), 4) if pd.notna(r["MACD_HIST"]) else None,
+            "macd_bear": macd_bear,
+            "kdj_j": round(float(r["KDJ_J"]), 2),
+            "kdj_falling": kdj_falling,
+            "trend_ok": bool(close >= ma20 and ma20 >= ma50),
+        }
     except Exception as e:
-        print(f"⚠️ 移动止损计算失败 {ticker}: {e}"); return None
+        print(f"⚠️ 移动止损计算失败 {ticker}: {e}")
+        return None
 
 
-def update_trade_history_trailing_stop(ticker,buy_date,stop_price,ctx):
-    if not os.path.exists(TRADE_HISTORY): return
+def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
+    if not os.path.exists(TRADE_HISTORY):
+        return
     try:
-        d=pd.read_csv(TRADE_HISTORY,dtype=str,keep_default_na=False)
-        for col in ["Stop_Loss","Stop_Method","Trail_Stop","MA20","MA50","ATR_Pct"]:
-            if col not in d.columns: d[col]=""
-        dates=pd.to_datetime(d["Date"],errors="coerce"); mask=(d["Ticker"].astype(str).str.upper()==str(ticker).upper())&(dates.dt.strftime("%Y-%m-%d")==str(buy_date))&(d["Status"].astype(str).str.strip()=="Active")
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
+        for col in ["Stop_Loss", "Stop_Method", "Trail_Stop", "MA20", "MA50", "ATR_Pct"]:
+            if col not in d.columns:
+                d[col] = ""
+        dates = pd.to_datetime(d["Date"], errors="coerce")
+        mask = (
+            (d["Ticker"].astype(str).str.upper() == str(ticker).upper())
+            & (dates.dt.strftime("%Y-%m-%d") == str(buy_date))
+            & (d["Status"].astype(str).str.strip() == "Active")
+        )
         if mask.any():
-            d.loc[mask,"Stop_Loss"]=str(stop_price); d.loc[mask,"Trail_Stop"]=str(stop_price); d.loc[mask,"Stop_Method"]="MA20/MA50 + ATR + MACD/KDJ"; d.loc[mask,"MA20"]=str(ctx.get("ma20","")); d.loc[mask,"MA50"]=str(ctx.get("ma50","")); d.loc[mask,"ATR_Pct"]=str(ctx.get("atr_pct","")); d.to_csv(TRADE_HISTORY,index=False,encoding="utf-8")
-    except Exception as e: print(f"⚠️ 更新移动止损失败 {ticker}: {e}")
+            d.loc[mask, "Stop_Loss"] = str(stop_price)
+            d.loc[mask, "Trail_Stop"] = str(stop_price)
+            d.loc[mask, "Stop_Method"] = "MA20/MA50 + ATR + MACD/KDJ"
+            d.loc[mask, "MA20"] = str(ctx.get("ma20", ""))
+            d.loc[mask, "MA50"] = str(ctx.get("ma50", ""))
+            d.loc[mask, "ATR_Pct"] = str(ctx.get("atr_pct", ""))
+            d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
+    except Exception as e:
+        print(f"⚠️ 更新移动止损失败 {ticker}: {e}")
 
 
 def load_active_options_snapshot(price_map):
-    d=load_option_positions()
-    if d.empty: return []
-    out=[]
-    for _,r in d.iterrows():
-        t=resolve_ticker(r.get("Ticker")); cur=price_map.get(t)
-        if cur is None: _,cur=get_live_quote_bootstrap(t)
-        out.append({"ticker":t,"option_type":clean_text(r.get("OptionType")).upper(),"strike":safe_float(r.get("Strike")),"expiry":clean_text(r.get("Expiry")),"entry_price":safe_float(r.get("EntryPrice")),"current_underlying":cur,"quantity":safe_float(r.get("Quantity"),1),"stop_loss":clean_text(r.get("StopLoss")),"reason":clean_text(r.get("Reason"))})
+    d = load_option_positions()
+    if d.empty:
+        return []
+    out = []
+    for _, r in d.iterrows():
+        t = resolve_ticker(r.get("Ticker"))
+        cur = price_map.get(t)
+        if cur is None:
+            _, cur = get_live_quote_bootstrap(t)
+        out.append({
+            "ticker": t,
+            "option_type": clean_text(r.get("OptionType")).upper(),
+            "strike": safe_float(r.get("Strike")),
+            "expiry": clean_text(r.get("Expiry")),
+            "entry_price": safe_float(r.get("EntryPrice")),
+            "current_underlying": cur,
+            "quantity": safe_float(r.get("Quantity"), 1),
+            "stop_loss": clean_text(r.get("StopLoss")),
+            "reason": clean_text(r.get("Reason")),
+        })
     return out
 
 # ============================================================
