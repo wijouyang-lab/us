@@ -1,0 +1,7 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-02,USB,U.S. Bancorp,Observation,37.8,-3.56,0,0,None,None,None,None,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,61.21,1.76,False
+2026-09-02,SO,Southern Company,Observation,31.5,-3.11,6,19,21.226505,17.88724,4.15,2.5609047,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,88.09,1.75,False
+2026-09-02,ADM,Archer Daniels Midland,Observation,62.0,5.94,6,19,23.101093,14.858881,3.66,1.7287914,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,84.55,3.11,False
+2026-09-02,DG,Dollar General,Observation,64.2,5.83,5,19,17.046814,15.88962,7.69,3.1135547,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,131.09,3.21,False
+2026-09-02,DUK,Duke Energy,Observation,41.3,-1.49,18,19,18.10376,16.785364,6.65,1.7461492,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,120.39,1.67,False
+2026-09-02,EVRG,Evergy,Observation,43.2,-0.91,19,19,20.743002,17.857494,3.93,1.8385204,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,81.52,1.66,False
