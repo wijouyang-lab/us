@@ -541,7 +541,7 @@ def enrich_pool_with_fundamentals(pool_data, limit=80):
                 elif pb > 12:
                     fs -= 2; labels.append("PB偏高")
 
-            if isinstance(pe_t, (int,float)) and pe_t > 0 and pe_t_med is not None and pe_t <= pe_ttm_med * 1.15:
+            if isinstance(pe_t, (int,float)) and pe_t > 0 and pe_ttm_med is not None and pe_t <= pe_ttm_med * 1.15:
                 fs += 3; labels.append("TTM PE合理")
             if isinstance(eg, (int,float)) and eg > 0.10:
                 fs += 2; labels.append("盈利增长>10%")
