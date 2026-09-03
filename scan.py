@@ -2,7 +2,7 @@
 """
 美股盘前扫描引擎（完整 Regime Gate 版）
 - 保留 Top300 / 日线+周线 / MACD / RSI / KDJ / ATR
-- 基于完整美股 scan 原版结构改造，不删除原有 pending / review / option / portfolio 功能
+- 基于完整美股 scan 原版结构改造，不删除原有 pending / review / portfolio 功能
 - 保留宏观新闻、Mega-Cap 新闻、重要人物讲话、结构化美国经济数据、全球大宗、板块 ETF、个股新闻
 - 保留跨市场 AVOID / BUY_DIP / POSITIVE_CATALYST / ROTATION / CONTRARIAN
 - 新增：事件驱动 Regime Gate
@@ -10,7 +10,7 @@
 - 新增：重要人物讲话 + 结构化 CPI/PCE/失业率/政策利率作为 Regime 证据层
 - 新增：当前行业价格确认，避免“周线共振但行业正在崩”仍然进入 Top5
 - 历史进化规则改为条件化参考，不把过去低胜率板块永久封禁
-- 保留 pending / trade_history / option_strategies / review.py 联动
+- 保留 pending / trade_history / review.py 联动
 """
 
 import faulthandler
@@ -42,11 +42,6 @@ import pandas_ta as ta
 import requests
 import yfinance as yf
 
-# 可选：已有期权引擎存在时使用；不存在时仍允许股票 Scan 正常运行
-try:
-    from scan_us_option_engine import append_option_strategy
-except Exception:
-    append_option_strategy = None
 
 # ==================== 环境检查 ====================
 TARGET_MODEL = "claude-opus-4-8"
@@ -1623,6 +1618,26 @@ def get_stop_loss_hit_warning():
         return ""
 
 # ==================== 12. 盘前持仓审查 ====================
+
+def get_review_risk_linkage_warning():
+    """读取Review写回的风控状态；STOP_TRIGGERED禁止重新推荐，STOP_NEAR强提醒并降权。"""
+    path="trade_history.csv"
+    if not os.path.exists(path) or os.path.getsize(path)==0: return "", set(), set()
+    try: df=pd.read_csv(path, keep_default_na=False)
+    except Exception as e:
+        print(f"⚠️ 读取 Review 风控联动失败: {e}"); return "", set(), set()
+    if not {"Ticker","Status","Review_Risk_Status"}.issubset(df.columns): return "", set(), set()
+    active=df[df["Status"].astype(str).str.strip().eq("Active")].copy()
+    triggered, near, lines=set(), set(), []
+    if active.empty: return "", triggered, near
+    for t,g in active.groupby("Ticker"):
+        r=g.iloc[-1]; st=str(r.get("Review_Risk_Status","")).strip(); note=str(r.get("Review_Risk_Note","")).strip()
+        if st=="STOP_TRIGGERED":
+            triggered.add(str(t).strip()); lines.append(f"🚨 {t}: Review=STOP_TRIGGERED，今日禁止重新推荐。{note}")
+        elif st=="STOP_NEAR":
+            near.add(str(t).strip()); lines.append(f"⚠️ {t}: Review=STOP_NEAR，今日Scan强提醒并降权。{note}")
+    return "\n".join(lines), triggered, near
+
 def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     path = "trade_history.csv"
     if not os.path.exists(path) or os.path.getsize(path) == 0:
@@ -1739,6 +1754,8 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
     economic_block = str(economic_text or "暂无结构化美国经济数据")
     stop_warn = get_stop_loss_hit_warning()
     dropped_text = ""
+    if review_risk_text:
+        dropped_text += "\n【Review→Scan 风控联动】\n" + review_risk_text
     if dropped_info:
         dropped_text = "\n⚠️ 今日已因当前真实风险 Dropped：" + ", ".join(dropped_info)
 
@@ -1779,7 +1796,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 {stop_warn}
 {dropped_text}
 
-【成交活跃 Top300 候选池】
+【STOP_NEAR 标的必须降权】\n{', '.join(sorted(review_near)) or '无'}\n\n【成交活跃 Top300 候选池】
 {'\n'.join(pool_lines)}
 
 【强制决策顺序】
@@ -1816,7 +1833,6 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 <p><span class="highlight-label bg-blue">📈 技术确认:</span>...</p>
 <p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
-<div><h4>🎲 美股专属期权实战策略</h4><ul><li><b>建议行权价与到期日：</b>...</li><li><b>期权组合构建：</b>...</li></ul></div>
 </div>
 
 <!-- 重复上述 div 结构至第5只，确保每只都有 class="top-card core-card" -->
@@ -1959,52 +1975,6 @@ def build_full_email_html(ai_html):
     """
     return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
-# ==================== 17. 期权策略 ====================
-def _write_option_strategy_fallback(item):
-    """外部期权引擎不可用时，保留原版内联逻辑写入 option_strategies.csv。"""
-    try:
-        opt_file = "option_strategies.csv"
-        # 期权到期日独立于股票持仓逻辑；股票已经改为动态持有。
-        hp = str(item.get("Hold_Period", "动态持有"))
-        nums = [int(x) for x in re.findall(r"\d+", hp)]
-        max_days = max(nums) if nums else 45
-        max_days = max(30, min(60, max_days))
-        expiry = (get_us_time() + datetime.timedelta(days=max_days)).strftime("%Y-%m-%d")
-        price = float(item.get("Price", 0) or 0)
-        stop = item.get("Stop_Loss", "N/A")
-        strike = round(price * 1.05, 2)
-        entry_price = round(strike * 0.02, 2)
-        header = "Ticker,OptionType,Strike,Expiry,EntryPrice,Status,EntryDate,Quantity,Direction,UnderlyingPrice,StopLoss,HoldPeriod,Reason,ScanScore\n"
-        need_header = (not os.path.exists(opt_file)) or os.path.getsize(opt_file) == 0
-        with open(opt_file, "a", encoding="utf-8", newline="") as f:
-            if need_header:
-                f.write(header)
-            reason = "美股 scan 核心精选：事件/Regime/技术共振，偏多。"
-            safe_reason = reason.replace(",", "；")
-            f.write(f"{item.get('Ticker','')},CALL,{strike},{expiry},{entry_price},Active,{today_us_str()},1,BULLISH,{price},{stop},{hp},{safe_reason},{item.get('Score','N/A')}\n")
-        print(f"📝 [期权备用] {item.get('Ticker','')} CALL {strike} @ {expiry}")
-        return True
-    except Exception as e:
-        print(f"⚠️ {item.get('Ticker','')} 期权备用策略失败：{e}")
-        return False
-
-
-def safe_generate_option_strategy(item):
-    if append_option_strategy is not None:
-        try:
-            result = append_option_strategy(
-                ticker=item["Ticker"], name=item["Name"], direction="BULLISH",
-                scan_score=item.get("Score","N/A"), scan_date=today_us_str(),
-                underlying_price=item.get("Price",0), underlying_stop=item.get("Stop_Loss","N/A"),
-                hold_period="45天",
-                strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。", contracts=1,
-            )
-            if result:
-                return True
-        except Exception as e:
-            print(f"⚠️ {item.get('Ticker','')} 外部期权引擎失败，切换内联备用：{e}")
-    return _write_option_strategy_fallback(item)
-
 # ==================== 主程序 ====================
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
@@ -2037,6 +2007,8 @@ if __name__ == "__main__":
     market_signal_text = signal_block[0] if signal_block else ""
 
     restricted_tickers, dropped_info, current_prices = pre_scan_portfolio_review(combined_news, macro_market)
+    review_risk_text, review_triggered, review_near = get_review_risk_linkage_warning()
+    restricted_tickers = set(restricted_tickers) | set(review_triggered)
     raw_tickers = get_scan_pool()
     pool_tickers = {t:n for t,n in raw_tickers.items() if t not in restricted_tickers}
     pool_data = build_stock_pool(pool_tickers)
@@ -2058,9 +2030,9 @@ if __name__ == "__main__":
         combined_news,
         macro_market,
         dropped_info,
-        gate_text,
+        sector_text,
         sector_tech_data,
-        gate_text,
+        event_regime_text,
         event_regime,
         market_signal_text,
         key_people_news,
@@ -2146,11 +2118,6 @@ if __name__ == "__main__":
                 f.write(",".join(safe_vals)+"\n")
         print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
 
-        option_created = 0
-        for item in to_write:
-            if item.get("Tag") == "Core_Dragon" and safe_generate_option_strategy(item):
-                option_created += 1
-        print(f"🎯 Scan→Option 联动：{option_created} 笔")
     else:
         print("⚠️ 今日没有新增可入账推荐")
 
