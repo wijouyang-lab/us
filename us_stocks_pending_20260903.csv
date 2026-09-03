@@ -1,0 +1,7 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-03,TFC,Truist Financial,Observation,49.3,-0.73,18,19,11.68046,10.207813,4.35,1.0577043,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,50.81,1.94,False
+2026-09-03,FITB,Fifth Third Bancorp,Observation,41.5,-2.63,21,17,17.836067,11.013461,3.05,1.526846,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,54.4,2.04,False
+2026-09-03,OKE,Oneok,Observation,60.9,2.71,13,17,16.582039,15.379884,5.79,2.6385796,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,96.01,2.63,False
+2026-09-03,CHTR,Charter Communications,Observation,58.3,4.46,35,19,3.80402,3.6045403,41.79,1.1185461,False,True,True,True,观望,观望,ATR初始保护,N/A,pending,158.97,4.79,False
+2026-09-03,MET,MetLife,Observation,54.7,0.07,17,17,18.471264,8.8314495,5.22,2.2408664,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,96.42,1.88,False
+2026-09-03,SYF,Synchrony Financial,Observation,51.3,-0.91,17,17,7.8547096,7.458504,9.98,1.6781195,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,78.39,2.65,False
