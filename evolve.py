@@ -4,7 +4,6 @@
 
 真正的进化闭环（与 A股版完全对等）：
   trade_history.csv → 多维度绩效分析 → AI识别规律
-  option_strategies.csv → 期权绩效分析 → 补充策略评估
   → evolved_rules.json → scan.py 注入 prompt → 更好的选股
 """
 
@@ -16,7 +15,6 @@ import datetime
 
 EVOLVE_MODEL   = "claude-opus-4-8"
 HISTORY_FILE   = "trade_history.csv"
-OPTION_FILE    = "option_strategies.csv"   # 【新增】期权账本
 EVOLVE_LOG     = "strategy_evolution.json"
 EVOLVED_RULES  = "evolved_rules.json"
 
@@ -30,7 +28,7 @@ SCORE_COL  = "Score"
 
 
 # ============================================================
-# 1. 多维度绩效指标计算（含期权）
+# 1. 多维度绩效指标计算（股票）
 # ============================================================
 def safe_float(val, default=None):
     try:
@@ -102,62 +100,6 @@ def _segment_by_generation(df_c, boundaries):
         elif len(seg) > 0:
             since_last = {"样本数": int(len(seg)), "提示": "样本数不足2笔，暂不单独计算胜率"}
     return segments, since_last
-
-
-def load_option_metrics():
-    """
-    【新增】读取期权账本，计算期权策略绩效指标。
-    用于补充策略进化引擎的评估维度。
-    """
-    if not os.path.exists(OPTION_FILE):
-        return None
-    try:
-        df_opt = pd.read_csv(OPTION_FILE, keep_default_na=False)
-        # 筛选已平仓的期权（Status == 'Closed'）
-        closed = df_opt[df_opt.get('Status', '') == 'Closed'].copy()
-        if closed.empty:
-            return None
-
-        # 确保 PnL 列存在且为数值
-        if 'PnL' not in closed.columns:
-            return None
-
-        # 转换盈亏为数值
-        closed['PnL_num'] = pd.to_numeric(closed['PnL'], errors='coerce')
-        closed = closed.dropna(subset=['PnL_num'])
-        if closed.empty:
-            return None
-
-        total = len(closed)
-        wins = (closed['PnL_num'] > 0).sum()
-        win_rate = round(wins / total * 100, 1)
-        avg_pnl = round(closed['PnL_num'].mean(), 2)
-        total_pnl = round(closed['PnL_num'].sum(), 2)
-        best = closed.loc[closed['PnL_num'].idxmax()] if total > 0 else None
-        worst = closed.loc[closed['PnL_num'].idxmin()] if total > 0 else None
-
-        # 按期权类型拆分（CALL vs PUT）
-        type_stats = {}
-        for opt_type, grp in closed.groupby('OptionType'):
-            if len(grp) >= 2:
-                type_stats[opt_type] = {
-                    "样本数": len(grp),
-                    "胜率": round((grp['PnL_num'] > 0).sum() / len(grp) * 100, 1),
-                    "平均盈亏": round(grp['PnL_num'].mean(), 2),
-                }
-
-        return {
-            "total_closed": total,
-            "win_rate": win_rate,
-            "avg_pnl": avg_pnl,
-            "total_pnl": total_pnl,
-            "best_trade": f"{best['Ticker']} {best.get('OptionType','')} {best.get('Strike','')} +{best['PnL_num']:.2f}" if best is not None else "无",
-            "worst_trade": f"{worst['Ticker']} {worst.get('OptionType','')} {worst.get('Strike','')} {worst['PnL_num']:.2f}" if worst is not None else "无",
-            "type_stats": type_stats,
-        }
-    except Exception as e:
-        print(f"⚠️ 读取期权账本失败: {e}")
-        return None
 
 
 def calculate_metrics(df: pd.DataFrame) -> dict | None:
@@ -296,11 +238,6 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
     generation_boundaries = _load_evolution_boundaries()
     generation_stats, since_last_evolution = _segment_by_generation(df_c, generation_boundaries)
 
-    # ========== 【新增】加载期权指标 ==========
-    option_metrics = load_option_metrics()
-    if option_metrics:
-        print(f"📊 期权策略绩效：已平仓 {option_metrics['total_closed']} 笔，胜率 {option_metrics['win_rate']}%，总盈亏 ${option_metrics['total_pnl']:.2f}")
-
     return {
         "total_closed":       total,
         "overall_win_rate":   wr,
@@ -317,12 +254,11 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         "active_count":       len(active),
         "active_summary":     active_summary[:10],
         "prev_rules":         prev_rules,
-        "option_metrics":     option_metrics,   # 【新增】
     }
 
 
 # ============================================================
-# 2. AI 分析 + 生成规则补丁（已包含期权数据）
+# 2. AI 分析 + 生成规则补丁（已包股票数据）
 # ============================================================
 def evolve_strategy(metrics: dict):
     print(f"🧬 启动策略进化引擎（{EVOLVE_MODEL}）...")
@@ -331,20 +267,7 @@ def evolve_strategy(metrics: dict):
         base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
     )
 
-    # 【新增】期权绩效文本
-    option_text = "无期权数据（尚未平仓或 option_strategies.csv 不存在）"
-    if metrics.get("option_metrics"):
-        opt = metrics["option_metrics"]
-        option_text = f"""
-【期权策略绩效】（独立于股票持仓，用于评估期权附加策略的有效性）：
-- 已平仓期权：{opt['total_closed']} 笔
-- 期权胜率：{opt['win_rate']}%
-- 平均盈亏：${opt['avg_pnl']}
-- 总盈亏：${opt['total_pnl']}
-- 最佳：{opt['best_trade']}
-- 最差：{opt['worst_trade']}
-- 按类型拆分（CALL/PUT）：{json.dumps(opt.get('type_stats', {}), ensure_ascii=False, indent=2)}
-"""
+
 
     prompt = f"""
 你是一个美股量化策略进化系统。根据以下交易绩效数据，生成具体可执行的选股规则补丁。
@@ -354,7 +277,7 @@ def evolve_strategy(metrics: dict):
 - 最佳：{metrics['best_trade']} | 最差：{metrics['worst_trade']}
 - 当前持仓：{metrics['active_count']} 只
 
-{option_text}
+
 
 【按进化世代拆分股票胜率】（重点看这个，而不是上面混合了所有历史的总胜率——
 能看出每一轮规则调整之后胜率到底是变好还是变差了）：
@@ -370,8 +293,6 @@ def evolve_strategy(metrics: dict):
 {json.dumps(metrics['tech_score_stats'], ensure_ascii=False, indent=2)}
 
 【按ATR波动率分层胜率】（验证止损从固定-5%改成ATR动态算这个改动有没有用——如果
-高波动分层的胜率明显提升，说明方向正确；同时结合期权胜率看，高波动股票对应的期权
-是否也表现更好，还是期权被波动率吞噬了）：
 {json.dumps(metrics['atr_stats'], ensure_ascii=False, indent=2) if metrics['atr_stats'] else "样本不足或还没有ATR数据的已平仓记录"}
 
 【技术信号有效性分析】（判断MACD金叉/周线共振等信号是否真的有效）：
@@ -389,14 +310,10 @@ def evolve_strategy(metrics: dict):
 1. 如果高技术评分（30-40分）的胜率 < 低技术评分（0-9分），说明技术面权重过高（40分），需要降低
 2. 如果MACD金叉=是的胜率远高于=否，说明金叉信号有效，应该提高MACD金叉的推荐权重
 3. 如果止损触发次数多且亏损较大，说明止损位设得太紧，建议适当放宽
-4. 【新增】结合期权绩效分析：
-   - 如果期权总盈亏为负但股票胜率尚可，说明期权策略（行权价/到期日选择）存在缺陷，应调整期权生成逻辑
-   - 如果高波动股票的期权胜率明显低于低波动股票，应建议 scan.py 对高波动股票使用更保守的期权参数
    - 如果 CALL 和 PUT 的胜率差异显著，应建议扫描器优先选择胜率更高的方向
 
 必须只返回以下 JSON，不要输出其他文字：
 {{
-    "assessment": "总体策略表现评估（3句话以内，要有数据，如涉及期权需一并评价）",
     "key_findings": [
         "发现1（数据支撑）",
         "发现2",
@@ -406,14 +323,13 @@ def evolve_strategy(metrics: dict):
     "applied_rules": [
         {{
             "rule_id": "rule_{datetime.date.today().strftime('%Y%m%d')}_001",
-            "type": "TECH_WEIGHT_ADJUST 或 SIGNAL_BOOST 或 STOPLOSS_ADJUST 或 HOLD_PERIOD_ADJUST 或 OPTION_ADJUST 或 CONDITION_ADD 或 CONDITION_REMOVE",
+            "type": "TECH_WEIGHT_ADJUST 或 SIGNAL_BOOST 或 STOPLOSS_ADJUST 或 HOLD_PERIOD_ADJUST 或 CONDITION_ADD 或 CONDITION_REMOVE",
             "description": "规则说明",
             "prompt_patch": "注入 scan.py AI prompt 的具体文字（可执行，如：'历史数据显示MACD金叉标的胜率达71%，当出现MACD金叉信号时，消息面评分可适当上浮5-8分'）",
             "evidence": "支撑数据",
             "expires_after_trades": 20
         }}
     ],
-    "next_focus": "下一轮进化应重点观察什么（如涉及期权也需说明）"
 }}
 """
 
@@ -471,7 +387,6 @@ def evolve_strategy(metrics: dict):
             "total_closed_at_update":  total_now,
             "overall_win_rate":        metrics["overall_win_rate"],
             "recent_win_rate":         metrics.get("since_last_evolution"),
-            "option_win_rate":         metrics.get("option_metrics", {}).get("win_rate") if metrics.get("option_metrics") else None,
             "active_rules":            deduped,
             "prompt_patches":          [r["prompt_patch"] for r in deduped],
         }
@@ -528,9 +443,6 @@ if __name__ == "__main__":
     print(f"\n📊 绩效概览：")
     print(f"  已平仓股票 {metrics['total_closed']} 笔 | 总体胜率(全部历史) {metrics['overall_win_rate']}% | 平均盈亏 {metrics['avg_pnl_pct']}%")
     print(f"  当前持仓 {metrics['active_count']} 只")
-    if metrics.get("option_metrics"):
-        opt = metrics["option_metrics"]
-        print(f"  期权已平仓 {opt['total_closed']} 笔 | 期权胜率 {opt['win_rate']}% | 总盈亏 ${opt['total_pnl']:.2f}")
     if metrics["generation_stats"]:
         print(f"  按进化世代拆分：{metrics['generation_stats']}")
     if metrics["since_last_evolution"]:
