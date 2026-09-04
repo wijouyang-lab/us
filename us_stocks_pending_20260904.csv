@@ -1,0 +1,8 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-04,RTX,RTX Corporation,Observation,36.8,-5.86,18,19,35.337414,25.729837,5.72,4.1041627,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,202.13,2.24,False
+2026-09-04,XEL,Xcel Energy,Observation,42.3,-1.59,15,19,20.915068,16.805574,3.65,1.981416,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,76.34,1.81,False
+2026-09-04,PSX,Phillips 66,Observation,74.8,7.21,0,0,None,None,None,None,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,254.66,2.72,False
+2026-09-04,EVRG,Evergy,Observation,47.8,-0.14,21,19,20.585426,17.947308,3.98,1.8477672,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,81.93,1.66,False
+2026-09-04,MPC,Marathon Petroleum,Observation,77.9,8.38,5,0,None,None,None,None,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,387.71,2.82,False
+2026-09-04,TEL,TE Connectivity,Observation,53.5,0.78,27,15,20.490215,16.225698,10.22,4.5837803,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,209.41,3.0,False
+2026-09-04,AMT,American Tower,Observation,56.5,1.94,34,19,23.795181,25.35649,7.47,22.266066,True,True,True,False,观望,观望,ATR初始保护,N/A,pending,177.75,2.38,False
