@@ -472,6 +472,31 @@ def download_ohlc_safe(tickers, period="60d", start=None, end=None):
     return df_all, latest_map
 
 
+def get_exact_date_ohlc(df_hist, ticker, target_date):
+    """严格获取指定交易日的OHLC；禁止用 <= target_date 的上一交易日冒充目标日。"""
+    try:
+        if df_hist is None or df_hist.empty:
+            return None
+        target = pd.Timestamp(target_date).normalize()
+        sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
+        if sub.empty:
+            return None
+        dates = pd.to_datetime(sub["Date"], errors="coerce")
+        exact = sub.loc[dates.dt.normalize() == target].copy()
+        if exact.empty:
+            return None
+        exact = exact.sort_values("Date")
+        r = exact.iloc[-1]
+        return {
+            "open": safe_float(r.get("open")),
+            "high": safe_float(r.get("high")),
+            "low": safe_float(r.get("low")),
+            "close": safe_float(r.get("close")),
+        }
+    except Exception:
+        return None
+
+
 def get_live_quote_bootstrap(ticker):
     """
     单 ticker 实时/最近价格兜底。
@@ -771,23 +796,9 @@ def supplement_us_stocks_from_pending():
                 )
 
                 for ticker in real_tickers:
-                    sub = df_hist[
-                        (df_hist["Ticker"] == ticker)
-                        & (df_hist["Date"] <= target_dt)
-                    ].copy()
-
-                    if sub.empty:
-                        continue
-
-                    sub = sub.sort_values("Date")
-                    r = sub.iloc[-1]
-
-                    historical_target[ticker] = {
-                        "open": safe_float(r.get("open")),
-                        "high": safe_float(r.get("high")),
-                        "low": safe_float(r.get("low")),
-                        "close": safe_float(r.get("close")),
-                    }
+                    exact = get_exact_date_ohlc(df_hist, ticker, target_date)
+                    if exact is not None:
+                        historical_target[ticker] = exact
 
             new_rows = []
             missing_price = []
@@ -1117,11 +1128,19 @@ df_hist_all, ohlc_map_today = download_ohlc_safe(
 
 price_map_today = {}
 
-for ticker, ohlc in ohlc_map_today.items():
-    close = safe_float(ohlc.get("close"))
+today_review_date = today_us_str()
 
-    if close is not None:
-        price_map_today[ticker] = close
+# 严格限制：Review 当天的“今日价格”只能来自当天真实交易日 OHLC。
+# 如果批量下载的最后一根是上一交易日，视为缺失，不能静默回退。
+for ticker in clean_tickers:
+    exact_today = get_exact_date_ohlc(df_hist_all, ticker, today_review_date)
+    if exact_today is not None:
+        ohlc_map_today[ticker] = exact_today
+        if exact_today.get("close") is not None:
+            price_map_today[ticker] = exact_today["close"]
+    else:
+        price_map_today.pop(ticker, None)
+        ohlc_map_today.pop(ticker, None)
 
 
 # ============================================================
@@ -1917,7 +1936,7 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
     risk_status="STOP_NEAR" if risk_distance is not None and risk_distance<=3.0 else "CLEAR"
     risk_note=(f"收盘距离移动止损约 {risk_distance:.2f}%，次日 Scan 强提醒。" if risk_status=="STOP_NEAR" else "本次 Review 未发现触及或接近移动止损。")
     write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note)
-    active_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,"今日开盘价":openp if openp is not None else "N/A","现价":closep,"持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),"系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),"KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),"趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱","风险提示":"、".join(risk) if risk else "趋势未出现同步转弱","Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":round(risk_distance,2) if risk_distance is not None else "","Review_Risk_Note":risk_note})
+    active_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,"今日开盘价":openp if openp is not None else "N/A","现价":closep,"今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp is not None and openp > 0 and closep is not None else None,"持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),"系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),"KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),"趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱","风险提示":"、".join(risk) if risk else "趋势未出现同步转弱","Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":round(risk_distance,2) if risk_distance is not None else "","Review_Risk_Note":risk_note})
 
 
 for _item in active_list:
@@ -2195,7 +2214,9 @@ prompt = f"""
 - 当前移动止损位及止损方法
 - 买入成本
 - 当前价格
-- 当前盈亏
+- 当前盈亏（按首次推荐价计算）
+- 今日实际开盘价、今日实际收盘价
+- 今日开盘→收盘收益率（独立于首次推荐价→当前盈亏）
 - 持仓天数（仅记录，不作为退出条件）
 - MA20/MA50、MACD、KDJ 状态
 - 今日新增
@@ -2557,9 +2578,12 @@ def build_us_risk_attribution_html():
         reason=item.get('盈利/亏损原因','')
         action=item.get('风控动作指令','')
         name=item.get('名称',item.get('代码','')); ticker=item.get('代码','')
+        day_oc=item.get("今日开盘→收盘%")
+        day_oc_text="N/A" if day_oc is None else f"{day_oc:+.2f}%"
         card=(f'<div style="background:#fafafa;border:1px solid #e0e0e0;padding:16px;margin:0 0 12px 0;border-radius:8px;">'
               f'<div style="font-weight:bold;color:#263238;margin-bottom:8px;">🟢 {name} ({ticker})</div>'
               f'<div><b>当前盈亏：</b>{pnl_text}　<b>Review风控状态：</b>{status}</div>'
+              f'<div><b>今日实际行情：</b>开盘 {item.get("今日开盘价","N/A")} → 收盘 {item.get("现价","N/A")}　<b>今日开盘→收盘：</b>{day_oc_text}</div>'
               f'<div><b>移动止损：</b>{item.get("止损价","N/A")}　<b>止损方法：</b>{item.get("止损方法","MA20/MA50 + ATR + MACD/KDJ")}</div>'
               f'<div><b>盈亏归因：</b>{reason or "暂无"}</div>'
               f'<div><b>风控动作：</b>{action or "继续动态监控"}</div>'
