@@ -669,12 +669,10 @@ def _aggregate_ohlcv(df, freq):
 
 
 def get_kline_data(ticker):
-    # 雪球作为美股K线第一来源；失败后再用Yahoo。周/月线都由同一份日线聚合。
-    df = _xq_get_daily_kline(ticker, count=900)
-    if not df.empty:
-        return df
-    print(f"   ⚠️ 雪球美股K线失败 {ticker}，切换 Yahoo 日线备用")
-    for attempt in range(3):
+    # 美股历史K线：Yahoo作为主源，雪球作为补充源。
+    # 原因：GitHub Actions 环境下雪球美股K线接口经常返回空数据/被限流，
+    # 不应让每只股票先走一个高失败率的远程请求。周/月线统一由主日线本地聚合。
+    for attempt in range(2):
         try:
             df = yf.download(ticker, period="3y", progress=False, auto_adjust=True, threads=False)
             if df is not None and not df.empty:
@@ -686,15 +684,21 @@ def get_kline_data(ticker):
                 if "Volume" not in out.columns:
                     out["Volume"] = 0.0
                 out["Amount"] = out["Close"] * out["Volume"]
+                out.attrs["source"] = "Yahoo Finance"
                 return out
         except Exception:
-            time.sleep(1.0 + attempt)
+            time.sleep(0.8 + attempt)
+    # Yahoo失败时才尝试雪球，避免300只股票全部产生无意义告警。
+    df = _xq_get_daily_kline(ticker, count=900)
+    if not df.empty:
+        df.attrs["source"] = "Xueqiu"
+        return df
     return pd.DataFrame()
 
 
 def build_stock_pool(tickers):
     pool = []
-    print(f"📈 [技术面] 计算 {len(tickers)} 只标的日/周/月线指标（雪球主K线，Yahoo备用）...")
+    print(f"📈 [技术面] 计算 {len(tickers)} 只标的日/周/月线指标（Yahoo主K线，雪球备用）...")
     for ticker, name in tickers.items():
         try:
             df = get_kline_data(ticker)
