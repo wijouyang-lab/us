@@ -910,8 +910,9 @@ def screen_technical_setups(pool_data):
     for stock in pool_data:
         score = 0
         reasons = []
-        resonance, patterns = check_period_resonance(stock)
+        resonance, patterns, two_period = check_period_resonance(stock)
         stock["周期共振"] = resonance
+        stock["两周期共振"] = two_period
         stock["共振形态"] = patterns
 
         h = stock.get("MACD_HIST_LAST", 0)
