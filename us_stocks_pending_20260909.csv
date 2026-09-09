@@ -1,0 +1,8 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-09,VLO,Valero Energy,Observation,79.5,8.4,20,15,16.001251,11.924129,23.97,4.417252,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,383.55,2.79,True
+2026-09-09,MPC,Marathon Petroleum,Observation,81.1,7.97,20,15,13.828884,12.165883,28.84,5.916407,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,398.83,2.7,True
+2026-09-09,SWKS,Skyworks Solutions,Observation,69.9,9.01,20,14,39.04145,15.18342,1.93,1.976238,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,75.35,3.91,True
+2026-09-09,PYPL,PayPal,Observation,38.7,-9.43,12,17,9.954632,9.0984955,5.29,2.2902622,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,52.68,3.68,False
+2026-09-09,FSLR,First Solar,Observation,43.9,-2.84,6,19,12.674061,8.877629,16.23,2.1420166,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,205.75,4.65,False
+2026-09-09,LUV,Southwest Airlines,Observation,35.1,-4.9,7,16,24.0875,8.047206,1.6,2.6623378,True,False,False,False,观望,观望,ATR初始保护,N/A,pending,38.54,3.13,False
+2026-09-09,EXC,Exelon,Observation,42.2,-1.22,6,17,16.036764,14.356712,2.72,1.5161626,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,43.6,1.82,False
