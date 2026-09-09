@@ -1806,22 +1806,75 @@ def load_evolved_rules():
     return load_conditional_evolved_rules()
 
 # ==================== 11. 昨日止损联动警告 ====================
-def get_stop_loss_hit_warning():
+def _previous_us_business_day_str(ref_date=None):
+    """返回美东时间下的上一工作日，周末自动跳过。"""
+    d = ref_date or get_us_time().date()
+    d = d - datetime.timedelta(days=1)
+    while d.weekday() >= 5:
+        d -= datetime.timedelta(days=1)
+    return d.strftime("%Y-%m-%d")
+
+def get_stop_loss_hit_records(limit=5):
+    """读取 Review 已确认的止损记录。优先 Status=Stop_Loss_Hit，兼容旧账本 Tag=Stop_Loss_Hit。"""
     path = "trade_history.csv"
-    if not os.path.exists(path):
-        return ""
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return []
     try:
         df = pd.read_csv(path, keep_default_na=False)
-        if "Tag" not in df.columns or "Exit_Date" not in df.columns:
-            return ""
-        hits = df[df["Tag"].astype(str).str.strip() == "Stop_Loss_Hit"].copy()
+        if "Exit_Date" not in df.columns or "Ticker" not in df.columns:
+            return []
+        status = df["Status"].astype(str).str.strip() if "Status" in df.columns else pd.Series("", index=df.index)
+        tag = df["Tag"].astype(str).str.strip() if "Tag" in df.columns else pd.Series("", index=df.index)
+        hits = df[(status.eq("Stop_Loss_Hit")) | (tag.eq("Stop_Loss_Hit"))].copy()
         if hits.empty:
-            return ""
-        hits = hits.sort_values("Exit_Date", ascending=False).head(5)
-        details = [f"{r.get('Name',r['Ticker'])}({r['Ticker']}) @{r.get('Exit_Date','未知')}" for _,r in hits.iterrows()]
-        return "⚠️ 最近止损联动警告：这些标的最近触发 Stop_Loss_Hit，今日仅作为反面案例，不自动代表未来永久回避：" + ", ".join(details)
-    except Exception:
+            return []
+        hits["_exit_dt"] = pd.to_datetime(hits["Exit_Date"], errors="coerce")
+        hits = hits.sort_values(["_exit_dt", "Ticker"], ascending=[False, True])
+        out = []
+        for _, r in hits.head(limit).iterrows():
+            out.append({
+                "ticker": str(r.get("Ticker", "")).strip(),
+                "name": str(r.get("Name", r.get("Ticker", ""))).strip(),
+                "exit_date": str(r.get("Exit_Date", "")).strip(),
+                "exit_price": _fmt_price(r.get("Exit_Price")),
+                "entry_price": _fmt_price(r.get("Price")),
+                "score": str(r.get("Score", "N/A")).strip(),
+            })
+        return out
+    except Exception as e:
+        print(f"⚠️ 读取止损联动记录失败: {e}")
+        return []
+
+def get_stop_loss_hit_warning():
+    hits = get_stop_loss_hit_records(limit=5)
+    if not hits:
         return ""
+    details = [f"{x['name']}({x['ticker']}) @{x['exit_date']}" for x in hits]
+    return "⚠️ 最近止损联动警告：这些标的已由 Review 触发 Stop_Loss_Hit，今日仅作为反面案例，不自动代表未来永久回避：" + ", ".join(details)
+
+def build_stop_loss_linkage_html():
+    """确定性生成 Scan 首页的 Review→Scan 止损联动区块，不依赖 Claude 是否愿意展示。"""
+    hits = get_stop_loss_hit_records(limit=10)
+    if not hits:
+        return ""
+    prev_day = _previous_us_business_day_str()
+    recent = [x for x in hits if str(x.get("exit_date", ""))[:10] == prev_day]
+    shown = recent if recent else hits[:5]
+    title = f"🚨 昨日 Review 止损联动（{prev_day}）" if recent else "🚨 最近 Review 止损联动"
+    rows = []
+    for x in shown:
+        rows.append(
+            f"<li><b>{x['name']} ({x['ticker']})</b> | 触发日：{x['exit_date']} | "
+            f"买入价：{x['entry_price']} | 止损结算价：{x['exit_price']} | 评分：{x['score']} | "
+            f"<span style='color:#c62828;font-weight:bold;'>次日 Scan 禁止重新推荐</span></li>"
+        )
+    return (
+        "<div class='stop-link-card' style='background:#fff3f3;border-left:6px solid #c62828;"
+        "padding:20px;margin-bottom:25px;border-radius:8px;'>"
+        f"<h2 style='margin-top:0;color:#b71c1c;'>{title}</h2>"
+        "<p>以下标的已经由盘后 Review 确认触发移动止损。该区块由程序直接写入首页，不受 AI 输出影响；仅用于风控联动，不代表永久黑名单。</p>"
+        "<ul style='margin-bottom:0;'>" + "".join(rows) + "</ul></div>"
+    )
 
 # ==================== 12. 盘前持仓审查 ====================
 
@@ -2187,7 +2240,8 @@ def build_full_email_html(ai_html):
     .bg-red{background:#d32f2f}.bg-green{background:#2e7d32}.bg-blue{background:#1976d2}.bg-teal{background:#00897b}.bg-orange{background:#e64a19}
     </style>
     """
-    return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
+    stop_linkage_html = build_stop_loss_linkage_html()
+    return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{stop_linkage_html}{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
 # ==================== 17. 期权策略 ====================
 def _write_option_strategy_fallback(item):
