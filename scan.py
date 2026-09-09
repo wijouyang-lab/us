@@ -555,15 +555,138 @@ def enrich_pool_with_fundamentals(pool_data, limit=80):
 
 
 # ==================== 5. K线与技术指标 ====================
+_XQ_BASE = "https://stock.xueqiu.com"
+_XQ_HOME = "https://xueqiu.com/"
+_XQ_UA = os.environ.get(
+    "XUEQIU_USER_AGENT",
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36"
+)
+
+
+def _xq_symbol_candidates(ticker):
+    t = str(ticker or "").strip().upper().replace(".", ":")
+    if ":" in t:
+        return [t]
+    # 雪球美股常见代码带交易所前缀；未知交易所时逐一尝试。
+    return [f"NASDAQ:{t}", f"NYSE:{t}", f"AMEX:{t}", t]
+
+
+def _xq_request_json(path, params, timeout=10):
+    session = get_robust_session()
+    headers = {
+        "User-Agent": _XQ_UA,
+        "Accept": "application/json,text/plain,*/*",
+        "Referer": _XQ_HOME,
+        "Origin": "https://xueqiu.com",
+    }
+    last = None
+    for attempt in range(2):
+        try:
+            r = session.get(_XQ_BASE + path, params=params, headers=headers, timeout=timeout)
+            r.raise_for_status()
+            obj = r.json()
+            if isinstance(obj, dict) and obj.get("error_code") not in (None, 0, "0"):
+                raise RuntimeError(str(obj.get("error_description") or obj.get("error_code")))
+            return obj
+        except Exception as e:
+            last = e
+            if attempt == 0:
+                time.sleep(0.5)
+    return None
+
+
+def _xq_get_daily_kline(ticker, count=900):
+    for sym in _xq_symbol_candidates(ticker):
+        obj = _xq_request_json(
+            "/v5/stock/chart/kline.json",
+            {
+                "symbol": sym,
+                "begin": int(time.time() * 1000),
+                "period": "day",
+                "type": "before",
+                "count": -abs(int(count)),
+                "indicator": "kline",
+            },
+            timeout=10,
+        )
+        try:
+            data = (obj or {}).get("data") or {}
+            cols = data.get("column") or []
+            rows = data.get("item") or []
+            if not cols or not rows:
+                continue
+            frame = pd.DataFrame(rows, columns=cols)
+            rename = {
+                "timestamp": "Date", "time": "Date",
+                "open": "Open", "high": "High", "low": "Low", "close": "Close",
+                "volume": "Volume", "amount": "Amount",
+            }
+            frame = frame.rename(columns={k:v for k,v in rename.items() if k in frame.columns})
+            if "Date" not in frame.columns or not all(c in frame.columns for c in ["Open","High","Low","Close"]):
+                continue
+            dt = pd.to_datetime(frame["Date"], unit="ms", errors="coerce")
+            if dt.isna().all():
+                dt = pd.to_datetime(frame["Date"], errors="coerce")
+            frame["Date"] = dt.dt.tz_localize(None) if getattr(dt.dt, "tz", None) is not None else dt
+            for c in ["Open","High","Low","Close","Volume","Amount"]:
+                if c in frame.columns:
+                    frame[c] = pd.to_numeric(frame[c], errors="coerce")
+            if "Volume" not in frame.columns:
+                frame["Volume"] = 0.0
+            if "Amount" not in frame.columns:
+                frame["Amount"] = frame["Close"] * frame["Volume"]
+            frame = frame.dropna(subset=["Date","Open","High","Low","Close"]).sort_values("Date")
+            frame = frame.drop_duplicates(subset=["Date"], keep="last").set_index("Date")
+            if len(frame) >= 40:
+                return frame[["Open","High","Low","Close","Volume","Amount"]]
+        except Exception:
+            continue
+    return pd.DataFrame()
+
+
+def _xq_get_quote(ticker):
+    for sym in _xq_symbol_candidates(ticker):
+        obj = _xq_request_json("/v5/stock/quote.json", {"symbol": sym, "extend": "detail"}, timeout=8)
+        try:
+            q = ((obj or {}).get("data") or {}).get("quote") or {}
+            last = q.get("current") or q.get("last_price")
+            if last is not None and float(last) > 0:
+                return round(float(last), 4)
+        except Exception:
+            continue
+    return None
+
+
+def _aggregate_ohlcv(df, freq):
+    if df is None or df.empty:
+        return pd.DataFrame()
+    g = df.sort_index().copy()
+    return g.resample(freq).agg({
+        "Open":"first", "High":"max", "Low":"min", "Close":"last",
+        "Volume":"sum", "Amount":"sum",
+    }).dropna(subset=["Open","Close"])
+
+
 def get_kline_data(ticker):
+    # 雪球作为美股K线第一来源；失败后再用Yahoo。周/月线都由同一份日线聚合。
+    df = _xq_get_daily_kline(ticker, count=900)
+    if not df.empty:
+        return df
+    print(f"   ⚠️ 雪球美股K线失败 {ticker}，切换 Yahoo 日线备用")
     for attempt in range(3):
         try:
-            df = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
+            df = yf.download(ticker, period="3y", progress=False, auto_adjust=True, threads=False)
             if df is not None and not df.empty:
                 if isinstance(df.columns, pd.MultiIndex):
                     df.columns = df.columns.get_level_values(0)
                 df.index.name = "Date"
-                return df
+                keep = [c for c in ["Open","High","Low","Close","Volume"] if c in df.columns]
+                out = df[keep].copy()
+                if "Volume" not in out.columns:
+                    out["Volume"] = 0.0
+                out["Amount"] = out["Close"] * out["Volume"]
+                return out
         except Exception:
             time.sleep(1.0 + attempt)
     return pd.DataFrame()
@@ -571,7 +694,7 @@ def get_kline_data(ticker):
 
 def build_stock_pool(tickers):
     pool = []
-    print(f"📈 [技术面] 计算 {len(tickers)} 只标的日线/周线指标...")
+    print(f"📈 [技术面] 计算 {len(tickers)} 只标的日/周/月线指标（雪球主K线，Yahoo备用）...")
     for ticker, name in tickers.items():
         try:
             df = get_kline_data(ticker)
@@ -603,27 +726,35 @@ def build_stock_pool(tickers):
             daily_v = bool(h_prev2 > h_prev and h_prev < h_last)
             bias = ((float(latest["Close"]) - float(latest["MA20"])) / float(latest["MA20"])) * 100
 
-            # 周线
+            # 周线 + 月线：统一由真实日线聚合，避免多源周期不同步
             weekly_bullish = False
             weekly_rising = False
             weekly_v = False
-            try:
-                dw = yf.download(ticker, period="1y", interval="1wk", progress=False, auto_adjust=True, threads=False)
-                if dw is not None and not dw.empty:
-                    if isinstance(dw.columns, pd.MultiIndex):
-                        dw.columns = dw.columns.get_level_values(0)
-                    wc = dw["Close"].astype(float).dropna()
-                    if len(wc) >= 12:
-                        wma5 = wc.rolling(5).mean().iloc[-1]
-                        wma10 = wc.rolling(10).mean().iloc[-1]
-                        wm1 = wc.ewm(span=12, adjust=False).mean()
-                        wm2 = wc.ewm(span=26, adjust=False).mean()
-                        wh = (wm1 - wm2 - (wm1 - wm2).ewm(span=9, adjust=False).mean()) * 2
-                        weekly_rising = float(wh.iloc[-1]) > float(wh.iloc[-2])
-                        weekly_bullish = bool(wma5 > wma10 and weekly_rising)
-                        weekly_v = bool(len(wh) >= 3 and float(wh.iloc[-3]) > float(wh.iloc[-2]) < float(wh.iloc[-1]))
-            except Exception:
-                pass
+            monthly_bullish = False
+            monthly_rising = False
+            monthly_v = False
+            dw = _aggregate_ohlcv(df, "W-FRI")
+            dm = _aggregate_ohlcv(df, "ME")
+            if len(dw) >= 12:
+                wc = dw["Close"].astype(float)
+                wma5 = wc.rolling(5).mean().iloc[-1]
+                wma10 = wc.rolling(10).mean().iloc[-1]
+                wm1 = wc.ewm(span=12, adjust=False).mean()
+                wm2 = wc.ewm(span=26, adjust=False).mean()
+                wh = (wm1-wm2-(wm1-wm2).ewm(span=9, adjust=False).mean())*2
+                weekly_rising = bool(wh.iloc[-1] > wh.iloc[-2])
+                weekly_bullish = bool(wma5 > wma10 and weekly_rising)
+                weekly_v = bool(len(wh)>=3 and wh.iloc[-3] > wh.iloc[-2] < wh.iloc[-1])
+            if len(dm) >= 15:
+                mc = dm["Close"].astype(float)
+                mma5 = mc.rolling(5).mean()
+                mma10 = mc.rolling(10).mean()
+                mm1 = mc.ewm(span=12, adjust=False).mean()
+                mm2 = mc.ewm(span=26, adjust=False).mean()
+                mh = (mm1-mm2-(mm1-mm2).ewm(span=9, adjust=False).mean())*2
+                monthly_rising = bool(mh.iloc[-1] > mh.iloc[-2])
+                monthly_bullish = bool(mma5.iloc[-1] > mma10.iloc[-1] and mc.iloc[-1] >= mma5.iloc[-1])
+                monthly_v = bool(len(mh)>=3 and mh.iloc[-3] > mh.iloc[-2] < mh.iloc[-1])
 
             # KDJ
             closes = df["Close"].values.astype(float)
@@ -668,11 +799,12 @@ def build_stock_pool(tickers):
                 if c2 < o2 and abs(c2-o2) > rng*0.3 and abs(c1-o1) < abs(c2-o2)*0.4 and c > o and c > (o2+c2)/2:
                     patterns.append("启明星")
 
+            live_quote = _xq_get_quote(ticker)
             pool.append({
                 "Ticker": ticker,
                 "ts_code": ticker,
                 "Name": name,
-                "Price": round(float(latest["Close"]), 2),
+                "Price": round(float(live_quote if live_quote is not None else latest["Close"]), 2),
                 "Open_Price": round(float(latest["Open"]), 2),
                 "RSI": round(float(latest["RSI"]), 1),
                 "ATR_Pct": round(float(latest["ATR"]) / float(latest["Close"]) * 100, 2) if float(latest["Close"]) else 5.0,
@@ -685,6 +817,11 @@ def build_stock_pool(tickers):
                 "周线共振": weekly_bullish,
                 "周线MACD上升": weekly_rising,
                 "周线MACD_V型反转": weekly_v,
+                "月线共振": monthly_bullish,
+                "月线趋势共振": monthly_bullish and monthly_rising,
+                "月线MACD上升": monthly_rising,
+                "月线MACD_V型反转": monthly_v,
+                "月线MA5>MA10": monthly_bullish,
                 "日线MACD上升": h_last > h_prev,
                 "日线MACD_V型反转": daily_v,
                 "KDJ_J": round(float(j_last), 2),
@@ -701,11 +838,15 @@ def build_stock_pool(tickers):
 
 # ==================== 6. 技术评分 ====================
 def check_period_resonance(stock):
-    if not stock.get("日线MACD上升") or not stock.get("周线MACD上升"):
-        return False, []
+    """美股日/周/月三周期共振：日线动量 + 周线动量 + 月线趋势同向。"""
+    daily = bool(stock.get("日线MACD上升"))
+    weekly = bool(stock.get("周线MACD上升"))
+    monthly = bool(stock.get("月线MACD上升")) and bool(stock.get("月线趋势共振"))
     valid = ["看涨吞没", "启明星", "刺穿线", "锤子线"]
     matched = [p for p in stock.get("看涨形态", []) if p in valid]
-    return bool(matched), matched
+    three_period = bool(daily and weekly and monthly)
+    two_period = bool(daily and weekly)
+    return three_period, matched, two_period
 
 
 def screen_technical_setups(pool_data):
@@ -751,12 +892,15 @@ def screen_technical_setups(pool_data):
             score += max({"看涨吞没":5,"启明星":5,"刺穿线":4,"锤子线":3}.get(p,2) for p in stock["看涨形态"])
             reasons.append("/".join(stock["看涨形态"]))
 
-        if stock.get("周线共振"):
-            score = min(int(score * 1.25), 40)
-            reasons.append("✅周日共振×1.25")
+        if stock.get("周期共振"):
+            score = min(int(score * 1.40), 40)
+            reasons.append("🔥日周月三周期共振×1.40")
+        elif stock.get("日周共振"):
+            score = min(int(score * 1.20), 40)
+            reasons.append("✅日周共振×1.20")
         elif score > 0:
-            score = int(score * 0.6)
-            reasons.append("⚠️仅日线×0.6")
+            score = int(score * 0.55)
+            reasons.append("⚠️未形成日周共振×0.55")
 
         if stock.get("日线MACD_V型反转"):
             score = min(score + 8, 40); reasons.append("日线V型反转")
@@ -773,7 +917,7 @@ def screen_technical_setups(pool_data):
     print("📊 [技术筛选] 技术评分 Top10：")
     for s in sorted(pool_data, key=lambda x: x.get("技术评分",0), reverse=True)[:10]:
         if s.get("技术评分",0) > 0:
-            print(f"   {s['Name']}({s['Ticker']}) {s['技术评分']}/40 | 周日共振={'是' if s.get('周线共振') else '否'}")
+            print(f"   {s['Name']}({s['Ticker']}) {s['技术评分']}/40 | 日周月共振={'是' if s.get('周期共振') else '否'} | 月线={'是' if s.get('月线趋势共振') else '否'}")
 
     return {k: sorted(v, key=lambda x: x["技术评分"], reverse=True) for k,v in sector_groups.items()}
 
@@ -1756,7 +1900,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
     pool_lines = []
     for x in pool_data:
         pool_lines.append(
-            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} | 周日共振:{'是' if x.get('周线共振') else '否'} | 技术:{x.get('技术评分',0)}/40 | 估值:{x.get('估值评分',0)}/20 | PE_TTM:{x.get('PE_TTM')} | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 估值结论:{x.get('估值结论','数据不足')} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
+            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} | 日周月共振:{'是' if x.get('周期共振') else '否'} | 日周共振:{'是' if x.get('日周共振') else '否'} | 月线趋势:{'是' if x.get('月线趋势共振') else '否'} | 技术:{x.get('技术评分',0)}/40 | 估值:{x.get('估值评分',0)}/20 | PE_TTM:{x.get('PE_TTM')} | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 估值结论:{x.get('估值结论','数据不足')} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
         )
     evolved = load_evolved_rules()
     key_people_block = str(key_people_text or "暂无重要人物讲话数据")
@@ -1815,7 +1959,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 1. 先 Regime Gate：高等级事件+宏观价格确认优先于单一商品方向。
 2. Regime Gate 是当前交易状态，不是历史黑名单；硬回避只在当前事件+行业价格共同确认时生效。
 3. 行业硬回避不得进 Top1-5；但 BUY_DIP/CONTRARIAN 可以作为观察逻辑，除非当前又出现新的基本面证伪。
-4. 不能因为周线共振就忽略行业当前下跌；行业价格环境是个股技术之前的确认层。
+4. 日周月三周期共振优先级高于单纯日周共振，但不能因为任何周期共振就忽略行业当前下跌；行业价格环境是个股技术之前的确认层。
 5. 先从事件得到1-2个产业链主线，再选个股。
 6. 个股新闻优先于纯技术信号做排雷。
 7. RSI>70、Bias>15%、5日已大涨属于追高风险，不得无条件追涨。
