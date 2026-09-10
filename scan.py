@@ -1625,26 +1625,78 @@ def get_stop_loss_hit_warning():
 # ==================== 12. 盘前持仓审查 ====================
 
 def get_review_risk_linkage_warning():
-    """读取 Review 写回的风控状态；STOP_TRIGGERED 硬禁入，STOP_NEAR 强提醒并降权。"""
+    """读取最近一次已完成 Review 的风控状态；仅把最近 Review 批次带入今日 Scan。
+
+    规则：
+    - STOP_TRIGGERED：今日硬禁入，禁止重新推荐。
+    - STOP_NEAR：今日仍展示为强提醒，并在 AI 排名中降权。
+    - 不再简单读取某只股票“最新交易行”，避免后续推荐行为空值把昨天的 Review 状态覆盖掉。
+    """
     path='trade_history.csv'
     if not os.path.exists(path) or os.path.getsize(path)==0:
         return '',set(),set()
     try:
-        df=pd.read_csv(path,keep_default_na=False)
+        df=pd.read_csv(path,keep_default_na=False,dtype=str)
     except Exception as e:
         print(f'⚠️ 读取 Review 风控联动失败: {e}'); return '',set(),set()
-    required={'Ticker','Status','Review_Risk_Status'}
+    required={'Ticker','Status','Review_Risk_Status','Review_Risk_Date'}
     if not required.issubset(df.columns): return '',set(),set()
+
     active=df[df['Status'].astype(str).str.strip().eq('Active')].copy()
     if active.empty: return '',set(),set()
+
+    active['Review_Risk_Date_Norm']=pd.to_datetime(active['Review_Risk_Date'],errors='coerce')
+    active['Date_Norm']=pd.to_datetime(active.get('Date',''),errors='coerce')
+    valid=active[active['Review_Risk_Date_Norm'].notna()].copy()
+    if valid.empty: return '',set(),set()
+
+    # 当前 Scan 只消费最近一批已经完成的 Review，避免把更早日期的风险提醒无限向后沿用。
+    today=pd.Timestamp(today_us_str())
+    valid=valid[valid['Review_Risk_Date_Norm'] < today]
+    if valid.empty:
+        return '',set(),set()
+    latest_review_date=valid['Review_Risk_Date_Norm'].max().normalize()
+    batch=valid[valid['Review_Risk_Date_Norm'].dt.normalize().eq(latest_review_date)]
+
     triggered=set(); near=set(); lines=[]
-    for ticker,grp in active.groupby('Ticker',sort=False):
-        row=grp.sort_values('Date').iloc[-1] if 'Date' in grp.columns else grp.iloc[-1]
+    for ticker,grp in batch.groupby('Ticker',sort=False):
+        # 同一 Review 日期若存在多行，优先取有明确风险状态的那一行。
+        grp=grp.copy()
+        grp['risk_rank']=grp['Review_Risk_Status'].map({'STOP_TRIGGERED':2,'STOP_NEAR':1}).fillna(0)
+        row=grp.sort_values(['risk_rank','Date_Norm']).iloc[-1]
         st=str(row.get('Review_Risk_Status','')).strip(); note=str(row.get('Review_Risk_Note','')).strip()
         t=str(ticker).strip()
-        if st=='STOP_TRIGGERED': triggered.add(t); lines.append(f'🚨 {t}: Review 判定 STOP_TRIGGERED，今日禁止重新推荐。{note}')
-        elif st=='STOP_NEAR': near.add(t); lines.append(f'⚠️ {t}: Review 判定 STOP_NEAR，今日强提醒并降权。{note}')
-    return '\n'.join(lines),triggered,near
+        name=str(row.get('Name',t)).strip()
+        if st=='STOP_TRIGGERED':
+            triggered.add(t)
+            lines.append(f'🚨 {name} ({t})：昨日 Review 判定 STOP_TRIGGERED，今日禁止重新推荐。{note}')
+        elif st=='STOP_NEAR':
+            near.add(t)
+            lines.append(f'⚠️ {name} ({t})：昨日 Review 判定 STOP_NEAR，今日强提醒并降权。{note}')
+
+    if lines:
+        header=f'【昨日 Review 风控联动｜{latest_review_date.strftime("%Y-%m-%d")}】'
+        return header+'\n'+'\n'.join(lines),triggered,near
+    return '',triggered,near
+
+
+def build_review_risk_banner_html(review_risk_text, review_triggered, review_near):
+    """确定性生成 Scan 邮件中的 Review→Scan 风控提醒，不能被 AI 输出覆盖或省略。"""
+    if not review_risk_text and not review_triggered and not review_near:
+        return ''
+    rows=[]
+    if review_risk_text:
+        for line in review_risk_text.splitlines():
+            if line.startswith('【'):
+                continue
+            if 'STOP_TRIGGERED' in line:
+                rows.append(f'<div style="margin:8px 0;padding:10px 12px;background:#ffebee;border-left:5px solid #c62828;border-radius:5px;"><b style="color:#b71c1c;">{line}</b></div>')
+            elif 'STOP_NEAR' in line:
+                rows.append(f'<div style="margin:8px 0;padding:10px 12px;background:#fff8e1;border-left:5px solid #ef6c00;border-radius:5px;"><b style="color:#e65100;">{line}</b></div>')
+    title='🚨 昨日 Review → 今日 Scan 风控提醒'
+    summary=(f'硬禁入 {len(review_triggered)} 只｜强提醒 {len(review_near)} 只｜'
+             '硬禁入标的不会进入今日 Top1-5；STOP_NEAR 标的继续参与数据分析，但必须降权。')
+    return f'<div class="review-risk-banner"><h2>{title}</h2><p>{summary}</p>{"".join(rows)}</div>'
 
 def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     path = "trade_history.csv"
@@ -1972,6 +2024,9 @@ def send_mail(to_emails, subject, content):
 
 # ==================== 16. HTML 样式 ====================
 def build_full_email_html(ai_html):
+    # Review 风控提醒必须确定性展示，不能依赖 AI 自己决定是否输出。
+    review_risk_text, review_triggered, review_near = get_review_risk_linkage_warning()
+    review_banner = build_review_risk_banner_html(review_risk_text, review_triggered, review_near)
     style = """
     <style>
     body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:#f0f2f5;padding:20px;color:#2c3e50;line-height:1.7}
@@ -1982,11 +2037,12 @@ def build_full_email_html(ai_html):
     .compare-card{border-left:5px solid #ff9800;background:#fffdf7;padding:25px;margin-bottom:25px;border-radius:10px}
     .trap-card{border-left:5px solid #607d8b;background:#fbfcfe;padding:25px;margin-bottom:25px;border-radius:10px}
     .top-title{font-size:20px;font-weight:800;border-bottom:1px dashed #cfd8dc;padding-bottom:10px;margin-bottom:15px}
+    .review-risk-banner{background:#fff3e0;border:1px solid #ffcc80;border-left:6px solid #ef6c00;padding:18px 20px;margin:0 0 25px 0;border-radius:8px}
     .highlight-label{display:inline-block;font-weight:bold;color:#fff;padding:3px 8px;border-radius:4px;margin-right:6px;font-size:13px}
     .bg-red{background:#d32f2f}.bg-green{background:#2e7d32}.bg-blue{background:#1976d2}.bg-teal{background:#00897b}.bg-orange{background:#e64a19}
     </style>
     """
-    return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
+    return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{review_banner}{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
 # ==================== 17. 期权策略 ====================
 def _write_option_strategy_fallback(item):
