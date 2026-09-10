@@ -156,31 +156,6 @@ def normalize_date(value):
         return None
 
 
-def _fmt_price(value, default="N/A"):
-    """美股所有价格统一显示/写入两位小数。"""
-    v = safe_float(value)
-    return default if v is None else f"{v:.2f}"
-
-def _fmt_num(value, decimals=2, default="N/A"):
-    v = safe_float(value)
-    return default if v is None else f"{v:.{decimals}f}"
-
-def get_full_recommendation_history(all_df, ticker):
-    """从完整 trade_history 计算某股票的历史总推荐次数与全部推荐日期。"""
-    if all_df is None or all_df.empty or "Ticker" not in all_df.columns:
-        return 0, []
-    t = str(ticker).strip().upper().lstrip("$")
-    try:
-        sub = all_df[all_df["Ticker"].astype(str).str.strip().str.upper().str.lstrip("$") == t].copy()
-        if sub.empty or "Date" not in sub.columns:
-            return 0, []
-        dates = pd.to_datetime(sub["Date"], errors="coerce").dropna().dt.strftime("%Y-%m-%d")
-        dates = sorted(set(dates))
-        return len(sub), dates
-    except Exception:
-        return 0, []
-
-
 def normalize_ticker_text(value):
     """
     只负责清洗字符串，不负责公司名称 -> 股票代码。
@@ -1042,7 +1017,6 @@ supplement_us_stocks_from_pending()
 # ============================================================
 
 df = load_trade_history()
-all_trade_history = df.copy()
 
 if df.empty:
     print("无交易账本或账本为空，退出。")
@@ -1938,12 +1912,6 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
     if rec_date is None: continue
     if clean_text(latest.get("Status")) not in {"", "Active", "pending"}: continue
     rec_date_str=rec_date.strftime("%Y-%m-%d"); rec_price=safe_record_price(first)
-    total_rec_count, rec_dates = get_full_recommendation_history(all_trade_history, ticker)
-    if total_rec_count <= 0:
-        total_rec_count = len(group)
-        rec_dates = [d.strftime("%Y-%m-%d") for d in pd.to_datetime(group["Date"], errors="coerce").dropna()]
-        rec_dates = sorted(set(rec_dates))
-    rec_dates_text = ", ".join(rec_dates)
     if rec_price is None or rec_price<=0: missing_entry_price.append(ticker); continue
     ohlc=ohlc_map_today.get(ticker)
     if ohlc is None:
@@ -1956,8 +1924,7 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
     if exec_stop is not None and exec_stop>0 and low<=exec_stop:
         write_review_risk_linkage_us(ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep, f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。")
         exitp=openp if openp is not None and openp<exec_stop else exec_stop; pnl=round((exitp-rec_price)/rec_price*100,2)
-        stopped_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":round(exec_stop,2) if exec_stop is not None else None,"首次推荐日":rec_date_str,"首次推荐价":round(rec_price,2),"推荐日期列表":rec_dates,"推荐日期汇总":rec_dates_text,"历史总推荐次数":total_rec_count,"止损触发日":today_us_str(),"止损结算价":round(exitp,2),"止损盈亏(%)":pnl,"持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":len(group),"触发方式":"移动止损：前一交易日保护线","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"})
-        exitp = round(exitp, 2)
+        stopped_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":exec_stop,"首次推荐日":rec_date_str,"首次推荐价":rec_price,"止损触发日":today_us_str(),"止损结算价":exitp,"止损盈亏(%)":pnl,"持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":len(group),"触发方式":"移动止损：前一交易日保护线","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"})
         update_trade_history_status(ticker,rec_date_str,"Stop_Loss_Hit",exitp); continue
     next_ctx=get_trailing_stop_context(ticker,rec_date,exec_stop,None); next_stop=next_ctx.get("exec_stop") if next_ctx else exec_stop
     if next_stop is not None and next_stop>0: update_trade_history_trailing_stop(ticker,rec_date_str,next_stop,next_ctx or ctx or {})
@@ -1969,7 +1936,7 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
     risk_status="STOP_NEAR" if risk_distance is not None and risk_distance<=3.0 else "CLEAR"
     risk_note=(f"收盘距离移动止损约 {risk_distance:.2f}%，次日 Scan 强提醒。" if risk_status=="STOP_NEAR" else "本次 Review 未发现触及或接近移动止损。")
     write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note)
-    active_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":round(next_stop,2) if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":round(rec_price,2),"推荐日期列表":rec_dates,"推荐日期汇总":rec_dates_text,"历史总推荐次数":total_rec_count,"今日开盘价":round(openp,2) if openp is not None else "N/A","现价":round(closep,2),"今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp is not None and openp > 0 and closep is not None else None,"持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),"系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":round(c.get("ma20"),2) if c.get("ma20") is not None else None,"MA50":round(c.get("ma50"),2) if c.get("ma50") is not None else None,"KDJ_J":round(c.get("kdj_j"),2) if c.get("kdj_j") is not None else None,"MACD_Hist":round(c.get("macd_hist"),4) if c.get("macd_hist") is not None else None,"趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱","风险提示":"、".join(risk) if risk else "趋势未出现同步转弱","Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":round(risk_distance,2) if risk_distance is not None else "","Review_Risk_Note":risk_note})
+    active_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,"今日开盘价":openp if openp is not None else "N/A","现价":closep,"今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp is not None and openp > 0 and closep is not None else None,"持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),"系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),"KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),"趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱","风险提示":"、".join(risk) if risk else "趋势未出现同步转弱","Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":round(risk_distance,2) if risk_distance is not None else "","Review_Risk_Note":risk_note})
 
 
 for _item in active_list:
@@ -2021,7 +1988,6 @@ REVIEW_COLUMNS = [
     "Hold_Period",
     "Stop_Loss",
     "Rec_Count",
-    "Rec_Dates",
     "Status",
     "Score",
     "Review_Risk_Status", "Review_Risk_Date", "Review_Stop_Distance_Pct", "Review_Risk_Note",
@@ -2101,8 +2067,7 @@ for item in active_list:
         "Stop_Loss": item["止损价"],
         "Stop_Method": item.get("止损方法", "MA20/MA50 + ATR + MACD/KDJ"),
         "Trail_Stop": item.get("止损价", ""),
-        "Rec_Count": item.get("历史总推荐次数", item["系统连续推荐次数"]),
-        "Rec_Dates": item.get("推荐日期汇总", item.get("首次推荐日", "")),
+        "Rec_Count": item["系统连续推荐次数"],
         "Status": "持仓中",
         "Score": item["推荐评分"],
         "Review_Risk_Status": item.get("Review_Risk_Status", ""),
@@ -2130,8 +2095,7 @@ for item in stopped_list:
         "Stop_Loss": item["止损价"],
         "Stop_Method": item.get("止损方法", "MA20/MA50 + ATR + MACD/KDJ"),
         "Trail_Stop": item.get("止损价", ""),
-        "Rec_Count": item.get("历史总推荐次数", item["系统连续推荐次数"]),
-        "Rec_Dates": item.get("推荐日期汇总", item.get("首次推荐日", "")),
+        "Rec_Count": item["系统连续推荐次数"],
         "Status": "移动止损清仓",
         "Score": item["推荐评分"],
         "Review_Risk_Status": "STOP_TRIGGERED",
@@ -2224,9 +2188,7 @@ prompt = f"""
 2. 低分票（60以下）若盈利，要指出评分可能偏保守。
 3. 今日新增标的要纳入正常盈亏分析。
 4. 移动止损触发必须评价执行纪律，并检查止损是否随趋势抬升。
-5. 每只股票必须同时显示“历史总推荐次数”和“全部推荐日期”；“系统连续推荐次数”只能作为补充字段。
-6. 所有股票价格（买入价、现价、开盘、收盘、止损价、结算价、MA20/MA50）统一显示到小数点后两位。
-7. 股票逐笔归因优先使用程序生成的“盈利/亏损原因”和“风控动作指令”，不要编造。
+5. 股票逐笔归因优先使用程序生成的“盈利/亏损原因”和“风控动作指令”，不要编造。
 6. 美股期权继续保留并独立评价其到期/持仓风险。
 6. 不要编造不存在的数据。
 7. 如果某只股票价格数据缺失，不要自行猜价格。
@@ -2238,46 +2200,43 @@ prompt = f"""
 
 <div style="background:#eceff1;border-left:6px solid #455a64;padding:20px;margin-bottom:25px;border-radius:8px;">
 <h3>盘后总体风控审查</h3>
-<p>总结今日整体表现。</p>
+<p>只做全局总结，不重复逐股票数据。</p>
 </div>
 
-<h2>持仓中 - 动态风控核对单</h2>
-<p>股票不设置固定持仓到期日；持仓天数仅做统计，退出以移动止损和趋势破坏为准。</p>
+重要：不要按“动态风控核对单 / 风控纪律与逐笔归因”两个独立章节分别列股票。
+不要让同一只股票在报告中出现两次。
+股票必须按“一只股票一个完整卡片”的方式连续输出：写完第一只股票的全部内容后，再写第二只。
 
-对每一只 active_list 输出：
-- 推荐日期
-- 历史总推荐次数
-- 全部推荐日期
-- 评分
-- 系统连续推荐次数
+每一只 active_list 股票必须在同一个卡片内一次性包含：
+- 股票名称与 ticker
+- 首次推荐日期、首次推荐价、系统连续推荐次数、评分
 - 动态持有状态（不设置固定到期天数）
-- 当前移动止损位及止损方法
-- 买入成本
-- 当前价格
-- 当前盈亏（按首次推荐价计算）
-- 今日实际开盘价、今日实际收盘价
-- 今日开盘→收盘收益率（独立于首次推荐价→当前盈亏）
-- 持仓天数（仅记录，不作为退出条件）
-- MA20/MA50、MACD、KDJ 状态
-- 今日新增
+- 买入成本、当前价格、当前盈亏
+- 今日实际开盘价、今日实际收盘价、今日开盘→收盘收益率
+- 持仓天数（仅统计，不作为退出条件）
+- 当前移动止损位、止损方法、距离止损的风险程度
+- MA20/MA50、MACD、KDJ、趋势状态
+- 盈亏原因/归因
+- 风控纪律核对结论
 - 风控动作指令
+- Review 风控状态及说明
 
-<h2>移动止损清仓 - 策略复盘</h2>
-
-说明：
+每一只 stopped_list 股票也必须在同一个卡片内一次性包含全部信息：
+- 股票名称与 ticker
+- 首次推荐日期、首次推荐价、系统连续推荐次数、评分
+- 触发日期、触发价、止损位、止损方法
+- 策略盈亏
 - 止损触发原因
-- 触发价格
-- 盈亏
-- 评分
 - 是否执行纪律
+- 次日 Scan 风控联动结论
 
-<h2>趋势转弱复盘</h2>
+股票章节标题统一使用“持仓股票 - 逐只风控与盈亏归因”，内部不要再拆成“动态风控核对单”和“风控纪律与逐笔归因”两个章节。
 
-逐只评价；不因持仓天数达到某个值而强制卖出。
-
+最后再单独输出：
 <h2>期权持仓风控 - 平仓复盘</h2>
+仅评价期权，不重复股票内容。
 
-逐只评价。
+如果某项数据缺失，明确写“数据不足”，不要猜测。
 
 盈利用红色，亏损用绿色。
 """
@@ -2566,7 +2525,7 @@ kpi_html = f"""
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px;">
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
-<div style="font-size:13px;color:#7f8c8d;">总推荐笔数（历史）</div>
+<div style="font-size:13px;color:#7f8c8d;">总推荐笔数</div>
 <div style="font-size:24px;font-weight:bold;">{total_count}</div>
 <div style="font-size:12px;">持仓 {active_count}（今日新增 {new_today_count}） · 了结 {closed_count}</div>
 </div>
@@ -2608,44 +2567,102 @@ kpi_html = f"""
 # ============================================================
 # 21.5 确定性股票风控/盈亏归因卡片
 # ============================================================
+def _us_pnl_style(value):
+    pnl = safe_float(value)
+    if pnl is None:
+        return "color:#607d8b;"
+    # 保留当前项目约定：盈利红色、亏损绿色。
+    return "color:#d32f2f;font-weight:700;" if pnl > 0 else ("color:#2e7d32;font-weight:700;" if pnl < 0 else "color:#455a64;font-weight:700;")
+
+
+def _us_fmt_price(value):
+    f = safe_float(value)
+    return "N/A" if f is None else f"${f:.2f}"
+
+
+def _us_fmt_pct(value, signed=False):
+    f = safe_float(value)
+    if f is None:
+        return "N/A"
+    return f"{f:+.2f}%" if signed else f"{f:.2f}%"
+
+
+def _us_common_trade_card(item, stopped=False):
+    ticker = clean_text(item.get("代码"), "N/A")
+    name = clean_text(item.get("名称"), ticker)
+    rec_date = clean_text(item.get("首次推荐日"), "N/A")
+    rec_price = _us_fmt_price(item.get("首次推荐价"))
+    rec_count = clean_text(item.get("系统连续推荐次数"), "1")
+    score = clean_text(item.get("推荐评分"), "N/A")
+
+    if stopped:
+        pnl = safe_float(item.get("止损盈亏(%)"))
+        pnl_text = _us_fmt_pct(pnl, signed=True)
+        title_color = "#b71c1c"
+        bg = "#fff8f8"
+        border = "#ef9a9a"
+        status_text = "已触发移动止损 / 次日Scan禁止重新推荐"
+        extra = (
+            f'<div><b>触发日期：</b>{clean_text(item.get("止损触发日"), "N/A")}　'
+            f'<b>止损结算价：</b>{_us_fmt_price(item.get("止损结算价"))}　'
+            f'<b>策略盈亏：</b><span style="{_us_pnl_style(pnl)}">{pnl_text}</span></div>'
+            f'<div><b>止损原因：</b>{clean_text(item.get("触发方式"), "移动止损触发")}</div>'
+            f'<div><b>执行纪律：</b>已执行移动止损；状态写回后，次日 Scan 应禁止重新推荐。</div>'
+        )
+    else:
+        pnl = safe_float(item.get("当前盈亏(%)"))
+        pnl_text = _us_fmt_pct(pnl, signed=True)
+        title_color = "#263238"
+        bg = "#fafafa"
+        border = "#e0e0e0"
+        status = clean_text(item.get("Review_Risk_Status"), "CLEAR")
+        risk_note = clean_text(item.get("Review_Risk_Note"), "")
+        extra = (
+            f'<div><b>动态持有：</b>是（不设置固定到期天数）　'
+            f'<b>持仓天数：</b>{clean_text(item.get("持仓天数"), "N/A")}</div>'
+            f'<div><b>当前盈亏：</b><span style="{_us_pnl_style(pnl)}">{pnl_text}</span>　'
+            f'<b>当前价格：</b>{_us_fmt_price(item.get("现价"))}</div>'
+            f'<div><b>今日实际行情：</b>开盘 {_us_fmt_price(item.get("今日开盘价"))} → '
+            f'收盘 {_us_fmt_price(item.get("现价"))}　'
+            f'<b>今日开盘→收盘：</b>{_us_fmt_pct(item.get("今日开盘→收盘%"), signed=True)}</div>'
+            f'<div><b>移动止损：</b>{_us_fmt_price(item.get("止损价"))}　'
+            f'<b>止损方法：</b>{clean_text(item.get("止损方法"), "MA20/MA50 + ATR + MACD/KDJ")}</div>'
+            f'<div><b>技术状态：</b>MA20={_us_fmt_price(item.get("MA20"))}　'
+            f'MA50={_us_fmt_price(item.get("MA50"))}　'
+            f'MACD_Hist={clean_text(item.get("MACD_Hist"), "N/A")}　'
+            f'KDJ_J={clean_text(item.get("KDJ_J"), "N/A")}　'
+            f'{clean_text(item.get("趋势状态"), "趋势状态未知")}</div>'
+            f'<div><b>风险提示：</b>{clean_text(item.get("风险提示"), "暂无")}</div>'
+            f'<div><b>Review风控状态：</b>{status}　{risk_note}</div>'
+        )
+
+    card = (
+        f'<div style="background:{bg};border:1px solid {border};padding:16px;margin:0 0 14px 0;border-radius:8px;">'
+        f'<div style="font-size:16px;font-weight:bold;color:{title_color};margin-bottom:10px;">'
+        f'{"🔴" if stopped else "🟢"} {name} ({ticker})</div>'
+        f'<div><b>首次推荐：</b>{rec_date} @ {rec_price}　'
+        f'<b>推荐评分：</b>{score}　<b>系统连续推荐次数：</b>{rec_count}</div>'
+        f'{extra}'
+        f'<div><b>盈亏归因：</b>{clean_text(item.get("盈利/亏损原因"), "暂无")}</div>'
+        f'<div><b>风控纪律核对：</b>{"止损触发后已执行" if stopped else "按移动止损与趋势破坏规则执行，不按固定持仓天数强制退出"}</div>'
+        f'<div><b>风控动作：</b>{clean_text(item.get("风控动作指令"), "继续动态监控")}</div>'
+        f'<div><b>联动状态：</b>{status_text if stopped else "当前持仓正常纳入下一交易日风险跟踪"}</div>'
+        f'</div>'
+    )
+    return card
+
+
 def build_us_risk_attribution_html():
     blocks=[]
     for item in active_list:
-        pnl=safe_float(item.get('当前盈亏(%)'))
-        pnl_text='N/A' if pnl is None else f'{pnl:.2f}%'
-        status=item.get('Review_Risk_Status','CLEAR')
-        note=item.get('Review_Risk_Note','')
-        reason=item.get('盈利/亏损原因','')
-        action=item.get('风控动作指令','')
-        name=item.get('名称',item.get('代码','')); ticker=item.get('代码','')
-        day_oc=item.get("今日开盘→收盘%")
-        day_oc_text="N/A" if day_oc is None else f"{day_oc:+.2f}%"
-        card=(f'<div style="background:#fafafa;border:1px solid #e0e0e0;padding:16px;margin:0 0 12px 0;border-radius:8px;">'
-              f'<div style="font-weight:bold;color:#263238;margin-bottom:8px;">🟢 {name} ({ticker})</div>'
-              f'<div><b>当前盈亏：</b>{pnl_text}　<b>Review风控状态：</b>{status}</div>'
-              f'<div><b>推荐信息：</b>首次推荐 {item.get("首次推荐日","N/A")}　<b>历史总推荐次数：</b>{item.get("历史总推荐次数", item.get("系统连续推荐次数", "N/A"))}　<b>系统连续推荐次数：</b>{item.get("系统连续推荐次数","N/A")}</div>'
-              f'<div><b>全部推荐日期：</b>{item.get("推荐日期汇总", item.get("首次推荐日","N/A"))}</div>'
-              f'<div><b>买入成本：</b>{_fmt_price(item.get("首次推荐价"))}　<b>今日实际行情：</b>开盘 {_fmt_price(item.get("今日开盘价"))} → 收盘 {_fmt_price(item.get("现价"))}　<b>今日开盘→收盘：</b>{day_oc_text}</div>'
-              f'<div><b>移动止损：</b>{_fmt_price(item.get("止损价"))}　<b>止损方法：</b>{item.get("止损方法","MA20/MA50 + ATR + MACD/KDJ")}</div>'
-              f'<div><b>盈亏归因：</b>{reason or "暂无"}</div>'
-              f'<div><b>风控动作：</b>{action or "继续动态监控"}</div>'
-              f'<div style="color:#607d8b;"><b>Review说明：</b>{note}</div></div>')
-        blocks.append(card)
+        blocks.append(_us_common_trade_card(item, stopped=False))
     for item in stopped_list:
-        pnl=safe_float(item.get('止损盈亏(%)'))
-        pnl_text='N/A' if pnl is None else f'{pnl:.2f}%'
-        name=item.get('名称',item.get('代码','')); ticker=item.get('代码','')
-        card=(f'<div style="background:#fff8f8;border:1px solid #ef9a9a;padding:16px;margin:0 0 12px 0;border-radius:8px;">'
-              f'<div style="font-weight:bold;color:#b71c1c;margin-bottom:8px;">🔴 {name} ({ticker}) — 移动止损清仓</div>'
-              f'<div><b>推荐信息：</b>首次推荐 {item.get("首次推荐日","N/A")}　<b>历史总推荐次数：</b>{item.get("历史总推荐次数", item.get("系统连续推荐次数", "N/A"))}</div>'
-              f'<div><b>全部推荐日期：</b>{item.get("推荐日期汇总", item.get("首次推荐日","N/A"))}</div>'
-              f'<div><b>策略盈亏：</b>{pnl_text}　<b>止损价：</b>{_fmt_price(item.get("止损价"))}　<b>结算价：</b>{_fmt_price(item.get("止损结算价"))}</div>'
-              f'<div><b>盈亏归因：</b>{item.get("盈利/亏损原因","移动止损触发")}</div>'
-              f'<div><b>风控动作：</b>{item.get("风控动作指令","已执行移动止损，次日Scan禁止重新推荐。")}</div></div>')
-        blocks.append(card)
+        blocks.append(_us_common_trade_card(item, stopped=True))
     if not blocks:
         return ''
-    return '<h2 style="color:#1565c0;border-bottom:2px solid #1565c0;padding-bottom:5px;">📊 持仓中 - 风控纪律与逐笔归因</h2>' + ''.join(blocks)
+    header = '<h2 style="color:#1565c0;border-bottom:2px solid #1565c0;padding-bottom:5px;">📊 持仓股票 - 逐只风控与盈亏归因</h2>'
+    sub = '<p style="color:#607d8b;">每只股票一次性展示推荐、盈亏、技术状态、移动止损、风控纪律与动作；不拆成两个独立模块。</p>'
+    return header + sub + ''.join(blocks)
 
 us_risk_attribution_html=build_us_risk_attribution_html()
 
