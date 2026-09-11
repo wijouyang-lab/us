@@ -1,0 +1,7 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-11,PYPL,PayPal,Observation,41.5,-7.85,21,17,10.077505,9.214511,5.29,2.3185318,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,53.31,3.72,False
+2026-09-11,SWKS,Skyworks Solutions,Observation,80.3,20.22,17,14,43.53886,16.932486,1.93,2.2038922,False,True,False,True,观望,观望,ATR初始保护,N/A,pending,84.03,4.29,False
+2026-09-11,APP,AppLovin,Observation,41.4,0.98,31,13,24.154377,14.992284,13.02,33.335804,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,314.49,5.23,True
+2026-09-11,ISRG,Intuitive Surgical,Observation,42.6,-3.91,40,7,41.337154,29.859499,8.72,7.0213094,False,True,False,True,观望,观望,ATR初始保护,N/A,pending,360.46,3.34,True
+2026-09-11,INTU,Intuit,Observation,38.5,-9.74,0,0,None,None,None,None,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,312.77,4.72,False
+2026-09-11,MPC,Marathon Petroleum,Observation,73.4,5.58,0,0,None,None,None,None,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,392.42,2.79,False
