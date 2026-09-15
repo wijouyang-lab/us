@@ -1,0 +1,6 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-15,PANW,Palo Alto Networks,Observation,57.7,6.01,29,14,912.04877,76.6448,0.41,11.11263,False,True,True,True,观望,观望,ATR初始保护,N/A,pending,373.94,5.2,False
+2026-09-15,APA,APA Corporation,Observation,64.7,3.83,8,19,9.5,10.255068,4.74,2.249026,False,True,False,True,观望,观望,ATR初始保护,N/A,pending,45.03,3.27,False
+2026-09-15,LUV,Southwest Airlines,Observation,41.5,-0.54,28,19,24.7,8.388752,1.6,2.730036,False,False,False,True,观望,观望,ATR初始保护,N/A,pending,39.52,3.05,True
+2026-09-15,BBY,Best Buy,Observation,66.1,9.1,13,15,15.778702,13.146713,6.01,6.268509,False,True,False,True,观望,观望,ATR初始保护,N/A,pending,94.83,3.58,False
+2026-09-15,LHX,L3Harris,Observation,31.0,-4.73,29,17,25.119072,18.511894,9.91,2.4219456,False,False,True,True,观望,观望,ATR初始保护,N/A,pending,248.93,2.54,False
