@@ -1,0 +1,8 @@
+Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
+2026-09-16,JPM,JPMorgan Chase,Observation,47.5,-0.9,23,19,15.108872,14.106377,23.33,2.650161,False,False,True,True,观望,观望,ATR初始保护,N/A,pending,352.49,1.85,False
+2026-09-16,SRE,Sempra,Observation,36.7,-3.7,4,19,23.53623,14.651168,3.45,1.6241299,False,False,False,True,观望,观望,ATR初始保护,N/A,pending,81.2,2.43,False
+2026-09-16,RVTY,Revvity,Observation,70.8,10.97,34,12,61.75771,23.790775,2.27,2.1639938,True,True,False,True,观望,观望,ATR初始保护,N/A,pending,140.19,3.19,False
+2026-09-16,WRB,W. R. Berkley Corporation,Observation,59.5,2.93,24,19,14.666666,14.724504,4.86,2.854854,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,71.28,1.93,True
+2026-09-16,GS,Goldman Sachs,Observation,37.2,-4.49,6,19,15.083706,13.19246,64.75,2.6976182,False,False,False,True,观望,观望,ATR初始保护,N/A,pending,976.67,2.78,False
+2026-09-16,ALB,Albemarle Corporation,Observation,32.0,-13.05,6,14,436.34616,10.042267,0.26,1.6649544,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,113.45,4.74,False
+2026-09-16,FANG,Diamondback Energy,Observation,64.2,3.62,17,16,40.290474,11.412174,5.25,1.5658891,True,True,False,False,观望,观望,ATR初始保护,N/A,pending,211.53,2.74,False
