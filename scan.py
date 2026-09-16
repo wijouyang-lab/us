@@ -42,11 +42,8 @@ import pandas_ta as ta
 import requests
 import yfinance as yf
 
-# 可选：已有期权引擎存在时使用；不存在时仍允许股票 Scan 正常运行
-try:
-    from scan_us_option_engine import append_option_strategy
-except Exception:
-    append_option_strategy = None
+# 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
+from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 
 # ==================== 环境检查 ====================
 TARGET_MODEL = "claude-opus-4-8"
@@ -1897,7 +1894,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 <p><span class="highlight-label bg-blue">📈 技术确认:</span>...</p>
 <p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
-<div><h4>🎲 美股专属期权实战策略</h4><ul><li><b>建议行权价与到期日：</b>...</li><li><b>期权组合构建：</b>...</li></ul></div>
+<p><b>期权：</b>不要在AI正文中编造行权价、到期日、权利金、Delta或IV；真实期权策略由程序从期权链读取后统一插入。</p>
 </div>
 
 <!-- 重复上述 div 结构至第5只，确保每只都有 class="top-card core-card" -->
@@ -2045,50 +2042,67 @@ def build_full_email_html(ai_html):
     return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{review_banner}{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
 # ==================== 17. 期权策略 ====================
-def _write_option_strategy_fallback(item):
-    """外部期权引擎不可用时，保留原版内联逻辑写入 option_strategies.csv。"""
-    try:
-        opt_file = "option_strategies.csv"
-        # 期权到期日独立于股票持仓逻辑；股票已经改为动态持有。
-        hp = str(item.get("Hold_Period", "动态持有"))
-        nums = [int(x) for x in re.findall(r"\d+", hp)]
-        max_days = max(nums) if nums else 45
-        max_days = max(30, min(60, max_days))
-        expiry = (get_us_time() + datetime.timedelta(days=max_days)).strftime("%Y-%m-%d")
-        price = float(item.get("Price", 0) or 0)
-        stop = item.get("Stop_Loss", "N/A")
-        strike = round(price * 1.05, 2)
-        entry_price = round(strike * 0.02, 2)
-        header = "Ticker,OptionType,Strike,Expiry,EntryPrice,Status,EntryDate,Quantity,Direction,UnderlyingPrice,StopLoss,HoldPeriod,Reason,ScanScore\n"
-        need_header = (not os.path.exists(opt_file)) or os.path.getsize(opt_file) == 0
-        with open(opt_file, "a", encoding="utf-8", newline="") as f:
-            if need_header:
-                f.write(header)
-            reason = "美股 scan 核心精选：事件/Regime/技术共振，偏多。"
-            safe_reason = reason.replace(",", "；")
-            f.write(f"{item.get('Ticker','')},CALL,{strike},{expiry},{entry_price},Active,{today_us_str()},1,BULLISH,{price},{stop},{hp},{safe_reason},{item.get('Score','N/A')}\n")
-        print(f"📝 [期权备用] {item.get('Ticker','')} CALL {strike} @ {expiry}")
-        return True
-    except Exception as e:
-        print(f"⚠️ {item.get('Ticker','')} 期权备用策略失败：{e}")
-        return False
-
-
-def safe_generate_option_strategy(item):
-    if append_option_strategy is not None:
+def generate_option_recommendations(chosen_items):
+    """仅为本次新产生的 Core_Dragon 生成可验证期权策略。"""
+    created = []
+    for item in chosen_items:
+        if item.get("Tag") != "Core_Dragon":
+            continue
         try:
-            result = append_option_strategy(
-                ticker=item["Ticker"], name=item["Name"], direction="BULLISH",
-                scan_score=item.get("Score","N/A"), scan_date=today_us_str(),
-                underlying_price=item.get("Price",0), underlying_stop=item.get("Stop_Loss","N/A"),
-                hold_period="45天",
-                strategy_reason="美股 scan 核心精选：事件/Regime/技术共振，偏多。", contracts=1,
-            )
-            if result:
-                return True
+            if append_option_strategy(item):
+                created.append(item)
         except Exception as e:
-            print(f"⚠️ {item.get('Ticker','')} 外部期权引擎失败，切换内联备用：{e}")
-    return _write_option_strategy_fallback(item)
+            print(f"⚠️ {item.get('Ticker','')} 期权策略生成失败：{e}")
+    print(f"🎯 Scan→Option 联动：{len(created)} 笔")
+    # Scan 邮件只展示本次扫描新生成的期权建议，避免把旧期权重复冒充成今日推荐。
+    recent = get_recent_option_recommendations(limit=50)
+    today = today_us_str()
+    today_records = [r for r in recent if str(r.get("EntryDate", ""))[:10] == today]
+    return today_records, created
+
+
+def build_option_recommendation_html(option_records):
+    if not option_records:
+        return (
+            '<div style="background:#fff8e1;border:1px solid #ffe082;border-left:6px solid #ffb300;'
+            'padding:18px;margin:0 0 25px 0;border-radius:8px;">'
+            '<h2>🎲 美股期权实战策略</h2>'
+            '<p>本次没有生成可验证的期权链策略。原因可能是：核心精选为空、'
+            '45-90天到期窗口无合适合约，或行情源未提供可执行的买卖价。程序不会伪造期权报价。</p>'
+            '</div>'
+        )
+
+    cards=[]
+    for r in option_records:
+        strategy=str(r.get("Strategy", "CALL_DEBIT_SPREAD"))
+        spread=(f"{r.get('LongStrike')} / {r.get('ShortStrike')}" if r.get('ShortStrike') else f"{r.get('LongStrike')}")
+        max_profit = r.get("MaxProfit") or "未限制"
+        cards.append(
+            '<div style="background:#fafafa;border:1px solid #e0e0e0;border-left:6px solid #7b1fa2;'
+            'padding:16px;margin:0 0 12px 0;border-radius:8px;">'
+            f'<div style="font-size:17px;font-weight:800;">🎯 {html.escape(str(r.get("Name", r.get("Ticker", ""))))} ({html.escape(str(r.get("Ticker", "")))})'
+            f'｜{html.escape(strategy)}</div>'
+            f'<div><b>到期日：</b>{html.escape(str(r.get("Expiry","N/A")))}（{html.escape(str(r.get("DTE","N/A")))}天）'
+            f'　<b>执行价：</b>{html.escape(spread)}</div>'
+            f'<div><b>权利金：</b>${html.escape(str(r.get("NetDebit","N/A")))}／股'
+            f'　<b>最大风险：</b>${html.escape(str(r.get("MaxLoss","N/A")))}'
+            f'　<b>盈亏平衡：</b>${html.escape(str(r.get("BreakEven","N/A")))}</div>'
+            f'<div><b>Delta：</b>{html.escape(str(r.get("Delta","N/A")))}'
+            f'　<b>IV：</b>{html.escape(str(r.get("IV","N/A")))}'
+            f'　<b>IV状态：</b>{html.escape(str(r.get("IV_Regime","N/A")))}</div>'
+            f'<div><b>Call Wall：</b>${html.escape(str(r.get("CallWall","N/A")))}'
+            f'　<b>Put Wall：</b>${html.escape(str(r.get("PutWall","N/A")))}</div>'
+            f'<div><b>财报：</b>{html.escape(str(r.get("EarningsDate","未确认")))}'
+            f'　<b>事件距离：</b>{html.escape(str(r.get("EarningsDays","N/A")))}天</div>'
+            f'<div><b>策略逻辑：</b>{html.escape(str(r.get("Reason","")))}</div>'
+            '<div><b>仓位纪律：</b>1张起步；最大亏损以实际支付权利金为边界；若正股趋势破坏，Review重新评估。</div>'
+        )
+    return (
+        '<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:6px;">🎲 美股期权实战策略</h2>'
+        '<p style="color:#607d8b;">只展示程序从期权链中取得的真实合约与报价，不用AI虚构行权价或到期日。</p>'
+        + ''.join(cards)
+    )
+
 
 # ==================== 主程序 ====================
 if __name__ == "__main__":
@@ -2153,9 +2167,6 @@ if __name__ == "__main__":
         key_people_news,
         economic_text,
     )
-
-    full_html = build_full_email_html(ai_html)
-    send_mail(SUPER_ADMIN, f"【宏观驱动美股版】{TARGET_REGION} 核心打分与实战 ({today_us_str()})", full_html)
 
     chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT)
 
@@ -2232,13 +2243,12 @@ if __name__ == "__main__":
                 safe_vals = [str(v).replace(","," ").replace("\n"," ") for v in vals]
                 f.write(",".join(safe_vals)+"\n")
         print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
-
-        option_created = 0
-        for item in to_write:
-            if item.get("Tag") == "Core_Dragon" and safe_generate_option_strategy(item):
-                option_created += 1
-        print(f"🎯 Scan→Option 联动：{option_created} 笔")
     else:
         print("⚠️ 今日没有新增可入账推荐")
+
+    option_records, option_created_items = generate_option_recommendations(to_write)
+    option_html = build_option_recommendation_html(option_records)
+    full_html = build_full_email_html(ai_html + option_html)
+    send_mail(SUPER_ADMIN, f"【宏观驱动美股版】{TARGET_REGION} 核心打分、股票与期权实战 ({today_us_str()})", full_html)
 
     print("🎯 美股盘前扫描完成。")
