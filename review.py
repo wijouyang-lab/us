@@ -2259,6 +2259,26 @@ client = anthropic.Anthropic(
     ),
 )
 
+def _load_recent_option_recommendations(limit=20, days=7):
+    """读取最近期权推荐；推荐与实际期权持仓分开统计。"""
+    try:
+        if not os.path.exists(OPTION_LOG_FILE) or os.path.getsize(OPTION_LOG_FILE) == 0:
+            return []
+        d = pd.read_csv(OPTION_LOG_FILE, dtype=str, keep_default_na=False)
+        if d.empty or "EntryDate" not in d.columns:
+            return []
+        if "Status" in d.columns:
+            d = d[d["Status"].astype(str).str.strip().eq("Active")].copy()
+        d["_dt"] = pd.to_datetime(d["EntryDate"], errors="coerce", format="mixed")
+        cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=days)
+        d = d[d["_dt"].notna() & (d["_dt"] >= cutoff)].copy()
+        d = d.sort_values(["_dt", "Ticker"], ascending=[False, True])
+        return d.drop(columns=["_dt"]).head(limit).to_dict("records")
+    except Exception as e:
+        print(f"⚠️ 读取近期期权推荐失败：{e}")
+        return []
+
+
 active_option_snapshot = load_active_options_snapshot(price_map_today)
 recent_option_recommendations = _load_recent_option_recommendations(limit=20, days=7)
 
@@ -2739,26 +2759,6 @@ def build_us_observation_html():
             '</div>'
         )
     return '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 最近30天新增/观察推荐</h2><p style="color:#607d8b;">Observation 是有效的 Scan 推荐记录，但不作为实际持仓计算，也不因行情缺失而从 Review 消失。</p>'+''.join(blocks)
-
-
-def _load_recent_option_recommendations(limit=20, days=7):
-    """读取最近期权推荐；推荐与实际期权持仓分开统计。"""
-    try:
-        if not os.path.exists(OPTION_LOG_FILE) or os.path.getsize(OPTION_LOG_FILE) == 0:
-            return []
-        d = pd.read_csv(OPTION_LOG_FILE, dtype=str, keep_default_na=False)
-        if d.empty or "EntryDate" not in d.columns:
-            return []
-        if "Status" in d.columns:
-            d = d[d["Status"].astype(str).str.strip().eq("Active")].copy()
-        d["_dt"] = pd.to_datetime(d["EntryDate"], errors="coerce", format="mixed")
-        cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=days)
-        d = d[d["_dt"].notna() & (d["_dt"] >= cutoff)].copy()
-        d = d.sort_values(["_dt", "Ticker"], ascending=[False, True])
-        return d.drop(columns=["_dt"]).head(limit).to_dict("records")
-    except Exception as e:
-        print(f"⚠️ 读取近期期权推荐失败：{e}")
-        return []
 
 
 def build_us_active_option_html(snapshot, closed, recommendations=None):
