@@ -719,7 +719,7 @@ def supplement_us_stocks_from_pending():
 
     for pending_file in pending_files:
         m = re.search(
-            r"us_stocks_pending_(\d{8})\.csv$",
+            r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$",
             os.path.basename(pending_file),
         )
 
@@ -2034,6 +2034,7 @@ if missing_entry_price:
 
 if not any([
     active_list,
+    observation_list,
     stopped_list,
     option_closed_records,
 ]):
@@ -2259,6 +2260,7 @@ client = anthropic.Anthropic(
 )
 
 active_option_snapshot = load_active_options_snapshot(price_map_today)
+recent_option_recommendations = _load_recent_option_recommendations(limit=20, days=7)
 
 prompt = f"""
 你是顶级量化风控总监。
@@ -2273,6 +2275,9 @@ prompt = f"""
 
 【期权当前活跃持仓】
 {active_option_snapshot}
+
+【最近7天期权推荐】
+{recent_option_recommendations}
 
 【期权自动平仓】
 {option_closed_records}
@@ -2736,7 +2741,27 @@ def build_us_observation_html():
     return '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 最近30天新增/观察推荐</h2><p style="color:#607d8b;">Observation 是有效的 Scan 推荐记录，但不作为实际持仓计算，也不因行情缺失而从 Review 消失。</p>'+''.join(blocks)
 
 
-def build_us_active_option_html(snapshot, closed):
+def _load_recent_option_recommendations(limit=20, days=7):
+    """读取最近期权推荐；推荐与实际期权持仓分开统计。"""
+    try:
+        if not os.path.exists(OPTION_LOG_FILE) or os.path.getsize(OPTION_LOG_FILE) == 0:
+            return []
+        d = pd.read_csv(OPTION_LOG_FILE, dtype=str, keep_default_na=False)
+        if d.empty or "EntryDate" not in d.columns:
+            return []
+        if "Status" in d.columns:
+            d = d[d["Status"].astype(str).str.strip().eq("Active")].copy()
+        d["_dt"] = pd.to_datetime(d["EntryDate"], errors="coerce", format="mixed")
+        cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=days)
+        d = d[d["_dt"].notna() & (d["_dt"] >= cutoff)].copy()
+        d = d.sort_values(["_dt", "Ticker"], ascending=[False, True])
+        return d.drop(columns=["_dt"]).head(limit).to_dict("records")
+    except Exception as e:
+        print(f"⚠️ 读取近期期权推荐失败：{e}")
+        return []
+
+
+def build_us_active_option_html(snapshot, closed, recommendations=None):
     blocks=[]
     for r in snapshot or []:
         blocks.append(
@@ -2745,6 +2770,17 @@ def build_us_active_option_html(snapshot, closed):
             f'{(" / " + _us_fmt_price(r.get("short_strike"))) if r.get("short_strike") else ""} | 到期={clean_text(r.get("expiry"))}</div>'
             f'<div><b>入场权利金：</b>{_us_fmt_price(r.get("entry_price"))}　<b>正股现价：</b>{_us_fmt_price(r.get("current_underlying"))}　<b>数量：</b>{clean_text(r.get("quantity"), "1")}</div>'
             f'<div><b>策略：</b>{clean_text(r.get("reason"), "Scan 生成的期权策略")}</div>'
+            '</div>'
+        )
+    for r in recommendations or []:
+        blocks.append(
+            '<div style="background:#fff8e1;border:1px solid #ffcc80;border-left:6px solid #fb8c00;padding:14px;margin:0 0 10px 0;border-radius:8px;">'
+            f'<div style="font-weight:800;">🎯 {clean_text(r.get("Name"), r.get("Ticker"))} ({clean_text(r.get("Ticker"))}) | {clean_text(r.get("Strategy"), "LONG_CALL")}</div>'
+            f'<div><b>推荐日期：</b>{clean_text(r.get("EntryDate"))}　<b>方向：</b>{clean_text(r.get("Direction"), "BULLISH")}　<b>DTE：</b>{clean_text(r.get("DTE"))}</div>'
+            f'<div><b>Call执行价：</b>{_us_fmt_price(r.get("LongStrike", r.get("Strike")))}　<b>Short：</b>{_us_fmt_price(r.get("ShortStrike")) if r.get("ShortStrike") else "—"}　<b>到期：</b>{clean_text(r.get("Expiry"))}</div>'
+            f'<div><b>净权利金：</b>{_us_fmt_price(r.get("NetDebit", r.get("EntryPrice")))}　<b>Delta：</b>{clean_text(r.get("Delta"), "N/A")}　<b>IV：</b>{clean_text(r.get("IV"), "N/A")}　<b>最大亏损：</b>{_us_fmt_price(r.get("MaxLoss"))}</div>'
+            f'<div><b>Call Wall：</b>{clean_text(r.get("CallWall"), "N/A")}　<b>Put Wall：</b>{clean_text(r.get("PutWall"), "N/A")}　<b>财报：</b>{clean_text(r.get("EarningsDate"), "N/A")}</div>'
+            f'<div><b>理由：</b>{clean_text(r.get("Reason"), "期权策略由 Scan 生成")}</div>'
             '</div>'
         )
     for r in closed or []:
@@ -2809,7 +2845,7 @@ body {{
 
 {build_us_observation_html()}
 
-{build_us_active_option_html(active_option_snapshot, option_closed_records)}
+{build_us_active_option_html(active_option_snapshot, option_closed_records, recent_option_recommendations)}
 
 {us_risk_attribution_html}
 
@@ -2819,6 +2855,17 @@ body {{
 </body>
 </html>
 """
+
+
+# ============================================================
+# 22.5 保存最新报告文件
+# ============================================================
+for _report_path in ("report.html", "review_report.html"):
+    try:
+        with open(_report_path, "w", encoding="utf-8") as _f:
+            _f.write(full_html)
+    except Exception as _e:
+        print(f"⚠️ 保存 {_report_path} 失败：{_e}")
 
 
 # ============================================================
