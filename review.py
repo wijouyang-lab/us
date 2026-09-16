@@ -609,7 +609,7 @@ def load_trade_history():
         if "Name" not in df.columns:
             df["Name"] = ""
 
-        df["Date"] = pd.to_datetime(df["Date"], errors="coerce")
+        df["Date"] = pd.to_datetime(df["Date"], errors="coerce", format="mixed")
         df = df.dropna(subset=["Date"]).copy()
 
         return df
@@ -688,13 +688,27 @@ def supplement_us_stocks_from_pending():
     - 价格获取失败时允许写空，但后续绝不 float('')
     - 使用 pandas.to_csv，避免 Name 中的逗号破坏 CSV
     """
-    pending_files = sorted(
-        f for f in glob.glob("us_stocks_pending_*.csv")
-        if not f.endswith(".processed")
-    )
+    # 同时读取尚未 processed 的 pending 与最近30天已 processed 的恢复文件。
+    # Scan 会先把 pending 改名为 .processed；Review 仍需能够从该文件恢复新推荐。
+    candidates = sorted(glob.glob("us_stocks_pending_*.csv") + glob.glob("us_stocks_pending_*.csv.processed"))
+    pending_files = []
+    cutoff_recovery = (get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)).date()
+    for f in candidates:
+        name = os.path.basename(f)
+        m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", name)
+        if not m:
+            continue
+        try:
+            file_day = datetime.datetime.strptime(m.group(1), "%Y%m%d").date()
+        except Exception:
+            continue
+        # 未 processed 的全部处理；processed 只恢复最近30天，避免每次 Review 重扫多年历史。
+        if name.endswith(".processed") and file_day < cutoff_recovery:
+            continue
+        pending_files.append(f)
 
     if not pending_files:
-        print("📋 无待确认美股文件，跳过补充。")
+        print("📋 无待确认/恢复美股文件，跳过补充。")
         return
 
     print(f"📋 发现 {len(pending_files)} 份待确认文件。")
@@ -988,15 +1002,15 @@ def supplement_us_stocks_from_pending():
                     f"✅ 新增 {len(new_rows)} 条美股记录。"
                 )
 
-            # 只有成功处理后才标记 processed
-            os.rename(
-                pending_file,
-                pending_file + ".processed",
-            )
-
-            print(
-                f"✅ {pending_file} 已处理并标记 .processed"
-            )
+            # 只有未 processed 的文件才需要改名；恢复文件保持原样。
+            if not pending_file.endswith(".processed"):
+                os.rename(
+                    pending_file,
+                    pending_file + ".processed",
+                )
+                print(f"✅ {pending_file} 已处理并标记 .processed")
+            else:
+                print(f"✅ {pending_file} 已完成恢复检查")
 
         except Exception as e:
             print(
@@ -1030,7 +1044,7 @@ cutoff_date = (
 )
 
 recent_picks = df[
-    df["Date"] >= cutoff_date
+    df["Date"].notna() & (df["Date"] >= cutoff_date)
 ].copy()
 
 if recent_picks.empty:
@@ -2460,6 +2474,7 @@ active_count = len(
 
 total_count = (
     active_count
+    + len(observation_list)
     + closed_count
 )
 

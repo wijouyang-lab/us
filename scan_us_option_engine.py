@@ -1,19 +1,21 @@
 # -*- coding: utf-8 -*-
-"""
-美股期权推荐引擎
-- 只对 Scan 的 Core_Dragon 生成期权建议
-- 使用 yfinance 公开期权链，优先 45-90 DTE
-- 优先 Call Debit Spread；若无法构建价差则退化为 Long Call
-- 同时记录 Delta、IV、Call Wall、Put Wall、Earnings Date
-- 不伪造不存在的期权报价；链/报价不足则明确返回 None
+"""美股期权推荐引擎
+
+优先使用 yfinance；失败时直接调用 Yahoo Finance options endpoint 作为第二层。
+只有拿到真实期权链/报价才生成可执行策略，不伪造权利金、IV 或 Delta。
 """
 
 import csv
 import datetime as dt
+import json
 import math
 import os
 import tempfile
-from typing import Any, Dict, Optional
+import time
+import urllib.parse
+import urllib.request
+from zoneinfo import ZoneInfo
+from typing import Any, Dict, Optional, Tuple
 
 import pandas as pd
 import yfinance as yf
@@ -23,6 +25,7 @@ MIN_DTE = 45
 MAX_DTE = 90
 TARGET_DTE = 60
 RISK_FREE = 0.04
+US_TZ = ZoneInfo("America/New_York")
 
 
 def _sf(v, default=None):
@@ -37,9 +40,14 @@ def _sf(v, default=None):
 
 def _norm_date(v):
     try:
-        return pd.Timestamp(v).date()
+        ts = pd.Timestamp(v)
+        return ts.date() if not pd.isna(ts) else None
     except Exception:
         return None
+
+
+def _us_today():
+    return dt.datetime.now(US_TZ).date()
 
 
 def _normal_cdf(x: float) -> float:
@@ -69,16 +77,11 @@ def _clean_chain(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _best_price(row, side: str) -> Optional[float]:
-    if side == "buy":
-        for c in ("ask", "lastPrice", "bid"):
-            v = _sf(row.get(c))
-            if v is not None and v > 0:
-                return v
-    else:
-        for c in ("bid", "lastPrice", "ask"):
-            v = _sf(row.get(c))
-            if v is not None and v > 0:
-                return v
+    cols = ("ask", "lastPrice", "bid") if side == "buy" else ("bid", "lastPrice", "ask")
+    for c in cols:
+        v = _sf(row.get(c))
+        if v is not None and v > 0:
+            return v
     return None
 
 
@@ -125,21 +128,18 @@ def _wall(df: pd.DataFrame) -> Optional[float]:
     if df is None or df.empty:
         return None
     work = df.copy()
-    if "openInterest" not in work.columns:
-        return None
-    work["openInterest"] = pd.to_numeric(work["openInterest"], errors="coerce").fillna(0)
-    work["strike"] = pd.to_numeric(work["strike"], errors="coerce")
+    work["openInterest"] = pd.to_numeric(work.get("openInterest"), errors="coerce").fillna(0)
+    work["strike"] = pd.to_numeric(work.get("strike"), errors="coerce")
     work = work.dropna(subset=["strike"])
     if work.empty:
         return None
-    r = work.sort_values(["openInterest", "strike"], ascending=[False, True]).iloc[0]
-    return _sf(r.get("strike"))
+    return _sf(work.sort_values(["openInterest", "strike"], ascending=[False, True]).iloc[0].get("strike"))
 
 
 def _iv_bucket(chain: pd.DataFrame, iv: Optional[float]) -> str:
-    if iv is None or chain.empty or "impliedVolatility" not in chain.columns:
+    if iv is None or chain.empty:
         return "N/A"
-    vals = pd.to_numeric(chain["impliedVolatility"], errors="coerce").dropna()
+    vals = pd.to_numeric(chain.get("impliedVolatility"), errors="coerce").dropna()
     vals = vals[vals > 0]
     if len(vals) < 8:
         return "样本不足"
@@ -151,21 +151,20 @@ def _iv_bucket(chain: pd.DataFrame, iv: Optional[float]) -> str:
     return f"中性（链内约P{pct:.0f}）"
 
 
-def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
+def _pick_call_structure(calls: pd.DataFrame, spot: float):
     if calls.empty:
         return None
-    work = calls.copy()
-    work = work[work["strike"] > 0]
-    work = work.assign(moneyness=(work["strike"] / spot - 1.0).abs())
-    liquid = work[(work["volume"].fillna(0) + work["openInterest"].fillna(0) > 0)]
+    work = calls[calls["strike"] > 0].copy()
+    if work.empty:
+        return None
+    work["moneyness"] = (work["strike"] / spot - 1.0).abs()
+    liquid = work[(work["volume"].fillna(0) + work["openInterest"].fillna(0)) > 0]
     if liquid.empty:
         liquid = work
 
-    # Long call: nearest ATM with a valid executable ask/last.
-    candidates = liquid.sort_values(["moneyness", "strike"])
     long_row = None
     long_price = None
-    for _, row in candidates.iterrows():
+    for _, row in liquid.sort_values(["moneyness", "strike"]).iterrows():
         p = _best_price(row, "buy")
         if p is not None and p > 0:
             long_row, long_price = row, p
@@ -175,25 +174,21 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
 
     long_strike = _sf(long_row["strike"])
     long_iv = _sf(long_row.get("impliedVolatility"))
-    long_delta = _call_delta(spot, long_strike, dte, long_iv) if long_iv else None
-
-    # Short call: prefer >= +5% OTM, lowest strike satisfying target.
-    short_candidates = liquid[liquid["strike"] >= spot * 1.05].sort_values("strike")
     short_row = None
     short_price = None
-    if not short_candidates.empty:
-        for _, row in short_candidates.iterrows():
-            p = _best_price(row, "sell")
-            if p is not None and p > 0:
-                short_row, short_price = row, p
-                break
+    short_candidates = liquid[liquid["strike"] >= spot * 1.05].sort_values("strike")
+    for _, row in short_candidates.iterrows():
+        p = _best_price(row, "sell")
+        if p is not None and p > 0:
+            short_row, short_price = row, p
+            break
 
     if short_row is not None:
         short_strike = _sf(short_row["strike"])
-        if short_strike and short_strike > long_strike and short_price is not None:
+        if short_strike and short_strike > long_strike:
             net = long_price - short_price
-            spread_width = short_strike - long_strike
-            if 0 < net < spread_width:
+            width = short_strike - long_strike
+            if 0 < net < width:
                 return {
                     "strategy": "CALL_DEBIT_SPREAD",
                     "long_strike": long_strike,
@@ -202,14 +197,12 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
                     "short_price": short_price,
                     "net_debit": round(net, 2),
                     "max_loss": round(net * 100, 2),
-                    "max_profit": round((short_strike - long_strike - net) * 100, 2),
+                    "max_profit": round((width - net) * 100, 2),
                     "break_even": round(long_strike + net, 2),
                     "iv": long_iv,
-                    "delta": long_delta,
-                    "direction": "BULLISH",
+                    "delta": _call_delta(spot, long_strike, 60, long_iv) if long_iv else None,
                 }
 
-    # Fallback: Long Call only.
     return {
         "strategy": "LONG_CALL",
         "long_strike": long_strike,
@@ -221,151 +214,154 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
         "max_profit": None,
         "break_even": round(long_strike + long_price, 2),
         "iv": long_iv,
-        "delta": long_delta,
-        "direction": "BULLISH",
+        "delta": _call_delta(spot, long_strike, 60, long_iv) if long_iv else None,
     }
 
 
+def _direct_yahoo_option_chain(ticker: str) -> Tuple[list, pd.DataFrame, pd.DataFrame]:
+    """直接调用 Yahoo options endpoint，绕开 yfinance 在 Actions 环境的部分链路问题。"""
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150.0 Safari/537.36",
+        "Accept": "application/json,text/plain,*/*",
+    }
+    base = f"https://query2.finance.yahoo.com/v7/finance/options/{urllib.parse.quote(ticker, safe='')}"
+    req = urllib.request.Request(base, headers=headers)
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        payload = json.loads(resp.read().decode("utf-8", errors="ignore"))
+    result = (((payload.get("optionChain") or {}).get("result") or [None])[0])
+    if not result:
+        return [], pd.DataFrame(), pd.DataFrame()
+    expirations = [dt.datetime.fromtimestamp(x, tz=dt.timezone.utc).date().isoformat() for x in (result.get("expirationDates") or [])]
+    today = _us_today()
+    expiry = _pick_expiry(expirations, today)
+    if expiry is None:
+        return expirations, pd.DataFrame(), pd.DataFrame()
+    ts = int(dt.datetime.combine(expiry, dt.time()).replace(tzinfo=dt.timezone.utc).timestamp())
+    req2 = urllib.request.Request(base + "?" + urllib.parse.urlencode({"date": ts}), headers=headers)
+    with urllib.request.urlopen(req2, timeout=15) as resp:
+        payload2 = json.loads(resp.read().decode("utf-8", errors="ignore"))
+    result2 = (((payload2.get("optionChain") or {}).get("result") or [None])[0])
+    if not result2:
+        return expirations, pd.DataFrame(), pd.DataFrame()
+    opt = (result2.get("options") or [{}])[0]
+    calls = _clean_chain(pd.DataFrame(opt.get("calls") or []))
+    puts = _clean_chain(pd.DataFrame(opt.get("puts") or []))
+    return expirations, calls, puts
+
+
+def _load_chain(ticker: str):
+    today = _us_today()
+    # Layer 1: yfinance
+    try:
+        obj = yf.Ticker(ticker)
+        expiry = _pick_expiry(obj.options, today)
+        if expiry:
+            exp_str = expiry.strftime("%Y-%m-%d")
+            chain = obj.option_chain(exp_str)
+            calls = _clean_chain(chain.calls)
+            puts = _clean_chain(chain.puts)
+            if not calls.empty:
+                return obj, expiry, calls, puts
+    except Exception as e:
+        print(f"⚠️ [期权] yfinance {ticker} 失败，尝试 Yahoo 直连：{e}")
+    # Layer 2: direct Yahoo
+    try:
+        expirations, calls, puts = _direct_yahoo_option_chain(ticker)
+        expiry = _pick_expiry(expirations, today)
+        if expiry and not calls.empty:
+            return None, expiry, calls, puts
+    except Exception as e:
+        print(f"⚠️ [期权] Yahoo直连 {ticker} 失败：{e}")
+    return None, None, pd.DataFrame(), pd.DataFrame()
+
+
 def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]]:
-    """为一个 Core_Dragon 构建真实期权建议；数据不足时返回 None。"""
     ticker = str(item.get("Ticker", "")).strip().upper()
     if not ticker:
         return None
     spot = _sf(item.get("Price"))
     if spot is None or spot <= 0:
         return None
-
-    today = dt.date.today()
-    try:
-        obj = yf.Ticker(ticker)
-        expiry = _pick_expiry(obj.options, today)
-        if expiry is None:
-            return None
-        expiry_str = expiry.strftime("%Y-%m-%d")
-        chain = obj.option_chain(expiry_str)
-        calls = _clean_chain(chain.calls)
-        puts = _clean_chain(chain.puts)
-        if calls.empty:
-            return None
-
-        dte = (expiry - today).days
-        structure = _pick_call_structure(calls, spot, dte)
-        if structure is None:
-            return None
-
-        call_wall = _wall(calls)
-        put_wall = _wall(puts)
-        earnings = _event_date(obj)
-        earnings_days = (earnings - today).days if earnings else None
-        iv = structure.get("iv")
-        iv_label = _iv_bucket(calls, iv)
-        score = _sf(item.get("Score"))
-
-        if structure["strategy"] == "CALL_DEBIT_SPREAD":
-            rationale = "核心精选偏多；用Call Debit Spread限制最大亏损，并保留上行空间。"
-        else:
-            rationale = "核心精选偏多；期权链无法形成有效价差，退化为Long Call，最大风险限定为权利金。"
-
-        if earnings_days is not None and 0 <= earnings_days <= dte:
-            event_note = f"到期前约第{earnings_days}天有财报事件，需控制事件风险。"
-        elif earnings_days is None:
-            event_note = "财报日期未从数据源可靠取得，不把其当作已确认事件。"
-        else:
-            event_note = "在本次期权到期日前未识别到更近的财报事件。"
-
-        return {
-            "Ticker": ticker,
-            "Name": str(item.get("Name", ticker)),
-            "EntryDate": dt.datetime.now().strftime("%Y-%m-%d"),
-            "UnderlyingPrice": round(spot, 2),
-            "Strategy": structure["strategy"],
-            "OptionType": "CALL",
-            "Strike": structure["long_strike"],
-            "LongStrike": structure["long_strike"],
-            "ShortStrike": structure["short_strike"] or "",
-            "Expiry": expiry_str,
-            "DTE": dte,
-            "LongPrice": structure["long_price"],
-            "ShortPrice": structure["short_price"] or "",
-            "NetDebit": structure["net_debit"],
-            "EntryPrice": structure["net_debit"],
-            "MaxLoss": structure["max_loss"],
-            "MaxProfit": structure["max_profit"] or "",
-            "BreakEven": structure["break_even"],
-            "Delta": round(structure["delta"], 3) if structure.get("delta") is not None else "",
-            "IV": round(structure["iv"], 4) if structure.get("iv") is not None else "",
-            "IV_Regime": iv_label,
-            "CallWall": call_wall or "",
-            "PutWall": put_wall or "",
-            "EarningsDate": earnings.strftime("%Y-%m-%d") if earnings else "",
-            "EarningsDays": earnings_days if earnings_days is not None else "",
-            "Direction": "BULLISH",
-            "Status": "Active",
-            "Quantity": 1,
-            "StopLoss": "权利金为最大亏损；若标的趋势破坏，Review重新评估",
-            "HoldPeriod": "随股票趋势动态管理，期权到期日独立",
-            "Reason": rationale + " " + event_note,
-            "ScanScore": score if score is not None else str(item.get("Score", "N/A")),
-        }
-    except Exception as e:
-        print(f"⚠️ [期权] {ticker} 推荐生成失败：{e}")
+    obj, expiry, calls, puts = _load_chain(ticker)
+    if expiry is None or calls.empty:
+        print(f"⚠️ [期权] {ticker} 没有可验证的45-90天期权链")
         return None
+    dte = (expiry - _us_today()).days
+    structure = _pick_call_structure(calls, spot)
+    if not structure:
+        print(f"⚠️ [期权] {ticker} 没有可执行的CALL结构")
+        return None
+
+    earnings = _event_date(obj) if obj is not None else None
+    earnings_days = (earnings - _us_today()).days if earnings else None
+    iv = structure.get("iv")
+    event_note = (f"到期前约第{earnings_days}天有财报事件，需控制事件风险。" if earnings_days is not None and 0 <= earnings_days <= dte else "财报日期未可靠取得或不在本次到期窗内。")
+    strategy = structure["strategy"]
+    rationale = "核心精选偏多；优先使用Call Debit Spread限制最大亏损。" if strategy == "CALL_DEBIT_SPREAD" else "核心精选偏多；期权链无法构建价差，使用Long Call，最大风险为权利金。"
+    return {
+        "Ticker": ticker,
+        "Name": str(item.get("Name", ticker)),
+        "EntryDate": dt.datetime.now(US_TZ).strftime("%Y-%m-%d"),
+        "UnderlyingPrice": round(spot, 2),
+        "Strategy": strategy,
+        "OptionType": "CALL",
+        "Strike": structure["long_strike"],
+        "LongStrike": structure["long_strike"],
+        "ShortStrike": structure["short_strike"] or "",
+        "Expiry": expiry.strftime("%Y-%m-%d"),
+        "DTE": dte,
+        "LongPrice": structure["long_price"],
+        "ShortPrice": structure["short_price"] or "",
+        "NetDebit": structure["net_debit"],
+        "EntryPrice": structure["net_debit"],
+        "MaxLoss": structure["max_loss"],
+        "MaxProfit": structure["max_profit"] or "",
+        "BreakEven": structure["break_even"],
+        "Delta": round(structure["delta"], 3) if structure.get("delta") is not None else "",
+        "IV": round(iv, 4) if iv is not None else "",
+        "IV_Regime": _iv_bucket(calls, iv),
+        "CallWall": _wall(calls) or "",
+        "PutWall": _wall(puts) or "",
+        "EarningsDate": earnings.strftime("%Y-%m-%d") if earnings else "",
+        "EarningsDays": earnings_days if earnings_days is not None else "",
+        "Direction": "BULLISH",
+        "Status": "Active",
+        "Quantity": 1,
+        "StopLoss": "权利金为最大亏损；若正股趋势破坏，Review重新评估",
+        "HoldPeriod": "随股票趋势动态管理，期权到期日独立",
+        "Reason": rationale + " " + event_note,
+        "ScanScore": item.get("Score", "N/A"),
+    }
 
 
 def append_option_strategy(item: Dict[str, Any]) -> bool:
     rec = build_option_recommendation(item)
     if not rec:
         return False
-
     columns = [
-        "Ticker", "Name", "EntryDate", "UnderlyingPrice", "Strategy", "OptionType", "Strike",
-        "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
-        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "Delta", "IV", "IV_Regime",
-        "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status",
-        "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
+        "Ticker", "Name", "EntryDate", "UnderlyingPrice", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
+        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "Delta", "IV", "IV_Regime", "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
     ]
-
-    rows = []
+    old = pd.DataFrame(columns=columns)
     if os.path.exists(OPTION_FILE) and os.path.getsize(OPTION_FILE) > 0:
-        try:
-            old = pd.read_csv(OPTION_FILE, dtype=str, keep_default_na=False)
-        except Exception:
-            old = pd.DataFrame(columns=columns)
-    else:
-        old = pd.DataFrame(columns=columns)
-
+        try: old = pd.read_csv(OPTION_FILE, dtype=str, keep_default_na=False)
+        except Exception: pass
     for c in columns:
-        if c not in old.columns:
-            old[c] = ""
+        if c not in old.columns: old[c] = ""
     old = old[columns].copy()
-
-    # 同一 ticker + expiry + 当日 recommendation 不重复增加。
-    mask = (
-        old["Ticker"].astype(str).str.upper().eq(rec["Ticker"].upper())
-        & old["EntryDate"].astype(str).eq(rec["EntryDate"])
-        & old["Expiry"].astype(str).eq(rec["Expiry"])
-    )
+    mask = old["Ticker"].astype(str).str.upper().eq(rec["Ticker"].upper()) & old["EntryDate"].astype(str).eq(rec["EntryDate"]) & old["Expiry"].astype(str).eq(rec["Expiry"])
     if mask.any():
-        old.loc[mask, columns] = pd.DataFrame([rec])[columns].values[0]
+        old.loc[mask, columns] = [rec[c] for c in columns]
         final = old
     else:
         final = pd.concat([old, pd.DataFrame([rec])[columns]], ignore_index=True)
-
-    fd, tmp = tempfile.mkstemp(prefix=".option_strategies.", suffix=".csv", dir=".")
-    os.close(fd)
+    fd, tmp = tempfile.mkstemp(prefix=".option_strategies.", suffix=".csv", dir="."); os.close(fd)
     try:
         final.to_csv(tmp, index=False, encoding="utf-8", quoting=csv.QUOTE_MINIMAL)
         os.replace(tmp, OPTION_FILE)
     finally:
-        if os.path.exists(tmp):
-            os.remove(tmp)
-
-    print(
-        f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} "
-        f"{rec['LongStrike']}" +
-        (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") +
-        f" @ {rec['Expiry']} | Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}"
-    )
+        if os.path.exists(tmp): os.remove(tmp)
+    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | 权利金={rec['NetDebit']} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}")
     return True
 
 
@@ -374,13 +370,11 @@ def get_recent_option_recommendations(limit: int = 20) -> list:
         return []
     try:
         d = pd.read_csv(OPTION_FILE, dtype=str, keep_default_na=False)
-        if d.empty:
-            return []
+        if d.empty: return []
         d = d[d["Status"].astype(str).str.strip().eq("Active")].copy()
-        if "EntryDate" in d.columns:
-            d["_dt"] = pd.to_datetime(d["EntryDate"], errors="coerce")
-            d = d.sort_values(["_dt", "Ticker"], ascending=[False, True])
-        return d.drop(columns=[c for c in ["_dt"] if c in d.columns]).head(limit).to_dict("records")
+        d["_dt"] = pd.to_datetime(d["EntryDate"], errors="coerce", format="mixed")
+        d = d.sort_values(["_dt", "Ticker"], ascending=[False, True])
+        return d.drop(columns=["_dt"]).head(limit).to_dict("records")
     except Exception as e:
         print(f"⚠️ 读取期权推荐失败：{e}")
         return []
