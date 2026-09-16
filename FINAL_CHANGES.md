@@ -1,47 +1,16 @@
-# 美股 Scan / Review / 期权完整修复版
+# US 最终修复版 v6
 
-本版本基于用户提供的 us-main(3).zip 完整代码整理。
+本版核心修正：
 
-## 已修改
+1. 所有有效 Scan 股票推荐均纳入股票绩效统计：Core_Dragon / Core_Double_Dragon / Sub_Pioneer / Observation。
+2. Observation 不再排除在胜率统计之外：仍按首次推荐价持续计算当前盈亏；但不视为实际持仓，不触发实际持仓移动止损。
+3. Scan 推荐综合胜率 = 已了结股票 + 当前实际持仓 + Observation；期权完全独立。
+4. 当前推荐跟踪胜率 = 当前持仓 + Observation，全部按推荐价追踪。
+5. 当日 OHLC 缺失时，止损判断继续暂停，但绩效统计可以使用最近可用完整收盘价，避免推荐因数据源暂时缺失而从胜率样本消失。
+6. Observation 写入 review_history.csv 时同步写入 PnL_Pct，并在报告中显示推荐跟踪盈亏。
+7. 保留真实期权链策略引擎，不生成虚假期权报价。
+8. 保留 Review / Scan 风控联动和动态移动止损。
+9. 不把 Trap_Warning 视为股票推荐；它是风险警告，不进入推荐胜率。
+10. 仓库不包含 __pycache__ 或 *.pyc。
 
-1. `scan.py`
-   - 扫描邮件改为在股票推荐、期权策略生成之后发送，避免邮件只有占位符而没有真实期权信息。
-   - AI 正文不再允许虚构行权价、到期日、权利金、Delta、IV；真实期权数据由程序后置注入。
-   - 新增可验证期权推荐区域。
-   - 仅对本次新产生的 `Core_Dragon` 生成期权策略。
-
-2. `scan_us_option_engine.py`
-   - 新增真实期权链策略引擎。
-   - 45-90 DTE，优先约 60 天。
-   - 优先 `CALL_DEBIT_SPREAD`，无法形成有效价差时使用 `LONG_CALL`。
-   - 使用期权链中的真实 bid/ask/lastPrice。
-   - 计算/记录 Delta、IV、链内 IV 分位、Call Wall、Put Wall、财报日期和到期天数。
-   - 不会在没有可验证期权链时伪造报价。
-
-3. `review.py`
-   - `Observation` 不再被当作实际持仓，也不会因为今日行情缺失而从 Review 消失。
-   - 新增“最近30天新增/观察推荐”区域。
-   - 实际持仓当日行情缺失时保留 Review 卡片并标记 `DATA_MISSING`，不做虚假止损判断。
-   - Review 历史记录增加 `Observation` 状态。
-   - 期权账本兼容新策略字段，并支持 `CALL_DEBIT_SPREAD` 到期内在价值结算。
-   - Review 增加期权持仓/推荐区域。
-
-4. `.github/workflows/scan.yml`
-   - 使用 `git add -A`，防止新增 `option_strategies.csv`、推荐历史等遗漏。
-   - 增加 fetch/rebase/retry，避免远程更新造成 push 失败。
-
-5. `.github/workflows/review.yml`
-   - 同样改为完整暂存并安全同步。
-   - 保证 trade_history、review_history、option_strategies、报告和 pending processed 状态都能提交。
-
-6. `.github/workflows/evolve.yml`
-   - 增加安全同步逻辑，减少与 Scan/Review 并发提交冲突。
-
-7. `.gitignore`
-   - 排除 `__pycache__/`、`*.pyc` 等缓存文件。
-
-## 特别说明
-
-`Observation` 是有效的 Scan 推荐，但不计入实际持仓盈亏和股票止损触发。
-
-期权策略只在期权链存在可验证报价时生成；没有数据时报告会明确显示“没有生成可验证期权策略”，而不是编造合约。
+上传说明：代码与 workflow 可直接覆盖；不要用包内旧 CSV 覆盖你 GitHub 当前最新账本，除非你确认这些 CSV 就是你要保留的版本。
