@@ -1,6 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
-2026-09-09,COP,ConocoPhillips,Observation,67.5,4.03,39,15,18.14418,14.408159,7.56,2.5216465,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,137.18,2.21,True
-2026-09-09,EOG,EOG Resources,Observation,53.8,0.26,14,19,11.4389105,10.201164,12.85,2.4241376,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,146.99,2.35,False
-2026-09-09,PYPL,PayPal,Observation,38.8,-9.33,12,17,9.969754,9.112318,5.29,2.2937417,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,52.74,3.68,False
-2026-09-09,LUV,Southwest Airlines,Observation,35.1,-4.9,7,19,24.0875,8.047206,1.6,2.6623378,True,False,False,False,观望,观望,ATR初始保护,N/A,pending,38.54,3.13,False
-2026-09-09,STX,Seagate Technology,Observation,57.9,5.66,5,0,None,None,None,None,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,911.95,6.05,False
