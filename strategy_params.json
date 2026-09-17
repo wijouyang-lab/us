@@ -1,0 +1,51 @@
+{
+  "version": "2026-09-17-US-GROK-REVIEW",
+  "scoring": {
+    "fundamental_weight": 35,
+    "event_weight": 20,
+    "technical_weight": 25,
+    "risk_weight": 20,
+    "ai_weight": 30,
+    "quant_weight": 70,
+    "core_min_score": 65,
+    "observation_min_score": 58,
+    "pre_ai_min_quant_score": 55,
+    "min_technical_confirmations": 2,
+    "stressed_min_technical_confirmations": 3
+  },
+  "regime": {
+    "vix_tighten": 25,
+    "vix_panic": 30,
+    "spy_ma_buffer_pct": 0.0,
+    "sector_rs_min_pct": 0.0,
+    "recent_market_drop_pct": -2.0
+  },
+  "liquidity": {
+    "min_market_cap": 500000000,
+    "min_avg_dollar_volume": 5000000
+  },
+  "technical": {
+    "ma20_slope_min_pct_5d": -0.2,
+    "recent_volume_ratio": 1.15,
+    "recent_bull_volume_ratio": 1.5,
+    "atr_max_pct": 12.0
+  },
+  "exit": {
+    "early_days": 3,
+    "early_stop_pct": -5.0,
+    "atr_multiplier": 2.0,
+    "atr_floor_pct": 3.0,
+    "atr_ceiling_pct": 12.0,
+    "profit_lock_1_pct": 15.0,
+    "profit_lock_1_drawdown_pct": 10.0,
+    "profit_lock_2_pct": 30.0,
+    "profit_lock_2_drawdown_pct": 8.0,
+    "profit_lock_3_pct": 50.0,
+    "profit_lock_3_drawdown_pct": 12.0
+  },
+  "limits": {
+    "max_core": 5,
+    "max_observation": 7,
+    "evolution_recent_rules": 4
+  }
+}

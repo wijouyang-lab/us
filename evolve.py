@@ -12,6 +12,7 @@ import os
 import json
 import anthropic
 import datetime
+import math
 
 EVOLVE_MODEL   = "claude-opus-4-8"
 HISTORY_FILE   = "trade_history.csv"
@@ -32,8 +33,11 @@ SCORE_COL  = "Score"
 # ============================================================
 def safe_float(val, default=None):
     try:
-        v = float(str(val).strip().replace(",", "").replace("$", ""))
-        return v if v > 0 else default
+        if val is None: return default
+        s=str(val).strip().replace(",","").replace("$","")
+        if s.lower() in {"","nan","none","null","n/a","na"}: return default
+        x=float(s)
+        return x if math.isfinite(x) else default
     except Exception:
         return default
 
@@ -101,6 +105,26 @@ def _segment_by_generation(df_c, boundaries):
             since_last = {"样本数": int(len(seg)), "提示": "样本数不足2笔，暂不单独计算胜率"}
     return segments, since_last
 
+
+
+def evaluate_score_thresholds_oos(df_c):
+    """时间顺序 60/40 切分，用推荐事件的历史 Score 做简单门槛验证；不足样本时不自动改参数。"""
+    work=df_c.copy()
+    work["score_num"]=pd.to_numeric(work["score"],errors="coerce")
+    work=work.dropna(subset=["score_num","pnl_pct"]).sort_values("date")
+    if len(work)<30:
+        return {"eligible":False,"reason":"样本不足30笔"}
+    cut=max(1,int(len(work)*0.6)); val=work.iloc[cut:].copy(); base=float(STRATEGY_PARAMS["scoring"].get("core_min_score",65))
+    def ev(g): return float(g["pnl_pct"].mean()) if len(g) else None
+    base_g=val[val["score_num"]>=base]
+    base_ev=ev(base_g)
+    results=[]
+    for t in (55,60,62,65,68,70,72,75):
+        g=val[val["score_num"]>=t]
+        results.append({"threshold":t,"n":int(len(g)),"win_rate":round(float((g["pnl_pct"]>0).mean()*100),1) if len(g) else None,"ev":round(ev(g),2) if len(g) else None})
+    eligible=[r for r in results if r["n"]>=8 and r["ev"] is not None]
+    best=max(eligible,key=lambda r:r["ev"]) if eligible else None
+    return {"eligible":bool(best is not None and (base_ev is None or best["ev"]>=base_ev)),"baseline_threshold":base,"baseline_n":int(len(base_g)),"baseline_ev":round(base_ev,2) if base_ev is not None else None,"candidates":results,"best":best}
 
 def calculate_metrics(df: pd.DataFrame) -> dict | None:
     if df.empty:
@@ -237,6 +261,9 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
 
     generation_boundaries = _load_evolution_boundaries()
     generation_stats, since_last_evolution = _segment_by_generation(df_c, generation_boundaries)
+    threshold_validation = evaluate_score_thresholds_oos(df_c)
+    loss_examples = df_c.sort_values("pnl_pct").head(8)[["ticker","name","score","tech_score","pnl_pct"]].to_dict("records")
+    win_examples = df_c.sort_values("pnl_pct",ascending=False).head(8)[["ticker","name","score","tech_score","pnl_pct"]].to_dict("records")
 
     return {
         "total_closed":       total,
@@ -254,6 +281,9 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
         "active_count":       len(active),
         "active_summary":     active_summary[:10],
         "prev_rules":         prev_rules,
+        "threshold_validation": threshold_validation,
+        "loss_examples": loss_examples,
+        "win_examples": win_examples,
     }
 
 
@@ -301,6 +331,15 @@ def evolve_strategy(metrics: dict):
 【退出方式分布】（判断止损位/持股周期是否合理）：
 {json.dumps(metrics['exit_stats'], ensure_ascii=False, indent=2)}
 
+【OOS 门槛验证】
+{json.dumps(metrics.get("threshold_validation"), ensure_ascii=False, indent=2)}
+
+【失败样本】
+{json.dumps(metrics.get("loss_examples"), ensure_ascii=False, indent=2)}
+
+【成功样本】
+{json.dumps(metrics.get("win_examples"), ensure_ascii=False, indent=2)}
+
 【上一轮已应用规则】：
 {json.dumps(metrics['prev_rules'], ensure_ascii=False, indent=2) if metrics['prev_rules'] else "无（首次进化）"}
 
@@ -311,6 +350,8 @@ def evolve_strategy(metrics: dict):
 2. 如果MACD金叉=是的胜率远高于=否，说明金叉信号有效，应该提高MACD金叉的推荐权重
 3. 如果止损触发次数多且亏损较大，说明止损位设得太紧，建议适当放宽
    - 如果 CALL 和 PUT 的胜率差异显著，应建议扫描器优先选择胜率更高的方向
+
+代码级参数只允许从白名单中选择：core_min_score、observation_min_score、min_technical_confirmations、stressed_min_technical_confirmations；只有 OOS 验证样本足够且 EV 不差于当前基线时才允许自动应用。止损参数只能提出建议，不自动覆盖。
 
 必须只返回以下 JSON，不要输出其他文字：
 {{
@@ -352,6 +393,21 @@ def evolve_strategy(metrics: dict):
             return
 
         result = json.loads(text[start:end])
+
+        # 代码级参数：白名单 + OOS 门槛验证，避免 AI 随意改阈值。
+        applied_parameter_updates = []
+        tv = metrics.get("threshold_validation") or {}
+        if tv.get("eligible") and tv.get("best"):
+            best_t = int(tv["best"]["threshold"])
+            current_t = int(STRATEGY_PARAMS["scoring"].get("core_min_score",65))
+            if best_t != current_t:
+                STRATEGY_PARAMS["scoring"]["core_min_score"] = best_t
+                applied_parameter_updates.append({"name":"core_min_score","old":current_t,"new":best_t,"reason":"time-ordered OOS EV >= baseline"})
+        # Observation 门槛不单独自动降低；保持更保守的下限，避免用 Observation 扩大低质量样本。
+        if applied_parameter_updates:
+            with open(STRATEGY_PARAMS_FILE,"w",encoding="utf-8") as f:
+                json.dump(STRATEGY_PARAMS,f,ensure_ascii=False,indent=2)
+        result["applied_parameter_updates"] = applied_parameter_updates
         result["date"]    = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         result["metrics"] = {k: v for k, v in metrics.items()
                              if k not in ("prev_rules", "active_summary")}
@@ -382,13 +438,16 @@ def evolve_strategy(metrics: dict):
             seen.setdefault(r["rule_id"], r)
         deduped = list(reversed(seen.values()))
 
+        recent_limit = 4
+        deduped = deduped[-recent_limit:]
         evolved_output = {
             "last_updated":            result["date"],
             "total_closed_at_update":  total_now,
             "overall_win_rate":        metrics["overall_win_rate"],
             "recent_win_rate":         metrics.get("since_last_evolution"),
             "active_rules":            deduped,
-            "prompt_patches":          [r["prompt_patch"] for r in deduped],
+            "prompt_patches":          [r.get("prompt_patch","") for r in deduped],
+            "applied_parameter_updates": result.get("applied_parameter_updates",[]),
         }
         with open(EVOLVED_RULES, "w", encoding="utf-8") as f:
             json.dump(evolved_output, f, ensure_ascii=False, indent=2)

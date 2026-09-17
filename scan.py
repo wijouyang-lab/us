@@ -54,6 +54,40 @@ ATR_STOP_FLOOR_PCT = 3.0
 ATR_STOP_CEIL_PCT = 12.0
 REGIME_GATE_VERSION = "2026-08-31-US"
 
+STRATEGY_PARAMS_FILE = "strategy_params.json"
+
+def load_strategy_params():
+    base = {
+        "scoring": {"fundamental_weight": 35, "event_weight": 20, "technical_weight": 25, "risk_weight": 20,
+                    "ai_weight": 30, "quant_weight": 70, "core_min_score": 65, "observation_min_score": 58,
+                    "pre_ai_min_quant_score": 55, "min_technical_confirmations": 2, "stressed_min_technical_confirmations": 3},
+        "regime": {"vix_tighten": 25, "vix_panic": 30, "spy_ma_buffer_pct": 0.0, "sector_rs_min_pct": 0.0, "recent_market_drop_pct": -2.0},
+        "liquidity": {"min_market_cap": 5e8, "min_avg_dollar_volume": 5e6},
+        "technical": {"ma20_slope_min_pct_5d": -0.20, "recent_volume_ratio": 1.15, "recent_bull_volume_ratio": 1.50, "atr_max_pct": 12.0},
+        "exit": {"early_days": 3, "early_stop_pct": -5.0, "atr_multiplier": 2.0, "atr_floor_pct": 3.0, "atr_ceiling_pct": 12.0,
+                 "profit_lock_1_pct": 15.0, "profit_lock_1_drawdown_pct": 10.0,
+                 "profit_lock_2_pct": 30.0, "profit_lock_2_drawdown_pct": 8.0,
+                 "profit_lock_3_pct": 50.0, "profit_lock_3_drawdown_pct": 12.0},
+        "limits": {"max_core": 5, "max_observation": 7, "evolution_recent_rules": 4}
+    }
+    try:
+        with open(STRATEGY_PARAMS_FILE, "r", encoding="utf-8") as f:
+            loaded = json.load(f)
+        for section, values in loaded.items():
+            if isinstance(values, dict) and isinstance(base.get(section), dict):
+                base[section].update(values)
+    except Exception as e:
+        print(f"⚠️ strategy_params.json 读取失败，使用默认参数: {e}")
+    return base
+
+STRATEGY_PARAMS = load_strategy_params()
+SCORING_PARAMS = STRATEGY_PARAMS["scoring"]
+REGIME_PARAMS = STRATEGY_PARAMS["regime"]
+TECH_PARAMS = STRATEGY_PARAMS["technical"]
+LIQUIDITY_PARAMS = STRATEGY_PARAMS["liquidity"]
+EXIT_PARAMS = STRATEGY_PARAMS["exit"]
+LIMIT_PARAMS = STRATEGY_PARAMS["limits"]
+
 SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
 if not SUPER_ADMIN:
     print("致命错误：未检测到 TARGET_EMAILS！")
@@ -465,6 +499,12 @@ def _fetch_fundamental_one(ticker):
             "PB": _safe_info_float(info, "priceToBook"),
             "EPS_Forward": _safe_info_float(info, "epsForward"),
             "Earnings_Growth": _safe_info_float(info, "earningsGrowth"),
+            "Revenue_Growth": _safe_info_float(info, "revenueGrowth"),
+            "ROE": _safe_info_float(info, "returnOnEquity"),
+            "Profit_Margin": _safe_info_float(info, "profitMargins"),
+            "Operating_Cashflow": _safe_info_float(info, "operatingCashflow"),
+            "Free_Cashflow": _safe_info_float(info, "freeCashflow"),
+            "Market_Cap": _safe_info_float(info, "marketCap"),
         }
     except Exception as e:
         return ticker, {"error": str(e)}
@@ -497,7 +537,7 @@ def enrich_pool_with_fundamentals(pool_data, limit=80):
     for item in pool_data:
         t = item["Ticker"]
         d = fund_map.get(t, {})
-        for k in ("PE_TTM", "PE_Forward", "EPS_TTM", "EPS_Forward", "PB", "Earnings_Growth"):
+        for k in ("PE_TTM", "PE_Forward", "EPS_TTM", "EPS_Forward", "PB", "Earnings_Growth", "Revenue_Growth", "ROE", "Profit_Margin", "Operating_Cashflow", "Free_Cashflow", "Market_Cap"):
             item[k] = d.get(k)
         sector = _US_SECTOR_MAP.get(t, "Other")
         by_sector.setdefault(sector, []).append(item)
@@ -578,11 +618,13 @@ def build_stock_pool(tickers):
             macd_df = ta.macd(df["Close"])
             rsi_s = ta.rsi(df["Close"], length=14)
             ma20_s = ta.sma(df["Close"], length=20)
+            ma50_s = ta.sma(df["Close"], length=50)
             atr_s = ta.atr(df["High"], df["Low"], df["Close"], length=14)
             df = df.copy()
             df["MACDh"] = macd_df.iloc[:, 1]
             df["RSI"] = rsi_s
             df["MA20"] = ma20_s
+            df["MA50"] = ma50_s
             df["ATR"] = atr_s
             df = df.dropna()
             if len(df) < 10:
@@ -643,6 +685,22 @@ def build_stock_pool(tickers):
             vol = df["Volume"].values.astype(float)
             avg5 = float(pd.Series(vol[:-1]).tail(5).mean()) if len(vol) >= 6 else 0
             vol_ratio = float(vol[-1] / (avg5 + 1e-9)) if avg5 > 0 else 1.0
+            avg20_vol = float(pd.Series(vol[:-1]).tail(20).mean()) if len(vol) >= 21 else avg5
+            near5 = df.tail(5).copy()
+            bull_volume_event = False
+            max_recent_vol_ratio = 0.0
+            for _, rr in near5.iterrows():
+                rv = float(rr.get("Volume", 0) or 0)
+                rc = float(rr.get("Close", 0) or 0)
+                ro = float(rr.get("Open", 0) or 0)
+                ratio = rv / (avg20_vol + 1e-9) if avg20_vol > 0 else 0
+                max_recent_vol_ratio = max(max_recent_vol_ratio, ratio)
+                if rc > ro and ratio >= float(TECH_PARAMS.get("recent_bull_volume_ratio", 1.5)):
+                    bull_volume_event = True
+            ma20_now = float(latest["MA20"])
+            ma20_prev5 = float(df["MA20"].iloc[-6]) if len(df) >= 26 and pd.notna(df["MA20"].iloc[-6]) else ma20_now
+            ma20_slope_pct = (ma20_now / ma20_prev5 - 1) * 100 if ma20_prev5 else 0.0
+            ma50_now = float(latest["MA50"]) if pd.notna(latest["MA50"]) else ma20_now
 
             # 蜡烛形态
             opens = df["Open"].values.astype(float)
@@ -671,6 +729,12 @@ def build_stock_pool(tickers):
                 "Name": name,
                 "Price": round(float(latest["Close"]), 2),
                 "Open_Price": round(float(latest["Open"]), 2),
+                "MA20": round(ma20_now, 2),
+                "MA50": round(ma50_now, 2),
+                "MA20_Slope_Pct_5D": round(ma20_slope_pct, 3),
+                "Avg_Dollar_Volume_20D": round(avg20_vol * float(latest["Close"]), 2) if avg20_vol else None,
+                "近5日最大量比": round(max_recent_vol_ratio, 2),
+                "近5日放量阳线": bool(bull_volume_event),
                 "RSI": round(float(latest["RSI"]), 1),
                 "ATR_Pct": round(float(latest["ATR"]) / float(latest["Close"]) * 100, 2) if float(latest["Close"]) else 5.0,
                 "乖离率(%)": round(bias, 2),
@@ -696,6 +760,194 @@ def build_stock_pool(tickers):
     print(f"✅ 技术面完成：{len(pool)} 只")
     return pool
 
+
+# ==================== 5.5 市场环境 / 相对强弱 / 透明量化评分 ====================
+def _download_close_series(ticker, period="30d"):
+    try:
+        df = yf.download(ticker, period=period, progress=False, auto_adjust=True, threads=False)
+        if df is None or df.empty:
+            return pd.Series(dtype=float)
+        if isinstance(df.columns, pd.MultiIndex):
+            df.columns = df.columns.get_level_values(0)
+        return pd.to_numeric(df["Close"], errors="coerce").dropna()
+    except Exception:
+        return pd.Series(dtype=float)
+
+
+def get_market_regime_context():
+    """用 SPY/VIX + 行业 ETF 相对强弱形成硬门控；失败时明确标记数据不足，不伪造。"""
+    ctx = {
+        "spy": None, "spy_ma20": None, "spy_above_ma20": None,
+        "spy_5d_return": None, "vix": None, "regime": "UNKNOWN",
+        "sector_rs": {}, "reason": []
+    }
+    spy = _download_close_series("SPY", "60d")
+    if len(spy) >= 21:
+        ctx["spy"] = float(spy.iloc[-1])
+        ctx["spy_ma20"] = float(spy.rolling(20).mean().iloc[-1])
+        ctx["spy_above_ma20"] = ctx["spy"] >= ctx["spy_ma20"] * (1 + float(REGIME_PARAMS.get("spy_ma_buffer_pct", 0))/100)
+    if len(spy) >= 6:
+        ctx["spy_5d_return"] = float((spy.iloc[-1] / spy.iloc[-6] - 1) * 100)
+    vix = _download_close_series("^VIX", "15d")
+    if len(vix):
+        ctx["vix"] = float(vix.iloc[-1])
+    if ctx["vix"] is None:
+        ctx["regime"] = "UNKNOWN"
+    elif ctx["vix"] >= float(REGIME_PARAMS["vix_panic"]):
+        ctx["regime"] = "PANIC"
+        ctx["reason"].append(f"VIX={ctx['vix']:.1f}≥{REGIME_PARAMS['vix_panic']}")
+    elif ctx["vix"] >= float(REGIME_PARAMS["vix_tighten"]):
+        ctx["regime"] = "STRESSED"
+        ctx["reason"].append(f"VIX={ctx['vix']:.1f}≥{REGIME_PARAMS['vix_tighten']}")
+    else:
+        ctx["regime"] = "NORMAL"
+    if ctx["spy_above_ma20"] is False:
+        ctx["reason"].append("SPY低于MA20")
+    if ctx["spy_5d_return"] is not None and ctx["spy_5d_return"] <= float(REGIME_PARAMS["recent_market_drop_pct"]):
+        ctx["reason"].append(f"SPY近5日{ctx['spy_5d_return']:+.2f}%")
+
+    etf_map = {
+        "Technology":"XLK", "Communication":"XLC", "Consumer Discretionary":"XLY", "Consumer Staples":"XLP",
+        "Financials":"XLF", "Healthcare":"XLV", "Industrials":"XLI", "Energy":"XLE",
+        "Materials":"XLB", "Utilities":"XLU", "Real Estate":"XLRE"
+    }
+    for sector, etf in etf_map.items():
+        s = _download_close_series(etf, "30d")
+        if len(s) >= 21 and len(spy) >= 21:
+            sr = float((s.iloc[-1] / s.iloc[-21] - 1) * 100)
+            spr = float((spy.iloc[-1] / spy.iloc[-21] - 1) * 100)
+            ctx["sector_rs"][sector] = round(sr - spr, 2)
+    print(f"🧭 [Regime] {ctx['regime']} | SPY={ctx['spy']} MA20={ctx['spy_ma20']} 5D={ctx['spy_5d_return']}% | VIX={ctx['vix']} | {', '.join(ctx['reason']) or '正常'}")
+    return ctx
+
+
+def apply_market_context_to_pool(pool_data, market_ctx):
+    for item in pool_data:
+        sector = _US_SECTOR_MAP.get(item.get("Ticker"), "Other")
+        item["Sector"] = sector
+        item["Sector_RS_20D_Pct"] = market_ctx.get("sector_rs", {}).get(sector)
+        item["SPY_Above_MA20"] = market_ctx.get("spy_above_ma20")
+        item["VIX"] = market_ctx.get("vix")
+        item["Market_Regime"] = market_ctx.get("regime")
+    return pool_data
+
+
+def _clip(v, lo, hi):
+    return max(lo, min(hi, v))
+
+
+def score_candidate_quality(item, market_ctx):
+    """透明量化评分：基本面35 + 事件20 + 技术25 + 风险/流动性20。"""
+    # ---------- Fundamental 35 ----------
+    fs = 0.0
+    rg = item.get("Revenue_Growth")
+    eg = item.get("Earnings_Growth")
+    roe = item.get("ROE")
+    pm = item.get("Profit_Margin")
+    ocf = item.get("Operating_Cashflow")
+    fcf = item.get("Free_Cashflow")
+    pe = item.get("PE_Forward")
+    pb = item.get("PB")
+    if isinstance(rg, (int,float)):
+        fs += 8 if rg >= .15 else 5 if rg >= .08 else 2 if rg >= 0 else 0
+    if isinstance(eg, (int,float)):
+        fs += 7 if eg >= .15 else 4 if eg >= .08 else 2 if eg >= 0 else 0
+    if isinstance(roe, (int,float)):
+        fs += 7 if roe >= .15 else 4 if roe >= .08 else 2 if roe >= 0 else 0
+    if isinstance(pm, (int,float)):
+        fs += 4 if pm >= .10 else 2 if pm >= .05 else 0
+    if isinstance(ocf, (int,float)) and ocf > 0: fs += 4
+    if isinstance(fcf, (int,float)) and fcf > 0: fs += 3
+    if isinstance(pe, (int,float)) and pe > 0:
+        if pe <= 20: fs += 2
+        elif pe <= 35: fs += 1
+    if isinstance(pb, (int,float)) and pb > 0 and pb <= 5: fs += 1
+    fundamental = _clip(fs, 0, 35)
+
+    # ---------- Event 20 ----------
+    news = " ".join(item.get("个股新闻", []) or []).lower()
+    event_positive = sum(k in news for k in (
+        "earnings beat", "guidance", "contract", "order", "approval", "upgrade", "partnership", "deal", "record revenue",
+        "超预期", "订单", "批准", "合作", "上调指引", "创纪录"
+    ))
+    event_negative = sum(k in news for k in (
+        "downgrade", "miss", "lawsuit", "investigation", "cut guidance", "warning", "recall",
+        "下调指引", "诉讼", "调查", "警告", "召回"
+    ))
+    event = _clip(8 + event_positive * 3 - event_negative * 4, 0, 20)
+    item["Event_Positive_Count"] = event_positive
+    item["Event_Negative_Count"] = event_negative
+
+    # ---------- Technical 25 ----------
+    confirmations = int(item.get("技术确认数", 0))
+    tech = _clip(confirmations * 5, 0, 20)
+    if item.get("周线共振"): tech += 3
+    if item.get("周期共振"): tech += 2
+    technical = _clip(tech, 0, 25)
+
+    # ---------- Risk / Liquidity 20 ----------
+    risk = 10.0
+    mcap = item.get("Market_Cap")
+    adv = item.get("Avg_Dollar_Volume_20D")
+    atrp = item.get("ATR_Pct")
+    rs = item.get("Sector_RS_20D_Pct")
+    if isinstance(mcap, (int,float)):
+        risk += 2 if mcap >= 5e9 else 1 if mcap >= 5e8 else -4
+    else: risk -= 2
+    if isinstance(adv, (int,float)):
+        risk += 4 if adv >= 2e7 else 2 if adv >= 5e6 else -4
+    else: risk -= 2
+    if isinstance(atrp, (int,float)):
+        risk += 2 if atrp <= 5 else 0 if atrp <= 8 else -3
+    if isinstance(rs, (int,float)):
+        risk += 2 if rs > 0 else -3
+    risk = _clip(risk, 0, 20)
+
+    quant = round(fundamental + event + technical + risk, 1)
+    item["Fundamental_Score"] = round(fundamental, 1)
+    item["Event_Score"] = round(event, 1)
+    item["Technical_Score_25"] = round(technical, 1)
+    item["Risk_Liquidity_Score"] = round(risk, 1)
+    item["Quant_Score"] = quant
+    return item
+
+
+def apply_entry_quality_gate(pool_data, market_ctx):
+    out = []
+    regime = market_ctx.get("regime", "UNKNOWN")
+    min_tech = int(SCORING_PARAMS.get("min_technical_confirmations", 2))
+    if regime in {"STRESSED", "PANIC"}:
+        min_tech = max(min_tech, int(SCORING_PARAMS.get("stressed_min_technical_confirmations", 3)))
+    defensive = {"Healthcare", "Consumer Staples", "Utilities"}
+    for item in pool_data:
+        techn = int(item.get("技术确认数", 0))
+        quant = float(item.get("Quant_Score", 0))
+        if techn < min_tech:
+            item["Gate_Status"] = "TECH_FAIL"
+            continue
+        if quant < float(SCORING_PARAMS.get("pre_ai_min_quant_score", 55)):
+            item["Gate_Status"] = "QUANT_FAIL"
+            continue
+        atrp = item.get("ATR_Pct")
+        if isinstance(atrp, (int,float)) and atrp > float(TECH_PARAMS.get("atr_max_pct", 12)):
+            item["Gate_Status"] = "ATR_FAIL"
+            continue
+        rs = item.get("Sector_RS_20D_Pct")
+        if regime != "UNKNOWN" and isinstance(rs, (int,float)) and rs < float(REGIME_PARAMS.get("sector_rs_min_pct", 0)):
+            item["Gate_Status"] = "SECTOR_RS_FAIL"
+            continue
+        if market_ctx.get("spy_above_ma20") is False and item.get("Sector") not in defensive:
+            item["Gate_Status"] = "SPY_TREND_FAIL"
+            continue
+        if regime == "PANIC" and item.get("Sector") not in defensive and quant < 68:
+            item["Gate_Status"] = "PANIC_FAIL"
+            continue
+        item["Gate_Status"] = "PASS_PRE_AI"
+        out.append(item)
+    print(f"🛡️ [硬门槛] {len(out)}/{len(pool_data)} 只通过；最低技术确认={min_tech}；Regime={regime}")
+    return out
+
+
 # ==================== 6. 技术评分 ====================
 def check_period_resonance(stock):
     if not stock.get("日线MACD上升") or not stock.get("周线MACD上升"):
@@ -706,73 +958,56 @@ def check_period_resonance(stock):
 
 
 def screen_technical_setups(pool_data):
+    """透明技术确认：不只依赖经典金叉，允许 MACD 收敛/上升、KDJ、均线与放量结构参与。"""
     sector_groups = {}
     for stock in pool_data:
-        score = 0
         reasons = []
-        resonance, patterns = check_period_resonance(stock)
-        stock["周期共振"] = resonance
-        stock["共振形态"] = patterns
+        close = float(stock.get("Price", 0) or 0)
+        ma20 = float(stock.get("MA20", close) or close)
+        ma50 = float(stock.get("MA50", ma20) or ma20)
+        ma20_slope = float(stock.get("MA20_Slope_Pct_5D", 0) or 0)
+        h = float(stock.get("MACD_HIST_LAST", 0) or 0)
+        hp = float(stock.get("MACD_HIST_PREV", 0) or 0)
+        j = float(stock.get("KDJ_J", 50) or 50)
+        vr = float(stock.get("量比", 1) or 1)
+        confirmations = []
 
-        h = stock.get("MACD_HIST_LAST", 0)
-        hp = stock.get("MACD_HIST_PREV", 0)
-        if stock.get("MACD金叉"):
-            if h < -0.5:
-                score += 18; reasons.append(f"MACD零轴下金叉({h:.2f})(+18)")
-            elif abs(h) <= 0.5:
-                score += 14; reasons.append(f"MACD零轴附近金叉({h:.2f})(+14)")
-            else:
-                score += 6; reasons.append(f"⚠️MACD高位金叉({h:.2f})(+6)")
-        elif stock.get("MACD绿柱缩短"):
-            score += 12 if h < 0 and abs(h) < abs(hp)*0.85 else 8
-            reasons.append("MACD绿柱快速收敛" if score >= 12 else "MACD绿柱缩短")
-        elif stock.get("MACD趋势") == "走强" and h > 0:
-            score += 2 if h > 3 else 4
-            reasons.append("MACD红柱走强")
+        # 1) 均线结构：价格站上 MA20 + MA20 不明显下斜
+        if close > ma20 and ma20_slope >= float(TECH_PARAMS.get("ma20_slope_min_pct_5d", -0.2)):
+            confirmations.append("MA20结构")
+        # 2) MACD：经典金叉/绿柱收敛/红柱扩大三选一
+        macd_improving = bool(stock.get("MACD金叉") or stock.get("MACD绿柱缩短") or h > hp)
+        if macd_improving:
+            confirmations.append("MACD改善")
+        # 3) KDJ J 回升
+        if bool(stock.get("KDJ_J回升")):
+            confirmations.append("KDJ回升")
+        # 4) 周线结构
+        if bool(stock.get("周线共振")) or bool(stock.get("周线MACD上升")):
+            confirmations.append("周线改善")
+        # 5) 放量结构：不再要求“所有标的必须放量”，但作为强确认
+        if bool(stock.get("量能放大")) or float(stock.get("近5日最大量比", 0) or 0) >= float(TECH_PARAMS.get("recent_volume_ratio", 1.15)):
+            confirmations.append("量能确认")
 
-        j = stock.get("KDJ_J", 50)
-        if stock.get("KDJ_J回升"):
-            if stock.get("KDJ_J超卖") or j < 20:
-                score += 10; reasons.append(f"KDJ超卖回升J={j:.0f}(+10)")
-            elif j < 50:
-                score += 7; reasons.append(f"KDJ低位回升J={j:.0f}(+7)")
-            else:
-                score += 3; reasons.append(f"KDJ中位回升J={j:.0f}(+3)")
-
-        vr = stock.get("量比", 1.0)
-        if stock.get("量能放大"):
-            score += 10 if vr >= 2 else 7
-            reasons.append(f"量比{vr:.1f}倍放量")
-
+        # 蜡烛形态 / 周日共振作为附加项
         if stock.get("看涨形态"):
-            score += max({"看涨吞没":5,"启明星":5,"刺穿线":4,"锤子线":3}.get(p,2) for p in stock["看涨形态"])
-            reasons.append("/".join(stock["看涨形态"]))
-
+            reasons.append("形态=" + "/".join(stock["看涨形态"]))
+        if stock.get("周期共振"):
+            reasons.append("周期共振")
         if stock.get("周线共振"):
-            score = min(int(score * 1.25), 40)
-            reasons.append("✅周日共振×1.25")
-        elif score > 0:
-            score = int(score * 0.6)
-            reasons.append("⚠️仅日线×0.6")
+            reasons.append("周线共振")
 
-        if stock.get("日线MACD_V型反转"):
-            score = min(score + 8, 40); reasons.append("日线V型反转")
-        if stock.get("周线MACD_V型反转"):
-            score = min(score + 4, 40); reasons.append("周线V型反转")
-        if resonance:
-            score = min(score + 15, 40); reasons.append("🔥周期共振(+15)")
-
-        stock["技术评分"] = min(score, 40)
-        stock["技术信号"] = reasons
+        stock["技术确认信号"] = confirmations
+        stock["技术确认数"] = len(confirmations)
+        stock["技术评分"] = min(40, len(confirmations) * 7 + (4 if stock.get("周线共振") else 0) + (3 if stock.get("周期共振") else 0))
+        stock["技术信号"] = reasons + ["确认=" + ",".join(confirmations)]
         sector = _US_SECTOR_MAP.get(stock["Ticker"], "Other")
-        sector_groups.setdefault(sector, []).append({"名称":stock["Name"],"代码":stock["Ticker"],"技术评分":score,"技术信号":reasons})
+        sector_groups.setdefault(sector, []).append({"名称":stock["Name"],"代码":stock["Ticker"],"技术评分":stock["技术评分"],"技术确认数":len(confirmations),"技术信号":stock["技术信号"]})
 
-    print("📊 [技术筛选] 技术评分 Top10：")
-    for s in sorted(pool_data, key=lambda x: x.get("技术评分",0), reverse=True)[:10]:
-        if s.get("技术评分",0) > 0:
-            print(f"   {s['Name']}({s['Ticker']}) {s['技术评分']}/40 | 周日共振={'是' if s.get('周线共振') else '否'}")
-
-    return {k: sorted(v, key=lambda x: x["技术评分"], reverse=True) for k,v in sector_groups.items()}
+    print("📊 [技术筛选] 技术确认 Top10：")
+    for s in sorted(pool_data, key=lambda x: (x.get("技术确认数",0), x.get("技术评分",0)), reverse=True)[:10]:
+        print(f"   {s['Name']}({s['Ticker']}) {s.get('技术评分',0)}/40 | 确认{s.get('技术确认数',0)}项 | {','.join(s.get('技术确认信号',[]))}")
+    return {k: sorted(v, key=lambda x: (x.get("技术确认数",0),x.get("技术评分",0)), reverse=True) for k,v in sector_groups.items()}
 
 
 # ==================== 6.5 重要人物讲话与宏观预期变化 ====================
@@ -1578,20 +1813,34 @@ def build_market_signal_text(analysis_result):
 
 # ==================== 10. 进化规则：条件化，不永久封板 ====================
 def load_conditional_evolved_rules():
-    path = "evolved_rules.json"
+    """只注入最新且数量受控的历史规则，避免多年 prompt 补丁叠加冲突。"""
+    path = "strategy_evolution.json"
+    if not os.path.exists(path):
+        path = "evolved_rules.json"
     if not os.path.exists(path):
         return ""
     try:
         with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-        rules = data.get("active_rules", [])
-        patches = data.get("prompt_patches", [])
+        entries = data if isinstance(data, list) else []
+        if not entries and isinstance(data, dict):
+            rules = data.get("active_rules", [])
+            entries = [{"applied_rules": rules}]
+        rules = []
+        for entry in reversed(entries):
+            for rule in entry.get("applied_rules", []) if isinstance(entry, dict) else []:
+                if rule and rule.get("description"):
+                    rules.append(rule)
+                if len(rules) >= int(LIMIT_PARAMS.get("evolution_recent_rules", 4)):
+                    break
+            if len(rules) >= int(LIMIT_PARAMS.get("evolution_recent_rules", 4)):
+                break
         lines = [
-            "【📈 历史绩效规则——条件化参考】",
-            "过去低胜率只用于识别历史失败条件，不构成永久板块或股票黑名单。只有当前条件再次出现时才降权。",
+            "【📈 最近有效绩效规则】",
+            "只使用最近少量规则；历史规则不是永久黑名单。当前数据、当前技术与市场环境优先。",
         ]
-        for rule, patch in zip(rules, patches):
-            lines.append(f"- {rule.get('type','')}: {rule.get('description','')} | 证据: {rule.get('evidence','')} | 当前条件化执行: {patch}")
+        for r in reversed(rules):
+            lines.append(f"- {r.get('type','')}: {r.get('description','')} | 证据: {r.get('evidence','')} | 执行: {r.get('prompt_patch','')}")
         return "\n".join(lines)
     except Exception as e:
         print(f"⚠️ 进化规则读取失败: {e}")
@@ -1805,7 +2054,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
     pool_lines = []
     for x in pool_data:
         pool_lines.append(
-            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} | 周日共振:{'是' if x.get('周线共振') else '否'} | 技术:{x.get('技术评分',0)}/40 | 估值:{x.get('估值评分',0)}/20 | PE_TTM:{x.get('PE_TTM')} | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 估值结论:{x.get('估值结论','数据不足')} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
+            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MA20:{x.get('MA20')} slope5d:{x.get('MA20_Slope_Pct_5D')}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} recentVol:{x.get('近5日最大量比')} | 技术确认:{x.get('技术确认数',0)} | Quant:{x.get('Quant_Score',0)}/100 (F{x.get('Fundamental_Score',0)} E{x.get('Event_Score',0)} T{x.get('Technical_Score_25',0)} R{x.get('Risk_Liquidity_Score',0)}) | Market:{x.get('Market_Regime')} VIX:{x.get('VIX')} SectorRS20D:{x.get('Sector_RS_20D_Pct')} | 估值:{x.get('估值评分',0)}/20 | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
         )
     evolved = load_evolved_rules()
     key_people_block = str(key_people_text or "暂无重要人物讲话数据")
@@ -1819,7 +2068,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 
     hard_avoid = ", ".join((event_regime or {}).get("hard_avoid_sectors", [])) or "无"
     prompt = f"""
-【最高优先级】输出 5 只 Top1-5；若池不足5只则实际输出，禁止输出“今日无推荐”。历史低胜率不是永久黑名单。
+【最高优先级】只从通过程序硬门槛的候选中选择；Core 最终量化分至少65，Observation最终量化分至少58。若合格数量不足，不得为了凑数放宽门槛。历史低胜率不是永久黑名单。
 
 你是顶级美股产业链+宏观事件驱动交易员。
 今天是 {today_us_str()}。
@@ -1845,6 +2094,10 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 
 【数据可靠性纪律】FRED单项失败不得伪造数值；优先使用BLS备用或Yahoo利率代理，并标明来源。
 
+【程序化市场环境（硬门控数据）】
+SPY={getattr(locals().get("market_ctx", {}), "get", lambda *_: None)("spy") if False else "见候选池逐项字段"}
+VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/VIX/SectorRS20D 为准。
+
 【板块表现】
 {embargo_text}
 
@@ -1859,6 +2112,14 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 
 【成交活跃 Top300 候选池】
 {'\n'.join(pool_lines)}
+
+【程序硬门槛（不可绕过）】
+- 技术确认通常至少2项；VIX≥25时至少3项。
+- Quant_Score < 程序最低门槛不得进入最终推荐。
+- SPY低于20日均线时，非防御行业不得进入Core。
+- 行业20日相对SPY为负时不得进入Core；高波动/低流动性标的原则上剔除。
+- AI评分只是辅助意见，不可覆盖程序硬门槛；最终分 = 70% Quant_Score + 30% AI评分。
+- 推荐必须使用报告里真实展示的 Quant/Fundamental/Event/Technical/Risk 数据。
 
 【强制决策顺序】
 1. 先 Regime Gate：高等级事件+宏观价格确认优先于单一商品方向。
@@ -1892,7 +2153,8 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 <p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>...</p>
 <p><span class="highlight-label bg-green">📰 个股新闻核查:</span>...</p>
 <p><span class="highlight-label bg-blue">📈 技术确认:</span>...</p>
-<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...</p>
+<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...（最终评分由 Quant 70% + AI 30% 构成）</p>
+<p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:[XX]/100 | 基本面:[X]/35 | 事件:[X]/20 | 技术:[X]/25 | 风险/流动性:[X]/20 | 技术确认:[N]项 | MA20:[数值] | MA20斜率5日:[数值]% | Sector RS20D:[数值]%</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
 <p><b>期权：</b>不要在AI正文中编造行权价、到期日、权利金、Delta或IV；真实期权策略由程序从期权链读取后统一插入。</p>
 </div>
@@ -1940,64 +2202,66 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
     def clean(t):
         return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", t)).strip()
     def title_hit(fragment, name, ticker):
-        head = fragment[:140]
-        return f"({ticker})" in head or name in head[:40]
+        head = fragment[:180]
+        return f"({ticker})" in head or name.lower() in head.lower()[:70]
 
     obs_start = ai_html.find('class="compare-card"')
-    if obs_start < 0:
-        obs_start = ai_html.find("观察池")
-    if obs_start < 0:
-        obs_start = len(ai_html)
+    if obs_start < 0: obs_start = ai_html.find("观察池")
+    if obs_start < 0: obs_start = len(ai_html)
     trap_start = ai_html.find("诱多对照组")
-    if trap_start < 0 or trap_start < obs_start:
-        trap_start = len(ai_html)
-
+    if trap_start < 0 or trap_start < obs_start: trap_start = len(ai_html)
     core_zone = ai_html[:obs_start]
     obs_zone = ai_html[obs_start:trap_start]
-    trap_zone = ai_html[trap_start:]
-    core_cards = [clean(x) for x in re.split(r'(?=<div class="top-card")', core_zone) if "top-card" in x]
+    core_cards = [clean(x) for x in re.split(r'(?=<div class="top-card)', core_zone) if "top-card" in x]
     obs_items = [clean(x) for x in re.split(r'(?=<li>)', obs_zone) if x.strip().startswith("<li>")]
-    trap_items = [clean(x) for x in re.split(r'(?=<li>)', trap_zone) if x.strip().startswith("<li>")]
 
-    chosen = []
+    chosen=[]
     for item in pool_data:
         name, ticker = str(item["Name"]), str(item["Ticker"])
-        tag, chunk = None, None
+        tag=None; chunk=None
         for c in core_cards:
-            if title_hit(c,name,ticker):
-                tag, chunk = "Core_Dragon", c; break
+            if title_hit(c,name,ticker): tag,chunk="Core_Dragon",c; break
         if tag is None:
             for c in obs_items:
-                if title_hit(c,name,ticker):
-                    tag, chunk = "Observation", c; break
-        if tag is None:
-            for c in trap_items:
-                if title_hit(c,name,ticker):
-                    tag, chunk = "Trap_Warning", c; break
-        if tag is None or tag == "Trap_Warning":
+                if title_hit(c,name,ticker): tag,chunk="Observation",c; break
+        if tag is None: continue
+
+        ai_score = None
+        if chunk:
+            sc = re.search(r'(?:评分|Score)\s*[:：]?\s*\[?(\d{1,3}(?:\.\d+)?)\]?\s*/\s*100', chunk, re.I)
+            if sc:
+                ai_score=float(sc.group(1))
+        if ai_score is None: ai_score=60.0
+        quant=float(item.get("Quant_Score",0) or 0)
+        final=round(float(SCORING_PARAMS.get("quant_weight",70))/100*quant + float(SCORING_PARAMS.get("ai_weight",30))/100*ai_score,1)
+        core_ok = quant >= float(SCORING_PARAMS.get("core_min_score",65)) and final >= float(SCORING_PARAMS.get("core_min_score",65)) and int(item.get("技术确认数",0)) >= int(SCORING_PARAMS.get("min_technical_confirmations",2)) and item.get("Gate_Status")=="PASS_PRE_AI"
+        obs_ok = quant >= float(SCORING_PARAMS.get("observation_min_score",58)) and final >= float(SCORING_PARAMS.get("observation_min_score",58)) and int(item.get("技术确认数",0)) >= 1 and item.get("Gate_Status")=="PASS_PRE_AI"
+        if tag=="Core_Dragon" and not core_ok:
+            if obs_ok: tag="Observation"
+            else: continue
+        elif tag=="Observation" and not obs_ok:
             continue
 
-        if tag == "Observation":
-            hp, sl, score = "观望", "观望", "N/A"
+        if tag=="Observation":
+            hp,sl="观望","观望"
         else:
-            hp = "动态持有"
-            sm = re.search(r'止损[\s]*[:：][\s]*\[?(\$?\d+(?:\.\d+)?%?)', chunk)
-            if sm:
-                sl = sm.group(1)
+            hp="动态持有"
+            sm=re.search(r'止损[\s]*[:：][\s]*\[?(\$?\d+(?:\.\d+)?%?)',chunk or "")
+            if sm: sl=sm.group(1)
             else:
-                atr = item.get("ATR_Pct",5.0)
-                pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr*ATR_STOP_MULTIPLIER))
-                sl = f"${round(item['Price']*(1+pct/100),2)}"
-            sc = re.search(r'评分[\s]*[:：][\s]*\[?(\d{1,3})\]?[\s]*/[\s]*100', chunk)
-            score = sc.group(1) if sc else str(min(100, int(item.get("技术评分",0))+50))
+                atr=float(item.get("ATR_Pct",5) or 5)
+                pct=-max(float(EXIT_PARAMS.get("atr_floor_pct",3)),min(float(EXIT_PARAMS.get("atr_ceiling_pct",12)),atr*float(EXIT_PARAMS.get("atr_multiplier",2))))
+                sl=f"${round(float(item['Price'])*(1+pct/100),2)}"
+        out=dict(item); out["Tag"]=tag; out["Hold_Period"]=hp; out["Stop_Loss"]=sl; out["AI_Score"]=ai_score; out["Score"]=str(final); out["Final_Score"]=final
+        chosen.append(out)
 
-        item = dict(item)
-        item["Tag"] = tag
-        item["Hold_Period"] = hp
-        item["Stop_Loss"] = sl
-        item["Score"] = score
-        chosen.append(item)
-    return chosen
+    # 只保留最高质量的 Core/Observation 上限
+    chosen.sort(key=lambda x: float(x.get("Final_Score", x.get("Quant_Score",0)) or 0), reverse=True)
+    core=[x for x in chosen if x.get("Tag")=="Core_Dragon"][:int(LIMIT_PARAMS.get("max_core",5))]
+    used={x["Ticker"] for x in core}
+    obs=[x for x in chosen if x.get("Tag")=="Observation" and x["Ticker"] not in used][:int(LIMIT_PARAMS.get("max_observation",7))]
+    return core+obs
+
 
 # ==================== 15. 邮件 ====================
 def send_mail(to_emails, subject, content):
@@ -2147,8 +2411,17 @@ if __name__ == "__main__":
         sys.exit(0)
 
     sector_tech_data = screen_technical_setups(pool_data)
-    pool_data = enrich_pool_with_fundamentals(pool_data, limit=80)
+    pool_data = enrich_pool_with_fundamentals(pool_data, limit=120)
     pool_data = enrich_pool_with_news(pool_data)
+    market_ctx = get_market_regime_context()
+    pool_data = apply_market_context_to_pool(pool_data, market_ctx)
+    for _item in pool_data:
+        score_candidate_quality(_item, market_ctx)
+    pool_data = apply_entry_quality_gate(pool_data, market_ctx)
+    if not pool_data:
+        empty = build_full_email_html('<div class="header-card"><h2>⚠️ 今日硬门槛后暂无合格新标的</h2><p>技术确认、市场环境、相对强弱或量化评分未达到准入标准；不为了凑满推荐数量而放宽条件。</p></div>')
+        send_mail(SUPER_ADMIN, f"【美股扫描】{today_us_str()} 硬门槛后无合格新标的", empty)
+        sys.exit(0)
 
     # 将 Regime Gate 硬回避行业转成 AI 明确的硬约束文字
     gate_hard = (event_regime or {}).get("hard_avoid_sectors", [])
@@ -2174,10 +2447,10 @@ if __name__ == "__main__":
     if not chosen:
         print("⚠️ AI HTML 匹配失败，启用技术评分 Fallback...")
         top_pool = sorted(
-            [x for x in pool_data if x.get("技术评分", 0) > 0],
-            key=lambda x: (x.get("综合基础评分", x.get("技术评分", 0)), x.get("技术评分", 0)), reverse=True
+            [x for x in pool_data if x.get("Gate_Status") == "PASS_PRE_AI" and x.get("Quant_Score",0) >= float(SCORING_PARAMS.get("observation_min_score",58))],
+            key=lambda x: (x.get("Quant_Score",0), x.get("技术确认数",0)), reverse=True
         )
-        # Top 5 作为 Core_Dragon，6-10 作为 Observation
+        # Quant 门槛通过后，优先前5作为 Core，其余为 Observation
         for rank, item in enumerate(top_pool[:10], 1):
             copy_item = dict(item)
             if rank <= 5:
@@ -2192,7 +2465,8 @@ if __name__ == "__main__":
                 copy_item["Tag"] = "Observation"
                 copy_item["Hold_Period"] = "观望"
                 copy_item["Stop_Loss"] = "观望"
-                copy_item["Score"] = "N/A"
+                copy_item["AI_Score"] = 55.0
+                copy_item["Score"] = str(round(0.7*float(copy_item.get("Quant_Score",0)) + 0.3*55.0,1))
                 print(f"   👁️ Fallback 观察: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
             chosen.append(copy_item)
 
@@ -2210,7 +2484,7 @@ if __name__ == "__main__":
                 pct = -max(ATR_STOP_FLOOR_PCT,min(ATR_STOP_CEIL_PCT,atr*ATR_STOP_MULTIPLIER))
                 item["Stop_Loss"] = f"${round(item['Price']*(1+pct/100),2)}"
             if not item.get("Score") or item.get("Score") in {"N/A","观望"}:
-                item["Score"] = str(min(100,40 + int(item.get("技术评分",0)) + int(item.get("估值评分",0))))
+                item["Score"] = str(round(0.7*float(item.get("Quant_Score",0)) + 0.3*float(item.get("AI_Score",60) or 60),1))
         to_write.append(item)
 
     if os.path.exists(log_file) and to_write:
@@ -2227,18 +2501,18 @@ if __name__ == "__main__":
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
         header_cols = [
-            "Date","Ticker","Name","Tag","RSI","Bias","技术评分","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","MACD金叉","周线共振","KDJ_J回升","量能放大","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振"
+            "Date","Ticker","Name","Tag","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX"
         ]
         with open(pending_file,"w",encoding="utf-8",newline="") as f:
             f.write(",".join(header_cols)+"\n")
             for item in to_write:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
-                    item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("估值评分",0),
-                    item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""),
-                    item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("Hold_Period","动态持有"),
-                    item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")),
-                    item.get("ATR_Pct",""), item.get("周期共振",False)
+                    item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("技术确认数",0), ",".join(item.get("技术确认信号",[]) or []), item.get("估值评分",0),
+                    item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
+                    item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",60), item.get("Final_Score",item.get("Score","")),
+                    item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("近5日放量阳线",False), item.get("Hold_Period","动态持有"),
+                    item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")), item.get("ATR_Pct",""), item.get("周期共振",False), item.get("Sector_RS_20D_Pct",""), item.get("Market_Regime",""), item.get("VIX","")
                 ]
                 safe_vals = [str(v).replace(","," ").replace("\n"," ") for v in vals]
                 f.write(",".join(safe_vals)+"\n")
