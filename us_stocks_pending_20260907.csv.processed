@@ -1,7 +1,0 @@
-Date,Ticker,Name,Tag,RSI,Bias,技术评分,估值评分,PE_TTM,PE_Forward,EPS_TTM,PB,MACD金叉,周线共振,KDJ_J回升,量能放大,Hold_Period,Stop_Loss,Stop_Method,Score,Status,Scan_Ref_Price,ATR_Pct,周期共振
-2026-09-07,DELL,Dell Technologies,Observation,63.7,12.45,6,10,30.490984,18.3223,17.19,-236.953,False,True,False,False,观望,观望,ATR初始保护,N/A,pending,524.14,6.12,False
-2026-09-07,BEN,Franklin Resources,Observation,57.1,1.95,19,19,23.625849,10.972277,1.47,1.5015781,False,False,False,True,观望,观望,ATR初始保护,N/A,pending,34.73,2.36,False
-2026-09-07,VST,Vistra Corp.,Observation,57.5,5.23,24,17,25.177067,14.403398,5.93,16.687159,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,149.3,3.65,True
-2026-09-07,CRH,CRH plc,Observation,44.9,-1.31,39,19,16.653711,14.27319,5.66,2.6115143,False,False,True,False,观望,观望,ATR初始保护,N/A,pending,94.26,2.89,True
-2026-09-07,CVNA,Carvana,Observation,56.5,2.68,40,5,39.465607,32.974075,1.89,13.314886,True,True,True,False,观望,观望,ATR初始保护,N/A,pending,74.59,4.76,True
-2026-09-07,ODFL,Old Dominion,Observation,27.5,-7.89,12,7,35.744232,27.975616,5.2,8.480245,False,False,False,False,观望,观望,ATR初始保护,N/A,pending,185.87,3.7,False
