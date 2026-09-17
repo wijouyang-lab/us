@@ -819,7 +819,9 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
     try:
         d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
         for c in ("Review_Risk_Status","Review_Risk_Date","Review_Stop_Distance_Pct","Review_Risk_Note"):
-            if c not in d.columns: d[c] = ""
+            if c not in d.columns:
+                d[c] = ""
+            d[c] = d[c].astype("object")
         dates = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
         mask = (
             d["Ticker"].astype(str).str.upper().eq(str(ticker).upper()) &
@@ -1256,110 +1258,208 @@ def _load_review_closed_lookup():
 
 def build_scan_recommendation_events():
     """
-    每一次 Scan 输出的一行推荐 = 一个独立推荐事件。
-
-    事件键：推荐日期 + Ticker。
-
-    推荐价格来自 Scan pending 原始文件，而不是 trade_history 的
-    实际开盘价。这样统计的收益真正对应：
-        Scan 推荐价 -> 当前价/退出价
-
-    Observation 与实际持仓都是有效 Scan 推荐事件；
-    Observation 不属于实际持仓，但必须进入推荐绩效。
+    统一推荐事件账本：
+    - 以 review_history.csv 的 Rec_Date + Ticker + Tag 作为推荐事件主键。
+    - Review 每天重复记录同一推荐时只保留该推荐事件的最新状态。
+    - Rec_Date 按推荐发生日过滤最近30天，而不是 Review_Date。
+    - 当前仍开放的推荐使用当天真实价格；已退出推荐优先使用退出价格。
+    - Observation 同样是有效 Scan 推荐，必须进入绩效追踪。
+    - 不把期权记录纳入股票推荐事件。
+    - 若 review_history 无法提供事件，则用 trade_history.csv 作为补充来源。
     """
-    raw_events = _load_scan_recommendation_files()
-    trade_lookup = _load_trade_event_lookup()
-    review_closed = _load_review_closed_lookup()
 
-    events_by_key = {}
+    event_rows = []
 
-    for raw in raw_events:
-        key = (raw["rec_date"], raw["ticker"])
-        events_by_key[key] = raw
+    # --------------------------------------------------------
+    # 主来源：review_history.csv
+    # --------------------------------------------------------
+    if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
+        try:
+            rh = pd.read_csv(
+                REVIEW_HISTORY,
+                dtype=str,
+                keep_default_na=False,
+                on_bad_lines="skip",
+            )
+            if not rh.empty and {"Rec_Date", "Ticker", "Rec_Price"}.issubset(rh.columns):
+                rh["_rec_dt"] = pd.to_datetime(
+                    rh["Rec_Date"], errors="coerce", format="mixed"
+                )
+                rh["_review_dt"] = pd.to_datetime(
+                    rh.get("Review_Date", ""), errors="coerce", format="mixed"
+                )
+                cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
+                rh = rh[rh["_rec_dt"].notna() & (rh["_rec_dt"] >= cutoff)].copy()
 
-    # 若 pending 文件已被清理/未保存，则用 trade_history 做兜底。
-    d = load_trade_history()
-    if not d.empty:
-        for _, row in d.iterrows():
-            dt = normalize_date(row.get("Date"))
-            ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
-            if dt is None or not ticker:
-                continue
-            if dt < (pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)):
-                continue
-            key = (dt.strftime("%Y-%m-%d"), ticker)
-            if key not in events_by_key:
-                rp = safe_float(row.get("Scan_Ref_Price"))
-                if rp is None:
-                    rp = safe_float(row.get("Price"))
-                events_by_key[key] = {
-                    "ticker": ticker,
-                    "name": clean_text(row.get("Name"), ticker),
-                    "rec_date": dt.strftime("%Y-%m-%d"),
-                    "rec_price": rp,
-                    "tag": clean_text(row.get("Tag")),
-                    "score": clean_text(row.get("Score"), "N/A"),
-                    "source_file": "trade_history.csv",
-                }
+                if "Option_Type" not in rh.columns:
+                    rh["Option_Type"] = ""
+                if "Tag" not in rh.columns:
+                    rh["Tag"] = ""
+                if "Status" not in rh.columns:
+                    rh["Status"] = ""
+                if "Cur_Price" not in rh.columns:
+                    rh["Cur_Price"] = ""
+                if "Exit_Price" not in rh.columns:
+                    rh["Exit_Price"] = ""
 
-    events = []
+                # 股票推荐：排除期权记录。
+                rh = rh[
+                    rh["Option_Type"].astype(str).str.strip().eq("")
+                ].copy()
 
-    for key in sorted(events_by_key.keys()):
-        raw = events_by_key[key]
-        trow = trade_lookup.get(key, {})
-        hrow = review_closed.get(key, {})
+                # 每次 Scan 推荐事件 = Rec_Date + Ticker + Tag。
+                # 同一事件在后续 Review 中每天重复出现，只取最后一次状态。
+                rh["_ticker_norm"] = rh["Ticker"].map(lambda x: resolve_ticker(x))
+                rh["_tag_norm"] = rh["Tag"].astype(str).str.strip()
+                rh = rh[rh["_ticker_norm"].astype(str).str.len() > 0].copy()
+                rh = rh.sort_values(["_rec_dt", "_review_dt"])
 
-        rec_price = safe_float(raw.get("rec_price"))
-        if rec_price is None:
-            rec_price = safe_float(trow.get("Scan_Ref_Price"))
-        if rec_price is None:
-            rec_price = safe_float(trow.get("Price"))
+                grouped = rh.groupby(
+                    ["_rec_dt", "_ticker_norm", "_tag_norm"],
+                    sort=True,
+                    dropna=False,
+                )
 
-        ticker = raw["ticker"]
-        status = clean_text(trow.get("Status"))
-        tag = clean_text(raw.get("tag")) or clean_text(trow.get("Tag"))
-        if not tag and clean_text(hrow.get("Tag")) == "Observation":
-            tag = "Observation"
+                for (_, _, _), g in grouped:
+                    row = g.iloc[-1]
+                    rec_dt = row["_rec_dt"]
+                    ticker = row["_ticker_norm"]
+                    rec_price = safe_float(row.get("Rec_Price"))
+                    if rec_price is None or rec_price <= 0:
+                        event_rows.append({
+                            "ticker": ticker,
+                            "name": clean_text(row.get("Name"), ticker),
+                            "rec_date": rec_dt.strftime("%Y-%m-%d"),
+                            "rec_price": None,
+                            "status": clean_text(row.get("Status")),
+                            "tag": clean_text(row.get("Tag")),
+                            "current_price": None,
+                            "pnl": None,
+                            "data_status": "NO_REC_PRICE",
+                        })
+                        continue
 
-        exit_price = safe_float(trow.get("Exit_Price"))
-        if exit_price is None:
-            exit_price = safe_float(hrow.get("Cur_Price"))
+                    status = clean_text(row.get("Status"))
+                    exit_price = safe_float(row.get("Exit_Price"))
 
-        closed_status = status in {
-            "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓",
-            "已超期归档", "突发清仓暂停", "周期到期清仓"
-        }
+                    closed_statuses = {
+                        "Stop_Loss_Hit",
+                        "移动止损清仓",
+                        "止损触发清仓",
+                        "已超期归档",
+                        "突发清仓暂停",
+                        "周期到期清仓",
+                    }
 
-        if closed_status and exit_price is not None:
-            current_price = exit_price
-        else:
-            current_price = safe_float(price_map_today.get(ticker))
+                    if status in closed_statuses and exit_price is not None:
+                        cur = exit_price
+                    else:
+                        # 以当前真实行情刷新当前开放/Observation 推荐。
+                        cur = safe_float(price_map_today.get(ticker))
+                        if cur is None:
+                            # review_history 中最后一次 Review 已有 Cur_Price 时可作为历史兜底，
+                            # 但今天能取得真实行情时优先使用今天的价格。
+                            cur = safe_float(row.get("Cur_Price"))
 
-        pnl = None
-        if rec_price is not None and rec_price > 0 and current_price is not None:
-            pnl = round((current_price - rec_price) / rec_price * 100, 2)
+                    pnl = (
+                        round((cur - rec_price) / rec_price * 100, 2)
+                        if cur is not None and rec_price > 0
+                        else None
+                    )
 
-        events.append({
-            "ticker": ticker,
-            "name": raw.get("name") or clean_text(trow.get("Name"), ticker),
-            "rec_date": raw["rec_date"],
-            "rec_price": rec_price,
-            "status": status,
-            "tag": "Observation" if tag == "Observation" else tag,
-            "current_price": current_price,
-            "pnl": pnl,
-            "data_status": (
-                "NO_REC_PRICE" if rec_price is None or rec_price <= 0
-                else "PRICE_MISSING" if current_price is None
-                else "OK"
-            ),
-            "score": raw.get("score", "N/A"),
-            "source_file": raw.get("source_file", ""),
-        })
+                    event_rows.append({
+                        "ticker": ticker,
+                        "name": clean_text(row.get("Name"), ticker),
+                        "rec_date": rec_dt.strftime("%Y-%m-%d"),
+                        "rec_price": rec_price,
+                        "status": status,
+                        "tag": clean_text(row.get("Tag")),
+                        "current_price": cur,
+                        "pnl": pnl,
+                        "data_status": "OK" if pnl is not None else "PRICE_MISSING",
+                    })
 
-    return events
+        except Exception as e:
+            print(f"⚠️ 从 review_history 重建 Scan 推荐事件失败：{e}")
+
+    # --------------------------------------------------------
+    # 补充来源：trade_history.csv
+    # 某些刚产生、尚未写入 review_history 的事件也要纳入。
+    # --------------------------------------------------------
+    if os.path.exists(TRADE_HISTORY) and os.path.getsize(TRADE_HISTORY) > 0:
+        try:
+            th = load_trade_history()
+            if not th.empty:
+                cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
+                th = th[th["Date"] >= cutoff].copy()
+
+                for _, row in th.iterrows():
+                    ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+                    if not ticker:
+                        continue
+                    rec_dt = normalize_date(row.get("Date"))
+                    if rec_dt is None:
+                        continue
+                    rec_price = safe_record_price(row)
+                    tag = clean_text(row.get("Tag"))
+                    key = (
+                        ticker.upper(),
+                        rec_dt.strftime("%Y-%m-%d"),
+                        tag,
+                    )
+
+                    # 已存在的 review_history 事件不重复追加。
+                    exists = any(
+                        (e["ticker"].upper(), e["rec_date"], e["tag"]) == key
+                        for e in event_rows
+                    )
+                    if exists:
+                        continue
+
+                    exit_price = safe_float(row.get("Exit_Price"))
+                    status = clean_text(row.get("Status"))
+                    if status in {
+                        "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓",
+                        "已超期归档", "突发清仓暂停", "周期到期清仓"
+                    } and exit_price is not None:
+                        cur = exit_price
+                    else:
+                        cur = safe_float(price_map_today.get(ticker))
+
+                    pnl = (
+                        round((cur-rec_price)/rec_price*100,2)
+                        if rec_price and rec_price > 0 and cur is not None
+                        else None
+                    )
+                    event_rows.append({
+                        "ticker":ticker,
+                        "name":clean_text(row.get("Name"),ticker),
+                        "rec_date":rec_dt.strftime("%Y-%m-%d"),
+                        "rec_price":rec_price,
+                        "status":status,
+                        "tag":tag,
+                        "current_price":cur,
+                        "pnl":pnl,
+                        "data_status":"OK" if pnl is not None else ("NO_REC_PRICE" if rec_price is None else "PRICE_MISSING"),
+                    })
+        except Exception as e:
+            print(f"⚠️ 从 trade_history 补充 Scan 推荐事件失败：{e}")
+
+    # 最终稳定排序：推荐日期 -> ticker -> tag
+    event_rows.sort(key=lambda x: (x.get("rec_date", ""), x.get("ticker", ""), x.get("tag", "")))
+    return event_rows
 
 scan_events = build_scan_recommendation_events()
+
+# 用统一推荐事件账本中的最新价格刷新 Observation 展示，避免仅依赖第一次行情下载。
+_event_price_map = {(e["ticker"].upper(), e["rec_date"], e["tag"]): e for e in scan_events}
+for _obs in observation_list:
+    _key = (clean_text(_obs.get("代码")).upper(), clean_text(_obs.get("首次推荐日")), "Observation")
+    _evt = _event_price_map.get(_key)
+    if _evt is not None and _evt.get("current_price") is not None:
+        _obs["当前价格"] = _evt["current_price"]
+        _obs["推荐跟踪涨跌幅(%)"] = _evt.get("pnl")
+
 
 # 只统计最近30天 Scan 推荐事件
 recent_event_cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
@@ -1389,18 +1489,19 @@ recommendation_win_rate = (
 )
 
 # 实际持仓：只统计非 Observation 的当前 Active/持仓事件
-active_tracking = []
-for e in scan_events_30d:
-    if e["tag"] == "Observation":
-        continue
-    if e["status"] in ("Active", "持仓中", "") and e["pnl"] is not None:
-        active_tracking.append(e["pnl"])
-
-# Observation：全部进入推荐绩效
-observation_tracking = [
-    e["pnl"] for e in scan_events_30d
-    if e["tag"] == "Observation" and e["pnl"] is not None
+active_event_rows = [
+    e for e in scan_events_30d
+    if e["tag"] != "Observation"
+    and e["status"] in ("Active", "持仓中", "")
 ]
+active_tracking = [e["pnl"] for e in active_event_rows if e["pnl"] is not None]
+
+# Observation：全部进入 Scan 推荐绩效
+observation_event_rows = [
+    e for e in scan_events_30d
+    if e["tag"] == "Observation"
+]
+observation_tracking = [e["pnl"] for e in observation_event_rows if e["pnl"] is not None]
 
 actual_active_wins = sum(p > 0 for p in active_tracking)
 actual_active_win_rate = (
@@ -1428,6 +1529,7 @@ closed_stock_events = [
     e for e in scan_events_30d
     if e["tag"] != "Observation"
     and e["status"] not in ("Active", "持仓中", "")
+    and e["status"] not in ("期权平仓",)
     and e["pnl"] is not None
 ]
 closed_stock_pnl = [e["pnl"] for e in closed_stock_events]
