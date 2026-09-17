@@ -20,6 +20,7 @@ import os
 import re
 import smtplib
 import sys
+from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
@@ -830,9 +831,10 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
         d.loc[mask,"Review_Risk_Date"] = today_us_str()
         d.loc[mask,"Review_Risk_Note"] = note
         if stop_price is not None and current_price is not None and safe_float(current_price,0) > 0:
-            d.loc[mask,"Review_Stop_Distance_Pct"] = round((float(current_price)-float(stop_price))/float(current_price)*100,2)
+            distance = round((float(current_price)-float(stop_price))/float(current_price)*100,2)
+            d.loc[mask,"Review_Stop_Distance_Pct"] = str(distance)
         else:
-            d.loc[mask,"Review_Stop_Distance_Pct"] = 0 if risk_status == "STOP_TRIGGERED" else ""
+            d.loc[mask,"Review_Stop_Distance_Pct"] = "0" if risk_status == "STOP_TRIGGERED" else ""
         d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
     except Exception as e:
         print(f"⚠️ Review→Scan 联动写回失败 {ticker}: {e}")
@@ -1137,70 +1139,222 @@ append_review_rows(review_rows)
 # 12. 每次 Scan 推荐事件的独立追踪
 # ============================================================
 
+def _load_scan_recommendation_files():
+    """
+    Scan 推荐事件的第一数据源：
+    us_stocks_pending_YYYYMMDD.csv 及 .processed。
+
+    这是 Scan 的原始输出，比 trade_history 更适合作为
+    “每一次 Scan 推荐 = 一笔推荐事件”的统计来源。
+    """
+    files = sorted(
+        glob.glob("us_stocks_pending_*.csv")
+        + glob.glob("us_stocks_pending_*.csv.processed")
+    )
+    cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
+    records = []
+
+    for filename in files:
+        m = re.search(
+            r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$",
+            os.path.basename(filename),
+        )
+        if not m:
+            continue
+
+        try:
+            file_date = pd.Timestamp(datetime.datetime.strptime(m.group(1), "%Y%m%d"))
+        except Exception:
+            continue
+
+        if file_date < cutoff:
+            continue
+
+        try:
+            d = pd.read_csv(
+                filename,
+                dtype=str,
+                keep_default_na=False,
+                on_bad_lines="skip",
+            )
+        except Exception as e:
+            print(f"⚠️ 读取 Scan 推荐文件失败 {filename}: {e}")
+            continue
+
+        if d.empty or "Ticker" not in d.columns:
+            continue
+
+        for _, row in d.iterrows():
+            ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+            if not ticker:
+                continue
+
+            # Scan 推荐价优先使用 Scan_Ref_Price；其次才是 Price。
+            rec_price = safe_float(row.get("Scan_Ref_Price"))
+            if rec_price is None:
+                rec_price = safe_float(row.get("Price"))
+
+            records.append({
+                "ticker": ticker,
+                "name": clean_text(row.get("Name"), ticker),
+                "rec_date": file_date.strftime("%Y-%m-%d"),
+                "rec_price": rec_price,
+                "tag": clean_text(row.get("Tag")),
+                "score": clean_text(row.get("Score"), "N/A"),
+                "source_file": os.path.basename(filename),
+            })
+
+    return records
+
+
+def _load_trade_event_lookup():
+    """按 Date+Ticker 保存 trade_history 中与推荐事件对应的状态。"""
+    d = load_trade_history()
+    lookup = {}
+    if d.empty:
+        return lookup
+
+    for _, row in d.iterrows():
+        rec_date = normalize_date(row.get("Date"))
+        ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+        if rec_date is None or not ticker:
+            continue
+        key = (rec_date.strftime("%Y-%m-%d"), ticker)
+        lookup[key] = row.to_dict()
+
+    return lookup
+
+
+def _load_review_closed_lookup():
+    """从 review_history 找已归档事件的退出价/PnL 兜底。"""
+    lookup = {}
+    if not os.path.exists(REVIEW_HISTORY) or os.path.getsize(REVIEW_HISTORY) == 0:
+        return lookup
+    try:
+        d = pd.read_csv(
+            REVIEW_HISTORY,
+            dtype=str,
+            keep_default_na=False,
+            on_bad_lines="skip",
+        )
+        if d.empty:
+            return lookup
+        for _, row in d.iterrows():
+            rec_date = normalize_date(row.get("Rec_Date"))
+            ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+            if rec_date is None or not ticker:
+                continue
+            status = clean_text(row.get("Status"))
+            if status in {"移动止损清仓", "止损触发清仓", "已超期归档", "周期到期清仓", "突发清仓暂停"}:
+                key = (rec_date.strftime("%Y-%m-%d"), ticker)
+                lookup[key] = row.to_dict()
+        return lookup
+    except Exception as e:
+        print(f"⚠️ 读取 review_history 归档兜底失败：{e}")
+        return lookup
+
+
 def build_scan_recommendation_events():
     """
-    每一条 trade_history 中的 Scan 推荐记录，
-    以「Date + Ticker」作为独立推荐事件。
-    Observation / Active / 已退出都保留。
-    """
+    每一次 Scan 输出的一行推荐 = 一个独立推荐事件。
 
+    事件键：推荐日期 + Ticker。
+
+    推荐价格来自 Scan pending 原始文件，而不是 trade_history 的
+    实际开盘价。这样统计的收益真正对应：
+        Scan 推荐价 -> 当前价/退出价
+
+    Observation 与实际持仓都是有效 Scan 推荐事件；
+    Observation 不属于实际持仓，但必须进入推荐绩效。
+    """
+    raw_events = _load_scan_recommendation_files()
+    trade_lookup = _load_trade_event_lookup()
+    review_closed = _load_review_closed_lookup()
+
+    events_by_key = {}
+
+    for raw in raw_events:
+        key = (raw["rec_date"], raw["ticker"])
+        events_by_key[key] = raw
+
+    # 若 pending 文件已被清理/未保存，则用 trade_history 做兜底。
     d = load_trade_history()
-    if d.empty:
-        return []
+    if not d.empty:
+        for _, row in d.iterrows():
+            dt = normalize_date(row.get("Date"))
+            ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+            if dt is None or not ticker:
+                continue
+            if dt < (pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)):
+                continue
+            key = (dt.strftime("%Y-%m-%d"), ticker)
+            if key not in events_by_key:
+                rp = safe_float(row.get("Scan_Ref_Price"))
+                if rp is None:
+                    rp = safe_float(row.get("Price"))
+                events_by_key[key] = {
+                    "ticker": ticker,
+                    "name": clean_text(row.get("Name"), ticker),
+                    "rec_date": dt.strftime("%Y-%m-%d"),
+                    "rec_price": rp,
+                    "tag": clean_text(row.get("Tag")),
+                    "score": clean_text(row.get("Score"), "N/A"),
+                    "source_file": "trade_history.csv",
+                }
 
     events = []
 
-    for (date_value, ticker), g in d.groupby(["Date","Ticker"], dropna=False, sort=True):
-        g = g.sort_values("Date")
-        row = g.iloc[-1]
-        rec_date = normalize_date(date_value)
-        if rec_date is None:
-            continue
+    for key in sorted(events_by_key.keys()):
+        raw = events_by_key[key]
+        trow = trade_lookup.get(key, {})
+        hrow = review_closed.get(key, {})
 
-        ticker = resolve_ticker(ticker, row.get("Name"))
-        if not ticker:
-            continue
+        rec_price = safe_float(raw.get("rec_price"))
+        if rec_price is None:
+            rec_price = safe_float(trow.get("Scan_Ref_Price"))
+        if rec_price is None:
+            rec_price = safe_float(trow.get("Price"))
 
-        rec_price = safe_record_price(row)
-        if rec_price is None or rec_price <= 0:
-            events.append({
-                "ticker":ticker,"name":clean_text(row.get("Name"),ticker),
-                "rec_date":rec_date.strftime("%Y-%m-%d"),
-                "rec_price":None,"status":clean_text(row.get("Status")),
-                "tag":clean_text(row.get("Tag")),
-                "current_price":None,"pnl":None,"data_status":"NO_REC_PRICE"
-            })
-            continue
+        ticker = raw["ticker"]
+        status = clean_text(trow.get("Status"))
+        tag = clean_text(raw.get("tag")) or clean_text(trow.get("Tag"))
+        if not tag and clean_text(hrow.get("Tag")) == "Observation":
+            tag = "Observation"
 
-        status = clean_text(row.get("Status"))
-        exit_price = safe_float(row.get("Exit_Price"))
+        exit_price = safe_float(trow.get("Exit_Price"))
+        if exit_price is None:
+            exit_price = safe_float(hrow.get("Cur_Price"))
 
-        if status in {
-            "Stop_Loss_Hit","移动止损清仓","止损触发清仓",
-            "已超期归档","突发清仓暂停","周期到期清仓"
-        } and exit_price is not None:
-            cur = exit_price
+        closed_status = status in {
+            "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓",
+            "已超期归档", "突发清仓暂停", "周期到期清仓"
+        }
+
+        if closed_status and exit_price is not None:
+            current_price = exit_price
         else:
-            cur = safe_float(price_map_today.get(ticker))
+            current_price = safe_float(price_map_today.get(ticker))
 
-        pnl = round((cur-rec_price)/rec_price*100,2) if cur is not None else None
-        observation = clean_text(row.get("Tag")).strip() == "Observation"
-
-        if pnl is None:
-            ds = "PRICE_MISSING"
-        else:
-            ds = "OK"
+        pnl = None
+        if rec_price is not None and rec_price > 0 and current_price is not None:
+            pnl = round((current_price - rec_price) / rec_price * 100, 2)
 
         events.append({
-            "ticker":ticker,
-            "name":clean_text(row.get("Name"),ticker),
-            "rec_date":rec_date.strftime("%Y-%m-%d"),
-            "rec_price":rec_price,
-            "status":status,
-            "tag":"Observation" if observation else clean_text(row.get("Tag")),
-            "current_price":cur,
-            "pnl":pnl,
-            "data_status":ds,
+            "ticker": ticker,
+            "name": raw.get("name") or clean_text(trow.get("Name"), ticker),
+            "rec_date": raw["rec_date"],
+            "rec_price": rec_price,
+            "status": status,
+            "tag": "Observation" if tag == "Observation" else tag,
+            "current_price": current_price,
+            "pnl": pnl,
+            "data_status": (
+                "NO_REC_PRICE" if rec_price is None or rec_price <= 0
+                else "PRICE_MISSING" if current_price is None
+                else "OK"
+            ),
+            "score": raw.get("score", "N/A"),
+            "source_file": raw.get("source_file", ""),
         })
 
     return events
