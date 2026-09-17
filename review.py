@@ -1,20 +1,16 @@
 # -*- coding: utf-8 -*-
 """
-美股盘后复盘与风控审查引擎（终极可靠版）
+美股盘后复盘与风控审查引擎
 ================================================
-功能：
-1. 与 scan.py 的 us_stocks_pending_YYYYMMDD.csv 联动
-2. 自动修复 pending 中 Ticker 被写成公司名称的问题
-3. yfinance 下载失败不会导致整个 review.py 崩溃
-4. 缺失价格安全回退，不再对空字符串执行 float('')
-5. 股票采用 MA20/MA50 + ATR + MACD/KDJ 移动止损：当日 Low <= 前一交易日保护线即触发
-6. 股票不再按固定持仓天数强制归档，趋势破坏/移动止损才退出
-7. 今日新增标的正常计入盈亏/胜率
-8. 期权到期自动平仓（股票不使用持仓期限）
-9. review_history.csv 自动归档
-10. KPI / 胜率统计
-11. Claude 生成 HTML 风控报告
-12. Gmail 邮件发送
+核心统计口径：
+1. 每次 Scan 推荐事件按「推荐日期 + Ticker」独立追踪。
+2. Observation 是有效 Scan 推荐，必须追踪推荐价 -> 当前价。
+3. 实际持仓与 Observation 分开，不把 Observation 算成持仓。
+4. Scan 推荐综合胜率 = 当前持仓 + Observation + 已了结股票推荐。
+5. 数据缺失的推荐不虚构收益，但保留为“数据不足”。
+6. 期权完全独立，不混入股票 Scan 推荐胜率。
+7. 同一 Review 日期不会重复写入相同推荐事件。
+8. 股票不按固定持仓天数强制退出，采用 MA20/MA50 + ATR + MACD/KDJ 移动止损。
 """
 
 import csv
@@ -24,7 +20,6 @@ import os
 import re
 import smtplib
 import sys
-import time
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
@@ -35,7 +30,7 @@ import yfinance as yf
 
 
 # ============================================================
-# 0. 环境变量
+# 0. 环境与时间
 # ============================================================
 
 _missing_env = [
@@ -46,51 +41,32 @@ if _missing_env:
     print(f"致命错误：未检测到环境变量 {', '.join(_missing_env)}！")
     sys.exit(1)
 
-
-# ============================================================
-# 1. 时间
-# ============================================================
-
 US_TZ = ZoneInfo("America/New_York")
-
+TARGET_MODEL = "claude-opus-4-8"
 
 def get_us_time():
     return datetime.datetime.now(US_TZ)
 
-
 def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
-
 
 if get_us_time().weekday() >= 5:
     print("当前为周末，美股休市，退出复盘。")
     sys.exit(0)
 
-
-TARGET_MODEL = "claude-opus-4-8"
-
 print("=" * 60)
-print("启动美股盘后复盘与风控审查引擎（终极可靠版）")
+print("启动美股盘后复盘与风控审查引擎")
 print("=" * 60)
 
 
 # ============================================================
-# 2. 通用安全函数
+# 1. 通用安全函数
 # ============================================================
 
 INVALID_STRINGS = {
-    "",
-    "nan",
-    "none",
-    "null",
-    "n/a",
-    "na",
-    "nat",
-    "观望",
-    "坚决空仓",
-    "绝对规避",
+    "", "nan", "none", "null", "n/a", "na", "nat",
+    "观望", "坚决空仓", "绝对规避",
 }
-
 
 def clean_text(value, default=""):
     if value is None:
@@ -100,53 +76,41 @@ def clean_text(value, default=""):
             return default
     except Exception:
         pass
-    return str(value).strip()
-
+    s = str(value).strip()
+    return default if s.lower() in INVALID_STRINGS and default != "" else s
 
 def safe_float(value, default=None):
-    """
-    绝对禁止 float('') 导致 review.py 崩溃。
-    """
     if value is None:
         return default
-
     try:
         if pd.isna(value):
             return default
     except Exception:
         pass
-
     s = str(value).strip().replace(",", "").replace("$", "")
     if s.lower() in INVALID_STRINGS:
         return default
-
-    # 处理类似 "$123.45 USD"
     m = re.search(r"-?\d+(?:\.\d+)?", s)
     if not m:
         return default
-
     try:
-        value_f = float(m.group(0))
-        if pd.isna(value_f):
-            return default
-        return value_f
+        x = float(m.group(0))
+        return default if pd.isna(x) else x
     except Exception:
         return default
-
 
 def safe_int(value, default=None):
-    f = safe_float(value, None)
-    if f is None:
+    x = safe_float(value, None)
+    if x is None:
         return default
     try:
-        return int(f)
+        return int(x)
     except Exception:
         return default
-
 
 def normalize_date(value):
     try:
-        dt = pd.to_datetime(value, errors="coerce")
+        dt = pd.to_datetime(value, errors="coerce", format="mixed")
         if pd.isna(dt):
             return None
         if getattr(dt, "tzinfo", None) is not None:
@@ -155,325 +119,159 @@ def normalize_date(value):
     except Exception:
         return None
 
-
 def normalize_ticker_text(value):
-    """
-    只负责清洗字符串，不负责公司名称 -> 股票代码。
-    """
-    s = clean_text(value)
-    s = s.replace("\ufeff", "").strip()
-    s = s.lstrip("$").strip()
-    return s
-
+    return clean_text(value).replace("\ufeff", "").strip().lstrip("$").strip()
 
 def is_probable_us_ticker(value):
-    """
-    判断一个字符串是否像真正的美股 ticker。
-    允许 BRK-B / BF-B / etc.
-    """
     s = normalize_ticker_text(value).upper()
-
-    if not s:
-        return False
-
-    if len(s) > 8:
-        return False
-
-    return bool(re.fullmatch(r"[A-Z]{1,6}(?:[-.][A-Z]{1,3})?", s))
+    return bool(s and len(s) <= 8 and re.fullmatch(r"[A-Z]{1,6}(?:[-.][A-Z]{1,3})?", s))
 
 
 # ============================================================
-# 3. 公司名称 -> Ticker 修复
-# ============================================================
-#
-# 你这次报错的根本原因：
-#
-# pending 中出现：
-#   Nvidia
-#   Pfizer
-#   Apple Inc.
-#   Supermicro
-#   Charles Schwab Corporation
-#
-# review.py 原来直接把这些字符串送给 yfinance：
-#   yf.download(["Nvidia", "Pfizer", ...])
-#
-# yfinance 当然把它们当成 ticker，于是出现：
-#   $NVIDIA: possibly delisted
-#
-# 现在先 canonicalize 成：
-#   Nvidia -> NVDA
-#   Pfizer -> PFE
-#   Apple Inc. -> AAPL
-#   Supermicro -> SMCI
-#   Charles Schwab Corporation -> SCHW
-#
+# 2. 公司名 -> Ticker
 # ============================================================
 
 COMPANY_TO_TICKER = {
-    # Technology
-    "nvidia": "NVDA",
-    "nvidia corporation": "NVDA",
-    "nvidia corp": "NVDA",
-    "apple": "AAPL",
-    "apple inc": "AAPL",
-    "apple inc.": "AAPL",
-    "intel": "INTC",
-    "intel corporation": "INTC",
-    "broadcom": "AVGO",
-    "broadcom inc": "AVGO",
-    "broadcom inc.": "AVGO",
-    "supermicro": "SMCI",
-    "super micro": "SMCI",
+    "nvidia": "NVDA", "nvidia corporation": "NVDA", "nvidia corp": "NVDA",
+    "apple": "AAPL", "apple inc": "AAPL", "apple inc.": "AAPL",
+    "intel": "INTC", "intel corporation": "INTC",
+    "broadcom": "AVGO", "broadcom inc": "AVGO", "broadcom inc.": "AVGO",
+    "supermicro": "SMCI", "super micro": "SMCI",
     "super micro computer": "SMCI",
     "super micro computer inc": "SMCI",
     "super micro computer inc.": "SMCI",
-    "intuit": "INTU",
-    "intuit inc": "INTU",
-    "intuit inc.": "INTU",
-    "sandisk": "SNDK",
-    "sandisk corporation": "SNDK",
-    "the trade desk": "TTD",
-    "the trade desk (the)": "TTD",
-    "trade desk": "TTD",
-    "trade desk (the)": "TTD",
+    "intuit": "INTU", "intuit inc": "INTU", "intuit inc.": "INTU",
+    "sandisk": "SNDK", "sandisk corporation": "SNDK",
+    "the trade desk": "TTD", "trade desk": "TTD",
+    "the trade desk (the)": "TTD", "trade desk (the)": "TTD",
+    "charles schwab": "SCHW", "charles schwab corp": "SCHW",
     "charles schwab corporation": "SCHW",
-    "charles schwab": "SCHW",
-    "charles schwab corp": "SCHW",
-
-    # Healthcare
-    "pfizer": "PFE",
-    "pfizer inc": "PFE",
-    "pfizer inc.": "PFE",
-
-    # Industrials / Energy
-    "halliburton": "HAL",
-    "halliburton company": "HAL",
-    "eqt": "EQT",
-    "eqt corporation": "EQT",
+    "pfizer": "PFE", "pfizer inc": "PFE", "pfizer inc.": "PFE",
+    "halliburton": "HAL", "halliburton company": "HAL",
+    "eqt": "EQT", "eqt corporation": "EQT",
+    "palo alto networks": "PANW", "palo alto networks inc": "PANW",
+    "palo alto networks inc.": "PANW",
+    "apa corporation": "APA", "southwest airlines": "LUV",
+    "best buy": "BBY", "best buy co": "BBY", "best buy co inc": "BBY",
+    "l3harris technologies": "LHX", "l3harris": "LHX",
 }
 
-
 def normalize_company_key(value):
-    s = clean_text(value).lower()
-    s = s.replace("&", "and")
+    s = clean_text(value).lower().replace("&", "and")
     s = re.sub(r"[^a-z0-9]+", " ", s)
-    s = re.sub(r"\s+", " ", s).strip()
-    return s
-
+    return re.sub(r"\s+", " ", s).strip()
 
 def lookup_ticker_by_company_name(name):
-    """
-    最后一层才调用 yfinance Search。
-    常见公司优先走本地映射，避免大量 API 请求。
-    """
     name = clean_text(name)
     if not name:
         return None
-
     key = normalize_company_key(name)
-
-    # 先本地映射
     for k, ticker in COMPANY_TO_TICKER.items():
         if normalize_company_key(k) == key:
             return ticker
-
-    # yfinance Search 兜底
     try:
         result = yf.Search(name, max_results=8)
         quotes = result.quotes if result is not None else []
-
         for q in quotes:
             symbol = clean_text(q.get("symbol"))
-            quote_type = clean_text(q.get("quoteType")).upper()
-
-            if quote_type in ("EQUITY", "ETF", "") and is_probable_us_ticker(symbol):
+            qt = clean_text(q.get("quoteType")).upper()
+            if qt in ("EQUITY", "ETF", "") and is_probable_us_ticker(symbol):
                 return symbol.upper()
-
     except Exception as e:
         print(f"⚠️ 公司名称解析失败 [{name}]: {e}")
-
     return None
 
-
 def resolve_ticker(raw_ticker, company_name=""):
-    """
-    最可靠的 Ticker 解析：
-    1. 已经是 ticker -> 直接使用
-    2. 本地公司名映射
-    3. Name 列映射
-    4. yfinance Search
-    5. 最后保留原值，但绝不让它导致程序崩溃
-    """
     raw = normalize_ticker_text(raw_ticker)
-
     if is_probable_us_ticker(raw):
         return raw.upper()
-
-    candidates = [raw, clean_text(company_name)]
-
-    for candidate in candidates:
+    for candidate in (raw, clean_text(company_name)):
         if not candidate:
             continue
-
         key = normalize_company_key(candidate)
-
         for k, ticker in COMPANY_TO_TICKER.items():
             if normalize_company_key(k) == key:
                 return ticker
-
-    for candidate in candidates:
-        if not candidate:
-            continue
-
-        found = lookup_ticker_by_company_name(candidate)
-        if found:
-            return found
-
+    for candidate in (raw, clean_text(company_name)):
+        if candidate:
+            found = lookup_ticker_by_company_name(candidate)
+            if found:
+                return found
     return raw.upper() if raw else ""
 
 
 # ============================================================
-# 4. yfinance 数据获取
+# 3. 行情
 # ============================================================
 
 def extract_single_ticker_df(hist_data, ticker, ticker_count):
-    """
-    兼容 yfinance 单 ticker / MultiIndex 两种返回格式。
-    """
     try:
         if hist_data is None or hist_data.empty:
             return pd.DataFrame()
-
         if ticker_count == 1:
             sub = hist_data.copy()
         else:
             if not isinstance(hist_data.columns, pd.MultiIndex):
                 return pd.DataFrame()
-
             if ticker not in hist_data.columns.get_level_values(0):
                 return pd.DataFrame()
-
             sub = hist_data[ticker].copy()
-
         required = ["Open", "High", "Low", "Close"]
-
-        for col in required:
-            if col not in sub.columns:
-                return pd.DataFrame()
-
-        sub = sub.dropna(subset=required).copy()
-
-        if sub.empty:
+        if any(c not in sub.columns for c in required):
             return pd.DataFrame()
-
-        return sub
-
+        return sub.dropna(subset=required).copy()
     except Exception:
         return pd.DataFrame()
 
-
 def download_ohlc_safe(tickers, period="60d", start=None, end=None):
-    """
-    一次批量下载。
-    任何 ticker 失败都不能让整个程序退出。
-    """
-    tickers = [
+    tickers = list(dict.fromkeys(
         normalize_ticker_text(t).upper()
-        for t in tickers
-        if normalize_ticker_text(t)
-    ]
-
-    tickers = list(dict.fromkeys(tickers))
-
+        for t in tickers if normalize_ticker_text(t)
+    ))
     if not tickers:
         return pd.DataFrame(), {}
-
     print(f"📡 yfinance 请求 {len(tickers)} 只真实 ticker...")
-
     try:
         kwargs = {
-            "progress": False,
-            "auto_adjust": True,
-            "group_by": "ticker",
-            "threads": False,
+            "progress": False, "auto_adjust": True,
+            "group_by": "ticker", "threads": False,
         }
-
         if start is not None:
             kwargs["start"] = start
         if end is not None:
             kwargs["end"] = end
         if start is None and end is None:
             kwargs["period"] = period
-
         hist = yf.download(tickers, **kwargs)
-
     except Exception as e:
         print(f"⚠️ 批量行情下载失败：{e}")
         return pd.DataFrame(), {}
-
     if hist is None or hist.empty:
         print("⚠️ yfinance 没有返回任何行情。")
         return pd.DataFrame(), {}
-
-    all_records = []
-    latest_map = {}
-
+    rows, latest = [], {}
     for ticker in tickers:
         sub = extract_single_ticker_df(hist, ticker, len(tickers))
-
         if sub.empty:
             print(f"⚠️ 无法获取 {ticker} OHLC，跳过该 ticker。")
             continue
-
         for dt, row in sub.iterrows():
-            try:
-                o = safe_float(row.get("Open"))
-                h = safe_float(row.get("High"))
-                l = safe_float(row.get("Low"))
-                c = safe_float(row.get("Close"))
-
-                if None in (o, h, l, c):
-                    continue
-
-                all_records.append({
-                    "Ticker": ticker,
-                    "Date": dt,
-                    "open": o,
-                    "high": h,
-                    "low": l,
-                    "close": c,
-                })
-            except Exception:
+            o, h, l, c = (safe_float(row.get(x)) for x in ("Open", "High", "Low", "Close"))
+            if None in (o, h, l, c):
                 continue
-
-        if all_records:
-            try:
-                last = sub.iloc[-1]
-                o = safe_float(last.get("Open"))
-                h = safe_float(last.get("High"))
-                l = safe_float(last.get("Low"))
-                c = safe_float(last.get("Close"))
-
-                if None not in (o, h, l, c):
-                    latest_map[ticker] = {
-                        "open": o,
-                        "high": h,
-                        "low": l,
-                        "close": c,
-                    }
-            except Exception:
-                pass
-
-    df_all = pd.DataFrame(all_records)
-
-    print(f"✅ 成功获得 {len(latest_map)} / {len(tickers)} 只 ticker 的 OHLC。")
-
-    return df_all, latest_map
-
+            rows.append({"Ticker": ticker, "Date": dt, "open": o, "high": h, "low": l, "close": c})
+        try:
+            r = sub.iloc[-1]
+            o, h, l, c = (safe_float(r.get(x)) for x in ("Open", "High", "Low", "Close"))
+            if None not in (o, h, l, c):
+                latest[ticker] = {"open": o, "high": h, "low": l, "close": c}
+        except Exception:
+            pass
+    df_all = pd.DataFrame(rows)
+    print(f"✅ 成功获得 {len(latest)} / {len(tickers)} 只 ticker 的 OHLC。")
+    return df_all, latest
 
 def get_exact_date_ohlc(df_hist, ticker, target_date):
-    """严格获取指定交易日的OHLC；禁止用 <= target_date 的上一交易日冒充目标日。"""
     try:
         if df_hist is None or df_hist.empty:
             return None
@@ -481,457 +279,209 @@ def get_exact_date_ohlc(df_hist, ticker, target_date):
         sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
         if sub.empty:
             return None
-        dates = pd.to_datetime(sub["Date"], errors="coerce")
+        dates = pd.to_datetime(sub["Date"], errors="coerce", format="mixed")
         exact = sub.loc[dates.dt.normalize() == target].copy()
         if exact.empty:
             return None
-        exact = exact.sort_values("Date")
-        r = exact.iloc[-1]
-        return {
-            "open": safe_float(r.get("open")),
-            "high": safe_float(r.get("high")),
-            "low": safe_float(r.get("low")),
-            "close": safe_float(r.get("close")),
-        }
+        r = exact.sort_values("Date").iloc[-1]
+        return {k: safe_float(r.get(v)) for k, v in {
+            "open": "open", "high": "high", "low": "low", "close": "close"
+        }.items()}
     except Exception:
         return None
 
-
 def get_live_quote_bootstrap(ticker):
-    """
-    单 ticker 实时/最近价格兜底。
-    """
     ticker = normalize_ticker_text(ticker).upper()
-
     if not is_probable_us_ticker(ticker):
         return None, None
-
     try:
         fi = yf.Ticker(ticker).fast_info
-
-        open_p = safe_float(
-            fi.get("open") if hasattr(fi, "get") else None
-        )
-
-        last_p = safe_float(
-            fi.get("last_price") if hasattr(fi, "get") else None
-        )
-
-        return open_p, last_p
-
+        op = safe_float(fi.get("open") if hasattr(fi, "get") else None)
+        last = safe_float(fi.get("last_price") if hasattr(fi, "get") else None)
+        return op, last
     except Exception as e:
         print(f"⚠️ 实时价格获取失败 {ticker}: {e}")
         return None, None
 
 
-def get_price_from_history_row(df_rows, ticker):
-    if df_rows is None or df_rows.empty:
-        return None
-
-    try:
-        sub = df_rows[df_rows["Ticker"] == ticker].copy()
-        if sub.empty:
-            return None
-
-        sub = sub.sort_values("Date")
-        row = sub.iloc[-1]
-
-        return {
-            "open": safe_float(row.get("open")),
-            "high": safe_float(row.get("high")),
-            "low": safe_float(row.get("low")),
-            "close": safe_float(row.get("close")),
-        }
-
-    except Exception:
-        return None
-
-
 # ============================================================
-# 5. CSV / 账本兼容
+# 4. 账本
 # ============================================================
 
 TRADE_HISTORY = "trade_history.csv"
 REVIEW_HISTORY = "review_history.csv"
 OPTION_LOG_FILE = "option_strategies.csv"
 
+TRADE_COLUMNS = [
+    "Date","Ticker","Name","Tag","Score","Price","RSI","Bias","Hold_Period",
+    "Stop_Loss","Stop_Method","Trail_Stop","Exit_Date","Exit_Price","Status",
+    "Close_Price","技术评分","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB",
+    "MA20","MA50","ATR_Pct","MACD金叉","周线共振","KDJ_J回升","量能放大","周期共振",
+    "Review_Risk_Status","Review_Risk_Date","Review_Stop_Distance_Pct","Review_Risk_Note"
+]
+
+REVIEW_COLUMNS = [
+    "Review_Date","Ticker","Name","Tag","Rec_Date","Rec_Price","Cur_Price",
+    "Days_Held","PnL_Pct","Maturity_PnL","Hold_Period","Stop_Loss","Stop_Method",
+    "Trail_Stop","Rec_Count","Status","Score","Review_Risk_Status",
+    "Review_Risk_Date","Review_Stop_Distance_Pct","Review_Risk_Note",
+    "Option_Type","Strike","Expiry"
+]
 
 def ensure_trade_history_columns():
-    """
-    不再用字符串拼接 CSV。
-    pandas.to_csv 会正确处理公司名中的逗号。
-    """
-    required = [
-        "Date", "Ticker", "Name", "Tag", "Score", "Price", "RSI", "Bias",
-        "Hold_Period", "Stop_Loss", "Stop_Method", "Trail_Stop", "Exit_Date", "Exit_Price", "Status",
-        "Close_Price", "技术评分", "估值评分", "PE_TTM", "PE_Forward", "EPS_TTM", "PB",
-        "MA20", "MA50", "ATR_Pct", "MACD金叉", "周线共振", "KDJ_J回升",
-        "量能放大", "周期共振"
-    ]
-
     if not os.path.exists(TRADE_HISTORY) or os.path.getsize(TRADE_HISTORY) == 0:
         return
-
     try:
-        df = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
-
-        for col in required:
-            if col not in df.columns:
-                df[col] = ""
-
-        df = df[required]
-        df.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
-
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
+        for c in TRADE_COLUMNS:
+            if c not in d.columns:
+                d[c] = ""
+        d[TRADE_COLUMNS].to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
     except Exception as e:
         print(f"⚠️ trade_history.csv 表结构检查失败：{e}")
-
 
 def load_trade_history():
     if not os.path.exists(TRADE_HISTORY):
         return pd.DataFrame()
-
     try:
-        df = pd.read_csv(
-            TRADE_HISTORY,
-            dtype=str,
-            keep_default_na=False,
-            on_bad_lines="skip",
-        )
-
-        if "Date" not in df.columns:
-            print("❌ trade_history.csv 缺少 Date 列。")
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+        if "Date" not in d.columns or "Ticker" not in d.columns:
             return pd.DataFrame()
-
-        if "Ticker" not in df.columns:
-            print("❌ trade_history.csv 缺少 Ticker 列。")
-            return pd.DataFrame()
-
-        if "Name" not in df.columns:
-            df["Name"] = ""
-
-        df["Date"] = pd.to_datetime(df["Date"], errors="coerce", format="mixed")
-        df = df.dropna(subset=["Date"]).copy()
-
-        return df
-
+        if "Name" not in d.columns:
+            d["Name"] = ""
+        d["Date"] = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
+        return d.dropna(subset=["Date"]).copy()
     except Exception as e:
         print(f"❌ 读取 trade_history.csv 失败：{e}")
         return pd.DataFrame()
 
-
-# ============================================================
-# 6. pending 文件处理
-# ============================================================
-
-def recalibrate_stop_loss(stop_loss_str, scan_ref_price, real_open_price):
-    try:
-        s = clean_text(stop_loss_str)
-
-        if s.lower() in INVALID_STRINGS:
-            return stop_loss_str
-
-        old_val = safe_float(s)
-        ref = safe_float(scan_ref_price)
-        new_open = safe_float(real_open_price)
-
-        if None in (old_val, ref, new_open):
-            return stop_loss_str
-
-        if old_val <= 0 or ref <= 0 or new_open <= 0:
-            return stop_loss_str
-
-        new_val = round(old_val * (new_open / ref), 2)
-
-        if str(s).startswith("$"):
-            return f"${new_val}"
-
-        return str(new_val)
-
-    except Exception:
-        return stop_loss_str
-
-
-def migrate_trade_history():
-    """
-    老版本账本缺列时补列。
-    """
-    ensure_trade_history_columns()
-
+def safe_record_price(row):
+    for c in ("Price", "Close_Price"):
+        p = safe_float(row.get(c))
+        if p is not None and p > 0:
+            return p
+    return None
 
 def find_existing_record(df_existing, date_value, ticker):
     if df_existing.empty:
         return False
-
-    target_date = normalize_date(date_value)
-
-    if target_date is None:
+    target = normalize_date(date_value)
+    if target is None:
         return False
-
     try:
-        mask_date = df_existing["Date"] == target_date
-        mask_ticker = (
-            df_existing["Ticker"].astype(str).str.upper()
-            == str(ticker).upper()
-        )
-
-        return bool((mask_date & mask_ticker).any())
-
+        return bool((
+            (df_existing["Date"] == target) &
+            (df_existing["Ticker"].astype(str).str.upper() == str(ticker).upper())
+        ).any())
     except Exception:
         return False
 
 
+# ============================================================
+# 5. pending -> trade_history
+# ============================================================
+
+def recalibrate_stop_loss(stop_loss_str, scan_ref_price, real_open_price):
+    try:
+        old = safe_float(stop_loss_str)
+        ref = safe_float(scan_ref_price)
+        op = safe_float(real_open_price)
+        if None in (old, ref, op) or old <= 0 or ref <= 0 or op <= 0:
+            return stop_loss_str
+        new_val = round(old * op / ref, 2)
+        return f"${new_val}" if str(stop_loss_str).strip().startswith("$") else str(new_val)
+    except Exception:
+        return stop_loss_str
+
 def supplement_us_stocks_from_pending():
-    """
-    关键修复：
-    - pending 的 Ticker 如果是公司名称，先解析成真实 ticker
-    - 不把公司名称直接交给 yfinance
-    - 价格获取失败时允许写空，但后续绝不 float('')
-    - 使用 pandas.to_csv，避免 Name 中的逗号破坏 CSV
-    """
-    # 同时读取尚未 processed 的 pending 与最近30天已 processed 的恢复文件。
-    # Scan 会先把 pending 改名为 .processed；Review 仍需能够从该文件恢复新推荐。
-    candidates = sorted(glob.glob("us_stocks_pending_*.csv") + glob.glob("us_stocks_pending_*.csv.processed"))
-    pending_files = []
-    cutoff_recovery = (get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)).date()
-    for f in candidates:
+    files = sorted(
+        glob.glob("us_stocks_pending_*.csv") +
+        glob.glob("us_stocks_pending_*.csv.processed")
+    )
+    cutoff = (get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)).date()
+    pending = []
+    for f in files:
         name = os.path.basename(f)
         m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", name)
         if not m:
             continue
         try:
-            file_day = datetime.datetime.strptime(m.group(1), "%Y%m%d").date()
+            day = datetime.datetime.strptime(m.group(1), "%Y%m%d").date()
         except Exception:
             continue
-        # 未 processed 的全部处理；processed 只恢复最近30天，避免每次 Review 重扫多年历史。
-        if name.endswith(".processed") and file_day < cutoff_recovery:
+        if name.endswith(".processed") and day < cutoff:
             continue
-        pending_files.append(f)
-
-    if not pending_files:
+        pending.append(f)
+    if not pending:
         print("📋 无待确认/恢复美股文件，跳过补充。")
         return
+    ensure_trade_history_columns()
+    existing = load_trade_history()
+    print(f"📋 发现 {len(pending)} 份待确认文件。")
 
-    print(f"📋 发现 {len(pending_files)} 份待确认文件。")
-
-    migrate_trade_history()
-
-    df_existing = load_trade_history()
-
-    for pending_file in pending_files:
-        m = re.search(
-            r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$",
-            os.path.basename(pending_file),
-        )
-
+    for pf in pending:
+        m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", os.path.basename(pf))
         if not m:
-            print(f"⚠️ 无法识别 pending 文件日期：{pending_file}")
             continue
-
-        date_raw = m.group(1)
-        target_date = (
-            f"{date_raw[:4]}-{date_raw[4:6]}-{date_raw[6:]}"
-        )
-
-        print(f"处理 {pending_file}（交易日 {target_date}）")
-
+        raw_date = m.group(1)
+        target_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
         try:
-            df_pending = pd.read_csv(
-                pending_file,
-                dtype=str,
-                keep_default_na=False,
-                on_bad_lines="skip",
-            )
-
-            if df_pending.empty:
-                print("ℹ️ pending 文件为空，标记 processed。")
-                os.rename(
-                    pending_file,
-                    pending_file + ".processed",
-                )
+            p = pd.read_csv(pf, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            if p.empty:
+                if not pf.endswith(".processed"):
+                    os.rename(pf, pf + ".processed")
                 continue
-
-            if "Ticker" not in df_pending.columns:
-                print("❌ pending 文件没有 Ticker 列，跳过。")
+            if "Ticker" not in p.columns:
+                print(f"❌ {pf} 没有 Ticker 列。")
                 continue
-
-            # ==================================================
-            # 第一步：把 Ticker 统一解析成真实股票代码
-            # ==================================================
 
             resolved = []
+            for _, row in p.iterrows():
+                rt = resolve_ticker(row.get("Ticker"), row.get("Name"))
+                if rt:
+                    resolved.append((row, rt))
+            tickers = list(dict.fromkeys(t for _, t in resolved if is_probable_us_ticker(t)))
+            hist, _ = download_ohlc_safe(tickers, period="10d")
+            target_map = {}
+            for t in tickers:
+                exact = get_exact_date_ohlc(hist, t, target_date)
+                if exact:
+                    target_map[t] = exact
 
-            for _, row in df_pending.iterrows():
-                raw_ticker = clean_text(row.get("Ticker"))
-                name = clean_text(row.get("Name"))
-
-                real_ticker = resolve_ticker(raw_ticker, name)
-
-                if not real_ticker:
-                    print(
-                        f"⚠️ 无法解析 ticker："
-                        f"raw={raw_ticker}, name={name}"
-                    )
-                    continue
-
-                if real_ticker != raw_ticker.upper().lstrip("$"):
-                    print(
-                        f"🔧 ticker 修复："
-                        f"{raw_ticker} -> {real_ticker}"
-                    )
-
-                resolved.append(
-                    (row, real_ticker)
-                )
-
-            real_tickers = list(
-                dict.fromkeys(
-                    ticker
-                    for _, ticker in resolved
-                    if is_probable_us_ticker(ticker)
-                )
-            )
-
-            # ==================================================
-            # 第二步：一次性下载真实 ticker 行情
-            # ==================================================
-
-            df_hist, latest_map = download_ohlc_safe(
-                real_tickers,
-                period="10d",
-            )
-
-            target_dt = pd.Timestamp(target_date)
-            historical_target = {}
-
-            if not df_hist.empty:
-                df_hist["Date"] = pd.to_datetime(
-                    df_hist["Date"],
-                    errors="coerce",
-                )
-
-                for ticker in real_tickers:
-                    exact = get_exact_date_ohlc(df_hist, ticker, target_date)
-                    if exact is not None:
-                        historical_target[ticker] = exact
-
-            new_rows = []
-            missing_price = []
-
+            new_rows, missing = [], []
             for row, ticker in resolved:
-
-                # ----------------------------------------------
-                # 去重
-                # ----------------------------------------------
-
-                if find_existing_record(
-                    df_existing,
-                    target_date,
-                    ticker,
-                ):
-                    print(
-                        f"⏭️ {ticker} ({clean_text(row.get('Name'))}) "
-                        f"已在账本，跳过。"
-                    )
+                if find_existing_record(existing, target_date, ticker):
                     continue
-
-                # ----------------------------------------------
-                # 优先使用目标交易日 OHLC
-                # ----------------------------------------------
-
-                price_data = historical_target.get(ticker)
-
-                open_price = (
-                    safe_float(price_data.get("open"))
-                    if price_data
-                    else None
-                )
-
-                close_price = (
-                    safe_float(price_data.get("close"))
-                    if price_data
-                    else None
-                )
-
-                # ----------------------------------------------
-                # 今日文件额外尝试实时价格
-                # ----------------------------------------------
-
-                if (
-                    target_date == today_us_str()
-                    and (
-                        open_price is None
-                        or close_price is None
-                    )
-                ):
-                    live_open, live_last = get_live_quote_bootstrap(
-                        ticker
-                    )
-
-                    if open_price is None:
-                        open_price = live_open
-
-                    if close_price is None:
-                        close_price = (
-                            live_last
-                            if live_last is not None
-                            else live_open
-                        )
-
-                # ----------------------------------------------
-                # 缺失价格不再崩溃
-                # ----------------------------------------------
-
-                if open_price is None or close_price is None:
-                    missing_price.append(ticker)
-
-                calibrated_stop = row.get(
-                    "Stop_Loss",
-                    "N/A",
-                )
-
-                scan_ref = row.get(
-                    "Scan_Ref_Price",
-                    row.get("Price", ""),
-                )
-
-                if open_price is not None:
-                    calibrated_stop = recalibrate_stop_loss(
-                        row.get("Stop_Loss", "N/A"),
-                        scan_ref,
-                        open_price,
-                    )
-
-                record = {
+                pdx = target_map.get(ticker)
+                op = safe_float(pdx.get("open")) if pdx else None
+                cp = safe_float(pdx.get("close")) if pdx else None
+                if target_date == today_us_str() and (op is None or cp is None):
+                    live_op, live_last = get_live_quote_bootstrap(ticker)
+                    op = op if op is not None else live_op
+                    cp = cp if cp is not None else (live_last if live_last is not None else live_op)
+                if op is None or cp is None:
+                    missing.append(ticker)
+                scan_ref = row.get("Scan_Ref_Price", row.get("Price", ""))
+                stop = row.get("Stop_Loss", "N/A")
+                if op is not None:
+                    stop = recalibrate_stop_loss(stop, scan_ref, op)
+                new_rows.append({
                     "Date": target_date,
                     "Ticker": ticker,
                     "Name": clean_text(row.get("Name")),
                     "Tag": clean_text(row.get("Tag")),
-                    "Score": clean_text(
-                        row.get("Score"),
-                        "N/A",
-                    ),
-                    "Price": (
-                        open_price
-                        if open_price is not None
-                        else ""
-                    ),
+                    "Score": clean_text(row.get("Score"), "N/A"),
+                    "Price": op if op is not None else "",
                     "RSI": clean_text(row.get("RSI")),
                     "Bias": clean_text(row.get("Bias")),
-                    "Hold_Period": clean_text(
-                        row.get("Hold_Period"),
-                        "N/A",
-                    ),
-                    "Stop_Loss": calibrated_stop,
-                    "Stop_Method": clean_text(row.get("Stop_Method"), "移动止损"),
-                    "Trail_Stop": calibrated_stop,
+                    "Hold_Period": "动态持有",
+                    "Stop_Loss": stop,
+                    "Stop_Method": clean_text(row.get("Stop_Method"), "MA20/MA50 + ATR + MACD/KDJ"),
+                    "Trail_Stop": stop,
                     "Exit_Date": "",
                     "Exit_Price": "",
                     "Status": "Active",
-                    "Close_Price": (
-                        close_price
-                        if close_price is not None
-                        else ""
-                    ),
+                    "Close_Price": cp if cp is not None else "",
                     "技术评分": clean_text(row.get("技术评分")),
                     "估值评分": clean_text(row.get("估值评分")),
                     "PE_TTM": clean_text(row.get("PE_TTM")),
@@ -940,877 +490,276 @@ def supplement_us_stocks_from_pending():
                     "PB": clean_text(row.get("PB")),
                     "MA20": "",
                     "MA50": "",
+                    "ATR_Pct": clean_text(row.get("ATR_Pct")),
                     "MACD金叉": clean_text(row.get("MACD金叉")),
                     "周线共振": clean_text(row.get("周线共振")),
                     "KDJ_J回升": clean_text(row.get("KDJ_J回升")),
                     "量能放大": clean_text(row.get("量能放大")),
-                    "ATR_Pct": clean_text(row.get("ATR_Pct")),
                     "周期共振": clean_text(row.get("周期共振")),
-                    "Review_Risk_Status": "", "Review_Risk_Date": "", "Review_Stop_Distance_Pct": "", "Review_Risk_Note": "",
-                }
-
-                new_rows.append(record)
-
-            if missing_price:
-                print(
-                    f"⚠️ 以下 ticker 暂时没有 OHLC："
-                    f"{missing_price}"
-                )
-
+                    "Review_Risk_Status": "",
+                    "Review_Risk_Date": "",
+                    "Review_Stop_Distance_Pct": "",
+                    "Review_Risk_Note": "",
+                })
+            if missing:
+                print(f"⚠️ 以下 ticker 暂时没有 OHLC：{missing}")
             if new_rows:
-                df_new = pd.DataFrame(new_rows)
-
-                # 与现有表统一列
-                required_cols = [
-                    "Date", "Ticker", "Name", "Tag", "Score",
-                    "Price", "RSI", "Bias", "Hold_Period",
-                    "Stop_Loss", "Stop_Method", "Trail_Stop", "Exit_Date", "Exit_Price",
-                    "Status", "Close_Price", "技术评分", "估值评分", "PE_TTM", "PE_Forward", "EPS_TTM", "PB",
-                    "MA20", "MA50", "ATR_Pct", "MACD金叉", "周线共振", "KDJ_J回升",
-                    "量能放大", "周期共振", "Review_Risk_Status", "Review_Risk_Date", "Review_Stop_Distance_Pct", "Review_Risk_Note"
-                ]
-
-                for col in required_cols:
-                    if col not in df_new.columns:
-                        df_new[col] = ""
-
-                df_new = df_new[required_cols]
-
-                if df_existing.empty:
-                    df_final = df_new
+                nd = pd.DataFrame(new_rows)
+                for c in TRADE_COLUMNS:
+                    if c not in nd.columns:
+                        nd[c] = ""
+                nd = nd[TRADE_COLUMNS]
+                if existing.empty:
+                    final = nd
                 else:
-                    for col in required_cols:
-                        if col not in df_existing.columns:
-                            df_existing[col] = ""
-
-                    df_existing = df_existing[required_cols]
-                    df_final = pd.concat(
-                        [df_existing, df_new],
-                        ignore_index=True,
-                    )
-
-                df_final.to_csv(
-                    TRADE_HISTORY,
-                    index=False,
-                    encoding="utf-8",
-                    quoting=csv.QUOTE_MINIMAL,
-                )
-
-                df_existing = df_final
-
-                print(
-                    f"✅ 新增 {len(new_rows)} 条美股记录。"
-                )
-
-            # 只有未 processed 的文件才需要改名；恢复文件保持原样。
-            if not pending_file.endswith(".processed"):
-                os.rename(
-                    pending_file,
-                    pending_file + ".processed",
-                )
-                print(f"✅ {pending_file} 已处理并标记 .processed")
-            else:
-                print(f"✅ {pending_file} 已完成恢复检查")
-
+                    for c in TRADE_COLUMNS:
+                        if c not in existing.columns:
+                            existing[c] = ""
+                    final = pd.concat([existing[TRADE_COLUMNS], nd], ignore_index=True)
+                final.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
+                existing = final
+                print(f"✅ 新增 {len(new_rows)} 条美股记录。")
+            if not pf.endswith(".processed"):
+                os.rename(pf, pf + ".processed")
         except Exception as e:
-            print(
-                f"❌ 处理 {pending_file} 出错：{e}"
-            )
-            # 不删除、不 processed，下一次可以重试。
+            print(f"❌ 处理 {pf} 出错：{e}")
 
-
-# ============================================================
-# 7. 运行 pending 补充
-# ============================================================
 
 supplement_us_stocks_from_pending()
 
-
-# ============================================================
-# 8. 加载最近 30 天账本
-# ============================================================
-
 df = load_trade_history()
-
 if df.empty:
     print("无交易账本或账本为空，退出。")
     sys.exit(0)
 
-
-cutoff_date = (
-    get_us_time()
-    .replace(tzinfo=None)
-    - datetime.timedelta(days=30)
-)
-
-recent_picks = df[
-    df["Date"].notna() & (df["Date"] >= cutoff_date)
-].copy()
-
+cutoff_date = get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)
+recent_picks = df[df["Date"].notna() & (df["Date"] >= cutoff_date)].copy()
 if recent_picks.empty:
     print("最近30天无记录，退出。")
     sys.exit(0)
 
-
-print(
-    f"📊 加载最近30天记录 "
-    f"{len(recent_picks)} 行。"
-)
-
-
-# ============================================================
-# 9. 账本字段兼容
-# ============================================================
-
-for col in [
-    "Hold_Period",
-    "Stop_Loss",
-    "Score",
-    "Name",
-    "Tag",
-    "Price",
-    "Close_Price",
-    "Status",
-]:
-    if col not in recent_picks.columns:
-        recent_picks[col] = ""
-
-
+for c in ("Hold_Period","Stop_Loss","Score","Name","Tag","Price","Close_Price","Status"):
+    if c not in recent_picks.columns:
+        recent_picks[c] = ""
 recent_picks["Hold_Period"] = "动态持有"
 
 
 # ============================================================
-# 10. 再次统一修复历史账本中错误的公司名称 Ticker
+# 6. 行情准备
 # ============================================================
 
-ticker_changes = []
-
-for idx, row in recent_picks.iterrows():
-    raw_ticker = clean_text(row.get("Ticker"))
-    name = clean_text(row.get("Name"))
-
-    real_ticker = resolve_ticker(
-        raw_ticker,
-        name,
-    )
-
-    if real_ticker and real_ticker != raw_ticker.upper().lstrip("$"):
-        ticker_changes.append(
-            (raw_ticker, real_ticker, name)
-        )
-        recent_picks.at[idx, "Ticker"] = real_ticker
-
-
-if ticker_changes:
-    print("🔧 发现历史账本中存在公司名称型 Ticker：")
-
-    shown = set()
-
-    for old, new, name in ticker_changes:
-        key = (old, new)
-
-        if key not in shown:
-            print(
-                f"   {old} -> {new}"
-                f" ({name})"
-            )
-            shown.add(key)
-
-
-# ============================================================
-# 11. 获取行情
-# ============================================================
-
-all_tickers = []
-
+clean_tickers = []
 for t in recent_picks["Ticker"].astype(str):
-    resolved = resolve_ticker(t)
-    if resolved and is_probable_us_ticker(resolved):
-        all_tickers.append(resolved)
+    rt = resolve_ticker(t)
+    if rt and is_probable_us_ticker(rt):
+        clean_tickers.append(rt)
+clean_tickers = list(dict.fromkeys(clean_tickers))
 
-clean_tickers = list(dict.fromkeys(all_tickers))
-
-print(
-    f"📡 获取 {len(clean_tickers)} 只真实美股 ticker 的 "
-    f"60日 OHLC..."
-)
-
-df_hist_all, ohlc_map_today = download_ohlc_safe(
-    clean_tickers,
-    period="60d",
-)
+print(f"📡 获取 {len(clean_tickers)} 只真实美股 ticker 的 60日 OHLC...")
+df_hist_all, ohlc_map_today = download_ohlc_safe(clean_tickers, period="60d")
 
 price_map_today = {}
-
-# 最近可用收盘价仅用于“Scan 推荐跟踪胜率”/Observation 绩效统计，
-# 绝不用于触发当日移动止损。这样即使某只股票当天 OHLC 缺失，
-# 也不会从 Scan 综合胜率统计中消失。
-latest_available_price_map = {}
-if df_hist_all is not None and not df_hist_all.empty:
-    try:
-        _tmp_latest = df_hist_all.copy().sort_values(["Ticker", "Date"])
-        _tmp_latest = _tmp_latest.dropna(subset=["close"])
-        for _t, _g in _tmp_latest.groupby("Ticker", sort=False):
-            _px = safe_float(_g.iloc[-1].get("close"))
-            if _px is not None and _px > 0:
-                latest_available_price_map[_t] = _px
-    except Exception as _e:
-        print(f"⚠️ 构建最近可用收盘价映射失败：{_e}")
-
-today_review_date = today_us_str()
-
-# 严格限制：Review 当天的“今日价格”只能来自当天真实交易日 OHLC。
-# 如果批量下载的最后一根是上一交易日，视为缺失，不能静默回退。
 for ticker in clean_tickers:
-    exact_today = get_exact_date_ohlc(df_hist_all, ticker, today_review_date)
-    if exact_today is not None:
-        ohlc_map_today[ticker] = exact_today
-        if exact_today.get("close") is not None:
-            price_map_today[ticker] = exact_today["close"]
-    else:
-        price_map_today.pop(ticker, None)
-        ohlc_map_today.pop(ticker, None)
-
-
-# ============================================================
-# 12. 缺失价格安全补全
-# ============================================================
+    exact = get_exact_date_ohlc(df_hist_all, ticker, today_us_str())
+    if exact and exact.get("close") is not None:
+        ohlc_map_today[ticker] = exact
+        price_map_today[ticker] = exact["close"]
 
 for ticker in clean_tickers:
-
     if ticker in price_map_today:
         continue
-
-    live_open, live_last = get_live_quote_bootstrap(
-        ticker
-    )
-
-    if live_last is not None:
-        price_map_today[ticker] = live_last
-
+    op, last = get_live_quote_bootstrap(ticker)
+    if last is not None:
+        price_map_today[ticker] = last
         ohlc_map_today[ticker] = {
-            "open": (
-                live_open
-                if live_open is not None
-                else live_last
-            ),
-            "high": live_last,
-            "low": live_last,
-            "close": live_last,
+            "open": op if op is not None else last,
+            "high": last,
+            "low": last,
+            "close": last,
         }
-
-        print(
-            f"🔄 {ticker} 使用实时价格兜底："
-            f"{live_last}"
-        )
+        print(f"🔄 {ticker} 使用实时价格兜底：{last}")
 
 
 # ============================================================
-# 13. 期权
+# 7. 期权
 # ============================================================
 
 def load_option_positions():
-    if (
-        not os.path.exists(OPTION_LOG_FILE)
-        or os.path.getsize(OPTION_LOG_FILE) == 0
-    ):
+    if not os.path.exists(OPTION_LOG_FILE) or os.path.getsize(OPTION_LOG_FILE) == 0:
         return pd.DataFrame()
-
     try:
-        df_opt = pd.read_csv(
-            OPTION_LOG_FILE,
-            dtype=str,
-            keep_default_na=False,
-        )
-
+        d = pd.read_csv(OPTION_LOG_FILE, dtype=str, keep_default_na=False)
         required = [
-            "Ticker",
-            "OptionType",
-            "Strike",
-            "LongStrike",
-            "ShortStrike",
-            "Strategy",
-            "Expiry",
-            "EntryPrice",
-            "NetDebit",
-            "LongPrice",
-            "Status",
-            "EntryDate",
+            "Ticker","OptionType","Strike","LongStrike","ShortStrike","Strategy",
+            "Expiry","EntryPrice","NetDebit","LongPrice","Status","EntryDate"
         ]
-
-        for col in required:
-            if col not in df_opt.columns:
-                df_opt[col] = ""
-
-        df_opt = df_opt[
-            df_opt["Status"].astype(str).str.strip()
-            == "Active"
-        ].copy()
-
-        if not df_opt.empty:
-            df_opt["Expiry"] = pd.to_datetime(
-                df_opt["Expiry"],
-                errors="coerce",
-            )
-
-        return df_opt
-
+        for c in required:
+            if c not in d.columns:
+                d[c] = ""
+        d = d[d["Status"].astype(str).str.strip() == "Active"].copy()
+        if not d.empty:
+            d["Expiry"] = pd.to_datetime(d["Expiry"], errors="coerce", format="mixed")
+        return d
     except Exception as e:
         print(f"⚠️ 读取期权账本失败：{e}")
         return pd.DataFrame()
 
-
-def close_option_position(
-    row,
-    close_price,
-    close_date,
-    reason,
-):
+def close_option_position(row, close_price, close_date, reason):
     try:
-        df_opt = pd.read_csv(
-            OPTION_LOG_FILE,
-            dtype=str,
-            keep_default_na=False,
-        )
-
-        for col in [
-            "Status",
-            "Close_Date",
-            "Close_Price",
-            "PnL",
-        ]:
-            if col not in df_opt.columns:
-                df_opt[col] = ""
-
+        d = pd.read_csv(OPTION_LOG_FILE, dtype=str, keep_default_na=False)
+        for c in ("Status","Close_Date","Close_Price","PnL"):
+            if c not in d.columns:
+                d[c] = ""
         ticker = clean_text(row.get("Ticker")).upper()
         expiry = clean_text(row.get("Expiry"))
-
+        dt = pd.to_datetime(d["Expiry"], errors="coerce", format="mixed").dt.strftime("%Y-%m-%d")
+        target = pd.to_datetime(expiry, errors="coerce", format="mixed")
+        target_s = target.strftime("%Y-%m-%d") if not pd.isna(target) else ""
         mask = (
-            df_opt["Ticker"].astype(str).str.upper()
-            == ticker
-        ) & (
-            pd.to_datetime(
-                df_opt["Expiry"],
-                errors="coerce",
-            ).dt.strftime("%Y-%m-%d")
-            == pd.to_datetime(
-                expiry,
-                errors="coerce",
-            ).strftime("%Y-%m-%d")
-        ) & (
-            df_opt["Status"].astype(str).str.strip()
-            == "Active"
+            d["Ticker"].astype(str).str.upper().eq(ticker) &
+            dt.eq(target_s) &
+            d["Status"].astype(str).str.strip().eq("Active")
         )
-
         if not mask.any():
             return 0.0
-
-        entry = safe_float(row.get("EntryPrice"), 0.0)
-        qty = safe_float(row.get("Quantity"), 1.0)
-
-        if entry is None:
-            entry = 0.0
-
-        if qty is None:
-            qty = 1.0
-
-        qty_contracts = qty * 100.0
-
-        option_type = (
-            clean_text(row.get("OptionType"))
-            .upper()
-        )
-
-        if option_type == "CALL":
-            pnl = (
-                (close_price - entry)
-                * qty_contracts
-            )
-        else:
-            pnl = (
-                (entry - close_price)
-                * qty_contracts
-            )
-
-        df_opt.loc[mask, "Status"] = "Closed"
-        df_opt.loc[mask, "Close_Date"] = close_date
-        df_opt.loc[mask, "Close_Price"] = close_price
-        df_opt.loc[mask, "PnL"] = round(pnl, 2)
-
-        df_opt.to_csv(
-            OPTION_LOG_FILE,
-            index=False,
-            encoding="utf-8",
-        )
-
-        print(
-            f"🔒 [期权] {ticker} "
-            f"{option_type} "
-            f"{row.get('Strike')} "
-            f"平仓，原因：{reason}，"
-            f"盈亏 ${pnl:.2f}"
-        )
-
+        entry = safe_float(row.get("EntryPrice"), 0.0) or 0.0
+        qty = safe_float(row.get("Quantity"), 1.0) or 1.0
+        opt_type = clean_text(row.get("OptionType")).upper()
+        pnl = ((close_price - entry) if opt_type == "CALL" else (entry - close_price)) * qty * 100.0
+        d.loc[mask, "Status"] = "Closed"
+        d.loc[mask, "Close_Date"] = close_date
+        d.loc[mask, "Close_Price"] = close_price
+        d.loc[mask, "PnL"] = round(pnl, 2)
+        d.to_csv(OPTION_LOG_FILE, index=False, encoding="utf-8")
         return round(pnl, 2)
-
     except Exception as e:
         print(f"⚠️ 期权平仓失败：{e}")
         return 0.0
 
-
 def process_options(price_map):
-    df_opt = load_option_positions()
-
-    if df_opt.empty:
+    d = load_option_positions()
+    if d.empty:
         print("📋 无活跃期权持仓。")
         return []
-
     today = get_us_time().date()
-    closed_records = []
-
-    for _, row in df_opt.iterrows():
-
-        expiry_dt = pd.to_datetime(
-            row.get("Expiry"),
-            errors="coerce",
-        )
-
-        if pd.isna(expiry_dt):
-            print(
-                f"⚠️ 期权到期日无效："
-                f"{row.get('Ticker')}"
-            )
+    out = []
+    for _, row in d.iterrows():
+        expiry_dt = pd.to_datetime(row.get("Expiry"), errors="coerce", format="mixed")
+        if pd.isna(expiry_dt) or expiry_dt.date() > today:
             continue
-
-        expiry_date = expiry_dt.date()
-
-        if expiry_date > today:
+        underlying = resolve_ticker(row.get("Ticker"))
+        cur = price_map.get(underlying)
+        if cur is None:
+            _, cur = get_live_quote_bootstrap(underlying)
+        if cur is None:
             continue
-
-        underlying = resolve_ticker(
-            row.get("Ticker")
-        )
-
-        cur_price = price_map.get(
-            underlying
-        )
-
-        if cur_price is None:
-            _, cur_price = get_live_quote_bootstrap(
-                underlying
-            )
-
-        if cur_price is None:
-            print(
-                f"⚠️ [期权] {underlying} "
-                f"现价获取失败，暂不平仓。"
-            )
-            continue
-
-        option_type = clean_text(row.get("OptionType")).upper()
+        opt_type = clean_text(row.get("OptionType")).upper()
         strategy = clean_text(row.get("Strategy"), "LONG_CALL").upper()
         strike = safe_float(row.get("Strike"), safe_float(row.get("LongStrike"), 0.0))
-        short_strike = safe_float(row.get("ShortStrike"), None)
-
-        if strategy == "CALL_DEBIT_SPREAD" and option_type == "CALL" and short_strike is not None and short_strike > strike:
-            intrinsic = max(0.0, min(short_strike - strike, cur_price - strike))
-        elif option_type == "CALL":
-            intrinsic = max(0.0, cur_price - strike)
+        short_strike = safe_float(row.get("ShortStrike"))
+        if strategy == "CALL_DEBIT_SPREAD" and opt_type == "CALL" and short_strike and short_strike > strike:
+            intrinsic = max(0.0, min(short_strike - strike, cur - strike))
+        elif opt_type == "CALL":
+            intrinsic = max(0.0, cur - strike)
         else:
-            intrinsic = max(0.0, strike - cur_price)
-
-        reason = (
-            "价内行权"
-            if intrinsic > 0
-            else "价外归零"
-        )
-
-        pnl = close_option_position(
-            row,
-            intrinsic,
-            today.strftime("%Y-%m-%d"),
-            reason,
-        )
-
-        closed_records.append({
-            "ticker": underlying,
-            "option_type": option_type,
-            "strike": strike,
-            "short_strike": short_strike,
-            "strategy": strategy,
-            "expiry": expiry_date.strftime(
-                "%Y-%m-%d"
-            ),
-            "entry_price": safe_float(
-                row.get("EntryPrice"),
-                0.0,
-            ),
-            "close_price": intrinsic,
-            "pnl": pnl,
-            "reason": reason,
+            intrinsic = max(0.0, strike - cur)
+        reason = "价内行权" if intrinsic > 0 else "价外归零"
+        pnl = close_option_position(row, intrinsic, today.strftime("%Y-%m-%d"), reason)
+        out.append({
+            "ticker": underlying, "option_type": opt_type, "strike": strike,
+            "short_strike": short_strike, "strategy": strategy,
+            "expiry": expiry_dt.strftime("%Y-%m-%d"),
+            "entry_price": safe_float(row.get("EntryPrice"), 0.0) or 0.0,
+            "close_price": intrinsic, "pnl": pnl, "reason": reason
         })
+    return out
 
-    return closed_records
-
-
-option_closed_records = process_options(
-    price_map_today
-)
-
-if option_closed_records:
-    print(
-        f"✅ 今日自动平仓期权 "
-        f"{len(option_closed_records)} 笔。"
-    )
+option_closed_records = process_options(price_map_today)
 
 
 # ============================================================
-# 14. 持仓解析
+# 8. 技术指标与移动止损
 # ============================================================
 
-def parse_hold_days(value):
-    s = clean_text(value)
-
-    if s.lower() in INVALID_STRINGS:
-        return None
-
-    nums = re.findall(
-        r"\d+",
-        s,
-    )
-
-    if not nums:
-        return None
-
-    try:
-        return int(nums[-1])
-    except Exception:
-        return None
-
-
-def parse_stop_loss_price(value):
-    s = clean_text(value)
-
-    if s.lower() in INVALID_STRINGS:
-        return None
-
-    return safe_float(s)
-
-
-def get_first_valid_value(group, column, extra_invalid=None):
-    invalid = set(INVALID_STRINGS)
-
-    if extra_invalid:
-        invalid.update(extra_invalid)
-
-    for _, row in group.iterrows():
-        value = clean_text(row.get(column))
-
-        if value.lower() not in invalid:
-            return value
-
-    return "N/A"
-
-
-def safe_record_price(row):
-    """
-    优先 Price，其次 Close_Price。
-    两者都为空时返回 None。
-    """
-    p = safe_float(row.get("Price"))
-
-    if p is not None and p > 0:
-        return p
-
-    p = safe_float(row.get("Close_Price"))
-
-    if p is not None and p > 0:
-        return p
-
-    return None
-
-
-# ============================================================
-# 15. 更新 trade_history 状态
-# ============================================================
-
-def update_trade_history_status(
-    ticker,
-    buy_date,
-    new_status,
-    exit_price,
-):
-    if not os.path.exists(TRADE_HISTORY):
-        return
-
-    try:
-        df_orig = pd.read_csv(
-            TRADE_HISTORY,
-            dtype=str,
-            keep_default_na=False,
-        )
-
-        if "Ticker" not in df_orig.columns:
-            return
-
-        if "Status" not in df_orig.columns:
-            df_orig["Status"] = "Active"
-
-        if "Exit_Date" not in df_orig.columns:
-            df_orig["Exit_Date"] = ""
-
-        if "Exit_Price" not in df_orig.columns:
-            df_orig["Exit_Price"] = ""
-
-        target_date = pd.to_datetime(
-            buy_date,
-            errors="coerce",
-        )
-
-        df_dates = pd.to_datetime(
-            df_orig["Date"],
-            errors="coerce",
-        )
-
-        ticker_mask = (
-            df_orig["Ticker"].astype(str).str.upper()
-            == str(ticker).upper()
-        )
-
-        date_mask = (
-            df_dates.dt.strftime("%Y-%m-%d")
-            == target_date.strftime("%Y-%m-%d")
-            if not pd.isna(target_date)
-            else False
-        )
-
-        active_mask = (
-            df_orig["Status"].astype(str).str.strip()
-            == "Active"
-        )
-
-        mask = (
-            ticker_mask
-            & date_mask
-            & active_mask
-        )
-
-        if mask.any():
-            df_orig.loc[
-                mask,
-                "Status"
-            ] = new_status
-
-            df_orig.loc[
-                mask,
-                "Exit_Date"
-            ] = today_us_str()
-
-            df_orig.loc[
-                mask,
-                "Exit_Price"
-            ] = str(exit_price)
-
-            df_orig.to_csv(
-                TRADE_HISTORY,
-                index=False,
-                encoding="utf-8",
-            )
-
-            print(
-                f"✅ 更新 {ticker} "
-                f"状态={new_status} "
-                f"退出价={exit_price}"
-            )
-
-    except Exception as e:
-        print(
-            f"⚠️ 更新 trade_history 状态失败 "
-            f"{ticker}: {e}"
-        )
-
-
-# ============================================================
-# 16. 历史 review 去重
-# ============================================================
-
-already_archived = set()
-
-if (
-    os.path.exists(REVIEW_HISTORY)
-    and os.path.getsize(REVIEW_HISTORY) > 0
-):
-    try:
-        existing_review = pd.read_csv(
-            REVIEW_HISTORY,
-            dtype=str,
-            keep_default_na=False,
-            on_bad_lines="skip",
-        )
-
-        required = {
-            "Status",
-            "Ticker",
-            "Rec_Date",
-        }
-
-        if required.issubset(
-            existing_review.columns
-        ):
-            closed_statuses = {
-                "已超期归档",
-                "突发清仓暂停",
-                "止损触发清仓",
-                "周期到期清仓",
-            }
-
-            archived = existing_review[
-                existing_review["Status"].isin(
-                    closed_statuses
-                )
-            ].copy()
-
-            already_archived = set(
-                zip(
-                    archived["Ticker"].astype(str),
-                    archived["Rec_Date"].astype(str),
-                )
-            )
-
-            print(
-                f"📌 历史已归档交易 "
-                f"{len(already_archived)} 条。"
-            )
-
-    except Exception as e:
-        print(
-            f"⚠️ 读取 review_history 失败：{e}"
-        )
-
-
-# ============================================================
-# 16.5 移动止损：MA20/MA50 + ATR + MACD/KDJ
-# ============================================================
-
-def _calc_atr(df, length=14):
-    """纯 pandas 实现 ATR（Average True Range）"""
-    high = df["High"]
-    low = df["Low"]
-    close = df["Close"]
-    prev_close = close.shift(1)
-    tr1 = high - low
-    tr2 = (high - prev_close).abs()
-    tr3 = (low - prev_close).abs()
-    tr = pd.concat([tr1, tr2, tr3], axis=1).max(axis=1)
-    atr = tr.rolling(window=length, min_periods=length).mean()
-    return atr
-
+def _calc_atr(d, length=14):
+    h, l, c = d["High"], d["Low"], d["Close"]
+    prev = c.shift(1)
+    tr = pd.concat([(h-l), (h-prev).abs(), (l-prev).abs()], axis=1).max(axis=1)
+    return tr.rolling(length, min_periods=length).mean()
 
 def _calc_macd(close, fast=12, slow=26, signal=9):
-    """纯 pandas 实现 MACD（12,26,9）"""
-    ema_fast = close.ewm(span=fast, adjust=False).mean()
-    ema_slow = close.ewm(span=slow, adjust=False).mean()
-    macd_line = ema_fast - ema_slow
-    signal_line = macd_line.ewm(span=signal, adjust=False).mean()
-    hist = macd_line - signal_line
-    return pd.DataFrame({
-        "MACD": macd_line,
-        "MACD_SIGNAL": signal_line,
-        "MACD_HIST": hist,
-    })
+    ef = close.ewm(span=fast, adjust=False).mean()
+    es = close.ewm(span=slow, adjust=False).mean()
+    macd = ef - es
+    sig = macd.ewm(span=signal, adjust=False).mean()
+    return pd.DataFrame({"MACD": macd, "MACD_SIGNAL": sig, "MACD_HIST": macd-sig})
 
-
-def _calc_kdj(df, n=9):
-    """纯 pandas/NumPy 实现 KDJ（K, D, J）"""
-    h = df["High"].to_numpy(float)
-    l = df["Low"].to_numpy(float)
-    c = df["Close"].to_numpy(float)
-    K = 50.0
-    D = 50.0
-    ks = []
-    ds = []
-    js = []
+def _calc_kdj(d, n=9):
+    h = d["High"].to_numpy(float)
+    l = d["Low"].to_numpy(float)
+    c = d["Close"].to_numpy(float)
+    K = D = 50.0
+    ks, ds, js = [], [], []
     for i in range(len(c)):
-        if i < n - 1:
-            ks.append(K)
-            ds.append(D)
-            js.append(3 * K - 2 * D)
-            continue
-        h_n = h[max(0, i - n + 1):i + 1].max()
-        l_n = l[max(0, i - n + 1):i + 1].min()
-        rsv = (c[i] - l_n) / (h_n - l_n + 1e-9) * 100 if (h_n - l_n) != 0 else 50.0
-        K = 2 / 3 * K + 1 / 3 * rsv
-        D = 2 / 3 * D + 1 / 3 * K
-        ks.append(K)
-        ds.append(D)
-        js.append(3 * K - 2 * D)
-    return pd.DataFrame({"K": ks, "D": ds, "J": js}, index=df.index)
+        if i < n-1:
+            rsv = 50.0
+        else:
+            hn = h[max(0,i-n+1):i+1].max()
+            ln = l[max(0,i-n+1):i+1].min()
+            rsv = (c[i]-ln)/(hn-ln+1e-9)*100 if hn != ln else 50.0
+        K = 2/3*K + 1/3*rsv
+        D = 2/3*D + 1/3*K
+        ks.append(K); ds.append(D); js.append(3*K-2*D)
+    return pd.DataFrame({"K":ks,"D":ds,"J":js}, index=d.index)
 
-
-def get_trailing_stop_context(ticker, entry_date=None, current_stop=None, before_date=None):
+def get_trailing_stop_context(ticker, current_stop=None, before_date=None):
     try:
         hist = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
         if hist is None or hist.empty:
             return None
         if isinstance(hist.columns, pd.MultiIndex):
             hist.columns = hist.columns.get_level_values(0)
-        hist = hist.dropna(subset=["Open", "High", "Low", "Close"]).copy()
-        hist.index = pd.to_datetime(hist.index).tz_localize(None)
-        # 指标计算必须基于完整历史窗口，不能先按建仓日截断。
-        # 否则 8/12 建仓的持仓在 6 个月窗口内只剩约 20 个交易日，
-        # MA20/MA50/MACD/KDJ 会被整体判为不可用，最终全部显示 N/A。
+        hist = hist.dropna(subset=["Open","High","Low","Close"]).copy()
+        idx = pd.to_datetime(hist.index, errors="coerce")
+        try:
+            idx = idx.tz_localize(None)
+        except Exception:
+            pass
+        hist.index = idx
         if len(hist) < 60:
             return None
-
         ref = pd.Timestamp(before_date).normalize() if before_date is not None else hist.index[-1]
         d = hist[hist.index < ref].copy()
         if d.empty:
             return None
-
-        # 纯 pandas 指标计算
-        d["MA20"] = d["Close"].rolling(window=20, min_periods=20).mean()
-        d["MA50"] = d["Close"].rolling(window=50, min_periods=50).mean()
-        d["ATR14"] = _calc_atr(d, length=14)
-
-        macd_df = _calc_macd(d["Close"])
-        d["MACD"] = macd_df["MACD"]
-        d["MACD_SIGNAL"] = macd_df["MACD_SIGNAL"]
-        d["MACD_HIST"] = macd_df["MACD_HIST"]
-
-        kdj_df = _calc_kdj(d, n=9)
-        d["KDJ_J"] = kdj_df["J"]
-
+        d["MA20"] = d["Close"].rolling(20, min_periods=20).mean()
+        d["MA50"] = d["Close"].rolling(50, min_periods=50).mean()
+        d["ATR14"] = _calc_atr(d)
+        md = _calc_macd(d["Close"])
+        d["MACD"] = md["MACD"]; d["MACD_SIGNAL"] = md["MACD_SIGNAL"]; d["MACD_HIST"] = md["MACD_HIST"]
+        kd = _calc_kdj(d)
+        d["KDJ_J"] = kd["J"]
         r = d.iloc[-1]
         close = float(r["Close"])
-        atr = float(r["ATR14"]) if pd.notna(r["ATR14"]) else close * 0.05
+        atr = float(r["ATR14"]) if pd.notna(r["ATR14"]) else close*0.05
         ma20 = float(r["MA20"]) if pd.notna(r["MA20"]) else close
         ma50 = float(r["MA50"]) if pd.notna(r["MA50"]) else ma20
-        pct = max(0.03, min(0.12, 2 * atr / max(close, 1e-9)))
-        candidate = max(close * (1 - pct), ma20 - atr, ma50 - 1.5 * atr)
-
-        macd_bear = bool(
-            pd.notna(r["MACD"]) and pd.notna(r["MACD_SIGNAL"]) and float(r["MACD"]) < float(r["MACD_SIGNAL"])
-        )
-        kdj_falling = bool(
-            len(d) >= 2 and float(d["KDJ_J"].iloc[-1]) < float(d["KDJ_J"].iloc[-2])
-        )
-
+        pct = max(0.03, min(0.12, 2*atr/max(close,1e-9)))
+        candidate = max(close*(1-pct), ma20-atr, ma50-1.5*atr)
+        macd_bear = bool(pd.notna(r["MACD"]) and pd.notna(r["MACD_SIGNAL"]) and r["MACD"] < r["MACD_SIGNAL"])
+        kdj_falling = bool(len(d) >= 2 and d["KDJ_J"].iloc[-1] < d["KDJ_J"].iloc[-2])
         if macd_bear and kdj_falling:
-            candidate = max(candidate, close - 1.5 * atr)
-
-        candidate = min(candidate, close * 0.98)
+            candidate = max(candidate, close - 1.5*atr)
+        candidate = min(candidate, close*0.98)
         old = safe_float(current_stop)
         if old and old > 0:
             candidate = max(old, candidate)
-
         return {
-            "exec_stop": round(candidate, 2),
-            "ma20": round(ma20, 2),
-            "ma50": round(ma50, 2),
-            "atr_pct": round(atr / close * 100, 2) if close else None,
-            "macd_hist": round(float(r["MACD_HIST"]), 4) if pd.notna(r["MACD_HIST"]) else None,
-            "macd_bear": macd_bear,
-            "kdj_j": round(float(r["KDJ_J"]), 2),
+            "exec_stop": round(candidate,2),
+            "ma20": round(ma20,2), "ma50": round(ma50,2),
+            "atr_pct": round(atr/close*100,2) if close else None,
+            "macd_hist": round(float(r["MACD_HIST"]),4) if pd.notna(r["MACD_HIST"]) else None,
+            "macd_bear": macd_bear, "kdj_j": round(float(r["KDJ_J"]),2),
             "kdj_falling": kdj_falling,
             "trend_ok": bool(close >= ma20 and ma20 >= ma50),
         }
@@ -1818,32 +767,739 @@ def get_trailing_stop_context(ticker, entry_date=None, current_stop=None, before
         print(f"⚠️ 移动止损计算失败 {ticker}: {e}")
         return None
 
-
 def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
     if not os.path.exists(TRADE_HISTORY):
         return
     try:
         d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
-        for col in ["Stop_Loss", "Stop_Method", "Trail_Stop", "MA20", "MA50", "ATR_Pct"]:
-            if col not in d.columns:
-                d[col] = ""
+        for c in ("Stop_Loss","Stop_Method","Trail_Stop","MA20","MA50","ATR_Pct"):
+            if c not in d.columns: d[c] = ""
         dates = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
         mask = (
-            (d["Ticker"].astype(str).str.upper() == str(ticker).upper())
-            & (dates.dt.strftime("%Y-%m-%d") == str(buy_date))
-            & (d["Status"].astype(str).str.strip() == "Active")
+            d["Ticker"].astype(str).str.upper().eq(str(ticker).upper()) &
+            dates.dt.strftime("%Y-%m-%d").eq(str(buy_date)[:10]) &
+            d["Status"].astype(str).str.strip().eq("Active")
         )
         if mask.any():
-            d.loc[mask, "Stop_Loss"] = str(stop_price)
-            d.loc[mask, "Trail_Stop"] = str(stop_price)
-            d.loc[mask, "Stop_Method"] = "MA20/MA50 + ATR + MACD/KDJ"
-            d.loc[mask, "MA20"] = str(ctx.get("ma20", ""))
-            d.loc[mask, "MA50"] = str(ctx.get("ma50", ""))
-            d.loc[mask, "ATR_Pct"] = str(ctx.get("atr_pct", ""))
+            d.loc[mask,"Stop_Loss"] = str(stop_price)
+            d.loc[mask,"Trail_Stop"] = str(stop_price)
+            d.loc[mask,"Stop_Method"] = "MA20/MA50 + ATR + MACD/KDJ"
+            d.loc[mask,"MA20"] = str(ctx.get("ma20",""))
+            d.loc[mask,"MA50"] = str(ctx.get("ma50",""))
+            d.loc[mask,"ATR_Pct"] = str(ctx.get("atr_pct",""))
             d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
     except Exception as e:
         print(f"⚠️ 更新移动止损失败 {ticker}: {e}")
 
+def update_trade_history_status(ticker, buy_date, new_status, exit_price):
+    if not os.path.exists(TRADE_HISTORY):
+        return
+    try:
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
+        for c in ("Status","Exit_Date","Exit_Price"):
+            if c not in d.columns: d[c] = ""
+        dates = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
+        mask = (
+            d["Ticker"].astype(str).str.upper().eq(str(ticker).upper()) &
+            dates.dt.strftime("%Y-%m-%d").eq(str(buy_date)[:10]) &
+            d["Status"].astype(str).str.strip().eq("Active")
+        )
+        if mask.any():
+            d.loc[mask,"Status"] = new_status
+            d.loc[mask,"Exit_Date"] = today_us_str()
+            d.loc[mask,"Exit_Price"] = str(exit_price)
+            d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
+    except Exception as e:
+        print(f"⚠️ 更新状态失败 {ticker}: {e}")
+
+def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=None, current_price=None, note=""):
+    if not os.path.exists(TRADE_HISTORY):
+        return
+    try:
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False)
+        for c in ("Review_Risk_Status","Review_Risk_Date","Review_Stop_Distance_Pct","Review_Risk_Note"):
+            if c not in d.columns: d[c] = ""
+        dates = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
+        mask = (
+            d["Ticker"].astype(str).str.upper().eq(str(ticker).upper()) &
+            dates.dt.strftime("%Y-%m-%d").eq(str(rec_date_str)[:10]) &
+            d["Status"].astype(str).str.strip().eq("Active")
+        )
+        if not mask.any(): return
+        d.loc[mask,"Review_Risk_Status"] = risk_status
+        d.loc[mask,"Review_Risk_Date"] = today_us_str()
+        d.loc[mask,"Review_Risk_Note"] = note
+        if stop_price is not None and current_price is not None and safe_float(current_price,0) > 0:
+            d.loc[mask,"Review_Stop_Distance_Pct"] = round((float(current_price)-float(stop_price))/float(current_price)*100,2)
+        else:
+            d.loc[mask,"Review_Stop_Distance_Pct"] = 0 if risk_status == "STOP_TRIGGERED" else ""
+        d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
+    except Exception as e:
+        print(f"⚠️ Review→Scan 联动写回失败 {ticker}: {e}")
+
+
+# ============================================================
+# 9. 股票分类
+# ============================================================
+
+active_list, observation_list, expired_list, stopped_list = [], [], [], []
+
+for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
+    group = group.sort_values("Date").copy()
+    if group.empty:
+        continue
+    ticker = resolve_ticker(orig_ticker, clean_text(group.iloc[0].get("Name")))
+    if not ticker:
+        continue
+
+    first = group.iloc[0]
+    latest = group.iloc[-1]
+    rec_date = normalize_date(first.get("Date"))
+    if rec_date is None:
+        continue
+
+    status = clean_text(latest.get("Status"))
+    if status not in ("", "Active", "pending"):
+        continue
+
+    rec_date_str = rec_date.strftime("%Y-%m-%d")
+    rec_price = safe_record_price(first)
+
+    # ---- Observation：保留为有效 Scan 推荐，但不是实际持仓 ----
+    if clean_text(latest.get("Tag")).strip() == "Observation":
+        cur = safe_float(price_map_today.get(ticker))
+        pnl = None
+        if rec_price and rec_price > 0 and cur is not None:
+            pnl = round((cur-rec_price)/rec_price*100, 2)
+        observation_list.append({
+            "代码": ticker,
+            "名称": clean_text(first.get("Name"), ticker),
+            "标签": "Observation",
+            "推荐评分": clean_text(latest.get("Score"), "N/A"),
+            "首次推荐日": rec_date_str,
+            "首次推荐价": rec_price,
+            "当前价格": cur,
+            "推荐跟踪涨跌幅(%)": pnl,
+            "RSI": clean_text(first.get("RSI"), "N/A"),
+            "Bias": clean_text(first.get("Bias"), "N/A"),
+            "技术评分": clean_text(first.get("技术评分"), "N/A"),
+            "估值评分": clean_text(first.get("估值评分"), "N/A"),
+            "PE_TTM": clean_text(first.get("PE_TTM"), "N/A"),
+            "PE_Forward": clean_text(first.get("PE_Forward"), "N/A"),
+            "EPS_TTM": clean_text(first.get("EPS_TTM"), "N/A"),
+            "PB": clean_text(first.get("PB"), "N/A"),
+            "MACD金叉": clean_text(first.get("MACD金叉"), "N/A"),
+            "周线共振": clean_text(first.get("周线共振"), "N/A"),
+            "KDJ_J回升": clean_text(first.get("KDJ_J回升"), "N/A"),
+            "量能放大": clean_text(first.get("量能放大"), "N/A"),
+            "周期共振": clean_text(first.get("周期共振"), "N/A"),
+            "系统连续推荐次数": len(group),
+            "今日新增": "是" if rec_date_str == today_us_str() else "否",
+            "行情状态": "已取得" if cur is not None else "今日行情缺失",
+        })
+        continue
+
+    if rec_price is None or rec_price <= 0:
+        continue
+
+    ohlc = ohlc_map_today.get(ticker)
+    if ohlc is None:
+        cur = price_map_today.get(ticker)
+        if cur is None:
+            active_list.append({
+                "代码": ticker, "名称": clean_text(first.get("Name"), ticker),
+                "标签": clean_text(latest.get("Tag")), "推荐评分": clean_text(latest.get("Score"),"N/A"),
+                "持股周期建议": "动态持有", "止损价": safe_float(first.get("Stop_Loss")) or "N/A",
+                "首次推荐日": rec_date_str, "首次推荐价": rec_price,
+                "今日开盘价":"N/A", "现价":"N/A", "今日开盘→收盘%":None,
+                "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days, "剩余天数":"—",
+                "当前盈亏(%)":None, "系统连续推荐次数":len(group),
+                "今日新增":"是" if rec_date_str==today_us_str() else "否",
+                "止损方法":"MA20/MA50 + ATR + MACD/KDJ",
+                "MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
+                "趋势状态":"今日行情缺失","风险提示":"今日行情未取得；暂不执行止损判断",
+                "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),
+                "Review_Stop_Distance_Pct":"","Review_Risk_Note":"今日行情缺失，待下一次Review补算"
+            })
+            write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, "今日行情缺失，暂不执行止损判断。")
+            continue
+        ohlc = {"open":cur,"high":cur,"low":cur,"close":cur}
+
+    low, closep, openp = safe_float(ohlc.get("low")), safe_float(ohlc.get("close")), safe_float(ohlc.get("open"))
+    if low is None or closep is None:
+        active_list.append({
+            "代码":ticker, "名称":clean_text(first.get("Name"),ticker), "标签":clean_text(latest.get("Tag")),
+            "推荐评分":clean_text(latest.get("Score"),"N/A"), "持股周期建议":"动态持有",
+            "止损价":safe_float(first.get("Stop_Loss")) or "N/A", "首次推荐日":rec_date_str, "首次推荐价":rec_price,
+            "今日开盘价":"N/A","现价":"N/A","今日开盘→收盘%":None,
+            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"剩余天数":"—","当前盈亏(%)":None,
+            "系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否",
+            "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
+            "趋势状态":"行情不完整","风险提示":"今日OHLC不完整，暂不执行止损判断",
+            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),
+            "Review_Stop_Distance_Pct":"","Review_Risk_Note":"今日OHLC不完整，待下一次Review补算"
+        })
+        continue
+
+    old_stop = safe_float(first.get("Stop_Loss"))
+    ctx = get_trailing_stop_context(ticker, old_stop, today_us_str())
+    exec_stop = ctx.get("exec_stop") if ctx else old_stop
+
+    if exec_stop and exec_stop > 0 and low <= exec_stop:
+        write_review_risk_linkage_us(
+            ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep,
+            f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。"
+        )
+        exitp = openp if openp is not None and openp < exec_stop else exec_stop
+        pnl = round((exitp-rec_price)/rec_price*100,2)
+        stopped_list.append({
+            "代码":ticker,"名称":clean_text(first.get("Name"),ticker),
+            "标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),
+            "持股周期建议":"动态持有","止损价":exec_stop,"首次推荐日":rec_date_str,"首次推荐价":rec_price,
+            "止损触发日":today_us_str(),"止损结算价":exitp,"止损盈亏(%)":pnl,
+            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":len(group),
+            "触发方式":"移动止损：前一交易日保护线","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
+        })
+        update_trade_history_status(ticker, rec_date_str, "Stop_Loss_Hit", exitp)
+        continue
+
+    next_ctx = get_trailing_stop_context(ticker, exec_stop, None)
+    next_stop = next_ctx.get("exec_stop") if next_ctx else exec_stop
+    if next_stop:
+        update_trade_history_trailing_stop(ticker, rec_date_str, next_stop, next_ctx or ctx or {})
+    c = next_ctx or ctx or {}
+    risk = []
+    if c.get("macd_bear"): risk.append("MACD弱势")
+    if c.get("kdj_falling"): risk.append("KDJ回落")
+    days = (pd.Timestamp(today_us_str()) - rec_date).days
+    distance = ((closep-next_stop)/closep*100) if next_stop and closep else None
+    risk_status = "STOP_NEAR" if distance is not None and distance <= 3.0 else "CLEAR"
+    risk_note = f"收盘距离移动止损约 {distance:.2f}%，次日 Scan 强提醒。" if risk_status == "STOP_NEAR" else "本次 Review 未发现触及或接近移动止损。"
+    write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note)
+
+    active_list.append({
+        "代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
+        "推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有",
+        "止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
+        "今日开盘价":openp if openp is not None else "N/A","现价":closep,
+        "今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp and closep is not None else None,
+        "持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),
+        "系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否",
+        "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),
+        "KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),
+        "趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱",
+        "风险提示":"、".join(risk) if risk else "趋势未出现同步转弱",
+        "Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),
+        "Review_Stop_Distance_Pct":round(distance,2) if distance is not None else "",
+        "Review_Risk_Note":risk_note
+    })
+
+
+# ============================================================
+# 10. 确定性归因
+# ============================================================
+
+def build_us_attribution(item):
+    pnl = safe_float(item.get("当前盈亏(%)"))
+    cur = safe_float(item.get("现价"))
+    stop = safe_float(item.get("止损价"))
+    ma20 = safe_float(item.get("MA20"))
+    ma50 = safe_float(item.get("MA50"))
+    if pnl is None:
+        reason = "当前盈亏数据不足，无法可靠归因。"
+    elif pnl < 0:
+        parts = []
+        if ma20 is not None and cur is not None and cur < ma20: parts.append("跌破MA20")
+        if ma50 is not None and cur is not None and cur < ma50: parts.append("跌破MA50")
+        reason = f"当前持仓亏损 {pnl:.2f}%，主要来自建仓后的价格回撤。"
+        if parts: reason += " 技术原因：" + "、".join(parts) + "。"
+    else:
+        reason = f"当前持仓盈利 {pnl:.2f}%。" if pnl > 0 else "当前盈亏接近持平。"
+    if stop is not None and cur is not None and cur > 0:
+        gap = (cur-stop)/cur*100
+        action = "止损距离较近，继续收紧风控。" if gap <= 3 else "继续动态持有，以移动止损和趋势破坏作为退出依据。"
+    else:
+        action = "继续动态持有；技术数据不足时沿用已有保护线。"
+    return reason, action
+
+for item in active_list:
+    item["盈利/亏损原因"], item["风控动作指令"] = build_us_attribution(item)
+
+for item in stopped_list:
+    item["盈利/亏损原因"] = f"移动止损触发，策略盈亏 {safe_float(item.get('止损盈亏(%)'),0):.2f}%。"
+    item["风控动作指令"] = "已触发移动止损，次日 Scan 禁止重新推荐。"
+
+print(f"📊 股票分类：持仓 {len(active_list)}，Observation {len(observation_list)}，止损 {len(stopped_list)}")
+
+
+# ============================================================
+# 11. review_history：逐次 Review 记录，但不重复同一 Review 事件
+# ============================================================
+
+def review_event_key(row):
+    return (
+        clean_text(row.get("Review_Date"))[:10],
+        clean_text(row.get("Ticker")).upper(),
+        clean_text(row.get("Rec_Date"))[:10],
+        clean_text(row.get("Status")),
+        clean_text(row.get("Option_Type")).upper(),
+        clean_text(row.get("Strike")),
+        clean_text(row.get("Expiry")),
+    )
+
+def append_review_rows(rows):
+    if not rows:
+        return
+    nd = pd.DataFrame(rows)
+    for c in REVIEW_COLUMNS:
+        if c not in nd.columns: nd[c] = ""
+    nd = nd[REVIEW_COLUMNS]
+
+    if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
+        try:
+            od = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            for c in REVIEW_COLUMNS:
+                if c not in od.columns: od[c] = ""
+            od = od[REVIEW_COLUMNS]
+        except Exception:
+            od = pd.DataFrame(columns=REVIEW_COLUMNS)
+    else:
+        od = pd.DataFrame(columns=REVIEW_COLUMNS)
+
+    existing_keys = {review_event_key(r) for _, r in od.iterrows()}
+    out = []
+    for _, r in nd.iterrows():
+        k = review_event_key(r)
+        if k not in existing_keys:
+            existing_keys.add(k)
+            out.append(r.to_dict())
+    if out:
+        pd.concat([od, pd.DataFrame(out, columns=REVIEW_COLUMNS)], ignore_index=True).to_csv(
+            REVIEW_HISTORY, index=False, encoding="utf-8"
+        )
+
+review_rows = []
+
+for item in active_list:
+    review_rows.append({
+        "Review_Date":today_us_str(),"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
+        "Rec_Date":item["首次推荐日"],"Rec_Price":item["首次推荐价"],"Cur_Price":item["现价"],
+        "Days_Held":item["持仓天数"],"PnL_Pct":item["当前盈亏(%)"],"Maturity_PnL":"",
+        "Hold_Period":"动态持有","Stop_Loss":item["止损价"],
+        "Stop_Method":item.get("止损方法","MA20/MA50 + ATR + MACD/KDJ"),
+        "Trail_Stop":item.get("止损价",""),"Rec_Count":item["系统连续推荐次数"],"Status":"持仓中",
+        "Score":item["推荐评分"],"Review_Risk_Status":item.get("Review_Risk_Status",""),
+        "Review_Risk_Date":item.get("Review_Risk_Date",""),
+        "Review_Stop_Distance_Pct":item.get("Review_Stop_Distance_Pct",""),
+        "Review_Risk_Note":item.get("Review_Risk_Note",""),
+        "Option_Type":"","Strike":"","Expiry":""
+    })
+
+for item in stopped_list:
+    review_rows.append({
+        "Review_Date":today_us_str(),"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
+        "Rec_Date":item["首次推荐日"],"Rec_Price":item["首次推荐价"],"Cur_Price":item["止损结算价"],
+        "Days_Held":item["持仓天数"],"PnL_Pct":item["止损盈亏(%)"],"Maturity_PnL":item["止损盈亏(%)"],
+        "Hold_Period":"动态持有","Stop_Loss":item["止损价"],
+        "Stop_Method":item.get("Stop_Method","MA20/MA50 + ATR + MACD/KDJ"),
+        "Trail_Stop":item.get("止损价",""),"Rec_Count":item["系统连续推荐次数"],"Status":"移动止损清仓",
+        "Score":item["推荐评分"],"Review_Risk_Status":"STOP_TRIGGERED","Review_Risk_Date":today_us_str(),
+        "Review_Stop_Distance_Pct":0,"Review_Risk_Note":f"移动止损触发：{item.get('止损价','')}",
+        "Option_Type":"","Strike":"","Expiry":""
+    })
+
+for item in observation_list:
+    review_rows.append({
+        "Review_Date":today_us_str(),"Ticker":item["代码"],"Name":item["名称"],"Tag":"Observation",
+        "Rec_Date":item["首次推荐日"],"Rec_Price":item.get("首次推荐价",""),"Cur_Price":item.get("当前价格",""),
+        "Days_Held":"","PnL_Pct":item.get("推荐跟踪涨跌幅(%)"),"Maturity_PnL":"",
+        "Hold_Period":"观察","Stop_Loss":"","Stop_Method":"观察，不触发持仓止损","Trail_Stop":"",
+        "Rec_Count":item.get("系统连续推荐次数","1"),"Status":"观察推荐","Score":item.get("推荐评分","N/A"),
+        "Review_Risk_Status":"OBSERVATION","Review_Risk_Date":today_us_str(),
+        "Review_Stop_Distance_Pct":"","Review_Risk_Note":"有效 Scan 推荐；不作为实际持仓，但纳入推荐绩效追踪。",
+        "Option_Type":"","Strike":"","Expiry":""
+    })
+
+for opt in option_closed_records:
+    review_rows.append({
+        "Review_Date":today_us_str(),"Ticker":opt["ticker"],"Name":opt["ticker"]+" OPT","Tag":"期权平仓",
+        "Rec_Date":opt["expiry"],"Rec_Price":opt["entry_price"],"Cur_Price":opt["close_price"],
+        "Days_Held":"","PnL_Pct":opt["pnl"],"Maturity_PnL":opt["pnl"],"Hold_Period":"",
+        "Stop_Loss":"","Stop_Method":"","Trail_Stop":"","Rec_Count":"","Status":"期权平仓","Score":opt["reason"],
+        "Review_Risk_Status":"","Review_Risk_Date":"","Review_Stop_Distance_Pct":"","Review_Risk_Note":"",
+        "Option_Type":opt["option_type"],"Strike":opt["strike"],"Expiry":opt["expiry"]
+    })
+
+append_review_rows(review_rows)
+
+
+# ============================================================
+# 12. 每次 Scan 推荐事件的独立追踪
+# ============================================================
+
+def build_scan_recommendation_events():
+    """
+    每一条 trade_history 中的 Scan 推荐记录，
+    以「Date + Ticker」作为独立推荐事件。
+    Observation / Active / 已退出都保留。
+    """
+
+    d = load_trade_history()
+    if d.empty:
+        return []
+
+    events = []
+
+    for (date_value, ticker), g in d.groupby(["Date","Ticker"], dropna=False, sort=True):
+        g = g.sort_values("Date")
+        row = g.iloc[-1]
+        rec_date = normalize_date(date_value)
+        if rec_date is None:
+            continue
+
+        ticker = resolve_ticker(ticker, row.get("Name"))
+        if not ticker:
+            continue
+
+        rec_price = safe_record_price(row)
+        if rec_price is None or rec_price <= 0:
+            events.append({
+                "ticker":ticker,"name":clean_text(row.get("Name"),ticker),
+                "rec_date":rec_date.strftime("%Y-%m-%d"),
+                "rec_price":None,"status":clean_text(row.get("Status")),
+                "tag":clean_text(row.get("Tag")),
+                "current_price":None,"pnl":None,"data_status":"NO_REC_PRICE"
+            })
+            continue
+
+        status = clean_text(row.get("Status"))
+        exit_price = safe_float(row.get("Exit_Price"))
+
+        if status in {
+            "Stop_Loss_Hit","移动止损清仓","止损触发清仓",
+            "已超期归档","突发清仓暂停","周期到期清仓"
+        } and exit_price is not None:
+            cur = exit_price
+        else:
+            cur = safe_float(price_map_today.get(ticker))
+
+        pnl = round((cur-rec_price)/rec_price*100,2) if cur is not None else None
+        observation = clean_text(row.get("Tag")).strip() == "Observation"
+
+        if pnl is None:
+            ds = "PRICE_MISSING"
+        else:
+            ds = "OK"
+
+        events.append({
+            "ticker":ticker,
+            "name":clean_text(row.get("Name"),ticker),
+            "rec_date":rec_date.strftime("%Y-%m-%d"),
+            "rec_price":rec_price,
+            "status":status,
+            "tag":"Observation" if observation else clean_text(row.get("Tag")),
+            "current_price":cur,
+            "pnl":pnl,
+            "data_status":ds,
+        })
+
+    return events
+
+scan_events = build_scan_recommendation_events()
+
+# 只统计最近30天 Scan 推荐事件
+recent_event_cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
+scan_events_30d = [
+    e for e in scan_events
+    if normalize_date(e["rec_date"]) is not None
+    and normalize_date(e["rec_date"]) >= recent_event_cutoff
+]
+
+
+# ============================================================
+# 13. KPI
+# ============================================================
+
+stock_events_valid = [e for e in scan_events_30d if e["pnl"] is not None]
+stock_events_missing = [e for e in scan_events_30d if e["pnl"] is None]
+
+event_pnl = [e["pnl"] for e in stock_events_valid]
+
+recommendation_wins = sum(p > 0 for p in event_pnl)
+recommendation_losses = sum(p < 0 for p in event_pnl)
+recommendation_neutral = sum(p == 0 for p in event_pnl)
+
+recommendation_win_rate = (
+    recommendation_wins / len(event_pnl) * 100
+    if event_pnl else 0.0
+)
+
+# 实际持仓：只统计非 Observation 的当前 Active/持仓事件
+active_tracking = []
+for e in scan_events_30d:
+    if e["tag"] == "Observation":
+        continue
+    if e["status"] in ("Active", "持仓中", "") and e["pnl"] is not None:
+        active_tracking.append(e["pnl"])
+
+# Observation：全部进入推荐绩效
+observation_tracking = [
+    e["pnl"] for e in scan_events_30d
+    if e["tag"] == "Observation" and e["pnl"] is not None
+]
+
+actual_active_wins = sum(p > 0 for p in active_tracking)
+actual_active_win_rate = (
+    actual_active_wins / len(active_tracking) * 100
+    if active_tracking else 0.0
+)
+
+obs_wins = sum(p > 0 for p in observation_tracking)
+obs_win_rate = (
+    obs_wins / len(observation_tracking) * 100
+    if observation_tracking else 0.0
+)
+
+current_tracking = active_tracking + observation_tracking
+tracking_wins = sum(p > 0 for p in current_tracking)
+tracking_losses = sum(p < 0 for p in current_tracking)
+tracking_neutral = sum(p == 0 for p in current_tracking)
+tracking_win_rate = (
+    tracking_wins / len(current_tracking) * 100
+    if current_tracking else 0.0
+)
+
+# 已了结股票：不是 Observation 且状态已经退出
+closed_stock_events = [
+    e for e in scan_events_30d
+    if e["tag"] != "Observation"
+    and e["status"] not in ("Active", "持仓中", "")
+    and e["pnl"] is not None
+]
+closed_stock_pnl = [e["pnl"] for e in closed_stock_events]
+closed_stock_wins = sum(p > 0 for p in closed_stock_pnl)
+closed_stock_win_rate = (
+    closed_stock_wins / len(closed_stock_pnl) * 100
+    if closed_stock_pnl else 0.0
+)
+
+total_scan_recommendations = len(scan_events_30d)
+valid_performance_samples = len(stock_events_valid)
+data_insufficient_count = len(stock_events_missing)
+
+all_stock_pnl = event_pnl
+super_threshold = 50.0
+super_contribution = sum(p for p in all_stock_pnl if p >= super_threshold)
+
+other_winners = [p for p in all_stock_pnl if 0 < p < super_threshold]
+losers = [p for p in all_stock_pnl if p < 0]
+other_avg = sum(other_winners)/len(other_winners) if other_winners else 0.0
+loser_avg = sum(losers)/len(losers) if losers else 0.0
+
+
+# 期权独立 KPI
+option_closed_pnl = [safe_float(x.get("pnl"),0.0) for x in option_closed_records]
+option_wins = sum(p > 0 for p in option_closed_pnl)
+option_win_rate = option_wins/len(option_closed_pnl)*100 if option_closed_pnl else 0.0
+
+
+print(
+    f"📊 Scan推荐事件：{total_scan_recommendations}；"
+    f"有效绩效：{valid_performance_samples}；"
+    f"数据不足：{data_insufficient_count}"
+)
+print(f"📊 Scan推荐综合胜率：{recommendation_win_rate:.2f}%")
+print(f"📊 当前推荐跟踪胜率：{tracking_win_rate:.2f}%")
+print(f"📊 实际持仓胜率：{actual_active_win_rate:.2f}%")
+print(f"📊 Observation胜率：{obs_win_rate:.2f}%")
+print(f"📊 已了结股票胜率：{closed_stock_win_rate:.2f}%")
+
+
+# ============================================================
+# 14. HTML 格式
+# ============================================================
+
+def _pnl_style(v):
+    x = safe_float(v)
+    if x is None:
+        return "color:#607d8b;"
+    if x > 0:
+        return "color:#d32f2f;font-weight:700;"
+    if x < 0:
+        return "color:#2e7d32;font-weight:700;"
+    return "color:#455a64;font-weight:700;"
+
+def _price(v):
+    x = safe_float(v)
+    return "N/A" if x is None else f"${x:.2f}"
+
+def _pct(v):
+    x = safe_float(v)
+    return "N/A" if x is None else f"{x:+.2f}%"
+
+kpi_html = f"""
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-bottom:20px;">
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
+<div style="font-size:13px;color:#7f8c8d;">总股票 Scan 推荐事件</div>
+<div style="font-size:24px;font-weight:bold;">{total_scan_recommendations}</div>
+<div style="font-size:12px;">有效绩效 {valid_performance_samples} · 数据不足 {data_insufficient_count}</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #2ecc71;">
+<div style="font-size:13px;color:#7f8c8d;">Scan 推荐综合胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#2ecc71;">{recommendation_win_rate:.2f}%</div>
+<div style="font-size:12px;">{recommendation_wins} 赢 / {recommendation_losses} 亏 / {recommendation_neutral} 持平</div>
+<div style="font-size:11px;color:#607d8b;">每次 Scan 推荐事件独立计算</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #17a2b8;">
+<div style="font-size:13px;color:#7f8c8d;">当前推荐跟踪胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#17a2b8;">{tracking_win_rate:.2f}%</div>
+<div style="font-size:12px;">{tracking_wins} 赢 / {tracking_losses} 亏 / {tracking_neutral} 持平</div>
+<div style="font-size:11px;color:#607d8b;">实际持仓 + Observation</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e67e22;">
+<div style="font-size:13px;color:#7f8c8d;">实际持仓胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#e67e22;">{actual_active_win_rate:.2f}%</div>
+<div style="font-size:12px;">{actual_active_wins} 赢 / {len(active_tracking)-actual_active_wins} 亏</div>
+<div style="font-size:11px;color:#607d8b;">仅真实持仓，不含 Observation</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
+<div style="font-size:13px;color:#7f8c8d;">Observation 跟踪胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#ff9800;">{obs_win_rate:.2f}%</div>
+<div style="font-size:12px;">{obs_wins} 赢 / {len(observation_tracking)-obs_wins} 亏</div>
+<div style="font-size:11px;color:#607d8b;">有效 Scan 推荐，不是实际持仓</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #8e44ad;">
+<div style="font-size:13px;color:#7f8c8d;">已了结股票胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#8e44ad;">{closed_stock_win_rate:.2f}%</div>
+<div style="font-size:12px;">{closed_stock_wins} 赢 / {len(closed_stock_pnl)-closed_stock_wins} 亏</div>
+<div style="font-size:11px;color:#607d8b;">不含期权</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #9b59b6;">
+<div style="font-size:13px;color:#7f8c8d;">期权已了结胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#9b59b6;">{option_win_rate:.2f}%</div>
+<div style="font-size:12px;">{option_wins} 赢 / {len(option_closed_pnl)-option_wins} 亏</div>
+<div style="font-size:11px;color:#607d8b;">完全独立于股票 Scan 推荐</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #9b59b6;">
+<div style="font-size:13px;color:#7f8c8d;">超级赢家贡献</div>
+<div style="font-size:24px;font-weight:bold;">+{super_contribution:.2f}%</div>
+<div style="font-size:12px;">单笔股票推荐盈利 ≥ 50%</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1abc9c;">
+<div style="font-size:13px;color:#7f8c8d;">其余盈利平均</div>
+<div style="font-size:24px;font-weight:bold;">+{other_avg:.2f}%</div>
+<div style="font-size:12px;">排除超级赢家</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e74c3c;">
+<div style="font-size:13px;color:#7f8c8d;">亏损平均</div>
+<div style="font-size:24px;font-weight:bold;">{loser_avg:.2f}%</div>
+<div style="font-size:12px;">所有有效股票 Scan 推荐亏损</div>
+</div>
+
+</div>
+"""
+
+
+# ============================================================
+# 15. Observation HTML
+# ============================================================
+
+def build_observation_html():
+    if not observation_list:
+        return ""
+    blocks = []
+    for x in observation_list:
+        pnl = safe_float(x.get("推荐跟踪涨跌幅(%)"))
+        pnl_text = (
+            f'<span style="{_pnl_style(pnl)}">{_pct(pnl)}</span>'
+            if pnl is not None else "N/A"
+        )
+        blocks.append(f"""
+<div style="background:#fffdf7;border:1px solid #ffe0b2;border-left:6px solid #ff9800;padding:16px;margin-bottom:12px;border-radius:8px;">
+<div style="font-size:16px;font-weight:bold;color:#e65100;">👀 {clean_text(x.get("名称"),x.get("代码"))} ({x.get("代码")})</div>
+<div><b>首次推荐：</b>{x.get("首次推荐日")} @ {_price(x.get("首次推荐价"))}　
+<b>连续推荐：</b>{x.get("系统连续推荐次数","1")}　
+<b>今日新增：</b>{x.get("今日新增","否")}</div>
+<div><b>当前价格：</b>{_price(x.get("当前价格"))}　
+<b>推荐跟踪涨跌幅：</b>{pnl_text}</div>
+<div><b>RSI：</b>{x.get("RSI")}　<b>Bias：</b>{x.get("Bias")}　
+<b>技术评分：</b>{x.get("技术评分")}　<b>估值评分：</b>{x.get("估值评分")}</div>
+<div><b>PE：</b>{x.get("PE_TTM")}　
+<b>Forward PE：</b>{x.get("PE_Forward")}　
+<b>EPS：</b>{x.get("EPS_TTM")}　
+<b>PB：</b>{x.get("PB")}</div>
+<div><b>MACD金叉：</b>{x.get("MACD金叉")}　
+<b>周线共振：</b>{x.get("周线共振")}　
+<b>KDJ_J回升：</b>{x.get("KDJ_J回升")}　
+<b>量能放大：</b>{x.get("量能放大")}　
+<b>周期共振：</b>{x.get("周期共振")}</div>
+<div style="color:#607d8b;">Observation 不计入实际持仓，但属于有效 Scan 推荐，按首次推荐价持续追踪并计入 Scan 推荐绩效。</div>
+</div>
+""")
+    return '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 最近30天 Observation 推荐</h2>' + "".join(blocks)
+
+
+# ============================================================
+# 16. 实际持仓 HTML
+# ============================================================
+
+def build_active_html():
+    blocks = []
+    for x in active_list:
+        pnl = safe_float(x.get("当前盈亏(%)"))
+        blocks.append(f"""
+<div style="background:#fafafa;border:1px solid #e0e0e0;padding:16px;margin-bottom:12px;border-radius:8px;">
+<div style="font-size:16px;font-weight:bold;">🟢 {x.get("名称")} ({x.get("代码")})</div>
+<div><b>首次推荐：</b>{x.get("首次推荐日")} @ {_price(x.get("首次推荐价"))}　
+<b>推荐评分：</b>{x.get("推荐评分")}　
+<b>连续推荐：</b>{x.get("系统连续推荐次数")}</div>
+<div><b>当前盈亏：</b><span style="{_pnl_style(pnl)}">{_pct(pnl)}</span>　
+<b>当前价格：</b>{_price(x.get("现价"))}　
+<b>今日开盘→收盘：</b>{_pct(x.get("今日开盘→收盘%"))}</div>
+<div><b>移动止损：</b>{_price(x.get("止损价"))}　
+<b>MA20：</b>{_price(x.get("MA20"))}　
+<b>MA50：</b>{_price(x.get("MA50"))}　
+<b>KDJ_J：</b>{x.get("KDJ_J","N/A")}　
+<b>MACD_Hist：</b>{x.get("MACD_Hist","N/A")}</div>
+<div><b>趋势状态：</b>{x.get("趋势状态","N/A")}　
+<b>风险：</b>{x.get("风险提示","暂无")}</div>
+<div><b>盈亏归因：</b>{x.get("盈利/亏损原因","暂无")}</div>
+<div><b>风控动作：</b>{x.get("风控动作指令","继续动态监控")}</div>
+</div>
+""")
+    return '<h2 style="color:#1565c0;border-bottom:2px solid #1565c0;padding-bottom:5px;">📊 实际持仓 - 逐只风控与盈亏归因</h2>' + "".join(blocks)
+
+
+def build_stopped_html():
+    blocks = []
+    for x in stopped_list:
+        pnl = safe_float(x.get("止损盈亏(%)"))
+        blocks.append(f"""
+<div style="background:#fff8f8;border:1px solid #ef9a9a;border-left:6px solid #b71c1c;padding:16px;margin-bottom:12px;border-radius:8px;">
+<div style="font-size:16px;font-weight:bold;color:#b71c1c;">🔴 {x.get("名称")} ({x.get("代码")})</div>
+<div><b>首次推荐：</b>{x.get("首次推荐日")} @ {_price(x.get("首次推荐价"))}</div>
+<div><b>止损触发：</b>{x.get("止损触发日")}　
+<b>止损结算价：</b>{_price(x.get("止损结算价"))}　
+<b>策略盈亏：</b><span style="{_pnl_style(pnl)}">{_pct(pnl)}</span></div>
+<div><b>执行纪律：</b>移动止损触发；次日 Scan 禁止重新推荐。</div>
+</div>
+""")
+    return '<h2 style="color:#b71c1c;border-bottom:2px solid #b71c1c;padding-bottom:5px;">🔴 移动止损清仓</h2>' + "".join(blocks)
+
+
+# ============================================================
+# 17. Claude
+# ============================================================
 
 def load_active_options_snapshot(price_map):
     d = load_option_positions()
@@ -1864,932 +1520,90 @@ def load_active_options_snapshot(price_map):
             "expiry": clean_text(r.get("Expiry")),
             "entry_price": safe_float(r.get("EntryPrice"), safe_float(r.get("NetDebit"), safe_float(r.get("LongPrice")))),
             "current_underlying": cur,
-            "quantity": safe_float(r.get("Quantity"), 1),
-            "stop_loss": clean_text(r.get("StopLoss")),
+            "quantity": safe_float(r.get("Quantity"),1),
             "reason": clean_text(r.get("Reason")),
         })
     return out
 
-
-# ============================================================
-# 16.5 Review → Scan 风控联动 + 确定性逐笔归因（股票）
-# ============================================================
-def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=None, current_price=None, note=''):
-    if not os.path.exists(TRADE_HISTORY): return
-    try:
-        d=pd.read_csv(TRADE_HISTORY,dtype=str,keep_default_na=False)
-        for col in ['Review_Risk_Status','Review_Risk_Date','Review_Stop_Distance_Pct','Review_Risk_Note']:
-            if col not in d.columns: d[col]=''
-            d[col]=d[col].astype(object)
-        dates=pd.to_datetime(d.get('Date',''),errors='coerce')
-        mask=(d['Ticker'].astype(str).str.strip().str.upper()==str(ticker).strip().upper())&(dates.dt.strftime('%Y-%m-%d')==str(rec_date_str)[:10])&(d.get('Status','Active').astype(str).str.strip().eq('Active'))
-        if not mask.any(): return
-        d.loc[mask,'Review_Risk_Status']=risk_status; d.loc[mask,'Review_Risk_Date']=today_us_str(); d.loc[mask,'Review_Risk_Note']=note
-        if stop_price is not None and current_price is not None and float(current_price)>0:
-            d.loc[mask,'Review_Stop_Distance_Pct']=round((float(current_price)-float(stop_price))/float(current_price)*100,2)
-        elif risk_status=='STOP_TRIGGERED': d.loc[mask,'Review_Stop_Distance_Pct']=0
-        else: d.loc[mask,'Review_Stop_Distance_Pct']=''
-        d.to_csv(TRADE_HISTORY,index=False,encoding='utf-8')
-    except Exception as e: print(f'⚠️ {ticker} Review→Scan 联动写回失败: {e}')
-
-def build_us_attribution(item):
-    pnl=safe_float(item.get('当前盈亏(%)')); cur=safe_float(item.get('现价')); stop=safe_float(item.get('止损价'))
-    ma20=safe_float(item.get('MA20')); ma50=safe_float(item.get('MA50')); macd=clean_text(item.get('MACD状态')); kdj=clean_text(item.get('KDJ状态'))
-    if pnl is None: reason='当前盈亏数据不足，无法可靠归因。'
-    elif pnl<0:
-        parts=[]
-        if ma20 is not None and cur is not None and cur<ma20: parts.append('跌破MA20')
-        if ma50 is not None and cur is not None and cur<ma50: parts.append('跌破MA50')
-        if '偏空' in macd: parts.append('MACD偏空')
-        if '回落' in kdj: parts.append('KDJ走弱')
-        reason=f'当前持仓亏损 {pnl:.2f}%，主要来自建仓后的价格回撤。'
-        if parts: reason+=' 技术原因：'+'、'.join(parts)+'。'
-    elif pnl>0:
-        parts=[]
-        if ma20 is not None and cur is not None and cur>ma20: parts.append('站在MA20上方')
-        if ma50 is not None and cur is not None and cur>ma50: parts.append('站在MA50上方')
-        if '偏空' not in macd: parts.append('MACD未确认转空')
-        reason=f'当前持仓盈利 {pnl:.2f}%。'
-        if parts: reason+=' 主要支撑：'+'、'.join(parts)+'。'
-    else: reason='当前盈亏接近持平，暂无明显方向性归因。'
-    if stop is not None and cur is not None and cur>0:
-        gap=(cur-stop)/cur*100
-        action='止损距离较近，继续收紧风控。' if gap<=3 else '继续动态持有，以移动止损、MA20/MA50及MACD/KDJ趋势破坏作为退出依据。'
-    else: action='继续动态持有；技术数据不足时沿用已有保护线。'
-    return reason,action
-
-# ============================================================
-# 17. 股票风控
-# ============================================================
-
-active_list = []
-observation_list = []
-expired_list = []
-stopped_list = []
-
-skipped_duplicate = 0
-missing_entry_price = []
-
-
-print("开始股票风控检查：采用 MA20/MA50 + ATR + MACD/KDJ 移动止损，不设置股票到期日...")
-
-for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
-    group=group.sort_values("Date").copy()
-    if group.empty: continue
-    ticker=resolve_ticker(orig_ticker,clean_text(group.iloc[0].get("Name")))
-    if not ticker: continue
-    first=group.iloc[0]; latest=group.iloc[-1]; rec_date=normalize_date(first.get("Date"))
-    if rec_date is None: continue
-    latest_status = clean_text(latest.get("Status"))
-    if latest_status not in {"", "Active", "pending"}: continue
-    rec_date_str=rec_date.strftime("%Y-%m-%d"); rec_price=safe_record_price(first)
-
-    # Observation 是 Scan 的有效推荐结果，但不是实际持仓。
-    # 不再因为当天行情缺失而整条推荐从 Review 消失。
-    if clean_text(latest.get("Tag")).strip() == "Observation":
-        # Observation 仍然是有效 Scan 推荐：不计入实际持仓，但必须按推荐价跟踪绩效。
-        # 当日收盘不可得时，使用最近可用完整收盘价做跟踪统计，并标明数据日期。
-        cur = safe_float(price_map_today.get(ticker))
-        tracking_source = "今日收盘" if cur is not None else "最近可用收盘"
-        if cur is None:
-            cur = safe_float(latest_available_price_map.get(ticker))
-        tracking_pnl = ((cur - rec_price) / rec_price * 100) if cur is not None and rec_price is not None and rec_price > 0 else None
-        observation_list.append({
-            "代码": ticker,
-            "名称": clean_text(first.get("Name"), ticker),
-            "标签": "Observation",
-            "推荐评分": clean_text(latest.get("Score"), "N/A"),
-            "首次推荐日": rec_date_str,
-            "首次推荐价": rec_price,
-            "当前价格": cur,
-            "当前盈亏(%)": round(tracking_pnl, 2) if tracking_pnl is not None else None,
-            "跟踪价格来源": tracking_source if cur is not None else "无可用收盘价",
-            "RSI": clean_text(first.get("RSI"), "N/A"),
-            "Bias": clean_text(first.get("Bias"), "N/A"),
-            "技术评分": clean_text(first.get("技术评分"), "N/A"),
-            "估值评分": clean_text(first.get("估值评分"), "N/A"),
-            "PE_TTM": clean_text(first.get("PE_TTM"), "N/A"),
-            "PE_Forward": clean_text(first.get("PE_Forward"), "N/A"),
-            "EPS_TTM": clean_text(first.get("EPS_TTM"), "N/A"),
-            "PB": clean_text(first.get("PB"), "N/A"),
-            "MACD金叉": clean_text(first.get("MACD金叉"), "N/A"),
-            "周线共振": clean_text(first.get("周线共振"), "N/A"),
-            "KDJ_J回升": clean_text(first.get("KDJ_J回升"), "N/A"),
-            "量能放大": clean_text(first.get("量能放大"), "N/A"),
-            "周期共振": clean_text(first.get("周期共振"), "N/A"),
-            "系统连续推荐次数": len(group),
-            "今日新增": "是" if rec_date_str == today_us_str() else "否",
-            "行情状态": "已取得" if cur is not None else "今日行情缺失"
-        })
-        continue
-
-    if rec_price is None or rec_price<=0:
-        missing_entry_price.append(ticker); continue
-    ohlc=ohlc_map_today.get(ticker)
-    if ohlc is None:
-        cur=price_map_today.get(ticker)
-        if cur is None:
-            # 当日行情缺失时，止损判断必须暂停；但 Scan 推荐绩效不能消失。
-            # 绩效统计使用最近可用完整收盘价作为跟踪价格，并明确标记来源。
-            tracking_cur = safe_float(latest_available_price_map.get(ticker))
-            tracking_pnl = ((tracking_cur - rec_price) / rec_price * 100) if tracking_cur is not None and rec_price > 0 else None
-            active_list.append({
-                "代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
-                "推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有",
-                "止损价":safe_float(first.get("Stop_Loss")) or "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
-                "今日开盘价":"N/A","现价":tracking_cur if tracking_cur is not None else "N/A","今日开盘→收盘%":None,"持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,
-                "剩余天数":"—","当前盈亏(%)":round(tracking_pnl,2) if tracking_pnl is not None else None,"跟踪价格来源":"最近可用收盘" if tracking_cur is not None else "无可用收盘价","系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否",
-                "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
-                "趋势状态":"今日行情缺失","风险提示":"今日行情未取得；暂不执行止损判断","Review_Risk_Status":"DATA_MISSING",
-                "Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":"","Review_Risk_Note":"今日行情缺失，待下一次Review补算"
-            })
-            write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, "今日行情缺失，暂不执行止损判断。")
-            continue
-        ohlc={"open":cur,"high":cur,"low":cur,"close":cur}
-    low=safe_float(ohlc.get("low")); closep=safe_float(ohlc.get("close")); openp=safe_float(ohlc.get("open"))
-    if low is None or closep is None:
-        tracking_cur = safe_float(latest_available_price_map.get(ticker))
-        tracking_pnl = ((tracking_cur - rec_price) / rec_price * 100) if tracking_cur is not None and rec_price > 0 else None
-        active_list.append({
-            "代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),
-            "持股周期建议":"动态持有","止损价":safe_float(first.get("Stop_Loss")) or "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
-            "今日开盘价":"N/A","现价":tracking_cur if tracking_cur is not None else "N/A","今日开盘→收盘%":None,"持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"剩余天数":"—",
-            "当前盈亏(%)":round(tracking_pnl,2) if tracking_pnl is not None else None,"跟踪价格来源":"最近可用收盘" if tracking_cur is not None else "无可用收盘价","系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ",
-            "MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,"趋势状态":"行情不完整","风险提示":"今日OHLC不完整，暂不执行止损判断",
-            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":"","Review_Risk_Note":"今日OHLC不完整，待下一次Review补算"
-        })
-        continue
-    old_stop=safe_float(first.get("Stop_Loss")); ctx=get_trailing_stop_context(ticker,rec_date,old_stop,today_us_str()); exec_stop=ctx.get("exec_stop") if ctx else old_stop
-    if exec_stop is not None and exec_stop>0 and low<=exec_stop:
-        write_review_risk_linkage_us(ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep, f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。")
-        exitp=openp if openp is not None and openp<exec_stop else exec_stop; pnl=round((exitp-rec_price)/rec_price*100,2)
-        stopped_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":exec_stop,"首次推荐日":rec_date_str,"首次推荐价":rec_price,"止损触发日":today_us_str(),"止损结算价":exitp,"止损盈亏(%)":pnl,"持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":len(group),"触发方式":"移动止损：前一交易日保护线","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"})
-        update_trade_history_status(ticker,rec_date_str,"Stop_Loss_Hit",exitp); continue
-    next_ctx=get_trailing_stop_context(ticker,rec_date,exec_stop,None); next_stop=next_ctx.get("exec_stop") if next_ctx else exec_stop
-    if next_stop is not None and next_stop>0: update_trade_history_trailing_stop(ticker,rec_date_str,next_stop,next_ctx or ctx or {})
-    c=next_ctx or ctx or {}; risk=[]
-    if c.get("macd_bear"): risk.append("MACD弱势")
-    if c.get("kdj_falling"): risk.append("KDJ回落")
-    days=(pd.Timestamp(today_us_str())-rec_date).days
-    risk_distance=((closep-next_stop)/closep*100) if next_stop and closep else None
-    risk_status="STOP_NEAR" if risk_distance is not None and risk_distance<=3.0 else "CLEAR"
-    risk_note=(f"收盘距离移动止损约 {risk_distance:.2f}%，次日 Scan 强提醒。" if risk_status=="STOP_NEAR" else "本次 Review 未发现触及或接近移动止损。")
-    write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note)
-    active_list.append({"代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有","止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,"今日开盘价":openp if openp is not None else "N/A","现价":closep,"今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp is not None and openp > 0 and closep is not None else None,"持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),"系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否","止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),"KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),"趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱","风险提示":"、".join(risk) if risk else "趋势未出现同步转弱","Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),"Review_Stop_Distance_Pct":round(risk_distance,2) if risk_distance is not None else "","Review_Risk_Note":risk_note})
-
-
-for _item in active_list:
-    _reason,_action=build_us_attribution(_item)
-    _item["盈利/亏损原因"]=_reason; _item["风控动作指令"]=_action
-for _item in stopped_list:
-    _item["盈利/亏损原因"]=f"移动止损触发，策略盈亏 {_item.get('止损盈亏(%)',0):.2f}%。"
-    _item["风控动作指令"]="已触发移动止损，次日 Scan 禁止重新推荐。"
-
-print(
-    f"📊 股票分类："
-    f"持仓 {len(active_list)}，"
-    f"超期 {len(expired_list)}，"
-    f"止损 {len(stopped_list)}，"
-    f"历史重复跳过 {skipped_duplicate}"
-)
-
-if missing_entry_price:
-    print(
-        f"⚠️ 缺少有效建仓价的 ticker："
-        f"{missing_entry_price}"
-    )
-
-
-if not any([
-    active_list,
-    observation_list,
-    stopped_list,
-    option_closed_records,
-]):
-    print("无任何复盘数据，退出。")
-    sys.exit(0)
-
-
-# ============================================================
-# 18. review_history.csv
-# ============================================================
-
-REVIEW_COLUMNS = [
-    "Review_Date",
-    "Ticker",
-    "Name",
-    "Tag",
-    "Rec_Date",
-    "Rec_Price",
-    "Cur_Price",
-    "Days_Held",
-    "PnL_Pct",
-    "Maturity_PnL",
-    "Hold_Period",
-    "Stop_Loss",
-    "Rec_Count",
-    "Status",
-    "Score",
-    "Review_Risk_Status", "Review_Risk_Date", "Review_Stop_Distance_Pct", "Review_Risk_Note",
-    "Option_Type",
-    "Strike",
-    "Expiry",
-]
-
-
-def append_review_rows(rows):
-    """
-    使用 pandas 写 CSV，避免逗号破坏 CSV。
-    """
-    if not rows:
-        return
-
-    df_new = pd.DataFrame(
-        rows,
-        columns=REVIEW_COLUMNS,
-    )
-
-    if (
-        os.path.exists(REVIEW_HISTORY)
-        and os.path.getsize(REVIEW_HISTORY) > 0
-    ):
-        try:
-            df_old = pd.read_csv(
-                REVIEW_HISTORY,
-                dtype=str,
-                keep_default_na=False,
-                on_bad_lines="skip",
-            )
-
-            for col in REVIEW_COLUMNS:
-                if col not in df_old.columns:
-                    df_old[col] = ""
-
-            df_old = df_old[
-                REVIEW_COLUMNS
-            ]
-
-            df_final = pd.concat(
-                [df_old, df_new],
-                ignore_index=True,
-            )
-
-        except Exception:
-            df_final = df_new
-
-    else:
-        df_final = df_new
-
-    df_final.to_csv(
-        REVIEW_HISTORY,
-        index=False,
-        encoding="utf-8",
-        quoting=csv.QUOTE_MINIMAL,
-    )
-
-
-review_rows = []
-review_date = today_us_str()
-
-for item in active_list:
-    review_rows.append({
-        "Review_Date": review_date,
-        "Ticker": item["代码"],
-        "Name": item["名称"],
-        "Tag": item["标签"],
-        "Rec_Date": item["首次推荐日"],
-        "Rec_Price": item["首次推荐价"],
-        "Cur_Price": item["现价"],
-        "Days_Held": item["持仓天数"],
-        "PnL_Pct": item["当前盈亏(%)"],
-        "Maturity_PnL": "",
-        "Hold_Period": "动态持有",
-        "Stop_Loss": item["止损价"],
-        "Stop_Method": item.get("止损方法", "MA20/MA50 + ATR + MACD/KDJ"),
-        "Trail_Stop": item.get("止损价", ""),
-        "Rec_Count": item["系统连续推荐次数"],
-        "Status": "持仓中",
-        "Score": item["推荐评分"],
-        "Review_Risk_Status": item.get("Review_Risk_Status", ""),
-        "Review_Risk_Date": item.get("Review_Risk_Date", ""),
-        "Review_Stop_Distance_Pct": item.get("Review_Stop_Distance_Pct", ""),
-        "Review_Risk_Note": item.get("Review_Risk_Note", ""),
-        "Option_Type": "",
-        "Strike": "",
-        "Expiry": "",
-    })
-
-for item in stopped_list:
-    review_rows.append({
-        "Review_Date": review_date,
-        "Ticker": item["代码"],
-        "Name": item["名称"],
-        "Tag": item["标签"],
-        "Rec_Date": item["首次推荐日"],
-        "Rec_Price": item["首次推荐价"],
-        "Cur_Price": item["止损结算价"],
-        "Days_Held": item["持仓天数"],
-        "PnL_Pct": item["止损盈亏(%)"],
-        "Maturity_PnL": item["止损盈亏(%)"],
-        "Hold_Period": "动态持有",
-        "Stop_Loss": item["止损价"],
-        "Stop_Method": item.get("止损方法", "MA20/MA50 + ATR + MACD/KDJ"),
-        "Trail_Stop": item.get("止损价", ""),
-        "Rec_Count": item["系统连续推荐次数"],
-        "Status": "移动止损清仓",
-        "Score": item["推荐评分"],
-        "Review_Risk_Status": "STOP_TRIGGERED",
-        "Review_Risk_Date": review_date,
-        "Review_Stop_Distance_Pct": 0,
-        "Review_Risk_Note": f"移动止损触发：{item.get('止损价', '')}",
-        "Option_Type": "",
-        "Strike": "",
-        "Expiry": "",
-    })
-
-# 股票不再按固定期限生成 expired_list 新记录；仅保留历史兼容读取。
-
-for item in observation_list:
-    review_rows.append({
-        "Review_Date": review_date,
-        "Ticker": item["代码"],
-        "Name": item["名称"],
-        "Tag": "Observation",
-        "Rec_Date": item["首次推荐日"],
-        "Rec_Price": item.get("首次推荐价", ""),
-        "Cur_Price": item.get("当前价格", ""),
-        "Days_Held": "",
-        "PnL_Pct": item.get("当前盈亏(%)", ""),
-        "Maturity_PnL": "",
-        "Hold_Period": "观察",
-        "Stop_Loss": "",
-        "Stop_Method": "观察，不触发持仓止损",
-        "Trail_Stop": "",
-        "Rec_Count": item.get("系统连续推荐次数", "1"),
-        "Status": "观察推荐",
-        "Score": item.get("推荐评分", "N/A"),
-        "Review_Risk_Status": "OBSERVATION",
-        "Review_Risk_Date": review_date,
-        "Review_Stop_Distance_Pct": "",
-        "Review_Risk_Note": "有效 Scan 推荐；按推荐价持续跟踪绩效，不计入实际持仓止损。",
-        "Option_Type": "",
-        "Strike": "",
-        "Expiry": "",
-    })
-
-for opt in option_closed_records:
-    review_rows.append({
-        "Review_Date": review_date,
-        "Ticker": opt["ticker"],
-        "Name": opt["ticker"] + " OPT",
-        "Tag": "期权平仓",
-        "Rec_Date": opt["expiry"],
-        "Rec_Price": opt["entry_price"],
-        "Cur_Price": opt["close_price"],
-        "Days_Held": "",
-        "PnL_Pct": opt["pnl"],
-        "Maturity_PnL": opt["pnl"],
-        "Hold_Period": "",
-        "Stop_Loss": "",
-        "Rec_Count": "",
-        "Status": "期权平仓",
-        "Score": opt["reason"],
-        "Option_Type": opt["option_type"],
-        "Strike": opt["strike"],
-        "Expiry": opt["expiry"],
-    })
-
-
-try:
-    append_review_rows(review_rows)
-    print(
-        f"✅ review_history.csv "
-        f"写入 {len(review_rows)} 条记录。"
-    )
-except Exception as e:
-    print(
-        f"❌ review_history.csv 写入失败：{e}"
-    )
-
-
-# ============================================================
-# 19. Claude AI 风控报告
-# ============================================================
-
-print("🤖 调用 Claude 生成风控报告...")
-
-client = anthropic.Anthropic(
-    api_key=os.environ.get(
-        "CLAWSOCKET_API_KEY"
-    ),
-    base_url=os.environ.get(
-        "CLAWSOCKET_BASE_URL"
-    ),
-)
-
-def _load_recent_option_recommendations(limit=20, days=7):
-    """读取最近期权推荐；推荐与实际期权持仓分开统计。"""
+def load_recent_option_recommendations(limit=20, days=7):
     try:
         if not os.path.exists(OPTION_LOG_FILE) or os.path.getsize(OPTION_LOG_FILE) == 0:
             return []
         d = pd.read_csv(OPTION_LOG_FILE, dtype=str, keep_default_na=False)
-        if d.empty or "EntryDate" not in d.columns:
+        if "EntryDate" not in d.columns:
             return []
         if "Status" in d.columns:
             d = d[d["Status"].astype(str).str.strip().eq("Active")].copy()
         d["_dt"] = pd.to_datetime(d["EntryDate"], errors="coerce", format="mixed")
         cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=days)
         d = d[d["_dt"].notna() & (d["_dt"] >= cutoff)].copy()
-        d = d.sort_values(["_dt", "Ticker"], ascending=[False, True])
-        return d.drop(columns=["_dt"]).head(limit).to_dict("records")
+        return d.sort_values("_dt", ascending=False).drop(columns=["_dt"]).head(limit).to_dict("records")
     except Exception as e:
-        print(f"⚠️ 读取近期期权推荐失败：{e}")
+        print(f"⚠️ 读取近期义项权利推荐失败：{e}")
         return []
 
-
 active_option_snapshot = load_active_options_snapshot(price_map_today)
-recent_option_recommendations = _load_recent_option_recommendations(limit=20, days=7)
-
-prompt = f"""
-你是顶级量化风控总监。
-
-以下是今日美股盘后复盘数据。
-
-【股票持仓中（程序已逐只生成完整卡片）】
-{active_list}
-
-【股票因移动止损退出】
-{stopped_list}
-
-【期权当前活跃持仓】
-{active_option_snapshot}
-
-【最近7天期权推荐】
-{recent_option_recommendations}
-
-【期权自动平仓】
-{option_closed_records}
-
-重要：股票逐只数据已经由程序生成并会单独展示。你在本段输出中严禁再次逐只列出任何股票，不得复制股票名称、ticker、价格、MA、MACD、KDJ、止损、盈亏等逐股票信息。
-
-只输出两个部分：
-1. 全局盘后风控总结：市场环境、整体持仓风险、最重要的共性风险，不逐只点评。
-2. 期权持仓风控 - 平仓复盘：仅评价期权，不重复股票内容。
-
-要求：
-- 不编造不存在的数据。
-- 输出中文。
-- 直接输出 HTML，不要 markdown 代码框。
-- 第一个字符必须是 <。
-- 盈利用红色，亏损用绿色。
-- 不输出任何股票逐笔卡片。
-
-输出结构：
-<div style="background:#eceff1;border-left:6px solid #455a64;padding:20px;margin-bottom:25px;border-radius:8px;">
-<h3>盘后总体风控审查</h3>
-<p>仅做全局总结，不重复逐股票数据。</p>
-</div>
-
-<h2>期权持仓风控 - 平仓复盘</h2>
-只评价期权持仓、到期、波动率与平仓风险。
-"""
-
+recent_option_recommendations = load_recent_option_recommendations()
 
 ai_html = ""
-
 try:
+    client = anthropic.Anthropic(
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
+    )
+    prompt = f"""
+你是顶级量化风控总监。
+今日美股盘后数据如下：
+
+【实际持仓】
+{active_list}
+
+【Observation】
+{observation_list}
+
+【移动止损清仓】
+{stopped_list}
+
+【活跃期权】
+{active_option_snapshot}
+
+【最近期权推荐】
+{recent_option_recommendations}
+
+【期权平仓】
+{option_closed_records}
+
+只输出两个部分：
+1. 全局盘后风控总结。只讲市场环境和共性风险，不逐只重复股票。
+2. 期权持仓风控 - 平仓复盘。只评价期权。
+
+严禁编造数据。
+直接输出 HTML，不要 Markdown，不要代码框。
+"""
     with client.messages.stream(
         model=TARGET_MODEL,
         max_tokens=30000,
-        messages=[
-            {
-                "role": "user",
-                "content": prompt,
-            }
-        ],
+        messages=[{"role":"user","content":prompt}],
     ) as stream:
-
         for text in stream.text_stream:
             ai_html += text
-
 except Exception as e:
-    print(
-        f"⚠️ Claude 报告生成失败：{e}"
-    )
-
-    # AI 失败不能让整个 review 工作流失败
+    print(f"⚠️ Claude 报告生成失败：{e}")
     ai_html = """
 <div style="background:#fff3cd;border-left:6px solid #f0ad4e;padding:20px;border-radius:8px;">
 <h3>AI 风控报告暂时不可用</h3>
-<p>行情、持仓、止损和归档数据已经完成处理；Claude 本次调用失败。</p>
+<p>行情、持仓、Observation、推荐绩效和止损数据已经完成处理。</p>
 </div>
 """
 
-
-ai_html = (
-    ai_html
-    .replace("```html", "")
-    .replace("```HTML", "")
-    .replace("```", "")
-    .strip()
-)
-
-html_start = ai_html.find("<")
-
-if html_start > 0:
-    ai_html = ai_html[
-        html_start:
-    ]
+ai_html = ai_html.replace("```html","").replace("```HTML","").replace("```","").strip()
+i = ai_html.find("<")
+if i > 0:
+    ai_html = ai_html[i:]
 
 
 # ============================================================
-# 20. KPI
-# ============================================================
-
-print("📊 计算 KPI...")
-
-# -----------------------------
-# 历史已了结股票 / 期权分开统计
-# -----------------------------
-historical_closed_stock = []
-historical_closed_options = []
-
-if (
-    os.path.exists(REVIEW_HISTORY)
-    and os.path.getsize(REVIEW_HISTORY) > 0
-):
-    try:
-        existing_review = pd.read_csv(
-            REVIEW_HISTORY,
-            dtype=str,
-            keep_default_na=False,
-            on_bad_lines="skip",
-        )
-        closed_statuses_stock = {
-            "已超期归档",
-            "突发清仓暂停",
-            "止损触发清仓",
-            "移动止损清仓",
-            "周期到期清仓",
-        }
-        closed_statuses_option = {"期权平仓"}
-        if "Status" in existing_review.columns:
-            closed_rows = existing_review[
-                existing_review["Status"].isin(closed_statuses_stock | closed_statuses_option)
-            ]
-            for _, row in closed_rows.iterrows():
-                pnl = safe_float(row.get("PnL_Pct"))
-                if pnl is None:
-                    pnl = safe_float(row.get("Maturity_PnL"))
-                if pnl is None:
-                    continue
-                rec = {
-                    "ticker": clean_text(row.get("Ticker")),
-                    "name": clean_text(row.get("Name")),
-                    "pnl": pnl,
-                    "status": clean_text(row.get("Status")),
-                }
-                if rec["status"] in closed_statuses_option:
-                    historical_closed_options.append(rec)
-                else:
-                    historical_closed_stock.append(rec)
-    except Exception as e:
-        print(f"⚠️ KPI 历史数据读取失败：{e}")
-
-for item in stopped_list:
-    historical_closed_stock.append({
-        "ticker": item["代码"],
-        "name": item["名称"],
-        "pnl": safe_float(item.get("止损盈亏(%)"), 0.0),
-        "status": "移动止损清仓",
-    })
-
-for item in expired_list:
-    pnl = safe_float(item.get("期满日盈亏(%)"))
-    if pnl is not None:
-        historical_closed_stock.append({
-            "ticker": item["代码"],
-            "name": item["名称"],
-            "pnl": pnl,
-            "status": "已超期归档",
-        })
-
-for opt in option_closed_records:
-    historical_closed_options.append({
-        "ticker": opt["ticker"],
-        "name": opt["ticker"] + " OPT",
-        "pnl": safe_float(opt.get("pnl"), 0.0),
-        "status": "期权平仓",
-    })
-
-active_count = len(active_list)
-observation_count = len(observation_list)
-closed_stock_count = len(historical_closed_stock)
-closed_option_count = len(historical_closed_options)
-
-new_today_count = sum(1 for item in active_list if item.get("今日新增") == "是")
-new_observation_today_count = sum(1 for item in observation_list if item.get("今日新增") == "是")
-
-# 所有“有效 Scan 推荐”都必须参与股票胜率：
-# Core_Dragon / Core_Double_Dragon / Sub_Pioneer / Observation。
-# Trap_Warning 是风险警告，不定义为推荐，不纳入推荐胜率。
-current_scan_tracking = []
-for item in active_list:
-    pnl = safe_float(item.get("当前盈亏(%)"))
-    if pnl is not None:
-        current_scan_tracking.append({"ticker": item.get("代码"), "pnl": pnl, "status": "当前持仓"})
-for item in observation_list:
-    pnl = safe_float(item.get("当前盈亏(%)"))
-    if pnl is not None:
-        current_scan_tracking.append({"ticker": item.get("代码"), "pnl": pnl, "status": "Observation"})
-
-# 股票 Scan 推荐综合样本 = 历史已了结股票 + 当前持仓 + Observation。
-scan_stock_samples = historical_closed_stock + current_scan_tracking
-scan_pnl = [safe_float(x.get("pnl")) for x in scan_stock_samples]
-scan_pnl = [p for p in scan_pnl if p is not None]
-scan_wins = sum(1 for p in scan_pnl if p > 0)
-scan_losses = sum(1 for p in scan_pnl if p < 0)
-scan_flats = sum(1 for p in scan_pnl if p == 0)
-scan_total_tracked = len(scan_pnl)
-scan_win_rate = (scan_wins / scan_total_tracked * 100) if scan_total_tracked else 0.0
-print(f"📈 Scan推荐胜率样本：历史已了结 {closed_stock_count} + 当前持仓 {active_count} + Observation {observation_count} = {scan_total_tracked} 条有效统计样本")
-print(f"📈 Scan推荐胜率结果：{scan_wins} 赢 / {scan_losses} 亏 / {scan_flats} 持平，胜率 {scan_win_rate:.2f}%")
-
-# 当前推荐跟踪胜率 = 持仓 + Observation；两者都按推荐价计算，不再排除 Observation。
-tracking_pnl = [safe_float(x.get("pnl")) for x in current_scan_tracking]
-tracking_pnl = [p for p in tracking_pnl if p is not None]
-tracking_wins = sum(1 for p in tracking_pnl if p > 0)
-tracking_losses = sum(1 for p in tracking_pnl if p < 0)
-tracking_flats = sum(1 for p in tracking_pnl if p == 0)
-tracking_total = len(tracking_pnl)
-tracking_win_rate = (tracking_wins / tracking_total * 100) if tracking_total else 0.0
-
-# 实际持仓胜率
-active_pnl = [safe_float(item.get("当前盈亏(%)")) for item in active_list]
-active_pnl = [p for p in active_pnl if p is not None]
-active_wins = sum(1 for p in active_pnl if p > 0)
-active_losses = sum(1 for p in active_pnl if p < 0)
-active_flats = sum(1 for p in active_pnl if p == 0)
-active_win_rate = (active_wins / len(active_pnl) * 100) if active_pnl else 0.0
-
-# 已了结股票胜率：只统计股票，不含期权。
-closed_stock_pnl = [safe_float(x.get("pnl")) for x in historical_closed_stock]
-closed_stock_pnl = [p for p in closed_stock_pnl if p is not None]
-closed_stock_wins = sum(1 for p in closed_stock_pnl if p > 0)
-closed_stock_losses = sum(1 for p in closed_stock_pnl if p < 0)
-closed_stock_flats = sum(1 for p in closed_stock_pnl if p == 0)
-closed_stock_win_rate = (closed_stock_wins / len(closed_stock_pnl) * 100) if closed_stock_pnl else 0.0
-
-# 期权单独统计
-option_pnl = [safe_float(x.get("pnl")) for x in historical_closed_options]
-option_pnl = [p for p in option_pnl if p is not None]
-option_wins = sum(1 for p in option_pnl if p > 0)
-option_losses = sum(1 for p in option_pnl if p < 0)
-option_flats = sum(1 for p in option_pnl if p == 0)
-option_win_rate = (option_wins / len(option_pnl) * 100) if option_pnl else 0.0
-
-# 推荐总笔数：历史已了结 + 当前持仓 + Observation；不是把 Observation 丢掉。
-total_stock_recommendations = closed_stock_count + active_count + observation_count
-
-# 盈亏贡献只使用股票 Scan 推荐样本，不把期权混进股票 KPI。
-super_threshold = 50.0
-super_winners = [p for p in scan_pnl if p >= super_threshold]
-super_contribution = sum(super_winners)
-other_winners = [p for p in scan_pnl if 0 < p < super_threshold]
-other_avg = sum(other_winners) / len(other_winners) if other_winners else 0.0
-losers = [p for p in scan_pnl if p < 0]
-loser_avg = sum(losers) / len(losers) if losers else 0.0
-
-# ============================================================
-# 21. KPI HTML
-# ============================================================
-
-kpi_html = f"""
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-bottom:20px;">
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
-<div style="font-size:13px;color:#7f8c8d;">总股票推荐笔数</div>
-<div style="font-size:24px;font-weight:bold;">{total_stock_recommendations}</div>
-<div style="font-size:12px;">持仓 {active_count}（今日新增 {new_today_count}） · Observation {observation_count}（今日新增 {new_observation_today_count}） · 已了结 {closed_stock_count}</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
-<div style="font-size:13px;color:#7f8c8d;">Scan推荐综合胜率</div>
-<div style="font-size:24px;font-weight:bold;">{scan_win_rate:.2f}%</div>
-<div style="font-size:12px;">{scan_wins} 赢 / {scan_losses} 亏 / {scan_flats} 持平</div>
-<div style="font-size:11px;color:#607d8b;">持仓 + Observation + 已了结股票；Observation 按推荐价跟踪</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #00897b;">
-<div style="font-size:13px;color:#7f8c8d;">当前推荐跟踪胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#00897b;">{tracking_win_rate:.2f}%</div>
-<div style="font-size:12px;">{tracking_wins} 赢 / {tracking_losses} 亏 / {tracking_flats} 持平</div>
-<div style="font-size:11px;color:#607d8b;">持仓 + Observation，全部按推荐价追踪</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #2ecc71;">
-<div style="font-size:13px;color:#7f8c8d;">实际持仓胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#2ecc71;">{active_win_rate:.2f}%</div>
-<div style="font-size:12px;">{active_wins} 赢 / {active_losses} 亏 / {active_flats} 持平</div>
-<div style="font-size:11px;color:#607d8b;">仅实际持仓，不含 Observation</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e67e22;">
-<div style="font-size:13px;color:#7f8c8d;">已了结股票胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#e67e22;">{closed_stock_win_rate:.2f}%</div>
-<div style="font-size:12px;">{closed_stock_wins} 赢 / {closed_stock_losses} 亏 / {closed_stock_flats} 持平</div>
-<div style="font-size:11px;color:#607d8b;">不含期权</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #7b1fa2;">
-<div style="font-size:13px;color:#7f8c8d;">期权已了结胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#7b1fa2;">{option_win_rate:.2f}%</div>
-<div style="font-size:12px;">{option_wins} 赢 / {option_losses} 亏 / {option_flats} 持平</div>
-<div style="font-size:11px;color:#607d8b;">完全独立于股票 Scan 推荐统计</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #9b59b6;">
-<div style="font-size:13px;color:#7f8c8d;">超级赢家贡献</div>
-<div style="font-size:24px;font-weight:bold;color:#9b59b6;">+{super_contribution:.2f}%</div>
-<div style="font-size:12px;">股票 Scan 推荐中单笔盈利 ≥ {super_threshold:.0f}%</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1abc9c;">
-<div style="font-size:13px;color:#7f8c8d;">其余盈利平均</div>
-<div style="font-size:24px;font-weight:bold;color:#1abc9c;">+{other_avg:.2f}%</div>
-<div style="font-size:12px;">排除超级赢家</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e74c3c;">
-<div style="font-size:13px;color:#7f8c8d;">亏损平均</div>
-<div style="font-size:24px;font-weight:bold;color:#e74c3c;">{loser_avg:.2f}%</div>
-<div style="font-size:12px;">所有股票 Scan 推荐亏损</div>
-</div>
-</div>
-"""
-
-
-# ============================================================
-# 21.5 确定性股票风控/盈亏归因卡片
-# ============================================================
-def _us_pnl_style(value):
-    pnl = safe_float(value)
-    if pnl is None:
-        return "color:#607d8b;"
-    # 保留当前项目约定：盈利红色、亏损绿色。
-    return "color:#d32f2f;font-weight:700;" if pnl > 0 else ("color:#2e7d32;font-weight:700;" if pnl < 0 else "color:#455a64;font-weight:700;")
-
-
-def _us_fmt_price(value):
-    f = safe_float(value)
-    return "N/A" if f is None else f"${f:.2f}"
-
-
-def _us_fmt_pct(value, signed=False):
-    f = safe_float(value)
-    if f is None:
-        return "N/A"
-    return f"{f:+.2f}%" if signed else f"{f:.2f}%"
-
-
-def _us_common_trade_card(item, stopped=False):
-    ticker = clean_text(item.get("代码"), "N/A")
-    name = clean_text(item.get("名称"), ticker)
-    rec_date = clean_text(item.get("首次推荐日"), "N/A")
-    rec_price = _us_fmt_price(item.get("首次推荐价"))
-    rec_count = clean_text(item.get("系统连续推荐次数"), "1")
-    score = clean_text(item.get("推荐评分"), "N/A")
-
-    if stopped:
-        pnl = safe_float(item.get("止损盈亏(%)"))
-        pnl_text = _us_fmt_pct(pnl, signed=True)
-        title_color = "#b71c1c"
-        bg = "#fff8f8"
-        border = "#ef9a9a"
-        status_text = "已触发移动止损 / 次日Scan禁止重新推荐"
-        extra = (
-            f'<div><b>触发日期：</b>{clean_text(item.get("止损触发日"), "N/A")}　'
-            f'<b>止损结算价：</b>{_us_fmt_price(item.get("止损结算价"))}　'
-            f'<b>策略盈亏：</b><span style="{_us_pnl_style(pnl)}">{pnl_text}</span></div>'
-            f'<div><b>止损原因：</b>{clean_text(item.get("触发方式"), "移动止损触发")}</div>'
-            f'<div><b>执行纪律：</b>已执行移动止损；状态写回后，次日 Scan 应禁止重新推荐。</div>'
-        )
-    else:
-        pnl = safe_float(item.get("当前盈亏(%)"))
-        pnl_text = _us_fmt_pct(pnl, signed=True)
-        title_color = "#263238"
-        bg = "#fafafa"
-        border = "#e0e0e0"
-        status = clean_text(item.get("Review_Risk_Status"), "CLEAR")
-        risk_note = clean_text(item.get("Review_Risk_Note"), "")
-        extra = (
-            f'<div><b>动态持有：</b>是（不设置固定到期天数）　'
-            f'<b>持仓天数：</b>{clean_text(item.get("持仓天数"), "N/A")}</div>'
-            f'<div><b>当前盈亏：</b><span style="{_us_pnl_style(pnl)}">{pnl_text}</span>　'
-            f'<b>当前价格：</b>{_us_fmt_price(item.get("现价"))}</div>'
-            f'<div><b>今日实际行情：</b>开盘 {_us_fmt_price(item.get("今日开盘价"))} → '
-            f'收盘 {_us_fmt_price(item.get("现价"))}　'
-            f'<b>今日开盘→收盘：</b>{_us_fmt_pct(item.get("今日开盘→收盘%"), signed=True)}</div>'
-            f'<div><b>移动止损：</b>{_us_fmt_price(item.get("止损价"))}　'
-            f'<b>止损方法：</b>{clean_text(item.get("止损方法"), "MA20/MA50 + ATR + MACD/KDJ")}</div>'
-            f'<div><b>技术状态：</b>MA20={_us_fmt_price(item.get("MA20"))}　'
-            f'MA50={_us_fmt_price(item.get("MA50"))}　'
-            f'MACD_Hist={clean_text(item.get("MACD_Hist"), "N/A")}　'
-            f'KDJ_J={clean_text(item.get("KDJ_J"), "N/A")}　'
-            f'{clean_text(item.get("趋势状态"), "趋势状态未知")}</div>'
-            f'<div><b>风险提示：</b>{clean_text(item.get("风险提示"), "暂无")}</div>'
-            f'<div><b>Review风控状态：</b>{status}　{risk_note}</div>'
-        )
-
-    card = (
-        f'<div style="background:{bg};border:1px solid {border};padding:16px;margin:0 0 14px 0;border-radius:8px;">'
-        f'<div style="font-size:16px;font-weight:bold;color:{title_color};margin-bottom:10px;">'
-        f'{"🔴" if stopped else "🟢"} {name} ({ticker})</div>'
-        f'<div><b>首次推荐：</b>{rec_date} @ {rec_price}　'
-        f'<b>推荐评分：</b>{score}　<b>系统连续推荐次数：</b>{rec_count}</div>'
-        f'{extra}'
-        f'<div><b>盈亏归因：</b>{clean_text(item.get("盈利/亏损原因"), "暂无")}</div>'
-        f'<div><b>风控纪律核对：</b>{"止损触发后已执行" if stopped else "按移动止损与趋势破坏规则执行，不按固定持仓天数强制退出"}</div>'
-        f'<div><b>风控动作：</b>{clean_text(item.get("风控动作指令"), "继续动态监控")}</div>'
-        f'<div><b>联动状态：</b>{status_text if stopped else "当前持仓正常纳入下一交易日风险跟踪"}</div>'
-        f'</div>'
-    )
-    return card
-
-
-def build_us_observation_html():
-    if not observation_list:
-        return ""
-    blocks=[]
-    for item in observation_list:
-        def f(v, default="N/A"):
-            return clean_text(v, default)
-        cur=safe_float(item.get("当前价格"))
-        blocks.append(
-            '<div style="background:#fffdf7;border:1px solid #ffe0b2;border-left:6px solid #ff9800;padding:16px;margin:0 0 12px 0;border-radius:8px;">'
-            f'<div style="font-size:16px;font-weight:bold;color:#e65100;">👀 {f(item.get("名称"), item.get("代码"))} ({f(item.get("代码"))})</div>'
-            f'<div><b>首次推荐：</b>{f(item.get("首次推荐日"))} @ {_us_fmt_price(item.get("首次推荐价"))}　<b>推荐评分：</b>{f(item.get("推荐评分"))}　<b>连续推荐：</b>{f(item.get("系统连续推荐次数"), "1")}</div>'
-            f'<div><b>当前状态：</b>观察推荐，计入 Scan 推荐胜率，不计入实际持仓止损　<b>今日新增：</b>{f(item.get("今日新增"), "否")}</div>'
-            f'<div><b>推荐跟踪盈亏：</b><span style="{_us_pnl_style(item.get("当前盈亏(%)"))}">{_us_fmt_pct(item.get("当前盈亏(%)"), signed=True)}</span>　<b>价格来源：</b>{f(item.get("跟踪价格来源"), "N/A")}</div>'
-            f'<div><b>行情：</b>{_us_fmt_price(cur) if cur is not None else "N/A（今日行情缺失）"}　<b>RSI：</b>{f(item.get("RSI"))}　<b>Bias：</b>{f(item.get("Bias"))}</div>'
-            f'<div><b>技术评分：</b>{f(item.get("技术评分"))}　<b>估值评分：</b>{f(item.get("估值评分"))}　<b>PE：</b>{f(item.get("PE_TTM"))}　<b>Forward PE：</b>{f(item.get("PE_Forward"))}</div>'
-            f'<div><b>EPS：</b>{f(item.get("EPS_TTM"))}　<b>PB：</b>{f(item.get("PB"))}　<b>MACD金叉：</b>{f(item.get("MACD金叉"))}　<b>周线共振：</b>{f(item.get("周线共振"))}</div>'
-            f'<div><b>KDJ_J回升：</b>{f(item.get("KDJ_J回升"))}　<b>量能放大：</b>{f(item.get("量能放大"))}　<b>周期共振：</b>{f(item.get("周期共振"))}</div>'
-            '</div>'
-        )
-    return '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 最近30天新增/观察推荐</h2><p style="color:#607d8b;">Observation 是有效的 Scan 推荐，必须计入 Scan 推荐综合胜率；仅不作为实际持仓止损对象。绩效始终按首次推荐价跟踪。</p>'+''.join(blocks)
-
-
-def build_us_active_option_html(snapshot, closed, recommendations=None):
-    blocks=[]
-    for r in snapshot or []:
-        blocks.append(
-            '<div style="background:#faf5ff;border:1px solid #d1c4e9;border-left:6px solid #7b1fa2;padding:14px;margin:0 0 10px 0;border-radius:8px;">'
-            f'<div style="font-weight:800;">🎲 {clean_text(r.get("ticker"))} {clean_text(r.get("option_type"), "CALL")} | {clean_text(r.get("strategy"), "LONG_CALL")} | K={_us_fmt_price(r.get("strike"))}'
-            f'{(" / " + _us_fmt_price(r.get("short_strike"))) if r.get("short_strike") else ""} | 到期={clean_text(r.get("expiry"))}</div>'
-            f'<div><b>入场权利金：</b>{_us_fmt_price(r.get("entry_price"))}　<b>正股现价：</b>{_us_fmt_price(r.get("current_underlying"))}　<b>数量：</b>{clean_text(r.get("quantity"), "1")}</div>'
-            f'<div><b>策略：</b>{clean_text(r.get("reason"), "Scan 生成的期权策略")}</div>'
-            '</div>'
-        )
-    for r in recommendations or []:
-        blocks.append(
-            '<div style="background:#fff8e1;border:1px solid #ffcc80;border-left:6px solid #fb8c00;padding:14px;margin:0 0 10px 0;border-radius:8px;">'
-            f'<div style="font-weight:800;">🎯 {clean_text(r.get("Name"), r.get("Ticker"))} ({clean_text(r.get("Ticker"))}) | {clean_text(r.get("Strategy"), "LONG_CALL")}</div>'
-            f'<div><b>推荐日期：</b>{clean_text(r.get("EntryDate"))}　<b>方向：</b>{clean_text(r.get("Direction"), "BULLISH")}　<b>DTE：</b>{clean_text(r.get("DTE"))}</div>'
-            f'<div><b>Call执行价：</b>{_us_fmt_price(r.get("LongStrike", r.get("Strike")))}　<b>Short：</b>{_us_fmt_price(r.get("ShortStrike")) if r.get("ShortStrike") else "—"}　<b>到期：</b>{clean_text(r.get("Expiry"))}</div>'
-            f'<div><b>净权利金：</b>{_us_fmt_price(r.get("NetDebit", r.get("EntryPrice")))}　<b>Delta：</b>{clean_text(r.get("Delta"), "N/A")}　<b>IV：</b>{clean_text(r.get("IV"), "N/A")}　<b>最大亏损：</b>{_us_fmt_price(r.get("MaxLoss"))}</div>'
-            f'<div><b>Call Wall：</b>{clean_text(r.get("CallWall"), "N/A")}　<b>Put Wall：</b>{clean_text(r.get("PutWall"), "N/A")}　<b>财报：</b>{clean_text(r.get("EarningsDate"), "N/A")}</div>'
-            f'<div><b>理由：</b>{clean_text(r.get("Reason"), "期权策略由 Scan 生成")}</div>'
-            '</div>'
-        )
-    for r in closed or []:
-        blocks.append(
-            '<div style="background:#f5f5f5;border:1px solid #d0d0d0;border-left:6px solid #607d8b;padding:14px;margin:0 0 10px 0;border-radius:8px;">'
-            f'<div style="font-weight:800;">🔒 {clean_text(r.get("ticker"))} {clean_text(r.get("option_type"), "CALL")} 已平仓</div>'
-            f'<div><b>执行价：</b>{_us_fmt_price(r.get("strike"))}　<b>到期：</b>{clean_text(r.get("expiry"))}　<b>盈亏：</b>{clean_text(r.get("pnl"), "0")}</div>'
-            f'<div><b>原因：</b>{clean_text(r.get("reason"), "到期处理")}</div>'
-            '</div>'
-        )
-    if not blocks:
-        return ''
-    return '<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:5px;">🎲 期权持仓/推荐</h2>'+''.join(blocks)
-
-
-def build_us_risk_attribution_html():
-    blocks=[]
-    for item in active_list:
-        blocks.append(_us_common_trade_card(item, stopped=False))
-    for item in stopped_list:
-        blocks.append(_us_common_trade_card(item, stopped=True))
-    if not blocks:
-        return ''
-    header = '<h2 style="color:#1565c0;border-bottom:2px solid #1565c0;padding-bottom:5px;">📊 持仓股票 - 逐只风控与盈亏归因</h2>'
-    sub = '<p style="color:#607d8b;">每只股票一次性展示推荐、盈亏、技术状态、移动止损、风控纪律与动作；不拆成两个独立模块。</p>'
-    return header + sub + ''.join(blocks)
-
-us_risk_attribution_html=build_us_risk_attribution_html()
-
-# ============================================================
-# 22. 完整 HTML
+# 18. 完整 HTML
 # ============================================================
 
 full_html = f"""<!DOCTYPE html>
@@ -2806,7 +1620,6 @@ body {{
     background:white;
     padding:25px;
     border-radius:12px;
-    box-shadow:0 4px 6px rgba(0,0,0,0.05);
     max-width:1200px;
     margin:0 auto;
 }}
@@ -2814,18 +1627,17 @@ body {{
 </head>
 <body>
 <div class="card">
-
 <h2 style="color:#2c3e50;margin-bottom:20px;border-bottom:3px solid #1565c0;padding-bottom:10px;">
-美股盘后复盘与风控审查报告（含期权）
+美股盘后复盘与风控审查报告（Scan推荐事件独立追踪 / 含期权）
 </h2>
 
 {kpi_html}
 
-{build_us_observation_html()}
+{build_observation_html()}
 
-{build_us_active_option_html(active_option_snapshot, option_closed_records, recent_option_recommendations)}
+{build_active_html()}
 
-{us_risk_attribution_html}
+{build_stopped_html()}
 
 {ai_html}
 
@@ -2834,105 +1646,47 @@ body {{
 </html>
 """
 
-
-# ============================================================
-# 22.5 保存最新报告文件
-# ============================================================
-for _report_path in ("report.html", "review_report.html"):
+for path in ("report.html","review_report.html"):
     try:
-        with open(_report_path, "w", encoding="utf-8") as _f:
-            _f.write(full_html)
-    except Exception as _e:
-        print(f"⚠️ 保存 {_report_path} 失败：{_e}")
+        Path(path).write_text(full_html, encoding="utf-8")
+    except Exception as e:
+        print(f"⚠️ 保存 {path} 失败：{e}")
 
 
 # ============================================================
-# 23. 邮件
+# 19. 邮件
 # ============================================================
 
 def send_mail():
-    account = os.environ.get(
-        "EMAIL_ACCOUNT"
-    )
-
-    password = os.environ.get(
-        "EMAIL_PASSWORD"
-    )
-
-    owner_email = (
-        os.environ.get("TARGET_EMAILS")
-        or os.environ.get("OWNER_EMAIL")
-    )
-
-    if not account or not password or not owner_email:
-        print(
-            "⚠️ 邮件配置缺失，"
-            "本次不发送邮件。"
-        )
+    account = os.environ.get("EMAIL_ACCOUNT")
+    password = os.environ.get("EMAIL_PASSWORD")
+    target = os.environ.get("TARGET_EMAILS") or os.environ.get("OWNER_EMAIL")
+    if not account or not password or not target:
+        print("⚠️ 邮件配置缺失，本次不发送邮件。")
         return
-
     msg = MIMEMultipart()
-
     msg["From"] = account
-    msg["To"] = owner_email
-    msg["Subject"] = (
-        "盘后清算 美股风控纪律与复盘 "
-        f"({today_us_str()})"
-    )
-
-    msg.attach(
-        MIMEText(
-            full_html,
-            "html",
-            "utf-8",
-        )
-    )
-
-    to_list = [
-        x.strip()
-        for x in owner_email.split(",")
-        if x.strip()
-    ]
-
+    msg["To"] = target
+    msg["Subject"] = f"盘后清算 美股风控纪律与复盘 ({today_us_str()})"
+    msg.attach(MIMEText(full_html, "html", "utf-8"))
+    to_list = [x.strip() for x in target.split(",") if x.strip()]
     try:
-        with smtplib.SMTP_SSL(
-            "smtp.gmail.com",
-            465,
-            timeout=30,
-        ) as server:
-
-            server.login(
-                account,
-                password,
-            )
-
-            server.sendmail(
-                account,
-                to_list,
-                msg.as_string(),
-            )
-
-        print(
-            f"✅ 邮件发送成功："
-            f"{owner_email}"
-        )
-
+        with smtplib.SMTP_SSL("smtp.gmail.com",465,timeout=30) as server:
+            server.login(account,password)
+            server.sendmail(account,to_list,msg.as_string())
+        print(f"✅ 邮件发送成功：{target}")
     except Exception as e:
-        print(
-            f"❌ 邮件发送失败：{e}"
-        )
+        print(f"❌ 邮件发送失败：{e}")
 
-
-# ============================================================
-# 24. 完成
-# ============================================================
 
 send_mail()
 
 print("=" * 60)
+print("✅ 美股盘后复盘完成。")
 print(
-    "✅ 美股盘后复盘完成。"
-    "（硬止损 + pending 联动 + "
-    "Ticker 自动修复 + 期权 + KPI）"
+    f"Scan推荐 {total_scan_recommendations} 笔，"
+    f"有效 {valid_performance_samples}，"
+    f"数据不足 {data_insufficient_count}，"
+    f"综合胜率 {recommendation_win_rate:.2f}%"
 )
 print("=" * 60)
