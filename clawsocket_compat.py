@@ -6,7 +6,7 @@ so gateways that route the backend model from headers do not lose the model
 field even when an intermediate proxy rewrites the request body.
 """
 
-CLAWSOCKET_COMPAT_VERSION = "2026.09.18-post-model-route-v15.1"
+CLAWSOCKET_COMPAT_VERSION = "2026.09.18-astra-to-fable-fallback-v15.3"
 import json
 import os
 import time
@@ -93,9 +93,18 @@ class ClawSocketClient:
         return {"requested": requested, "exact_available": requested in available or bool(ci_match), "matched": requested if requested in available else ci_match, "available_count": len(available), "available_preview": available[:40]}
 
     def _fallback_candidates(self, requested: str) -> List[str]:
-        env_key = "CLAUDE_FALLBACK_MODEL" if requested.lower().startswith("claude") else "GPT_FALLBACK_MODEL"
-        configured = self._clean_model_id(os.environ.get(env_key, ""))
-        defaults = ["claude-opus-4-6", "claude-sonnet-4-5-20250929"] if requested.lower().startswith("claude") else ["gpt-6-astra", "gpt-5.4", "gpt-5.3-codex", "gpt-5.2"]
+        # 2026-09-18 policy: GPT-6 Astra is the primary model.
+        # If Astra is unavailable already at /v1/models discovery time, the
+        # only approved fallback is Claude Fable 5-1. Do not silently switch
+        # to another GPT model.
+        if requested.lower().startswith("claude"):
+            env_key = "CLAUDE_FALLBACK_MODEL"
+            configured = self._clean_model_id(os.environ.get(env_key, ""))
+            defaults = ["claude-fable-5-1"]
+        else:
+            env_key = "CLAUDE_RUNTIME_FALLBACK_MODEL"
+            configured = self._clean_model_id(os.environ.get(env_key, ""))
+            defaults = ["claude-fable-5-1"]
         return list(dict.fromkeys(([configured] if configured else []) + defaults))
 
     def _resolve_model(self, requested: str) -> str:
@@ -214,25 +223,16 @@ class ClawSocketClient:
         /v1/models 能看到某模型，不代表真实 POST 路由一定已经可用。
         当网关在 POST 阶段返回 model 路由错误时，从实际公布的模型中选择运行时备用模型。
         """
-        if requested.lower().startswith("claude"):
-            return []
         if str(os.environ.get("CLAWSOCKET_RUNTIME_FALLBACK", "1")).lower().strip() not in {"1", "true", "yes", "on"}:
             return []
 
+        # 2026-09-18 policy: when GPT-6 Astra fails at the real POST route,
+        # fall back only to Claude Fable 5-1. No GPT-to-GPT silent fallback.
         preferred = []
-        configured = self._clean_model_id(os.environ.get("GPT_RUNTIME_FALLBACK_MODEL", ""))
+        configured = self._clean_model_id(os.environ.get("CLAUDE_RUNTIME_FALLBACK_MODEL", ""))
         if configured:
             preferred.append(configured)
-        # 这些只是优先级，不代表一定存在；最终仍以 /v1/models 为准。
-        preferred.extend([
-            "gpt-5.6-sol",
-            "gpt-5.6-terra",
-            "gpt-5.6-luna",
-            "gpt-5.5",
-            "gpt-5.4",
-            "gpt-5",
-            "gpt-4o-mini",
-        ])
+        preferred.append("claude-fable-5-1")
         available = self.available_models
         lower_map = {str(m).lower(): str(m) for m in available}
         out = []
