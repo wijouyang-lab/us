@@ -46,7 +46,7 @@ import yfinance as yf
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 
 # ==================== 环境检查 ====================
-TARGET_MODEL = "claude-opus-4-8"
+TARGET_MODEL = "gpt-6-astra"
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 ATR_STOP_MULTIPLIER = 2.0
