@@ -36,6 +36,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+from clawsocket_compat import ClawSocketClient
 import pandas as pd
 import pandas_ta as ta
 import requests
@@ -43,10 +44,9 @@ import yfinance as yf
 
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
-from ai_router import gpt_generate_text, extract_json_object
 
 # ==================== 环境检查 ====================
-TARGET_MODEL = os.getenv("GPT_MODEL", "gpt-6-astra")
+TARGET_MODEL = os.environ.get("GPT_MODEL", "gpt-6-astra")
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 ATR_STOP_MULTIPLIER = 2.0
@@ -111,7 +111,7 @@ if get_us_time().weekday() >= 5:
     print(f"[{get_us_time()}] 周末休市，脚本自动跳过。")
     sys.exit(0)
 
-print(f"启动：宏观驱动美股扫描引擎 | 主模型: {TARGET_MODEL} | AI路由: ai_router")
+print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
 
 # ==================== 版本标记 ====================
 def update_version_marker():
@@ -191,77 +191,47 @@ def _news_age_tag(dt):
     return None
 
 
-def _rss_local_text(item, names):
-    """兼容 pubDate / updated / dc:date 等多种 RSS 日期字段。"""
-    for name in names:
-        for child in list(item):
-            if child.tag.rsplit("}", 1)[-1] == name:
-                return (child.text or "").strip()
-    return ""
-
-
-def _fetch_rss_news(session, source_name, url, max_items=20, priority=50):
-    rows = []
-    try:
-        response = session.get(url, timeout=12)
-        response.raise_for_status()
-        root = ET.fromstring(response.content)
-        items = root.findall(".//item")
-        for item in items[:max_items]:
-            title = item.findtext("title", default="").strip()
-            if not title:
-                continue
-            date_text = _rss_local_text(item, ["pubDate", "updated", "date", "issued"])
-            dt = _parse_rss_date(date_text)
-            tag = _news_age_tag(dt)
-            if tag is None:
-                continue
-            ts = dt.astimezone(US_TZ).strftime("%m-%d %H:%M") if dt else "时间未知"
-            rows.append((dt, priority, f"{tag}[{source_name}] {ts} - {title}"))
-        print(f"   ✅ {source_name} 节点抓取成功：{len(rows)} 条")
-    except Exception as e:
-        print(f"   ⚠️ {source_name} 节点抓取失败: {e}")
-    return rows
-
-
 def get_latest_macro_news():
-    print("📡 [阶段1] 正在抓取 CNBC / Reuters / Fed / BLS / Google News / MarketWatch 全球财经快讯...")
-    session = get_robust_session()
+    print("📡 [阶段1] 正在抓取 CNBC/Reuters/MarketWatch 全球财经快讯...")
     sources = [
-        ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114", 80),
-        ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/", 50),
-        # Reuters 直接 RSS 在不同网络环境下可用性不稳定，这里通过 Google News 定向抓 Reuters。
-        ("Reuters via Google", "https://news.google.com/rss/search?q=site%3Areuters.com+%28Federal+Reserve+OR+inflation+OR+Treasury+OR+oil+OR+stocks+OR+markets%29&hl=en-US&gl=US&ceid=US:en", 90),
-        # Fed 官方新闻源：比二手媒体更适合作为政策事件证据。
-        ("Federal Reserve", "https://www.federalreserve.gov/feeds/press_all.xml", 100),
-        ("Federal Reserve Monetary", "https://www.federalreserve.gov/feeds/press_monetary.xml", 105),
-        # BLS 官方最新经济数据/新闻源。
-        ("BLS", "https://www.bls.gov/feed/bls_latest.rss", 100),
-        ("BLS CPI", "https://www.bls.gov/feed/cpi.rss", 105),
-        ("Google News Macro", "https://news.google.com/rss/search?q=Federal+Reserve+inflation+tariff+economy+markets&hl=en-US&gl=US&ceid=US:en", 60),
+        ("CNBC", "https://search.cnbc.com/rs/search/combinedcms/view.xml?partnerId=wrss01&id=100003114"),
+        ("MarketWatch", "https://feeds.marketwatch.com/marketwatch/topstories/"),
+        ("Google News Macro", "https://news.google.com/rss/search?q=Federal+Reserve+inflation+tariff+economy+markets&hl=en-US&gl=US&ceid=US:en"),
     ]
-    rows = []
-    for source_name, url, priority in sources:
-        rows.extend(_fetch_rss_news(session, source_name, url, max_items=20, priority=priority))
+    session = get_robust_session()
+    news_lines = []
 
-    if not rows:
+    for source_name, url in sources:
+        try:
+            response = session.get(url, timeout=12)
+            response.raise_for_status()
+            root = ET.fromstring(response.content)
+            for item in root.findall(".//item")[:20]:
+                title = item.findtext("title", default="").strip()
+                date_text = item.findtext("pubDate", default="")
+                dt = _parse_rss_date(date_text)
+                tag = _news_age_tag(dt)
+                if not title or tag is None:
+                    continue
+                ts = dt.astimezone(US_TZ).strftime("%m-%d %H:%M") if dt else "时间未知"
+                news_lines.append(f"{tag}[{source_name}] {ts} - {title}")
+            print(f"   ✅ {source_name} 节点抓取成功")
+        except Exception as e:
+            print(f"   ⚠️ {source_name} 节点抓取失败: {e}")
+
+    if not news_lines:
         return "暂无实时英文财经新闻，请基于昨收盘及底层产业逻辑进行推演。"
 
-    # 先按发布时间，再按官方/高可信来源优先；再按标题去重。
-    rows.sort(key=lambda x: (x[0] or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc), x[1]), reverse=True)
+    # 简单去重，保留更近的
     dedup = []
     seen = set()
-    for _, _, line in rows:
-        title_key = line.split(" - ", 1)[-1].lower()
-        key = re.sub(r"[^a-z0-9]+", "", title_key)[:240]
-        if key in seen:
-            continue
-        seen.add(key)
-        dedup.append(line)
-        if len(dedup) >= 60:
-            break
+    for line in news_lines:
+        key = re.sub(r"[^a-z0-9]+", "", line.lower())[-180:]
+        if key not in seen:
+            seen.add(key)
+            dedup.append(line)
     print(f"✅ 盘前英文宏观新闻矩阵完成，共 {len(dedup)} 条")
-    return "\n".join(dedup)
+    return "\n".join(dedup[:50])
 
 
 def get_megacap_breaking_news():
@@ -380,7 +350,6 @@ def get_stock_news(ticker, max_items=6):
     urls = [
         f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US",
         f"https://news.google.com/rss/search?q={requests.utils.quote(ticker + ' stock')}&hl=en-US&gl=US&ceid=US:en",
-        f"https://news.google.com/rss/search?q=site%3Areuters.com+{requests.utils.quote(ticker + ' stock')}&hl=en-US&gl=US&ceid=US:en",
     ]
     headlines = []
     for url in urls:
@@ -1620,6 +1589,32 @@ def _fetch_macro_from_google_news(label):
     return None
 
 
+    """统一使用 stream，规避长请求的 SDK 超时限制。"""
+    out = []
+    with client.messages.stream(**kwargs) as stream:
+        for text in stream.text_stream:
+            out.append(text)
+    return "".join(out).strip()
+
+
+def _anthropic_text(response):
+    """兼容新版 Claude 的 TextBlock / ThinkingBlock 返回结构。"""
+    parts = []
+    for block in getattr(response, "content", []) or []:
+        text = getattr(block, "text", None)
+        if text:
+            parts.append(str(text))
+    return "\n".join(parts).strip()
+
+
+def _anthropic_stream_text(client, **kwargs):
+    """统一使用 stream，规避长请求的 SDK 超时限制。"""
+    out = []
+    with client.messages.stream(**kwargs) as stream:
+        for text in stream.text_stream:
+            out.append(text)
+    return "".join(out).strip()
+
 
 # ==================== 6.7 事件证据汇总 ====================
 def build_event_evidence_text(key_people_text, economic_text, macro_market_text):
@@ -1770,9 +1765,43 @@ def get_us_sector_performance():
     return "\n".join(results) if results else "暂无板块数据"
 
 # ==================== 9. 新闻驱动市场信号 ====================
+def _extract_json_object(text):
+    """从 Claude 输出中提取第一个完整 JSON 对象，容忍 ```json、前后解释和字符串内花括号。"""
+    raw = str(text or "").strip()
+    if not raw:
+        return None
+    start = raw.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    for i in range(start, len(raw)):
+        ch = raw[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = raw[start:i+1]
+                try:
+                    return json.loads(candidate)
+                except Exception:
+                    return None
+    return None
 
 
-def analyze_market_signals(combined_news_text):
+def analyze_market_signals(combined_news_text, client):
     if not combined_news_text or len(combined_news_text.strip()) < 50:
         return {"signals": []}
     prompt = f"""
@@ -1803,7 +1832,7 @@ def analyze_market_signals(combined_news_text):
 }}
 """
     try:
-        text = gpt_generate_text(messages=[{"role":"user","content":prompt}], model=TARGET_MODEL, max_tokens=12000, reasoning_effort="high")
+        text = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=12000, messages=[{"role":"user","content":prompt}])
         data = _extract_json_object(text)
         if not isinstance(data, dict):
             print("⚠️ [市场信号] Claude 返回不是有效 JSON，安全降级为空信号")
@@ -2036,6 +2065,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
         news = get_stock_news(t, 4)
         position_lines.append(f"- {r.get('Name',t)}({t}) | 买入${r.get('Price','N/A')} | 现价${prices.get(t,0)} | 新闻: {' | '.join(news) if news else '无'}")
 
+    client = ClawSocketClient(api_key=os.environ["CLAWSOCKET_API_KEY"], base_url=os.environ["CLAWSOCKET_BASE_URL"])
     prompt = f"""
 你是美股宏观风控总监。判断当前活跃持仓是否存在真正的突发利空/逻辑证伪。
 不要因为过去止损、过去低胜率就建议未来永久退出；只处理当前真实事件风险。
@@ -2046,10 +2076,10 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     decisions = {}
     reason = ""
     try:
-        txt = gpt_generate_text(messages=[{"role":"user","content":prompt}], model=TARGET_MODEL, max_tokens=3000, reasoning_effort="high")
-        obj = extract_json_object(txt)
+        txt = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=3000, messages=[{"role":"user","content":prompt}])
+        obj = _extract_json_object(txt)
         if not isinstance(obj, dict):
-            raise ValueError("GPT 风控返回不是有效 JSON")
+            raise ValueError("Claude 风控返回不是有效 JSON")
         decisions = obj.get("decision", {})
         reason = obj.get("reason", "")
     except Exception as e:
@@ -2078,10 +2108,43 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
         print("✅ 活跃持仓通过盘前风控")
     return restricted, dropped, prices
 
+
+
+def build_programmatic_fallback_report(pool_data, error_text):
+    """AI不可用时仍输出可用的程序化报告，避免整封邮件只剩“API失败”。"""
+    eligible = [x for x in pool_data if x.get("Gate_Status") == "PASS_PRE_AI"]
+    eligible.sort(key=lambda x: (float(x.get("Quant_Score", 0) or 0), int(x.get("技术确认数", 0) or 0)), reverse=True)
+    core_n = int(LIMIT_PARAMS.get("max_core", 5))
+    obs_n = int(LIMIT_PARAMS.get("max_observation", 7))
+    core = [x for x in eligible if float(x.get("Quant_Score",0) or 0) >= float(SCORING_PARAMS.get("core_min_score",65))][:core_n]
+    used = {x.get("Ticker") for x in core}
+    obs = [x for x in eligible if x.get("Ticker") not in used and float(x.get("Quant_Score",0) or 0) >= float(SCORING_PARAMS.get("observation_min_score",58))][:obs_n]
+
+    def card(rank, x):
+        return f'''<div class="top-card core-card">
+<div class="top-title">{rank}. {html.escape(str(x.get("Name","")))} ({html.escape(str(x.get("Ticker","")))}) | RSI:{html.escape(str(x.get("RSI","N/A")))} | 乖离率:{html.escape(str(x.get("乖离率(%)","N/A")))}%</div>
+<p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>AI暂不可用，以下为程序化候选，不使用AI补全。</p>
+<p><span class="highlight-label bg-blue">📈 技术确认:</span>{html.escape("、".join(map(str,x.get("技术确认信号",[]) or [])))} | 共{x.get("技术确认数",0)}项</p>
+<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>程序 Quant {float(x.get("Quant_Score",0) or 0):.1f}/100 | AI=N/A</p>
+<p><span class="highlight-label bg-blue">📊 量化拆解:</span>基本面:{x.get("Fundamental_Score",0)}/35 | 事件:{x.get("Event_Score",0)}/20 | 技术:{x.get("Technical_Score_25",0)}/25 | 风险/流动性:{x.get("Risk_Liquidity_Score",0)}/20 | MA20:{x.get("MA20","N/A")} | SectorRS20D:{x.get("Sector_RS_20D_Pct","N/A")}%</p>
+<p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>AI分析暂不可用；程序硬门槛已通过。不得仅凭此兜底报告扩大仓位。</p>
+</div>'''
+
+    parts = [f'<div class="header-card"><h2>⚠️ AI服务暂时不可用，以下为程序化安全兜底</h2><p>ClawSocket错误：{html.escape(str(error_text)[:500])}</p><p>本邮件仍展示程序计算的 Quant、技术确认、RSI 与乖离率，不伪造 AI 观点。</p></div>', '<h2>👑 核心精选 Top 1-5</h2>']
+    if core:
+        parts.extend(card(i, x) for i,x in enumerate(core,1))
+    else:
+        parts.append('<div class="header-card"><h3>今日没有达到 Core 硬门槛的标的</h3></div>')
+    parts.append('<div class="compare-card"><div class="compare-title">🎖️ 观察池 - 程序化兜底</div><ul>')
+    parts.extend(f'<li>{html.escape(str(x.get("Name","")))} ({html.escape(str(x.get("Ticker","")))}) | Quant:{float(x.get("Quant_Score",0) or 0):.1f}</li>' for x in obs)
+    parts.append('</ul></div>')
+    return "\n".join(parts)
+
 # ==================== 13. 生成 AI 报告 ====================
 def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None, embargo_text="", sector_tech_data=None, event_regime_text="", event_regime=None, market_signal_text="", key_people_text="", economic_text=""):
     print("🧠 [AI] 生成美股宏观穿透报告...")
     review_risk_text, _, review_near = get_review_risk_linkage_warning()
+    client = ClawSocketClient(api_key=os.environ["CLAWSOCKET_API_KEY"], base_url=os.environ["CLAWSOCKET_BASE_URL"])
     pool_lines = []
     for x in pool_data:
         pool_lines.append(
@@ -2124,15 +2187,10 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 {economic_block}
 
 【数据可靠性纪律】FRED单项失败不得伪造数值；优先使用BLS备用或Yahoo利率代理，并标明来源。
-【新闻源优先级】
-1. Federal Reserve / BLS 官方发布：政策与宏观数据事实优先。
-2. Reuters：市场事件、公司/行业新闻的高优先级二手来源。
-3. CNBC / Yahoo / Google News：用于补充和交叉验证。
-4. 单一来源与聚合器发生冲突时，不得直接采用更强结论；必须标明冲突并降权。
-
 
 【程序化市场环境（硬门控数据）】
-SPY/VIX/Regime 已由程序完成硬门控；候选池逐项的 Market_Regime、VIX、Sector_RS20D_Pct、SPY_Above_MA20 为准。
+SPY={getattr(locals().get("market_ctx", {}), "get", lambda *_: None)("spy") if False else "见候选池逐项字段"}
+VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/VIX/SectorRS20D 为准。
 
 【板块表现】
 {embargo_text}
@@ -2224,15 +2282,15 @@ SPY/VIX/Regime 已由程序完成硬门控；候选池逐项的 Market_Regime、
 只输出HTML，不输出解释性前言。
 """
     try:
-        out = gpt_generate_text(messages=[{"role":"user","content":prompt}], model=TARGET_MODEL, max_tokens=30000, reasoning_effort="high").replace("```html","").replace("```","").strip()
+        out = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=30000, messages=[{"role":"user","content":prompt}]).replace("```html","").replace("```","").strip()
         idx = out.find("<div")
         if idx > 0:
             out = out[idx:]
         print(f"✅ AI 报告生成完成：{len(out)} 字符")
         return out
     except Exception as e:
-        print(f"🚨 AI 报告失败：{e}")
-        return '<div class="header-card"><h2>⚠️ AI报告生成失败</h2><p>请检查 API 和网络。</p></div>'
+        print(f"🚨 AI 报告失败：{type(e).__name__}: {e}")
+        return build_programmatic_fallback_report(pool_data, f"{type(e).__name__}: {e}")
 
 # ==================== 14. Match / 写账 ====================
 def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
@@ -2554,7 +2612,8 @@ if __name__ == "__main__":
     event_regime_text = format_event_regime_gate(event_regime)
     print(event_regime_text)
 
-    signal_analysis = analyze_market_signals(combined_news)
+    client = ClawSocketClient(api_key=os.environ["CLAWSOCKET_API_KEY"], base_url=os.environ["CLAWSOCKET_BASE_URL"])
+    signal_analysis = analyze_market_signals(combined_news, client)
     signal_block = build_market_signal_text(signal_analysis)
     market_signal_text = signal_block[0] if signal_block else ""
 

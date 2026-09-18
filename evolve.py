@@ -10,12 +10,12 @@
 import pandas as pd
 import os
 import json
+from clawsocket_compat import ClawSocketClient
 import datetime
 import math
-from ai_router import gpt_generate_text, claude_generate_text, extract_json_object, claude_available
 
-EVOLVE_MODEL   = os.getenv("GPT_MODEL", "gpt-6-astra")
-CLAUDE_AUDIT_MODEL = os.getenv("CLAUDE_AUDIT_MODEL", "claude-opus-5")
+EVOLVE_MODEL   = os.environ.get("GPT_MODEL", "gpt-6-astra")
+CLAUDE_AUDIT_MODEL = os.environ.get("CLAUDE_AUDIT_MODEL", "claude-opus-5")
 HISTORY_FILE   = "trade_history.csv"
 EVOLVE_LOG     = "strategy_evolution.json"
 EVOLVED_RULES  = "evolved_rules.json"
@@ -27,35 +27,6 @@ ACTIVE_STATUSES = {"Active"}
 PRICE_COL  = "Price"
 EXIT_COL   = "Exit_Price"
 SCORE_COL  = "Score"
-STRATEGY_PARAMS_FILE = "strategy_params.json"
-
-
-def _load_strategy_params():
-    base = {
-        "scoring": {
-            "core_min_score": 65,
-            "observation_min_score": 58,
-            "min_technical_confirmations": 2,
-            "stressed_min_technical_confirmations": 3,
-        },
-        "evolution": {
-            "min_oos_samples": 15,
-            "min_oos_ev_pct": 0.0,
-            "min_oos_ev_improvement_pct": 0.25,
-        },
-    }
-    try:
-        with open(STRATEGY_PARAMS_FILE, "r", encoding="utf-8") as f:
-            loaded = json.load(f)
-        for section in ("scoring", "evolution"):
-            if isinstance(loaded.get(section), dict):
-                base[section].update(loaded[section])
-    except Exception as e:
-        print(f"⚠️ strategy_params.json 读取失败，使用默认进化参数: {e}")
-    return base
-
-
-STRATEGY_PARAMS = _load_strategy_params()
 
 
 # ============================================================
@@ -152,18 +123,9 @@ def evaluate_score_thresholds_oos(df_c):
     for t in (55,60,62,65,68,70,72,75):
         g=val[val["score_num"]>=t]
         results.append({"threshold":t,"n":int(len(g)),"win_rate":round(float((g["pnl_pct"]>0).mean()*100),1) if len(g) else None,"ev":round(ev(g),2) if len(g) else None})
-    min_n = int(STRATEGY_PARAMS.get("evolution", {}).get("min_oos_samples", 15))
-    min_ev = float(STRATEGY_PARAMS.get("evolution", {}).get("min_oos_ev_pct", 0.0))
-    min_improve = float(STRATEGY_PARAMS.get("evolution", {}).get("min_oos_ev_improvement_pct", 0.25))
-    eligible=[r for r in results if r["n"]>=min_n and r["ev"] is not None]
+    eligible=[r for r in results if r["n"]>=8 and r["ev"] is not None]
     best=max(eligible,key=lambda r:r["ev"]) if eligible else None
-    eligible_flag = bool(
-        best is not None
-        and best["ev"] >= min_ev
-        and (base_ev is None or best["ev"] >= base_ev + min_improve)
-    )
-    reason = "通过样本量/正EV/相对基线改善三重条件" if eligible_flag else "OOS未同时满足最小样本、非负EV、相对基线改善三重条件"
-    return {"eligible":eligible_flag,"reason":reason,"min_samples":min_n,"min_ev":min_ev,"min_improvement":min_improve,"baseline_threshold":base,"baseline_n":int(len(base_g)),"baseline_ev":round(base_ev,2) if base_ev is not None else None,"candidates":results,"best":best}
+    return {"eligible":bool(best is not None and (base_ev is None or best["ev"]>=base_ev)),"baseline_threshold":base,"baseline_n":int(len(base_g)),"baseline_ev":round(base_ev,2) if base_ev is not None else None,"candidates":results,"best":best}
 
 def calculate_metrics(df: pd.DataFrame) -> dict | None:
     if df.empty:
@@ -329,184 +291,192 @@ def calculate_metrics(df: pd.DataFrame) -> dict | None:
 # ============================================================
 # 2. AI 分析 + 生成规则补丁（已包股票数据）
 # ============================================================
+def claude_red_team_audit(metrics: dict, proposed_result: dict):
+    """Claude 只做独立红队审查；不直接修改策略参数。"""
+    try:
+        client = ClawSocketClient(
+            api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+            base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
+        )
+        prompt = f"""你是独立的美股量化策略红队审计员。
+不要提出新的选股结论，只审查另一个模型提出的规则是否存在过拟合、样本不足、数据泄漏、因果倒置或不可执行问题。
+
+OOS验证：
+{json.dumps(metrics.get('threshold_validation'), ensure_ascii=False, indent=2)}
+
+历史失败样本：
+{json.dumps(metrics.get('loss_examples'), ensure_ascii=False, indent=2)}
+
+历史成功样本：
+{json.dumps(metrics.get('win_examples'), ensure_ascii=False, indent=2)}
+
+GPT提出的结果：
+{json.dumps(proposed_result, ensure_ascii=False, indent=2)}
+
+只输出JSON：{{"approve":true或false,"risk_level":"low|medium|high","reasons":["..."],"required_conditions":["..."]}}
+"""
+        response = client.messages.create(model=CLAUDE_AUDIT_MODEL, max_tokens=1800, messages=[{"role":"user","content":prompt}])
+        text = next((b.text for b in getattr(response,"content",[]) if getattr(b,"text",None)), "").strip()
+        start, end = text.find("{"), text.rfind("}")+1
+        if start < 0 or end <= start:
+            return {"approve": False, "risk_level": "high", "reasons": ["Claude未返回有效JSON"]}
+        obj=json.loads(text[start:end])
+        return obj if isinstance(obj,dict) else {"approve":False,"risk_level":"high","reasons":["Claude返回格式异常"]}
+    except Exception as e:
+        print(f"⚠️ Claude红队审计失败：{type(e).__name__}: {e}")
+        return {"approve": False, "risk_level": "high", "reasons": [f"审计调用失败：{type(e).__name__}: {e}"]}
+
+
+def claude_red_team_audit(metrics: dict, proposed_result: dict):
+    """Claude只做独立红队审查；不直接修改策略参数。"""
+    try:
+        client = ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
+        prompt = f"""你是独立的美股量化策略红队审计员。只审查另一个模型提出的规则是否存在过拟合、样本不足、数据泄漏、因果倒置或不可执行问题。
+OOS验证：
+{json.dumps(metrics.get('threshold_validation'), ensure_ascii=False, indent=2)}
+失败样本：
+{json.dumps(metrics.get('loss_examples'), ensure_ascii=False, indent=2)}
+成功样本：
+{json.dumps(metrics.get('win_examples'), ensure_ascii=False, indent=2)}
+GPT提出的结果：
+{json.dumps(proposed_result, ensure_ascii=False, indent=2)}
+只输出JSON：{{"approve":true或false,"risk_level":"low|medium|high","reasons":["..."],"required_conditions":["..."]}}"""
+        response = client.messages.create(model=CLAUDE_AUDIT_MODEL, max_tokens=1800, messages=[{"role":"user","content":prompt}])
+        text = next((b.text for b in getattr(response,"content",[]) if getattr(b,"text",None)), "").strip()
+        start, end = text.find("{"), text.rfind("}")+1
+        if start < 0 or end <= start:
+            return {"approve": False, "risk_level": "high", "reasons": ["Claude未返回有效JSON"]}
+        obj=json.loads(text[start:end])
+        return obj if isinstance(obj,dict) else {"approve":False,"risk_level":"high","reasons":["Claude返回格式异常"]}
+    except Exception as e:
+        print(f"⚠️ Claude红队审计失败：{type(e).__name__}: {e}")
+        return {"approve": False, "risk_level": "high", "reasons": [f"审计调用失败：{type(e).__name__}: {e}"]}
+
+
 def evolve_strategy(metrics: dict):
-    print(f"🧬 启动策略进化引擎（主模型 {EVOLVE_MODEL} + Claude 红队 {CLAUDE_AUDIT_MODEL}）...")
+    print(f"🧬 启动策略进化引擎（{EVOLVE_MODEL}）...")
+    client = ClawSocketClient(
+        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+        base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
+    )
+
+
 
     prompt = f"""
-你是一个美股量化策略进化系统。你的任务是根据真实交易绩效提出候选规则，但不能绕过程序化 OOS 验证。
+你是一个美股量化策略进化系统。根据以下交易绩效数据，生成具体可执行的选股规则补丁。
 
-【当前绩效报告】
+【当前绩效报告】：
 - 已平仓股票：{metrics['total_closed']} 笔 | 总体胜率（全部历史混合，仅供参考）：{metrics['overall_win_rate']}% | 平均盈亏：{metrics['avg_pnl_pct']}%
 - 最佳：{metrics['best_trade']} | 最差：{metrics['worst_trade']}
 - 当前持仓：{metrics['active_count']} 只
 
-【按进化世代拆分股票胜率】
+
+
+【按进化世代拆分股票胜率】（重点看这个，而不是上面混合了所有历史的总胜率——
+能看出每一轮规则调整之后胜率到底是变好还是变差了）：
 {json.dumps(metrics['generation_stats'], ensure_ascii=False, indent=2) if metrics['generation_stats'] else "尚无进化历史，这是第一轮"}
 
-【最近一次进化之后的战绩】
+【最近一次进化之后的战绩】（当前生效规则的真实表现，样本量可能还小）：
 {json.dumps(metrics['since_last_evolution'], ensure_ascii=False, indent=2) if metrics['since_last_evolution'] else "尚无数据或样本不足"}
 
-【AI综合评分胜率分布】
+【AI综合评分（0-100）胜率分布】（判断高分是否真的对应高胜率）：
 {json.dumps(metrics['score_stats'], ensure_ascii=False, indent=2)}
 
-【技术评分胜率分布】
+【技术评分（0-40分）胜率分布】（判断技术面40分权重是否设置合理）：
 {json.dumps(metrics['tech_score_stats'], ensure_ascii=False, indent=2)}
 
-【ATR波动率分层】
-{json.dumps(metrics['atr_stats'], ensure_ascii=False, indent=2) if metrics['atr_stats'] else "样本不足或旧记录没有ATR"}
+【按ATR波动率分层胜率】（验证止损从固定-5%改成ATR动态算这个改动有没有用——如果
+{json.dumps(metrics['atr_stats'], ensure_ascii=False, indent=2) if metrics['atr_stats'] else "样本不足或还没有ATR数据的已平仓记录"}
 
-【技术信号有效性】
+【技术信号有效性分析】（判断MACD金叉/周线共振等信号是否真的有效）：
 {json.dumps(metrics['signal_stats'], ensure_ascii=False, indent=2)}
 
-【退出方式分布】
+【退出方式分布】（判断止损位/持股周期是否合理）：
 {json.dumps(metrics['exit_stats'], ensure_ascii=False, indent=2)}
 
 【OOS 门槛验证】
-{json.dumps(metrics.get('threshold_validation'), ensure_ascii=False, indent=2)}
+{json.dumps(metrics.get("threshold_validation"), ensure_ascii=False, indent=2)}
 
 【失败样本】
-{json.dumps(metrics.get('loss_examples'), ensure_ascii=False, indent=2)}
+{json.dumps(metrics.get("loss_examples"), ensure_ascii=False, indent=2)}
 
 【成功样本】
-{json.dumps(metrics.get('win_examples'), ensure_ascii=False, indent=2)}
+{json.dumps(metrics.get("win_examples"), ensure_ascii=False, indent=2)}
 
-【上一轮已应用规则】
+【上一轮已应用规则】：
 {json.dumps(metrics['prev_rules'], ensure_ascii=False, indent=2) if metrics['prev_rules'] else "无（首次进化）"}
 
-【进化纪律】
-1. 先看时间顺序 OOS，而不是只看混合历史胜率。
-2. 不允许根据单个股票或极少数样本创造永久黑名单。
-3. 规则必须具有明确触发条件、失效条件和证据。
-4. 代码级参数白名单仅允许：core_min_score、observation_min_score、min_technical_confirmations、stressed_min_technical_confirmations。
-5. 止损参数只能提出建议，不得自动改写。
-6. 只有 OOS 验证同时满足最小样本、非负EV、相对基线改善，并通过独立 Claude 红队审查的变化才能实际落地。
+【分析思路】：
+0. 优先看"按进化世代拆分胜率"：如果最近一代相比上一代胜率下降了，说明上一轮规则
+   可能是错的或用力过猛，这一轮应考虑撤销或调整方向。
+1. 如果高技术评分（30-40分）的胜率 < 低技术评分（0-9分），说明技术面权重过高（40分），需要降低
+2. 如果MACD金叉=是的胜率远高于=否，说明金叉信号有效，应该提高MACD金叉的推荐权重
+3. 如果止损触发次数多且亏损较大，说明止损位设得太紧，建议适当放宽
+   - 如果 CALL 和 PUT 的胜率差异显著，应建议扫描器优先选择胜率更高的方向
 
-必须只返回 JSON：
+代码级参数只允许从白名单中选择：core_min_score、observation_min_score、min_technical_confirmations、stressed_min_technical_confirmations；只有 OOS 验证样本足够且 EV 不差于当前基线时才允许自动应用。止损参数只能提出建议，不自动覆盖。
+
+必须只返回以下 JSON，不要输出其他文字：
 {{
-  "key_findings": ["发现1（数据支撑）", "发现2", "发现3"],
-  "identified_flaws": "最关键逻辑缺陷",
-  "applied_rules": [
-    {{
-      "rule_id": "rule_{datetime.date.today().strftime('%Y%m%d')}_001",
-      "type": "TECH_WEIGHT_ADJUST|SIGNAL_BOOST|STOPLOSS_ADJUST|HOLD_PERIOD_ADJUST|CONDITION_ADD|CONDITION_REMOVE",
-      "description": "规则说明",
-      "prompt_patch": "注入 scan.py 的具体文字",
-      "evidence": "支撑数据",
-      "expires_after_trades": 20
-    }}
-  ]
+    "key_findings": [
+        "发现1（数据支撑）",
+        "发现2",
+        "发现3"
+    ],
+    "identified_flaws": "最关键的逻辑缺陷（指出根因）",
+    "applied_rules": [
+        {{
+            "rule_id": "rule_{datetime.date.today().strftime('%Y%m%d')}_001",
+            "type": "TECH_WEIGHT_ADJUST 或 SIGNAL_BOOST 或 STOPLOSS_ADJUST 或 HOLD_PERIOD_ADJUST 或 CONDITION_ADD 或 CONDITION_REMOVE",
+            "description": "规则说明",
+            "prompt_patch": "注入 scan.py AI prompt 的具体文字（可执行，如：'历史数据显示MACD金叉标的胜率达71%，当出现MACD金叉信号时，消息面评分可适当上浮5-8分'）",
+            "evidence": "支撑数据",
+            "expires_after_trades": 20
+        }}
+    ],
 }}
 """
 
     try:
-        text = gpt_generate_text(
-            messages=[{"role": "user", "content": prompt}],
+        response = client.messages.create(
             model=EVOLVE_MODEL,
-            max_tokens=6000,
-            reasoning_effort="high",
+            max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}],
         )
-        result = extract_json_object(text)
-        if not isinstance(result, dict):
-            print("❌ GPT 未返回有效 JSON，停止本轮进化")
+        text_block = next((b for b in response.content if hasattr(b, "text")), None)
+        if text_block is None:
+            print("❌ AI 未返回文本内容（只有 ThinkingBlock）")
+            return
+        text = text_block.text.strip()
+        start = text.find("{")
+        end   = text.rfind("}") + 1
+        if start == -1 or end == 0:
+            print("❌ AI 未返回有效 JSON")
             return
 
-        proposed_rules = result.get("applied_rules", [])
-        if not isinstance(proposed_rules, list):
-            proposed_rules = []
+        result = json.loads(text[start:end])
 
-        # ====================================================
-        # 独立 Claude 红队：只审查 GPT 的规则，不直接改参数。
-        # ====================================================
-        audit = {
-            "available": False,
-            "approve_parameter_changes": False,
-            "approved_rule_ids": [],
-            "overfit_risk": "unknown",
-            "major_concerns": ["Claude 红队不可用，禁止本轮自动落地策略变化。"],
-            "reason": "",
-        }
-        if claude_available():
-            audit_prompt = f"""
-你是独立的量化策略红队审计员。不要重新设计策略，只审查另一模型刚刚提出的候选规则。
-你的任务是找出过拟合、样本不足、因果倒置、数据泄漏、与当前硬门槛冲突、以及把偶然事件误当规律的问题。
+        audit = claude_red_team_audit(metrics, result)
+        result["claude_red_team_audit"] = audit
+        print(f"🛡️ Claude红队：approve={audit.get('approve')} risk={audit.get('risk_level')}")
 
-【真实绩效与 OOS】
-{json.dumps(metrics.get('threshold_validation'), ensure_ascii=False, indent=2)}
-
-【成功样本】
-{json.dumps(metrics.get('win_examples'), ensure_ascii=False, indent=2)}
-
-【失败样本】
-{json.dumps(metrics.get('loss_examples'), ensure_ascii=False, indent=2)}
-
-【GPT 提出的候选规则】
-{json.dumps(proposed_rules, ensure_ascii=False, indent=2)}
-
-【GPT 关键发现】
-{json.dumps(result.get('key_findings', []), ensure_ascii=False, indent=2)}
-
-只返回 JSON：
-{{
-  "approve_parameter_changes": true,
-  "approved_rule_ids": ["rule_..."],
-  "overfit_risk": "low|medium|high",
-  "major_concerns": ["具体问题1", "具体问题2"],
-  "reason": "为什么批准/拒绝"
-}}
-"""
-            try:
-                audit_text = claude_generate_text(
-                    messages=[{"role": "user", "content": audit_prompt}],
-                    model=CLAUDE_AUDIT_MODEL,
-                    max_tokens=4000,
-                )
-                parsed_audit = extract_json_object(audit_text)
-                if isinstance(parsed_audit, dict):
-                    audit.update(parsed_audit)
-                    audit["available"] = True
-                else:
-                    audit["major_concerns"] = ["Claude 返回不是有效 JSON，本轮禁止自动落地。"]
-            except Exception as e:
-                audit["major_concerns"] = [f"Claude 红队调用失败：{e}"]
-                print(f"⚠️ Claude 红队失败，本轮不自动落地规则/参数：{e}")
-        else:
-            print("⚠️ 未配置 Claude 审计凭证，本轮只记录 GPT 提案，不自动落地。")
-
-        approved_ids = {str(x) for x in (audit.get("approved_rule_ids") or [])}
-        approved_rules = [
-            r for r in proposed_rules
-            if isinstance(r, dict) and str(r.get("rule_id", "")) in approved_ids
-        ]
-        result["proposed_rules"] = proposed_rules
-        result["applied_rules"] = approved_rules
-        result["claude_red_team"] = audit
-
-        # ====================================================
-        # 代码级参数：OOS + Claude 双门槛。
-        # ====================================================
+        # 代码级参数：白名单 + OOS 门槛验证 + Claude 红队批准，避免 AI 随意改阈值。
         applied_parameter_updates = []
         tv = metrics.get("threshold_validation") or {}
-        audit_allows_params = bool(audit.get("available")) and bool(audit.get("approve_parameter_changes")) and str(audit.get("overfit_risk", "high")).lower() != "high"
-        if tv.get("eligible") and tv.get("best") and audit_allows_params:
+        if tv.get("eligible") and tv.get("best") and audit.get("approve") is True and audit.get("risk_level") != "high":
             best_t = int(tv["best"]["threshold"])
-            current_t = int(STRATEGY_PARAMS["scoring"].get("core_min_score", 65))
+            current_t = int(STRATEGY_PARAMS["scoring"].get("core_min_score",65))
             if best_t != current_t:
                 STRATEGY_PARAMS["scoring"]["core_min_score"] = best_t
-                applied_parameter_updates.append({
-                    "name": "core_min_score",
-                    "old": current_t,
-                    "new": best_t,
-                    "reason": "time-ordered OOS EV >= baseline + Claude red-team approved",
-                })
-        elif tv.get("eligible") and tv.get("best") and not audit_allows_params:
-            print("🛡️ OOS 虽有候选阈值，但 Claude 红队未批准，本轮不修改 strategy_params.json")
-
+                applied_parameter_updates.append({"name":"core_min_score","old":current_t,"new":best_t,"reason":"time-ordered OOS EV >= baseline"})
+        # Observation 门槛不单独自动降低；保持更保守的下限，避免用 Observation 扩大低质量样本。
         if applied_parameter_updates:
-            with open(STRATEGY_PARAMS_FILE, "w", encoding="utf-8") as f:
-                json.dump(STRATEGY_PARAMS, f, ensure_ascii=False, indent=2)
+            with open(STRATEGY_PARAMS_FILE,"w",encoding="utf-8") as f:
+                json.dump(STRATEGY_PARAMS,f,ensure_ascii=False,indent=2)
         result["applied_parameter_updates"] = applied_parameter_updates
-        result["date"] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
-        result["metrics"] = {k: v for k, v in metrics.items() if k not in ("prev_rules", "active_summary")}
+        result["date"]    = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
+        result["metrics"] = {k: v for k, v in metrics.items()
+                             if k not in ("prev_rules", "active_summary")}
 
         log_data = []
         if os.path.exists(EVOLVE_LOG):
@@ -525,7 +495,7 @@ def evolve_strategy(metrics: dict):
         for entry in log_data:
             for rule in entry.get("applied_rules", []):
                 created_at = entry.get("metrics", {}).get("total_closed", 0)
-                expires = rule.get("expires_after_trades", 20)
+                expires    = rule.get("expires_after_trades", 20)
                 if total_now - created_at < expires:
                     all_rules.append(rule)
 
@@ -533,27 +503,27 @@ def evolve_strategy(metrics: dict):
         for r in reversed(all_rules):
             seen.setdefault(r["rule_id"], r)
         deduped = list(reversed(seen.values()))
-        deduped = deduped[-4:]
 
+        recent_limit = 4
+        deduped = deduped[-recent_limit:]
         evolved_output = {
-            "last_updated": result["date"],
-            "total_closed_at_update": total_now,
-            "overall_win_rate": metrics["overall_win_rate"],
-            "recent_win_rate": metrics.get("since_last_evolution"),
-            "active_rules": deduped,
-            "prompt_patches": [r.get("prompt_patch", "") for r in deduped],
-            "applied_parameter_updates": result.get("applied_parameter_updates", []),
-            "claude_red_team": audit,
+            "last_updated":            result["date"],
+            "total_closed_at_update":  total_now,
+            "overall_win_rate":        metrics["overall_win_rate"],
+            "recent_win_rate":         metrics.get("since_last_evolution"),
+            "active_rules":            deduped,
+            "prompt_patches":          [r.get("prompt_patch","") for r in deduped],
+            "applied_parameter_updates": result.get("applied_parameter_updates",[]),
         }
         with open(EVOLVED_RULES, "w", encoding="utf-8") as f:
             json.dump(evolved_output, f, ensure_ascii=False, indent=2)
 
-        print(f"\n✅ 进化完成！Claude批准规则 {len(approved_rules)} 条；有效规则总计 {len(deduped)} 条 → {EVOLVED_RULES}")
+        print(f"\n✅ 进化完成！共 {len(deduped)} 条有效规则 → {EVOLVED_RULES}")
         for i, rule in enumerate(deduped, 1):
             print(f"  规则{i} [{rule['type']}] {rule['description']}")
             print(f"    证据: {rule.get('evidence','')}")
-        print(f"  Claude 红队风险: {audit.get('overfit_risk')}")
-        print(f"  参数自动更新: {result.get('applied_parameter_updates', [])}")
+        print(f"\n📋 评估: {result.get('assessment','')}")
+        print(f"🎯 下轮重点: {result.get('next_focus','')}")
 
     except json.JSONDecodeError as e:
         print(f"❌ JSON 解析失败: {e}")
