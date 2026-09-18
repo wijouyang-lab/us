@@ -10,3 +10,14 @@
 - 错误中增加 `/v1/models` 模型摘要。
 
 推荐：`GPT_MODEL=gpt-6-astra`；若 ClawSocket 当前账户尚未开放 Astra，保持 `CLAWSOCKET_AUTO_FALLBACK=1`，系统会自动使用网关实际提供的 GPT 模型，不再把“AI失败”静默伪装成正常 AI 评分。
+
+
+# V14.1 — 实际 POST 路由修复
+
+- 修复 `/v1/models` 能发现模型、但 `/v1/responses` 与 `/v1/chat/completions` 同时返回 `Request is missing a model` 的情况。
+- OpenAI-compatible 请求现在同时携带：
+  - JSON body: `model=<实际模型>`
+  - Header: `x-openclaw-model=<实际模型>`
+- 保留 Responses → Chat 的协议回退，不改变现有模型选择逻辑。
+- 新增 `CLAWSOCKET_DEBUG=1` 调试输出，只显示 URL、model、JSON keys 和脱敏 headers，不输出 API Key。
+- 新增 `transport_probe()`，用于验证“GET /v1/models 可用”与“实际 POST 可用”之间是否存在网关路由差异。
