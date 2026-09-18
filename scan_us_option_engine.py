@@ -151,7 +151,7 @@ def _iv_bucket(chain: pd.DataFrame, iv: Optional[float]) -> str:
     return f"中性（链内约P{pct:.0f}）"
 
 
-def _pick_call_structure(calls: pd.DataFrame, spot: float):
+def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
     if calls.empty:
         return None
     work = calls[calls["strike"] > 0].copy()
@@ -174,6 +174,10 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float):
 
     long_strike = _sf(long_row["strike"])
     long_iv = _sf(long_row.get("impliedVolatility"))
+    # Yahoo偶尔返回极小/异常IV（例如0.0000x），会把Black-Scholes Delta推到1.000，
+    # 同时邮件又显示IV=N/A，形成明显的数据矛盾。异常IV不参与Delta计算。
+    if long_iv is not None and not (0.01 <= long_iv <= 5.0):
+        long_iv = None
     short_row = None
     short_price = None
     short_candidates = liquid[liquid["strike"] >= spot * 1.05].sort_values("strike")
@@ -200,7 +204,7 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float):
                     "max_profit": round((width - net) * 100, 2),
                     "break_even": round(long_strike + net, 2),
                     "iv": long_iv,
-                    "delta": _call_delta(spot, long_strike, 60, long_iv) if long_iv else None,
+                    "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
                 }
 
     return {
@@ -214,7 +218,7 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float):
         "max_profit": None,
         "break_even": round(long_strike + long_price, 2),
         "iv": long_iv,
-        "delta": _call_delta(spot, long_strike, 60, long_iv) if long_iv else None,
+        "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
     }
 
 
@@ -287,7 +291,7 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         print(f"⚠️ [期权] {ticker} 没有可验证的45-90天期权链")
         return None
     dte = (expiry - _us_today()).days
-    structure = _pick_call_structure(calls, spot)
+    structure = _pick_call_structure(calls, spot, dte)
     if not structure:
         print(f"⚠️ [期权] {ticker} 没有可执行的CALL结构")
         return None

@@ -901,6 +901,13 @@ def score_candidate_quality(item, market_ctx):
         risk += 2 if atrp <= 5 else 0 if atrp <= 8 else -3
     if isinstance(rs, (int,float)):
         risk += 2 if rs > 0 else -3
+    # 正常、浅回撤环境下，SPY跌破MA20不再直接否决非防御股；改为轻微风险扣分。
+    # 只有市场进一步恶化（VIX压力或5日SPY跌幅达到硬阈值）时才走硬门槛。
+    if market_ctx.get("spy_above_ma20") is False:
+        risk -= 2
+        item["SPY_Trend_Warning"] = True
+    else:
+        item["SPY_Trend_Warning"] = False
     risk = _clip(risk, 0, 20)
 
     quant = round(fundamental + event + technical + risk, 1)
@@ -914,7 +921,12 @@ def score_candidate_quality(item, market_ctx):
 
 def apply_entry_quality_gate(pool_data, market_ctx):
     out = []
+    fail_counts = {}
     regime = market_ctx.get("regime", "UNKNOWN")
+
+    def fail(item, status):
+        item["Gate_Status"] = status
+        fail_counts[status] = fail_counts.get(status, 0) + 1
     min_tech = int(SCORING_PARAMS.get("min_technical_confirmations", 2))
     if regime in {"STRESSED", "PANIC"}:
         min_tech = max(min_tech, int(SCORING_PARAMS.get("stressed_min_technical_confirmations", 3)))
@@ -923,28 +935,41 @@ def apply_entry_quality_gate(pool_data, market_ctx):
         techn = int(item.get("技术确认数", 0))
         quant = float(item.get("Quant_Score", 0))
         if techn < min_tech:
-            item["Gate_Status"] = "TECH_FAIL"
+            fail(item, "TECH_FAIL")
             continue
         if quant < float(SCORING_PARAMS.get("pre_ai_min_quant_score", 55)):
-            item["Gate_Status"] = "QUANT_FAIL"
+            fail(item, "QUANT_FAIL")
             continue
         atrp = item.get("ATR_Pct")
         if isinstance(atrp, (int,float)) and atrp > float(TECH_PARAMS.get("atr_max_pct", 12)):
-            item["Gate_Status"] = "ATR_FAIL"
+            fail(item, "ATR_FAIL")
             continue
         rs = item.get("Sector_RS_20D_Pct")
         if regime != "UNKNOWN" and isinstance(rs, (int,float)) and rs < float(REGIME_PARAMS.get("sector_rs_min_pct", 0)):
-            item["Gate_Status"] = "SECTOR_RS_FAIL"
+            fail(item, "SECTOR_RS_FAIL")
             continue
-        if market_ctx.get("spy_above_ma20") is False and item.get("Sector") not in defensive:
-            item["Gate_Status"] = "SPY_TREND_FAIL"
+        # SPY仅温和跌破MA20时不再“一刀切”剔除所有非防御行业。
+        # 当VIX进入压力/恐慌，或SPY近5日跌幅达到硬阈值时，再启用SPY趋势硬门槛。
+        spy_hard = (
+            market_ctx.get("spy_above_ma20") is False
+            and (
+                regime in {"STRESSED", "PANIC"}
+                or (market_ctx.get("spy_5d_return") is not None and
+                    market_ctx.get("spy_5d_return") <= float(REGIME_PARAMS.get("recent_market_drop_pct", -2.0)))
+            )
+        )
+        if spy_hard and item.get("Sector") not in defensive:
+            fail(item, "SPY_TREND_FAIL")
             continue
         if regime == "PANIC" and item.get("Sector") not in defensive and quant < 68:
-            item["Gate_Status"] = "PANIC_FAIL"
+            fail(item, "PANIC_FAIL")
             continue
         item["Gate_Status"] = "PASS_PRE_AI"
         out.append(item)
     print(f"🛡️ [硬门槛] {len(out)}/{len(pool_data)} 只通过；最低技术确认={min_tech}；Regime={regime}")
+    if fail_counts:
+        detail = " | ".join(f"{k}={v}" for k, v in sorted(fail_counts.items(), key=lambda kv: kv[1], reverse=True))
+        print(f"   ↳ 失败原因分布：{detail}")
     return out
 
 
@@ -1740,6 +1765,42 @@ def get_us_sector_performance():
     return "\n".join(results) if results else "暂无板块数据"
 
 # ==================== 9. 新闻驱动市场信号 ====================
+def _extract_json_object(text):
+    """从 Claude 输出中提取第一个完整 JSON 对象，容忍 ```json、前后解释和字符串内花括号。"""
+    raw = str(text or "").strip()
+    if not raw:
+        return None
+    start = raw.find("{")
+    if start < 0:
+        return None
+    depth = 0
+    in_string = False
+    escape = False
+    for i in range(start, len(raw)):
+        ch = raw[i]
+        if in_string:
+            if escape:
+                escape = False
+            elif ch == "\\":
+                escape = True
+            elif ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+        elif ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                candidate = raw[start:i+1]
+                try:
+                    return json.loads(candidate)
+                except Exception:
+                    return None
+    return None
+
+
 def analyze_market_signals(combined_news_text, client):
     if not combined_news_text or len(combined_news_text.strip()) < 50:
         return {"signals": []}
@@ -1772,10 +1833,10 @@ def analyze_market_signals(combined_news_text, client):
 """
     try:
         text = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=12000, messages=[{"role":"user","content":prompt}])
-        a, b = text.find("{"), text.rfind("}")
-        if a < 0 or b < 0:
+        data = _extract_json_object(text)
+        if not isinstance(data, dict):
+            print("⚠️ [市场信号] Claude 返回不是有效 JSON，安全降级为空信号")
             return {"signals": []}
-        data = json.loads(text[a:b+1])
         signals = data.get("signals", [])
         print(f"📡 [市场信号] 识别到 {len(signals)} 个跨市场信号")
         return {"signals": signals}
@@ -2016,8 +2077,9 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     reason = ""
     try:
         txt = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=3000, messages=[{"role":"user","content":prompt}])
-        a,b = txt.find("{"), txt.rfind("}")
-        obj = json.loads(txt[a:b+1])
+        obj = _extract_json_object(txt)
+        if not isinstance(obj, dict):
+            raise ValueError("Claude 风控返回不是有效 JSON")
         decisions = obj.get("decision", {})
         reason = obj.get("reason", "")
     except Exception as e:
