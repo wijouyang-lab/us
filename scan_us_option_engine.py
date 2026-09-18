@@ -180,11 +180,15 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
         long_iv = None
     short_row = None
     short_price = None
+    short_iv = None
     short_candidates = liquid[liquid["strike"] >= spot * 1.05].sort_values("strike")
     for _, row in short_candidates.iterrows():
         p = _best_price(row, "sell")
         if p is not None and p > 0:
             short_row, short_price = row, p
+            short_iv = _sf(row.get("impliedVolatility"))
+            if short_iv is not None and not (0.01 <= short_iv <= 5.0):
+                short_iv = None
             break
 
     if short_row is not None:
@@ -204,7 +208,10 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
                     "max_profit": round((width - net) * 100, 2),
                     "break_even": round(long_strike + net, 2),
                     "iv": long_iv,
-                    "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
+                    "delta": (
+                        (_call_delta(spot, long_strike, dte, long_iv) or 0.0)
+                        - (_call_delta(spot, short_strike, dte, short_iv) or 0.0)
+                    ) if (long_iv and short_iv) else None,
                 }
 
     return {
@@ -301,6 +308,9 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
     iv = structure.get("iv")
     event_note = (f"到期前约第{earnings_days}天有财报事件，需控制事件风险。" if earnings_days is not None and 0 <= earnings_days <= dte else "财报日期未可靠取得或不在本次到期窗内。")
     strategy = structure["strategy"]
+    # 数据一致性：IV 缺失/异常时，Delta 必须同时为空，避免出现 IV=N/A 但 Delta=1.000。
+    if iv is None:
+        structure["delta"] = None
     rationale = "核心精选偏多；优先使用Call Debit Spread限制最大亏损。" if strategy == "CALL_DEBIT_SPREAD" else "核心精选偏多；期权链无法构建价差，使用Long Call，最大风险为权利金。"
     return {
         "Ticker": ticker,

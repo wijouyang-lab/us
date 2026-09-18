@@ -26,9 +26,10 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
 
-import anthropic
 import pandas as pd
 import yfinance as yf
+
+from ai_router import gpt_generate_text
 
 
 # ============================================================
@@ -44,7 +45,7 @@ if _missing_env:
     sys.exit(1)
 
 US_TZ = ZoneInfo("America/New_York")
-TARGET_MODEL = "gpt-6-astra"
+TARGET_MODEL = os.getenv("GPT_MODEL", "gpt-6-astra")
 
 STRATEGY_PARAMS_FILE = "strategy_params.json"
 def load_strategy_params():
@@ -1812,10 +1813,6 @@ recent_option_recommendations = load_recent_option_recommendations()
 
 ai_html = ""
 try:
-    client = anthropic.Anthropic(
-        api_key=os.environ.get("CLAWSOCKET_API_KEY"),
-        base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
-    )
     prompt = f"""
 你是顶级量化风控总监。
 今日美股盘后数据如下：
@@ -1845,15 +1842,14 @@ try:
 严禁编造数据。
 直接输出 HTML，不要 Markdown，不要代码框。
 """
-    with client.messages.stream(
+    ai_html = gpt_generate_text(
+        messages=[{"role":"user","content":prompt}],
         model=TARGET_MODEL,
         max_tokens=30000,
-        messages=[{"role":"user","content":prompt}],
-    ) as stream:
-        for text in stream.text_stream:
-            ai_html += text
+        reasoning_effort="high",
+    )
 except Exception as e:
-    print(f"⚠️ Claude 报告生成失败：{e}")
+    print(f"⚠️ GPT-6 Astra 风控报告生成失败：{e}")
     ai_html = """
 <div style="background:#fff3cd;border-left:6px solid #f0ad4e;padding:20px;border-radius:8px;">
 <h3>AI 风控报告暂时不可用</h3>

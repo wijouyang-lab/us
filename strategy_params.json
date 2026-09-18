@@ -1,5 +1,5 @@
 {
-  "version": "2026-09-17-US-GROK-REVIEW",
+  "version": "2026-09-18-US-ASTRA-CLAUDE-V10",
   "scoring": {
     "fundamental_weight": 35,
     "event_weight": 20,
@@ -47,5 +47,10 @@
     "max_core": 5,
     "max_observation": 7,
     "evolution_recent_rules": 4
+  },
+  "evolution": {
+    "min_oos_samples": 15,
+    "min_oos_ev_pct": 0.0,
+    "min_oos_ev_improvement_pct": 0.25
   }
 }
