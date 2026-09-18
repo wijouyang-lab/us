@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
-"""ClawSocket compatibility client with model discovery and safe fallback."""
+"""ClawSocket compatibility client with model discovery and safe fallback.
+
+2026-09-18 fix: OpenAI-compatible POST requests also send x-openclaw-model
+so gateways that route the backend model from headers do not lose the model
+field even when an intermediate proxy rewrites the request body.
+"""
+
+CLAWSOCKET_COMPAT_VERSION = "2026.09.18-post-model-route-v15.1"
 import json
 import os
 import time
@@ -119,23 +126,6 @@ class ClawSocketClient:
         return info
 
     @staticmethod
-    def transport_probe(self, model: str) -> Dict[str, Any]:
-        """Perform a tiny real POST to Chat Completions.
-
-        This distinguishes model-catalog success (`GET /v1/models`) from actual
-        model-routing success (`POST /v1/chat/completions`). The probe never
-        returns the API key or full response body.
-        """
-        requested = self._resolve_model(model)
-        payload = {"model": requested, "messages": [{"role": "user", "content": "ping"}], "max_tokens": 8}
-        headers = self._headers_openai(requested)
-        try:
-            data = self._post(self._url_v1("chat/completions"), headers, payload)
-            text = self._extract_text(data)
-            return {"ok": bool(text), "model": requested, "text_len": len(text), "error": ""}
-        except Exception as exc:
-            return {"ok": False, "model": requested, "text_len": 0, "error": str(exc)}
-
     def _message_text(content: Any) -> str:
         if isinstance(content, str): return content
         if isinstance(content, list):
@@ -191,20 +181,17 @@ class ClawSocketClient:
         return (self._extract_responses_text(data) or self._extract_anthropic_text(data) or self._extract_chat_text(data)).strip()
 
     def _headers_openai(self, model=None):
-        """OpenAI-compatible headers.
-
-        ClawSocket/OpenClaw-style gateways may use x-openclaw-model to select the
-        backend model while the request body still carries a normal OpenAI
-        `model` field. Sending both is harmless for ordinary OpenAI-compatible
-        servers and prevents gateways/proxies from dropping the routing model.
-        """
         headers = {
             "Authorization": f"Bearer {self.api_key}",
             "Content-Type": "application/json",
             "Accept": "application/json",
         }
         if model:
+            # OpenClaw-compatible gateways may use this header to select the
+            # provider/model behind the selected agent. Keep JSON `model` too.
             headers["x-openclaw-model"] = str(model)
+        if str(os.environ.get("CLAWSOCKET_DEBUG", "0")).lower() in {"1", "true", "yes", "on"}:
+            print(f"🔧 [ClawSocket POST] model={model or '<none>'} x-openclaw-model={model or '<none>'}")
         return headers
     def _headers_anthropic(self): return {"Authorization":f"Bearer {self.api_key}","x-api-key":self.api_key,"anthropic-version":os.environ.get("CLAWSOCKET_ANTHROPIC_VERSION","2023-06-01"),"Content-Type":"application/json","Accept":"application/json"}
     @staticmethod
@@ -213,10 +200,6 @@ class ClawSocketClient:
         except Exception: return "<无法读取错误正文>"
 
     def _post(self, url, headers, payload):
-        # Never log the API key; print only the transport shape when debugging.
-        if str(os.environ.get("CLAWSOCKET_DEBUG", "0")).lower() in {"1", "true", "yes", "on"}:
-            safe_headers = {k: ("***" if k.lower() in {"authorization", "x-api-key"} else v) for k, v in headers.items()}
-            print(f"🔧 [ClawSocket调试] POST {url} | model={payload.get('model')!r} | keys={list(payload.keys())} | headers={safe_headers}")
         last_error=None
         for attempt in range(1,self.retries+1):
             try:

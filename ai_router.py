@@ -141,11 +141,7 @@ def _gpt_via_clawsocket(
 ) -> str:
     from openai import OpenAI
 
-    client = OpenAI(
-        api_key=key,
-        base_url=normalize_clawsocket_openai_base(base),
-        default_headers={"x-openclaw-model": model},
-    )
+    client = OpenAI(api_key=key, base_url=normalize_clawsocket_openai_base(base))
     kwargs = {
         "model": model,
         "messages": messages,
