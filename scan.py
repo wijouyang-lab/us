@@ -2114,6 +2114,7 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 {'\n'.join(pool_lines)}
 
 【程序硬门槛（不可绕过）】
+【封闭候选集】核心精选、观察池、诱多对照组都只能使用上方“成交活跃 Top300 候选池”中实际出现的 Ticker；候选池外股票即使新闻很强，也禁止出现在任何推荐位置。
 - 技术确认通常至少2项；VIX≥25时至少3项。
 - Quant_Score < 程序最低门槛不得进入最终推荐。
 - SPY低于20日均线时，非防御行业不得进入Core。
@@ -2199,68 +2200,191 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 
 # ==================== 14. Match / 写账 ====================
 def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
-    def clean(t):
-        return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", t)).strip()
+    """
+    程序验证版：AI 只负责给合格候选提供 AI_Score；候选集合、Core/Observation 标签和最终入账由程序决定。
+    这样候选池外股票即使被 AI 写进 Top1-5，也不会进入 pending 或邮件 Core。
+    """
     def title_hit(fragment, name, ticker):
-        head = fragment[:180]
-        return f"({ticker})" in head or name.lower() in head.lower()[:70]
+        head = fragment[:260]
+        return f"({ticker})" in head or str(name).lower() in head.lower()[:120]
+
+    def parse_ai_score(fragment):
+        sc = re.search(r'(?:评分|Score)\s*[:：]?\s*\[?(\d{1,3}(?:\.\d+)?)\]?\s*/\s*100', fragment or "", re.I)
+        if not sc:
+            return 60.0
+        try:
+            return max(0.0, min(100.0, float(sc.group(1))))
+        except Exception:
+            return 60.0
 
     obs_start = ai_html.find('class="compare-card"')
-    if obs_start < 0: obs_start = ai_html.find("观察池")
-    if obs_start < 0: obs_start = len(ai_html)
+    if obs_start < 0:
+        obs_start = ai_html.find("观察池")
+    if obs_start < 0:
+        obs_start = len(ai_html)
+
     trap_start = ai_html.find("诱多对照组")
-    if trap_start < 0 or trap_start < obs_start: trap_start = len(ai_html)
+    if trap_start < 0 or trap_start < obs_start:
+        trap_start = len(ai_html)
+
     core_zone = ai_html[:obs_start]
     obs_zone = ai_html[obs_start:trap_start]
-    core_cards = [clean(x) for x in re.split(r'(?=<div class="top-card)', core_zone) if "top-card" in x]
-    obs_items = [clean(x) for x in re.split(r'(?=<li>)', obs_zone) if x.strip().startswith("<li>")]
 
-    chosen=[]
+    # 保留原始 HTML，后续程序校验卡可以继续拿到 AI 的说明文本。
+    core_cards = [x for x in re.split(r'(?=<div class="top-card)', core_zone) if "top-card" in x]
+    obs_items = [x for x in re.split(r'(?=<li>)', obs_zone) if x.strip().startswith("<li>")]
+
+    pool_tickers = {str(x.get("Ticker", "")).upper() for x in pool_data}
+    mentioned_tickers = set(re.findall(r"\(([A-Z][A-Z0-9.\-]{1,9})\)", core_zone + "\n" + obs_zone))
+    invalid_ai = sorted(t for t in mentioned_tickers if t not in pool_tickers)
+    if invalid_ai:
+        print(f"🚫 [AI校验] 忽略候选池外推荐：{', '.join(invalid_ai)}")
+
+    def find_chunk(item):
+        name, ticker = str(item.get("Name", "")), str(item.get("Ticker", ""))
+        for chunk in core_cards:
+            if title_hit(chunk, name, ticker):
+                return "Core_Dragon", chunk
+        for chunk in obs_items:
+            if title_hit(chunk, name, ticker):
+                return "Observation", chunk
+        return None, None
+
+    candidates = []
     for item in pool_data:
-        name, ticker = str(item["Name"]), str(item["Ticker"])
-        tag=None; chunk=None
-        for c in core_cards:
-            if title_hit(c,name,ticker): tag,chunk="Core_Dragon",c; break
-        if tag is None:
-            for c in obs_items:
-                if title_hit(c,name,ticker): tag,chunk="Observation",c; break
-        if tag is None: continue
-
-        ai_score = None
-        if chunk:
-            sc = re.search(r'(?:评分|Score)\s*[:：]?\s*\[?(\d{1,3}(?:\.\d+)?)\]?\s*/\s*100', chunk, re.I)
-            if sc:
-                ai_score=float(sc.group(1))
-        if ai_score is None: ai_score=60.0
-        quant=float(item.get("Quant_Score",0) or 0)
-        final=round(float(SCORING_PARAMS.get("quant_weight",70))/100*quant + float(SCORING_PARAMS.get("ai_weight",30))/100*ai_score,1)
-        core_ok = quant >= float(SCORING_PARAMS.get("core_min_score",65)) and final >= float(SCORING_PARAMS.get("core_min_score",65)) and int(item.get("技术确认数",0)) >= int(SCORING_PARAMS.get("min_technical_confirmations",2)) and item.get("Gate_Status")=="PASS_PRE_AI"
-        obs_ok = quant >= float(SCORING_PARAMS.get("observation_min_score",58)) and final >= float(SCORING_PARAMS.get("observation_min_score",58)) and int(item.get("技术确认数",0)) >= 1 and item.get("Gate_Status")=="PASS_PRE_AI"
-        if tag=="Core_Dragon" and not core_ok:
-            if obs_ok: tag="Observation"
-            else: continue
-        elif tag=="Observation" and not obs_ok:
+        ai_tag, chunk = find_chunk(item)
+        ai_score = parse_ai_score(chunk) if chunk else 60.0
+        quant = float(item.get("Quant_Score", 0) or 0)
+        final = round(
+            float(SCORING_PARAMS.get("quant_weight", 70)) / 100 * quant
+            + float(SCORING_PARAMS.get("ai_weight", 30)) / 100 * ai_score,
+            1,
+        )
+        tech_count = int(item.get("技术确认数", 0) or 0)
+        gate_ok = item.get("Gate_Status") == "PASS_PRE_AI"
+        core_ok = (
+            gate_ok
+            and quant >= float(SCORING_PARAMS.get("core_min_score", 65))
+            and final >= float(SCORING_PARAMS.get("core_min_score", 65))
+            and tech_count >= int(SCORING_PARAMS.get("min_technical_confirmations", 2))
+        )
+        obs_ok = (
+            gate_ok
+            and quant >= float(SCORING_PARAMS.get("observation_min_score", 58))
+            and final >= float(SCORING_PARAMS.get("observation_min_score", 58))
+            and tech_count >= 1
+        )
+        if not core_ok and not obs_ok:
             continue
 
-        if tag=="Observation":
-            hp,sl="观望","观望"
-        else:
-            hp="动态持有"
-            sm=re.search(r'止损[\s]*[:：][\s]*\[?(\$?\d+(?:\.\d+)?%?)',chunk or "")
-            if sm: sl=sm.group(1)
-            else:
-                atr=float(item.get("ATR_Pct",5) or 5)
-                pct=-max(float(EXIT_PARAMS.get("atr_floor_pct",3)),min(float(EXIT_PARAMS.get("atr_ceiling_pct",12)),atr*float(EXIT_PARAMS.get("atr_multiplier",2))))
-                sl=f"${round(float(item['Price'])*(1+pct/100),2)}"
-        out=dict(item); out["Tag"]=tag; out["Hold_Period"]=hp; out["Stop_Loss"]=sl; out["AI_Score"]=ai_score; out["Score"]=str(final); out["Final_Score"]=final
-        chosen.append(out)
+        out = dict(item)
+        out["AI_Score"] = ai_score
+        out["Final_Score"] = final
+        out["Score"] = str(final)
+        out["_AI_Chunk"] = chunk or ""
+        out["_AI_Tag"] = ai_tag or ""
+        out["Tag"] = "Core_Dragon" if core_ok else "Observation"
 
-    # 只保留最高质量的 Core/Observation 上限
-    chosen.sort(key=lambda x: float(x.get("Final_Score", x.get("Quant_Score",0)) or 0), reverse=True)
-    core=[x for x in chosen if x.get("Tag")=="Core_Dragon"][:int(LIMIT_PARAMS.get("max_core",5))]
-    used={x["Ticker"] for x in core}
-    obs=[x for x in chosen if x.get("Tag")=="Observation" and x["Ticker"] not in used][:int(LIMIT_PARAMS.get("max_observation",7))]
-    return core+obs
+        if out["Tag"] == "Observation":
+            out["Hold_Period"] = "观望"
+            out["Stop_Loss"] = "观望"
+        else:
+            out["Hold_Period"] = "动态持有"
+            sm = re.search(r'止损\s*[:：]\s*\[?(\$?\d+(?:\.\d+)?%?)', chunk or "")
+            if sm:
+                out["Stop_Loss"] = sm.group(1)
+            else:
+                atr = float(item.get("ATR_Pct", 5) or 5)
+                pct = -max(
+                    float(EXIT_PARAMS.get("atr_floor_pct", 3)),
+                    min(float(EXIT_PARAMS.get("atr_ceiling_pct", 12)), atr * float(EXIT_PARAMS.get("atr_multiplier", 2)))
+                )
+                try:
+                    out["Stop_Loss"] = "$" + str(round(float(item["Price"]) * (1 + pct / 100), 2))
+                except Exception:
+                    out["Stop_Loss"] = ""
+        candidates.append(out)
+
+    candidates.sort(
+        key=lambda x: (
+            1 if x.get("Tag") == "Core_Dragon" else 0,
+            float(x.get("Final_Score", 0) or 0),
+            float(x.get("Quant_Score", 0) or 0),
+            int(x.get("技术确认数", 0) or 0),
+        ),
+        reverse=True,
+    )
+
+    core = [x for x in candidates if x.get("Tag") == "Core_Dragon"][: int(LIMIT_PARAMS.get("max_core", 5))]
+    used = {x["Ticker"] for x in core}
+    obs = [x for x in candidates if x.get("Tag") == "Observation" and x["Ticker"] not in used][: int(LIMIT_PARAMS.get("max_observation", 7))]
+    print(f"🔒 [程序校验] Core={len(core)} / Observation={len(obs)} / AI候选池外忽略={len(invalid_ai)}")
+    return core + obs
+
+
+def build_verified_core_html(ai_html, verified_items):
+    """用程序最终入账集合重建邮件 Core，避免 AI 候选池外股票占据 Top1-5。"""
+    core_items = [x for x in verified_items if x.get("Tag") == "Core_Dragon"][: int(LIMIT_PARAMS.get("max_core", 5))]
+
+    def fmt(v, digits=2):
+        try:
+            if v is None or str(v).strip() == "":
+                return "N/A"
+            return f"{float(v):.{digits}f}"
+        except Exception:
+            return str(v)
+
+    def esc(v):
+        return html.escape(str(v if v not in (None, "") else "N/A"))
+
+    def ai_summary(chunk, label, fallback):
+        if not chunk:
+            return fallback
+        clean = re.sub(r"<[^>]+>", " ", chunk)
+        clean = re.sub(r"\s+", " ", clean).strip()
+        m = re.search(re.escape(label) + r"\s*:?\s*(.{0,260})", clean, re.I)
+        if m:
+            return m.group(1).strip(" -—:：")
+        return fallback
+
+    cards = []
+    for rank, item in enumerate(core_items, 1):
+        chunk = str(item.get("_AI_Chunk", "") or "")
+        news = "；".join(item.get("个股新闻", [])[:2]) if item.get("个股新闻") else "暂无最新新闻"
+        logic = ai_summary(chunk, "产业链逻辑", "程序候选通过硬门槛；以程序量化数据为准。")
+        tech = "、".join(map(str, item.get("技术确认信号", []) or [])) or "暂无"
+        stop = item.get("Stop_Loss", "") or "N/A"
+        cards.append(f"""
+<div class="top-card core-card">
+<div class="top-title">{rank}. {esc(item.get("Name"))} ({esc(item.get("Ticker"))}) | RSI:{esc(fmt(item.get("RSI"),1))} | 乖离率:{esc(fmt(item.get("乖离率(%)"),2))}%</div>
+<p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>{esc(logic)}</p>
+<p><span class="highlight-label bg-green">📰 个股新闻核查:</span>{esc(news)}</p>
+<p><span class="highlight-label bg-blue">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get("技术确认数",0))}项</p>
+<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>最终 {esc(fmt(item.get("Final_Score", item.get("Score")),1))}/100 | Quant {esc(fmt(item.get("Quant_Score"),1))} | AI {esc(fmt(item.get("AI_Score"),1))}</p>
+<p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:{esc(fmt(item.get("Quant_Score"),1))}/100 | 基本面:{esc(item.get("Fundamental_Score",0))}/35 | 事件:{esc(item.get("Event_Score",0))}/20 | 技术:{esc(item.get("Technical_Score_25",0))}/25 | 风险/流动性:{esc(item.get("Risk_Liquidity_Score",0))}/20 | 技术确认:{esc(item.get("技术确认数",0))}项 | MA20:{esc(fmt(item.get("MA20"),2))} | MA20斜率5日:{esc(fmt(item.get("MA20_Slope_Pct_5D"),3))}% | Sector RS20D:{esc(fmt(item.get("Sector_RS_20D_Pct"),2))}%</p>
+<p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)} | ATR:{esc(fmt(item.get("ATR_Pct"),2))}% | Regime:{esc(item.get("Market_Regime","N/A"))}</p>
+<p style="color:#607d8b;font-size:13px;"><b>程序校验：</b>RSI、乖离率、Quant 与技术确认均来自程序候选池；候选池外股票不会进入 Core。</p>
+<p><b>期权：</b>不要在 AI 正文中编造行权价、到期日、权利金、Delta 或 IV；真实期权策略由程序从期权链读取后统一插入。</p>
+</div>
+""")
+
+    verified_block = (
+        '<h2>👑 核心精选（程序校验 Top 1-5）</h2>'
+        + ("".join(cards) if cards else '<div class="header-card"><h3>今日没有达到 Core 硬门槛的新增标的</h3></div>')
+        + '<div style="background:#eef7ee;border-left:5px solid #2e7d32;padding:10px 14px;margin:12px 0 20px 0;border-radius:6px;color:#2e7d32;">🔒 程序校验：邮件 Core 与 pending 使用同一程序候选集合；候选池外 AI 推荐已自动剔除。</div>'
+    )
+
+    start = ai_html.find("<h2>👑 核心精选 Top 1-5</h2>")
+    if start < 0:
+        start = ai_html.find("核心精选 Top 1-5")
+    if start < 0:
+        return ai_html
+    obs_start = ai_html.find('class="compare-card"', start)
+    if obs_start < 0:
+        obs_start = ai_html.find("观察池", start)
+    if obs_start < 0:
+        return ai_html[:start] + verified_block
+    return ai_html[:start] + verified_block + "\n" + ai_html[obs_start:]
 
 
 # ==================== 15. 邮件 ====================
@@ -2443,32 +2567,10 @@ if __name__ == "__main__":
 
     chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT)
 
-    # Fallback: 如果 AI HTML 匹配完全失败，从技术评分 Top10 中分层取标的
+    # 安全兜底：绝不再用旧的“技术 Top10 强行凑 Core”逻辑绕过硬门槛。
+    # match_pool_to_report 已经对所有程序候选执行统一 Core/Observation 准入。
     if not chosen:
-        print("⚠️ AI HTML 匹配失败，启用技术评分 Fallback...")
-        top_pool = sorted(
-            [x for x in pool_data if x.get("Gate_Status") == "PASS_PRE_AI" and x.get("Quant_Score",0) >= float(SCORING_PARAMS.get("observation_min_score",58))],
-            key=lambda x: (x.get("Quant_Score",0), x.get("技术确认数",0)), reverse=True
-        )
-        # Quant 门槛通过后，优先前5作为 Core，其余为 Observation
-        for rank, item in enumerate(top_pool[:10], 1):
-            copy_item = dict(item)
-            if rank <= 5:
-                copy_item["Tag"] = "Core_Dragon"
-                atr = copy_item.get("ATR_Pct", 5.0)
-                pct = -max(ATR_STOP_FLOOR_PCT, min(ATR_STOP_CEIL_PCT, atr * ATR_STOP_MULTIPLIER))
-                copy_item["Stop_Loss"] = f"${round(copy_item['Price']*(1+pct/100),2)}"
-                copy_item["Hold_Period"] = "动态持有"
-                copy_item["Score"] = str(min(100, 40 + int(copy_item.get("技术评分", 0)) + int(copy_item.get("估值评分", 0))))
-                print(f"   🔄 Fallback Core: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
-            else:
-                copy_item["Tag"] = "Observation"
-                copy_item["Hold_Period"] = "观望"
-                copy_item["Stop_Loss"] = "观望"
-                copy_item["AI_Score"] = 55.0
-                copy_item["Score"] = str(round(0.7*float(copy_item.get("Quant_Score",0)) + 0.3*55.0,1))
-                print(f"   👁️ Fallback 观察: {copy_item['Name']}({copy_item['Ticker']}) 评分:{copy_item['技术评分']}/40")
-            chosen.append(copy_item)
+        print("⚠️ 程序候选经过硬门槛后没有达到 Core/Observation 最低线，不凑数。")
 
     log_file = "trade_history.csv"
     to_write = []
@@ -2497,6 +2599,10 @@ if __name__ == "__main__":
             print(f"📋 跳过 {before-len(to_write)} 只已在持仓中的标的")
         except Exception as e:
             print(f"⚠️ 持仓去重失败：{e}")
+
+    # 关键：先完成“实际入账集合”的确定，再用同一集合渲染邮件 Core。
+    # 因此候选池外 AI 推荐、历史持仓去重等都不会再导致邮件与 pending 分裂。
+    ai_html = build_verified_core_html(ai_html, to_write)
 
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
