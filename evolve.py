@@ -14,7 +14,7 @@ import anthropic
 import datetime
 import math
 
-EVOLVE_MODEL   = "claude-opus-4-8"
+EVOLVE_MODEL   = "gpt-6-astra"
 HISTORY_FILE   = "trade_history.csv"
 EVOLVE_LOG     = "strategy_evolution.json"
 EVOLVED_RULES  = "evolved_rules.json"
