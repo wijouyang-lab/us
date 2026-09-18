@@ -11,7 +11,7 @@
 - 新增：当前行业价格确认，避免“周线共振但行业正在崩”仍然进入 Top5
 - 历史进化规则改为条件化参考，不把过去低胜率板块永久封禁
 - 保留 pending / trade_history / option_strategies / review.py 联动
-- 2026-09-18：修复 ClawSocket POST 路由，Scan 强制注入有效 model，并输出构建版本
+- 2026-09-18：ClawSocket真实 POST 路由兜底；目录可见但 POST 路由失败时自动切换真实可用 GPT 模型，并输出构建版本
 """
 
 import faulthandler
@@ -48,7 +48,7 @@ from scan_us_option_engine import append_option_strategy, get_recent_option_reco
 
 # ==================== 环境检查 ====================
 TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
-SCAN_BUILD_ID = "US-SCAN-2026.09.18-CLAWSOCKET-POST-FIX-V15.1"
+SCAN_BUILD_ID = "US-SCAN-2026.09.18-CLAWSOCKET-ROUTE-FALLBACK-V15.2"
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 ATR_STOP_MULTIPLIER = 2.0
