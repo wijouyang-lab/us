@@ -44,7 +44,7 @@ if _missing_env:
     sys.exit(1)
 
 US_TZ = ZoneInfo("America/New_York")
-TARGET_MODEL = os.environ.get("GPT_MODEL", "gpt-6-astra")
+TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
 
 STRATEGY_PARAMS_FILE = "strategy_params.json"
 def load_strategy_params():
@@ -1853,7 +1853,7 @@ try:
         for text in stream.text_stream:
             ai_html += text
 except Exception as e:
-    print(f"⚠️ Claude 报告生成失败：{e}")
+    print(f"⚠️ AI 风控报告生成失败：{e}")
     ai_html = """
 <div style="background:#fff3cd;border-left:6px solid #f0ad4e;padding:20px;border-radius:8px;">
 <h3>AI 风控报告暂时不可用</h3>

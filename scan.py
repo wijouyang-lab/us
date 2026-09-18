@@ -46,7 +46,7 @@ import yfinance as yf
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 
 # ==================== 环境检查 ====================
-TARGET_MODEL = os.environ.get("GPT_MODEL", "gpt-6-astra")
+TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 ATR_STOP_MULTIPLIER = 2.0
@@ -919,10 +919,12 @@ def score_candidate_quality(item, market_ctx):
     return item
 
 
-def apply_entry_quality_gate(pool_data, market_ctx):
+def apply_entry_quality_gate(pool_data, market_ctx, event_regime=None):
     out = []
     fail_counts = {}
     regime = market_ctx.get("regime", "UNKNOWN")
+    event_regime = event_regime or {}
+    hard_avoid = set(event_regime.get("hard_avoid_sectors", []) or [])
 
     def fail(item, status):
         item["Gate_Status"] = status
@@ -939,6 +941,9 @@ def apply_entry_quality_gate(pool_data, market_ctx):
             continue
         if quant < float(SCORING_PARAMS.get("pre_ai_min_quant_score", 55)):
             fail(item, "QUANT_FAIL")
+            continue
+        if item.get("Sector") in hard_avoid:
+            fail(item, "EVENT_HARD_AVOID")
             continue
         atrp = item.get("ATR_Pct")
         if isinstance(atrp, (int,float)) and atrp > float(TECH_PARAMS.get("atr_max_pct", 12)):
@@ -1173,6 +1178,31 @@ def _fetch_yahoo_scalar(ticker, timeout=8):
         return None, None, None
 
 
+def _fetch_bea_core_pce_webpage():
+    """从 BEA 官方核心PCE页面读取最新公布的同比值。"""
+    url = "https://bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy"
+    try:
+        resp = get_robust_session().get(url, timeout=8)
+        resp.raise_for_status()
+        text = re.sub(r"\s+", " ", resp.text)
+        # 页面当前会把最新月份写成：July 2026 | +3.3%
+        months = "January|February|March|April|May|June|July|August|September|October|November|December"
+        m = re.search(rf"({months})\s+(20\d{{2}})\s*\|\s*([+-]?[0-9]+(?:\.[0-9]+)?)%", text, re.I)
+        if not m:
+            return None
+        month_year = f"{m.group(1)} {m.group(2)}"
+        return {
+            "value": float(m.group(3)),
+            "yoy": float(m.group(3)),
+            "date": month_year,
+            "source": "BEA 官方网页",
+            "unit": "%",
+        }
+    except Exception as e:
+        print(f"   ⚠️ BEA 核心PCE备用失败: {e}")
+        return None
+
+
 def get_us_economic_data(combined_news_text=""):
     """
     美国经济数据获取 —— 多层备用方案：
@@ -1284,7 +1314,7 @@ def get_us_economic_data(combined_news_text=""):
         else:
             print(f"   ❌ {label}: 所有备用源均失败")
 
-    # ===== 3. 核心PCE：FRED → 新闻文本提取 → Google News 提取 =====
+    # ===== 3. 核心PCE：FRED → BEA官方网页 → 新闻文本 → Google News =====
     pce_result = _quick_fred("PCEPILFE")
     if pce_result:
         val, date, df = pce_result["value"], pce_result["date"], pce_result["df"]
@@ -1302,21 +1332,28 @@ def get_us_economic_data(combined_news_text=""):
         data["核心PCE指数"] = item
         print(f"   ✅ 核心PCE指数: FRED 成功")
     else:
-        # 备用 1: 从已抓取的新闻文本中提取
-        pce_from_news = _extract_pce_from_news(combined_news_text if 'combined_news_text' in dir() else "")
-        if pce_from_news:
-            data["核心PCE指数"] = pce_from_news
-            lines.append(f"- 核心PCE指数：{pce_from_news['value']:.2f}%（新闻文本提取，数据期 {pce_from_news['date']}）")
-            print(f"   ✅ 核心PCE指数: 新闻文本提取成功")
+        # 备用 1: BEA 官方核心PCE页面
+        bea_pce = _fetch_bea_core_pce_webpage()
+        if bea_pce:
+            data["核心PCE指数"] = bea_pce
+            lines.append(f"- 核心PCE指数：{bea_pce['yoy']:.2f}% YoY（BEA 官方网页，数据期 {bea_pce['date']}）")
+            print(f"   ✅ 核心PCE指数: BEA 官方网页成功")
         else:
-            # 备用 2: Google News 提取
-            result = _fetch_macro_from_google_news("核心PCE指数")
-            if result:
-                data["核心PCE指数"] = result
-                lines.append(f"- 核心PCE指数：{result['value']:.2f}{result.get('unit', '%')}（Google News 提取，数据期 {result['date']}）")
-                print(f"   ✅ 核心PCE指数: Google News 提取成功")
+            # 备用 2: 从已抓取的新闻文本中提取
+            pce_from_news = _extract_pce_from_news(combined_news_text if 'combined_news_text' in dir() else "")
+            if pce_from_news:
+                data["核心PCE指数"] = pce_from_news
+                lines.append(f"- 核心PCE指数：{pce_from_news['value']:.2f}%（新闻文本提取，数据期 {pce_from_news['date']}）")
+                print(f"   ✅ 核心PCE指数: 新闻文本提取成功")
             else:
-                print(f"   ❌ 核心PCE指数: 所有备用源均失败")
+                # 备用 3: Google News 提取
+                result = _fetch_macro_from_google_news("核心PCE指数")
+                if result:
+                    data["核心PCE指数"] = result
+                    lines.append(f"- 核心PCE指数：{result['value']:.2f}{result.get('unit', '%')}（Google News 提取，数据期 {result['date']}）")
+                    print(f"   ✅ 核心PCE指数: Google News 提取成功")
+                else:
+                    print(f"   ❌ 核心PCE指数: 所有备用源均失败")
 
     # ===== 4. 联邦基金利率：Yahoo ^IRX → New York Fed =====
     if "13周国债" not in data:
@@ -1597,7 +1634,7 @@ def _fetch_macro_from_google_news(label):
     return "".join(out).strip()
 
 
-def _anthropic_text(response):
+def _model_text(response):
     """兼容新版 Claude 的 TextBlock / ThinkingBlock 返回结构。"""
     parts = []
     for block in getattr(response, "content", []) or []:
@@ -1607,7 +1644,7 @@ def _anthropic_text(response):
     return "\n".join(parts).strip()
 
 
-def _anthropic_stream_text(client, **kwargs):
+def _model_stream_text(client, **kwargs):
     """统一使用 stream，规避长请求的 SDK 超时限制。"""
     out = []
     with client.messages.stream(**kwargs) as stream:
@@ -1832,10 +1869,10 @@ def analyze_market_signals(combined_news_text, client):
 }}
 """
     try:
-        text = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=12000, messages=[{"role":"user","content":prompt}])
+        text = _model_stream_text(client, model=TARGET_MODEL, max_tokens=12000, messages=[{"role":"user","content":prompt}])
         data = _extract_json_object(text)
         if not isinstance(data, dict):
-            print("⚠️ [市场信号] Claude 返回不是有效 JSON，安全降级为空信号")
+            print("⚠️ [市场信号] AI 返回不是有效 JSON，安全降级为空信号")
             return {"signals": []}
         signals = data.get("signals", [])
         print(f"📡 [市场信号] 识别到 {len(signals)} 个跨市场信号")
@@ -2076,7 +2113,7 @@ def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     decisions = {}
     reason = ""
     try:
-        txt = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=3000, messages=[{"role":"user","content":prompt}])
+        txt = _model_stream_text(client, model=TARGET_MODEL, max_tokens=3000, messages=[{"role":"user","content":prompt}])
         obj = _extract_json_object(txt)
         if not isinstance(obj, dict):
             raise ValueError("Claude 风控返回不是有效 JSON")
@@ -2282,7 +2319,7 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 只输出HTML，不输出解释性前言。
 """
     try:
-        out = _anthropic_stream_text(client, model=TARGET_MODEL, max_tokens=30000, messages=[{"role":"user","content":prompt}]).replace("```html","").replace("```","").strip()
+        out = _model_stream_text(client, model=TARGET_MODEL, max_tokens=30000, messages=[{"role":"user","content":prompt}]).replace("```html","").replace("```","").strip()
         idx = out.find("<div")
         if idx > 0:
             out = out[idx:]
@@ -2290,10 +2327,11 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
         return out
     except Exception as e:
         print(f"🚨 AI 报告失败：{type(e).__name__}: {e}")
-        return build_programmatic_fallback_report(pool_data, f"{type(e).__name__}: {e}")
+        return "<!-- AI_UNAVAILABLE -->" + build_programmatic_fallback_report(pool_data, f"{type(e).__name__}: {e}")
 
 # ==================== 14. Match / 写账 ====================
 def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
+    ai_available = "AI_UNAVAILABLE" not in (ai_html or "")
     """
     程序验证版：AI 只负责给合格候选提供 AI_Score；候选集合、Core/Observation 标签和最终入账由程序决定。
     这样候选池外股票即使被 AI 写进 Top1-5，也不会进入 pending 或邮件 Core。
@@ -2357,7 +2395,8 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
         tech_count = int(item.get("技术确认数", 0) or 0)
         gate_ok = item.get("Gate_Status") == "PASS_PRE_AI"
         core_ok = (
-            gate_ok
+            ai_available
+            and gate_ok
             and quant >= float(SCORING_PARAMS.get("core_min_score", 65))
             and final >= float(SCORING_PARAMS.get("core_min_score", 65))
             and tech_count >= int(SCORING_PARAMS.get("min_technical_confirmations", 2))
@@ -2635,7 +2674,7 @@ if __name__ == "__main__":
     pool_data = apply_market_context_to_pool(pool_data, market_ctx)
     for _item in pool_data:
         score_candidate_quality(_item, market_ctx)
-    pool_data = apply_entry_quality_gate(pool_data, market_ctx)
+    pool_data = apply_entry_quality_gate(pool_data, market_ctx, event_regime)
     if not pool_data:
         empty = build_full_email_html('<div class="header-card"><h2>⚠️ 今日硬门槛后暂无合格新标的</h2><p>技术确认、市场环境、相对强弱或量化评分未达到准入标准；不为了凑满推荐数量而放宽条件。</p></div>')
         send_mail(SUPER_ADMIN, f"【美股扫描】{today_us_str()} 硬门槛后无合格新标的", empty)

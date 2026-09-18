@@ -14,8 +14,8 @@ from clawsocket_compat import ClawSocketClient
 import datetime
 import math
 
-EVOLVE_MODEL   = os.environ.get("GPT_MODEL", "gpt-6-astra")
-CLAUDE_AUDIT_MODEL = os.environ.get("CLAUDE_AUDIT_MODEL", "claude-opus-5")
+EVOLVE_MODEL   = os.environ.get("GPT_MODEL") or "gpt-6-astra"
+CLAUDE_AUDIT_MODEL = os.environ.get("CLAUDE_AUDIT_MODEL") or "claude-opus-5"
 HISTORY_FILE   = "trade_history.csv"
 EVOLVE_LOG     = "strategy_evolution.json"
 EVOLVED_RULES  = "evolved_rules.json"
@@ -315,32 +315,6 @@ GPT提出的结果：
 
 只输出JSON：{{"approve":true或false,"risk_level":"low|medium|high","reasons":["..."],"required_conditions":["..."]}}
 """
-        response = client.messages.create(model=CLAUDE_AUDIT_MODEL, max_tokens=1800, messages=[{"role":"user","content":prompt}])
-        text = next((b.text for b in getattr(response,"content",[]) if getattr(b,"text",None)), "").strip()
-        start, end = text.find("{"), text.rfind("}")+1
-        if start < 0 or end <= start:
-            return {"approve": False, "risk_level": "high", "reasons": ["Claude未返回有效JSON"]}
-        obj=json.loads(text[start:end])
-        return obj if isinstance(obj,dict) else {"approve":False,"risk_level":"high","reasons":["Claude返回格式异常"]}
-    except Exception as e:
-        print(f"⚠️ Claude红队审计失败：{type(e).__name__}: {e}")
-        return {"approve": False, "risk_level": "high", "reasons": [f"审计调用失败：{type(e).__name__}: {e}"]}
-
-
-def claude_red_team_audit(metrics: dict, proposed_result: dict):
-    """Claude只做独立红队审查；不直接修改策略参数。"""
-    try:
-        client = ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
-        prompt = f"""你是独立的美股量化策略红队审计员。只审查另一个模型提出的规则是否存在过拟合、样本不足、数据泄漏、因果倒置或不可执行问题。
-OOS验证：
-{json.dumps(metrics.get('threshold_validation'), ensure_ascii=False, indent=2)}
-失败样本：
-{json.dumps(metrics.get('loss_examples'), ensure_ascii=False, indent=2)}
-成功样本：
-{json.dumps(metrics.get('win_examples'), ensure_ascii=False, indent=2)}
-GPT提出的结果：
-{json.dumps(proposed_result, ensure_ascii=False, indent=2)}
-只输出JSON：{{"approve":true或false,"risk_level":"low|medium|high","reasons":["..."],"required_conditions":["..."]}}"""
         response = client.messages.create(model=CLAUDE_AUDIT_MODEL, max_tokens=1800, messages=[{"role":"user","content":prompt}])
         text = next((b.text for b in getattr(response,"content",[]) if getattr(b,"text",None)), "").strip()
         start, end = text.find("{"), text.rfind("}")+1
