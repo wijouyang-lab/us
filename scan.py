@@ -111,7 +111,22 @@ if get_us_time().weekday() >= 5:
     print(f"[{get_us_time()}] 周末休市，脚本自动跳过。")
     sys.exit(0)
 
-print(f"启动：宏观驱动美股扫描引擎 | 引擎: {TARGET_MODEL}")
+print(f"启动：宏观驱动美股扫描引擎 | 请求引擎: {TARGET_MODEL}")
+
+def _ai_preflight():
+    try:
+        probe=ClawSocketClient()
+        info=probe.preflight(TARGET_MODEL)
+        if info.get("exact_available"):
+            print(f"✅ [ClawSocket] {TARGET_MODEL} 已在 /v1/models 中确认")
+        elif probe.last_model_fallback:
+            print(f"⚠️ [ClawSocket] {TARGET_MODEL} 不可用，将使用 {probe.last_model_used}")
+        else:
+            print(f"⚠️ [ClawSocket] {TARGET_MODEL} 尚未被 /v1/models 确认；首次请求仍会尝试")
+    except Exception as e:
+        print(f"⚠️ [ClawSocket预检] 跳过：{type(e).__name__}: {e}")
+
+_ai_preflight()
 
 # ==================== 版本标记 ====================
 def update_version_marker():
