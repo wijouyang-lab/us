@@ -44,7 +44,7 @@ if _missing_env:
     sys.exit(1)
 
 US_TZ = ZoneInfo("America/New_York")
-TARGET_MODEL = "claude-opus-4-8"
+TARGET_MODEL = "gpt-6-astra"
 
 STRATEGY_PARAMS_FILE = "strategy_params.json"
 def load_strategy_params():
