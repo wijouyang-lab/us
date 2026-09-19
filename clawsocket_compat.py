@@ -1,12 +1,5 @@
 # -*- coding: utf-8 -*-
-"""ClawSocket compatibility client with model discovery and safe fallback.
-
-2026-09-18 fix: OpenAI-compatible POST requests also send x-openclaw-model
-so gateways that route the backend model from headers do not lose the model
-field even when an intermediate proxy rewrites the request body.
-"""
-
-CLAWSOCKET_COMPAT_VERSION = "2026.09.18-astra-to-fable-fallback-v15.3"
+"""ClawSocket compatibility client with model discovery and safe fallback."""
 import json
 import os
 import time
@@ -93,18 +86,9 @@ class ClawSocketClient:
         return {"requested": requested, "exact_available": requested in available or bool(ci_match), "matched": requested if requested in available else ci_match, "available_count": len(available), "available_preview": available[:40]}
 
     def _fallback_candidates(self, requested: str) -> List[str]:
-        # 2026-09-18 policy: GPT-6 Astra is the primary model.
-        # If Astra is unavailable already at /v1/models discovery time, the
-        # only approved fallback is Claude Fable 5-1. Do not silently switch
-        # to another GPT model.
-        if requested.lower().startswith("claude"):
-            env_key = "CLAUDE_FALLBACK_MODEL"
-            configured = self._clean_model_id(os.environ.get(env_key, ""))
-            defaults = ["claude-fable-5-1"]
-        else:
-            env_key = "CLAUDE_RUNTIME_FALLBACK_MODEL"
-            configured = self._clean_model_id(os.environ.get(env_key, ""))
-            defaults = ["claude-fable-5-1"]
+        env_key = "CLAUDE_FALLBACK_MODEL" if requested.lower().startswith("claude") else "GPT_FALLBACK_MODEL"
+        configured = self._clean_model_id(os.environ.get(env_key, ""))
+        defaults = ["claude-opus-4-6", "claude-sonnet-4-5-20250929"] if requested.lower().startswith("claude") else ["gpt-6-astra", "gpt-5.4", "gpt-5.3-codex", "gpt-5.2"]
         return list(dict.fromkeys(([configured] if configured else []) + defaults))
 
     def _resolve_model(self, requested: str) -> str:
@@ -123,6 +107,38 @@ class ClawSocketClient:
                 print(f"⚠️ [ClawSocket] 请求模型 {requested} 未出现在 /v1/models；自动切换到可用模型 {match}")
                 return match
         return requested
+
+    def live_probe(self, requested: str, timeout: int = 25) -> Dict[str, Any]:
+        """Perform one tiny real POST so /v1/models catalog != POST routing mismatch is detected early."""
+        requested = self._clean_model_id(requested)
+        info = self.describe_model(requested)
+        variants = self._model_variants(requested)
+        # Prefer bare catalog ID, then provider-qualified identity.
+        errors = []
+        old_timeout = self.timeout
+        self.timeout = min(int(timeout), old_timeout)
+        try:
+            for candidate in variants:
+                for protocol in self._protocol_plan(candidate):
+                    try:
+                        probe_messages = [{"role": "user", "content": "Reply with exactly: OK"}]
+                        data = self._request_one(candidate, protocol, probe_messages, 16, None, {})
+                        text = self._extract_text(data)
+                        if text:
+                            self.last_model_used = candidate
+                            self.last_protocol = protocol
+                            os.environ["CLAWSOCKET_LIVE_MODEL"] = candidate
+                            os.environ["CLAWSOCKET_LIVE_PROTOCOL"] = protocol
+                            print(f"✅ [ClawSocket实测] model={candidate} protocol={protocol} 可用")
+                            return {"ok": True, "model": candidate, "protocol": protocol, "text": text, "errors": errors, "catalog": info}
+                    except Exception as exc:
+                        errors.append(f"{candidate}/{protocol}: {exc}")
+        finally:
+            self.timeout = old_timeout
+        print("⚠️ [ClawSocket实测] 请求模型没有可用的真实 POST 路由")
+        for err in errors[:6]:
+            print(f"   - {err}")
+        return {"ok": False, "model": "", "protocol": "", "text": "", "errors": errors, "catalog": info}
 
     def preflight(self, requested: str) -> Dict[str, Any]:
         info = self.describe_model(requested)
@@ -190,57 +206,11 @@ class ClawSocketClient:
         return (self._extract_responses_text(data) or self._extract_anthropic_text(data) or self._extract_chat_text(data)).strip()
 
     def _headers_openai(self, model=None):
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-        }
+        headers={"Authorization":f"Bearer {self.api_key}","Content-Type":"application/json","Accept":"application/json"}
         if model:
-            # OpenClaw-compatible gateways may use this header to select the
-            # provider/model behind the selected agent. Keep JSON `model` too.
             headers["x-openclaw-model"] = str(model)
-        if str(os.environ.get("CLAWSOCKET_DEBUG", "0")).lower() in {"1", "true", "yes", "on"}:
-            print(f"🔧 [ClawSocket POST] model={model or '<none>'} x-openclaw-model={model or '<none>'}")
         return headers
     def _headers_anthropic(self): return {"Authorization":f"Bearer {self.api_key}","x-api-key":self.api_key,"anthropic-version":os.environ.get("CLAWSOCKET_ANTHROPIC_VERSION","2023-06-01"),"Content-Type":"application/json","Accept":"application/json"}
-
-    @staticmethod
-    def _looks_like_model_route_error(error: Exception) -> bool:
-        text = str(error or "").lower()
-        markers = (
-            "request is missing a model",
-            "missing a model",
-            "model is required",
-            "model parameter is required",
-            "model not found",
-            "unknown model",
-            "invalid model",
-        )
-        return any(marker in text for marker in markers)
-
-    def _runtime_fallback_candidates(self, requested: str) -> List[str]:
-        """
-        /v1/models 能看到某模型，不代表真实 POST 路由一定已经可用。
-        当网关在 POST 阶段返回 model 路由错误时，从实际公布的模型中选择运行时备用模型。
-        """
-        if str(os.environ.get("CLAWSOCKET_RUNTIME_FALLBACK", "1")).lower().strip() not in {"1", "true", "yes", "on"}:
-            return []
-
-        # 2026-09-18 policy: when GPT-6 Astra fails at the real POST route,
-        # fall back only to Claude Fable 5-1. No GPT-to-GPT silent fallback.
-        preferred = []
-        configured = self._clean_model_id(os.environ.get("CLAUDE_RUNTIME_FALLBACK_MODEL", ""))
-        if configured:
-            preferred.append(configured)
-        preferred.append("claude-fable-5-1")
-        available = self.available_models
-        lower_map = {str(m).lower(): str(m) for m in available}
-        out = []
-        for candidate in preferred:
-            match = candidate if candidate in available else lower_map.get(candidate.lower())
-            if match and match.lower() != requested.lower() and match not in out:
-                out.append(match)
-        return out
     @staticmethod
     def _safe_error_body(response):
         try: return response.text[:1800]
@@ -282,54 +252,103 @@ class ClawSocketClient:
     def _protocol_plan(self, model: str):
         override=str(os.environ.get("CLAWSOCKET_PROTOCOL","auto")).lower().strip()
         if override in {"responses","chat","anthropic"}: return [override]
-        if str(model).lower().startswith("claude"): return ["anthropic","chat"]
-        # ClawSocket 的公开 OpenAI-compatible 接入以 /v1/chat/completions 为通用入口；
-        # Responses 保留为第二协议备用。
+        if str(model).lower().startswith("claude") or str(model).lower().startswith("anthropic/"): return ["anthropic","chat"]
         return ["chat","responses"]
 
+    def _model_variants(self, model: str) -> List[str]:
+        """Return model-id variants used by common proxy/provider routers."""
+        m = self._clean_model_id(model)
+        out = [m]
+        low = m.lower()
+        # ClawSocket/OpenClaw-style provider-qualified identity.
+        if low.startswith("gpt-"):
+            out.append("openai/" + m)
+        elif low.startswith("claude-"):
+            out.append("anthropic/" + m)
+        return list(dict.fromkeys(out))
+
+    def _request_one(self, model, protocol, messages, max_tokens, reasoning_effort, kwargs):
+        if protocol == "responses":
+            return self._request_responses(model, messages, max_tokens, reasoning_effort, kwargs)
+        if protocol == "anthropic":
+            return self._request_anthropic(model, messages, max_tokens, kwargs)
+        return self._request_chat(model, messages, max_tokens, kwargs)
+
     def _request(self, model, messages, max_tokens=None, temperature=None, reasoning_effort=None, **kwargs):
-        if not self.api_key: raise RuntimeError("CLAWSOCKET_API_KEY 未设置")
-        requested=self._clean_model_id(model)
-        if not requested: raise RuntimeError("模型名为空：请设置 GPT_MODEL / CLAUDE_AUDIT_MODEL")
-        resolved=self._resolve_model(requested)
-        self.last_model_used=resolved
-        all_errors=[]
+        if not self.api_key:
+            raise RuntimeError("CLAWSOCKET_API_KEY 未设置")
+        requested = self._clean_model_id(model)
+        if not requested:
+            raise RuntimeError("模型名为空：请设置 GPT_MODEL / CLAUDE_AUDIT_MODEL")
+        live_model = self._clean_model_id(os.environ.get("CLAWSOCKET_LIVE_MODEL", ""))
+        live_protocol = str(os.environ.get("CLAWSOCKET_LIVE_PROTOCOL", "")).lower().strip()
+        resolved = live_model or self._resolve_model(requested)
+        self.last_model_used = resolved
+        all_errors = []
 
-        # 第一轮：严格尝试用户要求的模型。
-        plan=self._protocol_plan(resolved)
-        for protocol in plan:
+        # 已经在启动阶段做过真实 POST 验证时，优先复用验证成功的路由，避免每个业务函数重复打失败请求。
+        if live_model and live_protocol:
             try:
-                if protocol=="responses": data=self._request_responses(resolved,messages,max_tokens,reasoning_effort,kwargs)
-                elif protocol=="anthropic": data=self._request_anthropic(resolved,messages,max_tokens,kwargs)
-                else: data=self._request_chat(resolved,messages,max_tokens,kwargs)
-                text=self._extract_text(data)
-                if not text: raise RuntimeError(f"{protocol} 请求成功但没有文本内容：{json.dumps(data,ensure_ascii=False)[:1600]}")
-                self.last_protocol=protocol; return data
+                data = self._request_one(resolved, live_protocol, messages, max_tokens, reasoning_effort, kwargs)
+                text = self._extract_text(data)
+                if text:
+                    self.last_protocol = live_protocol
+                    return data
             except Exception as exc:
-                all_errors.append(f"{resolved}/{protocol}: {exc}")
+                all_errors.append(f"live/{resolved}/{live_protocol}: {exc}")
+                os.environ.pop("CLAWSOCKET_LIVE_MODEL", None)
+                os.environ.pop("CLAWSOCKET_LIVE_PROTOCOL", None)
 
-        # 第二轮：如果目录可见模型在真实 POST 路由中被判定为“缺 model/模型不可用”，
-        # 把它视为网关目录与实际路由不同步，从实际公布模型中自动选运行时备用模型。
+        # 先用目录返回的原始 ID；如果网关把 provider/model 作为路由键，
+        # 再尝试 openai/<id> / anthropic/<id>。/v1/models 的裸 ID 仍然优先。
+        model_variants = self._model_variants(resolved)
+        plan = self._protocol_plan(resolved)
+        for candidate_model in model_variants:
+            for protocol in plan:
+                try:
+                    data = self._request_one(candidate_model, protocol, messages, max_tokens, reasoning_effort, kwargs)
+                    text = self._extract_text(data)
+                    if not text:
+                        raise RuntimeError(
+                            f"{protocol} 请求成功但没有文本内容：{json.dumps(data, ensure_ascii=False)[:1600]}"
+                        )
+                    self.last_protocol = protocol
+                    self.last_model_used = candidate_model
+                    if candidate_model != resolved:
+                        print(f"🔁 [ClawSocket] provider-qualified model 成功：{candidate_model}")
+                    return data
+                except Exception as exc:
+                    all_errors.append(f"{candidate_model}/{protocol}: {exc}")
+
+        # GPT 模型如果真实 POST 阶段失败，尝试明确的 Claude Fable 运行时备用。
         route_error_seen = any(self._looks_like_model_route_error(RuntimeError(err)) for err in all_errors)
         if route_error_seen:
             for fallback in self._runtime_fallback_candidates(resolved):
-                fallback_plan=self._protocol_plan(fallback)
+                fallback_plan = self._protocol_plan(fallback)
                 print(f"⚠️ [ClawSocket] {resolved} 在真实 POST 阶段路由失败；尝试运行时备用模型 {fallback}")
                 for protocol in fallback_plan:
                     try:
-                        if protocol=="responses": data=self._request_responses(fallback,messages,max_tokens,reasoning_effort,kwargs)
-                        elif protocol=="anthropic": data=self._request_anthropic(fallback,messages,max_tokens,kwargs)
-                        else: data=self._request_chat(fallback,messages,max_tokens,kwargs)
-                        text=self._extract_text(data)
-                        if not text: raise RuntimeError(f"{protocol} 请求成功但没有文本内容：{json.dumps(data,ensure_ascii=False)[:1600]}")
-                        self.last_model_fallback=True
-                        self.last_model_used=fallback
-                        self.last_protocol=protocol
+                        data = self._request_one(fallback, protocol, messages, max_tokens, reasoning_effort, kwargs)
+                        text = self._extract_text(data)
+                        if not text:
+                            raise RuntimeError(
+                                f"{protocol} 请求成功但没有文本内容：{json.dumps(data, ensure_ascii=False)[:1600]}"
+                            )
+                        self.last_model_fallback = True
+                        self.last_model_used = fallback
+                        self.last_protocol = protocol
                         print(f"✅ [ClawSocket] 运行时备用模型成功：{fallback} ({protocol})")
                         return data
                     except Exception as exc:
                         all_errors.append(f"{fallback}/{protocol}: {exc}")
 
-        available=self.available_models
-        availability_note=(f"；/v1/models可见模型前40={available[:40]}" if available else "；/v1/models未返回可用模型列表（接口可能关闭或当前Key无法读取）")
-        raise RuntimeError(f"ClawSocket调用失败（requested={requested}, used={self.last_model_used or resolved}）。详细错误: {' | '.join(all_errors)}{availability_note}")
+        available = self.available_models
+        availability_note = (
+            f"；/v1/models可见模型前40={available[:40]}"
+            if available else
+            "；/v1/models未返回可用模型列表（接口可能关闭或当前Key无法读取）"
+        )
+        raise RuntimeError(
+            f"ClawSocket调用失败（requested={requested}, used={self.last_model_used or resolved}）。"
+            f"详细错误: {' | '.join(all_errors)}{availability_note}"
+        )

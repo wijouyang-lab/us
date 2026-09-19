@@ -11,7 +11,6 @@
 - 新增：当前行业价格确认，避免“周线共振但行业正在崩”仍然进入 Top5
 - 历史进化规则改为条件化参考，不把过去低胜率板块永久封禁
 - 保留 pending / trade_history / option_strategies / review.py 联动
-- 2026-09-18：ClawSocket真实 POST 路由兜底；gpt-6-astra失败时只允许切换到 claude-fable-5-1，并输出实际使用模型
 """
 
 import faulthandler
@@ -48,7 +47,6 @@ from scan_us_option_engine import append_option_strategy, get_recent_option_reco
 
 # ==================== 环境检查 ====================
 TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
-SCAN_BUILD_ID = "US-SCAN-2026.09.18-ASTRA-FABLE-FALLBACK-V15.3"
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 ATR_STOP_MULTIPLIER = 2.0
@@ -114,7 +112,6 @@ if get_us_time().weekday() >= 5:
     sys.exit(0)
 
 print(f"启动：宏观驱动美股扫描引擎 | 请求引擎: {TARGET_MODEL}")
-print(f"🧩 Scan构建版本: {SCAN_BUILD_ID}")
 
 def _ai_preflight():
     try:
@@ -126,6 +123,12 @@ def _ai_preflight():
             print(f"⚠️ [ClawSocket] {TARGET_MODEL} 不可用，将使用 {probe.last_model_used}")
         else:
             print(f"⚠️ [ClawSocket] {TARGET_MODEL} 尚未被 /v1/models 确认；首次请求仍会尝试")
+
+        live = probe.live_probe(TARGET_MODEL)
+        if live.get("ok"):
+            print(f"🎯 [ClawSocket] 启动实测路由锁定：{live['model']} / {live['protocol']}")
+        else:
+            print("⚠️ [ClawSocket] 启动实测未找到可用路由；业务阶段仍按完整降级链尝试")
     except Exception as e:
         print(f"⚠️ [ClawSocket预检] 跳过：{type(e).__name__}: {e}")
 
@@ -1663,11 +1666,7 @@ def _model_text(response):
 
 
 def _model_stream_text(client, **kwargs):
-    """统一使用 stream；Scan 层强制确保每次 AI 请求都有明确 model。"""
-    model = str(kwargs.get("model") or TARGET_MODEL).strip()
-    if not model:
-        raise RuntimeError("Scan AI请求缺少 model：GPT_MODEL/TARGET_MODEL 为空")
-    kwargs["model"] = model
+    """统一使用 stream，规避长请求的 SDK 超时限制。"""
     out = []
     with client.messages.stream(**kwargs) as stream:
         for text in stream.text_stream:
@@ -2341,7 +2340,10 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 只输出HTML，不输出解释性前言。
 """
     try:
-        out = _model_stream_text(client, model=TARGET_MODEL, max_tokens=30000, messages=[{"role":"user","content":prompt}]).replace("```html","").replace("```","").strip()
+        # Claude Fable 作为运行时备用时，限制输出上限，避免长报告触发网关 524。
+        live_model = os.environ.get("CLAWSOCKET_LIVE_MODEL", "")
+        report_max_tokens = 8000 if live_model.lower().startswith(("claude-", "anthropic/")) else 30000
+        out = _model_stream_text(client, model=TARGET_MODEL, max_tokens=report_max_tokens, messages=[{"role":"user","content":prompt}]).replace("```html","").replace("```","").strip()
         idx = out.find("<div")
         if idx > 0:
             out = out[idx:]
