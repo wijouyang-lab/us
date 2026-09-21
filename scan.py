@@ -100,9 +100,15 @@ if _missing_env:
 
 # ==================== 美东时间 ====================
 US_TZ = datetime.timezone(datetime.timedelta(hours=-4))
+RUN_ASOF_UTC = datetime.datetime.now(datetime.timezone.utc)
+RUN_ASOF_US = RUN_ASOF_UTC.astimezone(US_TZ)
 
 def get_us_time():
     return datetime.datetime.now(US_TZ)
+
+def get_scan_asof_us():
+    """整次 Scan 固定一个快照时间，避免 300 只股票抓取期间出现时间口径漂移。"""
+    return RUN_ASOF_US
 
 def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
@@ -366,42 +372,79 @@ def get_macro_market_data():
     return "\n".join(lines) if lines else "暂无实时宏观市场数据。"
 
 # ==================== 3. 个股新闻 ====================
-def get_stock_news(ticker, max_items=6):
+def _previous_close_cutoff_us(technical_date):
+    """把最后完整日线交易日的 16:00 ET 作为新闻“昨收后”分界点。"""
+    try:
+        ts = pd.Timestamp(technical_date)
+        if ts.tzinfo is None:
+            local_date = ts.date()
+        else:
+            local_date = ts.tz_convert(US_TZ).date()
+        return datetime.datetime.combine(local_date, datetime.time(16, 0), tzinfo=US_TZ).astimezone(datetime.timezone.utc)
+    except Exception:
+        return RUN_ASOF_UTC - datetime.timedelta(hours=20)
+
+
+def get_stock_news_snapshot(ticker, max_items=6, technical_date=None):
+    """
+    股票新闻统一按本次 Scan 的固定 as-of 时间排序，并区分：
+    - 【昨收后】上一交易日 16:00 ET 之后到本次扫描时点的新消息
+    - 【历史背景】昨收以前的旧消息
+    禁止在一次 Scan 内因不同股票抓取时间不同而改变“最新新闻”口径。
+    """
     session = get_robust_session()
     urls = [
-        f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US",
-        f"https://news.google.com/rss/search?q={requests.utils.quote(ticker + ' stock')}&hl=en-US&gl=US&ceid=US:en",
+        ("Yahoo", f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US"),
+        ("Google News", f"https://news.google.com/rss/search?q={requests.utils.quote(ticker + ' stock')}&hl=en-US&gl=US&ceid=US:en"),
+        ("Reuters Search", f"https://news.google.com/rss/search?q={requests.utils.quote(ticker + ' site:reuters.com')}&hl=en-US&gl=US&ceid=US:en"),
     ]
-    headlines = []
-    for url in urls:
+    cutoff = RUN_ASOF_UTC + datetime.timedelta(minutes=1)
+    since = _previous_close_cutoff_us(technical_date)
+    rows = []
+    for source_name, url in urls:
         try:
             resp = session.get(url, timeout=8)
             resp.raise_for_status()
             root = ET.fromstring(resp.content)
-            for item in root.findall(".//item")[:max_items + 5]:
-                title = item.findtext("title", default="").strip()
-                dt = _parse_rss_date(item.findtext("pubDate", default=""))
-                tag = _news_age_tag(dt)
-                if title and tag:
-                    headlines.append(f"{tag}{title}")
+            for item in root.findall('.//item')[:12]:
+                title = item.findtext('title', default='').strip()
+                dt = _parse_rss_date(item.findtext('pubDate', default=''))
+                if not title or not dt:
+                    continue
+                if dt > cutoff or dt < (RUN_ASOF_UTC - datetime.timedelta(hours=72)):
+                    continue
+                rows.append({
+                    'title': title,
+                    'dt': dt,
+                    'source': source_name,
+                    'after_close': bool(dt >= since),
+                })
         except Exception:
             continue
-        if len(headlines) >= max_items:
+
+    rows.sort(key=lambda x: x['dt'], reverse=True)
+    out, seen = [], set()
+    for r in rows:
+        key = re.sub(r'[^a-z0-9]+', '', r['title'].lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        age = _news_age_tag(r['dt']) or '[较旧]'
+        bucket = '[🆕昨收后]' if r['after_close'] else '[📄历史背景]'
+        ts = r['dt'].astimezone(US_TZ).strftime('%m-%d %H:%M ET')
+        out.append(f"{bucket}{age}[{r['source']}] {ts} — {r['title']}")
+        if len(out) >= max_items:
             break
-    # 去重
-    out = []
-    seen = set()
-    for h in headlines:
-        key = re.sub(r"[^a-z0-9]+", "", h.lower())
-        if key not in seen:
-            seen.add(key)
-            out.append(h)
-    return out[:max_items]
+    return out
+
+
+def get_stock_news(ticker, max_items=6, technical_date=None):
+    return get_stock_news_snapshot(ticker, max_items=max_items, technical_date=technical_date)
 
 
 def _news_worker(item):
     ticker = item["Ticker"]
-    news = get_stock_news(ticker, 6)
+    news = get_stock_news(ticker, 6, technical_date=item.get("Technical_Date"))
     return ticker, (news if news else ["暂无最新新闻"])
 
 
@@ -419,8 +462,10 @@ def enrich_pool_with_news(pool):
                 pass
     for item in pool:
         item["个股新闻"] = by_ticker.get(item["Ticker"], ["暂无最新新闻"])
+        item["News_AsOf_ET"] = get_scan_asof_us().strftime("%Y-%m-%d %H:%M:%S ET")
     with_news = sum(1 for x in pool if x.get("个股新闻") and x["个股新闻"] != ["暂无最新新闻"])
-    print(f"✅ 个股新闻补充完毕：{with_news}/{len(pool)}")
+    overnight = sum(1 for x in pool if any("🆕昨收后" in str(n) for n in x.get("个股新闻", [])))
+    print(f"✅ 个股新闻补充完毕：{with_news}/{len(pool)} | 含昨收后新消息：{overnight}/{len(pool)} | 新闻快照={get_scan_asof_us().strftime('%H:%M:%S ET')}")
     return pool
 
 # ==================== 4. 标的池 ====================
@@ -627,6 +672,101 @@ def get_kline_data(ticker):
     return pd.DataFrame()
 
 
+def get_premarket_snapshot_batch(tickers):
+    """
+    获取美国 04:00-09:29:59 ET 的盘前最新成交。
+    注意：这只用于“当前行情参考”，绝不回写日线技术K线。
+    返回 ticker -> {price, time_et, change_pct, source}.
+    """
+    tickers = list(dict.fromkeys([str(t).upper() for t in (tickers or []) if str(t).strip()]))
+    if not tickers:
+        return {}
+    now_us = get_scan_asof_us()
+    if now_us.weekday() >= 5 or now_us.time() < datetime.time(4, 0):
+        return {}
+    end_time = min(now_us, now_us.replace(hour=9, minute=30, second=0, microsecond=0))
+    start_time = now_us.replace(hour=4, minute=0, second=0, microsecond=0)
+    out = {}
+
+    # Yahoo/yfinance 的 1m extended-hours 数据只在有限历史窗口可用；一次 Scan 只取当天。
+    # 分块避免一次请求 URL/响应过大。
+    for i in range(0, len(tickers), 40):
+        chunk = tickers[i:i+40]
+        try:
+            data = yf.download(chunk, period="1d", interval="1m", prepost=True,
+                               progress=False, auto_adjust=False, threads=True, group_by="column")
+            if data is None or data.empty:
+                continue
+            close = None
+            if isinstance(data.columns, pd.MultiIndex):
+                if "Close" in data.columns.get_level_values(0):
+                    close = data["Close"]
+                elif "Close" in data.columns.get_level_values(1):
+                    close = data.xs("Close", axis=1, level=1)
+            elif "Close" in data.columns:
+                close = data[["Close"]].copy()
+                close.columns = [chunk[0]] if len(chunk) == 1 else close.columns
+
+            if close is None:
+                continue
+            if isinstance(close, pd.Series):
+                close = close.to_frame(name=chunk[0])
+
+            idx = pd.to_datetime(close.index, errors="coerce")
+            if getattr(idx, "tz", None) is None:
+                idx = idx.tz_localize("UTC")
+            idx_us = idx.tz_convert(US_TZ)
+            mask = (idx_us.date == start_time.date()) & (idx_us >= start_time) & (idx_us < end_time)
+            filtered = close.loc[mask]
+            if filtered.empty:
+                continue
+
+            for t in chunk:
+                if t not in filtered.columns:
+                    continue
+                series = pd.to_numeric(filtered[t], errors="coerce").dropna()
+                if series.empty:
+                    continue
+                ts = series.index[-1]
+                if ts.tzinfo is None:
+                    ts_us = pd.Timestamp(ts, tz="UTC").tz_convert(US_TZ)
+                else:
+                    ts_us = pd.Timestamp(ts).tz_convert(US_TZ)
+                out[t] = {
+                    "price": round(float(series.iloc[-1]), 4),
+                    "time_et": ts_us.strftime("%Y-%m-%d %H:%M:%S ET"),
+                    "source": "Yahoo/yfinance 1m prepost",
+                }
+        except Exception as e:
+            print(f"⚠️ [盘前行情] 分块 {chunk[:2]}... 抓取失败: {e}")
+    return out
+
+
+def apply_premarket_snapshot(pool):
+    snap = get_premarket_snapshot_batch([x.get("Ticker") for x in pool])
+    count = 0
+    for item in pool:
+        t = item.get("Ticker")
+        try:
+            prev_close = float(item.get("Price")) if item.get("Price") not in (None, "") else None
+        except Exception:
+            prev_close = None
+        q = snap.get(t)
+        item["Prev_Close"] = prev_close
+        item["Premarket_Price"] = round(float(q["price"]), 2) if q else ""
+        item["Premarket_AsOf_ET"] = q.get("time_et", "") if q else ""
+        item["Price_Reference"] = "PREMARKET" if q else "REGULAR_CLOSE"
+        if q and prev_close:
+            item["Premarket_Change_Pct"] = round((float(q["price"]) / prev_close - 1.0) * 100.0, 2)
+        else:
+            item["Premarket_Change_Pct"] = ""
+        if q:
+            count += 1
+        # 技术指标仍然锁定在最后完整日线；Price 不被盘前价覆盖。
+    print(f"✅ [盘前行情] {count}/{len(pool)} 获得 04:00-09:29 ET 盘前最新成交；技术K线继续使用最后完整日线收盘。")
+    return pool
+
+
 def build_stock_pool(tickers):
     pool = []
     print(f"📈 [技术面] 计算 {len(tickers)} 只标的日线/周线指标...")
@@ -748,6 +888,7 @@ def build_stock_pool(tickers):
                 "Ticker": ticker,
                 "ts_code": ticker,
                 "Name": name,
+                "Technical_Date": pd.Timestamp(df.index[-1]).strftime("%Y-%m-%d"),
                 "Price": round(float(latest["Close"]), 2),
                 "Open_Price": round(float(latest["Open"]), 2),
                 "MA20": round(ma20_now, 2),
@@ -1209,40 +1350,100 @@ def _fetch_yahoo_scalar(ticker, timeout=8):
 
 
 def _fetch_bea_core_pce_webpage():
-    """从 BEA 官方核心PCE页面读取最新公布的同比值。
-    多 URL + 多正则容错；只接受页面明确给出的月份/年份和百分比。
+    """BEA 官方核心PCE多层读取。
+
+    BEA 页面是动态/表格混合 HTML，不能假设抓下来后仍保留“月份 | 数值”的
+    纯文本格式。因此这里同时支持：
+      1) 核心PCE专题页的表格文本；
+      2) BEA Personal Income and Outlays 官方新闻稿；
+      3) 从专题页自动发现当前 release 链接后再解析新闻稿。
+    只接受明确写有“excluding food and energy”且对应同比的数字。
     """
-    urls = [
+    page_urls = [
         "https://www.bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
         "https://bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
     ]
-    months = "January|February|March|April|May|June|July|August|September|October|November|December"
-    patterns = [
-        rf"({months})\s+(20\d{{2}})\s*\|\s*([+-]?[0-9]+(?:\.[0-9]+)?)%",
-        rf"({months})\s+(20\d{{2}}).*?([+-]?[0-9]+(?:\.[0-9]+)?)%\s*(?:YoY|year over year|from the same month one year ago)",
-    ]
-    for url in urls:
+    months = r"January|February|March|April|May|June|July|August|September|October|November|December"
+
+    def _extract_from_text(raw):
+        # 保留表格单元格边界，避免原来“\s+”清洗后无法识别表格列。
+        text = re.sub(r"<[^>]+>", " ", raw)
+        text = re.sub(r"&nbsp;", " ", text, flags=re.I)
+        text = re.sub(r"\s+", " ", text)
+        # 专题页：Month Year ... +X.X% 的同比表格。
+        pats = [
+            rf"({months})\s+(20\d{{2}}).*?([+-]?[0-9]+(?:\.[0-9]+)?)%",
+        ]
+        # 只在核心PCE专题页的“Change From Month One Year Ago”区域附近取值。
+        anchor = re.search(r"Change From Month One Year Ago", text, re.I)
+        if anchor:
+            window = text[anchor.start():anchor.start()+3500]
+            for pat in pats:
+                ms = list(re.finditer(pat, window, re.I))
+                if ms:
+                    m = ms[0]
+                    val = float(m.group(3))
+                    if 0 <= val <= 15:
+                        return {
+                            "value": val, "yoy": val,
+                            "date": f"{m.group(1)} {m.group(2)}",
+                            "source": "BEA 官方网页", "unit": "%"
+                        }
+        # 官方新闻稿：明确出现“From the same month one year ago ...
+        # excluding food and energy ... X.X percent”。
+        release_pat = rf"From the same month one year ago.*?excluding food and energy.*?(?:increased|decreased).*?([0-9]+(?:\.[0-9]+)?)\s*percent"
+        m = re.search(release_pat, text, re.I)
+        if m:
+            val = float(m.group(1))
+            if 0 <= val <= 15:
+                dm = re.search(r"Personal Income and Outlays,\s*({months})\s+(20\d{{2}})".format(months=months), text, re.I)
+                return {
+                    "value": val, "yoy": val,
+                    "date": f"{dm.group(1)} {dm.group(2)}" if dm else "最新",
+                    "source": "BEA 官方新闻稿", "unit": "%"
+                }
+        return None
+
+    session = get_robust_session()
+    discovered_release = []
+    for url in page_urls:
         try:
-            resp = get_robust_session().get(url, timeout=12, headers={
-                "User-Agent": "Mozilla/5.0 (compatible; US-Macro-Scanner/17.0)",
-                "Accept": "text/html,application/xhtml+xml",
+            resp = session.get(url, timeout=15, headers={
+                "User-Agent": "Mozilla/5.0 (compatible; US-Macro-Scanner/18.0)",
+                "Accept": "text/html,application/xhtml+xml,text/plain",
             })
             resp.raise_for_status()
-            text = re.sub(r"\s+", " ", resp.text)
-            for pat in patterns:
-                matches = list(re.finditer(pat, text, re.I))
-                if not matches:
-                    continue
-                m = matches[0]
-                return {
-                    "value": float(m.group(3)),
-                    "yoy": float(m.group(3)),
-                    "date": f"{m.group(1)} {m.group(2)}",
-                    "source": "BEA 官方网页",
-                    "unit": "%",
-                }
+            result = _extract_from_text(resp.text)
+            if result:
+                return result
+            for href in re.findall(r'href=["\']([^"\']+)["\']', resp.text, re.I):
+                if re.search(r"/news/20\d{2}/personal-income-and-outlays", href, re.I):
+                    if href.startswith("/"):
+                        href = "https://www.bea.gov" + href
+                    elif href.startswith("http"):
+                        pass
+                    else:
+                        href = "https://www.bea.gov/" + href.lstrip("/")
+                    discovered_release.append(href)
         except Exception as e:
-            print(f"   ⚠️ BEA 核心PCE网页备用失败({url}): {e}")
+            print(f"   ⚠️ BEA 核心PCE专题页失败({url}): {e}")
+
+    # 自动发现的 release 优先，再用当前已知的官方 release 路径作为兜底。
+    release_urls = list(dict.fromkeys(discovered_release + [
+        "https://www.bea.gov/news/2026/personal-income-and-outlays-july-2026",
+    ]))
+    for url in release_urls:
+        try:
+            resp = session.get(url, timeout=15, headers={
+                "User-Agent": "Mozilla/5.0 (compatible; US-Macro-Scanner/18.0)",
+                "Accept": "text/html,application/xhtml+xml,text/plain",
+            })
+            resp.raise_for_status()
+            result = _extract_from_text(resp.text)
+            if result:
+                return result
+        except Exception as e:
+            print(f"   ⚠️ BEA 核心PCE新闻稿失败({url}): {e}")
     return None
 
 
@@ -2228,7 +2429,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
     pool_lines = []
     for x in pool_data:
         pool_lines.append(
-            f"[{x['Ticker']}] {x['Name']} | ${x['Price']} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MA20:{x.get('MA20')} slope5d:{x.get('MA20_Slope_Pct_5D')}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} recentVol:{x.get('近5日最大量比')} | 技术确认:{x.get('技术确认数',0)} | Quant:{x.get('Quant_Score',0)}/100 (F{x.get('Fundamental_Score',0)} E{x.get('Event_Score',0)} T{x.get('Technical_Score_25',0)} R{x.get('Risk_Liquidity_Score',0)}) | Market:{x.get('Market_Regime')} VIX:{x.get('VIX')} SectorRS20D:{x.get('Sector_RS_20D_Pct')} | 估值:{x.get('估值评分',0)}/20 | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
+            f"[{x['Ticker']}] {x['Name']} | 昨收:${x['Price']} | 盘前:${x.get('Premarket_Price') or 'N/A'} ({x.get('Premarket_Change_Pct') or 'N/A'}%) | 盘前时间:{x.get('Premarket_AsOf_ET') or 'N/A'} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MA20:{x.get('MA20')} slope5d:{x.get('MA20_Slope_Pct_5D')}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} recentVol:{x.get('近5日最大量比')} | 技术确认:{x.get('技术确认数',0)} | Quant:{x.get('Quant_Score',0)}/100 (F{x.get('Fundamental_Score',0)} E{x.get('Event_Score',0)} T{x.get('Technical_Score_25',0)} R{x.get('Risk_Liquidity_Score',0)}) | Market:{x.get('Market_Regime')} VIX:{x.get('VIX')} SectorRS20D:{x.get('Sector_RS_20D_Pct')} | 估值:{x.get('估值评分',0)}/20 | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 新闻快照:{x.get('News_AsOf_ET') or 'N/A'} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
         )
     evolved = load_evolved_rules()
     key_people_block = str(key_people_text or "暂无重要人物讲话数据")
@@ -2267,6 +2468,8 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 {economic_block}
 
 【数据可靠性纪律】FRED单项失败不得伪造数值；优先使用BLS备用或Yahoo利率代理，并标明来源。
+【价格口径纪律】候选池同时提供“昨收”和“盘前最新成交”。MA20/MA50/RSI/MACD/KDJ/ATR 等技术指标只基于最后完整常规交易日；盘前价只用于判断当前价格偏离、新闻事件冲击和盘前参考，不得把盘前价当成新的日线收盘。若盘前价格缺失，明确写 N/A。
+【新闻口径纪律】新闻全部固定在本次 Scan 的统一快照时间；带【🆕昨收后】的是上一交易日16:00 ET后发布的新消息，带【📄历史背景】的是昨收前旧消息。不得把历史文章描述成盘前新消息。
 
 【程序化市场环境（硬门控数据）】
 SPY={getattr(locals().get("market_ctx", {}), "get", lambda *_: None)("spy") if False else "见候选池逐项字段"}
@@ -2545,13 +2748,14 @@ def build_verified_core_html(ai_html, verified_items):
         stop = item.get("Stop_Loss", "") or "N/A"
         cards.append(f"""
 <div class="top-card core-card">
-<div class="top-title">{rank}. {esc(item.get("Name"))} ({esc(item.get("Ticker"))}) | RSI:{esc(fmt(item.get("RSI"),1))} | 乖离率:{esc(fmt(item.get("乖离率(%)"),2))}%</div>
+<div class="top-title">{rank}. {esc(item.get("Name"))} ({esc(item.get("Ticker"))}) | 昨收:${esc(fmt(item.get("Price"),2))} | 盘前:${esc(fmt(item.get("Premarket_Price"),2))} | 盘前变动:{esc(fmt(item.get("Premarket_Change_Pct"),2))}% | RSI:{esc(fmt(item.get("RSI"),1))} | 乖离率:{esc(fmt(item.get("乖离率(%)"),2))}%</div>
 <p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>{esc(logic)}</p>
 <p><span class="highlight-label bg-green">📰 个股新闻核查:</span>{esc(news)}</p>
 <p><span class="highlight-label bg-blue">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get("技术确认数",0))}项</p>
 <p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>最终 {esc(fmt(item.get("Final_Score", item.get("Score")),1))}/100 | Quant {esc(fmt(item.get("Quant_Score"),1))} | AI {esc(fmt(item.get("AI_Score"),1))}</p>
 <p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:{esc(fmt(item.get("Quant_Score"),1))}/100 | 基本面:{esc(item.get("Fundamental_Score",0))}/35 | 事件:{esc(item.get("Event_Score",0))}/20 | 技术:{esc(item.get("Technical_Score_25",0))}/25 | 风险/流动性:{esc(item.get("Risk_Liquidity_Score",0))}/20 | 技术确认:{esc(item.get("技术确认数",0))}项 | MA20:{esc(fmt(item.get("MA20"),2))} | MA20斜率5日:{esc(fmt(item.get("MA20_Slope_Pct_5D"),3))}% | Sector RS20D:{esc(fmt(item.get("Sector_RS_20D_Pct"),2))}%</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)} | ATR:{esc(fmt(item.get("ATR_Pct"),2))}% | Regime:{esc(item.get("Market_Regime","N/A"))}</p>
+<p><span class="highlight-label bg-blue">🕒 数据时间:</span>技术K线={esc(item.get("Technical_Date","N/A"))} | 盘前报价={esc(item.get("Premarket_AsOf_ET") or "N/A")} | 新闻快照={esc(item.get("News_AsOf_ET") or "N/A")}</p>
 <p style="color:#607d8b;font-size:13px;"><b>程序校验：</b>RSI、乖离率、Quant 与技术确认均来自程序候选池；候选池外股票不会进入 Core。</p>
 <p><b>期权：</b>不要在 AI 正文中编造行权价、到期日、权利金、Delta 或 IV；真实期权策略由程序从期权链读取后统一插入。</p>
 </div>
@@ -2723,6 +2927,8 @@ if __name__ == "__main__":
         send_mail(SUPER_ADMIN, f"【美股扫描】{today_us_str()} 无有效标的", empty)
         sys.exit(0)
 
+    # 双价格口径：技术K线=最后完整常规交易日；当前参考=盘前最新成交。两者禁止混算。
+    pool_data = apply_premarket_snapshot(pool_data)
     sector_tech_data = screen_technical_setups(pool_data)
     pool_data = enrich_pool_with_fundamentals(pool_data, limit=120)
     pool_data = enrich_pool_with_news(pool_data)
@@ -2796,13 +3002,14 @@ if __name__ == "__main__":
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
         header_cols = [
-            "Date","Ticker","Name","Tag","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX"
+            "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX"
         ]
         with open(pending_file,"w",encoding="utf-8",newline="") as f:
             f.write(",".join(header_cols)+"\n")
             for item in to_write:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
+                    item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("News_AsOf_ET",""),
                     item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("技术确认数",0), ",".join(item.get("技术确认信号",[]) or []), item.get("估值评分",0),
                     item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
                     item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",60), item.get("Final_Score",item.get("Score","")),

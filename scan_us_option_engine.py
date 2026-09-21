@@ -25,6 +25,10 @@ MIN_DTE = 45
 MAX_DTE = 90
 TARGET_DTE = 60
 RISK_FREE = 0.04
+# 期权价差质量硬门槛：避免“能算出来”就直接推荐。
+MIN_SPREAD_REWARD_RISK = 0.40
+MAX_BREAKEVEN_PCT = 12.0
+MAX_DEBIT_PCT_OF_SPOT = 4.0
 US_TZ = ZoneInfo("America/New_York")
 
 
@@ -247,21 +251,42 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
             net = long_price - short_price
             width = short_strike - long_strike
             if 0 < net < width:
-                return {
-                    "strategy": "CALL_DEBIT_SPREAD",
-                    "long_strike": long_strike,
-                    "short_strike": short_strike,
-                    "long_price": long_price,
-                    "short_price": short_price,
-                    "net_debit": round(net, 2),
-                    "max_loss": round(net * 100, 2),
-                    "max_profit": round((width - net) * 100, 2),
-                    "break_even": round(long_strike + net, 2),
-                    "iv": long_iv,
-                    "iv_source": iv_source,
-                    "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
-                }
+                max_loss = net * 100.0
+                max_profit = (width - net) * 100.0
+                break_even = long_strike + net
+                reward_risk = max_profit / max_loss if max_loss > 0 else 0.0
+                breakeven_pct = (break_even / spot - 1.0) * 100.0 if spot > 0 else 999.0
+                debit_pct = (net / spot) * 100.0 if spot > 0 else 999.0
 
+                # 只有同时满足收益/风险、盈亏平衡和权利金占正股比例，
+                # 才把价差标为“可执行”。否则继续寻找更合理的 short strike。
+                if (reward_risk >= MIN_SPREAD_REWARD_RISK
+                        and breakeven_pct <= MAX_BREAKEVEN_PCT
+                        and debit_pct <= MAX_DEBIT_PCT_OF_SPOT):
+                    return {
+                        "strategy": "CALL_DEBIT_SPREAD",
+                        "long_strike": long_strike,
+                        "short_strike": short_strike,
+                        "long_price": long_price,
+                        "short_price": short_price,
+                        "net_debit": round(net, 2),
+                        "max_loss": round(max_loss, 2),
+                        "max_profit": round(max_profit, 2),
+                        "break_even": round(break_even, 2),
+                        "reward_risk": round(reward_risk, 3),
+                        "breakeven_pct": round(breakeven_pct, 2),
+                        "debit_pct": round(debit_pct, 2),
+                        "iv": long_iv,
+                        "iv_source": iv_source,
+                        "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
+                    }
+
+    # Spread 无法通过质量门槛时，只有 Long Call 也满足风险预算才允许兜底。
+    long_breakeven = long_strike + long_price
+    long_breakeven_pct = (long_breakeven / spot - 1.0) * 100.0 if spot > 0 else 999.0
+    long_debit_pct = (long_price / spot) * 100.0 if spot > 0 else 999.0
+    if long_breakeven_pct > MAX_BREAKEVEN_PCT or long_debit_pct > MAX_DEBIT_PCT_OF_SPOT:
+        return None
     return {
         "strategy": "LONG_CALL",
         "long_strike": long_strike,
@@ -271,7 +296,10 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
         "net_debit": round(long_price, 2),
         "max_loss": round(long_price * 100, 2),
         "max_profit": None,
-        "break_even": round(long_strike + long_price, 2),
+        "break_even": round(long_breakeven, 2),
+        "reward_risk": None,
+        "breakeven_pct": round(long_breakeven_pct, 2),
+        "debit_pct": round(long_debit_pct, 2),
         "iv": long_iv,
         "iv_source": iv_source,
         "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
@@ -339,7 +367,8 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
     ticker = str(item.get("Ticker", "")).strip().upper()
     if not ticker:
         return None
-    spot = _sf(item.get("Price"))
+    technical_close = _sf(item.get("Price"))
+    spot = _sf(item.get("Premarket_Price")) or technical_close
     if spot is None or spot <= 0:
         return None
     obj, expiry, calls, puts = _load_chain(ticker)
@@ -363,6 +392,11 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         "Name": str(item.get("Name", ticker)),
         "EntryDate": dt.datetime.now(US_TZ).strftime("%Y-%m-%d"),
         "UnderlyingPrice": round(spot, 2),
+        "TechnicalClose": round(technical_close, 2) if technical_close is not None else "",
+        "PremarketPrice": round(_sf(item.get("Premarket_Price")), 2) if _sf(item.get("Premarket_Price")) is not None else "",
+        "PremarketChangePct": item.get("Premarket_Change_Pct", ""),
+        "PriceReference": item.get("Price_Reference", "REGULAR_CLOSE"),
+        "PremarketAsOfET": item.get("Premarket_AsOf_ET", ""),
         "Strategy": strategy,
         "OptionType": "CALL",
         "Strike": structure["long_strike"],
@@ -377,6 +411,9 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         "MaxLoss": structure["max_loss"],
         "MaxProfit": structure["max_profit"] or "",
         "BreakEven": structure["break_even"],
+        "RewardRisk": structure.get("reward_risk", ""),
+        "BreakevenPct": structure.get("breakeven_pct", ""),
+        "DebitPctOfSpot": structure.get("debit_pct", ""),
         "Delta": round(structure["delta"], 3) if structure.get("delta") is not None else "",
         "IV": round(iv, 4) if iv is not None else "",
         "IV_Source": structure.get("iv_source", "") if iv is not None else "",
@@ -400,8 +437,8 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
     if not rec:
         return False
     columns = [
-        "Ticker", "Name", "EntryDate", "UnderlyingPrice", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
-        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "Delta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
+        "Ticker", "Name", "EntryDate", "UnderlyingPrice", "TechnicalClose", "PremarketPrice", "PremarketChangePct", "PriceReference", "PremarketAsOfET", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
+        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
     ]
     old = pd.DataFrame(columns=columns)
     if os.path.exists(OPTION_FILE) and os.path.getsize(OPTION_FILE) > 0:
@@ -422,7 +459,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         os.replace(tmp, OPTION_FILE)
     finally:
         if os.path.exists(tmp): os.remove(tmp)
-    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | 权利金={rec['NetDebit']} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}" + (f" ({rec['IV_Source']})" if rec.get('IV_Source') else ""))
+    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | 权利金={rec['NetDebit']} 最大亏损={rec['MaxLoss']} 最大收益={rec['MaxProfit'] or '不限'} BE={rec['BreakEven']} R/R={rec.get('RewardRisk') or 'N/A'} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}" + (f" ({rec['IV_Source']})" if rec.get('IV_Source') else ""))
     return True
 
 
