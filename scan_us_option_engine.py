@@ -63,7 +63,55 @@ def _call_delta(spot: float, strike: float, dte: int, iv: float, rate: float = R
     return _normal_cdf(d1)
 
 
-def _clean_chain(df: pd.DataFrame) -> pd.DataFrame:
+def _call_price(spot: float, strike: float, dte: int, iv: float, rate: float = RISK_FREE) -> Optional[float]:
+    if min(spot, strike, dte, iv) <= 0:
+        return None
+    t = dte / 365.0
+    sigma = max(0.0001, iv)
+    root_t = math.sqrt(t)
+    d1 = (math.log(spot / strike) + (rate + 0.5 * sigma * sigma) * t) / (sigma * root_t)
+    d2 = d1 - sigma * root_t
+    return spot * _normal_cdf(d1) - strike * math.exp(-rate * t) * _normal_cdf(d2)
+
+
+def _implied_vol_call(spot: float, strike: float, dte: int, price: float, rate: float = RISK_FREE) -> Optional[float]:
+    """从真实期权 mid/last 价格反解 Black-Scholes IV；失败则返回 None。"""
+    if min(spot, strike, dte, price) <= 0:
+        return None
+    intrinsic = max(0.0, spot - strike * math.exp(-rate * dte / 365.0))
+    if price < intrinsic * 0.98:
+        return None
+    lo, hi = 0.01, 5.0
+    p_hi = _call_price(spot, strike, dte, hi, rate)
+    if p_hi is None or price > p_hi * 1.02:
+        return None
+    for _ in range(60):
+        mid = (lo + hi) / 2.0
+        p = _call_price(spot, strike, dte, mid, rate)
+        if p is None:
+            return None
+        if p < price:
+            lo = mid
+        else:
+            hi = mid
+    iv = (lo + hi) / 2.0
+    return iv if 0.01 <= iv <= 5.0 else None
+
+
+def _mid_or_last(row) -> Optional[float]:
+    bid = _sf(row.get("bid"))
+    ask = _sf(row.get("ask"))
+    last = _sf(row.get("lastPrice"))
+    if bid is not None and ask is not None and bid > 0 and ask >= bid:
+        return (bid + ask) / 2.0
+    if last is not None and last > 0:
+        return last
+    if ask is not None and ask > 0:
+        return ask
+    return bid
+
+
+def _clean_chain(df: pd.DataFrame):
     if df is None or df.empty:
         return pd.DataFrame()
     out = df.copy()
@@ -174,10 +222,16 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
 
     long_strike = _sf(long_row["strike"])
     long_iv = _sf(long_row.get("impliedVolatility"))
-    # Yahoo偶尔返回极小/异常IV（例如0.0000x），会把Black-Scholes Delta推到1.000，
-    # 同时邮件又显示IV=N/A，形成明显的数据矛盾。异常IV不参与Delta计算。
+    iv_source = "Yahoo chain" if long_iv is not None and 0.01 <= long_iv <= 5.0 else ""
+    # Yahoo 偶尔返回空/异常 IV。此时用真实 bid/ask mid（或 last）反解 IV，
+    # 这样 Delta/IV 仍然来自真实期权报价，而不是虚构参数。
     if long_iv is not None and not (0.01 <= long_iv <= 5.0):
         long_iv = None
+    if long_iv is None:
+        ref_price = _mid_or_last(long_row)
+        long_iv = _implied_vol_call(spot, long_strike, dte, ref_price) if ref_price else None
+        if long_iv is not None:
+            iv_source = "BS-derived from market mid/last"
     short_row = None
     short_price = None
     short_candidates = liquid[liquid["strike"] >= spot * 1.05].sort_values("strike")
@@ -204,6 +258,7 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
                     "max_profit": round((width - net) * 100, 2),
                     "break_even": round(long_strike + net, 2),
                     "iv": long_iv,
+                    "iv_source": iv_source,
                     "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
                 }
 
@@ -218,6 +273,7 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
         "max_profit": None,
         "break_even": round(long_strike + long_price, 2),
         "iv": long_iv,
+        "iv_source": iv_source,
         "delta": _call_delta(spot, long_strike, dte, long_iv) if long_iv else None,
     }
 
@@ -323,6 +379,7 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         "BreakEven": structure["break_even"],
         "Delta": round(structure["delta"], 3) if structure.get("delta") is not None else "",
         "IV": round(iv, 4) if iv is not None else "",
+        "IV_Source": structure.get("iv_source", "") if iv is not None else "",
         "IV_Regime": _iv_bucket(calls, iv),
         "CallWall": _wall(calls) or "",
         "PutWall": _wall(puts) or "",
@@ -344,7 +401,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         return False
     columns = [
         "Ticker", "Name", "EntryDate", "UnderlyingPrice", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
-        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "Delta", "IV", "IV_Regime", "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
+        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "Delta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
     ]
     old = pd.DataFrame(columns=columns)
     if os.path.exists(OPTION_FILE) and os.path.getsize(OPTION_FILE) > 0:
@@ -365,7 +422,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         os.replace(tmp, OPTION_FILE)
     finally:
         if os.path.exists(tmp): os.remove(tmp)
-    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | 权利金={rec['NetDebit']} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}")
+    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | 权利金={rec['NetDebit']} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}" + (f" ({rec['IV_Source']})" if rec.get('IV_Source') else ""))
     return True
 
 

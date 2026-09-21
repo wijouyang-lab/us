@@ -966,6 +966,15 @@ def apply_entry_quality_gate(pool_data, market_ctx, event_regime=None):
         if item.get("Sector") in hard_avoid:
             fail(item, "EVENT_HARD_AVOID")
             continue
+        # 高置信度鹰派重定价下，不永久封杀观察行业，但提高进入AI候选池的技术确认门槛。
+        # 这样宏观事件会真实改变准入质量，而不是只作为AI提示文本。
+        watch_sectors = set(event_regime.get("watch_sectors", []) or [])
+        if (event_regime.get("market_regime") == "HAWKISH_REPRICING"
+                and event_regime.get("confidence") == "high"
+                and item.get("Sector") in watch_sectors
+                and techn < max(min_tech, 3)):
+            fail(item, "EVENT_WATCH_TECH_FAIL")
+            continue
         atrp = item.get("ATR_Pct")
         if isinstance(atrp, (int,float)) and atrp > float(TECH_PARAMS.get("atr_max_pct", 12)):
             fail(item, "ATR_FAIL")
@@ -1200,28 +1209,41 @@ def _fetch_yahoo_scalar(ticker, timeout=8):
 
 
 def _fetch_bea_core_pce_webpage():
-    """从 BEA 官方核心PCE页面读取最新公布的同比值。"""
-    url = "https://bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy"
-    try:
-        resp = get_robust_session().get(url, timeout=8)
-        resp.raise_for_status()
-        text = re.sub(r"\s+", " ", resp.text)
-        # 页面当前会把最新月份写成：July 2026 | +3.3%
-        months = "January|February|March|April|May|June|July|August|September|October|November|December"
-        m = re.search(rf"({months})\s+(20\d{{2}})\s*\|\s*([+-]?[0-9]+(?:\.[0-9]+)?)%", text, re.I)
-        if not m:
-            return None
-        month_year = f"{m.group(1)} {m.group(2)}"
-        return {
-            "value": float(m.group(3)),
-            "yoy": float(m.group(3)),
-            "date": month_year,
-            "source": "BEA 官方网页",
-            "unit": "%",
-        }
-    except Exception as e:
-        print(f"   ⚠️ BEA 核心PCE备用失败: {e}")
-        return None
+    """从 BEA 官方核心PCE页面读取最新公布的同比值。
+    多 URL + 多正则容错；只接受页面明确给出的月份/年份和百分比。
+    """
+    urls = [
+        "https://www.bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
+        "https://bea.gov/data/personal-consumption-expenditures-price-index-excluding-food-and-energy",
+    ]
+    months = "January|February|March|April|May|June|July|August|September|October|November|December"
+    patterns = [
+        rf"({months})\s+(20\d{{2}})\s*\|\s*([+-]?[0-9]+(?:\.[0-9]+)?)%",
+        rf"({months})\s+(20\d{{2}}).*?([+-]?[0-9]+(?:\.[0-9]+)?)%\s*(?:YoY|year over year|from the same month one year ago)",
+    ]
+    for url in urls:
+        try:
+            resp = get_robust_session().get(url, timeout=12, headers={
+                "User-Agent": "Mozilla/5.0 (compatible; US-Macro-Scanner/17.0)",
+                "Accept": "text/html,application/xhtml+xml",
+            })
+            resp.raise_for_status()
+            text = re.sub(r"\s+", " ", resp.text)
+            for pat in patterns:
+                matches = list(re.finditer(pat, text, re.I))
+                if not matches:
+                    continue
+                m = matches[0]
+                return {
+                    "value": float(m.group(3)),
+                    "yoy": float(m.group(3)),
+                    "date": f"{m.group(1)} {m.group(2)}",
+                    "source": "BEA 官方网页",
+                    "unit": "%",
+                }
+        except Exception as e:
+            print(f"   ⚠️ BEA 核心PCE网页备用失败({url}): {e}")
+    return None
 
 
 def get_us_economic_data(combined_news_text=""):
@@ -1229,7 +1251,7 @@ def get_us_economic_data(combined_news_text=""):
     美国经济数据获取 —— 多层备用方案：
     1. 利率：Yahoo Finance（首选，<3秒）
     2. CPI/核心CPI/失业率：FRED → BLS API → BLS 网页 → Google News 提取
-    3. 核心PCE：FRED → Google News 提取
+    3. 核心PCE：FRED → BEA官方网页 → 新闻文本 → Google News 提取
     4. 联邦基金利率：Yahoo ^IRX → New York Fed
     每层失败立即进入下一层，不阻塞主流程。
     """
@@ -2354,8 +2376,13 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
         return "<!-- AI_UNAVAILABLE -->" + build_programmatic_fallback_report(pool_data, f"{type(e).__name__}: {e}")
 
 # ==================== 14. Match / 写账 ====================
-def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
+def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime=None):
     ai_available = "AI_UNAVAILABLE" not in (ai_html or "")
+    event_regime = event_regime or {}
+    hawkish_watch = (event_regime.get("market_regime") == "HAWKISH_REPRICING"
+                     and event_regime.get("confidence") == "high"
+                     and str(event_regime.get("watch_sectors", "")))
+    watch_sectors = set(event_regime.get("watch_sectors", []) or [])
     """
     程序验证版：AI 只负责给合格候选提供 AI_Score；候选集合、Core/Observation 标签和最终入账由程序决定。
     这样候选池外股票即使被 AI 写进 Top1-5，也不会进入 pending 或邮件 Core。
@@ -2418,12 +2445,17 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct):
         )
         tech_count = int(item.get("技术确认数", 0) or 0)
         gate_ok = item.get("Gate_Status") == "PASS_PRE_AI"
+        core_tech_min = int(SCORING_PARAMS.get("min_technical_confirmations", 2))
+        core_quant_min = float(SCORING_PARAMS.get("core_min_score", 65))
+        if hawkish_watch and item.get("Sector") in watch_sectors:
+            core_tech_min = max(core_tech_min, 3)
+            core_quant_min = max(core_quant_min, 68)
         core_ok = (
             ai_available
             and gate_ok
-            and quant >= float(SCORING_PARAMS.get("core_min_score", 65))
-            and final >= float(SCORING_PARAMS.get("core_min_score", 65))
-            and tech_count >= int(SCORING_PARAMS.get("min_technical_confirmations", 2))
+            and quant >= core_quant_min
+            and final >= core_quant_min
+            and tech_count >= core_tech_min
         )
         obs_ok = (
             gate_ok
@@ -2722,7 +2754,7 @@ if __name__ == "__main__":
         economic_text,
     )
 
-    chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT)
+    chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT, event_regime)
 
     # 安全兜底：绝不再用旧的“技术 Top10 强行凑 Core”逻辑绕过硬门槛。
     # match_pool_to_report 已经对所有程序候选执行统一 Core/Observation 准入。
