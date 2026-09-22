@@ -320,6 +320,87 @@ def get_live_quote_bootstrap(ticker):
         return None, None
 
 
+def fetch_latest_regular_closes(tickers):
+    """独立于持仓账本，为所有 Scan 事件刷新最近一个完整交易日收盘价。
+    Observation/历史 Scan 事件不能依赖 active_list 的行情池。
+    返回: {ticker: {close, date, source}}。
+    """
+    clean = list(dict.fromkeys(
+        normalize_ticker_text(t).upper()
+        for t in tickers
+        if is_probable_us_ticker(t)
+    ))
+    out = {}
+    if not clean:
+        return out
+    try:
+        hist = yf.download(
+            clean, period="7d", interval="1d", progress=False,
+            auto_adjust=False, group_by="ticker", threads=False,
+        )
+        if hist is not None and not hist.empty:
+            for ticker in clean:
+                try:
+                    sub = extract_single_ticker_df(hist, ticker, len(clean))
+                    if sub.empty or "Close" not in sub.columns:
+                        continue
+                    sub = sub.dropna(subset=["Close"])
+                    if sub.empty:
+                        continue
+                    r = sub.iloc[-1]
+                    close = safe_float(r.get("Close"))
+                    if close is None or close <= 0:
+                        continue
+                    raw_date = pd.Timestamp(sub.index[-1])
+                    if getattr(raw_date, "tzinfo", None) is not None:
+                        raw_date = raw_date.tz_localize(None)
+                    out[ticker] = {
+                        "close": close,
+                        "date": raw_date.strftime("%Y-%m-%d"),
+                        "source": "Yahoo Finance 日线收盘",
+                    }
+                except Exception:
+                    continue
+    except Exception as e:
+        print(f"⚠️ Scan事件独立批量收盘价刷新失败: {e}")
+
+    # 个别 ticker 失败时逐只补，不让少数失败拖累 Observation。
+    for ticker in clean:
+        if ticker in out:
+            continue
+        try:
+            h = yf.Ticker(ticker).history(period="7d", interval="1d", auto_adjust=False)
+            if h is not None and not h.empty and "Close" in h.columns:
+                h = h.dropna(subset=["Close"])
+                if not h.empty:
+                    close = safe_float(h["Close"].iloc[-1])
+                    idx = pd.Timestamp(h.index[-1])
+                    if close is not None and close > 0:
+                        if getattr(idx, "tzinfo", None) is not None:
+                            idx = idx.tz_localize(None)
+                        out[ticker] = {
+                            "close": close,
+                            "date": idx.strftime("%Y-%m-%d"),
+                            "source": "Yahoo Finance 单票日线收盘",
+                        }
+                        continue
+        except Exception:
+            pass
+        # 最后才使用 fast_info，明确标记为实时/缓存兜底，而不是伪装成正式收盘。
+        try:
+            _, last = get_live_quote_bootstrap(ticker)
+            if last is not None and last > 0:
+                out[ticker] = {
+                    "close": last,
+                    "date": today_us_str(),
+                    "source": "Yahoo FastInfo 兜底",
+                }
+        except Exception:
+            pass
+    print(f"✅ [Scan事件独立行情] 最近有效价格 {len(out)}/{len(clean)} 只")
+    return out
+
+
 # ============================================================
 # 4. 账本
 # ============================================================
@@ -1458,14 +1539,36 @@ def build_scan_recommendation_events():
 
 scan_events = build_scan_recommendation_events()
 
-# 用统一推荐事件账本中的最新价格刷新 Observation 展示，避免仅依赖第一次行情下载。
+# 关键修复：Scan事件的“当前价格”必须独立刷新。
+# 不能因为 Observation 不是实际持仓，就只从 active_list / price_map_today 取价格。
+_event_tickers = sorted({e["ticker"].upper() for e in scan_events if e.get("ticker")})
+_event_latest_quotes = fetch_latest_regular_closes(_event_tickers)
+for _ticker, _q in _event_latest_quotes.items():
+    price_map_today[_ticker] = _q["close"]
+    ohlc_map_today[_ticker] = {
+        "open": _q["close"],
+        "high": _q["close"],
+        "low": _q["close"],
+        "close": _q["close"],
+    }
+
+# 价格刷新后重新构建事件账本，让所有 Open Core / Observation 都用同一份最新价。
+scan_events = build_scan_recommendation_events()
+
+# 用统一推荐事件账本中的最新价格刷新 Observation 展示。
 _event_price_map = {(e["ticker"].upper(), e["rec_date"], e["tag"]): e for e in scan_events}
 for _obs in observation_list:
     _key = (clean_text(_obs.get("代码")).upper(), clean_text(_obs.get("首次推荐日")), "Observation")
     _evt = _event_price_map.get(_key)
-    if _evt is not None and _evt.get("current_price") is not None:
-        _obs["当前价格"] = _evt["current_price"]
-        _obs["推荐跟踪涨跌幅(%)"] = _evt.get("pnl")
+    if _evt is not None:
+        if _evt.get("current_price") is not None:
+            _obs["当前价格"] = _evt["current_price"]
+            _obs["推荐跟踪涨跌幅(%)"] = _evt.get("pnl")
+            _obs["当前价格来源"] = "Scan事件独立行情刷新"
+            _obs["当前价格数据日期"] = _event_latest_quotes.get(_evt["ticker"].upper(), {}).get("date", today_us_str())
+        else:
+            _obs["当前价格来源"] = "未取得最新价格"
+            _obs["当前价格数据日期"] = ""
 
 
 # 只统计最近30天 Scan 推荐事件
@@ -1710,7 +1813,9 @@ def build_observation_html():
 <b>连续推荐：</b>{x.get("系统连续推荐次数","1")}　
 <b>今日新增：</b>{x.get("今日新增","否")}</div>
 <div><b>当前价格：</b>{_price(x.get("当前价格"))}　
-<b>推荐跟踪涨跌幅：</b>{pnl_text}</div>
+<b>推荐跟踪涨跌幅：</b>{pnl_text}　
+<b>价格来源：</b>{x.get("当前价格来源","Scan事件独立行情刷新")}　
+<b>数据日期：</b>{x.get("当前价格数据日期","N/A")}</div>
 <div><b>RSI：</b>{x.get("RSI")}　<b>Bias：</b>{x.get("Bias")}　
 <b>技术评分：</b>{x.get("技术评分")}　<b>估值评分：</b>{x.get("估值评分")}</div>
 <div><b>PE：</b>{x.get("PE_TTM")}　
