@@ -29,6 +29,7 @@ import smtplib
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
+from zoneinfo import ZoneInfo
 import xml.etree.ElementTree as ET
 import urllib.request
 import urllib.parse
@@ -99,7 +100,7 @@ if _missing_env:
     sys.exit(1)
 
 # ==================== 美东时间 ====================
-US_TZ = datetime.timezone(datetime.timedelta(hours=-4))
+US_TZ = ZoneInfo("America/New_York")
 RUN_ASOF_UTC = datetime.datetime.now(datetime.timezone.utc)
 RUN_ASOF_US = RUN_ASOF_UTC.astimezone(US_TZ)
 
@@ -113,8 +114,31 @@ def get_scan_asof_us():
 def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
 
+def get_market_session_state(asof=None):
+    """按 America/New_York 判断真实交易时段。"""
+    now = asof or get_scan_asof_us()
+    if now.weekday() >= 5:
+        return "MARKET_CLOSED_WEEKEND"
+    t = now.time()
+    if t < datetime.time(4, 0):
+        return "PREMARKET_NOT_STARTED"
+    if t < datetime.time(9, 30):
+        return "PREMARKET"
+    if t < datetime.time(16, 0):
+        return "REGULAR_SESSION"
+    return "AFTER_HOURS"
+
+
 if get_us_time().weekday() >= 5:
     print(f"[{get_us_time()}] 周末休市，脚本自动跳过。")
+    sys.exit(0)
+
+_scan_session_state = get_market_session_state(RUN_ASOF_US)
+if _scan_session_state != "PREMARKET":
+    print(
+        f"⛔ 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')}，不在美股真实盘前窗口 04:00-09:29 ET。"
+        f" 当前状态={_scan_session_state}；本次停止发送盘前选股邮件，避免把昨收或历史数据冒充盘前数据。"
+    )
     sys.exit(0)
 
 print(f"启动：宏观驱动美股扫描引擎 | 请求引擎: {TARGET_MODEL}")
@@ -661,7 +685,7 @@ def enrich_pool_with_fundamentals(pool_data, limit=80):
 def get_kline_data(ticker):
     for attempt in range(3):
         try:
-            df = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
+            df = yf.download(ticker, period="6mo", progress=False, auto_adjust=False, threads=False)
             if df is not None and not df.empty:
                 if isinstance(df.columns, pd.MultiIndex):
                     df.columns = df.columns.get_level_values(0)
@@ -673,54 +697,44 @@ def get_kline_data(ticker):
 
 
 def get_premarket_snapshot_batch(tickers):
-    """
-    获取美国 04:00-09:29:59 ET 的盘前最新成交。
-    注意：这只用于“当前行情参考”，绝不回写日线技术K线。
-    返回 ticker -> {price, time_et, change_pct, source}.
-    """
+    """只在真实 04:00-09:29 ET 窗口读取 1m 盘前成交。"""
     tickers = list(dict.fromkeys([str(t).upper() for t in (tickers or []) if str(t).strip()]))
-    if not tickers:
+    if not tickers or get_market_session_state(get_scan_asof_us()) != "PREMARKET":
         return {}
     now_us = get_scan_asof_us()
-    if now_us.weekday() >= 5 or now_us.time() < datetime.time(4, 0):
-        return {}
-    end_time = min(now_us, now_us.replace(hour=9, minute=30, second=0, microsecond=0))
+    end_time = now_us
     start_time = now_us.replace(hour=4, minute=0, second=0, microsecond=0)
     out = {}
-
-    # Yahoo/yfinance 的 1m extended-hours 数据只在有限历史窗口可用；一次 Scan 只取当天。
-    # 分块避免一次请求 URL/响应过大。
     for i in range(0, len(tickers), 40):
         chunk = tickers[i:i+40]
         try:
-            data = yf.download(chunk, period="1d", interval="1m", prepost=True,
-                               progress=False, auto_adjust=False, threads=True, group_by="column")
+            data = yf.download(
+                chunk, period="1d", interval="1m", prepost=True,
+                progress=False, auto_adjust=False, threads=True, group_by="column"
+            )
             if data is None or data.empty:
                 continue
-            close = None
             if isinstance(data.columns, pd.MultiIndex):
                 if "Close" in data.columns.get_level_values(0):
                     close = data["Close"]
                 elif "Close" in data.columns.get_level_values(1):
                     close = data.xs("Close", axis=1, level=1)
+                else:
+                    continue
             elif "Close" in data.columns:
                 close = data[["Close"]].copy()
                 close.columns = [chunk[0]] if len(chunk) == 1 else close.columns
-
-            if close is None:
+            else:
                 continue
             if isinstance(close, pd.Series):
                 close = close.to_frame(name=chunk[0])
-
             idx = pd.to_datetime(close.index, errors="coerce")
             if getattr(idx, "tz", None) is None:
                 idx = idx.tz_localize("UTC")
             idx_us = idx.tz_convert(US_TZ)
-            mask = (idx_us.date == start_time.date()) & (idx_us >= start_time) & (idx_us < end_time)
-            filtered = close.loc[mask]
+            filtered = close.loc[(idx_us.date == start_time.date()) & (idx_us >= start_time) & (idx_us <= end_time)]
             if filtered.empty:
                 continue
-
             for t in chunk:
                 if t not in filtered.columns:
                     continue
@@ -728,10 +742,7 @@ def get_premarket_snapshot_batch(tickers):
                 if series.empty:
                     continue
                 ts = series.index[-1]
-                if ts.tzinfo is None:
-                    ts_us = pd.Timestamp(ts, tz="UTC").tz_convert(US_TZ)
-                else:
-                    ts_us = pd.Timestamp(ts).tz_convert(US_TZ)
+                ts_us = (pd.Timestamp(ts, tz="UTC") if ts.tzinfo is None else pd.Timestamp(ts)).tz_convert(US_TZ)
                 out[t] = {
                     "price": round(float(series.iloc[-1]), 4),
                     "time_et": ts_us.strftime("%Y-%m-%d %H:%M:%S ET"),
@@ -743,27 +754,44 @@ def get_premarket_snapshot_batch(tickers):
 
 
 def apply_premarket_snapshot(pool):
-    snap = get_premarket_snapshot_batch([x.get("Ticker") for x in pool])
+    state = get_market_session_state(get_scan_asof_us())
+    snap = get_premarket_snapshot_batch([x.get("Ticker") for x in pool]) if state == "PREMARKET" else {}
     count = 0
     for item in pool:
-        t = item.get("Ticker")
         try:
             prev_close = float(item.get("Price")) if item.get("Price") not in (None, "") else None
         except Exception:
             prev_close = None
-        q = snap.get(t)
+        q = snap.get(item.get("Ticker"))
         item["Prev_Close"] = prev_close
         item["Premarket_Price"] = round(float(q["price"]), 2) if q else ""
         item["Premarket_AsOf_ET"] = q.get("time_et", "") if q else ""
-        item["Price_Reference"] = "PREMARKET" if q else "REGULAR_CLOSE"
-        if q and prev_close:
-            item["Premarket_Change_Pct"] = round((float(q["price"]) / prev_close - 1.0) * 100.0, 2)
+        item["Premarket_Source"] = q.get("source", "") if q else ""
+        item["Premarket_Session_State"] = state
+        if state == "PREMARKET":
+            item["Premarket_Status_Display"] = "盘前实时" if q else "盘前窗口已开启，但当前未取得报价"
+        elif state == "PREMARKET_NOT_STARTED":
+            item["Premarket_Status_Display"] = f"盘前尚未开始（当前{get_scan_asof_us().strftime('%H:%M:%S')} ET）"
+        elif state == "REGULAR_SESSION":
+            item["Premarket_Status_Display"] = "盘前已结束（当前为常规交易时段）"
+        elif state == "AFTER_HOURS":
+            item["Premarket_Status_Display"] = "盘前已结束（当前为盘后时段）"
         else:
-            item["Premarket_Change_Pct"] = ""
+            item["Premarket_Status_Display"] = "市场休市"
+        item["Price_Reference"] = "PREMARKET" if q else "REGULAR_CLOSE"
+        item["Premarket_Change_Pct"] = round((float(q["price"]) / prev_close - 1.0) * 100.0, 2) if q and prev_close else ""
         if q:
             count += 1
-        # 技术指标仍然锁定在最后完整日线；Price 不被盘前价覆盖。
-    print(f"✅ [盘前行情] {count}/{len(pool)} 获得 04:00-09:29 ET 盘前最新成交；技术K线继续使用最后完整日线收盘。")
+    if state == "PREMARKET":
+        print(f"✅ [盘前行情] {count}/{len(pool)} 获得真实 04:00-09:29 ET 盘前最新成交；技术K线继续使用最后完整日线收盘。")
+    elif state == "PREMARKET_NOT_STARTED":
+        print(f"⏱️ [盘前行情] 当前 {get_scan_asof_us().strftime('%H:%M:%S ET')}，盘前窗口尚未开始（04:00 ET）；本次不把昨收冒充盘前价。")
+    elif state == "REGULAR_SESSION":
+        print(f"ℹ️ [盘前行情] 当前已进入常规交易时段（{get_scan_asof_us().strftime('%H:%M:%S ET')}），本次不把常规成交冒充盘前价。")
+    elif state == "AFTER_HOURS":
+        print(f"ℹ️ [盘前行情] 当前已进入盘后时段（{get_scan_asof_us().strftime('%H:%M:%S ET')}），本次不使用盘前字段。")
+    else:
+        print(f"ℹ️ [盘前行情] 当前市场休市状态：{state}")
     return pool
 
 
@@ -2193,80 +2221,99 @@ def load_evolved_rules():
     return load_conditional_evolved_rules()
 
 # ==================== 11. 昨日止损联动警告 ====================
+def _stop_statuses():
+    return {
+        "Stop_Loss_Hit", "Dropped", "Period_Matured", "Forced_Exit",
+        "移动止损清仓", "止损触发清仓", "已超期归档", "周期到期清仓", "突发清仓暂停"
+    }
+
+
 def get_stop_loss_hit_warning():
+    """最近一次真正完成止损/清仓的确定性提醒；不要依赖 Tag。"""
     path = "trade_history.csv"
-    if not os.path.exists(path):
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
         return ""
     try:
-        df = pd.read_csv(path, keep_default_na=False)
-        if "Tag" not in df.columns or "Exit_Date" not in df.columns:
-            return ""
-        hits = df[df["Tag"].astype(str).str.strip() == "Stop_Loss_Hit"].copy()
+        df = pd.read_csv(path, keep_default_na=False, dtype=str)
+        status = df.get("Status", pd.Series("", index=df.index)).astype(str).str.strip()
+        risk = df.get("Review_Risk_Status", pd.Series("", index=df.index)).astype(str).str.strip()
+        hits = df[status.isin(_stop_statuses()) | risk.eq("STOP_TRIGGERED")].copy()
         if hits.empty:
             return ""
-        hits = hits.sort_values("Exit_Date", ascending=False).head(5)
-        details = [f"{r.get('Name',r['Ticker'])}({r['Ticker']}) @{r.get('Exit_Date','未知')}" for _,r in hits.iterrows()]
-        return "⚠️ 最近止损联动警告：这些标的最近触发 Stop_Loss_Hit，今日仅作为反面案例，不自动代表未来永久回避：" + ", ".join(details)
-    except Exception:
+        hits["_d"] = pd.to_datetime(hits.get("Review_Risk_Date", ""), errors="coerce").fillna(
+            pd.to_datetime(hits.get("Exit_Date", ""), errors="coerce")
+        )
+        hits = hits.sort_values("_d", ascending=False).head(5)
+        details = [
+            f"{r.get('Name', r.get('Ticker',''))}({r.get('Ticker','')}) @{r.get('Exit_Date', r.get('Review_Risk_Date','未知'))}"
+            for _, r in hits.iterrows()
+        ]
+        return "⚠️ 最近止损/清仓联动警告：这些标的最近触发真实退出，今日不得重新推荐：" + ", ".join(details)
+    except Exception as e:
+        print(f"⚠️ 最近止损警告读取失败: {e}")
         return ""
 
 # ==================== 12. 盘前持仓审查 ====================
 
 def get_review_risk_linkage_warning():
-    """读取最近一次已完成 Review 的风控状态；仅把最近 Review 批次带入今日 Scan。
-
-    规则：
-    - STOP_TRIGGERED：今日硬禁入，禁止重新推荐。
-    - STOP_NEAR：今日仍展示为强提醒，并在 AI 排名中降权。
-    - 不再简单读取某只股票“最新交易行”，避免后续推荐行为空值把昨天的 Review 状态覆盖掉。
-    """
-    path='trade_history.csv'
-    if not os.path.exists(path) or os.path.getsize(path)==0:
-        return '',set(),set()
+    """读取最近一次 Review；已退出记录同样具有下一次 Scan 的硬禁入效力。"""
+    path = "trade_history.csv"
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return "", set(), set()
     try:
-        df=pd.read_csv(path,keep_default_na=False,dtype=str)
+        df = pd.read_csv(path, keep_default_na=False, dtype=str)
     except Exception as e:
-        print(f'⚠️ 读取 Review 风控联动失败: {e}'); return '',set(),set()
-    required={'Ticker','Status','Review_Risk_Status','Review_Risk_Date'}
-    if not required.issubset(df.columns): return '',set(),set()
+        print(f"⚠️ 读取 Review 风控联动失败: {e}")
+        return "", set(), set()
+    required = {"Ticker", "Status", "Review_Risk_Status", "Review_Risk_Date"}
+    if not required.issubset(df.columns):
+        return "", set(), set()
 
-    active=df[df['Status'].astype(str).str.strip().eq('Active')].copy()
-    if active.empty: return '',set(),set()
+    status = df["Status"].astype(str).str.strip()
+    risk = df["Review_Risk_Status"].astype(str).str.strip()
+    risk_date = pd.to_datetime(df["Review_Risk_Date"], errors="coerce")
+    exit_date = pd.to_datetime(df.get("Exit_Date", ""), errors="coerce")
+    effective = risk_date.copy()
+    fallback = effective.isna() & status.isin(_stop_statuses())
+    effective.loc[fallback] = exit_date.loc[fallback]
 
-    active['Review_Risk_Date_Norm']=pd.to_datetime(active['Review_Risk_Date'],errors='coerce')
-    active['Date_Norm']=pd.to_datetime(active.get('Date',''),errors='coerce')
-    valid=active[active['Review_Risk_Date_Norm'].notna()].copy()
-    if valid.empty: return '',set(),set()
-
-    # 当前 Scan 只消费最近一批已经完成的 Review，避免把更早日期的风险提醒无限向后沿用。
-    today=pd.Timestamp(today_us_str())
-    valid=valid[valid['Review_Risk_Date_Norm'] < today]
+    today = pd.Timestamp(today_us_str())
+    valid_mask = effective.notna() & (effective < today)
+    valid = df.loc[valid_mask].copy()
     if valid.empty:
-        return '',set(),set()
-    latest_review_date=valid['Review_Risk_Date_Norm'].max().normalize()
-    batch=valid[valid['Review_Risk_Date_Norm'].dt.normalize().eq(latest_review_date)]
+        return "", set(), set()
+    valid["_effective_risk_date"] = effective.loc[valid.index]
+    latest = valid["_effective_risk_date"].dt.normalize().max()
+    valid = valid[valid["_effective_risk_date"].dt.normalize().eq(latest)].copy()
+    valid["_risk_rank"] = risk.loc[valid.index].map({"STOP_TRIGGERED": 3, "STOP_NEAR": 2}).fillna(0)
+    valid.loc[
+        (valid["_risk_rank"] == 0) & valid["Status"].astype(str).str.strip().isin(_stop_statuses()),
+        "_risk_rank"
+    ] = 3
 
-    triggered=set(); near=set(); lines=[]
-    for ticker,grp in batch.groupby('Ticker',sort=False):
-        # 同一 Review 日期若存在多行，优先取有明确风险状态的那一行。
-        grp=grp.copy()
-        grp['risk_rank']=grp['Review_Risk_Status'].map({'STOP_TRIGGERED':2,'STOP_NEAR':1}).fillna(0)
-        row=grp.sort_values(['risk_rank','Date_Norm']).iloc[-1]
-        st=str(row.get('Review_Risk_Status','')).strip(); note=str(row.get('Review_Risk_Note','')).strip()
-        t=str(ticker).strip()
-        name=str(row.get('Name',t)).strip()
-        if st=='STOP_TRIGGERED':
+    triggered, near, lines = set(), set(), []
+    if "Date" in valid.columns:
+        valid["_row_date"] = pd.to_datetime(valid["Date"], errors="coerce")
+    else:
+        valid["_row_date"] = pd.NaT
+    for ticker, group in valid.groupby("Ticker", sort=False):
+        group = group.sort_values(["_risk_rank", "_effective_risk_date", "_row_date"], na_position="first")
+        row = group.iloc[-1]
+        t = str(ticker).strip().upper()
+        name = str(row.get("Name", t)).strip()
+        st = str(row.get("Review_Risk_Status", "")).strip()
+        status_now = str(row.get("Status", "")).strip()
+        note = str(row.get("Review_Risk_Note", "")).strip()
+        if st == "STOP_TRIGGERED" or (not st and status_now in _stop_statuses()):
             triggered.add(t)
-            lines.append(f'🚨 {name} ({t})：昨日 Review 判定 STOP_TRIGGERED，今日禁止重新推荐。{note}')
-        elif st=='STOP_NEAR':
+            lines.append(f"🚨 {name} ({t})：最近一次 Review 已确认退出，今日禁止重新推荐。{note}")
+        elif st == "STOP_NEAR":
             near.add(t)
-            lines.append(f'⚠️ {name} ({t})：昨日 Review 判定 STOP_NEAR，今日强提醒并降权。{note}')
+            lines.append(f"⚠️ {name} ({t})：最近一次 Review 判定 STOP_NEAR，今日强提醒并降权。{note}")
 
-    if lines:
-        header=f'【昨日 Review 风控联动｜{latest_review_date.strftime("%Y-%m-%d")}】'
-        return header+'\n'+'\n'.join(lines),triggered,near
-    return '',triggered,near
-
+    if not lines:
+        return "", triggered, near
+    return f"【最近一次 Review 风控联动｜{latest.strftime('%Y-%m-%d')}】\n" + "\n".join(lines), triggered, near
 
 def build_review_risk_banner_html(review_risk_text, review_triggered, review_near):
     """确定性生成 Scan 邮件中的 Review→Scan 风控提醒，不能被 AI 输出覆盖或省略。"""
@@ -2771,10 +2818,12 @@ def build_verified_core_html(ai_html, verified_items):
         invalidation = ai_field(["失效条件"], "MA20/MA50、MACD/KDJ 或事件逻辑发生明显反转。")
         label = "👑 核心精选" if tag == "Core_Dragon" else "👀 Observation"
         stop = item.get("Stop_Loss", "") or ("观望" if tag == "Observation" else "N/A")
-        prev = item.get("Price"); pre = item.get("Premarket_Price"); pre_chg = item.get("Premarket_Change_Pct")
+        prev = item.get("Prev_Close", item.get("Price")); pre = item.get("Premarket_Price"); pre_chg = item.get("Premarket_Change_Pct")
+        pre_display = fmt(pre,2) if pre not in (None,"") else str(item.get("Premarket_Status_Display") or "N/A")
+        pre_chg_display = fmt(pre_chg,2) + "%" if pre_chg not in (None,"") else "—"
         return f"""
 <div class=\"{'top-card core-card' if tag == 'Core_Dragon' else 'compare-card'}\">
-<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(prev,2))} | 盘前:${esc(fmt(pre,2))} | 盘前变动:{esc(fmt(pre_chg,2))}% | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
+<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(prev,2))} | 盘前:${esc(pre_display)} | 盘前变动:${esc(pre_chg_display)} | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
 <p><span class=\"highlight-label bg-red\">🔗 产业链逻辑:</span>{esc(logic)}</p>
 <p><span class=\"highlight-label bg-green\">📰 个股新闻核查:</span>{esc(news)}</p>
 <p><span class=\"highlight-label bg-blue\">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get('技术确认数',0))}项 | MACD:{esc(item.get('MACD趋势','N/A'))} | KDJ_J:{esc(fmt(item.get('KDJ_J'),1))} | ATR:{esc(fmt(item.get('ATR_Pct'),2))}%</p>
@@ -2787,7 +2836,7 @@ def build_verified_core_html(ai_html, verified_items):
 <p><span class=\"highlight-label bg-purple\">⚠️ 主要风险:</span>{esc(risk)}</p>
 <p><span class=\"highlight-label bg-purple\">🛑 失效条件:</span>{esc(invalidation)}</p>
 <p><span class=\"highlight-label bg-orange\">🛡️ 动态风控:</span>{'观察，不执行持仓止损' if tag == 'Observation' else f'持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)}'} | 依据:MA20/MA50 + ATR + MACD/KDJ</p>
-<p><span class=\"highlight-label bg-blue\">🕒 数据时间:</span>技术K线={esc(item.get('Technical_Date','N/A'))} | 盘前报价={esc(item.get('Premarket_AsOf_ET') or 'N/A')} | 新闻快照={esc(item.get('News_AsOf_ET') or 'N/A')}</p>
+<p><span class=\"highlight-label bg-blue\">🕒 数据时间:</span>技术K线={esc(item.get('Technical_Date','N/A'))} | 盘前状态={esc(item.get('Premarket_Status_Display') or 'N/A')} | 盘前报价={esc(item.get('Premarket_AsOf_ET') or 'N/A')} | 新闻快照={esc(item.get('News_AsOf_ET') or 'N/A')}</p>
 <p style=\"color:#607d8b;font-size:13px;\"><b>程序校验：</b>{'Observation 仅作跟踪，不计入实际持仓；不会与 Core 重复。' if tag == 'Observation' else 'Core 与 pending 使用同一程序候选集合；候选池外 AI 推荐自动剔除。'}</p>
 </div>
 """
@@ -3003,6 +3052,12 @@ if __name__ == "__main__":
     )
 
     chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT, event_regime)
+    hard_blocked = set(restricted_tickers) | set(review_triggered)
+    if hard_blocked:
+        before_block = len(chosen)
+        chosen = [x for x in chosen if str(x.get("Ticker","")).upper() not in hard_blocked]
+        if before_block != len(chosen):
+            print(f"🚫 [最终风控复核] 剔除 {before_block-len(chosen)} 只昨日已退出/当前受限标的：{', '.join(sorted(hard_blocked))}")
 
     # 安全兜底：绝不再用旧的“技术 Top10 强行凑 Core”逻辑绕过硬门槛。
     # match_pool_to_report 已经对所有程序候选执行统一 Core/Observation 准入。
@@ -3044,14 +3099,14 @@ if __name__ == "__main__":
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
         header_cols = [
-            "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX"
+            "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX"
         ]
         with open(pending_file,"w",encoding="utf-8",newline="") as f:
             f.write(",".join(header_cols)+"\n")
             for item in to_write:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
-                    item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("News_AsOf_ET",""),
+                    item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("Premarket_Status_Display",""), item.get("Premarket_Source",""), item.get("News_AsOf_ET",""),
                     item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("技术确认数",0), ",".join(item.get("技术确认信号",[]) or []), item.get("估值评分",0),
                     item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
                     item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",60), item.get("Final_Score",item.get("Score","")),
