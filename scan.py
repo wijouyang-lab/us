@@ -2534,6 +2534,10 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 <p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...（最终评分由 Quant 70% + AI 30% 构成）</p>
 <p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:[XX]/100 | 基本面:[X]/35 | 事件:[X]/20 | 技术:[X]/25 | 风险/流动性:[X]/20 | 技术确认:[N]项 | MA20:[数值] | MA20斜率5日:[数值]% | Sector RS20D:[数值]%</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
+<p><span class="highlight-label bg-purple">🧠 盘前结论:</span>明确说明为什么现在值得关注、盘前异动是否被新闻解释、以及主要不确定性。</p>
+<p><span class="highlight-label bg-purple">🚀 主要催化:</span>只写当天真实新闻/事件或已给出的基本面证据；没有就写“暂无新催化”。</p>
+<p><span class="highlight-label bg-purple">⚠️ 主要风险:</span>明确写出估值、事件、技术或盘前跳空方面的主要风险。</p>
+<p><span class="highlight-label bg-purple">🛑 失效条件:</span>说明什么价格/技术结构/事件变化会使本次观点失效。</p>
 <p><b>期权：</b>不要在AI正文中编造行权价、到期日、权利金、Delta或IV；真实期权策略由程序从期权链读取后统一插入。</p>
 </div>
 
@@ -2747,25 +2751,47 @@ def build_verified_core_html(ai_html, verified_items):
         return fallback
 
     def render_meta(item, tag):
-        news = "；".join(item.get("个股新闻", [])[:2]) if item.get("个股新闻") else "暂无最新新闻"
+        news_items = item.get("个股新闻", []) or []
+        news = "；".join(news_items[:4]) if news_items else "暂无最新新闻"
         tech = "、".join(map(str, item.get("技术确认信号", []) or [])) or "暂无"
         chunk = str(item.get("_AI_Chunk", "") or "")
+        def ai_field(labels, fallback):
+            clean = re.sub(r"<[^>]+>", " ", chunk)
+            clean = re.sub(r"\s+", " ", clean).strip()
+            for label in labels:
+                m = re.search(re.escape(label) + r"\s*(?:[:：])?\s*(.{0,420}?)(?=(?:盘前结论|主要催化|主要风险|失效条件|期权：|$))", clean, re.I)
+                if m:
+                    text=m.group(1).strip(" -—:：")
+                    if text: return text
+            return fallback
         logic = ai_summary(chunk, "产业链逻辑", "程序候选通过硬门槛；以程序量化数据为准。")
+        conclusion = ai_field(["盘前结论"], "AI未提供独立盘前结论；以程序化数据为准。")
+        catalyst = ai_field(["主要催化"], "暂无新催化。")
+        risk = ai_field(["主要风险"], "请重点关注估值、事件与技术失效风险。")
+        invalidation = ai_field(["失效条件"], "MA20/MA50、MACD/KDJ 或事件逻辑发生明显反转。")
         label = "👑 核心精选" if tag == "Core_Dragon" else "👀 Observation"
         stop = item.get("Stop_Loss", "") or ("观望" if tag == "Observation" else "N/A")
+        prev = item.get("Price"); pre = item.get("Premarket_Price"); pre_chg = item.get("Premarket_Change_Pct")
         return f"""
 <div class=\"{'top-card core-card' if tag == 'Core_Dragon' else 'compare-card'}\">
-<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(item.get('Price'),2))} | 盘前:${esc(fmt(item.get('Premarket_Price'),2))} | 盘前变动:{esc(fmt(item.get('Premarket_Change_Pct'),2))}% | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
+<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(prev,2))} | 盘前:${esc(fmt(pre,2))} | 盘前变动:{esc(fmt(pre_chg,2))}% | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
 <p><span class=\"highlight-label bg-red\">🔗 产业链逻辑:</span>{esc(logic)}</p>
 <p><span class=\"highlight-label bg-green\">📰 个股新闻核查:</span>{esc(news)}</p>
-<p><span class=\"highlight-label bg-blue\">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get('技术确认数',0))}项</p>
+<p><span class=\"highlight-label bg-blue\">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get('技术确认数',0))}项 | MACD:{esc(item.get('MACD趋势','N/A'))} | KDJ_J:{esc(fmt(item.get('KDJ_J'),1))} | ATR:{esc(fmt(item.get('ATR_Pct'),2))}%</p>
 <p><span class=\"highlight-label bg-teal\">⭐ 推荐评分:</span>最终 {esc(fmt(item.get('Final_Score', item.get('Score')),1))}/100 | Quant {esc(fmt(item.get('Quant_Score'),1))} | AI {esc(fmt(item.get('AI_Score'),1))}</p>
-<p><span class=\"highlight-label bg-blue\">📊 量化拆解:</span>Quant:{esc(fmt(item.get('Quant_Score'),1))}/100 | 基本面:{esc(item.get('Fundamental_Score',0))}/35 | 事件:{esc(item.get('Event_Score',0))}/20 | 技术:{esc(item.get('Technical_Score_25',0))}/25 | 风险/流动性:{esc(item.get('Risk_Liquidity_Score',0))}/20 | 技术确认:{esc(item.get('技术确认数',0))}项 | MA20:{esc(fmt(item.get('MA20'),2))} | MA20斜率5日:{esc(fmt(item.get('MA20_Slope_Pct_5D'),3))}% | Sector RS20D:{esc(fmt(item.get('Sector_RS_20D_Pct'),2))}%</p>
-<p><span class=\"highlight-label bg-orange\">⚠️ 动态风控:</span>{'观察，不执行持仓止损' if tag == 'Observation' else f'持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)}'} | ATR:{esc(fmt(item.get('ATR_Pct'),2))}% | Regime:{esc(item.get('Market_Regime','N/A'))}</p>
+<p><span class=\"highlight-label bg-blue\">📊 基本面/估值:</span>基本面 {esc(item.get('Fundamental_Score',0))}/35 | EPS:{esc(item.get('EPS_TTM','N/A'))} | PE(TTM):{esc(item.get('PE_TTM','N/A'))} | PE(Fwd):{esc(item.get('PE_Forward','N/A'))} | PB:{esc(item.get('PB','N/A'))} | 营收增速:{esc(item.get('Revenue_Growth','N/A'))} | 盈利增速:{esc(item.get('Earnings_Growth','N/A'))}</p>
+<p><span class=\"highlight-label bg-blue\">📊 技术结构:</span>技术:{esc(item.get('Technical_Score_25',0))}/25 | 风险/流动性:{esc(item.get('Risk_Liquidity_Score',0))}/20 | MA20:{esc(fmt(item.get('MA20'),2))} | MA50:{esc(fmt(item.get('MA50'),2))} | MA20斜率5日:{esc(fmt(item.get('MA20_Slope_Pct_5D'),3))}% | Sector RS20D:{esc(fmt(item.get('Sector_RS_20D_Pct'),2))}%</p>
+<p><span class=\"highlight-label bg-orange\">⚠️ 事件/市场:</span>事件分:{esc(item.get('Event_Score',0))}/20 | Sector:{esc(item.get('Sector','N/A'))} | Market Regime:{esc(item.get('Market_Regime','N/A'))} | VIX:{esc(fmt(item.get('VIX'),2))} | 周期共振:{esc(item.get('周期共振','N/A'))}</p>
+<p><span class=\"highlight-label bg-purple\">🧠 盘前结论:</span>{esc(conclusion)}</p>
+<p><span class=\"highlight-label bg-purple\">🚀 主要催化:</span>{esc(catalyst)}</p>
+<p><span class=\"highlight-label bg-purple\">⚠️ 主要风险:</span>{esc(risk)}</p>
+<p><span class=\"highlight-label bg-purple\">🛑 失效条件:</span>{esc(invalidation)}</p>
+<p><span class=\"highlight-label bg-orange\">🛡️ 动态风控:</span>{'观察，不执行持仓止损' if tag == 'Observation' else f'持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)}'} | 依据:MA20/MA50 + ATR + MACD/KDJ</p>
 <p><span class=\"highlight-label bg-blue\">🕒 数据时间:</span>技术K线={esc(item.get('Technical_Date','N/A'))} | 盘前报价={esc(item.get('Premarket_AsOf_ET') or 'N/A')} | 新闻快照={esc(item.get('News_AsOf_ET') or 'N/A')}</p>
 <p style=\"color:#607d8b;font-size:13px;\"><b>程序校验：</b>{'Observation 仅作跟踪，不计入实际持仓；不会与 Core 重复。' if tag == 'Observation' else 'Core 与 pending 使用同一程序候选集合；候选池外 AI 推荐自动剔除。'}</p>
 </div>
 """
+
 
     core_cards = [render_meta(x, "Core_Dragon") for x in core_items]
     obs_cards = [render_meta(x, "Observation") for x in obs_items]
@@ -2833,7 +2859,7 @@ def build_full_email_html(ai_html):
     .top-title{font-size:20px;font-weight:800;border-bottom:1px dashed #cfd8dc;padding-bottom:10px;margin-bottom:15px}
     .review-risk-banner{background:#fff3e0;border:1px solid #ffcc80;border-left:6px solid #ef6c00;padding:18px 20px;margin:0 0 25px 0;border-radius:8px}
     .highlight-label{display:inline-block;font-weight:bold;color:#fff;padding:3px 8px;border-radius:4px;margin-right:6px;font-size:13px}
-    .bg-red{background:#d32f2f}.bg-green{background:#2e7d32}.bg-blue{background:#1976d2}.bg-teal{background:#00897b}.bg-orange{background:#e64a19}
+    .bg-red{background:#d32f2f}.bg-green{background:#2e7d32}.bg-blue{background:#1976d2}.bg-teal{background:#00897b}.bg-orange{background:#e64a19}.bg-purple{background:#6a1b9a}
     </style>
     """
     return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{review_banner}{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
