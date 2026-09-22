@@ -1641,11 +1641,22 @@ obs_closed_losses = sum(p < 0 for p in obs_closed_pnl)
 core_closed_win_rate = core_closed_wins / len(core_closed_pnl) * 100 if core_closed_pnl else 0.0
 obs_closed_win_rate = obs_closed_wins / len(obs_closed_pnl) * 100 if obs_closed_pnl else 0.0
 
-# Core / Observation 全部“当前跟踪”统计（包括已经关闭前的样本），仅用于当前状态观察。
+# Core / Observation 全部“当前跟踪”统计；两者必须分开，不能用一个综合胜率替代。
 core_open = [e["pnl"] for e in open_events if e.get("tag") != "Observation"]
 core_open_wins = sum(p > 0 for p in core_open)
 core_open_losses = sum(p < 0 for p in core_open)
+core_open_neutral = sum(p == 0 for p in core_open)
 core_open_win_rate = core_open_wins / len(core_open) * 100 if core_open else 0.0
+
+# 最近30天事件数量也分层展示，避免把 Core 与 Observation 混成一个池。
+core_events_30d = [e for e in scan_events_30d if e.get("tag") != "Observation"]
+observation_events_30d = [e for e in scan_events_30d if e.get("tag") == "Observation"]
+core_event_count = len(core_events_30d)
+observation_event_count = len(observation_events_30d)
+core_closed_count = len(core_closed_pnl)
+observation_closed_count = len(obs_closed_pnl)
+core_open_count = len(core_open)
+observation_open_count = len(observation_tracking)
 
 # 数据质量拆分，避免“数据不足”成为黑箱。
 no_rec_price_count = sum(1 for e in stock_events_missing if e.get("data_status") == "NO_REC_PRICE")
@@ -1713,7 +1724,8 @@ kpi_html = f"""
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
 <div style="font-size:13px;color:#7f8c8d;">最近30天股票 Scan 推荐事件</div>
 <div style="font-size:24px;font-weight:bold;">{total_scan_recommendations}</div>
-<div style="font-size:12px;">有价格 {valid_performance_samples} · 数据不足 {data_insufficient_count}</div><div style="font-size:11px;color:#607d8b;">无推荐价 {no_rec_price_count} · 无当前价 {price_missing_count} · 其他 {other_missing_count}</div>
+<div style="font-size:12px;">Core {core_event_count} · Observation {observation_event_count}</div>
+<div style="font-size:11px;color:#607d8b;">有价格 {valid_performance_samples} · 数据不足 {data_insufficient_count} · 无推荐价 {no_rec_price_count} · 无当前价 {price_missing_count} · 其他 {other_missing_count}</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #2ecc71;">
@@ -1723,11 +1735,25 @@ kpi_html = f"""
 <div style="font-size:11px;color:#607d8b;">仅统计已经结束的 Core + Observation 事件；当前持仓/观察仍单独跟踪</div>
 </div>
 
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #17a2b8;">
-<div style="font-size:13px;color:#7f8c8d;">当前开放推荐跟踪胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#17a2b8;">{tracking_win_rate:.2f}%</div>
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
+<div style="font-size:13px;color:#7f8c8d;">Core 当前跟踪胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#1565c0;">{core_open_win_rate:.2f}%</div>
+<div style="font-size:12px;">{core_open_wins} 赢 / {core_open_losses} 亏 / {core_open_neutral} 平</div>
+<div style="font-size:11px;color:#607d8b;">当前未结束的 Core；独立于 Observation</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
+<div style="font-size:13px;color:#7f8c8d;">Observation 当前跟踪胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#ff9800;">{obs_win_rate:.2f}%</div>
+<div style="font-size:12px;">{obs_wins} 赢 / {obs_losses} 亏 / {obs_neutral} 平</div>
+<div style="font-size:11px;color:#607d8b;">当前未结束的 Observation；不是实际持仓</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #607d8b;">
+<div style="font-size:13px;color:#7f8c8d;">Core + Observation 汇总参考</div>
+<div style="font-size:24px;font-weight:bold;color:#607d8b;">{tracking_win_rate:.2f}%</div>
 <div style="font-size:12px;">{tracking_wins} 赢 / {tracking_losses} 亏 / {tracking_neutral} 平</div>
-<div style="font-size:11px;color:#607d8b;">仍在跟踪的 Core + Observation</div>
+<div style="font-size:11px;color:#607d8b;">仅作总体参考，不替代 Core / Observation 分层统计</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e67e22;">
@@ -1741,14 +1767,14 @@ kpi_html = f"""
 <div style="font-size:13px;color:#7f8c8d;">Core 已完成胜率</div>
 <div style="font-size:24px;font-weight:bold;color:#d32f2f;">{core_closed_win_rate:.2f}%</div>
 <div style="font-size:12px;">{core_closed_wins} 赢 / {core_closed_losses} 亏</div>
-<div style="font-size:11px;color:#607d8b;">只统计已经结束的 Core 事件；当前未结束的 Core 单独追踪</div>
+<div style="font-size:11px;color:#607d8b;">已完成 Core {core_closed_count} 笔；当前 Core {core_open_count} 笔单独追踪</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
 <div style="font-size:13px;color:#7f8c8d;">Observation 已完成胜率</div>
 <div style="font-size:24px;font-weight:bold;color:#ff9800;">{obs_closed_win_rate:.2f}%</div>
 <div style="font-size:12px;">{obs_closed_wins} 赢 / {obs_closed_losses} 亏</div>
-<div style="font-size:11px;color:#607d8b;">只统计已经结束的 Observation；当前 Observation 单独追踪</div>
+<div style="font-size:11px;color:#607d8b;">已完成 Observation {observation_closed_count} 笔；当前 Observation {observation_open_count} 笔单独追踪</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #8e44ad;">
@@ -1784,7 +1810,7 @@ kpi_html = f"""
 </div>
 
 <div style="background:#eef7ff;border-left:6px solid #1976d2;padding:12px 15px;border-radius:8px;margin-top:12px;">
-<b>绩效口径：</b>“已完成 Scan 推荐胜率”只计算已经结束的推荐事件；当前 Active/持仓中/观察推荐不计入历史胜负。Observation 不是持仓，但作为独立推荐事件进入已完成统计；当前 Observation 单独显示跟踪表现。
+<b>绩效口径：</b>Core 与 Observation 永久分层统计。Core：已完成胜率 + 当前跟踪胜率 + 实际持仓跟踪；Observation：已完成胜率 + 当前跟踪胜率。两者不混算；“Core + Observation 汇总”仅作为参考，不用于替代分层判断。已完成胜率只计算真实结束事件，当前浮盈/浮亏只进入当前跟踪。
 </div>
 
 </div>
