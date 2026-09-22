@@ -1480,104 +1480,286 @@ scan_events_30d = [
 
 
 # ============================================================
-# 13. KPI
+# ============================================================
+# 13. KPI —— 精简版：Core / Observation / 实际持仓 / 期权
 # ============================================================
 
-stock_events_valid = [e for e in scan_events_30d if e["pnl"] is not None]
-stock_events_missing = [e for e in scan_events_30d if e["pnl"] is None]
+# 说明：
+# 1) Core 与 Observation 永久分开统计。
+# 2) 实际持仓是 Core 的子集，不是第三种推荐类型。
+# 3) 当前浮盈/浮亏只进入“当前跟踪”。
+# 4) 只有真实结束、且有退出价格的推荐才进入“已完成胜率”。
+# 5) 期权完全独立，不进入股票 KPI。
 
-event_pnl = [e["pnl"] for e in stock_events_valid]
+stock_events_valid = [
+    e for e in scan_events_30d
+    if e.get("pnl") is not None
+]
 
-recommendation_wins = sum(p > 0 for p in event_pnl)
-recommendation_losses = sum(p < 0 for p in event_pnl)
-recommendation_neutral = sum(p == 0 for p in event_pnl)
+stock_events_missing = [
+    e for e in scan_events_30d
+    if e.get("pnl") is None
+]
 
-recommendation_win_rate = (
-    recommendation_wins / len(event_pnl) * 100
-    if event_pnl else 0.0
+
+# ============================================================
+# 推荐类型拆分
+# ============================================================
+
+core_events_30d = [
+    e for e in scan_events_30d
+    if clean_text(e.get("tag")) != "Observation"
+]
+
+observation_events_30d = [
+    e for e in scan_events_30d
+    if clean_text(e.get("tag")) == "Observation"
+]
+
+
+# ============================================================
+# 明确的股票结束状态
+# ============================================================
+
+CLOSED_STOCK_STATUSES = {
+    "Stop_Loss_Hit",
+    "Dropped",
+    "Period_Matured",
+    "Forced_Exit",
+    "移动止损清仓",
+    "止损触发清仓",
+    "已超期归档",
+    "周期到期清仓",
+    "突发清仓暂停",
+}
+
+
+def _event_is_closed(e):
+    """只有明确结束状态 + 有 PnL 才进入已完成胜率。"""
+    status = clean_text(e.get("status"))
+    return (
+        status in CLOSED_STOCK_STATUSES
+        and e.get("pnl") is not None
+    )
+
+
+# ============================================================
+# Core 已完成
+# ============================================================
+
+core_closed = [
+    e for e in core_events_30d
+    if _event_is_closed(e)
+]
+
+core_closed_pnl = [
+    safe_float(e.get("pnl"))
+    for e in core_closed
+    if safe_float(e.get("pnl")) is not None
+]
+
+core_closed_wins = sum(p > 0 for p in core_closed_pnl)
+core_closed_losses = sum(p < 0 for p in core_closed_pnl)
+core_closed_neutral = sum(p == 0 for p in core_closed_pnl)
+core_closed_win_rate = (
+    core_closed_wins / len(core_closed_pnl) * 100
+    if core_closed_pnl else 0.0
 )
 
-# 实际持仓：只统计非 Observation 的当前 Active/持仓事件
-active_event_rows = [
-    e for e in scan_events_30d
-    if e["tag"] != "Observation"
-    and e["status"] in ("Active", "持仓中", "")
-]
-active_tracking = [e["pnl"] for e in active_event_rows if e["pnl"] is not None]
 
-# Observation：全部进入 Scan 推荐绩效
-observation_event_rows = [
-    e for e in scan_events_30d
-    if e["tag"] == "Observation"
-]
-observation_tracking = [e["pnl"] for e in observation_event_rows if e["pnl"] is not None]
+# ============================================================
+# Core 当前跟踪
+# ============================================================
 
-actual_active_wins = sum(p > 0 for p in active_tracking)
-actual_active_win_rate = (
-    actual_active_wins / len(active_tracking) * 100
-    if active_tracking else 0.0
+core_open = [
+    e for e in core_events_30d
+    if not _event_is_closed(e)
+    and e.get("pnl") is not None
+]
+
+core_open_pnl = [
+    safe_float(e.get("pnl"))
+    for e in core_open
+    if safe_float(e.get("pnl")) is not None
+]
+
+core_open_wins = sum(p > 0 for p in core_open_pnl)
+core_open_losses = sum(p < 0 for p in core_open_pnl)
+core_open_neutral = sum(p == 0 for p in core_open_pnl)
+core_open_win_rate = (
+    core_open_wins / len(core_open_pnl) * 100
+    if core_open_pnl else 0.0
 )
 
-obs_wins = sum(p > 0 for p in observation_tracking)
+
+# ============================================================
+# Observation 已完成
+# ============================================================
+
+obs_closed = [
+    e for e in observation_events_30d
+    if _event_is_closed(e)
+]
+
+obs_closed_pnl = [
+    safe_float(e.get("pnl"))
+    for e in obs_closed
+    if safe_float(e.get("pnl")) is not None
+]
+
+obs_closed_wins = sum(p > 0 for p in obs_closed_pnl)
+obs_closed_losses = sum(p < 0 for p in obs_closed_pnl)
+obs_closed_neutral = sum(p == 0 for p in obs_closed_pnl)
+obs_closed_win_rate = (
+    obs_closed_wins / len(obs_closed_pnl) * 100
+    if obs_closed_pnl else 0.0
+)
+
+
+# ============================================================
+# Observation 当前跟踪
+# ============================================================
+
+obs_open = [
+    e for e in observation_events_30d
+    if not _event_is_closed(e)
+    and e.get("pnl") is not None
+]
+
+obs_open_pnl = [
+    safe_float(e.get("pnl"))
+    for e in obs_open
+    if safe_float(e.get("pnl")) is not None
+]
+
+obs_open_wins = sum(p > 0 for p in obs_open_pnl)
+obs_open_losses = sum(p < 0 for p in obs_open_pnl)
+obs_open_neutral = sum(p == 0 for p in obs_open_pnl)
 obs_win_rate = (
-    obs_wins / len(observation_tracking) * 100
-    if observation_tracking else 0.0
+    obs_open_wins / len(obs_open_pnl) * 100
+    if obs_open_pnl else 0.0
 )
 
-current_tracking = active_tracking + observation_tracking
-tracking_wins = sum(p > 0 for p in current_tracking)
-tracking_losses = sum(p < 0 for p in current_tracking)
-tracking_neutral = sum(p == 0 for p in current_tracking)
-tracking_win_rate = (
-    tracking_wins / len(current_tracking) * 100
-    if current_tracking else 0.0
+
+# ============================================================
+# 实际持仓
+# ============================================================
+# 实际持仓直接以 active_list 为准。
+# 这是系统真正已经建仓并且目前仍持有的 Core 子集。
+# 不再从全部 Core 推荐事件反推，避免把“未买入 Core”误算成持仓。
+
+actual_active_pnl = []
+for item in active_list:
+    pnl = safe_float(item.get("当前盈亏(%)"))
+    if pnl is None:
+        rec = safe_float(item.get("首次推荐价"))
+        cur = safe_float(item.get("现价"))
+        if rec is not None and rec > 0 and cur is not None:
+            pnl = (cur - rec) / rec * 100
+    if pnl is not None:
+        actual_active_pnl.append(round(pnl, 2))
+
+actual_active_wins = sum(p > 0 for p in actual_active_pnl)
+actual_active_losses = sum(p < 0 for p in actual_active_pnl)
+actual_active_neutral = sum(p == 0 for p in actual_active_pnl)
+actual_active_win_rate = (
+    actual_active_wins / len(actual_active_pnl) * 100
+    if actual_active_pnl else 0.0
 )
 
-# 已了结股票：不是 Observation 且状态已经退出
-closed_stock_events = [
-    e for e in scan_events_30d
-    if e["tag"] != "Observation"
-    and e["status"] not in ("Active", "持仓中", "")
-    and e["status"] not in ("期权平仓",)
-    and e["pnl"] is not None
-]
-closed_stock_pnl = [e["pnl"] for e in closed_stock_events]
-closed_stock_wins = sum(p > 0 for p in closed_stock_pnl)
-closed_stock_win_rate = (
-    closed_stock_wins / len(closed_stock_pnl) * 100
-    if closed_stock_pnl else 0.0
-)
+
+# ============================================================
+# 基础统计
+# ============================================================
 
 total_scan_recommendations = len(scan_events_30d)
+core_event_count = len(core_events_30d)
+observation_event_count = len(observation_events_30d)
+
+core_closed_count = len(core_closed_pnl)
+core_open_count = len(core_open_pnl)
+observation_closed_count = len(obs_closed_pnl)
+observation_open_count = len(obs_open_pnl)
+actual_active_count = len(actual_active_pnl)
+
 valid_performance_samples = len(stock_events_valid)
 data_insufficient_count = len(stock_events_missing)
 
-all_stock_pnl = event_pnl
-super_threshold = 50.0
-super_contribution = sum(p for p in all_stock_pnl if p >= super_threshold)
+no_rec_price_count = sum(
+    1 for e in stock_events_missing
+    if e.get("data_status") == "NO_REC_PRICE"
+)
 
-other_winners = [p for p in all_stock_pnl if 0 < p < super_threshold]
-losers = [p for p in all_stock_pnl if p < 0]
-other_avg = sum(other_winners)/len(other_winners) if other_winners else 0.0
-loser_avg = sum(losers)/len(losers) if losers else 0.0
+price_missing_count = sum(
+    1 for e in stock_events_missing
+    if e.get("data_status") == "PRICE_MISSING"
+)
+
+other_missing_count = max(
+    0,
+    data_insufficient_count - no_rec_price_count - price_missing_count
+)
 
 
+# ============================================================
 # 期权独立 KPI
-option_closed_pnl = [safe_float(x.get("pnl"),0.0) for x in option_closed_records]
-option_wins = sum(p > 0 for p in option_closed_pnl)
-option_win_rate = option_wins/len(option_closed_pnl)*100 if option_closed_pnl else 0.0
+# ============================================================
 
+option_closed_pnl = [
+    safe_float(x.get("pnl"))
+    for x in option_closed_records
+    if safe_float(x.get("pnl")) is not None
+]
+
+option_wins = sum(p > 0 for p in option_closed_pnl)
+option_losses = sum(p < 0 for p in option_closed_pnl)
+option_neutral = sum(p == 0 for p in option_closed_pnl)
+option_win_rate = (
+    option_wins / len(option_closed_pnl) * 100
+    if option_closed_pnl else 0.0
+)
+
+
+# ============================================================
+# 日志
+# ============================================================
 
 print(
     f"📊 Scan推荐事件：{total_scan_recommendations}；"
+    f"Core {core_event_count} / Observation {observation_event_count}；"
     f"有效绩效：{valid_performance_samples}；"
     f"数据不足：{data_insufficient_count}"
 )
-print(f"📊 Scan推荐综合胜率：{recommendation_win_rate:.2f}%")
-print(f"📊 当前推荐跟踪胜率：{tracking_win_rate:.2f}%")
-print(f"📊 实际持仓胜率：{actual_active_win_rate:.2f}%")
-print(f"📊 Observation胜率：{obs_win_rate:.2f}%")
-print(f"📊 已了结股票胜率：{closed_stock_win_rate:.2f}%")
+
+print(
+    f"📊 Core 已完成：{core_closed_win_rate:.2f}% "
+    f"({core_closed_wins}赢/{core_closed_losses}亏/{core_closed_neutral}平)"
+)
+
+print(
+    f"📊 Core 当前跟踪：{core_open_win_rate:.2f}% "
+    f"({core_open_wins}赢/{core_open_losses}亏/{core_open_neutral}平)"
+)
+
+print(
+    f"📊 Observation 已完成：{obs_closed_win_rate:.2f}% "
+    f"({obs_closed_wins}赢/{obs_closed_losses}亏/{obs_closed_neutral}平)"
+)
+
+print(
+    f"📊 Observation 当前跟踪：{obs_win_rate:.2f}% "
+    f"({obs_open_wins}赢/{obs_open_losses}亏/{obs_open_neutral}平)"
+)
+
+print(
+    f"📊 实际持仓当前跟踪：{actual_active_win_rate:.2f}% "
+    f"({actual_active_wins}赢/{actual_active_losses}亏/{actual_active_neutral}平)"
+)
+
+print(
+    f"📊 期权已完成：{option_win_rate:.2f}% "
+    f"({option_wins}赢/{option_losses}亏/{option_neutral}平)"
+)
 
 
 # ============================================================
@@ -1594,13 +1776,16 @@ def _pnl_style(v):
         return "color:#2e7d32;font-weight:700;"
     return "color:#455a64;font-weight:700;"
 
+
 def _price(v):
     x = safe_float(v)
     return "N/A" if x is None else f"${x:.2f}"
 
+
 def _pct(v):
     x = safe_float(v)
     return "N/A" if x is None else f"{x:+.2f}%"
+
 
 kpi_html = f"""
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;margin-bottom:20px;">
@@ -1609,19 +1794,22 @@ kpi_html = f"""
 <div style="font-size:13px;color:#7f8c8d;">最近30天 Scan 推荐</div>
 <div style="font-size:25px;font-weight:bold;">{total_scan_recommendations}</div>
 <div style="font-size:14px;font-weight:700;">Core {core_event_count}　·　Observation {observation_event_count}</div>
-<div style="font-size:11px;color:#607d8b;margin-top:8px;">有价格 {valid_performance_samples} · 数据不足 {data_insufficient_count} · 无推荐价 {no_rec_price_count} · 无当前价 {price_missing_count}</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">
+有价格 {valid_performance_samples} · 数据不足 {data_insufficient_count}
+· 无推荐价 {no_rec_price_count} · 无当前价 {price_missing_count}
+</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
 <div style="font-size:14px;color:#1565c0;font-weight:700;">👑 Core</div>
-<div style="font-size:13px;margin-top:7px;">已完成胜率 <b>{core_closed_win_rate:.2f}%</b>　{core_closed_wins} 赢 / {core_closed_losses} 亏</div>
+<div style="font-size:13px;margin-top:7px;">已完成胜率 <b>{core_closed_win_rate:.2f}%</b>　{core_closed_wins} 赢 / {core_closed_losses} 亏 / {core_closed_neutral} 平</div>
 <div style="font-size:13px;margin-top:5px;">当前跟踪 <b>{core_open_win_rate:.2f}%</b>　{core_open_wins} 赢 / {core_open_losses} 亏 / {core_open_neutral} 平</div>
 <div style="font-size:11px;color:#607d8b;margin-top:8px;">已完成 {core_closed_count} 笔 · 当前 {core_open_count} 笔</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
 <div style="font-size:14px;color:#e65100;font-weight:700;">👀 Observation</div>
-<div style="font-size:13px;margin-top:7px;">已完成胜率 <b>{obs_closed_win_rate:.2f}%</b>　{obs_closed_wins} 赢 / {obs_closed_losses} 亏</div>
+<div style="font-size:13px;margin-top:7px;">已完成胜率 <b>{obs_closed_win_rate:.2f}%</b>　{obs_closed_wins} 赢 / {obs_closed_losses} 亏 / {obs_closed_neutral} 平</div>
 <div style="font-size:13px;margin-top:5px;">当前跟踪 <b>{obs_win_rate:.2f}%</b>　{obs_open_wins} 赢 / {obs_open_losses} 亏 / {obs_open_neutral} 平</div>
 <div style="font-size:11px;color:#607d8b;margin-top:8px;">已完成 {observation_closed_count} 笔 · 当前 {observation_open_count} 笔 · 不计实际持仓</div>
 </div>
@@ -1630,7 +1818,7 @@ kpi_html = f"""
 <div style="font-size:14px;color:#e67e22;font-weight:700;">🟢 实际持仓</div>
 <div style="font-size:25px;font-weight:bold;color:#e67e22;">{actual_active_win_rate:.2f}%</div>
 <div style="font-size:13px;">{actual_active_wins} 赢 / {actual_active_losses} 亏 / {actual_active_neutral} 平</div>
-<div style="font-size:11px;color:#607d8b;margin-top:8px;">当前真实持仓 {actual_active_count} 笔；它是 Core 中已实际建仓的子集</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">当前真实持仓 {actual_active_count} 笔；它是 Core 中真正建仓的子集</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #9b59b6;">
@@ -1643,11 +1831,14 @@ kpi_html = f"""
 <div style="background:#f7f9fb;border:1px solid #dfe6ee;border-radius:10px;padding:15px;grid-column:1/-1;">
 <div style="font-size:13px;font-weight:700;color:#455a64;">📌 统计口径</div>
 <div style="font-size:12px;line-height:1.8;color:#546e7a;margin-top:5px;">
-Core 与 Observation 不再混成一个主胜率。<br>
-<strong>Core 已完成胜率</strong> = 已结束的 Core 推荐事件；<strong>Core 当前跟踪</strong> = 尚未结束的 Core 推荐事件。<br>
-<strong>Observation 已完成胜率</strong> = 已结束的 Observation 推荐事件；<strong>Observation 当前跟踪</strong> = 尚未结束的 Observation 推荐事件。<br>
-<strong>实际持仓胜率</strong> = 当前真实建仓且仍持有的 Core 子集，因此它与 Core 当前跟踪胜率可以不同；Observation 永远不进入实际持仓统计。<br>
-当前浮盈/浮亏只用于“当前跟踪”，只有真实结束并有退出价格的事件才进入“已完成胜率”。
+<strong>Core</strong> = Scan 认定的核心推荐。<br>
+<strong>Observation</strong> = 观察推荐，不进入实际持仓统计。<br>
+<strong>Core 已完成</strong> = 已结束的 Core 推荐事件。<br>
+<strong>Core 当前跟踪</strong> = 尚未结束且有最新价格的 Core 推荐事件。<br>
+<strong>Observation 已完成</strong> = 已结束的 Observation 推荐事件。<br>
+<strong>Observation 当前跟踪</strong> = 尚未结束且有最新价格的 Observation 推荐事件。<br>
+<strong>实际持仓</strong> = 当前真正建仓并仍持有的 Core 子集，因此它与 Core 当前跟踪完全可以不同。<br>
+当前浮盈/浮亏只进入当前跟踪；只有真实结束并有退出价格的事件才进入已完成胜率。
 </div>
 </div>
 
@@ -1655,6 +1846,8 @@ Core 与 Observation 不再混成一个主胜率。<br>
 """
 
 
+# ============================================================
+# 15. Observation HTML
 # ============================================================
 # 15. Observation HTML
 # ============================================================
