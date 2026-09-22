@@ -6,7 +6,7 @@
 1. 每次 Scan 推荐事件按「推荐日期 + Ticker」独立追踪。
 2. Observation 是有效 Scan 推荐，必须追踪推荐价 -> 当前价。
 3. 实际持仓与 Observation 分开，不把 Observation 算成持仓。
-4. 已完成 Scan 推荐胜率 = 当前持仓 + Observation + 已了结股票推荐。
+4. Scan 推荐综合胜率 = 当前持仓 + Observation + 已了结股票推荐。
 5. 数据缺失的推荐不虚构收益，但保留为“数据不足”。
 6. 期权完全独立，不混入股票 Scan 推荐胜率。
 7. 同一 Review 日期不会重复写入相同推荐事件。
@@ -26,7 +26,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
 
-from clawsocket_compat import ClawSocketClient
+import anthropic
 import pandas as pd
 import yfinance as yf
 
@@ -44,7 +44,7 @@ if _missing_env:
     sys.exit(1)
 
 US_TZ = ZoneInfo("America/New_York")
-TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
+TARGET_MODEL = "gpt-6-astra"
 
 STRATEGY_PARAMS_FILE = "strategy_params.json"
 def load_strategy_params():
@@ -318,87 +318,6 @@ def get_live_quote_bootstrap(ticker):
     except Exception as e:
         print(f"⚠️ 实时价格获取失败 {ticker}: {e}")
         return None, None
-
-
-def fetch_latest_regular_closes(tickers):
-    """独立于持仓账本，为所有 Scan 事件刷新最近一个完整交易日收盘价。
-    Observation/历史 Scan 事件不能依赖 active_list 的行情池。
-    返回: {ticker: {close, date, source}}。
-    """
-    clean = list(dict.fromkeys(
-        normalize_ticker_text(t).upper()
-        for t in tickers
-        if is_probable_us_ticker(t)
-    ))
-    out = {}
-    if not clean:
-        return out
-    try:
-        hist = yf.download(
-            clean, period="7d", interval="1d", progress=False,
-            auto_adjust=False, group_by="ticker", threads=False,
-        )
-        if hist is not None and not hist.empty:
-            for ticker in clean:
-                try:
-                    sub = extract_single_ticker_df(hist, ticker, len(clean))
-                    if sub.empty or "Close" not in sub.columns:
-                        continue
-                    sub = sub.dropna(subset=["Close"])
-                    if sub.empty:
-                        continue
-                    r = sub.iloc[-1]
-                    close = safe_float(r.get("Close"))
-                    if close is None or close <= 0:
-                        continue
-                    raw_date = pd.Timestamp(sub.index[-1])
-                    if getattr(raw_date, "tzinfo", None) is not None:
-                        raw_date = raw_date.tz_localize(None)
-                    out[ticker] = {
-                        "close": close,
-                        "date": raw_date.strftime("%Y-%m-%d"),
-                        "source": "Yahoo Finance 日线收盘",
-                    }
-                except Exception:
-                    continue
-    except Exception as e:
-        print(f"⚠️ Scan事件独立批量收盘价刷新失败: {e}")
-
-    # 个别 ticker 失败时逐只补，不让少数失败拖累 Observation。
-    for ticker in clean:
-        if ticker in out:
-            continue
-        try:
-            h = yf.Ticker(ticker).history(period="7d", interval="1d", auto_adjust=False)
-            if h is not None and not h.empty and "Close" in h.columns:
-                h = h.dropna(subset=["Close"])
-                if not h.empty:
-                    close = safe_float(h["Close"].iloc[-1])
-                    idx = pd.Timestamp(h.index[-1])
-                    if close is not None and close > 0:
-                        if getattr(idx, "tzinfo", None) is not None:
-                            idx = idx.tz_localize(None)
-                        out[ticker] = {
-                            "close": close,
-                            "date": idx.strftime("%Y-%m-%d"),
-                            "source": "Yahoo Finance 单票日线收盘",
-                        }
-                        continue
-        except Exception:
-            pass
-        # 最后才使用 fast_info，明确标记为实时/缓存兜底，而不是伪装成正式收盘。
-        try:
-            _, last = get_live_quote_bootstrap(ticker)
-            if last is not None and last > 0:
-                out[ticker] = {
-                    "close": last,
-                    "date": today_us_str(),
-                    "source": "Yahoo FastInfo 兜底",
-                }
-        except Exception:
-            pass
-    print(f"✅ [Scan事件独立行情] 最近有效价格 {len(out)}/{len(clean)} 只")
-    return out
 
 
 # ============================================================
@@ -938,7 +857,7 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
 
 active_list, observation_list, expired_list, stopped_list = [], [], [], []
 
-for (orig_ticker, orig_tag), group in recent_picks.groupby(["Ticker", "Tag"], sort=False):
+for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
     group = group.sort_values("Date").copy()
     if group.empty:
         continue
@@ -1348,227 +1267,207 @@ def _load_review_closed_lookup():
 
 def build_scan_recommendation_events():
     """
-    V21 统一 Scan 推荐事件账本。
-
-    数据优先级：
-    1) us_stocks_pending_*.csv(.processed) —— Scan 原始推荐事件的 Source of Truth
-    2) trade_history.csv —— 补充事件状态/实际退出价格
-    3) review_history.csv —— 补充历史已归档状态
-
-    关键口径：
-    - 一次 Scan = 一个事件：Rec_Date + Ticker；同日同票若旧数据同时出现多个 Tag，Core 优先于 Observation。
-    - Observation 是独立推荐事件，不是持仓，但必须进入绩效统计。
-    - Open 事件只进入“当前跟踪”，不能被当成历史已完成胜负。
-    - Closed 事件才进入“已完成胜率”。
+    统一推荐事件账本：
+    - 以 review_history.csv 的 Rec_Date + Ticker + Tag 作为推荐事件主键。
+    - Review 每天重复记录同一推荐时只保留该推荐事件的最新状态。
+    - Rec_Date 按推荐发生日过滤最近30天，而不是 Review_Date。
+    - 当前仍开放的推荐使用当天真实价格；已退出推荐优先使用退出价格。
+    - Observation 同样是有效 Scan 推荐，必须进入绩效追踪。
+    - 不把期权记录纳入股票推荐事件。
+    - 若 review_history 无法提供事件，则用 trade_history.csv 作为补充来源。
     """
-    cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
-    event_map = {}
 
-    tag_priority = {
-        "Core_Dragon": 3,
-        "Core_Double_Dragon": 3,
-        "Sub_Pioneer": 3,
-        "Observation": 2,
-        "Trap_Warning": 1,
-        "": 0,
-    }
+    event_rows = []
 
-    valid_recommendation_tags = {"Core_Dragon", "Core_Double_Dragon", "Sub_Pioneer", "Observation", ""}
-
-    def add_event(ticker, name, rec_date, rec_price, tag, score="N/A", source=""):
-        if not ticker or not rec_date:
-            return
-        if tag not in valid_recommendation_tags:
-            return
-        if rec_date < cutoff:
-            return
-        # 事件主键故意不包含 Tag：同一天同一股票只能有一个真实 Scan 事件。
-        key = (ticker.upper(), rec_date.strftime("%Y-%m-%d"))
-        rec = {
-            "ticker": ticker.upper(),
-            "name": name or ticker.upper(),
-            "rec_date": rec_date.strftime("%Y-%m-%d"),
-            "rec_price": rec_price,
-            "tag": tag or "",
-            "score": score or "N/A",
-            "source_file": source,
-        }
-        old = event_map.get(key)
-        if old is None or tag_priority.get(rec["tag"], 0) > tag_priority.get(old.get("tag", ""), 0):
-            event_map[key] = rec
-        elif old.get("rec_price") is None and rec_price is not None:
-            old["rec_price"] = rec_price
-        if old is not None and (not old.get("name") or old.get("name") == old.get("ticker")) and name:
-            old["name"] = name
-
-    # 1) Raw Scan pending files —— 这是推荐事件的权威来源。
-    for filename in sorted(glob.glob("us_stocks_pending_*.csv") + glob.glob("us_stocks_pending_*.csv.processed")):
-        m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", os.path.basename(filename))
-        if not m:
-            continue
+    # --------------------------------------------------------
+    # 主来源：review_history.csv
+    # --------------------------------------------------------
+    if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
         try:
-            file_date = pd.Timestamp(datetime.datetime.strptime(m.group(1), "%Y%m%d"))
-        except Exception:
-            continue
-        if file_date < cutoff:
-            continue
-        try:
-            d = pd.read_csv(filename, dtype=str, keep_default_na=False, on_bad_lines="skip")
-        except Exception as e:
-            print(f"⚠️ 读取 Scan 原始推荐文件失败 {filename}: {e}")
-            continue
-        if d.empty or "Ticker" not in d.columns:
-            continue
-        for _, row in d.iterrows():
-            ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
-            if not ticker:
-                continue
-            rec_price = safe_float(row.get("Scan_Ref_Price"))
-            if rec_price is None:
-                rec_price = safe_float(row.get("Price"))
-            add_event(
-                ticker=ticker,
-                name=clean_text(row.get("Name"), ticker),
-                rec_date=file_date,
-                rec_price=rec_price,
-                tag=clean_text(row.get("Tag")),
-                score=clean_text(row.get("Final_Score"), clean_text(row.get("Score"), "N/A")),
-                source=os.path.basename(filename),
+            rh = pd.read_csv(
+                REVIEW_HISTORY,
+                dtype=str,
+                keep_default_na=False,
+                on_bad_lines="skip",
             )
+            if not rh.empty and {"Rec_Date", "Ticker", "Rec_Price"}.issubset(rh.columns):
+                rh["_rec_dt"] = pd.to_datetime(
+                    rh["Rec_Date"], errors="coerce", format="mixed"
+                )
+                rh["_review_dt"] = pd.to_datetime(
+                    rh.get("Review_Date", ""), errors="coerce", format="mixed"
+                )
+                cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
+                rh = rh[rh["_rec_dt"].notna() & (rh["_rec_dt"] >= cutoff)].copy()
 
-    # 2) trade_history —— 补充一些 pending 丢失/旧版本迁移产生的事件。
+                if "Option_Type" not in rh.columns:
+                    rh["Option_Type"] = ""
+                if "Tag" not in rh.columns:
+                    rh["Tag"] = ""
+                if "Status" not in rh.columns:
+                    rh["Status"] = ""
+                if "Cur_Price" not in rh.columns:
+                    rh["Cur_Price"] = ""
+                if "Exit_Price" not in rh.columns:
+                    rh["Exit_Price"] = ""
+
+                # 股票推荐：排除期权记录。
+                rh = rh[
+                    rh["Option_Type"].astype(str).str.strip().eq("")
+                ].copy()
+
+                # 每次 Scan 推荐事件 = Rec_Date + Ticker + Tag。
+                # 同一事件在后续 Review 中每天重复出现，只取最后一次状态。
+                rh["_ticker_norm"] = rh["Ticker"].map(lambda x: resolve_ticker(x))
+                rh["_tag_norm"] = rh["Tag"].astype(str).str.strip()
+                rh = rh[rh["_ticker_norm"].astype(str).str.len() > 0].copy()
+                rh = rh.sort_values(["_rec_dt", "_review_dt"])
+
+                grouped = rh.groupby(
+                    ["_rec_dt", "_ticker_norm", "_tag_norm"],
+                    sort=True,
+                    dropna=False,
+                )
+
+                for (_, _, _), g in grouped:
+                    row = g.iloc[-1]
+                    rec_dt = row["_rec_dt"]
+                    ticker = row["_ticker_norm"]
+                    rec_price = safe_float(row.get("Rec_Price"))
+                    if rec_price is None or rec_price <= 0:
+                        event_rows.append({
+                            "ticker": ticker,
+                            "name": clean_text(row.get("Name"), ticker),
+                            "rec_date": rec_dt.strftime("%Y-%m-%d"),
+                            "rec_price": None,
+                            "status": clean_text(row.get("Status")),
+                            "tag": clean_text(row.get("Tag")),
+                            "current_price": None,
+                            "pnl": None,
+                            "data_status": "NO_REC_PRICE",
+                        })
+                        continue
+
+                    status = clean_text(row.get("Status"))
+                    exit_price = safe_float(row.get("Exit_Price"))
+
+                    closed_statuses = {
+                        "Stop_Loss_Hit",
+                        "移动止损清仓",
+                        "止损触发清仓",
+                        "已超期归档",
+                        "突发清仓暂停",
+                        "周期到期清仓",
+                    }
+
+                    if status in closed_statuses and exit_price is not None:
+                        cur = exit_price
+                    else:
+                        # 以当前真实行情刷新当前开放/Observation 推荐。
+                        cur = safe_float(price_map_today.get(ticker))
+                        if cur is None:
+                            # review_history 中最后一次 Review 已有 Cur_Price 时可作为历史兜底，
+                            # 但今天能取得真实行情时优先使用今天的价格。
+                            cur = safe_float(row.get("Cur_Price"))
+
+                    pnl = (
+                        round((cur - rec_price) / rec_price * 100, 2)
+                        if cur is not None and rec_price > 0
+                        else None
+                    )
+
+                    event_rows.append({
+                        "ticker": ticker,
+                        "name": clean_text(row.get("Name"), ticker),
+                        "rec_date": rec_dt.strftime("%Y-%m-%d"),
+                        "rec_price": rec_price,
+                        "status": status,
+                        "tag": clean_text(row.get("Tag")),
+                        "current_price": cur,
+                        "pnl": pnl,
+                        "data_status": "OK" if pnl is not None else "PRICE_MISSING",
+                    })
+
+        except Exception as e:
+            print(f"⚠️ 从 review_history 重建 Scan 推荐事件失败：{e}")
+
+    # --------------------------------------------------------
+    # 补充来源：trade_history.csv
+    # 某些刚产生、尚未写入 review_history 的事件也要纳入。
+    # --------------------------------------------------------
     if os.path.exists(TRADE_HISTORY) and os.path.getsize(TRADE_HISTORY) > 0:
         try:
             th = load_trade_history()
-            for _, row in th.iterrows():
-                rec_dt = normalize_date(row.get("Date"))
-                ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
-                if rec_dt is None or not ticker or rec_dt < cutoff:
-                    continue
-                add_event(
-                    ticker=ticker,
-                    name=clean_text(row.get("Name"), ticker),
-                    rec_date=rec_dt,
-                    rec_price=safe_record_price(row),
-                    tag=clean_text(row.get("Tag")),
-                    score=clean_text(row.get("Final_Score"), clean_text(row.get("Score"), "N/A")),
-                    source="trade_history.csv",
-                )
-        except Exception as e:
-            print(f"⚠️ 从 trade_history 补充推荐事件失败：{e}")
+            if not th.empty:
+                cutoff = pd.Timestamp(today_us_str()) - pd.Timedelta(days=30)
+                th = th[th["Date"] >= cutoff].copy()
 
-    # 3) 状态索引：trade_history 优先，review_history 作为归档兜底。
-    th_lookup = {}
-    try:
-        th = load_trade_history()
-        if not th.empty:
-            for _, row in th.iterrows():
-                rd = normalize_date(row.get("Date")); tk = resolve_ticker(row.get("Ticker"), row.get("Name"))
-                if rd is not None and tk:
-                    th_lookup[(tk.upper(), rd.strftime("%Y-%m-%d"))] = row.to_dict()
-    except Exception:
-        pass
-
-    rh_lookup = {}
-    if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
-        try:
-            rh = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
-            if not rh.empty:
-                rh["_rec_dt"] = pd.to_datetime(rh.get("Rec_Date", ""), errors="coerce", format="mixed")
-                rh["_review_dt"] = pd.to_datetime(rh.get("Review_Date", ""), errors="coerce", format="mixed")
-                for _, row in rh.sort_values(["_rec_dt", "_review_dt"]).iterrows():
-                    rd = row["_rec_dt"]; tk = resolve_ticker(row.get("Ticker"), row.get("Name"))
-                    if pd.isna(rd) or not tk:
+                for _, row in th.iterrows():
+                    ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+                    if not ticker:
                         continue
-                    key=(tk.upper(), rd.strftime("%Y-%m-%d"))
-                    rh_lookup[key]=row.to_dict()
+                    rec_dt = normalize_date(row.get("Date"))
+                    if rec_dt is None:
+                        continue
+                    rec_price = safe_record_price(row)
+                    tag = clean_text(row.get("Tag"))
+                    key = (
+                        ticker.upper(),
+                        rec_dt.strftime("%Y-%m-%d"),
+                        tag,
+                    )
+
+                    # 已存在的 review_history 事件不重复追加。
+                    exists = any(
+                        (e["ticker"].upper(), e["rec_date"], e["tag"]) == key
+                        for e in event_rows
+                    )
+                    if exists:
+                        continue
+
+                    exit_price = safe_float(row.get("Exit_Price"))
+                    status = clean_text(row.get("Status"))
+                    if status in {
+                        "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓",
+                        "已超期归档", "突发清仓暂停", "周期到期清仓"
+                    } and exit_price is not None:
+                        cur = exit_price
+                    else:
+                        cur = safe_float(price_map_today.get(ticker))
+
+                    pnl = (
+                        round((cur-rec_price)/rec_price*100,2)
+                        if rec_price and rec_price > 0 and cur is not None
+                        else None
+                    )
+                    event_rows.append({
+                        "ticker":ticker,
+                        "name":clean_text(row.get("Name"),ticker),
+                        "rec_date":rec_dt.strftime("%Y-%m-%d"),
+                        "rec_price":rec_price,
+                        "status":status,
+                        "tag":tag,
+                        "current_price":cur,
+                        "pnl":pnl,
+                        "data_status":"OK" if pnl is not None else ("NO_REC_PRICE" if rec_price is None else "PRICE_MISSING"),
+                    })
         except Exception as e:
-            print(f"⚠️ review_history 状态索引失败：{e}")
+            print(f"⚠️ 从 trade_history 补充 Scan 推荐事件失败：{e}")
 
-    closed_statuses = {
-        "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓", "止损触发",
-        "已超期归档", "突发清仓暂停", "周期到期清仓", "Period_Matured", "Dropped"
-    }
-    open_statuses = {"", "Active", "pending", "持仓中", "观察推荐"}
-
-    event_rows=[]
-    for key, base in event_map.items():
-        throw = th_lookup.get(key, {})
-        rrow = rh_lookup.get(key, {})
-        status = clean_text(throw.get("Status"), clean_text(rrow.get("Status")))
-        tag = clean_text(base.get("tag")) or clean_text(throw.get("Tag")) or clean_text(rrow.get("Tag"))
-        rec_price = safe_float(base.get("rec_price"))
-        if rec_price is None:
-            rec_price = safe_record_price(throw) or safe_float(rrow.get("Rec_Price"))
-
-        exit_price = safe_float(throw.get("Exit_Price"))
-        if exit_price is None:
-            exit_price = safe_float(rrow.get("Cur_Price")) if status in closed_statuses else None
-
-        is_closed = status in closed_statuses and exit_price is not None
-        is_open = not is_closed and status in open_statuses
-
-        if is_closed:
-            cur = exit_price
-            lifecycle = "CLOSED"
-        else:
-            cur = safe_float(price_map_today.get(base["ticker"]))
-            if cur is None:
-                cur = safe_float(rrow.get("Cur_Price"))
-            lifecycle = "OPEN" if is_open else ("DATA_GAP" if cur is None else "OPEN")
-
-        pnl = round((cur-rec_price)/rec_price*100,2) if rec_price and rec_price>0 and cur is not None else None
-        if rec_price is None:
-            data_status="NO_REC_PRICE"
-        elif cur is None:
-            data_status="PRICE_MISSING"
-        else:
-            data_status="OK"
-
-        event_rows.append({
-            "ticker":base["ticker"], "name":base["name"], "rec_date":base["rec_date"],
-            "rec_price":rec_price, "status":status, "tag":tag, "current_price":cur,
-            "pnl":pnl, "data_status":data_status, "is_closed":is_closed, "is_open":is_open,
-            "lifecycle":lifecycle, "exit_price":exit_price, "score":base.get("score","N/A"),
-            "source_file":base.get("source_file", ""),
-        })
-
-    event_rows.sort(key=lambda x:(x.get("rec_date",""),x.get("ticker","")))
+    # 最终稳定排序：推荐日期 -> ticker -> tag
+    event_rows.sort(key=lambda x: (x.get("rec_date", ""), x.get("ticker", ""), x.get("tag", "")))
     return event_rows
 
-
 scan_events = build_scan_recommendation_events()
 
-# 关键修复：Scan事件的“当前价格”必须独立刷新。
-# 不能因为 Observation 不是实际持仓，就只从 active_list / price_map_today 取价格。
-_event_tickers = sorted({e["ticker"].upper() for e in scan_events if e.get("ticker")})
-_event_latest_quotes = fetch_latest_regular_closes(_event_tickers)
-for _ticker, _q in _event_latest_quotes.items():
-    price_map_today[_ticker] = _q["close"]
-    ohlc_map_today[_ticker] = {
-        "open": _q["close"],
-        "high": _q["close"],
-        "low": _q["close"],
-        "close": _q["close"],
-    }
-
-# 价格刷新后重新构建事件账本，让所有 Open Core / Observation 都用同一份最新价。
-scan_events = build_scan_recommendation_events()
-
-# 用统一推荐事件账本中的最新价格刷新 Observation 展示。
+# 用统一推荐事件账本中的最新价格刷新 Observation 展示，避免仅依赖第一次行情下载。
 _event_price_map = {(e["ticker"].upper(), e["rec_date"], e["tag"]): e for e in scan_events}
 for _obs in observation_list:
     _key = (clean_text(_obs.get("代码")).upper(), clean_text(_obs.get("首次推荐日")), "Observation")
     _evt = _event_price_map.get(_key)
-    if _evt is not None:
-        if _evt.get("current_price") is not None:
-            _obs["当前价格"] = _evt["current_price"]
-            _obs["推荐跟踪涨跌幅(%)"] = _evt.get("pnl")
-            _obs["当前价格来源"] = "Scan事件独立行情刷新"
-            _obs["当前价格数据日期"] = _event_latest_quotes.get(_evt["ticker"].upper(), {}).get("date", today_us_str())
-        else:
-            _obs["当前价格来源"] = "未取得最新价格"
-            _obs["当前价格数据日期"] = ""
+    if _evt is not None and _evt.get("current_price") is not None:
+        _obs["当前价格"] = _evt["current_price"]
+        _obs["推荐跟踪涨跌幅(%)"] = _evt.get("pnl")
 
 
 # 只统计最近30天 Scan 推荐事件
@@ -1587,94 +1486,81 @@ scan_events_30d = [
 stock_events_valid = [e for e in scan_events_30d if e["pnl"] is not None]
 stock_events_missing = [e for e in scan_events_30d if e["pnl"] is None]
 
-# ---- 关键口径 V21：Open 不能当作历史胜负；只有 CLOSED 才进入“已完成胜率” ----
-closed_events = [e for e in scan_events_30d if e.get("is_closed") and e.get("pnl") is not None]
-open_events = [e for e in scan_events_30d if e.get("is_open") and e.get("pnl") is not None]
+event_pnl = [e["pnl"] for e in stock_events_valid]
 
-closed_pnl = [e["pnl"] for e in closed_events]
-closed_wins = sum(p > 0 for p in closed_pnl)
-closed_losses = sum(p < 0 for p in closed_pnl)
-closed_neutral = sum(p == 0 for p in closed_pnl)
-closed_win_rate = closed_wins / len(closed_pnl) * 100 if closed_pnl else 0.0
+recommendation_wins = sum(p > 0 for p in event_pnl)
+recommendation_losses = sum(p < 0 for p in event_pnl)
+recommendation_neutral = sum(p == 0 for p in event_pnl)
 
-# 当前跟踪：只看仍未结束的 Core + Observation。
-open_wins = sum(e["pnl"] > 0 for e in open_events)
-open_losses = sum(e["pnl"] < 0 for e in open_events)
-open_neutral = sum(e["pnl"] == 0 for e in open_events)
-open_tracking_win_rate = open_wins / len(open_events) * 100 if open_events else 0.0
+recommendation_win_rate = (
+    recommendation_wins / len(event_pnl) * 100
+    if event_pnl else 0.0
+)
 
-# 实际持仓：严格排除 Observation，只统计仍在 Active/持仓中的 Core 类事件。
+# 实际持仓：只统计非 Observation 的当前 Active/持仓事件
 active_event_rows = [
-    e for e in open_events
-    if e.get("tag") != "Observation"
-    and e.get("status") in ("Active", "持仓中", "")
+    e for e in scan_events_30d
+    if e["tag"] != "Observation"
+    and e["status"] in ("Active", "持仓中", "")
 ]
-active_tracking = [e["pnl"] for e in active_event_rows]
+active_tracking = [e["pnl"] for e in active_event_rows if e["pnl"] is not None]
+
+# Observation：全部进入 Scan 推荐绩效
+observation_event_rows = [
+    e for e in scan_events_30d
+    if e["tag"] == "Observation"
+]
+observation_tracking = [e["pnl"] for e in observation_event_rows if e["pnl"] is not None]
+
 actual_active_wins = sum(p > 0 for p in active_tracking)
-actual_active_losses = sum(p < 0 for p in active_tracking)
-actual_active_neutral = sum(p == 0 for p in active_tracking)
-actual_active_win_rate = actual_active_wins / len(active_tracking) * 100 if active_tracking else 0.0
+actual_active_win_rate = (
+    actual_active_wins / len(active_tracking) * 100
+    if active_tracking else 0.0
+)
 
-# 当前 Observation 跟踪（不作为持仓）。
-observation_open = [e for e in open_events if e.get("tag") == "Observation"]
-observation_tracking = [e["pnl"] for e in observation_open]
 obs_wins = sum(p > 0 for p in observation_tracking)
-obs_losses = sum(p < 0 for p in observation_tracking)
-obs_neutral = sum(p == 0 for p in observation_tracking)
-obs_win_rate = obs_wins / len(observation_tracking) * 100 if observation_tracking else 0.0
+obs_win_rate = (
+    obs_wins / len(observation_tracking) * 100
+    if observation_tracking else 0.0
+)
 
-# 当前开放推荐综合跟踪 = Core + Observation；与“已完成胜率”严格分开。
-tracking_wins = open_wins
-tracking_losses = open_losses
-tracking_neutral = open_neutral
-tracking_win_rate = open_tracking_win_rate
+current_tracking = active_tracking + observation_tracking
+tracking_wins = sum(p > 0 for p in current_tracking)
+tracking_losses = sum(p < 0 for p in current_tracking)
+tracking_neutral = sum(p == 0 for p in current_tracking)
+tracking_win_rate = (
+    tracking_wins / len(current_tracking) * 100
+    if current_tracking else 0.0
+)
 
-# 已完成 Core / Observation 各自统计。
-closed_core = [e for e in closed_events if e.get("tag") != "Observation"]
-closed_obs = [e for e in closed_events if e.get("tag") == "Observation"]
-core_closed_pnl = [e["pnl"] for e in closed_core]
-obs_closed_pnl = [e["pnl"] for e in closed_obs]
-core_closed_wins = sum(p > 0 for p in core_closed_pnl)
-core_closed_losses = sum(p < 0 for p in core_closed_pnl)
-obs_closed_wins = sum(p > 0 for p in obs_closed_pnl)
-obs_closed_losses = sum(p < 0 for p in obs_closed_pnl)
-core_closed_win_rate = core_closed_wins / len(core_closed_pnl) * 100 if core_closed_pnl else 0.0
-obs_closed_win_rate = obs_closed_wins / len(obs_closed_pnl) * 100 if obs_closed_pnl else 0.0
-
-# Core / Observation 全部“当前跟踪”统计；两者必须分开，不能用一个综合胜率替代。
-core_open = [e["pnl"] for e in open_events if e.get("tag") != "Observation"]
-core_open_wins = sum(p > 0 for p in core_open)
-core_open_losses = sum(p < 0 for p in core_open)
-core_open_neutral = sum(p == 0 for p in core_open)
-core_open_win_rate = core_open_wins / len(core_open) * 100 if core_open else 0.0
-
-# 最近30天事件数量也分层展示，避免把 Core 与 Observation 混成一个池。
-core_events_30d = [e for e in scan_events_30d if e.get("tag") != "Observation"]
-observation_events_30d = [e for e in scan_events_30d if e.get("tag") == "Observation"]
-core_event_count = len(core_events_30d)
-observation_event_count = len(observation_events_30d)
-core_closed_count = len(core_closed_pnl)
-observation_closed_count = len(obs_closed_pnl)
-core_open_count = len(core_open)
-observation_open_count = len(observation_tracking)
-
-# 数据质量拆分，避免“数据不足”成为黑箱。
-no_rec_price_count = sum(1 for e in stock_events_missing if e.get("data_status") == "NO_REC_PRICE")
-price_missing_count = sum(1 for e in stock_events_missing if e.get("data_status") == "PRICE_MISSING")
-other_missing_count = len(stock_events_missing) - no_rec_price_count - price_missing_count
+# 已了结股票：不是 Observation 且状态已经退出
+closed_stock_events = [
+    e for e in scan_events_30d
+    if e["tag"] != "Observation"
+    and e["status"] not in ("Active", "持仓中", "")
+    and e["status"] not in ("期权平仓",)
+    and e["pnl"] is not None
+]
+closed_stock_pnl = [e["pnl"] for e in closed_stock_events]
+closed_stock_wins = sum(p > 0 for p in closed_stock_pnl)
+closed_stock_win_rate = (
+    closed_stock_wins / len(closed_stock_pnl) * 100
+    if closed_stock_pnl else 0.0
+)
 
 total_scan_recommendations = len(scan_events_30d)
 valid_performance_samples = len(stock_events_valid)
 data_insufficient_count = len(stock_events_missing)
 
-# 绩效贡献：只对已经完成的股票事件统计，避免把当前浮盈当作历史已实现贡献。
-all_stock_pnl = closed_pnl
-a_super_threshold = 50.0
-super_contribution = sum(p for p in all_stock_pnl if p >= a_super_threshold)
-other_winners = [p for p in all_stock_pnl if 0 < p < a_super_threshold]
+all_stock_pnl = event_pnl
+super_threshold = 50.0
+super_contribution = sum(p for p in all_stock_pnl if p >= super_threshold)
+
+other_winners = [p for p in all_stock_pnl if 0 < p < super_threshold]
 losers = [p for p in all_stock_pnl if p < 0]
 other_avg = sum(other_winners)/len(other_winners) if other_winners else 0.0
 loser_avg = sum(losers)/len(losers) if losers else 0.0
+
 
 # 期权独立 KPI
 option_closed_pnl = [safe_float(x.get("pnl"),0.0) for x in option_closed_records]
@@ -1683,17 +1569,15 @@ option_win_rate = option_wins/len(option_closed_pnl)*100 if option_closed_pnl el
 
 
 print(
-    f"📊 最近30天 Scan推荐事件：{total_scan_recommendations}；"
-    f"有价格 {valid_performance_samples}；数据不足 {data_insufficient_count} "
-    f"(无推荐价 {no_rec_price_count} / 无当前价 {price_missing_count} / 其他 {other_missing_count})"
+    f"📊 Scan推荐事件：{total_scan_recommendations}；"
+    f"有效绩效：{valid_performance_samples}；"
+    f"数据不足：{data_insufficient_count}"
 )
-print(f"📊 已完成 Scan推荐胜率：{closed_win_rate:.2f}% ({closed_wins} 赢 / {closed_losses} 亏 / {closed_neutral} 平)")
-print(f"📊 当前开放推荐跟踪：{tracking_win_rate:.2f}% ({tracking_wins} 赢 / {tracking_losses} 亏 / {tracking_neutral} 平)")
-print(f"📊 当前实际持仓跟踪：{actual_active_win_rate:.2f}% ({actual_active_wins} 赢 / {actual_active_losses} 亏 / {actual_active_neutral} 平)")
-print(f"📊 Core已完成胜率：{core_closed_win_rate:.2f}% ({core_closed_wins} 赢 / {core_closed_losses} 亏)")
-print(f"📊 Observation已完成胜率：{obs_closed_win_rate:.2f}% ({obs_closed_wins} 赢 / {obs_closed_losses} 亏)")
-print(f"📊 当前Observation跟踪：{obs_win_rate:.2f}% ({obs_wins} 赢 / {obs_losses} 亏 / {obs_neutral} 平)")
-print(f"📊 已了结股票推荐胜率：{closed_win_rate:.2f}%")
+print(f"📊 Scan推荐综合胜率：{recommendation_win_rate:.2f}%")
+print(f"📊 当前推荐跟踪胜率：{tracking_win_rate:.2f}%")
+print(f"📊 实际持仓胜率：{actual_active_win_rate:.2f}%")
+print(f"📊 Observation胜率：{obs_win_rate:.2f}%")
+print(f"📊 已了结股票胜率：{closed_stock_win_rate:.2f}%")
 
 
 # ============================================================
@@ -1719,103 +1603,56 @@ def _pct(v):
     return "N/A" if x is None else f"{x:+.2f}%"
 
 kpi_html = f"""
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:15px;margin-bottom:20px;">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:15px;margin-bottom:20px;">
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
-<div style="font-size:13px;color:#7f8c8d;">最近30天股票 Scan 推荐事件</div>
-<div style="font-size:24px;font-weight:bold;">{total_scan_recommendations}</div>
-<div style="font-size:12px;">Core {core_event_count} · Observation {observation_event_count}</div>
-<div style="font-size:11px;color:#607d8b;">有价格 {valid_performance_samples} · 数据不足 {data_insufficient_count} · 无推荐价 {no_rec_price_count} · 无当前价 {price_missing_count} · 其他 {other_missing_count}</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #2ecc71;">
-<div style="font-size:13px;color:#7f8c8d;">已完成 Scan 推荐胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#2ecc71;">{closed_win_rate:.2f}%</div>
-<div style="font-size:12px;">{closed_wins} 赢 / {closed_losses} 亏 / {closed_neutral} 持平</div>
-<div style="font-size:11px;color:#607d8b;">仅统计已经结束的 Core + Observation 事件；当前持仓/观察仍单独跟踪</div>
+<div style="font-size:13px;color:#7f8c8d;">最近30天 Scan 推荐</div>
+<div style="font-size:25px;font-weight:bold;">{total_scan_recommendations}</div>
+<div style="font-size:14px;font-weight:700;">Core {core_event_count}　·　Observation {observation_event_count}</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">有价格 {valid_performance_samples} · 数据不足 {data_insufficient_count} · 无推荐价 {no_rec_price_count} · 无当前价 {price_missing_count}</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1565c0;">
-<div style="font-size:13px;color:#7f8c8d;">Core 当前跟踪胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#1565c0;">{core_open_win_rate:.2f}%</div>
-<div style="font-size:12px;">{core_open_wins} 赢 / {core_open_losses} 亏 / {core_open_neutral} 平</div>
-<div style="font-size:11px;color:#607d8b;">当前未结束的 Core；独立于 Observation</div>
+<div style="font-size:14px;color:#1565c0;font-weight:700;">👑 Core</div>
+<div style="font-size:13px;margin-top:7px;">已完成胜率 <b>{core_closed_win_rate:.2f}%</b>　{core_closed_wins} 赢 / {core_closed_losses} 亏</div>
+<div style="font-size:13px;margin-top:5px;">当前跟踪 <b>{core_open_win_rate:.2f}%</b>　{core_open_wins} 赢 / {core_open_losses} 亏 / {core_open_neutral} 平</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">已完成 {core_closed_count} 笔 · 当前 {core_open_count} 笔</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
-<div style="font-size:13px;color:#7f8c8d;">Observation 当前跟踪胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#ff9800;">{obs_win_rate:.2f}%</div>
-<div style="font-size:12px;">{obs_wins} 赢 / {obs_losses} 亏 / {obs_neutral} 平</div>
-<div style="font-size:11px;color:#607d8b;">当前未结束的 Observation；不是实际持仓</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #607d8b;">
-<div style="font-size:13px;color:#7f8c8d;">Core + Observation 汇总参考</div>
-<div style="font-size:24px;font-weight:bold;color:#607d8b;">{tracking_win_rate:.2f}%</div>
-<div style="font-size:12px;">{tracking_wins} 赢 / {tracking_losses} 亏 / {tracking_neutral} 平</div>
-<div style="font-size:11px;color:#607d8b;">仅作总体参考，不替代 Core / Observation 分层统计</div>
+<div style="font-size:14px;color:#e65100;font-weight:700;">👀 Observation</div>
+<div style="font-size:13px;margin-top:7px;">已完成胜率 <b>{obs_closed_win_rate:.2f}%</b>　{obs_closed_wins} 赢 / {obs_closed_losses} 亏</div>
+<div style="font-size:13px;margin-top:5px;">当前跟踪 <b>{obs_win_rate:.2f}%</b>　{obs_open_wins} 赢 / {obs_open_losses} 亏 / {obs_open_neutral} 平</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">已完成 {observation_closed_count} 笔 · 当前 {observation_open_count} 笔 · 不计实际持仓</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e67e22;">
-<div style="font-size:13px;color:#7f8c8d;">当前实际持仓跟踪胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#e67e22;">{actual_active_win_rate:.2f}%</div>
-<div style="font-size:12px;">{actual_active_wins} 赢 / {actual_active_losses} 亏 / {actual_active_neutral} 平</div>
-<div style="font-size:11px;color:#607d8b;">仅真实持仓，不含 Observation</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #d32f2f;">
-<div style="font-size:13px;color:#7f8c8d;">Core 已完成胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#d32f2f;">{core_closed_win_rate:.2f}%</div>
-<div style="font-size:12px;">{core_closed_wins} 赢 / {core_closed_losses} 亏</div>
-<div style="font-size:11px;color:#607d8b;">已完成 Core {core_closed_count} 笔；当前 Core {core_open_count} 笔单独追踪</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
-<div style="font-size:13px;color:#7f8c8d;">Observation 已完成胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#ff9800;">{obs_closed_win_rate:.2f}%</div>
-<div style="font-size:12px;">{obs_closed_wins} 赢 / {obs_closed_losses} 亏</div>
-<div style="font-size:11px;color:#607d8b;">已完成 Observation {observation_closed_count} 笔；当前 Observation {observation_open_count} 笔单独追踪</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #8e44ad;">
-<div style="font-size:13px;color:#7f8c8d;">已了结股票推荐胜率（Core+Observation）</div>
-<div style="font-size:24px;font-weight:bold;color:#8e44ad;">{closed_win_rate:.2f}%</div>
-<div style="font-size:12px;">{closed_wins} 赢 / {closed_losses} 亏</div>
-<div style="font-size:11px;color:#607d8b;">不含期权</div>
+<div style="font-size:14px;color:#e67e22;font-weight:700;">🟢 实际持仓</div>
+<div style="font-size:25px;font-weight:bold;color:#e67e22;">{actual_active_win_rate:.2f}%</div>
+<div style="font-size:13px;">{actual_active_wins} 赢 / {actual_active_losses} 亏 / {actual_active_neutral} 平</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">当前真实持仓 {actual_active_count} 笔；它是 Core 中已实际建仓的子集</div>
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #9b59b6;">
-<div style="font-size:13px;color:#7f8c8d;">期权已了结胜率</div>
-<div style="font-size:24px;font-weight:bold;color:#9b59b6;">{option_win_rate:.2f}%</div>
-<div style="font-size:12px;">{option_wins} 赢 / {len(option_closed_pnl)-option_wins} 亏</div>
-<div style="font-size:11px;color:#607d8b;">完全独立于股票 Scan 推荐</div>
+<div style="font-size:14px;color:#8e44ad;font-weight:700;">🎲 期权</div>
+<div style="font-size:25px;font-weight:bold;color:#8e44ad;">{option_win_rate:.2f}%</div>
+<div style="font-size:13px;">{option_wins} 赢 / {option_losses} 亏 / {option_neutral} 平</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">只统计已经结束的期权，与股票 Scan 完全分开</div>
 </div>
 
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #9b59b6;">
-<div style="font-size:13px;color:#7f8c8d;">超级赢家贡献</div>
-<div style="font-size:24px;font-weight:bold;">+{super_contribution:.2f}%</div>
-<div style="font-size:12px;">单笔股票推荐盈利 ≥ 50%</div>
+<div style="background:#f7f9fb;border:1px solid #dfe6ee;border-radius:10px;padding:15px;grid-column:1/-1;">
+<div style="font-size:13px;font-weight:700;color:#455a64;">📌 统计口径</div>
+<div style="font-size:12px;line-height:1.8;color:#546e7a;margin-top:5px;">
+Core 与 Observation 不再混成一个主胜率。<br>
+<strong>Core 已完成胜率</strong> = 已结束的 Core 推荐事件；<strong>Core 当前跟踪</strong> = 尚未结束的 Core 推荐事件。<br>
+<strong>Observation 已完成胜率</strong> = 已结束的 Observation 推荐事件；<strong>Observation 当前跟踪</strong> = 尚未结束的 Observation 推荐事件。<br>
+<strong>实际持仓胜率</strong> = 当前真实建仓且仍持有的 Core 子集，因此它与 Core 当前跟踪胜率可以不同；Observation 永远不进入实际持仓统计。<br>
+当前浮盈/浮亏只用于“当前跟踪”，只有真实结束并有退出价格的事件才进入“已完成胜率”。
 </div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #1abc9c;">
-<div style="font-size:13px;color:#7f8c8d;">其余盈利平均</div>
-<div style="font-size:24px;font-weight:bold;">+{other_avg:.2f}%</div>
-<div style="font-size:12px;">排除超级赢家</div>
-</div>
-
-<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #e74c3c;">
-<div style="font-size:13px;color:#7f8c8d;">亏损平均</div>
-<div style="font-size:24px;font-weight:bold;">{loser_avg:.2f}%</div>
-<div style="font-size:12px;">所有有效股票 Scan 推荐亏损</div>
-</div>
-
-<div style="background:#eef7ff;border-left:6px solid #1976d2;padding:12px 15px;border-radius:8px;margin-top:12px;">
-<b>绩效口径：</b>Core 与 Observation 永久分层统计。Core：已完成胜率 + 当前跟踪胜率 + 实际持仓跟踪；Observation：已完成胜率 + 当前跟踪胜率。两者不混算；“Core + Observation 汇总”仅作为参考，不用于替代分层判断。已完成胜率只计算真实结束事件，当前浮盈/浮亏只进入当前跟踪。
 </div>
 
 </div>
 """
-
 
 
 # ============================================================
@@ -1839,9 +1676,7 @@ def build_observation_html():
 <b>连续推荐：</b>{x.get("系统连续推荐次数","1")}　
 <b>今日新增：</b>{x.get("今日新增","否")}</div>
 <div><b>当前价格：</b>{_price(x.get("当前价格"))}　
-<b>推荐跟踪涨跌幅：</b>{pnl_text}　
-<b>价格来源：</b>{x.get("当前价格来源","Scan事件独立行情刷新")}　
-<b>数据日期：</b>{x.get("当前价格数据日期","N/A")}</div>
+<b>推荐跟踪涨跌幅：</b>{pnl_text}</div>
 <div><b>RSI：</b>{x.get("RSI")}　<b>Bias：</b>{x.get("Bias")}　
 <b>技术评分：</b>{x.get("技术评分")}　<b>估值评分：</b>{x.get("估值评分")}</div>
 <div><b>PE：</b>{x.get("PE_TTM")}　
@@ -1957,7 +1792,7 @@ recent_option_recommendations = load_recent_option_recommendations()
 
 ai_html = ""
 try:
-    client = ClawSocketClient(
+    client = anthropic.Anthropic(
         api_key=os.environ.get("CLAWSOCKET_API_KEY"),
         base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
     )
@@ -1998,7 +1833,7 @@ try:
         for text in stream.text_stream:
             ai_html += text
 except Exception as e:
-    print(f"⚠️ AI 风控报告生成失败：{e}")
+    print(f"⚠️ Claude 报告生成失败：{e}")
     ai_html = """
 <div style="background:#fff3cd;border-left:6px solid #f0ad4e;padding:20px;border-radius:8px;">
 <h3>AI 风控报告暂时不可用</h3>
@@ -2038,7 +1873,7 @@ body {{
 <body>
 <div class="card">
 <h2 style="color:#2c3e50;margin-bottom:20px;border-bottom:3px solid #1565c0;padding-bottom:10px;">
-美股盘后复盘与风控审查报告（Scan推荐事件独立追踪 / 含期权）
+美股盘后复盘与风控审查报告（Core / Observation 分层统计 / 含期权）
 </h2>
 
 {kpi_html}
@@ -2097,6 +1932,6 @@ print(
     f"Scan推荐 {total_scan_recommendations} 笔，"
     f"有效 {valid_performance_samples}，"
     f"数据不足 {data_insufficient_count}，"
-    f"综合胜率 {closed_win_rate:.2f}%"
+    f"综合胜率 {recommendation_win_rate:.2f}%"
 )
 print("=" * 60)
