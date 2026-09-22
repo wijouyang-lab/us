@@ -2715,8 +2715,15 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
 
 
 def build_verified_core_html(ai_html, verified_items):
-    """用程序最终入账集合重建邮件 Core，避免 AI 候选池外股票占据 Top1-5。"""
-    core_items = [x for x in verified_items if x.get("Tag") == "Core_Dragon"][: int(LIMIT_PARAMS.get("max_core", 5))]
+    """用程序最终入账集合重建 Core + Observation，彻底杜绝同一股票同时出现在两栏。"""
+    max_core = int(LIMIT_PARAMS.get("max_core", 5))
+    max_obs = int(LIMIT_PARAMS.get("max_observation", 7))
+    core_items = [x for x in verified_items if x.get("Tag") == "Core_Dragon"][:max_core]
+    core_tickers = {str(x.get("Ticker", "")).upper() for x in core_items}
+    obs_items = [
+        x for x in verified_items
+        if x.get("Tag") == "Observation" and str(x.get("Ticker", "")).upper() not in core_tickers
+    ][:max_obs]
 
     def fmt(v, digits=2):
         try:
@@ -2734,50 +2741,59 @@ def build_verified_core_html(ai_html, verified_items):
             return fallback
         clean = re.sub(r"<[^>]+>", " ", chunk)
         clean = re.sub(r"\s+", " ", clean).strip()
-        m = re.search(re.escape(label) + r"\s*:?\s*(.{0,260})", clean, re.I)
+        m = re.search(re.escape(label) + r"\s*(?:[:：])?\s*(.{0,300})", clean, re.I)
         if m:
             return m.group(1).strip(" -—:：")
         return fallback
 
-    cards = []
-    for rank, item in enumerate(core_items, 1):
-        chunk = str(item.get("_AI_Chunk", "") or "")
+    def render_meta(item, tag):
         news = "；".join(item.get("个股新闻", [])[:2]) if item.get("个股新闻") else "暂无最新新闻"
-        logic = ai_summary(chunk, "产业链逻辑", "程序候选通过硬门槛；以程序量化数据为准。")
         tech = "、".join(map(str, item.get("技术确认信号", []) or [])) or "暂无"
-        stop = item.get("Stop_Loss", "") or "N/A"
-        cards.append(f"""
-<div class="top-card core-card">
-<div class="top-title">{rank}. {esc(item.get("Name"))} ({esc(item.get("Ticker"))}) | 昨收:${esc(fmt(item.get("Price"),2))} | 盘前:${esc(fmt(item.get("Premarket_Price"),2))} | 盘前变动:{esc(fmt(item.get("Premarket_Change_Pct"),2))}% | RSI:{esc(fmt(item.get("RSI"),1))} | 乖离率:{esc(fmt(item.get("乖离率(%)"),2))}%</div>
-<p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>{esc(logic)}</p>
-<p><span class="highlight-label bg-green">📰 个股新闻核查:</span>{esc(news)}</p>
-<p><span class="highlight-label bg-blue">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get("技术确认数",0))}项</p>
-<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>最终 {esc(fmt(item.get("Final_Score", item.get("Score")),1))}/100 | Quant {esc(fmt(item.get("Quant_Score"),1))} | AI {esc(fmt(item.get("AI_Score"),1))}</p>
-<p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:{esc(fmt(item.get("Quant_Score"),1))}/100 | 基本面:{esc(item.get("Fundamental_Score",0))}/35 | 事件:{esc(item.get("Event_Score",0))}/20 | 技术:{esc(item.get("Technical_Score_25",0))}/25 | 风险/流动性:{esc(item.get("Risk_Liquidity_Score",0))}/20 | 技术确认:{esc(item.get("技术确认数",0))}项 | MA20:{esc(fmt(item.get("MA20"),2))} | MA20斜率5日:{esc(fmt(item.get("MA20_Slope_Pct_5D"),3))}% | Sector RS20D:{esc(fmt(item.get("Sector_RS_20D_Pct"),2))}%</p>
-<p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)} | ATR:{esc(fmt(item.get("ATR_Pct"),2))}% | Regime:{esc(item.get("Market_Regime","N/A"))}</p>
-<p><span class="highlight-label bg-blue">🕒 数据时间:</span>技术K线={esc(item.get("Technical_Date","N/A"))} | 盘前报价={esc(item.get("Premarket_AsOf_ET") or "N/A")} | 新闻快照={esc(item.get("News_AsOf_ET") or "N/A")}</p>
-<p style="color:#607d8b;font-size:13px;"><b>程序校验：</b>RSI、乖离率、Quant 与技术确认均来自程序候选池；候选池外股票不会进入 Core。</p>
-<p><b>期权：</b>不要在 AI 正文中编造行权价、到期日、权利金、Delta 或 IV；真实期权策略由程序从期权链读取后统一插入。</p>
+        chunk = str(item.get("_AI_Chunk", "") or "")
+        logic = ai_summary(chunk, "产业链逻辑", "程序候选通过硬门槛；以程序量化数据为准。")
+        label = "👑 核心精选" if tag == "Core_Dragon" else "👀 Observation"
+        stop = item.get("Stop_Loss", "") or ("观望" if tag == "Observation" else "N/A")
+        return f"""
+<div class=\"{'top-card core-card' if tag == 'Core_Dragon' else 'compare-card'}\">
+<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(item.get('Price'),2))} | 盘前:${esc(fmt(item.get('Premarket_Price'),2))} | 盘前变动:{esc(fmt(item.get('Premarket_Change_Pct'),2))}% | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
+<p><span class=\"highlight-label bg-red\">🔗 产业链逻辑:</span>{esc(logic)}</p>
+<p><span class=\"highlight-label bg-green\">📰 个股新闻核查:</span>{esc(news)}</p>
+<p><span class=\"highlight-label bg-blue\">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get('技术确认数',0))}项</p>
+<p><span class=\"highlight-label bg-teal\">⭐ 推荐评分:</span>最终 {esc(fmt(item.get('Final_Score', item.get('Score')),1))}/100 | Quant {esc(fmt(item.get('Quant_Score'),1))} | AI {esc(fmt(item.get('AI_Score'),1))}</p>
+<p><span class=\"highlight-label bg-blue\">📊 量化拆解:</span>Quant:{esc(fmt(item.get('Quant_Score'),1))}/100 | 基本面:{esc(item.get('Fundamental_Score',0))}/35 | 事件:{esc(item.get('Event_Score',0))}/20 | 技术:{esc(item.get('Technical_Score_25',0))}/25 | 风险/流动性:{esc(item.get('Risk_Liquidity_Score',0))}/20 | 技术确认:{esc(item.get('技术确认数',0))}项 | MA20:{esc(fmt(item.get('MA20'),2))} | MA20斜率5日:{esc(fmt(item.get('MA20_Slope_Pct_5D'),3))}% | Sector RS20D:{esc(fmt(item.get('Sector_RS_20D_Pct'),2))}%</p>
+<p><span class=\"highlight-label bg-orange\">⚠️ 动态风控:</span>{'观察，不执行持仓止损' if tag == 'Observation' else f'持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)}'} | ATR:{esc(fmt(item.get('ATR_Pct'),2))}% | Regime:{esc(item.get('Market_Regime','N/A'))}</p>
+<p><span class=\"highlight-label bg-blue\">🕒 数据时间:</span>技术K线={esc(item.get('Technical_Date','N/A'))} | 盘前报价={esc(item.get('Premarket_AsOf_ET') or 'N/A')} | 新闻快照={esc(item.get('News_AsOf_ET') or 'N/A')}</p>
+<p style=\"color:#607d8b;font-size:13px;\"><b>程序校验：</b>{'Observation 仅作跟踪，不计入实际持仓；不会与 Core 重复。' if tag == 'Observation' else 'Core 与 pending 使用同一程序候选集合；候选池外 AI 推荐自动剔除。'}</p>
 </div>
-""")
+"""
+
+    core_cards = [render_meta(x, "Core_Dragon") for x in core_items]
+    obs_cards = [render_meta(x, "Observation") for x in obs_items]
 
     verified_block = (
         '<h2>👑 核心精选（程序校验 Top 1-5）</h2>'
-        + ("".join(cards) if cards else '<div class="header-card"><h3>今日没有达到 Core 硬门槛的新增标的</h3></div>')
-        + '<div style="background:#eef7ee;border-left:5px solid #2e7d32;padding:10px 14px;margin:12px 0 20px 0;border-radius:6px;color:#2e7d32;">🔒 程序校验：邮件 Core 与 pending 使用同一程序候选集合；候选池外 AI 推荐已自动剔除。</div>'
+        + ("".join(core_cards) if core_cards else '<div class="header-card"><h3>今日没有达到 Core 硬门槛的新增标的</h3></div>')
+        + '<div style="background:#eef7ee;border-left:5px solid #2e7d32;padding:10px 14px;margin:12px 0 20px 0;border-radius:6px;color:#2e7d32;">🔒 Core 与 Observation 已由程序最终集合重建，同一 Ticker 只能进入一个栏目。</div>'
+        + '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 Observation 观察池（程序校验 Rank 6-12）</h2>'
+        + ("".join(obs_cards) if obs_cards else '<div class="header-card"><h3>今日没有达到 Observation 硬门槛的标的</h3></div>')
+        + '<div class="compare-card"><b>说明：</b>Observation 是有效 Scan 推荐，会持续进入 Review 绩效统计，但不是实际持仓；任何已进入 Core 的 Ticker 都不会再次出现在 Observation。</div>'
     )
 
-    start = ai_html.find("<h2>👑 核心精选 Top 1-5</h2>")
-    if start < 0:
-        start = ai_html.find("核心精选 Top 1-5")
-    if start < 0:
-        return ai_html
-    obs_start = ai_html.find('class="compare-card"', start)
-    if obs_start < 0:
-        obs_start = ai_html.find("观察池", start)
-    if obs_start < 0:
-        return ai_html[:start] + verified_block
-    return ai_html[:start] + verified_block + "\n" + ai_html[obs_start:]
+    # 截断原 AI 的股票推荐区，保留上方宏观/Regime/总结内容与后续“诱多对照组”等内容。
+    start_candidates = [ai_html.find("<h2>👑 核心精选 Top 1-5</h2>"), ai_html.find("核心精选 Top 1-5")]
+    starts = [x for x in start_candidates if x >= 0]
+    if not starts:
+        return ai_html + "\n" + verified_block
+    start = min(starts)
+
+    trap_text = ai_html.find("诱多对照组", start)
+    trap_start = -1
+    if trap_text > start:
+        trap_start = ai_html.rfind('<div class="trap-card"', start, trap_text + 1)
+        if trap_start < 0:
+            trap_start = ai_html.rfind('<div', start, trap_text + 1)
+    tail = ai_html[trap_start:] if trap_start > start else ""
+    return ai_html[:start] + verified_block + "\n" + tail
 
 
 # ==================== 15. 邮件 ====================

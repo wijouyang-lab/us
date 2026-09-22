@@ -857,7 +857,7 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
 
 active_list, observation_list, expired_list, stopped_list = [], [], [], []
 
-for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
+for (orig_ticker, orig_tag), group in recent_picks.groupby(["Ticker", "Tag"], sort=False):
     group = group.sort_values("Date").copy()
     if group.empty:
         continue
@@ -1533,12 +1533,16 @@ tracking_win_rate = (
     if current_tracking else 0.0
 )
 
-# 已了结股票：不是 Observation 且状态已经退出
+# Core / Observation 分栏绩效：二者均来自同一 Scan 事件账本，避免只看 Core。
+core_tracking_rows = [e for e in scan_events_30d if e["tag"] in {"Core_Dragon", "Core_Double_Dragon", "Sub_Pioneer"} and e["pnl"] is not None]
+core_tracking_pnl = [e["pnl"] for e in core_tracking_rows]
+core_tracking_wins = sum(p > 0 for p in core_tracking_pnl)
+core_tracking_win_rate = core_tracking_wins / len(core_tracking_pnl) * 100 if core_tracking_pnl else 0.0
+
+# 已了结股票：Core + Observation 都纳入；期权记录独立排除。
 closed_stock_events = [
     e for e in scan_events_30d
-    if e["tag"] != "Observation"
-    and e["status"] not in ("Active", "持仓中", "")
-    and e["status"] not in ("期权平仓",)
+    if e["status"] not in ("Active", "持仓中", "", "期权平仓")
     and e["pnl"] is not None
 ]
 closed_stock_pnl = [e["pnl"] for e in closed_stock_events]
@@ -1576,6 +1580,7 @@ print(
 print(f"📊 Scan推荐综合胜率：{recommendation_win_rate:.2f}%")
 print(f"📊 当前推荐跟踪胜率：{tracking_win_rate:.2f}%")
 print(f"📊 实际持仓胜率：{actual_active_win_rate:.2f}%")
+print(f"📊 Core推荐跟踪胜率：{core_tracking_win_rate:.2f}%")
 print(f"📊 Observation胜率：{obs_win_rate:.2f}%")
 print(f"📊 已了结股票胜率：{closed_stock_win_rate:.2f}%")
 
@@ -1632,6 +1637,13 @@ kpi_html = f"""
 <div style="font-size:11px;color:#607d8b;">仅真实持仓，不含 Observation</div>
 </div>
 
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #d32f2f;">
+<div style="font-size:13px;color:#7f8c8d;">Core 推荐跟踪胜率</div>
+<div style="font-size:24px;font-weight:bold;color:#d32f2f;">{core_tracking_win_rate:.2f}%</div>
+<div style="font-size:12px;">{core_tracking_wins} 赢 / {len(core_tracking_pnl)-core_tracking_wins} 亏</div>
+<div style="font-size:11px;color:#607d8b;">只统计 Core 事件，用于与 Observation 独立对照</div>
+</div>
+
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #ff9800;">
 <div style="font-size:13px;color:#7f8c8d;">Observation 跟踪胜率</div>
 <div style="font-size:24px;font-weight:bold;color:#ff9800;">{obs_win_rate:.2f}%</div>
@@ -1640,7 +1652,7 @@ kpi_html = f"""
 </div>
 
 <div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #8e44ad;">
-<div style="font-size:13px;color:#7f8c8d;">已了结股票胜率</div>
+<div style="font-size:13px;color:#7f8c8d;">已了结股票推荐胜率（Core+Observation）</div>
 <div style="font-size:24px;font-weight:bold;color:#8e44ad;">{closed_stock_win_rate:.2f}%</div>
 <div style="font-size:12px;">{closed_stock_wins} 赢 / {len(closed_stock_pnl)-closed_stock_wins} 亏</div>
 <div style="font-size:11px;color:#607d8b;">不含期权</div>
@@ -1671,8 +1683,13 @@ kpi_html = f"""
 <div style="font-size:12px;">所有有效股票 Scan 推荐亏损</div>
 </div>
 
+<div style="background:#eef7ff;border-left:6px solid #1976d2;padding:12px 15px;border-radius:8px;margin-top:12px;">
+<b>绩效口径：</b>Scan 综合胜率 = Core + Observation 全部有效推荐事件；Observation 不计实际持仓，但计入推荐跟踪胜率与分层统计。
+</div>
+
 </div>
 """
+
 
 
 # ============================================================
