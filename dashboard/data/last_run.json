@@ -1,0 +1,67 @@
+{
+  "generated_at": "2026-09-23T17:55:22Z",
+  "market_updated_at": null,
+  "technical_updated_at": null,
+  "network_status": "unavailable: --no-network 已禁用行情抓取",
+  "quote_backends": [],
+  "market": {
+    "available": 0,
+    "total": 13,
+    "source_used": [],
+    "missing": [
+      "^GSPC",
+      "^IXIC",
+      "^DJI",
+      "^VIX",
+      "^TNX",
+      "^FVX",
+      "DX-Y.NYB",
+      "GC=F",
+      "SI=F",
+      "HG=F",
+      "CL=F",
+      "BZ=F",
+      "NG=F"
+    ]
+  },
+  "stocks": {
+    "total": 8,
+    "core": 3,
+    "observation": 5,
+    "kline_ok": 0,
+    "technical_ok": 0,
+    "price_source_breakdown": {
+      "pending_csv": 8
+    }
+  },
+  "review": {
+    "core_closed": 11,
+    "core_open": 2,
+    "observation_closed": 0,
+    "observation_open": 48,
+    "actual_active": 2,
+    "unresolved_pnl_events": 28,
+    "price_refreshed_count": 0,
+    "price_backfill_count": 0,
+    "partial_items": [
+      {
+        "core_open_count": 2,
+        "status": "partial",
+        "unresolved": 2
+      },
+      {
+        "observation_open_count": 48,
+        "status": "partial",
+        "unresolved": 26
+      },
+      {
+        "actual_active_count": 2,
+        "status": "partial",
+        "unresolved": 2
+      }
+    ]
+  },
+  "warnings": [],
+  "ai_status": "pending",
+  "ai_calls": 0
+}

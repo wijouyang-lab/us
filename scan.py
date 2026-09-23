@@ -3334,7 +3334,11 @@ if __name__ == "__main__":
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
         header_cols = [
-            "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线","Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX"
+            "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线",
+            "Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX",
+            # >>> Dashboard 阶段 C：把 enrich_verified_items_with_ai_details() 已生成的
+            #     AI 六段文本原样持久化（不新增 GPT 调用、不改写、不摘要、不截断）
+            "AI_industry_logic","AI_news_cn","AI_premarket_conclusion","AI_catalysts","AI_risks","AI_invalidation"
         ]
         with open(pending_file,"w",encoding="utf-8",newline="") as f:
             f.write(",".join(header_cols)+"\n")
@@ -3346,9 +3350,13 @@ if __name__ == "__main__":
                     item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
                     item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",60), item.get("Final_Score",item.get("Score","")),
                     item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("近5日放量阳线",False), item.get("Hold_Period","动态持有"),
-                    item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")), item.get("ATR_Pct",""), item.get("周期共振",False), item.get("Sector_RS_20D_Pct",""), item.get("Market_Regime",""), item.get("VIX","")
+                    item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")), item.get("ATR_Pct",""),
+                    item.get("周期共振",False), item.get("Sector_RS_20D_Pct",""), item.get("Market_Regime",""), item.get("VIX",""),
+                    # >>> Dashboard 阶段 C：AI 六段文本原样落盘（缺失即空字符串，不允许补写）
+                    item.get("AI_industry_logic",""), item.get("AI_news_cn",""), item.get("AI_premarket_conclusion",""),
+                    item.get("AI_catalysts",""), item.get("AI_risks",""), item.get("AI_invalidation","")
                 ]
-                safe_vals = [str(v).replace(","," ").replace("\n"," ") for v in vals]
+                safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
                 f.write(",".join(safe_vals)+"\n")
         print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
     else:

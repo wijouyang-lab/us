@@ -1,0 +1,4 @@
+# Dashboard 数据导出（阶段 D）所需依赖
+# dashboard_export.py 本身零依赖也能跑（内置 Yahoo HTTP / Stooq 降级路径）；
+# 装上 yfinance 后优先走 yfinance，与 scan.py 同源。
+yfinance>=0.2.40
