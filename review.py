@@ -864,6 +864,7 @@ def build_option_review_html(active_reviews, closed_records, closed_history):
     return '<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:5px;">🎲 期权盘后复盘与风控</h2>'+''.join(cards)+f'<div style="background:#fff;border:1px solid #e0e0e0;border-left:6px solid #9b59b6;padding:16px;border-radius:8px;margin-top:12px;"><div style="font-weight:800;margin-bottom:8px;">✅ 最近30天期权已完成复盘</div><ul style="margin:0;padding-left:20px;">{closed_html}</ul></div>'
 
 
+option_closed_records = process_options(price_map_today)
 active_option_reviews=build_active_option_reviews(price_map_today)
 option_closed_history=load_option_closed_history(days=30)
 
@@ -2182,6 +2183,9 @@ try:
 
 【期权平仓】
 {option_closed_records}
+
+【最近30天历史已平仓期权】
+{option_closed_history}
 
 只输出两个部分：
 1. 全局盘后风控总结。只讲市场环境和共性风险，不逐只重复股票。
