@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Invest Terminal · 美股与全球宏观 Dashboard</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ==================== HOME ==================== -->
+<div class="app" id="home">
+
+  <header class="brand">
+    <div class="brand-l">
+      <div class="logo">IT</div>
+      <div class="brand-t">
+        <h1>Invest Terminal</h1>
+        <p class="brand-sub">美股 · 全球宏观 · 量化 × AI 投研工作台</p>
+      </div>
+    </div>
+    <div class="brand-r">
+      <span class="tag" id="dataTag">加载中…</span>
+      <span class="tag" id="updatedTag">Data updated: —</span>
+      <span class="tag" id="sessionTag">—</span>
+    </div>
+  </header>
+
+  <!-- 加载 / 错误状态：fetch 成功前始终可见，避免白屏 -->
+  <div id="boot" class="boot">
+    <div class="boot-row"><span class="spinner"></span><span>Loading market data…</span></div>
+  </div>
+
+  <!-- 1. Global Market 状态栏 -->
+  <section class="card gmbar" id="gmBar"></section>
+
+  <!-- 2. Core 股票 -->
+  <section class="card sec">
+    <div class="sec-h">
+      <h2>Core 持仓</h2>
+      <span class="sec-sub" id="coreSub">核心池 · 点击卡片查看详情</span>
+    </div>
+    <div class="grid-core" id="coreList"></div>
+  </section>
+
+  <!-- 3. Observation -->
+  <section class="card sec">
+    <div class="sec-h">
+      <h2>Observation 观察池</h2>
+      <span class="sec-sub" id="obsSub">待升级标的</span>
+    </div>
+    <div class="grid-obs" id="obsList"></div>
+  </section>
+
+  <!-- 4. Global Markets + 12. Review + Options + History -->
+  <div class="grid-bottom">
+    <section class="card sec">
+      <div class="sec-h">
+        <h2>Global Markets</h2>
+        <span class="sec-sub" id="gmSub">全球市场</span>
+      </div>
+      <div id="gmNotice"></div>
+      <div id="globalWrap"></div>
+    </section>
+
+    <section class="card sec">
+      <div class="sec-h">
+        <h2>Review 复盘</h2>
+        <span class="sec-sub" id="revSubHome">近 30 天</span>
+      </div>
+      <div class="grid-review" id="reviewTiles"></div>
+      <div class="notes" id="reviewNotes"></div>
+    </section>
+
+    <section class="card sec">
+      <div class="sec-h">
+        <h2>Options 策略</h2>
+        <span class="sec-sub" id="optSubHome">来自 option_strategies.csv</span>
+      </div>
+      <div class="opt-list" id="optHomeList"></div>
+    </section>
+
+    <section class="card sec">
+      <div class="sec-h">
+        <h2>History 跟踪趋势</h2>
+        <span class="sec-sub" id="histSub">review_history.csv 每日快照</span>
+      </div>
+      <div id="histList"></div>
+    </section>
+  </div>
+
+  <footer class="foot" id="footInfo">真实数据 · 数据源 dashboard_data.json</footer>
+</div>
+
+<!-- ==================== DETAIL ==================== -->
+<div class="detail hidden" id="detail">
+  <div class="detail-inner">
+
+    <div class="detail-bar">
+      <button class="btn-back" id="btnBack">← 返回</button>
+      <div class="db-id">
+        <div class="db-line1"><span class="db-tk" id="dTicker">—</span><span class="db-nm" id="dName">—</span></div>
+        <div class="db-line2"><span class="db-px" id="dPrice">—</span><span class="db-ch" id="dChange">—</span></div>
+      </div>
+      <div class="db-right">
+        <div class="db-ring" id="dRing"></div>
+        <div class="db-badges" id="dBadges"></div>
+      </div>
+    </div>
+
+    <div class="d-grid">
+      <div class="d-left">
+
+        <!-- 7/8. K 线 + 指标矩阵 -->
+        <section class="card sec">
+          <div class="sec-h">
+            <h2>价格走势</h2>
+            <div class="chips" id="rangeChips"></div>
+          </div>
+          <div class="chart-wrap" id="chartPriceWrap">
+            <canvas id="chartPrice" style="height:320px"></canvas>
+          </div>
+          <div class="legend" id="legendPrice"></div>
+          <div class="chart-wrap" id="chartVolWrap" style="margin-top:8px">
+            <canvas id="chartVol" style="height:92px"></canvas>
+          </div>
+        </section>
+
+        <section class="card sec">
+          <div class="sec-h">
+            <h2>技术指标矩阵</h2>
+            <span class="sec-sub">日线 · MA20 / MA50 / RSI14 / MACD / KDJ / ATR14</span>
+          </div>
+          <div class="grid-ind" id="indGrid"></div>
+        </section>
+
+        <!-- 10. AI 分析 -->
+        <section class="card sec">
+          <div class="sec-h">
+            <h2>AI 分析</h2>
+            <span class="tag tag-ai">AI Score <b id="aiScoreTxt">–</b></span>
+          </div>
+          <div id="aiPendingNotice"></div>
+          <div class="ai-grid">
+            <div class="ai-block span2">
+              <h3>🧠 产业链逻辑</h3>
+              <p id="aiChain"></p>
+            </div>
+            <div class="ai-block">
+              <h3>📰 新闻核查</h3>
+              <p id="aiNews"></p>
+            </div>
+            <div class="ai-block">
+              <h3>📌 盘前/盘中结论</h3>
+              <p id="aiConclusion"></p>
+            </div>
+            <div class="ai-block">
+              <h3>🚀 主要催化</h3>
+              <ul class="ul-plus" id="aiCatalysts"></ul>
+            </div>
+            <div class="ai-block">
+              <h3>⚠️ 主要风险</h3>
+              <ul class="ul-minus" id="aiRisks"></ul>
+            </div>
+            <div class="ai-block span2">
+              <h3>🛑 失效条件</h3>
+              <p id="aiInvalid"></p>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="d-right">
+        <!-- 5/6. 评分 -->
+        <section class="card sec">
+          <div class="sec-h"><h2>评分明细</h2><span class="sec-sub" id="scoreSub">0 – 100</span></div>
+          <div class="score-top">
+            <div id="scoreRing"></div>
+            <div class="score-bars" id="scoreBars"></div>
+          </div>
+        </section>
+
+        <!-- 9. 基本面矩阵 -->
+        <section class="card sec">
+          <div class="sec-h"><h2>公司基本面</h2><span class="sec-sub" id="fundSub"></span></div>
+          <div class="matrix" id="fundMatrix"></div>
+        </section>
+
+        <!-- 11. Options -->
+        <section class="card sec">
+          <div class="sec-h"><h2>Options 策略</h2><span class="sec-sub" id="optSub"></span></div>
+          <div class="opt-list" id="optList"></div>
+        </section>
+
+        <!-- 12. Review -->
+        <section class="card sec">
+          <div class="sec-h"><h2>Review 复盘</h2><span class="sec-sub" id="revSub"></span></div>
+          <div class="matrix" id="posMatrix"></div>
+          <div class="notes" id="dReviewNotes"></div>
+        </section>
+      </div>
+    </div>
+
+    <div class="foot" id="dFoot">真实数据 · 数据源 dashboard_data.json</div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
