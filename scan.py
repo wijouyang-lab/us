@@ -3028,6 +3028,43 @@ def build_full_email_html(ai_html):
     return f"<!DOCTYPE html><html><head><meta charset='utf-8'>{style}</head><body><div class='container'><h1>🎯 宏观驱动美股波段内参：{TARGET_REGION}</h1>{review_banner}{ai_html}<p style='text-align:center;color:#999;font-size:12px'>[END_OF_QUANT_REPORT]</p></div></body></html>"
 
 # ==================== 17. 期权策略 ====================
+def safe_float(value, default=None):
+    """期权/HTML层的安全数值转换。"""
+    if value is None:
+        return default
+    try:
+        if isinstance(value, bool):
+            return float(value)
+        if pd.isna(value):
+            return default
+    except Exception:
+        pass
+    try:
+        text = str(value).strip().replace(",", "")
+        if not text:
+            return default
+        if text.startswith("$"):
+            text = text[1:]
+        if text.endswith("%"):
+            text = text[:-1]
+        return float(text)
+    except Exception:
+        return default
+
+
+def clean_text(value, default=""):
+    """HTML/报告层安全文本转换。"""
+    if value is None:
+        return default
+    try:
+        if pd.isna(value):
+            return default
+    except Exception:
+        pass
+    text = str(value).strip()
+    return text if text else default
+
+
 def generate_option_recommendations(chosen_items):
     """仅为本次新产生的 Core_Dragon 生成可验证期权策略。"""
     created = []

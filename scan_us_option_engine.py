@@ -356,7 +356,7 @@ def _pick_short_put_structure(puts: pd.DataFrame, spot: float, dte: int, item: D
                + abs(work.loc[_,"discount_pct"]-8.0) if _ in work.index else abs(abs_delta-SHORT_PUT_TARGET_DELTA)*100.0)
         candidates.append((score,{
             "strategy":"SHORT_PUT","long_strike":strike,"short_strike":None,"long_price":None,"short_price":sell_price,
-            "net_debit":-sell_price,"premium_collected":sell_price,"cash_secured":cash_secured,
+            "net_debit":"","premium_collected":sell_price,"cash_secured":cash_secured,
             "assignment_price":strike,"effective_entry":effective_entry,"premium_yield_pct":premium_yield,
             "annualized_yield_pct":annualized,"max_loss":max_loss,"max_profit":sell_price*100.0,
             "break_even":effective_entry,"reward_risk":None,"breakeven_pct":(effective_entry/spot-1)*100.0,
@@ -630,7 +630,9 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         os.replace(tmp, OPTION_FILE)
     finally:
         if os.path.exists(tmp): os.remove(tmp)
-    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | 权利金={rec['NetDebit']} 最大亏损={rec['MaxLoss']} 最大收益={rec['MaxProfit'] or '不限'} BE={rec['BreakEven']} R/R={rec.get('RewardRisk') or 'N/A'} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}" + (f" ({rec['IV_Source']})" if rec.get('IV_Source') else ""))
+    premium_display = rec.get("PremiumCollected") if rec.get("Strategy") == "SHORT_PUT" else rec.get("NetDebit")
+    premium_label = "收取权利金" if rec.get("Strategy") == "SHORT_PUT" else "支付权利金"
+    print(f"🎯 [期权推荐] {rec['Ticker']} {rec['Strategy']} {rec['LongStrike']}" + (f"/{rec['ShortStrike']}" if rec['ShortStrike'] else "") + f" @ {rec['Expiry']} | {premium_label}={premium_display} 最大亏损={rec['MaxLoss']} 最大收益={rec['MaxProfit'] or '不限'} BE={rec['BreakEven']} R/R={rec.get('RewardRisk') or 'N/A'} Delta={rec['Delta'] or 'N/A'} IV={rec['IV'] or 'N/A'}" + (f" ({rec['IV_Source']})" if rec.get('IV_Source') else ""))
     return True
 
 
