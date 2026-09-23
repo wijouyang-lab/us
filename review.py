@@ -867,6 +867,7 @@ def build_option_review_html(active_reviews, closed_records, closed_history):
 option_closed_records = process_options(price_map_today)
 active_option_reviews=build_active_option_reviews(price_map_today)
 option_closed_history=load_option_closed_history(days=30)
+print(f"📒 [期权账本] option_strategies.csv：活跃 {len(active_option_reviews)} 笔，最近30天已结束 {len(option_closed_history)} 笔，本次刚平仓 {len(option_closed_records)} 笔。")
 
 
 # ============================================================
