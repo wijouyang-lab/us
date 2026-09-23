@@ -21,6 +21,7 @@ import os
 import re
 import smtplib
 import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -1202,8 +1203,12 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
         continue
 
     old_stop = safe_float(latest.get("Stop_Loss"))
+    is_same_day_entry = rec_date_str == today_us_str()
     ctx = get_trailing_stop_context(ticker, old_stop, today_us_str(), entry_price=rec_price, days_held=(pd.Timestamp(today_us_str())-rec_date).days)
-    exec_stop = ctx.get("exec_stop") if ctx else old_stop
+    # 新推荐当日不允许用“入场前一个交易日”的技术结构把初始保护线瞬间抬高，
+    # 否则会出现 NXPI 9/22：初始止损 213.51，但因为 9/21 收盘技术线抬到 226.61，
+    # 9/22 当日最低 226.15 被错误判成止损。新仓当天只执行 Scan 已写入的初始保护线。
+    exec_stop = old_stop if is_same_day_entry and old_stop and old_stop > 0 else (ctx.get("exec_stop") if ctx else old_stop)
 
     if exec_stop and exec_stop > 0 and low <= exec_stop:
         write_review_risk_linkage_us(
@@ -1224,8 +1229,9 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
         continue
 
     next_ctx = get_trailing_stop_context(ticker, exec_stop, None, entry_price=rec_price, days_held=(pd.Timestamp(today_us_str())-rec_date).days)
-    next_stop = next_ctx.get("exec_stop") if next_ctx else exec_stop
-    if next_stop:
+    # 同日新仓保持原始保护线；从下一个 Review 日起才允许移动止损抬升。
+    next_stop = exec_stop if is_same_day_entry and exec_stop else (next_ctx.get("exec_stop") if next_ctx else exec_stop)
+    if next_stop and not is_same_day_entry:
         update_trade_history_trailing_stop(ticker, rec_date_str, next_stop, next_ctx or ctx or {})
     c = next_ctx or ctx or {}
     risk = []
@@ -1256,7 +1262,96 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
 
 
 # ============================================================
-# 10. 确定性归因
+# 10. Review 基本面补全
+# ============================================================
+# 原 Scan 的 Observation 可能没有进入当时的 Top80 基本面抓取窗口，导致
+# PE/EPS/PB 等字段在 trade_history 中长期为空。Review 这里对报告里仍缺失
+# 基本面的推荐做一次轻量补拉，并且只填空值，不覆盖 Scan 已记录的原始值。
+def _safe_info_float_review(info, *keys):
+    for key in keys:
+        try:
+            v = info.get(key) if hasattr(info, "get") else None
+            if v is None:
+                continue
+            v = float(v)
+            if pd.notna(v):
+                return v
+        except Exception:
+            continue
+    return None
+
+
+def _fetch_review_fundamental_one(ticker):
+    try:
+        info = yf.Ticker(ticker).info
+        return ticker, {
+            "PE_TTM": _safe_info_float_review(info, "trailingPE"),
+            "PE_Forward": _safe_info_float_review(info, "forwardPE"),
+            "EPS_TTM": _safe_info_float_review(info, "trailingEps", "epsTrailingTwelveMonths"),
+            "PB": _safe_info_float_review(info, "priceToBook"),
+            "EPS_Forward": _safe_info_float_review(info, "epsForward"),
+            "Earnings_Growth": _safe_info_float_review(info, "earningsGrowth"),
+            "Revenue_Growth": _safe_info_float_review(info, "revenueGrowth"),
+            "ROE": _safe_info_float_review(info, "returnOnEquity"),
+            "Profit_Margin": _safe_info_float_review(info, "profitMargins"),
+            "Market_Cap": _safe_info_float_review(info, "marketCap"),
+        }
+    except Exception as e:
+        return ticker, {"_error": str(e)}
+
+
+def _fill_missing_fundamentals_in_item(item, data):
+    for key, value in data.items():
+        if key.startswith("_") or value is None:
+            continue
+        existing = item.get(key)
+        if existing in (None, "", "N/A", "nan", "NaN", "None"):
+            item[key] = value
+
+
+def enrich_review_missing_fundamentals():
+    targets = {}
+    collections = (active_list, observation_list, stopped_list)
+    for rows in collections:
+        for item in rows:
+            ticker = str(item.get("代码", "")).strip().upper()
+            if not ticker:
+                continue
+            # 只有真正缺失关键基本面时才请求，避免每次 Review 无条件重抓 80 只。
+            missing = any(
+                item.get(k) in (None, "", "N/A", "nan", "NaN", "None")
+                for k in ("PE_TTM", "PE_Forward", "EPS_TTM", "PB")
+            )
+            if missing:
+                targets[ticker] = True
+    tickers = list(targets)
+    if not tickers:
+        return {}
+    print(f"💰 [Review基本面补全] {len(tickers)} 只标的缺少 PE/EPS/PB，开始补拉 Yahoo fundamentals...")
+    fund_map = {}
+    workers = min(8, max(2, len(tickers)))
+    with ThreadPoolExecutor(max_workers=workers) as executor:
+        futures = [executor.submit(_fetch_review_fundamental_one, t) for t in tickers]
+        for future in as_completed(futures):
+            try:
+                ticker, data = future.result()
+                fund_map[ticker] = data
+            except Exception:
+                pass
+    for rows in collections:
+        for item in rows:
+            ticker = str(item.get("代码", "")).strip().upper()
+            if ticker in fund_map:
+                _fill_missing_fundamentals_in_item(item, fund_map[ticker])
+    ok = sum(1 for t, d in fund_map.items() if any(d.get(k) is not None for k in ("PE_TTM", "PE_Forward", "EPS_TTM", "PB")))
+    print(f"✅ [Review基本面补全] 成功补全 {ok}/{len(tickers)} 只标的的至少一项估值数据。")
+    return fund_map
+
+
+review_fundamental_map = enrich_review_missing_fundamentals()
+
+# ============================================================
+# 11. 确定性归因
 # ============================================================
 
 def build_us_attribution(item):
@@ -1293,7 +1388,7 @@ print(f"📊 股票分类：持仓 {len(active_list)}，Observation {len(observa
 
 
 # ============================================================
-# 11. review_history：逐次 Review 记录，但不重复同一 Review 事件
+# 12. review_history：逐次 Review 记录，但不重复同一 Review 事件
 # ============================================================
 
 def review_event_key(row):
@@ -1394,7 +1489,7 @@ append_review_rows(review_rows)
 
 
 # ============================================================
-# 12. 每次 Scan 推荐事件的独立追踪
+# 13. 每次 Scan 推荐事件的独立追踪
 # ============================================================
 
 def _load_scan_recommendation_files():
@@ -2392,6 +2487,8 @@ print(
     f"Scan推荐 {total_scan_recommendations} 笔，"
     f"有效 {valid_performance_samples}，"
     f"数据不足 {data_insufficient_count}，"
-    f"Core完成 {core_closed_win_rate:.2f}% / Core当前 {core_open_win_rate:.2f}% / Observation完成 {obs_closed_win_rate:.2f}% / Observation当前 {obs_win_rate:.2f}% / 期权完成 {option_win_rate:.2f}%"
+    f"Core完成 {core_closed_win_rate_text} / Core当前 {core_open_win_rate_text} / "
+    f"Observation完成 {obs_closed_win_rate_text} / Observation当前 {obs_win_rate_text} / "
+    f"期权完成 {option_win_rate_text}"
 )
 print("=" * 60)
