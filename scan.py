@@ -3051,7 +3051,7 @@ def build_option_recommendation_html(option_records):
                 f'<div><b>卖出权利金：</b>${html.escape(str(r.get("PremiumCollected","N/A")))}／股　<b>最大收益：</b>${html.escape(str(r.get("MaxProfit","N/A")))}　<b>最大风险：</b>${html.escape(str(r.get("MaxLoss","N/A")))}</div>'
                 f'<div><b>有效接货价：</b>${html.escape(str(r.get("EffectiveEntry","N/A")))}　<b>现金担保：</b>${html.escape(str(r.get("CashSecured","N/A")))}　<b>盈亏平衡：</b>${html.escape(str(r.get("BreakEven","N/A")))}</div>'
                 f'<div><b>权利金收益率：</b>{html.escape(str(r.get("PremiumYieldPct","N/A")))}%　<b>年化简单折算：</b>{html.escape(str(r.get("AnnualizedYieldPct","N/A")))}%　<b>Put Delta：</b>{html.escape(str(r.get("PutDelta",r.get("Delta","N/A"))))}</div>'
-                f'<div><b>Call Wall：</b>{html.escape(str(r.get("CallWall") or "N/A"))}（OI:{html.escape(str(r.get("CallWallOI") or "N/A"))}）　<b>Put Wall：</b>{html.escape(str(r.get("PutWall") or "N/A"))}（OI:{html.escape(str(r.get("PutWallOI") or "N/A"))}）</div>'
+                f'<div><b>Call Wall：</b>{html.escape(_option_wall_text(r, "call"))}　<b>Put Wall：</b>{html.escape(_option_wall_text(r, "put"))}</div>'
                 f'<div><b>长期价值门槛：</b>{html.escape(str(r.get("Reason","")))} </div>'
                 f'<div><b>财报：</b>{html.escape(str(r.get("EarningsDate","未确认")))}　<b>事件距离：</b>{html.escape(str(r.get("EarningsDays","N/A")))}天</div>'
                 '<div><b>指派纪律：</b>美国股票期权可提前指派；若到期价内，可能按执行价接收100股/张。只有愿意长期持有该股票时才采用。</div>'
@@ -3066,7 +3066,7 @@ def build_option_recommendation_html(option_records):
                 f'<div><b>到期日：</b>{html.escape(str(r.get("Expiry","N/A")))}（{html.escape(str(r.get("DTE","N/A")))}天）　<b>执行价：</b>{html.escape(str(spread))}</div>'
                 f'<div><b>权利金：</b>${html.escape(str(r.get("NetDebit","N/A")))}／股　<b>最大风险：</b>${html.escape(str(r.get("MaxLoss","N/A")))}　<b>盈亏平衡：</b>${html.escape(str(r.get("BreakEven","N/A")))}</div>'
                 f'<div><b>Delta：</b>{html.escape(str(r.get("Delta","N/A")))}　<b>IV：</b>{html.escape(str(r.get("IV","N/A")))}　<b>IV状态：</b>{html.escape(str(r.get("IV_Regime","N/A")))}</div>'
-                f'<div><b>Call Wall：</b>{html.escape(str(r.get("CallWall") or "N/A"))}（OI:{html.escape(str(r.get("CallWallOI") or "N/A"))}）　<b>Put Wall：</b>{html.escape(str(r.get("PutWall") or "N/A"))}（OI:{html.escape(str(r.get("PutWallOI") or "N/A"))}）</div>'
+                f'<div><b>Call Wall：</b>{html.escape(_option_wall_text(r, "call"))}　<b>Put Wall：</b>{html.escape(_option_wall_text(r, "put"))}</div>'
                 f'<div><b>财报：</b>{html.escape(str(r.get("EarningsDate","未确认")))}　<b>事件距离：</b>{html.escape(str(r.get("EarningsDays","N/A")))}天</div>'
                 f'<div><b>策略逻辑：</b>{html.escape(str(r.get("Reason","")))}</div>'
                 '<div><b>仓位纪律：</b>1张起步；最大亏损以实际支付权利金为边界；若正股趋势破坏，Review重新评估。</div>'
@@ -3075,7 +3075,7 @@ def build_option_recommendation_html(option_records):
             )
         cards.append(card)
     return ('<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:6px;">🎲 美股期权实战策略</h2>'
-            '<p style="color:#607d8b;">只展示程序从期权链取得的真实合约与报价。Call Wall / Put Wall 只有存在有效 OI 才显示；没有有效 OI 时显示 N/A，不再用最低执行价冒充 Wall。</p>'
+            '<p style="color:#607d8b;">Wall 优先使用真实 Open Interest；若 OI 不可用，则使用同一期权链的成交量最高执行价作为“成交量代理 Wall”，并明确标注来源；不会再用最低执行价冒充 Wall。</p>'
             + ''.join(cards))
 
 

@@ -228,7 +228,7 @@ def _event_date(ticker_obj) -> Optional[dt.date]:
 
 
 def _wall(df: pd.DataFrame) -> Optional[Dict[str, Any]]:
-    """严格计算 OI Wall：没有有效 OI 时返回 None，不把链表最低 strike 误报成 Wall。"""
+    """计算可解释的 Wall：优先真实 OI；没有 OI 时使用成交量代理并明确标注来源。"""
     if df is None or df.empty:
         return None
     work=df.copy()
@@ -237,17 +237,26 @@ def _wall(df: pd.DataFrame) -> Optional[Dict[str, Any]]:
     work["strike"]=pd.to_numeric(work.get("strike"),errors="coerce")
     work=work.dropna(subset=["strike"])
     valid=work[work["openInterest"].fillna(0)>0].copy()
-    if valid.empty:
-        # 只有成交量时，不称其为 Wall，避免制造“假墙”。
-        return None
-    valid=valid.sort_values(["openInterest","volume","strike"],ascending=[False,False,True])
-    row=valid.iloc[0]
-    return {
-        "strike":_sf(row.get("strike")),
-        "open_interest":int(_sf(row.get("openInterest"),0) or 0),
-        "volume":int(_sf(row.get("volume"),0) or 0),
-        "source":"openInterest",
-    }
+    if not valid.empty:
+        valid=valid.sort_values(["openInterest","volume","strike"],ascending=[False,False,True])
+        row=valid.iloc[0]
+        return {
+            "strike":_sf(row.get("strike")),
+            "open_interest":int(_sf(row.get("openInterest"),0) or 0),
+            "volume":int(_sf(row.get("volume"),0) or 0),
+            "source":"openInterest",
+        }
+    vol=work[work["volume"].fillna(0)>0].copy()
+    if not vol.empty:
+        vol=vol.sort_values(["volume","strike"],ascending=[False,True])
+        row=vol.iloc[0]
+        return {
+            "strike":_sf(row.get("strike")),
+            "open_interest":None,
+            "volume":int(_sf(row.get("volume"),0) or 0),
+            "source":"volume_proxy",
+        }
+    return None
 
 
 def _iv_bucket(chain: pd.DataFrame, iv: Optional[float]) -> str:
@@ -582,7 +591,8 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         "IV":round(iv,4) if iv is not None else "","IV_Source":structure.get("iv_source","") if iv is not None else "","IV_Regime":_iv_bucket(puts if strategy=="SHORT_PUT" else calls,iv),
         "CallWall":call_wall.get("strike","") if call_wall else "","PutWall":put_wall.get("strike","") if put_wall else "",
         "CallWallOI":call_wall.get("open_interest","") if call_wall else "","PutWallOI":put_wall.get("open_interest","") if put_wall else "",
-        "CallWallSource":call_wall.get("source","") if call_wall else "NO_VALID_OI","PutWallSource":put_wall.get("source","") if put_wall else "NO_VALID_OI",
+        "CallWallVolume":call_wall.get("volume","") if call_wall else "","PutWallVolume":put_wall.get("volume","") if put_wall else "",
+        "CallWallSource":call_wall.get("source","") if call_wall else "NO_WALL_DATA","PutWallSource":put_wall.get("source","") if put_wall else "NO_WALL_DATA",
         "EarningsDate":earnings.strftime("%Y-%m-%d") if earnings else "","EarningsDays":earnings_days if earnings_days is not None else "",
         "Direction":"BULLISH" if strategy!="SHORT_PUT" else "BULLISH_VALUE","AssignmentRisk":"潜在指派：美国股票期权可在到期前被提前指派；程序在深度价内/临近到期时提高风险提示。" if strategy=="SHORT_PUT" else "",
         "Status":"Active","Quantity":1,
@@ -599,7 +609,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         return False
     columns = [
         "Ticker", "Name", "EntryDate", "UnderlyingPrice", "TechnicalClose", "PremarketPrice", "PremarketChangePct", "PriceReference", "PremarketAsOfET", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
-        "NetDebit", "PremiumCollected", "CashSecured", "AssignmentPrice", "EffectiveEntry", "PremiumYieldPct", "AnnualizedYieldPct", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "PutDelta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "CallWallOI", "PutWallOI", "CallWallSource", "PutWallSource", "EarningsDate", "EarningsDays", "Direction", "StrategySide", "AssignmentRisk", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
+        "NetDebit", "PremiumCollected", "CashSecured", "AssignmentPrice", "EffectiveEntry", "PremiumYieldPct", "AnnualizedYieldPct", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "PutDelta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "CallWallOI", "PutWallOI", "CallWallVolume", "PutWallVolume", "CallWallSource", "PutWallSource", "EarningsDate", "EarningsDays", "Direction", "StrategySide", "AssignmentRisk", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
     ]
     old = pd.DataFrame(columns=columns)
     if os.path.exists(OPTION_FILE) and os.path.getsize(OPTION_FILE) > 0:

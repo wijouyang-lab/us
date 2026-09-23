@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-美股盘后复盘与风控审查引擎 V29
+美股盘后复盘与风控审查引擎 V31
 ================================================
 核心统计口径：
 1. 每次 Scan 推荐事件按「推荐日期 + Ticker」独立追踪。
@@ -26,6 +26,8 @@ from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
+import urllib.parse
+import urllib.request
 
 import anthropic
 import pandas as pd
@@ -373,7 +375,7 @@ def load_trade_history():
         return pd.DataFrame()
 
 def safe_record_price(row):
-    for c in ("Price", "Close_Price"):
+    for c in ("Price", "Scan_Ref_Price", "Close_Price", "Prev_Close"):
         p = safe_float(row.get(c))
         if p is not None and p > 0:
             return p
@@ -393,6 +395,81 @@ def find_existing_record(df_existing, date_value, ticker):
     except Exception:
         return False
 
+
+# ============================================================
+# 4.5 推荐价回填：避免早期 Observation 永久缺少 Rec_Price
+# ============================================================
+def _build_recommendation_price_lookup():
+    """从 review_history / pending / trade_history 建立 Date+Ticker+Tag 推荐价兜底。"""
+    lookup = {}
+
+    # 优先读取 review_history：这里往往保留了早期事件的有效 Rec_Price。
+    if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
+        try:
+            rh = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            for _, row in rh.iterrows():
+                rec_date = normalize_date(row.get("Rec_Date"))
+                ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+                tag = clean_text(row.get("Tag"))
+                price = safe_float(row.get("Rec_Price"))
+                if rec_date is not None and ticker and price is not None and price > 0:
+                    key = (rec_date.strftime("%Y-%m-%d"), ticker.upper(), tag)
+                    lookup.setdefault(key, price)
+        except Exception as e:
+            print(f"⚠️ 推荐价回填：读取 review_history 失败：{e}")
+
+    # pending 是 Scan 原始推荐价的更直接来源；只在没有有效值时覆盖。
+    for filename in sorted(glob.glob("us_stocks_pending_*.csv") + glob.glob("us_stocks_pending_*.csv.processed")):
+        m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", os.path.basename(filename))
+        if not m:
+            continue
+        rec_date = f"{m.group(1)[:4]}-{m.group(1)[4:6]}-{m.group(1)[6:]}"
+        try:
+            d = pd.read_csv(filename, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            for _, row in d.iterrows():
+                ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+                tag = clean_text(row.get("Tag"))
+                price = safe_float(row.get("Scan_Ref_Price"))
+                if price is None:
+                    price = safe_float(row.get("Price"))
+                if ticker and price is not None and price > 0:
+                    key = (rec_date, ticker.upper(), tag)
+                    lookup[key] = price
+        except Exception:
+            continue
+
+    return lookup
+
+
+def backfill_missing_trade_history_recommendation_prices():
+    """把历史账本中缺失的 Price 用已有 Review/Scan 推荐价持久化补回。"""
+    if not os.path.exists(TRADE_HISTORY) or os.path.getsize(TRADE_HISTORY) == 0:
+        return 0
+    try:
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+        lookup = _build_recommendation_price_lookup()
+        changed = 0
+        for idx, row in d.iterrows():
+            current = safe_float(row.get("Price"))
+            if current is not None and current > 0:
+                continue
+            rec_date = normalize_date(row.get("Date"))
+            ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
+            tag = clean_text(row.get("Tag"))
+            if rec_date is None or not ticker:
+                continue
+            key = (rec_date.strftime("%Y-%m-%d"), ticker.upper(), tag)
+            fallback = lookup.get(key)
+            if fallback is not None and fallback > 0:
+                d.at[idx, "Price"] = str(fallback)
+                changed += 1
+        if changed:
+            d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
+            print(f"🔧 [推荐价回填] trade_history.csv 持久化补回 {changed} 条缺失推荐价。")
+        return changed
+    except Exception as e:
+        print(f"⚠️ 推荐价回填失败：{e}")
+        return 0
 
 # ============================================================
 # 5. pending -> trade_history
@@ -546,6 +623,7 @@ def supplement_us_stocks_from_pending():
 
 
 supplement_us_stocks_from_pending()
+backfill_missing_trade_history_recommendation_prices()
 
 df = load_trade_history()
 if df.empty:
@@ -583,12 +661,14 @@ df_hist_all, ohlc_map_today = download_ohlc_safe(clean_tickers, period="60d")
 latest_regular_map = dict(ohlc_map_today)
 price_map_today = {}
 price_source_map = {}
+verified_today_ohlc = set()
 for ticker in clean_tickers:
     exact = get_exact_date_ohlc(df_hist_all, ticker, today_us_str())
     if exact and exact.get("close") is not None:
         ohlc_map_today[ticker] = exact
         price_map_today[ticker] = exact["close"]
         price_source_map[ticker] = "today_regular_close"
+        verified_today_ohlc.add(ticker)
     else:
         latest = latest_regular_map.get(ticker)
         if latest and latest.get("close") is not None:
@@ -726,14 +806,53 @@ def _option_quote_mid(row):
 
 
 def _load_option_chain_exact(ticker, expiry):
-    """Review 专用：读取指定到期日的真实期权链；失败只返回空，不虚构价格。"""
+    """Review 专用：yfinance -> Yahoo options API 两层读取指定到期日真实期权链。"""
+    target = pd.Timestamp(expiry).strftime("%Y-%m-%d")
     try:
         obj=yf.Ticker(ticker)
-        target=pd.Timestamp(expiry).strftime("%Y-%m-%d")
         chain=obj.option_chain(target)
-        return chain.calls.copy(), chain.puts.copy()
-    except Exception:
-        return pd.DataFrame(), pd.DataFrame()
+        calls, puts = chain.calls.copy(), chain.puts.copy()
+        if not calls.empty or not puts.empty:
+            return calls, puts
+    except Exception as e:
+        print(f"⚠️ [期权Review] yfinance链读取失败 {ticker}: {e}")
+    try:
+        headers={
+            "User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/153.0 Safari/537.36",
+            "Accept":"application/json,text/plain,*/*",
+        }
+        base=f"https://query2.finance.yahoo.com/v7/finance/options/{urllib.parse.quote(str(ticker),safe='')}"
+        ts=int(pd.Timestamp(target, tz="UTC").timestamp())
+        req=urllib.request.Request(base+"?"+urllib.parse.urlencode({"date":ts}), headers=headers)
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            payload=json.loads(resp.read().decode("utf-8",errors="ignore"))
+        result=(((payload.get("optionChain") or {}).get("result") or [None])[0])
+        if result:
+            opt=(result.get("options") or [{}])[0]
+            return pd.DataFrame(opt.get("calls") or []), pd.DataFrame(opt.get("puts") or [])
+    except Exception as e:
+        print(f"⚠️ [期权Review] Yahoo直连链读取失败 {ticker}: {e}")
+    return pd.DataFrame(), pd.DataFrame()
+
+
+def _review_wall_from_chain(chain):
+    """返回可解释的实时 Wall：优先 OI Wall；OI 缺失时退化为成交量代理，不冒充 OI。"""
+    if chain is None or chain.empty:
+        return {"strike":None,"oi":None,"volume":None,"source":"NO_CHAIN"}
+    w = chain.copy()
+    w["strike"] = pd.to_numeric(w.get("strike"), errors="coerce")
+    w["openInterest"] = pd.to_numeric(w.get("openInterest"), errors="coerce")
+    w["volume"] = pd.to_numeric(w.get("volume"), errors="coerce").fillna(0)
+    w = w[w["strike"].notna()].copy()
+    oi = w[w["openInterest"].fillna(0) > 0]
+    if not oi.empty:
+        r = oi.sort_values(["openInterest","volume","strike"], ascending=[False,False,True]).iloc[0]
+        return {"strike":safe_float(r.get("strike")),"oi":safe_float(r.get("openInterest")),"volume":safe_float(r.get("volume"),0),"source":"openInterest"}
+    vol = w[w["volume"].fillna(0) > 0]
+    if not vol.empty:
+        r = vol.sort_values(["volume","strike"], ascending=[False,True]).iloc[0]
+        return {"strike":safe_float(r.get("strike")),"oi":None,"volume":safe_float(r.get("volume"),0),"source":"volume_proxy"}
+    return {"strike":None,"oi":None,"volume":None,"source":"NO_WALL_DATA"}
 
 
 def build_active_option_reviews(price_map):
@@ -775,6 +894,8 @@ def build_active_option_reviews(price_map):
                 intrinsic=max(0.0,spot-long_strike)
 
         calls,puts=_load_option_chain_exact(ticker,expiry_dt)
+        call_wall_live = _review_wall_from_chain(calls)
+        put_wall_live = _review_wall_from_chain(puts)
         try:
             if strategy=="SHORT_PUT":
                 if not puts.empty and long_strike is not None:
@@ -828,14 +949,20 @@ def build_active_option_reviews(price_map):
             "mark":mark,"mark_source":mark_source,"unrealized_pnl":unrealized,
             "intrinsic":intrinsic,"intrinsic_floor_pnl":intrinsic_floor_pnl,"max_loss":max_loss,"max_profit":max_profit,
             "breakeven":breakeven,"delta":safe_float(row.get("Delta")),"iv":safe_float(row.get("IV")),
-            "call_wall":safe_float(row.get("CallWall")),"put_wall":safe_float(row.get("PutWall")),
-            "call_wall_oi":safe_float(row.get("CallWallOI")),"put_wall_oi":safe_float(row.get("PutWallOI")),
+            "call_wall":call_wall_live.get("strike") if call_wall_live.get("strike") is not None else safe_float(row.get("CallWall")),
+            "put_wall":put_wall_live.get("strike") if put_wall_live.get("strike") is not None else safe_float(row.get("PutWall")),
+            "call_wall_oi":call_wall_live.get("oi") if call_wall_live.get("oi") is not None else safe_float(row.get("CallWallOI")),
+            "put_wall_oi":put_wall_live.get("oi") if put_wall_live.get("oi") is not None else safe_float(row.get("PutWallOI")),
+            "call_wall_volume":call_wall_live.get("volume"),"put_wall_volume":put_wall_live.get("volume"),
+            "call_wall_source":call_wall_live.get("source"),"put_wall_source":put_wall_live.get("source"),
             "cash_secured":safe_float(row.get("CashSecured")),"assignment_price":safe_float(row.get("AssignmentPrice")),
             "effective_entry":safe_float(row.get("EffectiveEntry"),breakeven),"premium_yield_pct":safe_float(row.get("PremiumYieldPct")),
             "annualized_yield_pct":safe_float(row.get("AnnualizedYieldPct")),"assignment_risk":clean_text(row.get("AssignmentRisk")),
             "earnings_date":clean_text(row.get("EarningsDate")),"earnings_days":safe_float(row.get("EarningsDays")),
             "quantity":qty,"reason":clean_text(row.get("Reason")),"risk_status":status,
         })
+    for _o in out:
+        print(f"   ↳ {_o['ticker']} Wall: Call={_o.get('call_wall')}({ _o.get('call_wall_source') }), Put={_o.get('put_wall')}({ _o.get('put_wall_source') })")
     print(f"📊 [期权Review] 活跃期权复盘：{len(out)} 笔")
     return out
 
@@ -869,6 +996,20 @@ def load_option_closed_history(days=30):
         return []
 
 
+def _wall_display(x, side):
+    value = x.get(f"{side}_wall")
+    oi = x.get(f"{side}_wall_oi")
+    volume = x.get(f"{side}_wall_volume")
+    source = x.get(f"{side}_wall_source")
+    if value is None:
+        return "N/A（无可用Wall数据）"
+    if oi is not None:
+        return f"{_price(value)}（OI {int(oi)}）"
+    if source == "volume_proxy":
+        return f"{_price(value)}（成交量代理 {int(volume or 0)}；OI N/A）"
+    return f"{_price(value)}（OI N/A）"
+
+
 def build_option_review_html(active_reviews, closed_records, closed_history):
     cards=[]
     if active_reviews:
@@ -897,7 +1038,7 @@ def build_option_review_html(active_reviews, closed_records, closed_history):
 <div><b>到期：</b>{x.get("expiry")}（DTE {x.get("dte")}）　<b>正股：</b>{_price(x.get("spot"))}　<b>执行价：</b>{spread}</div>
 <div><b>入场权利金：</b>{_price(x.get("entry"))}/股　<b>当前期权价格：</b>{_price(x.get("mark"))}/股　<b>当前浮盈亏：</b>{pnl_html}</div>
 <div><b>最大风险：</b>{_price(x.get("max_loss"))}　<b>最大收益：</b>{_price(x.get("max_profit"))}　<b>盈亏平衡：</b>{_price(x.get("breakeven"))}</div>
-<div><b>Delta：</b>{x.get("delta") if x.get("delta") is not None else "N/A"}　<b>IV：</b>{x.get("iv") if x.get("iv") is not None else "N/A"}　<b>Call Wall：</b>{_price(x.get("call_wall"))}（OI {x.get("call_wall_oi") if x.get("call_wall_oi") is not None else "N/A"}）　<b>Put Wall：</b>{_price(x.get("put_wall"))}（OI {x.get("put_wall_oi") if x.get("put_wall_oi") is not None else "N/A"}）</div>
+<div><b>Delta：</b>{x.get("delta") if x.get("delta") is not None else "N/A"}　<b>IV：</b>{x.get("iv") if x.get("iv") is not None else "N/A"}　<b>Call Wall：</b>{_wall_display(x,"call")}　<b>Put Wall：</b>{_wall_display(x,"put")}</div>
 <div><b>财报：</b>{x.get("earnings_date") or "未确认"}　<b>事件距离：</b>{x.get("earnings_days") if x.get("earnings_days") is not None else "N/A"}天</div>
 <div><b>风控判断：</b>{x.get("risk_status")}</div>
 <div style="font-size:12px;color:#607d8b;">报价来源：{x.get("mark_source")}; 若无真实期权报价，程序只显示内在价值底线，不把它冒充为市价。</div>
@@ -1086,6 +1227,7 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
 # ============================================================
 
 active_list, observation_list, expired_list, stopped_list = [], [], [], []
+_recommendation_price_lookup = _build_recommendation_price_lookup()
 
 # 关键修复：不能再按 Ticker 合并历史推荐。
 # 每一次 Scan 推荐都是独立事件：推荐日期 + Ticker + Tag。
@@ -1120,10 +1262,16 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
 
     # ---- Observation：每一条 Scan Observation 都独立追踪 ----
     if clean_text(latest.get("Tag")).strip() == "Observation":
+        if rec_price is None or rec_price <= 0:
+            rec_price = _recommendation_price_lookup.get((rec_date_str, ticker.upper(), "Observation"))
         cur = safe_float(price_map_today.get(ticker))
         pnl = None
         if rec_price and rec_price > 0 and cur is not None:
             pnl = round((cur-rec_price)/rec_price*100, 2)
+        if rec_price is None:
+            print(f"⚠️ [Observation] {ticker} {rec_date_str} 缺少可追溯推荐价，暂无法计算跟踪收益。")
+        elif cur is None:
+            print(f"⚠️ [Observation] {ticker} {rec_date_str} 缺少当前行情，暂无法计算跟踪收益。")
         observation_list.append({
             "代码": ticker,
             "名称": clean_text(latest.get("Name"), ticker),
@@ -1155,9 +1303,9 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
     if rec_price is None or rec_price <= 0:
         continue
 
-    # 只有今天的完整 OHLC 才能做“今日最低价触发止损”。
-    # 如果今天OHLC未返回，但有最近有效价格，允许跟踪浮盈亏，但不执行当日止损触发。
-    ohlc = ohlc_map_today.get(ticker)
+    # 只有经过“目标日期精确匹配”的完整 OHLC 才能做当日最低价止损判断。
+    # price_map_today 的最近有效收盘价只能用于跟踪，绝不能触发今天的 STOP。
+    ohlc = ohlc_map_today.get(ticker) if ticker in verified_today_ohlc and price_source_map.get(ticker) == "today_regular_close" else None
     if ohlc is None:
         cur = price_map_today.get(ticker)
         if cur is None:
@@ -1210,7 +1358,7 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
     # 9/22 当日最低 226.15 被错误判成止损。新仓当天只执行 Scan 已写入的初始保护线。
     exec_stop = old_stop if is_same_day_entry and old_stop and old_stop > 0 else (ctx.get("exec_stop") if ctx else old_stop)
 
-    if exec_stop and exec_stop > 0 and low <= exec_stop:
+    if ticker in verified_today_ohlc and price_source_map.get(ticker) == "today_regular_close" and exec_stop and exec_stop > 0 and low <= exec_stop:
         write_review_risk_linkage_us(
             ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep,
             f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。"
