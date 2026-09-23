@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-美股盘前扫描引擎（完整 Regime Gate 版）
+美股盘前/盘中补发扫描引擎（完整 Regime Gate 版）
 - 保留 Top300 / 日线+周线 / MACD / RSI / KDJ / ATR
 - 基于完整美股 scan 原版结构改造，不删除原有 pending / review / option / portfolio 功能
 - 保留宏观新闻、Mega-Cap 新闻、重要人物讲话、结构化美国经济数据、全球大宗、板块 ETF、个股新闻
@@ -134,14 +134,32 @@ if get_us_time().weekday() >= 5:
     sys.exit(0)
 
 _scan_session_state = get_market_session_state(RUN_ASOF_US)
-if _scan_session_state != "PREMARKET":
+if _scan_session_state == "PREMARKET":
+    SCAN_RUN_MODE = "PREMARKET"
+    SCAN_RUN_MODE_LABEL = "盘前"
+elif _scan_session_state == "REGULAR_SESSION":
+    # 盘前 Scan 因 API / Yahoo / AI / 网络等异常失败后，允许 09:30-16:00 ET 手动重跑。
+    # 不把盘中成交冒充盘前价；技术指标仍只使用最后完整常规交易日。
+    SCAN_RUN_MODE = "REGULAR_SESSION_RECOVERY"
+    SCAN_RUN_MODE_LABEL = "盘中补发"
     print(
-        f"⛔ 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')}，不在美股真实盘前窗口 04:00-09:29 ET。"
-        f" 当前状态={_scan_session_state}；本次停止发送盘前选股邮件，避免把昨收或历史数据冒充盘前数据。"
+        f"🔄 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')}，已进入常规交易时段。"
+        " 本次允许执行盘中补发：不伪造盘前价格，技术K线仍使用最后完整常规交易日。"
+    )
+elif _scan_session_state == "AFTER_HOURS":
+    print(
+        f"⛔ 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')} 已进入盘后时段。"
+        " 本次不运行 Scan，避免把盘后时点误作盘中/盘前快照。"
+    )
+    sys.exit(0)
+else:
+    print(
+        f"⛔ 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')}，当前状态={_scan_session_state}。"
+        " 本次不运行 Scan。"
     )
     sys.exit(0)
 
-print(f"启动：宏观驱动美股扫描引擎 | 请求引擎: {TARGET_MODEL}")
+print(f"启动：宏观驱动美股扫描引擎 | 请求引擎: {TARGET_MODEL} | 运行模式: {SCAN_RUN_MODE_LABEL}")
 
 def _ai_preflight():
     try:
@@ -773,7 +791,7 @@ def apply_premarket_snapshot(pool):
         elif state == "PREMARKET_NOT_STARTED":
             item["Premarket_Status_Display"] = f"盘前尚未开始（当前{get_scan_asof_us().strftime('%H:%M:%S')} ET）"
         elif state == "REGULAR_SESSION":
-            item["Premarket_Status_Display"] = "盘前已结束（当前为常规交易时段）"
+            item["Premarket_Status_Display"] = "盘前已结束（本次为盘中补发；不使用盘中成交冒充盘前价）"
         elif state == "AFTER_HOURS":
             item["Premarket_Status_Display"] = "盘前已结束（当前为盘后时段）"
         else:
@@ -787,7 +805,7 @@ def apply_premarket_snapshot(pool):
     elif state == "PREMARKET_NOT_STARTED":
         print(f"⏱️ [盘前行情] 当前 {get_scan_asof_us().strftime('%H:%M:%S ET')}，盘前窗口尚未开始（04:00 ET）；本次不把昨收冒充盘前价。")
     elif state == "REGULAR_SESSION":
-        print(f"ℹ️ [盘前行情] 当前已进入常规交易时段（{get_scan_asof_us().strftime('%H:%M:%S ET')}），本次不把常规成交冒充盘前价。")
+        print(f"🔄 [盘中补发] 当前已进入常规交易时段（{get_scan_asof_us().strftime('%H:%M:%S ET')}），本次允许重跑并发送邮件；不把常规成交冒充盘前价。")
     elif state == "AFTER_HOURS":
         print(f"ℹ️ [盘前行情] 当前已进入盘后时段（{get_scan_asof_us().strftime('%H:%M:%S ET')}），本次不使用盘前字段。")
     else:
@@ -2515,7 +2533,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
 {economic_block}
 
 【数据可靠性纪律】FRED单项失败不得伪造数值；优先使用BLS备用或Yahoo利率代理，并标明来源。
-【价格口径纪律】候选池同时提供“昨收”和“盘前最新成交”。MA20/MA50/RSI/MACD/KDJ/ATR 等技术指标只基于最后完整常规交易日；盘前价只用于判断当前价格偏离、新闻事件冲击和盘前参考，不得把盘前价当成新的日线收盘。若盘前价格缺失，明确写 N/A。
+【价格口径纪律】候选池提供“最后完整常规交易日收盘”，盘前运行时再提供“盘前最新成交”；本次运行模式为 {SCAN_RUN_MODE_LABEL}。MA20/MA50/RSI/MACD/KDJ/ATR 等技术指标只基于最后完整常规交易日。盘前运行时，盘前价只用于判断当前价格偏离、新闻事件冲击和盘前参考；盘中补发运行时，不得把盘中成交冒充盘前价格或新的日线收盘，盘前字段必须明确显示为“盘前已结束”。
 【新闻口径纪律】新闻全部固定在本次 Scan 的统一快照时间；带【🆕昨收后】的是上一交易日16:00 ET后发布的新消息，带【📄历史背景】的是昨收前旧消息。不得把历史文章描述成盘前新消息。
 
 【程序化市场环境（硬门控数据）】
@@ -2581,9 +2599,9 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 <p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...（最终评分由 Quant 70% + AI 30% 构成）</p>
 <p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:[XX]/100 | 基本面:[X]/35 | 事件:[X]/20 | 技术:[X]/25 | 风险/流动性:[X]/20 | 技术确认:[N]项 | MA20:[数值] | MA20斜率5日:[数值]% | Sector RS20D:[数值]%</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
-<p><span class="highlight-label bg-purple">🧠 盘前结论:</span>明确说明为什么现在值得关注、盘前异动是否被新闻解释、以及主要不确定性。</p>
+<p><span class="highlight-label bg-purple">🧠 {SCAN_RUN_MODE_LABEL}结论:</span>说明为什么当前值得关注、当前价格状态是否被新闻/事件解释、以及主要不确定性；盘中补发时不得虚构盘前异动。</p>
 <p><span class="highlight-label bg-purple">🚀 主要催化:</span>只写当天真实新闻/事件或已给出的基本面证据；没有就写“暂无新催化”。</p>
-<p><span class="highlight-label bg-purple">⚠️ 主要风险:</span>明确写出估值、事件、技术或盘前跳空方面的主要风险。</p>
+<p><span class="highlight-label bg-purple">⚠️ 主要风险:</span>明确写出估值、事件、技术以及价格状态方面的主要风险。</p>
 <p><span class="highlight-label bg-purple">🛑 失效条件:</span>说明什么价格/技术结构/事件变化会使本次观点失效。</p>
 <p><b>期权：</b>不要在AI正文中编造行权价、到期日、权利金、Delta或IV；真实期权策略由程序从期权链读取后统一插入。</p>
 </div>
@@ -2821,7 +2839,7 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
 1. 只能使用提供的数据、新闻和已有AI草稿；禁止编造新闻、订单、财报、政策、价格或产业链关系。
 2. “产业链逻辑”必须是因果链，而不是泛泛一句“基本面良好”。格式尽量：宏观/行业变化 → 产品/客户/业务 → 收入/盈利/估值 → 当前交易含义。
 3. “个股新闻核查”必须使用中文总结；每只股票 1-3 条事实，明确“有/无负面”。
-4. “盘前结论”必须结合昨收、盘前状态和技术结构。如果盘前状态不是“盘前实时”，明确写“当前未处于可用盘前窗口”或“盘前报价缺失”，不要编造盘前涨跌。
+4. “时段结论”必须结合昨收、当前运行模式和技术结构。盘前运行时说明盘前状态；盘中补发时明确说明已经进入常规交易时段，禁止编造盘前涨跌。
 5. “主要催化”必须来自已给新闻或结构化基本面；没有就写“暂无已验证的新催化”。
 6. “主要风险”至少检查估值、技术、事件/行业、盘前跳空中的相关项；只写有证据的风险。
 7. “失效条件”必须尽量具体到价格/技术结构/事件，不要写空泛的“市场发生变化”。
@@ -2908,7 +2926,7 @@ def build_verified_core_html(ai_html, verified_items):
         news_fallback = f"已抓取 {len(news_items)} 条个股新闻；中文事实摘要暂未生成，当前不对新闻内容做未经验证的延伸。"
         logic = str(item.get("AI_industry_logic") or ai_summary(chunk, "产业链逻辑", logic_fallback))
         news = str(item.get("AI_news_cn") or news_fallback)
-        conclusion = str(item.get("AI_premarket_conclusion") or ai_field(["盘前结论"], "当前缺少可验证的独立盘前结论；仅按昨收与技术结构评估。"))
+        conclusion = str(item.get("AI_premarket_conclusion") or ai_field(["盘前结论", "盘中补发结论", "市场时段结论"], "当前缺少可验证的独立时段结论；仅按最后完整常规交易日收盘与技术结构评估。"))
         catalyst = str(item.get("AI_catalysts") or ai_field(["主要催化"], "暂无已验证的新催化。"))
         risk = str(item.get("AI_risks") or ai_field(["主要风险"], "主要风险来自当前可验证的估值、技术与事件条件。"))
         invalidation = str(item.get("AI_invalidation") or ai_field(["失效条件"], "若跌破MA20/关键技术支撑且MACD/KDJ同步转弱，本次观点失效。"))
@@ -2919,7 +2937,7 @@ def build_verified_core_html(ai_html, verified_items):
         pre_chg_display = fmt(pre_chg,2) + "%" if pre_chg not in (None,"") else "—"
         return f"""
 <div class=\"{'top-card core-card' if tag == 'Core_Dragon' else 'compare-card'}\">
-<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(prev,2))} | 盘前:${esc(pre_display)} | 盘前变动:${esc(pre_chg_display)} | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
+<div class=\"top-title\">{esc(label)} | {esc(item.get('Name'))} ({esc(item.get('Ticker'))}) | 昨收:${esc(fmt(prev,2))} | {SCAN_RUN_MODE_LABEL}参考:{esc(pre_display)} | {SCAN_RUN_MODE_LABEL}变动:{esc(pre_chg_display)} | RSI:{esc(fmt(item.get('RSI'),1))} | 乖离率:{esc(fmt(item.get('乖离率(%)'),2))}%</div>
 <p><span class=\"highlight-label bg-red\">🔗 产业链逻辑:</span>{esc(logic)}</p>
 <p><span class=\"highlight-label bg-green\">📰 个股新闻核查:</span>{esc(news)}</p>
 <p><span class=\"highlight-label bg-blue\">📈 技术确认:</span>{esc(tech)} | 共{esc(item.get('技术确认数',0))}项 | MACD:{esc(item.get('MACD趋势','N/A'))} | KDJ_J:{esc(fmt(item.get('KDJ_J'),1))} | ATR:{esc(fmt(item.get('ATR_Pct'),2))}%</p>
@@ -2927,12 +2945,12 @@ def build_verified_core_html(ai_html, verified_items):
 <p><span class=\"highlight-label bg-blue\">📊 基本面/估值:</span>基本面 {esc(item.get('Fundamental_Score',0))}/35 | EPS:{esc(item.get('EPS_TTM','N/A'))} | PE(TTM):{esc(item.get('PE_TTM','N/A'))} | PE(Fwd):{esc(item.get('PE_Forward','N/A'))} | PB:{esc(item.get('PB','N/A'))} | 营收增速:{esc(item.get('Revenue_Growth','N/A'))} | 盈利增速:{esc(item.get('Earnings_Growth','N/A'))}</p>
 <p><span class=\"highlight-label bg-blue\">📊 技术结构:</span>技术:{esc(item.get('Technical_Score_25',0))}/25 | 风险/流动性:{esc(item.get('Risk_Liquidity_Score',0))}/20 | MA20:{esc(fmt(item.get('MA20'),2))} | MA50:{esc(fmt(item.get('MA50'),2))} | MA20斜率5日:{esc(fmt(item.get('MA20_Slope_Pct_5D'),3))}% | Sector RS20D:{esc(fmt(item.get('Sector_RS_20D_Pct'),2))}%</p>
 <p><span class=\"highlight-label bg-orange\">⚠️ 事件/市场:</span>事件分:{esc(item.get('Event_Score',0))}/20 | Sector:{esc(item.get('Sector','N/A'))} | Market Regime:{esc(item.get('Market_Regime','N/A'))} | VIX:{esc(fmt(item.get('VIX'),2))} | 周期共振:{esc(item.get('周期共振','N/A'))}</p>
-<p><span class=\"highlight-label bg-purple\">🧠 盘前结论:</span>{esc(conclusion)}</p>
+<p><span class=\"highlight-label bg-purple\">🧠 {SCAN_RUN_MODE_LABEL}结论:</span>{esc(conclusion)}</p>
 <p><span class=\"highlight-label bg-purple\">🚀 主要催化:</span>{esc(catalyst)}</p>
 <p><span class=\"highlight-label bg-purple\">⚠️ 主要风险:</span>{esc(risk)}</p>
 <p><span class=\"highlight-label bg-purple\">🛑 失效条件:</span>{esc(invalidation)}</p>
 <p><span class=\"highlight-label bg-orange\">🛡️ 动态风控:</span>{'观察，不执行持仓止损' if tag == 'Observation' else f'持有:{esc(item.get("Hold_Period","动态持有"))} | 移动止损:{esc(stop)}'} | 依据:MA20/MA50 + ATR + MACD/KDJ</p>
-<p><span class=\"highlight-label bg-blue\">🕒 数据时间:</span>技术K线={esc(item.get('Technical_Date','N/A'))} | 盘前状态={esc(item.get('Premarket_Status_Display') or 'N/A')} | 盘前报价={esc(item.get('Premarket_AsOf_ET') or 'N/A')} | 新闻快照={esc(item.get('News_AsOf_ET') or 'N/A')}</p>
+<p><span class=\"highlight-label bg-blue\">🕒 数据时间:</span>技术K线={esc(item.get('Technical_Date','N/A'))} | 运行模式={SCAN_RUN_MODE_LABEL} | 盘前状态={esc(item.get('Premarket_Status_Display') or 'N/A')} | 盘前报价={esc(item.get('Premarket_AsOf_ET') or 'N/A')} | 新闻快照={esc(item.get('News_AsOf_ET') or 'N/A')}</p>
 <p style=\"color:#607d8b;font-size:13px;\"><b>程序校验：</b>{'Observation 仅作跟踪，不计入实际持仓；不会与 Core 重复。' if tag == 'Observation' else 'Core 与 pending 使用同一程序候选集合；候选池外 AI 推荐自动剔除。'}</p>
 </div>
 """
@@ -3266,6 +3284,7 @@ if __name__ == "__main__":
         print(f"⚠️ 期权HTML生成失败，Scan继续完成：{e}")
         option_html = "<h2 style=\"color:#7b1fa2;\">🎲 美股期权实战策略</h2><p>本次期权数据已生成，但期权HTML渲染失败；不影响股票Scan与账本写入。</p>"
     full_html = build_full_email_html(ai_html + option_html)
-    send_mail(SUPER_ADMIN, f"【宏观驱动美股版】{TARGET_REGION} 核心打分、股票与期权实战 ({today_us_str()})", full_html)
+    subject_prefix = "盘前" if SCAN_RUN_MODE == "PREMARKET" else "盘中补发"
+    send_mail(SUPER_ADMIN, f"【宏观驱动美股版｜{subject_prefix}】{TARGET_REGION} 核心打分、股票与期权实战 ({today_us_str()})", full_html)
 
-    print("🎯 美股盘前扫描完成。")
+    print(f"🎯 美股{SCAN_RUN_MODE_LABEL} Scan 完成，邮件已按当前运行模式发送。")
