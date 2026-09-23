@@ -1083,7 +1083,7 @@ def _wall_display(x, side):
     if oi is not None:
         return f"{_price(value)}（OI {int(oi)}）"
     if source == "volume_proxy":
-        return f"{_price(value)}（成交量代理 {int(volume or 0)}；非OI Wall）"
+        return f"{_price(value)}（成交量代理 {int(volume or 0)}；OI不可用）"
     return f"{_price(value)}（OI N/A）"
 
 
@@ -1338,6 +1338,185 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
     except Exception as e:
         print(f"⚠️ Review→Scan 联动写回失败 {ticker}: {e}")
 
+
+# ============================================================
+# 8.5 Observation 生命周期管理
+# ============================================================
+# Observation 是观察性推荐，不应无限期占用 Review 算力。
+# 事件仍永久保留在 trade_history / review KPI 中，但“当前跟踪”会自动结束。
+OBS_MAX_TRADING_SESSIONS = 10
+OBS_TARGET_PCT = 10.0          # 达标即停止继续跟踪
+OBS_INVALIDATION_PCT = -6.0    # 跌破即停止继续跟踪
+OBS_CLOSE_STATUS = "Observation_Closed"
+OBS_END_REASONS = {
+    "TARGET_REACHED": "达到观察目标，停止继续跟踪",
+    "THESIS_INVALIDATED": "观察期价格表现跌破失效阈值，停止继续跟踪",
+    "MAX_TRACKING_SESSIONS": "达到最大观察交易日，停止继续跟踪",
+    "SUPERSEDED_BY_NEW_OBSERVATION": "同一标的出现新的 Observation，结束旧事件",
+    "SUPERSEDED_BY_CORE": "同一标的升级为 Core，结束旧 Observation",
+}
+
+
+def _observation_sessions_held(rec_date_str, review_date_str):
+    try:
+        a = pd.Timestamp(rec_date_str).normalize()
+        b = pd.Timestamp(review_date_str).normalize()
+        if b <= a:
+            return 0
+        return max(0, len(pd.bdate_range(a, b)) - 1)
+    except Exception:
+        return 0
+
+
+def _historical_close_for_review_event(ticker, date_str):
+    """尽量取指定推荐/替换交易日收盘价，给 Observation 事件做干净的结束结算。"""
+    try:
+        if 'df_hist_all' not in globals() or df_hist_all is None or df_hist_all.empty:
+            return None
+        d = df_hist_all.copy()
+        d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
+        target = pd.Timestamp(date_str).normalize()
+        sub = d[
+            d["Ticker"].astype(str).str.upper().eq(str(ticker).upper())
+            & d["Date"].dt.normalize().eq(target)
+        ]
+        if sub.empty:
+            return None
+        return safe_float(sub.iloc[-1].get("close"))
+    except Exception:
+        return None
+
+
+def manage_observation_lifecycle():
+    """
+    自动结束过老/已失效/被新推荐替代的 Observation。
+    只结束当前仍 Active/pending 的 Observation；历史事件不反复修改。
+    """
+    if not os.path.exists(TRADE_HISTORY) or os.path.getsize(TRADE_HISTORY) == 0:
+        return 0
+    try:
+        d = pd.read_csv(TRADE_HISTORY, dtype=str, keep_default_na=False, on_bad_lines='warn')
+    except Exception as e:
+        print(f"⚠️ Observation 生命周期读取失败：{e}")
+        return 0
+
+    for col in ["Status", "Exit_Date", "Exit_Price", "Observation_Status", "Observation_End_Reason"]:
+        if col not in d.columns:
+            d[col] = ""
+        d[col] = d[col].astype(object)
+
+    if "Date" not in d.columns or "Ticker" not in d.columns or "Tag" not in d.columns:
+        return 0
+
+    tmp = d.copy()
+    tmp["_date"] = pd.to_datetime(tmp["Date"], errors="coerce")
+    tmp["_ticker"] = tmp["Ticker"].astype(str).str.upper().str.strip()
+    tmp["_tag"] = tmp["Tag"].astype(str).str.strip()
+    tmp["_status"] = tmp["Status"].astype(str).str.strip()
+
+    active_obs = tmp[
+        (tmp["_tag"] == "Observation")
+        & tmp["_status"].isin(["", "Active", "pending"])
+        & tmp["_date"].notna()
+    ].copy()
+    if active_obs.empty:
+        return 0
+
+    # 仅比较同 ticker 的后续 Scan 事件。旧 Observation 被新的 Observation/Core 替代后关闭。
+    closes = []
+    for idx, row in active_obs.sort_values(["_ticker", "_date"]).iterrows():
+        ticker = str(row["_ticker"]).strip()
+        rec_date = row["_date"].strftime("%Y-%m-%d")
+        rec_price = safe_record_price(row)
+        if rec_price is None or rec_price <= 0:
+            # 推荐价缺失时仍允许超期关闭，但无法形成收益数字。
+            rec_price = None
+
+        later = tmp[
+            (tmp["_ticker"] == ticker)
+            & tmp["_date"].notna()
+            & (tmp["_date"] > row["_date"])
+        ].copy()
+        later = later.sort_values("_date")
+
+        replacement = None
+        if not later.empty:
+            later_repl = later[later["_tag"].isin([
+                "Core_Dragon", "Core_Double_Dragon", "Sub_Pioneer", "Observation"
+            ])].sort_values("_date")
+            if not later_repl.empty:
+                first_repl = later_repl.iloc[0]
+                if first_repl["_tag"] == "Observation":
+                    replacement = ("SUPERSEDED_BY_NEW_OBSERVATION", first_repl)
+                else:
+                    replacement = ("SUPERSEDED_BY_CORE", first_repl)
+
+        reason_code = None
+        close_date = pd.Timestamp(REVIEW_SESSION_DATE).strftime("%Y-%m-%d")
+        close_price = safe_float(price_map_today.get(ticker))
+
+        # 新事件替代：尽量在“新事件的推荐日收盘”结束旧观察，而不是等到今天。
+        if replacement is not None:
+            reason_code, repl = replacement
+            close_date = repl["_date"].strftime("%Y-%m-%d")
+            close_price = _historical_close_for_review_event(ticker, close_date) or close_price
+        else:
+            if rec_price and close_price:
+                pnl = (close_price - rec_price) / rec_price * 100.0
+                if pnl >= OBS_TARGET_PCT:
+                    reason_code = "TARGET_REACHED"
+                elif pnl <= OBS_INVALIDATION_PCT:
+                    reason_code = "THESIS_INVALIDATED"
+            if reason_code is None:
+                sessions = _observation_sessions_held(rec_date, REVIEW_SESSION_DATE)
+                if sessions >= OBS_MAX_TRADING_SESSIONS:
+                    reason_code = "MAX_TRACKING_SESSIONS"
+
+        if reason_code is None:
+            continue
+
+        label = OBS_END_REASONS.get(reason_code, reason_code)
+        mask = (
+            d["Tag"].astype(str).str.strip().eq("Observation")
+            & d["Ticker"].astype(str).str.upper().str.strip().eq(ticker)
+            & pd.to_datetime(d["Date"], errors="coerce").dt.strftime("%Y-%m-%d").eq(rec_date)
+            & d["Status"].astype(str).str.strip().isin(["", "Active", "pending"])
+        )
+        d.loc[mask, "Status"] = OBS_CLOSE_STATUS
+        d.loc[mask, "Exit_Date"] = close_date
+        if close_price is not None:
+            d.loc[mask, "Exit_Price"] = str(round(float(close_price), 4))
+        d.loc[mask, "Observation_Status"] = "Closed"
+        d.loc[mask, "Observation_End_Reason"] = label
+        closes.append((ticker, rec_date, reason_code, close_price))
+
+    if closes:
+        try:
+            d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
+        except Exception as e:
+            print(f"⚠️ Observation 生命周期写回失败：{e}")
+            return 0
+
+        reason_counts = {}
+        for ticker, rec_date, code, close_price in closes:
+            reason_counts[code] = reason_counts.get(code, 0) + 1
+        detail = "；".join(f"{OBS_END_REASONS.get(k,k)} {v}笔" for k, v in reason_counts.items())
+        print(f"📌 [Observation跟踪管理] 本次结束 {len(closes)} 笔，原因：{detail}")
+
+    return len(closes)
+
+
+# 事件生命周期管理必须先于分类和 KPI。
+manage_observation_lifecycle()
+
+# 生命周期写回后重新加载内存账本，避免本轮 Review 继续把已关闭 Observation 当作 Active。
+df = load_trade_history()
+cutoff_date = get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)
+recent_picks = df[df["Date"].notna() & (df["Date"] >= cutoff_date)].copy()
+for c in ("Hold_Period","Stop_Loss","Score","Name","Tag","Price","Close_Price","Status"):
+    if c not in recent_picks.columns:
+        recent_picks[c] = ""
+recent_picks["Hold_Period"] = "动态持有"
 
 # ============================================================
 # 9. 股票分类
@@ -1971,6 +2150,7 @@ def build_scan_recommendation_events():
                         "已超期归档",
                         "突发清仓暂停",
                         "周期到期清仓",
+                        "Observation_Closed",
                     }
 
                     if status in closed_statuses and exit_price is not None:
@@ -2042,7 +2222,7 @@ def build_scan_recommendation_events():
                     status = clean_text(row.get("Status"))
                     if status in {
                         "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓",
-                        "已超期归档", "突发清仓暂停", "周期到期清仓"
+                        "已超期归档", "突发清仓暂停", "周期到期清仓", "Observation_Closed"
                     } and exit_price is not None:
                         cur = exit_price
                     else:
@@ -2144,6 +2324,7 @@ CLOSED_STOCK_STATUSES = {
     "已超期归档",
     "周期到期清仓",
     "突发清仓暂停",
+    "Observation_Closed",
 }
 
 
@@ -2502,10 +2683,10 @@ def build_observation_html():
 <b>KDJ_J回升：</b>{x.get("KDJ_J回升")}　
 <b>量能放大：</b>{x.get("量能放大")}　
 <b>周期共振：</b>{x.get("周期共振")}</div>
-<div style="color:#607d8b;">Observation 不计入实际持仓，但属于有效 Scan 推荐，按首次推荐价持续追踪并计入 Scan 推荐绩效。</div>
+<div style="color:#607d8b;">Observation 不计入实际持仓。当前跟踪有明确结束条件；结束后的事件仍保留在历史绩效统计中。</div>
 </div>
 """)
-    return '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 最近30天 Observation 推荐</h2>' + "".join(blocks)
+    return '<h2 style="color:#e65100;border-bottom:2px solid #e65100;padding-bottom:5px;">👀 当前 Observation 跟踪</h2><div style="background:#fff7e6;border:1px solid #ffd59a;padding:12px;margin-bottom:15px;border-radius:8px;color:#7a4b00;">当前只保留仍在跟踪的 Observation。自动取消跟踪条件：达到 +10% 目标、跌幅达到 -6% 失效、满 10 个交易日、被新的 Observation 替代、或升级为 Core。已结束事件仍保留在 KPI 历史统计中，不再持续占用当前跟踪资源。</div>' + "".join(blocks)
 
 
 # ============================================================
