@@ -693,7 +693,179 @@ def process_options(price_map):
         })
     return out
 
-option_closed_records = process_options(price_map_today)
+def _option_quote_mid(row):
+    """优先 bid/ask mid，其次 last；只返回正数。"""
+    try:
+        bid=safe_float(row.get("bid")); ask=safe_float(row.get("ask")); last=safe_float(row.get("lastPrice"))
+        if bid is not None and ask is not None and bid>0 and ask>=bid:
+            return (bid+ask)/2.0
+        if last is not None and last>0:
+            return last
+        if ask is not None and ask>0:
+            return ask
+        return bid
+    except Exception:
+        return None
+
+
+def _load_option_chain_exact(ticker, expiry):
+    """Review 专用：读取指定到期日的真实期权链；失败只返回空，不虚构价格。"""
+    try:
+        obj=yf.Ticker(ticker)
+        target=pd.Timestamp(expiry).strftime("%Y-%m-%d")
+        chain=obj.option_chain(target)
+        return chain.calls.copy(), chain.puts.copy()
+    except Exception:
+        return pd.DataFrame(), pd.DataFrame()
+
+
+def build_active_option_reviews(price_map):
+    """对所有 Active 期权做确定性盘后复盘；不依赖 AI 是否愿意输出期权段落。"""
+    d=load_option_positions()
+    if d.empty:
+        return []
+    out=[]
+    for _,row in d.iterrows():
+        ticker=resolve_ticker(row.get("Ticker"))
+        expiry_dt=pd.to_datetime(row.get("Expiry"),errors="coerce",format="mixed")
+        if not ticker or pd.isna(expiry_dt):
+            continue
+        spot=safe_float(price_map.get(ticker))
+        if spot is None:
+            _, spot=get_live_quote_bootstrap(ticker)
+        strategy=clean_text(row.get("Strategy"),"LONG_CALL").upper()
+        opt_type=clean_text(row.get("OptionType")).upper()
+        long_strike=safe_float(row.get("LongStrike"),safe_float(row.get("Strike")))
+        short_strike=safe_float(row.get("ShortStrike"))
+        entry=safe_float(row.get("EntryPrice"),safe_float(row.get("NetDebit")))
+        qty=safe_float(row.get("Quantity"),1) or 1
+        max_loss=safe_float(row.get("MaxLoss"),entry*100 if entry else None)
+        max_profit=safe_float(row.get("MaxProfit"))
+        breakeven=safe_float(row.get("BreakEven"))
+        dte=max(0,(expiry_dt.date()-get_us_time().date()).days)
+
+        mark=None; mark_source="N/A"; long_mark=None; short_mark=None
+        intrinsic=None
+        if spot is not None and long_strike is not None:
+            if strategy=="CALL_DEBIT_SPREAD" and short_strike is not None and short_strike>long_strike:
+                intrinsic=max(0.0,min(short_strike-long_strike,spot-long_strike))
+            elif opt_type=="CALL":
+                intrinsic=max(0.0,spot-long_strike)
+
+        calls,puts=_load_option_chain_exact(ticker,expiry_dt)
+        try:
+            if not calls.empty and long_strike is not None:
+                lr=calls.iloc[(pd.to_numeric(calls["strike"],errors="coerce")-long_strike).abs().argsort()[:1]].iloc[0]
+                long_mark=_option_quote_mid(lr)
+            if strategy=="CALL_DEBIT_SPREAD" and not calls.empty and short_strike is not None:
+                sr=calls.iloc[(pd.to_numeric(calls["strike"],errors="coerce")-short_strike).abs().argsort()[:1]].iloc[0]
+                short_mark=_option_quote_mid(sr)
+        except Exception:
+            long_mark=None; short_mark=None
+
+        if strategy=="CALL_DEBIT_SPREAD" and long_mark is not None and short_mark is not None:
+            mark=max(0.0,long_mark-short_mark); mark_source="Yahoo option chain mid/last"
+        elif strategy=="LONG_CALL" and long_mark is not None:
+            mark=long_mark; mark_source="Yahoo option chain mid/last"
+        unrealized=None
+        if mark is not None and entry is not None:
+            unrealized=round((mark-entry)*qty*100,2)
+        intrinsic_floor_pnl=None
+        if intrinsic is not None and entry is not None:
+            intrinsic_floor_pnl=round((intrinsic-entry)*qty*100,2)
+
+        risk=[]
+        if dte<=14: risk.append("临近到期")
+        if spot is not None and long_strike is not None and spot<long_strike: risk.append("正股低于Long Strike")
+        if breakeven is not None and spot is not None:
+            risk.append("已站上盈亏平衡" if spot>=breakeven else "尚未站上盈亏平衡")
+        if unrealized is not None and entry and mark is not None and mark<=entry*0.5: risk.append("权利金回撤≥50%")
+        if strategy=="CALL_DEBIT_SPREAD" and short_strike is not None and spot is not None and spot>=short_strike: risk.append("正股已进入/超过价差上限区")
+        status="；".join(risk) if risk else "当前未触发程序化高风险条件"
+
+        out.append({
+            "ticker":ticker,"name":clean_text(row.get("Name"),ticker),"strategy":strategy,"option_type":opt_type,
+            "expiry":expiry_dt.strftime("%Y-%m-%d"),"dte":dte,"spot":spot,
+            "long_strike":long_strike,"short_strike":short_strike,"entry":entry,
+            "mark":mark,"mark_source":mark_source,"unrealized_pnl":unrealized,
+            "intrinsic":intrinsic,"intrinsic_floor_pnl":intrinsic_floor_pnl,"max_loss":max_loss,"max_profit":max_profit,
+            "breakeven":breakeven,"delta":safe_float(row.get("Delta")),"iv":safe_float(row.get("IV")),
+            "call_wall":safe_float(row.get("CallWall")),"put_wall":safe_float(row.get("PutWall")),
+            "earnings_date":clean_text(row.get("EarningsDate")),"earnings_days":safe_float(row.get("EarningsDays")),
+            "quantity":qty,"reason":clean_text(row.get("Reason")),"risk_status":status,
+        })
+    print(f"📊 [期权Review] 活跃期权复盘：{len(out)} 笔")
+    return out
+
+
+def load_option_closed_history(days=30):
+    """从 option_strategies.csv 读取历史已结束期权；避免 KPI 只统计“今天刚过期”的期权。"""
+    if not os.path.exists(OPTION_LOG_FILE) or os.path.getsize(OPTION_LOG_FILE)==0:
+        return []
+    try:
+        d=pd.read_csv(OPTION_LOG_FILE,dtype=str,keep_default_na=False)
+        if d.empty: return []
+        status=d.get("Status",pd.Series("",index=d.index)).astype(str).str.strip().str.lower()
+        d=d[status.isin({"closed","close","expired","已平仓"})].copy()
+        if d.empty: return []
+        date_cols=[c for c in ("Close_Date","EntryDate") if c in d.columns]
+        cutoff=pd.Timestamp(today_us_str())-pd.Timedelta(days=days)
+        use=pd.Series(pd.NaT,index=d.index,dtype="datetime64[ns]")
+        for c in date_cols:
+            dtv=pd.to_datetime(d[c],errors="coerce",format="mixed")
+            use=use.fillna(dtv)
+        d=d[use>=cutoff].copy()
+        d["_pnl"]=pd.to_numeric(d.get("PnL", ""),errors="coerce")
+        out=[]
+        for _,x in d.iterrows():
+            pnl=safe_float(x.get("PnL"))
+            if pnl is None: continue
+            out.append({"ticker":resolve_ticker(x.get("Ticker")),"strategy":clean_text(x.get("Strategy"),"LONG_CALL"),"expiry":clean_text(x.get("Expiry")),"close_date":clean_text(x.get("Close_Date")),"entry_price":safe_float(x.get("EntryPrice")),"close_price":safe_float(x.get("Close_Price")),"pnl":pnl,"reason":clean_text(x.get("Reason"))})
+        return out
+    except Exception as e:
+        print(f"⚠️ 读取历史期权平仓记录失败：{e}")
+        return []
+
+
+def build_option_review_html(active_reviews, closed_records, closed_history):
+    cards=[]
+    if active_reviews:
+        for x in active_reviews:
+            pnl=_price(x.get("unrealized_pnl"))
+            pnl_pct=None
+            if x.get("entry") is not None and x.get("entry")>0 and x.get("unrealized_pnl") is not None:
+                pnl_pct=(x.get("unrealized_pnl")/(x.get("entry")*x.get("quantity",1)*100))*100
+            pnl_html=(f'<span style="{_pnl_style(pnl_pct)}">{_pct(pnl_pct)}</span>' if pnl_pct is not None else '<span style="color:#607d8b">N/A</span>')
+            spread=f'{x.get("long_strike")}' + (f' / {x.get("short_strike")}' if x.get("short_strike") is not None else '')
+            cards.append(f"""<div style="background:#faf7ff;border:1px solid #d7bce8;border-left:6px solid #7b1fa2;padding:16px;margin-bottom:12px;border-radius:8px;">
+<div style="font-size:17px;font-weight:800;color:#5e2b76;">🎲 {x.get("name")} ({x.get("ticker")})｜{x.get("strategy")}</div>
+<div><b>到期：</b>{x.get("expiry")}（DTE {x.get("dte")}）　<b>正股：</b>{_price(x.get("spot"))}　<b>执行价：</b>{spread}</div>
+<div><b>入场权利金：</b>{_price(x.get("entry"))}/股　<b>当前期权价格：</b>{_price(x.get("mark"))}/股　<b>当前浮盈亏：</b>{pnl_html}</div>
+<div><b>最大风险：</b>{_price(x.get("max_loss"))}　<b>最大收益：</b>{_price(x.get("max_profit"))}　<b>盈亏平衡：</b>{_price(x.get("breakeven"))}</div>
+<div><b>Delta：</b>{x.get("delta") if x.get("delta") is not None else "N/A"}　<b>IV：</b>{x.get("iv") if x.get("iv") is not None else "N/A"}　<b>Call Wall：</b>{_price(x.get("call_wall"))}　<b>Put Wall：</b>{_price(x.get("put_wall"))}</div>
+<div><b>财报：</b>{x.get("earnings_date") or "未确认"}　<b>事件距离：</b>{x.get("earnings_days") if x.get("earnings_days") is not None else "N/A"}天</div>
+<div><b>风控判断：</b>{x.get("risk_status")}</div>
+<div style="font-size:12px;color:#607d8b;">报价来源：{x.get("mark_source")}; 若无真实期权报价，程序只显示内在价值底线，不把它冒充为市价。</div>
+</div>""")
+    else:
+        cards.append('<div style="background:#fafafa;border:1px solid #e0e0e0;padding:16px;border-radius:8px;color:#607d8b;">当前没有活跃期权持仓。</div>')
+
+    closed_rows=[]
+    for x in (closed_records or []):
+        closed_rows.append(f'<li><b>{x.get("ticker")}</b>｜{x.get("strategy")}｜到期 {x.get("expiry")}｜平仓价 {x.get("close_price")}｜PnL {x.get("pnl"):+.2f}｜{x.get("reason")}</li>')
+    # 只有当天 process_options 关闭记录时才追加，避免重复显示历史记录。
+    if closed_history:
+        seen={(x.get("ticker"),x.get("expiry"),x.get("close_date")) for x in (closed_records or [])}
+        for x in closed_history:
+            key=(x.get("ticker"),x.get("expiry"),x.get("close_date"))
+            if key not in seen:
+                closed_rows.append(f'<li><b>{x.get("ticker")}</b>｜{x.get("strategy")}｜平仓 {x.get("close_date") or "N/A"}｜PnL {x.get("pnl"):+.2f}｜{x.get("reason")}</li>')
+    closed_html=''.join(closed_rows) if closed_rows else '<li>最近30天没有已完成期权平仓记录。</li>'
+    return '<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:5px;">🎲 期权盘后复盘与风控</h2>'+''.join(cards)+f'<div style="background:#fff;border:1px solid #e0e0e0;border-left:6px solid #9b59b6;padding:16px;border-radius:8px;margin-top:12px;"><div style="font-weight:800;margin-bottom:8px;">✅ 最近30天期权已完成复盘</div><ul style="margin:0;padding-left:20px;">{closed_html}</ul></div>'
+
+
+active_option_reviews=build_active_option_reviews(price_map_today)
+option_closed_history=load_option_closed_history(days=30)
 
 
 # ============================================================
@@ -1707,7 +1879,7 @@ other_missing_count = max(
 
 option_closed_pnl = [
     safe_float(x.get("pnl"))
-    for x in option_closed_records
+    for x in option_closed_history
     if safe_float(x.get("pnl")) is not None
 ]
 
@@ -1980,7 +2152,7 @@ def load_recent_option_recommendations(limit=20, days=7):
         print(f"⚠️ 读取近期义项权利推荐失败：{e}")
         return []
 
-active_option_snapshot = load_active_options_snapshot(price_map_today)
+active_option_snapshot = active_option_reviews
 recent_option_recommendations = load_recent_option_recommendations()
 
 ai_html = ""
@@ -2077,6 +2249,8 @@ body {{
 
 {build_stopped_html()}
 
+{build_option_review_html(active_option_reviews, option_closed_records, option_closed_history)}
+
 {ai_html}
 
 </div>
@@ -2125,6 +2299,6 @@ print(
     f"Scan推荐 {total_scan_recommendations} 笔，"
     f"有效 {valid_performance_samples}，"
     f"数据不足 {data_insufficient_count}，"
-    f"综合胜率 {recommendation_win_rate:.2f}%"
+    f"Core完成 {core_closed_win_rate:.2f}% / Core当前 {core_open_win_rate:.2f}% / Observation完成 {obs_closed_win_rate:.2f}% / Observation当前 {obs_win_rate:.2f}% / 期权完成 {option_win_rate:.2f}%"
 )
 print("=" * 60)

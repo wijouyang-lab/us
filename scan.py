@@ -2590,6 +2590,10 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 
 <!-- 重复上述 div 结构至第5只，确保每只都有 class="top-card core-card" -->
 
+【强制内容纪律】
+每只股票必须真实填写“产业链逻辑 / 个股新闻核查 / 盘前结论 / 主要催化 / 主要风险 / 失效条件”；不得用“暂无”“程序候选”“请重点关注”等模板句替代已有证据。
+“个股新闻核查”必须用中文，必须引用上方提供的真实新闻；“产业链逻辑”必须体现行业→公司→业务/盈利的传导。
+
 <div class="compare-card">
 <div class="compare-title">🎖️ 观察池 - Rank 6-12</div>
 <ul>
@@ -2765,6 +2769,93 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
     return core + obs
 
 
+
+def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_market=""):
+    """
+    第二层“最终推荐解释器”：只处理最终入账的 Core / Observation，
+    将产业链逻辑、新闻核查、盘前结论、催化、风险、失效条件统一生成成中文结构化字段。
+
+    这样邮件渲染不再依赖初始 AI HTML 是否严格遵守标签格式。
+    """
+    if not items:
+        return items
+
+    def clean_fragment(v, limit=1800):
+        text = re.sub(r"<[^>]+>", " ", str(v or ""))
+        text = re.sub(r"\s+", " ", text).strip()
+        return text[:limit]
+
+    payload = []
+    for item in items:
+        payload.append({
+            "ticker": item.get("Ticker"),
+            "name": item.get("Name"),
+            "tag": item.get("Tag"),
+            "sector": item.get("Sector", ""),
+            "prev_close": item.get("Prev_Close", item.get("Price")),
+            "premarket": item.get("Premarket_Price", ""),
+            "premarket_change_pct": item.get("Premarket_Change_Pct", ""),
+            "premarket_status": item.get("Premarket_Status_Display", ""),
+            "fundamental": {
+                "eps": item.get("EPS_TTM"), "pe_ttm": item.get("PE_TTM"),
+                "pe_forward": item.get("PE_Forward"), "pb": item.get("PB"),
+                "revenue_growth": item.get("Revenue_Growth"),
+                "earnings_growth": item.get("Earnings_Growth"),
+            },
+            "technical": {
+                "rsi": item.get("RSI"), "bias": item.get("乖离率(%)"),
+                "ma20": item.get("MA20"), "ma50": item.get("MA50"),
+                "ma20_slope_5d": item.get("MA20_Slope_Pct_5D"),
+                "atr_pct": item.get("ATR_Pct"), "macd": item.get("MACD趋势"),
+                "kdj_j": item.get("KDJ_J"), "confirmations": item.get("技术确认信号", []),
+            },
+            "news": (item.get("个股新闻", []) or [])[:6],
+            "initial_ai": clean_fragment(item.get("_AI_Chunk", "")),
+        })
+
+    prompt=f"""
+你是最终推荐解释层。下面只有程序已经确定进入最终邮件的股票，不允许增加任何新Ticker。
+你的工作不是重新选股，而是把已有证据整理成可靠、简洁、中文的最终解释。
+
+【硬规则】
+1. 只能使用提供的数据、新闻和已有AI草稿；禁止编造新闻、订单、财报、政策、价格或产业链关系。
+2. “产业链逻辑”必须是因果链，而不是泛泛一句“基本面良好”。格式尽量：宏观/行业变化 → 产品/客户/业务 → 收入/盈利/估值 → 当前交易含义。
+3. “个股新闻核查”必须使用中文总结；每只股票 1-3 条事实，明确“有/无负面”。
+4. “盘前结论”必须结合昨收、盘前状态和技术结构。如果盘前状态不是“盘前实时”，明确写“当前未处于可用盘前窗口”或“盘前报价缺失”，不要编造盘前涨跌。
+5. “主要催化”必须来自已给新闻或结构化基本面；没有就写“暂无已验证的新催化”。
+6. “主要风险”至少检查估值、技术、事件/行业、盘前跳空中的相关项；只写有证据的风险。
+7. “失效条件”必须尽量具体到价格/技术结构/事件，不要写空泛的“市场发生变化”。
+8. 每个字段都必须有内容；不能输出空字符串、N/A、null。
+9. 只返回 JSON，不要 Markdown。
+
+【当前事件环境】
+{event_regime_text[:5000]}
+
+【宏观市场】
+{macro_market[:5000]}
+
+【最终股票】
+{json.dumps(payload, ensure_ascii=False)}
+
+输出格式：
+{{"items":[{{"ticker":"AAPL","industry_logic":"...","news_cn":"...","premarket_conclusion":"...","catalysts":"...","risks":"...","invalidation":"..."}}]}}
+"""
+    try:
+        client=ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
+        txt=_model_stream_text(client, model=TARGET_MODEL, max_tokens=10000, messages=[{"role":"user","content":prompt}])
+        obj=_extract_json_object(txt)
+        rows=obj.get("items", []) if isinstance(obj, dict) else []
+        by_ticker={str(x.get("ticker","")).upper():x for x in rows if isinstance(x,dict) and x.get("ticker")}
+        for item in items:
+            d=by_ticker.get(str(item.get("Ticker","")).upper(),{})
+            for key in ("industry_logic","news_cn","premarket_conclusion","catalysts","risks","invalidation"):
+                item[f"AI_{key}"]=str(d.get(key) or "").strip()
+        ok=sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn")) for item in items)
+        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文产业链/新闻/风险解释")
+    except Exception as e:
+        print(f"⚠️ [AI最终解释层] 生成失败，邮件使用确定性字段兜底：{type(e).__name__}: {e}")
+    return items
+
 def build_verified_core_html(ai_html, verified_items):
     """用程序最终入账集合重建 Core + Observation，彻底杜绝同一股票同时出现在两栏。"""
     max_core = int(LIMIT_PARAMS.get("max_core", 5))
@@ -2811,11 +2902,16 @@ def build_verified_core_html(ai_html, verified_items):
                     text=m.group(1).strip(" -—:：")
                     if text: return text
             return fallback
-        logic = ai_summary(chunk, "产业链逻辑", "程序候选通过硬门槛；以程序量化数据为准。")
-        conclusion = ai_field(["盘前结论"], "AI未提供独立盘前结论；以程序化数据为准。")
-        catalyst = ai_field(["主要催化"], "暂无新催化。")
-        risk = ai_field(["主要风险"], "请重点关注估值、事件与技术失效风险。")
-        invalidation = ai_field(["失效条件"], "MA20/MA50、MACD/KDJ 或事件逻辑发生明显反转。")
+        sector_cn_map = {"Technology":"科技/软件与AI", "Communication":"通信/互联网媒体", "Healthcare":"医药与医疗服务", "Financials":"金融服务", "Energy":"能源/油气", "Industrials":"工业/航空制造", "Consumer Discretionary":"可选消费/零售", "Consumer Staples":"必选消费", "Materials":"材料/化工与资源", "Utilities":"公用事业", "Real Estate":"房地产", "Other":"所属行业"}
+        sector_cn = sector_cn_map.get(str(item.get("Sector") or "Other"), str(item.get("Sector") or "所属行业"))
+        logic_fallback = f"{sector_cn}产业链中，{item.get('Name', item.get('Ticker'))}当前量化分为{fmt(item.get('Quant_Score'),1)}/100、技术确认{item.get('技术确认数',0)}项；最终交易逻辑基于行业环境、公司基本面与技术结构的交叉确认，不能脱离已验证新闻单独外推。"
+        news_fallback = f"已抓取 {len(news_items)} 条个股新闻；中文事实摘要暂未生成，当前不对新闻内容做未经验证的延伸。"
+        logic = str(item.get("AI_industry_logic") or ai_summary(chunk, "产业链逻辑", logic_fallback))
+        news = str(item.get("AI_news_cn") or news_fallback)
+        conclusion = str(item.get("AI_premarket_conclusion") or ai_field(["盘前结论"], "当前缺少可验证的独立盘前结论；仅按昨收与技术结构评估。"))
+        catalyst = str(item.get("AI_catalysts") or ai_field(["主要催化"], "暂无已验证的新催化。"))
+        risk = str(item.get("AI_risks") or ai_field(["主要风险"], "主要风险来自当前可验证的估值、技术与事件条件。"))
+        invalidation = str(item.get("AI_invalidation") or ai_field(["失效条件"], "若跌破MA20/关键技术支撑且MACD/KDJ同步转弱，本次观点失效。"))
         label = "👑 核心精选" if tag == "Core_Dragon" else "👀 Observation"
         stop = item.get("Stop_Loss", "") or ("观望" if tag == "Observation" else "N/A")
         prev = item.get("Prev_Close", item.get("Price")); pre = item.get("Premarket_Price"); pre_chg = item.get("Premarket_Change_Pct")
@@ -3063,6 +3159,13 @@ if __name__ == "__main__":
     # match_pool_to_report 已经对所有程序候选执行统一 Core/Observation 准入。
     if not chosen:
         print("⚠️ 程序候选经过硬门槛后没有达到 Core/Observation 最低线，不凑数。")
+
+    # 第二层最终解释：只对真正入账的 Core/Observation 生成中文产业链、新闻核查、盘前结论与风控解释。
+    chosen = enrich_verified_items_with_ai_details(
+        chosen,
+        event_regime_text=event_regime_text,
+        macro_market=macro_market,
+    )
 
     log_file = "trade_history.csv"
     to_write = []
