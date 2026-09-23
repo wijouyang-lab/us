@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-美股盘后复盘与风控审查引擎 V31
+美股盘后复盘与风控审查引擎 V32
 ================================================
 核心统计口径：
 1. 每次 Scan 推荐事件按「推荐日期 + Ticker」独立追踪。
@@ -69,12 +69,38 @@ def get_us_time():
 def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
 
+def _previous_business_day(date_obj):
+    d = date_obj
+    while d.weekday() >= 5:
+        d -= datetime.timedelta(days=1)
+    return d
+
+def review_session_date():
+    """返回本次盘后 Review 应该评估的最近一个已完成美股常规交易日。
+
+    Review 可能在美东午夜后运行（例如 GitHub Actions 的 UTC cron），
+    此时“美东今天”尚未开盘，不能把当天当成已完成交易日。
+    16:00 ET 之后才把当天视为已完成常规交易日；此前统一评估上一交易日。
+    """
+    now = get_us_time()
+    if now.weekday() >= 5:
+        d = now.date() - datetime.timedelta(days=1)
+        return _previous_business_day(d).strftime("%Y-%m-%d")
+    if now.time() >= datetime.time(16, 0):
+        return now.strftime("%Y-%m-%d")
+    d = now.date() - datetime.timedelta(days=1)
+    return _previous_business_day(d).strftime("%Y-%m-%d")
+
+REVIEW_SESSION_DATE = review_session_date()
+
 if get_us_time().weekday() >= 5:
     print("当前为周末，美股休市，退出复盘。")
     sys.exit(0)
 
 print("=" * 60)
 print("启动美股盘后复盘与风控审查引擎")
+print(f"📅 本次复盘交易日：{REVIEW_SESSION_DATE}（美股最近已完成常规交易日）")
+print(f"🕒 Review运行时间：{get_us_time().strftime('%Y-%m-%d %H:%M:%S %Z')}")
 print("=" * 60)
 
 
@@ -657,24 +683,24 @@ print(f"📡 获取 {len(clean_tickers)} 只真实美股 ticker 的 60日 OHLC..
 df_hist_all, ohlc_map_today = download_ohlc_safe(clean_tickers, period="60d")
 
 # price_map_today = 用于当前跟踪/期权正股报价：今天收盘 > 最近一个有效交易日收盘 > fast_info
-# ohlc_map_today = 只有今天的完整 OHLC 才能用于当日止损触发判断，避免旧交易日低点误触发。
+# ohlc_map_today = 只有本次 Review 交易日（最近已完成常规交易日）的完整 OHLC 才能用于该交易日止损触发判断。
 latest_regular_map = dict(ohlc_map_today)
 price_map_today = {}
 price_source_map = {}
-verified_today_ohlc = set()
+verified_review_session_ohlc = set()
 for ticker in clean_tickers:
-    exact = get_exact_date_ohlc(df_hist_all, ticker, today_us_str())
+    exact = get_exact_date_ohlc(df_hist_all, ticker, REVIEW_SESSION_DATE)
     if exact and exact.get("close") is not None:
         ohlc_map_today[ticker] = exact
         price_map_today[ticker] = exact["close"]
         price_source_map[ticker] = "today_regular_close"
-        verified_today_ohlc.add(ticker)
+        verified_review_session_ohlc.add(ticker)
     else:
         latest = latest_regular_map.get(ticker)
         if latest and latest.get("close") is not None:
             price_map_today[ticker] = latest["close"]
             price_source_map[ticker] = "latest_regular_close"
-            print(f"ℹ️ {ticker} 今日OHLC尚未返回，使用最近有效交易日收盘价跟踪：{latest['close']}")
+            print(f"ℹ️ {ticker} {REVIEW_SESSION_DATE} OHLC未返回，使用最近有效交易日收盘价跟踪：{latest['close']}")
 
 for ticker in clean_tickers:
     if ticker in price_map_today:
@@ -881,7 +907,7 @@ def build_active_option_reviews(price_map):
         max_loss=safe_float(row.get("MaxLoss"),entry*100 if entry else None)
         max_profit=safe_float(row.get("MaxProfit"))
         breakeven=safe_float(row.get("BreakEven"))
-        dte=max(0,(expiry_dt.date()-get_us_time().date()).days)
+        dte=max(0,(expiry_dt.date()-pd.Timestamp(REVIEW_SESSION_DATE).date()).days)
 
         mark=None; mark_source="N/A"; long_mark=None; short_mark=None
         intrinsic=None
@@ -978,7 +1004,7 @@ def load_option_closed_history(days=30):
         d=d[status.isin({"closed","close","expired","已平仓"})].copy()
         if d.empty: return []
         date_cols=[c for c in ("Close_Date","EntryDate") if c in d.columns]
-        cutoff=pd.Timestamp(today_us_str())-pd.Timedelta(days=days)
+        cutoff=pd.Timestamp(REVIEW_SESSION_DATE)-pd.Timedelta(days=days)
         use=pd.Series(pd.NaT,index=d.index,dtype="datetime64[ns]")
         for c in date_cols:
             dtv=pd.to_datetime(d[c],errors="coerce",format="mixed")
@@ -1006,7 +1032,7 @@ def _wall_display(x, side):
     if oi is not None:
         return f"{_price(value)}（OI {int(oi)}）"
     if source == "volume_proxy":
-        return f"{_price(value)}（成交量代理 {int(volume or 0)}；OI N/A）"
+        return f"{_price(value)}（成交量代理 {int(volume or 0)}；非OI Wall）"
     return f"{_price(value)}（OI N/A）"
 
 
@@ -1187,7 +1213,7 @@ def update_trade_history_status(ticker, buy_date, new_status, exit_price):
         )
         if mask.any():
             d.loc[mask,"Status"] = new_status
-            d.loc[mask,"Exit_Date"] = today_us_str()
+            d.loc[mask,"Exit_Date"] = REVIEW_SESSION_DATE
             d.loc[mask,"Exit_Price"] = str(exit_price)
             d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
     except Exception as e:
@@ -1210,7 +1236,7 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
         )
         if not mask.any(): return
         d.loc[mask,"Review_Risk_Status"] = risk_status
-        d.loc[mask,"Review_Risk_Date"] = today_us_str()
+        d.loc[mask,"Review_Risk_Date"] = REVIEW_SESSION_DATE
         d.loc[mask,"Review_Risk_Note"] = note
         if stop_price is not None and current_price is not None and safe_float(current_price,0) > 0:
             distance = round((float(current_price)-float(stop_price))/float(current_price)*100,2)
@@ -1295,7 +1321,7 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
             "量能放大": clean_text(latest.get("量能放大"), "N/A"),
             "周期共振": clean_text(latest.get("周期共振"), "N/A"),
             "系统连续推荐次数": 1,
-            "今日新增": "是" if rec_date_str == today_us_str() else "否",
+            "今日新增": "是" if rec_date_str == REVIEW_SESSION_DATE else "否",
             "行情状态": price_source_map.get(ticker, "missing") if cur is not None else "今日/最近行情缺失",
         })
         continue
@@ -1305,7 +1331,7 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
 
     # 只有经过“目标日期精确匹配”的完整 OHLC 才能做当日最低价止损判断。
     # price_map_today 的最近有效收盘价只能用于跟踪，绝不能触发今天的 STOP。
-    ohlc = ohlc_map_today.get(ticker) if ticker in verified_today_ohlc and price_source_map.get(ticker) == "today_regular_close" else None
+    ohlc = ohlc_map_today.get(ticker) if ticker in verified_review_session_ohlc and price_source_map.get(ticker) == "today_regular_close" else None
     if ohlc is None:
         cur = price_map_today.get(ticker)
         if cur is None:
@@ -1315,16 +1341,16 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
                 "持股周期建议": "动态持有", "止损价": safe_float(latest.get("Stop_Loss")) or "N/A",
                 "首次推荐日": rec_date_str, "首次推荐价": rec_price,
                 "今日开盘价":"N/A", "现价":"N/A", "今日开盘→收盘%":None,
-                "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days, "剩余天数":"—",
+                "持仓天数":(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days, "剩余天数":"—",
                 "当前盈亏(%)":None, "系统连续推荐次数":1,
-                "今日新增":"是" if rec_date_str==today_us_str() else "否",
+                "今日新增":"是" if rec_date_str==REVIEW_SESSION_DATE else "否",
                 "止损方法":"MA20/MA50 + ATR + MACD/KDJ",
                 "MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
-                "趋势状态":"今日行情缺失","风险提示":"今日行情未取得；暂不执行止损判断",
-                "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),
-                "Review_Stop_Distance_Pct":"","Review_Risk_Note":"今日行情缺失，待下一次Review补算"
+                "趋势状态":f"{REVIEW_SESSION_DATE}行情缺失","风险提示":f"{REVIEW_SESSION_DATE} 行情未取得；暂不执行该交易日止损判断",
+                "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":REVIEW_SESSION_DATE,
+                "Review_Stop_Distance_Pct":"","Review_Risk_Note":f"{REVIEW_SESSION_DATE} 行情缺失，待下一次Review补算"
             })
-            write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, "今日行情缺失，暂不执行止损判断。")
+            write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, f"{REVIEW_SESSION_DATE} 行情缺失，暂不执行该交易日止损判断。")
             continue
 
         cur_float = safe_float(cur)
@@ -1335,13 +1361,13 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
             "推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有",
             "止损价":stop if stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
             "今日开盘价":"N/A","现价":cur_float if cur_float is not None else "N/A","今日开盘→收盘%":None,
-            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"剩余天数":"—","当前盈亏(%)":pnl,
-            "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==today_us_str() else "否",
+            "持仓天数":(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days,"剩余天数":"—","当前盈亏(%)":pnl,
+            "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==REVIEW_SESSION_DATE else "否",
             "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
-            "趋势状态":"仅有最近有效价格","风险提示":"今日OHLC未返回；仅跟踪价格，不执行当日止损触发",
-            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),
+            "趋势状态":"仅有最近有效价格","风险提示":f"{REVIEW_SESSION_DATE} OHLC未返回；仅跟踪价格，不执行该交易日止损触发",
+            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":REVIEW_SESSION_DATE,
             "Review_Stop_Distance_Pct":round((cur_float-stop)/cur_float*100,2) if stop and cur_float else "",
-            "Review_Risk_Note":"今日完整OHLC未返回；已使用最近有效价格跟踪，不执行当日止损触发。"
+            "Review_Risk_Note":f"{REVIEW_SESSION_DATE} 完整OHLC未返回；已使用最近有效价格跟踪，不执行该交易日止损触发。"
         })
         write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, cur_float, "今日完整OHLC未返回；使用最近有效价格跟踪，不执行当日止损触发。")
         continue
@@ -1351,14 +1377,14 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
         continue
 
     old_stop = safe_float(latest.get("Stop_Loss"))
-    is_same_day_entry = rec_date_str == today_us_str()
-    ctx = get_trailing_stop_context(ticker, old_stop, today_us_str(), entry_price=rec_price, days_held=(pd.Timestamp(today_us_str())-rec_date).days)
+    is_same_day_entry = rec_date_str == REVIEW_SESSION_DATE
+    ctx = get_trailing_stop_context(ticker, old_stop, REVIEW_SESSION_DATE, entry_price=rec_price, days_held=(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days)
     # 新推荐当日不允许用“入场前一个交易日”的技术结构把初始保护线瞬间抬高，
     # 否则会出现 NXPI 9/22：初始止损 213.51，但因为 9/21 收盘技术线抬到 226.61，
     # 9/22 当日最低 226.15 被错误判成止损。新仓当天只执行 Scan 已写入的初始保护线。
     exec_stop = old_stop if is_same_day_entry and old_stop and old_stop > 0 else (ctx.get("exec_stop") if ctx else old_stop)
 
-    if ticker in verified_today_ohlc and price_source_map.get(ticker) == "today_regular_close" and exec_stop and exec_stop > 0 and low <= exec_stop:
+    if ticker in verified_review_session_ohlc and price_source_map.get(ticker) == "today_regular_close" and exec_stop and exec_stop > 0 and low <= exec_stop:
         write_review_risk_linkage_us(
             ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep,
             f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。"
@@ -1369,14 +1395,14 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
             "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),
             "标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),
             "持股周期建议":"动态持有","止损价":exec_stop,"首次推荐日":rec_date_str,"首次推荐价":rec_price,
-            "止损触发日":today_us_str(),"止损结算价":exitp,"止损盈亏(%)":pnl,
-            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":1,
+            "止损触发日":REVIEW_SESSION_DATE,"止损结算价":exitp,"止损盈亏(%)":pnl,
+            "持仓天数":(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days,"系统连续推荐次数":1,
             "触发方式":"移动止损：今日完整OHLC触发","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
         })
         update_trade_history_status(ticker, rec_date_str, "Stop_Loss_Hit", exitp)
         continue
 
-    next_ctx = get_trailing_stop_context(ticker, exec_stop, None, entry_price=rec_price, days_held=(pd.Timestamp(today_us_str())-rec_date).days)
+    next_ctx = get_trailing_stop_context(ticker, exec_stop, None, entry_price=rec_price, days_held=(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days)
     # 同日新仓保持原始保护线；从下一个 Review 日起才允许移动止损抬升。
     next_stop = exec_stop if is_same_day_entry and exec_stop else (next_ctx.get("exec_stop") if next_ctx else exec_stop)
     if next_stop and not is_same_day_entry:
@@ -1398,12 +1424,12 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
         "今日开盘价":openp if openp is not None else "N/A","现价":closep,
         "今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp and closep is not None else None,
         "持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),
-        "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==today_us_str() else "否",
+        "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==REVIEW_SESSION_DATE else "否",
         "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),
         "KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),
         "趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱",
         "风险提示":"、".join(risk) if risk else "趋势未出现同步转弱",
-        "Review_Risk_Status":risk_status,"Review_Risk_Date":today_us_str(),
+        "Review_Risk_Status":risk_status,"Review_Risk_Date":REVIEW_SESSION_DATE,
         "Review_Stop_Distance_Pct":round(distance,2) if distance is not None else "",
         "Review_Risk_Note":risk_note
     })
@@ -1585,7 +1611,7 @@ review_rows = []
 
 for item in active_list:
     review_rows.append({
-        "Review_Date":today_us_str(),"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
+        "Review_Date":REVIEW_SESSION_DATE,"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
         "Rec_Date":item["首次推荐日"],"Rec_Price":item["首次推荐价"],"Cur_Price":item["现价"],
         "Days_Held":item["持仓天数"],"PnL_Pct":item["当前盈亏(%)"],"Maturity_PnL":"",
         "Hold_Period":"动态持有","Stop_Loss":item["止损价"],
@@ -1600,32 +1626,32 @@ for item in active_list:
 
 for item in stopped_list:
     review_rows.append({
-        "Review_Date":today_us_str(),"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
+        "Review_Date":REVIEW_SESSION_DATE,"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
         "Rec_Date":item["首次推荐日"],"Rec_Price":item["首次推荐价"],"Cur_Price":item["止损结算价"],
         "Days_Held":item["持仓天数"],"PnL_Pct":item["止损盈亏(%)"],"Maturity_PnL":item["止损盈亏(%)"],
         "Hold_Period":"动态持有","Stop_Loss":item["止损价"],
         "Stop_Method":item.get("Stop_Method","MA20/MA50 + ATR + MACD/KDJ"),
         "Trail_Stop":item.get("止损价",""),"Rec_Count":item["系统连续推荐次数"],"Status":"移动止损清仓",
-        "Score":item["推荐评分"],"Review_Risk_Status":"STOP_TRIGGERED","Review_Risk_Date":today_us_str(),
+        "Score":item["推荐评分"],"Review_Risk_Status":"STOP_TRIGGERED","Review_Risk_Date":REVIEW_SESSION_DATE,
         "Review_Stop_Distance_Pct":0,"Review_Risk_Note":f"移动止损触发：{item.get('止损价','')}",
         "Option_Type":"","Strike":"","Expiry":""
     })
 
 for item in observation_list:
     review_rows.append({
-        "Review_Date":today_us_str(),"Ticker":item["代码"],"Name":item["名称"],"Tag":"Observation",
+        "Review_Date":REVIEW_SESSION_DATE,"Ticker":item["代码"],"Name":item["名称"],"Tag":"Observation",
         "Rec_Date":item["首次推荐日"],"Rec_Price":item.get("首次推荐价",""),"Cur_Price":item.get("当前价格",""),
         "Days_Held":"","PnL_Pct":item.get("推荐跟踪涨跌幅(%)"),"Maturity_PnL":"",
         "Hold_Period":"观察","Stop_Loss":"","Stop_Method":"观察，不触发持仓止损","Trail_Stop":"",
         "Rec_Count":item.get("系统连续推荐次数","1"),"Status":"观察推荐","Score":item.get("推荐评分","N/A"),
-        "Review_Risk_Status":"OBSERVATION","Review_Risk_Date":today_us_str(),
+        "Review_Risk_Status":"OBSERVATION","Review_Risk_Date":REVIEW_SESSION_DATE,
         "Review_Stop_Distance_Pct":"","Review_Risk_Note":"有效 Scan 推荐；不作为实际持仓，但纳入推荐绩效追踪。",
         "Option_Type":"","Strike":"","Expiry":""
     })
 
 for opt in option_closed_records:
     review_rows.append({
-        "Review_Date":today_us_str(),"Ticker":opt["ticker"],"Name":opt["ticker"]+" OPT","Tag":"期权平仓",
+        "Review_Date":REVIEW_SESSION_DATE,"Ticker":opt["ticker"],"Name":opt["ticker"]+" OPT","Tag":"期权平仓",
         "Rec_Date":opt["expiry"],"Rec_Price":opt["entry_price"],"Cur_Price":opt["close_price"],
         "Days_Held":"","PnL_Pct":opt["pnl"],"Maturity_PnL":opt["pnl"],"Hold_Period":"",
         "Stop_Loss":"","Stop_Method":"","Trail_Stop":"","Rec_Count":"","Status":"期权平仓","Score":opt["reason"],
@@ -2401,7 +2427,7 @@ def build_active_html():
 <b>连续推荐：</b>{x.get("系统连续推荐次数")}</div>
 <div><b>当前盈亏：</b><span style="{_pnl_style(pnl)}">{_pct(pnl)}</span>　
 <b>当前价格：</b>{_price(x.get("现价"))}　
-<b>今日开盘→收盘：</b>{_pct(x.get("今日开盘→收盘%"))}</div>
+<b>复盘交易日开盘→收盘：</b>{_pct(x.get("今日开盘→收盘%"))}</div>
 <div><b>移动止损：</b>{_price(x.get("止损价"))}　
 <b>MA20：</b>{_price(x.get("MA20"))}　
 <b>MA50：</b>{_price(x.get("MA50"))}　
