@@ -1,0 +1,28 @@
+==============================================================
+dashboard_export.py —— Dashboard 真实数据导出（只读）
+==============================================================
+数据目录：/home/runner/work/us/us
+pending CSV：us_stocks_pending_20260923.csv
+行情提供者优先级    ： yfinance -> yahoo_http -> stooq
+--------------------------------------------------------------
+pending CSV          : us_stocks_pending_20260923.csv
+Core 数量            : 3
+Observation 数量     : 5
+Options 数量         : 1（Active 1）
+Market 数据数量      : 13/13 可用（来源 ['yfinance']）
+K线成功 / 失败       : 8 / 0   技术指标成功 8/8
+当前价来源           : 实时 0 · 最新收盘 0 · 合计可取 8/8
+Review 数据状态      :
+   · core_closed_count            = 11  [complete]
+   · core_open_count              = 4  [complete]
+   · observation_closed_count     = 0  [complete]
+   · observation_open_count       = 74  [complete]
+   · actual_active_count          = 4  [complete]
+history 条数         : 40
+AI 六段状态          : pending（0/8 只股票有内容，CSV 缺失列 6 个，来源 Scan 2026-09-23）
+AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
+输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
+同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
+字段 null 统计       : {'stop_loss': 5}
+GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
+==============================================================
