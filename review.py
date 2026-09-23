@@ -316,6 +316,29 @@ def download_ohlc_safe(tickers, period="60d", start=None, end=None):
     print(f"✅ 成功获得 {len(latest)} / {len(tickers)} 只 ticker 的 OHLC。")
     return df_all, latest
 
+def _normalize_market_dates(series):
+    """统一把 yfinance 时间戳转换为美国东部本地的无时区日期，避免 TZ 导致目标日全匹配失败。"""
+    dt = pd.to_datetime(series, errors="coerce", format="mixed")
+    try:
+        tz = getattr(dt.dt, "tz", None)
+    except Exception:
+        tz = None
+    if tz is not None:
+        try:
+            dt = dt.dt.tz_convert(US_TZ).dt.tz_localize(None)
+        except Exception:
+            try:
+                dt = dt.dt.tz_localize(None)
+            except Exception:
+                pass
+    else:
+        try:
+            dt = dt.dt.tz_localize(None)
+        except Exception:
+            pass
+    return dt.dt.normalize()
+
+
 def get_exact_date_ohlc(df_hist, ticker, target_date):
     try:
         if df_hist is None or df_hist.empty:
@@ -324,8 +347,8 @@ def get_exact_date_ohlc(df_hist, ticker, target_date):
         sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
         if sub.empty:
             return None
-        dates = pd.to_datetime(sub["Date"], errors="coerce", format="mixed")
-        exact = sub.loc[dates.dt.normalize() == target].copy()
+        dates = _normalize_market_dates(sub["Date"])
+        exact = sub.loc[dates.eq(target)].copy()
         if exact.empty:
             return None
         r = exact.sort_values("Date").iloc[-1]
@@ -688,6 +711,7 @@ latest_regular_map = dict(ohlc_map_today)
 price_map_today = {}
 price_source_map = {}
 verified_review_session_ohlc = set()
+missing_review_session_tickers = []
 for ticker in clean_tickers:
     exact = get_exact_date_ohlc(df_hist_all, ticker, REVIEW_SESSION_DATE)
     if exact and exact.get("close") is not None:
@@ -696,11 +720,38 @@ for ticker in clean_tickers:
         price_source_map[ticker] = "today_regular_close"
         verified_review_session_ohlc.add(ticker)
     else:
-        latest = latest_regular_map.get(ticker)
-        if latest and latest.get("close") is not None:
-            price_map_today[ticker] = latest["close"]
-            price_source_map[ticker] = "latest_regular_close"
-            print(f"ℹ️ {ticker} {REVIEW_SESSION_DATE} OHLC未返回，使用最近有效交易日收盘价跟踪：{latest['close']}")
+        missing_review_session_tickers.append(ticker)
+
+# 第一轮批量数据若因 Yahoo 临时缓存/时间轴问题漏掉目标交易日，
+# 再用明确 start/end 的目标日窗口做一次批量救援。
+if missing_review_session_tickers:
+    try:
+        target_start = pd.Timestamp(REVIEW_SESSION_DATE).strftime("%Y-%m-%d")
+        target_end = (pd.Timestamp(REVIEW_SESSION_DATE) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        print(f"🔁 [目标日OHLC救援] {REVIEW_SESSION_DATE} 仍缺 {len(missing_review_session_tickers)} 只，进行精确日期批量重取...")
+        rescue_hist, rescue_latest = download_ohlc_safe(
+            missing_review_session_tickers,
+            start=target_start,
+            end=target_end,
+        )
+        for ticker in missing_review_session_tickers:
+            exact = get_exact_date_ohlc(rescue_hist, ticker, REVIEW_SESSION_DATE)
+            if exact and exact.get("close") is not None:
+                ohlc_map_today[ticker] = exact
+                price_map_today[ticker] = exact["close"]
+                price_source_map[ticker] = "today_regular_close"
+                verified_review_session_ohlc.add(ticker)
+    except Exception as e:
+        print(f"⚠️ [目标日OHLC救援] 失败：{e}")
+
+for ticker in clean_tickers:
+    if ticker in verified_review_session_ohlc:
+        continue
+    latest = latest_regular_map.get(ticker)
+    if latest and latest.get("close") is not None:
+        price_map_today[ticker] = latest["close"]
+        price_source_map[ticker] = "latest_regular_close"
+        print(f"ℹ️ {ticker} {REVIEW_SESSION_DATE} OHLC未返回，使用最近有效交易日收盘价跟踪：{latest['close']}")
 
 for ticker in clean_tickers:
     if ticker in price_map_today:
@@ -1128,6 +1179,46 @@ def _calc_kdj(d, n=9):
         ks.append(K); ds.append(D); js.append(3*K-2*D)
     return pd.DataFrame({"K":ks,"D":ds,"J":js}, index=d.index)
 
+def get_technical_snapshot_from_bulk(df_all, ticker, target_date):
+    """从已经批量下载的60日OHLC中计算目标交易日技术指标；专供Review展示，不能单独触发止损。"""
+    try:
+        if df_all is None or df_all.empty:
+            return None
+        sub = df_all[df_all["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
+        if sub.empty:
+            return None
+        sub["_date"] = _normalize_market_dates(sub["Date"])
+        target = pd.Timestamp(target_date).normalize()
+        sub = sub[sub["_date"] <= target].sort_values("_date")
+        if len(sub) < 50:
+            return None
+        d = pd.DataFrame({
+            "Open": sub["open"].astype(float).to_numpy(),
+            "High": sub["high"].astype(float).to_numpy(),
+            "Low": sub["low"].astype(float).to_numpy(),
+            "Close": sub["close"].astype(float).to_numpy(),
+        }, index=sub["_date"].tolist())
+        d["MA20"] = d["Close"].rolling(20, min_periods=20).mean()
+        d["MA50"] = d["Close"].rolling(50, min_periods=50).mean()
+        d["ATR14"] = _calc_atr(d)
+        md = _calc_macd(d["Close"])
+        d["MACD_HIST"] = md["MACD_HIST"]
+        kd = _calc_kdj(d)
+        d["KDJ_J"] = kd["J"]
+        r = d.iloc[-1]
+        return {
+            "ma20": round(float(r["MA20"]), 2) if pd.notna(r["MA20"]) else None,
+            "ma50": round(float(r["MA50"]), 2) if pd.notna(r["MA50"]) else None,
+            "kdj_j": round(float(r["KDJ_J"]), 2) if pd.notna(r["KDJ_J"]) else None,
+            "macd_hist": round(float(r["MACD_HIST"]), 4) if pd.notna(r["MACD_HIST"]) else None,
+            "atr_pct": round(float(r["ATR14"]) / float(r["Close"]) * 100, 2) if pd.notna(r["ATR14"]) and float(r["Close"]) else None,
+            "trend_ok": bool(pd.notna(r["MA20"]) and pd.notna(r["MA50"]) and float(r["Close"]) >= float(r["MA20"]) >= float(r["MA50"])),
+            "source_date": str(sub.iloc[-1]["_date"].date()),
+        }
+    except Exception:
+        return None
+
+
 def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry_price=None, days_held=None):
     try:
         hist = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
@@ -1379,6 +1470,7 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
     old_stop = safe_float(latest.get("Stop_Loss"))
     is_same_day_entry = rec_date_str == REVIEW_SESSION_DATE
     ctx = get_trailing_stop_context(ticker, old_stop, REVIEW_SESSION_DATE, entry_price=rec_price, days_held=(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days)
+    tech_snapshot = get_technical_snapshot_from_bulk(df_hist_all, ticker, REVIEW_SESSION_DATE)
     # 新推荐当日不允许用“入场前一个交易日”的技术结构把初始保护线瞬间抬高，
     # 否则会出现 NXPI 9/22：初始止损 213.51，但因为 9/21 收盘技术线抬到 226.61，
     # 9/22 当日最低 226.15 被错误判成止损。新仓当天只执行 Scan 已写入的初始保护线。
@@ -1407,7 +1499,12 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
     next_stop = exec_stop if is_same_day_entry and exec_stop else (next_ctx.get("exec_stop") if next_ctx else exec_stop)
     if next_stop and not is_same_day_entry:
         update_trade_history_trailing_stop(ticker, rec_date_str, next_stop, next_ctx or ctx or {})
-    c = next_ctx or ctx or {}
+    c = dict(next_ctx or ctx or {})
+    # 展示指标以“复盘交易日收盘后的技术状态”为准；止损触发本身仍使用交易日前已知的 ctx。
+    if tech_snapshot:
+        for _k in ("ma20", "ma50", "kdj_j", "macd_hist", "atr_pct", "trend_ok"):
+            if tech_snapshot.get(_k) is not None:
+                c[_k] = tech_snapshot.get(_k)
     risk = []
     if c.get("macd_bear"): risk.append("MACD弱势")
     if c.get("kdj_falling"): risk.append("KDJ回落")
