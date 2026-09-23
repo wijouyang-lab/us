@@ -3035,41 +3035,48 @@ def build_option_recommendation_html(option_records):
             '<div style="background:#fff8e1;border:1px solid #ffe082;border-left:6px solid #ffb300;'
             'padding:18px;margin:0 0 25px 0;border-radius:8px;">'
             '<h2>🎲 美股期权实战策略</h2>'
-            '<p>本次没有生成可验证的期权链策略。原因可能是：核心精选为空、'
-            '45-90天到期窗口无合适合约，或行情源未提供可执行的买卖价。程序不会伪造期权报价。</p>'
+            '<p>本次没有生成可验证的期权链策略。Short Put 只有在长期价值门槛、低位执行价、Delta、流动性和财报窗口均通过时才会出现；程序不会伪造报价。</p>'
             '</div>'
         )
-
     cards=[]
     for r in option_records:
         strategy=str(r.get("Strategy", "CALL_DEBIT_SPREAD"))
-        spread=(f"{r.get('LongStrike')} / {r.get('ShortStrike')}" if r.get('ShortStrike') else f"{r.get('LongStrike')}")
-        max_profit = r.get("MaxProfit") or "未限制"
-        cards.append(
-            '<div style="background:#fafafa;border:1px solid #e0e0e0;border-left:6px solid #7b1fa2;'
-            'padding:16px;margin:0 0 12px 0;border-radius:8px;">'
-            f'<div style="font-size:17px;font-weight:800;">🎯 {html.escape(str(r.get("Name", r.get("Ticker", ""))))} ({html.escape(str(r.get("Ticker", "")))})'
-            f'｜{html.escape(strategy)}</div>'
-            f'<div><b>到期日：</b>{html.escape(str(r.get("Expiry","N/A")))}（{html.escape(str(r.get("DTE","N/A")))}天）'
-            f'　<b>执行价：</b>{html.escape(spread)}</div>'
-            f'<div><b>权利金：</b>${html.escape(str(r.get("NetDebit","N/A")))}／股'
-            f'　<b>最大风险：</b>${html.escape(str(r.get("MaxLoss","N/A")))}'
-            f'　<b>盈亏平衡：</b>${html.escape(str(r.get("BreakEven","N/A")))}</div>'
-            f'<div><b>Delta：</b>{html.escape(str(r.get("Delta","N/A")))}'
-            f'　<b>IV：</b>{html.escape(str(r.get("IV","N/A")))}'
-            f'　<b>IV状态：</b>{html.escape(str(r.get("IV_Regime","N/A")))}</div>'
-            f'<div><b>Call Wall：</b>${html.escape(str(r.get("CallWall","N/A")))}'
-            f'　<b>Put Wall：</b>${html.escape(str(r.get("PutWall","N/A")))}</div>'
-            f'<div><b>财报：</b>{html.escape(str(r.get("EarningsDate","未确认")))}'
-            f'　<b>事件距离：</b>{html.escape(str(r.get("EarningsDays","N/A")))}天</div>'
-            f'<div><b>策略逻辑：</b>{html.escape(str(r.get("Reason","")))}</div>'
-            '<div><b>仓位纪律：</b>1张起步；最大亏损以实际支付权利金为边界；若正股趋势破坏，Review重新评估。</div>'
-        )
-    return (
-        '<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:6px;">🎲 美股期权实战策略</h2>'
-        '<p style="color:#607d8b;">只展示程序从期权链中取得的真实合约与报价，不用AI虚构行权价或到期日。</p>'
-        + ''.join(cards)
-    )
+        short_put = strategy == "SHORT_PUT"
+        spread = (f'{r.get("LongStrike")} / {r.get("ShortStrike")}' if r.get("ShortStrike") else f'{r.get("LongStrike") or r.get("Strike")}')
+        if short_put:
+            card=(
+                '<div style="background:#f7fbf7;border:1px solid #c8e6c9;border-left:6px solid #2e7d32;padding:16px;margin:0 0 12px 0;border-radius:8px;">'
+                f'<div style="font-size:17px;font-weight:800;">🛡️ {html.escape(str(r.get("Name", r.get("Ticker", ""))))} ({html.escape(str(r.get("Ticker", "")))})｜现金担保 Short Put</div>'
+                f'<div><b>到期日：</b>{html.escape(str(r.get("Expiry","N/A")))}（{html.escape(str(r.get("DTE","N/A")))}天）　<b>执行价：</b>${html.escape(str(r.get("Strike","N/A")))}　<b>正股：</b>${html.escape(str(r.get("UnderlyingPrice","N/A")))}</div>'
+                f'<div><b>卖出权利金：</b>${html.escape(str(r.get("PremiumCollected","N/A")))}／股　<b>最大收益：</b>${html.escape(str(r.get("MaxProfit","N/A")))}　<b>最大风险：</b>${html.escape(str(r.get("MaxLoss","N/A")))}</div>'
+                f'<div><b>有效接货价：</b>${html.escape(str(r.get("EffectiveEntry","N/A")))}　<b>现金担保：</b>${html.escape(str(r.get("CashSecured","N/A")))}　<b>盈亏平衡：</b>${html.escape(str(r.get("BreakEven","N/A")))}</div>'
+                f'<div><b>权利金收益率：</b>{html.escape(str(r.get("PremiumYieldPct","N/A")))}%　<b>年化简单折算：</b>{html.escape(str(r.get("AnnualizedYieldPct","N/A")))}%　<b>Put Delta：</b>{html.escape(str(r.get("PutDelta",r.get("Delta","N/A"))))}</div>'
+                f'<div><b>Call Wall：</b>{html.escape(str(r.get("CallWall") or "N/A"))}（OI:{html.escape(str(r.get("CallWallOI") or "N/A"))}）　<b>Put Wall：</b>{html.escape(str(r.get("PutWall") or "N/A"))}（OI:{html.escape(str(r.get("PutWallOI") or "N/A"))}）</div>'
+                f'<div><b>长期价值门槛：</b>{html.escape(str(r.get("Reason","")))} </div>'
+                f'<div><b>财报：</b>{html.escape(str(r.get("EarningsDate","未确认")))}　<b>事件距离：</b>{html.escape(str(r.get("EarningsDays","N/A")))}天</div>'
+                '<div><b>指派纪律：</b>美国股票期权可提前指派；若到期价内，可能按执行价接收100股/张。只有愿意长期持有该股票时才采用。</div>'
+                f'<div style="font-size:12px;color:#607d8b;">Put Wall来源：{html.escape(str(r.get("PutWallSource") or "无有效OI"))}；Call Wall来源：{html.escape(str(r.get("CallWallSource") or "无有效OI"))}</div>'
+                '</div>'
+            )
+        else:
+            spread=(f'{r.get("LongStrike")} / {r.get("ShortStrike")}' if r.get("ShortStrike") else f'{r.get("LongStrike")}')
+            card=(
+                '<div style="background:#fafafa;border:1px solid #e0e0e0;border-left:6px solid #7b1fa2;padding:16px;margin:0 0 12px 0;border-radius:8px;">'
+                f'<div style="font-size:17px;font-weight:800;">🎯 {html.escape(str(r.get("Name", r.get("Ticker", ""))))} ({html.escape(str(r.get("Ticker", "")))})｜{html.escape(strategy)}</div>'
+                f'<div><b>到期日：</b>{html.escape(str(r.get("Expiry","N/A")))}（{html.escape(str(r.get("DTE","N/A")))}天）　<b>执行价：</b>{html.escape(str(spread))}</div>'
+                f'<div><b>权利金：</b>${html.escape(str(r.get("NetDebit","N/A")))}／股　<b>最大风险：</b>${html.escape(str(r.get("MaxLoss","N/A")))}　<b>盈亏平衡：</b>${html.escape(str(r.get("BreakEven","N/A")))}</div>'
+                f'<div><b>Delta：</b>{html.escape(str(r.get("Delta","N/A")))}　<b>IV：</b>{html.escape(str(r.get("IV","N/A")))}　<b>IV状态：</b>{html.escape(str(r.get("IV_Regime","N/A")))}</div>'
+                f'<div><b>Call Wall：</b>{html.escape(str(r.get("CallWall") or "N/A"))}（OI:{html.escape(str(r.get("CallWallOI") or "N/A"))}）　<b>Put Wall：</b>{html.escape(str(r.get("PutWall") or "N/A"))}（OI:{html.escape(str(r.get("PutWallOI") or "N/A"))}）</div>'
+                f'<div><b>财报：</b>{html.escape(str(r.get("EarningsDate","未确认")))}　<b>事件距离：</b>{html.escape(str(r.get("EarningsDays","N/A")))}天</div>'
+                f'<div><b>策略逻辑：</b>{html.escape(str(r.get("Reason","")))}</div>'
+                '<div><b>仓位纪律：</b>1张起步；最大亏损以实际支付权利金为边界；若正股趋势破坏，Review重新评估。</div>'
+                f'<div style="font-size:12px;color:#607d8b;">Put Wall来源：{html.escape(str(r.get("PutWallSource") or "无有效OI"))}；Call Wall来源：{html.escape(str(r.get("CallWallSource") or "无有效OI"))}</div>'
+                '</div>'
+            )
+        cards.append(card)
+    return ('<h2 style="color:#7b1fa2;border-bottom:2px solid #7b1fa2;padding-bottom:6px;">🎲 美股期权实战策略</h2>'
+            '<p style="color:#607d8b;">只展示程序从期权链取得的真实合约与报价。Call Wall / Put Wall 只有存在有效 OI 才显示；没有有效 OI 时显示 N/A，不再用最低执行价冒充 Wall。</p>'
+            + ''.join(cards))
 
 
 # ==================== 主程序 ====================

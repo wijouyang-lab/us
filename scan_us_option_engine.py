@@ -15,7 +15,7 @@ import time
 import urllib.parse
 import urllib.request
 from zoneinfo import ZoneInfo
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple, List
 
 import pandas as pd
 import yfinance as yf
@@ -29,6 +29,17 @@ RISK_FREE = 0.04
 MIN_SPREAD_REWARD_RISK = 0.40
 MAX_BREAKEVEN_PCT = 12.0
 MAX_DEBIT_PCT_OF_SPOT = 4.0
+
+# Short Put 只允许给“长期价值逻辑成立”的 Core；这是确定性风险预算，不是收益保证。
+SHORT_PUT_MIN_QUANT = 70.0
+SHORT_PUT_MIN_FUNDAMENTAL = 24.0
+SHORT_PUT_TARGET_DELTA = 0.25
+SHORT_PUT_MIN_ABS_DELTA = 0.15
+SHORT_PUT_MAX_ABS_DELTA = 0.35
+SHORT_PUT_MIN_STRIKE_DISCOUNT_PCT = 3.0
+SHORT_PUT_MAX_STRIKE_DISCOUNT_PCT = 15.0
+SHORT_PUT_MIN_PREMIUM_YIELD_PCT = 0.50
+SHORT_PUT_MAX_EARNINGS_DAYS = 14
 US_TZ = ZoneInfo("America/New_York")
 
 
@@ -65,6 +76,46 @@ def _call_delta(spot: float, strike: float, dte: int, iv: float, rate: float = R
     sigma = max(0.0001, iv)
     d1 = (math.log(spot / strike) + (rate + 0.5 * sigma * sigma) * t) / (sigma * math.sqrt(t))
     return _normal_cdf(d1)
+
+
+def _put_delta(spot: float, strike: float, dte: int, iv: float, rate: float = RISK_FREE) -> Optional[float]:
+    if min(spot, strike, dte, iv) <= 0:
+        return None
+    t = dte / 365.0
+    sigma = max(0.0001, iv)
+    d1 = (math.log(spot / strike) + (rate + 0.5 * sigma * sigma) * t) / (sigma * math.sqrt(t))
+    return _normal_cdf(d1) - 1.0
+
+
+def _put_price(spot: float, strike: float, dte: int, iv: float, rate: float = RISK_FREE) -> Optional[float]:
+    call = _call_price(spot, strike, dte, iv, rate)
+    if call is None:
+        return None
+    t = dte / 365.0
+    return call - spot + strike * math.exp(-rate * t)
+
+
+def _implied_vol_put(spot: float, strike: float, dte: int, price: float, rate: float = RISK_FREE) -> Optional[float]:
+    if min(spot, strike, dte, price) <= 0:
+        return None
+    intrinsic = max(0.0, strike * math.exp(-rate * dte / 365.0) - spot)
+    if price < intrinsic * 0.98:
+        return None
+    lo, hi = 0.01, 5.0
+    p_hi = _put_price(spot, strike, dte, hi, rate)
+    if p_hi is None or price > p_hi * 1.02:
+        return None
+    for _ in range(60):
+        mid = (lo + hi) / 2.0
+        p = _put_price(spot, strike, dte, mid, rate)
+        if p is None:
+            return None
+        if p < price:
+            lo = mid
+        else:
+            hi = mid
+    iv = (lo + hi) / 2.0
+    return iv if 0.01 <= iv <= 5.0 else None
 
 
 def _call_price(spot: float, strike: float, dte: int, iv: float, rate: float = RISK_FREE) -> Optional[float]:
@@ -176,16 +227,27 @@ def _event_date(ticker_obj) -> Optional[dt.date]:
     return None
 
 
-def _wall(df: pd.DataFrame) -> Optional[float]:
+def _wall(df: pd.DataFrame) -> Optional[Dict[str, Any]]:
+    """严格计算 OI Wall：没有有效 OI 时返回 None，不把链表最低 strike 误报成 Wall。"""
     if df is None or df.empty:
         return None
-    work = df.copy()
-    work["openInterest"] = pd.to_numeric(work.get("openInterest"), errors="coerce").fillna(0)
-    work["strike"] = pd.to_numeric(work.get("strike"), errors="coerce")
-    work = work.dropna(subset=["strike"])
-    if work.empty:
+    work=df.copy()
+    work["openInterest"]=pd.to_numeric(work.get("openInterest"),errors="coerce")
+    work["volume"]=pd.to_numeric(work.get("volume"),errors="coerce").fillna(0)
+    work["strike"]=pd.to_numeric(work.get("strike"),errors="coerce")
+    work=work.dropna(subset=["strike"])
+    valid=work[work["openInterest"].fillna(0)>0].copy()
+    if valid.empty:
+        # 只有成交量时，不称其为 Wall，避免制造“假墙”。
         return None
-    return _sf(work.sort_values(["openInterest", "strike"], ascending=[False, True]).iloc[0].get("strike"))
+    valid=valid.sort_values(["openInterest","volume","strike"],ascending=[False,False,True])
+    row=valid.iloc[0]
+    return {
+        "strike":_sf(row.get("strike")),
+        "open_interest":int(_sf(row.get("openInterest"),0) or 0),
+        "volume":int(_sf(row.get("volume"),0) or 0),
+        "source":"openInterest",
+    }
 
 
 def _iv_bucket(chain: pd.DataFrame, iv: Optional[float]) -> str:
@@ -201,6 +263,101 @@ def _iv_bucket(chain: pd.DataFrame, iv: Optional[float]) -> str:
     if pct <= 20:
         return f"偏低（链内约P{pct:.0f}）"
     return f"中性（链内约P{pct:.0f}）"
+
+
+def _long_term_value_gate(item: Dict[str, Any]) -> Tuple[bool, List[str]]:
+    """Short Put 的长期价值门槛：只有愿意接货的股票才允许卖 Put。"""
+    reasons=[]
+    quant=_sf(item.get("Quant_Score"))
+    fundamental=_sf(item.get("Fundamental_Score"))
+    eps=_sf(item.get("EPS_TTM"))
+    fwd_pe=_sf(item.get("PE_Forward"))
+    rg=_sf(item.get("Revenue_Growth"))
+    eg=_sf(item.get("Earnings_Growth"))
+    ocf=_sf(item.get("Operating_Cashflow"))
+    fcf=_sf(item.get("Free_Cashflow"))
+    if quant is None or quant < SHORT_PUT_MIN_QUANT:
+        return False,[f"Quant<{SHORT_PUT_MIN_QUANT:.0f}"]
+    if fundamental is None or fundamental < SHORT_PUT_MIN_FUNDAMENTAL:
+        return False,[f"基本面评分<{SHORT_PUT_MIN_FUNDAMENTAL:.0f}"]
+    if eps is not None and eps <= 0:
+        return False,["TTM EPS≤0，不满足长期接货逻辑"]
+    if rg is not None and rg < 0:
+        return False,["营收增长为负"]
+    if eg is not None and eg < -0.05:
+        return False,["盈利增长明显恶化"]
+    if ocf is not None and fcf is not None and ocf <= 0 and fcf <= 0:
+        return False,["经营现金流与自由现金流均非正"]
+    if fwd_pe is not None and fwd_pe > 45:
+        return False,["Forward PE>45，接货估值过高"]
+    reasons.append("Quant/基本面达长期价值门槛")
+    if eps is not None: reasons.append("EPS为正")
+    if rg is not None and rg >= 0: reasons.append("营收非负增长")
+    if eg is not None and eg >= -0.05: reasons.append("盈利未出现显著恶化")
+    if (ocf is not None and ocf > 0) or (fcf is not None and fcf > 0): reasons.append("现金流为正")
+    if fwd_pe is not None: reasons.append(f"Forward PE={fwd_pe:.1f}")
+    return True,reasons
+
+
+def _pick_short_put_structure(puts: pd.DataFrame, spot: float, dte: int, item: Dict[str, Any], earnings_days: Optional[int]):
+    if puts.empty or spot <= 0:
+        return None,None
+    ok,reasons=_long_term_value_gate(item)
+    if not ok:
+        return None,reasons
+    if earnings_days is not None and 0 <= earnings_days <= SHORT_PUT_MAX_EARNINGS_DAYS:
+        return None,[f"财报距离仅{earnings_days}天，Short Put 暂不承担事件跳空风险"]
+    work=puts[puts["strike"]>0].copy()
+    work=work[work["strike"]<spot].copy()
+    if work.empty:
+        return None,["没有低于正股的Put执行价"]
+    work["discount_pct"]=(1.0-work["strike"]/spot)*100.0
+    work=work[(work["discount_pct"]>=SHORT_PUT_MIN_STRIKE_DISCOUNT_PCT)&(work["discount_pct"]<=SHORT_PUT_MAX_STRIKE_DISCOUNT_PCT)].copy()
+    if work.empty:
+        return None,[f"没有位于正股下方{SHORT_PUT_MIN_STRIKE_DISCOUNT_PCT:.0f}-{SHORT_PUT_MAX_STRIKE_DISCOUNT_PCT:.0f}%的Put"]
+    liquid=work[(work["volume"].fillna(0)+work["openInterest"].fillna(0))>0].copy()
+    if liquid.empty:
+        return None,["Put链缺少有效成交量/OI"]
+
+    candidates=[]
+    for _,row in liquid.iterrows():
+        strike=_sf(row.get("strike"))
+        if strike is None: continue
+        sell_price=_sf(row.get("bid"))
+        if sell_price is None or sell_price<=0:
+            sell_price=_mid_or_last(row)
+        if sell_price is None or sell_price<=0: continue
+        iv=_sf(row.get("impliedVolatility"))
+        iv_source="Yahoo chain" if iv is not None and 0.01<=iv<=5.0 else ""
+        if iv is not None and not (0.01<=iv<=5.0): iv=None
+        if iv is None:
+            iv=_implied_vol_put(spot,strike,dte,_mid_or_last(row) or sell_price)
+            if iv is not None: iv_source="BS-derived from market mid/last"
+        delta=_put_delta(spot,strike,dte,iv) if iv is not None else None
+        if delta is None: continue
+        abs_delta=abs(delta)
+        if not (SHORT_PUT_MIN_ABS_DELTA<=abs_delta<=SHORT_PUT_MAX_ABS_DELTA): continue
+        cash_secured=strike*100.0
+        effective_entry=strike-sell_price
+        premium_yield=sell_price/strike*100.0 if strike>0 else 0.0
+        if premium_yield < SHORT_PUT_MIN_PREMIUM_YIELD_PCT: continue
+        annualized=premium_yield*365.0/dte if dte>0 else None
+        max_loss=max(0.0,effective_entry)*100.0
+        score=(abs(abs_delta-SHORT_PUT_TARGET_DELTA)*100.0
+               + abs(work.loc[_,"discount_pct"]-8.0) if _ in work.index else abs(abs_delta-SHORT_PUT_TARGET_DELTA)*100.0)
+        candidates.append((score,{
+            "strategy":"SHORT_PUT","long_strike":strike,"short_strike":None,"long_price":None,"short_price":sell_price,
+            "net_debit":-sell_price,"premium_collected":sell_price,"cash_secured":cash_secured,
+            "assignment_price":strike,"effective_entry":effective_entry,"premium_yield_pct":premium_yield,
+            "annualized_yield_pct":annualized,"max_loss":max_loss,"max_profit":sell_price*100.0,
+            "break_even":effective_entry,"reward_risk":None,"breakeven_pct":(effective_entry/spot-1)*100.0,
+            "debit_pct":0.0,"iv":iv,"iv_source":iv_source,"delta":delta,"put_delta":delta,
+            "assignment_note":"若到期价内可能被指派；持仓资金按执行价100股/张预留。","value_gate":"；".join(reasons),
+        }))
+    if not candidates:
+        return None,["没有同时满足Delta、流动性、权利金收益与低位执行价条件的Short Put"]
+    candidates.sort(key=lambda x:x[0])
+    return candidates[0][1],reasons
 
 
 def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
@@ -376,59 +533,63 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         print(f"⚠️ [期权] {ticker} 没有可验证的45-90天期权链")
         return None
     dte = (expiry - _us_today()).days
-    structure = _pick_call_structure(calls, spot, dte)
-    if not structure:
-        print(f"⚠️ [期权] {ticker} 没有可执行的CALL结构")
-        return None
-
     earnings = _event_date(obj) if obj is not None else None
     earnings_days = (earnings - _us_today()).days if earnings else None
-    iv = structure.get("iv")
-    event_note = (f"到期前约第{earnings_days}天有财报事件，需控制事件风险。" if earnings_days is not None and 0 <= earnings_days <= dte else "财报日期未可靠取得或不在本次到期窗内。")
-    strategy = structure["strategy"]
-    rationale = "核心精选偏多；优先使用Call Debit Spread限制最大亏损。" if strategy == "CALL_DEBIT_SPREAD" else "核心精选偏多；期权链无法构建价差，使用Long Call，最大风险为权利金。"
+
+    # 长期价值逻辑成立时，优先寻找 Cash-Secured Short Put；否则保留原来的 Call 结构。
+    short_put, short_put_reasons = _pick_short_put_structure(puts, spot, dte, item, earnings_days)
+    call_structure = _pick_call_structure(calls, spot, dte)
+    if short_put:
+        structure=short_put
+    elif call_structure:
+        structure=call_structure
+    else:
+        print(f"⚠️ [期权] {ticker} 没有可执行的CALL或Short Put结构")
+        return None
+
+    strategy=structure["strategy"]
+    iv=structure.get("iv")
+    event_note=(f"到期前约第{earnings_days}天有财报事件，需控制事件风险。" if earnings_days is not None and 0 <= earnings_days <= dte else "财报日期未可靠取得或不在本次到期窗内。")
+    if strategy=="SHORT_PUT":
+        rationale=(
+            f"长期价值门槛通过：{structure.get('value_gate','')}；卖出现金担保Put，收取权利金，"
+            f"若到期价内则按执行价接货，有效接货成本约{structure.get('effective_entry'):.2f}。"
+        )
+    else:
+        rationale=("核心精选偏多；优先使用Call Debit Spread限制最大亏损。"
+                   if strategy=="CALL_DEBIT_SPREAD"
+                   else "核心精选偏多；期权链无法构建价差，使用Long Call，最大风险为权利金。")
+    call_wall=_wall(calls)
+    put_wall=_wall(puts)
     return {
-        "Ticker": ticker,
-        "Name": str(item.get("Name", ticker)),
-        "EntryDate": dt.datetime.now(US_TZ).strftime("%Y-%m-%d"),
-        "UnderlyingPrice": round(spot, 2),
-        "TechnicalClose": round(technical_close, 2) if technical_close is not None else "",
-        "PremarketPrice": round(_sf(item.get("Premarket_Price")), 2) if _sf(item.get("Premarket_Price")) is not None else "",
-        "PremarketChangePct": item.get("Premarket_Change_Pct", ""),
-        "PriceReference": item.get("Price_Reference", "REGULAR_CLOSE"),
-        "PremarketAsOfET": item.get("Premarket_AsOf_ET", ""),
-        "Strategy": strategy,
-        "OptionType": "CALL",
-        "Strike": structure["long_strike"],
-        "LongStrike": structure["long_strike"],
-        "ShortStrike": structure["short_strike"] or "",
-        "Expiry": expiry.strftime("%Y-%m-%d"),
-        "DTE": dte,
-        "LongPrice": structure["long_price"],
-        "ShortPrice": structure["short_price"] or "",
-        "NetDebit": structure["net_debit"],
-        "EntryPrice": structure["net_debit"],
-        "MaxLoss": structure["max_loss"],
-        "MaxProfit": structure["max_profit"] or "",
-        "BreakEven": structure["break_even"],
-        "RewardRisk": structure.get("reward_risk", ""),
-        "BreakevenPct": structure.get("breakeven_pct", ""),
-        "DebitPctOfSpot": structure.get("debit_pct", ""),
-        "Delta": round(structure["delta"], 3) if structure.get("delta") is not None else "",
-        "IV": round(iv, 4) if iv is not None else "",
-        "IV_Source": structure.get("iv_source", "") if iv is not None else "",
-        "IV_Regime": _iv_bucket(calls, iv),
-        "CallWall": _wall(calls) or "",
-        "PutWall": _wall(puts) or "",
-        "EarningsDate": earnings.strftime("%Y-%m-%d") if earnings else "",
-        "EarningsDays": earnings_days if earnings_days is not None else "",
-        "Direction": "BULLISH",
-        "Status": "Active",
-        "Quantity": 1,
-        "StopLoss": "权利金为最大亏损；若正股趋势破坏，Review重新评估",
-        "HoldPeriod": "随股票趋势动态管理，期权到期日独立",
-        "Reason": rationale + " " + event_note,
-        "ScanScore": item.get("Score", "N/A"),
+        "Ticker": ticker,"Name":str(item.get("Name",ticker)),"EntryDate":dt.datetime.now(US_TZ).strftime("%Y-%m-%d"),
+        "UnderlyingPrice":round(spot,2),"TechnicalClose":round(technical_close,2) if technical_close is not None else "",
+        "PremarketPrice":round(_sf(item.get("Premarket_Price")),2) if _sf(item.get("Premarket_Price")) is not None else "",
+        "PremarketChangePct":item.get("Premarket_Change_Pct",""),"PriceReference":item.get("Price_Reference","REGULAR_CLOSE"),
+        "PremarketAsOfET":item.get("Premarket_AsOf_ET",""),"Strategy":strategy,"OptionType":"PUT" if strategy=="SHORT_PUT" else "CALL",
+        "StrategySide":"SELL_TO_OPEN" if strategy=="SHORT_PUT" else "BUY_TO_OPEN",
+        "Strike":structure["long_strike"],"LongStrike":structure["long_strike"] if strategy!="SHORT_PUT" else "",
+        "ShortStrike":structure["short_strike"] or "","Expiry":expiry.strftime("%Y-%m-%d"),"DTE":dte,
+        "LongPrice":structure.get("long_price") or "","ShortPrice":structure.get("short_price") or "",
+        "NetDebit":structure.get("net_debit", ""),"PremiumCollected":structure.get("premium_collected", ""),"CashSecured":structure.get("cash_secured", ""),
+        "AssignmentPrice":structure.get("assignment_price", ""),"EffectiveEntry":structure.get("effective_entry", ""),
+        "PremiumYieldPct":round(structure.get("premium_yield_pct"),3) if structure.get("premium_yield_pct") is not None else "",
+        "AnnualizedYieldPct":round(structure.get("annualized_yield_pct"),2) if structure.get("annualized_yield_pct") is not None else "",
+        "EntryPrice":structure.get("premium_collected",structure.get("net_debit",0.0)),"MaxLoss":structure["max_loss"],
+        "MaxProfit":structure.get("max_profit") or "","BreakEven":structure["break_even"],
+        "RewardRisk":structure.get("reward_risk", ""),"BreakevenPct":structure.get("breakeven_pct",""),"DebitPctOfSpot":structure.get("debit_pct",""),
+        "Delta":round(structure["delta"],3) if structure.get("delta") is not None else "","PutDelta":round(structure.get("put_delta"),3) if structure.get("put_delta") is not None else "",
+        "IV":round(iv,4) if iv is not None else "","IV_Source":structure.get("iv_source","") if iv is not None else "","IV_Regime":_iv_bucket(puts if strategy=="SHORT_PUT" else calls,iv),
+        "CallWall":call_wall.get("strike","") if call_wall else "","PutWall":put_wall.get("strike","") if put_wall else "",
+        "CallWallOI":call_wall.get("open_interest","") if call_wall else "","PutWallOI":put_wall.get("open_interest","") if put_wall else "",
+        "CallWallSource":call_wall.get("source","") if call_wall else "NO_VALID_OI","PutWallSource":put_wall.get("source","") if put_wall else "NO_VALID_OI",
+        "EarningsDate":earnings.strftime("%Y-%m-%d") if earnings else "","EarningsDays":earnings_days if earnings_days is not None else "",
+        "Direction":"BULLISH" if strategy!="SHORT_PUT" else "BULLISH_VALUE","AssignmentRisk":"潜在指派：美国股票期权可在到期前被提前指派；程序在深度价内/临近到期时提高风险提示。" if strategy=="SHORT_PUT" else "",
+        "Status":"Active","Quantity":1,
+        "StopLoss":"现金担保Put无固定技术止损；若长期基本面/接货逻辑失效，应重新评估并主动平仓" if strategy=="SHORT_PUT" else "权利金为最大亏损；若正股趋势破坏，Review重新评估",
+        "HoldPeriod":"持有至回补/到期；若到期价内，可能按执行价获得100股/张" if strategy=="SHORT_PUT" else "随股票趋势动态管理，期权到期日独立",
+        "Reason":rationale+" "+event_note+(f" {structure.get('assignment_note','')}" if strategy=="SHORT_PUT" else ""),
+        "ScanScore":item.get("Score","N/A"),
     }
 
 
@@ -438,7 +599,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         return False
     columns = [
         "Ticker", "Name", "EntryDate", "UnderlyingPrice", "TechnicalClose", "PremarketPrice", "PremarketChangePct", "PriceReference", "PremarketAsOfET", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
-        "NetDebit", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "EarningsDate", "EarningsDays", "Direction", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
+        "NetDebit", "PremiumCollected", "CashSecured", "AssignmentPrice", "EffectiveEntry", "PremiumYieldPct", "AnnualizedYieldPct", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "PutDelta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "CallWallOI", "PutWallOI", "CallWallSource", "PutWallSource", "EarningsDate", "EarningsDays", "Direction", "StrategySide", "AssignmentRisk", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
     ]
     old = pd.DataFrame(columns=columns)
     if os.path.exists(OPTION_FILE) and os.path.getsize(OPTION_FILE) > 0:
@@ -447,7 +608,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
     for c in columns:
         if c not in old.columns: old[c] = ""
     old = old[columns].copy()
-    mask = old["Ticker"].astype(str).str.upper().eq(rec["Ticker"].upper()) & old["EntryDate"].astype(str).eq(rec["EntryDate"]) & old["Expiry"].astype(str).eq(rec["Expiry"])
+    mask = (old["Ticker"].astype(str).str.upper().eq(rec["Ticker"].upper()) & old["EntryDate"].astype(str).eq(rec["EntryDate"]) & old["Expiry"].astype(str).eq(rec["Expiry"]) & old["Strategy"].astype(str).str.upper().eq(rec["Strategy"].upper()))
     if mask.any():
         old.loc[mask, columns] = [rec[c] for c in columns]
         final = old

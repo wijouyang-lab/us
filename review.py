@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-美股盘后复盘与风控审查引擎
+美股盘后复盘与风控审查引擎 V29
 ================================================
 核心统计口径：
 1. 每次 Scan 推荐事件按「推荐日期 + Ticker」独立追踪。
@@ -577,12 +577,23 @@ clean_tickers = list(dict.fromkeys(clean_tickers))
 print(f"📡 获取 {len(clean_tickers)} 只真实美股 ticker 的 60日 OHLC...")
 df_hist_all, ohlc_map_today = download_ohlc_safe(clean_tickers, period="60d")
 
+# price_map_today = 用于当前跟踪/期权正股报价：今天收盘 > 最近一个有效交易日收盘 > fast_info
+# ohlc_map_today = 只有今天的完整 OHLC 才能用于当日止损触发判断，避免旧交易日低点误触发。
+latest_regular_map = dict(ohlc_map_today)
 price_map_today = {}
+price_source_map = {}
 for ticker in clean_tickers:
     exact = get_exact_date_ohlc(df_hist_all, ticker, today_us_str())
     if exact and exact.get("close") is not None:
         ohlc_map_today[ticker] = exact
         price_map_today[ticker] = exact["close"]
+        price_source_map[ticker] = "today_regular_close"
+    else:
+        latest = latest_regular_map.get(ticker)
+        if latest and latest.get("close") is not None:
+            price_map_today[ticker] = latest["close"]
+            price_source_map[ticker] = "latest_regular_close"
+            print(f"ℹ️ {ticker} 今日OHLC尚未返回，使用最近有效交易日收盘价跟踪：{latest['close']}")
 
 for ticker in clean_tickers:
     if ticker in price_map_today:
@@ -590,12 +601,8 @@ for ticker in clean_tickers:
     op, last = get_live_quote_bootstrap(ticker)
     if last is not None:
         price_map_today[ticker] = last
-        ohlc_map_today[ticker] = {
-            "open": op if op is not None else last,
-            "high": last,
-            "low": last,
-            "close": last,
-        }
+        price_source_map[ticker] = "fast_info"
+        # fast_info 只有报价时可用于当前跟踪，不足以作为完整当日OHLC触发止损。
         print(f"🔄 {ticker} 使用实时价格兜底：{last}")
 
 
@@ -634,10 +641,14 @@ def close_option_position(row, close_price, close_date, reason):
         dt = pd.to_datetime(d["Expiry"], errors="coerce", format="mixed").dt.strftime("%Y-%m-%d")
         target = pd.to_datetime(expiry, errors="coerce", format="mixed")
         target_s = target.strftime("%Y-%m-%d") if not pd.isna(target) else ""
+        row_strategy = clean_text(row.get("Strategy"), "LONG_CALL").upper()
+        row_strike = clean_text(row.get("Strike"), clean_text(row.get("LongStrike"), ""))
         mask = (
             d["Ticker"].astype(str).str.upper().eq(ticker) &
             dt.eq(target_s) &
-            d["Status"].astype(str).str.strip().eq("Active")
+            d["Status"].astype(str).str.strip().eq("Active") &
+            d["Strategy"].astype(str).str.upper().eq(row_strategy) &
+            d["Strike"].astype(str).eq(row_strike)
         )
         if not mask.any():
             return 0.0
@@ -682,7 +693,12 @@ def process_options(price_map):
             intrinsic = max(0.0, cur - strike)
         else:
             intrinsic = max(0.0, strike - cur)
-        reason = "价内行权" if intrinsic > 0 else "价外归零"
+        if strategy == "SHORT_PUT":
+            reason = "到期价内/可能指派" if intrinsic > 0 else "到期价外/保留全部权利金"
+        elif strategy == "CALL_DEBIT_SPREAD":
+            reason = "价差到期结算" if intrinsic > 0 else "价差到期归零"
+        else:
+            reason = "价内行权" if intrinsic > 0 else "价外归零"
         pnl = close_option_position(row, intrinsic, today.strftime("%Y-%m-%d"), reason)
         out.append({
             "ticker": underlying, "option_type": opt_type, "strike": strike,
@@ -732,6 +748,9 @@ def build_active_option_reviews(price_map):
             continue
         spot=safe_float(price_map.get(ticker))
         if spot is None:
+            # 期权账本历史回填可能缺失当前正股价；先用账本入场正股价，再尝试实时。
+            spot=safe_float(row.get("UnderlyingPrice"))
+        if spot is None:
             _, spot=get_live_quote_bootstrap(ticker)
         strategy=clean_text(row.get("Strategy"),"LONG_CALL").upper()
         opt_type=clean_text(row.get("OptionType")).upper()
@@ -749,38 +768,56 @@ def build_active_option_reviews(price_map):
         if spot is not None and long_strike is not None:
             if strategy=="CALL_DEBIT_SPREAD" and short_strike is not None and short_strike>long_strike:
                 intrinsic=max(0.0,min(short_strike-long_strike,spot-long_strike))
+            elif strategy=="SHORT_PUT":
+                intrinsic=max(0.0,long_strike-spot)
             elif opt_type=="CALL":
                 intrinsic=max(0.0,spot-long_strike)
 
         calls,puts=_load_option_chain_exact(ticker,expiry_dt)
         try:
-            if not calls.empty and long_strike is not None:
-                lr=calls.iloc[(pd.to_numeric(calls["strike"],errors="coerce")-long_strike).abs().argsort()[:1]].iloc[0]
-                long_mark=_option_quote_mid(lr)
-            if strategy=="CALL_DEBIT_SPREAD" and not calls.empty and short_strike is not None:
-                sr=calls.iloc[(pd.to_numeric(calls["strike"],errors="coerce")-short_strike).abs().argsort()[:1]].iloc[0]
-                short_mark=_option_quote_mid(sr)
+            if strategy=="SHORT_PUT":
+                if not puts.empty and long_strike is not None:
+                    pr=puts.iloc[(pd.to_numeric(puts["strike"],errors="coerce")-long_strike).abs().argsort()[:1]].iloc[0]
+                    long_mark=_option_quote_mid(pr)
+            else:
+                if not calls.empty and long_strike is not None:
+                    lr=calls.iloc[(pd.to_numeric(calls["strike"],errors="coerce")-long_strike).abs().argsort()[:1]].iloc[0]
+                    long_mark=_option_quote_mid(lr)
+                if strategy=="CALL_DEBIT_SPREAD" and not calls.empty and short_strike is not None:
+                    sr=calls.iloc[(pd.to_numeric(calls["strike"],errors="coerce")-short_strike).abs().argsort()[:1]].iloc[0]
+                    short_mark=_option_quote_mid(sr)
         except Exception:
             long_mark=None; short_mark=None
 
         if strategy=="CALL_DEBIT_SPREAD" and long_mark is not None and short_mark is not None:
             mark=max(0.0,long_mark-short_mark); mark_source="Yahoo option chain mid/last"
-        elif strategy=="LONG_CALL" and long_mark is not None:
+        elif strategy in {"LONG_CALL","SHORT_PUT"} and long_mark is not None:
             mark=long_mark; mark_source="Yahoo option chain mid/last"
         unrealized=None
         if mark is not None and entry is not None:
-            unrealized=round((mark-entry)*qty*100,2)
+            if strategy=="SHORT_PUT":
+                unrealized=round((entry-mark)*qty*100,2)
+            else:
+                unrealized=round((mark-entry)*qty*100,2)
         intrinsic_floor_pnl=None
         if intrinsic is not None and entry is not None:
-            intrinsic_floor_pnl=round((intrinsic-entry)*qty*100,2)
+            intrinsic_floor_pnl=round(((entry-intrinsic) if strategy=="SHORT_PUT" else (intrinsic-entry))*qty*100,2)
 
         risk=[]
         if dte<=14: risk.append("临近到期")
-        if spot is not None and long_strike is not None and spot<long_strike: risk.append("正股低于Long Strike")
-        if breakeven is not None and spot is not None:
-            risk.append("已站上盈亏平衡" if spot>=breakeven else "尚未站上盈亏平衡")
-        if unrealized is not None and entry and mark is not None and mark<=entry*0.5: risk.append("权利金回撤≥50%")
-        if strategy=="CALL_DEBIT_SPREAD" and short_strike is not None and spot is not None and spot>=short_strike: risk.append("正股已进入/超过价差上限区")
+        if strategy=="SHORT_PUT":
+            if spot is not None and long_strike is not None and spot <= long_strike: risk.append("正股进入/低于执行价，存在指派风险")
+            if breakeven is not None and spot is not None: risk.append("已站上有效接货价" if spot>=breakeven else "跌破有效接货价")
+            if unrealized is not None and entry and mark is not None and mark>=entry*1.5: risk.append("回补成本较入场权利金上升≥50%")
+            if dte<=7 and spot is not None and long_strike is not None and spot<long_strike: risk.append("临近到期且价内，提前/到期指派风险提高")
+            earnings_days=safe_float(row.get("EarningsDays"))
+            if earnings_days is not None and 0<=earnings_days<=14: risk.append("财报临近，跳空风险提高")
+        else:
+            if spot is not None and long_strike is not None and spot<long_strike: risk.append("正股低于Long Strike")
+            if breakeven is not None and spot is not None:
+                risk.append("已站上盈亏平衡" if spot>=breakeven else "尚未站上盈亏平衡")
+            if unrealized is not None and entry and mark is not None and mark<=entry*0.5: risk.append("权利金回撤≥50%")
+            if strategy=="CALL_DEBIT_SPREAD" and short_strike is not None and spot is not None and spot>=short_strike: risk.append("正股已进入/超过价差上限区")
         status="；".join(risk) if risk else "当前未触发程序化高风险条件"
 
         out.append({
@@ -791,6 +828,10 @@ def build_active_option_reviews(price_map):
             "intrinsic":intrinsic,"intrinsic_floor_pnl":intrinsic_floor_pnl,"max_loss":max_loss,"max_profit":max_profit,
             "breakeven":breakeven,"delta":safe_float(row.get("Delta")),"iv":safe_float(row.get("IV")),
             "call_wall":safe_float(row.get("CallWall")),"put_wall":safe_float(row.get("PutWall")),
+            "call_wall_oi":safe_float(row.get("CallWallOI")),"put_wall_oi":safe_float(row.get("PutWallOI")),
+            "cash_secured":safe_float(row.get("CashSecured")),"assignment_price":safe_float(row.get("AssignmentPrice")),
+            "effective_entry":safe_float(row.get("EffectiveEntry"),breakeven),"premium_yield_pct":safe_float(row.get("PremiumYieldPct")),
+            "annualized_yield_pct":safe_float(row.get("AnnualizedYieldPct")),"assignment_risk":clean_text(row.get("AssignmentRisk")),
             "earnings_date":clean_text(row.get("EarningsDate")),"earnings_days":safe_float(row.get("EarningsDays")),
             "quantity":qty,"reason":clean_text(row.get("Reason")),"risk_status":status,
         })
@@ -837,16 +878,30 @@ def build_option_review_html(active_reviews, closed_records, closed_history):
                 pnl_pct=(x.get("unrealized_pnl")/(x.get("entry")*x.get("quantity",1)*100))*100
             pnl_html=(f'<span style="{_pnl_style(pnl_pct)}">{_pct(pnl_pct)}</span>' if pnl_pct is not None else '<span style="color:#607d8b">N/A</span>')
             spread=f'{x.get("long_strike")}' + (f' / {x.get("short_strike")}' if x.get("short_strike") is not None else '')
-            cards.append(f"""<div style="background:#faf7ff;border:1px solid #d7bce8;border-left:6px solid #7b1fa2;padding:16px;margin-bottom:12px;border-radius:8px;">
+            if x.get("strategy")=="SHORT_PUT":
+                body=f"""<div style="background:#f7fbf7;border:1px solid #c8e6c9;border-left:6px solid #2e7d32;padding:16px;margin-bottom:12px;border-radius:8px;">
+<div style="font-size:17px;font-weight:800;color:#2e7d32;">🛡️ {x.get("name")} ({x.get("ticker")})｜现金担保 Short Put</div>
+<div><b>到期：</b>{x.get("expiry")}（DTE {x.get("dte")}）　<b>正股：</b>{_price(x.get("spot"))}　<b>执行价：</b>{_price(x.get("assignment_price"))}</div>
+<div><b>入场权利金：</b>{_price(x.get("entry"))}/股　<b>当前Put价格：</b>{_price(x.get("mark"))}/股　<b>当前浮盈亏：</b>{pnl_html}</div>
+<div><b>有效接货价：</b>{_price(x.get("effective_entry"))}　<b>现金担保：</b>{_price(x.get("cash_secured"))}　<b>最大收益：</b>{_price(x.get("max_profit"))}</div>
+<div><b>最大风险：</b>{_price(x.get("max_loss"))}　<b>盈亏平衡：</b>{_price(x.get("breakeven"))}　<b>Put Delta：</b>{x.get("delta") if x.get("delta") is not None else "N/A"}</div>
+<div><b>权利金收益率：</b>{x.get("premium_yield_pct") if x.get("premium_yield_pct") is not None else "N/A"}%　<b>年化简单折算：</b>{x.get("annualized_yield_pct") if x.get("annualized_yield_pct") is not None else "N/A"}%　<b>指派：</b>{x.get("assignment_risk") or "存在"}</div>
+<div><b>财报：</b>{x.get("earnings_date") or "未确认"}　<b>事件距离：</b>{x.get("earnings_days") if x.get("earnings_days") is not None else "N/A"}天</div>
+<div><b>风控判断：</b>{x.get("risk_status")}</div>
+<div style="font-size:12px;color:#607d8b;">报价来源：{x.get("mark_source")}; 若到期价内，可能按执行价获得100股/张；只有愿意长期持有该股票时才使用。</div>
+</div>"""
+            else:
+                body=f"""<div style="background:#faf7ff;border:1px solid #d7bce8;border-left:6px solid #7b1fa2;padding:16px;margin-bottom:12px;border-radius:8px;">
 <div style="font-size:17px;font-weight:800;color:#5e2b76;">🎲 {x.get("name")} ({x.get("ticker")})｜{x.get("strategy")}</div>
 <div><b>到期：</b>{x.get("expiry")}（DTE {x.get("dte")}）　<b>正股：</b>{_price(x.get("spot"))}　<b>执行价：</b>{spread}</div>
 <div><b>入场权利金：</b>{_price(x.get("entry"))}/股　<b>当前期权价格：</b>{_price(x.get("mark"))}/股　<b>当前浮盈亏：</b>{pnl_html}</div>
 <div><b>最大风险：</b>{_price(x.get("max_loss"))}　<b>最大收益：</b>{_price(x.get("max_profit"))}　<b>盈亏平衡：</b>{_price(x.get("breakeven"))}</div>
-<div><b>Delta：</b>{x.get("delta") if x.get("delta") is not None else "N/A"}　<b>IV：</b>{x.get("iv") if x.get("iv") is not None else "N/A"}　<b>Call Wall：</b>{_price(x.get("call_wall"))}　<b>Put Wall：</b>{_price(x.get("put_wall"))}</div>
+<div><b>Delta：</b>{x.get("delta") if x.get("delta") is not None else "N/A"}　<b>IV：</b>{x.get("iv") if x.get("iv") is not None else "N/A"}　<b>Call Wall：</b>{_price(x.get("call_wall"))}（OI {x.get("call_wall_oi") if x.get("call_wall_oi") is not None else "N/A"}）　<b>Put Wall：</b>{_price(x.get("put_wall"))}（OI {x.get("put_wall_oi") if x.get("put_wall_oi") is not None else "N/A"}）</div>
 <div><b>财报：</b>{x.get("earnings_date") or "未确认"}　<b>事件距离：</b>{x.get("earnings_days") if x.get("earnings_days") is not None else "N/A"}天</div>
 <div><b>风控判断：</b>{x.get("risk_status")}</div>
 <div style="font-size:12px;color:#607d8b;">报价来源：{x.get("mark_source")}; 若无真实期权报价，程序只显示内在价值底线，不把它冒充为市价。</div>
-</div>""")
+</div>"""
+            cards.append(body)
     else:
         cards.append('<div style="background:#fafafa;border:1px solid #e0e0e0;padding:16px;border-radius:8px;color:#607d8b;">当前没有活跃期权持仓。</div>')
 
@@ -1031,28 +1086,38 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
 
 active_list, observation_list, expired_list, stopped_list = [], [], [], []
 
-for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
-    group = group.sort_values("Date").copy()
-    if group.empty:
+# 关键修复：不能再按 Ticker 合并历史推荐。
+# 每一次 Scan 推荐都是独立事件：推荐日期 + Ticker + Tag。
+# 否则“9/21 NXPI Stop_Loss_Hit + 9/22 NXPI 新 Core”会被合并，
+# 导致旧事件的止损状态污染新事件；同理 Observation 会被最新 Core 覆盖而消失。
+recent_picks = recent_picks.copy()
+_recent_event_groups = []
+for (event_date, event_ticker, event_tag), g in recent_picks.groupby(
+    ["Date", "Ticker", "Tag"], sort=False, dropna=False
+):
+    g = g.sort_values("Date").copy()
+    if g.empty:
         continue
-    ticker = resolve_ticker(orig_ticker, clean_text(group.iloc[0].get("Name")))
+    _recent_event_groups.append(((event_date, event_ticker, event_tag), g.iloc[-1].copy()))
+
+for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
+    ticker = resolve_ticker(latest.get("Ticker"), clean_text(latest.get("Name")))
     if not ticker:
         continue
 
-    first = group.iloc[0]
-    latest = group.iloc[-1]
-    rec_date = normalize_date(first.get("Date"))
+    rec_date = normalize_date(latest.get("Date"))
     if rec_date is None:
         continue
-
+    rec_date_str = rec_date.strftime("%Y-%m-%d")
     status = clean_text(latest.get("Status"))
+
+    # 已经结束的旧推荐事件不重复重新计算；它们由 review_history / 止损区块保留历史。
     if status not in ("", "Active", "pending"):
         continue
 
-    rec_date_str = rec_date.strftime("%Y-%m-%d")
-    rec_price = safe_record_price(first)
+    rec_price = safe_record_price(latest)
 
-    # ---- Observation：保留为有效 Scan 推荐，但不是实际持仓 ----
+    # ---- Observation：每一条 Scan Observation 都独立追踪 ----
     if clean_text(latest.get("Tag")).strip() == "Observation":
         cur = safe_float(price_map_today.get(ticker))
         pnl = None
@@ -1060,47 +1125,49 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
             pnl = round((cur-rec_price)/rec_price*100, 2)
         observation_list.append({
             "代码": ticker,
-            "名称": clean_text(first.get("Name"), ticker),
+            "名称": clean_text(latest.get("Name"), ticker),
             "标签": "Observation",
             "推荐评分": clean_text(latest.get("Score"), "N/A"),
             "首次推荐日": rec_date_str,
             "首次推荐价": rec_price,
             "当前价格": cur,
             "推荐跟踪涨跌幅(%)": pnl,
-            "RSI": clean_text(first.get("RSI"), "N/A"),
-            "Bias": clean_text(first.get("Bias"), "N/A"),
-            "技术评分": clean_text(first.get("技术评分"), "N/A"),
-            "估值评分": clean_text(first.get("估值评分"), "N/A"),
-            "PE_TTM": clean_text(first.get("PE_TTM"), "N/A"),
-            "PE_Forward": clean_text(first.get("PE_Forward"), "N/A"),
-            "EPS_TTM": clean_text(first.get("EPS_TTM"), "N/A"),
-            "PB": clean_text(first.get("PB"), "N/A"),
-            "MACD金叉": clean_text(first.get("MACD金叉"), "N/A"),
-            "周线共振": clean_text(first.get("周线共振"), "N/A"),
-            "KDJ_J回升": clean_text(first.get("KDJ_J回升"), "N/A"),
-            "量能放大": clean_text(first.get("量能放大"), "N/A"),
-            "周期共振": clean_text(first.get("周期共振"), "N/A"),
-            "系统连续推荐次数": len(group),
+            "RSI": clean_text(latest.get("RSI"), "N/A"),
+            "Bias": clean_text(latest.get("Bias"), "N/A"),
+            "技术评分": clean_text(latest.get("技术评分"), "N/A"),
+            "估值评分": clean_text(latest.get("估值评分"), "N/A"),
+            "PE_TTM": clean_text(latest.get("PE_TTM"), "N/A"),
+            "PE_Forward": clean_text(latest.get("PE_Forward"), "N/A"),
+            "EPS_TTM": clean_text(latest.get("EPS_TTM"), "N/A"),
+            "PB": clean_text(latest.get("PB"), "N/A"),
+            "MACD金叉": clean_text(latest.get("MACD金叉"), "N/A"),
+            "周线共振": clean_text(latest.get("周线共振"), "N/A"),
+            "KDJ_J回升": clean_text(latest.get("KDJ_J回升"), "N/A"),
+            "量能放大": clean_text(latest.get("量能放大"), "N/A"),
+            "周期共振": clean_text(latest.get("周期共振"), "N/A"),
+            "系统连续推荐次数": 1,
             "今日新增": "是" if rec_date_str == today_us_str() else "否",
-            "行情状态": "已取得" if cur is not None else "今日行情缺失",
+            "行情状态": price_source_map.get(ticker, "missing") if cur is not None else "今日/最近行情缺失",
         })
         continue
 
     if rec_price is None or rec_price <= 0:
         continue
 
+    # 只有今天的完整 OHLC 才能做“今日最低价触发止损”。
+    # 如果今天OHLC未返回，但有最近有效价格，允许跟踪浮盈亏，但不执行当日止损触发。
     ohlc = ohlc_map_today.get(ticker)
     if ohlc is None:
         cur = price_map_today.get(ticker)
         if cur is None:
             active_list.append({
-                "代码": ticker, "名称": clean_text(first.get("Name"), ticker),
+                "代码": ticker, "名称": clean_text(latest.get("Name"), ticker),
                 "标签": clean_text(latest.get("Tag")), "推荐评分": clean_text(latest.get("Score"),"N/A"),
-                "持股周期建议": "动态持有", "止损价": safe_float(first.get("Stop_Loss")) or "N/A",
+                "持股周期建议": "动态持有", "止损价": safe_float(latest.get("Stop_Loss")) or "N/A",
                 "首次推荐日": rec_date_str, "首次推荐价": rec_price,
                 "今日开盘价":"N/A", "现价":"N/A", "今日开盘→收盘%":None,
                 "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days, "剩余天数":"—",
-                "当前盈亏(%)":None, "系统连续推荐次数":len(group),
+                "当前盈亏(%)":None, "系统连续推荐次数":1,
                 "今日新增":"是" if rec_date_str==today_us_str() else "否",
                 "止损方法":"MA20/MA50 + ATR + MACD/KDJ",
                 "MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
@@ -1110,25 +1177,31 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
             })
             write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, "今日行情缺失，暂不执行止损判断。")
             continue
-        ohlc = {"open":cur,"high":cur,"low":cur,"close":cur}
+
+        cur_float = safe_float(cur)
+        stop = safe_float(latest.get("Stop_Loss"))
+        pnl = round((cur_float-rec_price)/rec_price*100,2) if cur_float is not None else None
+        active_list.append({
+            "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
+            "推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有",
+            "止损价":stop if stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
+            "今日开盘价":"N/A","现价":cur_float if cur_float is not None else "N/A","今日开盘→收盘%":None,
+            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"剩余天数":"—","当前盈亏(%)":pnl,
+            "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==today_us_str() else "否",
+            "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
+            "趋势状态":"仅有最近有效价格","风险提示":"今日OHLC未返回；仅跟踪价格，不执行当日止损触发",
+            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),
+            "Review_Stop_Distance_Pct":round((cur_float-stop)/cur_float*100,2) if stop and cur_float else "",
+            "Review_Risk_Note":"今日完整OHLC未返回；已使用最近有效价格跟踪，不执行当日止损触发。"
+        })
+        write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, cur_float, "今日完整OHLC未返回；使用最近有效价格跟踪，不执行当日止损触发。")
+        continue
 
     low, closep, openp = safe_float(ohlc.get("low")), safe_float(ohlc.get("close")), safe_float(ohlc.get("open"))
     if low is None or closep is None:
-        active_list.append({
-            "代码":ticker, "名称":clean_text(first.get("Name"),ticker), "标签":clean_text(latest.get("Tag")),
-            "推荐评分":clean_text(latest.get("Score"),"N/A"), "持股周期建议":"动态持有",
-            "止损价":safe_float(first.get("Stop_Loss")) or "N/A", "首次推荐日":rec_date_str, "首次推荐价":rec_price,
-            "今日开盘价":"N/A","现价":"N/A","今日开盘→收盘%":None,
-            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"剩余天数":"—","当前盈亏(%)":None,
-            "系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否",
-            "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
-            "趋势状态":"行情不完整","风险提示":"今日OHLC不完整，暂不执行止损判断",
-            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":today_us_str(),
-            "Review_Stop_Distance_Pct":"","Review_Risk_Note":"今日OHLC不完整，待下一次Review补算"
-        })
         continue
 
-    old_stop = safe_float(first.get("Stop_Loss"))
+    old_stop = safe_float(latest.get("Stop_Loss"))
     ctx = get_trailing_stop_context(ticker, old_stop, today_us_str(), entry_price=rec_price, days_held=(pd.Timestamp(today_us_str())-rec_date).days)
     exec_stop = ctx.get("exec_stop") if ctx else old_stop
 
@@ -1140,12 +1213,12 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
         exitp = openp if openp is not None and openp < exec_stop else exec_stop
         pnl = round((exitp-rec_price)/rec_price*100,2)
         stopped_list.append({
-            "代码":ticker,"名称":clean_text(first.get("Name"),ticker),
+            "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),
             "标签":clean_text(latest.get("Tag")),"推荐评分":clean_text(latest.get("Score"),"N/A"),
             "持股周期建议":"动态持有","止损价":exec_stop,"首次推荐日":rec_date_str,"首次推荐价":rec_price,
             "止损触发日":today_us_str(),"止损结算价":exitp,"止损盈亏(%)":pnl,
-            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":len(group),
-            "触发方式":"移动止损：前一交易日保护线","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
+            "持仓天数":(pd.Timestamp(today_us_str())-rec_date).days,"系统连续推荐次数":1,
+            "触发方式":"移动止损：今日完整OHLC触发","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
         })
         update_trade_history_status(ticker, rec_date_str, "Stop_Loss_Hit", exitp)
         continue
@@ -1165,13 +1238,13 @@ for orig_ticker, group in recent_picks.groupby("Ticker", sort=False):
     write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note)
 
     active_list.append({
-        "代码":ticker,"名称":clean_text(first.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
+        "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
         "推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有",
         "止损价":next_stop if next_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
         "今日开盘价":openp if openp is not None else "N/A","现价":closep,
         "今日开盘→收盘%":round((closep-openp)/openp*100,2) if openp and closep is not None else None,
         "持仓天数":days,"剩余天数":"—","当前盈亏(%)":round((closep-rec_price)/rec_price*100,2),
-        "系统连续推荐次数":len(group),"今日新增":"是" if rec_date_str==today_us_str() else "否",
+        "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==today_us_str() else "否",
         "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":c.get("ma20"),"MA50":c.get("ma50"),
         "KDJ_J":c.get("kdj_j"),"MACD_Hist":c.get("macd_hist"),
         "趋势状态":"多头结构" if c.get("trend_ok") else "趋势转弱",
@@ -1893,6 +1966,14 @@ option_win_rate = (
     if option_closed_pnl else 0.0
 )
 
+# 没有有效样本时显示 N/A，而不是误报为 0%。
+core_closed_win_rate_text = f"{core_closed_win_rate:.2f}%" if core_closed_count else "N/A"
+core_open_win_rate_text = f"{core_open_win_rate:.2f}%" if core_open_count else "N/A"
+obs_closed_win_rate_text = f"{obs_closed_win_rate:.2f}%" if observation_closed_count else "N/A"
+obs_win_rate_text = f"{obs_win_rate:.2f}%" if observation_open_count else "N/A"
+actual_active_win_rate_text = f"{actual_active_win_rate:.2f}%" if actual_active_count else "N/A"
+option_win_rate_text = f"{option_win_rate:.2f}%" if option_closed_pnl else "N/A"
+
 
 # ============================================================
 # 日志
@@ -1906,32 +1987,32 @@ print(
 )
 
 print(
-    f"📊 Core 已完成：{core_closed_win_rate:.2f}% "
+    f"📊 Core 已完成：{core_closed_win_rate_text} "
     f"({core_closed_wins}赢/{core_closed_losses}亏/{core_closed_neutral}平)"
 )
 
 print(
-    f"📊 Core 当前跟踪：{core_open_win_rate:.2f}% "
+    f"📊 Core 当前跟踪：{core_open_win_rate_text} "
     f"({core_open_wins}赢/{core_open_losses}亏/{core_open_neutral}平)"
 )
 
 print(
-    f"📊 Observation 已完成：{obs_closed_win_rate:.2f}% "
+    f"📊 Observation 已完成：{obs_closed_win_rate_text} "
     f"({obs_closed_wins}赢/{obs_closed_losses}亏/{obs_closed_neutral}平)"
 )
 
 print(
-    f"📊 Observation 当前跟踪：{obs_win_rate:.2f}% "
+    f"📊 Observation 当前跟踪：{obs_win_rate_text} "
     f"({obs_open_wins}赢/{obs_open_losses}亏/{obs_open_neutral}平)"
 )
 
 print(
-    f"📊 实际持仓当前跟踪：{actual_active_win_rate:.2f}% "
+    f"📊 实际持仓当前跟踪：{actual_active_win_rate_text} "
     f"({actual_active_wins}赢/{actual_active_losses}亏/{actual_active_neutral}平)"
 )
 
 print(
-    f"📊 期权已完成：{option_win_rate:.2f}% "
+    f"📊 期权已完成：{option_win_rate_text} "
     f"({option_wins}赢/{option_losses}亏/{option_neutral}平)"
 )
 
@@ -2131,8 +2212,15 @@ def load_active_options_snapshot(price_map):
             "strategy": clean_text(r.get("Strategy"), "LONG_CALL"),
             "expiry": clean_text(r.get("Expiry")),
             "entry_price": safe_float(r.get("EntryPrice"), safe_float(r.get("NetDebit"), safe_float(r.get("LongPrice")))),
+            "premium_collected": safe_float(r.get("PremiumCollected")),
+            "cash_secured": safe_float(r.get("CashSecured")),
+            "assignment_price": safe_float(r.get("AssignmentPrice")),
+            "effective_entry": safe_float(r.get("EffectiveEntry"), safe_float(r.get("BreakEven"))),
+            "premium_yield_pct": safe_float(r.get("PremiumYieldPct")),
+            "annualized_yield_pct": safe_float(r.get("AnnualizedYieldPct")),
             "current_underlying": cur,
             "quantity": safe_float(r.get("Quantity"),1),
+            "assignment_risk": clean_text(r.get("AssignmentRisk")),
             "reason": clean_text(r.get("Reason")),
         })
     return out
