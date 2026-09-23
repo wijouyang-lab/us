@@ -2272,7 +2272,7 @@ def get_review_risk_linkage_warning():
     status = df["Status"].astype(str).str.strip()
     risk = df["Review_Risk_Status"].astype(str).str.strip()
     risk_date = pd.to_datetime(df["Review_Risk_Date"], errors="coerce")
-    exit_date = pd.to_datetime(df.get("Exit_Date", ""), errors="coerce")
+    exit_date = pd.to_datetime(df.get("Exit_Date", ""), format="mixed", errors="coerce")
     effective = risk_date.copy()
     fallback = effective.isna() & status.isin(_stop_statuses())
     effective.loc[fallback] = exit_date.loc[fallback]
@@ -3029,6 +3029,36 @@ def generate_option_recommendations(chosen_items):
     return today_records, created
 
 
+def _option_wall_text(row, side):
+    """
+    将期权 Wall 统一格式化为可解释文本。
+    side: "call" / "put"
+    优先真实 OI Wall；没有 OI 时明确显示成交量代理。
+    """
+    side = str(side or "").strip().lower()
+    if side not in {"call", "put"}:
+        return "N/A"
+
+    prefix = "Call" if side == "call" else "Put"
+    strike = safe_float(row.get(f"{prefix}Wall"))
+    source = clean_text(row.get(f"{prefix}WallSource"), "NO_WALL_DATA").strip().lower()
+    oi = safe_float(row.get(f"{prefix}WallOI"))
+    vol = safe_float(row.get(f"{prefix}WallVolume"))
+
+    if strike is None:
+        return "N/A（OI/成交量均不可用）"
+
+    if source in {"openinterest", "oi", "open_interest"}:
+        oi_text = f"OI {int(oi):,}" if oi is not None else "OI N/A"
+        return f"${strike:.2f}（{oi_text}；OI Wall）"
+
+    if source == "volume_proxy" or (oi is None and vol is not None):
+        vol_text = f"成交量代理 {int(vol):,}" if vol is not None else "成交量代理 N/A"
+        return f"${strike:.2f}（{vol_text}；OI不可用）"
+
+    return f"${strike:.2f}（来源：{html.escape(source)}）"
+
+
 def build_option_recommendation_html(option_records):
     if not option_records:
         return (
@@ -3230,7 +3260,11 @@ if __name__ == "__main__":
         print("⚠️ 今日没有新增可入账推荐")
 
     option_records, option_created_items = generate_option_recommendations(to_write)
-    option_html = build_option_recommendation_html(option_records)
+    try:
+        option_html = build_option_recommendation_html(option_records)
+    except Exception as e:
+        print(f"⚠️ 期权HTML生成失败，Scan继续完成：{e}")
+        option_html = "<h2 style=\"color:#7b1fa2;\">🎲 美股期权实战策略</h2><p>本次期权数据已生成，但期权HTML渲染失败；不影响股票Scan与账本写入。</p>"
     full_html = build_full_email_html(ai_html + option_html)
     send_mail(SUPER_ADMIN, f"【宏观驱动美股版】{TARGET_REGION} 核心打分、股票与期权实战 ({today_us_str()})", full_html)
 
