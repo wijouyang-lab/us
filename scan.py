@@ -700,6 +700,33 @@ def enrich_pool_with_fundamentals(pool_data, limit=80):
 
 
 # ==================== 5. K线与技术指标 ====================
+def _last_completed_regular_date_us(asof=None):
+    """返回本次 Scan 可以使用的最后完整美股常规交易日日期。"""
+    now = asof or get_scan_asof_us()
+    if now.time() < datetime.time(16, 0):
+        return now.date() - datetime.timedelta(days=1)
+    return now.date()
+
+
+def _filter_completed_daily_bars(df, asof=None):
+    """按 America/New_York 日期剔除当前未完成的日线 K 棒。"""
+    if df is None or df.empty:
+        return pd.DataFrame()
+    out = df.copy()
+    idx = pd.to_datetime(out.index, errors="coerce")
+    valid = ~idx.isna()
+    out = out.loc[valid].copy()
+    idx = pd.DatetimeIndex(idx[valid])
+    if idx.tz is None:
+        idx_us = idx.tz_localize("UTC").tz_convert(US_TZ)
+    else:
+        idx_us = idx.tz_convert(US_TZ)
+    cutoff = _last_completed_regular_date_us(asof)
+    out.index = idx_us
+    out.index.name = "Date"
+    return out.loc[out.index.date <= cutoff].copy()
+
+
 def get_kline_data(ticker):
     for attempt in range(3):
         try:
@@ -707,8 +734,10 @@ def get_kline_data(ticker):
             if df is not None and not df.empty:
                 if isinstance(df.columns, pd.MultiIndex):
                     df.columns = df.columns.get_level_values(0)
-                df.index.name = "Date"
-                return df
+                # Yahoo 在 09:30-16:00 ET 可能返回当天的未收盘日线；技术指标禁止使用它。
+                df = _filter_completed_daily_bars(df, get_scan_asof_us())
+                if not df.empty:
+                    return df
         except Exception:
             time.sleep(1.0 + attempt)
     return pd.DataFrame()
@@ -858,7 +887,18 @@ def build_stock_pool(tickers):
                 if dw is not None and not dw.empty:
                     if isinstance(dw.columns, pd.MultiIndex):
                         dw.columns = dw.columns.get_level_values(0)
-                    wc = dw["Close"].astype(float).dropna()
+                    # 不直接使用 Yahoo 当前周的未完成周K；由已过滤的完整日线收盘重构周收盘。
+                    daily_close = pd.to_numeric(df["Close"], errors="coerce").dropna()
+                    if len(daily_close) >= 20:
+                        daily_idx = pd.DatetimeIndex(daily_close.index)
+                        if daily_idx.tz is None:
+                            daily_idx = daily_idx.tz_localize(US_TZ)
+                        else:
+                            daily_idx = daily_idx.tz_convert(US_TZ)
+                        daily_close.index = daily_idx
+                        wc = daily_close.resample("W-FRI").last().dropna()
+                    else:
+                        wc = pd.Series(dtype=float)
                     if len(wc) >= 12:
                         wma5 = wc.rolling(5).mean().iloc[-1]
                         wma10 = wc.rolling(10).mean().iloc[-1]
