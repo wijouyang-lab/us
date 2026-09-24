@@ -126,5 +126,13 @@ jobs:
             echo "数据无变化，跳过提交"
           else
             git commit -m "chore(dashboard): refresh market data [skip ci]"
-            git push
+            # 与并发定时任务撞车时 rebase 到最新 main 再推，避免 fetch-first 拒绝丢数据
+            for i in 1 2 3; do
+              if git push; then
+                break
+              fi
+              echo "push 被拒绝（疑似并发提交），pull --rebase 后重试 ($i/3)"
+              git pull --rebase origin main || git rebase --abort
+            done
+            git push || echo "::warning::重试后仍无法推送，本次数据将在下一轮定时任务覆盖刷新"
           fi
