@@ -1766,6 +1766,20 @@ def main(argv=None):
 
     # ---- STOCKS ----
     stocks, kstats = build_stocks(pending_rows, provider, args.kline_bars, anomalies, warnings)
+    if not stocks:
+        # 自愈守卫：本次构建为空（无 pending / pending 为空）时，
+        # 回退复用上一版 dashboard_data.json 的名单，杜绝把持仓清空成 []。
+        fb_rows, _ = load_fallback_stock_rows(data_dir)
+        if fb_rows:
+            log(f"[WARN] 本次构建结果为空，回退复用上一版 JSON 名单（{len(fb_rows)} 只），"
+                f"行情 / 技术指标照常刷新。")
+            notes.append(
+                f"本次 pending 来源未产出任何股票，已回退复用上一版 dashboard_data.json 的 "
+                f"名单（{len(fb_rows)} 只）并刷新行情；stocks 未写空。"
+            )
+            stocks, kstats = build_stocks(
+                fb_rows, provider, args.kline_bars, anomalies, warnings)
+            stocks_source = "existing_dashboard_json"
     kline_ok, kline_fail = kstats["kline_ok"], kstats["kline_fail"]
     technical_ok = sum(1 for s in stocks if s["technical"]["status"] == "ok")
     price_live = sum(1 for s in stocks if s["price_source"] in ("realtime", "realtime_unverified", "last_close"))
