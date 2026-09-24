@@ -1484,12 +1484,87 @@ def _fetch_option_chain(yf, symbol, expiry, tries=3, sleep_base=1.0):
     raise last or RuntimeError("期权链获取失败")
 
 
+def _is_monthly_expiry(date_str):
+    """标准月度期权到期日 = 当月第 3 个星期五（weekday==4 且 15<=day<=21）。
+
+    月度合约通常是持仓量最集中的“主力量化墙”，作为特定到期日 OI 为空时的回退参考。
+    """
+    try:
+        d = dt.datetime.strptime(str(date_str), "%Y-%m-%d").date()
+    except Exception:
+        return False
+    return d.weekday() == 4 and 15 <= d.day <= 21
+
+
+def _find_primary_monthly_wall(yf, symbol, preferred_expiry, tries=3, max_scan=12):
+    """特定到期日 OI 为空时的主力月度合约回退。
+
+    流程：
+      1. 取该标的全部可用到期日，筛出月度合约（第 3 周五），按离 preferred_expiry 由近到远排序。
+      2. 先试最近的 1-2 个；若仍无 OI，再扫描其余月度（上限 max_scan 个）找任一有 OI 的。
+      3. 返回 (call_strike, call_oi, put_strike, put_oi, used_expiry)；仅当所有月度合约 OI 全为空才返回 None。
+
+    绝不伪造数值：所有到期日都无有效 OI 时返回 None，交由上层标记 N/A。
+    """
+    try:
+        tk = yf.Ticker(symbol)
+        avail = list(getattr(tk, "options", None) or [])
+    except Exception:
+        return None
+    if not avail:
+        return None
+    monthlies = sorted([e for e in avail if _is_monthly_expiry(e)])
+    if not monthlies:  # 无法识别月度时用全部到期日兜底
+        monthlies = sorted(avail)
+
+    def _dist(e):
+        try:
+            ed = dt.datetime.strptime(e, "%Y-%m-%d").date()
+        except Exception:
+            return 1 << 30
+        ref = preferred_expiry
+        if ref:
+            try:
+                return abs((ed - dt.datetime.strptime(ref, "%Y-%m-%d").date()).days)
+            except Exception:
+                pass
+        return abs((ed - dt.date.today()).days)
+
+    ordered = sorted(monthlies, key=_dist)
+    ordered = [e for e in ordered if e != preferred_expiry]  # 排除已尝试过的请求到期日
+
+    scanned = 0
+    for e in ordered:
+        if scanned >= max_scan:
+            break
+        scanned += 1
+        try:
+            chain, _ = _fetch_option_chain(yf, symbol, e, tries=tries)
+        except Exception:
+            continue
+        cs, co = _max_oi_strike(getattr(chain, "calls", None))
+        ps, po = _max_oi_strike(getattr(chain, "puts", None))
+        if cs is not None and ps is not None:
+            return cs, co, ps, po, e
+    return None
+
+
+def _is_real_oi_source(src):
+    """判断 wall 来源是否为“真实 OI”（期权链最大 OI 或主力月度合约回退）。"""
+    return bool(src) and ("max_oi" in src or "near_month_primary" in src)
+
+
 def enrich_option_walls(options, provider, anomalies, notes=None):
     """用 yfinance 真实期权链补齐缺失 / LEGACY_INVALID_WALL 的 Call Wall / Put Wall。
 
     口径（严格按 Open Interest，不用成交量代理）：
       Call Wall = 该到期日 Call 链中 openInterest 最大的 strike
       Put  Wall = 该到期日 Put  链中 openInterest 最大的 strike
+
+    特定到期日 OI 为空（远期/薄合约常态）时的回退：
+      自动取该标的全部到期日，筛选月度合约（第 3 周五），回退到离请求到期日最近的
+      1-2 个主力月度合约作为参考 Wall，wall_source 标 "yfinance_near_month_primary"。
+      仅当所有到期日 OI 全为空才标记 N/A，**绝不伪造数值**。
 
     只处理 wall 为空或来源标记含 INVALID 的条目；已有真实 OI 的不动。
     取不到期权链时保留原标记并记入 anomalies，**绝不伪造数值**。
@@ -1526,41 +1601,62 @@ def enrich_option_walls(options, provider, anomalies, notes=None):
         if need_put:
             put_strike, put_oi = _max_oi_strike(getattr(chain, "puts", None))
 
+        # ---- 主力月度合约回退：特定到期日 OI 为空时不直接放弃 ----
+        primary_used = None
+        primary_note = None
+        if (need_call and call_strike is None) or (need_put and put_strike is None):
+            primary = _find_primary_monthly_wall(yf, symbol, expiry, tries=3)
+            if primary:
+                pcs, pco, pps, ppo, pexp = primary
+                if need_call and call_strike is None:
+                    call_strike, call_oi = pcs, pco
+                if need_put and put_strike is None:
+                    put_strike, put_oi = pps, ppo
+                primary_used = pexp
+                primary_note = (
+                    f"原始到期日 {expiry or 'N/A'} OI 为空，已自动回退主力月度合约 "
+                    f"{pexp}（NEAR_MONTH_PRIMARY）")
+
         changed = False
         parts = []
+        if primary_note:
+            parts.append(primary_note)
         # ---- Call Wall：仅在拿到真实 OI 时赋值；否则显式标记 N/A，绝不给默认数值 ----
         if need_call:
             if call_strike is not None:
                 o["call_wall"] = round_num(call_strike)
                 o["call_wall_oi"] = round_num(call_oi)
-                o["call_wall_source"] = "yfinance_option_chain_max_oi"
+                o["call_wall_source"] = ("yfinance_near_month_primary" if primary_used
+                                         else "yfinance_option_chain_max_oi")
                 parts.append(f"CALL: 真实期权链 OI 最大 strike={call_strike}（OI={call_oi}）")
                 changed = True
             else:
                 o["call_wall"] = None
                 o["call_wall_oi"] = None
                 o["call_wall_unavailable"] = True
-                parts.append("CALL: 期权链无有效 OI（OI 全为 0 或为空），Call Wall = N/A，不伪造数值")
+                parts.append("CALL: 所有到期日期权链均无有效 OI，Call Wall = N/A，不伪造数值")
         # ---- Put Wall：同上 ----
         if need_put:
             if put_strike is not None:
                 o["put_wall"] = round_num(put_strike)
                 o["put_wall_oi"] = round_num(put_oi)
-                o["put_wall_source"] = "yfinance_option_chain_max_oi"
+                o["put_wall_source"] = ("yfinance_near_month_primary" if primary_used
+                                        else "yfinance_option_chain_max_oi")
                 parts.append(f"PUT: 真实期权链 OI 最大 strike={put_strike}（OI={put_oi}）")
                 changed = True
             else:
                 o["put_wall"] = None
                 o["put_wall_oi"] = None
                 o["put_wall_unavailable"] = True
-                parts.append("PUT: 期权链无有效 OI（OI 全为 0 或为空），Put Wall = N/A，不伪造数值")
+                parts.append("PUT: 所有到期日期权链均无有效 OI，Put Wall = N/A，不伪造数值")
 
         if changed:
-            o["wall_source"] = "yfinance_option_chain_max_oi"
+            o["wall_source"] = ("yfinance_near_month_primary" if primary_used
+                                else "yfinance_option_chain_max_oi")
             o["wall_is_true_oi"] = bool(
-                str(o.get("call_wall_source") or "").endswith("max_oi")
-                and str(o.get("put_wall_source") or "").endswith("max_oi"))
-            o["wall_expiry_used"] = used_expiry
+                _is_real_oi_source(o.get("call_wall_source"))
+                and _is_real_oi_source(o.get("put_wall_source")))
+            o["wall_expiry_used"] = primary_used or used_expiry
         if parts:
             o["wall_note"] = " | ".join(parts)
         if changed or parts:
