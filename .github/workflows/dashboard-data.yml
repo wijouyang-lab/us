@@ -11,9 +11,9 @@ name: Dashboard Data Refresh
 
 on:
   schedule:
-    # 24 小时全天候无休：每 10 分钟刷新一次（覆盖盘前 / 盘中 / 盘后 / 休市）
-    # 注意：GitHub cron 最短间隔为 5 分钟，高峰期可能延迟或跳跑。
-    - cron: "*/10 * * * *"
+    # 美东 04:00-20:00（UTC 08:00-23:59）每 15 分钟刷新，覆盖盘前 / 盘中 / 盘后
+    # 注意：UTC 固定时段会随美国夏令时漂移约 1 小时；GitHub cron 最短间隔 5 分钟。
+    - cron: "*/15 8-23 * * 1-5"
   workflow_dispatch:
     inputs:
       kline_bars:
