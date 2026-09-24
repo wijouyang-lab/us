@@ -95,6 +95,10 @@ AI_HISTORY_PATTERNS = (
     "scan_result*.csv",
 )
 
+# AI 文本持久化缓存：scan.py 在本地生成六段后按 Ticker Upsert 到该文件并提交入库。
+# 优先级高于历史 CSV——它是唯一保证"只要 GPT 生成过就永久可查"的来源。
+AI_CACHE_NAME = "ai_text_cache.csv"
+
 # 单位提示（只做说明，不改数值）
 UNIT_HINT = {
     "roe": "ratio (0.177 = 17.7%)",
@@ -708,16 +712,54 @@ def load_ai_history(data_dir, skip_paths=()):
     return index
 
 
-def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
-    """Core / Observation 股票的 AI 六段若为空，用历史 CSV 中同名 Ticker 的文本回填。
+def load_ai_cache(data_dir):
+    """读取 ai_text_cache.csv（scan.py 本地生成 GPT 文本后按 Ticker Upsert 的持久化缓存）。
 
-    硬性约束：本函数**不生成、不改写、不补写任何文案**，只搬运历史已生成的真实文本。
-    回填来源记入 stock['ai_source']：
+    返回 {TICKER: {"texts": {json_key: text}, "update_date": str}}；
+    文件不存在或为空返回 {}。只搬运真实已生成文本，绝不生成/改写。
+    """
+    path = Path(data_dir) / AI_CACHE_NAME
+    if not path.exists():
+        return {}
+    try:
+        rows = read_csv_rows(path)
+    except Exception:
+        return {}
+    index = {}
+    for row in rows:
+        ticker = clean_text(row.get("Ticker")).upper()
+        if not ticker:
+            continue
+        texts = {}
+        for csv_col, json_key in AI_FIELD_MAP:
+            text = clean_text(row.get(csv_col))
+            if text:
+                texts[json_key] = text
+        if texts:
+            index[ticker] = {
+                "texts": texts,
+                "update_date": clean_text(row.get("Update_Date")) or None,
+            }
+    return index
+
+
+def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
+    """Core / Observation 股票的 AI 六段若为空，按优先级回填同名 Ticker 的真实文本。
+
+    硬性约束：本函数**不生成、不改写、不补写任何文案**，只搬运已生成的真实文本。
+    回填优先级与 stock['ai_source'] 取值：
       scan_pending_csv  本次 pending CSV 自带
-      history_backfill  本次为空、由历史 CSV 回填
-      none              本次与历史都没有（前端显示 pending 是正确的）
+      ai_text_cache     ai_text_cache.csv 持久化缓存（scan 生成后 Upsert 入库，永久可查）
+      history_backfill  历史 pending / scan_results CSV
+      none              三处都没有（前端显示 pending 是正确的）
     """
     skip = [str(current_pending)] if current_pending else []
+    try:
+        cache = load_ai_cache(data_dir)
+    except Exception as e:
+        cache = {}
+        if notes is not None:
+            notes.append(f"AI 文本缓存读取失败：{type(e).__name__}: {e}")
     try:
         history = load_ai_history(data_dir, skip_paths=skip)
     except Exception as e:
@@ -731,8 +773,24 @@ def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
         if all(ai.get(k) for _c, k in AI_FIELD_MAP):
             s["ai_source"] = "scan_pending_csv"
             continue
-        src = history.get(s.get("ticker"))
+        ticker = s.get("ticker")
         changed = False
+        # 第一优先级：持久化缓存（scan.py 生成后 Upsert，永久保留）
+        cached = cache.get(ticker)
+        if cached:
+            for _csv_col, key in AI_FIELD_MAP:
+                if not ai.get(key) and cached["texts"].get(key):
+                    ai[key] = cached["texts"][key]
+                    changed = True
+            if changed:
+                if cached.get("update_date"):
+                    s["ai_update_date"] = cached["update_date"]
+                s["ai"] = ai
+                s["ai_source"] = "ai_text_cache"
+                backfilled.append(ticker)
+                continue
+        # 第二优先级：历史 pending / scan_results CSV
+        src = history.get(ticker)
         if src:
             for _csv_col, key in AI_FIELD_MAP:
                 if not ai.get(key) and src.get(key):
@@ -741,19 +799,23 @@ def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
         s["ai"] = ai
         if changed:
             s["ai_source"] = "history_backfill"
-            backfilled.append(s["ticker"])
+            backfilled.append(ticker)
         elif any(ai.get(k) for _c, k in AI_FIELD_MAP):
             s["ai_source"] = "scan_pending_csv"
         else:
             s["ai_source"] = "none"
 
     if notes is not None:
+        if cache:
+            notes.append(f"AI 文本缓存索引：{AI_CACHE_NAME} 命中 {len(cache)} 个 Ticker")
+        else:
+            notes.append(f"未找到可用的 {AI_CACHE_NAME}（scan 尚未生成或尚未入库）。")
         if history:
             notes.append(f"AI 历史回填索引：命中 {len(history)} 个 Ticker 的历史 AI 文本")
         if backfilled:
-            notes.append("AI 六段由历史 CSV 回填：" + "、".join(sorted(set(backfilled))))
+            notes.append("AI 六段已回填：" + "、".join(sorted(set(backfilled))))
         elif stocks:
-            notes.append("AI 六段无历史文本可回填（历史 CSV 中未找到同名 Ticker 的 AI 文本）。")
+            notes.append("AI 六段无文本可回填（缓存与历史 CSV 中均未找到同名 Ticker）。")
     return backfilled
 
 
@@ -1070,6 +1132,15 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
 # ============================================================
 
 def build_market(provider):
+    """全球市场资产：无论正常导出还是兜底降级流程，都必须实时抓取。
+
+    价格口径（修复"非美股时段金/银/原油价格卡死"）：
+    - 优先用 provider.quote() 的实时报价（yfinance 1m prepost / Yahoo includePrePost），
+      期货 ~23h 交易、外汇 24h 交易，非美股时段也会真实跳动；
+    - 实时报价不可用时回退到最近一根已完成日线收盘价（明确标记 price_kind）；
+    - change_1d = 现价 vs 最近已完成日收盘；change_5d / change_20d 用日线收盘序列；
+    - 任何情况下都不读取、不复用旧 dashboard_data.json 里的宏观缓存。
+    """
     updated_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     assets = []
     ok = 0
@@ -1086,27 +1157,57 @@ def build_market(provider):
             "updated_at": updated_at if provider.available else None,
             "available": False,
             "source": None,
+            "price_kind": None,
             "error": provider.network_error,
         }
         if provider.available:
             bars = provider.daily_bars(symbol, days=40)
-            if bars:
-                closes = [b["close"] for b in bars]
+            closes = [b["close"] for b in bars] if bars else []
 
-                def chg(n):
+            # 实时报价：盘前盘后 / 非美股时段也能拿到真实价格
+            quote = provider.quote(symbol) if hasattr(provider, "quote") else None
+            live_price = parse_num(quote.get("price")) if quote else None
+
+            if closes:
+                prev_close = closes[-1]
+
+                def chg_from(base_idx_price, n):
                     if len(closes) > n and closes[-(n + 1)]:
-                        return (closes[-1] / closes[-(n + 1)] - 1) * 100
+                        return (base_idx_price / closes[-(n + 1)] - 1) * 100
                     return None
 
+                if live_price and live_price > 0:
+                    item.update({
+                        "price": round_num(live_price),
+                        "change_1d": round_num(chg_from(live_price, 1), 4),
+                        "price_kind": "live",
+                        "source": quote.get("source") or provider.last_source,
+                        "quote_ts": quote.get("ts"),
+                    })
+                else:
+                    item.update({
+                        "price": round_num(prev_close),
+                        "change_1d": round_num(chg_from(prev_close, 1), 4),
+                        "price_kind": "daily_close",
+                        "source": provider.last_source,
+                    })
                 item.update({
-                    "price": round_num(closes[-1]),
-                    "change_1d": round_num(chg(1), 4),
-                    "change_5d": round_num(chg(5), 4),
-                    "change_20d": round_num(chg(20), 4),
+                    "change_5d": round_num(chg_from(item["price"], 5), 4),
+                    "change_20d": round_num(chg_from(item["price"], 20), 4),
                     "available": True,
-                    "source": provider.last_source,
                     "error": None,
                     "last_bar_date": bars[-1]["date"].strftime("%Y-%m-%d"),
+                })
+                ok += 1
+            elif live_price and live_price > 0:
+                # 日线全失败但实时报价可用：仍然给出实时价（涨幅无法计算则为 null，不编造）
+                item.update({
+                    "price": round_num(live_price),
+                    "price_kind": "live",
+                    "available": True,
+                    "source": quote.get("source"),
+                    "quote_ts": quote.get("ts"),
+                    "error": None,
                 })
                 ok += 1
             else:
@@ -1707,10 +1808,17 @@ def main(argv=None):
         if fallback_rows:
             log(f"       已复用上一版 dashboard_data.json 的股票名单：{len(fallback_rows)} 只，"
                 f"行情 / 技术指标照常刷新。")
+            log("       兜底模式下全球市场（商品/外汇/股指等）同样强制实时抓取，"
+                "绝不复用旧 JSON 的宏观缓存。")
             notes.append(
                 "未找到新的 pending CSV，已复用上一版 dashboard_data.json 中的 "
                 f"Core/Observation 名单（{len(fallback_rows)} 只）并刷新行情与技术指标；"
                 "名单未发生清空。"
+            )
+            notes.append(
+                "兜底保护模式：旧 JSON 仅用于复原股票名单与基本面快照；"
+                "全球市场宏观指标在后续 MARKET 阶段通过行情源强制重新实时抓取"
+                "（含盘前盘后报价），未复用旧 JSON 中的任何宏观价格。"
             )
             pending_rows = fallback_rows
             stocks_source = "existing_dashboard_json"
@@ -1805,7 +1913,12 @@ def main(argv=None):
         ai_status = "complete"
 
     # ---- MARKET ----
+    # 无论正常导出还是兜底降级（stocks_source == existing_dashboard_json），
+    # 宏观指标都走到这里通过行情源强制实时抓取，绝不复用旧 JSON 的宏观缓存。
     market_assets, market_ok = build_market(provider)
+    live_count = sum(1 for a in market_assets if a.get("price_kind") == "live")
+    log(f"全球市场：{market_ok}/{len(market_assets)} 可用，其中实时报价 {live_count} 只"
+        f"（其余回退最近日收盘，绝不使用旧 JSON 缓存）")
     regime_market = None
     regime_vix = None
     for s in stocks:
@@ -1825,8 +1938,10 @@ def main(argv=None):
         "assets": market_assets,
         "available_count": market_ok,
         "total_count": len(market_assets),
+        "live_quote_count": live_count,
         "provider": provider.name,
         "source_used": sorted({a["source"] for a in market_assets if a.get("source")}),
+        "refresh_policy": "always_live_fetch（含兜底降级流程；禁止复用旧 JSON 宏观缓存）",
         "updated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
 

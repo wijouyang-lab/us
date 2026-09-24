@@ -37,13 +37,19 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python scan.py
 
-      - name: 提交待确认文件
+      - name: 提交待确认文件与 AI 文本缓存
         run: |
+          # AI 文本缓存必须随 scan 一并入库：云端 dashboard_export.py 靠它回填六段
+          if [ -f ai_text_cache.csv ]; then
+            git add ai_text_cache.csv
+          fi
           if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv
-            git commit -m "chore: 美股盘中待确认 $(date +%Y-%m-%d)"
-            git push
-            echo "✅ 美股待确认文件已提交"
+          fi
+          if git diff --cached --quiet; then
+            echo "⚠️ 无可提交变更（无 pending 文件且缓存无更新）"
           else
-            echo "⚠️ 未生成美股待确认文件"
+            git commit -m "chore: 美股盘中待确认 + AI 文本缓存 $(date +%Y-%m-%d)"
+            git push
+            echo "✅ 美股待确认文件与 AI 文本缓存已提交"
           fi

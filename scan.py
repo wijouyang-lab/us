@@ -3204,6 +3204,69 @@ def build_option_recommendation_html(option_records):
             + ''.join(cards))
 
 
+# ==================== AI 文本持久化缓存 ====================
+# Dashboard 云端导出（dashboard_export.py）在 GitHub Actions 上运行、不调用 GPT。
+# 因此本地 scan 生成 AI 六段文本后，必须按 Ticker Upsert 到 ai_text_cache.csv 并随
+# scan.yml 提交推送，云端才能按 Ticker 回填完整六段；缓存查不到才显示 pending。
+AI_TEXT_CACHE_FILE = "ai_text_cache.csv"
+AI_TEXT_CACHE_COLS = [
+    "Ticker", "Update_Date",
+    "AI_industry_logic", "AI_news_cn", "AI_premarket_conclusion",
+    "AI_catalysts", "AI_risks", "AI_invalidation",
+]
+
+
+def upsert_ai_text_cache(items, path=AI_TEXT_CACHE_FILE):
+    """把本次已生成的 AI 六段文本按 Ticker Upsert 进持久化缓存。
+
+    规则（与 Dashboard 零伪造原则一致）：
+    - 只搬运 enrich_verified_items_with_ai_details() 已生成的真实文本，不改写/不摘要；
+    - 某 Ticker 本次六段全为空 -> 跳过，绝不用空值覆盖缓存里的旧文本；
+    - 单段为空 -> 保留缓存中该段的旧文本（部分更新，不整行清空）；
+    - 使用 csv 模块正确转义，保留文本中的逗号与换行。
+    返回本次写入/更新的 Ticker 数。
+    """
+    import csv as _csv
+
+    updates = {}
+    for item in items:
+        ticker = str(item.get("Ticker", "") or "").strip().upper()
+        if not ticker:
+            continue
+        texts = {c: str(item.get(c, "") or "").strip() for c in AI_TEXT_CACHE_COLS[2:]}
+        if not any(texts.values()):
+            continue
+        updates[ticker] = texts
+    if not updates:
+        return 0
+
+    rows = {}
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8-sig", newline="") as f:
+                for r in _csv.DictReader(f):
+                    t = (r.get("Ticker") or "").strip().upper()
+                    if t:
+                        rows[t] = dict(r)
+        except Exception as e:
+            print(f"⚠️ 读取 {path} 失败（将以本次内容重建）：{e}")
+
+    today = today_us_str()
+    for ticker, texts in updates.items():
+        old = rows.get(ticker) or {}
+        merged = {"Ticker": ticker, "Update_Date": today}
+        for col in AI_TEXT_CACHE_COLS[2:]:
+            merged[col] = texts[col] or (old.get(col) or "")
+        rows[ticker] = merged
+
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        w = _csv.DictWriter(f, fieldnames=AI_TEXT_CACHE_COLS, quoting=_csv.QUOTE_MINIMAL)
+        w.writeheader()
+        for ticker in sorted(rows):
+            w.writerow({k: (rows[ticker].get(k) or "") for k in AI_TEXT_CACHE_COLS})
+    return len(updates)
+
+
 # ==================== 主程序 ====================
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
@@ -3359,6 +3422,18 @@ if __name__ == "__main__":
                 safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
                 f.write(",".join(safe_vals)+"\n")
         print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
+
+        # AI 文本持久化缓存：按 Ticker Upsert 到 ai_text_cache.csv，
+        # 由 scan.yml 随 pending CSV 一并提交推送；云端 dashboard_export.py
+        # 按 Ticker 直接回填完整六段，网页不再永远显示 pending。
+        try:
+            cached_n = upsert_ai_text_cache(to_write)
+            if cached_n:
+                print(f"🧠 AI 文本缓存已更新 {cached_n} 只 -> {AI_TEXT_CACHE_FILE}")
+            else:
+                print("⚠️ 本次无可写入的 AI 文本（六段均为空），缓存保持不变。")
+        except Exception as e:
+            print(f"⚠️ AI 文本缓存写入失败（不影响主流程）：{type(e).__name__}: {e}")
     else:
         print("⚠️ 今日没有新增可入账推荐")
 
