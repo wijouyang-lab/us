@@ -3,17 +3,17 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
 [WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。
-       上一版 dashboard_data.json 也不存在或无股票，stocks 输出空数组。
+       已复用上一版 dashboard_data.json 的股票名单：8 只，行情 / 技术指标照常刷新。
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $EDGM: possibly delisted; no price data found  (period=1d)
 --------------------------------------------------------------
-pending CSV          : （无）   股票名单来源：None
-Core 数量            : 0
-Observation 数量     : 0
+pending CSV          : （无）   股票名单来源：existing_dashboard_json
+Core 数量            : 3
+Observation 数量     : 5
 Options 数量         : 1（Active 1）
 Market 数据数量      : 13/13 可用（来源 ['yfinance']）
-K线成功 / 失败       : 0 / 0
-当前价来源           : 实时 0 · 最新收盘 0 · 合计可取 0/0
+K线成功 / 失败       : 8 / 0   技术指标成功 8/8
+当前价来源           : 实时 8 · 最新收盘 0 · 合计可取 8/8
 Review 数据状态      :
    · core_closed_count            = 11  [complete]
    · core_open_count              = 7  [complete]
@@ -21,11 +21,10 @@ Review 数据状态      :
    · observation_open_count       = 79  [complete]
    · actual_active_count          = 7  [complete]
 history 条数         : 41
-AI 六段状态          : pending（0/0 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
+AI 六段状态          : pending（0/8 只股票有内容，CSV 缺失列 6 个，来源 Scan 2026-09-23）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
-字段 null 统计       : 无 null
-缺失字段             : ['regime.market', 'regime.vix']
+字段 null 统计       : {'stop_loss': 5}
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
