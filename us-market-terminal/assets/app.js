@@ -68,6 +68,11 @@
 
   /* 普通数值 → 文本（null 显示 —） */
   function nv(v, d) { var n = num(v); return n === null ? NA : fmt(n, d == null ? 2 : d); }
+  // 期权 Wall 显示：无效/无有效 OI 时显式标 N/A，绝不显示捏造的默认数值（如 100.00）
+  function wallVal(v, unavailable, d) {
+    if (v === null || v === undefined) return unavailable ? 'N/A' : NA;
+    return fmt(num(v), d == null ? 2 : d);
+  }
   /* 技术类数值 → 文本（行情不可用时显示「暂无行情数据」） */
   function tnv(v, d) {
     var n = num(v);
@@ -597,7 +602,9 @@
     var trueOi = o.wall_is_true_oi === true;
     var wallBadge = trueOi
       ? '<span class="wb true">真实 OI Wall</span>'
-      : '<span class="wb false">Proxy / Invalid Wall</span>';
+      : ((o.call_wall_unavailable || o.put_wall_unavailable)
+          ? '<span class="wb false">N/A · 期权链无有效 OI</span>'
+          : '<span class="wb false">Proxy / Invalid Wall</span>');
 
     return '<div class="opt">' +
       '<div class="opt-h"><span class="opt-type">' + esc((o.ticker || NA) + ' · ' + strat) + '</span>' +
@@ -617,8 +624,8 @@
       '<div class="opt-wall">' +
       '<div class="wl">' + wallBadge +
       '<span class="wnote">wall_source: <b>' + esc(o.wall_source || NA) + '</b></span></div>' +
-      '<div class="wl"><span class="wnote">Call Wall <b>' + nv(o.call_wall, 2) + '</b> · Put Wall <b>' + nv(o.put_wall, 2) + '</b>' +
-      ' · OI <b>' + nv(o.call_wall_oi, 0) + ' / ' + nv(o.put_wall_oi, 0) + '</b></span></div>' +
+      '<div class="wl"><span class="wnote">Call Wall <b>' + wallVal(o.call_wall, o.call_wall_unavailable) + '</b> · Put Wall <b>' + wallVal(o.put_wall, o.put_wall_unavailable) + '</b>' +
+      ' · OI <b>' + wallVal(o.call_wall_oi, o.call_wall_unavailable, 0) + ' / ' + wallVal(o.put_wall_oi, o.put_wall_unavailable, 0) + '</b></span></div>' +
       (o.wall_note ? '<div class="wnote">' + esc(o.wall_note) + '</div>' : '') +
       '</div>' +
       '<div class="opt-wall">' +

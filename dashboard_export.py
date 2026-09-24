@@ -1417,6 +1417,8 @@ def build_options(option_rows, anomalies):
             "put_wall_source": put_src,
             "call_wall_oi": round_num(parse_num(row.get("CallWallOI")), 2),
             "put_wall_oi": round_num(parse_num(row.get("PutWallOI")), 2),
+            "call_wall_unavailable": False,
+            "put_wall_unavailable": False,
             "wall_is_true_oi": bool(call_true and put_true),
             "wall_note": " | ".join([x for x in (f"CALL: {call_note}", f"PUT: {put_note}") if x]),
         })
@@ -1424,7 +1426,12 @@ def build_options(option_rows, anomalies):
 
 
 def _max_oi_strike(df):
-    """返回 (strike, openInterest)：期权链中未平仓量最大的那一行；无数据返回 (None, None)。"""
+    """返回 (strike, openInterest)：期权链中未平仓量最大的那一行；无效/全 0 返回 (None, None)。
+
+    关键修复：OI 全为 0 或合计为 0 时，idxmax 会返回“第一行”从而给出任意 strike（如 100.0），
+    造成“Call Wall 100.00 / OI 0”的异常显示。此处显式判定 sum(OI) <= 0 视为无效，
+    绝不返回任何数值，交由上层标记为 N/A。
+    """
     if df is None or getattr(df, "empty", True):
         return None, None
     col = None
@@ -1438,10 +1445,43 @@ def _max_oi_strike(df):
     if d.empty:
         return None, None
     try:
+        oi_sum = float(d[col].sum())
+    except Exception:
+        return None, None
+    # 关键修复：OI 合计 <= 0（含全 0）一律视为无效数据，不返回任何 strike
+    if oi_sum <= 0:
+        return None, None
+    try:
         row = d.loc[d[col].idxmax()]
     except Exception:
         return None, None
     return parse_num(row.get("strike")), parse_num(row.get(col))
+
+
+def _fetch_option_chain(yf, symbol, expiry, tries=3, sleep_base=1.0):
+    """带重试地抓取期权链；任何失败都抛异常由上层捕获，绝不伪造。
+
+    - 请求到期日不在可用列表时，回退到“最近的可用的 >= 该日”的到期日，仍取不到则抛错。
+    - 网络/限流等瞬时错误重试最多 tries 次，指数退避。
+    """
+    last = None
+    for attempt in range(1, tries + 1):
+        try:
+            tk = yf.Ticker(symbol)
+            avail = list(getattr(tk, "options", None) or [])
+            use_expiry = expiry
+            if expiry and expiry not in avail:
+                cand = sorted([e for e in avail if e >= expiry]) if avail else []
+                use_expiry = cand[0] if cand else (avail[0] if avail else None)
+            if not use_expiry:
+                raise ValueError(f"无可用到期日（请求 {expiry or 'N/A'}）")
+            chain = tk.option_chain(use_expiry)
+            return chain, use_expiry
+        except Exception as e:  # noqa: BLE001 - yfinance 异常类型不可枚举，统一重试/上报
+            last = e
+            if attempt < tries:
+                time.sleep(sleep_base * attempt)
+    raise last or RuntimeError("期权链获取失败")
 
 
 def enrich_option_walls(options, provider, anomalies, notes=None):
@@ -1473,15 +1513,7 @@ def enrich_option_walls(options, provider, anomalies, notes=None):
         symbol = o.get("ticker")
         expiry = o.get("expiry")
         try:
-            tk = yf.Ticker(symbol)
-            if expiry:
-                chain = tk.option_chain(expiry)
-            else:
-                expiries = list(getattr(tk, "options", None) or [])
-                if not expiries:
-                    raise ValueError("该标的无可用到期日")
-                expiry = expiries[0]
-                chain = tk.option_chain(expiry)
+            chain, used_expiry = _fetch_option_chain(yf, symbol, expiry, tries=3)
         except Exception as e:
             anomalies.append(
                 f"{symbol}: 期权链获取失败（{type(e).__name__}: {e}），保留原 Wall 标记，不伪造数值")
@@ -1495,33 +1527,43 @@ def enrich_option_walls(options, provider, anomalies, notes=None):
             put_strike, put_oi = _max_oi_strike(getattr(chain, "puts", None))
 
         changed = False
-        if call_strike is not None:
-            o["call_wall"] = round_num(call_strike)
-            o["call_wall_oi"] = round_num(call_oi)
-            o["call_wall_source"] = "yfinance_option_chain_max_oi"
-            changed = True
-        if put_strike is not None:
-            o["put_wall"] = round_num(put_strike)
-            o["put_wall_oi"] = round_num(put_oi)
-            o["put_wall_source"] = "yfinance_option_chain_max_oi"
-            changed = True
+        parts = []
+        # ---- Call Wall：仅在拿到真实 OI 时赋值；否则显式标记 N/A，绝不给默认数值 ----
+        if need_call:
+            if call_strike is not None:
+                o["call_wall"] = round_num(call_strike)
+                o["call_wall_oi"] = round_num(call_oi)
+                o["call_wall_source"] = "yfinance_option_chain_max_oi"
+                parts.append(f"CALL: 真实期权链 OI 最大 strike={call_strike}（OI={call_oi}）")
+                changed = True
+            else:
+                o["call_wall"] = None
+                o["call_wall_oi"] = None
+                o["call_wall_unavailable"] = True
+                parts.append("CALL: 期权链无有效 OI（OI 全为 0 或为空），Call Wall = N/A，不伪造数值")
+        # ---- Put Wall：同上 ----
+        if need_put:
+            if put_strike is not None:
+                o["put_wall"] = round_num(put_strike)
+                o["put_wall_oi"] = round_num(put_oi)
+                o["put_wall_source"] = "yfinance_option_chain_max_oi"
+                parts.append(f"PUT: 真实期权链 OI 最大 strike={put_strike}（OI={put_oi}）")
+                changed = True
+            else:
+                o["put_wall"] = None
+                o["put_wall_oi"] = None
+                o["put_wall_unavailable"] = True
+                parts.append("PUT: 期权链无有效 OI（OI 全为 0 或为空），Put Wall = N/A，不伪造数值")
 
         if changed:
             o["wall_source"] = "yfinance_option_chain_max_oi"
             o["wall_is_true_oi"] = bool(
                 str(o.get("call_wall_source") or "").endswith("max_oi")
                 and str(o.get("put_wall_source") or "").endswith("max_oi"))
-            o["wall_expiry_used"] = expiry
-            parts = []
-            if call_strike is not None:
-                parts.append(f"CALL: 真实期权链 OI 最大 strike={call_strike}（OI={call_oi}）")
-            else:
-                parts.append("CALL: 期权链无可用 OI，保持原状态")
-            if put_strike is not None:
-                parts.append(f"PUT: 真实期权链 OI 最大 strike={put_strike}（OI={put_oi}）")
-            else:
-                parts.append("PUT: 期权链无可用 OI，保持原状态")
+            o["wall_expiry_used"] = used_expiry
+        if parts:
             o["wall_note"] = " | ".join(parts)
+        if changed or parts:
             fixed.append(symbol)
 
     if notes is not None:
