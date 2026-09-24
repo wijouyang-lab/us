@@ -125,7 +125,7 @@ MARKET_ASSETS = [
     ("VIX",      "^VIX",     None,       "volatility", "index point",   None),
     ("US10Y",    "^TNX",     None,       "rate",       "percent yield", "US10Y"),
     ("US2Y",     "2YY=F",    None,       "rate",       "percent yield", "US2Y"),
-    ("US5Y",     "^FVX",     None,       "rate",       "percent yield", None),
+    ("US5Y",     "^FVX",     None,       "rate",       "percent yield", "US5Y"),
     ("US30Y",    "^TYX",     None,       "rate",       "percent yield", "US30Y"),
     ("DXY",      "DX-Y.NYB", None,       "fx",         "index point",   None),
     ("Gold",     "XAUUSD=X", "GC=F",     "commodity",  "usd/oz",        None),
