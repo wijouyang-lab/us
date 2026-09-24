@@ -97,8 +97,12 @@ jobs:
                   print(f"::error::缺少顶层字段 {k}")
                   sys.exit(1)
           if not d["stocks"]:
-              print("::error::stocks 为空")
-              sys.exit(1)
+              # 盘后复盘消费掉 pending CSV 后，stocks 为空属预期状态，不应判失败
+              pending = (d.get("meta") or {}).get("pending_csv")
+              if pending:
+                  print(f"::error::stocks 为空，但 pending_csv={pending}")
+                  sys.exit(1)
+              print("::warning::本次无 pending CSV（盘后已消费或尚未扫描），stocks 为空数组，属预期状态")
           c = d["meta"].get("counts", {})
           print(f"[validate] stocks={len(d['stocks'])} "
                 f"market={c.get('market_available')}/{c.get('market_total')} "

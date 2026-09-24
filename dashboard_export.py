@@ -1624,22 +1624,36 @@ def main(argv=None):
     log("=" * 62)
     log(f"数据目录：{data_dir}")
 
+    # ---- 采集容器（提前初始化，输入文件阶段的降级提示也要记录）----
+    anomalies = []
+    notes = []
+    missing = []
+    warnings = []
+
     # ---- 输入文件 ----
     pending_path = find_latest_pending(data_dir)
     if pending_path is None:
-        raise SystemExit(
-            f"[ERROR] 在 {data_dir} 下未找到任何 us_stocks_pending_YYYYMMDD.csv。\n"
-            f"        请确认 --data-dir 是否指向包含 scan.py 产物的仓库目录。"
+        # 24 小时全天候调度：盘后复盘流程会消费掉当日 pending CSV，
+        # 此时不能让整个导出失败 —— Core / Observation 输出空数组，
+        # 全球市场行情 / 期权 / Review 照常刷新（不伪造、不补写）。
+        log("[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv"
+            "（通常是盘后复盘已消费当日文件，或当日尚未扫描）。")
+        log("       stocks 输出空数组；market / options / review 照常导出。")
+        notes.append(
+            "本次运行未找到 pending CSV（盘后复盘消费掉当日文件后属正常现象），"
+            "Core / Observation 为空数组；全球市场与期权数据照常刷新。"
         )
+        pending_rows = []
+    else:
+        log(f"pending CSV：{pending_path.name}")
+        pending_rows = read_csv_rows(pending_path)
+
     trade_path = require_file(data_dir / TRADE_HISTORY_NAME, "推荐事件账本")
     option_path = data_dir / OPTION_CSV_NAME
     params_path = data_dir / PARAMS_NAME
     review_hist_path = data_dir / REVIEW_HISTORY_NAME
     version_path = data_dir / VERSION_NAME
 
-    log(f"pending CSV：{pending_path.name}")
-
-    pending_rows = read_csv_rows(pending_path)
     trade_rows = read_csv_rows(trade_path)
     option_rows = read_csv_rows(option_path) if option_path.exists() else None
     review_rows = read_csv_rows(review_hist_path) if review_hist_path.exists() else []
@@ -1671,11 +1685,6 @@ def main(argv=None):
     else:
         log(f"[WARN] 行情不可用：{provider.network_error or '未知原因'}。"
             f"K线/技术指标与全球市场行情将输出 null（不伪造、不硬编码）。")
-
-    anomalies = []
-    notes = []
-    missing = []
-    warnings = []
 
     # ---- STOCKS ----
     stocks, kstats = build_stocks(pending_rows, provider, args.kline_bars, anomalies, warnings)
@@ -1766,7 +1775,8 @@ def main(argv=None):
         "history": history,
         "meta": {
             "data_source": (
-                f"{pending_path.name} + {TRADE_HISTORY_NAME} + {OPTION_CSV_NAME}"
+                f"{(pending_path.name + ' + ') if pending_path else ''}"
+                f"{TRADE_HISTORY_NAME} + {OPTION_CSV_NAME}"
                 + (f" + {REVIEW_HISTORY_NAME}" if review_rows else "")
             ),
             "ai_generated_at": (ai_scan_date if ai_status in ("partial", "complete") else None),
@@ -1777,7 +1787,7 @@ def main(argv=None):
             "ai_backfilled": sorted(set(ai_backfilled)),
             "ai_backfilled_count": len(set(ai_backfilled)),
             "ai_calls": 0,
-            "pending_csv": pending_path.name,
+            "pending_csv": (pending_path.name if pending_path else None),
             "pending_scan_date": (clean_text(pending_rows[0].get("Date")) if pending_rows else None),
             "quote_provider": provider.name,
             "quote_backends": provider.backends,
@@ -1843,7 +1853,7 @@ def main(argv=None):
 
     # ---- 日志 ----
     log("-" * 62)
-    log(f"pending CSV          : {pending_path.name}")
+    log(f"pending CSV          : {pending_path.name if pending_path else '（无，stocks 为空数组）'}")
     log(f"Core 数量            : {core_count}")
     log(f"Observation 数量     : {obs_count}")
     log(f"Options 数量         : {len(options)}（Active {active_options}）")
