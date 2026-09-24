@@ -97,12 +97,13 @@ jobs:
                   print(f"::error::缺少顶层字段 {k}")
                   sys.exit(1)
           if not d["stocks"]:
-              # 盘后复盘消费掉 pending CSV 后，stocks 为空属预期状态，不应判失败
+              # 无 pending CSV 时会复用上一版 dashboard_data.json 的名单；两者都没有才为空
               pending = (d.get("meta") or {}).get("pending_csv")
+              src = (d.get("meta") or {}).get("stocks_source")
               if pending:
                   print(f"::error::stocks 为空，但 pending_csv={pending}")
                   sys.exit(1)
-              print("::warning::本次无 pending CSV（盘后已消费或尚未扫描），stocks 为空数组，属预期状态")
+              print(f"::warning::stocks 为空数组（pending CSV 与上一版 JSON 均不可用，stocks_source={src}），属预期状态")
           c = d["meta"].get("counts", {})
           print(f"[validate] stocks={len(d['stocks'])} "
                 f"market={c.get('market_available')}/{c.get('market_total')} "

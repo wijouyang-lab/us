@@ -757,6 +757,70 @@ def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
     return backfilled
 
 
+def load_fallback_stock_rows(data_dir):
+    """无 pending CSV 时，从仓库已有的 dashboard_data.json 复原 Core / Observation 名单。
+
+    把上一版导出 JSON 的 stocks[] 反向映射成 pending CSV 形态的 dict，供
+    build_stocks 原样消费——分数 / 止损 / 基本面 / AI 文本全部原样保留，
+    行情（价格 / K线 / 技术指标）仍由 build_stocks 重新抓取刷新。
+
+    返回 (rows, source_path)；找不到文件或列表为空返回 ([], None)。
+    """
+    path = Path(data_dir) / "dashboard" / "data" / "dashboard_data.json"
+    if not path.exists():
+        return [], None
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except Exception:
+        return [], None
+    stocks = data.get("stocks") or []
+
+    rows = []
+    for s in stocks:
+        ticker = clean_text(s.get("ticker")).upper()
+        if not ticker:
+            continue
+        ai = s.get("ai") or {}
+        row = {
+            "Ticker": ticker,
+            "Name": s.get("name") or ticker,
+            "Tag": s.get("tag_raw") or (
+                "Core_Dragon" if s.get("bucket") == "Core" else "Observation"),
+            "Prev_Close": s.get("prev_close") or "",
+            "Price": s.get("price") or "",
+            "Scan_Ref_Price": s.get("pending_price") or "",
+            "RSI": s.get("rsi") or "", "ATR_Pct": s.get("atr_pct") or "",
+            "Stop_Loss": s.get("stop_loss") or "",
+            "Stop_Method": s.get("stop_method") or "",
+            "Final_Score": s.get("final_score") or "",
+            "Quant_Score": s.get("quant_score") or "",
+            "AI_Score": s.get("ai_score") or "",
+            "Fundamental_Score": s.get("fundamental_score") or "",
+            "Technical_Score_25": s.get("technical_score") or "",
+            "Risk_Liquidity_Score": s.get("risk_liquidity_score") or "",
+            "PE_TTM": s.get("pe_ttm") or "", "PE_Forward": s.get("pe_forward") or "",
+            "PB": s.get("pb") or "", "EPS_TTM": s.get("eps_ttm") or "",
+            "ROE": s.get("roe") or "", "Revenue_Growth": s.get("revenue_growth") or "",
+            "Earnings_Growth": s.get("earnings_growth") or "",
+            "Profit_Margin": s.get("profit_margin") or "",
+            "Market_Cap": s.get("market_cap") or "",
+            "Market_Regime": s.get("market_regime") or "", "VIX": s.get("vix") or "",
+            "Status": s.get("status") or "",
+            "Technical_Date": s.get("technical_date") or "",
+            "Date": s.get("scan_date") or "",
+            "Avg_Dollar_Volume_20D": s.get("avg_dollar_volume_20d") or "",
+            "Sector_RS_20D_Pct": s.get("sector_rs_20d_pct") or "",
+            "Bias": s.get("bias") or "", "Event_Score": s.get("event_score") or "",
+            "技术确认数": s.get("technical_confirmations") or "",
+            "技术确认信号": s.get("technical_confirmation_signals") or "",
+        }
+        for csv_col, json_key in AI_FIELD_MAP:
+            if ai.get(json_key):
+                row[csv_col] = ai[json_key]
+        rows.append(row)
+    return rows, path
+
+
 def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
     stocks = []
     kline_ok, kline_fail = 0, 0
@@ -1632,21 +1696,35 @@ def main(argv=None):
 
     # ---- 输入文件 ----
     pending_path = find_latest_pending(data_dir)
+    stocks_source = None
     if pending_path is None:
-        # 24 小时全天候调度：盘后复盘流程会消费掉当日 pending CSV，
-        # 此时不能让整个导出失败 —— Core / Observation 输出空数组，
-        # 全球市场行情 / 期权 / Review 照常刷新（不伪造、不补写）。
+        # 盘后复盘流程会消费掉当日 pending CSV。此时绝不能把持仓清空：
+        # 先复用上一版 dashboard_data.json 的 Core / Observation 名单，
+        # 行情 / K线 / 技术指标照常重新抓取刷新。
         log("[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv"
             "（通常是盘后复盘已消费当日文件，或当日尚未扫描）。")
-        log("       stocks 输出空数组；market / options / review 照常导出。")
-        notes.append(
-            "本次运行未找到 pending CSV（盘后复盘消费掉当日文件后属正常现象），"
-            "Core / Observation 为空数组；全球市场与期权数据照常刷新。"
-        )
-        pending_rows = []
+        fallback_rows, fallback_src = load_fallback_stock_rows(data_dir)
+        if fallback_rows:
+            log(f"       已复用上一版 dashboard_data.json 的股票名单：{len(fallback_rows)} 只，"
+                f"行情 / 技术指标照常刷新。")
+            notes.append(
+                "未找到新的 pending CSV，已复用上一版 dashboard_data.json 中的 "
+                f"Core/Observation 名单（{len(fallback_rows)} 只）并刷新行情与技术指标；"
+                "名单未发生清空。"
+            )
+            pending_rows = fallback_rows
+            stocks_source = "existing_dashboard_json"
+        else:
+            log("       上一版 dashboard_data.json 也不存在或无股票，stocks 输出空数组。")
+            notes.append(
+                "未找到新的 pending CSV，且上一版 dashboard_data.json 不可用，"
+                "Core / Observation 为空数组；全球市场与期权数据照常刷新。"
+            )
+            pending_rows = []
     else:
         log(f"pending CSV：{pending_path.name}")
         pending_rows = read_csv_rows(pending_path)
+        stocks_source = "scan_pending_csv"
 
     trade_path = require_file(data_dir / TRADE_HISTORY_NAME, "推荐事件账本")
     option_path = data_dir / OPTION_CSV_NAME
@@ -1788,6 +1866,7 @@ def main(argv=None):
             "ai_backfilled_count": len(set(ai_backfilled)),
             "ai_calls": 0,
             "pending_csv": (pending_path.name if pending_path else None),
+            "stocks_source": stocks_source,
             "pending_scan_date": (clean_text(pending_rows[0].get("Date")) if pending_rows else None),
             "quote_provider": provider.name,
             "quote_backends": provider.backends,
@@ -1853,7 +1932,7 @@ def main(argv=None):
 
     # ---- 日志 ----
     log("-" * 62)
-    log(f"pending CSV          : {pending_path.name if pending_path else '（无，stocks 为空数组）'}")
+    log(f"pending CSV          : {pending_path.name if pending_path else '（无）'}   股票名单来源：{stocks_source}")
     log(f"Core 数量            : {core_count}")
     log(f"Observation 数量     : {obs_count}")
     log(f"Options 数量         : {len(options)}（Active {active_options}）")
