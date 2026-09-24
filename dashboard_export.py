@@ -118,6 +118,7 @@ MARKET_ASSETS = [
     ("VIX", "^VIX", "volatility", "index point"),
     ("US10Y", "^TNX", "rate", "percent yield"),
     ("US5Y", "^FVX", "rate", "percent yield"),
+    ("US30Y", "^TYX", "rate", "percent yield"),
     ("DXY", "DX-Y.NYB", "fx", "index point"),
     ("Gold", "GC=F", "commodity", "usd/oz"),
     ("Silver", "SI=F", "commodity", "usd/oz"),
@@ -356,7 +357,7 @@ def calc_rsi_wilder(closes, length=14):
 # 备用源（Stooq）符号映射；只有前序源都失败时才用到，来源会如实写入 JSON
 STOOQ_SYMBOL_MAP = {
     "^GSPC": "^spx", "^IXIC": "^ndq", "^DJI": "^dji", "^VIX": "^vix",
-    "^TNX": "10usy.b", "^FVX": "5usy.b", "DX-Y.NYB": "usdidx",
+    "^TNX": "10usy.b", "^FVX": "5usy.b", "^TYX": "30usy.b", "DX-Y.NYB": "usdidx",
     "GC=F": "gc.f", "SI=F": "si.f", "HG=F": "hg.f",
     "CL=F": "cl.f", "BZ=F": "bz.f", "NG=F": "ng.f",
 }

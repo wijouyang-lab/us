@@ -357,7 +357,7 @@
   }
 
   /* ---------------- 1. Global Market 状态栏 ---------------- */
-  var TOP_KEYS = ['S&P 500', 'Nasdaq', 'VIX', 'US10Y', 'DXY', 'Gold', 'WTI'];
+  var TOP_KEYS = ['S&P 500', 'Nasdaq', 'Dow Jones', 'VIX', 'US10Y', 'DXY', 'Gold', 'WTI'];
   function assetByName(name) {
     var list = MARKET.assets || [], i;
     for (i = 0; i < list.length; i++) if (list[i].name === name) return list[i];
