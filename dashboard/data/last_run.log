@@ -6,14 +6,14 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
        已复用上一版 dashboard_data.json 的股票名单：8 只，行情 / 技术指标照常刷新。
        兜底模式下全球市场（商品/外汇/股指等）同样强制实时抓取，绝不复用旧 JSON 的宏观缓存。
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
-全球市场：13/13 可用，其中实时报价 13 只（其余回退最近日收盘，绝不使用旧 JSON 缓存）
+全球市场：14/14 可用，其中实时报价 14 只（其余回退最近日收盘，绝不使用旧 JSON 缓存）
 $EDGM: possibly delisted; no price data found  (period=1d)
 --------------------------------------------------------------
 pending CSV          : （无）   股票名单来源：existing_dashboard_json
 Core 数量            : 3
 Observation 数量     : 5
 Options 数量         : 1（Active 1）
-Market 数据数量      : 13/13 可用（来源 ['yfinance']）
+Market 数据数量      : 14/14 可用（来源 ['yfinance']）
 K线成功 / 失败       : 8 / 0   技术指标成功 8/8
 当前价来源           : 实时 0 · 最新收盘 8 · 合计可取 8/8
 Review 数据状态      :
