@@ -14,6 +14,13 @@
   'use strict';
 
   var DATA_URL = 'dashboard/data/dashboard_data.json';
+
+  // iOS Safari / WKWebView 会忽略 cache:'no-store' 并沿用磁盘缓存，
+  // 导致手机端一直显示旧数据。请求时追加一次性时间戳参数强制绕过缓存。
+  function dataUrl() {
+    return DATA_URL + (DATA_URL.indexOf('?') >= 0 ? '&' : '?') + 't=' + Date.now();
+  }
+
   var NA = '—';
   var TECH_NA = '暂无行情数据';
   var MARKET_NA = '暂无行情';
@@ -248,7 +255,7 @@
         '然后访问 <code>http://127.0.0.1:8000/</code>。');
       return;
     }
-    window.fetch(DATA_URL, { cache: 'no-store' })
+    window.fetch(dataUrl(), { cache: 'no-store' })
       .then(function (res) {
         if (!res.ok) {
           var e1 = new Error('HTTP ' + res.status + ' ' + res.statusText);

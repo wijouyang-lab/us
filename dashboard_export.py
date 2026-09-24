@@ -87,6 +87,14 @@ AI_FIELD_MAP = [
     ("AI_invalidation", "invalidation"),
 ]
 
+# AI 六段历史回填：从这些历史 CSV 中按 Ticker 检索同名股票此前已生成的 AI 文本。
+# 只做检索 + 复制，绝不生成、改写或补写任何文案；检索不到就保持空字符串。
+AI_HISTORY_PATTERNS = (
+    "us_stocks_pending_*.csv",
+    "scan_results*.csv",
+    "scan_result*.csv",
+)
+
 # 单位提示（只做说明，不改数值）
 UNIT_HINT = {
     "roe": "ratio (0.177 = 17.7%)",
@@ -476,20 +484,47 @@ class QuoteProvider:
 
     def _quote_yahoo(self, symbol):
         url = ("https://query1.finance.yahoo.com/v8/finance/chart/"
-               f"{urllib.parse.quote(symbol)}?range=1d&interval=1d&includePrePost=false")
+               f"{urllib.parse.quote(symbol)}?range=1d&interval=1d&includePrePost=true")
         req = urllib.request.Request(url, headers=UA)
         with urllib.request.urlopen(req, timeout=self.timeout) as r:
             payload = json.load(r)
         meta = payload["chart"]["result"][0]["meta"]
         price = parse_num(meta.get("regularMarketPrice"))
+        # 盘前 / 盘后：常规时段价缺失或市场未开时，用 pre/postMarketPrice
+        if price is None:
+            price = parse_num(meta.get("postMarketPrice"))
+        if price is None:
+            price = parse_num(meta.get("preMarketPrice"))
         if price is None:
             return None
-        return {"price": float(price), "ts": meta.get("regularMarketTime")}
+        ts = meta.get("regularMarketTime") or meta.get("postMarketTime") or meta.get("preMarketTime")
+        return {"price": float(price), "ts": ts}
 
     def _quote_yf(self, symbol):
         if self._yf is None:
             return None
         t = self._yf.Ticker(symbol)
+
+        # prepost=True：1m 粒度会包含盘前 / 盘后（Extended Hours）成交，
+        # 这样美东 04:00-09:30 与 16:00-20:00 也能取到真实变动的价格。
+        # （日线 interval="1d" 情况下 Yahoo 会忽略 prepost，故这里必须用 1m。）
+        try:
+            h = t.history(period="1d", interval="1m",
+                          prepost=True, auto_adjust=False)
+            if h is not None and not h.empty:
+                price = parse_num(h["Close"].iloc[-1])
+                ts_epoch = None
+                try:
+                    ts_epoch = int(h.index[-1].timestamp())
+                except Exception:
+                    ts_epoch = None
+                if price is not None:
+                    return {"price": float(price), "ts": ts_epoch, "prepost": True}
+        except Exception as e:
+            self._note(symbol + "#quote", "yfinance",
+                       f"prepost 1m 报价失败：{type(e).__name__}: {e}")
+
+        # 回退：fast_info（无时间戳，仅常规时段）
         price = parse_num(getattr(t.fast_info, "last_price", None))
         if price is None:
             price = parse_num(getattr(t.fast_info, "previous_close", None))
@@ -503,6 +538,7 @@ class QuoteProvider:
         df = self._yf.download(
             symbol, period=period, interval="1d",
             progress=False, auto_adjust=False, threads=False,
+            prepost=True,   # 仅对 intraday 生效；1d 日线下 Yahoo 会忽略此参数
         )
         if df is None or df.empty:
             return []
@@ -637,6 +673,88 @@ def require_file(path: Path, what: str) -> Path:
 # ============================================================
 
 BUCKET_MAP = {"Core_Dragon": "Core", "Observation": "Observation"}
+
+
+def load_ai_history(data_dir, skip_paths=()):
+    """扫描 data_dir 下的历史 pending / scan_results CSV，建立 Ticker -> AI 六段 的索引。
+
+    - 只收录 AI_HISTORY_PATTERNS 命中的文件，按名称倒序（新日期优先）
+    - 已存在内容的字段不覆盖
+    - 返回 {TICKER: {json_key: text}}；没有任何可用历史时返回 {}
+    """
+    files = []
+    for pat in AI_HISTORY_PATTERNS:
+        files.extend(glob.glob(os.path.join(str(data_dir), pat)))
+    skip = {os.path.abspath(str(p)) for p in skip_paths}
+    files = sorted({os.path.abspath(f) for f in files} - skip, reverse=True)
+
+    index = {}
+    for path in files:
+        try:
+            rows = read_csv_rows(Path(path))
+        except Exception:
+            continue
+        for row in rows:
+            ticker = clean_text(row.get("Ticker")).upper()
+            if not ticker:
+                continue
+            entry = index.setdefault(ticker, {})
+            for csv_col, json_key in AI_FIELD_MAP:
+                if csv_col not in row:
+                    continue
+                text = clean_text(row.get(csv_col))
+                if text and not entry.get(json_key):
+                    entry[json_key] = text
+    return index
+
+
+def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
+    """Core / Observation 股票的 AI 六段若为空，用历史 CSV 中同名 Ticker 的文本回填。
+
+    硬性约束：本函数**不生成、不改写、不补写任何文案**，只搬运历史已生成的真实文本。
+    回填来源记入 stock['ai_source']：
+      scan_pending_csv  本次 pending CSV 自带
+      history_backfill  本次为空、由历史 CSV 回填
+      none              本次与历史都没有（前端显示 pending 是正确的）
+    """
+    skip = [str(current_pending)] if current_pending else []
+    try:
+        history = load_ai_history(data_dir, skip_paths=skip)
+    except Exception as e:
+        history = {}
+        if notes is not None:
+            notes.append(f"AI 历史索引构建失败：{type(e).__name__}: {e}")
+
+    backfilled = []
+    for s in stocks:
+        ai = s.get("ai") or {}
+        if all(ai.get(k) for _c, k in AI_FIELD_MAP):
+            s["ai_source"] = "scan_pending_csv"
+            continue
+        src = history.get(s.get("ticker"))
+        changed = False
+        if src:
+            for _csv_col, key in AI_FIELD_MAP:
+                if not ai.get(key) and src.get(key):
+                    ai[key] = src[key]
+                    changed = True
+        s["ai"] = ai
+        if changed:
+            s["ai_source"] = "history_backfill"
+            backfilled.append(s["ticker"])
+        elif any(ai.get(k) for _c, k in AI_FIELD_MAP):
+            s["ai_source"] = "scan_pending_csv"
+        else:
+            s["ai_source"] = "none"
+
+    if notes is not None:
+        if history:
+            notes.append(f"AI 历史回填索引：命中 {len(history)} 个 Ticker 的历史 AI 文本")
+        if backfilled:
+            notes.append("AI 六段由历史 CSV 回填：" + "、".join(sorted(set(backfilled))))
+        elif stocks:
+            notes.append("AI 六段无历史文本可回填（历史 CSV 中未找到同名 Ticker 的 AI 文本）。")
+    return backfilled
 
 
 def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
@@ -1031,6 +1149,115 @@ def build_options(option_rows, anomalies):
             "wall_note": " | ".join([x for x in (f"CALL: {call_note}", f"PUT: {put_note}") if x]),
         })
     return out
+
+
+def _max_oi_strike(df):
+    """返回 (strike, openInterest)：期权链中未平仓量最大的那一行；无数据返回 (None, None)。"""
+    if df is None or getattr(df, "empty", True):
+        return None, None
+    col = None
+    for c in ("openInterest", "open_interest", "OI"):
+        if c in df.columns:
+            col = c
+            break
+    if col is None or "strike" not in df.columns:
+        return None, None
+    d = df[["strike", col]].dropna()
+    if d.empty:
+        return None, None
+    try:
+        row = d.loc[d[col].idxmax()]
+    except Exception:
+        return None, None
+    return parse_num(row.get("strike")), parse_num(row.get(col))
+
+
+def enrich_option_walls(options, provider, anomalies, notes=None):
+    """用 yfinance 真实期权链补齐缺失 / LEGACY_INVALID_WALL 的 Call Wall / Put Wall。
+
+    口径（严格按 Open Interest，不用成交量代理）：
+      Call Wall = 该到期日 Call 链中 openInterest 最大的 strike
+      Put  Wall = 该到期日 Put  链中 openInterest 最大的 strike
+
+    只处理 wall 为空或来源标记含 INVALID 的条目；已有真实 OI 的不动。
+    取不到期权链时保留原标记并记入 anomalies，**绝不伪造数值**。
+    """
+    yf = getattr(provider, "_yf", None)
+    if yf is None:
+        if notes is not None:
+            notes.append("yfinance 不可用，跳过期权 Wall 计算，保留源数据原标记（不伪造）。")
+        return []
+
+    def _needs(o, key, src_key):
+        return o.get(key) is None or "INVALID" in ((o.get(src_key) or "").upper())
+
+    fixed = []
+    for o in options:
+        need_call = _needs(o, "call_wall", "call_wall_source")
+        need_put = _needs(o, "put_wall", "put_wall_source")
+        if not (need_call or need_put):
+            continue
+
+        symbol = o.get("ticker")
+        expiry = o.get("expiry")
+        try:
+            tk = yf.Ticker(symbol)
+            if expiry:
+                chain = tk.option_chain(expiry)
+            else:
+                expiries = list(getattr(tk, "options", None) or [])
+                if not expiries:
+                    raise ValueError("该标的无可用到期日")
+                expiry = expiries[0]
+                chain = tk.option_chain(expiry)
+        except Exception as e:
+            anomalies.append(
+                f"{symbol}: 期权链获取失败（{type(e).__name__}: {e}），保留原 Wall 标记，不伪造数值")
+            continue
+
+        call_strike, call_oi = (None, None)
+        put_strike, put_oi = (None, None)
+        if need_call:
+            call_strike, call_oi = _max_oi_strike(getattr(chain, "calls", None))
+        if need_put:
+            put_strike, put_oi = _max_oi_strike(getattr(chain, "puts", None))
+
+        changed = False
+        if call_strike is not None:
+            o["call_wall"] = round_num(call_strike)
+            o["call_wall_oi"] = round_num(call_oi)
+            o["call_wall_source"] = "yfinance_option_chain_max_oi"
+            changed = True
+        if put_strike is not None:
+            o["put_wall"] = round_num(put_strike)
+            o["put_wall_oi"] = round_num(put_oi)
+            o["put_wall_source"] = "yfinance_option_chain_max_oi"
+            changed = True
+
+        if changed:
+            o["wall_source"] = "yfinance_option_chain_max_oi"
+            o["wall_is_true_oi"] = bool(
+                str(o.get("call_wall_source") or "").endswith("max_oi")
+                and str(o.get("put_wall_source") or "").endswith("max_oi"))
+            o["wall_expiry_used"] = expiry
+            parts = []
+            if call_strike is not None:
+                parts.append(f"CALL: 真实期权链 OI 最大 strike={call_strike}（OI={call_oi}）")
+            else:
+                parts.append("CALL: 期权链无可用 OI，保持原状态")
+            if put_strike is not None:
+                parts.append(f"PUT: 真实期权链 OI 最大 strike={put_strike}（OI={put_oi}）")
+            else:
+                parts.append("PUT: 期权链无可用 OI，保持原状态")
+            o["wall_note"] = " | ".join(parts)
+            fixed.append(symbol)
+
+    if notes is not None:
+        if fixed:
+            notes.append("期权 Wall 已按真实期权链 OI 重算：" + "、".join(sorted(set(fixed))))
+        else:
+            notes.append("期权 Wall 本次未重算（无缺失项或期权链不可用）。")
+    return fixed
 
 
 # ============================================================
@@ -1458,16 +1685,19 @@ def main(argv=None):
     core_count = sum(1 for s in stocks if s["bucket"] == "Core")
     obs_count = sum(1 for s in stocks if s["bucket"] == "Observation")
 
+    # ---- AI 六段：本次为空时，从历史 pending / scan_results CSV 回填同名 Ticker 文本 ----
+    # 只搬运历史已生成的真实文本；本脚本不调用任何 AI 接口、不生成文案。
+    ai_backfilled = backfill_ai_fields(
+        stocks, data_dir, current_pending=pending_path, notes=notes)
+
     # ---- AI 六段状态（只统计，不生成内容）----
     first_row = pending_rows[0] if pending_rows else {}
     ai_cols_present = [c for c, _ in AI_FIELD_MAP if c in first_row]
     ai_cols_missing = [c for c, _ in AI_FIELD_MAP if c not in first_row]
     ai_filled = sum(1 for s in stocks if any((s.get("ai") or {}).values()))
     ai_scan_date = clean_text(first_row.get("Date")) or None
-    if not ai_cols_present:
-        ai_status = "pending"          # CSV 完全没有这 6 列（旧文件）
-    elif ai_filled == 0:
-        ai_status = "pending"          # 有列但本次 Scan 没产出内容
+    if ai_filled == 0:
+        ai_status = "pending"          # 本次与历史都没有可用的 AI 文本
     elif ai_filled < len(stocks):
         ai_status = "partial"
     else:
@@ -1501,6 +1731,8 @@ def main(argv=None):
 
     # ---- OPTIONS ----
     options = build_options(option_rows, anomalies)
+    # Wall 为空或标记为 LEGACY_INVALID_WALL 时，用 yfinance 真实期权链 OI 重算
+    wall_fixed = enrich_option_walls(options, provider, anomalies, notes)
     active_options = sum(1 for o in options if (o.get("status") or "").lower() == "active")
 
     # ---- REVIEW ----
@@ -1542,6 +1774,9 @@ def main(argv=None):
             "ai_stocks_filled": ai_filled,
             "ai_fields_present": ai_cols_present,
             "ai_fields_pending": ai_cols_missing,
+            "ai_backfilled": sorted(set(ai_backfilled)),
+            "ai_backfilled_count": len(set(ai_backfilled)),
+            "ai_calls": 0,
             "pending_csv": pending_path.name,
             "pending_scan_date": (clean_text(pending_rows[0].get("Date")) if pending_rows else None),
             "quote_provider": provider.name,
@@ -1564,6 +1799,8 @@ def main(argv=None):
                 "price_live": price_live,
                 "price_realtime": kstats["price_realtime"],
                 "price_last_close": kstats["price_last_close"],
+                "wall_recomputed": len(set(wall_fixed)),
+                "wall_true_oi": sum(1 for o in options if o.get("wall_is_true_oi")),
             },
             "warnings": warnings,
             "unit_hints": UNIT_HINT,
@@ -1576,10 +1813,10 @@ def main(argv=None):
             "schema_hint": {
                 "stocks[]": "pending CSV 派生；technical 为 OHLCV 计算值；ohlcv 为完整日线（已剔除未完成 K 棒）",
                 "market.assets[]": "13 项全球市场资产；price/change_* 未取到时为 null",
-                "options[]": "option_strategies.csv 原样字段；wall_is_true_oi=false 表示非真实 OI",
+                "options[]": "option_strategies.csv 原样字段；Wall 缺失或 LEGACY_INVALID_WALL 时用 yfinance 期权链 OI 最大值重算（wall_source=yfinance_option_chain_max_oi）",
                 "review": "口径与 review.py 一致（近30天，closed 需 CLOSED_STOCK_STATUSES 且有 pnl）",
                 "history[]": "review_history.csv 每日快照的仍在跟踪事件数",
-                "stocks[].ai": "透传 pending CSV 中 Scan 已生成的 AI 六段文本；空字符串表示本次 Scan 未产出，前端显示 AI analysis pending",
+                "stocks[].ai": "pending CSV 中 Scan 已生成的 AI 六段文本；本次为空时会从历史 pending/scan_results CSV 按 Ticker 回填（ai_source=history_backfill）。空字符串表示本次与历史都没有，前端显示 AI analysis pending",
             },
         },
     }
@@ -1588,7 +1825,8 @@ def main(argv=None):
         notes.append(
             "AI 六段：pending CSV "
             + ("尚无这 6 列（旧版文件，未破坏）" if not ai_cols_present else "本次 Scan 未产出内容")
-            + "，前端显示 AI analysis pending；本脚本未调用任何 AI 接口，也未生成替代文案。"
+            + "，且历史 pending / scan_results CSV 中未检索到同名 Ticker 的历史文本，"
+            + "前端显示 AI analysis pending；本脚本未调用任何 AI 接口，也未生成替代文案。"
         )
 
     # ---- 写出 ----
