@@ -3,11 +3,11 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
 [WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。
-       stocks 输出空数组；market / options / review 照常导出。
+       上一版 dashboard_data.json 也不存在或无股票，stocks 输出空数组。
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $EDGM: possibly delisted; no price data found  (period=1d)
 --------------------------------------------------------------
-pending CSV          : （无，stocks 为空数组）
+pending CSV          : （无）   股票名单来源：None
 Core 数量            : 0
 Observation 数量     : 0
 Options 数量         : 1（Active 1）
