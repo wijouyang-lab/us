@@ -812,7 +812,24 @@
       });
       $('#aiCatalysts').innerHTML = '<li class="na">' + AI_PENDING + '</li>';
       $('#aiRisks').innerHTML = '<li class="na">' + AI_PENDING + '</li>';
+      if ($('#aiGrid')) $('#aiGrid').style.display = '';
+      if ($('#aiObsSummary')) $('#aiObsSummary').style.display = 'none';
+    } else if (s.bucket === 'obs') {
+      /* Observation 观察池：极简模式——隐藏六段网格，只保留一句话总结
+         （优先取盘前结论，其次产业链逻辑），不渲染其余字段 */
+      var oneLiner = ai.conclusion || ai.chain || ai.news || '';
+      $('#aiPendingNotice').innerHTML = '<div class="notice ok"><b>AI 分析已就绪</b> · ' +
+        '观察池极简模式 · 来源：Scan ' + esc(META.ai_generated_at || s.scanDate || NA) +
+        ' 已落盘文本 · 本页 0 次 GPT 调用</div>';
+      $('#aiGrid').style.display = 'none';
+      $('#aiObsSummary').style.display = '';
+      $('#aiObsSummary').innerHTML = oneLiner
+        ? esc(oneLiner)
+        : '<span class="na">' + AI_EMPTY + '</span>';
     } else {
+      /* Core：完整渲染六段 */
+      if ($('#aiObsSummary')) $('#aiObsSummary').style.display = 'none';
+      $('#aiGrid').style.display = '';
       $('#aiPendingNotice').innerHTML = '<div class="notice ok"><b>AI 分析已就绪</b> · ' +
         '来源：Scan ' + esc(META.ai_generated_at || s.scanDate || NA) + ' 已落盘的六段文本 · 本页 0 次 GPT 调用</div>';
       $('#aiChain').innerHTML = aiPara(ai.chain);
