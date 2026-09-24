@@ -4,7 +4,9 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 数据目录：/home/runner/work/us/us
 [WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。
        已复用上一版 dashboard_data.json 的股票名单：8 只，行情 / 技术指标照常刷新。
+       兜底模式下全球市场（商品/外汇/股指等）同样强制实时抓取，绝不复用旧 JSON 的宏观缓存。
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
+全球市场：13/13 可用，其中实时报价 13 只（其余回退最近日收盘，绝不使用旧 JSON 缓存）
 $EDGM: possibly delisted; no price data found  (period=1d)
 --------------------------------------------------------------
 pending CSV          : （无）   股票名单来源：existing_dashboard_json
