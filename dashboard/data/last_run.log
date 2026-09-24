@@ -6,7 +6,6 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
        已复用上一版 dashboard_data.json 的股票名单：8 只，行情 / 技术指标照常刷新。
        兜底模式下全球市场（商品/外汇/股指等）同样强制实时抓取，绝不复用旧 JSON 的宏观缓存。
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
-$DOC: possibly delisted; no price data found  (period=1d)
 $^DJI: possibly delisted; no price data found  (period=1d)
 $^GSPC: possibly delisted; no price data found  (period=1d)
 $^IXIC: possibly delisted; no price data found  (period=1d)
@@ -36,7 +35,7 @@ Observation 数量     : 5
 Options 数量         : 1（Active 1）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 8 / 0   技术指标成功 8/8
-当前价来源           : 实时 7 · 最新收盘 0 · 合计可取 8/8
+当前价来源           : 实时 8 · 最新收盘 0 · 合计可取 8/8
 Review 数据状态      :
    · core_closed_count            = 7  [complete]
    · core_open_count              = 6  [complete]
