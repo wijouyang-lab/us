@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-24T07:30:49Z",
-  "market_updated_at": "2026-09-24T07:30:46Z",
-  "technical_updated_at": "2026-09-24T07:30:49Z",
+  "generated_at": "2026-09-24T07:36:53Z",
+  "market_updated_at": "2026-09-24T07:36:51Z",
+  "technical_updated_at": "2026-09-24T07:36:53Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -12,7 +12,6 @@
     "available": 15,
     "total": 15,
     "source_used": [
-      "cnbc",
       "yfinance"
     ],
     "missing": []
