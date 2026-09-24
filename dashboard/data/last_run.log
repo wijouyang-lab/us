@@ -9,7 +9,10 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 $^DJI: possibly delisted; no price data found  (period=1d)
 $^GSPC: possibly delisted; no price data found  (period=1d)
 $^IXIC: possibly delisted; no price data found  (period=1d)
+$^TNX: possibly delisted; no price data found  (period=1d)
 $2YY=F: possibly delisted; no price data found  (period=1d)
+$^FVX: possibly delisted; no price data found  (period=1d)
+$^TYX: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
 
