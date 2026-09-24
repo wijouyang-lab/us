@@ -110,30 +110,29 @@ UNIT_HINT = {
     "price": "usd",
 }
 
-# 全球市场资产：(输出名, 主抓 symbol, 备用 symbol, 分组, 单位说明, CNBC 符号)
-# 口径设计（与东方财富 / Bloomberg 终端对齐）：
-# - 三大股指：主抓 CME E-mini 期货（ES/NQ/YM，~23h 连续交易），
-#   盘外时段也能反映真实波动；期货不可用时回退现货指数（^GSPC/^IXIC/^DJI）。
-# - 美债收益率：优先 CNBC 公开接口（Tradeweb 现货收益率，实时），
-#   失败回退 Yahoo 收益率指数（^TNX/^FVX/^TYX，2Y 用 CME 2YY=F 收益率期货）。
-# - 黄金 / 白银：主抓伦敦现货（XAUUSD=X / XAGUSD=X），与国内主流行情软件
-#   现货口径一致；现货不可用时回退 COMEX 期货（GC=F / SI=F）。
+# 全球市场资产：(输出名, 主抓 symbol, 备用 symbol, 分组, 单位, CNBC 符号, 仅常规时段)
+# 口径设计（与东方财富 / 同花顺 100% 对齐）：
+# - 三大股指：现货指数 ^DJI / ^GSPC / ^IXIC（点位与国内终端一致）。
+#   regular_hours_only=True —— 仅在美股常规时段（美东 09:30-16:00）实时更新，
+#   盘前/盘后/周末/节假日保持“上一常规交易日收盘”静态不变（price_kind=daily_close）。
+# - 美债收益率：优先 CNBC 现货接口（Tradeweb 实时，24h），失败回退 Yahoo 并手动重算涨跌幅。
+# - 大宗商品 / 外汇：24h 高频跳动（期货/现货连续合约），不受常规时段限制。
 MARKET_ASSETS = [
-    ("S&P 500",  "ES=F",     "^GSPC",    "index",      "index point",   None),
-    ("Nasdaq",   "NQ=F",     "^IXIC",    "index",      "index point",   None),
-    ("Dow Jones","YM=F",     "^DJI",     "index",      "index point",   None),
-    ("VIX",      "^VIX",     None,       "volatility", "index point",   None),
-    ("US10Y",    "^TNX",     None,       "rate",       "percent yield", "US10Y"),
-    ("US2Y",     "2YY=F",    None,       "rate",       "percent yield", "US2Y"),
-    ("US5Y",     "^FVX",     None,       "rate",       "percent yield", "US5Y"),
-    ("US30Y",    "^TYX",     None,       "rate",       "percent yield", "US30Y"),
-    ("DXY",      "DX-Y.NYB", None,       "fx",         "index point",   None),
-    ("Gold",     "XAUUSD=X", "GC=F",     "commodity",  "usd/oz",        None),
-    ("Silver",   "XAGUSD=X", "SI=F",     "commodity",  "usd/oz",        None),
-    ("Copper",   "HG=F",     None,       "commodity",  "usd/lb",        None),
-    ("WTI",      "CL=F",     None,       "energy",     "usd/bbl",       None),
-    ("Brent",    "BZ=F",     None,       "energy",     "usd/bbl",       None),
-    ("Natural Gas", "NG=F",  None,       "energy",     "usd/mmbtu",     None),
+    ("Dow Jones",  "^DJI",     None,    "index",      "index point",   None,    True),
+    ("S&P 500",    "^GSPC",    None,    "index",      "index point",   None,    True),
+    ("Nasdaq",     "^IXIC",    None,    "index",      "index point",   None,    True),
+    ("VIX",        "^VIX",     None,    "volatility", "index point",   None,    False),
+    ("US10Y",      "^TNX",     None,    "rate",       "percent yield", "US10Y", False),
+    ("US2Y",       "2YY=F",    None,    "rate",       "percent yield", "US2Y",  False),
+    ("US5Y",       "^FVX",     None,    "rate",       "percent yield", "US5Y",  False),
+    ("US30Y",      "^TYX",     None,    "rate",       "percent yield", "US30Y", False),
+    ("DXY",        "DX-Y.NYB", None,    "fx",         "index point",   None,    False),
+    ("Gold",       "XAUUSD=X", "GC=F",  "commodity",  "usd/oz",        None,    False),
+    ("Silver",     "XAGUSD=X", "SI=F",  "commodity",  "usd/oz",        None,    False),
+    ("Copper",     "HG=F",     None,    "commodity",  "usd/lb",        None,    False),
+    ("WTI",        "CL=F",     None,    "energy",     "usd/bbl",       None,    False),
+    ("Brent",      "BZ=F",     None,    "energy",     "usd/bbl",       None,    False),
+    ("Natural Gas","NG=F",     None,    "energy",     "usd/mmbtu",     None,    False),
 ]
 
 # review.py:2317 CLOSED_STOCK_STATUSES —— 原样复制，不改变口径
@@ -266,6 +265,19 @@ def last_completed_regular_date_us(asof=None) -> dt.date:
     return now.date()
 
 
+def us_regular_session_open(asof=None) -> bool:
+    """判断当前是否处于美股常规交易时段（美东周一~周五 09:30-16:00）。
+
+    用于股指：常规时段内实时更新；盘前/盘后/周末/节假日保持静态收盘价。
+    严格按美东本地时间判定（含夏令时），不依赖行情源返回的市场状态。
+    """
+    now = asof or now_us()
+    if now.weekday() >= 5:          # 周六/周日
+        return False
+    t = now.time()
+    return dt.time(9, 30) <= t < dt.time(16, 0)
+
+
 # ============================================================
 # 2. 技术指标（纯计算）
 #    来源：review.py:1151-1180 _calc_atr / _calc_macd / _calc_kdj
@@ -368,7 +380,6 @@ STOOQ_SYMBOL_MAP = {
     "^TNX": "10usy.b", "^FVX": "5usy.b", "^TYX": "30usy.b", "DX-Y.NYB": "usdidx",
     "GC=F": "gc.f", "SI=F": "si.f", "HG=F": "hg.f",
     "CL=F": "cl.f", "BZ=F": "bz.f", "NG=F": "ng.f",
-    "ES=F": "es.f", "NQ=F": "nq.f", "YM=F": "ym.f",
     "XAUUSD=X": "xauusd", "XAGUSD=X": "xagusd",
 }
 
@@ -1179,7 +1190,7 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
 # 6. GLOBAL MARKET
 # ============================================================
 
-def build_market(provider):
+def build_market(provider, regular_open=None):
     """全球市场资产：无论正常导出还是兜底降级流程，都必须实时抓取。
 
     数据口径（与东方财富 / Bloomberg 终端对齐）：
@@ -1197,6 +1208,7 @@ def build_market(provider):
     updated_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     assets = []
     ok = 0
+    regular_open = us_regular_session_open() if regular_open is None else regular_open
 
     # CNBC 现货收益率：每次运行批量抓一次（逐 symbol 轻量请求，独立成败）
     cnbc_wanted = [c for *_rest, c in MARKET_ASSETS if c]
@@ -1207,7 +1219,7 @@ def build_market(provider):
         except Exception:
             cnbc_rates = {}
 
-    for label, primary, fallback, group, unit, cnbc_sym in MARKET_ASSETS:
+    for label, primary, fallback, group, unit, cnbc_sym, regular_only in MARKET_ASSETS:
         item = {
             "symbol": primary,
             "symbol_used": None,
@@ -1259,11 +1271,28 @@ def build_market(provider):
                     "symbol_used": f"CNBC:{cnbc_sym}",
                     "quote_ts": rate.get("asof"),
                 })
+            elif regular_only and not regular_open:
+                # 股指盘外：保持“上一常规交易日收盘”静态不变，绝不取盘前/盘后跳动
+                if closes:
+                    item.update({
+                        "price": round_num(closes[-1]),
+                        "change_1d": round_num(chg_from(closes[-1], 1), 4),
+                        "price_kind": "daily_close_frozen",
+                        "source": provider.last_source,
+                        "symbol_used": bars_used,
+                        "frozen_outside_session": True,
+                    })
+                else:
+                    errs = provider.error_log.get(primary) or []
+                    item["error"] = " | ".join(errs[-3:]) if errs else (provider.network_error or "无可用日线")
             elif live_price and live_price > 0:
-                # 实时报价：涨跌幅手动重算（现价 vs 前收），不用 yfinance 异常涨跌幅
+                # 实时报价：涨跌幅手动重算 = (现价 - 前收) / 前收，不用 yfinance 异常涨跌幅
+                # 前收 = 最近一根已完成日线收盘（closes[-1]），避免相对前前日
+                prev_close = closes[-1] if closes else None
+                chg1 = ((live_price / prev_close - 1) * 100) if prev_close else None
                 item.update({
                     "price": round_num(live_price),
-                    "change_1d": round_num(chg_from(live_price, 1), 4),
+                    "change_1d": round_num(chg1, 4),
                     "price_kind": "live",
                     "source": quote.get("source") or provider.last_source,
                     "symbol_used": quote_used,
@@ -1995,9 +2024,11 @@ def main(argv=None):
     # 宏观指标都走到这里通过行情源强制实时抓取，绝不复用旧 JSON 的宏观缓存。
     market_assets, market_ok = build_market(provider)
     live_count = sum(1 for a in market_assets if a.get("price_kind") == "live")
+    frozen_count = sum(1 for a in market_assets if a.get("price_kind") == "daily_close_frozen")
     cnbc_count = sum(1 for a in market_assets if a.get("source") == "cnbc")
-    log(f"全球市场：{market_ok}/{len(market_assets)} 可用，其中实时报价 {live_count} 只"
-        f"（CNBC 现货收益率 {cnbc_count} 只；其余回退最近日收盘，绝不使用旧 JSON 缓存）")
+    log(f"全球市场：{market_ok}/{len(market_assets)} 可用，实时 {live_count} 只"
+        f"（CNBC 现货收益率 {cnbc_count} 只；盘外静态收盘 {frozen_count} 只；"
+        f"绝不使用旧 JSON 宏观缓存）")
     regime_market = None
     regime_vix = None
     for s in stocks:
@@ -2018,9 +2049,10 @@ def main(argv=None):
         "available_count": market_ok,
         "total_count": len(market_assets),
         "live_quote_count": live_count,
+        "frozen_outside_session_count": frozen_count,
         "provider": provider.name,
         "source_used": sorted({a["source"] for a in market_assets if a.get("source")}),
-        "refresh_policy": "always_live_fetch（含兜底降级流程；禁止复用旧 JSON 宏观缓存）",
+        "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
         "updated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
 
