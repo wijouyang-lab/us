@@ -110,22 +110,30 @@ UNIT_HINT = {
     "price": "usd",
 }
 
-# 全球市场资产：(输出名, Yahoo/Futures ticker, 分组, 单位说明)
+# 全球市场资产：(输出名, 主抓 symbol, 备用 symbol, 分组, 单位说明, CNBC 符号)
+# 口径设计（与东方财富 / Bloomberg 终端对齐）：
+# - 三大股指：主抓 CME E-mini 期货（ES/NQ/YM，~23h 连续交易），
+#   盘外时段也能反映真实波动；期货不可用时回退现货指数（^GSPC/^IXIC/^DJI）。
+# - 美债收益率：优先 CNBC 公开接口（Tradeweb 现货收益率，实时），
+#   失败回退 Yahoo 收益率指数（^TNX/^FVX/^TYX，2Y 用 CME 2YY=F 收益率期货）。
+# - 黄金 / 白银：主抓伦敦现货（XAUUSD=X / XAGUSD=X），与国内主流行情软件
+#   现货口径一致；现货不可用时回退 COMEX 期货（GC=F / SI=F）。
 MARKET_ASSETS = [
-    ("S&P 500", "^GSPC", "index", "index point"),
-    ("Nasdaq", "^IXIC", "index", "index point"),
-    ("Dow Jones", "^DJI", "index", "index point"),
-    ("VIX", "^VIX", "volatility", "index point"),
-    ("US10Y", "^TNX", "rate", "percent yield"),
-    ("US5Y", "^FVX", "rate", "percent yield"),
-    ("US30Y", "^TYX", "rate", "percent yield"),
-    ("DXY", "DX-Y.NYB", "fx", "index point"),
-    ("Gold", "GC=F", "commodity", "usd/oz"),
-    ("Silver", "SI=F", "commodity", "usd/oz"),
-    ("Copper", "HG=F", "commodity", "usd/lb"),
-    ("WTI", "CL=F", "energy", "usd/bbl"),
-    ("Brent", "BZ=F", "energy", "usd/bbl"),
-    ("Natural Gas", "NG=F", "energy", "usd/mmbtu"),
+    ("S&P 500",  "ES=F",     "^GSPC",    "index",      "index point",   None),
+    ("Nasdaq",   "NQ=F",     "^IXIC",    "index",      "index point",   None),
+    ("Dow Jones","YM=F",     "^DJI",     "index",      "index point",   None),
+    ("VIX",      "^VIX",     None,       "volatility", "index point",   None),
+    ("US10Y",    "^TNX",     None,       "rate",       "percent yield", "US10Y"),
+    ("US2Y",     "2YY=F",    None,       "rate",       "percent yield", "US2Y"),
+    ("US5Y",     "^FVX",     None,       "rate",       "percent yield", None),
+    ("US30Y",    "^TYX",     None,       "rate",       "percent yield", "US30Y"),
+    ("DXY",      "DX-Y.NYB", None,       "fx",         "index point",   None),
+    ("Gold",     "XAUUSD=X", "GC=F",     "commodity",  "usd/oz",        None),
+    ("Silver",   "XAGUSD=X", "SI=F",     "commodity",  "usd/oz",        None),
+    ("Copper",   "HG=F",     None,       "commodity",  "usd/lb",        None),
+    ("WTI",      "CL=F",     None,       "energy",     "usd/bbl",       None),
+    ("Brent",    "BZ=F",     None,       "energy",     "usd/bbl",       None),
+    ("Natural Gas", "NG=F",  None,       "energy",     "usd/mmbtu",     None),
 ]
 
 # review.py:2317 CLOSED_STOCK_STATUSES —— 原样复制，不改变口径
@@ -360,7 +368,46 @@ STOOQ_SYMBOL_MAP = {
     "^TNX": "10usy.b", "^FVX": "5usy.b", "^TYX": "30usy.b", "DX-Y.NYB": "usdidx",
     "GC=F": "gc.f", "SI=F": "si.f", "HG=F": "hg.f",
     "CL=F": "cl.f", "BZ=F": "bz.f", "NG=F": "ng.f",
+    "ES=F": "es.f", "NQ=F": "nq.f", "YM=F": "ym.f",
+    "XAUUSD=X": "xauusd", "XAGUSD=X": "xagusd",
 }
+
+# CNBC 公开接口（quote-html-webservice）：美债现货收益率（Tradeweb 实时）。
+# 多 symbol 逗号拼接会被当成单一非法 symbol，故逐个轻量请求。
+CNBC_QUOTE_URL = ("https://quote.cnbc.com/quote-html-webservice/restQuote/"
+                  "symbolType/symbol?symbols={sym}&requestMethod=itv&output=json")
+
+
+def fetch_cnbc_rates(symbols, timeout=REQUEST_TIMEOUT):
+    """从 CNBC 公开接口抓取美国国债现货收益率。
+
+    返回 {symbol: {"price": float, "change_pct": float|None, "asof": str|None}}；
+    每个 symbol 独立成败，失败的不出现在结果中（由调用方 fallback）。
+    只解析真实返回的 last / change_pct，不做任何推算或编造。
+    """
+    out = {}
+    for sym in symbols:
+        try:
+            url = CNBC_QUOTE_URL.format(sym=urllib.parse.quote(sym))
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                payload = json.load(r)
+            quotes = (payload.get("FormattedQuoteResult") or {}).get("FormattedQuote") or []
+            if isinstance(quotes, dict):
+                quotes = [quotes]
+            q = next((x for x in quotes
+                      if x.get("symbol") == sym and str(x.get("code")) == "0"), None)
+            if not q:
+                continue
+            last = parse_num(q.get("last"))            # "5.129%" -> 5.129
+            chg = parse_num(q.get("change_pct"))       # "+0.2933%" -> 0.2933
+            if last is None or last <= 0:
+                continue
+            out[sym] = {"price": last, "change_pct": chg,
+                        "asof": q.get("last_time") or None}
+        except Exception:
+            continue
+    return out
 
 # Yahoo -> 备用源
 def stooq_symbol(symbol: str) -> str:
@@ -1135,19 +1182,35 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
 def build_market(provider):
     """全球市场资产：无论正常导出还是兜底降级流程，都必须实时抓取。
 
-    价格口径（修复"非美股时段金/银/原油价格卡死"）：
-    - 优先用 provider.quote() 的实时报价（yfinance 1m prepost / Yahoo includePrePost），
-      期货 ~23h 交易、外汇 24h 交易，非美股时段也会真实跳动；
-    - 实时报价不可用时回退到最近一根已完成日线收盘价（明确标记 price_kind）；
-    - change_1d = 现价 vs 最近已完成日收盘；change_5d / change_20d 用日线收盘序列；
-    - 任何情况下都不读取、不复用旧 dashboard_data.json 里的宏观缓存。
+    数据口径（与东方财富 / Bloomberg 终端对齐）：
+    - 美债收益率（US10Y/US2Y/US30Y）：优先 CNBC 现货收益率（Tradeweb 实时），
+      直接采用其 last / change_pct；CNBC 失败回退 Yahoo 收益率指数实时报价，
+      涨跌幅一律用 (现价 - 前收) / 前收 手动重算，不采用 yfinance 异常涨跌幅。
+    - 三大股指：主抓 CME E-mini 期货（ES=F/NQ=F/YM=F，~23h 连续），
+      盘外时段真实跳动；期货不可用回退现货指数。
+    - 金 / 银：主抓伦敦现货（XAUUSD=X/XAGUSD=X），回退 COMEX 期货。
+    - 实时报价不可用时回退最近一根已完成日线收盘价（明确标记 price_kind）；
+      任何情况下都不读取、不复用旧 dashboard_data.json 里的宏观缓存。
+    - JSON 记录 symbol_used：实际提供数据的 symbol（主抓 / 备用 / CNBC），
+      主备切换全程透明可查。
     """
     updated_at = dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     assets = []
     ok = 0
-    for label, symbol, group, unit in MARKET_ASSETS:
+
+    # CNBC 现货收益率：每次运行批量抓一次（逐 symbol 轻量请求，独立成败）
+    cnbc_wanted = [c for *_rest, c in MARKET_ASSETS if c]
+    cnbc_rates = {}
+    if provider.available and cnbc_wanted:
+        try:
+            cnbc_rates = fetch_cnbc_rates(cnbc_wanted)
+        except Exception:
+            cnbc_rates = {}
+
+    for label, primary, fallback, group, unit, cnbc_sym in MARKET_ASSETS:
         item = {
-            "symbol": symbol,
+            "symbol": primary,
+            "symbol_used": None,
             "name": label,
             "group": group,
             "unit": unit,
@@ -1162,59 +1225,73 @@ def build_market(provider):
             "error": provider.network_error,
         }
         if provider.available:
-            bars = provider.daily_bars(symbol, days=40)
+            # ---- 日线（5d/20d 基准与前收）：主抓 -> 备用 ----
+            bars = provider.daily_bars(primary, days=40)
+            bars_used = primary
+            if not bars and fallback:
+                bars = provider.daily_bars(fallback, days=40)
+                bars_used = fallback if bars else primary
             closes = [b["close"] for b in bars] if bars else []
 
-            # 实时报价：盘前盘后 / 非美股时段也能拿到真实价格
-            quote = provider.quote(symbol) if hasattr(provider, "quote") else None
+            # ---- 实时报价：主抓 -> 备用 ----
+            quote = provider.quote(primary)
+            quote_used = primary
+            if not quote and fallback:
+                quote = provider.quote(fallback)
+                quote_used = fallback if quote else primary
             live_price = parse_num(quote.get("price")) if quote else None
 
-            if closes:
-                prev_close = closes[-1]
+            # ---- CNBC 现货收益率优先（美债）----
+            rate = cnbc_rates.get(cnbc_sym) if cnbc_sym else None
 
-                def chg_from(base_idx_price, n):
-                    if len(closes) > n and closes[-(n + 1)]:
-                        return (base_idx_price / closes[-(n + 1)] - 1) * 100
-                    return None
+            def chg_from(base_price, n):
+                if len(closes) > n and closes[-(n + 1)]:
+                    return (base_price / closes[-(n + 1)] - 1) * 100
+                return None
 
-                if live_price and live_price > 0:
-                    item.update({
-                        "price": round_num(live_price),
-                        "change_1d": round_num(chg_from(live_price, 1), 4),
-                        "price_kind": "live",
-                        "source": quote.get("source") or provider.last_source,
-                        "quote_ts": quote.get("ts"),
-                    })
-                else:
-                    item.update({
-                        "price": round_num(prev_close),
-                        "change_1d": round_num(chg_from(prev_close, 1), 4),
-                        "price_kind": "daily_close",
-                        "source": provider.last_source,
-                    })
+            if rate:
+                # CNBC：last 与 change_pct 直接采用（Tradeweb 实时口径）
+                item.update({
+                    "price": round_num(rate["price"]),
+                    "change_1d": round_num(rate["change_pct"], 4),
+                    "price_kind": "live",
+                    "source": "cnbc",
+                    "symbol_used": f"CNBC:{cnbc_sym}",
+                    "quote_ts": rate.get("asof"),
+                })
+            elif live_price and live_price > 0:
+                # 实时报价：涨跌幅手动重算（现价 vs 前收），不用 yfinance 异常涨跌幅
+                item.update({
+                    "price": round_num(live_price),
+                    "change_1d": round_num(chg_from(live_price, 1), 4),
+                    "price_kind": "live",
+                    "source": quote.get("source") or provider.last_source,
+                    "symbol_used": quote_used,
+                    "quote_ts": quote.get("ts"),
+                })
+            elif closes:
+                item.update({
+                    "price": round_num(closes[-1]),
+                    "change_1d": round_num(chg_from(closes[-1], 1), 4),
+                    "price_kind": "daily_close",
+                    "source": provider.last_source,
+                    "symbol_used": bars_used,
+                })
+
+            if item["price"] is not None:
                 item.update({
                     "change_5d": round_num(chg_from(item["price"], 5), 4),
                     "change_20d": round_num(chg_from(item["price"], 20), 4),
                     "available": True,
                     "error": None,
-                    "last_bar_date": bars[-1]["date"].strftime("%Y-%m-%d"),
                 })
-                ok += 1
-            elif live_price and live_price > 0:
-                # 日线全失败但实时报价可用：仍然给出实时价（涨幅无法计算则为 null，不编造）
-                item.update({
-                    "price": round_num(live_price),
-                    "price_kind": "live",
-                    "available": True,
-                    "source": quote.get("source"),
-                    "quote_ts": quote.get("ts"),
-                    "error": None,
-                })
+                if bars:
+                    item["last_bar_date"] = bars[-1]["date"].strftime("%Y-%m-%d")
                 ok += 1
             else:
                 # 记录该 symbol 在每个后端的真实失败原因，不编造价格
-                errs = provider.error_log.get(symbol) or []
-                item["error"] = " | ".join(errs[-3:]) if errs else (provider.network_error or "无可用日线")
+                errs = provider.error_log.get(primary) or []
+                item["error"] = " | ".join(errs[-3:]) if errs else (provider.network_error or "无可用行情")
         assets.append(item)
     return assets, ok
 
@@ -1918,8 +1995,9 @@ def main(argv=None):
     # 宏观指标都走到这里通过行情源强制实时抓取，绝不复用旧 JSON 的宏观缓存。
     market_assets, market_ok = build_market(provider)
     live_count = sum(1 for a in market_assets if a.get("price_kind") == "live")
+    cnbc_count = sum(1 for a in market_assets if a.get("source") == "cnbc")
     log(f"全球市场：{market_ok}/{len(market_assets)} 可用，其中实时报价 {live_count} 只"
-        f"（其余回退最近日收盘，绝不使用旧 JSON 缓存）")
+        f"（CNBC 现货收益率 {cnbc_count} 只；其余回退最近日收盘，绝不使用旧 JSON 缓存）")
     regime_market = None
     regime_vix = None
     for s in stocks:
