@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-24T06:00:29Z",
-  "market_updated_at": "2026-09-24T06:00:27Z",
-  "technical_updated_at": "2026-09-24T06:00:29Z",
+  "generated_at": "2026-09-24T06:04:28Z",
+  "market_updated_at": "2026-09-24T06:04:27Z",
+  "technical_updated_at": "2026-09-24T06:04:28Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -9,9 +9,10 @@
     "stooq"
   ],
   "market": {
-    "available": 14,
-    "total": 14,
+    "available": 15,
+    "total": 15,
     "source_used": [
+      "cnbc",
       "yfinance"
     ],
     "missing": []
