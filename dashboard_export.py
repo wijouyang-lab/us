@@ -1425,12 +1425,44 @@ def build_options(option_rows, anomalies):
     return out
 
 
-def _max_oi_strike(df):
-    """返回 (strike, openInterest)：期权链中未平仓量最大的那一行；无效/全 0 返回 (None, None)。
+# 期权 Wall 筛选阀门（可调参数）
+MIN_WALL_OI = 100          # 单 Strike 最小持仓量阈值（张）；区间内最大 OI 低于此值视为无机构流动性
+WALL_SPOT_LO = 0.5         # 现价合理区间下界系数：spot * 0.5
+WALL_SPOT_HI = 1.5         # 现价合理区间上界系数：spot * 1.5
 
-    关键修复：OI 全为 0 或合计为 0 时，idxmax 会返回“第一行”从而给出任意 strike（如 100.0），
-    造成“Call Wall 100.00 / OI 0”的异常显示。此处显式判定 sum(OI) <= 0 视为无效，
-    绝不返回任何数值，交由上层标记为 N/A。
+
+def _iter_chain_rows(df, col):
+    """通用迭代 (strike, oi) 对，跳过 None/NaN。兼容 pandas Series 与测试用 fake。"""
+    if df is None or col is None:
+        return
+    try:
+        strikes = df["strike"]
+        ois = df[col]
+        sl = strikes.tolist() if hasattr(strikes, "tolist") else list(strikes)
+        ol = ois.tolist() if hasattr(ois, "tolist") else list(ois)
+    except Exception:
+        return
+    for s, oi in zip(sl, ol):
+        if s is None or oi is None:
+            continue
+        try:
+            s = float(s)
+            oi = float(oi)
+        except Exception:
+            continue
+        if s != s or oi != oi:  # NaN
+            continue
+        yield s, oi
+
+
+def _max_oi_strike(df, spot=None, min_oi=MIN_WALL_OI):
+    """返回 (strike, openInterest)：期权链中“现价合理区间 + 满足最小 OI”的未平仓量最大的那一行。
+
+    两道过滤阀门（避免把低持仓散单 / 拆股遗留非标合约误判为主墙）：
+      1. 现价合理区间：若给定 spot>0，仅保留 [spot*WALL_SPOT_LO, spot*WALL_SPOT_HI] 内的 strike。
+      2. 最小持仓量阈值：区间内 OI 最大值 < min_oi（默认 100 张）视为无机构流动性 -> (None, None)。
+
+    无效 / 全 0 / 越界 / 流动性不足 -> (None, None)，绝不返回任意 strike。
     """
     if df is None or getattr(df, "empty", True):
         return None, None
@@ -1441,21 +1473,22 @@ def _max_oi_strike(df):
             break
     if col is None or "strike" not in df.columns:
         return None, None
-    d = df[["strike", col]].dropna()
-    if d.empty:
+
+    lo = hi = None
+    if spot is not None and spot > 0:
+        lo, hi = spot * WALL_SPOT_LO, spot * WALL_SPOT_HI
+
+    best_s = best_oi = None
+    for s, oi in _iter_chain_rows(df, col):
+        if lo is not None and not (lo <= s <= hi):   # 阀门 1：偏离现价过远
+            continue
+        if best_oi is None or oi > best_oi:
+            best_s, best_oi = s, oi
+    if best_oi is None:
         return None, None
-    try:
-        oi_sum = float(d[col].sum())
-    except Exception:
+    if best_oi < min_oi:                              # 阀门 2：区间内最大 OI 仍低于阈值
         return None, None
-    # 关键修复：OI 合计 <= 0（含全 0）一律视为无效数据，不返回任何 strike
-    if oi_sum <= 0:
-        return None, None
-    try:
-        row = d.loc[d[col].idxmax()]
-    except Exception:
-        return None, None
-    return parse_num(row.get("strike")), parse_num(row.get(col))
+    return best_s, best_oi
 
 
 def _fetch_option_chain(yf, symbol, expiry, tries=3, sleep_base=1.0):
@@ -1496,13 +1529,14 @@ def _is_monthly_expiry(date_str):
     return d.weekday() == 4 and 15 <= d.day <= 21
 
 
-def _find_primary_monthly_wall(yf, symbol, preferred_expiry, tries=3, max_scan=12):
+def _find_primary_monthly_wall(yf, symbol, preferred_expiry, tries=3, max_scan=12, spot=None):
     """特定到期日 OI 为空时的主力月度合约回退。
 
     流程：
       1. 取该标的全部可用到期日，筛出月度合约（第 3 周五），按离 preferred_expiry 由近到远排序。
       2. 先试最近的 1-2 个；若仍无 OI，再扫描其余月度（上限 max_scan 个）找任一有 OI 的。
-      3. 返回 (call_strike, call_oi, put_strike, put_oi, used_expiry)；仅当所有月度合约 OI 全为空才返回 None。
+      3. 返回 (call_strike, call_oi, put_strike, put_oi, used_expiry)；两侧任一有效即返回，
+         仅当所有月度合约 OI 全为空 / 均不满足 Wall 筛选阀门才返回 None。
 
     绝不伪造数值：所有到期日都无有效 OI 时返回 None，交由上层标记 N/A。
     """
@@ -1542,9 +1576,9 @@ def _find_primary_monthly_wall(yf, symbol, preferred_expiry, tries=3, max_scan=1
             chain, _ = _fetch_option_chain(yf, symbol, e, tries=tries)
         except Exception:
             continue
-        cs, co = _max_oi_strike(getattr(chain, "calls", None))
-        ps, po = _max_oi_strike(getattr(chain, "puts", None))
-        if cs is not None and ps is not None:
+        cs, co = _max_oi_strike(getattr(chain, "calls", None), spot=spot)
+        ps, po = _max_oi_strike(getattr(chain, "puts", None), spot=spot)
+        if cs is not None or ps is not None:   # 两侧任一通过 Wall 筛选阀门即采用
             return cs, co, ps, po, e
     return None
 
@@ -1587,6 +1621,7 @@ def enrich_option_walls(options, provider, anomalies, notes=None):
 
         symbol = o.get("ticker")
         expiry = o.get("expiry")
+        spot = parse_num(o.get("underlying_price"))   # 现价：用于 Wall 合理区间过滤
         try:
             chain, used_expiry = _fetch_option_chain(yf, symbol, expiry, tries=3)
         except Exception as e:
@@ -1597,15 +1632,15 @@ def enrich_option_walls(options, provider, anomalies, notes=None):
         call_strike, call_oi = (None, None)
         put_strike, put_oi = (None, None)
         if need_call:
-            call_strike, call_oi = _max_oi_strike(getattr(chain, "calls", None))
+            call_strike, call_oi = _max_oi_strike(getattr(chain, "calls", None), spot=spot)
         if need_put:
-            put_strike, put_oi = _max_oi_strike(getattr(chain, "puts", None))
+            put_strike, put_oi = _max_oi_strike(getattr(chain, "puts", None), spot=spot)
 
         # ---- 主力月度合约回退：特定到期日 OI 为空时不直接放弃 ----
         primary_used = None
         primary_note = None
         if (need_call and call_strike is None) or (need_put and put_strike is None):
-            primary = _find_primary_monthly_wall(yf, symbol, expiry, tries=3)
+            primary = _find_primary_monthly_wall(yf, symbol, expiry, tries=3, spot=spot)
             if primary:
                 pcs, pco, pps, ppo, pexp = primary
                 if need_call and call_strike is None:
