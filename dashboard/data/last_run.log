@@ -7,7 +7,6 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
        兜底模式下全球市场（商品/外汇/股指等）同样强制实时抓取，绝不复用旧 JSON 的宏观缓存。
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
-$DX-Y.NYB: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
 
