@@ -30,7 +30,7 @@ Observation 数量     : 5
 Options 数量         : 1（Active 1）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 8 / 0   技术指标成功 8/8
-当前价来源           : 实时 8 · 最新收盘 0 · 合计可取 8/8
+当前价来源           : 实时 0 · 最新收盘 8 · 合计可取 8/8
 Review 数据状态      :
    · core_closed_count            = 3  [complete]
    · core_open_count              = 6  [complete]
