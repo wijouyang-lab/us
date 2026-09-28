@@ -97,7 +97,12 @@ AI_HISTORY_PATTERNS = (
 
 # AI 文本持久化缓存：scan.py 在本地生成六段后按 Ticker Upsert 到该文件并提交入库。
 # 优先级高于历史 CSV——它是唯一保证"只要 GPT 生成过就永久可查"的来源。
+# 注意：它按 Ticker 覆盖，只能用于【当前股票】AI 展示，禁止作为 Review 历史 AI 来源。
 AI_CACHE_NAME = "ai_text_cache.csv"
+
+# AI Snapshot 历史快照：scan.py 按 (Ticker, Rec_Date, Tag) 永久保存，每次推荐一条。
+# 它是【Review 历史 AI 的唯一合法来源】，索引键必须是三元组，禁止 Ticker-only 匹配。
+AI_SNAPSHOT_NAME = "ai_snapshot.csv"
 
 # 单位提示（只做说明，不改数值）
 UNIT_HINT = {
@@ -799,6 +804,47 @@ def load_ai_cache(data_dir):
                 "texts": texts,
                 "update_date": clean_text(row.get("Update_Date")) or None,
             }
+    return index
+
+
+def load_ai_snapshots(data_dir):
+    """读取 ai_snapshot.csv（scan.py 按 Ticker+Rec_Date+Tag 永久保存的 AI 历史快照）。
+
+    返回 {(TICKER, REC_DATE, TAG): {"snapshot_id", "snapshot_type", "update_date", "texts"}}。
+    文件不存在或为空返回 {}。只搬运真实已生成文本，绝不生成 / 改写 / 补写。
+
+    硬性约束：索引键必须是 (Ticker, Rec_Date, Tag) 三元组。
+    - 禁止 Ticker-only 匹配（会把 MGM|2026-09-22|Core 的文本错配到 MGM|2026-09-10|Observation）；
+    - legacy 行的 Rec_Date/Tag 为空字符串，其键天然不可能命中任何 Review 事件。
+    """
+    path = Path(data_dir) / AI_SNAPSHOT_NAME
+    if not path.exists():
+        return {}
+    try:
+        rows = read_csv_rows(path)
+    except Exception:
+        return {}
+    index = {}
+    for row in rows:
+        ticker = clean_text(row.get("Ticker")).upper()
+        if not ticker:
+            continue
+        d = parse_date(row.get("Rec_Date"))
+        rec_date = d.strftime("%Y-%m-%d") if d else ""
+        tag = clean_text(row.get("Tag"))
+        texts = {}
+        for csv_col, json_key in AI_FIELD_MAP:
+            text = clean_text(row.get(csv_col))
+            if text:
+                texts[json_key] = text
+        if not texts:
+            continue
+        index[(ticker, rec_date, tag)] = {
+            "snapshot_id": clean_text(row.get("Snapshot_ID")) or None,
+            "snapshot_type": clean_text(row.get("Snapshot_Type")) or None,
+            "update_date": clean_text(row.get("Update_Date")) or None,
+            "texts": texts,
+        }
     return index
 
 
@@ -1810,17 +1856,19 @@ def build_events(trade_rows, review_rows, anomalies):
     return list(events.values()), price_lookup
 
 
-def build_review_records(events, asof=None):
+def build_review_records(events, asof=None, snapshots=None):
     """把 build_events() 的推荐事件账本「原样展开」为 Review 历史明细。
 
     设计约束（不改变任何既有口径）：
     - 不重新计算 Review：只是把 build_events() 已算好的事件对象映射成展示字段；
     - 去重复用现有 _event_key(ticker, rec_date, tag)，不新造第二套 key；
     - 排序 rec_date DESC（同日按 ticker ASC）；
-    - 只输出历史事实数据，绝不包含 AI 文本（不读 ai_text_cache.csv，不按 Ticker 猜文案）。
+    - AI 文本只来自 ai_snapshot.csv 的 (Ticker, Rec_Date, Tag) 精确匹配；
+      匹配不到就是 null，绝不按 Ticker 回退到 ai_text_cache.csv 或历史 pending CSV。
     """
     if asof is None:
         asof = now_us()
+    snapshots = snapshots or {}
     base_date = asof.date() if isinstance(asof, dt.datetime) else asof
 
     seen = {}
@@ -1842,6 +1890,18 @@ def build_review_records(events, asof=None):
         except (TypeError, ValueError):
             days_held = None
 
+        # AI Snapshot：只用 (Ticker, Rec_Date, Tag) 三元组精确匹配，匹配不到就是 null。
+        # 禁止 Ticker-only 回退——否则 MGM|2026-09-22|Core 的文本会错配到 MGM|2026-09-10|Observation。
+        snap = snapshots.get(key)
+        ai_snapshot = None
+        if snap:
+            ai_snapshot = {
+                "snapshot_id": snap.get("snapshot_id"),
+                "snapshot_type": snap.get("snapshot_type"),
+                "update_date": snap.get("update_date"),
+            }
+            ai_snapshot.update(snap.get("texts") or {})
+
         seen[key] = {
             "event_id": f"{key[0]}|{key[1]}|{key[2]}",
             "ticker": key[0],
@@ -1856,6 +1916,7 @@ def build_review_records(events, asof=None):
             "stop_loss": e.get("stop_loss"),
             "score": e.get("score"),
             "source": e.get("source"),
+            "ai_snapshot": ai_snapshot,
         }
 
     records = list(seen.values())
@@ -2322,16 +2383,32 @@ def main(argv=None):
 
     # Review 历史明细：复用 build_events() 的同一批事件（已按本次行情刷新 cur_price/pnl），
     # 只做字段映射 + rec_date DESC 排序，不重算 Review 口径、不含任何 AI 文本。
-    review_records = build_review_records(events)
+    # AI Snapshot：只按 (Ticker, Rec_Date, Tag) 三元组精确匹配，禁止 Ticker-only 回退。
+    ai_snapshots = load_ai_snapshots(data_dir)
+    review_records = build_review_records(events, snapshots=ai_snapshots)
+    snap_matched = sum(1 for r in review_records if r.get("ai_snapshot"))
     review["records"] = review_records
     review["records_count"] = len(review_records)
     review["records_fields"] = ["event_id", "ticker", "name", "rec_date", "tag", "status",
                                 "rec_price", "cur_price", "pnl_pct", "days_held",
-                                "stop_loss", "score", "source"]
+                                "stop_loss", "score", "source", "ai_snapshot"]
     review["records_note"] = (
         "review.records[] = build_events() 事件账本原样展开；去重 key 复用 _event_key(Ticker,Rec_Date,Tag)；"
-        "按 rec_date DESC 排序；仅历史事实数据，不含 AI 文本。"
+        "按 rec_date DESC 排序；ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，"
+        "匹配不到为 null，禁止按 Ticker 回退到 ai_text_cache.csv。"
     )
+    review["ai_snapshot_total"] = len(ai_snapshots)
+    review["ai_snapshot_matched"] = snap_matched
+    review["ai_snapshot_source"] = (
+        AI_SNAPSHOT_NAME if ai_snapshots else f"未找到 {AI_SNAPSHOT_NAME}（scan 尚未生成）"
+    )
+    if ai_snapshots:
+        legacy_n = sum(1 for v in ai_snapshots.values() if v.get("snapshot_type") == "legacy")
+        notes.append(
+            f"AI Snapshot 索引：{AI_SNAPSHOT_NAME} 命中 {len(ai_snapshots)} 个三元组"
+            f"（其中 legacy {legacy_n} 条，不绑定任何历史推荐）"
+            f" · Review 历史精确匹配 {snap_matched}/{len(review_records)} 条"
+        )
 
     # ---- HISTORY ----
     history = build_history(review_rows, notes)
@@ -2401,7 +2478,8 @@ def main(argv=None):
                                      "按 rec_date DESC 排序；pnl_pct 来自 PnL_Pct 或 (cur-rec)/rec；"
                                      "days_held 来自 Days_Held 列（缺失时按 今日-Rec_Date 天数差）；"
                                      "stop_loss/score 来自 review_history.csv / trade_history.csv 原始列；"
-                                     "仅历史事实数据，不含任何 AI 文本"),
+                                     "ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，无匹配为 null；"
+                                     "不含任何 Ticker-only 回退的 AI 文本"),
                 "history[]": "review_history.csv 每日快照的仍在跟踪事件数",
                 "stocks[].ai": "pending CSV 中 Scan 已生成的 AI 六段文本；本次为空时会从历史 pending/scan_results CSV 按 Ticker 回填（ai_source=history_backfill）。空字符串表示本次与历史都没有，前端显示 AI analysis pending",
             },

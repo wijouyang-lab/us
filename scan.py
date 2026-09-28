@@ -3267,6 +3267,167 @@ def upsert_ai_text_cache(items, path=AI_TEXT_CACHE_FILE):
     return len(updates)
 
 
+# ---------------------------------------------------------------------------
+# AI Snapshot 历史快照（第 4 步）
+#
+# 背景：upsert_ai_text_cache() 的唯一键只有 Ticker，MGM 在 2026-09-10(Observation)
+# 与 2026-09-22(Core) 两次推荐会互相覆盖，历史 AI 观点永久丢失。
+# 因此新增 ai_snapshot.csv，唯一键 = Ticker|Rec_Date|Tag，每次推荐保存一条独立快照。
+#
+# 铁律：
+# - 不新增任何 GPT 调用：只搬运 enrich_verified_items_with_ai_details() 已生成的文本；
+# - 只新增 / 更新同一个 Snapshot_ID，绝不按 Ticker 覆盖旧快照；
+# - 旧 ai_text_cache.csv 保留不动（当前 stocks[].ai 展示链路仍依赖它），
+#   只能迁移为 legacy 快照（Rec_Date="" / Tag=""），绝不猜测它属于哪次推荐。
+# ---------------------------------------------------------------------------
+AI_SNAPSHOT_FILE = "ai_snapshot.csv"
+AI_SNAPSHOT_COLS = [
+    "Snapshot_ID", "Ticker", "Rec_Date", "Tag", "Snapshot_Type", "Update_Date",
+    "AI_industry_logic", "AI_news_cn", "AI_premarket_conclusion",
+    "AI_catalysts", "AI_risks", "AI_invalidation",
+]
+AI_SNAPSHOT_TEXT_COLS = AI_SNAPSHOT_COLS[6:]
+
+
+def make_snapshot_id(ticker, rec_date, tag):
+    """Snapshot 唯一键：Ticker|Rec_Date|Tag（与 review 事件主键 Ticker+Rec_Date+Tag 同构）。"""
+    return "|".join([
+        str(ticker or "").strip().upper(),
+        str(rec_date or "").strip(),
+        str(tag or "").strip(),
+    ])
+
+
+def upsert_ai_snapshot(items, rec_date=None, path=AI_SNAPSHOT_FILE):
+    """把本次 Scan 已生成的 AI 六段按 (Ticker, Rec_Date, Tag) 写入历史快照。
+
+    规则（与 Dashboard 零伪造原则一致）：
+    - 只搬运 enrich_verified_items_with_ai_details() 已生成的真实文本，不改写/不摘要；
+    - 同一个 Snapshot_ID 重复运行 Scan -> 覆盖同一条（始终只有 1 条），不产生 _1 / _2；
+    - 不同 Snapshot_ID（同 Ticker 不同日期 / 不同 Tag）-> 新增，绝不按 Ticker 覆盖；
+    - 某条六段全为空 -> 跳过，绝不用空值覆盖已有快照文本。
+    返回本次写入/更新的 Snapshot 数。
+    """
+    import csv as _csv
+
+    if not rec_date:
+        rec_date = today_us_str()
+
+    updates = {}
+    for item in items:
+        ticker = str(item.get("Ticker", "") or "").strip().upper()
+        if not ticker:
+            continue
+        texts = {c: str(item.get(c, "") or "").strip() for c in AI_SNAPSHOT_TEXT_COLS}
+        if not any(texts.values()):
+            continue
+        tag = str(item.get("Tag", "") or "").strip()
+        sid = make_snapshot_id(ticker, rec_date, tag)
+        updates[sid] = {"Ticker": ticker, "Rec_Date": rec_date, "Tag": tag, "texts": texts}
+    if not updates:
+        return 0
+
+    rows = {}
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8-sig", newline="") as f:
+                for r in _csv.DictReader(f):
+                    sid = str(r.get("Snapshot_ID") or "").strip()
+                    if sid:
+                        rows[sid] = dict(r)
+        except Exception as e:
+            print(f"⚠️ 读取 {path} 失败（将以本次内容重建）：{e}")
+
+    today = today_us_str()
+    for sid, payload in updates.items():
+        old = rows.get(sid) or {}
+        merged = {
+            "Snapshot_ID": sid,
+            "Ticker": payload["Ticker"],
+            "Rec_Date": payload["Rec_Date"],
+            "Tag": payload["Tag"],
+            "Snapshot_Type": "scan",
+            "Update_Date": today,
+        }
+        # 单段为空时保留该 Snapshot 内已有的旧文本（部分更新，不整行清空）
+        for col in AI_SNAPSHOT_TEXT_COLS:
+            merged[col] = payload["texts"][col] or (old.get(col) or "")
+        rows[sid] = merged
+
+    with open(path, "w", encoding="utf-8", newline="") as f:
+        w = _csv.DictWriter(f, fieldnames=AI_SNAPSHOT_COLS, quoting=_csv.QUOTE_MINIMAL)
+        w.writeheader()
+        for sid in sorted(rows):
+            w.writerow({k: (rows[sid].get(k) or "") for k in AI_SNAPSHOT_COLS})
+    return len(updates)
+
+
+def migrate_legacy_ai_cache(path=AI_SNAPSHOT_FILE, cache_path=AI_TEXT_CACHE_FILE):
+    """把只有 Ticker、无法识别日期的旧 ai_text_cache.csv 迁移为 legacy 快照。
+
+    迁移结果 Rec_Date="" / Tag="" / Snapshot_Type=legacy：
+    只代表「该股票曾经生成过的旧 AI 文本」，绝不绑定到任何历史推荐日期或 Tag，
+    因此天然不会被 Review 历史事件（Rec_Date 必非空）匹配到。
+    旧 ai_text_cache.csv 一律保留不删除。
+    本函数幂等：已存在同 Snapshot_ID 的 legacy 行不会重复写入。
+    返回本次新增的 legacy 条数。
+    """
+    import csv as _csv
+
+    if not os.path.exists(cache_path):
+        return 0
+
+    rows = {}
+    if os.path.exists(path):
+        try:
+            with open(path, "r", encoding="utf-8-sig", newline="") as f:
+                for r in _csv.DictReader(f):
+                    sid = str(r.get("Snapshot_ID") or "").strip()
+                    if sid:
+                        rows[sid] = dict(r)
+        except Exception as e:
+            print(f"⚠️ 读取 {path} 失败（将以本次内容重建）：{e}")
+            rows = {}
+    try:
+        with open(cache_path, "r", encoding="utf-8-sig", newline="") as f:
+            cache_rows = [r for r in _csv.DictReader(f) if (r.get("Ticker") or "").strip()]
+    except Exception as e:
+        print(f"⚠️ legacy 迁移读取 {cache_path} 失败（已跳过，不影响主流程）：{e}")
+        return 0
+
+    added = 0
+    for r in cache_rows:
+        ticker = str(r.get("Ticker") or "").strip().upper()
+        if not ticker:
+            continue
+        sid = make_snapshot_id(ticker, "", "")     # TICKER|| ：无日期、无 Tag
+        if sid in rows:
+            continue
+        texts = {c: str(r.get(c) or "").strip() for c in AI_SNAPSHOT_TEXT_COLS}
+        if not any(texts.values()):
+            continue
+        row = {
+            "Snapshot_ID": sid,
+            "Ticker": ticker,
+            "Rec_Date": "",
+            "Tag": "",
+            "Snapshot_Type": "legacy",
+            "Update_Date": str(r.get("Update_Date") or "").strip(),
+        }
+        for c in AI_SNAPSHOT_TEXT_COLS:
+            row[c] = texts[c]
+        rows[sid] = row
+        added += 1
+
+    if added:
+        with open(path, "w", encoding="utf-8", newline="") as f:
+            w = _csv.DictWriter(f, fieldnames=AI_SNAPSHOT_COLS, quoting=_csv.QUOTE_MINIMAL)
+            w.writeheader()
+            for sid in sorted(rows):
+                w.writerow({k: (rows[sid].get(k) or "") for k in AI_SNAPSHOT_COLS})
+    return added
+
+
 # ==================== 主程序 ====================
 if __name__ == "__main__":
     macro_news = get_latest_macro_news()
@@ -3434,6 +3595,21 @@ if __name__ == "__main__":
                 print("⚠️ 本次无可写入的 AI 文本（六段均为空），缓存保持不变。")
         except Exception as e:
             print(f"⚠️ AI 文本缓存写入失败（不影响主流程）：{type(e).__name__}: {e}")
+
+        # AI Snapshot 历史快照：按 (Ticker, Rec_Date, Tag) 永久保存本次已生成的六段，
+        # 与按 Ticker 覆盖的 ai_text_cache.csv 明确分离。
+        # 只搬运 enrich_verified_items_with_ai_details() 的产出，不新增任何 GPT 调用。
+        try:
+            legacy_n = migrate_legacy_ai_cache()
+            if legacy_n:
+                print(f"🗂️ 旧 AI 缓存已迁移为 legacy 快照 {legacy_n} 条 -> {AI_SNAPSHOT_FILE}")
+            snap_n = upsert_ai_snapshot(to_write, rec_date=today_us_str())
+            if snap_n:
+                print(f"🧠 AI Snapshot 已保存 {snap_n} 条 -> {AI_SNAPSHOT_FILE}")
+            else:
+                print("⚠️ 本次无可写入的 AI 文本（六段均为空），Snapshot 保持不变。")
+        except Exception as e:
+            print(f"⚠️ AI Snapshot 写入失败（不影响主流程）：{type(e).__name__}: {e}")
     else:
         print("⚠️ 今日没有新增可入账推荐")
 
