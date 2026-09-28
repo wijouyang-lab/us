@@ -54,6 +54,7 @@ jobs:
             us_stocks_pending_*.csv
             ai_text_cache.csv
             ai_snapshot.csv
+            option_strategies.csv
           if-no-files-found: warn
 
       - name: 提交待确认文件、AI 文本缓存与 AI Snapshot
@@ -66,6 +67,10 @@ jobs:
           # 只在文件存在时 add；不存在时不能让 workflow 失败
           if [ -f ai_snapshot.csv ]; then
             git add ai_snapshot.csv
+          fi
+          # 期权策略账本：scan.py 经 scan_us_option_engine 生成；必须入库，否则 Runner 销毁后丢失
+          if [ -f option_strategies.csv ]; then
+            git add option_strategies.csv
           fi
           if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv

@@ -3,13 +3,18 @@ name: 美股盘后复盘
 on:
   workflow_dispatch:
 
+# 防重复：同一时间只允许一个 Review 在执行/排队；不与 Scan / Dashboard 互斥。
+concurrency:
+  group: us-stock-review
+  cancel-in-progress: false
+
 jobs:
   review:
     runs-on: ubuntu-latest
 
     steps:
       - name: 检出代码
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
@@ -40,16 +45,88 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python review.py
 
+      # 安全网：即使后面 git push 失败，本轮复盘产物也不会随 runner 销毁而丢失
+      - name: 上传复盘产物（防止推送失败导致数据丢失）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-output-${{ github.run_id }}
+          path: |
+            trade_history.csv
+            review_history.csv
+            option_strategies.csv
+            review_report.html
+            us_stocks_pending_*.csv.processed
+          if-no-files-found: warn
+
       - name: 提交账本和处理记录
         run: |
+          # 只 add 明确需要持久化的业务文件，绝不 git add -A
           git add trade_history.csv review_history.csv
+
+          # review.py 平仓时会改写期权账本，必须入库
+          if [ -f option_strategies.csv ]; then
+            git add option_strategies.csv
+          fi
 
           if ls us_stocks_pending_*.csv.processed 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv.processed
           fi
 
+          # review.py 消费过的 pending 原文件（未 .processed）从工作区移除，避免下一轮重复入账
           git rm -f us_stocks_pending_*.csv 2>/dev/null || true
 
-          git commit -m "chore: 美股盘后补充成交 $(date +%Y-%m-%d)" || echo "无变更"
-          git push
-          echo "✅ 美股成交记录已提交"
+          if git diff --cached --quiet; then
+            echo "⚠️ 无可提交变更"
+            exit 0
+          fi
+
+          git commit -m "chore: 美股盘后补充成交 $(date +%Y-%m-%d)"
+
+          # ------------------------------------------------------------------
+          # rebase 前先把"未纳入本次提交"的工作区变更挪走。
+          # review.py 运行时会生成 __pycache__/*.pyc 等未跟踪文件；若不清理，
+          # git rebase 会报 "cannot rebase: You have unstaged changes." 而拒绝执行。
+          # 用 stash 而不是 checkout -- .：不破坏任何文件，-u 连未跟踪文件一起收走。
+          # 若 stash 失败必须停止，绝不掩盖错误、绝不删除任何业务数据。
+          # ------------------------------------------------------------------
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "ℹ️ 工作区仍有未纳入本次提交的变更，先 stash（不删除任何文件）："
+            git status --porcelain
+            if ! git stash push -u -m "review-uncommitted-leftovers"; then
+              echo "::error::git stash 失败，停止推送（不掩盖错误，不删除任何业务数据）"
+              exit 1
+            fi
+          fi
+
+          # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
+          # 绝对禁止 git push --force / -f：绝不覆盖远端 main
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "✅ push 成功"
+                exit 0
+              fi
+            else
+              # 只有"真正的内容冲突"才硬停止；其余 rebase 失败（如工作区脏、瞬时错误）继续重试
+              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+                echo "::error::git rebase 发生冲突，停止推送（禁止 force push，不自动解决冲突）"
+                echo "冲突文件："
+                git diff --name-only --diff-filter=U
+                git status --porcelain
+                git rebase --abort || true
+                exit 1
+              fi
+              echo "::warning::git rebase 第 $i 次失败（非内容冲突），回滚后重试"
+              git rebase --abort || true
+            fi
+
+            echo "⚠️ push/rebase 第 $i 次失败，等待后重试"
+            sleep $((i * 5))
+          done
+
+          echo "::error::复盘数据无法推送到 main（已重试 5 次）"
+          git status --porcelain
+          exit 1
