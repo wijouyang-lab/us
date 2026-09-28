@@ -849,7 +849,13 @@ def load_ai_snapshots(data_dir):
 
 
 def backfill_ai_fields(stocks, data_dir, current_pending=None, notes=None):
-    """Core / Observation 股票的 AI 六段若为空，按优先级回填同名 Ticker 的真实文本。
+    """（已停用）Core / Observation 股票的 AI 六段若为空，按优先级回填同名 Ticker 的真实文本。
+
+    注意：自「当前有效股票池」改造后，本函数不再被 main() 调用——
+    stocks[] 的 AI 改由 build_current_event_rows() 按 ai_snapshot.csv 的
+    (Ticker, Rec_Date, Tag) 三元组精确匹配（+ 当天 pending CSV 直写），
+    禁止 Ticker-only 回退到 ai_text_cache.csv / 历史 pending CSV。
+    本函数保留仅作历史参考，不再参与 AI 回填。
 
     硬性约束：本函数**不生成、不改写、不补写任何文案**，只搬运已生成的真实文本。
     回填优先级与 stock['ai_source'] 取值：
@@ -988,6 +994,147 @@ def load_fallback_stock_rows(data_dir):
     return rows, path
 
 
+# ============================================================
+# 5.5 当前有效股票池（Core / Observation 完整集合）
+# ============================================================
+
+# trade_history 列 -> pending CSV 形态列（build_stocks 消费的列名）
+_TRADE_TO_PENDING = {
+    "Name": "Name", "Tag": "Tag",
+    "RSI": "RSI", "Bias": "Bias", "ATR_Pct": "ATR_Pct",
+    "Stop_Loss": "Stop_Loss", "Stop_Method": "Stop_Method", "Score": "Score",
+    "Final_Score": "Final_Score", "Quant_Score": "Quant_Score", "AI_Score": "AI_Score",
+    "Fundamental_Score": "Fundamental_Score", "Technical_Score_25": "Technical_Score_25",
+    "Risk_Liquidity_Score": "Risk_Liquidity_Score", "Event_Score": "Event_Score",
+    "PE_TTM": "PE_TTM", "PE_Forward": "PE_Forward", "EPS_TTM": "EPS_TTM", "PB": "PB",
+    "Revenue_Growth": "Revenue_Growth", "Earnings_Growth": "Earnings_Growth",
+    "ROE": "ROE", "Profit_Margin": "Profit_Margin", "Market_Cap": "Market_Cap",
+    "Avg_Dollar_Volume_20D": "Avg_Dollar_Volume_20D",
+    "MACD金叉": "MACD金叉", "周线共振": "周线共振", "KDJ_J回升": "KDJ_J回升",
+    "量能放大": "量能放大", "周期共振": "周期共振",
+    "技术评分": "技术评分", "技术确认数": "技术确认数",
+    "技术确认信号": "技术确认信号", "估值评分": "估值评分",
+    "Sector_RS_20D_Pct": "Sector_RS_20D_Pct",
+    "Status": "Status",
+}
+
+
+def _attach_snapshot_ai(row, ticker, rec_date, tag, snapshots):
+    """把 ai_snapshot.csv 的 (Ticker, Rec_Date, Tag) 三元组精确匹配结果写入 row。
+
+    硬约束：只按三元组精确匹配，禁止 Ticker-only；匹配不到 AI 文本时保留 row 原值
+    （pending 当天直写的 AI 六段，或 trade_history 事件本就为空），绝不回退到
+    ai_text_cache.csv（Ticker 级缓存，会污染历史事件）。
+    """
+    row["Recommendation_ID"] = f"{ticker}|{rec_date}|{tag}"
+    row["Snapshot_ID"] = ""
+    row["Snapshot_Update_Date"] = ""
+    snap = snapshots.get((ticker, rec_date, tag))
+    if snap:
+        row["Snapshot_ID"] = snap.get("snapshot_id") or ""
+        row["Snapshot_Update_Date"] = snap.get("update_date") or ""
+        if snap.get("texts"):
+            for csv_col, json_key in AI_FIELD_MAP:
+                row[csv_col] = snap["texts"].get(json_key) or ""
+
+
+def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
+    """构建「当前有效 Core / Observation 推荐事件」的 rows（对齐 pending CSV 列名）。
+
+    彻底分离「当前股票池」与「当天新推荐」：
+    - 当前股票池 = trade_history 中仍有效的 Core_Dragon + Observation 事件
+      + 当天 pending CSV 新推荐（补充，去重）。旧的有效 Core 不会因当天无 Scan 而消失。
+    - pending CSV 只代表「本次 Scan 新产生的推荐事件」，不再是完整股票池的唯一来源。
+
+    口径（复用 review.py:1526-1712 active_list / observation_list，不另造生命周期）：
+    - 只认 Status ∈ ACTIVE_STATUSES（{"", "Active", "pending"}）
+    - 只认 Tag ∈ BUCKET_MAP（Core_Dragon / Observation）；Trap_Warning 等历史遗留 Tag 排除
+    - rec_price > 0（否则无法作为持仓跟踪）
+    - 同一 (Ticker, Rec_Date, Tag) 去重取最新，绝不按 Ticker 合并两个不同事件
+    """
+    snapshots = snapshots or {}
+    rows = []
+    seen = set()
+
+    # 来源 1：trade_history 的当前有效事件（按 Date 升序遍历，seen 去重保证同键取最新）
+    ordered = sorted(
+        trade_rows,
+        key=lambda r: parse_date(r.get("Date")) or dt.date.min,
+    )
+    for r in ordered:
+        ticker = clean_text(r.get("Ticker")).upper()
+        if not ticker or not TICKER_RE.match(ticker):
+            continue
+        tag = clean_text(r.get("Tag"))
+        if tag not in BUCKET_MAP:
+            continue
+        status = clean_text(r.get("Status"))
+        if status not in ACTIVE_STATUSES:
+            continue
+        rec_date = parse_date(r.get("Date"))
+        if rec_date is None:
+            continue
+        rec_price = None
+        for col in ("Price", "Scan_Ref_Price", "Close_Price", "Prev_Close"):
+            v = parse_num(r.get(col))
+            if v and v > 0:
+                rec_price = v
+                break
+        if not rec_price:
+            continue
+        rec_date_str = rec_date.strftime("%Y-%m-%d")
+        key = (ticker, rec_date_str, tag)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        row = {"Ticker": ticker, "Date": rec_date_str}
+        for tcol, pcol in _TRADE_TO_PENDING.items():
+            row[pcol] = r.get(tcol, "")
+        # rec_price 作为 Scan_Ref_Price（build_stocks 的价格回退链会用到）
+        row["Scan_Ref_Price"] = str(rec_price)
+        row["Prev_Close"] = r.get("Close_Price", "") or r.get("Price", "")
+        if not row.get("Name"):
+            row["Name"] = ticker
+        _attach_snapshot_ai(row, ticker, rec_date_str, tag, snapshots)
+        rows.append(row)
+
+    # 来源 2：pending CSV 当天新推荐（补充；trade_history 已覆盖的同键跳过）
+    for r in pending_rows:
+        ticker = clean_text(r.get("Ticker")).upper()
+        if not ticker:
+            continue
+        tag = clean_text(r.get("Tag"))
+        if tag not in BUCKET_MAP:
+            continue
+        rec_date = parse_date(r.get("Date"))
+        if rec_date is None:
+            continue
+        rec_date_str = rec_date.strftime("%Y-%m-%d")
+        key = (ticker, rec_date_str, tag)
+        if key in seen:
+            continue
+        seen.add(key)
+        r = dict(r)
+        r["Ticker"] = ticker
+        r["Date"] = rec_date_str
+        _attach_snapshot_ai(r, ticker, rec_date_str, tag, snapshots)
+        rows.append(r)
+
+    # 第三步去重：同一 (Ticker, bucket) 只保留最新 Rec_Date 的事件。
+    # 依据 review.py 再次推荐语义：当前 card 使用最新的有效 Recommendation Event
+    # （旧事件仍保留在 review.records[] / Review History，绝不合并删除）。
+    final = {}
+    for r in rows:
+        bucket = BUCKET_MAP.get(r.get("Tag"), r.get("Tag"))
+        key = (r.get("Ticker"), bucket)
+        cur_date = r.get("Date") or ""
+        existing = final.get(key)
+        if existing is None or cur_date > (existing.get("Date") or ""):
+            final[key] = r
+    return sorted(final.values(), key=lambda r: (r.get("Ticker") or "", r.get("Date") or ""))
+
+
 def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
     stocks = []
     kline_ok, kline_fail = 0, 0
@@ -1035,6 +1182,16 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
             "name": name,
             "bucket": bucket,
             "tag_raw": raw_tag,
+
+            # 推荐事件标识（当前有效股票池口径）：AI 属于 Recommendation Event，
+            # 用 recommendation_id = Ticker|Rec_Date|Tag 精确定位，禁止 Ticker-only。
+            "recommendation_id": clean_text(row.get("Recommendation_ID")) or (
+                f"{ticker}|{clean_text(row.get('Date')) or ''}|{raw_tag}" if raw_tag else None
+            ),
+            "recommendation_date": clean_text(row.get("Date")) or None,
+            "recommendation_tag": raw_tag,
+            "ai_snapshot_id": clean_text(row.get("Snapshot_ID")) or None,
+            "ai_snapshot_date": clean_text(row.get("Snapshot_Update_Date")) or None,
 
             # price / price_source 在下面按「实时 > 最新完整收盘 > pending CSV」覆盖
             "price": None,
@@ -1807,6 +1964,15 @@ def build_events(trade_rows, review_rows, anomalies):
             "stop_loss": parse_num(row.get("Stop_Loss")),
             "score": clean_text(row.get("Score")) or None,
             "source": "review_history",
+            # 里程碑（5D/10D/20D + Review_Stage）：只透传 review_history.csv 原值，绝不重算。
+            # 取该事件「最新快照」latest_row——里程碑随交易日推移单调补齐，最新行最完整。
+            "price_5d": parse_num(latest_row.get("Price_5D")),
+            "pnl_5d": parse_num(latest_row.get("PnL_5D")),
+            "price_10d": parse_num(latest_row.get("Price_10D")),
+            "pnl_10d": parse_num(latest_row.get("PnL_10D")),
+            "price_20d": parse_num(latest_row.get("Price_20D")),
+            "pnl_20d": parse_num(latest_row.get("PnL_20D")),
+            "review_stage": clean_text(latest_row.get("Review_Stage")) or None,
         }
         if cur is not None:
             price_lookup[key] = cur
@@ -1917,6 +2083,14 @@ def build_review_records(events, asof=None, snapshots=None):
             "score": e.get("score"),
             "source": e.get("source"),
             "ai_snapshot": ai_snapshot,
+            # 里程碑：只透传 build_events() 从 review_history.csv 读到的原值，不在此重算。
+            "price_5d": e.get("price_5d"),
+            "pnl_5d": e.get("pnl_5d"),
+            "price_10d": e.get("price_10d"),
+            "pnl_10d": e.get("pnl_10d"),
+            "price_20d": e.get("price_20d"),
+            "pnl_20d": e.get("pnl_20d"),
+            "review_stage": e.get("review_stage"),
         }
 
     records = list(seen.values())
@@ -2205,42 +2379,16 @@ def main(argv=None):
 
     # ---- 输入文件 ----
     pending_path = find_latest_pending(data_dir)
-    stocks_source = None
+    # pending 只代表「本次 Scan 新产生的推荐事件」，不再是 stocks 股票池的唯一来源。
+    # 当前股票池改由 trade_history 仍有效事件 + pending 新推荐共同构建（见下方 current_rows）。
     if pending_path is None:
-        # 盘后复盘流程会消费掉当日 pending CSV。此时绝不能把持仓清空：
-        # 先复用上一版 dashboard_data.json 的 Core / Observation 名单，
-        # 行情 / K线 / 技术指标照常重新抓取刷新。
         log("[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv"
-            "（通常是盘后复盘已消费当日文件，或当日尚未扫描）。")
-        fallback_rows, fallback_src = load_fallback_stock_rows(data_dir)
-        if fallback_rows:
-            log(f"       已复用上一版 dashboard_data.json 的股票名单：{len(fallback_rows)} 只，"
-                f"行情 / 技术指标照常刷新。")
-            log("       兜底模式下全球市场（商品/外汇/股指等）同样强制实时抓取，"
-                "绝不复用旧 JSON 的宏观缓存。")
-            notes.append(
-                "未找到新的 pending CSV，已复用上一版 dashboard_data.json 中的 "
-                f"Core/Observation 名单（{len(fallback_rows)} 只）并刷新行情与技术指标；"
-                "名单未发生清空。"
-            )
-            notes.append(
-                "兜底保护模式：旧 JSON 仅用于复原股票名单与基本面快照；"
-                "全球市场宏观指标在后续 MARKET 阶段通过行情源强制重新实时抓取"
-                "（含盘前盘后报价），未复用旧 JSON 中的任何宏观价格。"
-            )
-            pending_rows = fallback_rows
-            stocks_source = "existing_dashboard_json"
-        else:
-            log("       上一版 dashboard_data.json 也不存在或无股票，stocks 输出空数组。")
-            notes.append(
-                "未找到新的 pending CSV，且上一版 dashboard_data.json 不可用，"
-                "Core / Observation 为空数组；全球市场与期权数据照常刷新。"
-            )
-            pending_rows = []
+            "（通常是盘后复盘已消费当日文件，或当日尚未扫描）。"
+            "当前股票池将从 trade_history 仍有效事件构建，不受影响。")
+        pending_rows = []
     else:
-        log(f"pending CSV：{pending_path.name}")
+        log(f"pending CSV（本次 Scan 新推荐）：{pending_path.name}")
         pending_rows = read_csv_rows(pending_path)
-        stocks_source = "scan_pending_csv"
 
     trade_path = require_file(data_dir / TRADE_HISTORY_NAME, "推荐事件账本")
     option_path = data_dir / OPTION_CSV_NAME
@@ -2257,6 +2405,20 @@ def main(argv=None):
         option_rows = []
     if not review_rows:
         log(f"[WARN] 未找到或为空：{REVIEW_HISTORY_NAME}（history 将为空，Review 仅用 trade_history 口径）")
+
+    # ---- 当前有效股票池（Core + Observation 完整集合）----
+    # 与「当天新推荐」彻底分离：来自 trade_history 仍有效事件 + pending 新推荐补充，
+    # 复用 review.py active_list / observation_list 同口径，不另造生命周期。
+    # 旧的仍持仓 Core 即使当天没有 Scan，也会继续显示（修复此前会消失的问题）。
+    ai_snapshots = load_ai_snapshots(data_dir)   # 提前加载，供股票池 AI 三元组匹配
+    current_rows = build_current_event_rows(trade_rows, pending_rows, ai_snapshots)
+    if current_rows:
+        stocks_source = "active_events"
+        log(f"当前有效股票池：{len(current_rows)} 个事件"
+            f"（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）")
+    else:
+        stocks_source = None
+        log("[WARN] trade_history 无有效事件且无 pending 新推荐，股票池为空，稍后走兜底。")
 
     params = None
     if params_path.exists():
@@ -2281,17 +2443,18 @@ def main(argv=None):
             f"K线/技术指标与全球市场行情将输出 null（不伪造、不硬编码）。")
 
     # ---- STOCKS ----
-    stocks, kstats = build_stocks(pending_rows, provider, args.kline_bars, anomalies, warnings)
+    # 股票池 = 当前有效 Core + Observation 事件（current_rows），不是「当天 pending 新推荐」。
+    stocks, kstats = build_stocks(current_rows, provider, args.kline_bars, anomalies, warnings)
     if not stocks:
-        # 自愈守卫：本次构建为空（无 pending / pending 为空）时，
+        # 自愈守卫：current_rows 为空（trade_history 无有效事件且无 pending）时，
         # 回退复用上一版 dashboard_data.json 的名单，杜绝把持仓清空成 []。
         fb_rows, _ = load_fallback_stock_rows(data_dir)
         if fb_rows:
-            log(f"[WARN] 本次构建结果为空，回退复用上一版 JSON 名单（{len(fb_rows)} 只），"
+            log(f"[WARN] 当前有效事件为空，回退复用上一版 JSON 名单（{len(fb_rows)} 只），"
                 f"行情 / 技术指标照常刷新。")
             notes.append(
-                f"本次 pending 来源未产出任何股票，已回退复用上一版 dashboard_data.json 的 "
-                f"名单（{len(fb_rows)} 只）并刷新行情；stocks 未写空。"
+                f"trade_history 无有效持仓事件且无 pending 新推荐，已回退复用上一版 "
+                f"dashboard_data.json 的名单（{len(fb_rows)} 只）并刷新行情；stocks 未写空。"
             )
             stocks, kstats = build_stocks(
                 fb_rows, provider, args.kline_bars, anomalies, warnings)
@@ -2302,10 +2465,13 @@ def main(argv=None):
     core_count = sum(1 for s in stocks if s["bucket"] == "Core")
     obs_count = sum(1 for s in stocks if s["bucket"] == "Observation")
 
-    # ---- AI 六段：本次为空时，从历史 pending / scan_results CSV 回填同名 Ticker 文本 ----
-    # 只搬运历史已生成的真实文本；本脚本不调用任何 AI 接口、不生成文案。
-    ai_backfilled = backfill_ai_fields(
-        stocks, data_dir, current_pending=pending_path, notes=notes)
+    # ---- AI 六段：已在 build_current_event_rows 里按 (Ticker, Rec_Date, Tag) 三元组
+    # 精确匹配 ai_snapshot.csv（+ 当天 pending CSV 直写）。禁止 Ticker-only 回退到
+    # ai_text_cache.csv / 历史 pending CSV（会把 A 事件的 AI 错配给 B 事件）。
+    ai_backfilled = sorted({
+        clean_text(r.get("Ticker")).upper()
+        for r in current_rows if clean_text(r.get("Snapshot_ID"))
+    })
 
     # ---- AI 六段状态（只统计，不生成内容）----
     first_row = pending_rows[0] if pending_rows else {}
@@ -2384,18 +2550,22 @@ def main(argv=None):
     # Review 历史明细：复用 build_events() 的同一批事件（已按本次行情刷新 cur_price/pnl），
     # 只做字段映射 + rec_date DESC 排序，不重算 Review 口径、不含任何 AI 文本。
     # AI Snapshot：只按 (Ticker, Rec_Date, Tag) 三元组精确匹配，禁止 Ticker-only 回退。
-    ai_snapshots = load_ai_snapshots(data_dir)
+    # （ai_snapshots 已在 STOCKS 阶段提前加载，此处复用，不重复读盘。）
     review_records = build_review_records(events, snapshots=ai_snapshots)
     snap_matched = sum(1 for r in review_records if r.get("ai_snapshot"))
     review["records"] = review_records
     review["records_count"] = len(review_records)
     review["records_fields"] = ["event_id", "ticker", "name", "rec_date", "tag", "status",
                                 "rec_price", "cur_price", "pnl_pct", "days_held",
-                                "stop_loss", "score", "source", "ai_snapshot"]
+                                "stop_loss", "score", "source", "ai_snapshot",
+                                "price_5d", "pnl_5d", "price_10d", "pnl_10d",
+                                "price_20d", "pnl_20d", "review_stage"]
     review["records_note"] = (
         "review.records[] = build_events() 事件账本原样展开；去重 key 复用 _event_key(Ticker,Rec_Date,Tag)；"
         "按 rec_date DESC 排序；ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，"
         "匹配不到为 null，禁止按 Ticker 回退到 ai_text_cache.csv。"
+        "price_5d/10d/20d 与 review_stage 只透传 review_history.csv 原值（review.py 按 OHLCV 交易日历计算），"
+        "本导出器不重算、不补值。"
     )
     review["ai_snapshot_total"] = len(ai_snapshots)
     review["ai_snapshot_matched"] = snap_matched
@@ -2470,7 +2640,10 @@ def main(argv=None):
             "notes": notes,
             "missing_fields": missing,
             "schema_hint": {
-                "stocks[]": "pending CSV 派生；technical 为 OHLCV 计算值；ohlcv 为完整日线（已剔除未完成 K 棒）",
+                "stocks[]": ("当前有效 Core + Observation 事件派生（trade_history 仍有效事件 + pending 新推荐，"
+                             "复用 review.py active_list/observation_list 同口径）；"
+                             "recommendation_id=Ticker|Rec_Date|Tag；technical 为 OHLCV 计算值；"
+                             "ohlcv 为完整日线（已剔除未完成 K 棒）"),
                 "market.assets[]": "13 项全球市场资产；price/change_* 未取到时为 null",
                 "options[]": "option_strategies.csv 原样字段；Wall 缺失或 LEGACY_INVALID_WALL 时用 yfinance 期权链 OI 最大值重算（wall_source=yfinance_option_chain_max_oi）",
                 "review": "口径与 review.py 一致（近30天，closed 需 CLOSED_STOCK_STATUSES 且有 pnl）",
@@ -2481,17 +2654,18 @@ def main(argv=None):
                                      "ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，无匹配为 null；"
                                      "不含任何 Ticker-only 回退的 AI 文本"),
                 "history[]": "review_history.csv 每日快照的仍在跟踪事件数",
-                "stocks[].ai": "pending CSV 中 Scan 已生成的 AI 六段文本；本次为空时会从历史 pending/scan_results CSV 按 Ticker 回填（ai_source=history_backfill）。空字符串表示本次与历史都没有，前端显示 AI analysis pending",
+                "stocks[].ai": ("AI 属于 Recommendation Event：只按 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 三元组"
+                                "精确匹配 + 当天 pending CSV 直写；禁止 Ticker-only 回退到 ai_text_cache.csv。"
+                                "无 Snapshot 时为 null（前端显示 AI analysis pending）"),
             },
         },
     }
 
     if ai_status == "pending":
         notes.append(
-            "AI 六段：pending CSV "
-            + ("尚无这 6 列（旧版文件，未破坏）" if not ai_cols_present else "本次 Scan 未产出内容")
-            + "，且历史 pending / scan_results CSV 中未检索到同名 Ticker 的历史文本，"
-            + "前端显示 AI analysis pending；本脚本未调用任何 AI 接口，也未生成替代文案。"
+            "AI 六段：当前股票池中没有任何事件命中 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 三元组，"
+            "且当天 pending CSV 也未直写 AI 文本，前端显示 AI analysis pending；"
+            "本脚本未调用任何 AI 接口，也未生成替代文案，且不按 Ticker 回退到 ai_text_cache.csv。"
         )
 
     # ---- 写出 ----
