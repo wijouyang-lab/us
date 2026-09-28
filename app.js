@@ -596,7 +596,7 @@
   */
   var REV_PAGE = 20;                        /* 每次「加载更多」的增量 */
   var RNA = 'N/A';
-  var revFilter = 'all', revQuery = '', revShown = REV_PAGE, revExp = {};
+  var revFilter = 'all', revQuery = '', revShown = REV_PAGE, revExp = {}, revAiExp = {};
 
   /* 与 dashboard_export.py CLOSED_STOCK_STATUSES 保持一致（仅用于筛选，不产生新口径） */
   var REV_CLOSED = {
@@ -662,6 +662,50 @@
       (na ? ' na' : '') + (cls && !na ? ' ' + cls : '') + '">' + v + '</span></div>';
   }
 
+  /* ---- AI Snapshot（review.records[].ai_snapshot，仅精确匹配，绝不回退 stocks[].ai / CSV） ----
+     后端已按 (Ticker, Rec_Date, Tag) 精确匹配；前端只读 record.ai_snapshot，
+     不建立任何 Ticker→AI 映射、不读 ai_snapshot.csv / ai_text_cache.csv、不调用 GPT。 */
+  function recAiPara(v) { return v ? esc(v) : '<span class="na">' + RNA + '</span>'; }
+  function recAiList(v) {
+    if (!v) return '<li class="na">' + RNA + '</li>';
+    var parts = String(v).split(/；|;|\|/).map(function (x) { return x.trim(); }).filter(Boolean);
+    if (!parts.length) parts = [String(v)];
+    return parts.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('');
+  }
+
+  function recAiHtml(r) {
+    var snap = r.ai_snapshot;
+    var id = r.event_id || '';
+    var aiOpen = !!revAiExp[id];
+    var none = '<div class="rh-ai rh-ai-none">' +
+      '<div class="rh-ai-title">AI 分析 Snapshot</div>' +
+      '<div class="rh-ai-na">AI Snapshot 尚未建立</div></div>';
+
+    if (!snap || typeof snap !== 'object') return none;
+
+    var n = normAi(snap);
+    var hasAny = !!(n.chain || n.news || n.conclusion || n.catalysts || n.risks || n.invalidation);
+    if (!hasAny) return none;
+
+    var meta = [r.rec_date, r.tag].filter(function (x) { return x; }).join(' · ');
+    var body =
+      '<div class="rh-ai-block"><div class="rh-ai-k">产业链逻辑</div><p class="rh-ai-p">' + recAiPara(n.chain) + '</p></div>' +
+      '<div class="rh-ai-block"><div class="rh-ai-k">新闻核查</div><p class="rh-ai-p">' + recAiPara(n.news) + '</p></div>' +
+      '<div class="rh-ai-block"><div class="rh-ai-k">盘前结论</div><p class="rh-ai-p">' + recAiPara(n.conclusion) + '</p></div>' +
+      '<div class="rh-ai-block"><div class="rh-ai-k">催化剂</div><ul class="rh-ai-ul">' + recAiList(n.catalysts) + '</ul></div>' +
+      '<div class="rh-ai-block"><div class="rh-ai-k">风险</div><ul class="rh-ai-ul">' + recAiList(n.risks) + '</ul></div>' +
+      '<div class="rh-ai-block"><div class="rh-ai-k">失效条件</div><p class="rh-ai-p">' + recAiPara(n.invalidation) + '</p></div>';
+
+    return '<div class="rh-ai' + (aiOpen ? ' ai-open' : '') + '">' +
+      '<button type="button" class="rh-ai-head">' +
+        '<span class="rh-ai-title">AI 分析 Snapshot</span>' +
+        '<span class="rh-ai-meta">' + esc(meta || RNA) + '</span>' +
+        '<span class="rh-ai-arrow">' + (aiOpen ? '▲' : '▼') + '</span>' +
+      '</button>' +
+      '<div class="rh-ai-body">' + body + '</div>' +
+    '</div>';
+  }
+
   function recCard(r) {
     var id = r.event_id || '';
     var pnl = num(r.pnl_pct);
@@ -699,7 +743,9 @@
         gi('持有天数', recDays(r.days_held), r.days_held) +
         gi('止损', recMoney(r.stop_loss), r.stop_loss) +
         gi('评分', recScore(r.score), r.score) +
-      '</div></div>' +
+      '</div>' +
+      recAiHtml(r) +
+      '</div>' +
     '</div>';
   }
 
@@ -798,6 +844,19 @@
 
     /* 展开 / 收起详情：纯前端交互，不请求任何接口、不调用 GPT */
     list.addEventListener('click', function (e) {
+      /* AI Snapshot 六段的折叠开关：独立于卡片整体展开，点击不联动收起卡片 */
+      var aiHead = closestByClass(e.target, 'rh-ai-head', list);
+      if (aiHead) {
+        var aiCard = closestByClass(aiHead, 'rh-card', list);
+        var aiId = aiCard ? aiCard.getAttribute('data-id') || '' : '';
+        if (aiId) { if (revAiExp[aiId]) delete revAiExp[aiId]; else revAiExp[aiId] = 1; }
+        var aiWrap = aiHead.parentNode;
+        var aiOpen = !!revAiExp[aiId];
+        if (aiWrap && aiWrap.classList) aiWrap.classList.toggle('ai-open', aiOpen);
+        var aiArrow = aiHead.querySelector('.rh-ai-arrow');
+        if (aiArrow) aiArrow.textContent = aiOpen ? '▲' : '▼';
+        return;
+      }
       var card = closestByClass(e.target, 'rh-card', list);
       if (!card) return;
       var id = card.getAttribute('data-id') || '';
