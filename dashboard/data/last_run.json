@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-28T22:16:29Z",
-  "market_updated_at": "2026-09-28T22:16:28Z",
-  "technical_updated_at": "2026-09-28T22:16:29Z",
+  "generated_at": "2026-09-28T22:31:32Z",
+  "market_updated_at": "2026-09-28T22:31:31Z",
+  "technical_updated_at": "2026-09-28T22:31:32Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -21,7 +21,7 @@
     "core": 57,
     "observation": 48,
     "kline_ok": 105,
-    "technical_ok": 103,
+    "technical_ok": 105,
     "price_source_breakdown": {
       "realtime": 105
     }
@@ -37,10 +37,7 @@
     "price_backfill_count": 7,
     "partial_items": []
   },
-  "warnings": [
-    "A: 仅取得 1 个完整交易日（目标 180，下限 60），MA50 等技术指标可靠性下降",
-    "NOW: 仅取得 1 个完整交易日（目标 180，下限 60），MA50 等技术指标可靠性下降"
-  ],
+  "warnings": [],
   "ai_status": "partial",
   "ai_calls": 0
 }
