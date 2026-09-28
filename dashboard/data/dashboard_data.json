@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-28T03:45:38Z",
+  "generated_at": "2026-09-28T04:00:36Z",
   "stocks": [
     {
       "ticker": "APH",
@@ -1513,7 +1513,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:24Z",
+        "computed_at": "2026-09-28T04:00:22Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -3031,7 +3031,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:24Z",
+        "computed_at": "2026-09-28T04:00:23Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -4549,7 +4549,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:24Z",
+        "computed_at": "2026-09-28T04:00:23Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -6067,7 +6067,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:24Z",
+        "computed_at": "2026-09-28T04:00:23Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -7585,7 +7585,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:25Z",
+        "computed_at": "2026-09-28T04:00:23Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -9103,7 +9103,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:25Z",
+        "computed_at": "2026-09-28T04:00:24Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -10621,7 +10621,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:25Z",
+        "computed_at": "2026-09-28T04:00:24Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -12139,7 +12139,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-09-25",
         "bars_source": "yfinance",
-        "computed_at": "2026-09-28T03:45:25Z",
+        "computed_at": "2026-09-28T04:00:24Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -12163,7 +12163,7 @@
         "change_1d": 0.9321,
         "change_5d": 0.2825,
         "change_20d": -3.2497,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -12181,7 +12181,7 @@
         "change_1d": 0.5099,
         "change_5d": 1.2144,
         "change_20d": 0.1607,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -12199,7 +12199,7 @@
         "change_1d": 0.4802,
         "change_5d": 2.0593,
         "change_20d": 1.987,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -12217,7 +12217,7 @@
         "change_1d": 0.0,
         "change_5d": 0.4051,
         "change_20d": 3.0492,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -12235,7 +12235,7 @@
         "change_1d": 0.0,
         "change_5d": 3.7215,
         "change_20d": 10.9589,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -12253,7 +12253,7 @@
         "change_1d": 0.0,
         "change_5d": 1.9022,
         "change_20d": 7.9137,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -12271,7 +12271,7 @@
         "change_1d": 0.0,
         "change_5d": 3.1096,
         "change_20d": 13.899,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -12289,7 +12289,7 @@
         "change_1d": 0.0,
         "change_5d": 3.2452,
         "change_20d": 6.0297,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -12303,17 +12303,17 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.126,
-        "change_1d": 0.0,
-        "change_5d": 0.693,
-        "change_20d": 1.4303,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 101.116,
+        "change_1d": 0.1446,
+        "change_5d": 0.894,
+        "change_20d": 1.9726,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       },
       {
         "symbol": "XAUUSD=X",
@@ -12321,17 +12321,17 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4226.3999,
-        "change_1d": 0.0047,
-        "change_5d": -3.5927,
-        "change_20d": -6.6999,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 4230.0,
+        "change_1d": -2.1105,
+        "change_5d": -4.4046,
+        "change_20d": -9.3053,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       },
       {
         "symbol": "XAGUSD=X",
@@ -12339,17 +12339,17 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 62.385,
-        "change_1d": 0.0,
-        "change_5d": -5.226,
-        "change_20d": -6.8811,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 62.465,
+        "change_1d": -2.7706,
+        "change_5d": -6.1467,
+        "change_20d": -10.0304,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       },
       {
         "symbol": "HG=F",
@@ -12357,17 +12357,17 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.6615,
-        "change_1d": 0.03,
-        "change_5d": -0.3739,
-        "change_20d": 1.5163,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 6.669,
+        "change_1d": -0.3958,
+        "change_5d": 0.8163,
+        "change_20d": 1.2449,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       },
       {
         "symbol": "CL=F",
@@ -12375,17 +12375,17 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 93.8,
-        "change_1d": 0.0,
-        "change_5d": -2.0672,
-        "change_20d": 12.47,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 93.84,
+        "change_1d": 1.5474,
+        "change_5d": -6.4407,
+        "change_20d": 12.3429,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       },
       {
         "symbol": "BZ=F",
@@ -12393,17 +12393,17 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 98.75,
-        "change_1d": 0.0,
-        "change_5d": -1.5846,
-        "change_20d": 10.5699,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 98.81,
+        "change_1d": -5.2818,
+        "change_5d": -4.8715,
+        "change_20d": 10.1561,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       },
       {
         "symbol": "NG=F",
@@ -12411,17 +12411,17 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.109,
-        "change_1d": 0.0,
-        "change_5d": 9.6262,
-        "change_20d": 7.6524,
-        "updated_at": "2026-09-28T03:45:25Z",
+        "price": 3.115,
+        "change_1d": -2.5344,
+        "change_5d": 6.9712,
+        "change_20d": 7.1551,
+        "updated_at": "2026-09-28T04:00:24Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790566500,
-        "last_bar_date": "2026-09-27"
+        "quote_ts": null,
+        "last_bar_date": "2026-09-25"
       }
     ],
     "available_count": 15,
@@ -12433,7 +12433,7 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-09-28T03:45:36Z"
+    "updated_at": "2026-09-28T04:00:34Z"
   },
   "options": [
     {
@@ -12482,8 +12482,8 @@
   ],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-09-27 23:45:38",
-    "window_start": "2026-08-28",
+    "as_of_us": "2026-09-28 00:00:36",
+    "window_start": "2026-08-29",
     "core_closed_count": 3,
     "core_open_count": 6,
     "observation_closed_count": 5,
@@ -12596,7 +12596,7 @@
         "rec_price": 79.26000213623047,
         "cur_price": 78.58999633789062,
         "pnl_pct": -0.85,
-        "days_held": 4,
+        "days_held": 5,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12611,7 +12611,7 @@
         "rec_price": 20.440000534057617,
         "cur_price": 20.479999542236328,
         "pnl_pct": 0.2,
-        "days_held": 4,
+        "days_held": 5,
         "stop_loss": null,
         "score": "63.5",
         "source": "review_history"
@@ -12626,7 +12626,7 @@
         "rec_price": 88.69999694824219,
         "cur_price": 86.81999969482422,
         "pnl_pct": -2.12,
-        "days_held": 4,
+        "days_held": 5,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12641,7 +12641,7 @@
         "rec_price": 90.9219970703125,
         "cur_price": 91.55999755859375,
         "pnl_pct": 0.7,
-        "days_held": 4,
+        "days_held": 5,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12656,7 +12656,7 @@
         "rec_price": 38.540000915527344,
         "cur_price": 37.849998474121094,
         "pnl_pct": -1.79,
-        "days_held": 4,
+        "days_held": 5,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12671,7 +12671,7 @@
         "rec_price": 315.17999267578125,
         "cur_price": 301.9599914550781,
         "pnl_pct": -4.19,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12686,7 +12686,7 @@
         "rec_price": 37.99,
         "cur_price": 37.15999984741211,
         "pnl_pct": -2.18,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12701,7 +12701,7 @@
         "rec_price": 231.6199951171875,
         "cur_price": 252.87,
         "pnl_pct": 9.17,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12716,7 +12716,7 @@
         "rec_price": 20.72,
         "cur_price": 20.479999542236328,
         "pnl_pct": -1.16,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "63.5",
         "source": "review_history"
@@ -12746,7 +12746,7 @@
         "rec_price": 27.08,
         "cur_price": 26.93000030517578,
         "pnl_pct": -0.55,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12761,7 +12761,7 @@
         "rec_price": 72.51000213623047,
         "cur_price": 76.22000122070312,
         "pnl_pct": 5.12,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12791,7 +12791,7 @@
         "rec_price": 113.66,
         "cur_price": 109.6500015258789,
         "pnl_pct": -3.53,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12806,7 +12806,7 @@
         "rec_price": 127.7300033569336,
         "cur_price": 131.58999633789062,
         "pnl_pct": 3.02,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12821,7 +12821,7 @@
         "rec_price": 653.8900146484375,
         "cur_price": 665.2999877929688,
         "pnl_pct": 1.74,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12836,7 +12836,7 @@
         "rec_price": 111.80000305175781,
         "cur_price": 110.72000122070312,
         "pnl_pct": -0.97,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12851,7 +12851,7 @@
         "rec_price": 232.76,
         "cur_price": 229.8699951171875,
         "pnl_pct": -1.24,
-        "days_held": 5,
+        "days_held": 6,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12866,7 +12866,7 @@
         "rec_price": 248.9199981689453,
         "cur_price": 240.69000244140625,
         "pnl_pct": -3.31,
-        "days_held": 6,
+        "days_held": 7,
         "stop_loss": null,
         "score": "63.5",
         "source": "review_history"
@@ -12881,7 +12881,7 @@
         "rec_price": 229.72999572753906,
         "cur_price": 251.49000549316406,
         "pnl_pct": 9.47,
-        "days_held": 6,
+        "days_held": 7,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12896,7 +12896,7 @@
         "rec_price": 212.02999877929688,
         "cur_price": 221.55999755859375,
         "pnl_pct": 4.49,
-        "days_held": 6,
+        "days_held": 7,
         "stop_loss": null,
         "score": "63.5",
         "source": "review_history"
@@ -12926,7 +12926,7 @@
         "rec_price": 21.920000076293945,
         "cur_price": 22.149999618530273,
         "pnl_pct": 1.05,
-        "days_held": 6,
+        "days_held": 7,
         "stop_loss": null,
         "score": "64.9",
         "source": "review_history"
@@ -12941,7 +12941,7 @@
         "rec_price": 60.060001373291016,
         "cur_price": 57.63999938964844,
         "pnl_pct": -4.03,
-        "days_held": 6,
+        "days_held": 7,
         "stop_loss": null,
         "score": "64.2",
         "source": "review_history"
@@ -12971,7 +12971,7 @@
         "rec_price": 172.4600067138672,
         "cur_price": 173.55,
         "pnl_pct": 0.63,
-        "days_held": 9,
+        "days_held": 10,
         "stop_loss": null,
         "score": "74.0",
         "source": "review_history"
@@ -12986,7 +12986,7 @@
         "rec_price": 152.0,
         "cur_price": 154.47999572753906,
         "pnl_pct": 1.63,
-        "days_held": 9,
+        "days_held": 10,
         "stop_loss": null,
         "score": "77.5",
         "source": "review_history"
@@ -13001,7 +13001,7 @@
         "rec_price": 260.82000732421875,
         "cur_price": 272.6199951171875,
         "pnl_pct": 4.52,
-        "days_held": 9,
+        "days_held": 10,
         "stop_loss": null,
         "score": "74.0",
         "source": "review_history"
@@ -13016,7 +13016,7 @@
         "rec_price": 412.0,
         "cur_price": 387.2,
         "pnl_pct": -6.02,
-        "days_held": 9,
+        "days_held": 10,
         "stop_loss": null,
         "score": "74.7",
         "source": "review_history"
@@ -13061,7 +13061,7 @@
         "rec_price": 114.0,
         "cur_price": 113.47000122070312,
         "pnl_pct": -0.46,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13076,7 +13076,7 @@
         "rec_price": 197.02999877929688,
         "cur_price": 185.64999389648438,
         "pnl_pct": -5.78,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13091,7 +13091,7 @@
         "rec_price": 981.4600219726562,
         "cur_price": 936.3599853515625,
         "pnl_pct": -4.6,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13106,7 +13106,7 @@
         "rec_price": 353.3800048828125,
         "cur_price": 337.5299987792969,
         "pnl_pct": -4.49,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13121,7 +13121,7 @@
         "rec_price": 140.8800048828125,
         "cur_price": 142.11000061035156,
         "pnl_pct": 0.87,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13136,7 +13136,7 @@
         "rec_price": 81.77999877929688,
         "cur_price": 79.0,
         "pnl_pct": -3.4,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13151,7 +13151,7 @@
         "rec_price": 70.80999755859375,
         "cur_price": 67.66999816894531,
         "pnl_pct": -4.43,
-        "days_held": 11,
+        "days_held": 12,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13166,7 +13166,7 @@
         "rec_price": 45.66999816894531,
         "cur_price": 43.70000076293945,
         "pnl_pct": -4.31,
-        "days_held": 12,
+        "days_held": 13,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13181,7 +13181,7 @@
         "rec_price": 95.0,
         "cur_price": 90.80000305175781,
         "pnl_pct": -4.42,
-        "days_held": 12,
+        "days_held": 13,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13196,7 +13196,7 @@
         "rec_price": 251.89999389648438,
         "cur_price": 239.2100067138672,
         "pnl_pct": -5.04,
-        "days_held": 12,
+        "days_held": 13,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13211,7 +13211,7 @@
         "rec_price": 39.7400016784668,
         "cur_price": 41.040000915527344,
         "pnl_pct": 3.27,
-        "days_held": 12,
+        "days_held": 13,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13226,7 +13226,7 @@
         "rec_price": 368.1300048828125,
         "cur_price": 393.29998779296875,
         "pnl_pct": 6.84,
-        "days_held": 12,
+        "days_held": 13,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13241,7 +13241,7 @@
         "rec_price": 97.44000244140625,
         "cur_price": 95.16000366210938,
         "pnl_pct": -2.34,
-        "days_held": 13,
+        "days_held": 14,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13271,7 +13271,7 @@
         "rec_price": 149.02000427246094,
         "cur_price": 141.83999633789062,
         "pnl_pct": -4.82,
-        "days_held": 13,
+        "days_held": 14,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13286,7 +13286,7 @@
         "rec_price": 82.05000305175781,
         "cur_price": 78.41999816894531,
         "pnl_pct": -4.42,
-        "days_held": 13,
+        "days_held": 14,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13316,7 +13316,7 @@
         "rec_price": 72.51000213623047,
         "cur_price": 71.11000061035156,
         "pnl_pct": -1.93,
-        "days_held": 13,
+        "days_held": 14,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13331,7 +13331,7 @@
         "rec_price": 315.5400085449219,
         "cur_price": 315.25,
         "pnl_pct": -0.09,
-        "days_held": 16,
+        "days_held": 17,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13346,7 +13346,7 @@
         "rec_price": 313.0199890136719,
         "cur_price": 313.1300048828125,
         "pnl_pct": 0.04,
-        "days_held": 16,
+        "days_held": 17,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13361,7 +13361,7 @@
         "rec_price": 363.55999755859375,
         "cur_price": 398.29998779296875,
         "pnl_pct": 9.56,
-        "days_held": 16,
+        "days_held": 17,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13376,7 +13376,7 @@
         "rec_price": 394.989990234375,
         "cur_price": 388.3800048828125,
         "pnl_pct": -1.67,
-        "days_held": 16,
+        "days_held": 17,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13391,7 +13391,7 @@
         "rec_price": 53.310001373291016,
         "cur_price": 52.5099983215332,
         "pnl_pct": -1.5,
-        "days_held": 16,
+        "days_held": 17,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13406,7 +13406,7 @@
         "rec_price": 84.2699966430664,
         "cur_price": 91.44999694824219,
         "pnl_pct": 8.52,
-        "days_held": 16,
+        "days_held": 17,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13436,7 +13436,7 @@
         "rec_price": 140.1199951171875,
         "cur_price": 133.82000732421875,
         "pnl_pct": -4.5,
-        "days_held": 17,
+        "days_held": 18,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13466,7 +13466,7 @@
         "rec_price": 67.75782002058538,
         "cur_price": 68.94999694824219,
         "pnl_pct": 1.76,
-        "days_held": 17,
+        "days_held": 18,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13481,7 +13481,7 @@
         "rec_price": 74.38978656363246,
         "cur_price": 71.80999755859375,
         "pnl_pct": -3.47,
-        "days_held": 17,
+        "days_held": 18,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13496,7 +13496,7 @@
         "rec_price": 137.00999450683594,
         "cur_price": 133.19000244140625,
         "pnl_pct": -2.79,
-        "days_held": 18,
+        "days_held": 19,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13511,7 +13511,7 @@
         "rec_price": 147.5399932861328,
         "cur_price": 145.47000122070312,
         "pnl_pct": -1.4,
-        "days_held": 18,
+        "days_held": 19,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13526,7 +13526,7 @@
         "rec_price": 37.88999938964844,
         "cur_price": 40.34000015258789,
         "pnl_pct": 6.47,
-        "days_held": 18,
+        "days_held": 19,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13541,7 +13541,7 @@
         "rec_price": 52.9900016784668,
         "cur_price": 52.939998626708984,
         "pnl_pct": -0.09,
-        "days_held": 18,
+        "days_held": 19,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13556,7 +13556,7 @@
         "rec_price": 893.1400146484375,
         "cur_price": 803.1300048828125,
         "pnl_pct": -10.08,
-        "days_held": 18,
+        "days_held": 19,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13571,7 +13571,7 @@
         "rec_price": 32.720001220703125,
         "cur_price": 33.06999969482422,
         "pnl_pct": 1.07,
-        "days_held": 20,
+        "days_held": 21,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13586,7 +13586,7 @@
         "rec_price": 86.69999694824219,
         "cur_price": 86.69999694824219,
         "pnl_pct": 0.0,
-        "days_held": 20,
+        "days_held": 21,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13601,7 +13601,7 @@
         "rec_price": 65.4000015258789,
         "cur_price": 65.83999633789062,
         "pnl_pct": 0.67,
-        "days_held": 20,
+        "days_held": 21,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13616,7 +13616,7 @@
         "rec_price": 563.2899780273438,
         "cur_price": 588.4000244140625,
         "pnl_pct": 4.46,
-        "days_held": 20,
+        "days_held": 21,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13631,7 +13631,7 @@
         "rec_price": 174.36000061035156,
         "cur_price": 175.08999633789062,
         "pnl_pct": 0.42,
-        "days_held": 20,
+        "days_held": 21,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13646,7 +13646,7 @@
         "rec_price": 140.38999938964844,
         "cur_price": 143.55999755859375,
         "pnl_pct": 2.26,
-        "days_held": 20,
+        "days_held": 21,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13661,7 +13661,7 @@
         "rec_price": 176.38999938964844,
         "cur_price": 175.5800018310547,
         "pnl_pct": -0.46,
-        "days_held": 23,
+        "days_held": 24,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13691,7 +13691,7 @@
         "rec_price": 386.1000061035156,
         "cur_price": 421.9599914550781,
         "pnl_pct": 9.29,
-        "days_held": 23,
+        "days_held": 24,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13706,7 +13706,7 @@
         "rec_price": 251.77999877929688,
         "cur_price": 274.2099914550781,
         "pnl_pct": 8.91,
-        "days_held": 23,
+        "days_held": 24,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13721,7 +13721,7 @@
         "rec_price": 200.77000427246094,
         "cur_price": 193.5399932861328,
         "pnl_pct": -3.6,
-        "days_held": 23,
+        "days_held": 24,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13736,7 +13736,7 @@
         "rec_price": 208.1999969482422,
         "cur_price": 206.60000610351562,
         "pnl_pct": -0.77,
-        "days_held": 23,
+        "days_held": 24,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13751,7 +13751,7 @@
         "rec_price": 75.39229233679121,
         "cur_price": 73.62999725341797,
         "pnl_pct": -2.34,
-        "days_held": 23,
+        "days_held": 24,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13766,7 +13766,7 @@
         "rec_price": 160.24000549316406,
         "cur_price": 133.3699951171875,
         "pnl_pct": -16.77,
-        "days_held": 24,
+        "days_held": 25,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13781,7 +13781,7 @@
         "rec_price": 54.650001525878906,
         "cur_price": 53.27000045776367,
         "pnl_pct": -2.53,
-        "days_held": 24,
+        "days_held": 25,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13796,7 +13796,7 @@
         "rec_price": 97.1500015258789,
         "cur_price": 97.3499984741211,
         "pnl_pct": 0.21,
-        "days_held": 24,
+        "days_held": 25,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13811,7 +13811,7 @@
         "rec_price": 96.45999908447266,
         "cur_price": 93.22000122070312,
         "pnl_pct": -3.36,
-        "days_held": 24,
+        "days_held": 25,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13826,7 +13826,7 @@
         "rec_price": 79.56999969482422,
         "cur_price": 74.41000366210938,
         "pnl_pct": -6.48,
-        "days_held": 24,
+        "days_held": 25,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13841,7 +13841,7 @@
         "rec_price": 51.09000015258789,
         "cur_price": 48.45000076293945,
         "pnl_pct": -5.17,
-        "days_held": 24,
+        "days_held": 25,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13856,7 +13856,7 @@
         "rec_price": 84.6500015258789,
         "cur_price": 88.08999633789062,
         "pnl_pct": 4.06,
-        "days_held": 25,
+        "days_held": 26,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13871,7 +13871,7 @@
         "rec_price": 131.5,
         "cur_price": 124.94999694824219,
         "pnl_pct": -4.98,
-        "days_held": 25,
+        "days_held": 26,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13886,7 +13886,7 @@
         "rec_price": 120.22000122070312,
         "cur_price": 118.54000091552734,
         "pnl_pct": -1.4,
-        "days_held": 25,
+        "days_held": 26,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13901,7 +13901,7 @@
         "rec_price": 81.36000061035156,
         "cur_price": 80.83999633789062,
         "pnl_pct": -0.64,
-        "days_held": 25,
+        "days_held": 26,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13916,7 +13916,7 @@
         "rec_price": 87.98999786376953,
         "cur_price": 86.76000213623047,
         "pnl_pct": -1.4,
-        "days_held": 25,
+        "days_held": 26,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -13931,7 +13931,7 @@
         "rec_price": 61.68000030517578,
         "cur_price": 60.25,
         "pnl_pct": -2.32,
-        "days_held": 25,
+        "days_held": 26,
         "stop_loss": null,
         "score": "N/A",
         "source": "review_history"
@@ -14081,7 +14081,7 @@
         "rec_price": 180.05999755859375,
         "cur_price": 195.0301,
         "pnl_pct": 8.31,
-        "days_held": 37,
+        "days_held": 38,
         "stop_loss": 152.61,
         "score": "69",
         "source": "trade_history"
@@ -14096,7 +14096,7 @@
         "rec_price": 479.8800048828125,
         "cur_price": 517.89,
         "pnl_pct": 7.92,
-        "days_held": 37,
+        "days_held": 38,
         "stop_loss": 407.98,
         "score": "70",
         "source": "trade_history"
@@ -17141,7 +17141,7 @@
         "rec_price": null,
         "cur_price": 0.0005,
         "pnl_pct": null,
-        "days_held": 116,
+        "days_held": 117,
         "stop_loss": null,
         "score": "nan",
         "source": "trade_history"
@@ -17486,7 +17486,7 @@
         "rec_price": 271.85,
         "cur_price": 249.9799,
         "pnl_pct": -8.04,
-        "days_held": 122,
+        "days_held": 123,
         "stop_loss": null,
         "score": "83.5",
         "source": "trade_history"
@@ -17621,7 +17621,7 @@
         "rec_price": null,
         "cur_price": 0.0001,
         "pnl_pct": null,
-        "days_held": 122,
+        "days_held": 123,
         "stop_loss": null,
         "score": "nan",
         "source": "trade_history"
@@ -18105,8 +18105,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-09-28T03:45:36Z",
-    "technical_updated_at": "2026-09-28T03:45:38Z",
+    "market_updated_at": "2026-09-28T04:00:34Z",
+    "technical_updated_at": "2026-09-28T04:00:36Z",
     "counts": {
       "core": 3,
       "observation": 5,
