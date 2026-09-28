@@ -393,7 +393,8 @@ REVIEW_COLUMNS = [
     "Days_Held","PnL_Pct","Maturity_PnL","Hold_Period","Stop_Loss","Stop_Method",
     "Trail_Stop","Rec_Count","Status","Score","Review_Risk_Status",
     "Review_Risk_Date","Review_Stop_Distance_Pct","Review_Risk_Note",
-    "Option_Type","Strike","Expiry"
+    "Option_Type","Strike","Expiry",
+    "Price_5D","PnL_5D","Price_10D","PnL_10D","Price_20D","PnL_20D","Review_Stage"
 ]
 
 def ensure_trade_history_columns():
@@ -702,8 +703,8 @@ for t in recent_picks["Ticker"].astype(str):
         clean_tickers.append(rt)
 clean_tickers = list(dict.fromkeys(clean_tickers))
 
-print(f"📡 获取 {len(clean_tickers)} 只真实美股 ticker 的 60日 OHLC...")
-df_hist_all, ohlc_map_today = download_ohlc_safe(clean_tickers, period="60d")
+print(f"📡 获取 {len(clean_tickers)} 只真实美股 ticker 的 90日 OHLC...")
+df_hist_all, ohlc_map_today = download_ohlc_safe(clean_tickers, period="90d")
 
 # price_map_today = 用于当前跟踪/期权正股报价：今天收盘 > 最近一个有效交易日收盘 > fast_info
 # ohlc_map_today = 只有本次 Review 交易日（最近已完成常规交易日）的完整 OHLC 才能用于该交易日止损触发判断。
@@ -1883,9 +1884,86 @@ def append_review_rows(rows):
             REVIEW_HISTORY, index=False, encoding="utf-8"
         )
 
+# ============================================================
+# 12b. 里程碑：5D / 10D / 20D / Review_Stage（历史客观计算，不调用 GPT）
+# ============================================================
+
+# 明确的股票结束状态（与下方 KPI 处共用同一份，提前定义供里程碑阶段使用）
+CLOSED_STOCK_STATUSES = {
+    "Stop_Loss_Hit",
+    "Dropped",
+    "Period_Matured",
+    "Forced_Exit",
+    "移动止损清仓",
+    "止损触发清仓",
+    "已超期归档",
+    "周期到期清仓",
+    "突发清仓暂停",
+    "Observation_Closed",
+}
+
+def get_nth_trading_day_close(df_hist, ticker, rec_date, n):
+    """Rec_Date 之后第 n 根有效 OHLCV bar 的收盘价。
+
+    交易日历 = download_ohlc_safe() 返回的 df_hist_all 的 Date 列（OHLCV bar），
+    而不是自然日、也不是 pd.bdate_range（后者把 NYSE 节假日也当交易日）。
+    不足 n 根 / 数据缺失 → None，绝不用当前价或最近价顶替。
+    """
+    try:
+        if df_hist is None or df_hist.empty or not n or n < 1:
+            return None
+        sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
+        if sub.empty:
+            return None
+        sub["_d"] = _normalize_market_dates(sub["Date"])
+        base = pd.Timestamp(rec_date).normalize()
+        sub = sub[sub["_d"] > base].sort_values("_d")
+        if len(sub) < n:
+            return None
+        return safe_float(sub.iloc[n - 1].get("close"))
+    except Exception:
+        return None
+
+def compute_review_milestones(ticker, rec_date, rec_price, status):
+    """计算单个推荐事件的 5D/10D/20D 里程碑客观收盘价 + PnL + Review_Stage。
+
+    - 价格来自 OHLCV 的「Rec_Date 之后第 N 根 bar」客观收盘，与是否提前退出无关。
+    - 未来 milestone 未到 → null；不猜未来价、不用当前价。
+    - PnL_N = (Price_N - Rec_Price) / Rec_Price * 100，round(..., 2)；Rec_Price 缺失则 PnL 为 null。
+    - Review_Stage：FINAL（status ∈ CLOSED_STOCK_STATUSES）> 20D > 10D > 5D > OPEN。
+    - 期权不参与（调用方保证不传期权）。
+    """
+    out = {
+        "Price_5D": "", "PnL_5D": "",
+        "Price_10D": "", "PnL_10D": "",
+        "Price_20D": "", "PnL_20D": "",
+        "Review_Stage": "OPEN",
+    }
+    rp = safe_float(rec_price)
+    for label, n in (("5", 5), ("10", 10), ("20", 20)):
+        px = get_nth_trading_day_close(df_hist_all, ticker, rec_date, n)
+        pnl = None
+        if px is not None and rp is not None and rp > 0:
+            pnl = round((px - rp) / rp * 100, 2)
+        out[f"Price_{label}D"] = "" if px is None else str(px)
+        out[f"PnL_{label}D"] = "" if pnl is None else str(pnl)
+
+    if clean_text(status) in CLOSED_STOCK_STATUSES:
+        out["Review_Stage"] = "FINAL"
+    elif out["Price_20D"] != "":
+        out["Review_Stage"] = "20D"
+    elif out["Price_10D"] != "":
+        out["Review_Stage"] = "10D"
+    elif out["Price_5D"] != "":
+        out["Review_Stage"] = "5D"
+    else:
+        out["Review_Stage"] = "OPEN"
+    return out
+
 review_rows = []
 
 for item in active_list:
+    _ms = compute_review_milestones(item["代码"], item["首次推荐日"], item["首次推荐价"], "持仓中")
     review_rows.append({
         "Review_Date":REVIEW_SESSION_DATE,"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
         "Rec_Date":item["首次推荐日"],"Rec_Price":item["首次推荐价"],"Cur_Price":item["现价"],
@@ -1897,10 +1975,15 @@ for item in active_list:
         "Review_Risk_Date":item.get("Review_Risk_Date",""),
         "Review_Stop_Distance_Pct":item.get("Review_Stop_Distance_Pct",""),
         "Review_Risk_Note":item.get("Review_Risk_Note",""),
-        "Option_Type":"","Strike":"","Expiry":""
+        "Option_Type":"","Strike":"","Expiry":"",
+        "Price_5D":_ms["Price_5D"],"PnL_5D":_ms["PnL_5D"],
+        "Price_10D":_ms["Price_10D"],"PnL_10D":_ms["PnL_10D"],
+        "Price_20D":_ms["Price_20D"],"PnL_20D":_ms["PnL_20D"],
+        "Review_Stage":_ms["Review_Stage"]
     })
 
 for item in stopped_list:
+    _ms = compute_review_milestones(item["代码"], item["首次推荐日"], item["首次推荐价"], "移动止损清仓")
     review_rows.append({
         "Review_Date":REVIEW_SESSION_DATE,"Ticker":item["代码"],"Name":item["名称"],"Tag":item["标签"],
         "Rec_Date":item["首次推荐日"],"Rec_Price":item["首次推荐价"],"Cur_Price":item["止损结算价"],
@@ -1910,10 +1993,15 @@ for item in stopped_list:
         "Trail_Stop":item.get("止损价",""),"Rec_Count":item["系统连续推荐次数"],"Status":"移动止损清仓",
         "Score":item["推荐评分"],"Review_Risk_Status":"STOP_TRIGGERED","Review_Risk_Date":REVIEW_SESSION_DATE,
         "Review_Stop_Distance_Pct":0,"Review_Risk_Note":f"移动止损触发：{item.get('止损价','')}",
-        "Option_Type":"","Strike":"","Expiry":""
+        "Option_Type":"","Strike":"","Expiry":"",
+        "Price_5D":_ms["Price_5D"],"PnL_5D":_ms["PnL_5D"],
+        "Price_10D":_ms["Price_10D"],"PnL_10D":_ms["PnL_10D"],
+        "Price_20D":_ms["Price_20D"],"PnL_20D":_ms["PnL_20D"],
+        "Review_Stage":_ms["Review_Stage"]
     })
 
 for item in observation_list:
+    _ms = compute_review_milestones(item["代码"], item["首次推荐日"], item.get("首次推荐价",""), "观察推荐")
     review_rows.append({
         "Review_Date":REVIEW_SESSION_DATE,"Ticker":item["代码"],"Name":item["名称"],"Tag":"Observation",
         "Rec_Date":item["首次推荐日"],"Rec_Price":item.get("首次推荐价",""),"Cur_Price":item.get("当前价格",""),
@@ -1922,7 +2010,11 @@ for item in observation_list:
         "Rec_Count":item.get("系统连续推荐次数","1"),"Status":"观察推荐","Score":item.get("推荐评分","N/A"),
         "Review_Risk_Status":"OBSERVATION","Review_Risk_Date":REVIEW_SESSION_DATE,
         "Review_Stop_Distance_Pct":"","Review_Risk_Note":"有效 Scan 推荐；不作为实际持仓，但纳入推荐绩效追踪。",
-        "Option_Type":"","Strike":"","Expiry":""
+        "Option_Type":"","Strike":"","Expiry":"",
+        "Price_5D":_ms["Price_5D"],"PnL_5D":_ms["PnL_5D"],
+        "Price_10D":_ms["Price_10D"],"PnL_10D":_ms["PnL_10D"],
+        "Price_20D":_ms["Price_20D"],"PnL_20D":_ms["PnL_20D"],
+        "Review_Stage":_ms["Review_Stage"]
     })
 
 for opt in option_closed_records:
@@ -2311,21 +2403,8 @@ observation_events_30d = [
 
 
 # ============================================================
-# 明确的股票结束状态
+# 明确的股票结束状态（CLOSED_STOCK_STATUSES 已在 12b 里程碑阶段提前定义，这里复用）
 # ============================================================
-
-CLOSED_STOCK_STATUSES = {
-    "Stop_Loss_Hit",
-    "Dropped",
-    "Period_Matured",
-    "Forced_Exit",
-    "移动止损清仓",
-    "止损触发清仓",
-    "已超期归档",
-    "周期到期清仓",
-    "突发清仓暂停",
-    "Observation_Closed",
-}
 
 
 def _event_is_closed(e):
