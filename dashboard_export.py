@@ -1756,6 +1756,10 @@ def build_events(trade_rows, review_rows, anomalies):
             "rec_price": rec_price,
             "cur_price": cur,
             "pnl": pnl,
+            # 明细展示用（review_history.csv 原始列，不做任何推算/不触碰 AI 文本）
+            "days_held": parse_num(row.get("Days_Held")),
+            "stop_loss": parse_num(row.get("Stop_Loss")),
+            "score": clean_text(row.get("Score")) or None,
             "source": "review_history",
         }
         if cur is not None:
@@ -1783,6 +1787,12 @@ def build_events(trade_rows, review_rows, anomalies):
         exit_price = parse_num(r.get("Exit_Price"))
         cur = exit_price if (status in CLOSED_STOCK_STATUSES and exit_price is not None) else None
         pnl = ((cur - rec_price) / rec_price * 100) if (cur and rec_price and rec_price > 0) else None
+        # 明细展示用（trade_history.csv 原始列；该表无 Days_Held，按 Exit_Date/今日与 Rec_Date 的天数差计算，
+        # 与 review.py:1651 (REVIEW_SESSION_DATE - rec_date).days 的口径一致）
+        days_held = None
+        end_date = parse_date(r.get("Exit_Date")) or now_us().date()
+        if rec_date is not None:
+            days_held = (end_date - rec_date).days
         events[key] = {
             "ticker": ticker,
             "name": clean_text(r.get("Name")) or ticker,
@@ -1792,9 +1802,66 @@ def build_events(trade_rows, review_rows, anomalies):
             "rec_price": rec_price,
             "cur_price": cur,
             "pnl": round(pnl, 2) if pnl is not None else None,
+            "days_held": days_held,
+            "stop_loss": parse_num(r.get("Stop_Loss")),
+            "score": clean_text(r.get("Score")) or None,
             "source": "trade_history",
         }
     return list(events.values()), price_lookup
+
+
+def build_review_records(events, asof=None):
+    """把 build_events() 的推荐事件账本「原样展开」为 Review 历史明细。
+
+    设计约束（不改变任何既有口径）：
+    - 不重新计算 Review：只是把 build_events() 已算好的事件对象映射成展示字段；
+    - 去重复用现有 _event_key(ticker, rec_date, tag)，不新造第二套 key；
+    - 排序 rec_date DESC（同日按 ticker ASC）；
+    - 只输出历史事实数据，绝不包含 AI 文本（不读 ai_text_cache.csv，不按 Ticker 猜文案）。
+    """
+    if asof is None:
+        asof = now_us()
+    base_date = asof.date() if isinstance(asof, dt.datetime) else asof
+
+    seen = {}
+    for e in events:
+        ticker = clean_text(e.get("ticker")).upper()
+        rec_date = parse_date(e.get("rec_date"))
+        tag = clean_text(e.get("tag"))
+        if not ticker or rec_date is None:
+            continue
+        key = _event_key(ticker, rec_date.strftime("%Y-%m-%d"), tag)
+        if key in seen:
+            continue
+
+        days_held = e.get("days_held")
+        if days_held is None:
+            days_held = (base_date - rec_date).days   # 与 review.py:1651 同口径的天数差
+        try:
+            days_held = int(days_held)
+        except (TypeError, ValueError):
+            days_held = None
+
+        seen[key] = {
+            "event_id": f"{key[0]}|{key[1]}|{key[2]}",
+            "ticker": key[0],
+            "name": e.get("name") or key[0],
+            "rec_date": key[1],
+            "tag": key[2],
+            "status": e.get("status") or None,
+            "rec_price": e.get("rec_price"),
+            "cur_price": e.get("cur_price"),
+            "pnl_pct": e.get("pnl"),
+            "days_held": days_held,
+            "stop_loss": e.get("stop_loss"),
+            "score": e.get("score"),
+            "source": e.get("source"),
+        }
+
+    records = list(seen.values())
+    records.sort(key=lambda r: r["ticker"] or "")
+    records.sort(key=lambda r: r["rec_date"] or "", reverse=True)
+    return records
 
 
 def build_active_positions(trade_rows, cutoff, price_lookup, stock_price_map):
@@ -2253,6 +2320,19 @@ def main(argv=None):
     review["price_backfill_sources"] = backfill["sources"]
     review["active_options_count"] = active_options
 
+    # Review 历史明细：复用 build_events() 的同一批事件（已按本次行情刷新 cur_price/pnl），
+    # 只做字段映射 + rec_date DESC 排序，不重算 Review 口径、不含任何 AI 文本。
+    review_records = build_review_records(events)
+    review["records"] = review_records
+    review["records_count"] = len(review_records)
+    review["records_fields"] = ["event_id", "ticker", "name", "rec_date", "tag", "status",
+                                "rec_price", "cur_price", "pnl_pct", "days_held",
+                                "stop_loss", "score", "source"]
+    review["records_note"] = (
+        "review.records[] = build_events() 事件账本原样展开；去重 key 复用 _event_key(Ticker,Rec_Date,Tag)；"
+        "按 rec_date DESC 排序；仅历史事实数据，不含 AI 文本。"
+    )
+
     # ---- HISTORY ----
     history = build_history(review_rows, notes)
 
@@ -2317,6 +2397,11 @@ def main(argv=None):
                 "market.assets[]": "13 项全球市场资产；price/change_* 未取到时为 null",
                 "options[]": "option_strategies.csv 原样字段；Wall 缺失或 LEGACY_INVALID_WALL 时用 yfinance 期权链 OI 最大值重算（wall_source=yfinance_option_chain_max_oi）",
                 "review": "口径与 review.py 一致（近30天，closed 需 CLOSED_STOCK_STATUSES 且有 pnl）",
+                "review.records[]": ("Review 历史明细：build_events() 事件账本原样展开（去重 key = Ticker+Rec_Date+Tag），"
+                                     "按 rec_date DESC 排序；pnl_pct 来自 PnL_Pct 或 (cur-rec)/rec；"
+                                     "days_held 来自 Days_Held 列（缺失时按 今日-Rec_Date 天数差）；"
+                                     "stop_loss/score 来自 review_history.csv / trade_history.csv 原始列；"
+                                     "仅历史事实数据，不含任何 AI 文本"),
                 "history[]": "review_history.csv 每日快照的仍在跟踪事件数",
                 "stocks[].ai": "pending CSV 中 Scan 已生成的 AI 六段文本；本次为空时会从历史 pending/scan_results CSV 按 Ticker 回填（ai_source=history_backfill）。空字符串表示本次与历史都没有，前端显示 AI analysis pending",
             },
