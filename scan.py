@@ -3428,8 +3428,50 @@ def migrate_legacy_ai_cache(path=AI_SNAPSHOT_FILE, cache_path=AI_TEXT_CACHE_FILE
     return added
 
 
+def legacy_migration_needed(snapshot_existed_before_run, cache_existed_before_run):
+    """判定本次 Scan 是否允许执行 legacy 迁移。
+
+    legacy 的语义只有一个：「无法知道推荐日期和 Tag 的历史旧 AI 文本」。
+    因此它必须是【一次性兼容旧数据】的动作，而不是每日常规流程。
+
+    只有同时满足才允许迁移：
+      · 本次 Scan 开始前 ai_snapshot.csv 还不存在  —— 说明还没做过兼容迁移；
+      · 本次 Scan 开始前 ai_text_cache.csv 已经存在 —— 说明确实有历史旧数据可迁。
+
+    为什么必须卡这两个条件（2026-09-28 run #142 的真实教训）：
+      旧实现把 migrate_legacy_ai_cache() 放在 upsert_ai_text_cache() 之后，
+      导致本次 Scan 刚写入 ai_text_cache.csv 的 9 条新 AI 文本被当成「历史旧文本」
+      迁移成了 9 条 VLO|| / GNRC|| 之类的 legacy —— 语义完全错误。
+    迁移点必须位于任何写入之前，且由这两个「开始前」的标志位门控。
+    """
+    return (not snapshot_existed_before_run) and bool(cache_existed_before_run)
+
+
 # ==================== 主程序 ====================
 if __name__ == "__main__":
+    # --- AI Snapshot legacy 迁移（一次性兼容旧数据，必须在任何写入之前完成）-------
+    # 先记录两个「本次 Scan 开始前」的事实，再据此决定是否迁移：
+    #   snapshot_existed_before / cache_existed_before
+    # legacy 只代表「无法知道推荐日期和 Tag 的历史旧 AI 文本」，
+    # 本次 Scan 刚生成的 AI 文本绝不能变成 legacy。
+    # 放在最开头保证迁移读到的一定是 Scan 开始前的旧 ai_text_cache.csv，
+    # 不会读到本次 upsert_ai_text_cache() 刚写进去的新文本。
+    snapshot_existed_before = os.path.exists(AI_SNAPSHOT_FILE)
+    cache_existed_before = os.path.exists(AI_TEXT_CACHE_FILE)
+    if legacy_migration_needed(snapshot_existed_before, cache_existed_before):
+        try:
+            legacy_n = migrate_legacy_ai_cache()
+            if legacy_n:
+                print(f"🗂️ 旧 AI 缓存已迁移为 legacy 快照 {legacy_n} 条 -> {AI_SNAPSHOT_FILE}")
+            else:
+                print("ℹ️ 旧 AI 缓存无可迁移内容（六段均为空），跳过 legacy 迁移。")
+        except Exception as e:
+            print(f"⚠️ legacy 迁移失败（不影响主流程）：{type(e).__name__}: {e}")
+    elif snapshot_existed_before:
+        print("ℹ️ ai_snapshot.csv 已存在，跳过 legacy 迁移（一次性兼容，不重复执行）")
+    else:
+        print("ℹ️ Scan 开始前无历史 ai_text_cache.csv，无需 legacy 迁移")
+
     macro_news = get_latest_macro_news()
     megacap_news = get_megacap_breaking_news()
     key_people_news = get_key_people_policy_news(macro_news)
@@ -3600,9 +3642,8 @@ if __name__ == "__main__":
         # 与按 Ticker 覆盖的 ai_text_cache.csv 明确分离。
         # 只搬运 enrich_verified_items_with_ai_details() 的产出，不新增任何 GPT 调用。
         try:
-            legacy_n = migrate_legacy_ai_cache()
-            if legacy_n:
-                print(f"🗂️ 旧 AI 缓存已迁移为 legacy 快照 {legacy_n} 条 -> {AI_SNAPSHOT_FILE}")
+            # 注意：legacy 迁移不在这里 —— 它在 Scan 最开头（任何写入之前）一次性完成，
+            # 否则本次刚写入 ai_text_cache.csv 的新 AI 文本会被误当成历史旧数据迁成 legacy。
             snap_n = upsert_ai_snapshot(to_write, rec_date=today_us_str())
             if snap_n:
                 print(f"🧠 AI Snapshot 已保存 {snap_n} 条 -> {AI_SNAPSHOT_FILE}")
