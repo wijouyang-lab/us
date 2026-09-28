@@ -43,7 +43,8 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python scan.py
 
-      # 安全网：即使后面 git push 失败，本轮生成的 pending CSV 与 AI 文本也不会随 runner 销毁而丢失
+      # 安全网：即使后面 git push 失败，本轮生成的 pending CSV、AI 文本与 AI Snapshot
+      # 也不会随 runner 销毁而丢失（ai_snapshot.csv 按 Ticker|Rec_Date|Tag 永久保存，丢失不可重建）
       - name: 上传扫描产物（防止推送失败导致数据丢失）
         if: always()
         uses: actions/upload-artifact@v4
@@ -52,13 +53,19 @@ jobs:
           path: |
             us_stocks_pending_*.csv
             ai_text_cache.csv
+            ai_snapshot.csv
           if-no-files-found: warn
 
-      - name: 提交待确认文件与 AI 文本缓存
+      - name: 提交待确认文件、AI 文本缓存与 AI Snapshot
         run: |
           # AI 文本缓存必须随 scan 一并入库：云端 dashboard_export.py 靠它回填六段
           if [ -f ai_text_cache.csv ]; then
             git add ai_text_cache.csv
+          fi
+          # AI Snapshot 必须入库：它是 Review 历史 AI 的唯一合法来源（按 Ticker|Rec_Date|Tag）
+          # 只在文件存在时 add；不存在时不能让 workflow 失败
+          if [ -f ai_snapshot.csv ]; then
+            git add ai_snapshot.csv
           fi
           if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv
@@ -69,7 +76,7 @@ jobs:
             exit 0
           fi
 
-          git commit -m "chore: 美股盘中待确认 + AI 文本缓存 $(date +%Y-%m-%d)"
+          git commit -m "chore: persist scan pending and AI snapshots"
 
           # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
           # 绝对禁止 git push --force / -f：绝不覆盖远端 main
