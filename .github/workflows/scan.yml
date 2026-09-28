@@ -78,6 +78,20 @@ jobs:
 
           git commit -m "chore: persist scan pending and AI snapshots"
 
+          # ------------------------------------------------------------------
+          # rebase 前先把"未纳入本次提交"的工作区变更挪走。
+          # scan.py 运行时还会改写 option_strategies.csv / scan_version.txt 并生成
+          # __pycache__/*.pyc，这些不在上面的 git add 清单里。若不清理，git rebase 会直接
+          # 报 "cannot rebase: You have unstaged changes." 而拒绝执行 —— 本次提交的数据
+          # 就永远推不上去。（2026-09-28 run 36432062414 就是死在这里）
+          # 用 stash 而不是 checkout -- .：不破坏任何文件，且 -u 连未跟踪的 pyc 一起收走。
+          # ------------------------------------------------------------------
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "ℹ️ 工作区仍有未纳入本次提交的变更，先 stash（不删除任何文件）："
+            git status --porcelain
+            git stash push -u -m "scan-uncommitted-leftovers" || true
+          fi
+
           # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
           # 绝对禁止 git push --force / -f：绝不覆盖远端 main
           for i in 1 2 3 4 5; do
@@ -89,13 +103,18 @@ jobs:
                 exit 0
               fi
             else
-              # rebase 冲突：不自动选择 ours / theirs，停止并列出冲突文件
-              echo "::error::git rebase 发生冲突，停止推送（禁止 force push，不自动解决冲突）"
-              echo "冲突文件："
-              git diff --name-only --diff-filter=U
-              git status --porcelain
+              # 只有"真正的内容冲突"才硬停止；其余 rebase 失败（如工作区脏、瞬时错误）应继续重试
+              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
+                # rebase 冲突：不自动选择 ours / theirs，停止并列出冲突文件
+                echo "::error::git rebase 发生冲突，停止推送（禁止 force push，不自动解决冲突）"
+                echo "冲突文件："
+                git diff --name-only --diff-filter=U
+                git status --porcelain
+                git rebase --abort || true
+                exit 1
+              fi
+              echo "::warning::git rebase 第 $i 次失败（非内容冲突），回滚后重试"
               git rebase --abort || true
-              exit 1
             fi
 
             echo "⚠️ push/rebase 第 $i 次失败，等待后重试"
