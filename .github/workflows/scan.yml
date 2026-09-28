@@ -37,6 +37,17 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python scan.py
 
+      # 安全网：即使后面 git push 失败，本轮生成的 pending CSV 与 AI 文本也不会随 runner 销毁而丢失
+      - name: 上传扫描产物（防止推送失败导致数据丢失）
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: scan-output-${{ github.run_id }}
+          path: |
+            us_stocks_pending_*.csv
+            ai_text_cache.csv
+          if-no-files-found: warn
+
       - name: 提交待确认文件与 AI 文本缓存
         run: |
           # AI 文本缓存必须随 scan 一并入库：云端 dashboard_export.py 靠它回填六段
@@ -46,10 +57,38 @@ jobs:
           if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv
           fi
+
           if git diff --cached --quiet; then
             echo "⚠️ 无可提交变更（无 pending 文件且缓存无更新）"
-          else
-            git commit -m "chore: 美股盘中待确认 + AI 文本缓存 $(date +%Y-%m-%d)"
-            git push
-            echo "✅ 美股待确认文件与 AI 文本缓存已提交"
+            exit 0
           fi
+
+          git commit -m "chore: 美股盘中待确认 + AI 文本缓存 $(date +%Y-%m-%d)"
+
+          # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
+          # 绝对禁止 git push --force / -f：绝不覆盖远端 main
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "✅ push 成功"
+                exit 0
+              fi
+            else
+              # rebase 冲突：不自动选择 ours / theirs，停止并列出冲突文件
+              echo "::error::git rebase 发生冲突，停止推送（禁止 force push，不自动解决冲突）"
+              echo "冲突文件："
+              git diff --name-only --diff-filter=U
+              git status --porcelain
+              git rebase --abort || true
+              exit 1
+            fi
+
+            echo "⚠️ push/rebase 第 $i 次失败，等待后重试"
+            sleep $((i * 5))
+          done
+
+          echo "::error::Scan 数据无法推送到 main（已重试 5 次）"
+          git status --porcelain
+          exit 1
