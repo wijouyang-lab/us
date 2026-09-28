@@ -662,6 +662,42 @@
       (na ? ' na' : '') + (cls && !na ? ' ' + cls : '') + '">' + v + '</span></div>';
   }
 
+  /* ---- Review Milestone（review.records[].price_5d / pnl_5d / ... / review_stage，只透传不重算） ----
+     后端 review.py 已按 OHLCV 交易日历算出 5D/10D/20D 客观收盘价与 PnL、Review_Stage；
+     dashboard_export.py 只透传 review_history.csv 原值。前端只读，绝不重算、绝不推算日期。
+     null 一律显示 N/A，绝不补 0 / 当前收益 / 最近价。 */
+  function recMsItem(label, price, pnl) {
+    var p = num(price);
+    var pnlN = num(pnl);
+    var pnlCls = pnlN === null ? '' : dirCls(pnlN);
+    return '<div class="rh-ms-item">' +
+      '<div class="rh-ms-label">' + label + '</div>' +
+      '<div class="rh-ms-price' + (p === null ? ' na' : '') + '">' + recMoney(price) + '</div>' +
+      '<div class="rh-ms-pnl ' + (pnlCls || 'na') + '">' + recPnl(pnl) + '</div>' +
+    '</div>';
+  }
+  function recStageCls(s) {
+    if (s === null || s === undefined || s === '') return 'stg-na';
+    var u = String(s).toUpperCase();
+    if (u === 'FINAL') return 'stg-final';
+    if (u === 'OPEN') return 'stg-open';
+    if (u === '5D' || u === '10D' || u === '20D') return 'stg-ms';
+    return 'stg-other';
+  }
+  function recMsHtml(r) {
+    return '<div class="rh-ms">' +
+      '<div class="rh-ms-head">' +
+        '<span class="rh-ms-title">Review Progress</span>' +
+        '<span class="rh-ms-stage ' + recStageCls(r.review_stage) + '">' + esc(recTxt(r.review_stage)) + '</span>' +
+      '</div>' +
+      '<div class="rh-ms-grid">' +
+        recMsItem('5D', r.price_5d, r.pnl_5d) +
+        recMsItem('10D', r.price_10d, r.pnl_10d) +
+        recMsItem('20D', r.price_20d, r.pnl_20d) +
+      '</div>' +
+    '</div>';
+  }
+
   /* ---- AI Snapshot（review.records[].ai_snapshot，仅精确匹配，绝不回退 stocks[].ai / CSV） ----
      后端已按 (Ticker, Rec_Date, Tag) 精确匹配；前端只读 record.ai_snapshot，
      不建立任何 Ticker→AI 映射、不读 ai_snapshot.csv / ai_text_cache.csv、不调用 GPT。 */
@@ -729,6 +765,7 @@
         gi('止损', recMoney(r.stop_loss), r.stop_loss) +
         gi('评分', recScore(r.score), r.score) +
       '</div>' +
+      recMsHtml(r) +
       '<div class="rh-st ' + recStatusCls(r.status) + '">状态：' + esc(recTxt(r.status)) + '</div>' +
       '<div class="rh-hint">点击展开详情</div>' +
       '<div class="rh-det"><div class="rh-g">' +
