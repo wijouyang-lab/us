@@ -41,7 +41,7 @@ AI 六段状态          : partial（9/67 只股票有内容，CSV 缺失列 6 �
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
-字段 null 统计       : {'final_score': 36, 'quant_score': 36, 'ai_score': 36, 'fundamental_score': 36, 'technical_score': 36, 'risk_liquidity_score': 36, 'atr_pct': 20, 'stop_loss': 27, 'pe_ttm': 36, 'pe_forward': 36, 'pb': 36, 'eps_ttm': 36, 'roe': 37, 'revenue_growth': 36, 'earnings_growth': 37, 'profit_margin': 36, 'market_cap': 36, 'market_regime': 67, 'vix': 67}
+字段 null 统计       : {'quant_score': 36, 'ai_score': 36, 'fundamental_score': 36, 'technical_score': 36, 'risk_liquidity_score': 36, 'atr_pct': 20, 'stop_loss': 27, 'pe_ttm': 36, 'pe_forward': 36, 'pb': 36, 'eps_ttm': 36, 'roe': 37, 'revenue_growth': 36, 'earnings_growth': 37, 'profit_margin': 36, 'market_cap': 36, 'market_regime': 67, 'vix': 67}
 缺失字段             : ['regime.market', 'regime.vix']
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
