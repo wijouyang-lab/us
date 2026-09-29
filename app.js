@@ -401,15 +401,38 @@
     return v === null ? NA : signed(v, 2) + '%';
   }
 
+  /* 状态（市场状态 / 行情状态）：只用 dashboard_data.json 的真实字段，不硬编码、不推测。
+     1) market.regime.market —— 真实 Market Regime（来自 pending CSV 的 Market_Regime 列）
+     2) 该字段为 null 时（meta.missing_fields 会标记 regime.market），用真实行情状态兜底：
+        meta.network_status / market.live_quote_count / market.frozen_outside_session_count / market.total_count */
+  function regimeTxt(rg) {
+    var src = (rg && rg.source) ? String(rg.source) : 'Market Regime 未提供';
+    if (rg && rg.market) {
+      return { txt: String(rg.market), title: 'Market Regime · market.regime.market' };
+    }
+    var live = num(MARKET.live_quote_count), total = num(MARKET.total_count),
+        frozen = num(MARKET.frozen_outside_session_count);
+    var net = META.network_status ? String(META.network_status) : '';
+    var txt = NA;
+    if (net && net.toLowerCase() !== 'ok') {
+      txt = '网络 ' + net;                                  /* 真实 network_status */
+    } else if (total !== null && total > 0 && (live !== null || frozen !== null)) {
+      txt = '实时 ' + (live === null ? NA : live) + '/' + total +
+        (frozen ? ' · 冻结 ' + frozen : '');                 /* 真实实时 / 冻结计数 */
+    }
+    return { txt: txt, title: 'Market Regime 为 null（' + src + '）· 此处显示真实行情状态' };
+  }
+
   function renderGmBar() {
     var rg = MARKET.regime || {};
     var core = STOCKS.filter(function (s) { return s.bucket === 'core'; }).length;
     var obs = STOCKS.filter(function (s) { return s.bucket === 'obs'; }).length;
     var date = META.pending_scan_date || (DATA && DATA.generated_at ? DATA.generated_at.slice(0, 10) : NA);
+    var rs = regimeTxt(rg);
 
     var html = '<div class="gm-grid"><div class="gm-cell hero">' +
       '<div class="gm-date">' + date + ' <small>Scan 日期 · 真实数据（非模拟）</small></div>' +
-      '<span class="regime"><i></i>' + (rg.market || NA) + '</span>' +
+      '<span class="regime" title="' + esc(rs.title) + '"><i></i>' + esc(rs.txt) + '</span>' +
       '<div class="regime-meta">VIX <b>' + nv(rg.vix, 2) + '</b> · Core <b>' + core + '</b> · Observation <b>' + obs +
       '</b> · Options <b>' + OPTIONS.length + '</b></div>' +
       '</div>';
