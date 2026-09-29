@@ -2800,6 +2800,11 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
         ai_score = parse_ai_score(chunk)
         if ai_score is None:
             print(f"🚫 [AI Score Missing] {item.get('Ticker')} —— 未解析到真实 AI 评分，本次排除（不补 60、不伪造 Final）")
+            # 临时诊断（仅定位 gpt-6-astra 真实评分格式用）：打印该候选 AI chunk 前 300 字符。
+            # 受控输出，不打印完整报告/prompt/敏感环境变量；定位后即移除。
+            _dbg = (chunk or "").strip()
+            if _dbg:
+                print(f"   ↳ [AI chunk 诊断] {_dbg[:300]!r}")
             continue
         quant = float(item.get("Quant_Score", 0) or 0)
         final = round(
