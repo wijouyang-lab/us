@@ -2836,7 +2836,22 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
 
         if out["Tag"] == "Observation":
             out["Hold_Period"] = "观望"
-            out["Stop_Loss"] = "观望"
+            # Observation 复用 Core 的 ATR Quant 止损（0 GPT），不再写「观望」。
+            # fail-closed：ATR_Pct / Price 缺失或非正数时不默认、不猜价，直接置空(NULL)。
+            try:
+                _atr = float(item.get("ATR_Pct") or "")
+                _px = float(item.get("Price") or "")
+            except (TypeError, ValueError):
+                _atr = _px = None
+            if _atr is not None and _atr > 0 and _px is not None and _px > 0:
+                _pct = -max(
+                    float(EXIT_PARAMS.get("atr_floor_pct", 3)),
+                    min(float(EXIT_PARAMS.get("atr_ceiling_pct", 12)),
+                        _atr * float(EXIT_PARAMS.get("atr_multiplier", 2))),
+                )
+                out["Stop_Loss"] = "$" + str(round(_px * (1 + _pct / 100), 2))
+            else:
+                out["Stop_Loss"] = ""
         else:
             out["Hold_Period"] = "动态持有"
             sm = re.search(r'止损\s*[:：]\s*\[?(\$?\d+(?:\.\d+)?%?)', chunk or "")
@@ -2889,31 +2904,50 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
 
     payload = []
     for item in items:
-        payload.append({
+        is_core = item.get("Tag") == "Core_Dragon"
+        entry = {
             "ticker": item.get("Ticker"),
             "name": item.get("Name"),
             "tag": item.get("Tag"),
             "sector": item.get("Sector", ""),
-            "prev_close": item.get("Prev_Close", item.get("Price")),
-            "premarket": item.get("Premarket_Price", ""),
-            "premarket_change_pct": item.get("Premarket_Change_Pct", ""),
-            "premarket_status": item.get("Premarket_Status_Display", ""),
-            "fundamental": {
-                "eps": item.get("EPS_TTM"), "pe_ttm": item.get("PE_TTM"),
-                "pe_forward": item.get("PE_Forward"), "pb": item.get("PB"),
-                "revenue_growth": item.get("Revenue_Growth"),
-                "earnings_growth": item.get("Earnings_Growth"),
-            },
-            "technical": {
-                "rsi": item.get("RSI"), "bias": item.get("乖离率(%)"),
-                "ma20": item.get("MA20"), "ma50": item.get("MA50"),
-                "ma20_slope_5d": item.get("MA20_Slope_Pct_5D"),
-                "atr_pct": item.get("ATR_Pct"), "macd": item.get("MACD趋势"),
-                "kdj_j": item.get("KDJ_J"), "confirmations": item.get("技术确认信号", []),
-            },
-            "news": (item.get("个股新闻", []) or [])[:6],
-            "initial_ai": clean_fragment(item.get("_AI_Chunk", "")),
-        })
+        }
+        if is_core:
+            # Core：保持完整六段所需的完整输入（不变）
+            entry.update({
+                "prev_close": item.get("Prev_Close", item.get("Price")),
+                "premarket": item.get("Premarket_Price", ""),
+                "premarket_change_pct": item.get("Premarket_Change_Pct", ""),
+                "premarket_status": item.get("Premarket_Status_Display", ""),
+                "fundamental": {
+                    "eps": item.get("EPS_TTM"), "pe_ttm": item.get("PE_TTM"),
+                    "pe_forward": item.get("PE_Forward"), "pb": item.get("PB"),
+                    "revenue_growth": item.get("Revenue_Growth"),
+                    "earnings_growth": item.get("Earnings_Growth"),
+                },
+                "technical": {
+                    "rsi": item.get("RSI"), "bias": item.get("乖离率(%)"),
+                    "ma20": item.get("MA20"), "ma50": item.get("MA50"),
+                    "ma20_slope_5d": item.get("MA20_Slope_Pct_5D"),
+                    "atr_pct": item.get("ATR_Pct"), "macd": item.get("MACD趋势"),
+                    "kdj_j": item.get("KDJ_J"), "confirmations": item.get("技术确认信号", []),
+                },
+                "news": (item.get("个股新闻", []) or [])[:6],
+                "initial_ai": clean_fragment(item.get("_AI_Chunk", "")),
+            })
+        else:
+            # Observation：极简输入——只保留判断行业逻辑/催化/风险所需的最小数据，
+            # 不发送 Core 级别的完整 fundamental/technical/news payload。
+            entry.update({
+                "prev_close": item.get("Prev_Close", item.get("Price")),
+                "premarket_change_pct": item.get("Premarket_Change_Pct", ""),
+                "rsi": item.get("RSI"),
+                "bias": item.get("乖离率(%)"),
+                "pe_ttm": item.get("PE_TTM"),
+                "pe_forward": item.get("PE_Forward"),
+                "news": (item.get("个股新闻", []) or [])[:3],
+                "initial_ai": clean_fragment(item.get("_AI_Chunk", ""), limit=800),
+            })
+        payload.append(entry)
 
     prompt=f"""
 你是最终推荐解释层。下面只有程序已经确定进入最终邮件的股票，不允许增加任何新Ticker。
@@ -2927,8 +2961,11 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
 5. “主要催化”必须来自已给新闻或结构化基本面；没有就写“暂无已验证的新催化”。
 6. “主要风险”至少检查估值、技术、事件/行业、盘前跳空中的相关项；只写有证据的风险。
 7. “失效条件”必须尽量具体到价格/技术结构/事件，不要写空泛的“市场发生变化”。
-8. 每个字段都必须有内容；不能输出空字符串、N/A、null。
-9. 只返回 JSON，不要 Markdown。
+8. 只返回 JSON，不要 Markdown。
+
+【输出粒度（务必区分 tag）】
+- tag="Core_Dragon" 的股票：输出完整六字段 industry_logic / news_cn / premarket_conclusion / catalysts / risks / invalidation，每字段都必须有内容，不能输出空字符串、N/A、null。
+- tag="Observation" 的股票：只输出三字段 industry_logic（简短因果链）/ catalysts（最多1-2条）/ risks（最多1-2条）；禁止输出 news_cn / premarket_conclusion / invalidation，也禁止生成 Core 级别的完整技术分析、完整基本面分析或长篇新闻分析。
 
 【当前事件环境】
 {event_regime_text[:5000]}
@@ -2939,8 +2976,8 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
 【最终股票】
 {json.dumps(payload, ensure_ascii=False)}
 
-输出格式：
-{{"items":[{{"ticker":"AAPL","industry_logic":"...","news_cn":"...","premarket_conclusion":"...","catalysts":"...","risks":"...","invalidation":"..."}}]}}
+输出格式（Core 输出六字段，Observation 输出三字段）：
+{{"items":[{{"ticker":"AAPL","industry_logic":"...","news_cn":"...","premarket_conclusion":"...","catalysts":"...","risks":"...","invalidation":"..."}},{{"ticker":"XYZ","industry_logic":"...","catalysts":"...","risks":"..."}}]}}
 """
     try:
         client=ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
@@ -2952,8 +2989,12 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
             d=by_ticker.get(str(item.get("Ticker","")).upper(),{})
             for key in ("industry_logic","news_cn","premarket_conclusion","catalysts","risks","invalidation"):
                 item[f"AI_{key}"]=str(d.get(key) or "").strip()
-        ok=sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn")) for item in items)
-        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文产业链/新闻/风险解释")
+        ok_core = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn"))
+                      for item in items if item.get("Tag") == "Core_Dragon")
+        ok_obs = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_catalysts"))
+                     for item in items if item.get("Tag") == "Observation")
+        ok = ok_core + ok_obs
+        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation {ok_obs} 极简）")
     except Exception as e:
         print(f"⚠️ [AI最终解释层] 生成失败，邮件使用确定性字段兜底：{type(e).__name__}: {e}")
     return items
