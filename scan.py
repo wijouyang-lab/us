@@ -2536,6 +2536,7 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
         pool_lines.append(
             f"[{x['Ticker']}] {x['Name']} | 昨收:${x['Price']} | 盘前:${x.get('Premarket_Price') or 'N/A'} ({x.get('Premarket_Change_Pct') or 'N/A'}%) | 盘前时间:{x.get('Premarket_AsOf_ET') or 'N/A'} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MA20:{x.get('MA20')} slope5d:{x.get('MA20_Slope_Pct_5D')}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} recentVol:{x.get('近5日最大量比')} | 技术确认:{x.get('技术确认数',0)} | Quant:{x.get('Quant_Score',0)}/100 (F{x.get('Fundamental_Score',0)} E{x.get('Event_Score',0)} T{x.get('Technical_Score_25',0)} R{x.get('Risk_Liquidity_Score',0)}) | Market:{x.get('Market_Regime')} VIX:{x.get('VIX')} SectorRS20D:{x.get('Sector_RS_20D_Pct')} | 估值:{x.get('估值评分',0)}/20 | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 新闻快照:{x.get('News_AsOf_ET') or 'N/A'} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
         )
+    pool_ticker_list = ", ".join(str(x.get("Ticker", "")).upper() for x in pool_data)
     evolved = load_evolved_rules()
     key_people_block = str(key_people_text or "暂无重要人物讲话数据")
     economic_block = str(economic_text or "暂无结构化美国经济数据")
@@ -2594,6 +2595,10 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 
 【成交活跃 Top300 候选池】
 {'\n'.join(pool_lines)}
+
+【AI评分 Map（机器可读，最高优先级）】
+候选池完整 Ticker 清单（一个都不能少）：{pool_ticker_list}
+AI评分 = AI 对该标的当前交易价值/风险/催化/技术状态的独立判断（0~100 整数），绝不能用 Quant 分代替、不能复制 Quant 分、不能省略任何一只。
 
 【程序硬门槛（不可绕过）】
 【封闭候选集】核心精选、观察池、诱多对照组都只能使用上方“成交活跃 Top300 候选池”中实际出现的 Ticker；候选池外股票即使新闻很强，也禁止出现在任何推荐位置。
@@ -2658,6 +2663,7 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 - AI评分 是 AI 对该标的当前交易价值/风险/催化/技术状态的独立判断，绝不能用 Quant 分代替、不能复制 Quant 分、不能省略、不能留空。
 - Quant:XX/100 只是程序量化分，绝不能当作 AI评分。
 - 如果证据不足以支持高分，就给较低的 AI评分，但必须输出真实评分。
+- 最终 HTML 最末尾必须追加机器可读 JSON 块「AI_SCORE_MAP」（用 <!--AI_SCORE_MAP_START--> / <!--AI_SCORE_MAP_END--> 包裹），把候选池完整 Ticker 清单里的每一只都写进去，值必须是 0~100 的整数，不能有小数、单位、注释、换行省略或 markdown 代码块标记。
 
 <div class="compare-card">
 <div class="compare-title">🎖️ 观察池 - Rank 6-12</div>
@@ -2675,12 +2681,18 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 </ul>
 </div>
 
+<!-- 机器可读 AI 评分 Map：诱多对照组之后、整个 HTML 的最末尾必须追加，覆盖上方「候选池完整 Ticker 清单」的全部标的，一个不少 -->
+<!--AI_SCORE_MAP_START-->
+{{"AI_SCORE_MAP": {{"AAPL": 72, "MSFT": 65, "NVDA": 58}}}}
+<!--AI_SCORE_MAP_END-->
+
 【格式纪律】
 1. 核心精选每只必须用 <div class="top-card core-card"> 包裹
 2. 标题行必须包含 "([TICKER])" 格式，如 "NVIDIA (NVDA)"
 3. 观察池和诱多池必须用 <li> 包裹，且包含 "([TICKER])"
 4. 不要输出 ```html 或 ``` 标记
 5. 从第一个字符开始就是 <div
+6. 整个 HTML 末尾必须追加 AI_SCORE_MAP JSON 块（以 <!--AI_SCORE_MAP_START--> 开始、<!--AI_SCORE_MAP_END--> 结束），候选池每只 Ticker 一个不少，值为 0~100 整数。
 
 只输出HTML，不输出解释性前言。
 """
@@ -2743,6 +2755,44 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
                     return round(v, 1)
         return None
 
+    def parse_ai_score_map(ai_html):
+        """提取机器可读 AI_SCORE_MAP（{"AI_SCORE_MAP": {"TICKER": 0~100, ...}}）。
+
+        返回 dict（可能为空）表示已找到合法 JSON Map，程序将优先用 Map 赋 AI_Score；
+        返回 None 表示未找到任何 Map 结构，触发回退到旧的逐 chunk 自然语言评分解析。
+        """
+        text = ai_html or ""
+        mapping = None
+        # 1) 优先显式定界符 <!--AI_SCORE_MAP_START--> ... <!--AI_SCORE_MAP_END-->
+        m = re.search(r'<!--\s*AI_SCORE_MAP_START\s*-->(.*?)<!--\s*AI_SCORE_MAP_END\s*-->', text, re.S | re.I)
+        if m:
+            obj = _extract_json_object(m.group(1))
+            if isinstance(obj, dict):
+                mapping = obj.get("AI_SCORE_MAP")
+        # 2) 回退：全文定位 {"AI_SCORE_MAP" 外层对象的起始花括号（容忍 markdown fence / 无定界符）
+        if not isinstance(mapping, dict):
+            k = re.search(r'\{\s*"AI_SCORE_MAP"\s*:', text, re.I)
+            if k:
+                obj = _extract_json_object(text[k.start():])
+                if isinstance(obj, dict):
+                    mapping = obj.get("AI_SCORE_MAP")
+        if not isinstance(mapping, dict):
+            return None
+        out = {}
+        for tk, v in mapping.items():
+            tk = str(tk).strip().upper()
+            if not tk:
+                continue
+            if isinstance(v, bool):
+                continue
+            try:
+                fv = float(v)
+            except (TypeError, ValueError):
+                continue
+            if 0.0 <= fv <= 100.0:
+                out[tk] = round(fv, 1)
+        return out
+
     def window_around_ticker(text, ticker, window=1200):
         """按精确 Ticker 定位该股票附近的文本窗口（不依赖任何 HTML class / <li> 结构）。
 
@@ -2800,21 +2850,39 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
                 return tag, frag
         return None, None
 
+    # 方案 C：优先读取机器可读 AI_SCORE_MAP，为所有候选统一赋 AI_Score；
+    # 解析不到 Map 才回退到旧的逐 chunk 自然语言评分解析（历史兼容）。
+    ai_score_map = parse_ai_score_map(ai_html)
+    map_used = ai_score_map is not None
+    if map_used:
+        print(f"✅ [AI_SCORE_MAP] 读取成功：{len(ai_score_map)} 只候选的机器可读 AI 评分")
+    else:
+        print("⚠️ [AI_SCORE_MAP] 未解析到机器可读 Map，回退逐 chunk 自然语言评分解析（历史兼容）")
+
     candidates = []
     score_missing_core = 0
     score_missing_obs = 0
+    ai_eq_quant = []
     for item in pool_data:
+        ticker = str(item.get("Ticker", "")).upper()
         ai_tag, chunk = find_chunk(item)
+        if map_used:
+            # 优先 Map 赋分；Map 缺该候选 → None → fail-closed 排除（绝不补分）
+            ai_score = ai_score_map.get(ticker)
+        else:
+            ai_score = parse_ai_score(chunk)
         # fail-closed：没有真实 AI 评分就绝不用 60 顶替，直接排除该候选
-        ai_score = parse_ai_score(chunk)
         if ai_score is None:
             if ai_tag == "Core_Dragon":
                 score_missing_core += 1
             else:
                 score_missing_obs += 1
-            print(f"🚫 [AI Score Missing] {item.get('Ticker')} —— 未解析到真实 AI 评分，本次排除（不补 60、不伪造 Final）")
+            print(f"🚫 [AI Score Missing] {ticker} —— 未解析到真实 AI 评分，本次排除（不补 60、不伪造 Final）")
             continue
         quant = float(item.get("Quant_Score", 0) or 0)
+        # 诊断：AI_Score 与 Quant_Score 相等时记录（不修改值，不影响 Final）
+        if abs(float(ai_score) - quant) < 1e-9:
+            ai_eq_quant.append(ticker)
         final = round(
             float(SCORING_PARAMS.get("quant_weight", 70)) / 100 * quant
             + float(SCORING_PARAMS.get("ai_weight", 30)) / 100 * ai_score,
@@ -2901,6 +2969,8 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
     obs = [x for x in candidates if x.get("Tag") == "Observation" and x["Ticker"] not in used][: int(LIMIT_PARAMS.get("max_observation", 7))]
     if score_missing_core or score_missing_obs:
         print(f"📊 [AI Score Missing 统计] Core={score_missing_core} / Observation={score_missing_obs}")
+    if ai_eq_quant:
+        print(f"⚠️ [AI=Quant 诊断] {len(ai_eq_quant)} 只 AI_Score == Quant_Score（仅记录，不修改）：{', '.join(ai_eq_quant)}")
     print(f"🔒 [程序校验] Core={len(core)} / Observation={len(obs)} / AI候选池外忽略={len(invalid_ai)}")
     return core + obs
 
