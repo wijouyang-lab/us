@@ -32,7 +32,9 @@
   var DATA = null;
   var META = {}, MARKET = { assets: [], regime: {} }, REVIEW = {};
   var OPTIONS = [], HISTORY = [], STOCKS = [], OPT_BY_TK = {};
-  var REVIEWS = [];                         /* review.records[] —— 历史推荐明细（只读，不重算） */
+  var REVIEWS = [];                         /* review.records[] —— 只读，不重算；首页不再渲染历史列表，
+                                            仅用于当前 Core / Observation 卡片的 Review 里程碑 */
+  var REV_MS = {};                          /* review.records[] → (Ticker|Rec_Date|Tag) 索引，供当前卡片挂 Review 里程碑 */
   var MAX_F = 35, MAX_T = 25, MAX_R = 20;   /* 来自 strategy_params.json 的评分权重 */
   var NET_DOWN = false;                      /* meta.network_status 是否 unavailable */
   var cur = null, curRange = 126;
@@ -151,6 +153,18 @@
     REVIEW = data.review || {};
     HISTORY = data.history || [];
     REVIEWS = (REVIEW && Array.isArray(REVIEW.records)) ? REVIEW.records.slice() : [];
+
+    /* Review 里程碑索引：严格按 Ticker + Rec_Date + Tag 关联 review.records[]（第 10D）。
+       只建立索引、不重算任何里程碑值；同一事件若有多条 record，取 days_held 最大（最新一次 Review）。 */
+    REV_MS = {};
+    (REVIEWS || []).forEach(function (r) {
+      if (!r) return;
+      var k = msKey(r.ticker, r.rec_date, r.tag);
+      var prev = REV_MS[k];
+      if (!prev) { REV_MS[k] = r; return; }
+      var dv = num(r.days_held), pv = num(prev.days_held);
+      if (dv !== null && (pv === null || dv > pv)) REV_MS[k] = r;
+    });
 
     var sc = (META.strategy_params && META.strategy_params.scoring) || {};
     MAX_F = num(sc.fundamental_weight) || 35;
@@ -322,11 +336,11 @@
     renderGmBar();
     renderPools(core, obs);
     renderGlobal();
-    renderReview();
-    renderReviewHistory();
-    bindReviewHistory();
+    /* 首页不再渲染 Review 复盘 KPI / Review 历史列表 / History 跟踪趋势。
+       review.records[]（REVIEWS）与 REV_MS / msHtml 全部保留 —— 当前 Core / Observation
+       卡片的 Review Stage / 5D / 10D / 20D 仍按 Ticker+Rec_Date+Tag 精确匹配；
+       股票详情页的 Review 复盘不受影响。 */
     renderOptions(OPTIONS, $('#optHomeList'), true);
-    renderHistory();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
@@ -421,6 +435,43 @@
     return '<div class="spark-na' + (small ? ' sm' : '') + '">K线数据暂不可用</div>';
   }
 
+  /* ---- Review 里程碑（当前 Core / Observation 卡片） ----
+     数据来源 review.records[]，严格按 Ticker + Rec_Date + Tag 精确匹配；
+     只透传 review.py 已算好的 review_stage / pnl_5d / pnl_10d / pnl_20d，前端绝不重算、绝不推算日期。
+     取不到值一律显示 N/A，绝不补 0 / 当前收益 / 最近价。0 次 GPT 调用。 */
+  var MS_NA = 'N/A';
+
+  function msKey(ticker, recDate, tag) {
+    return String(ticker || '') + '|' + String(recDate || '') + '|' + String(tag || '');
+  }
+  function msStageCls(s) {
+    if (s === null || s === undefined || s === '') return 'stg-na';
+    var u = String(s).toUpperCase();
+    if (u === 'FINAL') return 'stg-final';
+    if (u === 'OPEN') return 'stg-open';
+    if (u === '5D' || u === '10D' || u === '20D') return 'stg-ms';
+    return 'stg-other';
+  }
+  function msPnlItem(label, v) {
+    var n = num(v);
+    return '<span class="ms-item"><span class="l">' + label + '</span>' +
+      '<span class="v ' + (n === null ? 'na' : dirCls(n)) + '">' +
+      (n === null ? MS_NA : signed(n, 2) + '%') + '</span></span>';
+  }
+  function msHtml(s) {
+    var raw = s.raw || {};
+    var r = REV_MS[msKey(raw.ticker, raw.recommendation_date, raw.recommendation_tag)] || null;
+    var stage = r ? r.review_stage : null;
+    var stageTxt = (stage === null || stage === undefined || stage === '') ? MS_NA : String(stage);
+    return '<div class="ms-row">' +
+      '<span class="ms-title">Review</span>' +
+      '<span class="ms-stage ' + msStageCls(stage) + '">' + esc(stageTxt) + '</span>' +
+      msPnlItem('5D', r && r.pnl_5d) +
+      msPnlItem('10D', r && r.pnl_10d) +
+      msPnlItem('20D', r && r.pnl_20d) +
+      '</div>';
+  }
+
   function coreCard(s) {
     var m = s.m;
     var stopPct = (s.stop !== null && s.px) ? (s.stop / s.px - 1) * 100 : null;
@@ -460,6 +511,7 @@
       sparkHtml(s, false) +
       '<div class="bars">' + bars + '</div>' +
       '<div class="p-foot">' + foot + '</div>' +
+      msHtml(s) +
       '</article>';
   }
 
@@ -490,6 +542,7 @@
       sparkHtml(s, true) +
       '<div class="o-mini"><div class="o-bars">' + mini + '</div>' + ring(s.s.final, 34) + '</div>' +
       '<div class="o-foot">' + foot + '</div>' +
+      msHtml(s) +
       '</article>';
   }
 
@@ -587,227 +640,6 @@
     $('#reviewNotes').innerHTML = html;
   }
 
-  /* ---------------- 12b. Review 历史推荐明细（review.records[]） ----------------
-     只读 dashboard_data.json 的 review.records[]：
-     - 不在前端重算 PnL / Days Held（后端已给出真实值）
-     - 不读 CSV、不调用任何 API、0 次 GPT
-     - 不显示任何 AI 文本（AI Snapshot 阶段另行处理）
-     - null 一律显示 N/A，绝不补 0
-  */
-  var REV_PAGE = 20;                        /* 每次「加载更多」的增量 */
-  var RNA = 'N/A';
-  var revFilter = 'all', revQuery = '', revShown = REV_PAGE, revExp = {};
-
-  /* 与 dashboard_export.py CLOSED_STOCK_STATUSES 保持一致（仅用于筛选，不产生新口径） */
-  var REV_CLOSED = {
-    'Stop_Loss_Hit': 1, 'Dropped': 1, 'Period_Matured': 1, 'Forced_Exit': 1,
-    'Observation_Closed': 1,
-    '移动止损清仓': 1, '止损触发清仓': 1, '已超期归档': 1,
-    '周期到期清仓': 1, '突发清仓暂停': 1
-  };
-
-  function recMoney(v) { var n = num(v); return n === null ? RNA : '$' + fmt(n, 2); }
-  function recPnl(v) {
-    var n = num(v);
-    return n === null ? RNA : (n > 0 ? '+' : '') + fmt(n, 2) + '%';
-  }
-  function recScore(v) {
-    if (v === null || v === undefined) return RNA;
-    var s = String(v).trim();
-    if (!s || s === 'N/A' || s.toLowerCase() === 'nan') return RNA;
-    var n = Number(s);
-    if (!isFinite(n)) return esc(s);
-    return fmt(n, Math.abs(n % 1) < 1e-9 ? 0 : 1);
-  }
-  function recDays(v) { var n = num(v); return n === null ? RNA : fmt(n, 0) + ' 天'; }
-  function recTxt(v) { return (v === null || v === undefined || v === '') ? RNA : String(v); }
-
-  function recTagLabel(t) {
-    if (t === 'Core_Dragon') return 'Core';
-    if (t === 'Trap_Warning') return 'Trap';
-    return t || RNA;
-  }
-  function recTagCls(t) {
-    if (t === 'Core_Dragon') return 't-core';
-    if (t === 'Observation') return 't-obs';
-    if (t === 'Trap_Warning') return 't-trap';
-    return 't-other';
-  }
-  function recStatusCls(s) {
-    if (!s) return 's-na';
-    if (s === '持仓中' || s === '观察推荐' || s === 'Active' || s === 'pending') return 's-open';
-    if (s === '止损触发清仓' || s === '移动止损清仓' || s === 'Stop_Loss_Hit') return 's-stop';
-    if (REV_CLOSED[s]) return 's-closed';
-    return 's-other';
-  }
-  function recIsClosed(r) { return !!(r.status && REV_CLOSED[r.status]); }
-  function recIsCore(r) { return String(r.tag || '').indexOf('Core') === 0; }
-
-  function recMatch(r) {
-    if (revFilter === 'core' && !recIsCore(r)) return false;
-    if (revFilter === 'observation' && r.tag !== 'Observation') return false;
-    if (revFilter === 'closed' && !recIsClosed(r)) return false;
-    if (revFilter === 'open' && recIsClosed(r)) return false;
-    if (revQuery) {
-      var hay = String(r.ticker || '') + ' ' + String(r.name || '');
-      if (hay.toLowerCase().indexOf(revQuery.toLowerCase()) < 0) return false;
-    }
-    return true;
-  }
-
-  /* 单个 label/value 单元；raw 为空 → 加 na 样式（灰） */
-  function gi(k, v, raw, cls) {
-    var na = (raw === null || raw === undefined || raw === '' || v === RNA);
-    return '<div class="gi"><span class="k">' + k + '</span><span class="v' +
-      (na ? ' na' : '') + (cls && !na ? ' ' + cls : '') + '">' + v + '</span></div>';
-  }
-
-  function recCard(r) {
-    var id = r.event_id || '';
-    var pnl = num(r.pnl_pct);
-    var pnlCls = pnl === null ? '' : dirCls(pnl);
-    var open = !!revExp[id];
-    return '<div class="rh-card' + (open ? ' open' : '') + '" data-id="' + esc(id) + '">' +
-      '<div class="rh-top">' +
-        '<div class="rh-id"><div class="rh-tk">' + esc(r.ticker || RNA) + '</div>' +
-          '<div class="rh-nm" title="' + esc(r.name || '') + '">' + esc(r.name || r.ticker || RNA) + '</div></div>' +
-        '<div class="rh-right">' +
-          '<span class="rh-tag ' + recTagCls(r.tag) + '">' + esc(recTagLabel(r.tag)) + '</span>' +
-          '<div class="rh-pnl ' + (pnlCls || 'na') + '">' + recPnl(r.pnl_pct) + '</div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="rh-meta"><span class="rh-date">' + esc(r.rec_date || RNA) + '</span>' +
-        '<span class="rh-days">持有 ' + recDays(r.days_held) + '</span></div>' +
-      '<div class="rh-g">' +
-        gi('推荐价', recMoney(r.rec_price), r.rec_price) +
-        gi('当前价', recMoney(r.cur_price), r.cur_price) +
-        gi('当前收益', recPnl(r.pnl_pct), r.pnl_pct, pnlCls) +
-        gi('止损', recMoney(r.stop_loss), r.stop_loss) +
-        gi('评分', recScore(r.score), r.score) +
-      '</div>' +
-      '<div class="rh-st ' + recStatusCls(r.status) + '">状态：' + esc(recTxt(r.status)) + '</div>' +
-      '<div class="rh-hint">点击展开详情</div>' +
-      '<div class="rh-det"><div class="rh-g">' +
-        gi('Event ID', esc(id), id) +
-        gi('Ticker', esc(r.ticker || RNA), r.ticker) +
-        gi('推荐日期', esc(r.rec_date || RNA), r.rec_date) +
-        gi('Tag', esc(r.tag || RNA), r.tag) +
-        gi('Status', esc(recTxt(r.status)), r.status) +
-        gi('推荐价', recMoney(r.rec_price), r.rec_price) +
-        gi('当前价', recMoney(r.cur_price), r.cur_price) +
-        gi('PnL', recPnl(r.pnl_pct), r.pnl_pct, pnlCls) +
-        gi('持有天数', recDays(r.days_held), r.days_held) +
-        gi('止损', recMoney(r.stop_loss), r.stop_loss) +
-        gi('评分', recScore(r.score), r.score) +
-      '</div></div>' +
-    '</div>';
-  }
-
-  var REV_FILTER_TXT = { all: '全部', core: 'Core', observation: 'Observation', closed: '已结束', open: '进行中' };
-
-  function renderReviewHistory() {
-    var listEl = $('#revHistList');
-    if (!listEl) return;
-    var all = REVIEWS || [];
-
-    if (!all.length) {
-      var s0 = $('#revHistSub');
-      if (s0) s0.textContent = 'review.records[] · 暂无数据';
-      listEl.innerHTML = '<div class="chart-na">当前 dashboard_data.json 尚无 review.records[]。' +
-        '该字段由 dashboard_export.py 导出；此处不伪造、不用其它数据顶替。</div>';
-      var m0 = $('#revHistMore'); if (m0) m0.hidden = true;
-      var c0 = $('#revHistCount'); if (c0) c0.textContent = '';
-      return;
-    }
-
-    var rows = all.filter(recMatch);
-    var total = rows.length;
-    var show = rows.slice(0, Math.max(REV_PAGE, revShown));
-
-    var html = '', lastDate = '';
-    show.forEach(function (r) {
-      var d = String(r.rec_date || '');
-      if (d !== lastDate) {
-        lastDate = d;
-        html += '<div class="rh-dayhead">' + esc(d || RNA) + '</div>';
-      }
-      html += recCard(r);
-    });
-    listEl.innerHTML = html;
-
-    var more = $('#revHistMore');
-    if (more) {
-      if (total > show.length) {
-        more.hidden = false;
-        more.textContent = '加载更多（+' + Math.min(REV_PAGE, total - show.length) + '）';
-      } else {
-        more.hidden = true;
-      }
-    }
-    var cnt = $('#revHistCount');
-    if (cnt) {
-      cnt.textContent = '显示 ' + show.length + ' / ' + total + ' 条' +
-        (total !== all.length ? '（全部 ' + all.length + ' 条）' : '') +
-        (revFilter !== 'all' ? ' · 筛选：' + REV_FILTER_TXT[revFilter] : '') +
-        (revQuery ? ' · 搜索：' + revQuery : '');
-    }
-    var sub = $('#revHistSub');
-    if (sub) {
-      sub.textContent = 'review.records[] · 共 ' + all.length + ' 条 · 最新 ' + (all[0] && all[0].rec_date || NA);
-    }
-  }
-
-  function closestByClass(node, cls, root) {
-    while (node && node !== root) {
-      if (node.classList && node.classList.contains(cls)) return node;
-      node = node.parentNode;
-    }
-    return null;
-  }
-
-  var revBound = false;
-  function bindReviewHistory() {
-    if (revBound) return;
-    var chips = $('#revHistChips'), list = $('#revHistList'),
-        more = $('#revHistMore'), search = $('#revHistSearch');
-    if (!chips || !list || !more || !search) return;
-
-    chips.addEventListener('click', function (e) {
-      var b = closestByClass(e.target, 'chip', chips);
-      if (!b) return;
-      var f = b.getAttribute('data-f') || 'all';
-      if (f === revFilter) return;
-      revFilter = f;
-      revShown = REV_PAGE;
-      Array.prototype.forEach.call(chips.querySelectorAll('.chip'), function (x) {
-        if (x.getAttribute('data-f') === f) x.classList.add('on'); else x.classList.remove('on');
-      });
-      renderReviewHistory();
-    });
-
-    search.addEventListener('input', function () {
-      revQuery = String(search.value || '').trim();
-      revShown = REV_PAGE;
-      renderReviewHistory();
-    });
-
-    more.addEventListener('click', function () {
-      revShown += REV_PAGE;
-      renderReviewHistory();
-    });
-
-    /* 展开 / 收起详情：纯前端交互，不请求任何接口、不调用 GPT */
-    list.addEventListener('click', function (e) {
-      var card = closestByClass(e.target, 'rh-card', list);
-      if (!card) return;
-      var id = card.getAttribute('data-id') || '';
-      if (revExp[id]) delete revExp[id]; else revExp[id] = 1;
-      card.classList.toggle('open', !!revExp[id]);
-    });
-
-    revBound = true;
-  }
-
   /* ---------------- Options ---------------- */
   var STRAT_TXT = {
     'CALL_DEBIT_SPREAD': 'CALL Debit Spread',
@@ -872,35 +704,6 @@
     if (isHome) {
       $('#optSubHome').textContent = '来自 option_strategies.csv · ' + list.length + ' 条';
     }
-  }
-
-  /* ---------------- History ---------------- */
-  function renderHistory() {
-    var el = $('#histList');
-    if (!el) return;
-    if (!HISTORY.length) {
-      el.innerHTML = '<div class="chart-na">history 为空：现有 CSV 不足以生成历史序列（不伪造）</div>';
-      return;
-    }
-    var rows = HISTORY.slice().sort(function (a, b) { return String(a.date) < String(b.date) ? 1 : -1; });
-    var show = rows.slice(0, 12);
-    var maxC = 1;
-    rows.forEach(function (h) { maxC = Math.max(maxC, num(h.core_count) || 0); });
-
-    var html = '<div class="hist"><div class="hrow head"><span class="hd">Date</span>' +
-      '<span class="hn">Core</span><span class="hn">Obs</span></div>' +
-      show.map(function (h) {
-        var c = num(h.core_count), o = num(h.observation_count);
-        var w = (c === null ? 0 : Math.max(2, c / maxC * 100));
-        return '<div class="hrow"><span class="hd">' + esc(h.date) + '</span>' +
-          '<span class="hn' + (c === null ? ' na' : '') + '">' + nv(c, 0) + '</span>' +
-          '<span class="hn' + (o === null ? ' na' : '') + '">' + nv(o, 0) + '</span>' +
-          '<span class="hbar"><i style="width:' + w.toFixed(1) + '%"></i></span></div>';
-      }).join('') + '</div>';
-    html += '<div class="wnote" style="margin-top:7px">共 ' + rows.length + ' 条 · 显示最近 ' + show.length +
-      ' 条 · 口径：当日仍在跟踪的去重推荐事件数（Ticker + Rec_Date），非当日新增数。</div>';
-    el.innerHTML = html;
-    $('#histSub').textContent = 'review_history.csv · ' + rows.length + ' 个交易日快照';
   }
 
   /* =========================================================

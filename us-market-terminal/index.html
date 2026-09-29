@@ -65,60 +65,14 @@
 
     <section class="card sec">
       <div class="sec-h">
-        <h2>Review 复盘</h2>
-        <span class="sec-sub" id="revSubHome">近 30 天</span>
-      </div>
-      <div class="grid-review" id="reviewTiles"></div>
-      <div class="notes" id="reviewNotes"></div>
-    </section>
-
-    <section class="card sec">
-      <div class="sec-h">
         <h2>Options 策略</h2>
         <span class="sec-sub" id="optSubHome">来自 option_strategies.csv</span>
       </div>
       <div class="opt-list" id="optHomeList"></div>
     </section>
 
-    <section class="card sec">
-      <div class="sec-h">
-        <h2>History 跟踪趋势</h2>
-        <span class="sec-sub" id="histSub">review_history.csv 每日快照</span>
-      </div>
-      <div id="histList"></div>
-    </section>
   </div>
 
-  <!-- 5. Review 历史推荐明细（dashboard_data.json · review.records[]） -->
-  <section class="card sec" id="revHistSec">
-    <div class="sec-h">
-      <h2>Review 历史推荐</h2>
-      <span class="sec-sub" id="revHistSub">dashboard_data.json · review.records[]</span>
-    </div>
-
-    <div class="rh-tools">
-      <div class="rh-chips" id="revHistChips">
-        <button type="button" class="chip on" data-f="all">全部</button>
-        <button type="button" class="chip" data-f="core">Core</button>
-        <button type="button" class="chip" data-f="observation">Observation</button>
-        <button type="button" class="chip" data-f="closed">已结束</button>
-        <button type="button" class="chip" data-f="open">进行中</button>
-      </div>
-      <input class="rh-search" id="revHistSearch" type="search"
-             placeholder="搜索 Ticker / 公司名…" autocomplete="off" spellcheck="false">
-    </div>
-
-    <div class="rh-list" id="revHistList"></div>
-
-    <div class="rh-foot">
-      <button type="button" class="rh-more" id="revHistMore" hidden>加载更多</button>
-      <div class="rh-count" id="revHistCount"></div>
-    </div>
-    <div class="notes">
-      <div class="note">本区块只呈现 review.records[] 的历史事实数据（Ticker / 推荐日期 / 价格 / PnL / 持有天数 / 止损 / 评分），
-        <b>不含任何 AI 文本</b>，也不在前端重算 PnL 或 Days Held · 数据来源 dashboard_data.json · 0 次 GPT 调用</div>
-    </div>
-  </section>
 
   <footer class="foot" id="footInfo">真实数据 · 数据源 dashboard_data.json</footer>
 </div>
