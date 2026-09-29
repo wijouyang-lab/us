@@ -211,6 +211,17 @@ def round_num(v, nd=4):
         return None
 
 
+def is_valid_stop_loss(value):
+    """Stop_Loss 是否为有效止损价：可解析为 float 且 > 0。
+
+    空 / None / NaN / 非数字 / <= 0（如「观望」「N/A」「绝对规避」「-5%」等文本）
+    均视为「无有效止损」，返回 False。本函数只做「当前展示池是否允许进入」的判断，
+    绝不推算 / 替换止损价本身，也不使用当前价或 Rec_Price 代替。
+    """
+    f = parse_num(value)
+    return f is not None and f > 0
+
+
 def parse_date(v):
     """接受 YYYY-MM-DD / YYYY-MM-DD HH:MM:SS / YYYYMMDD，返回 date 或 None。"""
     s = clean_text(v)
@@ -1136,6 +1147,14 @@ def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
     # 注意：这不是删除历史数据——被排除的事件仍完整保留在 review.records[] / Review History，
     # 其 AI Snapshot（ai_snapshot.csv）也原样保留；本步只影响 Dashboard 当前 Core/Observation 展示。
     scored = [r for r in final.values() if parse_num(r.get("Score")) is not None]
+
+    # 第五步过滤（fail-closed）：只保留「有有效止损」的当前事件。
+    # Stop_Loss 必须可解析为 float 且 > 0；空 / None / NaN / 非数字 / <= 0
+    # （如「观望」「N/A」「绝对规避」等文本）均视为无有效止损，从【当前展示池】排除。
+    # 注意：这不是删除历史数据——被排除的事件仍完整保留在 review.records[] / Review History，
+    # 止损价本身不做任何推算/替换，也不使用当前价或 Rec_Price 代替；
+    # 本步只影响 Dashboard 当前 Core/Observation 展示池。
+    scored = [r for r in scored if is_valid_stop_loss(r.get("Stop_Loss"))]
     return sorted(scored, key=lambda r: (r.get("Ticker") or "", r.get("Date") or ""))
 
 
