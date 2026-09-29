@@ -11,7 +11,6 @@ $AES: possibly delisted; no price data found  (period=1d)
 $CF: possibly delisted; no price data found  (period=1d)
 $CVS: possibly delisted; no price data found  (period=1d)
 $DECK: possibly delisted; no price data found  (period=1d)
-$DIS: possibly delisted; no price data found  (period=1d)
 $DOC: possibly delisted; no price data found  (period=1d)
 $EW: possibly delisted; no price data found  (period=1d)
 $GGB: possibly delisted; no price data found  (period=1d)
@@ -52,7 +51,7 @@ Observation 数量     : 22
 Options 数量         : 1（Active 1）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 67 / 0   技术指标成功 67/67
-当前价来源           : 实时 50 · 最新收盘 0 · 合计可取 67/67
+当前价来源           : 实时 51 · 最新收盘 0 · 合计可取 67/67
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 9  [complete]
