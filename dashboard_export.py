@@ -1142,6 +1142,24 @@ def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
     return sorted(scored, key=lambda r: (r.get("Ticker") or "", r.get("Date") or ""))
 
 
+def effective_score(row):
+    """Dashboard 展示用的综合分：优先 Final_Score，Final_Score 无法解析时回落到推荐评分 Score。
+
+    trade_history.csv 里一部分旧事件只写了推荐评分 Score、没有综合分 Final_Score，
+    若直接用 Final_Score，这些事件的 Final ring 会显示 N/A（明明 Score 有真实数字）。
+
+    只影响 Dashboard 的展示字段 final_score，**不改变任何业务逻辑**：
+    - build_current_event_rows() 的股票池过滤仍只看 Score 是否可解析（第 10B 规则不变）
+    - 不影响 Core / Observation 生命周期、ACTIVE_STATUSES、Ticker+Rec_Date+Tag、
+      AI Snapshot、Review milestone
+    - 两者都不可解析时仍然返回 None（前端显示 N/A，绝不补 0）
+    """
+    fs = parse_num(row.get("Final_Score"))
+    if fs is not None:
+        return fs
+    return parse_num(row.get("Score"))
+
+
 def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
     stocks = []
     kline_ok, kline_fail = 0, 0
@@ -1213,7 +1231,8 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
             "pending_change_1d": round_num(pending_change, 4),
             "pending_change_1d_source": pending_chg_src,
 
-            "final_score": round_num(parse_num(row.get("Final_Score")), 2),
+            # 综合分兜底：Final_Score 缺失时回落到推荐评分 Score（见 effective_score 说明）
+            "final_score": round_num(effective_score(row), 2),
             "quant_score": round_num(parse_num(row.get("Quant_Score")), 2),
             "ai_score": round_num(parse_num(row.get("AI_Score")), 2),
 

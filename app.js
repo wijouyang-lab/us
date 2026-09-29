@@ -338,7 +338,8 @@
     renderGlobal();
     renderReview();
     renderOptions(OPTIONS, $('#optHomeList'), true);
-    renderHistory();
+    /* 第 10E：首页不再渲染 Review History / History 跟踪趋势（后端 review.records[] 原样保留，
+       当前卡片的 5D/10D/20D/Review Stage 仍依赖它）。renderHistory() 函数保留但未再调用。 */
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
