@@ -3,7 +3,7 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
 pending CSV（本次 Scan 新推荐）：us_stocks_pending_20260929.csv
-当前有效股票池：45 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+当前有效股票池：48 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
@@ -25,12 +25,12 @@ $EDGM: possibly delisted; no price data found  (period=1d)
 $HIRU: possibly delisted; no price data found  (period=1d)
 --------------------------------------------------------------
 pending CSV          : us_stocks_pending_20260929.csv   股票名单来源：active_events
-Core 数量            : 45
-Observation 数量     : 0
-Options 数量         : 6（Active 6）
+Core 数量            : 43
+Observation 数量     : 5
+Options 数量         : 9（Active 9）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 45 / 0   技术指标成功 45/45
-当前价来源           : 实时 45 · 最新收盘 0 · 合计可取 45/45
+K线成功 / 失败       : 48 / 0   技术指标成功 48/48
+当前价来源           : 实时 48 · 最新收盘 0 · 合计可取 48/48
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 9  [complete]
@@ -38,7 +38,7 @@ Review 数据状态      :
    · observation_open_count       = 84  [complete]
    · actual_active_count          = 9  [complete]
 history 条数         : 42
-AI 六段状态          : partial（9/45 只股票有内容，来源 Scan 2026-09-29）
+AI 六段状态          : partial（12/48 只股票有内容，来源 Scan 2026-09-29）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
