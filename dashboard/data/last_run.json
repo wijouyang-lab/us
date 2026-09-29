@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-29T11:45:57Z",
-  "market_updated_at": "2026-09-29T11:45:55Z",
-  "technical_updated_at": "2026-09-29T11:45:57Z",
+  "generated_at": "2026-09-29T11:56:44Z",
+  "market_updated_at": "2026-09-29T11:56:41Z",
+  "technical_updated_at": "2026-09-29T11:56:44Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,14 +17,14 @@
     "missing": []
   },
   "stocks": {
-    "total": 67,
-    "core": 45,
-    "observation": 22,
-    "kline_ok": 67,
-    "technical_ok": 67,
+    "total": 40,
+    "core": 40,
+    "observation": 0,
+    "kline_ok": 40,
+    "technical_ok": 40,
     "price_source_breakdown": {
-      "realtime": 55,
-      "realtime_unverified": 12
+      "realtime": 36,
+      "realtime_unverified": 4
     }
   },
   "review": {
@@ -35,7 +35,7 @@
     "actual_active": 9,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 14,
-    "price_backfill_count": 8,
+    "price_backfill_count": 11,
     "partial_items": []
   },
   "warnings": [],
