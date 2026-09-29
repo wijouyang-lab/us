@@ -2636,7 +2636,7 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 <p><span class="highlight-label bg-red">🔗 产业链逻辑:</span>...</p>
 <p><span class="highlight-label bg-green">📰 个股新闻核查:</span>...</p>
 <p><span class="highlight-label bg-blue">📈 技术确认:</span>...</p>
-<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>评分:[XX]/100 — ...（最终评分由 Quant 70% + AI 30% 构成）</p>
+<p><span class="highlight-label bg-teal">⭐ 推荐评分:</span>AI评分:[XX]/100 — ...（AI评分是 AI 对该标的交易价值/风险/催化/技术状态的独立判断，0~100 整数；最终分 = Quant 70% + AI评分 30%）</p>
 <p><span class="highlight-label bg-blue">📊 量化拆解:</span>Quant:[XX]/100 | 基本面:[X]/35 | 事件:[X]/20 | 技术:[X]/25 | 风险/流动性:[X]/20 | 技术确认:[N]项 | MA20:[数值] | MA20斜率5日:[数值]% | Sector RS20D:[数值]%</p>
 <p><span class="highlight-label bg-orange">⚠️ 动态风控:</span>持有:[趋势未破则继续] | 移动止损:[具体价格] | 依据:[MA20/MA50 + ATR + MACD/KDJ]</p>
 <p><span class="highlight-label bg-purple">🧠 {SCAN_RUN_MODE_LABEL}结论:</span>说明为什么当前值得关注、当前价格状态是否被新闻/事件解释、以及主要不确定性；盘中补发时不得虚构盘前异动。</p>
@@ -2652,11 +2652,18 @@ VIX/Regime 与 SPY趋势已经由程序完成硬门控；候选池中的 Market/
 每只股票必须真实填写“产业链逻辑 / 个股新闻核查 / 盘前结论 / 主要催化 / 主要风险 / 失效条件”；不得用“暂无”“程序候选”“请重点关注”等模板句替代已有证据。
 “个股新闻核查”必须用中文，必须引用上方提供的真实新闻；“产业链逻辑”必须体现行业→公司→业务/盈利的传导。
 
+【AI评分强制规则（最高优先级，绝不可省略）】
+- Core 与 Observation 的每只标的都必须输出「AI评分:XX/100」（XX 为 0~100 的整数）。
+- 即使今日 Core=0、只有 Observation，也必须给 Observation 的每只标的输出 AI评分，绝不能因为只是“观察池”就省略 AI评分。
+- AI评分 是 AI 对该标的当前交易价值/风险/催化/技术状态的独立判断，绝不能用 Quant 分代替、不能复制 Quant 分、不能省略、不能留空。
+- Quant:XX/100 只是程序量化分，绝不能当作 AI评分。
+- 如果证据不足以支持高分，就给较低的 AI评分，但必须输出真实评分。
+
 <div class="compare-card">
 <div class="compare-title">🎖️ 观察池 - Rank 6-12</div>
 <ul>
-<li>[公司名称] ([TICKER]) | 理由...</li>
-<li>[公司名称] ([TICKER]) | 理由...</li>
+<li>[公司名称] ([TICKER]) | AI评分:XX/100 | Quant:XX/100 | 理由...</li>
+<li>[公司名称] ([TICKER]) | AI评分:XX/100 | Quant:XX/100 | 理由...</li>
 </ul>
 </div>
 
@@ -2794,17 +2801,18 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
         return None, None
 
     candidates = []
+    score_missing_core = 0
+    score_missing_obs = 0
     for item in pool_data:
         ai_tag, chunk = find_chunk(item)
         # fail-closed：没有真实 AI 评分就绝不用 60 顶替，直接排除该候选
         ai_score = parse_ai_score(chunk)
         if ai_score is None:
+            if ai_tag == "Core_Dragon":
+                score_missing_core += 1
+            else:
+                score_missing_obs += 1
             print(f"🚫 [AI Score Missing] {item.get('Ticker')} —— 未解析到真实 AI 评分，本次排除（不补 60、不伪造 Final）")
-            # 临时诊断（仅定位 gpt-6-astra 真实评分格式用）：打印该候选 AI chunk 前 300 字符。
-            # 受控输出，不打印完整报告/prompt/敏感环境变量；定位后即移除。
-            _dbg = (chunk or "").strip()
-            if _dbg:
-                print(f"   ↳ [AI chunk 诊断] {_dbg[:300]!r}")
             continue
         quant = float(item.get("Quant_Score", 0) or 0)
         final = round(
@@ -2891,6 +2899,8 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
     core = [x for x in candidates if x.get("Tag") == "Core_Dragon"][: int(LIMIT_PARAMS.get("max_core", 5))]
     used = {x["Ticker"] for x in core}
     obs = [x for x in candidates if x.get("Tag") == "Observation" and x["Ticker"] not in used][: int(LIMIT_PARAMS.get("max_observation", 7))]
+    if score_missing_core or score_missing_obs:
+        print(f"📊 [AI Score Missing 统计] Core={score_missing_core} / Observation={score_missing_obs}")
     print(f"🔒 [程序校验] Core={len(core)} / Observation={len(obs)} / AI候选池外忽略={len(invalid_ai)}")
     return core + obs
 
