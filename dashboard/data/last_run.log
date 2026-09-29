@@ -5,6 +5,40 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 [WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
 当前有效股票池：67 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
+$A: possibly delisted; no price data found  (period=1d)
+$ABBV: possibly delisted; no price data found  (period=1d)
+$AES: possibly delisted; no price data found  (period=1d)
+$APH: possibly delisted; no price data found  (period=1d)
+$BMY: possibly delisted; no price data found  (period=1d)
+$CF: possibly delisted; no price data found  (period=1d)
+$CNP: possibly delisted; no price data found  (period=1d)
+$CVS: possibly delisted; no price data found  (period=1d)
+$DECK: possibly delisted; no price data found  (period=1d)
+$DHR: possibly delisted; no price data found  (period=1d)
+$DIS: possibly delisted; no price data found  (period=1d)
+$DOC: possibly delisted; no price data found  (period=1d)
+$DVN: possibly delisted; no price data found  (period=1d)
+$EW: possibly delisted; no price data found  (period=1d)
+$FCX: possibly delisted; no price data found  (period=1d)
+$GEHC: possibly delisted; no price data found  (period=1d)
+$GGB: possibly delisted; no price data found  (period=1d)
+$GNRC: possibly delisted; no price data found  (period=1d)
+$HST: possibly delisted; no price data found  (period=1d)
+$HUM: possibly delisted; no price data found  (period=1d)
+$INVH: possibly delisted; no price data found  (period=1d)
+$IR: possibly delisted; no price data found  (period=1d)
+$KO: possibly delisted; no price data found  (period=1d)
+$KR: possibly delisted; no price data found  (period=1d)
+$KVUE: possibly delisted; no price data found  (period=1d)
+$LLY: possibly delisted; no price data found  (period=1d)
+$MRK: possibly delisted; no price data found  (period=1d)
+$SPDN: possibly delisted; no price data found  (period=1d)
+$UDR: possibly delisted; no price data found  (period=1d)
+$WELL: possibly delisted; no price data found  (period=1d)
+$WFC: possibly delisted; no price data found  (period=1d)
+$^DJI: possibly delisted; no price data found  (period=1d)
+$^GSPC: possibly delisted; no price data found  (period=1d)
+$^IXIC: possibly delisted; no price data found  (period=1d)
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
@@ -22,6 +56,9 @@ $XAGUSD=X: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
 全球市场：15/15 可用，实时 12 只（CNBC 现货收益率 0 只；盘外静态收盘 3 只；绝不使用旧 JSON 宏观缓存）
 $EDGM: possibly delisted; no price data found  (period=1d)
+$HIRU: possibly delisted; no price data found  (period=1d)
+$KEY: possibly delisted; no price data found  (period=1d)
+$RGBP: possibly delisted; no price data found  (period=1d)
 --------------------------------------------------------------
 pending CSV          : （无）   股票名单来源：active_events
 Core 数量            : 45
@@ -29,7 +66,7 @@ Observation 数量     : 22
 Options 数量         : 1（Active 1）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 67 / 0   技术指标成功 67/67
-当前价来源           : 实时 0 · 最新收盘 67 · 合计可取 67/67
+当前价来源           : 实时 36 · 最新收盘 0 · 合计可取 67/67
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 9  [complete]
