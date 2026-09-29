@@ -2707,14 +2707,48 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
         head = fragment[:260]
         return f"({ticker})" in head or str(name).lower() in head.lower()[:120]
 
+    # AI 评分的真实写法不止一种（AI 输出格式可能轻微变化），全部只认「/100」的显式评分：
+    #   评分:[78]/100 · 评分:78/100 · Score:78/100 · 推荐评分:78/100 · 推荐评分：[78]/100
+    #   ⭐ 推荐评分:</span>评分:[78]/100 · 推荐评分：评分：[78]/100 · AI Score:78/100 · AI=78
+    # 解析不到一律返回 None —— 严禁用 60 / 0 / Quant / Final 反推冒充 AI Score。
+    AI_SCORE_PATTERNS = [
+        r'推荐评分\s*[:：]?\s*(?:评分\s*[:：]?\s*)?\[?\s*(\d{1,3}(?:\.\d+)?)\s*\]?\s*/\s*100',
+        r'评分\s*[:：]?\s*\[?\s*(\d{1,3}(?:\.\d+)?)\s*\]?\s*/\s*100',
+        r'Score\s*[:：]?\s*\[?\s*(\d{1,3}(?:\.\d+)?)\s*\]?\s*/\s*100',
+        r'AI\s*Score\s*[:：]?\s*\[?\s*(\d{1,3}(?:\.\d+)?)\s*\]?\s*/\s*100',
+        r'\bAI\s*[:：=]\s*\[?\s*(\d{1,3}(?:\.\d+)?)\s*\]?\s*(?:/\s*100)?',
+    ]
+
     def parse_ai_score(fragment):
-        sc = re.search(r'(?:评分|Score)\s*[:：]?\s*\[?(\d{1,3}(?:\.\d+)?)\]?\s*/\s*100', fragment or "", re.I)
-        if not sc:
-            return 60.0
-        try:
-            return max(0.0, min(100.0, float(sc.group(1))))
-        except Exception:
-            return 60.0
+        """只解析真实 AI 评分；解析不到返回 None（不 fallback 60 / 0，不拿 Quant 冒充）。"""
+        frag = fragment or ""
+        for pat in AI_SCORE_PATTERNS:
+            for m in re.finditer(pat, frag, re.I):
+                try:
+                    v = float(m.group(1))
+                except Exception:
+                    continue
+                if 0.0 <= v <= 100.0:
+                    return round(v, 1)
+        return None
+
+    def window_around_ticker(text, ticker, window=1200):
+        """按精确 Ticker 定位该股票附近的文本窗口（不依赖任何 HTML class / <li> 结构）。
+
+        右边界取「下一个其它股票的 (TICKER) 标记」或固定窗口，避免把别人的评分串过来。
+        """
+        if not text or not ticker:
+            return ""
+        m = (re.search(r'\(\s*' + re.escape(ticker) + r'\s*\)', text, re.I)
+             or re.search(r'\b' + re.escape(ticker) + r'\b', text))
+        if not m:
+            return ""
+        start = m.start()
+        nxt = re.search(r'\(\s*[A-Z][A-Z0-9.\-]{1,9}\s*\)', text[start + 1:], re.I)
+        end = (start + 1 + nxt.start()) if nxt else len(text)
+        if end - start > window:
+            end = start + window
+        return text[max(0, start - 60):end]
 
     obs_start = ai_html.find('class="compare-card"')
     if obs_start < 0:
@@ -2741,18 +2775,28 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
 
     def find_chunk(item):
         name, ticker = str(item.get("Name", "")), str(item.get("Ticker", ""))
+        # 1) 原有路径：AI 卡片 / 列表项标题命中
         for chunk in core_cards:
             if title_hit(chunk, name, ticker):
                 return "Core_Dragon", chunk
         for chunk in obs_items:
             if title_hit(chunk, name, ticker):
                 return "Observation", chunk
+        # 2) 兜底：按精确 Ticker 定位附近窗口（HTML class / <li> 结构轻微变化时仍可用）
+        for tag, zone in (("Core_Dragon", core_zone), ("Observation", obs_zone)):
+            frag = window_around_ticker(zone, ticker)
+            if frag:
+                return tag, frag
         return None, None
 
     candidates = []
     for item in pool_data:
         ai_tag, chunk = find_chunk(item)
-        ai_score = parse_ai_score(chunk) if chunk else 60.0
+        # fail-closed：没有真实 AI 评分就绝不用 60 顶替，直接排除该候选
+        ai_score = parse_ai_score(chunk)
+        if ai_score is None:
+            print(f"🚫 [AI Score Missing] {item.get('Ticker')} —— 未解析到真实 AI 评分，本次排除（不补 60、不伪造 Final）")
+            continue
         quant = float(item.get("Quant_Score", 0) or 0)
         final = round(
             float(SCORING_PARAMS.get("quant_weight", 70)) / 100 * quant
@@ -3579,7 +3623,15 @@ if __name__ == "__main__":
                 pct = -max(ATR_STOP_FLOOR_PCT,min(ATR_STOP_CEIL_PCT,atr*ATR_STOP_MULTIPLIER))
                 item["Stop_Loss"] = f"${round(item['Price']*(1+pct/100),2)}"
             if not item.get("Score") or item.get("Score") in {"N/A","观望"}:
-                item["Score"] = str(round(0.7*float(item.get("Quant_Score",0)) + 0.3*float(item.get("AI_Score",60) or 60),1))
+                # Final = 70% Quant + 30% AI；AI 缺失时不得用 60 顶替 —— 只能留空（fail-closed）
+                _ai = item.get("AI_Score")
+                _ai = None if _ai in (None, "", "N/A") else _ai
+                try:
+                    _ai = float(_ai)
+                except Exception:
+                    _ai = None
+                item["Score"] = ("" if _ai is None else
+                                 str(round(0.7*float(item.get("Quant_Score",0)) + 0.3*_ai, 1)))
         to_write.append(item)
 
     if os.path.exists(log_file) and to_write:
@@ -3614,7 +3666,7 @@ if __name__ == "__main__":
                     item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("Premarket_Status_Display",""), item.get("Premarket_Source",""), item.get("News_AsOf_ET",""),
                     item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("技术确认数",0), ",".join(item.get("技术确认信号",[]) or []), item.get("估值评分",0),
                     item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
-                    item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",60), item.get("Final_Score",item.get("Score","")),
+                    item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",""), item.get("Final_Score",item.get("Score","")),
                     item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("近5日放量阳线",False), item.get("Hold_Period","动态持有"),
                     item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")), item.get("ATR_Pct",""),
                     item.get("周期共振",False), item.get("Sector_RS_20D_Pct",""), item.get("Market_Regime",""), item.get("VIX",""),

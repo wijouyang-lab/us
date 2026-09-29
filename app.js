@@ -336,7 +336,9 @@
     renderGmBar();
     renderPools(core, obs);
     renderGlobal();
-    renderReview();
+    /* 第 10F：首页不再渲染 Review 复盘 KPI（renderReview 只服务首页，故不再调用）。
+       REVIEW / REVIEWS / REV_MS / msHtml 等数据与函数全部保留 —— 当前卡片的
+       Review Stage / 5D / 10D / 20D 仍从 review.records[] 精确匹配。 */
     renderOptions(OPTIONS, $('#optHomeList'), true);
     /* 第 10E：首页不再渲染 Review History / History 跟踪趋势（后端 review.records[] 原样保留，
        当前卡片的 5D/10D/20D/Review Stage 仍依赖它）。renderHistory() 函数保留但未再调用。 */
