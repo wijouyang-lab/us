@@ -1,6 +1,11 @@
 name: US-Share Evolve
 on:
   workflow_dispatch:
+  schedule:
+    # Schedule timezone: Asia/Shanghai
+    # Evolution: First Saturday of each month 10:00 Beijing time
+    - cron: '0 10 * * 6'
+      timezone: 'Asia/Shanghai'
 
 jobs:
   run-scan:
@@ -14,15 +19,47 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    # 定时触发控制：只有「北京时间每月第一个星期六」才执行 Evolution。
+    # schedule 的 cron '0 10 * * 6' + timezone Asia/Shanghai 每周六 10:00 触发，
+    # 但仅在本月第一个星期六（day-of-month <= 7）继续；其余星期六跳过，不执行 Evolution 业务。
+    # 手动 workflow_dispatch 不受此限制，始终执行（便于人工随时运行）。
+    - name: Check first Saturday of month (Beijing time)
+      id: check-date
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" = "schedule" ]; then
+          # 北京时间：day-of-week (1=Mon .. 6=Sat .. 7=Sun) 与 day-of-month
+          BJ_DOW=$(TZ=Asia/Shanghai date '+%u')
+          BJ_DAY=$(TZ=Asia/Shanghai date '+%d')
+          if [ "$BJ_DOW" = "6" ] && [ "$BJ_DAY" -le 7 ]; then
+            SHOULD_RUN=true
+          else
+            SHOULD_RUN=false
+          fi
+        else
+          # 手动 workflow_dispatch：不受每月第一个星期六限制，直接执行
+          SHOULD_RUN=true
+        fi
+        echo "should_run=$SHOULD_RUN" >> "$GITHUB_OUTPUT"
+        echo "event=${{ github.event_name }} | Beijing $(TZ=Asia/Shanghai date '+%Y-%m-%d %H:%M:%S %A') | day-of-month=$(TZ=Asia/Shanghai date '+%d') | dow=$(TZ=Asia/Shanghai date '+%u') | should_run=$SHOULD_RUN"
+        if [ "$SHOULD_RUN" != "true" ]; then
+          echo "Skip: schedule trigger but not the first Saturday of the month, Evolution will not run."
+        else
+          echo "Run: proceeding with Evolution."
+        fi
+
     - name: Setup Python
+      if: steps.check-date.outputs.should_run == 'true'
       uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
     - name: Install Libs
+      if: steps.check-date.outputs.should_run == 'true'
       run: pip install pandas pandas-ta requests anthropic tushare
 
     - name: Run Evolve
+      if: steps.check-date.outputs.should_run == 'true'
       env:
         TUSHARE_TOKEN: ${{ secrets.TUSHARE_TOKEN }}
         CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
@@ -33,6 +70,7 @@ jobs:
       run: python evolve.py || true
 
     - name: Save Logs
+      if: steps.check-date.outputs.should_run == 'true'
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "Alpha Bot"

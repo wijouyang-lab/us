@@ -2,6 +2,11 @@ name: 美股盘中扫描
 
 on:
   workflow_dispatch:
+  schedule:
+    # Schedule timezone: Asia/Shanghai
+    # Scan: Mon-Fri 21:00 Beijing time
+    - cron: '0 21 * * 1-5'
+      timezone: 'Asia/Shanghai'
 
 # 防重复：同一时间只允许一个 Scan 在执行/排队。
 # cancel-in-progress: false —— 已有 Scan 正在跑时，新触发排队等待，绝不取消正在跑的那个。

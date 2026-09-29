@@ -2,6 +2,11 @@ name: 美股盘后复盘
 
 on:
   workflow_dispatch:
+  schedule:
+    # Schedule timezone: Asia/Shanghai
+    # Review: Tue-Sat 06:00 Beijing time
+    - cron: '0 6 * * 2-6'
+      timezone: 'Asia/Shanghai'
 
 # 防重复：同一时间只允许一个 Review 在执行/排队；不与 Scan / Dashboard 互斥。
 concurrency:
