@@ -89,39 +89,6 @@
     </section>
   </div>
 
-  <!-- 5. Review 历史推荐明细（dashboard_data.json · review.records[]） -->
-  <section class="card sec" id="revHistSec">
-    <div class="sec-h">
-      <h2>Review 历史推荐</h2>
-      <span class="sec-sub" id="revHistSub">dashboard_data.json · review.records[]</span>
-    </div>
-
-    <div class="rh-tools">
-      <div class="rh-chips" id="revHistChips">
-        <button type="button" class="chip on" data-f="all">全部</button>
-        <button type="button" class="chip" data-f="core">Core</button>
-        <button type="button" class="chip" data-f="observation">Observation</button>
-        <button type="button" class="chip" data-f="closed">已结束</button>
-        <button type="button" class="chip" data-f="open">进行中</button>
-      </div>
-      <input class="rh-search" id="revHistSearch" type="search"
-             placeholder="搜索 Ticker / 公司名…" autocomplete="off" spellcheck="false">
-    </div>
-
-    <div class="rh-list" id="revHistList"></div>
-
-    <div class="rh-foot">
-      <button type="button" class="rh-more" id="revHistMore" hidden>加载更多</button>
-      <div class="rh-count" id="revHistCount"></div>
-    </div>
-    <div class="notes">
-      <div class="note">本区块只呈现 review.records[] 的历史事实数据（Ticker / 推荐日期 / 价格 / PnL / 持有天数 / 止损 / 评分），
-        以及 <b>Review Progress（5D / 10D / 20D / Review Stage）</b> —— 两者均由 review.py 按 OHLCV 交易日历客观计算、
-        dashboard_export.py 只透传原值，<b>前端不重算</b>；<b>不含任何 AI 文本</b> ·
-        数据来源 dashboard_data.json · 0 次 GPT 调用</div>
-    </div>
-  </section>
-
   <footer class="foot" id="footInfo">真实数据 · 数据源 dashboard_data.json</footer>
 </div>
 
