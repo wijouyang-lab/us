@@ -1074,13 +1074,10 @@ def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
         rec_date = parse_date(r.get("Date"))
         if rec_date is None:
             continue
-        rec_price = None
-        for col in ("Price", "Scan_Ref_Price", "Close_Price", "Prev_Close"):
-            v = parse_num(r.get(col))
-            if v and v > 0:
-                rec_price = v
-                break
-        if not rec_price:
+        # 正式买入价 = trade_history 的 Price（推荐日真实 Open）。
+        # 禁止 fallback 到 Scan_Ref_Price / Close_Price / Prev_Close —— 那些不是买入价。
+        rec_price = parse_num(r.get("Price"))
+        if not rec_price or rec_price <= 0:
             continue
         rec_date_str = rec_date.strftime("%Y-%m-%d")
         key = (ticker, rec_date_str, tag)
@@ -2015,12 +2012,8 @@ def build_events(trade_rows, review_rows, anomalies):
         key = _event_key(ticker, rec_date.strftime("%Y-%m-%d"), tag)
         if key in events:
             continue
-        rec_price = None
-        for col in ("Price", "Scan_Ref_Price", "Close_Price", "Prev_Close"):  # review.py:426
-            v = parse_num(r.get(col))
-            if v and v > 0:
-                rec_price = v
-                break
+        # 正式买入价 = trade_history 的 Price（推荐日真实 Open）；不 fallback 到其它价格列。
+        rec_price = parse_num(r.get("Price"))
         status = clean_text(r.get("Status"))
         exit_price = parse_num(r.get("Exit_Price"))
         cur = exit_price if (status in CLOSED_STOCK_STATUSES and exit_price is not None) else None
@@ -2143,13 +2136,9 @@ def build_active_positions(trade_rows, cutoff, price_lookup, stock_price_map):
         status = clean_text(r.get("Status"))
         if status not in ACTIVE_STATUSES:
             continue
-        rec_price = None
-        for col in ("Price", "Scan_Ref_Price", "Close_Price", "Prev_Close"):  # review.py:426
-            v = parse_num(r.get(col))
-            if v and v > 0:
-                rec_price = v
-                break
-        if not rec_price:
+        # 正式买入价 = trade_history 的 Price（推荐日真实 Open）；不 fallback 到其它价格列。
+        rec_price = parse_num(r.get("Price"))
+        if not rec_price or rec_price <= 0:
             continue
         key = _event_key(ticker, rec_date.strftime("%Y-%m-%d"), tag)
         cur = stock_price_map.get(ticker)

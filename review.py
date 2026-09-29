@@ -425,11 +425,13 @@ def load_trade_history():
         return pd.DataFrame()
 
 def safe_record_price(row):
-    for c in ("Price", "Scan_Ref_Price", "Close_Price", "Prev_Close"):
-        p = safe_float(row.get(c))
-        if p is not None and p > 0:
-            return p
-    return None
+    """正式买入价 = trade_history 的 Price 字段 = 推荐日真实 Open。
+
+    禁止 fallback 到 Scan_Ref_Price / Close_Price / Prev_Close / 实时 quote：
+    这些都不是正式买入价。Open 未产生（盘前新仓）→ 返回 None，等回补。
+    """
+    p = safe_float(row.get("Price"))
+    return p if (p is not None and p > 0) else None
 
 def find_existing_record(df_existing, date_value, ticker):
     if df_existing.empty:
@@ -599,10 +601,12 @@ def supplement_us_stocks_from_pending():
                 pdx = target_map.get(ticker)
                 op = safe_float(pdx.get("open")) if pdx else None
                 cp = safe_float(pdx.get("close")) if pdx else None
-                if target_date == today_us_str() and (op is None or cp is None):
-                    live_op, live_last = get_live_quote_bootstrap(ticker)
-                    op = op if op is not None else live_op
-                    cp = cp if cp is not None else (live_last if live_last is not None else live_op)
+                if target_date == today_us_str() and cp is None:
+                    _, live_last = get_live_quote_bootstrap(ticker)
+                    cp = live_last
+                # 注意：op（正式买入价 = 推荐日 Open）在盘前/盘中尚未产生时必须保持 None，
+                # 绝不 get_live_quote_bootstrap() 把实时价假装成 Open。Price 列随之留空，
+                # 由后续 Review 的 backfill_rec_price() 取得 Rec_Date 真实 Open 后幂等回填。
                 if op is None or cp is None:
                     missing.append(ticker)
                 scan_ref = row.get("Scan_Ref_Price", row.get("Price", ""))
@@ -2184,6 +2188,80 @@ def backfill_review_milestones():
     return rows_changed
 
 
+def backfill_rec_price():
+    """幂等：review_history.csv 的 Rec_Price 统一修正为 Rec_Date 真实 Open。
+
+    - 只读已有行，绝不新建；
+    - Rec_Date 有真实 OHLC → Rec_Price = Rec_Date Open（旧值无论是什么一律改成 Open）；
+    - Rec_Date 无真实 OHLC（非交易日/停牌/数据缺失）→ Rec_Price = NULL，绝不 fallback 到
+      Prev_Close / Close_Price / Scan_Ref_Price / 实时 quote / 最近交易日价格；
+    - 期权行跳过；
+    - Rec_Price 数值变化后：重算 PnL_5D/10D/20D（round((PN-Rec_Price)/Rec_Price*100, 2) 不变），
+      Price_N 为空或 Rec_Price 为空时 PnL 置空；
+    - 重算 Review_Stage（FINAL > 20D > 10D > 5D > OPEN，原 FINAL 保持 FINAL）；
+    - 幂等：Rec_Price 已等于 Open 的行跳过。
+    """
+    if not os.path.exists(REVIEW_HISTORY) or os.path.getsize(REVIEW_HISTORY) == 0:
+        print("ℹ️ [买入价回填] review_history.csv 不存在或为空，跳过。")
+        return 0
+    try:
+        od = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+    except Exception as e:
+        print(f"⚠️ [买入价回填] 读取失败：{e}")
+        return 0
+    for c in REVIEW_COLUMNS:
+        if c not in od.columns:
+            od[c] = ""
+    od = od[REVIEW_COLUMNS]
+
+    hist = get_milestone_history()
+    changed = 0
+    cleared = 0
+    pnl_changed = {"5D": 0, "10D": 0, "20D": 0}
+    stage_changed = 0
+
+    for idx, row in od.iterrows():
+        if clean_text(row.get("Option_Type")) or clean_text(row.get("Strike")) or clean_text(row.get("Expiry")):
+            continue
+        tk = clean_text(row.get("Ticker"))
+        rec = clean_text(row.get("Rec_Date"))[:10]
+        if not tk or not rec:
+            continue
+        ohlc = get_exact_date_ohlc(hist, tk, rec)
+        new_price = safe_float(ohlc.get("open")) if ohlc else None
+        old_price = safe_float(row.get("Rec_Price"))
+        if (old_price is None and new_price is None) or            (old_price is not None and new_price is not None and abs(old_price - new_price) < 1e-6):
+            continue
+        od.at[idx, "Rec_Price"] = "" if new_price is None else str(new_price)
+        changed += 1
+        if new_price is None:
+            cleared += 1
+        rp = new_price
+        for label, n in (("5", 5), ("10", 10), ("20", 20)):
+            px = safe_float(row.get("Price_%sD" % label))
+            old_pnl = clean_text(row.get("PnL_%sD" % label))
+            if px is not None and rp is not None and rp > 0:
+                new_pnl = str(round((px - rp) / rp * 100, 2))
+            else:
+                new_pnl = ""
+            if new_pnl != old_pnl:
+                od.at[idx, "PnL_%sD" % label] = new_pnl
+                pnl_changed["%sD" % label] += 1
+        st_old = clean_text(row.get("Review_Stage"))
+        st_new = _milestone_stage(row.get("Status"), od.at[idx, "Price_5D"],
+                                  od.at[idx, "Price_10D"], od.at[idx, "Price_20D"], st_old)
+        if st_new != st_old:
+            od.at[idx, "Review_Stage"] = st_new
+            stage_changed += 1
+
+    if changed:
+        od.to_csv(REVIEW_HISTORY, index=False, encoding="utf-8")
+    print(f"🔧 [买入价回填] 影响 {changed} 行（改为 Rec_Date Open，其中 {cleared} 行因无 OHLC 置空）· "
+          f"PnL 重算 5D={pnl_changed['5D']} 10D={pnl_changed['10D']} 20D={pnl_changed['20D']} · "
+          f"Stage 更新 {stage_changed}")
+    return changed
+
+
 review_rows = []
 
 for item in active_list:
@@ -2255,6 +2333,9 @@ append_review_rows(review_rows)
 
 # 历史行里程碑回补（幂等；milestone 达成日必须 <= 该行自己的 Review_Date）
 backfill_review_milestones()
+
+# 推荐买入价统一（幂等）：Rec_Price = Rec_Date 真实 Open；无 OHLC 则置空；变化后重算 PnL/Stage
+backfill_rec_price()
 
 
 # ============================================================

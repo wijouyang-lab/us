@@ -906,15 +906,20 @@
 
     /* 12. Review（真实字段） */
     $('#revSub').textContent = s.bucketLabel + ' · ' + (s.status || NA);
+    var revRec = REV_MS[msKey(s.raw.ticker, s.raw.recommendation_date, s.raw.recommendation_tag)] || null;
+    var recPrice = num(revRec && revRec.rec_price);
     var stopPct = (s.stop !== null && s.px) ? (s.stop / s.px - 1) * 100 : null;
+    var buyRisk = (s.stop !== null && recPrice !== null && recPrice > 0) ? (s.stop / recPrice - 1) * 100 : null;
     $('#posMatrix').innerHTML =
       mx('Bucket', esc(s.bucketLabel)) +
       mx('Status', esc(s.status || NA)) +
-      mx('Price', nv(s.px, 2)) +
+      mx('买入价', nv(recPrice, 2)) +
+      mx('当前价格', nv(s.px, 2)) +
       mx('Prev Close', nv(s.prevClose, 2)) +
       mx('Change 1D', s.pct === null ? NA : signed(s.pct) + '%', s.pct === null ? '' : dirCls(s.pct)) +
       mx('止损价', nv(s.stop, 2)) +
-      mx('距止损', stopPct === null ? NA : fmt(stopPct, 1) + '%', 'down') +
+      mx('当前距止损', stopPct === null ? NA : fmt(stopPct, 1) + '%', 'down') +
+      mx('买入风险', buyRisk === null ? NA : fmt(buyRisk, 1) + '%', 'down') +
       mx('止损方式', esc(s.stopMethod || NA)) +
       mx('RSI', nv(m.rsi, 1)) +
       mx('ATR %', nv(m.atrPct, 2)) +
