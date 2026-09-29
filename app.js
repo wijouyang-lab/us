@@ -34,6 +34,7 @@
   var OPTIONS = [], HISTORY = [], STOCKS = [], OPT_BY_TK = {};
   var REVIEWS = [];                         /* review.records[] —— 数据仍由 dashboard_data.json 提供；
                                             第 10C 已移除首页历史推荐列表，此处仅保留引用供后续 Evolution 使用，不渲染任何卡片 */
+  var REV_MS = {};                          /* review.records[] → (Ticker|Rec_Date|Tag) 索引，供当前卡片挂 Review 里程碑 */
   var MAX_F = 35, MAX_T = 25, MAX_R = 20;   /* 来自 strategy_params.json 的评分权重 */
   var NET_DOWN = false;                      /* meta.network_status 是否 unavailable */
   var cur = null, curRange = 126;
@@ -152,6 +153,18 @@
     REVIEW = data.review || {};
     HISTORY = data.history || [];
     REVIEWS = (REVIEW && Array.isArray(REVIEW.records)) ? REVIEW.records.slice() : [];
+
+    /* Review 里程碑索引：严格按 Ticker + Rec_Date + Tag 关联 review.records[]（第 10D）。
+       只建立索引、不重算任何里程碑值；同一事件若有多条 record，取 days_held 最大（最新一次 Review）。 */
+    REV_MS = {};
+    (REVIEWS || []).forEach(function (r) {
+      if (!r) return;
+      var k = msKey(r.ticker, r.rec_date, r.tag);
+      var prev = REV_MS[k];
+      if (!prev) { REV_MS[k] = r; return; }
+      var dv = num(r.days_held), pv = num(prev.days_held);
+      if (dv !== null && (pv === null || dv > pv)) REV_MS[k] = r;
+    });
 
     var sc = (META.strategy_params && META.strategy_params.scoring) || {};
     MAX_F = num(sc.fundamental_weight) || 35;
@@ -420,6 +433,43 @@
     return '<div class="spark-na' + (small ? ' sm' : '') + '">K线数据暂不可用</div>';
   }
 
+  /* ---- Review 里程碑（当前 Core / Observation 卡片） ----
+     数据来源 review.records[]，严格按 Ticker + Rec_Date + Tag 精确匹配；
+     只透传 review.py 已算好的 review_stage / pnl_5d / pnl_10d / pnl_20d，前端绝不重算、绝不推算日期。
+     取不到值一律显示 N/A，绝不补 0 / 当前收益 / 最近价。0 次 GPT 调用。 */
+  var MS_NA = 'N/A';
+
+  function msKey(ticker, recDate, tag) {
+    return String(ticker || '') + '|' + String(recDate || '') + '|' + String(tag || '');
+  }
+  function msStageCls(s) {
+    if (s === null || s === undefined || s === '') return 'stg-na';
+    var u = String(s).toUpperCase();
+    if (u === 'FINAL') return 'stg-final';
+    if (u === 'OPEN') return 'stg-open';
+    if (u === '5D' || u === '10D' || u === '20D') return 'stg-ms';
+    return 'stg-other';
+  }
+  function msPnlItem(label, v) {
+    var n = num(v);
+    return '<span class="ms-item"><span class="l">' + label + '</span>' +
+      '<span class="v ' + (n === null ? 'na' : dirCls(n)) + '">' +
+      (n === null ? MS_NA : signed(n, 2) + '%') + '</span></span>';
+  }
+  function msHtml(s) {
+    var raw = s.raw || {};
+    var r = REV_MS[msKey(raw.ticker, raw.recommendation_date, raw.recommendation_tag)] || null;
+    var stage = r ? r.review_stage : null;
+    var stageTxt = (stage === null || stage === undefined || stage === '') ? MS_NA : String(stage);
+    return '<div class="ms-row">' +
+      '<span class="ms-title">Review</span>' +
+      '<span class="ms-stage ' + msStageCls(stage) + '">' + esc(stageTxt) + '</span>' +
+      msPnlItem('5D', r && r.pnl_5d) +
+      msPnlItem('10D', r && r.pnl_10d) +
+      msPnlItem('20D', r && r.pnl_20d) +
+      '</div>';
+  }
+
   function coreCard(s) {
     var m = s.m;
     var stopPct = (s.stop !== null && s.px) ? (s.stop / s.px - 1) * 100 : null;
@@ -459,6 +509,7 @@
       sparkHtml(s, false) +
       '<div class="bars">' + bars + '</div>' +
       '<div class="p-foot">' + foot + '</div>' +
+      msHtml(s) +
       '</article>';
   }
 
@@ -489,6 +540,7 @@
       sparkHtml(s, true) +
       '<div class="o-mini"><div class="o-bars">' + mini + '</div>' + ring(s.s.final, 34) + '</div>' +
       '<div class="o-foot">' + foot + '</div>' +
+      msHtml(s) +
       '</article>';
   }
 

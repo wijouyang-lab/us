@@ -374,3 +374,25 @@ button{font-family:inherit}
 .hrow.head .hd,.hrow.head .hn{font-size:9.5px;color:var(--text-3);font-weight:700}
 .hbar{grid-column:1 / -1;height:4px;border-radius:99px;background:var(--track);overflow:hidden}
 .hbar i{display:block;height:100%;border-radius:99px;background:var(--accent-2)}
+
+/* =========================================================
+   Review 里程碑（当前 Core / Observation 卡片）
+   数据来源 review.records[]，按 Ticker + Rec_Date + Tag 精确匹配；
+   只透传 review.py 已算好的 review_stage / pnl_5d / pnl_10d / pnl_20d，前端不重算、不补 0
+   ========================================================= */
+.ms-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0;
+  border-top:1px dashed var(--border-2);padding-top:6px;margin-top:2px}
+.ms-title{font-size:9px;font-weight:700;color:var(--text-3);letter-spacing:.5px;flex:0 0 auto}
+.ms-stage{font-size:9.5px;font-weight:750;border-radius:5px;padding:1px 7px;border:1px solid;
+  white-space:nowrap;flex:0 0 auto;font-variant-numeric:tabular-nums}
+.ms-stage.stg-final{background:#fff6f5;color:#bf3b2f;border-color:#f6dcd8}
+.ms-stage.stg-open{background:#f0f7f2;color:#0f7a48;border-color:#d3e8db}
+.ms-stage.stg-ms{background:var(--accent-soft);color:var(--accent);border-color:#d8e1ff}
+.ms-stage.stg-other,.ms-stage.stg-na{background:#f6f7f9;color:var(--text-3);border-color:var(--border)}
+.ms-item{display:inline-flex;align-items:baseline;gap:3px;flex:0 0 auto;font-variant-numeric:tabular-nums}
+.ms-item .l{font-size:9px;font-weight:650;color:var(--text-3)}
+.ms-item .v{font-size:11px;font-weight:700;white-space:nowrap}
+@media(max-width:360px){
+  .ms-row{gap:5px}
+  .ms-title{display:none}
+}
