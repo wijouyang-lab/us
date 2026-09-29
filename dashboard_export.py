@@ -1132,7 +1132,14 @@ def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
         existing = final.get(key)
         if existing is None or cur_date > (existing.get("Date") or ""):
             final[key] = r
-    return sorted(final.values(), key=lambda r: (r.get("Ticker") or "", r.get("Date") or ""))
+
+    # 第四步过滤：只保留「有有效评分」的当前事件。
+    # 有效评分 = Score 能成功解析为数字（parse_num 非 None）；N/A / 科技 / 空 / nan 等
+    # 无法解析的均视为无有效评分，属于老推荐，从【当前展示池】排除。
+    # 注意：这不是删除历史数据——被排除的事件仍完整保留在 review.records[] / Review History，
+    # 其 AI Snapshot（ai_snapshot.csv）也原样保留；本步只影响 Dashboard 当前 Core/Observation 展示。
+    scored = [r for r in final.values() if parse_num(r.get("Score")) is not None]
+    return sorted(scored, key=lambda r: (r.get("Ticker") or "", r.get("Date") or ""))
 
 
 def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
