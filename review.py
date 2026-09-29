@@ -1842,6 +1842,28 @@ print(f"📊 股票分类：持仓 {len(active_list)}，Observation {len(observa
 # 12. review_history：逐次 Review 记录，但不重复同一 Review 事件
 # ============================================================
 
+# 里程碑字段（回补 / 更新只允许补齐空字段，绝不覆盖已有真实值）
+MILESTONE_FIELDS = ("Price_5D", "PnL_5D", "Price_10D", "PnL_10D", "Price_20D", "PnL_20D")
+# 里程碑窗口容错：rec_date 之后第一根真实 bar 与该 rec_date 的最大自然日距离。
+# 超过说明历史窗口没有覆盖到 rec_date，必须 fail-closed（不取错误的第 N 根 bar）。
+MILESTONE_WINDOW_TOLERANCE_DAYS = 7
+
+
+def _milestone_stage(status, price_5d, price_10d, price_20d, cur_stage=""):
+    """FINAL > 20D > 10D > 5D > OPEN；原有 FINAL 或状态已结束 → FINAL。"""
+    if clean_text(cur_stage).upper() == "FINAL":
+        return "FINAL"
+    if clean_text(status) in CLOSED_STOCK_STATUSES:
+        return "FINAL"
+    if clean_text(price_20d):
+        return "20D"
+    if clean_text(price_10d):
+        return "10D"
+    if clean_text(price_5d):
+        return "5D"
+    return "OPEN"
+
+
 def review_event_key(row):
     return (
         clean_text(row.get("Review_Date"))[:10],
@@ -1854,35 +1876,67 @@ def review_event_key(row):
     )
 
 def append_review_rows(rows):
+    """写入 review_history.csv。
+
+    A. 新事件（key 不存在）→ append。
+    B. 已存在事件（同一 Review_Date + Ticker + Rec_Date + Status…）→ 只允许补齐仍为空的
+       里程碑字段（Price_5D/PnL_5D/Price_10D/PnL_10D/Price_20D/PnL_20D），已有真实值绝不覆盖；
+       并按 FINAL > 20D > 10D > 5D > OPEN 同步 Review_Stage（原 FINAL 保持 FINAL）。
+    绝不新建/改写任何业务字段（Rec_Price / Cur_Price / PnL_Pct / Status …）。
+    """
     if not rows:
         return
     nd = pd.DataFrame(rows)
     for c in REVIEW_COLUMNS:
-        if c not in nd.columns: nd[c] = ""
+        if c not in nd.columns:
+            nd[c] = ""
     nd = nd[REVIEW_COLUMNS]
 
     if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
         try:
             od = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
             for c in REVIEW_COLUMNS:
-                if c not in od.columns: od[c] = ""
+                if c not in od.columns:
+                    od[c] = ""
             od = od[REVIEW_COLUMNS]
         except Exception:
             od = pd.DataFrame(columns=REVIEW_COLUMNS)
     else:
         od = pd.DataFrame(columns=REVIEW_COLUMNS)
 
-    existing_keys = {review_event_key(r) for _, r in od.iterrows()}
-    out = []
+    pos = {}
+    for i, (_, r) in enumerate(od.iterrows()):
+        pos.setdefault(review_event_key(r), i)
+
+    out, updated = [], 0
     for _, r in nd.iterrows():
         k = review_event_key(r)
-        if k not in existing_keys:
-            existing_keys.add(k)
+        if k in pos:
+            i = pos[k]
+            touched = False
+            for f in MILESTONE_FIELDS:
+                if not clean_text(od.at[i, f]) and clean_text(r.get(f)):
+                    od.at[i, f] = clean_text(r.get(f))
+                    touched = True
+            st_old = clean_text(od.at[i, "Review_Stage"])
+            st_new = _milestone_stage(r.get("Status"), od.at[i, "Price_5D"],
+                                      od.at[i, "Price_10D"], od.at[i, "Price_20D"], st_old)
+            if st_new != st_old:
+                od.at[i, "Review_Stage"] = st_new
+                touched = True
+            if touched:
+                updated += 1
+        else:
             out.append(r.to_dict())
+
     if out:
-        pd.concat([od, pd.DataFrame(out, columns=REVIEW_COLUMNS)], ignore_index=True).to_csv(
-            REVIEW_HISTORY, index=False, encoding="utf-8"
-        )
+        od = pd.concat([od, pd.DataFrame(out, columns=REVIEW_COLUMNS)], ignore_index=True)
+        print(f"🧾 新增 review 行 {len(out)} 条" + (f"，补齐里程碑 {updated} 条" if updated else ""))
+    elif updated:
+        print(f"🧾 无新增行，补齐里程碑 {updated} 条")
+    if out or updated:
+        od.to_csv(REVIEW_HISTORY, index=False, encoding="utf-8")
+
 
 # ============================================================
 # 12b. 里程碑：5D / 10D / 20D / Review_Stage（历史客观计算，不调用 GPT）
@@ -1902,27 +1956,118 @@ CLOSED_STOCK_STATUSES = {
     "Observation_Closed",
 }
 
-def get_nth_trading_day_close(df_hist, ticker, rec_date, n):
-    """Rec_Date 之后第 n 根有效 OHLCV bar 的收盘价。
+DF_HIST_MILESTONE = None
 
-    交易日历 = download_ohlc_safe() 返回的 df_hist_all 的 Date 列（OHLCV bar），
-    而不是自然日、也不是 pd.bdate_range（后者把 NYSE 节假日也当交易日）。
-    不足 n 根 / 数据缺失 → None，绝不用当前价或最近价顶替。
+
+def build_milestone_history():
+    """里程碑专用宽窗口历史 OHLCV（覆盖最早需回补的 Rec_Date）。
+
+    - 复用已有 df_hist_all，绝不重复下载已经存在的 90d 数据；
+    - 只有当存在更早的 Rec_Date 时，才补下载
+      「最早 Rec_Date − 5 个自然日 → df_hist_all 最早日 − 1 天」这一段历史；
+    - df_hist_all 对实时行情 / 止损逻辑的用途完全不变；
+    - 构建失败 → 退化为 df_hist_all（后续 get_nth_trading_day_close 会 fail-closed）。
+    """
+    global DF_HIST_MILESTONE
+    if DF_HIST_MILESTONE is not None:
+        return DF_HIST_MILESTONE
+
+    base = df_hist_all if (df_hist_all is not None and not df_hist_all.empty) else pd.DataFrame()
+    try:
+        if base.empty:
+            DF_HIST_MILESTONE = base
+            return DF_HIST_MILESTONE
+
+        # 需要回补的历史（Ticker, Rec_Date）：只挑里程碑字段仍为空的行，尽量少下载
+        need_tickers, recs = [], []
+        if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
+            try:
+                _h = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+                for _, r in _h.iterrows():
+                    if any(not clean_text(r.get(f)) for f in MILESTONE_FIELDS):
+                        t = clean_text(r.get("Ticker")).upper()
+                        if t:
+                            need_tickers.append(t)
+                        d = clean_text(r.get("Rec_Date"))[:10]
+                        if d:
+                            recs.append(d)
+            except Exception:
+                pass
+
+        base_min = _normalize_market_dates(base["Date"]).min()
+        earliest = None
+        for d in recs:
+            try:
+                t = pd.Timestamp(d).normalize()
+            except Exception:
+                continue
+            if earliest is None or t < earliest:
+                earliest = t
+
+        if earliest is None or base_min is None or pd.isna(base_min) or earliest >= base_min:
+            DF_HIST_MILESTONE = base          # 现有窗口已覆盖，无需补下载
+            return DF_HIST_MILESTONE
+
+        start = (earliest - pd.Timedelta(days=5)).strftime("%Y-%m-%d")
+        end = (base_min - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        tickers = list(dict.fromkeys(list(base["Ticker"].astype(str).tolist()) + need_tickers))
+        print(f"📡 [里程碑宽窗口] 补取 {start} → {end} 的历史 OHLC（{len(tickers)} 只，现有窗口最早 {base_min.date()}）...")
+        early, _ = download_ohlc_safe(tickers, start=start, end=end)
+        DF_HIST_MILESTONE = pd.concat([early, base], ignore_index=True) if (early is not None and not early.empty) else base
+    except Exception as e:
+        print(f"⚠️ [里程碑宽窗口] 构建失败，退化为现有窗口：{e}")
+        DF_HIST_MILESTONE = base
+    return DF_HIST_MILESTONE
+
+
+def get_milestone_history():
+    """里程碑计算统一入口（懒构建 + 缓存）。"""
+    if DF_HIST_MILESTONE is None:
+        return build_milestone_history()
+    return DF_HIST_MILESTONE
+
+
+def get_nth_trading_day_bar(df_hist, ticker, rec_date, n, asof=None):
+    """Rec_Date 之后第 n 根有效 OHLCV bar 的 (日期, 收盘价)。
+
+    交易日历 = OHLCV bar 的 Date 列（真实交易日），而不是自然日、也不是 pd.bdate_range。
+    定义（不变）：date > rec_date、升序、iloc[n-1]。
+
+    fail-closed（新增）：
+      - rec_date 之后第一根 bar 与 rec_date 的自然日距离 > MILESTONE_WINDOW_TOLERANCE_DAYS
+        → 说明历史窗口没有覆盖 rec_date，直接返回 (None, None)，绝不取错误的第 N 根 bar；
+      - 不足 n 根 / 数据缺失 → (None, None)，绝不用当前价或最近价顶替。
+    asof（新增，可选）：只允许使用 date <= asof 的 bar（历史行回补用，禁止预写未来 milestone）。
     """
     try:
         if df_hist is None or df_hist.empty or not n or n < 1:
-            return None
+            return None, None
         sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
         if sub.empty:
-            return None
+            return None, None
         sub["_d"] = _normalize_market_dates(sub["Date"])
         base = pd.Timestamp(rec_date).normalize()
         sub = sub[sub["_d"] > base].sort_values("_d")
-        if len(sub) < n:
-            return None
-        return safe_float(sub.iloc[n - 1].get("close"))
+        if sub.empty or len(sub) < n:
+            return None, None
+        gap = (sub.iloc[0]["_d"] - base).days
+        if gap is None or gap < 0 or gap > MILESTONE_WINDOW_TOLERANCE_DAYS:
+            return None, None
+        row = sub.iloc[n - 1]
+        if asof is not None:
+            limit = pd.Timestamp(asof).normalize()
+            if row["_d"] > limit:
+                return None, None
+        return row["_d"].strftime("%Y-%m-%d"), safe_float(row.get("close"))
     except Exception:
-        return None
+        return None, None
+
+
+def get_nth_trading_day_close(df_hist, ticker, rec_date, n, asof=None):
+    """Rec_Date 之后第 n 根有效 OHLCV bar 的收盘价（get_nth_trading_day_bar 的收盘价视图）。"""
+    _d, close = get_nth_trading_day_bar(df_hist, ticker, rec_date, n, asof=asof)
+    return close
+
 
 def compute_review_milestones(ticker, rec_date, rec_price, status):
     """计算单个推荐事件的 5D/10D/20D 里程碑客观收盘价 + PnL + Review_Stage。
@@ -1941,7 +2086,7 @@ def compute_review_milestones(ticker, rec_date, rec_price, status):
     }
     rp = safe_float(rec_price)
     for label, n in (("5", 5), ("10", 10), ("20", 20)):
-        px = get_nth_trading_day_close(df_hist_all, ticker, rec_date, n)
+        px = get_nth_trading_day_close(get_milestone_history(), ticker, rec_date, n)
         pnl = None
         if px is not None and rp is not None and rp > 0:
             pnl = round((px - rp) / rp * 100, 2)
@@ -1959,6 +2104,85 @@ def compute_review_milestones(ticker, rec_date, rec_price, status):
     else:
         out["Review_Stage"] = "OPEN"
     return out
+
+def backfill_review_milestones():
+    """幂等回补 review_history.csv 中仍为空的里程碑字段。
+
+    严格规则（保守口径）：
+      - 只读已有行，绝不新建任何行（尤其是当前池内没有 review 行的事件，不会自动创建）；
+      - 第 N 个交易日 bar 的日期必须 <= 该行自己的 Review_Date，否则该字段保持空
+        （禁止用今天的行情给旧 Review 行补“未来信息”）；
+      - 只写真实 OHLCV bar 的收盘价；窗口未覆盖 rec_date → fail-closed 留空；
+      - 已存在的真实值一律不覆盖；
+      - 期权行（Option_Type/Strike/Expiry 非空）不参与；
+      - 回补后按 FINAL > 20D > 10D > 5D > OPEN 重算 Review_Stage（原 FINAL 保持 FINAL）。
+    """
+    if not os.path.exists(REVIEW_HISTORY) or os.path.getsize(REVIEW_HISTORY) == 0:
+        print("ℹ️ [里程碑回补] review_history.csv 不存在或为空，跳过。")
+        return 0
+    try:
+        od = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False, on_bad_lines="skip")
+    except Exception as e:
+        print(f"⚠️ [里程碑回补] 读取失败：{e}")
+        return 0
+    for c in REVIEW_COLUMNS:
+        if c not in od.columns:
+            od[c] = ""
+    od = od[REVIEW_COLUMNS]
+
+    hist = get_milestone_history()
+    filled = {"5D": 0, "10D": 0, "20D": 0}
+    stage_changed = 0
+    rows_changed = 0
+
+    for idx, row in od.iterrows():
+        # 期权行不参与股票里程碑
+        if clean_text(row.get("Option_Type")) or clean_text(row.get("Strike")) or clean_text(row.get("Expiry")):
+            continue
+        tk = clean_text(row.get("Ticker"))
+        rec = clean_text(row.get("Rec_Date"))[:10]
+        asof = clean_text(row.get("Review_Date"))[:10]
+        if not tk or not rec or not asof:
+            continue
+        rp = safe_float(row.get("Rec_Price"))
+        touched = False
+        vals = {}
+        for label, n in (("5", 5), ("10", 10), ("20", 20)):
+            cur_p = clean_text(row.get("Price_%sD" % label))
+            cur_n = clean_text(row.get("PnL_%sD" % label))
+            if cur_p and cur_n:
+                vals[label] = (cur_p, cur_n)          # 已有真实值：不覆盖
+                continue
+            d, px = get_nth_trading_day_bar(hist, tk, rec, n, asof=asof)
+            if d is None or px is None:
+                vals[label] = (cur_p, cur_n)          # 未达成 / 窗口不足 → 保持空
+                continue
+            pnl = None
+            if rp is not None and rp > 0:
+                pnl = round((px - rp) / rp * 100, 2)  # 公式不变
+            new_p, new_n = str(px), ("" if pnl is None else str(pnl))
+            if new_p != cur_p or new_n != cur_n:
+                od.at[idx, "Price_%sD" % label] = new_p
+                od.at[idx, "PnL_%sD" % label] = new_n
+                filled["%sD" % label] += 1
+                touched = True
+            vals[label] = (new_p, new_n)
+
+        st_old = clean_text(row.get("Review_Stage"))
+        st_new = _milestone_stage(row.get("Status"), vals["5"][0], vals["10"][0], vals["20"][0], st_old)
+        if st_new != st_old:
+            od.at[idx, "Review_Stage"] = st_new
+            stage_changed += 1
+            touched = True
+        if touched:
+            rows_changed += 1
+
+    if rows_changed:
+        od.to_csv(REVIEW_HISTORY, index=False, encoding="utf-8")
+    print(f"🔧 [里程碑回补] 影响 {rows_changed} 行 · 新增 5D={filled['5D']} 10D={filled['10D']} 20D={filled['20D']}"
+          f" · Stage 更新 {stage_changed} 行")
+    return rows_changed
+
 
 review_rows = []
 
@@ -2028,6 +2252,9 @@ for opt in option_closed_records:
     })
 
 append_review_rows(review_rows)
+
+# 历史行里程碑回补（幂等；milestone 达成日必须 <= 该行自己的 Review_Date）
+backfill_review_milestones()
 
 
 # ============================================================
