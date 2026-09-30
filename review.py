@@ -2253,8 +2253,12 @@ def backfill_rec_price():
 
     - 只读已有行，绝不新建；
     - Rec_Date 有真实 OHLC → Rec_Price = Rec_Date Open（旧值无论是什么一律改成 Open）；
-    - Rec_Date 无真实 OHLC（非交易日/停牌/数据缺失）→ Rec_Price = NULL，绝不 fallback 到
-      Prev_Close / Close_Price / Scan_Ref_Price / 实时 quote / 最近交易日价格；
+    - Rec_Date 无真实 OHLC（非交易日/停牌/数据缺失/限流导致抓取失败）→ fail-closed：
+        · 旧 Rec_Price 已是有效正数 → **保留原值**，绝不因网络/限流/历史数据获取失败
+          把已有有效买入价清空（P1 修复：此前误清空 1225 条历史数据）；
+        · 旧 Rec_Price 为空或无效（0/负数/非数字）→ 继续为空；
+      两种情况都不 fallback 到 Prev_Close / Close_Price / Scan_Ref_Price / 实时 quote /
+      最近交易日价格，也不做任何估算；
     - 期权行跳过；
     - Rec_Price 数值变化后：重算 PnL_5D/10D/20D（round((PN-Rec_Price)/Rec_Price*100, 2) 不变），
       Price_N 为空或 Rec_Price 为空时 PnL 置空；
@@ -2277,6 +2281,7 @@ def backfill_rec_price():
     hist = get_milestone_history()
     changed = 0
     cleared = 0
+    preserved = 0
     pnl_changed = {"5D": 0, "10D": 0, "20D": 0}
     stage_changed = 0
 
@@ -2289,8 +2294,17 @@ def backfill_rec_price():
             continue
         ohlc = get_exact_date_ohlc(hist, tk, rec)
         new_price = safe_float(ohlc.get("open")) if ohlc else None
+        if new_price is not None and new_price <= 0:
+            new_price = None          # 非正数 Open 不是真实买入价，按“未可靠取得”处理
         old_price = safe_float(row.get("Rec_Price"))
-        if (old_price is None and new_price is None) or            (old_price is not None and new_price is not None and abs(old_price - new_price) < 1e-6):
+        old_valid = old_price is not None and old_price > 0
+        if new_price is None and old_valid:
+            # P1 fail-closed：无法取得 Rec_Date 当天真实 OHLC 时，
+            # 若已有有效买入价则原样保留（不因限流/网络/历史缺失清空有效值）。
+            preserved += 1
+            continue
+        if (old_price is None and new_price is None) or \
+           (old_price is not None and new_price is not None and abs(old_price - new_price) < 1e-6):
             continue
         od.at[idx, "Rec_Price"] = "" if new_price is None else str(new_price)
         changed += 1
@@ -2317,6 +2331,7 @@ def backfill_rec_price():
     if changed:
         od.to_csv(REVIEW_HISTORY, index=False, encoding="utf-8")
     print(f"🔧 [买入价回填] 影响 {changed} 行（改为 Rec_Date Open，其中 {cleared} 行因无 OHLC 置空）· "
+          f"保留 {preserved} 行（无 OHLC 但原值有效）· "
           f"PnL 重算 5D={pnl_changed['5D']} 10D={pnl_changed['10D']} 20D={pnl_changed['20D']} · "
           f"Stage 更新 {stage_changed}")
     return changed
