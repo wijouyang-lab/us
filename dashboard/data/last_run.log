@@ -3,10 +3,9 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
 [WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
-当前有效股票池：48 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+当前有效股票池：42 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
-$DX-Y.NYB: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
 
@@ -15,27 +14,22 @@ $XAUUSD=X: No data found, symbol may be delisted
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
 $XAUUSD=X: No data found, symbol may be delisted
-$GC=F: possibly delisted; no price data found  (period=1d)
 $XAGUSD=X: No data found, symbol may be delisted
 
 1 Failed download:
 ['XAGUSD=X']: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
-$SI=F: possibly delisted; no price data found  (period=1d)
-$HG=F: possibly delisted; no price data found  (period=1d)
-$CL=F: possibly delisted; no price data found  (period=1d)
 $BZ=F: possibly delisted; no price data found  (period=1d)
-$NG=F: possibly delisted; no price data found  (period=1d)
 全球市场：15/15 可用，实时 12 只（CNBC 现货收益率 0 只；盘外静态收盘 3 只；绝不使用旧 JSON 宏观缓存）
 --------------------------------------------------------------
 pending CSV          : （无）   股票名单来源：active_events
-Core 数量            : 43
+Core 数量            : 37
 Observation 数量     : 5
 Options 数量         : 9（Active 9）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 48 / 0   技术指标成功 48/48
-当前价来源           : 实时 0 · 最新收盘 48 · 合计可取 48/48
+K线成功 / 失败       : 42 / 0   技术指标成功 42/42
+当前价来源           : 实时 0 · 最新收盘 42 · 合计可取 42/42
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 12  [complete]
@@ -43,11 +37,11 @@ Review 数据状态      :
    · observation_open_count       = 89  [complete]
    · actual_active_count          = 12  [complete]
 history 条数         : 43
-AI 六段状态          : partial（12/48 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
+AI 六段状态          : partial（12/42 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
-字段 null 统计       : {'quant_score': 31, 'ai_score': 31, 'fundamental_score': 31, 'technical_score': 31, 'risk_liquidity_score': 31, 'atr_pct': 15, 'pe_ttm': 31, 'pe_forward': 31, 'pb': 31, 'eps_ttm': 31, 'roe': 32, 'revenue_growth': 31, 'earnings_growth': 31, 'profit_margin': 31, 'market_cap': 31, 'market_regime': 48, 'vix': 48}
+字段 null 统计       : {'quant_score': 25, 'ai_score': 25, 'fundamental_score': 25, 'technical_score': 25, 'risk_liquidity_score': 25, 'atr_pct': 15, 'pe_ttm': 25, 'pe_forward': 25, 'pb': 25, 'eps_ttm': 25, 'roe': 26, 'revenue_growth': 25, 'earnings_growth': 25, 'profit_margin': 25, 'market_cap': 25, 'market_regime': 42, 'vix': 42}
 缺失字段             : ['regime.market', 'regime.vix']
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
