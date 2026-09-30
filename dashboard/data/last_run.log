@@ -33,7 +33,7 @@ Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 12  [complete]
    · observation_closed_count     = 5  [complete]
-   · observation_open_count       = 83  [partial]  未计入 6 条
+   · observation_open_count       = 89  [complete]
    · actual_active_count          = 12  [complete]
 history 条数         : 43
 AI 六段状态          : partial（12/48 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
@@ -41,6 +41,6 @@ AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文�
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
 字段 null 统计       : {'quant_score': 31, 'ai_score': 31, 'fundamental_score': 31, 'technical_score': 31, 'risk_liquidity_score': 31, 'atr_pct': 15, 'pe_ttm': 31, 'pe_forward': 31, 'pb': 31, 'eps_ttm': 31, 'roe': 32, 'revenue_growth': 31, 'earnings_growth': 31, 'profit_margin': 31, 'market_cap': 31, 'market_regime': 48, 'vix': 48}
-缺失字段             : ['regime.market', 'regime.vix', 'review.observation_open_count (partial)']
+缺失字段             : ['regime.market', 'regime.vix']
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
