@@ -72,11 +72,16 @@ button{font-family:inherit}
 
 /* ---------- Scan / Review / Evolve 运行状态栏 ---------- */
 .runtime-strip{display:flex;gap:10px;flex-wrap:wrap;padding:10px 12px;margin-bottom:12px}
-.rt-item{display:flex;align-items:center;gap:7px;flex:1 1 180px;min-width:180px}
+.rt-item{display:flex;flex-direction:column;gap:3px;flex:1 1 220px;min-width:220px;
+  border-left:3px solid var(--accent-soft);padding-left:9px}
+.rt-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .rt-name{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--text-2);
   background:var(--accent-soft);border:1px solid #d8e1ff;border-radius:6px;padding:2px 7px;white-space:nowrap}
 .rt-val{font-size:12px;color:var(--text);font-variant-numeric:tabular-nums}
+.rt-val::before{content:"Last Successful Run: ";font-size:11px;font-weight:600;color:var(--text-3)}
 .rt-sha{font-size:11px;color:var(--text-3);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+.rt-sha::before{content:"SHA: ";font-weight:600;font-family:-apple-system,Segoe UI,Roboto,sans-serif}
+.rt-sha:empty{display:none}
 
 /* ---------- 1. Global Market 状态栏 ---------- */
 .gmbar{padding:11px 12px;margin-bottom:12px}

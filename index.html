@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
-<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="app.css?v=runtime1">
 </head>
 <body>
 
@@ -29,18 +29,24 @@
   <!-- Scan / Review / Evolve 运行状态（独立字段，绝不互相覆盖） -->
   <section class="card runtime-strip" id="runtimeStrip">
     <div class="rt-item">
-      <span class="rt-name">SCAN</span>
-      <span class="rt-val" id="scanRunTime">—</span>
+      <div class="rt-line">
+        <span class="rt-name">SCAN</span>
+        <span class="rt-val" id="scanRunTime">—</span>
+      </div>
       <span class="rt-sha" id="scanRunSha"></span>
     </div>
     <div class="rt-item">
-      <span class="rt-name">REVIEW</span>
-      <span class="rt-val" id="reviewRunTime">—</span>
+      <div class="rt-line">
+        <span class="rt-name">REVIEW</span>
+        <span class="rt-val" id="reviewRunTime">—</span>
+      </div>
       <span class="rt-sha" id="reviewRunSha"></span>
     </div>
     <div class="rt-item">
-      <span class="rt-name">EVOLVE</span>
-      <span class="rt-val" id="evolveRunTime">—</span>
+      <div class="rt-line">
+        <span class="rt-name">EVOLVE</span>
+        <span class="rt-val" id="evolveRunTime">—</span>
+      </div>
       <span class="rt-sha" id="evolveRunSha"></span>
     </div>
   </section>
@@ -225,6 +231,6 @@
   </div>
 </div>
 
-<script src="app.js"></script>
+<script src="app.js?v=runtime1"></script>
 </body>
 </html>

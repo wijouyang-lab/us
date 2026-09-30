@@ -400,9 +400,11 @@
       var shaEl = $('#' + shaId);
       if (timeEl) {
         timeEl.textContent = (entry && entry.last_success_at) ? toBeijingTime(entry.last_success_at) : NA;
+        timeEl.title = 'Last Successful Run · Asia/Shanghai (UTC+8) · 失败/取消的运行不会覆盖此时间';
       }
       if (shaEl) {
-        shaEl.textContent = (entry && entry.last_success_sha) ? ('#' + entry.last_success_sha) : '';
+        /* "SHA: " 前缀由 CSS ::before 提供；无成功运行时保持 empty 以隐藏整行 */
+        shaEl.textContent = (entry && entry.last_success_sha) ? entry.last_success_sha : '';
       }
     }
     fill('scanRunTime', 'scanRunSha', RT.scan);
