@@ -8,7 +8,6 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 $A: possibly delisted; no price data found  (period=1d)
 $ABBV: possibly delisted; no price data found  (period=1d)
 $AES: possibly delisted; no price data found  (period=1d)
-$BX: possibly delisted; no price data found  (period=1d)
 $CBOE: possibly delisted; no price data found  (period=1d)
 $CF: possibly delisted; no price data found  (period=1d)
 $CVS: possibly delisted; no price data found  (period=1d)
@@ -50,7 +49,7 @@ Observation 数量     : 5
 Options 数量         : 9（Active 9）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 39 / 0   技术指标成功 39/39
-当前价来源           : 实时 25 · 最新收盘 0 · 合计可取 39/39
+当前价来源           : 实时 26 · 最新收盘 0 · 合计可取 39/39
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 12  [complete]
