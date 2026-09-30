@@ -2052,11 +2052,16 @@ def _milestone_stage(status, price_5d, price_10d, price_20d, cur_stage=""):
 
 
 def review_event_key(row):
+    """事件唯一键（deterministic）：Rec_Date + Ticker + Tag + 期权区分字段。
+
+    同一 (Rec_Date, Ticker, Tag) 是同一个 logical event；不同 Tag 即使
+    Rec_Date + Ticker 相同也是不同 event。不依赖 Review_Date / Status /
+    行号 / dataframe 顺序，保证多个 Review snapshot 共享同一 key。
+    """
     return (
-        clean_text(row.get("Review_Date"))[:10],
-        clean_text(row.get("Ticker")).upper(),
         clean_text(row.get("Rec_Date"))[:10],
-        clean_text(row.get("Status")),
+        clean_text(row.get("Ticker")).upper(),
+        clean_text(row.get("Tag")),
         clean_text(row.get("Option_Type")).upper(),
         clean_text(row.get("Strike")),
         clean_text(row.get("Expiry")),
@@ -2093,7 +2098,9 @@ def append_review_rows(rows):
 
     pos = {}
     for i, (_, r) in enumerate(od.iterrows()):
-        pos.setdefault(review_event_key(r), i)
+        # 同一 event（同 key）在多次 Review 中可能有多个 snapshot；
+        # 取最后一个 index，确保后续补齐里程碑/Review_Stage 作用在最新快照上。
+        pos[review_event_key(r)] = i
 
     out, updated = [], 0
     for _, r in nd.iterrows():
