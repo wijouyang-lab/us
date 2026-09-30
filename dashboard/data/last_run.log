@@ -14,14 +14,10 @@ $CF: possibly delisted; no price data found  (period=1d)
 $CVS: possibly delisted; no price data found  (period=1d)
 $EMR: possibly delisted; no price data found  (period=1d)
 $HUM: possibly delisted; no price data found  (period=1d)
-$LLY: possibly delisted; no price data found  (period=1d)
-$MRK: possibly delisted; no price data found  (period=1d)
 $ROL: possibly delisted; no price data found  (period=1d)
 $SPDN: possibly delisted; no price data found  (period=1d)
-$SYK: possibly delisted; no price data found  (period=1d)
 $VLO: possibly delisted; no price data found  (period=1d)
 $WFC: possibly delisted; no price data found  (period=1d)
-$XLF: possibly delisted; no price data found  (period=1d)
 $XOM: possibly delisted; no price data found  (period=1d)
 $^DJI: possibly delisted; no price data found  (period=1d)
 $^GSPC: possibly delisted; no price data found  (period=1d)
@@ -54,7 +50,7 @@ Observation 数量     : 5
 Options 数量         : 9（Active 9）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 39 / 0   技术指标成功 39/39
-当前价来源           : 实时 21 · 最新收盘 0 · 合计可取 39/39
+当前价来源           : 实时 25 · 最新收盘 0 · 合计可取 39/39
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 12  [complete]
