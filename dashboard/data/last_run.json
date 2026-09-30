@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-09-30T10:15:49Z",
-  "market_updated_at": "2026-09-30T10:15:46Z",
-  "technical_updated_at": "2026-09-30T10:15:49Z",
+  "generated_at": "2026-09-30T10:32:07Z",
+  "market_updated_at": "2026-09-30T10:32:06Z",
+  "technical_updated_at": "2026-09-30T10:32:07Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -43,9 +43,9 @@
   "ai_calls": 0,
   "runtimes": {
     "scan": {
-      "last_success_at": "2026-08-21T13:50:52Z",
-      "last_success_sha": "52cdb2282cca",
-      "run_id": 32488570564
+      "last_success_at": "2026-09-29T16:39:25Z",
+      "last_success_sha": "ebb246734be4",
+      "run_id": 36597992914
     },
     "review": {
       "last_success_at": "2026-09-30T08:21:13Z",
