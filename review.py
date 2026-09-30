@@ -684,9 +684,12 @@ def is_active_holding(status, exit_date=None):
     """动态持有口径：Status 为 空/Active/pending 且未设置 Exit_Date 的持仓视为 active。
 
     股票已是“动态持有”，不能因持仓超过 30 天就停止风险检查。
+    Exit_Date 为 "N/A"/nan/空 等占位符时，一律视为"未退出"（只有真实日期才算已退出）。
     """
     st = clean_text(status).strip()
     ex = clean_text(exit_date).strip()
+    if ex and ex.lower() in INVALID_STRINGS:
+        ex = ""
     return st in ("", "Active", "pending") and ex == ""
 
 
