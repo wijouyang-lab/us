@@ -2,10 +2,9 @@ name: US-Share Evolve
 on:
   workflow_dispatch:
   schedule:
-    # Schedule timezone: Asia/Shanghai
-    # Evolution: First Saturday of each month 10:00 Beijing time
-    - cron: '0 10 * * 6'
-      timezone: 'Asia/Shanghai'
+    # Schedule: UTC (GitHub 原生 cron 只认 UTC，不依赖 timezone 字段)
+    # Evolution: First Saturday of each month 10:00 Beijing = 02:00 UTC
+    - cron: '0 2 * * 6'
 
 jobs:
   run-scan:
@@ -20,7 +19,7 @@ jobs:
       uses: actions/checkout@v4
 
     # 定时触发控制：只有「北京时间每月第一个星期六」才执行 Evolution。
-    # schedule 的 cron '0 10 * * 6' + timezone Asia/Shanghai 每周六 10:00 触发，
+    # schedule 的 cron '0 2 * * 6'（UTC）每周六 02:00 UTC = 北京时间 10:00 触发，
     # 但仅在本月第一个星期六（day-of-month <= 7）继续；其余星期六跳过，不执行 Evolution 业务。
     # 手动 workflow_dispatch 不受此限制，始终执行（便于人工随时运行）。
     - name: Check first Saturday of month (Beijing time)
