@@ -684,10 +684,16 @@ if df.empty:
     print("无交易账本或账本为空，退出。")
     sys.exit(0)
 
-cutoff_date = get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)
-recent_picks = df[df["Date"].notna() & (df["Date"] >= cutoff_date)].copy()
+# 动态持有：active holdings 必须从完整 trade_history 识别，不能按“最近30天” cutoff 过滤。
+# 已超过 30 天但仍 Status=Active（且未设置 Exit_Date）的真实持仓，必须进入今天的止损检查。
+# 历史记录仍可继续用于 KPI / milestone；这里只决定“今天是否还要做风控”。
+active_mask = df.apply(lambda r: is_active_holding(r.get("Status"), r.get("Exit_Date")), axis=1)
+active_holdings = df[active_mask].copy()
+# recent_picks 仍保留完整历史（closed / 已退出由下方 Status+Exit_Date 过滤排除）；
+# 分类段依此重新计算，旧仓不会被 30 天 cutoff 挡在风控之外。
+recent_picks = df.copy()
 if recent_picks.empty:
-    print("最近30天无记录，退出。")
+    print("无交易记录，退出。")
     sys.exit(0)
 
 for c in ("Hold_Period","Stop_Loss","Score","Name","Tag","Price","Close_Price","Status"):
@@ -700,8 +706,11 @@ recent_picks["Hold_Period"] = "动态持有"
 # 6. 行情准备
 # ============================================================
 
+# OHLC 只下载真实 active holdings（不受 30 天限制），避免对全量历史 ticker 拉取行情。
+# active holdings 已包含“超 30 天但仍 Active”的持仓，因此它们今天的止损检查不会漏。
 clean_tickers = []
-for t in recent_picks["Ticker"].astype(str):
+_src = active_holdings if not active_holdings.empty else recent_picks
+for t in _src["Ticker"].astype(str):
     rt = resolve_ticker(t)
     if rt and is_probable_us_ticker(rt):
         clean_tickers.append(rt)
@@ -1270,6 +1279,91 @@ def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry
         print(f"⚠️ 移动止损计算失败 {ticker}: {e}"); return None
 
 
+def select_current_stop_loss(group_rows):
+    """取一个生命周期分组内「最新一条有效 Stop_Loss」。
+
+    从最晚 Date 行向前扫描，返回第一个 >0 的 Stop_Loss；
+    若最新行 Stop_Loss 为空/无效，回退到更早的有效止损；
+    没有任何有效值时返回 None。绝不返回 0/负数/空。
+    """
+    try:
+        g = group_rows.sort_values("Date", ascending=False) if hasattr(group_rows, "sort_values") else group_rows
+        for _, r in g.iterrows():
+            sv = safe_float(r.get("Stop_Loss"))
+            if sv is not None and sv > 0:
+                return sv
+    except Exception:
+        pass
+    return None
+
+
+def evaluate_stop_trigger(low, closep, openp, exec_stop):
+    """统一快照下的止损触发判定（纯函数，离线可测，无需联网）。
+
+    入参必须是同一交易日的真实 OHLC（low/close/open）与当前有效 Stop_Loss。
+    返回 (trigger_result, exit_price)：
+      - ("STOP_TRIGGERED", exit_price)   已确认跌破止损
+      - ("NO_TRIGGER_INVALID_STOP", None) Stop_Loss 无效，不触发（仅跟踪 + warning）
+      - ("DATA_MISSING", None)           无可靠 OHLC，不能猜测，不触发
+      - ("CLEAR", None)                  未跌破
+    exit_price：Gap Down 时若 Open < Stop 取 Open，否则取 Stop；
+    Low 缺失但有可靠 Close<=Stop 时确认触发，exit 取 Stop（无 Open 可判缺口，保守）。
+    """
+    if not exec_stop or exec_stop <= 0:
+        return "NO_TRIGGER_INVALID_STOP", None
+    if low is not None and low <= exec_stop:
+        exit_price = openp if (openp is not None and openp < exec_stop) else exec_stop
+        return "STOP_TRIGGERED", exit_price
+    if low is None and closep is not None and closep <= exec_stop:
+        return "STOP_TRIGGERED", exec_stop
+    if low is None and closep is None:
+        return "DATA_MISSING", None
+    return "CLEAR", None
+
+
+def is_active_holding(status, exit_date=None):
+    """动态持有口径：Status 为 空/Active/pending 且未设置 Exit_Date 的持仓视为 active。
+
+    股票已是“动态持有”，不能因持仓超过 30 天就停止风险检查。
+    """
+    st = clean_text(status).strip()
+    ex = clean_text(exit_date).strip()
+    return st in ("", "Active", "pending") and ex == ""
+
+
+def compute_change_1d(close, prev_close):
+    """Change_1D = (Close - Prev_Close) / Prev_Close * 100。
+
+    Close 与 Prev_Close 必须来自同一份快照（同一交易日 OHLC 与前一真实交易日收盘），
+    禁止跨数据源拼凑；否则无法得到自洽的涨跌幅（例如 BKNG 162.16 vs 207.74 应为 -21.94%，
+    而不是 -0.11%）。
+    """
+    if close is None or prev_close is None or prev_close <= 0:
+        return None
+    return round((close - prev_close) / prev_close * 100, 4)
+
+
+def _prior_regular_close(df_hist, ticker, before_date):
+    """返回 before_date 之前最近一个真实交易日的收盘价（Prev_Close 的来源）。
+
+    严格取 date < before_date 的最后一根真实 OHLCV bar 的 close；无则返回 None。
+    """
+    try:
+        if df_hist is None or df_hist.empty:
+            return None
+        sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
+        if sub.empty:
+            return None
+        d = _normalize_market_dates(sub["Date"])
+        base = pd.Timestamp(before_date).normalize()
+        sub = sub[d < base].sort_values("Date")
+        if sub.empty:
+            return None
+        return safe_float(sub.iloc[-1].get("close"))
+    except Exception:
+        return None
+
+
 def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
     if not os.path.exists(TRADE_HISTORY):
         return
@@ -1516,8 +1610,8 @@ manage_observation_lifecycle()
 
 # 生命周期写回后重新加载内存账本，避免本轮 Review 继续把已关闭 Observation 当作 Active。
 df = load_trade_history()
-cutoff_date = get_us_time().replace(tzinfo=None) - datetime.timedelta(days=30)
-recent_picks = df[df["Date"].notna() & (df["Date"] >= cutoff_date)].copy()
+# 动态持有：与行情准备段一致，从完整 trade_history 识别 active holdings（不按 30 天 cutoff）。
+recent_picks = df.copy()
 for c in ("Hold_Period","Stop_Loss","Score","Name","Tag","Price","Close_Price","Status"):
     if c not in recent_picks.columns:
         recent_picks[c] = ""
@@ -1542,9 +1636,10 @@ for (event_date, event_ticker, event_tag), g in recent_picks.groupby(
     g = g.sort_values("Date").copy()
     if g.empty:
         continue
-    _recent_event_groups.append(((event_date, event_ticker, event_tag), g.iloc[-1].copy()))
+    # 同时保留完整生命周期分组，用于选取“当前有效 Stop_Loss”（最新一条有效值）。
+    _recent_event_groups.append(((event_date, event_ticker, event_tag), g.iloc[-1].copy(), g.copy()))
 
-for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
+for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_groups:
     ticker = resolve_ticker(latest.get("Ticker"), clean_text(latest.get("Name")))
     if not ticker:
         continue
@@ -1555,10 +1650,14 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
     rec_date_str = rec_date.strftime("%Y-%m-%d")
     status = clean_text(latest.get("Status"))
 
-    # 已经结束的旧推荐事件不重复重新计算；它们由 review_history / 止损区块保留历史。
-    if status not in ("", "Active", "pending"):
+    # 已经结束 / 已退出的旧生命周期不再作为 active 检查（含 Exit_Date 已设置的清仓）。
+    if status not in ("", "Active", "pending") or clean_text(latest.get("Exit_Date")).strip():
         continue
 
+    # 当前有效 Stop_Loss：取该生命周期内最新一条有效值（从最新行向前扫描）；
+    # 最新行若为空/无效则回退到更早的有效止损；绝不用技术候选覆盖仍有效的历史止损
+    #（避免“邮件显示184、内部实际拿更低值”）。
+    current_stop = select_current_stop_loss(group)
     rec_price = safe_record_price(latest)
 
     # ---- Observation：每一条 Scan Observation 都独立追踪 ----
@@ -1629,7 +1728,7 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
             continue
 
         cur_float = safe_float(cur)
-        stop = safe_float(latest.get("Stop_Loss"))
+        stop = current_stop
         pnl = round((cur_float-rec_price)/rec_price*100,2) if cur_float is not None else None
         active_list.append({
             "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
@@ -1647,11 +1746,10 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
         write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, cur_float, "今日完整OHLC未返回；使用最近有效价格跟踪，不执行当日止损触发。")
         continue
 
+    # ---- 统一行情快照：ohlc 已确保来自本次 Review 交易日同一份 OHLC（见上文 ohlc_map_today 选取）----
     low, closep, openp = safe_float(ohlc.get("low")), safe_float(ohlc.get("close")), safe_float(ohlc.get("open"))
-    if low is None or closep is None:
-        continue
-
-    old_stop = safe_float(latest.get("Stop_Loss"))
+    highp = safe_float(ohlc.get("high"))
+    old_stop = current_stop
     is_same_day_entry = rec_date_str == REVIEW_SESSION_DATE
     ctx = get_trailing_stop_context(ticker, old_stop, REVIEW_SESSION_DATE, entry_price=rec_price, days_held=(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days)
     tech_snapshot = get_technical_snapshot_from_bulk(df_hist_all, ticker, REVIEW_SESSION_DATE)
@@ -1659,13 +1757,25 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
     # 否则会出现 NXPI 9/22：初始止损 213.51，但因为 9/21 收盘技术线抬到 226.61，
     # 9/22 当日最低 226.15 被错误判成止损。新仓当天只执行 Scan 已写入的初始保护线。
     exec_stop = old_stop if is_same_day_entry and old_stop and old_stop > 0 else (ctx.get("exec_stop") if ctx else old_stop)
+    ohlc_src = price_source_map.get(ticker) or "?"
+    # Prev_Close / Change_1D 从同一份快照重算：Prev_Close = 前一真实交易日收盘，Change_1D=(Close-Prev_Close)/Prev_Close*100。
+    prev_close = _prior_regular_close(df_hist_all, ticker, REVIEW_SESSION_DATE)
+    change_1d = compute_change_1d(closep, prev_close)
 
-    if ticker in verified_review_session_ohlc and price_source_map.get(ticker) == "today_regular_close" and exec_stop and exec_stop > 0 and low <= exec_stop:
+    # ---- 止损触发（统一快照 + 当前有效 Stop_Loss）----
+    trigger_result, exitp = evaluate_stop_trigger(low, closep, openp, exec_stop)
+    if trigger_result == "NO_TRIGGER_INVALID_STOP":
+        # Stop_Loss 无效：不触发价格止损，但必须输出明确 warning。
+        print(f"⚠️ [风控] {ticker} {rec_date_str} Stop_Loss 无效({exec_stop})，跳过价格止损（仅跟踪）。")
+        write_review_risk_linkage_us(ticker, rec_date_str, "NO_STOP", None, closep,
+                                     f"Stop_Loss 无效({exec_stop})，不触发价格止损，仅跟踪。")
+    elif trigger_result == "STOP_TRIGGERED":
+        # 已确认跌破止损（Low 或 可靠 Close）→ STOP_TRIGGERED。
+        print(f"ℹ️ [风控] {ticker} {rec_date_str} 确认触及止损 {exec_stop:.2f}（Low={low} Close={closep} Open={openp}）-> Exit={exitp}。")
         write_review_risk_linkage_us(
             ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep,
             f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。"
         )
-        exitp = openp if openp is not None and openp < exec_stop else exec_stop
         pnl = round((exitp-rec_price)/rec_price*100,2)
         stopped_list.append({
             "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),
@@ -1676,6 +1786,33 @@ for (_event_date, _event_ticker, _event_tag), latest in _recent_event_groups:
             "触发方式":"移动止损：今日完整OHLC触发","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
         })
         update_trade_history_status(ticker, rec_date_str, "Stop_Loss_Hit", exitp)
+    elif trigger_result == "DATA_MISSING":
+        # 无任何可靠 OHLC：不能猜测，输出数据不足 warning（不触发）。
+        write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None,
+                                     f"{REVIEW_SESSION_DATE} 行情缺失，暂不执行该交易日止损判断。")
+        cur = price_map_today.get(ticker); cur_float = safe_float(cur)
+        active_list.append({
+            "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
+            "推荐评分":clean_text(latest.get("Score"),"N/A"),"持股周期建议":"动态持有",
+            "止损价":exec_stop if exec_stop else "N/A","首次推荐日":rec_date_str,"首次推荐价":rec_price,
+            "今日开盘价":"N/A","现价":cur_float if cur_float is not None else "N/A","今日开盘→收盘%":None,
+            "持仓天数":(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days,"剩余天数":"—","当前盈亏(%)":None,
+            "系统连续推荐次数":1,"今日新增":"是" if rec_date_str==REVIEW_SESSION_DATE else "否",
+            "止损方法":"MA20/MA50 + ATR + MACD/KDJ","MA20":None,"MA50":None,"KDJ_J":None,"MACD_Hist":None,
+            "趋势状态":f"{REVIEW_SESSION_DATE}行情缺失","风险提示":f"{REVIEW_SESSION_DATE} 行情未取得；暂不执行该交易日止损判断",
+            "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":REVIEW_SESSION_DATE,
+            "Review_Stop_Distance_Pct":"","Review_Risk_Note":f"{REVIEW_SESSION_DATE} 行情缺失，待下一次Review补算"
+        })
+    else:
+        # CLEAR：Low > Stop 且 Close 未确认跌破 -> 进入下方常规 CLEAR/STOP_NEAR 流程。
+        pass
+
+    # ---- 风控诊断日志（统一快照，便于从 Actions log 直接定位“价破止损却未止损”）----
+    print(f"[风控诊断] {ticker} Trade_Date={REVIEW_SESSION_DATE} Current_Close={closep} Prev_Close={prev_close} "
+          f"Change_1D={change_1d} Open={openp} High={highp} Low={low} Stop_Loss={exec_stop} "
+          f"Trigger={trigger_result} Exit={exitp} OHLC_Source={ohlc_src}")
+
+    if trigger_result in ("STOP_TRIGGERED", "DATA_MISSING"):
         continue
 
     next_ctx = get_trailing_stop_context(ticker, exec_stop, None, entry_price=rec_price, days_held=(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days)
