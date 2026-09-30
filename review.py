@@ -711,6 +711,41 @@ def select_current_stop_loss(group_rows):
     return None
 
 
+# 移动止损合理上界：相对入场价最多 2 倍。
+# 依据：profit_lock_3_pct=50%（最高利润锁定档，drawdown 12%）→ 移动止损 ≈ 1.32x 入场价；
+# 2.0 留足余量，同时排除 3.3x+ 的跨 ticker 污染 / 明显写错（MSTR 965/116、BSX 980/44、ORCL 505/152）。
+MAX_TRAILING_RATIO = 2.0
+
+
+def is_valid_existing_stop(old_stop, rec_price, reference_price=None):
+    """判断 old_stop 是否可作为 trailing-stop floor（fail-closed，纯函数）。
+
+    返回 bool：
+      - True：old_stop 是合理的历史止损，可进入 max(old_stop, candidate)；
+      - False：old_stop 明显异常（如 MSTR $965 vs 入场 $116），丢弃该 floor，
+        改用当前技术候选重新建立止损。
+
+    reference_price 参数保留用于将来扩展；当前不参与判定，避免误伤
+    “价格已跌破合理止损”的正常触发场景（如 BKNG stop=184 vs 现价 162）。
+    """
+    if old_stop is None:
+        return False
+    try:
+        v = float(old_stop)
+    except (ValueError, TypeError):
+        return False
+    if not (v > 0 and v == v and v not in (float("inf"), float("-inf"))):
+        return False
+    if rec_price is not None:
+        try:
+            rp = float(rec_price)
+        except (ValueError, TypeError):
+            rp = None
+        if rp is not None and rp > 0 and v > rp * MAX_TRAILING_RATIO:
+            return False
+    return True
+
+
 def evaluate_stop_trigger(low, closep, openp, exec_stop):
     """统一快照下的止损触发判定（纯函数，离线可测，无需联网）。
 
@@ -1360,7 +1395,13 @@ def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry
         if macd_bear and kdj_falling: candidate=max(candidate, close-1.5*atr)
         candidate=min(candidate, close*0.98)
         old=safe_float(current_stop)
-        if old and old>0: candidate=max(old,candidate)
+        if old and old>0:
+            # 只有通过合理性校验的历史止损才作为 floor（保持 trailing 只升不降）；
+            # 异常旧止损（跨 ticker 污染 / 明显高于入场价）丢弃，从当前技术候选重建。
+            if is_valid_existing_stop(old, entry_price):
+                candidate=max(old,candidate)
+            else:
+                print(f"[STOP_FLOOR_REJECT] ticker={ticker} old_stop={old} rec_price={entry_price} reason=stop_implausible_vs_entry")
         return {"exec_stop":round(candidate,2),"ma20":round(ma20,2),"ma50":round(ma50,2),"atr_pct":round(atr/close*100,2) if close else None,
                 "macd_hist":round(float(r["MACD_HIST"]),4) if pd.notna(r["MACD_HIST"]) else None,"macd_bear":macd_bear,"kdj_j":round(float(r["KDJ_J"]),2),
                 "kdj_falling":kdj_falling,"trend_ok":bool(close>=ma20 and ma20>=ma50),"pnl_pct":round((close/ep-1)*100,2) if ep else None}

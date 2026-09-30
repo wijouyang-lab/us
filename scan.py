@@ -55,6 +55,38 @@ ATR_STOP_FLOOR_PCT = 3.0
 ATR_STOP_CEIL_PCT = 12.0
 REGIME_GATE_VERSION = "2026-08-31-US"
 
+
+def _is_valid_ai_stop(stop_raw, reference_price):
+    """校验 AI 文本提取的 Stop_Loss 是否可用于该 ticker（fail-closed）。
+
+    返回 (ok: bool, reason: str)。
+      - ok=True：可以写入；
+      - ok=False：拒绝写入（异常 AI 值 / 跨 ticker 污染 / 明显高于参考价）。
+
+    只拦截「明显不合理」的值，不做 min/max 静默截断：
+      · 必须能解析为有限正数；
+      · 不得明显高于该 ticker 的参考价（保护性止损必然 <= 当前价）。
+    """
+    if stop_raw is None:
+        return False, "missing"
+    s = str(stop_raw).strip().replace("$", "").replace("%", "").replace(",", "").strip()
+    if s == "":
+        return False, "empty"
+    try:
+        val = float(s)
+    except (ValueError, TypeError):
+        return False, "not_numeric"
+    if not (val > 0 and val == val and val not in (float("inf"), float("-inf"))):
+        return False, "not_positive_finite"
+    if reference_price is not None:
+        try:
+            ref = float(reference_price)
+        except (ValueError, TypeError):
+            ref = None
+        if ref is not None and ref > 0 and val > ref:
+            return False, "stop_above_reference_price"
+    return True, ""
+
 STRATEGY_PARAMS_FILE = "strategy_params.json"
 
 def load_strategy_params():
@@ -2939,10 +2971,20 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
                 out["Stop_Loss"] = ""
         else:
             out["Hold_Period"] = "动态持有"
+            _ref_price = item.get("Price")
+            _ai_stop = None
             sm = re.search(r'止损\s*[:：]\s*\[?(\$?\d+(?:\.\d+)?%?)', chunk or "")
             if sm:
-                out["Stop_Loss"] = sm.group(1)
+                _ok, _reason = _is_valid_ai_stop(sm.group(1), _ref_price)
+                if _ok:
+                    _ai_stop = sm.group(1)
+                else:
+                    # 异常 AI 止损（跨 ticker 污染 / 明显高于参考价）→ fail-closed：不写入该值。
+                    print(f"[STOP_SANITY_REJECT] ticker={item.get('Ticker')} stop={sm.group(1)} reference_price={_ref_price} reason={_reason}")
+            if _ai_stop is not None:
+                out["Stop_Loss"] = _ai_stop
             else:
+                # 无有效 AI 止损 → 走既有 ATR 技术止损，不凭空新增固定百分比策略。
                 atr = float(item.get("ATR_Pct", 5) or 5)
                 pct = -max(
                     float(EXIT_PARAMS.get("atr_floor_pct", 3)),
