@@ -1655,7 +1655,8 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
     status = clean_text(latest.get("Status"))
 
     # 已经结束 / 已退出的旧生命周期不再作为 active 检查（含 Exit_Date 已设置的清仓）。
-    if status not in ("", "Active", "pending") or clean_text(latest.get("Exit_Date")).strip():
+    # 统一用 is_active_holding 判定，确保 Exit_Date="N/A" 等占位符不会被误判为"已退出"。
+    if not is_active_holding(status, latest.get("Exit_Date")):
         continue
 
     # 当前有效 Stop_Loss：取该生命周期内最新一条有效值（从最新行向前扫描）；
