@@ -2329,6 +2329,38 @@ def _compute_milestones_asof(hist, ticker, rec_date, rec_price, asof):
     return out
 
 
+def compute_milestone_win_rate(events):
+    """统计 5D / 10D / 20D milestone win rate（纯函数，离线可测）。
+
+    events: list of dict，每项含 pnl_5d / pnl_10d / pnl_20d（float 或 None）。
+
+    规则（只读统计，不修改 milestone 数据）：
+      - Win  = PnL_N > 0；
+      - Loss = PnL_N <= 0（含 0）；
+      - Eligible = Wins + Losses，即只有「已有有效 PnL_N」的记录进入分母；
+      - PnL_N 缺失 / 未达标 / Rec_Price 缺失 / Price_N 缺失 → 不进入分母（None 跳过）；
+      - win_rate = Wins / Eligible * 100；Eligible == 0 → win_rate = None（前端显示 N/A）。
+
+    返回 {"5D": {...}, "10D": {...}, "20D": {...}}，每个含 eligible/wins/losses/win_rate。
+    """
+    result = {}
+    for label in ("5D", "10D", "20D"):
+        key = "pnl_" + label.lower()
+        vals = [safe_float(e.get(key)) for e in events]
+        vals = [v for v in vals if v is not None]
+        wins = sum(1 for v in vals if v > 0)
+        losses = sum(1 for v in vals if v <= 0)
+        eligible = len(vals)
+        win_rate = (wins / eligible * 100) if eligible else None
+        result[label] = {
+            "eligible": eligible,
+            "wins": wins,
+            "losses": losses,
+            "win_rate": win_rate,
+        }
+    return result
+
+
 def backfill_review_milestones():
     """幂等回补 review_history.csv 中仍为空的里程碑字段（P0 修复版）。
 
@@ -3158,6 +3190,46 @@ option_win_rate = (
     if option_closed_pnl else 0.0
 )
 
+
+# ============================================================
+# Milestone Performance（5D/10D/20D 胜率，只读统计，不修改 milestone 数据）
+# ============================================================
+
+def _load_milestone_win_rate_events():
+    """从 review_history.csv 读取唯一 milestone 事件（Rec_Date + Ticker + Tag）。
+
+    同一事件在多次 Review 中重复出现，只取最后一次快照（与现有 KPI 口径一致）。
+    期权记录排除。返回 list[dict]，每项含 pnl_5d/pnl_10d/pnl_20d（float 或 None）。
+    """
+    events = []
+    if os.path.exists(REVIEW_HISTORY) and os.path.getsize(REVIEW_HISTORY) > 0:
+        try:
+            rh = pd.read_csv(REVIEW_HISTORY, dtype=str, keep_default_na=False)
+            if not rh.empty and {"Rec_Date", "Ticker", "Tag"}.issubset(rh.columns):
+                if "Option_Type" not in rh.columns:
+                    rh["Option_Type"] = ""
+                rh = rh[rh["Option_Type"].astype(str).str.strip().eq("")].copy()
+                rh["_tk"] = rh["Ticker"].astype(str).str.upper()
+                rh["_rd"] = rh["Rec_Date"].astype(str).str[:10]
+                rh["_tag"] = rh["Tag"].astype(str).str.strip()
+                if "Review_Date" not in rh.columns:
+                    rh["Review_Date"] = rh["_rd"]
+                rh = rh.sort_values(["_rd", "Review_Date"])
+                for _, g in rh.groupby(["_rd", "_tk", "_tag"], sort=False, dropna=False):
+                    row = g.iloc[-1]
+                    events.append({
+                        "pnl_5d": safe_float(row.get("PnL_5D")),
+                        "pnl_10d": safe_float(row.get("PnL_10D")),
+                        "pnl_20d": safe_float(row.get("PnL_20D")),
+                    })
+        except Exception as e:
+            print(f"⚠️ 读取 milestone 统计失败：{e}")
+    return events
+
+
+milestone_events = _load_milestone_win_rate_events()
+milestone_win_rate = compute_milestone_win_rate(milestone_events)
+
 # 没有有效样本时显示 N/A，而不是误报为 0%。
 core_closed_win_rate_text = f"{core_closed_win_rate:.2f}%" if core_closed_count else "N/A"
 core_open_win_rate_text = f"{core_open_win_rate:.2f}%" if core_open_count else "N/A"
@@ -3208,6 +3280,17 @@ print(
     f"({option_wins}赢/{option_losses}亏/{option_neutral}平)"
 )
 
+# Milestone Performance 文本（只读统计）
+print("📊 Milestone Performance")
+for _label in ("5D", "10D", "20D"):
+    _s = milestone_win_rate[_label]
+    _rate = f"{_s['win_rate']:.2f}%" if _s["win_rate"] is not None else "N/A"
+    print(
+        f"  {_label}: Eligible={_s['eligible']} Wins={_s['wins']} "
+        f"Losses={_s['losses']} Win Rate={_rate}"
+    )
+print("  （N/A / 未达标 milestone 不进入分母）")
+
 
 # ============================================================
 # 14. HTML 格式
@@ -3232,6 +3315,16 @@ def _price(v):
 def _pct(v):
     x = safe_float(v)
     return "N/A" if x is None else f"{x:+.2f}%"
+
+
+# Milestone Performance 胜率文案（HTML 用；None -> N/A）
+def _mwr_text(label):
+    s = milestone_win_rate[label]
+    return f"{s['win_rate']:.2f}%" if s["win_rate"] is not None else "N/A"
+
+_mwr_5d = _mwr_text("5D")
+_mwr_10d = _mwr_text("10D")
+_mwr_20d = _mwr_text("20D")
 
 
 kpi_html = f"""
@@ -3273,6 +3366,16 @@ kpi_html = f"""
 <div style="font-size:25px;font-weight:bold;color:#8e44ad;">{option_win_rate:.2f}%</div>
 <div style="font-size:13px;">{option_wins} 赢 / {option_losses} 亏 / {option_neutral} 平</div>
 <div style="font-size:11px;color:#607d8b;margin-top:8px;">只统计已经结束的期权，与股票 Scan 完全分开</div>
+</div>
+
+<div style="background:#fff;border:1px solid #eef2f5;border-radius:10px;padding:15px;border-top:4px solid #16a085;grid-column:1/-1;">
+<div style="font-size:14px;color:#0e6655;font-weight:700;">📈 Milestone Performance</div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px;">
+<div><div style="font-size:13px;color:#7f8c8d;">5D 胜率</div><div style="font-size:22px;font-weight:bold;color:#0e6655;">{_mwr_5d}</div><div style="font-size:11px;color:#607d8b;">{milestone_win_rate['5D']['wins']} 赢 / {milestone_win_rate['5D']['losses']} 亏 · 样本 {milestone_win_rate['5D']['eligible']}</div></div>
+<div><div style="font-size:13px;color:#7f8c8d;">10D 胜率</div><div style="font-size:22px;font-weight:bold;color:#0e6655;">{_mwr_10d}</div><div style="font-size:11px;color:#607d8b;">{milestone_win_rate['10D']['wins']} 赢 / {milestone_win_rate['10D']['losses']} 亏 · 样本 {milestone_win_rate['10D']['eligible']}</div></div>
+<div><div style="font-size:13px;color:#7f8c8d;">20D 胜率</div><div style="font-size:22px;font-weight:bold;color:#0e6655;">{_mwr_20d}</div><div style="font-size:11px;color:#607d8b;">{milestone_win_rate['20D']['wins']} 赢 / {milestone_win_rate['20D']['losses']} 亏 · 样本 {milestone_win_rate['20D']['eligible']}</div></div>
+</div>
+<div style="font-size:11px;color:#607d8b;margin-top:8px;">N/A / 未达标 milestone 不进入分母；Win=PnL&gt;0，Loss=PnL≤0</div>
 </div>
 
 <div style="background:#f7f9fb;border:1px solid #dfe6ee;border-radius:10px;padding:15px;grid-column:1/-1;">
