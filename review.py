@@ -679,6 +679,92 @@ def supplement_us_stocks_from_pending():
 supplement_us_stocks_from_pending()
 backfill_missing_trade_history_recommendation_prices()
 
+
+def is_active_holding(status, exit_date=None):
+    """动态持有口径：Status 为 空/Active/pending 且未设置 Exit_Date 的持仓视为 active。
+
+    股票已是“动态持有”，不能因持仓超过 30 天就停止风险检查。
+    """
+    st = clean_text(status).strip()
+    ex = clean_text(exit_date).strip()
+    return st in ("", "Active", "pending") and ex == ""
+
+
+def select_current_stop_loss(group_rows):
+    """取一个生命周期分组内「最新一条有效 Stop_Loss」。
+
+    从最晚 Date 行向前扫描，返回第一个 >0 的 Stop_Loss；
+    若最新行 Stop_Loss 为空/无效，回退到更早的有效止损；
+    没有任何有效值时返回 None。绝不返回 0/负数/空。
+    """
+    try:
+        g = group_rows.sort_values("Date", ascending=False) if hasattr(group_rows, "sort_values") else group_rows
+        for _, r in g.iterrows():
+            sv = safe_float(r.get("Stop_Loss"))
+            if sv is not None and sv > 0:
+                return sv
+    except Exception:
+        pass
+    return None
+
+
+def evaluate_stop_trigger(low, closep, openp, exec_stop):
+    """统一快照下的止损触发判定（纯函数，离线可测，无需联网）。
+
+    入参必须是同一交易日的真实 OHLC（low/close/open）与当前有效 Stop_Loss。
+    返回 (trigger_result, exit_price)：
+      - ("STOP_TRIGGERED", exit_price)   已确认跌破止损
+      - ("NO_TRIGGER_INVALID_STOP", None) Stop_Loss 无效，不触发（仅跟踪 + warning）
+      - ("DATA_MISSING", None)           无可靠 OHLC，不能猜测，不触发
+      - ("CLEAR", None)                  未跌破
+    exit_price：Gap Down 时若 Open < Stop 取 Open，否则取 Stop；
+    Low 缺失但有可靠 Close<=Stop 时确认触发，exit 取 Stop（无 Open 可判缺口，保守）。
+    """
+    if not exec_stop or exec_stop <= 0:
+        return "NO_TRIGGER_INVALID_STOP", None
+    if low is not None and low <= exec_stop:
+        exit_price = openp if (openp is not None and openp < exec_stop) else exec_stop
+        return "STOP_TRIGGERED", exit_price
+    if low is None and closep is not None and closep <= exec_stop:
+        return "STOP_TRIGGERED", exec_stop
+    if low is None and closep is None:
+        return "DATA_MISSING", None
+    return "CLEAR", None
+
+
+def compute_change_1d(close, prev_close):
+    """Change_1D = (Close - Prev_Close) / Prev_Close * 100。
+
+    Close 与 Prev_Close 必须来自同一份快照（同一交易日 OHLC 与前一真实交易日收盘），
+    禁止跨数据源拼凑；否则无法得到自洽的涨跌幅（例如 BKNG 162.16 vs 207.74 应为 -21.94%，
+    而不是 -0.11%）。
+    """
+    if close is None or prev_close is None or prev_close <= 0:
+        return None
+    return round((close - prev_close) / prev_close * 100, 4)
+
+
+def _prior_regular_close(df_hist, ticker, before_date):
+    """返回 before_date 之前最近一个真实交易日的收盘价（Prev_Close 的来源）。
+
+    严格取 date < before_date 的最后一根真实 OHLCV bar 的 close；无则返回 None。
+    """
+    try:
+        if df_hist is None or df_hist.empty:
+            return None
+        sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
+        if sub.empty:
+            return None
+        d = _normalize_market_dates(sub["Date"])
+        base = pd.Timestamp(before_date).normalize()
+        sub = sub[d < base].sort_values("Date")
+        if sub.empty:
+            return None
+        return safe_float(sub.iloc[-1].get("close"))
+    except Exception:
+        return None
+
+
 df = load_trade_history()
 if df.empty:
     print("无交易账本或账本为空，退出。")
@@ -1277,91 +1363,6 @@ def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry
                 "kdj_falling":kdj_falling,"trend_ok":bool(close>=ma20 and ma20>=ma50),"pnl_pct":round((close/ep-1)*100,2) if ep else None}
     except Exception as e:
         print(f"⚠️ 移动止损计算失败 {ticker}: {e}"); return None
-
-
-def select_current_stop_loss(group_rows):
-    """取一个生命周期分组内「最新一条有效 Stop_Loss」。
-
-    从最晚 Date 行向前扫描，返回第一个 >0 的 Stop_Loss；
-    若最新行 Stop_Loss 为空/无效，回退到更早的有效止损；
-    没有任何有效值时返回 None。绝不返回 0/负数/空。
-    """
-    try:
-        g = group_rows.sort_values("Date", ascending=False) if hasattr(group_rows, "sort_values") else group_rows
-        for _, r in g.iterrows():
-            sv = safe_float(r.get("Stop_Loss"))
-            if sv is not None and sv > 0:
-                return sv
-    except Exception:
-        pass
-    return None
-
-
-def evaluate_stop_trigger(low, closep, openp, exec_stop):
-    """统一快照下的止损触发判定（纯函数，离线可测，无需联网）。
-
-    入参必须是同一交易日的真实 OHLC（low/close/open）与当前有效 Stop_Loss。
-    返回 (trigger_result, exit_price)：
-      - ("STOP_TRIGGERED", exit_price)   已确认跌破止损
-      - ("NO_TRIGGER_INVALID_STOP", None) Stop_Loss 无效，不触发（仅跟踪 + warning）
-      - ("DATA_MISSING", None)           无可靠 OHLC，不能猜测，不触发
-      - ("CLEAR", None)                  未跌破
-    exit_price：Gap Down 时若 Open < Stop 取 Open，否则取 Stop；
-    Low 缺失但有可靠 Close<=Stop 时确认触发，exit 取 Stop（无 Open 可判缺口，保守）。
-    """
-    if not exec_stop or exec_stop <= 0:
-        return "NO_TRIGGER_INVALID_STOP", None
-    if low is not None and low <= exec_stop:
-        exit_price = openp if (openp is not None and openp < exec_stop) else exec_stop
-        return "STOP_TRIGGERED", exit_price
-    if low is None and closep is not None and closep <= exec_stop:
-        return "STOP_TRIGGERED", exec_stop
-    if low is None and closep is None:
-        return "DATA_MISSING", None
-    return "CLEAR", None
-
-
-def is_active_holding(status, exit_date=None):
-    """动态持有口径：Status 为 空/Active/pending 且未设置 Exit_Date 的持仓视为 active。
-
-    股票已是“动态持有”，不能因持仓超过 30 天就停止风险检查。
-    """
-    st = clean_text(status).strip()
-    ex = clean_text(exit_date).strip()
-    return st in ("", "Active", "pending") and ex == ""
-
-
-def compute_change_1d(close, prev_close):
-    """Change_1D = (Close - Prev_Close) / Prev_Close * 100。
-
-    Close 与 Prev_Close 必须来自同一份快照（同一交易日 OHLC 与前一真实交易日收盘），
-    禁止跨数据源拼凑；否则无法得到自洽的涨跌幅（例如 BKNG 162.16 vs 207.74 应为 -21.94%，
-    而不是 -0.11%）。
-    """
-    if close is None or prev_close is None or prev_close <= 0:
-        return None
-    return round((close - prev_close) / prev_close * 100, 4)
-
-
-def _prior_regular_close(df_hist, ticker, before_date):
-    """返回 before_date 之前最近一个真实交易日的收盘价（Prev_Close 的来源）。
-
-    严格取 date < before_date 的最后一根真实 OHLCV bar 的 close；无则返回 None。
-    """
-    try:
-        if df_hist is None or df_hist.empty:
-            return None
-        sub = df_hist[df_hist["Ticker"].astype(str).str.upper() == str(ticker).upper()].copy()
-        if sub.empty:
-            return None
-        d = _normalize_market_dates(sub["Date"])
-        base = pd.Timestamp(before_date).normalize()
-        sub = sub[d < base].sort_values("Date")
-        if sub.empty:
-            return None
-        return safe_float(sub.iloc[-1].get("close"))
-    except Exception:
-        return None
 
 
 def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
