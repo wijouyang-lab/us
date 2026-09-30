@@ -2,8 +2,8 @@
 dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
-[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
-当前有效股票池：39 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+pending CSV（本次 Scan 新推荐）：us_stocks_pending_20260930.csv
+当前有效股票池：46 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
@@ -24,13 +24,13 @@ $XAGUSD=X: No data found, symbol may be delisted
 $HIRU: possibly delisted; no price data found  (period=1d)
 已读取 workflow runtimes：runtimes.json
 --------------------------------------------------------------
-pending CSV          : （无）   股票名单来源：active_events
-Core 数量            : 34
-Observation 数量     : 5
-Options 数量         : 9（Active 9）
+pending CSV          : us_stocks_pending_20260930.csv   股票名单来源：active_events
+Core 数量            : 35
+Observation 数量     : 11
+Options 数量         : 10（Active 10）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 39 / 0   技术指标成功 39/39
-当前价来源           : 实时 39 · 最新收盘 0 · 合计可取 39/39
+K线成功 / 失败       : 46 / 0   技术指标成功 46/46
+当前价来源           : 实时 46 · 最新收盘 0 · 合计可取 46/46
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 12  [complete]
@@ -38,11 +38,10 @@ Review 数据状态      :
    · observation_open_count       = 89  [complete]
    · actual_active_count          = 12  [complete]
 history 条数         : 43
-AI 六段状态          : partial（12/39 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
+AI 六段状态          : partial（19/46 只股票有内容，来源 Scan 2026-09-30）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
-字段 null 统计       : {'quant_score': 22, 'ai_score': 22, 'fundamental_score': 22, 'technical_score': 22, 'risk_liquidity_score': 22, 'pe_ttm': 22, 'pe_forward': 22, 'pb': 22, 'eps_ttm': 22, 'roe': 23, 'revenue_growth': 22, 'earnings_growth': 22, 'profit_margin': 22, 'market_cap': 22, 'market_regime': 39, 'vix': 39}
-缺失字段             : ['regime.market', 'regime.vix']
+字段 null 统计       : {'quant_score': 22, 'ai_score': 22, 'fundamental_score': 22, 'technical_score': 22, 'risk_liquidity_score': 22, 'pe_ttm': 22, 'pe_forward': 22, 'pb': 22, 'eps_ttm': 22, 'roe': 24, 'revenue_growth': 22, 'earnings_growth': 23, 'profit_margin': 22, 'market_cap': 22, 'market_regime': 39, 'vix': 39}
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
