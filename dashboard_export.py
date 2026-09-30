@@ -2388,6 +2388,9 @@ def main(argv=None):
     ap.add_argument("--retries", type=int, default=2, help="单个 symbol 的 HTTP 重试次数")
     ap.add_argument("--no-mirror", action="store_true",
                     help="不把 JSON 同步写入 us-market-terminal/dashboard/data/")
+    ap.add_argument("--runtimes", default=None,
+                    help="GitHub Actions workflow 运行元数据 JSON 路径（scan/review/evolve 最近成功 run），"
+                         "由 dashboard/fetch_runtimes.py 生成；缺失时输出 runtimes=null")
     args = ap.parse_args(argv)
 
     data_dir = Path(args.data_dir).resolve()
@@ -2617,6 +2620,19 @@ def main(argv=None):
     # ---- HISTORY ----
     history = build_history(review_rows, notes)
 
+    # ---- workflow runtimes（scan/review/evolve 最近成功 run，来自 GitHub Actions API）----
+    runtimes = None
+    if args.runtimes:
+        rt_path = Path(args.runtimes)
+        if rt_path.exists():
+            try:
+                runtimes = json.loads(rt_path.read_text(encoding="utf-8"))
+                log(f"已读取 workflow runtimes：{rt_path.name}")
+            except Exception as e:
+                log(f"[WARN] 读取 runtimes 失败（{e}），runtimes 置 null")
+        else:
+            log(f"[WARN] runtimes 文件不存在：{args.runtimes}，runtimes 置 null")
+
     # ---- 组装 ----
     payload = {
         "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -2625,6 +2641,7 @@ def main(argv=None):
         "options": options,
         "review": review,
         "history": history,
+        "runtimes": runtimes,
         "meta": {
             "data_source": (
                 f"{(pending_path.name + ' + ') if pending_path else ''}"

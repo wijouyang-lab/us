@@ -32,6 +32,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 concurrency:
   group: dashboard-data-refresh
@@ -44,6 +45,9 @@ jobs:
     env:
       # 明确声明：本 Workflow 与 AI 无关，仅作审计留痕
       DASHBOARD_AI_ENABLED: "false"
+      # fetch_runtimes.py 读取 scan/review/evolve 最近成功 run（只读 actions:read）
+      GITHUB_TOKEN: ${{ github.token }}
+      GITHUB_REPOSITORY: ${{ github.repository }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,6 +66,12 @@ jobs:
           python -c "import yfinance,sys;print('yfinance', yfinance.__version__)" \
             || echo "::warning::yfinance 不可用，将使用 Yahoo HTTP / Stooq 降级路径"
 
+      - name: Fetch workflow runtimes
+        run: |
+          # 读取 scan/review/evolve 最近一次成功 run 的时间与 head_sha（只读，绝不覆盖成功时间）
+          python dashboard/fetch_runtimes.py > dashboard/data/runtimes.json
+          cat dashboard/data/runtimes.json
+
       - name: Run dashboard_export.py
         id: export
         run: |
@@ -73,6 +83,7 @@ jobs:
           if [ "${{ github.event.inputs.no_stooq }}" = "true" ]; then
             ARGS="$ARGS --no-stooq"
           fi
+          ARGS="$ARGS --runtimes dashboard/data/runtimes.json"
           python dashboard_export.py $ARGS 2>&1 | tee dashboard/data/last_run.log
           echo "exit=${PIPESTATUS[0]}"
 

@@ -26,6 +26,25 @@
     </div>
   </header>
 
+  <!-- Scan / Review / Evolve 运行状态（独立字段，绝不互相覆盖） -->
+  <section class="card runtime-strip" id="runtimeStrip">
+    <div class="rt-item">
+      <span class="rt-name">SCAN</span>
+      <span class="rt-val" id="scanRunTime">—</span>
+      <span class="rt-sha" id="scanRunSha"></span>
+    </div>
+    <div class="rt-item">
+      <span class="rt-name">REVIEW</span>
+      <span class="rt-val" id="reviewRunTime">—</span>
+      <span class="rt-sha" id="reviewRunSha"></span>
+    </div>
+    <div class="rt-item">
+      <span class="rt-name">EVOLVE</span>
+      <span class="rt-val" id="evolveRunTime">—</span>
+      <span class="rt-sha" id="evolveRunSha"></span>
+    </div>
+  </section>
+
   <!-- 加载 / 错误状态：fetch 成功前始终可见，避免白屏 -->
   <div id="boot" class="boot">
     <div class="boot-row"><span class="spinner"></span><span>Loading market data…</span></div>

@@ -25,7 +25,6 @@ import json
 import os
 import random
 import re
-import smtplib
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 import time
@@ -34,8 +33,6 @@ import xml.etree.ElementTree as ET
 import urllib.request
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 
 from clawsocket_compat import ClawSocketClient
 import pandas as pd
@@ -120,11 +117,6 @@ TECH_PARAMS = STRATEGY_PARAMS["technical"]
 LIQUIDITY_PARAMS = STRATEGY_PARAMS["liquidity"]
 EXIT_PARAMS = STRATEGY_PARAMS["exit"]
 LIMIT_PARAMS = STRATEGY_PARAMS["limits"]
-
-SUPER_ADMIN = os.environ.get("TARGET_EMAILS")
-if not SUPER_ADMIN:
-    print("致命错误：未检测到 TARGET_EMAILS！")
-    sys.exit(1)
 
 _missing_env = [k for k in ("CLAWSOCKET_API_KEY", "CLAWSOCKET_BASE_URL") if not os.environ.get(k)]
 if _missing_env:
@@ -3241,26 +3233,6 @@ def build_verified_core_html(ai_html, verified_items):
     return ai_html[:start] + verified_block + "\n" + tail
 
 
-# ==================== 15. 邮件 ====================
-def send_mail(to_emails, subject, content):
-    user = os.environ.get("EMAIL_ACCOUNT")
-    pwd = os.environ.get("EMAIL_PASSWORD")
-    if not user or not pwd or not to_emails:
-        print("⚠️ 邮件配置不完整，跳过邮件发送")
-        return
-    msg = MIMEMultipart()
-    msg["From"] = user
-    msg["To"] = to_emails
-    msg["Subject"] = subject
-    msg.attach(MIMEText(content,"html","utf-8"))
-    try:
-        with smtplib.SMTP_SSL("smtp.gmail.com",465,timeout=30) as s:
-            s.login(user,pwd)
-            s.sendmail(user,[x.strip() for x in to_emails.split(",") if x.strip()],msg.as_string())
-        print("✅ 邮件发送成功")
-    except Exception as e:
-        print(f"❌ 邮件发送失败：{e}")
-
 # ==================== 16. HTML 样式 ====================
 def build_full_email_html(ai_html):
     # Review 风控提醒必须确定性展示，不能依赖 AI 自己决定是否输出。
@@ -3724,8 +3696,7 @@ if __name__ == "__main__":
     pool_tickers = {t:n for t,n in raw_tickers.items() if t not in restricted_tickers}
     pool_data = build_stock_pool(pool_tickers)
     if not pool_data:
-        empty = build_full_email_html('<div class="header-card"><h2>⚠️ 今日扫描无有效标的</h2><p>行情/技术数据不足，安全退出。</p></div>')
-        send_mail(SUPER_ADMIN, f"【美股扫描】{today_us_str()} 无有效标的", empty)
+        print("⚠️ 今日扫描无有效标的：行情/技术数据不足，安全退出。")
         sys.exit(0)
 
     # 双价格口径：技术K线=最后完整常规交易日；当前参考=盘前最新成交。两者禁止混算。
@@ -3739,8 +3710,7 @@ if __name__ == "__main__":
         score_candidate_quality(_item, market_ctx)
     pool_data = apply_entry_quality_gate(pool_data, market_ctx, event_regime)
     if not pool_data:
-        empty = build_full_email_html('<div class="header-card"><h2>⚠️ 今日硬门槛后暂无合格新标的</h2><p>技术确认、市场环境、相对强弱或量化评分未达到准入标准；不为了凑满推荐数量而放宽条件。</p></div>')
-        send_mail(SUPER_ADMIN, f"【美股扫描】{today_us_str()} 硬门槛后无合格新标的", empty)
+        print("⚠️ 今日硬门槛后暂无合格新标的：技术/市场/评分未达准入，不凑数。")
         sys.exit(0)
 
     # 将 Regime Gate 硬回避行业转成 AI 明确的硬约束文字
@@ -3884,8 +3854,6 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"⚠️ 期权HTML生成失败，Scan继续完成：{e}")
         option_html = "<h2 style=\"color:#7b1fa2;\">🎲 美股期权实战策略</h2><p>本次期权数据已生成，但期权HTML渲染失败；不影响股票Scan与账本写入。</p>"
-    full_html = build_full_email_html(ai_html + option_html)
-    subject_prefix = "盘前" if SCAN_RUN_MODE == "PREMARKET" else "盘中补发"
-    send_mail(SUPER_ADMIN, f"【宏观驱动美股版｜{subject_prefix}】{TARGET_REGION} 核心打分、股票与期权实战 ({today_us_str()})", full_html)
 
-    print(f"🎯 美股{SCAN_RUN_MODE_LABEL} Scan 完成，邮件已按当前运行模式发送。")
+    # 邮件发送已移除（生产不再发邮件），不再构建/投递邮件专用 HTML。
+    print(f"🎯 美股{SCAN_RUN_MODE_LABEL} Scan 完成。")

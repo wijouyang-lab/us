@@ -65,6 +65,7 @@ def summarize(path):
         "warnings": meta.get("warnings", []),
         "ai_status": meta.get("ai_status"),
         "ai_calls": 0,
+        "runtimes": d.get("runtimes"),
     }
 
 

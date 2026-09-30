@@ -19,12 +19,9 @@ import json
 import glob
 import os
 import re
-import smtplib
 import sys
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 from zoneinfo import ZoneInfo
 import urllib.parse
 import urllib.request
@@ -3659,34 +3656,6 @@ for path in ("report.html","review_report.html"):
     except Exception as e:
         print(f"⚠️ 保存 {path} 失败：{e}")
 
-
-# ============================================================
-# 19. 邮件
-# ============================================================
-
-def send_mail():
-    account = os.environ.get("EMAIL_ACCOUNT")
-    password = os.environ.get("EMAIL_PASSWORD")
-    target = os.environ.get("TARGET_EMAILS") or os.environ.get("OWNER_EMAIL")
-    if not account or not password or not target:
-        print("⚠️ 邮件配置缺失，本次不发送邮件。")
-        return
-    msg = MIMEMultipart()
-    msg["From"] = account
-    msg["To"] = target
-    msg["Subject"] = f"盘后清算 美股风控纪律与复盘 ({today_us_str()})"
-    msg.attach(MIMEText(full_html, "html", "utf-8"))
-    to_list = [x.strip() for x in target.split(",") if x.strip()]
-    try:
-        with smtplib.SMTP_SSL("smtp.gmail.com",465,timeout=30) as server:
-            server.login(account,password)
-            server.sendmail(account,to_list,msg.as_string())
-        print(f"✅ 邮件发送成功：{target}")
-    except Exception as e:
-        print(f"❌ 邮件发送失败：{e}")
-
-
-send_mail()
 
 print("=" * 60)
 print("✅ 美股盘后复盘完成。")

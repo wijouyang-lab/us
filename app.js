@@ -333,6 +333,7 @@
     var obs = STOCKS.filter(function (s) { return s.bucket === 'obs'; });
 
     renderHeader();
+    renderRuntime();
     renderGmBar();
     renderPools(core, obs);
     renderGlobal();
@@ -378,6 +379,35 @@
     }
     var df = $('#dFoot');
     if (df) df.textContent = 'Data Source: dashboard_data.json · 本页不含任何模拟数据';
+  }
+
+  /* ---------------- 顶部：Scan/Review/Evolve 运行状态（独立字段，绝不互相覆盖） ---------------- */
+  function toBeijingTime(iso) {
+    if (!iso) return NA;
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return NA;
+    // 北京时间 = UTC+8，固定无夏令时，不依赖浏览器本地时区
+    var bj = new Date(d.getTime() + 8 * 3600 * 1000);
+    var p = function (n) { return (n < 10 ? '0' : '') + n; };
+    return bj.getUTCFullYear() + '-' + p(bj.getUTCMonth() + 1) + '-' + p(bj.getUTCDate()) +
+      ' ' + p(bj.getUTCHours()) + ':' + p(bj.getUTCMinutes()) + ':' + p(bj.getUTCSeconds());
+  }
+
+  function renderRuntime() {
+    var RT = DATA.runtimes || {};
+    function fill(timeId, shaId, entry) {
+      var timeEl = $('#' + timeId);
+      var shaEl = $('#' + shaId);
+      if (timeEl) {
+        timeEl.textContent = (entry && entry.last_success_at) ? toBeijingTime(entry.last_success_at) : NA;
+      }
+      if (shaEl) {
+        shaEl.textContent = (entry && entry.last_success_sha) ? ('#' + entry.last_success_sha) : '';
+      }
+    }
+    fill('scanRunTime', 'scanRunSha', RT.scan);
+    fill('reviewRunTime', 'reviewRunSha', RT.review);
+    fill('evolveRunTime', 'evolveRunSha', RT.evolve);
   }
 
   /* ---------------- 1. Global Market 状态栏 ---------------- */
