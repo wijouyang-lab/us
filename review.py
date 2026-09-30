@@ -2013,11 +2013,26 @@ def build_milestone_history():
             return DF_HIST_MILESTONE
 
         start = (earliest - pd.Timedelta(days=5)).strftime("%Y-%m-%d")
-        end = (base_min - pd.Timedelta(days=1)).strftime("%Y-%m-%d")
+        end = base_min.strftime("%Y-%m-%d")
         tickers = list(dict.fromkeys(list(base["Ticker"].astype(str).tolist()) + need_tickers))
         print(f"📡 [里程碑宽窗口] 补取 {start} → {end} 的历史 OHLC（{len(tickers)} 只，现有窗口最早 {base_min.date()}）...")
-        early, _ = download_ohlc_safe(tickers, start=start, end=end)
-        DF_HIST_MILESTONE = pd.concat([early, base], ignore_index=True) if (early is not None and not early.empty) else base
+        # 分块下载：一次性请求过多 ticker 极易超时/被限流导致整批失败；分块保证部分成功也可使用。
+        early_frames = []
+        CHUNK = 30
+        for i in range(0, len(tickers), CHUNK):
+            chunk = tickers[i:i + CHUNK]
+            part, _ = download_ohlc_safe(chunk, start=start, end=end)
+            if part is not None and not part.empty:
+                early_frames.append(part)
+        if not early_frames:
+            DF_HIST_MILESTONE = base
+        else:
+            early = pd.concat(early_frames, ignore_index=True)
+            merged = pd.concat([early, base], ignore_index=True)
+            # 去重：分块下载与 base 可能在边界日重叠，按 (Ticker, 交易日) 去重，避免取第 N 根 bar 错位
+            _norm = _normalize_market_dates(merged["Date"])
+            _key = merged["Ticker"].astype(str).str.upper() + "|" + _norm.dt.strftime("%Y-%m-%d")
+            DF_HIST_MILESTONE = merged.loc[~_key.duplicated(keep="first")].reset_index(drop=True)
     except Exception as e:
         print(f"⚠️ [里程碑宽窗口] 构建失败，退化为现有窗口：{e}")
         DF_HIST_MILESTONE = base
@@ -2109,15 +2124,41 @@ def compute_review_milestones(ticker, rec_date, rec_price, status):
         out["Review_Stage"] = "OPEN"
     return out
 
-def backfill_review_milestones():
-    """幂等回补 review_history.csv 中仍为空的里程碑字段。
 
-    严格规则（保守口径）：
+def _compute_milestones_asof(hist, ticker, rec_date, rec_price, asof):
+    """按 asof 上限计算单个推荐事件的 5D/10D/20D 里程碑（纯函数，供回补与离线测试复用）。
+
+    返回 dict：Price_5D/PnL_5D/Price_10D/PnL_10D/Price_20D/PnL_20D（字符串，未达成为空串）。
+    - 第 N 个交易日 bar 日期 > asof → 该 milestone 为空（尚未达成，绝不预写未来）。
+    - 行情缺失 / 无法确认交易日 → 为空（fail-closed，绝不猜价 / 补价 / 用非交易日）。
+    - Price_N <= 0 或 Rec_Price <= 0 → PnL 为空；Price_N <= 0 → Price 也为空。
+    - PnL_N = round((Price_N - Rec_Price) / Rec_Price * 100, 2)。
+    """
+    out = {"Price_5D": "", "PnL_5D": "", "Price_10D": "", "PnL_10D": "", "Price_20D": "", "PnL_20D": ""}
+    rp = safe_float(rec_price)
+    for label, n in (("5", 5), ("10", 10), ("20", 20)):
+        _d, px = get_nth_trading_day_bar(hist, ticker, rec_date, n, asof=asof)
+        pnl = None
+        if px is not None and px > 0 and rp is not None and rp > 0:
+            pnl = round((px - rp) / rp * 100, 2)
+        out["Price_%sD" % label] = "" if (px is None or px <= 0) else str(px)
+        out["PnL_%sD" % label] = "" if pnl is None else str(pnl)
+    return out
+
+
+def backfill_review_milestones():
+    """幂等回补 review_history.csv 中仍为空的里程碑字段（P0 修复版）。
+
+    严格规则：
       - 只读已有行，绝不新建任何行（尤其是当前池内没有 review 行的事件，不会自动创建）；
-      - 第 N 个交易日 bar 的日期必须 <= 该行自己的 Review_Date，否则该字段保持空
-        （禁止用今天的行情给旧 Review 行补“未来信息”）；
-      - 只写真实 OHLCV bar 的收盘价；窗口未覆盖 rec_date → fail-closed 留空；
-      - 已存在的真实值一律不覆盖；
+      - as-of 上限：
+          · CLOSED 事件（该事件存在 Status ∈ CLOSED_STOCK_STATUSES 的行）→ 上限 =
+            实际 Close_Date（最早出现 CLOSED 状态的 Review_Date）；milestone 在 Close_Date
+            之前已达成才回填，超过 Close_Date 才达成的保持空（不读取 Close_Date 之后的数据）。
+          · OPEN 事件 → 上限 = 当前复盘交易日 REVIEW_SESSION_DATE；只要当前日期已实际
+            经过 5D/10D/20D，就回填。
+      - 只写真实 OHLCV bar 的收盘价；窗口未覆盖 rec_date / 行情缺失 → fail-closed 留空；
+      - 已存在的真实值一律不覆盖；写入前校验 Price_N > 0、Rec_Price > 0、PnL 公式；
       - 期权行（Option_Type/Strike/Expiry 非空）不参与；
       - 回补后按 FINAL > 20D > 10D > 5D > OPEN 重算 Review_Stage（原 FINAL 保持 FINAL）。
     """
@@ -2135,6 +2176,24 @@ def backfill_review_milestones():
     od = od[REVIEW_COLUMNS]
 
     hist = get_milestone_history()
+
+    # P0：事件级 Close_Date。key=(Ticker, Rec_Date, Tag)；value=最早出现 CLOSED 状态的 Review_Date。
+    # 一个事件可能有多行（每日快照），只有明确 CLOSED 的行才算真正关闭。
+    close_dates = {}
+    for _, r in od.iterrows():
+        if clean_text(r.get("Status")) not in CLOSED_STOCK_STATUSES:
+            continue
+        _tk = clean_text(r.get("Ticker")).upper()
+        _rec = clean_text(r.get("Rec_Date"))[:10]
+        if not _tk or not _rec:
+            continue
+        _rd = clean_text(r.get("Review_Date"))[:10]
+        if not _rd:
+            continue
+        key = (_tk, _rec, clean_text(r.get("Tag")))
+        if key not in close_dates or _rd < close_dates[key]:
+            close_dates[key] = _rd
+
     filled = {"5D": 0, "10D": 0, "20D": 0}
     stage_changed = 0
     rows_changed = 0
@@ -2143,32 +2202,33 @@ def backfill_review_milestones():
         # 期权行不参与股票里程碑
         if clean_text(row.get("Option_Type")) or clean_text(row.get("Strike")) or clean_text(row.get("Expiry")):
             continue
-        tk = clean_text(row.get("Ticker"))
+        tk = clean_text(row.get("Ticker")).upper()
         rec = clean_text(row.get("Rec_Date"))[:10]
-        asof = clean_text(row.get("Review_Date"))[:10]
-        if not tk or not rec or not asof:
+        if not tk or not rec:
+            continue
+        key = (tk, rec, clean_text(row.get("Tag")))
+        # P0：CLOSED 事件回补到实际 Close_Date；OPEN 事件回补到当前复盘交易日
+        # （不再用该行自己的 Review_Date 冻结，避免历史事件永远补不上已过去的 milestone）。
+        asof = close_dates.get(key) or REVIEW_SESSION_DATE
+        if not asof:
             continue
         rp = safe_float(row.get("Rec_Price"))
+        computed = _compute_milestones_asof(hist, tk, rec, rp, asof)
         touched = False
         vals = {}
-        for label, n in (("5", 5), ("10", 10), ("20", 20)):
+        for label in ("5", "10", "20"):
             cur_p = clean_text(row.get("Price_%sD" % label))
             cur_n = clean_text(row.get("PnL_%sD" % label))
             if cur_p and cur_n:
                 vals[label] = (cur_p, cur_n)          # 已有真实值：不覆盖
                 continue
-            d, px = get_nth_trading_day_bar(hist, tk, rec, n, asof=asof)
-            if d is None or px is None:
-                vals[label] = (cur_p, cur_n)          # 未达成 / 窗口不足 → 保持空
-                continue
-            pnl = None
-            if rp is not None and rp > 0:
-                pnl = round((px - rp) / rp * 100, 2)  # 公式不变
-            new_p, new_n = str(px), ("" if pnl is None else str(pnl))
+            new_p = computed["Price_%sD" % label]
+            new_n = computed["PnL_%sD" % label]
             if new_p != cur_p or new_n != cur_n:
                 od.at[idx, "Price_%sD" % label] = new_p
                 od.at[idx, "PnL_%sD" % label] = new_n
-                filled["%sD" % label] += 1
+                if new_p:
+                    filled["%sD" % label] += 1
                 touched = True
             vals[label] = (new_p, new_n)
 
