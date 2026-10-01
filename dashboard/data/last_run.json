@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-01T18:00:46Z",
-  "market_updated_at": "2026-10-01T18:00:44Z",
-  "technical_updated_at": "2026-10-01T18:00:46Z",
+  "generated_at": "2026-10-01T18:07:19Z",
+  "market_updated_at": "2026-10-01T18:07:18Z",
+  "technical_updated_at": "2026-10-01T18:07:19Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -42,19 +42,67 @@
   "ai_calls": 0,
   "runtimes": {
     "scan": {
-      "last_success_at": "2026-09-30T18:35:06Z",
-      "last_success_sha": "9737418287b7",
-      "run_id": 36757957242
+      "latest": {
+        "run_id": 36757957242,
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-09-30T18:21:10Z",
+        "started_at": "2026-09-30T18:21:10Z",
+        "updated_at": "2026-09-30T18:35:06Z",
+        "head_sha": "9737418287b7",
+        "event": "schedule",
+        "run_number": 148,
+        "run_attempt": 1,
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/36757957242"
+      },
+      "last_success": {
+        "run_id": 36757957242,
+        "completed_at": "2026-09-30T18:35:06Z",
+        "head_sha": "9737418287b7"
+      },
+      "error": null
     },
     "review": {
-      "last_success_at": "2026-10-01T01:12:45Z",
-      "last_success_sha": "e42525140c43",
-      "run_id": 36799795650
+      "latest": {
+        "run_id": 36799795650,
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-10-01T01:10:15Z",
+        "started_at": "2026-10-01T01:10:15Z",
+        "updated_at": "2026-10-01T01:12:45Z",
+        "head_sha": "e42525140c43",
+        "event": "schedule",
+        "run_number": 124,
+        "run_attempt": 1,
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/36799795650"
+      },
+      "last_success": {
+        "run_id": 36799795650,
+        "completed_at": "2026-10-01T01:12:45Z",
+        "head_sha": "e42525140c43"
+      },
+      "error": null
     },
     "evolve": {
-      "last_success_at": "2026-09-05T02:00:34Z",
-      "last_success_sha": "e32b5ef89246",
-      "run_id": 33937804241
+      "latest": {
+        "run_id": 33937804241,
+        "status": "completed",
+        "conclusion": "success",
+        "created_at": "2026-09-05T02:00:06Z",
+        "started_at": "2026-09-05T02:00:06Z",
+        "updated_at": "2026-09-05T02:00:34Z",
+        "head_sha": "e32b5ef89246",
+        "event": "workflow_dispatch",
+        "run_number": 13,
+        "run_attempt": 1,
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/33937804241"
+      },
+      "last_success": {
+        "run_id": 33937804241,
+        "completed_at": "2026-09-05T02:00:34Z",
+        "head_sha": "e32b5ef89246"
+      },
+      "error": null
     }
   }
 }
