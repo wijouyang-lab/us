@@ -77,8 +77,16 @@ button{font-family:inherit}
 .rt-line{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
 .rt-name{font-size:11px;font-weight:700;letter-spacing:.6px;color:var(--text-2);
   background:var(--accent-soft);border:1px solid #d8e1ff;border-radius:6px;padding:2px 7px;white-space:nowrap}
+.rt-status{font-size:10px;font-weight:700;letter-spacing:.4px;padding:1px 6px;border-radius:999px;white-space:nowrap}
+.rt-status:empty{display:none}
+.rt-status.rt-running{background:#fff3e0;color:#e65100;border:1px solid #ffcc80}
+.rt-status.rt-queued{background:#e3f2fd;color:#1565c0;border:1px solid #90caf9}
+.rt-status.rt-success{background:#e8f5e9;color:#2e7d32;border:1px solid #a5d6a7}
+.rt-status.rt-failed{background:#ffebee;color:#c62828;border:1px solid #ef9a9a}
+.rt-status.rt-cancelled{background:#fff8e1;color:#f9a825;border:1px solid #ffe082}
+.rt-status.rt-skipped{background:#eceff1;color:#607d8b;border:1px solid #cfd8dc}
+.rt-status.rt-nodata{background:#eceff1;color:#90a4ae;border:1px solid #cfd8dc}
 .rt-val{font-size:12px;color:var(--text);font-variant-numeric:tabular-nums}
-.rt-val::before{content:"Last Successful Run: ";font-size:11px;font-weight:600;color:var(--text-3)}
 .rt-sha{font-size:11px;color:var(--text-3);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 .rt-sha::before{content:"SHA: ";font-weight:600;font-family:-apple-system,Segoe UI,Roboto,sans-serif}
 .rt-sha:empty{display:none}

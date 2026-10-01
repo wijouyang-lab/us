@@ -26,27 +26,30 @@
     </div>
   </header>
 
-  <!-- Scan / Review / Evolve 运行状态（独立字段，绝不互相覆盖） -->
+  <!-- Scan / Review / Evolve 运行状态（latest + last_success，独立字段，绝不互相覆盖） -->
   <section class="card runtime-strip" id="runtimeStrip">
     <div class="rt-item">
       <div class="rt-line">
         <span class="rt-name">SCAN</span>
-        <span class="rt-val" id="scanRunTime">—</span>
+        <span class="rt-status" id="scanStatus"></span>
       </div>
+      <div class="rt-line"><span class="rt-val" id="scanRunTime">—</span></div>
       <span class="rt-sha" id="scanRunSha"></span>
     </div>
     <div class="rt-item">
       <div class="rt-line">
         <span class="rt-name">REVIEW</span>
-        <span class="rt-val" id="reviewRunTime">—</span>
+        <span class="rt-status" id="reviewStatus"></span>
       </div>
+      <div class="rt-line"><span class="rt-val" id="reviewRunTime">—</span></div>
       <span class="rt-sha" id="reviewRunSha"></span>
     </div>
     <div class="rt-item">
       <div class="rt-line">
         <span class="rt-name">EVOLVE</span>
-        <span class="rt-val" id="evolveRunTime">—</span>
+        <span class="rt-status" id="evolveStatus"></span>
       </div>
+      <div class="rt-line"><span class="rt-val" id="evolveRunTime">—</span></div>
       <span class="rt-sha" id="evolveRunSha"></span>
     </div>
   </section>

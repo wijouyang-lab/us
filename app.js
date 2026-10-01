@@ -354,6 +354,11 @@
       data: DATA, stocks: STOCKS, market: MARKET, options: OPTIONS,
       review: REVIEW, reviews: REVIEWS, history: HISTORY, reload: boot, open: openDetail
     };
+
+    /* 每 60 秒自动刷新 Runtime 状态（只更新 runtimes，不整页 reload）*/
+    if (!window.__runtimeTimer) {
+      window.__runtimeTimer = setInterval(refreshRuntime, 60000);
+    }
   }
 
   /* ---------------- 顶部：数据源与更新时间 ---------------- */
@@ -395,21 +400,76 @@
 
   function renderRuntime() {
     var RT = DATA.runtimes || {};
-    function fill(timeId, shaId, entry) {
-      var timeEl = $('#' + timeId);
-      var shaEl = $('#' + shaId);
+    function renderOne(key) {
+      var entry = RT[key] || {};
+      var latest = entry.latest || null;
+      var lastSuccess = entry.last_success || null;
+      var statusEl = $('#' + key + 'Status');
+      var timeEl = $('#' + key + 'RunTime');
+      var shaEl = $('#' + key + 'RunSha');
+
+      var status = latest ? latest.status : null;
+      var conclusion = latest ? latest.conclusion : null;
+
+      var badge = '', cls = 'rt-nodata', timeText = NA;
+
+      if (!latest) {
+        badge = 'NO DATA';
+        cls = 'rt-nodata';
+      } else if (status === 'in_progress') {
+        badge = 'RUNNING';
+        cls = 'rt-running';
+        timeText = 'Started ' + toBeijingTime(latest.started_at || latest.created_at);
+      } else if (status === 'queued' || status === 'pending' || status === 'waiting' || status === 'requested') {
+        badge = 'QUEUED';
+        cls = 'rt-queued';
+        timeText = 'Queued ' + toBeijingTime(latest.created_at);
+      } else if (status === 'completed') {
+        if (conclusion === 'success') { badge = 'SUCCESS'; cls = 'rt-success'; }
+        else if (conclusion === 'failure') { badge = 'FAILED'; cls = 'rt-failed'; }
+        else if (conclusion === 'cancelled') { badge = 'CANCELLED'; cls = 'rt-cancelled'; }
+        else if (conclusion === 'skipped') { badge = 'SKIPPED'; cls = 'rt-skipped'; }
+        else { badge = (conclusion || 'COMPLETED').toUpperCase(); cls = 'rt-skipped'; }
+        timeText = 'Last run: ' + toBeijingTime(latest.updated_at);
+      } else {
+        badge = (status || 'UNKNOWN').toUpperCase();
+        cls = 'rt-nodata';
+        timeText = toBeijingTime(latest.created_at);
+      }
+
+      var sha = (latest && latest.head_sha) || (lastSuccess && lastSuccess.head_sha) || '';
+      var runNum = (latest && latest.run_number) ? ('Run #' + latest.run_number) : '';
+
+      if (statusEl) {
+        statusEl.textContent = badge;
+        statusEl.className = 'rt-status ' + cls;
+      }
       if (timeEl) {
-        timeEl.textContent = (entry && entry.last_success_at) ? toBeijingTime(entry.last_success_at) : NA;
-        timeEl.title = 'Last Successful Run · Asia/Shanghai (UTC+8) · 失败/取消的运行不会覆盖此时间';
+        timeEl.textContent = timeText;
+        timeEl.title = 'Asia/Shanghai (UTC+8) · latest.status/conclusion 来自 GitHub Actions 原始值';
       }
       if (shaEl) {
-        /* "SHA: " 前缀由 CSS ::before 提供；无成功运行时保持 empty 以隐藏整行 */
-        shaEl.textContent = (entry && entry.last_success_sha) ? entry.last_success_sha : '';
+        shaEl.textContent = sha ? (sha + (runNum ? '  ·  ' + runNum : '')) : '';
       }
     }
-    fill('scanRunTime', 'scanRunSha', RT.scan);
-    fill('reviewRunTime', 'reviewRunSha', RT.review);
-    fill('evolveRunTime', 'evolveRunSha', RT.evolve);
+    renderOne('scan');
+    renderOne('review');
+    renderOne('evolve');
+  }
+
+  /* 每 60 秒只刷新 runtime 数据，不整页 reload，不触碰其他页面状态 */
+  function refreshRuntime() {
+    window.fetch(dataUrl(), { cache: 'no-store' })
+      .then(function (res) { return res.ok ? res.json() : Promise.reject(new Error('HTTP ' + res.status)); })
+      .then(function (d) {
+        if (d && d.runtimes) {
+          DATA.runtimes = d.runtimes;
+          renderRuntime();
+        }
+      })
+      .catch(function (err) {
+        console.warn('[Dashboard] runtime refresh failed:', err && err.message);
+      });
   }
 
   /* ---------------- 1. Global Market 状态栏 ---------------- */
