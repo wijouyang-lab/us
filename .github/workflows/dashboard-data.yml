@@ -27,6 +27,7 @@ on:
   push:
     paths:
       - dashboard_export.py
+      - dashboard/fetch_runtimes.py
       - dashboard/summarize_run.py
       - .github/workflows/dashboard-data.yml
 
