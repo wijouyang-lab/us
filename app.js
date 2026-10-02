@@ -61,6 +61,20 @@
     var n = Number(v);
     return (typeof n === 'number' && isFinite(n)) ? n : null;
   }
+
+  /* Actionable Option 判定（与后端 MIN_REWARD_RISK = 2.0 同口径）：
+     · Status 必须为 Active
+     · reward_risk 必须可计算且 >= 2.0
+     · reward_risk 缺失/NaN 时绝不默认 Active
+     Rejected 数据仍保留在 CSV 底层，此处只做展示层过滤。 */
+  var MIN_ACTIONABLE_REWARD_RISK = 2.0;
+  function isActionableOption(o) {
+    if (!o) return false;
+    if (String(o.status || '').toLowerCase() !== 'active') return false;
+    var rr = num(o.reward_risk);
+    if (rr === null) return false;
+    return rr >= MIN_ACTIONABLE_REWARD_RISK;
+  }
   function fmt(n, d) {
     d = d == null ? 2 : d;
     return Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
@@ -149,7 +163,10 @@
     DATA = data;
     META = data.meta || {};
     MARKET = data.market || { assets: [], regime: {} };
-    OPTIONS = data.options || [];
+    /* Actionable Options 口径：只有 Status=Active 且 Reward/Risk >= 2.0 才展示。
+       Rejected 仍完整保留在 option_strategies.csv 底层数据中（审计/统计），
+       此处仅在展示层过滤，绝不删除任何数据。 */
+    OPTIONS = (data.options || []).filter(isActionableOption);
     REVIEW = data.review || {};
     HISTORY = data.history || [];
     REVIEWS = (REVIEW && Array.isArray(REVIEW.records)) ? REVIEW.records.slice() : [];

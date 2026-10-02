@@ -26,9 +26,22 @@ MAX_DTE = 90
 TARGET_DTE = 60
 RISK_FREE = 0.04
 # 期权价差质量硬门槛：避免“能算出来”就直接推荐。
+# 注意：这是 candidate / structure selection 门槛，不是最终交易资格门槛。
 MIN_SPREAD_REWARD_RISK = 0.40
 MAX_BREAKEVEN_PCT = 12.0
 MAX_DEBIT_PCT_OF_SPOT = 4.0
+
+# ============================================================
+# 最终交易资格门槛（final actionable trade gate）
+#
+# 与 MIN_SPREAD_REWARD_RISK 概念严格分离：
+#   · MIN_SPREAD_REWARD_RISK(0.40) = 价差候选结构筛选，失败则回退其他结构
+#   · MIN_REWARD_RISK(2.0)         = 最终能否成为 Active / Actionable 推荐
+# 任何策略（含 Short Put、Call Debit Spread、Long Call）都必须跨过 2.0。
+# ============================================================
+MIN_REWARD_RISK = 2.0
+REJECT_REASON_RR_BELOW = "Reward/Risk below 2.0"
+REJECT_REASON_RR_UNAVAILABLE = "Reward/Risk unavailable"
 
 # Short Put 只允许给“长期价值逻辑成立”的 Core；这是确定性风险预算，不是收益保证。
 SHORT_PUT_MIN_QUANT = 70.0
@@ -51,6 +64,81 @@ def _sf(v, default=None):
         return x if math.isfinite(x) else default
     except Exception:
         return default
+
+
+def _safe_num(v):
+    """严格转 float。None / 空串 / 非数字 / NaN / ±inf 一律返回 None。
+
+    用于 Reward/Risk 这类"宁可拒绝也不能误判"的计算，绝不让脏值静默通过。
+    """
+    if v is None:
+        return None
+    if isinstance(v, str) and not v.strip():
+        return None
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(x):
+        return None
+    return x
+
+
+def _valid_qty(v, default=1.0):
+    """校验合约数量：必须为正的有限数，否则 None。"""
+    q = _safe_num(v)
+    if q is None or q <= 0:
+        return None
+    return q
+
+
+def theoretical_reward_risk(max_profit, max_loss, qty=1.0):
+    """Theoretical Reward / Risk = MaxProfit / MaxLoss。
+
+    严格使用真实期权数学定义：
+        Short Put          : MaxProfit = premium × 100 × qty
+                             MaxLoss   = (strike − premium) × 100 × qty
+        Call Debit Spread  : MaxProfit = (width − debit) × 100 × qty
+                             MaxLoss   = debit × 100 × qty
+    本函数只做除法，不修改任何 MaxProfit / MaxLoss 定义。
+
+    任何不可靠输入（None / NaN / inf / 非数字 / max_loss<=0 / qty 无效）
+    一律返回 None，由调用方据此拒绝，绝不默认通过。
+    """
+    q = _valid_qty(qty)
+    if q is None:
+        return None
+    mp = _safe_num(max_profit)
+    ml = _safe_num(max_loss)
+    if mp is None or ml is None:
+        return None
+    if mp < 0:
+        return None
+    if ml <= 0:
+        return None
+    rr = mp / ml
+    if not math.isfinite(rr) or rr < 0:
+        return None
+    return rr
+
+
+def evaluate_trade_eligibility(max_profit, max_loss, qty=1.0):
+    """最终交易资格判定（final actionable trade gate）。
+
+    规则严格为：
+        rr >= MIN_REWARD_RISK (2.0)  -> "Active"
+        rr <  MIN_REWARD_RISK        -> "Rejected" / Reward/Risk below 2.0
+        rr 无法可靠计算 (None/NaN/…)  -> "Rejected" / Reward/Risk unavailable
+
+    返回 (status, reward_risk_raw, reject_reason)。
+    reward_risk_raw 为**未四舍五入**的原始浮点值，gating 只用它（禁止 rounded gating）。
+    """
+    rr = theoretical_reward_risk(max_profit, max_loss, qty)
+    if rr is None:
+        return "Rejected", None, REJECT_REASON_RR_UNAVAILABLE
+    if rr >= MIN_REWARD_RISK:
+        return "Active", rr, ""
+    return "Rejected", rr, REJECT_REASON_RR_BELOW
 
 
 def _norm_date(v):
@@ -438,6 +526,9 @@ def _pick_call_structure(calls: pd.DataFrame, spot: float, dte: int):
                         "net_debit": round(net, 2),
                         "max_loss": round(max_loss, 2),
                         "max_profit": round(max_profit, 2),
+                        # 未四舍五入的原始值，仅供 Reward/Risk gating 使用（禁止 rounded gating）
+                        "_raw_max_profit": max_profit,
+                        "_raw_max_loss": max_loss,
                         "break_even": round(break_even, 2),
                         "reward_risk": round(reward_risk, 3),
                         "breakeven_pct": round(breakeven_pct, 2),
@@ -570,6 +661,19 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
                    else "核心精选偏多；期权链无法构建价差，使用Long Call，最大风险为权利金。")
     call_wall=_wall(calls)
     put_wall=_wall(puts)
+    # ---- 最终交易资格门槛（MIN_REWARD_RISK = 2.0）------------------------
+    # 当前项目不存在可执行的 Planned Risk 数值字段（StopLoss 为纯文本描述），
+    # 因此一律以 Theoretical Reward/Risk 作为最终 gate；
+    # 不伪造 ATR / MA / Support / 百分比等数字风险。
+    # gating 使用**未四舍五入**的原始值，避免 1.999 显示成 2.00 后误判为 Active。
+    _qty = 1.0
+    _raw_mp = structure.get("_raw_max_profit")
+    _raw_ml = structure.get("_raw_max_loss")
+    if _raw_mp is None:
+        _raw_mp = structure.get("max_profit")
+    if _raw_ml is None:
+        _raw_ml = structure.get("max_loss")
+    trade_status, trade_rr, trade_reject_reason = evaluate_trade_eligibility(_raw_mp, _raw_ml, _qty)
     return {
         "Ticker": ticker,"Name":str(item.get("Name",ticker)),"EntryDate":dt.datetime.now(US_TZ).strftime("%Y-%m-%d"),
         "UnderlyingPrice":round(spot,2),"TechnicalClose":round(technical_close,2) if technical_close is not None else "",
@@ -586,7 +690,8 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         "AnnualizedYieldPct":round(structure.get("annualized_yield_pct"),2) if structure.get("annualized_yield_pct") is not None else "",
         "EntryPrice":structure.get("premium_collected",structure.get("net_debit",0.0)),"MaxLoss":structure["max_loss"],
         "MaxProfit":structure.get("max_profit") or "","BreakEven":structure["break_even"],
-        "RewardRisk":structure.get("reward_risk", ""),"BreakevenPct":structure.get("breakeven_pct",""),"DebitPctOfSpot":structure.get("debit_pct",""),
+        # gating 用 trade_rr（raw）；落库保留 10 位精度，避免下游复算时出现 rounded gating
+        "RewardRisk":round(trade_rr,10) if trade_rr is not None else "","BreakevenPct":structure.get("breakeven_pct",""),"DebitPctOfSpot":structure.get("debit_pct",""),
         "Delta":round(structure["delta"],3) if structure.get("delta") is not None else "","PutDelta":round(structure.get("put_delta"),3) if structure.get("put_delta") is not None else "",
         "IV":round(iv,4) if iv is not None else "","IV_Source":structure.get("iv_source","") if iv is not None else "","IV_Regime":_iv_bucket(puts if strategy=="SHORT_PUT" else calls,iv),
         "CallWall":call_wall.get("strike","") if call_wall else "","PutWall":put_wall.get("strike","") if put_wall else "",
@@ -595,7 +700,7 @@ def build_option_recommendation(item: Dict[str, Any]) -> Optional[Dict[str, Any]
         "CallWallSource":call_wall.get("source","") if call_wall else "NO_WALL_DATA","PutWallSource":put_wall.get("source","") if put_wall else "NO_WALL_DATA",
         "EarningsDate":earnings.strftime("%Y-%m-%d") if earnings else "","EarningsDays":earnings_days if earnings_days is not None else "",
         "Direction":"BULLISH" if strategy!="SHORT_PUT" else "BULLISH_VALUE","AssignmentRisk":"潜在指派：美国股票期权可在到期前被提前指派；程序在深度价内/临近到期时提高风险提示。" if strategy=="SHORT_PUT" else "",
-        "Status":"Active","Quantity":1,
+        "Status":trade_status,"Quantity":1,"Reject_Reason":trade_reject_reason,
         "StopLoss":"现金担保Put无固定技术止损；若长期基本面/接货逻辑失效，应重新评估并主动平仓" if strategy=="SHORT_PUT" else "权利金为最大亏损；若正股趋势破坏，Review重新评估",
         "HoldPeriod":"持有至回补/到期；若到期价内，可能按执行价获得100股/张" if strategy=="SHORT_PUT" else "随股票趋势动态管理，期权到期日独立",
         "Reason":rationale+" "+event_note+(f" {structure.get('assignment_note','')}" if strategy=="SHORT_PUT" else ""),
@@ -609,7 +714,7 @@ def append_option_strategy(item: Dict[str, Any]) -> bool:
         return False
     columns = [
         "Ticker", "Name", "EntryDate", "UnderlyingPrice", "TechnicalClose", "PremarketPrice", "PremarketChangePct", "PriceReference", "PremarketAsOfET", "Strategy", "OptionType", "Strike", "LongStrike", "ShortStrike", "Expiry", "DTE", "LongPrice", "ShortPrice",
-        "NetDebit", "PremiumCollected", "CashSecured", "AssignmentPrice", "EffectiveEntry", "PremiumYieldPct", "AnnualizedYieldPct", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "PutDelta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "CallWallOI", "PutWallOI", "CallWallVolume", "PutWallVolume", "CallWallSource", "PutWallSource", "EarningsDate", "EarningsDays", "Direction", "StrategySide", "AssignmentRisk", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore",
+        "NetDebit", "PremiumCollected", "CashSecured", "AssignmentPrice", "EffectiveEntry", "PremiumYieldPct", "AnnualizedYieldPct", "EntryPrice", "MaxLoss", "MaxProfit", "BreakEven", "RewardRisk", "BreakevenPct", "DebitPctOfSpot", "Delta", "PutDelta", "IV", "IV_Source", "IV_Regime", "CallWall", "PutWall", "CallWallOI", "PutWallOI", "CallWallVolume", "PutWallVolume", "CallWallSource", "PutWallSource", "EarningsDate", "EarningsDays", "Direction", "StrategySide", "AssignmentRisk", "Status", "Quantity", "StopLoss", "HoldPeriod", "Reason", "ScanScore", "Reject_Reason",
     ]
     old = pd.DataFrame(columns=columns)
     if os.path.exists(OPTION_FILE) and os.path.getsize(OPTION_FILE) > 0:

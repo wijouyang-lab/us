@@ -1597,6 +1597,36 @@ def classify_wall(value, source, oi):
     return v, clean_text(source) or None, False, "Wall 来源未知，无法确认是否为真实 OI"
 
 
+# ============================================================
+# Options 最终交易资格门槛（与 scan_us_option_engine.MIN_REWARD_RISK 同口径）
+#
+# 仅用于 Dashboard「Actionable Options」展示层过滤：
+#   · 底层 option_strategies.csv 仍完整保留 Rejected 记录（审计/统计/历史分析）
+#   · 只有 Status=Active 且 Reward/Risk >= 2.0 才进入用户可见的 Actionable 列表
+#   · Reward/Risk 无法可靠计算时绝不默认 Active
+# ============================================================
+MIN_ACTIONABLE_REWARD_RISK = 2.0
+
+
+def is_actionable_option(option):
+    """判断一条期权记录是否属于最终可执行的 Actionable 推荐。"""
+    if not option:
+        return False
+    status = str(option.get("status") or "").strip().lower()
+    if status != "active":
+        return False
+    rr = parse_num(option.get("reward_risk"))
+    if rr is None:
+        return False
+    try:
+        rr = float(rr)
+    except (TypeError, ValueError):
+        return False
+    if rr != rr:  # NaN
+        return False
+    return rr >= MIN_ACTIONABLE_REWARD_RISK
+
+
 def build_options(option_rows, anomalies):
     out = []
     for row in option_rows:
@@ -1648,6 +1678,9 @@ def build_options(option_rows, anomalies):
             "entry_date": clean_text(row.get("EntryDate")) or None,
             "underlying_price": round_num(parse_num(row.get("UnderlyingPrice"))),
             "status": clean_text(row.get("Status")) or None,
+            "reject_reason": clean_text(row.get("Reject_Reason")) or None,
+            # gating 专用：保留原始精度，绝不 round（round 会把 1.99999 抹成 2.0 而误判 Active）
+            "reward_risk": parse_num(row.get("RewardRisk")),
             "quantity": int(parse_num(row.get("Quantity"))) if parse_num(row.get("Quantity")) is not None else None,
             "stop_loss": clean_text(row.get("StopLoss")) or None,
             "reason": clean_text(row.get("Reason")) or None,
@@ -2561,10 +2594,14 @@ def main(argv=None):
     }
 
     # ---- OPTIONS ----
-    options = build_options(option_rows, anomalies)
+    all_options = build_options(option_rows, anomalies)
+    # Actionable Options 只保留通过 Reward/Risk 门槛的记录；
+    # Rejected 仍完整保留在 option_strategies.csv 与 all_options 中，仅不进入展示层。
+    options = [o for o in all_options if is_actionable_option(o)]
     # Wall 为空或标记为 LEGACY_INVALID_WALL 时，用 yfinance 真实期权链 OI 重算
     wall_fixed = enrich_option_walls(options, provider, anomalies, notes)
-    active_options = sum(1 for o in options if (o.get("status") or "").lower() == "active")
+    active_options = sum(1 for o in all_options if is_actionable_option(o))
+    rejected_options = sum(1 for o in all_options if not is_actionable_option(o))
 
     # ---- REVIEW ----
     # 用本次抓到的行情补齐当前价（实时价优先，其次最新完整交易日收盘），
@@ -2583,6 +2620,8 @@ def main(argv=None):
     review["price_backfill_attempted"] = backfill["attempted"]
     review["price_backfill_sources"] = backfill["sources"]
     review["active_options_count"] = active_options
+    # Rejected 仅作统计口径，与 Active 严格分开；Rejected 不进入 Actionable Options
+    review["rejected_options_count"] = rejected_options
 
     # Review 历史明细：复用 build_events() 的同一批事件（已按本次行情刷新 cur_price/pnl），
     # 只做字段映射 + rec_date DESC 排序，不重算 Review 口径、不含任何 AI 文本。
