@@ -2430,8 +2430,12 @@ def main(argv=None):
                     help="禁用 Stooq 备用源（默认在前两个源都失败时启用）")
     ap.add_argument("--timeout", type=int, default=REQUEST_TIMEOUT, help="单次行情请求超时秒数")
     ap.add_argument("--retries", type=int, default=2, help="单个 symbol 的 HTTP 重试次数")
+    ap.add_argument("--mirror", action="store_true",
+                    help="显式把 JSON 同步写入 us-market-terminal/dashboard/data/；"
+                         "默认关闭——该目录为已停止维护的旧前端，继续同步会让 dashboard-data "
+                         "的同一批数据在多次运行间产生无意义的重提交冲突。")
     ap.add_argument("--no-mirror", action="store_true",
-                    help="不把 JSON 同步写入 us-market-terminal/dashboard/data/")
+                    help="兼容旧参数（当前已是默认行为）：不写入 us-market-terminal 同步副本")
     ap.add_argument("--runtimes", default=None,
                     help="GitHub Actions workflow 运行元数据 JSON 路径（scan/review/evolve 最近成功 run），"
                          "由 dashboard/fetch_runtimes.py 生成；缺失时输出 runtimes=null")
@@ -2774,8 +2778,10 @@ def main(argv=None):
     text = json.dumps(payload, ensure_ascii=False, indent=2)
     out_path.write_text(text, encoding="utf-8")
     mirror_path = None
-    if not args.no_mirror:
-        # 前端 us-market-terminal/ 若存在，同步写一份，避免两边读到不同版本
+    # 默认不再向已停止维护的旧前端 us-market-terminal/ 写同步副本（需显式 --mirror 才写）。
+    # 原因：该副本与正式 dashboard/data/dashboard_data.json 构成两个同源提交目标，
+    # dashboard-data workflow 多次运行时会在 rebase 阶段产生必然冲突，导致正确数据丢失。
+    if args.mirror:
         mirror_path = SCRIPT_DIR / "us-market-terminal" / "dashboard" / "data" / "dashboard_data.json"
         if mirror_path.resolve() != out_path.resolve() and (SCRIPT_DIR / "us-market-terminal").is_dir():
             mirror_path.parent.mkdir(parents=True, exist_ok=True)

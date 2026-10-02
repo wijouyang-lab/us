@@ -36,8 +36,12 @@ permissions:
   actions: read
 
 concurrency:
+  # dashboard-data 会对同一批数据文件做「生成 → commit → push」。
+  # cancel-in-progress: true 会让已进入 push 阶段的 run 被后一个 run 取消，
+  # 前一个 run 已生成但尚未提交的数据随之丢失（run #951 即此情形）。
+  # 改为 false：后到的 run 排队等待，保证同一时刻只有一个 run 操作 main 分支。
   group: dashboard-data-refresh
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -130,21 +134,48 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # 只提交正式 Dashboard 数据文件。绝不 git add . / git add -A，
+          # 也不提交已停止维护的旧前端 us-market-terminal/（导出层默认已不再产生该副本）。
           git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log
-          if [ -d us-market-terminal/dashboard/data ]; then
-            git add us-market-terminal/dashboard/data/dashboard_data.json
-          fi
           if git diff --cached --quiet; then
             echo "数据无变化，跳过提交"
-          else
+            exit 0
+          fi
+          # 提交范围守卫：出现非预期路径立即失败，避免把无关文件带入 main
+          STAGED="$(git diff --cached --name-only)"
+          echo "待提交文件："
+          echo "$STAGED"
+          if echo "$STAGED" | grep -vE '^dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)$'; then
+            echo "::error::检测到非预期文件进入提交范围，已中止提交"
+            exit 1
+          fi
+          git commit -m "chore(dashboard): refresh market data [skip ci]"
+          # 与并发运行撞车时的重试：
+          #   · 先 fetch 最新 origin/main，绝不使用陈旧远端基准
+          #   · 用 reset --soft 让本轮「已生成的数据」重新成为工作区改动并提交到最新 main 之上
+          #   · 不使用 git pull --rebase —— 两次运行写同一 JSON，rebase 重放必然行级冲突
+          #   · 不使用任何 force push
+          PUSHED=0
+          for i in 1 2 3; do
+            if git push origin main; then
+              PUSHED=1
+              break
+            fi
+            echo "::warning::push 被拒绝（疑似并发提交），基于最新 origin/main 重建提交后重试 ($i/3)"
+            git fetch origin main
+            git reset --soft FETCH_HEAD
+            if git diff --cached --quiet; then
+              echo "远端数据已与本轮一致，无需重复提交"
+              PUSHED=1
+              break
+            fi
             git commit -m "chore(dashboard): refresh market data [skip ci]"
-            # 与并发定时任务撞车时 rebase 到最新 main 再推，避免 fetch-first 拒绝丢数据
-            for i in 1 2 3; do
-              if git push; then
-                break
-              fi
-              echo "push 被拒绝（疑似并发提交），pull --rebase 后重试 ($i/3)"
-              git pull --rebase origin main || git rebase --abort
-            done
-            git push || echo "::warning::重试后仍无法推送，本次数据将在下一轮定时任务覆盖刷新"
+          done
+          if [ "$PUSHED" = "1" ]; then
+            echo "Dashboard 数据已提交并推送"
+          else
+            echo "::error::重试 3 次后仍无法推送；本轮已生成的数据保留在工作区，未回退、未覆盖远端"
+            echo "::error::待提交快照："
+            git diff --cached --stat || true
+            exit 1
           fi
