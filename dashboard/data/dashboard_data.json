@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-02T03:32:18Z",
+  "generated_at": "2026-10-02T03:45:44Z",
   "stocks": [
     {
       "ticker": "ABBV",
@@ -1518,7 +1518,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:32Z",
+        "computed_at": "2026-10-02T03:45:24Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3040,7 +3040,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:32Z",
+        "computed_at": "2026-10-02T03:45:25Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4562,7 +4562,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:33Z",
+        "computed_at": "2026-10-02T03:45:25Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6084,7 +6084,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:33Z",
+        "computed_at": "2026-10-02T03:45:25Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7606,7 +7606,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:33Z",
+        "computed_at": "2026-10-02T03:45:25Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9128,7 +9128,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:34Z",
+        "computed_at": "2026-10-02T03:45:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10650,7 +10650,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:34Z",
+        "computed_at": "2026-10-02T03:45:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12172,7 +12172,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:34Z",
+        "computed_at": "2026-10-02T03:45:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13694,7 +13694,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:35Z",
+        "computed_at": "2026-10-02T03:45:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15216,7 +15216,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:35Z",
+        "computed_at": "2026-10-02T03:45:27Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16738,7 +16738,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:36Z",
+        "computed_at": "2026-10-02T03:45:27Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18260,7 +18260,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:36Z",
+        "computed_at": "2026-10-02T03:45:27Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19782,7 +19782,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:37Z",
+        "computed_at": "2026-10-02T03:45:28Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21304,7 +21304,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:37Z",
+        "computed_at": "2026-10-02T03:45:28Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22826,7 +22826,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:37Z",
+        "computed_at": "2026-10-02T03:45:28Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24348,7 +24348,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:38Z",
+        "computed_at": "2026-10-02T03:45:28Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25870,7 +25870,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:38Z",
+        "computed_at": "2026-10-02T03:45:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27392,7 +27392,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:39Z",
+        "computed_at": "2026-10-02T03:45:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28914,7 +28914,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:39Z",
+        "computed_at": "2026-10-02T03:45:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -30436,7 +30436,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:39Z",
+        "computed_at": "2026-10-02T03:45:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -31958,7 +31958,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:40Z",
+        "computed_at": "2026-10-02T03:45:30Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33480,7 +33480,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:40Z",
+        "computed_at": "2026-10-02T03:45:30Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35002,7 +35002,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:41Z",
+        "computed_at": "2026-10-02T03:45:30Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -36524,7 +36524,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:41Z",
+        "computed_at": "2026-10-02T03:45:30Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38046,7 +38046,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:41Z",
+        "computed_at": "2026-10-02T03:45:31Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -39568,7 +39568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:42Z",
+        "computed_at": "2026-10-02T03:45:31Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -41090,7 +41090,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:42Z",
+        "computed_at": "2026-10-02T03:45:31Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -42612,7 +42612,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:43Z",
+        "computed_at": "2026-10-02T03:45:32Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44134,7 +44134,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-01",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-02T03:30:43Z",
+        "computed_at": "2026-10-02T03:45:32Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44153,11 +44153,11 @@
         "name": "Dow Jones",
         "group": "index",
         "unit": "index point",
-        "price": 50926.6016,
-        "change_1d": 0.0404,
-        "change_5d": -0.8245,
+        "price": 50926.5586,
+        "change_1d": 0.0403,
+        "change_5d": -0.8246,
         "change_20d": -4.0243,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -44175,7 +44175,7 @@
         "change_1d": 0.1949,
         "change_5d": -0.4891,
         "change_20d": -0.002,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -44193,7 +44193,7 @@
         "change_1d": 0.0392,
         "change_5d": -0.2516,
         "change_20d": 2.4936,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -44211,7 +44211,7 @@
         "change_1d": -0.061,
         "change_5d": 4.531,
         "change_20d": 14.3855,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -44229,7 +44229,7 @@
         "change_1d": 0.0,
         "change_5d": 1.4529,
         "change_20d": 9.1952,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -44247,7 +44247,7 @@
         "change_1d": 0.0,
         "change_5d": 3.0859,
         "change_20d": 9.7619,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -44265,7 +44265,7 @@
         "change_1d": 0.0,
         "change_5d": -0.398,
         "change_20d": 9.9517,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -44283,7 +44283,7 @@
         "change_1d": 0.0,
         "change_5d": 2.6003,
         "change_20d": 6.3793,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -44297,16 +44297,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.98,
+        "price": 101.952,
         "change_1d": 0.0,
-        "change_5d": 0.6812,
-        "change_20d": 2.4307,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "change_5d": 0.6536,
+        "change_20d": 2.4026,
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911200,
+        "quote_ts": 1790912100,
         "last_bar_date": "2026-10-01"
       },
       {
@@ -44315,16 +44315,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4201.5,
+        "price": 4204.6001,
         "change_1d": 0.0,
-        "change_5d": -2.2452,
-        "change_20d": -4.8272,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "change_5d": -2.1731,
+        "change_20d": -4.7569,
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911260,
+        "quote_ts": 1790912100,
         "last_bar_date": "2026-10-01"
       },
       {
@@ -44333,16 +44333,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 61.29,
+        "price": 61.425,
         "change_1d": 0.0,
-        "change_5d": -3.4149,
-        "change_20d": -5.3041,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "change_5d": -3.2022,
+        "change_20d": -5.0956,
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911320,
+        "quote_ts": 1790912100,
         "last_bar_date": "2026-10-01"
       },
       {
@@ -44351,16 +44351,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.559,
+        "price": 6.5595,
         "change_1d": 0.0,
-        "change_5d": -2.374,
-        "change_20d": 0.8922,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "change_5d": -2.3666,
+        "change_20d": 0.8999,
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911260,
+        "quote_ts": 1790912100,
         "last_bar_date": "2026-10-01"
       },
       {
@@ -44369,16 +44369,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 92.56,
+        "price": 92.64,
         "change_1d": 0.0,
-        "change_5d": -2.1668,
-        "change_20d": 1.7031,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "change_5d": -2.0822,
+        "change_20d": 1.791,
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911260,
+        "quote_ts": 1790912100,
         "last_bar_date": "2026-10-01"
       },
       {
@@ -44387,16 +44387,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 102.13,
+        "price": 102.22,
         "change_1d": 0.0,
-        "change_5d": -4.1932,
-        "change_20d": 6.797,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "change_5d": -4.1088,
+        "change_20d": 6.8911,
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911260,
+        "quote_ts": 1790912100,
         "last_bar_date": "2026-10-01"
       },
       {
@@ -44409,12 +44409,12 @@
         "change_1d": 0.0,
         "change_5d": -11.1617,
         "change_20d": -0.9134,
-        "updated_at": "2026-10-02T03:30:43Z",
+        "updated_at": "2026-10-02T03:45:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1790911260,
+        "quote_ts": 1790911920,
         "last_bar_date": "2026-10-01"
       }
     ],
@@ -44427,12 +44427,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-02T03:32:16Z"
+    "updated_at": "2026-10-02T03:45:43Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-01 23:32:18",
+    "as_of_us": "2026-10-01 23:45:44",
     "window_start": "2026-09-01",
     "core_closed_count": 4,
     "core_open_count": 13,
@@ -53750,8 +53750,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-02T03:32:16Z",
-    "technical_updated_at": "2026-10-02T03:32:18Z",
+    "market_updated_at": "2026-10-02T03:45:43Z",
+    "technical_updated_at": "2026-10-02T03:45:44Z",
     "counts": {
       "core": 19,
       "observation": 10,
