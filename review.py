@@ -382,6 +382,9 @@ TRADE_COLUMNS = [
     "Stop_Loss","Stop_Method","Trail_Stop","Exit_Date","Exit_Price","Status",
     "Close_Price","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score",
     "MA20","MA50","ATR_Pct","MACD金叉","周线共振","KDJ_J回升","量能放大","周期共振",
+    # 上下文/元数据字段（context only）：仅从 pending CSV 原样透传，供 Dashboard 展示。
+    # 不参与任何 Entry / PnL / Stop / 胜率 / 持仓状态 / Options 逻辑，不得重算或重新推导。
+    "Market_Regime","VIX","Sector_RS_20D_Pct",
     "Review_Risk_Status","Review_Risk_Date","Review_Stop_Distance_Pct","Review_Risk_Note"
 ]
 
@@ -644,6 +647,10 @@ def supplement_us_stocks_from_pending():
                     "KDJ_J回升": clean_text(row.get("KDJ_J回升")),
                     "量能放大": clean_text(row.get("量能放大")),
                     "周期共振": clean_text(row.get("周期共振")),
+                    # 上下文/元数据：原样透传 pending CSV 的值，不重算、不重新抓取、不推导
+                    "Market_Regime": clean_text(row.get("Market_Regime")),
+                    "VIX": clean_text(row.get("VIX")),
+                    "Sector_RS_20D_Pct": clean_text(row.get("Sector_RS_20D_Pct")),
                     "Review_Risk_Status": "",
                     "Review_Risk_Date": "",
                     "Review_Stop_Distance_Pct": "",

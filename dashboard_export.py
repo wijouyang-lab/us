@@ -1026,6 +1026,9 @@ _TRADE_TO_PENDING = {
     "技术评分": "技术评分", "技术确认数": "技术确认数",
     "技术确认信号": "技术确认信号", "估值评分": "估值评分",
     "Sector_RS_20D_Pct": "Sector_RS_20D_Pct",
+    # 上下文/元数据透传（来自 pending CSV，review.py 已纳入 TRADE_COLUMNS）
+    "Market_Regime": "Market_Regime",
+    "VIX": "VIX",
     "Status": "Status",
 }
 
@@ -1099,8 +1102,12 @@ def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
         row = {"Ticker": ticker, "Date": rec_date_str}
         for tcol, pcol in _TRADE_TO_PENDING.items():
             row[pcol] = r.get(tcol, "")
-        # rec_price 作为 Scan_Ref_Price（build_stocks 的价格回退链会用到）
+        # rec_price 作为 Scan_Ref_Price（build_stocks 的价格回退链会用到）—— 保留旧逻辑，勿删
         row["Scan_Ref_Price"] = str(rec_price)
+        # 独立买入价字段：正式买入价 = trade_history 的 Price（推荐日真实 Open）。
+        # 与 Scan_Ref_Price（价格回退链）分离，供 stocks[].rec_price 与前端展示使用；
+        # 不替代 Scan_Ref_Price，也不参与任何价格回退/回算。
+        row["Rec_Price"] = str(rec_price)
         row["Prev_Close"] = r.get("Close_Price", "") or r.get("Price", "")
         if not row.get("Name"):
             row["Name"] = ticker
@@ -1230,6 +1237,10 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
                 f"{ticker}|{clean_text(row.get('Date')) or ''}|{raw_tag}" if raw_tag else None
             ),
             "recommendation_date": clean_text(row.get("Date")) or None,
+            # 正式买入价 = trade_history 的 Price（推荐日真实 Open），经 Rec_Price 独立透传。
+            # 与 price（当前价）/ prev_close（前收）语义严格区分，三者互不等同；
+            # 仅用于展示，不参与任何价格回退、止损、PnL 或胜率计算。缺失时为 None（前端显示 —）。
+            "rec_price": round_num(parse_num(row.get("Rec_Price")), 2),
             "recommendation_tag": raw_tag,
             "ai_snapshot_id": clean_text(row.get("Snapshot_ID")) or None,
             "ai_snapshot_date": clean_text(row.get("Snapshot_Update_Date")) or None,

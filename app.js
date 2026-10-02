@@ -207,7 +207,12 @@
         bucket: s.bucket === 'Core' ? 'core' : 'obs',
         bucketLabel: s.bucket || NA,
         status: s.status || '',
+        /* 三个价格语义严格区分，互不替代：
+           px        = 当前价（Current Price）
+           recPrice  = 正式买入价（= 推荐日真实 Open，缺失为 null）
+           prevClose = 前收（Prev Close） */
         px: num(s.price),
+        recPrice: num(s.rec_price),
         pct: num(s.change_1d),
         prevClose: num(s.prev_close),
         s: {
@@ -1049,6 +1054,8 @@
     $('#posMatrix').innerHTML =
       mx('Bucket', esc(s.bucketLabel)) +
       mx('Status', esc(s.status || NA)) +
+      /* 买入价 = 正式买入价（推荐日真实 Open）；缺失时 nv() 返回 —，不会 NaN/undefined */
+      mx('买入价', nv(s.recPrice, 2)) +
       mx('Price', nv(s.px, 2)) +
       mx('Prev Close', nv(s.prevClose, 2)) +
       mx('Change 1D', s.pct === null ? NA : signed(s.pct) + '%', s.pct === null ? '' : dirCls(s.pct)) +
