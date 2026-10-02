@@ -41,7 +41,6 @@ history 条数         : 44
 AI 六段状态          : partial（15/29 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
-同步副本             : /home/runner/work/us/us/us-market-terminal/dashboard/data/dashboard_data.json
 字段 null 统计       : {'quant_score': 10, 'ai_score': 10, 'fundamental_score': 10, 'technical_score': 10, 'risk_liquidity_score': 10, 'pe_ttm': 10, 'pe_forward': 10, 'pb': 10, 'eps_ttm': 10, 'roe': 12, 'revenue_growth': 10, 'earnings_growth': 11, 'profit_margin': 10, 'market_cap': 10, 'market_regime': 29, 'vix': 29}
 缺失字段             : ['regime.market', 'regime.vix']
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
