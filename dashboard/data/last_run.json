@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-02T18:30:54Z",
-  "market_updated_at": "2026-10-02T18:30:53Z",
-  "technical_updated_at": "2026-10-02T18:30:54Z",
+  "generated_at": "2026-10-02T18:45:45Z",
+  "market_updated_at": "2026-10-02T18:45:43Z",
+  "technical_updated_at": "2026-10-02T18:45:45Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,13 +17,13 @@
     "missing": []
   },
   "stocks": {
-    "total": 29,
-    "core": 19,
-    "observation": 10,
-    "kline_ok": 29,
-    "technical_ok": 29,
+    "total": 37,
+    "core": 21,
+    "observation": 16,
+    "kline_ok": 37,
+    "technical_ok": 37,
     "price_source_breakdown": {
-      "realtime": 29
+      "realtime": 37
     }
   },
   "review": {
@@ -44,11 +44,11 @@
     "scan": {
       "latest": {
         "run_id": 37046849987,
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "created_at": "2026-10-02T18:21:12Z",
         "started_at": "2026-10-02T18:21:12Z",
-        "updated_at": "2026-10-02T18:21:16Z",
+        "updated_at": "2026-10-02T18:34:47Z",
         "head_sha": "9c79d6903b40",
         "event": "schedule",
         "run_number": 149,
@@ -56,9 +56,9 @@
         "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37046849987"
       },
       "last_success": {
-        "run_id": 36757957242,
-        "completed_at": "2026-09-30T18:35:06Z",
-        "head_sha": "9737418287b7"
+        "run_id": 37046849987,
+        "completed_at": "2026-10-02T18:34:47Z",
+        "head_sha": "9c79d6903b40"
       },
       "error": null
     },
