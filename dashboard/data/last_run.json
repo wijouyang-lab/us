@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-03T01:02:12Z",
-  "market_updated_at": "2026-10-03T01:02:11Z",
-  "technical_updated_at": "2026-10-03T01:02:12Z",
+  "generated_at": "2026-10-03T01:15:47Z",
+  "market_updated_at": "2026-10-03T01:15:45Z",
+  "technical_updated_at": "2026-10-03T01:15:47Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,24 +17,24 @@
     "missing": []
   },
   "stocks": {
-    "total": 37,
-    "core": 21,
+    "total": 34,
+    "core": 18,
     "observation": 16,
-    "kline_ok": 37,
-    "technical_ok": 37,
+    "kline_ok": 34,
+    "technical_ok": 34,
     "price_source_breakdown": {
-      "realtime": 37
+      "realtime": 34
     }
   },
   "review": {
     "core_closed": 4,
-    "core_open": 13,
+    "core_open": 15,
     "observation_closed": 5,
-    "observation_open": 95,
-    "actual_active": 9,
+    "observation_open": 101,
+    "actual_active": 8,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
-    "price_backfill_count": 10,
+    "price_backfill_count": 11,
     "partial_items": []
   },
   "warnings": [],
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 36951145171,
+        "run_id": 37084416266,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-02T01:29:05Z",
-        "started_at": "2026-10-02T01:29:05Z",
-        "updated_at": "2026-10-02T01:34:07Z",
-        "head_sha": "92f0e4d4ab04",
+        "created_at": "2026-10-03T01:00:47Z",
+        "started_at": "2026-10-03T01:00:47Z",
+        "updated_at": "2026-10-03T01:02:52Z",
+        "head_sha": "b3fae44c8c11",
         "event": "schedule",
-        "run_number": 125,
+        "run_number": 126,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/36951145171"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37084416266"
       },
       "last_success": {
-        "run_id": 36951145171,
-        "completed_at": "2026-10-02T01:34:07Z",
-        "head_sha": "92f0e4d4ab04"
+        "run_id": 37084416266,
+        "completed_at": "2026-10-03T01:02:52Z",
+        "head_sha": "b3fae44c8c11"
       },
       "error": null
     },
