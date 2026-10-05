@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-05T21:11:22Z",
-  "market_updated_at": "2026-10-05T21:11:20Z",
-  "technical_updated_at": "2026-10-05T21:11:22Z",
+  "generated_at": "2026-10-05T21:21:36Z",
+  "market_updated_at": "2026-10-05T21:21:34Z",
+  "technical_updated_at": "2026-10-05T21:21:36Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -44,11 +44,11 @@
     "scan": {
       "latest": {
         "run_id": 37373620155,
-        "status": "queued",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "created_at": "2026-10-05T21:04:23Z",
         "started_at": "2026-10-05T21:04:23Z",
-        "updated_at": "2026-10-05T21:04:23Z",
+        "updated_at": "2026-10-05T21:19:27Z",
         "head_sha": "110d15dd50a5",
         "event": "schedule",
         "run_number": 150,
