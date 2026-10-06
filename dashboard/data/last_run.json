@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-06T02:00:50Z",
-  "market_updated_at": "2026-10-06T02:00:49Z",
-  "technical_updated_at": "2026-10-06T02:00:50Z",
+  "generated_at": "2026-10-06T02:15:45Z",
+  "market_updated_at": "2026-10-06T02:15:44Z",
+  "technical_updated_at": "2026-10-06T02:15:45Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,13 +17,13 @@
     "missing": []
   },
   "stocks": {
-    "total": 34,
-    "core": 18,
+    "total": 30,
+    "core": 14,
     "observation": 16,
-    "kline_ok": 34,
-    "technical_ok": 34,
+    "kline_ok": 30,
+    "technical_ok": 30,
     "price_source_breakdown": {
-      "realtime": 34
+      "realtime": 30
     }
   },
   "review": {
@@ -31,7 +31,7 @@
     "core_open": 15,
     "observation_closed": 4,
     "observation_open": 83,
-    "actual_active": 8,
+    "actual_active": 5,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
     "price_backfill_count": 11,
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 37084416266,
+        "run_id": 37402692643,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-03T01:00:47Z",
-        "started_at": "2026-10-03T01:00:47Z",
-        "updated_at": "2026-10-03T01:02:52Z",
-        "head_sha": "b3fae44c8c11",
+        "created_at": "2026-10-06T02:08:37Z",
+        "started_at": "2026-10-06T02:08:37Z",
+        "updated_at": "2026-10-06T02:11:14Z",
+        "head_sha": "c8e7ce40448e",
         "event": "schedule",
-        "run_number": 126,
+        "run_number": 127,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37084416266"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37402692643"
       },
       "last_success": {
-        "run_id": 37084416266,
-        "completed_at": "2026-10-03T01:02:52Z",
-        "head_sha": "b3fae44c8c11"
+        "run_id": 37402692643,
+        "completed_at": "2026-10-06T02:11:14Z",
+        "head_sha": "c8e7ce40448e"
       },
       "error": null
     },
