@@ -2,8 +2,8 @@
 dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
-[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
-当前有效股票池：30 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+pending CSV（本次 Scan 新推荐）：us_stocks_pending_20261006.csv
+当前有效股票池：35 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
@@ -21,17 +21,19 @@ $XAGUSD=X: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
 全球市场：15/15 可用，实时 15 只（CNBC 现货收益率 0 只；盘外静态收盘 0 只；绝不使用旧 JSON 宏观缓存）
+$EDGM: possibly delisted; no price data found  (period=1d)
 $HIRU: possibly delisted; no price data found  (period=1d)
+$RGBP: possibly delisted; no price data found  (period=1d)
 已读取 workflow runtimes：runtimes.json
 [INFO] 未发现 portfolio_50000_meta.json，Portfolio 尚未初始化，输出 null
 --------------------------------------------------------------
-pending CSV          : （无）   股票名单来源：active_events
+pending CSV          : us_stocks_pending_20261006.csv   股票名单来源：active_events
 Core 数量            : 14
-Observation 数量     : 16
+Observation 数量     : 21
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 30 / 0   技术指标成功 30/30
-当前价来源           : 实时 30 · 最新收盘 0 · 合计可取 30/30
+K线成功 / 失败       : 35 / 0   技术指标成功 35/35
+当前价来源           : 实时 35 · 最新收盘 0 · 合计可取 35/35
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 15  [complete]
@@ -39,9 +41,9 @@ Review 数据状态      :
    · observation_open_count       = 83  [complete]
    · actual_active_count          = 5  [complete]
 history 条数         : 45
-AI 六段状态          : partial（18/30 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
+AI 六段状态          : partial（23/35 只股票有内容，来源 Scan 2026-10-06）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
-字段 null 统计       : {'quant_score': 9, 'ai_score': 9, 'fundamental_score': 9, 'technical_score': 9, 'risk_liquidity_score': 9, 'pe_ttm': 9, 'pe_forward': 9, 'pb': 9, 'eps_ttm': 9, 'roe': 10, 'revenue_growth': 9, 'earnings_growth': 10, 'profit_margin': 9, 'market_cap': 9, 'market_regime': 22, 'vix': 22}
+字段 null 统计       : {'quant_score': 9, 'ai_score': 9, 'fundamental_score': 9, 'technical_score': 9, 'risk_liquidity_score': 9, 'pe_ttm': 9, 'pe_forward': 9, 'pb': 9, 'eps_ttm': 9, 'roe': 10, 'revenue_growth': 9, 'earnings_growth': 12, 'profit_margin': 9, 'market_cap': 9, 'market_regime': 22, 'vix': 22}
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
