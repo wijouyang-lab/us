@@ -417,3 +417,13 @@ button{font-family:inherit}
   .ms-row{gap:5px}
   .ms-title{display:none}
 }
+
+/* ===== $50,000 Long-Term Portfolio ===== */
+.pf-tbl{width:100%;border-collapse:collapse;font-size:12px;margin-top:6px}
+.pf-tbl th,.pf-tbl td{padding:5px 7px;text-align:right;border-bottom:1px solid rgba(148,163,184,.16);white-space:nowrap}
+.pf-tbl th{color:var(--muted,#94a3b8);font-weight:600;font-size:11px;text-align:right}
+.pf-tbl td:first-child,.pf-tbl th:first-child,
+.pf-tbl td.tk,.pf-tbl th:nth-child(2){text-align:left;font-weight:700}
+.pf-tbl td.rsn{text-align:left;color:var(--muted,#94a3b8);max-width:260px;overflow:hidden;text-overflow:ellipsis}
+.pf-tbl tr:last-child td{border-bottom:none}
+.pf-hd{margin:12px 0 2px;font-size:12px;font-weight:700;color:var(--muted,#94a3b8)}

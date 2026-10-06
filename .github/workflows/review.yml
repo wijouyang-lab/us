@@ -49,6 +49,11 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python review.py
 
+      # $50,000 长期模拟投资组合：只读取 trade_history 的推荐与 Review 裁决，
+      # 不重新实现止损；账本由 portfolio_50000.py 确定性维护并幂等落盘。
+      - name: 更新 $50,000 Portfolio Ledger
+        run: python portfolio_50000.py --data-dir .
+
       # 安全网：即使后面 git push 失败，本轮复盘产物也不会随 runner 销毁而丢失
       - name: 上传复盘产物（防止推送失败导致数据丢失）
         if: always()
@@ -61,12 +66,24 @@ jobs:
             option_strategies.csv
             review_report.html
             us_stocks_pending_*.csv.processed
+            portfolio_50000_meta.json
+            portfolio_50000_positions.csv
+            portfolio_50000_transactions.csv
+            portfolio_50000_history.csv
           if-no-files-found: warn
 
       - name: 提交账本和处理记录
         run: |
           # 只 add 明确需要持久化的业务文件，绝不 git add -A
           git add trade_history.csv review_history.csv
+
+          # $50,000 Portfolio Ledger：必须随复盘一并入库，否则账户状态会丢失
+          if [ -f portfolio_50000_meta.json ]; then
+            git add portfolio_50000_meta.json
+            git add portfolio_50000_positions.csv
+            git add portfolio_50000_transactions.csv
+            git add portfolio_50000_history.csv
+          fi
 
           # review.py 平仓时会改写期权账本，必须入库
           if [ -f option_strategies.csv ]; then

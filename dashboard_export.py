@@ -2415,6 +2415,120 @@ def count_nulls(stocks, keys):
     return res
 
 
+def build_portfolio(data_dir: Path):
+    """$50,000 长期模拟投资组合（Portfolio Ledger）。
+
+    只读消费 portfolio_50000_*.csv / meta.json —— 本导出层绝不写回、绝不重算盈亏。
+    文件不存在（尚未初始化）时返回 None，前端显示「尚未初始化」。
+    """
+    meta_p = data_dir / "portfolio_50000_meta.json"
+    pos_p = data_dir / "portfolio_50000_positions.csv"
+    txn_p = data_dir / "portfolio_50000_transactions.csv"
+    his_p = data_dir / "portfolio_50000_history.csv"
+    if not meta_p.exists():
+        log("[INFO] 未发现 portfolio_50000_meta.json，Portfolio 尚未初始化，输出 null")
+        return None
+    try:
+        meta = json.loads(meta_p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] portfolio meta 解析失败（{e}），Portfolio 输出 null")
+        return None
+
+    hist_rows = read_csv_rows(his_p)
+    hist_rows = sorted(hist_rows, key=lambda r: clean_text(r.get("Date")))
+    last = hist_rows[-1] if hist_rows else {}
+    asof = clean_text(last.get("Date")) or None
+
+    def _days(entry_date):
+        """持仓天数：以最近一次快照日为基准（不依赖本地时钟，避免跨时区漂移）。"""
+        if not asof or not entry_date:
+            return None
+        try:
+            d1 = dt.date.fromisoformat(entry_date)
+            d2 = dt.date.fromisoformat(asof)
+            return max((d2 - d1).days, 0)
+        except Exception:
+            return None
+
+    positions = []
+    for r in read_csv_rows(pos_p):
+        if clean_text(r.get("Status")).upper() != "OPEN":
+            continue
+        entry_date = clean_text(r.get("Entry_Date")) or None
+        positions.append({
+            "portfolio_id": clean_text(r.get("Portfolio_ID")) or None,
+            "unit_id": clean_text(r.get("Unit_ID")) or None,
+            "ticker": clean_text(r.get("Ticker")).upper() or None,
+            "shares": int(parse_num(r.get("Shares")) or 0),
+            "entry_price": round_num(parse_num(r.get("Entry_Price")), 2),
+            "entry_date": entry_date,
+            "cost_basis": round_num(parse_num(r.get("Cost_Basis")), 2),
+            "current_price": round_num(parse_num(r.get("Current_Price")), 2),
+            "market_value": round_num(parse_num(r.get("Market_Value")), 2),
+            "unrealized_pnl": round_num(parse_num(r.get("Unrealized_PnL")), 2),
+            "unrealized_pnl_pct": round_num(parse_num(r.get("Unrealized_PnL_Pct")), 2),
+            "weight_pct": round_num(parse_num(r.get("Weight_Pct")), 2),
+            "stop_loss": clean_text(r.get("Stop_Loss")) or None,
+            "holding_days": _days(entry_date),
+        })
+
+    txns = []
+    for r in read_csv_rows(txn_p):
+        txns.append({
+            "date": clean_text(r.get("Date")) or None,
+            "ticker": clean_text(r.get("Ticker")).upper() or None,
+            "action": clean_text(r.get("Action")).upper() or None,
+            "shares": int(parse_num(r.get("Shares")) or 0),
+            "price": round_num(parse_num(r.get("Price")), 2),
+            "amount": round_num(parse_num(r.get("Amount")), 2),
+            "realized_pnl": round_num(parse_num(r.get("Realized_PnL")), 2),
+            "reason": clean_text(r.get("Reason")) or None,
+            "unit_id": clean_text(r.get("Unit_ID")) or None,
+        })
+    txns = sorted(txns, key=lambda t: (t["date"] or ""), reverse=True)[:20]
+
+    curve = [{
+        "date": clean_text(r.get("Date")) or None,
+        "total_equity": round_num(parse_num(r.get("Total_Equity")), 2),
+        "cash": round_num(parse_num(r.get("Cash")), 2),
+        "stock_value": round_num(parse_num(r.get("Stock_Value")), 2),
+    } for r in hist_rows]
+
+    # Equity Curve 原点必须是 $50,000：账户起始日的真实状态就是"全现金、无持仓"。
+    # 起始日快照会被同日 upsert 覆盖（当日已有浮动盈亏），因此这里显式补齐原点，
+    # 保证曲线永远从 Initial Capital 出发，而不是从当日盯市后的数值出发。
+    initial = round_num(parse_num(meta.get("initial_capital")), 2)
+    start = clean_text(meta.get("start_date")) or None
+    if initial is not None:
+        if not curve or curve[0]["date"] != start or curve[0]["total_equity"] != initial:
+            curve.insert(0, {
+                "date": start,
+                "total_equity": initial,
+                "cash": initial,
+                "stock_value": 0.0,
+            })
+
+    return {
+        "portfolio_id": clean_text(meta.get("portfolio_id")) or None,
+        "initial_capital": round_num(parse_num(meta.get("initial_capital")), 2),
+        "start_date": clean_text(meta.get("start_date")) or None,
+        "unit_dollars": round_num(parse_num(meta.get("unit_dollars")), 2),
+        "max_open_positions": int(parse_num(meta.get("max_open_positions")) or 0) or None,
+        "asof": asof,
+        "cash": round_num(parse_num(last.get("Cash")), 2),
+        "stock_value": round_num(parse_num(last.get("Stock_Value")), 2),
+        "total_equity": round_num(parse_num(last.get("Total_Equity")), 2),
+        "realized_pnl": round_num(parse_num(last.get("Realized_PnL")), 2),
+        "unrealized_pnl": round_num(parse_num(last.get("Unrealized_PnL")), 2),
+        "total_pnl": round_num(parse_num(last.get("Total_PnL")), 2),
+        "return_pct": round_num(parse_num(last.get("Return_Pct")), 2),
+        "open_positions": int(parse_num(last.get("Open_Positions")) or 0),
+        "positions": positions,
+        "transactions": txns,
+        "equity_curve": curve,
+    }
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="生成 Dashboard 使用的 dashboard_data.json（只读导出层）")
     ap.add_argument("--data-dir", default=str(SCRIPT_DIR),
@@ -2687,6 +2801,9 @@ def main(argv=None):
         else:
             log(f"[WARN] runtimes 文件不存在：{args.runtimes}，runtimes 置 null")
 
+    # ---- $50,000 长期模拟投资组合（只读消费 portfolio_50000_*.csv，不写回）----
+    portfolio = build_portfolio(data_dir)
+
     # ---- 组装 ----
     payload = {
         "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -2696,6 +2813,7 @@ def main(argv=None):
         "review": review,
         "history": history,
         "runtimes": runtimes,
+        "portfolio": portfolio,
         "meta": {
             "data_source": (
                 f"{(pending_path.name + ' + ') if pending_path else ''}"

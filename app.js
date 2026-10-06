@@ -347,6 +347,157 @@
   /* =========================================================
      渲染入口
      ========================================================= */
+  /* ---------------- $50,000 Long-Term Portfolio ---------------- */
+  /* 数据来源：portfolio_50000_*.csv（由 portfolio_50000.py 维护），
+     经 dashboard_export.py 原样透传。前端只做展示与两位小数格式化，不重算盈亏。 */
+  function renderPortfolio() {
+    var pf = DATA.portfolio;
+    var sumEl = $('#pfSummary'), posEl = $('#pfPositions'),
+        txEl = $('#pfTxns'), cv = $('#pfCurve');
+    if (!sumEl) return;
+
+    if (!pf) {
+      sumEl.innerHTML = '<div class="mx"><div class="k">状态</div>' +
+        '<div class="v na">尚未初始化（首次 Review 运行后自动建立）</div></div>';
+      if (posEl) posEl.innerHTML = '';
+      if (txEl) txEl.innerHTML = '';
+      if (cv) cv.style.display = 'none';
+      return;
+    }
+    if (cv) cv.style.display = '';
+
+    // --- 概览 ---
+    var tp = num(pf.total_pnl) || 0;
+    var ret = num(pf.return_pct) || 0;
+    var cells = '';
+    cells += cell('Initial Capital', '$' + nv(pf.initial_capital, 2));
+    cells += cell('Total Equity', '$' + nv(pf.total_equity, 2));
+    cells += cell('Total PnL', (tp > 0 ? '+' : '') + '$' + nv(tp, 2), pctCls(tp));
+    cells += cell('Return %', (ret > 0 ? '+' : '') + nv(ret, 2) + '%', pctCls(ret));
+    cells += cell('Cash', '$' + nv(pf.cash, 2));
+    cells += cell('Stock Value', '$' + nv(pf.stock_value, 2));
+    cells += cell('Realized PnL', '$' + nv(pf.realized_pnl, 2), pctCls(num(pf.realized_pnl)));
+    cells += cell('Unrealized PnL', '$' + nv(pf.unrealized_pnl, 2), pctCls(num(pf.unrealized_pnl)));
+    cells += cell('Open Units', (pf.open_positions == null ? NA : pf.open_positions) +
+      ' / ' + (pf.max_open_positions == null ? NA : pf.max_open_positions));
+    cells += cell('Start Date', esc(pf.start_date || NA));
+    sumEl.innerHTML = '<div class="matrix">' + cells + '</div>';
+
+    // --- 持仓 ---
+    var ps = pf.positions || [];
+    if (!ps.length) {
+      posEl.innerHTML = '<div class="mx"><div class="k">当前持仓</div>' +
+        '<div class="v na">空仓（等待新的 Core 推荐触发建仓）</div></div>';
+    } else {
+      var h = '<table class="pf-tbl"><thead><tr>' +
+        '<th>Unit</th><th>Ticker</th><th>Shares</th><th>Entry</th><th>Current</th>' +
+        '<th>Market Value</th><th>Unrealized</th><th>Return %</th><th>Weight %</th>' +
+        '<th>Stop</th><th>Days</th></tr></thead><tbody>';
+      ps.forEach(function (p) {
+        var up = num(p.unrealized_pnl) || 0, rt = num(p.unrealized_pnl_pct) || 0;
+        h += '<tr>' +
+          '<td>' + esc(p.unit_id || NA) + '</td>' +
+          '<td class="tk">' + esc(p.ticker || NA) + '</td>' +
+          '<td>' + (p.shares == null ? NA : p.shares) + '</td>' +
+          '<td>$' + nv(p.entry_price, 2) + '</td>' +
+          '<td>$' + nv(p.current_price, 2) + '</td>' +
+          '<td>$' + nv(p.market_value, 2) + '</td>' +
+          '<td class="' + pctCls(up) + '">' + (up > 0 ? '+' : '') + '$' + nv(up, 2) + '</td>' +
+          '<td class="' + pctCls(rt) + '">' + (rt > 0 ? '+' : '') + nv(rt, 2) + '%</td>' +
+          '<td>' + nv(p.weight_pct, 2) + '%</td>' +
+          '<td>' + esc(p.stop_loss || NA) + '</td>' +
+          '<td>' + (p.holding_days == null ? NA : p.holding_days) + '</td>' +
+          '</tr>';
+      });
+      h += '</tbody></table>';
+      posEl.innerHTML = h;
+    }
+
+    // --- 最近交易 ---
+    var ts = pf.transactions || [];
+    if (!ts.length) {
+      txEl.innerHTML = '';
+    } else {
+      var th = '<div class="pf-hd">Recent Portfolio Transactions</div>' +
+        '<table class="pf-tbl"><thead><tr><th>Date</th><th>Action</th><th>Ticker</th>' +
+        '<th>Shares</th><th>Price</th><th>Amount</th><th>Realized PnL</th><th>Reason</th>' +
+        '</tr></thead><tbody>';
+      ts.forEach(function (t) {
+        var rp = num(t.realized_pnl);
+        th += '<tr>' +
+          '<td>' + esc(t.date || NA) + '</td>' +
+          '<td class="' + (String(t.action).toUpperCase() === 'BUY' ? 'up' : 'down') + '">' +
+          esc(t.action || NA) + '</td>' +
+          '<td class="tk">' + esc(t.ticker || NA) + '</td>' +
+          '<td>' + (t.shares == null ? NA : t.shares) + '</td>' +
+          '<td>$' + nv(t.price, 2) + '</td>' +
+          '<td>$' + nv(t.amount, 2) + '</td>' +
+          '<td class="' + (rp ? pctCls(rp) : '') + '">' +
+          (rp == null ? NA : (rp > 0 ? '+' : '') + '$' + nv(rp, 2)) + '</td>' +
+          '<td class="rsn">' + esc(t.reason || NA) + '</td>' +
+          '</tr>';
+      });
+      th += '</tbody></table>';
+      txEl.innerHTML = th;
+    }
+
+    drawPortfolioCurve(pf);
+  }
+
+  /* Equity Curve：横轴日期、纵轴 Total Equity，起点恒为 $50,000 */
+  function drawPortfolioCurve(pf) {
+    var cv = document.getElementById('pfCurve');
+    if (!cv || typeof cv.getContext !== 'function') return;
+    var curve = pf.equity_curve || [];
+    var dpr = window.devicePixelRatio || 1;
+    var w = cv.clientWidth || 600, h = 180;
+    cv.width = w * dpr; cv.height = h * dpr;
+    var g = cv.getContext('2d');
+    if (!g) return;
+    g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    g.clearRect(0, 0, w, h);
+
+    var pts = [];
+    curve.forEach(function (c) { var v = num(c.total_equity); if (v != null) pts.push(v); });
+    if (!pts.length) return;
+
+    var pad = 26, base = num(pf.initial_capital) || 50000;
+    var min = Math.min.apply(null, pts.concat([base]));
+    var max = Math.max.apply(null, pts.concat([base]));
+    if (max - min < 1) { max = min + 1; }
+    var span = max - min;
+    var X = function (i) { return pad + (pts.length === 1 ? (w - 2 * pad) / 2 : i * (w - 2 * pad) / (pts.length - 1)); };
+    var Y = function (v) { return h - pad - (v - min) / span * (h - 2 * pad); };
+
+    // 初始本金基准线 $50,000
+    g.strokeStyle = 'rgba(148,163,184,.45)';
+    g.setLineDash([4, 4]);
+    g.beginPath(); g.moveTo(pad, Y(base)); g.lineTo(w - pad, Y(base)); g.stroke();
+    g.setLineDash([]);
+    g.fillStyle = 'rgba(148,163,184,.85)';
+    g.font = '10px system-ui,sans-serif';
+    g.fillText('$' + fmt(base, 0), 2, Y(base) - 3);
+
+    // 净值折线
+    var last = pts[pts.length - 1];
+    var color = last >= base ? '#ef4444' : '#22c55e';   // 涨红跌绿（中国习惯）
+    g.strokeStyle = color; g.lineWidth = 2;
+    g.beginPath();
+    pts.forEach(function (v, i) { var x = X(i), y = Y(v); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.stroke();
+
+    pts.forEach(function (v, i) {
+      g.fillStyle = color; g.beginPath(); g.arc(X(i), Y(v), 2.2, 0, Math.PI * 2); g.fill();
+    });
+
+    g.fillStyle = color;
+    g.font = '11px system-ui,sans-serif';
+    g.fillText('$' + fmt(last, 2), Math.min(X(pts.length - 1) + 4, w - 58), Y(last) - 6);
+    g.fillStyle = 'rgba(148,163,184,.9)';
+    g.fillText(esc((curve[0] || {}).date || ''), pad, h - 8);
+    g.fillText(esc((curve[curve.length - 1] || {}).date || ''), w - pad - 52, h - 8);
+  }
+
   function renderDashboard(data) {
     normalize(data);
     hideBoot();
@@ -364,6 +515,7 @@
     renderReview();
     renderOptions(OPTIONS, $('#optHomeList'), true);
     renderHistory();
+    renderPortfolio();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
