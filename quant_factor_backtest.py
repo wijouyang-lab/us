@@ -31,6 +31,8 @@ Quant Factor Backtest —— 阶段 2：因子前瞻收益研究框架（纯研�
     对应未来交易日不存在 → None（禁止填 0 / 均值 / 最近日期替代）。
 """
 
+import argparse
+import json
 import os
 import sys
 
@@ -40,6 +42,8 @@ import pandas as pd
 SNAPSHOT_PATH = "quant_factor_snapshot.csv"
 BACKTEST_PATH = "quant_factor_backtest.csv"
 SUMMARY_PATH = "quant_factor_summary.csv"
+# Phase 2B 持久价格历史（Forward Return 的唯一真实来源）
+PRICE_HISTORY_FILE = "quant_factor_price_history.csv"
 
 HORIZONS = (5, 10, 20)
 
@@ -368,23 +372,25 @@ def run_backtest(snapshot_path=SNAPSHOT_PATH, price_map=None,
         "backtest_rows": 0,
         "summary_rows": 0,
         "maturity": {},
+        # R1 修复：是否真的写出了产物。无数据时保持 False，绝不创建空文件。
+        "written": False,
     }
 
     if not os.path.exists(snapshot_path):
         result["reason"] = f"snapshot 不存在：{snapshot_path}"
-        _write_empty(backtest_path, summary_path)
+        _no_data_skip_write(backtest_path, summary_path)
         return result
 
     try:
         snap = pd.read_csv(snapshot_path, dtype=str, keep_default_na=False)
     except Exception as e:
         result["reason"] = f"snapshot 读取失败：{type(e).__name__}: {e}"
-        _write_empty(backtest_path, summary_path)
+        _no_data_skip_write(backtest_path, summary_path)
         return result
 
     if snap.empty:
         result["reason"] = "snapshot 为空（尚无真实因子数据，绝不做历史回填）"
-        _write_empty(backtest_path, summary_path)
+        _no_data_skip_write(backtest_path, summary_path)
         return result
 
     result["snapshot_rows"] = int(len(snap))
@@ -393,29 +399,44 @@ def run_backtest(snapshot_path=SNAPSHOT_PATH, price_map=None,
     for n in HORIZONS:
         result["maturity"][f"{n}D"] = maturity_status(price_map, snap, n)
 
-    # 无价格数据 → 无法计算 forward return，写空表并报告缺口
+    # 无价格数据 → 无法计算 forward return。报告缺口，【绝不落文件】。
     if not price_map:
         result["reason"] = "价格数据不足（无 price_map），先建立框架并报告缺口，不擅自抓取"
-        _write_empty(backtest_path, summary_path)
+        _no_data_skip_write(backtest_path, summary_path)
         return result
 
     bt = compute_forward_returns(snap, price_map)
+    # 输入 snapshot 带有上游 phase1.v1 版本列，此处覆盖为本阶段版本
+    bt["schema_version"] = SCHEMA_VERSION
     result["backtest_rows"] = int(len(bt))
     bt.to_csv(backtest_path, index=False, encoding="utf-8")
 
     summary = compute_factor_summary(bt)
+    summary["schema_version"] = SCHEMA_VERSION
     result["summary_rows"] = int(len(summary))
     summary.to_csv(summary_path, index=False, encoding="utf-8")
 
     result["status"] = "OK"
+    result["written"] = True
     return result
 
 
-def _write_empty(backtest_path, summary_path):
-    for p in (backtest_path, summary_path):
-        if p:
-            with open(p, "w", encoding="utf-8") as f:
-                f.write("")
+def _no_data_skip_write(backtest_path, summary_path):
+    """R1 防呆修复：无数据时【绝不写出任何文件】。
+
+    背景（审计发现的风险 R1）
+    ------------------------
+    旧实现 `_write_empty()` 会在无数据时用 open(p,"w") 创建 0 字节 CSV。
+    危害在于：
+        · 文件不存在  → 下游明确报 NOT_ENOUGH_DATA，问题可见；
+        · 文件存在但为空 → 下游可能静默通过，让人误以为"有数据"。
+    因此"存在但为空"比"不存在"更危险。
+
+    本函数改为：什么都不写，只由调用方在 result["reason"] 中说明缺口。
+    已存在的产物文件【不会被删除】——删除历史产物比保留更危险，
+    是否覆盖由后续有真实数据的运行决定。
+    """
+    return None
 
 
 def run_backtest_from_history(snapshot_path=SNAPSHOT_PATH,
@@ -433,3 +454,49 @@ def run_backtest_from_history(snapshot_path=SNAPSHOT_PATH,
         price_map = {}
     return run_backtest(snapshot_path=snapshot_path, price_map=price_map,
                         backtest_path=backtest_path, summary_path=summary_path)
+
+
+# ============================================================================
+# 8. 命令行入口（STEP 3-B）
+# ============================================================================
+def main(argv=None):
+    """命令行入口：读已存在的 snapshot + price history → 输出回测结果。
+
+    用法：
+        python quant_factor_backtest.py
+        python quant_factor_backtest.py --snapshot <path> --price-history <path>
+        python quant_factor_backtest.py --strict      # 数据不足时以退出码 1 失败
+
+    退出码语义：
+        · 0 = 成功写出回测结果；或数据不足（NOT_ENOUGH_DATA）——
+              这是研究数据尚未就绪的【预期状态】，默认不算失败，避免阻断 workflow。
+        · 1 = --strict 模式下数据不足，或发生其它未就绪状态。
+    """
+    ap = argparse.ArgumentParser(
+        description="Quant Phase 2 · Factor Backtest（只读消费 snapshot + price history，绝不抓行情）")
+    ap.add_argument("--snapshot", default=SNAPSHOT_PATH,
+                    help=f"Phase 1 因子快照 CSV（默认 {SNAPSHOT_PATH}）")
+    ap.add_argument("--price-history", default=PRICE_HISTORY_FILE,
+                    help=f"Phase 2B 价格历史 CSV（默认 {PRICE_HISTORY_FILE}）")
+    ap.add_argument("--backtest", default=BACKTEST_PATH,
+                    help=f"回测输出 CSV（默认 {BACKTEST_PATH}）")
+    ap.add_argument("--summary", default=SUMMARY_PATH,
+                    help=f"汇总输出 CSV（默认 {SUMMARY_PATH}）")
+    ap.add_argument("--strict", action="store_true",
+                    help="数据不足时以退出码 1 退出（默认 0：数据不足是预期状态而非错误）")
+    args = ap.parse_args(argv)
+
+    r = run_backtest_from_history(
+        snapshot_path=args.snapshot,
+        price_history_path=args.price_history,
+        backtest_path=args.backtest,
+        summary_path=args.summary,
+    )
+    print("[Backtest] " + json.dumps(r, ensure_ascii=False, sort_keys=True))
+    if r["status"] == "OK":
+        return 0
+    return 1 if args.strict else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

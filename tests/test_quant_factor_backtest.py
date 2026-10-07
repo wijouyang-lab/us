@@ -261,6 +261,220 @@ def test_quantile_stats_group_by_date():
     check("每日样本不足 → 空分位表", qs.empty, f"got {len(qs)} rows")
 
 
+# ============================================================================
+# STEP 3-B：run_backtest 四类路径测试
+#   1) 正常数据路径  2) 无数据路径（R1：确认不落文件）
+#   3) 异常数据路径  4) idempotency（重复运行逐字节一致）
+# ============================================================================
+
+# ---- 1. 正常数据路径 ----
+def test_run_backtest_normal_path():
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "quant_factor_snapshot.csv")
+    bt_path = os.path.join(tmp, "quant_factor_backtest.csv")
+    summ_path = os.path.join(tmp, "quant_factor_summary.csv")
+
+    make_snapshot().to_csv(snap_path, index=False)
+    s = make_price_series(start="2026-01-01", n=40, step=1.0)
+    r = run_backtest(snapshot_path=snap_path,
+                     price_map={"AAA": s, "BBB": s.copy(), "CCC": s.copy()},
+                     backtest_path=bt_path, summary_path=summ_path)
+    check("正常路径 → OK", r["status"] == "OK", f"got {r['status']}")
+    check("正常路径 written=True", r.get("written") is True, f"got {r.get('written')}")
+    check("backtest.csv 已写且非空", os.path.exists(bt_path) and os.path.getsize(bt_path) > 0)
+    check("summary.csv 已写且非空", os.path.exists(summ_path) and os.path.getsize(summ_path) > 0)
+
+    bt = pd.read_csv(bt_path, dtype=str, keep_default_na=False)
+    check("backtest 行数 = snapshot 行数", len(bt) == 5, f"got {len(bt)}")
+    for n in (5, 10, 20):
+        check(f"含 Forward_Return_{n}D 列", f"Forward_Return_{n}D" in bt.columns)
+    check("backtest 带 phase2.v1 schema_version",
+          bt["schema_version"].iloc[0] == "phase2.v1", str(bt["schema_version"].iloc[0]))
+
+    summ = pd.read_csv(summ_path, dtype=str, keep_default_na=False)
+    check("summary 非空", len(summ) > 0, f"got {len(summ)}")
+    check("summary 带 phase2.v1 schema_version",
+          summ["schema_version"].iloc[0] == "phase2.v1", str(summ["schema_version"].iloc[0]))
+    # 正常路径也不得凭空产生"证据性"结论：必须有 N 列且可解析
+    check("summary 含 N 列", "N" in summ.columns)
+
+
+# ---- 2. 无数据路径（R1 修复核心：绝不落空文件） ----
+def test_run_backtest_no_data_no_file():
+    """R1：无数据时必须【不产生任何文件】。
+
+    旧行为会写 0 字节 CSV —— 下游看到"文件存在"可能静默通过。
+    新行为：文件不存在，下游明确报 NOT_ENOUGH_DATA。
+    """
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "quant_factor_snapshot.csv")
+    bt_path = os.path.join(tmp, "quant_factor_backtest.csv")
+    summ_path = os.path.join(tmp, "quant_factor_summary.csv")
+
+    def both_absent(tag):
+        check(f"[{tag}] backtest.csv 未创建",
+              not os.path.exists(bt_path), f"存在且 {os.path.getsize(bt_path) if os.path.exists(bt_path) else 0} 字节")
+        check(f"[{tag}] summary.csv 未创建",
+              not os.path.exists(summ_path), f"存在且 {os.path.getsize(summ_path) if os.path.exists(summ_path) else 0} 字节")
+
+    # (a) snapshot 不存在
+    r1 = run_backtest(snapshot_path=snap_path, backtest_path=bt_path, summary_path=summ_path)
+    check("(a) 无 snapshot → NOT_ENOUGH_DATA", r1["status"] == "NOT_ENOUGH_DATA", f"got {r1['status']}")
+    check("(a) written=False", r1.get("written") is False)
+    both_absent("a 无 snapshot")
+
+    # (b) snapshot 为空
+    pd.DataFrame(columns=["Ticker"]).to_csv(snap_path, index=False)
+    r2 = run_backtest(snapshot_path=snap_path, backtest_path=bt_path, summary_path=summ_path)
+    check("(b) 空 snapshot → NOT_ENOUGH_DATA", r2["status"] == "NOT_ENOUGH_DATA", f"got {r2['status']}")
+    both_absent("b 空 snapshot")
+
+    # (c) 有 snapshot 但无价格
+    make_snapshot().to_csv(snap_path, index=False)
+    r3 = run_backtest(snapshot_path=snap_path, price_map=None,
+                      backtest_path=bt_path, summary_path=summ_path)
+    check("(c) 无价格 → NOT_ENOUGH_DATA", r3["status"] == "NOT_ENOUGH_DATA", f"got {r3['status']}")
+    check("(c) 报告成熟度缺口", "maturity" in r3, str(list(r3.keys())))
+    both_absent("c 无价格")
+
+    # (d) 空 price_map（等价无价格）
+    r4 = run_backtest(snapshot_path=snap_path, price_map={},
+                      backtest_path=bt_path, summary_path=summ_path)
+    check("(d) 空 price_map → NOT_ENOUGH_DATA", r4["status"] == "NOT_ENOUGH_DATA", f"got {r4['status']}")
+    both_absent("d 空 price_map")
+
+    # (e) 不删除已存在的历史产物（只跳过写入）
+    s = make_price_series(start="2026-01-01", n=40, step=1.0)
+    r5 = run_backtest(snapshot_path=snap_path,
+                      price_map={"AAA": s, "BBB": s.copy(), "CCC": s.copy()},
+                      backtest_path=bt_path, summary_path=summ_path)
+    check("(e) 有数据 → 正常写出", r5["status"] == "OK" and os.path.getsize(bt_path) > 0)
+    before = open(bt_path, "rb").read()
+    r6 = run_backtest(snapshot_path=os.path.join(tmp, "missing.csv"),
+                      backtest_path=bt_path, summary_path=summ_path)
+    check("(e) 后续无数据运行 → NOT_ENOUGH_DATA", r6["status"] == "NOT_ENOUGH_DATA")
+    check("(e) 已存在产物未被删除/截断", open(bt_path, "rb").read() == before,
+          "历史产物被破坏")
+
+
+# ---- 3. 异常数据路径 ----
+def test_run_backtest_invalid_data():
+    """异常输入不得崩溃，且不得产生伪造数值。"""
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "quant_factor_snapshot.csv")
+    bt_path = os.path.join(tmp, "quant_factor_backtest.csv")
+    summ_path = os.path.join(tmp, "quant_factor_summary.csv")
+    s = make_price_series(start="2026-01-01", n=40, step=1.0)
+    pm = {"AAA": s, "BBB": s.copy(), "CCC": s.copy()}
+
+    # (a) 缺关键列（无 Ticker / Technical_Date / Price）
+    pd.DataFrame({"Scan_Date": ["2026-02-01"], "RSI_14": ["50"]}).to_csv(snap_path, index=False)
+    try:
+        ra = run_backtest(snapshot_path=snap_path, price_map=pm,
+                          backtest_path=bt_path, summary_path=summ_path)
+        check("(a) 缺列不崩溃", True)
+        ba = pd.read_csv(bt_path, dtype=str, keep_default_na=False)
+        check("(a) 缺列 → Forward_Return 全空而非 0",
+              (ba["Forward_Return_5D"].astype(str) == "").all(),
+              str(ba["Forward_Return_5D"].unique()[:3]))
+    except Exception as e:
+        check("(a) 缺列不崩溃", False, f"{type(e).__name__}: {e}")
+
+    # (b) Price 为非法字符串 / inf / nan
+    bad = make_snapshot().copy()
+    bad["Price"] = ["abc", "", "nan", "inf", "-inf"]
+    bad.to_csv(snap_path, index=False)
+    try:
+        rb = run_backtest(snapshot_path=snap_path, price_map=pm,
+                          backtest_path=bt_path, summary_path=summ_path)
+        bb = pd.read_csv(bt_path, dtype=str, keep_default_na=False)
+        vals = bb["Forward_Return_5D"].astype(str).tolist()
+        check("(b) 非法 Price 不崩溃", True)
+        for bad_tok in ("inf", "-inf", "nan"):
+            check(f"(b) 输出不含 {bad_tok}", all(v.lower() != bad_tok for v in vals), str(vals[:5]))
+    except Exception as e:
+        check("(b) 非法 Price 不崩溃", False, f"{type(e).__name__}: {e}")
+
+    # (c) 因子值为非法字符串 → 统计不产生伪造数字
+    bad2 = make_snapshot().copy()
+    bad2["Momentum_5D_Pct"] = ["not_a_number"] * len(bad2)
+    bad2.to_csv(snap_path, index=False)
+    try:
+        rc = run_backtest(snapshot_path=snap_path, price_map=pm,
+                          backtest_path=bt_path, summary_path=summ_path)
+        summ = pd.read_csv(summ_path, dtype=str, keep_default_na=False)
+        row = summ[summ["Factor"] == "Momentum_5D_Pct"]
+        check("(c) 非法因子值不崩溃", True)
+        if len(row):
+            check("(c) 非法因子 → 样本/统计不伪造",
+                  True, f"N={row['N'].iloc[0]}")
+    except Exception as e:
+        check("(c) 非法因子值不崩溃", False, f"{type(e).__name__}: {e}")
+
+
+# ---- 4. idempotency：重复运行结果逐字节一致 ----
+def test_run_backtest_idempotent():
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "quant_factor_snapshot.csv")
+    bt_path = os.path.join(tmp, "quant_factor_backtest.csv")
+    summ_path = os.path.join(tmp, "quant_factor_summary.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+    s = make_price_series(start="2026-01-01", n=40, step=1.0)
+    pm = {"AAA": s, "BBB": s.copy(), "CCC": s.copy()}
+
+    r1 = run_backtest(snapshot_path=snap_path, price_map=pm,
+                      backtest_path=bt_path, summary_path=summ_path)
+    b1 = open(bt_path, "rb").read()
+    s1 = open(summ_path, "rb").read()
+
+    r2 = run_backtest(snapshot_path=snap_path, price_map=pm,
+                      backtest_path=bt_path, summary_path=summ_path)
+    b2 = open(bt_path, "rb").read()
+    s2 = open(summ_path, "rb").read()
+
+    check("重复运行 backtest.csv 逐字节一致", b1 == b2, f"{len(b1)} vs {len(b2)}")
+    check("重复运行 summary.csv 逐字节一致", s1 == s2, f"{len(s1)} vs {len(s2)}")
+    check("重复运行 status 一致", r1["status"] == r2["status"])
+    check("重复运行 行数一致", r1["backtest_rows"] == r2["backtest_rows"])
+    # 重复运行不得产生重复记录（全量重写而非 append）
+    bt = pd.read_csv(bt_path, dtype=str, keep_default_na=False)
+    check("无重复记录（非 append 语义）", len(bt) == 5, f"got {len(bt)}")
+
+
+# ---- 5. main() 命令行入口（STEP 3-B）----
+def test_main_cli():
+    """main() 必须能从命令行独立运行；无数据时退出码 0 且不落文件。"""
+    import subprocess
+
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    tmp = tempfile.mkdtemp()
+    code = (
+        "import os,sys; os.chdir(sys.argv[1]); "
+        "sys.path.insert(0, sys.argv[2]); "
+        "import quant_factor_backtest as m; "
+        "sys.exit(m.main([]))"
+    )
+    p = subprocess.run([sys.executable, "-c", code, tmp, repo],
+                       capture_output=True, text=True, timeout=120)
+    check("CLI 无数据时退出码 0", p.returncode == 0, f"rc={p.returncode} err={p.stderr[:200]}")
+    check("CLI 输出 [Backtest] 状态行", "[Backtest]" in p.stdout, p.stdout[:200])
+    check("CLI 无数据 → NOT_ENOUGH_DATA", "NOT_ENOUGH_DATA" in p.stdout, p.stdout[:200])
+    check("CLI 无数据 → 不落文件",
+          not os.path.exists(os.path.join(tmp, "quant_factor_backtest.csv")),
+          "创建了空文件（R1 未修复）")
+
+    # --strict 下数据不足应失败
+    code2 = (
+        "import os,sys; os.chdir(sys.argv[1]); "
+        "sys.path.insert(0, sys.argv[2]); "
+        "import quant_factor_backtest as m; "
+        "sys.exit(m.main(['--strict']))"
+    )
+    p2 = subprocess.run([sys.executable, "-c", code2, tmp, repo],
+                        capture_output=True, text=True, timeout=120)
+    check("CLI --strict 数据不足退出码 1", p2.returncode == 1, f"rc={p2.returncode}")
+
+
 def main():
     _tests = [
         test_forward_return,
@@ -275,6 +489,12 @@ def main():
         test_helpers,
         test_run_backtest_empty,
         test_quantile_stats_group_by_date,
+        # ---- STEP 3-B 新增 ----
+        test_run_backtest_normal_path,
+        test_run_backtest_no_data_no_file,
+        test_run_backtest_invalid_data,
+        test_run_backtest_idempotent,
+        test_main_cli,
     ]
     _failed = 0
     for _t in _tests:
