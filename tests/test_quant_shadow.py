@@ -84,8 +84,14 @@ def test_shadow_disabled_active():
                    report_path=os.path.join(tmp, "r.json"))
     check("默认 DISABLED", r["shadow_status"] == "SHADOW_DISABLED", f"got {r['shadow_status']}")
     check("DISABLED 时 shadow_snapshot 0 行", r["shadow_snapshot_rows"] == 0)
-    rep = json.load(open(os.path.join(tmp, "r.json")))
-    check("report shadow_status=SHADOW_DISABLED", rep["shadow_status"] == "SHADOW_DISABLED")
+    # R1（STEP 3-C）：Shadow 禁用 → 绝不落文件（旧行为会写 0 行 CSV + report）
+    check("DISABLED → shadow_snapshot.csv 未创建",
+          not os.path.exists(os.path.join(tmp, "ss.csv")))
+    check("DISABLED → performance.csv 未创建",
+          not os.path.exists(os.path.join(tmp, "p.csv")))
+    check("DISABLED → report.json 未创建",
+          not os.path.exists(os.path.join(tmp, "r.json")))
+    check("DISABLED → written=False", r.get("written") is False)
 
 
 def test_shadow_active_logic():
@@ -253,11 +259,50 @@ def test_empty_report():
                    performance_path=os.path.join(tmp, "p.csv"),
                    report_path=os.path.join(tmp, "r.json"))
     check("空数据 shadow_status=DISABLED", r["shadow_status"] == "SHADOW_DISABLED")
-    rep = json.load(open(os.path.join(tmp, "r.json")))
-    check("report existing_selection_count=None", rep["existing_selection_count"] is None)
-    check("report 5D_status 为 None 或 NOT_ENOUGH_DATA",
-          rep.get("5D_status") in (None, "NOT_ENOUGH_DATA"))
-    check("report production_lock 存在", "production_lock" in rep)
+    # R1（STEP 3-C）：无 snapshot → 绝不落文件
+    check("空数据 → report.json 未创建", not os.path.exists(os.path.join(tmp, "r.json")))
+    check("空数据 → shadow_snapshot.csv 未创建", not os.path.exists(os.path.join(tmp, "ss.csv")))
+    check("空数据 → written=False", r.get("written") is False)
+    # 不伪造结论：内存态返回值中不得出现任何选中计数
+    check("空数据 → shadow_snapshot_rows=0", r["shadow_snapshot_rows"] == 0)
+    check("空数据 → performance_rows=0", r["performance_rows"] == 0)
+
+
+# ---- STEP 3-C：Phase 6 R1 —— 禁用/无数据绝不落文件 ----
+def test_no_data_no_files():
+    """R1：Phase 6 在 Shadow 禁用或 snapshot 为空时必须【不创建任何文件】。
+
+    Shadow 当前恒为 SHADOW_DISABLED，旧行为每次运行都会往仓库丢
+    "0 行 shadow_snapshot.csv + 0 行 performance.csv + report.json"。
+    """
+    tmp = tempfile.mkdtemp()
+    ss_path = os.path.join(tmp, "ss.csv")
+    p_path = os.path.join(tmp, "p.csv")
+    r_path = os.path.join(tmp, "r.json")
+
+    def none_exist(tag):
+        check(f"[{tag}] shadow_snapshot.csv 未创建", not os.path.exists(ss_path))
+        check(f"[{tag}] performance.csv 未创建", not os.path.exists(p_path))
+        check(f"[{tag}] report.json 未创建", not os.path.exists(r_path))
+
+    # (a) SHADOW 未启用（当前真实状态）+ 有 snapshot
+    snap_path = os.path.join(tmp, "snap.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+    ra = run_shadow(snapshot_path=snap_path, shadow_snapshot_path=ss_path,
+                    performance_path=p_path, report_path=r_path)
+    check("(a) shadow_status=SHADOW_DISABLED", ra["shadow_status"] == "SHADOW_DISABLED")
+    check("(a) written=False", ra.get("written") is False)
+    none_exist("a SHADOW_DISABLED")
+
+    # (b) snapshot 不存在
+    rb = run_shadow(snapshot_path=os.path.join(tmp, "missing.csv"),
+                    shadow_snapshot_path=ss_path, performance_path=p_path, report_path=r_path)
+    check("(b) shadow_status=SHADOW_DISABLED", rb["shadow_status"] == "SHADOW_DISABLED")
+    none_exist("b 无 snapshot")
+
+    # 禁用期间不得产生任何"选中计数"类伪结果
+    check("禁用期 shadow_snapshot_rows=0", ra["shadow_snapshot_rows"] == 0)
+    check("禁用期 performance_rows=0", ra["performance_rows"] == 0)
 
 
 def main():
@@ -280,6 +325,8 @@ def main():
         test_production_disabled,
         test_existing_scan_unchanged,
         test_empty_report,
+        # ---- STEP 3-C ----
+        test_no_data_no_files,
     ]
     _failed = 0
     for _t in _tests:

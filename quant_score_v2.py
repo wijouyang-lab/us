@@ -42,6 +42,7 @@ Quant Score 2.0 Framework —— 阶段 4：候选评分模型研究框架（纯
     本阶段只记录方法，不拟合任何历史参数。
 """
 
+import argparse
 import json
 import os
 import sys
@@ -362,11 +363,23 @@ def run_quant_score_v2(validation_path=VALIDATION_PATH, correlation_path=CORRELA
         "cluster_rows": 0,
         "candidate_rows": 0,
         "n_promising": 0,
+        # R1 修复：是否真的写出了产物。无数据时保持 False，绝不出文件。
+        "written": False,
     }
+
+    # R1 防呆修复（STEP 3-C）：Phase 3 无真实验证结果 → 不构建、不落盘。
+    # 旧行为会用全 NOT_ENOUGH_DATA 写出 5 份文件，下游看到"文件存在"会误以为
+    # Phase 4 已产出候选模型。改为只返回状态与缺口原因。
+    if not os.path.exists(validation_path):
+        result["reason"] = f"validation 不存在：{validation_path}（Phase 3 尚无真实结果）"
+        return result
 
     validation_df = load_csv(validation_path)
     correlation_df = load_csv(correlation_path)
     result["validation_rows"] = int(len(validation_df))
+    if validation_df.empty:
+        result["reason"] = "validation 为空（Phase 3 尚无真实验证结果，绝不做历史回填）"
+        return result
 
     registry_df = build_factor_registry(validation_df)
     cluster_df = build_factor_clusters(correlation_df)
@@ -399,13 +412,36 @@ def run_quant_score_v2(validation_path=VALIDATION_PATH, correlation_path=CORRELA
     os.replace(tmp, report_path)
 
     result["status"] = "OK"
+    result["written"] = True
     return result
 
 
 def main(argv=None):
-    r = run_quant_score_v2()
+    """命令行入口（STEP 3-C）：与 Phase 2 一致的退出码语义。
+
+    退出码：0 = OK，或数据不足（预期状态）；1 = --strict 下数据不足。
+    注：旧实现把"非 OK 一律返回 1"，本步骤改为与其余 Phase 一致
+    （数据不足默认不算失败，避免阻断 workflow），需要强告警时用 --strict。
+    """
+    ap = argparse.ArgumentParser(description="Quant Phase 4 · Quant Score V2（研究候选，V2 恒 DISABLED）")
+    ap.add_argument("--validation", default=VALIDATION_PATH, help=f"Phase 3 验证 CSV（默认 {VALIDATION_PATH}）")
+    ap.add_argument("--correlation", default=CORRELATION_PATH, help=f"Phase 3 相关矩阵 CSV（默认 {CORRELATION_PATH}）")
+    ap.add_argument("--registry", default=REGISTRY_PATH, help=f"registry 输出（默认 {REGISTRY_PATH}）")
+    ap.add_argument("--clusters", default=CLUSTERS_PATH, help=f"clusters 输出（默认 {CLUSTERS_PATH}）")
+    ap.add_argument("--candidates", default=CANDIDATES_PATH, help=f"candidates 输出（默认 {CANDIDATES_PATH}）")
+    ap.add_argument("--config", default=CONFIG_PATH, help=f"config 输出（默认 {CONFIG_PATH}）")
+    ap.add_argument("--report", default=REPORT_PATH, help=f"report 输出（默认 {REPORT_PATH}）")
+    ap.add_argument("--strict", action="store_true", help="数据不足时以退出码 1 退出（默认 0）")
+    args = ap.parse_args(argv)
+
+    r = run_quant_score_v2(validation_path=args.validation, correlation_path=args.correlation,
+                           registry_path=args.registry, clusters_path=args.clusters,
+                           candidates_path=args.candidates, config_path=args.config,
+                           report_path=args.report)
     print("[Quant Score V2]", r)
-    return 0 if r["status"] == "OK" else 1
+    if r["status"] == "OK":
+        return 0
+    return 1 if args.strict else 0
 
 
 if __name__ == "__main__":

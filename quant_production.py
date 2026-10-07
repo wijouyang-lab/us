@@ -36,6 +36,7 @@ Quant Score V2 Production Integration & Governance —— 阶段 7（治理层�
     AI Calls = 0，网络请求 = 0。只读本仓库已有数据和配置。
 """
 
+import argparse
 import hashlib
 import json
 import os
@@ -473,12 +474,38 @@ def run_production_governance(config_path=CONFIG_PATH, approval_path=APPROVAL_PA
         "monitor_reason": monitor_reason,
         "production_state": determine_state(active_model, gates, approval),
         "config_hash": runtime_hash,
+        # R1 一致性标志（STEP 3-C）：
+        # Phase 7 无 _write_empty_outputs —— 它从不写空文件，state.json 恒含
+        # V1_ACTIVE 等真实治理状态（安全默认值，必须持久存在）。
+        # 因此这里不是"数据不足即不写"，而是恒为 True 以便与其它 Phase 口径一致。
+        "written": True,
+        "skip_empty_writes_note": (
+            "Phase 7 不存在 R1 空文件风险：state.json 恒为真实治理状态（非空、非 0 行）。"
+            "审计已确认无需改为 skip-write。"
+        ),
     }
 
 
 def main(argv=None):
-    r = run_production_governance()
+    """命令行入口（STEP 3-C）：与 Phase 2 一致的 --strict 语义。
+
+    Phase 7 恒产出真实治理状态（V1_ACTIVE 为安全默认值，必须持久），
+    因此不存在"数据不足"；--strict 仅在 monitor_status 非 PASS 时返回 1。
+    """
+    ap = argparse.ArgumentParser(description="Quant Phase 7 · Production Governance（V1 ACTIVE，V2 DISABLED）")
+    ap.add_argument("--config", default=CONFIG_PATH, help=f"production config（默认 {CONFIG_PATH}）")
+    ap.add_argument("--approval", default=APPROVAL_PATH, help=f"人工审批文件（默认 {APPROVAL_PATH}）")
+    ap.add_argument("--state", default=STATE_PATH, help=f"state 输出（默认 {STATE_PATH}）")
+    ap.add_argument("--audit", default=AUDIT_PATH, help=f"audit JSONL（默认 {AUDIT_PATH}）")
+    ap.add_argument("--strict", action="store_true",
+                    help="monitor_status 非 PASS 时以退出码 1 退出（默认 0：V1 恒为安全默认）")
+    args = ap.parse_args(argv)
+
+    r = run_production_governance(config_path=args.config, approval_path=args.approval,
+                                  state_path=args.state, audit_path=args.audit)
     print("[Production Governance]", json.dumps(r, ensure_ascii=False, indent=2))
+    if args.strict and r.get("monitor_status") != "PASS":
+        return 1
     return 0
 
 

@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from quant_score_v2 import (
     CANDIDATE_MODELS,
+    FACTOR_REGISTRY_DEF,
     QUANT_SCORE_V2_ENABLED,
     build_candidate_models,
     build_config,
@@ -192,12 +193,25 @@ def test_run_end_to_end():
     cfg_path = os.path.join(tmp, "quant_score_v2_config.json")
     rep_path = os.path.join(tmp, "quant_score_v2_report.json")
 
-    # 无 validation 文件（Snapshot=0 的真实场景）
+    # R1（STEP 3-C）：无 validation 文件（Snapshot=0 的真实场景）→ 不落任何文件
     res = run_quant_score_v2(validation_path=v_path, correlation_path=c_path,
                              registry_path=reg_path, clusters_path=clu_path,
                              candidates_path=cand_path, config_path=cfg_path, report_path=rep_path)
-    check("run 返回 OK", res["status"] == "OK")
-    check("n_promising=0", res["n_promising"] == 0)
+    check("无 validation → NOT_ENOUGH_DATA", res["status"] == "NOT_ENOUGH_DATA", f"got {res['status']}")
+    check("无 validation → written=False", res.get("written") is False)
+    check("无 validation → registry.csv 未创建", not os.path.exists(reg_path))
+    check("无 validation → config.json 未创建", not os.path.exists(cfg_path))
+    check("无 validation → report.json 未创建", not os.path.exists(rep_path))
+
+    # 有真实 validation → 正常产出（最小合法 validation：Factor + Status 两列）
+    pd.DataFrame([{"Factor": d[0], "Status": "NOT_ENOUGH_DATA"}
+                  for d in FACTOR_REGISTRY_DEF]).to_csv(v_path, index=False)
+    res_r = run_quant_score_v2(validation_path=v_path, correlation_path=c_path,
+                               registry_path=reg_path, clusters_path=clu_path,
+                               candidates_path=cand_path, config_path=cfg_path, report_path=rep_path)
+    check("有 validation → OK", res_r["status"] == "OK", f"got {res_r['status']}")
+    check("有 validation → written=True", res_r.get("written") is True)
+    check("n_promising=0", res_r["n_promising"] == 0)
 
     reg = pd.read_csv(reg_path, dtype=str, keep_default_na=False)
     check("registry 24 行", len(reg) == 24)
@@ -212,6 +226,68 @@ def test_run_end_to_end():
     check("report state=RESEARCH", rep["state"] == "RESEARCH")
     check("report 所有 model NOT_ENOUGH_DATA",
           all(s in ("NOT_ENOUGH_DATA", "DISABLED") for s in rep["candidate_model_statuses"].values()))
+
+
+# ---- STEP 3-C：Phase 4 R1 —— 无数据绝不落文件 ----
+def test_no_data_no_files():
+    """R1：Phase 4 在 Phase 3 无真实验证结果时必须【不创建任何文件】。
+
+    旧行为会用全 NOT_ENOUGH_DATA 写出 5 份文件（registry/clusters/candidates/
+    config/report），下游看到文件存在会误以为已产出候选模型。
+    """
+    tmp = tempfile.mkdtemp()
+    v_path = os.path.join(tmp, "quant_factor_validation.csv")
+    c_path = os.path.join(tmp, "quant_factor_correlation.csv")
+    reg_path = os.path.join(tmp, "quant_factor_registry.csv")
+    clu_path = os.path.join(tmp, "quant_factor_clusters.csv")
+    cand_path = os.path.join(tmp, "quant_score_v2_candidates.csv")
+    cfg_path = os.path.join(tmp, "quant_score_v2_config.json")
+    rep_path = os.path.join(tmp, "quant_score_v2_report.json")
+    outs = ((reg_path, "registry.csv"), (clu_path, "clusters.csv"),
+            (cand_path, "candidates.csv"), (cfg_path, "config.json"),
+            (rep_path, "report.json"))
+
+    def none_exist(tag):
+        for p, nm in outs:
+            check(f"[{tag}] {nm} 未创建", not os.path.exists(p))
+
+    # (a) validation 不存在
+    ra = run_quant_score_v2(validation_path=v_path, correlation_path=c_path,
+                            registry_path=reg_path, clusters_path=clu_path,
+                            candidates_path=cand_path, config_path=cfg_path,
+                            report_path=rep_path)
+    check("(a) → NOT_ENOUGH_DATA", ra["status"] == "NOT_ENOUGH_DATA", f"got {ra['status']}")
+    check("(a) written=False", ra.get("written") is False)
+    none_exist("a 无 validation")
+
+    # (b) validation 为空
+    pd.DataFrame(columns=["Factor", "Status"]).to_csv(v_path, index=False)
+    rb = run_quant_score_v2(validation_path=v_path, correlation_path=c_path,
+                            registry_path=reg_path, clusters_path=clu_path,
+                            candidates_path=cand_path, config_path=cfg_path,
+                            report_path=rep_path)
+    check("(b) → NOT_ENOUGH_DATA", rb["status"] == "NOT_ENOUGH_DATA", f"got {rb['status']}")
+    none_exist("b 空 validation")
+
+    # (c) 有真实 validation → 正常写出（确认不是"永远不写"）
+    pd.DataFrame([{"Factor": d[0], "Status": "NOT_ENOUGH_DATA"}
+                  for d in FACTOR_REGISTRY_DEF]).to_csv(v_path, index=False)
+    rc = run_quant_score_v2(validation_path=v_path, correlation_path=c_path,
+                            registry_path=reg_path, clusters_path=clu_path,
+                            candidates_path=cand_path, config_path=cfg_path,
+                            report_path=rep_path)
+    check("(c) 有数据 → OK", rc["status"] == "OK", f"got {rc['status']}")
+    check("(c) written=True", rc.get("written") is True)
+    check("(c) registry.csv 已写且非空",
+          os.path.exists(reg_path) and os.path.getsize(reg_path) > 0)
+
+    # (d) 已存在产物 + 后续无数据 → 不删除
+    before = open(reg_path, "rb").read()
+    run_quant_score_v2(validation_path=os.path.join(tmp, "missing.csv"),
+                       correlation_path=c_path, registry_path=reg_path,
+                       clusters_path=clu_path, candidates_path=cand_path,
+                       config_path=cfg_path, report_path=rep_path)
+    check("(d) 已存在产物未被删除/截断", open(reg_path, "rb").read() == before)
 
 
 def main():
@@ -230,6 +306,8 @@ def main():
         test_no_ai,
         test_old_quant_score_untouched,
         test_run_end_to_end,
+        # ---- STEP 3-C ----
+        test_no_data_no_files,
     ]
     _failed = 0
     for _t in _tests:

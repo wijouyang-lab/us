@@ -36,6 +36,7 @@ Quant Score V2 Shadow Mode —— 阶段 6：影子观察框架（纯研究层�
     5D/10D/20D = NOT_ENOUGH_DATA；Performance = None。绝不输出 Win_Rate=0% / Return=0%。
 """
 
+import argparse
 import json
 import os
 import sys
@@ -330,15 +331,16 @@ def run_shadow(snapshot_path=SNAPSHOT_PATH, price_map=None,
         "status": "NOT_ENOUGH_DATA",
         "shadow_snapshot_rows": 0,
         "performance_rows": 0,
+        # R1 修复：是否真的写出了产物。禁用/无数据时保持 False，绝不创建空文件。
+        "written": False,
     }
 
-    # Governance：未启用 → 不产生 shadow，输出禁用状态
+    # Governance：未启用 → 不产生 shadow，也【不落任何文件】
     if not SHADOW_ENABLE:
         result["reason"] = "SHADOW_ENABLE=false（未人工启用），Shadow 保持 DISABLED"
         snapshot_df = load_csv(snapshot_path)
         result["snapshot_rows"] = int(len(snapshot_df))
-        _write_disabled_outputs(shadow_snapshot_path, performance_path, report_path,
-                                result, snapshot_df, model_names)
+        _no_data_skip_write(shadow_snapshot_path, performance_path, report_path)
         return result
 
     # 已启用：需要 SHADOW_START_DATE
@@ -347,8 +349,7 @@ def run_shadow(snapshot_path=SNAPSHOT_PATH, price_map=None,
         result["reason"] = "SHADOW_ENABLE=true 但 SHADOW_START_DATE=null，无法确定启用日"
         snapshot_df = load_csv(snapshot_path)
         result["snapshot_rows"] = int(len(snapshot_df))
-        _write_disabled_outputs(shadow_snapshot_path, performance_path, report_path,
-                                result, snapshot_df, model_names)
+        _no_data_skip_write(shadow_snapshot_path, performance_path, report_path)
         return result
 
     snapshot_df = load_csv(snapshot_path)
@@ -357,8 +358,7 @@ def run_shadow(snapshot_path=SNAPSHOT_PATH, price_map=None,
     if snapshot_df.empty:
         result["status"] = "NOT_ENOUGH_DATA"
         result["reason"] = "Snapshot=0（无候选池数据）"
-        _write_disabled_outputs(shadow_snapshot_path, performance_path, report_path,
-                                result, snapshot_df, model_names)
+        _no_data_skip_write(shadow_snapshot_path, performance_path, report_path)
         return result
 
     # 只处理 start_date 之后（含）的 snapshot（历史连续性，绝不回填）
@@ -387,29 +387,41 @@ def run_shadow(snapshot_path=SNAPSHOT_PATH, price_map=None,
     return result
 
 
-def _write_disabled_outputs(shadow_snapshot_path, performance_path, report_path, result, snapshot_df, model_names):
-    if shadow_snapshot_path:
-        pd.DataFrame(columns=[
-            "Scan_Date", "Ticker", "Name", "Sector", "Existing_Quant_Score",
-            "Existing_Final_Score", "Existing_Tag", "Shadow_Model", "Shadow_Score", "Shadow_Rank",
-            "Existing_Selected", "Shadow_Selected", "Difference_Type", "Market_Regime", "VIX", "Price",
-        ]).to_csv(shadow_snapshot_path, index=False, encoding="utf-8")
-    if performance_path:
-        pd.DataFrame(columns=["Scan_Date", "Ticker", "Forward_Return_5D", "Forward_Return_10D", "Forward_Return_20D"]).to_csv(
-            performance_path, index=False, encoding="utf-8")
-    if report_path:
-        report = build_report("SHADOW_DISABLED", SHADOW_START_DATE, snapshot_df,
-                              pd.DataFrame(), pd.DataFrame(), model_names)
-        tmp = report_path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
-            json.dump(report, f, ensure_ascii=False, indent=2)
-        os.replace(tmp, report_path)
+def _no_data_skip_write(shadow_snapshot_path, performance_path, report_path):
+    """R1 防呆修复（STEP 3-C）：Shadow 禁用/无数据时【绝不写出任何文件】。
+
+    旧实现 `_write_disabled_outputs()` 会在 SHADOW_ENABLE=false 时写出
+    "0 行 shadow_snapshot.csv + 0 行 performance.csv + report.json"。
+    Shadow 当前恒为 DISABLED，等于每次运行都会往仓库里丢三份空/状态文件 ——
+    下游看到"文件存在"会误以为 Shadow 已经跑过并产出了对比数据。
+
+    改为：什么都不写。SHADOW_DISABLED 这一状态本身由返回值与 Dashboard
+    （build_quant 硬编码 SHADOW_DISABLED）表达，无需落盘载体。
+    已存在的产物【不会被删除】。
+    """
+    return None
 
 
 def main(argv=None):
-    r = run_shadow()
+    """命令行入口（STEP 3-C）：与 Phase 2 一致的退出码语义。
+
+    退出码：0 = OK，或数据不足 / Shadow 禁用（预期状态）；1 = --strict 下非 OK。
+    """
+    ap = argparse.ArgumentParser(description="Quant Phase 6 · Shadow Mode（SHADOW_ENABLE 恒 False，只算不交易）")
+    ap.add_argument("--snapshot", default=SNAPSHOT_PATH, help=f"Phase 1 快照（默认 {SNAPSHOT_PATH}）")
+    ap.add_argument("--shadow-snapshot", default=SHADOW_SNAPSHOT_PATH, help=f"shadow 快照输出（默认 {SHADOW_SNAPSHOT_PATH}）")
+    ap.add_argument("--performance", default=PERFORMANCE_PATH, help=f"performance 输出（默认 {PERFORMANCE_PATH}）")
+    ap.add_argument("--report", default=REPORT_PATH, help=f"report 输出（默认 {REPORT_PATH}）")
+    ap.add_argument("--strict", action="store_true", help="数据不足/禁用时以退出码 1 退出（默认 0）")
+    args = ap.parse_args(argv)
+
+    r = run_shadow(snapshot_path=args.snapshot,
+                   shadow_snapshot_path=args.shadow_snapshot,
+                   performance_path=args.performance, report_path=args.report)
     print("[Shadow]", r)
-    return 0 if r["status"] in ("OK", "NOT_ENOUGH_DATA") else 1
+    if r["status"] == "OK":
+        return 0
+    return 1 if args.strict else 0
 
 
 if __name__ == "__main__":

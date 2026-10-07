@@ -15,6 +15,7 @@ from quant_walk_forward import (
     CANDIDATE_MODELS,
     CONFIG,
     QUANT_SCORE_V2_ENABLED,
+    build_summary,
     _max_drawdown,
     _profit_factor,
     evaluate_segment,
@@ -233,16 +234,73 @@ def test_no_ai_no_network():
 
 # ---- 23. no fake production data ----
 def test_no_fake_production_data():
-    # 空数据时，results.csv 只含表头，summary 全 NOT_ENOUGH_DATA，不产生 0% 胜率
+    # R1（STEP 3-C）：空数据 → 绝不落文件。
+    # 旧行为会写"0 行 results.csv + summary.json"，下游看到文件存在会误以为已完成 OOS。
     tmp = tempfile.mkdtemp()
     r = run_walk_forward(backtest_path="/tmp/nonexistent.csv",
                          results_path=os.path.join(tmp, "r.csv"), summary_path=os.path.join(tmp, "s.json"))
-    res = pd.read_csv(os.path.join(tmp, "r.csv"), dtype=str, keep_default_na=False)
-    check("空数据 results 只有表头（0 行）", len(res) == 0)
-    summary = json.load(open(os.path.join(tmp, "s.json")))
-    check("summary model 全 NOT_ENOUGH_DATA",
-          all(v == "NOT_ENOUGH_DATA" for v in summary["model_statuses"].values()))
+    check("空数据 → results.csv 未创建", not os.path.exists(os.path.join(tmp, "r.csv")))
+    check("空数据 → summary.json 未创建", not os.path.exists(os.path.join(tmp, "s.json")))
+    check("空数据 → written=False", r.get("written") is False)
+    check("空数据 → status=NOT_ENOUGH_DATA", r["status"] == "NOT_ENOUGH_DATA", f"got {r['status']}")
+    # 不伪造结论：内存态返回值中模型状态必须全为 NOT_ENOUGH_DATA
+    check("model_statuses 全 NOT_ENOUGH_DATA",
+          all(v == "NOT_ENOUGH_DATA" for v in r["model_statuses"].values()),
+          str(r["model_statuses"]))
+    # production_lock 语义仍由纯函数保证（不依赖落盘）
+    summary = build_summary(r, pd.DataFrame(), r["model_statuses"], dict(CONFIG))
     check("production_lock ENABLED=false", summary["production_lock"]["QUANT_SCORE_V2_ENABLED"] is False)
+
+
+# ---- STEP 3-C：Phase 5 R1 —— 无数据绝不落文件 ----
+def test_no_data_no_files():
+    """R1：Phase 5 在三种无数据分支下都必须【不创建任何文件】。
+
+    旧行为会写"0 行 results.csv + summary.json"，下游看到文件存在会误以为
+    已完成 OOS 验证。
+    """
+    tmp = tempfile.mkdtemp()
+    r_path = os.path.join(tmp, "r.csv")
+    s_path = os.path.join(tmp, "s.json")
+
+    def none_exist(tag):
+        check(f"[{tag}] results.csv 未创建", not os.path.exists(r_path))
+        check(f"[{tag}] summary.json 未创建", not os.path.exists(s_path))
+
+    # (a) backtest 不存在
+    ra = run_walk_forward(backtest_path=os.path.join(tmp, "missing.csv"),
+                          results_path=r_path, summary_path=s_path)
+    check("(a) → NOT_ENOUGH_DATA", ra["status"] == "NOT_ENOUGH_DATA")
+    check("(a) written=False", ra.get("written") is False)
+    none_exist("a 无 backtest")
+
+    # (b) backtest 为空
+    empty_bt = os.path.join(tmp, "empty_bt.csv")
+    pd.DataFrame(columns=["Technical_Date", "Forward_Return_5D"]).to_csv(empty_bt, index=False)
+    rb = run_walk_forward(backtest_path=empty_bt, results_path=r_path, summary_path=s_path)
+    check("(b) → NOT_ENOUGH_DATA", rb["status"] == "NOT_ENOUGH_DATA")
+    none_exist("b 空 backtest")
+
+    # (c) 缺 Technical_Date 列
+    no_col = os.path.join(tmp, "nocol.csv")
+    pd.DataFrame({"RSI_14": ["50"], "Forward_Return_5D": ["0.01"]}).to_csv(no_col, index=False)
+    rc = run_walk_forward(backtest_path=no_col, results_path=r_path, summary_path=s_path)
+    check("(c) → NOT_ENOUGH_DATA", rc["status"] == "NOT_ENOUGH_DATA")
+    none_exist("c 缺 Technical_Date")
+
+    # (d) 有足够数据 → 正常写出（确认不是"永远不写"）
+    # make_bt 每行递增 1 天；Phase 5 需 initial_train(50) + oos_step(20) = 70 个不同日期
+    bt_path = os.path.join(tmp, "bt.csv")
+    make_bt(120).to_csv(bt_path, index=False)
+    rd = run_walk_forward(backtest_path=bt_path, results_path=r_path, summary_path=s_path)
+    if rd["status"] == "OK":
+        check("(d) 有数据 → written=True", rd.get("written") is True)
+        check("(d) results.csv 已写且非空",
+              os.path.exists(r_path) and os.path.getsize(r_path) > 0)
+    else:
+        # 数据仍不足以开窗也属合法；此时必须依旧不落文件
+        check("(d) 数据不足 → 仍未落文件", not os.path.exists(r_path),
+              f"status={rd['status']}")
 
 
 def main():
@@ -263,6 +321,8 @@ def main():
         test_production_lock,
         test_no_ai_no_network,
         test_no_fake_production_data,
+        # ---- STEP 3-C ----
+        test_no_data_no_files,
     ]
     _failed = 0
     for _t in _tests:

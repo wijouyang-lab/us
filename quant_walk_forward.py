@@ -34,6 +34,7 @@ Quant Walk-Forward / Out-of-Sample Validation —— 阶段 5（纯研究层，�
     AI Calls = 0，网络请求 = 0。只读已持久化的研究数据。
 """
 
+import argparse
 import json
 import os
 import sys
@@ -320,17 +321,19 @@ def run_walk_forward(backtest_path=BACKTEST_PATH, results_path=RESULTS_PATH,
         "window_count": 0,
         "status": "NOT_ENOUGH_DATA",
         "model_statuses": {},
+        # R1 修复：是否真的写出了产物。无数据时保持 False，绝不创建空文件。
+        "written": False,
     }
 
     bt = load_backtest(backtest_path)
     result["backtest_rows"] = int(len(bt))
     if bt.empty:
-        _write_empty_outputs(results_path, summary_path, result, "backtest 为空（Snapshot=0，绝不做历史回填）")
+        _no_data_skip_write(results_path, summary_path, result, "backtest 为空（Snapshot=0，绝不做历史回填）")
         return result
 
     # 时间排序（保持时间顺序，绝不 shuffle）
     if "Technical_Date" not in bt.columns:
-        _write_empty_outputs(results_path, summary_path, result, "缺少 Technical_Date 列")
+        _no_data_skip_write(results_path, summary_path, result, "缺少 Technical_Date 列")
         return result
     dates = sorted(pd.to_datetime(bt["Technical_Date"], errors="coerce").dropna().unique())
 
@@ -340,7 +343,7 @@ def run_walk_forward(backtest_path=BACKTEST_PATH, results_path=RESULTS_PATH,
                             rolling_train=cfg["rolling_train_size"])
     result["window_count"] = len(windows)
     if not windows:
-        _write_empty_outputs(results_path, summary_path, result, "Window 数量=0（数据不足）")
+        _no_data_skip_write(results_path, summary_path, result, "Window 数量=0（数据不足）")
         return result
 
     models = list(CANDIDATE_MODELS.keys()) + [BENCHMARK_MODEL]
@@ -455,6 +458,9 @@ def run_walk_forward(backtest_path=BACKTEST_PATH, results_path=RESULTS_PATH,
     result["model_statuses"] = model_statuses
     result["status"] = "OK" if results_df is not None and not results_df.empty else "NOT_ENOUGH_DATA"
 
+    if results_df is not None and not results_df.empty:
+        result["written"] = True
+
     summary = build_summary(result, results_df, model_statuses, cfg)
     tmp = summary_path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
@@ -517,29 +523,41 @@ def build_summary(result, results_df, model_statuses, cfg):
     }
 
 
-def _write_empty_outputs(results_path, summary_path, result, reason):
+def _no_data_skip_write(results_path, summary_path, result, reason):
+    """R1 防呆修复（STEP 3-C）：无数据时【绝不写出任何文件】。
+
+    旧实现 `_write_empty_outputs()` 会写出"0 行 results.csv + summary.json"，
+    下游看到文件存在可能误以为已完成 OOS 验证，而实际 window_count=0。
+
+    改为：只记录 reason 与模型状态（内存态），不落任何文件。
+    已存在的产物【不会被删除】——是否覆盖由后续有真实数据的运行决定。
+    """
     result["reason"] = reason
-    result["model_statuses"] = {m: "NOT_ENOUGH_DATA" for m in list(CANDIDATE_MODELS.keys()) + [BENCHMARK_MODEL]}
-    if results_path:
-        pd.DataFrame(columns=[
-            "Model", "Window_ID", "Train_Start", "Train_End", "OOS_Start", "OOS_End", "Horizon",
-            "Train_N", "OOS_N", "Train_Win_Rate", "OOS_Win_Rate",
-            "Train_Average_Return", "OOS_Average_Return", "Train_Median_Return", "OOS_Median_Return",
-            "OOS_Std_Return", "OOS_Cumulative_Return", "OOS_Max_Drawdown", "Train_OOS_Gap",
-            "Market_Regime", "Stability_Status", "Overfit_Status", "Validation_Status",
-        ]).to_csv(results_path, index=False, encoding="utf-8")
-    if summary_path:
-        summary = build_summary(result, pd.DataFrame(), result.get("model_statuses", {}), dict(CONFIG))
-        tmp = summary_path + ".tmp"
-        with open(tmp, "w", encoding="utf-8") as f:
-            json.dump(summary, f, ensure_ascii=False, indent=2)
-        os.replace(tmp, summary_path)
+    result["model_statuses"] = {
+        m: "NOT_ENOUGH_DATA" for m in list(CANDIDATE_MODELS.keys()) + [BENCHMARK_MODEL]
+    }
+    result["written"] = False
+    return None
 
 
 def main(argv=None):
-    r = run_walk_forward()
+    """命令行入口（STEP 3-C）：与 Phase 2 一致的退出码语义。
+
+    退出码：0 = OK，或数据不足（预期状态）；1 = --strict 下数据不足。
+    """
+    ap = argparse.ArgumentParser(description="Quant Phase 5 · Walk-Forward / OOS（只读消费 Phase 2 结果）")
+    ap.add_argument("--backtest", default=BACKTEST_PATH, help=f"Phase 2 回测 CSV（默认 {BACKTEST_PATH}）")
+    ap.add_argument("--results", default=RESULTS_PATH, help=f"results 输出（默认 {RESULTS_PATH}）")
+    ap.add_argument("--summary", default=SUMMARY_PATH, help=f"summary 输出（默认 {SUMMARY_PATH}）")
+    ap.add_argument("--strict", action="store_true", help="数据不足时以退出码 1 退出（默认 0）")
+    args = ap.parse_args(argv)
+
+    r = run_walk_forward(backtest_path=args.backtest, results_path=args.results,
+                         summary_path=args.summary)
     print("[Walk-Forward]", r)
-    return 0 if r["status"] in ("OK", "NOT_ENOUGH_DATA") else 1
+    if r["status"] == "OK":
+        return 0
+    return 1 if args.strict else 0
 
 
 if __name__ == "__main__":

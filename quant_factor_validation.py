@@ -45,6 +45,7 @@ Quant Factor Validation —— 阶段 3：因子有效性验证引擎（纯研�
     不自动删除、不自动改权重。
 """
 
+import argparse
 import json
 import os
 import sys
@@ -410,24 +411,26 @@ def run_validation(backtest_path=BACKTEST_PATH,
         "validation_rows": 0,
         "correlation_rows": 0,
         "promising": 0,
+        # R1 修复：是否真的写出了产物。无数据时保持 False，绝不创建空文件。
+        "written": False,
     }
 
     if not os.path.exists(backtest_path):
         result["reason"] = f"backtest 不存在：{backtest_path}"
-        _write_empty_outputs(validation_path, correlation_path, report_path, result)
+        _no_data_skip_write(validation_path, correlation_path, report_path)
         return result
 
     try:
         bt = pd.read_csv(backtest_path, dtype=str, keep_default_na=False)
     except Exception as e:
         result["reason"] = f"backtest 读取失败：{type(e).__name__}: {e}"
-        _write_empty_outputs(validation_path, correlation_path, report_path, result)
+        _no_data_skip_write(validation_path, correlation_path, report_path)
         return result
 
     result["backtest_rows"] = int(len(bt))
     if bt.empty:
         result["reason"] = "backtest 为空（尚无真实研究数据，绝不做历史回填）"
-        _write_empty_outputs(validation_path, correlation_path, report_path, result)
+        _no_data_skip_write(validation_path, correlation_path, report_path)
         return result
 
     validation_df, corr_df, redundant = compute_validation(bt)
@@ -446,32 +449,44 @@ def run_validation(backtest_path=BACKTEST_PATH,
         json.dump(report, f, ensure_ascii=False, indent=2)
 
     result["status"] = "OK"
+    result["written"] = True
     return result
 
 
-def _write_empty_outputs(validation_path, correlation_path, report_path, result):
-    # 即使无数据，也写出"全 NOT_ENOUGH_DATA"的合法空表与报告（只更新状态，不制造结果）
-    vrows = [validate_factor_horizon(None, factor, n) for factor in ALL_FACTORS for n in HORIZONS]
-    validation_df = pd.DataFrame(vrows)
-    corr_df = pd.DataFrame(columns=["Factor_A", "Factor_B", "Pearson", "Spearman", "Redundant"])
-    if validation_path:
-        validation_df.to_csv(validation_path, index=False, encoding="utf-8")
-    if correlation_path:
-        corr_df.to_csv(correlation_path, index=False, encoding="utf-8")
-    if report_path:
-        report = build_report(validation_df, corr_df, [])
-        report["data_maturity"]["backtest_rows"] = result.get("backtest_rows", 0)
-        report["insufficient_data_reasons"] = [
-            {"Factor": f, "Horizon": h, "N": 0} for f in ALL_FACTORS for h in ["5D", "10D", "20D"]
-        ]
-        with open(report_path, "w", encoding="utf-8") as f:
-            json.dump(report, f, ensure_ascii=False, indent=2)
+def _no_data_skip_write(validation_path, correlation_path, report_path):
+    """R1 防呆修复（STEP 3-C）：无数据时【绝不写出任何文件】。
+
+    旧实现 `_write_empty_outputs()` 会在无数据时写出
+    "72 行全 NOT_ENOUGH_DATA 的 validation.csv + 空 correlation.csv + report.json"。
+    虽然它标了状态而非伪造结果，但危害与 Phase 2 的空文件同源：
+    下游看到"文件存在"可能误以为已完成验证，而实际样本为 0。
+
+    改为：什么都不写，由调用方在 result["reason"] 中说明缺口。
+    已存在的产物【不会被删除】——是否覆盖由后续有真实数据的运行决定。
+    """
+    return None
 
 
 def main(argv=None):
-    r = run_validation()
+    """命令行入口（STEP 3-C）：与 Phase 2 一致的退出码语义。
+
+    退出码：0 = OK，或数据不足（NOT_ENOUGH_DATA 是研究数据未就绪的预期状态）；
+            1 = --strict 下数据不足，或其它未就绪状态。
+    """
+    ap = argparse.ArgumentParser(description="Quant Phase 3 · Factor Validation（只读消费 Phase 2 结果）")
+    ap.add_argument("--backtest", default=BACKTEST_PATH, help=f"Phase 2 回测 CSV（默认 {BACKTEST_PATH}）")
+    ap.add_argument("--validation", default=VALIDATION_PATH, help=f"验证输出 CSV（默认 {VALIDATION_PATH}）")
+    ap.add_argument("--correlation", default=CORRELATION_PATH, help=f"相关矩阵输出 CSV（默认 {CORRELATION_PATH}）")
+    ap.add_argument("--report", default=REPORT_PATH, help=f"报告输出 JSON（默认 {REPORT_PATH}）")
+    ap.add_argument("--strict", action="store_true", help="数据不足时以退出码 1 退出（默认 0）")
+    args = ap.parse_args(argv)
+
+    r = run_validation(backtest_path=args.backtest, validation_path=args.validation,
+                       correlation_path=args.correlation, report_path=args.report)
     print("[Validation]", r)
-    return 0 if r["status"] in ("OK", "NOT_ENOUGH_DATA") else 1
+    if r["status"] == "OK":
+        return 0
+    return 1 if args.strict else 0
 
 
 if __name__ == "__main__":

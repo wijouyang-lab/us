@@ -273,6 +273,47 @@ def test_default_production_state():
     check("production_gate=NOT_READY", r["gates"]["production_gate"] == "NOT_READY")
 
 
+# ---- STEP 3-C：Phase 7 R1 一致性 —— 绝不产生空文件 ----
+def test_no_empty_files():
+    """R1 一致性：Phase 7 不存在"无数据写空文件"的分支。
+
+    与其它 Phase 不同，Phase 7 的 state.json 是【治理状态】而非研究数据：
+    V1_ACTIVE 是安全默认值，必须持久存在，因此恒为 written=True。
+    本测试验证的是"它写出的一定是真实非空状态，绝不是 0 字节/0 行文件"。
+    """
+    tmp = tempfile.mkdtemp()
+    state_path = os.path.join(tmp, "state.json")
+    audit_path = os.path.join(tmp, "audit.jsonl")
+    cfg_path = os.path.join(tmp, "cfg.json")
+    app_path = os.path.join(tmp, "app.json")
+
+    r = run_production_governance(config_path=cfg_path, approval_path=app_path,
+                                  state_path=state_path, audit_path=audit_path)
+    check("written=True（治理状态恒为真实内容）", r.get("written") is True)
+    check("state.json 已创建", os.path.exists(state_path))
+    size = os.path.getsize(state_path)
+    check("state.json 非空（非 0 字节）", size > 0, f"{size} bytes")
+
+    st = json.load(open(state_path))
+    check("state 含 active_model", bool(st.get("active_model")), str(st.get("active_model")))
+    check("state active_version=V1", st.get("active_version") == "V1", str(st.get("active_version")))
+    check("state 含 schema_version=phase7.v1", st.get("schema_version") == "phase7.v1",
+          str(st.get("schema_version")))
+    check("state 非 0 行/非空 dict", len(st) > 0, f"{len(st)} keys")
+
+    check("audit.jsonl 已创建且非空",
+          os.path.exists(audit_path) and os.path.getsize(audit_path) > 0)
+    entry = json.loads(open(audit_path).readline())
+    check("audit 首条含 schema_version=phase7.v1",
+          entry.get("schema_version") == "phase7.v1", str(entry.get("schema_version")))
+    check("audit 首条含真实 Gate_Status", "Gate_Status" in entry)
+
+    # 安全状态不变
+    check("production_state=V1_ACTIVE", r["production_state"] == "V1_ACTIVE",
+          str(r["production_state"]))
+    check("gate=NOT_READY", r["gates"]["production_gate"] == "NOT_READY")
+
+
 def main():
     _tests = [
         test_gates_all_fail,
@@ -297,6 +338,8 @@ def main():
         test_no_ai_no_network,
         test_v1_unchanged,
         test_default_production_state,
+        # ---- STEP 3-C ----
+        test_no_empty_files,
     ]
     _failed = 0
     for _t in _tests:

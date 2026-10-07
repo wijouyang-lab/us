@@ -212,15 +212,23 @@ def test_run_validation_empty():
     res = run_validation(backtest_path=bt_path, validation_path=v_path, correlation_path=c_path, report_path=r_path)
     check("无 backtest → NOT_ENOUGH_DATA", res["status"] == "NOT_ENOUGH_DATA", f"got {res['status']}")
 
+    # R1（STEP 3-C）：无数据 → 绝不落文件
+    check("无 backtest → validation.csv 未创建", not os.path.exists(v_path))
+    check("无 backtest → report.json 未创建", not os.path.exists(r_path))
+    check("无 backtest → written=False", res.get("written") is False)
+
     # 空 backtest
     pd.DataFrame(columns=["RSI_14", "Forward_Return_5D"]).to_csv(bt_path, index=False)
     res2 = run_validation(backtest_path=bt_path, validation_path=v_path, correlation_path=c_path, report_path=r_path)
     check("空 backtest → NOT_ENOUGH_DATA", res2["status"] == "NOT_ENOUGH_DATA")
-    # 校验写出的 validation 全是 NOT_ENOUGH_DATA，且 N=0 时 Win_Rate 是空（非0）
-    vdf = pd.read_csv(v_path, dtype=str, keep_default_na=False)
-    check("空数据 validation 行数 = factor×horizon", len(vdf) == len(ALL_FACTORS) * 3, f"got {len(vdf)}")
-    check("所有行 Status=NOT_ENOUGH_DATA", (vdf["Status"] == "NOT_ENOUGH_DATA").all())
-    check("N=0 时 Win_Rate 为空", (vdf["Win_Rate"] == "").all())
+    # R1：空数据同样不落文件（旧行为会写 72 行全 NOT_ENOUGH_DATA 的表）
+    check("空 backtest → validation.csv 未创建", not os.path.exists(v_path))
+    check("空 backtest → correlation.csv 未创建", not os.path.exists(c_path))
+    check("空 backtest → report.json 未创建", not os.path.exists(r_path))
+    # 内存态仍可校验"不伪造"：直接调用纯函数确认 N=0 时指标为 None 而非 0
+    one = validate_factor_horizon(None, "RSI_14", 5)
+    check("N=0 时 Win_Rate 为 None（非 0）", one["Win_Rate"] is None, str(one["Win_Rate"]))
+    check("N=0 时 Status=NOT_ENOUGH_DATA", one["Status"] == "NOT_ENOUGH_DATA")
 
     # 有真实数据 → OK
     make_bt(60).to_csv(bt_path, index=False)
@@ -231,6 +239,54 @@ def test_run_validation_empty():
     check("report 含 data_maturity", "data_maturity" in report)
     check("report 含 validation_status", "validation_status" in report)
     check("report 含 insufficient_data_reasons", "insufficient_data_reasons" in report)
+
+
+# ---- STEP 3-C：Phase 3 R1 —— 无数据绝不落文件 ----
+def test_no_data_no_files():
+    """R1：Phase 3 在三种无数据分支下都必须【不创建任何文件】。
+
+    旧行为会写 72 行全 NOT_ENOUGH_DATA 的 validation.csv —— 文件存在会让人
+    误以为验证已完成。现在必须一个文件都不写。
+    """
+    tmp = tempfile.mkdtemp()
+    bt_path = os.path.join(tmp, "quant_factor_backtest.csv")
+    v_path = os.path.join(tmp, "quant_factor_validation.csv")
+    c_path = os.path.join(tmp, "quant_factor_correlation.csv")
+    r_path = os.path.join(tmp, "quant_factor_validation_report.json")
+
+    def none_exist(tag):
+        for p, nm in ((v_path, "validation.csv"), (c_path, "correlation.csv"),
+                      (r_path, "report.json")):
+            check(f"[{tag}] {nm} 未创建", not os.path.exists(p))
+
+    # (a) backtest 不存在
+    ra = run_validation(backtest_path=bt_path, validation_path=v_path,
+                        correlation_path=c_path, report_path=r_path)
+    check("(a) → NOT_ENOUGH_DATA", ra["status"] == "NOT_ENOUGH_DATA")
+    check("(a) written=False", ra.get("written") is False)
+    none_exist("a 无 backtest")
+
+    # (b) backtest 为空
+    pd.DataFrame(columns=["RSI_14", "Forward_Return_5D"]).to_csv(bt_path, index=False)
+    rb = run_validation(backtest_path=bt_path, validation_path=v_path,
+                        correlation_path=c_path, report_path=r_path)
+    check("(b) → NOT_ENOUGH_DATA", rb["status"] == "NOT_ENOUGH_DATA")
+    none_exist("b 空 backtest")
+
+    # (c) 有数据 → 正常写出（确认不是"永远不写"）
+    make_bt(60).to_csv(bt_path, index=False)
+    rc = run_validation(backtest_path=bt_path, validation_path=v_path,
+                        correlation_path=c_path, report_path=r_path)
+    check("(c) 有数据 → OK", rc["status"] == "OK", f"got {rc['status']}")
+    check("(c) written=True", rc.get("written") is True)
+    check("(c) validation.csv 已写且非空",
+          os.path.exists(v_path) and os.path.getsize(v_path) > 0)
+
+    # (d) 已存在产物 + 后续无数据运行 → 不删除、不截断
+    before = open(v_path, "rb").read()
+    run_validation(backtest_path=os.path.join(tmp, "missing.csv"),
+                   validation_path=v_path, correlation_path=c_path, report_path=r_path)
+    check("(d) 已存在产物未被删除/截断", open(v_path, "rb").read() == before)
 
 
 def main():
@@ -247,6 +303,8 @@ def main():
         test_no_future_leakage,
         test_no_fake_zero,
         test_run_validation_empty,
+        # ---- STEP 3-C ----
+        test_no_data_no_files,
     ]
     _failed = 0
     for _t in _tests:
