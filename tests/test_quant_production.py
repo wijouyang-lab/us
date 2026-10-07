@@ -314,6 +314,108 @@ def test_no_empty_files():
     check("gate=NOT_READY", r["gates"]["production_gate"] == "NOT_READY")
 
 
+# ---- STEP 4-8 / Phase 7：activation criteria ----
+# 约束：不硬编码真实事件日期 —— 所有日期用 fixture 参数（测试内固定合成日期，非业务事件日期）。
+def _write_all_pass(tmp):
+    """写入使 4 个 gate 全部 PASS 所需的合成证据文件（TEST DATA，绝不写生产 CSV）。"""
+    import json as _json
+    f = tmp_files()
+    # research gate：至少一个 PROMISING
+    pd.DataFrame([{"Factor": "RSI_14", "Status": "PROMISING"}]).to_csv(
+        f["validation_csv"], index=False, encoding="utf-8")
+    with open(f["validation_report"], "w", encoding="utf-8") as h:
+        _json.dump({"schema_version": "phase3.v1"}, h)
+    # wf gate：至少一个模型 OOS PASS
+    with open(f["wf_summary"], "w", encoding="utf-8") as h:
+        _json.dump({"model_statuses": {"MODEL_B_BALANCED": "PASS"}}, h)
+    pd.DataFrame([{"Model": "MODEL_B_BALANCED", "Validation_Status": "PASS"}]).to_csv(
+        f["wf_csv"], index=False, encoding="utf-8")
+    # shadow gate：已启用且 horizon 成熟
+    with open(f["shadow_report"], "w", encoding="utf-8") as h:
+        _json.dump({"shadow_status": "SHADOW_ACTIVE",
+                    "5D_status": "OK", "10D_status": "OK", "20D_status": "OK"}, h)
+    pd.DataFrame([{"Scan_Date": "2026-03-02", "Ticker": "T0"}]).to_csv(
+        f["shadow_snap"], index=False, encoding="utf-8")
+    pd.DataFrame([{"Scan_Date": "2026-03-02", "Ticker": "T0"}]).to_csv(
+        f["shadow_perf"], index=False, encoding="utf-8")
+    return f
+
+
+def test_activation_criteria():
+    """Production Gate 必须四项俱全才 READY；且 READY ≠ ENABLED（绝不自动 promote）。"""
+    tmp = tempfile.mkdtemp()
+    f = _write_all_pass(tmp)
+    approval_ok = {"approved": True, "approved_by": "tester", "approved_at": "2026-03-02T00:00:00Z"}
+
+    def gates(**over):
+        kw = dict(approval=approval_ok,
+                  validation_csv=f["validation_csv"], validation_report=f["validation_report"],
+                  wf_summary=f["wf_summary"], wf_csv=f["wf_csv"],
+                  shadow_report=f["shadow_report"], shadow_snap=f["shadow_snap"],
+                  shadow_perf=f["shadow_perf"])
+        kw.update(over)
+        return evaluate_production_gates(**kw)
+
+    # (1) 四项俱全 → READY_FOR_PRODUCTION
+    g_all = gates()
+    check("四 gate 全 PASS → READY_FOR_PRODUCTION",
+          g_all["production_gate"] == "READY_FOR_PRODUCTION", str(g_all["production_gate"]))
+    check("research_gate=PASS", g_all["research_gate"] == "PASS", str(g_all["research_gate"]))
+    check("walk_forward_gate=PASS", g_all["walk_forward_gate"] == "PASS", str(g_all["walk_forward_gate"]))
+    check("shadow_gate=PASS", g_all["shadow_gate"] == "PASS", str(g_all["shadow_gate"]))
+    check("human_approval_gate=PASS", g_all["human_approval_gate"] == "PASS",
+          str(g_all["human_approval_gate"]))
+
+    # (2) READY ≠ ENABLED：V2 开关必须仍为 False
+    check("READY 时 QUANT_SCORE_V2_ENABLED 仍为 False（绝不自动 promote）",
+          QUANT_SCORE_V2_ENABLED is False)
+
+    # (3) V1 在任何 gate 状态下都是 V1_ACTIVE
+    check("determine_state(V1) = V1_ACTIVE",
+          determine_state(V1_MODEL, g_all, approval_ok) == "V1_ACTIVE",
+          str(determine_state(V1_MODEL, g_all, approval_ok)))
+
+    # (4) 缺任一 gate → NOT_READY
+    variants = [
+        ("无人工审批", dict(approval={"approved": False})),
+        ("无 research 证据", dict(validation_csv=os.path.join(tmp, "none.csv"))),
+        ("无 wf 结果", dict(wf_summary=os.path.join(tmp, "none.json"),
+                        wf_csv=os.path.join(tmp, "none2.csv"))),
+        ("shadow 未启用", dict(shadow_report=os.path.join(tmp, "none3.json"),
+                           shadow_snap=os.path.join(tmp, "none4.csv"),
+                           shadow_perf=os.path.join(tmp, "none5.csv"))),
+    ]
+    for label, over in variants:
+        g = gates(**over)
+        check("缺 %s → NOT_READY" % label,
+              g["production_gate"] == "NOT_READY", "%s → %s" % (label, g["production_gate"]))
+
+    # (5) gate 未就绪时 V2 必须 BLOCKED（即使审批通过）
+    g_partial = gates(shadow_report=os.path.join(tmp, "n6.json"),
+                      shadow_snap=os.path.join(tmp, "n7.csv"),
+                      shadow_perf=os.path.join(tmp, "n8.csv"))
+    check("gate 未就绪 → V2 BLOCKED",
+          determine_state(V2_MODEL, g_partial, approval_ok) == "BLOCKED",
+          str(determine_state(V2_MODEL, g_partial, approval_ok)))
+
+    # (6) 审批缺失时 V2 BLOCKED
+    check("无审批 → V2 BLOCKED",
+          determine_state(V2_MODEL, g_all, {"approved": False}) == "BLOCKED",
+          str(determine_state(V2_MODEL, g_all, {"approved": False})))
+
+    # (7) 当前真实默认状态：所有证据文件缺失 → NOT_READY 且 V1_ACTIVE
+    g_real = evaluate_production_gates(
+        approval={"approved": False},
+        validation_csv=os.path.join(tmp, "r1.csv"), validation_report=os.path.join(tmp, "r2.json"),
+        wf_summary=os.path.join(tmp, "r3.json"), wf_csv=os.path.join(tmp, "r4.csv"),
+        shadow_report=os.path.join(tmp, "r5.json"), shadow_snap=os.path.join(tmp, "r6.csv"),
+        shadow_perf=os.path.join(tmp, "r7.csv"))
+    check("真实默认 → production_gate=NOT_READY", g_real["production_gate"] == "NOT_READY",
+          str(g_real["production_gate"]))
+    check("真实默认 → V1_ACTIVE",
+          determine_state(V1_MODEL, g_real, {"approved": False}) == "V1_ACTIVE")
+
+
 def main():
     _tests = [
         test_gates_all_fail,
@@ -340,6 +442,8 @@ def main():
         test_default_production_state,
         # ---- STEP 3-C ----
         test_no_empty_files,
+        # ---- STEP 4-8 / Phase 7 ----
+        test_activation_criteria,
     ]
     _failed = 0
     for _t in _tests:
