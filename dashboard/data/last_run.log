@@ -5,6 +5,9 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 pending CSV（本次 Scan 新推荐）：us_stocks_pending_20261007.csv
 当前有效股票池：44 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
+
+1 Failed download:
+['^GSPC']: YFRateLimitError('Too Many Requests. Rate limited. Try after a while.')
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
@@ -20,7 +23,7 @@ $XAGUSD=X: No data found, symbol may be delisted
 ['XAGUSD=X']: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
 $XAGUSD=X: No data found, symbol may be delisted
-全球市场：15/15 可用，实时 15 只（CNBC 现货收益率 0 只；盘外静态收盘 0 只；绝不使用旧 JSON 宏观缓存）
+全球市场：15/15 可用，实时 12 只（CNBC 现货收益率 0 只；盘外静态收盘 3 只；绝不使用旧 JSON 宏观缓存）
 $EDGM: possibly delisted; no price data found  (period=1d)
 $HIRU: possibly delisted; no price data found  (period=1d)
 $RGBP: possibly delisted; no price data found  (period=1d)
@@ -30,7 +33,7 @@ pending CSV          : us_stocks_pending_20261007.csv   股票名单来源：act
 Core 数量            : 17
 Observation 数量     : 27
 Options 数量         : 0（Active 0）
-Market 数据数量      : 15/15 可用（来源 ['yfinance']）
+Market 数据数量      : 15/15 可用（来源 ['yahoo_http', 'yfinance']）
 K线成功 / 失败       : 44 / 0   技术指标成功 44/44
 当前价来源           : 实时 44 · 最新收盘 0 · 合计可取 44/44
 Review 数据状态      :

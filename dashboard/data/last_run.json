@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-07T19:46:16Z",
-  "market_updated_at": "2026-10-07T19:46:14Z",
-  "technical_updated_at": "2026-10-07T19:46:16Z",
+  "generated_at": "2026-10-07T20:01:16Z",
+  "market_updated_at": "2026-10-07T20:01:14Z",
+  "technical_updated_at": "2026-10-07T20:01:16Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -12,6 +12,7 @@
     "available": 15,
     "total": 15,
     "source_used": [
+      "yahoo_http",
       "yfinance"
     ],
     "missing": []
