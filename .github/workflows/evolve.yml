@@ -55,7 +55,7 @@ jobs:
 
     - name: Install Libs
       if: steps.check-date.outputs.should_run == 'true'
-      run: pip install pandas pandas-ta requests anthropic tushare
+      run: python -m pip install -r requirements-production.txt
 
     - name: Run Evolve
       if: steps.check-date.outputs.should_run == 'true'

@@ -33,7 +33,8 @@ jobs:
 
       - name: 安装依赖
         run: |
-          pip install pandas yfinance anthropic requests lxml html5lib
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-production.txt
 
       - name: 配置Git
         run: |

@@ -65,7 +65,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          if ! pip install -r requirements-dashboard.txt; then
+          if ! python -m pip install -r requirements-production.txt; then
             echo "::warning::依赖安装失败，dashboard_export.py 将自动降级到内置 HTTP / Stooq 源"
           fi
           python -c "import yfinance,sys;print('yfinance', yfinance.__version__)" \
