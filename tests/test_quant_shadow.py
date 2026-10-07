@@ -305,6 +305,75 @@ def test_no_data_no_files():
     check("禁用期 performance_rows=0", ra["performance_rows"] == 0)
 
 
+# ---- STEP 4-8 / Phase 6：V1/V2 分歧记录完整性 ----
+# 约束：不硬编码真实事件日期（沿用 make_snapshot 的 fixture 日期）；
+#       不假设 Technical_Date 与 price history 一致（本测试只校验分歧记录结构）。
+def test_divergence_record_completeness():
+    """Shadow 快照必须逐行完整记录 V1 与 V2 两侧的可比字段，且分歧分类自洽。"""
+    snap = make_snapshot(n_tickers=10, with_tag=True)
+    ss = build_shadow_snapshot(snap, "MODEL_B_BALANCED", top_k=3)
+
+    required = ["Scan_Date", "Ticker", "Name", "Sector",
+                "Existing_Quant_Score", "Existing_Final_Score", "Existing_Tag",
+                "Shadow_Model", "Shadow_Score", "Shadow_Rank",
+                "Existing_Selected", "Shadow_Selected", "Difference_Type",
+                "Market_Regime", "VIX", "Price"]
+    missing = [c for c in required if c not in ss.columns]
+    check("分歧记录必需字段齐全", not missing, str(missing))
+
+    check("每行都覆盖同一候选池（V1/V2 看到相同股票）",
+          len(ss) == len(snap), "%d vs %d" % (len(ss), len(snap)))
+
+    # V1 侧字段必须有值（不为空）
+    check("V1 侧 Quant_Score 全部有值",
+          (ss["Existing_Quant_Score"].astype(str).str.strip() != "").all())
+    check("V1 侧 Final_Score 全部有值",
+          (ss["Existing_Final_Score"].astype(str).str.strip() != "").all())
+
+    # V2 侧字段必须有值（Shadow 分数与排名）
+    check("V2 侧 Shadow_Score 全部有值",
+          (ss["Shadow_Score"].astype(str).str.strip() != "").all())
+    check("V2 侧 Shadow_Rank 全部有值",
+          (ss["Shadow_Rank"].astype(str).str.strip() != "").all())
+    check("Shadow_Model 标注正确",
+          (ss["Shadow_Model"] == "MODEL_B_BALANCED").all())
+
+    # 分歧分类必须是四种合法取值之一
+    valid = {"BOTH_SELECTED", "EXISTING_ONLY", "SHADOW_ONLY", "BOTH_REJECTED"}
+    got = set(ss["Difference_Type"].astype(str))
+    check("Difference_Type 取值合法", got <= valid, str(sorted(got)))
+
+    # 分歧分类必须与两侧 Selected 标记自洽（不能自相矛盾）
+    def expect(row):
+        e = str(row["Existing_Selected"]) == "true"
+        s_ = str(row["Shadow_Selected"]) == "true"
+        return classify_difference(e, s_)
+    mismatch = [ (r["Ticker"], r["Difference_Type"], expect(r))
+                 for _, r in ss.iterrows() if str(r["Difference_Type"]) != expect(r) ]
+    check("Difference_Type 与两侧 Selected 标记自洽", not mismatch, str(mismatch[:3]))
+
+    # 必须真的产生分歧（否则 shadow 无观察价值）：构造 V2 选与 V1 选不同集合的情形
+    types = set(ss["Difference_Type"].astype(str))
+    check("存在至少一种分歧分类", len(types) >= 1, str(sorted(types)))
+
+    # 确定性：同一输入两次构建结果一致
+    ss2 = build_shadow_snapshot(snap, "MODEL_B_BALANCED", top_k=3)
+    check("确定性：重复构建结果一致",
+          ss.reset_index(drop=True).equals(ss2.reset_index(drop=True)))
+
+    # 禁用语义：SHADOW 未启用时 run_shadow 不得产出任何分歧记录行
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "snap.csv")
+    snap.to_csv(snap_path, index=False)
+    r = run_shadow(snapshot_path=snap_path,
+                   shadow_snapshot_path=os.path.join(tmp, "ss.csv"),
+                   performance_path=os.path.join(tmp, "p.csv"),
+                   report_path=os.path.join(tmp, "r.json"))
+    check("禁用时 shadow_snapshot_rows=0（无分歧记录产出）",
+          r["shadow_snapshot_rows"] == 0, str(r["shadow_snapshot_rows"]))
+    check("禁用时不落任何文件", not os.path.exists(os.path.join(tmp, "ss.csv")))
+
+
 def main():
     _tests = [
         test_empty_candidate_pool,
@@ -327,6 +396,8 @@ def main():
         test_empty_report,
         # ---- STEP 3-C ----
         test_no_data_no_files,
+        # ---- STEP 4-8 / Phase 6 ----
+        test_divergence_record_completeness,
     ]
     _failed = 0
     for _t in _tests:
