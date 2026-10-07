@@ -3,7 +3,7 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
 pending CSV（本次 Scan 新推荐）：us_stocks_pending_20261007.csv
-当前有效股票池：42 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+当前有效股票池：44 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
@@ -27,12 +27,12 @@ $RGBP: possibly delisted; no price data found  (period=1d)
 已读取 workflow runtimes：runtimes.json
 --------------------------------------------------------------
 pending CSV          : us_stocks_pending_20261007.csv   股票名单来源：active_events
-Core 数量            : 16
-Observation 数量     : 26
+Core 数量            : 17
+Observation 数量     : 27
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 42 / 0   技术指标成功 42/42
-当前价来源           : 实时 42 · 最新收盘 0 · 合计可取 42/42
+K线成功 / 失败       : 44 / 0   技术指标成功 44/44
+当前价来源           : 实时 44 · 最新收盘 0 · 合计可取 44/44
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 15  [complete]
@@ -41,9 +41,9 @@ Review 数据状态      :
    · actual_active_count          = 5  [complete]
 history 条数         : 46
 Quant 研究状态       : RESEARCH · 数据可用性 PARTIAL · 生产 V1 V1_ACTIVE · V2 DISABLED · Gate NOT_READY
-AI 六段状态          : partial（31/42 只股票有内容，来源 Scan 2026-10-07）
+AI 六段状态          : partial（33/44 只股票有内容，来源 Scan 2026-10-07）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
-字段 null 统计       : {'quant_score': 8, 'ai_score': 8, 'fundamental_score': 8, 'technical_score': 8, 'risk_liquidity_score': 8, 'pe_ttm': 8, 'pe_forward': 8, 'pb': 8, 'eps_ttm': 8, 'roe': 9, 'revenue_growth': 8, 'earnings_growth': 12, 'profit_margin': 8, 'market_cap': 8, 'market_regime': 21, 'vix': 21}
+字段 null 统计       : {'quant_score': 8, 'ai_score': 8, 'fundamental_score': 8, 'technical_score': 8, 'risk_liquidity_score': 8, 'pe_ttm': 8, 'pe_forward': 8, 'pb': 8, 'eps_ttm': 8, 'roe': 11, 'revenue_growth': 8, 'earnings_growth': 11, 'profit_margin': 8, 'market_cap': 8, 'market_regime': 21, 'vix': 21}
 GPT / LLM            : 全程 0 次调用（AI 文本来自 Scan 已落盘内容，本脚本只透传）
 ==============================================================
