@@ -11,13 +11,13 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import quant_shadow as qs
+from quant_factor_backtest import forward_return_nd
 from quant_shadow import (
     SHADOW_ENABLE,
     SHADOW_START_DATE,
     build_shadow_performance,
     build_shadow_snapshot,
     classify_difference,
-    compute_forward_return,
     compute_shadow_score,
     run_shadow,
     shadow_rank,
@@ -151,16 +151,16 @@ def test_no_backfill():
 def test_forward_returns():
     s = make_price_series(30)
     # T = 2026-02-27, Close[T]=100
-    r5 = compute_forward_return(s, "2026-02-27", 100.0, 5)
-    r10 = compute_forward_return(s, "2026-02-27", 100.0, 10)
-    r20 = compute_forward_return(s, "2026-02-27", 100.0, 20)
+    r5 = forward_return_nd(s, "2026-02-27", 100.0, 5)
+    r10 = forward_return_nd(s, "2026-02-27", 100.0, 10)
+    r20 = forward_return_nd(s, "2026-02-27", 100.0, 20)
     check("5D 非 None", r5 is not None, f"got {r5}")
     check("10D 非 None", r10 is not None, f"got {r10}")
     check("20D 非 None", r20 is not None, f"got {r20}")
     # 缺价 → None
     short = pd.Series([100.0, 101.0], index=pd.bdate_range("2026-02-27", periods=2))
-    check("缺未来价格 → None", compute_forward_return(short, "2026-02-27", 100.0, 5) is None)
-    check("无价格序列 → None", compute_forward_return(None, "2026-02-27", 100.0, 5) is None)
+    check("缺未来价格 → None", forward_return_nd(short, "2026-02-27", 100.0, 5) is None)
+    check("无价格序列 → None", forward_return_nd(None, "2026-02-27", 100.0, 5) is None)
 
 
 def test_performance():

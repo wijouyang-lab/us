@@ -48,6 +48,8 @@ from quant_score_v2 import (
     FACTOR_REGISTRY_DEF,
     QUANT_SCORE_V2_ENABLED,
 )
+# Forward Return 唯一真源：统一复用 Phase 2 的 forward_return_nd，绝不另起一套口径。
+from quant_factor_backtest import forward_return_nd
 
 SNAPSHOT_PATH = "quant_factor_snapshot.csv"
 PERFORMANCE_PATH = "quant_shadow_performance.csv"
@@ -198,26 +200,12 @@ def build_shadow_snapshot(snapshot_df, shadow_model, top_k=5):
 # ============================================================================
 # 4. Performance Tracking（真实 Forward Return，缺价 → None）
 # ============================================================================
-def compute_forward_return(price_series, technical_date, close_t, n):
-    """复用 Phase 2 口径：Close[T+n交易日] / Close[T] - 1。未来不存在 → None。"""
-    if close_t is None or close_t <= 0 or price_series is None or price_series.empty:
-        return None
-    try:
-        ts = pd.Timestamp(technical_date).normalize()
-    except Exception:
-        return None
-    pos = price_series.index.searchsorted(ts, side="right")
-    target = pos + n - 1
-    if target < 0 or target >= len(price_series):
-        return None
-    future = _to_float(price_series.iloc[target])
-    if future is None or future <= 0:
-        return None
-    return round((future / close_t - 1.0), 6)
-
-
 def build_shadow_performance(snapshot_df, price_map):
-    """对全候选池每个 ticker 计算 5D/10D/20D forward return，返回长表。缺价 → None。"""
+    """对全候选池每个 ticker 计算 5D/10D/20D forward return，返回长表。缺价 → None。
+
+    Forward Return 统一调用 quant_factor_backtest.forward_return_nd（唯一真源），
+    与 Backtest 完全同口径，杜绝同名函数不同公式的历史污染。
+    """
     if snapshot_df is None or snapshot_df.empty:
         return pd.DataFrame()
     rows = []
@@ -228,7 +216,7 @@ def build_shadow_performance(snapshot_df, price_map):
         series = price_map.get(ticker) if price_map else None
         row = {"Scan_Date": r.get("Scan_Date", ""), "Ticker": ticker}
         for n in HORIZONS:
-            fr = compute_forward_return(series, tech, close_t, n)
+            fr = forward_return_nd(series, tech, close_t, n)
             row[f"Forward_Return_{n}D"] = fr
         rows.append(row)
     return pd.DataFrame(rows)
