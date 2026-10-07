@@ -13,6 +13,7 @@ from quant_factor_lab import (
     beta_60d,
     build_snapshot_rows,
     calculate_extended_quant_factors,
+    check_technical_date_contract,
     momentum_pct,
     realized_volatility_20d_pct,
     stock_rs_20d_vs_spy,
@@ -218,6 +219,70 @@ def test_no_lookahead():
 
 
 # ---- 全量入口 ----
+# ---- 契约告警（Technical_Date vs 理论最后完成交易日）----
+# 约束：测试用例不出现任何绝对业务日期 —— 全部用 pandas.bdate_range 动态生成日历，
+# 再按「末端 / 末端-1 / 末端-2」的相对位置取日期。
+def test_technical_date_contract_warning():
+    """契约告警必须把"隐性滞后"变成显性信号；且自身严格只读。"""
+    cal = [d.strftime("%Y-%m-%d") for d in pd.bdate_range("2026-09-01", periods=30)]
+    last = cal[-1]        # 理论最后完成交易日
+    prev1 = cal[-2]       # 滞后 1 个交易日
+    prev2 = cal[-3]       # 滞后 2 个交易日
+    beyond = (pd.Timestamp(cal[-1]) + pd.Timedelta(days=3)).strftime("%Y-%m-%d")  # 超前场景
+
+    # (1) 滞后 1 个交易日 → STALE + 完整 warning 四要素
+    r = check_technical_date_contract(prev1, last, trading_dates=cal)
+    check("滞后1个交易日 → STALE", r["status"] == "STALE", f"got {r['status']}")
+    check("gap_trading_days = 1", r["gap_trading_days"] == 1, str(r["gap_trading_days"]))
+    check("expected_date = 理论最后完成交易日", r["expected_date"] == last, str(r["expected_date"]))
+    msg = r["message"]
+    check("warning 含 实际 Technical_Date", prev1 in msg)
+    check("warning 含 理论/最新可得日期", last in msg)
+    check("warning 含 相差交易日数", ("1" in msg and "交易日" in msg))
+    check("warning 含 建议", "建议" in msg)
+    check("warning 指向契约出处", "quant_factor_price.py" in msg)
+
+    # (2) 滞后 2 个交易日 → STALE 且 gap=2（可区分滞后幅度）
+    r2 = check_technical_date_contract(prev2, last, trading_dates=cal)
+    check("滞后2个交易日 → STALE", r2["status"] == "STALE", f"got {r2['status']}")
+    check("gap_trading_days = 2", r2["gap_trading_days"] == 2, str(r2["gap_trading_days"]))
+
+    # (3) 契约成立 → OK，不告警
+    r3 = check_technical_date_contract(last, last, trading_dates=cal)
+    check("T == 理论值 → OK", r3["status"] == "OK", f"got {r3['status']}")
+    check("OK 时 gap = 0", r3["gap_trading_days"] == 0)
+
+    # (4) 实际比日历更新 → AHEAD，不误报为 STALE
+    r4 = check_technical_date_contract(beyond, last, trading_dates=cal)
+    check("T 晚于日历末端 → AHEAD（不误报 STALE）",
+          r4["status"] == "AHEAD", f"got {r4['status']}")
+
+    # (5) 无 price history 参考时仍可用 cutoff 判定（降级为自然日差，不崩溃）
+    r5 = check_technical_date_contract(prev1, last, trading_dates=None)
+    check("无日历参考 → 仍能判定 STALE", r5["status"] == "STALE", f"got {r5['status']}")
+    check("无日历参考 → gap 非空", r5["gap_trading_days"] is not None)
+
+    # (6) 缺输入 → 明确状态，不崩溃
+    r6 = check_technical_date_contract(None, last, trading_dates=cal)
+    check("缺 Technical_Date → NO_DATA", r6["status"] == "NO_DATA", f"got {r6['status']}")
+    r7 = check_technical_date_contract(prev1, None, trading_dates=cal)
+    check("缺 cutoff → NO_REFERENCE", r7["status"] == "NO_REFERENCE", f"got {r7['status']}")
+
+    # (7) 只读性：不修改入参、不产生任何文件
+    cal_copy = list(cal)
+    check_technical_date_contract(prev1, last, trading_dates=cal)
+    check("只读：不修改传入的 trading_dates", cal == cal_copy)
+    tmp = tempfile.mkdtemp()
+    before = sorted(os.listdir(tmp))
+    check_technical_date_contract(prev1, last, trading_dates=cal)
+    check("只读：不产生任何文件", sorted(os.listdir(tmp)) == before)
+
+    # (8) 确定性：同输入两次调用结果一致
+    a = check_technical_date_contract(prev1, last, trading_dates=cal)
+    b = check_technical_date_contract(prev1, last, trading_dates=cal)
+    check("确定性：重复调用结果一致", a == b)
+
+
 def main():
     _tests = [
         test_momentum,
@@ -232,6 +297,8 @@ def main():
         test_nan_handling,
         test_snapshot,
         test_no_lookahead,
+        # ---- 契约告警 ----
+        test_technical_date_contract_warning,
     ]
     _failed = 0
     for _t in _tests:

@@ -44,7 +44,11 @@ import yfinance as yf
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
-from quant_factor_lab import calculate_extended_quant_factors, write_factor_snapshot
+from quant_factor_lab import (
+    calculate_extended_quant_factors,
+    check_technical_date_contract,
+    write_factor_snapshot,
+)
 
 # ==================== 环境检查 ====================
 TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
@@ -57,6 +61,8 @@ REGIME_GATE_VERSION = "2026-08-31-US"
 
 # Quant Factor Lab 每日因子快照路径（只落盘，不参与选股）
 QUANT_FACTOR_SNAPSHOT_FILE = "quant_factor_snapshot.csv"
+# Phase 2B 持久价格历史（仅用于契约告警的只读比对，绝不写入）
+QUANT_PRICE_HISTORY_FILE = "quant_factor_price_history.csv"
 
 
 def _is_valid_ai_stop(stop_raw, reference_price):
@@ -3725,6 +3731,36 @@ if __name__ == "__main__":
     # 这样快照能记录"全候选池 + 每项是否过 gate"，避免只保留最终 Core/Observation 的 selection bias。
     snapshot_pool = pool_data
     pool_data = apply_entry_quality_gate(pool_data, market_ctx, event_regime)
+
+    # ---- Quant 契约告警（只读比对 + 日志；绝不改值、绝不改数据源、绝不阻断落盘）----
+    # 契约：Technical_Date = 最后完整常规交易日（见 quant_factor_price.py:10-16）。
+    # 2026-10-07 首份真实数据曾出现 Technical_Date=2026-10-05 而理论值为 2026-10-06，
+    # 即契约未兑现。此处把该隐性偏差变成每日可见的显性信号，供后续判定是否为系统性滞后。
+    try:
+        _cutoff = _last_completed_regular_date_us(get_scan_asof_us())
+        _known_dates = []
+        if os.path.exists(QUANT_PRICE_HISTORY_FILE):
+            _ph = pd.read_csv(QUANT_PRICE_HISTORY_FILE, dtype=str, keep_default_na=False)
+            if "Date" in _ph.columns:
+                _known_dates = sorted({str(x).strip() for x in _ph["Date"] if str(x).strip()})
+        _t_dates = sorted({str(x.get("Technical_Date") or "").strip()
+                           for x in snapshot_pool
+                           if str(x.get("Technical_Date") or "").strip()})
+        _diag = check_technical_date_contract(
+            _t_dates[-1] if _t_dates else None,
+            _cutoff,
+            trading_dates=_known_dates,
+        )
+        if _diag.get("status") == "STALE":
+            print("⚠️ " + _diag["message"])
+        else:
+            print(f"[Quant Factor Lab][契约] Technical_Date={_t_dates[-1] if _t_dates else None} "
+                  f"理论={_diag.get('expected_date')} status={_diag.get('status')} "
+                  f"gap={_diag.get('gap_trading_days')}")
+    except Exception as _cw_e:
+        print(f"⚠️ [Quant Factor Lab] 契约告警校验异常（不影响落盘）："
+              f"{type(_cw_e).__name__}: {_cw_e}")
+
     try:
         write_factor_snapshot(snapshot_pool, QUANT_FACTOR_SNAPSHOT_FILE, today_us_str())
     except Exception as _qf_e:

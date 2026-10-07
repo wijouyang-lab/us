@@ -283,6 +283,122 @@ def build_snapshot_rows(pool, scan_date):
     return rows
 
 
+# ============================================================================
+# 契约告警（纯函数 · 只读 · 零副作用）
+# ============================================================================
+def _norm_date(v):
+    """把 str / date / datetime 统一成 datetime.date；无法解析返回 None。"""
+    if v is None:
+        return None
+    try:
+        ts = pd.Timestamp(v)
+        if pd.isna(ts):
+            return None
+        return ts.date()
+    except Exception:
+        return None
+
+
+def check_technical_date_contract(technical_date, cutoff_date, trading_dates=None):
+    """比对 snapshot 的 Technical_Date 与「理论最后完成交易日」，返回只读诊断。
+
+    【为什么要有这个函数】
+    设计契约（quant_factor_price.py:10-16）明确写着：
+        Technical_Date = 最后完整常规交易日；Price = 该日 Close。
+    2026-10-07 首份真实数据中，Technical_Date=2026-10-05，而理论值应为 2026-10-06
+    （price history 同期已具备 10-06），即契约未被兑现。为把这种隐性偏差变成
+    **每日可见的显性信号**，才有本函数。
+
+    【严格只读】
+        · 不修改 Technical_Date 的值
+        · 不修改数据源 / 调用方式
+        · 不阻断 snapshot 生成
+        · 无任何文件写入、无网络请求
+
+    参数
+    ----
+    technical_date : snapshot 实际写入的 Technical_Date
+    cutoff_date    : 理论「最后完整常规交易日」（调用方按美东时点计算）
+    trading_dates  : 可选，已知交易日列表（来自 Phase 2B price history）。
+                     用于把期望日落在真实交易日上，并精确统计相差【交易日】数。
+
+    返回 dict
+    ---------
+    status           : OK / STALE / AHEAD / NO_REFERENCE / NO_DATA
+    technical_date   : 实际 T
+    expected_date    : 理论 T
+    gap_trading_days : 相差交易日数（无 trading_dates 时退化为自然日差）
+    message          : 说明；STALE 时即为 warning 正文
+    """
+    t = _norm_date(technical_date)
+    c = _norm_date(cutoff_date)
+    out = {
+        "status": "NO_DATA",
+        "technical_date": str(t) if t else None,
+        "expected_date": str(c) if c else None,
+        "gap_trading_days": None,
+        "message": "",
+    }
+
+    if t is None or c is None:
+        out["status"] = "NO_DATA" if t is None else "NO_REFERENCE"
+        out["message"] = (
+            "无法完成契约比对：technical_date 缺失" if t is None
+            else "无法完成契约比对：cutoff_date 缺失（理论最后完成交易日未知）"
+        )
+        return out
+
+    # 已知交易日（升序、去重），用于精确定位期望日与相差交易日数
+    known = []
+    if trading_dates:
+        for d in trading_dates:
+            nd = _norm_date(d)
+            if nd is not None:
+                known.append(nd)
+        known = sorted(set(known))
+
+    expected = c
+    if known:
+        le = [d for d in known if d <= c]
+        if le:
+            expected = max(le)
+
+    out["expected_date"] = str(expected)
+
+    if t > expected:
+        # 实际比日历更"新"：通常是 price history 尚未更新到该日，属正常
+        out["status"] = "AHEAD"
+        out["message"] = (
+            f"Technical_Date={t} 晚于已知交易日日历末端 {expected}"
+            f"（price history 尚未更新到该日，属正常）"
+        )
+        return out
+
+    if t == expected:
+        out["status"] = "OK"
+        out["gap_trading_days"] = 0
+        out["message"] = f"Technical_Date={t} 与理论最后完成交易日一致，契约成立"
+        return out
+
+    # t < expected → 滞后
+    if known:
+        gap = len([d for d in known if t < d <= expected])
+    else:
+        gap = (expected - t).days
+    out["status"] = "STALE"
+    out["gap_trading_days"] = gap
+    out["message"] = (
+        f"[Quant Factor Lab][契约告警] Technical_Date={t} 早于理论最后完成交易日 "
+        f"{expected}，相差 {gap} 个交易日。"
+        f"设计契约要求 Technical_Date = 最后完整常规交易日（见 quant_factor_price.py:10-16），"
+        f"本次未兑现。可能原因：get_kline_data() 使用单只 period=\"6mo\" 下载，"
+        f"与 fetch_batch_prices() 的批量 start/end 下载存在数据新鲜度差异；"
+        f"也可能是该时点行情源尚未更新。建议：持续观测，先不改数据源，"
+        f"累积数日后判定是否为系统性滞后。本次不修改 Technical_Date、不阻断落盘。"
+    )
+    return out
+
+
 def write_factor_snapshot(pool, path, scan_date):
     """幂等 upsert 写因子快照，返回最终行数。
 
