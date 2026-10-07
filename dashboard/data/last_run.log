@@ -8,7 +8,6 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 $COO: possibly delisted; no price data found  (period=1d)
 $CRH: possibly delisted; no price data found  (period=1d)
 $EMR: possibly delisted; no price data found  (period=1d)
-$SNPS: possibly delisted; no price data found  (period=1d)
 $TECH: possibly delisted; no price data found  (period=1d)
 $WEC: possibly delisted; no price data found  (period=1d)
 $^DJI: possibly delisted; no price data found  (period=1d)
@@ -43,7 +42,7 @@ Observation 数量     : 21
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 34 / 0   技术指标成功 34/34
-当前价来源           : 实时 28 · 最新收盘 0 · 合计可取 34/34
+当前价来源           : 实时 29 · 最新收盘 0 · 合计可取 34/34
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 15  [complete]
@@ -51,6 +50,7 @@ Review 数据状态      :
    · observation_open_count       = 88  [complete]
    · actual_active_count          = 5  [complete]
 history 条数         : 46
+Quant 研究状态       : RESEARCH · 数据可用性 NOT_ENOUGH_DATA · 生产 V1 V1_ACTIVE · V2 DISABLED · Gate NOT_READY
 AI 六段状态          : partial（23/34 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
