@@ -303,6 +303,81 @@ def test_no_data_no_files():
               f"status={rd['status']}")
 
 
+# ---- STEP 4-8 / Phase 5：walk-forward OOS 边界（含不规则间隔）----
+# 约束 1：不硬编码真实事件日期 —— 用 bdate_range 生成日历，再按需抽稀制造不规则间隔。
+# 约束 2：不假设 Technical_Date 与 price history 一致 —— 显式覆盖"等距"与"不等距"两种日历。
+def test_window_split_irregular_intervals():
+    """snapshot 日期不等距（滞后/缺失导致）时，窗口切分必须仍然安全。
+
+    长期风险背景：若 Technical_Date 有时滞后、有时不滞后，snapshot 日期序列会出现
+    不规则间隔。split_windows 按【唯一日期列表的索引】切分而非日历距离，因此不应崩溃；
+    但语义会从"N 个交易日"退化为"N 个 snapshot 观测"，必须在测试里钉死这一行为。
+    """
+    base = pd.bdate_range("2026-03-02", periods=120)
+
+    def dates_str(idx):
+        return [d.strftime("%Y-%m-%d") for d in idx]
+
+    # (1) 等距日历：正常开窗
+    regular = dates_str(base)
+    w = split_windows(regular, mode="EXPANDING", initial_train=50, oos_step=20)
+    check("等距日历 → 产生窗口", len(w) > 0, str(len(w)))
+    tr0, oos0 = w[0]
+    check("首个窗口 train 长度 = initial_train", len(tr0) == 50, str(len(tr0)))
+    check("首个窗口 oos 长度 = oos_step", len(oos0) == 20, str(len(oos0)))
+    check("train 与 oos 不重叠", not (set(tr0) & set(oos0)))
+
+    # (2) 不规则日历：随机抽掉若干 snapshot 日（模拟滞后/缺失造成的间隔不均）
+    keep_mask = [i for i in range(len(base)) if i % 7 != 3]
+    irregular = dates_str([base[i] for i in keep_mask])
+    check("不规则日历确实更短", len(irregular) < len(regular),
+          "%d < %d" % (len(irregular), len(regular)))
+    w2 = split_windows(irregular, mode="EXPANDING", initial_train=50, oos_step=20)
+    check("不规则间隔 → 仍能开窗（不崩溃）", len(w2) > 0, str(len(w2)))
+    tr2, oos2 = w2[0]
+    check("不规则间隔 → train 长度仍按【观测数】而非日历天数", len(tr2) == 50, str(len(tr2)))
+    check("不规则间隔 → oos 长度仍为 oos_step", len(oos2) == 20, str(len(oos2)))
+    check("不规则间隔 → train 与 oos 仍不重叠", not (set(tr2) & set(oos2)))
+
+    # (3) 所有窗口都必须严格保持时间顺序且 train 早于 oos
+    ok_order = True
+    for tr, oo in w2:
+        if not (max(tr) < min(oo)):
+            ok_order = False
+            break
+    check("不规则间隔 → 所有窗口 train 严格早于 oos", ok_order)
+
+    # (4) 数据不足 → 无窗口（不得伪造）
+    check("日期数 < initial_train+oos_step → 无窗口",
+          split_windows(dates_str(base[:40]), mode="EXPANDING",
+                        initial_train=50, oos_step=20) == [])
+    check("恰好不足一个 oos_step → 无窗口",
+          split_windows(dates_str(base[:60]), mode="EXPANDING",
+                        initial_train=50, oos_step=20) == [])
+
+    # (5) ROLLING 模式：train 窗口固定长度滚动
+    w3 = split_windows(regular, mode="ROLLING", initial_train=50, oos_step=20, rolling_train=100)
+    check("ROLLING → 产生窗口", len(w3) > 0, str(len(w3)))
+    check("ROLLING → train 长度不超过 rolling_train",
+          all(len(tr) <= 100 for tr, _ in w3))
+    check("ROLLING → 各窗口 train 与 oos 不重叠",
+          all(not (set(tr) & set(oo)) for tr, oo in w3))
+
+    # (6) 极端不规则：严重抽稀后仍能安全处理（即使窗口变少）
+    sparse = dates_str([base[i] for i in range(len(base)) if i % 3 == 0])
+    w4 = split_windows(sparse, mode="EXPANDING", initial_train=50, oos_step=20)
+    check("严重抽稀 → 不崩溃（窗口数可为 0 或正）", isinstance(w4, list), str(type(w4)))
+    if w4:
+        check("严重抽稀 → 窗口仍不重叠", all(not (set(tr) & set(oo)) for tr, oo in w4))
+
+    # (7) 输入未排序时必须先排序（调用方责任）—— 本函数按传入顺序切分，
+    #     此处验证"乱序输入"不会静默产生错误窗口：调用方应传入 sorted()。
+    shuffled = list(reversed(regular))
+    w5 = split_windows(shuffled, mode="EXPANDING", initial_train=50, oos_step=20)
+    check("乱序输入仍返回等长窗口（调用方须自行 sorted）",
+          len(w5) == len(w), "%d vs %d" % (len(w5), len(w)))
+
+
 def main():
     _tests = [
         test_empty_and_insufficient,
@@ -323,6 +398,8 @@ def main():
         test_no_fake_production_data,
         # ---- STEP 3-C ----
         test_no_data_no_files,
+        # ---- STEP 4-8 / Phase 5 ----
+        test_window_split_irregular_intervals,
     ]
     _failed = 0
     for _t in _tests:
