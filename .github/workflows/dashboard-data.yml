@@ -164,6 +164,19 @@ jobs:
             echo "::warning::push 被拒绝（疑似并发提交），基于最新 origin/main 重建提交后重试 ($i/3)"
             git fetch origin main
             git reset --soft FETCH_HEAD
+            # 关键修复：reset --soft 后 index 仍是旧 HEAD 的暂存快照，会把并行期间
+            # 其他 workflow 新增的文件误判为 D（删除）。这里先把 index 重置到最新 HEAD
+            # （工作区改动保留），再只 add 本 workflow 允许提交的文件，从根源上杜绝
+            # 无关删除被带入 commit。
+            git reset HEAD
+            git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log
+            # 提交范围守卫（与首次提交等价）：任何非允许路径立即失败，绝不把无关删除带入 main
+            STAGED="$(git diff --cached --name-only)"
+            if echo "$STAGED" | grep -vE '^dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)$'; then
+              echo "::error::重试阶段检测到非预期文件进入提交范围，已中止提交"
+              echo "$STAGED"
+              exit 1
+            fi
             if git diff --cached --quiet; then
               echo "远端数据已与本轮一致，无需重复提交"
               PUSHED=1
