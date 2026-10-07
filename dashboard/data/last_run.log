@@ -5,12 +5,9 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 [WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
 当前有效股票池：34 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
-$BX: possibly delisted; no price data found  (period=1d)
 $COO: possibly delisted; no price data found  (period=1d)
 $CRH: possibly delisted; no price data found  (period=1d)
-$DDOG: possibly delisted; no price data found  (period=1d)
 $EMR: possibly delisted; no price data found  (period=1d)
-$MNST: possibly delisted; no price data found  (period=1d)
 $SNPS: possibly delisted; no price data found  (period=1d)
 $TECH: possibly delisted; no price data found  (period=1d)
 $TGT: possibly delisted; no price data found  (period=1d)
@@ -47,7 +44,7 @@ Observation 数量     : 21
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 34 / 0   技术指标成功 34/34
-当前价来源           : 实时 24 · 最新收盘 0 · 合计可取 34/34
+当前价来源           : 实时 27 · 最新收盘 0 · 合计可取 34/34
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 15  [complete]
