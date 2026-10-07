@@ -289,6 +289,105 @@ def test_no_data_no_files():
     check("(d) 已存在产物未被删除/截断", open(v_path, "rb").read() == before)
 
 
+# ---- STEP 4-8 / Phase 3：validation 状态机全 7 种 status ----
+# 约束 1：不硬编码真实事件日期 —— 基准日由 fixture 参数传入（默认用 bdate_range 生成）。
+# 约束 2：不假设 Technical_Date 与 price history 一致 —— 日历用独立参数构造。
+def _mk_status_df(n, mode="promising", base=None, seed=7):
+    """构造可命中指定 validation status 的 backtest DataFrame。
+
+    mode:
+      empty       Forward_Return 全空           → NOT_ENOUGH_DATA
+      exploratory n 较小(<30)                    → EXPLORATORY
+      weak        30<=n<50                       → WEAK_EVIDENCE
+      promising   n>=50 + regime 均衡 + 单调     → PROMISING
+      inconclusive n>=50 + regime 均衡 + 非单调  → INCONCLUSIVE
+      regime      n>=50 + 单一 regime 主导       → REGIME_DEPENDENT:*
+    """
+    if base is None:
+        base = pd.bdate_range("2026-03-02", periods=1)[0]
+    rng = np.random.default_rng(seed)
+    rows = []
+    for i in range(n):
+        # regime：promising/inconclusive 用均衡分布；regime 模式让 NORMAL 主导
+        if mode == "regime":
+            regime = "NORMAL" if i < n - 2 else "STRESSED"
+        else:
+            regime = "NORMAL" if i % 2 == 0 else "STRESSED"
+        if mode == "promising":
+            f = float(i)                       # 因子升序
+            r = float(i) * 0.01                # 收益随因子单调上行
+        elif mode == "inconclusive":
+            f = float(i)
+            r = float(rng.normal(0, 5))        # 与因子无关 → 非单调
+        else:
+            f = float(rng.uniform(0, 100))
+            r = float(rng.normal(0, 5))
+        rows.append({
+            "Technical_Date": (pd.Timestamp(base) + pd.Timedelta(days=i)).strftime("%Y-%m-%d"),
+            "Ticker": "T%d" % (i % 10),
+            "Market_Regime": regime,
+            "RSI_14": str(round(f, 4)),
+            "Momentum_5D_Pct": str(round(f, 4)),
+            "Forward_Return_5D": "" if mode == "empty" else str(round(r, 6)),
+        })
+    return pd.DataFrame(rows)
+
+
+def test_validation_status_machine():
+    """Phase 3 必须能产出全部 7 种 validation status，且阈值边界正确。"""
+    cases = [
+        ("empty", 60, "NOT_ENOUGH_DATA"),
+        ("exploratory", 20, "EXPLORATORY"),
+        ("weak", 40, "WEAK_EVIDENCE"),
+        ("promising", 60, "PROMISING"),
+        ("inconclusive", 60, "INCONCLUSIVE"),
+    ]
+    for mode, n, expect in cases:
+        df = _mk_status_df(n, mode=mode)
+        r = validate_factor_horizon(df, "RSI_14", 5)
+        check("%-13s N=%-3d → %s" % (mode, n, expect),
+              r["Status"] == expect, "got %s (N=%s)" % (r["Status"], r["N"]))
+
+    # REGIME_DEPENDENT：单一 regime 主导(>=80%) 且其它 regime 样本 <5
+    r = validate_factor_horizon(_mk_status_df(60, mode="regime"), "RSI_14", 5)
+    check("regime 主导 → REGIME_DEPENDENT", str(r["Status"]).startswith("REGIME_DEPENDENT"),
+          "got %s" % r["Status"])
+    check("Regime_Status 同步标记", str(r["Regime_Status"]).startswith("REGIME_DEPENDENT"),
+          str(r["Regime_Status"]))
+
+    # 第 7 种：POTENTIALLY_REDUNDANT 来自因子相关矩阵（|corr|>=0.9）
+    n = 40
+    base = pd.bdate_range("2026-03-02", periods=1)[0]
+    xs = [float(i) for i in range(n)]
+    df2 = pd.DataFrame({
+        "Technical_Date": [(pd.Timestamp(base) + pd.Timedelta(days=i)).strftime("%Y-%m-%d") for i in range(n)],
+        "RSI_14": [str(x) for x in xs],
+        # 与 RSI_14 完全线性相关 → Pearson/Spearman = 1.0
+        "Momentum_5D_Pct": [str(x * 2.0 + 1.0) for x in xs],
+    })
+    corr_df, redundant = compute_factor_correlation(df2)
+    check("|corr|>=0.9 → 命中冗余对", len(redundant) >= 1, str(len(redundant)))
+    check("correlation 标记 POTENTIALLY_REDUNDANT",
+          (corr_df["Redundant"] == "POTENTIALLY_REDUNDANT").any(),
+          str(corr_df["Redundant"].unique()[:3]))
+
+    # 阈值边界：N=29 → EXPLORATORY；N=30 → 不再是 EXPLORATORY
+    r29 = validate_factor_horizon(_mk_status_df(29, mode="weak"), "RSI_14", 5)
+    r30 = validate_factor_horizon(_mk_status_df(30, mode="weak"), "RSI_14", 5)
+    check("N=29 → EXPLORATORY", r29["Status"] == "EXPLORATORY", "got %s" % r29["Status"])
+    check("N=30 → 不再是 EXPLORATORY", r30["Status"] != "EXPLORATORY", "got %s" % r30["Status"])
+
+    # 约束 2：Technical_Date 与"价格日历"不一致时也不得崩溃、不得伪造状态
+    df3 = _mk_status_df(60, mode="promising")
+    df3["Technical_Date"] = [(pd.Timestamp("2026-01-05") + pd.Timedelta(days=i)).strftime("%Y-%m-%d")
+                             for i in range(len(df3))]   # 刻意与基础日历错位
+    r3 = validate_factor_horizon(df3, "RSI_14", 5)
+    check("日历错位时仍产出合法 status",
+          r3["Status"] in ("NOT_ENOUGH_DATA", "EXPLORATORY", "WEAK_EVIDENCE", "PROMISING",
+                           "INCONCLUSIVE", "REGIME_DEPENDENT"), str(r3["Status"]))
+    check("日历错位时 N 仍真实统计", r3["N"] == 60, str(r3["N"]))
+
+
 def main():
     _tests = [
         test_empty_data,
@@ -305,6 +404,8 @@ def main():
         test_run_validation_empty,
         # ---- STEP 3-C ----
         test_no_data_no_files,
+        # ---- STEP 4-8 / Phase 3 ----
+        test_validation_status_machine,
     ]
     _failed = 0
     for _t in _tests:
