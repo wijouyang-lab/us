@@ -30,6 +30,9 @@ import anthropic
 import pandas as pd
 import yfinance as yf
 
+# Trade History 数据质量纯函数层（去重 + 价格精度），与测试共享同一套规则。
+from trade_history_quality import deduplicate_trade_history, fmt_price
+
 
 # ============================================================
 # 0. 环境与时间
@@ -409,6 +412,10 @@ def ensure_trade_history_columns():
     except Exception as e:
         print(f"⚠️ trade_history.csv 表结构检查失败：{e}")
 
+# 去重（deduplicate_trade_history）与价格格式化（fmt_price）的规则定义在
+# trade_history_quality.py，与本文件共享，避免"同名函数不同公式"。
+
+
 def load_trade_history():
     if not os.path.exists(TRADE_HISTORY):
         return pd.DataFrame()
@@ -419,7 +426,10 @@ def load_trade_history():
         if "Name" not in d.columns:
             d["Name"] = ""
         d["Date"] = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
-        return d.dropna(subset=["Date"]).copy()
+        d = d.dropna(subset=["Date"])
+        # 防御层：即使历史文件存在 duplicate event，也按 canonical 规则去重，
+        # 保证 Review KPI / 后续逻辑绝不把同一事件重复计算。
+        return deduplicate_trade_history(d).copy()
     except Exception as e:
         print(f"❌ 读取 trade_history.csv 失败：{e}")
         return pd.DataFrame()
@@ -513,7 +523,7 @@ def backfill_missing_trade_history_recommendation_prices():
             key = (rec_date.strftime("%Y-%m-%d"), ticker.upper(), tag)
             fallback = lookup.get(key)
             if fallback is not None and fallback > 0:
-                d.at[idx, "Price"] = str(fallback)
+                d.at[idx, "Price"] = fmt_price(fallback)
                 changed += 1
         if changed:
             d.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
@@ -619,7 +629,7 @@ def supplement_us_stocks_from_pending():
                     "Name": clean_text(row.get("Name")),
                     "Tag": clean_text(row.get("Tag")),
                     "Score": clean_text(row.get("Score"), "N/A"),
-                    "Price": op if op is not None else "",
+                    "Price": fmt_price(op),
                     "RSI": clean_text(row.get("RSI")),
                     "Bias": clean_text(row.get("Bias")),
                     "Hold_Period": "动态持有",
@@ -2532,7 +2542,7 @@ def backfill_rec_price():
         if (old_price is None and new_price is None) or \
            (old_price is not None and new_price is not None and abs(old_price - new_price) < 1e-6):
             continue
-        od.at[idx, "Rec_Price"] = "" if new_price is None else str(new_price)
+        od.at[idx, "Rec_Price"] = fmt_price(new_price)
         changed += 1
         if new_price is None:
             cleared += 1
