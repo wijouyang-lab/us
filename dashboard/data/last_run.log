@@ -6,159 +6,12 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 当前有效股票池：34 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $COO: possibly delisted; no price data found  (period=1d)
-$EMR: possibly delisted; no price data found  (period=1d)
 $WEC: possibly delisted; no price data found  (period=1d)
 $^DJI: possibly delisted; no price data found  (period=1d)
 $^GSPC: possibly delisted; no price data found  (period=1d)
 $^IXIC: possibly delisted; no price data found  (period=1d)
 $2YY=F: possibly delisted; no price data found  (period=1d)
-HTTP Error 502: <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
-    <meta charset="utf-8">
-    <title>Yahoo</title>
-    <meta name="viewport" content="width=device-width,initial-scale=1,minimal-ui">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <style>
-      html {
-          height: 100%;
-      }
-      body {
-          background: #fafafc url(https://s.yimg.com/nn/img/sad-panda-201402200631.png) 50% 50%;
-          background-size: cover;
-          height: 100%;
-          text-align: center;
-          font: 300 18px "helvetica neue", helvetica, verdana, tahoma, arial, sans-serif;
-          margin: 0;
-      }
-      table {
-          height: 100%;
-          width: 100%;
-          table-layout: fixed;
-          border-collapse: collapse;
-          border-spacing: 0;
-          border: none;
-      }
-      h1 {
-          font-size: 42px;
-          font-weight: 400;
-          color: #400090;
-      }
-      p {
-          color: #1A1A1A;
-      }
-      #message-1 {
-          font-weight: bold;
-          margin: 0;
-      }
-      #message-2 {
-          display: inline-block;
-          *display: inline;
-          zoom: 1;
-          max-width: 17em;
-          _width: 17em;
-      }
-      </style>
-      <script>
-      
-      </script>
-  </head>
-  <body>
-  <!-- status code : 502 -->
-  <!-- Could Not Connect -->
-  <!-- host machine: media-router-api7123.prod.media.bf1.yahoo.com -->
-  <!-- timestamp: 1791378053.105 -->
-  <!-- url: https://query2.finance.yahoo.com/v10/finance/quoteSummary/XAUUSD=X?modules=financialData%2CquoteType%2CdefaultKeyStatistics%2CassetProfile%2CsummaryDetail&corsDomain=finance.yahoo.com&formatted=false&symbol=XAUUSD%3DX&lang=en-US&region=US&crumb=12eldGkpfw3-->
-  <script type="text/javascript">
-    function buildUrl(url, parameters){
-      var qs = [];
-      for(var key in parameters) {
-        var value = parameters[key];
-        qs.push(encodeURIComponent(key) + "=" + encodeURIComponent(value));
-      }
-      url = url + "?" + qs.join('&');
-      return url;
-    }
-
-    function generateBRBMarkup(site) {
-      params.source = 'brb';
-      generateBeaconMarkup(params);
-      var englishHeader = 'Will be right back...';
-      var englishMessage1 = 'Thank you for your patience.';
-      var englishMessage2 = 'Our engineers are working quickly to resolve the issue.';
-      var defaultLogoStyle = '';
-      var siteDataMap = {
-        'default': {
-          logo: 'https://s.yimg.com/rz/p/yahoo_frontpage_en-US_s_f_p_205x58_frontpage.png',
-          logoAlt: 'Yahoo Logo',
-          logoStyle: defaultLogoStyle,
-          header: englishHeader,
-          message1: englishMessage1,
-          message2: englishMessage2
-        }
-      };
-
-      var siteDetails = siteDataMap['default'];
-
-      document.write('<table><tbody><tr><td>');
-      document.write('<div id="content">');
-      document.write('<img src="' + siteDetails['logo'] + '" alt="' + siteDetails['logoAlt'] + '" style="' + siteDetails['logoStyle'] + '">');
-      document.write('<h1 style="margin-top:20px;">' + siteDetails['header'] + '</h1>');
-      document.write('<p id="message-1">' + siteDetails['message1'] + '</p>');
-      document.write('<p id="message-2">' + siteDetails['message2'] + '</p>');
-      document.write('</div>');
-      document.write('</td></tr></tbody></table>');
-    }
-
-    function generateBeaconMarkup(params) {
-        document.write('<img src="' + buildUrl('//geo.yahoo.com/b', params) + '" style="display:none;" width="0px" height="0px"/>');
-        var beacon = new Image();
-        beacon.src = buildUrl('//bcn.fp.yahoo.com/p', params);
-    }
-
-    var hostname = window.location.hostname;
-    var device = 'desktop';
-    var ynet = ('-' === '1');
-    var prid = '5bbj7ahlccgk5';
-    var crid = '5bbj7ahlccgk5';
-    var time = new Date().getTime();
-    var params = {
-        s: '1197757129',
-        t: time,
-        err_url: document.URL,
-        err: '502',
-        test: '-',
-        ats_host: 'media-router-api7123.prod.media.bf1.yahoo.com',
-        prid: prid,
-        crid: crid,
-        message: 'Could Not Connect'
-    };
-
-    if(ynet) {
-        document.write('<div style="height: 5px; background-color: red;"></div>');
-    }
-    generateBRBMarkup(hostname, params);
-
-  </script>
-  <noscript>
-  <table>
-    <tbody>
-      <tr>
-        <td>
-          <div id="englishContent">
-            <h1 style="margin-top:20px;">Will be right back...</h1>
-            <p id="message-1">Thank you for your patience.</p>
-            <p id="message-2">Our engineers are working quickly to resolve the issue.</p>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  </noscript>
-  </body>
-</html>
-
+HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
 
 1 Failed download:
@@ -184,7 +37,7 @@ Observation 数量     : 21
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 34 / 0   技术指标成功 34/34
-当前价来源           : 实时 31 · 最新收盘 0 · 合计可取 34/34
+当前价来源           : 实时 32 · 最新收盘 0 · 合计可取 34/34
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 15  [complete]
