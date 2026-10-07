@@ -427,3 +427,29 @@ button{font-family:inherit}
 .pf-tbl td.rsn{text-align:left;color:var(--muted,#94a3b8);max-width:260px;overflow:hidden;text-overflow:ellipsis}
 .pf-tbl tr:last-child td{border-bottom:none}
 .pf-hd{margin:12px 0 2px;font-size:12px;font-weight:700;color:var(--muted,#94a3b8)}
+
+/* ===== Quant / 量化研究 =====
+   状态徽章使用中性/语义化颜色，绝不使用涨跌红绿表达 Quant 状态：
+   灰 = NOT_ENOUGH_DATA / DISABLED，黄 = NOT_READY，蓝绿 = V1_ACTIVE，蓝 = RESEARCH */
+.q-badge{display:inline-flex;align-items:center;font-size:9.5px;font-weight:750;letter-spacing:.3px;
+  border-radius:999px;padding:1px 7px;border:1px solid;white-space:nowrap;font-variant-numeric:tabular-nums}
+.q-badge.q-notenough{background:#eceff1;color:#607d8b;border-color:#cfd8dc}
+.q-badge.q-disabled{background:#f1f2f5;color:#8b93a3;border-color:#e0e3ea}
+.q-badge.q-notready{background:var(--warn-soft);color:var(--warn);border-color:#f0dfb8}
+.q-badge.q-active{background:#e8f5e9;color:#1b7a46;border-color:#bfe3cb}
+.q-badge.q-research{background:var(--accent-soft);color:var(--accent);border-color:#d8e1ff}
+.q-badge.q-promising{background:#fff8e6;color:#9a6b00;border-color:#f0dfb8}
+.q-badge.q-ok{background:#eef6f0;color:#0f7a48;border-color:#d3e8db}
+
+.q-model{color:var(--accent);font-size:13px}
+.q-note{margin-top:8px;font-size:11px;color:var(--text-2);line-height:1.5;
+  background:var(--soft);border:1px solid var(--border-2);border-radius:8px;padding:7px 9px}
+.q-phase{margin-top:10px;border:1px solid var(--border-2);border-radius:10px;background:var(--soft);padding:9px 11px}
+.q-phase-h{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.q-phase-t{font-size:12px;font-weight:700;color:var(--text)}
+.q-sub{margin-top:6px;font-size:10.5px;color:var(--text-3)}
+.q-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.q-chip{font-size:10px;font-weight:600;color:var(--text-2);background:#fff;border:1px solid var(--border);
+  border-radius:999px;padding:2px 8px;white-space:nowrap}
+.q-prod{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px;align-items:center}
+.q-prod-item{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--text-2)}

@@ -2529,6 +2529,183 @@ def build_portfolio(data_dir: Path):
     }
 
 
+# ============================================================================
+# Quant Research Phase 1–7 —— Dashboard 展示层（只读、纯标准库、零假数据）
+# ============================================================================
+# 本函数只做一件事：把 Quant Phase 1–7 的【真实研究状态】接到 Dashboard 上。
+# 它绝不 import 任何 quant 模块（quant_factor_lab / backtest / validation /
+# score_v2 / walk_forward / shadow / production），也绝不生产任何 Quant 数据。
+#
+# 状态判定规则（确定性，全部由「数据文件是否存在」+「设计常量」推出）：
+#   · Phase 1/2/3/5 依赖真实数据文件 —— 文件缺失/为空 → NOT_ENOUGH_DATA。
+#   · Phase 4 Quant Score V2 —— 恒 enabled=false（对应 quant_score_v2.py 的
+#     QUANT_SCORE_V2_ENABLED=False，硬编码，绝不自动 enable）→ DISABLED。
+#   · Phase 6 Shadow —— 恒 enabled=false（对应 quant_shadow.py 的 SHADOW_ENABLE=False）→ SHADOW_DISABLED。
+#   · Phase 7 Production —— 当前生产模型恒 V1（CURRENT_EXISTING_QUANT_SCORE），
+#     V2 恒 DISABLED，Production Gate 恒 NOT_READY（research/walk-forward/shadow 三 gate
+#     均 NOT_ENOUGH_DATA 且无 Human Approval）。V2 不能替换 V1。
+#
+# 禁止输出任何伪造数字：IC / Sharpe / Return / Win Rate / 因子得分 / 样本收益 / 回测收益
+# 一律不出现，除非真实数据文件已经存在（本阶段它们都不存在，故绝不输出）。
+#
+# 常量锚定源（若未来这些设计常量改变，需同步此处）：
+#   quant_score_v2.py: QUANT_SCORE_V2_ENABLED = False
+#   quant_shadow.py:   SHADOW_ENABLE = False, BENCHMARK_MODEL = "CURRENT_EXISTING_QUANT_SCORE"
+#   quant_production.py: PRODUCTION_MODEL = "CURRENT_EXISTING_QUANT_SCORE", PRODUCTION_VERSION = "V1"
+#   quant_factor_backtest.py: HORIZONS = (5, 10, 20), ALL_FACTORS 共 24 个（19 RAW + 1 Composite + 4 Existing Score）
+#   quant_factor_validation.py: 24 factor × 3 horizon = 72 行
+# ============================================================================
+
+# 8 个扩展因子（Phase 1）—— id 与 quant_factor_lab.calculate_extended_quant_factors 严格一致
+QUANT_FACTORS = [
+    {"id": "Momentum_5D_Pct", "label": "Momentum 5D"},
+    {"id": "Momentum_20D_Pct", "label": "Momentum 20D"},
+    {"id": "Momentum_60D_Pct", "label": "Momentum 60D"},
+    {"id": "Realized_Volatility_20D_Pct", "label": "Realized Volatility 20D"},
+    {"id": "Volume_Ratio_20D", "label": "Volume Ratio 20D"},
+    {"id": "ZScore_20D", "label": "Z-Score 20D"},
+    {"id": "Beta_60D_SPY", "label": "Beta 60D SPY"},
+    {"id": "Stock_RS_20D_vs_SPY", "label": "Stock RS 20D vs SPY"},
+]
+
+# 3 个研究候选模型（Phase 4）—— id/描述与 quant_score_v2.CANDIDATE_MODELS 严格一致
+QUANT_CANDIDATE_MODELS = [
+    {"id": "MODEL_A_CONSERVATIVE", "label": "Model A — Conservative",
+     "description": "保守：TREND + FUNDAMENTAL + LIQUIDITY，低动量暴露"},
+    {"id": "MODEL_B_BALANCED", "label": "Model B — Balanced",
+     "description": "均衡：各 Group 接近等权"},
+    {"id": "MODEL_C_MOMENTUM", "label": "Model C — Momentum",
+     "description": "动量：MOMENTUM + RELATIVE_STRENGTH 为主"},
+]
+
+# 生产基准模型（V1）—— id 与 quant_production.PRODUCTION_MODEL 严格一致
+QUANT_BENCHMARK_MODEL = "CURRENT_EXISTING_QUANT_SCORE"
+
+
+def _quant_csv_rows(data_dir: Path, name: str) -> int:
+    """返回 quant 数据文件的行数（文件缺失/为空/不可解析均返回 0，绝不抛异常）。"""
+    p = data_dir / name
+    if not p.exists():
+        return 0
+    try:
+        return len(read_csv_rows(p))
+    except Exception:
+        return 0
+
+
+def build_quant(data_dir: Path):
+    """构建 payload["quant"]：Quant Phase 1–7 的真实研究状态。
+
+    纯标准库、只读、确定性。只判断数据文件存在性 + 输出设计常量，
+    不 import quant 模块、不联网、不跑回测、不算因子、不写回任何 Quant 数据。
+    """
+    # ---- 真实数据文件存在性（只读判断，绝不读取/计算因子值）----
+    snapshot_rows = _quant_csv_rows(data_dir, "quant_factor_snapshot.csv")          # Phase 1
+    backtest_rows = _quant_csv_rows(data_dir, "quant_factor_backtest.csv")          # Phase 2
+    validation_rows = _quant_csv_rows(data_dir, "quant_factor_validation.csv")      # Phase 3
+    wf_rows = _quant_csv_rows(data_dir, "quant_walk_forward_results.csv")           # Phase 5
+    shadow_rows = _quant_csv_rows(data_dir, "quant_shadow_performance.csv")         # Phase 6
+
+    # 数据可用性：Phase 1/2/3/5 任一存在真实数据即视为「部分可用」；
+    # 当前这 4 个文件全部缺失 → NOT_ENOUGH_DATA。
+    any_research_data = (snapshot_rows > 0 or backtest_rows > 0
+                         or validation_rows > 0 or wf_rows > 0)
+    data_availability = "NOT_ENOUGH_DATA" if not any_research_data else "PARTIAL"
+
+    def _research_status(rows):
+        # 研究类 Phase 的状态只由数据文件是否存在决定，缺失即 NOT_ENOUGH_DATA。
+        return "NOT_ENOUGH_DATA" if rows <= 0 else "DATA_AVAILABLE"
+
+    quant = {
+        # 整个 Quant 流水线仍处于研究态，未进入生产
+        "status": "RESEARCH",
+        "data_availability": data_availability,
+        "note": ("Research ≠ Production：本页只展示 Quant Phase 1–7 的当前研究状态，"
+                 "不改变现有生产 Scan 策略，也不生产任何 Quant 数据。"),
+    }
+
+    # ---- Phase 1 · Factor Library ----
+    quant["factor_lab"] = {
+        "phase": 1,
+        "label": "Factor Library",
+        "status": _research_status(snapshot_rows),
+        "factor_count": len(QUANT_FACTORS),
+        "factors": [{"id": f["id"], "label": f["label"]} for f in QUANT_FACTORS],
+        "snapshot_file": "quant_factor_snapshot.csv",
+        "snapshot_rows": snapshot_rows,
+    }
+
+    # ---- Phase 2 · Backtest ----
+    quant["backtest"] = {
+        "phase": 2,
+        "label": "Backtest",
+        "status": _research_status(backtest_rows),
+        "factors": 24,                       # 19 RAW + Quant_Score + 4 Existing Scan Score
+        "horizons": [
+            {"days": 5, "label": "5D"},
+            {"days": 10, "label": "10D"},
+            {"days": 20, "label": "20D"},
+        ],
+    }
+
+    # ---- Phase 3 · Validation ----
+    quant["validation"] = {
+        "phase": 3,
+        "label": "Validation",
+        "status": _research_status(validation_rows),
+        "factors": 24,
+        "horizons": 3,
+        "combos": 72,                        # 24 factors × 3 horizons
+        "combo_label": "24 Factors × 3 Horizons",
+    }
+
+    # ---- Phase 4 · Quant Score 2.0（候选模型，恒 disabled）----
+    quant["score_v2"] = {
+        "phase": 4,
+        "label": "Quant Score 2.0",
+        "status": "DISABLED",                # QUANT_SCORE_V2_ENABLED 恒 False
+        "enabled": False,
+        "models": [{"id": m["id"], "label": m["label"], "description": m["description"]}
+                   for m in QUANT_CANDIDATE_MODELS],
+        "note": "研究候选模型，非生产模型。",
+    }
+
+    # ---- Phase 5 · Walk-Forward / OOS ----
+    quant["walk_forward"] = {
+        "phase": 5,
+        "label": "Walk-Forward / OOS",
+        "status": _research_status(wf_rows),
+        "models": [{"id": m["id"], "label": m["label"], "role": "candidate"}
+                   for m in QUANT_CANDIDATE_MODELS]
+                  + [{"id": QUANT_BENCHMARK_MODEL, "label": "V1 (Benchmark)", "role": "benchmark"}],
+    }
+
+    # ---- Phase 6 · Shadow Mode（恒 disabled）----
+    quant["shadow"] = {
+        "phase": 6,
+        "label": "Shadow Mode",
+        "status": "SHADOW_DISABLED",         # SHADOW_ENABLE 恒 False
+        "enabled": False,
+        "note": "Shadow testing is currently disabled.",
+    }
+
+    # ---- Phase 7 · Production Governance（恒 V1 ACTIVE / V2 DISABLED / gate NOT_READY）----
+    quant["production"] = {
+        "phase": 7,
+        "label": "Production Governance",
+        "status": "V1_ACTIVE",
+        "active_model": QUANT_BENCHMARK_MODEL,
+        "active_version": "V1",
+        "v2_enabled": False,
+        "v2_status": "DISABLED",
+        "production_gate": "NOT_READY",
+        "note": ("当前生产仍使用 V1；Quant V2 尚未满足进入生产的研究/OOS/Shadow 条件，"
+                 "V2 当前不能替换 V1。"),
+    }
+
+    return quant
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="生成 Dashboard 使用的 dashboard_data.json（只读导出层）")
     ap.add_argument("--data-dir", default=str(SCRIPT_DIR),
@@ -2804,6 +2981,9 @@ def main(argv=None):
     # ---- $50,000 长期模拟投资组合（只读消费 portfolio_50000_*.csv，不写回）----
     portfolio = build_portfolio(data_dir)
 
+    # ---- Quant Research Phase 1–7 研究状态（只读判断文件存在性，不生产任何 Quant 数据）----
+    quant = build_quant(data_dir)
+
     # ---- 组装 ----
     payload = {
         "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -2814,6 +2994,7 @@ def main(argv=None):
         "history": history,
         "runtimes": runtimes,
         "portfolio": portfolio,
+        "quant": quant,
         "meta": {
             "data_source": (
                 f"{(pending_path.name + ' + ') if pending_path else ''}"
@@ -2927,6 +3108,9 @@ def main(argv=None):
         log(f"   · {k:<28} = {review[k]}  [{review[k + '_status']}]"
             + (f"  未计入 {review[k.replace('_count', '_unresolved')]} 条" if review[k + '_status'] != "complete" else ""))
     log(f"history 条数         : {len(history)}")
+    log(f"Quant 研究状态       : {quant['status']} · 数据可用性 {quant['data_availability']} · "
+        f"生产 {quant['production']['active_version']} {quant['production']['status']} · "
+        f"V2 {quant['production']['v2_status']} · Gate {quant['production']['production_gate']}")
     log(f"AI 六段状态          : {ai_status}（{ai_filled}/{len(stocks)} 只股票有内容"
         + (f"，CSV 缺失列 {len(ai_cols_missing)} 个" if ai_cols_missing else "")
         + f"，来源 Scan {ai_scan_date or '未知'}）")

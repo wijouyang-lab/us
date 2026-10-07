@@ -32,6 +32,7 @@
   var DATA = null;
   var META = {}, MARKET = { assets: [], regime: {} }, REVIEW = {};
   var OPTIONS = [], HISTORY = [], STOCKS = [], OPT_BY_TK = {};
+  var QUANT = {};                           /* dashboard_data.json 的 quant 键（Quant Phase 1–7 研究状态） */
   var REVIEWS = [];                         /* review.records[] —— 数据仍由 dashboard_data.json 提供；
                                             第 10C 已移除首页历史推荐列表，此处仅保留引用供后续 Evolution 使用，不渲染任何卡片 */
   var REV_MS = {};                          /* review.records[] → (Ticker|Rec_Date|Tag) 索引，供当前卡片挂 Review 里程碑 */
@@ -169,6 +170,7 @@
     OPTIONS = (data.options || []).filter(isActionableOption);
     REVIEW = data.review || {};
     HISTORY = data.history || [];
+    QUANT = data.quant || {};
     REVIEWS = (REVIEW && Array.isArray(REVIEW.records)) ? REVIEW.records.slice() : [];
 
     /* Review 里程碑索引：严格按 Ticker + Rec_Date + Tag 关联 review.records[]（第 10D）。
@@ -498,6 +500,118 @@
     g.fillText(esc((curve[curve.length - 1] || {}).date || ''), w - pad - 52, h - 8);
   }
 
+  /* ---------------- Quant / 量化研究 ---------------- */
+  /* 数据来源：dashboard_data.json 的 quant 键（由 dashboard_export.build_quant 输出）。
+     前端只做研究状态展示：无真实数据时只显示 NOT_ENOUGH_DATA / DISABLED / NOT_READY 徽章，
+     绝不渲染任何伪造的 IC / Sharpe / Return / Win Rate / 因子得分 / 权重等数字。 */
+
+  /* 状态徽章：中性 / 语义化颜色，绝不使用涨跌红绿表达 Quant 状态 */
+  function qBadgeCls(s) {
+    switch (s) {
+      case 'NOT_ENOUGH_DATA': return 'q-notenough';
+      case 'DISABLED': return 'q-disabled';
+      case 'SHADOW_DISABLED': return 'q-disabled';
+      case 'NOT_READY': return 'q-notready';
+      case 'V1_ACTIVE': return 'q-active';
+      case 'PRODUCTION_ACTIVE': return 'q-active';
+      case 'RESEARCH': return 'q-research';
+      case 'PROMISING': return 'q-promising';
+      case 'OK': return 'q-ok';
+      case 'DATA_AVAILABLE': return 'q-ok';
+      default: return 'q-disabled';
+    }
+  }
+  function qBadge(s) {
+    if (!s) return '';
+    return '<span class="q-badge ' + qBadgeCls(s) + '">' + esc(s) + '</span>';
+  }
+  function qCell(k, inner) {
+    return '<div class="mx"><div class="k">' + k + '</div><div class="v">' + inner + '</div></div>';
+  }
+  function qChips(items) {
+    if (!items || !items.length) return '';
+    return '<div class="q-chips">' + items.map(function (it) {
+      return '<span class="q-chip">' + esc(it) + '</span>';
+    }).join('') + '</div>';
+  }
+
+  function qPhaseCard(p) {
+    if (!p) return '';
+    var body = '';
+    switch (p.phase) {
+      case 1: // Factor Library
+        body = qChips((p.factors || []).map(function (f) { return f.label; })) +
+          '<div class="q-sub">' + (p.factor_count || 0) + ' 个扩展因子 · snapshot ' +
+          (p.snapshot_rows > 0 ? (p.snapshot_rows + ' 行') : '无数据') + '</div>';
+        break;
+      case 2: // Backtest
+        body = qChips((p.horizons || []).map(function (h) { return h.label; })) +
+          '<div class="q-sub">' + (p.factors || NA) + ' 个因子 × 3 个持有期</div>';
+        break;
+      case 3: // Validation
+        body = '<div class="q-sub">' + esc(p.combo_label || NA) +
+          '（' + (p.combos == null ? NA : p.combos) + ' 行）</div>';
+        break;
+      case 4: // Quant Score 2.0
+        body = qChips((p.models || []).map(function (m) { return m.label; })) +
+          (p.note ? '<div class="q-note">' + esc(p.note) + '</div>' : '');
+        break;
+      case 5: // Walk-Forward / OOS
+        body = qChips((p.models || []).map(function (m) { return m.label; }));
+        break;
+      case 6: // Shadow Mode
+        body = (p.note ? '<div class="q-note">' + esc(p.note) + '</div>' : '');
+        break;
+      case 7: // Production Governance
+        body = '<div class="q-prod">' +
+          '<span class="q-prod-item">' + esc(p.active_version || NA) + ' ' + qBadge(p.status) + '</span>' +
+          '<span class="q-prod-item">V2 ' + qBadge(p.v2_status) + '</span>' +
+          '<span class="q-prod-item">Gate ' + qBadge(p.production_gate) + '</span>' +
+          '</div>' + (p.note ? '<div class="q-note">' + esc(p.note) + '</div>' : '');
+        break;
+    }
+    return '<div class="q-phase">' +
+      '<div class="q-phase-h">' +
+        '<span class="q-phase-t">Phase ' + p.phase + ' · ' + esc(p.label || '') + '</span>' +
+        qBadge(p.status) +
+      '</div>' + body + '</div>';
+  }
+
+  function renderQuant() {
+    var q = QUANT || {};
+    var sumEl = $('#quantSummary'), phEl = $('#quantPhases');
+    if (!sumEl) return;
+
+    if (!q || typeof q !== 'object' || !q.production) {
+      sumEl.innerHTML = '<div class="mx"><div class="k">Quant 状态</div>' +
+        '<div class="v na">尚未接入（dashboard_data.json 缺少 quant 键）</div></div>';
+      if (phEl) phEl.innerHTML = '';
+      return;
+    }
+
+    var prod = q.production || {};
+    var shadow = q.shadow || {};
+
+    // --- 概览：Quant Status ---
+    var cells = '';
+    cells += qCell('Current Production Model',
+      '<b class="q-model">' + esc(prod.active_version || NA) + '</b> ' + qBadge(prod.status));
+    cells += qCell('Quant V2', qBadge(prod.v2_enabled ? 'ENABLED' : 'DISABLED'));
+    cells += qCell('Production Gate', qBadge(prod.production_gate || NA));
+    cells += qCell('Shadow', qBadge(shadow.status || 'DISABLED'));
+    cells += qCell('Data Availability', qBadge(q.data_availability || 'NOT_ENOUGH_DATA'));
+    sumEl.innerHTML = '<div class="matrix">' + cells + '</div>' +
+      (q.note ? '<div class="q-note">' + esc(q.note) + '</div>' : '');
+
+    // --- Phase 1–7 列表 ---
+    if (phEl) {
+      var keys = ['factor_lab', 'backtest', 'validation', 'score_v2', 'walk_forward', 'shadow', 'production'];
+      var html = '';
+      keys.forEach(function (k) { if (q[k]) html += qPhaseCard(q[k]); });
+      phEl.innerHTML = html;
+    }
+  }
+
   function renderDashboard(data) {
     normalize(data);
     hideBoot();
@@ -516,6 +630,7 @@
     renderOptions(OPTIONS, $('#optHomeList'), true);
     renderHistory();
     renderPortfolio();
+    renderQuant();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
