@@ -16,18 +16,15 @@ from trade_history_quality import (
     review_event_key,
 )
 
-passed = 0
-total = 0
 
 
 def check(name, cond, detail=""):
-    global passed, total
-    total += 1
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        passed += 1
         print(f"  [PASS] {name}")
-    else:
-        print(f"  [FAIL] {name}  {detail}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 def make_th(rows):
@@ -206,22 +203,31 @@ def test_field_informative():
 
 
 def main():
-    test_detect_duplicate()
-    test_canonical_selection()
-    test_dedup_idempotent()
-    test_kpi_no_double_count()
-    test_fmt_price_round()
-    test_fmt_none()
-    test_fmt_nan()
-    test_price_source_unchanged()
-    test_exit_not_lost()
-    test_status_not_downgraded()
-    test_pnl_unchanged()
-    test_stop_loss_unchanged()
-    test_idempotent()
-    test_field_informative()
-    print(f"\n结果: 通过 {passed} / {total}")
-    sys.exit(0 if passed == total else 1)
+    _tests = [
+        test_detect_duplicate,
+        test_canonical_selection,
+        test_dedup_idempotent,
+        test_kpi_no_double_count,
+        test_fmt_price_round,
+        test_fmt_none,
+        test_fmt_nan,
+        test_price_source_unchanged,
+        test_exit_not_lost,
+        test_status_not_downgraded,
+        test_pnl_unchanged,
+        test_stop_loss_unchanged,
+        test_idempotent,
+        test_field_informative,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":

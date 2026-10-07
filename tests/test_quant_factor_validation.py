@@ -18,19 +18,15 @@ from quant_factor_validation import (
     validate_factor_horizon,
 )
 
-_passed = 0
-_failed = 0
-_failures = []
 
 
 def check(name, cond, detail=""):
-    global _passed, _failed
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        _passed += 1
-    else:
-        _failed += 1
-        _failures.append(f"{name}  {detail}")
-        print(f"  ✗ {name}  {detail}")
+        print(f"  [PASS] {name}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 def make_bt(n_rows, seed=42, with_regime=True):
@@ -238,26 +234,29 @@ def test_run_validation_empty():
 
 
 def main():
-    test_empty_data()
-    test_n_thresholds()
-    test_quintile()
-    test_monotonicity()
-    test_regime()
-    test_correlation()
-    test_redundancy()
-    test_missing_none()
-    test_deterministic()
-    test_no_future_leakage()
-    test_no_fake_zero()
-    test_run_validation_empty()
-
-    print(f"\n结果：通过 {_passed} / {_passed + _failed}")
-    if _failures:
-        print("失败项：")
-        for f in _failures:
-            print("  -", f)
-        sys.exit(1)
-    sys.exit(0)
+    _tests = [
+        test_empty_data,
+        test_n_thresholds,
+        test_quintile,
+        test_monotonicity,
+        test_regime,
+        test_correlation,
+        test_redundancy,
+        test_missing_none,
+        test_deterministic,
+        test_no_future_leakage,
+        test_no_fake_zero,
+        test_run_validation_empty,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":

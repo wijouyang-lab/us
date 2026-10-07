@@ -16,18 +16,15 @@ sys.path.insert(0, ".")
 from quant_factor_backtest import forward_return_nd
 import quant_shadow
 
-passed = 0
-total = 0
 
 
 def check(name, cond, detail=""):
-    global passed, total
-    total += 1
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        passed += 1
         print(f"  [PASS] {name}")
-    else:
-        print(f"  [FAIL] {name}  {detail}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 def make_series(n=30, start="2026-01-01", base=100.0, step=1.0):
@@ -148,18 +145,27 @@ def test_no_future_leakage():
 
 
 def main():
-    test_horizons()
-    test_none()
-    test_missing_future()
-    test_zero_return()
-    test_negative_return()
-    test_boundary()
-    test_consistent_with_legacy()
-    test_shadow_uses_unified()
-    test_deterministic()
-    test_no_future_leakage()
-    print(f"\n结果: 通过 {passed} / {total}")
-    sys.exit(0 if passed == total else 1)
+    _tests = [
+        test_horizons,
+        test_none,
+        test_missing_future,
+        test_zero_return,
+        test_negative_return,
+        test_boundary,
+        test_consistent_with_legacy,
+        test_shadow_uses_unified,
+        test_deterministic,
+        test_no_future_leakage,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":

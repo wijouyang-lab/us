@@ -20,19 +20,15 @@ from quant_factor_price import (
 )
 from quant_factor_backtest import forward_return_nd
 
-_passed = 0
-_failed = 0
-_failures = []
 
 
 def check(name, cond, detail=""):
-    global _passed, _failed
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        _passed += 1
-    else:
-        _failed += 1
-        _failures.append(f"{name}  {detail}")
-        print(f"  ✗ {name}  {detail}")
+        print(f"  [PASS] {name}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 def make_snapshot():
@@ -211,26 +207,29 @@ def test_filter_bars():
 
 
 def main():
-    test_upsert()
-    test_upsert_empty_existing()
-    test_forward_from_history()
-    test_weekend_not_trading_day()
-    test_missing_future_none()
-    test_no_future_factor()
-    test_deterministic()
-    test_empty_snapshot()
-    test_full_universe()
-    test_update_with_injected_fetch()
-    test_price_map()
-    test_filter_bars()
-
-    print(f"\n结果：通过 {_passed} / {_passed + _failed}")
-    if _failures:
-        print("失败项：")
-        for f in _failures:
-            print("  -", f)
-        sys.exit(1)
-    sys.exit(0)
+    _tests = [
+        test_upsert,
+        test_upsert_empty_existing,
+        test_forward_from_history,
+        test_weekend_not_trading_day,
+        test_missing_future_none,
+        test_no_future_factor,
+        test_deterministic,
+        test_empty_snapshot,
+        test_full_universe,
+        test_update_with_injected_fetch,
+        test_price_map,
+        test_filter_bars,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":

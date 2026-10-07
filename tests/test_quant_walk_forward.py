@@ -29,19 +29,15 @@ from quant_walk_forward import (
     transform_normalization,
 )
 
-_passed = 0
-_failed = 0
-_failures = []
 
 
 def check(name, cond, detail=""):
-    global _passed, _failed
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        _passed += 1
-    else:
-        _failed += 1
-        _failures.append(f"{name}  {detail}")
-        print(f"  ✗ {name}  {detail}")
+        print(f"  [PASS] {name}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 # 极小人工 fixture，仅用于测试窗口/冻结/收益计算逻辑
@@ -250,30 +246,33 @@ def test_no_fake_production_data():
 
 
 def main():
-    test_empty_and_insufficient()
-    test_windows()
-    test_disjoint_and_ordering()
-    test_no_leakage()
-    test_frozen_normalization()
-    test_frozen_weights()
-    test_evaluate()
-    test_max_drawdown()
-    test_overfit_gap()
-    test_overfit_detection()
-    test_regime_split()
-    test_model_comparison()
-    test_deterministic()
-    test_production_lock()
-    test_no_ai_no_network()
-    test_no_fake_production_data()
-
-    print(f"\n结果：通过 {_passed} / {_passed + _failed}")
-    if _failures:
-        print("失败项：")
-        for f in _failures:
-            print("  -", f)
-        sys.exit(1)
-    sys.exit(0)
+    _tests = [
+        test_empty_and_insufficient,
+        test_windows,
+        test_disjoint_and_ordering,
+        test_no_leakage,
+        test_frozen_normalization,
+        test_frozen_weights,
+        test_evaluate,
+        test_max_drawdown,
+        test_overfit_gap,
+        test_overfit_detection,
+        test_regime_split,
+        test_model_comparison,
+        test_deterministic,
+        test_production_lock,
+        test_no_ai_no_network,
+        test_no_fake_production_data,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":

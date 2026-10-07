@@ -23,19 +23,15 @@ from quant_shadow import (
     shadow_rank,
 )
 
-_passed = 0
-_failed = 0
-_failures = []
 
 
 def check(name, cond, detail=""):
-    global _passed, _failed
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        _passed += 1
-    else:
-        _failed += 1
-        _failures.append(f"{name}  {detail}")
-        print(f"  ✗ {name}  {detail}")
+        print(f"  [PASS] {name}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 def make_snapshot(n_tickers=10, with_tag=False):
@@ -265,32 +261,35 @@ def test_empty_report():
 
 
 def main():
-    test_empty_candidate_pool()
-    test_shadow_disabled_active()
-    test_shadow_active_logic()
-    test_difference_types()
-    test_same_candidate_pool()
-    test_start_date()
-    test_no_backfill()
-    test_forward_returns()
-    test_performance()
-    test_regime_split()
-    test_incremental_value()
-    test_overlap_rate()
-    test_deterministic()
-    test_no_leakage()
-    test_no_ai_no_network()
-    test_production_disabled()
-    test_existing_scan_unchanged()
-    test_empty_report()
-
-    print(f"\n结果：通过 {_passed} / {_passed + _failed}")
-    if _failures:
-        print("失败项：")
-        for f in _failures:
-            print("  -", f)
-        sys.exit(1)
-    sys.exit(0)
+    _tests = [
+        test_empty_candidate_pool,
+        test_shadow_disabled_active,
+        test_shadow_active_logic,
+        test_difference_types,
+        test_same_candidate_pool,
+        test_start_date,
+        test_no_backfill,
+        test_forward_returns,
+        test_performance,
+        test_regime_split,
+        test_incremental_value,
+        test_overlap_rate,
+        test_deterministic,
+        test_no_leakage,
+        test_no_ai_no_network,
+        test_production_disabled,
+        test_existing_scan_unchanged,
+        test_empty_report,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":

@@ -23,19 +23,15 @@ from quant_factor_backtest import (
     sample_size_label,
 )
 
-_passed = 0
-_failed = 0
-_failures = []
 
 
 def check(name, cond, detail=""):
-    global _passed, _failed
+    """断言：FAIL 时抛出 AssertionError（pytest 可捕获），同时保留打印。"""
     if cond:
-        _passed += 1
-    else:
-        _failed += 1
-        _failures.append(f"{name}  {detail}")
-        print(f"  ✗ {name}  {detail}")
+        print(f"  [PASS] {name}")
+        return True
+    print(f"  [FAIL] {name}  {detail}")
+    raise AssertionError(f"{name}  {detail}".strip())
 
 
 def make_price_series(start="2026-01-01", n=30, step=1.0):
@@ -266,26 +262,29 @@ def test_quantile_stats_group_by_date():
 
 
 def main():
-    test_forward_return()
-    test_forward_missing_future()
-    test_win()
-    test_quantile()
-    test_n_and_nan()
-    test_regime()
-    test_snapshot_immutable()
-    test_no_lookahead()
-    test_deterministic()
-    test_helpers()
-    test_run_backtest_empty()
-    test_quantile_stats_group_by_date()
-
-    print(f"\n结果：通过 {_passed} / {_passed + _failed}")
-    if _failures:
-        print("失败项：")
-        for f in _failures:
-            print("  -", f)
-        sys.exit(1)
-    sys.exit(0)
+    _tests = [
+        test_forward_return,
+        test_forward_missing_future,
+        test_win,
+        test_quantile,
+        test_n_and_nan,
+        test_regime,
+        test_snapshot_immutable,
+        test_no_lookahead,
+        test_deterministic,
+        test_helpers,
+        test_run_backtest_empty,
+        test_quantile_stats_group_by_date,
+    ]
+    _failed = 0
+    for _t in _tests:
+        try:
+            _t()
+        except Exception as _e:
+            _failed += 1
+            print(f"  [FAIL] {_t.__name__}: {_e}")
+    print(f"\n结果：通过 {len(_tests) - _failed} / {len(_tests)}")
+    sys.exit(1 if _failed else 0)
 
 
 if __name__ == "__main__":
