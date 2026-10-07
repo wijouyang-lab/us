@@ -4,7 +4,7 @@ on:
   schedule:
     # Schedule: UTC (GitHub 原生 cron 只认 UTC，不依赖 timezone 字段)
     # Evolution: First Saturday of each month 10:00 Beijing = 02:00 UTC
-    - cron: '0 2 * * 6'
+    - cron: '37 2 * * 6'
 
 jobs:
   run-scan:
