@@ -47,6 +47,11 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python scan.py
 
+      # Quant Research 价格历史层：扫描成功后，为 Factor Snapshot 的历史 ticker
+      # 批量更新 quant_factor_price_history.csv（幂等 upsert，绝不逐股重复请求）。
+      - name: 更新 Quant 价格历史
+        run: python quant_factor_price.py
+
       # 安全网：即使后面 git push 失败，本轮生成的 pending CSV、AI 文本与 AI Snapshot
       # 也不会随 runner 销毁而丢失（ai_snapshot.csv 按 Ticker|Rec_Date|Tag 永久保存，丢失不可重建）
       - name: 上传扫描产物（防止推送失败导致数据丢失）
@@ -60,6 +65,7 @@ jobs:
             ai_snapshot.csv
             option_strategies.csv
             quant_factor_snapshot.csv
+            quant_factor_price_history.csv
           if-no-files-found: warn
 
       - name: 提交待确认文件、AI 文本缓存与 AI Snapshot
@@ -80,6 +86,10 @@ jobs:
           # Quant Factor Lab 每日因子快照：研究数据层，随 Scan 一并入库
           if [ -f quant_factor_snapshot.csv ]; then
             git add quant_factor_snapshot.csv
+          fi
+          # Quant Research 价格历史层：为 Forward Return 提供真实历史价格
+          if [ -f quant_factor_price_history.csv ]; then
+            git add quant_factor_price_history.csv
           fi
           if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv
