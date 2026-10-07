@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-07T01:15:50Z",
-  "market_updated_at": "2026-10-07T01:15:49Z",
-  "technical_updated_at": "2026-10-07T01:15:50Z",
+  "generated_at": "2026-10-07T01:30:56Z",
+  "market_updated_at": "2026-10-07T01:30:54Z",
+  "technical_updated_at": "2026-10-07T01:30:56Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,20 +17,20 @@
     "missing": []
   },
   "stocks": {
-    "total": 35,
-    "core": 14,
+    "total": 34,
+    "core": 13,
     "observation": 21,
-    "kline_ok": 35,
-    "technical_ok": 35,
+    "kline_ok": 34,
+    "technical_ok": 34,
     "price_source_breakdown": {
-      "realtime": 35
+      "realtime": 34
     }
   },
   "review": {
     "core_closed": 4,
     "core_open": 15,
     "observation_closed": 4,
-    "observation_open": 83,
+    "observation_open": 88,
     "actual_active": 5,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 37402692643,
+        "run_id": 37556600849,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-06T02:08:37Z",
-        "started_at": "2026-10-06T02:08:37Z",
-        "updated_at": "2026-10-06T02:11:14Z",
-        "head_sha": "c8e7ce40448e",
+        "created_at": "2026-10-07T01:20:30Z",
+        "started_at": "2026-10-07T01:20:30Z",
+        "updated_at": "2026-10-07T01:23:51Z",
+        "head_sha": "88a13b00f8af",
         "event": "schedule",
-        "run_number": 127,
+        "run_number": 128,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37402692643"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37556600849"
       },
       "last_success": {
-        "run_id": 37402692643,
-        "completed_at": "2026-10-06T02:11:14Z",
-        "head_sha": "c8e7ce40448e"
+        "run_id": 37556600849,
+        "completed_at": "2026-10-07T01:23:51Z",
+        "head_sha": "88a13b00f8af"
       },
       "error": null
     },

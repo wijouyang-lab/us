@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-07T01:15:50Z",
+  "generated_at": "2026-10-07T01:30:56Z",
   "stocks": [
     {
       "ticker": "ADI",
@@ -30,8 +30,8 @@
       "technical_score": 20.0,
       "risk_liquidity_score": 18.0,
       "rsi": 59.7,
-      "atr_pct": 2.6,
-      "stop_loss": 404.64,
+      "atr_pct": 2.62,
+      "stop_loss": 406.53,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 45.6059,
       "pe_forward": 23.5169,
@@ -1519,7 +1519,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:31Z",
+        "computed_at": "2026-10-07T01:30:25Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3042,7 +3042,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:31Z",
+        "computed_at": "2026-10-07T01:30:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3076,7 +3076,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 47.4,
-      "atr_pct": 3.98,
+      "atr_pct": 3.92,
       "stop_loss": 614.89,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -4565,7 +4565,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:32Z",
+        "computed_at": "2026-10-07T01:30:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4599,7 +4599,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 62.7,
-      "atr_pct": 2.14,
+      "atr_pct": 2.08,
       "stop_loss": 246.49,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -6088,7 +6088,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:32Z",
+        "computed_at": "2026-10-07T01:30:26Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7611,7 +7611,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:32Z",
+        "computed_at": "2026-10-07T01:30:27Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7645,8 +7645,8 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 18.0,
       "rsi": 54.2,
-      "atr_pct": 3.01,
-      "stop_loss": 84.35,
+      "atr_pct": 2.92,
+      "stop_loss": 84.65,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 40.965,
       "pe_forward": 24.9765,
@@ -9134,7 +9134,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:32Z",
+        "computed_at": "2026-10-07T01:30:27Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9146,7 +9146,7 @@
       "tag_raw": "Observation",
       "recommendation_id": "BE|2026-10-06|Observation",
       "recommendation_date": "2026-10-06",
-      "rec_price": null,
+      "rec_price": 298.79,
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BE|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
@@ -9182,8 +9182,8 @@
       "market_cap": 88019501056.0,
       "market_regime": "NORMAL",
       "vix": 15.04,
-      "status": "pending",
-      "technical_date": "2026-10-05",
+      "status": "Active",
+      "technical_date": null,
       "scan_date": "2026-10-06",
       "avg_dollar_volume_20d": 5181330841.48,
       "sector_rs_20d_pct": null,
@@ -10657,7 +10657,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:33Z",
+        "computed_at": "2026-10-07T01:30:28Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12180,7 +12180,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:33Z",
+        "computed_at": "2026-10-07T01:30:28Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13703,7 +13703,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:33Z",
+        "computed_at": "2026-10-07T01:30:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15226,7 +15226,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:33Z",
+        "computed_at": "2026-10-07T01:30:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16749,7 +16749,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:33Z",
+        "computed_at": "2026-10-07T01:30:29Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16761,7 +16761,7 @@
       "tag_raw": "Observation",
       "recommendation_id": "CRWD|2026-10-06|Observation",
       "recommendation_date": "2026-10-06",
-      "rec_price": null,
+      "rec_price": 278.38,
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "CRWD|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
@@ -16797,8 +16797,8 @@
       "market_cap": 284213706752.0,
       "market_regime": "NORMAL",
       "vix": 15.04,
-      "status": "pending",
-      "technical_date": "2026-10-05",
+      "status": "Active",
+      "technical_date": null,
       "scan_date": "2026-10-06",
       "avg_dollar_volume_20d": 2897393009.82,
       "sector_rs_20d_pct": 5.77,
@@ -18272,7 +18272,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:34Z",
+        "computed_at": "2026-10-07T01:30:30Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18284,7 +18284,7 @@
       "tag_raw": "Observation",
       "recommendation_id": "DDOG|2026-10-06|Observation",
       "recommendation_date": "2026-10-06",
-      "rec_price": null,
+      "rec_price": 276.02,
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "DDOG|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
@@ -18320,8 +18320,8 @@
       "market_cap": 99111878656.0,
       "market_regime": "NORMAL",
       "vix": 15.04,
-      "status": "pending",
-      "technical_date": "2026-10-05",
+      "status": "Active",
+      "technical_date": null,
       "scan_date": "2026-10-06",
       "avg_dollar_volume_20d": 917595331.08,
       "sector_rs_20d_pct": 5.77,
@@ -19795,7 +19795,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:34Z",
+        "computed_at": "2026-10-07T01:30:30Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21318,7 +21318,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:34Z",
+        "computed_at": "2026-10-07T01:30:31Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22841,7 +22841,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:34Z",
+        "computed_at": "2026-10-07T01:30:31Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22876,7 +22876,7 @@
       "risk_liquidity_score": 18.0,
       "rsi": 58.1,
       "atr_pct": 3.28,
-      "stop_loss": 959.04,
+      "stop_loss": 960.3,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 28.3982,
       "pe_forward": 39.4002,
@@ -24364,7 +24364,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:34Z",
+        "computed_at": "2026-10-07T01:30:31Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25887,7 +25887,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:35Z",
+        "computed_at": "2026-10-07T01:30:32Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25922,7 +25922,7 @@
       "risk_liquidity_score": null,
       "rsi": 49.2,
       "atr_pct": 3.97,
-      "stop_loss": 716.63,
+      "stop_loss": 719.64,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -27410,7 +27410,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:35Z",
+        "computed_at": "2026-10-07T01:30:32Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28933,7 +28933,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:35Z",
+        "computed_at": "2026-10-07T01:30:33Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -30456,7 +30456,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:35Z",
+        "computed_at": "2026-10-07T01:30:33Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -30490,8 +30490,8 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 62.1,
-      "atr_pct": 2.29,
-      "stop_loss": 502.0,
+      "atr_pct": 2.32,
+      "stop_loss": 509.42,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -31979,7 +31979,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:35Z",
+        "computed_at": "2026-10-07T01:30:33Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -32013,7 +32013,7 @@
       "technical_score": 20.0,
       "risk_liquidity_score": 18.0,
       "rsi": 52.3,
-      "atr_pct": 2.96,
+      "atr_pct": 2.97,
       "stop_loss": 236.35,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 19.8302,
@@ -33502,7 +33502,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:36Z",
+        "computed_at": "2026-10-07T01:30:34Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33536,8 +33536,8 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 38.1,
-      "atr_pct": 4.37,
-      "stop_loss": 82.34,
+      "atr_pct": 4.24,
+      "stop_loss": 83.35,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -35025,7 +35025,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:36Z",
+        "computed_at": "2026-10-07T01:30:34Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -36548,7 +36548,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-05",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:36Z",
+        "computed_at": "2026-10-07T01:30:34Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -36560,7 +36560,7 @@
       "tag_raw": "Observation",
       "recommendation_id": "RCL|2026-10-06|Observation",
       "recommendation_date": "2026-10-06",
-      "rec_price": null,
+      "rec_price": 279.8,
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "RCL|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
@@ -36568,12 +36568,12 @@
       "price_source": "realtime",
       "current_price": 288.799,
       "current_price_updated_at": "2026-10-06T23:58:00Z",
-      "pending_price": 288.16,
+      "pending_price": 279.8,
       "pending_price_source": "Scan_Ref_Price",
-      "prev_close": 288.16,
+      "prev_close": 288.78,
       "change_1d": 0.0066,
       "change_1d_source": "computed(current vs last completed close)",
-      "pending_change_1d": 0.0,
+      "pending_change_1d": -3.1096,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
       "final_score": 64.7,
       "quant_score": 65.0,
@@ -36583,7 +36583,7 @@
       "risk_liquidity_score": 18.0,
       "rsi": 65.1,
       "atr_pct": 3.58,
-      "stop_loss": 267.53,
+      "stop_loss": 259.77,
       "stop_method": "ATR初始保护",
       "pe_ttm": 17.7883,
       "pe_forward": 14.0932,
@@ -36596,8 +36596,8 @@
       "market_cap": 77071671296.0,
       "market_regime": "NORMAL",
       "vix": 15.04,
-      "status": "pending",
-      "technical_date": "2026-10-05",
+      "status": "Active",
+      "technical_date": null,
       "scan_date": "2026-10-06",
       "avg_dollar_volume_20d": 978636037.24,
       "sector_rs_20d_pct": null,
@@ -38071,7 +38071,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:36Z",
+        "computed_at": "2026-10-07T01:30:35Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -39594,7 +39594,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:37Z",
+        "computed_at": "2026-10-07T01:30:35Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -39628,7 +39628,7 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 18.0,
       "rsi": 73.9,
-      "atr_pct": 3.85,
+      "atr_pct": 3.97,
       "stop_loss": 475.2,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 85.2056,
@@ -41117,1530 +41117,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:37Z",
-        "status": "ok"
-      },
-      "ohlcv_status": "ok"
-    },
-    {
-      "ticker": "SPDN",
-      "name": "SPDN",
-      "bucket": "Core",
-      "tag_raw": "Core_Dragon",
-      "recommendation_id": "SPDN|2026-06-08|Core_Dragon",
-      "recommendation_date": "2026-06-08",
-      "rec_price": 8.84,
-      "recommendation_tag": "Core_Dragon",
-      "ai_snapshot_id": null,
-      "ai_snapshot_date": null,
-      "price": 8.3,
-      "price_source": "realtime",
-      "current_price": 8.3,
-      "current_price_updated_at": "2026-10-06T22:18:00Z",
-      "pending_price": 8.84,
-      "pending_price_source": "Scan_Ref_Price",
-      "prev_close": 8.84,
-      "change_1d": -0.7177,
-      "change_1d_source": "computed(current vs last completed close)",
-      "pending_change_1d": 0.0,
-      "pending_change_1d_source": "computed(price vs Prev_Close)",
-      "final_score": 83.7,
-      "quant_score": null,
-      "ai_score": null,
-      "fundamental_score": null,
-      "technical_score": null,
-      "risk_liquidity_score": null,
-      "rsi": 50.8,
-      "atr_pct": 0.97,
-      "stop_loss": 8.31,
-      "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
-      "pe_ttm": null,
-      "pe_forward": null,
-      "pb": null,
-      "eps_ttm": null,
-      "roe": null,
-      "revenue_growth": null,
-      "earnings_growth": null,
-      "profit_margin": null,
-      "market_cap": null,
-      "market_regime": null,
-      "vix": null,
-      "status": "Active",
-      "technical_date": null,
-      "scan_date": "2026-06-08",
-      "avg_dollar_volume_20d": null,
-      "sector_rs_20d_pct": null,
-      "bias": 1.25,
-      "event_score": null,
-      "technical_confirmations": null,
-      "technical_confirmation_signals": null,
-      "ai": {
-        "industry_logic": "",
-        "news_cn": "",
-        "premarket_conclusion": "",
-        "catalysts": "",
-        "risks": "",
-        "invalidation": ""
-      },
-      "ohlcv": [
-        {
-          "date": "2026-01-16",
-          "open": 9.3,
-          "high": 9.355,
-          "low": 9.3,
-          "close": 9.33,
-          "volume": 23690800
-        },
-        {
-          "date": "2026-01-20",
-          "open": 9.47,
-          "high": 9.54,
-          "low": 9.43,
-          "close": 9.53,
-          "volume": 35831700
-        },
-        {
-          "date": "2026-01-21",
-          "open": 9.5,
-          "high": 9.52,
-          "low": 9.37,
-          "close": 9.42,
-          "volume": 36969600
-        },
-        {
-          "date": "2026-01-22",
-          "open": 9.36,
-          "high": 9.4,
-          "low": 9.34,
-          "close": 9.38,
-          "volume": 18074400
-        },
-        {
-          "date": "2026-01-23",
-          "open": 9.39,
-          "high": 9.395,
-          "low": 9.35,
-          "close": 9.375,
-          "volume": 15259200
-        },
-        {
-          "date": "2026-01-26",
-          "open": 9.36,
-          "high": 9.36,
-          "low": 9.305,
-          "close": 9.33,
-          "volume": 12770700
-        },
-        {
-          "date": "2026-01-27",
-          "open": 9.3,
-          "high": 9.319,
-          "low": 9.275,
-          "close": 9.28,
-          "volume": 5585300
-        },
-        {
-          "date": "2026-01-28",
-          "open": 9.28,
-          "high": 9.32,
-          "low": 9.26,
-          "close": 9.29,
-          "volume": 16103200
-        },
-        {
-          "date": "2026-01-29",
-          "open": 9.29,
-          "high": 9.439,
-          "low": 9.28,
-          "close": 9.31,
-          "volume": 32556600
-        },
-        {
-          "date": "2026-01-30",
-          "open": 9.34,
-          "high": 9.409,
-          "low": 9.314,
-          "close": 9.34,
-          "volume": 43394000
-        },
-        {
-          "date": "2026-02-02",
-          "open": 9.39,
-          "high": 9.39,
-          "low": 9.28,
-          "close": 9.31,
-          "volume": 23995600
-        },
-        {
-          "date": "2026-02-03",
-          "open": 9.29,
-          "high": 9.455,
-          "low": 9.28,
-          "close": 9.39,
-          "volume": 37686800
-        },
-        {
-          "date": "2026-02-04",
-          "open": 9.38,
-          "high": 9.49,
-          "low": 9.36,
-          "close": 9.44,
-          "volume": 58925200
-        },
-        {
-          "date": "2026-02-05",
-          "open": 9.51,
-          "high": 9.577,
-          "low": 9.461,
-          "close": 9.55,
-          "volume": 71403100
-        },
-        {
-          "date": "2026-02-06",
-          "open": 9.51,
-          "high": 9.51,
-          "low": 9.35,
-          "close": 9.37,
-          "volume": 35176900
-        },
-        {
-          "date": "2026-02-09",
-          "open": 9.39,
-          "high": 9.41,
-          "low": 9.3,
-          "close": 9.33,
-          "volume": 18655000
-        },
-        {
-          "date": "2026-02-10",
-          "open": 9.32,
-          "high": 9.36,
-          "low": 9.29,
-          "close": 9.36,
-          "volume": 24081400
-        },
-        {
-          "date": "2026-02-11",
-          "open": 9.3,
-          "high": 9.395,
-          "low": 9.29,
-          "close": 9.35,
-          "volume": 40154100
-        },
-        {
-          "date": "2026-02-12",
-          "open": 9.33,
-          "high": 9.516,
-          "low": 9.32,
-          "close": 9.5,
-          "volume": 48257400
-        },
-        {
-          "date": "2026-02-13",
-          "open": 9.51,
-          "high": 9.57,
-          "low": 9.44,
-          "close": 9.51,
-          "volume": 49030200
-        },
-        {
-          "date": "2026-02-17",
-          "open": 9.53,
-          "high": 9.59,
-          "low": 9.463,
-          "close": 9.5,
-          "volume": 53681400
-        },
-        {
-          "date": "2026-02-18",
-          "open": 9.475,
-          "high": 9.493,
-          "low": 9.4,
-          "close": 9.44,
-          "volume": 33489600
-        },
-        {
-          "date": "2026-02-19",
-          "open": 9.49,
-          "high": 9.52,
-          "low": 9.45,
-          "close": 9.47,
-          "volume": 41365100
-        },
-        {
-          "date": "2026-02-20",
-          "open": 9.51,
-          "high": 9.515,
-          "low": 9.401,
-          "close": 9.41,
-          "volume": 54277000
-        },
-        {
-          "date": "2026-02-23",
-          "open": 9.44,
-          "high": 9.54,
-          "low": 9.4,
-          "close": 9.52,
-          "volume": 29566300
-        },
-        {
-          "date": "2026-02-24",
-          "open": 9.52,
-          "high": 9.543,
-          "low": 9.43,
-          "close": 9.44,
-          "volume": 26502300
-        },
-        {
-          "date": "2026-02-25",
-          "open": 9.41,
-          "high": 9.41,
-          "low": 9.35,
-          "close": 9.36,
-          "volume": 9968000
-        },
-        {
-          "date": "2026-02-26",
-          "open": 9.36,
-          "high": 9.49,
-          "low": 9.36,
-          "close": 9.42,
-          "volume": 35267400
-        },
-        {
-          "date": "2026-02-27",
-          "open": 9.51,
-          "high": 9.53,
-          "low": 9.46,
-          "close": 9.46,
-          "volume": 40963700
-        },
-        {
-          "date": "2026-03-02",
-          "open": 9.57,
-          "high": 9.58,
-          "low": 9.43,
-          "close": 9.46,
-          "volume": 30404700
-        },
-        {
-          "date": "2026-03-03",
-          "open": 9.63,
-          "high": 9.7,
-          "low": 9.52,
-          "close": 9.56,
-          "volume": 59759600
-        },
-        {
-          "date": "2026-03-04",
-          "open": 9.53,
-          "high": 9.56,
-          "low": 9.46,
-          "close": 9.48,
-          "volume": 41289700
-        },
-        {
-          "date": "2026-03-05",
-          "open": 9.53,
-          "high": 9.62,
-          "low": 9.48,
-          "close": 9.53,
-          "volume": 90478800
-        },
-        {
-          "date": "2026-03-06",
-          "open": 9.66,
-          "high": 9.71,
-          "low": 9.62,
-          "close": 9.67,
-          "volume": 124356100
-        },
-        {
-          "date": "2026-03-09",
-          "open": 9.76,
-          "high": 9.82,
-          "low": 9.56,
-          "close": 9.59,
-          "volume": 92166300
-        },
-        {
-          "date": "2026-03-10",
-          "open": 9.59,
-          "high": 9.64,
-          "low": 9.51,
-          "close": 9.61,
-          "volume": 96810200
-        },
-        {
-          "date": "2026-03-11",
-          "open": 9.6,
-          "high": 9.66,
-          "low": 9.565,
-          "close": 9.61,
-          "volume": 141067400
-        },
-        {
-          "date": "2026-03-12",
-          "open": 9.7,
-          "high": 9.77,
-          "low": 9.68,
-          "close": 9.77,
-          "volume": 175127900
-        },
-        {
-          "date": "2026-03-13",
-          "open": 9.72,
-          "high": 9.84,
-          "low": 9.68,
-          "close": 9.83,
-          "volume": 148622100
-        },
-        {
-          "date": "2026-03-16",
-          "open": 9.74,
-          "high": 9.76,
-          "low": 9.68,
-          "close": 9.72,
-          "volume": 90152000
-        },
-        {
-          "date": "2026-03-17",
-          "open": 9.68,
-          "high": 9.72,
-          "low": 9.65,
-          "close": 9.7,
-          "volume": 85757000
-        },
-        {
-          "date": "2026-03-18",
-          "open": 9.74,
-          "high": 9.85,
-          "low": 9.72,
-          "close": 9.85,
-          "volume": 92236000
-        },
-        {
-          "date": "2026-03-19",
-          "open": 9.92,
-          "high": 9.94,
-          "low": 9.825,
-          "close": 9.87,
-          "volume": 129446300
-        },
-        {
-          "date": "2026-03-20",
-          "open": 9.9,
-          "high": 10.08,
-          "low": 9.895,
-          "close": 10.03,
-          "volume": 131740300
-        },
-        {
-          "date": "2026-03-23",
-          "open": 9.87,
-          "high": 9.94,
-          "low": 9.8,
-          "close": 9.91,
-          "volume": 136458600
-        },
-        {
-          "date": "2026-03-24",
-          "open": 9.93,
-          "high": 9.95,
-          "low": 9.84,
-          "close": 9.9,
-          "volume": 137458900
-        },
-        {
-          "date": "2026-03-25",
-          "open": 9.81,
-          "high": 9.889,
-          "low": 9.78,
-          "close": 9.85,
-          "volume": 114475300
-        },
-        {
-          "date": "2026-03-26",
-          "open": 9.92,
-          "high": 10.03,
-          "low": 9.87,
-          "close": 10.02,
-          "volume": 128241600
-        },
-        {
-          "date": "2026-03-27",
-          "open": 10.07,
-          "high": 10.22,
-          "low": 10.07,
-          "close": 10.2,
-          "volume": 125439100
-        },
-        {
-          "date": "2026-03-30",
-          "open": 10.11,
-          "high": 10.28,
-          "low": 10.1,
-          "close": 10.23,
-          "volume": 104669300
-        },
-        {
-          "date": "2026-03-31",
-          "open": 10.12,
-          "high": 10.14,
-          "low": 9.92,
-          "close": 9.95,
-          "volume": 177448200
-        },
-        {
-          "date": "2026-04-01",
-          "open": 9.88,
-          "high": 9.9,
-          "low": 9.81,
-          "close": 9.86,
-          "volume": 90516000
-        },
-        {
-          "date": "2026-04-02",
-          "open": 10.01,
-          "high": 10.03,
-          "low": 9.831,
-          "close": 9.87,
-          "volume": 125256500
-        },
-        {
-          "date": "2026-04-06",
-          "open": 9.87,
-          "high": 9.87,
-          "low": 9.815,
-          "close": 9.82,
-          "volume": 102281100
-        },
-        {
-          "date": "2026-04-07",
-          "open": 9.86,
-          "high": 9.94,
-          "low": 9.81,
-          "close": 9.82,
-          "volume": 125141000
-        },
-        {
-          "date": "2026-04-08",
-          "open": 9.56,
-          "high": 9.64,
-          "low": 9.55,
-          "close": 9.58,
-          "volume": 87733100
-        },
-        {
-          "date": "2026-04-09",
-          "open": 9.59,
-          "high": 9.61,
-          "low": 9.5,
-          "close": 9.52,
-          "volume": 74031300
-        },
-        {
-          "date": "2026-04-10",
-          "open": 9.5,
-          "high": 9.54,
-          "low": 9.49,
-          "close": 9.53,
-          "volume": 45065400
-        },
-        {
-          "date": "2026-04-13",
-          "open": 9.56,
-          "high": 9.57,
-          "low": 9.43,
-          "close": 9.43,
-          "volume": 52662300
-        },
-        {
-          "date": "2026-04-14",
-          "open": 9.42,
-          "high": 9.42,
-          "low": 9.32,
-          "close": 9.33,
-          "volume": 37991400
-        },
-        {
-          "date": "2026-04-15",
-          "open": 9.31,
-          "high": 9.33,
-          "low": 9.24,
-          "close": 9.26,
-          "volume": 27939300
-        },
-        {
-          "date": "2026-04-16",
-          "open": 9.24,
-          "high": 9.27,
-          "low": 9.215,
-          "close": 9.24,
-          "volume": 39598400
-        },
-        {
-          "date": "2026-04-17",
-          "open": 9.17,
-          "high": 9.18,
-          "low": 9.09,
-          "close": 9.13,
-          "volume": 49850000
-        },
-        {
-          "date": "2026-04-20",
-          "open": 9.15,
-          "high": 9.18,
-          "low": 9.13,
-          "close": 9.14,
-          "volume": 49005700
-        },
-        {
-          "date": "2026-04-21",
-          "open": 9.13,
-          "high": 9.225,
-          "low": 9.11,
-          "close": 9.2,
-          "volume": 78099500
-        },
-        {
-          "date": "2026-04-22",
-          "open": 9.14,
-          "high": 9.15,
-          "low": 9.11,
-          "close": 9.11,
-          "volume": 39347600
-        },
-        {
-          "date": "2026-04-23",
-          "open": 9.13,
-          "high": 9.23,
-          "low": 9.1,
-          "close": 9.15,
-          "volume": 78190900
-        },
-        {
-          "date": "2026-04-24",
-          "open": 9.13,
-          "high": 9.15,
-          "low": 9.08,
-          "close": 9.09,
-          "volume": 45153800
-        },
-        {
-          "date": "2026-04-27",
-          "open": 9.09,
-          "high": 9.11,
-          "low": 9.06,
-          "close": 9.07,
-          "volume": 17004200
-        },
-        {
-          "date": "2026-04-28",
-          "open": 9.11,
-          "high": 9.15,
-          "low": 9.1,
-          "close": 9.12,
-          "volume": 46372600
-        },
-        {
-          "date": "2026-04-29",
-          "open": 9.13,
-          "high": 9.16,
-          "low": 9.11,
-          "close": 9.12,
-          "volume": 38276100
-        },
-        {
-          "date": "2026-04-30",
-          "open": 9.09,
-          "high": 9.14,
-          "low": 9.02,
-          "close": 9.03,
-          "volume": 51789600
-        },
-        {
-          "date": "2026-05-01",
-          "open": 9.0,
-          "high": 9.01,
-          "low": 8.95,
-          "close": 9.0,
-          "volume": 37673600
-        },
-        {
-          "date": "2026-05-04",
-          "open": 9.02,
-          "high": 9.08,
-          "low": 8.99,
-          "close": 9.05,
-          "volume": 41356500
-        },
-        {
-          "date": "2026-05-05",
-          "open": 9.0,
-          "high": 9.001,
-          "low": 8.96,
-          "close": 8.98,
-          "volume": 20987200
-        },
-        {
-          "date": "2026-05-06",
-          "open": 8.92,
-          "high": 8.925,
-          "low": 8.84,
-          "close": 8.85,
-          "volume": 28393100
-        },
-        {
-          "date": "2026-05-07",
-          "open": 8.84,
-          "high": 8.9,
-          "low": 8.82,
-          "close": 8.88,
-          "volume": 41196000
-        },
-        {
-          "date": "2026-05-08",
-          "open": 8.85,
-          "high": 8.85,
-          "low": 8.8,
-          "close": 8.82,
-          "volume": 23285000
-        },
-        {
-          "date": "2026-05-11",
-          "open": 8.83,
-          "high": 8.83,
-          "low": 8.77,
-          "close": 8.79,
-          "volume": 30612800
-        },
-        {
-          "date": "2026-05-12",
-          "open": 8.83,
-          "high": 8.89,
-          "low": 8.8,
-          "close": 8.8,
-          "volume": 53917700
-        },
-        {
-          "date": "2026-05-13",
-          "open": 8.81,
-          "high": 8.84,
-          "low": 8.74,
-          "close": 8.75,
-          "volume": 39993500
-        },
-        {
-          "date": "2026-05-14",
-          "open": 8.75,
-          "high": 8.75,
-          "low": 8.68,
-          "close": 8.7,
-          "volume": 39333800
-        },
-        {
-          "date": "2026-05-15",
-          "open": 8.78,
-          "high": 8.82,
-          "low": 8.75,
-          "close": 8.8,
-          "volume": 62414600
-        },
-        {
-          "date": "2026-05-18",
-          "open": 8.795,
-          "high": 8.88,
-          "low": 8.78,
-          "close": 8.82,
-          "volume": 102081700
-        },
-        {
-          "date": "2026-05-19",
-          "open": 8.85,
-          "high": 8.9,
-          "low": 8.82,
-          "close": 8.88,
-          "volume": 83583100
-        },
-        {
-          "date": "2026-05-20",
-          "open": 8.86,
-          "high": 8.87,
-          "low": 8.77,
-          "close": 8.79,
-          "volume": 72808900
-        },
-        {
-          "date": "2026-05-21",
-          "open": 8.82,
-          "high": 8.83,
-          "low": 8.74,
-          "close": 8.77,
-          "volume": 76999200
-        },
-        {
-          "date": "2026-05-22",
-          "open": 8.73,
-          "high": 8.75,
-          "low": 8.7,
-          "close": 8.74,
-          "volume": 27117200
-        },
-        {
-          "date": "2026-05-26",
-          "open": 8.69,
-          "high": 8.71,
-          "low": 8.66,
-          "close": 8.68,
-          "volume": 35708900
-        },
-        {
-          "date": "2026-05-27",
-          "open": 8.67,
-          "high": 8.71,
-          "low": 8.67,
-          "close": 8.69,
-          "volume": 24621300
-        },
-        {
-          "date": "2026-05-28",
-          "open": 8.68,
-          "high": 8.7,
-          "low": 8.63,
-          "close": 8.64,
-          "volume": 36161400
-        },
-        {
-          "date": "2026-05-29",
-          "open": 8.62,
-          "high": 8.64,
-          "low": 8.6,
-          "close": 8.62,
-          "volume": 34566200
-        },
-        {
-          "date": "2026-06-01",
-          "open": 8.63,
-          "high": 8.64,
-          "low": 8.58,
-          "close": 8.61,
-          "volume": 18109000
-        },
-        {
-          "date": "2026-06-02",
-          "open": 8.62,
-          "high": 8.62,
-          "low": 8.58,
-          "close": 8.6,
-          "volume": 16729600
-        },
-        {
-          "date": "2026-06-03",
-          "open": 8.6,
-          "high": 8.66,
-          "low": 8.6,
-          "close": 8.65,
-          "volume": 23244300
-        },
-        {
-          "date": "2026-06-04",
-          "open": 8.68,
-          "high": 8.69,
-          "low": 8.605,
-          "close": 8.62,
-          "volume": 15205900
-        },
-        {
-          "date": "2026-06-05",
-          "open": 8.68,
-          "high": 8.87,
-          "low": 8.675,
-          "close": 8.84,
-          "volume": 49645200
-        },
-        {
-          "date": "2026-06-08",
-          "open": 8.78,
-          "high": 8.84,
-          "low": 8.75,
-          "close": 8.83,
-          "volume": 67872000
-        },
-        {
-          "date": "2026-06-09",
-          "open": 8.77,
-          "high": 9.03,
-          "low": 8.74,
-          "close": 8.86,
-          "volume": 129339600
-        },
-        {
-          "date": "2026-06-10",
-          "open": 8.9,
-          "high": 9.0,
-          "low": 8.84,
-          "close": 9.0,
-          "volume": 141258000
-        },
-        {
-          "date": "2026-06-11",
-          "open": 8.95,
-          "high": 9.01,
-          "low": 8.82,
-          "close": 8.85,
-          "volume": 125394600
-        },
-        {
-          "date": "2026-06-12",
-          "open": 8.81,
-          "high": 8.89,
-          "low": 8.77,
-          "close": 8.81,
-          "volume": 95587300
-        },
-        {
-          "date": "2026-06-15",
-          "open": 8.68,
-          "high": 8.685,
-          "low": 8.63,
-          "close": 8.66,
-          "volume": 21415400
-        },
-        {
-          "date": "2026-06-16",
-          "open": 8.65,
-          "high": 8.71,
-          "low": 8.64,
-          "close": 8.71,
-          "volume": 34538300
-        },
-        {
-          "date": "2026-06-17",
-          "open": 8.69,
-          "high": 8.835,
-          "low": 8.68,
-          "close": 8.81,
-          "volume": 51225500
-        },
-        {
-          "date": "2026-06-18",
-          "open": 8.72,
-          "high": 8.765,
-          "low": 8.71,
-          "close": 8.73,
-          "volume": 50609700
-        },
-        {
-          "date": "2026-06-22",
-          "open": 8.72,
-          "high": 8.778,
-          "low": 8.69,
-          "close": 8.75,
-          "volume": 31597200
-        },
-        {
-          "date": "2026-06-23",
-          "open": 8.81,
-          "high": 8.83,
-          "low": 8.74,
-          "close": 8.81,
-          "volume": 35212400
-        },
-        {
-          "date": "2026-06-24",
-          "open": 8.8,
-          "high": 8.85,
-          "low": 8.74,
-          "close": 8.83,
-          "volume": 50037400
-        },
-        {
-          "date": "2026-06-25",
-          "open": 8.75,
-          "high": 8.87,
-          "low": 8.75,
-          "close": 8.83,
-          "volume": 81223600
-        },
-        {
-          "date": "2026-06-26",
-          "open": 8.88,
-          "high": 8.905,
-          "low": 8.79,
-          "close": 8.87,
-          "volume": 59197700
-        },
-        {
-          "date": "2026-06-29",
-          "open": 8.79,
-          "high": 8.845,
-          "low": 8.73,
-          "close": 8.74,
-          "volume": 34980600
-        },
-        {
-          "date": "2026-06-30",
-          "open": 8.73,
-          "high": 8.74,
-          "low": 8.65,
-          "close": 8.67,
-          "volume": 18017300
-        },
-        {
-          "date": "2026-07-01",
-          "open": 8.7,
-          "high": 8.73,
-          "low": 8.64,
-          "close": 8.69,
-          "volume": 21366500
-        },
-        {
-          "date": "2026-07-02",
-          "open": 8.68,
-          "high": 8.76,
-          "low": 8.63,
-          "close": 8.71,
-          "volume": 54227800
-        },
-        {
-          "date": "2026-07-06",
-          "open": 8.65,
-          "high": 8.675,
-          "low": 8.61,
-          "close": 8.62,
-          "volume": 16977800
-        },
-        {
-          "date": "2026-07-07",
-          "open": 8.65,
-          "high": 8.7,
-          "low": 8.63,
-          "close": 8.68,
-          "volume": 34224400
-        },
-        {
-          "date": "2026-07-08",
-          "open": 8.72,
-          "high": 8.77,
-          "low": 8.69,
-          "close": 8.69,
-          "volume": 42361900
-        },
-        {
-          "date": "2026-07-09",
-          "open": 8.68,
-          "high": 8.7,
-          "low": 8.62,
-          "close": 8.63,
-          "volume": 22787300
-        },
-        {
-          "date": "2026-07-10",
-          "open": 8.63,
-          "high": 8.675,
-          "low": 8.59,
-          "close": 8.59,
-          "volume": 32717700
-        },
-        {
-          "date": "2026-07-13",
-          "open": 8.63,
-          "high": 8.68,
-          "low": 8.61,
-          "close": 8.67,
-          "volume": 45888100
-        },
-        {
-          "date": "2026-07-14",
-          "open": 8.65,
-          "high": 8.67,
-          "low": 8.62,
-          "close": 8.63,
-          "volume": 36023700
-        },
-        {
-          "date": "2026-07-15",
-          "open": 8.61,
-          "high": 8.66,
-          "low": 8.59,
-          "close": 8.6,
-          "volume": 41859200
-        },
-        {
-          "date": "2026-07-16",
-          "open": 8.63,
-          "high": 8.68,
-          "low": 8.6,
-          "close": 8.65,
-          "volume": 51771300
-        },
-        {
-          "date": "2026-07-17",
-          "open": 8.75,
-          "high": 8.77,
-          "low": 8.69,
-          "close": 8.75,
-          "volume": 61092600
-        },
-        {
-          "date": "2026-07-20",
-          "open": 8.7,
-          "high": 8.77,
-          "low": 8.68,
-          "close": 8.75,
-          "volume": 48198800
-        },
-        {
-          "date": "2026-07-21",
-          "open": 8.72,
-          "high": 8.74,
-          "low": 8.67,
-          "close": 8.69,
-          "volume": 25633700
-        },
-        {
-          "date": "2026-07-22",
-          "open": 8.71,
-          "high": 8.71,
-          "low": 8.66,
-          "close": 8.7,
-          "volume": 13219100
-        },
-        {
-          "date": "2026-07-23",
-          "open": 8.79,
-          "high": 8.84,
-          "low": 8.754,
-          "close": 8.8,
-          "volume": 48977000
-        },
-        {
-          "date": "2026-07-24",
-          "open": 8.81,
-          "high": 8.82,
-          "low": 8.74,
-          "close": 8.8,
-          "volume": 52115900
-        },
-        {
-          "date": "2026-07-27",
-          "open": 8.73,
-          "high": 8.84,
-          "low": 8.72,
-          "close": 8.8,
-          "volume": 51476200
-        },
-        {
-          "date": "2026-07-28",
-          "open": 8.81,
-          "high": 8.84,
-          "low": 8.76,
-          "close": 8.78,
-          "volume": 48348200
-        },
-        {
-          "date": "2026-07-29",
-          "open": 8.8,
-          "high": 8.925,
-          "low": 8.76,
-          "close": 8.91,
-          "volume": 68852700
-        },
-        {
-          "date": "2026-07-30",
-          "open": 8.84,
-          "high": 8.86,
-          "low": 8.76,
-          "close": 8.78,
-          "volume": 64179400
-        },
-        {
-          "date": "2026-07-31",
-          "open": 8.74,
-          "high": 8.82,
-          "low": 8.69,
-          "close": 8.71,
-          "volume": 72799400
-        },
-        {
-          "date": "2026-08-03",
-          "open": 8.69,
-          "high": 8.69,
-          "low": 8.58,
-          "close": 8.6,
-          "volume": 39947000
-        },
-        {
-          "date": "2026-08-04",
-          "open": 8.56,
-          "high": 8.56,
-          "low": 8.41,
-          "close": 8.44,
-          "volume": 43682500
-        },
-        {
-          "date": "2026-08-05",
-          "open": 8.39,
-          "high": 8.46,
-          "low": 8.38,
-          "close": 8.45,
-          "volume": 52641100
-        },
-        {
-          "date": "2026-08-06",
-          "open": 8.45,
-          "high": 8.485,
-          "low": 8.43,
-          "close": 8.48,
-          "volume": 47787000
-        },
-        {
-          "date": "2026-08-07",
-          "open": 8.45,
-          "high": 8.47,
-          "low": 8.41,
-          "close": 8.43,
-          "volume": 36615100
-        },
-        {
-          "date": "2026-08-10",
-          "open": 8.43,
-          "high": 8.44,
-          "low": 8.4,
-          "close": 8.43,
-          "volume": 29108000
-        },
-        {
-          "date": "2026-08-11",
-          "open": 8.42,
-          "high": 8.47,
-          "low": 8.41,
-          "close": 8.46,
-          "volume": 18781400
-        },
-        {
-          "date": "2026-08-12",
-          "open": 8.41,
-          "high": 8.45,
-          "low": 8.41,
-          "close": 8.44,
-          "volume": 21110100
-        },
-        {
-          "date": "2026-08-13",
-          "open": 8.42,
-          "high": 8.425,
-          "low": 8.36,
-          "close": 8.39,
-          "volume": 28747100
-        },
-        {
-          "date": "2026-08-14",
-          "open": 8.37,
-          "high": 8.41,
-          "low": 8.37,
-          "close": 8.4,
-          "volume": 14224700
-        },
-        {
-          "date": "2026-08-17",
-          "open": 8.41,
-          "high": 8.45,
-          "low": 8.4,
-          "close": 8.45,
-          "volume": 12043600
-        },
-        {
-          "date": "2026-08-18",
-          "open": 8.49,
-          "high": 8.51,
-          "low": 8.48,
-          "close": 8.5,
-          "volume": 33750500
-        },
-        {
-          "date": "2026-08-19",
-          "open": 8.47,
-          "high": 8.5,
-          "low": 8.45,
-          "close": 8.49,
-          "volume": 32388900
-        },
-        {
-          "date": "2026-08-20",
-          "open": 8.53,
-          "high": 8.57,
-          "low": 8.5,
-          "close": 8.57,
-          "volume": 30726500
-        },
-        {
-          "date": "2026-08-21",
-          "open": 8.53,
-          "high": 8.55,
-          "low": 8.5,
-          "close": 8.53,
-          "volume": 27710400
-        },
-        {
-          "date": "2026-08-24",
-          "open": 8.55,
-          "high": 8.57,
-          "low": 8.53,
-          "close": 8.56,
-          "volume": 28938200
-        },
-        {
-          "date": "2026-08-25",
-          "open": 8.52,
-          "high": 8.56,
-          "low": 8.52,
-          "close": 8.52,
-          "volume": 14451300
-        },
-        {
-          "date": "2026-08-26",
-          "open": 8.54,
-          "high": 8.555,
-          "low": 8.51,
-          "close": 8.53,
-          "volume": 30560900
-        },
-        {
-          "date": "2026-08-27",
-          "open": 8.5,
-          "high": 8.52,
-          "low": 8.46,
-          "close": 8.48,
-          "volume": 33939100
-        },
-        {
-          "date": "2026-08-28",
-          "open": 8.47,
-          "high": 8.51,
-          "low": 8.435,
-          "close": 8.49,
-          "volume": 42841100
-        },
-        {
-          "date": "2026-08-31",
-          "open": 8.52,
-          "high": 8.55,
-          "low": 8.515,
-          "close": 8.53,
-          "volume": 28374800
-        },
-        {
-          "date": "2026-09-01",
-          "open": 8.59,
-          "high": 8.61,
-          "low": 8.55,
-          "close": 8.59,
-          "volume": 28297500
-        },
-        {
-          "date": "2026-09-02",
-          "open": 8.59,
-          "high": 8.59,
-          "low": 8.53,
-          "close": 8.56,
-          "volume": 24888400
-        },
-        {
-          "date": "2026-09-03",
-          "open": 8.53,
-          "high": 8.53,
-          "low": 8.45,
-          "close": 8.47,
-          "volume": 25679300
-        },
-        {
-          "date": "2026-09-04",
-          "open": 8.48,
-          "high": 8.52,
-          "low": 8.47,
-          "close": 8.51,
-          "volume": 26157500
-        },
-        {
-          "date": "2026-09-08",
-          "open": 8.51,
-          "high": 8.56,
-          "low": 8.51,
-          "close": 8.55,
-          "volume": 46093600
-        },
-        {
-          "date": "2026-09-09",
-          "open": 8.57,
-          "high": 8.61,
-          "low": 8.57,
-          "close": 8.6,
-          "volume": 21576500
-        },
-        {
-          "date": "2026-09-10",
-          "open": 8.65,
-          "high": 8.66,
-          "low": 8.62,
-          "close": 8.64,
-          "volume": 49135400
-        },
-        {
-          "date": "2026-09-11",
-          "open": 8.57,
-          "high": 8.58,
-          "low": 8.55,
-          "close": 8.58,
-          "volume": 31510200
-        },
-        {
-          "date": "2026-09-14",
-          "open": 8.64,
-          "high": 8.65,
-          "low": 8.58,
-          "close": 8.62,
-          "volume": 43425400
-        },
-        {
-          "date": "2026-09-15",
-          "open": 8.62,
-          "high": 8.67,
-          "low": 8.62,
-          "close": 8.65,
-          "volume": 25998900
-        },
-        {
-          "date": "2026-09-16",
-          "open": 8.64,
-          "high": 8.75,
-          "low": 8.61,
-          "close": 8.69,
-          "volume": 45233000
-        },
-        {
-          "date": "2026-09-17",
-          "open": 8.6,
-          "high": 8.63,
-          "low": 8.59,
-          "close": 8.59,
-          "volume": 21340300
-        },
-        {
-          "date": "2026-09-18",
-          "open": 8.6,
-          "high": 8.64,
-          "low": 8.59,
-          "close": 8.59,
-          "volume": 26595400
-        },
-        {
-          "date": "2026-09-21",
-          "open": 8.54,
-          "high": 8.549,
-          "low": 8.44,
-          "close": 8.46,
-          "volume": 14101600
-        },
-        {
-          "date": "2026-09-22",
-          "open": 8.33,
-          "high": 8.36,
-          "low": 8.33,
-          "close": 8.34,
-          "volume": 25081700
-        },
-        {
-          "date": "2026-09-23",
-          "open": 8.35,
-          "high": 8.43,
-          "low": 8.35,
-          "close": 8.42,
-          "volume": 39414100
-        },
-        {
-          "date": "2026-09-24",
-          "open": 8.46,
-          "high": 8.47,
-          "low": 8.4,
-          "close": 8.41,
-          "volume": 59297800
-        },
-        {
-          "date": "2026-09-25",
-          "open": 8.41,
-          "high": 8.44,
-          "low": 8.37,
-          "close": 8.38,
-          "volume": 47507700
-        },
-        {
-          "date": "2026-09-28",
-          "open": 8.42,
-          "high": 8.47,
-          "low": 8.4,
-          "close": 8.45,
-          "volume": 47927600
-        },
-        {
-          "date": "2026-09-29",
-          "open": 8.44,
-          "high": 8.48,
-          "low": 8.435,
-          "close": 8.47,
-          "volume": 37128700
-        },
-        {
-          "date": "2026-09-30",
-          "open": 8.43,
-          "high": 8.49,
-          "low": 8.4,
-          "close": 8.48,
-          "volume": 41444200
-        },
-        {
-          "date": "2026-10-01",
-          "open": 8.46,
-          "high": 8.53,
-          "low": 8.45,
-          "close": 8.47,
-          "volume": 74920600
-        },
-        {
-          "date": "2026-10-02",
-          "open": 8.4,
-          "high": 8.44,
-          "low": 8.37,
-          "close": 8.42,
-          "volume": 34002400
-        },
-        {
-          "date": "2026-10-05",
-          "open": 8.42,
-          "high": 8.42,
-          "low": 8.334,
-          "close": 8.36,
-          "volume": 18186600
-        }
-      ],
-      "technical": {
-        "ma20": 8.5085,
-        "ma50": 8.529,
-        "kdj_j": 28.91,
-        "kdj_k": 34.61,
-        "kdj_d": 37.45,
-        "macd_hist": -0.0096,
-        "macd": -0.0389,
-        "macd_signal": -0.0293,
-        "atr_abs": 0.0922,
-        "atr_pct_computed": 1.103,
-        "rsi": 50.8,
-        "rsi_source": "pending_csv",
-        "bars_used": 180,
-        "last_bar_date": "2026-10-05",
-        "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:37Z",
+        "computed_at": "2026-10-07T01:30:36Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -42652,7 +41129,7 @@
       "tag_raw": "Observation",
       "recommendation_id": "STZ|2026-10-06|Observation",
       "recommendation_date": "2026-10-06",
-      "rec_price": null,
+      "rec_price": 113.83,
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "STZ|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
@@ -42660,12 +41137,12 @@
       "price_source": "realtime",
       "current_price": 110.498,
       "current_price_updated_at": "2026-10-06T23:59:00Z",
-      "pending_price": 116.31,
+      "pending_price": 113.83,
       "pending_price_source": "Scan_Ref_Price",
-      "prev_close": 116.31,
+      "prev_close": 115.67,
       "change_1d": -4.4713,
       "change_1d_source": "computed(current vs last completed close)",
-      "pending_change_1d": 0.0,
+      "pending_change_1d": -1.5907,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
       "final_score": 63.3,
       "quant_score": 69.0,
@@ -42675,7 +41152,7 @@
       "risk_liquidity_score": 18.0,
       "rsi": 39.3,
       "atr_pct": 2.44,
-      "stop_loss": 110.63,
+      "stop_loss": 108.27,
       "stop_method": "ATR初始保护",
       "pe_ttm": 11.0705,
       "pe_forward": 9.4763,
@@ -42688,8 +41165,8 @@
       "market_cap": 19851284480.0,
       "market_regime": "NORMAL",
       "vix": 15.04,
-      "status": "pending",
-      "technical_date": "2026-10-05",
+      "status": "Active",
+      "technical_date": null,
       "scan_date": "2026-10-06",
       "avg_dollar_volume_20d": 272054879.67,
       "sector_rs_20d_pct": null,
@@ -44163,7 +42640,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:37Z",
+        "computed_at": "2026-10-07T01:30:36Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -45686,7 +44163,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:38Z",
+        "computed_at": "2026-10-07T01:30:37Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -47209,7 +45686,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:38Z",
+        "computed_at": "2026-10-07T01:30:37Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48732,7 +47209,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:38Z",
+        "computed_at": "2026-10-07T01:30:37Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -50255,7 +48732,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:38Z",
+        "computed_at": "2026-10-07T01:30:38Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -50290,7 +48767,7 @@
       "risk_liquidity_score": null,
       "rsi": 53.3,
       "atr_pct": 1.94,
-      "stop_loss": 61.56,
+      "stop_loss": 62.04,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -51778,7 +50255,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:39Z",
+        "computed_at": "2026-10-07T01:30:38Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51812,8 +50289,8 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 65.1,
-      "atr_pct": 2.19,
-      "stop_loss": 159.19,
+      "atr_pct": 2.14,
+      "stop_loss": 159.5,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -53301,7 +51778,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-07T01:15:39Z",
+        "computed_at": "2026-10-07T01:30:39Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -53324,7 +51801,7 @@
         "change_1d": 0.4942,
         "change_5d": 0.3337,
         "change_20d": -2.3961,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -53342,7 +51819,7 @@
         "change_1d": 0.5786,
         "change_5d": 1.9306,
         "change_20d": 1.895,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -53360,7 +51837,7 @@
         "change_1d": 0.4461,
         "change_5d": 2.9941,
         "change_20d": 4.4603,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -53378,7 +51855,7 @@
         "change_1d": 0.0,
         "change_5d": -6.4215,
         "change_20d": -4.5165,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -53396,7 +51873,7 @@
         "change_1d": 0.0,
         "change_5d": 0.2664,
         "change_20d": 9.6338,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -53414,7 +51891,7 @@
         "change_1d": -4.6572,
         "change_5d": -1.7333,
         "change_20d": 5.2857,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -53432,7 +51909,7 @@
         "change_1d": 0.0,
         "change_5d": -0.6913,
         "change_20d": 9.9497,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -53450,7 +51927,7 @@
         "change_1d": 0.0,
         "change_5d": 0.8402,
         "change_20d": 7.1619,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -53464,16 +51941,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.973,
+        "price": 101.977,
         "change_1d": 0.0,
-        "change_5d": 0.5948,
-        "change_20d": 3.1698,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "change_5d": 0.5988,
+        "change_20d": 3.1738,
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791336000,
         "last_bar_date": "2026-10-06"
       },
       {
@@ -53482,16 +51959,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4180.7002,
+        "price": 4179.1001,
         "change_1d": 0.0,
-        "change_5d": 0.0239,
-        "change_20d": -5.8189,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "change_5d": -0.0144,
+        "change_20d": -5.8549,
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791336000,
         "last_bar_date": "2026-10-06"
       },
       {
@@ -53500,16 +51977,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 61.56,
+        "price": 61.535,
         "change_1d": 0.0,
-        "change_5d": 1.4703,
-        "change_20d": -7.1451,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "change_5d": 1.4291,
+        "change_20d": -7.1828,
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791336000,
         "last_bar_date": "2026-10-06"
       },
       {
@@ -53518,16 +51995,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.6615,
+        "price": 6.6645,
         "change_1d": 0.0,
-        "change_5d": 1.8033,
-        "change_20d": -1.15,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "change_5d": 1.8492,
+        "change_20d": -1.1055,
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791336000,
         "last_bar_date": "2026-10-06"
       },
       {
@@ -53536,16 +52013,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 90.39,
+        "price": 90.43,
         "change_1d": 0.0,
-        "change_5d": 1.13,
-        "change_20d": -2.8378,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "change_5d": 1.1748,
+        "change_20d": -2.7948,
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791336000,
         "last_bar_date": "2026-10-06"
       },
       {
@@ -53554,16 +52031,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 101.66,
+        "price": 101.72,
         "change_1d": 0.0,
-        "change_5d": -0.9065,
-        "change_20d": 3.8194,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "change_5d": -0.848,
+        "change_20d": 3.8807,
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791335880,
         "last_bar_date": "2026-10-06"
       },
       {
@@ -53576,12 +52053,12 @@
         "change_1d": 0.0,
         "change_5d": 4.1514,
         "change_20d": 7.5446,
-        "updated_at": "2026-10-07T01:15:39Z",
+        "updated_at": "2026-10-07T01:30:39Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791335100,
+        "quote_ts": 1791336000,
         "last_bar_date": "2026-10-06"
       }
     ],
@@ -53594,17 +52071,17 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-07T01:15:49Z"
+    "updated_at": "2026-10-07T01:30:54Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-06 21:15:50",
+    "as_of_us": "2026-10-06 21:30:56",
     "window_start": "2026-09-06",
     "core_closed_count": 4,
     "core_open_count": 15,
     "observation_closed_count": 4,
-    "observation_open_count": 83,
+    "observation_open_count": 88,
     "actual_active_count": 5,
     "core_closed_count_status": "complete",
     "core_open_count_status": "complete",
@@ -53617,12 +52094,12 @@
     "observation_open_unresolved": 0,
     "actual_active_unresolved": 0,
     "core_event_count": 19,
-    "observation_event_count": 87,
+    "observation_event_count": 92,
     "actual_active_candidate_count": 5,
     "core_closed_win_rate": 25.0,
     "core_open_win_rate": 53.33,
     "observation_closed_win_rate": 0.0,
-    "observation_open_win_rate": 46.99,
+    "observation_open_win_rate": 48.86,
     "actual_active_win_rate": 100.0,
     "stop_loss_hit_count": 4,
     "price_source": "ohlcv_last_close",
@@ -53630,7 +52107,7 @@
     "unresolved_pnl_events": 0,
     "notes": [
       "期权 Wall 本次未重算（无缺失项或期权链不可用）。",
-      "AI Snapshot 索引：ai_snapshot.csv 命中 51 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 32/386 条",
+      "AI Snapshot 索引：ai_snapshot.csv 命中 51 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 37/391 条",
       "history：基于 review_history.csv 的每日快照，统计口径=当日仍在跟踪(持仓中/观察推荐)的去重推荐事件数（Ticker+Rec_Date），非当日新增数。"
     ],
     "missing_fields": [],
@@ -53651,6 +52128,156 @@
     "active_options_count": 0,
     "rejected_options_count": 12,
     "records": [
+      {
+        "event_id": "BE|2026-10-06|Observation",
+        "ticker": "BE",
+        "name": "Bloom Energy",
+        "rec_date": "2026-10-06",
+        "tag": "Observation",
+        "status": "观察推荐",
+        "rec_price": 298.79,
+        "cur_price": 295.7799987792969,
+        "pnl_pct": -1.01,
+        "days_held": 0,
+        "stop_loss": null,
+        "score": "63.6",
+        "source": "review_history",
+        "ai_snapshot": {
+          "snapshot_id": "BE|2026-10-06|Observation",
+          "snapshot_type": "scan",
+          "update_date": "2026-10-06",
+          "industry_logic": "数据中心用电需求增加 → 企业寻求分布式和替代性能源方案 → Bloom Energy可能受益于燃料电池及数据中心能源需求，但当前估值仍高 → 当前催化偏主题和行业情绪，需观察盈利兑现。",
+          "catalysts": "1. 新闻称Bloom Energy受数据中心能源计划及可再生能源板块上涨带动。2. 报道关注其季度业绩表现。",
+          "risks": "1. TTM市盈率约393.22倍、前瞻市盈率约60.47倍，估值对盈利兑现要求较高。2. 板块联动上涨的持续性和数据中心项目落地速度仍未被所给数据确认。"
+        },
+        "price_5d": null,
+        "pnl_5d": null,
+        "price_10d": null,
+        "pnl_10d": null,
+        "price_20d": null,
+        "pnl_20d": null,
+        "review_stage": "OPEN"
+      },
+      {
+        "event_id": "CRWD|2026-10-06|Observation",
+        "ticker": "CRWD",
+        "name": "CrowdStrike",
+        "rec_date": "2026-10-06",
+        "tag": "Observation",
+        "status": "观察推荐",
+        "rec_price": 278.38,
+        "cur_price": 278.8599853515625,
+        "pnl_pct": 0.17,
+        "days_held": 0,
+        "stop_loss": null,
+        "score": "64.8",
+        "source": "review_history",
+        "ai_snapshot": {
+          "snapshot_id": "CRWD|2026-10-06|Observation",
+          "snapshot_type": "scan",
+          "update_date": "2026-10-06",
+          "industry_logic": "网络攻击威胁上升 → 企业对端点安全和云安全防护的需求增加 → CrowdStrike可能受益于AI安全需求，但当前估值和技术位置已显著偏高 → 当前更适合作为观察标的，而非追涨依据。",
+          "catalysts": "1. 新闻提及网络攻击可能出现“浪潮”，强化网络安全需求。2. 报道称CrowdStrike创历史新高，AI安全需求强劲。",
+          "risks": "1. TTM市盈率约4626倍、前瞻市盈率约172.84倍，估值风险极高。2. RSI 71.8、Bias 11.94%，技术上明显过热，存在高位回撤风险。"
+        },
+        "price_5d": null,
+        "pnl_5d": null,
+        "price_10d": null,
+        "pnl_10d": null,
+        "price_20d": null,
+        "pnl_20d": null,
+        "review_stage": "OPEN"
+      },
+      {
+        "event_id": "DDOG|2026-10-06|Observation",
+        "ticker": "DDOG",
+        "name": "Datadog",
+        "rec_date": "2026-10-06",
+        "tag": "Observation",
+        "status": "观察推荐",
+        "rec_price": 276.02,
+        "cur_price": 278.239990234375,
+        "pnl_pct": 0.8,
+        "days_held": 0,
+        "stop_loss": null,
+        "score": "63.8",
+        "source": "review_history",
+        "ai_snapshot": {
+          "snapshot_id": "DDOG|2026-10-06|Observation",
+          "snapshot_type": "scan",
+          "update_date": "2026-10-06",
+          "industry_logic": "云计算和AIOps需求增长 → 企业增加云监控、可观测性及IT运营管理投入 → Datadog可能受益于软件与云需求扩张，但高估值使其对增长兑现高度敏感 → 当前以观察为主。",
+          "catalysts": "1. 新闻提及AIOps和云需求市场规模扩张，并将Datadog列为相关受益公司。2. 暂无已验证的新公司级订单或财报催化。",
+          "risks": "1. TTM市盈率约552.04倍、前瞻市盈率约92.80倍，估值风险高。2. RSI 69.3、Bias 10.15%，接近短线过热区，存在回撤风险。"
+        },
+        "price_5d": null,
+        "pnl_5d": null,
+        "price_10d": null,
+        "pnl_10d": null,
+        "price_20d": null,
+        "pnl_20d": null,
+        "review_stage": "OPEN"
+      },
+      {
+        "event_id": "RCL|2026-10-06|Observation",
+        "ticker": "RCL",
+        "name": "Royal Caribbean Group",
+        "rec_date": "2026-10-06",
+        "tag": "Observation",
+        "status": "观察推荐",
+        "rec_price": 279.79998779296875,
+        "cur_price": 288.7799987792969,
+        "pnl_pct": 3.21,
+        "days_held": 0,
+        "stop_loss": null,
+        "score": "64.7",
+        "source": "review_history",
+        "ai_snapshot": {
+          "snapshot_id": "RCL|2026-10-06|Observation",
+          "snapshot_type": "scan",
+          "update_date": "2026-10-06",
+          "industry_logic": "邮轮旅游需求和行业交易情绪改善 → Royal Caribbean通过航线与品牌运营获取客运收入 → 前瞻市盈率约14.09倍，估值相对可控 → 当前催化主要来自行业联动和新航线供给，但仍需观察需求持续性。",
+          "catalysts": "1. Silversea公布2028—2029年103个新航次，体现集团航线供给扩展。2. 邮轮板块同步走强，Royal Caribbean相关报道显示行业情绪改善。",
+          "risks": "1. RSI 65.1、Bias 12.78%，短线涨幅偏高，存在回撤风险。2. 行业联动上涨不等于公司盈利改善已被确认，旅游需求若放缓将削弱逻辑。"
+        },
+        "price_5d": null,
+        "pnl_5d": null,
+        "price_10d": null,
+        "pnl_10d": null,
+        "price_20d": null,
+        "pnl_20d": null,
+        "review_stage": "OPEN"
+      },
+      {
+        "event_id": "STZ|2026-10-06|Observation",
+        "ticker": "STZ",
+        "name": "Constellation Brands",
+        "rec_date": "2026-10-06",
+        "tag": "Observation",
+        "status": "观察推荐",
+        "rec_price": 113.83000183105469,
+        "cur_price": 115.66999816894531,
+        "pnl_pct": 1.62,
+        "days_held": 0,
+        "stop_loss": null,
+        "score": "63.3",
+        "source": "review_history",
+        "ai_snapshot": {
+          "snapshot_id": "STZ|2026-10-06|Observation",
+          "snapshot_type": "scan",
+          "update_date": "2026-10-06",
+          "industry_logic": "消费品与酒类需求 → Constellation Brands通过品牌销售获得收入和利润 → 前瞻市盈率约9.48倍，估值较低但市场担忧关税与业绩表现 → 当前交易含义是低估值可能提供缓冲，但事件验证尚未完成。",
+          "catalysts": "1. 公司股票被机构收购的新闻提供一定关注度。2. 即将发布业绩，可能成为估值重估节点。",
+          "risks": "1. 新闻明确提出关税能否被Q2业绩消化，关税是已知行业/事件风险。2. RSI 39.3、Bias -1.25%，技术仍偏弱，业绩前不确定性较高。"
+        },
+        "price_5d": null,
+        "pnl_5d": null,
+        "price_10d": null,
+        "pnl_10d": null,
+        "price_20d": null,
+        "pnl_20d": null,
+        "review_stage": "OPEN"
+      },
       {
         "event_id": "APA|2026-10-02|Observation",
         "ticker": "APA",
@@ -54132,13 +52759,13 @@
           "catalysts": "另类资本支持美国新一轮LNG和管线项目；Blackstone计划推出北欧仓储投资平台。",
           "risks": "高利率可能压制房地产与私募资产估值；股价低于MA20且乖离率-9.77%、RSI 27.3，弱势结构尚未确认反转。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 113.36000061035156,
+        "pnl_5d": -1.73,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "CBOE|2026-09-29|Core_Dragon",
@@ -54195,13 +52822,13 @@
           "catalysts": "股价连续8个交易日上涨、累计上涨9.3%；新闻标题显示华尔街分析师对Emerson观点偏多。",
           "risks": "连续上涨后短线获利回吐风险上升；TTM市盈率约34.4倍，估值对增长兑现较敏感。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 161.39999389648438,
+        "pnl_5d": 0.83,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "NTAP|2026-09-29|Core_Dragon",
@@ -54258,13 +52885,13 @@
           "catalysts": "经常性害虫防治合同提供一定防御性；RSI 24.6显示技术上存在超卖反弹条件。",
           "risks": "摩根士丹利下调Rentokil并提示美国害虫防治竞争加剧，构成行业风险；股价明显低于MA20，乖离率-9.32%，下行趋势尚未扭转。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 30.350000381469727,
+        "pnl_5d": -0.16,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "SNPS|2026-09-29|Observation",
@@ -54288,13 +52915,13 @@
           "catalysts": "暂无已验证的新催化。",
           "risks": "TTM市盈率约72.4倍，估值风险较突出；当前新闻以2026年看跌期权报价和行情信息为主，未提供新的经营层面支撑。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 505.1700134277344,
+        "pnl_5d": 21.85,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "SYK|2026-09-29|Observation",
@@ -54318,13 +52945,13 @@
           "catalysts": "暂无已验证的新催化。",
           "risks": "一份DCF分析将内在价值估为147美元、明显低于当前约275至278美元价格区间，构成估值风险；RSI 38.4且乖离率-1.72%，技术动能偏弱。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 278.20001220703125,
+        "pnl_5d": 0.43,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "TER|2026-09-29|Core_Dragon",
@@ -54857,11 +53484,11 @@
         "ai_snapshot": null,
         "price_5d": 305.3999938964844,
         "pnl_5d": -3.39,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 304.54998779296875,
+        "pnl_10d": -3.66,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "CNP|2026-09-22|Observation",
@@ -54880,11 +53507,11 @@
         "ai_snapshot": null,
         "price_5d": 36.939998626708984,
         "pnl_5d": -2.71,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 38.560001373291016,
+        "pnl_10d": 1.55,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "CRWD|2026-09-22|Observation",
@@ -55018,11 +53645,11 @@
         "ai_snapshot": null,
         "price_5d": 236.47000122070312,
         "pnl_5d": 1.98,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 244.3800048828125,
+        "pnl_10d": 6.65,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "P|2026-09-22|Observation",
@@ -55064,11 +53691,11 @@
         "ai_snapshot": null,
         "price_5d": 133.8000030517578,
         "pnl_5d": 1.42,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 137.02999877929688,
+        "pnl_10d": 3.87,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "TMO|2026-09-22|Observation",
@@ -55087,11 +53714,11 @@
         "ai_snapshot": null,
         "price_5d": 679.6099853515625,
         "pnl_5d": 3.53,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 656.5800170898438,
+        "pnl_10d": 0.03,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "UAL|2026-09-22|Observation",
@@ -55110,11 +53737,11 @@
         "ai_snapshot": null,
         "price_5d": 112.6500015258789,
         "pnl_5d": -3.39,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 111.87000274658203,
+        "pnl_10d": -4.06,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "WELL|2026-09-22|Observation",
@@ -55133,11 +53760,11 @@
         "ai_snapshot": null,
         "price_5d": 232.89999389648438,
         "pnl_5d": 1.28,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 225.77999877929688,
+        "pnl_10d": -1.81,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "ADBE|2026-09-21|Observation",
@@ -55179,11 +53806,11 @@
         "ai_snapshot": null,
         "price_5d": 268.70001220703125,
         "pnl_5d": 16.96,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 276.4150085449219,
+        "pnl_10d": 20.32,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "DHR|2026-09-21|Observation",
@@ -60772,7 +59399,7 @@
         "pnl_10d": 1.15,
         "price_20d": 8.57187271118164,
         "pnl_20d": -0.23,
-        "review_stage": "20D"
+        "review_stage": "FINAL"
       },
       {
         "event_id": "SQQQ|2026-06-08|Observation",
@@ -61356,7 +59983,7 @@
         "rec_date": "2026-06-04",
         "tag": "Observation",
         "status": "持仓中",
-        "rec_price": 622.601105447702,
+        "rec_price": 622.6011661035562,
         "cur_price": 585.39,
         "pnl_pct": -6.03,
         "days_held": 5,
@@ -62184,7 +60811,7 @@
         "rec_date": "2026-05-28",
         "tag": "Trap_Warning",
         "status": null,
-        "rec_price": 0.4,
+        "rec_price": 0.3400000035762787,
         "cur_price": 0.52,
         "pnl_pct": 30.0,
         "days_held": 11,
@@ -62276,7 +60903,7 @@
         "rec_date": "2026-05-28",
         "tag": "Observation",
         "status": null,
-        "rec_price": 68.39,
+        "rec_price": 67.30019109637604,
         "cur_price": 64.59,
         "pnl_pct": -5.56,
         "days_held": 11,
@@ -62322,7 +60949,7 @@
         "rec_date": "2026-05-28",
         "tag": "Observation",
         "status": null,
-        "rec_price": 5.4,
+        "rec_price": 5.239999771118164,
         "cur_price": 4.85,
         "pnl_pct": -10.19,
         "days_held": 11,
@@ -62345,7 +60972,7 @@
         "rec_date": "2026-05-28",
         "tag": "Observation",
         "status": "已超期归档",
-        "rec_price": 14.33,
+        "rec_price": 13.9399995803833,
         "cur_price": 12.32,
         "pnl_pct": -14.03,
         "days_held": 11,
@@ -62368,7 +60995,7 @@
         "rec_date": "2026-05-28",
         "tag": "Trap_Warning",
         "status": null,
-        "rec_price": 1.57,
+        "rec_price": 1.350000023841858,
         "cur_price": 0.93,
         "pnl_pct": -40.76,
         "days_held": 11,
@@ -62414,7 +61041,7 @@
         "rec_date": "2026-05-28",
         "tag": "Trap_Warning",
         "status": null,
-        "rec_price": 12.85,
+        "rec_price": 11.520000457763672,
         "cur_price": 14.0,
         "pnl_pct": 8.95,
         "days_held": 8,
@@ -62799,7 +61426,7 @@
         "review_stage": "OPEN"
       }
     ],
-    "records_count": 386,
+    "records_count": 391,
     "records_fields": [
       "event_id",
       "ticker",
@@ -62825,7 +61452,7 @@
     ],
     "records_note": "review.records[] = build_events() 事件账本原样展开；去重 key 复用 _event_key(Ticker,Rec_Date,Tag)；按 rec_date DESC 排序；ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，匹配不到为 null，禁止按 Ticker 回退到 ai_text_cache.csv。price_5d/10d/20d 与 review_stage 只透传 review_history.csv 原值（review.py 按 OHLCV 交易日历计算），本导出器不重算、不补值。",
     "ai_snapshot_total": 51,
-    "ai_snapshot_matched": 32,
+    "ai_snapshot_matched": 37,
     "ai_snapshot_source": "ai_snapshot.csv"
   },
   "history": [
@@ -63053,6 +61680,11 @@
       "date": "2026-10-02",
       "core_count": 2,
       "observation_count": 6
+    },
+    {
+      "date": "2026-10-06",
+      "core_count": 0,
+      "observation_count": 5
     }
   ],
   "runtimes": {
@@ -63079,22 +61711,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 37402692643,
+        "run_id": 37556600849,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-06T02:08:37Z",
-        "started_at": "2026-10-06T02:08:37Z",
-        "updated_at": "2026-10-06T02:11:14Z",
-        "head_sha": "c8e7ce40448e",
+        "created_at": "2026-10-07T01:20:30Z",
+        "started_at": "2026-10-07T01:20:30Z",
+        "updated_at": "2026-10-07T01:23:51Z",
+        "head_sha": "88a13b00f8af",
         "event": "schedule",
-        "run_number": 127,
+        "run_number": 128,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37402692643"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37556600849"
       },
       "last_success": {
-        "run_id": 37402692643,
-        "completed_at": "2026-10-06T02:11:14Z",
-        "head_sha": "c8e7ce40448e"
+        "run_id": 37556600849,
+        "completed_at": "2026-10-07T01:23:51Z",
+        "head_sha": "88a13b00f8af"
       },
       "error": null
     },
@@ -63120,13 +61752,39 @@
       "error": null
     }
   },
-  "portfolio": null,
+  "portfolio": {
+    "portfolio_id": "US-50000-001",
+    "initial_capital": 50000.0,
+    "start_date": "2026-10-06",
+    "unit_dollars": 10000.0,
+    "max_open_positions": 4,
+    "asof": "2026-10-06",
+    "cash": 50000.0,
+    "stock_value": 0.0,
+    "total_equity": 50000.0,
+    "realized_pnl": 0.0,
+    "unrealized_pnl": 0.0,
+    "total_pnl": 0.0,
+    "return_pct": 0.0,
+    "open_positions": 0,
+    "positions": [],
+    "transactions": [],
+    "equity_curve": [
+      {
+        "date": "2026-10-06",
+        "total_equity": 50000.0,
+        "cash": 50000.0,
+        "stock_value": 0.0
+      }
+    ]
+  },
   "meta": {
-    "data_source": "us_stocks_pending_20261006.csv + trade_history.csv + option_strategies.csv + review_history.csv",
-    "ai_generated_at": "2026-10-06",
+    "data_source": "trade_history.csv + option_strategies.csv + review_history.csv",
+    "ai_generated_at": null,
     "ai_status": "partial",
     "ai_stocks_filled": 23,
-    "ai_fields_present": [
+    "ai_fields_present": [],
+    "ai_fields_pending": [
       "AI_industry_logic",
       "AI_news_cn",
       "AI_premarket_conclusion",
@@ -63134,7 +61792,6 @@
       "AI_risks",
       "AI_invalidation"
     ],
-    "ai_fields_pending": [],
     "ai_backfilled": [
       "APA",
       "BE",
@@ -63162,9 +61819,9 @@
     ],
     "ai_backfilled_count": 23,
     "ai_calls": 0,
-    "pending_csv": "us_stocks_pending_20261006.csv",
+    "pending_csv": null,
     "stocks_source": "active_events",
-    "pending_scan_date": "2026-10-06",
+    "pending_scan_date": null,
     "quote_provider": "yfinance",
     "quote_backends": [
       "yfinance",
@@ -63173,18 +61830,18 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-07T01:15:49Z",
-    "technical_updated_at": "2026-10-07T01:15:50Z",
+    "market_updated_at": "2026-10-07T01:30:54Z",
+    "technical_updated_at": "2026-10-07T01:30:56Z",
     "counts": {
-      "core": 14,
+      "core": 13,
       "observation": 21,
       "market_available": 15,
       "market_total": 15,
-      "kline_ok": 35,
+      "kline_ok": 34,
       "kline_fail": 0,
-      "technical_ok": 35,
-      "price_live": 35,
-      "price_realtime": 35,
+      "technical_ok": 34,
+      "price_live": 34,
+      "price_realtime": 34,
       "price_last_close": 0,
       "wall_recomputed": 0,
       "wall_true_oi": 0
@@ -63254,7 +61911,7 @@
     "anomalies": [],
     "notes": [
       "期权 Wall 本次未重算（无缺失项或期权链不可用）。",
-      "AI Snapshot 索引：ai_snapshot.csv 命中 51 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 32/386 条",
+      "AI Snapshot 索引：ai_snapshot.csv 命中 51 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 37/391 条",
       "history：基于 review_history.csv 的每日快照，统计口径=当日仍在跟踪(持仓中/观察推荐)的去重推荐事件数（Ticker+Rec_Date），非当日新增数。"
     ],
     "missing_fields": [],
