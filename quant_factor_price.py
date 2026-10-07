@@ -36,7 +36,11 @@ import pandas as pd
 US_TZ = ZoneInfo("America/New_York")
 
 PRICE_HISTORY_PATH = "quant_factor_price_history.csv"
-PRICE_HISTORY_COLUMNS = ["Date", "Ticker", "Close"]
+PRICE_HISTORY_COLUMNS = ["Date", "Ticker", "Close", "schema_version"]
+
+# 输出 schema 版本（STEP 3-A）：写入 quant_factor_price_history.csv 的 schema_version 列。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+SCHEMA_VERSION = "phase2b.v1"
 
 SNAPSHOT_PATH = "quant_factor_snapshot.csv"
 
@@ -136,6 +140,7 @@ def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None)
                     "Date": d.normalize().strftime("%Y-%m-%d"),
                     "Ticker": t,
                     "Close": round(float(c), 6),
+                    "schema_version": SCHEMA_VERSION,
                 })
         except Exception:
             continue

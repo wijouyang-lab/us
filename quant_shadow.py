@@ -65,6 +65,10 @@ SHADOW_START_DATE = None  # 正式启用日期（YYYY-MM-DD），需人工设置
 HORIZONS = (5, 10, 20)
 BENCHMARK_MODEL = "CURRENT_EXISTING_QUANT_SCORE"
 
+# 输出 schema 版本（STEP 3-A）：写入 shadow snapshot/performance CSV 与 report.json。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+SCHEMA_VERSION = "phase6.v1"
+
 # factor -> primary group（来自 Phase 4，不重定义）
 FACTOR_GROUP = {f: g for f, g, sg, d, src in FACTOR_REGISTRY_DEF}
 RAW_FACTORS = [f for f, g, sg, d, src in FACTOR_REGISTRY_DEF if f != "Quant_Score"]
@@ -263,6 +267,7 @@ def build_report(shadow_status, start_date, snapshot_df, shadow_snapshot_df, per
         diff_counts = shadow_snapshot_df["Difference_Type"].value_counts().to_dict()
 
     return {
+        "schema_version": SCHEMA_VERSION,
         "shadow_status": shadow_status,
         "shadow_start_date": start_date,
         "current_data_maturity": {
@@ -364,6 +369,8 @@ def run_shadow(snapshot_path=SNAPSHOT_PATH, price_map=None,
     shadow_snap = build_shadow_snapshot(snapshot_df, shadow_model, top_k)
     perf = build_shadow_performance(snapshot_df, price_map)
 
+    shadow_snap["schema_version"] = SCHEMA_VERSION
+    perf["schema_version"] = SCHEMA_VERSION
     shadow_snap.to_csv(shadow_snapshot_path, index=False, encoding="utf-8")
     perf.to_csv(performance_path, index=False, encoding="utf-8")
 

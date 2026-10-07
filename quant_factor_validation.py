@@ -67,6 +67,10 @@ CORRELATION_PATH = "quant_factor_correlation.csv"
 REPORT_PATH = "quant_factor_validation_report.json"
 BACKTEST_PATH = "quant_factor_backtest.csv"
 
+# 输出 schema 版本（STEP 3-A）：写入 validation.csv / correlation.csv / report.json。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+SCHEMA_VERSION = "phase3.v1"
+
 REDUNDANCY_CORR_THRESHOLD = 0.9  # 高度相关阈值（Pearson 或 Spearman 绝对值）
 REGIME_MIN_N = 5                 # 单一 Regime 参与判定所需的最小样本
 REGIME_DOMINANCE = 0.8           # 主导 Regime 占比阈值
@@ -371,6 +375,7 @@ def build_report(validation_df, corr_df, redundant_pairs):
         for _, r in validation_df[validation_df["Status"] == "NOT_ENOUGH_DATA"].iterrows():
             insufficient.append({"Factor": r["Factor"], "Horizon": r["Horizon"], "N": int(r["N"])})
     return {
+        "schema_version": SCHEMA_VERSION,
         "data_maturity": {
             "backtest_rows": 0,  # 由 run_validation 覆盖
             "n_factors": n_factors,
@@ -430,6 +435,8 @@ def run_validation(backtest_path=BACKTEST_PATH,
     result["correlation_rows"] = int(len(corr_df))
     result["promising"] = int((validation_df["Status"] == "PROMISING").sum())
 
+    validation_df["schema_version"] = SCHEMA_VERSION
+    corr_df["schema_version"] = SCHEMA_VERSION
     validation_df.to_csv(validation_path, index=False, encoding="utf-8")
     corr_df.to_csv(correlation_path, index=False, encoding="utf-8")
 

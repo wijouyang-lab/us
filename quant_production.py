@@ -71,6 +71,11 @@ SHADOW_REPORT = "quant_shadow_report.json"
 V1_MODEL = "CURRENT_EXISTING_QUANT_SCORE"
 V2_MODEL = "QUANT_SCORE_V2_CANDIDATE"
 
+# 输出 schema 版本（STEP 3-A）：写入 state.json / config（默认）/ audit.jsonl。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+# 注意：PRODUCTION_VERSION("V1") 是【模型版本】，与 schema_version（【数据结构版本】）语义不同，不可混用。
+SCHEMA_VERSION = "phase7.v1"
+
 # 状态机
 STATES = [
     "RESEARCH", "CANDIDATE", "OOS_VALIDATED", "SHADOW",
@@ -126,6 +131,7 @@ def config_hash(config_dict):
 def load_production_config(path=CONFIG_PATH):
     """读取生产配置；不存在则返回默认 V1/disabled 配置。"""
     default = {
+        "schema_version": SCHEMA_VERSION,
         "production_model": PRODUCTION_MODEL,
         "quant_score_v2_enabled": False,
         "version": PRODUCTION_VERSION,
@@ -371,6 +377,7 @@ def audit_entry(run_date, model_id, model_version, config_hash_val, gate_status,
                 approval_status, active_model, fallback_model):
     """构造一条审计记录。"""
     return {
+        "schema_version": SCHEMA_VERSION,
         "Run_Date": run_date,
         "Model_ID": model_id,
         "Model_Version": model_version,
@@ -426,6 +433,7 @@ def run_production_governance(config_path=CONFIG_PATH, approval_path=APPROVAL_PA
             state = {}
 
     state.update({
+        "schema_version": SCHEMA_VERSION,
         "active_model": active_model,
         "active_version": active_version,
         "rollback_available": True,

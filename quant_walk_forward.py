@@ -72,6 +72,10 @@ CONFIG = {
 HORIZONS = (5, 10, 20)
 BENCHMARK_MODEL = "CURRENT_EXISTING_QUANT_SCORE"
 
+# 输出 schema 版本（STEP 3-A）：写入 walk_forward results.csv 与 summary.json。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+SCHEMA_VERSION = "phase5.v1"
+
 # factor -> primary group 映射（来自 Phase 4 Registry，不重定义）
 FACTOR_GROUP = {f: g for f, g, sg, d, src in FACTOR_REGISTRY_DEF}
 RAW_FACTORS = [f for f, g, sg, d, src in FACTOR_REGISTRY_DEF if f != "Quant_Score"]
@@ -436,6 +440,7 @@ def run_walk_forward(backtest_path=BACKTEST_PATH, results_path=RESULTS_PATH,
                     model_oos[model].append(oos_met["Average_Return"])
 
     results_df = pd.DataFrame(all_rows)
+    results_df["schema_version"] = SCHEMA_VERSION
     results_df.to_csv(results_path, index=False, encoding="utf-8")
     result["result_rows"] = int(len(results_df))
 
@@ -490,6 +495,7 @@ def build_summary(result, results_df, model_statuses, cfg):
         oos_n = int(sub["OOS_N"].max()) if not sub.empty else 0
         horizon_maturity[f"{h}D"] = {"max_oos_sample": oos_n, "mature": oos_n >= cfg["min_oos_observations"]}
     return {
+        "schema_version": SCHEMA_VERSION,
         "data_maturity": {
             "backtest_rows": result.get("backtest_rows", 0),
             "window_count": result.get("window_count", 0),

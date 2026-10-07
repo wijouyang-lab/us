@@ -77,10 +77,16 @@ SNAPSHOT_COLUMNS = [
     "Fundamental_Score", "Event_Score", "Technical_Score_25",
     "Risk_Liquidity_Score", "Quant_Score",
     "技术确认数", "Gate_Status",
+    "schema_version",
 ]
 
 # 幂等唯一键：Scan_Date | Ticker（同一扫描日同一标的只保留一行）
 KEY_COLUMNS = ("Scan_Date", "Ticker")
+
+# 输出 schema 版本（STEP 3-A）：写入 quant_factor_snapshot.csv 的 schema_version 列。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 2–7 完全一致；字段结构变更时递增主版本号。
+# 用途：下游 Dashboard / 各 Phase 读取时先校验版本，避免字段变化导致静默错误。
+SCHEMA_VERSION = "phase1.v1"
 
 
 # ============================================================================
@@ -239,6 +245,7 @@ def build_snapshot_rows(pool, scan_date):
     rows = []
     for item in pool or []:
         rows.append({
+            "schema_version": SCHEMA_VERSION,
             "Scan_Date": str(scan_date),
             "Technical_Date": str(item.get("Technical_Date", "") or ""),
             "Ticker": str(item.get("Ticker", "") or ""),

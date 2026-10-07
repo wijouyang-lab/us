@@ -63,6 +63,10 @@ REPORT_PATH = "quant_score_v2_report.json"
 VALIDATION_PATH = "quant_factor_validation.csv"
 CORRELATION_PATH = "quant_factor_correlation.csv"
 
+# 输出 schema 版本（STEP 3-A）：写入 registry/clusters/candidates CSV 与 config/report JSON。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+SCHEMA_VERSION = "phase4.v1"
+
 # ============================================================================
 # Factor Registry 静态定义
 # ============================================================================
@@ -278,6 +282,7 @@ def model_statuses(registry_df):
 def build_config(model_statuses):
     """构造 config JSON dict。QUANT_SCORE_V2_ENABLED 恒为 False。"""
     return {
+        "schema_version": SCHEMA_VERSION,
         "QUANT_SCORE_V2_ENABLED": bool(QUANT_SCORE_V2_ENABLED),  # 恒 False
         "enable_note": "Phase 4 研究框架，默认且永远关闭；仅当 Phase 5 Walk-Forward 验证通过并经人工批准后才可开启。",
         "models": {m: {"status": s, "group_weights": CANDIDATE_MODELS[m]["group_weights"],
@@ -305,6 +310,7 @@ def build_report(registry_df, cluster_df, candidates_df, model_statuses):
     n_blocked = int((candidates_df["Candidate_Status"] == "BLOCKED").sum()) if candidates_df is not None and not candidates_df.empty else 0
     n_eligible = int((candidates_df["Candidate_Status"] == "ELIGIBLE").sum()) if candidates_df is not None and not candidates_df.empty else 0
     return {
+        "schema_version": SCHEMA_VERSION,
         "QUANT_SCORE_V2_ENABLED": bool(QUANT_SCORE_V2_ENABLED),
         "state": "RESEARCH",
         "candidate_model_statuses": model_statuses,
@@ -373,6 +379,9 @@ def run_quant_score_v2(validation_path=VALIDATION_PATH, correlation_path=CORRELA
     result["n_promising"] = int((registry_df["Evidence_Status"] == "PROMISING").sum())
 
     # 原子写
+    for _df in (registry_df, cluster_df, candidates_df):
+        if _df is not None:
+            _df["schema_version"] = SCHEMA_VERSION
     registry_df.to_csv(registry_path, index=False, encoding="utf-8")
     cluster_df.to_csv(clusters_path, index=False, encoding="utf-8")
     candidates_df.to_csv(candidates_path, index=False, encoding="utf-8")

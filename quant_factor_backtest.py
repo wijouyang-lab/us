@@ -55,6 +55,11 @@ COMPOSITE_FACTORS = ["Quant_Score"]
 EXISTING_SCORE_FACTORS = ["Fundamental_Score", "Event_Score", "Technical_Score_25", "Risk_Liquidity_Score"]
 ALL_FACTORS = RAW_FACTORS + COMPOSITE_FACTORS + EXISTING_SCORE_FACTORS
 
+# 输出 schema 版本（STEP 3-A）：写入 backtest.csv / summary.csv 的 schema_version 列。
+# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
+# 注意：输入 snapshot 自带上游 phase1.v1 标记，写出前必须覆盖为本阶段版本。
+SCHEMA_VERSION = "phase2.v1"
+
 
 def factor_type(factor):
     if factor in COMPOSITE_FACTORS:
