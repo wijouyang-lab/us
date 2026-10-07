@@ -59,6 +59,7 @@ jobs:
             ai_text_cache.csv
             ai_snapshot.csv
             option_strategies.csv
+            quant_factor_snapshot.csv
           if-no-files-found: warn
 
       - name: 提交待确认文件、AI 文本缓存与 AI Snapshot
@@ -75,6 +76,10 @@ jobs:
           # 期权策略账本：scan.py 经 scan_us_option_engine 生成；必须入库，否则 Runner 销毁后丢失
           if [ -f option_strategies.csv ]; then
             git add option_strategies.csv
+          fi
+          # Quant Factor Lab 每日因子快照：研究数据层，随 Scan 一并入库
+          if [ -f quant_factor_snapshot.csv ]; then
+            git add quant_factor_snapshot.csv
           fi
           if ls us_stocks_pending_*.csv 1> /dev/null 2>&1; then
             git add us_stocks_pending_*.csv

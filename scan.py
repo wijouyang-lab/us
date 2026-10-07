@@ -43,6 +43,9 @@ import yfinance as yf
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 
+# Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
+from quant_factor_lab import calculate_extended_quant_factors, write_factor_snapshot
+
 # ==================== 环境检查 ====================
 TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
 TARGET_REGION = "美国市场"
@@ -51,6 +54,9 @@ ATR_STOP_MULTIPLIER = 2.0
 ATR_STOP_FLOOR_PCT = 3.0
 ATR_STOP_CEIL_PCT = 12.0
 REGIME_GATE_VERSION = "2026-08-31-US"
+
+# Quant Factor Lab 每日因子快照路径（只落盘，不参与选股）
+QUANT_FACTOR_SNAPSHOT_FILE = "quant_factor_snapshot.csv"
 
 
 def _is_valid_ai_stop(stop_raw, reference_price):
@@ -869,11 +875,16 @@ def apply_premarket_snapshot(pool):
 def build_stock_pool(tickers):
     pool = []
     print(f"📈 [技术面] 计算 {len(tickers)} 只标的日线/周线指标...")
+    # Quant Factor Lab：SPY 基准日线只抓取一次，供 Beta / Stock_RS 复用（绝不逐股重复下载）。
+    spy_close = _download_close_series("SPY", "6mo")
     for ticker, name in tickers.items():
         try:
             df = get_kline_data(ticker)
             if df is None or df.empty or len(df) < 40:
                 continue
+
+            # Quant Factor Lab：在 dropna 之前用完整 Close/Volume 计算扩展因子（零额外请求）。
+            ext_factors = calculate_extended_quant_factors(df, spy_close)
 
             macd_df = ta.macd(df["Close"])
             rsi_s = ta.rsi(df["Close"], length=14)
@@ -1026,6 +1037,7 @@ def build_stock_pool(tickers):
                 "量能放大": bool(avg5 > 0 and vol[-1] >= avg5 * 1.3),
                 "量比": round(vol_ratio, 2),
                 "看涨形态": patterns,
+                **ext_factors,
             })
         except Exception:
             continue
@@ -3708,7 +3720,16 @@ if __name__ == "__main__":
     pool_data = apply_market_context_to_pool(pool_data, market_ctx)
     for _item in pool_data:
         score_candidate_quality(_item, market_ctx)
+
+    # Quant Factor Lab：保存完整候选池引用（gate 会原地给每项标记 Gate_Status），
+    # 这样快照能记录"全候选池 + 每项是否过 gate"，避免只保留最终 Core/Observation 的 selection bias。
+    snapshot_pool = pool_data
     pool_data = apply_entry_quality_gate(pool_data, market_ctx, event_regime)
+    try:
+        write_factor_snapshot(snapshot_pool, QUANT_FACTOR_SNAPSHOT_FILE, today_us_str())
+    except Exception as _qf_e:
+        print(f"⚠️ [Quant Factor Lab] 因子快照写入失败（不影响主流程）：{type(_qf_e).__name__}: {_qf_e}")
+
     if not pool_data:
         print("⚠️ 今日硬门槛后暂无合格新标的：技术/市场/评分未达准入，不凑数。")
         sys.exit(0)
