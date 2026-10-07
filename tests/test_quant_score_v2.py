@@ -290,6 +290,66 @@ def test_no_data_no_files():
     check("(d) 已存在产物未被删除/截断", open(reg_path, "rb").read() == before)
 
 
+# ---- STEP 4-8 / Phase 4：权重 None 门控 ----
+# 约束：不硬编码真实事件日期；不依赖 Technical_Date 与 price history 一致（本 Phase 不涉日期）。
+def _mk_registry(statuses):
+    """构造 registry DataFrame：按给定 Evidence_Status 列表逐因子赋值。"""
+    return pd.DataFrame([{"Factor": f, "Group": g, "Evidence_Status": s}
+                         for (f, g, s) in statuses])
+
+
+def test_weight_none_gate():
+    """Phase 4 绝不产出数值权重 —— Weight 必须恒为 None（不给伪造权重）。"""
+    statuses = [
+        ("RSI_14", "MEAN_REVERSION", "PROMISING"),
+        ("Momentum_20D_Pct", "MOMENTUM", "NOT_ENOUGH_DATA"),
+        ("Beta_60D_SPY", "RELATIVE_STRENGTH", "INCONCLUSIVE"),
+    ]
+    reg = _mk_registry(statuses)
+
+    # (1) 即使存在 PROMISING 证据，候选模型的因子权重仍必须是 None
+    cand = build_candidate_models(reg)
+    check("候选模型产出非空", len(cand) > 0, str(len(cand)))
+    check("Weight 列恒为 None（即使有 PROMISING 证据）",
+          cand["Weight"].isna().all(), str(cand["Weight"].unique()[:3]))
+    check("Weight 不得出现任何数值",
+          not any(isinstance(w, (int, float)) for w in cand["Weight"].tolist()))
+
+    # (2) 证据门控：PROMISING → ELIGIBLE；其余 → BLOCKED
+    by_f = {r["Factor"]: r for _, r in cand[cand["Model"] == list(CANDIDATE_MODELS)[0]].iterrows()}
+    check("PROMISING → ELIGIBLE", by_f["RSI_14"]["Candidate_Status"] == "ELIGIBLE",
+          str(by_f["RSI_14"]["Candidate_Status"]))
+    check("NOT_ENOUGH_DATA → BLOCKED",
+          by_f["Momentum_20D_Pct"]["Candidate_Status"] == "BLOCKED",
+          str(by_f["Momentum_20D_Pct"]["Candidate_Status"]))
+    check("INCONCLUSIVE → BLOCKED", by_f["Beta_60D_SPY"]["Candidate_Status"] == "BLOCKED",
+          str(by_f["Beta_60D_SPY"]["Candidate_Status"]))
+
+    # (3) 三个模型都必须各自产出候选清单
+    check("三模型全覆盖", set(cand["Model"]) == set(CANDIDATE_MODELS),
+          str(sorted(set(cand["Model"]))))
+
+    # (4) 模型状态三分支
+    s_none = model_statuses(_mk_registry([("RSI_14", "MEAN_REVERSION", "NOT_ENOUGH_DATA"),
+                                          ("Momentum_20D_Pct", "MOMENTUM", "INCONCLUSIVE")]))
+    check("无 PROMISING/REGIME_DEPENDENT → 全 NOT_ENOUGH_DATA",
+          all(v == "NOT_ENOUGH_DATA" for v in s_none.values()), str(s_none))
+    s_reg = model_statuses(_mk_registry([("RSI_14", "MEAN_REVERSION", "REGIME_DEPENDENT")]))
+    check("仅 REGIME_DEPENDENT → DISABLED", all(v == "DISABLED" for v in s_reg.values()), str(s_reg))
+    s_pro = model_statuses(_mk_registry([("RSI_14", "MEAN_REVERSION", "PROMISING")]))
+    check("有 PROMISING → CANDIDATE", all(v == "CANDIDATE" for v in s_pro.values()), str(s_pro))
+
+    # (5) group_weights 是"研究规格"常量（有定义且冻结），与 Weight=None 是两回事
+    for m, spec in CANDIDATE_MODELS.items():
+        check("%s group_weights 已定义且非空" % m, bool(spec.get("group_weights")))
+
+    # (6) V2 恒关闭：config 里 QUANT_SCORE_V2_ENABLED 必须为 False（任何证据下）
+    for st, label in ((s_none, "无证据"), (s_pro, "有 PROMISING 证据")):
+        cfg = build_config(st)
+        check("config ENABLED=False（%s）" % label,
+              cfg["QUANT_SCORE_V2_ENABLED"] is False)
+
+
 def main():
     _tests = [
         test_empty_validation,
@@ -308,6 +368,8 @@ def main():
         test_run_end_to_end,
         # ---- STEP 3-C ----
         test_no_data_no_files,
+        # ---- STEP 4-8 / Phase 4 ----
+        test_weight_none_gate,
     ]
     _failed = 0
     for _t in _tests:
