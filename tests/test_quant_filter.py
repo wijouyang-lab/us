@@ -1,0 +1,277 @@
+# -*- coding: utf-8 -*-
+"""quant_filter 纯函数单元测试。
+
+只 import quant_filter（不 import scan，避免其模块级 sys.exit / 时间门控 / 环境变量校验）。
+不触网、不写生产文件、不硬编码绝对日期、不调用真实 AI。
+"""
+
+import pandas as pd
+import pytest
+
+import quant_filter as qf
+
+
+# ============================================================
+# compute_20d_high：前 20 日高点
+# ============================================================
+
+def test_compute_20d_high_normal():
+    # 25 根日线，取最近 20 根 High 的最大值
+    highs = list(range(1, 26))  # 1..25，最近 20 根 = 6..25，max = 25
+    df = pd.DataFrame({"High": highs})
+    assert qf.compute_20d_high(df) == 25.0
+
+
+def test_compute_20d_high_insufficient_data():
+    # 不足 20 根：返回已有区间的最大值
+    df = pd.DataFrame({"High": [10, 13, 11, 9, 12]})
+    assert qf.compute_20d_high(df) == 13.0
+
+
+def test_compute_20d_high_with_nan():
+    # NaN 与 None 被丢弃后取有效值最大值
+    df = pd.DataFrame({"High": [5.0, float("nan"), 8.0, None, 7.0]})
+    assert qf.compute_20d_high(df) == 8.0
+
+
+def test_compute_20d_high_all_nan():
+    df = pd.DataFrame({"High": [float("nan"), float("nan")]})
+    assert qf.compute_20d_high(df) is None
+
+
+def test_compute_20d_high_empty_or_missing_column():
+    assert qf.compute_20d_high(pd.DataFrame({"High": []})) is None
+    assert qf.compute_20d_high(pd.DataFrame({"Close": [1, 2, 3]})) is None
+    assert qf.compute_20d_high(None) is None
+
+
+# ============================================================
+# compute_rr_ratio：(target - price) / (price - stop_loss)
+# ============================================================
+
+def test_compute_rr_ratio_normal():
+    assert qf.compute_rr_ratio(100, 95, 110) == pytest.approx(2.0)
+
+
+def test_compute_rr_ratio_stop_at_or_above_price():
+    # 止损 ≥ 现价：无下行风险，返回 None（fail-closed）
+    assert qf.compute_rr_ratio(100, 100, 110) is None
+    assert qf.compute_rr_ratio(100, 105, 110) is None
+
+
+def test_compute_rr_ratio_target_below_price():
+    # 目标 ≤ 现价：返回非正比值（严筛按 R/R ≥ 2.0 拒绝，而非 None）
+    rr = qf.compute_rr_ratio(100, 95, 90)
+    assert rr is not None
+    assert rr < 0
+
+
+def test_compute_rr_ratio_none_inputs():
+    assert qf.compute_rr_ratio(None, 95, 110) is None
+    assert qf.compute_rr_ratio(100, None, 110) is None
+    assert qf.compute_rr_ratio(100, 95, None) is None
+
+
+# ============================================================
+# strict_filter：严筛（评分≥90 / R/R≥2.0 / 止损 2%-5% / ≤1板块 / ≤3只）
+# ============================================================
+
+def _row(ticker, score=95, price=100, stop=96, target=110, sector="Tech"):
+    """构造一个默认可通过严筛的候选行。"""
+    return {
+        "Ticker": ticker,
+        "Price": price,
+        "Final_Score": score,
+        "Stop_Loss": stop,
+        "target_price": target,
+        "Sector": sector,
+    }
+
+
+def test_strict_filter_all_pass():
+    rows = [
+        _row("AAA", sector="Tech"),
+        _row("BBB", sector="Health"),
+        _row("CCC", sector="Energy"),
+    ]
+    out = qf.strict_filter(rows)
+    assert len(out) == 3
+    assert [x["Ticker"] for x in out] == ["AAA", "BBB", "CCC"]
+
+
+def test_strict_filter_score_below_min():
+    rows = [
+        _row("AAA", score=89),   # 评分 < 90 → 排除
+        _row("BBB", score=95),
+    ]
+    out = qf.strict_filter(rows)
+    assert [x["Ticker"] for x in out] == ["BBB"]
+
+
+def test_strict_filter_rr_below_min():
+    rows = [
+        _row("AAA", target=104),  # R/R = (104-100)/4 = 1.0 < 2.0 → 排除
+        _row("BBB", target=110),
+    ]
+    out = qf.strict_filter(rows)
+    assert [x["Ticker"] for x in out] == ["BBB"]
+
+
+def test_strict_filter_stop_distance_out_of_range():
+    rows = [
+        _row("AAA", stop=99),   # 止损距离 1% < 2% → 排除
+        _row("BBB", stop=90),   # 止损距离 10% > 5% → 排除
+        _row("CCC", stop=96),   # 4% → 通过
+    ]
+    out = qf.strict_filter(rows)
+    assert [x["Ticker"] for x in out] == ["CCC"]
+
+
+def test_strict_filter_sector_concentration():
+    rows = [
+        _row("AAA", sector="Tech"),
+        _row("BBB", sector="Tech"),   # 同板块第二只 → 排除
+        _row("CCC", sector="Health"),
+    ]
+    out = qf.strict_filter(rows)
+    assert [x["Ticker"] for x in out] == ["AAA", "CCC"]
+
+
+def test_strict_filter_caps_at_three():
+    rows = [
+        _row(f"T{i}", sector=f"S{i}") for i in range(5)
+    ]
+    out = qf.strict_filter(rows)
+    assert len(out) == 3
+
+
+def test_strict_filter_sorted_by_score_desc():
+    rows = [
+        _row("A", score=92, sector="S1"),
+        _row("B", score=99, sector="S2"),
+        _row("C", score=95, sector="S3"),
+    ]
+    out = qf.strict_filter(rows)
+    assert [x["Ticker"] for x in out] == ["B", "C", "A"]
+
+
+def test_strict_filter_missing_target_price_skipped():
+    rows = [
+        _row("AAA"),            # 有 target_price
+        {"Ticker": "BBB", "Price": 100, "Final_Score": 95, "Stop_Loss": 96, "Sector": "Health"},  # 无 target → 跳过
+    ]
+    out = qf.strict_filter(rows)
+    assert [x["Ticker"] for x in out] == ["AAA"]
+
+
+def test_strict_filter_diagnostic_fields_attached():
+    out = qf.strict_filter([_row("AAA")])
+    assert len(out) == 1
+    assert "_rr" in out[0]
+    assert "_stop_dist" in out[0]
+    assert out[0]["_rr"] == pytest.approx(2.5)
+    assert out[0]["_stop_dist"] == pytest.approx(0.04)
+
+
+# ============================================================
+# load_positions：读持仓 CSV，防御容错
+# ============================================================
+
+def _write_csv(path, content):
+    path.write_text(content, encoding="utf-8")
+
+
+def test_load_positions_existing_file(tmp_path):
+    p = tmp_path / "positions.csv"
+    _write_csv(p, (
+        "Ticker,Stop_Loss,Status\n"
+        "adsk,120,OPEN\n"
+        "ANET,90,ACTIVE\n"
+        "isrg,75,CLOSED\n"
+        "KR,50,\n"           # 空 Status → 视为 OPEN
+        ",60,OPEN\n"          # 空 Ticker → 跳过
+    ))
+    tickers = qf.load_positions(str(p))
+    assert tickers == ["ADSK", "ANET", "KR"]
+
+
+def test_load_positions_missing_file(tmp_path):
+    tickers = qf.load_positions(str(tmp_path / "nope.csv"))
+    assert tickers == []
+
+
+def test_load_positions_empty_file(tmp_path):
+    p = tmp_path / "positions.csv"
+    _write_csv(p, "Ticker,Stop_Loss,Status\n")  # 仅表头
+    assert qf.load_positions(str(p)) == []
+
+
+def test_load_positions_none_path():
+    assert qf.load_positions(None) == []
+    assert qf.load_positions("") == []
+
+
+# ============================================================
+# build_ai_input：收缩 AI 输入（持仓 + ≤3 候选）
+# ============================================================
+
+def _pool(tickers):
+    """构造含 tickers 的池（每只带 Price/Final_Score/Sector）。"""
+    return [
+        {"Ticker": t, "Price": 100, "Final_Score": 95, "Sector": f"S{i}"}
+        for i, t in enumerate(tickers)
+    ]
+
+
+def test_build_ai_input_positions_at_least_three():
+    pool = _pool(["AAA", "BBB", "CCC", "DDD", "EEE"])
+    positions = ["AAA", "BBB", "CCC", "DDD"]  # 4 持仓
+    candidates = [
+        {"Ticker": "EEE", "Price": 100, "_rr": 2.5},
+        {"Ticker": "FFF", "Price": 100, "_rr": 2.4},
+        {"Ticker": "GGG", "Price": 100, "_rr": 2.3},
+    ]
+    out = qf.build_ai_input(pool, positions, candidates)
+    assert len(out) == 7  # 4 + 3
+    # 持仓优先，标记 Core_Dragon + _is_position
+    assert [x["Ticker"] for x in out[:4]] == ["AAA", "BBB", "CCC", "DDD"]
+    assert all(x["Tag"] == "Core_Dragon" for x in out[:4])
+    assert all(x.get("_is_position") for x in out[:4])
+    # 候选标记 Candidate
+    assert [x["Ticker"] for x in out[4:]] == ["EEE", "FFF", "GGG"]
+    assert all(x["Tag"] == "Candidate" for x in out[4:])
+
+
+def test_build_ai_input_positions_less_than_three():
+    pool = _pool(["AAA", "BBB", "CCC", "DDD"])
+    positions = ["AAA"]  # 1 持仓
+    candidates = [
+        {"Ticker": "BBB", "_rr": 2.5},
+        {"Ticker": "CCC", "_rr": 2.4},
+        {"Ticker": "DDD", "_rr": 2.3},
+    ]
+    out = qf.build_ai_input(pool, positions, candidates)
+    assert len(out) == 4
+    assert out[0]["Ticker"] == "AAA" and out[0]["_is_position"]
+    assert [x["Ticker"] for x in out[1:]] == ["BBB", "CCC", "DDD"]
+
+
+def test_build_ai_input_no_candidates():
+    pool = _pool(["AAA", "BBB", "CCC"])
+    positions = ["AAA", "BBB", "CCC"]
+    out = qf.build_ai_input(pool, positions, [])
+    assert len(out) == 3
+    assert all(x["_is_position"] for x in out)
+
+
+def test_build_ai_input_dedup_and_cap():
+    # 候选与持仓重叠时持仓优先（候选被去重）；总数硬顶 7
+    pool = _pool([f"T{i}" for i in range(10)])
+    positions = ["T0", "T1", "T2", "T3"]
+    candidates = [{"Ticker": "T1", "_rr": 2.5}] + [{"Ticker": f"C{i}", "_rr": 2.5} for i in range(8)]
+    out = qf.build_ai_input(pool, positions, candidates)
+    assert len(out) <= 7
+    # T1 是持仓，候选中的 T1 被去重
+    tickers = [x["Ticker"] for x in out]
+    assert tickers.count("T1") == 1
+    assert out[tickers.index("T1")]["_is_position"] is True
