@@ -50,10 +50,21 @@ from quant_factor_lab import (
     write_factor_snapshot,
 )
 
+# Scan 角色重定义（2026-10-08 判决）：严筛层纯函数（零 token、无副作用，见 quant_filter.py）
+from quant_filter import (
+    build_ai_input,
+    compute_20d_high,
+    load_positions,
+    strict_filter,
+)
+
 # ==================== 环境检查 ====================
 TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
+
+# Scan 角色重定义：持仓 CSV 路径（仓库根，相对 cwd）。严筛阈值常量见 quant_filter.py。
+POSITIONS_CSV_PATH = "portfolio_50000_positions.csv"
 ATR_STOP_MULTIPLIER = 2.0
 ATR_STOP_FLOOR_PCT = 3.0
 ATR_STOP_CEIL_PCT = 12.0
@@ -2938,11 +2949,12 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
             core_tech_min = max(core_tech_min, 3)
             core_quant_min = max(core_quant_min, 68)
         core_ok = (
-            ai_available
-            and gate_ok
-            and quant >= core_quant_min
-            and final >= core_quant_min
-            and tech_count >= core_tech_min
+            bool(item.get("_is_position"))
+            or (ai_available
+                and gate_ok
+                and quant >= core_quant_min
+                and final >= core_quant_min
+                and tech_count >= core_tech_min)
         )
         obs_ok = (
             gate_ok
@@ -2959,9 +2971,9 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
         out["Score"] = str(final)
         out["_AI_Chunk"] = chunk or ""
         out["_AI_Tag"] = ai_tag or ""
-        out["Tag"] = "Core_Dragon" if core_ok else "Observation"
+        out["Tag"] = "Core_Dragon" if core_ok else "Candidate"
 
-        if out["Tag"] == "Observation":
+        if out["Tag"] == "Candidate":
             out["Hold_Period"] = "观望"
             # Observation 复用 Core 的 ATR Quant 止损（0 GPT），不再写「观望」。
             # fail-closed：ATR_Pct / Price 缺失或非正数时不默认、不猜价，直接置空(NULL)。
@@ -3018,12 +3030,12 @@ def match_pool_to_report(pool_data, ai_html, default_stop_loss_pct, event_regime
 
     core = [x for x in candidates if x.get("Tag") == "Core_Dragon"][: int(LIMIT_PARAMS.get("max_core", 5))]
     used = {x["Ticker"] for x in core}
-    obs = [x for x in candidates if x.get("Tag") == "Observation" and x["Ticker"] not in used][: int(LIMIT_PARAMS.get("max_observation", 7))]
+    obs = [x for x in candidates if x.get("Tag") == "Candidate" and x["Ticker"] not in used][: int(LIMIT_PARAMS.get("max_candidate", 3))]
     if score_missing_core or score_missing_obs:
-        print(f"📊 [AI Score Missing 统计] Core={score_missing_core} / Observation={score_missing_obs}")
+        print(f"📊 [AI Score Missing 统计] Core={score_missing_core} / Candidate={score_missing_obs}")
     if ai_eq_quant:
         print(f"⚠️ [AI=Quant 诊断] {len(ai_eq_quant)} 只 AI_Score == Quant_Score（仅记录，不修改）：{', '.join(ai_eq_quant)}")
-    print(f"🔒 [程序校验] Core={len(core)} / Observation={len(obs)} / AI候选池外忽略={len(invalid_ai)}")
+    print(f"🔒 [程序校验] Core={len(core)} / Candidate={len(obs)} / AI候选池外忽略={len(invalid_ai)}")
     return core + obs
 
 
@@ -3732,6 +3744,29 @@ if __name__ == "__main__":
     snapshot_pool = pool_data
     pool_data = apply_entry_quality_gate(pool_data, market_ctx, event_regime)
 
+    # >>> Scan 角色重定义：读持仓 + 严筛候选（零 token 硬筛），收缩 AI 输入到 ≤7 只
+    # 持仓(~4) 强制纳入 AI 分析（每日重评分，支撑「评分崩塌 <60」规则）；
+    # 严筛候选(≤3) 评分≥90 & R/R≥2.0 & 2%≤止损距离≤5% & ≤1只/板块。
+    # 仅在编排层做网络(kline)/AI 调用；严筛与 R/R 计算本身是纯函数（见上方定义）。
+    redef_positions = load_positions(POSITIONS_CSV_PATH)  # list[str] 持仓 Ticker
+    redef_held = {t.upper() for t in redef_positions}
+    # 严筛需要每只候选的「前20日高点」目标价（来自已完成日线 High 序列，网络只读）
+    for _it in (pool_data or []):
+        _t = str(_it.get("Ticker", "")).upper()
+        if _t in redef_held:
+            _it["target_price"] = None  # 持仓走每日重评分，不参与候选严筛
+            continue
+        try:
+            _kdf = get_kline_data(_it.get("Ticker"))
+            _it["target_price"] = compute_20d_high(_kdf) if _kdf is not None and not _kdf.empty else None
+        except Exception:
+            _it["target_price"] = None
+    redef_eligible = [x for x in (pool_data or []) if str(x.get("Ticker", "")).upper() not in redef_held]
+    redef_candidates = strict_filter(redef_eligible)
+    ai_input = build_ai_input(pool_data, redef_positions, redef_candidates)
+    print(f"🔎 [角色重定义] 持仓={len(redef_positions)} / 严筛候选={len(redef_candidates)} "
+          f"/ AI输入={len(ai_input)}（旧：全闸口池 {len(pool_data or [])} 只）")
+
     # ---- Quant 契约告警（只读比对 + 日志；绝不改值、绝不改数据源、绝不阻断落盘）----
     # 契约：Technical_Date = 最后完整常规交易日（见 quant_factor_price.py:10-16）。
     # 2026-10-07 首份真实数据曾出现 Technical_Date=2026-10-05 而理论值为 2026-10-06，
@@ -3775,7 +3810,7 @@ if __name__ == "__main__":
     gate_text = event_regime_text + "\n当前硬回避行业必须阻止进入Top1-5：" + (", ".join(gate_hard) if gate_hard else "无")
 
     ai_html = generate_ai_report(
-        pool_data,
+        ai_input,
         combined_news,
         macro_market,
         dropped_info,
@@ -3788,7 +3823,7 @@ if __name__ == "__main__":
         economic_text,
     )
 
-    chosen = match_pool_to_report(pool_data, ai_html, DEFAULT_STOP_LOSS_PCT, event_regime)
+    chosen = match_pool_to_report(ai_input, ai_html, DEFAULT_STOP_LOSS_PCT, event_regime)
     hard_blocked = set(restricted_tickers) | set(review_triggered)
     if hard_blocked:
         before_block = len(chosen)
@@ -3811,7 +3846,7 @@ if __name__ == "__main__":
     log_file = "trade_history.csv"
     to_write = []
     for item in chosen:
-        if item.get("Tag") not in {"Core_Dragon","Observation"}:
+        if item.get("Tag") not in {"Core_Dragon","Candidate"}:
             continue
         item = dict(item)
         if item.get("Tag") == "Core_Dragon":

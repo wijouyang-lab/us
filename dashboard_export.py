@@ -751,7 +751,7 @@ def require_file(path: Path, what: str) -> Path:
 # 5. STOCKS
 # ============================================================
 
-BUCKET_MAP = {"Core_Dragon": "Core", "Observation": "Observation"}
+BUCKET_MAP = {"Core_Dragon": "Core", "Observation": "Observation", "Candidate": "Candidate"}
 
 
 def load_ai_history(data_dir, skip_paths=()):
