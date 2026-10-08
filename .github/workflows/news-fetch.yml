@@ -1,0 +1,49 @@
+name: news-fetch
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Schedule: UTC（GitHub 原生 cron 只认 UTC）
+    # TBD：判决后填写，避开 dashboard-data 的 */15 网格与 scan/review 高峰。
+    # 推荐：工作日每 2 小时 23 分 → 23 */2 * * 1-5（北京时间 07:23 / 09:23 / ... / 23:23）
+    # - cron: '23 */2 * * 1-5'
+
+# 独立并发组：不与 scan / review / dashboard-data / evolve 抢占
+concurrency:
+  group: news-fetch
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 安装依赖
+        # 抓取脚本仅用标准库；沿用仓库既有依赖清单（dashboard_export 同款）保持一致
+        run: python -m pip install --upgrade pip && python -m pip install -r requirements-production.txt
+
+      - name: 抓取 Finnhub 新闻
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+        run: python dashboard/fetch_news.py
+
+      - name: 提交新闻数据
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dashboard/data/news_data.json
+          # [skip ci] 防止提交触发其它 CI；无变化则跳过提交
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore(dashboard): refresh news data [skip ci]"
+          git push
