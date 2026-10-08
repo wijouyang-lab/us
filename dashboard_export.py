@@ -2706,6 +2706,24 @@ def build_quant(data_dir: Path):
     return quant
 
 
+def build_news(data_dir: Path) -> dict | None:
+    """读取 dashboard/data/news_data.json（由 dashboard/fetch_news.py 生成）。
+
+    文件不存在 / 解析失败 / 非字典 → 返回 None（前端显示「暂无新闻」，不报错）。
+    本函数只读、不写、不触发任何网络请求。
+    """
+    p = data_dir / "dashboard" / "data" / "news_data.json"
+    if not p.exists():
+        return None
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(d, dict):
+        return None
+    return d
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description="生成 Dashboard 使用的 dashboard_data.json（只读导出层）")
     ap.add_argument("--data-dir", default=str(SCRIPT_DIR),
@@ -2984,6 +3002,9 @@ def main(argv=None):
     # ---- Quant Research Phase 1–7 研究状态（只读判断文件存在性，不生产任何 Quant 数据）----
     quant = build_quant(data_dir)
 
+    # ---- 金融新闻板块（只读 dashboard/data/news_data.json；缺失则 null，前端显示「暂无新闻」）----
+    news = build_news(data_dir)
+
     # ---- 组装 ----
     payload = {
         "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -2995,6 +3016,7 @@ def main(argv=None):
         "runtimes": runtimes,
         "portfolio": portfolio,
         "quant": quant,
+        "news": news,
         "meta": {
             "data_source": (
                 f"{(pending_path.name + ' + ') if pending_path else ''}"

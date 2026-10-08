@@ -54,6 +54,16 @@
     </div>
   </section>
 
+  <!-- 金融新闻板块（市场流 + 个股联动；数据来自 dashboard/data/news_data.json，独立低频刷新） -->
+  <section class="card sec" id="newsCard">
+    <div class="sec-h">
+      <h2>📰 金融新闻</h2>
+      <span class="sec-sub" id="newsUpdated"></span>
+    </div>
+    <div id="newsMarket" class="news-block"></div>
+    <div id="newsTickers" class="news-block"></div>
+  </section>
+
   <!-- 加载 / 错误状态：fetch 成功前始终可见，避免白屏 -->
   <div id="boot" class="boot">
     <div class="boot-row"><span class="spinner"></span><span>Loading market data…</span></div>

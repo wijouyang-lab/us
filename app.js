@@ -631,6 +631,7 @@
     renderHistory();
     renderPortfolio();
     renderQuant();
+    renderNews();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
@@ -648,6 +649,81 @@
     if (!window.__runtimeTimer) {
       window.__runtimeTimer = setInterval(refreshRuntime, 60000);
     }
+  }
+
+  /* ---------------- 金融新闻板块（市场流 + 个股联动，Q6 混合方案）---------------- */
+  /* 数据来源：DATA.news（dashboard_export.py 从 news_data.json 嵌入 dashboard_data.json）。
+     不参与 60s runtime 刷新，仅整页加载时渲染一次。null / 空 → 显示「暂无新闻」不报错。 */
+  function renderNews() {
+    var news = DATA && DATA.news;
+    var mEl = $('#newsMarket'), tEl = $('#newsTickers'), uEl = $('#newsUpdated');
+    if (!mEl || !tEl) return;
+
+    if (!news) {
+      mEl.innerHTML = '<div class="na">暂无新闻（数据尚未生成）</div>';
+      tEl.innerHTML = '';
+      return;
+    }
+    if (uEl) {
+      var g = news.generated_at || '';
+      uEl.textContent = g ? ('更新 ' + g.replace('T', ' ').replace('Z', ' UTC')) : '';
+    }
+    if (news.error) {
+      mEl.innerHTML = '<div class="na">新闻暂不可用：' + esc(news.error) + '</div>';
+      tEl.innerHTML = '';
+      return;
+    }
+
+    /* 市场流 */
+    var m = news.market_news || [];
+    if (!m.length) {
+      mEl.innerHTML = '<div class="na">今日暂无市场新闻</div>';
+    } else {
+      mEl.innerHTML = '<div class="news-sub">📡 市场动态</div>' +
+        m.slice(0, 12).map(newsRow).join('');
+    }
+
+    /* 个股联动（高亮当前股票池中的 ticker） */
+    var tk = news.ticker_news || {};
+    var keys = Object.keys(tk);
+    if (!keys.length) {
+      tEl.innerHTML = '<div class="na">暂无个股新闻</div>';
+      return;
+    }
+    var pool = {};
+    STOCKS.forEach(function (s) { if (s.ticker) pool[String(s.ticker).toUpperCase()] = (s.bucket || ''); });
+    tEl.innerHTML = '<div class="news-sub">🏷️ 持仓 / 推荐联动</div>' + keys.map(function (sym) {
+      var list = tk[sym] || [];
+      var on = pool[sym] ? ' news-ticker-on' : '';
+      var body = list.length
+        ? list.slice(0, 5).map(newsRow).join('')
+        : '<div class="na">暂无</div>';
+      var tag = pool[sym] ? ' <span class="news-tag">' + esc(pool[sym]) + '</span>' : '';
+      return '<div class="news-ticker' + on + '"><div class="news-ticker-h">' +
+        esc(sym) + tag + '</div>' + body + '</div>';
+    }).join('');
+  }
+
+  function newsRow(x) {
+    if (!x || !x.headline) return '';
+    var t = fmtBJ(x.datetime);
+    var src = x.source ? ' · ' + esc(x.source) : '';
+    var url = x.url || '';
+    var head = '<a class="news-h" href="' + esc(url) + '" target="_blank" rel="noopener">' +
+      esc(x.headline) + '</a>';
+    return '<div class="news-item"><span class="news-t">' + esc(t) + '</span>' + head +
+      '<span class="news-src">' + src + '</span></div>';
+  }
+
+  function fmtBJ(ts) {
+    if (!ts) return '';
+    try {
+      /* 转北京时间 UTC+8：把 epoch 毫秒 +8h 后用 UTC getter 取，即北京本地时间 */
+      var bj = new Date(ts * 1000 + 8 * 3600 * 1000);
+      function p(n) { return (n < 10 ? '0' : '') + n; }
+      return p(bj.getUTCMonth() + 1) + '-' + p(bj.getUTCDate()) + ' ' +
+        p(bj.getUTCHours()) + ':' + p(bj.getUTCMinutes());
+    } catch (e) { return ''; }
   }
 
   /* ---------------- 顶部：数据源与更新时间 ---------------- */
