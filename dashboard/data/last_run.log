@@ -2,8 +2,8 @@
 dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
-[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
-当前有效股票池：40 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+pending CSV（本次 Scan 新推荐）：us_stocks_pending_20261008.csv
+当前有效股票池：47 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
@@ -25,13 +25,13 @@ $EDGM: possibly delisted; no price data found  (period=1d)
 $HIRU: possibly delisted; no price data found  (period=1d)
 已读取 workflow runtimes：runtimes.json
 --------------------------------------------------------------
-pending CSV          : （无）   股票名单来源：active_events
-Core 数量            : 13
-Observation 数量     : 27
+pending CSV          : us_stocks_pending_20261008.csv   股票名单来源：active_events
+Core 数量            : 15
+Observation 数量     : 32
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 40 / 0   技术指标成功 40/40
-当前价来源           : 实时 40 · 最新收盘 0 · 合计可取 40/40
+K线成功 / 失败       : 47 / 0   技术指标成功 47/47
+当前价来源           : 实时 47 · 最新收盘 0 · 合计可取 47/47
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 19  [complete]
@@ -40,7 +40,7 @@ Review 数据状态      :
    · actual_active_count          = 6  [complete]
 history 条数         : 47
 Quant 研究状态       : RESEARCH · 数据可用性 PARTIAL · 生产 V1 V1_ACTIVE · V2 DISABLED · Gate NOT_READY
-AI 六段状态          : partial（32/40 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
+AI 六段状态          : partial（39/47 只股票有内容，来源 Scan 2026-10-08）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 字段 null 统计       : {'quant_score': 7, 'ai_score': 7, 'fundamental_score': 7, 'technical_score': 7, 'risk_liquidity_score': 7, 'pe_ttm': 7, 'pe_forward': 7, 'pb': 7, 'eps_ttm': 7, 'roe': 10, 'revenue_growth': 7, 'earnings_growth': 10, 'profit_margin': 7, 'market_cap': 7, 'market_regime': 18, 'vix': 18}
