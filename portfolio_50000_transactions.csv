@@ -1,1 +1,5 @@
 Txn_ID,Date,Ticker,Action,Shares,Price,Amount,Realized_PnL,Cash_After,Reason,Recommendation_ID,Scan_Date,Portfolio_ID,Unit_ID
+ADSK|2026-10-07|Core_Dragon|BUY,2026-10-07,ADSK,BUY,43,231.42,9951.06,0.00,40048.94,Core recommendation -> 1 Unit long,ADSK|2026-10-07|Core_Dragon,2026-10-07,US-50000-001,U001
+ANET|2026-10-07|Core_Dragon|BUY,2026-10-07,ANET,BUY,47,211.30,9931.10,0.00,30117.84,Core recommendation -> 1 Unit long,ANET|2026-10-07|Core_Dragon,2026-10-07,US-50000-001,U002
+ISRG|2026-10-07|Core_Dragon|BUY,2026-10-07,ISRG,BUY,24,405.07,9721.68,0.00,20396.16,Core recommendation -> 1 Unit long,ISRG|2026-10-07|Core_Dragon,2026-10-07,US-50000-001,U003
+KR|2026-10-07|Core_Dragon|BUY,2026-10-07,KR,BUY,168,59.27,9957.36,0.00,10438.80,Core recommendation -> 1 Unit long,KR|2026-10-07|Core_Dragon,2026-10-07,US-50000-001,U004
