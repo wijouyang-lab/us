@@ -2,11 +2,6 @@ name: news-fetch
 
 on:
   workflow_dispatch:
-  # TEMP-VERIFY：临时 push 触发，只为立即验证模型切换后的翻译，验证完立刻移除。
-  # paths 过滤保证只有“本文件自身变化”才跑，不会被 dashboard-data 的每 15 分钟提交反复触发。
-  push:
-    paths:
-      - '.github/workflows/news-fetch.yml'
   schedule:
     # Schedule: UTC（GitHub 原生 cron 只认 UTC）
     # TBD：判决后填写，避开 dashboard-data 的 */15 网格与 scan/review 高峰。
@@ -46,57 +41,6 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
           CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
         run: python dashboard/fetch_news.py
-
-      - name: TEMP-DIAG 用真实标题跑真实 translate_headlines（临时，验证完删除）
-        env:
-          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
-          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
-        run: |
-          python3 - <<'PY'
-          import os, sys, json, time
-          sys.path.insert(0, os.getcwd())
-          import dashboard.fetch_news as fn
-          from clawsocket_compat import ClawSocketClient
-
-          def ann(level, title, msg):
-              safe = str(msg).replace("%", "%25").replace("\r", "").replace("\n", " ")[:700]
-              print(f"::{level} title={title}::{safe}")
-
-          ann("notice", "DIAG_MODEL_CONST", f"TRANSLATE_MODEL={fn.TRANSLATE_MODEL} live_env={os.environ.get('CLAWSOCKET_LIVE_MODEL')}")
-
-          d = json.load(open("dashboard/data/news_data.json", encoding="utf-8"))
-          pos = fn.read_position_tickers(fn.POSITIONS_PATH_DEFAULT)
-          ann("notice", "DIAG_POSITIONS", f"pos={pos}")
-          heads = [x.get("headline") for x in d.get("market_news", [])[:10]]
-          for tk in pos:
-              heads += [x.get("headline") for x in d.get("ticker_news", {}).get(tk, [])[:5]]
-          heads = list(dict.fromkeys([h for h in heads if h]))
-          ann("notice", "DIAG_HEADS", f"n={len(heads)} first={heads[0][:60]!r}")
-
-          # 1) 走真实生产函数（R1 吞异常）
-          t0 = time.time()
-          res = fn.translate_headlines(heads)
-          ann("notice", "DIAG_TR_RESULT",
-              f"{time.time()-t0:.1f}s returned={len(res)} sample={list(res.items())[:1]}")
-
-          # 2) 绕过 R1，直接看原始返回 + 解析
-          t0 = time.time()
-          try:
-              c = ClawSocketClient(timeout=150, retries=1)
-              resp = c.messages.create(model=fn.TRANSLATE_MODEL, max_tokens=4000,
-                                       messages=[{"role": "user", "content": fn._build_translation_prompt(heads)}])
-              txt = getattr(resp, "output_text", "") or ""
-              arr = fn._extract_json_array(txt)
-              ann("notice", "DIAG_RAW",
-                  f"{time.time()-t0:.1f}s used={c.last_model_used} proto={c.last_protocol} "
-                  f"fallback={c.last_model_fallback} len={len(txt)} "
-                  f"arr={'None' if arr is None else 'len=%d' % len(arr)}")
-              ann("notice", "DIAG_RAW_HEAD", repr(txt[:300]))
-              ann("notice", "DIAG_RAW_TAIL", repr(txt[-300:]))
-          except Exception as e:
-              ann("error", "DIAG_RAW", f"{time.time()-t0:.1f}s FAIL {type(e).__name__}: {str(e)[:250]}")
-          PY
 
       - name: 提交新闻数据
         run: |
