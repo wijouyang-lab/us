@@ -47,5 +47,32 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add dashboard/data/news_data.json
           # [skip ci] 防止提交触发其它 CI；无变化则跳过提交
-          git diff --quiet && git diff --staged --quiet || git commit -m "chore(dashboard): refresh news data [skip ci]"
-          git push
+          git diff --cached --quiet || git commit -m "chore(dashboard): refresh news data [skip ci]"
+          # 与 dashboard-data 并发撞车时的重试（同款模式）：
+          #   · 先 fetch 最新 origin/main，绝不用陈旧远端基准
+          #   · reset --soft 让本轮已生成数据重新成为工作区改动，提交到最新 main 之上
+          #   · 不 force push
+          PUSHED=0
+          for i in 1 2 3; do
+            if git push origin main; then
+              PUSHED=1
+              break
+            fi
+            echo "::warning::push 被拒绝（疑似并发提交），基于最新 origin/main 重建提交后重试 ($i/3)"
+            git fetch origin main
+            git reset --soft FETCH_HEAD
+            git reset HEAD
+            git add dashboard/data/news_data.json
+            if git diff --cached --quiet; then
+              echo "远端数据已与本轮一致，无需重复提交"
+              PUSHED=1
+              break
+            fi
+            git commit -m "chore(dashboard): refresh news data [skip ci]"
+          done
+          if [ "$PUSHED" = "1" ]; then
+            echo "新闻数据已提交并推送"
+          else
+            echo "::error::重试 3 次后仍无法推送；本轮已生成数据保留在工作区，未回退未覆盖远端"
+            exit 1
+          fi
