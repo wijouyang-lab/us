@@ -39,11 +39,10 @@ jobs:
         # 抓取脚本仅用标准库；沿用仓库既有依赖清单（dashboard_export 同款）保持一致
         run: python -m pip install --upgrade pip && python -m pip install -r requirements-production.txt
 
-      - name: TEMP-DIAG ClawSocket 翻译调用诊断（临时，验证完删除）
+      - name: TEMP-DIAG 逐个模型 POST 可用性（临时，验证完删除）
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
         run: |
           python3 - <<'PY'
           import os, sys
@@ -54,17 +53,32 @@ jobs:
               safe = str(msg).replace("%", "%25").replace("\r", "").replace("\n", " ")[:700]
               print(f"::{level} title={title}::{safe}")
 
+          # 关掉自动降级 + 不 pin LIVE_MODEL，才能看清「每个模型自己到底能不能 POST」
+          os.environ["CLAWSOCKET_AUTO_FALLBACK"] = "0"
+          os.environ.pop("CLAWSOCKET_LIVE_MODEL", None)
+          os.environ.pop("CLAWSOCKET_LIVE_PROTOCOL", None)
+
           try:
-              c = ClawSocketClient()
-              ann("notice", "DIAG_ENV", f"key_set={bool(c.api_key)} base={c.base_url} live_env={os.environ.get('CLAWSOCKET_LIVE_MODEL')}")
-              models = c.available_models
+              models = ClawSocketClient().available_models
               ann("notice", "DIAG_MODELS", f"total={len(models)} has_opus55={'claude-opus-5-5' in models}")
-              resp = c.messages.create(model="claude-opus-5-5", max_tokens=64,
-                                       messages=[{"role": "user", "content": "Reply with exactly: OK"}])
-              txt = getattr(resp, "output_text", "") or ""
-              ann("notice", "DIAG_CALL", f"OK used={c.last_model_used} proto={c.last_protocol} text={txt!r}")
           except Exception as e:
-              ann("error", "DIAG_CALL", f"FAILED type={type(e).__name__} msg={e}")
+              ann("error", "DIAG_MODELS", f"{type(e).__name__}: {e}")
+
+          CANDIDATES = [
+              "claude-opus-5-5", "claude-opus-5", "claude-opus-4-8", "claude-opus-4-7",
+              "claude-opus-4-6", "claude-sonnet-5", "claude-sonnet-4-6",
+              "claude-fable-5", "claude-fable-5-1",
+              "gpt-6-astra", "gpt-6-sol", "gpt-6.1-sol",
+          ]
+          for m in CANDIDATES:
+              try:
+                  c = ClawSocketClient(timeout=45, retries=1)
+                  resp = c.messages.create(model=m, max_tokens=64,
+                                           messages=[{"role": "user", "content": "Reply with exactly: OK"}])
+                  txt = getattr(resp, "output_text", "") or ""
+                  ann("notice", "DIAG_OK", f"{m} -> proto={c.last_protocol} text={txt[:40]!r}")
+              except Exception as e:
+                  ann("warning", "DIAG_FAIL", f"{m} -> {type(e).__name__}: {str(e)[:180]}")
           PY
 
       - name: 抓取 Finnhub 新闻
