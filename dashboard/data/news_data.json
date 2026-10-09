@@ -1,76 +1,96 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-09T01:57:56Z",
+  "generated_at": "2026-10-09T02:41:25Z",
   "market_news": [
     {
       "headline": "Trump says comment that Iran could 'take out' Los Angeles was misinterpreted - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQMlo5Y2pEcmFzbDdDSTdjYUdlR2t5dmlvMG44Q19yX3BKWEtLZC1yaXBCRUlYN1JXUDRsRERWbDQtUkhQSUJFSU9yZjVaUGppS25KQWpiUWswUU41eUpqU2c1RF9ZSGhJN2NySWxVQXROQ3ZQNUNYOTc1RXFqcnpFaFVJNmM3VDVFYzhWbnJWRmtoSnBBRGVQOF9jdy1ad21SVU9OX1RHS3NmM2ZKWmpkak5rNWg2dnZxWFpN?oc=5",
       "datetime": 1791489390,
-      "summary": "Trump says comment that Iran could 'take out' Los Angeles was misinterpreted  Reuters"
+      "summary": "Trump says comment that Iran could 'take out' Los Angeles was misinterpreted  Reuters",
+      "headline_cn": "特朗普称，有关伊朗可能“摧毁”洛杉矶的言论遭到误解——路透社",
+      "sentiment": "neutral"
     },
     {
       "headline": "Treasury yields are 'really, really high,' but can come down soon, Bessent's new adviser says",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/10/08/treasury-yields-david-zervos.html",
       "datetime": 1791488294,
-      "summary": "The comments from David Zervos come after the 10-year and 30-year yields marched to 24-year highs in recent days."
+      "summary": "The comments from David Zervos come after the 10-year and 30-year yields marched to 24-year highs in recent days.",
+      "headline_cn": "贝森特新任顾问称，美债收益率“确实非常高”，但可能很快回落",
+      "sentiment": "bullish"
     },
     {
       "headline": "New data shows Starbucks turnaround is working, but Chipotle takeover report slams shares",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/08/new-data-shows-starbucks-turn-is-working-but-chipotle-takeover-report-slams-shares.html",
       "datetime": 1791486487,
-      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
+      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading.",
+      "headline_cn": "新数据显示星巴克转型见效，但有关收购Chipotle的报道重挫股价",
+      "sentiment": "bearish"
     },
     {
       "headline": "We're buying the dip in a stock being punished for something it's actually insulated from",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/08/were-buying-the-dip-in-a-stock-being-punished-for-something-its-actually-insulated-from.html",
       "datetime": 1791485367,
-      "summary": "We waited and watched patiently."
+      "summary": "We waited and watched patiently.",
+      "headline_cn": "我们正逢低买入一只因本可免受影响的因素而遭抛售的股票",
+      "sentiment": "bullish"
     },
     {
       "headline": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQS3RjWlUtbVhIS3V2UlRkMFZOT3pESFlCZGVKcVp5N1lwX1JCTGRrXzI3dXdHT3diVGZUWENHREJ3MW5zQUpRamZpbkV0dTdoNDhRUzl6OW5FT2JZSjZHaHY2T2ltMm1fNTZVNHhuQzdZTmJVRHhSbE1vYnNpZTR4SGJONWhxVWxoYmxBLW1SRkpBNlROdHBxN3VjMUtpcHFaVzgzQ1ZvcmIyVllXcjBhSTY3TlhuLXpQRExkZmYtd29TOEppUkYwOA?oc=5",
       "datetime": 1791484955,
-      "summary": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say  Reuters"
+      "summary": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say  Reuters",
+      "headline_cn": "消息人士称，胡塞武装升级袭击，利雅得机场一架飞机受损——路透社",
+      "sentiment": "bearish"
     },
     {
       "headline": "US imposes fresh sanctions on Iran's shadow fleet - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQUm45bHRGMFlmNEV2d2lTTkFvQURQckhMSGhYRlhxWUtOb1d2cGhCTnVXUEJaMF94S2xZNXFWMF9ONTVraWdWdnVOME04c2xyMk5tRnhHVjI3YVFmQTZIWVR6MXhDUUNram9tRjlsejRlRXVQUERDX3NkY2ZIVmlsOV9Ic0wxOVNPSmVCRmtVVExGcWZNY0tCTw?oc=5",
       "datetime": 1791484524,
-      "summary": "US imposes fresh sanctions on Iran's shadow fleet  Reuters"
+      "summary": "US imposes fresh sanctions on Iran's shadow fleet  Reuters",
+      "headline_cn": "美国对伊朗“影子船队”实施新一轮制裁——路透社",
+      "sentiment": "bearish"
     },
     {
       "headline": "We're adding to our position in a hard-hit stock before important catalysts arrive",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/08/were-adding-to-our-position-in-a-hard-hit-stock-before-important-catalysts-arrive.html",
       "datetime": 1791484003,
-      "summary": "This is our second stock purchase on Thursday."
+      "summary": "This is our second stock purchase on Thursday.",
+      "headline_cn": "我们正赶在重要催化因素到来前，加仓一只遭受重挫的股票",
+      "sentiment": "bullish"
     },
     {
       "headline": "Moroccan defense firm MMI targets turret deliveries in March 2027 - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQOGtuWDhETzgwLUI4QlB0cnVKQWtuZjIybG1ROF9HVHVpRGR2S0Z6Q1dGeUFENnZDa0l3SzNGaUNpX05nOUNaQTV0NGUwMGdyQ01fSEw2ZzQ5eGhPWVZuOUpRTlVfSHM0WlluMDZRc0tBR2hDcXFIMVJCcUg4MnE2bDdORmxiV1ItVDBCNkN3UU5RZktvcTh0eVdadExMTUdIRDZ5dGg1U0t0Z3VBTXhMZzc4b3RKa3pqZElMNmJEM0pyQQ?oc=5",
       "datetime": 1791483978,
-      "summary": "Moroccan defense firm MMI targets turret deliveries in March 2027  Reuters"
+      "summary": "Moroccan defense firm MMI targets turret deliveries in March 2027  Reuters",
+      "headline_cn": "摩洛哥防务企业MMI计划于2027年3月交付炮塔——路透社",
+      "sentiment": "bullish"
     },
     {
       "headline": "Trump says US will not attack Iran before midterm elections in November - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNMmV2ZUhoRklKSzBPaFkzWHVFdkwxVDlVVU8tdDV2NXc4NEkxTjZSTVhoaklIeTlJX3BCUTFkRUREY1VDVGpTY1lhZEQ4OHgyRG81S0RLa0JJVEZHTWpiUFJVRy0xZmVSWEpVbDZsVFBSRzZ4bmw2RnhtMXlBelJ1Vi1GUnVuZ3htemdTdExuTktpQ2dKdzhFRmRMd0MwMlYtd3JPb1J0NVlKcVNtWUlNNHRoNVFWaFBWUHNTdg?oc=5",
       "datetime": 1791480159,
-      "summary": "Trump says US will not attack Iran before midterm elections in November  Reuters"
+      "summary": "Trump says US will not attack Iran before midterm elections in November  Reuters",
+      "headline_cn": "特朗普称，美国不会在11月中期选举前攻击伊朗——路透社",
+      "sentiment": "bullish"
     },
     {
       "headline": "Lufthansa, Indian airlines suspend flights to Riyadh after Houthi attacks - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxOVXd3SHFQR3NWbldRVWo1OVQtajAyZVYtRzNYcmFzZTR3X2pMaDEzTXJKX3R4aUNPNW9fOEhUalZkVnR3LWtKRWM3VDVqelA0M1QtRlFNOE45ZG16VFVIN0JrbHFQSDFFd0N1OEM5Z3FMS0tnVDJvaEZXSjhSYUVsVWJGWXpBdTdVSjZrVVBEc3JCUzFDQXM4Y2ZjYUpHTWlIb2VtUGFlOWs2djlQYUFZLUZ1X0hSZFJ0?oc=5",
       "datetime": 1791478318,
-      "summary": "Lufthansa, Indian airlines suspend flights to Riyadh after Houthi attacks  Reuters"
+      "summary": "Lufthansa, Indian airlines suspend flights to Riyadh after Houthi attacks  Reuters",
+      "headline_cn": "胡塞武装袭击后，汉莎航空及印度多家航司暂停飞往利雅得的航班——路透社",
+      "sentiment": "bearish"
     },
     {
       "headline": "Scenes from across France as student protests spread - Reuters",
@@ -234,13 +254,6 @@
       "summary": "Ryanair's O'Leary says 'insanely higher' jet fuel cost could remain into 2028  Reuters"
     },
     {
-      "headline": "As Munir's military takes on Gulf role, Pakistan's parliament is not involved - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQblJ3TUVya3VIYjNCdzZfeEJOeUpDbE9RdVloYUllQ0dxMk5oeHVWck5NaTcxVVdUTG94aW1oc3pzakZyWk9hTkwwQ0w2bXVydGxISlRtOHdYZWhpM2NnNHdrejBOX2tUN3lQd1I5Z3ZQMHl1Y1NSc0ZKVWpITnY1Zl81LVdvX2FWLVplRjAxTVQ2NGs1N2V3dnpxQnRpQXRQMlVONHhURkY2bnl6U2RIVE5WcE4wUDNaWGdBaEtCTjI?oc=5",
-      "datetime": 1791458900,
-      "summary": "As Munir's military takes on Gulf role, Pakistan's parliament is not involved  Reuters"
-    },
-    {
       "headline": "Russia, China hypersonic missile threats fuel need for space defense, satellite CEO says",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/10/08/space-missile-defense-interceptors-russia-china.html",
@@ -253,6 +266,13 @@
       "url": "https://news.google.com/rss/articles/CBMigAFBVV95cUxNSFg5SnpPNHdMZFV1S01HeXZOZDVZQk84Xy05N2UxcHZZV3h5aXctVWVrc0FQRUgzdFlFTENpczRzMDBFZWNnOXZLT0Y2YldoOVhTejN2dHJPN3NYdV9BWkxMWTR3Tkhyem5ONTN5cG8tRHI5cm1rTC1kdk5xTHVGRw?oc=5",
       "datetime": 1791457200,
       "summary": "Iran’s wartime hunt for protesters at home and abroad ushers in a new era of repression  Reuters"
+    },
+    {
+      "headline": "As Munir's military takes on Gulf role, Pakistan's parliament is not involved - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxQblJ3TUVya3VIYjNCdzZfeEJOeUpDbE9RdVloYUllQ0dxMk5oeHVWck5NaTcxVVdUTG94aW1oc3pzakZyWk9hTkwwQ0w2bXVydGxISlRtOHdYZWhpM2NnNHdrejBOX2tUN3lQd1I5Z3ZQMHl1Y1NSc0ZKVWpITnY1Zl81LVdvX2FWLVplRjAxTVQ2NGs1N2V3dnpxQnRpQXRQMlVONHhURkY2bnl6U2RIVE5WcE4wUDNaWGdBaEtCTjI?oc=5",
+      "datetime": 1791456180,
+      "summary": "As Munir's military takes on Gulf role, Pakistan's parliament is not involved  Reuters"
     },
     {
       "headline": "Latest suspect in RAF Fairford airbase plot released on bail - Reuters",
@@ -584,18 +604,18 @@
       "summary": "Venezuelan crude deliveries to India are expected to more than double to about 465,000 barrels a day this month, from 196,000 in September"
     },
     {
+      "headline": "India joins global rate-tightening wave with first hike in nearly 4 years - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPQlZCVTJBN0oxSFUtU3pHLXZBVzVpQVJfMXRkVnRMMWFXeUhrczVkVmRkelVJckVZOGc4QVZkVDBlSDRCVE1XMEJEUXBmWlVGaklQcDRxUTlFNVl0a3h6TlhqWmpVT1gyMmR4VTZtdmRWSTU3SUtPeGZPYndYdjlaVEsxWUdJU2U1RjhaS3Z2YU8xZ3lHbXVsaklld1hCTkRzS0lpTGJzcnJNX01TallDRQ?oc=5",
+      "datetime": 1791358969,
+      "summary": "India joins global rate-tightening wave with first hike in nearly 4 years  Reuters"
+    },
+    {
       "headline": "Israelis mark three years since October 7 as Palestinians mourn Gaza's destruction - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPVEc3R0oyN1N1QkF0Q09Zb1hfWURTdDRRSnFvaVNlQU42cXJCNEhNNXdLOW11NTRsVi1VVlJKV0NSTm1CMVg3c3RMQ3pHcEV3VGpCNGF1UHBobHVhYkFQY0pNS2NvMXBQMWxSTEVhQTF6a01jRzBpXzFKajQ2NWxIZm5BdGQ4azhfYnBwVnh1enVzc04xeElNSTZFMHcyNmlfUElEM2s3RVFRXzFScUcyNUlfbFVrSjA5LVNjMlhQZzVBUQ?oc=5",
       "datetime": 1791349380,
       "summary": "Israelis mark three years since October 7 as Palestinians mourn Gaza's destruction  Reuters"
-    },
-    {
-      "headline": "India joins global rate-tightening wave with first hike in nearly 4 years - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPQlZCVTJBN0oxSFUtU3pHLXZBVzVpQVJfMXRkVnRMMWFXeUhrczVkVmRkelVJckVZOGc4QVZkVDBlSDRCVE1XMEJEUXBmWlVGaklQcDRxUTlFNVl0a3h6TlhqWmpVT1gyMmR4VTZtdmRWSTU3SUtPeGZPYndYdjlaVEsxWUdJU2U1RjhaS3Z2YU8xZ3lHbXVsaklld1hCTkRzS0lpTGJzcnJNX01TallDRQ?oc=5",
-      "datetime": 1791347580,
-      "summary": "India joins global rate-tightening wave with first hike in nearly 4 years  Reuters"
     },
     {
       "headline": "Morning Bid: Who's the boss? - Reuters",
@@ -706,25 +726,49 @@
   "ticker_news": {
     "ADSK": [
       {
+        "headline": "How Much Should This Move Change Your View Of Freshworks Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ea301eca58969060aeb35d38140ebe4865a5a518a3b9940e1e6ecdfb16cb0d8b",
+        "datetime": 1791509621,
+        "summary": "Between April 10 and October 7, 2026, Freshworks (FRSH) stock returned 80.1%, easily outpacing the 15.1% return of the S&P 500. Two significant developments emerged during that period: a round of job cuts announced on May 5 and a quarterly report on August 4. What did those two events change at Freshworks.",
+        "headline_cn": "这一动向应在多大程度上改变你对Freshworks股票的看法？",
+        "sentiment": "neutral"
+      },
+      {
+        "headline": "Is Autodesk (ADSK) Below Fair Value As Its New AEC Chief Pushes AI And Cloud?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=401a2a603ed9bda35c8c7700e9c2546500be2aa9bc674df5fdb0798c13c8ed8c",
+        "datetime": 1791505537,
+        "summary": "Autodesk (ADSK) just reshuffled a key leadership seat, putting long-time executive Diana Colella in charge of its architecture, engineering and construction business as investors watch how this affects the company’s push into AI and cloud tools. Autodesk shares trade at US$233.60, with a 7 day share price return of 10.55% and a 30 day gain of 10.08%. However, the year to date share price return is down 18.53% and the 1 year total shareholder return has declined 24.72%, so recent momentum is...",
+        "headline_cn": "Autodesk（ADSK）新任建筑、工程与施工业务负责人推进AI与云战略，股价是否低于公允价值？",
+        "sentiment": "bullish"
+      },
+      {
         "headline": "Can Autodesk’s New AEC Leader Reframe ADSK’s AI Story From Experimentation to Core Strategy?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=112eaa13047fa8ca0116d33c3a2ad6c8bc56f41b8d22953a36199cdf16d8d7a0",
         "datetime": 1791486823,
-        "summary": "Autodesk recently named long-time executive Diana Colella as executive vice president of its architecture, engineering and construction business, succeeding retiring leader Amy Bunszel, while Colella also continues to oversee the Media & Entertainment unit during the leadership transition. The move concentrates Autodesk’s AI and cloud expertise at the helm of its largest segment, signaling a push to more tightly connect legacy tools like Revit and Civil 3D with its Forma industry cloud and..."
+        "summary": "Autodesk recently named long-time executive Diana Colella as executive vice president of its architecture, engineering and construction business, succeeding retiring leader Amy Bunszel, while Colella also continues to oversee the Media & Entertainment unit during the leadership transition. The move concentrates Autodesk’s AI and cloud expertise at the helm of its largest segment, signaling a push to more tightly connect legacy tools like Revit and Civil 3D with its Forma industry cloud and...",
+        "headline_cn": "Autodesk新任建筑、工程与施工业务负责人能否推动AI从试验走向核心战略？",
+        "sentiment": "bullish"
       },
       {
         "headline": "3 of Wall Street’s Favorite Stocks That Fall Short",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=227190cd8495bafa2b12dc8026d0d9c25ac54c0a77c81628ebc8583031db6f1a",
         "datetime": 1791372047,
-        "summary": "Wall Street is overwhelmingly bullish on the stocks in this article, with price targets suggesting significant upside potential. However, it’s worth remembering that analysts rarely issue sell ratings, partly because their firms often seek other business from the same companies they cover."
+        "summary": "Wall Street is overwhelmingly bullish on the stocks in this article, with price targets suggesting significant upside potential. However, it’s worth remembering that analysts rarely issue sell ratings, partly because their firms often seek other business from the same companies they cover.",
+        "headline_cn": "华尔街青睐却表现不尽如人意的3只股票",
+        "sentiment": "bearish"
       },
       {
         "headline": "Autodesk names Diana Colella to lead architecture, engineering and construction business",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=260a36640a0ba9035bb25e01b77ec8af4152b0dd080ab6eb3854d7aba472ca53",
         "datetime": 1791302400,
-        "summary": "Autodesk, Inc. (NASDAQ: ADSK) today announced that Diana Colella has been named executive vice president of its architecture, engineering and construction (AEC) business. Colella succeeds Amy Bunszel, who previously announced her retirement and will remain with Autodesk through November 2, 2026, to support the transition."
+        "summary": "Autodesk, Inc. (NASDAQ: ADSK) today announced that Diana Colella has been named executive vice president of its architecture, engineering and construction (AEC) business. Colella succeeds Amy Bunszel, who previously announced her retirement and will remain with Autodesk through November 2, 2026, to support the transition.",
+        "headline_cn": "Autodesk任命Diana Colella执掌建筑、工程与施工业务",
+        "sentiment": "neutral"
       },
       {
         "headline": "Is PTC Stock Increasing Your Market Risk?",
@@ -856,6 +900,20 @@
     "AES": [],
     "AMD": [
       {
+        "headline": "AMD CEO delivers stark warning on chip market’s future",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=dd4e4eee517fc2d9be85a0f25db35c688051272177d74e18221311d5363a8be8",
+        "datetime": 1791507780,
+        "summary": "AMD CEO plans to substantially increase supply in 2027 after meetings with TSMC and suppliers in Taiwan."
+      },
+      {
+        "headline": "TSMC's $46.7 billion quarter leaves 1 question for investors",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=8b6bcbe59f25de334e8fbb3fe8176075c3a7ef1ae1abc56ba9095760db78df40",
+        "datetime": 1791504180,
+        "summary": "The record is not in doubt. What matters for the stock is whether the market has already priced it in."
+      },
+      {
         "headline": "Advanced Micro Devices vs. ASML: Which Semiconductor Stock Is a Better Buy in 2026?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=8d42f25c2ed44fae3597e64c63defe9bc77ce60ad76e26198e7ef0825841354b",
@@ -965,7 +1023,9 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=49d1395ae7bab88fb007f54d380c2cdd4a0ae42f8b824346ca51e197ebcb5fbe",
         "datetime": 1791471480,
-        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions."
+        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions.",
+        "headline_cn": "Arista面向AI的新型机架级以太网解决方案能否推动增长？",
+        "sentiment": "bullish"
       },
       {
         "headline": "Trump's Portfolio Invested Tens of Millions in Debt of Two of The World's Largest Companies, Disclosure Shows",
@@ -2562,20 +2622,6 @@
         "url": "https://finnhub.io/api/news?id=c45c0eb27474edad5f5e4157b375135c9051f4248cd122996c41d31130d75620",
         "datetime": 1790963716,
         "summary": "The Philadelphia semiconductor index, known as SOX, on Friday rose to its highest level in three months."
-      },
-      {
-        "headline": "Got $1,000? 2 Growth Stocks Building the Data Centers of the AI Infrastructure Supercycle.",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=386cfe521d6ef503072db9f1a16754edc08b9c47eea912b3ecbe62ac87da9bef",
-        "datetime": 1790960580,
-        "summary": "AMD and Broadcom looked poised to lead during the next wave of the AI infrastructure build-out."
-      },
-      {
-        "headline": "If You Invest $10,000 in AMD Today, Here’s What It Could Be Worth by 2030",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=ec2cfaeaf725b9907870fd3d232e71b92c36bcdff69e4ca75c3ba31173954db1",
-        "datetime": 1790958620,
-        "summary": "AMD has surged dramatically over the past year, and its AI ambitions stretch into trillion-dollar markets by 2030, but the model scoring it a hold at near fair value tells a more complicated story about what that growth is actually worth today."
       }
     ],
     "AMZN": [
@@ -2612,7 +2658,9 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f9f5f36e2d46a569cc995c2ca01944721e1b0f58135637465ad8c75ffe422ef9",
         "datetime": 1791491656,
-        "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores."
+        "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores.",
+        "headline_cn": "沃尔玛的下一轮增长可能来自哪里？",
+        "sentiment": "neutral"
       },
       {
         "headline": "Can AWS Transform Make NetApp (NTAP) the Default Storage Landing Zone in the Cloud?",
@@ -2629,6 +2677,13 @@
         "summary": "Amazon customers who failed to receive refunds or were incorrectly charged for returned merchandise may be eligible for payments under a $309.5 million class-action settlement."
       },
       {
+        "headline": "Why Qualcomm Stock Now Looks Poised to Surge Over the Longer Term",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=885fd56770f2a48f55b6519aae36fba6bec00df0f3d3cc29cf37074efbaf4c50",
+        "datetime": 1791486920,
+        "summary": "The company's positive catalysts may take years to boost QCOM stock."
+      },
+      {
         "headline": "Exploring the top movers within the dow jones index during today's session.",
         "source": "ChartMill",
         "url": "https://finnhub.io/api/news?id=d02e79ecef043a92ebba46248d20db4281c6aa7162d4da8ddbe12ca8c3b04577",
@@ -2640,14 +2695,18 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=6998d5ebbf1191720a53a0ecafdfaf8420981807afd7344d78e26a5aa1aada5d",
         "datetime": 1791484998,
-        "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports."
+        "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports.",
+        "headline_cn": "塔吉特股价这轮上涨是否早有明显迹象？",
+        "sentiment": "bullish"
       },
       {
         "headline": "What Are Costco Investors Betting On?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=34045d124769cb9170aad222e84c7eaf1ca4b6843fcc12e163b344cb7f489e0a",
         "datetime": 1791482953,
-        "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for."
+        "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for.",
+        "headline_cn": "好市多投资者在押注什么？",
+        "sentiment": "neutral"
       },
       {
         "headline": "What does Amazon's 'About You' feature say about your spending habits?",
@@ -4279,13 +4338,6 @@
         "url": "https://finnhub.io/api/news?id=80c83bdf3b8ad0032d34ffadb6d515752eeae00f736a7aa659f3577149ecb1ab",
         "datetime": 1791289920,
         "summary": "Big Tech is going nuclear as Alphabet and others scramble for enough power for their AI data centers."
-      },
-      {
-        "headline": "Stocks Rise Pre-Bell After Nasdaq Reaches New Record High",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=44b3a232a896ddd9c98bc17ee7fb070b3e729b1ed4b4cd06377e0013ddfc7e3c",
-        "datetime": 1791287764,
-        "summary": "US equity futures were tracking in the green on Tuesday following gains in the previous session, whe"
       }
     ],
     "ANET": [
@@ -4294,35 +4346,45 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=5b6168fb39dddc8f4976d2f6e3b2604a5ac596d2c91b7ed93fb76ac6a6780bc7",
         "datetime": 1791503454,
-        "summary": "Shares of Ondas (ONDS) have lost 33% over the past twelve months, while the S&P 500 returned 17.1%. A lack of orders is not the reason to worry: on October 7, the defense technology company announced it had won more than $270 million of them since June 30. During an August 13 call, management itself raised a different problem. What could go wrong for a company with this many orders."
+        "summary": "Shares of Ondas (ONDS) have lost 33% over the past twelve months, while the S&P 500 returned 17.1%. A lack of orders is not the reason to worry: on October 7, the defense technology company announced it had won more than $270 million of them since June 30. During an August 13 call, management itself raised a different problem. What could go wrong for a company with this many orders.",
+        "headline_cn": "每位Ondas投资者都应了解的一个风险是什么？",
+        "sentiment": "bearish"
       },
       {
         "headline": "One Unsettled Question Sits Under Super Micro Computer Stock",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=2d6fc2ab0fef13ec99d7bd77e821859fdc297c78363eff44e63aa50db17c2938",
         "datetime": 1791502308,
-        "summary": "Super Micro Computer (SMCI) expects a steep climb in sales for fiscal 2027. Management has noted, however, that its high-volume GPU systems usually earn much lower margins than its other products. As a result, Super Micro has yet to prove how much of each sale it can keep as profit during this rapid expansion."
+        "summary": "Super Micro Computer (SMCI) expects a steep climb in sales for fiscal 2027. Management has noted, however, that its high-volume GPU systems usually earn much lower margins than its other products. As a result, Super Micro has yet to prove how much of each sale it can keep as profit during this rapid expansion.",
+        "headline_cn": "超微电脑股票背后仍有一个悬而未决的问题",
+        "sentiment": "bearish"
       },
       {
         "headline": "Arista Stock Rises 64.7% YTD: Is There More Upside Ahead?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=4c6930c1965b1a0858d952e3eb988e3ebb33875489b962ab550c610b62085b8a",
         "datetime": 1791472080,
-        "summary": "ANET's AI networking growth and expanding Ethernet opportunity fuel strong gains, but customer concentration and margin pressure cloud the upside."
+        "summary": "ANET's AI networking growth and expanding Ethernet opportunity fuel strong gains, but customer concentration and margin pressure cloud the upside.",
+        "headline_cn": "Arista股价年内上涨64.7%：未来还有上涨空间吗？",
+        "sentiment": "bullish"
       },
       {
         "headline": "Can Arista's New Rack-Scale Ethernet Solutions for AI Stoke Growth?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=49d1395ae7bab88fb007f54d380c2cdd4a0ae42f8b824346ca51e197ebcb5fbe",
         "datetime": 1791471480,
-        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions."
+        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions.",
+        "headline_cn": "Arista面向AI的新型机架级以太网解决方案能否推动增长？",
+        "sentiment": "bullish"
       },
       {
         "headline": "Arista Networks (ANET) Could Be a Key Winner From the AI Infrastructure Boom",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=c60539d7556212d85cb6a98c4255848ae8877015ece2b4f877b97d656229a9d7",
         "datetime": 1791468032,
-        "summary": "Andrew Hill Investment Advisors recently released its third-quarter 2026 investor letter. A copy of the letter can be downloaded here. The fund navigated a mixed third-quarter investment environment in which rising oil prices, higher interest rates, and persistent inflation created headwinds for equities and bonds, although strong corporate earnings and continued AI investment helped support […]"
+        "summary": "Andrew Hill Investment Advisors recently released its third-quarter 2026 investor letter. A copy of the letter can be downloaded here. The fund navigated a mixed third-quarter investment environment in which rising oil prices, higher interest rates, and persistent inflation created headwinds for equities and bonds, although strong corporate earnings and continued AI investment helped support […]",
+        "headline_cn": "Arista Networks（ANET）或成AI基础设施热潮的主要受益者",
+        "sentiment": "bullish"
       },
       {
         "headline": "Cisco Could Be Entering a New Growth Phase. Here’s My Price Target.",
@@ -6960,7 +7022,9 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=2d6fc2ab0fef13ec99d7bd77e821859fdc297c78363eff44e63aa50db17c2938",
         "datetime": 1791502308,
-        "summary": "Super Micro Computer (SMCI) expects a steep climb in sales for fiscal 2027. Management has noted, however, that its high-volume GPU systems usually earn much lower margins than its other products. As a result, Super Micro has yet to prove how much of each sale it can keep as profit during this rapid expansion."
+        "summary": "Super Micro Computer (SMCI) expects a steep climb in sales for fiscal 2027. Management has noted, however, that its high-volume GPU systems usually earn much lower margins than its other products. As a result, Super Micro has yet to prove how much of each sale it can keep as profit during this rapid expansion.",
+        "headline_cn": "超微电脑股票背后仍有一个悬而未决的问题",
+        "sentiment": "bearish"
       },
       {
         "headline": "What Does Western Digital Offer That Apple Does Not?",
@@ -8012,35 +8076,45 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=4033ed6ae8ed17606a1ceae187e57795d32b87189e2c0a317bee21a00a136507",
         "datetime": 1791462604,
-        "summary": "Based on the average brokerage recommendation (ABR), Intuitive Surgical (ISRG) should be added to one's portfolio. Wall Street analysts' overly optimistic recommendations cast doubt on the effectiveness of this highly sought-after metric. So, is the stock worth buying?"
+        "summary": "Based on the average brokerage recommendation (ABR), Intuitive Surgical (ISRG) should be added to one's portfolio. Wall Street analysts' overly optimistic recommendations cast doubt on the effectiveness of this highly sought-after metric. So, is the stock worth buying?",
+        "headline_cn": "华尔街分析师持乐观态度，直觉外科（ISRG）值得买入吗？",
+        "sentiment": "bullish"
       },
       {
         "headline": "The Monopolistic Razor-and-Blade Engine I Can’t Stop Buying",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=53bbe4aa9c11aaa912b85bc6ec7e10cf64b2e86085ceb4c77aa34351fd789f03",
         "datetime": 1791458154,
-        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying."
+        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying.",
+        "headline_cn": "这家凭“剃须刀与刀片”模式驱动增长的垄断型企业，让我持续买入",
+        "sentiment": "bullish"
       },
       {
         "headline": "Intuitive Surgical (NASDAQ:ISRG) Combines Strong Growth With a Constructive Technical Setup",
         "source": "ChartMill",
         "url": "https://finnhub.io/api/news?id=df1cd6419db9df0bf5af0ef0817b082b8dddd428cba634f9389c9499cb3054f7",
         "datetime": 1791452447,
-        "summary": "Intuitive Surgical shows strong growth, top-tier profits, and a technical setup that could signal a breakout. See the full ISRG stock analysis."
+        "summary": "Intuitive Surgical shows strong growth, top-tier profits, and a technical setup that could signal a breakout. See the full ISRG stock analysis.",
+        "headline_cn": "直觉外科（NASDAQ:ISRG）兼具强劲增长与向好技术形态",
+        "sentiment": "bullish"
       },
       {
         "headline": "2 Profitable Stocks with Exciting Potential and 1 We Question",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=259b9f14a2c4c0e2f9a8e774ad3a21f8bed4e08dfd5889115e5ef149f544e134",
         "datetime": 1791445449,
-        "summary": "Not all profitable companies are built to last - some rely on outdated models or unsustainable advantages. Just because a business is in the green today doesn’t mean it will thrive tomorrow."
+        "summary": "Not all profitable companies are built to last - some rely on outdated models or unsustainable advantages. Just because a business is in the green today doesn’t mean it will thrive tomorrow.",
+        "headline_cn": "两只盈利且潜力可期的股票，以及一只我们存疑的股票",
+        "sentiment": "neutral"
       },
       {
         "headline": "Should Barclays’ Bullish Initiation Amid Rising Rivalry Require Action From Intuitive Surgical (ISRG) Investors?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=69560862c2feae8204312ca7a51206fa6c8a05a6750ccd4806487633eddf5698",
         "datetime": 1791439855,
-        "summary": "In early October 2026, Barclays initiated coverage of Intuitive Surgical, describing it as a high‑quality healthcare equipment company amid a softer medical devices backdrop, while investors looked ahead to the company’s then-upcoming October 20 earnings release expected to show year-over-year growth in earnings per share and revenue. At the same time, market debate sharpened around Intuitive Surgical’s valuation and competitive position, as commentary highlighted both its strong balance..."
+        "summary": "In early October 2026, Barclays initiated coverage of Intuitive Surgical, describing it as a high‑quality healthcare equipment company amid a softer medical devices backdrop, while investors looked ahead to the company’s then-upcoming October 20 earnings release expected to show year-over-year growth in earnings per share and revenue. At the same time, market debate sharpened around Intuitive Surgical’s valuation and competitive position, as commentary highlighted both its strong balance...",
+        "headline_cn": "竞争加剧之际，巴克莱首次覆盖直觉外科（ISRG）并看多，投资者是否应采取行动？",
+        "sentiment": "bullish"
       },
       {
         "headline": "Intuitive Surgical (ISRG) and JNJ Give Jim Cramer More Than Valuation to Consider",
@@ -8240,35 +8314,45 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f9f5f36e2d46a569cc995c2ca01944721e1b0f58135637465ad8c75ffe422ef9",
         "datetime": 1791491656,
-        "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores."
+        "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores.",
+        "headline_cn": "沃尔玛的下一轮增长可能来自哪里？",
+        "sentiment": "neutral"
       },
       {
         "headline": "AM Best Revises Issuer Credit Rating Outlook to Negative for Queen City Assurance, Inc. and Vine Court Assurance Incorporated",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=962cdfb6fd8b6c68330727cb34f0fd43a24d77be6e6ef324c7f3a8eb37587a7d",
         "datetime": 1791489840,
-        "summary": "OLDWICK, N.J., October 08, 2026--AM Best has revised the outlook to negative from stable for the Long Term-Issuer Credit Rating (Long-Term ICR) and affirmed the Financial Strength Rating (FSR) of A (Excellent) and the Long-Term ICR of \"a+\" (Excellent) of Queen City Assurance, Inc. and Vine Court Assurance Incorporated, both domiciled in Burlington, VT, and collectively referred to as Queen City Assurance Group (the group). The outlook of the FSR is stable."
+        "summary": "OLDWICK, N.J., October 08, 2026--AM Best has revised the outlook to negative from stable for the Long Term-Issuer Credit Rating (Long-Term ICR) and affirmed the Financial Strength Rating (FSR) of A (Excellent) and the Long-Term ICR of \"a+\" (Excellent) of Queen City Assurance, Inc. and Vine Court Assurance Incorporated, both domiciled in Burlington, VT, and collectively referred to as Queen City Assurance Group (the group). The outlook of the FSR is stable.",
+        "headline_cn": "AM Best将Queen City Assurance, Inc.和Vine Court Assurance Incorporated的发行人信用评级展望调整为负面",
+        "sentiment": "bearish"
       },
       {
         "headline": "Was The Run In Target Stock Hiding In Plain Sight?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=6998d5ebbf1191720a53a0ecafdfaf8420981807afd7344d78e26a5aa1aada5d",
         "datetime": 1791484998,
-        "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports."
+        "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports.",
+        "headline_cn": "塔吉特股价这轮上涨是否早有明显迹象？",
+        "sentiment": "bullish"
       },
       {
         "headline": "What Are Costco Investors Betting On?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=34045d124769cb9170aad222e84c7eaf1ca4b6843fcc12e163b344cb7f489e0a",
         "datetime": 1791482953,
-        "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for."
+        "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for.",
+        "headline_cn": "好市多投资者在押注什么？",
+        "sentiment": "neutral"
       },
       {
         "headline": "Is Kroger open on Columbus Day?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=31b341eeed7725e455803157467cbe7879a3c7d3179516614cb3735dc7db1c59",
         "datetime": 1791479820,
-        "summary": "Kroger grocery and pharmacy store hours vary."
+        "summary": "Kroger grocery and pharmacy store hours vary.",
+        "headline_cn": "克罗格在哥伦布日营业吗？",
+        "sentiment": "neutral"
       },
       {
         "headline": "Publix now has 10 Kentucky stores. Here’s how the grocer is growing in the state.",
@@ -8543,7 +8627,9 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=49d1395ae7bab88fb007f54d380c2cdd4a0ae42f8b824346ca51e197ebcb5fbe",
         "datetime": 1791471480,
-        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions."
+        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions.",
+        "headline_cn": "Arista面向AI的新型机架级以太网解决方案能否推动增长？",
+        "sentiment": "bullish"
       },
       {
         "headline": "AI Capex Efficiency Should Guide Your Capital Into These Two Hyperscalers",
@@ -12378,6 +12464,13 @@
     ],
     "P": [
       {
+        "headline": "What Are Everpure Investors Betting On?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=85a2f70411db67a50bbd7df7bcc3d4774dae50d6cdf68a0c04690dcadcd839e9",
+        "datetime": 1791510451,
+        "summary": "Shares of Everpure (P) trade at 77.7 times the company's adjusted earnings over the last twelve months, once stock-based pay is added back. That is a steep premium for a single year of profit. Look at the earnings projected for the next two fiscal years, however, and the valuation takes on a different shape. So what are buyers at this price counting on Everpure to deliver."
+      },
+      {
         "headline": "1 Growth Stock with Explosive Upside and 2 That Underwhelm",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=38b87fee1e9b1c8d19c3b12e11ceeb76c41016f18f3100a324bfa35133a6a7b9",
@@ -14006,7 +14099,9 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=53bbe4aa9c11aaa912b85bc6ec7e10cf64b2e86085ceb4c77aa34351fd789f03",
         "datetime": 1791458154,
-        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying."
+        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying.",
+        "headline_cn": "这家凭“剃须刀与刀片”模式驱动增长的垄断型企业，让我持续买入",
+        "sentiment": "bullish"
       },
       {
         "headline": "Tilray Brands, Inc. (TLRY) Reports Q1 Loss, Misses Revenue Estimates",
@@ -14188,6 +14283,13 @@
     ],
     "TGT": [
       {
+        "headline": "Target (TGT) On Its Merchandising Reset And The Case For More Upside",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ae399ba7f8b98d64134720b0d693f7a23068c7759e5d776af0d02f68bb007c88",
+        "datetime": 1791508603,
+        "summary": "Target (TGT) is bringing back its Simply Shabby Chic home brand on October 11, adding fresh bedding and seasonal decor to stores at accessible prices and giving investors another angle on the retailer’s merchandising approach. Recent trading has been choppy for Target, with a 1-day share price return of 2.54% lifting the stock to US$154.76, even as the 30-day share price return is down 4.89% and the year-to-date share price return is 53.97%. That short-term cooling contrasts with stronger..."
+      },
+      {
         "headline": "Jim Cramer Said It Was “Suddenly” A Market For Walmart (WMT) But Made A Big Prediction For Target (TGT)",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=e89d9f997bf89cd045d00ee9a981dccf4fc6414d4c971b424c9845181e36df61",
@@ -14199,21 +14301,27 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f9f5f36e2d46a569cc995c2ca01944721e1b0f58135637465ad8c75ffe422ef9",
         "datetime": 1791491656,
-        "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores."
+        "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores.",
+        "headline_cn": "沃尔玛的下一轮增长可能来自哪里？",
+        "sentiment": "neutral"
       },
       {
         "headline": "Was The Run In Target Stock Hiding In Plain Sight?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=6998d5ebbf1191720a53a0ecafdfaf8420981807afd7344d78e26a5aa1aada5d",
         "datetime": 1791484998,
-        "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports."
+        "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports.",
+        "headline_cn": "塔吉特股价这轮上涨是否早有明显迹象？",
+        "sentiment": "bullish"
       },
       {
         "headline": "What Are Costco Investors Betting On?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=34045d124769cb9170aad222e84c7eaf1ca4b6843fcc12e163b344cb7f489e0a",
         "datetime": 1791482953,
-        "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for."
+        "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for.",
+        "headline_cn": "好市多投资者在押注什么？",
+        "sentiment": "neutral"
       },
       {
         "headline": "Looking to Generate Passive Income From Stocks? 3 Unstoppable Dividend Stocks to Buy Now.",
@@ -15065,6 +15173,13 @@
       }
     ],
     "XOM": [
+      {
+        "headline": "Permian Resources, Granite Ridge Resources, ExxonMobil, and Viper Energy Shares Skyrocket, What You Need To Know",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d822aa33c77dd394b54d409b534ef96e6f8f772b14899f8719d3204f604248bb",
+        "datetime": 1791504969,
+        "summary": "A number of stocks jumped in the afternoon session after a Gulf tanker attack slowed traffic through the Strait of Hormuz, while hurricane-driven production halts shut in Gulf of Mexico output, the Financial Times noted."
+      },
       {
         "headline": "Nvidia, Apple, and Microsoft Spell Trouble for Index Investors",
         "source": "Yahoo",
