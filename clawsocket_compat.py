@@ -91,6 +91,50 @@ class ClawSocketClient:
         defaults = ["claude-opus-4-6", "claude-sonnet-4-5-20250929"] if requested.lower().startswith("claude") else ["gpt-6-astra", "gpt-5.4", "gpt-5.3-codex", "gpt-5.2"]
         return list(dict.fromkeys(([configured] if configured else []) + defaults))
 
+    # --- 运行时路由失败判定 / 备用模型 ---
+    # 这两个方法在 _request() 的真实 POST 全部失败分支里被调用（见下方 _request）。
+    # 判定只认“模型路由/模型不存在”类错误：限流(429)、超时、5xx 不算，
+    # 否则一次普通的网关抖动就会误触发跨模型降级。
+    _ROUTE_ERROR_MARKERS = (
+        "missing a model", "unknown model", "model not found",
+        "invalid model", "no such model", "unsupported model",
+        "model does not exist", "is not a valid model",
+        "model_not_found", "model route", "route error",
+    )
+
+    def _looks_like_model_route_error(self, exc) -> bool:
+        """判断异常是否属于「模型路由失败」（不是限流/超时/网关 5xx）。"""
+        msg = str(exc or "").lower()
+        if not msg:
+            return False
+        for marker in self._ROUTE_ERROR_MARKERS:
+            if marker in msg:
+                return True
+        # V16 实测形态：HTTP 400 "Request is missing a model"
+        if "model" in msg and ("http 400" in msg or "http 404" in msg):
+            return True
+        return False
+
+    def _runtime_fallback_candidates(self, requested: str) -> List[str]:
+        """真实 POST 阶段路由失败时的运行时备用模型。
+
+        V15.3 约定：唯一允许的运行时备用是 claude-fable-5-1，
+        可用 CLAUDE_RUNTIME_FALLBACK_MODEL 覆盖（兼容 CLAUDE_FALLBACK_MODEL）。
+        不返回 requested 自身，避免自兜底。
+        """
+        configured = self._clean_model_id(
+            os.environ.get("CLAUDE_RUNTIME_FALLBACK_MODEL", "")
+            or os.environ.get("CLAUDE_FALLBACK_MODEL", "")
+        )
+        defaults = ["claude-fable-5-1"]
+        requested_clean = self._clean_model_id(requested)
+        out = []
+        for m in ([configured] if configured else []) + defaults:
+            m = self._clean_model_id(m)
+            if m and m != requested_clean and m not in out:
+                out.append(m)
+        return out
+
     def _resolve_model(self, requested: str) -> str:
         requested = self._clean_model_id(requested); self.last_requested_model = requested; self.last_model_fallback = False
         available = self.available_models
