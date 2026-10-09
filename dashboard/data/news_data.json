@@ -1,96 +1,204 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-09T04:42:45Z",
+  "generated_at": "2026-10-09T14:11:36Z",
   "market_news": [
+    {
+      "headline": "Two men deny carrying out surveillance for Iran of Israeli embassy in UK - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxPZm1Rb2hka05MbFN4QTJTSTBOVWxCbHpFV0JTVjcwY2w3MWR5cFFfX09nNEsxNlRXdk02NDlVWEFFZFJ4bnJETUNyZXNqb1lycEJ3N3hFVmxMLW1qUEJ3M3I2XzJBbW5WSDBsal9LS19rX0lobTJuZWV4NG45T2tPVkdOcW5pM2YzdjBaR0NiMGdLRnY3dHhyU2dQRmFtWHlMTzZnSHdIckUwcVV1UkVxNUNCZ1JLNUU?oc=5",
+      "datetime": 1791553071,
+      "summary": "Two men deny carrying out surveillance for Iran of Israeli embassy in UK  Reuters",
+      "headline_cn": "两名男子否认为伊朗监视以色列驻英国大使馆",
+      "sentiment": "neutral",
+      "rationale": "司法个案，对市场无直接影响"
+    },
+    {
+      "headline": "Tech stocks' resilience has puzzled investors. The options market could hold some clues",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/09/tech-stocks-resilience-has-puzzled-investors-the-options-market-could-hold-some-clues.html",
+      "datetime": 1791551250,
+      "summary": "In the options pits, traders are the most prepared for a tech pullback since early Summer.",
+      "headline_cn": "科技股韧性令投资者困惑，期权市场或提供线索",
+      "sentiment": "neutral",
+      "rationale": "分析性文章，未给出明确方向信号"
+    },
+    {
+      "headline": "Jim Cramer's top 10 things to watch in the stock market Friday",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/09/jim-cramers-top-10-things-to-watch-in-the-stock-market-friday.html",
+      "datetime": 1791550892,
+      "summary": "Stocks are bouncing this morning after yesterday's sharp tech-driven selloff.",
+      "headline_cn": "吉姆·克莱默：周五股市十大看点",
+      "sentiment": "neutral",
+      "rationale": "常规市场前瞻，不含方向性信息"
+    },
+    {
+      "headline": "Houthi strikes on Riyadh airport killed three Saudis as war escalates - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQMEFCQWZhWGJXa25ZeDBOZlE3b3RWQldSSUM5MmRDd1JqdFNvbl83R19nc014ek1YTW1iQlBqbW1paUlManF3UzlNT21BTl81cG5NNGQ5MWhWOWZOMnpQamN6TmxrUFVLVXRCaTl2T0JYclhVc3dvLUpNeG5wY3JSci02OHVtWmRpemp2UExRUGRoTnpyN3lKUGlRQ3FHdS1pZDNvNVM0bWE2djAzNzNvNTg4RVdXVEhw?oc=5",
+      "datetime": 1791547044,
+      "summary": "Houthi strikes on Riyadh airport killed three Saudis as war escalates  Reuters",
+      "headline_cn": "胡塞武装袭击利雅得机场致三名沙特人死亡，战事升级",
+      "sentiment": "bearish",
+      "rationale": "中东冲突升级，推升风险规避情绪"
+    },
+    {
+      "headline": "Ferrari’s chairman is bullish on AI. He’s less certain how businesses will cash in",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/09/john-elkann-ferrari-ai-technology.html",
+      "datetime": 1791546861,
+      "summary": "Ferrari chair John Elkann played down AI bubble fears, but acknowledged investment in the technology could outpace revenue generation.",
+      "headline_cn": "法拉利董事长看好AI，但对企业如何变现存疑",
+      "sentiment": "neutral",
+      "rationale": "乐观与疑虑并存，影响相互抵消"
+    },
+    {
+      "headline": "Kalshi traders see high odds that more than 5,100 data centers will be planned or operating before 2027",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/09/kalshi-traders-see-high-odds-of-5000-plus-data-centers-by-2027.html",
+      "datetime": 1791546844,
+      "summary": "Despite the growing backlash against data centers, Kalshi odds show the buildout will continue to expand.",
+      "headline_cn": "Kalshi交易者押注2027年前规划或运营的数据中心将超5100个",
+      "sentiment": "bullish",
+      "rationale": "数据中心扩张预期利好AI基建需求"
+    },
+    {
+      "headline": "EU aviation agency widens Saudi airspace alert, citing growing risk from Houthi strikes - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxObUF1S2Y0LTFHM0JDbXRLY05aMmVvUDJqOU1ZNjEtLVlDdFVMelgyTlN0d3BvY0lrLVJkZEc4VGI0eEMtWTVnbDBGQnNVSGx1bklCQkxiNEs3RzFlWklGSWtoMFpyLV9zb2N6Y1VlVjQ2b2pqMy1ld0IyZ2RQMGt3YmFRaWQyUFBrYnVua2VyWGdyQW4wU0xGWm91d2prUlRLSHZrZXNwZjl0MVBuQV9ZeFZmZi15Nmh1VGFvV25xeVJfYkNGWkE?oc=5",
+      "datetime": 1791545433,
+      "summary": "EU aviation agency widens Saudi airspace alert, citing growing risk from Houthi strikes  Reuters",
+      "headline_cn": "欧盟航空安全局扩大沙特空域警告，称胡塞袭击风险上升",
+      "sentiment": "bearish",
+      "rationale": "航线受限推高航空成本，地缘风险加剧"
+    },
+    {
+      "headline": "Delta CEO: 'Safety is going to make the call' on launching Saudi Arabia flight",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/09/delta-riyadh-flight-safety-houthi-attacks.html",
+      "datetime": 1791544322,
+      "summary": "Delta is weighing whether to continue with its Riyadh, Saudi Arabia flight debut as planned.",
+      "headline_cn": "达美航空CEO：是否开通沙特航线将以安全为准",
+      "sentiment": "neutral",
+      "rationale": "仅表态谨慎，航线计划尚无定论"
+    },
+    {
+      "headline": "Bipartisan majority of Americans blame Trump policies for rising costs, Reuters/Ipsos poll finds - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQaXotRVVHVGluZXJPazBzWGR5YjdFcjFVVWdvZS1Ib2FVNEJoSmdkcTAweHllQzR3STl3RHVZUkYzNy1hOWlPSGZIWG5pNEpvcXBpOGNNNmsxbG0tRllvSjVlRFVwalRsbnhxWV9pSm5Oby1pSzVtUnhYN0RwQmxDMFVmVWRaMXNoTmxGN1ZOb1dVUTY3M0dmS0dZbWh1X2t0RnAwUksyZDlWakFjQUl5TUFOLTBCTTFCYlFmV1J3?oc=5",
+      "datetime": 1791543689,
+      "summary": "Bipartisan majority of Americans blame Trump policies for rising costs, Reuters/Ipsos poll finds  Reuters",
+      "headline_cn": "路透/益普索民调：两党多数美国人将物价上涨归咎于特朗普政策",
+      "sentiment": "bearish",
+      "rationale": "通胀压力与政策不确定性压制情绪"
+    },
+    {
+      "headline": "Trump's moves to boost diesel supplies have not yet lowered prices - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPSC1DZmo5R2daREU0YTBRSFBZTE04NW92WFQ3eXhLeGhiRlFyTEZBbHdWT2xuczBRYmtWcmlqMVJKTUo0Vk9KTEk1OU1jYUo1NlQ3Zi1KTzhmc1pmZkhQS01OajhXWHR1aWpQVEpuRTllX0RSd3ZmR3ZKMG51MlJRNGQtX3BkdUpfOHFGejVtbnhMUGlGNVdDa2lISkd5dFdmNWc3dFpRZnJuNGJ6M3duQ1pJcXo?oc=5",
+      "datetime": 1791541191,
+      "summary": "Trump's moves to boost diesel supplies have not yet lowered prices  Reuters",
+      "headline_cn": "特朗普增加柴油供应的举措尚未压低价格",
+      "sentiment": "bearish",
+      "rationale": "燃料成本居高不下，通胀压力持续"
+    },
+    {
+      "headline": "Three Saudi nationals killed in attacks on Riyadh airport, aviation authority says - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNSHNYa055VWx5WldTdndPaXJnREN3Q1BDX1hzTVE4cEdwNmM0bU9YbE1oc0Ryb2VOenROdjd3NDlaRy1hOGU1MnlxVE9nWk45Znh5Rm1iVXE3TGpjY2ZXRGhmWV9QbkhGeURIRXBDRTdLWElZeG9mRldGbE9wSnV4V1QyU0xFUFlKUXFna3RFYlpVc2JHS2RXOS1GNEkxQmZiWFZxU01VNk0yZ25ieF9ydWN4Ry1nVk54bFhR?oc=5",
+      "datetime": 1791535194,
+      "summary": "Three Saudi nationals killed in attacks on Riyadh airport, aviation authority says  Reuters"
+    },
+    {
+      "headline": "Treasury yields steady as Trump strikes diplomatic tone on Iran ahead of midterms",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/09/us-treasurys-bond-yields-midterms.html",
+      "datetime": 1791534290,
+      "summary": "Yields were largely unchanged Friday as investors assessed President Trump's latest comments on Iran."
+    },
     {
       "headline": "Scenes from across France as student protests spread - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMikwFBVV95cUxOb21oSm9NOG1mT29xbTY2STJqaHBvLWRkRk1hSWpXY0tndDZTd000NkxIQUR1cUJBMmNSYkxRZl8zd0lyS2xlMVBpVm53UVlFS0xTblp1UnQteXBJTUVkUUJkSHdoOUhObGw0VV9DSEJkbzMxNlFmOXJTbHpxZFNfZ3J1emw1ZU9xQmJNNVJjckxnQUU?oc=5",
-      "datetime": 1791518855,
-      "summary": "Scenes from across France as student protests spread  Reuters",
-      "headline_cn": "法国各地学生抗议蔓延现场",
-      "sentiment": "neutral"
+      "datetime": 1791529655,
+      "summary": "Scenes from across France as student protests spread  Reuters"
+    },
+    {
+      "headline": "China to resume October fuel exports after a brief halt, four trade sources say - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxON1hqTEMxUXNhdTUya2dwTlA2VVktRm9QeWlYcDRJWkFiaGg4aXhpcTBFcnJETDJUZDZQRHdIdVBiVFl6UFdNU0VCdFlTRHhaaVk3akVSazBsN3QwOXBSUHFjckM4TWc4LUtIdzNyc2kyM0RjclFNOG1QYkplX3ljOHBFR1NibFRwUS1QMHAyd3ZhZjZTZGtoMmVjbGsyUWdaQ01FV21jSFFiM1FrQ0U4eHRYOTRUZlRTeTRlRFJVOFh4RVk?oc=5",
+      "datetime": 1791516480,
+      "summary": "China to resume October fuel exports after a brief halt, four trade sources say  Reuters"
     },
     {
       "headline": "Oil falls as Trump comments on Iran talks ease supply concerns - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxONW0wejJNQmpGTE9heFBmZG8wTWE5a010VFNMSDBqcThNXzBFTjZkbWF3NnpxSWxoVkRJSEhMcDk4VDh5OVp3bzlZNzdiS0pNTnd6aGkwQVZsU0JiOU9wb0k1ckN1V2ZUVl9sTFRuZnVhLXFlaDUwZGIxT2VxNW1RZUwyNlJ3c2ZxRkdONll5RVdtTnlfcDllN0pnLWE4VU1FblRvbHdkTkIwbHNk?oc=5",
       "datetime": 1791512880,
-      "summary": "Oil falls as Trump comments on Iran talks ease supply concerns  Reuters",
-      "headline_cn": "特朗普就伊朗谈判发表评论缓解供应担忧，油价下跌",
-      "sentiment": "bearish"
+      "summary": "Oil falls as Trump comments on Iran talks ease supply concerns  Reuters"
     },
     {
-      "headline": "Gold rises on softer dollar, easing yields; Fed outlook in focus - Reuters",
+      "headline": "Gold adds over 1% on easing oil prices, softer dollar - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQVl80MTVLVXR1WWd1MGxyNFRNN1VaNlJ2WFNIeGlrLS1HTGwzc1pZZ3FqaFZyOFBZcDk0VGRnMzVvSUtiSGFyR3c2Z29Fa25XZk1xX0JlWGpJZVlNaEJhWXhoenc3enFGZGZ3QnVUaGg1U2ZTNE9GZGxfTDIyb3hoMl9ycTNsOHpHeWdKRXk1VmdZZ1VITnhMR29NQ3JYUmV4TXJpemVRaw?oc=5",
       "datetime": 1791511080,
-      "summary": "Gold rises on softer dollar, easing yields; Fed outlook in focus  Reuters",
-      "headline_cn": "美元走软收益率回落推动黄金上涨，关注美联储前景",
-      "sentiment": "bullish"
+      "summary": "Gold adds over 1% on easing oil prices, softer dollar  Reuters"
+    },
+    {
+      "headline": "Pepsi shares rallied despite cutting profit guidance. Where Cramer stands on the stock now",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/08/pepsico-earnings-guidance-cramer.html",
+      "datetime": 1791499836,
+      "summary": "CNBC's Jim Cramer said improving sales growth and investments to revive demand are encouraging signs, though PepsiCo still faces significant challenges."
+    },
+    {
+      "headline": "PODCAST: Trump pauses Iran strikes, Microsoft visa suspension, French mayor (Updated) - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxON2dMNjlPU3pvNEhhME5TaVk0SlloS1Zwd081SFVJRkdHS3IyUzhkdmFWTGg0WUZCMnNXR0JEaXE3RTFpLS0zQ0J1NXhiSXBFMnlmT3hrdFJqOTNuTlBBblpERTNTQVpnWFF4c0xpd1luMGF6SjMyX3F1bTJVVGlLU3lveW1TYmxVUWFRLVFyOGpNVkctR0ZiZEJ3bk9iZXdpUlhQYzhGTWxidw?oc=5",
+      "datetime": 1791490821,
+      "summary": "PODCAST: Trump pauses Iran strikes, Microsoft visa suspension, French mayor (Updated)  Reuters"
     },
     {
       "headline": "Trump says comment that Iran could 'take out' Los Angeles was misinterpreted - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQMlo5Y2pEcmFzbDdDSTdjYUdlR2t5dmlvMG44Q19yX3BKWEtLZC1yaXBCRUlYN1JXUDRsRERWbDQtUkhQSUJFSU9yZjVaUGppS25KQWpiUWswUU41eUpqU2c1RF9ZSGhJN2NySWxVQXROQ3ZQNUNYOTc1RXFqcnpFaFVJNmM3VDVFYzhWbnJWRmtoSnBBRGVQOF9jdy1ad21SVU9OX1RHS3NmM2ZKWmpkak5rNWg2dnZxWFpN?oc=5",
       "datetime": 1791489390,
-      "summary": "Trump says comment that Iran could 'take out' Los Angeles was misinterpreted  Reuters",
-      "headline_cn": "特朗普称关于伊朗可能'摧毁'洛杉矶的言论被误读",
-      "sentiment": "neutral"
+      "summary": "Trump says comment that Iran could 'take out' Los Angeles was misinterpreted  Reuters"
     },
     {
       "headline": "Treasury yields are 'really, really high,' but can come down soon, Bessent's new adviser says",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/10/08/treasury-yields-david-zervos.html",
       "datetime": 1791488294,
-      "summary": "The comments from David Zervos come after the 10-year and 30-year yields marched to 24-year highs in recent days.",
-      "headline_cn": "贝森特新顾问表示国债收益率'非常非常高'，但很快会回落",
-      "sentiment": "bullish"
+      "summary": "The comments from David Zervos come after the 10-year and 30-year yields marched to 24-year highs in recent days."
     },
     {
       "headline": "New data shows Starbucks turnaround is working, but Chipotle takeover report slams shares",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/08/new-data-shows-starbucks-turn-is-working-but-chipotle-takeover-report-slams-shares.html",
       "datetime": 1791486487,
-      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading.",
-      "headline_cn": "新数据显示星巴克转型见效，但Chipotle收购报道重挫股价",
-      "sentiment": "neutral"
+      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
     },
     {
       "headline": "We're buying the dip in a stock being punished for something it's actually insulated from",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/08/were-buying-the-dip-in-a-stock-being-punished-for-something-its-actually-insulated-from.html",
       "datetime": 1791485367,
-      "summary": "We waited and watched patiently.",
-      "headline_cn": "我们正在逢低买入一只因实际上不受影响的因素而受惩罚的股票",
-      "sentiment": "bullish"
-    },
-    {
-      "headline": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQS3RjWlUtbVhIS3V2UlRkMFZOT3pESFlCZGVKcVp5N1lwX1JCTGRrXzI3dXdHT3diVGZUWENHREJ3MW5zQUpRamZpbkV0dTdoNDhRUzl6OW5FT2JZSjZHaHY2T2ltMm1fNTZVNHhuQzdZTmJVRHhSbE1vYnNpZTR4SGJONWhxVWxoYmxBLW1SRkpBNlROdHBxN3VjMUtpcHFaVzgzQ1ZvcmIyVllXcjBhSTY3TlhuLXpQRExkZmYtd29TOEppUkYwOA?oc=5",
-      "datetime": 1791484955,
-      "summary": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say  Reuters",
-      "headline_cn": "消息人士称胡塞武装升级袭击，利雅得机场飞机受损",
-      "sentiment": "bearish"
+      "summary": "We waited and watched patiently."
     },
     {
       "headline": "US imposes fresh sanctions on Iran's shadow fleet - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxQUm45bHRGMFlmNEV2d2lTTkFvQURQckhMSGhYRlhxWUtOb1d2cGhCTnVXUEJaMF94S2xZNXFWMF9ONTVraWdWdnVOME04c2xyMk5tRnhHVjI3YVFmQTZIWVR6MXhDUUNram9tRjlsejRlRXVQUERDX3NkY2ZIVmlsOV9Ic0wxOVNPSmVCRmtVVExGcWZNY0tCTw?oc=5",
       "datetime": 1791484524,
-      "summary": "US imposes fresh sanctions on Iran's shadow fleet  Reuters",
-      "headline_cn": "美国对伊朗影子船队实施新制裁",
-      "sentiment": "bullish"
+      "summary": "US imposes fresh sanctions on Iran's shadow fleet  Reuters"
     },
     {
       "headline": "We're adding to our position in a hard-hit stock before important catalysts arrive",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/08/were-adding-to-our-position-in-a-hard-hit-stock-before-important-catalysts-arrive.html",
       "datetime": 1791484003,
-      "summary": "This is our second stock purchase on Thursday.",
-      "headline_cn": "我们正在重要催化剂到来前增持一只重挫股票",
-      "sentiment": "bullish"
+      "summary": "This is our second stock purchase on Thursday."
     },
     {
       "headline": "Moroccan defense firm MMI targets turret deliveries in March 2027 - Reuters",
@@ -98,13 +206,6 @@
       "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQOGtuWDhETzgwLUI4QlB0cnVKQWtuZjIybG1ROF9HVHVpRGR2S0Z6Q1dGeUFENnZDa0l3SzNGaUNpX05nOUNaQTV0NGUwMGdyQ01fSEw2ZzQ5eGhPWVZuOUpRTlVfSHM0WlluMDZRc0tBR2hDcXFIMVJCcUg4MnE2bDdORmxiV1ItVDBCNkN3UU5RZktvcTh0eVdadExMTUdIRDZ5dGg1U0t0Z3VBTXhMZzc4b3RKa3pqZElMNmJEM0pyQQ?oc=5",
       "datetime": 1791483978,
       "summary": "Moroccan defense firm MMI targets turret deliveries in March 2027  Reuters"
-    },
-    {
-      "headline": "Trump says US will not attack Iran before midterm elections in November - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNMmV2ZUhoRklKSzBPaFkzWHVFdkwxVDlVVU8tdDV2NXc4NEkxTjZSTVhoaklIeTlJX3BCUTFkRUREY1VDVGpTY1lhZEQ4OHgyRG81S0RLa0JJVEZHTWpiUFJVRy0xZmVSWEpVbDZsVFBSRzZ4bmw2RnhtMXlBelJ1Vi1GUnVuZ3htemdTdExuTktpQ2dKdzhFRmRMd0MwMlYtd3JPb1J0NVlKcVNtWUlNNHRoNVFWaFBWUHNTdg?oc=5",
-      "datetime": 1791480159,
-      "summary": "Trump says US will not attack Iran before midterm elections in November  Reuters"
     },
     {
       "headline": "Lufthansa, Indian airlines suspend flights to Riyadh after Houthi attacks - Reuters",
@@ -119,6 +220,20 @@
       "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPY0RkSExrMDJ0QVQySHp6M1RMbEpSRXA5U2hUZXZINGM1Vk03b0lsR2dRZ3h1SGh4OXNHclpDT0RuYWFHM2d3SXk1YzVkTXpkckZHc2syWllMUFgwdnpaaXZhWXk2bkxEdEl2U3F2YzJhaWVBcmVVbGV6d0RiY09Fb2lzMEYxOGVJZ3VmbERDSlVZQnJfYWJ4M3NHT3hQZ1dLUVBzcVhXRl9YR1c2aDMzM3o3RzNBR0FlMU9DYld0emJBR1pid0lDajNtQ0s?oc=5",
       "datetime": 1791477349,
       "summary": "Turkey's foreign minister says Ankara weighing Saudi defence support, rules out offensive role  Reuters"
+    },
+    {
+      "headline": "Trump says US will not attack Iran before midterm elections in November - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNMmV2ZUhoRklKSzBPaFkzWHVFdkwxVDlVVU8tdDV2NXc4NEkxTjZSTVhoaklIeTlJX3BCUTFkRUREY1VDVGpTY1lhZEQ4OHgyRG81S0RLa0JJVEZHTWpiUFJVRy0xZmVSWEpVbDZsVFBSRzZ4bmw2RnhtMXlBelJ1Vi1GUnVuZ3htemdTdExuTktpQ2dKdzhFRmRMd0MwMlYtd3JPb1J0NVlKcVNtWUlNNHRoNVFWaFBWUHNTdg?oc=5",
+      "datetime": 1791476580,
+      "summary": "Trump says US will not attack Iran before midterm elections in November  Reuters"
+    },
+    {
+      "headline": "COMMENTARY: Energy Watch: War within a war - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxQSlZtM19hdmFLVHVZYldhMHlSOEZRUkI3NWxzN202Z19MbHFxMk4xckR2LXhOQWtHVUkwd3dCR3BxcEdILWFfY083LXFNZThNdHEyUVI4UjNVU2ZRTDQ0eXl3UmY4ZndYZElSb2lMVm5Sck5FenJqbDhYajA4SHdZS2JFUmZlT0dENVVVdG9ieVQ0cGxIX21yemN2Vmg?oc=5",
+      "datetime": 1791476180,
+      "summary": "COMMENTARY: Energy Watch: War within a war  Reuters"
     },
     {
       "headline": "We're putting some of our large cash pile to work in a beaten-down consumer name",
@@ -236,7 +351,7 @@
       "headline": "High gasoline prices drive EV sales surge in the Philippines - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNNnRiRDZMYXY5YkpoU1VFSHB3Q1BJNF9ydTVDdTBSTUZTekxLNjFCVElmNDdycVFNUXlmcy1QbWY2aXUtQm1MYi1oV2dRTUE2aDNBdEVPdEJkekZUYVRuQUNiR1I0WjFjWUlvQ1NOZ1owUjRrYmNSZ1VqSWlHQ280U1VyUTZSWjZKVU5UYWVlUFVKNTN5VmVlX0JfS19Ta2dob2c0eWpHV1g?oc=5",
-      "datetime": 1791462943,
+      "datetime": 1791462900,
       "summary": "High gasoline prices drive EV sales surge in the Philippines  Reuters"
     },
     {
@@ -266,6 +381,20 @@
       "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQbWZKUzZnT1ZUaVhPYXViX3l6TnZVYW94MlB5cG5IbjVYVGdSRmdiWkpTNWdxbnFYa3pLbkt1YWkyQUFiTGRtbGpoTW41cmpialRINlBucTMwX2RiTEdpUzM5MGI4c2FtVDE0dGUyazJNRnpPOUtPMjNYcDd0MEduam1yNWtfdUpPUFJjSE8yOHFuVWx2RWZUNHhpMkIwX0NtcHRsaFlwMnNxWmhSX1lScg?oc=5",
       "datetime": 1791460404,
       "summary": "Ryanair's O'Leary says 'insanely higher' jet fuel cost could remain into 2028  Reuters"
+    },
+    {
+      "headline": "Ex-Flipkart Executives press Walmart to buy out their stock options",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-08/ex-flipkart-execs-press-walmart-to-buy-out-their-stock-options",
+      "datetime": 1791459644,
+      "summary": "With no timing for a Flipkart IPO, eight former C-suite and senior executives said Walmart buying their shares would let them liquidate holdings"
+    },
+    {
+      "headline": "AI bubble risks worst S&P 500 crash since 2008, strategist says",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-08/ai-bubble-risks-worst-s-p-500-crash-since-2008-strategist-says",
+      "datetime": 1791459284,
+      "summary": "The head of market strategy at a London investment bank has a stark warning for investors: the artificial-intelligence trade may soon be over in what could trigger the most severe market crash since the global financial crisis."
     },
     {
       "headline": "Russia, China hypersonic missile threats fuel need for space defense, satellite CEO says",
@@ -303,11 +432,25 @@
       "summary": "In an amicus brief supporting New Jersey regulators in their battle against Kalshi, the NFL argues sports prediction contracts are effectively gambling"
     },
     {
+      "headline": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQS3RjWlUtbVhIS3V2UlRkMFZOT3pESFlCZGVKcVp5N1lwX1JCTGRrXzI3dXdHT3diVGZUWENHREJ3MW5zQUpRamZpbkV0dTdoNDhRUzl6OW5FT2JZSjZHaHY2T2ltMm1fNTZVNHhuQzdZTmJVRHhSbE1vYnNpZTR4SGJONWhxVWxoYmxBLW1SRkpBNlROdHBxN3VjMUtpcHFaVzgzQ1ZvcmIyVllXcjBhSTY3TlhuLXpQRExkZmYtd29TOEppUkYwOA?oc=5",
+      "datetime": 1791450660,
+      "summary": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say  Reuters"
+    },
+    {
       "headline": "COMMENTARY: Battle for Mideast oil market share has already begun - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPT1RyVmNydDh5ZVFSUExTVnBMZElEeHF1QUVDWTh6SmV6R0wxOV9yZno1clF4dW5fUlFzcnJIWE9ZMG1qM0MtZVRtVC1yNHJEZEJDVmhCZFBOU2RxNUxfdURsVXV2TktONlJ5OEd4NEJxaGZLcmp3X1RNcFllX3k0NzdoU05qVGVBa0hqb2RDNE1vZHBVQ1liTjU4c2J3R215UGR1Nnc0eFlsaW1rVW1lUlYzTFZLZlRvcXc?oc=5",
       "datetime": 1791439200,
       "summary": "COMMENTARY: Battle for Mideast oil market share has already begun  Reuters"
+    },
+    {
+      "headline": "Global stocks drop, Treasuries decline as Brent tops $102",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-07/stock-market-today-dow-s-p-live-updates",
+      "datetime": 1791434034,
+      "summary": "The MSCI All Country World Index — a key barometer of global stocks — fell 0.2%, pulling further away from its record high after coming within 1.5% of the peak earlier this week"
     },
     {
       "headline": "British diplomats to remain at scaled-down mission in Jerusalem - Reuters",
@@ -364,6 +507,13 @@
       "url": "https://www.bloomberg.com/news/articles/2026-10-06/apple-s-smart-home-push-includes-doorbell-lock-thermostat-codeveloped-with-lg?accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJTdWJzY3JpYmVyR2lmdGVkQXJ0aWNsZSIsImlhdCI6MTc5MTMyMDkxNiwiZXhwIjoxNzkxOTI1NzE2LCJhcnRpY2xlSWQiOiJUTUdDN0lLSkg2VjUwMCIsImJjb25uZWN0SWQiOiJDNEVEQ0FFMUZBMDU0MEJFQTI0QTlGMjExQzFFOTA4MCJ9.LSK9jlXYPFHac9EpcJCErTgJNAwqmpV6qFoORcKffVo",
       "datetime": 1791410563,
       "summary": ""
+    },
+    {
+      "headline": "The status of Iran's uranium enrichment programme - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOSnlJOEpCTFRFNHYydjJsZE5xaXBTQUZtbGxveEo4MlJlYlR2V083Z29pLXV4TFdxWS1zTjVNTS1fWHh4Zkt4TTNqcXIzVDhiOGluLUZoaDNtS216c3R0WVQ3VmJkY0xFVUgzWVpKVGZjbTFlRmpKdnB4MzBIT055cWpVMGJrV29Db2llb2tlTVhMU2RMSFJrS19WUQ?oc=5",
+      "datetime": 1791409745,
+      "summary": "The status of Iran's uranium enrichment programme  Reuters"
     },
     {
       "headline": "Trump says he deserves Nobel Peace Prize but has doubts he will get it - Reuters",
@@ -448,13 +598,6 @@
       "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxNQ2c2aGxCandROGI0dlNXUHpVazlWYU1WVUZ0VGRqVVo0RHQxNTB5eV9lckg0SzZVSVltVzFJeldSY0J3WHhIX2xQNmlvUVhiZExKSXkzZ1lsaWlWZERaVkptRVRIOGludklraGhyYklpa1MwOTRKcXp2b1Z0MUl3U200TWk?oc=5",
       "datetime": 1791388440,
       "summary": "NEWSLETTER: The war's explosive new front  Reuters"
-    },
-    {
-      "headline": "The status of Iran's uranium enrichment programme - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOSnlJOEpCTFRFNHYydjJsZE5xaXBTQUZtbGxveEo4MlJlYlR2V083Z29pLXV4TFdxWS1zTjVNTS1fWHh4Zkt4TTNqcXIzVDhiOGluLUZoaDNtS216c3R0WVQ3VmJkY0xFVUgzWVpKVGZjbTFlRmpKdnB4MzBIT055cWpVMGJrV29Db2llb2tlTVhMU2RMSFJrS19WUQ?oc=5",
-      "datetime": 1791387720,
-      "summary": "The status of Iran's uranium enrichment programme  Reuters"
     },
     {
       "headline": "Jim Cramer's key to Wednesday's market — plus, relief for Intel after a concerning report",
@@ -588,151 +731,39 @@
       "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPMEpwOEJxamRUYWRiRS1XT1lsUDlTcWx6WnhhblZWODZ1b1NpN1ZRTWJXMjZjbVR1SnplZEMwYmYyNXpQOGRnanRaenFiNUVBdVY2bmZxUURyb1RUdktXUGpLaVdGUThRLUY1Z1BEMXItUEZoVUlWbE04Vy11ZjlpajJsZ3l2QVd3N2NIREJwZWFFZ0RJbThweG8zZjJGeDdtbThuUEJacHVFRnh3QWFNd3hrLXA4QQ?oc=5",
       "datetime": 1791367063,
       "summary": "Iraq devalues dinar to 1,520 per US dollar, state news agency says  Reuters"
-    },
-    {
-      "headline": "India faces widespread power outage risk as coal reserves run out at plants",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-07/indian-power-plants-depleted-coal-reserves-raise-blackout-risk",
-      "datetime": 1791367062,
-      "summary": "As of October 4, some 69 power stations — more than two-fifths of the nation’s coal power fleet — had fuel for just four days or less, a level monitored as a minimum by plant operators"
-    },
-    {
-      "headline": "Rubio says Tehran missed 'multiple' chances for nuclear deal amid Iran stalemate",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/07/us-iran-war-trump-hormuz.html",
-      "datetime": 1791366185,
-      "summary": "Iran has failed to take advantage of \"multiple opportunities\" to reach a deal on its nuclear program, Secretary of State Marco Rubio said Wednesday."
-    },
-    {
-      "headline": "Google ordered to halt work on two data centers in ‘Texas of Europe’",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/07/google-finland-data-center-halt.html",
-      "datetime": 1791365162,
-      "summary": "Finland has emerged as a key location for data centers amid the AI boom."
-    },
-    {
-      "headline": "Reliance drives India’s Venezuela oil imports to seven-year high",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-07/reliance-drives-india-s-venezuela-oil-imports-to-seven-year-high",
-      "datetime": 1791361707,
-      "summary": "Venezuelan crude deliveries to India are expected to more than double to about 465,000 barrels a day this month, from 196,000 in September"
-    },
-    {
-      "headline": "India joins global rate-tightening wave with first hike in nearly 4 years - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPQlZCVTJBN0oxSFUtU3pHLXZBVzVpQVJfMXRkVnRMMWFXeUhrczVkVmRkelVJckVZOGc4QVZkVDBlSDRCVE1XMEJEUXBmWlVGaklQcDRxUTlFNVl0a3h6TlhqWmpVT1gyMmR4VTZtdmRWSTU3SUtPeGZPYndYdjlaVEsxWUdJU2U1RjhaS3Z2YU8xZ3lHbXVsaklld1hCTkRzS0lpTGJzcnJNX01TallDRQ?oc=5",
-      "datetime": 1791358969,
-      "summary": "India joins global rate-tightening wave with first hike in nearly 4 years  Reuters"
-    },
-    {
-      "headline": "Israelis mark three years since October 7 as Palestinians mourn Gaza's destruction - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPVEc3R0oyN1N1QkF0Q09Zb1hfWURTdDRRSnFvaVNlQU42cXJCNEhNNXdLOW11NTRsVi1VVlJKV0NSTm1CMVg3c3RMQ3pHcEV3VGpCNGF1UHBobHVhYkFQY0pNS2NvMXBQMWxSTEVhQTF6a01jRzBpXzFKajQ2NWxIZm5BdGQ4azhfYnBwVnh1enVzc04xeElNSTZFMHcyNmlfUElEM2s3RVFRXzFScUcyNUlfbFVrSjA5LVNjMlhQZzVBUQ?oc=5",
-      "datetime": 1791349380,
-      "summary": "Israelis mark three years since October 7 as Palestinians mourn Gaza's destruction  Reuters"
-    },
-    {
-      "headline": "Morning Bid: Who's the boss? - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE9pTkNXeGt4a29GamFjUnZ6UnlIdEtFZGFZSHk4UzFUWUZpcHVhNEpQNjI3OWxtZE5FbVJ5c3cteEhmOVVQUWZ6OWNmMXRNSEp4LTdaeGlIWVFESWlpSDcxcDQ1ejdPNnJqMXhLdHE1RmY2ZUhYWTJpWnFyRmhNSVU?oc=5",
-      "datetime": 1791347520,
-      "summary": "Morning Bid: Who's the boss?  Reuters"
-    },
-    {
-      "headline": "Maersk’s owner seeks investments in Asian startups with new office",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-06/maersk-owner-seeks-investments-in-asia-startups-with-new-office",
-      "datetime": 1791345331,
-      "summary": "The firm, funded entirely by the billionaire Maersk family with no external investors, will open the office — its first outside of Denmark — this week. It has more than $50 billion of net assets."
-    },
-    {
-      "headline": "AustralianSuper eyes India, Japan for Private equity",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-06/australiansuper-eyes-india-japan-in-asia-private-equity-boost",
-      "datetime": 1791345097,
-      "summary": "Private equity penetration remains much lower in Asia, she said, presenting “more and more opportunities” for the A$430 billion ($300 billion) fund."
-    },
-    {
-      "headline": "Boston Dynamics appoints former Amazon executive Rohit Prasad as CEO",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-06/boston-dynamics-taps-amazon-alexa-executive-as-new-ceo",
-      "datetime": 1791344617,
-      "summary": "Boston Dynamics names former Amazon executive Rohit Prasad as CEO as Hyundai-backed company advances Atlas humanoid robots and commercial robotics."
-    },
-    {
-      "headline": "Gold slips as dollar gains; investors await Fed minutes for rate clues - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOMU10STF5SHNISk9FdXk3NTA2YjZhbnhWRTJlYlpBRGVhanFxWVQxVzhVek11UEp1OUJOU1Y1WjNQTDlBWmg3aEhvVWkzMUpXd3dBbm5Qa3pEcFdEeERZUDNwUHdFYVp0YmZPQVd3dDIwalp0LU1YWi1WTFZNVm5FTWxrSkR0dTJnNk9aM1BBc29MWXk5S3lOLXIxVW1Fd0xvbmhxNEpn?oc=5",
-      "datetime": 1791339480,
-      "summary": "Gold slips as dollar gains; investors await Fed minutes for rate clues  Reuters"
-    },
-    {
-      "headline": "Attacks on Saudi airports kill three people, as fighting escalates in Yemen - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNNjcwdDdFSmxISzN2RWdiODU1ZjlXODFLZGRiVmxTeW94dnI1T1VsNnhlU1NJMTZXajJoVlE0VnpzVDlmMmJQUjYzN21Tamk5YWZhazdRSzd5MTJndURBTjNQTC0yd2I2ZDhIazZlNUJUYjAyZHVwZFRCMER1OGZLS2pZRmRQTjlrSlVyLUd3N1dnUUxrM2NBSERSd3VmYkJBNnpzT1I4RmhwMWhHbHQyN1ZOWkxCclZBV3c?oc=5",
-      "datetime": 1791336060,
-      "summary": "Attacks on Saudi airports kill three people, as fighting escalates in Yemen  Reuters"
-    },
-    {
-      "headline": "Transcript of US Vice President Vance interview in Alaska - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPN285Y1hMSlNId3o1Zi1tSmI5U0NfUVMtUDRlWVh2QVZZVG5QRlg1MmxzU1BHdno3VE1GMXBSeFpab1ZyTHlkdzNucXc4UWJSUmpSV01kN2RNMi1VZW0tb3g5QjFWMk5jS2pETmdualpUWTNYRm82R3d2UUdEX21FR0cyeU1kWjhvYWlHZnVYS0xMQUVvZzg5Zld4TXo?oc=5",
-      "datetime": 1791327565,
-      "summary": "Transcript of US Vice President Vance interview in Alaska  Reuters"
-    },
-    {
-      "headline": "Trump says nobody knows who is running Iran - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxOOGU1UW1VTmk1eGViZjRja3o3X18zR3UtcXc3Sk9VVDBuaVU3VWMwc2NkeFN4cXRyNHA1ZkpUMVNIaGRWOTY3anA0OXFrUHUwVzFwSFFydm41aWZDMDVkRmhvOGdIa05yLWM4VDNCVEpyZTAyMzM0Mi1IT1ZuNjdPTEpLVlEwUEE2NUhGS2xMSUhoaTdZbG5YQzhZelBOQQ?oc=5",
-      "datetime": 1791325964,
-      "summary": "Trump says nobody knows who is running Iran  Reuters"
-    },
-    {
-      "headline": "Yemeni government fighters shown driving vehicles over Houthi opponents - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNdTUtR05NTWVJVFBWcjJmSVZRb0RuVXl6Zk5ocVBacHBIMm1yeWo2VWQ4U2ZqNVFPcTFqeExXUjFyMlpONkU5blQyekxfbGpwM3ZBay05dFU4WkRqZ3lIcmw3VG9UQ3NxSWczQU9qMjFRbHV3QVd3LXl3ZElxaHVRMkFVdHVfajl5SV81YkF1X1ZYX0ZNbW0yMFdjUWFnY3JTLXhZd1gzSU5pNTR5MU1mT0RneVlsLU1uaVdEd1lSRnd0M19Yd1JF?oc=5",
-      "datetime": 1791319430,
-      "summary": "Yemeni government fighters shown driving vehicles over Houthi opponents  Reuters"
-    },
-    {
-      "headline": "US Senator Murphy says Pentagon denied him access to US base in Qatar - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxNMkNYTFZmdFZrdzNHWDNNVHZNMmJCWWtHVHc5OHFzbWhLNHNKY19HdXlZUUhwZTRUQ2E3TlVKSjBMV1p5RVRyOTc1OWZ1M2RMMmRrN09GcUgtNUlQQjA1UGV0dUl4UXNSeTdxLTN4eUw0d3lwQ2VqVWg3T0ZSbVVSZUVxR0Z2UVBvU1I1Nm9BTkIxRWlpNzNYQnlfRDBKZ0RTak02YmxZWlVoekFO?oc=5",
-      "datetime": 1791316564,
-      "summary": "US Senator Murphy says Pentagon denied him access to US base in Qatar  Reuters"
-    },
-    {
-      "headline": "Former German spy chief arrested for attempted treason, obtaining state secrets - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxObU8wUVdxRFgxQzZyTGZXbHhIOEhBTHAzR2luYTFzZDkyXzhLV21OZHhtYWFFd1c4TDFTZzFURFc1SzRPRFA2NlJaYm1VbFFNMU4yT2t1NHRBYW8zZmFXVW52clZJbWJVeVZfVHlfYVk4N2hRUnRxcHN3SFhFSHBPOHBIaVRGRkdaZWd2QnpNQ21QSU0tV3FhQlg1Z2tzZzM5MTRWazcwS211bTJrM3k0N0M3MkJLNmFZczE2RkhkaVkxOEhP?oc=5",
-      "datetime": 1791313063,
-      "summary": "Former German spy chief arrested for attempted treason, obtaining state secrets  Reuters"
-    },
-    {
-      "headline": "'I'm getting fed up': early US midterm voters line up before dawn in Ohio - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOR3NBVWtIOEhDaDlKenA1S0x2NUh3dDFfa1c5REw3OThWbjVzQnpwWVhQd09nYnBJU2dwMFJfZWxhcU1nb1JTR1JETm85R1lRV0RVZEViRmR0UGZJdmpSQUdNLXZhTWRleFRaMndmX283c29UY3FvZE9KSVBsRVM0ZW5rMXZYam9FeklWUTZoU3FKQ2pDcFBzc21LVFF6QndO?oc=5",
-      "datetime": 1791312720,
-      "summary": "'I'm getting fed up': early US midterm voters line up before dawn in Ohio  Reuters"
-    },
-    {
-      "headline": "What Marvell's rosy long-term guidance means for our AI chip stocks",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/06/what-marvells-rosy-long-term-guidance-means-for-our-ai-chip-stocks.html",
-      "datetime": 1791312661,
-      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
     }
   ],
   "ticker_news": {
     "ADSK": [
+      {
+        "headline": "Are SaaS Stocks Making A Comeback? Autodesk, Intuit Outperform In Tough Week For Tech",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c5645039edf7a60f12c6973ef8eac71bf2adc1a24378bfa95d56be951c66e7d6",
+        "datetime": 1791523947,
+        "summary": "Tech stocks broadly declined this week as escalating tensions over the Iran war fueled fresh uncertainty across financial markets.",
+        "headline_cn": "SaaS股回暖？科技股艰难一周中欧特克、财捷跑赢",
+        "sentiment": "bullish",
+        "rationale": "逆势跑赢显示资金回流软件板块"
+      },
+      {
+        "headline": "PTC (PTC) vs Autodesk (ADSK): Which is a Better Stock to Buy?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=93d9cc969a6ba88bb1ef94479ef137d6e57558ea37de27764cd17e2e1646381a",
+        "datetime": 1791518520,
+        "summary": "PTC Inc. (NASDAQ:PTC) traded at around $194 on October 7, little changed on the day and 4.32% lower over twelve months. Autodesk, Inc. (NASDAQ:ADSK) traded near $235 over the same session, down 25.73% across the year. One of these two received a $22.6 billion cash bid last week and is still below where it traded […]",
+        "headline_cn": "PTC与欧特克：哪只股票更值得买入？",
+        "sentiment": "neutral",
+        "rationale": "个股对比文章，无新增基本面信息"
+      },
       {
         "headline": "How Much Should This Move Change Your View Of Freshworks Stock?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=ea301eca58969060aeb35d38140ebe4865a5a518a3b9940e1e6ecdfb16cb0d8b",
         "datetime": 1791509621,
         "summary": "Between April 10 and October 7, 2026, Freshworks (FRSH) stock returned 80.1%, easily outpacing the 15.1% return of the S&P 500. Two significant developments emerged during that period: a round of job cuts announced on May 5 and a quarterly report on August 4. What did those two events change at Freshworks.",
-        "headline_cn": "这一举措应在多大程度上改变你对Freshworks股票的看法？",
-        "sentiment": "neutral"
+        "headline_cn": "此番变动应在多大程度上改变你对Freshworks的看法？",
+        "sentiment": "neutral",
+        "rationale": "未明确变动方向，信息有限"
       },
       {
         "headline": "Is Autodesk (ADSK) Below Fair Value As Its New AEC Chief Pushes AI And Cloud?",
@@ -740,15 +771,19 @@
         "url": "https://finnhub.io/api/news?id=401a2a603ed9bda35c8c7700e9c2546500be2aa9bc674df5fdb0798c13c8ed8c",
         "datetime": 1791505537,
         "summary": "Autodesk (ADSK) just reshuffled a key leadership seat, putting long-time executive Diana Colella in charge of its architecture, engineering and construction business as investors watch how this affects the company’s push into AI and cloud tools. Autodesk shares trade at US$233.60, with a 7 day share price return of 10.55% and a 30 day gain of 10.08%. However, the year to date share price return is down 18.53% and the 1 year total shareholder return has declined 24.72%, so recent momentum is...",
-        "headline_cn": "Autodesk新任AEC负责人推动AI和云业务，股价是否低于合理价值？",
-        "sentiment": "bullish"
+        "headline_cn": "新任AEC负责人力推AI与云，欧特克股价是否低于公允价值？",
+        "sentiment": "bullish",
+        "rationale": "暗示低估且AI云战略提振成长预期"
       },
       {
         "headline": "Can Autodesk’s New AEC Leader Reframe ADSK’s AI Story From Experimentation to Core Strategy?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=112eaa13047fa8ca0116d33c3a2ad6c8bc56f41b8d22953a36199cdf16d8d7a0",
         "datetime": 1791486823,
-        "summary": "Autodesk recently named long-time executive Diana Colella as executive vice president of its architecture, engineering and construction business, succeeding retiring leader Amy Bunszel, while Colella also continues to oversee the Media & Entertainment unit during the leadership transition. The move concentrates Autodesk’s AI and cloud expertise at the helm of its largest segment, signaling a push to more tightly connect legacy tools like Revit and Civil 3D with its Forma industry cloud and..."
+        "summary": "Autodesk recently named long-time executive Diana Colella as executive vice president of its architecture, engineering and construction business, succeeding retiring leader Amy Bunszel, while Colella also continues to oversee the Media & Entertainment unit during the leadership transition. The move concentrates Autodesk’s AI and cloud expertise at the helm of its largest segment, signaling a push to more tightly connect legacy tools like Revit and Civil 3D with its Forma industry cloud and...",
+        "headline_cn": "欧特克新AEC负责人能否将AI从试验转为核心战略？",
+        "sentiment": "neutral",
+        "rationale": "仅提出疑问，战略成效尚待验证"
       },
       {
         "headline": "3 of Wall Street’s Favorite Stocks That Fall Short",
@@ -762,9 +797,7 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=260a36640a0ba9035bb25e01b77ec8af4152b0dd080ab6eb3854d7aba472ca53",
         "datetime": 1791302400,
-        "summary": "Autodesk, Inc. (NASDAQ: ADSK) today announced that Diana Colella has been named executive vice president of its architecture, engineering and construction (AEC) business. Colella succeeds Amy Bunszel, who previously announced her retirement and will remain with Autodesk through November 2, 2026, to support the transition.",
-        "headline_cn": "Autodesk任命Diana Colella领导建筑、工程和施工业务",
-        "sentiment": "bullish"
+        "summary": "Autodesk, Inc. (NASDAQ: ADSK) today announced that Diana Colella has been named executive vice president of its architecture, engineering and construction (AEC) business. Colella succeeds Amy Bunszel, who previously announced her retirement and will remain with Autodesk through November 2, 2026, to support the transition."
       },
       {
         "headline": "Is PTC Stock Increasing Your Market Risk?",
@@ -896,11 +929,137 @@
     "AES": [],
     "AMZN": [
       {
+        "headline": "Amazon Just Signed a 20-Year Nuclear Power Deal. Here's the 1 Industrial Stock That Benefits Most.",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=2a15204dad56db73ee1cf94be32969b66abcc55a73f20ad604853074142af82f",
+        "datetime": 1791546780,
+        "summary": "This company-specific news is just a sampling of a much bigger, broader trend."
+      },
+      {
+        "headline": "Prediction: Oracle Has 49% Upside as Cloud Backlog Signals Major Growth Shift",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7f5bd24e5f8dbfabe9bca71be89b972a324c3896d0394436713ba3f99f0092d7",
+        "datetime": 1791544509,
+        "summary": "Oracle's cloud backlog keeps growing and its quarterly results keep beating estimates, yet the stock sits near a 52-week low. Something in that gap is either a serious warning sign or the biggest mispricing in megacap tech right now."
+      },
+      {
+        "headline": "Nepra Foods Launches Flagship PROPASTA Brand on Amazon",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=0e91f02ad55e8a4bdc48c236f53191b35ceff3f5760355170ad36d90eedb0c25",
+        "datetime": 1791543600,
+        "summary": "Initial Amazon test launch introduces PROPASTA's new 16 oz. pouch, expanding direct-to-consumer access to the Company's high-protein, high-fiber pastaCENTENNIAL, CO / ACCESS Newswire / October 9, 2026 / Inc."
+      },
+      {
+        "headline": "Inside Google's AI Slump: Can Gemini 4 Argon Fix it?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=aa283c09eb30f351fdb43e0b6ce91499baae724cd14a2654a87e6a32bedad3f2",
+        "datetime": 1791543600,
+        "summary": "Despite having 3 billion users, its own chips, and a $4.1 trillion market cap, Google can't seem to ship an AI model that beats Claude or ChatGPT. Host Ejaaz Ahamadeen explains how Google fell behind, whether Gemini 4 Argon and Nano Banana 2.1 can bring it back, and the one move that could still make Google the biggest winner in AI."
+      },
+      {
+        "headline": "Prediction: Amazon Could Turn a $10K Investment Into This by 2030",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ba899bb608d5f739c07f0fc0838900e7a03c46509e8d98c21013f8987c61192a",
+        "datetime": 1791540300,
+        "summary": "Amazon stock hasn't been this cheap in a while."
+      },
+      {
+        "headline": "OpenAI's $20 Billion Revenue Gap Sends Chip Stocks Tumbling",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=557033d381aadccfe976abc5e7e0ac7ac2483c91237e84c6093fb91093fef475",
+        "datetime": 1791540023,
+        "summary": "Chip stocks slid after reports put OpenAI's annual revenue near $50 billion, well below earlier estimates. Debt-heavy AI names took the hardest hit, SpaceX moved deeper into mobile with new spectrum, Chipotle jumped on Starbucks takeover talk, PepsiCo rallied despite a guidance cut, and oil climbed above $91."
+      },
+      {
+        "headline": "Blue Origin's potential IPO signals the countdown to a new phase of the space race",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=491bf22a1c50092853dcc6bfc92fc2fee8245286e3542af0822a2c1cd56f26ec",
+        "datetime": 1791540000,
+        "summary": "Blue Origin is likely to pursue an IPO in the coming years, ratcheting up the new space race and pitting Jeff Bezos squarely against Elon Musk's SpaceX."
+      },
+      {
+        "headline": "Prediction: Jeff Bezos Will One Day Reclaim The Title Of World’s Richest Man. Here’s Why Elon Musk’s $650 Billion Lead Might Not Be Enough",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=68a8f095c23a5ed3f8573ccd385bf8b093784134247aaf73b8b461b1c6fea07c",
+        "datetime": 1791535009,
+        "summary": "Elon Musk sits on a trillion-dollar fortune while Jeff Bezos trails by hundreds of billions, yet three private companies quietly sitting on Bezos's balance sheet could rewrite that story entirely."
+      },
+      {
+        "headline": "AWS CEO Says AI Spending Isn’t a Bubble Just Yet — Amazon’s Cloud Chief Says ‘We Feel Really Good’ as Ray Dalio Warns the Boom Is Near a Breaking Point",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=f954320cd82dac249e3534e87cb20ff9ca981dd5888354a1cc095c9c6b21ca30",
+        "datetime": 1791533318,
+        "summary": "AWS CEO Matt Garman dismisses AI bubble fears, citing Amazon’s diversified customer base and strong returns from AI investments."
+      },
+      {
+        "headline": "Amazon’s New Alexa Tablets Cost Up to $550. Can It Keep Buyers Coming Back?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7a564b12a3d4f0a5542e4b8ae96a5ca524438ce64107faf14ca9c8523e9edf74",
+        "datetime": 1791532641,
+        "summary": "Amazon (AMZN:NASDAQ) is moving its tablet lineup upmarket. On October 8, the company unveiled three Alexa-branded tablets that replace its budget Fire line and run Android instead of Fire OS."
+      },
+      {
+        "headline": "‘Dean of Valuation’ Warns of AI Cash Drain: 4 Ways to Play the Shift",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=aa06922a2d3805b00683107f05c8e2dd6e6b42a46f8c0d0de296ffdb4a39789a",
+        "datetime": 1791531183,
+        "summary": "Aswath Damodaran breaks down 2026 AI capex: rising cash burn, tech shifting to heavy assets, and 4 paths for stock investors."
+      },
+      {
+        "headline": "Skydance Faces a Tough Lift. Netflix and Disney Are Better Bets.",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9f86627074d8916b46204007a5ebbf469a2a1607a6f8c2beca6e7b8858dff86c",
+        "datetime": 1791525600,
+        "summary": "The newly merged company has high debt, aggressive financial targets, and integration challenges."
+      },
+      {
+        "headline": "Wall Street Still Treats Micron Like a Commodity Stock — Analyst Says That's a Costly Mistake",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=6965fcc7bdb47adc7e2f8ab9f572313baf1fc3e5053f4c4e5cc23bcf82e69ae2",
+        "datetime": 1791525437,
+        "summary": "Micron (MU) stock gains in premarket trading. D.A. Davidson highlights a massive valuation gap vs. AMD and Intel amid AI expansion."
+      },
+      {
+        "headline": "The Real Challenge for Muse AI Is Making the Math Make Sense",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3bc8ab084136d6029d7cea2604c91cf1623519fa16089b22bddc1ecab255c93a",
+        "datetime": 1791523800,
+        "summary": "Even if Meta Platforms can turn its AI agent into an essential service, making it profitable is going to be tough."
+      },
+      {
+        "headline": "Zacks Investment Ideas feature highlights: Synopsys and Amazon",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c53e4ba36521edbf6ec4340afd5ad22d4d9553756bd553707010313ed861b4e3",
+        "datetime": 1791521820,
+        "summary": "Synopsys and Amazon have been highlighted in this Investment Ideas article."
+      },
+      {
         "headline": "Amazon's Alexa shopping tool faces its first big October test",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=2f79f83118ec2ff2f54d093aa42d338cc41be6e18876d67e322caae91bb19ae8",
         "datetime": 1791511380,
         "summary": "Auto Buy removes the pause where you’d normally ask yourself if you still want the thing."
+      },
+      {
+        "headline": "Jim Cramer Says OpenAI Revenue Isn’t ‘Apples to Apples’ With Anthropic, Daniel Newman Calls Debate 'Hilarious' — $500 Billion Wiped Out",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=db59760f27da43fbbe7fdf60c26899e3bad695c225a70bbbf0d8bd684477821e",
+        "datetime": 1791511360,
+        "summary": "OpenAI’s annualized revenue may be nearer $50 billion than $70 billion, and investors say the $20 billion gap is accounting, not lost sales."
+      },
+      {
+        "headline": "Snowflake: Fairly Priced Until Migrations Prove Themselves",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=761d9d58003ad71bd83b302820ba20428fae8f505d7a8be0a1e660177876026e",
+        "datetime": 1791506990,
+        "summary": "Snowflake (SNOW) outlook: FY2026 product revenue $4.68B, RPO up 42%, AI-led migrations driving growth. Read here for a detailed investment analysis."
+      },
+      {
+        "headline": "Securitize Stock Jumps After Hours As It Launches Tokenized Apple, Nvidia, Tesla Shares On Solana",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=413233843013b38dd1cadc4a77d42efa5a769d8336ffd92a18cca1c6ee07c161",
+        "datetime": 1791502056,
+        "summary": "Securitize shares jump 9.92% in after-hours session as company launches 12 tokenized U.S. stocks on Solana."
       },
       {
         "headline": "Is the Market Underestimating Amazon’s (AMZN) Moat?",
@@ -936,8 +1095,9 @@
         "url": "https://finnhub.io/api/news?id=f9f5f36e2d46a569cc995c2ca01944721e1b0f58135637465ad8c75ffe422ef9",
         "datetime": 1791491656,
         "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores.",
-        "headline_cn": "沃尔玛的下一个增长点在哪里？",
-        "sentiment": "neutral"
+        "headline_cn": "沃尔玛的下一个增长点可能来自哪里？",
+        "sentiment": "neutral",
+        "rationale": "探讨性文章，未披露新增催化剂"
       },
       {
         "headline": "Can AWS Transform Make NetApp (NTAP) the Default Storage Landing Zone in the Cloud?",
@@ -973,8 +1133,9 @@
         "url": "https://finnhub.io/api/news?id=6998d5ebbf1191720a53a0ecafdfaf8420981807afd7344d78e26a5aa1aada5d",
         "datetime": 1791484998,
         "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports.",
-        "headline_cn": "Target股票的上涨是否显而易见？",
-        "sentiment": "bullish"
+        "headline_cn": "塔吉特股价上涨早有迹可循？",
+        "sentiment": "bullish",
+        "rationale": "回顾股价上涨，暗示基本面改善"
       },
       {
         "headline": "What Are Costco Investors Betting On?",
@@ -982,8 +1143,9 @@
         "url": "https://finnhub.io/api/news?id=34045d124769cb9170aad222e84c7eaf1ca4b6843fcc12e163b344cb7f489e0a",
         "datetime": 1791482953,
         "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for.",
-        "headline_cn": "Costco投资者在押注什么？",
-        "sentiment": "neutral"
+        "headline_cn": "好市多投资者在押注什么？",
+        "sentiment": "neutral",
+        "rationale": "分析投资逻辑，未提供新增信息"
       },
       {
         "headline": "What does Amazon's 'About You' feature say about your spending habits?",
@@ -1126,6 +1288,13 @@
         "summary": "The new Securitize Stocks product launches with 12 names backed one-to-one by real shares—preserving dividends and voting rights—trading first on Solana, with NYSE and OKX-ICE venues planned."
       },
       {
+        "headline": "Anthropic Launches Cyber Mission To Equip Defenders With AI Tools, Research, And Resources To Strengthen Software And Systems Security",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=13142e927c5dc9855bdc8bba378f30f8aa5b31f888d6cb6647e283965f3d6500",
+        "datetime": 1791471870,
+        "summary": "https://www.anthropic.com/news/anthropic-cyber-mission"
+      },
+      {
         "headline": "Reflecting On Credit Card Stocks’ Q2 Earnings: Synchrony Financial (NYSE:SYF)",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=8c715ace3529d19e36cbf62aed1453ce718ac0fc3b85f5cc806eba45ce602ea7",
@@ -1208,6 +1377,13 @@
         "url": "https://finnhub.io/api/news?id=1873357f444e2e90884aad1b80b722067f4eae114bab47d2142d6a9acad261ac",
         "datetime": 1791466860,
         "summary": "Uber's partnership-led robotaxi expansion faces off against Pony AI's driverless ambitions, but which company offers the stronger investment opportunity?"
+      },
+      {
+        "headline": "Stock Reaction To Samsung And TSMC Earnings Is An Early Indicator Of A Market Character Shift—Watch Oil And Yields",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=ba9d5e3a3085961ccee6b85033662ecdbb5a2baa491b31c74441125d2b408433",
+        "datetime": 1791466673,
+        "summary": "\n\n\n\nSigns Of Market Character Shift\n\n\n\nPlease click here for an enlarged chart of SPDR S&amp;P 500 ETF Trust (NYSE:SPY) which represents the benchmark stock market index S&amp;P 500 (SPX).\n\n\n\nNote the following:\n\n\n\n\nThe"
       },
       {
         "headline": "Amazon launches 2 new China-to-US air freight options",
@@ -1320,6 +1496,20 @@
         "url": "https://finnhub.io/api/news?id=17a9aaea3ba495c68bdc6c8f43f9d69e24f2e73ecf2dba2471a3d4d4d498f090",
         "datetime": 1791458702,
         "summary": "Elon Musk praises Jeff Bezos after his $28B Blue Origin reveal. Find out what the first $10B outside raise means for a future Blue Origin IPO."
+      },
+      {
+        "headline": "Anthropic Is Deepening Its Support For American Scientific Research By Committing $150M Over Three Years To The Genesis Mission",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=9f67cc0249e63ef41b2fd31abd30954b0f93188badf327f996aa75160a07fd7b",
+        "datetime": 1791457791,
+        "summary": "https://www.anthropic.com/news/genesis-mission-commitment"
+      },
+      {
+        "headline": "70 Million Kids Just Got Trump Accounts. The Bigger Winner Could Be State Street",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=fc917b19758215f50261cca914df499463c0fd91e36f8ece6314dc748a4058de",
+        "datetime": 1791457326,
+        "summary": "Trump Accounts now cover nearly 70 million children, with State Street&#39;s SPYM as the default ETF. Here&#39;s why the long-term economics matter."
       },
       {
         "headline": "Amazon Has Fallen 10% From Its All-Time High. Now Is the Perfect Time to Buy.",
@@ -2454,163 +2644,29 @@
         "url": "https://finnhub.io/api/news?id=0730e47320c8ee20b432f3698b9f08e320c2569f1beb00634846e320d6fcf54f",
         "datetime": 1791297269,
         "summary": "The indices have continued to print new all-time highs; however, the markets do not appear pricy and are not due for a sizable pullback. Click to read more."
-      },
-      {
-        "headline": "What Are Palantir Stock Bulls Not Worried About?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=05b2727165f6f1fc5c9282709173099972a65fa64254291083a7a253c4b23abd",
-        "datetime": 1791297258,
-        "summary": "Palantir Technologies (PLTR) stock has returned 46% over the three months through October 5, 2026, against 3.9% for the S&P 500. Buyers at this price appear to expect the company's sales to businesses to keep growing as fast as they have. But Palantir is no longer alone in chasing those customers, and its own management described one such contest on its latest earnings call. So who is Palantir now up against."
-      },
-      {
-        "headline": "Amazon Kicked Off Prime Big Deal Days as Consumer Stocks Slump. Here’s Where the Stock Could Go by 2030",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=6079f87f6caff3f833b68b044db5d511fb913de99327ab71e98fcb6b31288c4a",
-        "datetime": 1791296926,
-        "summary": "Key Stats for Amazon StockCurrent Price: $251. 40Target Price (Mid): ~$600Street Target: ~$331Potential Total Return: ~139%Annualized IRR: ~23% / yearWhat Happened?Amazon (AMZN:NASDAQ) opened Prime Big Deal Days on October 6 with consumer confidence at its weakest since 2014."
-      },
-      {
-        "headline": "What Would It Take For Apple Stock To Move Higher?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0c1b5781b2f8b76825c537cb1a0d0e86eec9f8a1a4ee37bbf175ee0e1f723edb",
-        "datetime": 1791296792,
-        "summary": "Apple (AAPL) stock trades at 37.8 times earnings, against 21.5 for the S&P 500. Buyers at that price appear to expect more growth than Apple has reported so far. A Barron's article on October 1, 2026, reported an analyst's view that the shares may lack a clear catalyst to move meaningfully higher in the near term. Yet management pointed to a possible new source of revenue on its July 30 earnings call. So what is Apple planning."
-      },
-      {
-        "headline": "MSFT Rises 41% in 6 Months on Solid AI Demand: Should You Hold Now?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=90bf0b1f4c3fcba95e1bb53b61659321c8227de6aed6b112447aeba14868febb",
-        "datetime": 1791296340,
-        "summary": "Microsoft's 41% six-month gain reflects strong Azure and AI demand, but heavy capex and valuation pressure raise questions for new investors."
-      },
-      {
-        "headline": "Generac Surges 58% Year to Date: Is There More Room to Run?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=4bf1e21243854475e3fe6134f0b8664ea4e46bdd9c6862aa0305dd9c3747ba8a",
-        "datetime": 1791296280,
-        "summary": "GNRC's 57.8% YTD surge reflects booming data center demand and a major Amazon deal, but residential softness and margin risks loom."
-      },
-      {
-        "headline": "CrowdStrike, AWS And Nvidia Launch 4th Cybersecurity Accelerator As Agentic AI Security Push Grows",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b930b4d5770dcdd55c13fb4b17537fd3e6ceb29f66328ce2272d4f417a7b440a",
-        "datetime": 1791296156,
-        "summary": "The program has supported more than 90 startups globally, with participating companies raising nearly $1 billion in funding and multiple alumni going on to be acquired."
-      },
-      {
-        "headline": "Tigress Financial Maintains Buy on Amazon.com, Raises Price Target to $385",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=e434971503a843ece324c99bea24e7e6bf1f9b412e63d0134c8ba1aac6f7e3fd",
-        "datetime": 1791295926,
-        "summary": "Tigress Financial  analyst Ivan Feinseth   maintains Amazon.com (NASDAQ:AMZN) with a Buy and raises the price target from $315 to $385."
-      },
-      {
-        "headline": "Are Rising Live Sports Costs a Margin Threat to Netflix Stockholders?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e58c209b725dd586f0f1a2835f933f971653532237c3d81b6734e4032a3b40e5",
-        "datetime": 1791295920,
-        "summary": "NFLX's rising live sports costs are testing margin expansion as rights spending outpaces amortization and sports deliver limited viewing hours."
-      },
-      {
-        "headline": "How Much Upside Is Left In Google Stock?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7c0237b0cc5337182a4d4e307ae917a99a0eded0c4b5c6989b9384efb7db2fe4",
-        "datetime": 1791295838,
-        "summary": "Alphabet (GOOGL) stock returned 41% over the past twelve months, against 17.1% for the S&P 500. After a run like that, you may assume most of the gain is behind you, but the business has sped up as the stock climbed. Revenue grew 24.2% in the latest quarter from a year earlier, up from 15.9% three quarters before. So what could three more years of owning Alphabet return."
-      },
-      {
-        "headline": "3 Things Investors Need to Know Before Buying Skydance",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=866d0fa854f208d42683c5d46aee77d02afbaf3e18968c761c05fd9eab12a5b3",
-        "datetime": 1791295440,
-        "summary": "The newly formed media giant has an enviable IP catalog but it also faces a challenging streaming environment and other headwinds."
-      },
-      {
-        "headline": "Anthropic Announces Claude Now Works With Google Docs, Sheets, And Slides",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=eebad73db579943ea93bfa34e373d1de36eb3b52107b4a333242d435dc5f391f",
-        "datetime": 1791295276,
-        "summary": "https://claude.com/resources/articles/claude-now-works-in-google-docs-sheets-and-slides"
-      },
-      {
-        "headline": "Amazon Said No to Muse. Venn Wants Real Estate to Say No Too.",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=76ff403f41390ef8db6af25b52ca2aeba46e630bd3307737fce4363be2500d7e",
-        "datetime": 1791294240,
-        "summary": "Venn's new super agents give real estate companies the power of big tech’s consumer AI without handing their operating data to someone else. Venn Launches Super Agents Venn's new super agents give real estate companies the power of big tech’s consumer AI without handing their operating data to someone else. NEW YORK, Oct. 06, 2026 (GLOBE NEWSWIRE) -- Venn, the sovereign AI platform for real estate, today launched super agents: always-on, superintelligent agents that each owner and operator build"
-      },
-      {
-        "headline": "Google & Constellation Energy ink $1B nuclear agreement, but this deal isn't unique",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=29dbe8d231c4e2b6b275de100fdf06358b0c3193cbe45b1c5aefa07d779e4008",
-        "datetime": 1791294022,
-        "summary": "The 8:30 Hosts Julie Hyman, Pras Subramanian, and Jake Conley discuss Google (GOOG, GOOGL) and Constellation Energy's (CEG) recently signed $1 billion nuclear energy deal."
-      },
-      {
-        "headline": "Google Nuke Deal Jolts Constellation Energy To Top Of S&P 500",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7e18ab404af9c9282e2757715b08eae41004e04bad1a5a25594051ebec36d6e3",
-        "datetime": 1791293966,
-        "summary": "The Google deal will be like adding a nuclear reactor to the grid, but faster."
-      },
-      {
-        "headline": "S&P Eyes Record High, Yet Concentration Risk Looms",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=c44164f719f402a94580a9e83d88d5fdf80db42182e66115fa3dff420cffcddc",
-        "datetime": 1791293674,
-        "summary": "\n\n\n\nHidden Weakness\n\n\n\nPlease click here for an enlarged chart of SPDR S&amp;P 500 ETF Trust (NYSE:SPY) which represents the benchmark stock market index S&amp;P 500 (SPX).\n\n\n\nNote the following:\n\n\n\n\nThe chart shows the"
-      },
-      {
-        "headline": "Nvidia: The Capital Bottleneck Is Becoming A $6 Trillion Catalyst",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=868fdef60e3ebb6df941a1ac9e71141033c7feebc71f445fe58761016d3a99bc",
-        "datetime": 1791293328,
-        "summary": "Nvidiaâs AI growth outlook: agentic shift boosts demand as $500B alternative financing eases capital constraints amid rising rates. Click here to read more."
-      },
-      {
-        "headline": "Pinterest Names Former Amazon Finance Executive James Dibbo as CFO",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=9c45495991b95a7a091221e67a8b5ca99f4c0296e3d4190f0094935fa0b5e133",
-        "datetime": 1791293092,
-        "summary": "Key Stats for Pinterest StockPrice change for Pinterest stock in last 6 months: 10%$PINS Stock Price as of Oct. 5: $2052-Week High: $35$PINS Stock Price Target: $29What Happened?Pinterest (PINS:NYSE) said on Monday that it has named James Dibbo as its new chief financial officer."
-      },
-      {
-        "headline": "Amazon Stock Moves Higher: What's Happening?",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=5ac4b0130eaf7f679005d4f86ac77034e08a728c090237424d34b189af5afd90",
-        "datetime": 1791292393,
-        "summary": "Amazon.com Inc (NASDAQ:AMZN) shares are trading higher Tuesday. Tigress Financial Partners reiterated its rating and price target on the stock."
-      },
-      {
-        "headline": "Pinterest names Amazon veteran James Dibbo as CFO",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=15a903400ef8f58a14e4b7332ff508038de873d6e65ef951a7590d0ca6c105e6",
-        "datetime": 1791291915,
-        "summary": "James Dibbo, who oversaw finances for Amazon Ads, Prime Video, and Twitch, will take the role on October 26"
-      },
-      {
-        "headline": "Power Out? Jackery Offers Up to 65% Off 4.5-Star+ Rated Portable Power Stations and Solar Generators for Amazon's Prime Big Deal Days",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=fe0d53f3695209748f9d52182b581264be55031501f3793667a99eefd60ab178",
-        "datetime": 1791291600,
-        "summary": "Jackery's portable power stations and solar generators, including the new HomePower 2000 Plus V2, are on sale October 6–7. The HomePower 3600 Plus leads the event at the deepest discount of the year, and shoppers can also enter to win their entire Prime Day order, up to $2,000, free. FREMONT, Calif., Oct. 06, 2026 (GLOBE NEWSWIRE) -- Jackery, a global leader in portable power solutions, is making home preparation easy with steep discounts in power this Amazon Prime Big Deal Days, touting up to 6"
-      },
-      {
-        "headline": "2 Nasdaq 100 Stocks Worth Investigating and 1 We Question",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d705ac8bbc1a84771105f38aa40b1a33e4d5758ef9d3290847880283eb6a42f9",
-        "datetime": 1791291394,
-        "summary": "The Nasdaq 100 (^NDX) is home to some of the biggest success stories in tech and growth investing. However, certain stocks in the index face challenges like profitability concerns, rising costs, or shifts in market trends."
-      },
-      {
-        "headline": "CrowdStrike Launches Fourth Cybersecurity Startup Accelerator With AWS and Nvidia",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e8ee2539568560bdd7373db106c6b74395cceb336f78b58dbeda9f470238c0d9",
-        "datetime": 1791291073,
-        "summary": "CrowdStrike (NASDAQ:CRWD) has announced the fourth edition of its annual Cybersecurity Startup Accelerator in partnership with Amazon Web Services (AWS) (NASDAQ:AMZN) and Nvidia (NASDAQ:NVDA). Applications are open globally until November 2, 2026, with the eight-week programme scheduled to run from January 11 through March 8, 2027."
       }
     ],
     "ANET": [
+      {
+        "headline": "Elite AI Stocks To Own In October 2026",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=20e8e727816b173b77cb51d200459d3cd5b204dda414ffb1a11dddd761bb8478",
+        "datetime": 1791529955,
+        "summary": "AI ambitions are getting bigger. SoftBank is now trying to raise up to US$100b from Gulf investors to buy and build businesses around artificial intelligence. That kind of money concentrates attention on companies already targeting strong expansion, backed by confident management teams and bullish analysts. This article walks through three high conviction, high growth stocks from the screener that aim to capture that momentum for long term focused investors. The three stocks highlighted next...",
+        "headline_cn": "2026年10月值得持有的优质AI股",
+        "sentiment": "bullish",
+        "rationale": "荐股文章，强化AI板块乐观情绪"
+      },
+      {
+        "headline": "Arista Networks Stock Is Expensive, But Don’t Count It Out Just Yet",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=2b72d236ffa922274ee9f80d0822bf9095ff5bdd8091e52b69cb2012f010c667",
+        "datetime": 1791522003,
+        "summary": "Arista Networks (ANET) delivers robust cloud networking solutions, achieving strong technical momentum and exceptional price appreciation. ANET maintains a 100% “Buy” rating from Barchart. Shares are up 34% over the past year. While profitability and growth metrics are outstanding, ANET’s valuation is extremely stretched versus sector peers, warranting disciplined risk...",
+        "headline_cn": "Arista估值偏高，但仍不可小觑",
+        "sentiment": "neutral",
+        "rationale": "高估值与增长潜力相互平衡"
+      },
       {
         "headline": "What Is The One Risk Every Ondas Investor Should Know?",
         "source": "Yahoo",
@@ -2618,7 +2674,8 @@
         "datetime": 1791503454,
         "summary": "Shares of Ondas (ONDS) have lost 33% over the past twelve months, while the S&P 500 returned 17.1%. A lack of orders is not the reason to worry: on October 7, the defense technology company announced it had won more than $270 million of them since June 30. During an August 13 call, management itself raised a different problem. What could go wrong for a company with this many orders.",
         "headline_cn": "每位Ondas投资者都应了解的一个风险是什么？",
-        "sentiment": "bearish"
+        "sentiment": "bearish",
+        "rationale": "聚焦风险提示，可能压制投资信心"
       },
       {
         "headline": "One Unsettled Question Sits Under Super Micro Computer Stock",
@@ -2626,8 +2683,9 @@
         "url": "https://finnhub.io/api/news?id=2d6fc2ab0fef13ec99d7bd77e821859fdc297c78363eff44e63aa50db17c2938",
         "datetime": 1791502308,
         "summary": "Super Micro Computer (SMCI) expects a steep climb in sales for fiscal 2027. Management has noted, however, that its high-volume GPU systems usually earn much lower margins than its other products. As a result, Super Micro has yet to prove how much of each sale it can keep as profit during this rapid expansion.",
-        "headline_cn": "Super Micro Computer股票背后存在一个悬而未决的问题",
-        "sentiment": "bearish"
+        "headline_cn": "超微电脑股价之下仍悬而未决的一个问题",
+        "sentiment": "bearish",
+        "rationale": "悬而未决的疑问加大不确定性"
       },
       {
         "headline": "Arista Stock Rises 64.7% YTD: Is There More Upside Ahead?",
@@ -2635,26 +2693,23 @@
         "url": "https://finnhub.io/api/news?id=4c6930c1965b1a0858d952e3eb988e3ebb33875489b962ab550c610b62085b8a",
         "datetime": 1791472080,
         "summary": "ANET's AI networking growth and expanding Ethernet opportunity fuel strong gains, but customer concentration and margin pressure cloud the upside.",
-        "headline_cn": "Arista股价年初至今上涨64.7%：还有更多上涨空间吗？",
-        "sentiment": "bullish"
+        "headline_cn": "Arista年内上涨64.7%：还有上行空间吗？",
+        "sentiment": "bullish",
+        "rationale": "强劲涨势反映基本面与需求向好"
       },
       {
         "headline": "Can Arista's New Rack-Scale Ethernet Solutions for AI Stoke Growth?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=49d1395ae7bab88fb007f54d380c2cdd4a0ae42f8b824346ca51e197ebcb5fbe",
         "datetime": 1791471480,
-        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions.",
-        "headline_cn": "Arista面向AI的新型机架级以太网解决方案能否刺激增长？",
-        "sentiment": "bullish"
+        "summary": "ANET launches an open Ethernet rack-scale portfolio for dense AI infrastructure, offering flexible scale-up and scale-out solutions."
       },
       {
         "headline": "Arista Networks (ANET) Could Be a Key Winner From the AI Infrastructure Boom",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=c60539d7556212d85cb6a98c4255848ae8877015ece2b4f877b97d656229a9d7",
         "datetime": 1791468032,
-        "summary": "Andrew Hill Investment Advisors recently released its third-quarter 2026 investor letter. A copy of the letter can be downloaded here. The fund navigated a mixed third-quarter investment environment in which rising oil prices, higher interest rates, and persistent inflation created headwinds for equities and bonds, although strong corporate earnings and continued AI investment helped support […]",
-        "headline_cn": "Arista Networks可能成为AI基础设施热潮的关键赢家",
-        "sentiment": "bullish"
+        "summary": "Andrew Hill Investment Advisors recently released its third-quarter 2026 investor letter. A copy of the letter can be downloaded here. The fund navigated a mixed third-quarter investment environment in which rising oil prices, higher interest rates, and persistent inflation created headwinds for equities and bonds, although strong corporate earnings and continued AI investment helped support […]"
       },
       {
         "headline": "Cisco Could Be Entering a New Growth Phase. Here’s My Price Target.",
@@ -2953,6 +3008,13 @@
         "summary": "Mid-cap stocks have the best odds of scaling into $100 billion corporations thanks to their tested business models and large addressable markets. But the many opportunities in front of them attract significant competition, spanning from industry behemoths with seemingly infinite resources to small, nimble players with chips on their shoulders."
       },
       {
+        "headline": "Stock Market Today: S&P 500 Slips as Oil Spikes 5%, 10-Year Yields Near 5.35%",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=dbb9d0610a0a6dcb624548d326562f4cf90c10df247b33b10bdac1225e3393e9",
+        "datetime": 1791465599,
+        "summary": "Stocks slip as Gulf tanker attacks lift Brent above $105 and the 10-year yield nears 5.35%; small caps lag while energy and Chipotle rally."
+      },
+      {
         "headline": "These S&P500 stocks that are showing activity before the opening bell on Thursday.",
         "source": "ChartMill",
         "url": "https://finnhub.io/api/news?id=1ac25b3729a281f22c541b2922f619ac20a7dd4de053fb7af5ccb6d5a18d03b1",
@@ -2989,6 +3051,27 @@
       }
     ],
     "APP": [
+      {
+        "headline": "AppLovin: Why I'm Upgrading To Buy Following The Recent Pullback",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=66dfad7e8ec769b8c67f0c5f6111387b4b00bbb8797da6d242366770353903c6",
+        "datetime": 1791536251,
+        "summary": "AppLovin is upgraded to Buy, reflecting renewed confidence in its e-commerce advertising expansion and robust financials. Click for this APP stock update."
+      },
+      {
+        "headline": "Here's Where Palantir and 4 Other AI Software Stocks Could Be in 5 Years",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e692b4b2a46c84931a178e1d5f5a31ce596f54cca77a75b30acda39304bc1eb7",
+        "datetime": 1791534900,
+        "summary": "Palantir isn't the only AI software stock worth watching. Here's how I'd rank all five over the next five years."
+      },
+      {
+        "headline": "What Does AppLovin (APP) Need To Answer In The Kids Ads Lawsuit?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=71af9ac654f2f7d23129803a7f9e344ec93c9418cb1ca833829b12c38a9b3508",
+        "datetime": 1791520079,
+        "summary": "San Diego County filed a lawsuit against AppLovin (NasdaqGS:APP) alleging improper data collection and ad targeting in children's games. The complaint accuses AppLovin of serving inappropriate ads to under-13 users and mishandling their personal information in violation of child privacy rules. County officials claim the ad tech group failed to obtain required parental consent before tracking young players across certain mobile titles. Beyond the San Diego County lawsuit over kids' ads and..."
+      },
       {
         "headline": "The Trade Desk Is Down 68% This Year: Is TTD Stock Dead Money or Due for a Bounce?",
         "source": "Yahoo",
@@ -3338,6 +3421,20 @@
     ],
     "BX": [
       {
+        "headline": "Nvidia-Backed Firmus Scraps Australia’s Second-Largest IPO Plan After Poor Demand and Volatile Market: 'Not in the Best Interests…'",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=250afc09312aa91f06b1be0f531b90885cc14ca175c32c458dd87ac5599fb596",
+        "datetime": 1791500324,
+        "summary": "Nvidia-backed Firmus reportedly shelved its $5 billion Australian IPO after poor demand and volatility, and will raise funds privately."
+      },
+      {
+        "headline": "Barclays Maintains Equal-Weight on Blackstone, Lowers Price Target to $124",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=205aa5ae546cd8e9551e82c32ea9b38a8c20f197b398f08f8e97acc6a6bec6d0",
+        "datetime": 1791458214,
+        "summary": "Barclays  analyst Benjamin Budish   maintains Blackstone (NYSE:BX) with a Equal-Weight and lowers the price target from $128 to $124."
+      },
+      {
         "headline": "What's Going On With Broadcom Stock Thursday?",
         "source": "Benzinga",
         "url": "https://finnhub.io/api/news?id=eacc2294f2b2bf0f2575d4c0151b5420d334556837cbd32b68db04d744929432",
@@ -3542,6 +3639,13 @@
       }
     ],
     "CME": [
+      {
+        "headline": "Your Stock Picks, My Verdict: What I'd Buy Right Now",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=e94b2a71d25f02ec3e506feeb84e17cc619e9079787c970e632fb90cdd2ed940",
+        "datetime": 1791531000,
+        "summary": "Cyclical value and defensive names like ODFL, UNP, and NOC remain attractive due to secular tailwinds and compelling valuation. Read more on my survey here."
+      },
       {
         "headline": "Should S&P Global Stock Holders Look At Intercontinental Exchange Instead?",
         "source": "Yahoo",
@@ -3880,6 +3984,20 @@
     ],
     "CRWD": [
       {
+        "headline": "CrowdStrike To Rally Around 18%? Here Are 10 Top Analyst Forecasts For Friday",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=d2532159d2519f8a84debe6570d937118d333e71b3f68bc98a08ed16d50e1662",
+        "datetime": 1791537104,
+        "summary": "Analysts raised targets for HOOD, SAIL, U and CRWD; cut targets for BULL, ALGN and PCRX, with PCRX downgraded to Neutral."
+      },
+      {
+        "headline": "Here's Where Palantir and 4 Other AI Software Stocks Could Be in 5 Years",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e692b4b2a46c84931a178e1d5f5a31ce596f54cca77a75b30acda39304bc1eb7",
+        "datetime": 1791534900,
+        "summary": "Palantir isn't the only AI software stock worth watching. Here's how I'd rank all five over the next five years."
+      },
+      {
         "headline": "CrowdStrike vs. Figma: Which Technology Stock Is a Better Buy in 2026?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=1c7b17f10add77f61b1d94bddd7900f4f300900e545940405d5fed377a3f8392",
@@ -3901,11 +4019,32 @@
         "summary": "Yahoo Finance Executive Editor Brian Sozzi takes a look at the biggest stories as the trading day kicks off, weighing in on PepsiCo's (PEP) latest earnings results, General Motors' (GM) latest update, and more. Sozzi also sits down with Kenneth Rogoff, the International Monetary Fund's (IMF) former chief economist and Harvard University's current Maurits C. Boas chair and professor of international economics. The two discuss various looming risks to the US economy, including the deficit, the specter of a debt crisis, the AI economy's growing wealth divide, and more. Rogoff is also a chess grandmaster and former chess champion."
       },
       {
+        "headline": "Anthropic Launches Cyber Mission To Equip Defenders With AI Tools, Research, And Resources To Strengthen Software And Systems Security",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=13142e927c5dc9855bdc8bba378f30f8aa5b31f888d6cb6647e283965f3d6500",
+        "datetime": 1791471870,
+        "summary": "https://www.anthropic.com/news/anthropic-cyber-mission"
+      },
+      {
         "headline": "AI Agents Don't Clock Out, So Cloud Software Keeps Billing",
         "source": "SeekingAlpha",
         "url": "https://finnhub.io/api/news?id=c7832e2dd445d00b3c34ef4a528dc3f06c9719fd0086d071ab085774b958ad88",
         "datetime": 1791468596,
         "summary": "Agentic AI tools are shifting software pricing models from per-seat to consumption-based, increasing billable usage and benefiting certain vendors. Read what investors need to know."
+      },
+      {
+        "headline": "U.S. Cybersecurity Agencies Warn China-Based Cybersecurity Company Enabling Threat Actors To Target Multiple Critical Infrastructure Sectors Worldwide",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=b00a5643932b631312c786db8a83c622b76aece79a69f5c4e114a17c99c1f3a3",
+        "datetime": 1791467869,
+        "summary": "- Reuters Citing CISA Statement"
+      },
+      {
+        "headline": "10 Information Technology Stocks With Whale Alerts In Today’s Session",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=b484c848510f6f065b649b0701fb45209a42e7090f0b5bd28a3462537e97b111",
+        "datetime": 1791466512,
+        "summary": "This whale alert can help traders discover the next big trading opportunities.\nWhales are entities with large sums of money and we track their transactions here at Benzinga on our options activity scanner.\nTraders often"
       },
       {
         "headline": "Grab Holdings Limited (GRAB) Faces Earnings Pressure Over Indonesian Two-Wheeler Cap",
@@ -4575,6 +4714,13 @@
         "summary": "Agentic AI tools are shifting software pricing models from per-seat to consumption-based, increasing billable usage and benefiting certain vendors. Read what investors need to know."
       },
       {
+        "headline": "U.S. Cybersecurity Agencies Warn China-Based Cybersecurity Company Enabling Threat Actors To Target Multiple Critical Infrastructure Sectors Worldwide",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=b00a5643932b631312c786db8a83c622b76aece79a69f5c4e114a17c99c1f3a3",
+        "datetime": 1791467869,
+        "summary": "- Reuters Citing CISA Statement"
+      },
+      {
         "headline": "Trump August disclosure: Meta stock, SpaceX debt purchases",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=11749583e4ce41c914ce462dfb279f1ec6f1a5e00367612c2c82029a4d5705a4",
@@ -4717,6 +4863,41 @@
     ],
     "DELL": [
       {
+        "headline": "Dell Technologies -C (NYSE:DELL) Nears Breakout as High Growth Momentum Accelerates",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=a8862b68f85fa88e4f76f55bca6692f7df44efeb47d826b20982774a6df15f94",
+        "datetime": 1791535257,
+        "summary": "Dell clears ChartMill's top technical, setup and growth momentum filters, pairing 281% yearly gains with accelerating earnings and a tight breakout setup."
+      },
+      {
+        "headline": "Zacks Investment Ideas feature highlights: Microsoft, Dell, HP, Lenovo and Nvidia",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ec9f09abb94e6a97f6523f2a2d42ecba63078ce5c2b5c68342122fce508e6d32",
+        "datetime": 1791521100,
+        "summary": "Microsoft, Dell, HP, Lenovo and Nvidia have been highlighted in this Investment Ideas article."
+      },
+      {
+        "headline": "Dan Ives Updates AI 30: Adds DELL, SPCX While Dropping ORCL and PEGA Ahead of IVES Rebalance",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=e978ca685be0edd6f3fd72986b5f649e8e0287a0b3d5419b87d8e7752ea2d03d",
+        "datetime": 1791518310,
+        "summary": "Dan Ives updates his AI 30 &#39;Winner List&#39; ahead of the IVES ETF rebalance, adding Dell and SpaceX while dropping Oracle and Pegasystems."
+      },
+      {
+        "headline": "Elon Musk A ‘National Treasure,’ Says Trump: President Compares Tesla CEO With Edison As He Awards National Medal of Science",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=abc0f7cf0b96e512b07f7090ff56bf8f1a001e22ef9f5a7cbac9cb8117710500",
+        "datetime": 1791514805,
+        "summary": "Elon Musk congratulated his fellow honorees after President Trump gave six tech leaders national science and technology medals on Thursday."
+      },
+      {
+        "headline": "VYM And HDV: Two Dividend ETFs That Complement Each Other",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=6d82d1f29b37c668501acad8a62716f96f7f57203f4aeb6c68105387e0eca70d",
+        "datetime": 1791514485,
+        "summary": "VYM's diversified portfolio positions it to benefit from the AI momentum, while HDV appeals to retirees seeking monthly income. Read more on VYM and HDV ETFs here."
+      },
+      {
         "headline": "Dell Technologies (DELL) Unveils AI Ready Windows PCs For Creators And Developers",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=37de026326942a7ee34a2340167dad14b6c9fa59125d262639089a6702a92735",
@@ -4750,8 +4931,9 @@
         "url": "https://finnhub.io/api/news?id=2d6fc2ab0fef13ec99d7bd77e821859fdc297c78363eff44e63aa50db17c2938",
         "datetime": 1791502308,
         "summary": "Super Micro Computer (SMCI) expects a steep climb in sales for fiscal 2027. Management has noted, however, that its high-volume GPU systems usually earn much lower margins than its other products. As a result, Super Micro has yet to prove how much of each sale it can keep as profit during this rapid expansion.",
-        "headline_cn": "Super Micro Computer股票背后存在一个悬而未决的问题",
-        "sentiment": "bearish"
+        "headline_cn": "超微电脑股价之下仍悬而未决的一个问题",
+        "sentiment": "bearish",
+        "rationale": "悬而未决的疑问加大不确定性"
       },
       {
         "headline": "What Does Western Digital Offer That Apple Does Not?",
@@ -4850,6 +5032,13 @@
         "url": "https://finnhub.io/api/news?id=11749583e4ce41c914ce462dfb279f1ec6f1a5e00367612c2c82029a4d5705a4",
         "datetime": 1791466916,
         "summary": "The August filing covers more than 500 transactions totaling between roughly $74M and $273M, according to a CNBC analysis"
+      },
+      {
+        "headline": "What Is Going on With Super Micro Stock on Thursday?",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=736c45dce7b29996c776a23cdec78e4af13fc4ce650e82a46bf145a6b541fa36",
+        "datetime": 1791465545,
+        "summary": "Super Micro Computer stock pulls back 3% as investors take profits and balance Jim Cramer&#39;s caution against server demand from Lambda&#39;s $4B funding."
       },
       {
         "headline": "Sweetgreen Announces Lauren Crowley as Chief People Officer",
@@ -5407,6 +5596,13 @@
     ],
     "EBAY": [
       {
+        "headline": "2 Soaring Stocks to Hold for the Next 7 Years",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=effd94db0149883bfdf3d2906bac19c6ed964f4f08812d1facb9603e90b6c711",
+        "datetime": 1791541500,
+        "summary": "These consumer goods stocks are trading near new highs and have solid growth prospects."
+      },
+      {
         "headline": "eBay Stock Is on a Tear as Its CEO Keeps Selling Millions in Shares",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f9b55c8cfdaa3fa9abade1d9c911df0324d7c57ce250242b1705dd1791b9cbef",
@@ -5588,6 +5784,13 @@
     ],
     "EOG": [
       {
+        "headline": "EOG Resources (NYSE:EOG): A Decent Value Stock With Solid Profitability and Balance-Sheet Health",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=a36d76245dcc7961f3b40989b271264054b7fd62f74a7f9e470bb70c0a5e9219",
+        "datetime": 1791546065,
+        "summary": "EOG Resources looks undervalued: strong value, profitability and health scores, but slower growth. A decent value candidate with real cash flow."
+      },
+      {
         "headline": "How XOM's Strong Balance Sheet Helps Weather Oil Price Volatility",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=c83de90e2a1921e0b7ad5cefc2bcde2dd9c6ab9004bef809b4a268ecdcc3c5c7",
@@ -5600,6 +5803,13 @@
         "url": "https://finnhub.io/api/news?id=1ac25b3729a281f22c541b2922f619ac20a7dd4de053fb7af5ccb6d5a18d03b1",
         "datetime": 1791462901,
         "summary": "Stay updated with the S&P500 stocks that are on the move in today's pre-market session."
+      },
+      {
+        "headline": "Shares of oil and gas-related companies are trading lower as crude prices pull back amid renewed optimism over potential diplomatic progress between the U.S. and Iran this weekend in Pakistan talks.",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=258c1853a446a9109364948ddadc425f95605ceb5a4e7d7ff2a77f8686a781fd",
+        "datetime": 1791455835,
+        "summary": ""
       },
       {
         "headline": "Will EOG Resources (EOG) Beat Estimates Again in Its Next Earnings Report?",
@@ -5806,20 +6016,34 @@
     ],
     "ISRG": [
       {
+        "headline": "Robotics Stocks Diverge as AI and Semiconductor Automation Leaders Pull Ahead",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=27e8d3f00645503716d12005bb437ba0b6b20dbe570fc2a96917ce4cb616786e",
+        "datetime": 1791549375,
+        "summary": "Robotics and automation stocks are splitting: AI, semiconductor, and healthcare robotics lead while traditional industrial and software automation lag.",
+        "headline_cn": "机器人股分化，AI与半导体自动化龙头领涨",
+        "sentiment": "bullish",
+        "rationale": "AI相关龙头走强，显示需求集中受益"
+      },
+      {
         "headline": "Is Intuitive Surgical (ISRG) a Buy as Wall Street Analysts Look Optimistic?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=4033ed6ae8ed17606a1ceae187e57795d32b87189e2c0a317bee21a00a136507",
         "datetime": 1791462604,
         "summary": "Based on the average brokerage recommendation (ABR), Intuitive Surgical (ISRG) should be added to one's portfolio. Wall Street analysts' overly optimistic recommendations cast doubt on the effectiveness of this highly sought-after metric. So, is the stock worth buying?",
-        "headline_cn": "华尔街分析师看好，Intuitive Surgical是否值得买入？",
-        "sentiment": "bullish"
+        "headline_cn": "华尔街分析师看好，直觉外科值得买入吗？",
+        "sentiment": "bullish",
+        "rationale": "分析师普遍乐观支撑股价预期"
       },
       {
         "headline": "The Monopolistic Razor-and-Blade Engine I Can’t Stop Buying",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=53bbe4aa9c11aaa912b85bc6ec7e10cf64b2e86085ceb4c77aa34351fd789f03",
         "datetime": 1791458154,
-        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying."
+        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying.",
+        "headline_cn": "我忍不住持续买入的垄断型“剃刀加刀片”模式公司",
+        "sentiment": "bullish",
+        "rationale": "垄断地位与经常性收入模式受青睐"
       },
       {
         "headline": "Intuitive Surgical (NASDAQ:ISRG) Combines Strong Growth With a Constructive Technical Setup",
@@ -5827,8 +6051,9 @@
         "url": "https://finnhub.io/api/news?id=df1cd6419db9df0bf5af0ef0817b082b8dddd428cba634f9389c9499cb3054f7",
         "datetime": 1791452447,
         "summary": "Intuitive Surgical shows strong growth, top-tier profits, and a technical setup that could signal a breakout. See the full ISRG stock analysis.",
-        "headline_cn": "Intuitive Surgical结合强劲增长与建设性技术形态",
-        "sentiment": "bullish"
+        "headline_cn": "直觉外科兼具强劲增长与积极技术形态",
+        "sentiment": "bullish",
+        "rationale": "基本面与技术面双重向好"
       },
       {
         "headline": "2 Profitable Stocks with Exciting Potential and 1 We Question",
@@ -5836,8 +6061,9 @@
         "url": "https://finnhub.io/api/news?id=259b9f14a2c4c0e2f9a8e774ad3a21f8bed4e08dfd5889115e5ef149f544e134",
         "datetime": 1791445449,
         "summary": "Not all profitable companies are built to last - some rely on outdated models or unsustainable advantages. Just because a business is in the green today doesn’t mean it will thrive tomorrow.",
-        "headline_cn": "2只具有令人兴奋潜力的盈利股票和1只我们存疑的股票",
-        "sentiment": "neutral"
+        "headline_cn": "两只潜力可观的盈利股及一只存疑股",
+        "sentiment": "neutral",
+        "rationale": "褒贬兼有，对整体市场无明确指向"
       },
       {
         "headline": "Should Barclays’ Bullish Initiation Amid Rising Rivalry Require Action From Intuitive Surgical (ISRG) Investors?",
@@ -6040,13 +6266,24 @@
     ],
     "KR": [
       {
+        "headline": "Kroger (KR) President Colleen Lindholz Retires After More Than 30 Years",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=550c4ca28a4183dc541b54ba1dc96b1cf27593e374bfe5f222450ee6c13f76f9",
+        "datetime": 1791540788,
+        "summary": "Kroger (NYSE:KR) announced the retirement of Colleen Lindholz, President of Kroger Health, after more than 30 years with the retailer. Lindholz has led Kroger Health and its Food as Medicine platform, including pharmacy, clinic and wellness programs across the chain. The company credited her tenure with helping shape Kroger's broader healthcare approach and its integration with the grocery business. The retirement of Colleen Lindholz from Kroger Health is a leadership shift investors may...",
+        "headline_cn": "克罗格总裁Colleen Lindholz任职30余年后退休",
+        "sentiment": "neutral",
+        "rationale": "常规人事变动，对经营影响有限"
+      },
+      {
         "headline": "Where Could Walmart's Next Growth Come From?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f9f5f36e2d46a569cc995c2ca01944721e1b0f58135637465ad8c75ffe422ef9",
         "datetime": 1791491656,
         "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores.",
-        "headline_cn": "沃尔玛的下一个增长点在哪里？",
-        "sentiment": "neutral"
+        "headline_cn": "沃尔玛的下一个增长点可能来自哪里？",
+        "sentiment": "neutral",
+        "rationale": "探讨性文章，未披露新增催化剂"
       },
       {
         "headline": "AM Best Revises Issuer Credit Rating Outlook to Negative for Queen City Assurance, Inc. and Vine Court Assurance Incorporated",
@@ -6055,7 +6292,8 @@
         "datetime": 1791489840,
         "summary": "OLDWICK, N.J., October 08, 2026--AM Best has revised the outlook to negative from stable for the Long Term-Issuer Credit Rating (Long-Term ICR) and affirmed the Financial Strength Rating (FSR) of A (Excellent) and the Long-Term ICR of \"a+\" (Excellent) of Queen City Assurance, Inc. and Vine Court Assurance Incorporated, both domiciled in Burlington, VT, and collectively referred to as Queen City Assurance Group (the group). The outlook of the FSR is stable.",
         "headline_cn": "AM Best将Queen City Assurance和Vine Court Assurance发行人信用评级展望下调至负面",
-        "sentiment": "bearish"
+        "sentiment": "bearish",
+        "rationale": "评级展望转负，预示信用质量承压"
       },
       {
         "headline": "Was The Run In Target Stock Hiding In Plain Sight?",
@@ -6063,8 +6301,9 @@
         "url": "https://finnhub.io/api/news?id=6998d5ebbf1191720a53a0ecafdfaf8420981807afd7344d78e26a5aa1aada5d",
         "datetime": 1791484998,
         "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports.",
-        "headline_cn": "Target股票的上涨是否显而易见？",
-        "sentiment": "bullish"
+        "headline_cn": "塔吉特股价上涨早有迹可循？",
+        "sentiment": "bullish",
+        "rationale": "回顾股价上涨，暗示基本面改善"
       },
       {
         "headline": "What Are Costco Investors Betting On?",
@@ -6072,17 +6311,16 @@
         "url": "https://finnhub.io/api/news?id=34045d124769cb9170aad222e84c7eaf1ca4b6843fcc12e163b344cb7f489e0a",
         "datetime": 1791482953,
         "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for.",
-        "headline_cn": "Costco投资者在押注什么？",
-        "sentiment": "neutral"
+        "headline_cn": "好市多投资者在押注什么？",
+        "sentiment": "neutral",
+        "rationale": "分析投资逻辑，未提供新增信息"
       },
       {
         "headline": "Is Kroger open on Columbus Day?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=31b341eeed7725e455803157467cbe7879a3c7d3179516614cb3735dc7db1c59",
         "datetime": 1791479820,
-        "summary": "Kroger grocery and pharmacy store hours vary.",
-        "headline_cn": "Kroger在哥伦布日营业吗？",
-        "sentiment": "neutral"
+        "summary": "Kroger grocery and pharmacy store hours vary."
       },
       {
         "headline": "Publix now has 10 Kentucky stores. Here’s how the grocer is growing in the state.",
@@ -6434,6 +6672,20 @@
     ],
     "MPC": [
       {
+        "headline": "Valero and US Refiners Expected to Report Record Earnings as Global Fuel Supply Tightens",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a20ac1384746d56f5ec2064b29e06edf0db2989ea0d62dc68559facbeae0080f",
+        "datetime": 1791542815,
+        "summary": "Major US oil refiners, including Valero Energy (NYSE:VLO), Marathon Petroleum (NYSE:MPC) and Phillips 66 (NYSE:PSX), are expected to report substantially higher third-quarter earnings as disruptions to global fuel production support refining margins. Analysts anticipate that the three companies could exceed their near-record second-quarter profits, benefiting from shortages of refined petroleum products linked to conflicts in the Middle East and Ukraine."
+      },
+      {
+        "headline": "Why Did VLO, MPC, PSX Stocks Jump To 52-Week Highs Today?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c442156c701b87ba414b7903bd81f761c40df00411ee1b62ef29d3b3df56be41",
+        "datetime": 1791518813,
+        "summary": "Valero Energy, Marathon Petroleum and Phillips 66 jumped to annual highs amid rising diesel prices and positive expectations from their upcoming results."
+      },
+      {
         "headline": "3 Pipeline Stocks With Yield Up To 5%",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f782a661439ac9efc9ad73202e4c202a19ae920f17258e9f61d9023f1b843055",
@@ -6469,6 +6721,13 @@
         "summary": "DK secures a full 2025 small refinery exemption, easing its RFS burden as rising earnings estimates add to the stock's appeal."
       },
       {
+        "headline": "Stock Market Today: S&P 500 Slips as Oil Spikes 5%, 10-Year Yields Near 5.35%",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=dbb9d0610a0a6dcb624548d326562f4cf90c10df247b33b10bdac1225e3393e9",
+        "datetime": 1791465599,
+        "summary": "Stocks slip as Gulf tanker attacks lift Brent above $105 and the 10-year yield nears 5.35%; small caps lag while energy and Chipotle rally."
+      },
+      {
         "headline": "HP's Strong Q4 Outlook and FlexRobotics Drive Investor Focus",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=6fcd2ff36675a1ab6f190f75ddbde8283b2c4ec1228d10e1c94ace1221ada6d6",
@@ -6486,6 +6745,13 @@
         "headline": "Okeanis Eco Tankers Commences Trading Of Newly Issued Shares On New York Stock Exchange",
         "source": "Benzinga",
         "url": "https://finnhub.io/api/news?id=1a63ce29ae5064b59e682c235a3e8c12552247d410f746a10ee2bcda0537c471",
+        "datetime": 1791455835,
+        "summary": ""
+      },
+      {
+        "headline": "Shares of oil and gas-related companies are trading lower as crude prices pull back amid renewed optimism over potential diplomatic progress between the U.S. and Iran this weekend in Pakistan talks.",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=258c1853a446a9109364948ddadc425f95605ceb5a4e7d7ff2a77f8686a781fd",
         "datetime": 1791455835,
         "summary": ""
       },
@@ -6709,6 +6975,125 @@
     ],
     "MSFT": [
       {
+        "headline": "Here's Why I Sold Cipher Digital and Bought More Iren",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3882c3cae7658ab12bac7cde120ee686e8485f1ae98d540420e3b97eef02a087",
+        "datetime": 1791546600,
+        "summary": "I got out of Cipher Digital and doubled down on Iren. Here's why."
+      },
+      {
+        "headline": "Prediction: Oracle Has 49% Upside as Cloud Backlog Signals Major Growth Shift",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7f5bd24e5f8dbfabe9bca71be89b972a324c3896d0394436713ba3f99f0092d7",
+        "datetime": 1791544509,
+        "summary": "Oracle's cloud backlog keeps growing and its quarterly results keep beating estimates, yet the stock sits near a 52-week low. Something in that gap is either a serious warning sign or the biggest mispricing in megacap tech right now."
+      },
+      {
+        "headline": "BMO is bullish on this Magnificent 7 stock after enterprise AI agent launch",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=501ec9ac25fa55433456ea20db6386d2761a45d9271705ddfe650fd0e6a82278",
+        "datetime": 1791543040,
+        "summary": "Investing.com -- BMO Capital Markets reiterated an Outperform rating and Top Pick status on a tech giant after it launched an enterprise AI agent, entering what the broker calls \"the next frontier of the AI war.\""
+      },
+      {
+        "headline": "Social Buzz: Wallstreetbets Stocks Mostly Higher Pre-Bell Friday; SpaceX, Nebius Group to Advance",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=f98f52dae6b1c3f34445b85bc8a333038fc0ea7b0a07bc884f94ea9f4809a41f",
+        "datetime": 1791542058,
+        "summary": "The most-talked-about stocks in the Reddit subforum Wallstreetbets were mostly higher hours before F"
+      },
+      {
+        "headline": "OpenAI’s Revenue Appears $20 Billion Lighter Than Reported — and the Gap Is Accounting, Not Demand",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c998b593c567bcde20b7e2ed1b8c6eb2943105d31a4cb3801213722b8a4ae65c",
+        "datetime": 1791540275,
+        "summary": "OpenAI’s annualized revenue is running at roughly $50 billion — about $20 billion less than the $68 billion figure that circulated in September after multiple outlets reported it as fact. The gap is not a demand shortfall. It is a measurement difference. But the market reaction — Oracle down 5%, CoreWeave down 8%, Nvidia down […]"
+      },
+      {
+        "headline": "OpenAI's $20 Billion Revenue Gap Sends Chip Stocks Tumbling",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=557033d381aadccfe976abc5e7e0ac7ac2483c91237e84c6093fb91093fef475",
+        "datetime": 1791540023,
+        "summary": "Chip stocks slid after reports put OpenAI's annual revenue near $50 billion, well below earlier estimates. Debt-heavy AI names took the hardest hit, SpaceX moved deeper into mobile with new spectrum, Chipotle jumped on Starbucks takeover talk, PepsiCo rallied despite a guidance cut, and oil climbed above $91."
+      },
+      {
+        "headline": "Google’s New Gemini Agent Works Inside Microsoft 365. Can It Add to Google Cloud’s Growth?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=88d75c3b4b18fbb8e3b318aeb863d38aa5fe14877976c594f844455d8566c3a9",
+        "datetime": 1791539868,
+        "summary": "Alphabet (GOOGL:NASDAQ) is taking an unusual route into AI agents for work. At its Gemini at Work 2026 event on Thursday, October 8, Google Cloud introduced the Gemini agent, a single agent that plans tasks, connects to business systems, creates content and writes code."
+      },
+      {
+        "headline": "‘Dean of Valuation’ Warns of AI Cash Drain: 4 Ways to Play the Shift",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=aa06922a2d3805b00683107f05c8e2dd6e6b42a46f8c0d0de296ffdb4a39789a",
+        "datetime": 1791531183,
+        "summary": "Aswath Damodaran breaks down 2026 AI capex: rising cash burn, tech shifting to heavy assets, and 4 paths for stock investors."
+      },
+      {
+        "headline": "Stocktwits AI Roundup: OpenAI Revenue Woes Rattle Chip Stocks, SoftBank Hunts $100B, Microsoft Goes AI-First",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=904739f60c9136de943044b8335811943bdc533a33ad1ab2080f92ba1e57cb39",
+        "datetime": 1791528210,
+        "summary": "AI stocks faced a reality check as OpenAI revenue concerns rattled chipmakers."
+      },
+      {
+        "headline": "Microsoft and Adobe Face a Green Card Sponsorship Freeze: What Investors Should Watch",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c03d2a7fa0ee2270fd018f380006c20c4d5d3f07d00c454b6efe625918e3ee96",
+        "datetime": 1791526790,
+        "summary": "Microsoft (MSFT:NASDAQ) and Adobe (ADBE:NASDAQ) lost access to a key step in the US green card system on Thursday, October 8. Labor Secretary Keith Sonderling announced the suspensions at a White House press conference, saying the Labor Department won’t accept new or process pending permanent labor certification (PERM) applications involving either company."
+      },
+      {
+        "headline": "Nvidia: Jensen Huang And Lisa Su Agree On One Thing",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=92e0b4ad495445fbb3c207f309f0c1e98ddd4571657ad2717bb37a7f855400d6",
+        "datetime": 1791526731,
+        "summary": "Nvidia (NVDA) sees $15.6B in customer prepayments, signaling strong external AI GPU demand beyond circular financing."
+      },
+      {
+        "headline": "Jim Cramer Says OpenAI Revenue Isn’t ‘Apples to Apples’ With Anthropic, Daniel Newman Calls Debate 'Hilarious' — $500 Billion Wiped Out",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1fb861178fda58df17cca8687b28f492e69420075397a007f1c1fea8da66bed9",
+        "datetime": 1791525760,
+        "summary": "OpenAI’s annualized revenue may be closer to $50 billion than the $70 billion previously reported, and investors say the $20 billion gap reflects how revenue is counted, not a drop in sales. FT Report Sparks Debate The Financial Times reported Thursday that OpenAI told investors its annualized revenue was approaching $50 billion at the end of September. The newspaper said investors had earlier adjusted the ChatGPT maker’s figures to match Anthropic’s approach, which counts the full value of sale"
+      },
+      {
+        "headline": "Wall Street Still Treats Micron Like a Commodity Stock — Analyst Says That's a Costly Mistake",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=6965fcc7bdb47adc7e2f8ab9f572313baf1fc3e5053f4c4e5cc23bcf82e69ae2",
+        "datetime": 1791525437,
+        "summary": "Micron (MU) stock gains in premarket trading. D.A. Davidson highlights a massive valuation gap vs. AMD and Intel amid AI expansion."
+      },
+      {
+        "headline": "OpenAI expects to reach $70 bln revenue by end-2026, Bloomberg reports",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=76ccff807cb9a9035d3c7689ccb1e9e8a828148d93242c8c39e78d398064a501",
+        "datetime": 1791523922,
+        "summary": "Investing.com-- OpenAI expects to reach or exceed $70 billion in annualized revenue by end-2026, Bloomberg reported on Friday, citing people familiar with the matter."
+      },
+      {
+        "headline": "The Real Challenge for Muse AI Is Making the Math Make Sense",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3bc8ab084136d6029d7cea2604c91cf1623519fa16089b22bddc1ecab255c93a",
+        "datetime": 1791523800,
+        "summary": "Even if Meta Platforms can turn its AI agent into an essential service, making it profitable is going to be tough."
+      },
+      {
+        "headline": "Zacks Investment Ideas feature highlights: Microsoft, Dell, HP, Lenovo and Nvidia",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ec9f09abb94e6a97f6523f2a2d42ecba63078ce5c2b5c68342122fce508e6d32",
+        "datetime": 1791521100,
+        "summary": "Microsoft, Dell, HP, Lenovo and Nvidia have been highlighted in this Investment Ideas article."
+      },
+      {
+        "headline": "Bill Gates Says Aviation Is One of the Hardest Sectors to Decarbonize Amid Skyrocketing Fuel Costs—Here's His Solution",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=2813822656deb035b37aae7540a6f33ed668b6462898fcaf91eac68f346ec518",
+        "datetime": 1791516541,
+        "summary": "Bill Gates says contrails drive half of aviation’s warming, but the billionaire may have a solution to tackle the problem."
+      },
+      {
         "headline": "Is SailPoint (SAIL) Fairly Valued After Its Latest Identity Security Launches?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=49f37beeb3003719ef9d1fe7c4ff0abc2ff7638cea14f7c054feae19f36219d3",
@@ -6716,11 +7101,39 @@
         "summary": "SailPoint (SAIL) just rolled out a fresh batch of identity security features, tying its platform into tools like Microsoft Purview, BigID, and data warehouses such as Google BigQuery and AWS Redshift. Investors have been rewarding that story in recent months, with SailPoint’s share price showing a 46.02% 90-day return and a 12.54% 30-day share price return, even though the 1-year total shareholder return is still down 14.08%. Scan how SailPoint’s AI identity security story compares with other..."
       },
       {
+        "headline": "Elon Musk A ‘National Treasure,’ Says Trump: President Compares Tesla CEO With Edison As He Awards National Medal of Science",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=abc0f7cf0b96e512b07f7090ff56bf8f1a001e22ef9f5a7cbac9cb8117710500",
+        "datetime": 1791514805,
+        "summary": "Elon Musk congratulated his fellow honorees after President Trump gave six tech leaders national science and technology medals on Thursday."
+      },
+      {
+        "headline": "OpenAI Says Three Employees Violated Sensitive Information Policies, Denies Safety-Concern Firings, Will Announce Third-Party Safety Assessors In Coming Weeks",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=d168122d1e62e28e7f02273396fce0ec266a1e4fe01e7ec414873751cffd5983",
+        "datetime": 1791513110,
+        "summary": "https://x.com/OpenAINewsroom/status/2108441580806025712 "
+      },
+      {
+        "headline": "Snowflake: Fairly Priced Until Migrations Prove Themselves",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=761d9d58003ad71bd83b302820ba20428fae8f505d7a8be0a1e660177876026e",
+        "datetime": 1791506990,
+        "summary": "Snowflake (SNOW) outlook: FY2026 product revenue $4.68B, RPO up 42%, AI-led migrations driving growth. Read here for a detailed investment analysis."
+      },
+      {
         "headline": "Advanced Micro Devices vs. ASML: Which Semiconductor Stock Is a Better Buy in 2026?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=8d42f25c2ed44fae3597e64c63defe9bc77ce60ad76e26198e7ef0825841354b",
         "datetime": 1791502971,
         "summary": "Both are essential to the AI chip build-out, but they carry very different risk profiles depending on where they sit in the supply chain."
+      },
+      {
+        "headline": "Securitize Stock Jumps After Hours As It Launches Tokenized Apple, Nvidia, Tesla Shares On Solana",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=413233843013b38dd1cadc4a77d42efa5a769d8336ffd92a18cca1c6ee07c161",
+        "datetime": 1791502056,
+        "summary": "Securitize shares jump 9.92% in after-hours session as company launches 12 tokenized U.S. stocks on Solana."
       },
       {
         "headline": "What Does Western Digital Offer That Apple Does Not?",
@@ -6861,6 +7274,13 @@
         "url": "https://finnhub.io/api/news?id=2edba0fdf164f91c01c6429c2ea4bd16998772f18be4160ea821de16c936febb",
         "datetime": 1791482580,
         "summary": "Infosys falls after the Labor Department says it will suspend major tech companies from sponsoring foreign workers for green cards."
+      },
+      {
+        "headline": "Here’s How Much You Would Have Made Owning Microsoft Stock In The Last 20 Years",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=6eded6234dfd1d08ba6662574709465f3d8d02b830fc3c6dcd00021fdddb6aef",
+        "datetime": 1791482433,
+        "summary": "Microsoft (NASDAQ:MSFT) has outperformed the market over the past 20 years by 6.6% on an annualized basis producing an average annual return of 15.67%. Currently, Microsoft has a market capitalization of $3.93 trillion."
       },
       {
         "headline": "OpenAI Annualized Revenue $20 Billion Short, Says Report. AI Stocks Fall.",
@@ -7059,6 +7479,20 @@
         "summary": "The new Securitize Stocks product launches with 12 names backed one-to-one by real shares—preserving dividends and voting rights—trading first on Solana, with NYSE and OKX-ICE venues planned."
       },
       {
+        "headline": "Solana Tops NYSE Trade Count: Can Robinhood, Coinbase, Hyperliquid Keep Up?",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=542365d1786c73a9f2118686fe3c540c092c357fcbf888bee2eafb7d08671e5f",
+        "datetime": 1791472223,
+        "summary": "Solana briefly tops the NYSE in trade count as Securitize brings Apple, Nvidia, Tesla and Microsoft stocks on-chain."
+      },
+      {
+        "headline": "Anthropic Launches Cyber Mission To Equip Defenders With AI Tools, Research, And Resources To Strengthen Software And Systems Security",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=13142e927c5dc9855bdc8bba378f30f8aa5b31f888d6cb6647e283965f3d6500",
+        "datetime": 1791471870,
+        "summary": "https://www.anthropic.com/news/anthropic-cyber-mission"
+      },
+      {
         "headline": "The Safest Upside in the Mag 7 Right Now",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=4a4d65bcfc04fa074db1e3f94069f327bcd58ff7712a32cd43e00cced26d1867",
@@ -7094,6 +7528,13 @@
         "summary": "XP will combine activities into four businesses: XBOX Pictures, XBOX Products, XBOX Places and XBOX Partnerships."
       },
       {
+        "headline": "Microsoft's Visa Freeze Could Trigger an AI 'Brain Drain'",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=00d96051989ef6509bd764093435c59e235819bbc0ed1eca3c55193051d17586",
+        "datetime": 1791470499,
+        "summary": "Microsoft’s visa freeze may have limited earnings impact now, but tighter immigration rules could push AI talent and R&amp;D overseas."
+      },
+      {
         "headline": "Mar Vista U.S. Quality Premier Portfolio Q3 2026 Activity",
         "source": "SeekingAlpha",
         "url": "https://finnhub.io/api/news?id=96f3e6022a2df39f5504ef418a37b5e58fcf41a5cf54fe19df450a0764354772",
@@ -7113,6 +7554,13 @@
         "url": "https://finnhub.io/api/news?id=698c8fd51e6ec0c6f6e801183771405364c1bb9f69506bafd4398a5a22b78ae9",
         "datetime": 1791469260,
         "summary": "Securitize (NYSE: $SECZ) has launched tokenized U.S. stocks, initially offering tokens tied to Apple (NASDAQ: $AAPL..."
+      },
+      {
+        "headline": "OpenAI Revenue $20B Below Previous Reports, ORCL, NVDA Tumble",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=7d82cf1388db48685ad278e766e27d3637854f605e5b302b64efba8c66191886",
+        "datetime": 1791469119,
+        "summary": "New figures put OpenAI’s annualized revenue near $50 billion, about $20 billion below earlier reports, as AI stocks fell."
       },
       {
         "headline": "Can Microsoft's Big AI Capex Translate Into Sustainable Returns Ahead?",
@@ -7143,6 +7591,13 @@
         "summary": "Andrew Hill Investment Advisors recently released its third-quarter 2026 investor letter. A copy of the letter can be downloaded here. The fund navigated a mixed third-quarter investment environment in which rising oil prices, higher interest rates, and persistent inflation created headwinds for equities and bonds, although strong corporate earnings and continued AI investment helped support […]"
       },
       {
+        "headline": "Stock Reaction To Samsung And TSMC Earnings Is An Early Indicator Of A Market Character Shift—Watch Oil And Yields",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=ba9d5e3a3085961ccee6b85033662ecdbb5a2baa491b31c74441125d2b408433",
+        "datetime": 1791466673,
+        "summary": "\n\n\n\nSigns Of Market Character Shift\n\n\n\nPlease click here for an enlarged chart of SPDR S&amp;P 500 ETF Trust (NYSE:SPY) which represents the benchmark stock market index S&amp;P 500 (SPX).\n\n\n\nNote the following:\n\n\n\n\nThe"
+      },
+      {
         "headline": "Microsoft’s Most Powerful Laptop Ever Runs on Nvidia, Not Intel",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=67922892f01bdfa8e687e65d7ba11a5dff6aef6e4361035646c899ae29d9b73c",
@@ -7155,6 +7610,13 @@
         "url": "https://finnhub.io/api/news?id=1c57c246342ef7a5b1c03b7b1c11337ca147c2f5bb32430f7b968d5136c11119",
         "datetime": 1791466118,
         "summary": "Investing.com -- Microsoft Corporation (NASDAQ:MSFT) is formalizing its push into Hollywood and location-based entertainment by creating a dedicated division within its Xbox business to license, adapt, and monetize its marquee gaming franchises across non-gaming media."
+      },
+      {
+        "headline": "Microsoft On U.S. Government Suspending Perm Program, Says \"We Look Forward To Providing The Administration With Additional Information\"; We Pay Our H-1B Employees The Same As Any Other Employees Doing Comparable Work; Vast Majority Of Microsoft Employees In The United States Are Americans; About 80% Of H-1B Visa Applications Co Submitted Last Fiscal Year Were To Extend/Change Status Of Existing Microsoft Employees",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=7aa7f1477e83951c53be91900e99b1add14d3786872d4b0ffc13956c22e5ec47",
+        "datetime": 1791465758,
+        "summary": "- Reuters "
       },
       {
         "headline": "Amazon Stock Has Another Growth Story Investors May Be Missing",
@@ -7178,6 +7640,34 @@
         "summary": "Acquisition pairs CyberFOX privileged access, password, and network controls with continuous M365 tenant monitoring, giving small to mid-sized enterprises coverage on both the device and the cloudTAMPA, Fla., Oct. 08, 2026 (GLOBE NEWSWIRE) -- CyberFOX®, a global cybersecurity software provider helping IT teams control access, protect credentials, and secure connectivity, today announced it has acquired Optimize365. The acquisition adds continuous Microsoft 365 tenant monitoring and hardening to"
       },
       {
+        "headline": "AI Bubble Nearing a Breaking Point? Ray Dalio’s Warning Reveals a Risk Hiding in These ETFs",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=a45683c4656781704f2e0b29d34f6fdede3c99c6483a91e0bd4bdb67edc4268c",
+        "datetime": 1791464157,
+        "summary": "Ray Dalio warns the AI bubble may be nearing a breaking point. Here’s how Nvidia, Apple and Microsoft exposure could put major ETFs at risk."
+      },
+      {
+        "headline": "'OpenAI annualised revenues $20bn less than previously signalled' - Financial Times",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=988f54379b7133c53a8bb05c859af55272ae8c383d6ed14ccd973d58972169df",
+        "datetime": 1791463503,
+        "summary": "https://www.ft.com/content/b66a9858-f8fb-46cb-b506-44bfe26fca2a?shareType=nongift"
+      },
+      {
+        "headline": "'Trump to Unveil $2.4B in AI Pledges to Boost Research'- Bloomberg",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=e19279daed9e8916aba9bac271e85507e3daf5766b1cea43d646fe7315fe79d1",
+        "datetime": 1791463305,
+        "summary": "https://www.bloomberg.com/news/articles/2026-10-08/trump-to-unveil-2-4-billion-in-ai-pledges-to-boost-research"
+      },
+      {
+        "headline": "What's Going On With Microsoft Stock Thursday?",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=2ed18e5e0c368df061688e714b1a3aac10e79c59da8f7e72c32764ff7180c3ee",
+        "datetime": 1791463016,
+        "summary": "Microsoft stock dips as tech stocks weaken and overbought signals emerge, while Activision Blizzard faces fresh EU scrutiny."
+      },
+      {
         "headline": "Wall Street Lunch: Starbucks Puts Chipotle On Its Takeover Menu",
         "source": "SeekingAlpha",
         "url": "https://finnhub.io/api/news?id=c018240ef167e2a959907fdaead23ba01ffa70435f7bfd5f13ecac9ddddaa4da",
@@ -7197,6 +7687,13 @@
         "url": "https://finnhub.io/api/news?id=108a8a5f74cd341b32d8ce1a9353dad0d6033386731fd21794f22e0b36dacd49",
         "datetime": 1791460560,
         "summary": "CRWV expands in India with a 240 MW AI data center deal, betting on advanced NVIDIA infrastructure and rising AI demand to fuel growth."
+      },
+      {
+        "headline": "SpaceX’s $500 Billion AI Data Center Gamble Has Real Revenue Behind It, Says FT’s John Foley",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=daa722ad026f35c97e82f22f99f5c6f62736e9dec56511d37f1a2ad3f6e93b9d",
+        "datetime": 1791460055,
+        "summary": "FT’s John Foley says SpaceX’s AI compute business has real demand, even as scaling it could require $500 billion."
       },
       {
         "headline": "U.S. suspends Microsoft, Adobe from green-card labor program in foreign worker crackdown",
@@ -7220,6 +7717,20 @@
         "summary": "Nvidia CEO Jensen Huang says the world's most valuable company would not exist without Microsoft."
       },
       {
+        "headline": "Anthropic Is Deepening Its Support For American Scientific Research By Committing $150M Over Three Years To The Genesis Mission",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=9f67cc0249e63ef41b2fd31abd30954b0f93188badf327f996aa75160a07fd7b",
+        "datetime": 1791457791,
+        "summary": "https://www.anthropic.com/news/genesis-mission-commitment"
+      },
+      {
+        "headline": "70 Million Kids Just Got Trump Accounts. The Bigger Winner Could Be State Street",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=fc917b19758215f50261cca914df499463c0fd91e36f8ece6314dc748a4058de",
+        "datetime": 1791457326,
+        "summary": "Trump Accounts now cover nearly 70 million children, with State Street&#39;s SPYM as the default ETF. Here&#39;s why the long-term economics matter."
+      },
+      {
         "headline": "AI Debt Boom: ETF Areas to Play",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=deb2c3fa42332aa2e2c596e5a154d005022bb0e6d26f6269a21d12fe3e5058a3",
@@ -7234,11 +7745,32 @@
         "summary": "Nvidia stock has wavered since breaking through to a record high earlier this week. One massive options buyer is confident of further gains."
       },
       {
+        "headline": "OpenAI Says Recently Banned 2 IO One From Russia And One From Iran That Used Our Models In Combination With More Traditional Techniques And Technologies To Support Sophisticated “False Front” Entities",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=250227ad9b48036779f4ac8c0eceba0f9fc16cd75ffeb266871ce3d18923ac63",
+        "datetime": 1791456142,
+        "summary": "https://openai.com/index/disrupting-ai-enabled-false-front-operations/"
+      },
+      {
+        "headline": "U.S. Labor Secretary Says Is Suspending Some Of The Largest IT Sourcing Firms In The World From Labor Certification Program Including Microsoft, Adobe",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=fda6d92da9769892dadc073a09eb6d5670455166fef976aca32d4e6e4c93c0f8",
+        "datetime": 1791455412,
+        "summary": "https://x.com/i/broadcasts/1PKqrNLRmNPGb"
+      },
+      {
         "headline": "What Is Going on With Alphabet Stock on Thursday?",
         "source": "Benzinga",
         "url": "https://finnhub.io/api/news?id=0b00817fb0e77a8c25f12b5ae5bd2b5d347ac97ee971c33a653a3f422fc20be1",
         "datetime": 1791455090,
         "summary": "Alphabet expands Gemini across Google Workspace to capture enterprise AI demand as analysts project strong Q3 earnings growth."
+      },
+      {
+        "headline": "Vice President Vance Says U.S. Suspending Perm Program For Microsoft; Message To Microsoft Is You've Got To Hire American Workers; U.S. Is Reforming H-1B, J-1 Visa Programs",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=1f74ea86e913c6d337a5c1e65c25c7c9fbac5050e29282b0575f2f4252de6856",
+        "datetime": 1791455023,
+        "summary": "https://x.com/i/broadcasts/1PKqrNLRmNPGb"
       },
       {
         "headline": "Jeff Bezos Says He Usually Tells Retired Investors To Buy The Same Thing, And It’s Not Just AI Stocks",
@@ -8184,282 +8716,16 @@
         "url": "https://finnhub.io/api/news?id=ea5b6277d40f0f0daa0514c9615b7dee85dafdcc74215d455affa0548af5e2f1",
         "datetime": 1791309087,
         "summary": "A congressman is swapping stocks ahead of earnings season. Here&#39;s the trades."
-      },
-      {
-        "headline": "Did Strong Q3 Outlook and New CEO Plan Just Shift NeoGenomics' (NEO) Investment Narrative?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0ebd549c22b136beb17776f613cb57ee292edc188b3e606352ad4e111ec137e5",
-        "datetime": 1791306537,
-        "summary": "NeoGenomics, Inc. recently amended its bylaws to expand its Board to up to eleven directors, issued preliminary third-quarter 2026 revenue guidance of about US$209 million with very strong next-generation sequencing growth, and outlined plans to increase full-year revenue guidance. The company also unveiled a planned leadership transition that will see President and COO Warren Stone become CEO and join the Board in January 2027, while current CEO Tony Zook moves to Executive Chair and the..."
-      },
-      {
-        "headline": "AI Trade Broadens, Again: Capital Stack Recycling (Video)",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=857cbd7a91c5a2216df9039f8d1a5c4093bf5d7d56d5978b23f25905922d3982",
-        "datetime": 1791306309,
-        "summary": "Rising new build costs & higher interest rates increase the value of existing capacity for data centers, opening capital recycling opportunities. Read more now."
-      },
-      {
-        "headline": "The Magnificent Seven's Combined Value Nears $25 Trillion",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=ac02a16de95c3a453fe65733c06d1261d8b7de5cc4f283b2185594b6c58de8d8",
-        "datetime": 1791306269,
-        "summary": "The Magnificent Seven's combined market capitalization was on pace to close above $25 trillion for the first time, according to Dow Jones Market Data."
-      },
-      {
-        "headline": "The Nasdaq Just Hit a Record High -- Are You Overexposed to AI Without Realizing It?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=35569b8edc4e53e2712574e787c31cc0ec93dbd8d61260433f7001b436a95ead",
-        "datetime": 1791306026,
-        "summary": "As the Nasdaq reaches record highs, find out whether AI stocks make up more of your portfolio than you realize and what risks that may create."
-      },
-      {
-        "headline": "Jensen Huang Vs. Satya Nadella: Whose Promises About AI Better Approximate The ‘Truth’?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=a87875219cd1267473e0e658f60ed755d19ed8dd986348d03b074e2734d632fa",
-        "datetime": 1791305138,
-        "summary": "Jensen Huang speaks in gigawatts and doubling demand while Satya Nadella speaks in seat counts and cost curves, but one of them is quietly funding his own customers to keep the story alive."
-      },
-      {
-        "headline": "Not Microsoft. Not Google. Analysts Call This $2.7 Trillion Tech Titan the Most Undervalued AI Play.",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=6ace78cffa55a1f59fc8f1d51337c8297fff889c1283b8b9c28203ebe2428365",
-        "datetime": 1791304860,
-        "summary": "Amazon's cloud growth should lead to massive profit expansion."
-      },
-      {
-        "headline": "Uncover the latest developments among dow jones stocks in today's session.",
-        "source": "ChartMill",
-        "url": "https://finnhub.io/api/news?id=361e5b72465570df72e887158a87e1dc49821914f115ef86f466fedcaf903622",
-        "datetime": 1791304810,
-        "summary": "Get insights into the dow jones index performance on Tuesday. Explore the top gainers and losers within the dow jones index in today's session."
-      },
-      {
-        "headline": "M365 Con 27 Brings 120+ Microsoft Experts Together — Including 90+ Microsoft MVPs — for a Global Conference on AI, Copilot and the Future of Work",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b0b24d016759c0c9b636db2a7c73d39b48cc61ce9fb94fc8d6eb6f42387c77a7",
-        "datetime": 1791304500,
-        "summary": "Free online conference runs January 11–22, 2027, bringing one of the largest concentrations of Microsoft MVPs together for ten days of practical technology sessions Jasmin Siemader, Microsoft Data Platform MVP, explores how AI, business intelligence, data governance, and human judgment work together to support successful data transformation and better decision-making within organizations. Stuttgart, Oct. 06, 2026 (GLOBE NEWSWIRE) -- More than 120 Microsoft experts will come together online in Ja"
-      },
-      {
-        "headline": "Why this chart making the rounds on X is a bad omen for stocks",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e129d7936852fa8c15d98e38f810202db463580c9f673884f5e202511d8e531a",
-        "datetime": 1791302351,
-        "summary": "Dig underneath the surface of a stock market trading near record highs, and you may not like what you find."
-      },
-      {
-        "headline": "Marvell stock surges after company raises 2028 revenue outlook to $20 billion",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=df6316b6758364baf8495c30d9238996ae06ed35ee620c33df8b718e35ba5dfa",
-        "datetime": 1791301838,
-        "summary": "Marvell stock jumped after the custom silicon designer raised its revenue outlook for fiscal year 2028 during its investor day."
-      },
-      {
-        "headline": "Nvidia Strength Is Masking ‘A Whole Lot of Pain’ in the Broader Market, David Rosenberg Says",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=c8b0b6173e24bc416dcac542f5b7af651a1dabc86fa5c274941e0c9c3b35fec1",
-        "datetime": 1791301283,
-        "summary": "David Rosenberg warns weak breadth and extreme AI-stock concentration mask broader market pain, risking a shift if revenues disappoint."
-      },
-      {
-        "headline": "Stock Market Today: Dow Rises As Oil, Yields Fall; AMD, Nvidia, Tesla Shares Rally (Live Coverage)",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=17e181e56894175d3d48e8234373dbdf984acc756da331e92076e6fc53f1d371",
-        "datetime": 1791300591,
-        "summary": "The Dow Jones index rises Tuesday as oil prices and yields fall. AMD, Nvidia and Tesla rally."
-      },
-      {
-        "headline": "The S&P 500 Is Partying at Record Highs: Only 3% of Its Stocks Were Invited",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=205ddd44ff6f1452e358342025e56e33cb0dfa365f5e2fbc16991e2a8a53e86d",
-        "datetime": 1791300578,
-        "summary": "The S&amp;P 500 hit a record high Tuesday, but only 15 of its 504 stocks did too. The median member trades 25% below its own peak."
-      },
-      {
-        "headline": "These 5 key events could be SpaceX's next big catalysts",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=74f18baa5e83f044fc3d6312538f7da3cf67ecdce08994a8b9eb30aa35b8e5e8",
-        "datetime": 1791299700,
-        "summary": "Yahoo Finance Executive Editor Brian Sozzi outlines what could be next for Elon Musk's SpaceX (SPCX)."
-      },
-      {
-        "headline": "Did IREN’s Pivot From Bitcoin Mining to AI Cloud Deals Just Shift IREN's (IREN) Investment Narrative?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b314a62de972c105af24242b87b6ddaff9772c2a6a76754fa12c08d3ee842aa4",
-        "datetime": 1791299215,
-        "summary": "In the past month, IREN Limited reported its fiscal 2026 results and highlighted a transition of its sizable Bitcoin-focused data center capacity toward AI compute workloads, underpinned by new multi-year AI Cloud agreements and ongoing contract expansions with major customers including Microsoft. This shift suggests IREN is repurposing existing infrastructure to pursue recurring AI cloud demand, potentially reshaping its mix between digital asset mining and higher-value compute..."
-      },
-      {
-        "headline": "Anthropic Expands Cyber Verification Program With Three-Tier Access To Advanced AI Models For Security Professionals",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=300c4b9d62236b9bdce67413b30232ad836e463180f24bfb1e5e8f173de91bfc",
-        "datetime": 1791299175,
-        "summary": "www.anthropic.com/news/cyber-verification-program"
-      },
-      {
-        "headline": "Alphabet Has the Biggest Upside in the Mag 7 Right Now: 64%",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=9d7ac2c973d00fe20eb1c5c66aa8cb10add0729027ddf0fcd070b67caa3a27f5",
-        "datetime": 1791298809,
-        "summary": "Google Cloud just posted 82% revenue growth while the stock sits nearly 16% below its 52-week high, and the gap between what Wall Street sees and what the market is pricing in keeps widening."
-      },
-      {
-        "headline": "Jamie Dimon Says AI Boom Is Competing With Government Borrowing for Capital: ‘Rates Are Going Up’",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=a1a86476b72f5c29a44d563e46aa445f3e1e4cd24bbe850b6ea6ea4c50cce16e",
-        "datetime": 1791298808,
-        "summary": "Jamie Dimon says soaring AI investment and heavy government borrowing are competing for capital as interest rates rise."
-      },
-      {
-        "headline": "MRVL's Alliance With NVDA & MSFT: Can It Challenge ALAB & AVGO ?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=c99edaeabb3d9e8ac97a94db60840c680f14e099099c419fb6217e73bfe60229",
-        "datetime": 1791298680,
-        "summary": "Marvell Technology is deepening its ties with NVIDIA and Microsoft to expand AI infrastructure and cloud security as it takes on Broadcom and Astera Labs."
-      },
-      {
-        "headline": "Warren Buffett Said Buy the S&P 500 — But This ETF Is Secretly an AI Powerhouse",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=abf54df13b3779e2b374ca53f59e6d2ee1ce2c0e44ea57f389454f435acf41af",
-        "datetime": 1791298603,
-        "summary": "Warren Buffett’s S&amp;P 500 investing advice points investors toward VOO, but its heavy mega-cap tech exposure makes it an AI powerhouse."
-      },
-      {
-        "headline": "What Has Changed About Owning Amazon Stock?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=c28c633e5f98953af20cd7c01013e9e4f0be1bf41967f67509f04c584469a1cd",
-        "datetime": 1791298529,
-        "summary": "If you own Amazon (AMZN) stock, you probably bought it for growth, and you may now wonder what that growth is costing. Management gave you a reason to ask on its July 30, 2026 earnings call, when it raised its spending plan for the year. So how different is the Amazon you own today from the one you bought."
-      },
-      {
-        "headline": "Sozzi talks SpaceX, takes a look at Nike, and chats with the Conference Board CEO",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d07dbe19af84ddbe763216708c1a6c35385bb66cdd013f239da51a34846c5f81",
-        "datetime": 1791298260,
-        "summary": "Yahoo Finance Executive Editor Brian Sozzi takes a look at the biggest stories as the trading day kicks off, weighing in on what's next for SpaceX (SPCX), airline earnings expectations, and more.Sozzi also sits down with The Conference Board CEO and president, Steve Odland, for a conversation about leadership."
-      },
-      {
-        "headline": "Stocks Are Getting Cheaper Even As Indices Rally",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=0730e47320c8ee20b432f3698b9f08e320c2569f1beb00634846e320d6fcf54f",
-        "datetime": 1791297269,
-        "summary": "The indices have continued to print new all-time highs; however, the markets do not appear pricy and are not due for a sizable pullback. Click to read more."
-      },
-      {
-        "headline": "What Are Palantir Stock Bulls Not Worried About?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=05b2727165f6f1fc5c9282709173099972a65fa64254291083a7a253c4b23abd",
-        "datetime": 1791297258,
-        "summary": "Palantir Technologies (PLTR) stock has returned 46% over the three months through October 5, 2026, against 3.9% for the S&P 500. Buyers at this price appear to expect the company's sales to businesses to keep growing as fast as they have. But Palantir is no longer alone in chasing those customers, and its own management described one such contest on its latest earnings call. So who is Palantir now up against."
-      },
-      {
-        "headline": "What Would It Take For Apple Stock To Move Higher?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0c1b5781b2f8b76825c537cb1a0d0e86eec9f8a1a4ee37bbf175ee0e1f723edb",
-        "datetime": 1791296792,
-        "summary": "Apple (AAPL) stock trades at 37.8 times earnings, against 21.5 for the S&P 500. Buyers at that price appear to expect more growth than Apple has reported so far. A Barron's article on October 1, 2026, reported an analyst's view that the shares may lack a clear catalyst to move meaningfully higher in the near term. Yet management pointed to a possible new source of revenue on its July 30 earnings call. So what is Apple planning."
-      },
-      {
-        "headline": "Nebius Stock Surges 110% in 6 Months: Time to Buy, Hold or Sell?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=81b21cc798f4bccf2635de47edd0f9a2e073fd2a88e494ec048952ec14867a9b",
-        "datetime": 1791296700,
-        "summary": "NBIS stock surges 110% in six months as AI demand, expanding capacity and improving profitability fuel growth, but valuation raises questions."
-      },
-      {
-        "headline": "ETFs to Buy as NVIDIA Marches Toward $6 Trillion Market Cap",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=69e7889a75f51e52dbcffd104e6a2fab6204c3b361ae8d477abb4bf97dc11ae2",
-        "datetime": 1791296640,
-        "summary": "NVIDIA's march toward $6 trillion highlights four ETFs offering heavy exposure to its AI-fueled growth while providing diversification."
-      },
-      {
-        "headline": "MSFT Rises 41% in 6 Months on Solid AI Demand: Should You Hold Now?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=90bf0b1f4c3fcba95e1bb53b61659321c8227de6aed6b112447aeba14868febb",
-        "datetime": 1791296340,
-        "summary": "Microsoft's 41% six-month gain reflects strong Azure and AI demand, but heavy capex and valuation pressure raise questions for new investors."
-      },
-      {
-        "headline": "Palantir: Bullish AI Case Has Never Looked More Exciting",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=315bba33027d37507370cc5ceb4853dc1e2f20251bba0cb9da8aad1e2ef8df5c",
-        "datetime": 1791296032,
-        "summary": "Palantir AI outlook: Nvidia/Nebius ties, sovereign AI strategy, and $4.9B RPO support a Buy despite 100x valuation risks. Click for more on PLTR stock."
-      },
-      {
-        "headline": "How Much Upside Is Left In Google Stock?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7c0237b0cc5337182a4d4e307ae917a99a0eded0c4b5c6989b9384efb7db2fe4",
-        "datetime": 1791295838,
-        "summary": "Alphabet (GOOGL) stock returned 41% over the past twelve months, against 17.1% for the S&P 500. After a run like that, you may assume most of the gain is behind you, but the business has sped up as the stock climbed. Revenue grew 24.2% in the latest quarter from a year earlier, up from 15.9% three quarters before. So what could three more years of owning Alphabet return."
-      },
-      {
-        "headline": "The 3 tech stocks accounting for over 20% of the S&P 500",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=3d326daf75089ffe0e4205ba217ec16a736bb7bf3ceb461a1dd65b77ca8140d0",
-        "datetime": 1791295800,
-        "summary": "Nvidia (NVDA), Microsoft (MSFT), and Apple (AAPL) are lifting the S&P 500 (^GSPC) to record levels as the index grows increasingly concentrated in these three tech giants. Yahoo Finance Executive Editor Brian Sozzi shares his take on these concentration trends."
-      },
-      {
-        "headline": "Nvidia, Apple, and Microsoft are keeping the stock market afloat",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=845b74131fb85e9ad556ede34e0d43a7b857b19cbdca3aafc288d4f2d7ab4de6",
-        "datetime": 1791295725,
-        "summary": "The S&P 500 has never been more concentrated in just three stocks than it is today."
-      },
-      {
-        "headline": "Anthropic Announces Claude Now Works With Google Docs, Sheets, And Slides",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=eebad73db579943ea93bfa34e373d1de36eb3b52107b4a333242d435dc5f391f",
-        "datetime": 1791295276,
-        "summary": "https://claude.com/resources/articles/claude-now-works-in-google-docs-sheets-and-slides"
-      },
-      {
-        "headline": "OpenAI Announces Advancing Computer Use With Ironclad",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=c16635ef0a7833104767c22618f3b4af7ca04f1e18e40e9df1e3a6365d9d9599",
-        "datetime": 1791294414,
-        "summary": "https://openai.com/index/advancing-computer-use-with-ironclad/"
-      },
-      {
-        "headline": "Did The Market Read Okta Stock Right?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=cfe75f66ffcab433673fa9abfc0074478a35025cfc79ae2a4caac28c57106b1a",
-        "datetime": 1791294239,
-        "summary": "Okta (OKTA) stock returned 134% in the year to October 5, 2026, against 17.1% for the S&P 500. Okta's results on May 28 and August 26, 2026 both came with the same message from management: AI agents need identities that are secured. Buyers may be betting on that demand. So how much of Okta's sales come from AI agents today."
-      },
-      {
-        "headline": "S&P 500 hovers near record highs as Treasury yields ease: AlphaCheck",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7ce0dd7d0847484c3b29b0e8949033699f01d6090d2a82cf927c075099f472e6",
-        "datetime": 1791294008,
-        "summary": "Stocks climbed on Tuesday as the S&P 500 headed toward a record."
-      },
-      {
-        "headline": "Nvidia, Apple, Microsoft Now Drive 21% of S&P 500: Here’s How Much ETF Investors Own",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=6f482e31330c422a1ac2a99eea07dfa605b39ebeefc0e514f9be5fd4861ffa5b",
-        "datetime": 1791293663,
-        "summary": "The S&amp;P 500 is increasingly dominated by Nvidia, Apple and Microsoft. Here’s how much exposure SPY, VOO, QQQ and RSP offer to the mega-cap trio."
-      },
-      {
-        "headline": "Oku Digital Health Launches From Topcon Healthcare to Transform Eye Care Into Whole-Body Health",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=76e0397bcf9b6c547c5cf1a04f09b06bcc70a7ae4da049c03cfd41cda1a6e62c",
-        "datetime": 1791291900,
-        "summary": "Built on Topcon's Global Diagnostic Network and Microsoft Azure Cloud, Oku Operationalizes Healthcare from the Eye™ Across 10,000+ Connected SitesLA JOLLA, Calif., Oct. 06, 2026 (GLOBE NEWSWIRE) -- Oku Digital Health, Inc. (\"Oku\"), an AI-powered digital health company connecting eye insights to whole-body health, today announced its global launch from Topcon Healthcare, Inc. Oku turns routine eye exams into a front door for early disease detection and accelerated clinical development by unlockin"
-      },
-      {
-        "headline": "Reco Joins Invitation-Only Microsoft for Startups Pegasus Program to Accelerate Enterprise Agent Security",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=f87b439a270ba15c1a60d7dcbf731430a8e8a516e5fec3758335d4626ddec4be",
-        "datetime": 1791291780,
-        "summary": "Partnership will help more Microsoft customers discover, govern and reduce the risk of AI agents embedded across enterprise applications and workflowsALTAMONTE SPRINGS, Fla., Oct. 06, 2026 (GLOBE NEWSWIRE) -- Reco, the leader in Agent Security, today announced it has been accepted into the invitation-only Microsoft for Startups Pegasus Program, which helps enterprise-ready startups reach customers through Microsoft’s enterprise channels. Reco’s participation builds on its existing support and in"
       }
     ],
     "P": [
+      {
+        "headline": "Top Storage Stock to Buy With $500 Right Now",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=647d46c9e0bdf91b7908545a7ede013fffde7b4e561f04a8c2c6c81e3b78da62",
+        "datetime": 1791539400,
+        "summary": "The company formerly known as Pure Storage is seeing accelerating demand."
+      },
       {
         "headline": "What Are Everpure Investors Betting On?",
         "source": "Yahoo",
@@ -8575,6 +8841,13 @@
     ],
     "PM": [
       {
+        "headline": "VYM And HDV: Two Dividend ETFs That Complement Each Other",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=6d82d1f29b37c668501acad8a62716f96f7f57203f4aeb6c68105387e0eca70d",
+        "datetime": 1791514485,
+        "summary": "VYM's diversified portfolio positions it to benefit from the AI momentum, while HDV appeals to retirees seeking monthly income. Read more on VYM and HDV ETFs here."
+      },
+      {
         "headline": "Top S&P500 movers in Thursday's session",
         "source": "ChartMill",
         "url": "https://finnhub.io/api/news?id=00e3f6f428848d7b5f56e2fc7a444b52168551d6bb7094884d5ba564cf35c7c7",
@@ -8654,6 +8927,20 @@
     ],
     "PSX": [
       {
+        "headline": "Valero and US Refiners Expected to Report Record Earnings as Global Fuel Supply Tightens",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a20ac1384746d56f5ec2064b29e06edf0db2989ea0d62dc68559facbeae0080f",
+        "datetime": 1791542815,
+        "summary": "Major US oil refiners, including Valero Energy (NYSE:VLO), Marathon Petroleum (NYSE:MPC) and Phillips 66 (NYSE:PSX), are expected to report substantially higher third-quarter earnings as disruptions to global fuel production support refining margins. Analysts anticipate that the three companies could exceed their near-record second-quarter profits, benefiting from shortages of refined petroleum products linked to conflicts in the Middle East and Ukraine."
+      },
+      {
+        "headline": "Why Did VLO, MPC, PSX Stocks Jump To 52-Week Highs Today?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c442156c701b87ba414b7903bd81f761c40df00411ee1b62ef29d3b3df56be41",
+        "datetime": 1791518813,
+        "summary": "Valero Energy, Marathon Petroleum and Phillips 66 jumped to annual highs amid rising diesel prices and positive expectations from their upcoming results."
+      },
+      {
         "headline": "Mizuho Downgrades Phillips 66 to Neutral from Outperform",
         "source": "Fintel",
         "url": "https://finnhub.io/api/news?id=3c6706ba15cb62cf702143ad9022b12da54fac1771cb4b57e13934f3b36bfd3a",
@@ -8680,6 +8967,13 @@
         "url": "https://finnhub.io/api/news?id=5c55bf15f9ef789ef0c822e8e4fd0dc0516256d32a7a60461bab66f0ace0a3d5",
         "datetime": 1791460472,
         "summary": "Pre-Market Stock Futures: Futures are tumbling this morning as yields surge higher and oil rises again. After two solid days to start the first full trading week of the 4th quarter, the same issues that have weighed on stocks for months returned as rising interest rates and oil prices took center stage again on Wednesday. […]"
+      },
+      {
+        "headline": "Shares of oil and gas-related companies are trading lower as crude prices pull back amid renewed optimism over potential diplomatic progress between the U.S. and Iran this weekend in Pakistan talks.",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=258c1853a446a9109364948ddadc425f95605ceb5a4e7d7ff2a77f8686a781fd",
+        "datetime": 1791455835,
+        "summary": ""
       },
       {
         "headline": "This Tyler Technologies Analyst Is No Longer Bullish; Here Are Top 5 Downgrades For Thursday",
@@ -8887,6 +9181,13 @@
         "summary": "Royal Caribbean Cruises is set to unveil its third-quarter results soon, with analysts projecting double-digit growth in its bottom line."
       },
       {
+        "headline": "The $90 Social Security Payment Is a Tiny Stimulus. The Retiree Economy Is a Market Giant",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=105cf3fec9aa95e8bf35801e1ee0f41aff2bacba32ff727f950cd88c55ad9306",
+        "datetime": 1791463429,
+        "summary": "The viral $90 Social Security payment is tiny. The retiree economy behind it could matter far more for Walmart, Costco, CVS and travel stocks."
+      },
+      {
         "headline": "Jefferies upgrades Royal Caribbean on stronger yield growth outlook",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=cb3f0ad8a4f86595bd4683c12ff4abb18bbff99329278407bd1201c5fc33bfbd",
@@ -9072,6 +9373,13 @@
       }
     ],
     "SNPS": [
+      {
+        "headline": "Zacks Investment Ideas feature highlights: Synopsys and Amazon",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c53e4ba36521edbf6ec4340afd5ad22d4d9553756bd553707010313ed861b4e3",
+        "datetime": 1791521820,
+        "summary": "Synopsys and Amazon have been highlighted in this Investment Ideas article."
+      },
       {
         "headline": "Synopsys (SNPS): The Next Big AI Stock Breakout?",
         "source": "Yahoo",
@@ -9312,6 +9620,13 @@
       }
     ],
     "STZ": [
+      {
+        "headline": "Stocktwits Wall Street Wrap: Analysts Turn Bullish On Palantir, Marvell And Cava As Nike Faces Downgrade",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=25491a2cc68a9b4d38be43d53e0a2e92e3bfe9746d919c2e4f58f2a2fa505e5b",
+        "datetime": 1791536771,
+        "summary": "Analysts this week highlighted growth opportunities in artificial intelligence, concerns about consumer spending, and challenges facing established brands."
+      },
       {
         "headline": "STZ Q2 Earnings Call Highlights Improving Demand and Outlook",
         "source": "Yahoo",
@@ -10096,7 +10411,10 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=53bbe4aa9c11aaa912b85bc6ec7e10cf64b2e86085ceb4c77aa34351fd789f03",
         "datetime": 1791458154,
-        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying."
+        "summary": "A 26% price drop on a stock with a near-monopoly business model and 85% recurring revenue sounds like a warning, but one investor sees it as an invitation to keep buying.",
+        "headline_cn": "我忍不住持续买入的垄断型“剃刀加刀片”模式公司",
+        "sentiment": "bullish",
+        "rationale": "垄断地位与经常性收入模式受青睐"
       },
       {
         "headline": "Tilray Brands, Inc. (TLRY) Reports Q1 Loss, Misses Revenue Estimates",
@@ -10262,6 +10580,13 @@
     ],
     "TECH": [
       {
+        "headline": "Bio-Techne opens GMP small molecule facility in Bristol, UK",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=faefeed0730560c3361c4dffd5733b8aaf9c5b1bea0f759e1766341a03f5d04a",
+        "datetime": 1791543727,
+        "summary": "The purpose-built site is fully operational and produces materials to support developers working on cell therapies globally."
+      },
+      {
         "headline": "Bio-Techne Expands Global GMP Manufacturing Network with New Bristol Facility to Advance Scalable Cell Therapy Development",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=d30794fa2eb850b4bef3e1d778df4ba518dce031bee55cde42b3c1f019be0ed6",
@@ -10277,6 +10602,13 @@
       }
     ],
     "TGT": [
+      {
+        "headline": "Zacks Industry Outlook Ross Stores, Target, Dollar General  and  Dollar Tree",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e0d51d7d0a6c06d5c2d2cdb4e90cea34101b1402e1776f355db570072c370289",
+        "datetime": 1791524220,
+        "summary": "Ross Stores, Target, Dollar General and Dollar Tree have been highlighted in this Industry Outlook article."
+      },
       {
         "headline": "Target (TGT) On Its Merchandising Reset And The Case For More Upside",
         "source": "Yahoo",
@@ -10297,8 +10629,9 @@
         "url": "https://finnhub.io/api/news?id=f9f5f36e2d46a569cc995c2ca01944721e1b0f58135637465ad8c75ffe422ef9",
         "datetime": 1791491656,
         "summary": "Walmart (WMT) stock currently trades at 39.0 times earnings, well above the 21.5 multiple for the S&P 500. Investors typically assign that kind of premium to rapid growth, yet Walmart reported a modest 5.9% revenue increase in its latest quarter. This valuation suggests the market expects profit to outpace sales by a wide margin, and selling more groceries alone may not be enough to justify it. So what does Walmart have that can grow faster than its stores.",
-        "headline_cn": "沃尔玛的下一个增长点在哪里？",
-        "sentiment": "neutral"
+        "headline_cn": "沃尔玛的下一个增长点可能来自哪里？",
+        "sentiment": "neutral",
+        "rationale": "探讨性文章，未披露新增催化剂"
       },
       {
         "headline": "Was The Run In Target Stock Hiding In Plain Sight?",
@@ -10306,8 +10639,9 @@
         "url": "https://finnhub.io/api/news?id=6998d5ebbf1191720a53a0ecafdfaf8420981807afd7344d78e26a5aa1aada5d",
         "datetime": 1791484998,
         "summary": "Target (TGT) stock returned 76.5% in the twelve months to October 7, 2026. By comparison, the S&P 500 returned 17.1%. During this stretch, shoppers returned to the retailer, and its sales grew again after a long decline. Yet when the run began, Target had posted falling sales in its three most recent financial reports. So what was there to see in those reports.",
-        "headline_cn": "Target股票的上涨是否显而易见？",
-        "sentiment": "bullish"
+        "headline_cn": "塔吉特股价上涨早有迹可循？",
+        "sentiment": "bullish",
+        "rationale": "回顾股价上涨，暗示基本面改善"
       },
       {
         "headline": "What Are Costco Investors Betting On?",
@@ -10315,8 +10649,9 @@
         "url": "https://finnhub.io/api/news?id=34045d124769cb9170aad222e84c7eaf1ca4b6843fcc12e163b344cb7f489e0a",
         "datetime": 1791482953,
         "summary": "Costco Wholesale (COST) stock currently trades at 45.3 times its earnings of the past twelve months. At first glance, that valuation looks steep for a retailer that keeps about 3% of its sales as net profit. Investors, however, are buying the years ahead rather than a single past year of performance. So how much growth is a buyer at this price paying for.",
-        "headline_cn": "Costco投资者在押注什么？",
-        "sentiment": "neutral"
+        "headline_cn": "好市多投资者在押注什么？",
+        "sentiment": "neutral",
+        "rationale": "分析投资逻辑，未提供新增信息"
       },
       {
         "headline": "Looking to Generate Passive Income From Stocks? 3 Unstoppable Dividend Stocks to Buy Now.",
@@ -10696,6 +11031,13 @@
     ],
     "WM": [
       {
+        "headline": "JP Morgan Maintains Overweight on Waste Management, Lowers Price Target to $235",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=2be43b1e402d0885856cb9bc68679c4366b682e019e756abb86a16ecd92e253c",
+        "datetime": 1791478358,
+        "summary": "JP Morgan  analyst Tami Zakaria   maintains Waste Management (NYSE:WM) with a Overweight and lowers the price target from $270 to $235."
+      },
+      {
         "headline": "5 Monthly Dividend Stocks That Could Turn Your Portfolio Into a Second Paycheck",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=752eef944684bea1a51ce40305ad5633e6903c94e28298711c82d432673eb6ad",
@@ -10754,6 +11096,13 @@
     ],
     "XLE": [
       {
+        "headline": "S&P 500 Sector Outlook: Favor XLC And XLK, Underweight XLP As Earnings Leadership Remains Uneven",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=eedeb6028dfc7d226adeb92e5c844640dbabe38c5a2bc90819a55d98a0f3fbca",
+        "datetime": 1791515090,
+        "summary": "S&P 500 outlook for 2027: earnings strong but revisions concentrated. See sector ratingsâBuy XLC & XLK, Sell XLPâand allocation tips."
+      },
+      {
         "headline": "Sector Update: Energy Stocks Gain Late Afternoon",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=abb41f412bc806e635461de2a5fa9a2890ea501a73a3708004e49708f9a4c232",
@@ -10787,6 +11136,20 @@
         "url": "https://finnhub.io/api/news?id=895fc7a27d3f764b06d4d1a9f87895e02c6ab6fa805b0326626d6c308d10a0c7",
         "datetime": 1791465878,
         "summary": "Energy stocks were rising pre-bell Thursday, with the State Street Energy Select Sector SPDR ETF (XL"
+      },
+      {
+        "headline": "Stock Market Today: S&P 500 Slips as Oil Spikes 5%, 10-Year Yields Near 5.35%",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=dbb9d0610a0a6dcb624548d326562f4cf90c10df247b33b10bdac1225e3393e9",
+        "datetime": 1791465599,
+        "summary": "Stocks slip as Gulf tanker attacks lift Brent above $105 and the 10-year yield nears 5.35%; small caps lag while energy and Chipotle rally."
+      },
+      {
+        "headline": "8 Of 11 Sectors Fall In Thursday Trading As Energy Leads",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=7ba3ed272714de30d8449468da93c18b22f4812734ad8a9471a40b76efa0b11b",
+        "datetime": 1791457745,
+        "summary": "Three sectors are higher and eight are lower in Thursday&#39;s regular session, with the top three split across cyclical, defensive and growth groups. The leaders are separated rather than clustered, with Energy clearly ahead of the next sectors in the ranking."
       },
       {
         "headline": "Oil Is Already at $100. Now a Hurricane Could Shut Down Gulf Production",
@@ -11169,6 +11532,27 @@
     ],
     "XOM": [
       {
+        "headline": "Here's What $1,000 in These 6 Energy Dividend Stocks Could Pay You in a Year",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=97b1ac4087e06cbaad52bbd54a9f1309f596d06ae21202366c3aa847d51dd8f2",
+        "datetime": 1791527700,
+        "summary": "If you are looking to generate income from the energy sector, these six dividend stocks will likely show up on your screens."
+      },
+      {
+        "headline": "Oil Stocks To Watch As $100 Crude Tests ExxonMobil And Occidental",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=8712628f5159de06b8b74a2b5fd71021415c7a586acbe0e0fecc15b0a367ac6c",
+        "datetime": 1791526280,
+        "summary": "Oil above $100 is reshaping the story for integrated producers, from Gulf export snarls to political skirmishes over fuel taxes and stockpile releases. Price spikes, policy risks and inflation are colliding in a way that can punish some parts of the market while opening the door for others. This piece walks through three large integrated oil and gas stocks exposed to this news backdrop and what that could mean for your portfolio decisions. The stocks below are just a first pass, and the full..."
+      },
+      {
+        "headline": "VYM And HDV: Two Dividend ETFs That Complement Each Other",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=6d82d1f29b37c668501acad8a62716f96f7f57203f4aeb6c68105387e0eca70d",
+        "datetime": 1791514485,
+        "summary": "VYM's diversified portfolio positions it to benefit from the AI momentum, while HDV appeals to retirees seeking monthly income. Read more on VYM and HDV ETFs here."
+      },
+      {
         "headline": "Permian Resources, Granite Ridge Resources, ExxonMobil, and Viper Energy Shares Skyrocket, What You Need To Know",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=d822aa33c77dd394b54d409b534ef96e6f8f772b14899f8719d3204f604248bb",
@@ -11204,11 +11588,25 @@
         "summary": "Five dividend stocks spanning tobacco, pipelines, telecom, real estate, and oil each fund their payouts from real cash flow and decades of raise records, and together they could transform a single investment into something that pays you every month for life."
       },
       {
+        "headline": "Stock Market Today: S&P 500 Slips as Oil Spikes 5%, 10-Year Yields Near 5.35%",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=dbb9d0610a0a6dcb624548d326562f4cf90c10df247b33b10bdac1225e3393e9",
+        "datetime": 1791465599,
+        "summary": "Stocks slip as Gulf tanker attacks lift Brent above $105 and the 10-year yield nears 5.35%; small caps lag while energy and Chipotle rally."
+      },
+      {
         "headline": "HP's Strong Q4 Outlook and FlexRobotics Drive Investor Focus",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=6fcd2ff36675a1ab6f190f75ddbde8283b2c4ec1228d10e1c94ace1221ada6d6",
         "datetime": 1791465240,
         "summary": "Helmerich & Payne sees a constructive fiscal 2027, backed by stronger margins, steady activity and wider FlexRobotics adoption."
+      },
+      {
+        "headline": "What's Going On With ExxonMobil Stock On Thursday?",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=a912f9b071a98a773b83fe77817d573b1cb3d1f66c9a337689e8910d4d6bfee4",
+        "datetime": 1791463464,
+        "summary": "ExxonMobil shares rise about 2% premarket as the Trump administration plans to roll back Biden-era methane regulations affecting oil and gas producers."
       },
       {
         "headline": "These S&P500 stocks that are showing activity before the opening bell on Thursday.",
@@ -11230,6 +11628,13 @@
         "url": "https://finnhub.io/api/news?id=cf42fc0f87da8d29aaec8ccfac4cb8aaedca1e6a36d58db24f9655b68cb02c19",
         "datetime": 1791461456,
         "summary": "(updates with Climate Action 100+ response in the fourth paragraph.) ExxonMobil (XOM) was at the"
+      },
+      {
+        "headline": "8 Of 11 Sectors Fall In Thursday Trading As Energy Leads",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=7ba3ed272714de30d8449468da93c18b22f4812734ad8a9471a40b76efa0b11b",
+        "datetime": 1791457745,
+        "summary": "Three sectors are higher and eight are lower in Thursday&#39;s regular session, with the top three split across cyclical, defensive and growth groups. The leaders are separated rather than clustered, with Energy clearly ahead of the next sectors in the ranking."
       },
       {
         "headline": "Oil Is Already at $100. Now a Hurricane Could Shut Down Gulf Production",
@@ -11646,6 +12051,13 @@
       }
     ],
     "XYL": [
+      {
+        "headline": "Your Stock Picks, My Verdict: What I'd Buy Right Now",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=e94b2a71d25f02ec3e506feeb84e17cc619e9079787c970e632fb90cdd2ed940",
+        "datetime": 1791531000,
+        "summary": "Cyclical value and defensive names like ODFL, UNP, and NOC remain attractive due to secular tailwinds and compelling valuation. Read more on my survey here."
+      },
       {
         "headline": "Will Stronger Cash Flows and EPS Growth Shift Xylem's (XYL) Long-Duration Contract Narrative?",
         "source": "Yahoo",
