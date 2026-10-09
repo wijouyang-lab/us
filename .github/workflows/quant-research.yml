@@ -2,9 +2,7 @@ name: Quant Research (Phase 2-7)
 
 on:
   workflow_dispatch:
-  schedule:
-    # 判决后填：待定，避开 dashboard-data 的 */15 网格与整点
-    # - cron: 'TBD'
+  workflow_call:
 
 # 独立并发组，不与 scan / dashboard-data 抢占
 concurrency:

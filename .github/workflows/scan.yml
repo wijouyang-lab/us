@@ -154,3 +154,12 @@ jobs:
     needs: scan
     uses: ./.github/workflows/news-fetch.yml
     secrets: inherit
+
+  # Quant Research（Phase 2-7）：scan 成功后才跑（每天 1 次）。
+  # needs: scan —— scan 失败时本 job 被自动跳过；由 scan 顺带喂出 quant_factor_snapshot.csv 等。
+  # workflow_call —— 取消原 cron TBD（注释态永不触发），改为由 scan 链式驱动；
+  # 仍保留 workflow_dispatch 支持手动触发。secrets: inherit 透传全局密钥。
+  quant-research:
+    needs: scan
+    uses: ./.github/workflows/quant-research.yml
+    secrets: inherit
