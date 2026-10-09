@@ -352,6 +352,81 @@
   /* ---------------- $50,000 Long-Term Portfolio ---------------- */
   /* 数据来源：portfolio_50000_*.csv（由 portfolio_50000.py 维护），
      经 dashboard_export.py 原样透传。前端只做展示与两位小数格式化，不重算盈亏。 */
+  /* 持仓卡片：以 portfolio.positions[] 为主，按 ticker join STOCKS[] 取评分/技术面/AI/K线。 */
+  function sparkHtml(s, small) {
+    if (s && s.ohlcv && s.ohlcv.length > 1) {
+      return '<canvas class="spark' + (small ? ' spark-sm' : '') + '" data-spark="' + esc(s.t) + '"></canvas>';
+    }
+    return '<div class="spark-na' + (small ? ' sm' : '') + '">K线数据暂不可用</div>';
+  }
+
+  function posTechFoot(s) {
+    var m = s.m;
+    var items = [
+      ['MA20', tnv(m.ma20, 2)],
+      ['MA50', tnv(m.ma50, 2)],
+      ['RSI', nv(m.rsi, 1)],
+      ['MACD', tnv(m.dif, 2)],
+      ['KDJ', (m.k === null || m.d === null) ? NA : (fmt(m.k, 1) + '/' + fmt(m.d, 1))],
+      ['ATR%', nv(m.atrPct, 2)]
+    ];
+    return '<div class="pos-foot">' + items.map(function (x) {
+      return '<div><div class="fk">' + x[0] + '</div><div class="fv' + (naIf(x[1]) ? ' na' : '') + '">' + x[1] + '</div></div>';
+    }).join('') + '</div>';
+  }
+
+  /* p: portfolio.positions[] 条目；s: STOCKS[] 里同 ticker 的详情（找不到则 null → 降级只显示持仓字段） */
+  function positionCard(p, s) {
+    var tk = String(p.ticker || '').toUpperCase();
+    var up = num(p.unrealized_pnl) || 0;
+    var rt = num(p.unrealized_pnl_pct) || 0;
+    var upCls = up > 0 ? 'up' : (up < 0 ? 'down' : 'flat');
+
+    var head = '<div class="pos-top">' +
+      '<div class="pos-id">' +
+      '<div class="pos-tk">' + esc(tk) + '</div>' +
+      '<div class="pos-nm">' + esc(s ? s.n : '') + '</div>' +
+      '<div class="pos-px">$' + nv(p.current_price, 2) + '</div>' +
+      '</div>' +
+      (s ? '<div class="pos-ring">' + ring(s.s.final, 54, 'Final') + '</div>' : '') +
+      '</div>';
+
+    var quick = s
+      ? '<div class="pos-quick">' +
+        '<span class="qb">Quant ' + nv(s.s.quant, 1) + '</span>' +
+        '<span class="qb">AI ' + nv(s.s.ai, 1) + '</span>' +
+        '<span class="qb g">' + esc(s.bucketLabel || '') + '</span>' +
+        '</div>'
+      : '';
+
+    var bars = s
+      ? '<div class="bars">' +
+        scoreRow('Quant', s.s.quant, 100) +
+        scoreRow('AI', s.s.ai, 100) +
+        scoreRow('Fundamental', s.s.fund, MAX_F) +
+        scoreRow('Technical', s.s.tech, MAX_T) +
+        scoreRow('Risk', s.s.risk, MAX_R) +
+        '</div>'
+      : '';
+
+    var foot = s ? posTechFoot(s) : '';
+
+    var meta = '<div class="pos-meta">' +
+      '<div><span class="pmk">股数</span><b>' + (p.shares == null ? NA : p.shares) + '</b></div>' +
+      '<div><span class="pmk">Entry</span><b>$' + nv(p.entry_price, 2) + '</b></div>' +
+      '<div><span class="pmk">市值</span><b>$' + nv(p.market_value, 2) + '</b></div>' +
+      '<div><span class="pmk">浮盈</span><b class="' + upCls + '">' + (up > 0 ? '+' : '') + '$' + nv(up, 2) +
+      ' (' + (rt > 0 ? '+' : '') + nv(rt, 2) + '%)</b></div>' +
+      '<div><span class="pmk">权重</span><b>' + nv(p.weight_pct, 2) + '%</b></div>' +
+      '<div><span class="pmk">持有</span><b>' + (p.holding_days == null ? NA : p.holding_days) + ' 天</b></div>' +
+      '<div><span class="pmk">止损</span><b>' + esc(p.stop_loss || NA) + '</b></div>' +
+      '</div>';
+
+    return '<article class="poscard' + (s ? '' : ' poscard-na') + '" data-tk="' + esc(tk) + '">' +
+      head + quick + (s ? sparkHtml(s, false) : '') + bars + foot + meta +
+      '</article>';
+  }
+
   function renderPortfolio() {
     var pf = DATA.portfolio;
     var sumEl = $('#pfSummary'), posEl = $('#pfPositions'),
@@ -385,34 +460,18 @@
     cells += cell('Start Date', esc(pf.start_date || NA));
     sumEl.innerHTML = '<div class="matrix">' + cells + '</div>';
 
-    // --- 持仓 ---
+    // --- 持仓（卡片网格：positions[] 主表，按 ticker join STOCKS[]）---
     var ps = pf.positions || [];
     if (!ps.length) {
       posEl.innerHTML = '<div class="mx"><div class="k">当前持仓</div>' +
         '<div class="v na">空仓（等待新的 Core 推荐触发建仓）</div></div>';
     } else {
-      var h = '<table class="pf-tbl"><thead><tr>' +
-        '<th>Unit</th><th>Ticker</th><th>Shares</th><th>Entry</th><th>Current</th>' +
-        '<th>Market Value</th><th>Unrealized</th><th>Return %</th><th>Weight %</th>' +
-        '<th>Stop</th><th>Days</th></tr></thead><tbody>';
-      ps.forEach(function (p) {
-        var up = num(p.unrealized_pnl) || 0, rt = num(p.unrealized_pnl_pct) || 0;
-        h += '<tr>' +
-          '<td>' + esc(p.unit_id || NA) + '</td>' +
-          '<td class="tk">' + esc(p.ticker || NA) + '</td>' +
-          '<td>' + (p.shares == null ? NA : p.shares) + '</td>' +
-          '<td>$' + nv(p.entry_price, 2) + '</td>' +
-          '<td>$' + nv(p.current_price, 2) + '</td>' +
-          '<td>$' + nv(p.market_value, 2) + '</td>' +
-          '<td class="' + pctCls(up) + '">' + (up > 0 ? '+' : '') + '$' + nv(up, 2) + '</td>' +
-          '<td class="' + pctCls(rt) + '">' + (rt > 0 ? '+' : '') + nv(rt, 2) + '%</td>' +
-          '<td>' + nv(p.weight_pct, 2) + '%</td>' +
-          '<td>' + esc(p.stop_loss || NA) + '</td>' +
-          '<td>' + (p.holding_days == null ? NA : p.holding_days) + '</td>' +
-          '</tr>';
-      });
-      h += '</tbody></table>';
-      posEl.innerHTML = h;
+      var stockByTk = {};
+      STOCKS.forEach(function (s) { if (s.t) stockByTk[String(s.t).toUpperCase()] = s; });
+      posEl.innerHTML = ps.map(function (p) {
+        var s = stockByTk[String(p.ticker || '').toUpperCase()] || null;
+        return positionCard(p, s);
+      }).join('');
     }
 
     // --- 最近交易 ---
@@ -1462,6 +1521,8 @@
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (!t || !t.closest) return;
+    var card = t.closest('.poscard');
+    if (card) { openDetail(card.getAttribute('data-tk')); return; }
     if (t.closest('#btnBack')) { closeDetail(); return; }
     var chip = t.closest('.chip');
     if (chip) {
