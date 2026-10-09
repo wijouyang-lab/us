@@ -1,6 +1,6 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-09T04:06:30Z",
+  "generated_at": "2026-10-09T04:14:52Z",
   "market_news": [
     {
       "headline": "Scenes from across France as student protests spread - Reuters",
@@ -869,6 +869,13 @@
     ],
     "AES": [],
     "AMZN": [
+      {
+        "headline": "Amazon's Alexa shopping tool faces its first big October test",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=2f79f83118ec2ff2f54d093aa42d338cc41be6e18876d67e322caae91bb19ae8",
+        "datetime": 1791511380,
+        "summary": "Auto Buy removes the pause where you’d normally ask yourself if you still want the thing."
+      },
       {
         "headline": "Is the Market Underestimating Amazon’s (AMZN) Moat?",
         "source": "Yahoo",
@@ -2569,13 +2576,6 @@
         "url": "https://finnhub.io/api/news?id=e8ee2539568560bdd7373db106c6b74395cceb336f78b58dbeda9f470238c0d9",
         "datetime": 1791291073,
         "summary": "CrowdStrike (NASDAQ:CRWD) has announced the fourth edition of its annual Cybersecurity Startup Accelerator in partnership with Amazon Web Services (AWS) (NASDAQ:AMZN) and Nvidia (NASDAQ:NVDA). Applications are open globally until November 2, 2026, with the eight-week programme scheduled to run from January 11 through March 8, 2027."
-      },
-      {
-        "headline": "Constellation Energy Seals Google Nuclear Deal. It Can Keep Powering the Stock Higher.",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=80c83bdf3b8ad0032d34ffadb6d515752eeae00f736a7aa659f3577149ecb1ab",
-        "datetime": 1791289920,
-        "summary": "Big Tech is going nuclear as Alphabet and others scramble for enough power for their AI data centers."
       }
     ],
     "ANET": [
@@ -4675,6 +4675,20 @@
     ],
     "DELL": [
       {
+        "headline": "Dell Technologies (DELL) Unveils AI Ready Windows PCs For Creators And Developers",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=37de026326942a7ee34a2340167dad14b6c9fa59125d262639089a6702a92735",
+        "datetime": 1791512107,
+        "summary": "Dell Technologies (NYSE: DELL) has introduced new AI focused Windows PCs and workstations built with NVIDIA and Microsoft. The fresh portfolio targets the agentic AI era with devices that support local AI compute and development for professional users. New systems integrate NVIDIA RTX Spark, Grace Blackwell technology and unified memory to run local generative AI inference workloads. Dell's launch of AI optimized Windows PCs and workstations is worth weighing alongside the rest of our..."
+      },
+      {
+        "headline": "What Are Everpure Investors Betting On?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=85a2f70411db67a50bbd7df7bcc3d4774dae50d6cdf68a0c04690dcadcd839e9",
+        "datetime": 1791510451,
+        "summary": "Shares of Everpure (P) trade at 77.7 times the company's adjusted earnings over the last twelve months, once stock-based pay is added back. That is a steep premium for a single year of profit. Look at the earnings projected for the next two fiscal years, however, and the valuation takes on a different shape. So what are buyers at this price counting on Everpure to deliver."
+      },
+      {
         "headline": "Dow Jones Futures Rise After AI Stocks Tumble On OpenAI News; SpaceX Move Slams Verizon, AT&T Late",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=d5030d0f7a70a6770c332c8f1d2243651649b0ae98673d8958422f073f5fd4c7",
@@ -5617,6 +5631,13 @@
       }
     ],
     "ILMN": [
+      {
+        "headline": "What is Illumina’s (ILMN) Economic Moat, and is it Widening or Narrowing?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=edc14684f3cf0363f36c21c0b418ab18d69707584494fc319896a92daa48f7ad",
+        "datetime": 1791512094,
+        "summary": "Illumina, Inc. (NASDAQ:ILMN) traded at around $268 on October 7, down 2.11% on the day, though still 183.61% higher over twelve months. Revenue grew 9.40% in the most recent quarter while earnings fell 11.90%. A business selling more and earning less is the clearest sign a moat is being tested. READ ALSO: What is eBay’s […]"
+      },
       {
         "headline": "Illumina to Announce Third Quarter 2026 Financial Results on Thursday, October 29, 2026",
         "source": "Yahoo",
@@ -6627,6 +6648,13 @@
       }
     ],
     "MSFT": [
+      {
+        "headline": "Is SailPoint (SAIL) Fairly Valued After Its Latest Identity Security Launches?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=49f37beeb3003719ef9d1fe7c4ff0abc2ff7638cea14f7c054feae19f36219d3",
+        "datetime": 1791515892,
+        "summary": "SailPoint (SAIL) just rolled out a fresh batch of identity security features, tying its platform into tools like Microsoft Purview, BigID, and data warehouses such as Google BigQuery and AWS Redshift. Investors have been rewarding that story in recent months, with SailPoint’s share price showing a 46.02% 90-day return and a 12.54% 30-day share price return, even though the 1-year total shareholder return is still down 14.08%. Scan how SailPoint’s AI identity security story compares with other..."
+      },
       {
         "headline": "Advanced Micro Devices vs. ASML: Which Semiconductor Stock Is a Better Buy in 2026?",
         "source": "Yahoo",
@@ -8369,13 +8397,6 @@
         "url": "https://finnhub.io/api/news?id=f87b439a270ba15c1a60d7dcbf731430a8e8a516e5fec3758335d4626ddec4be",
         "datetime": 1791291780,
         "summary": "Partnership will help more Microsoft customers discover, govern and reduce the risk of AI agents embedded across enterprise applications and workflowsALTAMONTE SPRINGS, Fla., Oct. 06, 2026 (GLOBE NEWSWIRE) -- Reco, the leader in Agent Security, today announced it has been accepted into the invitation-only Microsoft for Startups Pegasus Program, which helps enterprise-ready startups reach customers through Microsoft’s enterprise channels. Reco’s participation builds on its existing support and in"
-      },
-      {
-        "headline": "Euromonitor International Launches Next-Generation Passport",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=2b83e395f69ddcb6da42a1a0de08945539dd1d91831e069da2f66a0b1270335e",
-        "datetime": 1791291600,
-        "summary": "CHICAGO, October 06, 2026--Euromonitor International today unveiled next-generation of Passport, its AI-powered market intelligence platform. Among the new features is Passport Connect, which brings trusted market intelligence into AI assistants, enterprise systems and workflows, enabling clients to combine Euromonitor insight with their own data and apply it wherever decisions are made."
       }
     ],
     "P": [
