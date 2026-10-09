@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-09T02:46:21Z",
-  "market_updated_at": "2026-10-09T02:46:18Z",
-  "technical_updated_at": "2026-10-09T02:46:21Z",
+  "generated_at": "2026-10-09T03:00:55Z",
+  "market_updated_at": "2026-10-09T03:00:54Z",
+  "technical_updated_at": "2026-10-09T03:00:55Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,21 +17,21 @@
     "missing": []
   },
   "stocks": {
-    "total": 50,
-    "core": 17,
-    "observation": 33,
-    "kline_ok": 50,
-    "technical_ok": 50,
+    "total": 46,
+    "core": 14,
+    "observation": 32,
+    "kline_ok": 46,
+    "technical_ok": 46,
     "price_source_breakdown": {
-      "realtime": 50
+      "realtime": 46
     }
   },
   "review": {
     "core_closed": 4,
-    "core_open": 19,
+    "core_open": 23,
     "observation_closed": 4,
-    "observation_open": 88,
-    "actual_active": 6,
+    "observation_open": 94,
+    "actual_active": 9,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
     "price_backfill_count": 10,
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 37714129072,
+        "run_id": 37876151532,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-08T01:40:52Z",
-        "started_at": "2026-10-08T01:40:52Z",
-        "updated_at": "2026-10-08T01:45:05Z",
-        "head_sha": "ea70c9670bd3",
-        "event": "schedule",
-        "run_number": 129,
+        "created_at": "2026-10-09T02:46:29Z",
+        "started_at": "2026-10-09T02:46:29Z",
+        "updated_at": "2026-10-09T02:50:06Z",
+        "head_sha": "7f949d2c6682",
+        "event": "workflow_dispatch",
+        "run_number": 130,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37714129072"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/37876151532"
       },
       "last_success": {
-        "run_id": 37714129072,
-        "completed_at": "2026-10-08T01:45:05Z",
-        "head_sha": "ea70c9670bd3"
+        "run_id": 37876151532,
+        "completed_at": "2026-10-09T02:50:06Z",
+        "head_sha": "7f949d2c6682"
       },
       "error": null
     },
