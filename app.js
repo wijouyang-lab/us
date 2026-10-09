@@ -815,10 +815,10 @@
       return;
     }
 
-    /* 市场流：top 10 */
-    var m = news.market_news || [];
+    /* 市场流：top 10（过滤无市场影响的条目） */
+    var m = (news.market_news || []).filter(isMarketRelevant);
     if (!m.length) {
-      mEl.innerHTML = '<div class="na">今日暂无市场新闻</div>';
+      mEl.innerHTML = '<div class="na">暂无相关市场新闻</div>';
     } else {
       mEl.innerHTML = '<div class="news-sub">📡 市场动态</div>' +
         m.slice(0, 10).map(newsRow).join('');
@@ -835,7 +835,7 @@
     var pool = {};
     STOCKS.forEach(function (s) { if (s.ticker) pool[String(s.ticker).toUpperCase()] = (s.bucket || ''); });
     tEl.innerHTML = '<div class="news-sub">🏷️ 持仓 / 推荐联动</div>' + positions.map(function (sym) {
-      var list = tk[sym] || [];
+      var list = (tk[sym] || []).filter(isMarketRelevant);
       var on = pool[sym] ? ' news-ticker-on' : '';
       var body = list.length
         ? list.slice(0, 5).map(newsRow).join('')
@@ -860,6 +860,12 @@
       ? '<div class="news-rationale">' + esc(x.rationale) + '</div>' : '';
     return '<div class="news-item">' + icon + '<span class="news-t">' + esc(t) + '</span>' + head +
       '<span class="news-src">' + src + '</span>' + rationale + '</div>';
+  }
+
+  function isMarketRelevant(x) {
+    // market_relevant === false → 过滤掉（AI 判定对美股市场无直接或间接影响）；
+    // 缺失 / true / 其它值 → 显示（保守，不误删，且向后兼容旧数据）。
+    return !x || x.market_relevant !== false;
   }
 
   function sentIcon(s) {
