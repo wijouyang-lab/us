@@ -1,9 +1,10 @@
 {
-  "generated_at": "2026-10-09T01:51:14Z",
-  "market_updated_at": "2026-10-09T01:51:13Z",
-  "technical_updated_at": "2026-10-09T01:51:14Z",
+  "generated_at": "2026-10-09T02:02:32Z",
+  "market_updated_at": "2026-10-09T02:02:31Z",
+  "technical_updated_at": "2026-10-09T02:02:32Z",
   "network_status": "ok",
   "quote_backends": [
+    "yfinance",
     "yahoo_http",
     "stooq"
   ],
@@ -11,7 +12,7 @@
     "available": 15,
     "total": 15,
     "source_used": [
-      "yahoo_http"
+      "yfinance"
     ],
     "missing": []
   },
