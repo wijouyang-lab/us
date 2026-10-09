@@ -6,7 +6,7 @@ on:
     # Schedule: UTC（GitHub 原生 cron 只认 UTC）
     # TBD：判决后填写，避开 dashboard-data 的 */15 网格与 scan/review 高峰。
     # 推荐：工作日每 2 小时 23 分 → 23 */2 * * 1-5（北京时间 07:23 / 09:23 / ... / 23:23）
-    # - cron: '23 */2 * * 1-5'
+    - cron: '23 */2 * * 1-5'
 
 # 独立并发组：不与 scan / review / dashboard-data / evolve 抢占
 concurrency:
