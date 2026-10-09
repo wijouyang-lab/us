@@ -275,3 +275,60 @@ def test_build_ai_input_dedup_and_cap():
     tickers = [x["Ticker"] for x in out]
     assert tickers.count("T1") == 1
     assert out[tickers.index("T1")]["_is_position"] is True
+
+
+# generate_ai_report (scan.py:2590) 对以下字段做硬索引 x['字段']，缺失即 KeyError。
+# 这些是 prompt 拼装契约的必填字段——任何一条缺失都会让整次 scan 崩在 2590 行。
+PROMPT_REQUIRED_FIELDS = [
+    "Name", "Price", "RSI", "乖离率(%)", "MACD趋势", "KDJ_J", "量比",
+]
+
+
+def test_build_ai_input_position_not_in_pool_has_all_prompt_fields():
+    """回归核心：持仓不在 pool_data 中时（生产真实情形），行绝不能缺字段。
+
+    这正是 2026-10-09 scan 首次真实运行崩溃的场景——
+    pool_data 来自扫描候选池，不含持仓，旧代码退化为空 dict 行导致 x['Name'] KeyError。
+    """
+    pool = [{"Ticker": "ZZZ", "Name": "Other", "Price": 10, "RSI": 50,
+             "乖离率(%)": 1.0, "MACD趋势": "up", "KDJ_J": 20, "量比": 1.0}]
+    positions = ["AAPL", "MSFT", "NVDA", "TSLA"]  # 4 持仓，均不在 pool 中
+    out = qf.build_ai_input(pool, positions, [])
+    assert len(out) == 4
+    for x in out:
+        for k in PROMPT_REQUIRED_FIELDS:
+            assert k in x, f"持仓 {x.get('Ticker')} 缺少 prompt 必填字段 {k}"
+        assert x["Tag"] == "Core_Dragon"
+        assert x["_is_position"] is True
+
+
+def test_build_ai_input_position_in_pool_keeps_real_values():
+    """持仓命中 pool_data 时，应复制真实字段值（不被默认值覆盖）。"""
+    pool = [
+        {"Ticker": "AAPL", "Name": "Apple", "Price": 229.5, "RSI": 42.1,
+         "乖离率(%)": -2.3, "MACD趋势": "down", "KDJ_J": 15.0, "量比": 0.8},
+        {"Ticker": "MSFT", "Name": "Microsoft", "Price": 410.0, "RSI": 55.0,
+         "乖离率(%)": 1.1, "MACD趋势": "up", "KDJ_J": 60.0, "量比": 1.2},
+    ]
+    positions = ["AAPL", "MSFT"]
+    out = qf.build_ai_input(pool, positions, [])
+    by_t = {x["Ticker"]: x for x in out}
+    assert by_t["AAPL"]["Name"] == "Apple"
+    assert by_t["AAPL"]["Price"] == 229.5
+    assert by_t["AAPL"]["RSI"] == 42.1
+    assert by_t["AAPL"]["量比"] == 0.8
+
+
+def test_build_ai_input_candidate_row_has_all_prompt_fields():
+    """候选行同样兜底补全 prompt 必填字段。"""
+    pool = []
+    candidates = [
+        {"Ticker": "BBB", "Price": 100, "_rr": 2.5},  # 缺 Name/RSI 等
+        {"Ticker": "CCC", "Price": 100, "_rr": 2.4},
+    ]
+    out = qf.build_ai_input(pool, [], candidates)
+    assert len(out) == 2
+    for x in out:
+        assert x["Tag"] == "Candidate"
+        for k in PROMPT_REQUIRED_FIELDS:
+            assert k in x, f"候选 {x.get('Ticker')} 缺少 prompt 必填字段 {k}"

@@ -2586,8 +2586,17 @@ def generate_ai_report(pool_data, combined_news, macro_market, dropped_info=None
     client = ClawSocketClient(api_key=os.environ["CLAWSOCKET_API_KEY"], base_url=os.environ["CLAWSOCKET_BASE_URL"])
     pool_lines = []
     for x in pool_data:
+        # 防御性兜底：下方 8 个字段为硬索引（缺失即 KeyError）。build_ai_input 已保证存在，
+        # 此处再用 .get 兜底，杜绝任何路径下字段缺失导致整次 scan 崩溃。
+        _name = x.get("Name", "N/A")
+        _price = x.get("Price", "N/A")
+        _rsi = x.get("RSI", "N/A")
+        _bias = x.get("乖离率(%)", "N/A")
+        _macd = x.get("MACD趋势", "N/A")
+        _kdj = x.get("KDJ_J", "N/A")
+        _vol = x.get("量比", "N/A")
         pool_lines.append(
-            f"[{x['Ticker']}] {x['Name']} | 昨收:${x['Price']} | 盘前:${x.get('Premarket_Price') or 'N/A'} ({x.get('Premarket_Change_Pct') or 'N/A'}%) | 盘前时间:{x.get('Premarket_AsOf_ET') or 'N/A'} | RSI:{x['RSI']} | Bias:{x['乖离率(%)']}% | MA20:{x.get('MA20')} slope5d:{x.get('MA20_Slope_Pct_5D')}% | MACD:{x['MACD趋势']} | KDJ:{x['KDJ_J']} | Vol:{x['量比']} recentVol:{x.get('近5日最大量比')} | 技术确认:{x.get('技术确认数',0)} | Quant:{x.get('Quant_Score',0)}/100 (F{x.get('Fundamental_Score',0)} E{x.get('Event_Score',0)} T{x.get('Technical_Score_25',0)} R{x.get('Risk_Liquidity_Score',0)}) | Market:{x.get('Market_Regime')} VIX:{x.get('VIX')} SectorRS20D:{x.get('Sector_RS_20D_Pct')} | 估值:{x.get('估值评分',0)}/20 | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 新闻快照:{x.get('News_AsOf_ET') or 'N/A'} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
+            f"[{x.get('Ticker','')}] {_name} | 昨收:${_price} | 盘前:${x.get('Premarket_Price') or 'N/A'} ({x.get('Premarket_Change_Pct') or 'N/A'}%) | 盘前时间:{x.get('Premarket_AsOf_ET') or 'N/A'} | RSI:{_rsi} | Bias:{_bias}% | MA20:{x.get('MA20')} slope5d:{x.get('MA20_Slope_Pct_5D')}% | MACD:{_macd} | KDJ:{_kdj} | Vol:{_vol} recentVol:{x.get('近5日最大量比')} | 技术确认:{x.get('技术确认数',0)} | Quant:{x.get('Quant_Score',0)}/100 (F{x.get('Fundamental_Score',0)} E{x.get('Event_Score',0)} T{x.get('Technical_Score_25',0)} R{x.get('Risk_Liquidity_Score',0)}) | Market:{x.get('Market_Regime')} VIX:{x.get('VIX')} SectorRS20D:{x.get('Sector_RS_20D_Pct')} | 估值:{x.get('估值评分',0)}/20 | PE_F:{x.get('PE_Forward')} | EPS:{x.get('EPS_TTM')} | PB:{x.get('PB')} | 新闻快照:{x.get('News_AsOf_ET') or 'N/A'} | 新闻:{' | '.join(x.get('个股新闻',[]))}"
         )
     pool_ticker_list = ", ".join(str(x.get("Ticker", "")).upper() for x in pool_data)
     evolved = load_evolved_rules()

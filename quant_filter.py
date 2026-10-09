@@ -27,6 +27,20 @@ MAX_CANDIDATES = 3        # 每日候选上限（≤3 只）
 DEFAULT_STOP_PCT = 0.05   # 缺 Stop_Loss 时按 5% 推导（落在 [2%, 5%] 上沿，保守）
 AI_INPUT_MAX = 7          # AI 输入硬顶（持仓 + 候选 ≤7 只）
 
+# generate_ai_report 拼 prompt 时对这些字段做「硬索引」（x['字段']，缺失即 KeyError）。
+# 持仓项若不在 pool_data 中（持仓未进入扫描候选池时必然如此），build_ai_input 会退化为
+# 空 dict 行，必须兜底补全这些必填字段，否则 scan 首次真实运行会在 2590 行 x['Name'] 崩溃。
+# 默认值统一用 "N/A"，与 prompt 中 x.get(..., 'N/A') 的可选字段约定保持一致。
+AI_INPUT_REQUIRED_FIELDS = {
+    "Name": "N/A",
+    "Price": "N/A",
+    "RSI": "N/A",
+    "乖离率(%)": "N/A",
+    "MACD趋势": "N/A",
+    "KDJ_J": "N/A",
+    "量比": "N/A",
+}
+
 
 # ============================================================
 # 纯函数
@@ -221,10 +235,15 @@ def build_ai_input(pool_data, positions, candidates):
         if not t or t in seen:
             continue
         seen.add(t)
+        # 持仓未必在 pool_data 中（持仓未进入扫描候选池时必然如此）：
+        # pool_by.get(t) 命中则复制完整行，未命中则用空 dict —— 必须兜底补全
+        # generate_ai_report 硬索引的必填字段，否则 2590 行 x['Name'] 等会 KeyError。
         row = dict(pool_by.get(t) or {})
         row["Ticker"] = t
         row["Tag"] = "Core_Dragon"
         row["_is_position"] = True
+        for k, v in AI_INPUT_REQUIRED_FIELDS.items():
+            row.setdefault(k, v)
         out.append(row)
 
     for c in (candidates or []):
@@ -232,6 +251,10 @@ def build_ai_input(pool_data, positions, candidates):
         if not t or t in seen:
             continue
         seen.add(t)
-        out.append(dict(c, Tag="Candidate"))
+        row = dict(c, Tag="Candidate")
+        # 候选同样兜底补全，防止 strict_filter 输出缺字段时 prompt 崩溃
+        for k, v in AI_INPUT_REQUIRED_FIELDS.items():
+            row.setdefault(k, v)
+        out.append(row)
 
     return out[:AI_INPUT_MAX]
