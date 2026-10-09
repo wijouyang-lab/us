@@ -616,13 +616,9 @@
     normalize(data);
     hideBoot();
 
-    var core = STOCKS.filter(function (s) { return s.bucket === 'core'; });
-    var obs = STOCKS.filter(function (s) { return s.bucket === 'obs'; });
-
     renderHeader();
     renderRuntime();
     renderGmBar();
-    renderPools(core, obs);
     renderGlobal();
     /* Review 复盘 KPI + History 跟踪趋势：重新联动 review.records[] / history[]，
        数据仍由 dashboard_export.py 从 review_history.csv 原样展开，前端不重算。 */
@@ -635,7 +631,6 @@
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
-      ' · Core ' + core.length + ' · Observation ' + obs.length +
       ' · Options ' + OPTIONS.length + ' · Market ' + MARKET.assets.length +
       ' · History ' + HISTORY.length + ' · ReviewRecords ' + REVIEWS.length +
       ' · network=' + (META.network_status || 'n/a'));
@@ -891,16 +886,13 @@
 
   function renderGmBar() {
     var rg = MARKET.regime || {};
-    var core = STOCKS.filter(function (s) { return s.bucket === 'core'; }).length;
-    var obs = STOCKS.filter(function (s) { return s.bucket === 'obs'; }).length;
     var date = META.pending_scan_date || (DATA && DATA.generated_at ? DATA.generated_at.slice(0, 10) : NA);
     var rs = regimeTxt(rg);
 
     var html = '<div class="gm-grid"><div class="gm-cell hero">' +
       '<div class="gm-date">' + date + ' <small>Scan 日期 · 真实数据（非模拟）</small></div>' +
       '<span class="regime" title="' + esc(rs.title) + '"><i></i>' + esc(rs.txt) + '</span>' +
-      '<div class="regime-meta">VIX <b>' + nv(rg.vix, 2) + '</b> · Core <b>' + core + '</b> · Observation <b>' + obs +
-      '</b> · Options <b>' + OPTIONS.length + '</b></div>' +
+      '<div class="regime-meta">VIX <b>' + nv(rg.vix, 2) + '</b> · Options <b>' + OPTIONS.length + '</b></div>' +
       '</div>';
 
     TOP_KEYS.forEach(function (k) {
@@ -917,132 +909,9 @@
     $('#gmBar').innerHTML = html;
   }
 
-  /* ---------------- 2/3. Core / Observation 卡片 ---------------- */
-  function sparkHtml(s, small) {
-    if (s.ohlcv.length > 1) {
-      return '<canvas class="spark' + (small ? ' spark-sm' : '') + '" data-spark="' + esc(s.t) + '"></canvas>';
-    }
-    return '<div class="spark-na' + (small ? ' sm' : '') + '">K线数据暂不可用</div>';
-  }
-
-  /* ---- Review 里程碑（当前 Core / Observation 卡片） ----
-     数据来源 review.records[]，严格按 Ticker + Rec_Date + Tag 精确匹配；
-     只透传 review.py 已算好的 review_stage / pnl_5d / pnl_10d / pnl_20d，前端绝不重算、绝不推算日期。
-     取不到值一律显示 N/A，绝不补 0 / 当前收益 / 最近价。0 次 GPT 调用。 */
-  var MS_NA = 'N/A';
-
+  /* Review 里程碑索引 key（normalize 里用 msKey 建 REV_MS 索引，供其它模块复用） */
   function msKey(ticker, recDate, tag) {
     return String(ticker || '') + '|' + String(recDate || '') + '|' + String(tag || '');
-  }
-  function msStageCls(s) {
-    if (s === null || s === undefined || s === '') return 'stg-na';
-    var u = String(s).toUpperCase();
-    if (u === 'FINAL') return 'stg-final';
-    if (u === 'OPEN') return 'stg-open';
-    if (u === '5D' || u === '10D' || u === '20D') return 'stg-ms';
-    return 'stg-other';
-  }
-  function msPnlItem(label, v) {
-    var n = num(v);
-    return '<span class="ms-item"><span class="l">' + label + '</span>' +
-      '<span class="v ' + (n === null ? 'na' : dirCls(n)) + '">' +
-      (n === null ? MS_NA : signed(n, 2) + '%') + '</span></span>';
-  }
-  function msHtml(s) {
-    var raw = s.raw || {};
-    var r = REV_MS[msKey(raw.ticker, raw.recommendation_date, raw.recommendation_tag)] || null;
-    var stage = r ? r.review_stage : null;
-    var stageTxt = (stage === null || stage === undefined || stage === '') ? MS_NA : String(stage);
-    return '<div class="ms-row">' +
-      '<span class="ms-title">Review</span>' +
-      '<span class="ms-stage ' + msStageCls(stage) + '">' + esc(stageTxt) + '</span>' +
-      msPnlItem('5D', r && r.pnl_5d) +
-      msPnlItem('10D', r && r.pnl_10d) +
-      msPnlItem('20D', r && r.pnl_20d) +
-      '</div>';
-  }
-
-  function coreCard(s) {
-    var m = s.m;
-    var stopPct = (s.stop !== null && s.px) ? (s.stop / s.px - 1) * 100 : null;
-    var devMA20 = (m.ma20 && s.px) ? (s.px / m.ma20 - 1) * 100 : null;
-
-    var bars = scoreRow('Fundamental', s.s.fund, MAX_F) +
-      scoreRow('Technical', s.s.tech, MAX_T) +
-      scoreRow('Risk', s.s.risk, MAX_R);
-
-    var foot = [
-      ['RSI', nv(m.rsi, 1), false],
-      ['MA20', tnv(m.ma20, 2), true],
-      ['MA50', tnv(m.ma50, 2), true],
-      ['ATR%', nv(m.atrPct, 2), false],
-      ['STOP', nv(s.stop, 2), false],
-      ['距止损', stopPct === null ? NA : fmt(stopPct, 1) + '%', false],
-      ['偏离MA20', devMA20 === null ? (NET_DOWN ? TECH_NA : NA) : fmt(devMA20, 1) + '%', true],
-      ['MA20/50', (m.ma20 !== null && m.ma50 !== null) ? (m.ma20 >= m.ma50 ? '多头' : '空头') : (NET_DOWN ? TECH_NA : NA), true]
-    ].map(function (x) {
-      return '<div><div class="fk">' + x[0] + '</div><div class="fv' + (naIf(x[1]) ? ' na' : '') + '">' + x[1] + '</div></div>';
-    }).join('');
-
-    return '<article class="pcard" data-tk="' + esc(s.t) + '">' +
-      '<div class="p-top">' +
-      '<div class="p-id"><div class="p-tk">' + esc(s.t) + '</div><div class="p-nm">' + esc(s.n) + '</div>' +
-      '<div class="p-px">' + nv(s.px, 2) + ' <span class="p-ch ' + (s.pct === null ? 'na' : dirCls(s.pct)) + '">' +
-      (s.pct === null ? NA : signed(s.pct) + '%') + '</span></div></div>' +
-      '<div class="p-ring">' + ring(s.s.final, 54, 'Final') + '</div>' +
-      '</div>' +
-      '<div class="p-quick">' +
-      '<span class="qb">Quant ' + nv(s.s.quant, 1) + '</span>' +
-      '<span class="qb">AI ' + nv(s.s.ai, 1) + '</span>' +
-      '<span class="qb g">' + esc(s.bucketLabel) + '</span>' +
-      '<span class="qb ' + (s.status === 'pending' ? 'dim' : 'ok') + '">' + esc(s.status || NA) + '</span>' +
-      '<span class="qb g">' + esc(s.regime || NA) + '</span>' +
-      '</div>' +
-      sparkHtml(s, false) +
-      '<div class="bars">' + bars + '</div>' +
-      '<div class="p-foot">' + foot + '</div>' +
-      msHtml(s) +
-      '</article>';
-  }
-
-  function obsCard(s) {
-    var m = s.m;
-    var mini = [['F', s.s.fund, MAX_F], ['T', s.s.tech, MAX_T], ['R', s.s.risk, MAX_R]].map(function (x) {
-      var n = num(x[1]);
-      var p = (n === null || !x[2]) ? 0 : Math.max(0, Math.min(100, n / x[2] * 100));
-      return '<span class="ob">' + x[0] + '<i><b style="width:' + p.toFixed(1) + '%"></b></i>' +
-        '<b class="n">' + nv(n, 0) + '</b></span>';
-    }).join('');
-
-    var foot = [
-      ['RSI', nv(m.rsi, 1)],
-      ['MA20', tnv(m.ma20, 2)],
-      ['ATR%', nv(m.atrPct, 2)],
-      ['STOP', nv(s.stop, 2)]
-    ].map(function (x) {
-      return '<div><div class="fk">' + x[0] + '</div><div class="fv' + (naIf(x[1]) ? ' na' : '') + '">' + x[1] + '</div></div>';
-    }).join('');
-
-    return '<article class="ocard" data-tk="' + esc(s.t) + '">' +
-      '<div class="o-top">' +
-      '<div class="o-id"><div class="o-tk">' + esc(s.t) + '</div><div class="o-nm">' + esc(s.n) + '</div></div>' +
-      '<div class="o-p"><div class="o-px">' + nv(s.px, 2) + '</div>' +
-      '<div class="o-ch ' + (s.pct === null ? 'na' : dirCls(s.pct)) + '">' + (s.pct === null ? NA : signed(s.pct) + '%') + '</div></div>' +
-      '</div>' +
-      sparkHtml(s, true) +
-      '<div class="o-mini"><div class="o-bars">' + mini + '</div>' + ring(s.s.final, 34) + '</div>' +
-      '<div class="o-foot">' + foot + '</div>' +
-      msHtml(s) +
-      '</article>';
-  }
-
-  function renderPools(core, obs) {
-    $('#coreList').innerHTML = core.map(coreCard).join('') ||
-      '<div class="chart-na">当前 JSON 中没有 Core 标的</div>';
-    $('#obsList').innerHTML = obs.map(obsCard).join('') ||
-      '<div class="chart-na">当前 JSON 中没有 Observation 标的</div>';
-    $('#coreSub').textContent = '核心池 · ' + core.length + ' 只 · 点击卡片查看详情';
-    $('#obsSub').textContent = '待升级标的 · ' + obs.length + ' 只';
   }
 
   /* ---------------- 4. Global Markets ---------------- */
@@ -1593,8 +1462,6 @@
   document.addEventListener('click', function (e) {
     var t = e.target;
     if (!t || !t.closest) return;
-    var card = t.closest('.pcard,.ocard');
-    if (card) { openDetail(card.getAttribute('data-tk')); return; }
     if (t.closest('#btnBack')) { closeDetail(); return; }
     var chip = t.closest('.chip');
     if (chip) {
