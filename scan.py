@@ -3665,6 +3665,10 @@ def legacy_migration_needed(snapshot_existed_before_run, cache_existed_before_ru
     return (not snapshot_existed_before_run) and bool(cache_existed_before_run)
 
 
+# ==================== Feature: AI 目标持仓（ENABLE_TARGET_FILE，默认关闭）====================
+# 落盘逻辑在 portfolio_target.py（纯函数，可单测）；scan 仅在 flag=1 时调用，失败不阻断主流程。
+from portfolio_target import build_portfolio_target_rows, write_portfolio_target_csv
+
 # ==================== 主程序 ====================
 if __name__ == "__main__":
     # --- AI Snapshot legacy 迁移（一次性兼容旧数据，必须在任何写入之前完成）-------
@@ -3939,6 +3943,13 @@ if __name__ == "__main__":
             print(f"⚠️ AI Snapshot 写入失败（不影响主流程）：{type(e).__name__}: {e}")
     else:
         print("⚠️ 今日没有新增可入账推荐")
+
+    # >>> Feature: AI 目标持仓（默认关闭；ENABLE_TARGET_FILE=1 才写，失败不阻断 scan）>>>
+    if os.environ.get("ENABLE_TARGET_FILE") == "1":
+        try:
+            write_portfolio_target_csv(to_write, redef_positions, today_us_str())
+        except Exception as _tgt_e:
+            print(f"⚠️ [Target] 生成目标持仓失败（不影响 scan）：{type(_tgt_e).__name__}: {_tgt_e}")
 
     option_records, option_created_items = generate_option_recommendations(to_write)
     try:

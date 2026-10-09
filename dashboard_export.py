@@ -2415,6 +2415,33 @@ def count_nulls(stocks, keys):
     return res
 
 
+def _read_portfolio_target(data_dir: Path):
+    """读 portfolio_50000_target.csv → 目标持仓列表（前端「AI 目标持仓」板块用）。
+
+    文件不存在返回 None；解析失败返回 None。字段映射到前端友好命名。
+    """
+    p = data_dir / "portfolio_50000_target.csv"
+    if not p.exists():
+        return None
+    try:
+        rows = read_csv_rows(p)
+    except Exception as e:
+        log(f"[WARN] 目标持仓读取失败（{e}），target 输出 null")
+        return None
+    out = []
+    for r in rows:
+        out.append({
+            "scan_date": clean_text(r.get("Scan_Date")) or None,
+            "ticker": clean_text(r.get("Ticker")).upper() or None,
+            "action": clean_text(r.get("Action")).upper() or None,
+            "target_shares": int(parse_num(r.get("Target_Shares")) or 0),
+            "ref_price": round_num(parse_num(r.get("Ref_Price")), 2),
+            "stop_loss": clean_text(r.get("Stop_Loss")) or None,
+            "ai_reason": clean_text(r.get("AI_Reason")) or None,
+        })
+    return out
+
+
 def build_portfolio(data_dir: Path):
     """$50,000 长期模拟投资组合（Portfolio Ledger）。
 
@@ -2508,8 +2535,14 @@ def build_portfolio(data_dir: Path):
                 "stock_value": 0.0,
             })
 
+    # >>> Feature: AI 目标持仓（ENABLE_TARGET_FILE，默认关闭；关闭时 target=None）>>>
+    target = None
+    if os.environ.get("ENABLE_TARGET_FILE") == "1":
+        target = _read_portfolio_target(data_dir)
+
     return {
         "portfolio_id": clean_text(meta.get("portfolio_id")) or None,
+        "target": target,
         "initial_capital": round_num(parse_num(meta.get("initial_capital")), 2),
         "start_date": clean_text(meta.get("start_date")) or None,
         "unit_dollars": round_num(parse_num(meta.get("unit_dollars")), 2),
