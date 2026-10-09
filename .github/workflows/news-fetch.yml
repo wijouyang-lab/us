@@ -1,12 +1,12 @@
 name: news-fetch
 
 on:
-  workflow_dispatch:
-  schedule:
-    # Schedule: UTC（GitHub 原生 cron 只认 UTC）
-    # TBD：判决后填写，避开 dashboard-data 的 */15 网格与 scan/review 高峰。
-    # 推荐：工作日每 2 小时 23 分 → 23 */2 * * 1-5（北京时间 07:23 / 09:23 / ... / 23:23）
-    - cron: '23 */2 * * 1-5'
+  workflow_call:        # 由 scan.yml 的 news job 在 scan 成功后调用（每天 1 次）
+  workflow_dispatch:    # 保留手动入口
+  # schedule 已移除：新闻抓取改为「等 scan 成功后才跑」，由 scan.yml 以
+  # needs: scan + uses: ./.github/workflows/news-fetch.yml 触发。
+  # 好处：新闻与当日 scan 结果同步（持仓联动读的是当天持仓），且不会与
+  # dashboard-data 的每 15 分钟提交反复撞车。
 
 # 独立并发组：不与 scan / review / dashboard-data / evolve 抢占
 concurrency:

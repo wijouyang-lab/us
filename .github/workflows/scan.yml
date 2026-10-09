@@ -150,3 +150,11 @@ jobs:
           echo "::error::Scan 数据无法推送到 main（已重试 5 次）"
           git status --porcelain
           exit 1
+
+  # 新闻抓取：scan job 成功后才跑（每天 1 次，与当日 scan 结果同步）。
+  # needs: scan —— scan 失败时本 job 被自动跳过，不会抓到"昨日持仓"的新闻。
+  # secrets: inherit —— 透传 FINNHUB_API_KEY / CLAWSOCKET_API_KEY / CLAWSOCKET_BASE_URL。
+  news:
+    needs: scan
+    uses: ./.github/workflows/news-fetch.yml
+    secrets: inherit
