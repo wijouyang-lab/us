@@ -94,6 +94,12 @@ jobs:
             git add us_stocks_pending_*.csv
           fi
 
+          # AI 目标持仓：scan 在 ENABLE_TARGET_FILE=1 时落盘 portfolio_50000_target.csv；
+          # 必须随 scan 一并入库，否则文件永远停在 runner 工作区、到不了 main（dashboard 无法读取）。
+          if [ -f portfolio_50000_target.csv ]; then
+            git add portfolio_50000_target.csv
+          fi
+
           if git diff --cached --quiet; then
             echo "⚠️ 无可提交变更（无 pending 文件且缓存无更新）"
             exit 0

@@ -53,6 +53,9 @@ jobs:
       # fetch_runtimes.py 读取 scan/review/evolve 最近成功 run（只读 actions:read）
       GITHUB_TOKEN: ${{ github.token }}
       GITHUB_REPOSITORY: ${{ github.repository }}
+      # 与 scan.yml 一致：开启后 dashboard_export 才会读 portfolio_50000_target.csv
+      # 并注入 portfolio.target，前端「AI 目标持仓」板块才可见（scan 已落盘该文件）。
+      ENABLE_TARGET_FILE: "1"
     steps:
       - name: Checkout
         uses: actions/checkout@v4
