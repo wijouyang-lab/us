@@ -427,6 +427,40 @@
       '</article>';
   }
 
+  /* AI 目标持仓板块：读 DATA.portfolio.target（dashboard_export 在 ENABLE_TARGET_FILE=1 时注入）。
+     target 为 null/空 → 静默隐藏；否则渲染 Ticker + Action + 数量 + 参考价 + 理由（点击展开）。 */
+  function renderTarget() {
+    var el = $('#pfTarget');
+    if (!el) return;
+    var pf = DATA.portfolio;
+    var target = pf && pf.target;
+    if (!target || !target.length) {
+      el.hidden = true;
+      el.innerHTML = '';
+      return;
+    }
+    el.hidden = false;
+    var rows = target.map(function (t) {
+      var act = (t.action || '').toUpperCase();
+      var actCls = act === 'BUY' ? 'buy' : (act === 'SELL' ? 'sell' : 'hold');
+      var price = (t.ref_price != null && t.ref_price !== '') ? '$' + nv(t.ref_price, 2) : NA;
+      var shares = (t.target_shares == null) ? NA : t.target_shares;
+      var reason = t.ai_reason || '';
+      return '<div class="at-row">' +
+        '<div class="at-head">' +
+          '<span class="at-tk">' + esc(t.ticker || NA) + '</span>' +
+          '<span class="at-act ' + actCls + '">' + esc(act || NA) + '</span>' +
+          '<span class="at-shares">×' + esc(String(shares)) + '</span>' +
+          '<span class="at-price">' + price + '</span>' +
+        '</div>' +
+        (reason ? '<div class="at-reason" onclick="this.classList.toggle(\'open\')">' + esc(reason) + '</div>' : '') +
+      '</div>';
+    }).join('');
+    var sub = (target[0] && target[0].scan_date) ? 'Scan ' + esc(target[0].scan_date) + ' · 点击理由展开' : '盘前目标 · 点击理由展开';
+    el.innerHTML = '<div class="sec-h sub"><h3>AI 目标持仓</h3><span class="sec-sub">' + sub + '</span></div>' +
+      '<div class="at-list">' + rows + '</div>';
+  }
+
   function renderPortfolio() {
     var pf = DATA.portfolio;
     var sumEl = $('#pfSummary'), posEl = $('#pfPositions'),
@@ -684,6 +718,7 @@
     renderReview();
     renderOptions(OPTIONS, $('#optHomeList'), true);
     renderHistory();
+    renderTarget();
     renderPortfolio();
     renderQuant();
     renderNews();

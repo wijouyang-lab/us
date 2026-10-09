@@ -444,3 +444,23 @@ button{font-family:inherit}
   border-radius:999px;padding:2px 8px;white-space:nowrap}
 .q-prod{display:flex;flex-wrap:wrap;gap:7px;margin-top:7px;align-items:center}
 .q-prod-item{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--text-2)}
+
+/* AI 目标持仓（Feature: ENABLE_TARGET_FILE，默认关闭；关闭时 #pfTarget 隐藏） */
+.ai-target{margin:4px 0 12px;padding:10px 12px;border:1px solid var(--border-2);border-radius:var(--r);background:var(--soft)}
+.ai-target .sec-h.sub{display:flex;align-items:baseline;gap:8px;margin:0 0 8px}
+.ai-target .sec-h.sub h3{font-size:15px;margin:0;color:var(--text)}
+.ai-target .sec-sub{font-size:12px;color:var(--text-3)}
+.at-list{display:flex;flex-direction:column;gap:6px}
+.at-row{border:1px solid var(--border-2);border-radius:8px;background:var(--card);padding:7px 9px}
+.at-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.at-tk{font-weight:700;font-size:14px;color:var(--text)}
+.at-act{font-size:11px;font-weight:700;padding:1px 7px;border-radius:99px;border:1px solid transparent}
+.at-act.buy{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7}
+.at-act.sell{background:#ffebee;color:#c62828;border-color:#ef9a9a}
+.at-act.hold{background:#e3f2fd;color:#1565c0;border-color:#90caf9}
+.at-shares{font-variant-numeric:tabular-nums;color:var(--text-2);font-size:13px}
+.at-price{font-variant-numeric:tabular-nums;color:var(--text-2);font-size:13px;margin-left:auto}
+.at-reason{margin-top:6px;font-size:12.5px;line-height:1.5;color:var(--text-2);max-height:2.6em;overflow:hidden;cursor:pointer;position:relative;padding-right:36px}
+.at-reason:before{content:"展开 ▾";position:absolute;right:0;top:0;font-size:11px;color:var(--accent)}
+.at-reason.open{max-height:none;padding-right:0}
+.at-reason.open:before{content:""}
