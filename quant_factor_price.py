@@ -21,8 +21,11 @@ Persistent Price History Layer —— 阶段 2B：为 Factor Snapshot 提供 For
     - 未来交易日不存在 → 缺价格（None），绝不填 0 / 插值 / 用最近交易日替代。
 
 【数据文件】
-    quant_factor_price_history.csv，字段：Date, Ticker, Close
-    唯一键：Date | Ticker（幂等 upsert，历史记录不被覆盖，除非数据源错误并已报告）。
+    quant_factor_price_history.csv，字段：Date, Ticker, Open, High, Low, Close, Volume
+    （外加 schema_version 跟踪列）。唯一键：Date | Ticker（幂等 upsert，历史记录不被覆盖）。
+    - Close 仍是前瞻收益（Forward Return）的唯一口径，列名与含义不变（兼容 Phase 2 回测）。
+    - Open/High/Low/Volume 为 OHLCV 补采，供未来（开盘跳空、真实止损/止盈、流动性建模）使用，
+      当前回测/验证/候选/Shadow/Walk-Forward/治理 均不消费这四列，加列不影响任何既有链路。
 """
 
 import os
@@ -36,11 +39,14 @@ import pandas as pd
 US_TZ = ZoneInfo("America/New_York")
 
 PRICE_HISTORY_PATH = "quant_factor_price_history.csv"
-PRICE_HISTORY_COLUMNS = ["Date", "Ticker", "Close", "schema_version"]
+# OHLCV 补采（STEP）：在原有 Date, Ticker, Close 基础上扩到 Open/High/Low/Close/Volume。
+# Close 列名与位置含义不变（仍紧邻 Ticker 之后、Volume 之前），兼容 Phase 2 回测的 price_map。
+PRICE_HISTORY_COLUMNS = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"]
 
 # 输出 schema 版本（STEP 3-A）：写入 quant_factor_price_history.csv 的 schema_version 列。
 # 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
-SCHEMA_VERSION = "phase2b.v1"
+# 本次新增 Open/High/Low/Volume 四列 → 主版本号 v1 → v2。
+SCHEMA_VERSION = "phase2b.v2"
 
 SNAPSHOT_PATH = "quant_factor_snapshot.csv"
 
@@ -103,14 +109,16 @@ def get_snapshot_tickers(snapshot_df):
 # 批量价格下载（单次批量，绝不逐 ticker 循环请求）
 # ============================================================================
 def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None):
-    """一次性批量下载 tickers 的日线 Close，返回长表 DataFrame[Date, Ticker, Close]。
+    """一次性批量下载 tickers 的日线 OHLCV，返回长表 DataFrame[Date, Ticker, Open, High, Low, Close, Volume, schema_version]。
 
     - 单次 yf.download(tickers, ...)，绝不为每个 ticker 单独请求。
     - auto_adjust=False，与 Phase 1 因子口径一致。
     - cutoff_date 默认为最后完整交易日（剔除未完成 bar）。
+    - Close 仍为必填（前瞻收益口径不变）；Open/High/Low/Volume 缺失则该行留空（不强行补 0 / 不阻断）。
     """
     import yfinance as yf
 
+    OHLCV = ["Open", "High", "Low", "Close", "Volume"]
     tickers = list(dict.fromkeys([str(t).upper() for t in tickers if str(t).strip()]))
     if not tickers:
         return pd.DataFrame(columns=PRICE_HISTORY_COLUMNS)
@@ -132,16 +140,29 @@ def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None)
                 continue
             if "Close" not in df.columns:
                 continue
-            sub = pd.DataFrame({"Close": pd.to_numeric(df["Close"], errors="coerce")})
+            # 仅取存在的 OHLCV 列；缺失列不强行补（与"绝不填 0 / 插值"铁律一致）
+            present = [c for c in OHLCV if c in df.columns]
+            if "Close" not in present:
+                continue
+            sub = pd.DataFrame({c: pd.to_numeric(df[c], errors="coerce") for c in present})
             sub = filter_completed_daily_bars(sub, cutoff)
-            sub = sub.dropna(subset=["Close"])
-            for d, c in sub["Close"].items():
-                rows.append({
+            sub = sub.dropna(subset=["Close"])  # Close 必填
+            for d, row in sub.iterrows():
+                rec = {
                     "Date": d.normalize().strftime("%Y-%m-%d"),
                     "Ticker": t,
-                    "Close": round(float(c), 6),
+                    "Close": round(float(row["Close"]), 6),
                     "schema_version": SCHEMA_VERSION,
-                })
+                }
+                for c in ("Open", "High", "Low", "Volume"):
+                    v = row.get(c)
+                    if v is None or pd.isna(v):
+                        rec[c] = ""
+                    elif c == "Volume":
+                        rec[c] = int(round(float(v)))
+                    else:
+                        rec[c] = round(float(v), 6)
+                rows.append(rec)
         except Exception:
             continue
     if not rows:

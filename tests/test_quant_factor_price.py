@@ -206,6 +206,58 @@ def test_filter_bars():
     check("未完成 bar 被剔除", len(filtered) == 2, f"got {len(filtered)}")
 
 
+# ---- OHLCV 补采（STEP）：schema + 写入 + 向后兼容 ----
+def test_schema_has_ohlcv():
+    expected = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"]
+    check("PRICE_HISTORY_COLUMNS 扩到 OHLCV", PRICE_HISTORY_COLUMNS == expected, f"got {PRICE_HISTORY_COLUMNS}")
+    check("Close 列名保留（兼容 Phase 2）", "Close" in PRICE_HISTORY_COLUMNS)
+
+
+def test_update_writes_ohlcv():
+    """注入 mock fetch（不联网）验证 OHLCV 正确落盘，Close 不变。"""
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "snap.csv")
+    ph_path = os.path.join(tmp, "price_history.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+
+    def fake_fetch(tickers, start, end):
+        rows = []
+        for t in tickers:
+            for d in ["2026-01-30", "2026-02-02"]:
+                rows.append({
+                    "Date": d, "Ticker": t,
+                    "Open": 99.0, "High": 101.0, "Low": 98.0,
+                    "Close": 100.0, "Volume": 123456,
+                })
+        return pd.DataFrame(rows, columns=PRICE_HISTORY_COLUMNS)
+
+    r = update_price_history(snapshot_path=snap_path, price_history_path=ph_path, fetch_func=fake_fetch)
+    check("update OK (OHLCV)", r["status"] == "OK", f"got {r['status']}")
+    df = load_price_history(ph_path)
+    for col in ["Open", "High", "Low", "Volume"]:
+        check(f"列 {col} 存在并落盘", col in df.columns)
+    sample = df[(df["Date"] == "2026-01-30") & (df["Ticker"] == "AAA")].iloc[0]
+    check("Open 已写入", abs(float(sample["Open"]) - 99.0) < 1e-9, f"got {sample['Open']}")
+    check("High 已写入", abs(float(sample["High"]) - 101.0) < 1e-9)
+    check("Low 已写入", abs(float(sample["Low"]) - 98.0) < 1e-9)
+    check("Volume 已写入(int)", int(float(sample["Volume"])) == 123456, f"got {sample['Volume']}")
+    check("Close 列名未变", "Close" in df.columns)
+    check("Close 值不变", abs(float(sample["Close"]) - 100.0) < 1e-9)
+
+
+def test_load_backward_compat_old_csv():
+    """旧 4 列 CSV（仅 Date/Ticker/Close/schema_version）读入后自动补空 OHLCV，Close 保留。"""
+    tmp = tempfile.mkdtemp()
+    ph_path = os.path.join(tmp, "old.csv")
+    pd.DataFrame([
+        {"Date": "2026-01-30", "Ticker": "AAA", "Close": "100.0", "schema_version": "phase2b.v1"},
+    ]).to_csv(ph_path, index=False)
+    df = load_price_history(ph_path)
+    for col in ["Open", "High", "Low", "Volume"]:
+        check(f"旧 CSV 自动补空列 {col}", col in df.columns and df.iloc[0][col] == "")
+    check("旧 CSV Close 保留", df.iloc[0]["Close"] == "100.0")
+
+
 def main():
     _tests = [
         test_upsert,
@@ -220,6 +272,9 @@ def main():
         test_update_with_injected_fetch,
         test_price_map,
         test_filter_bars,
+        test_schema_has_ohlcv,
+        test_update_writes_ohlcv,
+        test_load_backward_compat_old_csv,
     ]
     _failed = 0
     for _t in _tests:
