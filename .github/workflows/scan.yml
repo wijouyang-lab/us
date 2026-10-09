@@ -2,10 +2,6 @@ name: 美股盘中扫描
 
 on:
   workflow_dispatch:
-  schedule:
-    # Schedule: UTC (GitHub 原生 cron 只认 UTC，不依赖 timezone 字段)
-    # Scan: Mon-Fri 19:00 Beijing = 11:00 UTC
-    - cron: '7 11 * * 1-5'
 
 # 防重复：同一时间只允许一个 Scan 在执行/排队。
 # cancel-in-progress: false —— 已有 Scan 正在跑时，新触发排队等待，绝不取消正在跑的那个。
