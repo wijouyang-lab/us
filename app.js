@@ -1121,15 +1121,15 @@
   function renderReview() {
     var r = REVIEW || {};
     $('#revSubHome').textContent = '近 ' + (r.window_days || 30) + ' 天 · as of ' + (r.as_of_us || NA);
+    // Core 胜率：仅当样本（core_closed_count）≥ 10 时显示真实值；样本不足时显示「—」（不改数值逻辑）。
+    var coreWinRate = (r.core_closed_win_rate !== null && (r.core_closed_count || 0) >= 10)
+      ? r.core_closed_win_rate : null;
     $('#reviewTiles').innerHTML =
       reviewTile('Core Closed', r.core_closed_count, r.core_closed_count_status, r.core_closed_unresolved) +
       reviewTile('Core Open', r.core_open_count, r.core_open_count_status, r.core_open_unresolved) +
-      reviewTile('Obs Closed', r.observation_closed_count, r.observation_closed_count_status, r.observation_closed_unresolved) +
-      reviewTile('Obs Open', r.observation_open_count, r.observation_open_count_status, r.observation_open_unresolved) +
       reviewTile('Actual Active', r.actual_active_count, r.actual_active_count_status, r.actual_active_unresolved) +
       reviewTile('Stop Loss 触发', r.stop_loss_hit_count, 'complete', 0) +
-      reviewTile('Core 胜率', r.core_closed_win_rate === null ? null : r.core_closed_win_rate, r.core_closed_win_rate === null ? 'unavailable' : 'complete', 0) +
-      reviewTile('Active Options', r.active_options_count, 'complete', 0);
+      reviewTile('Core 胜率', coreWinRate, coreWinRate === null ? 'unavailable' : 'complete', 0);
 
     var notes = [];
     (r.notes || []).forEach(function (n) { if (notes.indexOf(n) < 0) notes.push(n); });
