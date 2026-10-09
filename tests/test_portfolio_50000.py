@@ -63,7 +63,8 @@ def mk_fixture(recs, start_date=None):
 
 def run_pf(d, prices=None):
     if prices is not None:
-        pf.fetch_last_closes = lambda tickers: {k.upper(): v for k, v in prices.items()}
+        # 适配 fetch_last_closes 的新返回结构：{TICKER: {"current": Decimal, ...}}
+        pf.fetch_last_closes = lambda tickers: {k.upper(): {"current": v} for k, v in prices.items()}
     return pf.run(d, offline=False)
 
 

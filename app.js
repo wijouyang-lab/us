@@ -375,6 +375,17 @@
     }).join('') + '</div>';
   }
 
+  /* 扩展时段标签：盘前 / 盘后 / 盘中（按 ET 时点的小时判断）。 */
+  function extLabel(t) {
+    var m = /(\d{1,2}):(\d{2})/.exec(t || '');
+    if (!m) return '盘后';
+    var h = parseInt(m[1], 10), mi = parseInt(m[2], 10);
+    var mins = h * 60 + mi;
+    if (mins < 9 * 60 + 30) return '盘前';
+    if (mins >= 16 * 60) return '盘后';
+    return '盘中';
+  }
+
   /* p: portfolio.positions[] 条目；s: STOCKS[] 里同 ticker 的详情（找不到则 null → 降级只显示持仓字段） */
   function positionCard(p, s) {
     var tk = String(p.ticker || '').toUpperCase();
@@ -382,11 +393,17 @@
     var rt = num(p.unrealized_pnl_pct) || 0;
     var upCls = up > 0 ? 'up' : (up < 0 ? 'down' : 'flat');
 
+    var extLine = (p.extended_price != null && p.extended_price !== '')
+      ? '<div class="pos-ext">' + extLabel(p.extended_time) + ' $' + nv(p.extended_price, 2)
+        + (p.extended_time ? ' (' + esc(p.extended_time) + ')' : '') + '</div>'
+      : '';
+
     var head = '<div class="pos-top">' +
       '<div class="pos-id">' +
       '<div class="pos-tk">' + esc(tk) + '</div>' +
       '<div class="pos-nm">' + esc(s ? s.n : '') + '</div>' +
       '<div class="pos-px">$' + nv(p.current_price, 2) + '</div>' +
+      extLine +
       '</div>' +
       (s ? '<div class="pos-ring">' + ring(s.s.final, 54, 'Final') + '</div>' : '') +
       '</div>';

@@ -393,6 +393,7 @@ button{font-family:inherit}
 .pos-tk{font-size:15px;font-weight:760;letter-spacing:.2px}
 .pos-nm{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pos-px{font-size:19px;font-weight:750;letter-spacing:-.4px;font-variant-numeric:tabular-nums;margin-top:2px}
+.pos-ext{font-size:11px;color:#888;margin-top:1px;font-variant-numeric:tabular-nums}
 .pos-ring{flex:0 0 auto;text-align:center}
 .pos-ring .rl{display:block;font-size:9.5px;color:var(--text-3);font-weight:650;letter-spacing:.3px;margin-top:-2px}
 .pos-quick{display:flex;gap:5px;flex-wrap:wrap}

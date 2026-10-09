@@ -56,7 +56,7 @@ HISTORY_FILE = "portfolio_50000_history.csv"
 
 POSITION_COLUMNS = [
     "Portfolio_ID", "Unit_ID", "Ticker", "Shares", "Entry_Price", "Entry_Date",
-    "Cost_Basis", "Current_Price", "Market_Value", "Unrealized_PnL",
+    "Cost_Basis", "Current_Price", "Extended_Price", "Extended_Time", "Market_Value", "Unrealized_PnL",
     "Unrealized_PnL_Pct", "Weight_Pct", "Status", "Stop_Loss",
     "Recommendation_ID", "Last_Update",
 ]
@@ -137,9 +137,46 @@ def rec_id_of(ticker: str, rec_date: str, tag: str) -> str:
 
 
 # ------------------------------------------------------------------ 价格
-def fetch_last_closes(tickers: list[str]) -> dict[str, Decimal]:
-    """取最新收盘价。取不到就返回空 —— 由调用方回退到上一快照价格，绝不编造。"""
-    out: dict[str, Decimal] = {}
+def _fmt_ext_time(ts) -> str:
+    """把 yfinance 返回的（通常为 tz-aware）时间戳格式化为 'MM-DD HH:MM ET'。失败留空。"""
+    if ts is None:
+        return ""
+    try:
+        from zoneinfo import ZoneInfo
+        et = ZoneInfo("America/New_York")
+        dt_et = ts.astimezone(et)
+        return dt_et.strftime("%m-%d %H:%M ET")
+    except Exception:
+        try:
+            return str(ts)
+        except Exception:
+            return ""
+
+
+def _fetch_extended_price(ticker: str, yf) -> tuple[Decimal | None, str]:
+    """含盘前/盘后的最新成交价（prepost=True，1 分钟粒度）。失败返回 (None, '')，绝不抛错。"""
+    try:
+        df_ext = yf.Ticker(ticker).history(period="1d", interval="1m", prepost=True)
+        if df_ext is None or len(df_ext) == 0:
+            return None, ""
+        series = df_ext["Close"].dropna()
+        if series.empty:
+            return None, ""
+        px = dec(series.iloc[-1])
+        ts = df_ext.index[-1] if hasattr(df_ext.index, "__getitem__") else None
+        return (px if px is not None and px > 0 else None), _fmt_ext_time(ts)
+    except Exception:
+        return None, ""
+
+
+def fetch_last_closes(tickers: list[str]) -> dict[str, dict]:
+    """取最新价。返回 {TICKER: {"current": Decimal|None, "extended": Decimal|None, "extended_time": str}}。
+
+    - current：常规时段收盘价（prepost=False，EOD 基准），取不到则该 ticker 不入表。
+    - extended：含盘前/盘后的最新成交价（prepost=True）；失败留空，不影响 current。
+    取不到任何价时返回空 dict —— 由调用方回退到上一快照价格，绝不编造。
+    """
+    out: dict[str, dict] = {}
     if not tickers:
         return out
     try:
@@ -154,9 +191,15 @@ def fetch_last_closes(tickers: list[str]) -> dict[str, Decimal]:
             series = hist["Close"].dropna()
             if series.empty:
                 continue
-            px = dec(series.iloc[-1])
-            if px is not None and px > 0:
-                out[t.upper()] = px
+            current = dec(series.iloc[-1])
+            if current is None or current <= 0:
+                continue
+            extended, ext_time = _fetch_extended_price(t, yf)
+            out[t.upper()] = {
+                "current": current,
+                "extended": extended,
+                "extended_time": ext_time,
+            }
         except Exception:
             continue
     return out
@@ -378,8 +421,8 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
     return log
 
 
-def mark_to_market(positions, prices: dict[str, Decimal], today: str):
-    """盯市：更新 OPEN 仓位的市值与浮盈。取不到价则沿用上一快照价格（不编造）。"""
+def mark_to_market(positions, prices: dict[str, dict], today: str):
+    """盯市：更新 OPEN 仓位的市值与浮盈 + 扩展时段价。取不到价则沿用上一快照价格（不编造）。"""
     stock_value = ZERO
     unrealized = ZERO
     for p in positions:
@@ -388,15 +431,21 @@ def mark_to_market(positions, prices: dict[str, Decimal], today: str):
         tkr = str(p.get("Ticker", "")).upper()
         shares = int(dec(p.get("Shares")) or 0)
         entry = dec(p.get("Entry_Price")) or ZERO
-        px = prices.get(tkr)
+        info = prices.get(tkr) or {}
+        px = info.get("current")
         if px is None:
             px = dec(p.get("Current_Price"))      # 回退：上一快照价
         if px is None or px <= 0:
             px = entry                            # 最后兜底：成本价（0 浮盈，下次刷新校正）
+        # 扩展时段价（盘前/盘后），失败留空，不影响 Current_Price / 市值
+        ext = info.get("extended")
+        ext_time = info.get("extended_time") or ""
         mv = money(Decimal(shares) * px)
         upl = money(Decimal(shares) * (px - entry))
         upl_pct = ((px - entry) / entry * Decimal("100")).quantize(CENT, rounding=ROUND_HALF_UP) if entry > 0 else ZERO
         p["Current_Price"] = str(money(px))
+        p["Extended_Price"] = "" if ext is None else str(money(ext))
+        p["Extended_Time"] = "" if not ext_time else str(ext_time)
         p["Market_Value"] = str(mv)
         p["Unrealized_PnL"] = str(upl)
         p["Unrealized_PnL_Pct"] = str(upl_pct)
@@ -426,13 +475,46 @@ def upsert_history(history: list[dict], row: dict):
 
 
 # ------------------------------------------------------------------ 主流程
-def run(data_dir: Path, offline: bool = False) -> dict:
+def run(data_dir: Path, offline: bool = False, price_only: bool = False) -> dict:
     today = us_today_str()
-    meta = ensure_meta(data_dir, today)
-
     positions = read_csv_rows(data_dir / POSITIONS_FILE)
     transactions = read_csv_rows(data_dir / TRANSACTIONS_FILE)
     history = read_csv_rows(data_dir / HISTORY_FILE)
+
+    # 仅刷新价格模式：跳过买卖处理与交易/历史写回，避免与盘后 review 抢同一份账本。
+    # 无持仓时直接返回，且不调用 ensure_meta（避免误建 meta 干扰 review 初始化）。
+    if price_only:
+        if not positions:
+            print("[price-only] 无持仓，跳过价格刷新")
+            return {"cash": ZERO, "stock_value": ZERO, "total_equity": ZERO,
+                    "unrealized_pnl": ZERO, "positions": []}
+        open_tickers = sorted({str(p.get("Ticker", "")).upper()
+                               for p in positions if str(p.get("Status", "")).upper() == "OPEN"})
+        prices = {} if offline else fetch_last_closes(open_tickers)
+        if open_tickers and not prices:
+            print("⚠️ 未取到实时价，沿用上一快照价格（不编造价格）")
+        stock_value, unrealized = mark_to_market(positions, prices, today)
+        cash = derive_cash(transactions)   # 只读，不写交易流水
+        total_equity = (cash + stock_value).quantize(CENT, rounding=ROUND_HALF_UP)
+        fill_weights(positions, total_equity)
+        # 只写回持仓 CSV（含 Extended_Price / Extended_Time），不动交易/历史
+        write_csv_rows(data_dir / POSITIONS_FILE, POSITION_COLUMNS, positions)
+        print("=" * 62)
+        print(f"  [price-only] Cash (unchanged) : {cash}")
+        print(f"  [price-only] Stock Value      : {stock_value}")
+        print(f"  [price-only] Total Equity     : {total_equity}")
+        print(f"  [price-only] Open Positions   : "
+              f"{sum(1 for p in positions if str(p.get('Status', '')).upper() == 'OPEN')}/{MAX_OPEN_POSITIONS}")
+        print("=" * 62)
+        return {
+            "cash": cash,
+            "stock_value": stock_value,
+            "total_equity": total_equity,
+            "unrealized_pnl": unrealized,
+            "positions": positions,
+        }
+
+    meta = ensure_meta(data_dir, today)
 
     recs = load_recommendations(data_dir)
     print(f"📋 推荐事件 {len(recs)} 条，其中 Core_Dragon "
@@ -521,12 +603,14 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description="$50,000 Long-Term Portfolio Ledger")
     ap.add_argument("--data-dir", default=".", help="数据目录（需包含 trade_history.csv）")
     ap.add_argument("--offline", action="store_true", help="不联网取价（测试/离线用）")
+    ap.add_argument("--price-only", action="store_true",
+                    help="仅刷新持仓价格（含盘前/盘后 Extended_Price），不处理买卖、不写交易/历史")
     args = ap.parse_args(argv)
     d = Path(args.data_dir).resolve()
     if not (d / "trade_history.csv").exists():
         print(f"❌ 缺少 trade_history.csv：{d}")
         return 1
-    run(d, offline=args.offline)
+    run(d, offline=args.offline, price_only=args.price_only)
     return 0
 
 

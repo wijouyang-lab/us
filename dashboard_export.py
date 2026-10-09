@@ -2491,6 +2491,9 @@ def build_portfolio(data_dir: Path):
             "entry_date": entry_date,
             "cost_basis": round_num(parse_num(r.get("Cost_Basis")), 2),
             "current_price": round_num(parse_num(r.get("Current_Price")), 2),
+            "extended_price": round_num(parse_num(clean_text(r.get("Extended_Price")) or ""), 2)
+            if clean_text(r.get("Extended_Price")) else None,
+            "extended_time": clean_text(r.get("Extended_Time")) or None,
             "market_value": round_num(parse_num(r.get("Market_Value")), 2),
             "unrealized_pnl": round_num(parse_num(r.get("Unrealized_PnL")), 2),
             "unrealized_pnl_pct": round_num(parse_num(r.get("Unrealized_PnL_Pct")), 2),
