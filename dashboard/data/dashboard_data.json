@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-08T23:46:06Z",
+  "generated_at": "2026-10-09T00:01:21Z",
   "stocks": [
     {
       "ticker": "ADSK",
@@ -19,7 +19,7 @@
       "pending_price": 231.42,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 235.05,
-      "change_1d": -0.0,
+      "change_1d": -0.6169,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -1.5444,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -62,6 +62,14 @@
         "invalidation": "若日线收盘跌破MA50约233.71美元并进一步失守MA20约217.12美元，当前反弹结构明显失效；若AI投资转向导致设计软件支出放缓或盈利预期下调，基本面催化失效。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 253.87,
+          "high": 257.49,
+          "low": 253.34,
+          "close": 257.44,
+          "volume": 2342600
+        },
         {
           "date": "2026-01-22",
           "open": 268.71,
@@ -1493,33 +1501,25 @@
           "low": 228.76,
           "close": 235.05,
           "volume": 2247400
-        },
-        {
-          "date": "2026-10-08",
-          "open": 232.56,
-          "high": 236.0,
-          "low": 230.61,
-          "close": 233.6,
-          "volume": 2269889
         }
       ],
       "technical": {
-        "ma20": 218.2135,
-        "ma50": 233.475,
-        "kdj_j": 115.48,
-        "kdj_k": 83.72,
-        "kdj_d": 67.83,
-        "macd_hist": 3.4586,
-        "macd": -1.0303,
-        "macd_signal": -4.4889,
-        "atr_abs": 7.3857,
-        "atr_pct_computed": 3.1617,
+        "ma20": 217.114,
+        "ma50": 233.708,
+        "kdj_j": 117.14,
+        "kdj_k": 78.97,
+        "kdj_d": 59.89,
+        "macd_hist": 3.0586,
+        "macd": -2.2949,
+        "macd_signal": -5.3535,
+        "atr_abs": 7.3429,
+        "atr_pct_computed": 3.124,
         "rsi": 60.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:38Z",
+        "computed_at": "2026-10-09T00:00:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1585,6 +1585,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 14.04,
+          "high": 14.41,
+          "low": 13.99,
+          "close": 14.24,
+          "volume": 10919100
+        },
         {
           "date": "2026-01-22",
           "open": 14.42,
@@ -3016,33 +3024,25 @@
           "low": 14.9,
           "close": 14.93,
           "volume": 6299200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 14.918,
-          "high": 14.98,
-          "low": 14.91,
-          "close": 14.93,
-          "volume": 13106526
         }
       ],
       "technical": {
-        "ma20": 14.8605,
-        "ma50": 14.7924,
-        "kdj_j": 74.4,
-        "kdj_k": 75.98,
-        "kdj_d": 76.77,
-        "macd_hist": 0.0054,
-        "macd": 0.039,
-        "macd_signal": 0.0337,
-        "atr_abs": 0.0471,
-        "atr_pct_computed": 0.3158,
+        "ma20": 14.854,
+        "ma50": 14.7902,
+        "kdj_j": 95.27,
+        "kdj_k": 83.2,
+        "kdj_d": 77.16,
+        "macd_hist": 0.0062,
+        "macd": 0.0385,
+        "macd_signal": 0.0323,
+        "atr_abs": 0.045,
+        "atr_pct_computed": 0.3014,
         "rsi": 64.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:39Z",
+        "computed_at": "2026-10-09T00:00:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3058,14 +3058,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 618.5,
+      "price": 618.0,
       "price_source": "realtime",
-      "current_price": 618.5,
-      "current_price_updated_at": "2026-10-08T23:45:18Z",
+      "current_price": 618.0,
+      "current_price_updated_at": "2026-10-08T23:59:40Z",
       "pending_price": 487.6,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 514.39,
-      "change_1d": -0.3512,
+      "change_1d": -4.3136,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -5.2081,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -3108,6 +3108,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 235.99,
+          "high": 252.9,
+          "low": 235.78,
+          "close": 249.8,
+          "volume": 62385600
+        },
         {
           "date": "2026-01-22",
           "open": 251.75,
@@ -4539,33 +4547,25 @@
           "low": 633.16,
           "close": 645.86,
           "volume": 18561100
-        },
-        {
-          "date": "2026-10-08",
-          "open": 639.2,
-          "high": 643.85,
-          "low": 613.3388,
-          "close": 620.68,
-          "volume": 23369562
         }
       ],
       "technical": {
-        "ma20": 593.4745,
-        "ma50": 526.4668,
-        "kdj_j": 48.94,
-        "kdj_k": 65.26,
-        "kdj_d": 73.41,
-        "macd_hist": 0.4194,
-        "macd": 34.1749,
-        "macd_signal": 33.7555,
-        "atr_abs": 24.7137,
-        "atr_pct_computed": 3.9817,
+        "ma20": 587.6205,
+        "ma50": 522.6444,
+        "kdj_j": 79.55,
+        "kdj_k": 78.18,
+        "kdj_d": 77.49,
+        "macd_hist": 2.9007,
+        "macd": 36.5514,
+        "macd_signal": 33.6507,
+        "atr_abs": 23.7036,
+        "atr_pct_computed": 3.6701,
         "rsi": 47.4,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:39Z",
+        "computed_at": "2026-10-09T00:00:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4581,14 +4581,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 254.81,
+      "price": 254.88,
       "price_source": "realtime",
-      "current_price": 254.81,
-      "current_price_updated_at": "2026-10-08T23:42:30Z",
+      "current_price": 254.88,
+      "current_price_updated_at": "2026-10-08T23:59:33Z",
       "pending_price": 271.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 271.85,
-      "change_1d": 0.2952,
+      "change_1d": -1.9391,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4631,6 +4631,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 231.09,
+          "high": 232.3,
+          "low": 226.88,
+          "close": 231.31,
+          "volume": 47276100
+        },
         {
           "date": "2026-01-22",
           "open": 234.05,
@@ -6062,33 +6070,25 @@
           "low": 253.17,
           "close": 259.92,
           "volume": 36225800
-        },
-        {
-          "date": "2026-10-08",
-          "open": 259.72,
-          "high": 259.8599,
-          "low": 253.78,
-          "close": 254.06,
-          "volume": 37077426
         }
       ],
       "technical": {
-        "ma20": 251.737,
-        "ma50": 258.557,
-        "kdj_j": 89.83,
-        "kdj_k": 69.71,
-        "kdj_d": 59.65,
-        "macd_hist": 1.0034,
-        "macd": -0.4142,
-        "macd_signal": -1.4176,
-        "atr_abs": 5.4257,
-        "atr_pct_computed": 2.1356,
+        "ma20": 251.6285,
+        "ma50": 258.0088,
+        "kdj_j": 113.64,
+        "kdj_k": 74.29,
+        "kdj_d": 54.62,
+        "macd_hist": 1.1047,
+        "macd": -0.5637,
+        "macd_signal": -1.6684,
+        "atr_abs": 5.29,
+        "atr_pct_computed": 2.0352,
         "rsi": 62.7,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:39Z",
+        "computed_at": "2026-10-09T00:00:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6104,14 +6104,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "ANET|2026-10-07|Core_Dragon",
       "ai_snapshot_date": "2026-10-07",
-      "price": 211.03,
+      "price": 211.014,
       "price_source": "realtime",
-      "current_price": 211.03,
-      "current_price_updated_at": "2026-10-08T23:33:53Z",
+      "current_price": 211.014,
+      "current_price_updated_at": "2026-10-08T23:52:25Z",
       "pending_price": 211.3,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 215.83,
-      "change_1d": 0.0284,
+      "change_1d": -2.2314,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.0989,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6154,6 +6154,14 @@
         "invalidation": "若日线收盘跌破MA20约202.67美元并伴随MACD转弱，当前上升结构失效；若后续公司指引被下调或AI网络需求证据不及预期，基本面催化亦失效。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 127.86,
+          "high": 129.55,
+          "low": 125.04,
+          "close": 127.29,
+          "volume": 5931000
+        },
         {
           "date": "2026-01-22",
           "open": 139.84,
@@ -7585,33 +7593,25 @@
           "low": 209.13,
           "close": 215.83,
           "volume": 4995900
-        },
-        {
-          "date": "2026-10-08",
-          "open": 213.495,
-          "high": 217.32,
-          "low": 209.51,
-          "close": 210.97,
-          "volume": 4874109
         }
       ],
       "technical": {
-        "ma20": 203.765,
-        "ma50": 196.9494,
-        "kdj_j": 77.28,
-        "kdj_k": 72.42,
-        "kdj_d": 70.0,
-        "macd_hist": 0.6628,
-        "macd": 4.9579,
-        "macd_signal": 4.295,
-        "atr_abs": 6.1698,
-        "atr_pct_computed": 2.9245,
+        "ma20": 202.666,
+        "ma50": 195.8894,
+        "kdj_j": 95.89,
+        "kdj_k": 77.82,
+        "kdj_d": 68.79,
+        "macd_hist": 0.8926,
+        "macd": 5.0219,
+        "macd_signal": 4.1293,
+        "atr_abs": 6.0184,
+        "atr_pct_computed": 2.7885,
         "rsi": 67.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:40Z",
+        "computed_at": "2026-10-09T00:00:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7634,7 +7634,7 @@
       "pending_price": 43.31,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 43.31,
-      "change_1d": -0.7477,
+      "change_1d": 3.013,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -7677,6 +7677,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 25.59,
+          "high": 26.61,
+          "low": 25.59,
+          "close": 26.54,
+          "volume": 6681900
+        },
         {
           "date": "2026-01-22",
           "open": 26.0,
@@ -9108,33 +9116,25 @@
           "low": 43.34,
           "close": 43.81,
           "volume": 3584700
-        },
-        {
-          "date": "2026-10-08",
-          "open": 45.18,
-          "high": 46.225,
-          "low": 45.0022,
-          "close": 45.47,
-          "volume": 7199547
         }
       ],
       "technical": {
-        "ma20": 43.9415,
-        "ma50": 42.2734,
-        "kdj_j": 96.07,
-        "kdj_k": 71.02,
-        "kdj_d": 58.49,
-        "macd_hist": 0.0167,
-        "macd": 0.4243,
-        "macd_signal": 0.4076,
-        "atr_abs": 1.5646,
-        "atr_pct_computed": 3.441,
+        "ma20": 43.8945,
+        "ma50": 42.098,
+        "kdj_j": 87.8,
+        "kdj_k": 64.09,
+        "kdj_d": 52.23,
+        "macd_hist": -0.1151,
+        "macd": 0.2884,
+        "macd_signal": 0.4035,
+        "atr_abs": 1.4514,
+        "atr_pct_computed": 3.313,
         "rsi": 51.6,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:40Z",
+        "computed_at": "2026-10-09T00:00:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9157,7 +9157,7 @@
       "pending_price": 83.38,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 82.19,
-      "change_1d": 0.1524,
+      "change_1d": -2.3986,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.4479,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -9200,6 +9200,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 76.54,
+          "high": 77.92,
+          "low": 75.24,
+          "close": 77.3,
+          "volume": 17329400
+        },
         {
           "date": "2026-01-22",
           "open": 78.0,
@@ -10631,33 +10639,25 @@
           "low": 86.44,
           "close": 87.55,
           "volume": 9190900
-        },
-        {
-          "date": "2026-10-08",
-          "open": 86.23,
-          "high": 87.405,
-          "low": 83.96,
-          "close": 85.32,
-          "volume": 12860307
         }
       ],
       "technical": {
-        "ma20": 83.0435,
-        "ma50": 82.1631,
-        "kdj_j": 45.07,
-        "kdj_k": 65.79,
-        "kdj_d": 76.15,
-        "macd_hist": 0.4,
-        "macd": 1.7484,
-        "macd_signal": 1.3484,
-        "atr_abs": 2.7114,
-        "atr_pct_computed": 3.178,
+        "ma20": 82.79,
+        "ma50": 81.9598,
+        "kdj_j": 76.73,
+        "kdj_k": 79.8,
+        "kdj_d": 81.33,
+        "macd_hist": 0.6364,
+        "macd": 1.8848,
+        "macd_signal": 1.2484,
+        "atr_abs": 2.5907,
+        "atr_pct_computed": 2.9591,
         "rsi": 54.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:40Z",
+        "computed_at": "2026-10-09T00:00:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10673,14 +10673,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 279.6877,
+      "price": 279.04,
       "price_source": "realtime",
-      "current_price": 279.6877,
-      "current_price_updated_at": "2026-10-08T23:38:27Z",
+      "current_price": 279.04,
+      "current_price_updated_at": "2026-10-08T23:46:00Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": -0.1543,
+      "change_1d": -0.7999,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -10723,6 +10723,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 555.01,
+          "high": 560.0,
+          "low": 530.15,
+          "close": 532.56,
+          "volume": 6676800
+        },
         {
           "date": "2026-01-22",
           "open": 538.93,
@@ -12154,33 +12162,25 @@
           "low": 269.41,
           "close": 281.29,
           "volume": 3528000
-        },
-        {
-          "date": "2026-10-08",
-          "open": 277.5,
-          "high": 280.12,
-          "low": 271.1,
-          "close": 280.12,
-          "volume": 5946587
         }
       ],
       "technical": {
-        "ma20": 305.9635,
-        "ma50": 320.7094,
-        "kdj_j": 25.89,
-        "kdj_k": 21.19,
-        "kdj_d": 18.84,
-        "macd_hist": -1.8219,
-        "macd": -14.0915,
-        "macd_signal": -12.2696,
-        "atr_abs": 14.4781,
-        "atr_pct_computed": 5.1685,
+        "ma20": 307.682,
+        "ma50": 323.0962,
+        "kdj_j": 24.39,
+        "kdj_k": 19.9,
+        "kdj_d": 17.66,
+        "macd_hist": -2.3067,
+        "macd": -14.1209,
+        "macd_signal": -11.8142,
+        "atr_abs": 15.2067,
+        "atr_pct_computed": 5.406,
         "rsi": 35.9,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:40Z",
+        "computed_at": "2026-10-09T00:00:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12196,14 +12196,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BE|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 273.1,
+      "price": 273.0308,
       "price_source": "realtime",
-      "current_price": 273.1,
-      "current_price_updated_at": "2026-10-08T23:43:51Z",
+      "current_price": 273.0308,
+      "current_price_updated_at": "2026-10-08T23:58:46Z",
       "pending_price": 298.79,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 298.79,
-      "change_1d": 0.1026,
+      "change_1d": -6.2684,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -12246,6 +12246,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 152.8,
+          "high": 155.87,
+          "low": 142.43,
+          "close": 150.56,
+          "volume": 12675400
+        },
         {
           "date": "2026-01-22",
           "open": 153.7,
@@ -13677,33 +13685,25 @@
           "low": 284.541,
           "close": 291.29,
           "volume": 10946100
-        },
-        {
-          "date": "2026-10-08",
-          "open": 283.83,
-          "high": 286.9499,
-          "low": 264.5,
-          "close": 272.82,
-          "volume": 15392138
         }
       ],
       "technical": {
-        "ma20": 276.6445,
-        "ma50": 245.0134,
-        "kdj_j": 46.94,
-        "kdj_k": 58.94,
-        "kdj_d": 64.94,
-        "macd_hist": -1.1269,
-        "macd": 11.3869,
-        "macd_signal": 12.5138,
-        "atr_abs": 20.5039,
-        "atr_pct_computed": 7.5155,
+        "ma20": 275.928,
+        "ma50": 242.832,
+        "kdj_j": 82.63,
+        "kdj_k": 72.84,
+        "kdj_d": 67.95,
+        "macd_hist": 0.279,
+        "macd": 13.0746,
+        "macd_signal": 12.7956,
+        "atr_abs": 20.026,
+        "atr_pct_computed": 6.8749,
         "rsi": 61.0,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:41Z",
+        "computed_at": "2026-10-09T00:00:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13719,14 +13719,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BRK-B|2026-10-02|Observation",
       "ai_snapshot_date": "2026-10-02",
-      "price": 511.1,
+      "price": 511.99,
       "price_source": "realtime",
-      "current_price": 511.1,
-      "current_price_updated_at": "2026-10-08T23:21:00Z",
+      "current_price": 511.99,
+      "current_price_updated_at": "2026-10-08T23:59:59Z",
       "pending_price": 502.52,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 502.52,
-      "change_1d": 0.0098,
+      "change_1d": 1.1338,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -13769,6 +13769,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 484.0,
+          "high": 488.0,
+          "low": 481.57,
+          "close": 483.83,
+          "volume": 5730200
+        },
         {
           "date": "2026-01-22",
           "open": 483.26,
@@ -15200,33 +15208,25 @@
           "low": 504.3,
           "close": 506.25,
           "volume": 3499200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 506.61,
-          "high": 513.1499,
-          "low": 505.27,
-          "close": 511.05,
-          "volume": 4579400
         }
       ],
       "technical": {
-        "ma20": 506.891,
-        "ma50": 507.6494,
-        "kdj_j": 104.01,
-        "kdj_k": 68.0,
-        "kdj_d": 50.0,
-        "macd_hist": 0.3756,
-        "macd": -0.1724,
-        "macd_signal": -0.548,
-        "atr_abs": 5.1636,
-        "atr_pct_computed": 1.0104,
+        "ma20": 506.6885,
+        "ma50": 507.6116,
+        "kdj_j": 92.34,
+        "kdj_k": 58.11,
+        "kdj_d": 40.99,
+        "macd_hist": -0.1088,
+        "macd": -0.7507,
+        "macd_signal": -0.6419,
+        "atr_abs": 5.025,
+        "atr_pct_computed": 0.9926,
         "rsi": 46.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:41Z",
+        "computed_at": "2026-10-09T00:00:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15249,7 +15249,7 @@
       "pending_price": 63.63,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 63.63,
-      "change_1d": 0.0,
+      "change_1d": 3.289,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -15292,6 +15292,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 79.22,
+          "high": 79.98,
+          "low": 76.31,
+          "close": 78.07,
+          "volume": 2914400
+        },
         {
           "date": "2026-01-22",
           "open": 77.62,
@@ -16723,33 +16731,25 @@
           "low": 61.41,
           "close": 61.72,
           "volume": 2969700
-        },
-        {
-          "date": "2026-10-08",
-          "open": 61.88,
-          "high": 63.82,
-          "low": 61.74,
-          "close": 63.75,
-          "volume": 4322092
         }
       ],
       "technical": {
-        "ma20": 62.9075,
-        "ma50": 67.8724,
-        "kdj_j": 111.13,
-        "kdj_k": 68.82,
-        "kdj_d": 47.66,
-        "macd_hist": 0.3275,
-        "macd": -1.8532,
-        "macd_signal": -2.1808,
-        "atr_abs": 1.6286,
-        "atr_pct_computed": 2.5546,
+        "ma20": 63.0365,
+        "ma50": 68.0948,
+        "kdj_j": 87.7,
+        "kdj_k": 53.96,
+        "kdj_d": 37.09,
+        "macd_hist": 0.0957,
+        "macd": -2.167,
+        "macd_signal": -2.2627,
+        "atr_abs": 1.5807,
+        "atr_pct_computed": 2.5611,
         "rsi": 48.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:41Z",
+        "computed_at": "2026-10-09T00:00:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16772,7 +16772,7 @@
       "pending_price": 115.36,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 114.0,
-      "change_1d": -0.6035,
+      "change_1d": 0.152,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.193,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -16815,6 +16815,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 155.59,
+          "high": 157.89,
+          "low": 154.81,
+          "close": 155.97,
+          "volume": 4156700
+        },
         {
           "date": "2026-01-22",
           "open": 157.29,
@@ -18246,33 +18254,25 @@
           "low": 110.15,
           "close": 111.83,
           "volume": 4339400
-        },
-        {
-          "date": "2026-10-08",
-          "open": 110.72,
-          "high": 112.9,
-          "low": 110.26,
-          "close": 112.68,
-          "volume": 6458689
         }
       ],
       "technical": {
-        "ma20": 118.84,
-        "ma50": 130.9172,
-        "kdj_j": 47.15,
-        "kdj_k": 30.78,
-        "kdj_d": 22.59,
-        "macd_hist": -0.1632,
-        "macd": -5.6084,
-        "macd_signal": -5.4452,
-        "atr_abs": 3.4479,
-        "atr_pct_computed": 3.0599,
+        "ma20": 119.4765,
+        "ma50": 131.2516,
+        "kdj_j": 35.51,
+        "kdj_k": 24.17,
+        "kdj_d": 18.5,
+        "macd_hist": -0.4035,
+        "macd": -5.8079,
+        "macd_signal": -5.4044,
+        "atr_abs": 3.4436,
+        "atr_pct_computed": 3.0793,
         "rsi": 27.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:41Z",
+        "computed_at": "2026-10-09T00:00:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18295,7 +18295,7 @@
       "pending_price": 276.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.85,
-      "change_1d": -0.0,
+      "change_1d": 2.2829,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -18338,6 +18338,14 @@
         "invalidation": "若日线收盘跌破当前271.54—270.08美元均线区且无法收复，同时MACD转弱，则修复结构失效；若后续披露国际成交增长未能带动收入或盈利改善，则成交催化的估值支撑需下调。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 280.19,
+          "high": 281.36,
+          "low": 276.59,
+          "close": 279.07,
+          "volume": 2204900
+        },
         {
           "date": "2026-01-22",
           "open": 279.05,
@@ -19769,33 +19777,25 @@
           "low": 267.87,
           "close": 270.27,
           "volume": 1307600
-        },
-        {
-          "date": "2026-10-08",
-          "open": 271.5,
-          "high": 278.21,
-          "low": 270.0,
-          "close": 276.44,
-          "volume": 3808091
         }
       ],
       "technical": {
-        "ma20": 270.062,
-        "ma50": 271.5288,
-        "kdj_j": 108.13,
-        "kdj_k": 73.52,
-        "kdj_d": 56.21,
-        "macd_hist": 0.5571,
-        "macd": -0.6384,
-        "macd_signal": -1.1955,
-        "atr_abs": 6.3257,
-        "atr_pct_computed": 2.2883,
+        "ma20": 269.9435,
+        "ma50": 271.3088,
+        "kdj_j": 100.34,
+        "kdj_k": 65.15,
+        "kdj_d": 47.56,
+        "macd_hist": -0.0578,
+        "macd": -1.3926,
+        "macd_signal": -1.3347,
+        "atr_abs": 6.2043,
+        "atr_pct_computed": 2.2956,
         "rsi": 58.7,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:42Z",
+        "computed_at": "2026-10-09T00:00:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19818,7 +19818,7 @@
       "pending_price": 38.47,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 38.47,
-      "change_1d": 0.0,
+      "change_1d": -0.2855,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -19861,6 +19861,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 39.69,
+          "high": 39.82,
+          "low": 39.37,
+          "close": 39.53,
+          "volume": 6312900
+        },
         {
           "date": "2026-01-22",
           "open": 39.6,
@@ -21292,33 +21300,25 @@
           "low": 38.17,
           "close": 38.53,
           "volume": 9918000
-        },
-        {
-          "date": "2026-10-08",
-          "open": 38.56,
-          "high": 38.589,
-          "low": 38.09,
-          "close": 38.42,
-          "volume": 6532477
         }
       ],
       "technical": {
-        "ma20": 37.8065,
-        "ma50": 39.236,
-        "kdj_j": 111.49,
-        "kdj_k": 80.37,
-        "kdj_d": 64.81,
-        "macd_hist": 0.2545,
-        "macd": -0.3766,
-        "macd_signal": -0.6311,
-        "atr_abs": 0.5906,
-        "atr_pct_computed": 1.5373,
+        "ma20": 37.8415,
+        "ma50": 39.3262,
+        "kdj_j": 116.75,
+        "kdj_k": 76.94,
+        "kdj_d": 57.04,
+        "macd_hist": 0.2366,
+        "macd": -0.4581,
+        "macd_signal": -0.6947,
+        "atr_abs": 0.5914,
+        "atr_pct_computed": 1.535,
         "rsi": 51.6,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:42Z",
+        "computed_at": "2026-10-09T00:00:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21341,7 +21341,7 @@
       "pending_price": 56.99,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 56.99,
-      "change_1d": 0.0,
+      "change_1d": -0.8219,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -21384,6 +21384,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 81.35,
+          "high": 83.1,
+          "low": 81.15,
+          "close": 82.54,
+          "volume": 1591300
+        },
         {
           "date": "2026-01-22",
           "open": 82.23,
@@ -22815,33 +22823,25 @@
           "low": 54.66,
           "close": 54.75,
           "volume": 4548000
-        },
-        {
-          "date": "2026-10-08",
-          "open": 54.09,
-          "high": 54.675,
-          "low": 53.71,
-          "close": 54.3,
-          "volume": 5794664
         }
       ],
       "technical": {
-        "ma20": 55.381,
-        "ma50": 65.6966,
-        "kdj_j": -1.15,
-        "kdj_k": 37.77,
-        "kdj_d": 57.23,
-        "macd_hist": 0.518,
-        "macd": -2.602,
-        "macd_signal": -3.1201,
-        "atr_abs": 1.3914,
-        "atr_pct_computed": 2.5625,
+        "ma20": 55.3745,
+        "ma50": 66.0718,
+        "kdj_j": 13.81,
+        "kdj_k": 49.24,
+        "kdj_d": 66.96,
+        "macd_hist": 0.6285,
+        "macd": -2.621,
+        "macd_signal": -3.2496,
+        "atr_abs": 1.47,
+        "atr_pct_computed": 2.6849,
         "rsi": 37.0,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:42Z",
+        "computed_at": "2026-10-09T00:00:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22864,7 +22864,7 @@
       "pending_price": 82.08,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 82.08,
-      "change_1d": 0.0,
+      "change_1d": 0.5156,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -22907,6 +22907,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 121.66,
+          "high": 121.74,
+          "low": 118.61,
+          "close": 121.0,
+          "volume": 6193700
+        },
         {
           "date": "2026-01-22",
           "open": 122.85,
@@ -24338,33 +24346,25 @@
           "low": 80.66,
           "close": 81.46,
           "volume": 4177700
-        },
-        {
-          "date": "2026-10-08",
-          "open": 80.77,
-          "high": 81.93,
-          "low": 80.35,
-          "close": 81.88,
-          "volume": 8797533
         }
       ],
       "technical": {
-        "ma20": 84.9245,
-        "ma50": 91.2912,
-        "kdj_j": 36.93,
+        "ma20": 85.2135,
+        "ma50": 91.6478,
+        "kdj_j": 39.65,
         "kdj_k": 31.47,
-        "kdj_d": 28.74,
-        "macd_hist": 0.0961,
-        "macd": -2.8085,
-        "macd_signal": -2.9046,
-        "atr_abs": 2.2529,
-        "atr_pct_computed": 2.7514,
+        "kdj_d": 27.38,
+        "macd_hist": 0.0599,
+        "macd": -2.8687,
+        "macd_signal": -2.9286,
+        "atr_abs": 2.2193,
+        "atr_pct_computed": 2.7244,
         "rsi": 31.8,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:43Z",
+        "computed_at": "2026-10-09T00:00:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24380,14 +24380,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "CRWD|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 263.15,
+      "price": 263.0,
       "price_source": "realtime",
-      "current_price": 263.15,
-      "current_price_updated_at": "2026-10-08T23:39:10Z",
+      "current_price": 263.0,
+      "current_price_updated_at": "2026-10-08T23:50:53Z",
       "pending_price": 278.38,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 278.38,
-      "change_1d": 0.0532,
+      "change_1d": -0.9192,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -24430,6 +24430,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 111.25,
+          "high": 114.03,
+          "low": 109.7925,
+          "close": 111.47,
+          "volume": 10747200
+        },
         {
           "date": "2026-01-22",
           "open": 113.6125,
@@ -25861,33 +25869,25 @@
           "low": 264.5,
           "close": 265.44,
           "volume": 8805200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 264.624,
-          "high": 272.5,
-          "low": 261.62,
-          "close": 263.01,
-          "volume": 9381560
         }
       ],
       "technical": {
-        "ma20": 254.2935,
-        "ma50": 226.9056,
-        "kdj_j": 35.49,
-        "kdj_k": 62.51,
-        "kdj_d": 76.02,
-        "macd_hist": -0.2903,
-        "macd": 13.6925,
-        "macd_signal": 13.9827,
-        "atr_abs": 10.7345,
-        "atr_pct_computed": 4.0814,
+        "ma20": 251.586,
+        "ma50": 225.233,
+        "kdj_j": 54.61,
+        "kdj_k": 73.39,
+        "kdj_d": 82.78,
+        "macd_hist": 0.6517,
+        "macd": 14.707,
+        "macd_signal": 14.0553,
+        "atr_abs": 10.8576,
+        "atr_pct_computed": 4.0904,
         "rsi": 71.8,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:43Z",
+        "computed_at": "2026-10-09T00:00:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25910,7 +25910,7 @@
       "pending_price": 276.02,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.02,
-      "change_1d": -0.291,
+      "change_1d": 0.613,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -25953,6 +25953,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 118.85,
+          "high": 127.0,
+          "low": 118.75,
+          "close": 123.46,
+          "volume": 9731800
+        },
         {
           "date": "2026-01-22",
           "open": 128.1,
@@ -27384,33 +27392,25 @@
           "low": 270.81,
           "close": 271.34,
           "volume": 1587100
-        },
-        {
-          "date": "2026-10-08",
-          "open": 271.75,
-          "high": 278.8982,
-          "low": 269.38,
-          "close": 273.8,
-          "volume": 2936660
         }
       ],
       "technical": {
-        "ma20": 255.5945,
-        "ma50": 246.382,
-        "kdj_j": 53.46,
-        "kdj_k": 69.21,
-        "kdj_d": 77.09,
-        "macd_hist": 1.8759,
-        "macd": 11.0386,
-        "macd_signal": 9.1627,
-        "atr_abs": 11.2365,
-        "atr_pct_computed": 4.1039,
+        "ma20": 252.9905,
+        "ma50": 246.19,
+        "kdj_j": 58.45,
+        "kdj_k": 73.5,
+        "kdj_d": 81.03,
+        "macd_hist": 2.5878,
+        "macd": 11.2816,
+        "macd_signal": 8.6938,
+        "atr_abs": 11.2966,
+        "atr_pct_computed": 4.1633,
         "rsi": 69.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:43Z",
+        "computed_at": "2026-10-09T00:00:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27426,14 +27426,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "DELL|2026-09-30|Observation",
       "ai_snapshot_date": "2026-09-30",
-      "price": 574.316,
+      "price": 574.8,
       "price_source": "realtime",
-      "current_price": 574.316,
-      "current_price_updated_at": "2026-10-08T23:45:26Z",
+      "current_price": 574.8,
+      "current_price_updated_at": "2026-10-08T23:59:44Z",
       "pending_price": 544.03,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 544.03,
-      "change_1d": -0.0407,
+      "change_1d": -0.7185,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -27476,6 +27476,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 112.33,
+          "high": 114.42,
+          "low": 110.22,
+          "close": 113.26,
+          "volume": 9162300
+        },
         {
           "date": "2026-01-22",
           "open": 114.23,
@@ -28907,33 +28915,25 @@
           "low": 560.38,
           "close": 578.96,
           "volume": 3983400
-        },
-        {
-          "date": "2026-10-08",
-          "open": 568.8,
-          "high": 585.745,
-          "low": 564.51,
-          "close": 574.55,
-          "volume": 5130701
         }
       ],
       "technical": {
-        "ma20": 557.1415,
-        "ma50": 502.0292,
-        "kdj_j": 97.87,
-        "kdj_k": 72.86,
-        "kdj_d": 60.36,
-        "macd_hist": -0.9582,
-        "macd": 18.6339,
-        "macd_signal": 19.5921,
-        "atr_abs": 24.9989,
-        "atr_pct_computed": 4.351,
+        "ma20": 553.745,
+        "ma50": 497.931,
+        "kdj_j": 97.97,
+        "kdj_k": 68.73,
+        "kdj_d": 54.11,
+        "macd_hist": -1.3204,
+        "macd": 18.5112,
+        "macd_signal": 19.8316,
+        "atr_abs": 25.4429,
+        "atr_pct_computed": 4.3946,
         "rsi": 54.5,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:43Z",
+        "computed_at": "2026-10-09T00:00:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28956,7 +28956,7 @@
       "pending_price": 111.67,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 111.67,
-      "change_1d": -0.1161,
+      "change_1d": 3.9498,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -28999,6 +28999,14 @@
         "invalidation": "若日线收盘跌破当前MA20参考位108.27美元且不能收复，短线趋势转弱；进一步跌破MA50参考位106.88美元，则当前双均线支撑结构失效。若后续经营披露显示二手需求未能转化为收入增长，则需求催化需重新评估。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 90.7,
+          "high": 93.01,
+          "low": 90.59,
+          "close": 92.82,
+          "volume": 4366800
+        },
         {
           "date": "2026-01-22",
           "open": 94.15,
@@ -30430,33 +30438,25 @@
           "low": 107.07,
           "close": 107.6,
           "volume": 2781200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 108.19,
-          "high": 112.1,
-          "low": 107.06,
-          "close": 111.98,
-          "volume": 2986953
         }
       ],
       "technical": {
-        "ma20": 108.2865,
-        "ma50": 106.8884,
-        "kdj_j": 99.43,
-        "kdj_k": 62.14,
-        "kdj_d": 43.49,
-        "macd_hist": 0.2201,
-        "macd": 0.3474,
-        "macd_signal": 0.1273,
-        "atr_abs": 3.1036,
-        "atr_pct_computed": 2.7715,
+        "ma20": 107.939,
+        "ma50": 106.9548,
+        "kdj_j": 63.68,
+        "kdj_k": 44.01,
+        "kdj_d": 34.17,
+        "macd_hist": -0.1116,
+        "macd": -0.0393,
+        "macd_signal": 0.0723,
+        "atr_abs": 2.9229,
+        "atr_pct_computed": 2.7164,
         "rsi": 61.6,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:44Z",
+        "computed_at": "2026-10-09T00:00:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -30479,7 +30479,7 @@
       "pending_price": 105.15,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 104.64,
-      "change_1d": 0.0,
+      "change_1d": 1.2901,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.4874,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -30522,6 +30522,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 105.21,
+          "high": 105.62,
+          "low": 103.08,
+          "close": 103.84,
+          "volume": 2386300
+        },
         {
           "date": "2026-01-22",
           "open": 103.6,
@@ -31953,33 +31961,25 @@
           "low": 104.45,
           "close": 104.64,
           "volume": 2177700
-        },
-        {
-          "date": "2026-10-08",
-          "open": 104.74,
-          "high": 106.265,
-          "low": 104.17,
-          "close": 105.99,
-          "volume": 2142900
         }
       ],
       "technical": {
-        "ma20": 104.296,
-        "ma50": 106.4714,
-        "kdj_j": 109.74,
-        "kdj_k": 73.98,
-        "kdj_d": 56.1,
-        "macd_hist": 0.3763,
-        "macd": -0.6576,
-        "macd_signal": -1.0339,
-        "atr_abs": 1.6361,
-        "atr_pct_computed": 1.5436,
+        "ma20": 104.333,
+        "ma50": 106.5966,
+        "kdj_j": 98.26,
+        "kdj_k": 64.2,
+        "kdj_d": 47.16,
+        "macd_hist": 0.2486,
+        "macd": -0.8793,
+        "macd_signal": -1.1279,
+        "atr_abs": 1.6107,
+        "atr_pct_computed": 1.5393,
         "rsi": 49.4,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:44Z",
+        "computed_at": "2026-10-09T00:00:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -32002,7 +32002,7 @@
       "pending_price": 160.07,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 157.24,
-      "change_1d": 0.0,
+      "change_1d": -0.1005,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.7998,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -32045,6 +32045,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 146.85,
+          "high": 150.55,
+          "low": 145.87,
+          "close": 149.57,
+          "volume": 2396500
+        },
         {
           "date": "2026-01-22",
           "open": 150.82,
@@ -33476,33 +33484,25 @@
           "low": 157.59,
           "close": 159.22,
           "volume": 3039800
-        },
-        {
-          "date": "2026-10-08",
-          "open": 157.93,
-          "high": 159.66,
-          "low": 156.25,
-          "close": 159.06,
-          "volume": 2355255
         }
       ],
       "technical": {
-        "ma20": 154.9715,
-        "ma50": 155.591,
-        "kdj_j": 44.07,
-        "kdj_k": 61.75,
-        "kdj_d": 70.58,
-        "macd_hist": 0.5566,
-        "macd": 2.1615,
-        "macd_signal": 1.6049,
-        "atr_abs": 3.8386,
-        "atr_pct_computed": 2.4133,
+        "ma20": 154.437,
+        "ma50": 155.3244,
+        "kdj_j": 54.22,
+        "kdj_k": 68.07,
+        "kdj_d": 75.0,
+        "macd_hist": 0.777,
+        "macd": 2.2428,
+        "macd_signal": 1.4658,
+        "atr_abs": 3.8,
+        "atr_pct_computed": 2.3866,
         "rsi": 57.5,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:44Z",
+        "computed_at": "2026-10-09T00:00:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33525,7 +33525,7 @@
       "pending_price": 148.62,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 148.62,
-      "change_1d": 0.0,
+      "change_1d": 2.9818,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -33568,6 +33568,14 @@
         "invalidation": "若日线收盘跌破当前144.52—143.61美元均线区且不能收复，叠加MA20继续下行，则修复交易依据失效；若油价转为持续下行，则需重新评估价格驱动的盈利逻辑。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 108.44,
+          "high": 111.02,
+          "low": 106.62,
+          "close": 108.05,
+          "volume": 5964700
+        },
         {
           "date": "2026-01-22",
           "open": 107.46,
@@ -34999,33 +35007,25 @@
           "low": 142.82,
           "close": 144.21,
           "volume": 2141300
-        },
-        {
-          "date": "2026-10-08",
-          "open": 147.09,
-          "high": 148.93,
-          "low": 146.505,
-          "close": 148.51,
-          "volume": 2930386
         }
       ],
       "technical": {
-        "ma20": 143.602,
-        "ma50": 144.5188,
-        "kdj_j": 108.0,
-        "kdj_k": 77.35,
-        "kdj_d": 62.02,
-        "macd_hist": 0.5974,
-        "macd": -0.136,
-        "macd_signal": -0.7334,
-        "atr_abs": 3.415,
-        "atr_pct_computed": 2.2995,
+        "ma20": 143.5495,
+        "ma50": 144.4674,
+        "kdj_j": 94.8,
+        "kdj_k": 67.83,
+        "kdj_d": 54.35,
+        "macd_hist": 0.235,
+        "macd": -0.6478,
+        "macd_signal": -0.8828,
+        "atr_abs": 3.2057,
+        "atr_pct_computed": 2.2229,
         "rsi": 59.8,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:45Z",
+        "computed_at": "2026-10-09T00:00:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35048,7 +35048,7 @@
       "pending_price": 22.64,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 22.64,
-      "change_1d": -0.0,
+      "change_1d": 1.3489,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -35091,6 +35091,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 18.33,
+          "high": 18.81,
+          "low": 18.33,
+          "close": 18.68,
+          "volume": 8410300
+        },
         {
           "date": "2026-01-22",
           "open": 18.89,
@@ -36522,33 +36530,25 @@
           "low": 22.22,
           "close": 22.24,
           "volume": 4836000
-        },
-        {
-          "date": "2026-10-08",
-          "open": 22.2,
-          "high": 22.72,
-          "low": 22.12,
-          "close": 22.54,
-          "volume": 6250070
         }
       ],
       "technical": {
-        "ma20": 22.2935,
-        "ma50": 22.7152,
-        "kdj_j": 38.98,
-        "kdj_k": 48.8,
-        "kdj_d": 53.71,
-        "macd_hist": 0.0565,
-        "macd": -0.0257,
-        "macd_signal": -0.0822,
-        "atr_abs": 0.4414,
-        "atr_pct_computed": 1.9584,
+        "ma20": 22.2735,
+        "ma50": 22.7752,
+        "kdj_j": 26.5,
+        "kdj_k": 46.27,
+        "kdj_d": 56.16,
+        "macd_hist": 0.0543,
+        "macd": -0.042,
+        "macd_signal": -0.0963,
+        "atr_abs": 0.4129,
+        "atr_pct_computed": 1.8564,
         "rsi": 54.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:45Z",
+        "computed_at": "2026-10-09T00:00:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -36571,7 +36571,7 @@
       "pending_price": 275.77,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 275.77,
-      "change_1d": -0.0,
+      "change_1d": -1.1914,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -36614,6 +36614,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 147.27,
+          "high": 153.11,
+          "low": 147.27,
+          "close": 152.48,
+          "volume": 2268900
+        },
         {
           "date": "2026-01-22",
           "open": 153.25,
@@ -38045,33 +38053,25 @@
           "low": 260.45,
           "close": 267.76,
           "volume": 2949200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 264.34,
-          "high": 266.135,
-          "low": 254.0,
-          "close": 264.57,
-          "volume": 3169503
         }
       ],
       "technical": {
-        "ma20": 254.607,
-        "ma50": 225.4548,
-        "kdj_j": 1.58,
-        "kdj_k": 40.98,
-        "kdj_d": 60.68,
-        "macd_hist": -0.6231,
-        "macd": 15.3152,
-        "macd_signal": 15.9382,
-        "atr_abs": 15.3271,
-        "atr_pct_computed": 5.7932,
+        "ma20": 251.442,
+        "ma50": 224.0598,
+        "kdj_j": 14.71,
+        "kdj_k": 51.93,
+        "kdj_d": 70.54,
+        "macd_hist": 0.5866,
+        "macd": 16.6806,
+        "macd_signal": 16.094,
+        "atr_abs": 15.3186,
+        "atr_pct_computed": 5.721,
         "rsi": 75.5,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:45Z",
+        "computed_at": "2026-10-09T00:00:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38094,7 +38094,7 @@
       "pending_price": 26.51,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 26.51,
-      "change_1d": -0.608,
+      "change_1d": 1.7749,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -38137,6 +38137,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 27.32,
+          "high": 27.78,
+          "low": 27.175,
+          "close": 27.5,
+          "volume": 5179700
+        },
         {
           "date": "2026-01-22",
           "open": 27.57,
@@ -39568,33 +39576,25 @@
           "low": 25.86,
           "close": 25.86,
           "volume": 8075100
-        },
-        {
-          "date": "2026-10-08",
-          "open": 25.89,
-          "high": 26.57,
-          "low": 25.835,
-          "close": 26.48,
-          "volume": 8346694
         }
       ],
       "technical": {
-        "ma20": 26.749,
-        "ma50": 28.471,
-        "kdj_j": 58.06,
-        "kdj_k": 35.64,
-        "kdj_d": 24.43,
-        "macd_hist": 0.0482,
-        "macd": -0.6511,
-        "macd_signal": -0.6993,
-        "atr_abs": 0.4491,
-        "atr_pct_computed": 1.6962,
+        "ma20": 26.803,
+        "ma50": 28.5436,
+        "kdj_j": 14.63,
+        "kdj_k": 17.43,
+        "kdj_d": 18.82,
+        "macd_hist": 0.0078,
+        "macd": -0.7036,
+        "macd_signal": -0.7114,
+        "atr_abs": 0.4252,
+        "atr_pct_computed": 1.6443,
         "rsi": 39.8,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:45Z",
+        "computed_at": "2026-10-09T00:00:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -39617,7 +39617,7 @@
       "pending_price": 405.07,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 414.52,
-      "change_1d": -0.0746,
+      "change_1d": 0.1399,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2797,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -39660,6 +39660,14 @@
         "invalidation": "若日线收盘跌破MA20约395.07美元并令MACD转弱，当前上升结构失效；若单孔平台未能形成可验证的收入贡献，或竞争加剧导致增长预期下调，成长催化失效。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 527.59,
+          "high": 530.05,
+          "low": 518.64,
+          "close": 523.69,
+          "volume": 2033900
+        },
         {
           "date": "2026-01-22",
           "open": 525.41,
@@ -41091,33 +41099,25 @@
           "low": 404.2,
           "close": 414.52,
           "volume": 1896000
-        },
-        {
-          "date": "2026-10-08",
-          "open": 411.6,
-          "high": 416.72,
-          "low": 407.7,
-          "close": 415.41,
-          "volume": 2529814
         }
       ],
       "technical": {
-        "ma20": 397.9055,
-        "ma50": 384.6774,
-        "kdj_j": 93.58,
-        "kdj_k": 76.15,
-        "kdj_d": 67.43,
-        "macd_hist": 1.0862,
-        "macd": 8.5116,
-        "macd_signal": 7.4254,
-        "atr_abs": 10.8964,
-        "atr_pct_computed": 2.6231,
+        "ma20": 395.158,
+        "ma50": 383.4312,
+        "kdj_j": 74.1,
+        "kdj_k": 66.75,
+        "kdj_d": 63.08,
+        "macd_hist": 0.9095,
+        "macd": 8.0634,
+        "macd_signal": 7.1539,
+        "atr_abs": 11.3529,
+        "atr_pct_computed": 2.7388,
         "rsi": 61.9,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:46Z",
+        "computed_at": "2026-10-09T00:00:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -41140,7 +41140,7 @@
       "pending_price": 153.81,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 153.81,
-      "change_1d": 0.0,
+      "change_1d": -1.2377,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -41183,6 +41183,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 115.18,
+          "high": 116.19,
+          "low": 114.67,
+          "close": 115.49,
+          "volume": 3607200
+        },
         {
           "date": "2026-01-22",
           "open": 116.28,
@@ -42614,33 +42622,25 @@
           "low": 154.25,
           "close": 155.93,
           "volume": 1868400
-        },
-        {
-          "date": "2026-10-08",
-          "open": 154.84,
-          "high": 155.71,
-          "low": 151.3601,
-          "close": 154.0,
-          "volume": 2786476
         }
       ],
       "technical": {
-        "ma20": 148.023,
-        "ma50": 147.1692,
-        "kdj_j": 55.3,
-        "kdj_k": 73.22,
-        "kdj_d": 82.17,
-        "macd_hist": 1.0063,
-        "macd": 3.1907,
-        "macd_signal": 2.1844,
-        "atr_abs": 3.5114,
-        "atr_pct_computed": 2.2801,
+        "ma20": 147.4635,
+        "ma50": 146.8776,
+        "kdj_j": 76.71,
+        "kdj_k": 83.34,
+        "kdj_d": 86.65,
+        "macd_hist": 1.3397,
+        "macd": 3.2725,
+        "macd_signal": 1.9328,
+        "atr_abs": 3.4014,
+        "atr_pct_computed": 2.1814,
         "rsi": 59.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:46Z",
+        "computed_at": "2026-10-09T00:00:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -42663,7 +42663,7 @@
       "pending_price": 59.27,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 59.25,
-      "change_1d": 0.0,
+      "change_1d": 3.6456,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0338,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -42706,6 +42706,14 @@
         "invalidation": "若日线收盘跌破MA20约59.42美元并进一步跌破MA50约58.23美元，当前修复结构失效；若后续盈利无法兑现远期估值所隐含的改善预期，升级逻辑失效。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 63.38,
+          "high": 64.24,
+          "low": 63.26,
+          "close": 63.92,
+          "volume": 6316300
+        },
         {
           "date": "2026-01-22",
           "open": 64.04,
@@ -44137,33 +44145,25 @@
           "low": 59.18,
           "close": 59.25,
           "volume": 8938800
-        },
-        {
-          "date": "2026-10-08",
-          "open": 59.71,
-          "high": 61.66,
-          "low": 59.675,
-          "close": 61.41,
-          "volume": 8301523
         }
       ],
       "technical": {
-        "ma20": 59.6275,
-        "ma50": 58.2516,
-        "kdj_j": 78.86,
-        "kdj_k": 57.82,
-        "kdj_d": 47.3,
-        "macd_hist": 0.0419,
-        "macd": 0.3382,
-        "macd_signal": 0.2963,
-        "atr_abs": 1.5729,
-        "atr_pct_computed": 2.5612,
+        "ma20": 59.4045,
+        "ma50": 58.2208,
+        "kdj_j": 35.71,
+        "kdj_k": 39.92,
+        "kdj_d": 42.03,
+        "macd_hist": -0.1202,
+        "macd": 0.1656,
+        "macd_signal": 0.2858,
+        "atr_abs": 1.4729,
+        "atr_pct_computed": 2.4858,
         "rsi": 53.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:46Z",
+        "computed_at": "2026-10-09T00:00:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44179,14 +44179,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 719.7,
+      "price": 719.4155,
       "price_source": "realtime",
-      "current_price": 719.7,
-      "current_price_updated_at": "2026-10-08T23:45:24Z",
+      "current_price": 719.4155,
+      "current_price_updated_at": "2026-10-08T23:59:44Z",
       "pending_price": 596.98,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 589.85,
-      "change_1d": -0.1651,
+      "change_1d": -0.2626,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.2088,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -44229,6 +44229,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 606.74,
+          "high": 618.27,
+          "low": 600.08,
+          "close": 612.96,
+          "volume": 14494700
+        },
         {
           "date": "2026-01-22",
           "open": 629.35,
@@ -45660,33 +45668,25 @@
           "low": 720.15,
           "close": 721.31,
           "volume": 13231600
-        },
-        {
-          "date": "2026-10-08",
-          "open": 724.54,
-          "high": 724.76,
-          "low": 711.6832,
-          "close": 720.89,
-          "volume": 15887049
         }
       ],
       "technical": {
-        "ma20": 715.651,
-        "ma50": 636.1376,
-        "kdj_j": 9.83,
-        "kdj_k": 30.23,
-        "kdj_d": 40.43,
-        "macd_hist": -4.8149,
-        "macd": 27.4406,
-        "macd_signal": 32.2555,
-        "atr_abs": 27.3791,
-        "atr_pct_computed": 3.798,
+        "ma20": 711.8255,
+        "ma50": 633.432,
+        "kdj_j": 9.47,
+        "kdj_k": 33.51,
+        "kdj_d": 45.53,
+        "macd_hist": -3.565,
+        "macd": 29.8944,
+        "macd_signal": 33.4593,
+        "atr_abs": 28.5414,
+        "atr_pct_computed": 3.9569,
         "rsi": 49.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:47Z",
+        "computed_at": "2026-10-09T00:00:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -45709,7 +45709,7 @@
       "pending_price": 44.5,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 44.5,
-      "change_1d": -1.1387,
+      "change_1d": 0.3688,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -45752,6 +45752,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 67.58,
+          "high": 67.65,
+          "low": 65.73,
+          "close": 66.56,
+          "volume": 6748700
+        },
         {
           "date": "2026-01-22",
           "open": 63.29,
@@ -47183,33 +47191,25 @@
           "low": 45.19,
           "close": 45.25,
           "volume": 4117100
-        },
-        {
-          "date": "2026-10-08",
-          "open": 45.41,
-          "high": 46.11,
-          "low": 45.1,
-          "close": 45.94,
-          "volume": 6140872
         }
       ],
       "technical": {
-        "ma20": 47.8705,
-        "ma50": 51.2428,
-        "kdj_j": 49.12,
-        "kdj_k": 34.09,
-        "kdj_d": 26.58,
-        "macd_hist": -0.1379,
-        "macd": -1.794,
-        "macd_signal": -1.6561,
-        "atr_abs": 1.4029,
-        "atr_pct_computed": 3.0537,
+        "ma20": 48.1285,
+        "ma50": 51.3638,
+        "kdj_j": 39.96,
+        "kdj_k": 28.53,
+        "kdj_d": 22.82,
+        "macd_hist": -0.2502,
+        "macd": -1.8718,
+        "macd_signal": -1.6216,
+        "atr_abs": 1.4021,
+        "atr_pct_computed": 3.0987,
         "rsi": 23.9,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:47Z",
+        "computed_at": "2026-10-09T00:00:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -47232,7 +47232,7 @@
       "pending_price": 42.58,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 42.58,
-      "change_1d": -0.0,
+      "change_1d": 1.7957,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -47275,6 +47275,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 40.66,
+          "high": 40.88,
+          "low": 39.945,
+          "close": 40.8,
+          "volume": 17286800
+        },
         {
           "date": "2026-01-22",
           "open": 40.8,
@@ -48706,33 +48714,25 @@
           "low": 42.56,
           "close": 42.88,
           "volume": 8372200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 43.01,
-          "high": 44.1186,
-          "low": 42.9,
-          "close": 43.65,
-          "volume": 8569709
         }
       ],
       "technical": {
-        "ma20": 43.3785,
-        "ma50": 45.1121,
-        "kdj_j": 94.75,
-        "kdj_k": 68.06,
-        "kdj_d": 54.72,
-        "macd_hist": 0.1762,
-        "macd": -0.5974,
-        "macd_signal": -0.7737,
-        "atr_abs": 1.0335,
-        "atr_pct_computed": 2.3676,
+        "ma20": 43.3505,
+        "ma50": 45.2114,
+        "kdj_j": 83.09,
+        "kdj_k": 59.73,
+        "kdj_d": 48.04,
+        "macd_hist": 0.1185,
+        "macd": -0.6992,
+        "macd_signal": -0.8177,
+        "atr_abs": 0.9964,
+        "atr_pct_computed": 2.3238,
         "rsi": 40.0,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:47Z",
+        "computed_at": "2026-10-09T00:00:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48755,7 +48755,7 @@
       "pending_price": 465.35,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 465.35,
-      "change_1d": 0.0108,
+      "change_1d": 4.7777,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -48798,6 +48798,14 @@
         "invalidation": "若日线收盘跌破当前MA20参考位411.09美元且随后无法收复，当前均线趋势依据失效；若进一步跌破MA50参考位376.19美元，则中期结构明显受损。上述均线应随交易日更新，不能视作固定止损价。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 178.4,
+          "high": 182.57,
+          "low": 177.22,
+          "close": 177.48,
+          "volume": 2389100
+        },
         {
           "date": "2026-01-22",
           "open": 176.48,
@@ -50229,33 +50237,25 @@
           "low": 435.0,
           "close": 442.26,
           "volume": 1923900
-        },
-        {
-          "date": "2026-10-08",
-          "open": 449.45,
-          "high": 467.774,
-          "low": 447.59,
-          "close": 463.34,
-          "volume": 2749647
         }
       ],
       "technical": {
-        "ma20": 410.985,
-        "ma50": 376.1512,
-        "kdj_j": 112.0,
-        "kdj_k": 87.8,
-        "kdj_d": 75.69,
-        "macd_hist": 3.8736,
-        "macd": 18.0493,
-        "macd_signal": 14.1757,
-        "atr_abs": 17.5996,
-        "atr_pct_computed": 3.7984,
+        "ma20": 407.439,
+        "ma50": 373.0588,
+        "kdj_j": 113.38,
+        "kdj_k": 84.22,
+        "kdj_d": 69.64,
+        "macd_hist": 2.2014,
+        "macd": 15.4086,
+        "macd_signal": 13.2073,
+        "atr_abs": 16.4093,
+        "atr_pct_computed": 3.7103,
         "rsi": 79.9,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:48Z",
+        "computed_at": "2026-10-09T00:00:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -50271,14 +50271,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 522.71,
+      "price": 522.5,
       "price_source": "realtime",
-      "current_price": 522.71,
-      "current_price_updated_at": "2026-10-08T23:43:47Z",
+      "current_price": 522.5,
+      "current_price_updated_at": "2026-10-08T23:59:25Z",
       "pending_price": 479.88,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 483.24,
-      "change_1d": 0.0191,
+      "change_1d": -1.3704,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6953,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -50321,6 +50321,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 452.6,
+          "high": 452.69,
+          "low": 438.68,
+          "close": 444.11,
+          "volume": 37980500
+        },
         {
           "date": "2026-01-22",
           "open": 447.62,
@@ -51752,33 +51760,25 @@
           "low": 524.69,
           "close": 529.76,
           "volume": 16790200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 529.39,
-          "high": 533.51,
-          "low": 518.79,
-          "close": 522.61,
-          "volume": 19593392
         }
       ],
       "technical": {
-        "ma20": 508.1275,
-        "ma50": 498.7674,
-        "kdj_j": 72.42,
-        "kdj_k": 74.39,
-        "kdj_d": 75.38,
-        "macd_hist": 1.166,
-        "macd": 9.9202,
-        "macd_signal": 8.7542,
-        "atr_abs": 12.4286,
-        "atr_pct_computed": 2.3782,
+        "ma20": 506.619,
+        "ma50": 496.126,
+        "kdj_j": 91.64,
+        "kdj_k": 81.13,
+        "kdj_d": 75.88,
+        "macd_hist": 1.6608,
+        "macd": 10.1235,
+        "macd_signal": 8.4627,
+        "atr_abs": 11.9164,
+        "atr_pct_computed": 2.2494,
         "rsi": 62.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:48Z",
+        "computed_at": "2026-10-09T00:00:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51794,14 +51794,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "P|2026-10-02|Observation",
       "ai_snapshot_date": "2026-10-02",
-      "price": 151.45,
+      "price": 150.6101,
       "price_source": "realtime",
-      "current_price": 151.45,
-      "current_price_updated_at": "2026-10-08T22:56:00Z",
+      "current_price": 150.6101,
+      "current_price_updated_at": "2026-10-08T23:59:25Z",
       "pending_price": 139.92,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 139.92,
-      "change_1d": 0.5844,
+      "change_1d": -1.3428,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -51844,6 +51844,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 70.48,
+          "high": 73.19,
+          "low": 69.07,
+          "close": 71.74,
+          "volume": 3032000
+        },
         {
           "date": "2026-01-22",
           "open": 74.63,
@@ -53275,33 +53283,25 @@
           "low": 144.471,
           "close": 152.66,
           "volume": 5068500
-        },
-        {
-          "date": "2026-10-08",
-          "open": 151.825,
-          "high": 157.05,
-          "low": 150.02,
-          "close": 150.57,
-          "volume": 5733762
         }
       ],
       "technical": {
-        "ma20": 121.778,
-        "ma50": 108.1132,
-        "kdj_j": 86.66,
-        "kdj_k": 90.66,
-        "kdj_d": 92.66,
-        "macd_hist": 3.0209,
-        "macd": 13.1159,
-        "macd_signal": 10.0949,
-        "atr_abs": 7.2316,
-        "atr_pct_computed": 4.8028,
+        "ma20": 118.9545,
+        "ma50": 106.4868,
+        "kdj_j": 100.61,
+        "kdj_k": 95.98,
+        "kdj_d": 93.66,
+        "macd_hist": 3.3308,
+        "macd": 12.6705,
+        "macd_signal": 9.3397,
+        "atr_abs": 7.1709,
+        "atr_pct_computed": 4.6973,
         "rsi": 78.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:48Z",
+        "computed_at": "2026-10-09T00:00:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -53324,7 +53324,7 @@
       "pending_price": 191.51,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 192.69,
-      "change_1d": 0.0,
+      "change_1d": 4.0531,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6124,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -53367,6 +53367,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 167.5,
+          "high": 169.02,
+          "low": 163.13,
+          "close": 168.81,
+          "volume": 5897800
+        },
         {
           "date": "2026-01-22",
           "open": 169.08,
@@ -54798,33 +54806,25 @@
           "low": 190.39,
           "close": 192.69,
           "volume": 3937800
-        },
-        {
-          "date": "2026-10-08",
-          "open": 194.84,
-          "high": 202.6994,
-          "low": 192.97,
-          "close": 200.5,
-          "volume": 5517172
         }
       ],
       "technical": {
-        "ma20": 191.4305,
-        "ma50": 189.6996,
-        "kdj_j": 88.79,
-        "kdj_k": 67.73,
-        "kdj_d": 57.2,
-        "macd_hist": 0.5882,
-        "macd": 1.1471,
-        "macd_signal": 0.5589,
-        "atr_abs": 4.5364,
-        "atr_pct_computed": 2.2625,
+        "ma20": 190.894,
+        "ma50": 189.6584,
+        "kdj_j": 68.67,
+        "kdj_k": 57.51,
+        "kdj_d": 51.93,
+        "macd_hist": -0.0314,
+        "macd": 0.3804,
+        "macd_signal": 0.4119,
+        "atr_abs": 4.1386,
+        "atr_pct_computed": 2.1478,
         "rsi": 55.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:48Z",
+        "computed_at": "2026-10-09T00:00:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -54847,7 +54847,7 @@
       "pending_price": 281.79,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.79,
-      "change_1d": 0.2062,
+      "change_1d": 3.8881,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -54890,6 +54890,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 141.24,
+          "high": 143.83,
+          "low": 140.4,
+          "close": 141.64,
+          "volume": 2549400
+        },
         {
           "date": "2026-01-22",
           "open": 140.84,
@@ -56321,33 +56329,25 @@
           "low": 270.48,
           "close": 271.62,
           "volume": 1844200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 274.89,
-          "high": 282.64,
-          "low": 274.04,
-          "close": 281.6,
-          "volume": 2374751
         }
       ],
       "technical": {
-        "ma20": 263.1355,
-        "ma50": 245.9542,
-        "kdj_j": 112.03,
-        "kdj_k": 83.83,
-        "kdj_d": 69.73,
-        "macd_hist": 0.7822,
-        "macd": 7.0493,
-        "macd_signal": 6.2671,
-        "atr_abs": 9.365,
-        "atr_pct_computed": 3.3256,
+        "ma20": 261.981,
+        "ma50": 244.4584,
+        "kdj_j": 106.45,
+        "kdj_k": 77.27,
+        "kdj_d": 62.68,
+        "macd_hist": -0.014,
+        "macd": 6.0576,
+        "macd_signal": 6.0716,
+        "atr_abs": 8.985,
+        "atr_pct_computed": 3.3079,
         "rsi": 74.8,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:49Z",
+        "computed_at": "2026-10-09T00:00:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -56366,11 +56366,11 @@
       "price": 281.25,
       "price_source": "realtime",
       "current_price": 281.25,
-      "current_price_updated_at": "2026-10-08T23:33:53Z",
+      "current_price_updated_at": "2026-10-08T23:33:00Z",
       "pending_price": 279.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 288.78,
-      "change_1d": -0.0569,
+      "change_1d": -0.379,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -3.1096,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -56413,6 +56413,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 271.48,
+          "high": 279.0,
+          "low": 270.5,
+          "close": 277.77,
+          "volume": 2275300
+        },
         {
           "date": "2026-01-22",
           "open": 282.0,
@@ -57844,33 +57852,25 @@
           "low": 281.11,
           "close": 282.32,
           "volume": 2415700
-        },
-        {
-          "date": "2026-10-08",
-          "open": 277.66,
-          "high": 283.56,
-          "low": 277.55,
-          "close": 281.41,
-          "volume": 1961982
         }
       ],
       "technical": {
-        "ma20": 257.788,
-        "ma50": 279.7452,
-        "kdj_j": 94.27,
-        "kdj_k": 88.01,
-        "kdj_d": 84.88,
-        "macd_hist": 5.7379,
-        "macd": 2.3325,
-        "macd_signal": -3.4054,
-        "atr_abs": 11.9207,
-        "atr_pct_computed": 4.2361,
+        "ma20": 256.668,
+        "ma50": 280.5886,
+        "kdj_j": 103.18,
+        "kdj_k": 89.94,
+        "kdj_d": 83.31,
+        "macd_hist": 6.1703,
+        "macd": 1.3304,
+        "macd_signal": -4.8399,
+        "atr_abs": 11.9486,
+        "atr_pct_computed": 4.2323,
         "rsi": 65.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:49Z",
+        "computed_at": "2026-10-09T00:00:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -57893,7 +57893,7 @@
       "pending_price": 30.4,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 30.5,
-      "change_1d": 0.744,
+      "change_1d": 5.2802,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.3279,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -57936,6 +57936,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 63.42,
+          "high": 63.56,
+          "low": 62.6,
+          "close": 63.3,
+          "volume": 2932800
+        },
         {
           "date": "2026-01-22",
           "open": 63.38,
@@ -59367,33 +59375,25 @@
           "low": 30.43,
           "close": 30.87,
           "volume": 9110300
-        },
-        {
-          "date": "2026-10-08",
-          "open": 31.12,
-          "high": 32.475,
-          "low": 31.12,
-          "close": 32.26,
-          "volume": 13561695
         }
       ],
       "technical": {
-        "ma20": 31.8005,
-        "ma50": 34.6354,
-        "kdj_j": 103.25,
-        "kdj_k": 59.26,
-        "kdj_d": 37.26,
-        "macd_hist": 0.2353,
-        "macd": -1.2974,
-        "macd_signal": -1.5327,
-        "atr_abs": 0.9889,
-        "atr_pct_computed": 3.0655,
+        "ma20": 31.9155,
+        "ma50": 34.7652,
+        "kdj_j": 74.26,
+        "kdj_k": 42.26,
+        "kdj_d": 26.26,
+        "macd_hist": 0.0788,
+        "macd": -1.5127,
+        "macd_signal": -1.5915,
+        "atr_abs": 0.9236,
+        "atr_pct_computed": 2.9918,
         "rsi": 24.6,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:49Z",
+        "computed_at": "2026-10-09T00:00:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -59416,7 +59416,7 @@
       "pending_price": 489.41,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 489.41,
-      "change_1d": -0.1507,
+      "change_1d": -1.128,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -59459,6 +59459,14 @@
         "invalidation": "若收盘跌破MA20约409.49美元，且MACD转弱、KDJ同步下行，则本次上行结构失效；若已报道的新订单被取消或公司指引下修，订单驱动逻辑失效。"
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 509.77,
+          "high": 525.49,
+          "low": 503.55,
+          "close": 521.95,
+          "volume": 2122000
+        },
         {
           "date": "2026-01-22",
           "open": 522.74,
@@ -60890,33 +60898,25 @@
           "low": 499.0,
           "close": 502.67,
           "volume": 1632200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 501.47,
-          "high": 511.95,
-          "low": 495.49,
-          "close": 497.75,
-          "volume": 3374903
         }
       ],
       "technical": {
-        "ma20": 430.404,
-        "ma50": 417.0892,
-        "kdj_j": 94.31,
-        "kdj_k": 88.59,
-        "kdj_d": 85.73,
-        "macd_hist": 9.8738,
-        "macd": 25.0837,
-        "macd_signal": 15.2099,
-        "atr_abs": 20.8179,
-        "atr_pct_computed": 4.1824,
+        "ma20": 425.375,
+        "ma50": 414.608,
+        "kdj_j": 99.67,
+        "kdj_k": 89.42,
+        "kdj_d": 84.3,
+        "macd_hist": 11.1197,
+        "macd": 23.861,
+        "macd_signal": 12.7414,
+        "atr_abs": 20.0629,
+        "atr_pct_computed": 3.9913,
         "rsi": 73.9,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:50Z",
+        "computed_at": "2026-10-09T00:00:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -60932,14 +60932,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "STZ|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 123.6,
+      "price": 123.1374,
       "price_source": "realtime",
-      "current_price": 123.6,
-      "current_price_updated_at": "2026-10-08T22:59:00Z",
+      "current_price": 123.1374,
+      "current_price_updated_at": "2026-10-08T23:47:26Z",
       "pending_price": 113.83,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 115.67,
-      "change_1d": -0.0243,
+      "change_1d": 4.01,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -1.5907,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -60982,6 +60982,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 163.42,
+          "high": 164.49,
+          "low": 160.18,
+          "close": 163.38,
+          "volume": 2914800
+        },
         {
           "date": "2026-01-22",
           "open": 162.86,
@@ -62413,33 +62421,25 @@
           "low": 114.1,
           "close": 118.39,
           "volume": 6339300
-        },
-        {
-          "date": "2026-10-08",
-          "open": 116.82,
-          "high": 123.719,
-          "low": 116.601,
-          "close": 123.63,
-          "volume": 5259002
         }
       ],
       "technical": {
-        "ma20": 117.576,
-        "ma50": 125.9792,
-        "kdj_j": 114.82,
-        "kdj_k": 67.38,
-        "kdj_d": 43.66,
-        "macd_hist": 1.1621,
-        "macd": -2.6264,
-        "macd_signal": -3.7885,
-        "atr_abs": 3.0906,
-        "atr_pct_computed": 2.4999,
+        "ma20": 117.585,
+        "ma50": 126.1416,
+        "kdj_j": 90.63,
+        "kdj_k": 51.41,
+        "kdj_d": 31.8,
+        "macd_hist": 0.5727,
+        "macd": -3.5063,
+        "macd_signal": -4.0791,
+        "atr_abs": 2.835,
+        "atr_pct_computed": 2.3946,
         "rsi": 39.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:50Z",
+        "computed_at": "2026-10-09T00:01:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -62462,7 +62462,7 @@
       "pending_price": 277.0,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 278.77,
-      "change_1d": -1.567,
+      "change_1d": -1.0058,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6349,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -62505,6 +62505,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 361.63,
+          "high": 365.3,
+          "low": 360.08,
+          "close": 362.94,
+          "volume": 1969600
+        },
         {
           "date": "2026-01-22",
           "open": 362.92,
@@ -63936,33 +63944,25 @@
           "low": 274.45,
           "close": 275.4,
           "volume": 1918900
-        },
-        {
-          "date": "2026-10-08",
-          "open": 275.72,
-          "high": 277.8,
-          "low": 271.67,
-          "close": 276.97,
-          "volume": 2982001
         }
       ],
       "technical": {
-        "ma20": 276.869,
-        "ma50": 306.2128,
-        "kdj_j": 43.8,
-        "kdj_k": 48.31,
-        "kdj_d": 50.56,
-        "macd_hist": 2.2175,
-        "macd": -7.1991,
-        "macd_signal": -9.4166,
-        "atr_abs": 6.5893,
-        "atr_pct_computed": 2.3791,
+        "ma20": 276.521,
+        "ma50": 307.7184,
+        "kdj_j": 55.27,
+        "kdj_k": 52.88,
+        "kdj_d": 51.69,
+        "macd_hist": 2.2709,
+        "macd": -7.7001,
+        "macd_signal": -9.971,
+        "atr_abs": 6.5629,
+        "atr_pct_computed": 2.383,
         "rsi": 38.4,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:50Z",
+        "computed_at": "2026-10-09T00:01:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -63985,7 +63985,7 @@
       "pending_price": 72.5,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 72.5,
-      "change_1d": 0.0,
+      "change_1d": -0.1103,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -64028,6 +64028,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 70.0,
+          "high": 71.63,
+          "low": 69.18,
+          "close": 71.38,
+          "volume": 2698900
+        },
         {
           "date": "2026-01-22",
           "open": 71.8,
@@ -65459,33 +65467,25 @@
           "low": 72.43,
           "close": 72.53,
           "volume": 3153500
-        },
-        {
-          "date": "2026-10-08",
-          "open": 72.55,
-          "high": 72.57,
-          "low": 72.43,
-          "close": 72.45,
-          "volume": 5390331
         }
       ],
       "technical": {
-        "ma20": 72.4355,
-        "ma50": 72.3248,
-        "kdj_j": 42.57,
-        "kdj_k": 45.63,
-        "kdj_d": 47.16,
-        "macd_hist": -0.0397,
-        "macd": 0.1182,
-        "macd_signal": 0.1579,
-        "atr_abs": 0.1593,
-        "atr_pct_computed": 0.2199,
+        "ma20": 72.417,
+        "ma50": 72.3164,
+        "kdj_j": 53.24,
+        "kdj_k": 49.7,
+        "kdj_d": 47.93,
+        "macd_hist": -0.0388,
+        "macd": 0.129,
+        "macd_signal": 0.1678,
+        "atr_abs": 0.1621,
+        "atr_pct_computed": 0.2236,
         "rsi": 59.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:51Z",
+        "computed_at": "2026-10-09T00:01:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -65508,7 +65508,7 @@
       "pending_price": 156.52,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 156.52,
-      "change_1d": 0.1615,
+      "change_1d": 2.71,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -65551,6 +65551,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 108.61,
+          "high": 110.25,
+          "low": 104.89,
+          "close": 106.04,
+          "volume": 6547300
+        },
         {
           "date": "2026-01-22",
           "open": 106.58,
@@ -66982,33 +66990,25 @@
           "low": 150.77,
           "close": 150.92,
           "volume": 4512000
-        },
-        {
-          "date": "2026-10-08",
-          "open": 150.76,
-          "high": 156.1,
-          "low": 150.4597,
-          "close": 154.76,
-          "volume": 4164999
         }
       ],
       "technical": {
-        "ma20": 156.2735,
-        "ma50": 156.596,
-        "kdj_j": 24.39,
-        "kdj_k": 29.81,
-        "kdj_d": 32.53,
-        "macd_hist": -0.6604,
-        "macd": -0.8236,
-        "macd_signal": -0.1632,
-        "atr_abs": 3.5922,
-        "atr_pct_computed": 2.3211,
+        "ma20": 156.322,
+        "ma50": 156.4188,
+        "kdj_j": 4.02,
+        "kdj_k": 23.93,
+        "kdj_d": 33.88,
+        "macd_hist": -0.8387,
+        "macd": -0.8367,
+        "macd_signal": 0.0019,
+        "atr_abs": 3.3821,
+        "atr_pct_computed": 2.241,
         "rsi": 48.7,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:51Z",
+        "computed_at": "2026-10-09T00:01:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -67031,7 +67031,7 @@
       "pending_price": 293.2,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 294.22,
-      "change_1d": -0.0,
+      "change_1d": 1.2134,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.3467,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -67074,6 +67074,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 247.87,
+          "high": 255.64,
+          "low": 247.87,
+          "close": 252.77,
+          "volume": 965700
+        },
         {
           "date": "2026-01-22",
           "open": 252.98,
@@ -68505,33 +68513,25 @@
           "low": 292.95,
           "close": 294.22,
           "volume": 1731900
-        },
-        {
-          "date": "2026-10-08",
-          "open": 293.14,
-          "high": 298.39,
-          "low": 290.34,
-          "close": 297.79,
-          "volume": 1921402
         }
       ],
       "technical": {
-        "ma20": 293.436,
-        "ma50": 290.2934,
-        "kdj_j": 107.78,
-        "kdj_k": 72.63,
-        "kdj_d": 55.05,
-        "macd_hist": 0.2768,
-        "macd": 0.7241,
-        "macd_signal": 0.4473,
-        "atr_abs": 7.0536,
-        "atr_pct_computed": 2.3686,
+        "ma20": 292.989,
+        "ma50": 290.156,
+        "kdj_j": 92.54,
+        "kdj_k": 61.69,
+        "kdj_d": 46.26,
+        "macd_hist": -0.2078,
+        "macd": 0.1703,
+        "macd_signal": 0.3781,
+        "atr_abs": 6.965,
+        "atr_pct_computed": 2.3673,
         "rsi": 57.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:51Z",
+        "computed_at": "2026-10-09T00:01:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -68554,7 +68554,7 @@
       "pending_price": 101.27,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 101.27,
-      "change_1d": -0.0,
+      "change_1d": 0.4167,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -68597,6 +68597,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 109.9,
+          "high": 110.29,
+          "low": 108.4,
+          "close": 109.52,
+          "volume": 1888000
+        },
         {
           "date": "2026-01-22",
           "open": 109.6,
@@ -70028,33 +70036,25 @@
           "low": 102.71,
           "close": 103.18,
           "volume": 2249200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 103.25,
-          "high": 103.885,
-          "low": 102.45,
-          "close": 103.61,
-          "volume": 1860724
         }
       ],
       "technical": {
-        "ma20": 102.7265,
-        "ma50": 105.7614,
-        "kdj_j": 111.65,
-        "kdj_k": 76.39,
-        "kdj_d": 58.75,
-        "macd_hist": 0.3926,
-        "macd": -1.0205,
-        "macd_signal": -1.4131,
-        "atr_abs": 1.5568,
-        "atr_pct_computed": 1.5025,
+        "ma20": 102.8135,
+        "ma50": 105.915,
+        "kdj_j": 103.96,
+        "kdj_k": 67.95,
+        "kdj_d": 49.94,
+        "macd_hist": 0.3075,
+        "macd": -1.2038,
+        "macd_signal": -1.5113,
+        "atr_abs": 1.5657,
+        "atr_pct_computed": 1.5175,
         "rsi": 35.2,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:51Z",
+        "computed_at": "2026-10-09T00:01:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -70077,7 +70077,7 @@
       "pending_price": 209.0,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 208.94,
-      "change_1d": 0.1103,
+      "change_1d": 0.6661,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0287,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -70120,6 +70120,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 221.5,
+          "high": 226.57,
+          "low": 221.06,
+          "close": 226.49,
+          "volume": 3847400
+        },
         {
           "date": "2026-01-22",
           "open": 226.48,
@@ -71551,33 +71559,25 @@
           "low": 208.63,
           "close": 208.94,
           "volume": 2277500
-        },
-        {
-          "date": "2026-10-08",
-          "open": 209.95,
-          "high": 211.23,
-          "low": 207.63,
-          "close": 210.1,
-          "volume": 2182180
         }
       ],
       "technical": {
-        "ma20": 209.1,
-        "ma50": 217.4486,
-        "kdj_j": 108.22,
-        "kdj_k": 68.71,
-        "kdj_d": 48.95,
-        "macd_hist": 0.7993,
-        "macd": -3.0874,
-        "macd_signal": -3.8867,
-        "atr_abs": 3.1543,
-        "atr_pct_computed": 1.5013,
+        "ma20": 209.3335,
+        "ma50": 217.9786,
+        "kdj_j": 96.96,
+        "kdj_k": 58.37,
+        "kdj_d": 39.07,
+        "macd_hist": 0.5366,
+        "macd": -3.5499,
+        "macd_signal": -4.0865,
+        "atr_abs": 3.0636,
+        "atr_pct_computed": 1.4662,
         "rsi": 47.6,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:52Z",
+        "computed_at": "2026-10-09T00:01:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -71593,14 +71593,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 65.15,
+      "price": 65.2606,
       "price_source": "realtime",
-      "current_price": 65.15,
-      "current_price_updated_at": "2026-10-08T23:38:20Z",
+      "current_price": 65.2606,
+      "current_price_updated_at": "2026-10-08T23:58:14Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": -0.1379,
+      "change_1d": 2.9997,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -71643,6 +71643,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 48.29,
+          "high": 49.05,
+          "low": 48.29,
+          "close": 48.75,
+          "volume": 58996000
+        },
         {
           "date": "2026-01-22",
           "open": 48.62,
@@ -73074,33 +73082,25 @@
           "low": 63.04,
           "close": 63.36,
           "volume": 27139200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 64.51,
-          "high": 65.4673,
-          "low": 64.31,
-          "close": 65.24,
-          "volume": 50409268
         }
       ],
       "technical": {
-        "ma20": 63.3065,
-        "ma50": 62.547,
-        "kdj_j": 105.74,
-        "kdj_k": 78.13,
-        "kdj_d": 64.32,
-        "macd_hist": 0.1246,
-        "macd": 0.2386,
-        "macd_signal": 0.1141,
-        "atr_abs": 1.3119,
-        "atr_pct_computed": 2.011,
+        "ma20": 63.291,
+        "ma50": 62.4152,
+        "kdj_j": 94.28,
+        "kdj_k": 69.7,
+        "kdj_d": 57.42,
+        "macd_hist": -0.019,
+        "macd": 0.0639,
+        "macd_signal": 0.0829,
+        "atr_abs": 1.2079,
+        "atr_pct_computed": 1.9063,
         "rsi": 53.3,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:52Z",
+        "computed_at": "2026-10-09T00:01:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -73116,14 +73116,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 168.5,
+      "price": 168.5806,
       "price_source": "realtime",
-      "current_price": 168.5,
-      "current_price_updated_at": "2026-10-08T23:21:00Z",
+      "current_price": 168.5806,
+      "current_price_updated_at": "2026-10-08T23:55:38Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": 0.0,
+      "change_1d": 2.7617,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -73166,6 +73166,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 131.91,
+          "high": 133.73,
+          "low": 131.91,
+          "close": 133.61,
+          "volume": 18879900
+        },
         {
           "date": "2026-01-22",
           "open": 133.05,
@@ -74597,33 +74605,25 @@
           "low": 163.46,
           "close": 164.05,
           "volume": 9516200
-        },
-        {
-          "date": "2026-10-08",
-          "open": 167.11,
-          "high": 169.19,
-          "low": 166.71,
-          "close": 168.5,
-          "volume": 13285006
         }
       ],
       "technical": {
-        "ma20": 163.3485,
-        "ma50": 161.3298,
-        "kdj_j": 90.56,
-        "kdj_k": 79.75,
-        "kdj_d": 74.35,
-        "macd_hist": 0.3235,
-        "macd": 1.2122,
-        "macd_signal": 0.8887,
-        "atr_abs": 3.5464,
-        "atr_pct_computed": 2.1047,
+        "ma20": 163.185,
+        "ma50": 161.0948,
+        "kdj_j": 76.02,
+        "kdj_k": 73.1,
+        "kdj_d": 71.64,
+        "macd_hist": 0.0445,
+        "macd": 0.8524,
+        "macd_signal": 0.8078,
+        "atr_abs": 3.3386,
+        "atr_pct_computed": 2.0351,
         "rsi": 65.1,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:53Z",
+        "computed_at": "2026-10-09T00:01:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -74646,7 +74646,7 @@
       "pending_price": 103.39,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 101.82,
-      "change_1d": -0.7238,
+      "change_1d": -0.558,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.5419,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -74689,6 +74689,14 @@
         "invalidation": ""
       },
       "ohlcv": [
+        {
+          "date": "2026-01-21",
+          "open": 140.21,
+          "high": 142.6,
+          "low": 138.84,
+          "close": 141.76,
+          "volume": 1309700
+        },
         {
           "date": "2026-01-22",
           "open": 142.6,
@@ -76120,33 +76128,25 @@
           "low": 101.62,
           "close": 101.82,
           "volume": 2477700
-        },
-        {
-          "date": "2026-10-08",
-          "open": 101.86,
-          "high": 102.24,
-          "low": 100.7,
-          "close": 101.99,
-          "volume": 2234713
         }
       ],
       "technical": {
-        "ma20": 104.499,
-        "ma50": 110.6764,
-        "kdj_j": 63.38,
-        "kdj_k": 45.65,
-        "kdj_d": 36.79,
-        "macd_hist": 0.2175,
-        "macd": -2.3807,
-        "macd_signal": -2.5982,
-        "atr_abs": 2.3593,
-        "atr_pct_computed": 2.3133,
+        "ma20": 104.727,
+        "ma50": 111.0792,
+        "kdj_j": 61.91,
+        "kdj_k": 42.21,
+        "kdj_d": 32.35,
+        "macd_hist": 0.192,
+        "macd": -2.4606,
+        "macd_signal": -2.6526,
+        "atr_abs": 2.3536,
+        "atr_pct_computed": 2.3115,
         "rsi": 39.0,
         "rsi_source": "pending_csv",
         "bars_used": 180,
-        "last_bar_date": "2026-10-08",
+        "last_bar_date": "2026-10-07",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-08T23:45:53Z",
+        "computed_at": "2026-10-09T00:01:04Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -76169,7 +76169,7 @@
         "change_1d": 0.1012,
         "change_5d": 0.5991,
         "change_20d": -1.5989,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -76187,7 +76187,7 @@
         "change_1d": -0.4667,
         "change_5d": 1.2902,
         "change_20d": 2.2875,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -76205,7 +76205,7 @@
         "change_1d": -1.2541,
         "change_5d": 1.1973,
         "change_20d": 4.2621,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -76223,7 +76223,7 @@
         "change_1d": 0.0649,
         "change_5d": -5.9182,
         "change_20d": -13.565,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -76241,7 +76241,7 @@
         "change_1d": 0.0,
         "change_5d": -0.1146,
         "change_20d": 5.805,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -76258,8 +76258,8 @@
         "price": 4.422,
         "change_1d": -4.8418,
         "change_5d": -9.478,
-        "change_20d": 5.2857,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_20d": 5.7389,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -76277,7 +76277,7 @@
         "change_1d": 0.0,
         "change_5d": -0.2797,
         "change_20d": 5.4511,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -76295,7 +76295,7 @@
         "change_1d": 0.0,
         "change_5d": 0.0535,
         "change_20d": 4.57,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -76309,16 +76309,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.128,
+        "price": 102.133,
         "change_1d": 0.0,
-        "change_5d": 0.0274,
-        "change_20d": 3.0659,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_5d": 0.0323,
+        "change_20d": 3.0709,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791502320,
+        "quote_ts": 1791503460,
         "last_bar_date": "2026-10-08"
       },
       {
@@ -76327,16 +76327,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4167.6001,
+        "price": 4167.2998,
         "change_1d": 0.0,
-        "change_5d": -0.8257,
-        "change_20d": -5.4387,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_5d": -0.8329,
+        "change_20d": -5.4455,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791502500,
+        "quote_ts": 1791503460,
         "last_bar_date": "2026-10-08"
       },
       {
@@ -76345,16 +76345,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 59.775,
+        "price": 59.76,
         "change_1d": 0.0,
-        "change_5d": -1.5644,
-        "change_20d": -7.0142,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_5d": -1.5891,
+        "change_20d": -7.0375,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791502500,
+        "quote_ts": 1791503400,
         "last_bar_date": "2026-10-08"
       },
       {
@@ -76363,16 +76363,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.567,
+        "price": 6.562,
         "change_1d": 0.0,
-        "change_5d": 1.3113,
-        "change_20d": 1.5463,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_5d": 1.2342,
+        "change_20d": 1.469,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791502320,
+        "quote_ts": 1791503340,
         "last_bar_date": "2026-10-08"
       },
       {
@@ -76381,16 +76381,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 91.16,
+        "price": 91.15,
         "change_1d": 0.0,
-        "change_5d": -1.8413,
-        "change_20d": -11.0461,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_5d": -1.8521,
+        "change_20d": -11.0558,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791502500,
+        "quote_ts": 1791503460,
         "last_bar_date": "2026-10-08"
       },
       {
@@ -76399,16 +76399,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 103.8,
+        "price": 103.79,
         "change_1d": 0.0,
-        "change_5d": 1.4564,
-        "change_20d": -3.5585,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "change_5d": 1.4466,
+        "change_20d": -3.5678,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791501960,
+        "quote_ts": 1791503400,
         "last_bar_date": "2026-10-08"
       },
       {
@@ -76417,16 +76417,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.129,
-        "change_1d": 0.0,
-        "change_5d": 5.4601,
-        "change_20d": 10.4093,
-        "updated_at": "2026-10-08T23:45:53Z",
+        "price": 3.135,
+        "change_1d": 0.0319,
+        "change_5d": 5.6623,
+        "change_20d": 10.621,
+        "updated_at": "2026-10-09T00:01:04Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791502440,
+        "quote_ts": 1791503460,
         "last_bar_date": "2026-10-08"
       }
     ],
@@ -76439,12 +76439,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-08T23:46:04Z"
+    "updated_at": "2026-10-09T00:01:18Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-08 19:46:06",
+    "as_of_us": "2026-10-08 20:01:21",
     "window_start": "2026-09-08",
     "core_closed_count": 4,
     "core_open_count": 19,
@@ -78201,8 +78201,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 263.15,
-        "pnl_pct": 6.02,
+        "cur_price": 263.0,
+        "pnl_pct": 5.96,
         "days_held": 16,
         "stop_loss": null,
         "score": "64.2",
@@ -78684,8 +78684,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 412.0,
-        "cur_price": 443.78,
-        "pnl_pct": 7.71,
+        "cur_price": 444.0,
+        "pnl_pct": 7.77,
         "days_held": 20,
         "stop_loss": null,
         "score": "74.7",
@@ -82617,8 +82617,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 274.75,
-        "pnl_pct": -34.41,
+        "cur_price": 274.4098,
+        "pnl_pct": -34.49,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -83468,8 +83468,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 53.63,
-        "pnl_pct": -1.67,
+        "cur_price": 53.59,
+        "pnl_pct": -1.74,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -83836,8 +83836,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 54.31,
-        "pnl_pct": 4.5,
+        "cur_price": 54.32,
+        "pnl_pct": 4.52,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -86795,8 +86795,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-08T23:46:04Z",
-    "technical_updated_at": "2026-10-08T23:46:06Z",
+    "market_updated_at": "2026-10-09T00:01:18Z",
+    "technical_updated_at": "2026-10-09T00:01:21Z",
     "counts": {
       "core": 17,
       "observation": 33,
