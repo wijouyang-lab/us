@@ -2,6 +2,11 @@ name: news-fetch
 
 on:
   workflow_dispatch:
+  # TEMP-VERIFY：临时 push 触发，只为立即验证模型切换后的翻译，验证完立刻移除。
+  # paths 过滤保证只有“本文件自身变化”才跑，不会被 dashboard-data 的每 15 分钟提交反复触发。
+  push:
+    paths:
+      - '.github/workflows/news-fetch.yml'
   schedule:
     # Schedule: UTC（GitHub 原生 cron 只认 UTC）
     # TBD：判决后填写，避开 dashboard-data 的 */15 网格与 scan/review 高峰。
