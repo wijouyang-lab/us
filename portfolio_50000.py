@@ -63,7 +63,7 @@ POSITION_COLUMNS = [
 TRANSACTION_COLUMNS = [
     "Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
     "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
-    "Portfolio_ID", "Unit_ID",
+    "Portfolio_ID", "Unit_ID", "Pending_Reason",
 ]
 HISTORY_COLUMNS = [
     "Date", "Cash", "Stock_Value", "Total_Equity", "Realized_PnL",
@@ -480,9 +480,135 @@ def upsert_history(history: list[dict], row: dict):
     history.append(row)
 
 
+# ------------------------------------------------------------------ 盘中机械止损
+MAX_INTRADAY_STOPS_PER_DAY = 2          # 单日最多止损 2 只（决策 2）
+INTRADAY_SESSION_OPEN = (9, 30)         # 09:30 ET
+INTRADAY_SESSION_CLOSE = (16, 0)        # 16:00 ET（不含）
+
+
+def _et_now():
+    """美东当前时间（供时段守卫；无需联网）。失败时回退 EDT（UTC-4）。"""
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("America/New_York"))
+    except Exception:
+        from datetime import timezone, timedelta
+        return datetime.now(timezone.utc - timedelta(hours=4))
+
+
+def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
+                       now_et=None) -> dict:
+    """盘中机械止损：检查 OPEN 持仓，实时价 ≤ Stop_Loss 则机械卖出。
+
+    设计约束（只加不改）：
+      · 不调用 process_buys / process_sells —— 只做"检查 + 卖"；
+      · 执行价 = 触发时实时价（fetch_last_closes 的 current，prepost=False）；
+      · 取不到实时价 → 不触发（绝不猜价，与 Review DATA_MISSING 一致）；
+      · 单日最多止损 2 只；全部持仓 CLOSED → 不再触发；已 CLOSED/已今日止损的不重复处理；
+      · 触发写 transactions（Reason="Intraday Stop Loss", Pending_Reason="True" 待 AI 补原因）；
+      · 时段守卫：仅 09:30 ≤ ET < 16:00 执行，其他时间静默退出（exit 0）。
+    """
+    from datetime import time as _dtime
+    now = now_et if now_et is not None else _et_now()
+    oh, om = INTRADAY_SESSION_OPEN
+    ch, cm = INTRADAY_SESSION_CLOSE
+    if not (_dtime(oh, om) <= now.time() < _dtime(ch, cm)):
+        print("[intraday-stop] 非交易时段（09:30-16:00 ET），静默退出")
+        return {"triggered": 0, "total_equity": None, "positions": []}
+
+    positions = read_csv_rows(data_dir / POSITIONS_FILE)
+    transactions = read_csv_rows(data_dir / TRANSACTIONS_FILE)
+    open_pos = [p for p in positions if str(p.get("Status", "")).upper() == "OPEN"]
+    if not open_pos:
+        print("[intraday-stop] 无 OPEN 持仓，跳过")
+        return {"triggered": 0, "total_equity": None, "positions": []}
+
+    open_tickers = sorted({str(p.get("Ticker", "")).upper() for p in open_pos})
+    prices = {} if offline else fetch_last_closes(open_tickers)
+
+    existing_txn = {str(t.get("Txn_ID", "")) for t in transactions}
+    # 今日已盘中止损数（与本次本批次计数合计，封顶单日上限）
+    stopped_today = sum(
+        1 for t in transactions
+        if str(t.get("Action", "")).upper() == "SELL"
+        and str(t.get("Reason", "")) == "Intraday Stop Loss"
+        and str(t.get("Date", "")) == today
+    )
+
+    triggered = 0
+    new_txns: list[dict] = []
+    for p in sorted(open_pos, key=lambda x: str(x.get("Ticker", "")).upper()):
+        if stopped_today + triggered >= MAX_INTRADAY_STOPS_PER_DAY:
+            print(f"[intraday-stop] 已达单日上限 {MAX_INTRADAY_STOPS_PER_DAY} 只，停止触发")
+            break
+        tkr = str(p.get("Ticker", "")).upper()
+        stop = dec(p.get("Stop_Loss"))
+        if stop is None or stop <= 0:
+            continue                                    # 无有效止损线，跳过
+        info = prices.get(tkr) or {}
+        px = info.get("current")
+        if px is None:
+            print(f"[intraday-stop] {tkr} 取不到实时价，跳过（不猜价）")
+            continue
+        if px > stop:
+            continue                                    # 未触及止损
+        # —— 触发止损 ——
+        rid = str(p.get("Recommendation_ID", "")) or tkr
+        shares = int(dec(p.get("Shares")) or 0)
+        if shares <= 0:
+            continue
+        entry = dec(p.get("Entry_Price")) or ZERO
+        txn_id = f"INTRADAY|{tkr}|{today}"
+        if txn_id in existing_txn:
+            continue                                    # 幂等：今日已止损，不再处理
+        realized = (px - entry) * Decimal(shares)
+        amount = px * Decimal(shares)
+        new_txns.append({
+            "Txn_ID": txn_id,
+            "Date": today,
+            "Ticker": tkr,
+            "Action": "SELL",
+            "Shares": str(shares),
+            "Price": str(money(px)),
+            "Amount": str(money(amount)),
+            "Realized_PnL": str(money(realized)),
+            "Cash_After": "",
+            "Reason": "Intraday Stop Loss",
+            "Recommendation_ID": rid,
+            "Scan_Date": str(p.get("Entry_Date", "")),
+            "Portfolio_ID": PORTFOLIO_ID,
+            "Unit_ID": str(p.get("Unit_ID", "")),
+            "Pending_Reason": "True",
+        })
+        p["Shares"] = "0"
+        p["Status"] = "CLOSED"
+        p["Current_Price"] = str(money(px))
+        p["Market_Value"] = "0.00"
+        p["Unrealized_PnL"] = "0.00"
+        p["Unrealized_PnL_Pct"] = "0.00"
+        p["Weight_Pct"] = "0.00"
+        p["Last_Update"] = today
+        existing_txn.add(txn_id)
+        triggered += 1
+        print(f"🛑 INTRADAY STOP {tkr} {shares}股 @ {money(px)}（止损线 {money(stop)}）")
+
+    if new_txns:
+        transactions.extend(new_txns)
+        write_csv_rows(data_dir / TRANSACTIONS_FILE, TRANSACTION_COLUMNS, transactions)
+        write_csv_rows(data_dir / POSITIONS_FILE, POSITION_COLUMNS, positions)
+    else:
+        print("[intraday-stop] 本次无触发")
+    return {"triggered": triggered, "total_equity": None, "positions": positions}
+
+
 # ------------------------------------------------------------------ 主流程
-def run(data_dir: Path, offline: bool = False, price_only: bool = False) -> dict:
+def run(data_dir: Path, offline: bool = False, price_only: bool = False,
+        intraday_stop: bool = False) -> dict:
     today = us_today_str()
+    if intraday_stop:
+        # 盘中机械止损：只在 09:30 ≤ ET < 16:00 触发，复用 fetch_last_closes（prepost=False）。
+        # 不调用 process_buys / process_sells，只做"检查 + 卖"。默认（无此 flag）完全不进入此分支。
+        return _run_intraday_stop(data_dir, today, offline)
     positions = read_csv_rows(data_dir / POSITIONS_FILE)
     transactions = read_csv_rows(data_dir / TRANSACTIONS_FILE)
     history = read_csv_rows(data_dir / HISTORY_FILE)
@@ -611,12 +737,16 @@ def main(argv=None):
     ap.add_argument("--offline", action="store_true", help="不联网取价（测试/离线用）")
     ap.add_argument("--price-only", action="store_true",
                     help="仅刷新持仓价格（含盘前/盘后 Extended_Price），不处理买卖、不写交易/历史")
+    ap.add_argument("--intraday-stop", action="store_true",
+                    help="盘中机械止损检查（09:30-16:00 ET）：实时价≤止损线则机械卖出；"
+                         "不调用 process_buys/process_sells，不影响盘后 Review 路径")
     args = ap.parse_args(argv)
     d = Path(args.data_dir).resolve()
     if not (d / "trade_history.csv").exists():
         print(f"❌ 缺少 trade_history.csv：{d}")
         return 1
-    run(d, offline=args.offline, price_only=args.price_only)
+    run(d, offline=args.offline, price_only=args.price_only,
+        intraday_stop=args.intraday_stop)
     return 0
 
 
