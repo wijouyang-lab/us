@@ -45,6 +45,60 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add -A
-          git diff --cached --quiet || git commit -m "chore(quant): refresh phase 2-7 research artifacts [skip ci]"
-          git push
+
+          # 显式列出 Phase 2-7 研究产物（不用 git add -A，避免把 __pycache__/无关文件带进 main）。
+          # 仅在文件存在时 add；不存在的（如某 Phase 未产出）不强行 add，避免 git add 报错中断。
+          add_research() {
+            for f in \
+              quant_factor_backtest.csv \
+              quant_factor_summary.csv \
+              quant_factor_validation.csv \
+              quant_factor_correlation.csv \
+              quant_factor_validation_report.json \
+              quant_walk_forward_results.csv \
+              quant_walk_forward_summary.json \
+              quant_shadow_snapshot.csv \
+              quant_shadow_performance.csv \
+              quant_shadow_report.json \
+              quant_production_approval.json \
+              quant_production_config.json \
+              quant_production_state.json \
+              quant_research_status.json ; do
+              if [ -f "$f" ]; then git add "$f"; fi
+            done
+          }
+
+          add_research
+          if git diff --cached --quiet; then
+            echo "研究产物无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore(quant): refresh phase 2-7 research artifacts [skip ci]"
+
+          # 并发安全推送：quant-research 经 scan.yml needs:scan 触发，启动时本地 main 落后于
+          # 已 push 的 scan 提交，直接 push 必被 non-fast-forward 拒绝。每次重试先 fetch +
+          # reset --soft 重建提交到最新 origin/main 之上，绝不 force push（同款 news-fetch 模式）。
+          PUSHED=0
+          for i in 1 2 3; do
+            if git push origin main; then
+              PUSHED=1
+              break
+            fi
+            echo "::warning::push 被拒绝（疑似并发提交），基于最新 origin/main 重建提交后重试 ($i/3)"
+            git fetch origin main
+            git reset --soft FETCH_HEAD
+            git reset HEAD
+            add_research
+            if git diff --cached --quiet; then
+              echo "远端数据已与本轮一致，无需重复提交"
+              PUSHED=1
+              break
+            fi
+            git commit -m "chore(quant): refresh phase 2-7 research artifacts [skip ci]"
+          done
+          if [ "$PUSHED" = "1" ]; then
+            echo "Quant 研究产物已提交并推送"
+          else
+            echo "::error::重试 3 次后仍无法推送；本轮已生成数据保留在工作区，未回退未覆盖远端"
+            exit 1
+          fi
