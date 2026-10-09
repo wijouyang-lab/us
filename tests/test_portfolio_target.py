@@ -61,12 +61,15 @@ def test_build_rows_schema_and_actions():
         assert r["Scan_Date"] == "2026-10-09"
 
 
-def test_build_rows_equal_weight_shares():
+def test_build_rows_equal_weight_with_cap():
+    # BUY 行：等权金额受 25% 上限约束；HOLD 行（无 held_shares）→ 回退 0
     rows, n = pt.build_portfolio_target_rows(_sample_chosen(), _sample_held(), "2026-10-09")
     assert n == 3  # 推荐标的数（ADSK/ANET/ISRG）
     by = {r["Ticker"]: r for r in rows}
-    assert by["ISRG"]["Target_Shares"] == int(16666.7 // 512.0)  # BUY
-    assert by["ADSK"]["Target_Shares"] == int(16666.7 // 231.42)  # HOLD（同公式）
+    isrg_budget = min(50000 / 3, pt.MAX_POSITION_DOLLARS)
+    assert by["ISRG"]["Target_Shares"] == int(isrg_budget // 512.0)  # BUY，上限截断
+    assert by["ISRG"]["Target_Shares"] * 512.0 <= pt.MAX_POSITION_DOLLARS + 1e-6
+    assert by["ADSK"]["Target_Shares"] == 0   # HOLD 无 shares map → 0
     assert by["KR"]["Target_Shares"] == 0
     assert by["KR"]["Ref_Price"] == ""
 
@@ -89,6 +92,74 @@ def test_stop_loss_passthrough():
     by = {r["Ticker"]: r for r in rows}
     assert by["ADSK"]["Stop_Loss"] == "$214.76"
     assert by["ISRG"]["Stop_Loss"] == ""   # N/A 视为空
+
+
+# ---------------------------------------------------------------------------
+# 修复 1：单只 25% 上限守卫（MAX_POSITION_DOLLARS = 12500）
+# ---------------------------------------------------------------------------
+def test_cap_constants():
+    assert pt.INITIAL_CAPITAL == 50000
+    assert pt.MAX_POSITION_PCT == 0.25
+    assert pt.MAX_POSITION_DOLLARS == 12500
+
+
+def test_cap_3_targets_each_within_25pct():
+    # 3 只候选 → 每只等权 16666.67，应被截断到 ≤ 12500
+    chosen = [
+        {"Ticker": "ADSK", "Price": 231.42},
+        {"Ticker": "ANET", "Price": 211.30},
+        {"Ticker": "ISRG", "Price": 415.00},
+    ]
+    rows, n = pt.build_portfolio_target_rows(chosen, [], "2026-10-09")
+    assert n == 3
+    for r in rows:
+        assert r["Action"] == "BUY"
+        value = r["Target_Shares"] * pt._to_float(r["Ref_Price"])
+        assert value <= pt.MAX_POSITION_DOLLARS + 1e-6
+
+
+def test_buy_row_capped_not_raw_equal_weight():
+    # 3 只 @ $100 → 裸等权 166 股；上限后 125 股（验证上限确实生效）
+    chosen = [
+        {"Ticker": "A", "Price": 100.0},
+        {"Ticker": "B", "Price": 100.0},
+        {"Ticker": "C", "Price": 100.0},
+    ]
+    rows, n = pt.build_portfolio_target_rows(chosen, [], "2026-10-09")
+    by = {r["Ticker"]: r for r in rows}
+    assert by["A"]["Target_Shares"] == 125
+    assert by["A"]["Target_Shares"] * 100.0 == pt.MAX_POSITION_DOLLARS
+    assert by["A"]["Target_Shares"] < int((50000 / 3) // 100.0)  # 真被截断
+
+
+# ---------------------------------------------------------------------------
+# 修复 2：HOLD 行 Target_Shares = 当前实际持股数（方案 B）
+# ---------------------------------------------------------------------------
+def test_hold_row_target_shares_equals_held():
+    chosen = [
+        {"Ticker": "ADSK", "Price": 231.42},
+        {"Ticker": "ISRG", "Price": 415.00},
+    ]
+    held = ["ISRG"]              # ISRG 已持有
+    held_shares = {"ISRG": 24}  # 实际持股 24 股
+    rows, n = pt.build_portfolio_target_rows(chosen, held, "2026-10-09", held_shares=held_shares)
+    by = {r["Ticker"]: r for r in rows}
+    assert by["ISRG"]["Action"] == "HOLD"
+    assert by["ISRG"]["Target_Shares"] == 24   # == 当前持有股数
+    assert by["ADSK"]["Action"] == "BUY"
+    assert by["ADSK"]["Target_Shares"] * 231.42 <= pt.MAX_POSITION_DOLLARS
+
+
+def test_sell_row_target_shares_zero():
+    chosen = [{"Ticker": "ADSK", "Price": 231.42}]
+    held = ["ADSK", "KR"]  # KR 持有但不在推荐 → SELL
+    rows, n = pt.build_portfolio_target_rows(
+        chosen, held, "2026-10-09", held_shares={"ADSK": 43, "KR": 10})
+    by = {r["Ticker"]: r for r in rows}
+    assert by["KR"]["Action"] == "SELL"
+    assert by["KR"]["Target_Shares"] == 0
+    assert by["ADSK"]["Action"] == "HOLD"
+    assert by["ADSK"]["Target_Shares"] == 43
 
 
 # ---------------------------------------------------------------------------

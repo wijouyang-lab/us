@@ -4,12 +4,31 @@
 scan.py 在 ENABLE_TARGET_FILE == "1" 时调用本模块，把「scan 最终 Core 推荐 + 当前持仓对比」
 落盘为 portfolio_50000_target.csv。本模块无任何市场时段守卫 / 环境变量校验 / 网络调用，
 便于直接 import 单测。失败由调用方（scan.py）的 try/except 兜住，不阻断 scan 主流程。
+
+资金约束：
+  · 初始资金 $50,000（模拟账户）
+  · 单只上限 25% → $12,500（用户拍板，防等权 3 只时每只 33.3% 超限）
+  · 等权目标金额受单只上限约束：budget = min(等权金额, MAX_POSITION_DOLLARS)
 """
-PORTFOLIO_TARGET_BUDGET = 50000  # $50k 模拟账户总预算
+import csv
+
+INITIAL_CAPITAL = 50000
+MAX_POSITION_PCT = 0.25
+MAX_POSITION_DOLLARS = INITIAL_CAPITAL * MAX_POSITION_PCT  # 12500
+
+
+def _to_float(v):
+    """把价格字符串（$ / 逗号）转 float；失败返回 0.0。"""
+    if v is None:
+        return 0.0
+    try:
+        return float(str(v).replace("$", "").replace(",", "").strip())
+    except (TypeError, ValueError):
+        return 0.0
 
 
 def _target_ref_price(item):
-    """盘前参考价：优先 Scan_Ref_Price（昨收/盘前），与 pending CSV 口径一致。"""
+    """盘前参考价：优先 Price（= 最近收盘，盘前即昨收），回退 Open_Price / Prev_Close。"""
     for k in ("Price", "Open_Price", "Prev_Close"):
         v = (item or {}).get(k)
         if v not in (None, "", "N/A"):
@@ -26,28 +45,53 @@ def _target_reason(item):
     return ""
 
 
-def _target_shares(ref_price, n_targets):
-    """等权目标股数：每个目标标的分到 50000/n 的市值，按参考价换算股数（向下取整）。"""
-    if not ref_price or n_targets <= 0:
+def _target_shares(per_amount, price):
+    """等权每只预算 per_amount，受单只 25% 上限（MAX_POSITION_DOLLARS）约束。
+
+    per_amount: 该标的等权目标金额（= INITIAL_CAPITAL / n_targets）
+    price: 参考价（Ref_Price）
+    返回向下取整股数；任意异常 / 价格≤0 → 0。
+    """
+    p = _to_float(price)
+    if p <= 0:
         return 0
+    budget = min(per_amount, MAX_POSITION_DOLLARS)
+    return max(0, int(budget // p))
+
+
+def _load_held_shares(positions_csv="portfolio_50000_positions.csv"):
+    """从持仓 CSV 读 {TICKER: shares} map（HOLD 行语义：目标股数=当前实际持股）。
+
+    只读、容错：文件缺失 / 解析失败返回空 dict（此时 HOLD 行 Target_Shares 回退为 0）。
+    不在 scan.py 内改调用，故 writer 自行读取同一持仓 CSV 获取 shares。
+    """
+    out = {}
     try:
-        price = float(str(ref_price).replace("$", "").replace(",", "").strip())
-    except (TypeError, ValueError):
-        return 0
-    if price <= 0:
-        return 0
-    per = PORTFOLIO_TARGET_BUDGET / n_targets
-    return max(0, int(per // price))
+        with open(positions_csv, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                t = (row.get("Ticker") or "").upper().strip()
+                if not t:
+                    continue
+                try:
+                    s = int(_to_float(row.get("Shares")))
+                except (TypeError, ValueError):
+                    s = 0
+                out[t] = s
+    except Exception:
+        return {}
+    return out
 
 
-def build_portfolio_target_rows(chosen_items, held_positions, scan_date):
+def build_portfolio_target_rows(chosen_items, held_positions, scan_date, held_shares=None):
     """构造目标持仓行（dict 列表）。幂等键 = Scan_Date + Ticker（整文件覆盖即幂等）。
 
     chosen_items: scan 最终推荐（to_write，Core/Observation）
     held_positions: 当前持仓 Ticker 列表（portfolio_50000_positions.csv OPEN）
+    held_shares: 可选 {TICKER: shares} map；提供时 HOLD 行 Target_Shares = 当前持股数
     返回 (rows, n_targets)：rows 含 BUY/HOLD/SELL；n_targets = 推荐标的数（用于等权）。
     """
     held = {str(t).upper() for t in (held_positions or [])}
+    shares_map = held_shares or {}
     rec = []
     seen = set()
     for it in (chosen_items or []):
@@ -65,14 +109,23 @@ def build_portfolio_target_rows(chosen_items, held_positions, scan_date):
     # 无推荐（n_targets==0）→ 不构成目标组合，避免误发「清仓所有持仓」信号
     if n_targets == 0:
         return [], 0
+    per = INITIAL_CAPITAL / n_targets
     rows = []
     for r in rec:
-        action = "HOLD" if r["Ticker"] in held else "BUY"
+        t = r["Ticker"]
+        if t in held:
+            # HOLD：维持现有持仓，目标股数 = 当前实际持股数（不新买，故不受单只上限约束）
+            action = "HOLD"
+            target_shares = shares_map.get(t, 0)
+        else:
+            # BUY：新标的，等权金额受 25% 上限约束
+            action = "BUY"
+            target_shares = _target_shares(per, r["Ref_Price"])
         rows.append({
             "Scan_Date": scan_date,
-            "Ticker": r["Ticker"],
+            "Ticker": t,
             "Action": action,
-            "Target_Shares": _target_shares(r["Ref_Price"], n_targets),
+            "Target_Shares": target_shares,
             "Ref_Price": r["Ref_Price"],
             "Stop_Loss": r["Stop_Loss"],
             "AI_Reason": r["AI_Reason"],
@@ -92,9 +145,14 @@ def build_portfolio_target_rows(chosen_items, held_positions, scan_date):
     return rows, n_targets
 
 
-def write_portfolio_target_csv(chosen_items, held_positions, scan_date):
-    """落盘 portfolio_50000_target.csv（整文件覆盖 → 同天重跑幂等）。返回路径或 None。"""
-    rows, _ = build_portfolio_target_rows(chosen_items, held_positions, scan_date)
+def write_portfolio_target_csv(chosen_items, held_positions, scan_date,
+                               positions_csv="portfolio_50000_positions.csv"):
+    """落盘 portfolio_50000_target.csv（整文件覆盖 → 同天重跑幂等）。返回路径或 None。
+
+    HOLD 行实际持股数由持仓 CSV 自行读取（不依赖 scan.py 改调用）。
+    """
+    held_shares = _load_held_shares(positions_csv)
+    rows, _ = build_portfolio_target_rows(chosen_items, held_positions, scan_date, held_shares=held_shares)
     if not rows:
         print("ℹ️ [Target] 今日无推荐，跳过目标持仓文件生成")
         return None
