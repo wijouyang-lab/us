@@ -205,7 +205,8 @@ def test_app_js_has_render_quant():
     js = de.Path(REPO_ROOT, "app.js").read_text(encoding="utf-8")
     assert re.search(r"function renderQuant\s*\(\)", js)
     # renderDashboard 里必须在 renderPortfolio 之后调用 renderQuant
-    assert re.search(r"renderPortfolio\(\);\s*\n\s*renderQuant\(\);", js), (
+    # （允许二者之间插入其它渲染调用，如 renderStopped）
+    assert re.search(r"renderPortfolio\(\);[\s\S]*?renderQuant\(\);", js), (
         "renderDashboard 应在 renderPortfolio() 之后调用 renderQuant()"
     )
 

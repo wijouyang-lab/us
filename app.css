@@ -460,6 +460,20 @@ button{font-family:inherit}
 .at-act.buy{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7}
 .at-act.sell{background:#ffebee;color:#c62828;border-color:#ef9a9a}
 .at-act.hold{background:#e3f2fd;color:#1565c0;border-color:#90caf9}
+
+/* 已止损记录（近 30 天）—— 纯前端板块 */
+#stoppedCard .sec-sub{font-variant-numeric:tabular-nums}
+.stp-list{display:flex;flex-direction:column;gap:8px}
+.stp-row{border:1px solid var(--border-2);border-radius:var(--r-sm);background:var(--soft);padding:8px 10px}
+.stp-line1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
+.stp-tk{font-weight:700;font-size:14px;color:var(--text);min-width:42px}
+.stp-date{font-size:11px;color:var(--text-3);font-weight:600}
+.stp-px{font-size:12.5px;font-weight:700;color:var(--text)}
+.stp-ret{font-size:12.5px;font-weight:700;margin-left:auto}
+.stp-ret.up{color:var(--up)}
+.stp-ret.down{color:var(--down)}
+.stp-reason{margin-top:3px;font-size:11px;color:var(--text-2);line-height:1.4}
+
 .at-shares{font-variant-numeric:tabular-nums;color:var(--text-2);font-size:13px}
 .at-price{font-variant-numeric:tabular-nums;color:var(--text-2);font-size:13px;margin-left:auto}
 .at-reason{margin-top:6px;font-size:12.5px;line-height:1.5;color:var(--text-2);max-height:2.6em;overflow:hidden;cursor:pointer;position:relative;padding-right:36px}

@@ -591,6 +591,105 @@
     drawPortfolioCurve(pf);
   }
 
+  /* 已止损记录板块（近 30 天）：纯前端只读 portfolio.transactions，
+     筛选 Action=SELL 且 Reason 含 "Stop Loss" 的记录，按日期降序展示。
+     字段来源（dashboard_export.build_portfolio 透传，零改后端）：
+       date / ticker / action / shares / price(成交价=退出价) / amount(成交额) /
+       realized_pnl(已实现盈亏，直接可用) / reason / unit_id
+     说明：
+       · transactions 后端只保留最近 20 条（不分 action，见 dashboard_export.py），
+         故本板块可见范围受此上限约束；止损离场多为近期事件，实践中可见。
+       · entry_price / entry_date 非透传字段，故入场价由 amount/realized_pnl/shares
+         反推（cost_basis = amount - realized_pnl），持有天数因无 entry_date 不展示
+         （缺则显 "—"，绝不捏造）。 */
+  function renderStopped() {
+    var subEl = $('#stoppedSub'), bodyEl = $('#stoppedBody');
+    if (!subEl || !bodyEl) return;
+    var pf = DATA && DATA.portfolio;
+    var ts = (pf && pf.transactions) || [];
+
+    if (!ts.length) {
+      subEl.textContent = '—';
+      bodyEl.innerHTML = '<div class="mx"><div class="k">已止损记录</div>' +
+        '<div class="v na">暂无止损记录</div></div>';
+      return;
+    }
+
+    // 锚点：以交易流水中最新日期为"今天"基准（不依赖本地时钟，避免时区漂移）
+    var maxDate = '';
+    ts.forEach(function (t) {
+      var d = String(t.date || '');
+      if (d && d > maxDate) maxDate = d;
+    });
+    var anchor = maxDate ? new Date(maxDate) : null;
+    var threshold = anchor ? new Date(anchor.getTime() - 30 * 86400000) : null;
+
+    // 筛选：SELL + Reason 含 "stop loss"（不区分大小写）+ 落在近 30 天
+    var stops = ts.filter(function (t) {
+      if (String(t.action || '').toUpperCase() !== 'SELL') return false;
+      if (!/stop\s*loss/i.test(String(t.reason || ''))) return false;
+      if (threshold) {
+        var d = new Date(String(t.date || ''));
+        if (!isNaN(d.getTime()) && d < threshold) return false;
+      }
+      return true;
+    }).sort(function (a, b) {
+      var da = String(a.date || ''), db = String(b.date || '');
+      return db > da ? 1 : (db < da ? -1 : 0);
+    });
+
+    if (!stops.length) {
+      subEl.textContent = '—';
+      bodyEl.innerHTML = '<div class="mx"><div class="k">已止损记录</div>' +
+        '<div class="v na">暂无止损记录</div></div>';
+      return;
+    }
+
+    // 统计：总计 / 胜率（样本<10 显 "—"）/ 平均收益率
+    var n = stops.length, wins = 0, sumRet = 0, counted = 0;
+    stops.forEach(function (t) {
+      var rp = num(t.realized_pnl), amt = num(t.amount);
+      if (rp !== null && rp > 0) wins++;
+      var cost = (amt !== null && rp !== null) ? (amt - rp) : null;
+      if (cost !== null && cost > 0) { sumRet += rp / cost * 100; counted++; }
+    });
+    var wr = n < 10 ? '—' : Math.round(wins / n * 100) + '%';
+    var avg = counted ? (sumRet / counted >= 0 ? '+' : '') +
+      fmt(sumRet / counted, 1) + '%' : '—';
+    subEl.textContent = '总计: ' + n + ' 笔 | 胜率: ' + wr + ' | 平均: ' + avg;
+
+    var rows = stops.map(function (t) {
+      var tk = t.ticker || NA;
+      var dt = String(t.date || '').slice(5);            // YYYY-MM-DD → MM-DD
+      var px = num(t.price), sh = num(t.shares),
+          amt = num(t.amount), rp = num(t.realized_pnl);
+      var cost = (amt !== null && rp !== null) ? (amt - rp) : null;
+      var entryTxt, retTxt;
+      if (cost !== null && cost > 0 && sh !== null && sh > 0) {
+        var entry = cost / sh;
+        entryTxt = '$' + fmt(entry, 2) + ' → $' + nv(px, 2);
+        var retPct = rp / cost * 100;
+        retTxt = (retPct >= 0 ? '+' : '') + fmt(retPct, 1) + '%';
+      } else {
+        entryTxt = (px === null ? NA : '$' + fmt(px, 2));
+        retTxt = '—';
+      }
+      var retCls = rp !== null ? pctCls(rp) : '';
+      var reason = t.reason || NA;
+      return '<div class="stp-row">' +
+        '<div class="stp-line1">' +
+          '<span class="stp-tk">' + esc(tk) + '</span>' +
+          '<span class="stp-date">' + esc(dt || NA) + '</span>' +
+          '<span class="stp-px">' + entryTxt + '</span>' +
+          '<span class="stp-ret ' + retCls + '">' + retTxt + '</span>' +
+        '</div>' +
+        '<div class="stp-reason">原因: ' + esc(reason) + '</div>' +
+      '</div>';
+    }).join('');
+
+    bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>';
+  }
+
   /* Equity Curve：横轴日期、纵轴 Total Equity，起点恒为 $50,000 */
   function drawPortfolioCurve(pf) {
     var cv = document.getElementById('pfCurve');
@@ -772,6 +871,7 @@
     renderHistory();
     renderTarget();
     renderPortfolio();
+    renderStopped();
     renderQuant();
     renderNews();
     drawAllSparks();
