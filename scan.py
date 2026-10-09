@@ -59,7 +59,7 @@ from quant_filter import (
 )
 
 # ==================== 环境检查 ====================
-TARGET_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
+TARGET_MODEL = os.environ.get("GPT_MODEL") or "claude-opus-5-5"
 TARGET_REGION = "美国市场"
 DEFAULT_STOP_LOSS_PCT = -5.0
 

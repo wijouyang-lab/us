@@ -190,7 +190,7 @@ def test_translate_headlines_batch_mock():
     assert res["Fed raises rates"]["sentiment"] == "bearish"
     # 批量：一次 API 调用、单条 user message、包含全部标题
     assert len(c.messages.recorded["messages"]) == 1
-    assert c.messages.recorded["model"] == "gpt-6-astra"
+    assert c.messages.recorded["model"] == "claude-opus-5-5"
     content = c.messages.recorded["messages"][0]["content"]
     assert "Apple beats earnings" in content and "Fed raises rates" in content
 

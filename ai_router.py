@@ -17,7 +17,7 @@ import os
 from typing import Any, Dict, Iterable, Optional
 from urllib.parse import urlsplit, urlunsplit
 
-GPT_MODEL = os.getenv("GPT_MODEL", "gpt-6-astra")
+GPT_MODEL = os.getenv("GPT_MODEL", "claude-opus-5-5")
 CLAUDE_AUDIT_MODEL = os.getenv("CLAUDE_AUDIT_MODEL", "claude-opus-5")
 
 

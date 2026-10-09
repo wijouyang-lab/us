@@ -58,7 +58,7 @@ COMPANY_LOOKBACK_DAYS = 7    # 个股新闻回溯窗口
 NEWS_FIELDS = ("headline", "source", "url", "datetime", "summary")
 
 # ------------------------------------------------------------------ 翻译
-TRANSLATE_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
+TRANSLATE_MODEL = os.environ.get("GPT_MODEL") or "claude-opus-5-5"
 MARKET_TRANSLATE_TOP = 10    # 市场新闻翻译条数（top N）
 TICKER_TRANSLATE_TOP = 5     # 每只持仓翻译条数（top N）
 TRANSLATION_CACHE_PATH = DATA_DIR / "news_translation_cache.json"
@@ -278,7 +278,7 @@ def _extract_json_array(text):
 def translate_headlines(headlines: list[str], client=None, model: str | None = None) -> dict:
     """批量翻译（一次 API 调用），返回 {headline: {headline_cn, sentiment}}。
 
-    - client 未传 → 惰性复用 ClawSocketClient（gpt-6-astra）。
+    - client 未传 → 惰性复用 ClawSocketClient（claude-opus-5-5）。
     - 任何失败（缺 key / 网络 / 解析）→ 返回 {}（R1：翻译失败不阻断抓取）。
     """
     headlines = [h for h in headlines if h]

@@ -14,7 +14,7 @@ from clawsocket_compat import ClawSocketClient
 import datetime
 import math
 
-EVOLVE_MODEL   = os.environ.get("GPT_MODEL") or "gpt-6-astra"
+EVOLVE_MODEL   = os.environ.get("GPT_MODEL") or "claude-opus-5-5"
 CLAUDE_AUDIT_MODEL = os.environ.get("CLAUDE_AUDIT_MODEL") or "claude-opus-5"
 HISTORY_FILE   = "trade_history.csv"
 EVOLVE_LOG     = "strategy_evolution.json"
