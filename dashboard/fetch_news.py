@@ -322,7 +322,7 @@ def translate_headlines(headlines: list[str], client=None, model: str | None = N
         prompt = _build_translation_prompt(headlines)
         resp = client.messages.create(
             model=model or TRANSLATE_MODEL,
-            max_tokens=4000,
+            max_tokens=8000,
             messages=[{"role": "user", "content": prompt}],
         )
         text = getattr(resp, "output_text", "") or ""
@@ -427,6 +427,23 @@ def run(api_key: str, tickers: list[str], include_market: bool,
             translated = translate_fn(missing) or {}
         except Exception:
             translated = {}
+        # 改动 1：缺口重试（最多 1 次，避免无限循环）
+        gap = [h for h in missing if h not in translated]
+        if gap:
+            print(f"⚠️ [News] 翻译缺口 {len(gap)} 条，重试一次")
+            try:
+                retry = translate_fn(gap) or {}
+            except Exception:
+                retry = {}
+            translated.update(retry)
+            still_missing = [h for h in gap if h not in retry]
+            if still_missing:
+                print(f"⚠️ [News] 重试后仍缺 {len(still_missing)} 条，放弃")
+        # 改动 2：覆盖率 warning 日志（翻译完成后统一打印）
+        total = len(missing)
+        got = len([h for h in missing if h in translated])
+        if got < total:
+            print(f"⚠️ [News] 翻译覆盖率 {got}/{total}，缺口 {total-got} 条")
         for h in missing:
             tr = translated.get(h)
             if isinstance(tr, dict):

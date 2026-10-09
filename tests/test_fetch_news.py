@@ -414,3 +414,82 @@ def test_cache_entry_with_rationale_empty_string_is_complete(tmp_path, monkeypat
     d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
     assert d["market_news"][0]["headline_cn"] == "译:M1"
     assert "rationale" not in d["market_news"][0]   # 空串 rationale 不注入
+
+
+# ------------------------------------------------------------------ 15. 翻译缺口重试（gap-retry）
+def test_gap_retry_completes_after_second_call(tmp_path, monkeypatch, capsys):
+    """AI 首轮漏翻部分条目 → 触发 1 次 gap retry → 补齐后最终全覆盖。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    items = [_item("A"), _item("B"), _item("C")]
+    monkeypatch.setattr(fn, "http_get", _market_get(items, {}))  # 3 条市场新闻均入翻译范围
+
+    calls = []
+    def fake_translate(headlines):
+        calls.append(list(headlines))
+        # 首轮：只返回 A、B，漏翻 C
+        if len(calls) == 1:
+            return {h: {"headline_cn": "译:" + h, "sentiment": "neutral"}
+                    for h in headlines if h != "C"}
+        # 第二轮（gap retry）：补齐剩余
+        return {h: {"headline_cn": "译:" + h, "sentiment": "neutral"} for h in headlines}
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+
+    assert len(calls) == 2                      # 首轮 + 1 次重试
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    for h in ("A", "B", "C"):
+        it = next(x for x in d["market_news"] if x["headline"] == h)
+        assert it["headline_cn"] == "译:" + h    # 最终全覆盖
+    out_text = capsys.readouterr().out
+    assert "翻译缺口" in out_text                # 触发了缺口重试
+    assert "重试后仍缺" not in out_text          # 重试后已补齐
+    assert "覆盖率" not in out_text              # 最终全覆盖 → 无覆盖率 warning
+
+
+def test_gap_retry_still_missing_does_not_crash(tmp_path, monkeypatch, capsys):
+    """AI 两次都漏翻 → 打印缺口 + 覆盖率 warning → 主流程不崩溃。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    items = [_item("A"), _item("B")]
+    monkeypatch.setattr(fn, "http_get", _market_get(items, {}))
+
+    calls = []
+    def fake_translate(headlines):
+        calls.append(list(headlines))
+        return {}                                # 永远漏翻
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+
+    assert len(calls) == 2                       # 首轮 + 1 次重试，不再无限重试
+    out_text = capsys.readouterr().out
+    assert "翻译缺口" in out_text
+    assert "重试后仍缺" in out_text              # 重试后仍缺 → 放弃
+    assert "覆盖率" in out_text                  # 最终仍缺 → 覆盖率 warning
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    for h in ("A", "B"):
+        it = next(x for x in d["market_news"] if x["headline"] == h)
+        assert "headline_cn" not in it           # 未翻译 → R1 留空，不崩
+
+
+def test_complete_first_call_no_retry(tmp_path, monkeypatch, capsys):
+    """AI 首轮即全覆盖 → 不触发任何重试（零额外调用）。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    items = [_item("A"), _item("B")]
+    monkeypatch.setattr(fn, "http_get", _market_get(items, {}))
+
+    calls = []
+    def fake_translate(headlines):
+        calls.append(list(headlines))
+        return {h: {"headline_cn": "译:" + h, "sentiment": "neutral"} for h in headlines}
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+
+    assert len(calls) == 1                       # 首轮即全覆盖 → 不重试
+    out_text = capsys.readouterr().out
+    assert "翻译缺口" not in out_text            # 未触发重试
+    assert "覆盖率" not in out_text              # 全覆盖 → 无覆盖率 warning
