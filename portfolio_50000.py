@@ -444,8 +444,14 @@ def mark_to_market(positions, prices: dict[str, dict], today: str):
         upl = money(Decimal(shares) * (px - entry))
         upl_pct = ((px - entry) / entry * Decimal("100")).quantize(CENT, rounding=ROUND_HALF_UP) if entry > 0 else ZERO
         p["Current_Price"] = str(money(px))
-        p["Extended_Price"] = "" if ext is None else str(money(ext))
-        p["Extended_Time"] = "" if not ext_time else str(ext_time)
+        # 扩展时段价：本次取不到（限流/无成交）时保留上一快照值，绝不擦掉已拿到的好值。
+        old_ext = str(p.get("Extended_Price") or "").strip()
+        if ext is None and old_ext:
+            p["Extended_Price"] = old_ext
+            p["Extended_Time"] = str(p.get("Extended_Time") or "").strip()
+        else:
+            p["Extended_Price"] = "" if ext is None else str(money(ext))
+            p["Extended_Time"] = "" if not ext_time else str(ext_time)
         p["Market_Value"] = str(mv)
         p["Unrealized_PnL"] = str(upl)
         p["Unrealized_PnL_Pct"] = str(upl_pct)

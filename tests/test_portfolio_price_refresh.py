@@ -138,3 +138,46 @@ def test_frontend_render_ext_guard():
     script = Path(__file__).resolve().parent / "_ext_render_check.cjs"
     res = subprocess.run(["node", str(script)], capture_output=True, text=True)
     assert res.returncode == 0, res.stdout + "\n" + res.stderr
+
+
+# ------------------------------------------------------------------ 扩展价不擦除
+def test_extended_new_value_overwrites_old(fx):
+    d = fx
+    mk(d, [core("AMD", TODAY, "630.48")])
+    mock_fetch({"AMD": {"current": Decimal("630.48"), "extended": Decimal("640.00"),
+                        "extended_time": "10-09 18:30 ET"}})
+    pfmod.run(d, offline=False)
+    # 第二次拿到更新的扩展价 → 应覆盖旧值
+    mock_fetch({"AMD": {"current": Decimal("700.00"), "extended": Decimal("701.50"),
+                        "extended_time": "10-09 19:05 ET"}})
+    pfmod.run(d, offline=False, price_only=True)
+    amd = [p for p in read(d, "portfolio_50000_positions.csv") if p["Ticker"] == "AMD"][0]
+    assert Decimal(amd["Extended_Price"]) == Decimal("701.50"), amd["Extended_Price"]
+    assert amd["Extended_Time"] == "10-09 19:05 ET"
+
+
+def test_extended_missing_preserves_old_value(fx):
+    d = fx
+    mk(d, [core("AMD", TODAY, "630.48")])
+    mock_fetch({"AMD": {"current": Decimal("630.48"), "extended": Decimal("640.00"),
+                        "extended_time": "10-09 18:30 ET"}})
+    pfmod.run(d, offline=False)
+    # 第二次扩展价取不到（限流 / 无成交）→ 必须保留旧值，不能擦成空
+    mock_fetch({"AMD": {"current": Decimal("700.00"), "extended": None, "extended_time": ""}})
+    pfmod.run(d, offline=False, price_only=True)
+    amd = [p for p in read(d, "portfolio_50000_positions.csv") if p["Ticker"] == "AMD"][0]
+    assert Decimal(amd["Extended_Price"]) == Decimal("640.00"), amd["Extended_Price"]
+    assert amd["Extended_Time"] == "10-09 18:30 ET"
+    # 同时确认 Current_Price 不被擦空（三级回退：新值 → 上一快照 → 成本价）
+    assert Decimal(amd["Current_Price"]) == Decimal("700.00"), amd["Current_Price"]
+
+
+def test_extended_missing_and_no_old_stays_empty(fx):
+    d = fx
+    mk(d, [core("AMD", TODAY, "630.48")])
+    # 从未取到过扩展价 → 留空，绝不伪造
+    mock_fetch({"AMD": {"current": Decimal("630.48"), "extended": None, "extended_time": ""}})
+    pfmod.run(d, offline=False)
+    amd = [p for p in read(d, "portfolio_50000_positions.csv") if p["Ticker"] == "AMD"][0]
+    assert amd["Extended_Price"] == ""
+    assert amd["Extended_Time"] == ""
