@@ -46,7 +46,7 @@ PRICE_HISTORY_COLUMNS = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volu
 # 输出 schema 版本（STEP 3-A）：写入 quant_factor_price_history.csv 的 schema_version 列。
 # 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
 # 本次新增 Open/High/Low/Volume 四列 → 主版本号 v1 → v2。
-SCHEMA_VERSION = "phase2b.v2"
+SCHEMA_VERSION = "phase2b.v1"
 
 SNAPSHOT_PATH = "quant_factor_snapshot.csv"
 
