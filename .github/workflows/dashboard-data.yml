@@ -151,7 +151,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # 只提交正式 Dashboard 数据文件。绝不 git add . / git add -A，
           # 也不提交已停止维护的旧前端 us-market-terminal/（导出层默认已不再产生该副本）。
-          git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv portfolio_50000_transactions.csv
+          git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
+          if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
           if git diff --cached --quiet; then
             echo "数据无变化，跳过提交"
             exit 0
@@ -184,7 +185,8 @@ jobs:
             # （工作区改动保留），再只 add 本 workflow 允许提交的文件，从根源上杜绝
             # 无关删除被带入 commit。
             git reset HEAD
-            git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv portfolio_50000_transactions.csv
+            git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
+          if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
             # 提交范围守卫（与首次提交等价）：任何非允许路径立即失败，绝不把无关删除带入 main
             STAGED="$(git diff --cached --name-only)"
             if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
