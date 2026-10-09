@@ -360,3 +360,57 @@ def test_news_row_rationale_render(tmp_path):
     result = _json.loads(proc.stdout.strip().splitlines()[-1])
     assert result["withRationale"] is True     # rationale 非空 → 渲染该行
     assert result["withoutRationale"] is False  # rationale 为空 → 不渲染该行
+
+
+# ------------------------------------------------------------------ 13-14. 缓存完整性：缺 rationale 触发重译
+def test_cache_entry_without_rationale_triggers_retranslate(tmp_path, monkeypatch):
+    """旧缓存（无 rationale 键）→ 视为未命中 → 该 headline 被重译补全。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(fn, "http_get", _market_get([_item("M1")], {}))
+
+    h = "M1"
+    # 旧缓存：只有 headline_cn / sentiment，没有 rationale 键
+    cache = {fn._headline_hash(h): {"headline_cn": "译:M1", "sentiment": "neutral"}}
+    (tmp_path / "c.json").write_text(json.dumps(cache), encoding="utf-8")
+
+    called = []
+    def fake_translate(headlines):
+        called.append(list(headlines))
+        return {hh: {"headline_cn": "译:M1", "sentiment": "neutral",
+                     "rationale": "重译补全理由"} for hh in headlines}
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+    # 关键断言：M1 被纳入重译请求（即视为未命中）
+    assert h in [hh for batch in called for hh in batch]
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    assert d["market_news"][0]["headline_cn"] == "译:M1"
+    assert d["market_news"][0]["rationale"] == "重译补全理由"   # rationale 已补全
+
+
+def test_cache_entry_with_rationale_empty_string_is_complete(tmp_path, monkeypatch):
+    """新缓存（含 rationale 键，值为空串）→ 视为完整 → 不重译。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(fn, "http_get", _market_get([_item("M1")], {}))
+
+    h = "M1"
+    # 新缓存：含 rationale 键（空串是合法的「AI 判定超长归一化」结果）
+    cache = {fn._headline_hash(h): {"headline_cn": "译:M1", "sentiment": "neutral",
+                                    "rationale": ""}}
+    (tmp_path / "c.json").write_text(json.dumps(cache), encoding="utf-8")
+
+    called = []
+    def fake_translate(headlines):
+        called.append(list(headlines))
+        return {hh: {"headline_cn": "译:M1", "sentiment": "neutral",
+                     "rationale": "X"} for hh in headlines}
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+    # 关键断言：M1 未被重译（缓存完整）
+    assert called == [] or h not in [hh for batch in called for hh in batch]
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    assert d["market_news"][0]["headline_cn"] == "译:M1"
+    assert "rationale" not in d["market_news"][0]   # 空串 rationale 不注入

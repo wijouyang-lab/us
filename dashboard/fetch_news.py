@@ -199,6 +199,20 @@ def save_translation_cache(cache: dict, path: Path) -> None:
         pass
 
 
+def _cache_complete(tr) -> bool:
+    """判断缓存条目是否已"完整"——含 headline_cn 且含 rationale 键。
+
+    旧缓存条目（rationale 增强前生成）只有 headline_cn/sentiment，缺 rationale 键
+    → 视为不完整 → run() 会重译以补全 rationale。
+    新缓存条目（含 rationale 键，值允许为空串）视为完整 → 不重译。
+    """
+    return (
+        isinstance(tr, dict)
+        and bool(tr.get("headline_cn"))
+        and ("rationale" in tr)
+    )
+
+
 def collect_translation_targets(market_news: list, ticker_news: dict,
                                 position_tickers: list[str]) -> list[dict]:
     """翻译范围：市场 top N + 每只持仓 top N（按 headline 去重）。"""
@@ -404,8 +418,10 @@ def run(api_key: str, tickers: list[str], include_market: bool,
 
     cache = load_translation_cache(cache_path)
     targets = collect_translation_targets(market_news, ticker_news, position_tickers)
+    # 仅当缓存条目完整（含 headline_cn 且含 rationale 键）才视为命中；
+    # 旧缓存缺 rationale 键 → 视为未命中 → 重译以补全 rationale。
     missing = [t["headline"] for t in targets
-               if _headline_hash(t["headline"]) not in cache]
+               if not _cache_complete(cache.get(_headline_hash(t["headline"])))]
     if missing:
         try:
             translated = translate_fn(missing) or {}
