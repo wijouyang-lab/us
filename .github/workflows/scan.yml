@@ -43,6 +43,7 @@ jobs:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
           CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
+          ENABLE_TARGET_FILE: "1"
         run: python scan.py
 
       # Quant Research 价格历史层：扫描成功后，为 Factor Snapshot 的历史 ticker
