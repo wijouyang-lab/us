@@ -396,9 +396,9 @@ def test_cache_entry_with_rationale_empty_string_is_complete(tmp_path, monkeypat
     monkeypatch.setattr(fn, "http_get", _market_get([_item("M1")], {}))
 
     h = "M1"
-    # 新缓存：含 rationale 键（空串是合法的「AI 判定超长归一化」结果）
+    # 新缓存：含 rationale 键（空串是合法的「AI 判定超长归一化」结果）+ market_relevant 键
     cache = {fn._headline_hash(h): {"headline_cn": "译:M1", "sentiment": "neutral",
-                                    "rationale": ""}}
+                                    "rationale": "", "market_relevant": True}}
     (tmp_path / "c.json").write_text(json.dumps(cache), encoding="utf-8")
 
     called = []
@@ -493,3 +493,121 @@ def test_complete_first_call_no_retry(tmp_path, monkeypatch, capsys):
     out_text = capsys.readouterr().out
     assert "翻译缺口" not in out_text            # 未触发重试
     assert "覆盖率" not in out_text              # 全覆盖 → 无覆盖率 warning
+
+
+# ------------------------------------------------------------------ 16. market_relevant 归一化
+def test_norm_market_relevant():
+    assert fn._norm_market_relevant(True) is True
+    assert fn._norm_market_relevant(False) is False
+    assert fn._norm_market_relevant("false") is False
+    assert fn._norm_market_relevant("FALSE ") is False
+    assert fn._norm_market_relevant("no") is False
+    assert fn._norm_market_relevant("0") is False
+    # 缺失 / 格式错 / 非否定值 → 保守返回 True（不误删）
+    assert fn._norm_market_relevant(None) is True
+    assert fn._norm_market_relevant("") is True
+    assert fn._norm_market_relevant("true") is True
+    assert fn._norm_market_relevant("yes") is True
+    assert fn._norm_market_relevant(123) is True
+
+
+# ------------------------------------------------------------------ 17. AI 返回 market_relevant=false → 正确解析
+def test_translate_headlines_market_relevant_false():
+    out_json = json.dumps([
+        {"headline": "Two men deny spying for Iran at embassy",
+         "headline_cn": "两名男子否认替伊朗监视使馆", "sentiment": "neutral",
+         "rationale": "司法个案无市场影响", "market_relevant": False},
+    ])
+    res = fn.translate_headlines(
+        ["Two men deny spying for Iran at embassy"], client=_fake_client_with(out_json))
+    item = res["Two men deny spying for Iran at embassy"]
+    assert item["headline_cn"] == "两名男子否认替伊朗监视使馆"
+    assert item["sentiment"] == "neutral"
+    assert item["market_relevant"] is False          # 正确解析 false
+
+
+# ------------------------------------------------------------------ 18. AI 缺 market_relevant → 归一化为 True
+def test_translate_headlines_missing_market_relevant():
+    out_json = json.dumps([
+        {"headline": "Fed signals rate cut", "headline_cn": "美联储释放降息信号",
+         "sentiment": "bullish", "rationale": "降息预期升温利好股市"},
+    ])
+    res = fn.translate_headlines(
+        ["Fed signals rate cut"], client=_fake_client_with(out_json))
+    item = res["Fed signals rate cut"]
+    assert item["headline_cn"] == "美联储释放降息信号"
+    assert item["sentiment"] == "bullish"
+    assert item["market_relevant"] is True          # 缺字段 → 保守 True
+
+
+# ------------------------------------------------------------------ 19. 旧缓存（无 market_relevant 键）→ 判为不完整 → 触发重译
+def test_cache_entry_without_market_relevant_triggers_retranslate(tmp_path, monkeypatch):
+    """旧缓存（含 headline_cn/sentiment/rationale，但无 market_relevant 键）
+    → _cache_complete 视为未命中 → 该 headline 被重译以补全 market_relevant。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(fn, "http_get", _market_get([_item("M1")], {}))
+
+    h = "M1"
+    # 旧缓存：有 headline_cn / sentiment / rationale，但缺 market_relevant 键
+    cache = {fn._headline_hash(h): {"headline_cn": "译:M1", "sentiment": "neutral",
+                                    "rationale": "旧理由"}}
+    (tmp_path / "c.json").write_text(json.dumps(cache), encoding="utf-8")
+
+    called = []
+    def fake_translate(headlines):
+        called.append(list(headlines))
+        return {hh: {"headline_cn": "译:M1", "sentiment": "neutral",
+                     "rationale": "新理由", "market_relevant": True} for hh in headlines}
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+    # 关键断言：M1 被纳入重译请求（即视为未命中）
+    assert h in [hh for batch in called for hh in batch]
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    assert d["market_news"][0]["headline_cn"] == "译:M1"
+    assert d["market_news"][0]["market_relevant"] is True   # market_relevant 已补全
+
+
+def test_cache_entry_with_market_relevant_is_complete(tmp_path, monkeypatch):
+    """新缓存（含 market_relevant 键）→ 视为完整 → 不重译。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(fn, "http_get", _market_get([_item("M1")], {}))
+
+    h = "M1"
+    cache = {fn._headline_hash(h): {"headline_cn": "译:M1", "sentiment": "neutral",
+                                    "rationale": "", "market_relevant": False}}
+    (tmp_path / "c.json").write_text(json.dumps(cache), encoding="utf-8")
+
+    called = []
+    def fake_translate(headlines):
+        called.append(list(headlines))
+        return {hh: {"headline_cn": "译:M1", "sentiment": "neutral",
+                     "rationale": "X", "market_relevant": True} for hh in headlines}
+
+    fn.run("dummy", [], True, out_path=tmp_path / "o.json",
+           position_tickers=[], translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+    assert called == [] or h not in [hh for batch in called for hh in batch]  # 未重译
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    assert d["market_news"][0]["market_relevant"] is False   # 命中缓存原值 False
+
+
+def test_market_relevant_injected_into_news_data(tmp_path, monkeypatch):
+    """端到端：含 market_relevant 的翻译应落到 news_data.json 相应条目。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    monkeypatch.setattr(fn, "http_get", _market_get([_item("Fed signals rate cut")], {}))
+
+    def fake_translate(headlines):
+        return {h: {"headline_cn": "美联储释放降息信号", "sentiment": "bullish",
+                    "rationale": "降息预期升温利好股市", "market_relevant": True}
+                for h in headlines}
+
+    out = tmp_path / "o.json"
+    fn.run("dummy", [], True, out_path=out, position_tickers=[],
+           translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+    d = json.loads(out.read_text(encoding="utf-8"))
+    m = d["market_news"][0]
+    assert m["headline_cn"] == "美联储释放降息信号"
+    assert m["market_relevant"] is True

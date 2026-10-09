@@ -20,7 +20,8 @@
 {
   "schema_version": "news.v1",
   "generated_at": "2026-10-08T...Z",
-  "market_news": [ {"headline","source","url","datetime","summary"} ],
+  "market_news": [ {"headline","source","url","datetime","summary",
+                    "headline_cn","sentiment","rationale","market_relevant"} ],
   "ticker_news": { "ADSK": [...], "ANET": [...] },
   "error": null
 }
@@ -200,16 +201,17 @@ def save_translation_cache(cache: dict, path: Path) -> None:
 
 
 def _cache_complete(tr) -> bool:
-    """判断缓存条目是否已"完整"——含 headline_cn 且含 rationale 键。
+    """判断缓存条目是否已"完整"——含 headline_cn、rationale 键、market_relevant 键。
 
-    旧缓存条目（rationale 增强前生成）只有 headline_cn/sentiment，缺 rationale 键
-    → 视为不完整 → run() 会重译以补全 rationale。
-    新缓存条目（含 rationale 键，值允许为空串）视为完整 → 不重译。
+    旧缓存条目（rationale / market_relevant 增强前生成）缺对应键
+    → 视为不完整 → run() 会重译以补全。
+    新缓存条目（含这些键，值允许为空串 / 布尔）视为完整 → 不重译。
     """
     return (
         isinstance(tr, dict)
         and bool(tr.get("headline_cn"))
         and ("rationale" in tr)
+        and ("market_relevant" in tr)
     )
 
 
@@ -248,6 +250,20 @@ def _norm_rationale(s) -> str:
     return s
 
 
+def _norm_market_relevant(v) -> bool:
+    """新闻市场相关度：缺失/格式错 → True（保守，不误删）。
+
+    - 已是布尔 → 原样返回；
+    - 字符串 "false"/"no"/"0"（不区分大小写、忽略空白）→ False；
+    - 其余（含 None、缺字段、True、"yes" 等）→ True。
+    """
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, str):
+        return v.strip().lower() not in ("false", "no", "0")
+    return True
+
+
 def _build_translation_prompt(headlines: list[str]) -> str:
     numbered = "\n".join(f"{i + 1}. {h}" for i, h in enumerate(headlines))
     return (
@@ -257,9 +273,15 @@ def _build_translation_prompt(headlines: list[str]) -> str:
         "3) 用 rationale 字段给出『为什么是利好/利空/中性』的一句中文简评：\n"
         "   - 必须 ≤30 字，说明因果，不要重复标题；\n"
         "   - 中性也要给理由（如『信息未超出市场预期』）。\n"
+        "4) 判断该新闻是否对美股市场有直接或间接影响（market_relevant，布尔）：\n"
+        "   - 直接影响（利率/CPI/财报/板块事件）→ true；\n"
+        "   - 间接影响（地缘政治推高油价、航空成本）→ true；\n"
+        "   - 无市场影响（纯司法个案、花边新闻、人事任免无业务影响）→ false；\n"
+        "   - 拿不准 → true（保守，宁可多显示）。\n"
         "必须严格只输出一个 JSON 数组，每项形如：\n"
         '{"headline": "<原英文标题，逐字保留>", "headline_cn": "<中文翻译>", '
-        '"sentiment": "bullish|bearish|neutral", "rationale": "<一句话理由，≤30字>"}\n'
+        '"sentiment": "bullish|bearish|neutral", "rationale": "<一句话理由，≤30字>", '
+        '"market_relevant": true}\n'
         "不要输出任何解释、Markdown 代码块或额外文字。\n\n"
         f"新闻标题列表：\n{numbered}"
     )
@@ -340,6 +362,7 @@ def translate_headlines(headlines: list[str], client=None, model: str | None = N
                 "headline_cn": it.get("headline_cn") or None,
                 "sentiment": _norm_sentiment(it.get("sentiment")),
                 "rationale": _norm_rationale(it.get("rationale")),
+                "market_relevant": _norm_market_relevant(it.get("market_relevant")),
             }
         return out
     except Exception:
@@ -361,6 +384,7 @@ def apply_translations(items: list, cache: dict) -> list:
             rat = tr.get("rationale")
             if rat:
                 it["rationale"] = rat
+            it["market_relevant"] = tr.get("market_relevant")
     return items
 
 
@@ -451,6 +475,7 @@ def run(api_key: str, tickers: list[str], include_market: bool,
                     "headline_cn": tr.get("headline_cn"),
                     "sentiment": _norm_sentiment(tr.get("sentiment")),
                     "rationale": tr.get("rationale"),
+                    "market_relevant": _norm_market_relevant(tr.get("market_relevant")),
                 }
         if translated:
             save_translation_cache(cache, cache_path)
