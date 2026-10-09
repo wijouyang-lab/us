@@ -116,17 +116,25 @@ class ClawSocketClient:
         return False
 
     def _runtime_fallback_candidates(self, requested: str) -> List[str]:
-        """真实 POST 阶段路由失败时的运行时备用模型。
+        """真实 POST 阶段路由失败时的运行时备用模型（按序尝试）。
 
-        V15.3 约定：唯一允许的运行时备用是 claude-fable-5-1，
-        可用 CLAUDE_RUNTIME_FALLBACK_MODEL 覆盖（兼容 CLAUDE_FALLBACK_MODEL）。
-        不返回 requested 自身，避免自兜底。
+        链路：claude-fable-5-1 → gpt-6-astra（最后一道兜底）。
+        设计意图：主模型（如 claude-opus-5-5）在网关 POST 阶段被拒时，
+        先退到 Fable；若 Fable 也失败，再退回久经生产验证的 gpt-6-astra，
+        避免「两级都失败 = 整批输出为空」。
+
+        协议自动切换：_request() 里对每个 fallback 单独调用 _protocol_plan(fallback)，
+        因此 claude-* 走 Anthropic /v1/messages、gpt-* 走 OpenAI /v1/chat/completions，
+        无需在本方法里额外处理。
+
+        可用 CLAUDE_RUNTIME_FALLBACK_MODEL 覆盖（兼容 CLAUDE_FALLBACK_MODEL），
+        配置的模型排在 defaults 之前。不返回 requested 自身，避免自兜底。
         """
         configured = self._clean_model_id(
             os.environ.get("CLAUDE_RUNTIME_FALLBACK_MODEL", "")
             or os.environ.get("CLAUDE_FALLBACK_MODEL", "")
         )
-        defaults = ["claude-fable-5-1"]
+        defaults = ["claude-fable-5-1", "gpt-6-astra"]
         requested_clean = self._clean_model_id(requested)
         out = []
         for m in ([configured] if configured else []) + defaults:

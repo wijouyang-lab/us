@@ -44,9 +44,12 @@ def test_route_error_detection():
 # ------------------------------------------------------------------ 2. 备用候选
 def test_runtime_fallback_candidates_default():
     c = _client()
+    # 兜底链：fable 优先，gpt-6-astra 最后一道
+    assert c._runtime_fallback_candidates("claude-opus-5-5") == ["claude-fable-5-1", "gpt-6-astra"]
+    # requested 自身不参与自兜底（gpt-6-astra 被剔除，只剩 fable）
     assert c._runtime_fallback_candidates("gpt-6-astra") == ["claude-fable-5-1"]
-    # requested 自身不参与自兜底
-    assert c._runtime_fallback_candidates("claude-fable-5-1") == []
+    # requested 自身不参与自兜底（fable-5-1 被剔除，只剩 gpt）
+    assert c._runtime_fallback_candidates("claude-fable-5-1") == ["gpt-6-astra"]
 
 
 def test_runtime_fallback_candidates_env_override(monkeypatch):
@@ -111,7 +114,51 @@ def test_route_error_all_fail_raises_runtime_error(monkeypatch):
     assert any(m == "claude-fable-5-1" for m, _ in tried)
 
 
-# ------------------------------------------------------------------ 5. 非路由错误不触发跨模型降级
+# ------------------------------------------------------------------ 5. 兜底链第二级：fable 也失败 → 退回 gpt-6-astra
+def test_runtime_fallback_chain_second_level_gpt(monkeypatch):
+    """主模型(claude-opus-5-5)路由失败 + fable 也失败 → 应继续退回 gpt-6-astra 并成功。
+
+    同时验证跨协议切换：claude-* 走 anthropic，gpt-* 走 chat/responses。
+    """
+    c = _client()
+    monkeypatch.delenv("CLAWSOCKET_LIVE_MODEL", raising=False)
+    monkeypatch.delenv("CLAWSOCKET_LIVE_PROTOCOL", raising=False)
+
+    tried = []
+
+    def fake_request_one(model, protocol, messages, max_tokens, reasoning_effort, kwargs):
+        tried.append((model, protocol))
+        if model == "gpt-6-astra":
+            # OpenAI chat 协议返回体
+            return {"choices": [{"message": {"content": "OK-GPT"}}]}
+        raise RuntimeError("HTTP 400: Request is missing a model")
+
+    monkeypatch.setattr(c, "_request_one", fake_request_one)
+
+    data = c._request("claude-opus-5-5", [{"role": "user", "content": "hi"}], max_tokens=16)
+
+    assert isinstance(data, dict)
+    assert c._extract_text(data) == "OK-GPT"
+    assert c.last_model_fallback is True
+    assert c.last_model_used == "gpt-6-astra"
+    assert c.last_protocol == "chat"
+    # 兜底链顺序：主模型 → fable（anthropic 协议）→ gpt-6-astra（chat 协议）
+    assert any(m == "claude-opus-5-5" for m, _ in tried)
+    assert any((m, p) == ("claude-fable-5-1", "anthropic") for m, p in tried)
+    assert any((m, p) == ("gpt-6-astra", "chat") for m, p in tried)
+    # gpt 的尝试必须排在 fable 之后
+    i_fable = next(i for i, (m, _) in enumerate(tried) if m == "claude-fable-5-1")
+    i_gpt = next(i for i, (m, _) in enumerate(tried) if m == "gpt-6-astra")
+    assert i_gpt > i_fable
+
+
+def test_runtime_fallback_defaults_include_gpt_last():
+    c = _client()
+    got = c._runtime_fallback_candidates("claude-opus-5-5")
+    assert got == ["claude-fable-5-1", "gpt-6-astra"]
+
+
+# ------------------------------------------------------------------ 6. 非路由错误不触发跨模型降级
 def test_non_route_error_does_not_use_runtime_fallback(monkeypatch):
     """429 限流属于网关抖动，不是模型路由问题 → 不应尝试 claude 备用。"""
     c = _client()
