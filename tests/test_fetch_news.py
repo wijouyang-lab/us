@@ -11,14 +11,21 @@
   8. 缓存命中 → 跳过翻译调用
   9. sentiment 归一化解析
   10. 翻译失败不阻断（headline_cn 留空）
+  11. rationale：AI 含 → 正确解析；缺 → 留空不影响翻译
+  12. 前端 newsRow：rationale 非空渲染该行、为空不渲染
 """
 import json
+import subprocess
+import sys
 from datetime import date
+from pathlib import Path
 
 import pytest
 import urllib.error
 
 import dashboard.fetch_news as fn
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 # ------------------------------------------------------------------ helpers
@@ -252,3 +259,104 @@ def test_translation_failure_does_not_block(tmp_path, monkeypatch):
     assert d["market_news"][0]["headline"] == "M1"          # 抓取不受影响
     assert "headline_cn" not in d["market_news"][0]          # R1 留空
     assert "sentiment" not in d["market_news"][0]
+
+
+# ------------------------------------------------------------------ 11. rationale 解析（AI 含 / 缺）
+def _fake_client_with(out_json):
+    class FakeResp:
+        def __init__(self, text):
+            self.output_text = text
+
+    class FakeMessages:
+        def create(self, **kw):
+            return FakeResp(out_json)
+
+    class FakeClient:
+        def __init__(self):
+            self.api_key = "dummy"
+            self.messages = FakeMessages()
+
+    return FakeClient()
+
+
+def test_translate_headlines_with_rationale():
+    out_json = json.dumps([
+        {"headline": "Fed signals rate cut", "headline_cn": "美联储释放降息信号",
+         "sentiment": "bullish", "rationale": "降息预期升温 → 流动性宽松利好股市"},
+    ])
+    res = fn.translate_headlines(["Fed signals rate cut"], client=_fake_client_with(out_json))
+    item = res["Fed signals rate cut"]
+    assert item["headline_cn"] == "美联储释放降息信号"
+    assert item["sentiment"] == "bullish"
+    assert item["rationale"] == "降息预期升温 → 流动性宽松利好股市"   # 正确解析
+
+
+def test_translate_headlines_missing_rationale():
+    out_json = json.dumps([
+        {"headline": "Fed signals rate cut", "headline_cn": "美联储释放降息信号",
+         "sentiment": "bullish"},
+    ])
+    res = fn.translate_headlines(["Fed signals rate cut"], client=_fake_client_with(out_json))
+    item = res["Fed signals rate cut"]
+    assert item["headline_cn"] == "美联储释放降息信号"   # 翻译不受影响
+    assert item["sentiment"] == "bullish"
+    assert item["rationale"] == ""                        # 缺 rationale → 留空
+
+
+def test_norm_rationale_truncates_overlong():
+    long = "x" * 31
+    assert fn._norm_rationale(long) == ""        # 超 30 字 → 留空（格式错）
+    assert fn._norm_rationale("正常理由") == "正常理由"
+    assert fn._norm_rationale(None) == ""
+    assert fn._norm_rationale("") == ""
+
+
+def test_rationale_injected_into_news_data(tmp_path, monkeypatch):
+    """端到端：含 rationale 的翻译应落到 news_data.json 相应条目。"""
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    fake = _market_get([_item("Fed signals rate cut")], {})
+    monkeypatch.setattr(fn, "http_get", fake)
+
+    def fake_translate(headlines):
+        return {h: {"headline_cn": "美联储释放降息信号", "sentiment": "bullish",
+                    "rationale": "降息预期升温 → 流动性宽松利好股市"} for h in headlines}
+
+    out = tmp_path / "o.json"
+    fn.run("dummy", [], True, out_path=out, position_tickers=[],
+           translate_fn=fake_translate, cache_path=tmp_path / "c.json")
+    d = json.loads(out.read_text(encoding="utf-8"))
+    m = d["market_news"][0]
+    assert m["headline_cn"] == "美联储释放降息信号"
+    assert m["rationale"] == "降息预期升温 → 流动性宽松利好股市"
+
+
+# ------------------------------------------------------------------ 12. 前端 newsRow 渲染（node 验证，不改动磁盘 app.js）
+def test_news_row_rationale_render(tmp_path):
+    app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    # 内存中：移除 boot() 启动、并暴露 newsRow 供断言（磁盘文件不变）
+    transformed = app_js.replace("\n  boot();\n", "\n  globalThis.__newsRow = newsRow;\n")
+    assert "globalThis.__newsRow" in transformed, "未能注入 newsRow 暴露钩子"
+    harness = (
+        "globalThis.document={addEventListener(){},querySelectorAll(){return[]},"
+        "getElementById(){return null}};\n"
+        "globalThis.window={addEventListener(){}};\n"
+        "globalThis.fetch=()=>Promise.resolve({json:()=>Promise.resolve({})});\n"
+        "globalThis.$=()=>({innerHTML:'',textContent:'',map:()=>[],forEach:()=>[]});\n"
+    )
+    tail = (
+        "\nconst r1 = globalThis.__newsRow({headline:'Fed signals cut',"
+        "headline_cn:'美联储释放降息信号',sentiment:'bullish',"
+        "rationale:'降息预期升温 → 流动性宽松利好股市'});\n"
+        "const r2 = globalThis.__newsRow({headline:'X',headline_cn:'Y',sentiment:'neutral'});\n"
+        "console.log(JSON.stringify({withRationale: r1.includes('news-rationale'),"
+        "withoutRationale: r2.includes('news-rationale')}));\n"
+    )
+    js = tmp_path / "harness.js"
+    js.write_text(harness + transformed + tail, encoding="utf-8")
+    proc = subprocess.run(["node", str(js)], capture_output=True, text=True, timeout=60)
+    assert proc.returncode == 0, f"node 执行失败：{proc.stderr}"
+    import json as _json
+    result = _json.loads(proc.stdout.strip().splitlines()[-1])
+    assert result["withRationale"] is True     # rationale 非空 → 渲染该行
+    assert result["withoutRationale"] is False  # rationale 为空 → 不渲染该行

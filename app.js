@@ -803,8 +803,11 @@
     var head = '<a class="news-h" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' +
       esc(title) + '</a>';
     var icon = sentIcon(x.sentiment);
+    /* rationale：1 句中文简评（≤30字）；为空则不渲染该行 */
+    var rationale = x.rationale
+      ? '<div class="news-rationale">' + esc(x.rationale) + '</div>' : '';
     return '<div class="news-item">' + icon + '<span class="news-t">' + esc(t) + '</span>' + head +
-      '<span class="news-src">' + src + '</span></div>';
+      '<span class="news-src">' + src + '</span>' + rationale + '</div>';
   }
 
   function sentIcon(s) {

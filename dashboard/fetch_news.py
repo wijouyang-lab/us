@@ -180,7 +180,7 @@ def _headline_hash(headline: str) -> str:
 
 
 def load_translation_cache(path: Path) -> dict:
-    """读翻译缓存 {hash: {headline_cn, sentiment}}；缺失/损坏 → {}。"""
+    """读翻译缓存 {hash: {headline_cn, sentiment, rationale}}；缺失/损坏 → {}。"""
     if not path.exists():
         return {}
     try:
@@ -226,15 +226,26 @@ def _norm_sentiment(s) -> str:
     return s if s in _VALID_SENTIMENT else "neutral"
 
 
+def _norm_rationale(s) -> str:
+    """新闻情绪理由：1 句中文、≤30 字；缺失或超长（格式错）一律留空，不影响其它字段。"""
+    s = str(s or "").strip()
+    if not s or len(s) > 30:
+        return ""
+    return s
+
+
 def _build_translation_prompt(headlines: list[str]) -> str:
     numbered = "\n".join(f"{i + 1}. {h}" for i, h in enumerate(headlines))
     return (
         "你是专业的金融新闻翻译与情绪标注助手。对以下每条英文新闻标题：\n"
         "1) 翻译成简洁、准确的中文（headline_cn）；\n"
-        "2) 判断该新闻对该标的/市场整体是利好、利空还是中性（sentiment）。\n"
+        "2) 判断该新闻对该标的/市场整体是利好、利空还是中性（sentiment）；\n"
+        "3) 用 rationale 字段给出『为什么是利好/利空/中性』的一句中文简评：\n"
+        "   - 必须 ≤30 字，说明因果，不要重复标题；\n"
+        "   - 中性也要给理由（如『信息未超出市场预期』）。\n"
         "必须严格只输出一个 JSON 数组，每项形如：\n"
         '{"headline": "<原英文标题，逐字保留>", "headline_cn": "<中文翻译>", '
-        '"sentiment": "bullish|bearish|neutral"}\n'
+        '"sentiment": "bullish|bearish|neutral", "rationale": "<一句话理由，≤30字>"}\n'
         "不要输出任何解释、Markdown 代码块或额外文字。\n\n"
         f"新闻标题列表：\n{numbered}"
     )
@@ -276,7 +287,7 @@ def _extract_json_array(text):
 
 
 def translate_headlines(headlines: list[str], client=None, model: str | None = None) -> dict:
-    """批量翻译（一次 API 调用），返回 {headline: {headline_cn, sentiment}}。
+    """批量翻译（一次 API 调用），返回 {headline: {headline_cn, sentiment, rationale}}。
 
     - client 未传 → 惰性复用 ClawSocketClient（claude-opus-5-5）。
     - 任何失败（缺 key / 网络 / 解析）→ 返回 {}（R1：翻译失败不阻断抓取）。
@@ -314,6 +325,7 @@ def translate_headlines(headlines: list[str], client=None, model: str | None = N
             out[str(h)] = {
                 "headline_cn": it.get("headline_cn") or None,
                 "sentiment": _norm_sentiment(it.get("sentiment")),
+                "rationale": _norm_rationale(it.get("rationale")),
             }
         return out
     except Exception:
@@ -332,6 +344,9 @@ def apply_translations(items: list, cache: dict) -> list:
         if isinstance(tr, dict):
             it["headline_cn"] = tr.get("headline_cn")
             it["sentiment"] = _norm_sentiment(tr.get("sentiment"))
+            rat = tr.get("rationale")
+            if rat:
+                it["rationale"] = rat
     return items
 
 
@@ -402,6 +417,7 @@ def run(api_key: str, tickers: list[str], include_market: bool,
                 cache[_headline_hash(h)] = {
                     "headline_cn": tr.get("headline_cn"),
                     "sentiment": _norm_sentiment(tr.get("sentiment")),
+                    "rationale": tr.get("rationale"),
                 }
         if translated:
             save_translation_cache(cache, cache_path)

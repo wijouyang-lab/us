@@ -221,7 +221,8 @@ button{font-family:inherit}
 /* ---- 金融新闻板块 ---- */
 .news-block{margin-top:4px}
 .news-sub{font-size:11.5px;color:var(--accent);font-weight:700;margin:8px 0 5px;letter-spacing:.2px}
-.news-item{display:flex;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px dashed var(--border-2);font-size:12px;line-height:1.5}
+.news-item{display:flex;gap:8px;align-items:baseline;padding:4px 0;border-bottom:1px dashed var(--border-2);font-size:12px;line-height:1.5;flex-wrap:wrap}
+.news-rationale{flex-basis:100%;font-size:11px;color:#888;margin-top:2px;line-height:1.4;padding-left:18px}
 .news-item:last-child{border-bottom:none}
 .news-t{flex:0 0 auto;color:var(--text-3);font-variant-numeric:tabular-nums;font-size:11px}
 .news-h{color:var(--text-1);text-decoration:none;flex:1 1 auto;min-width:0}
