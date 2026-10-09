@@ -1,0 +1,87 @@
+name: _temp-list-models
+
+# 临时诊断 workflow：只用来在 CI 里调一次 ClawSocket /v1/models，列出真实可用模型。
+# 验证完立即删除，不留在仓库。
+#
+# 触发说明：本沙箱无 gh 鉴权、无法手动 workflow_dispatch，因此额外挂一个
+# push+paths 过滤 —— 只在“本文件本身发生变化”时跑一次（创建时跑；删除时文件已不在，不会跑）。
+# 这样既不依赖手动触发，也不会被 dashboard-data 的每 15 分钟提交反复触发。
+on:
+  push:
+    paths:
+      - '.github/workflows/_temp-list-models.yml'
+  workflow_dispatch:
+
+jobs:
+  list:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: List ClawSocket models
+        env:
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+        run: |
+          set +e
+          echo "base_url = ${CLAWSOCKET_BASE_URL}"
+          echo "api_key 已注入: $([ -n "$CLAWSOCKET_API_KEY" ] && echo yes || echo NO)"
+
+          # 路径归一化：base 可能带 /v1，避免拼出 /v1/v1/models
+          URL=$(python3 -c "
+          import os
+          b = (os.environ.get('CLAWSOCKET_BASE_URL') or '').strip().rstrip('/')
+          if b.lower().endswith('/v1'):
+              b = b[:-3]
+          print(b + '/v1/models')
+          ")
+          echo "requesting: ${URL}"
+
+          RAW=$(curl -s -m 60 -w "\n__HTTP_CODE__=%{http_code}" \
+            -H "Authorization: Bearer ${CLAWSOCKET_API_KEY}" \
+            -H "Accept: application/json" \
+            "${URL}")
+
+          echo "----- RAW RESPONSE (head 4000 chars) -----"
+          printf '%s' "$RAW" | head -c 4000
+          echo ""
+          echo "----- END RAW -----"
+
+          export RAW_RESPONSE="$RAW"
+          python3 - <<'PY'
+          import json, os
+
+          raw = os.environ.get("RAW_RESPONSE", "")
+          body = "\n".join(l for l in raw.splitlines() if "__HTTP_CODE__=" not in l)
+          ids = []
+          err = ""
+          try:
+              d = json.loads(body)
+              rows = d.get("data") if isinstance(d, dict) else None
+              if rows is None and isinstance(d, list):
+                  rows = d
+              ids = [str(m.get("id")) for m in (rows or [])
+                     if isinstance(m, dict) and m.get("id")]
+          except Exception as e:
+              err = f"<PARSE_ERROR: {e}>"
+
+          def ann(level, title, msg):
+              # 单行 annotation（GitHub 会把 ::notice/::warning/::error 抽到 run 页摘要）
+              safe = str(msg).replace("%", "%25").replace("\r", "").replace("\n", " ")
+              print(f"::{level} title={title}::{safe}")
+
+          if err:
+              ann("error", "MODEL_LIST_PARSE_FAILED", err)
+          else:
+              ann("notice", "MODEL_COUNT", f"total={len(ids)}")
+              # 关键：opus 5.5 是否存在
+              target = "claude-opus-5-5"
+              hit = target if target in ids else ""
+              near = sorted([i for i in ids if "opus" in i.lower()])
+              if hit:
+                  ann("warning", "OPUS55_CHECK", f"FOUND: {target}")
+              else:
+                  ann("warning", "OPUS55_CHECK",
+                      f"MISSING: {target} ; opus-family={near or 'NONE'} ; claude-family={sorted([i for i in ids if i.lower().startswith('claude')])}")
+              # 全量清单（可能被截断，但尽力输出）
+              ann("notice", "ALL_MODELS", " ; ".join(ids))
+          PY
