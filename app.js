@@ -444,6 +444,38 @@
       '</article>';
   }
 
+  /* 盘中机械止损横幅：扫描 pf.transactions 中 Reason="Intraday Stop Loss" 的 SELL，
+     在持仓区下方展示"🔴 盘中止损"徽章 + 触发价 + 原因（AI 回填后原因会变）。
+     注：dashboard_export.build_portfolio 只保留 Status=OPEN 的持仓，CLOSED 仓位不进 positions[]，
+     故盘中止损经由交易流水展示，而非 positionCard。 */
+  function renderIntradayStops(pf) {
+    if (typeof txEl === 'undefined' || !txEl || !txEl.parentNode) return;
+    var ts = pf.transactions || [];
+    var stops = ts.filter(function (t) {
+      return String(t.action || '').toUpperCase() === 'SELL' &&
+        String(t.reason || '') === 'Intraday Stop Loss';
+    });
+    if (window.__intradayStopEl && window.__intradayStopEl.parentNode) {
+      window.__intradayStopEl.parentNode.removeChild(window.__intradayStopEl);
+      window.__intradayStopEl = null;
+    }
+    if (!stops.length) return;
+    var rows = stops.map(function (t) {
+      var reasonTxt = t.reason || 'Intraday Stop Loss';
+      return '<div class="is-row">' +
+        '<span class="is-tk">' + esc(t.ticker || NA) + '</span>' +
+        '<span class="is-px">$' + nv(t.price, 2) + '</span>' +
+        '<span class="is-tag">🔴 盘中止损</span>' +
+        '<span class="is-reason">' + esc(reasonTxt) + '</span>' +
+        '</div>';
+    }).join('');
+    var banner = document.createElement('div');
+    banner.className = 'intraday-stop';
+    banner.innerHTML = '<div class="is-hd">⚠️ 盘中机械止损（今日触发）</div>' + rows;
+    txEl.parentNode.insertBefore(banner, txEl);
+    window.__intradayStopEl = banner;
+  }
+
   /* AI 目标持仓板块：读 DATA.portfolio.target（dashboard_export 在 ENABLE_TARGET_FILE=1 时注入）。
      target 为 null/空 → 静默隐藏；否则渲染 Ticker + Action + 数量 + 参考价 + 理由（点击展开）。 */
   function renderTarget() {
@@ -524,6 +556,9 @@
         return positionCard(p, s);
       }).join('');
     }
+
+    // --- 盘中机械止损横幅（从交易流水展示）---
+    renderIntradayStops(pf);
 
     // --- 最近交易 ---
     var ts = pf.transactions || [];

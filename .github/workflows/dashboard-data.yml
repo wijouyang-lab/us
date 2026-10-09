@@ -83,6 +83,12 @@ jobs:
         run: python portfolio_50000.py --price-only --data-dir .
         continue-on-error: true
 
+      - name: Intraday stop loss check
+        # 盘中机械止损：挂 dashboard-data 每 15 分钟，仅在 09:30-16:00 ET 触发，
+        # 实时价≤止损线则机械卖出（执行价=触发实时价）。continue-on-error：失败不拖垮整体刷新。
+        run: python portfolio_50000.py --intraday-stop --data-dir .
+        continue-on-error: true
+
       - name: Run dashboard_export.py
         id: export
         run: |
@@ -142,7 +148,7 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # 只提交正式 Dashboard 数据文件。绝不 git add . / git add -A，
           # 也不提交已停止维护的旧前端 us-market-terminal/（导出层默认已不再产生该副本）。
-          git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
+          git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv portfolio_50000_transactions.csv
           if git diff --cached --quiet; then
             echo "数据无变化，跳过提交"
             exit 0
@@ -151,7 +157,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi
@@ -175,10 +181,10 @@ jobs:
             # （工作区改动保留），再只 add 本 workflow 允许提交的文件，从根源上杜绝
             # 无关删除被带入 commit。
             git reset HEAD
-            git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
+            git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv portfolio_50000_transactions.csv
             # 提交范围守卫（与首次提交等价）：任何非允许路径立即失败，绝不把无关删除带入 main
             STAGED="$(git diff --cached --name-only)"
-            if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv)$'; then
+            if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
               echo "::error::重试阶段检测到非预期文件进入提交范围，已中止提交"
               echo "$STAGED"
               exit 1
