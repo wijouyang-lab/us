@@ -37,6 +37,8 @@ jobs:
       - name: 抓取 Finnhub 新闻
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: python dashboard/fetch_news.py
 
       - name: 提交新闻数据

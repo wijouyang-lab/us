@@ -7,5 +7,8 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# 新闻翻译缓存（headline hash → 翻译/sentiment，本地加速用，不入库）
+dashboard/data/news_translation_cache.json
+
 # 系统
 .DS_Store

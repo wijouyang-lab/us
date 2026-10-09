@@ -28,8 +28,11 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import hashlib
 import json
 import os
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -53,6 +56,14 @@ MAX_RETRIES = 3              # 429 重试上限
 COMPANY_LOOKBACK_DAYS = 7    # 个股新闻回溯窗口
 
 NEWS_FIELDS = ("headline", "source", "url", "datetime", "summary")
+
+# ------------------------------------------------------------------ 翻译
+TRANSLATE_MODEL = os.environ.get("GPT_MODEL") or "gpt-6-astra"
+MARKET_TRANSLATE_TOP = 10    # 市场新闻翻译条数（top N）
+TICKER_TRANSLATE_TOP = 5     # 每只持仓翻译条数（top N）
+TRANSLATION_CACHE_PATH = DATA_DIR / "news_translation_cache.json"
+POSITIONS_PATH_DEFAULT = REPO_ROOT_DEFAULT / "portfolio_50000_positions.csv"
+_VALID_SENTIMENT = {"bullish", "bearish", "neutral"}
 
 
 class FinnhubError(Exception):
@@ -139,6 +150,191 @@ def collect_universe(universe_path: Path) -> list[str]:
         return []
 
 
+def read_position_tickers(path: Path) -> list[str]:
+    """读 portfolio_50000_positions.csv，返回 Status=OPEN 的 ticker（大写、去重、去空）。
+
+    文件不存在 / 解析失败 → 返回 []（不抛异常，翻译层与前端按空仓处理）。
+    """
+    if not path.exists():
+        return []
+    try:
+        with open(path, encoding="utf-8-sig", newline="") as f:
+            rows = list(csv.DictReader(f))
+    except Exception:
+        return []
+    out: list[str] = []
+    for r in rows:
+        if not isinstance(r, dict):
+            continue
+        if str(r.get("Status") or "").strip().upper() != "OPEN":
+            continue
+        tk = str(r.get("Ticker") or "").strip().upper()
+        if tk and tk not in out:
+            out.append(tk)
+    return out
+
+
+def _headline_hash(headline: str) -> str:
+    """headline 的稳定短哈希（缓存 key）。"""
+    return hashlib.sha256(str(headline).encode("utf-8")).hexdigest()[:16]
+
+
+def load_translation_cache(path: Path) -> dict:
+    """读翻译缓存 {hash: {headline_cn, sentiment}}；缺失/损坏 → {}。"""
+    if not path.exists():
+        return {}
+    try:
+        d = json.loads(path.read_text(encoding="utf-8"))
+        return d if isinstance(d, dict) else {}
+    except Exception:
+        return {}
+
+
+def save_translation_cache(cache: dict, path: Path) -> None:
+    """写翻译缓存，失败静默（缓存是加速项，不阻断主流程）。"""
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception:
+        pass
+
+
+def collect_translation_targets(market_news: list, ticker_news: dict,
+                                position_tickers: list[str]) -> list[dict]:
+    """翻译范围：市场 top N + 每只持仓 top N（按 headline 去重）。"""
+    targets: list[dict] = []
+    seen: set = set()
+
+    def add(item):
+        if not isinstance(item, dict):
+            return
+        h = item.get("headline")
+        if h and h not in seen:
+            seen.add(h)
+            targets.append(item)
+
+    for item in (market_news or [])[:MARKET_TRANSLATE_TOP]:
+        add(item)
+    for tk in position_tickers:
+        for item in (ticker_news or {}).get(tk, [])[:TICKER_TRANSLATE_TOP]:
+            add(item)
+    return targets
+
+
+def _norm_sentiment(s) -> str:
+    s = str(s or "").strip().lower()
+    return s if s in _VALID_SENTIMENT else "neutral"
+
+
+def _build_translation_prompt(headlines: list[str]) -> str:
+    numbered = "\n".join(f"{i + 1}. {h}" for i, h in enumerate(headlines))
+    return (
+        "你是专业的金融新闻翻译与情绪标注助手。对以下每条英文新闻标题：\n"
+        "1) 翻译成简洁、准确的中文（headline_cn）；\n"
+        "2) 判断该新闻对该标的/市场整体是利好、利空还是中性（sentiment）。\n"
+        "必须严格只输出一个 JSON 数组，每项形如：\n"
+        '{"headline": "<原英文标题，逐字保留>", "headline_cn": "<中文翻译>", '
+        '"sentiment": "bullish|bearish|neutral"}\n'
+        "不要输出任何解释、Markdown 代码块或额外文字。\n\n"
+        f"新闻标题列表：\n{numbered}"
+    )
+
+
+def _extract_json_array(text):
+    """从模型输出中提取第一个完整 JSON 数组（容忍 ```json / 前后解释 / 字符串内括号）。"""
+    raw = str(text or "").strip()
+    if not raw:
+        return None
+    start = raw.find("[")
+    if start < 0:
+        return None
+    depth = 0
+    in_str = False
+    esc = False
+    for i in range(start, len(raw)):
+        ch = raw[i]
+        if in_str:
+            if esc:
+                esc = False
+            elif ch == "\\":
+                esc = True
+            elif ch == '"':
+                in_str = False
+            continue
+        if ch == '"':
+            in_str = True
+        elif ch == "[":
+            depth += 1
+        elif ch == "]":
+            depth -= 1
+            if depth == 0:
+                try:
+                    return json.loads(raw[start:i + 1])
+                except Exception:
+                    return None
+    return None
+
+
+def translate_headlines(headlines: list[str], client=None, model: str | None = None) -> dict:
+    """批量翻译（一次 API 调用），返回 {headline: {headline_cn, sentiment}}。
+
+    - client 未传 → 惰性复用 ClawSocketClient（gpt-6-astra）。
+    - 任何失败（缺 key / 网络 / 解析）→ 返回 {}（R1：翻译失败不阻断抓取）。
+    """
+    headlines = [h for h in headlines if h]
+    if not headlines:
+        return {}
+    if client is None:
+        try:
+            sys.path.insert(0, str(REPO_ROOT_DEFAULT))
+            from clawsocket_compat import ClawSocketClient
+            client = ClawSocketClient()
+        except Exception:
+            return {}
+    if not getattr(client, "api_key", None):
+        return {}
+    try:
+        prompt = _build_translation_prompt(headlines)
+        resp = client.messages.create(
+            model=model or TRANSLATE_MODEL,
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        text = getattr(resp, "output_text", "") or ""
+        arr = _extract_json_array(text)
+        if not isinstance(arr, list):
+            return {}
+        out: dict = {}
+        for it in arr:
+            if not isinstance(it, dict):
+                continue
+            h = it.get("headline")
+            if not h:
+                continue
+            out[str(h)] = {
+                "headline_cn": it.get("headline_cn") or None,
+                "sentiment": _norm_sentiment(it.get("sentiment")),
+            }
+        return out
+    except Exception:
+        return {}
+
+
+def apply_translations(items: list, cache: dict) -> list:
+    """把缓存中的 headline_cn / sentiment 注入到新闻条目（就地更新）。"""
+    for it in items:
+        if not isinstance(it, dict):
+            continue
+        h = it.get("headline")
+        if not h:
+            continue
+        tr = cache.get(_headline_hash(h))
+        if isinstance(tr, dict):
+            it["headline_cn"] = tr.get("headline_cn")
+            it["sentiment"] = _norm_sentiment(tr.get("sentiment"))
+    return items
+
+
 def build_output(market_news: list, ticker_news: dict, error: str | None) -> dict:
     return {
         "schema_version": SCHEMA_VERSION,
@@ -155,8 +351,14 @@ def write_output(payload: dict, out_path: Path) -> None:
 
 
 def run(api_key: str, tickers: list[str], include_market: bool,
-        out_path: Path = OUT_PATH_DEFAULT) -> dict:
-    """抓取主流程。返回最终 payload（也负责落盘，遵循 R1）。"""
+        out_path: Path = OUT_PATH_DEFAULT, position_tickers: list[str] | None = None,
+        translate_fn=None, cache_path: Path | None = None) -> dict:
+    """抓取主流程。返回最终 payload（也负责落盘，遵循 R1）。
+
+    - position_tickers：当前持仓 ticker 列表（决定翻译范围 + 前端过滤）；None 时从 CSV 读。
+    - translate_fn：headlines -> {headline: {headline_cn, sentiment}}；None 时用 ClawSocket 批量翻译。
+    - cache_path：翻译缓存文件路径；None 时用默认路径。
+    """
     market_news: list = []
     ticker_news: dict = {}
     errors: list[str] = []
@@ -177,6 +379,36 @@ def run(api_key: str, tickers: list[str], include_market: bool,
         time.sleep(SLEEP_BETWEEN)
 
     error = "; ".join(errors) if errors else None
+
+    # ---- 翻译 + sentiment（R1：失败不阻断，headline_cn 留空由前端回退英文）----
+    if position_tickers is None:
+        position_tickers = read_position_tickers(POSITIONS_PATH_DEFAULT)
+    if translate_fn is None:
+        translate_fn = translate_headlines
+    cache_path = cache_path or TRANSLATION_CACHE_PATH
+
+    cache = load_translation_cache(cache_path)
+    targets = collect_translation_targets(market_news, ticker_news, position_tickers)
+    missing = [t["headline"] for t in targets
+               if _headline_hash(t["headline"]) not in cache]
+    if missing:
+        try:
+            translated = translate_fn(missing) or {}
+        except Exception:
+            translated = {}
+        for h in missing:
+            tr = translated.get(h)
+            if isinstance(tr, dict):
+                cache[_headline_hash(h)] = {
+                    "headline_cn": tr.get("headline_cn"),
+                    "sentiment": _norm_sentiment(tr.get("sentiment")),
+                }
+        if translated:
+            save_translation_cache(cache, cache_path)
+    apply_translations(market_news, cache)
+    for sym in ticker_news:
+        apply_translations(ticker_news[sym], cache)
+
     payload = build_output(market_news, ticker_news, error)
 
     # R1：成功抓取但零内容（无市场 + 无个股，且非错误态）→ 不落文件
@@ -200,8 +432,13 @@ def main(argv=None, out_path: Path | None = None,
     ap.add_argument("--out", default=None, help="输出路径（测试用，默认 dashboard/data/news_data.json）")
     ap.add_argument("--data-dir", default=None,
                     help="仓库根目录（用于推导股票池 universe，默认脚本上级目录）")
+    ap.add_argument("--positions", default=None,
+                    help="持仓 CSV 路径（默认 <仓库根>/portfolio_50000_positions.csv）")
+    ap.add_argument("--cache", default=None,
+                    help="翻译缓存路径（默认 dashboard/data/news_translation_cache.json）")
     args = ap.parse_args(argv)
 
+    root = Path(args.data_dir) if args.data_dir else REPO_ROOT_DEFAULT
     out = Path(args.out) if args.out else (out_path or OUT_PATH_DEFAULT)
     key = os.environ.get("FINNHUB_API_KEY")
 
@@ -214,12 +451,17 @@ def main(argv=None, out_path: Path | None = None,
     if args.tickers:
         tickers = [t.strip().upper() for t in args.tickers.split(",") if t.strip()]
     else:
-        root = Path(args.data_dir) if args.data_dir else REPO_ROOT_DEFAULT
         upath = universe_path or (root / "dashboard" / "data" / "dashboard_data.json")
         tickers = collect_universe(upath)
         print(f"📋 从股票池推导 {len(tickers)} 只 ticker（{upath.name}）")
 
-    run(key, tickers, include_market=not args.no_market, out_path=out)
+    positions_path = Path(args.positions) if args.positions else \
+        (root / "portfolio_50000_positions.csv")
+    position_tickers = read_position_tickers(positions_path)
+    cache_path = Path(args.cache) if args.cache else TRANSLATION_CACHE_PATH
+
+    run(key, tickers, include_market=not args.no_market, out_path=out,
+        position_tickers=position_tickers, cache_path=cache_path)
     return 0
 
 

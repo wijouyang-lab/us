@@ -2721,7 +2721,30 @@ def build_news(data_dir: Path) -> dict | None:
         return None
     if not isinstance(d, dict):
         return None
+    # 注入当前持仓 ticker 列表（前端「持仓联动」只显示这些，空仓显示「暂无持仓」）
+    d["positions"] = _open_position_tickers(data_dir)
     return d
+
+
+def _open_position_tickers(data_dir: Path) -> list[str]:
+    """读 portfolio_50000_positions.csv，返回 Status=OPEN 的 ticker（大写去重去空）。
+
+    文件缺失 / 解析异常 → 返回 []（按空仓处理，不报错）。
+    """
+    pos_p = data_dir / "portfolio_50000_positions.csv"
+    if not pos_p.exists():
+        return []
+    out: list[str] = []
+    try:
+        for r in read_csv_rows(pos_p):
+            if clean_text(r.get("Status")).upper() != "OPEN":
+                continue
+            tk = clean_text(r.get("Ticker")).upper()
+            if tk and tk not in out:
+                out.append(tk)
+    except Exception:
+        return []
+    return out
 
 
 def main(argv=None):

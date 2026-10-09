@@ -674,25 +674,26 @@
       return;
     }
 
-    /* 市场流 */
+    /* 市场流：top 10 */
     var m = news.market_news || [];
     if (!m.length) {
       mEl.innerHTML = '<div class="na">今日暂无市场新闻</div>';
     } else {
       mEl.innerHTML = '<div class="news-sub">📡 市场动态</div>' +
-        m.slice(0, 12).map(newsRow).join('');
+        m.slice(0, 10).map(newsRow).join('');
     }
 
-    /* 个股联动（高亮当前股票池中的 ticker） */
+    /* 持仓联动：只显示当前持仓 ticker（news.positions），空仓显示「暂无持仓」 */
     var tk = news.ticker_news || {};
-    var keys = Object.keys(tk);
-    if (!keys.length) {
-      tEl.innerHTML = '<div class="na">暂无个股新闻</div>';
+    var positions = news.positions || [];
+    if (!positions.length) {
+      tEl.innerHTML = '<div class="news-sub">🏷️ 持仓 / 推荐联动</div>' +
+        '<div class="na">暂无持仓</div>';
       return;
     }
     var pool = {};
     STOCKS.forEach(function (s) { if (s.ticker) pool[String(s.ticker).toUpperCase()] = (s.bucket || ''); });
-    tEl.innerHTML = '<div class="news-sub">🏷️ 持仓 / 推荐联动</div>' + keys.map(function (sym) {
+    tEl.innerHTML = '<div class="news-sub">🏷️ 持仓 / 推荐联动</div>' + positions.map(function (sym) {
       var list = tk[sym] || [];
       var on = pool[sym] ? ' news-ticker-on' : '';
       var body = list.length
@@ -709,10 +710,19 @@
     var t = fmtBJ(x.datetime);
     var src = x.source ? ' · ' + esc(x.source) : '';
     var url = x.url || '';
-    var head = '<a class="news-h" href="' + esc(url) + '" target="_blank" rel="noopener">' +
-      esc(x.headline) + '</a>';
-    return '<div class="news-item"><span class="news-t">' + esc(t) + '</span>' + head +
+    var title = x.headline_cn || x.headline;
+    var head = '<a class="news-h" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' +
+      esc(title) + '</a>';
+    var icon = sentIcon(x.sentiment);
+    return '<div class="news-item">' + icon + '<span class="news-t">' + esc(t) + '</span>' + head +
       '<span class="news-src">' + src + '</span></div>';
+  }
+
+  function sentIcon(s) {
+    if (s === 'bullish') return '<span class="news-sent" title="利好">🟢</span>';
+    if (s === 'bearish') return '<span class="news-sent" title="利空">🔴</span>';
+    if (s === 'neutral') return '<span class="news-sent" title="中性">⚪</span>';
+    return '';
   }
 
   function fmtBJ(ts) {

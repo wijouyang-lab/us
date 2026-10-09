@@ -7,7 +7,12 @@
   4. mock 429 → 重试逻辑生效（最多 3 次后成功）
   5. R1：无数据 → 不写文件
   6. 不硬编码绝对日期（from/to 动态派生）
+  7. 翻译批量调用（mock client，一次 API 调用多条）
+  8. 缓存命中 → 跳过翻译调用
+  9. sentiment 归一化解析
+  10. 翻译失败不阻断（headline_cn 留空）
 """
+import json
 from datetime import date
 
 import pytest
@@ -152,3 +157,98 @@ def test_dates_derived_dynamically(tmp_path, monkeypatch):
     week_ago = (date.today() - __import__("datetime").timedelta(days=7)).strftime("%Y-%m-%d")
     assert "from=" + week_ago in captured["url"]
     assert "to=" + today in captured["url"]
+
+
+# ------------------------------------------------------------------ 7. 翻译批量调用（mock client）
+def test_translate_headlines_batch_mock():
+    out_json = json.dumps([
+        {"headline": "Apple beats earnings", "headline_cn": "苹果业绩超预期", "sentiment": "bullish"},
+        {"headline": "Fed raises rates", "headline_cn": "美联储加息", "sentiment": "bearish"},
+    ])
+
+    class FakeResp:
+        def __init__(self, text):
+            self.output_text = text
+
+    class FakeMessages:
+        def __init__(self):
+            self.recorded = None
+
+        def create(self, **kw):
+            self.recorded = kw
+            return FakeResp(out_json)
+
+    class FakeClient:
+        def __init__(self):
+            self.api_key = "dummy"
+            self.messages = FakeMessages()
+
+    c = FakeClient()
+    res = fn.translate_headlines(["Apple beats earnings", "Fed raises rates"], client=c)
+    assert res["Apple beats earnings"]["headline_cn"] == "苹果业绩超预期"
+    assert res["Apple beats earnings"]["sentiment"] == "bullish"
+    assert res["Fed raises rates"]["sentiment"] == "bearish"
+    # 批量：一次 API 调用、单条 user message、包含全部标题
+    assert len(c.messages.recorded["messages"]) == 1
+    assert c.messages.recorded["model"] == "gpt-6-astra"
+    content = c.messages.recorded["messages"][0]["content"]
+    assert "Apple beats earnings" in content and "Fed raises rates" in content
+
+
+# ------------------------------------------------------------------ 8. 缓存命中 → 跳过翻译
+def test_cache_hit_skips_translate(tmp_path, monkeypatch):
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    fake = _market_get([_item("M1")], {"A": [_item("CA")]})
+    monkeypatch.setattr(fn, "http_get", fake)
+
+    cache = tmp_path / "cache.json"
+    calls = {"n": 0}
+
+    def fake_translate(headlines):
+        calls["n"] += 1
+        return {h: {"headline_cn": "译:" + h, "sentiment": "neutral"} for h in headlines}
+
+    # 第一次：无缓存 → 调用一次
+    fn.run("dummy", ["A"], True, out_path=tmp_path / "o1.json",
+           position_tickers=["A"], translate_fn=fake_translate, cache_path=cache)
+    assert calls["n"] == 1
+
+    # 第二次：全部命中缓存 → 不再调用
+    calls["n"] = 0
+    fn.run("dummy", ["A"], True, out_path=tmp_path / "o2.json",
+           position_tickers=["A"], translate_fn=fake_translate, cache_path=cache)
+    assert calls["n"] == 0
+
+    d = json.loads((tmp_path / "o2.json").read_text(encoding="utf-8"))
+    assert d["market_news"][0]["headline_cn"] == "译:M1"
+    assert d["market_news"][0]["sentiment"] == "neutral"
+    assert d["ticker_news"]["A"][0]["headline_cn"] == "译:CA"
+
+
+# ------------------------------------------------------------------ 9. sentiment 归一化解析
+def test_sentiment_normalization():
+    assert fn._norm_sentiment("BULLISH") == "bullish"
+    assert fn._norm_sentiment("Bearish") == "bearish"
+    assert fn._norm_sentiment("neutral") == "neutral"
+    assert fn._norm_sentiment("weird") == "neutral"
+    assert fn._norm_sentiment(None) == "neutral"
+    assert fn._norm_sentiment("") == "neutral"
+
+
+# ------------------------------------------------------------------ 10. 翻译失败不阻断
+def test_translation_failure_does_not_block(tmp_path, monkeypatch):
+    monkeypatch.setenv("FINNHUB_API_KEY", "dummy")
+    monkeypatch.setattr(fn.time, "sleep", lambda *a, **k: None)
+    fake = _market_get([_item("M1")], {"A": [_item("CA")]})
+    monkeypatch.setattr(fn, "http_get", fake)
+
+    def boom(headlines):
+        raise RuntimeError("translation down")
+
+    fn.run("dummy", ["A"], True, out_path=tmp_path / "o.json",
+           position_tickers=["A"], translate_fn=boom, cache_path=tmp_path / "c.json")
+    d = json.loads((tmp_path / "o.json").read_text(encoding="utf-8"))
+    assert d["market_news"][0]["headline"] == "M1"          # 抓取不受影响
+    assert "headline_cn" not in d["market_news"][0]          # R1 留空
+    assert "sentiment" not in d["market_news"][0]
