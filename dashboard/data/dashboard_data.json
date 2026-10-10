@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-10T01:46:09Z",
+  "generated_at": "2026-10-10T02:01:24Z",
   "stocks": [
     {
       "ticker": "ADSK",
@@ -30,7 +30,7 @@
       "technical_score": 20.0,
       "risk_liquidity_score": 18.0,
       "rsi": 60.1,
-      "atr_pct": 3.12,
+      "atr_pct": 3.16,
       "stop_loss": 228.0,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 30.5143,
@@ -1519,7 +1519,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:43Z",
+        "computed_at": "2026-10-10T02:00:42Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1553,7 +1553,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 64.2,
-      "atr_pct": 0.3,
+      "atr_pct": 0.32,
       "stop_loss": 14.63,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -3042,7 +3042,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:43Z",
+        "computed_at": "2026-10-10T02:00:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3076,7 +3076,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 62.7,
-      "atr_pct": 2.04,
+      "atr_pct": 2.14,
       "stop_loss": 252.12,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -4565,7 +4565,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:43Z",
+        "computed_at": "2026-10-10T02:00:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4599,7 +4599,7 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 18.0,
       "rsi": 67.3,
-      "atr_pct": 2.79,
+      "atr_pct": 2.92,
       "stop_loss": 209.36,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 68.1632,
@@ -6088,7 +6088,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:44Z",
+        "computed_at": "2026-10-10T02:00:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7611,7 +7611,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:44Z",
+        "computed_at": "2026-10-10T02:00:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9134,7 +9134,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:44Z",
+        "computed_at": "2026-10-10T02:00:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10657,7 +10657,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:45Z",
+        "computed_at": "2026-10-10T02:00:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12180,7 +12180,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:45Z",
+        "computed_at": "2026-10-10T02:00:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13703,7 +13703,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:45Z",
+        "computed_at": "2026-10-10T02:00:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13737,7 +13737,7 @@
       "technical_score": 15.0,
       "risk_liquidity_score": 18.0,
       "rsi": 58.7,
-      "atr_pct": 2.3,
+      "atr_pct": 2.29,
       "stop_loss": 268.15,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 23.4801,
@@ -15226,7 +15226,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:46Z",
+        "computed_at": "2026-10-10T02:00:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16749,7 +16749,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:46Z",
+        "computed_at": "2026-10-10T02:00:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18272,7 +18272,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:46Z",
+        "computed_at": "2026-10-10T02:00:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19795,7 +19795,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:46Z",
+        "computed_at": "2026-10-10T02:00:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21318,7 +21318,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:47Z",
+        "computed_at": "2026-10-10T02:00:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22841,7 +22841,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:47Z",
+        "computed_at": "2026-10-10T02:00:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24364,7 +24364,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:47Z",
+        "computed_at": "2026-10-10T02:00:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24398,7 +24398,7 @@
       "technical_score": 18.0,
       "risk_liquidity_score": 18.0,
       "rsi": 61.6,
-      "atr_pct": 2.72,
+      "atr_pct": 2.77,
       "stop_loss": 108.62,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 23.52,
@@ -25887,7 +25887,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:48Z",
+        "computed_at": "2026-10-10T02:00:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27410,7 +27410,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:48Z",
+        "computed_at": "2026-10-10T02:00:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28933,7 +28933,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:48Z",
+        "computed_at": "2026-10-10T02:00:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28967,7 +28967,7 @@
       "technical_score": 13.0,
       "risk_liquidity_score": 18.0,
       "rsi": 59.8,
-      "atr_pct": 2.22,
+      "atr_pct": 2.3,
       "stop_loss": 144.05,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 11.5658,
@@ -30456,7 +30456,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:49Z",
+        "computed_at": "2026-10-10T02:00:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -31979,7 +31979,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:49Z",
+        "computed_at": "2026-10-10T02:00:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33502,7 +33502,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:49Z",
+        "computed_at": "2026-10-10T02:00:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35025,7 +35025,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:49Z",
+        "computed_at": "2026-10-10T02:00:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35059,7 +35059,7 @@
       "technical_score": 18.0,
       "risk_liquidity_score": 18.0,
       "rsi": 61.9,
-      "atr_pct": 2.74,
+      "atr_pct": 2.62,
       "stop_loss": 402.95,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 47.3383,
@@ -36548,7 +36548,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:49Z",
+        "computed_at": "2026-10-10T02:00:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38071,7 +38071,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:50Z",
+        "computed_at": "2026-10-10T02:00:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38105,7 +38105,7 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 18.0,
       "rsi": 53.2,
-      "atr_pct": 2.49,
+      "atr_pct": 2.56,
       "stop_loss": 59.57,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 33.1278,
@@ -39594,7 +39594,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:50Z",
+        "computed_at": "2026-10-10T02:00:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -41117,7 +41117,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:50Z",
+        "computed_at": "2026-10-10T02:00:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -42640,7 +42640,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:51Z",
+        "computed_at": "2026-10-10T02:00:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -42674,7 +42674,7 @@
       "technical_score": 18.0,
       "risk_liquidity_score": 18.0,
       "rsi": 79.9,
-      "atr_pct": 3.71,
+      "atr_pct": 3.8,
       "stop_loss": 449.44,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 16.1136,
@@ -44163,7 +44163,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:51Z",
+        "computed_at": "2026-10-10T02:00:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44197,7 +44197,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 62.1,
-      "atr_pct": 2.25,
+      "atr_pct": 2.38,
       "stop_loss": 513.87,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -45686,7 +45686,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:51Z",
+        "computed_at": "2026-10-10T02:00:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -47209,7 +47209,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:51Z",
+        "computed_at": "2026-10-10T02:00:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48732,7 +48732,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:52Z",
+        "computed_at": "2026-10-10T02:00:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -50255,7 +50255,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:52Z",
+        "computed_at": "2026-10-10T02:00:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51778,7 +51778,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:52Z",
+        "computed_at": "2026-10-10T02:00:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51812,7 +51812,7 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 18.0,
       "rsi": 73.9,
-      "atr_pct": 3.99,
+      "atr_pct": 4.18,
       "stop_loss": 490.01,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 85.2056,
@@ -53301,7 +53301,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:53Z",
+        "computed_at": "2026-10-10T02:01:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -54824,7 +54824,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:53Z",
+        "computed_at": "2026-10-10T02:01:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -56347,7 +56347,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:53Z",
+        "computed_at": "2026-10-10T02:01:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -57870,7 +57870,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:53Z",
+        "computed_at": "2026-10-10T02:01:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -59393,7 +59393,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:54Z",
+        "computed_at": "2026-10-10T02:01:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -60916,7 +60916,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:54Z",
+        "computed_at": "2026-10-10T02:01:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -62439,7 +62439,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:54Z",
+        "computed_at": "2026-10-10T02:01:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -63962,7 +63962,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:55Z",
+        "computed_at": "2026-10-10T02:01:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -63996,7 +63996,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 53.3,
-      "atr_pct": 1.86,
+      "atr_pct": 1.97,
       "stop_loss": 63.28,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -65485,7 +65485,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:55Z",
+        "computed_at": "2026-10-10T02:01:04Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -65519,7 +65519,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 65.1,
-      "atr_pct": 2.04,
+      "atr_pct": 2.1,
       "stop_loss": 163.44,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -67008,7 +67008,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:55Z",
+        "computed_at": "2026-10-10T02:01:05Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -68531,7 +68531,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-10T01:45:55Z",
+        "computed_at": "2026-10-10T02:01:05Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -68554,7 +68554,7 @@
         "change_1d": 0.8263,
         "change_5d": 0.934,
         "change_20d": -1.7468,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -68572,7 +68572,7 @@
         "change_1d": 0.5947,
         "change_5d": 1.1501,
         "change_20d": 2.0186,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -68590,7 +68590,7 @@
         "change_1d": 0.6356,
         "change_5d": 0.6447,
         "change_20d": 3.9233,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -68608,7 +68608,7 @@
         "change_1d": 0.0,
         "change_5d": -3.0699,
         "change_20d": -6.3131,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68626,7 +68626,7 @@
         "change_1d": 0.0,
         "change_5d": -0.6254,
         "change_20d": 5.407,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68644,7 +68644,7 @@
         "change_1d": -4.8418,
         "change_5d": -4.0781,
         "change_20d": 5.7389,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68662,7 +68662,7 @@
         "change_1d": 0.0,
         "change_5d": -0.6726,
         "change_20d": 4.8007,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68680,7 +68680,7 @@
         "change_1d": 0.0,
         "change_5d": -0.5329,
         "change_20d": 4.5947,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68698,7 +68698,7 @@
         "change_1d": 0.0,
         "change_5d": 0.2953,
         "change_20d": 3.1386,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68716,7 +68716,7 @@
         "change_1d": 0.0,
         "change_5d": 1.3935,
         "change_20d": -4.2777,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68734,7 +68734,7 @@
         "change_1d": 0.0,
         "change_5d": 1.8891,
         "change_20d": -5.3351,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68752,7 +68752,7 @@
         "change_1d": 0.0,
         "change_5d": 3.3734,
         "change_20d": 3.7329,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68770,7 +68770,7 @@
         "change_1d": 0.0,
         "change_5d": 0.6037,
         "change_20d": -8.3858,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68788,7 +68788,7 @@
         "change_1d": 0.0,
         "change_5d": 2.132,
         "change_20d": -0.1721,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68806,7 +68806,7 @@
         "change_1d": 0.0,
         "change_5d": 5.5684,
         "change_20d": 13.1756,
-        "updated_at": "2026-10-10T01:45:55Z",
+        "updated_at": "2026-10-10T02:01:05Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -68824,12 +68824,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-10T01:46:07Z"
+    "updated_at": "2026-10-10T02:01:21Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-09 21:46:09",
+    "as_of_us": "2026-10-09 22:01:24",
     "window_start": "2026-09-09",
     "core_closed_count": 4,
     "core_open_count": 23,
@@ -69677,13 +69677,13 @@
           "catalysts": "暂无已验证的新催化；已提供信息主要是机构增持和董事股票授予。",
           "risks": "油气公司盈利仍对能源价格和行业波动敏感；前瞻市盈率约9.69倍虽低，但RSI为51.6、乖离率为-1.21%，技术上未显示明确上行突破。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 45.880001068115234,
+        "pnl_5d": 8.21,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "BRK-B|2026-10-02|Observation",
@@ -69707,13 +69707,13 @@
           "catalysts": "新闻持续将Berkshire视为股息增长和价值投资相关标的，提供防御型关注度。",
           "risks": "前瞻市盈率约23.22倍，高于TTM市盈率约12.63倍，市场对未来盈利存在较高预期；RSI为46.3、乖离率为-0.85%，短线动能偏中性。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 515.6199951171875,
+        "pnl_5d": 3.1,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "CRH|2026-10-02|Observation",
@@ -69737,13 +69737,13 @@
           "catalysts": "暂无已验证的新催化；已有报道主要涉及分析机构目标价和预测。",
           "risks": "UBS下调目标价，另有报道显示12个月目标价被下调，构成预期压力；RSI为31.8、乖离率为-5.16%，技术走势偏弱。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 81.54000091552734,
+        "pnl_5d": -0.66,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "GEV|2026-10-02|Core_Dragon",
@@ -69800,13 +69800,13 @@
           "catalysts": "报道提及股票估值较低、股息增长以及Unilever交易上行空间。",
           "risks": "BNP Paribas Exane和TD Cowen均下调目标价，构成明确的市场预期压力；RSI为23.9、乖离率为-9.34%，虽处超卖区，但仍未形成反转确认。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 44.810001373291016,
+        "pnl_5d": 0.7,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "MNST|2026-10-02|Observation",
@@ -69830,13 +69830,13 @@
           "catalysts": "最新报道继续关注Monster的经营数据；公司与百事起诉印度食品监管机构的事件提供了明确事件观察点。",
           "risks": "印度能量饮料标签禁令相关诉讼带来监管和市场准入不确定性；前瞻市盈率约32.54倍，且RSI为40、乖离率为-1.74%，当前缺乏明显技术强势。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 43.63999938964844,
+        "pnl_5d": 3.0,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "P|2026-10-02|Observation",
@@ -69893,13 +69893,13 @@
           "risks": "RSI、KDJ和乖离率均处于高位，回撤风险显著；前瞻市盈率约26.32倍，且美10年期收益率5.279%对高久期成长股估值构成压力；若大客户项目递延，订单催化可能弱化。",
           "invalidation": "若收盘跌破MA20约409.49美元，且MACD转弱、KDJ同步下行，则本次上行结构失效；若已报道的新订单被取消或公司指引下修，订单驱动逻辑失效。"
         },
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 509.989990234375,
+        "pnl_5d": 2.44,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "5D"
       },
       {
         "event_id": "ALL|2026-09-30|Core_Dragon",
@@ -71875,9 +71875,9 @@
         "pnl_5d": -2.37,
         "price_10d": 310.75,
         "pnl_10d": -1.52,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 277.0400085449219,
+        "pnl_20d": -12.2,
+        "review_stage": "20D"
       },
       {
         "event_id": "INTU|2026-09-11|Observation",
@@ -71921,9 +71921,9 @@
         "pnl_5d": 8.19,
         "price_10d": 405.17999267578125,
         "pnl_10d": 11.45,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 423.9599914550781,
+        "pnl_20d": 16.61,
+        "review_stage": "20D"
       },
       {
         "event_id": "MPC|2026-09-11|Observation",
@@ -71944,9 +71944,9 @@
         "pnl_5d": 7.57,
         "price_10d": 393.5199890136719,
         "pnl_10d": -0.37,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 455.0299987792969,
+        "pnl_20d": 15.2,
+        "review_stage": "20D"
       },
       {
         "event_id": "PYPL|2026-09-11|Observation",
@@ -79098,22 +79098,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 38009019206,
+        "run_id": 38014636499,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-10T00:25:56Z",
-        "started_at": "2026-10-10T00:25:56Z",
-        "updated_at": "2026-10-10T00:31:04Z",
-        "head_sha": "df95acb60416",
-        "event": "workflow_dispatch",
-        "run_number": 131,
+        "created_at": "2026-10-10T01:49:09Z",
+        "started_at": "2026-10-10T01:49:09Z",
+        "updated_at": "2026-10-10T01:58:41Z",
+        "head_sha": "a4a0df7e0358",
+        "event": "schedule",
+        "run_number": 132,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38009019206"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38014636499"
       },
       "last_success": {
-        "run_id": 38009019206,
-        "completed_at": "2026-10-10T00:31:04Z",
-        "head_sha": "df95acb60416"
+        "run_id": 38014636499,
+        "completed_at": "2026-10-10T01:58:41Z",
+        "head_sha": "a4a0df7e0358"
       },
       "error": null
     },
@@ -79148,12 +79148,12 @@
     "max_open_positions": 4,
     "asof": "2026-10-09",
     "cash": 10438.8,
-    "stock_value": 40247.11,
-    "total_equity": 50685.91,
+    "stock_value": 40837.39,
+    "total_equity": 51276.19,
     "realized_pnl": 0.0,
-    "unrealized_pnl": 685.91,
-    "total_pnl": 685.91,
-    "return_pct": 1.37,
+    "unrealized_pnl": 1276.19,
+    "total_pnl": 1276.19,
+    "return_pct": 2.55,
     "open_positions": 4,
     "positions": [
       {
@@ -79296,9 +79296,9 @@
       },
       {
         "date": "2026-10-09",
-        "total_equity": 50685.91,
+        "total_equity": 51276.19,
         "cash": 10438.8,
-        "stock_value": 40247.11
+        "stock_value": 40837.39
       }
     ]
   },
@@ -91712,8 +91712,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-10T01:46:07Z",
-    "technical_updated_at": "2026-10-10T01:46:09Z",
+    "market_updated_at": "2026-10-10T02:01:21Z",
+    "technical_updated_at": "2026-10-10T02:01:24Z",
     "counts": {
       "core": 14,
       "observation": 31,
