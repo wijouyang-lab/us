@@ -38,8 +38,8 @@ from pathlib import Path
 # ------------------------------------------------------------------ 常量
 PORTFOLIO_ID = "US-50000-001"
 INITIAL_CAPITAL = Decimal("50000.00")
-UNIT_DOLLARS = Decimal("10000.00")          # 1 Unit 目标资金（固定值，v1 不复利）
-MAX_OPEN_POSITIONS = 4                      # 最多 4 个同时存在的 Long Stock Unit
+UNIT_DOLLARS = Decimal("10000.00")          # 1 Unit 回退基准（#4：评分缺失时仍用 1 Unit，向后兼容）
+MAX_OPEN_POSITIONS_DEPRECATED = 4           # 仅历史参考：#4 起不再作硬守卫（改为浮动 3-5 + 百分比仓位）
 UNIT_IDS = ["U001", "U002", "U003", "U004"]
 
 CORE_TAG = "Core_Dragon"
@@ -172,6 +172,53 @@ def _had_stop_today(transactions: list[dict], today: str) -> bool:
     )
 
 
+# ------------------------------------------------------------------ #4 浮动只数 + 百分比仓位
+def _stock_pct(positions: list[dict], transactions: list[dict]) -> Decimal:
+    """当前总股票市值 / 总资产（现金 + 股票）。期权由期权引擎另计，不在此口径。"""
+    cash = derive_cash(transactions)
+    stock = ZERO
+    for p in positions:
+        if str(p.get("Status", "")).upper() == "OPEN":
+            stock += dec(p.get("Market_Value")) or ZERO
+    total = cash + stock
+    return (stock / total) if total > 0 else ZERO
+
+
+def unit_dollars_for(rec: dict, equity: Decimal) -> Decimal:
+    """#4 按信号强度动态 Unit：评分越高单只可配越多；但缺评分时退化为固定 1 Unit（向后兼容）。
+
+    单只受 25% 上限钳制。rec 当前无 AI_Score 字段（评分链路未落地）→ 返回 UNIT_DOLLARS，
+    行为与 v1 完全一致（见 WEEKEND_IMPLEMENTATION_PLAN §4.7「未落地时退化为固定 1 Unit」）。
+    评分链路落地后：factor = clamp((score-60)/30 + 0.5, 0.5, 1.25)（60→0.5U, 90→1.25U, 100→1.25U）。
+    """
+    score = rec.get("AI_Score")
+    try:
+        score = float(score) if score is not None else None
+    except (TypeError, ValueError):
+        score = None
+    if score is None or score <= 0:
+        return min(UNIT_DOLLARS, equity * Decimal("0.25"))   # 向后兼容：1 Unit
+    factor = max(Decimal("0.5"),
+                 min(Decimal("1.25"),
+                     (Decimal(str(score)) - 60) / Decimal("30") + Decimal("0.5")))
+    size = UNIT_DOLLARS * factor
+    return min(size, equity * Decimal("0.25"))
+
+
+def _within_alloc(rec: dict, positions: list[dict], transactions: list[dict],
+                  equity: Decimal) -> tuple[bool, str]:
+    """#4 四维占比预审（股票侧）：单只≤25% / 总股票≤80%。
+    返回 (ok, 原因)。期权≤15% 与现金≥5% 由期权引擎 / 预算双保险兜底，本函数只挡股票侧超配。"""
+    stock_pct = _stock_pct(positions, transactions)
+    new_size = unit_dollars_for(rec, equity)
+    proj_stock = stock_pct * equity + new_size
+    if new_size > equity * Decimal("0.25"):
+        return False, "单只将超 25%"
+    if proj_stock > equity * Decimal("0.80"):
+        return False, "总股票将超 80%"
+    return True, ""
+
+
 def read_csv_rows(path: Path) -> list[dict]:
     if not path.exists() or path.stat().st_size == 0:
         return []
@@ -280,7 +327,7 @@ def ensure_meta(data_dir: Path, today: str) -> dict:
         "initial_capital": str(INITIAL_CAPITAL),
         "start_date": today,
         "unit_dollars": str(UNIT_DOLLARS),
-        "max_open_positions": MAX_OPEN_POSITIONS,
+        "max_open_positions": MAX_OPEN_POSITIONS_DEPRECATED,  # 仅历史字段，#4 起不再作硬守卫
         "currency": "USD",
     }
     p.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -403,6 +450,10 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
                     for p in positions if str(p.get("Status", "")).upper() == "OPEN"}
     open_count = sum(1 for p in positions if str(p.get("Status", "")).upper() == "OPEN")
     cash = derive_cash(transactions)
+    # 总资产（现金 + 现有 OPEN 股票市值）：买入不改变总资产（现金↔股票互换），循环内恒定。
+    equity = cash + sum((dec(p.get("Market_Value")) or ZERO)
+                        for p in positions
+                        if str(p.get("Status", "")).upper() == "OPEN")
 
     # —— 闸门 0：全清仓当天停手 ——
     # 持仓已全 CLOSED 且今日发生过盘中/盘后止损 → 当日不再新开买入（防反复止损）。
@@ -441,16 +492,21 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
             log.append(f"⏸  {rec['Ticker']} 近 1–2 日刚止损 → 暂不复买（防御）")
             continue
 
-        if open_count >= MAX_OPEN_POSITIONS:
-            log.append(f"⏸  {rec['Ticker']} 无空闲 Unit（{open_count}/{MAX_OPEN_POSITIONS}）→ 仅保留为推荐")
+        # —— 闸门 3：浮动只数 + 百分比仓位（#4）——
+        # 原「固定 4 只 × 固定 1 Unit」硬守卫已移除；改为四维占比预审：
+        # 单只≤25% / 总股票≤80%（期权≤15% 与现金≥5% 由期权引擎/预算双保险兜底）。
+        ok, why = _within_alloc(rec, positions, transactions, equity)
+        if not ok:
+            log.append(f"⏸  {rec['Ticker']} 占比约束拦截（{why}）→ 跳过")
             continue
         price = rec["Price"]
-        shares = int((UNIT_DOLLARS / price).to_integral_value(rounding=ROUND_DOWN))
+        target = unit_dollars_for(rec, equity)
+        shares = int((target / price).to_integral_value(rounding=ROUND_DOWN))
         if shares < 1:
-            log.append(f"⏸  {rec['Ticker']} 单价 {money(price)} 超过 1 Unit 预算 {UNIT_DOLLARS} → 跳过")
+            log.append(f"⏸  {rec['Ticker']} 单价 {money(price)} 超过目标仓位 {money(target)} → 跳过")
             continue
         amount = money(Decimal(shares) * price)
-        if amount > UNIT_DOLLARS:        # 双保险：绝不超预算
+        if amount > target:        # 双保险：绝不超目标仓位
             shares -= 1
             if shares < 1:
                 continue
@@ -719,8 +775,9 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
         print(f"  [price-only] Cash (unchanged) : {cash}")
         print(f"  [price-only] Stock Value      : {stock_value}")
         print(f"  [price-only] Total Equity     : {total_equity}")
-        print(f"  [price-only] Open Positions   : "
-              f"{sum(1 for p in positions if str(p.get('Status', '')).upper() == 'OPEN')}/{MAX_OPEN_POSITIONS}")
+        _open_n = sum(1 for p in positions if str(p.get('Status', '')).upper() == 'OPEN')
+        _sp = (stock_value / total_equity * Decimal("100")).quantize(CENT) if total_equity > 0 else ZERO
+        print(f"  [price-only] Open Positions   : {_open_n} 只（浮动，目标 3-5）  股票占比 {_sp}%")
         print("=" * 62)
         return {
             "cash": cash,
@@ -797,7 +854,9 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
     print(f"  Realized PnL    : {realized_total}")
     print(f"  Unrealized PnL  : {unrealized}")
     print(f"  Total PnL       : {total_pnl}   (Return {return_pct}%)")
-    print(f"  Open Positions  : {sum(1 for p in positions if str(p.get('Status','')).upper()=='OPEN')}/{MAX_OPEN_POSITIONS}")
+    _open_n = sum(1 for p in positions if str(p.get('Status','')).upper()=='OPEN')
+    _sp = (stock_value / total_equity * Decimal("100")).quantize(CENT) if total_equity > 0 else ZERO
+    print(f"  Open Positions  : {_open_n} 只（浮动，目标 3-5）  股票占比 {_sp}%")
     print("=" * 62)
     return {
         "initial_capital": INITIAL_CAPITAL,

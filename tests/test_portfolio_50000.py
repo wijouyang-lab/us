@@ -279,7 +279,7 @@ d9 = mk_fixture([core("T1", TODAY, "100.00"), core("T2", TODAY, "100.00"),
                  core("T5", TODAY, "100.00")])
 run_pf(d9, prices={})
 open_cnt = len([p for p in read_csv(d9, "portfolio_50000_positions.csv") if p["Status"] == "OPEN"])
-check("28. 最多 4 个同时持仓（MAX_OPEN_POSITIONS）", open_cnt == 4, f"{open_cnt} 个")
+check("28. 浮动只数（#4）：同时持仓在 3-5 只区间", 3 <= open_cnt <= 5, f"{open_cnt} 个")
 
 d10 = mk_fixture([core("EXP", TODAY, "250.00")])
 run_pf(d10, prices={})
@@ -316,6 +316,56 @@ check("22e. Equity Curve 单调按日期排列且终点等于当前权益",
       f"{built['equity_curve'][-1]['total_equity']} vs {built['total_equity']}" if built else "-")
 no_pf = de.build_portfolio(Path(tempfile.mkdtemp(prefix="empty_")))
 check("22d. 未初始化时返回 None（前端不报错）", no_pf is None)
+
+# ---------------------------------------------------------------- #4 单元测试：动态 Unit + 百分比仓位
+def _mk_pos_4(ticker, mv):
+    return {"Ticker": ticker, "Status": "OPEN", "Market_Value": str(mv), "Unit_ID": "U001"}
+
+
+def _mk_txn_4(ticker, action, amount):
+    return {"Ticker": ticker, "Action": action, "Amount": str(amount), "Date": "2026-10-01"}
+
+
+# unit_dollars_for：缺评分 → 退化为固定 1 Unit（向后兼容，§4.7）
+check("4a. 缺 AI_Score → 1 Unit ($10,000)，equity=50k",
+      pf.unit_dollars_for({}, Decimal("50000")) == Decimal("10000"))
+# 缺评分 + equity 较小 → 受 25% 单只上限钳制
+check("4b. 缺评分 equity=30k → 受 25% 钳制为 $7,500",
+      pf.unit_dollars_for({}, Decimal("30000")) == Decimal("7500"))
+# 评分 60 → factor 0.5 → $5,000
+check("4c. AI_Score=60 → 0.5 Unit ($5,000)",
+      pf.unit_dollars_for({"AI_Score": 60}, Decimal("50000")) == Decimal("5000"))
+# 评分 75 → factor 1.0 → $10,000
+check("4d. AI_Score=75 → 1.0 Unit ($10,000)",
+      pf.unit_dollars_for({"AI_Score": 75}, Decimal("50000")) == Decimal("10000"))
+# 评分 90 → factor 1.25（上钳）→ $12,500
+check("4e. AI_Score=90 → 1.25 Unit 上限 ($12,500)",
+      pf.unit_dollars_for({"AI_Score": 90}, Decimal("50000")) == Decimal("12500"))
+# 评分 100 → 仍钳到 1.25 → $12,500
+check("4f. AI_Score=100 → 仍钳到 1.25 Unit ($12,500)",
+      pf.unit_dollars_for({"AI_Score": 100}, Decimal("50000")) == Decimal("12500"))
+# 评分非法（非数字）→ 视为缺失 → 1 Unit
+check("4g. AI_Score 非法(非数字) → 退化为 1 Unit",
+      pf.unit_dollars_for({"AI_Score": "n/a"}, Decimal("50000")) == Decimal("10000"))
+
+# _within_alloc：四维占比预审（单只≤25% / 总股票≤80%）
+ok0, why0 = pf._within_alloc({}, [], [], Decimal("50000"))
+check("4h. 空仓 equity=50k 通过占比预审", ok0 is True and why0 == "")
+# 单只 25% 上限的真正保护在 unit_dollars_for 内（高评分也被钳到 equity*25%）
+check("4i. AI_Score=90/equity30k → 仍受 25% 钳制为 $7,500（单只上限保护）",
+      pf.unit_dollars_for({"AI_Score": 90}, Decimal("30000")) == Decimal("7500"))
+# 因此 _within_alloc 对该场景放行（尺寸已 ≤25%）
+ok1, why1 = pf._within_alloc({"AI_Score": 90}, [], [], Decimal("30000"))
+check("4i'. 评分90/equity30k 尺寸已钳到 25% → 占比预审放行", ok1 is True and why1 == "")
+pos_hi = [_mk_pos_4("X", 35000)]
+txn_hi = [_mk_txn_4("X", "BUY", 35000)]   # cash=15k, stock=35k → 股票占比 70%
+ok2, why2 = pf._within_alloc({}, pos_hi, txn_hi, Decimal("50000"))
+check("4j. 已有 70% 股票再买 1 Unit → 总股票将超 80% 被拦截", ok2 is False and "80%" in why2)
+# 边界：股票 75%（37.5k）+ 新 1 Unit(10k) → proj=47.5k > 40k → 仍拦截
+pos_75 = [_mk_pos_4("Y", 37500)]
+txn_75 = [_mk_txn_4("Y", "BUY", 37500)]   # cash=12.5k, stock=37.5k → 股票占比 75%
+ok2b, why2b = pf._within_alloc({}, pos_75, txn_75, Decimal("50000"))
+check("4k. 已有 75% 股票再买 1 Unit → 总股票将超 80% 被拦截", ok2b is False and "80%" in why2b)
 
 # ---------------------------------------------------------------- 清理
 for dd in (d, d2, d3, d4, d5, d6, d8, d9, d10):
