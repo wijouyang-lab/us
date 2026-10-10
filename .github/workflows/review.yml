@@ -9,7 +9,7 @@ on:
 
 # 防重复：同一时间只允许一个 Review 在执行/排队；不与 Scan / Dashboard 互斥。
 concurrency:
-  group: us-stock-review
+  group: us-stock-portfolio-ledger
   cancel-in-progress: false
 
 jobs:

@@ -40,7 +40,7 @@ concurrency:
   # cancel-in-progress: true 会让已进入 push 阶段的 run 被后一个 run 取消，
   # 前一个 run 已生成但尚未提交的数据随之丢失（run #951 即此情形）。
   # 改为 false：后到的 run 排队等待，保证同一时刻只有一个 run 操作 main 分支。
-  group: dashboard-data-refresh
+  group: us-stock-portfolio-ledger
   cancel-in-progress: false
 
 jobs:
