@@ -7,7 +7,7 @@ on:
     # Review: Tue-Sat 06:00 Beijing = Mon-Fri 22:00 UTC
     - cron: '23 22 * * 1-5'
 
-# 防重复：同一时间只允许一个 Review 在执行/排队；不与 Scan / Dashboard 互斥。
+# 与 dashboard-data 同 concurrency group，串行排队防账本覆盖；与 scan 独立。
 concurrency:
   group: us-stock-portfolio-ledger
   cancel-in-progress: false
