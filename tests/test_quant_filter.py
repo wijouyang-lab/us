@@ -101,11 +101,28 @@ def test_strict_filter_all_pass():
 
 def test_strict_filter_score_below_min():
     rows = [
-        _row("AAA", score=89),   # 评分 < 90 → 排除
+        _row("AAA", score=75),   # 评分 < 80（MIN_SCORE）→ 排除
         _row("BBB", score=95),
     ]
     out = qf.strict_filter(rows)
     assert [x["Ticker"] for x in out] == ["BBB"]
+
+
+def test_strict_filter_score_between_old_and_new_threshold():
+    # MIN_SCORE 由 90 下调到 80 后，评分落在 (80, 90) 的行应被新阈值放行
+    # （旧阈值 90 会排除它）。本用例锁定该行为，防止阈值被误改回 90。
+    row = {
+        "Ticker": "MID",
+        "Quant_Score": 82,   # 旧阈值 90 不过、新阈值 80 过
+        "Price": 100,
+        "Stop_Loss": 96,     # 止损距离 4% ∈ [2%, 5%]
+        "target_price": 110,  # R/R = (110-100)/(100-96) = 2.5 ≥ 2.0
+        "Sector": "MidCap",
+    }
+    out = qf.strict_filter([row])
+    assert len(out) == 1
+    assert out[0]["Ticker"] == "MID"
+    assert out[0].get("_rr") is not None and out[0]["_rr"] >= 2.0
 
 
 def test_strict_filter_rr_below_min():
