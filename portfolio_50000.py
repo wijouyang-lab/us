@@ -58,7 +58,7 @@ POSITION_COLUMNS = [
     "Portfolio_ID", "Unit_ID", "Ticker", "Shares", "Entry_Price", "Entry_Date",
     "Cost_Basis", "Current_Price", "Extended_Price", "Extended_Time", "Market_Value", "Unrealized_PnL",
     "Unrealized_PnL_Pct", "Weight_Pct", "Status", "Stop_Loss",
-    "Recommendation_ID", "Last_Update",
+    "Recommendation_ID", "Last_Update", "Cooldown_Until",
 ]
 TRANSACTION_COLUMNS = [
     "Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
@@ -111,6 +111,65 @@ def us_today_str() -> str:
         # 兜底：UTC-5（不引入额外依赖，且仅影响日期，不影响任何价格）
         from datetime import timedelta, timezone
         return datetime.now(timezone.utc - timedelta(hours=5)).strftime("%Y-%m-%d")
+
+
+# ------------------------------------------------------------------ 买入冷却
+COOLDOWN_DAYS = 7   # 止损后同名 ticker 冷却天数
+
+
+def _cooldown_until(today: str, days: int = COOLDOWN_DAYS) -> str:
+    """止损冷却到期日 = 止损日 + days 天（默认 7）。today 为 YYYY-MM-DD。"""
+    from datetime import datetime as _dt, timedelta as _td
+    try:
+        d = _dt.strptime(today, "%Y-%m-%d").date() + _td(days=days)
+        return d.strftime("%Y-%m-%d")
+    except Exception:
+        return ""   # 解析失败不写，避免脏值
+
+
+def _load_cooldowns(positions: list[dict]) -> dict[str, str]:
+    """从 positions 收集仍有效的止损冷却到期日 {TICKER: 'YYYY-MM-DD'}。
+    CLOSED 行仍保留 Cooldown_Until；空值忽略（旧数据自动跳过）。"""
+    out: dict[str, str] = {}
+    for p in positions:
+        cd = str(p.get("Cooldown_Until", "")).strip()
+        if cd:
+            out[str(p.get("Ticker", "")).upper()] = cd
+    return out
+
+
+def _ymd_shift(today: str, days: int) -> str:
+    """today(YYYY-MM-DD) 平移 days 天，返回同格式字符串（days 可为负）。"""
+    from datetime import datetime as _dt, timedelta as _td
+    try:
+        return (_dt.strptime(today, "%Y-%m-%d").date() + _td(days=days)).strftime("%Y-%m-%d")
+    except Exception:
+        return ""
+
+
+def _recent_stop_tickers(transactions: list[dict], today: str) -> set[str]:
+    """近 1–2 日（today 与 yesterday）发生 'Intraday Stop Loss' 的 ticker 集合。"""
+    yest = _ymd_shift(today, -1)
+    out: set[str] = set()
+    for t in transactions:
+        if str(t.get("Action", "")).upper() != "SELL":
+            continue
+        if str(t.get("Reason", "")) != "Intraday Stop Loss":
+            continue
+        d = str(t.get("Date", ""))
+        if d == today or d == yest:
+            out.add(str(t.get("Ticker", "")).upper())
+    return out
+
+
+def _had_stop_today(transactions: list[dict], today: str) -> bool:
+    """今日是否发生过任意 'Intraday Stop Loss' 卖出（用于全清仓停手判断）。"""
+    return any(
+        str(t.get("Action", "")).upper() == "SELL"
+        and str(t.get("Reason", "")) == "Intraday Stop Loss"
+        and str(t.get("Date", "")) == today
+        for t in transactions
+    )
 
 
 def read_csv_rows(path: Path) -> list[dict]:
@@ -328,12 +387,15 @@ def process_sells(positions, transactions, recs, today) -> list[str]:
         p["Unrealized_PnL_Pct"] = "0.00"
         p["Weight_Pct"] = "0.00"
         p["Last_Update"] = today
+        if rec["Status"] == "Stop_Loss_Hit":          # 新增：仅止损才冷却
+            p["Cooldown_Until"] = _cooldown_until(today)
         log.append(f"💰 SELL {p.get('Ticker')} {shares}股 @ {money(exit_px)}（{rec['Status']}） 已实现盈亏 {money(realized)}")
     return log
 
 
 def process_buys(positions, transactions, recs, meta, today) -> list[str]:
-    """BUY：新 Core 推荐、未持有、有空闲 Unit、现金足够 → 买 1 Unit。"""
+    """BUY：新 Core 推荐、未持有、有空闲 Unit、现金足够 → 买 1 Unit。
+    含三道买入冷却闸门：全清仓停手 / 7 天字段冷却 / 近 1-2 日止损防御。"""
     log: list[str] = []
     start_date = str(meta.get("start_date", ""))
     existing_txn = {str(t.get("Txn_ID", "")) for t in transactions}
@@ -341,6 +403,16 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
                     for p in positions if str(p.get("Status", "")).upper() == "OPEN"}
     open_count = sum(1 for p in positions if str(p.get("Status", "")).upper() == "OPEN")
     cash = derive_cash(transactions)
+
+    # —— 闸门 0：全清仓当天停手 ——
+    # 持仓已全 CLOSED 且今日发生过盘中/盘后止损 → 当日不再新开买入（防反复止损）。
+    if open_count == 0 and _had_stop_today(transactions, today):
+        log.append("⏸  今日已全清仓（含止损）→ 当日停手，不再新开买入")
+        return log
+
+    # —— 闸门 1 数据：7 天字段冷却 + 近 1-2 日止损防御 ——
+    cooldowns = _load_cooldowns(positions)                       # {TICKER: "YYYY-MM-DD"}
+    stopped_recent = _recent_stop_tickers(transactions, today)    # 止损当天+次日
 
     # 按推荐日期升序处理，保证先来的推荐先占用 Unit（确定性，不受 dict 顺序影响）
     candidates = [r for r in recs.values()
@@ -358,6 +430,17 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
         if rec["Ticker"] in open_tickers:
             log.append(f"⏸  {rec['Ticker']} 已持仓 → HOLD（不重复买入）")
             continue
+
+        # —— 闸门 1：7 天字段冷却 ——
+        cd = cooldowns.get(rec["Ticker"])
+        if cd and today <= cd:
+            log.append(f"⏸  {rec['Ticker']} 处于止损冷却期（至 {cd}）→ 跳过")
+            continue
+        # —— 闸门 2：近 1-2 日刚止损（防御，覆盖旧数据无 Cooldown_Until 的情况）——
+        if rec["Ticker"] in stopped_recent:
+            log.append(f"⏸  {rec['Ticker']} 近 1–2 日刚止损 → 暂不复买（防御）")
+            continue
+
         if open_count >= MAX_OPEN_POSITIONS:
             log.append(f"⏸  {rec['Ticker']} 无空闲 Unit（{open_count}/{MAX_OPEN_POSITIONS}）→ 仅保留为推荐")
             continue
@@ -588,6 +671,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         p["Unrealized_PnL_Pct"] = "0.00"
         p["Weight_Pct"] = "0.00"
         p["Last_Update"] = today
+        p["Cooldown_Until"] = _cooldown_until(today)   # 盘中机械止损：止损日 + 7 天冷却
         existing_txn.add(txn_id)
         triggered += 1
         print(f"🛑 INTRADAY STOP {tkr} {shares}股 @ {money(px)}（止损线 {money(stop)}）")
