@@ -2649,6 +2649,135 @@ backfill_review_milestones()
 backfill_rec_price()
 
 
+from clawsocket_compat import ClawSocketClient
+
+
+def backfill_pending_reasons(data_dir="."):
+    """批量回填 Pending_Reason=True 的止损原因（一次 AI 调用，幂等）。
+
+    仅当存在 Pending 记录时才调用 AI（无记录直接返回，不浪费额度）。
+    解析失败 / AI 异常 → 内部兜底，保留 Pending_Reason 为原值，下次再试。
+    任何异常都不向外抛出（调用方已用 try/except 二次兜底）。
+    """
+    txn_path = os.path.join(data_dir, "portfolio_50000_transactions.csv")
+    if not os.path.exists(txn_path):
+        return
+
+    try:
+        with open(txn_path, "r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            fieldnames = reader.fieldnames or []
+            rows = list(reader)
+    except Exception as e:
+        print(f"⚠️ AI 原因回填：读取交易文件失败（跳过）：{e}")
+        return
+
+    def _is_pending(r):
+        return str(r.get("Pending_Reason", "")).strip().lower() in ("true", "1", "yes", "y")
+
+    def _parse_reason_array(text):
+        """从 AI 返回中提取 JSON 数组；失败返回 None。"""
+        s = (text or "").strip()
+        if not s:
+            return None
+        # 去掉 ```json ... ``` 或 ``` ... ```
+        if "```" in s:
+            s = re.sub(r"```(?:json)?", "", s).replace("```", "").strip()
+        # 截取第一个 [ 到最后一个 ]
+        a = s.find("[")
+        b = s.rfind("]")
+        if a == -1 or b == -1 or b < a:
+            return None
+        s = s[a:b + 1]
+        try:
+            data = json.loads(s)
+        except Exception:
+            return None
+        if not isinstance(data, list):
+            return None
+        return data
+
+    pending = [r for r in rows if _is_pending(r)]
+    if not pending:
+        return  # 无待回填记录 → 不调 AI
+
+    # 构造批量 prompt（一次调用分析全部 Pending 记录）
+    items = []
+    for r in pending:
+        sell_date = str(r.get("Date", "")).strip()
+        scan_date = str(r.get("Scan_Date", "")).strip()
+        holding_days = ""
+        try:
+            if sell_date and scan_date:
+                d1 = datetime.strptime(sell_date, "%Y-%m-%d")
+                d2 = datetime.strptime(scan_date, "%Y-%m-%d")
+                holding_days = str((d1 - d2).days)
+        except Exception:
+            holding_days = ""
+        items.append({
+            "ticker": str(r.get("Ticker", "")).strip(),
+            "sell_date": sell_date,
+            "sell_price": str(r.get("Price", "")).strip(),
+            "holding_days": holding_days,
+        })
+
+    prompt = (
+        "你是顶级量化风控总监。以下是若干笔已执行的止损卖出交易记录，"
+        "请为每一笔分析其止损的根本原因（如：跌破关键支撑位、基本面恶化、"
+        "板块系统性风险、个股黑天鹅事件、追高被套等），用一句简洁中文概括。\n"
+        "严格要求：只返回一个 JSON 数组，不要任何额外解释文字，也不要 Markdown 代码框。\n"
+        "数组每项格式：{\"ticker\": \"股票代码\", \"reason\": \"原因一句话\"}\n"
+        f"待分析记录：{json.dumps(items, ensure_ascii=False)}"
+    )
+
+    try:
+        client = ClawSocketClient(
+            api_key=os.environ.get("CLAWSOCKET_API_KEY"),
+            base_url=os.environ.get("CLAWSOCKET_BASE_URL"),
+        )
+        with client.messages.stream(
+            model=TARGET_MODEL,
+            max_tokens=4000,
+            messages=[{"role": "user", "content": prompt}],
+        ) as stream:
+            ai_text = "".join(stream.text_stream)
+    except Exception as e:
+        print(f"⚠️ AI 原因回填：AI 调用失败（保留 Pending，下次重试）：{type(e).__name__}: {e}")
+        return
+
+    parsed = _parse_reason_array(ai_text)
+    if parsed is None:
+        print("⚠️ AI 原因回填：返回解析失败（保留 Pending，下次重试）")
+        return  # 解析失败 → 不写任何字段
+
+    reason_map = {}
+    for it in parsed:
+        t = str(it.get("ticker", "")).strip().upper()
+        rs = str(it.get("reason", "")).strip()
+        if t and rs:
+            reason_map[t] = rs
+
+    changed = 0
+    for r in rows:
+        t = str(r.get("Ticker", "")).strip().upper()
+        if t in reason_map and _is_pending(r):
+            if not str(r.get("Reason", "")).strip():
+                r["Reason"] = reason_map[t]
+            r["Pending_Reason"] = ""
+            changed += 1
+
+    if changed == 0:
+        return
+
+    try:
+        with open(txn_path, "w", encoding="utf-8", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+    except Exception as e:
+        print(f"⚠️ AI 原因回填：写回交易文件失败（保留 Pending）：{e}")
+
+
 # ============================================================
 # 13. 每次 Scan 推荐事件的独立追踪
 # ============================================================
@@ -3685,3 +3814,11 @@ print(
     f"期权完成 {option_win_rate_text}"
 )
 print("=" * 60)
+
+
+# 18.x AI 原因回填（flag 门控，默认关闭；启用需设 ENABLE_AI_REASON_BACKFILL=1）
+if os.environ.get("ENABLE_AI_REASON_BACKFILL") == "1":
+    try:
+        backfill_pending_reasons(".")
+    except Exception as e:
+        print(f"⚠️ AI 原因回填失败（不影响 review）：{type(e).__name__}: {e}")
