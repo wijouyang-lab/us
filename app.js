@@ -449,7 +449,8 @@
      注：dashboard_export.build_portfolio 只保留 Status=OPEN 的持仓，CLOSED 仓位不进 positions[]，
      故盘中止损经由交易流水展示，而非 positionCard。 */
   function renderIntradayStops(pf) {
-    if (typeof txEl === 'undefined' || !txEl || !txEl.parentNode) return;
+    var txEl = document.querySelector('#pfTxns');   // 自行获取，避免依赖外层局部变量作用域
+    if (!txEl) return;
     var ts = pf.transactions || [];
     var stops = ts.filter(function (t) {
       return String(t.action || '').toUpperCase() === 'SELL' &&
