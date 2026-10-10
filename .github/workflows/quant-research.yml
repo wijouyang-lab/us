@@ -4,9 +4,8 @@ on:
   workflow_dispatch:
   workflow_call:
 
-# 独立并发组，不与 scan / dashboard-data 抢占
 concurrency:
-  group: quant-research
+  group: us-stock-derived-research
   cancel-in-progress: false
 
 jobs:
