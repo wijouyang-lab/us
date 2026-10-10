@@ -538,8 +538,8 @@
     cells += cell('Stock Value', '$' + nv(pf.stock_value, 2));
     cells += cell('Realized PnL', '$' + nv(pf.realized_pnl, 2), pctCls(num(pf.realized_pnl)));
     cells += cell('Unrealized PnL', '$' + nv(pf.unrealized_pnl, 2), pctCls(num(pf.unrealized_pnl)));
-    cells += cell('Open Units', (pf.open_positions == null ? NA : pf.open_positions) +
-      ' / ' + (pf.max_open_positions == null ? NA : pf.max_open_positions));
+    cells += cell('持仓只数', (pf.open_positions == null ? NA : pf.open_positions) + ' 只' +
+      (pf.open_pct == null ? '' : '（股票 ' + pf.open_pct + '%）'));
     cells += cell('Start Date', esc(pf.start_date || NA));
     sumEl.innerHTML = '<div class="matrix">' + cells + '</div>';
 

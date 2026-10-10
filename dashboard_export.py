@@ -2559,6 +2559,9 @@ def build_portfolio(data_dir: Path):
         "total_pnl": round_num(parse_num(last.get("Total_PnL")), 2),
         "return_pct": round_num(parse_num(last.get("Return_Pct")), 2),
         "open_positions": int(parse_num(last.get("Open_Positions")) or 0),
+        "open_pct": round_num(
+            (lambda s, t: (s / t * 100) if (s is not None and t and t > 0) else 0.0)(
+                parse_num(last.get("Stock_Value")), parse_num(last.get("Total_Equity"))), 2),
         "positions": positions,
         "transactions": txns,
         "equity_curve": curve,
