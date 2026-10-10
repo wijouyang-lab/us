@@ -257,4 +257,9 @@ def build_ai_input(pool_data, positions, candidates):
             row.setdefault(k, v)
         out.append(row)
 
-    return out[:AI_INPUT_MAX]
+    # #4 浮动只数（§0.9）：持仓恒优先保留，候选上限 = min(3, AI_INPUT_MAX - 持仓数)。
+    # 显式拆分避免 out[:AI_INPUT_MAX] 在候选过多时截断持仓（持仓优先于候选）。
+    positions = [x for x in out if x.get("_is_position")]
+    candidates = [x for x in out if not x.get("_is_position")]
+    cand_cap = min(3, AI_INPUT_MAX - len(positions))
+    return positions + candidates[:max(0, cand_cap)]

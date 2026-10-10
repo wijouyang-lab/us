@@ -332,3 +332,58 @@ def test_build_ai_input_candidate_row_has_all_prompt_fields():
         assert x["Tag"] == "Candidate"
         for k in PROMPT_REQUIRED_FIELDS:
             assert k in x, f"候选 {x.get('Ticker')} 缺少 prompt 必填字段 {k}"
+
+
+def test_build_ai_input_positions_never_truncated_by_candidates():
+    """#3 防御性回归（WEEKEND_IMPLEMENTATION_PLAN §3）：即使候选很多，持仓也恒优先保留，
+    不被 AI_INPUT_MAX 截断；候选被限到 ≤3（§0.9 候选上限 = min(3, 7-持仓数)）。
+
+    验证 4 持仓 + 10 候选 → 输出仍为 4 持仓全部保留 + ≤3 候选，总数 ≤7。
+    对当前 out[:AI_INPUT_MAX] 与 #4 Diff D（持仓优先 + 候选动态上限）两种实现都成立。
+    """
+    pool = _pool([f"P{i}" for i in range(4)] + [f"C{i}" for i in range(10)])
+    positions = ["P0", "P1", "P2", "P3"]
+    candidates = [{"Ticker": f"C{i}", "Price": 100, "_rr": 2.5} for i in range(10)]
+    out = qf.build_ai_input(pool, positions, candidates)
+    pos_out = [x for x in out if x.get("_is_position")]
+    assert len(pos_out) == 4, f"持仓应全部保留，实际 {len(pos_out)}"
+    assert {x["Ticker"] for x in pos_out} == {"P0", "P1", "P2", "P3"}
+    cand_out = [x for x in out if not x.get("_is_position")]
+    assert len(cand_out) <= 3, f"候选应 ≤3，实际 {len(cand_out)}"
+    assert len(out) <= 7, f"总数应 ≤7，实际 {len(out)}"
+
+
+def test_build_ai_input_candidate_cap_exact():
+    """#4 Diff D（§0.9）：候选上限 = min(3, AI_INPUT_MAX - 持仓数)，且持仓永不被截断。
+
+    验证：
+    - 4 持仓 + 10 候选 → 候选恰好 3、总数恰好 7（持仓 4 全保留）
+    - 2 持仓 + 10 候选 → 候选仍 3（下限 3）、总数恰好 5
+    - 0 持仓 + 10 候选 → 候选恰好 3（仍受 §0.9 候选上限约束，不铺满 7）
+    """
+    # 4 持仓 + 10 候选 → 候选恰好 3
+    pool4 = _pool([f"P{i}" for i in range(4)] + [f"C{i}" for i in range(10)])
+    out4 = qf.build_ai_input(pool4, ["P0", "P1", "P2", "P3"],
+                             [{"Ticker": f"C{i}", "Price": 100, "_rr": 2} for i in range(10)])
+    cand4 = [x for x in out4 if not x.get("_is_position")]
+    pos4 = [x for x in out4 if x.get("_is_position")]
+    assert len(pos4) == 4, f"4 持仓应全保留，实际 {len(pos4)}"
+    assert len(cand4) == 3, f"候选应恰好 3，实际 {len(cand4)}"
+    assert len(out4) == 7, f"总数应恰好 7，实际 {len(out4)}"
+
+    # 2 持仓 + 10 候选 → 候选仍 3、总数 5
+    pool2 = _pool([f"P{i}" for i in range(2)] + [f"C{i}" for i in range(10)])
+    out2 = qf.build_ai_input(pool2, ["P0", "P1"],
+                             [{"Ticker": f"C{i}", "Price": 100, "_rr": 2} for i in range(10)])
+    cand2 = [x for x in out2 if not x.get("_is_position")]
+    pos2 = [x for x in out2 if x.get("_is_position")]
+    assert len(pos2) == 2, f"2 持仓应全保留，实际 {len(pos2)}"
+    assert len(cand2) == 3, f"候选应恰好 3（下限），实际 {len(cand2)}"
+    assert len(out2) == 5, f"总数应恰好 5，实际 {len(out2)}"
+
+    # 0 持仓 + 10 候选 → 候选恰好 3（不铺满 7）
+    pool0 = _pool([f"C{i}" for i in range(10)])
+    out0 = qf.build_ai_input(pool0, [],
+                             [{"Ticker": f"C{i}", "Price": 100, "_rr": 2} for i in range(10)])
+    cand0 = [x for x in out0 if not x.get("_is_position")]
+    assert len(cand0) == 3, f"无持仓时候选仍应 ≤3，实际 {len(cand0)}"
