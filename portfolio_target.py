@@ -82,7 +82,39 @@ def _load_held_shares(positions_csv="portfolio_50000_positions.csv"):
     return out
 
 
-def build_portfolio_target_rows(chosen_items, held_positions, scan_date, held_shares=None):
+def _load_held_stops(positions_csv="portfolio_50000_positions.csv"):
+    """从持仓 CSV 读 {TICKER: stop_loss} map（HOLD 行语义：止损价 = 实际持仓止损价）。
+
+    只读、容错：文件缺失 / 解析失败返回空 dict（此时 HOLD 行 Stop_Loss 回退为候选行空值）。
+    与 _load_held_shares 同源，复用同一持仓 CSV 的 Stop_Loss 列。
+
+    > 根因（Bonus C）：snapshot 数据**没有 Stop_Loss 列**，候选行 it.get("Stop_Loss") 恒为空；
+    > 真实止损价实际躺在 portfolio_50000_positions.csv 的 Stop_Loss 列。HOLD 行必须从持仓 CSV 回填，
+    > 否则目标持仓文件里 HOLD 行的止损位永远为空，dashboard 无法展示有效止损线。
+    """
+    out = {}
+    try:
+        with open(positions_csv, newline="", encoding="utf-8") as f:
+            for row in csv.DictReader(f):
+                t = (row.get("Ticker") or "").upper().strip()
+                if not t:
+                    continue
+                sl = row.get("Stop_Loss")
+                if sl is None or str(sl).strip() in ("", "N/A"):
+                    continue
+                try:
+                    v = _to_float(sl)
+                except (TypeError, ValueError):
+                    continue
+                if v > 0:
+                    out[t] = round(v, 2)
+    except Exception:
+        return {}
+    return out
+
+
+def build_portfolio_target_rows(chosen_items, held_positions, scan_date,
+                                held_shares=None, held_stops=None):
     """构造目标持仓行（dict 列表）。幂等键 = Scan_Date + Ticker（整文件覆盖即幂等）。
 
     chosen_items: scan 最终推荐（to_write，Core/Observation）
@@ -92,6 +124,7 @@ def build_portfolio_target_rows(chosen_items, held_positions, scan_date, held_sh
     """
     held = {str(t).upper() for t in (held_positions or [])}
     shares_map = held_shares or {}
+    stop_map = held_stops or {}
     rec = []
     seen = set()
     for it in (chosen_items or []):
@@ -117,17 +150,20 @@ def build_portfolio_target_rows(chosen_items, held_positions, scan_date, held_sh
             # HOLD：维持现有持仓，目标股数 = 当前实际持股数（不新买，故不受单只上限约束）
             action = "HOLD"
             target_shares = shares_map.get(t, 0)
+            # HOLD 行止损价来自实际持仓 CSV（snapshot 无此列）；优先用持仓止损，缺失则回退候选行空值
+            stop_loss = stop_map.get(t, r["Stop_Loss"])
         else:
-            # BUY：新标的，等权金额受 25% 上限约束
+            # BUY：新标的，等权金额受 25% 上限约束；止损价仍取候选行（为空也接受，逻辑不变）
             action = "BUY"
             target_shares = _target_shares(per, r["Ref_Price"])
+            stop_loss = r["Stop_Loss"]
         rows.append({
             "Scan_Date": scan_date,
             "Ticker": t,
             "Action": action,
             "Target_Shares": target_shares,
             "Ref_Price": r["Ref_Price"],
-            "Stop_Loss": r["Stop_Loss"],
+            "Stop_Loss": stop_loss,
             "AI_Reason": r["AI_Reason"],
         })
     # 当前持仓但不在今日推荐 → SELL（调出目标持仓）
@@ -152,7 +188,9 @@ def write_portfolio_target_csv(chosen_items, held_positions, scan_date,
     HOLD 行实际持股数由持仓 CSV 自行读取（不依赖 scan.py 改调用）。
     """
     held_shares = _load_held_shares(positions_csv)
-    rows, _ = build_portfolio_target_rows(chosen_items, held_positions, scan_date, held_shares=held_shares)
+    held_stops = _load_held_stops(positions_csv)
+    rows, _ = build_portfolio_target_rows(chosen_items, held_positions, scan_date,
+                                          held_shares=held_shares, held_stops=held_stops)
     if not rows:
         print("ℹ️ [Target] 今日无推荐，跳过目标持仓文件生成")
         return None

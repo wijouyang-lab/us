@@ -163,6 +163,86 @@ def test_sell_row_target_shares_zero():
 
 
 # ---------------------------------------------------------------------------
+# 修复 3（Bonus C）：HOLD 行 Stop_Loss 从持仓 CSV 回填（snapshot 无此列）
+# ---------------------------------------------------------------------------
+def test_hold_row_stop_loss_from_held_stops():
+    # ADSK 已持有；候选行 Stop_Loss 空（snapshot 无列），但持仓 CSV 有 $214.76
+    chosen = [{"Ticker": "ADSK", "Price": 231.42}]   # 无 Stop_Loss
+    held = ["ADSK"]
+    held_stops = {"ADSK": 214.76}
+    rows, n = pt.build_portfolio_target_rows(
+        chosen, held, "2026-10-09", held_shares={"ADSK": 43}, held_stops=held_stops)
+    by = {r["Ticker"]: r for r in rows}
+    assert by["ADSK"]["Action"] == "HOLD"
+    assert by["ADSK"]["Stop_Loss"] == 214.76   # 来自持仓 CSV，非空
+    assert by["ADSK"]["Target_Shares"] == 43
+
+
+def test_buy_row_stop_loss_unchanged_with_held_stops():
+    # BUY 行逻辑不变：Stop_Loss 仍取候选行；held_stops 只作用于 HOLD 行
+    chosen = [
+        {"Ticker": "ADSK", "Price": 231.42, "Stop_Loss": "$214.76"},  # 已持有 → HOLD
+        {"Ticker": "ISRG", "Price": 512.0, "Stop_Loss": "$470.00"},   # 未持有 → BUY
+    ]
+    held = ["ADSK"]
+    held_stops = {"ADSK": 214.76}
+    rows, n = pt.build_portfolio_target_rows(
+        chosen, held, "2026-10-09", held_shares={"ADSK": 43}, held_stops=held_stops)
+    by = {r["Ticker"]: r for r in rows}
+    # BUY 行：取候选 Stop_Loss，不被 held_stops 影响
+    assert by["ISRG"]["Action"] == "BUY"
+    assert by["ISRG"]["Stop_Loss"] == "$470.00"
+    # HOLD 行：取持仓止损
+    assert by["ADSK"]["Action"] == "HOLD"
+    assert by["ADSK"]["Stop_Loss"] == 214.76
+
+
+def test_missing_positions_csv_no_impact():
+    # 持仓 CSV 缺失 → _load_held_stops 返回 {}；HOLD 行 Stop_Loss 回退为候选空值，不崩
+    chosen = [{"Ticker": "ADSK", "Price": 231.42}]   # 既无候选 Stop_Loss 也无持仓 CSV
+    held = ["ADSK"]
+    rows, n = pt.build_portfolio_target_rows(chosen, held, "2026-10-09")
+    by = {r["Ticker"]: r for r in rows}
+    assert by["ADSK"]["Action"] == "HOLD"
+    assert by["ADSK"]["Stop_Loss"] == ""   # 回退空，不抛异常
+    assert by["ADSK"]["Target_Shares"] == 0  # 无 shares map → 0
+
+
+def test_load_held_stops_reads_csv(tmp_path):
+    # _load_held_stops 直接从持仓 CSV 读 Stop_Loss 列
+    csv_text = (
+        "Portfolio_ID,Unit_ID,Ticker,Shares,Entry_Price,Entry_Date,Cost_Basis,Current_Price,"
+        "Market_Value,Unrealized_PnL,Unrealized_PnL_Pct,Weight_Pct,Status,Stop_Loss,"
+        "Recommendation_ID,Last_Update\n"
+        "US-50000-001,U001,ADSK,43,231.42,2026-10-07,9951.06,233.60,10044.80,93.74,0.94,"
+        "19.82,OPEN,$214.76,ADSK|2026-10-07|Core_Dragon,2026-10-08\n"
+    )
+    (tmp_path / "portfolio_50000_positions.csv").write_text(csv_text, encoding="utf-8")
+    stops = pt._load_held_stops(str(tmp_path / "portfolio_50000_positions.csv"))
+    assert stops == {"ADSK": 214.76}
+
+
+def test_write_csv_hold_stop_loss_from_positions(tmp_path, monkeypatch):
+    # 端到端：write_portfolio_target_csv 经持仓 CSV 回填 HOLD 行 Stop_Loss
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "portfolio_50000_positions.csv").write_text(
+        "Portfolio_ID,Unit_ID,Ticker,Shares,Entry_Price,Entry_Date,Cost_Basis,Current_Price,"
+        "Market_Value,Unrealized_PnL,Unrealized_PnL_Pct,Weight_Pct,Status,Stop_Loss,"
+        "Recommendation_ID,Last_Update\n"
+        "US-50000-001,U001,ADSK,43,231.42,2026-10-07,9951.06,233.60,10044.80,93.74,0.94,"
+        "19.82,OPEN,$214.76,ADSK|2026-10-07|Core_Dragon,2026-10-08\n",
+        encoding="utf-8")
+    chosen = [{"Ticker": "ADSK", "Price": 231.42}]   # 无 Stop_Loss（模拟 snapshot 缺列）
+    path = pt.write_portfolio_target_csv(chosen, ["ADSK"], "2026-10-09")
+    lines = (tmp_path / path).read_text(encoding="utf-8").strip().splitlines()
+    # 表头 + ADSK HOLD 行
+    assert len(lines) == 2
+    adsk = lines[1].split(",")
+    # Stop_Loss 列（索引 5）应为 214.76 而非空
+    assert adsk[5] == "214.76"
+
+
+# ---------------------------------------------------------------------------
 # portfolio_target: write_portfolio_target_csv（整文件覆盖 → 幂等）
 # ---------------------------------------------------------------------------
 def test_write_csv_file(tmp_path, monkeypatch):
