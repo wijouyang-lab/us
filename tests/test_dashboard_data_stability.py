@@ -173,6 +173,14 @@ check("E2. concurrency group 为刻意的 ledger 串行组（与 review 共享�
 import yaml  # noqa: E402
 _parsed = yaml.safe_load(wf)
 _on = _parsed.get(True, _parsed.get("on"))
+# E2b: review.yml 与 dashboard-data.yml 必须共享同一 concurrency group（防 H1 复现）
+# 若两者 group 名不一致 → review 与 dashboard-data 错峰串行失效 → H1 账本覆盖风险回归 → 失败
+_review_wf = (REPO / ".github" / "workflows" / "review.yml").read_text(encoding="utf-8")
+_review_group = yaml.safe_load(_review_wf).get("concurrency", {}).get("group")
+_dash_group = _parsed.get("concurrency", {}).get("group")
+check("E2b. review.yml 与 dashboard-data.yml 共享同一 concurrency group（防 H1 复现）",
+      _review_group == _dash_group and _review_group == "us-stock-portfolio-ledger",
+      f"review={_review_group} dashboard={_dash_group}")
 check("E3. concurrency 配置可解析且作用域正确",
       _parsed.get("concurrency", {}).get("cancel-in-progress") is False)
 check("E4. schedule 未被修改（*/15 * * * 1-5）",
