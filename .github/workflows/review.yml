@@ -54,8 +54,15 @@ jobs:
 
       # $50,000 长期模拟投资组合：只读取 trade_history 的推荐与 Review 裁决，
       # 不重新实现止损；账本由 portfolio_50000.py 确定性维护并幂等落盘。
+      # 买入决策已前置到 scan（flag 门控）时，review 跳过 process_buys（--no-buy）；
+      # flag 未设（默认）→ 走 else 分支，与改动前逐字节一致。
       - name: 更新 $50,000 Portfolio Ledger
-        run: python portfolio_50000.py --data-dir .
+        run: |
+          if [ "${{ vars.ENABLE_SCAN_BUY_DECISION }}" = "1" ]; then
+            python portfolio_50000.py --no-buy --data-dir .
+          else
+            python portfolio_50000.py --data-dir .
+          fi
 
       # 安全网：即使后面 git push 失败，本轮复盘产物也不会随 runner 销毁而丢失
       - name: 上传复盘产物（防止推送失败导致数据丢失）

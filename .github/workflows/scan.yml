@@ -44,7 +44,16 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
           CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
           ENABLE_TARGET_FILE: "1"
+          ENABLE_SCAN_BUY_DECISION: ${{ vars.ENABLE_SCAN_BUY_DECISION }}
         run: python scan.py
+
+      # 买入决策前置到 scan（flag 门控，默认关闭）：repo variable 不存在 → 步骤跳过 → 走旧路径。
+      # 仅执行买入决策（--buy-only 跳过 process_sells）；账本后续由 review 的 --no-buy 接管。
+      # continue-on-error：即便失败也不阻断 scan 主流程与数据落盘。
+      - name: Scan buy decision (flag-gated)
+        if: env.ENABLE_SCAN_BUY_DECISION == '1'
+        run: python portfolio_50000.py --buy-only --data-dir .
+        continue-on-error: true
 
       # Quant Research 价格历史层：扫描成功后，为 Factor Snapshot 的历史 ticker
       # 批量更新 quant_factor_price_history.csv（幂等 upsert，绝不逐股重复请求）。
