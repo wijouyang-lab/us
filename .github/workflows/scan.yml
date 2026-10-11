@@ -115,6 +115,14 @@ jobs:
             git add macro_data.json
           fi
 
+          # $50,000 账本：仅当 scan 通过 ENABLE_SCAN_BUY_DECISION=1 接管买入决策时，
+          # --buy-only 会改写这些账本文件，必须随 scan 一并提交，否则 review 的 --no-buy
+          # 在独立 runner 里 git pull 到的是旧账本 → scan 做的买入丢失。
+          # 关闭时 vars 为空 → 条件为假 → 不执行 → 与现在逐字节一致。
+          if [ "${{ vars.ENABLE_SCAN_BUY_DECISION }}" = "1" ]; then
+            git add portfolio_50000_positions.csv portfolio_50000_transactions.csv portfolio_50000_history.csv portfolio_50000_meta.json
+          fi
+
           if git diff --cached --quiet; then
             echo "⚠️ 无可提交变更（无 pending 文件且缓存无更新）"
             exit 0
