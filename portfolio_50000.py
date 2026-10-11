@@ -40,7 +40,7 @@ PORTFOLIO_ID = "US-50000-001"
 INITIAL_CAPITAL = Decimal("50000.00")
 UNIT_DOLLARS = Decimal("10000.00")          # 1 Unit 回退基准（#4：评分缺失时仍用 1 Unit，向后兼容）
 MAX_OPEN_POSITIONS_DEPRECATED = 4           # 仅历史参考：#4 起不再作硬守卫（改为浮动 3-5 + 百分比仓位）
-UNIT_IDS = ["U001", "U002", "U003", "U004"]
+UNIT_IDS = ["U001", "U002", "U003", "U004", "U005", "U006", "U007", "U008", "U009", "U010"]
 
 CORE_TAG = "Core_Dragon"
 # Review 已写入 Exit_Date / Exit_Price 的终态（出现新状态只需在此登记，不改逻辑）
