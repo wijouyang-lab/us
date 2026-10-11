@@ -488,6 +488,16 @@ button{font-family:inherit}
 .stp-ret.down{color:var(--down)}
 .stp-reason{margin-top:3px;font-size:11px;color:var(--text-2);line-height:1.4}
 
+/* 交易观测（频率 + 胜率 + 盈亏）—— 观测面板，不加硬闸门 */
+#tradeCard .sec-sub{font-variant-numeric:tabular-nums}
+.ts-grid{display:flex;flex-direction:column;gap:6px}
+.ts-row{display:flex;align-items:baseline;gap:10px;font-size:13px;font-variant-numeric:tabular-nums}
+.ts-k{color:var(--text-2);font-weight:600;min-width:64px;flex:0 0 auto}
+.ts-v{font-weight:700;color:var(--text);margin-left:auto}
+.ts-v.up{color:var(--up)}
+.ts-v.down{color:var(--down)}
+.ts-div{height:1px;background:var(--border-2);margin:8px 0}
+
 .at-shares{font-variant-numeric:tabular-nums;color:var(--text-2);font-size:13px}
 .at-price{font-variant-numeric:tabular-nums;color:var(--text-2);font-size:13px;margin-left:auto}
 .at-reason{margin-top:6px;font-size:12.5px;line-height:1.5;color:var(--text-2);max-height:2.6em;overflow:hidden;cursor:pointer;position:relative;padding-right:36px}

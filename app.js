@@ -693,6 +693,65 @@
     bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>';
   }
 
+  /* 交易观测面板：只读 portfolio.trade_stats（dashboard_export 计算，前端绝不重算）。
+     边界：
+       · trade_stats 缺失 / null → 隐藏整块（不渲染、不报错）
+       · 无交易（买+卖均 0）→ 显「暂无交易记录」
+       · 平仓样本 < 10 → 胜率显「样本不足」（不显示数字）
+       · 不依赖本地时钟（锚点取交易流水最新日期，由后端算好） */
+  function renderTradeStats() {
+    var subEl = $('#tradeSub'), bodyEl = $('#tradeBody');
+    if (!subEl || !bodyEl) return;
+    var pf = DATA && DATA.portfolio;
+    var ts = pf && pf.trade_stats;
+
+    // 缺失 / null → 隐藏整块
+    if (!pf || !ts) {
+      var card = (typeof subEl.closest === 'function') ? subEl.closest('.card') : null;
+      if (card && card.style) card.style.display = 'none';
+      return;
+    }
+
+    var total = (ts.total_buys || 0) + (ts.total_sells || 0);
+    if (total === 0) {
+      subEl.textContent = '频率 · 胜率 · 盈亏（观测）';
+      bodyEl.innerHTML = '<div class="mx"><div class="k">交易观测</div>' +
+        '<div class="v na">暂无交易记录</div></div>';
+      return;
+    }
+
+    var b7 = ts.buys_last_7d || 0, b30 = ts.buys_last_30d || 0;
+    var s7 = ts.sells_last_7d || 0, s30 = ts.sells_last_30d || 0;
+    var tb = ts.total_buys || 0, tso = ts.total_sells || 0;
+    var closed = ts.closed_count || 0, wins = ts.wins || 0;
+
+    // 胜率：样本(<10 平仓) → 「样本不足」；否则整数百分比 + (wins/closed)
+    var wr = closed < 10 ? '样本不足' : (ts.win_rate != null ? Math.round(ts.win_rate) + '%' : '—');
+    var wrDetail = closed < 10 ? '' : ' (' + wins + '/' + closed + ')';
+    var winPct = ts.avg_win_pct != null ? '+' + fmt(ts.avg_win_pct, 1) + '%' : '—';
+    var lossPct = ts.avg_loss_pct != null ? fmt(ts.avg_loss_pct, 1) + '%' : '—';
+    var hold = ts.avg_holding_days != null ? fmt(ts.avg_holding_days, 1) + ' 天' : '—';
+    var rp = ts.total_realized_pnl;
+    var rpTxt = rp != null ? (rp >= 0 ? '+$' : '-$') + fmt(Math.abs(rp), 0) : '—';
+    var rpCls = rp != null ? (rp >= 0 ? 'up' : 'down') : '';
+
+    subEl.textContent = '频率 · 胜率 · 盈亏（观测）';
+    bodyEl.innerHTML =
+      '<div class="ts-grid">' +
+        '<div class="ts-row"><span class="ts-k">最近 7 天</span><span class="ts-v">买 ' + b7 + ' · 卖 ' + s7 + '</span></div>' +
+        '<div class="ts-row"><span class="ts-k">最近 30 天</span><span class="ts-v">买 ' + b30 + ' · 卖 ' + s30 + '</span></div>' +
+        '<div class="ts-row"><span class="ts-k">历史总计</span><span class="ts-v">买 ' + tb + ' · 卖 ' + tso + '</span></div>' +
+      '</div>' +
+      '<div class="ts-div"></div>' +
+      '<div class="ts-grid">' +
+        '<div class="ts-row"><span class="ts-k">胜率</span><span class="ts-v">' + wr + wrDetail + '</span></div>' +
+        '<div class="ts-row"><span class="ts-k">平均盈利</span><span class="ts-v up">' + winPct + '</span></div>' +
+        '<div class="ts-row"><span class="ts-k">平均亏损</span><span class="ts-v down">' + lossPct + '</span></div>' +
+        '<div class="ts-row"><span class="ts-k">平均持仓</span><span class="ts-v">' + hold + '</span></div>' +
+        '<div class="ts-row"><span class="ts-k">累计盈亏</span><span class="ts-v ' + rpCls + '">' + rpTxt + '</span></div>' +
+      '</div>';
+  }
+
   /* Equity Curve：横轴日期、纵轴 Total Equity，起点恒为 $50,000 */
   function drawPortfolioCurve(pf) {
     var cv = document.getElementById('pfCurve');
@@ -875,6 +934,7 @@
     renderTarget();
     renderPortfolio();
     renderStopped();
+    renderTradeStats();
     renderQuant();
     renderNews();
     renderMacro();
