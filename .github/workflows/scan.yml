@@ -100,6 +100,12 @@ jobs:
             git add portfolio_50000_target.csv
           fi
 
+          # 美股宏观板块：scan 在 ENABLE_MACRO_PANEL=1 时落盘 macro_data.json；
+          # 必须随 scan 一并入库，否则文件到不了 main（dashboard_export 无法读取）。
+          if [ -f macro_data.json ]; then
+            git add macro_data.json
+          fi
+
           if git diff --cached --quiet; then
             echo "⚠️ 无可提交变更（无 pending 文件且缓存无更新）"
             exit 0

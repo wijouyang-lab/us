@@ -32,6 +32,7 @@
   var DATA = null;
   var META = {}, MARKET = { assets: [], regime: {} }, REVIEW = {};
   var OPTIONS = [], HISTORY = [], STOCKS = [], OPT_BY_TK = {};
+  var MACRO = null;
   var QUANT = {};                           /* dashboard_data.json 的 quant 键（Quant Phase 1–7 研究状态） */
   var REVIEWS = [];                         /* review.records[] —— 数据仍由 dashboard_data.json 提供；
                                             第 10C 已移除首页历史推荐列表，此处仅保留引用供后续 Evolution 使用，不渲染任何卡片 */
@@ -171,6 +172,7 @@
     REVIEW = data.review || {};
     HISTORY = data.history || [];
     QUANT = data.quant || {};
+    MACRO = data.macro || null;
     REVIEWS = (REVIEW && Array.isArray(REVIEW.records)) ? REVIEW.records.slice() : [];
 
     /* Review 里程碑索引：严格按 Ticker + Rec_Date + Tag 关联 review.records[]（第 10D）。
@@ -875,6 +877,7 @@
     renderStopped();
     renderQuant();
     renderNews();
+    renderMacro();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
@@ -945,6 +948,98 @@
       return '<div class="news-ticker' + on + '"><div class="news-ticker-h">' +
         esc(sym) + tag + '</div>' + body + '</div>';
     }).join('');
+  }
+
+  /* ---------------- 美股宏观板块（经济数据 + 重要人物讲话）---------------- */
+  /* 数据来源：DATA.macro（dashboard_export.py 从 macro_data.json 嵌入 dashboard_data.json）。
+     由 scan.py 在 ENABLE_MACRO_PANEL=1 时生成；未开启 / 缺失 → 显示「尚未开启」，不报错。 */
+  function renderMacro() {
+    var m = MACRO;
+    var wrap = $('#macroBody');
+    var sub = $('#macroSub');
+    if (!wrap) return;
+
+    if (!m) {
+      wrap.innerHTML = '<div class="na">宏观板块尚未开启（scan 未生成 macro_data.json）。' +
+        '开启 ENABLE_MACRO_PANEL=1 后自动出现。</div>';
+      return;
+    }
+    if (sub) {
+      var g = m.generated_at || '';
+      sub.textContent = g ? ('更新 ' + g.replace('T', ' ').replace('Z', ' UTC')) : '';
+    }
+    if (m.error) {
+      wrap.innerHTML = '<div class="na">宏观数据暂不可用：' + esc(String(m.error)) + '</div>';
+      return;
+    }
+
+    var econ = m.economic || [];
+    var spk = m.speakers || [];
+
+    var econHtml = '<div class="news-sub">📊 经济数据</div>';
+    if (!econ.length) {
+      econHtml += '<div class="na">暂无经济数据</div>';
+    } else {
+      econHtml += '<div class="macro-econ-grid">' + econ.map(macroEconCard).join('') + '</div>';
+    }
+
+    var spkHtml = '<div class="news-sub" style="margin-top:10px">🎙️ 重要人物讲话</div>';
+    if (!spk.length) {
+      spkHtml += '<div class="na">暂无重要讲话</div>';
+    } else {
+      spkHtml += spk.map(macroSpeakerCard).join('');
+    }
+
+    wrap.innerHTML = econHtml + spkHtml;
+  }
+
+  function macroEconCard(e) {
+    if (!e) return '';
+    var delta = macroDelta(e.value, e.prev);
+    var sent = e.sentiment ? sentIcon(e.sentiment) : '';
+    var rationale = (e.sentiment && e.rationale)
+      ? '<div class="news-rationale">' + esc(e.rationale) + '</div>' : '';
+    var prevTxt = (e.prev != null && e.prev !== '') ? ('前值 ' + esc(String(e.prev))) : '';
+    var src = e.source ? (' · ' + esc(e.source)) : '';
+    var date = e.date ? (' · ' + esc(String(e.date))) : '';
+    return '<div class="macro-econ">' +
+      '<div class="macro-econ-h">' + esc(e.indicator || '') + ' ' + sent + '</div>' +
+      '<div class="macro-econ-v">' + esc(e.value != null && e.value !== '' ? String(e.value) : '—') +
+      (delta ? (' <span class="macro-d ' + delta.cls + '">' + delta.txt + '</span>') : '') + '</div>' +
+      '<div class="macro-econ-m">' + prevTxt + src + date + '</div>' +
+      rationale +
+      '</div>';
+  }
+
+  function macroSpeakerCard(s) {
+    if (!s) return '';
+    var person = s.person ? ('<b class="macro-spk-person">' + esc(s.person) + '</b> ') : '';
+    var sent = s.sentiment ? sentIcon(s.sentiment) : '';
+    var rationale = (s.sentiment && s.rationale)
+      ? '<div class="news-rationale">' + esc(s.rationale) + '</div>' : '';
+    var meta = [s.time, s.source].filter(Boolean).map(esc).join(' · ');
+    return '<div class="macro-spk">' +
+      '<div class="macro-spk-h">' + person + sent + '</div>' +
+      '<div class="macro-spk-c">' + esc(s.content || '') + '</div>' +
+      (meta ? ('<div class="macro-econ-m">' + meta + '</div>') : '') +
+      rationale +
+      '</div>';
+  }
+
+  /* 经济数据 value/prev 均为百分比字符串（如 "3.20%"）；计算方向（百分点），仅展示箭头不重算。
+     通胀类 prev=None → 无 delta；利率类 prev 有值 → 显示 ▲/▼ 与差值。 */
+  function macroDelta(v, prev) {
+    var a = pctNum(v), b = pctNum(prev);
+    if (a === null || b === null || b === 0) return null;
+    var d = a - b;
+    if (Math.abs(d) < 0.005) return { txt: '→', cls: 'na' };
+    return { txt: (d > 0 ? '▲' : '▼') + Math.abs(d).toFixed(2) + 'pt', cls: d > 0 ? 'up' : 'down' };
+  }
+
+  function pctNum(s) {
+    if (s == null || s === '') return null;
+    var m = String(s).match(/-?\d+(\.\d+)?/);
+    return m ? parseFloat(m[0]) : null;
   }
 
   function newsRow(x) {

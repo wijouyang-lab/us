@@ -165,8 +165,11 @@ check("D5. 存在提交范围守卫（非预期文件即失败）",
 print("\n--- E. concurrency ---")
 check("E1. cancel-in-progress = false（不取消进行中的 run）",
       "cancel-in-progress: false" in wf)
-check("E2. concurrency group 仅限 dashboard-data",
-      "group: dashboard-data-refresh" in wf and wf.count("concurrency:") == 1)
+# H1 修复（批次 3）：dashboard-data 与 review 共用 group `us-stock-portfolio-ledger`
+# 以串行化写 positions.csv / portfolio_50000_*.csv，避免并发覆盖账本。
+# 此处校验 group 为刻意设定的共享组、且本文件仅一个 concurrency 块（无重复/误写）。
+check("E2. concurrency group 为刻意的 ledger 串行组（与 review 共享）",
+      "group: us-stock-portfolio-ledger" in wf and wf.count("concurrency:") == 1)
 import yaml  # noqa: E402
 _parsed = yaml.safe_load(wf)
 _on = _parsed.get(True, _parsed.get("on"))

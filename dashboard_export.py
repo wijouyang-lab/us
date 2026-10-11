@@ -2765,6 +2765,25 @@ def build_news(data_dir: Path) -> dict | None:
     return d
 
 
+def build_macro(data_dir: Path) -> dict | None:
+    """读取 macro_data.json（由 scan.py 在 ENABLE_MACRO_PANEL=1 时生成）。
+
+    文件不存在 / 解析失败 / 非字典 → 返回 None（前端显示「宏观板块尚未开启」，不报错）。
+    本函数只读、不写、不触发任何网络请求。
+    schema：macro.v1 —— {schema_version, generated_at, economic[], speakers[], error}。
+    """
+    p = data_dir / "macro_data.json"
+    if not p.exists():
+        return None
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(d, dict):
+        return None
+    return d
+
+
 def _open_position_tickers(data_dir: Path) -> list[str]:
     """读 portfolio_50000_positions.csv，返回 Status=OPEN 的 ticker（大写去重去空）。
 
@@ -3067,6 +3086,9 @@ def main(argv=None):
     # ---- 金融新闻板块（只读 dashboard/data/news_data.json；缺失则 null，前端显示「暂无新闻」）----
     news = build_news(data_dir)
 
+    # ---- 美股宏观板块（只读 macro_data.json；ENABLE_MACRO_PANEL=1 时由 scan 生成，缺失则 null）----
+    macro = build_macro(data_dir)
+
     # ---- 组装 ----
     payload = {
         "generated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -3079,6 +3101,7 @@ def main(argv=None):
         "portfolio": portfolio,
         "quant": quant,
         "news": news,
+        "macro": macro,
         "meta": {
             "data_source": (
                 f"{(pending_path.name + ' + ') if pending_path else ''}"

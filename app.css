@@ -229,6 +229,20 @@ button{font-family:inherit}
 .news-h:hover{color:var(--accent);text-decoration:underline}
 .news-sent{flex:0 0 auto;font-size:11.5px;line-height:1.2;user-select:none;transform:translateY(1px)}
 .news-src{flex:0 0 auto;color:var(--text-3);font-size:11px}
+
+/* ---------------- 美股宏观板块 ---------------- */
+.macro-econ-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}
+.macro-econ{border:1px solid var(--border-2);border-radius:9px;background:var(--soft);padding:8px 9px;min-width:0}
+.macro-econ-h{font-size:12px;font-weight:700;color:var(--text);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.macro-econ-v{font-size:18px;font-weight:750;letter-spacing:-.3px;font-variant-numeric:tabular-nums;margin-top:2px;line-height:1.1}
+.macro-econ-v .macro-d{font-size:11.5px;font-weight:700;margin-left:6px;vertical-align:middle}
+.macro-econ-m{font-size:10.5px;color:var(--text-3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.macro-spk{border-bottom:1px dashed var(--border-2);padding:6px 0;font-size:12px;line-height:1.5}
+.macro-spk:last-child{border-bottom:none}
+.macro-spk-h{display:flex;align-items:center;gap:4px;font-size:12px}
+.macro-spk-person{color:var(--accent)}
+.macro-spk-c{color:var(--text-1);margin-top:1px}
+.macro-d.na{color:var(--text-3)}
 .news-ticker{border:1px solid var(--border-2);border-radius:var(--r-sm);background:var(--soft);padding:7px 9px;margin-bottom:8px}
 .news-ticker-on{border-color:var(--accent-soft);background:var(--accent-soft)}
 .news-ticker-h{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:4px}
