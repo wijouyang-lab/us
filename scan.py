@@ -1787,6 +1787,182 @@ def get_us_economic_data(combined_news_text=""):
     return "\n".join(lines), data
 
 
+# ==================== 8.x 美股宏观板块（flag 门控，默认关闭） ====================
+# ENABLE_MACRO_PANEL=1 才由 scan 落盘 macro_data.json；失败不阻断 scan。
+MACRO_DATA_NAME = "macro_data.json"
+
+# 经济指标中文标签 → 展示名（与 scan 内部 dict key 对应，仅做美化）
+_MACRO_INDICATOR_NAMES = {
+    "CPI指数": "CPI",
+    "核心CPI指数": "核心CPI",
+    "失业率": "失业率",
+    "核心PCE指数": "核心PCE",
+    "10Y国债": "10Y国债",
+    "5Y国债": "5Y国债",
+    "13周国债": "13周国债",
+    "联邦基金有效利率": "联邦基金利率",
+}
+
+# 已知人物（从讲话标题尽力抽取 person；抽不到置 null）
+_KNOWN_SPEAKERS = ("Powell", "Warsh", "Waller", "Bowman", "Trump", "Yellen", "Bessent")
+
+
+def macro_panel_enabled():
+    """宏观板块总开关：默认关闭，周一验证前不激活。"""
+    return os.environ.get("ENABLE_MACRO_PANEL") == "1"
+
+
+def _fmt_pct(v):
+    try:
+        return f"{float(v):.2f}%"
+    except Exception:
+        return None
+
+
+def _parse_speakers(key_people_news):
+    """把 key_people_news 字符串（RSS 标题拼接）解析为结构化列表。
+
+    单行格式：'[Google News] MM-DD HH:MM - 标题'，或回退原始行（无 [source] 前缀）。
+    person/title 尽力抽取，缺则 null；content/time/source 尽可能解析。
+    """
+    if not key_people_news:
+        return []
+    out = []
+    for raw in str(key_people_news).split("\n"):
+        raw = raw.strip()
+        if not raw:
+            continue
+        content, source, ts = raw, None, None
+        m = re.match(r"\[(?P<src>[^\]]+)\]\s*(?P<ts>\d{2}-\d{2}\s+\d{2}:\d{2})?\s*-\s*(?P<body>.*)$", raw)
+        if m:
+            source, ts, content = m.group("src"), m.group("ts"), m.group("body").strip()
+        elif " - " in raw:
+            idx = raw.find(" - ")
+            left, content = raw[:idx], raw[idx + 3:].strip()
+            ms = re.match(r"\[(?P<src>[^\]]+)\]", left)
+            if ms:
+                source = ms.group("src")
+        person = None
+        low = content.lower()
+        for name in _KNOWN_SPEAKERS:
+            if name.lower() in low:
+                person = name
+                break
+        out.append({
+            "person": person,
+            "title": None,
+            "content": content,
+            "time": ts,
+            "source": source or "未知",
+            "sentiment": None,
+            "rationale": None,
+        })
+    return out
+
+
+def _build_macro_payload(economic_structured, key_people_news):
+    """构造 economic/speakers 列表（不含 AI 判断）。"""
+    economic = []
+    for label, item in (economic_structured or {}).items():
+        if not isinstance(item, dict):
+            continue
+        has_yoy = item.get("yoy") is not None
+        headline = item.get("yoy") if has_yoy else item.get("value")
+        # 通胀类（有 yoy）prev 为上一期指数，不展示为百分比 → 置 None；
+        # 利率/比率类（无 yoy）prev 为上一期利率，可展示为百分比。
+        prev = item.get("prev") if not has_yoy else None
+        economic.append({
+            "indicator": _MACRO_INDICATOR_NAMES.get(label, label),
+            "value": _fmt_pct(headline) if headline is not None else None,
+            "prev": _fmt_pct(prev) if prev is not None else None,
+            "date": item.get("date"),
+            "source": item.get("source"),
+            "sentiment": None,
+            "rationale": None,
+        })
+    speakers = _parse_speakers(key_people_news)
+    return economic, speakers
+
+
+def _macro_ai_judge(client, economic, speakers):
+    """批量 AI 判断利好/利空。返回补齐 sentiment/rationale 后的 (economic, speakers)。
+    AI 失败 / 缺 headline（combined 为空）/ 返回结构不符 → 所有 sentiment 保持 null（不阻断）。"""
+    combined = []
+    for e in economic:
+        combined.append({"type": "economic", "text": f"{e.get('indicator')}: 值 {e.get('value')}，前值 {e.get('prev')}，来源 {e.get('source')}"})
+    for s in speakers:
+        combined.append({"type": "speaker", "text": s.get("content")})
+    if not combined:
+        return economic, speakers
+    items_txt = "\n".join(
+        f"{i + 1}. [{c['type']}] {c.get('text')}" for i, c in enumerate(combined)
+    )
+    prompt = (
+        "你是美股宏观分析师。判断以下宏观事件对美股整体（大盘）的影响方向。\n"
+        "规则：\n"
+        "- 经济数据：CPI/PCE/核心通胀高于预期=偏利空（通胀/加息压力），低于预期=偏利好；"
+        "失业率上升=偏利空（经济走弱），下降=偏利好；需结合语境（经济强+通胀可控可能利好风险资产）。\n"
+        "- 人物讲话：鹰派（暗示加息/维持高利率）=偏利空；鸽派（暗示降息/宽松）=偏利好；中性表述=中性。\n"
+        "- 仅基于给定文本判断，不要使用外部知识。\n"
+        "返回 JSON 对象，结构：{\"items\": [ ... ]}，items 长度与输入条目数一致、顺序一致，每项：\n"
+        '{"sentiment": "bullish|bearish|neutral", "rationale": "≤30字中文简要理由"}\n'
+        "只输出 JSON 对象，不要任何解释。\n\n"
+        "输入条目：\n" + items_txt
+    )
+    try:
+        txt = _model_stream_text(
+            client, model=TARGET_MODEL, max_tokens=2000,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        obj = _extract_json_object(txt)
+        arr = (obj or {}).get("items") if isinstance(obj, dict) else None
+        if not isinstance(arr, list) or len(arr) != len(combined):
+            raise ValueError(
+                f"AI 返回数组长度不符（期望 {len(combined)}，实为 "
+                f"{len(arr) if isinstance(arr, list) else '非数组'}）"
+            )
+        econ_count = len(economic)
+        for i, r in enumerate(arr):
+            sent = (r or {}).get("sentiment")
+            rat = (r or {}).get("rationale")
+            if sent not in ("bullish", "bearish", "neutral"):
+                sent = None
+            if i < econ_count:
+                economic[i]["sentiment"] = sent
+                economic[i]["rationale"] = (rat if sent else None)
+            else:
+                sp = speakers[i - econ_count]
+                sp["sentiment"] = sent
+                sp["rationale"] = (rat if sent else None)
+    except Exception as e:
+        print(f"⚠️ 宏观 AI 判断失败（sentiment 置 null，不阻断）：{type(e).__name__}: {e}")
+    return economic, speakers
+
+
+def write_macro_data(economic_structured, key_people_news, client, output_dir="."):
+    """落盘 macro_data.json（前端宏观板块数据源）。
+
+    flag 由调用方（scan main）控制；本函数整体可被外层 try 包裹。
+    client 为 None 时跳过 AI 判断（仅落盘经济/讲话原文）。
+    返回写入路径或 None。
+    """
+    economic, speakers = _build_macro_payload(economic_structured, key_people_news)
+    if client is not None:
+        economic, speakers = _macro_ai_judge(client, economic, speakers)
+    payload = {
+        "schema_version": "macro.v1",
+        "generated_at": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "economic": economic,
+        "speakers": speakers,
+        "error": None,
+    }
+    path = os.path.join(output_dir, MACRO_DATA_NAME)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    print(f"📡 宏观板块数据已落盘：{path}（经济 {len(economic)} 条 / 讲话 {len(speakers)} 条）")
+    return path
+
+
 def _quick_fred(sid):
     """快速单次 FRED 获取，3秒超时，零重试。"""
     try:
@@ -3728,6 +3904,14 @@ if __name__ == "__main__":
     print(event_regime_text)
 
     client = ClawSocketClient(api_key=os.environ["CLAWSOCKET_API_KEY"], base_url=os.environ["CLAWSOCKET_BASE_URL"])
+
+    # >>> Feature: 美股宏观板块（默认关闭；ENABLE_MACRO_PANEL=1 才落盘，失败不阻断 scan）>>>
+    if macro_panel_enabled():
+        try:
+            write_macro_data(economic_structured, key_people_news, client, output_dir=".")
+        except Exception as _macro_e:
+            print(f"⚠️ [Macro] 宏观数据落盘失败（不影响 scan）：{type(_macro_e).__name__}: {_macro_e}")
+
     signal_analysis = analyze_market_signals(combined_news, client)
     signal_block = build_market_signal_text(signal_analysis)
     market_signal_text = signal_block[0] if signal_block else ""
