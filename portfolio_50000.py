@@ -743,7 +743,8 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
 
 # ------------------------------------------------------------------ 主流程
 def run(data_dir: Path, offline: bool = False, price_only: bool = False,
-        intraday_stop: bool = False) -> dict:
+        intraday_stop: bool = False, buy_only: bool = False,
+        no_buy: bool = False) -> dict:
     today = us_today_str()
     if intraday_stop:
         # 盘中机械止损：只在 09:30 ≤ ET < 16:00 触发，复用 fetch_last_closes（prepost=False）。
@@ -794,10 +795,14 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
           f"{sum(1 for r in recs.values() if r['Tag'] == CORE_TAG)} 条")
 
     # 1) 先卖后买：释放 Unit 与现金
-    for line in process_sells(positions, transactions, recs, today):
-        print("   " + line)
-    for line in process_buys(positions, transactions, recs, meta, today):
-        print("   " + line)
+    #    --buy-only（scan 前置买入）：跳过卖出，仅做买入决策
+    #    --no-buy（review 接手）：跳过买入，沿用 Review 终态裁决做卖出
+    if not buy_only:
+        for line in process_sells(positions, transactions, recs, today):
+            print("   " + line)
+    if not no_buy:
+        for line in process_buys(positions, transactions, recs, meta, today):
+            print("   " + line)
 
     # 2) 交易流水按日期排序，回填 Cash_After（审计可核对）
     transactions.sort(key=lambda t: (str(t.get("Date", "")), str(t.get("Txn_ID", ""))))
@@ -883,13 +888,20 @@ def main(argv=None):
     ap.add_argument("--intraday-stop", action="store_true",
                     help="盘中机械止损检查（09:30-16:00 ET）：实时价≤止损线则机械卖出；"
                          "不调用 process_buys/process_sells，不影响盘后 Review 路径")
+    ap.add_argument("--buy-only", action="store_true",
+                    help="仅执行买入决策（process_buys），跳过 process_sells；"
+                         "用于 scan 阶段前置买入（ENABLE_SCAN_BUY_DECISION 门控）")
+    ap.add_argument("--no-buy", action="store_true",
+                    help="跳过买入决策（process_buys），其余照常；"
+                         "用于 review 阶段（买入已由 scan 完成）")
     args = ap.parse_args(argv)
     d = Path(args.data_dir).resolve()
     if not (d / "trade_history.csv").exists():
         print(f"❌ 缺少 trade_history.csv：{d}")
         return 1
     run(d, offline=args.offline, price_only=args.price_only,
-        intraday_stop=args.intraday_stop)
+        intraday_stop=args.intraday_stop,
+        buy_only=args.buy_only, no_buy=args.no_buy)
     return 0
 
 
