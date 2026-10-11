@@ -2442,6 +2442,125 @@ def _read_portfolio_target(data_dir: Path):
     return out
 
 
+def _build_trade_stats(txn_rows, open_positions):
+    """交易观测统计：交易频率 + 胜率 + 平均持仓 + 累计已实现盈亏。
+
+    只读透传 portfolio_50000_transactions.csv / positions.csv，绝不重算盈亏；
+    缺失字段（如已平仓 unit 的 entry_date 不在 OPEN 持仓中）跳过不伪造，而非捏造。
+
+    口径（与前端 renderStopped 一致）：
+      · 胜率 = 盈利平仓笔数(SELL 且 realized_pnl>0) / 有效平仓笔数(SELL 且有 realized_pnl)；
+        所有卖出都算（止损 / 换股 / 止盈）；realized_pnl 缺失的笔跳过、不计入分母。
+      · 平均收益率 = realized_pnl / (amount - realized_pnl) * 100（入场成本由成交额反推）。
+      · 平均持仓天数 = 每笔 SELL 的 (锚点日期 − entry_date) 平均；entry 取不到则跳过。
+      · 锚点日期 = 流水最新日期（不依赖本地时钟，避免跨时区漂移）。
+    返回 dict；输入全空时返回全 0 / null。计算异常 → 返回 None（fail-closed）。
+    """
+    try:
+        # 入场日映射：仅当前 OPEN 持仓可用（已平仓无 entry 记录，缺则跳过）
+        entry_map = {}
+        for p in (open_positions or []):
+            uid = p.get("unit_id") or None
+            ed = p.get("entry_date") or None
+            if uid and ed:
+                entry_map[uid] = ed
+
+        def _act(r):
+            return clean_text(r.get("Action")).upper() or ""
+
+        buys = [r for r in txn_rows if _act(r) == "BUY"]
+        sells = [r for r in txn_rows if _act(r) == "SELL"]
+
+        # 锚点：流水最新日期
+        valid_dates = [clean_text(r.get("Date")) or "" for r in txn_rows]
+        valid_dates = [d for d in valid_dates if d]
+        anchor = max(valid_dates) if valid_dates else None
+        anchor_d = None
+        if anchor:
+            try:
+                anchor_d = dt.date.fromisoformat(anchor)
+            except Exception:
+                anchor_d = None
+
+        def _within(r, days):
+            if not anchor_d:
+                return False
+            d = clean_text(r.get("Date")) or ""
+            if not d:
+                return False
+            try:
+                dd = dt.date.fromisoformat(d)
+            except Exception:
+                return False
+            return 0 <= (anchor_d - dd).days <= days
+
+        def _cnt(action, window):
+            return sum(1 for r in txn_rows
+                       if _act(r) == action and _within(r, window))
+
+        total_buys = len(buys)
+        total_sells = len(sells)
+        buys_7 = _cnt("BUY", 7)
+        buys_30 = _cnt("BUY", 30)
+        sells_7 = _cnt("SELL", 7)
+        sells_30 = _cnt("SELL", 30)
+
+        # 累计已实现盈亏（所有流水；BUY 通常为 0）
+        total_realized = 0.0
+        for r in txn_rows:
+            rp = parse_num(r.get("Realized_PnL"))
+            if rp is not None:
+                total_realized += rp
+
+        # 胜率：所有 SELL，realized_pnl > 0 为赢；缺失 realized_pnl 的笔跳过（不计入分母）
+        closed = []  # (realized_pnl, return_pct, holding_days)
+        for r in sells:
+            rp = parse_num(r.get("Realized_PnL"))
+            if rp is None:
+                continue
+            amt = parse_num(r.get("Amount"))
+            cost = (amt - rp) if amt is not None else None  # 入场成本 = 成交额 - 已实现（与 renderStopped 一致）
+            pct = (rp / cost * 100) if (cost is not None and cost > 0) else None
+            uid = clean_text(r.get("Unit_ID")) or None
+            hd = None
+            if uid and uid in entry_map and anchor_d is not None:
+                try:
+                    ed = dt.date.fromisoformat(entry_map[uid])
+                    hd = max((anchor_d - ed).days, 0)
+                except Exception:
+                    hd = None
+            closed.append((rp, pct, hd))
+
+        closed_count = len(closed)
+        wins = sum(1 for rp, _, _ in closed if rp > 0)
+        win_rate = (wins / closed_count * 100) if closed_count else None
+        win_pcts = [p for rp, p, _ in closed if rp > 0 and p is not None]
+        loss_pcts = [p for rp, p, _ in closed if rp < 0 and p is not None]
+        avg_win_pct = (sum(win_pcts) / len(win_pcts)) if win_pcts else None
+        avg_loss_pct = (sum(loss_pcts) / len(loss_pcts)) if loss_pcts else None
+        holding_days = [hd for _, _, hd in closed if hd is not None]
+        avg_holding_days = (sum(holding_days) / len(holding_days)) if holding_days else None
+
+        return {
+            "total_buys": total_buys,
+            "total_sells": total_sells,
+            "buys_last_7d": buys_7,
+            "buys_last_30d": buys_30,
+            "sells_last_7d": sells_7,
+            "sells_last_30d": sells_30,
+            "avg_holding_days": round_num(avg_holding_days, 1),
+            "win_rate": round_num(win_rate, 1),
+            "wins": wins,
+            "closed_count": closed_count,
+            "avg_win_pct": round_num(avg_win_pct, 2),
+            "avg_loss_pct": round_num(avg_loss_pct, 2),
+            "total_realized_pnl": round_num(total_realized, 2),
+        }
+    except Exception as e:
+        log(f"[WARN] 交易统计计算失败（{e}），trade_stats 输出 null")
+        return None
+
+
 def build_portfolio(data_dir: Path):
     """$50,000 长期模拟投资组合（Portfolio Ledger）。
 
@@ -2502,8 +2621,11 @@ def build_portfolio(data_dir: Path):
             "holding_days": _days(entry_date),
         })
 
+    txn_raw = read_csv_rows(txn_p)
+    # 交易观测统计：从完整流水计算（不被下方 20 条截断窗口影响）
+    trade_stats = _build_trade_stats(txn_raw, positions)
     txns = []
-    for r in read_csv_rows(txn_p):
+    for r in txn_raw:
         txns.append({
             "date": clean_text(r.get("Date")) or None,
             "ticker": clean_text(r.get("Ticker")).upper() or None,
@@ -2564,6 +2686,7 @@ def build_portfolio(data_dir: Path):
                 parse_num(last.get("Stock_Value")), parse_num(last.get("Total_Equity"))), 2),
         "positions": positions,
         "transactions": txns,
+        "trade_stats": trade_stats,
         "equity_curve": curve,
     }
 
