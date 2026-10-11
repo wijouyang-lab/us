@@ -45,6 +45,7 @@ jobs:
           CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
           ENABLE_TARGET_FILE: "1"
           ENABLE_SCAN_BUY_DECISION: ${{ vars.ENABLE_SCAN_BUY_DECISION }}
+          ENABLE_MACRO_PANEL: ${{ vars.ENABLE_MACRO_PANEL }}
         run: python scan.py
 
       # 买入决策前置到 scan（flag 门控，默认关闭）：repo variable 不存在 → 步骤跳过 → 走旧路径。
