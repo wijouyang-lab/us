@@ -980,8 +980,8 @@
       return;
     }
 
-    /* 市场流：top 10（过滤无市场影响的条目） */
-    var m = (news.market_news || []).filter(isMarketRelevant);
+    /* 市场流：top 10（过滤无市场影响的条目 + 砍掉中性情绪） */
+    var m = (news.market_news || []).filter(isNewsVisible);
     if (!m.length) {
       mEl.innerHTML = '<div class="na">暂无相关市场新闻</div>';
     } else {
@@ -1000,7 +1000,7 @@
     var pool = {};
     STOCKS.forEach(function (s) { if (s.ticker) pool[String(s.ticker).toUpperCase()] = (s.bucket || ''); });
     tEl.innerHTML = '<div class="news-sub">🏷️ 持仓 / 推荐联动</div>' + positions.map(function (sym) {
-      var list = (tk[sym] || []).filter(isMarketRelevant);
+      var list = (tk[sym] || []).filter(isNewsVisible);
       var on = pool[sym] ? ' news-ticker-on' : '';
       var body = list.length
         ? list.slice(0, 5).map(newsRow).join('')
@@ -1213,6 +1213,13 @@
     // market_relevant === false → 过滤掉（AI 判定对美股市场无直接或间接影响）；
     // 缺失 / true / 其它值 → 显示（保守，不误删，且向后兼容旧数据）。
     return !x || x.market_relevant !== false;
+  }
+
+  function isNewsVisible(x) {
+    // 统一可见性：市场相关 且 非中性情绪。砍掉所有 neutral 条目（中性不提供方向信息）。
+    // · market_relevant === false → 隐藏；· sentiment === 'neutral' → 隐藏；
+    // · 缺失 / true / bullish / bearish → 保留（向后兼容旧数据，缺失情绪不误删）。
+    return isMarketRelevant(x) && !(x && x.sentiment === 'neutral');
   }
 
   function sentIcon(s) {
