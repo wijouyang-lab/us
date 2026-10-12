@@ -1,0 +1,30 @@
+name: _temp-test-datasources
+on:
+  push:
+    paths: ['.github/workflows/_temp-test-datasources.yml']
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test fear-greed
+        run: |
+          pip install fear-greed
+          python3 -c "
+          from fear_greed import fear_greed
+          d = fear_greed.get()
+          print('FG_OK score=', d.get('score'), 'rating=', d.get('rating'))
+          " || echo "FG_FAILED"
+      - name: Test cme-fedwatch
+        run: |
+          pip install cme-fedwatch
+          python3 -c "
+          from cme_fedwatch import get_probabilities
+          d = get_probabilities('next')
+          print('FW_OK meetings=', len(d.get('meetings', [])))
+          " || echo "FW_FAILED"
