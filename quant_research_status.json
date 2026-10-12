@@ -1,0 +1,57 @@
+{
+  "run_at": "2026-10-12T13:17:37.980376+00:00",
+  "workdir": "/home/runner/work/us/us",
+  "strict": false,
+  "only_phase": null,
+  "overall_status": "FAILED",
+  "phases": {
+    "2": {
+      "name": "backtest",
+      "status": "OK",
+      "written": true,
+      "reason": null,
+      "schema_warnings": [],
+      "_error": null
+    },
+    "3": {
+      "name": "validation",
+      "status": "ERROR",
+      "written": false,
+      "reason": "异常: ModuleNotFoundError: No module named 'scipy'",
+      "schema_warnings": [],
+      "_error": "ModuleNotFoundError: No module named 'scipy'"
+    },
+    "4": {
+      "name": "score_v2",
+      "status": "NOT_ENOUGH_DATA",
+      "written": false,
+      "reason": "输入缺失或为空: quant_factor_validation.csv",
+      "schema_warnings": [],
+      "_error": null
+    },
+    "5": {
+      "name": "walk_forward",
+      "status": "NOT_ENOUGH_DATA",
+      "written": false,
+      "reason": "Window 数量=0（数据不足）",
+      "schema_warnings": [],
+      "_error": null
+    },
+    "6": {
+      "name": "shadow",
+      "status": "NOT_ENOUGH_DATA",
+      "written": false,
+      "reason": "SHADOW_ENABLE=false（未人工启用），Shadow 保持 DISABLED",
+      "schema_warnings": [],
+      "_error": null
+    },
+    "7": {
+      "name": "production",
+      "status": "OK",
+      "written": true,
+      "reason": null,
+      "schema_warnings": [],
+      "_error": null
+    }
+  }
+}
