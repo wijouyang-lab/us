@@ -926,6 +926,7 @@
     renderRuntime();
     renderGmBar();
     renderGlobal();
+    renderMarketIndicators();
     /* Review 复盘 KPI + History 跟踪趋势：重新联动 review.records[] / history[]，
        数据仍由 dashboard_export.py 从 review_history.csv 原样展开，前端不重算。 */
     renderReview();
@@ -1051,6 +1052,96 @@
     }
 
     wrap.innerHTML = econHtml + spkHtml;
+  }
+
+
+  /* ---------------- 市场情绪指标板块（F&G + FedWatch；数据来自 DATA.market_indicators）---------------- */
+  /* flag 关 / 文件缺失 → dashboard_export 不注入 market_indicators → 读不到 → 隐藏整块（与现在逐字节一致）。
+     不调用任何 AI；纯展示从 market_indicators.json 透传的行情 / 概率数据。 */
+  function miBandClass(score) {
+    var v = num(score);
+    if (v === null) return 'mi-neutral';
+    if (v < 25) return 'mi-fear-extreme';
+    if (v < 45) return 'mi-fear';
+    if (v <= 55) return 'mi-neutral';
+    if (v < 75) return 'mi-greed';
+    return 'mi-greed-extreme';
+  }
+
+  function renderMarketIndicators() {
+    var mi = DATA && DATA.market_indicators;
+    var card = $('#marketIndicatorsCard');
+    var body = $('#marketIndicatorsBody');
+    if (!card || !body) return;
+    if (!mi) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+
+    var html = '';
+    var fg = mi.fear_greed;
+    var fw = mi.fedwatch;
+
+    // ---- F&G：环形图（复用 ring，按 score 自动配色）+ 5 档文字标签 ----
+    html += '<div class="mi-block">';
+    html += '<div class="mi-title">🌡️ CNN 恐惧贪婪指数</div>';
+    if (fg && num(fg.score) !== null) {
+      var v = num(fg.score);
+      html += '<div class="mi-fg">';
+      html += ring(v, 84, (fg.rating || ''));
+      html += '<div class="mi-fg-meta">';
+      html += '<span class="mi-band ' + miBandClass(v) + '">' + esc(fg.rating || NA) + '</span>';
+      if (fg.timestamp) {
+        html += '<span class="mi-ts">' + esc(String(fg.timestamp).replace('T', ' ').replace('Z', ' UTC')) + '</span>';
+      }
+      html += '</div>';
+      if (fg.subindicators && Object.keys(fg.subindicators).length) {
+        html += '<div class="mi-sub">';
+        html += Object.keys(fg.subindicators).map(function (k) {
+          var s = fg.subindicators[k] || {};
+          return '<span class="mi-sub-item"><b>' + esc(k) + '</b> ' +
+            (num(s.score) === null ? NA : num(s.score).toFixed(1)) +
+            ' <em class="' + miBandClass(s.score) + '">' + esc(s.rating || '') + '</em></span>';
+        }).join('');
+        html += '</div>';
+      }
+      html += '</div>';
+    } else {
+      html += '<div class="na">暂不可用</div>';
+    }
+    html += '</div>';
+
+    // ---- FedWatch：下次 FOMC 日期 + 概率条形图（hold / cut_Nbp / hike_Nbp）----
+    html += '<div class="mi-block">';
+    html += '<div class="mi-title">🏦 CME FedWatch</div>';
+    if (fw && fw.probabilities && Object.keys(fw.probabilities).length) {
+      var nm = fw.next_meeting || NA;
+      var ct = fw.current_target ? ('当前目标区间 ' + esc(fw.current_target)) : '';
+      html += '<div class="mi-fw-head">下次 FOMC：<b>' + esc(nm) + '</b>' +
+        (ct ? ' <span class="mi-ts">' + ct + '</span>' : '') + '</div>';
+      html += '<div class="mi-bars">';
+      html += Object.keys(fw.probabilities).map(function (k) {
+        var val = num(fw.probabilities[k]) || 0;
+        var label = k.replace('cut_', '降息 ').replace('hike_', '加息 ').replace('bp', 'bp').replace('_', ' ');
+        var cls = k.indexOf('cut') === 0 ? 'mi-cut' : (k.indexOf('hike') === 0 ? 'mi-hike' : 'mi-hold');
+        return '<div class="mi-bar-row">' +
+          '<span class="mi-bar-label">' + esc(label) + '</span>' +
+          '<span class="mi-bar-track"><span class="mi-bar-fill ' + cls + '" style="width:' + val.toFixed(1) + '%"></span></span>' +
+          '<span class="mi-bar-val">' + val.toFixed(1) + '%</span>' +
+          '</div>';
+      }).join('');
+      html += '</div>';
+    } else {
+      html += '<div class="na">暂不可用</div>';
+    }
+    html += '</div>';
+
+    if (mi.error) {
+      html += '<div class="mi-err">数据异常：' + esc(JSON.stringify(mi.error)) + '</div>';
+    }
+
+    body.innerHTML = html;
   }
 
   function macroEconCard(e) {

@@ -518,3 +518,34 @@ button{font-family:inherit}
   font-size:11px;font-weight:700;padding:1px 8px;border-radius:99px}
 .intraday-stop .is-reason{color:var(--text-2);margin-left:auto;max-width:60%;
   text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ---------- 市场情绪指标（F&G + FedWatch） ---------- */
+#marketIndicatorsCard .mi-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:8px;
+  display:flex;align-items:center;gap:6px}
+.mi-block{padding:10px 0;border-top:1px dashed var(--line, #eef0f4)}
+.mi-block:first-of-type{border-top:none;padding-top:0}
+.mi-fg{display:flex;align-items:center;gap:14px}
+.mi-fg-meta{display:flex;flex-direction:column;gap:3px}
+.mi-band{font-weight:800;font-size:14px;padding:2px 10px;border-radius:99px;display:inline-block}
+.mi-fear-extreme{background:#fdecea;color:#b71c1c}
+.mi-fear{background:#fff3e0;color:#e65100}
+.mi-neutral{background:#eceff1;color:#455a64}
+.mi-greed{background:#e8f5e9;color:#1b5e20}
+.mi-greed-extreme{background:#c8e6c9;color:#064b13}
+.mi-ts{font-size:11.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.mi-sub{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.mi-sub-item{font-size:11.5px;color:var(--text-2);background:var(--bg-2, #f6f7f9);
+  border:1px solid var(--line, #eef0f4);border-radius:6px;padding:2px 7px}
+.mi-sub-item b{color:var(--text)}
+.mi-fw-head{font-size:13px;color:var(--text);margin-bottom:8px}
+.mi-fw-head b{color:var(--accent)}
+.mi-bars{display:flex;flex-direction:column;gap:6px}
+.mi-bar-row{display:flex;align-items:center;gap:8px;font-size:12.5px}
+.mi-bar-label{width:74px;color:var(--text-2);flex:none}
+.mi-bar-track{flex:1;height:10px;background:var(--bg-2, #f0f2f5);border-radius:99px;overflow:hidden}
+.mi-bar-fill{display:block;height:100%;border-radius:99px}
+.mi-bar-fill.mi-hold{background:#90a4ae}
+.mi-bar-fill.mi-cut{background:#ef9a9a}
+.mi-bar-fill.mi-hike{background:#a5d6a7}
+.mi-bar-val{width:56px;text-align:right;color:var(--text);font-variant-numeric:tabular-nums;flex:none}
+.mi-err{margin-top:10px;font-size:12px;color:#c62828}
