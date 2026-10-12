@@ -56,6 +56,10 @@ jobs:
       # 与 scan.yml 一致：开启后 dashboard_export 才会读 portfolio_50000_target.csv
       # 并注入 portfolio.target，前端「AI 目标持仓」板块才可见（scan 已落盘该文件）。
       ENABLE_TARGET_FILE: "1"
+      # 市场情绪指标（F&G + FedWatch）：默认不设 → 步骤被 if: 跳过，dashboard 输出与现在逐字节一致。
+      # 激活方式：在仓库 Settings → Secrets and variables → Actions → Variables 新增
+      # ENABLE_MARKET_INDICATORS=1。
+      ENABLE_MARKET_INDICATORS: ${{ vars.ENABLE_MARKET_INDICATORS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -90,6 +94,15 @@ jobs:
         # 盘中机械止损：挂 dashboard-data 每 15 分钟，仅在 09:30-16:00 ET 触发，
         # 实时价≤止损线则机械卖出（执行价=触发实时价）。continue-on-error：失败不拖垮整体刷新。
         run: python portfolio_50000.py --intraday-stop --data-dir .
+        continue-on-error: true
+
+      - name: Fetch market indicators (flag-gated)
+        # F&G + FedWatch：flag 关（vars.ENABLE_MARKET_INDICATORS 未设）时整个步骤跳过，
+        # dashboard_export 读不到 market_indicators.json → payload 不含该键 → 前端板块隐藏，
+        # 与现在逐字节一致。flag 开时落盘 dashboard/data/market_indicators.json（单源失败→null）。
+        # continue-on-error：即使抓取全部失败也不拖垮整体刷新（两源都失败时不写文件，R1）。
+        if: env.ENABLE_MARKET_INDICATORS == '1'
+        run: python dashboard/fetch_market_indicators.py
         continue-on-error: true
 
       - name: Run dashboard_export.py
@@ -153,6 +166,8 @@ jobs:
           # 也不提交已停止维护的旧前端 us-market-terminal/（导出层默认已不再产生该副本）。
           git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
           if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
+          # 市场情绪指标：仅 flag 开且至少一源成功才会落盘该文件；flag 关时不出现，git add 需先判存在。
+          if [ -f dashboard/data/market_indicators.json ]; then git add dashboard/data/market_indicators.json; fi
           if git diff --cached --quiet; then
             echo "数据无变化，跳过提交"
             exit 0
@@ -161,7 +176,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi
@@ -186,10 +201,12 @@ jobs:
             # 无关删除被带入 commit。
             git reset HEAD
             git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
-          if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
+            if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
+            # 市场情绪指标：仅 flag 开且至少一源成功才会落盘该文件；flag 关时不出现，git add 需先判存在。
+            if [ -f dashboard/data/market_indicators.json ]; then git add dashboard/data/market_indicators.json; fi
             # 提交范围守卫（与首次提交等价）：任何非允许路径立即失败，绝不把无关删除带入 main
             STAGED="$(git diff --cached --name-only)"
-            if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
+            if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv)$'; then
               echo "::error::重试阶段检测到非预期文件进入提交范围，已中止提交"
               echo "$STAGED"
               exit 1

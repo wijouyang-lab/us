@@ -2442,6 +2442,31 @@ def _read_portfolio_target(data_dir: Path):
     return out
 
 
+# 哨兵：market_indicators.json 不存在（flag 关 / 两源失败未写文件）时返回，
+# 用于「不注入键」——保证 flag 关时 dashboard_data.json 与现在逐字节一致。
+_MARKET_INDICATORS_MISSING = object()
+
+
+def _read_market_indicators(data_dir: Path):
+    """读 market_indicators.json → 注入 dashboard_data.json 的 market_indicators。
+
+    设计（与 macro/portfolio.target 的 fail-closed 一致）：
+      · 文件不存在（flag 关，或两源都失败未写文件）→ 返回哨兵，调用方**不注入键**，
+        从而 dashboard_data.json 与现在逐字节一致（frontend 板块始终隐藏）。
+      · 文件存在但解析失败 → 返回 None（前端板块隐藏，但不改变「键存在」这一事实，
+        因为 flag 开且至少一源成功才会写文件）。
+      · 文件正常 → 返回其 dict（fear_greed / fedwatch 各自可能为 null）。
+    """
+    p = data_dir / "market_indicators.json"
+    if not p.exists():
+        return _MARKET_INDICATORS_MISSING
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 市场情绪指标读取失败（{e}），market_indicators 输出 null")
+        return None
+
+
 def _build_trade_stats(txn_rows, open_positions):
     """交易观测统计：交易频率 + 胜率 + 平均持仓 + 累计已实现盈亏。
 
@@ -3305,6 +3330,11 @@ def main(argv=None):
             },
         },
     }
+
+    # ---- 市场情绪指标（F&G + FedWatch；flag 关 / 文件缺失 → 不注入键，保持逐字节一致）----
+    mi = _read_market_indicators(data_dir)
+    if mi is not _MARKET_INDICATORS_MISSING:
+        payload["market_indicators"] = mi
 
     if ai_status == "pending":
         notes.append(
