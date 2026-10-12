@@ -2665,6 +2665,19 @@ def build_portfolio(data_dir: Path):
     if os.environ.get("ENABLE_TARGET_FILE") == "1":
         target = _read_portfolio_target(data_dir)
 
+    # >>> 汇总字段单一数据源：全部从 positions 派生，避免与 history 末行（旧快照）不同源 <<<
+    # 持仓市值/浮盈来自 positions.csv（最新，由 review 写入）；history 末行是 15 分钟前的旧快照。
+    # 若汇总继续读 history，会出现"汇总 ≠ 个股之和"的视觉不一致。现金 15 分钟内不变，保留 history 来源。
+    _stock_value = round_num(sum(p["market_value"] for p in positions), 2)
+    _unrealized_pnl = round_num(sum(p["unrealized_pnl"] for p in positions), 2)
+    _cash = round_num(parse_num(last.get("Cash")), 2)
+    _total_equity = round_num(_cash + _stock_value, 2)  # 不变量：total_equity = cash + stock_value
+    _initial = round_num(parse_num(meta.get("initial_capital")), 2)
+    _total_pnl = round_num(_total_equity - _initial, 2)
+    _return_pct = round_num((_total_pnl / _initial * 100) if _initial else 0.0, 2)  # 百分比量纲，与历史 Return_Pct 一致
+    _open_pct = round_num(
+        (_stock_value / _total_equity * 100) if (_total_equity and _total_equity > 0) else 0.0, 2)
+
     return {
         "portfolio_id": clean_text(meta.get("portfolio_id")) or None,
         "target": target,
@@ -2673,17 +2686,15 @@ def build_portfolio(data_dir: Path):
         "unit_dollars": round_num(parse_num(meta.get("unit_dollars")), 2),
         "max_open_positions": int(parse_num(meta.get("max_open_positions")) or 0) or None,
         "asof": asof,
-        "cash": round_num(parse_num(last.get("Cash")), 2),
-        "stock_value": round_num(parse_num(last.get("Stock_Value")), 2),
-        "total_equity": round_num(parse_num(last.get("Total_Equity")), 2),
+        "cash": _cash,
+        "stock_value": _stock_value,
+        "total_equity": _total_equity,
         "realized_pnl": round_num(parse_num(last.get("Realized_PnL")), 2),
-        "unrealized_pnl": round_num(parse_num(last.get("Unrealized_PnL")), 2),
-        "total_pnl": round_num(parse_num(last.get("Total_PnL")), 2),
-        "return_pct": round_num(parse_num(last.get("Return_Pct")), 2),
+        "unrealized_pnl": _unrealized_pnl,
+        "total_pnl": _total_pnl,
+        "return_pct": _return_pct,
         "open_positions": int(parse_num(last.get("Open_Positions")) or 0),
-        "open_pct": round_num(
-            (lambda s, t: (s / t * 100) if (s is not None and t and t > 0) else 0.0)(
-                parse_num(last.get("Stock_Value")), parse_num(last.get("Total_Equity"))), 2),
+        "open_pct": _open_pct,
         "positions": positions,
         "transactions": txns,
         "trade_stats": trade_stats,
