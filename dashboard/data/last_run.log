@@ -7,7 +7,6 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $AES: possibly delisted; no price data found  (period=1d)
 $BX: possibly delisted; no price data found  (period=1d)
-$CME: possibly delisted; no price data found  (period=1d)
 $CNP: possibly delisted; no price data found  (period=1d)
 $COO: possibly delisted; no price data found  (period=1d)
 $CRH: possibly delisted; no price data found  (period=1d)
@@ -22,7 +21,6 @@ $KR: possibly delisted; no price data found  (period=1d)
 $MKC: possibly delisted; no price data found  (period=1d)
 $MPC: possibly delisted; no price data found  (period=1d)
 $ROL: possibly delisted; no price data found  (period=1d)
-$SYK: possibly delisted; no price data found  (period=1d)
 $TECH: possibly delisted; no price data found  (period=1d)
 $TGT: possibly delisted; no price data found  (period=1d)
 $VRSN: possibly delisted; no price data found  (period=1d)
@@ -60,7 +58,7 @@ Observation 数量     : 31
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 45 / 0   技术指标成功 45/45
-当前价来源           : 实时 21 · 最新收盘 0 · 合计可取 45/45
+当前价来源           : 实时 23 · 最新收盘 0 · 合计可取 45/45
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 23  [complete]
