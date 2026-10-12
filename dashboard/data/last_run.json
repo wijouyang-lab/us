@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-12T02:46:06Z",
-  "market_updated_at": "2026-10-12T02:46:04Z",
-  "technical_updated_at": "2026-10-12T02:46:06Z",
+  "generated_at": "2026-10-12T03:02:48Z",
+  "market_updated_at": "2026-10-12T03:02:45Z",
+  "technical_updated_at": "2026-10-12T03:02:48Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 38014636499,
+        "run_id": 38197410065,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-10T01:49:09Z",
-        "started_at": "2026-10-10T01:49:09Z",
-        "updated_at": "2026-10-10T01:58:41Z",
-        "head_sha": "a4a0df7e0358",
-        "event": "schedule",
-        "run_number": 132,
+        "created_at": "2026-10-12T02:51:01Z",
+        "started_at": "2026-10-12T02:51:01Z",
+        "updated_at": "2026-10-12T02:51:42Z",
+        "head_sha": "382f475cb097",
+        "event": "workflow_dispatch",
+        "run_number": 133,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38014636499"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38197410065"
       },
       "last_success": {
-        "run_id": 38014636499,
-        "completed_at": "2026-10-10T01:58:41Z",
-        "head_sha": "a4a0df7e0358"
+        "run_id": 38197410065,
+        "completed_at": "2026-10-12T02:51:42Z",
+        "head_sha": "382f475cb097"
       },
       "error": null
     },
