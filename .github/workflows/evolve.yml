@@ -51,7 +51,7 @@ jobs:
         EMAIL_ACCOUNT: ${{ secrets.EMAIL_ACCOUNT }}
         EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         TARGET_EMAILS: ${{ secrets.TARGET_EMAILS }}
-      run: python evolve.py || true
+      run: python evolve.py
 
     - name: Save Logs
       if: steps.check-date.outputs.should_run == 'true'

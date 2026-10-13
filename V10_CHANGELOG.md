@@ -19,7 +19,7 @@
 - Only Claude-approved rule IDs are written into the active rule set.
 - `core_min_score` auto-update requires time-ordered OOS validation AND Claude approval.
 - OOS auto-update now requires minimum sample size, non-negative EV, and meaningful improvement over the current baseline. Negative-EV historical results cannot move the threshold automatically.
-- `evolve.yml` no longer hides failures with `|| true`.
+- `evolve.yml` no longer hides failures with `|| true` — **Correction (2026-10-13)**: this claim was never actually landed when written (`|| true` stayed in place the whole time); the removal was really applied on 2026-10-13.
 
 ## Runtime consistency
 - Scan keeps program-controlled Core/Observation and pending synchronization.

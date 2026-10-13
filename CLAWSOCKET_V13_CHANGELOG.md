@@ -28,7 +28,7 @@
    - 删除 Anthropic SDK 依赖
    - 支持 `GPT_MODEL`、`GPT_REASONING_EFFORT`、`CLAUDE_AUDIT_MODEL`、`CLAWSOCKET_PROTOCOL`
    - 扫描时提交 `scan_version.txt`
-   - Evolve 不再使用 `|| true` 吞掉失败
+   - Evolve 不再使用 `|| true` 吞掉失败 —— **更正（2026-10-13）**：此声明当时并未落地（`|| true` 一直存在），已于 2026-10-13 实际移除
 
 ## 推荐 Secrets
 
