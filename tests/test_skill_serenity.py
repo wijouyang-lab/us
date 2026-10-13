@@ -120,6 +120,33 @@ def test_load_universe_missing_file_is_empty(tmp_path):
     assert r.load_universe(tmp_path) == ([], 0)
 
 
+def test_load_universe_tolerates_real_portfolio_shapes(tmp_path):
+    """回归（线上 run #6 挂在这里）：真实 payload 的 `portfolio.open_positions` 是**整数**
+    （持仓数量），不是列表 —— 直接迭代会 TypeError: 'int' object is not iterable。
+    真实的 `positions[0]` 用小写 `ticker`，且可能混入非 dict 元素。"""
+    r = _load_runner()
+    d = tmp_path / "dashboard" / "data"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "dashboard_data.json").write_text(json.dumps({
+        "stocks": _stocks(3),
+        "portfolio": {
+            "portfolio_id": "US-50000-001",
+            "open_positions": 4,                        # ← 整数，不是列表
+            "positions": [                              # ← 小写 ticker
+                {"unit_id": "U001", "ticker": "T00", "shares": 43},
+                {"unit_id": "U002", "ticker": "T01", "shares": 47},
+                "垃圾元素",                              # ← 非 dict 也不能崩
+                {},
+            ],
+            "transactions": [{"ticker": "T02"}],        # 不在白名单键里，应被忽略
+        },
+    }, ensure_ascii=False), encoding="utf-8")
+
+    uni, n = r.load_universe(tmp_path)                  # 不得抛异常
+    assert n == 3
+    assert {u["ticker"] for u in uni if u["held"]} == {"T00", "T01"}
+
+
 def test_main_does_not_write_when_universe_empty(tmp_path, monkeypatch, capsys):
     r = _load_runner()
     monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")

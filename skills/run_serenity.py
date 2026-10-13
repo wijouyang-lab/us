@@ -80,8 +80,15 @@ def load_universe(data_dir: Path) -> tuple[list[dict], int]:
     folio = d.get("portfolio")
     if isinstance(folio, dict):
         for key in ("positions", "open_positions", "holdings"):
-            for r in folio.get(key) or []:
-                tk = str((r or {}).get("ticker") or (r or {}).get("Ticker") or "").strip().upper()
+            rows = folio.get(key)
+            # ⚠️ 真实 payload 里 `open_positions` 是**整数**（持仓数量），不是列表 ——
+            # 直接迭代会 TypeError: 'int' object is not iterable（线上 run #6 就是这么挂的）。
+            if not isinstance(rows, list):
+                continue
+            for r in rows:
+                if not isinstance(r, dict):
+                    continue
+                tk = str(r.get("ticker") or r.get("Ticker") or "").strip().upper()
                 if tk:
                     held.add(tk)
 
