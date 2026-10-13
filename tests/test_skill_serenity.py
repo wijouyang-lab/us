@@ -335,6 +335,62 @@ def test_prompt_contains_company_facts_exception():
 
 
 # --------------------------------------------------------------------------- #
+# 5b) JSON 边界鲁棒性（线上 run #8：JSONDecodeError: Extra data）
+# --------------------------------------------------------------------------- #
+_GOOD_JSON = ('{"priorities": [{"ticker": "SNPS", "priority_rank": 1, '
+              '"why": "瓶颈层", "what_to_verify": "10-Q"}]}')
+
+
+def _ex(text):
+    return _load_runner()._extract_json(text)
+
+
+def test_extract_json_tolerates_trailing_prose_with_brace():
+    """线上 run #8 真实形态：JSON 后跟一段**含 }** 的解释 → 旧实现 body 被贪婪拉长 → Extra data。"""
+    obj = _ex(_GOOD_JSON + "\n\n以上基于 {定性推理}，请以 10-Q 为准。")
+    assert obj["priorities"][0]["ticker"] == "SNPS"
+
+
+def test_extract_json_tolerates_trailing_plain_text():
+    assert _ex(_GOOD_JSON + "\nHope this helps!")["priorities"]
+
+
+def test_extract_json_tolerates_code_fence_and_trailing_text():
+    assert _ex("```json\n" + _GOOD_JSON + "\n```\n补充说明")["priorities"]
+
+
+def test_extract_json_tolerates_leading_prose():
+    assert _ex("好的，结果如下：\n" + _GOOD_JSON)["priorities"]
+
+
+def test_extract_json_skips_invalid_brace_in_prose():
+    assert _ex("前言 {这不是JSON} 正文 " + _GOOD_JSON)["priorities"]
+
+
+def test_extract_json_still_handles_bare_quotes():
+    """原有能力保留：中文自由文本里的裸双引号仍能被剥掉后解析。"""
+    obj = _ex('{"priorities": [{"ticker": "SNPS", "priority_rank": 1, '
+              '"why": "所谓"瓶颈"层", "what_to_verify": "y"}]}')
+    assert obj["priorities"][0]["ticker"] == "SNPS"
+
+
+def test_extract_json_no_json_raises_with_diagnostic():
+    """失败时必须把模型原文摘要带进异常（CI 日志可见），而不是无声失败。"""
+    with pytest.raises(ValueError) as ei:
+        _ex("完全没有 JSON 的纯文本 " * 30)
+    msg = str(ei.value)
+    assert "找不到合法 JSON 对象" in msg
+    assert "前 300 字符" in msg
+
+
+def test_parse_result_clean_error_on_array_payload():
+    """顶层数组 → 仍给出清晰错误（不静默产出脏数据）。"""
+    with pytest.raises(ValueError) as ei:
+        _load_runner().parse_result('[{"ticker": "SNPS"}]', valid_tickers={"SNPS"})
+    assert "缺少 priorities" in str(ei.value)
+
+
+# --------------------------------------------------------------------------- #
 # 6) R1 + 脚本模式 import
 # --------------------------------------------------------------------------- #
 def test_all_fail_does_not_write(tmp_path, monkeypatch):

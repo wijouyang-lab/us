@@ -450,26 +450,65 @@ def _drop_bare_quotes(s: str) -> str:
 
 
 def _extract_json(text: str) -> dict:
+    """从模型输出里提取**第一个合法 JSON 对象**，允许前后有额外文本。
+
+    为什么不再用 `json.loads(整串)`：模型常在 JSON 之后补一句解释，或用 ``` 围栏；
+    `json.loads` 要求**整串恰好等于一个 JSON 值**，遇到尾随内容会抛 `Extra data`。
+    原兜底 `re.search(r"\\{.*\\}")` 又是**贪婪**的（取到最后一个 `}`），一旦尾随文本里
+    还有 `}`，body 就被拉长 → 再次 `Extra data` → 线上 run #8 即这样失败。
+
+    改用 `JSONDecoder().raw_decode()`：从候选起点解析**一个** JSON 值、忽略其后内容。
+    候选顺序：原文 → 剥掉裸双引号的文本；每份文本内再依次尝试 `{` 与 `[` 的**多个**
+    出现位置（最多 20 个），取第一个能解析成功的对象。
+    失败时抛出的消息里带**前 300 字符摘要**，便于在 CI 日志里直接看到模型原文。
+    """
     if not text or not text.strip():
         raise ValueError("模型返回为空")
     s = text.strip()
     if s.startswith("```"):
         s = re.sub(r"^```[a-zA-Z]*\s*", "", s)
         s = re.sub(r"\s*```$", "", s).strip()
-    try:
-        obj = json.loads(s)
-    except json.JSONDecodeError:
-        m = re.search(r"\{.*\}", s, re.DOTALL)
-        if not m:
-            raise ValueError("模型输出里找不到 JSON 对象") from None
-        body = m.group(0)
-        try:
-            obj = json.loads(body)
-        except json.JSONDecodeError:
-            obj = json.loads(_drop_bare_quotes(body))   # 剥掉中文文本里的裸双引号后重试
-    if not isinstance(obj, dict):
-        raise ValueError(f"模型输出不是 JSON 对象，而是 {type(obj).__name__}")
-    return obj
+
+    decoder = json.JSONDecoder()
+    non_dict_type = None
+    first_any: dict | None = None
+    failed_attempts = 0
+
+    for cand_i, candidate in enumerate((s, _drop_bare_quotes(s))):
+        for open_ch in ("{", "["):
+            start = candidate.find(open_ch)
+            tries = 0
+            while start != -1 and tries < 20:
+                tries += 1
+                try:
+                    obj, _end = decoder.raw_decode(candidate[start:])
+                except json.JSONDecodeError:
+                    failed_attempts += 1
+                    start = candidate.find(open_ch, start + 1)
+                    continue
+                if isinstance(obj, dict):
+                    # 关键：**优先**返回含 priorities 的对象。若不这样做，遇到
+                    # 「外层对象因裸引号非法、但内层某个对象恰好是合法 JSON」时，
+                    # 会先命中内层对象而丢掉整个 priorities（线上 run #7/#8 的形态）。
+                    if "priorities" in obj:
+                        if cand_i > 0 or failed_attempts:
+                            print(f"[serenity] ⚠️ _extract_json 走兜底："
+                                  f"{'剥裸引号后' if cand_i > 0 else '跳过 N 次失败后'}命中，"
+                                  f"前缀 {candidate[start:start + 40]!r}")
+                        return obj
+                    if first_any is None:
+                        first_any = obj
+                elif non_dict_type is None:
+                    non_dict_type = type(obj).__name__
+                start = candidate.find(open_ch, start + 1)   # 继续找（后面可能有带 priorities 的）
+
+    if first_any is not None:
+        # 解析成功但没有 priorities → 交给 parse_result 报清晰错误（不静默产出脏数据）
+        return first_any
+    if non_dict_type is not None:
+        raise ValueError(f"模型输出不是 JSON 对象，而是 {non_dict_type}"
+                         f"（前 300 字符：{s[:300]!r}）")
+    raise ValueError(f"模型输出里找不到合法 JSON 对象（前 300 字符：{s[:300]!r}）")
 
 
 def parse_result(text: str, valid_tickers: set[str] | None = None) -> dict:
