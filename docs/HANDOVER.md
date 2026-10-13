@@ -132,7 +132,7 @@
 | 3 | 🟠 清理 `_temp-` 遗留（2 workflow + 4 脚本） | 临时资产混在生产库，有误触发风险 | 清理前确认结果已复核 |
 | 4 | 🟠 统一「卡片 / 详情页 / review」三处止损数据源 | ANET 曾出现 197.69 / 209.36 / 210.24 三个值 | `ANET_STOPLOSS_TRIPLE.md`；根因是三套系统各算各的 |
 | 5 | 🟠 为「推荐键匹配失败」加端到端断言 | 今日 bug 曾静默漏卖、无人察觉 | 已有告警打印，建议在 CI 上升为失败 |
-| 6 | 🔴 **机械止损与 review 移动止损不一致（资金风险）** | 只读调查 `STOPLOSS_ROOT_CAUSE.md` | 机械止损按冻结的 197.69 判断，实际**放宽**了止损线（可能多亏 5–8%）；修法见下方展开 |
+| 6 | 🟡 **机械止损与 review 移动止损不一致（资金风险）— 修复已实现，待激活** | `STOPLOSS_ROOT_CAUSE.md` + 实测 | 方案 C 已落地，门控在 `ENABLE_STOP_LOSS_SYNC`（**默认关闭**）；激活方式与一项新发现见下方展开 |
 | 7 | ✅ **`ENABLE_MARKET_INDICATORS` 已开但面板不出现（已修复）** | 实测 run #2082 → 复验 #2084 | 两处根因：① 依赖缺失 ② 读取路径不匹配；均已修并有回归测试 |
 
 > #### P1 #6 展开 · 🔴 机械止损与 review 移动止损不一致（资金风险）
@@ -149,19 +149,39 @@
 > - ⚠️ 更根本的矛盾：`portfolio_50000.py:5-11` docstring 明写「卖出完全沿用 Review 终态……**本模块不实现第二套止损**」，
 >   而 `_run_intraday_stop` 就是那"第二套"，且挂在一个永不更新的值上
 >
-> **修复**：**C + D 组合**（明早 review 通过后做）
+> **修复**：**C + D 组合**
 > - **C** = `portfolio_50000.py` 在 `mark_to_market()` 把 `Stop_Loss` 同步为 trade_history 的当前移动止损
->   （单文件、单一写入者、不新增跨模块耦合）
+>   （单文件、单一写入者、不新增跨模块耦合）→ ✅ **已实现**
 > - **D** = 拆掉并行的「第二套止损」：`_run_intraday_stop` 改读 trade_history，或直接下线 `dashboard-data.yml:93-97`
->   —— 让 review 成为唯一退出权威
+>   —— 让 review 成为唯一退出权威 → ⏳ **未做**
 > - 为什么不用 A（review 回写 positions.csv）：会引入 `positions.csv` 的第二个写入者，且 review 用 pandas 重写 CSV
 >   可能与账本的 `POSITION_COLUMNS` 列序不一致，风险高于收益
 >
-> **时机**：**明早 07:00 后**
-> （等 06:23 review 跑完并通过，避免与当晚生产复盘叠加变量）
+> **实现状态（2026-10-13）**：方案 C ✅ 已落地，commit **`0b55de72`**，新增 34 个测试。
+> - 门控 flag：**`ENABLE_STOP_LOSS_SYNC`**，`== "1"` 才生效；**默认不设 = 关闭**。
+> - 代码：`portfolio_50000.py` 新增 `stop_sync_enabled()` / `_sync_stop_loss_from_recs()`；
+>   `mark_to_market(positions, prices, today, recs=None)` 增加可选 `recs`；
+>   `run()` 的两个调用点（`--price-only` 与完整 run）均已接线。
+> - **关闭时逐字节一致（硬证据）**：用 `git show HEAD:portfolio_50000.py` 取出改动**前**的模块，
+>   在同一份真实 `positions.csv` 上跑 `--price-only --offline`，与改动后（flag 不设）的输出
+>   **SHA256 完全相同**（`87F0C688…993C`）。
+> - **激活方式**（明早 06:23 review 通过后）：
+>   `gh variable set ENABLE_STOP_LOSS_SYNC 1`（或 GitHub → Settings → Secrets and variables → Actions → Variables）
+> - **关闭时**：`_sync_stop_loss_from_recs` 整体不被调用；`--price-only` 连 `trade_history` 都不读。
 >
-> **注意**：C 会把机械止损线从 197.69 抬到 ~209，**原本不会触发的机械卖现在会触发**。
-> 这是预期行为（197.69 早已失效），但属**真实的行为变更**，实施前需确认。
+> 🔴 **实测新发现（比原报告更严重，建议单独立项）**：
+> `dec()`（`portfolio_50000.py:94`）**只剥逗号、不剥 `$`**，故 `dec("$197.69") is None`；
+> 而 `_run_intraday_stop:687-689` 是 `stop = dec(...)` → `if stop is None: continue`。
+> **当前 4 只持仓的 `Stop_Loss` 全是 `$` 前缀**（`$214.76` / `$197.69` / `$382.38` / `$56.31`）
+> → **盘中机械止损对这 4 只从未生效过**（不是"用了陈旧值"，而是被整条跳过）。
+> - 方案 C 的同步恰好能修好它：同步写的是**归一化后的裸数字**（`228.29` 而非 `$214.76`），
+>   因此 flag 一开，4 只的止损线立即变为可解析值，机械止损随之真正生效。
+> - 副作用（**可见但轻微**）：卡片 `Stop_Loss` 显示从 `$214.76` 变成 `228.29`（少了 `$`）。
+> - 若只想保留 `$` 格式，则 `dec()` 也必须同步支持 `$` —— 那会动到 `dec()` 的全部调用点，**不建议本次做**。
+>
+> **注意**：flag 一开，机械止损线会从 `197.69` 抬到 `~209`（ANET），**原本不触发的机械卖现在会触发**。
+> 这是预期行为（那 4 条线此前完全失效），但属**真实的行为变更**，激活前需确认。
+> 另建议同时评估 **D**（下线并行的第二套止损，让 review 成为唯一退出权威）。
 
 > #### P1 #7 展开 · ✅ `ENABLE_MARKET_INDICATORS` 已开但面板不出现（**已修复**）
 >
