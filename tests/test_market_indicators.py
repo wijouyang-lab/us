@@ -129,11 +129,40 @@ def test_both_sources_success(tmp_path):
     assert fw["probabilities"]["hike_25bp"] == 0.0   # 高 25bp → 加息
 
 
-def test_fg_fails_fw_ok(tmp_path):
-    """F&G 失败 + FedWatch 成功 → fear_greed=null，fedwatch 正常，error 记录 F&G 失败。"""
+def _block_imports(monkeypatch, *names):
+    """强制指定顶层包 import 抛 ImportError，模拟"包未安装"。
+
+    为什么需要：本文件有两个用例靠"包恰好没装"来构造失败分支
+    （`import fear_greed` / `import cme_fedwatch` 失败 → None）。
+    一旦这些包被装进环境（例如 `requirements-production.txt` 声明了它们），
+    用例就会去访问真实网络并把断言打穿 —— 即"环境脆弱"。
+
+    这里用 monkeypatch 覆盖 `builtins.__import__`，只拦白名单里的包，
+    其余 import 一律委托真实实现，因此不依赖环境、不打网络。
+    必须在 `_load_fetcher()` 之后调用（该函数自身还要 import importlib）。
+    """
+    import builtins
+
+    real_import = builtins.__import__
+    blocked = set(names)
+
+    def fake_import(name, *args, **kwargs):
+        if name.split(".")[0] in blocked:
+            raise ImportError(f"simulated missing module: {name}")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+
+def test_fg_fails_fw_ok(tmp_path, monkeypatch):
+    """F&G 失败 + FedWatch 成功 → fear_greed=null，fedwatch 正常，error 记录 F&G 失败。
+
+    hermetic：用 `_block_imports` 强制 F&G import 失败，不再依赖"环境里恰好没装
+    fear-greed"。否则一旦装了这个包，本用例会去访问真实 CNN 接口并返回真数据。
+    """
     fetcher = _load_fetcher()
-    # 只注入 FedWatch；fear_greed 未安装 → import 失败 → None
     sys.modules["cme_fedwatch"] = _fake_cme_fedwatch()
+    _block_imports(monkeypatch, "fear_greed")
 
     out = tmp_path / "market_indicators.json"
     rc = fetcher.main(["--out", str(out)])
@@ -144,10 +173,14 @@ def test_fg_fails_fw_ok(tmp_path):
     assert "fear_greed" in (d["error"] or {})
 
 
-def test_both_sources_fail_no_file(tmp_path):
-    """两源都失败（包均不可用）→ 不写文件（R1），返回 1。"""
+def test_both_sources_fail_no_file(tmp_path, monkeypatch):
+    """两源都失败（包均不可用）→ 不写文件（R1），返回 1。
+
+    hermetic：两个包都强制 import 失败，不依赖环境里是否安装。
+    """
     fetcher = _load_fetcher()
-    # 两个 fake 都不注入 → import 失败 → 两源都 None
+    _block_imports(monkeypatch, "fear_greed", "cme_fedwatch")
+
     out = tmp_path / "market_indicators.json"
     rc = fetcher.main(["--out", str(out)])
     assert rc == 1
