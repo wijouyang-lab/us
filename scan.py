@@ -16,6 +16,7 @@
 import faulthandler
 faulthandler.enable()
 
+import atexit
 import datetime
 import email.utils
 import hashlib
@@ -34,7 +35,7 @@ import urllib.request
 import urllib.parse
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from clawsocket_compat import ClawSocketClient
+from clawsocket_compat import ClawSocketClient, set_context, write_model_usage
 import pandas as pd
 import pandas_ta as ta
 import requests
@@ -3856,6 +3857,12 @@ from portfolio_target import build_portfolio_target_rows, write_portfolio_target
 
 # ==================== 主程序 ====================
 if __name__ == "__main__":
+    # --- 运行时模型使用记录（dashboard runtime 条展示「中转站实际返回了什么模型」）---
+    # 用 atexit 而不是在文件末尾写：scan 是顶层脚本，中途有多处提前退出/异常路径，
+    # atexit 保证「成功 / 抛异常 / exit()」任何一条路径都落盘 —— 失败场景才是最需要看模型的。
+    set_context("scan")
+    atexit.register(write_model_usage, ".", "scan")
+
     # --- AI Snapshot legacy 迁移（一次性兼容旧数据，必须在任何写入之前完成）-------
     # 先记录两个「本次 Scan 开始前」的事实，再据此决定是否迁移：
     #   snapshot_existed_before / cache_existed_before

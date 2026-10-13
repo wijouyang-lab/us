@@ -7,10 +7,11 @@
   → evolved_rules.json → scan.py 注入 prompt → 更好的选股
 """
 
+import atexit
 import pandas as pd
 import os
 import json
-from clawsocket_compat import ClawSocketClient
+from clawsocket_compat import ClawSocketClient, set_context, write_model_usage
 import datetime
 import math
 
@@ -509,6 +510,12 @@ def evolve_strategy(metrics: dict):
 # 主入口
 # ============================================================
 if __name__ == "__main__":
+    # --- 运行时模型使用记录（dashboard runtime 条展示「中转站实际返回了什么模型」）---
+    # 用 atexit 而不是在文件末尾写：evolve 有多处提前 exit()（无历史 / 无有效记录 / metrics 为空），
+    # atexit 保证「成功 / 抛异常 / exit()」任何一条路径都落盘。
+    set_context("evolve")
+    atexit.register(write_model_usage, ".", "evolve")
+
     if not os.path.exists(HISTORY_FILE):
         print(f"未检测到 {HISTORY_FILE}，进化中止。")
         exit()

@@ -13,6 +13,7 @@
 8. 股票不按固定持仓天数强制退出，采用 MA20/MA50 + ATR + MACD/KDJ 移动止损。
 """
 
+import atexit
 import csv
 import datetime
 import json
@@ -2649,7 +2650,13 @@ backfill_review_milestones()
 backfill_rec_price()
 
 
-from clawsocket_compat import ClawSocketClient
+from clawsocket_compat import ClawSocketClient, set_context, write_model_usage
+
+# --- 运行时模型使用记录（dashboard runtime 条展示「中转站实际返回了什么模型」）---
+# review.py 是顶层脚本（无 main()、无 __main__ 守卫），本文件第一处真实 AI 调用在下方，
+# 故在此注册即可覆盖全部调用；用 atexit 保证「成功 / 抛异常 / sys.exit()」都落盘。
+set_context("review")
+atexit.register(write_model_usage, ".", "review")
 
 
 def backfill_pending_reasons(data_dir="."):

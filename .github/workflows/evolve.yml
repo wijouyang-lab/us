@@ -58,6 +58,11 @@ jobs:
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "Alpha Bot"
+        # 运行时模型使用记录：evolve 结束时落盘 dashboard/data/model_usage.json。
+        # （下面的 git add -A 其实已覆盖，此处显式列出以免将来改成逐个 add 时被漏掉。）
+        if [ -f dashboard/data/model_usage.json ]; then
+          git add dashboard/data/model_usage.json
+        fi
         git add -A
         git diff --quiet && git diff --staged --quiet || git commit -m "Auto evolve US"
         git push

@@ -3,8 +3,73 @@
 import json
 import os
 import time
+from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Dict, List
 import requests
+
+# --------------------------------------------------------------------------- #
+# 运行时模型使用记录（供 dashboard 展示“中转站实际返回了什么模型”）
+# 数据来源：ClawSocket 响应体里的 model 字段（即 upstream_model，见 _post）。
+# 由调用方（scan.py / review.py / evolve.py）用 set_context() 标记当前语境，
+# 跑完后用 write_model_usage() 落盘到 dashboard/data/model_usage.json。
+# --------------------------------------------------------------------------- #
+_MODEL_USAGE: dict = {}
+_CURRENT_CONTEXT = None
+
+
+def set_context(context: str) -> None:
+    """调用方设置当前 context（'scan' / 'review' / 'evolve'）。"""
+    global _CURRENT_CONTEXT
+    _CURRENT_CONTEXT = context
+
+
+def record_model_usage(context: str, model, requested: str, fallback: bool) -> None:
+    """记录一次真实的模型使用。`model` = 中转站返回的 upstream model。"""
+    _MODEL_USAGE[context] = {
+        "model": model,
+        "requested": requested,
+        "fallback": bool(fallback),
+        "updated_at": datetime.now(timezone.utc).isoformat(),
+    }
+
+
+def get_model_usage() -> dict:
+    """返回当前进程内累积的使用记录（供测试/调试）。"""
+    return dict(_MODEL_USAGE)
+
+
+def write_model_usage(data_dir, context: str) -> None:
+    """把当前 context 的记录**合并**写入 dashboard/data/model_usage.json。
+
+    合并语义（重要）：文件里可能已有其它 context 的记录（scan 写的文件，
+    review 不能覆盖掉）—— 所以先读旧内容，只更新自己那一个 key。
+
+    另外：本次进程若一次真实调用都没有（例如 scan 在调用 AI 之前就失败），
+    `_MODEL_USAGE` 里没有该 context 的记录 —— 此时**直接返回、不落盘**，
+    避免写出 `{"scan": null}` 这种无意义空记录、污染其它 context 的已有数据。
+
+    任何异常都吞掉并打印警告：**记录模型失败绝不能让 scan/review 失败**。
+    """
+    try:
+        record = _MODEL_USAGE.get(context)
+        if record is None:
+            return
+        path = Path(data_dir) / "dashboard" / "data" / "model_usage.json"
+        existing = {}
+        if path.exists():
+            try:
+                existing = json.loads(path.read_text(encoding="utf-8"))
+            except Exception:
+                existing = {}
+        if not isinstance(existing, dict):
+            existing = {}
+        existing[context] = record
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:  # noqa: BLE001
+        print(f"⚠️ [model-usage] 写入失败（不影响主流程）：{type(e).__name__}: {e}")
+
 
 class _TextBlock:
     def __init__(self, text: str): self.text = text
@@ -278,6 +343,17 @@ class ClawSocketClient:
                 if not response.ok: raise RuntimeError(f"HTTP {response.status_code}: {self._safe_error_body(response)}")
                 data = response.json()
                 print(f"[ClawSocket] upstream_model={data.get('model', 'unknown')} requested={self.last_model_used}")
+                # 记录中转站**实际返回**的模型（model 字段 = upstream_model），供 dashboard 展示。
+                # 记录失败绝不能让 scan/review 失败 → 这里二次兜底。
+                try:
+                    record_model_usage(
+                        _CURRENT_CONTEXT or "unknown",
+                        data.get("model"),
+                        self.last_model_used,
+                        self.last_model_fallback,
+                    )
+                except Exception as _mu_e:  # noqa: BLE001
+                    print(f"⚠️ [model-usage] 记录失败（不影响主流程）：{type(_mu_e).__name__}: {_mu_e}")
                 return data
             except Exception as exc:
                 last_error=exc
@@ -380,6 +456,9 @@ class ClawSocketClient:
             for fallback in self._runtime_fallback_candidates(resolved):
                 fallback_plan = self._protocol_plan(fallback)
                 print(f"⚠️ [ClawSocket] {resolved} 在真实 POST 阶段路由失败；尝试运行时备用模型 {fallback}")
+                # 先置位再发请求：_post() 在请求成功那一刻就会记录模型使用，
+                # 若等到请求返回后才置位，记录里的 fallback 会永远是 False（前端就不会显示 ⚠️）。
+                self.last_model_fallback = True
                 for protocol in fallback_plan:
                     try:
                         data = self._request_one(fallback, protocol, messages, max_tokens, reasoning_effort, kwargs)

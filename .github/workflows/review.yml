@@ -104,6 +104,12 @@ jobs:
             git add us_stocks_pending_*.csv.processed
           fi
 
+          # 运行时模型使用记录：review 结束时落盘 dashboard/data/model_usage.json
+          # （只更新自己的 review 键，scan 的记录不会被覆盖）。必须入库，否则前端不显示模型名。
+          if [ -f dashboard/data/model_usage.json ]; then
+            git add dashboard/data/model_usage.json
+          fi
+
           # review.py 消费过的 pending 原文件（未 .processed）从工作区移除，避免下一轮重复入账
           git rm -f us_stocks_pending_*.csv 2>/dev/null || true
 
