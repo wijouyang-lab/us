@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-13T09:09:58Z",
+  "generated_at": "2026-10-13T13:02:19Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "5.24%",
+      "value": "5.19%",
       "prev": "5.24%",
-      "date": "2026-10-12",
+      "date": "2026-10-13",
       "source": "Yahoo Finance",
-      "sentiment": "neutral",
-      "rationale": "10Y国债收益率持平，无变化"
+      "sentiment": "bullish",
+      "rationale": "10年期国债收益率下降，融资成本降低利好股市"
     },
     {
       "indicator": "5Y国债",
-      "value": "5.02%",
+      "value": "4.98%",
       "prev": "5.02%",
-      "date": "2026-10-12",
+      "date": "2026-10-13",
       "source": "Yahoo Finance",
-      "sentiment": "neutral",
-      "rationale": "5Y国债收益率持平，无变化"
+      "sentiment": "bullish",
+      "rationale": "5年期国债收益率下降，融资成本降低利好股市"
     },
     {
       "indicator": "13周国债",
       "value": "4.05%",
-      "prev": "4.06%",
-      "date": "2026-10-12",
+      "prev": "4.05%",
+      "date": "2026-10-13",
       "source": "Yahoo Finance",
       "sentiment": "neutral",
-      "rationale": "13周国债收益率微降，影响有限"
+      "rationale": "13周国债收益率持平，无明显方向性影响"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-08-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI上升，通胀压力增加"
+      "rationale": "CPI上升显示通胀压力加大，可能推动加息预期"
     },
     {
       "indicator": "核心CPI",
@@ -45,7 +45,7 @@
       "date": "2026-08-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "核心CPI上升，通胀压力增加"
+      "rationale": "核心CPI上升显示通胀压力持续，加息压力增加"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率上升，经济走弱"
+      "rationale": "失业率上升显示经济走弱，企业盈利预期承压"
     },
     {
       "indicator": "核心PCE",
@@ -63,7 +63,7 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE为3%，通胀压力存在"
+      "rationale": "核心PCE为3%显示通胀高于美联储2%目标，加息压力"
     }
   ],
   "speakers": [
@@ -71,28 +71,122 @@
       "person": "Warsh",
       "title": null,
       "content": "US bond traders await CPI, Warsh for insight on Fed's rate path - Yahoo Finance Singapore",
-      "time": null,
-      "source": "📄昨日-中等权重",
+      "time": "10-11 10:23",
+      "source": "Yahoo Finance Singapore",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "美国债券交易员等待CPI数据和沃什讲话，以洞察美联储利率路径",
       "sentiment": "neutral",
-      "rationale": "仅提及等待数据和讲话，无明确方向"
+      "rationale": "市场等待CPI和沃什讲话，观望情绪无明确方向"
     },
     {
       "person": "Warsh",
       "title": null,
       "content": "What To Expect In Markets This Week: JPM, GS, C Bank Earnings, CPI Report, Kevin Warsh's Speech And More - TradingView",
-      "time": null,
-      "source": "📄昨日-中等权重",
+      "time": "10-11 09:13",
+      "source": "TradingView",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "本周市场看点：摩根大通、高盛、花旗银行财报，CPI报告，凯文·沃什讲话等",
       "sentiment": "neutral",
-      "rationale": "预告事件，无明确政策倾向"
+      "rationale": "预告本周关键事件，市场观望无明确方向指引"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Most Fed Officials See Another Rate Hike This Year but Leave Timing Open - Barron's",
+      "time": "10-12 00:47",
+      "source": "Barron's",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "多数美联储官员认为今年还需再加息一次，但时机未定",
+      "sentiment": "bearish",
+      "rationale": "多数美联储官员认为今年还需加息一次，鹰派立场"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "MBA forecast: Mortgage volume to dip below $2T in 2027 as 7% rates linger - HousingWire",
+      "time": "10-11 19:24",
+      "source": "HousingWire",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "MBA预测：2027年抵押贷款规模将降至2万亿美元以下，因7%利率持续",
+      "sentiment": "bearish",
+      "rationale": "预测抵押贷款利率维持7%高位至2027年，融资成本高企"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Mortgage Rates Will Remain Above 7% Through 2027, Top Economist Forecasts - Realtor.com",
+      "time": "10-11 19:23",
+      "source": "Realtor.com",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "顶级经济学家预测：抵押贷款利率将在2027年前保持在7%以上",
+      "sentiment": "bearish",
+      "rationale": "预测抵押贷款利率2027年前保持7%以上，融资成本高"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "MBA Forecast: Mortgage Originations to Decrease 5% in 2027 as Mortgage Rates Remain Above 7% - MBA Newslink",
+      "time": "10-11 03:00",
+      "source": "MBA Newslink",
+      "age_tag": "📑前日-低权重",
+      "content_cn": "MBA预测：2027年抵押贷款发放量将减少5%，因利率维持在7%以上",
+      "sentiment": "bearish",
+      "rationale": "预测2027年抵押贷款减少5%且利率超7%，经济活动受抑"
     },
     {
       "person": "Trump",
       "title": null,
       "content": "Don’t blame Ukraine: Prices go up and up, thanks to Trump’s wars - SMH.com.au",
-      "time": null,
-      "source": "📰今日-高权重",
+      "time": "10-12 21:08",
+      "source": "SMH.com.au",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "别怪乌克兰：物价持续上涨是特朗普的贸易战导致",
       "sentiment": "bearish",
-      "rationale": "提及价格上涨，暗示通胀压力"
+      "rationale": "归因特朗普政策导致物价持续上涨，通胀压力负面"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Middle Market Debt Weekly: Fed Minutes Point to a December Hike - ABF Journal",
+      "time": "10-12 03:45",
+      "source": "ABF Journal",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "中端市场债务周报：美联储会议纪要指向12月加息",
+      "sentiment": "bearish",
+      "rationale": "美联储会议纪要指向12月加息，鹰派信号利空"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - FOREX.com",
+      "time": "10-13 05:35",
+      "source": "FOREX.com",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易",
+      "sentiment": "neutral",
+      "rationale": "技术分析预测，无明确宏观政策或经济方向指引"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Gold Price Forecast: XAU/USD retraces losses as US yields and Oil prices ease - FXStreet",
+      "time": "10-13 05:28",
+      "source": "FXStreet",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "黄金价格预测：随着美国国债收益率和油价回落，金价回补跌幅",
+      "sentiment": "neutral",
+      "rationale": "黄金价格技术走势分析，无明确宏观方向信号"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Why Economists Think Higher Bond Yields Are Here to Stay - WSJ",
+      "time": "10-11 05:30",
+      "source": "WSJ",
+      "age_tag": "📑前日-低权重",
+      "content_cn": "为何经济学家认为更高的债券收益率将持续存在",
+      "sentiment": "bearish",
+      "rationale": "经济学家认为高债券收益率将持续，融资成本高企"
     }
   ],
   "error": null
