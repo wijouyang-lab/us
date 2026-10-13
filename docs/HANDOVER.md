@@ -53,6 +53,8 @@
 | 全量回归 | 387 passed（基线 382 + 新增 5） | ✅ **必须用 `python3.12`** |
 | 文档入库 | 130 篇 `.md` → `docs/` | ✅ commit `dc6e06f` |
 | 文档索引 | `DOCS_INDEX.md`（主题分组/状态/冲突） | ✅ 本日新增 |
+| 模型统一 | 所有 workflow + 模块默认模型改为 `claude-fable-5-1`（共 11 处，含 4 个 workflow 的 `CLAWSOCKET_LIVE_MODEL`） | ✅ commit `3ed5a4bb` |
+| 模型展示 | **未完成**：网页显示运行时模型（`MODEL_DISPLAY_TASK.md`） | 🔴 待实施 |
 
 **还没完成的验证**：今夜 21:00 scan（若外部触发到达）；明早 06:23 review 对 ANET 的重新判定。
 
@@ -264,6 +266,7 @@
 | 12 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
 | 13 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
 | 14 | 🟡 **git 全局 `curloptResolve` pin 不稳定** | 2026-10-13 实测 | 见下方展开 |
+| 15 | 🟠 **网页显示运行时模型**（MODEL_DISPLAY_TASK.md） | 见下方展开 | 让用户看出中转站是否偷换模型 |
 
 > #### P2 #14 展开 · 🟡 git 全局 `curloptResolve` pin 不稳定
 >
@@ -276,17 +279,32 @@
 >   或改用 hosts 条目把 `github.com` 固定到可用 IP（需管理员）。
 > - **时机**：不急，重试能过；但今天已经在 P1 #7 的收尾 push 上真实卡过一次。
 
+> #### P2 #15 展开 · 🟠 网页显示运行时模型
+>
+> - **状态**：🔴 **待实施**（完整任务规格见 [`MODEL_DISPLAY_TASK.md`](MODEL_DISPLAY_TASK.md)，可直接交给新会话执行）
+> - **目的**：让用户能一眼看出**中转站是否偷换了模型**。
+> - **触发原因**：2026-10-13 实测已出现「请求模型 ≠ 实际模型」——
+>   scan 日志里 `请求引擎: claude-opus-5-5`，紧接着
+>   `⚠️ [ClawSocket] … 路由失败；尝试运行时备用模型 claude-fable-5-1`；
+>   而同一次运行的另一行却是 `upstream_model=claude-opus-5-5`。
+>   **即模型到底是哪个只存在于 stdout 日志，网页上完全看不到**，
+>   而模型质量直接影响 scan 选股与 review 复盘质量。
+> - **做法**：`clawsocket_compat.py` 加模块级累积器（`set_context` / `record_model_usage` /
+>   `write_model_usage`）→ 落盘 `dashboard/data/model_usage.json` →
+>   `dashboard_export.py` 注入 → `app.js` 的 runtime 条在 `SCAN ✓` 后追加模型小字。
+> - **相关**：P2 #12（Model Fingerprint）是更深一层的同类问题；本项是它的"轻量可视版"。
+
 ### P3 — 探索 / 可选
 
 | # | 事项 | 依据 |
 |---|------|------|
-| 15 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
-| 16 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
-| 17 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
-| 18 | 宏观板块 / Market Indicators 激活 | 已完成，见 P1 #7 |
-| 19 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
-| 20 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
-| 21 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
+| 16 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
+| 17 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
+| 18 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
+| 19 | 宏观板块 / Market Indicators 激活 | 已完成，见 P1 #7 |
+| 20 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
+| 21 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
+| 22 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
 
 > ⚠️ `cme-fedwatch` 依赖 `curl_cffi`（~13MB 二进制 wheel）—— 已确认 CI 能装
 > （dashboard-data run #2082 实测），但会增加依赖安装时间约 10–15 秒（实测 +~17s）。
