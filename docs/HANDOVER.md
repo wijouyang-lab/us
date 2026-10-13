@@ -196,15 +196,16 @@
 > - ✅ 前端「📊 市场情绪指标」面板**已渲染**（payload 就位；渲染逻辑由
 >   `test_frontend_render_with_data` 覆盖）
 >
-> ⚠️ **遗留（本次未授权，未修）**：`requirements-production.txt` 加入这两个包后，
-> `tests/test_market_indicators.py` 有两个**环境脆弱用例**在"装了包的环境"下会失败：
-> - `test_fg_fails_fw_ok` —— 它假设 `fear_greed` **不可导入**来构造失败分支
-> - `test_both_sources_fail_no_file` —— 它假设两包**都不可导入**
+> ⚠️ **附带修复（同日）**：`requirements-production.txt` 加入这两个包后，
+> `tests/test_market_indicators.py` 有两个**环境脆弱用例**会失败 —— 它们靠"包恰好没装"来构造失败分支：
+> - `test_fg_fails_fw_ok`（假设 `fear_greed` 不可导入）
+> - `test_both_sources_fail_no_file`（假设两包都不可导入）
 >
-> 实测：修复前该文件 4 failed / 3 passed；修复路径后 2 failed / 5 passed ——
-> 剩的 2 个就是这两个，与路径无关。**CI 无 pytest runner（无任何 test workflow），
-> 所以不影响生产管线**；但本地全量跑会因此变红。
-> 建议后续用 monkeypatch 强制 import 失败，把这两个用例改成 hermetic。
+> ✅ **已修**：新增 `_block_imports()` helper，用 `monkeypatch` 覆盖 `builtins.__import__`
+> 强制抛 `ImportError`（只拦白名单包，其余一律委托真实实现），两个用例已 hermetic。
+> **全量回归：388 passed / 0 failed**（= 基线 382 + 前序新增 5 + 本次路径回归测试 1）。
+>
+> 注：CI 无 pytest runner（无任何 test workflow），此类环境脆弱问题只影响本地全量跑。
 
 ### P2 — 功能推进（已决策待实施）
 
@@ -215,18 +216,30 @@
 | 10 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
 | 11 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
 | 12 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
+| 13 | 🟡 **git 全局 `curloptResolve` pin 不稳定** | 2026-10-13 实测 | 见下方展开 |
+
+> #### P2 #13 展开 · 🟡 git 全局 `curloptResolve` pin 不稳定
+>
+> - **现象**：`git fetch` / `git push` **偶发失败**（`exit 128`，连接超时 / `Recv failure: Connection was reset`）。
+>   重试即可通过 —— 实测 fetch 连失 2 次后第 3 次成功；push 失败 1 次后重试成功。
+> - **当前 pin**：`github.com:443:140.82.112.3`，写在 `~/.gitconfig` 的 `http.curloptResolve`。
+>   **起因**：本机 DNS 把 `github.com` 解析到亚洲节点 `20.205.243.166`，该 IP 完全不可达；
+>   其它 GitHub 域名（api / raw / codeload / lfs）均正常。
+> - **修法**：换一个可达的美区 IP（`140.82.113.3` / `140.82.114.3` / `140.82.121.3` 实测均可达），
+>   或改用 hosts 条目把 `github.com` 固定到可用 IP（需管理员）。
+> - **时机**：不急，重试能过；但今天已经在 P1 #7 的收尾 push 上真实卡过一次。
 
 ### P3 — 探索 / 可选
 
 | # | 事项 | 依据 |
 |---|------|------|
-| 13 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
-| 14 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
-| 15 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
-| 16 | 宏观板块 / Market Indicators 激活 | `MACRO_PANEL_ACTIVATION.md`、`MARKET_INDICATORS_PANEL_DESIGN.md`（当前阻塞见 P1 #7） |
-| 17 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
-| 18 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
-| 19 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
+| 14 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
+| 15 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
+| 16 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
+| 17 | 宏观板块 / Market Indicators 激活 | 已完成，见 P1 #7 |
+| 18 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
+| 19 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
+| 20 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
 
 > ⚠️ `cme-fedwatch` 依赖 `curl_cffi`（~13MB 二进制 wheel）—— 已确认 CI 能装
 > （dashboard-data run #2082 实测），但会增加依赖安装时间约 10–15 秒（实测 +~17s）。
