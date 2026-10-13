@@ -1,6 +1,6 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-13T08:38:34Z",
+  "generated_at": "2026-10-13T09:09:58Z",
   "economic": [
     {
       "indicator": "10Y国债",
@@ -9,7 +9,7 @@
       "date": "2026-10-12",
       "source": "Yahoo Finance",
       "sentiment": "neutral",
-      "rationale": "10年期国债收益率持平，无变化"
+      "rationale": "10Y国债收益率持平，无变化"
     },
     {
       "indicator": "5Y国债",
@@ -18,7 +18,7 @@
       "date": "2026-10-12",
       "source": "Yahoo Finance",
       "sentiment": "neutral",
-      "rationale": "5年期国债收益率持平，无变化"
+      "rationale": "5Y国债收益率持平，无变化"
     },
     {
       "indicator": "13周国债",
@@ -36,7 +36,7 @@
       "date": "2026-08-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI环比上升，通胀压力增加"
+      "rationale": "CPI上升，通胀压力增加"
     },
     {
       "indicator": "核心CPI",
@@ -45,7 +45,7 @@
       "date": "2026-08-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "核心CPI环比上升，通胀压力增加"
+      "rationale": "核心CPI上升，通胀压力增加"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率上升0.1%，经济走弱信号"
+      "rationale": "失业率上升，经济走弱"
     },
     {
       "indicator": "核心PCE",
@@ -62,8 +62,8 @@
       "prev": null,
       "date": "August 2026",
       "source": "BEA 官方网页",
-      "sentiment": "neutral",
-      "rationale": "核心PCE无前值对比，无法判断方向"
+      "sentiment": "bearish",
+      "rationale": "核心PCE为3%，通胀压力存在"
     }
   ],
   "speakers": [
@@ -74,7 +74,7 @@
       "time": null,
       "source": "📄昨日-中等权重",
       "sentiment": "neutral",
-      "rationale": "市场等待CPI和Warsh讲话，未表明立场"
+      "rationale": "仅提及等待数据和讲话，无明确方向"
     },
     {
       "person": "Warsh",
@@ -83,7 +83,16 @@
       "time": null,
       "source": "📄昨日-中等权重",
       "sentiment": "neutral",
-      "rationale": "预告本周事件，未表明具体倾向"
+      "rationale": "预告事件，无明确政策倾向"
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "Don’t blame Ukraine: Prices go up and up, thanks to Trump’s wars - SMH.com.au",
+      "time": null,
+      "source": "📰今日-高权重",
+      "sentiment": "bearish",
+      "rationale": "提及价格上涨，暗示通胀压力"
     }
   ],
   "error": null
