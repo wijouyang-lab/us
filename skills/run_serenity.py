@@ -160,7 +160,8 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str) 
       "what_to_verify": "需要核验的具体材料（如 10-Q 某分部收入、客户认证公告、产能披露）"}}
   ]
 }}
-必须正好 {TOP_N} 条，priority_rank 为 1..{TOP_N} 且不重复。`ticker` 必须来自上表。"""
+必须正好 {TOP_N} 条，priority_rank 为 1..{TOP_N} 且不重复。`ticker` 必须来自上表。
+**字符串值内部禁止出现英文双引号 `"`**（会让整份 JSON 非法）——要引用术语请用中文引号「」或括号（）。"""
 
 
 # --------------------------------------------------------------------------- #
@@ -227,6 +228,38 @@ def _default_ask(prompt: str, model: str, max_tokens: int) -> str:
     return (getattr(resp, "output_text", "") or "").strip()
 
 
+def _drop_bare_quotes(s: str) -> str:
+    """删掉 JSON 字符串值内部**未转义**的裸英文双引号（模型写中文自由文本时常犯，
+    会让整份 JSON 非法 —— 线上 run #7 即因此失败）。
+
+    判定：已在字符串内，且其后紧跟的不是 `,` `}` `]` `:` （或空白后接这些 / 行尾）的 `"`
+    → 视为内容里的裸引号 → 删除。修不好就让异常照常抛出（R1 保证不写文件）。
+    """
+    out: list[str] = []
+    in_str, esc = False, False
+    for i, ch in enumerate(s):
+        if esc:
+            out.append(ch); esc = False; continue
+        if ch == "\\":
+            out.append(ch); esc = True; continue
+        if ch != '"':
+            out.append(ch); continue
+        if not in_str:
+            in_str = True; out.append(ch); continue
+        nxt = s[i + 1] if i + 1 < len(s) else ""
+        if nxt in ",}]:":
+            out.append(ch); in_str = False
+        elif nxt in " \t\r\n":
+            j = i + 1
+            while j < len(s) and s[j] in " \t\r\n":
+                j += 1
+            if j >= len(s) or s[j] in ",}]:":
+                out.append(ch); in_str = False
+            # 否则：裸引号 → 丢弃
+        # 否则：裸引号 → 丢弃
+    return "".join(out)
+
+
 def _extract_json(text: str) -> dict:
     if not text or not text.strip():
         raise ValueError("模型返回为空")
@@ -240,7 +273,11 @@ def _extract_json(text: str) -> dict:
         m = re.search(r"\{.*\}", s, re.DOTALL)
         if not m:
             raise ValueError("模型输出里找不到 JSON 对象") from None
-        obj = json.loads(m.group(0))
+        body = m.group(0)
+        try:
+            obj = json.loads(body)
+        except json.JSONDecodeError:
+            obj = json.loads(_drop_bare_quotes(body))   # 剥掉中文文本里的裸双引号后重试
     if not isinstance(obj, dict):
         raise ValueError(f"模型输出不是 JSON 对象，而是 {type(obj).__name__}")
     return obj

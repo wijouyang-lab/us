@@ -214,6 +214,35 @@ def test_parse_raises_on_garbage():
             r.parse_result(bad)
 
 
+def test_parse_survives_bare_quotes_in_chinese_text():
+    """回归（线上 run #7 挂在这里）：模型在中文自由文本里夹入**未转义的英文双引号**
+    → 整份 JSON 非法 → JSONDecodeError。必须能修复，而不是全盘丢弃。"""
+    r = _load_runner()
+    broken = (
+        '{"priorities": [\n'
+        '  {"ticker": "T00", "priority_rank": 1,\n'
+        '   "why": "管理层说"需求强劲"，且产品处于难替代环节",\n'
+        '   "what_to_verify": "核验 10-Q"},\n'
+        '  {"ticker": "T01", "priority_rank": 2,\n'
+        '   "why": "供给端扩产困难",\n'
+        '   "what_to_verify": "核验客户认证"}\n'
+        ']}'
+    )
+    with pytest.raises(Exception):
+        json.loads(broken)                     # 先确认原始串确实是坏的
+    got = r.parse_result(broken, valid_tickers={"T00", "T01"})
+    assert [p["ticker"] for p in got["priorities"]] == ["T00", "T01"]
+    assert "难替代环节" in got["priorities"][0]["why"]
+
+
+def test_drop_bare_quotes_keeps_valid_json_intact():
+    """修复函数对**本来就合法**的 JSON 必须零改动。"""
+    r = _load_runner()
+    good = '{"a": "正常文本", "b": {"c": [1, 2]}}'
+    assert r._drop_bare_quotes(good) == good
+    assert json.loads(r._drop_bare_quotes(good)) == json.loads(good)
+
+
 # --------------------------------------------------------------------------- #
 # 4) 数字纪律（正则清洗器，v1 复用 + 补中文数字盲区）
 # --------------------------------------------------------------------------- #
