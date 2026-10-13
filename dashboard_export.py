@@ -2493,6 +2493,32 @@ def _read_skill_serenity(data_dir: Path):
         return None
 
 
+# 哨兵：model_usage.json 不存在（从未跑过 / 被清理）时返回，用于「不注入键」。
+_MODEL_USAGE_MISSING = object()
+
+
+def _read_model_usage(data_dir: Path):
+    """读运行时模型使用记录 → 注入 dashboard_data.json 的 `model_usage`。
+
+    设计（与 market_indicators / skill_serenity 的 fail-closed 完全一致）：
+      · 文件不存在（三支 workflow 都还没跑过 / 记录被清理）→ 返回哨兵，
+        调用方**不注入键** ⇒ dashboard_data.json 与加此功能之前逐字节一致。
+      · 文件存在但解析失败 → 返回 None（前端隐藏 model 小字，但保留「键存在」这一事实）。
+      · 文件正常 → 返回其 dict（{scan|review|evolve: {model, requested, fallback, updated_at}}）。
+
+    路径与 `clawsocket_compat.write_model_usage()` 的落盘位置一致
+    （`<data-dir>/dashboard/data/model_usage.json`）。
+    """
+    p = data_dir / "dashboard" / "data" / "model_usage.json"
+    if not p.exists():
+        return _MODEL_USAGE_MISSING
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 模型使用记录读取失败（{e}），model_usage 输出 null")
+        return None
+
+
 def _build_trade_stats(txn_rows, open_positions):
     """交易观测统计：交易频率 + 胜率 + 平均持仓 + 累计已实现盈亏。
 
@@ -3366,6 +3392,11 @@ def main(argv=None):
     sk = _read_skill_serenity(data_dir)
     if sk is not _SKILL_SERENITY_MISSING:
         payload["skill_serenity"] = sk
+
+    # ---- 运行时模型使用记录（文件缺失 → 不注入键，保持逐字节一致）----
+    mu = _read_model_usage(data_dir)
+    if mu is not _MODEL_USAGE_MISSING:
+        payload["model_usage"] = mu
 
     if ai_status == "pending":
         notes.append(

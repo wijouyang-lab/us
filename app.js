@@ -1437,10 +1437,40 @@
       if (shaEl) {
         shaEl.textContent = sha ? (sha + (runNum ? '  ·  ' + runNum : '')) : '';
       }
+      paintRuntimeModel(key, statusEl);
     }
     renderOne('scan');
     renderOne('review');
     renderOne('evolve');
+  }
+
+  /* ---------------------------------------------------------
+     运行时模型：让用户一眼看出中转站是否偷换了模型。
+     数据来自 dashboard_data.json 的 model_usage（由 clawsocket_compat.py
+     在真实 POST 成功那一刻记录 upstream_model，不是我们请求的模型）。
+     无记录 / model 为空 → 不渲染任何小字；fallback=true → warn 样式 + ⚠️。
+     --------------------------------------------------------- */
+  function runtimeModelHtml(kind, id) {
+    var mu = (DATA && DATA.model_usage) || {};
+    var rec = mu[kind];
+    if (!rec || !rec.model) return '';
+    var full = String(rec.model);
+    var short = full.indexOf('claude-') === 0 ? full.slice(7) : full;   /* claude-fable-5-1 → fable-5-1 */
+    return '<span id="' + id + '" class="runtime-model' + (rec.fallback ? ' warn' : '') + '"' +
+      ' title="请求 ' + esc(rec.requested || '?') + ' · 实际 ' + esc(full) +
+      (rec.fallback ? '（运行时降级）' : '') + '">' +
+      (rec.fallback ? '⚠️ ' : '') + esc(short) + '</span>';
+  }
+
+  /* 幂等：先摘掉上一次渲染的同一个 id，再插到状态徽章之后（refreshRuntime 每 60 秒会重渲染） */
+  function paintRuntimeModel(key, statusEl) {
+    if (!statusEl) return;
+    var id = 'rtModel' + key.charAt(0).toUpperCase() + key.slice(1);
+    var prev = (document.getElementById ? document.getElementById(id) : null);
+    if (prev && prev.parentNode) prev.parentNode.removeChild(prev);
+    var html = runtimeModelHtml(key, id);
+    if (!html || typeof statusEl.insertAdjacentHTML !== 'function') return;
+    statusEl.insertAdjacentHTML('afterend', html);
   }
 
   /* 每 60 秒只刷新 runtime 数据，不整页 reload，不触碰其他页面状态 */
