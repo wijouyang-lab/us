@@ -1,9 +1,9 @@
 {
-  "run_at": "2026-10-13T09:16:17.736514+00:00",
+  "run_at": "2026-10-13T13:13:10.878140+00:00",
   "workdir": "/home/runner/work/us/us",
   "strict": false,
   "only_phase": null,
-  "overall_status": "FAILED",
+  "overall_status": "DEGRADED",
   "phases": {
     "2": {
       "name": "backtest",
@@ -15,17 +15,17 @@
     },
     "3": {
       "name": "validation",
-      "status": "ERROR",
-      "written": false,
-      "reason": "异常: ModuleNotFoundError: No module named 'scipy'",
+      "status": "OK",
+      "written": true,
+      "reason": null,
       "schema_warnings": [],
-      "_error": "ModuleNotFoundError: No module named 'scipy'"
+      "_error": null
     },
     "4": {
       "name": "score_v2",
-      "status": "NOT_ENOUGH_DATA",
-      "written": false,
-      "reason": "输入缺失或为空: quant_factor_validation.csv",
+      "status": "OK",
+      "written": true,
+      "reason": null,
       "schema_warnings": [],
       "_error": null
     },

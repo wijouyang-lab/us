@@ -1,0 +1,458 @@
+{
+  "schema_version": "phase3.v1",
+  "data_maturity": {
+    "backtest_rows": 1342,
+    "n_factors": 24,
+    "n_horizons": 3
+  },
+  "horizon_maturity": {
+    "5D": {
+      "max_sample_count": 0,
+      "mature": false
+    },
+    "10D": {
+      "max_sample_count": 0,
+      "mature": false
+    },
+    "20D": {
+      "max_sample_count": 0,
+      "mature": false
+    }
+  },
+  "sample_counts": {
+    "max_N_by_horizon": {
+      "5D": {
+        "max_sample_count": 0,
+        "mature": false
+      },
+      "10D": {
+        "max_sample_count": 0,
+        "mature": false
+      },
+      "20D": {
+        "max_sample_count": 0,
+        "mature": false
+      }
+    }
+  },
+  "validation_status": {
+    "status_counts": {
+      "NOT_ENOUGH_DATA": 72
+    },
+    "promising": [],
+    "regime_dependent": []
+  },
+  "redundant_pairs": [
+    {
+      "Factor_A": "RSI_14",
+      "Factor_B": "Bias_Pct",
+      "Pearson": 0.8223,
+      "Spearman": 0.9176
+    },
+    {
+      "Factor_A": "RSI_14",
+      "Factor_B": "ZScore_20D",
+      "Pearson": 0.8773,
+      "Spearman": 0.9221
+    },
+    {
+      "Factor_A": "Bias_Pct",
+      "Factor_B": "ZScore_20D",
+      "Pearson": 0.7735,
+      "Spearman": 0.956
+    },
+    {
+      "Factor_A": "MA20",
+      "Factor_B": "MA50",
+      "Pearson": 0.9974,
+      "Spearman": 0.9984
+    },
+    {
+      "Factor_A": "MA20_Slope_5D",
+      "Factor_B": "Momentum_20D_Pct",
+      "Pearson": 0.9402,
+      "Spearman": 0.9184
+    },
+    {
+      "Factor_A": "MA20_Slope_5D",
+      "Factor_B": "Stock_RS_20D_vs_SPY",
+      "Pearson": 0.9401,
+      "Spearman": 0.9179
+    },
+    {
+      "Factor_A": "Volume_Ratio_5D",
+      "Factor_B": "Volume_Ratio_20D",
+      "Pearson": 0.9263,
+      "Spearman": 0.9172
+    },
+    {
+      "Factor_A": "Momentum_20D_Pct",
+      "Factor_B": "Stock_RS_20D_vs_SPY",
+      "Pearson": 0.9997,
+      "Spearman": 0.9993
+    }
+  ],
+  "insufficient_data_reasons": [
+    {
+      "Factor": "RSI_14",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "RSI_14",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "RSI_14",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Bias_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Bias_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Bias_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "MACD_Hist",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "MACD_Hist",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "MACD_Hist",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "MA20",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "MA20",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "MA20",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "MA50",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "MA50",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "MA50",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "MA20_Slope_5D",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "MA20_Slope_5D",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "MA20_Slope_5D",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "ATR_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "ATR_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "ATR_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "KDJ_J",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "KDJ_J",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "KDJ_J",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Volume_Ratio_5D",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Volume_Ratio_5D",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Volume_Ratio_5D",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_5D_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_5D_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_5D_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_20D_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_20D_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_20D_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_60D_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_60D_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Momentum_60D_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Realized_Volatility_20D_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Realized_Volatility_20D_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Realized_Volatility_20D_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Volume_Ratio_20D",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Volume_Ratio_20D",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Volume_Ratio_20D",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "ZScore_20D",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "ZScore_20D",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "ZScore_20D",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Beta_60D_SPY",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Beta_60D_SPY",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Beta_60D_SPY",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Sector_RS_20D_Pct",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Sector_RS_20D_Pct",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Sector_RS_20D_Pct",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "VIX",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "VIX",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "VIX",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Quant_Score",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Quant_Score",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Quant_Score",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Fundamental_Score",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Fundamental_Score",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Fundamental_Score",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Event_Score",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Event_Score",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Event_Score",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Technical_Score_25",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Technical_Score_25",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Technical_Score_25",
+      "Horizon": "20D",
+      "N": 0
+    },
+    {
+      "Factor": "Risk_Liquidity_Score",
+      "Horizon": "5D",
+      "N": 0
+    },
+    {
+      "Factor": "Risk_Liquidity_Score",
+      "Horizon": "10D",
+      "N": 0
+    },
+    {
+      "Factor": "Risk_Liquidity_Score",
+      "Horizon": "20D",
+      "N": 0
+    }
+  ],
+  "no_decision_rule": "Phase 3 produces Research Evidence only; no factor is auto-approved for production."
+}
