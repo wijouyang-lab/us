@@ -267,45 +267,21 @@ update_version_marker()
 
 # ==================== 通用网络会话 ====================
 def get_robust_session():
-    session = requests.Session()
-    session.headers.update({
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/150 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9,zh-CN;q=0.8",
-        "Referer": "https://finance.yahoo.com/",
-    })
-    return session
+    # 段 1A：实现已抽到 news_fetch_util.new_session()（行为一致，供另一链路复用）
+    from news_fetch_util import new_session
+    return new_session()
 
 # ==================== 1. 宏观新闻 ====================
 def _parse_rss_date(date_str):
-    if not date_str:
-        return None
-    try:
-        dt = email.utils.parsedate_to_datetime(str(date_str).strip())
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=datetime.timezone.utc)
-        return dt.astimezone(datetime.timezone.utc)
-    except Exception:
-        for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d"):
-            try:
-                return datetime.datetime.strptime(str(date_str).strip()[:19], fmt).replace(tzinfo=datetime.timezone.utc)
-            except Exception:
-                pass
-    return None
+    # 段 1A：实现已抽到 news_fetch_util.parse_rss_date()
+    from news_fetch_util import parse_rss_date
+    return parse_rss_date(date_str)
 
 
 def _news_age_tag(dt):
-    if dt is None:
-        return "[时间未知]"
-    delta_hours = (datetime.datetime.now(datetime.timezone.utc) - dt).total_seconds() / 3600
-    if delta_hours <= 6:
-        return "[🔥今日最新-权重最高]"
-    if delta_hours <= 24:
-        return "[📰今日-高权重]"
-    if delta_hours <= 48:
-        return "[📄昨日-中等权重]"
-    if delta_hours <= 72:
-        return "[📑前日-低权重]"
-    return None
+    # 段 1A：实现已抽到 news_fetch_util.news_age_tag()；asof=None 即原「当前 UTC」语义
+    from news_fetch_util import news_age_tag
+    return news_age_tag(dt)
 
 
 # 年龄权重标签取值集合：直接由 _news_age_tag() 派生，避免与上面的阈值脱钩。
@@ -497,50 +473,10 @@ def get_stock_news_snapshot(ticker, max_items=6, technical_date=None):
     - 【历史背景】昨收以前的旧消息
     禁止在一次 Scan 内因不同股票抓取时间不同而改变“最新新闻”口径。
     """
-    session = get_robust_session()
-    urls = [
-        ("Yahoo", f"https://feeds.finance.yahoo.com/rss/2.0/headline?s={ticker}&region=US&lang=en-US"),
-        ("Google News", f"https://news.google.com/rss/search?q={requests.utils.quote(ticker + ' stock')}&hl=en-US&gl=US&ceid=US:en"),
-        ("Reuters Search", f"https://news.google.com/rss/search?q={requests.utils.quote(ticker + ' site:reuters.com')}&hl=en-US&gl=US&ceid=US:en"),
-    ]
-    cutoff = RUN_ASOF_UTC + datetime.timedelta(minutes=1)
+    from news_fetch_util import fetch_ticker_news
     since = _previous_close_cutoff_us(technical_date)
-    rows = []
-    for source_name, url in urls:
-        try:
-            resp = session.get(url, timeout=8)
-            resp.raise_for_status()
-            root = ET.fromstring(resp.content)
-            for item in root.findall('.//item')[:12]:
-                title = item.findtext('title', default='').strip()
-                dt = _parse_rss_date(item.findtext('pubDate', default=''))
-                if not title or not dt:
-                    continue
-                if dt > cutoff or dt < (RUN_ASOF_UTC - datetime.timedelta(hours=72)):
-                    continue
-                rows.append({
-                    'title': title,
-                    'dt': dt,
-                    'source': source_name,
-                    'after_close': bool(dt >= since),
-                })
-        except Exception:
-            continue
-
-    rows.sort(key=lambda x: x['dt'], reverse=True)
-    out, seen = [], set()
-    for r in rows:
-        key = re.sub(r'[^a-z0-9]+', '', r['title'].lower())
-        if key in seen:
-            continue
-        seen.add(key)
-        age = _news_age_tag(r['dt']) or '[较旧]'
-        bucket = '[🆕昨收后]' if r['after_close'] else '[📄历史背景]'
-        ts = r['dt'].astimezone(US_TZ).strftime('%m-%d %H:%M ET')
-        out.append(f"{bucket}{age}[{r['source']}] {ts} — {r['title']}")
-        if len(out) >= max_items:
-            break
-    return out
+    return [d["line"] for d in fetch_ticker_news(
+        ticker, max_items=max_items, asof=RUN_ASOF_UTC, since=since)]
 
 
 def get_stock_news(ticker, max_items=6, technical_date=None):
@@ -1368,35 +1304,9 @@ def screen_technical_setups(pool_data):
 
 # ==================== 6.5 重要人物讲话与宏观预期变化 ====================
 def _rss_search_google(query, max_items=8):
-    """通过 Google News RSS 抓取指定人物/政策关键词的近期新闻；503时重试，失败时安全降级。"""
-    session = get_robust_session()
-    q = requests.utils.quote(query)
-    url = f"https://news.google.com/rss/search?q={q}&hl=en-US&gl=US&ceid=US:en"
-    out = []
-    last_err = None
-    for attempt in range(2):  # 503 时重试 1 次
-        try:
-            resp = session.get(url, timeout=10)
-            resp.raise_for_status()
-            root = ET.fromstring(resp.content)
-            for item in root.findall('.//item')[:max_items * 2]:
-                title = item.findtext('title', default='').strip()
-                pub = item.findtext('pubDate', default='')
-                dt = _parse_rss_date(pub)
-                tag = _news_age_tag(dt)
-                if not title or tag is None:
-                    continue
-                ts = dt.astimezone(US_TZ).strftime('%m-%d %H:%M') if dt else '时间未知'
-                out.append((dt, f"{tag}[Google News] {ts} - {title}"))
-            break  # 成功则跳出重试
-        except Exception as e:
-            last_err = e
-            if attempt == 0:
-                time.sleep(2)  # 503 时等待 2 秒后重试
-    if not out and last_err:
-        print(f"   ⚠️ Google News 查询失败 {query}: {last_err}")
-    out.sort(key=lambda x: x[0] or datetime.datetime.min.replace(tzinfo=datetime.timezone.utc), reverse=True)
-    return [x[1] for x in out[:max_items]]
+    """通过 Google News RSS 抓取指定人物/政策关键词的近期新闻（段 1A 起由 news_fetch_util 实现）。"""
+    from news_fetch_util import rss_search_google
+    return [d["line"] for d in rss_search_google(query, max_items=max_items)]
 
 
 def get_key_people_policy_news(macro_news_text=""):
