@@ -563,8 +563,57 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
     return log
 
 
-def mark_to_market(positions, prices: dict[str, dict], today: str):
-    """盯市：更新 OPEN 仓位的市值与浮盈 + 扩展时段价。取不到价则沿用上一快照价格（不编造）。"""
+def stop_sync_enabled() -> bool:
+    """flag 门控：`ENABLE_STOP_LOSS_SYNC == "1"` 时才把 review 的移动止损同步进账本。
+
+    默认不设 → False → `mark_to_market` 完全不动 `Stop_Loss`，
+    输出与加此功能之前**逐字节一致**（不读 trade_history、不写日志、不改任何字段）。
+    """
+    return os.environ.get("ENABLE_STOP_LOSS_SYNC") == "1"
+
+
+def _sync_stop_loss_from_recs(p: dict, recs: dict) -> None:
+    """把 trade_history（recs）里 review 维护的移动止损写进持仓行。
+
+    写入条件（全部满足才写，否则原值原样保留）：
+      1. 持仓行有非空 `Recommendation_ID`；
+      2. recs 能按该 ID 命中，且其 `Stop_Loss` 非空；
+      3. 该值能解析为有限正数（fail-closed，绝不写入脏止损）；
+      4. 与当前值不同（避免无意义的 CSV 变更）。
+
+    任何异常都在本函数内吞掉并打印警告 —— **同步失败绝不阻断主流程**。
+    """
+    try:
+        rid = str(p.get("Recommendation_ID", "")).strip()
+        if not rid:
+            return
+        raw_stop = str((recs.get(rid) or {}).get("Stop_Loss", "")).strip()
+        if not raw_stop:
+            return
+        # 归一化为「裸数字」：
+        #   positions.csv 的历史值带 "$"（实测 4 只持仓全是 "$214.76"/"$197.69"/…），
+        #   而下游 `_run_intraday_stop`（:687）用 `dec()` 解析，`dec()` 只剥逗号不剥 "$"
+        #   → dec("$197.69") 返回 None → 该持仓被 `continue` 跳过 → **盘中机械止损形同虚设**。
+        #   所以这里剥掉 "$"（和逗号）后再校验/写入，保证同步后的值真正可被解析。
+        norm_stop = raw_stop.replace("$", "").replace(",", "").strip()
+        val = dec(norm_stop)
+        if val is None or val <= 0:
+            return
+        old = str(p.get("Stop_Loss", "") or "").strip()
+        if old == norm_stop:
+            return
+        p["Stop_Loss"] = norm_stop
+        print(f"🔁 [stop-sync] {p.get('Ticker', '')} Stop_Loss {old or 'N/A'} -> {norm_stop}")
+    except Exception as e:                      # noqa: BLE001 —— 故意兜住一切，绝不阻断主流程
+        print(f"⚠️ [stop-sync] 同步失败（不影响主流程）：{type(e).__name__}: {e}")
+
+
+def mark_to_market(positions, prices: dict[str, dict], today: str, recs: dict | None = None):
+    """盯市：更新 OPEN 仓位的市值与浮盈 + 扩展时段价。取不到价则沿用上一快照价格（不编造）。
+
+    `recs`（= `load_recommendations()` 的返回值）仅供 `ENABLE_STOP_LOSS_SYNC` 门控的
+    移动止损同步使用；flag 关或 `recs` 为 None 时**完全不触碰 `Stop_Loss`**。
+    """
     stock_value = ZERO
     unrealized = ZERO
     for p in positions:
@@ -598,6 +647,10 @@ def mark_to_market(positions, prices: dict[str, dict], today: str):
         p["Unrealized_PnL"] = str(upl)
         p["Unrealized_PnL_Pct"] = str(upl_pct)
         p["Last_Update"] = today
+        # >>> Feature: 移动止损同步（flag 门控 ENABLE_STOP_LOSS_SYNC，默认关闭）>>>
+        # flag 关 / recs 为 None 时整块跳过 → Stop_Loss 与加此功能之前逐字节一致。
+        if recs and stop_sync_enabled():
+            _sync_stop_loss_from_recs(p, recs)
         stock_value += mv
         unrealized += upl
     return stock_value.quantize(CENT), unrealized.quantize(CENT)
@@ -769,7 +822,9 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
         prices = {} if offline else fetch_last_closes(open_tickers)
         if open_tickers and not prices:
             print("⚠️ 未取到实时价，沿用上一快照价格（不编造价格）")
-        stock_value, unrealized = mark_to_market(positions, prices, today)
+        # 移动止损同步需要 recs；仅 flag 开时才读 trade_history（关闭时零额外 I/O）
+        sync_recs = load_recommendations(data_dir) if stop_sync_enabled() else None
+        stock_value, unrealized = mark_to_market(positions, prices, today, sync_recs)
         cash = derive_cash(transactions)   # 只读，不写交易流水
         total_equity = (cash + stock_value).quantize(CENT, rounding=ROUND_HALF_UP)
         fill_weights(positions, total_equity)
@@ -828,7 +883,7 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
     prices = {} if offline else fetch_last_closes(open_tickers)
     if open_tickers and not prices:
         print("⚠️ 未取到实时收盘价，沿用上一快照价格（不编造价格）")
-    stock_value, unrealized = mark_to_market(positions, prices, today)
+    stock_value, unrealized = mark_to_market(positions, prices, today, recs)
 
     total_equity = (cash + stock_value).quantize(CENT, rounding=ROUND_HALF_UP)
     realized_total = realized_total.quantize(CENT, rounding=ROUND_HALF_UP)
