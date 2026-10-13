@@ -322,7 +322,14 @@ def test_frontend_render_with_data():
         "fear_greed": {
             "score": 69, "rating": "Greed",
             "timestamp": "2026-10-12T13:00:00+00:00",
-            "subindicators": {"stock_price_momentum": {"score": 70.0, "rating": "Greed"}},
+            "subindicators": {
+                # 非 7 个真实 key 之一 → 应原样回退显示原 key
+                "stock_price_momentum": {"score": 70.0, "rating": "Greed"},
+                # 真实 key → 应显示中文；rating 用大写测大小写无关
+                "market_volatility_vix": {"score": 50.0, "rating": "Neutral"},
+                # 真实 key + 小写 rating（真实数据就是小写）→ 同样要命中
+                "put_call_options": {"score": 35.0, "rating": "extreme fear"},
+            },
             "history_30d": [{"date": "2026-10-12", "score": 69.0, "rating": "Greed"}],
         },
         "fedwatch": {
@@ -346,9 +353,16 @@ def test_frontend_render_with_data():
     assert r["card_display"] == "block", r
     # F&G
     assert "CNN 恐惧贪婪指数" in body, body
-    assert "Greed" in body, body
     assert "69.0" in body, body  # ring 中心分数
-    assert "mi-greed" in body, body  # 5 档配色（score 69 → greed）
+    assert "mi-greed" in body, body  # 5 档配色（score 69 → greed；⚠️ 类名不翻译）
+    # --- F&G 中文映射（大小写无关：fake 给的是大写 "Greed" / "Neutral"）---
+    assert "贪婪" in body, body            # rating → 中文
+    assert "中性" in body, body            # 子指标 rating → 中文
+    assert "Greed" not in body, body       # 英文原值不应残留
+    assert "市场波动(VIX)" in body, body   # 真实子指标 key → 中文
+    assert "看跌/看涨期权" in body, body    # 真实子指标 key → 中文
+    assert "极度恐惧" in body, body         # 小写 "extreme fear" 也要命中（真实数据即小写）
+    assert "stock_price_momentum" in body, body  # 非映射 key → fallback 原样
     # FedWatch
     assert "CME FedWatch" in body, body
     assert "下次 FOMC：" in body, body  # 日期被 <b> 包裹，分段断言

@@ -1068,6 +1068,35 @@
     return 'mi-greed-extreme';
   }
 
+  /* 市场情绪指标：中文映射（**纯展示层** —— 后端 JSON 保持英文原值不动，避免改契约）
+     注意：真实数据是小写（neutral / extreme fear / greed），测试 fake 用大写（Greed / Fear），
+     因此查表前必须 toLowerCase()；未命中一律回退原值，绝不吞数据。
+     另注：配色走 miBandClass() 的**数值**阈值，与语言无关 —— 切勿翻译 CSS 类名。 */
+  var MI_RATING_CN = {
+    'extreme fear': '极度恐惧',
+    'fear': '恐惧',
+    'neutral': '中性',
+    'greed': '贪婪',
+    'extreme greed': '极度贪婪'
+  };
+  var MI_SUB_CN = {
+    'market_momentum_sp500': '标普动能',
+    'stock_price_strength': '股价强度',
+    'stock_price_breadth': '股价广度',
+    'put_call_options': '看跌/看涨期权',
+    'market_volatility_vix': '市场波动(VIX)',
+    'junk_bond_demand': '垃圾债需求',
+    'safe_haven_demand': '避险需求'
+  };
+  function miRatingCN(r) {
+    if (r === null || r === undefined || r === '') return '';
+    return MI_RATING_CN[String(r).trim().toLowerCase()] || String(r);
+  }
+  function miSubCN(k) {
+    if (k === null || k === undefined || k === '') return '';
+    return MI_SUB_CN[String(k).trim().toLowerCase()] || String(k);
+  }
+
   function renderMarketIndicators() {
     var mi = DATA && DATA.market_indicators;
     var card = $('#marketIndicatorsCard');
@@ -1089,9 +1118,9 @@
     if (fg && num(fg.score) !== null) {
       var v = num(fg.score);
       html += '<div class="mi-fg">';
-      html += ring(v, 84, (fg.rating || ''));
+      html += ring(v, 84, miRatingCN(fg.rating));
       html += '<div class="mi-fg-meta">';
-      html += '<span class="mi-band ' + miBandClass(v) + '">' + esc(fg.rating || NA) + '</span>';
+      html += '<span class="mi-band ' + miBandClass(v) + '">' + esc(fg.rating ? miRatingCN(fg.rating) : NA) + '</span>';
       if (fg.timestamp) {
         html += '<span class="mi-ts">' + esc(String(fg.timestamp).replace('T', ' ').replace('Z', ' UTC')) + '</span>';
       }
@@ -1100,9 +1129,9 @@
         html += '<div class="mi-sub">';
         html += Object.keys(fg.subindicators).map(function (k) {
           var s = fg.subindicators[k] || {};
-          return '<span class="mi-sub-item"><b>' + esc(k) + '</b> ' +
+          return '<span class="mi-sub-item"><b>' + esc(miSubCN(k)) + '</b> ' +
             (num(s.score) === null ? NA : num(s.score).toFixed(1)) +
-            ' <em class="' + miBandClass(s.score) + '">' + esc(s.rating || '') + '</em></span>';
+            ' <em class="' + miBandClass(s.score) + '">' + esc(s.rating ? miRatingCN(s.rating) : '') + '</em></span>';
         }).join('');
         html += '</div>';
       }
