@@ -128,12 +128,19 @@ class _ToolRecorder:
         return self.result if not callable(self.result) else self.result(name, args)
 
 
+_LAST_VERIFIED_FACTS: list = []   # 测试辅助：最近一次 _run 的第 5 项（verified_facts）
+
+
 def _run(scripted, recorder, **kw):
+    """跑一次 loop。返回 (4 元组结果, client) —— 第 5 项 verified_facts 另存于
+    `_LAST_VERIFIED_FACTS`：段 2B 把返回值扩成 5 元组后，既有断言无需逐个改。"""
+    global _LAST_VERIFIED_FACTS
     client = _FakeClient(scripted)
     kw.setdefault("model", "claude-fable-5-1")
     kw.setdefault("max_tokens", 100)
-    return r.ask_with_tools("PROMPT", client_factory=lambda: client,
-                            **kw), client
+    res = r.ask_with_tools("PROMPT", client_factory=lambda: client, **kw)
+    _LAST_VERIFIED_FACTS = list(res[4]) if len(res) > 4 else []
+    return res[:4], client
 
 
 @pytest.fixture(autouse=True)
@@ -306,7 +313,7 @@ def test_client_factory_error_returns_none():
     def _boom():
         raise ValueError("no creds")
 
-    final, trace, mode, reason = r.ask_with_tools(
+    final, trace, mode, reason, _facts = r.ask_with_tools(
         "P", model="m", max_tokens=1, client_factory=_boom)
     assert final is None and trace == [] and mode == "offline_screening"
     assert reason.startswith("client_init_error: ValueError: no creds")
@@ -394,7 +401,7 @@ def test_ask_with_tools_does_not_call_default_ask(monkeypatch):
     monkeypatch.setattr(r, "_default_ask", _boom)
     rec = _ToolRecorder(result={"ok": True})
     monkeypatch.setattr(serenity_tools, "execute_tool", rec)
-    final, _t, mode, _d = r.ask_with_tools(
+    final, _t, mode, _d, _facts = r.ask_with_tools(
         "P", model="m", max_tokens=1,
         client_factory=lambda: _FakeClient([_end("OK")]))
     assert final == "OK" and mode == "online_tool_use"
@@ -414,3 +421,186 @@ def test_prompt_still_contains_numeric_discipline():
     p = r.build_prompt("", "", [], "2026-10-13")
     assert "严格禁止出现任何具体数字" in p      # 原数字纪律未被删除
     assert "what_to_verify" in p
+
+
+# --------------------------------------------------------------------------- #
+# G. verified_facts（段 2B：只收工具真实返回的 company_facts）
+# --------------------------------------------------------------------------- #
+_FACTS = {"PE_TTM": 42.5, "Market_Cap": 1234567890}
+
+
+def _cf_result(ticker, facts=None, **kw):
+    out = {"ticker": ticker, "facts": _FACTS if facts is None else facts,
+           "asof": "2026-10-13", "source": "yfinance", "error": None}
+    out.update(kw)
+    return out
+
+
+def test_verified_facts_collected_from_company_facts(monkeypatch):
+    rec = _ToolRecorder(result=_cf_result("SNPS"))
+    monkeypatch.setattr(serenity_tools, "execute_tool", rec)
+    (_f, _t, _m, _d), _ = _run(
+        [_tools(("t1", "company_facts", {"ticker": "SNPS"})), _end("DONE")], rec)
+
+    assert len(_LAST_VERIFIED_FACTS) == 1
+    entry = _LAST_VERIFIED_FACTS[0]
+    assert entry["ticker"] == "SNPS"
+    assert entry["facts"] == _FACTS               # 嵌套 facts 原样
+    assert entry["source"] == "yfinance"
+    assert entry["asof"] == "2026-10-13"
+
+
+def test_verified_facts_dedupes_by_ticker_keeps_last(monkeypatch):
+    seq = [_cf_result("SNPS", {"PE_TTM": 1.0}), _cf_result("SNPS", {"PE_TTM": 9.9})]
+    rec = _ToolRecorder(result=lambda name, args: seq.pop(0))
+    monkeypatch.setattr(serenity_tools, "execute_tool", rec)
+    (_f, _t, _m, _d), _ = _run([
+        _tools(("t1", "company_facts", {"ticker": "SNPS"})),
+        _tools(("t2", "company_facts", {"ticker": "SNPS"})),
+        _end("DONE"),
+    ], rec)
+
+    assert len(_LAST_VERIFIED_FACTS) == 1          # 同一 ticker 只留一条
+    assert _LAST_VERIFIED_FACTS[0]["facts"]["PE_TTM"] == 9.9   # 保留最后一次
+
+
+def test_verified_facts_empty_when_tool_fails(monkeypatch):
+    rec = _ToolRecorder(result={"error": "no_facts_returned"})
+    monkeypatch.setattr(serenity_tools, "execute_tool", rec)
+    (_f, _t, _m, _d), _ = _run(
+        [_tools(("t1", "company_facts", {"ticker": "SNPS"})), _end("DONE")], rec)
+    assert _LAST_VERIFIED_FACTS == []
+
+
+# --------------------------------------------------------------------------- #
+# H. run() 双路径（段 2B）
+# --------------------------------------------------------------------------- #
+_UNIVERSE = [{"ticker": f"T{i}", "name": "x", "bucket": "Core", "final_score": 90 - i,
+              "quant_score": 80 - i, "ai_score": 70.0, "sector_rs_20d_pct": 1.0,
+              "held": False}                      # build_prompt 会读 u['held']，必须齐 8 字段
+             for i in range(3)]
+
+
+def _ai_text(ticks=("T0", "T1", "T2")):
+    return json.dumps({"priorities": [
+        {"ticker": t, "priority_rank": i + 1, "why": "瓶颈层", "what_to_verify": "10-Q"}
+        for i, t in enumerate(ticks)]}, ensure_ascii=False)
+
+
+def test_run_offline_default_has_new_fields_empty():
+    calls = []
+
+    def _ask(prompt, model, max_tokens):
+        calls.append(prompt)
+        return _ai_text()
+
+    payload = r.run(None, "", _UNIVERSE, _ask, "m", 100, "2026-10-13")
+
+    assert payload["mode"] == "offline_screening"
+    assert payload["tool_trace"] == [] and payload["verified_facts"] == []
+    assert payload["degraded_reason"] is None
+    assert payload["universe_size"] == 3                 # 未传 universe_total → len(universe)
+    assert payload["universe_size_screened"] == 3
+    assert len(calls) == 1                               # 只调一次离线 ask
+
+
+def test_run_online_uses_tool_loop(monkeypatch):
+    seen = {}
+
+    def _fake_loop(prompt, *, model, max_tokens, **kw):
+        seen["kw"] = kw
+        return _ai_text(), [{"round": 1, "tool": "web_search", "args_digest": "query=a",
+                             "ok": True, "ms": 5, "result_bytes": 10}], "online_tool_use", None, \
+            [{"ticker": "T0", "facts": _FACTS, "source": "yfinance", "asof": "2026-10-13"}]
+
+    monkeypatch.setattr(r, "ask_with_tools", _fake_loop)
+    payload = r.run(None, "", _UNIVERSE, lambda *a: "SHOULD_NOT_BE_CALLED", "m", 100, "2026-10-13",
+                    online=True, online_kwargs={"max_rounds": 3}, universe_total=44)
+
+    assert payload["mode"] == "online_tool_use"
+    assert len(payload["tool_trace"]) == 1
+    assert payload["verified_facts"][0]["ticker"] == "T0"
+    assert payload["universe_size"] == 44                # 原池大小
+    assert payload["universe_size_screened"] == 3        # 本次传入的（已粗筛）池
+    assert seen["kw"] == {"max_rounds": 3}
+
+
+def test_run_online_falls_back_to_offline_on_failure(monkeypatch):
+    monkeypatch.setattr(r, "ask_with_tools",
+                        lambda prompt, **kw: (None, [{"round": 1, "tool": "web_search",
+                                                      "args_digest": "q", "ok": False,
+                                                      "ms": 1, "result_bytes": 0}],
+                                              "offline_screening", "api_error: RuntimeError: 500", []))
+    payload = r.run(None, "", _UNIVERSE, lambda *a: _ai_text(), "m", 100, "2026-10-13", online=True)
+
+    assert payload["mode"] == "offline_screening"
+    assert "api_error" in payload["degraded_reason"]      # 失败原因不被吞掉
+    assert len(payload["tool_trace"]) == 1                # trace 保留（可观测）
+    assert payload["priorities"]                          # 仍写出了优先级（回退成功）
+
+
+# --------------------------------------------------------------------------- #
+# I. 粗筛与环境变量（段 2B）
+# --------------------------------------------------------------------------- #
+def test_prescreen_orders_by_final_score_desc():
+    pool = [{"ticker": "LOW", "final_score": 10, "quant_score": 99},
+            {"ticker": "HIGH", "final_score": 90, "quant_score": 1},
+            {"ticker": "MID", "final_score": 50, "quant_score": 50}]
+    got = r.prescreen(pool, 2)
+    assert [u["ticker"] for u in got] == ["HIGH", "MID"]
+
+
+def test_prescreen_noop_cases():
+    pool = [{"ticker": f"T{i}", "final_score": i} for i in range(5)]
+    for limit in (None, 0, -1, 5, 99):
+        assert [u["ticker"] for u in r.prescreen(pool, limit)] == [u["ticker"] for u in pool]
+
+
+def test_num_or_neg_inf_handles_zero_and_none():
+    assert r._num_or_neg_inf(0) == 0.0          # 合法 0 分不得被当成 -inf
+    assert r._num_or_neg_inf("12.5") == 12.5
+    assert r._num_or_neg_inf(None) == float("-inf")
+    assert r._num_or_neg_inf("abc") == float("-inf")
+
+
+def test_prescreen_survives_none_scores():
+    pool = [{"ticker": "A", "final_score": None, "quant_score": None},
+            {"ticker": "B", "final_score": 5, "quant_score": 1}]
+    got = r.prescreen(pool, 1)
+    assert [u["ticker"] for u in got] == ["B"]   # 有分数者优先，None 不崩
+
+
+def test_env_int_fallback(monkeypatch):
+    monkeypatch.delenv("SERENITY_NOPE", raising=False)
+    assert r._env_int("SERENITY_NOPE", 7) == 7
+    monkeypatch.setenv("SERENITY_NOPE", "42")
+    assert r._env_int("SERENITY_NOPE", 7) == 42
+    monkeypatch.setenv("SERENITY_NOPE", "abc")
+    assert r._env_int("SERENITY_NOPE", 7) == 7
+
+
+def test_main_online_flag_wires_mode_and_screened_size(tmp_path, monkeypatch):
+    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
+    monkeypatch.setenv("SERENITY_ONLINE", "0")           # CLI --online 应覆盖 env
+    d = tmp_path / "data" / "dashboard" / "data"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "dashboard_data.json").write_text(json.dumps({
+        "stocks": [{"ticker": f"T{i:02d}", "name": f"C{i}",
+                    "bucket": "Core", "final_score": 90 - i, "quant_score": 80 - i,
+                    "ai_score": 70.0, "sector_rs_20d_pct": 1.0} for i in range(20)],
+        "portfolio": {},
+    }, ensure_ascii=False), encoding="utf-8")
+
+    monkeypatch.setattr(r, "ask_with_tools",
+                        lambda prompt, **kw: (_ai_text(tuple(f"T{i:02d}" for i in range(5))),
+                                              [], "online_tool_use", None, []))
+    out = tmp_path / "out.json"
+    rc = r.main(["--data-dir", str(tmp_path / "data"), "--out", str(out),
+                 "--online", "--prescreen", "5"])
+    assert rc == 0, "main 应返回 0"
+
+    j = json.loads(out.read_text(encoding="utf-8"))
+    assert j["mode"] == "online_tool_use"
+    assert j["universe_size"] == 20              # 原池
+    assert j["universe_size_screened"] == 5      # CLI 粗筛生效
+    assert j["tool_trace"] == [] and j["verified_facts"] == []
