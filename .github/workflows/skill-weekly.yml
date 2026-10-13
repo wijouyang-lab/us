@@ -52,6 +52,11 @@ jobs:
           # 工具失败会降级为 online_degraded；整体失败自动回退离线（mode=offline_screening，结果仍可用）。
           SERENITY_ONLINE: "1"
           SERENITY_PRESCREEN: "15"
+          # 工具预算：prompt 要求"每只至少一次工具"+"TOP 10 用 company_facts"
+          # ≈ 15 + 10 = 25 次；默认 6 轮 × 3 工具/轮 = 18 次会撞顶并整体回退离线。
+          # 故放宽到 10 轮 / 30 次（30 = 10×3 单轮上限，含 5 次余量）。
+          SERENITY_TOOL_MAX_ROUNDS: "10"
+          SERENITY_TOOL_MAX_CALLS: "30"
 
       - name: Commit if changed
         run: |
