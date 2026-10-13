@@ -24,7 +24,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     env:
       # ⚠️ flag 必须放在 **job 级** env：GitHub Actions 里某个 step 的 `if`
       # 读不到该 step 自己 `env:` 里定义的变量（那是 step 级，`if` 求值时尚未生效），
@@ -48,6 +48,10 @@ jobs:
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+          # 段 3：启用联网 tool loop（web_search / ticker_news / company_facts）。
+          # 工具失败会降级为 online_degraded；整体失败自动回退离线（mode=offline_screening，结果仍可用）。
+          SERENITY_ONLINE: "1"
+          SERENITY_PRESCREEN: "15"
 
       - name: Commit if changed
         run: |
