@@ -506,3 +506,80 @@ def test_script_mode_import_resolves():
     proc = _script_mode_probe("import clawsocket_compat;print('OK')")
     assert proc.returncode == 0 and "OK" in proc.stdout, (
         f"脚本模式下 clawsocket_compat 无法导入。\nstdout={proc.stdout}\nstderr={proc.stderr}")
+
+
+# --------------------------------------------------------------------------- #
+# 13) 正则兜底清洗（方案 ③）
+#
+# prompt 纪律把幻觉从 57%(13/23) 压到 11%(2/18)，剩下三类可机械识别，用正则兜底：
+# **改判而非删除** —— 信息仍可见，但可信度标签降级为「数字待核验」。
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("text", [
+    "FY2026 收入 $7.21B",
+    "收入 $346.2 亿",
+    "份额已达 24%",
+    "当前 P/E 约 28.5",
+    "EPS $1.02 超预期",
+    "全年营收约 1472 亿美元",
+    "指引上调至 12.6B",
+])
+def test_sanitize_numeric_evidence_relabelled(text):
+    """「定性推理」里出现金额/百分比/估值倍数/EPS → 改判为「数字待核验」。"""
+    r = _load_runner()
+    rec = {"evidence": [{"text": text, "source": "定性推理"}],
+           "business_position": "", "valuation": "", "earnings": ""}
+    r._sanitize_analysis(rec)
+    assert rec["evidence"][0]["source"] == "数字待核验", f"未命中数字模式：{text}"
+
+
+@pytest.mark.parametrize("text", [
+    "CEO Jayshree Ullal 提到「supply chain is the gating factor」",
+    '管理层在财报电话会上说"需求强劲"',
+    '"earnings call 上 CFO 表示产能仍是瓶颈"',
+])
+def test_sanitize_quote_relabelled(text):
+    """无法核验的直接引语 → 改判为「数字待核验」。"""
+    r = _load_runner()
+    rec = {"evidence": [{"text": text, "source": "定性推理"}],
+           "business_position": "", "valuation": "", "earnings": ""}
+    r._sanitize_analysis(rec)
+    assert rec["evidence"][0]["source"] == "数字待核验", f"引语未改判：{text}"
+
+
+def test_sanitize_strips_numbers_from_qualitative_fields():
+    """business_position 剥离数字且不加后缀；valuation / earnings 剥离并标注需核验。"""
+    r = _load_runner()
+    rec = {
+        "evidence": [],
+        "business_position": "约 85% 收入来自复购，而非系统销售本身",
+        "valuation": "当前 P/E 约 28.5，压力来自宏观不确定性",
+        "earnings": "关注毛利率与季度环比变化",
+    }
+    out = r._sanitize_analysis(rec)
+
+    assert "85%" not in out["business_position"]
+    assert r.DIGIT_REMOVED in out["business_position"]
+    assert "收入来自复购" in out["business_position"]        # 定性部分必须保留
+    assert "SEC filing" not in out["business_position"]      # 该字段不加后缀
+
+    assert "28.5" not in out["valuation"]
+    assert out["valuation"].endswith(r.SANITIZED_SUFFIX)
+    assert "压力来自宏观不确定性" in out["valuation"]
+
+
+def test_sanitize_leaves_clean_record_untouched():
+    """无违规 → 一个字符都不改（含来源正确的持仓数据条目）。"""
+    r = _load_runner()
+    rec = {
+        "evidence": [
+            {"text": "需求来自 AI 数据中心资本开支，供给集中在少数交换芯片供应商", "source": "定性推理"},
+            {"text": "浮盈 0.92%，权重 19.63%", "source": "持仓数据"},
+            {"text": "记忆中 P/E 约 30 倍，需查 10-K", "source": "数字待核验"},
+        ],
+        "business_position": "卡在网络互联层，壁垒来自 EOS 软件栈与客户集成深度",
+        "valuation": "估值压力来自云厂商资本开支的周期性",
+        "earnings": "看产品收入增速与毛利率稳定性",
+    }
+    before = json.dumps(rec, ensure_ascii=False, sort_keys=True)
+    out = r._sanitize_analysis(json.loads(before))
+    assert json.dumps(out, ensure_ascii=False, sort_keys=True) == before

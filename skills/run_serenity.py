@@ -216,6 +216,62 @@ def _coerce_evidence(v) -> list[dict]:
     return out
 
 
+# --------------------------------------------------------------------------- #
+# 正则兜底清洗（方案 ③）
+#
+# prompt 纪律已把幻觉占比从 57%（13/23）压到 11%（2/18），剩下的是**可机械识别**的三类：
+#   1. 「定性推理」里混入金额 / 百分比 / 估值倍数 / EPS；
+#   2. 「定性推理」里混入「CEO『…』」这类无法核验的直接引语；
+#   3. business_position / valuation / earnings 里出现数字。
+# 处理原则：**改判而非删除** —— 信息仍可见，但可信度标签被降级为「数字待核验」，
+# 读者一眼就知道"这条要自己去核验 SEC filing"。
+# --------------------------------------------------------------------------- #
+NUMERIC_PATTERNS = [
+    r"\$[\d.]+[BMK万亿]?",              # 金额：$7.21B / $346.2 亿
+    r"[\d.]+%",                          # 百分比：+17.5% / 24%
+    r"P/?E[^0-9\n]{0,8}[\d.]+",          # 估值倍数：P/E 约 28.5 / PE ~65
+    r"EPS[^0-9\n]{0,6}\$?[\d.]+",        # EPS：EPS $1.02 / EPS 约 1.02
+    r"[\d.]+\s*[BMK万亿]",               # 1472 亿 / 12.6B
+]
+# ⚠️ 引语检测拆成两段（与最初规格不同，因为规格那版**一条都命中不了**）：
+#    规格写的是「引号内部必须出现 CEO/管理层」，但真实输出是
+#        CEO Jayshree Ullal 提到「supply chain is the gating factor」
+#    —— 说话人在**引号外**。所以改成：**存在引号包裹的片段** 且 **同一段文字里出现说话人**。
+QUOTE_SPAN_PATTERN = r"[「『\"“][^」』\"”]{4,}[」』\"”]"
+SPEAKER_PATTERN = r"(CEO|CFO|CTO|管理层|高管|财报电话会|电话会|earnings call|investor call)"
+# 向后兼容旧名字（下文只用到上面两个）
+QUOTE_PATTERN = QUOTE_SPAN_PATTERN
+
+_NUMERIC_RE = re.compile("|".join(NUMERIC_PATTERNS))
+_QUOTE_RE = re.compile(QUOTE_SPAN_PATTERN)
+_SPEAKER_RE = re.compile(SPEAKER_PATTERN, re.IGNORECASE)
+DIGIT_REMOVED = "[数字已剔除]"
+SANITIZED_SUFFIX = "（数字已剔除，需核验 SEC filing）"
+
+
+def _sanitize_analysis(rec: dict) -> dict:
+    """正则兜底：降级不可核验内容，并剥离要求纯定性字段里的数字。就地修改并返回 rec。"""
+    for e in rec.get("evidence") or []:
+        if not isinstance(e, dict) or e.get("source") != "定性推理":
+            continue
+        text = str(e.get("text") or "")
+        if _NUMERIC_RE.search(text) or (_QUOTE_RE.search(text) and _SPEAKER_RE.search(text)):
+            e["source"] = "数字待核验"
+
+    for f in ("business_position", "valuation", "earnings"):
+        v = rec.get(f)
+        if not v:
+            continue
+        t = str(v)
+        if not _NUMERIC_RE.search(t):
+            continue
+        t = _NUMERIC_RE.sub(DIGIT_REMOVED, t)
+        if f in ("valuation", "earnings"):
+            t = t.rstrip() + SANITIZED_SUFFIX
+        rec[f] = t
+    return rec
+
+
 def parse_result(text: str) -> dict:
     """从模型输出里抽出 JSON 对象并规整字段。失败则抛异常（由调用方记 eorror）。"""
     if not text or not text.strip():
@@ -269,7 +325,7 @@ def run(data_dir: Path, out_path: Path, skill_md: str, positions: list[dict],
         try:
             prompt = build_prompt(skill_md, template, pos, asof)
             text = ask(prompt, model, max_tokens)
-            rec = parse_result(text)
+            rec = _sanitize_analysis(parse_result(text))
             rec["ticker"] = tk
             rec["error"] = None
             ok += 1
