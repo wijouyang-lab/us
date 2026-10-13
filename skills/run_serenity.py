@@ -50,7 +50,7 @@ SCHEMA_VERSION = "skill_serenity.v2"
 MODE = "offline_screening"
 SKILL_SOURCE = "serenity-skill by muxuuu (MIT)"
 FLAG_ENV = "ENABLE_SKILL_SERENITY"
-DEFAULT_MODEL = "claude-opus-5-5"
+DEFAULT_MODEL = "claude-fable-5-1"
 TOP_N = 10
 
 

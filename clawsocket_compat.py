@@ -153,7 +153,7 @@ class ClawSocketClient:
     def _fallback_candidates(self, requested: str) -> List[str]:
         env_key = "CLAUDE_FALLBACK_MODEL" if requested.lower().startswith("claude") else "GPT_FALLBACK_MODEL"
         configured = self._clean_model_id(os.environ.get(env_key, ""))
-        defaults = ["claude-opus-4-6", "claude-sonnet-4-5-20250929"] if requested.lower().startswith("claude") else ["gpt-6-astra", "gpt-5.4", "gpt-5.3-codex", "gpt-5.2"]
+        defaults = ["claude-fable-5-1", "claude-opus-5-5"] if requested.lower().startswith("claude") else ["gpt-6-astra", "gpt-5.4", "gpt-5.3-codex", "gpt-5.2"]
         return list(dict.fromkeys(([configured] if configured else []) + defaults))
 
     # --- 运行时路由失败判定 / 备用模型 ---

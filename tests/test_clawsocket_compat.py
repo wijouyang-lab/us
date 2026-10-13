@@ -11,6 +11,7 @@
   2. _runtime_fallback_candidates：返回 claude-fable-5-1，排除 requested 自身，支持 env 覆盖
   3. 主模型路由失败 + 备用可用 → 优雅降级成功（不是 AttributeError）
   4. 主模型路由失败 + 备用也失败 → 抛 RuntimeError（不是 AttributeError）
+  5. _fallback_candidates：目录比对失败时的降级候选（claude 系优先 claude-fable-5-1；支持 env 覆盖与去重）
 """
 import os
 
@@ -57,6 +58,55 @@ def test_runtime_fallback_candidates_env_override(monkeypatch):
     c = _client()
     got = c._runtime_fallback_candidates("gpt-6-astra")
     assert got[0] == "claude-opus-5"
+
+
+# ---------------------------------------------------- 2b. 目录层降级候选（_fallback_candidates）
+def test_fallback_candidates_claude_returns_fable_first(monkeypatch):
+    """目录比对失败时的 Claude 系降级：claude-fable-5-1 优先，claude-opus-5-5 次之。
+
+    P1 批 1：原默认表为 ["claude-opus-4-6", "claude-sonnet-4-5-20250929"]（旧世代残留），
+    已与全局主模型 claude-fable-5-1 对齐。
+    """
+    monkeypatch.delenv("CLAUDE_FALLBACK_MODEL", raising=False)
+    c = _client()
+    assert c._fallback_candidates("claude-fable-5-1") == ["claude-fable-5-1", "claude-opus-5-5"]
+    assert c._fallback_candidates("claude-opus-5-5") == ["claude-fable-5-1", "claude-opus-5-5"]
+    # 旧世代模型不应再出现在候选里
+    assert "claude-opus-4-6" not in c._fallback_candidates("claude-opus-5-5")
+
+
+def test_fallback_candidates_gpt_returns_legacy_gpt_list(monkeypatch):
+    """GPT 分支保持原样（非活跃路径，全局主模型是 claude-fable-5-1）。"""
+    monkeypatch.delenv("GPT_FALLBACK_MODEL", raising=False)
+    c = _client()
+    assert c._fallback_candidates("gpt-6-astra") == [
+        "gpt-6-astra", "gpt-5.4", "gpt-5.3-codex", "gpt-5.2"
+    ]
+
+
+def test_fallback_candidates_env_override(monkeypatch):
+    """CLAUDE_FALLBACK_MODEL / GPT_FALLBACK_MODEL 配置的模型排在 defaults 之前。"""
+    monkeypatch.setenv("CLAUDE_FALLBACK_MODEL", "claude-sonnet-4-5-20250929")
+    monkeypatch.setenv("GPT_FALLBACK_MODEL", "gpt-5.3-codex")
+    c = _client()
+    got_claude = c._fallback_candidates("claude-opus-5-5")
+    assert got_claude[0] == "claude-sonnet-4-5-20250929"
+    assert got_claude[1:] == ["claude-fable-5-1", "claude-opus-5-5"]
+    assert c._fallback_candidates("gpt-6-astra")[0] == "gpt-5.3-codex"
+
+
+def test_fallback_candidates_dedup(monkeypatch):
+    """configured 与 defaults 重复时不得产生重复项（dict.fromkeys 去重）。"""
+    monkeypatch.setenv("CLAUDE_FALLBACK_MODEL", "claude-fable-5-1")
+    c = _client()
+    got = c._fallback_candidates("claude-opus-5-5")
+    assert got == ["claude-fable-5-1", "claude-opus-5-5"]
+    assert len(got) == len(set(got))
+
+    # provider 前缀由 _clean_model_id 剥离后同样参与去重
+    monkeypatch.setenv("CLAUDE_FALLBACK_MODEL", "anthropic/claude-fable-5-1")
+    got2 = c._fallback_candidates("claude-opus-5-5")
+    assert got2 == ["claude-fable-5-1", "claude-opus-5-5"]
 
 
 # ------------------------------------------------------------------ 3. 优雅降级成功
