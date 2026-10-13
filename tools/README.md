@@ -12,8 +12,9 @@
    sed -i 's#/tmp/us#<你的仓库根>#g' <script>      # 再替换
    ```
 2. **只读性**：以每个脚本自己的 `README`/头部注释为准（多数为只读，修复类除外）。
-3. **修复类脚本有破坏性**：`tools/repair/` 下的 `*_repair.py` 会**改写 CSV 账本**，历史上只运行过一次。
+3. **修复类脚本有破坏性**：`tools/ledger_repairs_READONLY_ARCHIVE/` 下的 `*_repair.py` 会**改写 CSV 账本**，历史上只运行过一次。
    **不要重跑**，仅作为「当时怎么修的」证据保留。务必先备份 `trade_history.csv` 等账本文件再考虑复现。
+   ⚠️ **只读档案，不要重跑——会改写账本 CSV。**
 4. **不参与 pytest**：文件名已避开 pytest 默认采集模式（`test_*.py` / `*_test.py`）。
    注：`tools/quant/probe_night_session.py` 原名 `night_session_test.py`，为规避 pytest 采集在归档时**已重命名**（内容未改）。
 
@@ -23,7 +24,7 @@
 
 | 子目录 | 内容 | 关联文档 / 任务 |
 |--------|------|----------------|
-| `repair/` | Stop_Loss 历史修复、event key / orphan 修复、Rec_Price 修复、trade_history 去重清理 | 对应 `#78–#82`、`P0.5_stop_loss_repair_report.md` |
+| `ledger_repairs_READONLY_ARCHIVE/` | ⚠️ 只读档案：Stop_Loss 历史修复、event key / orphan 修复、Rec_Price 修复、trade_history 去重清理 | 对应 `#78–#82`、`P0.5_stop_loss_repair_report.md` |
 | `backfill/` | OHLCV 历史补采三版（`ohlc` → `ohlc_batch` → `ohlc_stooq`，后者最新） | `docs/OHLCV_BACKFILL_REPORT.md` |
 | `quant/` | Quant Phase 1 验证；Yahoo 夜盘数据覆盖实测 | `docs/PHASE1_FIRST_REAL_DATA_REPORT.md`、`docs/YAHOO_NIGHT_SESSION_TEST.md` |
 | `experiment/` | 技术因子 OOS 加速实验脚本 + `results/` 摘要结果 | `docs/ACCELERATION_EXPERIMENT.md` |
