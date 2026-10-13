@@ -133,6 +133,7 @@
 | 4 | 🟠 统一「卡片 / 详情页 / review」三处止损数据源 | ANET 曾出现 197.69 / 209.36 / 210.24 三个值 | `ANET_STOPLOSS_TRIPLE.md`；根因是三套系统各算各的 |
 | 5 | 🟠 为「推荐键匹配失败」加端到端断言 | 今日 bug 曾静默漏卖、无人察觉 | 已有告警打印，建议在 CI 上升为失败 |
 | 6 | 🔴 **机械止损与 review 移动止损不一致（资金风险）** | 只读调查 `STOPLOSS_ROOT_CAUSE.md` | 机械止损按冻结的 197.69 判断，实际**放宽**了止损线（可能多亏 5–8%）；修法见下方展开 |
+| 7 | 🟠 **`ENABLE_MARKET_INDICATORS` 已开，但面板仍未出现（修复中）** | 本次实测 dashboard-data run #2082 | 依赖已补齐，但又暴露**第二处根因：路径不匹配**，见下方展开 |
 
 > #### P1 #6 展开 · 🔴 机械止损与 review 移动止损不一致（资金风险）
 >
@@ -162,27 +163,58 @@
 > **注意**：C 会把机械止损线从 197.69 抬到 ~209，**原本不会触发的机械卖现在会触发**。
 > 这是预期行为（197.69 早已失效），但属**真实的行为变更**，实施前需确认。
 
+> #### P1 #7 展开 · 🟠 `ENABLE_MARKET_INDICATORS` 已开但面板仍未出现
+>
+> **状态**：修复中（2026-10-13）
+>
+> **根因（两处，缺一不可）**：
+> 1. ✅ **已修 · 依赖缺失**：`fear-greed` / `cme-fedwatch` 未在 `requirements-production.txt` 声明。
+>    修法 = 方案 i（加 2 行），commit **`60d55576`**。
+> 2. 🔴 **未修 · 路径不匹配**：`dashboard/fetch_market_indicators.py:140` 默认写
+>    `dashboard/data/market_indicators.json`，而 `dashboard_export.py:2460` 读的是
+>    `data_dir / "market_indicators.json"`（= 仓库根，**少了 `dashboard/data/` 这一段**）。
+>    读不到 → 返回哨兵 `_MARKET_INDICATORS_MISSING` → **不注入 `market_indicators` 键** → 前端整块隐藏。
+>    - 设计文档本意就是 `dashboard/data/market_indicators.json`（`MARKET_INDICATORS_PANEL_DESIGN.md:147`）
+>    - 输出侧 `dashboard_export.py:3001` 也写 `data_dir/"dashboard"/"data"/…`，**只有读取侧少了这段**
+>    - 单测为何没抓到：`tests/test_market_indicators.py` 把文件放在 `tmp_path/market_indicators.json`，
+>      与读取函数的**错误路径自洽**，所以永远测不出这个不匹配
+>    - **最小修复（1 行）**：`dashboard_export.py:2460` →
+>      `p = data_dir / "dashboard" / "data" / "market_indicators.json"`
+>
+> **影响**：不影响 scan（scan 不用这两个包）
+>
+> **验证**：dashboard-data run **#2082**（head `60d5557`）实测 ——
+> - ✅ Install dependencies 成功（`cme-fedwatch-0.2.1` / `curl_cffi-0.16.3` 已装，耗时 +~17s）
+> - ✅ Fetch market indicators 成功，日志 `[market_indicators] 已写入 dashboard/data/market_indicators.json（fear_greed=OK，fedwatch=OK）`
+> - ✅ 文件已生成并入库（`dashboard/data/market_indicators.json`，3267 B）
+> - ❌ **`dashboard_data.json` 仍无 `market_indicators` 键**（顶层仍 12 个 key）→ **面板仍未出现**
+>
+> → **修好路径后需再跑一次 dashboard-data 复验。**
+
 ### P2 — 功能推进（已决策待实施）
 
 | # | 事项 | 依据 | 备注 |
 |---|------|------|------|
-| 7 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
-| 8 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
-| 9 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
-| 10 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
-| 11 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
+| 8 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
+| 9 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
+| 10 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
+| 11 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
+| 12 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
 
 ### P3 — 探索 / 可选
 
 | # | 事项 | 依据 |
 |---|------|------|
-| 12 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
-| 13 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
-| 14 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
-| 15 | 宏观板块 / Market Indicators 激活 | `MACRO_PANEL_ACTIVATION.md`、`MARKET_INDICATORS_PANEL_DESIGN.md` |
-| 16 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
-| 17 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
-| 18 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
+| 13 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
+| 14 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
+| 15 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
+| 16 | 宏观板块 / Market Indicators 激活 | `MACRO_PANEL_ACTIVATION.md`、`MARKET_INDICATORS_PANEL_DESIGN.md`（当前阻塞见 P1 #7） |
+| 17 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
+| 18 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
+| 19 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
+
+> ⚠️ `cme-fedwatch` 依赖 `curl_cffi`（~13MB 二进制 wheel）—— 已确认 CI 能装
+> （dashboard-data run #2082 实测），但会增加依赖安装时间约 10–15 秒（实测 +~17s）。
 
 ---
 
