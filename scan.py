@@ -1684,6 +1684,11 @@ def get_us_economic_data(combined_news_text=""):
                         item["yoy"] = yoy
                         lines.append(f"- {label}：{yoy:.2f}% YoY（BLS API+网页，数据期 {dt.strftime('%Y-%m-%d')}）")
                     else:
+                        # 同比取不到：此处 val 是 CPI **指数点位**（不是百分比）。
+                        # 打标记交给 _build_macro_payload 展示为「指数 N」，
+                        # 避免它按「无 yoy 的利率类」格式化成「334.98%」。
+                        if _looks_like_index_level(label, val):
+                            item["is_index_level"] = True
                         lines.append(f"- {label}：指数 {val:.3f}（BLS API，数据期 {dt.strftime('%Y-%m-%d')}）")
                 else:
                     lines.append(f"- {label}：{val:.3f}（BLS API，数据期 {dt.strftime('%Y-%m-%d')}）")
@@ -1843,6 +1848,37 @@ def _fmt_pct(v):
         return None
 
 
+# 通胀类指标（P1 缺陷：CPI 一度显示成 334.98%）。三者上游正常产出「同比百分数」，
+# 合理区间 0–15 —— 与 _extract_from_google_news 里的同源护栏（CPI/核心CPI/核心PCE
+# 必须 0 <= val <= 15）保持一致。
+_INFLATION_LABELS = {"CPI指数", "核心CPI指数", "核心PCE指数"}
+
+
+def _looks_like_index_level(label, v):
+    """通胀类指标的值是否其实是 CPI **指数点位**，而不是同比百分数。
+
+    上游备用链（FRED → BLS API → BLS 网页 → Google News）里只有 BLS API 返回
+    指数点位（如 CUUR0000SA0 = 334.98）。一旦同比（yoy）取不到，这个点位就会被
+    当成百分数渲染成「334.98%」。这里用区间把它识别出来。
+    """
+    if label not in _INFLATION_LABELS:
+        return False
+    try:
+        return not (0 <= float(v) <= 15)
+    except (TypeError, ValueError):
+        return False
+
+
+def _fmt_index(v):
+    """指数点位展示：『指数 334.98』—— 明确标注这不是百分比。"""
+    if v is None or v == "":
+        return None
+    try:
+        return f"指数 {float(v):.2f}"
+    except (TypeError, ValueError):
+        return f"指数 {v}"
+
+
 def _parse_speakers(key_people_news):
     """把 key_people_news 字符串（RSS 标题拼接）解析为结构化列表。
 
@@ -1938,14 +1974,26 @@ def _build_macro_payload(economic_structured, key_people_news):
         if not isinstance(item, dict):
             continue
         has_yoy = item.get("yoy") is not None
-        headline = item.get("yoy") if has_yoy else item.get("value")
-        # 通胀类（有 yoy）prev 为上一期指数，不展示为百分比 → 置 None；
-        # 利率/比率类（无 yoy）prev 为上一期利率，可展示为百分比。
-        prev = item.get("prev") if not has_yoy else None
+        # 指数点位优先判定：既认源头的 is_index_level 标记（BLS API 兜底路径所打），
+        # 也认「通胀类 + 值超出 0–15」这一形态（防其它上游路径漏标）。
+        is_index = bool(item.get("is_index_level", False)) or (
+            not has_yoy and _looks_like_index_level(label, item.get("value"))
+        )
+        if is_index:
+            # CPI 指数点位不是百分比：展示为「指数 334.98」，绝不加 %。
+            value_display = _fmt_index(item.get("value"))
+            prev_display = _fmt_index(item.get("prev"))
+        else:
+            headline = item.get("yoy") if has_yoy else item.get("value")
+            # 通胀类（有 yoy）prev 为上一期指数，不展示为百分比 → 置 None；
+            # 利率/比率类（无 yoy）prev 为上一期利率，可展示为百分比。
+            prev = item.get("prev") if not has_yoy else None
+            value_display = _fmt_pct(headline) if headline is not None else None
+            prev_display = _fmt_pct(prev) if prev is not None else None
         economic.append({
             "indicator": _MACRO_INDICATOR_NAMES.get(label, label),
-            "value": _fmt_pct(headline) if headline is not None else None,
-            "prev": _fmt_pct(prev) if prev is not None else None,
+            "value": value_display,
+            "prev": prev_display,
             "date": item.get("date"),
             "source": item.get("source"),
             "sentiment": None,
