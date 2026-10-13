@@ -16,6 +16,7 @@
 import importlib.util
 import json
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -376,3 +377,41 @@ def test_frontend_no_offline_note_when_online_mode():
              "error": None}],
     })
     assert "未联网核验" not in r["body"], r
+
+
+# --------------------------------------------------------------------------- #
+# 11) 脚本模式 import 路径回归
+#     真实事故：workflow 跑 `python skills/run_serenity.py` 时 sys.path[0] = skills/，
+#     而 clawsocket_compat.py 在仓库根 → ModuleNotFoundError → 4 只全失败 → run 失败。
+#     本地测试当时全绿，因为 (a) pytest 把 rootdir 放进 sys.path，
+#     (b) 走 AI 的用例都把 _default_ask monkeypatch 掉了，真实 import 从未执行。
+# --------------------------------------------------------------------------- #
+def _script_mode_probe(extra: str) -> subprocess.CompletedProcess:
+    """在真实子进程里复刻 `python skills/run_serenity.py` 的 sys.path，再执行 `extra`。
+
+    ⚠️ 必须同时剔除 `''`：`python -c` 下 `sys.path[0]` 是空串（= cwd），
+    只按字面路径过滤会漏掉它，cwd 会把仓库根偷偷带回来 → 测试**假通过**。
+    （第一版测试就踩了这个坑：import 用例意外变绿，而静态用例才红。）
+    """
+    script = REPO_ROOT / "skills" / "run_serenity.py"
+    code = (
+        "import importlib.util,sys,os;"
+        f"ROOT=os.path.normcase(os.path.abspath(r'{REPO_ROOT}'));"
+        "sys.path=[p for p in sys.path if p and os.path.normcase(os.path.abspath(p))!=ROOT];"
+        f"sys.path.insert(0, r'{script.parent}');"
+        f"spec=importlib.util.spec_from_file_location('rr', r'{script}');"
+        "m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);"
+        + extra
+    )
+    return subprocess.run([sys.executable, "-c", code],
+                          capture_output=True, text=True, timeout=60)
+
+
+def test_script_mode_import_resolves():
+    """回归：以 `python skills/run_serenity.py` 运行时 clawsocket_compat 必须可导入。
+
+    只验证 import 能否解析，不发起任何 AI 请求。修复前必须失败、修复后必须通过。
+    """
+    proc = _script_mode_probe("import clawsocket_compat;print('OK')")
+    assert proc.returncode == 0 and "OK" in proc.stdout, (
+        f"脚本模式下 clawsocket_compat 无法导入。\nstdout={proc.stdout}\nstderr={proc.stderr}")

@@ -42,6 +42,13 @@ FLAG_ENV = "ENABLE_SKILL_SERENITY"
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILL_DIR = REPO_ROOT / "skills" / "serenity"
 SKILL_MD = SKILL_DIR / "SKILL.md"
+
+# `python skills/run_serenity.py` 时 sys.path[0] 是 skills/ 而非仓库根，
+# 故显式把仓库根加进来，保证根目录的 clawsocket_compat 可导入。
+# （真实事故：缺这段时 workflow 里 4 只持仓全部 ModuleNotFoundError。）
+_REPO_ROOT_IMPORT = Path(__file__).resolve().parent.parent
+if str(_REPO_ROOT_IMPORT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT_IMPORT))
 THESIS_TEMPLATE = SKILL_DIR / "assets" / "thesis-template.md"
 
 DEFAULT_MODEL = "claude-opus-5-5"
