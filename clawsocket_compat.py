@@ -276,7 +276,9 @@ class ClawSocketClient:
                 if response.status_code in {429,500,502,503,504} and attempt<self.retries:
                     time.sleep(2**(attempt-1)); continue
                 if not response.ok: raise RuntimeError(f"HTTP {response.status_code}: {self._safe_error_body(response)}")
-                return response.json()
+                data = response.json()
+                print(f"[ClawSocket] upstream_model={data.get('model', 'unknown')} requested={self.last_model_used}")
+                return data
             except Exception as exc:
                 last_error=exc
                 if attempt<self.retries and not str(exc).startswith("HTTP 4"): time.sleep(2**(attempt-1))
