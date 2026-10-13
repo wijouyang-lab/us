@@ -1,33 +1,33 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""serenity-skill runner —— 对 $50k 账本持仓做供应链瓶颈分析（**flag 门控，默认关闭**）。
+"""serenity-skill runner **v2 —— 市场发掘（从候选池筛研究优先级）**（flag 门控，默认关闭）。
+
+v1 是对 4 只**持仓**逐个做供应链分析；v2 改为对 scan 的**候选池（44 只）**做
+供应链瓶颈视角的**研究优先级排序**，输出 TOP 10。**这是研究优先级，不是买入建议。**
 
 框架来源：serenity-skill by muxuuu (MIT) —— https://github.com/muxuuu/serenity-skill
-本仓库只内嵌其 `SKILL.md` / `references/` / `assets/`（见 `skills/serenity/`），**未修改内容**。
+本仓库只内嵌其 `SKILL.md` / `references/` / `assets/`（见 `skills/serenity/`），未修改内容。
+
+输入源：`dashboard/data/dashboard_data.json` 的 `stocks[]`
+  （scan 的规范产物，恰好 44 只，含 bucket / 评分 / 板块相对强度；比 pending CSV 更权威）
+  仅取精简字段；**不输入**完整技术面或 AI 六段（token 会爆）。
 
 铁律
 ----
-1. `ENABLE_SKILL_SERENITY != "1"` → **首行直接 return，零副作用**
-   （不读 CSV、不读 SKILL.md、不调 AI、不写文件）。
-2. 单只持仓失败 → 该只记 `error`，**不阻断其他**。
-3. **全部失败 → 不写文件**（R1：绝不发布脏数据）。
-4. 不触碰 `scan.py` / `review.py` / `portfolio_50000.py` / 任何现有 workflow。
+1. `ENABLE_SKILL_SERENITY != "1"` → **首行直接 return，零副作用**（不读文件、不调 AI、不写文件）。
+2. **全部失败 / 无有效优先级 → 不写文件**（R1：绝不发布脏数据）。
+3. 不触碰 `scan.py` / `review.py` / `portfolio_50000.py` / 任何 workflow。
 
-⚠️ 重要限制（必须如实记录，不得宣称未核验的"事实"）
+⚠️ 能力限制（必须如实标注，不得宣称未核验的"事实"）
 --------------------------------------------------
-`clawsocket_compat.py` 的 `_request_chat` / `_request_anthropic` / `_request_responses`
-**不支持 tool use / function calling**（payload 里没有 `tools`；`extra` 形参被静默丢弃），
-本 runner 也**没有联网能力**。而 serenity-skill 的 frontmatter 明确要求：
-    compatibility: Requires a host agent with web search or access to current filings
-
-因此本 runner 运行的是**离线降级模式**：只基于我们已有的数据（持仓 + 入场/现价/止损）
-做结构推理。输出里显式标记 `mode="offline"`，并在 prompt 中要求模型
-把每条 evidence 标注来源类型、把无法核验的写进 gaps、**禁止编造公告/财报数字**。
+`clawsocket_compat.py` **不支持 tool use / function calling**，本 runner 也**没有联网能力**，
+而 serenity-skill 的 frontmatter 要求 host agent 具备 web search。
+故运行在**离线降级模式**（`mode="offline_screening"`）：只基于候选池字段 + 方法论推理，
+prompt 强约束禁止编造数字，另有正则清洗器（方案 ③）兜底。
 """
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import os
 import re
@@ -35,34 +35,23 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-SCHEMA_VERSION = "skill_serenity.v1"
-SKILL_SOURCE = "serenity-skill by muxuuu (MIT)"
-FLAG_ENV = "ENABLE_SKILL_SERENITY"
-
 REPO_ROOT = Path(__file__).resolve().parent.parent
 SKILL_DIR = REPO_ROOT / "skills" / "serenity"
 SKILL_MD = SKILL_DIR / "SKILL.md"
+THESIS_TEMPLATE = SKILL_DIR / "assets" / "thesis-template.md"
 
 # `python skills/run_serenity.py` 时 sys.path[0] 是 skills/ 而非仓库根，
 # 故显式把仓库根加进来，保证根目录的 clawsocket_compat 可导入。
-# （真实事故：缺这段时 workflow 里 4 只持仓全部 ModuleNotFoundError。）
 _REPO_ROOT_IMPORT = Path(__file__).resolve().parent.parent
 if str(_REPO_ROOT_IMPORT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT_IMPORT))
-THESIS_TEMPLATE = SKILL_DIR / "assets" / "thesis-template.md"
 
+SCHEMA_VERSION = "skill_serenity.v2"
+MODE = "offline_screening"
+SKILL_SOURCE = "serenity-skill by muxuuu (MIT)"
+FLAG_ENV = "ENABLE_SKILL_SERENITY"
 DEFAULT_MODEL = "claude-opus-5-5"
-
-# 每只持仓必须产出的字段（顺序即展示顺序）
-RESULT_FIELDS = (
-    "business_position",   # 业务定位：卡在产业链哪一层
-    "evidence",            # 证据（列表）：已知事实 + 来源类型
-    "gaps",                # 缺口（列表）：尚未核验 / 缺什么证据
-    "earnings",            # 盈利含义
-    "valuation",           # 估值压力
-    "alternatives",        # 替代路线 / 竞争
-    "what_would_change",   # 什么情况下这个判断应该降级
-)
+TOP_N = 10
 
 
 def skill_enabled() -> bool:
@@ -71,102 +60,152 @@ def skill_enabled() -> bool:
 
 
 # --------------------------------------------------------------------------- #
-# 数据加载
+# 输入：候选池
 # --------------------------------------------------------------------------- #
-def load_positions(data_dir: Path) -> list[dict]:
-    """读 `portfolio_50000_positions.csv` 的 OPEN 持仓（只读，绝不写回）。"""
-    p = Path(data_dir) / "portfolio_50000_positions.csv"
+def load_universe(data_dir: Path) -> tuple[list[dict], int]:
+    """从 `dashboard/data/dashboard_data.json` 读候选池（只读）。
+
+    返回 (精简后的候选列表, 全池数量)。为空时调用方应退出且**不写文件**。
+    """
+    p = Path(data_dir) / "dashboard" / "data" / "dashboard_data.json"
     if not p.exists():
-        return []
+        return [], 0
+    try:
+        d = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return [], 0
+
+    # 已持有的 ticker（来自同一份 payload 的 portfolio 段）
+    held: set[str] = set()
+    folio = d.get("portfolio")
+    if isinstance(folio, dict):
+        for key in ("positions", "open_positions", "holdings"):
+            for r in folio.get(key) or []:
+                tk = str((r or {}).get("ticker") or (r or {}).get("Ticker") or "").strip().upper()
+                if tk:
+                    held.add(tk)
+
     out: list[dict] = []
-    with open(p, "r", encoding="utf-8", newline="") as f:
-        for r in csv.DictReader(f):
-            if str(r.get("Status", "")).strip().upper() != "OPEN":
-                continue
-            tk = str(r.get("Ticker", "")).strip().upper()
-            if not tk:
-                continue
-            out.append({
-                "ticker": tk,
-                "unit": str(r.get("Unit_ID", "")).strip(),
-                "shares": str(r.get("Shares", "")).strip(),
-                "entry_price": str(r.get("Entry_Price", "")).strip(),
-                "entry_date": str(r.get("Entry_Date", "")).strip(),
-                "current_price": str(r.get("Current_Price", "")).strip(),
-                "stop_loss": str(r.get("Stop_Loss", "")).strip(),
-                "unrealized_pnl_pct": str(r.get("Unrealized_PnL_Pct", "")).strip(),
-                "weight_pct": str(r.get("Weight_Pct", "")).strip(),
-            })
-    return out
+    for s in d.get("stocks") or []:
+        tk = str(s.get("ticker") or "").strip().upper()
+        if not tk:
+            continue
+        out.append({
+            "ticker": tk,
+            "name": str(s.get("name") or "").strip(),
+            "bucket": str(s.get("bucket") or "").strip() or "-",
+            "final_score": s.get("final_score"),
+            "quant_score": s.get("quant_score"),
+            "ai_score": s.get("ai_score"),
+            "sector_rs_20d_pct": s.get("sector_rs_20d_pct"),
+            "held": tk in held,
+        })
+    return out, len(out)
 
 
-def _read_text(p: Path) -> str:
-    return p.read_text(encoding="utf-8") if p.exists() else ""
+def _fmt(v) -> str:
+    return "-" if v in (None, "") else str(v)
 
 
-# --------------------------------------------------------------------------- #
-# Prompt
-# --------------------------------------------------------------------------- #
-def build_prompt(skill_md: str, template: str, pos: dict, asof: str) -> str:
+def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str) -> str:
     tpl = f"\n\n【研究模板（serenity-skill assets/thesis-template.md）】\n{template}" if template else ""
-    return f"""你是投研分析助手。请严格按下面这份 serenity-skill 方法论，对**一只美股持仓**做供应链瓶颈分析。
+    rows = "\n".join(
+        f"| {u['ticker']} | {u['name'][:28]} | {u['bucket']} | {_fmt(u['final_score'])} | "
+        f"{_fmt(u['quant_score'])} | {_fmt(u['ai_score'])} | {_fmt(u['sector_rs_20d_pct'])} | "
+        f"{'是' if u['held'] else '否'} |"
+        for u in universe
+    )
+    return f"""你是**供应链瓶颈猎手**。下面这份 serenity-skill 方法论是你的分析框架。
 
 【serenity-skill 方法论（原文，MIT，by muxuuu）】
 {skill_md}{tpl}
 
+【任务】
+以下是当前候选池（{len(universe)} 只，来自 scan 的 Core / Observation 池）。请按 serenity 方法论分析：
+1. 哪些处于"难扩产 / 难替代"的瓶颈层？
+2. 哪些下游需求正在加速？
+3. 谁的产品正在被认证 / 交付 / 货币化？
+4. 哪些预期已经 price in？
+
+输出 **TOP {TOP_N} 研究优先级（不是买入建议）**，按 priority_rank 1..{TOP_N} 排序。
+
+【候选池（截至 {asof}）】
+| ticker | name | bucket | final | quant | ai | sector_rs_20d | 已持有 |
+|---|---|---|---|---|---|---|---|
+{rows}
+
 【数字纪律 —— 最高优先级，违反即整份作废】
-你没有联网能力，也没有任何公告 / 财报 / 行情数据库。严格禁止出现任何具体数字，
-**除非它来自 [持仓数据]**（= 下面「本次分析对象」里列出的字段）：
-- 禁止收入 / 营收金额（如 $7.21B、$346.2 亿）
-- 禁止增长率、百分比（如 +17.5%、42% 市场份额）
-- 禁止 P/E、EPS、估值倍数（如「约 28.5 倍」）
-- 禁止装机数、客户数、门店数、市场份额数字
-- 禁止直接引用管理层原话或财报电话会措辞（你无法核验）
-- 禁止具体事件名 / 日期 / 收购金额 / 诉讼金额
+你**没有联网能力**，也没有任何公告 / 财报 / 行情数据库。严格禁止出现任何具体数字：
+- 禁止收入 / 营收金额、增长率、百分比、市场份额
+- 禁止 P/E、EPS、估值倍数
+- 禁止装机数、客户数、订单金额
+- 禁止引用管理层原话或财报电话会措辞
+- **只能使用上表提供的字段**（bucket / final / quant / ai / sector_rs_20d / 已持有）
+  以及产业链结构、竞争格局、技术路径的**定性推理**
+- 凡是你"记得"但无法核验的，一律写进 `what_to_verify`，不要写进 `why`
 
-如果你「记得」某个数字，把它写进 source 为「数字待核验」的条目，**绝不要**写进「定性推理」。
-
-【evidence 标签语义】
-- source = "持仓数据"：直接来自下面「本次分析对象」的字段。**只有这一类可以含数字。**
-- source = "定性推理"：基于产业链结构、竞争格局、技术路径的逻辑推理。**禁止包含任何具体数字。**
-- source = "数字待核验"：你「记得」的数字（可能准确也可能过时），
-  必须由用户自行核验 SEC filing / 10-K / 10-Q 之后才能使用；请在 text 里写明该查哪份文件。
-
-【其它约束】
-1. 优先级用**文字与理由**表达，**不要给综合数字评分**（这是 serenity-skill 的明确要求）。
-2. 输出**只有**一个 JSON 对象，不要任何解释文字、不要 markdown 代码围栏。
-
-【本次分析对象（截至 {asof}）】
-- Ticker: {pos['ticker']}
-- 持仓单元: {pos.get('unit') or '-'}  股数: {pos.get('shares') or '-'}
-- 入场价: {pos.get('entry_price') or '-'}  入场日: {pos.get('entry_date') or '-'}
-- 现价: {pos.get('current_price') or '-'}  浮动盈亏: {pos.get('unrealized_pnl_pct') or '-'}%
-- 当前止损线: {pos.get('stop_loss') or '-'}  权重: {pos.get('weight_pct') or '-'}%
-
-【必须返回的 JSON 结构】
+【输出】
+只输出**一个 JSON 对象**，不要解释文字、不要 markdown 代码围栏：
 {{
-  "business_position": "这家公司卡在产业链哪一层、供给稀缺性来自哪里（文字，2-4 句，不含具体数字）",
-  "evidence": [
-    {{"text": "来自持仓字段的事实（入场价/现价/浮盈/权重）", "source": "持仓数据"}},
-    {{"text": "基于产业链结构的推理，不含任何数字", "source": "定性推理"}},
-    {{"text": "你记得但无法核验的某个数字，并写明该查哪份文件", "source": "数字待核验"}}
-  ],
-  "gaps": ["需要核验什么；缺哪类证据（如最新 10-Q 的某分部毛利率）"],
-  "earnings": "这条逻辑如何转成盈利；需要看哪个财务科目（文字，不含具体数字）",
-  "valuation": "当前估值压力来自哪里（文字，不含任何倍数）",
-  "alternatives": "替代路线 / 竞争对手 / 客户自研等（文字）",
-  "what_would_change": "出现什么情况说明这个判断应降级（文字，可用条件式描述，但不要编造当前数值）"
-}}"""
+  "priorities": [
+    {{"ticker": "ADSK", "priority_rank": 1,
+      "why": "为什么值得优先研究：产业链位置 + 需求驱动 + 证据（纯定性，不含数字）",
+      "what_to_verify": "需要核验的具体材料（如 10-Q 某分部收入、客户认证公告、产能披露）"}}
+  ]
+}}
+必须正好 {TOP_N} 条，priority_rank 为 1..{TOP_N} 且不重复。`ticker` 必须来自上表。"""
+
+
+# --------------------------------------------------------------------------- #
+# 数字纪律正则（方案 ③，沿用 v1）
+# --------------------------------------------------------------------------- #
+NUMERIC_PATTERNS = [
+    r"\$[\d.]+[BMK万亿]?",              # 金额
+    r"[\d.]+%",                          # 百分比
+    r"P/?E[^0-9\n]{0,8}[\d.]+",          # 估值倍数
+    r"EPS[^0-9\n]{0,6}\$?[\d.]+",        # EPS
+    r"[\d.]+\s*[BMK万亿]",               # 1472 亿 / 12.6B
+    r"[一二三四五六七八九十百千万亿]+(?:成|台|美元|亿|万|个百分点|倍)",   # 中文数字（v1 盲区）
+    r"百分之[一二三四五六七八九十百千零]+",
+]
+QUOTE_SPAN_PATTERN = r"[「『\"“][^」』\"”]{4,}[」』\"”]"
+SPEAKER_PATTERN = r"(CEO|CFO|CTO|管理层|高管|财报电话会|电话会|earnings call|investor call)"
+QUOTE_PATTERN = QUOTE_SPAN_PATTERN          # 向后兼容旧名
+
+_NUMERIC_RE = re.compile("|".join(NUMERIC_PATTERNS))
+_QUOTE_RE = re.compile(QUOTE_SPAN_PATTERN)
+_SPEAKER_RE = re.compile(SPEAKER_PATTERN, re.IGNORECASE)
+DIGIT_REMOVED = "[数字已剔除]"
+SANITIZED_SUFFIX = "（数字已剔除，需核验 SEC filing）"
+
+
+def _sanitize_text(t: str, add_suffix: bool) -> str:
+    """剥离不可核验的数字与引语；`add_suffix` 决定是否追加需核验说明。"""
+    if not t:
+        return t
+    has_num = bool(_NUMERIC_RE.search(t))
+    has_quote = bool(_QUOTE_RE.search(t) and _SPEAKER_RE.search(t))
+    if not (has_num or has_quote):
+        return t
+    t = _NUMERIC_RE.sub(DIGIT_REMOVED, t)
+    if has_quote:
+        t = _QUOTE_RE.sub("[引语已剔除]", t)
+    return (t.rstrip() + SANITIZED_SUFFIX) if add_suffix else t
+
+
+def sanitize_priorities(priorities: list[dict]) -> list[dict]:
+    """对 priorities[] 逐条套用数字纪律。就地修改并返回。"""
+    for p in priorities:
+        p["why"] = _sanitize_text(p.get("why") or "", add_suffix=True)
+        p["what_to_verify"] = _sanitize_text(p.get("what_to_verify") or "", add_suffix=False)
+    return priorities
 
 
 # --------------------------------------------------------------------------- #
 # AI 调用 + 解析
 # --------------------------------------------------------------------------- #
 def _default_ask(prompt: str, model: str, max_tokens: int) -> str:
-    """默认 AI 调用：走 ClawSocket（与 scan.py 同一客户端）。
-
-    注意：`clawsocket_compat` 不支持 tools，这里就是纯 prompt 调用。
-    """
+    """默认 AI 调用：走 ClawSocket（与 scan.py 同一客户端）。纯 prompt，无 tool use。"""
     from clawsocket_compat import ClawSocketClient  # 延迟导入：flag 关时零依赖副作用
 
     client = ClawSocketClient(
@@ -181,174 +220,68 @@ def _default_ask(prompt: str, model: str, max_tokens: int) -> str:
     return (getattr(resp, "output_text", "") or "").strip()
 
 
-EVIDENCE_SOURCES = ("持仓数据", "定性推理", "数字待核验")
-
-
-def _coerce_evidence(v) -> list[dict]:
-    """把 evidence 规整成 `[{"text":..., "source":...}, ...]`。
-
-    兼容两种输入：
-      · 新格式：`{"text": ..., "source": "定性推理"}`
-      · 旧格式：`"[持仓数据] ..."`（自动把方括号标签提升为 source）
-
-    **fail-safe**：source 缺失或不在白名单 → 一律降级为「数字待核验」。
-    宁可疑、不可信 —— 未标注来源的内容不该被当作已核验事实展示。
-    """
-    if v in (None, ""):
-        return []
-    items = v if isinstance(v, list) else [v]
-    out: list[dict] = []
-    for it in items:
-        src = ""
-        if isinstance(it, dict):
-            text = str(it.get("text") or it.get("evidence") or "").strip()
-            src = str(it.get("source") or "").strip()
-        else:
-            text = str(it).strip()
-            m = re.match(r"^\[([^\]]{1,12})\]\s*(.*)$", text, re.DOTALL)
-            if m:
-                src, text = m.group(1).strip(), m.group(2).strip()
-        if not text:
-            continue
-        if src not in EVIDENCE_SOURCES:
-            src = "数字待核验"
-        out.append({"text": text, "source": src})
-    return out
-
-
-# --------------------------------------------------------------------------- #
-# 正则兜底清洗（方案 ③）
-#
-# prompt 纪律已把幻觉占比从 57%（13/23）压到 11%（2/18），剩下的是**可机械识别**的三类：
-#   1. 「定性推理」里混入金额 / 百分比 / 估值倍数 / EPS；
-#   2. 「定性推理」里混入「CEO『…』」这类无法核验的直接引语；
-#   3. business_position / valuation / earnings 里出现数字。
-# 处理原则：**改判而非删除** —— 信息仍可见，但可信度标签被降级为「数字待核验」，
-# 读者一眼就知道"这条要自己去核验 SEC filing"。
-# --------------------------------------------------------------------------- #
-NUMERIC_PATTERNS = [
-    r"\$[\d.]+[BMK万亿]?",              # 金额：$7.21B / $346.2 亿
-    r"[\d.]+%",                          # 百分比：+17.5% / 24%
-    r"P/?E[^0-9\n]{0,8}[\d.]+",          # 估值倍数：P/E 约 28.5 / PE ~65
-    r"EPS[^0-9\n]{0,6}\$?[\d.]+",        # EPS：EPS $1.02 / EPS 约 1.02
-    r"[\d.]+\s*[BMK万亿]",               # 1472 亿 / 12.6B
-]
-# ⚠️ 引语检测拆成两段（与最初规格不同，因为规格那版**一条都命中不了**）：
-#    规格写的是「引号内部必须出现 CEO/管理层」，但真实输出是
-#        CEO Jayshree Ullal 提到「supply chain is the gating factor」
-#    —— 说话人在**引号外**。所以改成：**存在引号包裹的片段** 且 **同一段文字里出现说话人**。
-QUOTE_SPAN_PATTERN = r"[「『\"“][^」』\"”]{4,}[」』\"”]"
-SPEAKER_PATTERN = r"(CEO|CFO|CTO|管理层|高管|财报电话会|电话会|earnings call|investor call)"
-# 向后兼容旧名字（下文只用到上面两个）
-QUOTE_PATTERN = QUOTE_SPAN_PATTERN
-
-_NUMERIC_RE = re.compile("|".join(NUMERIC_PATTERNS))
-_QUOTE_RE = re.compile(QUOTE_SPAN_PATTERN)
-_SPEAKER_RE = re.compile(SPEAKER_PATTERN, re.IGNORECASE)
-DIGIT_REMOVED = "[数字已剔除]"
-SANITIZED_SUFFIX = "（数字已剔除，需核验 SEC filing）"
-
-
-def _sanitize_analysis(rec: dict) -> dict:
-    """正则兜底：降级不可核验内容，并剥离要求纯定性字段里的数字。就地修改并返回 rec。"""
-    for e in rec.get("evidence") or []:
-        if not isinstance(e, dict) or e.get("source") != "定性推理":
-            continue
-        text = str(e.get("text") or "")
-        if _NUMERIC_RE.search(text) or (_QUOTE_RE.search(text) and _SPEAKER_RE.search(text)):
-            e["source"] = "数字待核验"
-
-    for f in ("business_position", "valuation", "earnings"):
-        v = rec.get(f)
-        if not v:
-            continue
-        t = str(v)
-        if not _NUMERIC_RE.search(t):
-            continue
-        t = _NUMERIC_RE.sub(DIGIT_REMOVED, t)
-        if f in ("valuation", "earnings"):
-            t = t.rstrip() + SANITIZED_SUFFIX
-        rec[f] = t
-    return rec
-
-
-def parse_result(text: str) -> dict:
-    """从模型输出里抽出 JSON 对象并规整字段。失败则抛异常（由调用方记 eorror）。"""
+def _extract_json(text: str) -> dict:
     if not text or not text.strip():
         raise ValueError("模型返回为空")
     s = text.strip()
-    # 容忍 ```json ... ``` 围栏
     if s.startswith("```"):
         s = re.sub(r"^```[a-zA-Z]*\s*", "", s)
         s = re.sub(r"\s*```$", "", s).strip()
     try:
         obj = json.loads(s)
     except json.JSONDecodeError:
-        m = re.search(r"\{.*\}", s, re.DOTALL)      # 退一步：截取第一个大括号块
+        m = re.search(r"\{.*\}", s, re.DOTALL)
         if not m:
             raise ValueError("模型输出里找不到 JSON 对象") from None
         obj = json.loads(m.group(0))
     if not isinstance(obj, dict):
         raise ValueError(f"模型输出不是 JSON 对象，而是 {type(obj).__name__}")
+    return obj
 
-    out: dict = {}
-    for f in RESULT_FIELDS:
-        v = obj.get(f)
-        if f == "evidence":
-            out[f] = _coerce_evidence(v)          # → 对象数组 {text, source}
-        elif f == "gaps":
-            if isinstance(v, list):
-                out[f] = [str(x).strip() for x in v if str(x).strip()]
-            elif v not in (None, ""):
-                out[f] = [str(v).strip()]
-            else:
-                out[f] = []
-        else:
-            out[f] = "" if v is None else str(v).strip()
-    return out
+
+def parse_result(text: str, valid_tickers: set[str] | None = None) -> dict:
+    """抽出 `priorities[]`：规整字段、去重、按 rank 排序、截断到 TOP_N。"""
+    obj = _extract_json(text)
+    raw = obj.get("priorities")
+    if not isinstance(raw, list):
+        raise ValueError("模型输出缺少 priorities 数组")
+
+    seen: set[str] = set()
+    items: list[dict] = []
+    for i, p in enumerate(raw, 1):
+        if not isinstance(p, dict):
+            continue
+        tk = str(p.get("ticker") or "").strip().upper()
+        if not tk or tk in seen:
+            continue
+        if valid_tickers and tk not in valid_tickers:
+            continue                       # 只接受候选池内的 ticker（防幻觉造股票）
+        try:
+            rank = int(p.get("priority_rank") or i)
+        except (TypeError, ValueError):
+            rank = i
+        seen.add(tk)
+        items.append({
+            "ticker": tk,
+            "priority_rank": rank,
+            "why": str(p.get("why") or "").strip(),
+            "what_to_verify": str(p.get("what_to_verify") or "").strip(),
+        })
+
+    items.sort(key=lambda x: x["priority_rank"])
+    items = items[:TOP_N]
+    for n, it in enumerate(items, 1):      # 归一化为连续的 1..N
+        it["priority_rank"] = n
+    if not items:
+        raise ValueError("priorities 为空（或全部 ticker 不在候选池内）")
+    return {"priorities": sanitize_priorities(items)}
 
 
 # --------------------------------------------------------------------------- #
 # 编排
 # --------------------------------------------------------------------------- #
-def run(data_dir: Path, out_path: Path, skill_md: str, positions: list[dict],
-        ask, model: str, max_tokens: int, asof: str) -> dict:
-    """逐只分析。返回 payload dict；调用方决定是否落盘。
-
-    单只异常 → 该只带 `error` 字段，其余继续。
-    """
-    template = _read_text(THESIS_TEMPLATE)
-    results: list[dict] = []
-    ok = 0
-    for pos in positions:
-        tk = pos["ticker"]
-        try:
-            prompt = build_prompt(skill_md, template, pos, asof)
-            text = ask(prompt, model, max_tokens)
-            rec = _sanitize_analysis(parse_result(text))
-            rec["ticker"] = tk
-            rec["error"] = None
-            ok += 1
-            print(f"[serenity] ✅ {tk} 分析完成")
-        except Exception as e:                      # noqa: BLE001 —— 单只失败不阻断
-            rec = {f: ([] if f in ("evidence", "gaps") else "") for f in RESULT_FIELDS}
-            rec["ticker"] = tk
-            rec["error"] = f"{type(e).__name__}: {e}"
-            print(f"⚠️ [serenity] {tk} 分析失败（不阻断其他）：{rec['error']}")
-        results.append(rec)
-
-    payload = {
-        "schema_version": SCHEMA_VERSION,
-        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "asof": asof,
-        "source": SKILL_SOURCE,
-        "mode": "offline",          # 见模块 docstring：本 runner 无联网 / 无 tool use
-        "model": model,
-        "skill_version": _skill_version(skill_md),
-        "positions": results,
-        "error": None if ok else "全部持仓分析失败",
-    }
-    return payload
+def _read_text(p: Path) -> str:
+    return p.read_text(encoding="utf-8") if p.exists() else ""
 
 
 def _skill_version(skill_md: str) -> str:
@@ -356,12 +289,33 @@ def _skill_version(skill_md: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
+        max_tokens: int, asof: str) -> dict:
+    """一次 AI 调用完成全池排序。失败抛异常，由 main 决定不写文件。"""
+    template = _read_text(THESIS_TEMPLATE)
+    prompt = build_prompt(skill_md, template, universe, asof)
+    text = ask(prompt, model, max_tokens)
+    got = parse_result(text, valid_tickers={u["ticker"] for u in universe})
+    return {
+        "schema_version": SCHEMA_VERSION,
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "asof": asof,
+        "source": SKILL_SOURCE,
+        "mode": MODE,
+        "model": model,
+        "skill_version": _skill_version(skill_md),
+        "universe_size": len(universe),
+        "priorities": got["priorities"],
+        "error": None,
+    }
+
+
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="serenity-skill runner (flag-gated, offline mode)")
-    ap.add_argument("--data-dir", default=".", help="含 portfolio_50000_positions.csv 的目录")
+    ap = argparse.ArgumentParser(description="serenity-skill runner v2 (market screening, flag-gated, offline)")
+    ap.add_argument("--data-dir", default=".", help="含 dashboard/data/dashboard_data.json 的目录")
     ap.add_argument("--out", default="dashboard/data/skill_serenity.json", help="输出 JSON 路径")
     ap.add_argument("--model", default=None, help=f"模型（默认 {DEFAULT_MODEL}）")
-    ap.add_argument("--max-tokens", type=int, default=6000)
+    ap.add_argument("--max-tokens", type=int, default=12000)
     args = ap.parse_args(argv)
 
     # ---- flag 门控：必须在任何 I/O 之前 return（零副作用）----
@@ -379,26 +333,29 @@ def main(argv=None) -> int:
         print(f"⚠️ [serenity] 找不到框架文件 {SKILL_MD}，退出（不写文件）")
         return 1
 
-    positions = load_positions(data_dir)
-    if not positions:
-        print("[serenity] 无 OPEN 持仓，退出（不写文件）")
+    universe, n = load_universe(data_dir)
+    if not universe:
+        print(f"[serenity] 候选池为空（{data_dir}/dashboard/data/dashboard_data.json 缺失或无 stocks[]），退出（不写文件）")
         return 0
 
     model = args.model or os.environ.get("SERENITY_MODEL") or DEFAULT_MODEL
     asof = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    print(f"[serenity] offline 模式 | model={model} | 持仓 {len(positions)} 只 | asof={asof}")
+    n_core = sum(1 for u in universe if u["bucket"] == "Core")
+    print(f"[serenity] {MODE} | model={model} | 候选池 {n} 只（Core {n_core} / Observation {n - n_core}）| asof={asof}")
 
-    payload = run(data_dir, out_path, skill_md, positions, _default_ask, model, args.max_tokens, asof)
+    try:
+        payload = run(data_dir, skill_md, universe, _default_ask, model, args.max_tokens, asof)
+    except Exception as e:                                   # noqa: BLE001
+        print(f"⚠️ [serenity] 分析失败，按 R1 不写文件：{type(e).__name__}: {e}")
+        return 1
 
-    # R1：全部失败 → 不写文件
-    if all(p.get("error") for p in payload["positions"]):
-        print("[serenity] 全部持仓分析失败，按 R1 不写文件")
+    if not payload.get("priorities"):
+        print("[serenity] 无有效优先级，按 R1 不写文件")
         return 1
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    ok = sum(1 for p in payload["positions"] if not p.get("error"))
-    print(f"[serenity] 已写入 {out_path}（成功 {ok}/{len(payload['positions'])}）")
+    print(f"[serenity] 已写入 {out_path}（{len(payload['priorities'])} 条优先级，池 {payload['universe_size']} 只）")
     return 0
 
 

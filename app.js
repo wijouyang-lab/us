@@ -1206,71 +1206,47 @@
     return '<div class="ss-row"><span class="ss-k">' + esc(label) + '</span>' +
       '<span class="ss-v">' + esc(String(val)) + '</span></div>';
   }
-  /* evidence → 折叠块。**默认收起**：里面含「数字待核验」条目（AI 凭记忆写出、无法核验），
-     必须由用户主动点开，避免未核验数字被当成已确认事实阅读。 */
-  var SS_SRC_ORDER = ['持仓数据', '定性推理', '数字待核验'];
-  function ssEvidence(ev) {
-    if (!ev || !ev.length) return '';
-    var counts = {};
-    ev.forEach(function (e) {
-      var s = (e && typeof e === 'object' && e.source) ? e.source : '数字待核验';
-      counts[s] = (counts[s] || 0) + 1;
-    });
-    var keys = SS_SRC_ORDER.concat(Object.keys(counts).filter(function (k) {
-      return SS_SRC_ORDER.indexOf(k) < 0;
-    })).filter(function (k) { return counts[k]; });
-    var summary = keys.map(function (k) { return counts[k] + ' 条' + k; }).join(' · ');
-    var items = ev.map(function (e) {
-      var isObj = e && typeof e === 'object';
-      var src = (isObj && e.source) ? e.source : '数字待核验';
-      var txt = (isObj && e.text) ? e.text : String(e);
-      var unverified = src === '数字待核验' || SS_SRC_ORDER.indexOf(src) < 0;
-      var cls = unverified ? 'ss-ev-unverified'
-        : (src === '持仓数据' ? 'ss-ev-fact' : 'ss-ev-qual');
-      return '<li class="' + cls + '">' + esc(txt) + '</li>';
-    }).join('');
-    return '<details class="ss-ev"><summary>📊 证据（' + esc(summary) + '）' +
-      (counts['数字待核验'] ? '<span class="ss-ev-warn">⚠️ 点击展开，含未核验数字</span>' : '') +
-      '</summary><ul class="ss-list">' + items + '</ul></details>';
-  }
+  /* v2：**研究优先级卡片**（priorities[]）。这是研究排序，不是买入建议。
+     v1 的 evidence 折叠块 / business_position / valuation / gaps 等字段 v2 已不再产出。 */
   function renderSkillSerenity() {
     var sk = DATA && DATA.skill_serenity;
     var card = $('#skillSerenityCard');
     var body = $('#skillSerenityBody');
     if (!card || !body) return;
-    if (!sk || !sk.positions || !sk.positions.length) {
+    var list = sk && sk.priorities;
+    if (!list || !list.length) {
       card.style.display = 'none';
       return;
     }
     card.style.display = 'block';
+    // v2 语义已从「持仓分析」变为「候选池筛选」—— 静态 h2 文案在这里就地纠正
+    // （index.html 不在本次改动范围内；测试脚手架的 mock 元素没有 querySelector，故做能力判断）
+    var h2 = (card.querySelector ? card.querySelector('h2') : null);
+    if (h2) h2.textContent = '🔗 供应链研究优先级';
     var sub = $('#skillSerenitySub');
     if (sub) {
       sub.textContent = 'serenity-skill' + (sk.skill_version ? ' ' + sk.skill_version : '') +
-        ' · ' + (sk.mode === 'offline' ? '离线模式（未联网核验）' : String(sk.mode || '')) +
+        ' · TOP ' + list.length + ' 研究优先级（非买入建议）' +
+        (sk.universe_size ? ' · 候选池 ' + sk.universe_size + ' 只' : '') +
         (sk.asof ? ' · ' + sk.asof : '');
     }
+    var offline = String(sk.mode || '').indexOf('offline') === 0;
     var html = '';
-    if (sk.mode === 'offline') {
-      html += '<div class="ss-note">⚠️ 本板块由 AI 基于<strong>已有持仓数据 + serenity 方法论</strong>推理得出，' +
-        '<strong>未联网核验</strong>公告 / 财报 / 客户信息；未经核验的条目一律列在「缺口」里，请勿当作事实。</div>';
+    if (offline) {
+      html += '<div class="ss-note">⚠️ 离线筛选：AI 仅基于<strong>候选池字段 + serenity 方法论</strong>推理排序，' +
+        '<strong>未联网核验</strong>公告 / 财报 / 客户信息；无法核验的内容一律列在「待核验」里。' +
+        '<strong>本板块只给研究优先级，不构成买入建议。</strong></div>';
     }
-    html += '<div class="ss-grid">' + sk.positions.map(function (p) {
-      var head = '<div class="ss-head"><b>' + esc(p.ticker || '') + '</b>' +
-        (p.error ? '<span class="ss-bad">分析失败</span>' : '') + '</div>';
-      if (p.error) {
-        return '<div class="ss-card">' + head +
-          '<div class="ss-row"><span class="ss-v ss-bad">' + esc(String(p.error)) + '</span></div></div>';
-      }
-      return '<div class="ss-card">' + head +
-        ssRow('业务定位', p.business_position) +
-        ssEvidence(p.evidence) +
-        ssRow('缺口', ssList(p.gaps, 'ss-gap')) +
-        ssRow('盈利含义', p.earnings) +
-        ssRow('估值压力', p.valuation) +
-        ssRow('替代路线', p.alternatives) +
-        ssRow('何时降级', p.what_would_change) +
+    html += '<div class="ss-grid">' + list.map(function (p) {
+      var rank = num(p.priority_rank);
+      return '<div class="ss-card">' +
+        '<div class="ss-head"><span class="ss-rank">🎯 ' + (rank === null ? '-' : rank) + '</span>' +
+        '<b>' + esc(p.ticker || '') + '</b></div>' +
+        ssRow('为什么', p.why) +
+        ssRow('待核验', p.what_to_verify) +
         '</div>';
     }).join('') + '</div>';
+    html += '<div class="ss-foot">仅研究优先级排序，非买入建议' + (offline ? ' · 未联网核验' : '') + '</div>';
     if (sk.error) html += '<div class="ss-bad">数据异常：' + esc(String(sk.error)) + '</div>';
     body.innerHTML = html;
   }

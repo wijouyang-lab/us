@@ -580,3 +580,7 @@ button{font-family:inherit}
 .ss-ev-qual{color:var(--text-2)}
 .ss-ev-unverified{color:#888;font-style:italic}
 .ss-ev-unverified::before{content:"⚠️ 未经核验："}
+/* v2：研究优先级卡片 */
+.ss-rank{display:inline-block;min-width:30px;font-size:12px;font-weight:800;color:#fff;
+  background:var(--accent);border-radius:6px;padding:2px 7px;text-align:center}
+.ss-foot{margin-top:12px;font-size:11.5px;color:var(--text-3);text-align:center}

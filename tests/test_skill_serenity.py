@@ -1,17 +1,13 @@
 # -*- coding: utf-8 -*-
-"""serenity-skill runner + 展示层测试。
+"""serenity-skill **v2（市场发掘 / 研究优先级排序）** 测试。
 
-覆盖：
-  1. flag 关 → `main()` 首行 return（零副作用：不读文件、不写文件、不调 AI）
-  2. flag 开 + mock AI 成功 → 正确解析并落 JSON
-  3. AI 失败 → 该只记 error，不崩；全部失败 → payload.error 标记（由 main 决定不落盘）
-  4. 单只失败 → 其他 ticker 不受影响
-  5. 模型输出非法 JSON / 带代码围栏 → 分别报错 / 正确剥离
-  6. 前端：无数据 → 板块隐藏
-  7. 前端：有数据 → 正确渲染（含离线提示）
-  8. dashboard_export 哨兵：文件缺失 → 不注入 key（关闭时逐字节一致）
-  9. workflow：flag 必须在 **job 级** env（step 级会让 `if` 恒 false）+ 独立 concurrency group
- 10. clawsocket_compat 必须是延迟导入（flag 关时零依赖副作用）
+v2 相对 v1 的结构变更：
+  · 输入：候选池（`dashboard/data/dashboard_data.json` 的 stocks[]，44 只）—— 不再是 4 只持仓
+  · 输出：`priorities[]`（TOP 10 排序）—— 不再是 `positions[]`
+  · schema_version：`skill_serenity.v2`；mode：`offline_screening`
+
+保留的护栏：flag 门控零副作用 / R1 全失败不写文件 / 数字纪律正则 / 脚本模式 import /
+workflow job 级 flag / dashboard_export 哨兵。
 """
 import importlib.util
 import json
@@ -22,46 +18,51 @@ from pathlib import Path
 import pytest
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
-SCHEMA = "skill_serenity.v1"
+SCHEMA_V2 = "skill_serenity.v2"
+MODE_V2 = "offline_screening"
 SOURCE = "serenity-skill by muxuuu (MIT)"
 
 
 def _load_runner():
     p = REPO_ROOT / "skills" / "run_serenity.py"
-    spec = importlib.util.spec_from_file_location("run_serenity_mod", p)
+    spec = importlib.util.spec_from_file_location("run_serenity_v2", p)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     return mod
 
 
-def _positions():
-    return [
-        {"ticker": "ADSK", "unit": "U001", "shares": "43", "entry_price": "231.42",
-         "entry_date": "2026-10-07", "current_price": "233.54", "stop_loss": "228.29",
-         "unrealized_pnl_pct": "0.92", "weight_pct": "19.63"},
-        {"ticker": "ANET", "unit": "U002", "shares": "47", "entry_price": "211.30",
-         "entry_date": "2026-10-07", "current_price": "210.88", "stop_loss": "209.36",
-         "unrealized_pnl_pct": "-0.20", "weight_pct": "19.37"},
-    ]
+def _stocks(n=44):
+    """造 n 只候选（前 14 只 Core，其余 Observation），模拟真实池构成。"""
+    return [{
+        "ticker": f"T{i:02d}", "name": f"Company {i}",
+        "bucket": "Core" if i < 14 else "Observation",
+        "final_score": 90 - i * 0.5, "quant_score": 80 - i * 0.4,
+        "ai_score": 70 - i * 0.3, "sector_rs_20d_pct": 5 - i * 0.1,
+    } for i in range(n)]
 
 
-_GOOD_AI = {
-    "business_position": "卡在网络设备 / 数据中心交换层",
-    "evidence": [
-        {"text": "浮盈 0.92%，权重 19.63%", "source": "持仓数据"},
-        {"text": "需求来自 AI 数据中心资本开支，供给集中在少数交换芯片供应商", "source": "定性推理"},
-        {"text": "记忆中 P/E 约 30 倍，需查最新 10-K 核验", "source": "数字待核验"},
-    ],
-    "gaps": ["缺最新 10-Q 的园区网络分部毛利率", "缺客户集中度披露"],
-    "earnings": "看网络设备分部收入增速与毛利率",
-    "valuation": "无联网数据，不给倍数",
-    "alternatives": "白盒交换机 / 客户自研",
-    "what_would_change": "若数据中心资本开支指引下修，则降级",
-}
+def _write_payload(tmp_path, stocks=None, held=("T00", "T01")):
+    d = tmp_path / "dashboard" / "data"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "dashboard_data.json").write_text(json.dumps({
+        "generated_at": "2026-10-13T07:00:00Z",
+        "stocks": stocks if stocks is not None else _stocks(),
+        "portfolio": {"positions": [{"ticker": t} for t in held]},
+    }, ensure_ascii=False), encoding="utf-8")
+    return tmp_path
+
+
+def _good_ai(n=10):
+    return json.dumps({"priorities": [
+        {"ticker": f"T{i:02d}", "priority_rank": i + 1,
+         "why": f"处于难替代的瓶颈环节 #{i}，下游需求加速，产品已进入认证/交付阶段",
+         "what_to_verify": f"核验 T{i:02d} 最新 10-Q 的分部收入与客户集中度披露"}
+        for i in range(n)
+    ]}, ensure_ascii=False)
 
 
 # --------------------------------------------------------------------------- #
-# 1) flag 关 —— 零副作用
+# 1) flag 门控 —— 零副作用
 # --------------------------------------------------------------------------- #
 def test_flag_unset_returns_early(tmp_path, capsys):
     r = _load_runner()
@@ -72,225 +73,235 @@ def test_flag_unset_returns_early(tmp_path, capsys):
     assert "跳过" in capsys.readouterr().out
 
 
-def test_flag_off_is_zero_side_effect_even_with_missing_dir(tmp_path, capsys):
-    """flag 关时 data-dir 不存在也不应报错 —— 证明它确实没做任何 I/O。"""
+def test_flag_off_zero_side_effect_even_without_input(tmp_path, capsys):
+    """flag 关时连候选池都不用存在 —— 证明它确实没做任何 I/O。"""
     r = _load_runner()
     out = tmp_path / "o.json"
-    rc = r.main(["--data-dir", str(tmp_path / "does-not-exist"), "--out", str(out)])
-    assert rc == 0
-    assert not out.exists()
+    rc = r.main(["--data-dir", str(tmp_path / "nope"), "--out", str(out)])
+    assert rc == 0 and not out.exists()
     assert "跳过" in capsys.readouterr().out
 
 
 @pytest.mark.parametrize("val", ["0", "true", "yes", "", "2", "TRUE"])
-def test_only_exactly_1_enables(val, monkeypatch):
+def test_only_exactly_1_enables(monkeypatch, val):
     r = _load_runner()
     monkeypatch.setenv("ENABLE_SKILL_SERENITY", val)
-    assert r.skill_enabled() is False, f"只有 '1' 才应启用，val={val!r}"
+    assert r.skill_enabled() is False
+
+
+# --------------------------------------------------------------------------- #
+# 2) 输入源：候选池（不是持仓）
+# --------------------------------------------------------------------------- #
+def test_load_universe_reads_pool_not_positions(tmp_path):
+    r = _load_runner()
+    _write_payload(tmp_path)
+    uni, n = r.load_universe(tmp_path)
+    assert n == 44, f"应读出 44 只候选，实得 {n}"
+    assert len(uni) == 44
+    assert sum(1 for u in uni if u["bucket"] == "Core") == 14
+    assert sum(1 for u in uni if u["bucket"] == "Observation") == 30
+    first = uni[0]
+    for f in ("ticker", "name", "bucket", "final_score", "quant_score",
+              "ai_score", "sector_rs_20d_pct", "held"):
+        assert f in first, f"候选精简字段缺少 {f}"
+    for bad in ("ohlcv", "technical", "ai"):
+        assert bad not in first, f"不应把 {bad} 塞进输入（token 会爆）"
+
+
+def test_load_universe_marks_held(tmp_path):
+    r = _load_runner()
+    _write_payload(tmp_path, held=("T00",))
+    uni, _ = r.load_universe(tmp_path)
+    assert {u["ticker"] for u in uni if u["held"]} == {"T00"}
+
+
+def test_load_universe_missing_file_is_empty(tmp_path):
+    r = _load_runner()
+    assert r.load_universe(tmp_path) == ([], 0)
+
+
+def test_main_does_not_write_when_universe_empty(tmp_path, monkeypatch, capsys):
+    r = _load_runner()
+    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
+    out = tmp_path / "dashboard" / "data" / "skill_serenity.json"
+    rc = r.main(["--data-dir", str(tmp_path), "--out", str(out)])
+    assert rc == 0 and not out.exists()
+    assert "候选池为空" in capsys.readouterr().out
+
+
+# --------------------------------------------------------------------------- #
+# 3) 输出结构：priorities[]（TOP 10）
+# --------------------------------------------------------------------------- #
+def test_output_is_priorities_top10(tmp_path, monkeypatch):
+    r = _load_runner()
+    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
+    _write_payload(tmp_path)
+    monkeypatch.setattr(r, "_default_ask", lambda *a, **k: _good_ai(10))
+    out = tmp_path / "dashboard" / "data" / "skill_serenity.json"
+    assert r.main(["--data-dir", str(tmp_path), "--out", str(out)]) == 0
+    j = json.loads(out.read_text(encoding="utf-8"))
+
+    assert j["schema_version"] == SCHEMA_V2
+    assert j["mode"] == MODE_V2
+    assert j["universe_size"] == 44
+    assert j["source"] == SOURCE
+    assert j["error"] is None
+    assert "priorities" in j and "positions" not in j, "v2 必须是 priorities[]，不能再有 positions[]"
+    assert len(j["priorities"]) == 10
+    for i, p in enumerate(j["priorities"], 1):
+        assert p["priority_rank"] == i, f"rank 必须连续 1..10，实得 {p['priority_rank']}"
+        assert set(p) == {"ticker", "priority_rank", "why", "what_to_verify"}, p
+
+
+def test_priorities_sorted_and_capped():
+    r = _load_runner()
+    pri = [
+        {"ticker": "T05", "priority_rank": 5, "why": "e", "what_to_verify": "v"},
+        {"ticker": "T00", "priority_rank": 9, "why": "e", "what_to_verify": "v"},
+        {"ticker": "T02", "priority_rank": 2, "why": "e", "what_to_verify": "v"},
+    ] + [{"ticker": f"T{i:02d}", "priority_rank": 20 + i, "why": "e", "what_to_verify": "v"}
+         for i in range(10, 25)]
+    raw = json.dumps({"priorities": pri}, ensure_ascii=False)
+    pri = r.parse_result(raw, valid_tickers={f"T{i:02d}" for i in range(44)})["priorities"]
+    assert len(pri) == 10, "必须截断到 TOP 10"
+    assert [p["priority_rank"] for p in pri] == list(range(1, 11))
+    assert [p["ticker"] for p in pri[:3]] == ["T02", "T05", "T00"]   # 按原 rank 升序并归一化
+
+
+def test_parse_dedupes_and_rejects_unknown_ticker():
+    r = _load_runner()
+    raw = json.dumps({"priorities": [
+        {"ticker": "T01", "priority_rank": 1, "why": "a", "what_to_verify": "v"},
+        {"ticker": "T01", "priority_rank": 2, "why": "dup", "what_to_verify": "v"},
+        {"ticker": "FAKE", "priority_rank": 3, "why": "幻觉造股票", "what_to_verify": "v"},
+        {"ticker": "T03", "priority_rank": 4, "why": "b", "what_to_verify": "v"},
+    ]}, ensure_ascii=False)
+    got = r.parse_result(raw, valid_tickers={"T01", "T03"})
+    assert [p["ticker"] for p in got["priorities"]] == ["T01", "T03"], "去重 + 拒绝池外 ticker"
+
+
+def test_parse_raises_on_garbage():
+    r = _load_runner()
+    for bad in ("", "   ", "完全不是 JSON", '{"priorities": []}', '{"nope": 1}'):
+        with pytest.raises(Exception):
+            r.parse_result(bad)
+
+
+# --------------------------------------------------------------------------- #
+# 4) 数字纪律（正则清洗器，v1 复用 + 补中文数字盲区）
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("text", [
+    "收入 $7.21B", "份额 24%", "P/E 约 28.5", "EPS $1.02", "营收 1472 亿美元",
+    "一万一千七百台装机", "百分之十五增长", "占了四成份额",
+])
+def test_sanitizer_strips_numbers_from_why(text):
+    r = _load_runner()
+    got = r.sanitize_priorities([{"ticker": "T00", "priority_rank": 1,
+                                  "why": text, "what_to_verify": ""}])
+    why = got[0]["why"]
+    assert r.DIGIT_REMOVED in why, f"未命中数字：{text}"
+    assert r.SANITIZED_SUFFIX in why
+    assert r._NUMERIC_RE.search(why) is None, f"仍有残留：{why}"
+
+
+@pytest.mark.parametrize("text", [
+    "CEO 在财报电话会上表示「需求强劲」",
+    '管理层说"产能仍是瓶颈"',
+])
+def test_sanitizer_strips_quotes(text):
+    r = _load_runner()
+    got = r.sanitize_priorities([{"ticker": "T00", "priority_rank": 1, "why": text, "what_to_verify": ""}])
+    assert "[引语已剔除]" in got[0]["why"]
+
+
+def test_sanitizer_leaves_clean_text_untouched():
+    r = _load_runner()
+    clean = "处于难替代的瓶颈环节，下游需求加速，产品已进入认证阶段"
+    got = r.sanitize_priorities([{"ticker": "T00", "priority_rank": 1,
+                                  "why": clean, "what_to_verify": "核验最新 10-Q 的分部收入"}])
+    assert got[0]["why"] == clean
+
+
+# --------------------------------------------------------------------------- #
+# 5) prompt 契约
+# --------------------------------------------------------------------------- #
+def test_prompt_contains_universe_and_discipline():
+    r = _load_runner()
+    uni = [{"ticker": "ADSK", "name": "Autodesk", "bucket": "Core", "final_score": 69.9,
+            "quant_score": 70, "ai_score": 65, "sector_rs_20d_pct": 1.2, "held": True}]
+    p = r.build_prompt("SKILL_MD_TEXT", "", uni, "2026-10-13")
+    assert "SKILL_MD_TEXT" in p
+    assert "ADSK" in p and "Core" in p
+    assert "供应链瓶颈猎手" in p
+    assert "TOP 10" in p
+    assert "不是买入建议" in p
+    assert "数字纪律" in p and "禁止收入" in p and "禁止 P/E" in p
+    assert "只能使用上表提供的字段" in p
+    assert '"priorities"' in p
+    assert "禁止引用管理层原话" in p
+    assert "无法核验的，一律写进" in p
+    assert "[方法论推理]" not in p
+
+
+# --------------------------------------------------------------------------- #
+# 6) R1 + 脚本模式 import
+# --------------------------------------------------------------------------- #
+def test_all_fail_does_not_write(tmp_path, monkeypatch):
+    r = _load_runner()
+    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
+    _write_payload(tmp_path)
+    monkeypatch.setattr(r, "_default_ask",
+                        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("all dead")))
+    out = tmp_path / "dashboard" / "data" / "skill_serenity.json"
+    assert r.main(["--data-dir", str(tmp_path), "--out", str(out)]) == 1
+    assert not out.exists(), "R1：失败绝不能写文件"
+
+
+def test_script_mode_import_resolves():
+    """回归：以 `python skills/run_serenity.py` 运行时 clawsocket_compat 必须可导入。"""
+    script = REPO_ROOT / "skills" / "run_serenity.py"
+    code = (
+        "import importlib.util,sys,os;"
+        f"ROOT=os.path.normcase(os.path.abspath(r'{REPO_ROOT}'));"
+        "sys.path=[p for p in sys.path if p and os.path.normcase(os.path.abspath(p))!=ROOT];"
+        f"sys.path.insert(0, r'{script.parent}');"
+        f"spec=importlib.util.spec_from_file_location('rr', r'{script}');"
+        "m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);"
+        "import clawsocket_compat;print('OK')"
+    )
+    proc = subprocess.run([sys.executable, "-c", code], capture_output=True, text=True, timeout=60)
+    assert proc.returncode == 0 and "OK" in proc.stdout, (
+        f"脚本模式下 clawsocket_compat 无法导入。\nstdout={proc.stdout}\nstderr={proc.stderr}")
 
 
 def test_clawsocket_import_is_deferred():
-    """`clawsocket_compat` 必须只在函数内部导入（延迟），不能是模块级。
-
-    注意：不能用 strip() —— 缩进正是「在函数内」的标志。
-    """
     src = (REPO_ROOT / "skills" / "run_serenity.py").read_text(encoding="utf-8")
     for line in src.splitlines():
         if line.startswith("from clawsocket_compat") or line.startswith("import clawsocket_compat"):
-            raise AssertionError(f"clawsocket_compat 出现在模块级（第 1 列）：{line!r}")
-    # 反向确认：确实存在一个缩进的延迟导入
-    assert any(l.lstrip().startswith("from clawsocket_compat") for l in src.splitlines()), \
-        "应当存在函数内的延迟导入"
+            raise AssertionError(f"clawsocket_compat 出现在模块级：{line!r}")
+    assert any(l.lstrip().startswith("from clawsocket_compat") for l in src.splitlines())
 
 
 # --------------------------------------------------------------------------- #
-# 2) flag 开 + mock AI 成功
-# --------------------------------------------------------------------------- #
-def test_run_parses_ai_json(tmp_path):
-    r = _load_runner()
-    seen = {}
-
-    def ask(prompt, model, max_tokens):
-        seen["prompt"] = prompt
-        seen["model"] = model
-        return json.dumps(_GOOD_AI, ensure_ascii=False)
-
-    got = r.run(tmp_path, tmp_path / "o.json", "SKILL_MD_TEXT", _positions()[:1],
-                ask, "claude-opus-5-5", 6000, "2026-10-13")
-
-    assert got["schema_version"] == SCHEMA
-    assert got["source"] == SOURCE
-    assert got["mode"] == "offline"          # 必须如实标注离线
-    assert got["model"] == "claude-opus-5-5"
-    assert got["error"] is None
-
-    p = got["positions"][0]
-    assert p["ticker"] == "ADSK" and p["error"] is None
-    assert p["business_position"] == _GOOD_AI["business_position"]
-    assert p["evidence"] == _GOOD_AI["evidence"]
-    assert p["gaps"] == _GOOD_AI["gaps"]
-
-    # prompt 必须真的带上框架文本 + 离线硬约束
-    assert "SKILL_MD_TEXT" in seen["prompt"]
-    assert "数字纪律" in seen["prompt"]
-    assert "不要给综合数字评分" in seen["prompt"]
-
-
-def test_main_writes_file_when_flag_on(tmp_path, monkeypatch):
-    r = _load_runner()
-    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
-    # 造一个最小 positions.csv
-    (tmp_path / "portfolio_50000_positions.csv").write_text(
-        "Ticker,Status,Shares,Entry_Price,Current_Price,Stop_Loss,Recommendation_ID\n"
-        "ADSK,OPEN,43,231.42,233.54,228.29,X\n",
-        encoding="utf-8")
-    monkeypatch.setattr(r, "_default_ask",
-                        lambda prompt, model, max_tokens: json.dumps(_GOOD_AI, ensure_ascii=False))
-    out = tmp_path / "dashboard" / "data" / "skill_serenity.json"
-    rc = r.main(["--data-dir", str(tmp_path), "--out", str(out)])
-    assert rc == 0
-    assert out.exists()
-    j = json.loads(out.read_text(encoding="utf-8"))
-    assert j["schema_version"] == SCHEMA
-    assert j["positions"][0]["ticker"] == "ADSK"
-
-
-def test_load_positions_reads_only_open(tmp_path):
-    r = _load_runner()
-    (tmp_path / "portfolio_50000_positions.csv").write_text(
-        "Ticker,Status,Shares,Entry_Price,Current_Price,Stop_Loss,Recommendation_ID\n"
-        "ADSK,OPEN,43,231.42,233.54,228.29,X\n"
-        "OLD,CLOSED,10,1,1,1,Y\n",
-        encoding="utf-8")
-    pos = r.load_positions(tmp_path)
-    assert [p["ticker"] for p in pos] == ["ADSK"]
-
-
-# --------------------------------------------------------------------------- #
-# 3/4) 失败处理
-# --------------------------------------------------------------------------- #
-def test_ai_failure_records_error(tmp_path):
-    r = _load_runner()
-
-    def ask(*a, **k):
-        raise RuntimeError("boom")
-
-    got = r.run(tmp_path, tmp_path / "o.json", "S", _positions()[:1], ask, "m", 10, "2026-10-13")
-    p = got["positions"][0]
-    assert p["ticker"] == "ADSK"
-    assert p["error"] and "boom" in p["error"]
-    assert got["error"] == "全部持仓分析失败"
-
-
-def test_single_failure_does_not_block_others(tmp_path):
-    r = _load_runner()
-
-    def ask(prompt, model, max_tokens):
-        if "ANET" in prompt:
-            raise RuntimeError("ANET 挂了")
-        return json.dumps(_GOOD_AI, ensure_ascii=False)
-
-    got = r.run(tmp_path, tmp_path / "o.json", "S", _positions(), ask, "m", 10, "2026-10-13")
-    a, b = got["positions"]
-    assert a["ticker"] == "ADSK" and a["error"] is None
-    assert b["ticker"] == "ANET" and b["error"] and "ANET 挂了" in b["error"]
-    assert got["error"] is None, "不是全部失败时 payload.error 应为 None"
-
-
-def test_all_fail_does_not_write(tmp_path, monkeypatch, capsys):
-    """R1：全部失败 → 不写文件。"""
-    r = _load_runner()
-    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
-    (tmp_path / "portfolio_50000_positions.csv").write_text(
-        "Ticker,Status,Shares,Entry_Price,Current_Price,Stop_Loss,Recommendation_ID\n"
-        "ADSK,OPEN,43,231.42,233.54,228.29,X\n", encoding="utf-8")
-    monkeypatch.setattr(r, "_default_ask", lambda *a, **k: (_ for _ in ()).throw(RuntimeError("all dead")))
-    out = tmp_path / "dashboard" / "data" / "skill_serenity.json"
-    rc = r.main(["--data-dir", str(tmp_path), "--out", str(out)])
-    assert rc == 1
-    assert not out.exists(), "R1：全部失败绝不能写文件"
-
-
-# --------------------------------------------------------------------------- #
-# 5) 解析器
-# --------------------------------------------------------------------------- #
-def test_parse_result_strips_code_fence():
-    r = _load_runner()
-    got = r.parse_result('```json\n{"business_position":"x"}\n```')
-    assert got["business_position"] == "x"
-    assert got["evidence"] == [] and got["gaps"] == []
-
-
-def test_parse_result_tolerates_surrounding_text():
-    r = _load_runner()
-    got = r.parse_result('好的，结果如下：\n{"business_position":"y","evidence":"单条"}\n以上。')
-    assert got["business_position"] == "y"
-    # 非 list 会被包成单元素 list；裸字符串无来源标签 → fail-safe 记为「数字待核验」
-    assert got["evidence"] == [{"text": "单条", "source": "数字待核验"}]
-
-
-@pytest.mark.parametrize("bad", ["", "   ", "完全不是 JSON"])
-def test_parse_result_raises_on_garbage(bad):
-    r = _load_runner()
-    with pytest.raises(Exception):
-        r.parse_result(bad)
-
-
-# --------------------------------------------------------------------------- #
-# 8) dashboard_export 哨兵：文件缺失 → 不注入 key
+# 7) dashboard_export 哨兵 + workflow
 # --------------------------------------------------------------------------- #
 def test_export_sentinel_when_file_missing(tmp_path):
     import dashboard_export as de
     assert de._read_skill_serenity(tmp_path) is de._SKILL_SERENITY_MISSING
 
 
-def test_export_reads_when_present(tmp_path):
-    import dashboard_export as de
-    d = tmp_path / "dashboard" / "data"
-    d.mkdir(parents=True)
-    (d / "skill_serenity.json").write_text(json.dumps({"schema_version": SCHEMA}), encoding="utf-8")
-    got = de._read_skill_serenity(tmp_path)
-    assert got is not de._SKILL_SERENITY_MISSING
-    assert got["schema_version"] == SCHEMA
-
-
-def test_export_returns_none_on_bad_json(tmp_path):
-    import dashboard_export as de
-    d = tmp_path / "dashboard" / "data"
-    d.mkdir(parents=True)
-    (d / "skill_serenity.json").write_text("{ not json", encoding="utf-8")
-    got = de._read_skill_serenity(tmp_path)
-    assert got is None and got is not de._SKILL_SERENITY_MISSING
-
-
-# --------------------------------------------------------------------------- #
-# 9) workflow 结构
-# --------------------------------------------------------------------------- #
 def test_workflow_flag_is_job_level_and_gated():
     import re
     yml = (REPO_ROOT / ".github" / "workflows" / "skill-weekly.yml").read_text(encoding="utf-8")
     assert "ENABLE_SKILL_SERENITY: ${{ vars.ENABLE_SKILL_SERENITY }}" in yml
     assert "if: env.ENABLE_SKILL_SERENITY == '1'" in yml
-    # 独立 concurrency group —— 只看**实际配置行**（注释里提到别的 group 不算违规）
-    assert re.search(r"^\s*group:\s*skill-weekly\s*(#.*)?$", yml, re.M), "必须声明独立 group: skill-weekly"
-    assert not re.search(r"^\s*group:\s*us-stock-portfolio-ledger", yml, re.M), \
-        "不得与账本链路共享 concurrency group"
-    # 只提交自己的产物
+    assert re.search(r"^\s*group:\s*skill-weekly\s*(#.*)?$", yml, re.M)
+    assert not re.search(r"^\s*group:\s*us-stock-portfolio-ledger", yml, re.M)
     assert "git add dashboard/data/skill_serenity.json" in yml
 
 
-def test_workflow_flag_not_only_on_step_env():
-    """回归：flag 若只写在 step 的 env: 里，该 step 的 `if` 读不到 → 永远跳过。"""
-    yml = (REPO_ROOT / ".github" / "workflows" / "skill-weekly.yml").read_text(encoding="utf-8")
-    steps_at = yml.find("    steps:")
-    assert steps_at > 0
-    assert "${{ vars.ENABLE_SKILL_SERENITY }}" in yml[:steps_at], (
-        "flag 必须出现在 `steps:` 之前（= job 级 env），否则 if 恒为 false"
-    )
-
-
 # --------------------------------------------------------------------------- #
-# 6/7) 前端
+# 8) 前端：TOP 10 优先级卡片（非持仓卡片）
 # --------------------------------------------------------------------------- #
 _HARNESS = (
     "'use strict';\n"
@@ -335,251 +346,46 @@ def _render_sk(sk):
         "var els = globalThis.__els || {};\n"
         "console.log(JSON.stringify({"
         " card_display: els['#skillSerenityCard'] ? els['#skillSerenityCard'].style.display : null,"
-        " body: els['#skillSerenityBody'] ? els['#skillSerenityBody'].innerHTML : null }));\n"
+        " body: els['#skillSerenityBody'] ? els['#skillSerenityBody'].innerHTML : null,"
+        " sub: els['#skillSerenitySub'] ? els['#skillSerenitySub'].textContent : null }));\n"
     )
     return _run_node(exposed, tail)
 
 
-def test_frontend_hidden_when_no_data():
-    for sk in (None, {}, {"positions": []}):
+def test_frontend_hidden_when_no_priorities():
+    for sk in (None, {}, {"priorities": []}):
         r = _render_sk(sk)
         assert r["card_display"] == "none", r
         assert not (r["body"] or ""), r
 
 
-def test_frontend_renders_positions():
+def test_frontend_renders_top10_priority_cards():
     r = _render_sk({
-        "schema_version": SCHEMA, "source": SOURCE, "mode": "offline",
-        "skill_version": "1.1.0", "asof": "2026-10-13", "error": None,
-        "positions": [
-            {"ticker": "ADSK", "business_position": "卡在网络交换层",
-             "evidence": [{"text": "浮盈 0.92%", "source": "持仓数据"}],
-             "gaps": ["缺 10-Q 分部毛利率"],
-             "earnings": "看分部增速", "valuation": "无联网数据", "alternatives": "白盒交换机",
-             "what_would_change": "资本开支下修", "error": None},
-            {"ticker": "ANET", "business_position": "", "evidence": [], "gaps": [],
-             "earnings": "", "valuation": "", "alternatives": "", "what_would_change": "",
-             "error": "RuntimeError: boom"},
+        "schema_version": SCHEMA_V2, "mode": MODE_V2, "skill_version": "1.1.0",
+        "asof": "2026-10-13", "universe_size": 44, "error": None,
+        "priorities": [
+            {"ticker": "AMZN", "priority_rank": i + 1,
+             "why": f"为什么第{i + 1}名：卡在网络/算力瓶颈层",
+             "what_to_verify": f"核验 AMZN 第{i + 1}项材料"}
+            for i in range(10)
         ],
     })
     assert r["card_display"] == "block", r
     body = r["body"]
-    assert "ADSK" in body and "ANET" in body, body
-    assert "业务定位" in body and "卡在网络交换层" in body, body
-    assert "证据" in body and "浮盈 0.92%" in body, body
-    assert "缺口" in body and "缺 10-Q 分部毛利率" in body, body
-    assert "何时降级" in body and "资本开支下修" in body, body
-    # 离线提示必须显示（不得暗示已联网核验）
+    assert body.count('class="ss-card"') == 10, body
+    assert "🎯 1" in body and "🎯 10" in body, body
+    assert "为什么" in body and "待核验" in body, body
+    assert "AMZN" in body, body
+    assert "非买入建议" in body, body
     assert "未联网核验" in body, body
-    # 单只失败要标出来，但不影响整块
-    assert "分析失败" in body and "boom" in body, body
+    for gone in ("业务定位", "盈利含义", "估值压力", "替代路线", "何时降级", "缺口"):
+        assert gone not in body, f"v1 字段 {gone} 不应再渲染"
+    assert r["sub"] and "TOP 10" in r["sub"], r
 
 
 def test_frontend_no_offline_note_when_online_mode():
     r = _render_sk({
-        "schema_version": SCHEMA, "mode": "online", "positions": [
-            {"ticker": "ADSK", "business_position": "x", "evidence": [], "gaps": [],
-             "earnings": "", "valuation": "", "alternatives": "", "what_would_change": "",
-             "error": None}],
+        "schema_version": SCHEMA_V2, "mode": "online",
+        "priorities": [{"ticker": "X", "priority_rank": 1, "why": "a", "what_to_verify": "b"}],
     })
     assert "未联网核验" not in r["body"], r
-
-
-# --------------------------------------------------------------------------- #
-# 12) 数字纪律（方案 ②）：prompt 硬约束 + evidence 结构化 + 前端按 source 渲染
-#
-# 背景：skill-weekly run #2 产出 23 条 evidence，其中 13 条含无法核验的具体数字
-# （编造的收入/增速/P/E/EPS、虚构的直接引语），而且全部藏在 [方法论推理] 标签下 ——
-# 标签形同虚设，幻觉获得了"已标注来源"的外观。
-# --------------------------------------------------------------------------- #
-def test_prompt_forbids_specific_numbers():
-    """prompt 必须含数字纪律硬约束与三类标签语义，且旧标签已被替换掉。"""
-    r = _load_runner()
-    prompt = r.build_prompt("SKILL_MD_TEXT", "", _positions()[0], "2026-10-13")
-    for must in ("数字纪律",
-                 "禁止收入",
-                 "禁止增长率",
-                 "禁止 P/E",
-                 "禁止装机数",
-                 "禁止直接引用管理层原话",
-                 "数字待核验",
-                 "定性推理",
-                 "持仓数据",
-                 "只有这一类可以含数字"):
-        assert must in prompt, f"prompt 缺少硬约束：{must}"
-    assert "[方法论推理]" not in prompt, "旧标签 [方法论推理] 必须已被替换"
-    assert '"source": "定性推理"' in prompt, "输出结构必须示范对象数组"
-
-
-def test_evidence_is_object_array():
-    """evidence 必须是 {text, source} 对象数组；旧格式字符串要提升为 source；
-    来源缺失/未知一律 fail-safe 降级为「数字待核验」。"""
-    r = _load_runner()
-    got = r.parse_result(json.dumps({
-        "business_position": "x",
-        "evidence": [
-            {"text": "浮盈 1%", "source": "持仓数据"},
-            {"text": "结构推理", "source": "定性推理"},
-            {"text": "记得 P/E 30", "source": "数字待核验"},
-            "[持仓数据] 旧格式字符串",
-            "没有标签的字符串",
-            {"text": "来源非法的条目", "source": "AI自己编的来源"},
-        ],
-    }, ensure_ascii=False))
-    ev = got["evidence"]
-    assert all(isinstance(e, dict) for e in ev), ev
-    assert all("text" in e and "source" in e for e in ev), ev
-    assert [e["source"] for e in ev] == [
-        "持仓数据", "定性推理", "数字待核验",
-        "持仓数据",       # `[持仓数据] xxx` 旧格式 → 标签提升为 source
-        "数字待核验",     # 无标签 → fail-safe
-        "数字待核验",     # 非白名单来源 → fail-safe
-    ], ev
-    assert ev[3]["text"] == "旧格式字符串"
-
-
-def test_evidence_renders_by_source():
-    """前端：evidence 默认折叠在 <details>，摘要给出分类计数，只有「数字待核验」带特殊 class。"""
-    r = _render_sk({
-        "schema_version": SCHEMA, "mode": "offline", "positions": [
-            {"ticker": "ADSK", "business_position": "x",
-             "evidence": [
-                 {"text": "浮盈 0.92%", "source": "持仓数据"},
-                 {"text": "需求来自 AI 资本开支", "source": "定性推理"},
-                 {"text": "记得 P/E 约 30 倍", "source": "数字待核验"},
-             ],
-             "gaps": [], "earnings": "", "valuation": "", "alternatives": "",
-             "what_would_change": "", "error": None}],
-    })
-    body = r["body"]
-    # 默认折叠
-    assert "<details" in body and "</details>" in body, body
-    assert "<summary>" in body, body
-    # 摘要里的分类计数
-    assert "1 条持仓数据" in body, body
-    assert "1 条定性推理" in body, body
-    assert "1 条数字待核验" in body, body
-    assert "含未核验数字" in body, body
-    # 按 source 区分 class
-    assert 'class="ss-ev-unverified"' in body, body
-    assert 'class="ss-ev-fact"' in body, body
-    assert 'class="ss-ev-qual"' in body, body
-    assert body.count('class="ss-ev-unverified"') == 1, body
-    # 三类文案都在
-    for t in ("浮盈 0.92%", "需求来自 AI 资本开支", "记得 P/E 约 30 倍"):
-        assert t in body, body
-
-
-# --------------------------------------------------------------------------- #
-# 11) 脚本模式 import 路径回归
-#     真实事故：workflow 跑 `python skills/run_serenity.py` 时 sys.path[0] = skills/，
-#     而 clawsocket_compat.py 在仓库根 → ModuleNotFoundError → 4 只全失败 → run 失败。
-#     本地测试当时全绿，因为 (a) pytest 把 rootdir 放进 sys.path，
-#     (b) 走 AI 的用例都把 _default_ask monkeypatch 掉了，真实 import 从未执行。
-# --------------------------------------------------------------------------- #
-def _script_mode_probe(extra: str) -> subprocess.CompletedProcess:
-    """在真实子进程里复刻 `python skills/run_serenity.py` 的 sys.path，再执行 `extra`。
-
-    ⚠️ 必须同时剔除 `''`：`python -c` 下 `sys.path[0]` 是空串（= cwd），
-    只按字面路径过滤会漏掉它，cwd 会把仓库根偷偷带回来 → 测试**假通过**。
-    （第一版测试就踩了这个坑：import 用例意外变绿，而静态用例才红。）
-    """
-    script = REPO_ROOT / "skills" / "run_serenity.py"
-    code = (
-        "import importlib.util,sys,os;"
-        f"ROOT=os.path.normcase(os.path.abspath(r'{REPO_ROOT}'));"
-        "sys.path=[p for p in sys.path if p and os.path.normcase(os.path.abspath(p))!=ROOT];"
-        f"sys.path.insert(0, r'{script.parent}');"
-        f"spec=importlib.util.spec_from_file_location('rr', r'{script}');"
-        "m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);"
-        + extra
-    )
-    return subprocess.run([sys.executable, "-c", code],
-                          capture_output=True, text=True, timeout=60)
-
-
-def test_script_mode_import_resolves():
-    """回归：以 `python skills/run_serenity.py` 运行时 clawsocket_compat 必须可导入。
-
-    只验证 import 能否解析，不发起任何 AI 请求。修复前必须失败、修复后必须通过。
-    """
-    proc = _script_mode_probe("import clawsocket_compat;print('OK')")
-    assert proc.returncode == 0 and "OK" in proc.stdout, (
-        f"脚本模式下 clawsocket_compat 无法导入。\nstdout={proc.stdout}\nstderr={proc.stderr}")
-
-
-# --------------------------------------------------------------------------- #
-# 13) 正则兜底清洗（方案 ③）
-#
-# prompt 纪律把幻觉从 57%(13/23) 压到 11%(2/18)，剩下三类可机械识别，用正则兜底：
-# **改判而非删除** —— 信息仍可见，但可信度标签降级为「数字待核验」。
-# --------------------------------------------------------------------------- #
-@pytest.mark.parametrize("text", [
-    "FY2026 收入 $7.21B",
-    "收入 $346.2 亿",
-    "份额已达 24%",
-    "当前 P/E 约 28.5",
-    "EPS $1.02 超预期",
-    "全年营收约 1472 亿美元",
-    "指引上调至 12.6B",
-])
-def test_sanitize_numeric_evidence_relabelled(text):
-    """「定性推理」里出现金额/百分比/估值倍数/EPS → 改判为「数字待核验」。"""
-    r = _load_runner()
-    rec = {"evidence": [{"text": text, "source": "定性推理"}],
-           "business_position": "", "valuation": "", "earnings": ""}
-    r._sanitize_analysis(rec)
-    assert rec["evidence"][0]["source"] == "数字待核验", f"未命中数字模式：{text}"
-
-
-@pytest.mark.parametrize("text", [
-    "CEO Jayshree Ullal 提到「supply chain is the gating factor」",
-    '管理层在财报电话会上说"需求强劲"',
-    '"earnings call 上 CFO 表示产能仍是瓶颈"',
-])
-def test_sanitize_quote_relabelled(text):
-    """无法核验的直接引语 → 改判为「数字待核验」。"""
-    r = _load_runner()
-    rec = {"evidence": [{"text": text, "source": "定性推理"}],
-           "business_position": "", "valuation": "", "earnings": ""}
-    r._sanitize_analysis(rec)
-    assert rec["evidence"][0]["source"] == "数字待核验", f"引语未改判：{text}"
-
-
-def test_sanitize_strips_numbers_from_qualitative_fields():
-    """business_position 剥离数字且不加后缀；valuation / earnings 剥离并标注需核验。"""
-    r = _load_runner()
-    rec = {
-        "evidence": [],
-        "business_position": "约 85% 收入来自复购，而非系统销售本身",
-        "valuation": "当前 P/E 约 28.5，压力来自宏观不确定性",
-        "earnings": "关注毛利率与季度环比变化",
-    }
-    out = r._sanitize_analysis(rec)
-
-    assert "85%" not in out["business_position"]
-    assert r.DIGIT_REMOVED in out["business_position"]
-    assert "收入来自复购" in out["business_position"]        # 定性部分必须保留
-    assert "SEC filing" not in out["business_position"]      # 该字段不加后缀
-
-    assert "28.5" not in out["valuation"]
-    assert out["valuation"].endswith(r.SANITIZED_SUFFIX)
-    assert "压力来自宏观不确定性" in out["valuation"]
-
-
-def test_sanitize_leaves_clean_record_untouched():
-    """无违规 → 一个字符都不改（含来源正确的持仓数据条目）。"""
-    r = _load_runner()
-    rec = {
-        "evidence": [
-            {"text": "需求来自 AI 数据中心资本开支，供给集中在少数交换芯片供应商", "source": "定性推理"},
-            {"text": "浮盈 0.92%，权重 19.63%", "source": "持仓数据"},
-            {"text": "记忆中 P/E 约 30 倍，需查 10-K", "source": "数字待核验"},
-        ],
-        "business_position": "卡在网络互联层，壁垒来自 EOS 软件栈与客户集成深度",
-        "valuation": "估值压力来自云厂商资本开支的周期性",
-        "earnings": "看产品收入增速与毛利率稳定性",
-    }
-    before = json.dumps(rec, ensure_ascii=False, sort_keys=True)
-    out = r._sanitize_analysis(json.loads(before))
-    assert json.dumps(out, ensure_ascii=False, sort_keys=True) == before
