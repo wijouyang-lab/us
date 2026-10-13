@@ -308,6 +308,21 @@ def _news_age_tag(dt):
     return None
 
 
+# 年龄权重标签取值集合：直接由 _news_age_tag() 派生，避免与上面的阈值脱钩。
+_AGE_TAG_VALUES = frozenset(filter(None, (
+    _news_age_tag(None),
+    _news_age_tag(datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=1)),
+    _news_age_tag(datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=12)),
+    _news_age_tag(datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=30)),
+    _news_age_tag(datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=60)),
+)))
+
+
+def _is_age_tag(text):
+    """方括号内的内容是否为 _news_age_tag() 产出的年龄权重标签（如「📄昨日-中等权重」）。"""
+    return ("[%s]" % str(text or "").strip()) in _AGE_TAG_VALUES
+
+
 def get_latest_macro_news():
     print("📡 [阶段1] 正在抓取 CNBC/Reuters/MarketWatch 全球财经快讯...")
     sources = [
@@ -1388,7 +1403,7 @@ def get_key_people_policy_news(macro_news_text=""):
     """
     重要人物/政策预期监控：重点覆盖 Fed 官员、特朗普及市场高度敏感政策表述。
     不直接把人物名字当成利空；真正的方向判断交给 Regime Gate + AI。
-    Google News 失败时，从已抓取的宏观新闻中过滤备用。
+    Google News 产出不足 5 条时，从已抓取的宏观新闻中过滤补足。
     """
     print("🎙️ [阶段2.4] 正在抓取重要人物讲话与政策预期变化...")
     queries = [
@@ -1398,6 +1413,12 @@ def get_key_people_policy_news(macro_news_text=""):
         "Michelle Bowman Federal Reserve rate speech",
         "Trump tariffs inflation Federal Reserve interest rates",
         "Federal Reserve officials hawkish dovish September rate decision",
+        # 改动 3a：扩充查询词，提高原生命中率（实测原 6 条中有 3 条返回 0 条）
+        "Janet Yellen Federal Reserve speech",
+        "Scott Bessent Treasury speech",
+        "Fed minutes release",
+        "Treasury yields forecast",
+        "rate cut odds futures",
     ]
     rows = []
     seen = set()
@@ -1410,10 +1431,12 @@ def get_key_people_policy_news(macro_news_text=""):
             rows.append(line)
         time.sleep(1.0)  # 增加间隔到 1 秒，减少 503 概率
 
-    # 如果 Google News 全部失败，从已抓取的宏观新闻中过滤备用
-    if not rows and macro_news_text:
-        print("   🔄 Google News 全部失败，从宏观新闻中过滤人物讲话...")
-        priority_terms = ("warsh", "powell", "waller", "bowman", "federal reserve", "rate", "inflation", "tariff", "hawkish", "dovish")
+    # 改动 3c：Google News 产出不足 5 条时即从宏观新闻过滤补足。
+    # 原条件为 `not rows`（全部失败才兜底），导致只抓到 3 条时也不会补，
+    # 前端长期不足 5 条。补足结果沿用同一个 key 去重后追加。
+    if len(rows) < 5 and macro_news_text:
+        print(f"   🔄 Google News 仅 {len(rows)} 条（<5），从宏观新闻中过滤补足...")
+        priority_terms = ("warsh", "powell", "waller", "bowman", "yellen", "bessent", "federal reserve", "rate", "inflation", "tariff", "hawkish", "dovish")
         for line in macro_news_text.split("\n"):
             line_lower = line.lower()
             if any(t in line_lower for t in priority_terms):
@@ -1423,7 +1446,7 @@ def get_key_people_policy_news(macro_news_text=""):
                     rows.append(line)
 
     # 优先保留高信息密度条目
-    priority_terms = ("warsh", "powell", "waller", "bowman", "federal reserve", "rate", "inflation", "tariff", "hawkish", "dovish")
+    priority_terms = ("warsh", "powell", "waller", "bowman", "yellen", "bessent", "federal reserve", "rate", "inflation", "tariff", "hawkish", "dovish")
     rows.sort(key=lambda x: sum(t in x.lower() for t in priority_terms), reverse=True)
     rows = rows[:50]
     print(f"✅ 重要人物讲话监控完成：{len(rows)} 条")
@@ -1823,8 +1846,15 @@ def _fmt_pct(v):
 def _parse_speakers(key_people_news):
     """把 key_people_news 字符串（RSS 标题拼接）解析为结构化列表。
 
-    单行格式：'[Google News] MM-DD HH:MM - 标题'，或回退原始行（无 [source] 前缀）。
-    person/title 尽力抽取，缺则 null；content/time/source 尽可能解析。
+    单行格式（两条产出路径均为「年龄标签 + 来源」双方括号，
+    见 _rss_search_google 与 get_latest_macro_news 的拼接处）：
+      - ``[年龄标签][真实来源] MM-DD HH:MM - 正文``
+      - ``[真实来源] MM-DD HH:MM - 正文``（无年龄标签，兼容历史/测试数据）
+      - 无方括号的原始行（来源未知）
+    时间戳可缺失。当第二个方括号只是聚合器「Google News」时，再尝试从正文尾部
+    「 - 媒体名」取真实媒体名；取不到则保持原样。
+
+    person/title 尽力抽取，缺则 null；content/time/source/age_tag 尽可能解析。
     """
     if not key_people_news:
         return []
@@ -1833,28 +1863,68 @@ def _parse_speakers(key_people_news):
         raw = raw.strip()
         if not raw:
             continue
-        content, source, ts = raw, None, None
-        m = re.match(r"\[(?P<src>[^\]]+)\]\s*(?P<ts>\d{2}-\d{2}\s+\d{2}:\d{2})?\s*-\s*(?P<body>.*)$", raw)
-        if m:
-            source, ts, content = m.group("src"), m.group("ts"), m.group("body").strip()
-        elif " - " in raw:
-            idx = raw.find(" - ")
-            left, content = raw[:idx], raw[idx + 3:].strip()
-            ms = re.match(r"\[(?P<src>[^\]]+)\]", left)
-            if ms:
-                source = ms.group("src")
+
+        # 1) 逐个剥离前导方括号（生产格式为 [年龄标签][来源]）
+        rest = raw
+        brackets = []
+        while True:
+            mb = re.match(r"^\[([^\]]*)\]\s*", rest)
+            if not mb:
+                break
+            brackets.append(mb.group(1).strip())
+            rest = rest[mb.end():]
+
+        # 2) 可选时间戳
+        ts = None
+        mt = re.match(r"^(\d{2}-\d{2}\s+\d{2}:\d{2})\s*", rest)
+        if mt:
+            ts = mt.group(1)
+            rest = rest[mt.end():]
+
+        # 3) 可选 " - " 分隔符（无时间戳时也可能直接是正文）
+        content = rest.strip()
+        if content.startswith("-"):
+            content = content[1:].strip()
+
+        # 4) 判定 age_tag（年龄权重标签）与 source（真实来源）
+        age_tag, source = None, None
+        if len(brackets) >= 2:
+            if _is_age_tag(brackets[0]):
+                age_tag = brackets[0]
+                source = brackets[1] or None
+            else:
+                source = brackets[0] or None
+                if _is_age_tag(brackets[1]):
+                    age_tag = brackets[1]
+        elif len(brackets) == 1:
+            if _is_age_tag(brackets[0]):
+                age_tag = brackets[0]
+            else:
+                source = brackets[0] or None
+
+        # 5) 尾部「 - 媒体名」兜底：仅当来源只是聚合器「Google News」时。
+        #    不加这个限制会把「Fed cuts rates - what it means」之类正文误判成来源。
+        if source == "Google News" and " - " in content:
+            tail = content.rsplit(" - ", 1)[-1].strip()
+            if 2 <= len(tail) <= 50 and not tail.endswith((".", "。", "!", "！", "?", "？")):
+                source = tail
+
+        # 6) person 抽取（尽力，缺则 null）
         person = None
         low = content.lower()
         for name in _KNOWN_SPEAKERS:
             if name.lower() in low:
                 person = name
                 break
+
         out.append({
             "person": person,
             "title": None,
             "content": content,
             "time": ts,
             "source": source or "未知",
+            "age_tag": age_tag,
+            "content_cn": None,   # 改动 2：由 _macro_ai_judge 回填中文翻译
             "sentiment": None,
             "rationale": None,
         })
@@ -1886,8 +1956,9 @@ def _build_macro_payload(economic_structured, key_people_news):
 
 
 def _macro_ai_judge(client, economic, speakers):
-    """批量 AI 判断利好/利空。返回补齐 sentiment/rationale 后的 (economic, speakers)。
-    AI 失败 / 缺 headline（combined 为空）/ 返回结构不符 → 所有 sentiment 保持 null（不阻断）。"""
+    """批量 AI 判断利好/利空，并为人物讲话补中文翻译（content_cn）。
+    返回补齐 sentiment/rationale/content_cn 后的 (economic, speakers)。
+    AI 失败 / 缺 headline（combined 为空）/ 返回结构不符 → 所有字段保持 null（不阻断）。"""
     combined = []
     for e in economic:
         combined.append({"type": "economic", "text": f"{e.get('indicator')}: 值 {e.get('value')}，前值 {e.get('prev')}，来源 {e.get('source')}"})
@@ -1906,7 +1977,10 @@ def _macro_ai_judge(client, economic, speakers):
         "- 人物讲话：鹰派（暗示加息/维持高利率）=偏利空；鸽派（暗示降息/宽松）=偏利好；中性表述=中性。\n"
         "- 仅基于给定文本判断，不要使用外部知识。\n"
         "返回 JSON 对象，结构：{\"items\": [ ... ]}，items 长度与输入条目数一致、顺序一致，每项：\n"
-        '{"sentiment": "bullish|bearish|neutral", "rationale": "≤30字中文简要理由"}\n'
+        '{"sentiment": "bullish|bearish|neutral", "rationale": "≤30字中文简要理由", '
+        '"content_cn": "该条的中文翻译"}\n'
+        "- content_cn：把 [speaker] 条目的英文原文翻译成简洁、准确的中文；"
+        "[economic] 条目该字段留空字符串。\n"
         "只输出 JSON 对象，不要任何解释。\n\n"
         "输入条目：\n" + items_txt
     )
@@ -1935,6 +2009,8 @@ def _macro_ai_judge(client, economic, speakers):
                 sp = speakers[i - econ_count]
                 sp["sentiment"] = sent
                 sp["rationale"] = (rat if sent else None)
+                cn = (r or {}).get("content_cn")
+                sp["content_cn"] = (str(cn).strip() or None) if cn else None
     except Exception as e:
         print(f"⚠️ 宏观 AI 判断失败（sentiment 置 null，不阻断）：{type(e).__name__}: {e}")
     return economic, speakers

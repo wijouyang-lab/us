@@ -1275,10 +1275,10 @@
     var sent = s.sentiment ? sentIcon(s.sentiment) : '';
     var rationale = (s.sentiment && s.rationale)
       ? '<div class="news-rationale">' + esc(s.rationale) + '</div>' : '';
-    var meta = [s.time, s.source].filter(Boolean).map(esc).join(' · ');
+    var meta = [s.time, s.source, s.age_tag].filter(Boolean).map(esc).join(' · ');
     return '<div class="macro-spk">' +
       '<div class="macro-spk-h">' + person + sent + '</div>' +
-      '<div class="macro-spk-c">' + esc(s.content || '') + '</div>' +
+      '<div class="macro-spk-c">' + esc(s.content_cn || s.content || '') + '</div>' +
       (meta ? ('<div class="macro-econ-m">' + meta + '</div>') : '') +
       rationale +
       '</div>';
