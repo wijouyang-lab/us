@@ -239,7 +239,9 @@ def write_csv_rows(path: Path, columns: list[str], rows: list[dict]) -> None:
 
 
 def rec_id_of(ticker: str, rec_date: str, tag: str) -> str:
-    return f"{str(ticker).upper()}|{rec_date}|{tag}"
+    # 归一化为日期部分（YYYY-MM-DD），与仓位存储的 date-only RecID 对齐
+    d = str(rec_date)[:10] if rec_date else ""
+    return f"{str(ticker).upper()}|{d}|{tag}"
 
 
 # ------------------------------------------------------------------ 价格
@@ -391,6 +393,7 @@ def process_sells(positions, transactions, recs, today) -> list[str]:
         rid = str(p.get("Recommendation_ID", ""))
         rec = recs.get(rid)
         if not rec:
+            print(f"⚠️ [process_sells] 仓位 {p.get('Ticker')} 的 RecID={rid} 无法在 recommendations 中找到（键不匹配？）")
             continue
         if rec["Status"] not in TERMINAL_STATUSES:
             continue
