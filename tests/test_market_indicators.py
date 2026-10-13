@@ -171,13 +171,60 @@ def test_flag_off_guard_and_export_no_key(tmp_path):
     d = _read_market_indicators(tmp_path)  # tmp_path 无该文件
     assert d is _MARKET_INDICATORS_MISSING
     # 对称验证：文件存在 → 返回其 dict（flag 开时才会写文件，此时 payload 才注入键）
-    (tmp_path / "market_indicators.json").write_text(
+    # 注意：必须放在**真实嵌套位置** dashboard/data/ 下；读取函数只认
+    # <root>/dashboard/data/market_indicators.json（见下方回归测试）。
+    nested = tmp_path / "dashboard" / "data"
+    nested.mkdir(parents=True, exist_ok=True)
+    (nested / "market_indicators.json").write_text(
         json.dumps({"schema_version": "market_indicators.v1", "fear_greed": None,
                     "fedwatch": None, "error": "test"}), encoding="utf-8")
     d2 = _read_market_indicators(tmp_path)
     assert d2 is not _MARKET_INDICATORS_MISSING
     assert d2["schema_version"] == "market_indicators.v1"
     assert d2["error"] == "test"
+
+
+def test_read_path_must_be_dashboard_data_regression(tmp_path):
+    """回归（2026-10-13）：读取路径必须是 <root>/dashboard/data/market_indicators.json。
+
+    历史 bug（已修）：
+      · 写入侧 `dashboard/fetch_market_indicators.py:140` 默认写
+        `dashboard/data/market_indicators.json`；
+      · 读取侧 `dashboard_export.py` 却读 `<root>/market_indicators.json`
+        —— 少了 `dashboard/data/` 这一段；
+      · 结果：文件已生成并入库，但 `dashboard_data.json` **从不注入**
+        `market_indicators` 键 → 前端「市场情绪指标」面板永不出现。
+
+    旧测试为什么抓不到：它们把文件直接放在 `tmp_path` 根下，正好等于**错误路径**，
+    与 bug 自洽。本测试把文件放在**真实嵌套位置**，并把「直接放根」显式断言为
+    **读不到**，从而把契约钉死，防止未来退回旧路径。
+    """
+    from dashboard_export import _read_market_indicators, _MARKET_INDICATORS_MISSING
+
+    payload = {
+        "schema_version": "market_indicators.v1",
+        "fear_greed": {"score": 45.4, "rating": "neutral"},
+        "fedwatch": None,
+        "error": None,
+    }
+
+    # 1) 正确位置：<root>/dashboard/data/market_indicators.json → 必须读到
+    nested = tmp_path / "dashboard" / "data"
+    nested.mkdir(parents=True)
+    (nested / "market_indicators.json").write_text(json.dumps(payload), encoding="utf-8")
+    got = _read_market_indicators(tmp_path)
+    assert got is not _MARKET_INDICATORS_MISSING, (
+        "路径回归：读取函数没有去 <root>/dashboard/data/ 找 market_indicators.json"
+    )
+    assert got["fear_greed"]["score"] == 45.4
+
+    # 2) 错误位置：<root>/market_indicators.json → 不应被读取（钉死契约）
+    wrong_root = tmp_path / "wrong_root"
+    wrong_root.mkdir()
+    (wrong_root / "market_indicators.json").write_text(json.dumps(payload), encoding="utf-8")
+    assert _read_market_indicators(wrong_root) is _MARKET_INDICATORS_MISSING, (
+        "路径回归：<root>/market_indicators.json 不应被读取（那是历史错误路径）"
+    )
 
 
 # --------------------------------------------------------------------------- #

@@ -2457,7 +2457,7 @@ def _read_market_indicators(data_dir: Path):
         因为 flag 开且至少一源成功才会写文件）。
       · 文件正常 → 返回其 dict（fear_greed / fedwatch 各自可能为 null）。
     """
-    p = data_dir / "market_indicators.json"
+    p = data_dir / "dashboard" / "data" / "market_indicators.json"
     if not p.exists():
         return _MARKET_INDICATORS_MISSING
     try:
