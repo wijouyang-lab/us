@@ -1,0 +1,163 @@
+{
+  "schema_version": "market_indicators.v1",
+  "generated_at": "2026-10-13T05:22:07Z",
+  "fear_greed": {
+    "score": 45.4,
+    "rating": "neutral",
+    "timestamp": "2026-10-13T00:00:00+00:00",
+    "subindicators": {
+      "market_momentum_sp500": {
+        "score": 69.8,
+        "rating": "greed"
+      },
+      "stock_price_strength": {
+        "score": 7.8,
+        "rating": "extreme fear"
+      },
+      "stock_price_breadth": {
+        "score": 4.2,
+        "rating": "extreme fear"
+      },
+      "put_call_options": {
+        "score": 35.2,
+        "rating": "fear"
+      },
+      "market_volatility_vix": {
+        "score": 50,
+        "rating": "neutral"
+      },
+      "junk_bond_demand": {
+        "score": 82.2,
+        "rating": "extreme greed"
+      },
+      "safe_haven_demand": {
+        "score": 68.6,
+        "rating": "greed"
+      }
+    },
+    "history_30d": [
+      {
+        "date": "2026-10-13",
+        "score": 45.4,
+        "rating": "neutral"
+      },
+      {
+        "date": "2026-10-12",
+        "score": 45.4,
+        "rating": "neutral"
+      },
+      {
+        "date": "2026-10-09",
+        "score": 46.49,
+        "rating": "neutral"
+      },
+      {
+        "date": "2026-10-08",
+        "score": 39.8,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-10-07",
+        "score": 42.14,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-10-06",
+        "score": 46.8,
+        "rating": "neutral"
+      },
+      {
+        "date": "2026-10-05",
+        "score": 43.71,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-10-02",
+        "score": 39.97,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-10-01",
+        "score": 28.97,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-30",
+        "score": 30.26,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-29",
+        "score": 28.86,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-28",
+        "score": 34.4,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-25",
+        "score": 36.94,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-24",
+        "score": 35.74,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-23",
+        "score": 32.54,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-22",
+        "score": 35.03,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-21",
+        "score": 34.17,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-18",
+        "score": 30.43,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-17",
+        "score": 28.29,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-16",
+        "score": 27.31,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-15",
+        "score": 27.97,
+        "rating": "fear"
+      },
+      {
+        "date": "2026-09-14",
+        "score": 30.97,
+        "rating": "fear"
+      }
+    ]
+  },
+  "fedwatch": {
+    "next_meeting": "2026-10-28",
+    "current_target": "3.75%-4.00%",
+    "effr": 3.88,
+    "trade_date": "2026-10-12",
+    "probabilities": {
+      "hold": 79.0,
+      "hike_25bp": 21.0
+    },
+    "source": "cme"
+  },
+  "error": null
+}
