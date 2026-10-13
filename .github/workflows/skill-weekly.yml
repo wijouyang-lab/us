@@ -12,9 +12,10 @@ name: skill-weekly
 on:
   workflow_dispatch:
   schedule:
-    # 周日 UTC 22:00 = 北京周一 06:00 = 美东周日 18:00
-    # 选此时段：scan（工作日 21:00 北京）与 review（06:23 北京）都不跑。
-    - cron: '0 22 * * 0'
+    # 周日 UTC 20:00 = 北京周一 04:00 = 美东周日 16:00
+    # 原为 UTC 22:00（北京周一 06:00）—— 与 review（北京 06:23）只差 23 分钟。
+    # 虽然 concurrency group 独立，两者仍落在同一夜间窗口，故前移 2 小时拉开距离。
+    - cron: '0 20 * * 0'
 
 concurrency:
   group: skill-weekly          # 独立 group，绝不与 us-stock-portfolio-ledger 抢
