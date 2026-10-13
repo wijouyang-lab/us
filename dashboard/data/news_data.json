@@ -1,6 +1,6 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-13T08:48:25Z",
+  "generated_at": "2026-10-13T09:18:03Z",
   "market_news": [
     {
       "headline": "Visa gets approval to prepare for domestic business in China - Reuters",
@@ -8,9 +8,9 @@
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQWDU2MUdBSi1QYVQ0Ulg2MzdqQVJpaHJWZ2NFaVZYT2VGV0xYUnZ1T1B6ZGJFbmR5eWNqajFXSFhQSTI0X1pDU29HR3o1T2VmdDZCVUJvTFdWMXRldllGc2JmTVNrM2RoUWttaHc5ZFJnX3FvYTBfbEt2RTZPR0s2OEZqMGFtYWdPdTdPSEJKUVpBT25POHR5R2VKbWl0VUk?oc=5",
       "datetime": 1791865620,
       "summary": "Visa gets approval to prepare for domestic business in China  Reuters",
-      "headline_cn": "Visa获批准备在中国开展境内业务",
+      "headline_cn": "Visa获批在中国筹备境内业务",
       "sentiment": "bullish",
-      "rationale": "中国市场准入突破，长期增长空间扩大",
+      "rationale": "打开中国市场潜在增量空间",
       "market_relevant": true
     },
     {
@@ -19,10 +19,10 @@
       "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQaHZ3WXAyQzZiQXZBZmJ1aEV2WUZMcXA4bHlyNml3LUd5MG1GWjNJSFIyUnhycktZc1ZHZXVPMERsaEs1YzZEX3FtT1JwOERaMUtCY0RkYUZVQzhWWnIzLU45TXVLWUk4RnFaaU53X1VxVVNaOVVqaHpaeTdMRkFfS0h5aTFVaERIcEQ4S2xsTFJ0MVpHa093b1RmYjZPaV9DRTBGMkRLUWN2djRTSGtKVU1uUFBGZw?oc=5",
       "datetime": 1791863580,
       "summary": "Trump says he does not believe China and Russia are helping Iran 'at all'  Reuters",
-      "headline_cn": "特朗普称不相信中俄在帮助伊朗",
+      "headline_cn": "特朗普称不认为中俄在帮助伊朗",
       "sentiment": "neutral",
-      "rationale": "地缘表态未改变制裁现状或市场预期",
-      "market_relevant": true
+      "rationale": "地缘表态未改变实质政策",
+      "market_relevant": false
     },
     {
       "headline": "Indian shares flat at open as inflation strengthens rate-hike concerns - Reuters",
@@ -30,10 +30,10 @@
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNRUVTdlJpcHF3dEZTQlg5WWlESlo0dXpTRWJQR1lwWHl2aHR2QVlEUzI4Vkx3OTZVNFdvdnhNMm5BSC04bnNJdzZyLU9BVTVhbFFsUHhzNXlWc0VlLW5KU2k0NWFHZUlicF9zQTVMYjJTTGZoNDRMREJBQk5YU3k0OFdCX2pROWxtYWhlM0ZrREQxVTQweWJMaFdoVW1XX1FrOXpGQnBjZy01eVktY3VQSktkb1YxVEJIbmMw?oc=5",
       "datetime": 1791858540,
       "summary": "Indian shares flat at open as inflation strengthens rate-hike concerns  Reuters",
-      "headline_cn": "印度股市开盘持平，通胀加剧加息担忧",
-      "sentiment": "bearish",
-      "rationale": "新兴市场加息预期升温，资金流动承压",
-      "market_relevant": true
+      "headline_cn": "印度股市开盘持平，通胀强化加息担忧",
+      "sentiment": "neutral",
+      "rationale": "反映区域市场情绪，对美股影响有限",
+      "market_relevant": false
     },
     {
       "headline": "AI investment props up global growth, but war and debt threaten outlook, IMF says - Reuters",
@@ -43,7 +43,7 @@
       "summary": "AI investment props up global growth, but war and debt threaten outlook, IMF says  Reuters",
       "headline_cn": "IMF称AI投资支撑全球增长，但战争和债务威胁前景",
       "sentiment": "neutral",
-      "rationale": "利好与风险并存，整体符合市场认知",
+      "rationale": "利好与风险并存，信息符合预期",
       "market_relevant": true
     },
     {
@@ -54,7 +54,7 @@
       "summary": "Qatar Airways suspends Riyadh, Dammam flights as airport attacks disrupt air travel  Reuters",
       "headline_cn": "卡塔尔航空因机场袭击暂停利雅得和达曼航班",
       "sentiment": "bearish",
-      "rationale": "地缘冲突扰动航空业运营和油价预期",
+      "rationale": "地缘冲突影响航空业运营",
       "market_relevant": true
     },
     {
@@ -65,7 +65,7 @@
       "summary": "Oil falls as Russian diesel supply prospects counter Gulf supply risks  Reuters",
       "headline_cn": "俄罗斯柴油供应前景抵消海湾风险，油价下跌",
       "sentiment": "neutral",
-      "rationale": "供需相抵，油价波动在预期范围内",
+      "rationale": "供需互抵，能源板块影响中性",
       "market_relevant": true
     },
     {
@@ -74,10 +74,10 @@
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQcGUtWGlRWGVfTVVCaFlXbDQ3UTA4bmlUN2QxdV9yT19EOUZGTkhKNW5xR2hQcDJmaE1pX1F1Tmg4TEZ6VTMxcWl5QzdHdVdZa2U1ZDF5Vm5ONGhhNDFPd00xLXZKNXVSaXJGYTB2QVV6dkJ6WmtBS29uMTNyNko5dlptaEdjWngxR2gxa3FfNTc4bzdmaElUOHVzZTVfN0oxeXhwdExKLWxycEpBRGNna0QzM2N5NGRfaVE?oc=5",
       "datetime": 1791848340,
       "summary": "Saudi warning system stayed silent before deadly airport attacks  Reuters",
-      "headline_cn": "沙特预警系统在致命机场袭击前保持沉默",
-      "sentiment": "neutral",
-      "rationale": "安全事件报道，对市场影响有限",
-      "market_relevant": false
+      "headline_cn": "沙特致命机场袭击前预警系统保持沉默",
+      "sentiment": "bearish",
+      "rationale": "地缘安全风险升温",
+      "market_relevant": true
     },
     {
       "headline": "Trump says he is considering firing US ambassador to Greece - Reuters",
@@ -87,7 +87,7 @@
       "summary": "Trump says he is considering firing US ambassador to Greece  Reuters",
       "headline_cn": "特朗普称正考虑解雇美国驻希腊大使",
       "sentiment": "neutral",
-      "rationale": "外交人事变动，无直接经济影响",
+      "rationale": "外交人事变动无业务影响",
       "market_relevant": false
     },
     {
@@ -96,9 +96,9 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/12/heres-a-calculator-to-explain-why-cramer-always-stays-invested.html",
       "datetime": 1791838929,
       "summary": "Small, consistent gains over time, compounded through regular contributions, can supercharge your wealth",
-      "headline_cn": "计算器解释克莱默为何始终保持投资，可自定义数据",
+      "headline_cn": "这个计算器解释克莱默为何始终持仓，你也可以输入数据",
       "sentiment": "neutral",
-      "rationale": "投资理念讨论，非实质市场信息",
+      "rationale": "投资理念科普，无实质市场信号",
       "market_relevant": false
     },
     {
@@ -107,9 +107,9 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/12/bear-to-bull-a-double-upgrade-of-salesforce-illustrates-the-folly-of-the-saaspocalypse-.html",
       "datetime": 1791834619,
       "summary": "Jim Cramer said bets against Salesforce were always wrong.",
-      "headline_cn": "熊转牛：Salesforce双重升级凸显'SaaS末日论'谬误",
+      "headline_cn": "从看空到看多：Salesforce双重上调凸显'SaaS末日论'谬误",
       "sentiment": "bullish",
-      "rationale": "分析师双升评级，SaaS板块情绪改善",
+      "rationale": "分析师上调评级提振SaaS板块",
       "market_relevant": true
     },
     {
@@ -758,9 +758,9 @@
         "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
         "datetime": 1791570784,
         "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
-        "headline_cn": "Adobe股票能否应对订阅增长放缓？",
+        "headline_cn": "Adobe股票为订阅增长放缓做好准备了吗？",
         "sentiment": "bearish",
-        "rationale": "订阅增长放缓担忧施压估值",
+        "rationale": "增长放缓预期施压估值",
         "market_relevant": true
       },
       {
@@ -769,9 +769,9 @@
         "url": "https://finnhub.io/api/news?id=c5645039edf7a60f12c6973ef8eac71bf2adc1a24378bfa95d56be951c66e7d6",
         "datetime": 1791523947,
         "summary": "Tech stocks broadly declined this week as escalating tensions over the Iran war fueled fresh uncertainty across financial markets.",
-        "headline_cn": "SaaS股票在回归？Autodesk和Intuit在科技股艰难周表现突出",
+        "headline_cn": "SaaS股票在复苏吗？Autodesk和Intuit在科技股艰难周表现突出",
         "sentiment": "bullish",
-        "rationale": "板块龙头逆势跑赢，反弹信号显现",
+        "rationale": "板块龙头逆势上涨显示韧性",
         "market_relevant": true
       },
       {
@@ -782,7 +782,7 @@
         "summary": "PTC Inc. (NASDAQ:PTC) traded at around $194 on October 7, little changed on the day and 4.32% lower over twelve months. Autodesk, Inc. (NASDAQ:ADSK) traded near $235 over the same session, down 25.73% across the year. One of these two received a $22.6 billion cash bid last week and is still below where it traded […]",
         "headline_cn": "PTC与Autodesk：哪只股票更值得买？",
         "sentiment": "neutral",
-        "rationale": "股票对比分析，无明确方向指引",
+        "rationale": "对比分析无明确方向判断",
         "market_relevant": true
       },
       {
@@ -791,9 +791,9 @@
         "url": "https://finnhub.io/api/news?id=ea301eca58969060aeb35d38140ebe4865a5a518a3b9940e1e6ecdfb16cb0d8b",
         "datetime": 1791509621,
         "summary": "Between April 10 and October 7, 2026, Freshworks (FRSH) stock returned 80.1%, easily outpacing the 15.1% return of the S&P 500. Two significant developments emerged during that period: a round of job cuts announced on May 5 and a quarterly report on August 4. What did those two events change at Freshworks.",
-        "headline_cn": "这一走势应在多大程度上改变你对Freshworks的看法？",
+        "headline_cn": "这一走势应该如何改变你对Freshworks股票的看法？",
         "sentiment": "neutral",
-        "rationale": "引导性提问，未提供实质判断依据",
+        "rationale": "探讨性问题未给出明确结论",
         "market_relevant": true
       },
       {
@@ -883,9 +883,9 @@
         "url": "https://finnhub.io/api/news?id=8a522d896a912dae34dd0aade5bb246a2c485f7b23f74e31da38bd4919f3d687",
         "datetime": 1791843771,
         "summary": "The grocer has “more layers, more handoffs and more overhead than we need,” CEO Greg Foran wrote in an internal memo.",
-        "headline_cn": "Kroger将在未来三年裁减3000个企业岗位",
+        "headline_cn": "Kroger未来三年将裁减3000个企业岗位",
         "sentiment": "neutral",
-        "rationale": "成本控制举措，影响需看执行效果",
+        "rationale": "渐进式裁员降低短期冲击",
         "market_relevant": true
       },
       {
@@ -1321,9 +1321,9 @@
         "url": "https://finnhub.io/api/news?id=f389101aa4c1f3ce5a1e056dd6abe2c42740272aa5c798e83d3cd32e7df70d89",
         "datetime": 1791793164,
         "summary": "Analysts raised targets for CRBG, MTN, CRM and FSLR, while cutting targets for PVLA, SPOT and AMZN; CRM and FSLR were upgraded.",
-        "headline_cn": "亚马逊涨至310美元？周一10大分析师预测",
+        "headline_cn": "亚马逊目标价310美元？周一十大分析师预测汇总",
         "sentiment": "bullish",
-        "rationale": "分析师上调目标价，看多情绪升温",
+        "rationale": "分析师上调目标价提供支撑",
         "market_relevant": true
       },
       {
@@ -2596,7 +2596,7 @@
         "summary": "Shares of Super Micro Computer (SMCI) returned 65.7% between April 12 and October 9, 2026, easily outpacing the 15.2% gain for the S&P 500. Most of that rally occurred during the final three months of the period, a stretch that featured the company's August 11 quarterly update following an earlier release in early May. The August report included executive projections for significantly higher sales, though those forecasts are not results yet. So what did Super Micro tell investors in those two re",
         "headline_cn": "市场对超微电脑股票的解读正确吗？",
         "sentiment": "neutral",
-        "rationale": "质疑市场定价，但未给明确结论",
+        "rationale": "质疑市场定价但未给明确判断",
         "market_relevant": true
       },
       {
@@ -2605,9 +2605,9 @@
         "url": "https://finnhub.io/api/news?id=79a7e39b02221b609187febb6a5349fb17166d82ae3867cef802be4e872ec372",
         "datetime": 1791831600,
         "summary": "d-Matrix today announced d-Matrix Squadron, a fleet of multi-rack systems offering megawatts of highly efficient inference compute for running AI models with extreme speed and energy efficiency at data center scale.",
-        "headline_cn": "d-Matrix发布数据中心级AI推理Squadron计算集群",
+        "headline_cn": "d-Matrix发布数据中心规模AI推理Squadron计算集群",
         "sentiment": "bullish",
-        "rationale": "AI基础设施新品，利好产业链",
+        "rationale": "AI基础设施创新利好芯片生态",
         "market_relevant": true
       },
       {
@@ -2616,9 +2616,9 @@
         "url": "https://finnhub.io/api/news?id=dc28dfa8701adecd7656721b0e6168dd7f6c3539f14ae91a325705c72f04cdd4",
         "datetime": 1791830648,
         "summary": "Arista cleared our low-debt, strong-cash-flow screen. See the other cash-generating businesses that also made it to our list of Stocks with Low Debt and Strong Free Cash Flow. Its June-quarter filing adds an important qualification to that cash strength: deferred revenue reached $6.866 billion. Investors need to distinguish revenue waiting for recognition, cash collected and […]",
-        "headline_cn": "Arista递延收入69亿美元，能多大程度解释现金流？",
+        "headline_cn": "Arista有69亿美元递延收入，对现金流解释力如何？",
         "sentiment": "neutral",
-        "rationale": "财务指标探讨，无明确投资结论",
+        "rationale": "财务分析角度无明确利好利空",
         "market_relevant": true
       },
       {
@@ -2627,9 +2627,9 @@
         "url": "https://finnhub.io/api/news?id=2f574669561f897b27c6ddbd95544a20393fdc3c8284efa7732d95746889eec0",
         "datetime": 1791817080,
         "summary": "Nokia heads into Q3 earnings with AI-driven growth opportunities, rising cloud revenue and new 5G initiatives, but competition and restructuring costs remain concerns.",
-        "headline_cn": "诺基亚即将公布Q3财报：买入、卖出还是持有？",
+        "headline_cn": "诺基亚准备发布Q3财报：买入、卖出还是持有？",
         "sentiment": "neutral",
-        "rationale": "财报前观望，方向取决于业绩表现",
+        "rationale": "财报前观望，方向未明",
         "market_relevant": true
       },
       {
@@ -2640,7 +2640,7 @@
         "summary": "Investors holding Cisco Systems (CSCO) stock alongside broad market index funds are navigating a shifting business model. The company's sales of AI infrastructure to hyperscalers, the largest cloud companies, accounted for about 6% of fiscal 2026 revenue. That figure stood at less than 2% a year earlier. This rapid transition leaves the stock exposed to sharper price movements than the broader market. So what has Cisco paid you over five years for those swings.",
         "headline_cn": "思科股票的股息是否足以补偿波动？",
         "sentiment": "neutral",
-        "rationale": "股息与波动性权衡，投资决策因人而异",
+        "rationale": "股息分析无明确操作建议",
         "market_relevant": true
       },
       {
@@ -4816,7 +4816,7 @@
         "summary": "Shares of Super Micro Computer (SMCI) returned 65.7% between April 12 and October 9, 2026, easily outpacing the 15.2% gain for the S&P 500. Most of that rally occurred during the final three months of the period, a stretch that featured the company's August 11 quarterly update following an earlier release in early May. The August report included executive projections for significantly higher sales, though those forecasts are not results yet. So what did Super Micro tell investors in those two re",
         "headline_cn": "市场对超微电脑股票的解读正确吗？",
         "sentiment": "neutral",
-        "rationale": "质疑市场定价，但未给明确结论",
+        "rationale": "质疑市场定价但未给明确判断",
         "market_relevant": true
       },
       {
@@ -4855,7 +4855,7 @@
         "summary": "Investors holding Cisco Systems (CSCO) stock alongside broad market index funds are navigating a shifting business model. The company's sales of AI infrastructure to hyperscalers, the largest cloud companies, accounted for about 6% of fiscal 2026 revenue. That figure stood at less than 2% a year earlier. This rapid transition leaves the stock exposed to sharper price movements than the broader market. So what has Cisco paid you over five years for those swings.",
         "headline_cn": "思科股票的股息是否足以补偿波动？",
         "sentiment": "neutral",
-        "rationale": "股息与波动性权衡，投资决策因人而异",
+        "rationale": "股息分析无明确操作建议",
         "market_relevant": true
       },
       {
@@ -6189,9 +6189,9 @@
         "url": "https://finnhub.io/api/news?id=07f64436b15bb515cf5704a99d822bb9995517764231539e379bbadc26ca483a",
         "datetime": 1791831601,
         "summary": "Abbott trades at a 18x forward P/E with $7.4B in free cash flow, while Intuitive Surgical commands a 39x multiple backed by zero debt and 20% revenue growth.",
-        "headline_cn": "雅培vs直觉外科：2026年哪只医疗股更值得买？",
+        "headline_cn": "雅培vs.直觉外科：2026年哪只医疗股更值得买？",
         "sentiment": "neutral",
-        "rationale": "行业内对比分析，无单一标的倾向",
+        "rationale": "对比分析无明确方向结论",
         "market_relevant": true
       },
       {
@@ -6200,9 +6200,9 @@
         "url": "https://finnhub.io/api/news?id=5b549af35f8c34e8aff5bf2125e0b56139f22e32e5010a2ac3f69e489b9878c2",
         "datetime": 1791825387,
         "summary": "Medtronic (MDT) stock trades at 21.6 times earnings, sitting about level with the S&P 500 at 21.9. Shareholders paying that market price need to know what they are buying, particularly as corporate priorities shift. During its fiscal Q2 2025 call in November 2024, management first reviewed its fastest-growing businesses, including cardiac ablation, before turning to its established market leaders. Now, the company leads with something newer. So what is Medtronic putting first today.",
-        "headline_cn": "美敦力股票是否已变成不同的投资标的？",
+        "headline_cn": "美敦力股票的投资逻辑变了吗？",
         "sentiment": "neutral",
-        "rationale": "业务转型讨论，影响尚待观察",
+        "rationale": "逻辑探讨未给操作方向",
         "market_relevant": true
       },
       {
@@ -6213,7 +6213,7 @@
         "summary": "Two healthcare stocks that are leading their niches, and two that investors aren't giving enough credit to in the same niches.",
         "headline_cn": "未来十年值得持有的4只医疗股",
         "sentiment": "bullish",
-        "rationale": "长期看好医疗板块投资价值",
+        "rationale": "长期看好提振医疗板块信心",
         "market_relevant": true
       },
       {
@@ -6222,9 +6222,9 @@
         "url": "https://finnhub.io/api/news?id=f389101aa4c1f3ce5a1e056dd6abe2c42740272aa5c798e83d3cd32e7df70d89",
         "datetime": 1791793164,
         "summary": "Analysts raised targets for CRBG, MTN, CRM and FSLR, while cutting targets for PVLA, SPOT and AMZN; CRM and FSLR were upgraded.",
-        "headline_cn": "亚马逊涨至310美元？周一10大分析师预测",
+        "headline_cn": "亚马逊目标价310美元？周一十大分析师预测汇总",
         "sentiment": "bullish",
-        "rationale": "分析师上调目标价，看多情绪升温",
+        "rationale": "分析师上调目标价提供支撑",
         "market_relevant": true
       },
       {
@@ -6233,9 +6233,9 @@
         "url": "https://finnhub.io/api/news?id=3bf6d542571ae4cf122316a76cd02d326c41fa3347beeca99512457d5a5a22f1",
         "datetime": 1791785226,
         "summary": "BTIG  analyst Ryan Zimmerman   maintains Intuitive Surgical (NASDAQ:ISRG) with a Buy and lowers the price target from $469 to $454.",
-        "headline_cn": "BTIG维持直觉外科买入评级，目标价下调至454美元",
+        "headline_cn": "BTIG维持直觉外科买入评级，下调目标价至454美元",
         "sentiment": "neutral",
-        "rationale": "维持买入但降目标价，利好打折",
+        "rationale": "维持买入但降目标价，信号混合",
         "market_relevant": true
       },
       {
@@ -6416,9 +6416,9 @@
         "url": "https://finnhub.io/api/news?id=3609c5e7a55f00d9f734eea00f8312e1d4d7f4e575024d29f7fddf3eb67300f7",
         "datetime": 1791871973,
         "summary": "Albertsons Companies (NYSE: ACI) is seeking at least US$8b from Kroger after their proposed merger collapsed. The claim follows the termination of the planned supermarket tie up that had aimed to combine two major US grocery chains. Albertsons is reported to be pursuing the multibillion dollar payment as compensation linked to the failed transaction terms. Albertsons pressing Kroger for at least US$8b after the scrapped merger is only one part of the story. Take a look at 4 warning signs we...",
-        "headline_cn": "Albertsons在并购失败后寻求80亿美元融资",
+        "headline_cn": "Albertsons并购失败后寻求80亿美元融资",
         "sentiment": "bearish",
-        "rationale": "并购失败需融资弥补，经营压力凸显",
+        "rationale": "并购失败暴露战略受挫",
         "market_relevant": true
       },
       {
@@ -6427,9 +6427,9 @@
         "url": "https://finnhub.io/api/news?id=5341b8df92c053ac7373acfbaddf756a1a2209bb452be8294e218e39933335e1",
         "datetime": 1791846830,
         "summary": "The Kroger Co. plans to eliminate roughly 3,000 corporate positions over the next three years to streamline operations, cut costs, and redirect investments toward store-level pricing and service.",
-        "headline_cn": "Kroger据报将在运营改革中裁撤37%企业员工",
+        "headline_cn": "Kroger据报将裁减37%企业员工进行运营改革",
         "sentiment": "neutral",
-        "rationale": "大规模重组，短期阵痛换长期效率",
+        "rationale": "大规模重组，成本优化与执行风险并存",
         "market_relevant": true
       },
       {
@@ -6438,9 +6438,9 @@
         "url": "https://finnhub.io/api/news?id=8a522d896a912dae34dd0aade5bb246a2c485f7b23f74e31da38bd4919f3d687",
         "datetime": 1791843771,
         "summary": "The grocer has “more layers, more handoffs and more overhead than we need,” CEO Greg Foran wrote in an internal memo.",
-        "headline_cn": "Kroger将在未来三年裁减3000个企业岗位",
+        "headline_cn": "Kroger未来三年将裁减3000个企业岗位",
         "sentiment": "neutral",
-        "rationale": "成本控制举措，影响需看执行效果",
+        "rationale": "渐进式裁员降低短期冲击",
         "market_relevant": true
       },
       {
@@ -6449,9 +6449,9 @@
         "url": "https://finnhub.io/api/news?id=f60e72e6e096383b84fe0c2e4e660eeecec01c2fa4f74d008bf383521e32454b",
         "datetime": 1791839814,
         "summary": "Investing.com -- The Kroger Co. (NYSE: KR) has announced plans to eliminate approximately 3,000 corporate positions over the next three years. The sweeping reduction is part of a broader strategic initiative led by Chief Executive Officer Greg Foran to streamline the grocery chain’s operations and enhance organizational agility.",
-        "headline_cn": "Kroger在重大重组中裁减超三分之一企业员工",
+        "headline_cn": "Kroger重大重组中裁减超三分之一企业员工",
         "sentiment": "neutral",
-        "rationale": "重复裁员消息，市场已有预期",
+        "rationale": "结构调整信号，效果待观察",
         "market_relevant": true
       },
       {
@@ -6460,9 +6460,9 @@
         "url": "https://finnhub.io/api/news?id=a2336c74458d69120ab2a4d2f3d40817938d93f392e15d6f9751558227c59d20",
         "datetime": 1791839705,
         "summary": "Kroger (KR) reached $62.56 at the closing of the latest trading day, reflecting a +1.49% change compared to its last close.",
-        "headline_cn": "Kroger在大盘下跌中上涨：你需要知道这些",
+        "headline_cn": "Kroger逆市上涨：你需要知道的关键信息",
         "sentiment": "bullish",
-        "rationale": "逆市上涨显示个股韧性或利好消化",
+        "rationale": "逆市表现显示个股韧性",
         "market_relevant": true
       },
       {
@@ -8124,9 +8124,9 @@
         "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
         "datetime": 1791570784,
         "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
-        "headline_cn": "Adobe股票能否应对订阅增长放缓？",
+        "headline_cn": "Adobe股票为订阅增长放缓做好准备了吗？",
         "sentiment": "bearish",
-        "rationale": "订阅增长放缓担忧施压估值",
+        "rationale": "增长放缓预期施压估值",
         "market_relevant": true
       },
       {
@@ -9440,9 +9440,9 @@
         "url": "https://finnhub.io/api/news?id=f389101aa4c1f3ce5a1e056dd6abe2c42740272aa5c798e83d3cd32e7df70d89",
         "datetime": 1791793164,
         "summary": "Analysts raised targets for CRBG, MTN, CRM and FSLR, while cutting targets for PVLA, SPOT and AMZN; CRM and FSLR were upgraded.",
-        "headline_cn": "亚马逊涨至310美元？周一10大分析师预测",
+        "headline_cn": "亚马逊目标价310美元？周一十大分析师预测汇总",
         "sentiment": "bullish",
-        "rationale": "分析师上调目标价，看多情绪升温",
+        "rationale": "分析师上调目标价提供支撑",
         "market_relevant": true
       },
       {
@@ -9621,9 +9621,9 @@
         "url": "https://finnhub.io/api/news?id=5b549af35f8c34e8aff5bf2125e0b56139f22e32e5010a2ac3f69e489b9878c2",
         "datetime": 1791825387,
         "summary": "Medtronic (MDT) stock trades at 21.6 times earnings, sitting about level with the S&P 500 at 21.9. Shareholders paying that market price need to know what they are buying, particularly as corporate priorities shift. During its fiscal Q2 2025 call in November 2024, management first reviewed its fastest-growing businesses, including cardiac ablation, before turning to its established market leaders. Now, the company leads with something newer. So what is Medtronic putting first today.",
-        "headline_cn": "美敦力股票是否已变成不同的投资标的？",
+        "headline_cn": "美敦力股票的投资逻辑变了吗？",
         "sentiment": "neutral",
-        "rationale": "业务转型讨论，影响尚待观察",
+        "rationale": "逻辑探讨未给操作方向",
         "market_relevant": true
       },
       {
@@ -10690,6 +10690,13 @@
       }
     ],
     "XOM": [
+      {
+        "headline": "South & Central America Pipe Relining Market Size, Share, Growth Trends, and Forecast, 2021 - 2031 | Smart City and Offshore Energy Investments Drive 4.8% CAGR Opportunities",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e4f2a0731ff2aa0a8381559229c72b75fcb53be602c1b4f205c54c9d8c7aa500",
+        "datetime": 1791880920,
+        "summary": "Trenchless pipe relining can cut lifecycle costs by up to 40%, shorten timelines, reduce excavation and carbon footprints, and support low-disruption smart city upgrades.Dublin, Oct. 13, 2026 (GLOBE NEWSWIRE) -- \"South & Central America Pipe Relining Market Size and Forecast (2021 - 2031)\" has been added to ResearchAndMarkets.com's offering. The report projects that the South and Central America pipe relining market will grow from US$ 355.9 million in 2024 to US$ 484.5 million by 2031, registeri"
+      },
       {
         "headline": "Exxon, Oil Giants Top Buy Points After Deadly Saudi Airport Attacks",
         "source": "Yahoo",
