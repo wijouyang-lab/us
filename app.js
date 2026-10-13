@@ -1096,6 +1096,19 @@
     if (k === null || k === undefined || k === '') return '';
     return MI_SUB_CN[String(k).trim().toLowerCase()] || String(k);
   }
+  /* 一组 FedWatch 概率条（key = hold / cut_Nbp / hike_Nbp）。抽出以便多会议复用。 */
+  function miProbsBars(probs) {
+    return '<div class="mi-bars">' + Object.keys(probs).map(function (k) {
+      var val = num(probs[k]) || 0;
+      var label = k.replace('cut_', '降息 ').replace('hike_', '加息 ').replace('bp', 'bp').replace('_', ' ');
+      var cls = k.indexOf('cut') === 0 ? 'mi-cut' : (k.indexOf('hike') === 0 ? 'mi-hike' : 'mi-hold');
+      return '<div class="mi-bar-row">' +
+        '<span class="mi-bar-label">' + esc(label) + '</span>' +
+        '<span class="mi-bar-track"><span class="mi-bar-fill ' + cls + '" style="width:' + val.toFixed(1) + '%"></span></span>' +
+        '<span class="mi-bar-val">' + val.toFixed(1) + '%</span>' +
+        '</div>';
+    }).join('') + '</div>';
+  }
 
   function renderMarketIndicators() {
     var mi = DATA && DATA.market_indicators;
@@ -1141,26 +1154,31 @@
     }
     html += '</div>';
 
-    // ---- FedWatch：下次 FOMC 日期 + 概率条形图（hold / cut_Nbp / hike_Nbp）----
+    // ---- FedWatch：FOMC 会议（最多 N 次）+ 概率条形图（hold / cut_Nbp / hike_Nbp）----
+    // 新后端给 fw.meetings[]；旧后端只有 next_meeting + probabilities → 回退成单会议。
     html += '<div class="mi-block">';
     html += '<div class="mi-title">🏦 CME FedWatch</div>';
-    if (fw && fw.probabilities && Object.keys(fw.probabilities).length) {
-      var nm = fw.next_meeting || NA;
+    var fwMeetings = [];
+    if (fw) {
+      if (fw.meetings && fw.meetings.length) {
+        fwMeetings = fw.meetings;
+      } else if (fw.next_meeting) {
+        fwMeetings = [{ date: fw.next_meeting, probabilities: fw.probabilities }];
+      }
+    }
+    fwMeetings = fwMeetings.filter(function (m) {
+      return m && m.probabilities && Object.keys(m.probabilities).length;
+    });
+    if (fwMeetings.length) {
       var ct = fw.current_target ? ('当前目标区间 ' + esc(fw.current_target)) : '';
-      html += '<div class="mi-fw-head">下次 FOMC：<b>' + esc(nm) + '</b>' +
-        (ct ? ' <span class="mi-ts">' + ct + '</span>' : '') + '</div>';
-      html += '<div class="mi-bars">';
-      html += Object.keys(fw.probabilities).map(function (k) {
-        var val = num(fw.probabilities[k]) || 0;
-        var label = k.replace('cut_', '降息 ').replace('hike_', '加息 ').replace('bp', 'bp').replace('_', ' ');
-        var cls = k.indexOf('cut') === 0 ? 'mi-cut' : (k.indexOf('hike') === 0 ? 'mi-hike' : 'mi-hold');
-        return '<div class="mi-bar-row">' +
-          '<span class="mi-bar-label">' + esc(label) + '</span>' +
-          '<span class="mi-bar-track"><span class="mi-bar-fill ' + cls + '" style="width:' + val.toFixed(1) + '%"></span></span>' +
-          '<span class="mi-bar-val">' + val.toFixed(1) + '%</span>' +
+      html += fwMeetings.map(function (m, i) {
+        return '<div class="mi-fw-meet' + (i ? ' mi-fw-meet-sep' : '') + '">' +
+          '<div class="mi-fw-head">' + (i === 0 ? '下次 FOMC：' : '随后 FOMC：') +
+          '<b>' + esc(m.date || NA) + '</b>' +
+          (i === 0 && ct ? ' <span class="mi-ts">' + ct + '</span>' : '') + '</div>' +
+          miProbsBars(m.probabilities) +
           '</div>';
       }).join('');
-      html += '</div>';
     } else {
       html += '<div class="na">暂不可用</div>';
     }

@@ -539,6 +539,9 @@ button{font-family:inherit}
 .mi-sub-item b{color:var(--text)}
 .mi-fw-head{font-size:13px;color:var(--text);margin-bottom:8px}
 .mi-fw-head b{color:var(--accent)}
+/* 多次 FOMC 会议：每场一个块，第 2 场起用虚线分隔（纯新增类，不改既有 .mi-* 语义） */
+.mi-fw-meet{margin:0}
+.mi-fw-meet-sep{margin-top:10px;padding-top:10px;border-top:1px dashed var(--line, #eef0f4)}
 .mi-bars{display:flex;flex-direction:column;gap:6px}
 .mi-bar-row{display:flex;align-items:center;gap:8px;font-size:12.5px}
 .mi-bar-label{width:74px;color:var(--text-2);flex:none}

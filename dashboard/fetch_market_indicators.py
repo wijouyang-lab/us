@@ -26,6 +26,11 @@ from pathlib import Path
 
 SCHEMA_VERSION = "market_indicators.v1"
 
+# FedWatch 展示的会议数量上限。`cme_fedwatch.get_probabilities()` **没有** count/limit 参数：
+#   传 "next" → 只返回 1 个；不传 meeting（= None）→ 返回全部 upcoming。
+# 所以「取 3 次」必须在这里自己切片。
+FEDWATCH_MAX_MEETINGS = 3
+
 
 # --------------------------------------------------------------------------- #
 # 数据源 1：CNN 恐惧贪婪指数（fear-greed 包，绕过 Cloudflare）
@@ -96,26 +101,46 @@ def _normalize_fedwatch_probs(probs: dict, current_target: str) -> dict:
 
 
 def fetch_fedwatch():
-    """返回 (data, error)。data=None 表示本源失败。"""
+    """返回 (data, error)。data=None 表示本源失败。
+
+    取**最近 N 次**（`FEDWATCH_MAX_MEETINGS`，默认 3）FOMC 会议：
+      · 调 `get_probabilities()` **不传 meeting** → 包返回全部 upcoming（传 "next" 只会给 1 个）；
+      · 包本身没有 count/limit 参数，所以切片由本函数负责。
+
+    **向后兼容（重要）**：`next_meeting` 与 `probabilities` 两个旧字段**原样保留**，
+    值 = `meetings[0]` 的对应字段；`meetings[]` 是纯新增。
+    因此老前端（只读 next_meeting / probabilities）不会受影响，前后端任一侧先上线都不会坏。
+    """
     try:
         import cme_fedwatch
     except Exception as e:  # 包未安装 / import 失败 → 降级为 null
         return None, f"cme_fedwatch 包不可用：{e}"
 
     try:
-        raw = cme_fedwatch.get_probabilities("next")
+        raw = cme_fedwatch.get_probabilities()          # ← 不传 meeting = 全部 upcoming
         meetings = raw.get("meetings") or []
         if not meetings:
             return None, "FedWatch 无 upcoming meeting"
-        m = meetings[0]
         current_target = raw.get("current_target") or ""
+        picked = meetings[:FEDWATCH_MAX_MEETINGS]
+        out_meetings = [
+            {
+                "date": m.get("date"),
+                "contract": m.get("contract"),
+                "probabilities": _normalize_fedwatch_probs(
+                    m.get("probabilities") or {}, current_target),
+            }
+            for m in picked
+        ]
+        first = out_meetings[0]
         return {
-            "next_meeting": m.get("date"),
+            "next_meeting": first["date"],               # 向后兼容（= meetings[0].date）
             "current_target": current_target or None,
             "effr": raw.get("effr"),
             "trade_date": raw.get("trade_date"),
-            "probabilities": _normalize_fedwatch_probs(
-                m.get("probabilities") or {}, current_target),
+            "probabilities": first["probabilities"],      # 向后兼容（= meetings[0].probabilities）
+            "meetings": out_meetings,                     # 新增：供前端循环渲染
+            "max_meetings": FEDWATCH_MAX_MEETINGS,
             "source": "cme",
         }, None
     except Exception as e:

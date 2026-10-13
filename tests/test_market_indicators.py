@@ -369,3 +369,127 @@ def test_frontend_render_with_data():
     assert "2026-11-05" in body, body
     assert "降息 25bp" in body, body  # cut_25bp 归一化标签
     assert "55.0%" in body, body     # hold 概率
+
+
+# --------------------------------------------------------------------------- #
+# FedWatch 多会议（最近 3 次）
+# --------------------------------------------------------------------------- #
+_FW_DATES = ["2026-11-05", "2026-12-16", "2027-01-27", "2027-03-17", "2027-04-28"]
+
+
+def _fake_cme_fedwatch_n(n, calls=None):
+    """返回含 n 场会议的 fake；`calls` 非 None 时记录每次调用的 meeting 实参。"""
+    mod = types.SimpleNamespace()
+
+    def get_probabilities(meeting=None, trade_date=None, current_rate=None):
+        if calls is not None:
+            calls.append(meeting)
+        return {
+            "effr": 4.33,
+            "current_target": "4.25%-4.50%",
+            "trade_date": "2026-10-10",
+            "schedule_status": {},
+            "meetings": [
+                {"date": d, "contract": f"ZQ{i}",
+                 "probabilities": {"4.25%-4.50%": 55.0, "4.00%-4.25%": 45.0}}
+                for i, d in enumerate(_FW_DATES[:n])
+            ],
+        }
+
+    mod.get_probabilities = get_probabilities
+    return mod
+
+
+def test_fedwatch_takes_three_meetings_and_keeps_backcompat():
+    """取最近 3 场；旧字段 next_meeting / probabilities 必须保留 = meetings[0]。"""
+    fetcher = _load_fetcher()
+    calls = []
+    sys.modules["cme_fedwatch"] = _fake_cme_fedwatch_n(5, calls)
+
+    fw, err = fetcher.fetch_fedwatch()
+    assert err is None, err
+    assert len(fw["meetings"]) == 3, f"应只取 3 场，实得 {len(fw['meetings'])}"
+    assert [m["date"] for m in fw["meetings"]] == _FW_DATES[:3]
+
+    # 关键：必须【不传】meeting（传 "next" 只会给 1 场）
+    assert calls == [None], f"应以无参调用 get_probabilities()，实际 calls={calls}"
+
+    # 向后兼容：旧字段 = 第一场
+    assert fw["next_meeting"] == fw["meetings"][0]["date"]
+    assert fw["probabilities"] == fw["meetings"][0]["probabilities"]
+    assert fw["probabilities"]["hold"] == 55.0     # 归一化仍生效
+
+    # 每场都必须有 date + 归一化后的 probabilities
+    for m in fw["meetings"]:
+        assert m["date"], m
+        assert m["probabilities"], m
+        assert "hold" in m["probabilities"], m
+
+
+def test_fedwatch_fewer_than_max_is_ok():
+    """只有 1 场可用时不应补空、不应报错。"""
+    fetcher = _load_fetcher()
+    sys.modules["cme_fedwatch"] = _fake_cme_fedwatch_n(1)
+    fw, err = fetcher.fetch_fedwatch()
+    assert err is None, err
+    assert len(fw["meetings"]) == 1
+    assert fw["next_meeting"] == _FW_DATES[0]
+
+
+def _mi_payload(fedwatch):
+    return {
+        "schema_version": "market_indicators.v1",
+        "fear_greed": {"score": 45.4, "rating": "neutral"},
+        "fedwatch": fedwatch,
+        "error": None,
+    }
+
+
+def _render_mi(mi):
+    app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    exposed = _expose(app_js)
+    tail = (
+        "\nglobalThis.__setMI(" + json.dumps(mi) + ");\n"
+        "globalThis.__renderMI();\n"
+        "var els = globalThis.__els || {};\n"
+        "console.log(JSON.stringify({"
+        " body: els['#marketIndicatorsBody'] ? els['#marketIndicatorsBody'].innerHTML : null }));\n"
+    )
+    return _run_node(exposed, tail)["body"] or ""
+
+
+def test_frontend_fedwatch_renders_three_meetings():
+    """fw.meetings[] 有 3 场 → 全部渲染（下次 + 随后×2），各自独立概率条。"""
+    body = _render_mi(_mi_payload({
+        "next_meeting": "2026-10-28",
+        "current_target": "3.75%-4.00%",
+        "probabilities": {"hold": 79.0, "hike_25bp": 21.0},
+        "meetings": [
+            {"date": "2026-10-28", "probabilities": {"hold": 79.0, "hike_25bp": 21.0}},
+            {"date": "2026-12-09", "probabilities": {"hold": 60.0, "cut_25bp": 40.0}},
+            {"date": "2027-01-27", "probabilities": {"hold": 50.0, "cut_25bp": 50.0}},
+        ],
+        "source": "cme",
+    }))
+    for d in ("2026-10-28", "2026-12-09", "2027-01-27"):
+        assert d in body, f"{d} 未渲染：{body}"
+    assert body.count("下次 FOMC：") == 1, body
+    assert body.count("随后 FOMC：") == 2, body
+    assert body.count('class="mi-fw-meet') == 3, body
+    assert body.count('class="mi-bars"') == 3, body
+    assert "79.0%" in body and "40.0%" in body and "50.0%" in body, body
+
+
+def test_frontend_fedwatch_backward_compat_single_meeting():
+    """旧后端 payload（**无** meetings 字段）→ 仍按单会议渲染，不白屏。"""
+    body = _render_mi(_mi_payload({
+        "next_meeting": "2026-11-05",
+        "current_target": "4.25%-4.50%",
+        "probabilities": {"hold": 55.0, "cut_25bp": 45.0},
+        "source": "cme",
+    }))
+    assert "2026-11-05" in body, body
+    assert body.count("下次 FOMC：") == 1, body
+    assert "随后 FOMC：" not in body, body
+    assert body.count('class="mi-bars"') == 1, body
+    assert "55.0%" in body and "降息 25bp" in body, body
