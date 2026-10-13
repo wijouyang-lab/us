@@ -939,6 +939,7 @@
     renderQuant();
     renderNews();
     renderMacro();
+    renderSkillSerenity();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
@@ -1188,6 +1189,62 @@
       html += '<div class="mi-err">数据异常：' + esc(JSON.stringify(mi.error)) + '</div>';
     }
 
+    body.innerHTML = html;
+  }
+
+  /* ---------------- serenity-skill 持仓供应链分析板块 ----------------
+     数据来自 DATA.skill_serenity（dashboard_export 注入；flag 关 / 文件缺失 → 无该键 → 隐藏整块）。
+     纯展示：不重算、不调 AI、不改写任何字段。 */
+  function ssList(arr, cls) {
+    if (!arr || !arr.length) return '';
+    return '<ul class="ss-list ' + cls + '">' + arr.map(function (x) {
+      return '<li>' + esc(String(x)) + '</li>';
+    }).join('') + '</ul>';
+  }
+  function ssRow(label, val) {
+    if (!val) return '';
+    return '<div class="ss-row"><span class="ss-k">' + esc(label) + '</span>' +
+      '<span class="ss-v">' + esc(String(val)) + '</span></div>';
+  }
+  function renderSkillSerenity() {
+    var sk = DATA && DATA.skill_serenity;
+    var card = $('#skillSerenityCard');
+    var body = $('#skillSerenityBody');
+    if (!card || !body) return;
+    if (!sk || !sk.positions || !sk.positions.length) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+    var sub = $('#skillSerenitySub');
+    if (sub) {
+      sub.textContent = 'serenity-skill' + (sk.skill_version ? ' ' + sk.skill_version : '') +
+        ' · ' + (sk.mode === 'offline' ? '离线模式（未联网核验）' : String(sk.mode || '')) +
+        (sk.asof ? ' · ' + sk.asof : '');
+    }
+    var html = '';
+    if (sk.mode === 'offline') {
+      html += '<div class="ss-note">⚠️ 本板块由 AI 基于<strong>已有持仓数据 + serenity 方法论</strong>推理得出，' +
+        '<strong>未联网核验</strong>公告 / 财报 / 客户信息；未经核验的条目一律列在「缺口」里，请勿当作事实。</div>';
+    }
+    html += '<div class="ss-grid">' + sk.positions.map(function (p) {
+      var head = '<div class="ss-head"><b>' + esc(p.ticker || '') + '</b>' +
+        (p.error ? '<span class="ss-bad">分析失败</span>' : '') + '</div>';
+      if (p.error) {
+        return '<div class="ss-card">' + head +
+          '<div class="ss-row"><span class="ss-v ss-bad">' + esc(String(p.error)) + '</span></div></div>';
+      }
+      return '<div class="ss-card">' + head +
+        ssRow('业务定位', p.business_position) +
+        ssRow('证据', ssList(p.evidence, 'ss-ev')) +
+        ssRow('缺口', ssList(p.gaps, 'ss-gap')) +
+        ssRow('盈利含义', p.earnings) +
+        ssRow('估值压力', p.valuation) +
+        ssRow('替代路线', p.alternatives) +
+        ssRow('何时降级', p.what_would_change) +
+        '</div>';
+    }).join('') + '</div>';
+    if (sk.error) html += '<div class="ss-bad">数据异常：' + esc(String(sk.error)) + '</div>';
     body.innerHTML = html;
   }
 

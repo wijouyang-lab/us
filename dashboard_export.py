@@ -2467,6 +2467,32 @@ def _read_market_indicators(data_dir: Path):
         return None
 
 
+# 哨兵：skill_serenity.json 不存在（flag 关 / 全部失败未写文件）时返回，用于「不注入键」。
+_SKILL_SERENITY_MISSING = object()
+
+
+def _read_skill_serenity(data_dir: Path):
+    """读 serenity-skill 产物 → 注入 dashboard_data.json 的 `skill_serenity`。
+
+    设计（与 market_indicators 的 fail-closed 完全一致）：
+      · 文件不存在（flag 关 / 全部失败）→ 返回哨兵，调用方**不注入键**，
+        因此 dashboard_data.json 与加此功能之前**逐字节一致**（前端板块始终隐藏）。
+      · 文件存在但解析失败 → 返回 None（前端隐藏，但保留「键存在」这一事实）。
+      · 文件正常 → 返回其 dict。
+
+    路径与 dashboard_export 的输出目录一致（`<data-dir>/dashboard/data/`），
+    与 `skills/run_serenity.py` 的默认 `--out` 对齐。
+    """
+    p = data_dir / "dashboard" / "data" / "skill_serenity.json"
+    if not p.exists():
+        return _SKILL_SERENITY_MISSING
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 技能数据读取失败（{e}），skill_serenity 输出 null")
+        return None
+
+
 def _build_trade_stats(txn_rows, open_positions):
     """交易观测统计：交易频率 + 胜率 + 平均持仓 + 累计已实现盈亏。
 
@@ -3335,6 +3361,11 @@ def main(argv=None):
     mi = _read_market_indicators(data_dir)
     if mi is not _MARKET_INDICATORS_MISSING:
         payload["market_indicators"] = mi
+
+    # ---- serenity-skill 供应链分析（flag 关 / 文件缺失 → 不注入键，保持逐字节一致）----
+    sk = _read_skill_serenity(data_dir)
+    if sk is not _SKILL_SERENITY_MISSING:
+        payload["skill_serenity"] = sk
 
     if ai_status == "pending":
         notes.append(

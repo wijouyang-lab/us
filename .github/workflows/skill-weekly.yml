@@ -1,0 +1,78 @@
+name: skill-weekly
+
+# serenity-skill 供应链分析（独立链路）
+# ---------------------------------------------------------------------------
+# · **完全独立**：自己的 concurrency group、自己的 cron，不与 scan / review /
+#   dashboard-data 共享任何触发条件。
+# · **flag 门控**：`ENABLE_SKILL_SERENITY` 默认不设 → 步骤被 `if:` 跳过 →
+#   不生成 JSON → dashboard 不注入 key → 前端隐藏整块（零影响）。
+# · 产出：`dashboard/data/skill_serenity.json`（只加这一个文件）。
+#   `[skip ci]` + 只碰该 JSON ⇒ 不会触发任何其它 workflow。
+# ---------------------------------------------------------------------------
+on:
+  workflow_dispatch:
+  schedule:
+    # 周日 UTC 22:00 = 北京周一 06:00 = 美东周日 18:00
+    # 选此时段：scan（工作日 21:00 北京）与 review（06:23 北京）都不跑。
+    - cron: '0 22 * * 0'
+
+concurrency:
+  group: skill-weekly          # 独立 group，绝不与 us-stock-portfolio-ledger 抢
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      # ⚠️ flag 必须放在 **job 级** env：GitHub Actions 里某个 step 的 `if`
+      # 读不到该 step 自己 `env:` 里定义的变量（那是 step 级，`if` 求值时尚未生效），
+      # 所以写在 step 上会导致条件恒为 false、步骤永远不被执行。
+      ENABLE_SKILL_SERENITY: ${{ vars.ENABLE_SKILL_SERENITY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-production.txt
+
+      - name: Run serenity skill (flag-gated)
+        if: env.ENABLE_SKILL_SERENITY == '1'
+        run: python skills/run_serenity.py
+        env:
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          # flag 关时文件不存在 → 整个提交块跳过（零副作用）
+          if [ ! -f dashboard/data/skill_serenity.json ]; then
+            echo "ℹ️ dashboard/data/skill_serenity.json 不存在（flag 关或全部失败），跳过提交"
+            exit 0
+          fi
+          git add dashboard/data/skill_serenity.json
+          if git diff --staged --quiet; then
+            echo "ℹ️ 无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore(skill): refresh serenity data [skip ci]"
+          # 并发安全推送：fetch + rebase 后重试，绝不 force
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            if git rebase origin/main && git push origin HEAD:main; then
+              echo "✅ push 成功"
+              exit 0
+            fi
+            git rebase --abort || true
+            echo "::warning::第 $i 次 push 失败，重试"
+            sleep $((i * 5))
+          done
+          echo "::error::serenity 数据无法推送到 main（已重试 5 次）"
+          exit 1
