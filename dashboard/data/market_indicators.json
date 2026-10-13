@@ -1,13 +1,13 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-10-13T19:15:47Z",
+  "generated_at": "2026-10-13T19:31:38Z",
   "fear_greed": {
-    "score": 44.63,
-    "rating": "fear",
-    "timestamp": "2026-10-13T19:11:09+00:00",
+    "score": 45.17,
+    "rating": "neutral",
+    "timestamp": "2026-10-13T19:26:08+00:00",
     "subindicators": {
       "market_momentum_sp500": {
-        "score": 67.8,
+        "score": 71,
         "rating": "greed"
       },
       "stock_price_strength": {
@@ -38,8 +38,8 @@
     "history_30d": [
       {
         "date": "2026-10-13",
-        "score": 44.63,
-        "rating": "fear"
+        "score": 45.17,
+        "rating": "neutral"
       },
       {
         "date": "2026-10-12",
