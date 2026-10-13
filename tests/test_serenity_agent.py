@@ -423,6 +423,17 @@ def test_prompt_still_contains_numeric_discipline():
     assert "what_to_verify" in p
 
 
+def test_company_facts_description_says_facts_are_collected_by_system():
+    """段 3 修复：工具 description 必须消除模型"引用数字会违纪"的顾虑。"""
+    desc = [t for t in serenity_tools.TOOLS if t["name"] == "company_facts"][0]["description"]
+    assert "由系统单独收录" in desc
+    assert "不得把它们写进" in desc
+    # 其余工具描述不应被误改
+    for name in ("web_search", "ticker_news"):
+        d = [t for t in serenity_tools.TOOLS if t["name"] == name][0]["description"]
+        assert "由系统单独收录" not in d
+
+
 # --------------------------------------------------------------------------- #
 # G. verified_facts（段 2B：只收工具真实返回的 company_facts）
 # --------------------------------------------------------------------------- #
