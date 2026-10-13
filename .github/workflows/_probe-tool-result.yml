@@ -1,0 +1,168 @@
+name: Probe Tool-Result Roundtrip
+
+# 临时探针（用完即删）：验证 ClawSocket 网关对 **tool_result 回填**（第二跳）的兼容性。
+# 第一跳已确认 tools → tool_use 可行；本探针验证回填 tool_result 后能否收尾为 end_turn + text。
+# 自触发 + 自报告：push 本文件即触发；结果写入仓库根 probe_roundtrip.txt 并回推 main。
+
+on:
+  push:
+    paths:
+      - '.github/workflows/_probe-tool-result.yml'
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install anthropic SDK
+        run: |
+          python -m pip install --upgrade pip
+          pip install anthropic
+      - name: Run tool-result roundtrip probe
+        env:
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+        run: |
+          python - <<'PY'
+          import os, json, sys
+          import anthropic
+
+          api_key = os.environ.get("CLAWSOCKET_API_KEY")
+          base_url = os.environ.get("CLAWSOCKET_BASE_URL")
+
+          result_lines = []
+
+          def emit(line):
+              print(line)
+              result_lines.append(line)
+
+          def dump(path="probe_roundtrip.txt"):
+              try:
+                  with open(path, "w", encoding="utf-8") as f:
+                      f.write("\n".join(result_lines) + "\n")
+              except Exception as exc:
+                  print(f"[probe2] 写 {path} 失败: {exc}")
+
+          if not api_key or not base_url:
+              emit("[probe2] MISSING CREDENTIALS — check secrets injection")
+              emit("[probe2] RESULT = MISSING_CREDENTIALS")
+              dump()
+              sys.exit(2)
+
+          client = anthropic.Anthropic(api_key=api_key, base_url=base_url)
+
+          tools = [{
+              "name": "get_weather",
+              "description": "Get the current weather for a location.",
+              "input_schema": {
+                  "type": "object",
+                  "properties": {"location": {"type": "string"}},
+                  "required": ["location"]
+              }
+          }]
+
+          emit(f"[probe2] base_url = {base_url}")
+          emit(f"[probe2] api_key  = {api_key[:4]}***REDACTED***")
+          emit("[probe2] model    = claude-fable-5-1")
+
+          # ---------- 第一跳：tools → tool_use ----------
+          try:
+              resp1 = client.messages.create(
+                  model="claude-fable-5-1",
+                  max_tokens=512,
+                  tools=tools,
+                  messages=[{"role": "user", "content": "What is the weather in San Francisco? Use the tool."}]
+              )
+          except Exception as e:
+              emit(f"[probe2] JUMP1 ERROR: {type(e).__name__}: {e}")
+              emit("[probe2] RESULT = JUMP1_FAILED")
+              dump()
+              sys.exit(1)
+
+          emit(f"[probe2] jump1 stop_reason = {resp1.stop_reason}")
+          emit(f"[probe2] jump1 blocks = {[getattr(b, 'type', '?') for b in resp1.content]}")
+
+          tool_use_block = None
+          for b in resp1.content:
+              if getattr(b, "type", None) == "tool_use":
+                  tool_use_block = b
+                  break
+
+          if tool_use_block is None:
+              emit("[probe2] RESULT = JUMP1_NO_TOOL_USE — first hop already broken")
+              dump()
+              sys.exit(0)
+
+          emit(f"[probe2] jump1 tool_use.id    = {tool_use_block.id}")
+          emit(f"[probe2] jump1 tool_use.name  = {tool_use_block.name}")
+          emit(f"[probe2] jump1 tool_use.input = {json.dumps(tool_use_block.input)}")
+
+          # ---------- 第二跳：回填 tool_result ----------
+          assistant_content = [
+              {"type": "text", "text": "Let me check the weather."},
+              {"type": "tool_use", "id": tool_use_block.id,
+               "name": tool_use_block.name, "input": tool_use_block.input},
+          ]
+          tool_result_content = [{
+              "type": "tool_result",
+              "tool_use_id": tool_use_block.id,
+              "content": json.dumps({"temperature": "18°C", "condition": "foggy"}),
+          }]
+          messages = [
+              {"role": "user", "content": "What is the weather in San Francisco? Use the tool."},
+              {"role": "assistant", "content": assistant_content},
+              {"role": "user", "content": tool_result_content},
+          ]
+
+          try:
+              resp2 = client.messages.create(
+                  model="claude-fable-5-1",
+                  max_tokens=512,
+                  tools=tools,
+                  messages=messages
+              )
+          except Exception as e:
+              emit(f"[probe2] JUMP2 ERROR: {type(e).__name__}: {e}")
+              emit("[probe2] RESULT = JUMP2_FAILED — gateway does not support tool_result roundtrip")
+              dump()
+              sys.exit(0)
+
+          emit(f"[probe2] jump2 stop_reason = {resp2.stop_reason}")
+          emit(f"[probe2] jump2 blocks = {[getattr(b, 'type', '?') for b in resp2.content]}")
+
+          text_content = ""
+          for b in resp2.content:
+              if getattr(b, "type", None) == "text":
+                  text_content += (b.text or "")
+          if text_content:
+              emit(f"[probe2] jump2 text = {text_content[:300]}")
+
+          emit("")
+          if resp2.stop_reason == "end_turn" and text_content:
+              emit("[probe2] RESULT = ROUNDTRIP_SUPPORTED ✅")
+              emit("[probe2] 网关支持 tool_result 回填，方案 A 完全可行")
+          elif resp2.stop_reason == "tool_use":
+              emit("[probe2] RESULT = ROUNDTRIP_REQUESTS_MORE_TOOLS ⚠️")
+              emit("[probe2] 网关接受回填但模型又请求了工具（正常行为，说明 roundtrip 通）")
+              emit("[probe2] 方案 A 可行，但 loop 需要正确处理多轮")
+          else:
+              emit(f"[probe2] RESULT = UNKNOWN — stop_reason={resp2.stop_reason}")
+
+          dump()
+          PY
+      - name: Commit probe result
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add probe_roundtrip.txt || true
+          git commit -m "ci: probe roundtrip result [skip ci]" || echo "nothing to commit"
+          git push || (git fetch origin main && git rebase origin/main && git push) || true
+      - name: Show probe result
+        if: always()
+        run: cat probe_roundtrip.txt || echo "(probe_roundtrip.txt not found)"
