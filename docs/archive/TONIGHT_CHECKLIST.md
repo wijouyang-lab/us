@@ -27,11 +27,11 @@
 ## 【异常时】
 - [ ] scan 失败 → 截图贴给 ChatGPT
 - [ ] 21:05 没触发 → 手动 Run workflow
-- [ ] 其他 → 按 WEEKEND_CHANGELOG.md §3 报告
+- [ ] 其他 → 按 ../WEEKEND_CHANGELOG.md §3 报告
 
 ---
 
 ## 备注
 - 宏观 / 买入决策前置（scan）两个 flag 均关闭 → 今晚 scan 走旧路径（与上周一致）。
-- 若 §9 flag 出现 ❌，立即按 `WEEKEND_CHANGELOG.md` 回滚矩阵处理（删 repo variable）。
+- 若 §9 flag 出现 ❌，立即按 `../WEEKEND_CHANGELOG.md` 回滚矩阵处理（删 repo variable）。
 - 交易观测面板为纯观测（无硬闸门），应正常显示。

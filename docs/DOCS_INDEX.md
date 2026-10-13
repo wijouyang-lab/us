@@ -31,11 +31,11 @@
 | archive/PORTFOLIO_PREOPEN_RECOMMENDATION_INVESTIGATION.md | 盘前推荐机制可行性调查 | 设计中? |
 | POSITION_CARD_DATA_INVESTIGATION.md | 持仓卡片渲染数据可行性 | 已实施 |
 | POSITION_CARD_UPDATE_MECHANISM.md | 持仓卡片内容更新机制分析 | 已实施 |
-| POSITION_CEILING_EVAL.md | 80% 股票天花板评估（自述不实施） | 设计中 |
+| archive/POSITION_CEILING_EVAL.md | 80% 股票天花板评估（自述不实施） | 设计中 |
 | archive/BUY_PRICE_DESIGN.md | 买入价时点设计 | 设计中 |
 | BUY_DECISION_OWNER.md | 买入决策归属（scan vs 账本）调查 | 设计中 |
 | archive/STOPPED_PANEL_REPORT.md | 已止损记录前端面板实施 | 已实施 |
-| SUCCESS_PATH_SIM.md | 周末「意外成功」全链路模拟 | 已实施 |
+| archive/SUCCESS_PATH_SIM.md | 周末「意外成功」全链路模拟 | 已实施 |
 
 ## 2. 止损 / 风控 / 数据契约（9 篇）
 
@@ -44,7 +44,7 @@
 | P0.5_stop_loss_repair_report.md | Stop_Loss 历史数据确定性修复 | 已实施 |
 | INTRADAY_STOP_LOSS_DESIGN.md | 盘中机械止损设计 | 已实施 |
 | INTRADAY_STOP_LOSS_IMPLEMENTATION_REPORT.md | 盘中机械止损落地实施 | 已实施 |
-| ANET_STOPLOSS_TRIPLE.md | ANET 三个止损价溯源（只读） | 已实施 |
+| archive/ANET_STOPLOSS_TRIPLE.md | ANET 三个止损价溯源（只读） | 已实施 |
 | archive/ANET_STOP_PROPAGATION.md | ANET 止损写回与账本消费溯源 | 已实施 |
 | archive/PRE_WEEKEND_CHECK.md | 周末 5 处改动交叉风险体检 | 已废弃? |
 | archive/WEEKEND_COMBO_CHECK.md | 周末组合体检第二轮静态分析 | 已废弃? |
@@ -63,8 +63,8 @@
 | SCAN_SCHEDULE_STAGE6C_REPORT.md | Stage 6C 第三次 schedule 验证 | 已实施 |
 | archive/REVIEW_DOUBLE_RUN_READINESS.md | review 双跑就绪度只读检查 | 已实施 |
 | archive/SCHEDULE_AUDIT_REPORT.md | Scan/Review/Evolve 调度审计 | 已废弃 |
-| SCHEDULE_TRIGGER_INVESTIGATION.md | 调度是否真的触发调查 | 已废弃 |
-| SCAN_SCHEDULE_INVESTIGATION.md | Scan schedule 调查 | 已废弃 |
+| archive/SCHEDULE_TRIGGER_INVESTIGATION.md | 调度是否真的触发调查 | 已废弃 |
+| archive/SCAN_SCHEDULE_INVESTIGATION.md | Scan schedule 调查 | 已废弃 |
 | archive/SCAN_SCHEDULE_OBSERVATION.md | Stage 6B scan 调度观察 | 已废弃 |
 | archive/DEPLOYMENT_AND_SCHEDULE_FINAL.md | 部署与调度「最终」报告 | 已废弃 |
 | archive/FINAL_DEPLOYMENT_AND_SCHEDULE_AUDIT.md | 「最终」部署调度审计（二次） | 已废弃 |
@@ -97,10 +97,10 @@
 | archive/PRE_RUN_ROBUSTNESS_CHECK.md | Phase 2–7 健壮性预检 | 已废弃? |
 | archive/DAILY_SNAPSHOT_SUFFICIENCY.md | 日频快照字段充足性调查 | 已废弃? |
 | ALPHA101_FACTOR_RESEARCH.md | Alpha101 因子引入调研 | 设计中 |
-| ACCELERATION_EXPERIMENT.md | 技术因子 OOS 加速实验 | 设计中 |
+| archive/ACCELERATION_EXPERIMENT.md | 技术因子 OOS 加速实验 | 设计中 |
 | REVIEW_SIMPLIFY_QUANT_RESEARCH_REPORT.md | review 精简 + quant 链式化 | 已实施 |
 | SCHEMA_VERSION_REPORT.md | schema_version 实施报告 | 已实施 |
-| SCHEMA_VERSION_CONSUMERS.md | schema_version 消费方预调查 | 已废弃 |
+| archive/SCHEMA_VERSION_CONSUMERS.md | schema_version 消费方预调查 | 已废弃 |
 | FORWARD_RETURN_UNIFICATION_REPORT.md | Forward Return 实现统一交付 | 已实施 |
 | TRADE_HISTORY_QUALITY_FIX_REPORT.md | Trade History 数据质量修复 | 已实施 |
 | OHLCV_BACKFILL_REPORT.md | OHLCV 历史补采实施 | 已实施 |
@@ -149,7 +149,7 @@
 | MACRO_DATAFLOW_INVESTIGATION.md | 宏观数据在 scan 链中的流向 | 已实施 |
 | MACRO_GOLD_SILVER_STATUS.md | 黄金/白银宏观数据状态调查 | 已实施 |
 | MACRO_PANEL_ACTIVATION.md | 宏观板块 flag 激活清单 | 已实施（flag 已 ON） |
-| MARKET_INDICATORS_PANEL_DESIGN.md | F&G + FedWatch 面板设计 | 设计中（flag 值未知） |
+| archive/MARKET_INDICATORS_PANEL_DESIGN.md | F&G + FedWatch 面板设计 | 设计中（flag 值未知） |
 
 ## 9. 模型 / AI 中转 ClawSocket（5 篇）⚠️ 与当前临时改动冲突
 
@@ -157,7 +157,7 @@
 |------|--------------|------|
 | CLAWSOCKET_API_INVESTIGATION.md | ClawSocket 接口只读调查 | 已实施 |
 | archive/MODEL_SWITCH_INVESTIGATION.md | gpt-6-astra→opus5.5 切换调查 | 已废弃 |
-| MODEL_FINGERPRINT_METHOD.md | 实际模型识别方法 | 设计中 |
+| archive/MODEL_FINGERPRINT_METHOD.md | 实际模型识别方法 | 设计中 |
 | archive/MODEL_FINGERPRINT_IMPLEMENTATION.md | 模型指纹实施方案 | 设计中 |
 | archive/TOKEN_CONSUMPTION_ESTIMATE.md | 每日 AI Token 消耗静态估算 | 已实施 |
 
@@ -178,16 +178,16 @@
 |------|--------------|------|
 | archive/REVIEW_FIELD_AUDIT_REPORT.md | Price/Market_Regime 字段审计 | 已废弃 |
 | REVIEW_FIELD_MAPPING_FIX_REPORT.md | Review 字段映射修复（准绳） | 已实施 |
-| ECON_CALENDAR_L2.md | 事件日历 L2 调研（自述不实施） | 设计中 |
+| archive/ECON_CALENDAR_L2.md | 事件日历 L2 调研（自述不实施） | 设计中 |
 
 ## 12. 23 小时交易 / 美股时段（4 篇）⚠️ 最大草稿，未落地
 
 | 文档 | 摘要（<30字） | 状态 |
 |------|--------------|------|
-| 23H_IMPLEMENTATION_DIFFS.md | 23 小时交易改造 Diff 级草稿 | 设计中 |
+| archive/23H_IMPLEMENTATION_DIFFS.md | 23 小时交易改造 Diff 级草稿 | 设计中 |
 | archive/23H_TRADING_IMPACT.md | 23 小时 + 买入价影响面只读调查 | 设计中 |
 | archive/US_SESSION_DESIGN.md | `_us_session.py` 设计文档 | 设计中 |
-| YAHOO_NIGHT_SESSION_TEST.md | Yahoo 夜盘数据覆盖实测 | 设计中 |
+| archive/YAHOO_NIGHT_SESSION_TEST.md | Yahoo 夜盘数据覆盖实测 | 设计中 |
 
 > 📌 已核验：`_us_session.py` **在仓库中不存在** → 23H 尚未落地，仅为草稿。
 
@@ -216,12 +216,12 @@
 | archive/P0_review_data_integrity_audit.md | P0 Review 数据完整性审查 | 已废弃 |
 | WEEKEND_IMPLEMENTATION_PLAN.md | 周末实施计划（总纲） | 已废弃? |
 | WEEKEND_CHANGELOG.md | 周末变更记录含回滚矩阵 | 已实施 |
-| MONDAY_VERIFICATION_PLAN.md | 周一验证计划（周末改动验收） | 已废弃? |
-| TONIGHT_CHECKLIST.md | 周一 10-12 当晚验证清单 | 已废弃（日期过期） |
-| TUESDAY_CHECKLIST.md | 周二验证清单（含收尾清理） | 已实施（进行中） |
-| INTRADAY_SPARKLINE_DESIGN.md | 盘中 sparkline 设计（方案 B） | 设计中 |
-| SERENITY_SKILL_DESIGN.md | Serenity-Skill 独立模块设计 | 设计中 |
-| SKILL_FRAMEWORK_DESIGN.md | Skill 通用框架设计 | 设计中 |
+| archive/MONDAY_VERIFICATION_PLAN.md | 周一验证计划（周末改动验收） | 已废弃? |
+| archive/TONIGHT_CHECKLIST.md | 周一 10-12 当晚验证清单 | 已废弃（日期过期） |
+| archive/TUESDAY_CHECKLIST.md | 周二验证清单（含收尾清理） | 已实施（进行中） |
+| archive/INTRADAY_SPARKLINE_DESIGN.md | 盘中 sparkline 设计（方案 B） | 设计中 |
+| archive/SERENITY_SKILL_DESIGN.md | Serenity-Skill 独立模块设计 | 设计中 |
+| archive/SKILL_FRAMEWORK_DESIGN.md | Skill 通用框架设计 | 设计中 |
 
 ---
 

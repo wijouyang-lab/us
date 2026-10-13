@@ -132,7 +132,7 @@
 | 1 | 🔴 回滚 `review.yml` model → `claude-opus-5-5` | 临时测试改动未回滚，影响每日复盘质量 | 配套删 debug 日志 |
 | 2 | 🔴 修 `scan.py` PEP701（f-string 反斜杠） | 导致 3.11 不可用、工具链被迫锁 3.12 | `PEP701_TECHDEBT_REPORT.md` 确认但未修 |
 | 3 | 🟠 清理 `_temp-` 遗留（2 workflow + 4 脚本） | 临时资产混在生产库，有误触发风险 | 清理前确认结果已复核 |
-| 4 | 🟠 统一「卡片 / 详情页 / review」三处止损数据源 | ANET 曾出现 197.69 / 209.36 / 210.24 三个值 | `ANET_STOPLOSS_TRIPLE.md`；根因是三套系统各算各的 |
+| 4 | 🟠 统一「卡片 / 详情页 / review」三处止损数据源 | ANET 曾出现 197.69 / 209.36 / 210.24 三个值 | `archive/ANET_STOPLOSS_TRIPLE.md`；根因是三套系统各算各的 |
 | 5 | 🟠 为「推荐键匹配失败」加端到端断言 | 今日 bug 曾静默漏卖、无人察觉 | 已有告警打印，建议在 CI 上升为失败 |
 | 6 | 🟡 **机械止损与 review 移动止损不一致（资金风险）— 修复已实现，待激活** | `STOPLOSS_ROOT_CAUSE.md` + 实测 | 方案 C 已落地，门控在 `ENABLE_STOP_LOSS_SYNC`（**默认关闭**）；激活方式与一项新发现见下方展开 |
 | 7 | ✅ **`ENABLE_MARKET_INDICATORS` 已开但面板不出现（已修复）** | 实测 run #2082 → 复验 #2084 | 两处根因：① 依赖缺失 ② 读取路径不匹配；均已修并有回归测试 |
@@ -197,7 +197,7 @@
 >    `dashboard/data/market_indicators.json`，而 `dashboard_export.py:2460` 读的是
 >    `data_dir / "market_indicators.json"`（= 仓库根，**少了 `dashboard/data/` 这一段**）。
 >    读不到 → 返回哨兵 `_MARKET_INDICATORS_MISSING` → **不注入 `market_indicators` 键** → 前端整块隐藏。
->    - 设计文档本意就是 `dashboard/data/market_indicators.json`（`MARKET_INDICATORS_PANEL_DESIGN.md:147`）
+>    - 设计文档本意就是 `dashboard/data/market_indicators.json`（`archive/MARKET_INDICATORS_PANEL_DESIGN.md:147`）
 >    - 输出侧 `dashboard_export.py:3001` 也写 `data_dir/"dashboard"/"data"/…`，**只有读取侧少了这段**
 >    - **修复（1 行 + 1 回归测试）**：commit **`27d004e6`**
 >      - `dashboard_export.py:2460` → `p = data_dir / "dashboard" / "data" / "market_indicators.json"`
@@ -260,10 +260,10 @@
 
 | # | 事项 | 依据 | 备注 |
 |---|------|------|------|
-| 9 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
+| 9 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `archive/INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
 | 10 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
-| 11 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
-| 12 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
+| 11 | 23 小时交易改造 | `archive/23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
+| 12 | Model Fingerprint（识别中转站实际模型） | `archive/MODEL_FINGERPRINT_METHOD.md` + `archive/MODEL_FINGERPRINT_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
 | 13 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
 | 14 | 🟡 **git 全局 `curloptResolve` pin 不稳定** | 2026-10-13 实测 | 见下方展开 |
 | 15 | 🟠 **网页显示运行时模型**（MODEL_DISPLAY_TASK.md） | 见下方展开 | 让用户看出中转站是否偷换模型 |
@@ -299,11 +299,11 @@
 | # | 事项 | 依据 |
 |---|------|------|
 | 16 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
-| 17 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
-| 18 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
+| 17 | 技术因子 OOS 加速实验落地 | `archive/ACCELERATION_EXPERIMENT.md` |
+| 18 | 事件日历 L2 | `archive/ECON_CALENDAR_L2.md`（自述不实施） |
 | 19 | 宏观板块 / Market Indicators 激活 | 已完成，见 P1 #7 |
-| 20 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
-| 21 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
+| 20 | 80% 股票天花板取舍 | `archive/POSITION_CEILING_EVAL.md` |
+| 21 | Skill 框架 / Serenity-Skill | `archive/SKILL_FRAMEWORK_DESIGN.md`、`archive/SERENITY_SKILL_DESIGN.md` |
 | 22 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
 
 > ⚠️ `cme-fedwatch` 依赖 `curl_cffi`（~13MB 二进制 wheel）—— 已确认 CI 能装

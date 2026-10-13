@@ -8,7 +8,7 @@
 
 ## 1. 现状表（所有 `.github/workflows/*.yml` 的 `on:` 段）
 
-> 数据来源：前次只读调查（`SCHEDULE_TRIGGER_INVESTIGATION.md`）+ 本次确认。
+> 数据来源：前次只读调查（`archive/SCHEDULE_TRIGGER_INVESTIGATION.md`）+ 本次确认。
 
 | Workflow | 触发源 | Cron / 时间 | 兜底 | 状态 |
 |---|---|---|---|---|

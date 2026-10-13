@@ -397,7 +397,7 @@ SNAPSHOT_COLUMNS = [
 # 34 + 15 = 49 列
 ```
 
-> 若依 §5 决定升 `schema_version` → `phase1.v2`：同步改 `quant_research_runner.py:37` 期望值与 `test_quant_research_runner.py:50` 占位（否则仅一条软警告，无害，详见 `SCHEMA_VERSION_CONSUMERS.md`）。
+> 若依 §5 决定升 `schema_version` → `phase1.v2`：同步改 `quant_research_runner.py:37` 期望值与 `test_quant_research_runner.py:50` 占位（否则仅一条软警告，无害，详见 `archive/SCHEMA_VERSION_CONSUMERS.md`）。
 
 ## 附：铁律确认
 - 本文件为**只读调研**，`quant_factor_lab.py` 等所有 `.py` **未改动**；

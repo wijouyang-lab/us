@@ -499,7 +499,7 @@ def wheel_status() -> Dict:
 
 - 需先确认：`option_strategies.csv` 的字段结构（信号层，§2 已列 14 行现状），明确 CSP/CC 候选的过滤列。
 - 需先确认：`yfinance.option_chain()` 能否稳定拿到 `puts` / `calls` 链（`scan_us_option_engine.py:600-609` 已用，预期可行，实盘前再验证）。
-- **不在本周做**，等周一验证（见 `MONDAY_VERIFICATION_PLAN.md`）后启动；启动前先开 `ENABLE_OPTIONS_WHEEL` 仅做 dry-run 日志，确认无副作用再正式下单。
+- **不在本周做**，等周一验证（见 `archive/MONDAY_VERIFICATION_PLAN.md`）后启动；启动前先开 `ENABLE_OPTIONS_WHEEL` 仅做 dry-run 日志，确认无副作用再正式下单。
 
 ---
 

@@ -5,7 +5,7 @@
 
 ## monday_check.sh（★ 唯一被 runbook 引用）
 
-被 `docs/TUESDAY_CHECKLIST.md` 与 `docs/TONIGHT_CHECKLIST.md` 引用：
+被 `docs/archive/TUESDAY_CHECKLIST.md` 与 `docs/archive/TONIGHT_CHECKLIST.md` 引用：
 原写法是 `bash /workspace/monday_check.sh`，沙箱停用后该文件不再存在，**改指向本文件**：
 
 ```bash

@@ -26,9 +26,9 @@
 |--------|------|----------------|
 | `ledger_repairs_READONLY_ARCHIVE/` | ⚠️ 只读档案：Stop_Loss 历史修复、event key / orphan 修复、Rec_Price 修复、trade_history 去重清理 | 对应 `#78–#82`、`P0.5_stop_loss_repair_report.md` |
 | `backfill/` | OHLCV 历史补采三版（`ohlc` → `ohlc_batch` → `ohlc_stooq`，后者最新） | `docs/OHLCV_BACKFILL_REPORT.md` |
-| `quant/` | Quant Phase 1 验证；Yahoo 夜盘数据覆盖实测 | `docs/PHASE1_FIRST_REAL_DATA_REPORT.md`、`docs/YAHOO_NIGHT_SESSION_TEST.md` |
-| `experiment/` | 技术因子 OOS 加速实验脚本 + `results/` 摘要结果 | `docs/ACCELERATION_EXPERIMENT.md` |
-| `sim/` | 周一演练、意外成功全链路模拟、dashboard 并发冲突模拟 | `docs/SUCCESS_PATH_SIM.md`、`docs/DASHBOARD_DATA_STABILITY_REPORT.md` |
+| `quant/` | Quant Phase 1 验证；Yahoo 夜盘数据覆盖实测 | `docs/PHASE1_FIRST_REAL_DATA_REPORT.md`、`docs/archive/YAHOO_NIGHT_SESSION_TEST.md` |
+| `experiment/` | 技术因子 OOS 加速实验脚本 + `results/` 摘要结果 | `docs/archive/ACCELERATION_EXPERIMENT.md` |
+| `sim/` | 周一演练、意外成功全链路模拟、dashboard 并发冲突模拟 | `docs/archive/SUCCESS_PATH_SIM.md`、`docs/DASHBOARD_DATA_STABILITY_REPORT.md` |
 
 ### 关于 `experiment/`
 

@@ -54,7 +54,7 @@
 
 ## 3. 回滚路径
 
-> 原则：**能关 flag / 改 workflow 就不 revert 代码**；revert 一律 `git revert`（产生新提交，不改写历史，符合铁律）。多个 revert 按**从新到旧**顺序给出。详细判断矩阵见 `MONDAY_VERIFICATION_PLAN.md` §4–§5。
+> 原则：**能关 flag / 改 workflow 就不 revert 代码**；revert 一律 `git revert`（产生新提交，不改写历史，符合铁律）。多个 revert 按**从新到旧**顺序给出。详细判断矩阵见 `archive/MONDAY_VERIFICATION_PLAN.md` §4–§5。
 
 | 改动 | 关闭方式（首选，零代码改动） | 硬回滚（git revert，产生新提交） |
 |---|---|---|
@@ -85,13 +85,13 @@
 - 可用加仓空间极小，新候选即使评分达标也难开仓；
 - 触发「满仓(=80%)→评分≥最差+20 换股」分支，而非直接加仓；
 - 与期权 wheel（L2 需占用现金担保）存在资源竞争——**这是 wheel 延后 3 个月启动的底层约束之一**。
-> 属结构性约束，非 bug；周一需盯「线上持仓只数是否恒 >5 或持续 <3」作为异常信号（`MONDAY_VERIFICATION_PLAN.md` §5）。
+> 属结构性约束，非 bug；周一需盯「线上持仓只数是否恒 >5 或持续 <3」作为异常信号（`archive/MONDAY_VERIFICATION_PLAN.md` §5）。
 
 ---
 
 ## 5. 周一验证清单
 
-> 完整脚本与逐时点检查见 `monday_check.sh`（8 项只读检查，✅/❌/⚠️）与 `MONDAY_VERIFICATION_PLAN.md`。以下为浓缩版。
+> 完整脚本与逐时点检查见 `monday_check.sh`（8 项只读检查，✅/❌/⚠️）与 `archive/MONDAY_VERIFICATION_PLAN.md`。以下为浓缩版。
 
 ### 5.1 四个关键时点（北京时区）
 | 北京时点 | 触发 Workflow | 性质 | 重点盯防 |
@@ -111,7 +111,7 @@
 7. 盘中止损步骤静默（无意外 SELL）
 8. 距下次调度倒计时（天/时/分三级进位）
 
-### 5.3 周一异常 → 动作速查（详见 `MONDAY_VERIFICATION_PLAN.md` §5）
+### 5.3 周一异常 → 动作速查（详见 `archive/MONDAY_VERIFICATION_PLAN.md` §5）
 - scan 红 + 候选空/持仓截断 → `git revert 119af4d2` 重跑
 - 止损后次日又买同票 → `git revert ce3ad32`
 - 无故多笔 SELL → 删 `dashboard-data.yml:92 --intraday-stop`
@@ -126,7 +126,7 @@
 ## 6. 关联产物（本周末产出，位于 /workspace）
 - `WEEKEND_CHANGELOG.md`（本文件）
 - `monday_check.sh`（8 项只读验证脚本）
-- `MONDAY_VERIFICATION_PLAN.md`（逐时点验证 + 回滚矩阵）
+- `archive/MONDAY_VERIFICATION_PLAN.md`（逐时点验证 + 回滚矩阵）
 - `OPTIONS_WHEEL_DESIGN.md`（含 L2 实现草稿，wheel 模块待周一验证后启动）
 - `preview/`（周一 UI 本地预览：截图 + mock `dashboard_data.json`）
 
