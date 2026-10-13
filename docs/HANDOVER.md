@@ -54,7 +54,7 @@
 | 文档入库 | 130 篇 `.md` → `docs/` | ✅ commit `dc6e06f` |
 | 文档索引 | `DOCS_INDEX.md`（主题分组/状态/冲突） | ✅ 本日新增 |
 | 模型统一 | 所有 workflow + 模块默认模型改为 `claude-fable-5-1`（共 11 处，含 4 个 workflow 的 `CLAWSOCKET_LIVE_MODEL`） | ✅ commit `3ed5a4bb` |
-| 模型展示 | **未完成**：网页显示运行时模型（`MODEL_DISPLAY_TASK.md`） | 🔴 待实施 |
+| 模型展示 | 网页显示运行时模型（`MODEL_DISPLAY_TASK.md`） | ✅ 已实施（`3edd7bb4` + `cf52915f`），待 21:00 scan 复验 |
 
 **还没完成的验证**：今夜 21:00 scan（若外部触发到达）；明早 06:23 review 对 ANET 的重新判定。
 
