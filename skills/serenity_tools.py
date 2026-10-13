@@ -227,7 +227,8 @@ TOOLS = [
     {
         "name": "company_facts",
         "description": "取公司公开财务事实（PE / EPS / 收入增长 / 毛利 / 现金流 / 市值等 12 个字段），"
-                       "数值来自 yfinance。",
+                       "数值来自 yfinance。**返回的数值由系统单独收录，你不需要、也不得把它们写进 "
+                       "why 字段**，只用于判断哪些主张需要核验。",
         "input_schema": {
             "type": "object",
             "properties": {
