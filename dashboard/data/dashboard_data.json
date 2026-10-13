@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-13T13:01:17Z",
+  "generated_at": "2026-10-13T13:16:23Z",
   "stocks": [
     {
       "ticker": "ADSK",
@@ -1519,7 +1519,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:45Z",
+        "computed_at": "2026-10-13T13:15:37Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3042,7 +3042,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:46Z",
+        "computed_at": "2026-10-13T13:15:37Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3058,14 +3058,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 259.7,
+      "price": 259.3783,
       "price_source": "realtime",
-      "current_price": 259.7,
-      "current_price_updated_at": "2026-10-13T12:59:19Z",
+      "current_price": 259.3783,
+      "current_price_updated_at": "2026-10-13T13:15:01Z",
       "pending_price": 271.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 271.85,
-      "change_1d": 0.0655,
+      "change_1d": -0.0585,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4565,7 +4565,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:46Z",
+        "computed_at": "2026-10-13T13:15:38Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4581,14 +4581,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "ANET|2026-10-07|Core_Dragon",
       "ai_snapshot_date": "2026-10-07",
-      "price": 205.5,
+      "price": 205.6,
       "price_source": "realtime",
-      "current_price": 205.5,
-      "current_price_updated_at": "2026-10-13T13:00:03Z",
+      "current_price": 205.6,
+      "current_price_updated_at": "2026-10-13T13:13:19Z",
       "pending_price": 211.3,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 215.83,
-      "change_1d": -2.5512,
+      "change_1d": -2.5038,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.0989,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6088,7 +6088,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:47Z",
+        "computed_at": "2026-10-13T13:15:38Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7611,7 +7611,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:47Z",
+        "computed_at": "2026-10-13T13:15:39Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7627,14 +7627,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 269.7566,
+      "price": 269.18,
       "price_source": "realtime",
-      "current_price": 269.7566,
-      "current_price_updated_at": "2026-10-13T13:00:44Z",
+      "current_price": 269.18,
+      "current_price_updated_at": "2026-10-13T13:12:36Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": -0.411,
+      "change_1d": -0.6239,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -9134,7 +9134,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:47Z",
+        "computed_at": "2026-10-13T13:15:39Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9150,14 +9150,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BRK-B|2026-10-02|Observation",
       "ai_snapshot_date": "2026-10-02",
-      "price": 520.8,
+      "price": 520.23,
       "price_source": "realtime",
-      "current_price": 520.8,
-      "current_price_updated_at": "2026-10-13T12:38:00Z",
+      "current_price": 520.23,
+      "current_price_updated_at": "2026-10-13T13:14:11Z",
       "pending_price": 502.52,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 502.52,
-      "change_1d": 0.6182,
+      "change_1d": 0.5081,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -10657,7 +10657,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:48Z",
+        "computed_at": "2026-10-13T13:15:40Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12180,7 +12180,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:48Z",
+        "computed_at": "2026-10-13T13:15:41Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12196,14 +12196,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BX|2026-09-29|Observation",
       "ai_snapshot_date": "2026-09-29",
-      "price": 115.39,
+      "price": 115.36,
       "price_source": "realtime",
-      "current_price": 115.39,
-      "current_price_updated_at": "2026-10-13T12:09:00Z",
+      "current_price": 115.36,
+      "current_price_updated_at": "2026-10-13T13:14:02Z",
       "pending_price": 115.36,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 114.0,
-      "change_1d": 0.5315,
+      "change_1d": 0.5053,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.193,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -13703,7 +13703,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:48Z",
+        "computed_at": "2026-10-13T13:15:42Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15226,7 +15226,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:49Z",
+        "computed_at": "2026-10-13T13:15:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16749,7 +16749,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:49Z",
+        "computed_at": "2026-10-13T13:15:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16765,14 +16765,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "COO|2026-09-30|Observation",
       "ai_snapshot_date": "2026-09-30",
-      "price": 55.0,
+      "price": 54.99,
       "price_source": "realtime",
-      "current_price": 55.0,
-      "current_price_updated_at": "2026-10-13T12:56:30Z",
+      "current_price": 54.99,
+      "current_price_updated_at": "2026-10-13T13:06:12Z",
       "pending_price": 56.99,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 56.99,
-      "change_1d": -0.9901,
+      "change_1d": -1.0081,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -18272,7 +18272,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:50Z",
+        "computed_at": "2026-10-13T13:15:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19795,7 +19795,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:50Z",
+        "computed_at": "2026-10-13T13:15:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19811,14 +19811,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "CRWD|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 261.35,
+      "price": 261.29,
       "price_source": "realtime",
-      "current_price": 261.35,
-      "current_price_updated_at": "2026-10-13T13:00:33Z",
+      "current_price": 261.29,
+      "current_price_updated_at": "2026-10-13T13:15:43Z",
       "pending_price": 278.38,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 278.38,
-      "change_1d": -0.6312,
+      "change_1d": -0.654,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -21318,7 +21318,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:50Z",
+        "computed_at": "2026-10-13T13:15:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21334,14 +21334,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "DDOG|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 284.18,
+      "price": 285.55,
       "price_source": "realtime",
-      "current_price": 284.18,
-      "current_price_updated_at": "2026-10-13T12:45:31Z",
+      "current_price": 285.55,
+      "current_price_updated_at": "2026-10-13T13:11:09Z",
       "pending_price": 276.02,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.02,
-      "change_1d": -1.0825,
+      "change_1d": -0.6057,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -22841,7 +22841,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:50Z",
+        "computed_at": "2026-10-13T13:15:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22857,14 +22857,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "DELL|2026-09-30|Observation",
       "ai_snapshot_date": "2026-09-30",
-      "price": 560.9,
+      "price": 562.0,
       "price_source": "realtime",
-      "current_price": 560.9,
-      "current_price_updated_at": "2026-10-13T13:00:00Z",
+      "current_price": 562.0,
+      "current_price_updated_at": "2026-10-13T13:14:52Z",
       "pending_price": 544.03,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 544.03,
-      "change_1d": -2.7498,
+      "change_1d": -2.5591,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -24364,7 +24364,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:51Z",
+        "computed_at": "2026-10-13T13:15:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25887,7 +25887,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:51Z",
+        "computed_at": "2026-10-13T13:15:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27410,7 +27410,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:52Z",
+        "computed_at": "2026-10-13T13:15:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28933,7 +28933,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:53Z",
+        "computed_at": "2026-10-13T13:15:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -30456,7 +30456,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:53Z",
+        "computed_at": "2026-10-13T13:15:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -31979,7 +31979,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:54Z",
+        "computed_at": "2026-10-13T13:15:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33502,7 +33502,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:54Z",
+        "computed_at": "2026-10-13T13:15:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33518,14 +33518,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "INVH|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 26.8,
+      "price": 26.95,
       "price_source": "realtime",
-      "current_price": 26.8,
-      "current_price_updated_at": "2026-10-13T09:13:00Z",
+      "current_price": 26.95,
+      "current_price_updated_at": "2026-10-13T12:59:50Z",
       "pending_price": 25.89,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 26.48,
-      "change_1d": 0.3745,
+      "change_1d": 0.9363,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2281,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -35025,7 +35025,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:55Z",
+        "computed_at": "2026-10-13T13:15:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35041,14 +35041,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "ISRG|2026-10-07|Core_Dragon",
       "ai_snapshot_date": "2026-10-07",
-      "price": 430.8,
+      "price": 430.52,
       "price_source": "realtime",
-      "current_price": 430.8,
-      "current_price_updated_at": "2026-10-13T12:26:00Z",
+      "current_price": 430.52,
+      "current_price_updated_at": "2026-10-13T13:15:16Z",
       "pending_price": 405.07,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 414.52,
-      "change_1d": 0.7389,
+      "change_1d": 0.6735,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2797,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -36548,7 +36548,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:55Z",
+        "computed_at": "2026-10-13T13:15:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38071,7 +38071,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:55Z",
+        "computed_at": "2026-10-13T13:15:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38087,14 +38087,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "KR|2026-10-07|Core_Dragon",
       "ai_snapshot_date": "2026-10-07",
-      "price": 63.8,
+      "price": 63.16,
       "price_source": "realtime",
-      "current_price": 63.8,
-      "current_price_updated_at": "2026-10-13T12:59:49Z",
+      "current_price": 63.16,
+      "current_price_updated_at": "2026-10-13T13:09:05Z",
       "pending_price": 59.27,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 59.25,
-      "change_1d": 1.9821,
+      "change_1d": 0.9591,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0338,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -39594,7 +39594,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:55Z",
+        "computed_at": "2026-10-13T13:15:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -39610,14 +39610,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "MKC|2026-10-02|Observation",
       "ai_snapshot_date": "2026-10-02",
-      "price": 45.35,
+      "price": 45.56,
       "price_source": "realtime",
-      "current_price": 45.35,
-      "current_price_updated_at": "2026-10-13T12:18:00Z",
+      "current_price": 45.56,
+      "current_price_updated_at": "2026-10-13T12:47:00Z",
       "pending_price": 44.5,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 44.5,
-      "change_1d": -0.5046,
+      "change_1d": -0.0439,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -41117,7 +41117,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:56Z",
+        "computed_at": "2026-10-13T13:15:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -42640,7 +42640,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:56Z",
+        "computed_at": "2026-10-13T13:15:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44163,7 +44163,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:57Z",
+        "computed_at": "2026-10-13T13:15:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44179,14 +44179,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 544.55,
+      "price": 544.38,
       "price_source": "realtime",
-      "current_price": 544.55,
-      "current_price_updated_at": "2026-10-13T13:00:49Z",
+      "current_price": 544.38,
+      "current_price_updated_at": "2026-10-13T13:15:42Z",
       "pending_price": 479.88,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 483.24,
-      "change_1d": 0.6283,
+      "change_1d": 0.5969,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6953,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -45686,7 +45686,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:57Z",
+        "computed_at": "2026-10-13T13:15:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -45702,14 +45702,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "PM|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 203.8,
+      "price": 203.85,
       "price_source": "realtime",
-      "current_price": 203.8,
-      "current_price_updated_at": "2026-10-13T13:00:36Z",
+      "current_price": 203.85,
+      "current_price_updated_at": "2026-10-13T13:08:06Z",
       "pending_price": 191.51,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 192.69,
-      "change_1d": 0.8911,
+      "change_1d": 0.9158,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6124,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -47209,7 +47209,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:57Z",
+        "computed_at": "2026-10-13T13:15:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48732,7 +48732,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:58Z",
+        "computed_at": "2026-10-13T13:15:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48748,14 +48748,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "RCL|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 283.38,
+      "price": 283.354,
       "price_source": "realtime",
-      "current_price": 283.38,
-      "current_price_updated_at": "2026-10-13T12:59:12Z",
+      "current_price": 283.354,
+      "current_price_updated_at": "2026-10-13T13:10:06Z",
       "pending_price": 279.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 288.78,
-      "change_1d": 0.9655,
+      "change_1d": 0.9563,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -3.1096,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -50255,7 +50255,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:58Z",
+        "computed_at": "2026-10-13T13:15:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51778,7 +51778,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:58Z",
+        "computed_at": "2026-10-13T13:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51794,14 +51794,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "SNPS|2026-10-02|Core_Dragon",
       "ai_snapshot_date": "2026-10-02",
-      "price": 493.0,
+      "price": 496.5,
       "price_source": "realtime",
-      "current_price": 493.0,
-      "current_price_updated_at": "2026-10-13T12:56:42Z",
+      "current_price": 496.5,
+      "current_price_updated_at": "2026-10-13T13:11:23Z",
       "pending_price": 489.41,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 489.41,
-      "change_1d": -1.8925,
+      "change_1d": -1.196,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -53301,7 +53301,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:59Z",
+        "computed_at": "2026-10-13T13:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -54824,7 +54824,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:00:59Z",
+        "computed_at": "2026-10-13T13:15:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -56347,7 +56347,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:00Z",
+        "computed_at": "2026-10-13T13:15:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -57870,7 +57870,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:00Z",
+        "computed_at": "2026-10-13T13:15:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -59393,7 +59393,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:00Z",
+        "computed_at": "2026-10-13T13:15:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -60916,7 +60916,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:01Z",
+        "computed_at": "2026-10-13T13:15:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -62439,7 +62439,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:01Z",
+        "computed_at": "2026-10-13T13:16:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -62455,14 +62455,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 66.38,
+      "price": 66.55,
       "price_source": "realtime",
-      "current_price": 66.38,
-      "current_price_updated_at": "2026-10-13T13:00:43Z",
+      "current_price": 66.55,
+      "current_price_updated_at": "2026-10-13T13:15:44Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": 0.5605,
+      "change_1d": 0.8181,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -63962,7 +63962,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:02Z",
+        "computed_at": "2026-10-13T13:16:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -63978,14 +63978,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 173.34,
+      "price": 173.57,
       "price_source": "realtime",
-      "current_price": 173.34,
-      "current_price_updated_at": "2026-10-13T12:59:16Z",
+      "current_price": 173.57,
+      "current_price_updated_at": "2026-10-13T13:11:43Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": 0.6913,
+      "change_1d": 0.8249,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -65485,7 +65485,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:02Z",
+        "computed_at": "2026-10-13T13:16:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -67008,7 +67008,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T13:01:03Z",
+        "computed_at": "2026-10-13T13:16:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -67031,7 +67031,7 @@
         "change_1d": 0.3787,
         "change_5d": 1.1365,
         "change_20d": -1.0886,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -67049,7 +67049,7 @@
         "change_1d": -0.055,
         "change_5d": 0.4282,
         "change_20d": 2.4575,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -67067,7 +67067,7 @@
         "change_1d": -0.4395,
         "change_5d": -0.8422,
         "change_20d": 4.046,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -67081,16 +67081,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 15.32,
-        "change_1d": 0.7232,
-        "change_5d": -1.2887,
-        "change_20d": -10.4094,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 15.3,
+        "change_1d": 0.5917,
+        "change_5d": -1.4175,
+        "change_20d": -10.5263,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895560,
+        "quote_ts": 1791896460,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67099,16 +67099,16 @@
         "name": "US10Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.192,
-        "change_1d": -0.916,
-        "change_5d": -2.2406,
-        "change_20d": 4.6563,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 5.198,
+        "change_1d": -0.8015,
+        "change_5d": -2.1277,
+        "change_20d": 4.7773,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895500,
+        "quote_ts": 1791896400,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67121,7 +67121,7 @@
         "change_1d": 3.7228,
         "change_5d": 3.9241,
         "change_20d": 10.0457,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -67135,16 +67135,16 @@
         "name": "US5Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.981,
-        "change_1d": -0.7571,
-        "change_5d": -1.6779,
-        "change_20d": 3.9875,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 4.992,
+        "change_1d": -0.538,
+        "change_5d": -1.4607,
+        "change_20d": 4.2171,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895500,
+        "quote_ts": 1791896400,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67153,16 +67153,16 @@
         "name": "US30Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.55,
-        "change_1d": -0.8574,
-        "change_5d": -2.03,
-        "change_20d": 4.1471,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 5.554,
+        "change_1d": -0.786,
+        "change_5d": -1.9594,
+        "change_20d": 4.2222,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895500,
+        "quote_ts": 1791896400,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67171,16 +67171,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.239,
-        "change_1d": -0.3324,
-        "change_5d": 0.0675,
-        "change_20d": 2.7941,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 102.285,
+        "change_1d": -0.2876,
+        "change_5d": 0.1126,
+        "change_20d": 2.8403,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895860,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67189,16 +67189,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4206.7002,
-        "change_1d": 0.3842,
-        "change_5d": 1.2005,
-        "change_20d": -3.3365,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 4196.8999,
+        "change_1d": 0.1503,
+        "change_5d": 0.9647,
+        "change_20d": -3.5617,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895860,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67207,16 +67207,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 60.43,
-        "change_1d": 0.4805,
-        "change_5d": -0.7212,
-        "change_20d": -4.8541,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 60.14,
+        "change_1d": -0.0017,
+        "change_5d": -1.1977,
+        "change_20d": -5.3107,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895800,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67225,16 +67225,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.743,
-        "change_1d": 0.6643,
-        "change_5d": 2.3916,
-        "change_20d": 6.5245,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 6.746,
+        "change_1d": 0.7091,
+        "change_5d": 2.4372,
+        "change_20d": 6.5719,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895860,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67243,16 +67243,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 92.53,
-        "change_1d": -1.2908,
-        "change_5d": 3.4664,
-        "change_20d": -8.7385,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 93.01,
+        "change_1d": -0.7787,
+        "change_5d": 4.0031,
+        "change_20d": -8.2651,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895860,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67261,16 +67261,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 104.87,
-        "change_1d": -1.669,
-        "change_5d": 4.5355,
-        "change_20d": -0.7665,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 105.53,
+        "change_1d": -1.0502,
+        "change_5d": 5.1934,
+        "change_20d": -0.1419,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895860,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67279,16 +67279,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.177,
-        "change_1d": 0.3158,
-        "change_5d": 3.6204,
-        "change_20d": 9.703,
-        "updated_at": "2026-10-13T13:01:03Z",
+        "price": 3.179,
+        "change_1d": 0.3789,
+        "change_5d": 3.6856,
+        "change_20d": 9.7721,
+        "updated_at": "2026-10-13T13:16:02Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791895860,
+        "quote_ts": 1791896760,
         "last_bar_date": "2026-10-12"
       }
     ],
@@ -67301,12 +67301,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-13T13:01:15Z"
+    "updated_at": "2026-10-13T13:16:20Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-13 09:01:17",
+    "as_of_us": "2026-10-13 09:16:23",
     "window_start": "2026-09-13",
     "core_closed_count": 4,
     "core_open_count": 23,
@@ -69375,8 +69375,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 261.35,
-        "pnl_pct": 5.29,
+        "cur_price": 261.29,
+        "pnl_pct": 5.27,
         "days_held": 21,
         "stop_loss": null,
         "score": "64.2",
@@ -69789,8 +69789,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 172.46,
-        "cur_price": 190.58,
-        "pnl_pct": 10.51,
+        "cur_price": 191.24,
+        "pnl_pct": 10.89,
         "days_held": 25,
         "stop_loss": null,
         "score": "74.0",
@@ -73791,8 +73791,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 246.44,
-        "pnl_pct": -41.17,
+        "cur_price": 246.5,
+        "pnl_pct": -41.15,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -74642,8 +74642,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 54.55,
-        "pnl_pct": 0.02,
+        "cur_price": 54.6,
+        "pnl_pct": 0.11,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -74711,8 +74711,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 21.98,
-        "cur_price": 20.24,
-        "pnl_pct": -7.92,
+        "cur_price": 20.09,
+        "pnl_pct": -8.6,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -75010,8 +75010,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 55.38,
-        "pnl_pct": 6.56,
+        "cur_price": 55.43,
+        "pnl_pct": 6.66,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -77555,11 +77555,11 @@
     "scan": {
       "latest": {
         "run_id": 38401571765,
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "created_at": "2026-10-13T13:00:31Z",
         "started_at": "2026-10-13T13:00:31Z",
-        "updated_at": "2026-10-13T13:00:36Z",
+        "updated_at": "2026-10-13T13:13:17Z",
         "head_sha": "6d05ffd8b6a0",
         "event": "workflow_dispatch",
         "run_number": 162,
@@ -77567,9 +77567,9 @@
         "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38401571765"
       },
       "last_success": {
-        "run_id": 38374212404,
-        "completed_at": "2026-10-13T09:18:09Z",
-        "head_sha": "cf52915f235d"
+        "run_id": 38401571765,
+        "completed_at": "2026-10-13T13:13:17Z",
+        "head_sha": "6d05ffd8b6a0"
       },
       "error": null
     },
@@ -77661,8 +77661,8 @@
         "entry_date": "2026-10-07",
         "cost_basis": 9931.1,
         "current_price": 210.88,
-        "extended_price": 205.5,
-        "extended_time": "10-13 09:00 ET",
+        "extended_price": 205.6,
+        "extended_time": "10-13 09:13 ET",
         "market_value": 9911.36,
         "unrealized_pnl": -19.74,
         "unrealized_pnl_pct": -0.2,
@@ -77679,8 +77679,8 @@
         "entry_date": "2026-10-07",
         "cost_basis": 9721.68,
         "current_price": 427.64,
-        "extended_price": 430.8,
-        "extended_time": "10-13 08:26 ET",
+        "extended_price": 430.52,
+        "extended_time": "10-13 09:15 ET",
         "market_value": 10263.36,
         "unrealized_pnl": 541.68,
         "unrealized_pnl_pct": 5.57,
@@ -77697,8 +77697,8 @@
         "entry_date": "2026-10-07",
         "cost_basis": 9957.36,
         "current_price": 62.56,
-        "extended_price": 63.8,
-        "extended_time": "10-13 08:59 ET",
+        "extended_price": 63.16,
+        "extended_time": "10-13 09:09 ET",
         "market_value": 10510.08,
         "unrealized_pnl": 552.72,
         "unrealized_pnl_pct": 5.55,
@@ -77876,7 +77876,7 @@
     "validation": {
       "phase": 3,
       "label": "Validation",
-      "status": "NOT_ENOUGH_DATA",
+      "status": "DATA_AVAILABLE",
       "factors": 24,
       "horizons": 3,
       "combos": 72,
@@ -77954,117 +77954,201 @@
   },
   "news": {
     "schema_version": "news.v1",
-    "generated_at": "2026-10-13T09:18:03Z",
+    "generated_at": "2026-10-13T13:12:27Z",
     "market_news": [
+      {
+        "headline": "Jim Cramer's top 10 things to watch in the stock market Tuesday",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/investingclub/2026/10/13/jim-cramers-top-10-things-to-watch-in-the-stock-market-tuesday.html",
+        "datetime": 1791896090,
+        "summary": "The chip stock rout seems to know no end. But earnings from Club names Goldman Sachs and Wells Fargo are all better than expected.",
+        "headline_cn": "吉姆·克莱默周二股市十大关注事项",
+        "sentiment": "neutral",
+        "rationale": "仅为观点汇总，无实质市场信号",
+        "market_relevant": true
+      },
+      {
+        "headline": "Iran and Russia ramping up hybrid campaigns in Britain, UK spy chief says - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOel94VDNzeEx1LXhzdm9vX0xSSUhyQUswNTAwUWhsVklGcEtQRm1KYlpUWXhKOUo5cE1tdTJXQV85eVZic05iV3gyVXNIZTJwV2xCRmo0QkFtMDFXMWNWR3lhaS05dHN2UVNtREJodXZLMllfOTBYdUpHelFKS1JQbUVxUFU4NzhTTUswVVlvX21QcXByY0F4akJ1ZGNtSDZ0aExrZHBYVlR4aGlCYTJz?oc=5",
+        "datetime": 1791893912,
+        "summary": "Iran and Russia ramping up hybrid campaigns in Britain, UK spy chief says  Reuters",
+        "headline_cn": "英国情报局长称伊朗和俄罗斯加大对英混合战行动",
+        "sentiment": "bearish",
+        "rationale": "地缘紧张升级，增加市场避险情绪",
+        "market_relevant": true
+      },
+      {
+        "headline": "Citi profit jumps 40% with higher investment banking, services and wealth revenue - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOaEV6WWM3S2pfSzdheVNtbFZLdnBvTk1jQWl3Z0xGQ1R6RHByTUxVVl91U01wYTFUMWVQNGl5WmZzenJIRHhJMVczUWxGOGREVF9zV2wtX2w1a0tIM3RMZ2M1T3VBRFd1YmpPLUtqM2lmc3YzTVhKdW1QeGt0WkVLTjk4UXJMMlhQSVVnd1NnQm5PRklkZngwemJfRTdxa0JFU2syRkJfZ3hnbXoxcVlXcmhIeWg3ZjltTU41eUZCSkYxU3gxSjZF?oc=5",
+        "datetime": 1791893528,
+        "summary": "Citi profit jumps 40% with higher investment banking, services and wealth revenue  Reuters",
+        "headline_cn": "花旗利润飙升40%，投行、服务和财富管理收入增长",
+        "sentiment": "bullish",
+        "rationale": "业绩大超预期，提振金融板块",
+        "market_relevant": true
+      },
+      {
+        "headline": "Iran reportedly fortifies nuclear sites as it prepares for possible U.S. strikes after midterms",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/13/iran-us-war-houthis-saudi-arabia-airport.html",
+        "datetime": 1791892425,
+        "summary": "A Saudi-led coalition fighting the Houthis – a Yemeni militant group backed by Tehran – said it had intercepted another attack on Riyadh.",
+        "headline_cn": "据报伊朗加固核设施，为中期选举后美国可能打击做准备",
+        "sentiment": "bearish",
+        "rationale": "军事冲突风险加剧，推高避险需求",
+        "market_relevant": true
+      },
+      {
+        "headline": "Germany's Nuremberg airport closes due to aviation emergency - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNUjNQUks5MFpvMms0djJycmdGa09TTTNkbkVoSDEtSkNBVDVENlNWZkVwdS1KbVB1c0RFZ0FNQVZLZEQ0T2Zxc3ZRVU1xSmhNcmZ3R00zTE1wcldqQWJGY3o1eS1wU2NyN2M4ODBCTlpxU3hMTEFwYThuSHp2dXdhdjdhaHo5b3ZxRjZZcTBVUjE4QVpyVlNlaHJfcGlWRjA?oc=5",
+        "datetime": 1791889360,
+        "summary": "Germany's Nuremberg airport closes due to aviation emergency  Reuters",
+        "headline_cn": "德国纽伦堡机场因航空紧急情况关闭",
+        "sentiment": "neutral",
+        "rationale": "单一机场事件，无系统性影响",
+        "market_relevant": false
+      },
+      {
+        "headline": "Hezbollah outlines financial aid plan for Lebanese with destroyed homes - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQclNUQUdGdlRtUDhteWNFb0FkSHc2emhTVE1hNTQ4SGQ2MWtkTkRiUzJPd28xY3VHQ0ZZVmUyOVJpa3gyS3pyczJ5X1pMQllhMGdqQ3VLUU5BWkYxWVlLbWQ4SktZMjhySFhmWFZzYVpEOFJzZVlZa291NEx4Qnd6aU9tWTZlbmh6c3V1cTNJUTNGX0drQmliNFhaSHhsMlhJNElsa1AtYjdQR29jbGZ4QnhQZXNjYTZmMjMzSmpR?oc=5",
+        "datetime": 1791887980,
+        "summary": "Hezbollah outlines financial aid plan for Lebanese with destroyed homes  Reuters",
+        "headline_cn": "真主党公布黎巴嫩受损房屋援助计划",
+        "sentiment": "neutral",
+        "rationale": "地区人道事务，无直接市场影响",
+        "market_relevant": false
+      },
+      {
+        "headline": "UnitedHealth Group tops estimates, hikes profit outlook as insurer manages high medical costs",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/13/unitedhealth-group-unh-earnings-q3-2026.html",
+        "datetime": 1791885473,
+        "summary": "UnitedHealth Group said it expects 2026 adjusted earnings of at least $20.50 per share, up from a previous outlook of $19.50 to $20.00 per share.",
+        "headline_cn": "联合健康集团超预期并上调利润指引，成功管控医疗成本",
+        "sentiment": "bullish",
+        "rationale": "财报强劲且上调指引，利好医保板块",
+        "market_relevant": true
+      },
+      {
+        "headline": "Russia calls French seizure of alleged shadow fleet tanker a violation of international law, RIA reports - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOYkZiVzlsbWNyMXA5cV8tX1Z3UVEwUzY0cEt1RjBKOW0xWDc4RFRzRzBwYzNUdEVrQjhJY3JObi1LZjNqVnpjZ1QyUng5TjlFeExVd1NYWk45ZjB2SXduaE9qR1h1V1RyRldpTFU3bUhtb1ZfWHkwN1E3cDNDQm9NbnhtSHRWWUdHYzRKdUlxcHAwWmNScFE1V3VhX2JwMVVaaU9XZmpILTBIZmVLLWUwMUtuTEJ6NnEwbEZsTk5jbUJqT1pOWHBV?oc=5",
+        "datetime": 1791882361,
+        "summary": "Russia calls French seizure of alleged shadow fleet tanker a violation of international law, RIA reports  Reuters",
+        "headline_cn": "俄称法国扣押影子船队油轮违反国际法",
+        "sentiment": "neutral",
+        "rationale": "外交争端，对能源市场影响有限",
+        "market_relevant": false
+      },
+      {
+        "headline": "COMMENTARY: Trump's oil jawboning loses punch as wars spiral - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQVGRSS0t5UkdaMjZZWUNWWXNZWlpKOV9YcC1XdF9UVXE1M3NEVFJ5MC0zdHZZZnQtclpCRDJZX2hVM1NWNC1xZWZuQl82blNBZmZLRk9YdWZuZ1VMcFZvQmVFYld4VzgteDB3R0NhM05CckEwcjlxVHdldmV0NXlKOGZnc0FuYVIzZU00clRsRVVLeHZySzJ3NnV6MDY3R0I3NU51Sk9oTmRMek8yNExNMXZLYw?oc=5",
+        "datetime": 1791871200,
+        "summary": "COMMENTARY: Trump's oil jawboning loses punch as wars spiral  Reuters",
+        "headline_cn": "评论：特朗普施压降油价效果减弱，战争局势恶化",
+        "sentiment": "bearish",
+        "rationale": "战争推高油价，增加通胀压力",
+        "market_relevant": true
+      },
+      {
+        "headline": "NEWSLETTER: Modi's three-pronged challenge - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQb1plNXNTVWlqekpCanlwOUdXUVpmeEVnSEU1R014Y3NGalBNOFFnZWdhUWRaV2hMSkNENlZRNi1CZG1hMGlGNnFuMnhBVnFTMHZZY2hkbTZ1TjlYSzgzOHk2eXlSbElkeHN0S1VhYkF1QmpmQmdRbng2OVB6b0tZZm5YUQ?oc=5",
+        "datetime": 1791869400,
+        "summary": "NEWSLETTER: Modi's three-pronged challenge  Reuters",
+        "headline_cn": "通讯：莫迪的三重挑战",
+        "sentiment": "neutral",
+        "rationale": "印度政治话题，对美股无直接影响",
+        "market_relevant": false
+      },
       {
         "headline": "Visa gets approval to prepare for domestic business in China - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQWDU2MUdBSi1QYVQ0Ulg2MzdqQVJpaHJWZ2NFaVZYT2VGV0xYUnZ1T1B6ZGJFbmR5eWNqajFXSFhQSTI0X1pDU29HR3o1T2VmdDZCVUJvTFdWMXRldllGc2JmTVNrM2RoUWttaHc5ZFJnX3FvYTBfbEt2RTZPR0s2OEZqMGFtYWdPdTdPSEJKUVpBT25POHR5R2VKbWl0VUk?oc=5",
         "datetime": 1791865620,
-        "summary": "Visa gets approval to prepare for domestic business in China  Reuters",
-        "headline_cn": "Visa获批在中国筹备境内业务",
-        "sentiment": "bullish",
-        "rationale": "打开中国市场潜在增量空间",
-        "market_relevant": true
+        "summary": "Visa gets approval to prepare for domestic business in China  Reuters"
       },
       {
         "headline": "Trump says he does not believe China and Russia are helping Iran 'at all' - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQaHZ3WXAyQzZiQXZBZmJ1aEV2WUZMcXA4bHlyNml3LUd5MG1GWjNJSFIyUnhycktZc1ZHZXVPMERsaEs1YzZEX3FtT1JwOERaMUtCY0RkYUZVQzhWWnIzLU45TXVLWUk4RnFaaU53X1VxVVNaOVVqaHpaeTdMRkFfS0h5aTFVaERIcEQ4S2xsTFJ0MVpHa093b1RmYjZPaV9DRTBGMkRLUWN2djRTSGtKVU1uUFBGZw?oc=5",
         "datetime": 1791863580,
-        "summary": "Trump says he does not believe China and Russia are helping Iran 'at all'  Reuters",
-        "headline_cn": "特朗普称不认为中俄在帮助伊朗",
-        "sentiment": "neutral",
-        "rationale": "地缘表态未改变实质政策",
-        "market_relevant": false
+        "summary": "Trump says he does not believe China and Russia are helping Iran 'at all'  Reuters"
+      },
+      {
+        "headline": "Taiwan finance minister to attend APEC meeting in Hong Kong - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxQY0FpTmlaUmxrbERKQmRkRnFCMnBMVVIyZ05LTFpQdHVFNmdyNmNzR2tWVVhac2lpOEpkVTdfUVhNMFZmYWtkX0VURjFtdnNLRWJMRkpsTFJ2U2ppRkJ2eHlCS2k4RHg3cmkxNjhOd2Y0elYzb2RqZ0JUZENKanN0bFFYZ0NUTURYVkJMdG5jWTE0emJtQlEyV2lwYkw4bHdET2Nr?oc=5",
+        "datetime": 1791861840,
+        "summary": "Taiwan finance minister to attend APEC meeting in Hong Kong  Reuters"
+      },
+      {
+        "headline": "India rupee outpaces Asian peers on fresh FX curbs, RBI intervention - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQdC12dmVLWnRveDB6cEZtZENLNWwyRGlfSlExRmh2alNHTnlyNnNvR2dlRWk5d09nQ1JOZThid1BKTlBVbzBoQTRYdXFGWTJwTkxXOGVHUm95b3dmNTNFUmxRczRQSUY3b05oTGlxenZydGdBV2FRa1VEN29HM1M5dklaX3pnVXdGVTZzemszT2YwOTJwMnBmV2x4LUpQRDNiLS14eHFNbw?oc=5",
+        "datetime": 1791860280,
+        "summary": "India rupee outpaces Asian peers on fresh FX curbs, RBI intervention  Reuters"
       },
       {
         "headline": "Indian shares flat at open as inflation strengthens rate-hike concerns - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNRUVTdlJpcHF3dEZTQlg5WWlESlo0dXpTRWJQR1lwWHl2aHR2QVlEUzI4Vkx3OTZVNFdvdnhNMm5BSC04bnNJdzZyLU9BVTVhbFFsUHhzNXlWc0VlLW5KU2k0NWFHZUlicF9zQTVMYjJTTGZoNDRMREJBQk5YU3k0OFdCX2pROWxtYWhlM0ZrREQxVTQweWJMaFdoVW1XX1FrOXpGQnBjZy01eVktY3VQSktkb1YxVEJIbmMw?oc=5",
         "datetime": 1791858540,
-        "summary": "Indian shares flat at open as inflation strengthens rate-hike concerns  Reuters",
-        "headline_cn": "印度股市开盘持平，通胀强化加息担忧",
-        "sentiment": "neutral",
-        "rationale": "反映区域市场情绪，对美股影响有限",
-        "market_relevant": false
+        "summary": "Indian shares flat at open as inflation strengthens rate-hike concerns  Reuters"
       },
       {
         "headline": "AI investment props up global growth, but war and debt threaten outlook, IMF says - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPVlNmbDdlaDUwX1pOeWRzM1FhdDNhWTNnVnk4bXZLZlR2VGwxMFRCcWdiNngwM2p1Tmp3YjZMY0FwY1puZHk3bTlEYWNyd2pYYUxPd19nZVpqQU9CQjVlck9RUGtoajF5SGY4VnYzSWpZXzY2TWZ3TVY3Yl9ucVdEWnc3b2xzT19vbzBqazJUMzlCdmpfakw4VjAzOVZ3Ui13dmlJOV90Nk9pVUxWY1htUHYtNDZhTGhyTDYwZEk3SQ?oc=5",
         "datetime": 1791857100,
-        "summary": "AI investment props up global growth, but war and debt threaten outlook, IMF says  Reuters",
-        "headline_cn": "IMF称AI投资支撑全球增长，但战争和债务威胁前景",
-        "sentiment": "neutral",
-        "rationale": "利好与风险并存，信息符合预期",
-        "market_relevant": true
+        "summary": "AI investment props up global growth, but war and debt threaten outlook, IMF says  Reuters"
       },
       {
         "headline": "Qatar Airways suspends Riyadh, Dammam flights as airport attacks disrupt air travel - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxON3hKM0tyUDRYZ0ptS1I1ZGpDMzdHLU9zbER2LTNSb1QzcHk2SkR3VzY4VHBpQXIxR2hRcjk3d19pbTVqLWkzQTRtVkQ4R0lWV25rSFpzVGQwdkhMTGxaSDdDMVR5RUhEQ3FXS1RfY01heEl1ek5hSHFkNlBkOU83cnN1VkFVQjhUMlJuTUpqYnVxQV9zVkpBMGc3SkhadUhqMXJOM3lqVTdSRFBvbzdITWlSSVB3RW9HWkZnVEM5Skx4aWhNVjlfZWZOS3ROdw?oc=5",
         "datetime": 1791851160,
-        "summary": "Qatar Airways suspends Riyadh, Dammam flights as airport attacks disrupt air travel  Reuters",
-        "headline_cn": "卡塔尔航空因机场袭击暂停利雅得和达曼航班",
-        "sentiment": "bearish",
-        "rationale": "地缘冲突影响航空业运营",
-        "market_relevant": true
+        "summary": "Qatar Airways suspends Riyadh, Dammam flights as airport attacks disrupt air travel  Reuters"
       },
       {
-        "headline": "Oil falls as Russian diesel supply prospects counter Gulf supply risks - Reuters",
+        "headline": "Oil prices ease as traders monitor Russian diesel deal, Saudi attacks - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPa2sxWTVlekZ2bXloVXNiOUltMm5iODVOMW9NTUo4Q016ZU02OFQ5TU9relFTcUZSaW8xV0c2YmNVbE5jWW5uQjhKeXNKaWxBcE92SU1fQUU0R2RVamdNUzRhTER3NzEzMFUtRVd3bzVnZ1g0ZmtRek95VHdYbVNNMmNacmlDd3dLTThmaGF2VVJDYTc4c1hQeUZfX0ZGQzZjTXlpLU52U3JuUGpjOHJjWndoS19LandSX0dtMmdUMzNKZw?oc=5",
         "datetime": 1791851100,
-        "summary": "Oil falls as Russian diesel supply prospects counter Gulf supply risks  Reuters",
-        "headline_cn": "俄罗斯柴油供应前景抵消海湾风险，油价下跌",
-        "sentiment": "neutral",
-        "rationale": "供需互抵，能源板块影响中性",
-        "market_relevant": true
+        "summary": "Oil prices ease as traders monitor Russian diesel deal, Saudi attacks  Reuters"
       },
       {
         "headline": "Saudi warning system stayed silent before deadly airport attacks - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxQcGUtWGlRWGVfTVVCaFlXbDQ3UTA4bmlUN2QxdV9yT19EOUZGTkhKNW5xR2hQcDJmaE1pX1F1Tmg4TEZ6VTMxcWl5QzdHdVdZa2U1ZDF5Vm5ONGhhNDFPd00xLXZKNXVSaXJGYTB2QVV6dkJ6WmtBS29uMTNyNko5dlptaEdjWngxR2gxa3FfNTc4bzdmaElUOHVzZTVfN0oxeXhwdExKLWxycEpBRGNna0QzM2N5NGRfaVE?oc=5",
         "datetime": 1791848340,
-        "summary": "Saudi warning system stayed silent before deadly airport attacks  Reuters",
-        "headline_cn": "沙特致命机场袭击前预警系统保持沉默",
-        "sentiment": "bearish",
-        "rationale": "地缘安全风险升温",
-        "market_relevant": true
+        "summary": "Saudi warning system stayed silent before deadly airport attacks  Reuters"
       },
       {
         "headline": "Trump says he is considering firing US ambassador to Greece - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNWU5OdGppOWp6blA3UzZyT2tVenY4eExFelZFYVVHbkhQT0NGZkRnaG5GOFVpYzEwS3ZVWXViMW16VXZqRHNGM1hSeWpId2RMek5kR0ZiLTd6NUhFSDVvbE8tNk4xbHh0NXZkWGhteDBBa0xhN3JIbHhKZDJvN21BUFM3OUdubWp5eGtKWjlWandOT19oR1dzbFRrdXpFd0JsaGZKVGtvWFM?oc=5",
         "datetime": 1791840248,
-        "summary": "Trump says he is considering firing US ambassador to Greece  Reuters",
-        "headline_cn": "特朗普称正考虑解雇美国驻希腊大使",
-        "sentiment": "neutral",
-        "rationale": "外交人事变动无业务影响",
-        "market_relevant": false
+        "summary": "Trump says he is considering firing US ambassador to Greece  Reuters"
       },
       {
         "headline": "Here's a calculator to explain why Cramer always stays invested. Plug in your own numbers, too",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/12/heres-a-calculator-to-explain-why-cramer-always-stays-invested.html",
         "datetime": 1791838929,
-        "summary": "Small, consistent gains over time, compounded through regular contributions, can supercharge your wealth",
-        "headline_cn": "这个计算器解释克莱默为何始终持仓，你也可以输入数据",
-        "sentiment": "neutral",
-        "rationale": "投资理念科普，无实质市场信号",
-        "market_relevant": false
+        "summary": "Small, consistent gains over time, compounded through regular contributions, can supercharge your wealth"
       },
       {
         "headline": "Bear to bull: A double upgrade of Salesforce illustrates the folly of the 'SaaSpocalypse'",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/12/bear-to-bull-a-double-upgrade-of-salesforce-illustrates-the-folly-of-the-saaspocalypse-.html",
         "datetime": 1791834619,
-        "summary": "Jim Cramer said bets against Salesforce were always wrong.",
-        "headline_cn": "从看空到看多：Salesforce双重上调凸显'SaaS末日论'谬误",
-        "sentiment": "bullish",
-        "rationale": "分析师上调评级提振SaaS板块",
-        "market_relevant": true
+        "summary": "Jim Cramer said bets against Salesforce were always wrong."
       },
       {
         "headline": "US hopes diesel deal can 'soften' Moscow on peace talks, sources say - Reuters",
@@ -78072,6 +78156,13 @@
         "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQY1h5ek9QWEw0bXVmSUpuTlA1MDlVNXg1SzlnSkpwT1BXLVZHVnNMT1k0V3pfaU8tVFhUcWw1TWl1SE9Kcm04T0RYNjlhbGdyaUFQZEtOU2x6NmtJOGVfYXFWaHY3b1R0TDA5SzVsSDg0UTU2M2NGZk50WEZRTHBTSnJVWTBGbUJ6RjlnWFp0WTl1bkdWYmNYcl9ISXFSNS10OTBUZmVwQXpKSkI5REN1YTdkbnE?oc=5",
         "datetime": 1791832860,
         "summary": "US hopes diesel deal can 'soften' Moscow on peace talks, sources say  Reuters"
+      },
+      {
+        "headline": "Russia says its diesel exports may exceed volumes announced by Trump - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPLXBaMl96X25takpKUC15RzZpMEhXT3FwMkM0a0xiZUxuV1FINXU4eXF4emoxdWl5TGZjYkNoeGhOeWdESE8yZXUyRXU2NlpoZ3hENzRoTlRaVTBUMWFTOWpQRlVYel9PbEZhdTVla2U2MS1QU3RDcXR0aEZ2cjFXMXV3ek45YWEwakhFVVBPQ1hRYjRZZk9SVXcxaFAwQ2hxOHBxTmdqTHZNWGVITUgzUWUwd0t1V3phQVBzaHR3?oc=5",
+        "datetime": 1791831120,
+        "summary": "Russia says its diesel exports may exceed volumes announced by Trump  Reuters"
       },
       {
         "headline": "Americas have glut of heavy oil due to freight squeeze; Asia, Europe scramble for barrels - Reuters",
@@ -78107,6 +78198,13 @@
         "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNeWQ1cjJsQXBjdk5ST0Y5QmROZllXaUR4RDFxb2Q1TTZEMll6ZmsxOXp2alM4dTd3ZndjVmtjSUxaeV9NOU9oX090N3Q5RHd4R01IS2VoUFVmTEJlT240bUxmZmt2eVcta1cxenFpQzhJTUo2Um9hM1lHQ281b2xMLXRhYU9DTENhZDJtOXJnZDkxNWVIVmRJanlkQXRibHU5SUs5UFBFbUhsMHYyOF81VQ?oc=5",
         "datetime": 1791825463,
         "summary": "Likely unexploded ordnance kills teenager in northern Israel  Reuters"
+      },
+      {
+        "headline": "Details of UK PM Burnham's Manchester City meetings published - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPdkNrZ0Vkb1RyRGJCRS11SlJzU1dZM1lFVnJXM1JWdWNYQ2FGdTVYemJ1T05Xb1NrcUxWTm1uREI0SGNsMF93b2U1anlTaU5LVld1Ymxla2hNRGdVSlpxeVlzWl9lSUFOdlVmdklDNmtMTEx2XzZ6WU9uSTNRc2gzSmp5T0pqSUlCZF95aUF1Z2ZVazl6R2kyZ0MyS3p3QlRHanVLNg?oc=5",
+        "datetime": 1791823264,
+        "summary": "Details of UK PM Burnham's Manchester City meetings published  Reuters"
       },
       {
         "headline": "Turkey to send Mecca agreement to parliament soon, Erdogan says - Reuters",
@@ -78158,13 +78256,6 @@
         "summary": "UK PM Burnham says Iran's IRGC likely behind RAF Fairford incident  Reuters"
       },
       {
-        "headline": "Airlines cancel flights to Saudi Arabia after Riyadh airport attacks - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOX0c4YlJSYUNrT1pqLTA2TmFjdDZUdmh2Z3pXbG9vWF9mdS0tZFZ6M2tYTVUzRjZVTzhodnh4WU0waXV1bjZENURjUVhmRVZPN251V2laQmNMZ3JoNmIzZE5hWU82YkxIWTdvd2xNczBkNnEta0xGdzlmaGlFNkZ5M1lxcGZUNW5pRnMxV1pPT0NxMXZmOWpEUmpBNXRUcksyZWQ5Sm9pM1QweFFWdmZYVkdid0s1dUJSanNN?oc=5",
-        "datetime": 1791816485,
-        "summary": "Airlines cancel flights to Saudi Arabia after Riyadh airport attacks  Reuters"
-      },
-      {
         "headline": "Breakingviews - COMMENTARY: Riyadh attacks hit core of Saudi's economic pivot - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxOZENLRXVWdDdZX1BvTXFQN3E2TnRnYnJxUER4aldTVHFiR1pyenp6RllPeTMxeG55MjVrUE9TR3R2NzF2U1FEbjVHbS13S3JSNlJ5dldvWktocXZ6QzBkSEx6WV83SVBTN216X1BPYlhrSVoxZWp5a0REZkJjaVpBb2IteXBLN212R0lkRFJGeFdLaUhtb0ZuWFY1Q1BMT0pYWUZCZlhzX3JyUQ?oc=5",
@@ -78212,6 +78303,13 @@
         "url": "https://www.cnbc.com/2026/10/12/faa-saudi-arabia-flight-risks.html",
         "datetime": 1791808265,
         "summary": "The FAA warned U.S. airlines about flight risks over Saudi Arabia as Riyadh airport attacks disrupt travel and Delta weighs an Oct. 23 launch."
+      },
+      {
+        "headline": "Airlines cancel flights to Saudi Arabia after Riyadh airport attacks - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOX0c4YlJSYUNrT1pqLTA2TmFjdDZUdmh2Z3pXbG9vWF9mdS0tZFZ6M2tYTVUzRjZVTzhodnh4WU0waXV1bjZENURjUVhmRVZPN251V2laQmNMZ3JoNmIzZE5hWU82YkxIWTdvd2xNczBkNnEta0xGdzlmaGlFNkZ5M1lxcGZUNW5pRnMxV1pPT0NxMXZmOWpEUmpBNXRUcksyZWQ5Sm9pM1QweFFWdmZYVkdid0s1dUJSanNN?oc=5",
+        "datetime": 1791807840,
+        "summary": "Airlines cancel flights to Saudi Arabia after Riyadh airport attacks  Reuters"
       },
       {
         "headline": "India Sept inflation nears RBI tolerance ceiling, boosting case for further rate hikes - Reuters",
@@ -78319,6 +78417,13 @@
         "summary": "Turkey, Pakistan, Egypt, Saudi Arabia condemn Houthi attacks on Riyadh airport  Reuters"
       },
       {
+        "headline": "Pakistan sees growth above 4%, looks to raise more than $1 billion from privatisation - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxOTWI2R3JHY2NiRlU0WmZXZ19EY2pBMmJHckdWT3BOY0JjeXFGdDB4aG9tYVlFZTgtN0FrMXpOcFIzTVRJYlNZc2VUSWc0bUtDVllkdnpHZDFWT2FYY1BEU2trcEpJc1YzcDFOaXQwZnhUbVdRU3FmYk51OTFTTnVqZDUzeXgyNThPSmV5dXgwYVFTZS0xM1dOQ3lyZkRDdHdMS1VPRWU2azdBY0pKX2k1MUg1S3FlQ1BmTnlramhnXzNUU0RPWVM4RFhXOHlvaXc?oc=5",
+        "datetime": 1791781740,
+        "summary": "Pakistan sees growth above 4%, looks to raise more than $1 billion from privatisation  Reuters"
+      },
+      {
         "headline": "German startup 1Komma5Grad secures $1.35 billion valuation in new financing round - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOdDlTNHhfM2VxYnl2bHhjS1h0dzNGb1VlVE5WYjh1MklwYmpLMkNRNlNoWW1xc3N5aEV3dS1LZHhKVUEwanNhbGkwRGVFMEd5Mlg3ZVB6cEdCTDE2TjNJbnpoaFBEdHhxRlNnajh2YUYwODc2Y09oalMxdXpldTdEMnRtcGFqSldmQWFHdFhwdDFSZGMwYm9uOXF5aVB0VVM1ZmR0Q2xHV01zV3RjVjQzcmhDci1CNFFEOG1fYW9B?oc=5",
@@ -78389,18 +78494,18 @@
         "summary": "Earnings season ramps up this week, with four Club holdings set to report. Two main inflation reports are also out."
       },
       {
+        "headline": "Iran says US response to its proposal to reopen Hormuz was 'insufficient' - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOaDM4RVFjdmpFdUszUHFFbm5tWGM1R21NMEI2aFNqN2NOUGZPZzVPQ3d6QnUwY3VkWm96Q0tXQVFfTFF6c21hYzgzQWwyQVhJam0zZW45cGNuc282RkYzVEIyOEJlTkljM0l5MkdTRHRzRE1rdExZV2o4aFBiTURQMXd0UlFsTVlLdVlwVDZJcGpBNWZkb0RhalloX21XclFXTWJnN3pTSzZPNy1tS1o0SDNjLVlmZ2ZkVldj?oc=5",
+        "datetime": 1791738772,
+        "summary": "Iran says US response to its proposal to reopen Hormuz was 'insufficient'  Reuters"
+      },
+      {
         "headline": "Indian national injured in Riyadh airport attack dies, embassy says - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQdUdmYkdkbzVhY0FyLUxyT0k2Z2pOMHJVLTZsd3B5TEpEb1NVUmZ5U1drLTk1MnpoWk5VR1hpUFhpdTd5ZnE0bE1oQmVGQU4wWGlBakZvNGlfQWpjSUlxTE5MVGhodC1tYTQ2UV9ZREdxVnZnOTJQaFVfaHBDdHEyc0VXWG1GTE9JM2RJLS1fYm1NTXQ1NU5tRFZLY2YtOWFpZjhObGNTUTBTUnVUU2JNZw?oc=5",
         "datetime": 1791738734,
         "summary": "Indian national injured in Riyadh airport attack dies, embassy says  Reuters"
-      },
-      {
-        "headline": "Iran says US response to its proposal to reopen Hormuz was 'insufficient' - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOaDM4RVFjdmpFdUszUHFFbm5tWGM1R21NMEI2aFNqN2NOUGZPZzVPQ3d6QnUwY3VkWm96Q0tXQVFfTFF6c21hYzgzQWwyQVhJam0zZW45cGNuc282RkYzVEIyOEJlTkljM0l5MkdTRHRzRE1rdExZV2o4aFBiTURQMXd0UlFsTVlLdVlwVDZJcGpBNWZkb0RhalloX21XclFXTWJnN3pTSzZPNy1tS1o0SDNjLVlmZ2ZkVldj?oc=5",
-        "datetime": 1791738420,
-        "summary": "Iran says US response to its proposal to reopen Hormuz was 'insufficient'  Reuters"
       },
       {
         "headline": "Trump says Russia and Ukraine reached 'energy ceasefire' - Reuters",
@@ -78415,6 +78520,13 @@
         "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxOb2hZZTRZLXk2amlHSS1zWkYtUmkzdy1EUWRFZ3lRUzRLX2hOMkxkLXBSR1hnVmd1UkNrN0NpNXNneXgwcGJ2ZzgwRFRRUVo5QS1xSWlENjhWN1M0MGR5eFpPOVZQT0dMUGRWcTQ1YTN3aHhpTjZVVGVqSldfcDN3SFZTQTJSMTUyX1psaXpyb2VKTVU0OGIzeFViOXZGVnRGb0lvTDNVdERoX0tHaHc?oc=5",
         "datetime": 1791726195,
         "summary": "Strike reported on Yemeni Sanaa airport, Houthi-run TV says  Reuters"
+      },
+      {
+        "headline": "Germany backs Ukraine's Zelenskiy after Trump's call for his removal - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPbHctY0FCSGlIZVRCbWoyZWVocUlPbEZ1c3hSWEFNbDVnYjBvMWVEUjRzU2UtTVhvTHR1ekNhR0x5VUhTTFM1U1Z0SzJ3YWZXSFZxQ1FnVHhIWWFkLWl4SGQ2NkpXYVBZbWVIX0hJVDF3WW5nOFNSYWFKdDdHOUNuanoyRHotUVhVdW05WmphYVg1WDVYeW9idUJnLTcyT0FWcHM5X01lSQ?oc=5",
+        "datetime": 1791723343,
+        "summary": "Germany backs Ukraine's Zelenskiy after Trump's call for his removal  Reuters"
       },
       {
         "headline": "I’m a psychologist who studies couples: The No. 1 way to end a fight before it escalates—it works ‘almost immediately’",
@@ -78464,6 +78576,13 @@
         "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxNMUlyV0IybXFzanN6N1FSS3JuaEljNFhGMWtwXzJwR3g0S0NTVkNvUW1CSW4tSWxzY2txeTAxZGxvR2Y2RW53cklmbF8tNGVpaEFTRXlMeW15RkpkVGQ3clNwejJoOXBmQnhYd1ZXWGFJMVVBZ1hpUGFPWDdXeWV4LU1ORFVoekJleFlnOHFRenp4d29OVmV4U0c4eUJJY051RGFna01qMUJ2WFp3cGdHUm5kV0lSZ1hMMFJpdExQN21wMkJHcm1GU01yWQ?oc=5",
         "datetime": 1791704062,
         "summary": "Yemen's Houthis renew warning to airlines, travellers against using Saudi airports  Reuters"
+      },
+      {
+        "headline": "EXCLUSIVE: US imposes sanctions on ICC hours after former judge wins Nobel Peace Prize - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOLXU4YU9BUnl0d1dlTGlaSmdhcFBDcS1lRDFaeGRhbjNPaVFXU0NCQVlabFRhMXRFVVJER2gtclFYWE5hdHR4bXM1N245MWNKeS0yVkNkWFE0S0d5aDFaNmptQUlGWEtCZk4ySXJfWjU1ODczRTUxd2VwS19lTHc5ZTlMQ0hyZ09kOFRPUkVfcUdja3pjY0hGUXZvdWNiS1NEYms3c0I5UlpRX3Q4LUV2Z3d5QkkydkZiRmxXMUZB?oc=5",
+        "datetime": 1791702000,
+        "summary": "EXCLUSIVE: US imposes sanctions on ICC hours after former judge wins Nobel Peace Prize  Reuters"
       },
       {
         "headline": "World Bank in talks with dozens of countries about crisis aid, Banga says - Reuters",
@@ -78576,125 +78695,6 @@
         "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNMmV2ZUhoRklKSzBPaFkzWHVFdkwxVDlVVU8tdDV2NXc4NEkxTjZSTVhoaklIeTlJX3BCUTFkRUREY1VDVGpTY1lhZEQ4OHgyRG81S0RLa0JJVEZHTWpiUFJVRy0xZmVSWEpVbDZsVFBSRzZ4bmw2RnhtMXlBelJ1Vi1GUnVuZ3htemdTdExuTktpQ2dKdzhFRmRMd0MwMlYtd3JPb1J0NVlKcVNtWUlNNHRoNVFWaFBWUHNTdg?oc=5",
         "datetime": 1791573546,
         "summary": "Trump says US will not attack Iran before midterm elections in November  Reuters"
-      },
-      {
-        "headline": "What's behind the recovery rally in tech stocks — plus, Elon Musk's very good week",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/09/whats-behind-the-recovery-rally-in-tech-stocks-plus-musks-good-week.html",
-        "datetime": 1791572549,
-        "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
-      },
-      {
-        "headline": "Water cannon, tear gas deployed as Belgian students clash with riot police - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQRnd0VE8ybS02c2pWd1Y0T1ZXZ0hJTGJ6OHVUdDZJaV81aE1kNUJ2aWFQUTV2U3BZSVM1c3E2NU5kOUltT1h0RkJubTNubHZhdFlCMzhtenN5VFR1NlRYQTNQVjlhdGhXVnpzcDZFMlBxTlJHZzhVOU9rVHdGc0dNOEg3YndWckhpN2Z6b2lGclFzV3E1VktNb0V1WGt3Ylg5WUtCYm9aWjNYaE5qYmFsdjFFQ2FlUQ?oc=5",
-        "datetime": 1791572160,
-        "summary": "Water cannon, tear gas deployed as Belgian students clash with riot police  Reuters"
-      },
-      {
-        "headline": "Two massive trades just happened in Micron and Nvidia. What they could mean for chips",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/09/two-massive-trades-just-happened-in-micron-and-nvidia-what-they-could-mean-for-chips.html",
-        "datetime": 1791571821,
-        "summary": "Bears continued to build up positions against the semiconductor group on Friday."
-      },
-      {
-        "headline": "Trump created a committee to dig into the Fed's Lisa Cook. What is it and what comes next?",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/09/trump-lisa-cook-fed-firing-committee-explained.html",
-        "datetime": 1791570057,
-        "summary": "Trump’s bid to fire the Fed's Lisa Cook follows a Supreme Court ruling and could affect Jerome Powell, central bank independence and interest rates."
-      },
-      {
-        "headline": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQS3RjWlUtbVhIS3V2UlRkMFZOT3pESFlCZGVKcVp5N1lwX1JCTGRrXzI3dXdHT3diVGZUWENHREJ3MW5zQUpRamZpbkV0dTdoNDhRUzl6OW5FT2JZSjZHaHY2T2ltMm1fNTZVNHhuQzdZTmJVRHhSbE1vYnNpZTR4SGJONWhxVWxoYmxBLW1SRkpBNlROdHBxN3VjMUtpcHFaVzgzQ1ZvcmIyVllXcjBhSTY3TlhuLXpQRExkZmYtd29TOEppUkYwOA?oc=5",
-        "datetime": 1791569676,
-        "summary": "Plane damaged at Riyadh airport as Houthis escalate attacks, sources say  Reuters"
-      },
-      {
-        "headline": "The used car market is stagnant. Here's how to profit anyway",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/09/the-used-car-market-is-stagnant-heres-how-to-profit-anyway.html",
-        "datetime": 1791567451,
-        "summary": "Michael Khouw breaks down this short strangle options trade."
-      },
-      {
-        "headline": "Iveco, Tata Motors raises offer price to €14.40 per share - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxOamJUOFBpeGRYdWYzdE5HNFd5VV9nT1lPTG9ucElaNXY1NzZGa190Vm43U3pxd0xRQk1ablFCLVE5dUozWHMtSHhxUE55X1BjZUx5MEFsUy1zN0FIQ1c4by1tSGlBVmE5cDQ0a1ZYWFo0VHFUdmRsQVp4RU1FUC02bm1aM1pGbEV5d0NuS2xncWhRR2JJd1BQWDR5bk9OeG0w?oc=5",
-        "datetime": 1791566226,
-        "summary": "Iveco, Tata Motors raises offer price to €14.40 per share  Reuters"
-      },
-      {
-        "headline": "Tesla drops 'Full Self-Driving' brand name in Europe after regulator pushback",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/09/tesla-full-self-driving-europe-regulator.html",
-        "datetime": 1791565952,
-        "summary": "German regulators called Tesla's \"Full Self-Driving\" brand name \"somewhat misleading.\""
-      },
-      {
-        "headline": "Cramer: Investors selling Apple on latest iPhone 18 report are 'stupid as plywood'",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/09/cramer-investors-selling-apple-on-iphone-report-are-stupid-as-plywood.html",
-        "datetime": 1791564180,
-        "summary": "Cramer says investors who don't own the stock should use Friday's weakness to build a position."
-      },
-      {
-        "headline": "London stocks post weekly gains as gilt yields retreat; telecom stocks fall - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxPNVpWYUFMM2hlY2dnS0N0Q1VkcTFqLUJ1cGJzcVdJTWUzYjRvUWZXeDgyMmZsYXhsYl9wbEd1X1lRbU50dXA5c3lXLTZvd0N5clhnS1gxZHlpYUp1M01ha1BBQkp4Y0VacnRZWEFEWms0WG5UWEYtTE96ZzRuNDlsUzB6eXRUWEdKUGMzd3VGbkdsUTR1Z0VRbGtKUFZOeDVu?oc=5",
-        "datetime": 1791563720,
-        "summary": "London stocks post weekly gains as gilt yields retreat; telecom stocks fall  Reuters"
-      },
-      {
-        "headline": "Verizon stock heads for worst day since 2002 as SpaceX U.S. network plans whack telcos",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/09/verizon-att-tmobile-stocks-spacex-network.html",
-        "datetime": 1791563204,
-        "summary": "SpaceX announced the spectrum deal Thursday, as the company aims to push deeper into the telecom market through its Starlink service."
-      },
-      {
-        "headline": "EU aviation body widens Saudi airspace warning after Houthi strikes - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxObUF1S2Y0LTFHM0JDbXRLY05aMmVvUDJqOU1ZNjEtLVlDdFVMelgyTlN0d3BvY0lrLVJkZEc4VGI0eEMtWTVnbDBGQnNVSGx1bklCQkxiNEs3RzFlWklGSWtoMFpyLV9zb2N6Y1VlVjQ2b2pqMy1ld0IyZ2RQMGt3YmFRaWQyUFBrYnVua2VyWGdyQW4wU0xGWm91d2prUlRLSHZrZXNwZjl0MVBuQV9ZeFZmZi15Nmh1VGFvV25xeVJfYkNGWkE?oc=5",
-        "datetime": 1791563101,
-        "summary": "EU aviation body widens Saudi airspace warning after Houthi strikes  Reuters"
-      },
-      {
-        "headline": "US diesel prices remain high despite Trump's moves to boost supplies - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPSC1DZmo5R2daREU0YTBRSFBZTE04NW92WFQ3eXhLeGhiRlFyTEZBbHdWT2xuczBRYmtWcmlqMVJKTUo0Vk9KTEk1OU1jYUo1NlQ3Zi1KTzhmc1pmZkhQS01OajhXWHR1aWpQVEpuRTllX0RSd3ZmR3ZKMG51MlJRNGQtX3BkdUpfOHFGejVtbnhMUGlGNVdDa2lISkd5dFdmNWc3dFpRZnJuNGJ6M3duQ1pJcXo?oc=5",
-        "datetime": 1791562731,
-        "summary": "US diesel prices remain high despite Trump's moves to boost supplies  Reuters"
-      },
-      {
-        "headline": "Four signs it is about to get uglier in the bond market as yields rise - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxOZnpPbXRYRlc0T3dINmZIZnM3VEgxWWJzS2tLRVBadmJMVnQ2ekdHaTQ1NG1SZlhfTV84VjNsM3JNR0RRSTZyVWJ1ODJFZmxpa1pxckluaktPY0d6T0d3bUVUUnRGQjlCVmwxWUNGWEs2cEo1VGV4R3MxN19PakJaZ3FUZnZfMWxqUHAzNk1nOTVFT0hr?oc=5",
-        "datetime": 1791562715,
-        "summary": "Four signs it is about to get uglier in the bond market as yields rise  Reuters"
-      },
-      {
-        "headline": "Jim Cramer sets a Starbucks buy level — plus his take on 3 stocks we just bought",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/09/cramer-sets-starbucks-buy-level-and-reviews-3-stocks-we-bought.html",
-        "datetime": 1791560835,
-        "summary": "The Investing Club holds its \"Morning Meeting\" every weekday at 10:20 a.m. ET."
-      },
-      {
-        "headline": "Trump says Russia to supply diesel to US and global markets - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxQU3RwVkZ4Mkg3Vy1fdGF2T2t4RmRLV3lQaU5LcXdnd3hKd21HRlZqR1dBTDlEbmNheE1MYVNjZldOLVlUd2lpMDdSaDd5c0tSUEpVRWJPLU1rTU9hSVhTYlF3Z2JPUlQydXgyb0VraVpvMUlwdHlFY2RoNEZ3WUE4Y0JjNnlHMV9VakFsdzMzOFFzUnQ3MlE?oc=5",
-        "datetime": 1791560580,
-        "summary": "Trump says Russia to supply diesel to US and global markets  Reuters"
-      },
-      {
-        "headline": "Portugal PM cautions judiciary not to get political over US use of air base - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQR0JxN3hkUmZhbTlNY3FRWnlZaklwOTJ6QVpleUV3X2FoX0pEVm1YWlROSTRaUUE4ek5CMWhWN2FvcEM1bVowbkdxWDZIVjM0Vm4xTl9RLUxxZzBGeU0tWlBrWS1peFROZkM0UDIydnN6Q1VEWXhhOEQzdUtMVW83SjF4QXN6anlzMnlrQmI4X2VVOVlXa19TRU9VaTB3VXJHb0ROOHE3a0Rxa2lRaExPcA?oc=5",
-        "datetime": 1791560297,
-        "summary": "Portugal PM cautions judiciary not to get political over US use of air base  Reuters"
       }
     ],
     "ticker_news": {
@@ -78712,9 +78712,9 @@
           "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
           "datetime": 1791570784,
           "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
-          "headline_cn": "Adobe股票为订阅增长放缓做好准备了吗？",
+          "headline_cn": "Adobe股票准备好面对订阅增长放缓了吗？",
           "sentiment": "bearish",
-          "rationale": "增长放缓预期施压估值",
+          "rationale": "增长放缓担忧施压估值",
           "market_relevant": true
         },
         {
@@ -78723,9 +78723,9 @@
           "url": "https://finnhub.io/api/news?id=c5645039edf7a60f12c6973ef8eac71bf2adc1a24378bfa95d56be951c66e7d6",
           "datetime": 1791523947,
           "summary": "Tech stocks broadly declined this week as escalating tensions over the Iran war fueled fresh uncertainty across financial markets.",
-          "headline_cn": "SaaS股票在复苏吗？Autodesk和Intuit在科技股艰难周表现突出",
+          "headline_cn": "SaaS股反弹？Autodesk和Intuit在科技股艰难周表现优异",
           "sentiment": "bullish",
-          "rationale": "板块龙头逆势上涨显示韧性",
+          "rationale": "板块龙头逆势走强，释放积极信号",
           "market_relevant": true
         },
         {
@@ -78736,7 +78736,7 @@
           "summary": "PTC Inc. (NASDAQ:PTC) traded at around $194 on October 7, little changed on the day and 4.32% lower over twelve months. Autodesk, Inc. (NASDAQ:ADSK) traded near $235 over the same session, down 25.73% across the year. One of these two received a $22.6 billion cash bid last week and is still below where it traded […]",
           "headline_cn": "PTC与Autodesk：哪只股票更值得买？",
           "sentiment": "neutral",
-          "rationale": "对比分析无明确方向判断",
+          "rationale": "对比分析无明确方向性结论",
           "market_relevant": true
         },
         {
@@ -78745,9 +78745,9 @@
           "url": "https://finnhub.io/api/news?id=ea301eca58969060aeb35d38140ebe4865a5a518a3b9940e1e6ecdfb16cb0d8b",
           "datetime": 1791509621,
           "summary": "Between April 10 and October 7, 2026, Freshworks (FRSH) stock returned 80.1%, easily outpacing the 15.1% return of the S&P 500. Two significant developments emerged during that period: a round of job cuts announced on May 5 and a quarterly report on August 4. What did those two events change at Freshworks.",
-          "headline_cn": "这一走势应该如何改变你对Freshworks股票的看法？",
+          "headline_cn": "这一走势应如何改变你对Freshworks的看法？",
           "sentiment": "neutral",
-          "rationale": "探讨性问题未给出明确结论",
+          "rationale": "讨论性文章，未给出明确信号",
           "market_relevant": true
         },
         {
@@ -78818,6 +78818,48 @@
       ],
       "AMZN": [
         {
+          "headline": "Microsoft Could Be Worth Far More as Its Cloud and AI Businesses Scale",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=ea626f314a57fab5059aee5e249e5c1cd242b21c8704667dc21e83ca41c88e2a",
+          "datetime": 1791890101,
+          "summary": "Azure is accelerating, the commercial backlog just hit a staggering new record, and Wall Street is nearly unanimous on the stock. So why does free cash flow keep shrinking, and what does that mean for where Microsoft goes from here?"
+        },
+        {
+          "headline": "e.l.f. Beauty vs. Monster Beverage: Which Consumer Goods Stock Is a Better Buy in 2026?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=6afa99142a6b9a1b2019e85fb94241248c320ae1cfddc7a3246d452cd66eebc6",
+          "datetime": 1791886453,
+          "summary": "Monster posted record quarterly revenue in Q2 2026 with growth across every region. e.l.f. Beauty delivered its 30th consecutive quarter of sales growth but faces rising costs and margin pressure."
+        },
+        {
+          "headline": "Generac Entered a Massive Deal With Amazon. Is It Time to Buy the Stock?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=db3cdadfa65a5d66852fb22229d3874d3c1d59ebf6db4c86c5d0a0d355ee71a8",
+          "datetime": 1791883140,
+          "summary": "Generac just landed a massive deal with Amazon, marking a major step into the booming data center power market."
+        },
+        {
+          "headline": "ACCELYA LAUNCHES FLX RECOVER TO TRANSFORM AIRLINE PASSENGER RECOVERY",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=708c8b8d9052c195a8f85ab5dea9fa330097607b6ae16e59df9d47e03f46f694",
+          "datetime": 1791878400,
+          "summary": "Accelya, a global leader in airline software, today announced FLX Recover, an agentic AI-powered solution designed to help airlines assist disrupted passengers faster, more intelligently and at scale."
+        },
+        {
+          "headline": "Middle Coast Investing Q1 2026 Portfolio Activity",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=9dd5256eea8402c2dc6faeb3554ff674f530b2a60ffdfc143e11e31551f5e79e",
+          "datetime": 1791877260,
+          "summary": "Bookingâs share price dropped as much as 32% from its highs of last year, and 25% from the start of this year. Read more here."
+        },
+        {
+          "headline": "S&P Hits All-Time Highs, AI Trade Does All The Work",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=66560ff9f3f37bf54fdf7009dcfee55437ea1d91b6ce9ebd018012482868e7b8",
+          "datetime": 1791873000,
+          "summary": "From June we saw money rotate out of tech into reflationary sectors, also software, explains Amrita Roy and Uttam Dey. Now, money is moving back into tech."
+        },
+        {
           "headline": "Amazon.com vs. Alibaba: Which Consumer Stock Is a Better Buy in 2026?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=48064109132f58a040e930be8cd887eecbf5682e9e48558ac5c1be87580d5f18",
@@ -78837,9 +78879,9 @@
           "url": "https://finnhub.io/api/news?id=8a522d896a912dae34dd0aade5bb246a2c485f7b23f74e31da38bd4919f3d687",
           "datetime": 1791843771,
           "summary": "The grocer has “more layers, more handoffs and more overhead than we need,” CEO Greg Foran wrote in an internal memo.",
-          "headline_cn": "Kroger未来三年将裁减3000个企业岗位",
+          "headline_cn": "Kroger未来三年将裁减3000个公司岗位",
           "sentiment": "neutral",
-          "rationale": "渐进式裁员降低短期冲击",
+          "rationale": "成本控制举措，短期阵痛长期或增效",
           "market_relevant": true
         },
         {
@@ -79275,9 +79317,9 @@
           "url": "https://finnhub.io/api/news?id=f389101aa4c1f3ce5a1e056dd6abe2c42740272aa5c798e83d3cd32e7df70d89",
           "datetime": 1791793164,
           "summary": "Analysts raised targets for CRBG, MTN, CRM and FSLR, while cutting targets for PVLA, SPOT and AMZN; CRM and FSLR were upgraded.",
-          "headline_cn": "亚马逊目标价310美元？周一十大分析师预测汇总",
+          "headline_cn": "亚马逊涨至310美元？周一十大分析师预测",
           "sentiment": "bullish",
-          "rationale": "分析师上调目标价提供支撑",
+          "rationale": "机构普遍上调目标价",
           "market_relevant": true
         },
         {
@@ -80497,48 +80539,6 @@
           "url": "https://finnhub.io/api/news?id=d092152480784933b44c1d704b0bc82fb8cb551274c8fd3675824369e4da5383",
           "datetime": 1791466157,
           "summary": "Amazon lags the S&P 500 despite accelerating AWS AI growth and Anthropic IPO upside. Click here to read my most recent analysis of AMZN stock now."
-        },
-        {
-          "headline": "Why Is Amazon Blocking AI Shopping Agents? What Paul Graham Sees in It",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=c3dc0b99ff6c9ace22520f1e3b5f1bbaf339a0f92946e3edd9d896857058c052",
-          "datetime": 1791466106,
-          "summary": "Amazon AI agents ban gives startups their first real shot at building an Amazon rival since 1994, Paul Graham says, and Elon Musk agrees."
-        },
-        {
-          "headline": "Zenity Labs Discloses AgentCorruption, a Chain of AWS AgentCore Flaws That Allowed One Prompt to Take Over All AgentCore Agents Within an AWS Account and Region",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=2dfce061b378cd90a7d96022cd44a11035e599cdfbe248e5384c46bb1ead3c01",
-          "datetime": 1791464460,
-          "summary": "TORONTO, October 08, 2026--Zenity Labs today disclosed AgentCorruption, new research identifying a chain of security flaws in Amazon Bedrock AgentCore."
-        },
-        {
-          "headline": "Amazon Stock Has Another Growth Story Investors May Be Missing",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=a4048993ab130e4ab159a9f4fe878168300831ec7db1aed5b9f072de541fdcf6",
-          "datetime": 1791464449,
-          "summary": "Everyone knows the AWS story, but three faster-growing businesses quietly running alongside it could change how investors value Amazon entirely."
-        },
-        {
-          "headline": "In partnership with Amazon, Duracell Powers Up Austin Ahead of F1 Weekend with High-Power Pre-Race Celebration",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=2e86d62472f4369a00b344a3a787a7d2aba3137c5c14b39006bb186d83f16f1a",
-          "datetime": 1791464400,
-          "summary": "As Formula 1® returns to Austin this fall, Duracell is bringing premium, Texas-sized power and race-day excitement to the city with a celebration designed to plug fans into what drives them."
-        },
-        {
-          "headline": "Why AI Infrastructure Is Turning Meta and Amazon into Cash-Flow Sinks",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b8804dbd50588ff2f85301b7debd6e43b3aa57a2351622c50cc254851e68fe99",
-          "datetime": 1791463546,
-          "summary": "Meta and Amazon are burning through cash at a historic pace, but only one of them can show investors exactly when the bills stop and the returns begin."
-        },
-        {
-          "headline": "E-Commerce Update - Swiss Recommerce Market: Growth Driven By Circular Economy Policies",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=d65bbe5480765b694e11d32413484e5745351aef5a69f79b2d6ff8c3b974af56",
-          "datetime": 1791463054,
-          "summary": "Switzerland's recommerce market is expanding as it integrates certified refurbishment and retailer-led resale into the broader e-commerce landscape. Significant growth is projected, with the market estimated to reach approximately US$2.63 billion by 2030, driven by circular-economy policies and increasing consumer trust in second-hand marketplaces. Electronics remain a leading category, supported by telecom operators and retailers enhancing trade-in and refurbishment services. As competition..."
         }
       ],
       "ANET": [
@@ -80548,9 +80548,9 @@
           "url": "https://finnhub.io/api/news?id=60d2ff704729093268bda5281748c0bc34ca5545461c372a47e5a8c9b285377b",
           "datetime": 1791846589,
           "summary": "Shares of Super Micro Computer (SMCI) returned 65.7% between April 12 and October 9, 2026, easily outpacing the 15.2% gain for the S&P 500. Most of that rally occurred during the final three months of the period, a stretch that featured the company's August 11 quarterly update following an earlier release in early May. The August report included executive projections for significantly higher sales, though those forecasts are not results yet. So what did Super Micro tell investors in those two re",
-          "headline_cn": "市场对超微电脑股票的解读正确吗？",
+          "headline_cn": "市场对超微计算机股票的判断正确吗？",
           "sentiment": "neutral",
-          "rationale": "质疑市场定价但未给明确判断",
+          "rationale": "质疑市场定价，无明确立场",
           "market_relevant": true
         },
         {
@@ -80559,9 +80559,9 @@
           "url": "https://finnhub.io/api/news?id=79a7e39b02221b609187febb6a5349fb17166d82ae3867cef802be4e872ec372",
           "datetime": 1791831600,
           "summary": "d-Matrix today announced d-Matrix Squadron, a fleet of multi-rack systems offering megawatts of highly efficient inference compute for running AI models with extreme speed and energy efficiency at data center scale.",
-          "headline_cn": "d-Matrix发布数据中心规模AI推理Squadron计算集群",
+          "headline_cn": "d-Matrix发布数据中心级AI推理计算集群Squadron",
           "sentiment": "bullish",
-          "rationale": "AI基础设施创新利好芯片生态",
+          "rationale": "AI基础设施创新，利好算力生态",
           "market_relevant": true
         },
         {
@@ -80570,9 +80570,9 @@
           "url": "https://finnhub.io/api/news?id=dc28dfa8701adecd7656721b0e6168dd7f6c3539f14ae91a325705c72f04cdd4",
           "datetime": 1791830648,
           "summary": "Arista cleared our low-debt, strong-cash-flow screen. See the other cash-generating businesses that also made it to our list of Stocks with Low Debt and Strong Free Cash Flow. Its June-quarter filing adds an important qualification to that cash strength: deferred revenue reached $6.866 billion. Investors need to distinguish revenue waiting for recognition, cash collected and […]",
-          "headline_cn": "Arista有69亿美元递延收入，对现金流解释力如何？",
+          "headline_cn": "Arista拥有69亿美元递延收入，对现金流有何解释力？",
           "sentiment": "neutral",
-          "rationale": "财务分析角度无明确利好利空",
+          "rationale": "财务指标分析，无明确利好利空",
           "market_relevant": true
         },
         {
@@ -80581,9 +80581,9 @@
           "url": "https://finnhub.io/api/news?id=2f574669561f897b27c6ddbd95544a20393fdc3c8284efa7732d95746889eec0",
           "datetime": 1791817080,
           "summary": "Nokia heads into Q3 earnings with AI-driven growth opportunities, rising cloud revenue and new 5G initiatives, but competition and restructuring costs remain concerns.",
-          "headline_cn": "诺基亚准备发布Q3财报：买入、卖出还是持有？",
+          "headline_cn": "诺基亚准备公布Q3财报：买入、卖出还是持有？",
           "sentiment": "neutral",
-          "rationale": "财报前观望，方向未明",
+          "rationale": "财报前观望，方向待业绩确认",
           "market_relevant": true
         },
         {
@@ -80594,7 +80594,7 @@
           "summary": "Investors holding Cisco Systems (CSCO) stock alongside broad market index funds are navigating a shifting business model. The company's sales of AI infrastructure to hyperscalers, the largest cloud companies, accounted for about 6% of fiscal 2026 revenue. That figure stood at less than 2% a year earlier. This rapid transition leaves the stock exposed to sharper price movements than the broader market. So what has Cisco paid you over five years for those swings.",
           "headline_cn": "思科股票的股息是否足以补偿波动？",
           "sentiment": "neutral",
-          "rationale": "股息分析无明确操作建议",
+          "rationale": "股息收益讨论，无方向性判断",
           "market_relevant": true
         },
         {
@@ -81258,6 +81258,13 @@
       ],
       "BX": [
         {
+          "headline": "Market Chatter: Blackstone-Backed AirTrunk Data Center Operator Hits Pause on $1.5 Billion IPO",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=f5025afb10791484b660bb8366efd9850fbf383735e5dcbc2ea42de7c5bf9029",
+          "datetime": 1791880625,
+          "summary": "Blackstone-backed (BX) AirTrunk has delayed a planned $1.5 billion IPO of a real estate investment t"
+        },
+        {
           "headline": "Blackstone's Gray on 'Tough Choices' Ahead",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=de312efb25b75e434de936ca070849c25bbad3d14f4fd6d9cd46b553955e4f9a",
@@ -81771,6 +81778,20 @@
         }
       ],
       "CRWD": [
+        {
+          "headline": "Dan Ives Says Semiconductor Sell-Off Is ‘Way Overdone’ As AI Spending Fears Rattle NVDA, MU, SKHY, SNDK",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=1f5a700b93f1bcee04c9d7a4352012f10fdeaadaf29fd997e7f80022a3c6ab63",
+          "datetime": 1791888778,
+          "summary": "In an interview with CNBC, he said data center deals were accelerating and that the demand to supply ratio stands at 13:1."
+        },
+        {
+          "headline": "S&P Hits All-Time Highs, AI Trade Does All The Work",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=66560ff9f3f37bf54fdf7009dcfee55437ea1d91b6ce9ebd018012482868e7b8",
+          "datetime": 1791873000,
+          "summary": "From June we saw money rotate out of tech into reflationary sectors, also software, explains Amrita Roy and Uttam Dey. Now, money is moving back into tech."
+        },
         {
           "headline": "The Bull Case For CrowdStrike (CRWD) Could Change Following Falcon’s Launch In The OpenAI Marketplace",
           "source": "Yahoo",
@@ -82749,6 +82770,13 @@
       ],
       "DELL": [
         {
+          "headline": "Tuesday's pre-market session: top gainers and losers in the S&P500 index",
+          "source": "ChartMill",
+          "url": "https://finnhub.io/api/news?id=123cdc6d0ab0a2796cf336c8a3776abd50b85fd1ff13a6aa674423cb8464ac24",
+          "datetime": 1791894901,
+          "summary": "Discover the top S&P500 movers in Tuesday's pre-market session and stay informed about market dynamics."
+        },
+        {
           "headline": "Kholo Capital provides R275 million (US$17 million) mezzanine debt funding to DCC Holdings to support refinancing and future growth",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=f4684fd42075b2002ee1b118a942066d62e95f3c9da0b6ee9ea14f9f0263e2ea",
@@ -82768,9 +82796,9 @@
           "url": "https://finnhub.io/api/news?id=60d2ff704729093268bda5281748c0bc34ca5545461c372a47e5a8c9b285377b",
           "datetime": 1791846589,
           "summary": "Shares of Super Micro Computer (SMCI) returned 65.7% between April 12 and October 9, 2026, easily outpacing the 15.2% gain for the S&P 500. Most of that rally occurred during the final three months of the period, a stretch that featured the company's August 11 quarterly update following an earlier release in early May. The August report included executive projections for significantly higher sales, though those forecasts are not results yet. So what did Super Micro tell investors in those two re",
-          "headline_cn": "市场对超微电脑股票的解读正确吗？",
+          "headline_cn": "市场对超微计算机股票的判断正确吗？",
           "sentiment": "neutral",
-          "rationale": "质疑市场定价但未给明确判断",
+          "rationale": "质疑市场定价，无明确立场",
           "market_relevant": true
         },
         {
@@ -82809,7 +82837,7 @@
           "summary": "Investors holding Cisco Systems (CSCO) stock alongside broad market index funds are navigating a shifting business model. The company's sales of AI infrastructure to hyperscalers, the largest cloud companies, accounted for about 6% of fiscal 2026 revenue. That figure stood at less than 2% a year earlier. This rapid transition leaves the stock exposed to sharper price movements than the broader market. So what has Cisco paid you over five years for those swings.",
           "headline_cn": "思科股票的股息是否足以补偿波动？",
           "sentiment": "neutral",
-          "rationale": "股息分析无明确操作建议",
+          "rationale": "股息收益讨论，无方向性判断",
           "market_relevant": true
         },
         {
@@ -83536,6 +83564,13 @@
       ],
       "EBAY": [
         {
+          "headline": "Stock Market Today: Micron, Sandisk Fall on China Memory News",
+          "source": "ChartMill",
+          "url": "https://finnhub.io/api/news?id=ef29d9aa212ac6aeeb8f660273fca1c93daa065808d32fd189ccc501783f66b3",
+          "datetime": 1791887050,
+          "summary": "Micron, Sandisk and SK Hynix fell after China’s CXMT reported progress on denser memory chips. Meta rallied on Muse Wonder as bank earnings kick off."
+        },
+        {
           "headline": "eBay doubles down on surging customer behavior to drive holiday shopping",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=7c9d23b716ae7e95ce692942f6b3afa172ef13f9fa88b8a45074ae120e0d4c11",
@@ -84001,6 +84036,20 @@
       ],
       "ILMN": [
         {
+          "headline": "Mammogen Appoints Diagnostics Industry Leader, Dr. Robert S. Epstein, to Board of Directors",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=d54b22e722b141e744e058e7c16fb7b2955c64056b24094c4010687dd24e8779",
+          "datetime": 1791889320,
+          "summary": "Accomplished diagnostics and precision medicine leader brings decades of experience shaping the scientific, commercial and market success of category-defining companies across genomics, oncology and women's health NEWPORT BEACH, Calif., Oct. 13, 2026 (GLOBE NEWSWIRE) -- Mammogen, a precision health diagnostics company pioneering a new biological dimension in breast cancer detection, today announced the appointment of Robert S. Epstein, M.D., M.S., to its Board of Directors as an Independent Dire"
+        },
+        {
+          "headline": "Global Chromosomal Microarray Reflex Testing Market Report 2026-2030 | Capitalize on 9.1% CAGR as Thermo Fisher, LabCorp, Illumina, Agilent, and Natera Scale Precision Genomics",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=d2236c8c28c291f8d06435628151897272438e2c76e2f409c8bed47f16e3d589",
+          "datetime": 1791878580,
+          "summary": "Dublin, Oct. 13, 2026 (GLOBE NEWSWIRE) -- \"Chromosomal Microarray Reflex Testing Global Market Report 2026\" has been added to ResearchAndMarkets.com's offering. The global chromosomal microarray reflex testing market is experiencing strong growth as healthcare providers increase their use of advanced genomic diagnostics for prenatal, postnatal, oncology, and rare disease applications. The market is projected to grow from $1.39 billion in 2025 to $1.51 billion in 2026, representing a compound ann"
+        },
+        {
           "headline": "Illumina’s (ILMN) Sequencing Business Is Recovering, But Is the Stock Getting Ahead of Itself?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=698ff2ae220bf3aed31b49e2c8269d2037a26b847f19f42b230d464681a3af04",
@@ -84143,9 +84192,9 @@
           "url": "https://finnhub.io/api/news?id=07f64436b15bb515cf5704a99d822bb9995517764231539e379bbadc26ca483a",
           "datetime": 1791831601,
           "summary": "Abbott trades at a 18x forward P/E with $7.4B in free cash flow, while Intuitive Surgical commands a 39x multiple backed by zero debt and 20% revenue growth.",
-          "headline_cn": "雅培vs.直觉外科：2026年哪只医疗股更值得买？",
+          "headline_cn": "雅培vs达芬奇手术：2026年哪只医疗股更值得买？",
           "sentiment": "neutral",
-          "rationale": "对比分析无明确方向结论",
+          "rationale": "对比分析无明确推荐方向",
           "market_relevant": true
         },
         {
@@ -84154,9 +84203,9 @@
           "url": "https://finnhub.io/api/news?id=5b549af35f8c34e8aff5bf2125e0b56139f22e32e5010a2ac3f69e489b9878c2",
           "datetime": 1791825387,
           "summary": "Medtronic (MDT) stock trades at 21.6 times earnings, sitting about level with the S&P 500 at 21.9. Shareholders paying that market price need to know what they are buying, particularly as corporate priorities shift. During its fiscal Q2 2025 call in November 2024, management first reviewed its fastest-growing businesses, including cardiac ablation, before turning to its established market leaders. Now, the company leads with something newer. So what is Medtronic putting first today.",
-          "headline_cn": "美敦力股票的投资逻辑变了吗？",
+          "headline_cn": "美敦力股票已变成不同的投资标的？",
           "sentiment": "neutral",
-          "rationale": "逻辑探讨未给操作方向",
+          "rationale": "投资逻辑探讨，无明确信号",
           "market_relevant": true
         },
         {
@@ -84165,9 +84214,9 @@
           "url": "https://finnhub.io/api/news?id=e56eedd987cc94a618712e6a1e61bc2c1f2659bbfefcac8700a32838ef55df07",
           "datetime": 1791819300,
           "summary": "Two healthcare stocks that are leading their niches, and two that investors aren't giving enough credit to in the same niches.",
-          "headline_cn": "未来十年值得持有的4只医疗股",
+          "headline_cn": "值得持有十年的4只医疗股",
           "sentiment": "bullish",
-          "rationale": "长期看好提振医疗板块信心",
+          "rationale": "长期看好医疗板块投资价值",
           "market_relevant": true
         },
         {
@@ -84176,9 +84225,9 @@
           "url": "https://finnhub.io/api/news?id=f389101aa4c1f3ce5a1e056dd6abe2c42740272aa5c798e83d3cd32e7df70d89",
           "datetime": 1791793164,
           "summary": "Analysts raised targets for CRBG, MTN, CRM and FSLR, while cutting targets for PVLA, SPOT and AMZN; CRM and FSLR were upgraded.",
-          "headline_cn": "亚马逊目标价310美元？周一十大分析师预测汇总",
+          "headline_cn": "亚马逊涨至310美元？周一十大分析师预测",
           "sentiment": "bullish",
-          "rationale": "分析师上调目标价提供支撑",
+          "rationale": "机构普遍上调目标价",
           "market_relevant": true
         },
         {
@@ -84187,7 +84236,7 @@
           "url": "https://finnhub.io/api/news?id=3bf6d542571ae4cf122316a76cd02d326c41fa3347beeca99512457d5a5a22f1",
           "datetime": 1791785226,
           "summary": "BTIG  analyst Ryan Zimmerman   maintains Intuitive Surgical (NASDAQ:ISRG) with a Buy and lowers the price target from $469 to $454.",
-          "headline_cn": "BTIG维持直觉外科买入评级，下调目标价至454美元",
+          "headline_cn": "BTIG维持达芬奇手术买入评级，下调目标价至454美元",
           "sentiment": "neutral",
           "rationale": "维持买入但降目标价，信号混合",
           "market_relevant": true
@@ -84365,14 +84414,36 @@
       ],
       "KR": [
         {
+          "headline": "Update: Market Chatter: Albertsons Seeking at Least $8 Billion From Kroger After Failed Merger",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=39bec70632bb4fd42077f21dcf90133ef8fc8bdd34c1ec8c3a4aa930ee10c8bc",
+          "datetime": 1791890953,
+          "summary": "(Updates with Albertsons' reply to a request for comment in the penultimate paragraph.) Albertson",
+          "headline_cn": "更新：传Albertsons因并购失败向Kroger索赔至少80亿美元",
+          "sentiment": "bearish",
+          "rationale": "诉讼风险加大运营不确定性",
+          "market_relevant": true
+        },
+        {
+          "headline": "Wall Street Breakfast Podcast: Six Flags Shares Plunge Premarket",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=e3f4441d944eea682c76d64f545c7d2dde3efacf24443159e08046ca9d8f9ae9",
+          "datetime": 1791873900,
+          "summary": "FUN stock plunges as fatal incident shakes Six Flags. Disney steps in as Character.AI files chapter 11. Micron unleashes a record buyback.",
+          "headline_cn": "华尔街早餐播客：六旗娱乐盘前暴跌",
+          "sentiment": "bearish",
+          "rationale": "个股暴跌反映业绩或预期恶化",
+          "market_relevant": true
+        },
+        {
           "headline": "Albertsons Companies (ACI) Seeks $8 Billion After Its Merger Collapsed",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=3609c5e7a55f00d9f734eea00f8312e1d4d7f4e575024d29f7fddf3eb67300f7",
           "datetime": 1791871973,
           "summary": "Albertsons Companies (NYSE: ACI) is seeking at least US$8b from Kroger after their proposed merger collapsed. The claim follows the termination of the planned supermarket tie up that had aimed to combine two major US grocery chains. Albertsons is reported to be pursuing the multibillion dollar payment as compensation linked to the failed transaction terms. Albertsons pressing Kroger for at least US$8b after the scrapped merger is only one part of the story. Take a look at 4 warning signs we...",
-          "headline_cn": "Albertsons并购失败后寻求80亿美元融资",
+          "headline_cn": "Albertsons并购失败后寻求80亿美元赔偿",
           "sentiment": "bearish",
-          "rationale": "并购失败暴露战略受挫",
+          "rationale": "并购破裂引发诉讼，增加成本",
           "market_relevant": true
         },
         {
@@ -84381,9 +84452,9 @@
           "url": "https://finnhub.io/api/news?id=5341b8df92c053ac7373acfbaddf756a1a2209bb452be8294e218e39933335e1",
           "datetime": 1791846830,
           "summary": "The Kroger Co. plans to eliminate roughly 3,000 corporate positions over the next three years to streamline operations, cut costs, and redirect investments toward store-level pricing and service.",
-          "headline_cn": "Kroger据报将裁减37%企业员工进行运营改革",
+          "headline_cn": "Kroger据报将裁减37%公司职员进行运营改革",
           "sentiment": "neutral",
-          "rationale": "大规模重组，成本优化与执行风险并存",
+          "rationale": "裁员降成本但影响士气，利空利好抵消",
           "market_relevant": true
         },
         {
@@ -84392,9 +84463,9 @@
           "url": "https://finnhub.io/api/news?id=8a522d896a912dae34dd0aade5bb246a2c485f7b23f74e31da38bd4919f3d687",
           "datetime": 1791843771,
           "summary": "The grocer has “more layers, more handoffs and more overhead than we need,” CEO Greg Foran wrote in an internal memo.",
-          "headline_cn": "Kroger未来三年将裁减3000个企业岗位",
+          "headline_cn": "Kroger未来三年将裁减3000个公司岗位",
           "sentiment": "neutral",
-          "rationale": "渐进式裁员降低短期冲击",
+          "rationale": "成本控制举措，短期阵痛长期或增效",
           "market_relevant": true
         },
         {
@@ -84402,22 +84473,14 @@
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=f60e72e6e096383b84fe0c2e4e660eeecec01c2fa4f74d008bf383521e32454b",
           "datetime": 1791839814,
-          "summary": "Investing.com -- The Kroger Co. (NYSE: KR) has announced plans to eliminate approximately 3,000 corporate positions over the next three years. The sweeping reduction is part of a broader strategic initiative led by Chief Executive Officer Greg Foran to streamline the grocery chain’s operations and enhance organizational agility.",
-          "headline_cn": "Kroger重大重组中裁减超三分之一企业员工",
-          "sentiment": "neutral",
-          "rationale": "结构调整信号，效果待观察",
-          "market_relevant": true
+          "summary": "Investing.com -- The Kroger Co. (NYSE: KR) has announced plans to eliminate approximately 3,000 corporate positions over the next three years. The sweeping reduction is part of a broader strategic initiative led by Chief Executive Officer Greg Foran to streamline the grocery chain’s operations and enhance organizational agility."
         },
         {
           "headline": "Kroger (KR) Increases Despite Market Slip: Here's What You Need to Know",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=a2336c74458d69120ab2a4d2f3d40817938d93f392e15d6f9751558227c59d20",
           "datetime": 1791839705,
-          "summary": "Kroger (KR) reached $62.56 at the closing of the latest trading day, reflecting a +1.49% change compared to its last close.",
-          "headline_cn": "Kroger逆市上涨：你需要知道的关键信息",
-          "sentiment": "bullish",
-          "rationale": "逆市表现显示个股韧性",
-          "market_relevant": true
+          "summary": "Kroger (KR) reached $62.56 at the closing of the latest trading day, reflecting a +1.49% change compared to its last close."
         },
         {
           "headline": "Is Walmart Stock Increasing Your Market Risk?",
@@ -84625,6 +84688,13 @@
       ],
       "MKC": [
         {
+          "headline": "3 Top Dividend Stocks Yielding 4% or More to Buy Right Now for Passive Income",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=cf898b10414e10776a92308aa49a3a8fa49169e9f24785e478d32c43f9352ce2",
+          "datetime": 1791893100,
+          "summary": "These grocery stocks pay yields from 4.3% to 5.2%, funded by brands people buy every week."
+        },
+        {
           "headline": "3 charts sum up why many US households are struggling right now",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=346c6bc55ca1728c2a485c15174c909d12b0cd7f6a983b18ed8fc60dbe8a492a",
@@ -84710,6 +84780,13 @@
         }
       ],
       "MNST": [
+        {
+          "headline": "e.l.f. Beauty vs. Monster Beverage: Which Consumer Goods Stock Is a Better Buy in 2026?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=6afa99142a6b9a1b2019e85fb94241248c320ae1cfddc7a3246d452cd66eebc6",
+          "datetime": 1791886453,
+          "summary": "Monster posted record quarterly revenue in Q2 2026 with growth across every region. e.l.f. Beauty delivered its 30th consecutive quarter of sales growth but faces rising costs and margin pressure."
+        },
         {
           "headline": "Beverages, Alcohol, and Tobacco Stocks Q2 Teardown: Monster (NASDAQ:MNST) Vs The Rest",
           "source": "Yahoo",
@@ -84817,6 +84894,13 @@
         }
       ],
       "MPC": [
+        {
+          "headline": "Valero Energy: My Top Pick For 2027 As The Strait Of Hormuz Remains Under Siege",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=fd197e4ff5132b75dacc0a34e1ed444b38f4e7bbe795ebb7d1af4e86564b86db",
+          "datetime": 1791880303,
+          "summary": "Valero Energy (VLO) top 2027 long idea: macro tailwinds, low US oil reserves, strong Q2 beat, 8x P/E and 50%+ upside."
+        },
         {
           "headline": "4 Value Stocks to Buy Using the PEG Ratio for Better Returns",
           "source": "Yahoo",
@@ -85113,6 +85197,83 @@
         }
       ],
       "MSFT": [
+        {
+          "headline": "Tech Selloff Deepens as Bank Earnings Fuel Stock Market Rotation",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=9328fa0cab3286cc651f7448b00e2e8188e5e7ff7ac8ffa01eda5c724ff2fe91",
+          "datetime": 1791892140,
+          "summary": "The stock market is reacting to big bank earnings, Micron gets a warning from Elon Musk about Chinese memory chips, and more news to start your day."
+        },
+        {
+          "headline": "Microsoft Could Be Worth Far More as Its Cloud and AI Businesses Scale",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=ea626f314a57fab5059aee5e249e5c1cd242b21c8704667dc21e83ca41c88e2a",
+          "datetime": 1791890101,
+          "summary": "Azure is accelerating, the commercial backlog just hit a staggering new record, and Wall Street is nearly unanimous on the stock. So why does free cash flow keep shrinking, and what does that mean for where Microsoft goes from here?"
+        },
+        {
+          "headline": "Dan Ives Says Semiconductor Sell-Off Is ‘Way Overdone’ As AI Spending Fears Rattle NVDA, MU, SKHY, SNDK",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=1f5a700b93f1bcee04c9d7a4352012f10fdeaadaf29fd997e7f80022a3c6ab63",
+          "datetime": 1791888778,
+          "summary": "In an interview with CNBC, he said data center deals were accelerating and that the demand to supply ratio stands at 13:1."
+        },
+        {
+          "headline": "Stock Market Today: Micron, Sandisk Fall on China Memory News",
+          "source": "ChartMill",
+          "url": "https://finnhub.io/api/news?id=ef29d9aa212ac6aeeb8f660273fca1c93daa065808d32fd189ccc501783f66b3",
+          "datetime": 1791887050,
+          "summary": "Micron, Sandisk and SK Hynix fell after China’s CXMT reported progress on denser memory chips. Meta rallied on Muse Wonder as bank earnings kick off."
+        },
+        {
+          "headline": "Nvidia Stock Slips. How Broadcom and Microsoft Are Shaking the Chip Sector.",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=f7eeeef73b2ec848a2b41f7811e8787998222fd240d3bb998c8ac3e3bb759c70",
+          "datetime": 1791886800,
+          "summary": "Nvidia stock has fallen back from record highs after news from Broadcom and Microsoft rocked the semiconductor sector."
+        },
+        {
+          "headline": "Holm Security launches security assessment for Microsoft 365",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=177a092d9bbbc31c4e83f824b574f2a9161d972a9c427672c2d0bd0aaeec55df",
+          "datetime": 1791885600,
+          "summary": "STOCKHOLM, Oct. 13, 2026 (GLOBE NEWSWIRE) -- Holm Security today extended its Vulnerability Management platform with a new Microsoft 365 security assessment, now generally available. The assessment checks a tenant's configuration against over 100 controls based on the CISA Secure Cloud Business Applications (SCuBA) baseline. Unlike traditional vulnerability scanning, which looks for missing patches and known software vulnerabilities, the new capability focuses on configuration, identity, email,"
+        },
+        {
+          "headline": "Every major Nvidia customer is now a competitor as Microsoft reveals new Maia chip",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=5be4aa395811f5da736309458a900a3b9659766bd8a95219e0ea9e7572357345",
+          "datetime": 1791882007,
+          "summary": "The trillion-dollar AI race is moving from software to silicon, as Microsoft's massive bet on its proprietary Maia chips proves Big Tech wants to wean itself off Nvidia's dominance."
+        },
+        {
+          "headline": "AMD CEO Lisa Su Sees AI Inference Boom Fueling $1.5T Demand By 2030: 'About 60% Of The Market Going Forward'",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=31a02d0f7626662553f9442b1c9134d124fe0d2d6f2986ff0d370c20800417f9",
+          "datetime": 1791881921,
+          "summary": "AMD is scaling its AI hardware business as inference and AI agents boost computing needs."
+        },
+        {
+          "headline": "Japan High Bandwidth Memory (HBM) Market Share, Trends, and Growth Forecasts, 2026-2031 | AI Data Centers and HBM4 Adoption Fuel 24.05% CAGR to USD 311.53 Million",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=8c3a8f4cef5ab77aca2ce79949e9e9e6922524001b327a34383316d68bec2859",
+          "datetime": 1791879600,
+          "summary": "Secure HBM supply early, accelerate HBM3E-to-HBM4 qualification, and leverage Japan’s materials ecosystem to capture AI data center demand and reduce import risk.Dublin, Oct. 13, 2026 (GLOBE NEWSWIRE) -- \"Japan HBM - Market Share Analysis, Industry Trends & Statistics, Growth Forecasts (2026-2031)\" has been added to ResearchAndMarkets.com's offering. The Japan high bandwidth memory market is projected to increase from USD 84.48 million in 2025 to USD 106.07 million in 2026 before reaching USD 31"
+        },
+        {
+          "headline": "Is Morningstar's (MORN) New AI Platform Quietly Rewriting Its Data Moat And Competitive Edge?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=049b95184d1120bdd77b0c7ba5734e10b8d5e8f5faa4d4eeb685f8892e216958",
+          "datetime": 1791879263,
+          "summary": "Morningstar, Inc. recently launched Morningstar Direct AI, a browser-based upgrade to its flagship platform that embeds three task-specific AI agents for product development, distribution support, and manager research, all powered by its proprietary datasets, analytics, and ratings across public and private markets. By also making its investment intelligence accessible through tools like Claude, Microsoft Copilot, and ChatGPT, Morningstar is extending its research and data into the everyday..."
+        },
+        {
+          "headline": "S&P Hits All-Time Highs, AI Trade Does All The Work",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=66560ff9f3f37bf54fdf7009dcfee55437ea1d91b6ce9ebd018012482868e7b8",
+          "datetime": 1791873000,
+          "summary": "From June we saw money rotate out of tech into reflationary sectors, also software, explains Amrita Roy and Uttam Dey. Now, money is moving back into tech."
+        },
         {
           "headline": "Syndax Pharmaceuticals (SNDX) Is Down 7.2% After Axatilimab IPF Trial Misses Endpoint Has The Bull Case Changed?",
           "source": "Yahoo",
@@ -86078,9 +86239,9 @@
           "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
           "datetime": 1791570784,
           "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
-          "headline_cn": "Adobe股票为订阅增长放缓做好准备了吗？",
+          "headline_cn": "Adobe股票准备好面对订阅增长放缓了吗？",
           "sentiment": "bearish",
-          "rationale": "增长放缓预期施压估值",
+          "rationale": "增长放缓担忧施压估值",
           "market_relevant": true
         },
         {
@@ -86768,83 +86929,6 @@
           "url": "https://finnhub.io/api/news?id=d8198785af06b9d16ca957c2452cee162f4ac74103f5d3c648f23a87bf208ddb",
           "datetime": 1791476940,
           "summary": "AAPL shares have surged 24% YTD, fueled by iPhone demand, Services growth and AI prospects. Yet premium valuation and supply constraints warrant caution."
-        },
-        {
-          "headline": "NOW is Overvalued at 28.92X P/E: Buy, Sell or Hold the Stock?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=a9514f596cd2b205a5e16ba0e6d9ce626d296431e2f2ab6b97064a5314e5e479",
-          "datetime": 1791476700,
-          "summary": "ServiceNow shares have fallen 24.6% YTD amid AI competition and valuation concerns, but rising AI adoption and cybersecurity expansion support growth prospects."
-        },
-        {
-          "headline": "2 Stocks Worth Buying and Holding for Life",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=f5a91562d1f10e5ab8c66014db095f9fba5bb2d7fd571c37460594c72c7ba8e0",
-          "datetime": 1791476400,
-          "summary": "Two tech titans are folding AI into the products billions already use, and that's exactly what makes them built to last."
-        },
-        {
-          "headline": "How Investors May Respond To VinFast Auto (VFS) Expanding Its Electric Bus Footprint In Europe And The U.S.",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=4e06dea9105b9cbed54101363a099505ded2d46a9651aadf2aa6f89a7a6355dc",
-          "datetime": 1791476305,
-          "summary": "In recent weeks, NexMove announced a partnership with VinFast to bring VinFast electric buses to U.S. customers via an as-a-service model from early 2028, while VinFast also detailed its Europe-focused product lineup and secured full European certification for its EB 12 bus to meet strict zero-emission requirements. Together, these moves highlight VinFast’s push to become a comprehensive electric mobility supplier across public transport and passenger vehicles in both Europe and the United..."
-        },
-        {
-          "headline": "Securitize's tokenized US stock trading is here, bringing Nvidia, Tesla, & Apple to Solana",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=fcce66fd17d67a9d216ddc87c381df5c5a98f22f25f6e33d190d8b0b0fa4d22d",
-          "datetime": 1791476248,
-          "summary": "Scott Melker explains what crypto investors need to know about Securitize's (SECZ) newly launched tokenized stock trading. \"The Daily Wolf with Scott Melker\" airs every day at 12:00 p.m. Tune in for your daily dose of all things crypto."
-        },
-        {
-          "headline": "What could trigger a US debt crisis? Sozzi discusses with economist Kenneth Rogoff",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=ba7dba3492558ae45a4c107b3c7791a564e600f8ffb29d9f44734d43b6103ca1",
-          "datetime": 1791475399,
-          "summary": "Yahoo Finance Executive Editor Brian Sozzi takes a look at the biggest stories as the trading day kicks off, weighing in on PepsiCo's (PEP) latest earnings results, General Motors' (GM) latest update, and more. Sozzi also sits down with Kenneth Rogoff, the International Monetary Fund's (IMF) former chief economist and Harvard University's current Maurits C. Boas chair and professor of international economics. The two discuss various looming risks to the US economy, including the deficit, the specter of a debt crisis, the AI economy's growing wealth divide, and more. Rogoff is also a chess grandmaster and former chess champion."
-        },
-        {
-          "headline": "US government quietly offloads $770M in bitcoin",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=55322badc365bd09bd4084f4d7db18a270fb9c48336025eb8fc00096514115b3",
-          "datetime": 1791475348,
-          "summary": "Scott Melker discusses why bitcoin (BTC-USD) exchange-traded funds (ETFs) have lost millions of dollars this year, why the US government is selling $770M in bitcoin and explains what crypto investors need to know about Securitize's (SECZ) newly launched tokenized stock trading. \"The Daily Wolf with Scott Melker\" airs every day at 12:00 p.m. Tune in for your daily dose of all things crypto."
-        },
-        {
-          "headline": "Trump disclosed millions in new trades in SpaceX and Microsoft. Today, he's giving medals to their CEOs.",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=0461d52829f8e8ba3faf5001c5788afa8899390d7390067fc014d214e02043f5",
-          "datetime": 1791475343,
-          "summary": "President Trump made an array of stock trades valued at millions of dollars in August in major tech companies whose leaders have forged close ties with the president."
-        },
-        {
-          "headline": "Google Escalates the AI Agent Wars With Its New Gemini Agent",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=9f047a00a86a3aaeb668fb4c47eebfa780abf6c3d5784a1c1795c400738f7d22",
-          "datetime": 1791475260,
-          "summary": "Google’s new Gemini agent can complete tasks across workplace apps, intensifying competition with OpenAI and Microsoft for business customers."
-        },
-        {
-          "headline": "Top Midday Stories: Microsoft, Adobe Among Tech Firms Suspended From US Immigration Program; Starbucks Has Explored Chipotle Takeover",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=09f63c6e953e73e45d5c8e5ed68aaa12fe3ee4bad838462f85a047139cb903b8",
-          "datetime": 1791474479,
-          "summary": "All three major US stock indexes were down in late-morning trading, as oil prices rose amid the ongo"
-        },
-        {
-          "headline": "$2.6 Trillion and Climbing: Where the AI Spending Is Going",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=741bb519c90b50f0485cc84529dd85a3eb07a8ea6f17325263125eb488d10e2c",
-          "datetime": 1791474420,
-          "summary": "Wall Street Investor News Commentary - Worldwide spending on artificial intelligence is forecast to reach $2.59 trillion in 2026, up 47% from $1.76 trillion in 2025, and to climb to $3.49 trillion in 2027, according to Gartner. AI infrastructure is the largest piece of that total at $1.43 trillion this year, more than 45% of all AI spending. \"2026 will be the inflection year,\" said John-David Lovelock, Distinguished VP Analyst at Gartner. Active Companies from around the markets with current dev"
-        },
-        {
-          "headline": "Microsoft Is Suspended From Green Card Program. Vance Accuses Company Of H-1B Abuse.",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=10e73f0f555c76cf3e16887e63a0a8e2f11b2b06fdc19c738f2e43ddfadc83db",
-          "datetime": 1791473992,
-          "summary": "The Trump administration says Microsoft and several other major technology companies are being suspended from a federal program used to sponsor foreign workers for permanent U.S. residency."
         }
       ],
       "PM": [
@@ -86913,6 +86997,13 @@
         }
       ],
       "PSX": [
+        {
+          "headline": "Valero Energy: My Top Pick For 2027 As The Strait Of Hormuz Remains Under Siege",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=fd197e4ff5132b75dacc0a34e1ed444b38f4e7bbe795ebb7d1af4e86564b86db",
+          "datetime": 1791880303,
+          "summary": "Valero Energy (VLO) top 2027 long idea: macro tailwinds, low US oil reserves, strong Q2 beat, 8x P/E and 50%+ upside."
+        },
         {
           "headline": "Phillips 66: Momentum Makes Waiting Hard",
           "source": "SeekingAlpha",
@@ -87394,9 +87485,9 @@
           "url": "https://finnhub.io/api/news?id=f389101aa4c1f3ce5a1e056dd6abe2c42740272aa5c798e83d3cd32e7df70d89",
           "datetime": 1791793164,
           "summary": "Analysts raised targets for CRBG, MTN, CRM and FSLR, while cutting targets for PVLA, SPOT and AMZN; CRM and FSLR were upgraded.",
-          "headline_cn": "亚马逊目标价310美元？周一十大分析师预测汇总",
+          "headline_cn": "亚马逊涨至310美元？周一十大分析师预测",
           "sentiment": "bullish",
-          "rationale": "分析师上调目标价提供支撑",
+          "rationale": "机构普遍上调目标价",
           "market_relevant": true
         },
         {
@@ -87575,9 +87666,9 @@
           "url": "https://finnhub.io/api/news?id=5b549af35f8c34e8aff5bf2125e0b56139f22e32e5010a2ac3f69e489b9878c2",
           "datetime": 1791825387,
           "summary": "Medtronic (MDT) stock trades at 21.6 times earnings, sitting about level with the S&P 500 at 21.9. Shareholders paying that market price need to know what they are buying, particularly as corporate priorities shift. During its fiscal Q2 2025 call in November 2024, management first reviewed its fastest-growing businesses, including cardiac ablation, before turning to its established market leaders. Now, the company leads with something newer. So what is Medtronic putting first today.",
-          "headline_cn": "美敦力股票的投资逻辑变了吗？",
+          "headline_cn": "美敦力股票已变成不同的投资标的？",
           "sentiment": "neutral",
-          "rationale": "逻辑探讨未给操作方向",
+          "rationale": "投资逻辑探讨，无明确信号",
           "market_relevant": true
         },
         {
@@ -87815,6 +87906,34 @@
         }
       ],
       "TGT": [
+        {
+          "headline": "If I Could Invest $1,000 in Just 1 Dividend Stock for the Next 5 Years, I'd Pick This Clear Standout Over the Vanguard S&P 500 ETF (VOO)",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=c064f8d4582f40722916d9eb44649743d8d732fe62c4ac1431832bec9456eab6",
+          "datetime": 1791890340,
+          "summary": "Retail giant Target offers secure dividends and plenty of upside potential."
+        },
+        {
+          "headline": "e.l.f. Beauty vs. Monster Beverage: Which Consumer Goods Stock Is a Better Buy in 2026?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=6afa99142a6b9a1b2019e85fb94241248c320ae1cfddc7a3246d452cd66eebc6",
+          "datetime": 1791886453,
+          "summary": "Monster posted record quarterly revenue in Q2 2026 with growth across every region. e.l.f. Beauty delivered its 30th consecutive quarter of sales growth but faces rising costs and margin pressure."
+        },
+        {
+          "headline": "New Strong Buy Stocks for October 13th",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=fcc10312714dcf267f5f5a350449489dce63ae2406095f476480a7fa3e45ef65",
+          "datetime": 1791883740,
+          "summary": "NATL, BGC, CCNE, FRME and UVSP have been added to the Zacks Rank #1 (Strong Buy) List on October 13, 2026."
+        },
+        {
+          "headline": "Best Momentum Stocks to Buy for October 13th",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=3bbb205bd9f2bd9ca87f29e6fbaf4b026bd08aabb98d3113815ee35b321d4e91",
+          "datetime": 1791876480,
+          "summary": "REPYY, TGT and CLMT made it to the Zacks Rank #1 (Strong Buy) momentum stocks list on October 13, 2026."
+        },
         {
           "headline": "Target’s Intern-to-CEO Story Isn't Alone",
           "source": "Yahoo",
@@ -89316,34 +89435,34 @@
   },
   "macro": {
     "schema_version": "macro.v1",
-    "generated_at": "2026-10-13T09:09:58Z",
+    "generated_at": "2026-10-13T13:02:19Z",
     "economic": [
       {
         "indicator": "10Y国债",
-        "value": "5.24%",
+        "value": "5.19%",
         "prev": "5.24%",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "source": "Yahoo Finance",
-        "sentiment": "neutral",
-        "rationale": "10Y国债收益率持平，无变化"
+        "sentiment": "bullish",
+        "rationale": "10年期国债收益率下降，融资成本降低利好股市"
       },
       {
         "indicator": "5Y国债",
-        "value": "5.02%",
+        "value": "4.98%",
         "prev": "5.02%",
-        "date": "2026-10-12",
+        "date": "2026-10-13",
         "source": "Yahoo Finance",
-        "sentiment": "neutral",
-        "rationale": "5Y国债收益率持平，无变化"
+        "sentiment": "bullish",
+        "rationale": "5年期国债收益率下降，融资成本降低利好股市"
       },
       {
         "indicator": "13周国债",
         "value": "4.05%",
-        "prev": "4.06%",
-        "date": "2026-10-12",
+        "prev": "4.05%",
+        "date": "2026-10-13",
         "source": "Yahoo Finance",
         "sentiment": "neutral",
-        "rationale": "13周国债收益率微降，影响有限"
+        "rationale": "13周国债收益率持平，无明显方向性影响"
       },
       {
         "indicator": "CPI",
@@ -89352,7 +89471,7 @@
         "date": "2026-08-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "CPI上升，通胀压力增加"
+        "rationale": "CPI上升显示通胀压力加大，可能推动加息预期"
       },
       {
         "indicator": "核心CPI",
@@ -89361,7 +89480,7 @@
         "date": "2026-08-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "核心CPI上升，通胀压力增加"
+        "rationale": "核心CPI上升显示通胀压力持续，加息压力增加"
       },
       {
         "indicator": "失业率",
@@ -89370,7 +89489,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "失业率上升，经济走弱"
+        "rationale": "失业率上升显示经济走弱，企业盈利预期承压"
       },
       {
         "indicator": "核心PCE",
@@ -89379,7 +89498,7 @@
         "date": "August 2026",
         "source": "BEA 官方网页",
         "sentiment": "bearish",
-        "rationale": "核心PCE为3%，通胀压力存在"
+        "rationale": "核心PCE为3%显示通胀高于美联储2%目标，加息压力"
       }
     ],
     "speakers": [
@@ -89387,28 +89506,122 @@
         "person": "Warsh",
         "title": null,
         "content": "US bond traders await CPI, Warsh for insight on Fed's rate path - Yahoo Finance Singapore",
-        "time": null,
-        "source": "📄昨日-中等权重",
+        "time": "10-11 10:23",
+        "source": "Yahoo Finance Singapore",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": "美国债券交易员等待CPI数据和沃什讲话，以洞察美联储利率路径",
         "sentiment": "neutral",
-        "rationale": "仅提及等待数据和讲话，无明确方向"
+        "rationale": "市场等待CPI和沃什讲话，观望情绪无明确方向"
       },
       {
         "person": "Warsh",
         "title": null,
         "content": "What To Expect In Markets This Week: JPM, GS, C Bank Earnings, CPI Report, Kevin Warsh's Speech And More - TradingView",
-        "time": null,
-        "source": "📄昨日-中等权重",
+        "time": "10-11 09:13",
+        "source": "TradingView",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": "本周市场看点：摩根大通、高盛、花旗银行财报，CPI报告，凯文·沃什讲话等",
         "sentiment": "neutral",
-        "rationale": "预告事件，无明确政策倾向"
+        "rationale": "预告本周关键事件，市场观望无明确方向指引"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Most Fed Officials See Another Rate Hike This Year but Leave Timing Open - Barron's",
+        "time": "10-12 00:47",
+        "source": "Barron's",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": "多数美联储官员认为今年还需再加息一次，但时机未定",
+        "sentiment": "bearish",
+        "rationale": "多数美联储官员认为今年还需加息一次，鹰派立场"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "MBA forecast: Mortgage volume to dip below $2T in 2027 as 7% rates linger - HousingWire",
+        "time": "10-11 19:24",
+        "source": "HousingWire",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": "MBA预测：2027年抵押贷款规模将降至2万亿美元以下，因7%利率持续",
+        "sentiment": "bearish",
+        "rationale": "预测抵押贷款利率维持7%高位至2027年，融资成本高企"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Mortgage Rates Will Remain Above 7% Through 2027, Top Economist Forecasts - Realtor.com",
+        "time": "10-11 19:23",
+        "source": "Realtor.com",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": "顶级经济学家预测：抵押贷款利率将在2027年前保持在7%以上",
+        "sentiment": "bearish",
+        "rationale": "预测抵押贷款利率2027年前保持7%以上，融资成本高"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "MBA Forecast: Mortgage Originations to Decrease 5% in 2027 as Mortgage Rates Remain Above 7% - MBA Newslink",
+        "time": "10-11 03:00",
+        "source": "MBA Newslink",
+        "age_tag": "📑前日-低权重",
+        "content_cn": "MBA预测：2027年抵押贷款发放量将减少5%，因利率维持在7%以上",
+        "sentiment": "bearish",
+        "rationale": "预测2027年抵押贷款减少5%且利率超7%，经济活动受抑"
       },
       {
         "person": "Trump",
         "title": null,
         "content": "Don’t blame Ukraine: Prices go up and up, thanks to Trump’s wars - SMH.com.au",
-        "time": null,
-        "source": "📰今日-高权重",
+        "time": "10-12 21:08",
+        "source": "SMH.com.au",
+        "age_tag": "📰今日-高权重",
+        "content_cn": "别怪乌克兰：物价持续上涨是特朗普的贸易战导致",
         "sentiment": "bearish",
-        "rationale": "提及价格上涨，暗示通胀压力"
+        "rationale": "归因特朗普政策导致物价持续上涨，通胀压力负面"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Middle Market Debt Weekly: Fed Minutes Point to a December Hike - ABF Journal",
+        "time": "10-12 03:45",
+        "source": "ABF Journal",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": "中端市场债务周报：美联储会议纪要指向12月加息",
+        "sentiment": "bearish",
+        "rationale": "美联储会议纪要指向12月加息，鹰派信号利空"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - FOREX.com",
+        "time": "10-13 05:35",
+        "source": "FOREX.com",
+        "age_tag": "🔥今日最新-权重最高",
+        "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易",
+        "sentiment": "neutral",
+        "rationale": "技术分析预测，无明确宏观政策或经济方向指引"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Gold Price Forecast: XAU/USD retraces losses as US yields and Oil prices ease - FXStreet",
+        "time": "10-13 05:28",
+        "source": "FXStreet",
+        "age_tag": "🔥今日最新-权重最高",
+        "content_cn": "黄金价格预测：随着美国国债收益率和油价回落，金价回补跌幅",
+        "sentiment": "neutral",
+        "rationale": "黄金价格技术走势分析，无明确宏观方向信号"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Why Economists Think Higher Bond Yields Are Here to Stay - WSJ",
+        "time": "10-11 05:30",
+        "source": "WSJ",
+        "age_tag": "📑前日-低权重",
+        "content_cn": "为何经济学家认为更高的债券收益率将持续存在",
+        "sentiment": "bearish",
+        "rationale": "经济学家认为高债券收益率将持续，融资成本高企"
       }
     ],
     "error": null
@@ -89481,8 +89694,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-13T13:01:15Z",
-    "technical_updated_at": "2026-10-13T13:01:17Z",
+    "market_updated_at": "2026-10-13T13:16:20Z",
+    "technical_updated_at": "2026-10-13T13:16:23Z",
     "counts": {
       "core": 14,
       "observation": 30,
@@ -89578,11 +89791,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-13T13:00:43Z",
+    "generated_at": "2026-10-13T13:15:36Z",
     "fear_greed": {
       "score": 45.94,
       "rating": "neutral",
-      "timestamp": "2026-10-13T12:41:31+00:00",
+      "timestamp": "2026-10-13T12:56:46+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 69.8,
@@ -89847,7 +90060,7 @@
       "model": "claude-fable-5-1",
       "requested": "claude-fable-5-1",
       "fallback": false,
-      "updated_at": "2026-10-13T09:15:44.792041+00:00"
+      "updated_at": "2026-10-13T13:10:01.523696+00:00"
     }
   }
 }
