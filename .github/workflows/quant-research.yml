@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pandas numpy
+          pip install -r requirements-production.txt
 
       - name: Guard - require snapshot
         id: guard
@@ -38,6 +38,22 @@ jobs:
       - name: Run research pipeline
         if: steps.guard.outputs.skip != 'true'
         run: python quant_research_runner.py
+
+      # P0-2 门禁（方案 ②）：runner 默认 exit_code=0，因为 NOT_ENOUGH_DATA（数据未就绪 /
+      # SHADOW_ENABLE 未开启）属预期状态；但真实 Phase 异常会写入 overall_status=FAILED。
+      # 这里只对 FAILED 失败，既能让 scipy 这类真实故障变红，又不把预期状态误判为失败。
+      - name: Fail if overall_status is FAILED
+        if: steps.guard.outputs.skip != 'true'
+        run: |
+          python - <<'PY'
+          import json, sys
+          with open("quant_research_status.json", encoding="utf-8") as fh:
+              st = (json.load(fh) or {}).get("overall_status")
+          print(f"[gate] quant_research_status.overall_status={st}")
+          if st == "FAILED":
+              print("::error::Quant research pipeline reported FAILED (Phase exception)")
+              sys.exit(1)
+          PY
 
       - name: Commit research artifacts
         if: steps.guard.outputs.skip != 'true'
