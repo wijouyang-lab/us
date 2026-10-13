@@ -80,8 +80,13 @@ def test_out_of_session_silent_exit(monkeypatch, tmp_path, hh, mm):
 
 
 def test_weekend_silent_exit(monkeypatch, tmp_path):
-    # 2026-10-10 是周六，12:00 ET 仍在盘前外（实际盘后也无常规交易）
+    # 2026-10-10 是周六。即使 12:00 ET 落在时段窗口内，周末守卫也令其静默退出。
+    # 补 mock fetch_last_closes 保证确定性（原本依赖外网抓价，不稳定）。
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0, day=10))
+    monkeypatch.setattr(
+        pf, "fetch_last_closes",
+        lambda tickers: {t: {"current": Decimal("110.00")} for t in tickers}
+    )
     d = _setup(tmp_path, [_base_row("AAA")])
     res = pf.run(d, intraday_stop=True)
     assert res["triggered"] == 0

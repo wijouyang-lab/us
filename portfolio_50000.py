@@ -701,12 +701,17 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
       · 取不到实时价 → 不触发（绝不猜价，与 Review DATA_MISSING 一致）；
       · 单日最多止损 2 只；全部持仓 CLOSED → 不再触发；已 CLOSED/已今日止损的不重复处理；
       · 触发写 transactions（Reason="Intraday Stop Loss", Pending_Reason="True" 待 AI 补原因）；
+      · 交易日守卫：周末（weekday ≥ 5）静默退出（与 review.py/scan.py 一致）；
       · 时段守卫：仅 09:30 ≤ ET < 16:00 执行，其他时间静默退出（exit 0）。
     """
     from datetime import time as _dtime
     now = now_et if now_et is not None else _et_now()
     oh, om = INTRADAY_SESSION_OPEN
     ch, cm = INTRADAY_SESSION_CLOSE
+    # 非交易日（周末）静默退出 —— 与 review.py/scan.py 的 weekday 守卫一致
+    if now.weekday() >= 5:
+        print("[intraday-stop] 周末（非交易日），静默退出")
+        return {"triggered": 0, "total_equity": None, "positions": []}
     if not (_dtime(oh, om) <= now.time() < _dtime(ch, cm)):
         print("[intraday-stop] 非交易时段（09:30-16:00 ET），静默退出")
         return {"triggered": 0, "total_equity": None, "positions": []}
