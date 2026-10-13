@@ -53,6 +53,12 @@ SKILL_SOURCE = "serenity-skill by muxuuu (MIT)"
 FLAG_ENV = "ENABLE_SKILL_SERENITY"
 DEFAULT_MODEL = "claude-fable-5-1"
 TOP_N = 10
+DEFAULT_PRESCREEN = 15          # 段 2B：粗筛后进入 AI/工具循环的候选数（0 = 不粗筛）
+ENV_ONLINE = "SERENITY_ONLINE"  # 段 2B：置 "1" 才启用联网 tool loop
+ENV_PRESCREEN = "SERENITY_PRESCREEN"
+ENV_TOOL_MAX_ROUNDS = "SERENITY_TOOL_MAX_ROUNDS"
+ENV_TOOL_MAX_CALLS = "SERENITY_TOOL_MAX_CALLS"
+ENV_TOOL_WALL_CLOCK_SEC = "SERENITY_TOOL_WALL_CLOCK_SEC"
 
 
 def skill_enabled() -> bool:
@@ -264,13 +270,14 @@ def ask_with_tools(
     max_tool_calls: int = 20,
     wall_clock_sec: int = 300,
     clock=time.monotonic,
-) -> tuple[str | None, list[dict], str, str | None]:
+) -> tuple[str | None, list[dict], str, str | None, list[dict]]:
     """多轮 tool loop（Anthropic 原生 `tools` + `tool_result` 回填）。
 
-    返回: (final_text, tool_trace, mode, degraded_reason)
+    返回: (final_text, tool_trace, mode, degraded_reason, verified_facts)
       · final_text=None 表示整体失败 → 调用方回退离线路径（`_default_ask`）；
       · mode ∈ {"online_tool_use", "online_degraded", "offline_screening"}；
-      · degraded_reason 仅在降级/失败时有值。
+      · degraded_reason 仅在降级/失败时有值；
+      · verified_facts 只含**工具真实返回**的 company_facts（每 ticker 一条，含嵌套 facts）。
 
     终止条件（取最先命中，任一预算耗尽都返回 None 让调用方回退离线）：
       1) `stop_reason != "tool_use"`（正常收尾）
@@ -302,7 +309,7 @@ def ask_with_tools(
     try:
         client = client_factory()
     except Exception as e:                                     # noqa: BLE001
-        return None, [], "offline_screening", f"client_init_error: {type(e).__name__}: {e}"
+        return None, [], "offline_screening", f"client_init_error: {type(e).__name__}: {e}", []
 
     messages = [{"role": "user", "content": prompt}]
     tool_trace: list[dict] = []
@@ -310,20 +317,25 @@ def ask_with_tools(
     fail_count: dict[str, int] = {}
     disabled_tools: set[str] = set()
     failed_tools: set[str] = set()
+    # verified_facts：只收集**工具真实返回**的 company_facts（同一 ticker 保留最后一次）
+    verified_facts_map: dict[str, dict] = {}
+
+    def _facts() -> list[dict]:
+        return list(verified_facts_map.values())
     had_tool_failure = False
     start = clock()
 
     for round_no in range(1, max_rounds + 1):
         if tool_calls_total >= max_tool_calls:
-            return None, tool_trace, "offline_screening", f"max_tool_calls ({max_tool_calls}) reached"
+            return None, tool_trace, "offline_screening", f"max_tool_calls ({max_tool_calls}) reached", _facts()
         if (clock() - start) >= wall_clock_sec:
-            return None, tool_trace, "offline_screening", f"wall_clock ({wall_clock_sec}s) exceeded"
+            return None, tool_trace, "offline_screening", f"wall_clock ({wall_clock_sec}s) exceeded", _facts()
 
         try:
             resp = client.messages.create(
                 model=model, max_tokens=max_tokens, tools=TOOLS, messages=messages)
         except Exception as e:                                 # noqa: BLE001
-            return None, tool_trace, "offline_screening", f"api_error: {type(e).__name__}: {e}"
+            return None, tool_trace, "offline_screening", f"api_error: {type(e).__name__}: {e}", _facts()
 
         # 回放 assistant（text + tool_use 原样；两跳探针已验证该形态可用）
         assistant_content = []
@@ -341,11 +353,11 @@ def ask_with_tools(
                 getattr(b, "text", "") or "" for b in (getattr(resp, "content", None) or [])
                 if getattr(b, "type", None) == "text").strip()
             if not final_text:
-                return None, tool_trace, "offline_screening", "empty_final_text"
+                return None, tool_trace, "offline_screening", "empty_final_text", _facts()
             mode = "online_degraded" if had_tool_failure else "online_tool_use"
             degraded = (f"tool_failures: {', '.join(sorted(failed_tools))}"
                         if had_tool_failure else None)
-            return final_text, tool_trace, mode, degraded
+            return final_text, tool_trace, mode, degraded, _facts()
 
         tool_uses = [b for b in (getattr(resp, "content", None) or [])
                      if getattr(b, "type", None) == "tool_use"][:3]      # 每轮 ≤ 3
@@ -374,6 +386,13 @@ def ask_with_tools(
                 if fail_count[name] >= 3:
                     disabled_tools.add(name)
 
+            if name == "company_facts" and ok and result.get("ticker") and result.get("facts"):
+                verified_facts_map[result["ticker"]] = {
+                    "ticker": result["ticker"],
+                    "facts": result["facts"],
+                    "source": result.get("source", "yfinance"),
+                    "asof": result.get("asof"),
+                }
             serialized = json.dumps(result, ensure_ascii=False)
             if len(serialized) > 4000:                                    # 大小上限
                 serialized = serialized[:4000] + "...(truncated)"
@@ -388,7 +407,7 @@ def ask_with_tools(
 
         messages.append({"role": "user", "content": tool_results})
 
-    return None, tool_trace, "offline_screening", f"max_rounds ({max_rounds}) reached"
+    return None, tool_trace, "offline_screening", f"max_rounds ({max_rounds}) reached", _facts()
 
 
 def _drop_bare_quotes(s: str) -> str:
@@ -496,23 +515,90 @@ def _skill_version(skill_md: str) -> str:
     return m.group(1).strip() if m else ""
 
 
+def _env_int(name: str, default: int) -> int:
+    """读整数环境变量；缺失/非法 → default（绝不抛异常）。"""
+    try:
+        return int(str(os.environ.get(name, "")).strip())
+    except (TypeError, ValueError):
+        return default
+
+
+def _num_or_neg_inf(v) -> float:
+    """分数转 float；None / 非数值 → -inf（供降序排序，脏值不崩）。
+
+    注意：不用 `v or -inf` —— 那会把合法的 0 分误判为 -inf。
+    """
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return float("-inf")
+
+
+def prescreen(universe: list[dict], limit: int | None) -> list[dict]:
+    """粗筛：按 (final_score, quant_score) 降序取前 `limit` 只（段 2B）。
+
+    `limit` 为 None / <=0 / >= 池大小 → 原样返回（不做无意义排序）。
+    """
+    if limit is None or limit <= 0 or limit >= len(universe):
+        return list(universe)
+    ordered = sorted(
+        universe,
+        key=lambda u: (_num_or_neg_inf(u.get("final_score")),
+                       _num_or_neg_inf(u.get("quant_score"))),
+        reverse=True,
+    )
+    return ordered[:limit]
+
+
 def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
-        max_tokens: int, asof: str) -> dict:
-    """一次 AI 调用完成全池排序。失败抛异常，由 main 决定不写文件。"""
+        max_tokens: int, asof: str, online: bool = False,
+        online_kwargs: dict | None = None,
+        universe_total: int | None = None) -> dict:
+    """一次 AI 调用完成全池排序（可选联网 tool loop）。失败抛异常，由 main 决定不写文件。
+
+    · `online=False`（默认）→ **完全走原有离线路径，行为零变化**；
+    · `online=True` → 先走 `ask_with_tools()`；拿不到最终文本则回退离线 `ask`。
+    """
     template = _read_text(THESIS_TEMPLATE)
     prompt = build_prompt(skill_md, template, universe, asof)
-    text = ask(prompt, model, max_tokens)
+
+    tool_trace: list[dict] = []
+    verified_facts: list[dict] = []
+    mode = MODE
+    degraded_reason = None
+    text = None
+
+    if online:
+        try:
+            text, tool_trace, mode, degraded_reason, verified_facts = ask_with_tools(
+                prompt, model=model, max_tokens=max_tokens, **(online_kwargs or {}))
+        except Exception as e:                                 # noqa: BLE001
+            text = None
+            degraded_reason = f"tool_loop_error: {type(e).__name__}: {e}"
+        if not text:
+            # 回退离线：**保留**在线失败原因（不吞掉），便于事后定位
+            mode = MODE
+            degraded_reason = degraded_reason or "tool_loop_no_final_text"
+
+    if not text:
+        text = ask(prompt, model, max_tokens)
+
     got = parse_result(text, valid_tickers={u["ticker"] for u in universe})
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "asof": asof,
         "source": SKILL_SOURCE,
-        "mode": MODE,
+        "mode": mode,
         "model": model,
         "skill_version": _skill_version(skill_md),
-        "universe_size": len(universe),
+        # 原语义 = 候选池大小（前端显示"候选池 N 只"）→ 保持 44
+        "universe_size": universe_total if universe_total is not None else len(universe),
+        "universe_size_screened": len(universe),
         "priorities": got["priorities"],
+        "tool_trace": tool_trace,
+        "verified_facts": verified_facts,
+        "degraded_reason": degraded_reason,
         "error": None,
     }
 
@@ -523,6 +609,10 @@ def main(argv=None) -> int:
     ap.add_argument("--out", default="dashboard/data/skill_serenity.json", help="输出 JSON 路径")
     ap.add_argument("--model", default=None, help=f"模型（默认 {DEFAULT_MODEL}）")
     ap.add_argument("--max-tokens", type=int, default=12000)
+    ap.add_argument("--online", action="store_true",
+                    help=f"启用联网 tool loop（也可用 {ENV_ONLINE}=1）；失败自动回退离线")
+    ap.add_argument("--prescreen", type=int, default=None,
+                    help=f"粗筛条数（默认 {ENV_PRESCREEN} 或 {DEFAULT_PRESCREEN}；0 = 不粗筛）")
     args = ap.parse_args(argv)
 
     # ---- flag 门控：必须在任何 I/O 之前 return（零副作用）----
@@ -547,11 +637,28 @@ def main(argv=None) -> int:
 
     model = args.model or os.environ.get("SERENITY_MODEL") or DEFAULT_MODEL
     asof = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    # 段 2B：粗筛。原池大小另存 —— payload 的 universe_size 仍写原池（前端语义不变）
+    universe_total = len(universe)
+    ps_env = os.environ.get(ENV_PRESCREEN, "").strip()
+    ps_limit = args.prescreen if args.prescreen is not None else (
+        int(ps_env) if ps_env.lstrip("-").isdigit() else DEFAULT_PRESCREEN)
+    universe = prescreen(universe, ps_limit)
+
+    online = bool(args.online) or os.environ.get(ENV_ONLINE) == "1"
+    online_kwargs = {
+        "max_rounds": _env_int(ENV_TOOL_MAX_ROUNDS, 6),
+        "max_tool_calls": _env_int(ENV_TOOL_MAX_CALLS, 20),
+        "wall_clock_sec": _env_int(ENV_TOOL_WALL_CLOCK_SEC, 300),
+    }
     n_core = sum(1 for u in universe if u["bucket"] == "Core")
-    print(f"[serenity] {MODE} | model={model} | 候选池 {n} 只（Core {n_core} / Observation {n - n_core}）| asof={asof}")
+    print(f"[serenity] {'online_tool_use' if online else MODE} | model={model} | "
+          f"候选池 {universe_total} 只 → 粗筛 {len(universe)} 只"
+          f"（Core {n_core} / Observation {len(universe) - n_core}）| asof={asof}")
 
     try:
-        payload = run(data_dir, skill_md, universe, _default_ask, model, args.max_tokens, asof)
+        payload = run(data_dir, skill_md, universe, _default_ask, model, args.max_tokens, asof,
+                      online=online, online_kwargs=online_kwargs, universe_total=universe_total)
     except Exception as e:                                   # noqa: BLE001
         print(f"⚠️ [serenity] 分析失败，按 R1 不写文件：{type(e).__name__}: {e}")
         return 1
