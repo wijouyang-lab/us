@@ -133,7 +133,7 @@
 | 4 | 🟠 统一「卡片 / 详情页 / review」三处止损数据源 | ANET 曾出现 197.69 / 209.36 / 210.24 三个值 | `ANET_STOPLOSS_TRIPLE.md`；根因是三套系统各算各的 |
 | 5 | 🟠 为「推荐键匹配失败」加端到端断言 | 今日 bug 曾静默漏卖、无人察觉 | 已有告警打印，建议在 CI 上升为失败 |
 | 6 | 🔴 **机械止损与 review 移动止损不一致（资金风险）** | 只读调查 `STOPLOSS_ROOT_CAUSE.md` | 机械止损按冻结的 197.69 判断，实际**放宽**了止损线（可能多亏 5–8%）；修法见下方展开 |
-| 7 | 🟠 **`ENABLE_MARKET_INDICATORS` 已开，但面板仍未出现（修复中）** | 本次实测 dashboard-data run #2082 | 依赖已补齐，但又暴露**第二处根因：路径不匹配**，见下方展开 |
+| 7 | ✅ **`ENABLE_MARKET_INDICATORS` 已开但面板不出现（已修复）** | 实测 run #2082 → 复验 #2084 | 两处根因：① 依赖缺失 ② 读取路径不匹配；均已修并有回归测试 |
 
 > #### P1 #6 展开 · 🔴 机械止损与 review 移动止损不一致（资金风险）
 >
@@ -163,33 +163,48 @@
 > **注意**：C 会把机械止损线从 197.69 抬到 ~209，**原本不会触发的机械卖现在会触发**。
 > 这是预期行为（197.69 早已失效），但属**真实的行为变更**，实施前需确认。
 
-> #### P1 #7 展开 · 🟠 `ENABLE_MARKET_INDICATORS` 已开但面板仍未出现
+> #### P1 #7 展开 · ✅ `ENABLE_MARKET_INDICATORS` 已开但面板不出现（**已修复**）
 >
-> **状态**：修复中（2026-10-13）
+> **状态**：✅ **已修复（2026-10-13）**
 >
 > **根因（两处，缺一不可）**：
-> 1. ✅ **已修 · 依赖缺失**：`fear-greed` / `cme-fedwatch` 未在 `requirements-production.txt` 声明。
+> 1. ✅ **依赖缺失**：`fear-greed` / `cme-fedwatch` 未在 `requirements-production.txt` 声明。
 >    修法 = 方案 i（加 2 行），commit **`60d55576`**。
-> 2. 🔴 **未修 · 路径不匹配**：`dashboard/fetch_market_indicators.py:140` 默认写
+> 2. ✅ **路径不匹配**：`dashboard/fetch_market_indicators.py:140` 默认写
 >    `dashboard/data/market_indicators.json`，而 `dashboard_export.py:2460` 读的是
 >    `data_dir / "market_indicators.json"`（= 仓库根，**少了 `dashboard/data/` 这一段**）。
 >    读不到 → 返回哨兵 `_MARKET_INDICATORS_MISSING` → **不注入 `market_indicators` 键** → 前端整块隐藏。
 >    - 设计文档本意就是 `dashboard/data/market_indicators.json`（`MARKET_INDICATORS_PANEL_DESIGN.md:147`）
 >    - 输出侧 `dashboard_export.py:3001` 也写 `data_dir/"dashboard"/"data"/…`，**只有读取侧少了这段**
->    - 单测为何没抓到：`tests/test_market_indicators.py` 把文件放在 `tmp_path/market_indicators.json`，
->      与读取函数的**错误路径自洽**，所以永远测不出这个不匹配
->    - **最小修复（1 行）**：`dashboard_export.py:2460` →
->      `p = data_dir / "dashboard" / "data" / "market_indicators.json"`
+>    - **修复（1 行 + 1 回归测试）**：commit **`27d004e6`**
+>      - `dashboard_export.py:2460` → `p = data_dir / "dashboard" / "data" / "market_indicators.json"`
+>      - 新增 `tests/test_market_indicators.py::test_read_path_must_be_dashboard_data_regression`：
+>        把文件放在**真实嵌套位置**，并断言根目录那份读不到。**修复前该测试确实失败**（已验证），
+>        修复后通过 → 未来谁把路径改回去，测试立刻红。
+>      - 顺带修正原有 `test_flag_off_guard_and_export_no_key`：它原本把文件写在
+>        `tmp_path/market_indicators.json`，**与错误路径自洽**，所以永远抓不到这个 bug。
 >
 > **影响**：不影响 scan（scan 不用这两个包）
 >
-> **验证**：dashboard-data run **#2082**（head `60d5557`）实测 ——
-> - ✅ Install dependencies 成功（`cme-fedwatch-0.2.1` / `curl_cffi-0.16.3` 已装，耗时 +~17s）
-> - ✅ Fetch market indicators 成功，日志 `[market_indicators] 已写入 dashboard/data/market_indicators.json（fear_greed=OK，fedwatch=OK）`
-> - ✅ 文件已生成并入库（`dashboard/data/market_indicators.json`，3267 B）
-> - ❌ **`dashboard_data.json` 仍无 `market_indicators` 键**（顶层仍 12 个 key）→ **面板仍未出现**
+> **验证**：dashboard-data run **#2084**（head `27d004e6`，13:27:30 → 13:29:57 北京，conclusion=success）
+> - ✅ `Install dependencies` 成功；`Fetch market indicators` 成功
+>   （日志 `[market_indicators] 已写入 dashboard/data/market_indicators.json（fear_greed=OK，fedwatch=OK）`）
+> - ✅ `Run dashboard_export.py` 成功
+> - ✅ `dashboard/data/market_indicators.json` 已入库（3267 B，`generated_at=2026-10-13T05:29:11Z`）
+> - ✅ `dashboard_data.json` **已含 `market_indicators` 键**（raw 与 pages 两份均已确认）：
+>   `fear_greed.score=45.4 / rating=neutral`，`fedwatch.next_meeting=2026-10-28`
+> - ✅ 前端「📊 市场情绪指标」面板**已渲染**（payload 就位；渲染逻辑由
+>   `test_frontend_render_with_data` 覆盖）
 >
-> → **修好路径后需再跑一次 dashboard-data 复验。**
+> ⚠️ **遗留（本次未授权，未修）**：`requirements-production.txt` 加入这两个包后，
+> `tests/test_market_indicators.py` 有两个**环境脆弱用例**在"装了包的环境"下会失败：
+> - `test_fg_fails_fw_ok` —— 它假设 `fear_greed` **不可导入**来构造失败分支
+> - `test_both_sources_fail_no_file` —— 它假设两包**都不可导入**
+>
+> 实测：修复前该文件 4 failed / 3 passed；修复路径后 2 failed / 5 passed ——
+> 剩的 2 个就是这两个，与路径无关。**CI 无 pytest runner（无任何 test workflow），
+> 所以不影响生产管线**；但本地全量跑会因此变红。
+> 建议后续用 monkeypatch 强制 import 失败，把这两个用例改成 hermetic。
 
 ### P2 — 功能推进（已决策待实施）
 
