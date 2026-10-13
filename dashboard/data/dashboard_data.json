@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-13T08:16:10Z",
+  "generated_at": "2026-10-13T08:31:15Z",
   "stocks": [
     {
       "ticker": "ADSK",
@@ -1519,7 +1519,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:44Z",
+        "computed_at": "2026-10-13T08:30:37Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1535,14 +1535,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 14.98,
-      "price_source": "realtime_unverified",
-      "current_price": 14.98,
-      "current_price_updated_at": null,
+      "price": 14.96,
+      "price_source": "realtime",
+      "current_price": 14.96,
+      "current_price_updated_at": "2026-10-13T08:03:53Z",
       "pending_price": 14.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 14.75,
-      "change_1d": 0.0,
+      "change_1d": -0.1335,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -3042,7 +3042,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:44Z",
+        "computed_at": "2026-10-13T08:30:38Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3058,14 +3058,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 257.63,
+      "price": 257.77,
       "price_source": "realtime",
-      "current_price": 257.63,
-      "current_price_updated_at": "2026-10-13T08:15:16Z",
+      "current_price": 257.77,
+      "current_price_updated_at": "2026-10-13T08:23:08Z",
       "pending_price": 271.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 271.85,
-      "change_1d": -0.7321,
+      "change_1d": -0.6781,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4565,7 +4565,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:44Z",
+        "computed_at": "2026-10-13T08:30:38Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4581,14 +4581,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "ANET|2026-10-07|Core_Dragon",
       "ai_snapshot_date": "2026-10-07",
-      "price": 208.08,
+      "price": 207.36,
       "price_source": "realtime",
-      "current_price": 208.08,
-      "current_price_updated_at": "2026-10-13T08:01:00Z",
+      "current_price": 207.36,
+      "current_price_updated_at": "2026-10-13T08:03:00Z",
       "pending_price": 211.3,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 215.83,
-      "change_1d": -1.3278,
+      "change_1d": -1.6692,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.0989,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6088,7 +6088,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:44Z",
+        "computed_at": "2026-10-13T08:30:39Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7611,7 +7611,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:45Z",
+        "computed_at": "2026-10-13T08:30:39Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7627,14 +7627,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 270.31,
+      "price": 271.0,
       "price_source": "realtime",
-      "current_price": 270.31,
-      "current_price_updated_at": "2026-10-13T08:15:32Z",
+      "current_price": 271.0,
+      "current_price_updated_at": "2026-10-13T08:27:12Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": -0.2067,
+      "change_1d": 0.048,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -9134,7 +9134,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:45Z",
+        "computed_at": "2026-10-13T08:30:40Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9153,7 +9153,7 @@
       "price": 519.8,
       "price_source": "realtime",
       "current_price": 519.8,
-      "current_price_updated_at": "2026-10-13T08:14:36Z",
+      "current_price_updated_at": "2026-10-13T08:15:31Z",
       "pending_price": 502.52,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 502.52,
@@ -10657,7 +10657,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:45Z",
+        "computed_at": "2026-10-13T08:30:41Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12180,7 +12180,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:46Z",
+        "computed_at": "2026-10-13T08:30:41Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13703,7 +13703,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:46Z",
+        "computed_at": "2026-10-13T08:30:42Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15226,7 +15226,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:46Z",
+        "computed_at": "2026-10-13T08:30:42Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15242,14 +15242,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "CNP|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 39.03,
-      "price_source": "realtime_unverified",
-      "current_price": 39.03,
-      "current_price_updated_at": null,
+      "price": 39.22,
+      "price_source": "realtime",
+      "current_price": 39.22,
+      "current_price_updated_at": "2026-10-13T08:05:47Z",
       "pending_price": 38.56,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 38.42,
-      "change_1d": 0.0,
+      "change_1d": 0.4868,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.3644,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -16749,7 +16749,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:47Z",
+        "computed_at": "2026-10-13T08:30:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18272,7 +18272,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:47Z",
+        "computed_at": "2026-10-13T08:30:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19795,7 +19795,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:48Z",
+        "computed_at": "2026-10-13T08:30:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19811,14 +19811,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "CRWD|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 261.29,
+      "price": 261.13,
       "price_source": "realtime",
-      "current_price": 261.29,
-      "current_price_updated_at": "2026-10-13T08:09:32Z",
+      "current_price": 261.13,
+      "current_price_updated_at": "2026-10-13T08:30:00Z",
       "pending_price": 278.38,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 278.38,
-      "change_1d": -0.654,
+      "change_1d": -0.7148,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -21318,7 +21318,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:48Z",
+        "computed_at": "2026-10-13T08:30:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21337,7 +21337,7 @@
       "price": 286.0,
       "price_source": "realtime",
       "current_price": 286.0,
-      "current_price_updated_at": "2026-10-13T08:00:16Z",
+      "current_price_updated_at": "2026-10-13T08:00:00Z",
       "pending_price": 276.02,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.02,
@@ -22841,7 +22841,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:48Z",
+        "computed_at": "2026-10-13T08:30:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22857,14 +22857,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "DELL|2026-09-30|Observation",
       "ai_snapshot_date": "2026-09-30",
-      "price": 569.61,
+      "price": 570.21,
       "price_source": "realtime",
-      "current_price": 569.61,
-      "current_price_updated_at": "2026-10-13T08:01:06Z",
+      "current_price": 570.21,
+      "current_price_updated_at": "2026-10-13T08:27:17Z",
       "pending_price": 544.03,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 544.03,
-      "change_1d": -1.2397,
+      "change_1d": -1.1357,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -24364,7 +24364,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:48Z",
+        "computed_at": "2026-10-13T08:30:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25887,7 +25887,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:49Z",
+        "computed_at": "2026-10-13T08:30:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27410,7 +27410,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:49Z",
+        "computed_at": "2026-10-13T08:30:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28933,7 +28933,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:50Z",
+        "computed_at": "2026-10-13T08:30:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28949,14 +28949,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "EOG|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 150.51,
-      "price_source": "realtime_unverified",
-      "current_price": 150.51,
-      "current_price_updated_at": null,
+      "price": 151.1,
+      "price_source": "realtime",
+      "current_price": 151.1,
+      "current_price_updated_at": "2026-10-13T08:03:40Z",
       "pending_price": 147.09,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 148.51,
-      "change_1d": 0.0,
+      "change_1d": 0.392,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.9562,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -30456,7 +30456,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:50Z",
+        "computed_at": "2026-10-13T08:30:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -31979,7 +31979,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:50Z",
+        "computed_at": "2026-10-13T08:30:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -31998,7 +31998,7 @@
       "price": 276.0,
       "price_source": "realtime",
       "current_price": 276.0,
-      "current_price_updated_at": "2026-10-13T08:08:57Z",
+      "current_price_updated_at": "2026-10-13T08:08:00Z",
       "pending_price": 275.77,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 275.77,
@@ -33502,7 +33502,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:51Z",
+        "computed_at": "2026-10-13T08:30:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35025,7 +35025,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:51Z",
+        "computed_at": "2026-10-13T08:30:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35044,7 +35044,7 @@
       "price": 428.79,
       "price_source": "realtime",
       "current_price": 428.79,
-      "current_price_updated_at": "2026-10-13T08:01:07Z",
+      "current_price_updated_at": "2026-10-13T08:01:00Z",
       "pending_price": 405.07,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 414.52,
@@ -36548,7 +36548,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:51Z",
+        "computed_at": "2026-10-13T08:30:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -36564,14 +36564,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "JCI|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 155.41,
-      "price_source": "realtime_unverified",
-      "current_price": 155.41,
-      "current_price_updated_at": null,
+      "price": 155.09,
+      "price_source": "realtime",
+      "current_price": 155.09,
+      "current_price_updated_at": "2026-10-13T08:05:11Z",
       "pending_price": 154.84,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 154.0,
-      "change_1d": 0.0,
+      "change_1d": -0.2059,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.5455,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -38071,7 +38071,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:51Z",
+        "computed_at": "2026-10-13T08:30:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38087,14 +38087,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "KR|2026-10-07|Core_Dragon",
       "ai_snapshot_date": "2026-10-07",
-      "price": 62.56,
-      "price_source": "realtime_unverified",
-      "current_price": 62.56,
-      "current_price_updated_at": null,
+      "price": 62.64,
+      "price_source": "realtime",
+      "current_price": 62.64,
+      "current_price_updated_at": "2026-10-13T08:00:00Z",
       "pending_price": 59.27,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 59.25,
-      "change_1d": 0.0,
+      "change_1d": 0.1279,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0338,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -39594,7 +39594,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:52Z",
+        "computed_at": "2026-10-13T08:30:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -41117,7 +41117,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:52Z",
+        "computed_at": "2026-10-13T08:30:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -41136,7 +41136,7 @@
       "price": 44.04,
       "price_source": "realtime",
       "current_price": 44.04,
-      "current_price_updated_at": "2026-10-13T08:00:22Z",
+      "current_price_updated_at": "2026-10-13T08:00:00Z",
       "pending_price": 42.58,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 42.58,
@@ -42640,7 +42640,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:52Z",
+        "computed_at": "2026-10-13T08:30:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44163,7 +44163,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:53Z",
+        "computed_at": "2026-10-13T08:30:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -44179,14 +44179,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 542.29,
+      "price": 541.85,
       "price_source": "realtime",
-      "current_price": 542.29,
-      "current_price_updated_at": "2026-10-13T08:14:31Z",
+      "current_price": 541.85,
+      "current_price_updated_at": "2026-10-13T08:26:49Z",
       "pending_price": 479.88,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 483.24,
-      "change_1d": 0.2107,
+      "change_1d": 0.1293,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6953,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -45686,7 +45686,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:53Z",
+        "computed_at": "2026-10-13T08:30:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -47209,7 +47209,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:53Z",
+        "computed_at": "2026-10-13T08:30:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48732,7 +48732,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:54Z",
+        "computed_at": "2026-10-13T08:30:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -48748,14 +48748,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "RCL|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 280.67,
-      "price_source": "realtime_unverified",
-      "current_price": 280.67,
-      "current_price_updated_at": null,
+      "price": 281.0,
+      "price_source": "realtime",
+      "current_price": 281.0,
+      "current_price_updated_at": "2026-10-13T08:03:46Z",
       "pending_price": 279.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 288.78,
-      "change_1d": 0.0,
+      "change_1d": 0.1176,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -3.1096,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -50255,7 +50255,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:54Z",
+        "computed_at": "2026-10-13T08:30:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -51778,7 +51778,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:54Z",
+        "computed_at": "2026-10-13T08:30:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -53301,7 +53301,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:55Z",
+        "computed_at": "2026-10-13T08:30:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -54824,7 +54824,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:55Z",
+        "computed_at": "2026-10-13T08:30:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -56347,7 +56347,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:55Z",
+        "computed_at": "2026-10-13T08:30:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -57870,7 +57870,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:56Z",
+        "computed_at": "2026-10-13T08:30:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -59393,7 +59393,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:56Z",
+        "computed_at": "2026-10-13T08:30:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -60916,7 +60916,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:57Z",
+        "computed_at": "2026-10-13T08:30:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -60935,7 +60935,7 @@
       "price": 212.25,
       "price_source": "realtime",
       "current_price": 212.25,
-      "current_price_updated_at": "2026-10-13T08:00:21Z",
+      "current_price_updated_at": "2026-10-13T08:00:00Z",
       "pending_price": 209.0,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 208.94,
@@ -62439,7 +62439,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:57Z",
+        "computed_at": "2026-10-13T08:30:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -62455,14 +62455,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 66.29,
+      "price": 66.31,
       "price_source": "realtime",
-      "current_price": 66.29,
-      "current_price_updated_at": "2026-10-13T08:14:29Z",
+      "current_price": 66.31,
+      "current_price_updated_at": "2026-10-13T08:18:50Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": 0.4242,
+      "change_1d": 0.4545,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -63962,7 +63962,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:57Z",
+        "computed_at": "2026-10-13T08:30:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -63981,7 +63981,7 @@
       "price": 172.8,
       "price_source": "realtime",
       "current_price": 172.8,
-      "current_price_updated_at": "2026-10-13T08:05:20Z",
+      "current_price_updated_at": "2026-10-13T08:05:00Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
@@ -65485,7 +65485,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:57Z",
+        "computed_at": "2026-10-13T08:30:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -67008,7 +67008,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-12",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-13T08:15:58Z",
+        "computed_at": "2026-10-13T08:30:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -67031,7 +67031,7 @@
         "change_1d": 0.3787,
         "change_5d": 1.1365,
         "change_20d": -1.0886,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -67049,7 +67049,7 @@
         "change_1d": -0.055,
         "change_5d": 0.4282,
         "change_20d": 2.4575,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -67067,7 +67067,7 @@
         "change_1d": -0.4395,
         "change_5d": -0.8422,
         "change_20d": 4.046,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -67081,16 +67081,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 15.51,
-        "change_1d": 1.9724,
-        "change_5d": -0.0644,
-        "change_20d": -9.2982,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 15.45,
+        "change_1d": 1.5779,
+        "change_5d": -0.451,
+        "change_20d": -9.6491,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878400,
+        "quote_ts": 1791879300,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67103,7 +67103,7 @@
         "change_1d": 0.0,
         "change_5d": -1.3368,
         "change_20d": 5.6239,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -67121,7 +67121,7 @@
         "change_1d": -4.8418,
         "change_5d": -4.6572,
         "change_20d": 0.9589,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -67139,7 +67139,7 @@
         "change_1d": 0.0,
         "change_5d": -0.9278,
         "change_20d": 4.7808,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -67157,7 +67157,7 @@
         "change_1d": 0.0,
         "change_5d": -1.1827,
         "change_20d": 5.0479,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -67171,16 +67171,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.326,
-        "change_1d": -0.2476,
-        "change_5d": 0.1527,
-        "change_20d": 2.8816,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 102.308,
+        "change_1d": -0.2652,
+        "change_5d": 0.1351,
+        "change_20d": 2.8635,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878700,
+        "quote_ts": 1791879600,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67189,16 +67189,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4211.1001,
-        "change_1d": 0.4892,
-        "change_5d": 1.3063,
-        "change_20d": -3.2354,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 4214.0,
+        "change_1d": 0.5584,
+        "change_5d": 1.3761,
+        "change_20d": -3.1687,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878760,
+        "quote_ts": 1791879660,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67207,16 +67207,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 60.8,
-        "change_1d": 1.0958,
-        "change_5d": -0.1134,
-        "change_20d": -4.2716,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 60.915,
+        "change_1d": 1.287,
+        "change_5d": 0.0756,
+        "change_20d": -4.0905,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878760,
+        "quote_ts": 1791879600,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67225,16 +67225,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.756,
-        "change_1d": 0.8584,
-        "change_5d": 2.589,
-        "change_20d": 6.7299,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 6.7415,
+        "change_1d": 0.6419,
+        "change_5d": 2.3688,
+        "change_20d": 6.5008,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878760,
+        "quote_ts": 1791879660,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67243,16 +67243,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 92.01,
-        "change_1d": -1.8455,
-        "change_5d": 2.8849,
-        "change_20d": -9.2514,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 92.12,
+        "change_1d": -1.7282,
+        "change_5d": 3.0079,
+        "change_20d": -9.1429,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878760,
+        "quote_ts": 1791879660,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67261,16 +67261,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 104.98,
-        "change_1d": -1.5659,
-        "change_5d": 4.6451,
-        "change_20d": -0.6624,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 105.07,
+        "change_1d": -1.4815,
+        "change_5d": 4.7348,
+        "change_20d": -0.5772,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878700,
+        "quote_ts": 1791879660,
         "last_bar_date": "2026-10-12"
       },
       {
@@ -67279,16 +67279,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.152,
-        "change_1d": -0.4736,
-        "change_5d": 2.805,
-        "change_20d": 8.8398,
-        "updated_at": "2026-10-13T08:15:58Z",
+        "price": 3.146,
+        "change_1d": -0.6631,
+        "change_5d": 2.6093,
+        "change_20d": 8.6326,
+        "updated_at": "2026-10-13T08:30:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1791878760,
+        "quote_ts": 1791879660,
         "last_bar_date": "2026-10-12"
       }
     ],
@@ -67301,12 +67301,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-13T08:16:08Z"
+    "updated_at": "2026-10-13T08:31:12Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-13 04:16:10",
+    "as_of_us": "2026-10-13 04:31:15",
     "window_start": "2026-09-13",
     "core_closed_count": 4,
     "core_open_count": 23,
@@ -69375,8 +69375,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 261.29,
-        "pnl_pct": 5.27,
+        "cur_price": 261.13,
+        "pnl_pct": 5.21,
         "days_held": 21,
         "stop_loss": null,
         "score": "64.2",
@@ -73791,8 +73791,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 250.38,
-        "pnl_pct": -40.23,
+        "cur_price": 250.46,
+        "pnl_pct": -40.21,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -74642,8 +74642,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 55.29,
-        "pnl_pct": 1.38,
+        "cur_price": 55.35,
+        "pnl_pct": 1.49,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -77661,8 +77661,8 @@
         "entry_date": "2026-10-07",
         "cost_basis": 9931.1,
         "current_price": 210.88,
-        "extended_price": 208.08,
-        "extended_time": "10-13 04:01 ET",
+        "extended_price": 207.36,
+        "extended_time": "10-13 04:03 ET",
         "market_value": 9911.36,
         "unrealized_pnl": -19.74,
         "unrealized_pnl_pct": -0.2,
@@ -77697,8 +77697,8 @@
         "entry_date": "2026-10-07",
         "cost_basis": 9957.36,
         "current_price": 62.56,
-        "extended_price": 62.48,
-        "extended_time": "10-12 16:44 ET",
+        "extended_price": 62.64,
+        "extended_time": "10-13 04:00 ET",
         "market_value": 10510.08,
         "unrealized_pnl": 552.72,
         "unrealized_pnl_pct": 5.55,
@@ -90008,8 +90008,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-13T08:16:08Z",
-    "technical_updated_at": "2026-10-13T08:16:10Z",
+    "market_updated_at": "2026-10-13T08:31:12Z",
+    "technical_updated_at": "2026-10-13T08:31:15Z",
     "counts": {
       "core": 14,
       "observation": 30,
@@ -90019,7 +90019,7 @@
       "kline_fail": 0,
       "technical_ok": 44,
       "price_live": 44,
-      "price_realtime": 17,
+      "price_realtime": 23,
       "price_last_close": 0,
       "wall_recomputed": 0,
       "wall_true_oi": 0
@@ -90105,11 +90105,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-13T08:15:43Z",
+    "generated_at": "2026-10-13T08:30:36Z",
     "fear_greed": {
       "score": 45.94,
       "rating": "neutral",
-      "timestamp": "2026-10-13T07:56:16+00:00",
+      "timestamp": "2026-10-13T08:11:16+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 69.8,
@@ -90297,168 +90297,74 @@
     "error": null
   },
   "skill_serenity": {
-    "schema_version": "skill_serenity.v1",
-    "generated_at": "2026-10-13T07:47:33Z",
+    "schema_version": "skill_serenity.v2",
+    "generated_at": "2026-10-13T08:26:08Z",
     "asof": "2026-10-13",
     "source": "serenity-skill by muxuuu (MIT)",
-    "mode": "offline",
+    "mode": "offline_screening",
     "model": "claude-opus-5-5",
     "skill_version": "1.1.0",
-    "positions": [
+    "universe_size": 44,
+    "priorities": [
       {
-        "business_position": "Autodesk 占据建筑、工程、建造（AECO）和制造设计软件的标准层，稀缺性来自四十年积累的三维设计数据、文件格式标准（DWG/RVT）和跨专业协同工作流。客户的历史项目文件、团队培训成本、供应链上下游都用同一套文件标准，形成了极高的迁移壁垒。云原生平台（Forma、Fusion）进一步通过托管数据、协作历史和自动化工作流加深锁定，这比桌面软件许可证更难替换。",
-        "evidence": [
-          {
-            "text": "持仓单元 U001，入场价 $231.42（2026-10-07），现价 $233.54，浮动盈亏 +0.92%，当前权重 19.63%，止损线 $214.76",
-            "source": "持仓数据"
-          },
-          {
-            "text": "AECO 行业内只有少数公司能完全不依赖 Autodesk 产品运作，这意味着它控制了设计到施工全流程的必经工具层，而非可选的效率优化工具",
-            "source": "定性推理"
-          },
-          {
-            "text": "订阅制转型已完成，经常性收入占比约 97%，客户留存率超过 100%（含增购），但具体数值需核验 FY2026 10-K 第 7 项 Management's Discussion",
-            "source": "数字待核验"
-          },
-          {
-            "text": "消费型计费（EBA + Flex）占总收入约 17%，其中 EBA 约 15%，这是新的增长驱动，但需核验 FY2027 Q2（2026 年 8 月报告期）10-Q 中的分部收入明细",
-            "source": "数字待核验"
-          },
-          {
-            "text": "收购 MaintainX 意图将平台延伸至运营维护阶段，试图把数据价值链从设计延伸到资产全生命周期，但整合效果和财务影响需核验 FY2027 Q1 及后续季度的商誉摊销和运营利润率",
-            "source": "数字待核验"
-          },
-          {
-            "text": "行业特定的 3D 基础模型和物理 AI 能力需要设计与制造数据训练，通用大模型无法直接替代；Autodesk 将其定位为'物理世界的 AI 轨道'，但商业化进度和定价权需核验管理层指引",
-            "source": "定性推理"
-          }
-        ],
-        "gaps": [
-          "FY2027 最新季度的订阅续约率和 EBA 渗透率变化趋势",
-          "云平台迁移完成度：桌面永久许可证用户向订阅转化的剩余空间",
-          "MaintainX 收购后的运营利润率稀释程度和协同收入时间表",
-          "AI 产品（如 Forma、AI 助手）的独立定价策略和客户付费意愿证据",
-          "大客户（如大型 EPC 承包商、汽车 OEM）的议价压力和多年合同折扣率",
-          "中国等新兴市场的合规风险和本地化替代品（如中望、浩辰）的市场份额变化"
-        ],
-        "earnings": "订阅制已将收入从一次性许可证转为多年分期确认，自由现金流的稳定性和可预测性远高于传统软件。关键看：(1) 订阅 ARR 增长能否持续双位数；(2) 消费型计费（EBA）能否提升大客户 ARPU，因其按实际使用量付费，理论上可突破固定席位数限制；(3) 云平台的运营杠杆——SaaS 毛利率能否随规模扩张而改善，但需对比研发资本化政策和云基础设施成本；(4) 股东回报方式：自由现金流用于回购还是并购，MaintainX 类的并购若无法快速产生正回报会稀释 ROIC。需核验最近四个季度的经营现金流、资本开支、股票回购金额。",
-        "valuation": "入场时点（2026 年 10 月初）估值压力主要来自：(1) 订阅制转型红利已兑现，增长从转型期的高增速回落至稳态增长，市场对'转型故事'的溢价消退；(2) AI 叙事虽存在，但货币化路径尚未明确，投资者对'AI 税'定价权存疑——客户是否愿为 AI 功能支付显著增量；(3) 利率环境下软件股普遍估值收缩，SaaS 公司从现金流折现角度吸引力下降；(4) 周期性担忧：建筑和制造业资本开支若放缓，企业 IT 预算收紧会直接影响席位扩张和续约率。当前持仓浮盈不足 [数字已剔除]，接近入场成本，说明市场对其稳态增长的定价仍在博弈中。（数字已剔除，需核验 SEC filing）",
-        "alternatives": "设计软件层：Dassault Systèmes（CATIA、SolidWorks）在高端工程和航空航天领域有独立生态；Bentley Systems 在基础设施和数字孪生领域与 Autodesk 正面竞争；Trimble（SketchUp）和 Graphisoft（ArchiCAD）在中小建筑事务所有用户基础。施工管理层：Procore、PlanGrid（已被 Autodesk 收购但仍面临 Procore 竞争）。低成本替代：BricsCAD、FreeCAD 对价格敏感客户有吸引力，但兼容性和生态完整性是短板。最大威胁是客户自研或行业联盟推动开放标准：大型 EPC 或制造商若联合开发开源工具链，可能打破 Autodesk 的格式锁定。此外，生成式设计和 AI 辅助设计若由通用 AI 公司（如 OpenAI、Anthropic）以插件形式提供，可能绕过 Autodesk 平台直接服务终端用户。",
-        "what_would_change": "以下情况出现时应降低优先级或止损：(1) 连续两个季度订阅 ARR 增长低于个位数，且管理层无法给出明确的周期性解释；(2) EBA 渗透率停滞或大客户明确抵制消费型计费模式，说明'用量付费'假设失效；(3) 主要竞争对手（如 Dassault、Bentley）发布兼容 DWG/RVT 格式的云平台并获得大客户采用，格式壁垒开始瓦解；(4) 监管机构或行业联盟强制推行开放文件标准，削弱 Autodesk 的生态锁定；(5) AI 产品商业化两年后仍无独立收入贡献或定价权证据，说明技术护城河叙事未兑现；(6) 自由现金流转化率（FCF/Revenue）持续下降，说明云运营成本或研发投入侵蚀利润质量；(7) 管理层进行大规模股权激励稀释或高溢价并购但整合失败。技术上，跌破止损线 $214.76（较入场价约 -7.2%）应执行机械止损。",
-        "ticker": "ADSK",
-        "error": null
+        "ticker": "SNPS",
+        "priority_rank": 1,
+        "why": "芯片设计工具层是 AI 算力竞赛的最上游瓶颈——所有定制 AI 芯片、先进制程、多芯粒封装都必须经过 EDA 工具完成设计与验证。Synopsys 与 OpenAI 合作推出 GPT-Synopsys 自主设计代理，与 NVIDIA、AMD、Microsoft 深度绑定先进制程流程，且正在将 EDA 授权转向基于芯片出货量的持续性收入分成模式。这一层的供应商极度集中（Synopsys、Cadence、Siemens 三家），替代成本极高，且新增 AI 芯片设计需求直接转化为工具授权与 IP 授权收入。final 评分 80.8、quant 82、AI 78 均为候选池最高档，已持有为否，适合优先深入研究其 IP 授权结构、与云厂商的长期协议条款及 Ansys 并购后的协同变现路径",
+        "what_to_verify": "FY2026 各季度 10-Q 中 EDA 分部与 Design IP 分部收入拆分及同比增速；与 Amazon 签订的超[数字已剔除] IP 协议具体条款、交付节点与确认周期；OpenAI 合作的商业化路径（授权费 vs. 芯片分成）；Ansys 并购完成后各季度合并报表中来自 AI 相关仿真业务的收入占比"
       },
       {
-        "business_position": "ANET 位于数据中心网络设备层，通过 EOS 单一操作系统 + 商用芯片架构控制交换机软件栈，而非依赖定制芯片。稀缺性来自：AI 训练集群的后端网络从 InfiniBand 向 Ethernet 迁移的结构性转折，以及超大规模客户对可编程、低 TCO 架构的验证锁定。这是系统集成商而非上游元器件供应商，赚的是架构选型后的持续采购份额。",
-        "evidence": [
-          {
-            "text": "入场价 $211.30（2026-10-07），现价 $210.88，浮亏 -0.20%，当前权重 19.37%，止损线 $197.69",
-            "source": "持仓数据"
-          },
-          {
-            "text": "AI 数据中心的瓶颈正从 GPU 可得性转向网络带宽：同步训练要求数千块加速器每步完成后交换梯度，任何一块等待都会让整个集群空转。Ethernet 正在规模化 AI 后端网络中替代 InfiniBand，这为支持大规模 leaf-spine 架构、可编程且成本可控的交换方案打开结构性需求",
-            "source": "定性推理"
-          },
-          {
-            "text": "两大云巨头客户（Microsoft 和 Meta）占 2025 全年收入的 42%，高于 2024 年的 35%；管理层在 2026 Q1 将全年 AI 相关网络收入目标从 $3.25B 上调至 $3.5B —— 需核验最新 10-Q（2026 Q2 或 Q3）中客户集中度是否继续上升、以及分部收入中 AI 数据中心占比的最新披露",
-            "source": "数字待核验"
-          },
-          {
-            "text": "硬件收入约占总收入 85%，服务收入约 15%；公司使用 TSMC 等代工厂供应的商用交换芯片而非自研，这意味着供应链瓶颈可能出现在上游硅片或光模块交付，而非 ANET 自身产能",
-            "source": "数字待核验"
-          },
-          {
-            "text": "管理层在 2026 Q1 财报会议中将供应链描述为增长的约束因素 —— 需核验 2026 Q2/Q3 10-Q 中的库存周转天数、预收款变化、以及管理层对交付周期的最新表述",
-            "source": "数字待核验"
-          }
-        ],
-        "gaps": [
-          "最新季度（2026 Q3，预计 11 月初披露）的客户集中度：前两大客户占比是否继续攀升",
-          "AI 数据中心分部收入占比及毛利率：相比企业园区、路由等传统业务的结构变化",
-          "库存和预收款变化：判断供应链紧张是短期产能瓶颈还是需求持续超出行业交付能力",
-          "竞争对手（Cisco、Juniper、白牌 ODM）在 AI 后端网络的订单动向：Ethernet 替代 InfiniBand 的份额流向哪里",
-          "光模块供应商（如 400G/800G 模块）的交付周期和成本趋势：这是 ANET 的上游约束"
-        ],
-        "earnings": "从瓶颈到盈利的路径：AI 集群扩建 → 后端网络带宽需求线性增长 → ANET 的交换机和 EOS 订阅持续出货 → 转化为产品收入（硬件）和服务收入（软件支持）。关键财务科目：产品收入的同比增速、服务收入的续约率和 ARR 增长、经营现金流与资本开支的剪刀差（公司为 fabless 模式，资本开支低）、以及毛利率能否在规模扩张中维持。需重点核验：超大规模客户的议价压力是否开始侵蚀毛利率，以及客户集中度上升后的合同续约风险。",
-        "valuation": "估值压力来自预期的高度前置：市场已将 AI 网络需求的多年增长计入股价，任何季度指引不及预期、客户资本开支放缓、或供应链导致的收入递延都会引发估值收缩。另一压力源是客户集中：两大客户占比超过四成，若其中任一家削减数据中心投资或转向白牌方案，收入的波动会被放大。此外，商用芯片架构虽然降低了 ANET 的研发壁垒，但也意味着上游供应商（如 Broadcom）和 ODM 白牌厂商可以在某些标准化场景中绕过 ANET 直供超大规模客户。",
-        "alternatives": "客户侧：超大规模云厂商可以采购白牌交换机（ODM 直供）+ 自研网络操作系统，绕过 ANET 的软硬一体方案；Microsoft 和 Meta 都有内部网络团队和定制能力。供应商侧：Cisco 在企业市场有存量优势，Juniper 的可编程方案在部分场景中与 ANET 竞争，Broadcom 作为上游芯片供应商可能向下游延伸。技术路径：如果 InfiniBand 通过成本和互操作性改进重新夺回 AI 后端网络份额，或者光互连（optical interconnect）等新架构跳过传统交换层，ANET 的结构性优势会被削弱。",
-        "what_would_change": "出现以下情况应降低研究优先级：（1）连续两个季度客户集中度继续上升且单一客户占比超过 30%，说明议价权和收入稳定性进一步恶化；（2）毛利率环比下降超过 200 基点且管理层归因于客户议价或竞争加剧，而非短期供应链成本；（3）前两大客户之一在财报或公开场合表示将扩大白牌采购或自研网络方案的占比；（4）供应链约束持续超过两个季度但库存和预收款未相应增长，说明需求已开始回落而非供给受限；（5）Broadcom 或其他上游芯片供应商宣布向超大规模客户直供网络方案并拿到实质订单。",
         "ticker": "ANET",
-        "error": null
+        "priority_rank": 2,
+        "why": "AI 训练集群的网络层是当前最紧张的交付瓶颈之一——scale-up（单机架内 GPU 互联）与 scale-out（跨机架集群）都在从 InfiniBand 转向开放以太网方案，Arista 推出的 1.6T 交换机与液冷机架级架构（SU-144 支持单跳 144 加速器）正在成为云厂商与企业 AI 集群的标准选型。这一层的关键约束是：高带宽交换芯片供应、光模块协同、以及能在超大规模部署中保持低延迟的系统集成能力。Arista 既有超大规模云客户（AWS、Azure、Google Cloud）的长期设计导入，又在企业 AI 基础设施中占据领先地位。final 73.9、quant 85、AI 48，已持有，但其网络瓶颈位置与持续产品迭代（1.6T 到未来 3.2T）值得跟踪其订单转化与产能释放节奏",
+        "what_to_verify": "最近两个季度 10-Q 中 AI fabric 相关产品收入占比、交付周期变化；7060XE7 系列与 SU-144 架构的客户认证与量产时间表；与 NVIDIA、AMD 加速器平台的联合认证进展；光模块供应商合作协议及潜在瓶颈；2026 下半年至 2027 年资本开支与产能扩张计划"
       },
       {
-        "business_position": "Intuitive 占据软组织机器人手术系统的上游设备层和下游耗材层双重卡位。稀缺性来自三重壁垒：超过一万台的装机基数形成外科医生培训生态锁定，单次手术耗材强制配套产生持续现金流，以及二十五年积累的手术数据构成 AI 训练护城河。这是典型的剃刀-刀片模型在医疗资本品领域的极致演绎，新进入者即使推出硬件也难以撬动已完成培训和流程标准化的医院体系。",
-        "evidence": [
-          {
-            "text": "持仓 ISRG，入场价 $405.07（2026-10-07），现价 $427.64，浮盈 5.57%，当前权重 20.06%，止损线 $382.38",
-            "source": "持仓数据"
-          },
-          {
-            "text": "da Vinci 手术机器人采用资本设备 + 强制配套耗材模式，每台系统装机后医院必须持续采购一次性器械和附件完成手术，这部分收入已占公司总收入八成以上，构成高利润率的经常性现金流",
-            "source": "定性推理"
-          },
-          {
-            "text": "截至 2026 年中全球装机量约一万一千七百台 da Vinci 系统，单季度手术量同比增长在百分之十五到十七区间；Ion 肺部诊断平台装机约一千台，手术量增速更高。需核验最新 10-Q（2026 Q2 或 Q3）中 instruments & accessories 分部收入占比和毛利率走势",
-            "source": "数字待核验"
-          },
-          {
-            "text": "Johnson & Johnson 的 Ottava 系统已于 2026 年 7 月获 FDA 批准，Medtronic 的 Hugo 系统 2025 年底获批，这是 da Vinci 二十年来首次在软组织手术领域面对有资本和渠道能力的直接竞争者",
-            "source": "定性推理"
-          },
-          {
-            "text": "外科医生在住院医和专科培训阶段若接受 da Vinci 平台训练，转换成本包括重新学习操作界面、手术流程重构、医院科室工作流调整，加上 Intuitive 提供的持续教育和认证体系，形成强用户粘性",
-            "source": "定性推理"
-          },
-          {
-            "text": "2025 财年收入约一百亿美元，同比增长接近两成；市值约一千七百六十亿美元。需核验 2026 年前两季度的 EPS、operating margin 和 free cash flow 走势，判断竞争加剧是否已开始侵蚀定价权",
-            "source": "数字待核验"
-          }
-        ],
-        "gaps": [
-          "需核验 2026 Q2/Q3 财报中 instruments & accessories 收入增速是否仍维持双位数，判断手术量增长能否抵消潜在的耗材降价压力",
-          "需确认 da Vinci 5 新一代系统的装机进度和院均手术量爬坡速度，这决定未来两年设备收入能否对冲 Ottava/Hugo 的分流",
-          "需查阅最新 10-K 中对 Ottava 和 Hugo 竞争影响的 risk factors 披露，以及管理层在最近电话会中对市场份额预期的表述",
-          "缺乏 Intuitive 在中国市场的装机和手术量占比数据，若中国本土厂商（如微创、精锋等）快速渗透三甲医院，可能影响全球增长曲线"
-        ],
-        "earnings": "利润捕获路径是装机基数驱动的手术量复利增长转化为高毛利耗材收入。关键财务科目：instruments & accessories 收入的同比增速（反映单台系统利用率）、该分部毛利率（反映议价能力）、operating cash flow 与 capex 的剪刀差（反映自由现金流质量）。若竞争加剧导致新装机医院要求耗材价格折扣或服务合同让利，需在 service revenue 毛利率和 days sales outstanding 指标中寻找预警信号。",
-        "valuation": "当前估值压力来自两方面预期的拉锯：乐观方看手术量增长和 AI 数据变现的长期复利，悲观方担心首次真正竞争导致硬件降价、耗材议价权削弱、以及医院在新采购中分流预算给 Ottava/Hugo。入场价四百美元出头对应的隐含市盈率需结合最新十二个月 EPS 计算，若该倍数已处于历史区间上沿，则浮盈空间更多依赖盈利增速能否持续超预期，而非估值进一步扩张。",
-        "alternatives": "直接替代路线：J&J Ottava（模块化设计、主攻腹腔手术）和 Medtronic Hugo（更低资本开支门槛、瞄准中小医院）已进入商业化阶段，CMR Surgical 的 Versius 在欧洲和亚洲推进。间接威胁：Stryker 的 Mako 骨科机器人显示专科纵深比横向平台扩张更易建立壁垒，若心脏、神经外科出现类似专科系统，da Vinci 的通用平台优势会被削弱。长期变量：大型医疗集团可能自研或主导开源手术机器人联盟以摆脱单一供应商锁定，类似 Tesla 专利开放倒逼传统车厂的逻辑。",
-        "what_would_change": "若连续两个季度 da Vinci 全球手术量增速降至个位数，或 instruments & accessories 分部毛利率环比下降超过一个百分点，说明竞争已从预期转为实质侵蚀；若 Ottava 在美国前十大医疗系统中拿下三家以上的多科室合同，说明客户开始用第二供应商策略对冲 Intuitive 的议价权；若中国、印度等增量市场的新增装机被本土或欧洲品牌占据过半份额，说明成本结构优势在新兴市场的重要性超过了生态锁定效应。以上任一条件出现，应将研究优先级从高降至中，并重新评估长期自由现金流折现假设中的永续增长率。",
+        "ticker": "DELL",
+        "priority_rank": 3,
+        "why": "AI 服务器集成层是从 GPU、网络、存储到可交付系统的关键组装环节——云厂商与企业客户大多不具备自研能力，Dell 作为少数能够交付液冷、高密度 GPU 机架与完整数据平台的 OEM，在企业 AI 基础设施市场占据主导（IDC Q1 2026 AI 基础设施出货量第一，AI 服务器同比增长超过[数字已剔除]）。Dell AI Factory with NVIDIA 覆盖从 Blackwell 到 Rubin 平台的全栈集成，且正在从项目制 PoC 转向生产化部署阶段。关键约束是 GPU 分配、供应链协调能力及客户融资能力。final 62.7、quant 63、AI 62，未持有，且 Observation 池中少见的直接货币化标的，值得验证其 AI 服务器订单积压、交付周期与毛利率变化（数字已剔除，需核验 SEC filing）",
+        "what_to_verify": "最近两季度 Infrastructure Solutions Group 分部中 AI 优化服务器收入与订单；PowerEdge XE 系列（XE8812 等）的客户认证与交付进度；与 NVIDIA Blackwell / Rubin 平台的供应协议与 GPU 分配优先级；AI 存储与数据平台（Dell AI Data Platform）的独立收入贡献；企业客户融资方案（lease vs. 直接采购）对现金流的影响"
+      },
+      {
+        "ticker": "CNP",
+        "priority_rank": 4,
+        "why": "数据中心电力基础设施是 AI 算力扩张的物理瓶颈——德州休斯顿地区成为北美数据中心建设热点，CenterPoint 管辖区域内数据中心互联请求增长[数字已剔除]，已确认大型工业负荷从 7.5GW 跃升至 12.2GW。公司剥离俄亥俄州燃气资产专注德州电网扩张，十年资本计划达六百多[数字已剔除]，且获得美国能源部[数字已剔除]拨款用于变电站现代化。关键约束是输电建设审批周期、设备供应（变压器、复合材料电杆）及成本回收机制。final 64.1、quant 71、AI 48，Observation 池，未持有，但其作为 AI 基础设施上游公用事业的稀缺性与确定性现金流值得验证监管批准进度与费率调整机制（数字已剔除，需核验 SEC filing）",
+        "what_to_verify": "最近两季度 10-Q 中德州电力分部资本开支实际执行与大型客户互联确认时间表；输电项目（Southeast Texas Transmission Resiliency Projects）的监管审批状态与预计投运时间；与数据中心客户签订的长期供电协议条款（预付 vs. 分期）；费率案（rate case）申请进度及允许回报率；Resilient Structures 复合电杆供应协议的产能保障与价格锁定条款"
+      },
+      {
+        "ticker": "AMZN",
+        "priority_rank": 5,
+        "why": "云基础设施需求方是 AI 算力建设的最大单一驱动力——Amazon 2026 年资本开支提升至两千两[数字已剔除]（从年初两[数字已剔除]上调），几乎全部投向数据中心建设，AWS 作为全球最大云服务商正在将 AI 训练与推理需求转化为基础设施采购与服务收入。关键在于其同时是上游供应链（NVIDIA GPU、Arista 网络、Dell 服务器）的最大买家，又是下游企业 AI 应用的承载平台。约束是资本开支对自由现金流的压力、GPU 供应分配优先级及 AI 服务货币化速度能否匹配投资节奏。final 83.5，Core 池，未持有，但其作为需求侧锚点，验证其资本开支结构与 AWS AI 服务收入增速可反向确认上游供应链瓶颈的真实紧张程度（数字已剔除，需核验 SEC filing）",
+        "what_to_verify": "最近季度 10-Q 中 AWS 分部收入增速、AI 相关服务（SageMaker、Bedrock、Trainium/Inferentia 实例）的披露；资本开支在数据中心建设、GPU 采购、网络设备间的分配比例；与 NVIDIA、Arista、Dell 的长期供应协议及交付时间表；自研芯片（Trainium2、Graviton）对外部 GPU 采购的替代进度；自由现金流预测与 AI 投资回收周期管理层指引"
+      },
+      {
+        "ticker": "CRWD",
+        "priority_rank": 6,
+        "why": "AI 工作负载安全是企业部署 AI 基础设施的新增刚性成本——AI 模型训练、推理与数据管道扩大了攻击面，CrowdStrike 推出的 AI Detection and Response（AIDR）产品线三季度内增长[数字已剔除]，且在云运行时安全与 AI 工作负载保护中占据领先地位。关键约束是企业从试点转向生产化部署时必须同步部署安全能力，且 CrowdStrike 的平台整合策略（端点、云、身份、AI 工作负载统一）提高了客户迁移成本。final 64.8、quant 63、AI 69，sector_rs_20d 5.77（近期行业相对强势），Observation 池，未持有，且其 AI 安全产品正在从新增类别转向标准配置，值得验证其 AIDR 产品的独立收入贡献与客户留存率（数字已剔除，需核验 SEC filing）",
+        "what_to_verify": "最近两季度 10-Q 或 8-K 中 AIDR 产品线的年度经常性收入（ARR）贡献与客户数；云运行时安全与 AI 工作负载保护模块的定价模式与附加率；与主流云平台（AWS、Azure、GCP）AI 服务的集成认证进度；平台整合对客户平均合同价值（ACV）与净留存率（NRR）的提升幅度；竞争对手（Palo Alto Networks、Zscaler）在 AI 安全领域的产品对比与市场份额变化"
+      },
+      {
+        "ticker": "ADSK",
+        "priority_rank": 7,
+        "why": "生成式 AI 在建筑、工程与制造设计工作流中的嵌入正在从功能演示转向生产力变现——Autodesk 在 Forma（建筑）与 Fusion（制造）云平台中推出代理式 AI 工作流，且其四十年行业数据积累构成难以复制的上下文优势。关键在于 AI 功能是否能推动客户从传统永久授权向云订阅迁移、以及是否能支撑更高的席位单价或新增模块付费。约束是企业客户采纳周期长、ROI 验证要求高。final 69.9、quant 81、AI 44，Core 池，已持有，但其 AI 货币化路径（嵌入式功能 vs. 独立 AI 模块定价）及与云转型的协同效应需要跟踪最新订阅转化数据",
+        "what_to_verify": "最近两季度 10-Q 中订阅收入增速、云平台（Forma、Fusion）用户数与 ARPU 变化；AI 功能（生成式设计、自动化文档）对客户升级高价套餐或增购模块的转化率；与传统桌面软件相比，云 + AI 组合的客户留存率与净增值变化；行业客户（建筑事务所、制造企业）对 AI 工作流的采纳阶段（试点 vs. 全员部署）；竞争对手（Dassault、PTC）AI 产品进展"
+      },
+      {
+        "ticker": "MSFT",
+        "priority_rank": 8,
+        "why": "Microsoft 既是云基础设施买家（Azure AI 资本开支）又是 AI 应用层货币化的领先者（Copilot 嵌入 Office 365、GitHub、Dynamics）——其与 OpenAI 的战略绑定使其在企业生成式 AI 市场占据先发优势，Azure 作为第二大云平台正在承接企业 AI 工作负载迁移。关键在于 Copilot 的付费转化率、Azure AI 服务收入增速及其对上游 GPU、网络设备的采购拉动。约束是 OpenAI 独家依赖的战略风险与高额资本开支对利润率的压力。final 70.0，Core 池，未持有，但其作为需求侧与应用层双重标的，验证其 AI 收入贡献可作为产业链下游货币化进度的领先指标",
+        "what_to_verify": "最近季度 10-Q 中 Intelligent Cloud 分部收入、Azure AI 服务增速及 Copilot 订阅用户数或收入贡献；资本开支中用于 AI 基础设施（GPU、数据中心）的占比及同比变化；与 OpenAI 协议的最新条款（独家云服务、收入分成、GPT-5 等新模型部署权）；GitHub Copilot 在开发者工具市场的渗透率与企业客户留存；Azure 自研 AI 芯片（Maia、Cobalt）对外部 GPU 采购的替代时间表"
+      },
+      {
+        "ticker": "AES",
+        "priority_rank": 9,
+        "why": "可再生能源与储能组合是数据中心长期清洁电力供应的必要配套——数据中心运营商（尤其超大规模云厂商）面临 ESG 承诺与电网负荷双重压力，AES 正在为南加州数据中心集群开发 2GW 太阳能 + 储能项目，且签订或锁定了 4GW 长期购电协议（PPA）。关键在于其能否将项目开发转化为稳定现金流、以及数据中心客户对绿电溢价的支付意愿。约束是电网接入审批周期、储能设备供应及融资成本。final 68.0，Core 池，未持有，但其作为数据中心电力上游的可选标的，值得验证其与科技客户的 PPA 签订进度与定价机制",
+        "what_to_verify": "最近两季度 10-Q 中可再生能源与储能分部的在建项目（GW）、已签订 PPA 的客户类型（数据中心 vs. 公用事业）及平均电价；南加州 2GW 项目的并网时间表、客户确认状态及融资结构；储能项目的电池供应商、成本趋势及 IRR 预期；与主要云厂商（AWS、Google、Microsoft）签订的绿电协议条款；电网互联排队时长与监管批准风险"
+      },
+      {
         "ticker": "ISRG",
-        "error": null
-      },
-      {
-        "business_position": "Kroger 是美国传统超市业态的头部企业，占全美超市销售约 16-[数字已剔除]，但在全口径杂货零售（包括 Walmart、Costco、Amazon）中份额持续被压缩至个位数。它不卡在「稀缺供给」环节，而是处在一个正被大卖场、会员仓储、电商三面挤压的防守位置；其供应链优势（配送中心、自有品牌）在行业内属于标配而非壁垒，与 Albertsons 的合并已失败并面临巨额诉讼。",
-        "evidence": [
-          {
-            "text": "入场价 $59.27，入场日 2026-10-07；现价 $62.56，浮动盈亏 +5.55%；当前止损线 $56.31，权重 20.54%",
-            "source": "持仓数据"
-          },
-          {
-            "text": "传统超市业态在美国面临结构性份额流失：Walmart 以全品类+低价占据最大份额，Costco 以会员制+高周转吸引中产，Amazon/Whole Foods 以配送便利性切走城市客群；Kroger 的门店网络虽广但定价能力弱于 Walmart、体验弱于精品超市、配送密度弱于 Amazon",
-            "source": "定性推理"
-          },
-          {
-            "text": "与 Albertsons 的合并被联邦法院和州法院双双阻止，Albertsons 已提起违约诉讼索赔超过 90 亿美元；合并原本是 Kroger 获取规模、对抗 Walmart 和 Amazon 的关键战略，失败后公司回到单打独斗、份额继续收缩的轨道",
-            "source": "数字待核验"
-          },
-          {
-            "text": "Kroger 的同店销售增速（identical sales without fuel）和电商占比数据需核验最新季报（2026 Q2 或 Q3 的 10-Q），以判断数字化转型和全渠道履约是否真正改善了单店效率和毛利率",
-            "source": "数字待核验"
-          }
-        ],
-        "gaps": [
-          "需核验 2026 Q2/Q3 的 10-Q：同店销售增速、电商渗透率、自有品牌占比、履约成本率",
-          "需确认与 Albertsons 诉讼的或有负债敞口及对现金流的影响",
-          "需对比 Walmart、Costco、Target 同期的杂货业务增速，判断 Kroger 是跑赢行业还是继续失速",
-          "需确认门店关闭计划及相关重组费用对短期利润的拖累"
-        ],
-        "earnings": "这条逻辑的盈利来源应是：通过电商、自有品牌、零售媒体等高毛利业务提升综合毛利率，同时用全渠道履约降低单店流量下滑的冲击，最终稳住营业利润率和自由现金流。需重点关注 10-Q 中的分部毛利率（尤其是电商与自有品牌）、履约费用率、以及经营现金流扣除资本开支后的自由现金流变化；如果同店销售持平或负增长但毛利率能扩张，说明结构优化见效；反之则是量价齐跌的危险信号。",
-        "valuation": "当前估值压力主要来自两方面：一是合并失败后市场对其单独应对竞争的信心不足，二是传统超市估值本就受到低增长、低回报率预期的压制。如果市场已将 Kroger 定价为一个低个位数增长、防御性分红标的，那么现价可能已反映悲观预期；但若投资者此前押注合并带来的协同效应和市场份额反弹，则当前价格仍隐含未兑现的乐观假设。需对比同业（如 Sprouts、Ahold Delhaize）的市销率和自由现金流收益率，判断 Kroger 是估值洼地还是价值陷阱。",
-        "alternatives": "消费者的替代选择极为丰富：Walmart 提供更低价格和一站式购物，Costco 以会员制锁定忠诚度和高客单价，Amazon Fresh/Whole Foods 提供配送便利，Target 以设计感和精品杂货吸引年轻家庭，Aldi/Lidl 等硬折扣店以极致低价切入价格敏感客群。Kroger 自身也面临内部竞争：旗下多个区域品牌（King Soopers、Fred Meyer、Ralphs）彼此定位模糊，难以形成统一的品牌认知和议价能力。此外，零售商自建供应链和自有品牌的能力已不再稀缺，Walmart、Target、Costco 均有成熟的自有品牌体系，Kroger 在这一维度的优势正被稀释。",
-        "what_would_change": "如果出现以下情况，应降低研究优先级或止损离场：（1）连续两个季度同店销售负增长且电商增速显著放缓，说明全渠道战略失效；（2）与 Albertsons 的诉讼败诉并需支付数十亿美元赔偿，严重削弱资本配置灵活性；（3）Walmart 或 Amazon 宣布在 Kroger 核心市场（如俄亥俄、密歇根）大举开店或提升配送密度，进一步压缩其本地优势；（4）管理层在财报电话会议中上调履约成本或下调毛利率指引，意味着价格战加剧且公司无力维持利润率；（5）自由现金流连续两个季度低于资本开支加分红的总需求，说明股东回报不可持续。",
-        "ticker": "KR",
-        "error": null
+        "priority_rank": 10,
+        "why": "手术机器人是医疗设备中少见的高壁垒、持续性收入模型——Intuitive Surgical 的达芬奇系统占据机器人辅助手术绝对主导地位，其收入模式（设备销售 + 耗材 + 服务）类似剃须刀模型，且手术量增长直接转化为高毛利耗材收入。虽非直接 AI 基础设施标的，但其代表了：高研发投入、监管护城河、装机基数驱动的持续收入，与 AI 算力产业链的 EDA 或网络设备商有结构相似性。final 71.9、quant 77、AI 60，Core 池，已持有，作为组合中非周期、高确定性现金流的对冲标的，值得跟踪其装机增长与耗材收入加速是否持续",
+        "what_to_verify": "最近两季度 10-Q 中达芬奇系统装机量（累计与净增）、手术量同比增速、耗材与服务收入占比；新一代系统（da Vinci 5）的客户采纳进度与对存量系统的升级替代节奏；国际市场（尤其中国）的监管审批与市场准入进展；竞争对手（Medtronic、J&J）机器人系统的市场份额变化；长期服务合同的续约率与单系统年度耗材收入（procedure volume per system）趋势"
       }
     ],
     "error": null
