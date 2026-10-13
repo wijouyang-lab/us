@@ -73,7 +73,6 @@ TRADE_HISTORY_NAME = "trade_history.csv"
 OPTION_CSV_NAME = "option_strategies.csv"
 PARAMS_NAME = "strategy_params.json"
 REVIEW_HISTORY_NAME = "review_history.csv"
-VERSION_NAME = "scan_version.txt"
 
 # AI 六段文本：CSV 列名 -> JSON 字段名
 # 来源为 scan.py 的 enrich_verified_items_with_ai_details() 已生成内容，本脚本只做透传：
@@ -3021,8 +3020,7 @@ def main(argv=None):
     ap.add_argument("--data-dir", default=str(SCRIPT_DIR),
                     help="数据目录（默认脚本所在目录），需包含 us_stocks_pending_*.csv / trade_history.csv")
     ap.add_argument("--out", default=None,
-                    help="输出 JSON 路径（默认优先写入 us-market-terminal/dashboard/data/，"
-                         "否则 <data-dir>/dashboard/data/dashboard_data.json）")
+                    help="输出 JSON 路径（默认 <data-dir>/dashboard/data/dashboard_data.json）")
     ap.add_argument("--kline-bars", type=int, default=180, help="K 线保留的完整交易日数量（默认 180）")
     ap.add_argument("--no-network", action="store_true", help="完全跳过行情抓取")
     ap.add_argument("--provider", default="auto", choices=["auto", "yf", "yahoo", "stooq", "none"],
@@ -3046,11 +3044,9 @@ def main(argv=None):
     if args.out:
         out_path = Path(args.out).resolve()
     else:
-        # 阶段 B：前端通过相对路径 dashboard/data/dashboard_data.json 读取，
-        # 默认直接写到前端目录，避免导出后忘记拷贝导致页面读旧数据。
-        frontend_out = SCRIPT_DIR / "us-market-terminal" / "dashboard" / "data" / "dashboard_data.json"
-        out_path = frontend_out if (SCRIPT_DIR / "us-market-terminal").is_dir() \
-            else data_dir / "dashboard" / "data" / "dashboard_data.json"
+        # 前端通过 dashboard/data/dashboard_data.json 读取（见 app.js:16 DATA_URL），
+        # 默认直接写到 data_dir 下同一路径，与前端读取路径一致。
+        out_path = data_dir / "dashboard" / "data" / "dashboard_data.json"
 
     log("=" * 62)
     log("dashboard_export.py —— Dashboard 真实数据导出（只读）")
@@ -3080,7 +3076,6 @@ def main(argv=None):
     option_path = data_dir / OPTION_CSV_NAME
     params_path = data_dir / PARAMS_NAME
     review_hist_path = data_dir / REVIEW_HISTORY_NAME
-    version_path = data_dir / VERSION_NAME
 
     trade_rows = read_csv_rows(trade_path)
     option_rows = read_csv_rows(option_path) if option_path.exists() else None
@@ -3356,8 +3351,6 @@ def main(argv=None):
             "warnings": warnings,
             "unit_hints": UNIT_HINT,
             "strategy_params": params,
-            "scan_version": (version_path.read_text(encoding="utf-8").strip()
-                             if version_path.exists() else None),
             "anomalies": anomalies,
             "notes": notes,
             "missing_fields": missing,

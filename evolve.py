@@ -52,8 +52,11 @@ def _load_scan_version_boundaries():
     try:
         with open(version_file, "r", encoding="utf-8") as f:
             content = f.read().strip()
-        if content and "," in content:
-            date_str = content.split(",")[1]
+        # scan_version.txt 可能是多行（第 1 行 "hash,date"，其后可有人工标注行），
+        # 故只解析首行：直接 split(",") 会把第 2 行并进日期，长度校验必然失败。
+        first_line = content.split("\n")[0]
+        if first_line and "," in first_line:
+            date_str = first_line.split(",")[1].strip()
             if date_str and len(date_str) == 10:
                 return [date_str]
     except Exception:

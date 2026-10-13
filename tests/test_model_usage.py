@@ -112,7 +112,7 @@ def test_dashboard_export_injects_model_usage(tmp_path):
     payload_rec = {
         "scan": {"model": "claude-fable-5-1", "requested": "claude-fable-5-1",
                  "fallback": False, "updated_at": "2026-10-13T08:46:00+00:00"},
-        "review": {"model": "claude-opus-5-5", "requested": "claude-opus-4-6",
+        "review": {"model": "claude-fable-5-1", "requested": "claude-opus-5-5",
                    "fallback": True, "updated_at": "2026-10-13T22:30:00+00:00"},
     }
     p = _usage_path(tmp_path)
