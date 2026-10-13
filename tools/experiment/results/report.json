@@ -1,0 +1,121 @@
+{
+  "schema_version": "phase3.v1",
+  "data_maturity": {
+    "backtest_rows": 2968,
+    "n_factors": 24,
+    "n_horizons": 3
+  },
+  "horizon_maturity": {
+    "5D": {
+      "max_sample_count": 2968,
+      "mature": true
+    },
+    "10D": {
+      "max_sample_count": 2968,
+      "mature": true
+    },
+    "20D": {
+      "max_sample_count": 2968,
+      "mature": true
+    }
+  },
+  "sample_counts": {
+    "max_N_by_horizon": {
+      "5D": {
+        "max_sample_count": 2968,
+        "mature": true
+      },
+      "10D": {
+        "max_sample_count": 2968,
+        "mature": true
+      },
+      "20D": {
+        "max_sample_count": 2968,
+        "mature": true
+      }
+    }
+  },
+  "validation_status": {
+    "status_counts": {
+      "REGIME_DEPENDENT": 72
+    },
+    "promising": [],
+    "regime_dependent": [
+      "RSI_14",
+      "RSI_14",
+      "RSI_14",
+      "Bias_Pct",
+      "Bias_Pct",
+      "Bias_Pct",
+      "MACD_Hist",
+      "MACD_Hist",
+      "MACD_Hist",
+      "MA20",
+      "MA20",
+      "MA20",
+      "MA50",
+      "MA50",
+      "MA50",
+      "MA20_Slope_5D",
+      "MA20_Slope_5D",
+      "MA20_Slope_5D",
+      "ATR_Pct",
+      "ATR_Pct",
+      "ATR_Pct",
+      "KDJ_J",
+      "KDJ_J",
+      "KDJ_J",
+      "Volume_Ratio_5D",
+      "Volume_Ratio_5D",
+      "Volume_Ratio_5D",
+      "Momentum_5D_Pct",
+      "Momentum_5D_Pct",
+      "Momentum_5D_Pct",
+      "Momentum_20D_Pct",
+      "Momentum_20D_Pct",
+      "Momentum_20D_Pct",
+      "Momentum_60D_Pct",
+      "Momentum_60D_Pct",
+      "Momentum_60D_Pct",
+      "Realized_Volatility_20D_Pct",
+      "Realized_Volatility_20D_Pct",
+      "Realized_Volatility_20D_Pct",
+      "Volume_Ratio_20D",
+      "Volume_Ratio_20D",
+      "Volume_Ratio_20D",
+      "ZScore_20D",
+      "ZScore_20D",
+      "ZScore_20D",
+      "Beta_60D_SPY",
+      "Beta_60D_SPY",
+      "Beta_60D_SPY",
+      "Stock_RS_20D_vs_SPY",
+      "Stock_RS_20D_vs_SPY",
+      "Stock_RS_20D_vs_SPY",
+      "Sector_RS_20D_Pct",
+      "Sector_RS_20D_Pct",
+      "Sector_RS_20D_Pct",
+      "VIX",
+      "VIX",
+      "VIX",
+      "Quant_Score",
+      "Quant_Score",
+      "Quant_Score",
+      "Fundamental_Score",
+      "Fundamental_Score",
+      "Fundamental_Score",
+      "Event_Score",
+      "Event_Score",
+      "Event_Score",
+      "Technical_Score_25",
+      "Technical_Score_25",
+      "Technical_Score_25",
+      "Risk_Liquidity_Score",
+      "Risk_Liquidity_Score",
+      "Risk_Liquidity_Score"
+    ]
+  },
+  "redundant_pairs": [],
+  "insufficient_data_reasons": [],
+  "no_decision_rule": "Phase 3 produces Research Evidence only; no factor is auto-approved for production."
+}
