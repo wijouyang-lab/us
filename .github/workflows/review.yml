@@ -48,7 +48,7 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          CLAWSOCKET_LIVE_MODEL: gpt-6-astra
+          CLAWSOCKET_LIVE_MODEL: claude-fable-5-1
           ENABLE_AI_REASON_BACKFILL: "1"
         run: python review.py
 

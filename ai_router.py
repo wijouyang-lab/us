@@ -17,8 +17,8 @@ import os
 from typing import Any, Dict, Iterable, Optional
 from urllib.parse import urlsplit, urlunsplit
 
-GPT_MODEL = os.getenv("GPT_MODEL", "claude-opus-5-5")
-CLAUDE_AUDIT_MODEL = os.getenv("CLAUDE_AUDIT_MODEL", "claude-opus-5")
+GPT_MODEL = os.getenv("GPT_MODEL", "claude-fable-5-1")
+CLAUDE_AUDIT_MODEL = os.getenv("CLAUDE_AUDIT_MODEL", "claude-fable-5-1")
 
 
 def _first_env(*names: str) -> Optional[str]:

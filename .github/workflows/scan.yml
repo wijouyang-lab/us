@@ -42,7 +42,7 @@ jobs:
           EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          CLAWSOCKET_LIVE_MODEL: claude-opus-5-5
+          CLAWSOCKET_LIVE_MODEL: claude-fable-5-1
           ENABLE_TARGET_FILE: "1"
           ENABLE_SCAN_BUY_DECISION: ${{ vars.ENABLE_SCAN_BUY_DECISION }}
           ENABLE_MACRO_PANEL: ${{ vars.ENABLE_MACRO_PANEL }}
