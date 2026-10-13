@@ -18,7 +18,7 @@ set -u
 # 故意不设 set -e：单项检查失败不应中断整体；错误通过 $? 与 stderr 暴露。
 
 # ── 仓库与预取 ─────────────────────────────
-REPO="/tmp/us"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 if [ ! -d "$REPO/.git" ]; then
   echo "❌ 仓库目录不存在或不是 git 仓库: $REPO"
   exit 1
