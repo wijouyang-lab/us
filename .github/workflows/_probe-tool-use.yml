@@ -1,9 +1,13 @@
 name: Probe Tool-Use Support
 
 # 临时探针（用完即删）：验证 ClawSocket 网关是否透传 Anthropic 协议的 `tools` 参数。
-# on 只有 workflow_dispatch → push 不会触发它，也不影响其它 workflow。
+# 自触发 + 自报告：push 本文件即触发；结果写入仓库根 probe_result.txt 并回推 main，
+# 省去手动 Run workflow。提交信息带 [skip ci]（paths 不匹配本文件，双保险防递归）。
 
 on:
+  push:
+    paths:
+      - '.github/workflows/_probe-tool-use.yml'
   workflow_dispatch:
 
 jobs:
@@ -25,17 +29,46 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
         run: |
           python - <<'PY'
-          import os, json, sys
+          import os, json, sys, datetime
           import anthropic
 
+          MODEL = "claude-fable-5-1"
           api_key = os.environ.get("CLAWSOCKET_API_KEY")
           base_url = os.environ.get("CLAWSOCKET_BASE_URL")
-          if not api_key or not base_url:
-              print("[probe] MISSING CREDENTIALS — check secrets injection")
-              sys.exit(2)
 
-          print(f"[probe] base_url = {base_url}")
-          print(f"[probe] api_key  = {api_key[:4]}***REDACTED***")
+          _out = []
+
+          def emit(s):
+              print(s)
+              _out.append(str(s))
+
+          def finish(result, code):
+              ts = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+              log = "\n".join(_out) + "\n"
+              try:
+                  with open("/tmp/probe_output.txt", "w", encoding="utf-8") as fh:
+                      fh.write(log)
+              except Exception as exc:
+                  print(f"[probe] 写 /tmp/probe_output.txt 失败: {exc}")
+              try:
+                  with open("probe_result.txt", "w", encoding="utf-8") as fh:
+                      fh.write(f"timestamp: {ts}\n")
+                      fh.write(f"base_url: {base_url or '<unset>'}\n")
+                      fh.write(f"model: {MODEL}\n")
+                      fh.write(f"RESULT: {result}\n")
+                      fh.write("\n--- full log ---\n")
+                      fh.write(log)
+              except Exception as exc:
+                  print(f"[probe] 写 probe_result.txt 失败: {exc}")
+              sys.exit(code)
+
+          if not api_key or not base_url:
+              emit("[probe] MISSING CREDENTIALS — check secrets injection")
+              finish("MISSING_CREDENTIALS", 2)
+
+          emit(f"[probe] base_url = {base_url}")
+          emit(f"[probe] api_key  = {api_key[:4]}***REDACTED***")
+          emit(f"[probe] model    = {MODEL}")
 
           client = anthropic.Anthropic(api_key=api_key, base_url=base_url)
 
@@ -53,7 +86,7 @@ jobs:
 
           try:
               resp = client.messages.create(
-                  model="claude-fable-5-1",
+                  model=MODEL,
                   max_tokens=512,
                   tools=tools,
                   messages=[{
@@ -62,32 +95,44 @@ jobs:
                   }]
               )
           except Exception as e:
-              print(f"[probe] REQUEST ERROR: {type(e).__name__}: {e}")
-              sys.exit(1)
+              emit(f"[probe] REQUEST ERROR: {type(e).__name__}: {e}")
+              finish("REQUEST_ERROR", 1)
 
-          print(f"[probe] stop_reason = {resp.stop_reason}")
-          print(f"[probe] content blocks = {len(resp.content)}")
+          emit(f"[probe] stop_reason = {resp.stop_reason}")
+          emit(f"[probe] content blocks = {len(resp.content)}")
 
           found_tool_use = False
           for i, block in enumerate(resp.content):
               btype = getattr(block, "type", "unknown")
-              print(f"[probe]   block[{i}].type = {btype}")
+              emit(f"[probe]   block[{i}].type = {btype}")
               if btype == "tool_use":
                   found_tool_use = True
-                  print(f"[probe]     name  = {block.name}")
-                  print(f"[probe]     input = {json.dumps(block.input)}")
+                  emit(f"[probe]     name  = {block.name}")
+                  emit(f"[probe]     input = {json.dumps(block.input)}")
               elif btype == "text":
-                  text = (block.text or "")[:200]
-                  print(f"[probe]     text  = {text}")
+                  emit(f"[probe]     text  = {(block.text or '')[:200]}")
 
-          print()
           if found_tool_use:
-              print("[probe] RESULT = TOOL_USE_SUPPORTED ✅")
-              print("[probe] 网关透传 tools，方案 A（官方 SDK + ClawSocket base_url）可行")
-          elif resp.stop_reason == "end_turn" and not found_tool_use:
-              print("[probe] RESULT = TOOLS_IGNORED ⚠️")
-              print("[probe] 请求被接受但 tools 被忽略，模型未请求工具")
-              print("[probe] 方案 A 不可行，需考虑方案 C（DeepSeek 官方端点）")
+              emit("[probe] RESULT = TOOL_USE_SUPPORTED ✅")
+              emit("[probe] 网关透传 tools，方案 A（官方 SDK + ClawSocket base_url）可行")
+              finish("TOOL_USE_SUPPORTED", 0)
+          elif resp.stop_reason == "end_turn":
+              emit("[probe] RESULT = TOOLS_IGNORED ⚠️")
+              emit("[probe] 请求被接受但 tools 被忽略，模型未请求工具")
+              emit("[probe] 方案 A 不可行，需考虑方案 C（DeepSeek 官方端点）")
+              finish("TOOLS_IGNORED", 0)
           else:
-              print("[probe] RESULT = UNKNOWN — inspect output above")
+              emit("[probe] RESULT = UNKNOWN — inspect output above")
+              finish("UNKNOWN", 0)
           PY
+      - name: Show probe output
+        if: always()
+        run: cat /tmp/probe_output.txt || true
+      - name: Commit probe result
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add probe_result.txt || true
+          git commit -m "ci: probe result [skip ci]" || echo "nothing to commit"
+          git push || (git fetch origin main && git rebase origin/main && git push) || true
