@@ -120,10 +120,10 @@
 
 | 文档 | 摘要（<30字） | 状态 |
 |------|--------------|------|
-| NEWS_MODULE_DRAFT.md | 新闻板块需求草案 | 已废弃 |
+| archive/NEWS_MODULE_DRAFT.md | 新闻板块需求草案 | 已废弃 |
 | archive/NEWS_MODULE_DECISIONS.md | 新闻板块推进决策清单 | 已废弃 |
 | NEWS_MODULE_IMPLEMENTATION.md | 新闻板块实施（Finnhub 免费档） | 已实施 |
-| NEWS_LOCAL_VERIFICATION.md | 新闻模块本地验证报告 | 已废弃? |
+| archive/NEWS_LOCAL_VERIFICATION.md | 新闻模块本地验证报告 | 已废弃? |
 | NEWS_CN_GAP_INVESTIGATION.md | news_cn 覆盖缺口根因调查 | 已实施 |
 | NEWS_TRANSLATION_INCOMPLETE_DIAGNOSIS.md | 新闻翻译不完整诊断 | 已实施 |
 | NEWS_MARKET_RELEVANT_REPORT.md | 市场相关度过滤实施 | 已实施 |
@@ -185,8 +185,8 @@
 | 文档 | 摘要（<30字） | 状态 |
 |------|--------------|------|
 | 23H_IMPLEMENTATION_DIFFS.md | 23 小时交易改造 Diff 级草稿 | 设计中 |
-| 23H_TRADING_IMPACT.md | 23 小时 + 买入价影响面只读调查 | 设计中 |
-| US_SESSION_DESIGN.md | `_us_session.py` 设计文档 | 设计中 |
+| archive/23H_TRADING_IMPACT.md | 23 小时 + 买入价影响面只读调查 | 设计中 |
+| archive/US_SESSION_DESIGN.md | `_us_session.py` 设计文档 | 设计中 |
 | YAHOO_NIGHT_SESSION_TEST.md | Yahoo 夜盘数据覆盖实测 | 设计中 |
 
 > 📌 已核验：`_us_session.py` **在仓库中不存在** → 23H 尚未落地，仅为草稿。
