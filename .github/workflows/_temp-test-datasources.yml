@@ -16,10 +16,10 @@ jobs:
         run: |
           pip install fear-greed
           python3 -c "
-          from fear_greed import fear_greed
+          import fear_greed
           d = fear_greed.get()
           print('FG_OK score=', d.get('score'), 'rating=', d.get('rating'))
-          " || echo "FG_FAILED"
+          "
       - name: Test cme-fedwatch
         run: |
           pip install cme-fedwatch
