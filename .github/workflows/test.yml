@@ -1,0 +1,42 @@
+name: Test
+
+# 让「全量回归通过」这个基线有强制机制（此前 9 个 workflow 无一跑 pytest）。
+# 参考 docs/HANDOVER.md:120 —— 全量测试必须用 Python 3.12（scan.py 含 3.11 无法解析的
+# f-string 反斜杠），Windows 本机另需 PYTHONUTF8=1；这里统一在 workflow 级声明。
+#
+# 注意：bot 的 chore(dashboard) 提交带 [skip ci]，GitHub 对 push 事件会据此跳过本 workflow，
+# 因此本 CI 只在真人提交 / PR 时触发，不会被每 15 分钟的数据刷新刷屏。
+#
+# 隐式依赖：多个前端测试用 subprocess.run(["node", ...])（如 test_macro_panel_frontend.py:39、
+# test_model_usage.py:165、test_market_indicators.py:282）。ubuntu-latest 自带 Node，无需安装；
+# 若将来换 runner 镜像，需显式安装。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  PYTHONUTF8: "1"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-production.txt
+          pip install pytest
+
+      - name: Run tests
+        run: python -m pytest tests/ -v
