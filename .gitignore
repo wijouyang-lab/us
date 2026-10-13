@@ -13,3 +13,5 @@ dashboard/data/news_translation_cache.json
 
 # 系统
 .DS_Store
+
+.pytest_tmp/
