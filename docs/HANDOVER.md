@@ -132,28 +132,57 @@
 | 3 | 🟠 清理 `_temp-` 遗留（2 workflow + 4 脚本） | 临时资产混在生产库，有误触发风险 | 清理前确认结果已复核 |
 | 4 | 🟠 统一「卡片 / 详情页 / review」三处止损数据源 | ANET 曾出现 197.69 / 209.36 / 210.24 三个值 | `ANET_STOPLOSS_TRIPLE.md`；根因是三套系统各算各的 |
 | 5 | 🟠 为「推荐键匹配失败」加端到端断言 | 今日 bug 曾静默漏卖、无人察觉 | 已有告警打印，建议在 CI 上升为失败 |
+| 6 | 🔴 **机械止损与 review 移动止损不一致（资金风险）** | 只读调查 `STOPLOSS_ROOT_CAUSE.md` | 机械止损按冻结的 197.69 判断，实际**放宽**了止损线（可能多亏 5–8%）；修法见下方展开 |
+
+> #### P1 #6 展开 · 🔴 机械止损与 review 移动止损不一致（资金风险）
+>
+> **问题**：机械止损按 `portfolio_50000_positions.csv` 里**冻结的初始止损（197.69）**判断，
+> 而 review 按**移动止损（210.24）**判断。两者不一致，**机械止损实际放宽了止损线（可能多亏 5–8%）**。
+>
+> - 机械止损取值：`portfolio_50000.py:687`（`_run_intraday_stop`），由 `dashboard-data.yml:93-97` 每 15 分钟驱动
+> - 该值**全仓库唯一写入点**是建仓时的 `portfolio_50000.py:555`，持仓期间**永不更新**
+>   （`mark_to_market()` `:566-603` 只改价格/浮盈字段，不碰 `Stop_Loss`）
+> - review 的移动止损其实**有落盘**，但落在 `trade_history.csv`（`review.py:1426-1448`，调用点 `:1878-1882`）——
+>   **账本机械止损不读它**
+> - 触发时 review 还会跳过回写（`review.py:1875-1876` `continue`），所以日志的 210.24 与落盘的 209.36 本身也会差一拍
+> - ⚠️ 更根本的矛盾：`portfolio_50000.py:5-11` docstring 明写「卖出完全沿用 Review 终态……**本模块不实现第二套止损**」，
+>   而 `_run_intraday_stop` 就是那"第二套"，且挂在一个永不更新的值上
+>
+> **修复**：**C + D 组合**（明早 review 通过后做）
+> - **C** = `portfolio_50000.py` 在 `mark_to_market()` 把 `Stop_Loss` 同步为 trade_history 的当前移动止损
+>   （单文件、单一写入者、不新增跨模块耦合）
+> - **D** = 拆掉并行的「第二套止损」：`_run_intraday_stop` 改读 trade_history，或直接下线 `dashboard-data.yml:93-97`
+>   —— 让 review 成为唯一退出权威
+> - 为什么不用 A（review 回写 positions.csv）：会引入 `positions.csv` 的第二个写入者，且 review 用 pandas 重写 CSV
+>   可能与账本的 `POSITION_COLUMNS` 列序不一致，风险高于收益
+>
+> **时机**：**明早 07:00 后**
+> （等 06:23 review 跑完并通过，避免与当晚生产复盘叠加变量）
+>
+> **注意**：C 会把机械止损线从 197.69 抬到 ~209，**原本不会触发的机械卖现在会触发**。
+> 这是预期行为（197.69 早已失效），但属**真实的行为变更**，实施前需确认。
 
 ### P2 — 功能推进（已决策待实施）
 
 | # | 事项 | 依据 | 备注 |
 |---|------|------|------|
-| 6 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
-| 7 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
-| 8 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
-| 9 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
-| 10 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
+| 7 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
+| 8 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
+| 9 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
+| 10 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
+| 11 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
 
 ### P3 — 探索 / 可选
 
 | # | 事项 | 依据 |
 |---|------|------|
-| 11 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
-| 12 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
-| 13 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
-| 14 | 宏观板块 / Market Indicators 激活 | `MACRO_PANEL_ACTIVATION.md`、`MARKET_INDICATORS_PANEL_DESIGN.md` |
-| 15 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
-| 16 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
-| 17 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
+| 12 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
+| 13 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
+| 14 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
+| 15 | 宏观板块 / Market Indicators 激活 | `MACRO_PANEL_ACTIVATION.md`、`MARKET_INDICATORS_PANEL_DESIGN.md` |
+| 16 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
+| 17 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
+| 18 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
 
 ---
 
