@@ -1,0 +1,16 @@
+timestamp: 2026-10-13T14:00:30Z
+base_url: https://api.clawsocket.com
+model: claude-fable-5-1
+RESULT: TOOL_USE_SUPPORTED
+
+--- full log ---
+[probe] base_url = https://api.clawsocket.com
+[probe] api_key  = sk-W***REDACTED***
+[probe] model    = claude-fable-5-1
+[probe] stop_reason = tool_use
+[probe] content blocks = 1
+[probe]   block[0].type = tool_use
+[probe]     name  = get_weather
+[probe]     input = {"location": "San Francisco"}
+[probe] RESULT = TOOL_USE_SUPPORTED ✅
+[probe] 网关透传 tools，方案 A（官方 SDK + ClawSocket base_url）可行
