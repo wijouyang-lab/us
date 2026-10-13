@@ -142,6 +142,51 @@ def test_macro_render_with_ai():
     assert "风险偏好回升" in body, body
 
 
+def test_macro_source_and_age_tag_rendered():
+    """改动 1：source 渲染真实媒体名，age_tag 作为权重标签共存（不再把权重标签当来源）。"""
+    app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    exposed = _expose(app_js)
+
+    macro = {
+        "schema_version": "macro.v1", "generated_at": "2026-10-13T09:00:00Z",
+        "economic": [],
+        "speakers": [{"person": "Warsh", "title": None,
+                      "content": "US bond traders await CPI - Yahoo Finance Singapore",
+                      "time": "10-11 10:23", "source": "Yahoo Finance Singapore",
+                      "age_tag": "📄昨日-中等权重",
+                      "sentiment": "neutral", "rationale": "无明确方向"}],
+        "error": None,
+    }
+    body = (_run_node(exposed, _tail(json.dumps(macro)))["body"] or "")
+    assert "Yahoo Finance Singapore" in body, body          # 真实来源可见
+    assert "📄昨日-中等权重" in body, body                    # 权重标签与来源共存
+    assert "10-11 10:23" in body, body
+
+
+def test_macro_content_cn_priority():
+    """改动 2：有 content_cn 时优先显示中文；缺失时回退英文原文。"""
+    app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    exposed = _expose(app_js)
+
+    macro = {
+        "schema_version": "macro.v1", "generated_at": "2026-10-13T09:00:00Z",
+        "economic": [],
+        "speakers": [
+            {"person": "Warsh", "title": None, "content": "English original A",
+             "content_cn": "中文翻译 A", "time": None, "source": "CNBC", "age_tag": None,
+             "sentiment": None, "rationale": None},
+            {"person": None, "title": None, "content": "English original B",
+             "content_cn": None, "time": None, "source": None, "age_tag": None,
+             "sentiment": None, "rationale": None},
+        ],
+        "error": None,
+    }
+    body = (_run_node(exposed, _tail(json.dumps(macro)))["body"] or "")
+    assert "中文翻译 A" in body, body                 # 有翻译 → 显示中文
+    assert "English original A" not in body, body     # 有翻译 → 不显示英文原文
+    assert "English original B" in body, body         # 无翻译 → 回退英文原文
+
+
 def test_macro_empty_arrays():
     """economic/speakers 空数组 → 显示「暂无经济数据」「暂无重要讲话」。"""
     app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
