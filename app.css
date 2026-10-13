@@ -569,3 +569,14 @@ button{font-family:inherit}
 .ss-list{margin:0;padding-left:16px}
 .ss-list li{margin:3px 0;line-height:1.55}
 .ss-list.ss-gap li{color:#8a6d3b}
+/* evidence 折叠块：默认收起（内含未核验数字），按 source 区分渲染 */
+.ss-ev{margin-top:7px;font-size:12.5px}
+.ss-ev>summary{cursor:pointer;color:var(--text-3);font-weight:650;list-style:none;outline:none}
+.ss-ev>summary::-webkit-details-marker{display:none}
+.ss-ev>summary::before{content:"▸ ";color:var(--text-3)}
+.ss-ev[open]>summary::before{content:"▾ "}
+.ss-ev-warn{margin-left:6px;color:#b26a00;font-weight:600}
+.ss-ev-fact{color:var(--text-2)}
+.ss-ev-qual{color:var(--text-2)}
+.ss-ev-unverified{color:#888;font-style:italic}
+.ss-ev-unverified::before{content:"⚠️ 未经核验："}

@@ -1206,6 +1206,33 @@
     return '<div class="ss-row"><span class="ss-k">' + esc(label) + '</span>' +
       '<span class="ss-v">' + esc(String(val)) + '</span></div>';
   }
+  /* evidence → 折叠块。**默认收起**：里面含「数字待核验」条目（AI 凭记忆写出、无法核验），
+     必须由用户主动点开，避免未核验数字被当成已确认事实阅读。 */
+  var SS_SRC_ORDER = ['持仓数据', '定性推理', '数字待核验'];
+  function ssEvidence(ev) {
+    if (!ev || !ev.length) return '';
+    var counts = {};
+    ev.forEach(function (e) {
+      var s = (e && typeof e === 'object' && e.source) ? e.source : '数字待核验';
+      counts[s] = (counts[s] || 0) + 1;
+    });
+    var keys = SS_SRC_ORDER.concat(Object.keys(counts).filter(function (k) {
+      return SS_SRC_ORDER.indexOf(k) < 0;
+    })).filter(function (k) { return counts[k]; });
+    var summary = keys.map(function (k) { return counts[k] + ' 条' + k; }).join(' · ');
+    var items = ev.map(function (e) {
+      var isObj = e && typeof e === 'object';
+      var src = (isObj && e.source) ? e.source : '数字待核验';
+      var txt = (isObj && e.text) ? e.text : String(e);
+      var unverified = src === '数字待核验' || SS_SRC_ORDER.indexOf(src) < 0;
+      var cls = unverified ? 'ss-ev-unverified'
+        : (src === '持仓数据' ? 'ss-ev-fact' : 'ss-ev-qual');
+      return '<li class="' + cls + '">' + esc(txt) + '</li>';
+    }).join('');
+    return '<details class="ss-ev"><summary>📊 证据（' + esc(summary) + '）' +
+      (counts['数字待核验'] ? '<span class="ss-ev-warn">⚠️ 点击展开，含未核验数字</span>' : '') +
+      '</summary><ul class="ss-list">' + items + '</ul></details>';
+  }
   function renderSkillSerenity() {
     var sk = DATA && DATA.skill_serenity;
     var card = $('#skillSerenityCard');
@@ -1236,7 +1263,7 @@
       }
       return '<div class="ss-card">' + head +
         ssRow('业务定位', p.business_position) +
-        ssRow('证据', ssList(p.evidence, 'ss-ev')) +
+        ssEvidence(p.evidence) +
         ssRow('缺口', ssList(p.gaps, 'ss-gap')) +
         ssRow('盈利含义', p.earnings) +
         ssRow('估值压力', p.valuation) +

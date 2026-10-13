@@ -47,7 +47,11 @@ def _positions():
 
 _GOOD_AI = {
     "business_position": "卡在网络设备 / 数据中心交换层",
-    "evidence": ["[持仓数据] 浮盈 0.92%", "[方法论推理] 需求来自 AI 数据中心资本开支"],
+    "evidence": [
+        {"text": "浮盈 0.92%，权重 19.63%", "source": "持仓数据"},
+        {"text": "需求来自 AI 数据中心资本开支，供给集中在少数交换芯片供应商", "source": "定性推理"},
+        {"text": "记忆中 P/E 约 30 倍，需查最新 10-K 核验", "source": "数字待核验"},
+    ],
     "gaps": ["缺最新 10-Q 的园区网络分部毛利率", "缺客户集中度披露"],
     "earnings": "看网络设备分部收入增速与毛利率",
     "valuation": "无联网数据，不给倍数",
@@ -128,7 +132,7 @@ def test_run_parses_ai_json(tmp_path):
 
     # prompt 必须真的带上框架文本 + 离线硬约束
     assert "SKILL_MD_TEXT" in seen["prompt"]
-    assert "禁止编造" in seen["prompt"]
+    assert "数字纪律" in seen["prompt"]
     assert "不要给综合数字评分" in seen["prompt"]
 
 
@@ -221,7 +225,8 @@ def test_parse_result_tolerates_surrounding_text():
     r = _load_runner()
     got = r.parse_result('好的，结果如下：\n{"business_position":"y","evidence":"单条"}\n以上。')
     assert got["business_position"] == "y"
-    assert got["evidence"] == ["单条"]      # 非 list 会被包成单元素 list
+    # 非 list 会被包成单元素 list；裸字符串无来源标签 → fail-safe 记为「数字待核验」
+    assert got["evidence"] == [{"text": "单条", "source": "数字待核验"}]
 
 
 @pytest.mark.parametrize("bad", ["", "   ", "完全不是 JSON"])
@@ -348,7 +353,8 @@ def test_frontend_renders_positions():
         "skill_version": "1.1.0", "asof": "2026-10-13", "error": None,
         "positions": [
             {"ticker": "ADSK", "business_position": "卡在网络交换层",
-             "evidence": ["[持仓数据] 浮盈 0.92%"], "gaps": ["缺 10-Q 分部毛利率"],
+             "evidence": [{"text": "浮盈 0.92%", "source": "持仓数据"}],
+             "gaps": ["缺 10-Q 分部毛利率"],
              "earnings": "看分部增速", "valuation": "无联网数据", "alternatives": "白盒交换机",
              "what_would_change": "资本开支下修", "error": None},
             {"ticker": "ANET", "business_position": "", "evidence": [], "gaps": [],
@@ -360,7 +366,7 @@ def test_frontend_renders_positions():
     body = r["body"]
     assert "ADSK" in body and "ANET" in body, body
     assert "业务定位" in body and "卡在网络交换层" in body, body
-    assert "证据" in body and "[持仓数据] 浮盈 0.92%" in body, body
+    assert "证据" in body and "浮盈 0.92%" in body, body
     assert "缺口" in body and "缺 10-Q 分部毛利率" in body, body
     assert "何时降级" in body and "资本开支下修" in body, body
     # 离线提示必须显示（不得暗示已联网核验）
@@ -377,6 +383,91 @@ def test_frontend_no_offline_note_when_online_mode():
              "error": None}],
     })
     assert "未联网核验" not in r["body"], r
+
+
+# --------------------------------------------------------------------------- #
+# 12) 数字纪律（方案 ②）：prompt 硬约束 + evidence 结构化 + 前端按 source 渲染
+#
+# 背景：skill-weekly run #2 产出 23 条 evidence，其中 13 条含无法核验的具体数字
+# （编造的收入/增速/P/E/EPS、虚构的直接引语），而且全部藏在 [方法论推理] 标签下 ——
+# 标签形同虚设，幻觉获得了"已标注来源"的外观。
+# --------------------------------------------------------------------------- #
+def test_prompt_forbids_specific_numbers():
+    """prompt 必须含数字纪律硬约束与三类标签语义，且旧标签已被替换掉。"""
+    r = _load_runner()
+    prompt = r.build_prompt("SKILL_MD_TEXT", "", _positions()[0], "2026-10-13")
+    for must in ("数字纪律",
+                 "禁止收入",
+                 "禁止增长率",
+                 "禁止 P/E",
+                 "禁止装机数",
+                 "禁止直接引用管理层原话",
+                 "数字待核验",
+                 "定性推理",
+                 "持仓数据",
+                 "只有这一类可以含数字"):
+        assert must in prompt, f"prompt 缺少硬约束：{must}"
+    assert "[方法论推理]" not in prompt, "旧标签 [方法论推理] 必须已被替换"
+    assert '"source": "定性推理"' in prompt, "输出结构必须示范对象数组"
+
+
+def test_evidence_is_object_array():
+    """evidence 必须是 {text, source} 对象数组；旧格式字符串要提升为 source；
+    来源缺失/未知一律 fail-safe 降级为「数字待核验」。"""
+    r = _load_runner()
+    got = r.parse_result(json.dumps({
+        "business_position": "x",
+        "evidence": [
+            {"text": "浮盈 1%", "source": "持仓数据"},
+            {"text": "结构推理", "source": "定性推理"},
+            {"text": "记得 P/E 30", "source": "数字待核验"},
+            "[持仓数据] 旧格式字符串",
+            "没有标签的字符串",
+            {"text": "来源非法的条目", "source": "AI自己编的来源"},
+        ],
+    }, ensure_ascii=False))
+    ev = got["evidence"]
+    assert all(isinstance(e, dict) for e in ev), ev
+    assert all("text" in e and "source" in e for e in ev), ev
+    assert [e["source"] for e in ev] == [
+        "持仓数据", "定性推理", "数字待核验",
+        "持仓数据",       # `[持仓数据] xxx` 旧格式 → 标签提升为 source
+        "数字待核验",     # 无标签 → fail-safe
+        "数字待核验",     # 非白名单来源 → fail-safe
+    ], ev
+    assert ev[3]["text"] == "旧格式字符串"
+
+
+def test_evidence_renders_by_source():
+    """前端：evidence 默认折叠在 <details>，摘要给出分类计数，只有「数字待核验」带特殊 class。"""
+    r = _render_sk({
+        "schema_version": SCHEMA, "mode": "offline", "positions": [
+            {"ticker": "ADSK", "business_position": "x",
+             "evidence": [
+                 {"text": "浮盈 0.92%", "source": "持仓数据"},
+                 {"text": "需求来自 AI 资本开支", "source": "定性推理"},
+                 {"text": "记得 P/E 约 30 倍", "source": "数字待核验"},
+             ],
+             "gaps": [], "earnings": "", "valuation": "", "alternatives": "",
+             "what_would_change": "", "error": None}],
+    })
+    body = r["body"]
+    # 默认折叠
+    assert "<details" in body and "</details>" in body, body
+    assert "<summary>" in body, body
+    # 摘要里的分类计数
+    assert "1 条持仓数据" in body, body
+    assert "1 条定性推理" in body, body
+    assert "1 条数字待核验" in body, body
+    assert "含未核验数字" in body, body
+    # 按 source 区分 class
+    assert 'class="ss-ev-unverified"' in body, body
+    assert 'class="ss-ev-fact"' in body, body
+    assert 'class="ss-ev-qual"' in body, body
+    assert body.count('class="ss-ev-unverified"') == 1, body
+    # 三类文案都在
+    for t in ("浮盈 0.92%", "需求来自 AI 资本开支", "记得 P/E 约 30 倍"):
+        assert t in body, body
 
 
 # --------------------------------------------------------------------------- #
