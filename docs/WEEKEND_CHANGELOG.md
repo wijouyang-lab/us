@@ -1,6 +1,6 @@
 # 周末变更记录（WEEKEND CHANGELOG）
 
-> 生成日期：2026-10-10 23:18（GMT+8）｜ 仓库：`us-market-terminal` ｜ 分支：`main`
+> 生成日期：2026-10-10 23:18（GMT+8）｜ 仓库：wijouyang-lab/us ｜ 分支：`main`
 > 覆盖范围：**2026-10-09 晚 ~ 2026-10-10 全天** 的全部人工提交。
 > 当前 `HEAD = 683b45b`（= `origin/main`），工作树 clean。
 

@@ -15,6 +15,9 @@
 6. When Claude is the live fallback, the long report output cap is reduced to 8,000 tokens to reduce gateway timeout/524 risk.
 7. Fixed GitHub Actions environment indentation and added the runtime routing secrets consistently to scan/review/evolve.
 8. scan workflow commits `scan_version.txt` as well as pending files.
+   —— **更正（2026-10-13）**：未落地。`scan.yml` 只提交 pending CSV / AI 快照等文件，
+   `scan_version.txt` 被 `:142-153` 的 `git stash` 丢弃（值冻结在 `2026-08-04`）；
+   同日 P1 批 2 已从 `dashboard_export.py` 移除该字段写入。
 
 ### Safety behavior
 - AI failure never creates a Core recommendation.

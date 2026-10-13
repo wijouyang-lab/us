@@ -3,6 +3,8 @@
 > 范围：只读核查，不修改任何文件、不 push、不 rebase、不碰 workflow/代码。
 > 仓库：`/tmp/us`，HEAD = `fedf63d`（ahead 6 / behind 2）。
 > 核心问题：scan.py 是否因 PEP 701（Python 3.12 才允许 f-string 表达式内含反斜杠）在 < 3.12 环境编译失败？这是真实生产风险，还是纯技术债？
+>
+> 注：本报告写于 scan.py 长度约 2497 行时；此后文件已增长至约 2800 行，行号已漂移。当前触发点为 `scan.py:2813`（f-string 表达式内的反斜杠）。
 
 ---
 

@@ -27,7 +27,7 @@
    - setup-python v5
    - 删除 Anthropic SDK 依赖
    - 支持 `GPT_MODEL`、`GPT_REASONING_EFFORT`、`CLAUDE_AUDIT_MODEL`、`CLAWSOCKET_PROTOCOL`
-   - 扫描时提交 `scan_version.txt`
+   - 扫描时提交 `scan_version.txt` —— **更正（2026-10-13）**：此声明从未落地（`scan.yml` 提交清单 `:84-131` 不含它，且 `:142-153` 会 stash 丢弃，值冻结在 `2026-08-04`）；同日 P1 批 2 已移除 `dashboard_export.py` 对它的消费
    - Evolve 不再使用 `|| true` 吞掉失败 —— **更正（2026-10-13）**：此声明当时并未落地（`|| true` 一直存在），已于 2026-10-13 实际移除
 
 ## 推荐 Secrets

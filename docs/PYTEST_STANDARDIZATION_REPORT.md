@@ -1,5 +1,7 @@
 # P2：pytest Test Runner 标准化专项 — 交付报告
 
+> 历史快照：本文记录的是当时（2026-10-13）的测试基线。当前基线见 HANDOVER.md。
+
 ## 结论：`pytest -q` 现已成为标准测试入口，152 个测试单元全通过，0 INTERNALERROR
 
 | 项 | 结果 |

@@ -1,5 +1,7 @@
 # Dashboard Data 并发提交稳定性修复 + 废弃 Mirror 隔离 · 全链路生产验收报告
 
+> 历史快照：本文记录的是当时（2026-10-13）的测试基线。当前基线见 HANDOVER.md。
+
 > 本报告为「夜间全自动任务」的最终交付。全程自主执行，未 force push、未 reset --hard、未改写 main 历史、未修改 Scan/Review/Options/Schedule/Email。
 
 ---

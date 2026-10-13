@@ -232,7 +232,7 @@ function runtimeModel(kind) {
    `class="runtime-model"` 小字；`fallback:true` 时带 `warn` 与 `⚠️`；
    **无记录时不渲染任何 model 小字**。
 
-**全量测试基线**：当前 **465 passed** → 期望 **≥ 469 passed**。
+**全量测试基线**：当前 **465 passed** → 期望 **≥ 469 passed**。（2026-10-13 实测 **499 passed**）
 
 ---
 

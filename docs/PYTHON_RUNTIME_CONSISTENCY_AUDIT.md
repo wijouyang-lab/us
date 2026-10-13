@@ -1,5 +1,7 @@
 # P3：Python Runtime Version Consistency 只读审计报告
 
+> 历史快照：本文记录的是当时（2026-10-13）的测试基线。当前基线见 HANDOVER.md。
+
 > 本次为只读审计：**未修改任何文件、未 commit、未 push**（tracked 修改/删除 = 0）。
 
 ## 结论：当前可正常运行，风险等级 P3（低）；建议统一到 3.12（1 行改动）

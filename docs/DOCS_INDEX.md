@@ -201,7 +201,7 @@
 | PYTHON_DEPENDENCY_PINNING_REPORT.md | 生产依赖可重复性最小实施 | 已实施 |
 | PYTEST_STANDARDIZATION_REPORT.md | pytest Runner 标准化交付 | 已实施 |
 
-> 📌 已核验（10-13）：`scan.py:2690` 仍含 3.11 不兼容的 f-string 反斜杠 → **全量测试必须用 python3.12**，用 3.11 会在收集阶段报 SyntaxError。
+> 📌 已核验（10-13）：`scan.py` 风控 prompt 模板里的 `{'\n'.join(position_lines)}`（f-string 表达式内含反斜杠）在 3.11 无法解析 → **全量测试必须用 python3.12**，用 3.11 会在收集阶段报 SyntaxError。（按内容引用，避免行号漂移）
 
 ## 14. 总览审计 / 运维计划（13 篇）⚠️ 「Final」互相覆盖
 

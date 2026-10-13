@@ -50,7 +50,7 @@
 |----|------|------|
 | STOPLOSS key bug 修复 | `rec_id_of` 日期归一化（`portfolio_50000.py`）+ 漏卖告警 | ✅ commit `f03409b` |
 | ANET 状态重置 | `Stop_Loss_Hit`→`Active`，清 Exit_Date/Exit_Price，`STOP_TRIGGERED`→`CLEAR` | ✅ commit `021489a`（仅改 ANET 一行） |
-| 全量回归 | 465 passed（⚠️ Windows 本机需 `PYTHONUTF8=1`，否则 38 项子进程用例 GBK 解码失败） | ✅ **必须用 `python3.12`** |
+| 全量回归 | `PYTHONUTF8=1 python3.12 -m pytest tests/ -q`（数量随用例增长；2026-10-13 实测 **499 passed**；⚠️ Windows 本机需 `PYTHONUTF8=1`，否则子进程用例 GBK 解码失败） | ✅ **必须用 `python3.12`** |
 | 文档入库 | 130 篇 `.md` → `docs/` | ✅ commit `dc6e06f` |
 | 文档索引 | `DOCS_INDEX.md`（主题分组/状态/冲突） | ✅ 本日新增 |
 | 模型统一 | 所有 workflow + 模块默认模型改为 `claude-fable-5-1`（共 11 处，含 4 个 workflow 的 `CLAWSOCKET_LIVE_MODEL`） | ✅ commit `3ed5a4bb` |
@@ -117,7 +117,7 @@
 
 - ⛔ **永不 `git commit --amend` / `git push --force`**（含 `--force-with-lease`）
 - ⛔ **不要手动补跑 review**（同 group 串行，但重复跑会重复记账本流水）
-- ⚠️ **全量测试必须用 `python3.12`**：`scan.py:2690` 含 f-string 反斜杠，**python3.11 无法解析**，用 3.11 会在 pytest 收集阶段直接失败（这不是你改坏了，是既有技术债）
+- ⚠️ **全量测试必须用 `python3.12`**：`scan.py` 风控 prompt 模板里的 `{'\n'.join(position_lines)}`（f-string 表达式内含反斜杠）在 3.11 无法解析，用 3.11 会在 pytest 收集阶段直接失败（这不是你改坏了，是既有技术债）
 - ⚠️ **不要回退 `rec_id_of` 的日期归一化**（今日修复；回退会让所有持仓重新变成「漏卖」）
 - ⚠️ 每次 push 前：`git fetch origin` → `git rebase origin/main` → `git push`（远端常被自动 `refresh market data` 提交推进）
 
@@ -226,7 +226,7 @@
 >
 > ✅ **已修**：新增 `_block_imports()` helper，用 `monkeypatch` 覆盖 `builtins.__import__`
 > 强制抛 `ImportError`（只拦白名单包，其余一律委托真实实现），两个用例已 hermetic。
-> **全量回归：465 passed / 0 failed**（当前基线；Windows 本机需 `PYTHONUTF8=1`）。
+> **全量回归：`PYTHONUTF8=1 python3.12 -m pytest tests/ -q`，0 failed**（数量随用例增长；2026-10-13 实测 **499 passed**；Windows 本机需 `PYTHONUTF8=1`）。
 >
 > 注：CI 无 pytest runner（无任何 test workflow），此类环境脆弱问题只影响本地全量跑。
 
@@ -315,7 +315,7 @@
 
 ```bash
 cd /tmp/us
-PYTHONUTF8=1 python3.12 -m pytest tests/ -q   # 全量回归（465 passed；⚠️ 不能用 3.11；Windows 必须 PYTHONUTF8=1）
+PYTHONUTF8=1 python3.12 -m pytest tests/ -q   # 全量回归（数量随用例增长；2026-10-13 实测 499 passed；⚠️ 不能用 3.11；Windows 必须 PYTHONUTF8=1）
 git log --oneline -5                    # 最近提交
 git ls-files | grep _temp               # 现状 6 条（_temp_experiment/ ×4 + 2 个 _temp-*.yml），尚未清理
 grep -n "CLAWSOCKET_LIVE_MODEL" .github/workflows/review.yml   # 应为 claude-fable-5-1（已全库统一）

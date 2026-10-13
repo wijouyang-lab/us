@@ -1,5 +1,9 @@
 # 生产依赖可重复性最小实施 — 交付报告
 
+> **2026-10-13 更新**：此后引用方已从 4 个增至 9 个（+ news-fetch / quant-research /
+> skill-weekly / test / _temp-acceleration）；requirements-production.txt 已由 9 包增至 11 包
+> （+ fear-greed / cme-fedwatch）；全量基线 499 passed。下文为当时快照。
+
 ## 结论：已建立统一版本约束，发现并补上缺失的 scipy 依赖，全量测试通过
 
 ---
