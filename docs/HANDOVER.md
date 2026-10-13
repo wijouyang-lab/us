@@ -134,6 +134,7 @@
 | 5 | 🟠 为「推荐键匹配失败」加端到端断言 | 今日 bug 曾静默漏卖、无人察觉 | 已有告警打印，建议在 CI 上升为失败 |
 | 6 | 🟡 **机械止损与 review 移动止损不一致（资金风险）— 修复已实现，待激活** | `STOPLOSS_ROOT_CAUSE.md` + 实测 | 方案 C 已落地，门控在 `ENABLE_STOP_LOSS_SYNC`（**默认关闭**）；激活方式与一项新发现见下方展开 |
 | 7 | ✅ **`ENABLE_MARKET_INDICATORS` 已开但面板不出现（已修复）** | 实测 run #2082 → 复验 #2084 | 两处根因：① 依赖缺失 ② 读取路径不匹配；均已修并有回归测试 |
+| 8 | 🔴 **`dec()` 不解析 `$` 前缀 → 盘中机械止损从未真正生效** | 2026-10-13 实测（P1 #6 调查中发现） | 4 只持仓的 `Stop_Loss` 全是 `$` 前缀 → `dec()` 返回 None → `_run_intraday_stop` 全部跳过；详见下方展开 |
 
 > #### P1 #6 展开 · 🔴 机械止损与 review 移动止损不一致（资金风险）
 >
@@ -227,18 +228,44 @@
 >
 > 注：CI 无 pytest runner（无任何 test workflow），此类环境脆弱问题只影响本地全量跑。
 
+> #### P1 #8 展开 · 🔴 `dec()` 不解析 `$` 前缀 → 盘中机械止损从未真正生效
+>
+> **发现于**：P1 #6 的实现验证过程中（2026-10-13，跑 `ENABLE_STOP_LOSS_SYNC` 真实数据演练时暴露）。
+>
+> **根因**：`dec()`（`portfolio_50000.py:94`）只做 `Decimal(str(v).replace(",", "").strip())`
+> —— **剥逗号、剥空格，但不剥 `$`**，因此 `dec("$197.69") is None`。
+> 而 `_run_intraday_stop:687-689` 是 `stop = dec(p.get("Stop_Loss"))`，
+> 紧接着 `if stop is None or stop <= 0: continue` —— **直接跳过该持仓**。
+> **当前 4 只持仓的 `Stop_Loss` 全是 `$` 前缀**（实测）：
+> `ADSK '$214.76'` / `ANET '$197.69'` / `ISRG '$382.38'` / `KR '$56.31'` → `dec()` 全为 None
+> → **盘中机械止损对这 4 只从未执行过任何检查**。
+>
+> ⚠️ 这比 `STOPLOSS_ROOT_CAUSE.md` 的原判断更严重：原报告说 197.69「因价格距离远而惰性失效」，
+> 实际原因是**值根本无法解析**，与价格无关 —— 任何价格都不会触发。
+>
+> **修复路径（已就绪，随 P1 #6 的 flag 一起生效）**：
+> `ENABLE_STOP_LOSS_SYNC` 的同步逻辑写的是**归一化后的裸数字**（`raw_stop.replace("$", "")`），
+> 所以 flag 一开，这 4 条止损线立即变成可解析值，机械止损才真正开始工作。实测同步结果：
+> `ADSK 228.29` / `ANET 209.36` / `ISRG 411.24` / `KR 59.79`（`dec()` 全部可解析 ✅）。
+>
+> **附带影响（需知悉）**：卡片 `Stop_Loss` 显示会从 `"$214.76"` 变成 `"228.29"`（少一个 `$`）。
+> 若要坚持保留 `$` 格式，则必须让 `dec()` 也支持 `$` —— 那会波及 `dec()` 的**全部调用点**
+> （价格 / 股数 / 金额解析都走它），风险面大，**建议单独立项、独立验证**。
+>
+> **时机**：已随 P1 #6 的 flag 一起待激活；若决定保留 `$`，需先做 `dec()` 改造再评估。
+
 ### P2 — 功能推进（已决策待实施）
 
 | # | 事项 | 依据 | 备注 |
 |---|------|------|------|
-| 8 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
-| 9 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
-| 10 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
-| 11 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
-| 12 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
-| 13 | 🟡 **git 全局 `curloptResolve` pin 不稳定** | 2026-10-13 实测 | 见下方展开 |
+| 9 | 盘中 Sparkline（方案 B：15 分钟粒度，画布放当前价下方） | `INTRADAY_SPARKLINE_DESIGN.md`，三项决策已定 | 实测 `app.js` 仍**无** `renderIntradaySpark` |
+| 10 | 期权 Wheel 接线（CSP → CC） | `OPTIONS_WHEEL_DESIGN.md`（899 行） | flag 关、未接线 |
+| 11 | 23 小时交易改造 | `23H_IMPLEMENTATION_DIFFS.md`（937 行草稿，最大） | `_us_session.py` **不存在**，尚未起步 |
+| 12 | Model Fingerprint（识别中转站实际模型） | `MODEL_FINGERPRINT_METHOD.md` + `_IMPLEMENTATION.md` | 与 #1 的临时改动相关 |
+| 13 | Scan 角色重定义（选 B：抽独立模块） | `SCAN_REDEFINITION_IMPLEMENTATION.md` | 设计已定，推进中 |
+| 14 | 🟡 **git 全局 `curloptResolve` pin 不稳定** | 2026-10-13 实测 | 见下方展开 |
 
-> #### P2 #13 展开 · 🟡 git 全局 `curloptResolve` pin 不稳定
+> #### P2 #14 展开 · 🟡 git 全局 `curloptResolve` pin 不稳定
 >
 > - **现象**：`git fetch` / `git push` **偶发失败**（`exit 128`，连接超时 / `Recv failure: Connection was reset`）。
 >   重试即可通过 —— 实测 fetch 连失 2 次后第 3 次成功；push 失败 1 次后重试成功。
@@ -253,13 +280,13 @@
 
 | # | 事项 | 依据 |
 |---|------|------|
-| 14 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
-| 15 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
-| 16 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
-| 17 | 宏观板块 / Market Indicators 激活 | 已完成，见 P1 #7 |
-| 18 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
-| 19 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
-| 20 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
+| 15 | Alpha101 因子引入 | `ALPHA101_FACTOR_RESEARCH.md` |
+| 16 | 技术因子 OOS 加速实验落地 | `ACCELERATION_EXPERIMENT.md` |
+| 17 | 事件日历 L2 | `ECON_CALENDAR_L2.md`（自述不实施） |
+| 18 | 宏观板块 / Market Indicators 激活 | 已完成，见 P1 #7 |
+| 19 | 80% 股票天花板取舍 | `POSITION_CEILING_EVAL.md` |
+| 20 | Skill 框架 / Serenity-Skill | `SKILL_FRAMEWORK_DESIGN.md`、`SERENITY_SKILL_DESIGN.md` |
+| 21 | 文档治理：把 130 篇中「已废弃」的归档 | `DOCS_INDEX.md` §15 |
 
 > ⚠️ `cme-fedwatch` 依赖 `curl_cffi`（~13MB 二进制 wheel）—— 已确认 CI 能装
 > （dashboard-data run #2082 实测），但会增加依赖安装时间约 10–15 秒（实测 +~17s）。
