@@ -317,9 +317,9 @@
 cd /tmp/us
 PYTHONUTF8=1 python3.12 -m pytest tests/ -q   # 全量回归（465 passed；⚠️ 不能用 3.11；Windows 必须 PYTHONUTF8=1）
 git log --oneline -5                    # 最近提交
-git ls-files | grep _temp               # 应为空（清理后）
-grep -n "CLAWSOCKET_LIVE_MODEL" .github/workflows/review.yml   # 应为 claude-opus-5-5
-grep -n "upstream_model" clawsocket_compat.py                  # 应无输出（debug 日志已删）
+git ls-files | grep _temp               # 现状 6 条（_temp_experiment/ ×4 + 2 个 _temp-*.yml），尚未清理
+grep -n "CLAWSOCKET_LIVE_MODEL" .github/workflows/review.yml   # 应为 claude-fable-5-1（已全库统一）
+grep -n "upstream_model" clawsocket_compat.py                  # 应有输出（clawsocket_compat.py:345，供 dashboard 展示模型名，非 debug 残留）
 ```
 
 **当前 HEAD 附近**：`f03409b`(key 修复) → `021489a`(ANET 重置) → `dc6e06f`(docs 入库)；其上有自动刷新提交（`6636c98`、`cc8d60a` …）。
