@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-10-13T06:00:43Z",
+  "generated_at": "2026-10-13T06:12:50Z",
   "fear_greed": {
     "score": 45.4,
     "rating": "neutral",
@@ -157,6 +157,36 @@
       "hold": 79.0,
       "hike_25bp": 21.0
     },
+    "meetings": [
+      {
+        "date": "2026-10-28",
+        "contract": "ZQV6",
+        "probabilities": {
+          "hold": 79.0,
+          "hike_25bp": 21.0
+        }
+      },
+      {
+        "date": "2026-12-09",
+        "contract": "ZQZ6",
+        "probabilities": {
+          "hold": 12.3,
+          "hike_25bp": 69.9,
+          "hike_50bp": 17.7
+        }
+      },
+      {
+        "date": "2027-01-27",
+        "contract": "ZQF7",
+        "probabilities": {
+          "hold": 7.0,
+          "hike_25bp": 44.8,
+          "hike_50bp": 40.5,
+          "hike_75bp": 7.7
+        }
+      }
+    ],
+    "max_meetings": 3,
     "source": "cme"
   },
   "error": null
