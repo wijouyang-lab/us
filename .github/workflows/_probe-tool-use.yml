@@ -1,0 +1,93 @@
+name: Probe Tool-Use Support
+
+# 临时探针（用完即删）：验证 ClawSocket 网关是否透传 Anthropic 协议的 `tools` 参数。
+# on 只有 workflow_dispatch → push 不会触发它，也不影响其它 workflow。
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install anthropic SDK
+        run: |
+          python -m pip install --upgrade pip
+          pip install anthropic
+      - name: Run tool-use probe
+        env:
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+        run: |
+          python - <<'PY'
+          import os, json, sys
+          import anthropic
+
+          api_key = os.environ.get("CLAWSOCKET_API_KEY")
+          base_url = os.environ.get("CLAWSOCKET_BASE_URL")
+          if not api_key or not base_url:
+              print("[probe] MISSING CREDENTIALS — check secrets injection")
+              sys.exit(2)
+
+          print(f"[probe] base_url = {base_url}")
+          print(f"[probe] api_key  = {api_key[:4]}***REDACTED***")
+
+          client = anthropic.Anthropic(api_key=api_key, base_url=base_url)
+
+          tools = [{
+              "name": "get_weather",
+              "description": "Get the current weather for a location.",
+              "input_schema": {
+                  "type": "object",
+                  "properties": {
+                      "location": {"type": "string", "description": "City name"}
+                  },
+                  "required": ["location"]
+              }
+          }]
+
+          try:
+              resp = client.messages.create(
+                  model="claude-fable-5-1",
+                  max_tokens=512,
+                  tools=tools,
+                  messages=[{
+                      "role": "user",
+                      "content": "What is the weather in San Francisco? Use the tool."
+                  }]
+              )
+          except Exception as e:
+              print(f"[probe] REQUEST ERROR: {type(e).__name__}: {e}")
+              sys.exit(1)
+
+          print(f"[probe] stop_reason = {resp.stop_reason}")
+          print(f"[probe] content blocks = {len(resp.content)}")
+
+          found_tool_use = False
+          for i, block in enumerate(resp.content):
+              btype = getattr(block, "type", "unknown")
+              print(f"[probe]   block[{i}].type = {btype}")
+              if btype == "tool_use":
+                  found_tool_use = True
+                  print(f"[probe]     name  = {block.name}")
+                  print(f"[probe]     input = {json.dumps(block.input)}")
+              elif btype == "text":
+                  text = (block.text or "")[:200]
+                  print(f"[probe]     text  = {text}")
+
+          print()
+          if found_tool_use:
+              print("[probe] RESULT = TOOL_USE_SUPPORTED ✅")
+              print("[probe] 网关透传 tools，方案 A（官方 SDK + ClawSocket base_url）可行")
+          elif resp.stop_reason == "end_turn" and not found_tool_use:
+              print("[probe] RESULT = TOOLS_IGNORED ⚠️")
+              print("[probe] 请求被接受但 tools 被忽略，模型未请求工具")
+              print("[probe] 方案 A 不可行，需考虑方案 C（DeepSeek 官方端点）")
+          else:
+              print("[probe] RESULT = UNKNOWN — inspect output above")
+          PY
