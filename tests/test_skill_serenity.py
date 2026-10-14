@@ -585,3 +585,178 @@ def test_frontend_no_offline_note_when_online_mode():
         "priorities": [{"ticker": "X", "priority_rank": 1, "why": "a", "what_to_verify": "b"}],
     })
     assert "未联网核验" not in r["body"], r
+
+
+# --------------------------------------------------------------------------- #
+# 段 3a-2：load_context / context 注入 / 数据核验
+# --------------------------------------------------------------------------- #
+def _ctx_fixture(tmp_path, with_macro=True):
+    d = tmp_path / "dashboard" / "data"
+    d.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "generated_at": "2026-10-14T04:00:00Z",
+        "macro": {"economic": ([{"indicator": "CPI", "value": "指数 334.98",
+                                 "date": "2026-08-01", "source": "BLS API"}]
+                              if with_macro else [])},
+        "market": {"regime": "bull", "vix": 17.2},
+        "quant": {"factor": 1.0},
+        "market_indicators": {"us10y": 5.19, "dxy": 99.1},
+        "portfolio": {"cash": "10566.62", "stock_value": "40834.02",
+                      "total_equity": "51400.64", "open_pct": "79.4",
+                      "positions": [{"ticker": "ADSK", "shares": "43", "cost": "9951.06",
+                                     "market_value": "9908.49", "status": "OPEN"},
+                                    {"ticker": "ANET", "shares": "0", "cost": "9931.10",
+                                     "market_value": "0.00", "status": "CLOSED"}]},
+        "history": [{"date": "2026-10-%02d" % i, "total_equity": "51000.00",
+                     "return_pct": "2.0", "open_positions": 4} for i in range(1, 13)],
+    }
+    (d / "dashboard_data.json").write_text(json.dumps(payload, ensure_ascii=False),
+                                           encoding="utf-8")
+    (tmp_path / "portfolio_50000_meta.json").write_text(
+        json.dumps({"exposure_target": "0.40"}), encoding="utf-8")
+    return tmp_path
+
+
+def test_load_context_reads_six_panels(tmp_path):
+    ctx = _load_runner().load_context(_ctx_fixture(tmp_path))
+    assert ctx["macro_economic"][0]["indicator"] == "CPI"
+    assert ctx["market"]["regime"] == "bull"
+    assert ctx["quant"]["factor"] == 1.0
+    assert ctx["market_indicators"]["us10y"] == 5.19
+    ps = ctx["portfolio_summary"]
+    assert ps["cash"] == "10566.62" and ps["target_pct"] == "0.40"
+    assert [p["ticker"] for p in ps["positions"]] == ["ADSK"]      # 仅 OPEN
+    assert "transactions" not in ps and "equity_curve" not in ps
+    assert len(ctx["history_recent"]) == 10                        # 最近 10 天
+
+
+def test_load_context_fail_soft_on_missing_panel(tmp_path):
+    """文件缺失 / 板块缺失 → 不抛异常，该键为空。"""
+    ctx = _load_runner().load_context(tmp_path)                    # 什么都不存在
+    assert isinstance(ctx, dict)
+    assert ctx["market"] == {} and ctx["history_recent"] == []
+    assert ctx["portfolio_summary"]["target_pct"] is None
+
+
+def test_prompt_includes_macro_section_when_context_given(tmp_path):
+    r = _load_runner()
+    ctx = r.load_context(_ctx_fixture(tmp_path))
+    p = r.build_prompt("", "", [], "2026-10-14", online=True, context=ctx)
+    assert "【宏观与市场环境（本地快照，截至 2026-10-14）】" in p
+    assert "CPI: 指数 334.98" in p
+    assert "market.regime: bull" in p
+    assert "【我的组合与历史（本地快照）】" in p
+    assert "目标敞口 0.40" in p
+    assert "ADSK×43@9951.06" in p
+
+
+def test_prompt_omits_context_section_when_none():
+    p = _load_runner().build_prompt("", "", [], "2026-10-14", online=True, context=None)
+    assert "【宏观与市场环境" not in p
+    assert "【我的组合与历史" not in p
+
+
+def test_prompt_includes_verification_instructions_when_online():
+    p = _load_runner().build_prompt("", "", [], "2026-10-14", online=True)
+    assert "【本地数据与核验】" in p
+    assert "verify_macro_series" in p and "verify_current_price" in p
+    assert "以网上值为准" in p
+    assert "data_verification" in p
+
+
+def test_prompt_omits_verification_when_offline():
+    p = _load_runner().build_prompt("", "", [], "2026-10-14", online=False)
+    assert "【本地数据与核验】" not in p
+    assert "verify_macro_series" not in p
+
+
+def test_data_verification_enum_label_validated():
+    """防幻觉：枚举/ticker 之外的 label 一律丢弃。"""
+    r = _load_runner()
+    out = r._build_data_verification(
+        [{"field": "GDP", "local_value": "3.1", "verified_label": "GDP", "status": "match"}],
+        {})
+    assert out == []
+
+
+def test_data_verification_requires_tool_call():
+    """防伪造核验：AI 声称核验但 sink 无记录 → 强制 unverified。"""
+    r = _load_runner()
+    out = r._build_data_verification(
+        [{"field": "CPI", "local_value": "指数 334.98", "verified_label": "CPI",
+          "status": "match"}], {})
+    assert len(out) == 1
+    assert out[0]["status"] == "unverified" and out[0]["verified_value"] is None
+
+
+def test_data_verification_populates_verified_value_from_tool():
+    """防编数：verified_value 只从 sink 搬运（AI 无法自填）。"""
+    r = _load_runner()
+    sink = {("verify_macro_series", json.dumps({"label": "CPI"}, sort_keys=True,
+                                               ensure_ascii=False)):
+            {"label": "CPI", "value": 334.98, "source": "FRED:CPIAUCSL (independent)",
+             "asof": "2026-08-01", "error": None}}
+    out = r._build_data_verification(
+        [{"field": "CPI", "local_value": "指数 334.98", "verified_label": "CPI",
+          "status": "mismatch", "verified_value": 999.0}], sink)
+    assert out[0]["verified_value"] == 334.98                  # 不是 AI 写的 999
+    assert out[0]["source"].startswith("FRED:")
+    assert out[0]["asof"] == "2026-08-01" and out[0]["status"] == "mismatch"
+
+
+def test_data_verification_price_row_uses_ticker():
+    """价格行的 verified_label 是 ticker（非枚举）→ 也应被接受并搬运 price。"""
+    r = _load_runner()
+    sink = {("verify_current_price", json.dumps({"ticker": "CME"}, sort_keys=True,
+                                               ensure_ascii=False)):
+            {"ticker": "CME", "price": 278.03, "source": "yfinance",
+             "asof": "2026-10-14", "error": None}}
+    out = r._build_data_verification(
+        [{"field": "CME 价格", "local_value": "270.75", "verified_label": "CME",
+          "status": "mismatch"}], sink, valid_tickers={"CME", "ADSK"})
+    assert out[0]["verified_value"] == 278.03 and out[0]["status"] == "mismatch"
+
+
+def test_payload_includes_data_verification_field():
+    """离线路径也必须有该字段（无工具 → 全 unverified），且不影响既有字段。"""
+    r = _load_runner()
+    ai = json.dumps({"priorities": [
+        {"ticker": "T0", "priority_rank": 1, "why": "瓶颈层", "what_to_verify": "10-Q"}],
+        "data_verification": [
+            {"field": "CPI", "local_value": "指数 334.98", "verified_label": "CPI",
+             "status": "match"}]}, ensure_ascii=False)
+    payload = r.run(None, "", [{"ticker": "T0", "name": "x", "bucket": "Core",
+                                "final_score": 90, "quant_score": 80, "ai_score": 70.0,
+                                "sector_rs_20d_pct": 1.0, "held": False}],
+                    lambda *a: ai, "m", 100, "2026-10-14")
+    assert "data_verification" in payload
+    assert payload["data_verification"][0]["status"] == "unverified"   # 离线无工具
+    assert payload["priorities"]
+
+
+def test_run_online_passes_result_sink(monkeypatch):
+    """在线路径必须把 verify_sink 传给 ask_with_tools（否则核验永远 unverified）。"""
+    r = _load_runner()
+    seen = {}
+
+    def _fake_loop(prompt, *, model, max_tokens, result_sink=None, **kw):
+        seen["sink"] = result_sink
+        result_sink[("verify_macro_series",
+                     json.dumps({"label": "CPI"}, sort_keys=True, ensure_ascii=False))] = {
+            "label": "CPI", "value": 111.0, "source": "FRED:X (independent)",
+            "asof": "2026-08-01", "error": None}
+        return (json.dumps({"priorities": [
+            {"ticker": "T0", "priority_rank": 1, "why": "x", "what_to_verify": "y"}],
+            "data_verification": [{"field": "CPI", "local_value": "指数 334.98",
+                                   "verified_label": "CPI", "status": "match"}]}),
+            [], "online_tool_use", None, [])
+
+    monkeypatch.setattr(r, "ask_with_tools", _fake_loop)
+    payload = r.run(None, "", [{"ticker": "T0", "name": "x", "bucket": "Core",
+                                "final_score": 90, "quant_score": 80, "ai_score": 70.0,
+                                "sector_rs_20d_pct": 1.0, "held": False}],
+                    lambda *a: "SHOULD_NOT", "m", 100, "2026-10-14", online=True)
+    assert isinstance(seen["sink"], dict)      # 调用期间被填满属预期
+    dv = payload["data_verification"][0]
+    assert dv["verified_value"] == 111.0 and dv["source"].startswith("FRED:")
+    assert dv["status"] == "match"

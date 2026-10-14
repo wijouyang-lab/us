@@ -534,7 +534,7 @@ def test_run_online_uses_tool_loop(monkeypatch):
     assert payload["verified_facts"][0]["ticker"] == "T0"
     assert payload["universe_size"] == 44                # 原池大小
     assert payload["universe_size_screened"] == 3        # 本次传入的（已粗筛）池
-    assert seen["kw"] == {"max_rounds": 3}
+    assert seen["kw"].get("max_rounds") == 3      # result_sink 由 run() 另行传递
 
 
 def test_run_online_falls_back_to_offline_on_failure(monkeypatch):
@@ -616,3 +616,38 @@ def test_main_online_flag_wires_mode_and_screened_size(tmp_path, monkeypatch):
     assert j["universe_size"] == 20              # 原池
     assert j["universe_size_screened"] == 5      # CLI 粗筛生效
     assert j["tool_trace"] == [] and j["verified_facts"] == []
+
+
+# --------------------------------------------------------------------------- #
+# 段 3a-2：result_sink（不改返回元组也能拿到核验工具的真实返回值）
+# --------------------------------------------------------------------------- #
+def test_ask_with_tools_records_verification_results_to_map(monkeypatch):
+    rec = _ToolRecorder(result={"label": "CPI", "value": 334.98,
+                                "source": "FRED:CPIAUCSL (independent)",
+                                "asof": "2026-08-01", "error": None})
+    monkeypatch.setattr(serenity_tools, "execute_tool", rec)
+    sink = {}
+    client = _FakeClient([_tools(("t1", "verify_macro_series", {"label": "CPI"})),
+                          _end("DONE")])
+    final, _trace, mode, _deg, _facts = r.ask_with_tools(
+        "P", model="m", max_tokens=100, client_factory=lambda: client, result_sink=sink)
+
+    assert final == "DONE" and mode == "online_tool_use"
+    assert len(sink) == 1, sink
+    key = ("verify_macro_series",
+           json.dumps({"label": "CPI"}, sort_keys=True, ensure_ascii=False))
+    assert key in sink, sink
+    assert sink[key]["value"] == 334.98
+    # 未核验的工具**不进** sink（避免噪声）
+    assert all(k[0] in ("verify_macro_series", "verify_current_price") for k in sink)
+
+
+def test_ask_with_tools_without_sink_does_not_crash(monkeypatch):
+    """不传 result_sink（既有调用方）→ 行为不变、不报错。"""
+    rec = _ToolRecorder(result={"label": "CPI", "value": 1.0, "error": None})
+    monkeypatch.setattr(serenity_tools, "execute_tool", rec)
+    client = _FakeClient([_tools(("t1", "verify_macro_series", {"label": "CPI"})),
+                          _end("OK")])
+    final, _t, mode, _d, _f = r.ask_with_tools(
+        "P", model="m", max_tokens=100, client_factory=lambda: client)
+    assert final == "OK" and mode == "online_tool_use"
