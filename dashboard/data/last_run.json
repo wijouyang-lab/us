@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-14T22:17:30Z",
-  "market_updated_at": "2026-10-14T22:17:28Z",
-  "technical_updated_at": "2026-10-14T22:17:30Z",
+  "generated_at": "2026-10-14T22:31:03Z",
+  "market_updated_at": "2026-10-14T22:31:01Z",
+  "technical_updated_at": "2026-10-14T22:31:03Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,13 +17,13 @@
     "missing": []
   },
   "stocks": {
-    "total": 35,
-    "core": 11,
-    "observation": 24,
-    "kline_ok": 35,
-    "technical_ok": 35,
+    "total": 27,
+    "core": 9,
+    "observation": 18,
+    "kline_ok": 27,
+    "technical_ok": 27,
     "price_source_breakdown": {
-      "realtime": 35
+      "realtime": 27
     }
   },
   "review": {
@@ -31,7 +31,7 @@
     "core_open": 23,
     "observation_closed": 2,
     "observation_open": 80,
-    "actual_active": 6,
+    "actual_active": 5,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
     "price_backfill_count": 11,
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 38494877120,
+        "run_id": 38647267968,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-14T01:17:07Z",
-        "started_at": "2026-10-14T01:17:07Z",
-        "updated_at": "2026-10-14T01:20:08Z",
-        "head_sha": "c7d6add8ce52",
-        "event": "schedule",
-        "run_number": 137,
+        "created_at": "2026-10-14T22:23:07Z",
+        "started_at": "2026-10-14T22:23:07Z",
+        "updated_at": "2026-10-14T22:27:07Z",
+        "head_sha": "266248a1fa00",
+        "event": "workflow_dispatch",
+        "run_number": 138,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38494877120"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38647267968"
       },
       "last_success": {
-        "run_id": 38494877120,
-        "completed_at": "2026-10-14T01:20:08Z",
-        "head_sha": "c7d6add8ce52"
+        "run_id": 38647267968,
+        "completed_at": "2026-10-14T22:27:07Z",
+        "head_sha": "266248a1fa00"
       },
       "error": null
     },
