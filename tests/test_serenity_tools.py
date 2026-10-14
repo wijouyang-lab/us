@@ -29,6 +29,9 @@ if _REPO_ROOT not in sys.path:
 import news_fetch_util  # noqa: E402
 from skills import serenity_tools as st  # noqa: E402
 
+import portfolio_50000 as pf_mod  # 供 monkeypatch fetch_last_closes
+from decimal import Decimal  # noqa: E402  （核验工具的测试夹具用）
+
 
 # --------------------------------------------------------------------------- #
 # A. execute_tool 分发
@@ -317,7 +320,8 @@ def test_no_tool_schema_has_url_field(tool):
     assert not (props & {"url", "endpoint", "link", "host", "path"}), \
         f"{tool['name']} 不应接受任意 URL 类参数（SSRF 护栏）"
     # 且每个工具的参数都必须是显式白名单
-    assert props <= {"query", "ticker"}
+    assert props <= {"query", "ticker", "label"}, \
+        f"{tool['name']} 出现未登记的参数（需同步更新本断言）"
 
 
 @pytest.mark.parametrize("fn_name", ["tool_web_search", "tool_ticker_news", "tool_company_facts"])
@@ -342,3 +346,166 @@ def test_tools_module_import_has_no_side_effects():
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout == "" and proc.stderr == "", (proc.stdout, proc.stderr)
     assert elapsed < 5, f"导入耗时异常（可能有网络/IO 副作用）: {elapsed:.1f}s"
+
+
+# --------------------------------------------------------------------------- #
+# E2. 核验工具（段 3a-1）：verify_macro_series / verify_current_price
+# --------------------------------------------------------------------------- #
+_FRED_CSV_OK = "DATE,CPIAUCSL\n2025-07-01,320.10\n2025-08-01,321.00\n2026-07-01,332.00\n2026-08-01,334.98\n"
+
+
+class _Resp:
+    def __init__(self, text, status=200):
+        self.text = text
+        self.status_code = status
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise RuntimeError(f"HTTP {self.status_code}")
+
+
+def _patch_fred(monkeypatch, text, capture=None):
+    """把 news_fetch_util.new_session().get(...) 换成返回固定 CSV 的假 session。"""
+    class _Sess:
+        def get(self, url, timeout=None):
+            if capture is not None:
+                capture.append((url, timeout))
+            return _Resp(text)
+    monkeypatch.setattr(news_fetch_util, "new_session", lambda: _Sess())
+
+
+def test_verify_macro_cpi_returns_shape(monkeypatch):
+    cap = []
+    _patch_fred(monkeypatch, _FRED_CSV_OK, cap)
+    got = st.tool_verify_macro_series("CPI")
+    assert got["error"] is None, got
+    assert got["label"] == "CPI"
+    assert got["value"] == 334.98
+    assert got["prev"] == 332.00
+    assert got["asof"] == "2026-08-01"
+    assert "FRED:CPIAUCSL" in got["source"] and "independent" in got["source"]
+    assert cap[0][0].endswith("id=CPIAUCSL") and cap[0][1] == 10.0
+
+
+def test_verify_macro_rejects_unknown_label(monkeypatch):
+    _patch_fred(monkeypatch, _FRED_CSV_OK)
+    got = st.tool_verify_macro_series("GDP")
+    assert got["value"] is None and got["error"] == "unknown_label"
+
+
+def test_verify_macro_parses_yoy_from_fred(monkeypatch):
+    _patch_fred(monkeypatch, _FRED_CSV_OK)
+    got = st.tool_verify_macro_series("CPI")
+    # 334.98 / 321.00 - 1 = 4.36%
+    assert got["yoy"] == 4.36, got
+
+
+def test_verify_macro_unemployment_has_no_yoy(monkeypatch):
+    """失业率是百分比口径 → yoy 留空（与 CPI 的指数口径区分）。"""
+    _patch_fred(monkeypatch, "DATE,UNRATE\n2026-09-01,4.20\n")
+    got = st.tool_verify_macro_series("失业率")
+    assert got["value"] == 4.20 and got["yoy"] is None, got
+
+
+def test_verify_macro_yahoo_tnx_divided_by_10(monkeypatch):
+    monkeypatch.setattr(pf_mod, "fetch_last_closes",
+                        lambda ts: {"^TNX": {"current": Decimal("41.5"), "extended": None}})
+    got = st.tool_verify_macro_series("10Y国债")
+    assert got["error"] is None, got
+    assert got["value"] == 4.15, got
+
+
+def test_verify_macro_yahoo_tnx_already_percent(monkeypatch):
+    """Yahoo 若已返回百分数（4.05）→ 不再 /10（防"0.405%"这种明显错误）。"""
+    monkeypatch.setattr(pf_mod, "fetch_last_closes",
+                        lambda ts: {"^TNX": {"current": Decimal("4.05"), "extended": None}})
+    got = st.tool_verify_macro_series("10Y国债")
+    assert got["value"] == 4.05, got
+
+
+def test_verify_macro_network_failure_returns_error(monkeypatch):
+    class _Boom:
+        def get(self, url, timeout=None):
+            raise TimeoutError("fred timeout")
+    monkeypatch.setattr(news_fetch_util, "new_session", lambda: _Boom())
+    got = st.tool_verify_macro_series("CPI")
+    assert got["value"] is None and got["error"] == "TimeoutError: fred timeout"
+
+
+def test_verify_macro_malformed_csv_returns_error(monkeypatch):
+    """缺列 / 全为缺值 '.' → no_data（不编造）。"""
+    _patch_fred(monkeypatch, "FOO,BAR\n2026-08-01,.\n")
+    got = st.tool_verify_macro_series("核心CPI")
+    assert got["value"] is None and got["error"] == "no_data"
+
+
+def test_verify_price_returns_shape(monkeypatch):
+    monkeypatch.setattr(pf_mod, "fetch_last_closes", lambda ts: {
+        "CME": {"current": Decimal("278.03"), "extended": Decimal("277.90"),
+                "extended_time": "10-13 18:09 ET"}})
+    got = st.tool_verify_current_price("CME")
+    assert got["error"] is None, got
+    assert got["ticker"] == "CME" and got["price"] == 278.03
+    assert got["extended"] == 277.90 and got["extended_time"] == "10-13 18:09 ET"
+    assert got["source"] == "yfinance" and len(got["asof"]) == 10
+
+
+def test_verify_price_rejects_invalid_ticker():
+    got = st.tool_verify_current_price("../etc")
+    assert got["price"] is None and got["error"] == "invalid_ticker"
+
+
+def test_verify_price_accepts_hyphenated_ticker(monkeypatch):
+    monkeypatch.setattr(pf_mod, "fetch_last_closes", lambda ts: {
+        "BRK-B": {"current": Decimal("480.00"), "extended": None}})
+    got = st.tool_verify_current_price("BRK-B")
+    assert got["error"] is None and got["price"] == 480.00, got
+
+
+def test_verify_price_falls_back_to_alt_symbol(monkeypatch):
+    calls = []
+
+    def _fake(ts):
+        calls.append(list(ts))
+        if ts[0] == "BRK-B":
+            return {"BRK-B": {"current": Decimal("481.00"), "extended": None}}
+        return {}
+
+    monkeypatch.setattr(pf_mod, "fetch_last_closes", _fake)
+    got = st.tool_verify_current_price("BRK.B")
+    assert got["error"] is None and got["ticker"] == "BRK-B"
+    assert got["price"] == 481.00
+    assert calls == [["BRK.B"], ["BRK-B"]]
+
+
+def test_verify_price_no_data_returns_error(monkeypatch):
+    monkeypatch.setattr(pf_mod, "fetch_last_closes", lambda ts: {})
+    got = st.tool_verify_current_price("CME")
+    assert got["price"] is None and got["error"] == "no_data"
+
+
+# --------------------------------------------------------------------------- #
+# E3. 新工具的护栏
+# --------------------------------------------------------------------------- #
+_NEW_TOOL_NAMES = {"verify_macro_series", "verify_current_price"}
+
+
+@pytest.mark.parametrize("tool", st.TOOLS, ids=[t["name"] for t in st.TOOLS])
+def test_new_tools_schemas_have_no_url_field(tool):
+    if tool["name"] not in _NEW_TOOL_NAMES:
+        return
+    props = set((tool.get("input_schema") or {}).get("properties") or {})
+    assert not (props & {"url", "endpoint", "link", "host", "path"})
+    assert props <= {"label", "ticker"}
+
+
+def test_tools_registry_matches_tools_list():
+    assert {t["name"] for t in st.TOOLS} == set(st.TOOL_REGISTRY)
+    assert _NEW_TOOL_NAMES <= set(st.TOOL_REGISTRY)
+
+
+def test_new_tools_are_callable_through_execute_tool(monkeypatch):
+    _patch_fred(monkeypatch, _FRED_CSV_OK)
+    got = st.execute_tool("verify_macro_series", {"label": "CPI"})
+    assert got["value"] == 334.98
+    assert st.execute_tool("verify_current_price", {"ticker": "aa1"})["error"] == "invalid_ticker"
