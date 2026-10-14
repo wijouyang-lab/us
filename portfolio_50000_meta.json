@@ -4,5 +4,6 @@
   "start_date": "2026-10-06",
   "unit_dollars": "10000.00",
   "max_open_positions": 4,
-  "currency": "USD"
+  "currency": "USD",
+  "exposure_target": "0.65"
 }
