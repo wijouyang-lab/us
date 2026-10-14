@@ -4075,6 +4075,19 @@ if __name__ == "__main__":
         print("⚠️ 程序候选经过硬门槛后没有达到 Core/Observation 最低线，不凑数。")
 
     # 第二层最终解释：只对真正入账的 Core/Observation 生成中文产业链、新闻核查、盘前结论与风控解释。
+    # ★ F1：六段文本生成必须覆盖【持仓】——风控只决定「入账」，
+    #   不应剥夺 scan.py:3986 承诺的「持仓每日重评分」。
+    #   持仓在下游 :4119 仍会被剔除（pending CSV 只写新推荐，语义不变）。
+    _chosen_after_risk = list(chosen)                     # 入账语义：风控后（不变）
+    _held_up = {str(t).upper() for t in (redef_positions or [])}
+    _enrich_input = list(_chosen_after_risk)
+    _seen_tk = {str(x.get("Ticker", "")).upper() for x in _chosen_after_risk}
+    for _h in (ai_input or []):
+        _tk = str(_h.get("Ticker", "")).upper()
+        if _tk and _tk in _held_up and _tk not in _seen_tk:
+            _enrich_input.append(_h)
+            _seen_tk.add(_tk)
+    chosen = _enrich_input                                # 供紧随其后的 enrich 调用使用
     chosen = enrich_verified_items_with_ai_details(
         chosen,
         event_regime_text=event_regime_text,
@@ -4109,7 +4122,10 @@ if __name__ == "__main__":
     # ★ 方案 A：AI 持久化必须覆盖【持仓】。持仓此刻仍在 to_write 内，
     #   但下方 "跳过已在持仓中的标的" 会把它们剔除（那是为了不重复推荐）。
     #   因此在剔除之前先捕获一份，供 ai_snapshot / ai_text_cache 使用。
-    _ai_persist = list(to_write)
+    # ★ F3：持久化输入取自 enrich 产物（含持仓），
+    #   不再从 to_write 捕获（chosen 为空时它必定为空）。
+    _ai_persist_source = list(_enriched)
+    _ai_persist = list(_ai_persist_source)
     if os.path.exists(log_file) and to_write:
         try:
             old = pd.read_csv(log_file, keep_default_na=False)
