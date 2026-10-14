@@ -227,6 +227,66 @@ def test_company_facts_no_facts_returned_error(monkeypatch):
     assert got["facts"] == {} and got["error"] == "no_facts_returned"
 
 
+# --------------------------------------------------------------------------- #
+# D2. 符号回退（#5：池里写 BRK-B，模型可能传 BRK.B）
+# --------------------------------------------------------------------------- #
+@pytest.mark.parametrize("src,expected", [
+    ("BRK.B", "BRK-B"), ("BRK-B", "BRK.B"), ("SNPS", None), ("A.B.C", "A-B-C"),
+])
+def test_alt_symbol(src, expected):
+    assert st._alt_symbol(src) == expected
+
+
+def test_company_facts_falls_back_to_alt_symbol(monkeypatch):
+    """BRK.B 取不到 → 自动用 BRK-B 重试一次，并返回**实际生效的符号**。"""
+    calls = []
+
+    def _fake(t):
+        calls.append(t)
+        return {"PE_TTM": 1.0} if t == "BRK-B" else {}
+
+    monkeypatch.setattr(st, "_yf_fetch", _fake)
+    got = st.tool_company_facts("BRK.B")
+
+    assert got["error"] is None
+    assert got["ticker"] == "BRK-B"           # 返回实际符号（不是输入）
+    assert got["facts"]["PE_TTM"] == 1.0
+    assert calls == ["BRK.B", "BRK-B"]        # 恰好两次，顺序正确
+
+
+def test_company_facts_falls_back_reverse_direction(monkeypatch):
+    """反向也支持：输入 BRK-B 取不到 → 尝试 BRK.B。"""
+    calls = []
+
+    def _fake(t):
+        calls.append(t)
+        return {"PE_TTM": 2.0} if t == "BRK.B" else {}
+
+    monkeypatch.setattr(st, "_yf_fetch", _fake)
+    got = st.tool_company_facts("BRK-B")
+
+    assert got["ticker"] == "BRK.B" and got["facts"]["PE_TTM"] == 2.0
+    assert calls == ["BRK-B", "BRK.B"]
+
+
+def test_company_facts_no_alt_call_without_separator(monkeypatch):
+    """无 `.`/`-` 的普通 ticker 失败时**不得**多打一次网络。"""
+    calls = []
+    monkeypatch.setattr(st, "_yf_fetch", lambda t: (calls.append(t), {})[1])
+    got = st.tool_company_facts("SNPS")
+    assert got["error"] == "no_facts_returned"
+    assert calls == ["SNPS"]
+
+
+def test_company_facts_both_symbols_fail(monkeypatch):
+    """两种写法都失败 → 仍返回 no_facts_returned，且 ticker 保持输入值。"""
+    calls = []
+    monkeypatch.setattr(st, "_yf_fetch", lambda t: (calls.append(t), {})[1])
+    got = st.tool_company_facts("BRK.B")
+    assert got["error"] == "no_facts_returned" and got["ticker"] == "BRK.B"
+    assert calls == ["BRK.B", "BRK-B"]
+
+
 def test_company_facts_truncates_large_facts(monkeypatch):
     # Market_Cap 放一个超大列表 → 序列化超 2000 字符 → 应被裁掉，保留靠前字段
     _install_fake_yf(monkeypatch, {"trailingPE": 1.0, "marketCap": list(range(600))})
