@@ -231,6 +231,46 @@ _VERIFY_TOOL_NAMES = ("verify_macro_series", "verify_current_price")
 _TICKER_RE_VERIFY = re.compile(r"^[A-Z.\-]{1,6}$")
 
 
+def _prefetch_macro_verification(sink: dict, labels=("CPI", "核心CPI", "失业率")) -> None:
+    """方案 2：3 项宏观核验由 **runner 预取**，不依赖 AI 自觉。
+
+    结果按与 AI 调用时**完全相同的 key 格式**写入 sink；失败只记 error（含异常），
+    绝不让 run() 崩溃。价格核验仍留给 AI（它才知道打算买哪只）。
+    """
+    try:
+        from serenity_tools import execute_tool
+    except ImportError:                                        # 脚本/包两种运行方式
+        _sd = str(Path(__file__).resolve().parent)
+        if _sd not in sys.path:
+            sys.path.insert(0, _sd)
+        from serenity_tools import execute_tool
+    for label in labels:
+        key = ("verify_macro_series",
+               json.dumps({"label": label}, sort_keys=True, ensure_ascii=False))
+        try:
+            res = execute_tool("verify_macro_series", {"label": label})
+        except Exception as e:                                 # noqa: BLE001
+            res = {"label": label, "value": None, "error": f"{type(e).__name__}: {e}"}
+        sink[key] = res
+        _ok = not res.get("error")
+        print(f"[serenity] 预取核验: {label} → " +
+              ("ok value=%s" % res.get("value") if _ok else str(res.get("error"))))
+
+
+def _verification_status(dv: list | None) -> str:
+    """方案 3：一眼看出"这次核验跑成没有"。
+
+    · 至少一条 match/mismatch → ok
+    · 有条目但全 unverified   → skipped_by_model（AI 没调工具 / 预取也失败）
+    · 无条目                  → partial（没有可比对的本地值）
+    """
+    if not dv:
+        return "partial"
+    if any(x.get("status") in ("match", "mismatch") for x in dv):
+        return "ok"
+    return "skipped_by_model"
+
+
 def _render_local_values(context: dict | None) -> str:
     """把本地宏观值显式列给模型（降低"跳过工具直接猜"的概率，P1-3）。"""
     rows = [
@@ -241,7 +281,11 @@ def _render_local_values(context: dict | None) -> str:
     ]
     if not rows:
         return "（本地宏观值暂不可用——仍请调用核验工具，无法核验的标 unverified）\n"
-    return "必须核验以下字段（**本地值已列出，请用工具比对**）：\n" + "\n".join(rows) + "\n"
+    return ("必须核验以下字段（**本地值已列出，请用工具比对**）：\n" + "\n".join(rows) + "\n" +
+            "\n⚠️ 在输出 JSON 之前，你必须先实际调用 `verify_macro_series` 核验上述宏观字段"
+            "（CPI / 核心CPI / 失业率），再输出 JSON。\n"
+            "没有工具调用记录的条目会被系统判为 unverified。\n"
+            "注意：系统已为你**预取**这 3 项核验结果；如需更细的信息仍可再次调用。\n")
 
 
 def _render_verify_section() -> str:
@@ -911,6 +955,8 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
     tool_trace: list[dict] = []
     verified_facts: list[dict] = []
     verify_sink: dict = {}          # 段 3a-2：核验工具真实返回值（工具名+参数 JSON → 返回）
+    if online:
+        _prefetch_macro_verification(verify_sink)   # 方案 2：固定 3 项由 runner 预取
     mode = MODE
     degraded_reason = None
     text = None
@@ -936,6 +982,8 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
         text = ask(prompt, model, max_tokens)
 
     got = parse_result(text, valid_tickers={u["ticker"] for u in universe})
+    _dv_cache = _build_data_verification(got.get("data_verification"), verify_sink,
+                                         valid_tickers={u["ticker"] for u in universe})
     return {
         "schema_version": SCHEMA_VERSION,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -954,6 +1002,7 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
         "data_verification": _build_data_verification(
             got.get("data_verification"), verify_sink,
             valid_tickers={u["ticker"] for u in universe}),
+        "verification_status": _verification_status(_dv_cache),
         "exposure_target": got.get("exposure_target"),
         "exposure_rationale": got.get("exposure_rationale"),
         "degraded_reason": degraded_reason,
