@@ -35,9 +35,9 @@ _REPO_ROOT_IMPORT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _REPO_ROOT_IMPORT not in sys.path:
     sys.path.insert(0, _REPO_ROOT_IMPORT)
 
-# 股票代码校验（大写 + 点，用于 BRK.B 这类）；故意不做小写归一化：
-# 小写输入一律判为非法，避免模型把普通词当代码传进来。
-_TICKER_RE = re.compile(r"^[A-Z.]{1,6}$")
+# 股票代码校验（大写 + 点 + 连字符：BRK.B / BRK-B / RDS-A 这类都合法）；
+# 故意不做小写归一化：小写输入一律判为非法，避免模型把普通词当代码传进来。
+_TICKER_RE = re.compile(r"^[A-Z.\-]{1,6}$")
 
 _MAX_RESULTS = 8          # web_search 条数上限
 _MAX_TICKER_ITEMS = 6     # ticker_news 条数上限

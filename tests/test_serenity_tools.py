@@ -136,6 +136,15 @@ def test_ticker_news_rejects_invalid_ticker(bad):
     assert got["items"] == [] and got["error"] == "invalid_ticker"
 
 
+@pytest.mark.parametrize("good", ["BRK-B", "RDS-A", "BRK.B", "SNPS"])
+def test_ticker_news_accepts_hyphenated_ticker(good, monkeypatch):
+    """第四次运行暴露：池里的 BRK-B 被 `^[A-Z.]{1,6}$` 误拒 → 该 ticker 永远拿不到数据。"""
+    monkeypatch.setattr(news_fetch_util, "fetch_ticker_news", lambda t, **kw: [])
+    got = st.tool_ticker_news(good)
+    assert got["error"] is None, f"{good} 应被接受"
+    assert got["ticker"] == good
+
+
 def test_ticker_news_returns_expected_shape(monkeypatch):
     monkeypatch.setattr(news_fetch_util, "fetch_ticker_news", lambda t, **kw: [{
         "title": "SNPS wins design win",
@@ -202,6 +211,14 @@ def test_company_facts_returns_expected_shape(monkeypatch):
 def test_company_facts_rejects_invalid_ticker(bad):
     got = st.tool_company_facts(bad)
     assert got["facts"] == {} and got["error"] == "invalid_ticker"
+
+
+@pytest.mark.parametrize("good", ["BRK-B", "RDS-A"])
+def test_company_facts_accepts_hyphenated_ticker(good, monkeypatch):
+    _install_fake_yf(monkeypatch, {"trailingPE": 1.0})
+    got = st.tool_company_facts(good)
+    assert got["error"] is None, f"{good} 应被接受"
+    assert got["facts"]["PE_TTM"] == 1.0
 
 
 def test_company_facts_no_facts_returned_error(monkeypatch):
