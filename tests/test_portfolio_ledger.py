@@ -12,6 +12,7 @@
 """
 import importlib.util
 import sys
+import pytest
 from decimal import Decimal
 from pathlib import Path
 
@@ -325,3 +326,58 @@ def test_exposure_target_clamp_warns_once_in_log():
     assert any("exposure_target" in line and "回退" in line for line in log), log
     assert any("当前敞口" in line and "目标 80.0%" in line for line in log), log
     assert len([t for t in txn if t["Txn_ID"].startswith("AAA")]) == 1, log
+
+
+# --------------------------------------------------------------------------- #
+# 日期铁律（层1 ISO 断言 / 层2 未来日期拒收 / 层3 幂等）
+# --------------------------------------------------------------------------- #
+def test_transaction_date_cannot_be_overridden(monkeypatch):
+    """★ 买入的 Date / Entry_Date 只能来自 today，绝不被 Rec_Date 覆盖。"""
+    recs = _recs(_rec("CME", "2026-10-13", 100))          # 推荐日 != 执行日
+    pos, txn, log = _run(recs, "2026-10-14")              # 执行日
+    assert len(txn) == 1, log
+    assert txn[0]["Date"] == "2026-10-14"                  # 执行日，不是 10-13
+    assert txn[0]["Date"] != "2026-10-13"
+    assert pos[0]["Entry_Date"] == "2026-10-14"
+    assert txn[0]["Scan_Date"] == "2026-10-13"             # 推荐日仍可追溯
+
+
+@pytest.mark.parametrize("bad", ["", "2026-1-1", "2026/10/14", "2026-13-99",
+                                 "2026-02-30", None, 20261014])
+def test_reject_invalid_today_format(bad):
+    """层 1：执行日必须是合法 ISO 日历日，否则写入路径立即失败。"""
+    with pytest.raises(ValueError):
+        pf._validate_today(bad)
+
+
+def test_future_dated_transaction_skipped_on_load():
+    """层 2：未来日期交易在加载时被剔除，且不参与现金推导。"""
+    today = "2026-10-14"
+    txns = [
+        {"Txn_ID": "A|BUY", "Date": "2026-10-10", "Action": "BUY", "Amount": "1000.00"},
+        {"Txn_ID": "B|BUY", "Date": "2026-10-20", "Action": "BUY", "Amount": "9999.00"},
+        {"Txn_ID": "C|BUY", "Date": "", "Action": "BUY", "Amount": "1.00"},
+    ]
+    kept, warns = pf._reject_future_txns(txns, today)
+    assert [t["Txn_ID"] for t in kept] == ["A|BUY", "C|BUY"]      # 未来那条被剔除
+    assert warns and "未来日期" in warns[0] or "future" in warns[0].lower()
+    # 现金推导只看保留列表：9999 的未来买入不得影响现金
+    assert pf.derive_cash(kept) == pf.INITIAL_CAPITAL - Decimal("1001.00")
+
+
+def test_sell_idempotency():
+    """层 3：同一推荐 + 同一 Exit_Date 只产生一条 SELL（重复运行不重复卖）。"""
+    rec = _rec("CME", "2026-10-07", 100)
+    rec.update({"Status": "Stop_Loss_Hit", "Exit_Date": "2026-10-14",
+                "Exit_Price": Decimal("90")})
+    recs = {rec["Recommendation_ID"]: rec}
+    positions = [{"Portfolio_ID": "US-50000-001", "Unit_ID": "U001", "Ticker": "CME",
+                  "Shares": "10", "Entry_Price": "100", "Entry_Date": "2026-10-07",
+                  "Status": "OPEN", "Recommendation_ID": rec["Recommendation_ID"]}]
+    txns = []
+    pf.process_sells(positions, txns, recs, "2026-10-14")
+    first = len(txns)
+    assert first == 1, txns
+    pf.process_sells(positions, txns, recs, "2026-10-14")   # 再跑一次
+    assert len(txns) == first, txns                          # 幂等：没有新增
+    assert txns[0]["Txn_ID"].endswith("|SELL|2026-10-14")
