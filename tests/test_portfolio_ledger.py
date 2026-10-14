@@ -43,15 +43,19 @@ def _recs(*recs):
     return {r["Recommendation_ID"]: r for r in recs}
 
 
-def _run(recs, today, positions=None, transactions=None, start="2026-10-06", offline=True):
+def _run(recs, today, positions=None, transactions=None, start="2026-10-06", offline=True,
+         meta_extra=None):
     """默认 offline=True → 不触网（走推荐日价），保证测试确定性。
 
     价格相关的测试显式传 offline=False 并 monkeypatch `pf._exec_price_for`。
+    meta_extra 用于注入 `exposure_target` 等字段（段 2）。
     """
     positions = [] if positions is None else positions
     transactions = [] if transactions is None else transactions
-    log = pf.process_buys(positions, transactions, recs, {"start_date": start}, today,
-                          offline=offline)
+    meta = {"start_date": start}
+    if meta_extra:
+        meta.update(meta_extra)
+    log = pf.process_buys(positions, transactions, recs, meta, today, offline=offline)
     return positions, transactions, log
 
 
@@ -234,3 +238,90 @@ def test_cash_sufficient_allows_buy():
     new_buys = [t for t in txn if t["Txn_ID"].startswith("CME")]
     assert len(new_buys) == 1, log
     assert not any("⏸" in line for line in log), log
+
+
+# --------------------------------------------------------------------------- #
+# 段 2：动态仓位 —— meta.exposure_target（20%~80%，越界/非法回退 80%）
+# --------------------------------------------------------------------------- #
+def test_exposure_target_default_080():
+    """meta 无该字段 / 为空 / meta=None → 一律按默认 0.80，且**不告警**。"""
+    assert pf._exposure_target({}) == (Decimal("0.80"), None)
+    assert pf._exposure_target(None) == (Decimal("0.80"), None)
+    assert pf._exposure_target({"exposure_target": ""}) == (Decimal("0.80"), None)
+
+
+def test_exposure_target_at_min_boundary():
+    assert pf._exposure_target({"exposure_target": "0.20"}) == (Decimal("0.20"), None)
+
+
+def test_exposure_target_at_max_boundary():
+    assert pf._exposure_target({"exposure_target": "0.80"}) == (Decimal("0.80"), None)
+
+
+def test_exposure_target_below_min_clamped():
+    v, warn = pf._exposure_target({"exposure_target": "0.10"})
+    assert v == Decimal("0.80"), v
+    assert warn and "超出" in warn, warn
+
+
+def test_exposure_target_above_max_clamped():
+    v, warn = pf._exposure_target({"exposure_target": "0.95"})
+    assert v == Decimal("0.80"), v
+    assert warn and "超出" in warn, warn
+
+
+def test_exposure_target_invalid_string():
+    v, warn = pf._exposure_target({"exposure_target": "abc"})
+    assert v == Decimal("0.80"), v
+    assert warn and "非数字" in warn, warn
+
+
+def test_ensure_meta_seeds_exposure_target(tmp_path):
+    """新建 meta 必须带上 exposure_target（默认 0.80，字符串，与本文件金额字段同风格）。"""
+    m = pf.ensure_meta(tmp_path, "2026-10-14")
+    assert m["exposure_target"] == "0.80", m
+
+
+def test_exposure_target_limits_buy():
+    """同一持仓/同一推荐下：目标 0.30 拦、目标 0.80 放 —— 证明敞口真的在起作用。"""
+    open_pos = [{"Ticker": "XXX", "Status": "OPEN", "Market_Value": "12500.00",
+                 "Unit_ID": "U001", "Shares": "100"}]
+    rec = _rec("CME", "2026-10-13", 100)
+    eq = Decimal("62500")            # cash 50000（derive_cash）+ stock 12500
+    ok30, why30 = pf._within_alloc(rec, open_pos, [], eq, Decimal("0.30"))
+    assert ok30 is False and "30%" in why30, why30
+    ok80, why80 = pf._within_alloc(rec, open_pos, [], eq, Decimal("0.80"))
+    assert ok80 is True, why80
+
+
+def test_exposure_target_040_allows_half_position():
+    """target=0.40（半仓）→ 恰好允许 2 只各 20%，第 3 只被拦；并打印敞口日志。"""
+    recs = _recs(_rec("AAA", "2026-10-13", 100),
+                 _rec("BBB", "2026-10-13", 100),
+                 _rec("CCC", "2026-10-13", 100))
+    _pos, txn, log = _run(recs, "2026-10-13", meta_extra={"exposure_target": "0.40"})
+
+    new_buys = [t for t in txn if t["Txn_ID"].split("|")[0] in ("AAA", "BBB", "CCC")]
+    assert len(new_buys) == 2, (len(new_buys), log)          # 半仓 = 2 × 20%
+    assert {t["Ticker"] for t in new_buys} == {"AAA", "BBB"}
+    assert any("总股票将超 40%" in line for line in log), log
+    assert any("当前敞口" in line and "目标 40.0%" in line for line in log), log
+
+
+def test_exposure_target_default_allows_three():
+    """反向对照：默认 0.80 → 同样的 3 只都能买（证明上一条的"2 只"是被 0.40 限制的）。"""
+    recs = _recs(_rec("AAA", "2026-10-13", 100),
+                 _rec("BBB", "2026-10-13", 100),
+                 _rec("CCC", "2026-10-13", 100))
+    _pos, txn, log = _run(recs, "2026-10-13")
+    new_buys = [t for t in txn if t["Txn_ID"].split("|")[0] in ("AAA", "BBB", "CCC")]
+    assert len(new_buys) == 3, (len(new_buys), log)
+
+
+def test_exposure_target_clamp_warns_once_in_log():
+    """越界值 → 回退 80% 并**在运行日志里告警一次**（同时仍能正常买入）。"""
+    recs = _recs(_rec("AAA", "2026-10-13", 100))
+    _pos, txn, log = _run(recs, "2026-10-13", meta_extra={"exposure_target": "0.05"})
+    assert any("exposure_target" in line and "回退" in line for line in log), log
+    assert any("当前敞口" in line and "目标 80.0%" in line for line in log), log
+    assert len([t for t in txn if t["Txn_ID"].startswith("AAA")]) == 1, log
