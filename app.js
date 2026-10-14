@@ -1370,6 +1370,45 @@
     }
     var df = $('#dFoot');
     if (df) df.textContent = 'Data Source: dashboard_data.json · 本页不含任何模拟数据';
+
+    /* 陈旧告警：最新 AI 快照（stocks[].scan_date）距今超过 2 个交易日 -> 顶部横幅。
+       复用现有 .notice.err 样式；数据缺失一律不显示，绝不猜测。 */
+    (function () {
+      var rows = (DATA && DATA.stocks) || [];
+      var dates = [];
+      for (var i = 0; i < rows.length; i++) {
+        var ds = (rows[i] && rows[i].scan_date) ? String(rows[i].scan_date).slice(0, 10) : '';
+        if (/^\d{4}-\d{2}-\d{2}$/.test(ds)) dates.push(ds);
+      }
+      if (!dates.length) return;
+      dates.sort();
+      var maxDate = dates[dates.length - 1];
+      var base = (DATA && DATA.generated_at) ? String(DATA.generated_at).slice(0, 10) : maxDate;
+      var md = new Date(maxDate + 'T00:00:00Z'), bd = new Date(base + 'T00:00:00Z');
+      if (isNaN(md.getTime()) || isNaN(bd.getTime())) return;
+      var days = Math.round((bd - md) / 86400000), biz = 0, cur = md;
+      for (var k = 0; k < days; k++) {
+        cur = new Date(cur.getTime() + 86400000);
+        var wd = cur.getUTCDay();
+        if (wd !== 0 && wd !== 6) biz++;
+      }
+      if (biz <= 2) return;
+      var msg = '\u26a0\ufe0f AI \u5206\u6790\u5df2 ' + biz +
+                ' \u4e2a\u4ea4\u6613\u65e5\u672a\u66f4\u65b0\uff08\u6700\u65b0\uff1a' +
+                maxDate + '\uff09';
+      if (META.ai_status === 'partial') {
+        msg += '\uff08\u90e8\u5206\u6570\u636e\u6765\u81ea\u7f13\u5b58\u56de\u586b\uff09';
+      }
+      var box = document.getElementById('aiStaleBanner');
+      if (!box) {
+        box = document.createElement('div');
+        box.id = 'aiStaleBanner';
+        box.className = 'notice err';
+        var host = document.getElementById('view') || document.body;
+        host.insertBefore(box, host.firstChild);
+      }
+      box.textContent = msg;
+    })();
   }
 
   /* ---------------- 顶部：Scan/Review/Evolve 运行状态（独立字段，绝不互相覆盖） ---------------- */
