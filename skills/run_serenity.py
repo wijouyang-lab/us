@@ -117,12 +117,197 @@ def load_universe(data_dir: Path) -> tuple[list[dict], int]:
     return out, len(out)
 
 
+def load_context(data_dir: Path) -> dict:
+    """读取小板块 → prompt 可消费的摘要 dict（段 3a-2）。
+
+    fail-soft：任一板块缺失/异常 → 该键为空，绝不抛异常。
+    数据源：`dashboard/data/dashboard_data.json`（板块）+ `portfolio_50000_meta.json`
+    （仅取 `exposure_target`；该字段尚未被 dashboard_export 导出）。
+    """
+    d: dict = {}
+    try:
+        p = data_dir / "dashboard" / "data" / "dashboard_data.json"
+        d = json.loads(p.read_text(encoding="utf-8")) or {}
+        if not isinstance(d, dict):
+            d = {}
+    except Exception:                                          # noqa: BLE001
+        d = {}
+    meta: dict = {}
+    try:
+        mp = data_dir / "portfolio_50000_meta.json"
+        meta = json.loads(mp.read_text(encoding="utf-8")) or {}
+        if not isinstance(meta, dict):
+            meta = {}
+    except Exception:                                          # noqa: BLE001
+        meta = {}
+
+    def _sec(k):
+        v = d.get(k)
+        return v if isinstance(v, dict) else {}
+
+    macro = _sec("macro")
+    econ = macro.get("economic") if isinstance(macro.get("economic"), list) else []
+    pf = _sec("portfolio")
+    pos = pf.get("positions") if isinstance(pf.get("positions"), list) else []
+    hist = d.get("history") if isinstance(d.get("history"), list) else []
+    open_pos = []
+    for x in pos:
+        if isinstance(x, dict) and str(x.get("status", "")).upper() == "OPEN":
+            open_pos.append({
+                "ticker": x.get("ticker"), "shares": x.get("shares"),
+                "cost": x.get("cost"), "market_value": x.get("market_value"),
+            })
+    return {
+        "macro_economic": econ,                 # speakers 不注入（已在 stocks 分析里）
+        "market": _sec("market"),
+        "quant": _sec("quant"),
+        "market_indicators": _sec("market_indicators"),
+        "portfolio_summary": {
+            "cash": pf.get("cash"),
+            "stock_value": pf.get("stock_value"),
+            "total_equity": pf.get("total_equity"),
+            "open_pct": pf.get("open_pct"),
+            "target_pct": meta.get("exposure_target"),
+            "positions": open_pos,              # 不含 transactions / equity_curve
+        },
+        "history_recent": hist[-10:],           # 最近 10 天
+    }
+
+
+def _render_context_section(context: dict | None, asof: str) -> str:
+    """把 load_context() 的摘要渲染成 prompt 两段；context 为空 → 返回空串。"""
+    if not context:
+        return ""
+
+    def _g(row: dict, *names):
+        for n in names:
+            if isinstance(row, dict) and row.get(n) not in (None, ""):
+                return row.get(n)
+        return None
+
+    lines = ["\n【宏观与市场环境（本地快照，截至 %s）】" % asof]
+    for e in context.get("macro_economic") or []:
+        if isinstance(e, dict):
+            lines.append("- %s: %s（%s, %s）" % (e.get("indicator"), e.get("value"),
+                                                 e.get("date"), e.get("source")))
+    mk = context.get("market") or {}
+    for k in ("regime", "market_regime", "vix", "spx", "ndx", "us10y"):
+        if mk.get(k) not in (None, ""):
+            lines.append("- market.%s: %s" % (k, mk.get(k)))
+    mi = context.get("market_indicators") or {}
+    if isinstance(mi, dict):
+        n = 0
+        for k, v in mi.items():
+            if isinstance(v, (dict, list)):
+                continue
+            lines.append("- indicators.%s: %s" % (k, v))
+            n += 1
+            if n >= 6:
+                break
+    ps = context.get("portfolio_summary") or {}
+    lines.append("\n【我的组合与历史（本地快照）】")
+    lines.append("- 现金 %s / 股票市值 %s / 总资产 %s"
+                 % (ps.get("cash"), ps.get("stock_value"), ps.get("total_equity")))
+    lines.append("- 当前敞口 %s / **目标敞口 %s**（来自 meta.exposure_target）"
+                 % (ps.get("open_pct"), ps.get("target_pct")))
+    pos = ps.get("positions") or []
+    if pos:
+        lines.append("- 持仓 %d 只：%s" % (len(pos), "；".join(
+            "%s×%s@%s" % (p.get("ticker"), p.get("shares"), p.get("cost")) for p in pos)))
+    hist = context.get("history_recent") or []
+    if hist:
+        lines.append("- 最近 %d 天（日期|总资产|收益%%|持仓数）：" % len(hist))
+        for h in hist:
+            if isinstance(h, dict):
+                lines.append("  %s | %s | %s | %s" % (
+                    _g(h, "date", "Date"), _g(h, "total_equity", "Total_Equity"),
+                    _g(h, "return_pct", "Return_Pct"),
+                    _g(h, "open_positions", "Open_Positions")))
+    return "\n".join(lines) + "\n"
+
+
+_VERIFY_MACRO_LABELS = ("CPI", "核心CPI", "失业率", "10Y国债", "核心PCE")
+_VERIFY_TOOL_NAMES = ("verify_macro_series", "verify_current_price")
+_TICKER_RE_VERIFY = re.compile(r"^[A-Z.\-]{1,6}$")
+
+
+def _render_verify_section() -> str:
+    """在线模式的【本地数据与核验】段（离线路径无工具，故不注入）。"""
+    return """
+【本地数据与核验】
+本地数据由系统生成，可能有延迟或错误。以下字段你**必须**用核验工具交叉检查：
+1. 宏观（必须核验）：CPI / 核心CPI / 失业率
+   - 调用 `verify_macro_series`，label 必须用上述名称（枚举内）
+   - 网上值与本地值偏差 > 5% → 在 data_verification 里标 "mismatch"
+   - 工具失败 → 标 "unverified"，继续用本地值
+2. 价格（拟买入的股票必须核验）：调用 `verify_current_price`；偏差 > 2% → "mismatch"；失败 → "unverified"
+3. 冲突处理：**决策时以网上值为准**；payload 保留 local_value 与 verified_value 双记录
+4. 输出契约：JSON 新增 `data_verification` 数组：
+   [{"field": "CPI", "local_value": "指数 334.98", "verified_label": "CPI", "status": "match"}]
+   · `verified_label`：宏观用枚举内名称；价格填 ticker
+   · 没实际调用工具的条目不要写（写了也会被判为 unverified）
+"""
+
+
+def _lookup_verify(sink: dict | None, label: str) -> dict | None:
+    """在本轮真实工具调用记录里按 label/ticker 找返回值（防伪造核验）。"""
+    for (name, argj), res in (sink or {}).items():
+        try:
+            args = json.loads(argj)
+        except Exception:                                      # noqa: BLE001
+            continue
+        if not isinstance(args, dict):
+            continue
+        if name == "verify_macro_series" and str(args.get("label")) == label:
+            return res
+        if name == "verify_current_price" and str(args.get("ticker")) == label:
+            return res
+    return None
+
+
+def _build_data_verification(ai_items, sink: dict | None,
+                             valid_tickers: set | None = None) -> list[dict]:
+    """合并 AI 的 data_verification 与本轮真实工具返回值。
+
+    三道安全点：① 防幻觉 label（枚举/ticker 之外一律丢弃）
+              ② 防编数（verified_value 只从 sink 搬运）
+              ③ 防伪造核验（sink 无记录 → 强制 unverified）
+    """
+    out: list[dict] = []
+    for it in (ai_items or []):
+        if not isinstance(it, dict):
+            continue
+        field = str(it.get("field") or "").strip()
+        label = str(it.get("verified_label") or "").strip()
+        if not field or not label:
+            continue
+        _allowed = label in _VERIFY_MACRO_LABELS or bool(
+            valid_tickers and label.upper() in {str(t).upper() for t in valid_tickers})
+        if not _allowed:
+            continue                                           # ① 丢弃
+        res = _lookup_verify(sink, label)
+        if not res or res.get("error"):
+            out.append({"field": field, "local_value": it.get("local_value"),
+                        "verified_label": label, "verified_value": None,
+                        "source": None, "asof": None, "status": "unverified"})
+            continue
+        val = res.get("value") if "value" in res else res.get("price")   # ② 只搬运
+        status = str(it.get("status") or "").strip().lower()
+        if status not in ("match", "mismatch"):
+            status = "match"
+        out.append({"field": field, "local_value": it.get("local_value"),
+                    "verified_label": label, "verified_value": val,
+                    "source": res.get("source"), "asof": res.get("asof"),
+                    "status": status})
+    return out
+
+
 def _fmt(v) -> str:
     return "-" if v in (None, "") else str(v)
 
 
 def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
-                 online: bool = False) -> str:
+                 online: bool = False, context: dict | None = None) -> str:
     tpl = f"\n\n【研究模板（serenity-skill assets/thesis-template.md）】\n{template}" if template else ""
     rows = "\n".join(
         f"| {u['ticker']} | {u['name'][:28]} | {u['bucket']} | {_fmt(u['final_score'])} | "
@@ -130,6 +315,10 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
         f"{'是' if u['held'] else '否'} |"
         for u in universe
     )
+    # 段 3a-2：小板块注入（本地快照）+ 在线模式的核验要求段
+    ctx_block = _render_context_section(context, asof)
+    verify_block = _render_verify_section() if online else ""
+
     # 工具相关段落**只对在线路径**输出：离线路径没有工具，出现"调用工具"的指令
     # 会自相矛盾（第四次运行暴露：回退离线时 prompt 仍在要求模型调用工具）。
     if online:
@@ -181,7 +370,7 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
 - 禁止引用管理层原话或财报电话会措辞
 - **只能使用上表提供的字段**（bucket / final / quant / ai / sector_rs_20d / 已持有）
   以及产业链结构、竞争格局、技术路径的**定性推理**
-- 凡是你"记得"但无法核验的，一律写进 `what_to_verify`，不要写进 `why`{tool_block}
+- 凡是你"记得"但无法核验的，一律写进 `what_to_verify`，不要写进 `why`{tool_block}{ctx_block}{verify_block}
 【输出】
 只输出**一个 JSON 对象**，不要解释文字、不要 markdown 代码围栏：
 {{
@@ -291,6 +480,7 @@ def ask_with_tools(
     max_tool_calls: int = 20,
     wall_clock_sec: int = 300,
     clock=time.monotonic,
+    result_sink: dict | None = None,
 ) -> tuple[str | None, list[dict], str, str | None, list[dict]]:
     """多轮 tool loop（Anthropic 原生 `tools` + `tool_result` 回填）。
 
@@ -400,6 +590,15 @@ def ask_with_tools(
             result = execute_tool(name, getattr(tu, "input", {}) or {})   # 永不抛异常
             ms = int((clock() - t0) * 1000)
             ok = "error" not in result or result.get("error") is None
+            # 段 3a-2：把核验类工具的真实返回值记入 sink（按「工具名 + 参数 JSON」为键）。
+            # 不改返回元组：调用方通过 result_sink 拿到，避免动既有 loop 测试的解包。
+            if result_sink is not None and name in _VERIFY_TOOL_NAMES:
+                try:
+                    _k = (name, json.dumps(getattr(tu, "input", {}) or {},
+                                           sort_keys=True, ensure_ascii=False))
+                except Exception:                              # noqa: BLE001
+                    _k = (name, str(getattr(tu, "input", "")))
+                result_sink[_k] = result
             if not ok:
                 had_tool_failure = True
                 failed_tools.add(name)
@@ -560,7 +759,8 @@ def parse_result(text: str, valid_tickers: set[str] | None = None) -> dict:
         it["priority_rank"] = n
     if not items:
         raise ValueError("priorities 为空（或全部 ticker 不在候选池内）")
-    return {"priorities": sanitize_priorities(items)}
+    return {"priorities": sanitize_priorities(items),
+            "data_verification": obj.get("data_verification") or []}
 
 
 # --------------------------------------------------------------------------- #
@@ -624,6 +824,7 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
 
     tool_trace: list[dict] = []
     verified_facts: list[dict] = []
+    verify_sink: dict = {}          # 段 3a-2：核验工具真实返回值（工具名+参数 JSON → 返回）
     mode = MODE
     degraded_reason = None
     text = None
@@ -631,7 +832,8 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
     if online:
         try:
             text, tool_trace, mode, degraded_reason, verified_facts = ask_with_tools(
-                prompt, model=model, max_tokens=max_tokens, **(online_kwargs or {}))
+                prompt, model=model, max_tokens=max_tokens,
+                result_sink=verify_sink, **(online_kwargs or {}))
         except Exception as e:                                 # noqa: BLE001
             text = None
             degraded_reason = f"tool_loop_error: {type(e).__name__}: {e}"
@@ -662,6 +864,10 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
         "priorities": got["priorities"],
         "tool_trace": tool_trace,
         "verified_facts": verified_facts,
+        # 段 3a-2：AI 判定 + runner 从真实工具返回值补齐（防幻觉/防编数/防伪造核验）
+        "data_verification": _build_data_verification(
+            got.get("data_verification"), verify_sink,
+            valid_tickers={u["ticker"] for u in universe}),
         "degraded_reason": degraded_reason,
         "error": None,
     }
