@@ -231,6 +231,19 @@ _VERIFY_TOOL_NAMES = ("verify_macro_series", "verify_current_price")
 _TICKER_RE_VERIFY = re.compile(r"^[A-Z.\-]{1,6}$")
 
 
+def _render_local_values(context: dict | None) -> str:
+    """把本地宏观值显式列给模型（降低"跳过工具直接猜"的概率，P1-3）。"""
+    rows = [
+        "- {ind}: {val}（{date}, {src}）→ 调 `verify_macro_series` 核验".format(
+            ind=e.get("indicator"), val=e.get("value"), date=e.get("date"), src=e.get("source"))
+        for e in ((context or {}).get("macro_economic") or [])
+        if isinstance(e, dict) and e.get("indicator")
+    ]
+    if not rows:
+        return "（本地宏观值暂不可用——仍请调用核验工具，无法核验的标 unverified）\n"
+    return "必须核验以下字段（**本地值已列出，请用工具比对**）：\n" + "\n".join(rows) + "\n"
+
+
 def _render_verify_section() -> str:
     """在线模式的【本地数据与核验】段（离线路径无工具，故不注入）。"""
     return """
@@ -280,6 +293,9 @@ def _build_data_verification(ai_items, sink: dict | None,
         field = str(it.get("field") or "").strip()
         label = str(it.get("verified_label") or "").strip()
         if not field or not label:
+            continue
+        if str(it.get("local_value") or "").strip() in ("", "未提供", "N/A", "n/a", "无"):
+            continue          # 无本地值 = 无法核验 → 丢弃（P1-2）
             continue
         _allowed = label in _VERIFY_MACRO_LABELS or bool(
             valid_tickers and label.upper() in {str(t).upper() for t in valid_tickers})
@@ -365,7 +381,7 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
     )
     # 段 3a-2：小板块注入（本地快照）+ 在线模式的核验要求段
     ctx_block = _render_context_section(context, asof)
-    verify_block = _render_verify_section() if online else ""
+    verify_block = (_render_verify_section() + _render_local_values(context)) if online else ""
 
     # 工具相关段落**只对在线路径**输出：离线路径没有工具，出现"调用工具"的指令
     # 会自相矛盾（第四次运行暴露：回退离线时 prompt 仍在要求模型调用工具）。
@@ -885,7 +901,12 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
     · `online=True` → 先走 `ask_with_tools()`；拿不到最终文本则回退离线 `ask`。
     """
     template = _read_text(THESIS_TEMPLATE)
-    prompt = build_prompt(skill_md, template, universe, asof, online=online)
+    # P0 修复：段 3a-2 定义了 load_context 却从未接线 → AI 看不到本地板块
+    ctx = load_context(data_dir)
+    print(f"[serenity] context: {len(ctx.get('macro_economic', []))} macro + "
+          f"{len(ctx.get('history_recent', []))} history + "
+          f"portfolio={bool(ctx.get('portfolio_summary'))}")
+    prompt = build_prompt(skill_md, template, universe, asof, online=online, context=ctx)
 
     tool_trace: list[dict] = []
     verified_facts: list[dict] = []
