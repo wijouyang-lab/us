@@ -5,6 +5,7 @@ import ast
 import csv
 import os
 import tempfile
+import textwrap
 
 import pytest
 
@@ -139,11 +140,12 @@ def test_holdings_enriched_when_chosen_empty_after_risk():
     not_chosen = _at("if not chosen:")
     blk = _at("_chosen_after_risk = list(chosen)")
     inp = _at("_enrich_input = list(_chosen_after_risk)")
-    use = _at("chosen = _enrich_input")
-    call = _at("chosen = enrich_verified_items_with_ai_details(")
-    assert not_chosen > 0 and blk > 0 and inp > 0 and use > 0 and call > 0
-    # 顺序：风控空判断 -> 构造 enrich 输入 -> 交给 enrich
-    assert not_chosen < blk < inp < use < call
+    call = _at("_enriched = enrich_verified_items_with_ai_details(")
+    keep = _at("_keep_tk = {str(x.get")
+    restore = _at("chosen = [x for x in _enriched if")
+    assert not_chosen > 0 and blk > 0 and inp > 0 and call > 0 and keep > 0 and restore > 0
+    # 顺序：风控空判断 -> 构造 enrich 输入 -> enrich -> 恢复入账语义（chosen 只留风控后）
+    assert not_chosen < blk < inp < call < keep < restore
     # 持仓来自 AI 输入列表，按持仓集合筛选
     assert _at("_held_up = {str(t).upper() for t in (redef_positions or [])}") > 0
     assert _at("for _h in (ai_input or []):") > 0
@@ -154,9 +156,11 @@ def test_holdings_enriched_when_chosen_partial():
     src = (REPO / "scan.py").read_text(encoding="utf-8")
     blk = src.split("_chosen_after_risk = list(chosen)", 1)[1].split(
         "chosen = enrich_verified_items_with_ai_details(", 1)[0]
-    assert "_enrich_input = list(_chosen_after_risk)" in blk     # 先放风控后的
-    assert "_enrich_input.append(_h)" in blk                     # 再追加持仓
-    assert "_tk in _held_up" in blk                              # 只追加持仓
+    blk2 = src.split("_chosen_after_risk = list(chosen)", 1)[1].split(
+        "_enriched = enrich_verified_items_with_ai_details(", 1)[0]
+    assert "_enrich_input = list(_chosen_after_risk)" in blk2     # 先放风控后的
+    assert "_enrich_input.append(_h_copy)" in blk2                # 再追加持仓（已做数值兜底）
+    assert "_tk in _held_up" in blk2                              # 只追加持仓
 
 
 def test_no_duplicate_when_holding_also_recommended():
@@ -193,3 +197,84 @@ def test_bookkeeping_still_filters_holdings():
     src = (REPO / "scan.py").read_text(encoding="utf-8")
     assert "hard_blocked = set(restricted_tickers) | set(review_triggered)" in src
     assert 'chosen = [x for x in chosen if str(x.get("Ticker","")).upper() not in hard_blocked]' in src
+
+
+# --------------------------------------------------------------------------- #
+# 行为级测试：从 scan.py 抽取【真实代码片段】执行（不是行号断言）
+# --------------------------------------------------------------------------- #
+def _snippet(start_pat, end_pat):
+    """抽取 start_pat 行到 end_pat 行（不含）之间的源码，并左移缩进。"""
+    src = (REPO / "scan.py").read_text(encoding="utf-8")
+    i = src.index(start_pat)
+    j = src.index(end_pat, i)
+    return textwrap.dedent(src[i:j])
+
+
+def _run_snippet(code, ns):
+    exec(compile(code, "<snippet>", "exec"), ns)
+    return ns
+
+
+def test_holding_numeric_fields_coerced():
+    """Step2 行为：持仓项 Price='230.43' / RSI='47.6' -> _enrich_input 里为 float。"""
+    code = _snippet('            _h_copy = dict(_h)',
+                    '            _seen_tk.add(_tk)')
+    h = {"Ticker": "ADSK", "Price": "230.43", "RSI": "47.6", "ATR_Pct": "3.2",
+         "Quant_Score": "88.5", "AI_Score": "70"}
+    ns = {"_h": h, "_enrich_input": [], "_f": None}
+    ns["_enrich_input"] = []
+    _run_snippet(code, ns)
+    got = ns["_enrich_input"][0]
+    assert got["Price"] == 230.43 and isinstance(got["Price"], float)
+    assert got["RSI"] == 47.6 and got["ATR_Pct"] == 3.2
+    assert got["Quant_Score"] == 88.5 and got["AI_Score"] == 70.0
+    assert h["Price"] == "230.43", "不得修改原始 dict"
+
+
+def test_string_price_in_holding_does_not_crash():
+    """Step2+Step3 行为：字符串 Price 经兜底后不再触发 str*float。"""
+    code = _snippet('            _h_copy = dict(_h)',
+                    '            _seen_tk.add(_tk)')
+    ns = {"_h": {"Ticker": "ISRG", "Price": "405.07", "ATR_Pct": "2.5"}, "_enrich_input": []}
+    _run_snippet(code, ns)
+    item = ns["_enrich_input"][0]
+    # 模拟 scan.py:4109 的运算：必须成功
+    val = round(item["Price"] * (1 + (-3.0) / 100), 2)
+    assert isinstance(val, float) and val > 0
+    # 不可转换的值 -> None（再乘会 TypeError，但防护会把它挡在循环外）
+    ns2 = {"_h": {"Ticker": "X", "Price": "abc"}, "_enrich_input": []}
+    _run_snippet(_snippet('            _h_copy = dict(_h)',
+                          '            _seen_tk.add(_tk)'), ns2)
+    assert ns2["_enrich_input"][0]["Price"] is None
+
+
+def test_chosen_with_non_numeric_price_is_skipped(capsys):
+    """Step3 行为：chosen 里 Price='abc' 的项被防护跳过并打印告警。"""
+    code = _snippet("    # \u2605 \u9632\u62a4\uff1achosen", "    to_write = []")
+    ns = {"chosen": [{"Ticker": "BAD", "Price": "abc"}, {"Ticker": "OK", "Price": 1.0},
+                     {"Ticker": "NONE", "Price": None}]}
+    _run_snippet(code, ns)
+    assert [x["Ticker"] for x in ns["chosen"]] == ["OK", "NONE"]
+    out = capsys.readouterr().out
+    assert "BAD" in out and "防御" in out
+
+
+def test_enrich_output_filtered_back_to_risk_approved():
+    """Step1 行为：_enriched 含持仓 -> chosen 被过滤回风控后（空），_ai_persist 仍含持仓。"""
+    code = _snippet("    # \u2605 \u539f\u65b9\u6848\u7b2c 4 \u6b65", '    log_file = "trade_history.csv"')
+    enriched = [{"Ticker": "ADSK", "Price": 230.43}, {"Ticker": "ISRG", "Price": 405.07}]
+    ns = {"_enriched": enriched, "_chosen_after_risk": []}
+    _run_snippet(code, ns)
+    assert ns["chosen"] == [], "风控后为空 -> chosen 必须为空（入账语义恢复）"
+    assert len(ns["_ai_persist"]) == 2, "持久化仍含 2 只持仓"
+    assert ns["_ai_persist_source"] is not ns["_enriched"]
+
+
+def test_ai_persist_source_contains_holdings_and_risk_approved():
+    """Step1 行为：持仓 + 风控后推荐 -> chosen 只留推荐；_ai_persist 两者都有。"""
+    code = _snippet("    # \u2605 \u539f\u65b9\u6848\u7b2c 4 \u6b65", '    log_file = "trade_history.csv"')
+    enriched = [{"Ticker": "ADSK"}, {"Ticker": "ISRG"}, {"Ticker": "NEW1"}]
+    ns = {"_enriched": enriched, "_chosen_after_risk": [{"Ticker": "NEW1"}]}
+    _run_snippet(code, ns)
+    assert [x["Ticker"] for x in ns["chosen"]] == ["NEW1"]
+    assert sorted(x["Ticker"] for x in ns["_ai_persist"]) == ["ADSK", "ISRG", "NEW1"]
