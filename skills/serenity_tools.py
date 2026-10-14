@@ -302,7 +302,67 @@ def _norm_tnx(v: float) -> float:
     return round(v / 10.0, 3) if v > 20 else round(v, 3)
 
 
-def tool_verify_macro_series(label: str, *, timeout: float = 10.0) -> dict:
+_BLS_SERIES = {"CPI": "CUUR0000SA0", "核心CPI": "CUSR0000SA0L1E",
+               "失业率": "LNS14000000"}
+_BLS_API = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+
+
+def _bls_rows(sid: str, timeout: float = 20.0) -> list:
+    """备源：BLS 公开 API v2（无密钥；host 与 FRED 不同）。→ [(date, value)] 升序。
+
+    URL 形状与 series id 均与本仓库既有实现一致（scan.py:1369/2027 的 API 前缀、
+    scan.py:1580-1582 的系列号），**不是猜测**。
+    """
+    from datetime import datetime as _dt, timezone as _tz
+    from news_fetch_util import new_session
+    y = _dt.now(_tz.utc).year
+    payload = {"seriesid": [sid], "startyear": str(y - 3), "endyear": str(y)}
+    r = new_session().post(_BLS_API + sid, json=payload, timeout=timeout)
+    r.raise_for_status()
+    series = ((r.json() or {}).get("Results") or {}).get("series") or []
+    rows = []
+    for rec in (series[0].get("data") if series else []) or []:
+        per = str(rec.get("period") or "")
+        yr = str(rec.get("year") or "")
+        val = rec.get("value")
+        if not per.startswith("M") or not yr or val in (None, ""):
+            continue
+        try:
+            rows.append(("%s-%s-01" % (yr, per[1:].zfill(2)), float(val)))
+        except (TypeError, ValueError):
+            continue
+    rows.sort(key=lambda x: x[0])
+    return rows
+
+
+def _macro_rows_with_fallback(label: str, sid: str, timeout: float):
+    """主源 FRED → 失败则备源 BLS 公开 API。返回 (rows, source)。
+
+    rows 为空 = 两源都失败（调用方返回 no_data，绝不编造）。
+    """
+    rows = []
+    _fetch = _fred_csv_rows          # 局部别名：保证调用点锚点唯一
+    _err = None
+    try:
+        rows = _fetch(sid, timeout=timeout)
+    except Exception as e:                                     # noqa: BLE001
+        rows, _err = [], e
+    if rows:
+        return rows, "FRED:%s (independent)" % sid
+    bsid = _BLS_SERIES.get(label)
+    if bsid:
+        try:
+            rows = _bls_rows(bsid, timeout=timeout)
+        except Exception:                                      # noqa: BLE001
+            rows = []
+        if rows:
+            return rows, "BLS:%s (independent)" % bsid
+    if _err is not None:
+        raise _err            # 两源皆败 → 保留主源异常信息（调用方转成 error）
+    return [], "FRED:%s (independent)" % sid
+
+
+def tool_verify_macro_series(label: str, *, timeout: float = 20.0) -> dict:
     """联网核验一条美国宏观指标的最新官方值（**独立抓取**，与 scan.py 刻意不同源/不同码）。
 
     返回: {"label","value","prev","yoy","asof","source","error"}
@@ -324,7 +384,7 @@ def tool_verify_macro_series(label: str, *, timeout: float = 10.0) -> dict:
             return {"label": label, "value": _norm_tnx(float(cur)), "prev": None, "yoy": None,
                     "asof": today, "source": "Yahoo:^TNX (independent)", "error": None}
         sid, kind = _MACRO_SERIES[label]
-        rows = _fred_csv_rows(sid, timeout=timeout)
+        rows, _src = _macro_rows_with_fallback(label, sid, timeout)
         if not rows:
             return {"label": label, "value": None, "error": "no_data"}
         date_s, val = rows[-1]
@@ -334,7 +394,7 @@ def tool_verify_macro_series(label: str, *, timeout: float = 10.0) -> dict:
             "prev": round(rows[-2][1], 3) if len(rows) >= 2 else None,
             "yoy": _yoy_from_rows(rows, date_s, val) if kind == "index" else None,
             "asof": date_s[:10],
-            "source": f"FRED:{sid} (independent)",
+            "source": _src,
             "error": None,
         }
     except Exception as e:                                     # noqa: BLE001
