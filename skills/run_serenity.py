@@ -448,6 +448,11 @@ NUMERIC_PATTERNS = [
     r"[\d.]+\s*[BMK万亿]",               # 1472 亿 / 12.6B
     r"[一二三四五六七八九十百千万亿]+(?:成|台|美元|亿|万|个百分点|倍)",   # 中文数字（v1 盲区）
     r"百分之[一二三四五六七八九十百千零]+",
+    # 阿拉伯数字 + 单位（本轮泄漏：11,000 台 / 39 区域 / 123 可用区 / 4 GW）。
+    # 合并了"千分位+中文单位"/"3 位以上+量级单位"/"2 位以上+中文单位"三种形态；
+    # 刻意不匹配裸 "G"（保护 400G/800G）与无单位的裸数字（保护 GB200 / 10-Q / Fusion 360）。
+    r"\d[\d,]*(?:\.\d+)?\s*(?:台|个|区域|可用区|人|名|款|项|只|条|家|所"
+    r"|亿美元|万美元|GW|MW|kW|GWh|MWh|Gbps|Mbps)",
 ]
 QUOTE_SPAN_PATTERN = r"[「『\"“][^」』\"”]{4,}[」』\"”]"
 SPEAKER_PATTERN = r"(CEO|CFO|CTO|管理层|高管|财报电话会|电话会|earnings call|investor call)"
@@ -516,7 +521,9 @@ def _digest_args(name: str, args: dict) -> str:
         return "<invalid>"
     if name == "web_search":
         digest = f"query={str(args.get('query', ''))[:60]}"
-    elif name in ("ticker_news", "company_facts"):
+    elif name == "verify_macro_series":
+        digest = f"label={str(args.get('label', ''))}"
+    elif name in ("ticker_news", "company_facts", "verify_current_price"):
         digest = f"ticker={str(args.get('ticker', ''))}"
     else:
         return "<unknown>"
