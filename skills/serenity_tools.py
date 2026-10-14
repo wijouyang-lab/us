@@ -142,31 +142,65 @@ _YF_KEY_MAP = (
 _FACT_KEYS = tuple(name for name, _ in _YF_KEY_MAP)
 
 
+def _yf_fetch(ticker: str) -> dict:
+    """单次 yfinance 调用 → 12 个友好名字段（取不到就返回空 dict）。"""
+    import yfinance as yf
+    info = yf.Ticker(ticker).info or {}
+    facts = {}
+    for name, raw_keys in _YF_KEY_MAP:
+        for raw in raw_keys:
+            if raw in info and info[raw] is not None:
+                val = info[raw]
+                if isinstance(val, str):
+                    val = val[:50]
+                facts[name] = val
+                break
+    return facts
+
+
+def _alt_symbol(ticker: str) -> str | None:
+    """给出替代 ticker 写法（Yahoo 惯例是连字符 `BRK-B`，模型可能传点号 `BRK.B`）。
+
+    无 `.` / `-` → 返回 None（避免无意义的第二次网络调用）。
+    """
+    if "." in ticker:
+        alt = ticker.replace(".", "-")
+    elif "-" in ticker:
+        alt = ticker.replace("-", ".")
+    else:
+        return None
+    return alt if alt != ticker else None
+
+
 def tool_company_facts(ticker: str) -> dict:
     """取公司公开财务事实（12 个固定字段，来自 yfinance）。
 
     返回: {"ticker", "facts": {...12 键...}, "asof": "<UTC 日期>", "source": "yfinance", "error": null}
     失败: {"ticker", "facts": {}, "source": "yfinance", "error": "<...>"}
+
+    首次取不到时会用**替代符号**重试一次（#5：池里写 `BRK-B`，模型可能传 `BRK.B`）；
+    成功时返回的 `ticker` 是**实际生效的符号**。
     """
     if not isinstance(ticker, str) or not _TICKER_RE.match(ticker):
         return {"ticker": str(ticker), "facts": {}, "source": "yfinance", "error": "invalid_ticker"}
 
     try:
-        import yfinance as yf
+        import yfinance  # noqa: F401  # 提前验证依赖（真实调用在 _yf_fetch 内）
     except ImportError as e:
         return {"ticker": ticker, "facts": {}, "source": "yfinance", "error": f"import_error: {e}"}
 
     try:
-        info = yf.Ticker(ticker).info or {}
-        facts = {}
-        for name, raw_keys in _YF_KEY_MAP:
-            for raw in raw_keys:
-                if raw in info and info[raw] is not None:
-                    val = info[raw]
-                    if isinstance(val, str):
-                        val = val[:50]
-                    facts[name] = val
-                    break
+        facts = _yf_fetch(ticker)
+        used_ticker = ticker
+
+        # 符号回退（#5）——只在"有可替代写法"时多打一次网络
+        if not facts:
+            alt = _alt_symbol(ticker)
+            if alt:
+                alt_facts = _yf_fetch(alt)
+                if alt_facts:
+                    facts, used_ticker = alt_facts, alt
+
         if not facts:
             return {"ticker": ticker, "facts": {}, "source": "yfinance",
                     "error": "no_facts_returned"}
@@ -186,7 +220,7 @@ def tool_company_facts(ticker: str) -> dict:
 
         from datetime import datetime, timezone
         return {
-            "ticker": ticker,
+            "ticker": used_ticker,        # ← 实际生效的符号（可能是替代写法）
             "facts": facts,
             "asof": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
             "source": "yfinance",
