@@ -43,10 +43,15 @@ def _recs(*recs):
     return {r["Recommendation_ID"]: r for r in recs}
 
 
-def _run(recs, today, positions=None, transactions=None, start="2026-10-06"):
+def _run(recs, today, positions=None, transactions=None, start="2026-10-06", offline=True):
+    """默认 offline=True → 不触网（走推荐日价），保证测试确定性。
+
+    价格相关的测试显式传 offline=False 并 monkeypatch `pf._exec_price_for`。
+    """
     positions = [] if positions is None else positions
     transactions = [] if transactions is None else transactions
-    log = pf.process_buys(positions, transactions, recs, {"start_date": start}, today)
+    log = pf.process_buys(positions, transactions, recs, {"start_date": start}, today,
+                          offline=offline)
     return positions, transactions, log
 
 
@@ -105,25 +110,84 @@ def test_future_dated_recommendation_rejected():
 
 
 # --------------------------------------------------------------------------- #
-# 资金守护回归（原始疑点：现金不足时绝不能成交）
+# P3：现金检查前移（真因标签正确）
 # --------------------------------------------------------------------------- #
-def test_low_cash_blocked_by_total_stock_cap():
-    """现金远低于 1 Unit 时，实际拦下买入的是【总股票 ≤ 80%】（:217），而非现金检查（:517）。
+def test_cash_check_before_alloc_check():
+    """现金远低于 1 Unit → 日志应报【现金不足】（前移前会被 80% 规则抢先报"占比"）。
 
-    数学上「现金不足」分支几乎不可达：80% 规则在 :501 先执行，若它放行
-    （即 s + n ≤ 0.8e），则 n > e−s 必不成立（e−n < s ≤ 0.8e−n 无解）
-    → 有效守护是 80% 总额规则。本测试固化"确实买不进"这一行为。
+    注：两种情形**都会被跳过**（决策集合不变），前移只让"真因"标签更准。
     """
     prior_txn = [{"Date": "2026-10-06", "Action": "BUY", "Amount": "49000.00",
                   "Txn_ID": "XXX|2026-10-06|Core_Dragon|BUY", "Ticker": "XXX"}]
     open_pos = [{"Ticker": "XXX", "Status": "OPEN", "Market_Value": "49000.00",
                  "Unit_ID": "U001", "Shares": "100"}]
-    _pos, txn, log = _run(_recs(_rec("CME", "2026-10-13", 270.75)), "2026-10-13",
-                          positions=open_pos, transactions=prior_txn)
-    assert not any("🛒" in line for line in log), log      # 没有新买入
+    _pos, _txn, log = _run(_recs(_rec("CME", "2026-10-13", 270.75)), "2026-10-13",
+                           positions=open_pos, transactions=prior_txn)
+    assert not any("🛒" in line for line in log), log      # 依然买不进
+    assert any("现金不足" in line for line in log), log      # ← 新标签
+    assert not any("80%" in line for line in log), log
+
+
+def test_alloc_label_still_used_when_cash_is_ample():
+    """反向对照：现金充足但总股票将超 80% → 仍应报【占比约束】（前移没把标签一律改掉）。
+
+    口径：derive_cash 自 50,000 起算 → 先用 20,000 ⇒ 现金 30,000；
+    OPEN 市值 71,000 ⇒ equity 101,000；new_size 10,000
+    → s+n = 81,000 > 0.8e = 80,800 ⇒ 占比拦截（而现金 30,000 ≥ 9,747 不会触发"现金不足"）。
+    """
+    prior_txn = [{"Date": "2026-10-06", "Action": "BUY", "Amount": "20000.00",
+                  "Txn_ID": "XXX|2026-10-06|Core_Dragon|BUY", "Ticker": "XXX"}]
+    open_pos = [{"Ticker": "XXX", "Status": "OPEN", "Market_Value": "71000.00",
+                 "Unit_ID": "U001", "Shares": "100"}]
+    _pos, _txn, log = _run(_recs(_rec("CME", "2026-10-13", 270.75)), "2026-10-13",
+                           positions=open_pos, transactions=prior_txn)
+    assert not any("🛒" in line for line in log), log
     assert any("80%" in line for line in log), log
+    assert not any("现金不足" in line for line in log), log
 
 
+# --------------------------------------------------------------------------- #
+# P2：成交价用执行日市价（消除"假浮盈"的产生源）
+# --------------------------------------------------------------------------- #
+def test_buy_price_uses_execution_day_market_price(monkeypatch):
+    """rec 价 100、执行日市价 105 → Entry_Price 必须是 105（不再是 100）。"""
+    monkeypatch.setattr(pf, "_exec_price_for", lambda t: Decimal("105"))
+    pos, txn, log = _run(_recs(_rec("CME", "2026-10-13", 100)), "2026-10-13",
+                         offline=False)
+    assert len(pos) == 1, log
+    assert pos[0]["Entry_Price"] == "105.00"          # ← 执行日市价
+    assert txn[0]["Price"] == "105.00"
+    assert pos[0]["Cost_Basis"] == "9975.00"          # 95 股 × 105（Cost_Basis 在持仓行）
+    assert not any("未取到执行日市价" in line for line in log), log
+
+
+def test_buy_price_falls_back_to_rec_price_on_fetch_failure(monkeypatch):
+    """取价失败 → 退回推荐日价并告警（保守，绝不编造价格）。"""
+    monkeypatch.setattr(pf, "_exec_price_for", lambda t: None)
+    pos, txn, log = _run(_recs(_rec("CME", "2026-10-13", 100)), "2026-10-13",
+                         offline=False)
+    assert len(pos) == 1, log
+    assert pos[0]["Entry_Price"] == "100.00"          # ← 退回推荐日价
+    assert txn[0]["Price"] == "100.00"
+    assert any("未取到执行日市价" in line for line in log), log
+
+
+def test_buy_price_offline_never_fetches(monkeypatch):
+    """offline=True 时**不得**调用取价（monkeypatch 成抛错来证明真的没调）。"""
+    def _boom(_t):
+        raise AssertionError("offline 模式不应调用取价函数")
+
+    monkeypatch.setattr(pf, "_exec_price_for", _boom)
+    pos, _txn, log = _run(_recs(_rec("CME", "2026-10-13", 100)), "2026-10-13",
+                          offline=True)
+    assert len(pos) == 1, log
+    assert pos[0]["Entry_Price"] == "100.00"
+    assert any("（offline）" in line for line in log), log
+
+
+# --------------------------------------------------------------------------- #
+# 资金守护回归（原始疑点：现金不足时绝不能成交）
+# --------------------------------------------------------------------------- #
 def test_real_10_13_shape_never_overspends():
     """复刻 10-13 真实形态：同 run 先卖（释放现金）再买 → 两笔都成交且总额 ≤ 现金。
 
