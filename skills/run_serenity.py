@@ -306,6 +306,54 @@ def _fmt(v) -> str:
     return "-" if v in (None, "") else str(v)
 
 
+def _parse_exposure_target(raw):
+    """从 AI 输出解析 exposure_target（缺失/非法/越界 → None，交由上层保留旧值）。"""
+    if raw is None or isinstance(raw, bool):
+        return None
+    try:
+        v = float(raw)
+    except (TypeError, ValueError):
+        return None
+    if not (0.0 <= v <= 1.0):
+        return None
+    return round(v, 2)
+
+
+def _write_exposure_target(meta_path: Path, value) -> tuple[bool, str | None]:
+    """原子写回 meta 的 exposure_target。返回 (成功?, 错误原因)。
+
+    安全：① 越界（<0.20 或 >0.80）不写；② meta 缺失/损坏不写（绝不覆盖）；
+         ③ 临时文件 + os.replace 原子替换（防半写坏）。
+    """
+    try:
+        v = float(value)
+    except (TypeError, ValueError):
+        return False, "非数字"
+    if not (0.20 <= v <= 0.80):
+        return False, "越界（需 0.20~0.80）"
+    try:
+        if not meta_path.exists():
+            return False, "meta 文件不存在"
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        if not isinstance(meta, dict):
+            return False, "meta 不是 JSON 对象"
+    except Exception as e:                                     # noqa: BLE001
+        return False, f"meta 解析失败 {type(e).__name__}"
+    meta["exposure_target"] = str(round(v, 2))
+    tmp = meta_path.with_suffix(".json.tmp")
+    try:
+        tmp.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
+        os.replace(tmp, meta_path)
+    except Exception as e:                                     # noqa: BLE001
+        try:
+            if tmp.exists():
+                tmp.unlink()
+        except Exception:                                      # noqa: BLE001
+            pass
+        return False, f"写入失败 {type(e).__name__}"
+    return True, None
+
+
 def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
                  online: bool = False, context: dict | None = None) -> str:
     tpl = f"\n\n【研究模板（serenity-skill assets/thesis-template.md）】\n{template}" if template else ""
@@ -381,6 +429,11 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
   ]
 }}
 必须正好 {TOP_N} 条，priority_rank 为 1..{TOP_N} 且不重复。`ticker` 必须来自上表。
+除 priorities 外，你还必须在 JSON 顶层额外输出两个字段：
+- "exposure_target"：0.20~0.80 之间的小数（两位精度），表示你认为当前应该持有的**总股票敞口比例**。
+  依据宏观环境 / 市场状态 / 你自己的组合现状综合判断：环境不利 → 偏低（0.30~0.50）；环境有利 → 偏高（0.70~0.80）。**不得超过 0.80**。
+- "exposure_rationale"：不超过 100 字的中文说明，解释你为什么给出这个目标敞口。
+若你无法判断，可以不输出 exposure_target（系统会保留旧值）。
 **字符串值内部禁止出现英文双引号 `"`**（会让整份 JSON 非法）——要引用术语请用中文引号「」或括号（）。"""
 
 
@@ -759,8 +812,13 @@ def parse_result(text: str, valid_tickers: set[str] | None = None) -> dict:
         it["priority_rank"] = n
     if not items:
         raise ValueError("priorities 为空（或全部 ticker 不在候选池内）")
+    _raw_t = obj.get("exposure_target")
+    _raw_r = obj.get("exposure_rationale")
+    _rat = (str(_raw_r).strip()[:200] or None) if _raw_r is not None else None
     return {"priorities": sanitize_priorities(items),
-            "data_verification": obj.get("data_verification") or []}
+            "data_verification": obj.get("data_verification") or [],
+            "exposure_target": _parse_exposure_target(_raw_t),
+            "exposure_rationale": _rat}
 
 
 # --------------------------------------------------------------------------- #
@@ -868,6 +926,8 @@ def run(data_dir: Path, skill_md: str, universe: list[dict], ask, model: str,
         "data_verification": _build_data_verification(
             got.get("data_verification"), verify_sink,
             valid_tickers={u["ticker"] for u in universe}),
+        "exposure_target": got.get("exposure_target"),
+        "exposure_rationale": got.get("exposure_rationale"),
         "degraded_reason": degraded_reason,
         "error": None,
     }
@@ -940,6 +1000,26 @@ def main(argv=None) -> int:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"[serenity] 已写入 {out_path}（{len(payload['priorities'])} 条优先级，池 {payload['universe_size']} 只）")
+
+    # ---- 段 3b：把 AI 建议的 exposure_target 写回 meta（不影响退出码）----
+    ai_t = payload.get("exposure_target")
+    ai_r = payload.get("exposure_rationale")
+    if ai_t is not None:
+        print(f"[serenity] AI 建议敞口: {ai_t}（理由：{ai_r or '未提供'}）")
+    meta_path = data_dir / "portfolio_50000_meta.json"
+    try:
+        _old = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
+        _old_t = (_old or {}).get("exposure_target")
+    except Exception:                                          # noqa: BLE001
+        _old_t = None
+    if ai_t is None:
+        print(f"[serenity] exposure_target 未输出 → 保留旧值 {_old_t}")
+    else:
+        _ok, _err = _write_exposure_target(meta_path, ai_t)
+        if _ok:
+            print(f"[serenity] exposure_target 写回成功: {_old_t} → {round(float(ai_t), 2)}（AI 判断）")
+        else:
+            print(f"[serenity] exposure_target 未写回（AI 值: {ai_t}，原因：{_err}）→ 保留旧值 {_old_t}")
     return 0
 
 
