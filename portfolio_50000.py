@@ -41,6 +41,11 @@ INITIAL_CAPITAL = Decimal("50000.00")
 UNIT_DOLLARS = Decimal("10000.00")          # 1 Unit 回退基准（#4：评分缺失时仍用 1 Unit，向后兼容）
 MAX_OPEN_POSITIONS_DEPRECATED = 4           # 仅历史参考：#4 起不再作硬守卫（改为浮动 3-5 + 百分比仓位）
 MAX_REC_AGE_DAYS = 2                        # 迟到推荐上界：只执行 N 天内（含今日）仍 Active 的推荐
+# 段 2：目标总敞口（动态仓位机制）。范围**只允许收紧**到 20%~80%，
+# 越界/非法一律回退默认 80% + 告警；AI 写入该字段见段 3b。
+EXPOSURE_TARGET_MIN = Decimal("0.20")
+EXPOSURE_TARGET_MAX = Decimal("0.80")
+EXPOSURE_TARGET_DEFAULT = Decimal("0.80")
 UNIT_IDS = ["U001", "U002", "U003", "U004", "U005", "U006", "U007", "U008", "U009", "U010"]
 
 CORE_TAG = "Core_Dragon"
@@ -206,17 +211,42 @@ def unit_dollars_for(rec: dict, equity: Decimal) -> Decimal:
     return min(size, equity * Decimal("0.25"))
 
 
+def _exposure_target(meta: dict | None) -> tuple[Decimal, str | None]:
+    """读 `meta.exposure_target` 并做**硬范围校验**（段 2）。
+
+    返回 (target, warn)；warn 非空表示发生了回退（调用方负责告警一次）。
+    规则：0.20 ≤ target ≤ 0.80；缺失 → 默认 0.80（不告警，属正常情况）；
+    越界 / 非数字 / 非有限 → 回退 0.80 并给出告警文案。
+    """
+    raw = (meta or {}).get("exposure_target")
+    if raw is None or raw == "":
+        return EXPOSURE_TARGET_DEFAULT, None
+    try:
+        v = Decimal(str(raw))
+    except (InvalidOperation, ValueError, TypeError):
+        return EXPOSURE_TARGET_DEFAULT, (
+            f"exposure_target 非数字（{raw!r}）→ 回退 {EXPOSURE_TARGET_DEFAULT}")
+    if (not v.is_finite()) or v < EXPOSURE_TARGET_MIN or v > EXPOSURE_TARGET_MAX:
+        return EXPOSURE_TARGET_DEFAULT, (
+            f"exposure_target={raw!r} 超出 [{EXPOSURE_TARGET_MIN}, {EXPOSURE_TARGET_MAX}]"
+            f" → 回退 {EXPOSURE_TARGET_DEFAULT}")
+    return v, None
+
+
 def _within_alloc(rec: dict, positions: list[dict], transactions: list[dict],
-                  equity: Decimal) -> tuple[bool, str]:
-    """#4 四维占比预审（股票侧）：单只≤25% / 总股票≤80%。
-    返回 (ok, 原因)。期权≤15% 与现金≥5% 由期权引擎 / 预算双保险兜底，本函数只挡股票侧超配。"""
+                  equity: Decimal, exposure_target: Decimal | None = None) -> tuple[bool, str]:
+    """四维占比预审（股票侧）：单只≤25% / 总股票≤**目标敞口**（默认 80%，段 2 起可由 meta 收紧）。
+
+    返回 (ok, 原因)。期权≤15% 与现金≥5% 由期权引擎 / 预算双保险兜底，本函数只挡股票侧超配。
+    """
+    target = exposure_target if exposure_target is not None else EXPOSURE_TARGET_DEFAULT
     stock_pct = _stock_pct(positions, transactions)
     new_size = unit_dollars_for(rec, equity)
     proj_stock = stock_pct * equity + new_size
     if new_size > equity * Decimal("0.25"):
         return False, "单只将超 25%"
-    if proj_stock > equity * Decimal("0.80"):
-        return False, "总股票将超 80%"
+    if proj_stock > equity * target:
+        return False, f"总股票将超 {target:.0%}"
     return True, ""
 
 
@@ -365,6 +395,9 @@ def ensure_meta(data_dir: Path, today: str) -> dict:
         "start_date": today,
         "unit_dollars": str(UNIT_DOLLARS),
         "max_open_positions": MAX_OPEN_POSITIONS_DEPRECATED,  # 仅历史字段，#4 起不再作硬守卫
+        # 段 2：目标总敞口（字符串，与本文件其它金额字段同风格）。
+        # 旧 meta 文件**不会**被重写（本函数幂等）→ 由 _exposure_target 的默认值兜底。
+        "exposure_target": str(EXPOSURE_TARGET_DEFAULT),
         "currency": "USD",
     }
     p.write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -493,6 +526,16 @@ def process_buys(positions, transactions, recs, meta, today, offline: bool = Fal
                         for p in positions
                         if str(p.get("Status", "")).upper() == "OPEN")
 
+    # 段 2：目标敞口（meta.exposure_target，20%~80%）。越界/非法 → 回退 80% 并告警一次。
+    exposure_target, _exp_warn = _exposure_target(meta)
+    if _exp_warn:
+        log.append(f"⚠️  {_exp_warn}")
+    _stock_now = sum((dec(p.get("Market_Value")) or ZERO) for p in positions
+                     if str(p.get("Status", "")).upper() == "OPEN")
+    _open_pct = (_stock_now / equity) if equity > 0 else ZERO
+    log.append(f"📊 当前敞口 {_open_pct:.1%} / 目标 {exposure_target:.1%}"
+               f"（{open_count} 只 OPEN，现金 {money(cash)}）")
+
     # —— 闸门 0：全清仓当天停手 ——
     # 持仓已全 CLOSED 且今日发生过盘中/盘后止损 → 当日不再新开买入（防反复止损）。
     if open_count == 0 and _had_stop_today(transactions, today):
@@ -571,7 +614,7 @@ def process_buys(positions, transactions, recs, meta, today, offline: bool = Fal
         # —— 闸门 3：浮动只数 + 百分比仓位（#4）——
         # 原「固定 4 只 × 固定 1 Unit」硬守卫已移除；改为四维占比预审：
         # 单只≤25% / 总股票≤80%（期权≤15% 与现金≥5% 由期权引擎/预算双保险兜底）。
-        ok, why = _within_alloc(rec, positions, transactions, equity)
+        ok, why = _within_alloc(rec, positions, transactions, equity, exposure_target)
         if not ok:
             log.append(f"⏸  {rec['Ticker']} 占比约束拦截（{why}）→ 跳过")
             continue
