@@ -56,8 +56,8 @@ jobs:
           # ≈ 15 + 10 = 25 次；每轮上限 6 个 → 约 5 轮工具 + 1 轮作答。
           # 第四次运行用 10 轮/30 次恰好撞顶（少了作答轮）→ 整体回退离线。
           # 故放宽到 14 轮 / 40 次（留出作答轮与冗余）。
-          SERENITY_TOOL_MAX_ROUNDS: "14"
-          SERENITY_TOOL_MAX_CALLS: "40"
+          SERENITY_TOOL_MAX_ROUNDS: "18"
+          SERENITY_TOOL_MAX_CALLS: "60"
 
       - name: Commit if changed
         run: |
