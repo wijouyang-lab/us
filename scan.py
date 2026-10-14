@@ -4106,6 +4106,10 @@ if __name__ == "__main__":
                                  str(round(0.7*float(item.get("Quant_Score",0)) + 0.3*_ai, 1)))
         to_write.append(item)
 
+    # ★ 方案 A：AI 持久化必须覆盖【持仓】。持仓此刻仍在 to_write 内，
+    #   但下方 "跳过已在持仓中的标的" 会把它们剔除（那是为了不重复推荐）。
+    #   因此在剔除之前先捕获一份，供 ai_snapshot / ai_text_cache 使用。
+    _ai_persist = list(to_write)
     if os.path.exists(log_file) and to_write:
         try:
             old = pd.read_csv(log_file, keep_default_na=False)
@@ -4177,6 +4181,24 @@ if __name__ == "__main__":
             print(f"⚠️ AI Snapshot 写入失败（不影响主流程）：{type(e).__name__}: {e}")
     else:
         print("⚠️ 今日没有新增可入账推荐")
+
+    # ★ 方案 A：per-stock AI 持久化覆盖【持仓 + 新推荐】，不再被 `if to_write:` 门控拦住。
+    #   依据 scan.py:3986 的承诺「持仓每日重评分」；pending CSV 仍只写新推荐（职责分离）。
+    #   文本来自 enrich_verified_items_with_ai_details() 的既有产出，不新增任何 GPT 调用。
+    #   注：上游门控内的两次 upsert 与本次为【超集关系】且幂等键相同（Ticker|Rec_Date|Tag），
+    #       重复调用不会产生重复行。
+    if _ai_persist:
+        try:
+            _cached_n = upsert_ai_text_cache(_ai_persist)
+            print("🧠 AI 文本缓存已更新 %d 只（含持仓）-> %s" % (_cached_n, AI_TEXT_CACHE_FILE))
+        except Exception as e:
+            print(f"⚠️ AI 文本缓存写入失败（不影响主流程）：{type(e).__name__}: {e}")
+        try:
+            _snap_n = upsert_ai_snapshot(_ai_persist, rec_date=today_us_str())
+            print("🧠 AI Snapshot 已保存 %d 条（含持仓，Rec_Date=%s）-> %s"
+                  % (_snap_n, today_us_str(), AI_SNAPSHOT_FILE))
+        except Exception as e:
+            print(f"⚠️ AI Snapshot 写入失败（不影响主流程）：{type(e).__name__}: {e}")
 
     # >>> Feature: AI 目标持仓（默认关闭；ENABLE_TARGET_FILE=1 才写，失败不阻断 scan）>>>
     if os.environ.get("ENABLE_TARGET_FILE") == "1":
