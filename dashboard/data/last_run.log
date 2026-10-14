@@ -6,9 +6,6 @@ dashboard_export.py —— Dashboard 真实数据导出（只读）
 当前有效股票池：35 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $ADSK: possibly delisted; no price data found  (period=1d)
-$AES: possibly delisted; no price data found  (period=1d)
-$APP: possibly delisted; no price data found  (period=1d)
-$CME: possibly delisted; no price data found  (period=1d)
 $CNP: possibly delisted; no price data found  (period=1d)
 $COO: possibly delisted; no price data found  (period=1d)
 $CRH: possibly delisted; no price data found  (period=1d)
@@ -16,11 +13,7 @@ $EBAY: possibly delisted; no price data found  (period=1d)
 $ED: possibly delisted; no price data found  (period=1d)
 $HST: possibly delisted; no price data found  (period=1d)
 $ILMN: possibly delisted; no price data found  (period=1d)
-$INVH: possibly delisted; no price data found  (period=1d)
-$ISRG: possibly delisted; no price data found  (period=1d)
-$JCI: possibly delisted; no price data found  (period=1d)
 $MNST: possibly delisted; no price data found  (period=1d)
-$RCL: possibly delisted; no price data found  (period=1d)
 $TECH: possibly delisted; no price data found  (period=1d)
 $VRSN: possibly delisted; no price data found  (period=1d)
 $^DJI: possibly delisted; no price data found  (period=1d)
@@ -46,7 +39,6 @@ $CSX: possibly delisted; no price data found  (period=1d)
 $EDGM: possibly delisted; no price data found  (period=1d)
 $FTNT: possibly delisted; no price data found  (period=1d)
 $HIRU: possibly delisted; no price data found  (period=1d)
-$KEY: possibly delisted; no price data found  (period=1d)
 $RGBP: possibly delisted; no price data found  (period=1d)
 已读取 workflow runtimes：runtimes.json
 --------------------------------------------------------------
@@ -56,7 +48,7 @@ Observation 数量     : 24
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 35 / 0   技术指标成功 35/35
-当前价来源           : 实时 17 · 最新收盘 0 · 合计可取 35/35
+当前价来源           : 实时 24 · 最新收盘 0 · 合计可取 35/35
 Review 数据状态      :
    · core_closed_count            = 4  [complete]
    · core_open_count              = 23  [complete]
