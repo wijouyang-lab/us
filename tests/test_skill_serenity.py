@@ -1021,3 +1021,138 @@ def test_render_verify_section_empty_context_still_renders():
         assert "【本地数据与核验】" in sec
         assert "verify_macro_series" in sec
         assert "unverified" in sec          # 无本地值时也要求标记 unverified
+
+
+# --------------------------------------------------------------------------- #
+# 方案 2/1/3：runner 预取宏观核验 + 硬约束指令 + verification_status
+# --------------------------------------------------------------------------- #
+_UNI = [{"ticker": "T0", "name": "x", "bucket": "Core", "final_score": 90,
+         "quant_score": 80, "ai_score": 70.0, "sector_rs_20d_pct": 1.0, "held": False}]
+
+
+def _fake_loop(prompt, *, model, max_tokens, result_sink=None, **kw):
+    """捕获 run() 传给 ask_with_tools 的 sink。"""
+    _fake_loop.sink = result_sink
+    return ('{"priorities": [{"ticker": "T0", "priority_rank": 1, "why": "x", "what_to_verify": "y"}]}',
+            [], "online_tool_use", None, [])
+
+
+def _prefetch_ok(monkeypatch):
+    import serenity_tools as _stmod
+    calls = []
+
+    def _exec(name, args):
+        calls.append((name, args))
+        return {"label": args.get("label"), "value": 111.0,
+                "source": "FRED:X (independent)", "asof": "2026-08-01", "error": None}
+
+    monkeypatch.setattr(_stmod, "execute_tool", _exec)
+    return calls
+
+
+def test_run_prefetches_macro_verification(tmp_path, monkeypatch):
+    """★ runner 必须预取 3 项宏观核验，key 格式与 AI 调用时一致。"""
+    r = _load_runner()
+    _ctx_fixture(tmp_path)
+    calls = _prefetch_ok(monkeypatch)
+    monkeypatch.setattr(r, "ask_with_tools", _fake_loop)
+    r.run(tmp_path, "", _UNI, lambda *a: "SHOULD_NOT", "m", 100, "2026-10-14", online=True)
+
+    assert [c[1]["label"] for c in calls] == ["CPI", "核心CPI", "失业率"], calls
+    sink = _fake_loop.sink
+    assert isinstance(sink, dict) and len(sink) == 3, sink
+    for label in ("CPI", "核心CPI", "失业率"):
+        key = ("verify_macro_series",
+               json.dumps({"label": label}, sort_keys=True, ensure_ascii=False))
+        assert key in sink, (label, list(sink))
+        assert sink[key]["value"] == 111.0
+
+
+def test_run_prefetch_failure_does_not_abort(tmp_path, monkeypatch):
+    """预取失败（工具抛异常）→ 不中断 run，sink 记 error，mode 仍 online。"""
+    r = _load_runner()
+    _ctx_fixture(tmp_path)
+    import serenity_tools as _stmod
+
+    def _boom(name, args):
+        raise TimeoutError("prefetch timeout")
+
+    monkeypatch.setattr(_stmod, "execute_tool", _boom)
+    monkeypatch.setattr(r, "ask_with_tools", _fake_loop)
+    payload = r.run(tmp_path, "", _UNI, lambda *a: "SHOULD_NOT", "m", 100,
+                    "2026-10-14", online=True)
+
+    assert payload["mode"] == "online_tool_use"
+    sink = _fake_loop.sink
+    assert len(sink) == 3 and all(v["error"] for v in sink.values()), sink
+
+
+def test_run_offline_skips_prefetch(tmp_path, monkeypatch):
+    """离线模式绝不预取（不联网）。"""
+    r = _load_runner()
+    _ctx_fixture(tmp_path)
+    import serenity_tools as _stmod
+
+    def _boom(name, args):
+        raise AssertionError("离线模式不得预取")
+
+    monkeypatch.setattr(_stmod, "execute_tool", _boom)
+    payload = r.run(tmp_path, "", _UNI, lambda *a: json.dumps(
+        {"priorities": [{"ticker": "T0", "priority_rank": 1, "why": "x", "what_to_verify": "y"}]}),
+        "m", 100, "2026-10-14")            # online 默认 False
+    assert payload["mode"] == "offline_screening"
+
+
+def test_prompt_includes_hard_verification_constraint():
+    r = _load_runner()
+    ctx = {"macro_economic": [{"indicator": "CPI", "value": "334.98",
+                               "date": "2026-08-01", "source": "BLS API"}]}
+    txt = r._render_local_values(ctx)
+    assert "必须先实际调用" in txt and "verify_macro_series" in txt
+    assert "预取" in txt and "unverified" in txt
+    assert "334.98" in txt
+
+
+def _online_payload(r, monkeypatch, ai_dv, prefetch_ok=True):
+    """辅助：跑一次在线 run，返回 payload。"""
+    import serenity_tools as _stmod
+    if prefetch_ok:
+        monkeypatch.setattr(_stmod, "execute_tool",
+                            lambda name, args: {"label": args.get("label"), "value": 111.0,
+                                                "source": "FRED:X", "asof": "2026-08-01",
+                                                "error": None})
+    else:
+        monkeypatch.setattr(_stmod, "execute_tool",
+                            lambda name, args: {"label": args.get("label"), "value": None,
+                                                "error": "TimeoutError: x"})
+    ai = json.dumps({"priorities": [{"ticker": "T0", "priority_rank": 1,
+                                     "why": "x", "what_to_verify": "y"}],
+                     "data_verification": ai_dv}, ensure_ascii=False)
+    monkeypatch.setattr(r, "ask_with_tools",
+                        lambda prompt, **kw: (ai, [], "online_tool_use", None, []))
+    return r.run(None, "", _UNI, lambda *a: "no", "m", 100, "2026-10-14", online=True)
+
+
+def test_payload_verification_status_ok(monkeypatch):
+    r = _load_runner()
+    dv = [{"field": "CPI", "local_value": "334.98", "verified_label": "CPI",
+           "status": "match"}]
+    payload = _online_payload(r, monkeypatch, dv)
+    assert payload["data_verification"][0]["verified_value"] == 111.0
+    assert payload["verification_status"] == "ok"
+
+
+def test_payload_verification_status_skipped(monkeypatch):
+    r = _load_runner()
+    dv = [{"field": "CPI", "local_value": "334.98", "verified_label": "CPI",
+           "status": "match"}]
+    payload = _online_payload(r, monkeypatch, dv, prefetch_ok=False)
+    assert payload["data_verification"][0]["status"] == "unverified"
+    assert payload["verification_status"] == "skipped_by_model"
+
+
+def test_payload_verification_status_partial(monkeypatch):
+    r = _load_runner()
+    payload = _online_payload(r, monkeypatch, [])
+    assert payload["data_verification"] == []
+    assert payload["verification_status"] == "partial"
