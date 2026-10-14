@@ -234,6 +234,157 @@ def tool_company_facts(ticker: str) -> dict:
 # --------------------------------------------------------------------------- #
 # 工具 schema（给模型看的）
 # --------------------------------------------------------------------------- #
+# --------------------------------------------------------------------------- #
+# 工具 4：verify_macro_series（**独立实现**：刻意不复用 scan.py 的抓取链）
+# --------------------------------------------------------------------------- #
+# 为什么独立：scan.py 是本地宏观数据的产生者；若核验工具复用同一段代码，
+# 同一个 bug 会被"复现"而不是"发现"（CPI 曾显示 334.98% 即为格式化 bug）。
+# scan.py 还不可 import（模块级 sys.exit + 无 __main__ 守卫），故也不具备复用条件。
+_MACRO_SERIES = {
+    "CPI":      ("CPIAUCSL", "index"),
+    "核心CPI":  ("CPILFESL", "index"),
+    "失业率":   ("UNRATE",   "pct"),
+    "核心PCE":  ("PCEPILFE", "index"),
+}
+_MACRO_YAHOO = {"10Y国债": "^TNX"}
+_MACRO_LABELS = tuple(_MACRO_SERIES) + tuple(_MACRO_YAHOO)
+_FRED_CSV = "https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}"
+
+
+def _fred_csv_rows(sid: str, timeout: float = 10.0) -> list:
+    """独立抓取 FRED CSV（无 API key）→ [(date, value)]，按日期升序。失败抛异常。"""
+    import csv as _csv
+    import io as _io
+    from news_fetch_util import new_session
+    r = new_session().get(_FRED_CSV.format(sid=sid), timeout=timeout)
+    r.raise_for_status()
+    rows = []
+    for rec in _csv.DictReader(_io.StringIO(r.text)):
+        date = (rec.get("DATE") or "").strip()
+        raw = (rec.get(sid) or rec.get("VALUE") or "").strip()
+        if not date or raw in ("", "."):
+            continue                       # FRED 用 '.' 表示缺值
+        try:
+            rows.append((date, float(raw)))
+        except ValueError:
+            continue
+    rows.sort(key=lambda x: x[0])
+    return rows
+
+
+def _yoy_from_rows(rows, last_date: str, last_val: float):
+    """与「约 12 个月前」的读数比较（找不到返回 None）。"""
+    from datetime import date as _d, timedelta as _td
+    try:
+        y, m, d = (int(x) for x in str(last_date)[:10].split("-"))
+        target = _d(y, m, d) - _td(days=365)
+    except Exception:
+        return None
+    best = None
+    for date_s, val in rows:
+        try:
+            yy, mm, dd = (int(x) for x in date_s[:10].split("-"))
+            cur = _d(yy, mm, dd)
+        except Exception:
+            continue
+        if cur <= target and (best is None or cur > best[0]):
+            best = (cur, val)
+    if not best or not best[1]:
+        return None
+    return round((last_val / best[1] - 1) * 100, 2)
+
+
+def _norm_tnx(v: float) -> float:
+    """^TNX 的口径历史上是「收益率×10」，但 Yahoo 现价可能已是百分数。
+
+    故只在数值明显偏大（>20）时才 /10 —— 两种口径都能得到正确的百分数。
+    """
+    return round(v / 10.0, 3) if v > 20 else round(v, 3)
+
+
+def tool_verify_macro_series(label: str, *, timeout: float = 10.0) -> dict:
+    """联网核验一条美国宏观指标的最新官方值（**独立抓取**，与 scan.py 刻意不同源/不同码）。
+
+    返回: {"label","value","prev","yoy","asof","source","error"}
+    失败: {"label", "value": None, "error": "<type>: <msg>"}"
+    """
+    if not isinstance(label, str) or label.strip() not in _MACRO_LABELS:
+        return {"label": str(label), "value": None, "error": "unknown_label"}
+    label = label.strip()
+    try:
+        from datetime import datetime, timezone
+        today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+        if label in _MACRO_YAHOO:
+            from portfolio_50000 import fetch_last_closes
+            sym = _MACRO_YAHOO[label]
+            row = (fetch_last_closes([sym]) or {}).get(sym) or {}
+            cur = row.get("current")
+            if cur is None:
+                return {"label": label, "value": None, "error": "no_data"}
+            return {"label": label, "value": _norm_tnx(float(cur)), "prev": None, "yoy": None,
+                    "asof": today, "source": "Yahoo:^TNX (independent)", "error": None}
+        sid, kind = _MACRO_SERIES[label]
+        rows = _fred_csv_rows(sid, timeout=timeout)
+        if not rows:
+            return {"label": label, "value": None, "error": "no_data"}
+        date_s, val = rows[-1]
+        return {
+            "label": label,
+            "value": round(val, 3),
+            "prev": round(rows[-2][1], 3) if len(rows) >= 2 else None,
+            "yoy": _yoy_from_rows(rows, date_s, val) if kind == "index" else None,
+            "asof": date_s[:10],
+            "source": f"FRED:{sid} (independent)",
+            "error": None,
+        }
+    except Exception as e:                                     # noqa: BLE001
+        return {"label": label, "value": None, "error": f"{type(e).__name__}: {e}"}
+
+
+# --------------------------------------------------------------------------- #
+# 工具 5：verify_current_price（复用 portfolio_50000.fetch_last_closes）
+# --------------------------------------------------------------------------- #
+def tool_verify_current_price(ticker: str) -> dict:
+    """取某只股票的当前市价，用于核验本地记录的价格是否过期。
+
+    返回: {"ticker","price","extended","extended_time","asof","source","error"}
+    失败: {"ticker", "price": None, "error": "<...>"}"
+    """
+    if not isinstance(ticker, str) or not _TICKER_RE.match(ticker):
+        return {"ticker": str(ticker), "price": None, "error": "invalid_ticker"}
+    try:
+        from portfolio_50000 import fetch_last_closes
+    except ImportError as e:
+        return {"ticker": ticker, "price": None, "error": f"import_error: {e}"}
+    try:
+        used = ticker
+        row = (fetch_last_closes([used]) or {}).get(used.upper()) or {}
+        if not row:
+            alt = _alt_symbol(ticker)                          # 复用 #5 的符号回退
+            if alt:
+                row = (fetch_last_closes([alt]) or {}).get(alt.upper()) or {}
+                if row:
+                    used = alt
+        if not row or row.get("current") is None:
+            return {"ticker": ticker, "price": None, "error": "no_data"}
+        from datetime import datetime, timezone
+        ext = row.get("extended")
+        return {
+            "ticker": used,
+            "price": float(row["current"]),
+            "extended": (float(ext) if ext is not None else None),
+            "extended_time": row.get("extended_time") or "",
+            "asof": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "source": "yfinance",
+            "error": None,
+        }
+    except Exception as e:                                     # noqa: BLE001
+        return {"ticker": ticker, "price": None, "error": f"{type(e).__name__}: {e}"}
+
+
+
+
+
 TOOLS = [
     {
         "name": "web_search",
@@ -271,6 +422,29 @@ TOOLS = [
             "required": ["ticker"],
         },
     },
+    {
+        "name": "verify_macro_series",
+        "description": "联网核验一条美国宏观指标的最新官方值，用于交叉检查本地宏观面板的"
+                       "数值是否过期或错误。返回最新值 / 上期值 / 同比 / 数据期。",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "label": {"type": "string", "enum": ["CPI", "核心CPI", "失业率", "10Y国债", "核心PCE"]},
+            },
+            "required": ["label"],
+        },
+    },
+    {
+        "name": "verify_current_price",
+        "description": "取某只股票的当前市价，用于核验本地记录的价格是否过期。",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "ticker": {"type": "string", "description": "股票代码，如 CME"},
+            },
+            "required": ["ticker"],
+        },
+    },
 ]
 
 
@@ -281,6 +455,8 @@ TOOL_REGISTRY = {
     "web_search": tool_web_search,
     "ticker_news": tool_ticker_news,
     "company_facts": tool_company_facts,
+    "verify_macro_series": tool_verify_macro_series,
+    "verify_current_price": tool_verify_current_price,
 }
 
 
