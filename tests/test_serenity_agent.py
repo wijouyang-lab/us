@@ -651,3 +651,13 @@ def test_ask_with_tools_without_sink_does_not_crash(monkeypatch):
     final, _t, mode, _d, _f = r.ask_with_tools(
         "P", model="m", max_tokens=100, client_factory=lambda: client)
     assert final == "OK" and mode == "online_tool_use"
+
+
+# --------------------------------------------------------------------------- #
+# _digest_args 覆盖核验工具
+# --------------------------------------------------------------------------- #
+def test_digest_args_covers_verify_tools():
+    assert r._digest_args("verify_macro_series", {"label": "CPI"}) == "label=CPI"
+    assert r._digest_args("verify_current_price", {"ticker": "CME"}) == "ticker=CME"
+    assert r._digest_args("verify_macro_series", {}) == "label="
+    assert r._digest_args("unknown_tool", {}) == "<unknown>"

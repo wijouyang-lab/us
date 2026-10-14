@@ -384,7 +384,7 @@ def test_verify_macro_cpi_returns_shape(monkeypatch):
     assert got["prev"] == 332.00
     assert got["asof"] == "2026-08-01"
     assert "FRED:CPIAUCSL" in got["source"] and "independent" in got["source"]
-    assert cap[0][0].endswith("id=CPIAUCSL") and cap[0][1] == 10.0
+    assert cap[0][0].endswith("id=CPIAUCSL") and cap[0][1] == 20.0   # 段 3b+：10s 曾 3/3 超时
 
 
 def test_verify_macro_rejects_unknown_label(monkeypatch):
@@ -509,3 +509,88 @@ def test_new_tools_are_callable_through_execute_tool(monkeypatch):
     got = st.execute_tool("verify_macro_series", {"label": "CPI"})
     assert got["value"] == 334.98
     assert st.execute_tool("verify_current_price", {"ticker": "aa1"})["error"] == "invalid_ticker"
+
+
+# --------------------------------------------------------------------------- #
+# F. FRED 备用源（BLS 公开 API）与更长时间上限
+# --------------------------------------------------------------------------- #
+class _RespJSON:
+    def __init__(self, text, status=200):
+        self.text = text
+        self.status_code = status
+
+    def raise_for_status(self):
+        if self.status_code >= 400:
+            raise RuntimeError("HTTP %d" % self.status_code)
+
+    def json(self):
+        import json as _j
+        return _j.loads(self.text)
+
+
+_BLS_JSON = ('{"status":"REQUEST_SUCCEEDED","Results":{"series":[{"seriesID":"CUUR0000SA0",'
+             '"data":[{"year":"2026","period":"M07","value":"333.00"},'
+             '{"year":"2026","period":"M08","value":"334.98"}]}]}}')
+
+
+def _fake_session(calls, fred=None, bls=None):
+    """fred/bls: 文本(成功) | None(未用) | Exception(失败)。"""
+    class _S:
+        def get(self, url, timeout=None, **kw):
+            calls.append(("get", url, timeout))
+            if isinstance(fred, Exception):
+                raise fred
+            return _RespJSON(fred if fred is not None else "")
+
+        def post(self, url, json=None, timeout=None, **kw):
+            calls.append(("post", url, timeout))
+            if isinstance(bls, Exception):
+                raise bls
+            return _RespJSON(bls if bls is not None else "")
+    return _S()
+
+
+def test_verify_macro_falls_back_to_bls_when_fred_fails(monkeypatch):
+    """主源 FRED 超时 → 自动走备源 BLS 公开 API，并在 source 里标明。"""
+    calls = []
+    monkeypatch.setattr(news_fetch_util, "new_session",
+                        lambda: _fake_session(calls, fred=TimeoutError("fred timeout"),
+                                              bls=_BLS_JSON))
+    got = st.tool_verify_macro_series("CPI")
+    assert got["error"] is None, got
+    assert got["value"] == 334.98
+    assert got["source"].startswith("BLS:CUUR0000SA0"), got["source"]
+    assert [c[0] for c in calls] == ["get", "post"], calls
+
+
+def test_verify_macro_both_sources_fail_returns_error(monkeypatch):
+    """两源皆败 → 返回 error（保留主源异常信息），绝不编造数值。"""
+    calls = []
+    monkeypatch.setattr(news_fetch_util, "new_session",
+                        lambda: _fake_session(calls, fred=TimeoutError("fred timeout"),
+                                              bls=TimeoutError("bls timeout")))
+    got = st.tool_verify_macro_series("CPI")
+    assert got["value"] is None and got["error"], got
+    assert "TimeoutError" in got["error"]
+
+
+def test_verify_macro_uses_longer_timeout(monkeypatch):
+    """timeout 默认必须已放宽到 20s（runner 上 10s 曾 3/3 超时）。"""
+    calls = []
+    monkeypatch.setattr(news_fetch_util, "new_session",
+                        lambda: _fake_session(calls, fred="DATE,CPIAUCSL\n2026-08-01,334.98\n"))
+    got = st.tool_verify_macro_series("CPI")
+    assert got["error"] is None, got
+    assert calls and calls[0][2] == 20.0, calls
+
+
+def test_verify_macro_unemployment_uses_bls_unrate(monkeypatch):
+    """失业率无 FRED 数据时，BLS 系列号必须是 LNS14000000。"""
+    calls = []
+    bls = ('{"Results":{"series":[{"data":[{"year":"2026","period":"M09",'
+           '"value":"4.20"}]}]}}')
+    monkeypatch.setattr(news_fetch_util, "new_session",
+                        lambda: _fake_session(calls, fred=TimeoutError("x"), bls=bls))
+    got = st.tool_verify_macro_series("失业率")
+    assert got["value"] == 4.20, got
+    assert any("LNS14000000" in c[1] for c in calls), calls

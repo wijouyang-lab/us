@@ -912,3 +912,35 @@ def test_write_exposure_target_rejects_out_of_range(tmp_path):
     ok, err = r._write_exposure_target(mp, 0.95)
     assert ok is False and "越界" in err
     assert json.loads(mp.read_text(encoding="utf-8"))["exposure_target"] == "0.80"
+
+
+# --------------------------------------------------------------------------- #
+# sanitize 覆盖"阿拉伯数字 + 单位"（本轮泄漏：11,000 台 / 39 区域 / 4 GW）
+# --------------------------------------------------------------------------- #
+def _san(text):
+    return _load_runner()._sanitize_text(text, add_suffix=False)
+
+
+@pytest.mark.parametrize("raw", [
+    "全球装机超 11,000 台并持续增长",
+    "覆盖 39 区域 123 可用区",
+    "新增 4 GW 数据中心电力",
+    "会议披露 250 家客户",
+])
+def test_sanitize_removes_number_with_unit(raw):
+    out = _san(raw)
+    assert "[数字已剔除]" in out, (raw, out)
+    assert not any(ch.isdigit() for ch in out), out   # 清洗后不得残留数字
+
+
+@pytest.mark.parametrize("keep", [
+    "Maia 300 针对推理优化",
+    "NVIDIA GB200/GB300 需求强劲",
+    "最新 10-Q 与 10-K 披露",
+    "Fusion 360 与 Office 365",
+    "da Vinci 5 系统装机",
+    "400G/800G 以太网交换机",
+])
+def test_sanitize_preserves_product_names(keep):
+    out = _san(keep)
+    assert out == keep, (keep, out)
