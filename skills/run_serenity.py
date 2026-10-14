@@ -133,6 +133,10 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
     # 工具相关段落**只对在线路径**输出：离线路径没有工具，出现"调用工具"的指令
     # 会自相矛盾（第四次运行暴露：回退离线时 prompt 仍在要求模型调用工具）。
     if online:
+        # 在线模式：有工具，"数字纪律"的首句必须与之相符 —— 仍说"你没有联网能力"
+        # 会与【工具使用要求】自相矛盾（第五次运行后收尾项 #2）。
+        discipline_head = ("你**没有实时行情 / 付费数据库**；除工具能取到的内容外，"
+                           "不得依赖记忆中的数字。")
         tool_block = f"""
 例外：你可以调用 `company_facts` 工具获取公开财务数值（PE/EPS/收入增长等）。这些数值会被系统单独收录（不会进入你产出的 `why` / `what_to_verify`），你不需要、也不得把它们写进 `why`；你只能用它判断"哪些主张需要核验"。
 
@@ -144,8 +148,10 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
 2. 对进入 TOP 10 的股票，优先用 `company_facts` 获取其公开财务事实。
 3. 工具调用要分批进行：不要在第一轮把全部工具都用完，按信息需求逐轮展开。
 4. 若某工具返回 {{"error": ...}}，记录进 `what_to_verify` 并继续处理下一只，不要因为个别失败而中止。
+5. `web_search` 适合核验**特定事件 / 客户 / 认证 / 产能扩张**等需要"搜索关键词"的场景；若你要找**某只具体股票最近的新闻**，优先用 `ticker_news`。
 """
     else:
+        discipline_head = "你**没有联网能力**，也没有任何公告 / 财报 / 行情数据库。"
         tool_block = "\n"
 
     return f"""你是**供应链瓶颈猎手**。下面这份 serenity-skill 方法论是你的分析框架。
@@ -168,7 +174,7 @@ def build_prompt(skill_md: str, template: str, universe: list[dict], asof: str,
 {rows}
 
 【数字纪律 —— 最高优先级，违反即整份作废】
-你**没有联网能力**，也没有任何公告 / 财报 / 行情数据库。严格禁止出现任何具体数字：
+{discipline_head}严格禁止出现任何具体数字：
 - 禁止收入 / 营收金额、增长率、百分比、市场份额
 - 禁止 P/E、EPS、估值倍数
 - 禁止装机数、客户数、订单金额

@@ -320,6 +320,30 @@ def test_prompt_contains_tool_usage_requirements():
     assert "不要因为个别失败而中止" in p
 
 
+def test_prompt_online_mode_explains_web_search():
+    """收尾项 #3：web_search 五次运行 0 次使用 → 必须写明它的适用场景。"""
+    p = _prompt_for(15, online=True)
+    assert "5. `web_search` 适合核验" in p
+    assert "产能扩张" in p
+    assert "优先用 `ticker_news`" in p
+    # 离线模式不得出现（那里没有工具）
+    assert "`web_search`" not in _prompt_for(15, online=False)
+
+
+def test_prompt_online_mode_softens_connectivity_disclaimer():
+    """收尾项 #2：在线模式有工具，不能再自称"没有联网能力"（自相矛盾）。"""
+    on = _prompt_for(15, online=True)
+    off = _prompt_for(15, online=False)
+    assert "你**没有实时行情 / 付费数据库**" in on
+    assert "不得依赖记忆中的数字" in on
+    assert "你**没有联网能力**" not in on
+    # 离线模式保留原文（真的没有联网能力）
+    assert "你**没有联网能力**" in off
+    assert "也没有任何公告 / 财报 / 行情数据库" in off
+    # 两种模式都必须保留"严格禁止出现任何具体数字"
+    assert "严格禁止出现任何具体数字" in on and "严格禁止出现任何具体数字" in off
+
+
 def test_prompt_contains_company_facts_exception():
     """数字纪律里（在线模式）必须写明 company_facts 的例外，否则模型为守纪律而回避该工具。"""
     p = _prompt_for(1, online=True)
