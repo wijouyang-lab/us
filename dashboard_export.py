@@ -1038,14 +1038,30 @@ def _attach_snapshot_ai(row, ticker, rec_date, tag, snapshots):
     硬约束：只按三元组精确匹配，禁止 Ticker-only；匹配不到 AI 文本时保留 row 原值
     （pending 当天直写的 AI 六段，或 trade_history 事件本就为空），绝不回退到
     ai_text_cache.csv（Ticker 级缓存，会污染历史事件）。
+
+    G2b 补充（不改变上述约束的原意）：持仓事件的 Rec_Date 是【历史推荐日】，而持仓快照
+    按【当日】写入（scan.py 每日重评分），三元组必然对不上。故精确匹配失败时，允许回退到
+    同一 (Ticker, Tag) 组内 Rec_Date 最大的快照 —— 但**仅当该最大值晚于**本行 rec_date
+    （确实存在更新的分析）时才使用；等价于「持仓有更新分析就用最新」，新推荐
+    （max == 自身）与无新快照的历史事件都不会被改写，故不污染历史事件。
     """
     row["Recommendation_ID"] = f"{ticker}|{rec_date}|{tag}"
     row["Snapshot_ID"] = ""
     row["Snapshot_Update_Date"] = ""
+    snap_used_date = rec_date
     snap = snapshots.get((ticker, rec_date, tag))
+    if not snap:
+        _cands = [(k[1], v) for k, v in snapshots.items()
+                  if k[0] == ticker and k[2] == tag]
+        if _cands:
+            _latest_date, _latest_snap = max(_cands, key=lambda x: str(x[0]))
+            if str(_latest_date) > str(rec_date):
+                snap = _latest_snap
+                snap_used_date = _latest_date
     if snap:
         row["Snapshot_ID"] = snap.get("snapshot_id") or ""
         row["Snapshot_Update_Date"] = snap.get("update_date") or ""
+        row["Snapshot_Used_Date"] = snap_used_date
         if snap.get("texts"):
             for csv_col, json_key in AI_FIELD_MAP:
                 row[csv_col] = snap["texts"].get(json_key) or ""
@@ -1286,7 +1302,9 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
 
             "status": clean_text(row.get("Status")) or None,
             "technical_date": clean_text(row.get("Technical_Date")) or None,
-            "scan_date": clean_text(row.get("Date")) or None,
+            # G2b：持仓回退到最新快照时，scan_date 跟随快照日期（否则 UI 仍显示旧推荐日）
+            "scan_date": (clean_text(row.get("Snapshot_Used_Date"))
+                          or clean_text(row.get("Date")) or None),
             "avg_dollar_volume_20d": round_num(parse_num(row.get("Avg_Dollar_Volume_20D")), 2),
             "sector_rs_20d_pct": round_num(parse_num(row.get("Sector_RS_20D_Pct")), 4),
             "bias": round_num(parse_num(row.get("Bias")), 4),
