@@ -68,12 +68,20 @@ jobs:
             echo "ℹ️ dashboard/data/skill_serenity.json 不存在（flag 关或全部失败），跳过提交"
             exit 0
           fi
-          git add dashboard/data/skill_serenity.json
+          git add dashboard/data/skill_serenity.json portfolio_50000_meta.json
           if git diff --staged --quiet; then
             echo "ℹ️ 无变化，跳过提交"
             exit 0
           fi
-          git commit -m "chore(skill): refresh serenity data [skip ci]"
+          git commit -m "chore(skill): refresh serenity data and exposure target [skip ci]"
+          # 守卫：提交后工作区必须干净。否则 rebase 会因脏树失败，
+          # 表现是"盲重试 5 次然后整轮作废"（本轮即因漏提交 meta 而踩到）。
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::warning::提交后工作区仍有未提交改动，rebase 会失败。未提交文件："
+            git status --porcelain
+            echo "::error::有产物未被 git add —— 请把该文件加入本 step 的 git add 清单"
+            exit 1
+          fi
           # 并发安全推送：fetch + rebase 后重试，绝不 force
           for i in 1 2 3 4 5; do
             git fetch origin main
