@@ -314,6 +314,40 @@ def fetch_last_closes(tickers: list[str]) -> dict[str, dict]:
     return out
 
 
+def _exec_price_for(ticker: str) -> Decimal | None:
+    """买入**执行日**的常规时段最新价（取不到返回 None，绝不编造）。
+
+    复用 `fetch_last_closes` 的取价链路（yfinance）。优先 `current`（常规收盘）
+    而非 `extended`（盘前/盘后），避免把盘后噪声写进入场价 —— 与 Entry_Price
+    原先"推荐日真实 Open"的口径同源，只是换成**执行日**。
+    """
+    try:
+        row = (fetch_last_closes([ticker]) or {}).get(str(ticker).upper()) or {}
+    except Exception:                                          # noqa: BLE001
+        return None
+    for key in ("current", "extended"):
+        v = dec(row.get(key))
+        if v is not None and v > 0:
+            return v
+    return None
+
+
+def _buy_price_for(rec: dict, offline: bool) -> tuple[Decimal, str]:
+    """买入成交价：优先**执行日市价**，离线/取价失败 → 退回推荐日价（保守）。
+
+    背景：10-13 事件中 10-08 的推荐被追买时按【推荐日价格】建仓，产生假浮盈
+    （实测 CME +262.08 / EBAY +756.24 全部来自陈旧入场价）。
+
+    返回 (price, source)；source ∈ {"exec_market", "rec_date", "offline"}。
+    """
+    if not offline:
+        px = _exec_price_for(str(rec.get("Ticker", "")))
+        if px is not None:
+            return px, "exec_market"
+        return rec["Price"], "rec_date"
+    return rec["Price"], "offline"
+
+
 # ------------------------------------------------------------------ 核心逻辑
 def ensure_meta(data_dir: Path, today: str) -> dict:
     """初始化即幂等：文件已存在时绝不重写 initial_capital / start_date。"""
@@ -444,7 +478,7 @@ def process_sells(positions, transactions, recs, today) -> list[str]:
     return log
 
 
-def process_buys(positions, transactions, recs, meta, today) -> list[str]:
+def process_buys(positions, transactions, recs, meta, today, offline: bool = False) -> list[str]:
     """BUY：新 Core 推荐、未持有、有空闲 Unit、现金足够 → 买 1 Unit。
     含三道买入冷却闸门：全清仓停手 / 7 天字段冷却 / 近 1-2 日止损防御。"""
     log: list[str] = []
@@ -510,14 +544,11 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
             log.append(f"⏸  {rec['Ticker']} 近 1–2 日刚止损 → 暂不复买（防御）")
             continue
 
-        # —— 闸门 3：浮动只数 + 百分比仓位（#4）——
-        # 原「固定 4 只 × 固定 1 Unit」硬守卫已移除；改为四维占比预审：
-        # 单只≤25% / 总股票≤80%（期权≤15% 与现金≥5% 由期权引擎/预算双保险兜底）。
-        ok, why = _within_alloc(rec, positions, transactions, equity)
-        if not ok:
-            log.append(f"⏸  {rec['Ticker']} 占比约束拦截（{why}）→ 跳过")
-            continue
-        price = rec["Price"]
+        # 取价（P2）：优先**执行日市价**；离线 / 取价失败 → 退回推荐日价并告警。
+        # 背景：10-13 用 10-08 的推荐价建仓 → 假浮盈（CME +262.08 / EBAY +756.24）。
+        price, price_src = _buy_price_for(rec, offline)
+        if price_src != "exec_market":
+            log.append(f"⚠️  {rec['Ticker']} 未取到执行日市价 → 按推荐日价 {money(price)} 记账（{price_src}）")
         target = unit_dollars_for(rec, equity)
         shares = int((target / price).to_integral_value(rounding=ROUND_DOWN))
         if shares < 1:
@@ -529,8 +560,20 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
             if shares < 1:
                 continue
             amount = money(Decimal(shares) * price)
+        # —— 现金检查**前移**（P3）——
+        # 原先排在 80% 占比检查之后 → 「现金不足」分支数学上不可达：
+        #   80% 放行 ⟺ s + n ≤ 0.8e ⟹ n ≤ e − s = 现金，与 n > 现金 矛盾。
+        # 前移后：真因是缺钱就报「现金不足」，占比超限才报「占比约束」；
+        # 跳过/放行的**集合不变**（只是标签更准）。
         if amount > cash:
             log.append(f"⏸  {rec['Ticker']} 现金不足（需 {amount}，可用 {money(cash)}）→ 跳过")
+            continue
+        # —— 闸门 3：浮动只数 + 百分比仓位（#4）——
+        # 原「固定 4 只 × 固定 1 Unit」硬守卫已移除；改为四维占比预审：
+        # 单只≤25% / 总股票≤80%（期权≤15% 与现金≥5% 由期权引擎/预算双保险兜底）。
+        ok, why = _within_alloc(rec, positions, transactions, equity)
+        if not ok:
+            log.append(f"⏸  {rec['Ticker']} 占比约束拦截（{why}）→ 跳过")
             continue
         unit = next_free_unit(positions)
         if unit is None:
@@ -879,7 +922,7 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
         for line in process_sells(positions, transactions, recs, today):
             print("   " + line)
     if not no_buy:
-        for line in process_buys(positions, transactions, recs, meta, today):
+        for line in process_buys(positions, transactions, recs, meta, today, offline=offline):
             print("   " + line)
 
     # 2) 交易流水按日期排序，回填 Cash_After（审计可核对）
