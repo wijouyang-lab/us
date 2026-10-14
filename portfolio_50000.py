@@ -40,6 +40,7 @@ PORTFOLIO_ID = "US-50000-001"
 INITIAL_CAPITAL = Decimal("50000.00")
 UNIT_DOLLARS = Decimal("10000.00")          # 1 Unit 回退基准（#4：评分缺失时仍用 1 Unit，向后兼容）
 MAX_OPEN_POSITIONS_DEPRECATED = 4           # 仅历史参考：#4 起不再作硬守卫（改为浮动 3-5 + 百分比仓位）
+MAX_REC_AGE_DAYS = 2                        # 迟到推荐上界：只执行 N 天内（含今日）仍 Active 的推荐
 UNIT_IDS = ["U001", "U002", "U003", "U004", "U005", "U006", "U007", "U008", "U009", "U010"]
 
 CORE_TAG = "Core_Dragon"
@@ -468,11 +469,25 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
     cooldowns = _load_cooldowns(positions)                       # {TICKER: "YYYY-MM-DD"}
     stopped_recent = _recent_stop_tickers(transactions, today)    # 止损当天+次日
 
+    # 迟到上界（P1）：只执行 MAX_REC_AGE_DAYS 天内的推荐。
+    # 背景（10-13 事件）：10-08 的推荐在 10-13 仍 Active 时被追买，并按【推荐日价格】记账
+    # → 用陈旧价建仓，账面浮盈虚增（实测 CME +262.08 / EBAY +756.24 全为假）。
+    stale_cutoff = _ymd_shift(today, -MAX_REC_AGE_DAYS)
+    stale = [r for r in recs.values()
+             if r["Tag"] == CORE_TAG and r["Status"] == "Active"
+             and r["Rec_Date"] >= start_date
+             and (not stale_cutoff or r["Rec_Date"] < stale_cutoff)]
+    if stale:
+        log.append(f"⏸  {len(stale)} 条推荐超过 {MAX_REC_AGE_DAYS} 天时效"
+                   f"（最早 {min(r['Rec_Date'] for r in stale)}）→ 不再追买")
+
     # 按推荐日期升序处理，保证先来的推荐先占用 Unit（确定性，不受 dict 顺序影响）
     candidates = [r for r in recs.values()
                   if r["Tag"] == CORE_TAG
                   and r["Status"] == "Active"
                   and r["Rec_Date"] >= start_date
+                  and r["Rec_Date"] <= today                     # 不接受未来日期（防御）
+                  and (not stale_cutoff or r["Rec_Date"] >= stale_cutoff)
                   and r["Price"] is not None and r["Price"] > 0]
     candidates.sort(key=lambda r: (r["Rec_Date"], r["Ticker"]))
 
@@ -523,7 +538,7 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
             continue
         transactions.append({
             "Txn_ID": buy_id,
-            "Date": rec["Rec_Date"],
+            "Date": today,                 # P0：记账用【实际执行日】而非推荐日（推荐日见 Scan_Date / Recommendation_ID）
             "Ticker": rec["Ticker"],
             "Action": "BUY",
             "Shares": str(shares),
@@ -544,7 +559,7 @@ def process_buys(positions, transactions, recs, meta, today) -> list[str]:
             "Ticker": rec["Ticker"],
             "Shares": str(shares),
             "Entry_Price": str(money(price)),      # 买入价永久固定，之后永不更新
-            "Entry_Date": rec["Rec_Date"],
+            "Entry_Date": today,                   # P0：实际执行日（推荐日见 Recommendation_ID）
             "Cost_Basis": str(amount),
             "Current_Price": str(money(price)),
             "Market_Value": str(amount),
