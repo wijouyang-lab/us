@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-14T13:02:38Z",
+  "generated_at": "2026-10-14T15:20:32Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "5.30%",
+      "value": "5.27%",
       "prev": "5.22%",
       "date": "2026-10-14",
       "source": "Yahoo Finance",
       "sentiment": "bearish",
-      "rationale": "长期国债收益率上升，融资成本增加"
+      "rationale": "长期国债收益率上升，资金成本提高"
     },
     {
       "indicator": "5Y国债",
-      "value": "5.13%",
+      "value": "5.08%",
       "prev": "5.01%",
       "date": "2026-10-14",
       "source": "Yahoo Finance",
       "sentiment": "bearish",
-      "rationale": "中期国债收益率上升，借贷成本增加"
+      "rationale": "中期国债收益率上升，融资成本增加"
     },
     {
       "indicator": "13周国债",
-      "value": "4.13%",
+      "value": "4.11%",
       "prev": "4.06%",
       "date": "2026-10-14",
       "source": "Yahoo Finance",
       "sentiment": "bearish",
-      "rationale": "短期利率上升，流动性收紧预期"
+      "rationale": "短期国债收益率上升，流动性收紧预期"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI指数上升，通胀压力增加"
+      "rationale": "CPI指数上升，通胀压力加大"
     },
     {
       "indicator": "核心CPI",
@@ -45,7 +45,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "核心CPI上升，加息压力增加"
+      "rationale": "核心CPI上升，核心通胀加剧"
     },
     {
       "indicator": "失业率",
@@ -63,20 +63,31 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE为3.00%，高于美联储目标"
+      "rationale": "核心PCE为3%，高于美联储目标"
     }
   ],
   "speakers": [
     {
-      "person": "Warsh",
+      "person": null,
       "title": null,
-      "content": "US bond traders await CPI, Warsh for insight on Fed's rate path - Yahoo Finance Singapore",
-      "time": "10-11 10:23",
-      "source": "Yahoo Finance Singapore",
-      "age_tag": "📑前日-低权重",
-      "content_cn": "美国债券交易员等待CPI数据及Warsh对美联储利率路径的见解",
-      "sentiment": "neutral",
-      "rationale": "市场观望态度，无明确方向性信号"
+      "content": "September 2026 CPI inflation beats Wall Street forecasts - Quartz",
+      "time": "10-14 09:07",
+      "source": "Quartz",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "2026年9月CPI通胀超出华尔街预期 - Quartz",
+      "sentiment": "bearish",
+      "rationale": "CPI超出华尔街预期，通胀意外走高"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "CPI: Hot Inflation at 3.7% Lifts Yields and Dollar as Gold and Bitcoin Nosedive - TradingView",
+      "time": "10-14 08:59",
+      "source": "TradingView",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "CPI：3.7%高通胀推高收益率和美元，黄金比特币暴跌 - TradingView",
+      "sentiment": "bearish",
+      "rationale": "通胀3.7%走热，收益率上升压制风险资产"
     },
     {
       "person": null,
@@ -85,9 +96,20 @@
       "time": "10-12 03:45",
       "source": "ABF Journal",
       "age_tag": "📑前日-低权重",
-      "content_cn": "美联储会议纪要指向12月加息",
+      "content_cn": "中端市场债务周报：美联储会议纪要指向12月加息 - ABF Journal",
       "sentiment": "bearish",
-      "rationale": "会议纪要暗示12月加息，鹰派立场"
+      "rationale": "美联储纪要暗示12月加息，鹰派信号"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "US Dollar Weakens as Yields Fall and Chip Stocks Slide. Forecast as of 14.10.2026 - LiteFinance",
+      "time": "10-14 02:29",
+      "source": "LiteFinance",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "美元走弱，收益率下降，芯片股下跌。2026.10.14预测 - LiteFinance",
+      "sentiment": "neutral",
+      "rationale": "收益率下降利好但芯片股下跌，信号混合"
     },
     {
       "person": null,
@@ -96,9 +118,9 @@
       "time": "10-14 01:03",
       "source": "DailyForex",
       "age_tag": "📰今日-高权重",
-      "content_cn": "黄金预测14/10：4200美元支撑位能否守住？",
+      "content_cn": "黄金预测10/14：4200美元支撑能否守住？（视频） - DailyForex",
       "sentiment": "neutral",
-      "rationale": "黄金预测，不直接涉及股市方向"
+      "rationale": "黄金技术预测，对股市影响不明确"
     },
     {
       "person": null,
@@ -107,9 +129,9 @@
       "time": "10-14 00:30",
       "source": "FOREX.com",
       "age_tag": "📰今日-高权重",
-      "content_cn": "道琼斯预测：道指因油价和国债收益率受关注而下跌",
+      "content_cn": "道琼斯预测：道指下跌，关注油价和国债收益率 - FOREX.com",
       "sentiment": "bearish",
-      "rationale": "道指因油价和国债收益率上升而下跌"
+      "rationale": "道指下跌，油价和收益率施压"
     },
     {
       "person": null,
@@ -118,42 +140,9 @@
       "time": "10-13 22:55",
       "source": "StoneX",
       "age_tag": "📰今日-高权重",
-      "content_cn": "纳斯达克100预测：纳指因油价跳涨5%、国债收益率上升而下跌",
+      "content_cn": "纳斯达克100预测：油价跳涨5%、国债收益率上升，纳指下跌 - StoneX",
       "sentiment": "bearish",
-      "rationale": "纳指因油价飙升和国债收益率上升而下跌"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Databank: Elevated treasury yields, Middle East tension to shape Gold ETF’s near-term outlook - CNBC Africa",
-      "time": "10-13 10:38",
-      "source": "CNBC Africa",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "数据库：国债收益率高企和中东紧张局势将塑造黄金ETF近期前景",
-      "sentiment": "bearish",
-      "rationale": "国债收益率高企和地缘风险增加不确定性"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Why Economists Think Higher Bond Yields Are Here to Stay - WSJ",
-      "time": "10-12 03:00",
-      "source": "WSJ",
-      "age_tag": "📑前日-低权重",
-      "content_cn": "为何经济学家认为更高的债券收益率将持续",
-      "sentiment": "bearish",
-      "rationale": "经济学家预期高债券收益率持续，利率压力长期化"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Weekly market commentary - BlackRock",
-      "time": "10-12 03:00",
-      "source": "BlackRock",
-      "age_tag": "📑前日-低权重",
-      "content_cn": "贝莱德每周市场评论",
-      "sentiment": "neutral",
-      "rationale": "标题无明确方向性信息"
+      "rationale": "纳指下跌，油价飙升5%和收益率上升双重施压"
     }
   ],
   "error": null
