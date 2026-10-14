@@ -4085,16 +4085,41 @@ if __name__ == "__main__":
     for _h in (ai_input or []):
         _tk = str(_h.get("Ticker", "")).upper()
         if _tk and _tk in _held_up and _tk not in _seen_tk:
-            _enrich_input.append(_h)
+            _h_copy = dict(_h)                      # 不修改原 dict
+            for _f in ("Price", "Premarket_Price", "RSI", "ATR_Pct",
+                       "Quant_Score", "AI_Score", "MA_Position_Pct", "Sector_RS_20D_Pct"):
+                if _f in _h_copy and _h_copy[_f] is not None:
+                    try:
+                        _h_copy[_f] = float(_h_copy[_f])
+                    except (ValueError, TypeError):
+                        _h_copy[_f] = None
+            _enrich_input.append(_h_copy)
             _seen_tk.add(_tk)
     chosen = _enrich_input                                # 供紧随其后的 enrich 调用使用
-    chosen = enrich_verified_items_with_ai_details(
+    _enriched = enrich_verified_items_with_ai_details(
         chosen,
         event_regime_text=event_regime_text,
         macro_market=macro_market,
     )
 
+    # ★ 原方案第 4 步：恢复入账语义 —— chosen 只能含【风控后】的项。
+    #   否则持仓项（池项，Price 为字符串）会流入下方 to_write 加工循环的
+    #   item['Price']*(1+pct/100) -> TypeError（run #164 崩坏点 scan.py:4109）。
+    _keep_tk = {str(x.get("Ticker", "")).upper() for x in _chosen_after_risk}
+    chosen = [x for x in _enriched if str(x.get("Ticker", "")).upper() in _keep_tk]
+    # ★ 持久化仍用全量（含持仓）
+    _ai_persist_source = list(_enriched)
+    _ai_persist = list(_ai_persist_source)
     log_file = "trade_history.csv"
+    # ★ 防护：chosen 里的项必须是数值型 Price（防上游再次引入字符串）。
+    _bad_tk = [str(_x.get("Ticker") or "?") for _x in chosen
+               if _x.get("Price") is not None
+               and not isinstance(_x.get("Price"), (int, float))]
+    if _bad_tk:
+        print("⚠️ [防御] chosen 中 %d 项 Price 类型异常，已跳过：%s"
+              % (len(_bad_tk), ", ".join(_bad_tk)))
+        chosen = [_x for _x in chosen
+                  if _x.get("Price") is None or isinstance(_x.get("Price"), (int, float))]
     to_write = []
     for item in chosen:
         if item.get("Tag") not in {"Core_Dragon","Candidate"}:
