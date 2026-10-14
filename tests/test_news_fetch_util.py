@@ -113,7 +113,11 @@ def test_news_age_tag_none_and_default_asof():
 # 2) rss_search_google
 # --------------------------------------------------------------------------- #
 def test_rss_search_google_shape_and_line_format(monkeypatch):
-    fresh = FIXED - datetime.timedelta(hours=1)
+    # ⚠️ 基准必须是**真实 now**：rss_search_google 没有 asof 参数（对齐 scan.py 的
+    # "按当前时刻算年龄"语义），用写死的 FIXED 会让断言随墙上时钟流逝而失效。
+    # 且必须 `replace(microsecond=0)`：RFC822 只编码到秒，带微秒的基准会让
+    # `date_dt == fresh` 必然不等。
+    fresh = datetime.datetime.now(UTC).replace(microsecond=0) - datetime.timedelta(hours=1)
     xml = _rss([("Fed signals rate path shift - Reuters", "https://example.com/a", _rfc(fresh))])
     calls = _install(monkeypatch, lambda url: xml)
 
@@ -135,8 +139,10 @@ def test_rss_search_google_shape_and_line_format(monkeypatch):
 
 
 def test_rss_search_google_skips_old_and_empty_title(monkeypatch):
-    fresh = FIXED - datetime.timedelta(hours=2)
-    old = FIXED - datetime.timedelta(hours=100)     # >72h → age_tag None → 跳过
+    # 同上：无 asof 可注入 → 锚定真实 now（并截断微秒，见上一个测试的说明）
+    fresh = datetime.datetime.now(UTC).replace(microsecond=0) - datetime.timedelta(hours=2)
+    old = (datetime.datetime.now(UTC).replace(microsecond=0)
+           - datetime.timedelta(hours=100))   # >72h → age_tag None → 跳过
     xml = _rss([
         ("", "https://example.com/empty", _rfc(fresh)),      # 空标题 → 跳过
         ("Too old - X", "https://example.com/old", _rfc(old)),
@@ -148,7 +154,10 @@ def test_rss_search_google_skips_old_and_empty_title(monkeypatch):
 
 
 def test_rss_search_google_truncates_and_sorts_desc(monkeypatch):
-    items = [(f"H{i} - S", f"https://example.com/{i}", _rfc(FIXED - datetime.timedelta(hours=i)))
+    # 同上：无 asof 可注入 → 锚定真实 now（并截断微秒）
+    items = [(f"H{i} - S", f"https://example.com/{i}",
+              _rfc(datetime.datetime.now(UTC).replace(microsecond=0)
+                   - datetime.timedelta(hours=i)))
              for i in range(1, 4)]
     _install(monkeypatch, lambda url: _rss(items))
     got = u.rss_search_google("q", max_items=2)
