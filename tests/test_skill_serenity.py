@@ -760,3 +760,155 @@ def test_run_online_passes_result_sink(monkeypatch):
     dv = payload["data_verification"][0]
     assert dv["verified_value"] == 111.0 and dv["source"].startswith("FRED:")
     assert dv["status"] == "match"
+
+
+# --------------------------------------------------------------------------- #
+# 段 3b：AI 建议 exposure_target → 写回 meta
+# --------------------------------------------------------------------------- #
+def _meta_fixture(tmp_path, target="0.80", corrupt=False, stocks=20):
+    d = tmp_path / "dashboard" / "data"
+    d.mkdir(parents=True, exist_ok=True)
+    (d / "dashboard_data.json").write_text(json.dumps({"stocks": [
+        {"ticker": "T%02d" % i, "name": "x", "bucket": "Core",
+         "final_score": 90 - i, "quant_score": 80 - i, "ai_score": 70.0,
+         "sector_rs_20d_pct": 1.0} for i in range(stocks)]}, ensure_ascii=False),
+        encoding="utf-8")
+    mp = tmp_path / "portfolio_50000_meta.json"
+    if corrupt:
+        mp.write_text("{not json", encoding="utf-8")
+    else:
+        mp.write_text(json.dumps({"portfolio_id": "US-50000-001",
+                                  "initial_capital": "50000.00",
+                                  "start_date": "2026-10-01",
+                                  "exposure_target": target,
+                                  "currency": "USD"}), encoding="utf-8")
+    return mp
+
+
+def _run_main(tmp_path, monkeypatch, ai_target="SKIP", rationale="波动加大，减仓"):
+    r = _load_runner()
+    monkeypatch.setenv("ENABLE_SKILL_SERENITY", "1")
+    payload = {"priorities": [{"ticker": "T00", "priority_rank": 1, "why": "x",
+                               "what_to_verify": "y"}]}
+    if ai_target != "SKIP" and ai_target is not None:
+        payload["exposure_target"] = ai_target
+        payload["exposure_rationale"] = rationale
+    fake = json.dumps(payload, ensure_ascii=False)
+    monkeypatch.setattr(r, "_default_ask", lambda *a, **k: fake)
+    out = tmp_path / "out.json"
+    rc = r.main(["--data-dir", str(tmp_path), "--out", str(out)])
+    return r, rc, out
+
+
+def test_parse_result_extracts_exposure_target():
+    r = _load_runner()
+    raw = json.dumps({"priorities": [{"ticker": "T00", "priority_rank": 1,
+                                      "why": "a", "what_to_verify": "b"}],
+                      "exposure_target": 0.55,
+                      "exposure_rationale": "宏观转弱"})
+    got = r.parse_result(raw, valid_tickers={"T00"})
+    assert got["exposure_target"] == 0.55
+    assert got["exposure_rationale"] == "宏观转弱"
+
+
+def test_parse_result_handles_missing_exposure_target():
+    r = _load_runner()
+    raw = json.dumps({"priorities": [{"ticker": "T00", "priority_rank": 1,
+                                      "why": "a", "what_to_verify": "b"}]})
+    got = r.parse_result(raw, valid_tickers={"T00"})
+    assert got["exposure_target"] is None and got["exposure_rationale"] is None
+
+
+@pytest.mark.parametrize("bad", ["abc", 1.5, -0.1, None, True, [0.5]])
+def test_parse_result_handles_invalid_exposure_target(bad):
+    r = _load_runner()
+    raw = json.dumps({"priorities": [{"ticker": "T00", "priority_rank": 1,
+                                      "why": "a", "what_to_verify": "b"}],
+                      "exposure_target": bad})
+    got = r.parse_result(raw, valid_tickers={"T00"})
+    assert got["exposure_target"] is None, (bad, got["exposure_target"])
+
+
+def test_parse_result_truncates_rationale():
+    r = _load_runner()
+    raw = json.dumps({"priorities": [{"ticker": "T00", "priority_rank": 1,
+                                      "why": "a", "what_to_verify": "b"}],
+                      "exposure_rationale": "长" * 500})
+    assert len(r.parse_result(raw, valid_tickers={"T00"})["exposure_rationale"]) == 200
+
+
+def test_payload_includes_exposure_target_field():
+    r = _load_runner()
+    uni = [{"ticker": "T0", "name": "x", "bucket": "Core", "final_score": 90,
+            "quant_score": 80, "ai_score": 70.0, "sector_rs_20d_pct": 1.0, "held": False}]
+    ai = json.dumps({"priorities": [{"ticker": "T0", "priority_rank": 1, "why": "x",
+                                     "what_to_verify": "y"}],
+                     "exposure_target": 0.40, "exposure_rationale": "避险"})
+    payload = r.run(None, "", uni, lambda *a: ai, "m", 100, "2026-10-14")
+    assert payload["exposure_target"] == 0.40
+    assert payload["exposure_rationale"] == "避险"
+
+
+def test_main_writes_exposure_target_to_meta(tmp_path, monkeypatch):
+    mp = _meta_fixture(tmp_path, target="0.80")
+    r, rc, out = _run_main(tmp_path, monkeypatch, ai_target=0.60)
+    assert rc == 0 and out.exists()
+    meta = json.loads(mp.read_text(encoding="utf-8"))
+    assert meta["exposure_target"] == "0.6"                 # 字符串、两位精度内
+    assert json.loads(out.read_text(encoding="utf-8"))["exposure_target"] == 0.60
+
+
+def test_main_preserves_meta_other_fields(tmp_path, monkeypatch):
+    mp = _meta_fixture(tmp_path, target="0.80")
+    _run_main(tmp_path, monkeypatch, ai_target=0.6)
+    meta = json.loads(mp.read_text(encoding="utf-8"))
+    assert meta["portfolio_id"] == "US-50000-001"
+    assert meta["initial_capital"] == "50000.00"
+    assert meta["currency"] == "USD"
+    assert meta["start_date"] == "2026-10-01"
+
+
+def test_main_skips_write_when_target_missing(tmp_path, monkeypatch):
+    mp = _meta_fixture(tmp_path, target="0.80")
+    _r, rc, _out = _run_main(tmp_path, monkeypatch, ai_target=None)
+    assert rc == 0
+    assert json.loads(mp.read_text(encoding="utf-8"))["exposure_target"] == "0.80"
+
+
+@pytest.mark.parametrize("bad", [0.95, 0.10, 1.5, 0.0])
+def test_main_skips_write_when_target_out_of_range(tmp_path, monkeypatch, bad):
+    mp = _meta_fixture(tmp_path, target="0.80")
+    _r, rc, _out = _run_main(tmp_path, monkeypatch, ai_target=bad)
+    assert rc == 0                                          # 退出码语义不变
+    assert json.loads(mp.read_text(encoding="utf-8"))["exposure_target"] == "0.80"
+
+
+def test_main_skips_write_when_meta_corrupt(tmp_path, monkeypatch):
+    mp = _meta_fixture(tmp_path, corrupt=True)
+    _r, rc, _out = _run_main(tmp_path, monkeypatch, ai_target=0.6)
+    assert rc == 0
+    assert mp.read_text(encoding="utf-8") == "{not json"    # 绝不覆盖损坏文件
+
+
+def test_main_atomic_write(tmp_path, monkeypatch):
+    """os.replace 失败 → 原文件未变、无 .tmp 残留、退出码仍 0。"""
+    mp = _meta_fixture(tmp_path, target="0.80")
+    r, _rc, _out = _run_main(tmp_path, monkeypatch, ai_target=0.6)
+    before = mp.read_text(encoding="utf-8")
+
+    def _boom(*a, **k):
+        raise OSError("disk full")
+
+    monkeypatch.setattr(r.os, "replace", _boom)
+    ok, err = r._write_exposure_target(mp, 0.5)
+    assert ok is False and "写入失败" in err
+    assert mp.read_text(encoding="utf-8") == before
+    assert not (tmp_path / "portfolio_50000_meta.json.tmp").exists()
+
+
+def test_write_exposure_target_rejects_out_of_range(tmp_path):
+    mp = _meta_fixture(tmp_path, target="0.80")
+    r = _load_runner()
+    ok, err = r._write_exposure_target(mp, 0.95)
+    assert ok is False and "越界" in err
+    assert json.loads(mp.read_text(encoding="utf-8"))["exposure_target"] == "0.80"
