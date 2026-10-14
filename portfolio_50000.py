@@ -511,10 +511,50 @@ def process_sells(positions, transactions, recs, today) -> list[str]:
     return log
 
 
+def _validate_today(today: str) -> None:
+    """Layer 1: execution day must be a valid ISO date (YYYY-MM-DD).
+
+    Transaction dates may only come from the execution day; they must never be
+    overridden by Rec_Date / Exit_Date.  No regex dependency on purpose
+    (this module intentionally imports no `re`).
+    """
+    s = today.strip() if isinstance(today, str) else ""
+    from datetime import date as _date
+    try:
+        _date.fromisoformat(s)          # real calendar check
+        ok = True
+    except ValueError:
+        ok = False
+    if not ok:
+        raise ValueError(f"invalid execution day today={today!r} (want YYYY-MM-DD)")
+
+
+def _reject_future_txns(transactions: list, today: str):
+    """Layer 2: reject future-dated transactions at load time.
+
+    Returns (kept, warnings). Future dates signal a rewritten / skewed ledger;
+    such rows must not take part in any cash derivation.
+    """
+    _validate_today(today)
+    kept, dropped = [], []
+    for t in transactions:
+        d = str(t.get("Date", "")).strip()
+        if d and d > today:
+            dropped.append(d)
+        else:
+            kept.append(t)
+    warns = []
+    if dropped:
+        warns.append("[WARN] %d future-dated transactions (>= %s) skipped; range %s..%s"
+                     % (len(dropped), today, min(dropped), max(dropped)))
+    return kept, warns
+
+
 def process_buys(positions, transactions, recs, meta, today, offline: bool = False) -> list[str]:
     """BUY：新 Core 推荐、未持有、有空闲 Unit、现金足够 → 买 1 Unit。
     含三道买入冷却闸门：全清仓停手 / 7 天字段冷却 / 近 1-2 日止损防御。"""
     log: list[str] = []
+    _validate_today(today)                     # Layer 1 assertion
     start_date = str(meta.get("start_date", ""))
     existing_txn = {str(t.get("Txn_ID", "")) for t in transactions}
     open_tickers = {str(p.get("Ticker", "")).upper()
@@ -952,6 +992,10 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
             "positions": positions,
         }
 
+    _validate_today(today)                     # Layer 1 assertion (run entry)
+    transactions, _dt_warns = _reject_future_txns(transactions, today)   # Layer 2
+    for _w in _dt_warns:
+        print("   " + _w)
     meta = ensure_meta(data_dir, today)
 
     recs = load_recommendations(data_dir)
