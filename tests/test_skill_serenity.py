@@ -944,3 +944,80 @@ def test_sanitize_removes_number_with_unit(raw):
 def test_sanitize_preserves_product_names(keep):
     out = _san(keep)
     assert out == keep, (keep, out)
+
+
+# --------------------------------------------------------------------------- #
+# P0：run() 必须把 load_context 的结果传给 build_prompt（本会话曾漏接线）
+# --------------------------------------------------------------------------- #
+def test_run_passes_context_to_build_prompt(tmp_path, monkeypatch):
+    """★ 关键：把"接线"钉死 —— 否则 AI 看不到任何本地板块（曾真实发生）。"""
+    r = _load_runner()
+    _ctx_fixture(tmp_path)                      # 写入 dashboard_data.json + meta
+    seen = {}
+
+    def _fake_build(skill_md, template, universe, asof, online=False, context=None):
+        seen["context"] = context
+        return '{"priorities": []}'
+
+    monkeypatch.setattr(r, "build_prompt", _fake_build)
+    uni = [{"ticker": "T0", "name": "x", "bucket": "Core", "final_score": 90,
+            "quant_score": 80, "ai_score": 70.0, "sector_rs_20d_pct": 1.0, "held": False}]
+    ai = json.dumps({"priorities": [{"ticker": "T0", "priority_rank": 1,
+                                     "why": "x", "what_to_verify": "y"}]})
+    r.run(tmp_path, "", uni, lambda *a: ai, "m", 100, "2026-10-14")
+
+    ctx = seen.get("context")
+    assert isinstance(ctx, dict) and ctx, "run() 必须传 context=load_context(...)"
+    assert ctx.get("macro_economic"), ctx
+    assert ctx.get("portfolio_summary"), ctx
+    assert "history_recent" in ctx, ctx
+
+
+def test_run_logs_context_summary(tmp_path, monkeypatch, capsys):
+    """运行日志里必须能一眼看出注入是否生效。"""
+    r = _load_runner()
+    _ctx_fixture(tmp_path)
+    uni = [{"ticker": "T0", "name": "x", "bucket": "Core", "final_score": 90,
+            "quant_score": 80, "ai_score": 70.0, "sector_rs_20d_pct": 1.0, "held": False}]
+    ai = json.dumps({"priorities": [{"ticker": "T0", "priority_rank": 1,
+                                     "why": "x", "what_to_verify": "y"}]})
+    r.run(tmp_path, "", uni, lambda *a: ai, "m", 100, "2026-10-14")
+    out = capsys.readouterr().out
+    assert "context:" in out and "macro" in out, out
+
+
+# --------------------------------------------------------------------------- #
+# P1-2 / P1-3
+# --------------------------------------------------------------------------- #
+def test_build_data_verification_drops_empty_local_value():
+    r = _load_runner()
+    items = [
+        {"field": "CPI", "local_value": "未提供", "verified_label": "CPI", "status": "match"},
+        {"field": "核心CPI", "local_value": "", "verified_label": "核心CPI", "status": "match"},
+        {"field": "失业率", "local_value": None, "verified_label": "失业率", "status": "match"},
+        {"field": "10Y国债", "local_value": "5.19%", "verified_label": "10Y国债",
+         "status": "unverified"},
+    ]
+    out = r._build_data_verification(items, {})
+    assert [x["field"] for x in out] == ["10Y国债"], out
+    assert out[0]["status"] == "unverified"
+
+
+def test_render_verify_section_lists_local_values():
+    r = _load_runner()
+    ctx = {"macro_economic": [
+        {"indicator": "CPI", "value": "指数 334.98", "date": "2026-08-01", "source": "BLS API"},
+        {"indicator": "失业率", "value": "4.20%", "date": "2026-09-01", "source": "BLS API"}]}
+    sec = r._render_verify_section() + r._render_local_values(ctx)
+    assert "【本地数据与核验】" in sec
+    assert "指数 334.98" in sec and "4.20%" in sec
+    assert "verify_macro_series" in sec and "verify_current_price" in sec
+
+
+def test_render_verify_section_empty_context_still_renders():
+    r = _load_runner()
+    for ctx in (None, {}):
+        sec = r._render_verify_section() + r._render_local_values(ctx)
+        assert "【本地数据与核验】" in sec
+        assert "verify_macro_series" in sec
+        assert "unverified" in sec          # 无本地值时也要求标记 unverified
