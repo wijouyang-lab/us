@@ -1,102 +1,575 @@
 {
   "schema_version": "skill_serenity.v2",
-  "generated_at": "2026-10-13T15:45:25Z",
-  "asof": "2026-10-13",
+  "generated_at": "2026-10-14T02:44:32Z",
+  "asof": "2026-10-14",
   "source": "serenity-skill by muxuuu (MIT)",
-  "mode": "online_tool_use",
+  "mode": "offline_screening",
   "model": "claude-fable-5-1",
   "skill_version": "1.1.0",
-  "universe_size": 44,
+  "universe_size": 35,
   "universe_size_screened": 15,
   "priorities": [
     {
-      "ticker": "SNPS",
+      "ticker": "MPC",
       "priority_rank": 1,
-      "why": "EDA 工具是 AI 芯片设计的唯一必经路径，技术壁垒极高（算法积累需数十年、客户切换成本巨大），quant 和 ai 评分均衡偏高表明量化和主题双重支撑，外部数据显示卖方分析师近期上调预期，处于供应链最上游的工具层瓶颈，无论 GPU/ASIC/NPU 哪条路线胜出都必须使用其设计平台，需求弹性直接传导到软件订阅和 IP 授权收入",
-      "what_to_verify": "最新季度 10-Q 中 Design Automation 分部收入占比及同比变化、AI 相关芯片客户（如 NVDA/AMD/GOOGL）的设计项目数量或授权合同披露、递延收入余额变化是否支持未来确认加速"
+      "why": "炼化是全球能源供应链中最受约束的环节：关停产能多于新增，而成品油需求仍在增长。Marathon 作为美国第二大独立炼化商，拥有湾区和中陆多个炼厂，能够在结构性供给缺口中捕获利差。高利用率和利差捕获率表明其运营效率和商业化能力已验证。炼化资产扩建周期长、环保审批难，新进入者几乎不可能，这是典型的难扩产瓶颈层。",
+      "what_to_verify": "10-Q 中 Refining & Marketing 分部的季度 EBITDA 走势、资本回报率、自由现金流在油价不同情景下的敏感性分析、管理层对全球炼化产能供需的最新判断"
     },
     {
-      "ticker": "ANET",
+      "ticker": "ISRG",
       "priority_rank": 2,
-      "why": "数据中心网络交换机是 AI 训练集群的核心瓶颈（GPU 间通信需要超低延迟和超高带宽，400G/800G 以太网交换机供应商有限），quant 评分最高说明量化模型强烈看好，但 ai 评分远低于 quant 可能意味着 AI 主题预期已部分反映在股价中，外部数据显示递延收入规模较大且近期创新高，需要验证递延收入是否来自云厂商的长期框架合同及其转化为确认收入的节奏",
-      "what_to_verify": "10-K 或最新 10-Q 中云厂商客户（MSFT Azure/META/GOOGL）占比、递延收入中多少来自 AI 相关订单、800G 产品出货时间表及客户认证进度、竞争对手（Cisco/Juniper）在 AI 网络市场的份额变化"
+      "why": "手术机器人是医疗器械中壁垒最高的细分领域之一。Intuitive 的 da Vinci 系统已形成三重护城河：FDA 认证周期长且竞品稀少、医院的装机基数产生路径依赖（外科医生培训成本高）、耗材和服务收入持续货币化。手术量增长快于装机量增长，说明单机利用率在提升，这直接转化为高毛利的耗材收入。已持有头寸，需关注估值是否已充分反映增长预期。",
+      "what_to_verify": "最新财报中 procedure growth 的地区分布、新适应症（如单孔 SP 系统）的渗透进度、竞争对手（如 Medtronic Hugo）的市场份额变化、服务合同续签率"
+    },
+    {
+      "ticker": "CME",
+      "priority_rank": 3,
+      "why": "衍生品交易所是金融基础设施中的自然垄断：清算网络效应 + 监管牌照 + 客户迁移成本构成三重壁垒。CME 在利率、股指、能源、农产品衍生品市场都占据主导地位。波动率上升直接转化为交易量和清算费收入，且边际成本极低。已持有头寸，当前优先级在于验证交易量增长的持续性和结构（是波动率驱动的短期峰值，还是新客户和新产品带来的结构性增长）。",
+      "what_to_verify": "investor relations 披露的月度 ADV 数据、国际市场（特别是亚洲）交易量占比、新推出的数字资产衍生品和气候衍生品的采用情况、费率调整对收入的影响"
     },
     {
       "ticker": "AMZN",
-      "priority_rank": 3,
-      "why": "AWS 是全球最大云计算平台之一，AI 推理和训练需求的直接受益者，final 评分第二高显示综合模型强烈看好，自研 Graviton 和 Trainium 芯片降低对 NVDA 依赖增强利润率，但云计算市场三巨头竞争激烈（与 MSFT/GOOGL 同质化严重），需要验证 AWS 在生成式 AI 工作负载中的市场份额是否在扩大以及 Bedrock 等 AI 服务的货币化进度",
-      "what_to_verify": "AWS 最新季度财报中 AI 相关服务收入或客户数披露、Bedrock 和 SageMaker 的商业化阶段（测试/量产/规模化）、自研芯片 Trainium/Inferentia 的客户采用率、与 MSFT Azure 在企业 AI 市场的竞争态势"
-    },
-    {
-      "ticker": "MSFT",
       "priority_rank": 4,
-      "why": "Azure 云平台和 OpenAI 深度绑定使其成为生成式 AI 商业化的前沿阵地，Office 365 Copilot 是企业 AI 应用最快落地的场景之一，但 final 评分低于 AMZN 可能反映市场对其 AI 投入回报周期的担忧或宏观环境下企业 IT 支出放缓预期，需要验证 Azure AI 服务的增量收入贡献是否足以抵消 OpenAI 合作的算力成本以及 Copilot 的付费转化率",
-      "what_to_verify": "Azure AI 服务在总收入中的占比或增速、Copilot 的付费用户数或 ARPU、与 OpenAI 合作协议中的收入分成和算力成本结构、GitHub Copilot 续费率"
+      "why": "AWS 是云计算和 AI 基础设施的三大玩家之一，其 AI 相关收入已进入货币化阶段，且客户预订了未来多年的 Trainium 芯片产能。但当前处于资本开支高峰期（数据中心、自研芯片、电力基础设施），自由现金流已转为流出。核心问题是：这轮 AI capex 的回报周期和 ROIC 能否支撑当前估值？亚马逊还试图将部分 GPU 资产证券化以减轻资本压力，这是财务工程还是资本压力信号？",
+      "what_to_verify": "AWS 分部的 operating margin 走势、AI 相关收入在 AWS 总收入中的占比、Trainium 和 Inferentia 芯片对毛利率的影响、capex 指引的上修是否会继续、管理层对 AI 投资回报周期的最新表态"
     },
     {
       "ticker": "ADSK",
       "priority_rank": 5,
-      "why": "AutoCAD 和 Revit 是建筑设计和制造业的行业标准工具（客户切换成本极高），quant 评分高显示量化模型看好其基本面，但 ai 评分低说明市场尚未给予 AI 主题溢价，公司正在将生成式 AI 嵌入设计工具（如 AI 辅助建模、参数化设计优化），如果 AI 功能能够提升客户付费意愿或加速向云订阅转型，则存在预期差机会，但需要验证 AI 功能是否已开始贡献增量 ARR",
-      "what_to_verify": "最新财报中订阅收入增速、AI 功能（如 Autodesk AI）的商业化模式（单独收费/捆绑销售）、云端 Fusion 360 和传统桌面软件的收入占比变化、建筑和制造业 IT 支出周期是否在复苏"
+      "why": "Autodesk 已完成从永久许可到云订阅的转型，这是 SaaS 商业模式中最难的一步。其在 AEC（建筑/工程/施工）和制造业设计软件领域占据标准地位，客户迁移成本高。当前推出的 Forma 行业云和 agentic AI 是下一轮增长驱动，但需验证 AI 功能的货币化路径（是提价、扩大用户数，还是新增模块收费）。已持有头寸，关注 AI 驱动的 ARR 增长能否加速。",
+      "what_to_verify": "年报中 Annual Recurring Revenue 的增长结构、Forma 云的付费客户数和 ARPU、AI 功能的采用率和定价策略、客户留存率和 net dollar retention、竞争对手（如 Bentley、Trimble）的云化进展"
     },
     {
-      "ticker": "ISRG",
+      "ticker": "MSFT",
       "priority_rank": 6,
-      "why": "达芬奇手术机器人在微创手术市场具有垄断地位（装机基数形成网络效应，外科医生培训和医院采购锁定），quant 评分较高且 ai 评分中等说明市场认可其增长质量，手术量增长和耗材收入（razor-and-blade 模式）提供稳定现金流，但与 AI 算力主题的直接关联较弱，更多是医疗器械赛道的结构性增长，需要验证新一代多孔或单孔机器人的推广进度以及国际市场（尤其中国和欧洲）的渗透率",
-      "what_to_verify": "最新季度手术量增速（procedures per system）、da Vinci 5 或 SP 系统的装机进度、耗材和服务收入占比、中国和欧洲市场的监管批准和销售放量情况、竞争对手（Medtronic Hugo/CMR Surgical）的市场份额变化"
+      "why": "微软的 Azure 在云 AI 市场与 AWS 并列第一梯队，其优势在于与 OpenAI 的深度绑定和企业客户基础。Azure Maia 自研芯片计划降低对英伟达的依赖，但需验证性能和成本优势。与 AMZN 类似，当前处于重资本投入期，需关注 AI 收入的货币化速度能否跟上 capex 增长。微软还有 Office 365 和 GitHub Copilot 等 AI 应用层变现路径，产业链位置比纯云基础设施更靠近终端用户。",
+      "what_to_verify": "Azure 分部的收入增长和 operating margin、Maia 芯片的量产时间表和客户采用情况、Copilot 系列产品的付费用户数和 ARPU、管理层对 AI capex 回报的量化指引"
     },
     {
-      "ticker": "MPC",
+      "ticker": "PSX",
       "priority_rank": 7,
-      "why": "炼化企业受益于原油价格与成品油价差（crack spread）扩大，quant 评分高显示量化模型捕捉到炼化利润率改善信号，但能源是大宗商品行业，利润波动大且难以形成持续护城河，与 AI 主题的关联主要是数据中心电力需求间接推高能源消费，但这一传导路径较长且受宏观和地缘政治干扰，需要验证其炼化产能是否位于电力需求增长最快的区域以及是否有长期供应合同锁定利润",
-      "what_to_verify": "最新季度 crack spread 和炼化毛利率、炼厂产能利用率、与电力公司或数据中心的长期供应协议披露、库存周转和自由现金流是否支持分红或回购"
-    },
-    {
-      "ticker": "CME",
-      "priority_rank": 8,
-      "why": "芝加哥商品交易所是全球衍生品交易的核心基础设施（利率/能源/农产品期货的垄断性清算平台），quant 和 ai 评分相对均衡，市场波动率上升和地缘政治不确定性通常推高交易量，但其收入与 AI 主题无直接关联，更多是宏观避险需求的受益者，需要验证近期交易量是否因美联储政策转向或能源价格波动而上升以及电子化交易占比提升是否改善利润率",
-      "what_to_verify": "最新季度日均交易量（ADV）和清算费率、利率期货和能源期货的交易量占比、电子化交易占比及其对运营杠杆的影响、新产品（如加密货币衍生品）的推出进度"
+      "why": "Phillips 66 与 Marathon 处于同一炼化瓶颈层，同样受益于全球炼化产能受限和利差扩大。其炼化利用率和清洁产品收率都处于高位，证明运营效率可比。但作为第二梯队研究对象，需对比两者的资产地理分布、下游一体化程度（成品油零售、化工）、资本回报政策。若 MPC 的逻辑得到验证，PSX 可作为同主题的替代标的。",
+      "what_to_verify": "与 MPC 的炼化产能对比、各炼厂的地理位置和原油采购优势、Midstream 和 Chemicals 分部的利润贡献、股东回报政策（分红 + 回购）的可持续性"
     },
     {
       "ticker": "XLE",
-      "priority_rank": 9,
-      "why": "能源板块 ETF 提供对整个能源行业的被动敞口，final 评分最高可能反映量化模型看好能源板块相对收益，AI 数据中心的电力需求确实是长期驱动因素，但 ETF 本身无法捕捉供应链瓶颈（持仓分散在上游勘探/中游管道/下游炼化），且能源价格受 OPEC+ 政策和全球经济周期主导，研究优先级应让位于能选择具体瓶颈环节的个股（如 MPC 或电力公用事业）",
-      "what_to_verify": "XLE 最新持仓明细中上游/中游/下游的权重分配、前十大成分股中哪些直接受益于数据中心电力需求、能源板块相对大盘的估值分位数"
+      "priority_rank": 8,
+      "why": "能源板块 ETF，持有 Exxon（[数字已剔除]权重）、Chevron（[数字已剔除]）等综合油气公司和 MPC 等炼化商。作为被动指数工具，它不是产业链瓶颈的纯粹暴露，而是油价 beta 和能源板块整体的配置工具。若看好能源板块但不愿做个股研究，XLE 是流动性好的选择；但若已确定炼化瓶颈逻辑，直接持有 MPC/PSX 的暴露更纯粹。（数字已剔除，需核验 SEC filing）",
+      "what_to_verify": "最新的持仓权重分布、前十大成分股的业务类型（上游勘探 vs 炼化 vs 油服）、与油价的 beta 系数、费率和跟踪误差"
     },
     {
       "ticker": "EOG",
+      "priority_rank": 9,
+      "why": "EOG 是美国页岩油生产商中的效率标杆，其 Permian 和 Eagle Ford 资产的单井经济性行业领先，且资本纪律严格（自由现金流优先于产量增长）。但页岩油技术已成熟且可复制，不构成供给瓶颈。其盈利主要依赖油价，而非产业链中的稀缺环节。作为上游生产商，其利润会被炼化商通过利差捕获部分挤压。",
+      "what_to_verify": "Permian 单井 IP率和衰减曲线、未开发储量的经济性（不同油价情景下的 NPV）、资本开支效率（每桶新增产能的 capex）、与同行（如 PXD、DVN）的对比"
+    },
+    {
+      "ticker": "XOM",
       "priority_rank": 10,
-      "why": "页岩油气上游生产商，quant 评分较高说明量化模型看好其现金流或分红能力，但上游企业的利润完全取决于油气价格（commodity price taker），即使 AI 数据中心推高电力需求，传导到天然气发电需求再到 EOG 的收入也需要较长周期，且无法形成供应链瓶颈（页岩油气供给弹性相对较高），研究优先级低于炼化或电力环节，需要验证其产量增长计划和对冲策略是否锁定了未来现金流",
-      "what_to_verify": "最新季度油气产量和单位生产成本、对冲合同覆盖的产量比例和价格、资本支出计划和自由现金流分红率、Permian 盆地等核心区块的储量寿命"
+      "why": "ExxonMobil 是综合油气巨头，Permian 产量增长稳定且 Guyana 海上项目即将投产，但其业务横跨上游、炼化、化工多个环节，产业链暴露分散。作为大市值能源股，它是配置型选择而非瓶颈主题的纯粹标的。若要暴露于炼化瓶颈，MPC/PSX 更纯粹；若要暴露于上游增长，EOG 的资本效率更高。XOM 的优势在于规模、整合能力和分红稳定性。",
+      "what_to_verify": "各业务分部（Upstream / Energy Products / Chemical）的利润贡献、Permian 产量的资本效率、Guyana 项目的投产时间表和经济性、炼化分部的利差捕获能力与独立炼化商的对比"
     }
   ],
   "tool_trace": [
     {
       "round": 1,
-      "tool": "ticker_news",
-      "args_digest": "ticker=SNPS",
+      "tool": "company_facts",
+      "args_digest": "ticker=XLE",
       "ok": true,
-      "ms": 1306,
-      "result_bytes": 2156
+      "ms": 1160,
+      "result_bytes": 147
     },
     {
       "round": 1,
-      "tool": "ticker_news",
-      "args_digest": "ticker=ANET",
+      "tool": "company_facts",
+      "args_digest": "ticker=AMZN",
       "ok": true,
-      "ms": 987,
-      "result_bytes": 2509
+      "ms": 228,
+      "result_bytes": 382
     },
     {
       "round": 1,
+      "tool": "company_facts",
+      "args_digest": "ticker=ISRG",
+      "ok": true,
+      "ms": 212,
+      "result_bytes": 380
+    },
+    {
+      "round": 2,
+      "tool": "company_facts",
+      "args_digest": "ticker=MSFT",
+      "ok": true,
+      "ms": 171,
+      "result_bytes": 384
+    },
+    {
+      "round": 2,
+      "tool": "company_facts",
+      "args_digest": "ticker=MPC",
+      "ok": true,
+      "ms": 157,
+      "result_bytes": 376
+    },
+    {
+      "round": 2,
+      "tool": "company_facts",
+      "args_digest": "ticker=EOG",
+      "ok": true,
+      "ms": 162,
+      "result_bytes": 373
+    },
+    {
+      "round": 3,
+      "tool": "company_facts",
+      "args_digest": "ticker=ADSK",
+      "ok": true,
+      "ms": 153,
+      "result_bytes": 375
+    },
+    {
+      "round": 3,
+      "tool": "company_facts",
+      "args_digest": "ticker=CME",
+      "ok": true,
+      "ms": 236,
+      "result_bytes": 376
+    },
+    {
+      "round": 3,
+      "tool": "company_facts",
+      "args_digest": "ticker=EBAY",
+      "ok": true,
+      "ms": 157,
+      "result_bytes": 372
+    },
+    {
+      "round": 4,
+      "tool": "company_facts",
+      "args_digest": "ticker=AES",
+      "ok": true,
+      "ms": 154,
+      "result_bytes": 350
+    },
+    {
+      "round": 4,
+      "tool": "company_facts",
+      "args_digest": "ticker=XOM",
+      "ok": true,
+      "ms": 153,
+      "result_bytes": 377
+    },
+    {
+      "round": 4,
+      "tool": "company_facts",
+      "args_digest": "ticker=PSX",
+      "ok": true,
+      "ms": 235,
+      "result_bytes": 382
+    },
+    {
+      "round": 5,
+      "tool": "company_facts",
+      "args_digest": "ticker=MNST",
+      "ok": true,
+      "ms": 244,
+      "result_bytes": 373
+    },
+    {
+      "round": 5,
+      "tool": "company_facts",
+      "args_digest": "ticker=BRK-B",
+      "ok": false,
+      "ms": 0,
+      "result_bytes": 81
+    },
+    {
+      "round": 5,
+      "tool": "company_facts",
+      "args_digest": "ticker=RCL",
+      "ok": true,
+      "ms": 159,
+      "result_bytes": 379
+    },
+    {
+      "round": 6,
+      "tool": "ticker_news",
+      "args_digest": "ticker=AMZN",
+      "ok": true,
+      "ms": 1122,
+      "result_bytes": 2020
+    },
+    {
+      "round": 6,
+      "tool": "ticker_news",
+      "args_digest": "ticker=MSFT",
+      "ok": true,
+      "ms": 983,
+      "result_bytes": 1973
+    },
+    {
+      "round": 6,
+      "tool": "ticker_news",
+      "args_digest": "ticker=MPC",
+      "ok": true,
+      "ms": 943,
+      "result_bytes": 2717
+    },
+    {
+      "round": 7,
       "tool": "ticker_news",
       "args_digest": "ticker=ISRG",
       "ok": true,
-      "ms": 850,
-      "result_bytes": 2111
+      "ms": 900,
+      "result_bytes": 2576
+    },
+    {
+      "round": 7,
+      "tool": "ticker_news",
+      "args_digest": "ticker=ADSK",
+      "ok": true,
+      "ms": 882,
+      "result_bytes": 1872
+    },
+    {
+      "round": 7,
+      "tool": "ticker_news",
+      "args_digest": "ticker=EOG",
+      "ok": true,
+      "ms": 930,
+      "result_bytes": 1972
+    },
+    {
+      "round": 8,
+      "tool": "ticker_news",
+      "args_digest": "ticker=XLE",
+      "ok": true,
+      "ms": 963,
+      "result_bytes": 1684
+    },
+    {
+      "round": 8,
+      "tool": "ticker_news",
+      "args_digest": "ticker=CME",
+      "ok": true,
+      "ms": 910,
+      "result_bytes": 2630
+    },
+    {
+      "round": 8,
+      "tool": "ticker_news",
+      "args_digest": "ticker=EBAY",
+      "ok": true,
+      "ms": 994,
+      "result_bytes": 2920
+    },
+    {
+      "round": 9,
+      "tool": "ticker_news",
+      "args_digest": "ticker=XOM",
+      "ok": true,
+      "ms": 1013,
+      "result_bytes": 2592
+    },
+    {
+      "round": 9,
+      "tool": "ticker_news",
+      "args_digest": "ticker=AES",
+      "ok": true,
+      "ms": 966,
+      "result_bytes": 807
+    },
+    {
+      "round": 9,
+      "tool": "ticker_news",
+      "args_digest": "ticker=PSX",
+      "ok": true,
+      "ms": 906,
+      "result_bytes": 2438
+    },
+    {
+      "round": 10,
+      "tool": "ticker_news",
+      "args_digest": "ticker=MNST",
+      "ok": true,
+      "ms": 723,
+      "result_bytes": 2317
+    },
+    {
+      "round": 10,
+      "tool": "ticker_news",
+      "args_digest": "ticker=RCL",
+      "ok": true,
+      "ms": 878,
+      "result_bytes": 2412
+    },
+    {
+      "round": 10,
+      "tool": "ticker_news",
+      "args_digest": "ticker=BRK-B",
+      "ok": false,
+      "ms": 0,
+      "result_bytes": 71
     }
   ],
-  "verified_facts": [],
-  "degraded_reason": null,
+  "verified_facts": [
+    {
+      "ticker": "XLE",
+      "facts": {
+        "PE_TTM": 19.144205,
+        "EPS_TTM": 3.5102003,
+        "PB": 1.2894559
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "AMZN",
+      "facts": {
+        "PE_TTM": 20.802895,
+        "PE_Forward": 24.735573,
+        "EPS_TTM": 12.43,
+        "PB": 5.054734,
+        "EPS_Forward": 10.45377,
+        "Earnings_Growth": 2.423,
+        "Revenue_Growth": 0.196,
+        "ROE": 0.30558002,
+        "Profit_Margin": 0.1744,
+        "Operating_Cashflow": 161402994688,
+        "Free_Cashflow": 3219124992,
+        "Market_Cap": 2789124603904
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "ISRG",
+      "facts": {
+        "PE_TTM": 48.401375,
+        "PE_Forward": 34.859844,
+        "EPS_TTM": 8.72,
+        "PB": 8.2212,
+        "EPS_Forward": 12.10734,
+        "Earnings_Growth": 0.265,
+        "Revenue_Growth": 0.185,
+        "ROE": 0.17423001,
+        "Profit_Margin": 0.28445998,
+        "Operating_Cashflow": 3706400000,
+        "Free_Cashflow": 2615200000,
+        "Market_Cap": 149104525312
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "MSFT",
+      "facts": {
+        "PE_TTM": 30.616901,
+        "PE_Forward": 22.955486,
+        "EPS_TTM": 17.75,
+        "PB": 9.123647,
+        "EPS_Forward": 23.67408,
+        "Earnings_Growth": 0.317,
+        "Revenue_Growth": 0.177,
+        "ROE": 0.34039003,
+        "Profit_Margin": 0.40305,
+        "Operating_Cashflow": 182934994944,
+        "Free_Cashflow": 16545500160,
+        "Market_Cap": 4035413016576
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "MPC",
+      "facts": {
+        "PE_TTM": 16.515928,
+        "PE_Forward": 8.642345,
+        "EPS_TTM": 28.88,
+        "PB": 7.0758047,
+        "EPS_Forward": 55.19104,
+        "Earnings_Growth": 3.48,
+        "Revenue_Growth": 0.537,
+        "ROE": 0.42099,
+        "Profit_Margin": 0.05549,
+        "Operating_Cashflow": 17125999616,
+        "Free_Cashflow": 9249375232,
+        "Market_Cap": 139247943680
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "EOG",
+      "facts": {
+        "PE_TTM": 12.1083,
+        "PE_Forward": 9.929359,
+        "EPS_TTM": 12.65,
+        "PB": 2.526057,
+        "EPS_Forward": 15.42597,
+        "Earnings_Growth": 1.094,
+        "Revenue_Growth": 0.587,
+        "ROE": 0.22507,
+        "Profit_Margin": 0.25733,
+        "Operating_Cashflow": 13358000128,
+        "Free_Cashflow": 4478750208,
+        "Market_Cap": 81582710784
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "ADSK",
+      "facts": {
+        "PE_TTM": 29.88716,
+        "PE_Forward": 16.22816,
+        "EPS_TTM": 7.71,
+        "PB": 14.2354965,
+        "EPS_Forward": 14.19939,
+        "Earnings_Growth": 0.596,
+        "Revenue_Growth": 0.161,
+        "ROE": 0.53854,
+        "Profit_Margin": 0.21078,
+        "Operating_Cashflow": 2896000000,
+        "Free_Cashflow": 3157499904,
+        "Market_Cap": 48159866880
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "CME",
+      "facts": {
+        "PE_TTM": 23.305113,
+        "PE_Forward": 21.391546,
+        "EPS_TTM": 11.93,
+        "PB": 3.7665274,
+        "EPS_Forward": 12.99719,
+        "Earnings_Growth": 0.025,
+        "Revenue_Growth": 0.008,
+        "ROE": 0.15802,
+        "Profit_Margin": 0.63443,
+        "Operating_Cashflow": 4309000192,
+        "Free_Cashflow": 2909012480,
+        "Market_Cap": 99973824512
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "EBAY",
+      "facts": {
+        "PE_TTM": 24.50737,
+        "PE_Forward": 17.33783,
+        "EPS_TTM": 4.75,
+        "PB": 11.104646,
+        "EPS_Forward": 6.71422,
+        "Earnings_Growth": 0.55,
+        "Revenue_Growth": 0.148,
+        "ROE": 0.46611,
+        "Profit_Margin": 0.18571,
+        "Operating_Cashflow": 3036000000,
+        "Free_Cashflow": 1579624960,
+        "Market_Cap": 51802451968
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "AES",
+      "facts": {
+        "PE_TTM": 5.614232,
+        "PE_Forward": 6.323427,
+        "EPS_TTM": 2.67,
+        "PB": 2.1630592,
+        "EPS_Forward": 2.37055,
+        "Revenue_Growth": 0.199,
+        "ROE": 0.095740005,
+        "Profit_Margin": 0.1434,
+        "Operating_Cashflow": 5032000000,
+        "Free_Cashflow": -3089125120,
+        "Market_Cap": 10690233344
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "XOM",
+      "facts": {
+        "PE_TTM": 22.40412,
+        "PE_Forward": 15.190519,
+        "EPS_TTM": 7.77,
+        "PB": 2.7596703,
+        "EPS_Forward": 11.45978,
+        "Earnings_Growth": 1.128,
+        "Revenue_Growth": 0.441,
+        "ROE": 0.12584,
+        "Profit_Margin": 0.09072,
+        "Operating_Cashflow": 59726999552,
+        "Free_Cashflow": 20671000576,
+        "Market_Cap": 715801624576
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "PSX",
+      "facts": {
+        "PE_TTM": 16.727428,
+        "PE_Forward": 9.909155,
+        "EPS_TTM": 17.5,
+        "PB": 3.7074142,
+        "EPS_Forward": 29.54137,
+        "Earnings_Growth": 3.449,
+        "Revenue_Growth": 0.531,
+        "ROE": 0.23452999,
+        "Profit_Margin": 0.046609998,
+        "Operating_Cashflow": 8924999680,
+        "Free_Cashflow": 4545375232,
+        "Market_Cap": 116805402624
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "MNST",
+      "facts": {
+        "PE_TTM": 40.101852,
+        "PE_Forward": 33.106308,
+        "EPS_TTM": 1.08,
+        "PB": 9.060669,
+        "EPS_Forward": 1.30821,
+        "Earnings_Growth": 0.18,
+        "Revenue_Growth": 0.202,
+        "ROE": 0.25704,
+        "Profit_Margin": 0.23079,
+        "Operating_Cashflow": 2238761984,
+        "Free_Cashflow": 1681231104,
+        "Market_Cap": 84846534656
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    },
+    {
+      "ticker": "RCL",
+      "facts": {
+        "PE_TTM": 17.377161,
+        "PE_Forward": 13.8141365,
+        "EPS_TTM": 16.2,
+        "PB": 7.355316,
+        "EPS_Forward": 20.3784,
+        "Earnings_Growth": -0.046,
+        "Revenue_Growth": 0.065,
+        "ROE": 0.44669998,
+        "Profit_Margin": 0.23541,
+        "Operating_Cashflow": 6785999872,
+        "Free_Cashflow": -1516249984,
+        "Market_Cap": 75290435584
+      },
+      "source": "yfinance",
+      "asof": "2026-10-14"
+    }
+  ],
+  "degraded_reason": "max_rounds (10) reached",
   "error": null
 }
