@@ -77,6 +77,33 @@ REVIEW_HISTORY_NAME = "review_history.csv"
 # AI 六段文本：CSV 列名 -> JSON 字段名
 # 来源为 scan.py 的 enrich_verified_items_with_ai_details() 已生成内容，本脚本只做透传：
 # 不调用 GPT、不改写、不摘要、不截断；列缺失或为空时输出空字符串。
+def _fmt_ai_staleness(score, update_date_str):
+    """15 自然日时效分级显示。
+    ≤5 天："{score}（{date}）"
+    6-10 天："{score}（{date}）⚠️"
+    11-15 天："{score}（{date}）⏸"
+    >15 天："AI 数据已过期（最后 {date}）"
+    """
+    if score is None:
+        return None
+    if not update_date_str:
+        return str(score)
+    try:
+        from datetime import datetime as _dt
+        upd = _dt.strptime(str(update_date_str)[:10], "%Y-%m-%d").date()
+        days = (_dt.now().date() - upd).days
+    except (ValueError, TypeError):
+        return str(score)
+    d = str(update_date_str)[:10]
+    if days <= 5:
+        return f"{score}（{d}）"
+    if days <= 10:
+        return f"{score}（{d}）⚠️"
+    if days <= 15:
+        return f"{score}（{d}）⏸"
+    return f"AI 数据已过期（最后 {d}）"
+
+
 AI_FIELD_MAP = [
     ("AI_industry_logic", "industry_logic"),
     ("AI_news_cn", "news_cn"),
@@ -978,7 +1005,7 @@ def load_fallback_stock_rows(data_dir):
             "Stop_Method": s.get("stop_method") or "",
             "Final_Score": s.get("final_score") or "",
             "Quant_Score": s.get("quant_score") or "",
-            "AI_Score": s.get("ai_score") or "",
+            "AI_Score": s.get("ai_score") or _resolve_hist_ai_score(trade_rows, ticker) or "",
             "Fundamental_Score": s.get("fundamental_score") or "",
             "Technical_Score_25": s.get("technical_score") or "",
             "Risk_Liquidity_Score": s.get("risk_liquidity_score") or "",
@@ -1033,6 +1060,31 @@ _TRADE_TO_PENDING = {
 }
 
 
+def _resolve_hist_ai_score(trade_rows, ticker):
+    """从 trade_history 行取该 ticker 最近的非空 AI_Score（按 Date 降序）。
+    用于 s（pending）无 AI_Score 时回退到历史值。
+    返回 "" 或字符串分数。
+    """
+    if not trade_rows:
+        return ""
+    tk = str(ticker or "").upper().strip()
+    if not tk:
+        return ""
+    best_date = None
+    best_val = ""
+    for r in trade_rows:
+        if str(r.get("Ticker") or "").upper().strip() != tk:
+            continue
+        v = str(r.get("AI_Score") or "").strip()
+        if not v:
+            continue
+        d = str(r.get("Date") or "")[:10]
+        if best_date is None or d > best_date:
+            best_date = d
+            best_val = v
+    return best_val
+
+
 def _attach_snapshot_ai(row, ticker, rec_date, tag, snapshots):
     """把 ai_snapshot.csv 的快照匹配结果写入 row。
 
@@ -1055,17 +1107,24 @@ def _attach_snapshot_ai(row, ticker, rec_date, tag, snapshots):
     _cands = [(k[1], v) for k, v in snapshots.items()
               if k[0] == ticker and k[2] == tag]
     if _cands:
-        _latest_date, _latest_snap = max(_cands, key=lambda x: str(x[0]))
-        if str(_latest_date) > str(rec_date):
-            snap = _latest_snap
-            snap_used_date = _latest_date
+        _cands.sort(key=lambda x: str(x[0]), reverse=True)
+        for _d, _sn in _cands:
+            if str(_d) <= str(rec_date):
+                break
+            _texts = _sn.get("texts") or {}
+            if any(_texts.values()):
+                snap = _sn
+                snap_used_date = _d
+                break
     if snap:
         row["Snapshot_ID"] = snap.get("snapshot_id") or ""
         row["Snapshot_Update_Date"] = snap.get("update_date") or ""
         row["Snapshot_Used_Date"] = snap_used_date
         if snap.get("texts"):
             for csv_col, json_key in AI_FIELD_MAP:
-                row[csv_col] = snap["texts"].get(json_key) or ""
+                _v = snap["texts"].get(json_key)
+                if _v:
+                    row[csv_col] = _v
 def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
     """构建「当前有效 Core / Observation 推荐事件」的 rows（对齐 pending CSV 列名）。
 
@@ -1276,6 +1335,10 @@ def build_stocks(pending_rows, provider, kline_bars, anomalies, warnings=None):
             "final_score": round_num(effective_score(row), 2),
             "quant_score": round_num(parse_num(row.get("Quant_Score")), 2),
             "ai_score": round_num(parse_num(row.get("AI_Score")), 2),
+            "ai_score_display": _fmt_ai_staleness(
+                round_num(parse_num(row.get("AI_Score")), 2),
+                clean_text(row.get("Snapshot_Update_Date")) or None
+            ),
 
             "fundamental_score": round_num(parse_num(row.get("Fundamental_Score")), 2),
             "technical_score": round_num(parse_num(row.get("Technical_Score_25")), 2),
@@ -2164,7 +2227,7 @@ def build_review_records(events, asof=None, snapshots=None):
                 "snapshot_type": snap.get("snapshot_type"),
                 "update_date": snap.get("update_date"),
             }
-            ai_snapshot.update(snap.get("texts") or {})
+            ai_snapshot.update({k: v for k, v in (snap.get("texts") or {}).items() if v})
 
         seen[key] = {
             "event_id": f"{key[0]}|{key[1]}|{key[2]}",

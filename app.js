@@ -221,6 +221,7 @@
         prevClose: num(s.prev_close),
         s: {
           final: num(s.final_score), quant: num(s.quant_score), ai: num(s.ai_score),
+          aiDisplay: s.ai_score_display || null,
           fund: num(s.fundamental_score), tech: num(s.technical_score), risk: num(s.risk_liquidity_score)
         },
         f: {
@@ -1897,7 +1898,7 @@
       mx('Scan Date', esc(s.scanDate || NA));
 
     /* 10. AI：只渲染 Scan 已落盘的六段文本；未落盘一律 pending，前端不调用 GPT、不生成替代文案 */
-    $('#aiScoreTxt').textContent = nv(s.s.ai, 1);
+    $('#aiScoreTxt').textContent = s.s.aiDisplay != null ? s.s.aiDisplay : nv(s.s.ai, 1);
 
     var ai = s.ai || {};
     var aiAny = !!(ai.chain || ai.news || ai.conclusion || ai.catalysts || ai.risks || ai.invalidation);
