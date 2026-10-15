@@ -1,0 +1,38 @@
+name: Research Backfill 2Y (one-shot)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install yfinance pandas
+
+      - name: Run backfill
+        run: python tools/research/backfill_research_prices_2y.py
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add research_price_history_2y.csv research_spy_2y.csv
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+          else
+            git commit -m "chore(research): backfill 2Y price history for factor analysis"
+            git push
+          fi
