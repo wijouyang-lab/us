@@ -1,0 +1,58 @@
+name: Research Snapshots S&P500 PIT 2Y (one-shot)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  snapshots:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install pandas numpy pandas_ta
+
+      - name: Run snapshots
+        run: python tools/research/generate_research_snapshots_sp500_pit_2y.py
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-snapshots-sp500-pit-2y
+          path: research_factor_snapshots_sp500_pit_2y.csv
+          retention-days: 30
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f research_factor_snapshots_sp500_pit_2y.csv ]; then git add research_factor_snapshots_sp500_pit_2y.csv; fi
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+            exit 0
+          fi
+          git commit -m "chore(research): generate S&P500 PIT 2Y factor snapshots"
+          for i in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "✅ push succeeded (attempt $i)"
+                exit 0
+              fi
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep 5
+          done
+          echo "❌ push failed after 3 retries"
+          exit 1
