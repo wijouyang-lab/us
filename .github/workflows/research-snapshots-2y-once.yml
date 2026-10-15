@@ -20,7 +20,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install deps
-        run: pip install pandas numpy
+        run: pip install pandas numpy pandas_ta
 
       - name: Run snapshots
         run: python tools/research/generate_research_snapshots_2y.py
