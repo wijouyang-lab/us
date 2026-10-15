@@ -16,7 +16,7 @@ RSI_14,ZScore_20D,0.8754,0.9207,POTENTIALLY_REDUNDANT,phase3.v1
 RSI_14,Beta_60D_SPY,-0.0271,-0.106,,phase3.v1
 RSI_14,Stock_RS_20D_vs_SPY,0.7583,0.8261,,phase3.v1
 RSI_14,Sector_RS_20D_Pct,0.3469,0.3262,,phase3.v1
-RSI_14,VIX,0.0206,0.0117,,phase3.v1
+RSI_14,VIX,0.0204,0.0117,,phase3.v1
 Bias_Pct,MACD_Hist,0.4844,0.7406,,phase3.v1
 Bias_Pct,MA20,0.0042,0.1191,,phase3.v1
 Bias_Pct,MA50,-0.0027,0.1099,,phase3.v1
@@ -33,7 +33,7 @@ Bias_Pct,ZScore_20D,0.797,0.9554,POTENTIALLY_REDUNDANT,phase3.v1
 Bias_Pct,Beta_60D_SPY,-0.0675,-0.1767,,phase3.v1
 Bias_Pct,Stock_RS_20D_vs_SPY,0.7789,0.7463,,phase3.v1
 Bias_Pct,Sector_RS_20D_Pct,0.2083,0.2393,,phase3.v1
-Bias_Pct,VIX,-0.0412,-0.0056,,phase3.v1
+Bias_Pct,VIX,-0.041,-0.0056,,phase3.v1
 MACD_Hist,MA20,-0.3641,0.169,,phase3.v1
 MACD_Hist,MA50,-0.3391,0.1799,,phase3.v1
 MACD_Hist,MA20_Slope_5D,0.1504,0.2858,,phase3.v1
@@ -49,7 +49,7 @@ MACD_Hist,ZScore_20D,0.3559,0.7,,phase3.v1
 MACD_Hist,Beta_60D_SPY,-0.1701,-0.1463,,phase3.v1
 MACD_Hist,Stock_RS_20D_vs_SPY,0.2205,0.4132,,phase3.v1
 MACD_Hist,Sector_RS_20D_Pct,-0.0513,0.0069,,phase3.v1
-MACD_Hist,VIX,-0.0569,0.0294,,phase3.v1
+MACD_Hist,VIX,-0.0565,0.0294,,phase3.v1
 MA20,MA50,0.9976,0.9984,POTENTIALLY_REDUNDANT,phase3.v1
 MA20,MA20_Slope_5D,0.25,0.3459,,phase3.v1
 MA20,ATR_Pct,0.234,0.1905,,phase3.v1
@@ -64,7 +64,7 @@ MA20,ZScore_20D,0.0301,0.096,,phase3.v1
 MA20,Beta_60D_SPY,0.2878,0.2479,,phase3.v1
 MA20,Stock_RS_20D_vs_SPY,0.1892,0.2964,,phase3.v1
 MA20,Sector_RS_20D_Pct,0.0444,0.1121,,phase3.v1
-MA20,VIX,0.0102,-0.0015,,phase3.v1
+MA20,VIX,0.0101,-0.0015,,phase3.v1
 MA50,MA20_Slope_5D,0.2235,0.3192,,phase3.v1
 MA50,ATR_Pct,0.2215,0.1805,,phase3.v1
 MA50,KDJ_J,-0.1896,-0.1268,,phase3.v1
@@ -91,7 +91,7 @@ MA20_Slope_5D,ZScore_20D,0.4557,0.568,,phase3.v1
 MA20_Slope_5D,Beta_60D_SPY,0.3805,0.2204,,phase3.v1
 MA20_Slope_5D,Stock_RS_20D_vs_SPY,0.9352,0.9136,POTENTIALLY_REDUNDANT,phase3.v1
 MA20_Slope_5D,Sector_RS_20D_Pct,0.5264,0.5359,,phase3.v1
-MA20_Slope_5D,VIX,0.0784,0.1006,,phase3.v1
+MA20_Slope_5D,VIX,0.0778,0.1006,,phase3.v1
 ATR_Pct,KDJ_J,-0.4017,-0.4531,,phase3.v1
 ATR_Pct,Volume_Ratio_5D,0.0446,0.0481,,phase3.v1
 ATR_Pct,Momentum_5D_Pct,-0.5036,-0.3244,,phase3.v1
@@ -103,7 +103,7 @@ ATR_Pct,ZScore_20D,-0.229,-0.2418,,phase3.v1
 ATR_Pct,Beta_60D_SPY,0.5233,0.5375,,phase3.v1
 ATR_Pct,Stock_RS_20D_vs_SPY,-0.0293,0.0069,,phase3.v1
 ATR_Pct,Sector_RS_20D_Pct,0.3854,0.3919,,phase3.v1
-ATR_Pct,VIX,0.0166,0.0036,,phase3.v1
+ATR_Pct,VIX,0.0168,0.0036,,phase3.v1
 KDJ_J,Volume_Ratio_5D,-0.0368,-0.0283,,phase3.v1
 KDJ_J,Momentum_5D_Pct,0.7437,0.8672,,phase3.v1
 KDJ_J,Momentum_20D_Pct,0.2002,0.2496,,phase3.v1
@@ -114,7 +114,7 @@ KDJ_J,ZScore_20D,0.7202,0.7464,,phase3.v1
 KDJ_J,Beta_60D_SPY,-0.4411,-0.4381,,phase3.v1
 KDJ_J,Stock_RS_20D_vs_SPY,0.2008,0.25,,phase3.v1
 KDJ_J,Sector_RS_20D_Pct,-0.2152,-0.2039,,phase3.v1
-KDJ_J,VIX,-0.0358,-0.0383,,phase3.v1
+KDJ_J,VIX,-0.0352,-0.0383,,phase3.v1
 Volume_Ratio_5D,Momentum_5D_Pct,-0.0579,-0.0352,,phase3.v1
 Volume_Ratio_5D,Momentum_20D_Pct,-0.0123,0.0299,,phase3.v1
 Volume_Ratio_5D,Momentum_60D_Pct,0.0137,0.0307,,phase3.v1
@@ -124,7 +124,7 @@ Volume_Ratio_5D,ZScore_20D,-0.0276,0.0069,,phase3.v1
 Volume_Ratio_5D,Beta_60D_SPY,0.046,0.0366,,phase3.v1
 Volume_Ratio_5D,Stock_RS_20D_vs_SPY,-0.0172,0.0212,,phase3.v1
 Volume_Ratio_5D,Sector_RS_20D_Pct,-0.0269,0.0052,,phase3.v1
-Volume_Ratio_5D,VIX,0.4068,0.4084,,phase3.v1
+Volume_Ratio_5D,VIX,0.4095,0.4084,,phase3.v1
 Momentum_5D_Pct,Momentum_20D_Pct,0.383,0.3453,,phase3.v1
 Momentum_5D_Pct,Momentum_60D_Pct,0.2547,0.2692,,phase3.v1
 Momentum_5D_Pct,Realized_Volatility_20D_Pct,-0.2667,-0.1856,,phase3.v1
@@ -133,7 +133,7 @@ Momentum_5D_Pct,ZScore_20D,0.6646,0.7729,,phase3.v1
 Momentum_5D_Pct,Beta_60D_SPY,-0.3432,-0.388,,phase3.v1
 Momentum_5D_Pct,Stock_RS_20D_vs_SPY,0.3853,0.3462,,phase3.v1
 Momentum_5D_Pct,Sector_RS_20D_Pct,-0.1613,-0.0973,,phase3.v1
-Momentum_5D_Pct,VIX,-0.1027,-0.0483,,phase3.v1
+Momentum_5D_Pct,VIX,-0.1019,-0.0483,,phase3.v1
 Momentum_20D_Pct,Momentum_60D_Pct,0.6577,0.5422,,phase3.v1
 Momentum_20D_Pct,Realized_Volatility_20D_Pct,0.2003,0.0765,,phase3.v1
 Momentum_20D_Pct,Volume_Ratio_20D,-0.0177,0.0094,,phase3.v1
@@ -141,7 +141,7 @@ Momentum_20D_Pct,ZScore_20D,0.5836,0.7277,,phase3.v1
 Momentum_20D_Pct,Beta_60D_SPY,0.2658,0.1093,,phase3.v1
 Momentum_20D_Pct,Stock_RS_20D_vs_SPY,0.9996,0.9992,POTENTIALLY_REDUNDANT,phase3.v1
 Momentum_20D_Pct,Sector_RS_20D_Pct,0.4544,0.4991,,phase3.v1
-Momentum_20D_Pct,VIX,0.0452,0.0801,,phase3.v1
+Momentum_20D_Pct,VIX,0.0448,0.0801,,phase3.v1
 Momentum_60D_Pct,Realized_Volatility_20D_Pct,0.3197,0.2166,,phase3.v1
 Momentum_60D_Pct,Volume_Ratio_20D,0.0084,-0.001,,phase3.v1
 Momentum_60D_Pct,ZScore_20D,0.3152,0.4382,,phase3.v1
@@ -154,19 +154,19 @@ Realized_Volatility_20D_Pct,ZScore_20D,-0.0745,-0.0956,,phase3.v1
 Realized_Volatility_20D_Pct,Beta_60D_SPY,0.5279,0.4857,,phase3.v1
 Realized_Volatility_20D_Pct,Stock_RS_20D_vs_SPY,0.201,0.0779,,phase3.v1
 Realized_Volatility_20D_Pct,Sector_RS_20D_Pct,0.3388,0.3378,,phase3.v1
-Realized_Volatility_20D_Pct,VIX,-0.0124,-0.0152,,phase3.v1
+Realized_Volatility_20D_Pct,VIX,-0.0121,-0.0152,,phase3.v1
 Volume_Ratio_20D,ZScore_20D,-0.0341,-0.0146,,phase3.v1
 Volume_Ratio_20D,Beta_60D_SPY,0.0404,0.0349,,phase3.v1
 Volume_Ratio_20D,Stock_RS_20D_vs_SPY,-0.0222,0.0013,,phase3.v1
 Volume_Ratio_20D,Sector_RS_20D_Pct,-0.069,-0.0365,,phase3.v1
-Volume_Ratio_20D,VIX,0.355,0.3846,,phase3.v1
+Volume_Ratio_20D,VIX,0.3576,0.3846,,phase3.v1
 ZScore_20D,Beta_60D_SPY,-0.2067,-0.2308,,phase3.v1
 ZScore_20D,Stock_RS_20D_vs_SPY,0.5838,0.7276,,phase3.v1
 ZScore_20D,Sector_RS_20D_Pct,0.1676,0.1921,,phase3.v1
-ZScore_20D,VIX,0.0011,0.0014,,phase3.v1
+ZScore_20D,VIX,0.0012,0.0014,,phase3.v1
 Beta_60D_SPY,Stock_RS_20D_vs_SPY,0.2663,0.1102,,phase3.v1
 Beta_60D_SPY,Sector_RS_20D_Pct,0.314,0.2377,,phase3.v1
-Beta_60D_SPY,VIX,0.0128,-0.0088,,phase3.v1
+Beta_60D_SPY,VIX,0.0129,-0.0088,,phase3.v1
 Stock_RS_20D_vs_SPY,Sector_RS_20D_Pct,0.4543,0.4993,,phase3.v1
-Stock_RS_20D_vs_SPY,VIX,0.0368,0.0587,,phase3.v1
-Sector_RS_20D_Pct,VIX,0.0547,0.0514,,phase3.v1
+Stock_RS_20D_vs_SPY,VIX,0.0366,0.0587,,phase3.v1
+Sector_RS_20D_Pct,VIX,0.0545,0.0514,,phase3.v1
