@@ -554,7 +554,7 @@ def _reject_future_txns(transactions: list, today: str):
 
 def process_buys(positions, transactions, recs, meta, today, offline: bool = False) -> list[str]:
     """BUY：新 Core 推荐、未持有、有空闲 Unit、现金足够 → 买 1 Unit。
-    含三道买入冷却闸门：全清仓停手 / 7 天字段冷却 / 近 1-2 日止损防御。"""
+    含三道买入冷却闸门：全清仓停手 / 3 天字段冷却 / 近 1-2 日止损防御。"""
     log: list[str] = []
     _validate_today(today)                     # Layer 1 assertion
     start_date = str(meta.get("start_date", ""))
@@ -619,7 +619,7 @@ def process_buys(positions, transactions, recs, meta, today, offline: bool = Fal
             log.append(f"⏸  {rec['Ticker']} 已持仓 → HOLD（不重复买入）")
             continue
 
-        # —— 闸门 1：7 天字段冷却 ——
+        # —— 闸门 1：3 天字段冷却 ——
         cd = cooldowns.get(rec["Ticker"])
         if cd and today <= cd:
             log.append(f"⏸  {rec['Ticker']} 处于止损冷却期（至 {cd}）→ 跳过")
