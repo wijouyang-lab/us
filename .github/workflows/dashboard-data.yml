@@ -87,6 +87,8 @@ jobs:
       - name: Refresh portfolio prices
         # 盘前/盘后扩展价跟随 dashboard-data 每 15 分钟刷新（仅写 portfolio_50000_positions.csv）。
         # continue-on-error：即使本步骤失败，也不拖垮整体 dashboard 刷新（三重兜底之一）。
+        env:
+          ENABLE_STOP_LOSS_SYNC: "1"
         run: python portfolio_50000.py --price-only --data-dir .
         continue-on-error: true
 

@@ -57,6 +57,8 @@ jobs:
       # 买入决策已前置到 scan（flag 门控）时，review 跳过 process_buys（--no-buy）；
       # flag 未设（默认）→ 走 else 分支，与改动前逐字节一致。
       - name: 更新 $50,000 Portfolio Ledger
+        env:
+          ENABLE_STOP_LOSS_SYNC: "1"
         run: |
           if [ "${{ vars.ENABLE_SCAN_BUY_DECISION }}" = "1" ]; then
             python portfolio_50000.py --no-buy --data-dir .
