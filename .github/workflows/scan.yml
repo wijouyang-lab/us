@@ -149,7 +149,7 @@ jobs:
           if [ -n "$(git status --porcelain)" ]; then
             echo "ℹ️ 工作区仍有未纳入本次提交的变更，先 stash（不删除任何文件）："
             git status --porcelain
-            git stash push -u -m "scan-uncommitted-leftovers" || true
+            git stash push --keep-index -u -m "scan-uncommitted-leftovers" || true
           fi
 
           # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
