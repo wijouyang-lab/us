@@ -1,28 +1,20 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-15T08:44:09Z",
+  "generated_at": "2026-10-15T09:17:53Z",
   "market_news": [
     {
       "headline": "COMMENTARY: Oil's long view darkens as Iran war refuses to end - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOS2VycDJiM2tHUVV0LUZHMjgtcmdqOHQ2QWZkakF6eGlnY2ZmaHduOE80Ul95NjVTTVFtVFR5d3l4Q09QdU15YWI5MzVxYzdnUWlKRXgtR0lGakUyV243MlJPamhMRFIxTF85SWRJclNQLTlJTW9KUHR6OFdFMUpxaURpYkdISHJPRk5ZMDNIZ2h5Zm9rVVVzQTk0Uk56VXdYY1d5ZGduNDJUcVA0MjNBaDNB?oc=5",
       "datetime": 1792044000,
-      "summary": "COMMENTARY: Oil's long view darkens as Iran war refuses to end  Reuters",
-      "headline_cn": "评论：伊朗战争持续，石油长期前景黯淡",
-      "sentiment": "bearish",
-      "rationale": "地缘冲突持续推高油价，拖累经济增长预期",
-      "market_relevant": true
+      "summary": "COMMENTARY: Oil's long view darkens as Iran war refuses to end  Reuters"
     },
     {
       "headline": "BoE's Pill says a rate hike need not be start of long series - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxONEUxTUdrNGxTY0Y0LWE3YWNjUk1Nc3FmX1RWRUhDeXVSWTYxcmM5a3czc0g2QkJZcUgtTENRNTVRc2p4d1RXQnRrLU1fTUdhN1JBbF9uWGc4UVVVWFlnLXpUdkRLX050M1RGTk5TUXl3T203VElqeF9IU0J0b3RoWlJHcDNHU2hoeGI4RHE2azhzVlNlYWxVcTZUbDlkcmVL?oc=5",
       "datetime": 1792039500,
-      "summary": "BoE's Pill says a rate hike need not be start of long series  Reuters",
-      "headline_cn": "英国央行Pill称加息未必是连续加息的开始",
-      "sentiment": "bullish",
-      "rationale": "暗示加息周期温和，降低紧缩预期利好市场",
-      "market_relevant": true
+      "summary": "BoE's Pill says a rate hike need not be start of long series  Reuters"
     },
     {
       "headline": "US military weighs use of ‘mother of all bombs’ in potential future strikes on Iran, CNN says - Reuters",
@@ -36,77 +28,56 @@
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOakIxN2pXRENBSjFMY1Rtc00zZG84UUVERE54NFBReWdoV2VJMHRpMFlZdzdSLXdzaEFOOEQwbFp5TG44Mk5wMFZyLVdPOTNpNG5nRlY5Q1lITWFlSjZ1RXdBMDdoRTQ1LTdrMy0zQVJlTThsUUJ2anBxWDNLWkpyV3lUbm5VMm5KMVJybkNpTVJuTGl6bTJia0t5UjE1UHNIclJFQUVRZ0FnektCZWxnSXNGc1VSdlhXM2RZ?oc=5",
       "datetime": 1792027800,
-      "summary": "Oil prices ease as investors weigh supply outlook, Middle East tensions  Reuters",
-      "headline_cn": "油价回落，投资者权衡供应前景与中东局势",
-      "sentiment": "neutral",
-      "rationale": "供需与地缘因素相互抵消，方向不明",
-      "market_relevant": true
+      "summary": "Oil prices ease as investors weigh supply outlook, Middle East tensions  Reuters"
     },
     {
       "headline": "US considers easing sanctions on shadow fleet vessels to cut freight rates, official says - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOdC1hR0pwcGJWU2NSX0szSlhYNlBMYUc2Y1ktS0NseE5MeEVKdE9jUVVqUHlva3dxeDg4NXRTQXM0UlpyMWJlTHNSN1ZiOWFqcWdIX1NNcGRhYzBsak5iVnZrYnJaX2xGbkRLcjNrQmFkUUd2ejVHWm0ydVJ2RVJhS1VFbkRhTHg5MVJXbnJDQ3YtRmVLWWpKU2xwUXNZSzMtUWI4cjJfaXp4djM0V2lQQmc4X2VsaVkxMHFpVUZ2bWNLaldpQnBNZmNn?oc=5",
       "datetime": 1792022760,
-      "summary": "US considers easing sanctions on shadow fleet vessels to cut freight rates, official says  Reuters",
-      "headline_cn": "美国考虑放松影子船队制裁以降低运费",
-      "sentiment": "bullish",
-      "rationale": "运费下降降低通胀压力，利好经济与股市",
-      "market_relevant": true
+      "summary": "US considers easing sanctions on shadow fleet vessels to cut freight rates, official says  Reuters"
     },
     {
       "headline": "Russia's Lavrov, China's Wang discuss cooperation, Ukraine, Iran at Asia security meeting - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQRWd0VGluQkdsUm1GUWdkQlFINnM3NzFGUEpBSGZYMEtuOEVUdWpPOWY2d3Fxc0Q3OFI4TE95YUVWWFFXaklaTHQtZFRlMlgxWWtTc2hTaHJRejhueS1SOXMxVjRUZXZyYUNWbTNldlNMQTFtUzdzV2g3c2lhNG9ucjd6MWVVdjQ4OFctWnZGcXRmdzZsNVhKU2xNYTVJTzk4NkM3R2ctRm9aZFE3ZFNCa1VsYl9qRXdGOHFpSGRB?oc=5",
       "datetime": 1792014823,
-      "summary": "Russia's Lavrov, China's Wang discuss cooperation, Ukraine, Iran at Asia security meeting  Reuters",
-      "headline_cn": "俄外长拉夫罗夫与中国王毅在亚洲安全会议讨论合作、乌克兰与伊朗",
-      "sentiment": "neutral",
-      "rationale": "外交会谈属常规议程，无突破性进展",
-      "market_relevant": false
+      "summary": "Russia's Lavrov, China's Wang discuss cooperation, Ukraine, Iran at Asia security meeting  Reuters"
     },
     {
       "headline": "US inflation heats up in September; Fed rate hike this month back on table - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNX3hkV3J5em1xWWY4V0hQODFTamFtU3NvdkpPRUUzMGY0TnlKaVlneXZPc0J6bFpWdDZWb2hLRkZZaHhZVElDSXNFbGNYMVVBRGR6c1RlNDA4cEhkMEcwck5VMFRtZ1QxOFJqNTkyaGJzWWFLSXp2Z0l1Z19vMDh5bGd6N1FJSkJFR2tZUXd1UWUzeVlvZi1xNTVONk00ejJ5cE0xSGY4THFsaUo0RGxPV3dpaW4tbEZseUE?oc=5",
       "datetime": 1792014335,
-      "summary": "US inflation heats up in September; Fed rate hike this month back on table  Reuters",
-      "headline_cn": "美国9月通胀升温，本月加息重回议程",
-      "sentiment": "bearish",
-      "rationale": "通胀回升强化加息预期，压制估值",
-      "market_relevant": true
+      "summary": "US inflation heats up in September; Fed rate hike this month back on table  Reuters"
+    },
+    {
+      "headline": "Trading Day: Tech melt - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOWXJjTXByUmpSSHBXMHFsWGxfVE0tbktSLVNqNjZiclFHbDM4dUk5TTl2UFl3a2NxR09yN0U3YnlwT2JNdnJMWHFJbE9KRnpSVVZBUWZ3TTVDeVhlNE4yekVQTW51aVQzZFNYLXU5Yl9MY1BvUmdJQW80UV95Sk9hb2RrU3owR0JEZ1U0S2wyU19aTFRScl9CeHVSQUVZLXVTamRiTllB?oc=5",
+      "datetime": 1792014207,
+      "summary": "Trading Day: Tech melt  Reuters"
     },
     {
       "headline": "NEWSLETTER: Houthis bring the war to Riyadh - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxONHJqSGhySVVZXy02Zk5GMWRyNjA2bURRWWpVbU9FdEREM2xBY1h6dnZUZ0lWVGFobjFCWjZhZTdra1Z3MjNGV1hkcUNaUkxueHdPTDlTSGI2V1JFRzl5WHRVQWNEM0dxZEs3MzRLSFhtam5qME1GQ2dudVNMMXZ3RnpsTE4?oc=5",
       "datetime": 1792003680,
-      "summary": "NEWSLETTER: Houthis bring the war to Riyadh  Reuters",
-      "headline_cn": "简报：胡塞武装将战火蔓延至利雅得",
-      "sentiment": "bearish",
-      "rationale": "中东冲突扩大，油价与避险需求上升",
-      "market_relevant": true
+      "summary": "NEWSLETTER: Houthis bring the war to Riyadh  Reuters"
     },
     {
       "headline": "AI infrastructure stocks tumble. Here's a few reasons for the sell-off",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/14/ai-infrastructure-stocks-tumble-heres-a-few-reasons-for-the-sell-off-.html",
       "datetime": 1792003271,
-      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading.",
-      "headline_cn": "AI基础设施股暴跌，抛售原因解析",
-      "sentiment": "bearish",
-      "rationale": "板块集体下跌反映盈利或估值担忧",
-      "market_relevant": true
+      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
     },
     {
       "headline": "UN peacekeeping chief says talks on future of Lebanon mission must begin soon - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQZFFDWURYODViUnVqWEFWMzZGUkxuUVQ2SFFDZTFsdGRseDR2Z0MwNzV5eWZXMXVEZnd2T243QmdyaTRSM3BwbDB1S19manhlNlJmc3VOSDVNX0JQNlBMOFFWQ1l2ZWJ1TE5FNHRINThxd1ZhSVVFVDR6N3dKdElubTlLd09qQU9HczZsMktsUjZSdFVaWnl2ajJPSXFXdE85ZFVzU215VDg1cnNUVGp3eXNhS2lGX1JaWGhsYTFtWWw2dlE?oc=5",
       "datetime": 1792001448,
-      "summary": "UN peacekeeping chief says talks on future of Lebanon mission must begin soon  Reuters",
-      "headline_cn": "联合国维和负责人称必须尽快就黎巴嫩任务展开谈判",
-      "sentiment": "neutral",
-      "rationale": "维和事务性表态，无市场实质影响",
-      "market_relevant": false
+      "summary": "UN peacekeeping chief says talks on future of Lebanon mission must begin soon  Reuters"
     },
     {
       "headline": "Merck CEO tells CNBC he expects breakthrough cancer vaccine will become faster to make",
@@ -261,6 +232,13 @@
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxQYnR1WUkwS0JTSV9BMU1iUGVCTFVLd1V5U0N3ekNjTDZxa2ZKa2VNZ3kwYlNUYmNCOGY3RS04dTlXdnA5MEUteDhwR3VNRW05U3U1S2ZMWWRRNmpvMzhGWjM0Y0FrN2FRMmxTQTdrSGxEVFFTWXVULVJxY2g1dm1ldVN1NVEyR29YNTVWY2gzRlMwZEZFVTZqbFJ1Z3h4eXM?oc=5",
       "datetime": 1791971373,
       "summary": "Three fishermen injured in drone incident off southern Iran  Reuters"
+    },
+    {
+      "headline": "Barclays plans to build from Ground Zero to tap India’s IPO boom",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-14/barclays-plans-to-build-from-ground-zero-to-tap-india-s-ipo-boom",
+      "datetime": 1791967064,
+      "summary": "The move would mark Barclays’ return to India’s ECM business after nearly a decade, allowing it to compete for underwriting mandates as the IPO pipeline stays strong after two straight years of unprecedented deals"
     },
     {
       "headline": "Gazans harvest dregs of olive groves bulldozed and cut off by Israel - Reuters",
@@ -723,20 +701,6 @@
       "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQb1plNXNTVWlqekpCanlwOUdXUVpmeEVnSEU1R014Y3NGalBNOFFnZWdhUWRaV2hMSkNENlZRNi1CZG1hMGlGNnFuMnhBVnFTMHZZY2hkbTZ1TjlYSzgzOHk2eXlSbElkeHN0S1VhYkF1QmpmQmdRbng2OVB6b0tZZm5YUQ?oc=5",
       "datetime": 1791869400,
       "summary": "NEWSLETTER: Modi's three-pronged challenge  Reuters"
-    },
-    {
-      "headline": "Saudi capital's airport to remain shut this week as airlines cancel services - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxObGszbTdESk0xU0twcE1ZOHg4VFpzN2lzeWQ0ZDJseVpKczh6cE44eTNOb3ZDS3dnVnZJN3RCNE1wVDI0djVodU41LTN3WkVIemI0NWlucWpKY0tvU3JMeEM2YVN1OTBsdW5mZDVXeWhFcXdyQ1pGRjBVNTR6SmpBSXhzSXRObWtSTjlYcEJzOUxsX2Ezb28yZ1FrU083bzNpNmd2VlpjUkxnaE5PdEliNWpxeU5QNkp1V1JmcXlFdUJ1S01zcHc?oc=5",
-      "datetime": 1791868296,
-      "summary": "Saudi capital's airport to remain shut this week as airlines cancel services  Reuters"
-    },
-    {
-      "headline": "FSSAI to tighten grip on $80 billion online market",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-13/india-food-watchdog-to-tighten-grip-on-80-billion-online-market",
-      "datetime": 1791867599,
-      "summary": "FSSAI plans to require online listings to display manufacturing and expiry dates and batch numbers of food products, and to hold platforms accountable for misleading claims by manufacturers"
     }
   ],
   "ticker_news": {
@@ -746,33 +710,21 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=1c336ddf452c3cd20590c639ed3795641ac4a44f305df3f79475f6ff4fb4d3fd",
         "datetime": 1791996218,
-        "summary": "Is ADSK a good stock to buy? We came across a bullish thesis on Autodesk, Inc. on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $212.40, and ADSK gained 9.95% since then. The gain appears to reflect optimism around Autodesk’s new AI capabilities and renewed takeover interest […]",
-        "headline_cn": "Autodesk对比PTC和TRMB：云与AI投资能否推动盈利加速增长？",
-        "sentiment": "neutral",
-        "rationale": "行业对比分析，未给出明确结论",
-        "market_relevant": true
+        "summary": "Is ADSK a good stock to buy? We came across a bullish thesis on Autodesk, Inc. on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $212.40, and ADSK gained 9.95% since then. The gain appears to reflect optimism around Autodesk’s new AI capabilities and renewed takeover interest […]"
       },
       {
         "headline": "1 Software Stock Worth Investigating and 2 We Turn Down",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=fbb8df5d89d25ccaafe131fa770da5ebe4c5e00ef66557e37160d1415a0a0947",
         "datetime": 1791968327,
-        "summary": "Software is rapidly reducing operating expenses for businesses. Companies bringing it to life have been rewarded with explosive earnings growth, and the upward trend shows no signs of stopping as the industry has posted a 56.3% gain over the past six months, beating the S&P 500 by 44.2 percentage points.",
-        "headline_cn": "1只值得关注的软件股与2只我们不看好的",
-        "sentiment": "neutral",
-        "rationale": "观点文章无具体标的或数据支撑",
-        "market_relevant": true
+        "summary": "Software is rapidly reducing operating expenses for businesses. Companies bringing it to life have been rewarded with explosive earnings growth, and the upward trend shows no signs of stopping as the industry has posted a 56.3% gain over the past six months, beating the S&P 500 by 44.2 percentage points."
       },
       {
         "headline": "What Is Adobe No Longer Telling You?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=eeb6f4dde5f6817b278bc483feb73404e64ec1d7408c6466c4f0a1540a54379e",
         "datetime": 1791923368,
-        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now.",
-        "headline_cn": "Adobe不再告诉你什么信息？",
-        "sentiment": "bearish",
-        "rationale": "暗示信息披露减少，透明度担忧打压信心",
-        "market_relevant": true
+        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now."
       },
       {
         "headline": "Adobe Keeps Cratering: One Wall Street Pro’s Thesis Projects 50% Gains in the Next Year",
@@ -786,11 +738,7 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
         "datetime": 1791570784,
-        "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
-        "headline_cn": "Adobe股价能否消化订阅增长放缓？",
-        "sentiment": "bearish",
-        "rationale": "订阅增速放缓威胁核心增长逻辑",
-        "market_relevant": true
+        "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown."
       },
       {
         "headline": "Are SaaS Stocks Making A Comeback? Autodesk, Intuit Outperform In Tough Week For Tech",
@@ -3310,11 +3258,7 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=eeb6f4dde5f6817b278bc483feb73404e64ec1d7408c6466c4f0a1540a54379e",
         "datetime": 1791923368,
-        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now.",
-        "headline_cn": "Adobe不再告诉你什么信息？",
-        "sentiment": "bearish",
-        "rationale": "暗示信息披露减少，透明度担忧打压信心",
-        "market_relevant": true
+        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now."
       },
       {
         "headline": "If Palantir Stock Looks Expensive, You Need To Read This",
