@@ -1590,9 +1590,20 @@ def get_us_economic_data(combined_news_text=""):
                 if label in {"CPI指数", "核心CPI指数"}:
                     # BLS 返回的是指数值，尝试从网页获取同比
                     yoy = _fetch_bls_yoy_from_web(label)
+                    if yoy is None:
+                        # A′：用 BLS API 历史序列自算同比（不依赖网页，最稳）
+                        _series = _fetch_bls_series(bls_map[label])
+                        yoy = _calc_yoy_from_series(_series)
+                    if yoy is None:
+                        # B：最后兜底——从 Google News 提取（返回 float 或 None）
+                        _gn = _fetch_macro_from_google_news(label)
+                        if isinstance(_gn, dict):
+                            yoy = _gn.get("yoy") or _gn.get("value")
+                        elif isinstance(_gn, (int, float)):
+                            yoy = _gn
                     if yoy is not None:
                         item["yoy"] = yoy
-                        lines.append(f"- {label}：{yoy:.2f}% YoY（BLS API+网页，数据期 {dt.strftime('%Y-%m-%d')}）")
+                        lines.append(f"- {label}：{yoy:.2f}% YoY（BLS API+自算/新闻，数据期 {dt.strftime('%Y-%m-%d')}）")
                     else:
                         # 同比取不到：此处 val 是 CPI **指数点位**（不是百分比）。
                         # 打标记交给 _build_macro_payload 展示为「指数 N」，
@@ -2054,6 +2065,51 @@ def _fetch_bls_api(series_id, timeout=10):
         return val, prev, dt
     except Exception:
         return None, None, None
+
+
+def _fetch_bls_series(series_id, timeout=10):
+    """与 _fetch_bls_api 同源请求，但返回全部 [(date, value), ...]（升序）。
+    用于自算同比；不改 _fetch_bls_api 契约（保留其单期返回）。
+    """
+    url = "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+    payload = json.dumps({
+        "seriesid": [series_id],
+        "startyear": str(datetime.datetime.now().year - 2),
+        "endyear": str(datetime.datetime.now().year),
+    })
+    try:
+        resp = get_robust_session().post(url, data=payload, timeout=timeout)
+        resp.raise_for_status()
+        obj = resp.json()
+        rows = obj.get("Results", {}).get("series", [{}])[0].get("data", [])
+        parsed = []
+        for row in rows:
+            try:
+                period = row.get("period", "")
+                if period.startswith("M"):
+                    dt = pd.Timestamp(f"{row['year']}-{period[1:]}-01")
+                    parsed.append((dt, float(row["value"])))
+            except Exception:
+                continue
+        parsed.sort(key=lambda x: x[0])
+        return parsed
+    except Exception:
+        return []
+
+
+def _calc_yoy_from_series(parsed, periods_back=12):
+    """从升序序列 [(date, value), ...] 算同比（与 FRED 层同款算法）。
+
+    假设月度连续：最新 = parsed[-1]，去年同期 = parsed[-1-periods_back]。
+    数据不足 / 基数非正 / 空序列 → None（fail-safe）。
+    """
+    if not parsed or len(parsed) < periods_back + 1:
+        return None
+    latest = parsed[-1][1]
+    base = parsed[-1 - periods_back][1]
+    if base <= 0:
+        return None
+    return (latest / base - 1) * 100
 
 
 def _fetch_bls_yoy_from_web(label):
