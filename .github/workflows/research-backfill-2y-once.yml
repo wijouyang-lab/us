@@ -25,6 +25,16 @@ jobs:
       - name: Run backfill
         run: python tools/research/backfill_research_prices_2y.py
 
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-backfill-2y
+          path: |
+            research_price_history_2y.csv
+            research_spy_2y.csv
+          retention-days: 30
+
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
@@ -32,7 +42,21 @@ jobs:
           git add research_price_history_2y.csv research_spy_2y.csv
           if git diff --cached --quiet; then
             echo "no change to commit"
-          else
-            git commit -m "chore(research): backfill 2Y price history for factor analysis"
-            git push
+            exit 0
           fi
+          git commit -m "chore(research): backfill 2Y price history for factor analysis"
+          # 并发安全推送：fetch + rebase + 3 次重试（照抄 scan.yml）
+          for i in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "✅ push succeeded (attempt $i)"
+                exit 0
+              fi
+            fi
+            echo "⚠️ push failed (attempt $i), retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep 5
+          done
+          echo "❌ push failed after 3 retries"
+          exit 1
