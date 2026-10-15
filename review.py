@@ -1409,12 +1409,33 @@ def get_technical_snapshot_from_bulk(df_all, ticker, target_date):
         return None
 
 
+def _filter_regular_session(df):
+    """23 小时交易防御：仅保留 09:30-16:00 ET 常规时段 bar。
+
+    背景：纳斯达克 2026-12-06 起启用 23/5 交易（日间 4:00-20:00 ET、隔夜 21:00-次日 4:00 ET）。
+    若上游（yfinance）未来把夜盘 bar 聚合进来（index 上带时刻），MA/ATR 会被污染。
+    本函数只在 index **含非午夜时刻**时才过滤；纯日期日线（当前口径）= no-op（零影响）。
+    异常一律静默跳过（不阻断），返回原 df。
+    """
+    try:
+        import datetime as _dt_mod
+        _times = df.index.time
+        if not any(t != _dt_mod.time(0, 0) for t in _times):
+            return df          # 纯日期（午夜时刻）→ no-op
+        _mask = ((df.index.time >= _dt_mod.time(9, 30))
+                 & (df.index.time <= _dt_mod.time(16, 0)))
+        return df[_mask].copy()
+    except (AttributeError, TypeError):
+        return df
+
+
 def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry_price=None, days_held=None):
     try:
         hist = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
         if hist is None or hist.empty: return None
         if isinstance(hist.columns, pd.MultiIndex): hist.columns = hist.columns.get_level_values(0)
         hist = hist.dropna(subset=["Open","High","Low","Close"]).copy()
+        hist = _filter_regular_session(hist)
         idx = pd.to_datetime(hist.index, errors="coerce")
         try: idx=idx.tz_localize(None)
         except Exception: pass
