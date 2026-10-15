@@ -51,7 +51,7 @@ UNIT_IDS = ["U001", "U002", "U003", "U004", "U005", "U006", "U007", "U008", "U00
 CORE_TAG = "Core_Dragon"
 # Review 已写入 Exit_Date / Exit_Price 的终态（出现新状态只需在此登记，不改逻辑）
 TERMINAL_STATUSES = {
-    "Stop_Loss_Hit", "Dropped", "Period_Matured", "Observation_Closed",
+    "Stop_Loss_Hit", "Trailing_Profit_Take", "Dropped", "Period_Matured", "Observation_Closed",
     "Target_Reached", "Closed", "Exited",
 }
 

@@ -141,6 +141,7 @@ MARKET_ASSETS = [
 
 # review.py:2317 CLOSED_STOCK_STATUSES —— 原样复制，不改变口径
 CLOSED_STOCK_STATUSES = {
+    "Trailing_Profit_Take",
     "Stop_Loss_Hit",
     "Dropped",
     "Period_Matured",

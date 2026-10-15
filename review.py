@@ -785,6 +785,22 @@ def evaluate_stop_trigger(low, closep, openp, exec_stop):
     return "CLEAR", None
 
 
+def _classify_exit_status(exitp, rec_price):
+    """区分移动止盈与静态止损（纯函数，离线可测）。
+
+    exitp > rec_price  → "Trailing_Profit_Take"
+    否则（含等值/None/非数字）→ "Stop_Loss_Hit"（fail-safe 默认）
+
+    背景：现有主循环把所有价格触发都记为 "Stop_Loss_Hit"，
+    导致移动止盈（卖出价高于入场价）与真实止损在账本中无法区分。
+    """
+    try:
+        e = float(exitp); r = float(rec_price)
+    except (ValueError, TypeError):
+        return "Stop_Loss_Hit"
+    return "Trailing_Profit_Take" if e > r else "Stop_Loss_Hit"
+
+
 def compute_change_1d(close, prev_close):
     """Change_1D = (Close - Prev_Close) / Prev_Close * 100。
 
@@ -1846,7 +1862,8 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
             "持仓天数":(pd.Timestamp(REVIEW_SESSION_DATE)-rec_date).days,"系统连续推荐次数":1,
             "触发方式":"移动止损：今日完整OHLC触发","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
         })
-        update_trade_history_status(ticker, rec_date_str, "Stop_Loss_Hit", exitp)
+        _exit_status = _classify_exit_status(exitp, rec_price)
+        update_trade_history_status(ticker, rec_date_str, _exit_status, exitp)
     elif trigger_result == "DATA_MISSING":
         # 无任何可靠 OHLC：不能猜测，输出数据不足 warning（不触发）。
         write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None,
@@ -2153,6 +2170,7 @@ def append_review_rows(rows):
 
 # 明确的股票结束状态（与下方 KPI 处共用同一份，提前定义供里程碑阶段使用）
 CLOSED_STOCK_STATUSES = {
+    "Trailing_Profit_Take",
     "Stop_Loss_Hit",
     "Dropped",
     "Period_Matured",
@@ -3068,7 +3086,8 @@ def build_scan_recommendation_events():
                     exit_price = safe_float(row.get("Exit_Price"))
                     status = clean_text(row.get("Status"))
                     if status in {
-                        "Stop_Loss_Hit", "移动止损清仓", "止损触发清仓",
+                        "Stop_Loss_Hit", "Trailing_Profit_Take",
+                        "移动止损清仓", "止损触发清仓",
                         "已超期归档", "突发清仓暂停", "周期到期清仓", "Observation_Closed"
                     } and exit_price is not None:
                         cur = exit_price
