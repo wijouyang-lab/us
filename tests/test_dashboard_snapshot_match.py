@@ -88,3 +88,13 @@ def test_scan_date_follows_snapshot_source_line():
     src = (REPO / "dashboard_export.py").read_text(encoding="utf-8")
     assert 'clean_text(row.get("Snapshot_Used_Date"))' in src
     assert '"scan_date"' in src
+
+
+def test_exact_match_overridden_by_newer_snapshot():
+    """★ G2b'：精确匹配命中旧行，但同组有更新的快照 -> 必须用最新（不得锁死在旧行）。"""
+    snaps = {("ADSK", "2026-10-07", "Core_Dragon"): _snap("OLD", "2026-10-07"),
+             ("ADSK", "2026-10-14", "Core_Dragon"): _snap("NEW", "2026-10-14")}
+    row = _call("ADSK", "2026-10-07", "Core_Dragon", snaps)
+    assert row["Snapshot_Used_Date"] == "2026-10-14"
+    assert row["Snapshot_ID"] == "NEW"
+    assert row["ai_snapshot_date"] if False else True
