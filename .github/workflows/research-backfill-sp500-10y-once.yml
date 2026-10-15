@@ -1,0 +1,60 @@
+name: Research Backfill S&P500 10Y (one-shot)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  backfill:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install deps
+        run: pip install yfinance pandas requests lxml html5lib
+
+      - name: Run backfill
+        run: python tools/research/backfill_research_prices_sp500_10y.py
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-backfill-sp500-10y
+          path: |
+            research_price_history_sp500_10y.csv
+            research_spy_sp500_10y.csv
+          retention-days: 30
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f research_price_history_sp500_10y.csv ]; then git add research_price_history_sp500_10y.csv; fi
+          if [ -f research_spy_sp500_10y.csv ]; then git add research_spy_sp500_10y.csv; fi
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+            exit 0
+          fi
+          git commit -m "chore(research): backfill S&P500 10Y price history"
+          for i in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "push ok"
+                exit 0
+              fi
+            fi
+            git rebase --abort 2>/dev/null || true
+            sleep 5
+          done
+          exit 1
