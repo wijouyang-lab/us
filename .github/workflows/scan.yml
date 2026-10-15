@@ -116,6 +116,11 @@ jobs:
             git add macro_data.json
           fi
 
+          # 每日候选因子快照（只记录，供未来因子分析）。
+          if [ -f candidate_factor_snapshots.csv ]; then
+            git add candidate_factor_snapshots.csv
+          fi
+
           # 运行时模型使用记录：clawsocket_compat.write_model_usage() 在 scan 结束时落盘
           # dashboard/data/model_usage.json（记录中转站实际返回的 upstream_model）。
           # 必须随 scan 一并入库，否则 dashboard_export 读不到、前端 runtime 条不显示模型名。

@@ -75,6 +75,7 @@ REGIME_GATE_VERSION = "2026-08-31-US"
 QUANT_FACTOR_SNAPSHOT_FILE = "quant_factor_snapshot.csv"
 # Phase 2B 持久价格历史（仅用于契约告警的只读比对，绝不写入）
 QUANT_PRICE_HISTORY_FILE = "quant_factor_price_history.csv"
+CANDIDATE_SNAPSHOT_FILE = "candidate_factor_snapshots.csv"
 
 
 def _is_valid_ai_stop(stop_raw, reference_price):
@@ -3865,6 +3866,46 @@ def make_snapshot_id(ticker, rec_date, tag):
     ])
 
 
+def _persist_candidate_snapshots(candidates, trade_date):
+    """每日追加全部候选的因子快照（只记录，不评分、不改任何评分逻辑）。
+
+    文件：candidate_factor_snapshots.csv（追加写；首行写表头）
+    字段：Date, Ticker, Tag, Final_Score, Quant_Score, AI_Score,
+          RSI, MACD, ATR_Pct, MA20, MA50, Price, Market_Regime
+    空候选列表 → 不写文件（不产生空表头）。
+    """
+    import csv as _csv
+    import os as _os
+    if not candidates:
+        return
+    cols = ["Date", "Ticker", "Tag", "Final_Score", "Quant_Score", "AI_Score",
+            "RSI", "MACD", "ATR_Pct", "MA20", "MA50", "Price", "Market_Regime"]
+    rows = []
+    for c in candidates:
+        rows.append({
+            "Date": trade_date,
+            "Ticker": c.get("Ticker") or c.get("ticker") or "",
+            "Tag": c.get("Tag") or c.get("tag") or "",
+            "Final_Score": c.get("Final_Score") or "",
+            "Quant_Score": c.get("Quant_Score") or "",
+            "AI_Score": c.get("AI_Score") or "",
+            "RSI": c.get("RSI") or "",
+            "MACD": c.get("MACD") or "",
+            "ATR_Pct": c.get("ATR_Pct") or "",
+            "MA20": c.get("MA20") or "",
+            "MA50": c.get("MA50") or "",
+            "Price": c.get("Price") or c.get("Close_Price") or "",
+            "Market_Regime": c.get("Market_Regime") or "",
+        })
+    file_exists = _os.path.exists(CANDIDATE_SNAPSHOT_FILE)
+    with open(CANDIDATE_SNAPSHOT_FILE, "a", newline="", encoding="utf-8") as f:
+        w = _csv.DictWriter(f, fieldnames=cols)
+        if not file_exists:
+            w.writeheader()
+        w.writerows(rows)
+    print(f"   📝 候选因子快照已追加：{len(rows)} 条 → {CANDIDATE_SNAPSHOT_FILE}")
+
+
 def upsert_ai_snapshot(items, rec_date=None, path=AI_SNAPSHOT_FILE):
     """把本次 Scan 已生成的 AI 六段按 (Ticker, Rec_Date, Tag) 写入历史快照。
 
@@ -4365,6 +4406,8 @@ if __name__ == "__main__":
             print(f"⚠️ AI 文本缓存写入失败（不影响主流程）：{type(e).__name__}: {e}")
         try:
             _snap_n = upsert_ai_snapshot(_ai_persist, rec_date=today_us_str())
+            # 每日候选因子快照：只记录全部候选（含持仓）的因子值，不参与任何评分/止损决策。
+            _persist_candidate_snapshots(_enriched, get_us_time().strftime("%Y-%m-%d"))
             print("🧠 AI Snapshot 已保存 %d 条（含持仓，Rec_Date=%s）-> %s"
                   % (_snap_n, today_us_str(), AI_SNAPSHOT_FILE))
         except Exception as e:
