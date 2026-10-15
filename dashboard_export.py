@@ -1033,31 +1033,31 @@ _TRADE_TO_PENDING = {
 
 
 def _attach_snapshot_ai(row, ticker, rec_date, tag, snapshots):
-    """把 ai_snapshot.csv 的 (Ticker, Rec_Date, Tag) 三元组精确匹配结果写入 row。
+    """把 ai_snapshot.csv 的快照匹配结果写入 row。
 
-    硬约束：只按三元组精确匹配，禁止 Ticker-only；匹配不到 AI 文本时保留 row 原值
-    （pending 当天直写的 AI 六段，或 trade_history 事件本就为空），绝不回退到
+    硬约束：匹配以 (Ticker, Rec_Date, Tag) 三元组为准，禁止 Ticker-only；匹配不到 AI 文本时
+    保留 row 原值（pending 当天直写的 AI 六段，或 trade_history 事件本就为空），绝不回退到
     ai_text_cache.csv（Ticker 级缓存，会污染历史事件）。
 
-    G2b 补充（不改变上述约束的原意）：持仓事件的 Rec_Date 是【历史推荐日】，而持仓快照
-    按【当日】写入（scan.py 每日重评分），三元组必然对不上。故精确匹配失败时，允许回退到
-    同一 (Ticker, Tag) 组内 Rec_Date 最大的快照 —— 但**仅当该最大值晚于**本行 rec_date
-    （确实存在更新的分析）时才使用；等价于「持仓有更新分析就用最新」，新推荐
-    （max == 自身）与无新快照的历史事件都不会被改写，故不污染历史事件。
+    G2b'：**始终优先「该 (Ticker, Tag) 组内 Rec_Date 最新的快照」**，精确三元组仅作 fallback。
+    原因：持仓事件的 Rec_Date 是【历史推荐日】，而持仓快照按【当日】写入（scan.py 每日重评分）；
+    若只在「精确匹配失败」时回退，命中旧行会把该行锁死在旧文本上（实测 2026-10-07 永不刷新）。
+    因此无论精确匹配是否成功，只要同组存在更晚的快照（> rec_date）就改用最新的，并把实际
+    使用的快照日期写入 Snapshot_Used_Date（供 scan_date 跟随）。语义 = 「显示该标的最新分析」。
     """
     row["Recommendation_ID"] = f"{ticker}|{rec_date}|{tag}"
     row["Snapshot_ID"] = ""
     row["Snapshot_Update_Date"] = ""
     snap_used_date = rec_date
     snap = snapshots.get((ticker, rec_date, tag))
-    if not snap:
-        _cands = [(k[1], v) for k, v in snapshots.items()
-                  if k[0] == ticker and k[2] == tag]
-        if _cands:
-            _latest_date, _latest_snap = max(_cands, key=lambda x: str(x[0]))
-            if str(_latest_date) > str(rec_date):
-                snap = _latest_snap
-                snap_used_date = _latest_date
+    # G2b'：不设 `if not snap` 门控 —— 精确匹配命中旧行时也必须检查是否有更新的快照
+    _cands = [(k[1], v) for k, v in snapshots.items()
+              if k[0] == ticker and k[2] == tag]
+    if _cands:
+        _latest_date, _latest_snap = max(_cands, key=lambda x: str(x[0]))
+        if str(_latest_date) > str(rec_date):
+            snap = _latest_snap
+            snap_used_date = _latest_date
     if snap:
         row["Snapshot_ID"] = snap.get("snapshot_id") or ""
         row["Snapshot_Update_Date"] = snap.get("update_date") or ""
@@ -1065,8 +1065,6 @@ def _attach_snapshot_ai(row, ticker, rec_date, tag, snapshots):
         if snap.get("texts"):
             for csv_col, json_key in AI_FIELD_MAP:
                 row[csv_col] = snap["texts"].get(json_key) or ""
-
-
 def build_current_event_rows(trade_rows, pending_rows, snapshots=None):
     """构建「当前有效 Core / Observation 推荐事件」的 rows（对齐 pending CSV 列名）。
 
