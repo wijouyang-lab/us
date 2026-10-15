@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-14T15:20:32Z",
+  "generated_at": "2026-10-15T08:03:07Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "5.27%",
+      "value": "5.19%",
       "prev": "5.22%",
       "date": "2026-10-14",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "长期国债收益率上升，资金成本提高"
+      "sentiment": "bullish",
+      "rationale": "10年期国债收益率下降，债券利率走低对股市偏利好"
     },
     {
       "indicator": "5Y国债",
-      "value": "5.08%",
+      "value": "4.99%",
       "prev": "5.01%",
       "date": "2026-10-14",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "中期国债收益率上升，融资成本增加"
+      "sentiment": "bullish",
+      "rationale": "5年期国债收益率下降，利率环境改善对股市偏利好"
     },
     {
       "indicator": "13周国债",
-      "value": "4.11%",
+      "value": "4.09%",
       "prev": "4.06%",
       "date": "2026-10-14",
       "source": "Yahoo Finance",
       "sentiment": "bearish",
-      "rationale": "短期国债收益率上升，流动性收紧预期"
+      "rationale": "13周短期国债收益率上升，短期利率走高对股市偏利空"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI指数上升，通胀压力加大"
+      "rationale": "CPI指数上升，通胀压力增加对股市偏利空"
     },
     {
       "indicator": "核心CPI",
@@ -45,7 +45,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "核心CPI上升，核心通胀加剧"
+      "rationale": "核心CPI指数上升，核心通胀走高对股市偏利空"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率上升，经济走弱信号"
+      "rationale": "失业率上升至4.20%，经济走弱信号对股市偏利空"
     },
     {
       "indicator": "核心PCE",
@@ -63,64 +63,108 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE为3%，高于美联储目标"
+      "rationale": "核心PCE为3.00%，通胀压力仍存对股市偏利空"
     }
   ],
   "speakers": [
     {
       "person": null,
       "title": null,
+      "content": "What to expect at the next Fed meeting now that rate-hike odds are rising - MarketWatch",
+      "time": "10-14 15:04",
+      "source": "MarketWatch",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "随着加息可能性上升，下次美联储会议值得关注",
+      "sentiment": "bearish",
+      "rationale": "加息预期上升暗示鹰派倾向，对股市偏利空"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Inflation worsened last month to 3.7% as midterm elections near - PBS",
+      "time": "10-14 09:37",
+      "source": "PBS",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "中期选举临近，上月通胀恶化至3.7%",
+      "sentiment": "bearish",
+      "rationale": "通胀恶化至3.7%，通胀压力对股市偏利空"
+    },
+    {
+      "person": "Bowman",
+      "title": null,
+      "content": "Fed's Bowman says there's time to 'wait and see' before any more action - Reuters",
+      "time": "10-14 07:39",
+      "source": "Reuters",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "美联储鲍曼称在采取更多行动前有时间'等待观望'",
+      "sentiment": "neutral",
+      "rationale": "美联储鲍曼表示等待观望，中性立场"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Fannie Mae raises US mortgage rate forecast to 7.5% for 2027 - Beinsure",
+      "time": "10-14 15:28",
+      "source": "Beinsure",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "房利美将美国2027年房贷利率预期上调至7.5%",
+      "sentiment": "bearish",
+      "rationale": "房贷利率预期上调至7.5%，融资成本上升偏利空"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Fannie Mae sharply raises mortgage rate forecast for 2027 - CNBC",
+      "time": "10-14 11:20",
+      "source": "CNBC",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "房利美大幅上调2027年房贷利率预期",
+      "sentiment": "bearish",
+      "rationale": "房贷利率预期大幅上调，融资成本压力偏利空"
+    },
+    {
+      "person": null,
+      "title": null,
       "content": "September 2026 CPI inflation beats Wall Street forecasts - Quartz",
       "time": "10-14 09:07",
       "source": "Quartz",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "2026年9月CPI通胀超出华尔街预期 - Quartz",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "2026年9月CPI通胀超华尔街预期",
       "sentiment": "bearish",
-      "rationale": "CPI超出华尔街预期，通胀意外走高"
+      "rationale": "CPI通胀超预期，通胀压力对股市偏利空"
     },
     {
-      "person": null,
+      "person": "Trump",
       "title": null,
-      "content": "CPI: Hot Inflation at 3.7% Lifts Yields and Dollar as Gold and Bitcoin Nosedive - TradingView",
-      "time": "10-14 08:59",
-      "source": "TradingView",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "CPI：3.7%高通胀推高收益率和美元，黄金比特币暴跌 - TradingView",
-      "sentiment": "bearish",
-      "rationale": "通胀3.7%走热，收益率上升压制风险资产"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Middle Market Debt Weekly: Fed Minutes Point to a December Hike - ABF Journal",
-      "time": "10-12 03:45",
-      "source": "ABF Journal",
+      "content": "Don’t blame Ukraine: Prices go up and up, thanks to Trump’s wars - SMH.com.au",
+      "time": "10-12 21:08",
+      "source": "SMH.com.au",
       "age_tag": "📑前日-低权重",
-      "content_cn": "中端市场债务周报：美联储会议纪要指向12月加息 - ABF Journal",
+      "content_cn": "别怪乌克兰：物价持续上涨归因于特朗普的战争",
+      "sentiment": "neutral",
+      "rationale": "归因分析不涉及货币政策方向，中性"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Gold Price Forecast: XAU/USD rebounds firmly as China Treasuries-buying report smashes US yields - FXStreet",
+      "time": "10-15 00:01",
+      "source": "FXStreet",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "黄金价格预测：中国购买美债报道打压美债收益率，金价强劲反弹",
+      "sentiment": "bullish",
+      "rationale": "美债收益率下跌利好风险资产，黄金反弹偏利好"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Nasdaq 100 Forecast: NDX falls as oil jumps 5%, Treasury yields rise - StoneX",
+      "time": "10-14 22:42",
+      "source": "StoneX",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "纳斯达克100预测：油价跳涨5%、国债收益率上升，纳指下跌",
       "sentiment": "bearish",
-      "rationale": "美联储纪要暗示12月加息，鹰派信号"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US Dollar Weakens as Yields Fall and Chip Stocks Slide. Forecast as of 14.10.2026 - LiteFinance",
-      "time": "10-14 02:29",
-      "source": "LiteFinance",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美元走弱，收益率下降，芯片股下跌。2026.10.14预测 - LiteFinance",
-      "sentiment": "neutral",
-      "rationale": "收益率下降利好但芯片股下跌，信号混合"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Gold Forecast 14/10: Can $4,200 Support Hold? (Video) - DailyForex",
-      "time": "10-14 01:03",
-      "source": "DailyForex",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "黄金预测10/14：4200美元支撑能否守住？（视频） - DailyForex",
-      "sentiment": "neutral",
-      "rationale": "黄金技术预测，对股市影响不明确"
+      "rationale": "油价大涨5%、国债收益率上升，纳指下跌偏利空"
     },
     {
       "person": null,
@@ -128,21 +172,10 @@
       "content": "Dow Jones Forecast: DJIA falls with oil and treasury yields in focus - FOREX.com",
       "time": "10-14 00:30",
       "source": "FOREX.com",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "道琼斯预测：道指下跌，关注油价和国债收益率 - FOREX.com",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "道琼斯预测：油价和国债收益率成焦点，道指下跌",
       "sentiment": "bearish",
-      "rationale": "道指下跌，油价和收益率施压"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Nasdaq 100 Forecast: NDX falls as oil jumps 5%, Treasury yields rise - StoneX",
-      "time": "10-13 22:55",
-      "source": "StoneX",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "纳斯达克100预测：油价跳涨5%、国债收益率上升，纳指下跌 - StoneX",
-      "sentiment": "bearish",
-      "rationale": "纳指下跌，油价飙升5%和收益率上升双重施压"
+      "rationale": "油价和国债收益率走高，道指下跌偏利空"
     }
   ],
   "error": null
