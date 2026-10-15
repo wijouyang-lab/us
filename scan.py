@@ -1731,6 +1731,15 @@ def get_us_economic_data(combined_news_text=""):
     if ten_y is not None:
         lines.append(f"【Regime确认】10Y国债收益率={ten_y:.2f}%")
 
+    # ===== 6. Fear & Greed 情绪指标 =====
+    fg = _fetch_fear_greed()
+    if fg:
+        data[fg["indicator"]] = fg
+        lines.append(f"- {fg['indicator']}：{fg['value']}（{fg['source']}，{fg['date']}）")
+        print(f"   ✅ Fear & Greed: 成功（{fg['value']}）")
+    else:
+        print("   ⏭️ Fear & Greed: 跳过")
+
     if not lines:
         return "暂无结构化美国宏观经济数据。", data
     print(f"✅ 美国经济数据抓取完成：{len(data)} 项（多层备用）")
@@ -1751,6 +1760,7 @@ _MACRO_INDICATOR_NAMES = {
     "5Y国债": "5Y国债",
     "13周国债": "13周国债",
     "联邦基金有效利率": "联邦基金利率",
+    "Fear & Greed": "Fear & Greed",
 }
 
 # 已知人物（从讲话标题尽力抽取 person；抽不到置 null）
@@ -1773,6 +1783,10 @@ def _fmt_pct(v):
 # 合理区间 0–15 —— 与 _extract_from_google_news 里的同源护栏（CPI/核心CPI/核心PCE
 # 必须 0 <= val <= 15）保持一致。
 _INFLATION_LABELS = {"CPI指数", "核心CPI指数", "核心PCE指数"}
+
+# Fear & Greed 等非百分比指标：值已是可读字符串（如 "64 (Greed)"），
+# 不走 _fmt_pct 格式化，直接透传。
+_PASSTHROUGH_LABELS = {"Fear & Greed"}
 
 
 def _looks_like_index_level(label, v):
@@ -1904,6 +1918,10 @@ def _build_macro_payload(economic_structured, key_people_news):
             # CPI 指数点位不是百分比：展示为「指数 334.98」，绝不加 %。
             value_display = _fmt_index(item.get("value"))
             prev_display = _fmt_index(item.get("prev"))
+        elif label in _PASSTHROUGH_LABELS:
+            # Fear & Greed 等：value 已是可读字符串，原样透传
+            value_display = item.get("value")
+            prev_display = item.get("prev")
         else:
             headline = item.get("yoy") if has_yoy else item.get("value")
             # 通胀类（有 yoy）prev 为上一期指数，不展示为百分比 → 置 None；
@@ -1922,6 +1940,52 @@ def _build_macro_payload(economic_structured, key_people_news):
         })
     speakers = _parse_speakers(key_people_news)
     return economic, speakers
+
+
+def _fetch_fear_greed():
+    """CNN Fear & Greed Index。返回 economic[] 条目或 None（失败不阻断）。
+
+    rationale 留空（None），由 _macro_ai_judge 统一生成。
+    value 为可读字符串（"64 (Greed)"），_build_macro_payload 对
+    _PASSTHROUGH_LABELS 中的 label 直接透传，不做百分比格式化。
+    """
+    try:
+        import fear_greed
+        data = fear_greed.get()
+    except ImportError:
+        print("   ⏭️ Fear & Greed: fear_greed 库未安装，跳过")
+        return None
+    except Exception as e:
+        print(f"   ⏭️ Fear & Greed: 抓取失败 {type(e).__name__}: {e}")
+        return None
+    if not data:
+        return None
+    try:
+        score = data.get("score")
+        rating = data.get("rating")
+        if score is None or rating is None:
+            return None
+        r = str(rating).lower()
+        if "fear" in r:
+            sentiment = "bearish"
+        elif "greed" in r:
+            sentiment = "bullish"
+        else:
+            sentiment = "neutral"
+        hist = data.get("history") or {}
+        prev_1w = hist.get("1w")
+        return {
+            "indicator": "Fear & Greed",
+            "value": f"{int(round(score))} ({rating})",
+            "prev": f"{int(round(prev_1w))}" if isinstance(prev_1w, (int, float)) else None,
+            "date": datetime.datetime.now().strftime("%Y-%m-%d"),
+            "source": "CNN",
+            "sentiment": sentiment,
+            "rationale": None,
+        }
+    except Exception as e:
+        print(f"   ⏭️ Fear & Greed: 结构解析失败 {e}")
+        return None
 
 
 def _macro_ai_judge(client, economic, speakers):
