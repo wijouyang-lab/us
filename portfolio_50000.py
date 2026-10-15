@@ -120,11 +120,13 @@ def us_today_str() -> str:
 
 
 # ------------------------------------------------------------------ 买入冷却
-COOLDOWN_DAYS = 7   # 止损后同名 ticker 冷却天数
+COOLDOWN_DAYS = 3   # 止损后同名 ticker 冷却天数
+                    # 2026-10-15: 7→3，缩短止损后半仓期；
+                    # 旧持仓的 Cooldown_Until 不追溯修改。
 
 
 def _cooldown_until(today: str, days: int = COOLDOWN_DAYS) -> str:
-    """止损冷却到期日 = 止损日 + days 天（默认 7）。today 为 YYYY-MM-DD。"""
+    """止损冷却到期日 = 止损日 + days 天（默认 3）。today 为 YYYY-MM-DD。"""
     from datetime import datetime as _dt, timedelta as _td
     try:
         d = _dt.strptime(today, "%Y-%m-%d").date() + _td(days=days)
@@ -582,7 +584,7 @@ def process_buys(positions, transactions, recs, meta, today, offline: bool = Fal
         log.append("⏸  今日已全清仓（含止损）→ 当日停手，不再新开买入")
         return log
 
-    # —— 闸门 1 数据：7 天字段冷却 + 近 1-2 日止损防御 ——
+    # —— 闸门 1 数据：3 天字段冷却 + 近 1-2 日止损防御 ——
     cooldowns = _load_cooldowns(positions)                       # {TICKER: "YYYY-MM-DD"}
     stopped_recent = _recent_stop_tickers(transactions, today)    # 止损当天+次日
 
@@ -929,7 +931,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         p["Unrealized_PnL_Pct"] = "0.00"
         p["Weight_Pct"] = "0.00"
         p["Last_Update"] = today
-        p["Cooldown_Until"] = _cooldown_until(today)   # 盘中机械止损：止损日 + 7 天冷却
+        p["Cooldown_Until"] = _cooldown_until(today)   # 盘中机械止损：止损日 + 3 天冷却
         existing_txn.add(txn_id)
         triggered += 1
         print(f"🛑 INTRADAY STOP {tkr} {shares}股 @ {money(px)}（止损线 {money(stop)}）")

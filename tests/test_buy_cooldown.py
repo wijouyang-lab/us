@@ -3,7 +3,7 @@
 
 覆盖三道买入冷却闸门：
   · 闸门 0：全清仓当天停手（open_count==0 且今日 Intraday Stop Loss）
-  · 闸门 1：7 天字段冷却（positions 带 Cooldown_Until 且 >= today）
+  · 闸门 1：3 天字段冷却（positions 带 Cooldown_Until 且 >= today）
   · 闸门 2：近 1-2 日刚止损防御（transactions 含 Intraday Stop Loss，无字段兜底）
 
 不依赖真实数据 / 网络；仅验证 process_buys 的冷却逻辑。
@@ -88,10 +88,10 @@ def test_no_stop_history_buys_normally():
 
 
 def test_intraday_stop_writes_cooldown(monkeypatch, tmp_path):
-    """用例6（守护修正）：盘中机械止损触发后，持仓写入 Cooldown_Until = today+7。
+    """用例6（守护修正）：盘中机械止损触发后，持仓写入 Cooldown_Until = today+3。
 
     这是 #1 冷却的关键写入点之一（另一处为 Review 终态止损）；缺它则盘中止损的
-    ticker 不会被 7 天字段冷却覆盖，仅能靠 1-2 日防御——功能不完整。
+    ticker 不会被 3 天字段冷却覆盖，仅能靠 1-2 日防御——功能不完整。
     """
     TODAY = "2026-10-09"
     monkeypatch.setattr(pf, "us_today_str", lambda: TODAY)
@@ -111,4 +111,4 @@ def test_intraday_stop_writes_cooldown(monkeypatch, tmp_path):
     assert res["triggered"] == 1
     pos = pf.read_csv_rows(d / pf.POSITIONS_FILE)[0]
     assert pos["Status"] == "CLOSED"
-    assert pos["Cooldown_Until"] == "2026-10-16"   # TODAY + 7 天
+    assert pos["Cooldown_Until"] == "2026-10-12"   # TODAY + 3 天
