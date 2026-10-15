@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-14T15:30:16.027927+00:00",
+  "run_at": "2026-10-15T08:12:21.737474+00:00",
   "workdir": "/home/runner/work/us/us",
   "strict": false,
   "only_phase": null,
@@ -10,7 +10,9 @@
       "status": "OK",
       "written": true,
       "reason": null,
-      "schema_warnings": [],
+      "schema_warnings": [
+        "quant_factor_price_history.csv schema_version=phase2b.v2 期望 phase2b.v1"
+      ],
       "_error": null
     },
     "3": {
