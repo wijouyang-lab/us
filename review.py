@@ -1429,9 +1429,28 @@ def _filter_regular_session(df):
         return df
 
 
+# 请求级缓存：同 ticker 在本 run 内只下载一次（review.py:1879 与 :1944 共享同一份 6mo 日线）。
+# 生命周期 = 单次 review 进程；空结果不缓存（避免"某次失败被永久记住"）。
+_OHLC_6MO_CACHE = {}
+
+
+def _download_ohlc_6mo(ticker):
+    """下载（或复用缓存）某 ticker 的 6mo 日线；返回副本以防下游 mutate 污染缓存。
+
+    参数与 review.py 原实现逐字一致：period="6mo" / auto_adjust=True / threads=False。
+    缓存只影响"请求次数"，不改变任何返回值的数值语义。
+    """
+    if ticker in _OHLC_6MO_CACHE:
+        return _OHLC_6MO_CACHE[ticker].copy()
+    hist = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
+    if hist is not None and not hist.empty:
+        _OHLC_6MO_CACHE[ticker] = hist.copy()
+    return hist
+
+
 def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry_price=None, days_held=None):
     try:
-        hist = yf.download(ticker, period="6mo", progress=False, auto_adjust=True, threads=False)
+        hist = _download_ohlc_6mo(ticker)
         if hist is None or hist.empty: return None
         if isinstance(hist.columns, pd.MultiIndex): hist.columns = hist.columns.get_level_values(0)
         hist = hist.dropna(subset=["Open","High","Low","Close"]).copy()
