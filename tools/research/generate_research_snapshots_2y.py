@@ -51,6 +51,86 @@ def _load_calc_extended():
 _calc_extended, _MODE = _load_calc_extended()
 
 
+def _calc_kdj_scan_style(win, n=9):
+    """照抄 scan.py:919-935 的 KDJ 口径。返回 J 值（最后一个交易日）。"""
+    high = win["High"].to_numpy(float)
+    low = win["Low"].to_numpy(float)
+    close = win["Close"].to_numpy(float)
+    K, D = 50.0, 50.0
+    j_val = 50.0
+    for i in range(len(close)):
+        if i < 8:
+            j_val = 3 * K - 2 * D
+        else:
+            h9 = high[i - 8:i + 1].max()
+            l9 = low[i - 8:i + 1].min()
+            rsv = (close[i] - l9) / (h9 - l9 + 1e-9) * 100
+            K = 2 / 3 * K + 1 / 3 * rsv
+            D = 2 / 3 * D + 1 / 3 * K
+            j_val = 3 * K - 2 * D
+    return j_val
+
+
+def _extract_tech_factors(win):
+    """按 scan.py 逐字口径产出 9 个技术列。
+
+    键名与 quant_factor_lab.build_snapshot_rows 期望一致（RSI / MA20 / MA50 /
+    MA20_Slope_Pct_5D / ATR_Pct / 乖离率(%) / MACD_HIST_LAST / KDJ_J / 量比）。
+    同源依据：scan.py:859-863（ta.macd/rsi/sma/atr）、:884（乖离率）、
+    :937-939（量比，分母不含当日）、:953-954（MA20 斜率）、:992（ATR_Pct）。
+    """
+    import pandas_ta as ta
+    close = win["Close"]
+    high = win["High"]
+    low = win["Low"]
+    vol = win["Volume"]
+    out = {}
+
+    rsi = ta.rsi(close, length=14)
+    out["RSI"] = float(rsi.iloc[-1]) if pd.notna(rsi.iloc[-1]) else None
+
+    ma20 = ta.sma(close, length=20)
+    ma50 = ta.sma(close, length=50)
+    out["MA20"] = float(ma20.iloc[-1]) if pd.notna(ma20.iloc[-1]) else None
+    out["MA50"] = float(ma50.iloc[-1]) if pd.notna(ma50.iloc[-1]) else None
+
+    if pd.notna(ma20.iloc[-1]) and len(ma20) >= 6 and pd.notna(ma20.iloc[-6]) and ma20.iloc[-6]:
+        out["MA20_Slope_Pct_5D"] = (float(ma20.iloc[-1]) / float(ma20.iloc[-6]) - 1) * 100
+    else:
+        out["MA20_Slope_Pct_5D"] = None
+
+    atr = ta.atr(high, low, close, length=14)
+    if pd.notna(atr.iloc[-1]) and close.iloc[-1]:
+        out["ATR_Pct"] = float(atr.iloc[-1]) / float(close.iloc[-1]) * 100
+    else:
+        out["ATR_Pct"] = None
+
+    if pd.notna(ma20.iloc[-1]) and ma20.iloc[-1]:
+        out["乖离率(%)"] = (float(close.iloc[-1]) - float(ma20.iloc[-1])) / float(ma20.iloc[-1]) * 100
+    else:
+        out["乖离率(%)"] = None
+
+    macd = ta.macd(close)
+    if macd is not None and not macd.empty:
+        hcol = [c for c in macd.columns if c.startswith("MACDh")]      # MACDh_12_26_9（已实测）
+        if hcol:
+            out["MACD_HIST_LAST"] = float(macd[hcol[0]].iloc[-1]) if pd.notna(macd[hcol[0]].iloc[-1]) else None
+        else:
+            out["MACD_HIST_LAST"] = None
+    else:
+        out["MACD_HIST_LAST"] = None
+
+    out["KDJ_J"] = _calc_kdj_scan_style(win)
+
+    if len(vol) >= 6:
+        avg5 = float(vol.iloc[:-1].tail(5).mean())                     # 分母不含当日（scan.py:938）
+        out["量比"] = float(vol.iloc[-1] / (avg5 + 1e-9)) if avg5 > 0 else 1.0
+    else:
+        out["量比"] = 1.0
+
+    return out
+
+
 def main():
     print(f"Loading price history... (loader mode: {_MODE})")
     stocks = pd.read_csv(PRICE_IN, dtype={"Date": str, "Ticker": str})
@@ -87,6 +167,13 @@ def main():
                 if fail_count <= 3:
                     print(f"  {tk} @ {T.date()}: {type(e).__name__}: {e}")
                 continue
+            try:
+                tech = _extract_tech_factors(win2)
+            except Exception as e:
+                tech = {}
+                fail_count += 1
+                if fail_count <= 3:
+                    print(f"  [tech] {tk} @ {T.date()}: {type(e).__name__}: {e}")
             row = {
                 "Scan_Date": T.strftime("%Y-%m-%d"),
                 "Technical_Date": T_prev.strftime("%Y-%m-%d"),
@@ -95,6 +182,8 @@ def main():
                 "schema_version": "phase1.v1",
             }
             for k, v in factors.items():
+                row[k] = "" if v is None else round(float(v), 6)
+            for k, v in tech.items():
                 row[k] = "" if v is None else round(float(v), 6)
             rows.append(row)
 
