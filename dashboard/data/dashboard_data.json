@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-15T08:31:14Z",
+  "generated_at": "2026-10-15T08:46:14Z",
   "stocks": [
     {
       "ticker": "ADSK",
@@ -55,12 +55,12 @@
       "technical_confirmations": "4",
       "technical_confirmation_signals": "MA20结构 MACD改善 周线改善 量能确认",
       "ai": {
-        "industry_logic": "当前处于 HAWKISH_REPRICING 事件环境，10年美债收益率5.19%对成长股估值构成压力。ADSK 作为软件订阅模型公司，其现金流折现受长期利率上行影响显著。Technology 板块被标记为硬回避，反映市场对高估值成长股的规避偏好。在此宏观背景下，ADSK 面临估值重估压力：利率上行 → 贴现率提升 → 远期现金流现值下降 → 市盈率压缩。当前缺乏足够的业务催化或盈利加速数据来对抗宏观逆风。",
-        "news_cn": "未提供该股票相关新闻。经核查：无已验证的正面或负面事件。",
-        "premarket_conclusion": "盘前数据缺失，无法判断盘前交易状态。基于昨收价格和当前宏观环境：Technology 板块在 Fed 鹰派重定价期间通常承压，10Y 收益率5.19%处于高位（虽今日微降-0.52%，但绝对水平仍高），VIX 上升3.14%至17.4反映市场谨慎情绪。在缺乏盘前价格确认和基本面/技术数据支撑的情况下，ADSK 当前处于宏观不利、板块回避、数据空白的三重不确定状态。",
-        "catalysts": "暂无已验证的新催化。提供的数据集中缺乏 ADSK 的财报、订单、产品发布或行业政策等结构化基本面事件，也无相关新闻佐证。",
-        "risks": "1) 估值风险：缺乏 PE/PB/EPS 数据，但 Technology 板块在高利率环境下普遍面临估值压缩，ADSK 订阅收入模型对贴现率敏感；2) 宏观风险：Fed 鹰派重定价事件持续，10Y 收益率5.19%对成长股不利，VIX 上升反映市场波动加剧；3) 板块风险：Technology 被列为硬回避，历史在类似事件中胜率偏低；4) 数据盲区：缺乏技术指标（RSI/MACD/均线）和盘前价格，无法评估短期趋势和入场时机；5) 流动性风险：盘前状态不明，可能面临跳空或低流动性风险。",
-        "invalidation": "1) 价格失效：若盘中跌破关键支撑（需补充昨收和均线数据后具体确认，建议以 MA50 或前期低点为参考）；2) 宏观失效：10年美债收益率突破5.3%或 VIX 持续攀升超20，表明市场恐慌加剧，成长股估值进一步承压；3) 板块失效：Technology 板块指数（如 XLK）跌破关键支撑或相对大盘明显弱势；4) 事件失效：若 Fed 官员进一步释放鹰派信号或通胀数据超预期，HAWKISH_REPRICING 事件强化；5) 基本面失效：若公司发布负面预警、订阅续约率下滑或竞争对手抢占份额（需持续监控新闻）。建议：在补充完整技术和基本面数据前暂缓操作，或等待盘中明确信号后再评估。"
+        "industry_logic": "设计软件订阅模式 → 企业级CAD/BIM/制造业设计工具需求 → 稳定订阅收入与续约率 → 高利率环境下现金流稳定性相对占优，但Technology板块整体面临成长估值压力，当前处于Fed鹰派再定价阶段，10Y国债5.19%对长久期成长股形成压力。",
+        "news_cn": "暂无新的个股新闻；当前数据未显示负面事件，但缺乏新催化验证。",
+        "premarket_conclusion": "盘前数据缺失，无法判断开盘方向；昨收价格未提供，技术结构待确认。当前市场环境下Technology板块受硬回避规则约束，需等待常规交易时段确认价格行为与板块联动性，谨慎观察开盘后是否出现抗跌或独立走强信号。",
+        "catalysts": "暂无已验证的新催化；订阅续约数据、企业IT支出趋势、新产品发布等关键驱动暂无更新。",
+        "risks": "1) Technology板块被当前事件驱动Regime标记为硬回避，Fed鹰派再定价与10Y=5.19%对成长估值形成系统性压力；2) 缺乏技术指标与盘前价格数据，无法确认支撑位与趋势有效性；3) 缺乏新闻催化，短期上涨驱动不明；4) 纳指-1.88%显示科技板块承压，板块联动风险高。",
+        "invalidation": "1) 若开盘后跟随纳指下跌超2%且无独立支撑，立即失效；2) 若10Y国债收益率突破5.3%且Technology板块加速下跌，系统性风险加剧需退出；3) 若出现重大负面新闻（财报下调、大客户流失、监管调查等），立即重新评估。"
       },
       "ohlcv": [
         {
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:46Z",
+        "computed_at": "2026-10-15T08:45:39Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:46Z",
+        "computed_at": "2026-10-15T08:45:40Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3060,14 +3060,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 256.2761,
+      "price": 258.08,
       "price_source": "realtime",
-      "current_price": 256.2761,
-      "current_price_updated_at": "2026-10-15T08:27:13Z",
+      "current_price": 258.08,
+      "current_price_updated_at": "2026-10-15T08:45:28Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": -2.2556,
+      "change_1d": -1.5676,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:46Z",
+        "computed_at": "2026-10-15T08:45:41Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4584,14 +4584,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BRK-B|2026-10-02|Observation",
       "ai_snapshot_date": "2026-10-02",
-      "price": 531.39,
+      "price": 530.09,
       "price_source": "realtime",
-      "current_price": 531.39,
-      "current_price_updated_at": "2026-10-15T08:23:37Z",
+      "current_price": 530.09,
+      "current_price_updated_at": "2026-10-15T08:37:57Z",
       "pending_price": 502.52,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 502.52,
-      "change_1d": 0.9575,
+      "change_1d": 0.7106,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:47Z",
+        "computed_at": "2026-10-15T08:45:41Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:47Z",
+        "computed_at": "2026-10-15T08:45:42Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:48Z",
+        "computed_at": "2026-10-15T08:45:42Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:48Z",
+        "computed_at": "2026-10-15T08:45:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:49Z",
+        "computed_at": "2026-10-15T08:45:43Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:49Z",
+        "computed_at": "2026-10-15T08:45:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15236,7 +15236,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:50Z",
+        "computed_at": "2026-10-15T08:45:44Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16760,7 +16760,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:50Z",
+        "computed_at": "2026-10-15T08:45:45Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18284,7 +18284,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:51Z",
+        "computed_at": "2026-10-15T08:45:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19808,7 +19808,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:51Z",
+        "computed_at": "2026-10-15T08:45:46Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21332,7 +21332,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:52Z",
+        "computed_at": "2026-10-15T08:45:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22856,7 +22856,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:52Z",
+        "computed_at": "2026-10-15T08:45:47Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24380,7 +24380,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:53Z",
+        "computed_at": "2026-10-15T08:45:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25904,7 +25904,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:53Z",
+        "computed_at": "2026-10-15T08:45:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25923,7 +25923,7 @@
       "price": 486.71,
       "price_source": "realtime",
       "current_price": 486.71,
-      "current_price_updated_at": "2026-10-15T08:03:13Z",
+      "current_price_updated_at": "2026-10-15T08:03:00Z",
       "pending_price": 449.45,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 463.34,
@@ -27428,7 +27428,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:54Z",
+        "computed_at": "2026-10-15T08:45:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27444,14 +27444,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 530.53,
+      "price": 531.54,
       "price_source": "realtime",
-      "current_price": 530.53,
-      "current_price_updated_at": "2026-10-15T08:30:47Z",
+      "current_price": 531.54,
+      "current_price_updated_at": "2026-10-15T08:44:34Z",
       "pending_price": 479.88,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 483.24,
-      "change_1d": -0.5921,
+      "change_1d": -0.4029,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6953,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -28952,7 +28952,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:54Z",
+        "computed_at": "2026-10-15T08:45:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28971,7 +28971,7 @@
       "price": 207.88,
       "price_source": "realtime",
       "current_price": 207.88,
-      "current_price_updated_at": "2026-10-15T08:04:42Z",
+      "current_price_updated_at": "2026-10-15T08:04:00Z",
       "pending_price": 191.51,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 192.69,
@@ -30476,7 +30476,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:54Z",
+        "computed_at": "2026-10-15T08:45:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -32000,7 +32000,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:55Z",
+        "computed_at": "2026-10-15T08:45:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -33524,7 +33524,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:55Z",
+        "computed_at": "2026-10-15T08:45:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35048,7 +35048,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:56Z",
+        "computed_at": "2026-10-15T08:45:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -35067,7 +35067,7 @@
       "price": 216.38,
       "price_source": "realtime",
       "current_price": 216.38,
-      "current_price_updated_at": "2026-10-15T08:04:29Z",
+      "current_price_updated_at": "2026-10-15T08:04:00Z",
       "pending_price": 209.0,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 208.94,
@@ -36572,7 +36572,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:56Z",
+        "computed_at": "2026-10-15T08:45:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -36588,14 +36588,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 68.06,
+      "price": 68.0503,
       "price_source": "realtime",
-      "current_price": 68.06,
-      "current_price_updated_at": "2026-10-15T08:25:12Z",
+      "current_price": 68.0503,
+      "current_price_updated_at": "2026-10-15T08:31:53Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": 0.6358,
+      "change_1d": 0.6215,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -38096,7 +38096,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:57Z",
+        "computed_at": "2026-10-15T08:45:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -38115,7 +38115,7 @@
       "price": 178.8,
       "price_source": "realtime",
       "current_price": 178.8,
-      "current_price_updated_at": "2026-10-15T08:16:30Z",
+      "current_price_updated_at": "2026-10-15T08:16:00Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
@@ -39620,7 +39620,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:57Z",
+        "computed_at": "2026-10-15T08:45:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -39639,7 +39639,7 @@
       "price": 102.9,
       "price_source": "realtime",
       "current_price": 102.9,
-      "current_price_updated_at": "2026-10-15T08:03:54Z",
+      "current_price_updated_at": "2026-10-15T08:03:00Z",
       "pending_price": 103.39,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 101.82,
@@ -41144,7 +41144,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-14",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-15T08:30:57Z",
+        "computed_at": "2026-10-15T08:45:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -41167,7 +41167,7 @@
         "change_1d": -0.0941,
         "change_5d": 0.8629,
         "change_20d": 0.3101,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -41185,7 +41185,7 @@
         "change_1d": -1.1083,
         "change_5d": -1.0617,
         "change_20d": 2.2131,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -41203,7 +41203,7 @@
         "change_1d": -1.8803,
         "change_5d": -3.0714,
         "change_20d": 2.7501,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -41217,16 +41217,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 17.5,
-        "change_1d": 3.7344,
-        "change_5d": 16.0477,
-        "change_20d": -1.1858,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 17.52,
+        "change_1d": 3.853,
+        "change_5d": 16.1804,
+        "change_20d": -1.0728,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052100,
+        "quote_ts": 1792053000,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41239,7 +41239,7 @@
         "change_1d": 0.0,
         "change_5d": -1.6487,
         "change_20d": 3.6756,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -41255,15 +41255,15 @@
         "unit": "percent yield",
         "price": 4.75,
         "change_1d": 0.0,
-        "change_5d": null,
-        "change_20d": null,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "change_5d": 2.2165,
+        "change_20d": 8.3238,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
         "quote_ts": null,
-        "last_bar_date": "2026-10-13"
+        "last_bar_date": "2026-10-14"
       },
       {
         "symbol": "^FVX",
@@ -41275,7 +41275,7 @@
         "change_1d": -0.0,
         "change_5d": -0.5776,
         "change_20d": 2.7372,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -41293,7 +41293,7 @@
         "change_1d": 0.0,
         "change_5d": -2.4024,
         "change_20d": 3.2903,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -41307,16 +41307,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.999,
-        "change_1d": -0.5373,
-        "change_5d": -0.2357,
-        "change_20d": 1.6838,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 102.003,
+        "change_1d": -0.5334,
+        "change_5d": -0.2318,
+        "change_20d": 1.6878,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052400,
+        "quote_ts": 1792053300,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41325,16 +41325,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4175.5,
-        "change_1d": 1.6456,
-        "change_5d": 0.8404,
-        "change_20d": -4.8319,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 4176.2998,
+        "change_1d": 1.6651,
+        "change_5d": 0.8597,
+        "change_20d": -4.8137,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052460,
+        "quote_ts": 1792053360,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41343,16 +41343,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 56.745,
-        "change_1d": 2.1512,
-        "change_5d": -5.2655,
-        "change_20d": -11.7331,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 56.775,
+        "change_1d": 2.2052,
+        "change_5d": -5.2154,
+        "change_20d": -11.6865,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052460,
+        "quote_ts": 1792053360,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41361,16 +41361,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.549,
-        "change_1d": -0.9453,
-        "change_5d": -0.7201,
-        "change_20d": 1.8269,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 6.563,
+        "change_1d": -0.7336,
+        "change_5d": -0.5078,
+        "change_20d": 2.0446,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052460,
+        "quote_ts": 1792053360,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41379,16 +41379,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 94.29,
-        "change_1d": -0.8413,
-        "change_5d": 6.8079,
-        "change_20d": -7.9469,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 94.63,
+        "change_1d": -0.4838,
+        "change_5d": 7.193,
+        "change_20d": -7.615,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052460,
+        "quote_ts": 1792053360,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41397,16 +41397,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 103.74,
-        "change_1d": -2.1874,
-        "change_5d": 3.5329,
-        "change_20d": -1.9749,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 103.75,
+        "change_1d": -2.178,
+        "change_5d": 3.5429,
+        "change_20d": -1.9654,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052460,
+        "quote_ts": 1792053360,
         "last_bar_date": "2026-10-14"
       },
       {
@@ -41415,16 +41415,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.258,
-        "change_1d": 1.8762,
-        "change_5d": 1.7171,
-        "change_20d": 12.6946,
-        "updated_at": "2026-10-15T08:30:57Z",
+        "price": 3.264,
+        "change_1d": 2.0638,
+        "change_5d": 1.9045,
+        "change_20d": 12.9021,
+        "updated_at": "2026-10-15T08:45:54Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792052460,
+        "quote_ts": 1792053300,
         "last_bar_date": "2026-10-14"
       }
     ],
@@ -41437,12 +41437,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-15T08:31:12Z"
+    "updated_at": "2026-10-15T08:46:11Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-15 04:31:14",
+    "as_of_us": "2026-10-15 04:46:14",
     "window_start": "2026-09-15",
     "core_closed_count": 4,
     "core_open_count": 23,
@@ -43512,8 +43512,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 243.11,
-        "pnl_pct": -2.05,
+        "cur_price": 243.55,
+        "pnl_pct": -1.88,
         "days_held": 23,
         "stop_loss": null,
         "score": "64.2",
@@ -43926,8 +43926,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 172.46,
-        "cur_price": 182.95,
-        "pnl_pct": 6.08,
+        "cur_price": 181.88,
+        "pnl_pct": 5.46,
         "days_held": 27,
         "stop_loss": null,
         "score": "74.0",
@@ -47928,8 +47928,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 230.0,
-        "pnl_pct": -45.09,
+        "cur_price": 229.61,
+        "pnl_pct": -45.18,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -48779,8 +48779,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 51.81,
-        "pnl_pct": -5.01,
+        "cur_price": 51.83,
+        "pnl_pct": -4.97,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -49147,8 +49147,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 54.95,
-        "pnl_pct": 5.73,
+        "cur_price": 54.93,
+        "pnl_pct": 5.7,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -49584,7 +49584,7 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 0.0,
-        "cur_price": 0.0003,
+        "cur_price": 0.0003000000142492354,
         "pnl_pct": null,
         "days_held": 110,
         "stop_loss": null,
@@ -50320,7 +50320,7 @@
         "tag": "Trap_Warning",
         "status": "Active",
         "rec_price": 0.0,
-        "cur_price": 0.0005,
+        "cur_price": 0.0004400000034365803,
         "pnl_pct": null,
         "days_held": 134,
         "stop_loss": null,
@@ -51056,7 +51056,7 @@
         "tag": "Core_Dragon",
         "status": "Active",
         "rec_price": 0.0,
-        "cur_price": 0.0001,
+        "cur_price": 0.00019999999494757503,
         "pnl_pct": null,
         "days_held": 140,
         "stop_loss": null,
@@ -51691,22 +51691,22 @@
   "runtimes": {
     "scan": {
       "latest": {
-        "run_id": 38702747955,
+        "run_id": 38706441751,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-15T08:01:37Z",
-        "started_at": "2026-10-15T08:01:37Z",
-        "updated_at": "2026-10-15T08:12:28Z",
-        "head_sha": "6c5687dfbe5a",
+        "created_at": "2026-10-15T08:32:53Z",
+        "started_at": "2026-10-15T08:32:53Z",
+        "updated_at": "2026-10-15T08:44:15Z",
+        "head_sha": "b30828832ef7",
         "event": "workflow_dispatch",
-        "run_number": 166,
+        "run_number": 167,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38702747955"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38706441751"
       },
       "last_success": {
-        "run_id": 38702747955,
-        "completed_at": "2026-10-15T08:12:28Z",
-        "head_sha": "6c5687dfbe5a"
+        "run_id": 38706441751,
+        "completed_at": "2026-10-15T08:44:15Z",
+        "head_sha": "b30828832ef7"
       },
       "error": null
     },
@@ -52082,21 +52082,29 @@
   },
   "news": {
     "schema_version": "news.v1",
-    "generated_at": "2026-10-15T08:11:36Z",
+    "generated_at": "2026-10-15T08:44:09Z",
     "market_news": [
       {
         "headline": "COMMENTARY: Oil's long view darkens as Iran war refuses to end - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOS2VycDJiM2tHUVV0LUZHMjgtcmdqOHQ2QWZkakF6eGlnY2ZmaHduOE80Ul95NjVTTVFtVFR5d3l4Q09QdU15YWI5MzVxYzdnUWlKRXgtR0lGakUyV243MlJPamhMRFIxTF85SWRJclNQLTlJTW9KUHR6OFdFMUpxaURpYkdISHJPRk5ZMDNIZ2h5Zm9rVVVzQTk0Uk56VXdYY1d5ZGduNDJUcVA0MjNBaDNB?oc=5",
         "datetime": 1792044000,
-        "summary": "COMMENTARY: Oil's long view darkens as Iran war refuses to end  Reuters"
+        "summary": "COMMENTARY: Oil's long view darkens as Iran war refuses to end  Reuters",
+        "headline_cn": "评论：伊朗战争持续，石油长期前景黯淡",
+        "sentiment": "bearish",
+        "rationale": "地缘冲突持续推高油价，拖累经济增长预期",
+        "market_relevant": true
       },
       {
         "headline": "BoE's Pill says a rate hike need not be start of long series - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxONEUxTUdrNGxTY0Y0LWE3YWNjUk1Nc3FmX1RWRUhDeXVSWTYxcmM5a3czc0g2QkJZcUgtTENRNTVRc2p4d1RXQnRrLU1fTUdhN1JBbF9uWGc4UVVVWFlnLXpUdkRLX050M1RGTk5TUXl3T203VElqeF9IU0J0b3RoWlJHcDNHU2hoeGI4RHE2azhzVlNlYWxVcTZUbDlkcmVL?oc=5",
         "datetime": 1792039500,
-        "summary": "BoE's Pill says a rate hike need not be start of long series  Reuters"
+        "summary": "BoE's Pill says a rate hike need not be start of long series  Reuters",
+        "headline_cn": "英国央行Pill称加息未必是连续加息的开始",
+        "sentiment": "bullish",
+        "rationale": "暗示加息周期温和，降低紧缩预期利好市场",
+        "market_relevant": true
       },
       {
         "headline": "US military weighs use of ‘mother of all bombs’ in potential future strikes on Iran, CNN says - Reuters",
@@ -52110,49 +52118,77 @@
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOakIxN2pXRENBSjFMY1Rtc00zZG84UUVERE54NFBReWdoV2VJMHRpMFlZdzdSLXdzaEFOOEQwbFp5TG44Mk5wMFZyLVdPOTNpNG5nRlY5Q1lITWFlSjZ1RXdBMDdoRTQ1LTdrMy0zQVJlTThsUUJ2anBxWDNLWkpyV3lUbm5VMm5KMVJybkNpTVJuTGl6bTJia0t5UjE1UHNIclJFQUVRZ0FnektCZWxnSXNGc1VSdlhXM2RZ?oc=5",
         "datetime": 1792027800,
-        "summary": "Oil prices ease as investors weigh supply outlook, Middle East tensions  Reuters"
+        "summary": "Oil prices ease as investors weigh supply outlook, Middle East tensions  Reuters",
+        "headline_cn": "油价回落，投资者权衡供应前景与中东局势",
+        "sentiment": "neutral",
+        "rationale": "供需与地缘因素相互抵消，方向不明",
+        "market_relevant": true
       },
       {
         "headline": "US considers easing sanctions on shadow fleet vessels to cut freight rates, official says - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOdC1hR0pwcGJWU2NSX0szSlhYNlBMYUc2Y1ktS0NseE5MeEVKdE9jUVVqUHlva3dxeDg4NXRTQXM0UlpyMWJlTHNSN1ZiOWFqcWdIX1NNcGRhYzBsak5iVnZrYnJaX2xGbkRLcjNrQmFkUUd2ejVHWm0ydVJ2RVJhS1VFbkRhTHg5MVJXbnJDQ3YtRmVLWWpKU2xwUXNZSzMtUWI4cjJfaXp4djM0V2lQQmc4X2VsaVkxMHFpVUZ2bWNLaldpQnBNZmNn?oc=5",
         "datetime": 1792022760,
-        "summary": "US considers easing sanctions on shadow fleet vessels to cut freight rates, official says  Reuters"
+        "summary": "US considers easing sanctions on shadow fleet vessels to cut freight rates, official says  Reuters",
+        "headline_cn": "美国考虑放松影子船队制裁以降低运费",
+        "sentiment": "bullish",
+        "rationale": "运费下降降低通胀压力，利好经济与股市",
+        "market_relevant": true
       },
       {
         "headline": "Russia's Lavrov, China's Wang discuss cooperation, Ukraine, Iran at Asia security meeting - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQRWd0VGluQkdsUm1GUWdkQlFINnM3NzFGUEpBSGZYMEtuOEVUdWpPOWY2d3Fxc0Q3OFI4TE95YUVWWFFXaklaTHQtZFRlMlgxWWtTc2hTaHJRejhueS1SOXMxVjRUZXZyYUNWbTNldlNMQTFtUzdzV2g3c2lhNG9ucjd6MWVVdjQ4OFctWnZGcXRmdzZsNVhKU2xNYTVJTzk4NkM3R2ctRm9aZFE3ZFNCa1VsYl9qRXdGOHFpSGRB?oc=5",
         "datetime": 1792014823,
-        "summary": "Russia's Lavrov, China's Wang discuss cooperation, Ukraine, Iran at Asia security meeting  Reuters"
+        "summary": "Russia's Lavrov, China's Wang discuss cooperation, Ukraine, Iran at Asia security meeting  Reuters",
+        "headline_cn": "俄外长拉夫罗夫与中国王毅在亚洲安全会议讨论合作、乌克兰与伊朗",
+        "sentiment": "neutral",
+        "rationale": "外交会谈属常规议程，无突破性进展",
+        "market_relevant": false
       },
       {
         "headline": "US inflation heats up in September; Fed rate hike this month back on table - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNX3hkV3J5em1xWWY4V0hQODFTamFtU3NvdkpPRUUzMGY0TnlKaVlneXZPc0J6bFpWdDZWb2hLRkZZaHhZVElDSXNFbGNYMVVBRGR6c1RlNDA4cEhkMEcwck5VMFRtZ1QxOFJqNTkyaGJzWWFLSXp2Z0l1Z19vMDh5bGd6N1FJSkJFR2tZUXd1UWUzeVlvZi1xNTVONk00ejJ5cE0xSGY4THFsaUo0RGxPV3dpaW4tbEZseUE?oc=5",
         "datetime": 1792014335,
-        "summary": "US inflation heats up in September; Fed rate hike this month back on table  Reuters"
+        "summary": "US inflation heats up in September; Fed rate hike this month back on table  Reuters",
+        "headline_cn": "美国9月通胀升温，本月加息重回议程",
+        "sentiment": "bearish",
+        "rationale": "通胀回升强化加息预期，压制估值",
+        "market_relevant": true
       },
       {
         "headline": "NEWSLETTER: Houthis bring the war to Riyadh - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMihAFBVV95cUxONHJqSGhySVVZXy02Zk5GMWRyNjA2bURRWWpVbU9FdEREM2xBY1h6dnZUZ0lWVGFobjFCWjZhZTdra1Z3MjNGV1hkcUNaUkxueHdPTDlTSGI2V1JFRzl5WHRVQWNEM0dxZEs3MzRLSFhtam5qME1GQ2dudVNMMXZ3RnpsTE4?oc=5",
         "datetime": 1792003680,
-        "summary": "NEWSLETTER: Houthis bring the war to Riyadh  Reuters"
+        "summary": "NEWSLETTER: Houthis bring the war to Riyadh  Reuters",
+        "headline_cn": "简报：胡塞武装将战火蔓延至利雅得",
+        "sentiment": "bearish",
+        "rationale": "中东冲突扩大，油价与避险需求上升",
+        "market_relevant": true
       },
       {
         "headline": "AI infrastructure stocks tumble. Here's a few reasons for the sell-off",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/14/ai-infrastructure-stocks-tumble-heres-a-few-reasons-for-the-sell-off-.html",
         "datetime": 1792003271,
-        "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
+        "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading.",
+        "headline_cn": "AI基础设施股暴跌，抛售原因解析",
+        "sentiment": "bearish",
+        "rationale": "板块集体下跌反映盈利或估值担忧",
+        "market_relevant": true
       },
       {
         "headline": "UN peacekeeping chief says talks on future of Lebanon mission must begin soon - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQZFFDWURYODViUnVqWEFWMzZGUkxuUVQ2SFFDZTFsdGRseDR2Z0MwNzV5eWZXMXVEZnd2T243QmdyaTRSM3BwbDB1S19manhlNlJmc3VOSDVNX0JQNlBMOFFWQ1l2ZWJ1TE5FNHRINThxd1ZhSVVFVDR6N3dKdElubTlLd09qQU9HczZsMktsUjZSdFVaWnl2ajJPSXFXdE85ZFVzU215VDg1cnNUVGp3eXNhS2lGX1JaWGhsYTFtWWw2dlE?oc=5",
         "datetime": 1792001448,
-        "summary": "UN peacekeeping chief says talks on future of Lebanon mission must begin soon  Reuters"
+        "summary": "UN peacekeeping chief says talks on future of Lebanon mission must begin soon  Reuters",
+        "headline_cn": "联合国维和负责人称必须尽快就黎巴嫩任务展开谈判",
+        "sentiment": "neutral",
+        "rationale": "维和事务性表态，无市场实质影响",
+        "market_relevant": false
       },
       {
         "headline": "Merck CEO tells CNBC he expects breakthrough cancer vaccine will become faster to make",
@@ -52792,21 +52828,33 @@
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=1c336ddf452c3cd20590c639ed3795641ac4a44f305df3f79475f6ff4fb4d3fd",
           "datetime": 1791996218,
-          "summary": "Is ADSK a good stock to buy? We came across a bullish thesis on Autodesk, Inc. on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $212.40, and ADSK gained 9.95% since then. The gain appears to reflect optimism around Autodesk’s new AI capabilities and renewed takeover interest […]"
+          "summary": "Is ADSK a good stock to buy? We came across a bullish thesis on Autodesk, Inc. on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $212.40, and ADSK gained 9.95% since then. The gain appears to reflect optimism around Autodesk’s new AI capabilities and renewed takeover interest […]",
+          "headline_cn": "Autodesk对比PTC和TRMB：云与AI投资能否推动盈利加速增长？",
+          "sentiment": "neutral",
+          "rationale": "行业对比分析，未给出明确结论",
+          "market_relevant": true
         },
         {
           "headline": "1 Software Stock Worth Investigating and 2 We Turn Down",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=fbb8df5d89d25ccaafe131fa770da5ebe4c5e00ef66557e37160d1415a0a0947",
           "datetime": 1791968327,
-          "summary": "Software is rapidly reducing operating expenses for businesses. Companies bringing it to life have been rewarded with explosive earnings growth, and the upward trend shows no signs of stopping as the industry has posted a 56.3% gain over the past six months, beating the S&P 500 by 44.2 percentage points."
+          "summary": "Software is rapidly reducing operating expenses for businesses. Companies bringing it to life have been rewarded with explosive earnings growth, and the upward trend shows no signs of stopping as the industry has posted a 56.3% gain over the past six months, beating the S&P 500 by 44.2 percentage points.",
+          "headline_cn": "1只值得关注的软件股与2只我们不看好的",
+          "sentiment": "neutral",
+          "rationale": "观点文章无具体标的或数据支撑",
+          "market_relevant": true
         },
         {
           "headline": "What Is Adobe No Longer Telling You?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=eeb6f4dde5f6817b278bc483feb73404e64ec1d7408c6466c4f0a1540a54379e",
           "datetime": 1791923368,
-          "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now."
+          "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now.",
+          "headline_cn": "Adobe不再告诉你什么信息？",
+          "sentiment": "bearish",
+          "rationale": "暗示信息披露减少，透明度担忧打压信心",
+          "market_relevant": true
         },
         {
           "headline": "Adobe Keeps Cratering: One Wall Street Pro’s Thesis Projects 50% Gains in the Next Year",
@@ -52820,7 +52868,11 @@
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
           "datetime": 1791570784,
-          "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown."
+          "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
+          "headline_cn": "Adobe股价能否消化订阅增长放缓？",
+          "sentiment": "bearish",
+          "rationale": "订阅增速放缓威胁核心增长逻辑",
+          "market_relevant": true
         },
         {
           "headline": "Are SaaS Stocks Making A Comeback? Autodesk, Intuit Outperform In Tough Week For Tech",
@@ -54804,6 +54856,13 @@
       ],
       "MSFT": [
         {
+          "headline": "Will Yum! Brands' (YUM) AI-Driven Operations and Supplier Strategy Shift Its Post-Pizza Hut Narrative?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=ef1b9d3a5d6e2b5d49339c473935e9bc8bdda805654a03e76971a0408ef9ce78",
+          "datetime": 1792048696,
+          "summary": "In recent days, Yum! Brands highlighted deeper long-term supplier partnerships, expanding AI deployment such as Taco Bell’s automated drive-thru ordering, and a unified global supply chain, while analysts updated views on its growth prospects following the Pizza Hut divestiture and softer Taco Bell trends. Together, these moves suggest Yum! Brands is tightening operational control around its strongest brands and digital initiatives, aiming to improve restaurant-level efficiency and menu..."
+        },
+        {
           "headline": "Will OpenAI Go Public? One VC Says ‘Not Really Sure They Mean It’ But Bets On ‘Blockbuster’ Anthropic Listing",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=1d9d23e8fb75c742dbdf30fb46afdd3876f5d648219b5b2f22a6af8159e4f402",
@@ -55333,7 +55392,11 @@
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=eeb6f4dde5f6817b278bc483feb73404e64ec1d7408c6466c4f0a1540a54379e",
           "datetime": 1791923368,
-          "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now."
+          "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now.",
+          "headline_cn": "Adobe不再告诉你什么信息？",
+          "sentiment": "bearish",
+          "rationale": "暗示信息披露减少，透明度担忧打压信心",
+          "market_relevant": true
         },
         {
           "headline": "If Palantir Stock Looks Expensive, You Need To Read This",
@@ -56538,13 +56601,6 @@
           "url": "https://finnhub.io/api/news?id=914e0084ab8e06c5d5204a3d5efa51e92c8b9fbae3524fd4b7816f258e771c85",
           "datetime": 1791788394,
           "summary": "Micron faces bearish options bets despite strong AI-driven memory demand. Read why analysts remain bullish on MU stock long-term."
-        },
-        {
-          "headline": "AI Bubble Ready to Burst? Investor Raises Alarm Over Anthropic's Sky-High Valuation",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=66d7c4f479a455f004bf55fe2e8944bb57943b7396d1575969c51f616beeba70",
-          "datetime": 1791786383,
-          "summary": "Anthropic eyes a late 2026 IPO, while OpenAI delays until 2027. Experts weigh revenue growth against AI bubble risks."
         }
       ],
       "PM": [
@@ -58209,7 +58265,7 @@
   },
   "macro": {
     "schema_version": "macro.v1",
-    "generated_at": "2026-10-15T08:03:07Z",
+    "generated_at": "2026-10-15T08:34:27Z",
     "economic": [
       {
         "indicator": "10Y国债",
@@ -58217,8 +58273,8 @@
         "prev": "5.22%",
         "date": "2026-10-14",
         "source": "Yahoo Finance",
-        "sentiment": "bullish",
-        "rationale": "10年期国债收益率下降，债券利率走低对股市偏利好"
+        "sentiment": null,
+        "rationale": null
       },
       {
         "indicator": "5Y国债",
@@ -58226,8 +58282,8 @@
         "prev": "5.01%",
         "date": "2026-10-14",
         "source": "Yahoo Finance",
-        "sentiment": "bullish",
-        "rationale": "5年期国债收益率下降，利率环境改善对股市偏利好"
+        "sentiment": null,
+        "rationale": null
       },
       {
         "indicator": "13周国债",
@@ -58235,8 +58291,8 @@
         "prev": "4.06%",
         "date": "2026-10-14",
         "source": "Yahoo Finance",
-        "sentiment": "bearish",
-        "rationale": "13周短期国债收益率上升，短期利率走高对股市偏利空"
+        "sentiment": null,
+        "rationale": null
       },
       {
         "indicator": "CPI",
@@ -58244,8 +58300,8 @@
         "prev": "指数 334.98",
         "date": "2026-09-01",
         "source": "BLS API",
-        "sentiment": "bearish",
-        "rationale": "CPI指数上升，通胀压力增加对股市偏利空"
+        "sentiment": null,
+        "rationale": null
       },
       {
         "indicator": "核心CPI",
@@ -58253,8 +58309,8 @@
         "prev": "指数 337.76",
         "date": "2026-09-01",
         "source": "BLS API",
-        "sentiment": "bearish",
-        "rationale": "核心CPI指数上升，核心通胀走高对股市偏利空"
+        "sentiment": null,
+        "rationale": null
       },
       {
         "indicator": "失业率",
@@ -58262,8 +58318,8 @@
         "prev": "4.10%",
         "date": "2026-09-01",
         "source": "BLS API",
-        "sentiment": "bearish",
-        "rationale": "失业率上升至4.20%，经济走弱信号对股市偏利空"
+        "sentiment": null,
+        "rationale": null
       },
       {
         "indicator": "核心PCE",
@@ -58271,8 +58327,8 @@
         "prev": null,
         "date": "August 2026",
         "source": "BEA 官方网页",
-        "sentiment": "bearish",
-        "rationale": "核心PCE为3.00%，通胀压力仍存对股市偏利空"
+        "sentiment": null,
+        "rationale": null
       }
     ],
     "speakers": [
@@ -58283,9 +58339,9 @@
         "time": "10-14 15:04",
         "source": "MarketWatch",
         "age_tag": "📰今日-高权重",
-        "content_cn": "随着加息可能性上升，下次美联储会议值得关注",
-        "sentiment": "bearish",
-        "rationale": "加息预期上升暗示鹰派倾向，对股市偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": null,
@@ -58294,9 +58350,9 @@
         "time": "10-14 09:37",
         "source": "PBS",
         "age_tag": "📰今日-高权重",
-        "content_cn": "中期选举临近，上月通胀恶化至3.7%",
-        "sentiment": "bearish",
-        "rationale": "通胀恶化至3.7%，通胀压力对股市偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": "Bowman",
@@ -58305,9 +58361,9 @@
         "time": "10-14 07:39",
         "source": "Reuters",
         "age_tag": "📰今日-高权重",
-        "content_cn": "美联储鲍曼称在采取更多行动前有时间'等待观望'",
-        "sentiment": "neutral",
-        "rationale": "美联储鲍曼表示等待观望，中性立场"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": null,
@@ -58316,9 +58372,9 @@
         "time": "10-14 15:28",
         "source": "Beinsure",
         "age_tag": "📰今日-高权重",
-        "content_cn": "房利美将美国2027年房贷利率预期上调至7.5%",
-        "sentiment": "bearish",
-        "rationale": "房贷利率预期上调至7.5%，融资成本上升偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": null,
@@ -58327,9 +58383,9 @@
         "time": "10-14 11:20",
         "source": "CNBC",
         "age_tag": "📰今日-高权重",
-        "content_cn": "房利美大幅上调2027年房贷利率预期",
-        "sentiment": "bearish",
-        "rationale": "房贷利率预期大幅上调，融资成本压力偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": null,
@@ -58338,9 +58394,9 @@
         "time": "10-14 09:07",
         "source": "Quartz",
         "age_tag": "📰今日-高权重",
-        "content_cn": "2026年9月CPI通胀超华尔街预期",
-        "sentiment": "bearish",
-        "rationale": "CPI通胀超预期，通胀压力对股市偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": "Trump",
@@ -58349,20 +58405,9 @@
         "time": "10-12 21:08",
         "source": "SMH.com.au",
         "age_tag": "📑前日-低权重",
-        "content_cn": "别怪乌克兰：物价持续上涨归因于特朗普的战争",
-        "sentiment": "neutral",
-        "rationale": "归因分析不涉及货币政策方向，中性"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "Gold Price Forecast: XAU/USD rebounds firmly as China Treasuries-buying report smashes US yields - FXStreet",
-        "time": "10-15 00:01",
-        "source": "FXStreet",
-        "age_tag": "🔥今日最新-权重最高",
-        "content_cn": "黄金价格预测：中国购买美债报道打压美债收益率，金价强劲反弹",
-        "sentiment": "bullish",
-        "rationale": "美债收益率下跌利好风险资产，黄金反弹偏利好"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": null,
@@ -58371,9 +58416,9 @@
         "time": "10-14 22:42",
         "source": "StoneX",
         "age_tag": "🔥今日最新-权重最高",
-        "content_cn": "纳斯达克100预测：油价跳涨5%、国债收益率上升，纳指下跌",
-        "sentiment": "bearish",
-        "rationale": "油价大涨5%、国债收益率上升，纳指下跌偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       },
       {
         "person": null,
@@ -58382,9 +58427,20 @@
         "time": "10-14 00:30",
         "source": "FOREX.com",
         "age_tag": "📄昨日-中等权重",
-        "content_cn": "道琼斯预测：油价和国债收益率成焦点，道指下跌",
-        "sentiment": "bearish",
-        "rationale": "油价和国债收益率走高，道指下跌偏利空"
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Databank: Elevated treasury yields, Middle East tension to shape Gold ETF’s near-term outlook - CNBC Africa",
+        "time": "10-13 10:38",
+        "source": "CNBC Africa",
+        "age_tag": "📄昨日-中等权重",
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
       }
     ],
     "error": null
@@ -58441,8 +58497,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-15T08:31:12Z",
-    "technical_updated_at": "2026-10-15T08:31:14Z",
+    "market_updated_at": "2026-10-15T08:46:11Z",
+    "technical_updated_at": "2026-10-15T08:46:14Z",
     "counts": {
       "core": 9,
       "observation": 18,
@@ -58539,11 +58595,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-15T08:30:44Z",
+    "generated_at": "2026-10-15T08:45:38Z",
     "fear_greed": {
       "score": 29.91,
       "rating": "fear",
-      "timestamp": "2026-10-15T08:13:31+00:00",
+      "timestamp": "2026-10-15T08:28:46+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 35.6,
@@ -58582,7 +58638,7 @@
         },
         {
           "date": "2026-10-14",
-          "score": 30.14,
+          "score": 29.91,
           "rating": "fear"
         },
         {
@@ -59419,7 +59475,7 @@
       "model": "claude-fable-5-1",
       "requested": "claude-fable-5-1",
       "fallback": false,
-      "updated_at": "2026-10-15T08:09:38.230756+00:00"
+      "updated_at": "2026-10-15T08:41:39.525088+00:00"
     }
   }
 }
