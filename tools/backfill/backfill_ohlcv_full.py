@@ -41,7 +41,7 @@ def load_targets():
                     if max_d is None or d > max_d:
                         max_d = d
     if min_d:
-        dt = datetime.strptime(min_d, "%Y-%m-%d") - timedelta(days=5)
+        dt = datetime.strptime(min_d, "%Y-%m-%d") - timedelta(days=150)
         min_d = dt.strftime("%Y-%m-%d")
     if max_d:
         dt = datetime.strptime(max_d, "%Y-%m-%d") + timedelta(days=1)
