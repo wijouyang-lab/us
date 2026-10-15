@@ -54,7 +54,8 @@ STRATEGY_PARAMS_FILE = "strategy_params.json"
 def load_strategy_params():
     defaults = {"exit": {"early_days":3,"early_stop_pct":-5.0,"atr_multiplier":2.0,"atr_floor_pct":3.0,"atr_ceiling_pct":12.0,
                           "profit_lock_1_pct":15.0,"profit_lock_1_drawdown_pct":10.0,"profit_lock_2_pct":30.0,"profit_lock_2_drawdown_pct":8.0,
-                          "profit_lock_3_pct":50.0,"profit_lock_3_drawdown_pct":12.0}}
+                          "profit_lock_3_pct":50.0,"profit_lock_3_drawdown_pct":12.0,
+                          "breakeven_trigger_pct":5.0,"breakeven_floor_multiplier":1.0}}
     try:
         with open(STRATEGY_PARAMS_FILE,"r",encoding="utf-8") as f: d=json.load(f)
         if isinstance(d.get("exit"),dict): defaults["exit"].update(d["exit"])
@@ -801,6 +802,26 @@ def _classify_exit_status(exitp, rec_price):
     return "Trailing_Profit_Take" if e > r else "Stop_Loss_Hit"
 
 
+def _apply_breakeven_floor(candidate, entry_price, current_close, trigger_pct, floor_multiplier):
+    """浮盈 ≥ trigger_pct 后，把 trailing candidate 至少抬到 entry × floor_multiplier。
+
+    纯函数，离线可测。任一入参无效时原样返回 candidate（fail-safe）。
+    """
+    try:
+        ep = float(entry_price)
+        cc = float(current_close)
+        tp = float(trigger_pct)
+        fm = float(floor_multiplier)
+    except (ValueError, TypeError):
+        return candidate
+    if ep <= 0 or cc <= 0:
+        return candidate
+    pnl_pct = (cc / ep - 1) * 100
+    if pnl_pct < tp:
+        return candidate
+    return max(candidate, ep * fm)
+
+
 def compute_change_1d(close, prev_close):
     """Change_1D = (Close - Prev_Close) / Prev_Close * 100。
 
@@ -1421,6 +1442,12 @@ def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry
                 if pnl_pct >= float(EXIT_PARAMS.get(threshold_key,0)):
                     candidate=max(candidate, close*(1-float(EXIT_PARAMS.get(dd_key,10))/100))
                     break
+        # 保本线：浮盈超过阈值后，止损至少上移到入场价（参数化）
+        candidate = _apply_breakeven_floor(
+            candidate, ep, close,
+            EXIT_PARAMS.get("breakeven_trigger_pct", 5.0),
+            EXIT_PARAMS.get("breakeven_floor_multiplier", 1.0),
+        )
         macd_bear=bool(pd.notna(r["MACD"]) and pd.notna(r["MACD_SIGNAL"]) and r["MACD"]<r["MACD_SIGNAL"])
         kdj_falling=bool(len(d)>=2 and d["KDJ_J"].iloc[-1]<d["KDJ_J"].iloc[-2])
         if macd_bear and kdj_falling: candidate=max(candidate, close-1.5*atr)
