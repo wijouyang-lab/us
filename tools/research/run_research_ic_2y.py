@@ -48,6 +48,13 @@ def main():
                 if i >= 30:
                     break
                 print(f"    {line.rstrip()}")
+
+    # 追加：调用 compute_ic_2y 重算 IC 表（17 因子；前瞻收益只从 backtest CSV 搬运）
+    try:
+        import compute_ic_2y
+        compute_ic_2y.main()
+    except Exception as e:
+        print(f"[warn] compute_ic_2y failed: {e}")
     return 0
 
 
