@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-15T09:08:50Z",
+  "generated_at": "2026-10-15T13:02:02Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "5.19%",
-      "prev": "5.22%",
-      "date": "2026-10-14",
+      "value": "5.06%",
+      "prev": "5.19%",
+      "date": "2026-10-15",
       "source": "Yahoo Finance",
-      "sentiment": "bullish",
-      "rationale": "10年期国债收益率下降，融资成本降低"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "5Y国债",
-      "value": "4.99%",
-      "prev": "5.01%",
-      "date": "2026-10-14",
+      "value": "4.88%",
+      "prev": "4.99%",
+      "date": "2026-10-15",
       "source": "Yahoo Finance",
-      "sentiment": "bullish",
-      "rationale": "5年期国债收益率下降，市场风险偏好改善"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "13周国债",
-      "value": "4.09%",
-      "prev": "4.06%",
-      "date": "2026-10-14",
+      "value": "4.08%",
+      "prev": "4.09%",
+      "date": "2026-10-15",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "短期国债收益率上升，短期资金成本增加"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "CPI",
@@ -35,8 +35,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "CPI为4.00%，通胀压力较大"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心CPI",
@@ -44,8 +44,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "核心CPI为2.79%，仍存在通胀压力"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "失业率",
@@ -53,8 +53,8 @@
       "prev": "4.10%",
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "失业率从4.10%升至4.20%，经济走弱"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心PCE",
@@ -62,21 +62,30 @@
       "prev": null,
       "date": "August 2026",
       "source": "BEA 官方网页",
-      "sentiment": "bearish",
-      "rationale": "核心PCE为3.00%，通胀高于目标"
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "indicator": "Fear & Greed",
+      "value": "30 (fear)",
+      "prev": "40",
+      "date": "2026-10-15",
+      "source": "CNN",
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "speakers": [
     {
-      "person": "Warsh",
+      "person": null,
       "title": null,
-      "content": "Gold subdued ahead of US inflation data, Warsh remarks - Reuters",
-      "time": "10-12 22:23",
+      "content": "US inflation heats up in September; Fed rate hike this month back on table - Reuters",
+      "time": "10-14 17:45",
       "source": "Reuters",
-      "age_tag": "📑前日-低权重",
-      "content_cn": "黄金在美国通胀数据和Warsh讲话前表现平淡",
-      "sentiment": "neutral",
-      "rationale": "黄金在通胀数据和Warsh讲话前观望"
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -85,20 +94,9 @@
       "time": "10-14 15:04",
       "source": "MarketWatch",
       "age_tag": "📰今日-高权重",
-      "content_cn": "随着加息可能性上升，下次美联储会议有何预期",
-      "sentiment": "bearish",
-      "rationale": "加息概率上升，利率预期偏鹰派"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "The Fed faces a politically fraught rate decision on the eve of an election for the third time in a row - Yahoo Finance",
-      "time": "10-14 12:44",
-      "source": "Yahoo Finance",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美联储在选举前夕面临政治敏感的利率决策，这已是连续第三次",
-      "sentiment": "neutral",
-      "rationale": "描述选举前利率决策的政治敏感性"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -107,9 +105,9 @@
       "time": "10-14 09:37",
       "source": "PBS",
       "age_tag": "📰今日-高权重",
-      "content_cn": "中期选举临近，上月通胀恶化至3.7%",
-      "sentiment": "bearish",
-      "rationale": "中期选举前通胀恶化至3.7%"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": "Bowman",
@@ -117,87 +115,131 @@
       "content": "Fed's Bowman says there's time to 'wait and see' before any more action - Reuters",
       "time": "10-14 07:39",
       "source": "Reuters",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美联储Bowman表示在采取更多行动前有时间'观望'",
-      "sentiment": "neutral",
-      "rationale": "美联储官员表态观望，立场偏中性"
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
-      "person": null,
+      "person": "Trump",
       "title": null,
-      "content": "US labour market remains stuck in low-hire, low-fire state as inflation intensifies: Fed - inkl",
-      "time": "10-15 04:24",
-      "source": "inkl",
+      "content": "Trump Has Brought Inflation Back to the Heartland - Bloomberg.com",
+      "time": "10-15 05:00",
+      "source": "Bloomberg.com",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "美国劳动力市场陷入低招聘、低解雇状态，通胀加剧：美联储",
-      "sentiment": "bearish",
-      "rationale": "劳动力市场低迷且通胀加剧"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "Fannie Mae raises US mortgage rate forecast to 7.5% for 2027 - Beinsure",
-      "time": "10-14 15:28",
-      "source": "Beinsure",
+      "content": "Soaring Energy Prices Push Inflation Higher - The New York Times",
+      "time": "10-15 00:20",
+      "source": "The New York Times",
       "age_tag": "📰今日-高权重",
-      "content_cn": "房利美上调2027年美国房贷利率预测至7.5%",
-      "sentiment": "bearish",
-      "rationale": "房贷利率预测上调至7.5%，融资成本高"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "Fannie Mae sharply raises mortgage rate forecast for 2027 - CNBC",
-      "time": "10-14 11:20",
-      "source": "CNBC",
+      "content": "Higher Energy Prices Pushed U.S. Inflation Up to 3.7% Ahead of Midterm Elections - The New York Times",
+      "time": "10-14 16:22",
+      "source": "The New York Times",
       "age_tag": "📰今日-高权重",
-      "content_cn": "房利美大幅上调2027年房贷利率预测",
-      "sentiment": "bearish",
-      "rationale": "房贷利率预测大幅上调，房市承压"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "September 2026 CPI inflation beats Wall Street forecasts - Quartz",
-      "time": "10-14 09:07",
+      "content": "US inflation beat every forecast on the board - Wealth Professional",
+      "time": "10-15 07:32",
+      "source": "Wealth Professional",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Fannie Mae is raising its 2027 mortgage rate forecast to 7.5% - Quartz",
+      "time": "10-14 23:21",
       "source": "Quartz",
       "age_tag": "📰今日-高权重",
-      "content_cn": "2026年9月CPI通胀超华尔街预期",
-      "sentiment": "bearish",
-      "rationale": "2026年9月CPI超预期，通胀压力显现"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "In this deep-red city, rising costs test Trump’s affordability message - The Washington Post",
+      "time": "10-15 01:35",
+      "source": "The Washington Post",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "The damage Trump has inflicted on America is spreading - SMH.com.au",
+      "time": "10-14 20:59",
+      "source": "SMH.com.au",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "Gold Price Forecast: XAU/USD rebounds firmly as China Treasuries-buying report smashes US yields - FXStreet",
-      "time": "10-15 00:01",
-      "source": "FXStreet",
+      "content": "Pound-to-Dollar Forecast: GBP/USD Bounces as US Treasury Yields Retreat - currencynews.co.uk",
+      "time": "10-15 07:36",
+      "source": "currencynews.co.uk",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "金价预测：中国购买美债报道压低美债收益率，金价强劲反弹",
-      "sentiment": "bullish",
-      "rationale": "中国购债报道推低美债收益率，利好金价"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Gold Price Forecast: Softer Dollar Fuels Rebound After Hot CPI - FXEmpire",
+      "time": "10-15 06:05",
+      "source": "FXEmpire",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
       "content": "Nasdaq 100 Forecast: NDX falls as oil jumps 5%, Treasury yields rise - StoneX",
-      "time": "10-14 22:42",
+      "time": "10-15 04:47",
       "source": "StoneX",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "纳斯达克100预测：油价跳涨5%、国债收益率上升，NDX下跌",
-      "sentiment": "bearish",
-      "rationale": "油价大涨5%且国债收益率上升，纳指下跌"
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "Dow Jones Forecast: DJIA falls with oil and treasury yields in focus - FOREX.com",
-      "time": "10-14 00:30",
-      "source": "FOREX.com",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "道琼斯预测：油价和国债收益率成焦点，DJIA下跌",
-      "sentiment": "bearish",
-      "rationale": "油价和国债收益率施压，道指下跌"
+      "content": "Silver Price Forecast: XAG/USD recovers to near 56.50 amid weakness in USD, bond yields - FXStreet",
+      "time": "10-15 04:16",
+      "source": "FXStreet",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "error": null
