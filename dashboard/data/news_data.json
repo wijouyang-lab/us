@@ -1,13 +1,158 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-15T09:17:53Z",
+  "generated_at": "2026-10-15T13:11:31Z",
   "market_news": [
+    {
+      "headline": "Treasury yields slide as investors flee to safety of bonds amid tech rout",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/15/us-treasury-yields-investors-economic-data-.html",
+      "datetime": 1792068998,
+      "summary": "Treasury yields slide as investors flee to safety of bonds amid tech rout.",
+      "headline_cn": "科技股暴跌引发避险情绪，美债收益率下滑",
+      "sentiment": "bearish",
+      "rationale": "科技板块遭抛售，市场避险情绪升温",
+      "market_relevant": true
+    },
+    {
+      "headline": "Jim Cramer's top 10 things to watch in the stock market Thursday",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/15/jim-cramers-top-10-things-to-watch-in-the-stock-market-thursday.html",
+      "datetime": 1792068870,
+      "summary": "This is a fulcrum day for the market.",
+      "headline_cn": "Jim Cramer周四股市十大观察要点",
+      "sentiment": "neutral",
+      "rationale": "媒体观点汇总，未披露实质性信息",
+      "market_relevant": false
+    },
+    {
+      "headline": "Cboe to expand options trading hours for major stocks and ETFs",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/15/cboe-stock-etf-options-extended-hours.html",
+      "datetime": 1792065719,
+      "summary": "Cboe will offer trading on 24 of the most actively traded companies and five ETFs between 7:30 a.m. and 9:25 a.m. ET and 4:00 p.m. to 4:15 p.m. ET.",
+      "headline_cn": "Cboe将延长主要股票和ETF期权交易时间",
+      "sentiment": "bullish",
+      "rationale": "交易时间延长提升市场流动性和活跃度",
+      "market_relevant": true
+    },
+    {
+      "headline": "You can take it with you: Five tax tips before selling your business",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/15/you-can-take-it-with-you-five-tax-tips-for-selling-your-business.html",
+      "datetime": 1792063979,
+      "summary": "Business owners can leave millions of dollars on the table by delaying tax planning. Here are five tips for entrepreneurs to maximize their windfall.",
+      "headline_cn": "出售企业前的五大税务建议",
+      "sentiment": "neutral",
+      "rationale": "财税规划建议，无市场方向性影响",
+      "market_relevant": false
+    },
+    {
+      "headline": "EU and Gulf states postpone summit due in Saudi Arabia - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxOck10ZlptWXBhUE9nbDNFb1dWa0xGMXRRaC1wR29SZjVIbnVlMmJBZmI4ZzE3OG9RbjhCR0VjYUNVX0xyU0p0WkZFbEtfcjg3aFRyXzFSWjczRWU4WUx1NW9TWW1yZmNpUGQwLUdaNmlTSXdqMll5RVRzb3lZOWdPanhNNmN1QzFUNWMtUVktRzdFS0VQaGZSSW9CY18wSk9YVlNV?oc=5",
+      "datetime": 1792062827,
+      "summary": "EU and Gulf states postpone summit due in Saudi Arabia  Reuters",
+      "headline_cn": "欧盟与海湾国家推迟沙特峰会",
+      "sentiment": "neutral",
+      "rationale": "外交日程调整，对市场影响有限",
+      "market_relevant": false
+    },
+    {
+      "headline": "Nvidia must work with Chinese AI companies on safety, Jensen Huang tells CNBC",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/15/jensen-huang-nvidia-china-ai.html",
+      "datetime": 1792062771,
+      "summary": "Huang told CNBC he has ongoing \"dialogs\" with researchers in China.",
+      "headline_cn": "黄仁勋：英伟达须与中国AI企业合作确保安全",
+      "sentiment": "neutral",
+      "rationale": "表态合作但未明确商业实质进展",
+      "market_relevant": true
+    },
+    {
+      "headline": "Oil shipping costs spike, lifting prices from pump to grocery - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQbHR0bzBmX1E0Y3RlbjBYNTQwY2dUSENTVFJ5ajc5aXo1bjFqWGpyRmVROERicENVczd6RWJSMHRYR3dEVWJKNDdaS25NNXVEQ29xTThlMXVjQk1NRjdyZkkwR3NVaktQYXd0YzZFcEdYbHhDZE1kXzZnY3JQeGpnLWNXRzRxTnV1emlYdS1mOEdTd2JBVTJfSkpHWlZva3g0UUFMNm9ORQ?oc=5",
+      "datetime": 1792059490,
+      "summary": "Oil shipping costs spike, lifting prices from pump to grocery  Reuters",
+      "headline_cn": "石油运输成本飙升，推高油价和食品价格",
+      "sentiment": "bearish",
+      "rationale": "成本上升加剧通胀压力，挤压消费",
+      "market_relevant": true
+    },
+    {
+      "headline": "How Iran's precision strikes picked apart Gulf infrastructure - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxONmZVZ0RfSms3U0s1SVE3N3ZMeWxLaVhtTjczazRmNU40UkpCUldVbWZJVUtJVkt3cHdLOEpoTl9qY0lFXzdKWUtydmYzVi1MeDExbXB6eHc3NjAyTi1CT2lveE5WVUNPeHV5SndkU3BmRUNiS1JCQUI2bDYyZjd6RjltYUhzeFVmUDFPSU93NWo?oc=5",
+      "datetime": 1792058400,
+      "summary": "How Iran's precision strikes picked apart Gulf infrastructure  Reuters",
+      "headline_cn": "伊朗精准打击如何摧毁海湾基础设施",
+      "sentiment": "bearish",
+      "rationale": "地缘冲突升级威胁能源供应和市场稳定",
+      "market_relevant": true
+    },
+    {
+      "headline": "India's September merchandise trade deficit widens to $30.21 billion - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxPRlpEUE85Qnl6NWJNQXBnMU1Lek11TWVESkZWSFVzU2JrM3kyUmhWeGNHd3VRNE5YRzBXeC1ieElneF9CcjdoWkpBSHRsWFMxRVg2N1VyX29EQ0lHZDZaaHN2QkdIMHB0NVFKTENwb1pXc29GLVFhWFRId2MtYmJmU3ZJWDlFMVdjMzlHT1lrQzh1d1lCYWJvTXFLd1U1ejVCZ3dHSWlB?oc=5",
+      "datetime": 1792056791,
+      "summary": "India's September merchandise trade deficit widens to $30.21 billion  Reuters",
+      "headline_cn": "印度9月商品贸易逆差扩大至302.1亿美元",
+      "sentiment": "neutral",
+      "rationale": "区域经济数据，对美股直接影响较小",
+      "market_relevant": false
+    },
+    {
+      "headline": "Hormuz shipping disruption is starting to hit harvests, UN agency says - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPN3pFV3J3TU44dzNxVVVjWUoyeVc3bVFpV3RVWEducVZZUFk0UXNBdzlEcnpxSGUycUw0cTIyLUFvYnNxc1BOU0lOOHJVM21tRFVrWVp5Q0pKRENxc01LcFpJbk1JS0k1ZndiMURRRVBySmJ0MUltS1RoM2JCN3d0V0t6WkhfT2U3UHU4QWhKb1M5eGRoUVpaVVVNT2hzNWlFT2hPSVRuQlQ2cURjdTBPOVd2UzRCc0JGcTVMWQ?oc=5",
+      "datetime": 1792054903,
+      "summary": "Hormuz shipping disruption is starting to hit harvests, UN agency says  Reuters",
+      "headline_cn": "联合国机构称霍尔木兹航运中断开始影响收成",
+      "sentiment": "bearish",
+      "rationale": "供应链受阻推高农产品价格和通胀",
+      "market_relevant": true
+    },
+    {
+      "headline": "Bank of England's Breeden says cost-cutting by firms helping central bank - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQTlRqOEp1TktZM3ZxOUZ4ZU9jUHJCX1JkRjJFS2Z6T0NwT00zSk8weGswQ3ZJWmVIdGxveko1ZUg0SU9kQ1Z6RXlMYUltaDZMSlRiRE9YeFlBbDVxRXlxOThrYTFsejg3ZEJjWkNLM3ZqaXpuMmZqTlo2aW4wUEdjS1pibTNEb0RQc09SNzNNQTRfUUVsUWFYMTNZRHN4T29EZFExX0RRUVgzcUhLeTl1T2xWWTA?oc=5",
+      "datetime": 1792054057,
+      "summary": "Bank of England's Breeden says cost-cutting by firms helping central bank  Reuters"
+    },
+    {
+      "headline": "Gulf stocks fall after Houthis threaten more Saudi attacks - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPRno4UkRJYXkzMldxaU9XbzNpLWtsNVd4SmUtelluWEFxOHNCTjdpSmVJVzBac0h1TDF6TE8wY2FZNHBHaF9XTjZ0WTByY29yOTR4SDVKaG02YWItZkNVdXlQWWF6bWROd0ZSRDM5SDRSSEs2M0dBZHRVekJTVHhpYnMzemVCa3RQY3dmZ3g5UFBUZ2ZySWRjT0g0M2FuZElsaVkzUk1KSHB4ODRTdjBkbzJR?oc=5",
+      "datetime": 1792054028,
+      "summary": "Gulf stocks fall after Houthis threaten more Saudi attacks  Reuters"
+    },
+    {
+      "headline": "TotalEnergies flags quarterly profit surge as Iran war continues to drive energy prices - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOSjBJVjY0bVpoWDlsbGtrMnpFS0ZvcURsLUZMazd5S0o2Zmw2R2s0ZXc1NzBYb1YxUnNhdENBYzBfajVLVHZiWGJtdk5PbTRLb1BzaWdsNEJDY3lxUFV4TW1wTUpTRmZGTXVOb3JDdVFNeUFTcFZEbVNPcmJBMS1lazUtZVdJbENMMVAxQWRXallDRjZlQ3lINVBfaVppOXBPSHpmUkxqRVdNalVZWVZBcS01cEhWZnlTTDFnRFBoSTVxdkt5?oc=5",
+      "datetime": 1792044360,
+      "summary": "TotalEnergies flags quarterly profit surge as Iran war continues to drive energy prices  Reuters"
+    },
     {
       "headline": "COMMENTARY: Oil's long view darkens as Iran war refuses to end - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOS2VycDJiM2tHUVV0LUZHMjgtcmdqOHQ2QWZkakF6eGlnY2ZmaHduOE80Ul95NjVTTVFtVFR5d3l4Q09QdU15YWI5MzVxYzdnUWlKRXgtR0lGakUyV243MlJPamhMRFIxTF85SWRJclNQLTlJTW9KUHR6OFdFMUpxaURpYkdISHJPRk5ZMDNIZ2h5Zm9rVVVzQTk0Uk56VXdYY1d5ZGduNDJUcVA0MjNBaDNB?oc=5",
       "datetime": 1792044000,
       "summary": "COMMENTARY: Oil's long view darkens as Iran war refuses to end  Reuters"
+    },
+    {
+      "headline": "Albania's Education Ministry catches fire as student protests turn violent - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOcU10WXYxQ2VxSTZYcGJ4eUlDZzZnMVRDb2NRYS1VMFYzeDhWWFNpNXZFWFFjNTdYMnFYOUREb2FTa2V1bjRuY3BsalVQM3F3S00yUlpucGpET1lBUTdoZzRfVWZjSWVOS2lhc0tIT0FXY2JtSjUyOFR2ZUJyMENDUTRBeTFDV3lZbDR3Nm1OY0NtQ3hnMkd0eWRYSHlvZXRhXzZaV3lzT2VjbjNhMzBWbDdnR293QQ?oc=5",
+      "datetime": 1792043971,
+      "summary": "Albania's Education Ministry catches fire as student protests turn violent  Reuters"
+    },
+    {
+      "headline": "Breakingviews - COMMENTARY: Gulf’s latest shock imperils a rapid recovery - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOTDloZFVIVDVmNWFSb1Z5QWRoMkFsbDYwSk5ZTTNvdGI5ZGFkRU1WR0l5M3dNaEE1eTV4eUQ1WlI5QUU0R1Y4U1pjYVdQUlpjSVk0YkJtVklQTUhPTGk0Y25MQUtiNl9kMWY2cVExMGlOMzNpSTEzOGs0VDFXQlh2Uk8zVWFmWmFRdk5XOXhCQ3VWdDRIWm5zWUxaT1pocURScGdKUXp3?oc=5",
+      "datetime": 1792040400,
+      "summary": "Breakingviews - COMMENTARY: Gulf’s latest shock imperils a rapid recovery  Reuters"
     },
     {
       "headline": "BoE's Pill says a rate hike need not be start of long series - Reuters",
@@ -22,6 +167,13 @@
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPbkE2TjhWV0FPQU53YTl2bDFSaHNWVDBnMkFlekJxWTZ0RTFMTDRxa2czR0F4alduTnIzN2JBRkxlS1ZIb2I2Wk56WXE5OFBDQ0Z3cVNkcmpXWkNjc01JZm9hLWtqSFZHUktvUUt4S2hVTENQOXJ5Wk5mam93SjgxcW15SkttV2s0bU1TeFotalEtQXJ3M0MwSGtGd3FtdWp4eUlJSm1ubGJmT1ktai1YRk9fMGJPWmpaVDBBMA?oc=5",
       "datetime": 1792038180,
       "summary": "US military weighs use of ‘mother of all bombs’ in potential future strikes on Iran, CNN says  Reuters"
+    },
+    {
+      "headline": "Sports-FIFA postpones FIFAe Finals in Saudi Arabia following attacks - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxNbXBtWkJRSlV6SGoxVUpRVHZsSWMwTldtZURhUWlldTFtSGlLSmFJYzJjaHBqOHZ6SEJMQlByYW5SeGlPa2F2YTNfLXRwNWZTdnVpUWJQVHBZbmhyUkNLYlNaVlIxb3poOEdZRkc1LWJnRG1CWTljM3QyMjhXU0pJMzhSd3plaThOdTFkNTU5Q09JOVoxT2ozNVNDdEU3UFVEUDM4aEVPeXh2RXFVUkx5OGtuQ3RPdw?oc=5",
+      "datetime": 1792035000,
+      "summary": "Sports-FIFA postpones FIFAe Finals in Saudi Arabia following attacks  Reuters"
     },
     {
       "headline": "Oil prices ease as investors weigh supply outlook, Middle East tensions - Reuters",
@@ -437,13 +589,6 @@
       "summary": "EXCLUSIVE: Saudi Arabia to let executives attend FII conference remotely after attacks, sources say  Reuters"
     },
     {
-      "headline": "Oil prices settle mixed, focus on US-Russia diesel deal, Saudi Yemen attacks - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPa2sxWTVlekZ2bXloVXNiOUltMm5iODVOMW9NTUo4Q016ZU02OFQ5TU9relFTcUZSaW8xV0c2YmNVbE5jWW5uQjhKeXNKaWxBcE92SU1fQUU0R2RVamdNUzRhTER3NzEzMFUtRVd3bzVnZ1g0ZmtRek95VHdYbVNNMmNacmlDd3dLTThmaGF2VVJDYTc4c1hQeUZfX0ZGQzZjTXlpLU52U3JuUGpjOHJjWndoS19LandSX0dtMmdUMzNKZw?oc=5",
-      "datetime": 1791911566,
-      "summary": "Oil prices settle mixed, focus on US-Russia diesel deal, Saudi Yemen attacks  Reuters"
-    },
-    {
       "headline": "Malawi motorists sleep at petrol stations as fuel shortages return - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxQU2NrN0RlUmJKejJzYjh5N0hSRXBhUUQ4MHVrYmlSTVBRR2kzeUUxTVN3NkoyaFpKYVlCcU1tWEFtX0ZBcXlYWXpDQndFRUxPZjJmM2FLSVBna3I2R25XY0wtWHpBSUt4VzJEYWk3NzViTGM3OTFsbnRKMHNqR1VXQVU0UHdxLU41Q3BkdmhDRWJFek9YSnNXdFRmMjdOUUd4aTBWaF8wNUFCZjVBVEE?oc=5",
@@ -596,111 +741,6 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/13/jim-cramers-top-10-things-to-watch-in-the-stock-market-tuesday.html",
       "datetime": 1791896090,
       "summary": "The chip stock rout seems to know no end. But earnings from Club names Goldman Sachs and Wells Fargo are all better than expected."
-    },
-    {
-      "headline": "Airlines cancel flights to Saudi Arabia after Riyadh airport attacks - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOX0c4YlJSYUNrT1pqLTA2TmFjdDZUdmh2Z3pXbG9vWF9mdS0tZFZ6M2tYTVUzRjZVTzhodnh4WU0waXV1bjZENURjUVhmRVZPN251V2laQmNMZ3JoNmIzZE5hWU82YkxIWTdvd2xNczBkNnEta0xGdzlmaGlFNkZ5M1lxcGZUNW5pRnMxV1pPT0NxMXZmOWpEUmpBNXRUcksyZWQ5Sm9pM1QweFFWdmZYVkdid0s1dUJSanNN?oc=5",
-      "datetime": 1791894156,
-      "summary": "Airlines cancel flights to Saudi Arabia after Riyadh airport attacks  Reuters"
-    },
-    {
-      "headline": "Germany to fund new emergency gas reserve via consumer levy, draft says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNWDg1QUVraUl6Rl9NTU5rME9BMkhPY1Fmckk1emMteUxBVXczM01tRWNiLTdsUFkxNzVzVlA3a1d6b1MtT09JS0hkd19YVlJsak14bm1FTFRTSGZDeW1FRHYxbFFzQ0VFamlKQzRHcmpUZVp0MEc5UUJjQU45OFEtVGJJZXJKdkhoaWdJTVJJVEwtTVZuZ1J0ZUZ6YnQ4SXFXa2gtNnlyOTdZZjZ6T2xub1ktNWNtcDNydmZz?oc=5",
-      "datetime": 1791893918,
-      "summary": "Germany to fund new emergency gas reserve via consumer levy, draft says  Reuters"
-    },
-    {
-      "headline": "Occidental oil prices jump as supply concerns lift crude - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNcWhnUmlGS0Y5eEs2Vm13V3cxZFZSWmUzMjZ6OEdCdzhoN294ZEl2Wk1YeVNLb2VhWThLZXlnbHpNMmxwak8zVXBxdDM1N3ZLeFRxUHBOclVEdXBHZUVWTXJrYUs3ZGZHdEo0eUpDVHh3SlJRQjVXVFdNNE5iMnJtLTRhTTJnT0l5Z2FPckNfcFJFcEVfVVlnRmQ4SWpEYTY5WGpRaDJ5c0g?oc=5",
-      "datetime": 1791892869,
-      "summary": "Occidental oil prices jump as supply concerns lift crude  Reuters"
-    },
-    {
-      "headline": "US should become rights defender once more, Nobel peace laureate Pillay says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQYk1FXzRQWnNlMkU4VU1Bdjk0MTRhOUM5eFVNb2RobXYtcmowRFE5SUpyRFRiZ09sNERMdzBzZnNHa2FLSG9TZ0MyWUs1N0wtNWdSbmk5SHZ6bmZaclUzTTNFMjFIUG43VGlsMXVfZjk2N3BnbzNPdk82M2hVTS12WkJGbEVEMGRtOUdlZXAxV0FUZWp4MVoyZUsxaG8tbndMc21zRnln?oc=5",
-      "datetime": 1791892809,
-      "summary": "US should become rights defender once more, Nobel peace laureate Pillay says  Reuters"
-    },
-    {
-      "headline": "Iran reportedly fortifies nuclear sites as it prepares for possible U.S. strikes after midterms",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/13/iran-us-war-houthis-saudi-arabia-airport.html",
-      "datetime": 1791892425,
-      "summary": "A Saudi-led coalition fighting the Houthis – a Yemeni militant group backed by Tehran – said it had intercepted another attack on Riyadh."
-    },
-    {
-      "headline": "Trump says he does not believe China and Russia help Iran, contradicting US intelligence - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQaHZ3WXAyQzZiQXZBZmJ1aEV2WUZMcXA4bHlyNml3LUd5MG1GWjNJSFIyUnhycktZc1ZHZXVPMERsaEs1YzZEX3FtT1JwOERaMUtCY0RkYUZVQzhWWnIzLU45TXVLWUk4RnFaaU53X1VxVVNaOVVqaHpaeTdMRkFfS0h5aTFVaERIcEQ4S2xsTFJ0MVpHa093b1RmYjZPaV9DRTBGMkRLUWN2djRTSGtKVU1uUFBGZw?oc=5",
-      "datetime": 1791891045,
-      "summary": "Trump says he does not believe China and Russia help Iran, contradicting US intelligence  Reuters"
-    },
-    {
-      "headline": "Russia says its diesel exports may exceed volumes announced by Trump - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPLXBaMl96X25takpKUC15RzZpMEhXT3FwMkM0a0xiZUxuV1FINXU4eXF4emoxdWl5TGZjYkNoeGhOeWdESE8yZXUyRXU2NlpoZ3hENzRoTlRaVTBUMWFTOWpQRlVYel9PbEZhdTVla2U2MS1QU3RDcXR0aEZ2cjFXMXV3ek45YWEwakhFVVBPQ1hRYjRZZk9SVXcxaFAwQ2hxOHBxTmdqTHZNWGVITUgzUWUwd0t1V3phQVBzaHR3?oc=5",
-      "datetime": 1791890134,
-      "summary": "Russia says its diesel exports may exceed volumes announced by Trump  Reuters"
-    },
-    {
-      "headline": "Germany's Nuremberg airport closes due to aviation emergency - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNUjNQUks5MFpvMms0djJycmdGa09TTTNkbkVoSDEtSkNBVDVENlNWZkVwdS1KbVB1c0RFZ0FNQVZLZEQ0T2Zxc3ZRVU1xSmhNcmZ3R00zTE1wcldqQWJGY3o1eS1wU2NyN2M4ODBCTlpxU3hMTEFwYThuSHp2dXdhdjdhaHo5b3ZxRjZZcTBVUjE4QVpyVlNlaHJfcGlWRjA?oc=5",
-      "datetime": 1791889360,
-      "summary": "Germany's Nuremberg airport closes due to aviation emergency  Reuters"
-    },
-    {
-      "headline": "Hezbollah outlines financial aid plan for Lebanese with destroyed homes - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQclNUQUdGdlRtUDhteWNFb0FkSHc2emhTVE1hNTQ4SGQ2MWtkTkRiUzJPd28xY3VHQ0ZZVmUyOVJpa3gyS3pyczJ5X1pMQllhMGdqQ3VLUU5BWkYxWVlLbWQ4SktZMjhySFhmWFZzYVpEOFJzZVlZa291NEx4Qnd6aU9tWTZlbmh6c3V1cTNJUTNGX0drQmliNFhaSHhsMlhJNElsa1AtYjdQR29jbGZ4QnhQZXNjYTZmMjMzSmpR?oc=5",
-      "datetime": 1791887980,
-      "summary": "Hezbollah outlines financial aid plan for Lebanese with destroyed homes  Reuters"
-    },
-    {
-      "headline": "UnitedHealth Group tops estimates, hikes profit outlook as insurer manages high medical costs",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/13/unitedhealth-group-unh-earnings-q3-2026.html",
-      "datetime": 1791885473,
-      "summary": "UnitedHealth Group said it expects 2026 adjusted earnings of at least $20.50 per share, up from a previous outlook of $19.50 to $20.00 per share."
-    },
-    {
-      "headline": "Russia calls French seizure of alleged shadow fleet tanker a violation of international law, RIA reports - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOYkZiVzlsbWNyMXA5cV8tX1Z3UVEwUzY0cEt1RjBKOW0xWDc4RFRzRzBwYzNUdEVrQjhJY3JObi1LZjNqVnpjZ1QyUng5TjlFeExVd1NYWk45ZjB2SXduaE9qR1h1V1RyRldpTFU3bUhtb1ZfWHkwN1E3cDNDQm9NbnhtSHRWWUdHYzRKdUlxcHAwWmNScFE1V3VhX2JwMVVaaU9XZmpILTBIZmVLLWUwMUtuTEJ6NnEwbEZsTk5jbUJqT1pOWHBV?oc=5",
-      "datetime": 1791882361,
-      "summary": "Russia calls French seizure of alleged shadow fleet tanker a violation of international law, RIA reports  Reuters"
-    },
-    {
-      "headline": "Tata Chair defends nation-building bets over short-term returns",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-13/tata-chair-defends-nation-building-bets-over-short-term-returns",
-      "datetime": 1791874833,
-      "summary": "Chips will be fundamentally required, and advanced manufacturing is here to stay, he said, adding that India has the talent, the market and the ability to step up"
-    },
-    {
-      "headline": "COMMENTARY: Trump's oil jawboning loses punch as wars spiral - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQVGRSS0t5UkdaMjZZWUNWWXNZWlpKOV9YcC1XdF9UVXE1M3NEVFJ5MC0zdHZZZnQtclpCRDJZX2hVM1NWNC1xZWZuQl82blNBZmZLRk9YdWZuZ1VMcFZvQmVFYld4VzgteDB3R0NhM05CckEwcjlxVHdldmV0NXlKOGZnc0FuYVIzZU00clRsRVVLeHZySzJ3NnV6MDY3R0I3NU51Sk9oTmRMek8yNExNMXZLYw?oc=5",
-      "datetime": 1791871953,
-      "summary": "COMMENTARY: Trump's oil jawboning loses punch as wars spiral  Reuters"
-    },
-    {
-      "headline": "South Korean police detain man over stabbing of eight people at shopping mall - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxORk9RWHVGNlZqZ1lNUk9BLV80Q1NJRmRxQmxlYjlhOVFna21Sbk9jVlU1VDNidllTdEJEbnhKNl9rOXdpQXJOX2l1WHU4UWMzZ1lKUXk4bzFXRkNfdm5fem9CU2RlM0JBZlAtalBBRDZiMnJjYk1NUi12dHFfVXJucjZPc3N5ckxPSjRjVkxOaUFIcWdkVmV6MVRBMy1TY2NBT1NmakN2a3Blb1ZxTVpzV0JMNDNNa0xadG45b3pNNU1MMEpQUjA1WjdsNG9icHVT?oc=5",
-      "datetime": 1791870180,
-      "summary": "South Korean police detain man over stabbing of eight people at shopping mall  Reuters"
-    },
-    {
-      "headline": "NEWSLETTER: Modi's three-pronged challenge - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMigwFBVV95cUxQb1plNXNTVWlqekpCanlwOUdXUVpmeEVnSEU1R014Y3NGalBNOFFnZWdhUWRaV2hMSkNENlZRNi1CZG1hMGlGNnFuMnhBVnFTMHZZY2hkbTZ1TjlYSzgzOHk2eXlSbElkeHN0S1VhYkF1QmpmQmdRbng2OVB6b0tZZm5YUQ?oc=5",
-      "datetime": 1791869400,
-      "summary": "NEWSLETTER: Modi's three-pronged challenge  Reuters"
     }
   ],
   "ticker_news": {
@@ -710,21 +750,33 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=1c336ddf452c3cd20590c639ed3795641ac4a44f305df3f79475f6ff4fb4d3fd",
         "datetime": 1791996218,
-        "summary": "Is ADSK a good stock to buy? We came across a bullish thesis on Autodesk, Inc. on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $212.40, and ADSK gained 9.95% since then. The gain appears to reflect optimism around Autodesk’s new AI capabilities and renewed takeover interest […]"
+        "summary": "Is ADSK a good stock to buy? We came across a bullish thesis on Autodesk, Inc. on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $212.40, and ADSK gained 9.95% since then. The gain appears to reflect optimism around Autodesk’s new AI capabilities and renewed takeover interest […]",
+        "headline_cn": "Autodesk对比PTC和TRMB：云和AI投资能否加速盈利增长？",
+        "sentiment": "neutral",
+        "rationale": "行业对比分析，未给出明确结论",
+        "market_relevant": true
       },
       {
         "headline": "1 Software Stock Worth Investigating and 2 We Turn Down",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=fbb8df5d89d25ccaafe131fa770da5ebe4c5e00ef66557e37160d1415a0a0947",
         "datetime": 1791968327,
-        "summary": "Software is rapidly reducing operating expenses for businesses. Companies bringing it to life have been rewarded with explosive earnings growth, and the upward trend shows no signs of stopping as the industry has posted a 56.3% gain over the past six months, beating the S&P 500 by 44.2 percentage points."
+        "summary": "Software is rapidly reducing operating expenses for businesses. Companies bringing it to life have been rewarded with explosive earnings growth, and the upward trend shows no signs of stopping as the industry has posted a 56.3% gain over the past six months, beating the S&P 500 by 44.2 percentage points.",
+        "headline_cn": "1只值得关注的软件股和2只不推荐的",
+        "sentiment": "neutral",
+        "rationale": "选股建议但未指明具体标的",
+        "market_relevant": false
       },
       {
         "headline": "What Is Adobe No Longer Telling You?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=eeb6f4dde5f6817b278bc483feb73404e64ec1d7408c6466c4f0a1540a54379e",
         "datetime": 1791923368,
-        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now."
+        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now.",
+        "headline_cn": "Adobe不再告诉你什么信息？",
+        "sentiment": "bearish",
+        "rationale": "暗示公司信息披露透明度下降",
+        "market_relevant": true
       },
       {
         "headline": "Adobe Keeps Cratering: One Wall Street Pro’s Thesis Projects 50% Gains in the Next Year",
@@ -738,7 +790,11 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=d833349bc012a3f34bb740c1f0829ef0af390514946d0f48d04d10df024f11ad",
         "datetime": 1791570784,
-        "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown."
+        "summary": "Adobe (ADBE) stock has lost 31% over the past twelve months, significantly underperforming the S&P 500 and its 17.0% return. Investors appear to be worried about slower subscription growth, and the concern is justified. Weaker new subscription sales were a main topic of the question-and-answer session during the company's September 10 call for fiscal Q3 2026. Slower growth could compress the multiple investors are willing to pay for Adobe's earnings. So how close is Adobe to a real slowdown.",
+        "headline_cn": "Adobe股价能否消化订阅增长放缓？",
+        "sentiment": "bearish",
+        "rationale": "核心业务增速放缓引发估值担忧",
+        "market_relevant": true
       },
       {
         "headline": "Are SaaS Stocks Making A Comeback? Autodesk, Intuit Outperform In Tough Week For Tech",
@@ -1072,6 +1128,20 @@
     ],
     "CME": [
       {
+        "headline": "Gold price today, Thursday, October 15, 2026: Lowest open all week ahead of PPI data",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=34e64f076eeab083b722956ed924dcc5a5ff7bf6154e6de53a2b46274be3e95c",
+        "datetime": 1792062759,
+        "summary": "Gold futures opened at $4,128.30 per troy ounce on Thursday, October 15, 2026, down 0.5% from Wednesday's close. The price of gold rose in early trading to $4,175.50 as of 6:57a.m. ET."
+      },
+      {
+        "headline": "Traders Give Warsh A 42% Chance Of Doing Something This Month That Has Only Happened Once In The Past 36 Years",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=181d7ed53aae3a0209092a94a2d6afcdbc317d89fad8fcd0fd8629e9494c2f1b",
+        "datetime": 1792052811,
+        "summary": "Fed Chair Kevin Warsh faces a decision in late October that the central bank has avoided almost without exception for over three decades, and hot inflation data just doubled the odds it could happen again."
+      },
+      {
         "headline": "CME Group (CME) Stock Seems Overvalued After Its 65% Five Year Run",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=d275e3cc3893fc507d02f251ddf0d0f4fdf0939d38126179ceaba5021379ffe7",
@@ -1370,6 +1440,13 @@
     ],
     "CRH": [
       {
+        "headline": "CRH Confirms Date for Q3 2026 Results",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ae99177bf9d97a0c39444fff419f55ee64c34c35ff9f6b24b67ab1e750195a6b",
+        "datetime": 1792065600,
+        "summary": "NEW YORK, October 15, 2026--CRH (NYSE: CRH), the leading provider of building materials, will publish its Q3 2026 financial results before market open on Thursday, October 29, 2026, in advance of a conference call and webcast presentation at 8:00 a.m. (EDT)."
+      },
+      {
         "headline": "Here's Why CRH (CRH) Fell More Than Broader Market",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=3db9b04dfc7b4dd4496d3caca7d8e331e111c4644ecfbd0e16206bf559c16b0f",
@@ -1399,6 +1476,13 @@
       }
     ],
     "DDOG": [
+      {
+        "headline": "Datadog (NASDAQ:DDOG) Pairs High Growth Momentum With a Breakout Setup",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=73fb92a4299cb75a2a3f22e6611534cf00fead61a05cdd661cb9335382b95e8d",
+        "datetime": 1792057282,
+        "summary": "Datadog (DDOG) stock pairs high growth momentum with strong technical and setup ratings, offering a defined breakout entry."
+      },
       {
         "headline": "Datadog Announces Date of Third Quarter Fiscal Year 2026 Earnings Call",
         "source": "Yahoo",
@@ -2249,6 +2333,13 @@
     ],
     "MNST": [
       {
+        "headline": "Monster Beverage vs. PepsiCo: Which Consumer Goods Stock Is a Better Buy in 2026?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3f59379a4198681e313761ce976b7c4c08c86cb6abf5d98a7210353914dc952e",
+        "datetime": 1792065002,
+        "summary": "Monster's 23% net margins and zero debt contrast sharply with PepsiCo's leverage and slower growth, but which profile suits your risk tolerance?"
+      },
+      {
         "headline": "Is Coca-Cola Stock A Good Fit For Your Portfolio?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=61d8577f00b325f3b014bc66aaf04c6afffef774972884789f62335caff8583b",
@@ -2376,6 +2467,13 @@
       }
     ],
     "MPC": [
+      {
+        "headline": "Marathon Petroleum (MPC) Stock Gets Fair Value Boost As Analysts Lift Refining Assumptions",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=54d0acbb6c12218d1350a8edea0aef659d93909fca9ed0605ae054d3bd7a09a5",
+        "datetime": 1792062918,
+        "summary": "Analysts have lifted fair value estimates for Marathon Petroleum from US$375.50 to about US$433.44, indicating a higher valuation range in refreshed models. Recent Street research links these higher targets to updated refining assumptions, with many firms focused on what they describe as stronger margins and crack spreads in their work on Marathon Petroleum. As you read on, you will see how this evolving narrative might shape your own view and how to track future shifts in the story. Stay..."
+      },
       {
         "headline": "Is Marathon Petroleum (MPC) Cheap Following Fresh Value Focus And Lower Volatility Attention?",
         "source": "Yahoo",
@@ -2722,11 +2820,88 @@
     ],
     "MSFT": [
       {
+        "headline": "Here's What a $10,000 Investment in IonQ Could Be Worth by October 2027",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=b166fa9cf9f86f4e37917ac75eacbf648f7626f6f974c67d36ac726caeb93627",
+        "datetime": 1792064400,
+        "summary": "As quantum computing begins to achieve wider commercial adoption, IonQ could be among the winning pure plays, but it remains a speculative investment."
+      },
+      {
+        "headline": "Big Tech Will Spend $745 Billion on AI This Year. These Stocks Get Paid on Every Dollar.",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=29b3c98e09cd11bbd2c951c482bfdec5f20c5ef1cfd7ae9d658a8c39cecb1524",
+        "datetime": 1792063800,
+        "summary": "These top hardware suppliers are capitalizing on surging data center investment."
+      },
+      {
+        "headline": "Satya Nadella’s Call for an AI Killswitch is a Hyperscaler Powerplay to Buy",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=2be0d259fb0d49569199c6a7aa2e531239b725e659359bec8ad9da2f3f0d82e3",
+        "datetime": 1792062922,
+        "summary": "Satya Nadella pitched an AI killswitch as a safety measure, but the real beneficiary of that idea may surprise you. Here is why one investor keeps adding to his Microsoft position every quarter."
+      },
+      {
+        "headline": "3 Unpopular Stocks That Deserve Some Love",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=77202284761e14481e768cd7794a3ab387db1716f256fbb22f532c8deb9bf642",
+        "datetime": 1792062267,
+        "summary": "Wall Street has issued downbeat forecasts for the stocks in this article. These predictions are rare - financial institutions typically hesitate to say bad things about a company because it can jeopardize their other revenue-generating business lines like M&A advisory."
+      },
+      {
+        "headline": "UMass Memorial Health Announces Unified Data Platform Multi-Year Initiative, Investments in AI-Powered Innovation in Partnership with Accenture and Microsoft",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9c6d4cd2b4486218b434907ebf9e4c647878c1ed2086887eda586747c281c14a",
+        "datetime": 1792061940,
+        "summary": "NEW YORK & WORCESTER, Mass., October 15, 2026--UMass Memorial Health today announced a multi-year initiative with Accenture and Microsoft to modernize its data platform."
+      },
+      {
+        "headline": "Microsoft Had Its Best Quarter in 28 Years. Is it Too Late to Buy the Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9245253fa9f2576955d83bdce769232bfcbfa67e27b046955d86bb06481e60dd",
+        "datetime": 1792053302,
+        "summary": "Perhaps some investors wrote off the company too soon."
+      },
+      {
+        "headline": "Hornetsecurity by Proofpoint introduces new capabilities to support secure AI adoption for organisations using Microsoft 365",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=fc9753d8af736d90fde48f307220d7d860e478a2d46eaea31a1dc1ba0c236fb3",
+        "datetime": 1792051200,
+        "summary": "Leading global cybersecurity company, Hornetsecurity by Proofpoint, has announced new capabilities across its next-gen security portfolio for Microsoft 365 (M365) designed to help organisations and Managed Service Providers (MSPs) strengthen the foundations for secure AI adoption. Rolling out in Q4 2026, the updates address permission and sharing risks, make AI-powered security assessments easier to understand, extend adaptive security awareness training to Microsoft Teams and support more centr"
+      },
+      {
+        "headline": "AGD: Attractive Yield Is Fully Covered, But Fund Could Face Headwinds In 2027",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=0a80664ba56022699bca1103f57af63c35f633a2358a98137e034ac2c2462e97",
+        "datetime": 1792050985,
+        "summary": "AGD offers a 12.74% yield from global dividend stocks but faces risks from rising bond yields & IPO lockups."
+      },
+      {
         "headline": "Will Yum! Brands' (YUM) AI-Driven Operations and Supplier Strategy Shift Its Post-Pizza Hut Narrative?",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=ef1b9d3a5d6e2b5d49339c473935e9bc8bdda805654a03e76971a0408ef9ce78",
         "datetime": 1792048696,
         "summary": "In recent days, Yum! Brands highlighted deeper long-term supplier partnerships, expanding AI deployment such as Taco Bell’s automated drive-thru ordering, and a unified global supply chain, while analysts updated views on its growth prospects following the Pizza Hut divestiture and softer Taco Bell trends. Together, these moves suggest Yum! Brands is tightening operational control around its strongest brands and digital initiatives, aiming to improve restaurant-level efficiency and menu..."
+      },
+      {
+        "headline": "Alibaba: Enough Fuel To Power The Trillion-RMB Cloud Machine",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=7b76a6437764f701eac44a615f1dfb115a11df4be5e3d33508ba1b4486a7af69",
+        "datetime": 1792046761,
+        "summary": "Alibaba Group Holding Limited is down 41% from its 2025 peak as earnings recovery lags and capex expectations rise. Learn why BABA stock is a buy."
+      },
+      {
+        "headline": "Wedgewood Partners Q3 2026 Portfolio Activity",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=1620ad1d41f10c6eaf2a974c9853a8a0b1016575da7407c915252c3b46627dad",
+        "datetime": 1792045740,
+        "summary": "Microsoft grew operating income by about 18%, and we estimate its average gross asset base grew in the low 20s, leading to continued healthy returns on invested capital of almost 30%."
+      },
+      {
+        "headline": "Polen Focus Growth Portfolio Q3 2026 Portfolio Update",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=c8ef5653b5295604d783fe54d49e184a527f62574a75821de06ae2f4c1087851",
+        "datetime": 1792044900,
+        "summary": "In Q3 2026, we initiated new positions in Adyen, ASML, Quanta Services, and Seagate Technology, while selling MSCI and Rollins. Read more here."
       },
       {
         "headline": "Will OpenAI Go Public? One VC Says ‘Not Really Sure They Mean It’ But Bets On ‘Blockbuster’ Anthropic Listing",
@@ -3258,7 +3433,11 @@
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=eeb6f4dde5f6817b278bc483feb73404e64ec1d7408c6466c4f0a1540a54379e",
         "datetime": 1791923368,
-        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now."
+        "summary": "Adobe (ADBE) stock is priced at 12.9 times earnings, compared to a 21.9 multiple for the S&P 500. Yet even at that valuation, investors need to understand exactly what they hold as corporate priorities shift. Just a year ago, executives highlighted how much of the company's subscription revenue was influenced by AI. They no longer emphasize that measure. So what does Adobe point to now.",
+        "headline_cn": "Adobe不再告诉你什么信息？",
+        "sentiment": "bearish",
+        "rationale": "暗示公司信息披露透明度下降",
+        "market_relevant": true
       },
       {
         "headline": "If Palantir Stock Looks Expensive, You Need To Read This",
@@ -4386,86 +4565,23 @@
         "url": "https://finnhub.io/api/news?id=438f98dce4aaeff79bd51f046ecbf3e49145892135aeec33228e91ef36c1d8f4",
         "datetime": 1791799214,
         "summary": "STK vs TDVI: compare total returns, NAV discount, AI hardware exposure, and option-income payouts to pick growth or steady incomeâread now and decide."
-      },
-      {
-        "headline": "Jim Cramer Says OpenAI Revenue Isn’t ‘Apples to Apples’ With Anthropic, Daniel Newman Calls Debate 'Hilarious' — $500 Billion Wiped Out",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=9c701cbe7b5b173601a55c569c7624072bf78d371706b627ff02a9482fe5515c",
-        "datetime": 1791799214,
-        "summary": "OpenAI’s annualized revenue may be closer to $50 billion than the $70 billion previously reported, and investors say the $20 billion gap reflects how revenue is counted, not a drop in sales. FT Report Sparks Debate The Financial Times reported..."
-      },
-      {
-        "headline": "The Bulls Need This Earnings Season to Go Ridiculously Well",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=039156cac5f293ce58eba909b60b2a28543abfbc12f4802fa614246d274a5da4",
-        "datetime": 1791799200,
-        "summary": "Corporate America is likely to report another massive earnings season. But markets may need more."
-      },
-      {
-        "headline": "Protiviti Achieves 2026-2027 Microsoft AI Business Solutions Inner Circle Award",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=245f661769e7d0b91e0a2331c834739ab1b621c638d3a04533b4d4af803a76d3",
-        "datetime": 1791798900,
-        "summary": "Protiviti, a global consulting firm, has been selected for the Microsoft AI Business Solutions 2026-2027 Inner Circle membership. This is Protiviti's second consecutive year of being selected into Inner Circle. Participation within Inner Circle is based on sales achievements that rank Protiviti in the top echelon of Microsoft's AI Business Solutions global network of partners. It's widely acknowledged that Inner Circle members perform at a high level by delivering valuable and innovative solutio"
-      },
-      {
-        "headline": "Mark My Words: ASML Stock Is the Most Overlooked Way to Play the AI Infrastructure Boom",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0e4dde4ea4d91dd16f301c59579b8e8b9c82daed9afc704b31209993123262de",
-        "datetime": 1791797640,
-        "summary": "AI simply wouldn't be as effective if it weren't for ASML."
-      },
-      {
-        "headline": "President Trump Just Dropped Over $1 Million Into 3 Tech Stocks -- Should You Buy Them Too?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=23fad4fbd4fdc86d8c237921f08ebc057e053233f0048b4a0c937fe2dcc59522",
-        "datetime": 1791796800,
-        "summary": "President Trump's investment team was buying shares of Meta Platforms, Microsoft, and Netflix in August."
-      },
-      {
-        "headline": "IREN Scores Major AI Cloud Deal With Anthropic: Report",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=05e49812800020b0c9c3f5236d076b591174724ce9108eb0f90f7a492477711a",
-        "datetime": 1791796483,
-        "summary": "IREN unlocks AI data-center value with a multi-year Anthropic cloud deal as demand and contract prices for compute surge."
-      },
-      {
-        "headline": "Microsoft To Expand Azure Maia System To Multi-Gigawatt Deployments; Expect Maia 300 To Deliver 40% More Tokens Per Megawatt Compared To Leading GPU-Based Systems",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=bfd8286c60edcf88790fffc485623f9c8a4f8c3c702f29c75bee557cfb2f1fb7",
-        "datetime": 1791795987,
-        "summary": "https://blogs.microsoft.com/blog/2026/10/12/microsoft-to-expand-azure-maia-system-to-multi-gigawatt-deployments/"
-      },
-      {
-        "headline": "Microsoft to rely more on homegrown AI chips, reducing dependence on Nvidia",
-        "source": "CNBC",
-        "url": "https://finnhub.io/api/news?id=2af4baed7ee496c04a0de5c73112a6712e8a11da77fc7c96f28708d5d4a3360b",
-        "datetime": 1791795601,
-        "summary": "By increasingly counting on its own chips, Microsoft stands to expand margins and bolster its AI stack."
-      },
-      {
-        "headline": "The Global Quantum Technologies Market 2026-2036 Report Now Available, Profiling IBM, Google Quantum AI, IonQ, Microsoft & 350 Other Key Players",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=207293375ea7a9e1b65ce2851353a7304c5341b9847e5fd4b3ab4e5c7c6f0006",
-        "datetime": 1791793620,
-        "summary": "Global Quantum Technologies Market Report Tracks the Shift From Venture Funding to IPOs as US CHIPS Awards Reach $2.013B, Profiling IBM, IonQ & Google Quantum AIDublin, Oct. 12, 2026 (GLOBE NEWSWIRE) -- \"The Global Quantum Technologies Market 2026-2036\" has been added to ResearchAndMarkets.com's offering. The global quantum technology market is advancing from venture-funded research toward public capital markets, industrial-scale manufacturing and direct government ownership. In 2026, hardware c"
-      },
-      {
-        "headline": "Microsoft CEO Satya Nadella calls for new AI controls",
-        "source": "CNBC",
-        "url": "https://finnhub.io/api/news?id=37a6436a4359ff307a4bc40dbadb984f4d1ec663eb87736565f05d11dfae290e",
-        "datetime": 1791789022,
-        "summary": "CNBC's Andrew Ross Sorkin reports on the latest news."
-      },
-      {
-        "headline": "Micron's Monster Rally Faces New Threat As Traders Pile Into Bearish Bets",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=914e0084ab8e06c5d5204a3d5efa51e92c8b9fbae3524fd4b7816f258e771c85",
-        "datetime": 1791788394,
-        "summary": "Micron faces bearish options bets despite strong AI-driven memory demand. Read why analysts remain bullish on MU stock long-term."
       }
     ],
     "PM": [
+      {
+        "headline": "Philip Morris International Announces EU Economic Footprint Study 2021-2025: Transformation Made in Europe",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=4dcf07bab8f137737099ea4fca95f5d132c4e2e854cfa6c00ef568dfce0814e2",
+        "datetime": 1792064520,
+        "summary": "STAMFORD, CT, October 15, 2026--At a defining moment for Europe’s competitiveness, Philip Morris International Inc. (PMI) (NYSE: PM) today publishes the second edition of its EU Economic Footprint Study, prepared by EY-Parthenon."
+      },
+      {
+        "headline": "This Stock’s for You: Bud’s ‘Diet Coke’ Moment Is the Time to Buy",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=399b7129ac260331f50b88c028adfbba30a29b0034b7ed4b22b7fa9c0b602c5e",
+        "datetime": 1792062000,
+        "summary": "Americans and Europeans are drinking less alcohol, but that’s no problem for AB InBev. The Bud and Michelob brewer’s shares are trading at a discount as new zero-alcohol concoctions hit store shelves."
+      },
       {
         "headline": "These 3 Stocks Just Declared Dividend Raises",
         "source": "Yahoo",
@@ -5535,6 +5651,27 @@
       }
     ],
     "XOM": [
+      {
+        "headline": "Energy Stocks Aren't Running Out Of Gas",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a059773a10a4639f8b30a8cca3307f71997a1d76df2b7f5cd5e354820a576fd1",
+        "datetime": 1792065651,
+        "summary": "Investors keep waiting for the S&P 500 energy stock rally to sputter. But it's only picking up more power."
+      },
+      {
+        "headline": "BP: Way Ahead Of Schedule",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=dce0c7b0a92c3449247e46b0b3610ec418a5477ae79669d6f346ec9ad30e5478",
+        "datetime": 1792044269,
+        "summary": "BP stock analysis: rapid deleveraging and Q3 refining margin spike helped, but upside looks capped."
+      },
+      {
+        "headline": "ExxonMobil: The Best Integrated Major Isn't Worth 29x Normalized P/E",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=0103bf25e8581959718d3a35a72a74df079f943fb6a99ac2614af958d7cec01c",
+        "datetime": 1792041585,
+        "summary": "ExxonMobil's valuation is stretched, trading at 20.6x P/E and a normalized 27.3x, which is excessive. See why I rate XOM stock a Sell now."
+      },
       {
         "headline": "Exxon Wants to Repeat Its Guyana Success in Trinidad. Should You Buy the Stock Now or Wait for the First Well?",
         "source": "Yahoo",
