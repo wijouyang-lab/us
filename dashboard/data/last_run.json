@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-15T22:16:12Z",
-  "market_updated_at": "2026-10-15T22:16:11Z",
-  "technical_updated_at": "2026-10-15T22:16:12Z",
+  "generated_at": "2026-10-15T22:31:36Z",
+  "market_updated_at": "2026-10-15T22:31:34Z",
+  "technical_updated_at": "2026-10-15T22:31:36Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,13 +17,13 @@
     "missing": []
   },
   "stocks": {
-    "total": 27,
-    "core": 9,
+    "total": 26,
+    "core": 8,
     "observation": 18,
-    "kline_ok": 27,
-    "technical_ok": 27,
+    "kline_ok": 26,
+    "technical_ok": 26,
     "price_source_breakdown": {
-      "realtime": 27
+      "realtime": 26
     }
   },
   "review": {
@@ -31,7 +31,7 @@
     "core_open": 23,
     "observation_closed": 0,
     "observation_open": 76,
-    "actual_active": 5,
+    "actual_active": 4,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
     "price_backfill_count": 11,
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 38661060675,
+        "run_id": 38816728969,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-15T00:37:10Z",
-        "started_at": "2026-10-15T00:37:10Z",
-        "updated_at": "2026-10-15T00:41:28Z",
-        "head_sha": "1201564af72a",
-        "event": "schedule",
-        "run_number": 139,
+        "created_at": "2026-10-15T22:23:07Z",
+        "started_at": "2026-10-15T22:23:07Z",
+        "updated_at": "2026-10-15T22:26:49Z",
+        "head_sha": "fbb1574571a6",
+        "event": "workflow_dispatch",
+        "run_number": 140,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38661060675"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/38816728969"
       },
       "last_success": {
-        "run_id": 38661060675,
-        "completed_at": "2026-10-15T00:41:28Z",
-        "head_sha": "1201564af72a"
+        "run_id": 38816728969,
+        "completed_at": "2026-10-15T22:26:49Z",
+        "head_sha": "fbb1574571a6"
       },
       "error": null
     },
