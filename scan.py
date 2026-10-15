@@ -2078,22 +2078,31 @@ def _fetch_bls_series(series_id, timeout=10):
         "endyear": str(datetime.datetime.now().year),
     })
     try:
-        resp = get_robust_session().post(url, data=payload, timeout=timeout)
+        resp = get_robust_session().post(
+            url, data=payload, timeout=timeout,
+            headers={"Content-Type": "application/json"},
+        )
         resp.raise_for_status()
         obj = resp.json()
         rows = obj.get("Results", {}).get("series", [{}])[0].get("data", [])
         parsed = []
         for row in rows:
-            try:
-                period = row.get("period", "")
-                if period.startswith("M"):
+            period = row.get("period", "")
+            if period.startswith("M") and period != "M13":
+                try:
                     dt = pd.Timestamp(f"{row['year']}-{period[1:]}-01")
                     parsed.append((dt, float(row["value"])))
-            except Exception:
-                continue
+                except (ValueError, TypeError):
+                    continue
         parsed.sort(key=lambda x: x[0])
+        if parsed:
+            print(f"   [A'诊断] {series_id}: 解析 {len(parsed)} 期，"
+                  f"范围 {parsed[0][0].date()} ~ {parsed[-1][0].date()}")
+        else:
+            print(f"   [A'诊断] {series_id}: 解析 0 期（rows={len(rows)}）")
         return parsed
-    except Exception:
+    except Exception as e:
+        print(f"   [A'诊断] {series_id}: 请求失败 {type(e).__name__}: {e}")
         return []
 
 
