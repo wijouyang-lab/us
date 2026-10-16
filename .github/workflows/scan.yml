@@ -21,10 +21,9 @@ jobs:
           fetch-depth: 0
 
       - name: 设置Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
           python-version: '3.12'   # ← 升级到这里
-          cache: 'pip'
 
       - name: 安装依赖
         run: |

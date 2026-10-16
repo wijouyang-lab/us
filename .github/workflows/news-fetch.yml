@@ -28,7 +28,6 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'
 
       - name: 安装依赖
         # 抓取脚本仅用标准库；沿用仓库既有依赖清单（dashboard_export 同款）保持一致
