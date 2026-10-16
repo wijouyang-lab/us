@@ -196,3 +196,39 @@
 - `bd53c5c1`：BOM 修复
 - `fb9c89d5`：方案书 P1 修正
 - `b0f42953`：P2 推广到 9 个研究 workflow
+
+---
+
+## Dashboard 拆分尝试记录（2026-10-16）
+
+### 目标
+让 Dashboard 15 分钟 workflow 只抓数据，移出重活。
+
+### 尝试
+给 dashboard_export.py 加 `--no-network`（跳过网络抓取，只生成 JSON）。
+
+### 结果
+- export 耗时：22s -> 0.0s（-100%）
+- **但价格数据完全冻结**：`--no-network` 完全跳过所有行情抓取，不读缓存报价
+- docstring 自述：完全跳过行情抓取（只导出 CSV 派生数据）
+- 源码：`mode="none"` -> `_init()` 立即返回 -> `yf.download` 不可达
+
+### 已回滚
+- `git revert 41eb6c63`
+- 生产恢复：export 步骤耗时回到 ~22s
+
+### 教训
+**本会话第二次"未验证语义就上线"**：
+- 第一次：P1 `cache: 'pip'` 缺少 `cache-dependency-path`
+- 第二次：`--no-network` 未确认是否读缓存
+- **共同根因**：只验证"改动生效"（日志/耗时），未验证"行为语义"（是否真的做了该做的事）
+
+### 正确的拆分方向（待实施）
+- 方案 A：高频 workflow 保留完整 export（带网络）
+- 方案 B：拆成"抓取->落盘->生成"三段式
+  1. 抓取：高频 workflow 只跑 `fetch_runtimes` + `fetch_market_indicators` + `portfolio_50000 --price-only`，结果落盘
+  2. 生成：export 改为读缓存生成 JSON（需要一个真正的 `--read-cache` 模式，而非 `--no-network`）
+- **前提**：必须先读 `build_stocks` / `build_market` 的 provider 使用细节，设计好"缓存读取"逻辑
+
+### 关键发现
+`dashboard_export.py` 的重量来源是**网络抓取**（22s->0s），而非指标计算。真正的拆分需要"抓取与生成解耦"，而非简单跳过网络。
