@@ -53,23 +53,7 @@ jobs:
           #   · reset --soft 让本轮已生成数据重新成为工作区改动，提交到最新 main 之上
           #   · 不 force push
           PUSHED=0
-          for i in 1 2 3; do
-            if git push origin main; then
-              PUSHED=1
-              break
-            fi
-            echo "::warning::push 被拒绝（疑似并发提交），基于最新 origin/main 重建提交后重试 ($i/3)"
-            git fetch origin main
-            git reset --soft FETCH_HEAD
-            git reset HEAD
-            git add dashboard/data/news_data.json
-            if git diff --cached --quiet; then
-              echo "远端数据已与本轮一致，无需重复提交"
-              PUSHED=1
-              break
-            fi
-            git commit -m "chore(dashboard): refresh news data [skip ci]"
-          done
+          bash tools/ci/push_with_retry.sh 3 5
           if [ "$PUSHED" = "1" ]; then
             echo "新闻数据已提交并推送"
           else

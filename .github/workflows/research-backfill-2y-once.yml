@@ -48,17 +48,6 @@ jobs:
           fi
           git commit -m "chore(research): backfill 2Y price history for factor analysis"
           # 并发安全推送：fetch + rebase + 3 次重试（照抄 scan.yml）
-          for i in 1 2 3; do
-            git fetch origin main
-            if git rebase origin/main; then
-              if git push origin HEAD:main; then
-                echo "✅ push succeeded (attempt $i)"
-                exit 0
-              fi
-            fi
-            echo "⚠️ push failed (attempt $i), retrying..."
-            git rebase --abort 2>/dev/null || true
-            sleep 5
-          done
+          bash tools/ci/push_with_retry.sh 3 5
           echo "❌ push failed after 3 retries"
           exit 1
