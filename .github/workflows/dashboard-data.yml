@@ -189,7 +189,19 @@ jobs:
           #   · 不使用 git pull --rebase —— 两次运行写同一 JSON，rebase 重放必然行级冲突
           #   · 不使用任何 force push
           PUSHED=0
-          bash tools/ci/push_with_retry.sh 3 5
+          for i in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "push succeeded (attempt $i)"
+                exit 0
+              fi
+            fi
+            echo "push failed (attempt $i), retrying..."
+            git rebase --abort 2>/dev/null || true
+            sleep 5
+          done
+          exit 1
           if [ "$PUSHED" = "1" ]; then
             echo "Dashboard 数据已提交并推送"
           else
