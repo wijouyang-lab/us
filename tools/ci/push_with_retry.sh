@@ -17,11 +17,17 @@ echo "[push_with_retry] starting (max=$MAX_RETRIES, sleep=$SLEEP_SEC)"
 for i in $(seq 1 "$MAX_RETRIES"); do
     echo "[push_with_retry] attempt $i"
     git fetch origin main || true
-    if git rebase origin/main; then
-        if git push origin HEAD:main; then
-            echo "[push_with_retry] push ok (attempt $i)"
-            exit 0
+    REBASE_OUT=$(git rebase origin/main 2>&1) || {
+        if echo "$REBASE_OUT" | grep -q "CONFLICT"; then
+            echo "::error::git rebase 发生冲突，停止推送（不 force）"
+            echo "$REBASE_OUT"
+            git rebase --abort 2>/dev/null || true
+            exit 1
         fi
+    }
+    if git push origin HEAD:main; then
+        echo "[push_with_retry] push ok (attempt $i)"
+        exit 0
     fi
     echo "[push_with_retry] attempt $i failed, retrying..."
     git rebase --abort 2>/dev/null || true

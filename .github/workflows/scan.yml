@@ -159,7 +159,7 @@ jobs:
 
           # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
           # 绝对禁止 git push --force / -f：绝不覆盖远端 main
-          bash tools/ci/push_with_retry.sh 3 5
+          bash tools/ci/push_with_retry.sh 5 5
 
           echo "::error::Scan 数据无法推送到 main（已重试 5 次）"
           git status --porcelain
