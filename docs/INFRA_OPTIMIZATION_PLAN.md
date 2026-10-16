@@ -239,3 +239,32 @@
 - 价格冻结窗口约 **17 分钟**（05:31 -> 05:48）
 - 事故闭环：commit `ecc4c518`（revert）-> `61a8bbc1`（文档）
 - 首轮"回滚后验证"因触发时 origin 仍是坏版本而失效（export 0.0s），第二次验证（run 38857496009）确认真实恢复
+---
+
+## P3：push 重试统一（最终状态 2026-10-16）
+
+### 成果
+- 新增 `tools/ci/push_with_retry.sh`（纯 LF / 冲突软化 / 3 次重试默认）
+- **14/15 workflow 统一使用脚本**（dashboard-data.yml 为满足 F4 保留内联循环）
+- **并发撞车修复**：dashboard-data.yml 内联循环加入 `reset --soft` 重放分支
+
+### 关键决策
+- F4 断言要求 dashboard-data.yml 保留 `for i in 1 2 3` 字面 -> 该文件保持内联循环
+- 其余 14 个 workflow 调用脚本
+- 脚本的冲突处理从"立即 exit"软化为"abort + 重试"（对齐原有语义）
+
+### 验证
+- Test：844 passed / 1 skipped
+- YAML：20/20 有效
+- F1-F5：全 True
+- 所有 ci-failure issue：0 open
+
+### 遗留
+- reset --soft 重放分支尚未在真实并发撞车中触发（需下一次并发时观察日志确认）
+
+### 关键 commit
+- `a2f16e5b`：push_with_retry.sh 创建
+- `c4331b6c`：15 文件推广
+- `97fb6880`：冲突检测（后软化）
+- `327ee2a9`：F4 修复 + 冲突软化
+- `2b6f22ee`：reset --soft 重放落地
