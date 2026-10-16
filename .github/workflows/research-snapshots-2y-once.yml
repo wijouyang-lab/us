@@ -18,9 +18,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: tools/research/requirements-research.txt
 
       - name: Install deps
-        run: pip install pandas numpy pandas_ta
+        run: pip install -r tools/research/requirements-research.txt
 
       - name: Run snapshots
         run: python tools/research/generate_research_snapshots_2y.py

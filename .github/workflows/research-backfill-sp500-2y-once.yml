@@ -18,9 +18,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: tools/research/requirements-research.txt
 
       - name: Install deps
-        run: pip install yfinance pandas requests lxml html5lib
+        run: pip install -r tools/research/requirements-research.txt
 
       - name: Run backfill
         run: python tools/research/backfill_research_prices_sp500_2y.py
