@@ -148,3 +148,51 @@
 1. P0 通知渠道（推荐 issue）
 2. 哪些 P 项现在实施、哪些延后
 3. 是否一次性实施 P0+P1（最高性价比组合）
+
+---
+
+## E 系列最终状态（2026-10-16 闭环）
+
+### P0：失败通知 ✅ 已上线
+- `notify-on-failure.yml`（workflow_run 触发，创建 ci-failure issue）
+- 监控清单 19 项（含 PIT 2Y 快照补全）
+- **双向实证**：失败 → issue ✓；成功 → skipped ✓
+- 事故期间自动创建 5 issue，1 分钟内可发现
+
+### P1：pip 缓存 ⚠️ 试点验证，收益为负，不推广
+- 试点 `research-ic-2y-once.yml`：首次 1m45s → 二次 2m5s
+- 缓存命中成功（`Cache restored successfully`）但**耗时未降反升 20 秒**
+- 原因：pip 缓存只省"下载"不省"安装"；本仓依赖栈纯 wheel、无编译
+- **结论**：生产类不推广；研究类随 P2 顺带保留
+
+### P2：研究类依赖 pin ✅ 已推广到 10 个研究 workflow
+- 新增 `tools/research/requirements-research.txt`（234 B，与生产 pin 一致）
+- 9 个研究 workflow 改为 `pip install -r tools/research/requirements-research.txt`
+- 顺带加 cache + cache-dependency-path（研究类风险低）
+- **YAML 0 失败，生产类零改动**
+
+### P3：push 重试统一 ⏸ 未做（低优先级）
+- 18 个 workflow 含 git push，写法不统一
+- 建议：提取 `tools/ci/push_with_retry.sh`，最后做（改动面最大）
+
+### P4：cron 审视 ⏸ 未做（待用户确认）
+- Dashboard 每 15 分钟是否必要？→ 待用户裁决
+
+### 事故记录
+- P1 首次实施（`b15e09a4`）缺少 `cache-dependency-path` → 19 workflow 失败
+- 生产中断约 4 分钟（Dashboard 3 次失败）
+- 已 revert（`84813d4d`）→ 生产恢复 1m22s
+- 5 个 ci-failure issue 已关闭
+- BOM 缺陷修复（`c1f4591c`）
+- **教训**：批量改动前必须先在 1 个非生产 workflow 试点
+
+### 关键 commit 索引
+- `ac3b8ec8`：P0 新增 notify-on-failure.yml
+- `4227f7df`：P0 修正监控清单
+- `6f5b9da5`：P0 补 1 行监控
+- `b15e09a4`：P1 首次实施（已 revert）
+- `84813d4d`：revert P1
+- `e50d6da5`：P1 试点（含 requirements-research.txt）
+- `bd53c5c1`：BOM 修复
+- `fb9c89d5`：方案书 P1 修正
+- `b0f42953`：P2 推广到 9 个研究 workflow
