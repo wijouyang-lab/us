@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-16T13:01:29Z",
-  "market_updated_at": "2026-10-16T13:01:27Z",
-  "technical_updated_at": "2026-10-16T13:01:29Z",
+  "generated_at": "2026-10-16T13:16:20Z",
+  "market_updated_at": "2026-10-16T13:16:18Z",
+  "technical_updated_at": "2026-10-16T13:16:20Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -23,8 +23,8 @@
     "kline_ok": 26,
     "technical_ok": 26,
     "price_source_breakdown": {
-      "realtime": 20,
-      "realtime_unverified": 6
+      "realtime": 21,
+      "realtime_unverified": 5
     }
   },
   "review": {
@@ -45,11 +45,11 @@
     "scan": {
       "latest": {
         "run_id": 38904596437,
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "failure",
         "created_at": "2026-10-16T13:00:38Z",
         "started_at": "2026-10-16T13:00:38Z",
-        "updated_at": "2026-10-16T13:00:42Z",
+        "updated_at": "2026-10-16T13:10:06Z",
         "head_sha": "d17268f74eaf",
         "event": "workflow_dispatch",
         "run_number": 170,
