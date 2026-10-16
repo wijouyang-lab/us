@@ -1,4 +1,4 @@
-name: Research IC 2Y (one-shot)
+﻿name: Research IC 2Y (one-shot)
 
 on:
   workflow_dispatch:
@@ -18,9 +18,11 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: tools/research/requirements-research.txt
 
       - name: Install deps
-        run: pip install pandas numpy scipy
+        run: pip install -r tools/research/requirements-research.txt
 
       - name: Run IC
         run: python tools/research/run_research_ic_2y.py
