@@ -140,31 +140,7 @@ jobs:
 
           # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
           # 绝对禁止 git push --force / -f：绝不覆盖远端 main
-          for i in 1 2 3 4 5; do
-            git fetch origin main
-
-            if git rebase origin/main; then
-              if git push origin HEAD:main; then
-                echo "✅ push 成功"
-                exit 0
-              fi
-            else
-              # 只有"真正的内容冲突"才硬停止；其余 rebase 失败（如工作区脏、瞬时错误）继续重试
-              if [ -n "$(git diff --name-only --diff-filter=U)" ]; then
-                echo "::error::git rebase 发生冲突，停止推送（禁止 force push，不自动解决冲突）"
-                echo "冲突文件："
-                git diff --name-only --diff-filter=U
-                git status --porcelain
-                git rebase --abort || true
-                exit 1
-              fi
-              echo "::warning::git rebase 第 $i 次失败（非内容冲突），回滚后重试"
-              git rebase --abort || true
-            fi
-
-            echo "⚠️ push/rebase 第 $i 次失败，等待后重试"
-            sleep $((i * 5))
-          done
+          bash tools/ci/push_with_retry.sh 3 5
 
           echo "::error::复盘数据无法推送到 main（已重试 5 次）"
           git status --porcelain

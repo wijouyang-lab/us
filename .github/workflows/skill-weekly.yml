@@ -83,15 +83,6 @@ jobs:
             exit 1
           fi
           # 并发安全推送：fetch + rebase 后重试，绝不 force
-          for i in 1 2 3 4 5; do
-            git fetch origin main
-            if git rebase origin/main && git push origin HEAD:main; then
-              echo "✅ push 成功"
-              exit 0
-            fi
-            git rebase --abort || true
-            echo "::warning::第 $i 次 push 失败，重试"
-            sleep $((i * 5))
-          done
+          bash tools/ci/push_with_retry.sh 3 5
           echo "::error::serenity 数据无法推送到 main（已重试 5 次）"
           exit 1
