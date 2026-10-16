@@ -1,41 +1,57 @@
 {
-  "generated_at": "2026-10-16T05:31:16Z",
-  "market_updated_at": "2026-10-16T05:31:14Z",
-  "technical_updated_at": "2026-10-16T05:31:16Z",
-  "network_status": "ok",
-  "quote_backends": [
-    "yfinance",
-    "yahoo_http",
-    "stooq"
-  ],
+  "generated_at": "2026-10-16T05:38:32Z",
+  "market_updated_at": null,
+  "technical_updated_at": null,
+  "network_status": "unavailable: --no-network 已禁用行情抓取",
+  "quote_backends": [],
   "market": {
-    "available": 15,
+    "available": 0,
     "total": 15,
-    "source_used": [
-      "yfinance"
-    ],
-    "missing": []
+    "source_used": [],
+    "missing": [
+      "^DJI",
+      "^GSPC",
+      "^IXIC",
+      "^VIX",
+      "^TNX",
+      "2YY=F",
+      "^FVX",
+      "^TYX",
+      "DX-Y.NYB",
+      "XAUUSD=X",
+      "XAGUSD=X",
+      "HG=F",
+      "CL=F",
+      "BZ=F",
+      "NG=F"
+    ]
   },
   "stocks": {
     "total": 26,
     "core": 8,
     "observation": 18,
-    "kline_ok": 26,
-    "technical_ok": 26,
+    "kline_ok": 0,
+    "technical_ok": 0,
     "price_source_breakdown": {
-      "last_close": 26
+      "pending_csv": 26
     }
   },
   "review": {
     "core_closed": 4,
     "core_open": 23,
     "observation_closed": 0,
-    "observation_open": 71,
+    "observation_open": 68,
     "actual_active": 4,
-    "unresolved_pnl_events": 0,
-    "price_refreshed_count": 11,
-    "price_backfill_count": 11,
-    "partial_items": []
+    "unresolved_pnl_events": 3,
+    "price_refreshed_count": 0,
+    "price_backfill_count": 0,
+    "partial_items": [
+      {
+        "observation_open_count": 68,
+        "status": "partial",
+        "unresolved": 3
+      }
+    ]
   },
   "warnings": [],
   "ai_status": "partial",
