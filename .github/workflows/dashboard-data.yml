@@ -111,7 +111,7 @@ jobs:
         id: export
         run: |
           mkdir -p dashboard/data
-          ARGS="--data-dir . --out dashboard/data/dashboard_data.json --timeout 20 --retries 3"
+          ARGS="--no-network --data-dir . --out dashboard/data/dashboard_data.json --timeout 20 --retries 3"
           if [ "${{ github.event.inputs.kline_bars }}" != "" ]; then
             ARGS="$ARGS --kline-bars ${{ github.event.inputs.kline_bars }}"
           fi
