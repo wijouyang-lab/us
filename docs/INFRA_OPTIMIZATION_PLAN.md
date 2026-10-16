@@ -214,7 +214,7 @@
 - 源码：`mode="none"` -> `_init()` 立即返回 -> `yf.download` 不可达
 
 ### 已回滚
-- `git revert 41eb6c63`
+- `git revert ecc4c518（本地 41eb6c63 / 远端 ecc4c518）`
 - 生产恢复：export 步骤耗时回到 ~22s
 
 ### 教训
