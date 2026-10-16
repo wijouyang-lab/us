@@ -1,4 +1,4 @@
-name: Research Snapshots S&P500 PIT 10Y (one-shot)
+name: Research Snapshots + IC S&P500 PIT 10Y (one-shot)
 
 on:
   workflow_dispatch:
@@ -20,39 +20,45 @@ jobs:
           python-version: '3.12'
 
       - name: Install deps
-        run: pip install pandas numpy pandas_ta
+        run: pip install pandas numpy pandas_ta scipy
 
       - name: Run snapshots
         run: python tools/research/generate_research_snapshots_sp500_pit_10y.py
+
+      - name: Run IC
+        run: python tools/research/run_research_ic_sp500_pit_10y.py
 
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: research-snapshots-sp500-pit-10y
-          path: research_factor_snapshots_sp500_pit_10y.csv
+          name: research-snapshots-ic-sp500-pit-10y
+          path: |
+            research_factor_snapshots_sp500_pit_10y.csv
+            research_backtest_sp500_pit_10y.csv
+            research_summary_sp500_pit_10y.csv
+            research_ic_sp500_pit_10y.csv
           retention-days: 30
 
       - name: Commit and push
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          if [ -f research_factor_snapshots_sp500_pit_10y.csv ]; then git add research_factor_snapshots_sp500_pit_10y.csv; fi
+          if [ -f research_ic_sp500_pit_10y.csv ]; then git add research_ic_sp500_pit_10y.csv; fi
           if git diff --cached --quiet; then
             echo "no change to commit"
             exit 0
           fi
-          git commit -m "chore(research): generate S&P500 PIT 10Y factor snapshots"
+          git commit -m "chore(research): IC analysis S&P500 PIT 10Y"
           for i in 1 2 3; do
             git fetch origin main
             if git rebase origin/main; then
               if git push origin HEAD:main; then
-                echo "✅ push succeeded (attempt $i)"
+                echo "push ok"
                 exit 0
               fi
             fi
             git rebase --abort 2>/dev/null || true
             sleep 5
           done
-          echo "❌ push failed after 3 retries"
           exit 1
