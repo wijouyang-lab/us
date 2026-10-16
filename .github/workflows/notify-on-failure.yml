@@ -10,9 +10,17 @@ on:
       - "US-Share Evolve"
       - "news-fetch"
       - "skill-weekly"
-      - "Research Snapshots + IC S&P500 PIT 10Y (one-shot)"
+      - "Test"
+      - "Backfill OHLCV (one-shot)"
+      - "Research Backfill 2Y (one-shot)"
+      - "Research Backfill S&P500 2Y (one-shot)"
       - "Research Backfill S&P500 10Y (one-shot)"
-      - "Research IC S&P500 PIT 10Y (one-shot)"
+      - "Research Snapshots 2Y (one-shot)"
+      - "Research Snapshots S&P500 2Y (one-shot)"
+      - "Research Snapshots + IC S&P500 PIT 10Y (one-shot)"
+      - "Research IC 2Y (one-shot)"
+      - "Research IC S&P500 2Y (one-shot)"
+      - "Research IC S&P500 PIT 2Y (one-shot)"
     types:
       - completed
 
