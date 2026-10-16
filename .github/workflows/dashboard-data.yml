@@ -196,9 +196,18 @@ jobs:
                 echo "push succeeded (attempt $i)"
                 exit 0
               fi
+            else
+              # 并发撞车：rebase 行级冲突 → 放弃 rebase，改用 reset --soft 重放
+              git rebase --abort 2>/dev/null || true
+              echo "rebase conflict, using reset --soft replay (attempt $i)"
+              git reset --soft origin/main
+              git commit -m "chore(dashboard): refresh market data [skip ci]" || true
+              if git push origin HEAD:main; then
+                echo "push succeeded via reset --soft (attempt $i)"
+                exit 0
+              fi
             fi
             echo "push failed (attempt $i), retrying..."
-            git rebase --abort 2>/dev/null || true
             sleep 5
           done
           exit 1
