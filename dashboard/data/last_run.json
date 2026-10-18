@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-18T03:46:07Z",
-  "market_updated_at": "2026-10-18T03:46:06Z",
-  "technical_updated_at": "2026-10-18T03:46:07Z",
+  "generated_at": "2026-10-18T04:01:12Z",
+  "market_updated_at": "2026-10-18T04:01:10Z",
+  "technical_updated_at": "2026-10-18T04:01:12Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -27,8 +27,8 @@
     }
   },
   "review": {
-    "core_closed": 4,
-    "core_open": 23,
+    "core_closed": 3,
+    "core_open": 22,
     "observation_closed": 0,
     "observation_open": 64,
     "actual_active": 2,
