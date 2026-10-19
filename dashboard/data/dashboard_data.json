@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T16:16:26Z",
+  "generated_at": "2026-10-19T16:31:18Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -15,7 +15,7 @@
       "price": 14.94,
       "price_source": "realtime",
       "current_price": 14.94,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 14.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 14.75,
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:15:58Z",
+        "computed_at": "2026-10-19T16:30:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1536,14 +1536,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "APA|2026-10-19|Core_Dragon",
       "ai_snapshot_date": "2026-10-19",
-      "price": 49.31,
+      "price": 49.32,
       "price_source": "realtime",
-      "current_price": 49.31,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 49.32,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 48.5,
       "pending_price_source": "Premarket_Price",
       "prev_close": 49.15,
-      "change_1d": 0.3255,
+      "change_1d": 0.3459,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -1.32,
       "pending_change_1d_source": "Premarket_Change_Pct",
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:15:59Z",
+        "computed_at": "2026-10-19T16:30:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3060,14 +3060,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 267.01,
+      "price": 266.8595,
       "price_source": "realtime",
-      "current_price": 267.01,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 266.8595,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": 0.3307,
+      "change_1d": 0.2741,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:15:59Z",
+        "computed_at": "2026-10-19T16:30:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4584,14 +4584,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "BRO|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 68.42,
+      "price": 68.405,
       "price_source": "realtime",
-      "current_price": 68.42,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 68.405,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 61.88,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 63.75,
-      "change_1d": -1.4121,
+      "change_1d": -1.4337,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.9333,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:00Z",
+        "computed_at": "2026-10-19T16:30:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6108,14 +6108,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "CME|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 293.48,
+      "price": 293.685,
       "price_source": "realtime",
-      "current_price": 293.48,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 293.685,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 270.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.44,
-      "change_1d": -0.1327,
+      "change_1d": -0.063,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.0583,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:00Z",
+        "computed_at": "2026-10-19T16:30:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7632,14 +7632,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "CNP|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 39.805,
+      "price": 39.78,
       "price_source": "realtime",
-      "current_price": 39.805,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 39.78,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 38.56,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 38.42,
-      "change_1d": -1.8372,
+      "change_1d": -1.8989,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.3644,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:01Z",
+        "computed_at": "2026-10-19T16:30:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9156,14 +9156,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "ED|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 109.75,
+      "price": 109.63,
       "price_source": "realtime",
-      "current_price": 109.75,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 109.63,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 105.15,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 104.64,
-      "change_1d": -2.2359,
+      "change_1d": -2.3428,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.4874,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:01Z",
+        "computed_at": "2026-10-19T16:30:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10680,14 +10680,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "EOG|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 157.005,
+      "price": 157.26,
       "price_source": "realtime",
-      "current_price": 157.005,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 157.26,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 147.09,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 148.51,
-      "change_1d": -0.636,
+      "change_1d": -0.4747,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.9562,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:02Z",
+        "computed_at": "2026-10-19T16:30:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12204,14 +12204,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "HST|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 24.12,
+      "price": 24.14,
       "price_source": "realtime",
-      "current_price": 24.12,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 24.14,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 22.2,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 22.54,
-      "change_1d": 0.6258,
+      "change_1d": 0.7092,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -1.5084,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:02Z",
+        "computed_at": "2026-10-19T16:30:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13728,14 +13728,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "INVH|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 26.665,
+      "price": 26.69,
       "price_source": "realtime",
-      "current_price": 26.665,
-      "current_price_updated_at": "2026-10-19T16:16:00Z",
+      "current_price": 26.69,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 25.89,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 26.48,
-      "change_1d": -1.4961,
+      "change_1d": -1.4038,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2281,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -15236,7 +15236,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:03Z",
+        "computed_at": "2026-10-19T16:30:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15252,14 +15252,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "JCI|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 148.3125,
+      "price": 148.15,
       "price_source": "realtime",
-      "current_price": 148.3125,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 148.15,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 154.84,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 154.0,
-      "change_1d": 1.954,
+      "change_1d": 1.8423,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.5455,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -16760,7 +16760,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:03Z",
+        "computed_at": "2026-10-19T16:30:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16776,14 +16776,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "PM|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 201.77,
+      "price": 202.06,
       "price_source": "realtime",
-      "current_price": 201.77,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 202.06,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 191.51,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 192.69,
-      "change_1d": -1.6715,
+      "change_1d": -1.5302,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6124,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -18284,7 +18284,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:04Z",
+        "computed_at": "2026-10-19T16:30:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18300,14 +18300,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "PSX|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 291.89,
+      "price": 291.72,
       "price_source": "realtime",
-      "current_price": 291.89,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 291.72,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 274.89,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.6,
-      "change_1d": -0.4366,
+      "change_1d": -0.4946,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.3828,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -19808,7 +19808,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:04Z",
+        "computed_at": "2026-10-19T16:30:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19824,14 +19824,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "RCL|2026-10-06|Observation",
       "ai_snapshot_date": "2026-10-06",
-      "price": 281.11,
+      "price": 280.655,
       "price_source": "realtime",
-      "current_price": 281.11,
-      "current_price_updated_at": "2026-10-19T16:16:00Z",
+      "current_price": 280.655,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 279.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 288.78,
-      "change_1d": 1.2352,
+      "change_1d": 1.0714,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -3.1096,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -21332,7 +21332,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:05Z",
+        "computed_at": "2026-10-19T16:30:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21348,14 +21348,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "VRSN|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 306.49,
+      "price": 306.485,
       "price_source": "realtime",
-      "current_price": 306.49,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 306.485,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 293.2,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 294.22,
-      "change_1d": 1.3726,
+      "change_1d": 1.371,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.3467,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -22856,7 +22856,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:05Z",
+        "computed_at": "2026-10-19T16:31:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22872,14 +22872,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "WM|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 225.695,
+      "price": 225.71,
       "price_source": "realtime",
-      "current_price": 225.695,
-      "current_price_updated_at": "2026-10-19T16:15:00Z",
+      "current_price": 225.71,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 209.0,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 208.94,
-      "change_1d": -0.5135,
+      "change_1d": -0.5069,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0287,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -24380,7 +24380,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:06Z",
+        "computed_at": "2026-10-19T16:31:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24396,14 +24396,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 67.765,
+      "price": 67.83,
       "price_source": "realtime",
-      "current_price": 67.765,
-      "current_price_updated_at": "2026-10-19T16:16:00Z",
+      "current_price": 67.83,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": -0.6961,
+      "change_1d": -0.6008,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -25904,7 +25904,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:06Z",
+        "computed_at": "2026-10-19T16:31:00Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25920,14 +25920,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 177.65,
+      "price": 178.005,
       "price_source": "realtime",
-      "current_price": 177.65,
-      "current_price_updated_at": "2026-10-19T16:16:00Z",
+      "current_price": 178.005,
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": -0.7431,
+      "change_1d": -0.5447,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -27428,7 +27428,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:07Z",
+        "computed_at": "2026-10-19T16:31:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27447,7 +27447,7 @@
       "price": 103.58,
       "price_source": "realtime",
       "current_price": 103.58,
-      "current_price_updated_at": "2026-10-19T16:14:00Z",
+      "current_price_updated_at": "2026-10-19T16:30:00Z",
       "pending_price": 103.39,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 101.82,
@@ -28952,7 +28952,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T16:16:07Z",
+        "computed_at": "2026-10-19T16:31:01Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -28971,16 +28971,16 @@
         "name": "Dow Jones",
         "group": "index",
         "unit": "index point",
-        "price": 52013.4609,
-        "change_1d": 0.0213,
-        "change_5d": 0.6941,
-        "change_20d": 0.6401,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 51992.0703,
+        "change_1d": -0.0199,
+        "change_5d": 0.6526,
+        "change_20d": 0.5987,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792426560,
+        "quote_ts": 1792427460,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -28989,16 +28989,16 @@
         "name": "S&P 500",
         "group": "index",
         "unit": "index point",
-        "price": 7712.75,
-        "change_1d": 0.696,
-        "change_5d": -1.2647,
-        "change_20d": 0.8137,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 7705.5498,
+        "change_1d": 0.602,
+        "change_5d": -1.3568,
+        "change_20d": 0.7196,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792426560,
+        "quote_ts": 1792427460,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29007,16 +29007,16 @@
         "name": "Nasdaq",
         "group": "index",
         "unit": "index point",
-        "price": 26548.0996,
-        "change_1d": 1.5611,
-        "change_5d": -2.9893,
-        "change_20d": 0.0964,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 26503.2656,
+        "change_1d": 1.3896,
+        "change_5d": -3.1532,
+        "change_20d": -0.0727,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792426560,
+        "quote_ts": 1792427400,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29025,16 +29025,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 17.74,
-        "change_1d": -11.2556,
-        "change_5d": 19.5418,
-        "change_20d": 19.7839,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 17.8,
+        "change_1d": -10.9555,
+        "change_5d": 19.9461,
+        "change_20d": 20.1891,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425660,
+        "quote_ts": 1792426500,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29043,16 +29043,16 @@
         "name": "US10Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.138,
-        "change_1d": 0.7846,
-        "change_5d": -2.0214,
-        "change_20d": 2.8011,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 5.146,
+        "change_1d": 0.9415,
+        "change_5d": -1.8688,
+        "change_20d": 2.9612,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425660,
+        "quote_ts": 1792426500,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29063,15 +29063,15 @@
         "unit": "percent yield",
         "price": 4.75,
         "change_1d": 0.0,
-        "change_5d": 2.2165,
-        "change_20d": 7.8565,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "change_5d": null,
+        "change_20d": null,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
         "quote_ts": null,
-        "last_bar_date": "2026-10-16"
+        "last_bar_date": "2026-10-13"
       },
       {
         "symbol": "^FVX",
@@ -29079,16 +29079,16 @@
         "name": "US5Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.94,
-        "change_1d": 0.8369,
-        "change_5d": -1.6132,
-        "change_20d": 1.7298,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 4.949,
+        "change_1d": 1.0206,
+        "change_5d": -1.434,
+        "change_20d": 1.9152,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425660,
+        "quote_ts": 1792426500,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29097,16 +29097,16 @@
         "name": "US30Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.47,
-        "change_1d": 0.6255,
-        "change_5d": -2.3214,
-        "change_20d": 2.6074,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 5.477,
+        "change_1d": 0.7542,
+        "change_5d": -2.1964,
+        "change_20d": 2.7387,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425660,
+        "quote_ts": 1792426500,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29115,16 +29115,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.015,
-        "change_1d": 0.1718,
-        "change_5d": -0.1908,
-        "change_20d": 1.7911,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 102.002,
+        "change_1d": 0.1591,
+        "change_5d": -0.2035,
+        "change_20d": 1.7781,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29133,16 +29133,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4162.3999,
-        "change_1d": -0.4473,
-        "change_5d": -1.2784,
-        "change_20d": -5.9323,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 4161.7998,
+        "change_1d": -0.4616,
+        "change_5d": -1.2926,
+        "change_20d": -5.9459,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29151,16 +29151,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 57.39,
-        "change_1d": 0.693,
-        "change_5d": -5.4063,
-        "change_20d": -13.7719,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 57.395,
+        "change_1d": 0.7018,
+        "change_5d": -5.3981,
+        "change_20d": -13.7643,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29169,16 +29169,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.565,
-        "change_1d": 0.5206,
-        "change_5d": -1.1667,
-        "change_20d": -0.7559,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 6.568,
+        "change_1d": 0.5665,
+        "change_5d": -1.1216,
+        "change_20d": -0.7105,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29187,16 +29187,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 98.55,
-        "change_1d": -2.8202,
-        "change_5d": 7.2945,
-        "change_20d": -1.7448,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 98.75,
+        "change_1d": -2.623,
+        "change_5d": 7.5123,
+        "change_20d": -1.5454,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29205,16 +29205,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 109.34,
-        "change_1d": -0.4733,
-        "change_5d": 4.4118,
-        "change_20d": 5.2662,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 109.53,
+        "change_1d": -0.3004,
+        "change_5d": 4.5932,
+        "change_20d": 5.4491,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -29223,16 +29223,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.076,
-        "change_1d": -1.2837,
-        "change_5d": -4.4721,
-        "change_20d": 5.6319,
-        "updated_at": "2026-10-19T16:16:07Z",
+        "price": 3.089,
+        "change_1d": -0.8665,
+        "change_5d": -4.0683,
+        "change_20d": 6.0783,
+        "updated_at": "2026-10-19T16:31:01Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792425960,
+        "quote_ts": 1792426860,
         "last_bar_date": "2026-10-16"
       }
     ],
@@ -29245,12 +29245,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-19T16:16:24Z"
+    "updated_at": "2026-10-19T16:31:16Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-19 12:16:26",
+    "as_of_us": "2026-10-19 12:31:18",
     "window_start": "2026-09-19",
     "core_closed_count": 3,
     "core_open_count": 22,
@@ -29281,7 +29281,7 @@
     "unresolved_pnl_events": 0,
     "notes": [
       "期权 Wall 本次未重算（无缺失项或期权链不可用）。",
-      "AI Snapshot 索引：ai_snapshot.csv 命中 87 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 57/411 条",
+      "AI Snapshot 索引：ai_snapshot.csv 命中 88 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 57/411 条",
       "history：基于 review_history.csv 的每日快照，统计口径=当日仍在跟踪(持仓中/观察推荐)的去重推荐事件数（Ticker+Rec_Date），非当日新增数。"
     ],
     "missing_fields": [],
@@ -31320,8 +31320,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 230.0,
-        "pnl_pct": -7.34,
+        "cur_price": 229.44000244140625,
+        "pnl_pct": -7.56,
         "days_held": 27,
         "stop_loss": null,
         "score": "64.2",
@@ -31734,8 +31734,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 172.46,
-        "cur_price": 172.5500030517578,
-        "pnl_pct": 0.05,
+        "cur_price": 172.11000061035156,
+        "pnl_pct": -0.2,
         "days_held": 31,
         "stop_loss": null,
         "score": "74.0",
@@ -31803,8 +31803,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 412.0,
-        "cur_price": 441.25750732421875,
-        "pnl_pct": 7.1,
+        "cur_price": 440.42999267578125,
+        "pnl_pct": 6.9,
         "days_held": 31,
         "stop_loss": null,
         "score": "74.7",
@@ -35736,8 +35736,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 233.0,
-        "pnl_pct": -44.38,
+        "cur_price": 232.0,
+        "pnl_pct": -44.61,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -36288,8 +36288,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 47.57,
-        "cur_price": 48.119998931884766,
-        "pnl_pct": 1.16,
+        "cur_price": 48.189998626708984,
+        "pnl_pct": 1.3,
         "days_held": 99,
         "stop_loss": null,
         "score": "0",
@@ -36587,8 +36587,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.564998626708984,
-        "pnl_pct": -7.29,
+        "cur_price": 50.459999084472656,
+        "pnl_pct": -7.48,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -36955,8 +36955,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 55.1349983215332,
-        "pnl_pct": 6.09,
+        "cur_price": 55.13999938964844,
+        "pnl_pct": 6.1,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -37392,7 +37392,7 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 0.0,
-        "cur_price": 0.0002,
+        "cur_price": 0.00019999999494757503,
         "pnl_pct": null,
         "days_held": 110,
         "stop_loss": null,
@@ -39250,7 +39250,7 @@
       "review_stage"
     ],
     "records_note": "review.records[] = build_events() 事件账本原样展开；去重 key 复用 _event_key(Ticker,Rec_Date,Tag)；按 rec_date DESC 排序；ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，匹配不到为 null，禁止按 Ticker 回退到 ai_text_cache.csv。price_5d/10d/20d 与 review_stage 只透传 review_history.csv 原值（review.py 按 OHLCV 交易日历计算），本导出器不重算、不补值。",
-    "ai_snapshot_total": 87,
+    "ai_snapshot_total": 88,
     "ai_snapshot_matched": 57,
     "ai_snapshot_source": "ai_snapshot.csv"
   },
@@ -39499,17 +39499,17 @@
   "runtimes": {
     "scan": {
       "latest": {
-        "run_id": 39256523543,
-        "status": "completed",
-        "conclusion": "success",
-        "created_at": "2026-10-19T13:00:29Z",
-        "started_at": "2026-10-19T13:00:29Z",
-        "updated_at": "2026-10-19T13:11:00Z",
-        "head_sha": "51b70174e3a9",
+        "run_id": 39284294597,
+        "status": "pending",
+        "conclusion": null,
+        "created_at": "2026-10-19T16:17:32Z",
+        "started_at": "2026-10-19T16:17:32Z",
+        "updated_at": "2026-10-19T16:26:49Z",
+        "head_sha": "442244335539",
         "event": "workflow_dispatch",
-        "run_number": 179,
+        "run_number": 180,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39256523543"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39284294597"
       },
       "last_success": {
         "run_id": 39256523543,
@@ -39807,7 +39807,7 @@
         }
       ],
       "snapshot_file": "quant_factor_snapshot.csv",
-      "snapshot_rows": 2479
+      "snapshot_rows": 2503
     },
     "backtest": {
       "phase": 2,
@@ -39910,117 +39910,208 @@
   },
   "news": {
     "schema_version": "news.v1",
-    "generated_at": "2026-10-19T13:10:56Z",
+    "generated_at": "2026-10-19T16:28:04Z",
     "market_news": [
       {
-        "headline": "At least 18 killed in Houthi attack on Yemeni government training camp in Shabwa, sources say - Reuters",
+        "headline": "We're buying more of a beaten-up stock before another overhang is lifted",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/investingclub/2026/10/19/were-buying-more-of-a-beaten-up-stock-before-another-overhang-is-lifted.html",
+        "datetime": 1792424596,
+        "summary": "The stock is still down big from its Aug. 5 close.",
+        "headline_cn": "我们正在增持一只遭受重挫的股票，下一个压制因素即将解除",
+        "sentiment": "bullish",
+        "rationale": "机构增持预示信心恢复，压制解除将带来估值修复",
+        "market_relevant": true
+      },
+      {
+        "headline": "Every look from the Victoria's Secret Fashion Show - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNa2lPVEdrVzBfenM5SXI3MVNXTDdLQ1R5Si12OHFWQzF1TUtJaUZYdjl6SmZjSkdZeS1FSWV2a2JzeXc5TEFGdkliY09WTFE2SWYwRUQwVUJaWWsxV2dSNGZwYWlOMFMyd0kzaTZoN0xJZmJTRm9NUjdmdmhPeG9sYlJ5d05PVDREcWlFbF9YZ0U?oc=5",
+        "datetime": 1792423629,
+        "summary": "Every look from the Victoria's Secret Fashion Show  Reuters",
+        "headline_cn": "维密时装秀全部造型一览 - 路透社",
+        "sentiment": "neutral",
+        "rationale": "时尚展示为常规活动，未披露业绩或战略变化",
+        "market_relevant": false
+      },
+      {
+        "headline": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict? - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQVEFCaTJXdXlZR1NxZkpndXE3d0hRYWpmRUtBOXpXeTI3M2hUVnFSVVJrQm1NS29LLWlobDd4enF2OWxOY1h1SmJidXVlUksxeDdZdVMyZF9tVklTdWJiQzJZZzRNVnFEX0tMQUdCTW04WHhmdWdhQW42cERybkd1QzBDTHgxMklXU3dvbF9mbUt3a3RSb3NhZlpNbkpWcFNaWXZhMWE5TUkzTTVFMlI1YWV3NXJjb0lSMTRQVFNqbzFsRmZwRmtB?oc=5",
+        "datetime": 1792422187,
+        "summary": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict?  Reuters",
+        "headline_cn": "解读：埃及可能军事介入沙特-也门冲突的背后原因 - 路透社",
+        "sentiment": "bearish",
+        "rationale": "地缘紧张升级可能推高油价，增加通胀和避险情绪",
+        "market_relevant": true
+      },
+      {
+        "headline": "Houthi attack kills 53 at Yemen government training camp, officials say - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOSXFqMTJmVlRrSjR1NmNocW1VRWFpV1pSMjlNZDh1YXBsS2gyRkE0c19uRXJCQXN4Nklqajh6Tk4yeHhlRWRpWG81WXJMRVJmWXREaXZ2UkJfT3FNOFJndW9PNHBTZFRvVGJnbmFkeU10ZDlWdWY2N0kzVkFDVTh5NG0zZlZiM0N3bWthZmF2LUJjUXlEd29WOVRLZFdodFA0YlcwRl9fX0ptQ2dyN2I5RjVfRWJxRW1vYmF6VURGWQ?oc=5",
-        "datetime": 1792408839,
-        "summary": "At least 18 killed in Houthi attack on Yemeni government training camp in Shabwa, sources say  Reuters",
-        "headline_cn": "消息人士称胡塞武装袭击也门政府训练营造成至少18人死亡",
+        "datetime": 1792422183,
+        "summary": "Houthi attack kills 53 at Yemen government training camp, officials say  Reuters",
+        "headline_cn": "也门政府训练营遭胡塞武装袭击致53人死亡，官员称 - 路透社",
         "sentiment": "bearish",
-        "rationale": "地缘冲突升级推高避险情绪和油价",
+        "rationale": "中东冲突加剧威胁红海航运与能源供应链稳定",
+        "market_relevant": true
+      },
+      {
+        "headline": "NYSE becomes latest exchange to extend options hours as appetite for around-the-clock trading grows",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/19/nyse-extends-options-trading-hours.html",
+        "datetime": 1792417610,
+        "summary": "The New York Stock Exchange becomes second major exchange to announce extended-hours options trading for heavily traded ETFs and single stocks, following CBOE.",
+        "headline_cn": "纽交所成为最新延长期权交易时间的交易所，全天候交易需求增长",
+        "sentiment": "bullish",
+        "rationale": "交易时长扩展提升市场流动性和交易所收入潜力",
         "market_relevant": true
       },
       {
         "headline": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, cites funding shortages - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNenIya2dWLVowN3ZJZjB5eXlJekpqc3VCajlVN0N3eldBMzg4d05JSG9MQXVKQWdqbVZRYnZ3VXlVSGktNEE2MndNU1dZX2FFd0YyeW9teDFfN19WNk9RS09rV0JlM2dnbEluVlgydFFJc3QtQ0RNRkRSWkkxV0V6WjNRM21NX0FqRVZLdnp0WWFtNmFWZEh6YUJXXzJRRVU5Sy1MbmtjRm5pc1VVc1daWk9MTmFScG5yRmh4SHZBNno1eUloQXVDRkRVNU5kUQ?oc=5",
-        "datetime": 1792407966,
+        "datetime": 1792416258,
         "summary": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, cites funding shortages  Reuters",
-        "headline_cn": "世界粮食计划署因资金短缺削减对加沙50万巴勒斯坦人的援助",
+        "headline_cn": "世界粮食计划署削减50万加沙巴勒斯坦人援助，称资金短缺 - 路透社",
         "sentiment": "neutral",
-        "rationale": "人道危机但无直接市场影响",
+        "rationale": "人道危机严重但对市场影响有限，未触发大宗商品或地缘溢价",
         "market_relevant": false
+      },
+      {
+        "headline": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQWVF3TGpvSmg1YmEyMnhhWXhnUFkwdS13ak14NldscXdsZm92dVkzbGdnU3lwd2VjY255bXJKeGZOX09ZM3AxN1JjWHRSbXRGNDdFaTVhMU9SMWxKZXRDNDd2bnBuaE5pSjJwbkgtVXF6dzJWNWFJOUw5X2U1TjJPQjdUaG1ldHRudHRVTF9FeWhOM3gxaTloUEcxaVdJdHg2M29sUHJwc2NFWFdRV0xjS3Y2UlZ6ZEJLOEw3ZEpR?oc=5",
+        "datetime": 1792413317,
+        "summary": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month  Reuters",
+        "headline_cn": "克里姆林宫称普京、特朗普和习近平可能下月在中国举行三方会晤 - 路透社",
+        "sentiment": "bullish",
+        "rationale": "大国对话释放缓和信号，降低贸易战和地缘风险",
+        "market_relevant": true
+      },
+      {
+        "headline": "Credit stress is threatening to unwind the AI bull. All eyes are on Oracle to hold the line",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/19/oracle-debt-faces-an-ai-stress-test-why-some-investors-arent-worried-.html",
+        "datetime": 1792411027,
+        "summary": "Investors are pushing up the cost of insurance against an Oracle default.",
+        "headline_cn": "信贷压力威胁AI牛市逆转，所有目光聚焦甲骨文能否守住阵地",
+        "sentiment": "bearish",
+        "rationale": "融资成本上升抑制AI投资，龙头承压恐引发板块调整",
+        "market_relevant": true
+      },
+      {
+        "headline": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNRjBMUkU1SEVNclFaMVR1SnljVENrS3N5RUdNcnV5UFZkdlB3RHdiWTFoSFRxcVRBVkRSOEowM0h4bHZyYmd4dDhKYlJQSzUzTUJ2QmxzaGtha2lxUldoLXRPSmczQndXbTNHRWxwRHBhZF9vdDdZRVl4WXJ0M3B0dEJrOWh1SkVzTXhIUTVydk11cEFPaXc3dGZBX0JnMk9hYlpOdkpXc3R3cllKTllGRG5MVC01QkZHNl9Td3J1VHhSckE?oc=5",
+        "datetime": 1792410470,
+        "summary": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit  Reuters",
+        "headline_cn": "鲁比奥以盛大访问乌兹别克斯坦寻求扩大中亚关系 - 路透社",
+        "sentiment": "neutral",
+        "rationale": "外交访问属常规事务，暂无具体经贸协议或市场影响",
+        "market_relevant": false
+      },
+      {
+        "headline": "Trump's Russia sanctions waiver eases India's energy woes, lifts trade deal chances - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPX1JDdGd6aEZHMGQ5OXppVnA5d3FlSzNmbDdjOURNajl2Sjg3T0VrRzRLSC1DdVpLekQ5ZHBVdjQ1eV9UcF81anZNVklVYjZnQlNfQUlWRVMtNzEwVVVDQWlYTmQtU29FOU5xTFlGYTFUVV90bXI3dXU5UU5IUG9ZNjNYVHNUdzNjT3JXb244bm84d240TG56ZDVLbXNhMWpucjVTZXdtaTZQYjViOFU3bDZnZlFEQjduUDBfMWdwMVBXUFl3VFRJ?oc=5",
+        "datetime": 1792409771,
+        "summary": "Trump's Russia sanctions waiver eases India's energy woes, lifts trade deal chances  Reuters",
+        "headline_cn": "特朗普对俄制裁豁免缓解印度能源困境，提升贸易协议前景 - 路透社",
+        "sentiment": "bullish",
+        "rationale": "制裁放松稳定能源供应，利好印度市场及美印贸易",
+        "market_relevant": true
+      },
+      {
+        "headline": "French Prime Minister calls for partial curfews after weekend riots - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOS05IaFlBa0paMExacEp0cGpsM0JDeGF2RmZTR3JDZWxxRUZ4TGF4TVMtV09yay1PQjFhMnJRT3UteEtWQV9nUU9DMHFfaU1Kd054UlF3aFh1WGtuaUlFWTQ0RXExNVNfT3RwRFhLLW82XzhpNEFNdjd6X2RmVXNETzVsYTR5TjBFWTFrbHZ5NVhpcnNpbDF6UGVaSU9sMnR4d1hxZlVSLTY?oc=5",
+        "datetime": 1792409228,
+        "summary": "French Prime Minister calls for partial curfews after weekend riots  Reuters"
       },
       {
         "headline": "UK urges firms not to take part in E1 settlement tender or risk sanctions - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxNeG9CWEV1Z3N0eDN1b2U5TEw4Y21TVm51OWtfUFQ4UEhyVm9jZkpLQUFraHFaajdGeEctTWtVZmlWT3pkWGtVZXR0QzJmcC1wS1paMDVBQ3FVTUdGUWZ2TlZOdmRYRUJBMFNBeml4RjgtQlhaMW9TdFJNSzRBU2RjRGI1MmRadmI0azlNTGJQQ01EU3FhWXNsX0FyQkN2OHJKcUR6ckdwMExWanJfSVNJVFdMM1ZseGRMME43QUJR?oc=5",
         "datetime": 1792403690,
-        "summary": "UK urges firms not to take part in E1 settlement tender or risk sanctions  Reuters",
-        "headline_cn": "英国敦促企业勿参与E1定居点招标否则面临制裁",
-        "sentiment": "neutral",
-        "rationale": "政治表态，市场影响有限",
-        "market_relevant": false
+        "summary": "UK urges firms not to take part in E1 settlement tender or risk sanctions  Reuters"
+      },
+      {
+        "headline": "Qatar will soon announce local defence production hub, minister of state says - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOa1NSbS1JNV82NURyOVROZGxMc29reXNCU1RIdzlnVFFxbWhtMmdiV0w4TVFiXzJFRmZrREY0TzJDVGFjcUQteV9FVkRkT3VFRkd6TnY2Wk5pQVFZb3NSWHg1R1RDUkQ3UHFQRkpZUVA0ZGpJeEh0LW1uUmV6LVRHRm82eXZEbVlTWi1oeVFuZGdJalp6ZVplUDkwdE9CN2pqZmhrWlNMUzFYb2szTzdSLUNzR3dXRFhHTnR2VGJ5X2pGSnN6THc?oc=5",
+        "datetime": 1792401823,
+        "summary": "Qatar will soon announce local defence production hub, minister of state says  Reuters"
       },
       {
         "headline": "French unrest compounds debt crisis fears. Paris-listed stocks, bonds and the euro fall",
         "source": "CNBC",
         "url": "https://www.cnbc.com/2026/10/19/france-protests-bond-yields-markets.html",
         "datetime": 1792400829,
-        "summary": "\"It looks like either the bond markets riot, or the people riot, or both,\" one analyst told CNBC.",
-        "headline_cn": "法国动荡加剧债务危机担忧，巴黎股市债市和欧元下跌",
-        "sentiment": "bearish",
-        "rationale": "欧洲政治风险拖累资产价格",
-        "market_relevant": true
+        "summary": "\"It looks like either the bond markets riot, or the people riot, or both,\" one analyst told CNBC."
+      },
+      {
+        "headline": "Putin approves minor Russian government reshuffle - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxORXFIbEpxSmkybWNGczBUYVEyMnFKYm1GN1BwVTBkaWZDREF1Sk5WcEVFOHVwaTF4YXc2Z0RQcnB2TlNGdTY3bHFMODUtckcwMWdXWUV0eWtLWndTc1A0TTNlcUQ2S2ptUVFYN2hSRWVpMmdyNG1kbk43U0NaOHNYc1BzSHEzck0?oc=5",
+        "datetime": 1792392780,
+        "summary": "Putin approves minor Russian government reshuffle  Reuters"
       },
       {
         "headline": "COMMENTARY: Asian refiners' pain is Middle East oil producers' problem - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxORXo3cnhIZDJzWmtCS3BfenR2LVNIbWYxQ2dfNTVOdFlnMm8wZGIwemtWUC1vdTlTd2V3SzhIUTJWRmY5cG1JbWg5QzJfUGQ5UlZ0aDlydmVQbTZWNURyWGtFWlY3NDY4Y215MnpVT0xMdFlBaWlBMllnd0h0Zjh6TzdDMk5UT1JxR1FQSHkxRlhJeE5qQjF6SzduTTVOMUdLTFdDSG9hOGVoY3BPY2t3eUVVa0g2MDV1SktDc2ljaUJzWUkycGhubEgxUl8?oc=5",
         "datetime": 1792389600,
-        "summary": "COMMENTARY: Asian refiners' pain is Middle East oil producers' problem  Reuters",
-        "headline_cn": "评论：亚洲炼油商困境是中东产油国的问题",
-        "sentiment": "neutral",
-        "rationale": "行业分析评论，无明确方向",
-        "market_relevant": true
+        "summary": "COMMENTARY: Asian refiners' pain is Middle East oil producers' problem  Reuters"
+      },
+      {
+        "headline": "Global food inflation is expected to intensify as supply shocks pile up - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQUVRkb2hsTDU1SE9pWjNla2I5RTYxUFJQZndkWkVIQ05EbzhUOWlfbGp5X2J2SHA0bTJpMGptenRDdXdWZ3E2VkthVVdBY2YxTFQ0SjhPc2xadGJWRFR2dENBZ1luZ1lEOUlsVTFxYnJxYmJ4ck9kZmtaQlg1bzFjemN5Rk1WdFhSb0tpT2c2OVVGd2lRenlBVnRud2E5S2ZsMlRucENKZ0hpLWJBd1dCX0R5VG10YkU?oc=5",
+        "datetime": 1792382640,
+        "summary": "Global food inflation is expected to intensify as supply shocks pile up  Reuters"
+      },
+      {
+        "headline": "Rupee ends flat as stock slump, importer hedging erodes bounce - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxOa3NLUV9hTjZtMURDMENEaVZFZFBNWFNJVXNoakRPSjZTa1lGU1FQZHlVYU9HQVUyWGg0eDI3Y3lsRXFRZ2lhV0FSMFhPN3pwaHJ0SEVSOENrTUVtY1cxMjRZRWpxTVFwMDlJMURMRVN3dURIbVhQc3hiUTR3Nmh0QXJkUnRKNjJVSFkzTkFPYmRCT0JyZkpzaFF3LUJMZzlDbm5TMXRJUlZ1VUhSbXA4?oc=5",
+        "datetime": 1792377420,
+        "summary": "Rupee ends flat as stock slump, importer hedging erodes bounce  Reuters"
       },
       {
         "headline": "UK housing market showing signs of mortgage rates impact, Rightmove says - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaWFjYmdlWlpxc2JxSGc1YnZhM3ptTFp2bHdQbUUwVS1XTnoyeFpMVXh5TjNINy0tWm5hMmViQ2xpdzRFZWRHZjRyMHF4TkhDY0l0ZXhjS2FUTWpaNlpGRjl0ZEFUTm9qR1B2bUpYTnpWQjVNWXhwZDR0OFo0V2RheDdobm5jMGFCNWZuXzQ5WUdzM20xQ2dkd3JkUW9PWFh3Z1JrREVxcnJyNG1UR0M5ZXM0SQ?oc=5",
         "datetime": 1792364768,
-        "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters",
-        "headline_cn": "Rightmove称英国房市显现抵押贷款利率冲击迹象",
-        "sentiment": "bearish",
-        "rationale": "房市降温反映利率压力",
-        "market_relevant": true
+        "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters"
       },
       {
         "headline": "Why I am taking the other side of the trade that crushed the market Friday",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/18/jim-cramer-why-i-am-taking-the-other-side-of-the-trade-that-crushed-the-market-friday.html",
         "datetime": 1792362188,
-        "summary": "How did this happen so quickly? Where were the buyers? I have some answers.",
-        "headline_cn": "为何我要做上周五压垮市场的交易对手方",
-        "sentiment": "bullish",
-        "rationale": "逆向策略暗示超跌反弹机会",
-        "market_relevant": true
+        "summary": "How did this happen so quickly? Where were the buyers? I have some answers."
       },
       {
-        "headline": "Oil slips from five-month high with Hormuz transits in focus - Reuters",
+        "headline": "Oil slips from five-month highs with Hormuz crossings, Russian sanctions waiver in focus - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
         "datetime": 1792362180,
-        "summary": "Oil slips from five-month high with Hormuz transits in focus  Reuters",
-        "headline_cn": "油价从五个月高位回落，霍尔木兹海峡通航成焦点",
-        "sentiment": "neutral",
-        "rationale": "油价回调但地缘风险尚存",
-        "market_relevant": true
+        "summary": "Oil slips from five-month highs with Hormuz crossings, Russian sanctions waiver in focus  Reuters"
       },
       {
         "headline": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNaUsxbVVqQ0FFUl81U25IbG1NaXhrNzFqZzIzaFpRUVhKbF9rYlZoMXg1Z3NzYjR1TEtkeHNCU1BrOWs4ZXR5VHFqMTBoX3VjSV9FRV9neGVDSkdUNWIxMlNhZWRJbldocDM5Q2hiMXYxUXpHVUJqWkkyOEF5OGNBNWduQXFPMXp6VXhYRjUyNmsxaV9pbXJhS29uVGh6Tm51emp4S3YtdmI5c21HZE9HeFkycENlNGxHRUlJd29YWkxwRF85eXc?oc=5",
         "datetime": 1792357478,
-        "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters",
-        "headline_cn": "埃及称准备支持沙特对抗伊朗盟友胡塞武装",
-        "sentiment": "bearish",
-        "rationale": "中东冲突扩大化风险上升",
-        "market_relevant": true
+        "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters"
       },
       {
         "headline": "Here are the 3 big things we're watching in the stock market this week",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/18/here-are-the-3-big-things-were-watching-in-the-stock-market-this-week.html",
         "datetime": 1792337077,
-        "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio.",
-        "headline_cn": "本周股市关注的三大要点",
-        "sentiment": "neutral",
-        "rationale": "前瞻性信息，无具体方向",
-        "market_relevant": true
+        "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio."
       },
       {
         "headline": "Trump endorses Netanyahu in close Israeli election - Reuters",
@@ -40042,6 +40133,13 @@
         "url": "https://www.cnbc.com/make-it/2026/10/18/parenting-lessons-resilient-successful-well-adjusted.html",
         "datetime": 1792330621,
         "summary": "Parenting coach Reem Raouda shares lessons to help kids feel worthy regardless of achievements and handle disappointment, disagreement and difficult feelings."
+      },
+      {
+        "headline": "Ukraine 'regrets' possible diversion of its drones over Lithuania, foreign ministry says - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxQRUpURy1lbVFTRFVVRWFmZzM5V0hkNWFKcmVwWlEwZUd3aW4tazhodWZaMHI0czNMVFJpOVlabmNSVXhVR3hHWVdWQS1INU5tb2pPTVRxY0RtOWwxVkt6M280SnBDaUVRb3Q2QWNNckM0UjhyaEFNa2l1ZVJkTGFBR1hWNkl6YTdfSHJTaDFZOWVoTjBQR3FrQ0NzaEc0QjBIUk52aHgtVHZIMlFWeFNXNVVYNWR3aWZ5dldZ?oc=5",
+        "datetime": 1792330056,
+        "summary": "Ukraine 'regrets' possible diversion of its drones over Lithuania, foreign ministry says  Reuters"
       },
       {
         "headline": "Turkey will get some diesel from US-Russia supply deal, energy minister says - Reuters",
@@ -40100,11 +40198,25 @@
         "summary": "Saudi-led coalition says helicopter crash in Najran kills two crew members  Reuters"
       },
       {
+        "headline": "Mass protests in France spiral into worst riots in years - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNQ3ZSMTR3dmZDamlnT3EyMWx2U1hma3VycjFxblg3SmxXMi1mUEhibjJVTV8ySGRheTEyVndBWEF4em1sbEdoZ0pKcU0tS0JVSzVVS3VZdUVrOXdHNVNYdThleU0zaDE2RXpwMWxyYURCNGt1akVuRUF0aWhYY1VkQTV6cG9UeWd2eVRjTXV6U2V2NnpCeS1zMUl5M2N3Wk16a0t3ZQ?oc=5",
+        "datetime": 1792291108,
+        "summary": "Mass protests in France spiral into worst riots in years  Reuters"
+      },
+      {
         "headline": "Lebanon says military delegation will press for halt to Israeli attacks at US talks - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQSVBXRnY2dGJybHo5d2JiMTlEbnE2SGNfX3FBbVIyazh3dFFPWjB6eWpQaTZwZGwxT3dKQTRfVHlTQ0hZaGJfWmZtOFZYSERiV1Q1QWNTeWdDcWpSMkdtci0zOHBvelNXYW9XaFB0ZHRadFN5Sy1Vb25PNU8yeXV5Q01IdEZIX1o2TEpXNS15ZDcxX0MxQ1JJeEJZQ3laeGpvZURhYVpkajZrTmcwQzZzLW9EUnhaOUlaRmd5WGxaVEhpdElCQVE?oc=5",
         "datetime": 1792269103,
         "summary": "Lebanon says military delegation will press for halt to Israeli attacks at US talks  Reuters"
+      },
+      {
+        "headline": "Tens of thousands march in Lisbon over housing and living costs - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOa3NQRHI0VTRqeGpNXzZSN0hkTU1aOTh3M3BKdHBQVGc1b1pGdmRRVWJ4WTdSbnVaNlJXQXNJeklhMEJlYkhocVVwRGtzcjlISk43UW9tU2RYWXNQR09Wd3k4a2xCQm9Ua1Z4bkY2UlI3NFpzMXZKcHNGTy1PdlJBMkV6YTN0Y210eHJWN0xtbVByX0o1RlV6V2lOVQ?oc=5",
+        "datetime": 1792257089,
+        "summary": "Tens of thousands march in Lisbon over housing and living costs  Reuters"
       },
       {
         "headline": "Explosion at Iraqi paramilitary alliance base kills one member, sources say - Reuters",
@@ -40429,6 +40541,13 @@
         "summary": "US considers removing sanctions on some shadow fleet vessels to cut freight rates, official says  Reuters"
       },
       {
+        "headline": "IMF expects at least one more 25 bps ECB rate hike in 2026 - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPbUVycFZsRzVkXzRQNHZLVXlhMUxUbmtmVW1fRDdjN1hOTWQwS18zX0VqeklHb0oydmE0bjJvdHJSbFFaM3dhZThqTkV5NHJVVFNyb29PMTJfNlRfUTZjSV84cWF4aC03b1l1eEdQWE1ZX1l4TXlwQjhOc29vajRoWGhsMVFEVEZZdlhjUWk3bDZ6YTdhV25iQ25VZE9RZw?oc=5",
+        "datetime": 1792145115,
+        "summary": "IMF expects at least one more 25 bps ECB rate hike in 2026  Reuters"
+      },
+      {
         "headline": "On the campaign trail, JB Pritzker courts farmers like he's running for president - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQaG9mNDloV2MxakdrMTJablNtYWZaQVhmMmYtMUdxSE9JR0ZVRWdYWnlucG1laHRRWXVhZkZjOGlyWkxZWlJVZlY1dU1nc1pHRUlzcGEtWXJEQi1XN1Z2N2VjTzR4YXBiSE55MUtsQjZ5RUFqUURxa2E2VGpOYUtHRXFQVU1sMzBuc1BSbGg0WG9GeHBCaXdVcjJySEdJUDVwWUxWNFpybGp1NVRxeExZTm4yTQ?oc=5",
@@ -40532,125 +40651,6 @@
         "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFAxaUlzcGNmcDFvOGZOa1huX24wY2VmSnFtaG1qVjZsVVRZSUNPbFdUR3UzejVZckNxcWZwSURFV2l4QU9BZkVTMGVlSVNDaGtWOXktQmNDRDFVTmZlXzhlTnZvWGZCems?oc=5",
         "datetime": 1792098120,
         "summary": "Photos of the week  Reuters"
-      },
-      {
-        "headline": "Iraq parliament approves remaining cabinet posts, PM deputies - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxOYzM1MFlvcHllbHZBY0xabi1MZFBhS0FvdVFadU5oeGswa3hBN25KMmVSVWZ3M1pWaTB3RXNibWpsUGtxM3Y3M25zbkRZbWdNUjhtUG1wWVYwWTZGWFNpZ19INlZkMVBhVEUxMm1fNVlqckRtMWp4R1gyN2NUMzUwNGpHdUIwNDQ2M2VUNEZIWEpwNk10bzZYcWtKdkRUUDVrYVdkSmhpdDBjM09kYURfRUVaNnQ?oc=5",
-        "datetime": 1792094689,
-        "summary": "Iraq parliament approves remaining cabinet posts, PM deputies  Reuters"
-      },
-      {
-        "headline": "KFC to switch to Coca-Cola beverages in U.S. restaurants for the first time in decades",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/15/kfc-coca-cola-pepsi-switch.html",
-        "datetime": 1792094021,
-        "summary": "KFC is switching from PepsiCo to Coca-Cola as its beverage supplier for U.S. restaurants."
-      },
-      {
-        "headline": "Yemen's Houthis hit palace in Aden, coalition details attacks on Saudi infrastructure - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQODZXb0UtbHJiTHdmLTZhUENYcXNNeVptZDFGV1pUUEpuS3A0RzROVlBWSGw2V2tvdjNabmlnX1llVmh1Tno5TW5jUjhLWm5BY3VOREdYTnd5Q2RpdmdyVnVzR0lFTlp4SDV4a3JzNWo0US1xdER1eUkybkRtOHlBT2U4RE43NFI2dGVnb29fSmdPVmVPaDY3NG5fNXRabFR5dkJBU0pwNDFZSkN0NkxaU2lEd2c1Mk9HbUNUYTROV3BJUnh3TEE?oc=5",
-        "datetime": 1792093488,
-        "summary": "Yemen's Houthis hit palace in Aden, coalition details attacks on Saudi infrastructure  Reuters"
-      },
-      {
-        "headline": "Nvidia and Cisco confirm multimillion-dollar donations to Trump's White House ballroom",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/15/trump-ballroom-nvidia-cisco-donations.html",
-        "datetime": 1792093420,
-        "summary": "Big Tech gave millions to Trump's White House ballroom, documents show"
-      },
-      {
-        "headline": "Some 'classic' money advice is actually pretty new—and not all of it is worthwhile, says historian",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/make-it/2026/10/15/money-advice-history-joseph-moore.html",
-        "datetime": 1792092653,
-        "summary": "A historian explains why housing, investing and budgeting advice has changed over time — and what that can teach you about money today."
-      },
-      {
-        "headline": "US plan to ease shadow fleet sanctions unlikely to free up many tankers, analysts say - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQb2ZEWmpzTWpPVmpkN0hxSkJ1cmlCc3lSRjZHdmRMRG94Vjk4ZXhNdzJweDFCY1FER1l1eE9STG1EZjR2Ql9qTXRyVHF2ZTl0Y2tGUjRUOG54MDJPdV9iSGRXaVRGbUcxMGhBMHRtMmFGUFNpc0hYQ0c3VW1UT0ZDSDlTZEV1RExiT1JocDVTQU5SSFVMSmJfYmtvZzlkWF8xal81dkVRUENPVDFEdG9QY1M3RFhGSjRSQ1VtNmM1S09xWjJQSHpkZGl3?oc=5",
-        "datetime": 1792088728,
-        "summary": "US plan to ease shadow fleet sanctions unlikely to free up many tankers, analysts say  Reuters"
-      },
-      {
-        "headline": "Hezbollah says it owned confiscated explosives, meant to attack Israel - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPQUNqWTJxemdBVVByYW9Cc0N3NlU2UW9zczJReDZOeWdKMENNbUZjQmF1bE9IQ1VEOXNrcXpQU192ZUhHTVZ0cDN1N3IzS2lxY0ZTOXdGY3RvWlVObFZ2RjAyVF93ZUNCWVJKSlBpNDVINmxBNGRORXRYZUt1blF2RzFLV2VjZWJZMUg4X2tGMjd5VlpOVExvbFIxN1ExS1lMMnJXUXJPOWhfcnVXZEl2aUpDeHNqcnFSeUJ3NQ?oc=5",
-        "datetime": 1792086334,
-        "summary": "Hezbollah says it owned confiscated explosives, meant to attack Israel  Reuters"
-      },
-      {
-        "headline": "Anduril CEO defends Trump administration contracts: 'We've done incredibly well under Biden'",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/15/anduril-ceo-contracts-palmer-luckey-ethics.html",
-        "datetime": 1792086171,
-        "summary": "Anduril CEO Brian Schimpf says contracts are won 'on the merits' amid ethics questions over co-founder Palmer Luckey's Pentagon role"
-      },
-      {
-        "headline": "How the Houthis are helping Iran turn Saudi Arabia into a pressure point - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOdGVvZWRvRzA4MGlxRTRTLU95S2ZWTnB2LVZ1ZDBPQTdxbW53SmViQk96X3FpTlVXNEtZaTRvMld4akRJUm9vOU56NjJfSnROV3pCeURHQ3BCcTBYbW1KVVZyLVBaT0VXaE55WGc0WGI5c2RRdC1RaVZiT092ZU9RaTBRdmluamFTQ0JuRWRWNTNYdzhOa1dfNWVBNV9RcVMydFZoaHpFMlJnSHhrckl2cnRyZC0xc0xMcW5Idw?oc=5",
-        "datetime": 1792086156,
-        "summary": "How the Houthis are helping Iran turn Saudi Arabia into a pressure point  Reuters"
-      },
-      {
-        "headline": "How to weather the current AI stock storm that we were all dreading",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/15/cramer-how-to-weather-the-current-ai-stock-storm-that-we-were-all-dreading.html",
-        "datetime": 1792083977,
-        "summary": "We are at that moment."
-      },
-      {
-        "headline": "US issues fresh Iran-related sanctions, Treasury website shows - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxONEJZZXJmaFZ1b2c5eDlJMjhKMFRXX3JkNVJha1J1N29IWUJHRGphZ1M1czQ0Z1EtQzBub3gxNk5iT3FnNEdRM3dEbjVvdGhac2JjOGdmNGVCVFJMZW9GZzVGeEFCOEFualphSFJVNEM0eUZmVGhDdC1oaU9UR2lzRmltQVJ6RUtTZGJVV29pZ2tKZ3pBT2o0RU5lQzlYNzdZOWFfdENZNS13LVNhMEJSSGRfXzRXQQ?oc=5",
-        "datetime": 1792082720,
-        "summary": "US issues fresh Iran-related sanctions, Treasury website shows  Reuters"
-      },
-      {
-        "headline": "Israel says commercial goods no longer entering Gaza after merchants suspend coordination - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOcjRlbUN2V1haV3l1dVJUekRyOW5XcEszX0JtWlkwcHRRLXRkcjhBOXpXNW1rX01hLVZXVGJCZEFyUkdINUplbV9zaDJmWWlKSk1aWHhXU1BfOVJ5T3liLUFKLU9vUlpncDZnRmF3MmxrU3lNNkZ6ZTVTU283R01JOGxkaG41aTNTLU9jdUVOMUtONnh3aUxrNEp5YXpiOTFvQTdac1M5X1VPNV9adm5mMThqbUgzMjRRenB1RGRDcTdPUG5JZTZXYlpn?oc=5",
-        "datetime": 1792082023,
-        "summary": "Israel says commercial goods no longer entering Gaza after merchants suspend coordination  Reuters"
-      },
-      {
-        "headline": "How are Yemen’s Houthis attacking Saudi Arabia so effectively? - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPZWFHTEc0MTZnaUdvM3VtaW8zVFgyc2tmemRfV2l0N3VhaDVCc2hCb3N5UEtJZE84Qi1fTWFadXZfNm1WS092aW1heFM1YVlVQnp3aTd2dHQ4T2stMWVoTTJNMmRtcnNxbGdxMG9kNTV2QTFkeXFfcjhTVUxhTkVVNHBxTTBrSlA2QkpHcHVqUFNQNXp5UmlJb1JzQXBZZFlhSUNfTzRyS19zYXZNczJPUWhETDc?oc=5",
-        "datetime": 1792080856,
-        "summary": "How are Yemen’s Houthis attacking Saudi Arabia so effectively?  Reuters"
-      },
-      {
-        "headline": "JetBlue’s new domestic first class, BlueFirst, is now on sale",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/15/jetblue-bluefirst-first-class.html",
-        "datetime": 1792080813,
-        "summary": "JetBlue announced that BlueFirst, its new domestic first class option, is available for booking on more than 30 routes. It launches December 8."
-      },
-      {
-        "headline": "Seven sailors missing after drones hit two ships near Romania - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNWTNEdUVjS3dseHk5amh0VGlyX180YWx6MEZobS1ySVhHSnFzbVYtSFFRTUtqRU12M3pGTnRPOEIyOTg0VnRiUkoyRkJxMmJiYlpZamFOLTVYVXJXbmhCa2J0a1BxbmlaUDF4X1hsNW5rOWVpaEtzTUo5dGZSclVwWUpBSHdOdXZFa2h6TWp6b1piY1VqN18wVlY0dFFNOUtLcFlJcA?oc=5",
-        "datetime": 1792079961,
-        "summary": "Seven sailors missing after drones hit two ships near Romania  Reuters"
-      },
-      {
-        "headline": "Houthis attack presidential palace complex in Yemen's Aden, PM unharmed, officials say - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxPenN5Nk5reEJ3bHZicV9oSUR2N04zWUlyczJ1REFSbjFmZ0RPNEl1QzBKUUZjMnFrbzFvbE9YWjRCbVl1clRtNXFPZm9UanlhVmxUS09qYXhOYjJyeVRNRzZtdkVfeU5DalRNT1V4Q0E2MDU0Zno2ZWl5VERHd1BsZS0ya2lWQ0EtTngxbzVGdHNhc1RkZnhGRGxiSllsZzJqUjliamhmWmt3cVBfM1lzbS1vcmRPVHZkYVNhYTRB?oc=5",
-        "datetime": 1792078615,
-        "summary": "Houthis attack presidential palace complex in Yemen's Aden, PM unharmed, officials say  Reuters"
-      },
-      {
-        "headline": "We're trimming a rallying defensive stock and buying other on a muted earnings move",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/15/were-trimming-a-rallying-defensive-stock-and-buying-other-on-a-muted-earnings-move.html",
-        "datetime": 1792077434,
-        "summary": "A major rotation is happening in the market on Thursday, and we're capitalizing on it."
       }
     ],
     "ticker_news": {
@@ -40671,6 +40671,27 @@
         }
       ],
       "APA": [
+        {
+          "headline": "APA (APA) is a Great Momentum Stock: Should You Buy?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=90dc4b5a62ec1e8b4ee49caa5eee04dce85ea7c3227819240aaf980113f65fb7",
+          "datetime": 1792422003,
+          "summary": "Does APA (APA) have what it takes to be a top stock pick for momentum investors? Let's find out."
+        },
+        {
+          "headline": "5 Dividend Stocks Going Ex-Dividend This Week. Which Payouts Are Safest?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=f85d249733daf46e2f4e52023b52a3b983235e14c3485519e0ddcb3b4d4fd613",
+          "datetime": 1792412144,
+          "summary": "Five dividend deadlines are closing fast this week, but the payouts behind those yields vary wildly in how well they are actually covered. Before you buy, find out which names could keep the cash flowing and which one already burned through its free cash flow last year."
+        },
+        {
+          "headline": "The Zacks Analyst Blog Highlights Ross Stores, Roku, APA, Corcept Therapeutics and Halozyme Therapeutics",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=c0584ac4dc400289cb4bbcf4f0604a50724f59376fabb3b013c5a60889b15c77",
+          "datetime": 1792411200,
+          "summary": "Ross Stores, Roku, APA, Corcept Therapeutics and Halozyme Therapeutics earn top Zacks rankings, backed by growth drivers ranging from streaming ads to drug demand."
+        },
         {
           "headline": "The Winners Inside SCHD - October 2026",
           "source": "SeekingAlpha",
@@ -40841,6 +40862,27 @@
         }
       ],
       "APP": [
+        {
+          "headline": "AppLovin Corporation (APP) Grew Revenue 53%. What Must Happen to Defend Its Valuation?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=d71cf14f49a18bc782975c4c1811dff24220b8d6a4604adb8c8cdddb39e20f5b",
+          "datetime": 1792423939,
+          "summary": "AppLovin Corporation (NASDAQ:APP) reported second-quarter 2026 revenue growth of 53%, yet its stock fell sharply after missing revenue expectations and management’s own execution standard. The tension is not whether the advertising platform is growing; it is whether machine-learning improvements can sustain the exceptional margins and earnings trajectory implied by its valuation. In early October, analysts […]"
+        },
+        {
+          "headline": "The Trade Desk Broadens CTV Ad Reach in Italy: A New Catalyst for TTD?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=46b04d936fd049f9a2dba7c5ef8dbaa170926cc3391903e01f2def234e1205eb",
+          "datetime": 1792415760,
+          "summary": "TTD expands CTV advertising reach in Italy with Skydance Pause Ads on HBO Max and discovery+, adding premium inventory as international CTV growth accelerates."
+        },
+        {
+          "headline": "AppLovin Corporation (APP) is Attracting Investor Attention: Here is What You Should Know",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=0df15cb8165d17bab3e62b95ec66dd506c1ec5c23f995778323c1f1d16cfa9d3",
+          "datetime": 1792411204,
+          "summary": "AppLovin (APP) has been one of the stocks most watched by Zacks.com users lately. So, it is worth exploring what lies ahead for the stock."
+        },
         {
           "headline": "Objections to ICE and OKX’s Tokenized Stock Venue Climb to Nine as Broadcom, Verizon Opt Out",
           "source": "Yahoo",
@@ -41047,6 +41089,13 @@
       ],
       "BRO": [
         {
+          "headline": "Brown & Brown (BRO) Earnings Expected to Grow: Should You Buy?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=5369cdc70f4a47f91423b5a32d1afbbd5ec18df091cd2593b4b88df232707845",
+          "datetime": 1792414803,
+          "summary": "Brown & Brown (BRO) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+        },
+        {
           "headline": "Brown & Brown (BRO) Stock May Be 28% Undervalued On Excess Returns",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=4fdfd87ed4d8d53288d3bd7469ba0d97ef74889f47443fc9df025ea293916331",
@@ -41119,6 +41168,27 @@
       ],
       "CME": [
         {
+          "headline": "CME vs. Coinbase Global: Which Financial Stock Is a Better Buy in 2026?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=5ad3952557a31d03f5b648325d9019592ef885a3ef38c4df1dcdac16f32b7d6f",
+          "datetime": 1792423802,
+          "summary": "CME trades at a cheaper earnings multiple with fortress-like margins, while Coinbase scales faster but carries regulatory uncertainty."
+        },
+        {
+          "headline": "Is a Beat in the Cards for CME Group This Earnings Season?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=8a3359c95f241d49b948554d4754e823edbd4ca6609a43e51952c32190776c39",
+          "datetime": 1792415640,
+          "summary": "CME Group is poised for Q3 earnings growth, fueled by higher trading volumes, strong clearing fees and market data revenues. Will it deliver an earnings beat?"
+        },
+        {
+          "headline": "China's Treasury Pile Is Shrinking on Paper. The Custody Data Tell a Different Story",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=e46853a1cc5696809a443dc53458d26ed60ed3d5507790793556defa0dc86b29",
+          "datetime": 1792412100,
+          "summary": "American News Group News Commentary - China held $590.7 billion of U.S. Treasury securities at the end of August, down from $699.7 billion a year earlier, according to U.S. Treasury data released Friday. Fortune called it the lowest level in 18 years, and for anyone watching de-dollarization, the trend looks clear. But over the same year, holdings attributed to Belgium and Canada kept climbing, and a former Treasury official who follows the data says some of China's bonds may simply be sitting i"
+        },
+        {
           "headline": "CME Group Expands Dairy Business with New European Futures and Options",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=86114c507e59f755d9268762a2a93acf97f3ca9ee31b583b2e3b683ecf38d7bc",
@@ -41138,6 +41208,20 @@
           "url": "https://finnhub.io/api/news?id=f3aca2ccd2afc3cc8a61896ec7d9c5f6597cfa61e9826d266c4047451cabf530",
           "datetime": 1792404000,
           "summary": "CME Group, the world's leading derivatives marketplace, today announced that it will launch Tungsten futures to meet rising demand for its metals complex, which registered record volume this year. Trading will start by early Q1 2027, pending all relevant regulatory reviews."
+        },
+        {
+          "headline": "CME Group Earnings Are Imminent; These Most Accurate Analysts Revise Forecasts Ahead Of Earnings Call",
+          "source": "Benzinga",
+          "url": "https://finnhub.io/api/news?id=ce1f0407a977eee7fe7837fc8e0e6e740a6df68850abf0c334fdb9e567808b93",
+          "datetime": 1792398726,
+          "summary": "CME expects Q3 EPS of $2.98 and revenue of $1.71B, with international volume up 22%; analysts mostly raised price targets."
+        },
+        {
+          "headline": "CME Group To Launch Tungsten Futures; Trading Will Start By Early Q1 2027",
+          "source": "Benzinga",
+          "url": "https://finnhub.io/api/news?id=f3cd209dfa062659cc89b7f877193d8f87d460ab9ae2244c055c6d6dcf559fcf",
+          "datetime": 1792390483,
+          "summary": "With annual production between 85,000 and 95,000 metric tons, the global tungsten market is worth over $20 billion based on current spot prices. It has been identified as a critical mineral by the U.S., the E.U., Japan,"
         },
         {
           "headline": "Wall Street Is About to Get Uniswap Futures. Why Is UNI Down 21% in Two Weeks?",
@@ -41457,6 +41541,13 @@
       ],
       "CNP": [
         {
+          "headline": "Are You Looking for a High-Growth Dividend Stock?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=5d040ee3321f5913fb86baca0ed82a822570894f75ae74fa9b0068ae34db4992",
+          "datetime": 1792421102,
+          "summary": "Dividends are one of the best benefits to being a shareholder, but finding a great dividend stock is no easy task. Does CenterPoint (CNP) have what it takes? Let's find out."
+        },
+        {
           "headline": "ASGI: Infrastructure Offers Very High Yields And Inflation Protection",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=adf431018f73212430abc158eb34450984d39455d7cdca70ab7e61e2a37c35a0",
@@ -41565,6 +41656,48 @@
         }
       ],
       "EOG": [
+        {
+          "headline": "Best Momentum Stock to Buy for October 19th",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=0a72aeb7b56c43adc906e058ce656d363ff1b627f08fb5e8d49610d78cf76ee7",
+          "datetime": 1792414800,
+          "summary": "APOG, CNQ and EOG made it to the Zacks Rank #1 (Strong Buy) momentum stocks list on October 19, 2026."
+        },
+        {
+          "headline": "4 Permian Oil Stocks Riding Production and Efficiency Gains",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=cf73dfc53394617bc27fbd3114320a0b804ff75a0569cf83b9b2df34fae30ff2",
+          "datetime": 1792414800,
+          "summary": "EOG, XOM, FANG and CVX are capitalizing on advanced drilling technologies, lower development costs and disciplined spending to strengthen their Permian operations."
+        },
+        {
+          "headline": "Buy 5 Giant Oil Explorers to Tap the Northward Journey of Crude Prices",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=cc1c40e2040f24a9933783d710a82222a9107c8ed2755c6ccde30e93321f346e",
+          "datetime": 1792414440,
+          "summary": "Crude prices have surged more than 77% in 2026 amid Middle East tensions. CVX, XOM, EOG, FANG and COP are five top-ranked oil explorers poised to capitalize on rising prices."
+        },
+        {
+          "headline": "EOG Resources, Inc. (EOG) Soars to 52-Week High, Time to Cash Out?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=4dff4466fb529e993b8e0acfe6bf038b1bdac7b1ef985807109069a4886ceeb8",
+          "datetime": 1792412101,
+          "summary": "EOG Resources (EOG) is at a 52-week high, but can investors hope for more gains in the future? We take a look at the company's fundamentals for clues."
+        },
+        {
+          "headline": "Can SLB Stock Extend Its Winning Streak With Strong Q3 Earnings?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=822deb65c86eec1e377d78455cee73565ef473bb367bf420f50207b06b68360a",
+          "datetime": 1792409700,
+          "summary": "SLB heads into Q3 earnings with four straight beats and support from rising oil prices, but declining EPS estimates and a negative Earnings ESP raise questions."
+        },
+        {
+          "headline": "Best Growth Stocks to Buy for October 19th",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=91b9e2f313a7099e4ac1dfd70f7ead56a24ff9f067c0e8779931102261bb92e7",
+          "datetime": 1792407300,
+          "summary": "VLO, ASAIY and EOG made it to the Zacks Rank #1 (Strong Buy) growth stocks list on October 19, 2026."
+        },
         {
           "headline": "Best Value Stocks to Buy for October 19th",
           "source": "Yahoo",
@@ -41882,6 +42015,20 @@
       ],
       "PM": [
         {
+          "headline": "Update: Tech Stock Rebound Nudges US Equity Futures Mostly Higher Pre-Bell",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=440ba88c4b6a5a6044f0cee85b375bc353ccbc08eb91a77b0ca58ac5945809b2",
+          "datetime": 1792414864,
+          "summary": "(Updates with economic data, recent oil price movement, world markets' overview and corporate stock"
+        },
+        {
+          "headline": "Tech Stock Rebound Nudges US Equity Futures Mostly Higher Pre-Bell",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=dd124836842b3071c80da4e71a93129ce972cc37ab26ac8237e25a85d25da5f2",
+          "datetime": 1792411363,
+          "summary": "US equity futures were edging mostly higher pre-bell Monday as traders observed technology-related s"
+        },
+        {
           "headline": "Tech Rebound Lifts Wall Street Pre-Bell; Asia Mixed, Europe Off",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=c9d7e5e6fe4bc757c5297c82873c40d22f75cee4d67129e2fa37752a5e8e0b96",
@@ -42086,6 +42233,13 @@
         }
       ],
       "PSX": [
+        {
+          "headline": "Phillips 66 Stock Is Up 133%. Can Its Dividend Keep Growing?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=e45fb93d2bf855c26714951e4372039fd7eb73caa80e96100de51b3e35c17689",
+          "datetime": 1792419302,
+          "summary": "Phillips 66 has handed investors a 133% gain this year and just bumped its dividend again, but a swelling debt load and volatile refining margins raise real questions about how long the raises can continue."
+        },
         {
           "headline": "Dividend Announcements: October 10-16, 2026",
           "source": "SeekingAlpha",
@@ -42362,6 +42516,13 @@
       ],
       "RCL": [
         {
+          "headline": "Can Carnival's AI Push Accelerate Margin Expansion Through 2029?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=374056699ff6a8801fb6e5208ee04e559d818c77808199ad033ef9494bfe8c70",
+          "datetime": 1792412280,
+          "summary": "CCL is using AI, automation and vessel management to lift revenues and efficiency as PROPEL targets margin expansion through 2029."
+        },
+        {
           "headline": "MarketBeat Week in Review – 10/12 - 10/16",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=568e63e4c6d4bd104d2b5f3477ca384696dd07bd8f515a2913346504239748cc",
@@ -42503,6 +42664,13 @@
         }
       ],
       "VRSN": [
+        {
+          "headline": "Wedbush Maintains Outperform on VeriSign, Raises Price Target to $351",
+          "source": "Benzinga",
+          "url": "https://finnhub.io/api/news?id=a25a7ad0f6aa52d4f26c5a56f28ebc33bb3849c35333f5438891c9e5a48a42b1",
+          "datetime": 1792401920,
+          "summary": "Wedbush  analyst Ygal Arounian   maintains VeriSign (NASDAQ:VRSN) with a Outperform and raises the price target from $341 to $351."
+        },
         {
           "headline": "VeriSign: A Recovering Domain Base Adds Weight To The Pricing Engine",
           "source": "SeekingAlpha",
@@ -42647,6 +42815,13 @@
         }
       ],
       "XLE": [
+        {
+          "headline": "9 Of 11 Sectors Fall As Growth Leads",
+          "source": "Benzinga",
+          "url": "https://finnhub.io/api/news?id=0ed328ad162c5c21d1dbdf0e5e65800d4262809bd0eeab0e993a5921f507d8d7",
+          "datetime": 1792407630,
+          "summary": "Monday’s regular session has nine sectors lower and two higher, with growth sectors occupying the top two positions. The leaders are separated rather than clustered, with no single gap clearly standing apart from the other breaks across the table."
+        },
         {
           "headline": "AMLP Vs. MLPX: Two Ways To Profit From The Fuel Crisis",
           "source": "SeekingAlpha",
@@ -42979,11 +43154,46 @@
       ],
       "XOM": [
         {
+          "headline": "ExxonMobil’s Dividend Has Deep Pockets, but a Shallow Yield",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=d379612b7a5f897f98abcc10536f82c86df8aa2cacb2f1b7e1ae19d31cb29ca0",
+          "datetime": 1792419058,
+          "summary": "ExxonMobil Holdings Corporation (NYSE:XOM) has a set of advantages that most smaller oil companies can only dream of. Its business stretches across exploration, production, refining, chemicals, and specialty products. This means ExxonMobil can make money at every step of the energy chain, instead of relying only on the ups and downs of crude oil prices. […]"
+        },
+        {
+          "headline": "Proponent Becomes an authorized ExxonMobil Aviation Lubricants Distributor in the Americas",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=c9b0e1bf84db28d9c38c654179355750e06d6c1eb07d4397d06e25315ef70326",
+          "datetime": 1792414800,
+          "summary": "ExxonMobil Proponent Signing Signing ceremony with ExxonMobil team at Proponent headquarters in Brea, California. BREA, Calif., Oct. 19, 2026 (GLOBE NEWSWIRE) -- Proponent is pleased to announce it is now an authorized distributor of ExxonMobil* aviation lubricants in the Americas. Proponent already works with ExxonMobil in EMEA through Avioparts, a Proponent company. This collaboration with a leading aviation lubricant manufacturer is an important step in expanding Proponent's aftermarket portf"
+        },
+        {
+          "headline": "Buy 5 Giant Oil Explorers to Tap the Northward Journey of Crude Prices",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=cc1c40e2040f24a9933783d710a82222a9107c8ed2755c6ccde30e93321f346e",
+          "datetime": 1792414440,
+          "summary": "Crude prices have surged more than 77% in 2026 amid Middle East tensions. CVX, XOM, EOG, FANG and COP are five top-ranked oil explorers poised to capitalize on rising prices."
+        },
+        {
+          "headline": "9 Of 11 Sectors Fall As Growth Leads",
+          "source": "Benzinga",
+          "url": "https://finnhub.io/api/news?id=0ed328ad162c5c21d1dbdf0e5e65800d4262809bd0eeab0e993a5921f507d8d7",
+          "datetime": 1792407630,
+          "summary": "Monday’s regular session has nine sectors lower and two higher, with growth sectors occupying the top two positions. The leaders are separated rather than clustered, with no single gap clearly standing apart from the other breaks across the table."
+        },
+        {
           "headline": "Why Did XOM, V, TEAM Stocks Hit 52-Week Highs Last Week?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=68219abe3a3156f9212efd876ef242e5e2006331cdcf231db7b1a96c2deccc03",
           "datetime": 1792381315,
           "summary": "Refining profits, stablecoin adoption and cloud demand lifted investor optimism."
+        },
+        {
+          "headline": "Dow Jones, Nasdaq 100, S&P 500 Outlook: Top Catalysts to Move US Stocks This Week",
+          "source": "Benzinga",
+          "url": "https://finnhub.io/api/news?id=0f5e17564ca6052db212a8b1ff30f09868551d154b9d851b7409176ef90519b9",
+          "datetime": 1792331123,
+          "summary": "The Dow Jones, Nasdaq 100 and S&amp;P 500 indices will react to several important catalysts this week, including earnings and AI bubble issues."
         },
         {
           "headline": "ExxonMobil Signals Massive Profit Boost From Rising Refining Margins",
@@ -43575,25 +43785,25 @@
   },
   "macro": {
     "schema_version": "macro.v1",
-    "generated_at": "2026-10-19T13:02:09Z",
+    "generated_at": "2026-10-19T16:19:16Z",
     "economic": [
       {
         "indicator": "10Y国债",
-        "value": "5.10%",
+        "value": "5.14%",
         "prev": "5.10%",
         "date": "2026-10-19",
         "source": "Yahoo Finance",
-        "sentiment": "neutral",
-        "rationale": "国债收益率持平，无变化"
+        "sentiment": "bearish",
+        "rationale": "10年期国债收益率上升，反映市场对高利率预期增强，压制股市估值"
       },
       {
         "indicator": "5Y国债",
-        "value": "4.90%",
+        "value": "4.94%",
         "prev": "4.90%",
         "date": "2026-10-19",
         "source": "Yahoo Finance",
-        "sentiment": "neutral",
-        "rationale": "国债收益率持平，无变化"
+        "sentiment": "bearish",
+        "rationale": "5年期国债收益率上升，融资成本提高，对企业盈利不利"
       },
       {
         "indicator": "13周国债",
@@ -43602,7 +43812,7 @@
         "date": "2026-10-19",
         "source": "Yahoo Finance",
         "sentiment": "neutral",
-        "rationale": "国债收益率持平，无变化"
+        "rationale": "13周国债收益率持平，短期利率预期无变化"
       },
       {
         "indicator": "CPI",
@@ -43611,7 +43821,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "CPI 4.00%偏高，通胀压力"
+        "rationale": "CPI 4.00%显示通胀仍高，加息压力持续"
       },
       {
         "indicator": "核心CPI",
@@ -43619,8 +43829,8 @@
         "prev": null,
         "date": "2026-09-01",
         "source": "BLS API",
-        "sentiment": "neutral",
-        "rationale": "核心CPI 2.79%接近目标区间"
+        "sentiment": "bearish",
+        "rationale": "核心CPI 2.79%高于美联储2%目标，限制降息空间"
       },
       {
         "indicator": "失业率",
@@ -43629,7 +43839,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "失业率从4.1%升至4.2%，经济走弱"
+        "rationale": "失业率上升至4.20%，经济走弱信号"
       },
       {
         "indicator": "核心PCE",
@@ -43638,40 +43848,40 @@
         "date": "August 2026",
         "source": "BEA 官方网页",
         "sentiment": "bearish",
-        "rationale": "核心PCE 3.00%高于2%目标，通胀压力"
+        "rationale": "核心PCE 3.00%高于目标，通胀粘性强化鹰派预期"
       },
       {
         "indicator": "Fear & Greed",
-        "value": "27 (fear)",
+        "value": "26 (fear)",
         "prev": "46",
         "date": "2026-10-19",
         "source": "CNN",
         "sentiment": "bearish",
-        "rationale": "恐惧指数从46降至27，市场恐慌加剧"
+        "rationale": "恐慌指数从46降至26（恐慌区），市场情绪转悲观"
       }
     ],
     "speakers": [
       {
         "person": "Warsh",
         "title": null,
-        "content": "Fed chair Warsh says price stability is key but shies away from signals about rates - PBS",
-        "time": "10-16 13:21",
-        "source": "PBS",
-        "age_tag": "📑前日-低权重",
-        "content_cn": "美联储主席沃什表示价格稳定是关键，但未就利率发出信号",
-        "sentiment": "neutral",
-        "rationale": "强调价格稳定但未给利率信号"
+        "content": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech - Yahoo Finance",
+        "time": "10-18 19:47",
+        "source": "Yahoo Finance",
+        "age_tag": "📰今日-高权重",
+        "content_cn": "黄金因交易员根据Warsh讲话放松加息押注而小幅走高",
+        "sentiment": "bullish",
+        "rationale": "交易员因Warsh讲话降低加息预期，利好风险资产"
       },
       {
         "person": null,
         "title": null,
-        "content": "US Dollar Forecast: Fed Rates and DXY Key Levels - www.equiti.com",
-        "time": "10-19 04:27",
-        "source": "www.equiti.com",
-        "age_tag": "🔥今日最新-权重最高",
-        "content_cn": "美元预测：美联储利率与美元指数关键水平",
+        "content": "US Dollar Forecast: Fed Rates and DXY Key Levels - Equiti Global",
+        "time": "10-19 05:00",
+        "source": "Equiti Global",
+        "age_tag": "📰今日-高权重",
+        "content_cn": "美元预测：美联储利率与美元指数关键点位",
         "sentiment": "neutral",
-        "rationale": "美元预测文章，未明确表态"
+        "rationale": "美元与利率预测为中性分析，未明确方向性观点"
       },
       {
         "person": null,
@@ -43680,9 +43890,9 @@
         "time": "10-16 14:54",
         "source": "Yahoo Finance",
         "age_tag": "📑前日-低权重",
-        "content_cn": "未来5年抵押贷款利率预测：基准情景及最好最坏情景",
+        "content_cn": "未来5年抵押贷款利率预测：基准情景及最佳/最差情景",
         "sentiment": "neutral",
-        "rationale": "抵押贷款利率预测，未表明货币政策方向"
+        "rationale": "抵押贷款利率预测提供多种情景，未给出明确鹰鸽倾向"
       },
       {
         "person": null,
@@ -43693,18 +43903,29 @@
         "age_tag": "🔥今日最新-权重最高",
         "content_cn": "白银价格预测：下降通道使卖方保持控制",
         "sentiment": "neutral",
-        "rationale": "白银价格技术分析，与货币政策无关"
+        "rationale": "白银技术分析，非货币政策或宏观事件"
       },
       {
         "person": null,
         "title": null,
-        "content": "Gold Tests $4,000-$4,200 Demand Zone as Treasury Yields Ease - FXEmpire",
-        "time": "10-16 09:24",
-        "source": "FXEmpire",
-        "age_tag": "📑前日-低权重",
-        "content_cn": "黄金测试4000-4200美元需求区，国债收益率回落",
+        "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
+        "time": "10-19 07:10",
+        "source": "StoneX",
+        "age_tag": "🔥今日最新-权重最高",
+        "content_cn": "英镑/美元、黄金/美元预测：两项值得关注的交易",
         "sentiment": "neutral",
-        "rationale": "黄金价格技术分析，与货币政策无关"
+        "rationale": "外汇及贵金属交易技术分析，无明确宏观方向"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Treasury dismisses IMF debt alarm as US yields hold above 5% - Mortgage Professional America",
+        "time": "10-16 19:52",
+        "source": "Mortgage Professional America",
+        "age_tag": "📑前日-低权重",
+        "content_cn": "财政部驳斥IMF债务警告，美债收益率保持在5%以上",
+        "sentiment": "bearish",
+        "rationale": "美债收益率维持5%以上反映紧缩金融条件，对股市不利"
       }
     ],
     "error": null
@@ -43754,8 +43975,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-19T16:16:24Z",
-    "technical_updated_at": "2026-10-19T16:16:26Z",
+    "market_updated_at": "2026-10-19T16:31:16Z",
+    "technical_updated_at": "2026-10-19T16:31:18Z",
     "counts": {
       "core": 6,
       "observation": 13,
@@ -43836,7 +44057,7 @@
     "anomalies": [],
     "notes": [
       "期权 Wall 本次未重算（无缺失项或期权链不可用）。",
-      "AI Snapshot 索引：ai_snapshot.csv 命中 87 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 57/411 条",
+      "AI Snapshot 索引：ai_snapshot.csv 命中 88 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 57/411 条",
       "history：基于 review_history.csv 的每日快照，统计口径=当日仍在跟踪(持仓中/观察推荐)的去重推荐事件数（Ticker+Rec_Date），非当日新增数。"
     ],
     "missing_fields": [],
@@ -43852,14 +44073,14 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-19T16:15:57Z",
+    "generated_at": "2026-10-19T16:30:52Z",
     "fear_greed": {
-      "score": 27.35,
+      "score": 25.5,
       "rating": "fear",
-      "timestamp": "2026-10-19T16:11:18+00:00",
+      "timestamp": "2026-10-19T16:25:27+00:00",
       "subindicators": {
         "market_momentum_sp500": {
-          "score": 33.6,
+          "score": 34.6,
           "rating": "fear"
         },
         "stock_price_strength": {
@@ -43867,30 +44088,30 @@
           "rating": "extreme fear"
         },
         "stock_price_breadth": {
-          "score": 13.6,
+          "score": 13.4,
           "rating": "extreme fear"
         },
         "put_call_options": {
-          "score": 17.8,
+          "score": 17,
           "rating": "extreme fear"
         },
         "market_volatility_vix": {
-          "score": 39.06,
+          "score": 33.59,
           "rating": "fear"
         },
         "junk_bond_demand": {
-          "score": 53.4,
+          "score": 53.6,
           "rating": "neutral"
         },
         "safe_haven_demand": {
-          "score": 20.8,
+          "score": 21,
           "rating": "extreme fear"
         }
       },
       "history_30d": [
         {
           "date": "2026-10-19",
-          "score": 27.35,
+          "score": 25.5,
           "rating": "fear"
         },
         {
@@ -44710,7 +44931,7 @@
       "model": "claude-fable-5-1",
       "requested": "claude-fable-5-1",
       "fallback": false,
-      "updated_at": "2026-10-19T13:08:40.355411+00:00"
+      "updated_at": "2026-10-19T16:26:22.412613+00:00"
     }
   }
 }
