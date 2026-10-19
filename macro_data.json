@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-19T10:02:49Z",
+  "generated_at": "2026-10-19T13:02:09Z",
   "economic": [
     {
       "indicator": "10Y国债",
       "value": "5.10%",
-      "prev": "5.09%",
-      "date": "2026-10-16",
+      "prev": "5.10%",
+      "date": "2026-10-19",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "10年期国债收益率上升，反映市场对高利率预期增强"
+      "sentiment": "neutral",
+      "rationale": "国债收益率持平，无变化"
     },
     {
       "indicator": "5Y国债",
       "value": "4.90%",
       "prev": "4.90%",
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "source": "Yahoo Finance",
       "sentiment": "neutral",
-      "rationale": "5年期国债收益率持平，无方向性变化"
+      "rationale": "国债收益率持平，无变化"
     },
     {
       "indicator": "13周国债",
       "value": "4.07%",
-      "prev": "4.09%",
-      "date": "2026-10-16",
+      "prev": "4.07%",
+      "date": "2026-10-19",
       "source": "Yahoo Finance",
-      "sentiment": "bullish",
-      "rationale": "短期国债收益率下降，暗示近期降息预期升温"
+      "sentiment": "neutral",
+      "rationale": "国债收益率持平，无变化"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI 4.00%高于美联储目标，通胀压力仍存"
+      "rationale": "CPI 4.00%偏高，通胀压力"
     },
     {
       "indicator": "核心CPI",
@@ -44,8 +44,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "核心CPI 2.79%仍高于2%目标，限制降息空间"
+      "sentiment": "neutral",
+      "rationale": "核心CPI 2.79%接近目标区间"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率从4.10%升至4.20%，经济走弱信号"
+      "rationale": "失业率从4.1%升至4.2%，经济走弱"
     },
     {
       "indicator": "核心PCE",
@@ -63,16 +63,16 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE 3.00%明显高于2%目标，通胀粘性强"
+      "rationale": "核心PCE 3.00%高于2%目标，通胀压力"
     },
     {
       "indicator": "Fear & Greed",
-      "value": "20 (extreme fear)",
+      "value": "27 (fear)",
       "prev": "46",
       "date": "2026-10-19",
       "source": "CNN",
       "sentiment": "bearish",
-      "rationale": "恐慌指数从46跌至20极度恐慌区，市场情绪恶化"
+      "rationale": "恐惧指数从46降至27，市场恐慌加剧"
     }
   ],
   "speakers": [
@@ -83,20 +83,9 @@
       "time": "10-16 13:21",
       "source": "PBS",
       "age_tag": "📑前日-低权重",
-      "content_cn": "美联储主席沃什表示物价稳定是关键，但回避了有关利率的明确信号 - PBS",
+      "content_cn": "美联储主席沃什表示价格稳定是关键，但未就利率发出信号",
       "sentiment": "neutral",
-      "rationale": "强调物价稳定但未明确利率信号，立场中性"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Key Moments From Kevin Warsh’s IMF Appearance - WSJ",
-      "time": "10-16 06:08",
-      "source": "WSJ",
-      "age_tag": "📑前日-低权重",
-      "content_cn": "凯文·沃什IMF会议关键时刻回顾 - 华尔街日报",
-      "sentiment": "neutral",
-      "rationale": "仅为IMF会议要点汇总，无明确政策倾向"
+      "rationale": "强调价格稳定但未给利率信号"
     },
     {
       "person": null,
@@ -105,9 +94,9 @@
       "time": "10-19 04:27",
       "source": "www.equiti.com",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "美元预测：美联储利率与美元指数关键点位 - Equiti",
+      "content_cn": "美元预测：美联储利率与美元指数关键水平",
       "sentiment": "neutral",
-      "rationale": "美元和利率预测分析，非政策表态"
+      "rationale": "美元预测文章，未明确表态"
     },
     {
       "person": null,
@@ -116,20 +105,31 @@
       "time": "10-16 14:54",
       "source": "Yahoo Finance",
       "age_tag": "📑前日-低权重",
-      "content_cn": "未来5年抵押贷款利率预测：基准情景及最佳/最差情景 - 雅虎财经",
+      "content_cn": "未来5年抵押贷款利率预测：基准情景及最好最坏情景",
       "sentiment": "neutral",
-      "rationale": "抵押贷款利率预测，非政策制定者表态"
+      "rationale": "抵押贷款利率预测，未表明货币政策方向"
     },
     {
       "person": null,
       "title": null,
-      "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
-      "time": "10-18 17:32",
-      "source": "StoneX",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
+      "content": "Silver Price Forecast: Descending channel keeps sellers in control - FXStreet",
+      "time": "10-19 08:36",
+      "source": "FXStreet",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "白银价格预测：下降通道使卖方保持控制",
       "sentiment": "neutral",
-      "rationale": "英镑和黄金技术分析，与美股大盘无直接关系"
+      "rationale": "白银价格技术分析，与货币政策无关"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Gold Tests $4,000-$4,200 Demand Zone as Treasury Yields Ease - FXEmpire",
+      "time": "10-16 09:24",
+      "source": "FXEmpire",
+      "age_tag": "📑前日-低权重",
+      "content_cn": "黄金测试4000-4200美元需求区，国债收益率回落",
+      "sentiment": "neutral",
+      "rationale": "黄金价格技术分析，与货币政策无关"
     }
   ],
   "error": null
