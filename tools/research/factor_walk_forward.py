@@ -143,7 +143,7 @@ def main() -> int:
     L.append(f"**测试段最大 Sector：`{comp.index[0]}` 占 **{top_test:.1f}%** ⇒ "
              f"{'⚠️ 存在行业集中（>30%）' if conc else '未见行业集中（≤30%）'}**\n")
     L.append("### BP 极端值（P95 以上）的行业分布（%）\n")
-    L.append("| 段 | Sector | 占比 |", "|---|---|---|")
+    L += ["| 段 | Sector | 占比 |", "|---|---|---|"]
     for (seg, sec), v in ext_sector.items():
         L.append(f"| {seg} | {sec} | {v:.1f} |")
     L.append("")
