@@ -266,6 +266,16 @@ def render_text(d: dict) -> str:
         L.append(f"- {NA}（无成交记录）")
     else:
         L.append(f"- 样本数：{tr['count']}（按日期倒序展示最近 {len(tr['rows'])} 笔）")
+        # 历史同类交易汇总（胜率 / 平均盈亏 / 盈亏比）
+        _pnls = [x["realized_pnl"] for x in tr["rows"] if x.get("realized_pnl") is not None]
+        if _pnls:
+            _wins = [v for v in _pnls if v > 0]
+            _loss = [v for v in _pnls if v <= 0]
+            _wr = len(_wins) / len(_pnls) * 100
+            _aw = sum(_wins) / len(_wins) if _wins else 0.0
+            _al = abs(sum(_loss) / len(_loss)) if _loss else 0.0
+            _rr_s = ("%.2f" % (_aw / _al)) if _al > 0 else NA
+            L.append("- **历史同类交易汇总**：共 %d 笔，胜率 %.1f%%，平均盈利 +$%.2f，平均亏损 -$%.2f，盈亏比 %s" % (len(_pnls), _wr, _aw, _al, _rr_s))
         L += ["", "| 时间 | Ticker | 操作 | 价格 | 股数 | 金额 | 已实现盈亏 |",
               "|---|---|---|---|---|---|---|"]
         for r in tr["rows"]:
