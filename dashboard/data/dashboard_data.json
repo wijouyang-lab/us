@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T04:32:29Z",
+  "generated_at": "2026-10-19T04:46:19Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:46Z",
+        "computed_at": "2026-10-19T04:46:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:47Z",
+        "computed_at": "2026-10-19T04:46:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:47Z",
+        "computed_at": "2026-10-19T04:46:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:48Z",
+        "computed_at": "2026-10-19T04:46:02Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:48Z",
+        "computed_at": "2026-10-19T04:46:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:49Z",
+        "computed_at": "2026-10-19T04:46:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:49Z",
+        "computed_at": "2026-10-19T04:46:03Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:49Z",
+        "computed_at": "2026-10-19T04:46:04Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:50Z",
+        "computed_at": "2026-10-19T04:46:04Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15236,7 +15236,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:50Z",
+        "computed_at": "2026-10-19T04:46:04Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16760,7 +16760,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:51Z",
+        "computed_at": "2026-10-19T04:46:05Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18284,7 +18284,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:51Z",
+        "computed_at": "2026-10-19T04:46:05Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19808,7 +19808,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:51Z",
+        "computed_at": "2026-10-19T04:46:05Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21332,7 +21332,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:52Z",
+        "computed_at": "2026-10-19T04:46:06Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22856,7 +22856,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:52Z",
+        "computed_at": "2026-10-19T04:46:06Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24380,7 +24380,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:52Z",
+        "computed_at": "2026-10-19T04:46:06Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -25904,7 +25904,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:53Z",
+        "computed_at": "2026-10-19T04:46:06Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27428,7 +27428,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T04:30:53Z",
+        "computed_at": "2026-10-19T04:46:07Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27451,7 +27451,7 @@
         "change_1d": -0.3359,
         "change_5d": 0.6727,
         "change_20d": 0.6187,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27469,7 +27469,7 @@
         "change_1d": -1.0927,
         "change_5d": -1.9471,
         "change_20d": 0.1169,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27487,7 +27487,7 @@
         "change_1d": -2.145,
         "change_5d": -4.4805,
         "change_20d": -1.4422,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27505,7 +27505,7 @@
         "change_1d": -0.05,
         "change_5d": 34.6361,
         "change_20d": 34.9088,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27523,7 +27523,7 @@
         "change_1d": 0.0,
         "change_5d": -2.7841,
         "change_20d": 2.0008,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27541,7 +27541,7 @@
         "change_1d": 0.0,
         "change_5d": null,
         "change_20d": null,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27559,7 +27559,7 @@
         "change_1d": 0.0,
         "change_5d": -2.4298,
         "change_20d": 0.8855,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27577,7 +27577,7 @@
         "change_1d": 0.0,
         "change_5d": -2.9286,
         "change_20d": 1.9696,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27591,16 +27591,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.831,
-        "change_1d": -0.0088,
-        "change_5d": -0.3708,
-        "change_20d": 1.6075,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "price": 101.813,
+        "change_1d": -0.0265,
+        "change_5d": -0.3884,
+        "change_20d": 1.5895,
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383600,
+        "quote_ts": 1792384560,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27609,16 +27609,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4198.5,
-        "change_1d": 0.4162,
-        "change_5d": -0.4222,
-        "change_20d": -5.1165,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "price": 4202.1001,
+        "change_1d": 0.5023,
+        "change_5d": -0.3368,
+        "change_20d": -5.0351,
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383660,
+        "quote_ts": 1792384560,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27627,16 +27627,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 57.855,
-        "change_1d": 1.5089,
-        "change_5d": -4.6399,
-        "change_20d": -13.0732,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "price": 57.87,
+        "change_1d": 1.5352,
+        "change_5d": -4.6151,
+        "change_20d": -13.0507,
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383720,
+        "quote_ts": 1792384560,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27645,16 +27645,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.6195,
-        "change_1d": 1.3551,
-        "change_5d": -0.3463,
-        "change_20d": 0.068,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "price": 6.6155,
+        "change_1d": 1.2938,
+        "change_5d": -0.4065,
+        "change_20d": 0.0076,
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383720,
+        "quote_ts": 1792384560,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27663,16 +27663,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 97.45,
-        "change_1d": -3.9049,
-        "change_5d": 6.0969,
-        "change_20d": -2.8415,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "price": 97.5,
+        "change_1d": -3.8556,
+        "change_5d": 6.1513,
+        "change_20d": -2.7916,
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383720,
+        "quote_ts": 1792384560,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27681,16 +27681,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 107.89,
-        "change_1d": -1.7932,
-        "change_5d": 3.0271,
-        "change_20d": 3.8702,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "price": 107.82,
+        "change_1d": -1.8569,
+        "change_5d": 2.9603,
+        "change_20d": 3.8028,
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383660,
+        "quote_ts": 1792384500,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27703,12 +27703,12 @@
         "change_1d": -1.3158,
         "change_5d": -4.5031,
         "change_20d": 5.5975,
-        "updated_at": "2026-10-19T04:30:53Z",
+        "updated_at": "2026-10-19T04:46:07Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792383600,
+        "quote_ts": 1792384440,
         "last_bar_date": "2026-10-16"
       }
     ],
@@ -27721,12 +27721,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-19T04:32:26Z"
+    "updated_at": "2026-10-19T04:46:18Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-19 00:32:29",
+    "as_of_us": "2026-10-19 00:46:19",
     "window_start": "2026-09-19",
     "core_closed_count": 3,
     "core_open_count": 22,
@@ -37975,22 +37975,22 @@
   "runtimes": {
     "scan": {
       "latest": {
-        "run_id": 39197788561,
+        "run_id": 39200259363,
         "status": "completed",
-        "conclusion": "failure",
-        "created_at": "2026-10-19T04:06:01Z",
-        "started_at": "2026-10-19T04:06:01Z",
-        "updated_at": "2026-10-19T04:09:06Z",
-        "head_sha": "3d80cbe2d040",
+        "conclusion": "success",
+        "created_at": "2026-10-19T04:35:46Z",
+        "started_at": "2026-10-19T04:35:46Z",
+        "updated_at": "2026-10-19T04:39:05Z",
+        "head_sha": "4aba2b9cc122",
         "event": "workflow_dispatch",
-        "run_number": 171,
+        "run_number": 172,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39197788561"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39200259363"
       },
       "last_success": {
-        "run_id": 38739097610,
-        "completed_at": "2026-10-15T13:11:37Z",
-        "head_sha": "0c863345b559"
+        "run_id": 39200259363,
+        "completed_at": "2026-10-19T04:39:05Z",
+        "head_sha": "4aba2b9cc122"
       },
       "error": null
     },
@@ -38376,7 +38376,7 @@
   },
   "news": {
     "schema_version": "news.v1",
-    "generated_at": "2026-10-19T04:09:00Z",
+    "generated_at": "2026-10-19T04:38:06Z",
     "market_news": [
       {
         "headline": "Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies - Reuters",
@@ -38384,9 +38384,9 @@
         "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
         "datetime": 1792367549,
         "summary": "Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies  Reuters",
-        "headline_cn": "油价下滑，特朗普制裁豁免可能导致俄罗斯燃料供应增加",
+        "headline_cn": "油价下跌，特朗普制裁豁免或导致俄罗斯燃料供应增加",
         "sentiment": "bearish",
-        "rationale": "供应增加压制油价，利空能源板块",
+        "rationale": "供应增加预期施压油价",
         "market_relevant": true
       },
       {
@@ -38395,9 +38395,9 @@
         "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaWFjYmdlWlpxc2JxSGc1YnZhM3ptTFp2bHdQbUUwVS1XTnoyeFpMVXh5TjNINy0tWm5hMmViQ2xpdzRFZWRHZjRyMHF4TkhDY0l0ZXhjS2FUTWpaNlpGRjl0ZEFUTm9qR1B2bUpYTnpWQjVNWXhwZDR0OFo0V2RheDdobm5jMGFCNWZuXzQ5WUdzM20xQ2dkd3JkUW9PWFh3Z1JrREVxcnJyNG1UR0M5ZXM0SQ?oc=5",
         "datetime": 1792364768,
         "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters",
-        "headline_cn": "英国房地产市场显示出抵押贷款利率影响迹象",
+        "headline_cn": "英国房地产市场显现抵押贷款利率影响迹象",
         "sentiment": "bearish",
-        "rationale": "高利率抑制房市需求，地产承压",
+        "rationale": "高利率抑制购房需求",
         "market_relevant": true
       },
       {
@@ -38406,10 +38406,10 @@
         "url": "https://www.cnbc.com/investingclub/2026/10/18/jim-cramer-why-i-am-taking-the-other-side-of-the-trade-that-crushed-the-market-friday.html",
         "datetime": 1792362188,
         "summary": "How did this happen so quickly? Where were the buyers? I have some answers.",
-        "headline_cn": "为何我要站在周五暴跌对立面交易",
+        "headline_cn": "为何我押注与上周五暴跌方向相反",
         "sentiment": "neutral",
-        "rationale": "个人观点陈述，未披露具体依据",
-        "market_relevant": false
+        "rationale": "单一观点文章，不构成市场共识",
+        "market_relevant": true
       },
       {
         "headline": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis - Reuters",
@@ -38419,7 +38419,7 @@
         "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters",
         "headline_cn": "埃及称准备支持沙特对抗伊朗盟友胡塞武装",
         "sentiment": "bearish",
-        "rationale": "地缘冲突升级推高油价风险溢价",
+        "rationale": "地缘紧张升级推高风险溢价",
         "market_relevant": true
       },
       {
@@ -38428,9 +38428,9 @@
         "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNbFZiZFozb1RWTzVBbk4wZU8xMHlSeHhuSmhkMi1FSVhqTTZ5U3BMbF9aaU5fVjRpWnI1MkJTMTZscVcxTWM0YnVFRXFWdXQ2SnpSdVNPVm5LR1QzbVhpQjliR3VNZFl4WXhjODUzbjNZRXg0S0l0al80ZDlwdjc5ejFRU0E3NlJBZm1iOWg3VjhybzNLbWpOelQ4ZDZBWTkxS3Y4Rm9MUm9vTjdfYk9iaVRJd29DSDhMUi1KOGZMcDhzZGs?oc=5",
         "datetime": 1792338876,
         "summary": "Saudi-led coalition says helicopter crash in Najran kills two crew members  Reuters",
-        "headline_cn": "沙特联军称直升机在纳季兰坠毁致两名机组人员死亡",
+        "headline_cn": "沙特领导的联军称直升机坠毁致两名机组人员丧生",
         "sentiment": "neutral",
-        "rationale": "单一事故，无系统性市场影响",
+        "rationale": "单一事故无系统性影响",
         "market_relevant": false
       },
       {
@@ -38439,10 +38439,10 @@
         "url": "https://www.cnbc.com/investingclub/2026/10/18/here-are-the-3-big-things-were-watching-in-the-stock-market-this-week.html",
         "datetime": 1792337077,
         "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio.",
-        "headline_cn": "本周股市我们关注的三大事项",
+        "headline_cn": "本周股市关注的三大要点",
         "sentiment": "neutral",
-        "rationale": "前瞻性内容，不含实质性信息",
-        "market_relevant": false
+        "rationale": "前瞻性总结无具体立场",
+        "market_relevant": true
       },
       {
         "headline": "Trump endorses Netanyahu in close Israeli election - Reuters",
@@ -38450,9 +38450,9 @@
         "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQeXNEX0FibmplMGVhLVA1TDdESTEzdk9PR1JYNWtsQzJkTG5ER1lrMkhfV05saHNXYndlOXFxdFJONU4zOEZhZUdtXzR0WGpVSHBuLUUyOExTWHktR3AtMjlnU08yNXpaUWFVOXE1Q3dNaDFkZG4yT0JFMmlkYzdvTXFudjFQOF9rcFBaM0VBbjBaOFQ5bndSNS1fZw?oc=5",
         "datetime": 1792336320,
         "summary": "Trump endorses Netanyahu in close Israeli election  Reuters",
-        "headline_cn": "特朗普在以色列大选胶着之际支持内塔尼亚胡",
+        "headline_cn": "特朗普在以色列大选中支持内塔尼亚胡",
         "sentiment": "neutral",
-        "rationale": "政治表态，对市场影响不明确",
+        "rationale": "政治表态未改变市场预期",
         "market_relevant": true
       },
       {
@@ -38463,7 +38463,7 @@
         "summary": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions  Reuters",
         "headline_cn": "油价提振沙特股市；埃及因地区紧张局势暴跌",
         "sentiment": "neutral",
-        "rationale": "区域市场分化，对美股无直接影响",
+        "rationale": "区域分化，对美股无直接影响",
         "market_relevant": true
       },
       {
@@ -38472,9 +38472,9 @@
         "url": "https://www.cnbc.com/make-it/2026/10/18/parenting-lessons-resilient-successful-well-adjusted.html",
         "datetime": 1792330621,
         "summary": "Parenting coach Reem Raouda shares lessons to help kids feel worthy regardless of achievements and handle disappointment, disagreement and difficult feelings.",
-        "headline_cn": "我研究了200多名儿童——培养坚韧成功孩子的父母会早期教授这6课",
+        "headline_cn": "研究200多名儿童：成功父母早期教授孩子6个教训",
         "sentiment": "neutral",
-        "rationale": "育儿话题，与市场投资无关",
+        "rationale": "教育话题与市场无关",
         "market_relevant": false
       },
       {
@@ -38485,7 +38485,7 @@
         "summary": "Turkey will get some diesel from US-Russia supply deal, energy minister says  Reuters",
         "headline_cn": "土耳其能源部长称将从美俄供应协议中获得部分柴油",
         "sentiment": "neutral",
-        "rationale": "区域能源分配，对全球市场影响有限",
+        "rationale": "区域供应调整影响有限",
         "market_relevant": true
       },
       {
@@ -41205,6 +41205,13 @@
       ],
       "XOM": [
         {
+          "headline": "Why Did XOM, V, TEAM Stocks Hit 52-Week Highs Last Week?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=68219abe3a3156f9212efd876ef242e5e2006331cdcf231db7b1a96c2deccc03",
+          "datetime": 1792381315,
+          "summary": "Refining profits, stablecoin adoption and cloud demand lifted investor optimism."
+        },
+        {
           "headline": "ExxonMobil Signals Massive Profit Boost From Rising Refining Margins",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=5db434e3c04c051305a642b18d0d141ae21e21c25c52a09bd794ef782975a3de",
@@ -42082,8 +42089,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-19T04:32:26Z",
-    "technical_updated_at": "2026-10-19T04:32:29Z",
+    "market_updated_at": "2026-10-19T04:46:18Z",
+    "technical_updated_at": "2026-10-19T04:46:19Z",
     "counts": {
       "core": 5,
       "observation": 13,
@@ -42180,7 +42187,7 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-19T04:30:44Z",
+    "generated_at": "2026-10-19T04:46:00Z",
     "fear_greed": {
       "score": 17.94,
       "rating": "extreme fear",
