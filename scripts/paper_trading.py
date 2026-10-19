@@ -13,6 +13,8 @@ from __future__ import annotations
 import csv
 import sys
 from datetime import datetime, timedelta
+
+import pandas as pd
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
@@ -99,10 +101,9 @@ def main() -> int:
         cur = price_on_or_before(series, today)
         if cur is None:
             continue
+        # 按【交易日】计算持有天数（与回测的 20D 前瞻口径一致，跳过周末）
         try:
-            d0 = datetime.strptime(r["Entry_Date"], "%Y-%m-%d")
-            d1 = datetime.strptime(today, "%Y-%m-%d")
-            hold = (d1 - d0).days
+            hold = len(pd.bdate_range(r["Entry_Date"], today)) - 1
         except Exception:
             hold = 0
         reason = None
@@ -118,7 +119,7 @@ def main() -> int:
         r["Exit_Price"] = f"{cur:.4f}"
         r["PnL"] = f"{pnl:.2f}"
         r["PnL_Pct"] = f"{(cur / entry_px - 1) * 100:.4f}"
-        r["Hold_Days"] = str(min(hold, HOLD_DAYS) if reason == "Hold_20D" else hold)
+        r["Hold_Days"] = str(min(hold, HOLD_DAYS))
         r["Reason"] = reason
         closed += 1
 
