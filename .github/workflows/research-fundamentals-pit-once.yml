@@ -1,0 +1,62 @@
+name: Research Fundamentals PIT Once
+
+on:
+  workflow_dispatch:
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: requirements-production.txt
+
+      - name: Install deps
+        run: pip install -r requirements-production.txt
+
+      - name: Fetch fundamentals (50 tickers)
+        run: python tools/research/fetch_fundamentals_pit.py --limit 50
+
+      - name: Show head
+        if: always()
+        run: |
+          if [ -f research_fundamentals_pit_sample.csv ]; then
+            head -n 11 research_fundamentals_pit_sample.csv
+            wc -l research_fundamentals_pit_sample.csv
+          fi
+
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-fundamentals-pit-sample
+          path: research_fundamentals_pit_sample.csv
+          retention-days: 30
+
+      - name: Commit and push
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if [ -f research_fundamentals_pit_sample.csv ]; then git add research_fundamentals_pit_sample.csv; fi
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+            exit 0
+          fi
+          git commit -m "chore(research): fundamentals PIT sample (50 tickers, 90d release lag)"
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "fundamentals CSV pushed to main"
+            exit 0
+          fi
+          echo "::error::push failed after retries"
+          exit 1
