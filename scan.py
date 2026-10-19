@@ -4288,8 +4288,9 @@ if __name__ == "__main__":
     chosen = match_pool_to_report(ai_input, ai_html, DEFAULT_STOP_LOSS_PCT, event_regime)
     _hist = pd.read_csv("trade_history.csv", keep_default_na=False, dtype=str) \
         if os.path.exists("trade_history.csv") else None
+    hard_blocked = set(restricted_tickers) | set(review_triggered)
     _by_status, _block_stats = build_hard_blocked(_hist, today_us_str())
-    hard_blocked = (set(restricted_tickers) | set(review_triggered)) & _by_status
+    hard_blocked = hard_blocked & _by_status      # P2 分级收窄：仅风险类退出在冷却期内
     print(f"[风险封锁] 合计 {len(hard_blocked)} 只，分类：{_block_stats}")
     if hard_blocked:
         before_block = len(chosen)
