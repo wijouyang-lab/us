@@ -109,6 +109,33 @@ def test_strict_filter_score_below_min():
     assert [x["Ticker"] for x in out] == ["BBB"]
 
 
+def test_stop_dist_boundary_exact_5pct():
+    """边界：止损距离恰好 5%（浮点算成 0.050000000000000065）应通过，不应被误杀。"""
+    row = {
+        "Ticker": "EDGE",
+        "Quant_Score": qf.MIN_SCORE + 5,
+        "Price": 100.0,
+        "Stop_Loss": 100.0 * 0.95,      # 恰 5% ⇒ 浮点会略大于 0.05
+        "target_price": 120.0,          # R/R = 20/5 = 4.0
+        "Sector": "Edge",
+    }
+    out = qf.strict_filter([row])
+    assert [x["Ticker"] for x in out] == ["EDGE"], "恰好 5% 的止损距离被误杀（浮点边界）"
+
+
+def test_stop_dist_really_out_of_range():
+    """真超限：止损距离 6% 必须被拒。"""
+    row = {
+        "Ticker": "WIDE",
+        "Quant_Score": qf.MIN_SCORE + 5,
+        "Price": 100.0,
+        "Stop_Loss": 94.0,              # 6%
+        "target_price": 130.0,
+        "Sector": "Wide",
+    }
+    assert qf.strict_filter([row]) == []
+
+
 def test_min_score_in_sane_range():
     """阈值是业务决策，但必须落在合理范围，防止误改成荒谬值。
 

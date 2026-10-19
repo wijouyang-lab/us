@@ -193,7 +193,8 @@ def strict_filter(rows):
                   f"(price={price}, stop={stop_price}, target={target})")
             continue
         sd = _stop_distance(price, stop_price)
-        if sd is None or sd < MIN_STOP_DIST or sd > MAX_STOP_DIST:
+        # 1e-9 容忍浮点误差（stop = price*0.95 时 sd 会算成 0.050000000000000065）
+        if sd is None or sd < MIN_STOP_DIST - 1e-9 or sd > MAX_STOP_DIST + 1e-9:
             _st["stop_dist"] += 1
             print(f"[严筛淘汰] {ticker}: 止损距离 {sd} 不在 "
                   f"[{MIN_STOP_DIST}, {MAX_STOP_DIST}] (price={price}, stop={stop_price})")
