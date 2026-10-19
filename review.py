@@ -1616,7 +1616,7 @@ def _historical_close_for_review_event(ticker, date_str):
         if 'df_hist_all' not in globals() or df_hist_all is None or df_hist_all.empty:
             return None
         d = df_hist_all.copy()
-        d["Date"] = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
+        d["Date"] = pd.to_datetime(d["Date"], errors="coerce")
         target = pd.Timestamp(date_str).normalize()
         sub = d[
             d["Ticker"].astype(str).str.upper().eq(str(ticker).upper())
@@ -1721,7 +1721,7 @@ def manage_observation_lifecycle():
         mask = (
             d["Tag"].astype(str).str.strip().eq("Observation")
             & d["Ticker"].astype(str).str.upper().str.strip().eq(ticker)
-            & pd.to_datetime(d["Date"], errors="coerce", format="mixed").dt.strftime("%Y-%m-%d").eq(rec_date)
+            & pd.to_datetime(d["Date"], errors="coerce").dt.strftime("%Y-%m-%d").eq(rec_date)
             & d["Status"].astype(str).str.strip().isin(["", "Active", "pending"])
         )
         d.loc[mask, "Status"] = OBS_CLOSE_STATUS
