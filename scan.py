@@ -200,12 +200,16 @@ elif _scan_session_state == "AFTER_HOURS":
         f"⛔ 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')} 已进入盘后时段。"
         " 本次不运行 Scan，避免把盘后时点误作盘中/盘前快照。"
     )
+    print(f"::warning::Scan 被 session 门禁跳过（status=AFTER_HOURS，"
+          f"ET {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S')}）")
     sys.exit(0)
 else:
     print(
         f"⛔ 当前美东时间 {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')}，当前状态={_scan_session_state}。"
         " 本次不运行 Scan。"
     )
+    print(f"::warning::Scan 被 session 门禁跳过（status={_scan_session_state}，"
+          f"ET {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S')}）")
     sys.exit(0)
 
 print(f"启动：宏观驱动美股扫描引擎 | 请求引擎: {TARGET_MODEL} | 运行模式: {SCAN_RUN_MODE_LABEL}")
@@ -2785,6 +2789,56 @@ def build_review_risk_banner_html(review_risk_text, review_triggered, review_nea
              '硬禁入标的不会进入今日 Top1-5；STOP_NEAR 标的继续参与数据分析，但必须降权。')
     return f'<div class="review-risk-banner"><h2>{title}</h2><p>{summary}</p>{"".join(rows)}</div>'
 
+# ---- 封锁分级（2026-10-19）：只封锁风险类退出，盈利/正常退出按时解锁 ----
+_BLOCK_FOREVER = {"Dropped"}
+_BLOCK_RISK = {"Stop_Loss_Hit"}
+_COOL_RISK_DAYS = 28       # 止损冷却 ≈20 交易日
+_COOL_DROP_DAYS = 90       # 事件风险冷却 90 自然日
+
+
+def build_hard_blocked(trade_df, today):
+    """按 Status 分类 + 冷却期构造封锁集合。
+
+    返回 (blocked_set, stats_dict)。stats 用于 P3 观测日志。
+    规则：
+      STOP_NEAR                        -> 封锁（当前状态）
+      STOP_TRIGGERED / Stop_Loss_Hit   -> 冷却 _COOL_RISK_DAYS 天
+      Dropped                          -> 冷却 _COOL_DROP_DAYS 天
+      Status 空但有 Exit_Date          -> 封锁 + DATA_INCONSISTENT
+      Trailing_Profit_Take / Period_Matured / Observation_Closed -> 不封锁
+    """
+    blocked, stats = set(), {}
+    if trade_df is None or len(trade_df) == 0:
+        return blocked, stats
+    d = trade_df.copy()
+    d["_dt"] = pd.to_datetime(d.get("Date"), errors="coerce", format="mixed")
+    d["_exit"] = pd.to_datetime(d.get("Exit_Date"), errors="coerce", format="mixed")
+    today_dt = pd.to_datetime(today, errors="coerce")
+    for _, r in d.sort_values("_dt").groupby("Ticker").tail(1).iterrows():
+        tk = str(r.get("Ticker", "")).upper().strip()
+        st = str(r.get("Status", "")).strip()
+        rs = str(r.get("Review_Risk_Status", "")).strip()
+        if not tk:
+            continue
+        reason = None
+        if rs == "STOP_NEAR":
+            reason = "STOP_NEAR"
+        elif rs == "STOP_TRIGGERED" or st in _BLOCK_RISK:
+            ref = r["_exit"] if pd.notna(r["_exit"]) else r["_dt"]
+            if pd.notna(ref) and pd.notna(today_dt) and (today_dt - ref).days <= _COOL_RISK_DAYS:
+                reason = "STOP_RECENT"
+        elif st in _BLOCK_FOREVER:
+            ref = r["_exit"] if pd.notna(r["_exit"]) else r["_dt"]
+            if pd.notna(ref) and pd.notna(today_dt) and (today_dt - ref).days <= _COOL_DROP_DAYS:
+                reason = "DROPPED_RECENT"
+        elif st == "" and pd.notna(r["_exit"]):
+            reason = "DATA_INCONSISTENT"
+        if reason:
+            blocked.add(tk)
+            stats[reason] = stats.get(reason, 0) + 1
+    return blocked, stats
+
+
 def pre_scan_portfolio_review(macro_news_text, macro_market_text):
     path = "trade_history.csv"
     if not os.path.exists(path) or os.path.getsize(path) == 0:
@@ -4232,7 +4286,11 @@ if __name__ == "__main__":
     )
 
     chosen = match_pool_to_report(ai_input, ai_html, DEFAULT_STOP_LOSS_PCT, event_regime)
-    hard_blocked = set(restricted_tickers) | set(review_triggered)
+    _hist = pd.read_csv("trade_history.csv", keep_default_na=False, dtype=str) \
+        if os.path.exists("trade_history.csv") else None
+    _by_status, _block_stats = build_hard_blocked(_hist, today_us_str())
+    hard_blocked = (set(restricted_tickers) | set(review_triggered)) & _by_status
+    print(f"[风险封锁] 合计 {len(hard_blocked)} 只，分类：{_block_stats}")
     if hard_blocked:
         before_block = len(chosen)
         chosen = [x for x in chosen if str(x.get("Ticker","")).upper() not in hard_blocked]
@@ -4392,6 +4450,19 @@ if __name__ == "__main__":
             print(f"⚠️ AI Snapshot 写入失败（不影响主流程）：{type(e).__name__}: {e}")
     else:
         print("⚠️ 今日没有新增可入账推荐")
+        try:
+            _st_cnt = {}
+            if _hist is not None and len(_hist) > 0 and hard_blocked:
+                _m = _hist[_hist["Ticker"].astype(str).str.upper().isin(hard_blocked)]
+                _last = _m.sort_values("Date").groupby("Ticker").tail(1)
+                for _s, _c in _last["Status"].fillna("").astype(str).value_counts().items():
+                    _st_cnt[str(_s).strip() or "(空)"] = int(_c)
+            print(f"[诊断] session={_scan_session_state} "
+                  f"pool={len(pool_data)} chosen={len(chosen)} "
+                  f"hard_blocked={len(hard_blocked)} to_write={len(to_write)} "
+                  f"block_stats={_block_stats} blocked_status={_st_cnt}")
+        except Exception as _diag_e:
+            print(f"[诊断] 输出失败：{type(_diag_e).__name__}: {_diag_e}")
 
     # ★ 方案 A：per-stock AI 持久化覆盖【持仓 + 新推荐】，不再被 `if to_write:` 门控拦住。
     #   依据 scan.py:3986 的承诺「持仓每日重评分」；pending CSV 仍只写新推荐（职责分离）。
