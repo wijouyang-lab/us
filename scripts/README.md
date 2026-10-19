@@ -36,3 +36,20 @@ REPO="/tmp/us"        # ← 改成你的本地仓库绝对路径
 | `tools/` | 分析、修复、补采、实验脚本（一次性资产，保留为「怎么做到的」证据） |
 
 ⚠️ **两者都不参与 CI，也不参与 pytest**（无 `test_*.py` / `*_test.py` 命名，避免被默认采集）。
+
+
+## ticker_brief.py —— 单只标的决策简报（只读）
+
+```bash
+python scripts/ticker_brief.py AAPL                    # 纯文本（默认）
+python scripts/ticker_brief.py AAPL --md               # Markdown
+python scripts/ticker_brief.py AAPL --json             # 结构化 JSON
+python scripts/ticker_brief.py AAPL --date 2026-10-16  # 指定历史快照日
+python scripts/ticker_brief.py --ticker AAPL --json    # --ticker 写法同样支持
+```
+
+输出四段：① AI 历史（`ai_snapshot.csv`）② 因子位置 + 当日横截面百分位（`quant_factor_snapshot.csv`）
+③ 交易明细（`portfolio_50000_transactions.csv` + 侧车 `portfolio_50000_txn_time.csv` 的精确时刻；
+无记录时自动退化为同 Sector 最近 10 笔）④ 宏观结论（恐惧贪婪 / FedWatch / 经济指标 / 美联储讲话）。
+
+特性：**只读、不写文件**；不 import 任何生产模块；缺失项统一 `N/A`，异常不外抛，退出码恒 0。
