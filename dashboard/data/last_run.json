@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-19T10:01:04Z",
-  "market_updated_at": "2026-10-19T10:01:02Z",
-  "technical_updated_at": "2026-10-19T10:01:04Z",
+  "generated_at": "2026-10-19T10:16:01Z",
+  "market_updated_at": "2026-10-19T10:15:59Z",
+  "technical_updated_at": "2026-10-19T10:16:01Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,13 +17,13 @@
     "missing": []
   },
   "stocks": {
-    "total": 18,
-    "core": 5,
+    "total": 19,
+    "core": 6,
     "observation": 13,
-    "kline_ok": 18,
-    "technical_ok": 18,
+    "kline_ok": 19,
+    "technical_ok": 19,
     "price_source_breakdown": {
-      "realtime": 9,
+      "realtime": 10,
       "realtime_unverified": 9
     }
   },
@@ -44,22 +44,22 @@
   "runtimes": {
     "scan": {
       "latest": {
-        "run_id": 39231804691,
+        "run_id": 39234371818,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-19T09:40:16Z",
-        "started_at": "2026-10-19T09:40:16Z",
-        "updated_at": "2026-10-19T09:52:55Z",
-        "head_sha": "066c80e8f855",
+        "created_at": "2026-10-19T10:01:07Z",
+        "started_at": "2026-10-19T10:01:07Z",
+        "updated_at": "2026-10-19T10:12:42Z",
+        "head_sha": "b9131772b730",
         "event": "workflow_dispatch",
-        "run_number": 177,
+        "run_number": 178,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39231804691"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39234371818"
       },
       "last_success": {
-        "run_id": 39231804691,
-        "completed_at": "2026-10-19T09:52:55Z",
-        "head_sha": "066c80e8f855"
+        "run_id": 39234371818,
+        "completed_at": "2026-10-19T10:12:42Z",
+        "head_sha": "b9131772b730"
       },
       "error": null
     },
