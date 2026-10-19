@@ -1,6 +1,6 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-19T08:03:24Z",
+  "generated_at": "2026-10-19T08:31:45Z",
   "economic": [
     {
       "indicator": "10Y国债",
@@ -9,7 +9,7 @@
       "date": "2026-10-16",
       "source": "Yahoo Finance",
       "sentiment": "bearish",
-      "rationale": "10年期国债收益率上升，反映市场对通胀或利率预期升温"
+      "rationale": "10年期国债收益率上升，融资成本上升"
     },
     {
       "indicator": "5Y国债",
@@ -18,7 +18,7 @@
       "date": "2026-10-16",
       "source": "Yahoo Finance",
       "sentiment": "neutral",
-      "rationale": "5年期国债收益率持平，无明显变化"
+      "rationale": "5年期国债收益率持平，无变化"
     },
     {
       "indicator": "13周国债",
@@ -27,7 +27,7 @@
       "date": "2026-10-16",
       "source": "Yahoo Finance",
       "sentiment": "bullish",
-      "rationale": "13周国债收益率下降，短期利率预期略有缓和"
+      "rationale": "短期国债收益率下降，市场流动性改善"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI 4.00%显著高于美联储目标，通胀压力较大"
+      "rationale": "CPI 4.00%显示通胀压力，加息预期上升"
     },
     {
       "indicator": "核心CPI",
@@ -45,7 +45,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "核心CPI 2.79%仍高于2%目标，持续通胀压力"
+      "rationale": "核心CPI 2.79%高于2%目标，通胀粘性强"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率从4.10%上升至4.20%，就业市场走弱"
+      "rationale": "失业率从4.10%升至4.20%，经济走弱"
     },
     {
       "indicator": "核心PCE",
@@ -63,7 +63,7 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE 3.00%明显高于2%目标，通胀粘性强"
+      "rationale": "核心PCE 3.00%高于目标，通胀压力持续"
     },
     {
       "indicator": "Fear & Greed",
@@ -72,7 +72,7 @@
       "date": "2026-10-19",
       "source": "CNN",
       "sentiment": "bearish",
-      "rationale": "恐慌指数从46骤降至20（极度恐慌），市场情绪极差"
+      "rationale": "恐慌指数从46跌至20极度恐慌，市场情绪极差"
     }
   ],
   "speakers": [
@@ -83,9 +83,9 @@
       "time": "10-16 13:21",
       "source": "PBS",
       "age_tag": "📑前日-低权重",
-      "content_cn": "美联储主席Warsh表示物价稳定是关键，但对利率走向避而不谈 - PBS",
+      "content_cn": "美联储主席沃什表示价格稳定是关键，但回避有关利率的信号 - PBS",
       "sentiment": "neutral",
-      "rationale": "美联储主席Warsh强调物价稳定但未明确利率信号"
+      "rationale": "美联储主席强调价格稳定但未释放利率信号"
     },
     {
       "person": "Warsh",
@@ -94,9 +94,9 @@
       "time": "10-16 06:08",
       "source": "WSJ",
       "age_tag": "📑前日-低权重",
-      "content_cn": "Kevin Warsh在IMF亮相的关键时刻 - 华尔街日报",
+      "content_cn": "凯文·沃什IMF露面的关键时刻 - 华尔街日报",
       "sentiment": "neutral",
-      "rationale": "Warsh在IMF发言的关键时刻报道，未明确政策倾向"
+      "rationale": "IMF会议关键时刻报道，未明确政策倾向"
     },
     {
       "person": null,
@@ -105,9 +105,9 @@
       "time": "10-16 14:54",
       "source": "Yahoo Finance",
       "age_tag": "📑前日-低权重",
-      "content_cn": "未来5年抵押贷款利率预测：基准情形及最好最坏情况 - 雅虎财经",
+      "content_cn": "未来5年抵押贷款利率预测：基准情景及最好和最坏情景 - 雅虎财经",
       "sentiment": "neutral",
-      "rationale": "抵押贷款利率预测属于住房市场分析，对大盘影响中性"
+      "rationale": "抵押贷款利率预测为分析性内容，非政策信号"
     },
     {
       "person": null,
@@ -116,9 +116,9 @@
       "time": "10-19 01:29",
       "source": "CNBC",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "日本首相高市早苗驳斥围绕日元疲软和高利率的批评",
+      "content_cn": "日本首相高市早苗拒绝对日元疲软和高利率的批评",
       "sentiment": "neutral",
-      "rationale": "日本首相高市早苗回应日元和利率批评，与美股关联较弱"
+      "rationale": "日本首相言论针对日元和日本利率，对美股影响有限"
     },
     {
       "person": null,
@@ -129,7 +129,7 @@
       "age_tag": "📰今日-高权重",
       "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
       "sentiment": "neutral",
-      "rationale": "英镑美元和黄金技术分析，对美股大盘无直接影响"
+      "rationale": "外汇和黄金技术分析，与美股大盘无直接关系"
     }
   ],
   "error": null
