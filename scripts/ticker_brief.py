@@ -267,7 +267,7 @@ def render_text(d: dict) -> str:
     else:
         L.append(f"- 样本数：{tr['count']}（按日期倒序展示最近 {len(tr['rows'])} 笔）")
         # 历史同类交易汇总（胜率 / 平均盈亏 / 盈亏比）
-        _pnls = [x["realized_pnl"] for x in tr["rows"] if x.get("realized_pnl") is not None]
+        _pnls = [x["realized_pnl"] for x in tr["rows"] if x.get("realized_pnl") is not None and x.get("action") == "卖出"]
         if _pnls:
             _wins = [v for v in _pnls if v > 0]
             _loss = [v for v in _pnls if v <= 0]
