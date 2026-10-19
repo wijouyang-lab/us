@@ -9,15 +9,11 @@ $BRO: possibly delisted; no price data found  (period=1d)
 $CNP: possibly delisted; no price data found  (period=1d)
 $ED: possibly delisted; no price data found  (period=1d)
 $HST: possibly delisted; no price data found  (period=1d)
-$INVH: possibly delisted; no price data found  (period=1d)
 $VRSN: possibly delisted; no price data found  (period=1d)
 $^DJI: possibly delisted; no price data found  (period=1d)
 $^GSPC: possibly delisted; no price data found  (period=1d)
 $^IXIC: possibly delisted; no price data found  (period=1d)
-$^TNX: possibly delisted; no price data found  (period=1d)
 $2YY=F: possibly delisted; no price data found  (period=1d)
-$^FVX: possibly delisted; no price data found  (period=1d)
-$^TYX: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
 $XAUUSD=X: No data found, symbol may be delisted
 
@@ -44,7 +40,7 @@ Observation 数量     : 13
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
 K线成功 / 失败       : 19 / 0   技术指标成功 19/19
-当前价来源           : 实时 13 · 最新收盘 0 · 合计可取 19/19
+当前价来源           : 实时 14 · 最新收盘 0 · 合计可取 19/19
 Review 数据状态      :
    · core_closed_count            = 3  [complete]
    · core_open_count              = 22  [complete]
