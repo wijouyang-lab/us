@@ -13,8 +13,6 @@ from __future__ import annotations
 import csv
 import sys
 from datetime import datetime, timedelta
-
-import pandas as pd
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
