@@ -155,13 +155,21 @@ def strict_filter(rows):
     """
     used_sectors = set()
     out = []
+    # 观测（2026-10-19）：7 个门槛全部静默，导致"严筛=0"难以定位。
+    # 只对通过评分关的票打印逐票原因（数量少），其余仅计数。
+    _st = {"total": 0, "score": 0, "price": 0, "no_target": 0,
+           "rr": 0, "stop_dist": 0, "sector": 0, "passed": 0}
     for it in (rows or []):
+        _st["total"] += 1
         ticker = str(it.get("Ticker", "")).upper()
         score = _score_of(it)
         if score < MIN_SCORE:
+            _st["score"] += 1
             continue
         price = _price_of(it)
         if price is None or price <= 0:
+            _st["price"] += 1
+            print(f"[严筛淘汰] {ticker}: 价格无效 price={price}")
             continue
         stop_price = _stop_of(it)
         if stop_price is None:
@@ -170,19 +178,34 @@ def strict_filter(rows):
         if target is None and "highs" in it:
             target = _last_n_max(it.get("highs"), 20)
         if target is None:
+            _st["no_target"] += 1
+            print(f"[严筛淘汰] {ticker}: 缺 target_price（fail-closed，"
+                  f"K线下载失败或 compute_20d_high 返回 None）")
             continue
         rr = compute_rr_ratio(price, stop_price, target)
         if rr is None or rr < MIN_RR:
+            _st["rr"] += 1
+            print(f"[严筛淘汰] {ticker}: R/R {rr} < {MIN_RR} "
+                  f"(price={price}, stop={stop_price}, target={target})")
             continue
         sd = _stop_distance(price, stop_price)
         if sd is None or sd < MIN_STOP_DIST or sd > MAX_STOP_DIST:
+            _st["stop_dist"] += 1
+            print(f"[严筛淘汰] {ticker}: 止损距离 {sd} 不在 "
+                  f"[{MIN_STOP_DIST}, {MAX_STOP_DIST}] (price={price}, stop={stop_price})")
             continue
         sector = (it.get("Sector") or "").strip()
         if sector and sector in used_sectors:
-            continue  # 板块集中度 ≤1 只/板块
+            _st["sector"] += 1
+            print(f"[严筛淘汰] {ticker}: 板块集中（{sector} 已有候选）")
+            continue
         if sector:
             used_sectors.add(sector)
         out.append(dict(it, _rr=round(rr, 3), _stop_dist=round(sd, 4)))
+    _st["passed"] = len(out)
+    print(f"[严筛统计] 总 {_st['total']} / 评分 {_st['score']} / 价格 {_st['price']} / "
+          f"缺target {_st['no_target']} / R/R {_st['rr']} / 止损 {_st['stop_dist']} / "
+          f"板块 {_st['sector']} / 通过 {_st['passed']}")
     out.sort(key=_score_of, reverse=True)
     return out[:MAX_CANDIDATES]
 
