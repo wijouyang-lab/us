@@ -44,7 +44,8 @@ jobs:
       - name: Generate watchlist brief
         run: |
           mkdir -p docs
-          python scripts/ticker_brief.py --watchlist watchlist.txt --md > docs/watchlist_brief.md
+          python scripts/build_watchlist.py > watchlist.dynamic.txt
+          python scripts/ticker_brief.py --watchlist watchlist.dynamic.txt --md > docs/watchlist_brief.md
           echo "---- head ----"
           head -n 30 docs/watchlist_brief.md
           echo "---- size ----"

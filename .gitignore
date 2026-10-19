@@ -16,3 +16,5 @@ dashboard/data/news_translation_cache.json
 
 .pytest_tmp/
 portfolio_50000_txn_time.csv
+watchlist.dynamic.txt
+watchlist.dynamic.meta.txt
