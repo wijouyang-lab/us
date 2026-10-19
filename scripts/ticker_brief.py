@@ -30,6 +30,7 @@ REPO = Path(__file__).resolve().parent.parent
 AI_SNAPSHOT = REPO / "ai_snapshot.csv"
 QUANT_SNAPSHOT = REPO / "quant_factor_snapshot.csv"
 TRADE_HISTORY = REPO / "trade_history.csv"
+TXN = REPO / "portfolio_50000_transactions.csv"
 MACRO_DATA = REPO / "macro_data.json"
 MARKET_INDICATORS = REPO / "dashboard" / "data" / "market_indicators.json"
 NA = "N/A"
@@ -159,69 +160,158 @@ def block_quant(ticker: str, as_of: str | None) -> None:
 
 
 def block_history(ticker: str) -> None:
-    section("3. 类似历史交易（trade_history.csv）")
-    rows = read_csv(TRADE_HISTORY)
-    if not rows:
-        print(f"- {NA}（trade_history.csv 缺失或为空）")
+    section("3. 交易明细（portfolio_50000_transactions.csv）")
+    tx = read_csv(TXN)
+    if not tx:
+        print(f"- {NA}（portfolio_50000_transactions.csv 缺失或为空）")
         return
-    mine = [r for r in rows if (r.get("Ticker") or "").strip().upper() == ticker]
-    scope = f"{ticker}"
-    if not mine:
-        # 退化：先找该 ticker 的 Sector（来自 quant 快照），再取同 Sector 的历史
-        sector = ""
+    # 实测：transactions / history / trade_history 三源的日期字段均只有日期；
+    # trade_history.Date 形如 "2026-05-27 00:00:00"，时分秒恒为 00:00:00 → 等价于仅日期。
+    print("- **数据源缺少精确时间，仅有日期**（三源均无 Trade_Time/Timestamp 之类字段）")
+
+    def _sector_of(tk: str) -> str:
         for r in read_csv(QUANT_SNAPSHOT):
-            if (r.get("Ticker") or "").strip().upper() == ticker and r.get("Sector"):
-                sector = r["Sector"]
-                break
-        if sector:
-            pool = {((r.get("Ticker") or "").strip().upper()) for r in read_csv(QUANT_SNAPSHOT)
-                    if (r.get("Sector") or "") == sector}
-            mine = [r for r in rows if (r.get("Ticker") or "").strip().upper() in pool]
-            scope = f"同 Sector（{sector}）"
-        else:
-            print(f"- {NA}（该 ticker 无历史交易记录，且无法确定 Sector 以退化）")
-            return
-        print(f"- 该 ticker 无历史记录 → 退化为 {scope}")
+            if (r.get("Ticker") or "").strip().upper() == tk and r.get("Sector"):
+                return r["Sector"]
+        return ""
+
+    def _sector_pool(sector: str) -> set:
+        return {((r.get("Ticker") or "").strip().upper())
+                for r in read_csv(QUANT_SNAPSHOT) if (r.get("Sector") or "") == sector}
+
+    mine = [r for r in tx if (r.get("Ticker") or "").strip().upper() == ticker]
+    scope = ticker
     if not mine:
-        print(f"- {NA}（{scope} 亦无历史记录）")
-        return
+        sector = _sector_of(ticker)
+        if not sector:
+            print(f"- {NA}（该 ticker 无成交记录，且无法确定 Sector 以退化）")
+            return
+        pool = _sector_pool(sector)
+        mine = [r for r in tx if (r.get("Ticker") or "").strip().upper() in pool]
+        scope = f"同 Sector（{sector}）"
+        print(f"- 该 ticker 无成交记录 → 退化为 {scope}")
+        if not mine:
+            print(f"- {NA}（{scope} 亦无成交记录）")
+            return
+
     print(f"- 样本数：{len(mine)}（{scope}）")
     print()
-    print("| Date | Ticker | Tag | Score | Price |")
-    print("|---|---|---|---|---|")
-    for r in sorted(mine, key=lambda x: x.get("Date") or "", reverse=True)[:8]:
-        print("| {} | {} | {} | {} | {} |".format(
+    print("| 日期 | Ticker | 操作 | 价格 | 股数 | 金额 | 已实现盈亏 |")
+    print("|---|---|---|---|---|---|---|")
+    for r in sorted(mine, key=lambda x: x.get("Date") or "", reverse=True)[:10]:
+        action = (r.get("Action") or "").strip().upper()
+        action_cn = {"BUY": "买入", "SELL": "卖出"}.get(action, action or NA)
+        print("| {} | {} | {} | {} | {} | {} | {} |".format(
             r.get("Date") or NA,
             r.get("Ticker") or NA,
-            r.get("Tag") or NA,
-            fmt(r.get("Score")),
-            fmt(r.get("Entry_Price") or r.get("Price")),
+            action_cn,
+            fmt(r.get("Price")),
+            fmt(r.get("Shares"), 0),
+            fmt(r.get("Amount")),
+            fmt(r.get("Realized_PnL")),
         ))
+
+    hist = [r for r in read_csv(TRADE_HISTORY)
+            if (r.get("Ticker") or "").strip().upper() == ticker]
+    if hist:
+        print()
+        print("补充：历史推荐与退出（trade_history.csv，仅日期）")
+        print()
+        print("| Date | Tag | Score | Price | Exit_Date | Exit_Price | Status |")
+        print("|---|---|---|---|---|---|---|")
+        for r in sorted(hist, key=lambda x: x.get("Date") or "", reverse=True)[:5]:
+            print("| {} | {} | {} | {} | {} | {} | {} |".format(
+                (r.get("Date") or NA).split(" ")[0],
+                r.get("Tag") or NA,
+                fmt(r.get("Score")),
+                fmt(r.get("Price")),
+                r.get("Exit_Date") or NA,
+                fmt(r.get("Exit_Price")),
+                r.get("Status") or NA,
+            ))
+
+
+FG_CN = {
+    "extreme fear": "极度恐惧", "fear": "恐惧", "neutral": "中性",
+    "greed": "贪婪", "extreme greed": "极度贪婪",
+}
+SENT_CN = {"bullish": "偏多", "bearish": "偏空", "neutral": "中性"}
 
 
 def block_macro() -> None:
-    section("4. 宏观环境（macro_data.json + market_indicators.json）")
-    macro = read_json(MACRO_DATA)
-    if macro:
-        keys = [k for k in macro.keys()][:10]
-        print(f"- macro_data.json 顶层键：{', '.join(keys) if keys else NA}")
-    else:
-        print(f"- macro_data.json：{NA}")
+    section("4. 宏观环境（结论化）")
+
+    # ---- 4.1 恐惧贪婪（market_indicators.fear_greed）----
     mi = read_json(MARKET_INDICATORS)
-    if mi:
-        print(f"- market_indicators.json 顶层键：{', '.join(list(mi.keys())[:10]) or NA}")
-        assets = mi.get("assets") if isinstance(mi.get("assets"), (list, dict)) else None
-        if isinstance(assets, dict):
-            sample = list(assets.items())[:3]
-        elif isinstance(assets, list):
-            sample = [(a.get("symbol") or a.get("name"), a.get("price") or a.get("last"))
-                      for a in assets[:3] if isinstance(a, dict)]
-        else:
-            sample = []
-        for name, val in sample:
-            print(f"  - {name or NA}：{fmt(val) if not isinstance(val, dict) else NA}")
+    fg = mi.get("fear_greed") if isinstance(mi.get("fear_greed"), dict) else {}
+    score = num(fg.get("score"))
+    rating = (fg.get("rating") or "").strip().lower()
+    if score is None:
+        print(f"- 恐惧贪婪指数：{NA}")
     else:
-        print(f"- market_indicators.json：{NA}")
+        print(f"- 恐惧贪婪指数：**{score:.2f}（{FG_CN.get(rating, rating or NA)}）**"
+              f"　时间戳：{fg.get('timestamp') or NA}")
+
+    # ---- 4.2 FedWatch（market_indicators.fedwatch）----
+    fw = mi.get("fedwatch") if isinstance(mi.get("fedwatch"), dict) else {}
+    prob = fw.get("probabilities") if isinstance(fw.get("probabilities"), dict) else {}
+    parts = []
+    for key, label in (("cut_25bp", "降息 25bp"), ("hold", "维持不变"),
+                       ("hike_25bp", "加息 25bp"), ("cut_50bp", "降息 50bp")):
+        v = num(prob.get(key))
+        if v is not None:
+            parts.append(f"{label} **{v:.1f}%**")
+    if parts:
+        print(f"- FedWatch（会议 {fw.get('next_meeting') or NA}，当前目标区间 "
+              f"{fw.get('current_target') or NA}）：" + " / ".join(parts))
+    else:
+        print(f"- FedWatch：{NA}")
+
+    # ---- 4.3 economic 指标（macro_data.economic 列表）----
+    macro = read_json(MACRO_DATA)
+    econ = macro.get("economic") if isinstance(macro.get("economic"), list) else []
+    if econ:
+        print(f"- 宏观指标（{len(econ)} 项，最新 {macro.get('generated_at') or NA}）：")
+        for item in econ[:6]:
+            if not isinstance(item, dict):
+                continue
+            print("  - {}：**{}**（前值 {}，{}，{}）".format(
+                item.get("indicator") or NA,
+                item.get("value") or NA,
+                item.get("prev") or NA,
+                item.get("date") or NA,
+                SENT_CN.get((item.get("sentiment") or "").strip().lower(),
+                            item.get("sentiment") or NA),
+            ))
+        cpi = [i for i in econ if isinstance(i, dict)
+               and any(k in str(i.get("indicator") or "") for k in ("CPI", "通胀"))]
+        if cpi:
+            print(f"  - ★ CPI 同比：**{cpi[0].get('value') or NA}**"
+                  f"（{cpi[0].get('date') or NA}）")
+    else:
+        print(f"- 宏观指标：{NA}")
+
+    # ---- 4.4 speakers（macro_data.speakers 列表）----
+    spk = macro.get("speakers") if isinstance(macro.get("speakers"), list) else []
+    spk = [s for s in spk if isinstance(s, dict)]
+    if spk:
+        s = spk[0]
+        print("- 美联储讲话：最近一次 **{}**（{}，{}）：{}　立场：**{}**".format(
+            s.get("person") or NA,
+            s.get("time") or NA,
+            s.get("source") or NA,
+            s.get("content_cn") or s.get("content") or NA,
+            SENT_CN.get((s.get("sentiment") or "").strip().lower(),
+                        s.get("sentiment") or NA),
+        ))
+        for s in spk[1:3]:
+            print("  - 另有 {}（{}）：{}　[{}]".format(
+                s.get("person") or NA, s.get("time") or NA,
+                (s.get("content_cn") or s.get("content") or NA)[:60],
+                SENT_CN.get((s.get("sentiment") or "").strip().lower(),
+                            s.get("sentiment") or NA)))
+    else:
+        print(f"- 美联储讲话：{NA}")
 
 
 # ---------------------------------------------------------------- 主流程
