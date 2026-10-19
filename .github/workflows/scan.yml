@@ -17,6 +17,7 @@ concurrency:
 jobs:
   scan:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: 检出代码
