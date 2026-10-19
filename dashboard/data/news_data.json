@@ -1,6 +1,6 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-19T04:09:00Z",
+  "generated_at": "2026-10-19T04:38:06Z",
   "market_news": [
     {
       "headline": "Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies - Reuters",
@@ -8,9 +8,9 @@
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
       "datetime": 1792367549,
       "summary": "Oil slips as Trump's sanction waiver may lead to more Russian fuel supplies  Reuters",
-      "headline_cn": "油价下滑，特朗普制裁豁免可能导致俄罗斯燃料供应增加",
+      "headline_cn": "油价下跌，特朗普制裁豁免或导致俄罗斯燃料供应增加",
       "sentiment": "bearish",
-      "rationale": "供应增加压制油价，利空能源板块",
+      "rationale": "供应增加预期施压油价",
       "market_relevant": true
     },
     {
@@ -19,9 +19,9 @@
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaWFjYmdlWlpxc2JxSGc1YnZhM3ptTFp2bHdQbUUwVS1XTnoyeFpMVXh5TjNINy0tWm5hMmViQ2xpdzRFZWRHZjRyMHF4TkhDY0l0ZXhjS2FUTWpaNlpGRjl0ZEFUTm9qR1B2bUpYTnpWQjVNWXhwZDR0OFo0V2RheDdobm5jMGFCNWZuXzQ5WUdzM20xQ2dkd3JkUW9PWFh3Z1JrREVxcnJyNG1UR0M5ZXM0SQ?oc=5",
       "datetime": 1792364768,
       "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters",
-      "headline_cn": "英国房地产市场显示出抵押贷款利率影响迹象",
+      "headline_cn": "英国房地产市场显现抵押贷款利率影响迹象",
       "sentiment": "bearish",
-      "rationale": "高利率抑制房市需求，地产承压",
+      "rationale": "高利率抑制购房需求",
       "market_relevant": true
     },
     {
@@ -30,10 +30,10 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/18/jim-cramer-why-i-am-taking-the-other-side-of-the-trade-that-crushed-the-market-friday.html",
       "datetime": 1792362188,
       "summary": "How did this happen so quickly? Where were the buyers? I have some answers.",
-      "headline_cn": "为何我要站在周五暴跌对立面交易",
+      "headline_cn": "为何我押注与上周五暴跌方向相反",
       "sentiment": "neutral",
-      "rationale": "个人观点陈述，未披露具体依据",
-      "market_relevant": false
+      "rationale": "单一观点文章，不构成市场共识",
+      "market_relevant": true
     },
     {
       "headline": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis - Reuters",
@@ -43,7 +43,7 @@
       "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters",
       "headline_cn": "埃及称准备支持沙特对抗伊朗盟友胡塞武装",
       "sentiment": "bearish",
-      "rationale": "地缘冲突升级推高油价风险溢价",
+      "rationale": "地缘紧张升级推高风险溢价",
       "market_relevant": true
     },
     {
@@ -52,9 +52,9 @@
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNbFZiZFozb1RWTzVBbk4wZU8xMHlSeHhuSmhkMi1FSVhqTTZ5U3BMbF9aaU5fVjRpWnI1MkJTMTZscVcxTWM0YnVFRXFWdXQ2SnpSdVNPVm5LR1QzbVhpQjliR3VNZFl4WXhjODUzbjNZRXg0S0l0al80ZDlwdjc5ejFRU0E3NlJBZm1iOWg3VjhybzNLbWpOelQ4ZDZBWTkxS3Y4Rm9MUm9vTjdfYk9iaVRJd29DSDhMUi1KOGZMcDhzZGs?oc=5",
       "datetime": 1792338876,
       "summary": "Saudi-led coalition says helicopter crash in Najran kills two crew members  Reuters",
-      "headline_cn": "沙特联军称直升机在纳季兰坠毁致两名机组人员死亡",
+      "headline_cn": "沙特领导的联军称直升机坠毁致两名机组人员丧生",
       "sentiment": "neutral",
-      "rationale": "单一事故，无系统性市场影响",
+      "rationale": "单一事故无系统性影响",
       "market_relevant": false
     },
     {
@@ -63,10 +63,10 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/18/here-are-the-3-big-things-were-watching-in-the-stock-market-this-week.html",
       "datetime": 1792337077,
       "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio.",
-      "headline_cn": "本周股市我们关注的三大事项",
+      "headline_cn": "本周股市关注的三大要点",
       "sentiment": "neutral",
-      "rationale": "前瞻性内容，不含实质性信息",
-      "market_relevant": false
+      "rationale": "前瞻性总结无具体立场",
+      "market_relevant": true
     },
     {
       "headline": "Trump endorses Netanyahu in close Israeli election - Reuters",
@@ -74,9 +74,9 @@
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQeXNEX0FibmplMGVhLVA1TDdESTEzdk9PR1JYNWtsQzJkTG5ER1lrMkhfV05saHNXYndlOXFxdFJONU4zOEZhZUdtXzR0WGpVSHBuLUUyOExTWHktR3AtMjlnU08yNXpaUWFVOXE1Q3dNaDFkZG4yT0JFMmlkYzdvTXFudjFQOF9rcFBaM0VBbjBaOFQ5bndSNS1fZw?oc=5",
       "datetime": 1792336320,
       "summary": "Trump endorses Netanyahu in close Israeli election  Reuters",
-      "headline_cn": "特朗普在以色列大选胶着之际支持内塔尼亚胡",
+      "headline_cn": "特朗普在以色列大选中支持内塔尼亚胡",
       "sentiment": "neutral",
-      "rationale": "政治表态，对市场影响不明确",
+      "rationale": "政治表态未改变市场预期",
       "market_relevant": true
     },
     {
@@ -87,7 +87,7 @@
       "summary": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions  Reuters",
       "headline_cn": "油价提振沙特股市；埃及因地区紧张局势暴跌",
       "sentiment": "neutral",
-      "rationale": "区域市场分化，对美股无直接影响",
+      "rationale": "区域分化，对美股无直接影响",
       "market_relevant": true
     },
     {
@@ -96,9 +96,9 @@
       "url": "https://www.cnbc.com/make-it/2026/10/18/parenting-lessons-resilient-successful-well-adjusted.html",
       "datetime": 1792330621,
       "summary": "Parenting coach Reem Raouda shares lessons to help kids feel worthy regardless of achievements and handle disappointment, disagreement and difficult feelings.",
-      "headline_cn": "我研究了200多名儿童——培养坚韧成功孩子的父母会早期教授这6课",
+      "headline_cn": "研究200多名儿童：成功父母早期教授孩子6个教训",
       "sentiment": "neutral",
-      "rationale": "育儿话题，与市场投资无关",
+      "rationale": "教育话题与市场无关",
       "market_relevant": false
     },
     {
@@ -109,7 +109,7 @@
       "summary": "Turkey will get some diesel from US-Russia supply deal, energy minister says  Reuters",
       "headline_cn": "土耳其能源部长称将从美俄供应协议中获得部分柴油",
       "sentiment": "neutral",
-      "rationale": "区域能源分配，对全球市场影响有限",
+      "rationale": "区域供应调整影响有限",
       "market_relevant": true
     },
     {
@@ -2828,6 +2828,13 @@
       }
     ],
     "XOM": [
+      {
+        "headline": "Why Did XOM, V, TEAM Stocks Hit 52-Week Highs Last Week?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=68219abe3a3156f9212efd876ef242e5e2006331cdcf231db7b1a96c2deccc03",
+        "datetime": 1792381315,
+        "summary": "Refining profits, stablecoin adoption and cloud demand lifted investor optimism."
+      },
       {
         "headline": "ExxonMobil Signals Massive Profit Boost From Rising Refining Margins",
         "source": "Yahoo",
