@@ -41,14 +41,22 @@ def load_universe(limit: int) -> list[str]:
     return tickers[:limit]
 
 
+def _norm(name: str) -> str:
+    """归一化字段名：驼峰拆词 + 去括号内容 + 小写 + 压缩空格。"""
+    s = re.sub(r"\([^)]*\)", " ", str(name))
+    s = re.sub(r"(?<=[a-z0-9])(?=[A-Z])", " ", s)     # NetIncome -> Net Income
+    s = re.sub(r"[_\-/]+", " ", s)
+    return re.sub(r"\s+", " ", s).strip().lower()
+
+
 def _series(df: pd.DataFrame, *names):
-    """从 yfinance 的 quarterly_* DataFrame 中取第一行匹配项（行名大小写/写法不一）。"""
+    """从 yfinance 的 quarterly_* DataFrame 取第一行匹配项（驼峰/空格/下划线通吃）。"""
     if df is None or not isinstance(df, pd.DataFrame) or df.empty:
         return None
-    for want in names:
-        for idx in df.index:
-            if str(idx).strip().lower() == want.lower():
-                return df.loc[idx]
+    wants = {_norm(n) for n in names}
+    for idx in df.index:
+        if _norm(idx) in wants:
+            return df.loc[idx]
     return None
 
 
@@ -63,12 +71,21 @@ def fetch_one(ticker: str) -> list[dict]:
             qf = getattr(tk, "quarterly_financials", None)
             qbs = getattr(tk, "quarterly_balance_sheet", None)
             if qf is None or qf.empty:
+                print(f"  [diag] {ticker}: quarterly_income_stmt EMPTY")
                 return rows
+            if equity is None or shares is None:
+                print(f"  [diag] {ticker}: equity={equity is not None} shares={shares is not None}")
+                print("        balance_sheet index[:15] =", [str(x) for x in list(qbs.index)[:15]] if qbs is not None else None)
 
-            net_income = _series(qf, "NetIncome", "Net Income", "NetIncomeCommonStockholders")
-            equity = _series(qbs, "StockholdersEquity", "TotalStockHolderEquity",
-                             "CommonStockEquity") if qbs is not None else None
-            shares = _series(qbs, "OrdinarySharesNumber", "ShareIssued") if qbs is not None else None
+            net_income = _series(qf, "NetIncome", "Net Income", "NetIncomeCommonStockholders",
+                             "Net Income Common Stockholders")
+            equity = _series(qbs, "StockholdersEquity", "Stockholders Equity",
+                             "TotalStockHolderEquity", "CommonStockEquity",
+                             "Common Stock Equity",
+                             "Total Equity Gross Minority Interest") if qbs is not None else None
+            shares = _series(qbs, "OrdinarySharesNumber", "Ordinary Shares Number",
+                             "ShareIssued", "Common Stock Shares Outstanding",
+                             "CommonStockSharesOutstanding") if qbs is not None else None
             assets = _series(qbs, "TotalAssets") if qbs is not None else None
 
             for col in qf.columns:
@@ -158,7 +175,7 @@ def main(argv=None) -> int:
     out = out.sort_values(["Date", "Ticker", "Factor_Name"]).reset_index(drop=True)
     out.to_csv(OUT, index=False, encoding="utf-8")
     print(f"written: {OUT} ({len(out)} rows, {OUT.stat().st_size} bytes)")
-    print(out.head(5).to_string(index=False))
+    print(out.head(3).to_string(index=False))
     return 0
 
 
