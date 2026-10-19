@@ -268,3 +268,18 @@
 - `97fb6880`：冲突检测（后软化）
 - `327ee2a9`：F4 修复 + 冲突软化
 - `2b6f22ee`：reset --soft 重放落地
+
+---
+
+## 本地验证纪律（ruff）
+
+改完任何 `.py` 后，**必须先跑严格静态检查**，再 `py_compile`：
+
+```bash
+pip install -r requirements-dev.txt   # ruff==0.1.15
+ruff check <file.py> --select F821,F401,F811,F841,E9   # F821=未定义名（本次事故根因）
+```
+
+> 教训（2026-10-19）：etch_fundamentals_pit.py 新增 `_norm()` 使用 `re` 却漏 `import re`，
+> `py_compile` **无法**发现（仅语法），导致 3 次 CI run 失败。`ruff check --select F821` 可一次拦下。
+
