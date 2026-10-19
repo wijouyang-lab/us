@@ -6,16 +6,16 @@
 
 ## 宏观环境（结论化，仅打印一次）
 
-- 恐惧贪婪指数：**25.50（恐惧）**　时间戳：2026-10-19T16:25:27+00:00
+- 恐惧贪婪指数：**24.88（极度恐惧）**　时间戳：2026-10-19T16:55:53+00:00
 - FedWatch（会议 2026-10-28，目标区间 3.75%-4.00%）：维持不变 **84.5%** / 加息 25bp **15.5%**
 - 宏观指标：
   - 10Y国债：**5.14%**（前值 5.10%，2026-10-19，偏空）
   - 5Y国债：**4.94%**（前值 4.90%，2026-10-19，偏空）
-  - 13周国债：**4.07%**（前值 4.07%，2026-10-19，中性）
+  - 13周国债：**4.08%**（前值 4.07%，2026-10-19，中性）
   - CPI：**4.00%**（前值 N/A，2026-09-01，偏空）
-  - 核心CPI：**2.79%**（前值 N/A，2026-09-01，偏空）
+  - 核心CPI：**2.79%**（前值 N/A，2026-09-01，中性）
   - 失业率：**4.20%**（前值 4.10%，2026-09-01，偏空）
-- 美联储讲话：最近一次 **Warsh**（10-18 19:47，Yahoo Finance）：黄金因交易员根据Warsh讲话放松加息押注而小幅走高　立场：**偏多**
+- 美联储讲话：最近一次 **Warsh**（10-18 19:47，Yahoo Finance）：黄金小幅走高，因交易员根据Warsh讲话放松加息押注 - 雅虎财经　立场：**中性**
 
 ---
 
@@ -27,24 +27,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Healthcare　Price：1247.44
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Healthcare　Price：1247.86
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 5.4806 | 90 |
-| Momentum_20D_Pct | 7.0861 | 83 |
-| Momentum_60D_Pct | 4.2980 | 66 |
-| Realized_Volatility_20D_Pct | 26.8293 | 49 |
-| Volume_Ratio_20D | 0.3002 | 47 |
-| ZScore_20D | 2.2225 | 91 |
-| Beta_60D_SPY | -0.3662 | 9 |
-| Stock_RS_20D_vs_SPY | 7.7726 | 83 |
-| Quant_Score | 86.0000 | 100 |
-| MA20 | 1182.8900 | 99 |
-| MA50 | 1181.5800 | 99 |
+| Momentum_5D_Pct | 5.5166 | 89 |
+| Momentum_20D_Pct | 7.1226 | 83 |
+| Momentum_60D_Pct | 4.3335 | 66 |
+| Realized_Volatility_20D_Pct | 26.8108 | 49 |
+| Volume_Ratio_20D | 0.3296 | 43 |
+| ZScore_20D | 2.2363 | 90 |
+| Beta_60D_SPY | -0.3638 | 9 |
+| Stock_RS_20D_vs_SPY | 7.9202 | 83 |
+| Quant_Score | 83.0000 | 100 |
+| MA20 | 1182.9100 | 99 |
+| MA50 | 1181.5900 | 99 |
 | ATR_Pct | 2.7800 | 55 |
-| KDJ_J | 94.8800 | 84 |
+| KDJ_J | 95.1100 | 84 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -62,24 +62,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Consumer Discretionary　Price：263.17
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Consumer Discretionary　Price：262.25
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 1.4045 | 59 |
-| Momentum_20D_Pct | 1.8282 | 60 |
-| Momentum_60D_Pct | 13.3837 | 85 |
-| Realized_Volatility_20D_Pct | 30.2483 | 64 |
-| Volume_Ratio_20D | 0.7599 | 91 |
-| ZScore_20D | 2.0773 | 87 |
-| Beta_60D_SPY | 1.8078 | 83 |
-| Stock_RS_20D_vs_SPY | 2.5147 | 60 |
+| Momentum_5D_Pct | 1.0480 | 55 |
+| Momentum_20D_Pct | 1.4703 | 58 |
+| Momentum_60D_Pct | 12.9852 | 84 |
+| Realized_Volatility_20D_Pct | 29.4282 | 61 |
+| Volume_Ratio_20D | 0.8284 | 92 |
+| ZScore_20D | 1.8842 | 82 |
+| Beta_60D_SPY | 1.7892 | 83 |
+| Stock_RS_20D_vs_SPY | 2.2680 | 58 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 253.4600 | 82 |
-| MA50 | 256.8500 | 83 |
-| ATR_Pct | 2.4600 | 37 |
-| KDJ_J | 62.0400 | 44 |
+| MA20 | 253.4200 | 81 |
+| MA50 | 256.8300 | 83 |
+| ATR_Pct | 2.4700 | 38 |
+| KDJ_J | 57.2700 | 41 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -103,24 +103,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：49.22
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：49.44
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 5.0705 | 86 |
-| Momentum_20D_Pct | 12.3374 | 96 |
-| Momentum_60D_Pct | 36.1411 | 96 |
-| Realized_Volatility_20D_Pct | 34.1718 | 72 |
-| Volume_Ratio_20D | 0.2782 | 40 |
-| ZScore_20D | 2.1488 | 89 |
-| Beta_60D_SPY | -1.0605 | 1 |
-| Stock_RS_20D_vs_SPY | 13.0239 | 96 |
+| Momentum_5D_Pct | 5.5508 | 90 |
+| Momentum_20D_Pct | 12.8509 | 97 |
+| Momentum_60D_Pct | 36.7635 | 96 |
+| Realized_Volatility_20D_Pct | 34.1263 | 71 |
+| Volume_Ratio_20D | 0.3150 | 40 |
+| ZScore_20D | 2.2525 | 90 |
+| Beta_60D_SPY | -1.0557 | 1 |
+| Stock_RS_20D_vs_SPY | 13.6486 | 97 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 44.8200 | 17 |
-| MA50 | 43.8400 | 16 |
-| ATR_Pct | 3.0100 | 62 |
-| KDJ_J | 99.7800 | 91 |
+| MA20 | 44.8300 | 17 |
+| MA50 | 43.8500 | 15 |
+| ATR_Pct | 3.0000 | 62 |
+| KDJ_J | 102.6000 | 93 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -150,24 +150,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Energy　Price：223.85
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Energy　Price：224.52
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 4.1163 | 81 |
-| Momentum_20D_Pct | 9.9082 | 93 |
-| Momentum_60D_Pct | 14.9186 | 86 |
-| Realized_Volatility_20D_Pct | 19.8658 | 22 |
-| Volume_Ratio_20D | 0.5277 | 85 |
-| ZScore_20D | 2.1266 | 88 |
-| Beta_60D_SPY | -0.9125 | 3 |
-| Stock_RS_20D_vs_SPY | 10.5947 | 93 |
+| Momentum_5D_Pct | 4.4302 | 83 |
+| Momentum_20D_Pct | 10.2396 | 93 |
+| Momentum_60D_Pct | 15.2652 | 87 |
+| Realized_Volatility_20D_Pct | 19.6958 | 20 |
+| Volume_Ratio_20D | 0.5738 | 84 |
+| ZScore_20D | 2.2274 | 89 |
+| Beta_60D_SPY | -0.9083 | 3 |
+| Stock_RS_20D_vs_SPY | 11.0373 | 93 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 210.6200 | 76 |
-| MA50 | 207.8800 | 76 |
-| ATR_Pct | 1.9700 | 16 |
-| KDJ_J | 98.4900 | 89 |
+| MA20 | 210.6600 | 75 |
+| MA50 | 207.8900 | 75 |
+| ATR_Pct | 1.9600 | 16 |
+| KDJ_J | 101.0100 | 92 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -185,24 +185,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：51.19
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：51.25
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | -0.5755 | 36 |
-| Momentum_20D_Pct | 3.1092 | 66 |
-| Momentum_60D_Pct | 8.8764 | 76 |
-| Realized_Volatility_20D_Pct | 19.8420 | 21 |
-| Volume_Ratio_20D | 0.2246 | 19 |
-| ZScore_20D | 0.9704 | 59 |
-| Beta_60D_SPY | 0.3470 | 45 |
-| Stock_RS_20D_vs_SPY | 3.7956 | 67 |
+| Momentum_5D_Pct | -0.4756 | 38 |
+| Momentum_20D_Pct | 3.2127 | 66 |
+| Momentum_60D_Pct | 8.9857 | 77 |
+| Realized_Volatility_20D_Pct | 19.8573 | 22 |
+| Volume_Ratio_20D | 0.2485 | 15 |
+| ZScore_20D | 1.0526 | 61 |
+| Beta_60D_SPY | 0.3494 | 46 |
+| Stock_RS_20D_vs_SPY | 4.0104 | 67 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 50.6600 | 20 |
+| MA20 | 50.6700 | 20 |
 | MA50 | 50.3800 | 20 |
 | ATR_Pct | 2.6300 | 46 |
-| KDJ_J | 69.4300 | 53 |
+| KDJ_J | 70.1600 | 52 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -237,24 +237,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：432.57
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：432.11
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 1.1517 | 56 |
-| Momentum_20D_Pct | 7.6970 | 86 |
-| Momentum_60D_Pct | 28.1674 | 94 |
-| Realized_Volatility_20D_Pct | 24.9485 | 42 |
-| Volume_Ratio_20D | 0.5780 | 87 |
-| ZScore_20D | 1.9625 | 84 |
-| Beta_60D_SPY | 0.8041 | 61 |
-| Stock_RS_20D_vs_SPY | 8.3835 | 87 |
+| Momentum_5D_Pct | 1.0453 | 55 |
+| Momentum_20D_Pct | 7.5837 | 86 |
+| Momentum_60D_Pct | 28.0326 | 95 |
+| Realized_Volatility_20D_Pct | 24.8951 | 42 |
+| Volume_Ratio_20D | 0.6285 | 88 |
+| ZScore_20D | 1.9208 | 82 |
+| Beta_60D_SPY | 0.8020 | 61 |
+| Stock_RS_20D_vs_SPY | 8.3814 | 86 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 412.7000 | 93 |
-| MA50 | 392.7400 | 93 |
-| ATR_Pct | 2.4900 | 39 |
-| KDJ_J | 90.5200 | 78 |
+| MA20 | 412.6800 | 92 |
+| MA50 | 392.7300 | 93 |
+| ATR_Pct | 2.5000 | 39 |
+| KDJ_J | 89.3700 | 76 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -277,24 +277,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：230.55
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：230.70
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 2.3711 | 67 |
-| Momentum_20D_Pct | -0.8003 | 47 |
-| Momentum_60D_Pct | -14.3701 | 17 |
-| Realized_Volatility_20D_Pct | 32.1497 | 68 |
-| Volume_Ratio_20D | 0.2652 | 37 |
-| ZScore_20D | -0.5450 | 31 |
-| Beta_60D_SPY | 1.7012 | 80 |
-| Stock_RS_20D_vs_SPY | -0.1138 | 48 |
+| Momentum_5D_Pct | 2.4377 | 67 |
+| Momentum_20D_Pct | -0.7358 | 47 |
+| Momentum_60D_Pct | -14.3144 | 17 |
+| Realized_Volatility_20D_Pct | 32.1654 | 69 |
+| Volume_Ratio_20D | 0.3016 | 35 |
+| ZScore_20D | -0.5213 | 32 |
+| Beta_60D_SPY | 1.7063 | 81 |
+| Stock_RS_20D_vs_SPY | 0.0619 | 48 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 233.9000 | 80 |
+| MA20 | 233.9000 | 79 |
 | MA50 | 230.0000 | 78 |
-| ATR_Pct | 3.4700 | 73 |
-| KDJ_J | 52.1400 | 38 |
+| ATR_Pct | 3.4600 | 73 |
+| KDJ_J | 52.6900 | 39 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -328,24 +328,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：299.02
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：298.77
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 5.8103 | 91 |
-| Momentum_20D_Pct | 9.0558 | 91 |
-| Momentum_60D_Pct | -9.4565 | 31 |
-| Realized_Volatility_20D_Pct | 25.2917 | 43 |
-| Volume_Ratio_20D | 0.4549 | 78 |
-| ZScore_20D | 3.1392 | 99 |
-| Beta_60D_SPY | 0.2206 | 41 |
-| Stock_RS_20D_vs_SPY | 9.7422 | 91 |
+| Momentum_5D_Pct | 5.7219 | 91 |
+| Momentum_20D_Pct | 8.9646 | 91 |
+| Momentum_60D_Pct | -9.5322 | 31 |
+| Realized_Volatility_20D_Pct | 25.2475 | 44 |
+| Volume_Ratio_20D | 0.5035 | 78 |
+| ZScore_20D | 3.1009 | 99 |
+| Beta_60D_SPY | 0.2137 | 41 |
+| Stock_RS_20D_vs_SPY | 9.7623 | 91 |
 | Quant_Score | 80.0000 | 97 |
-| MA20 | 279.7600 | 85 |
-| MA50 | 299.1500 | 86 |
-| ATR_Pct | 2.7100 | 51 |
-| KDJ_J | 105.2700 | 95 |
+| MA20 | 279.7500 | 84 |
+| MA50 | 299.1400 | 86 |
+| ATR_Pct | 2.7200 | 52 |
+| KDJ_J | 104.5800 | 95 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -375,24 +375,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Energy　Price：62.80
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Energy　Price：62.99
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 2.7319 | 71 |
-| Momentum_20D_Pct | 9.6943 | 92 |
-| Momentum_60D_Pct | 9.5986 | 78 |
-| Realized_Volatility_20D_Pct | 28.4973 | 56 |
-| Volume_Ratio_20D | 0.3689 | 65 |
-| ZScore_20D | 1.9549 | 83 |
-| Beta_60D_SPY | -0.9180 | 3 |
-| Stock_RS_20D_vs_SPY | 10.3808 | 93 |
+| Momentum_5D_Pct | 3.0345 | 72 |
+| Momentum_20D_Pct | 10.0175 | 92 |
+| Momentum_60D_Pct | 9.9215 | 79 |
+| Realized_Volatility_20D_Pct | 28.5436 | 57 |
+| Volume_Ratio_20D | 0.4141 | 65 |
+| ZScore_20D | 2.0396 | 85 |
+| Beta_60D_SPY | -0.9189 | 3 |
+| Stock_RS_20D_vs_SPY | 10.8151 | 93 |
 | Quant_Score | 79.0000 | 97 |
-| MA20 | 58.8100 | 25 |
+| MA20 | 58.8200 | 25 |
 | MA50 | 59.4600 | 24 |
-| ATR_Pct | 2.3600 | 32 |
-| KDJ_J | 97.6500 | 88 |
+| ATR_Pct | 2.3500 | 31 |
+| KDJ_J | 100.3600 | 91 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -410,24 +410,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：174.35
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：174.36
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 6.6391 | 95 |
-| Momentum_20D_Pct | 4.5043 | 73 |
-| Momentum_60D_Pct | 23.5684 | 92 |
-| Realized_Volatility_20D_Pct | 40.7760 | 81 |
-| Volume_Ratio_20D | 0.1807 | 7 |
-| ZScore_20D | 1.9785 | 85 |
-| Beta_60D_SPY | 0.8919 | 63 |
-| Stock_RS_20D_vs_SPY | 5.1908 | 73 |
+| Momentum_5D_Pct | 6.6422 | 96 |
+| Momentum_20D_Pct | 4.5073 | 72 |
+| Momentum_60D_Pct | 23.5719 | 92 |
+| Realized_Volatility_20D_Pct | 40.7762 | 81 |
+| Volume_Ratio_20D | 0.2061 | 7 |
+| ZScore_20D | 1.9793 | 83 |
+| Beta_60D_SPY | 0.8957 | 63 |
+| Stock_RS_20D_vs_SPY | 5.3050 | 73 |
 | Quant_Score | 78.0000 | 96 |
 | MA20 | 162.4800 | 67 |
-| MA50 | 172.7200 | 69 |
+| MA50 | 172.7200 | 68 |
 | ATR_Pct | 2.7500 | 54 |
-| KDJ_J | 90.5600 | 79 |
+| KDJ_J | 90.5800 | 78 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -457,24 +457,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Technology　Price：341.64
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Technology　Price：341.69
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 0.1980 | 45 |
-| Momentum_20D_Pct | 0.7862 | 54 |
-| Momentum_60D_Pct | 2.5899 | 64 |
-| Realized_Volatility_20D_Pct | 16.1090 | 4 |
-| Volume_Ratio_20D | 0.4149 | 72 |
-| ZScore_20D | 1.0080 | 60 |
-| Beta_60D_SPY | -0.0365 | 21 |
-| Stock_RS_20D_vs_SPY | 1.4727 | 54 |
-| Quant_Score | 27.0000 | 19 |
-| MA20 | 337.5600 | 89 |
+| Momentum_5D_Pct | 0.2112 | 44 |
+| Momentum_20D_Pct | 0.7995 | 54 |
+| Momentum_60D_Pct | 2.6035 | 64 |
+| Realized_Volatility_20D_Pct | 16.1029 | 4 |
+| Volume_Ratio_20D | 0.4647 | 72 |
+| ZScore_20D | 1.0187 | 59 |
+| Beta_60D_SPY | -0.0341 | 21 |
+| Stock_RS_20D_vs_SPY | 1.5971 | 54 |
+| Quant_Score | 30.0000 | 29 |
+| MA20 | 337.5600 | 88 |
 | MA50 | 326.2700 | 88 |
 | ATR_Pct | 1.9400 | 14 |
-| KDJ_J | 67.4300 | 50 |
+| KDJ_J | 67.6300 | 50 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -492,7 +492,7 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
 - Sector：N/A　Price：N/A
 - 提示：该 ticker 在 2026-10-19 无因子快照
 
@@ -511,24 +511,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Technology　Price：218.54
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Technology　Price：218.14
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | -3.4376 | 24 |
-| Momentum_20D_Pct | -3.8878 | 34 |
-| Momentum_60D_Pct | 5.6565 | 68 |
-| Realized_Volatility_20D_Pct | 24.4113 | 40 |
-| Volume_Ratio_20D | 0.4805 | 82 |
-| ZScore_20D | -1.5128 | 17 |
-| Beta_60D_SPY | 1.9569 | 86 |
-| Stock_RS_20D_vs_SPY | -3.2013 | 35 |
+| Momentum_5D_Pct | -3.6144 | 24 |
+| Momentum_20D_Pct | -4.0637 | 33 |
+| Momentum_60D_Pct | 5.4631 | 68 |
+| Realized_Volatility_20D_Pct | 24.1913 | 39 |
+| Volume_Ratio_20D | 0.5370 | 81 |
+| ZScore_20D | -1.5756 | 16 |
+| Beta_60D_SPY | 1.9542 | 86 |
+| Stock_RS_20D_vs_SPY | -3.2661 | 34 |
 | Quant_Score | 71.0000 | 88 |
-| MA20 | 227.7400 | 79 |
-| MA50 | 222.9700 | 78 |
-| ATR_Pct | 2.7200 | 51 |
-| KDJ_J | 5.1200 | 14 |
+| MA20 | 227.7100 | 78 |
+| MA50 | 222.9600 | 77 |
+| ATR_Pct | 2.7200 | 52 |
+| KDJ_J | 3.9300 | 12 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -546,24 +546,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Communication　Price：345.25
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Communication　Price：344.51
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | -2.1178 | 28 |
-| Momentum_20D_Pct | -2.7383 | 39 |
-| Momentum_60D_Pct | 7.9784 | 74 |
-| Realized_Volatility_20D_Pct | 22.4597 | 33 |
-| Volume_Ratio_20D | 0.3498 | 60 |
-| ZScore_20D | -0.2262 | 38 |
-| Beta_60D_SPY | 1.2061 | 71 |
-| Stock_RS_20D_vs_SPY | -2.0518 | 39 |
-| Quant_Score | 33.0000 | 48 |
-| MA20 | 345.9300 | 89 |
-| MA50 | 344.4000 | 89 |
+| Momentum_5D_Pct | -2.3276 | 28 |
+| Momentum_20D_Pct | -2.9467 | 39 |
+| Momentum_60D_Pct | 7.7469 | 75 |
+| Realized_Volatility_20D_Pct | 22.2801 | 32 |
+| Volume_Ratio_20D | 0.3768 | 54 |
+| ZScore_20D | -0.3700 | 36 |
+| Beta_60D_SPY | 1.2026 | 71 |
+| Stock_RS_20D_vs_SPY | -2.1491 | 39 |
+| Quant_Score | 28.0000 | 26 |
+| MA20 | 345.8900 | 89 |
+| MA50 | 344.3800 | 89 |
 | ATR_Pct | 2.5200 | 40 |
-| KDJ_J | 13.7300 | 19 |
+| KDJ_J | 10.9000 | 18 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -581,24 +581,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Communication　Price：702.40
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Communication　Price：701.30
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | -5.4592 | 17 |
-| Momentum_20D_Pct | -5.2411 | 26 |
-| Momentum_60D_Pct | 18.0127 | 89 |
-| Realized_Volatility_20D_Pct | 40.2261 | 80 |
-| Volume_Ratio_20D | 0.3646 | 64 |
-| ZScore_20D | -2.0524 | 8 |
-| Beta_60D_SPY | 1.0986 | 67 |
-| Stock_RS_20D_vs_SPY | -4.5547 | 26 |
+| Momentum_5D_Pct | -5.6066 | 17 |
+| Momentum_20D_Pct | -5.3889 | 25 |
+| Momentum_60D_Pct | 17.8288 | 89 |
+| Realized_Volatility_20D_Pct | 40.2674 | 80 |
+| Volume_Ratio_20D | 0.3952 | 60 |
+| ZScore_20D | -2.1197 | 7 |
+| Beta_60D_SPY | 1.1057 | 68 |
+| Stock_RS_20D_vs_SPY | -4.5912 | 25 |
 | Quant_Score | 17.0000 | 1 |
-| MA20 | 733.8300 | 97 |
-| MA50 | 657.4500 | 97 |
-| ATR_Pct | 3.5000 | 73 |
-| KDJ_J | 5.9200 | 15 |
+| MA20 | 733.7800 | 97 |
+| MA50 | 657.4200 | 97 |
+| ATR_Pct | 3.5100 | 74 |
+| KDJ_J | 4.8200 | 14 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -616,24 +616,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Consumer Discretionary　Price：368.23
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Consumer Discretionary　Price：369.13
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | -2.5911 | 27 |
-| Momentum_20D_Pct | -1.8825 | 43 |
-| Momentum_60D_Pct | 17.6356 | 89 |
-| Realized_Volatility_20D_Pct | 32.6978 | 70 |
-| Volume_Ratio_20D | 0.6141 | 89 |
-| ZScore_20D | -0.2026 | 39 |
-| Beta_60D_SPY | 2.1803 | 88 |
-| Stock_RS_20D_vs_SPY | -1.1961 | 43 |
+| Momentum_5D_Pct | -2.3543 | 27 |
+| Momentum_20D_Pct | -1.6440 | 43 |
+| Momentum_60D_Pct | 17.9216 | 89 |
+| Realized_Volatility_20D_Pct | 33.1052 | 70 |
+| Volume_Ratio_20D | 0.6840 | 89 |
+| ZScore_20D | -0.1162 | 40 |
+| Beta_60D_SPY | 2.1795 | 88 |
+| Stock_RS_20D_vs_SPY | -0.8464 | 44 |
 | Quant_Score | 66.0000 | 79 |
-| MA20 | 369.9800 | 90 |
-| MA50 | 360.2600 | 90 |
-| ATR_Pct | 3.2600 | 68 |
-| KDJ_J | 23.7400 | 24 |
+| MA20 | 370.0200 | 90 |
+| MA50 | 360.2700 | 89 |
+| ATR_Pct | 3.2700 | 69 |
+| KDJ_J | 25.5100 | 25 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -651,24 +651,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Technology　Price：338.15
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Technology　Price：336.88
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | -4.6740 | 21 |
-| Momentum_20D_Pct | -6.7584 | 23 |
-| Momentum_60D_Pct | -11.4605 | 25 |
-| Realized_Volatility_20D_Pct | 37.6882 | 76 |
-| Volume_Ratio_20D | 0.3029 | 48 |
-| ZScore_20D | -1.5838 | 16 |
-| Beta_60D_SPY | 2.0922 | 87 |
-| Stock_RS_20D_vs_SPY | -6.0719 | 23 |
-| Quant_Score | 30.0000 | 28 |
-| MA20 | 354.1700 | 90 |
-| MA50 | 363.9300 | 90 |
-| ATR_Pct | 3.4200 | 72 |
-| KDJ_J | 1.0800 | 10 |
+| Momentum_5D_Pct | -5.0334 | 21 |
+| Momentum_20D_Pct | -7.1100 | 21 |
+| Momentum_60D_Pct | -11.7944 | 23 |
+| Realized_Volatility_20D_Pct | 37.2769 | 76 |
+| Volume_Ratio_20D | 0.3340 | 45 |
+| ZScore_20D | -1.7009 | 15 |
+| Beta_60D_SPY | 2.0824 | 87 |
+| Stock_RS_20D_vs_SPY | -6.3123 | 22 |
+| Quant_Score | 30.0000 | 29 |
+| MA20 | 354.1000 | 89 |
+| MA50 | 363.9100 | 90 |
+| ATR_Pct | 3.4300 | 72 |
+| KDJ_J | -0.9600 | 9 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -686,7 +686,7 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
 - Sector：N/A　Price：N/A
 - 提示：该 ticker 在 2026-10-19 无因子快照
 
@@ -709,24 +709,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Other　Price：530.87
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Other　Price：531.15
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 2.5636 | 70 |
-| Momentum_20D_Pct | 5.7488 | 77 |
-| Momentum_60D_Pct | 7.2615 | 73 |
-| Realized_Volatility_20D_Pct | 8.7430 | 0 |
-| Volume_Ratio_20D | 0.3340 | 55 |
-| ZScore_20D | 2.1588 | 89 |
-| Beta_60D_SPY | -0.1057 | 17 |
-| Stock_RS_20D_vs_SPY | 6.4352 | 77 |
+| Momentum_5D_Pct | 2.6179 | 68 |
+| Momentum_20D_Pct | 5.8047 | 77 |
+| Momentum_60D_Pct | 7.3182 | 73 |
+| Realized_Volatility_20D_Pct | 8.7051 | 0 |
+| Volume_Ratio_20D | 0.3704 | 53 |
+| ZScore_20D | 2.1875 | 89 |
+| Beta_60D_SPY | -0.1039 | 18 |
+| Stock_RS_20D_vs_SPY | 6.6023 | 77 |
 | Quant_Score | 71.0000 | 88 |
-| MA20 | 511.1800 | 95 |
+| MA20 | 511.2000 | 95 |
 | MA50 | 508.6900 | 95 |
 | ATR_Pct | 1.1100 | 0 |
-| KDJ_J | 96.8700 | 87 |
+| KDJ_J | 97.6200 | 87 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -756,24 +756,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Financials　Price：336.36
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Financials　Price：336.62
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 0.6162 | 49 |
-| Momentum_20D_Pct | -4.4540 | 31 |
-| Momentum_60D_Pct | -4.7705 | 46 |
-| Realized_Volatility_20D_Pct | 18.0927 | 13 |
-| Volume_Ratio_20D | 0.2626 | 34 |
-| ZScore_20D | 0.1347 | 46 |
-| Beta_60D_SPY | 0.6126 | 54 |
-| Stock_RS_20D_vs_SPY | -3.7676 | 32 |
-| Quant_Score | 30.0000 | 28 |
-| MA20 | 334.8700 | 88 |
+| Momentum_5D_Pct | 0.6940 | 51 |
+| Momentum_20D_Pct | -4.3802 | 31 |
+| Momentum_60D_Pct | -4.6969 | 46 |
+| Realized_Volatility_20D_Pct | 18.0516 | 13 |
+| Volume_Ratio_20D | 0.2914 | 32 |
+| ZScore_20D | 0.1842 | 46 |
+| Beta_60D_SPY | 0.6201 | 55 |
+| Stock_RS_20D_vs_SPY | -3.5825 | 32 |
+| Quant_Score | 27.0000 | 22 |
+| MA20 | 334.8800 | 88 |
 | MA50 | 347.7000 | 89 |
-| ATR_Pct | 1.9200 | 13 |
-| KDJ_J | 70.2000 | 54 |
+| ATR_Pct | 1.9200 | 14 |
+| KDJ_J | 71.2500 | 54 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -791,24 +791,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Financials　Price：402.42
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Financials　Price：402.78
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 3.3781 | 76 |
-| Momentum_20D_Pct | 8.7769 | 90 |
-| Momentum_60D_Pct | 13.1219 | 84 |
-| Realized_Volatility_20D_Pct | 20.8773 | 28 |
-| Volume_Ratio_20D | 0.2644 | 36 |
-| ZScore_20D | 1.9704 | 84 |
-| Beta_60D_SPY | 0.2306 | 41 |
-| Stock_RS_20D_vs_SPY | 9.4634 | 90 |
+| Momentum_5D_Pct | 3.4706 | 76 |
+| Momentum_20D_Pct | 8.8742 | 90 |
+| Momentum_60D_Pct | 13.2231 | 85 |
+| Realized_Volatility_20D_Pct | 20.8526 | 28 |
+| Volume_Ratio_20D | 0.3239 | 41 |
+| ZScore_20D | 1.9960 | 84 |
+| Beta_60D_SPY | 0.2341 | 42 |
+| Stock_RS_20D_vs_SPY | 9.6718 | 90 |
 | Quant_Score | 70.0000 | 86 |
-| MA20 | 376.3500 | 91 |
-| MA50 | 373.3000 | 91 |
+| MA20 | 376.3600 | 90 |
+| MA50 | 373.3100 | 91 |
 | ATR_Pct | 1.6900 | 5 |
-| KDJ_J | 98.9500 | 90 |
+| KDJ_J | 99.7500 | 89 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -826,24 +826,24 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：Healthcare　Price：401.74
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Healthcare　Price：402.77
 
 | 因子 | 值 | 当日百分位 |
 |---|---|---|
-| Momentum_5D_Pct | 6.1344 | 93 |
-| Momentum_20D_Pct | 6.4043 | 80 |
-| Momentum_60D_Pct | -4.5159 | 47 |
-| Realized_Volatility_20D_Pct | 26.2219 | 46 |
-| Volume_Ratio_20D | 0.3122 | 50 |
-| ZScore_20D | 2.1802 | 90 |
-| Beta_60D_SPY | 0.0879 | 31 |
-| Stock_RS_20D_vs_SPY | 7.0908 | 80 |
+| Momentum_5D_Pct | 6.4065 | 94 |
+| Momentum_20D_Pct | 6.6771 | 81 |
+| Momentum_60D_Pct | -4.2710 | 47 |
+| Realized_Volatility_20D_Pct | 26.2057 | 46 |
+| Volume_Ratio_20D | 0.3489 | 50 |
+| ZScore_20D | 2.2772 | 91 |
+| Beta_60D_SPY | 0.0919 | 31 |
+| Stock_RS_20D_vs_SPY | 7.4748 | 81 |
 | Quant_Score | 70.0000 | 86 |
-| MA20 | 379.7800 | 91 |
-| MA50 | 387.1900 | 93 |
+| MA20 | 379.8300 | 91 |
+| MA50 | 387.2100 | 92 |
 | ATR_Pct | 2.9500 | 61 |
-| KDJ_J | 80.2300 | 65 |
+| KDJ_J | 81.9900 | 68 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
@@ -861,7 +861,7 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
 - Sector：N/A　Price：N/A
 - 提示：该 ticker 在 2026-10-19 无因子快照
 
@@ -880,13 +880,29 @@
 
 ### 2. 因子位置（quant_factor_snapshot.csv）
 
-- 快照日期：2026-10-19（该日共 309 只；全表 9 个日期 / 2503 行）
-- Sector：N/A　Price：N/A
-- 提示：该 ticker 在 2026-10-19 无因子快照
+- 快照日期：2026-10-19（该日共 312 只；全表 9 个日期 / 2506 行）
+- Sector：Consumer Staples　Price：992.42
+
+| 因子 | 值 | 当日百分位 |
+|---|---|---|
+| Momentum_5D_Pct | 3.4374 | 76 |
+| Momentum_20D_Pct | 10.4554 | 94 |
+| Momentum_60D_Pct | 6.1378 | 70 |
+| Realized_Volatility_20D_Pct | 17.1740 | 8 |
+| Volume_Ratio_20D | 0.2812 | 27 |
+| ZScore_20D | 2.0848 | 86 |
+| Beta_60D_SPY | -0.1684 | 14 |
+| Stock_RS_20D_vs_SPY | 11.2531 | 94 |
+| Quant_Score | 70.0000 | 86 |
+| MA20 | 938.4400 | 98 |
+| MA50 | 934.6800 | 98 |
+| ATR_Pct | 1.6100 | 2 |
+| KDJ_J | 74.4500 | 57 |
 
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
 - **数据源缺少精确时间，仅有日期**（无 portfolio_50000_txn_time.csv 侧车）
+- 该 ticker 无成交记录 → 退化为 同 Sector（Consumer Staples）
 - N/A（无成交记录）
 
 ---
