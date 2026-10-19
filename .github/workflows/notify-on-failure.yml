@@ -5,7 +5,6 @@ on:
     workflows:
       - "美股盘中扫描"
       - "美股盘后复盘"
-      - "Dashboard Data Refresh"
       - "Quant Research (Phase 2-7)"
       - "US-Share Evolve"
       - "news-fetch"
@@ -28,6 +27,10 @@ on:
 permissions:
   issues: write
   actions: read
+
+concurrency:
+  group: notify-on-failure
+  cancel-in-progress: true
 
 jobs:
   notify:
