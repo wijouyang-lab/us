@@ -35,7 +35,8 @@ REPO = Path(__file__).resolve().parent.parent.parent
 FUND = REPO / "research_fundamentals_pit_sample.csv"
 PRICE = REPO / "research_price_history_sp500_2y.csv"
 OUT_CSV = REPO / "research_fundamentals_pit_corrected.csv"
-OUT_MD = REPO / "docs" / "FUNDAMENTAL_QUANTILE_BACKTEST.md"
+OUT_MD = REPO / "docs" / "FUNDAMENTAL_QUANTILE_BACKTEST_V2.md"
+SECTOR_FILE = REPO / "sp500_constituents.csv"
 
 HORIZONS = (5, 10, 20)
 Q = 5
@@ -99,6 +100,18 @@ def main() -> int:
     print(f"written: {OUT_CSV.name} ({len(corr)} rows)")
     print(corr.head(5).to_string(index=False))
 
+    # ---------- 行业中性化：合并 Sector ----------
+    sector_map = {}
+    if SECTOR_FILE.exists():
+        try:
+            sm = pd.read_csv(SECTOR_FILE, dtype=str)
+            sector_map = {str(r["Ticker"]).strip().upper(): str(r.get("Sector") or "NA")
+                          for _, r in sm.iterrows()}
+        except Exception as e:
+            print(f"  [warn] sector map failed: {e}")
+    corr["Sector"] = corr["Ticker"].astype(str).str.upper().map(sector_map).fillna("NA")
+    print(f"  Sector 覆盖：{(corr['Sector'] != 'NA').sum()}/{len(corr)}")
+
     # ---------- 前瞻收益（从 Release_Proxy 次日算，不重叠视角由报告说明）----------
     fr = {}
     for h in HORIZONS:
@@ -122,23 +135,26 @@ def main() -> int:
 
     # ---------- 分层回测（全样本分位 + winsorize）----------
     rows = []
-    L = ["# 基本面因子分层回测（PIT 修正后）\n",
+    L = ["# 基本面因子分层回测 V2（PIT 修正 + **行业中性化**）\n",
          "> 生成脚本：`tools/research/fundamental_quantile_backtest.py`",
          f"> 样本：**{len(corr)}** 个（Ticker × Release_Proxy）观测 / "
          f"**{corr['Ticker'].nunique()}** 只票",
-         f"> 去极值：**{WIN_LO:.0%} / {WIN_HI:.0%}** 分位 winsorize；分层：全样本 5 等分（Q5=因子值最高）",
+         f"> 去极值：**{WIN_LO:.0%} / {WIN_HI:.0%}** winsorize；**分层：Sector 内百分位 → 合并后 5 等分**（行业中性化 ✓）",
          "> PIT：价格取 Release_Proxy 当日或之前最近收盘；前瞻收益自次日起算（无未来函数）\n",
          "## 1. 分层平均前瞻收益（%）\n",
          "| 因子 | 层 | 5D | 10D | 20D | n |", "|---|---|---|---|---|---|"]
 
     summary = {}
     for fac in ("EP_TTM", "BP", "ROE_ANN"):
-        s = corr[[fac] + [f"Fwd_{h}D" for h in HORIZONS]].dropna(subset=[fac])
+        s = corr[["Sector", fac] + [f"Fwd_{h}D" for h in HORIZONS]].dropna(subset=[fac])
         if len(s) < 50:
             print(f"  {fac}: 样本不足（{len(s)}）"); continue
         lo, hi = s[fac].quantile(WIN_LO), s[fac].quantile(WIN_HI)
-        s = s[(s[fac] >= lo) & (s[fac] <= hi)]
-        s["Q"] = pd.qcut(s[fac].rank(method="first"), Q, labels=False) + 1
+        s = s[(s[fac] >= lo) & (s[fac] <= hi)].copy()
+        # ★ 行业中性化：先在每个 Sector 内取百分位，再在合并后的百分位上分层
+        s["Pct"] = s.groupby("Sector")[fac].rank(pct=True)
+        s = s.dropna(subset=["Pct"])
+        s["Q"] = pd.qcut(s["Pct"].rank(method="first"), Q, labels=False) + 1
         means = {h: s.groupby("Q")[f"Fwd_{h}D"].mean() * 100 for h in HORIZONS}
         stats = {}
         for h in HORIZONS:
