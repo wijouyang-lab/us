@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-19T08:01:16Z",
+  "generated_at": "2026-10-19T08:16:15Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -12,14 +12,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 14.9158,
+      "price": 14.95,
       "price_source": "realtime",
-      "current_price": 14.9158,
-      "current_price_updated_at": "2026-10-19T08:00:11Z",
+      "current_price": 14.95,
+      "current_price_updated_at": "2026-10-19T08:09:34Z",
       "pending_price": 14.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 14.75,
-      "change_1d": -0.2288,
+      "change_1d": 0.0,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:45Z",
+        "computed_at": "2026-10-19T08:15:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1536,14 +1536,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 269.5,
+      "price": 269.31,
       "price_source": "realtime",
-      "current_price": 269.5,
-      "current_price_updated_at": "2026-10-19T08:00:32Z",
+      "current_price": 269.31,
+      "current_price_updated_at": "2026-10-19T08:07:30Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": 1.2663,
+      "change_1d": 1.1949,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:46Z",
+        "computed_at": "2026-10-19T08:15:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:46Z",
+        "computed_at": "2026-10-19T08:15:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:47Z",
+        "computed_at": "2026-10-19T08:15:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:48Z",
+        "computed_at": "2026-10-19T08:15:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:48Z",
+        "computed_at": "2026-10-19T08:15:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:49Z",
+        "computed_at": "2026-10-19T08:15:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:50Z",
+        "computed_at": "2026-10-19T08:15:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:50Z",
+        "computed_at": "2026-10-19T08:15:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15236,7 +15236,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:51Z",
+        "computed_at": "2026-10-19T08:15:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15252,14 +15252,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "PM|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 205.2,
-      "price_source": "realtime_unverified",
-      "current_price": 205.2,
-      "current_price_updated_at": null,
+      "price": 204.21,
+      "price_source": "realtime",
+      "current_price": 204.21,
+      "current_price_updated_at": "2026-10-19T08:01:04Z",
       "pending_price": 191.51,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 192.69,
-      "change_1d": 0.0,
+      "change_1d": -0.4825,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.6124,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -16760,7 +16760,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:51Z",
+        "computed_at": "2026-10-19T08:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -18284,7 +18284,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:52Z",
+        "computed_at": "2026-10-19T08:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19808,7 +19808,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:53Z",
+        "computed_at": "2026-10-19T08:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21332,7 +21332,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:53Z",
+        "computed_at": "2026-10-19T08:15:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22856,7 +22856,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:54Z",
+        "computed_at": "2026-10-19T08:15:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22872,14 +22872,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 67.8601,
+      "price": 67.71,
       "price_source": "realtime",
-      "current_price": 67.8601,
-      "current_price_updated_at": "2026-10-19T08:00:18Z",
+      "current_price": 67.71,
+      "current_price_updated_at": "2026-10-19T08:05:18Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": -0.5567,
+      "change_1d": -0.7767,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -24380,7 +24380,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:54Z",
+        "computed_at": "2026-10-19T08:15:58Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24396,14 +24396,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 177.56,
+      "price": 177.25,
       "price_source": "realtime",
-      "current_price": 177.56,
-      "current_price_updated_at": "2026-10-19T08:00:19Z",
+      "current_price": 177.25,
+      "current_price_updated_at": "2026-10-19T08:07:59Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": -0.7934,
+      "change_1d": -0.9666,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -25904,7 +25904,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:55Z",
+        "computed_at": "2026-10-19T08:15:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27428,7 +27428,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-16",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-19T08:00:56Z",
+        "computed_at": "2026-10-19T08:15:59Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27451,7 +27451,7 @@
         "change_1d": -0.3359,
         "change_5d": 0.6727,
         "change_20d": 0.6187,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27469,7 +27469,7 @@
         "change_1d": -1.0927,
         "change_5d": -1.9471,
         "change_20d": 0.1169,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27487,7 +27487,7 @@
         "change_1d": -2.145,
         "change_5d": -4.4805,
         "change_20d": -1.4422,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27501,16 +27501,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 18.37,
-        "change_1d": -8.104,
-        "change_5d": 23.7871,
-        "change_20d": 24.0378,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 18.57,
+        "change_1d": -7.1036,
+        "change_5d": 25.1348,
+        "change_20d": 25.3882,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792395900,
+        "quote_ts": 1792396800,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27523,7 +27523,7 @@
         "change_1d": 0.0,
         "change_5d": -2.7841,
         "change_20d": 2.0008,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27539,15 +27539,15 @@
         "unit": "percent yield",
         "price": 4.75,
         "change_1d": 0.0,
-        "change_5d": 2.2165,
-        "change_20d": 7.8565,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "change_5d": null,
+        "change_20d": null,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
         "quote_ts": null,
-        "last_bar_date": "2026-10-16"
+        "last_bar_date": "2026-10-13"
       },
       {
         "symbol": "^FVX",
@@ -27559,7 +27559,7 @@
         "change_1d": 0.0,
         "change_5d": -2.4298,
         "change_20d": 0.8855,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27577,7 +27577,7 @@
         "change_1d": 0.0,
         "change_5d": -2.9286,
         "change_20d": 1.9696,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27591,16 +27591,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.934,
-        "change_1d": 0.0923,
-        "change_5d": -0.27,
-        "change_20d": 1.7102,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 102.022,
+        "change_1d": 0.1787,
+        "change_5d": -0.1839,
+        "change_20d": 1.798,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396200,
+        "quote_ts": 1792397100,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27609,16 +27609,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4201.6001,
-        "change_1d": 0.4903,
-        "change_5d": -0.3486,
-        "change_20d": -5.0464,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 4197.5,
+        "change_1d": 0.3922,
+        "change_5d": -0.4459,
+        "change_20d": -5.1391,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396260,
+        "quote_ts": 1792397160,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27627,16 +27627,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 57.69,
-        "change_1d": 1.2194,
-        "change_5d": -4.9118,
-        "change_20d": -13.3211,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 57.655,
+        "change_1d": 1.158,
+        "change_5d": -4.9695,
+        "change_20d": -13.3737,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396260,
+        "quote_ts": 1792397100,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27645,16 +27645,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.586,
-        "change_1d": 0.8421,
-        "change_5d": -0.8506,
-        "change_20d": -0.4384,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 6.5795,
+        "change_1d": 0.7426,
+        "change_5d": -0.9484,
+        "change_20d": -0.5367,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396260,
+        "quote_ts": 1792397160,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27663,16 +27663,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 96.93,
-        "change_1d": -4.4177,
-        "change_5d": 5.5308,
-        "change_20d": -3.3599,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 96.82,
+        "change_1d": -4.5262,
+        "change_5d": 5.411,
+        "change_20d": -3.4696,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396260,
+        "quote_ts": 1792397160,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27685,12 +27685,12 @@
         "change_1d": -2.5214,
         "change_5d": 2.2632,
         "change_20d": 3.1,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396260,
+        "quote_ts": 1792397100,
         "last_bar_date": "2026-10-16"
       },
       {
@@ -27699,16 +27699,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.114,
-        "change_1d": -0.0642,
-        "change_5d": -3.2919,
-        "change_20d": 6.9368,
-        "updated_at": "2026-10-19T08:00:56Z",
+        "price": 3.11,
+        "change_1d": -0.1926,
+        "change_5d": -3.4161,
+        "change_20d": 6.7995,
+        "updated_at": "2026-10-19T08:15:59Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792396260,
+        "quote_ts": 1792397160,
         "last_bar_date": "2026-10-16"
       }
     ],
@@ -27721,12 +27721,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-19T08:01:12Z"
+    "updated_at": "2026-10-19T08:16:13Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-19 04:01:16",
+    "as_of_us": "2026-10-19 04:16:15",
     "window_start": "2026-09-19",
     "core_closed_count": 3,
     "core_open_count": 22,
@@ -29796,8 +29796,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 232.29,
-        "pnl_pct": -6.41,
+        "cur_price": 231.64,
+        "pnl_pct": -6.68,
         "days_held": 27,
         "stop_loss": null,
         "score": "64.2",
@@ -30279,8 +30279,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 412.0,
-        "cur_price": 441.0,
-        "pnl_pct": 7.04,
+        "cur_price": 442.1,
+        "pnl_pct": 7.31,
         "days_held": 31,
         "stop_loss": null,
         "score": "74.7",
@@ -34212,8 +34212,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 235.14,
-        "pnl_pct": -43.86,
+        "cur_price": 235.0,
+        "pnl_pct": -43.9,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -35063,8 +35063,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 51.42,
-        "pnl_pct": -5.72,
+        "cur_price": 51.35,
+        "pnl_pct": -5.85,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -37975,22 +37975,22 @@
   "runtimes": {
     "scan": {
       "latest": {
-        "run_id": 39218606785,
+        "run_id": 39219870550,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-19T07:50:35Z",
-        "started_at": "2026-10-19T07:50:35Z",
-        "updated_at": "2026-10-19T07:53:33Z",
-        "head_sha": "5926e6035f73",
+        "created_at": "2026-10-19T08:01:47Z",
+        "started_at": "2026-10-19T08:01:47Z",
+        "updated_at": "2026-10-19T08:13:28Z",
+        "head_sha": "3ff883db7b80",
         "event": "workflow_dispatch",
-        "run_number": 173,
+        "run_number": 174,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39218606785"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39219870550"
       },
       "last_success": {
-        "run_id": 39218606785,
-        "completed_at": "2026-10-19T07:53:33Z",
-        "head_sha": "5926e6035f73"
+        "run_id": 39219870550,
+        "completed_at": "2026-10-19T08:13:28Z",
+        "head_sha": "3ff883db7b80"
       },
       "error": null
     },
@@ -38273,7 +38273,7 @@
         }
       ],
       "snapshot_file": "quant_factor_snapshot.csv",
-      "snapshot_rows": 2194
+      "snapshot_rows": 2479
     },
     "backtest": {
       "phase": 2,
@@ -38376,7 +38376,7 @@
   },
   "news": {
     "schema_version": "news.v1",
-    "generated_at": "2026-10-19T07:52:52Z",
+    "generated_at": "2026-10-19T08:13:21Z",
     "market_news": [
       {
         "headline": "UK housing market showing signs of mortgage rates impact, Rightmove says - Reuters",
@@ -38384,10 +38384,10 @@
         "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaWFjYmdlWlpxc2JxSGc1YnZhM3ptTFp2bHdQbUUwVS1XTnoyeFpMVXh5TjNINy0tWm5hMmViQ2xpdzRFZWRHZjRyMHF4TkhDY0l0ZXhjS2FUTWpaNlpGRjl0ZEFUTm9qR1B2bUpYTnpWQjVNWXhwZDR0OFo0V2RheDdobm5jMGFCNWZuXzQ5WUdzM20xQ2dkd3JkUW9PWFh3Z1JrREVxcnJyNG1UR0M5ZXM0SQ?oc=5",
         "datetime": 1792364768,
         "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters",
-        "headline_cn": "Rightmove称英国房市显现抵押贷款利率冲击迹象",
+        "headline_cn": "英国房地产市场显示抵押贷款利率影响迹象——Rightmove",
         "sentiment": "neutral",
-        "rationale": "英国区域性数据，对美股无直接传导",
-        "market_relevant": false
+        "rationale": "仅陈述现状，未明确利好或利空程度",
+        "market_relevant": true
       },
       {
         "headline": "Why I am taking the other side of the trade that crushed the market Friday",
@@ -38395,20 +38395,20 @@
         "url": "https://www.cnbc.com/investingclub/2026/10/18/jim-cramer-why-i-am-taking-the-other-side-of-the-trade-that-crushed-the-market-friday.html",
         "datetime": 1792362188,
         "summary": "How did this happen so quickly? Where were the buyers? I have some answers.",
-        "headline_cn": "为何我要做空上周五压垮市场的交易",
+        "headline_cn": "为何我要做周五暴跌反向交易",
         "sentiment": "neutral",
-        "rationale": "观点类文章，未披露具体标的或方向",
+        "rationale": "个人观点文章，市场方向尚未确定",
         "market_relevant": true
       },
       {
-        "headline": "Oil tumbles as Trump's Russia sanctions waiver may lead to more fuel supplies - Reuters",
+        "headline": "Oil slips from 5-month high as Trump's Russia sanctions waiver may bring more supplies - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
         "datetime": 1792362180,
-        "summary": "Oil tumbles as Trump's Russia sanctions waiver may lead to more fuel supplies  Reuters",
-        "headline_cn": "特朗普豁免俄罗斯制裁或增供应，油价暴跌",
+        "summary": "Oil slips from 5-month high as Trump's Russia sanctions waiver may bring more supplies  Reuters",
+        "headline_cn": "油价从5个月高位回落，因特朗普俄罗斯制裁豁免可能增加供应",
         "sentiment": "bearish",
-        "rationale": "能源板块承压，航空运输成本受益",
+        "rationale": "供应增加压制油价，利空能源板块",
         "market_relevant": true
       },
       {
@@ -38417,9 +38417,9 @@
         "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNaUsxbVVqQ0FFUl81U25IbG1NaXhrNzFqZzIzaFpRUVhKbF9rYlZoMXg1Z3NzYjR1TEtkeHNCU1BrOWs4ZXR5VHFqMTBoX3VjSV9FRV9neGVDSkdUNWIxMlNhZWRJbldocDM5Q2hiMXYxUXpHVUJqWkkyOEF5OGNBNWduQXFPMXp6VXhYRjUyNmsxaV9pbXJhS29uVGh6Tm51emp4S3YtdmI5c21HZE9HeFkycENlNGxHRUlJd29YWkxwRF85eXc?oc=5",
         "datetime": 1792357478,
         "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters",
-        "headline_cn": "埃及称准备支持沙特对抗伊朗盟友胡塞武装",
+        "headline_cn": "埃及表示准备支持沙特对抗伊朗盟友胡塞武装",
         "sentiment": "bearish",
-        "rationale": "地缘冲突升级推高风险溢价",
+        "rationale": "地缘冲突升级，推高避险情绪",
         "market_relevant": true
       },
       {
@@ -38428,9 +38428,9 @@
         "url": "https://www.cnbc.com/investingclub/2026/10/18/here-are-the-3-big-things-were-watching-in-the-stock-market-this-week.html",
         "datetime": 1792337077,
         "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio.",
-        "headline_cn": "本周股市三大关注焦点",
+        "headline_cn": "本周股市关注的三大重点",
         "sentiment": "neutral",
-        "rationale": "预告性内容，未涉及具体利空利好",
+        "rationale": "前瞻性信息汇总，无明确方向",
         "market_relevant": true
       },
       {
@@ -38439,7 +38439,7 @@
         "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQeXNEX0FibmplMGVhLVA1TDdESTEzdk9PR1JYNWtsQzJkTG5ER1lrMkhfV05saHNXYndlOXFxdFJONU4zOEZhZUdtXzR0WGpVSHBuLUUyOExTWHktR3AtMjlnU08yNXpaUWFVOXE1Q3dNaDFkZG4yT0JFMmlkYzdvTXFudjFQOF9rcFBaM0VBbjBaOFQ5bndSNS1fZw?oc=5",
         "datetime": 1792336320,
         "summary": "Trump endorses Netanyahu in close Israeli election  Reuters",
-        "headline_cn": "特朗普在以色列胶着选战中为内塔尼亚胡背书",
+        "headline_cn": "特朗普在以色列胶着大选中支持内塔尼亚胡",
         "sentiment": "neutral",
         "rationale": "政治表态，对市场影响有限",
         "market_relevant": false
@@ -38450,10 +38450,10 @@
         "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPdkJ2LXpMXzV0dEQ2b1NYcm9XT1FZMTUyZUlVQlZaZ2RYNFhvVFlnVFRJM1RJTU5CNzlDNVdKTmtzX2E0S0xvV2h6UEpOWFJtUlNGczZxeGR4a2NYQlU5NktIN0JQbE54SlRaS3QzRVVvWUdSRGpqWmNYWXlQSWtMbkM2R3lnRWtERTVLcTNadXMwbGxVQm9GXzVLRmVpZDY1OFFDVmI1ZlM3cGVZ?oc=5",
         "datetime": 1792331503,
         "summary": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions  Reuters",
-        "headline_cn": "油价提振沙特股市；地区紧张拖累埃及暴跌",
+        "headline_cn": "油价提振沙特股市；埃及因地区紧张局势暴跌",
         "sentiment": "neutral",
-        "rationale": "区域市场分化，美股无直接关联",
-        "market_relevant": false
+        "rationale": "地区市场分化，对美股无直接影响",
+        "market_relevant": true
       },
       {
         "headline": "I've studied over 200 kids—parents who raise resilient, successful children teach them these 6 lessons early on",
@@ -38461,9 +38461,9 @@
         "url": "https://www.cnbc.com/make-it/2026/10/18/parenting-lessons-resilient-successful-well-adjusted.html",
         "datetime": 1792330621,
         "summary": "Parenting coach Reem Raouda shares lessons to help kids feel worthy regardless of achievements and handle disappointment, disagreement and difficult feelings.",
-        "headline_cn": "研究200+儿童：成功父母早期教给孩子这6课",
+        "headline_cn": "研究200多名儿童——培养坚韧成功孩子的父母教这6课",
         "sentiment": "neutral",
-        "rationale": "育儿内容，与市场无关",
+        "rationale": "教育话题，与市场无关",
         "market_relevant": false
       },
       {
@@ -38472,10 +38472,10 @@
         "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQYjdhZ0V0TGxFRVBoQWVSMVBlOXFvdm1rcFlmWm45dVdYS3FJdm5ZdExGM2xRd3hhb1hvWUJYdnVlRG50bm1CbjJubjRnM2JtVFp3UkdiU0QxcVJEbnZyNC1HSDhOYUM1THhiTm9heG9tTV9FTHpwMW1BOEhxN0Q0WjlocVJMZV9TSUlIN0RMZDdkQmpPQUhUQk40bkNDdzdMSVhEa3U5eUZKd2R1OVBqajZYTDI5cDhTT3FaUk5uZw?oc=5",
         "datetime": 1792324304,
         "summary": "Turkey will get some diesel from US-Russia supply deal, energy minister says  Reuters",
-        "headline_cn": "土耳其能源部长称将从美俄供应协议中获柴油",
+        "headline_cn": "土耳其将从美俄供应协议中获得部分柴油——能源部长",
         "sentiment": "neutral",
         "rationale": "区域能源分配，对美股影响微弱",
-        "market_relevant": false
+        "market_relevant": true
       },
       {
         "headline": "EU condemns attacks by violent settlers, including on diplomats, spokesperson says - Reuters",
@@ -38483,9 +38483,9 @@
         "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOcG5pYTJCRkVpNVoxOTVPTVRoNUtwcTBYX2lhZ3ZmMVYxQjRjeG5kMHBHRnlpS1otNzZjWVNyaGJCNjhnU0ROclhuOWYwVGltT19POUY1Z0lOT2pJNDNCSUN0LTFHSkFxUW5iWW91T0ZiOVVTTm42TUpINVc2c1JVbEszT0hBQmhEUU5kemNPbFdqZndpTl9wTG1XeFRxd0JfTXhyam1zSDEzV2hXdWZ3X25xOXY4TkZwWThkLWVXTTBXREpWVFp0eC1XRQ?oc=5",
         "datetime": 1792320730,
         "summary": "EU condemns attacks by violent settlers, including on diplomats, spokesperson says  Reuters",
-        "headline_cn": "欧盟谴责暴力定居者袭击外交官等事件",
+        "headline_cn": "欧盟谴责暴力定居者袭击事件包括袭击外交官",
         "sentiment": "neutral",
-        "rationale": "地区冲突事件，未触发市场波动",
+        "rationale": "地区冲突谴责，市场影响有限",
         "market_relevant": false
       },
       {
@@ -41808,25 +41808,25 @@
   },
   "macro": {
     "schema_version": "macro.v1",
-    "generated_at": "2026-10-16T13:02:21Z",
+    "generated_at": "2026-10-19T08:03:24Z",
     "economic": [
       {
         "indicator": "10Y国债",
-        "value": "5.11%",
+        "value": "5.10%",
         "prev": "5.09%",
         "date": "2026-10-16",
         "source": "Yahoo Finance",
         "sentiment": "bearish",
-        "rationale": "10年期国债收益率上升，融资成本提高"
+        "rationale": "10年期国债收益率上升，反映市场对通胀或利率预期升温"
       },
       {
         "indicator": "5Y国债",
-        "value": "4.92%",
+        "value": "4.90%",
         "prev": "4.90%",
         "date": "2026-10-16",
         "source": "Yahoo Finance",
-        "sentiment": "bearish",
-        "rationale": "5年期国债收益率上升，借贷成本增加"
+        "sentiment": "neutral",
+        "rationale": "5年期国债收益率持平，无明显变化"
       },
       {
         "indicator": "13周国债",
@@ -41834,8 +41834,8 @@
         "prev": "4.09%",
         "date": "2026-10-16",
         "source": "Yahoo Finance",
-        "sentiment": "neutral",
-        "rationale": "13周短期国债收益率小幅下降，影响有限"
+        "sentiment": "bullish",
+        "rationale": "13周国债收益率下降，短期利率预期略有缓和"
       },
       {
         "indicator": "CPI",
@@ -41844,7 +41844,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "CPI 4.00%显示通胀压力，可能维持高利率"
+        "rationale": "CPI 4.00%显著高于美联储目标，通胀压力较大"
       },
       {
         "indicator": "核心CPI",
@@ -41852,8 +41852,8 @@
         "prev": null,
         "date": "2026-09-01",
         "source": "BLS API",
-        "sentiment": "neutral",
-        "rationale": "核心CPI 2.79%接近目标但仍偏高"
+        "sentiment": "bearish",
+        "rationale": "核心CPI 2.79%仍高于2%目标，持续通胀压力"
       },
       {
         "indicator": "失业率",
@@ -41862,7 +41862,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "失业率从4.10%升至4.20%，经济走弱信号"
+        "rationale": "失业率从4.10%上升至4.20%，就业市场走弱"
       },
       {
         "indicator": "核心PCE",
@@ -41871,183 +41871,73 @@
         "date": "August 2026",
         "source": "BEA 官方网页",
         "sentiment": "bearish",
-        "rationale": "核心PCE 3.00%高于2%目标，通胀压力持续"
+        "rationale": "核心PCE 3.00%明显高于2%目标，通胀粘性强"
       },
       {
         "indicator": "Fear & Greed",
-        "value": "32 (fear)",
+        "value": "20 (extreme fear)",
         "prev": "46",
-        "date": "2026-10-16",
+        "date": "2026-10-19",
         "source": "CNN",
         "sentiment": "bearish",
-        "rationale": "恐慌贪婪指数从46降至32（恐慌），市场情绪转差"
+        "rationale": "恐慌指数从46骤降至20（极度恐慌），市场情绪极差"
       }
     ],
     "speakers": [
       {
         "person": "Warsh",
         "title": null,
-        "content": "Warsh Avoids Signal on October Rate Move - WSJ",
-        "time": "10-16 00:41",
-        "source": "WSJ",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "Warsh避免对10月利率行动发出信号 - 华尔街日报",
-        "sentiment": "neutral",
-        "rationale": "Warsh避免对10月利率决策表态，立场不明"
-      },
-      {
-        "person": "Warsh",
-        "title": null,
-        "content": "Fed's Warsh withholds rate signal, praises recent global tightening with 'no free riders' - CNBC",
-        "time": "10-16 00:08",
-        "source": "CNBC",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "美联储Warsh不给出利率信号，赞扬近期全球紧缩政策'无搭便车者' - CNBC",
-        "sentiment": "neutral",
-        "rationale": "Warsh不表态利率路径，仅赞扬全球紧缩政策"
-      },
-      {
-        "person": "Warsh",
-        "title": null,
-        "content": "Fed's Warsh sees US resilience, mum on rate-path view - Reuters",
-        "time": "10-15 23:57",
-        "source": "Reuters",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "美联储Warsh认为美国经济有韧性，对利率路径观点保持沉默 - 路透社",
-        "sentiment": "neutral",
-        "rationale": "Warsh看好美国韧性但对利率路径保持沉默"
-      },
-      {
-        "person": "Warsh",
-        "title": null,
-        "content": "Stocks, futures rise as Fed bets ease after Warsh: Markets wrap - The Straits Times",
-        "time": "10-16 03:00",
-        "source": "The Straits Times",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "Warsh讲话后美联储押注放松，股票、期货上涨：市场综述 - 海峡时报",
-        "sentiment": "bullish",
-        "rationale": "市场对美联储押注放松后股票和期货上涨"
-      },
-      {
-        "person": "Warsh",
-        "title": null,
-        "content": "Breaking: Fed’s Warsh says he would deliver price stability, but won’t pre-judge meetings - FXStreet",
-        "time": "10-16 00:10",
-        "source": "FXStreet",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "突发：美联储Warsh称将实现价格稳定，但不会预判会议决策 - FXStreet",
-        "sentiment": "neutral",
-        "rationale": "Warsh承诺实现价格稳定但不预判会议决策"
-      },
-      {
-        "person": "Warsh",
-        "title": null,
-        "content": "Gold rebounds above $4,150 as yields fall, Fed Warsh’s speech in focus | FXStreet - شبكة تواصل الإخبارية",
-        "time": "10-15 20:03",
-        "source": "شبكة تواصل الإخبارية",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "收益率下降、Warsh讲话受关注，黄金反弹至4150美元上方 - FXStreet",
-        "sentiment": "bullish",
-        "rationale": "国债收益率下降、黄金反弹，市场预期偏鸽派"
-      },
-      {
-        "person": "Bowman",
-        "title": null,
-        "content": "Fed's Bowman says there's time to 'wait and see' before any more action - Reuters",
-        "time": "10-14 07:39",
-        "source": "Reuters",
+        "content": "Fed chair Warsh says price stability is key but shies away from signals about rates - PBS",
+        "time": "10-16 13:21",
+        "source": "PBS",
         "age_tag": "📑前日-低权重",
-        "content_cn": "美联储Bowman称在采取更多行动前有时间'观望' - 路透社",
-        "sentiment": "bullish",
-        "rationale": "Bowman表示有时间'观望'，暗示暂不急于行动"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "US labour market remains stuck in low-hire, low-fire state as inflation intensifies: Fed - inkl",
-        "time": "10-15 04:24",
-        "source": "inkl",
-        "age_tag": "📄昨日-中等权重",
-        "content_cn": "美联储：美国劳动力市场陷入低雇佣、低解雇状态，通胀加剧 - inkl",
-        "sentiment": "bearish",
-        "rationale": "劳动力市场低雇佣低解雇且通胀加剧，经济停滞"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "US inflation rises more than expected - here's what is happening with prices - BBC",
-        "time": "10-14 11:26",
-        "source": "BBC",
-        "age_tag": "📄昨日-中等权重",
-        "content_cn": "美国通胀超预期上升 - 价格走势解析 - BBC",
-        "sentiment": "bearish",
-        "rationale": "美国通胀超预期上升，加息压力增加"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "Fannie Mae Raises Mortgage-Rate Forecast to 7.5% for 2027 - Globest",
-        "time": "10-16 05:57",
-        "source": "Globest",
-        "age_tag": "🔥今日最新-权重最高",
-        "content_cn": "房利美将2027年抵押贷款利率预测上调至7.5% - Globest",
-        "sentiment": "bearish",
-        "rationale": "房美将2027年抵押贷款利率预测上调至7.5%，融资成本高"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "US Inflation Tops Forecasts, but 10-Year Treasury Yield Falls as Growth Slowdown Fears Spread - bloomingbit",
-        "time": "10-15 18:15",
-        "source": "bloomingbit",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "美国通胀超预期，但10年期国债收益率因经济增长放缓担忧而下降 - bloomingbit",
-        "sentiment": "bearish",
-        "rationale": "通胀超预期但国债收益率下降反映经济增长放缓担忧"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "US Dollar Forecast: Fed Rates and DXY Key Levels - www.equiti.com",
-        "time": "10-15 15:46",
-        "source": "www.equiti.com",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "美元预测：美联储利率和美元指数关键水平 - www.equiti.com",
+        "content_cn": "美联储主席Warsh表示物价稳定是关键，但对利率走向避而不谈 - PBS",
         "sentiment": "neutral",
-        "rationale": "美联储利率和美元指数关键水平分析，方向不明"
+        "rationale": "美联储主席Warsh强调物价稳定但未明确利率信号"
+      },
+      {
+        "person": "Warsh",
+        "title": null,
+        "content": "Key Moments From Kevin Warsh’s IMF Appearance - WSJ",
+        "time": "10-16 06:08",
+        "source": "WSJ",
+        "age_tag": "📑前日-低权重",
+        "content_cn": "Kevin Warsh在IMF亮相的关键时刻 - 华尔街日报",
+        "sentiment": "neutral",
+        "rationale": "Warsh在IMF发言的关键时刻报道，未明确政策倾向"
       },
       {
         "person": null,
         "title": null,
-        "content": "Mortgage rate predictions for the next five years: How high will they rise? - Yahoo Finance",
-        "time": "10-15 11:29",
+        "content": "Mortgage rate predictions for the next 5 years: A base case plus best and worst case scenarios - Yahoo Finance",
+        "time": "10-16 14:54",
         "source": "Yahoo Finance",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "未来五年抵押贷款利率预测：将升至多高？ - 雅虎财经",
-        "sentiment": "bearish",
-        "rationale": "未来五年抵押贷款利率预测显示持续高位"
+        "age_tag": "📑前日-低权重",
+        "content_cn": "未来5年抵押贷款利率预测：基准情形及最好最坏情况 - 雅虎财经",
+        "sentiment": "neutral",
+        "rationale": "抵押贷款利率预测属于住房市场分析，对大盘影响中性"
       },
       {
         "person": null,
         "title": null,
-        "content": "GBP/USD, DAX Forecast Two trades to watch 81026 - StoneX",
-        "time": "10-16 01:14",
+        "content": "Japanese Prime Minister Takaichi rejects criticism around weak yen and high interest rates",
+        "time": "10-19 01:29",
+        "source": "CNBC",
+        "age_tag": "🔥今日最新-权重最高",
+        "content_cn": "日本首相高市早苗驳斥围绕日元疲软和高利率的批评",
+        "sentiment": "neutral",
+        "rationale": "日本首相高市早苗回应日元和利率批评，与美股关联较弱"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
+        "time": "10-18 17:32",
         "source": "StoneX",
         "age_tag": "📰今日-高权重",
-        "content_cn": "英镑/美元、DAX预测 81026年值得关注的两笔交易 - StoneX",
+        "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
         "sentiment": "neutral",
-        "rationale": "英镑/美元和德国DAX技术分析，无明确方向信号"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting - CNBC",
-        "time": "10-15 08:40",
-        "source": "CNBC",
-        "age_tag": "📄昨日-中等权重",
-        "content_cn": "美国财政部驳回IMF债务警告和'混乱'预测 - CNBC",
-        "sentiment": "neutral",
-        "rationale": "美国财政部驳回IMF债务警告，立场偏乐观但非货币政策"
+        "rationale": "英镑美元和黄金技术分析，对美股大盘无直接影响"
       }
     ],
     "error": null
@@ -42096,8 +41986,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-19T08:01:12Z",
-    "technical_updated_at": "2026-10-19T08:01:16Z",
+    "market_updated_at": "2026-10-19T08:16:13Z",
+    "technical_updated_at": "2026-10-19T08:16:15Z",
     "counts": {
       "core": 5,
       "observation": 13,
@@ -42107,7 +41997,7 @@
       "kline_fail": 0,
       "technical_ok": 18,
       "price_live": 18,
-      "price_realtime": 4,
+      "price_realtime": 5,
       "price_last_close": 0,
       "wall_recomputed": 0,
       "wall_true_oi": 0
@@ -42194,11 +42084,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-19T08:00:44Z",
+    "generated_at": "2026-10-19T08:15:49Z",
     "fear_greed": {
-      "score": 20.5,
+      "score": 20.05,
       "rating": "extreme fear",
-      "timestamp": "2026-10-19T07:41:46+00:00",
+      "timestamp": "2026-10-19T07:56:46+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 23.6,
@@ -42217,7 +42107,7 @@
           "rating": "extreme fear"
         },
         "market_volatility_vix": {
-          "score": 21.88,
+          "score": 18.75,
           "rating": "extreme fear"
         },
         "junk_bond_demand": {
@@ -42232,12 +42122,12 @@
       "history_30d": [
         {
           "date": "2026-10-19",
-          "score": 20.5,
+          "score": 20.05,
           "rating": "extreme fear"
         },
         {
           "date": "2026-10-16",
-          "score": 20.72,
+          "score": 20.05,
           "rating": "extreme fear"
         },
         {
@@ -43052,7 +42942,7 @@
       "model": "claude-fable-5-1",
       "requested": "claude-fable-5-1",
       "fallback": false,
-      "updated_at": "2026-10-16T13:09:39.377454+00:00"
+      "updated_at": "2026-10-19T08:10:50.937641+00:00"
     }
   }
 }

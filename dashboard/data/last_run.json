@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-19T08:01:16Z",
-  "market_updated_at": "2026-10-19T08:01:12Z",
-  "technical_updated_at": "2026-10-19T08:01:16Z",
+  "generated_at": "2026-10-19T08:16:15Z",
+  "market_updated_at": "2026-10-19T08:16:13Z",
+  "technical_updated_at": "2026-10-19T08:16:15Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -23,8 +23,8 @@
     "kline_ok": 18,
     "technical_ok": 18,
     "price_source_breakdown": {
-      "realtime": 4,
-      "realtime_unverified": 14
+      "realtime": 5,
+      "realtime_unverified": 13
     }
   },
   "review": {
@@ -44,22 +44,22 @@
   "runtimes": {
     "scan": {
       "latest": {
-        "run_id": 39218606785,
+        "run_id": 39219870550,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-19T07:50:35Z",
-        "started_at": "2026-10-19T07:50:35Z",
-        "updated_at": "2026-10-19T07:53:33Z",
-        "head_sha": "5926e6035f73",
+        "created_at": "2026-10-19T08:01:47Z",
+        "started_at": "2026-10-19T08:01:47Z",
+        "updated_at": "2026-10-19T08:13:28Z",
+        "head_sha": "3ff883db7b80",
         "event": "workflow_dispatch",
-        "run_number": 173,
+        "run_number": 174,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39218606785"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39219870550"
       },
       "last_success": {
-        "run_id": 39218606785,
-        "completed_at": "2026-10-19T07:53:33Z",
-        "head_sha": "5926e6035f73"
+        "run_id": 39219870550,
+        "completed_at": "2026-10-19T08:13:28Z",
+        "head_sha": "3ff883db7b80"
       },
       "error": null
     },
