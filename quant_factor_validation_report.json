@@ -1,17 +1,17 @@
 {
   "schema_version": "phase3.v1",
   "data_maturity": {
-    "backtest_rows": 2479,
+    "backtest_rows": 2503,
     "n_factors": 24,
     "n_horizons": 3
   },
   "horizon_maturity": {
     "5D": {
-      "max_sample_count": 1076,
+      "max_sample_count": 1342,
       "mature": true
     },
     "10D": {
-      "max_sample_count": 0,
+      "max_sample_count": 5,
       "mature": false
     },
     "20D": {
@@ -22,11 +22,11 @@
   "sample_counts": {
     "max_N_by_horizon": {
       "5D": {
-        "max_sample_count": 1076,
+        "max_sample_count": 1342,
         "mature": true
       },
       "10D": {
-        "max_sample_count": 0,
+        "max_sample_count": 5,
         "mature": false
       },
       "20D": {
@@ -37,8 +37,9 @@
   },
   "validation_status": {
     "status_counts": {
-      "NOT_ENOUGH_DATA": 48,
-      "REGIME_DEPENDENT": 24
+      "REGIME_DEPENDENT": 24,
+      "EXPLORATORY": 24,
+      "NOT_ENOUGH_DATA": 24
     },
     "promising": [],
     "regime_dependent": [
@@ -72,66 +73,56 @@
     {
       "Factor_A": "RSI_14",
       "Factor_B": "Bias_Pct",
-      "Pearson": 0.8253,
-      "Spearman": 0.9194
+      "Pearson": 0.8248,
+      "Spearman": 0.9151
     },
     {
       "Factor_A": "RSI_14",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8795,
-      "Spearman": 0.9246
+      "Pearson": 0.8768,
+      "Spearman": 0.9211
     },
     {
       "Factor_A": "Bias_Pct",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8212,
-      "Spearman": 0.957
+      "Pearson": 0.8163,
+      "Spearman": 0.9567
     },
     {
       "Factor_A": "MA20",
       "Factor_B": "MA50",
-      "Pearson": 0.9977,
+      "Pearson": 0.9976,
       "Spearman": 0.9985
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Momentum_20D_Pct",
-      "Pearson": 0.9145,
-      "Spearman": 0.8895
+      "Pearson": 0.9231,
+      "Spearman": 0.9017
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9139,
-      "Spearman": 0.8868
+      "Pearson": 0.9232,
+      "Spearman": 0.9021
     },
     {
       "Factor_A": "Volume_Ratio_5D",
       "Factor_B": "Volume_Ratio_20D",
-      "Pearson": 0.9331,
-      "Spearman": 0.9363
+      "Pearson": 0.9406,
+      "Spearman": 0.9551
     },
     {
       "Factor_A": "Momentum_20D_Pct",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9972,
-      "Spearman": 0.9951
+      "Pearson": 0.9947,
+      "Spearman": 0.9914
     }
   ],
   "insufficient_data_reasons": [
     {
       "Factor": "RSI_14",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "RSI_14",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Bias_Pct",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -141,17 +132,7 @@
     },
     {
       "Factor": "MACD_Hist",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "MACD_Hist",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "MA20",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -161,17 +142,7 @@
     },
     {
       "Factor": "MA50",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "MA50",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "MA20_Slope_5D",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -181,17 +152,7 @@
     },
     {
       "Factor": "ATR_Pct",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "ATR_Pct",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "KDJ_J",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -201,17 +162,7 @@
     },
     {
       "Factor": "Volume_Ratio_5D",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "Volume_Ratio_5D",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Momentum_5D_Pct",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -221,17 +172,7 @@
     },
     {
       "Factor": "Momentum_20D_Pct",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "Momentum_20D_Pct",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Momentum_60D_Pct",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -241,17 +182,7 @@
     },
     {
       "Factor": "Realized_Volatility_20D_Pct",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "Realized_Volatility_20D_Pct",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Volume_Ratio_20D",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -261,17 +192,7 @@
     },
     {
       "Factor": "ZScore_20D",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "ZScore_20D",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Beta_60D_SPY",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -281,17 +202,7 @@
     },
     {
       "Factor": "Stock_RS_20D_vs_SPY",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "Stock_RS_20D_vs_SPY",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Sector_RS_20D_Pct",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -301,17 +212,7 @@
     },
     {
       "Factor": "VIX",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "VIX",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Quant_Score",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -321,17 +222,7 @@
     },
     {
       "Factor": "Fundamental_Score",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "Fundamental_Score",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Event_Score",
-      "Horizon": "10D",
       "N": 0
     },
     {
@@ -341,17 +232,7 @@
     },
     {
       "Factor": "Technical_Score_25",
-      "Horizon": "10D",
-      "N": 0
-    },
-    {
-      "Factor": "Technical_Score_25",
       "Horizon": "20D",
-      "N": 0
-    },
-    {
-      "Factor": "Risk_Liquidity_Score",
-      "Horizon": "10D",
       "N": 0
     },
     {
