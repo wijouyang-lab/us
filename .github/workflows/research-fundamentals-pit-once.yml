@@ -25,7 +25,7 @@ jobs:
         run: pip install -r requirements-production.txt
 
       - name: Fetch fundamentals (50 tickers)
-        run: python tools/research/fetch_fundamentals_pit.py --limit 50
+        run: python tools/research/fetch_fundamentals_pit.py --limit 500
 
       - name: Show head
         if: always()
@@ -39,7 +39,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: research-fundamentals-pit-sample
+          name: research-fundamentals-pit-sample-500
           path: research_fundamentals_pit_sample.csv
           retention-days: 30
 
