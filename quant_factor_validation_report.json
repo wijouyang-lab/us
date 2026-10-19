@@ -7,7 +7,7 @@
   },
   "horizon_maturity": {
     "5D": {
-      "max_sample_count": 843,
+      "max_sample_count": 1076,
       "mature": true
     },
     "10D": {
@@ -22,7 +22,7 @@
   "sample_counts": {
     "max_N_by_horizon": {
       "5D": {
-        "max_sample_count": 843,
+        "max_sample_count": 1076,
         "mature": true
       },
       "10D": {
