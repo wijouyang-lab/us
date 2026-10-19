@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -281,18 +282,139 @@ def render_md(d: dict) -> str:
     return "\n".join(head) + "\n" + body
 
 
+def _parse_watchlist(spec: str) -> list:
+    """解析 --watchlist：逗号分隔，或一个每行一个 ticker 的 txt 文件。"""
+    spec = (spec or "").strip()
+    if not spec:
+        return []
+    p = Path(spec)
+    if p.exists() and p.is_file():
+        try:
+            raw = p.read_text(encoding="utf-8-sig")
+        except Exception:
+            raw = ""
+        items = [x.strip() for x in re.split(r"[\s,]+", raw) if x.strip()]
+    else:
+        items = [x.strip() for x in spec.split(",") if x.strip()]
+    seen, out = set(), []
+    for x in items:
+        u = x.upper()
+        if u and u not in seen:
+            seen.add(u)
+            out.append(u)
+    return out
+
+
+def _macro_text(m: dict) -> list:
+    L = ["## 宏观环境（结论化，仅打印一次）", ""]
+    fgv = m["fear_greed"]
+    L.append(f"- 恐惧贪婪指数：**{fmt(fgv['score'])}（{fgv['rating']}）**　"
+             f"时间戳：{fgv['timestamp']}")
+    fw = m["fedwatch"]
+    parts = []
+    for k, label in (("cut_25bp", "降息 25bp"), ("hold", "维持不变"),
+                     ("hike_25bp", "加息 25bp"), ("cut_50bp", "降息 50bp")):
+        v = fw["probabilities"].get(k)
+        if v is not None:
+            parts.append(f"{label} **{v:.1f}%**")
+    L.append(f"- FedWatch（会议 {fw['next_meeting']}，目标区间 {fw['target_range']}）："
+             + (" / ".join(parts) if parts else NA))
+    if m["economic"]:
+        L.append("- 宏观指标：")
+        for e in m["economic"]:
+            L.append(f"  - {e['indicator']}：**{e['value']}**（前值 {e['prev']}，"
+                     f"{e['date']}，{e['sentiment']}）")
+    else:
+        L.append(f"- 宏观指标：{NA}")
+    if m["speakers"]:
+        s = m["speakers"][0]
+        L.append(f"- 美联储讲话：最近一次 **{s['person']}**（{s['time']}，{s['source']}）："
+                 f"{s['summary']}　立场：**{s['sentiment']}**")
+    else:
+        L.append(f"- 美联储讲话：{NA}")
+    L.append("")
+    return L
+
+
+def _summary_line(datas: list) -> str:
+    n = len(datas)
+    ai = sum(1 for d in datas if d["ai_history"]["count"] > 0)
+    tr = sum(1 for d in datas if d["trades"]["count"] > 0)
+    names = ", ".join(d["ticker"] for d in datas)
+    return (f"- 共 **{n}** 只票（{names}）：**{ai}** 只有 AI 快照记录，"
+            f"**{tr}** 只有交易记录")
+
+
+def _per_ticker_body(d: dict) -> str:
+    """去掉 # Ticker Brief 标题与第 4 段宏观（宏观在日报头部统一打印）。"""
+    body = render_text(d)
+    body = body.split("\n", 1)[1]
+    idx = body.find("## 4. 宏观环境")
+    if idx >= 0:
+        body = body[:idx].rstrip()
+    body = body.strip("\n")
+    # 逐票小节的内部标题降一级（避免与顶级 ## 冲突）
+    body = "\n".join(("#" + ln) if ln.startswith("## ") else ln for ln in body.split("\n"))
+    return body
+
+
+def render_watchlist_text(datas: list) -> str:
+    L = [f"# Watchlist Brief（{len(datas)} 只）", "", _summary_line(datas), ""]
+    L += _macro_text(datas[0]["macro"]) if datas else []
+    for i, d in enumerate(datas):
+        if i:
+            L += ["", "=" * 60, ""]
+        L.append(_per_ticker_body(d))
+        L.append("")
+    L += ["---", "说明：只读简报；缺失项统一 N/A。宏观环境在头部统一展示，不重复。"]
+    return "\n".join(L)
+
+
+def render_watchlist_md(datas: list) -> str:
+    L = [f"# Watchlist Brief — {len(datas)} 只", "",
+         f"> 生成：`scripts/ticker_brief.py --watchlist ... --md`　"
+         f"仓库：{datas[0]['repo'] if datas else NA}　日期："
+         f"{datas[0]['as_of'] if datas else NA}", "",
+         _summary_line(datas), ""]
+    L += _macro_text(datas[0]["macro"]) if datas else []
+    for i, d in enumerate(datas):
+        L += [f"---", "", f"## {i + 1}. `{d['ticker']}`", ""]
+        L.append(_per_ticker_body(d))
+        L.append("")
+    L += ["---", "", "说明：只读简报；缺失项统一 N/A。宏观环境在头部统一展示，不重复。"]
+    return "\n".join(L)
+
+
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="单只 ticker 的结构化简报（只读）")
+    ap = argparse.ArgumentParser(description="单只/批量 ticker 结构化简报（只读）")
     ap.add_argument("ticker", nargs="?", help="股票代码，如 AAPL")
     ap.add_argument("--ticker", dest="ticker_opt", help="同位置参数（兼容写法）")
+    ap.add_argument("--watchlist", default=None,
+                    help="批量：AAPL,MSFT,NVDA 或 watchlist.txt（每行一个）")
     ap.add_argument("--date", default=None, help="指定 Scan_Date（YYYY-MM-DD）")
     ap.add_argument("--json", action="store_true", help="输出结构化 JSON")
     ap.add_argument("--md", action="store_true", help="输出 Markdown")
     args = ap.parse_args(argv)
 
+    if args.watchlist:
+        tickers = _parse_watchlist(args.watchlist)
+        if not tickers:
+            print("watchlist 为空")
+            return 0
+        datas = [collect(tk, args.date) for tk in tickers]
+        if args.json:
+            print(json.dumps(datas, ensure_ascii=False, indent=2))
+        elif args.md:
+            print(render_watchlist_md(datas))
+        else:
+            print(render_watchlist_text(datas))
+        return 0
+
     raw = (args.ticker or args.ticker_opt or "").strip().upper()
     if not raw:
         print("用法：python scripts/ticker_brief.py <TICKER> [--md] [--json] [--date YYYY-MM-DD]")
+        print("      python scripts/ticker_brief.py --watchlist AAPL,MSFT,NVDA [--md|--json]")
+        print("      python scripts/ticker_brief.py --watchlist watchlist.txt --md")
         return 0
 
     data = collect(raw, args.date)

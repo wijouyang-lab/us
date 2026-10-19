@@ -53,3 +53,15 @@ python scripts/ticker_brief.py --ticker AAPL --json    # --ticker 写法同样�
 无记录时自动退化为同 Sector 最近 10 笔）④ 宏观结论（恐惧贪婪 / FedWatch / 经济指标 / 美联储讲话）。
 
 特性：**只读、不写文件**；不 import 任何生产模块；缺失项统一 `N/A`，异常不外抛，退出码恒 0。
+
+### 批量日报（--watchlist）
+
+```bash
+python scripts/ticker_brief.py --watchlist AAPL,MSFT,NVDA --md      # 合并 Markdown 日报
+python scripts/ticker_brief.py --watchlist watchlist.txt --md       # 从文件读（每行一个）
+python scripts/ticker_brief.py --watchlist AAPL,MSFT --json         # JSON 数组，每票一个对象
+python scripts/ticker_brief.py --watchlist AAPL,MSFT                # 纯文本，票间用分隔线
+```
+
+日报顶部含**汇总行**（共 X 只票、Y 只有 AI 快照、Z 只有交易记录）与**唯一一次**的宏观环境段；
+逐票小节依次为 AI 历史 / 因子位置 / 交易明细（宏观不重复打印）。ticker 自动大写去重，顺序即输入顺序。
