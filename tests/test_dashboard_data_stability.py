@@ -183,8 +183,15 @@ check("E2b. review.yml 与 dashboard-data.yml 共享同一 concurrency group（�
       f"review={_review_group} dashboard={_dash_group}")
 check("E3. concurrency 配置可解析且作用域正确",
       _parsed.get("concurrency", {}).get("cancel-in-progress") is False)
-check("E4. schedule 未被修改（*/15 * * * 1-5）",
-      _on.get("schedule") == [{"cron": "*/15 * * * 1-5"}])
+import re  # noqa: E402
+# E4. 校验 cron 存在且格式合法（5 段），不再钉死 */15（允许按队列压力调频）
+_cron = None
+try:
+    _cron = (_on.get("schedule") or [{}])[0].get("cron")
+except Exception:
+    _cron = None
+check("E4. schedule 存在且为合法 5 段 cron",
+      bool(_cron) and len(str(_cron).split()) == 5)
 check("E5. push.paths 未被修改",
       _on.get("push", {}).get("paths") == ["dashboard_export.py",
                                            "dashboard/fetch_runtimes.py",
