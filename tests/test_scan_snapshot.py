@@ -193,10 +193,24 @@ def test_bookkeeping_still_filters_holdings():
     persist = _at("if _ai_persist:")
     assert call < rm < gate < persist, "顺序: enrich(%d) < 剔持仓(%d) < 门控(%d) < 持久化(%d)" % (
         call, rm, gate, persist)
-    # 风控逻辑未被改动
+    # 守卫升级（2026-10-19）：防止悄悄删除分级收窄逻辑。
+    # 守护三层：(1) 原并集仍在 (2) 分级收窄仍在且在后 (3) 禁止直接 replace 成 _by_status
     src = (REPO / "scan.py").read_text(encoding="utf-8")
-    assert "hard_blocked = set(restricted_tickers) | set(review_triggered)" in src
     assert 'chosen = [x for x in chosen if str(x.get("Ticker","")).upper() not in hard_blocked]' in src
+
+    LITERAL = "hard_blocked = set(restricted_tickers) | set(review_triggered)"
+    NARROW = "hard_blocked = hard_blocked & _by_status"
+    # (1) 原并集字面仍在
+    assert LITERAL in src, "风控并集字面被删除"
+    # (2) 分级收窄调用与赋值都在
+    assert "build_hard_blocked(" in src, "分级封锁函数调用被删除"
+    assert NARROW in src, "分级收窄（& _by_status）被删除"
+    # (3) 顺序：收窄必须在并集之后
+    idx_literal = src.find(LITERAL)
+    idx_narrow = src.find(NARROW)
+    assert idx_literal < idx_narrow, "分级收窄必须先于/脱离并集赋值"
+    # (4) 禁止偷懒直接替换
+    assert "hard_blocked = _by_status" not in src, "禁止把分级直接 replace 掉原并集"
 
 
 # --------------------------------------------------------------------------- #
