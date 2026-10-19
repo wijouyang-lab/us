@@ -53,7 +53,10 @@ jobs:
           #   · reset --soft 让本轮已生成数据重新成为工作区改动，提交到最新 main 之上
           #   · 不 force push
           PUSHED=0
-          bash tools/ci/push_with_retry.sh 3 5
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "news 数据已推送到 main"
+            exit 0
+          fi
           if [ "$PUSHED" = "1" ]; then
             echo "新闻数据已提交并推送"
           else

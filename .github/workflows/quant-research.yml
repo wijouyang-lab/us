@@ -94,7 +94,10 @@ jobs:
           # 已 push 的 scan 提交，直接 push 必被 non-fast-forward 拒绝。每次重试先 fetch +
           # reset --soft 重建提交到最新 origin/main 之上，绝不 force push（同款 news-fetch 模式）。
           PUSHED=0
-          bash tools/ci/push_with_retry.sh 3 5
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "quant 数据已推送到 main"
+            exit 0
+          fi
           if [ "$PUSHED" = "1" ]; then
             echo "Quant 研究产物已提交并推送"
           else
