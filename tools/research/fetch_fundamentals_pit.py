@@ -73,9 +73,6 @@ def fetch_one(ticker: str) -> list[dict]:
             if qf is None or qf.empty:
                 print(f"  [diag] {ticker}: quarterly_income_stmt EMPTY")
                 return rows
-            if equity is None or shares is None:
-                print(f"  [diag] {ticker}: equity={equity is not None} shares={shares is not None}")
-                print("        balance_sheet index[:15] =", [str(x) for x in list(qbs.index)[:15]] if qbs is not None else None)
 
             net_income = _series(qf, "NetIncome", "Net Income", "NetIncomeCommonStockholders",
                              "Net Income Common Stockholders")
@@ -88,6 +85,10 @@ def fetch_one(ticker: str) -> list[dict]:
                              "CommonStockSharesOutstanding") if qbs is not None else None
             assets = _series(qbs, "TotalAssets") if qbs is not None else None
 
+            if equity is None or shares is None:
+                print(f"  [diag] {ticker}: equity_found={equity is not None} shares_found={shares is not None}")
+                if qbs is not None and not qbs.empty:
+                    print("        balance index[:15]:", [str(x) for x in list(qbs.index)[:15]])
             for col in qf.columns:
                 period_end = pd.Timestamp(col)
                 rec = {
