@@ -1,6 +1,6 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-19T08:13:21Z",
+  "generated_at": "2026-10-19T08:41:48Z",
   "market_news": [
     {
       "headline": "UK housing market showing signs of mortgage rates impact, Rightmove says - Reuters",
@@ -8,9 +8,9 @@
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaWFjYmdlWlpxc2JxSGc1YnZhM3ptTFp2bHdQbUUwVS1XTnoyeFpMVXh5TjNINy0tWm5hMmViQ2xpdzRFZWRHZjRyMHF4TkhDY0l0ZXhjS2FUTWpaNlpGRjl0ZEFUTm9qR1B2bUpYTnpWQjVNWXhwZDR0OFo0V2RheDdobm5jMGFCNWZuXzQ5WUdzM20xQ2dkd3JkUW9PWFh3Z1JrREVxcnJyNG1UR0M5ZXM0SQ?oc=5",
       "datetime": 1792364768,
       "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters",
-      "headline_cn": "英国房地产市场显示抵押贷款利率影响迹象——Rightmove",
-      "sentiment": "neutral",
-      "rationale": "仅陈述现状，未明确利好或利空程度",
+      "headline_cn": "Rightmove称英国房地产市场显现抵押贷款利率影响迹象",
+      "sentiment": "bearish",
+      "rationale": "高利率抑制房市需求，拖累经济增长",
       "market_relevant": true
     },
     {
@@ -19,9 +19,9 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/18/jim-cramer-why-i-am-taking-the-other-side-of-the-trade-that-crushed-the-market-friday.html",
       "datetime": 1792362188,
       "summary": "How did this happen so quickly? Where were the buyers? I have some answers.",
-      "headline_cn": "为何我要做周五暴跌反向交易",
+      "headline_cn": "为何我站在上周五打压市场的交易对立面",
       "sentiment": "neutral",
-      "rationale": "个人观点文章，市场方向尚未确定",
+      "rationale": "仅个人观点分享，未披露具体交易逻辑",
       "market_relevant": true
     },
     {
@@ -30,9 +30,9 @@
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
       "datetime": 1792362180,
       "summary": "Oil slips from 5-month high as Trump's Russia sanctions waiver may bring more supplies  Reuters",
-      "headline_cn": "油价从5个月高位回落，因特朗普俄罗斯制裁豁免可能增加供应",
+      "headline_cn": "油价从5个月高点回落，特朗普俄罗斯制裁豁免或增加供应",
       "sentiment": "bearish",
-      "rationale": "供应增加压制油价，利空能源板块",
+      "rationale": "供应增加预期打压油价，利空能源板块",
       "market_relevant": true
     },
     {
@@ -41,9 +41,9 @@
       "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNaUsxbVVqQ0FFUl81U25IbG1NaXhrNzFqZzIzaFpRUVhKbF9rYlZoMXg1Z3NzYjR1TEtkeHNCU1BrOWs4ZXR5VHFqMTBoX3VjSV9FRV9neGVDSkdUNWIxMlNhZWRJbldocDM5Q2hiMXYxUXpHVUJqWkkyOEF5OGNBNWduQXFPMXp6VXhYRjUyNmsxaV9pbXJhS29uVGh6Tm51emp4S3YtdmI5c21HZE9HeFkycENlNGxHRUlJd29YWkxwRF85eXc?oc=5",
       "datetime": 1792357478,
       "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters",
-      "headline_cn": "埃及表示准备支持沙特对抗伊朗盟友胡塞武装",
+      "headline_cn": "埃及称准备在对抗伊朗盟友胡塞武装的战争中支持沙特",
       "sentiment": "bearish",
-      "rationale": "地缘冲突升级，推高避险情绪",
+      "rationale": "地缘冲突升级推高油价和避险情绪",
       "market_relevant": true
     },
     {
@@ -52,9 +52,9 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/18/here-are-the-3-big-things-were-watching-in-the-stock-market-this-week.html",
       "datetime": 1792337077,
       "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio.",
-      "headline_cn": "本周股市关注的三大重点",
+      "headline_cn": "本周股市我们关注的三件大事",
       "sentiment": "neutral",
-      "rationale": "前瞻性信息汇总，无明确方向",
+      "rationale": "前瞻性信息，未明确事件性质及方向",
       "market_relevant": true
     },
     {
@@ -63,10 +63,10 @@
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQeXNEX0FibmplMGVhLVA1TDdESTEzdk9PR1JYNWtsQzJkTG5ER1lrMkhfV05saHNXYndlOXFxdFJONU4zOEZhZUdtXzR0WGpVSHBuLUUyOExTWHktR3AtMjlnU08yNXpaUWFVOXE1Q3dNaDFkZG4yT0JFMmlkYzdvTXFudjFQOF9rcFBaM0VBbjBaOFQ5bndSNS1fZw?oc=5",
       "datetime": 1792336320,
       "summary": "Trump endorses Netanyahu in close Israeli election  Reuters",
-      "headline_cn": "特朗普在以色列胶着大选中支持内塔尼亚胡",
+      "headline_cn": "特朗普在以色列势均力敌的选举中支持内塔尼亚胡",
       "sentiment": "neutral",
-      "rationale": "政治表态，对市场影响有限",
-      "market_relevant": false
+      "rationale": "政治站队，对市场影响不确定",
+      "market_relevant": true
     },
     {
       "headline": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions - Reuters",
@@ -74,9 +74,9 @@
       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPdkJ2LXpMXzV0dEQ2b1NYcm9XT1FZMTUyZUlVQlZaZ2RYNFhvVFlnVFRJM1RJTU5CNzlDNVdKTmtzX2E0S0xvV2h6UEpOWFJtUlNGczZxeGR4a2NYQlU5NktIN0JQbE54SlRaS3QzRVVvWUdSRGpqWmNYWXlQSWtMbkM2R3lnRWtERTVLcTNadXMwbGxVQm9GXzVLRmVpZDY1OFFDVmI1ZlM3cGVZ?oc=5",
       "datetime": 1792331503,
       "summary": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions  Reuters",
-      "headline_cn": "油价提振沙特股市；埃及因地区紧张局势暴跌",
+      "headline_cn": "油价推升沙特股市;埃及因地区紧张局势暴跌",
       "sentiment": "neutral",
-      "rationale": "地区市场分化，对美股无直接影响",
+      "rationale": "沙特利好埃及利空相互抵消,整体中性",
       "market_relevant": true
     },
     {
@@ -85,9 +85,9 @@
       "url": "https://www.cnbc.com/make-it/2026/10/18/parenting-lessons-resilient-successful-well-adjusted.html",
       "datetime": 1792330621,
       "summary": "Parenting coach Reem Raouda shares lessons to help kids feel worthy regardless of achievements and handle disappointment, disagreement and difficult feelings.",
-      "headline_cn": "研究200多名儿童——培养坚韧成功孩子的父母教这6课",
+      "headline_cn": "我研究了200多名儿童——培养出坚韧成功孩子的父母早期教授这6课",
       "sentiment": "neutral",
-      "rationale": "教育话题，与市场无关",
+      "rationale": "育儿话题,无市场相关性",
       "market_relevant": false
     },
     {
@@ -96,9 +96,9 @@
       "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxQYjdhZ0V0TGxFRVBoQWVSMVBlOXFvdm1rcFlmWm45dVdYS3FJdm5ZdExGM2xRd3hhb1hvWUJYdnVlRG50bm1CbjJubjRnM2JtVFp3UkdiU0QxcVJEbnZyNC1HSDhOYUM1THhiTm9heG9tTV9FTHpwMW1BOEhxN0Q0WjlocVJMZV9TSUlIN0RMZDdkQmpPQUhUQk40bkNDdzdMSVhEa3U5eUZKd2R1OVBqajZYTDI5cDhTT3FaUk5uZw?oc=5",
       "datetime": 1792324304,
       "summary": "Turkey will get some diesel from US-Russia supply deal, energy minister says  Reuters",
-      "headline_cn": "土耳其将从美俄供应协议中获得部分柴油——能源部长",
+      "headline_cn": "土耳其能源部长称土将从美俄供应协议中获得部分柴油",
       "sentiment": "neutral",
-      "rationale": "区域能源分配，对美股影响微弱",
+      "rationale": "区域能源调配,对全球市场影响有限",
       "market_relevant": true
     },
     {
@@ -107,10 +107,10 @@
       "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOcG5pYTJCRkVpNVoxOTVPTVRoNUtwcTBYX2lhZ3ZmMVYxQjRjeG5kMHBHRnlpS1otNzZjWVNyaGJCNjhnU0ROclhuOWYwVGltT19POUY1Z0lOT2pJNDNCSUN0LTFHSkFxUW5iWW91T0ZiOVVTTm42TUpINVc2c1JVbEszT0hBQmhEUU5kemNPbFdqZndpTl9wTG1XeFRxd0JfTXhyam1zSDEzV2hXdWZ3X25xOXY4TkZwWThkLWVXTTBXREpWVFp0eC1XRQ?oc=5",
       "datetime": 1792320730,
       "summary": "EU condemns attacks by violent settlers, including on diplomats, spokesperson says  Reuters",
-      "headline_cn": "欧盟谴责暴力定居者袭击事件包括袭击外交官",
+      "headline_cn": "欧盟谴责暴力定居者袭击事件,包括针对外交官的袭击",
       "sentiment": "neutral",
-      "rationale": "地区冲突谴责，市场影响有限",
-      "market_relevant": false
+      "rationale": "地区冲突事件,未直接影响经济政策",
+      "market_relevant": true
     },
     {
       "headline": "Iran urges US to accept proposal to reopen Strait of Hormuz - Reuters",
