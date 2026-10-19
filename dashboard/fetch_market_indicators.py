@@ -35,22 +35,6 @@ FEDWATCH_MAX_MEETINGS = 3
 # --------------------------------------------------------------------------- #
 # 数据源 1：CNN 恐惧贪婪指数（fear-greed 包，绕过 Cloudflare）
 # --------------------------------------------------------------------------- #
-def _fg_conclusion(score):
-    """恐惧贪婪 -> 一行操作结论（纯展示，不影响任何计算）。"""
-    try:
-        s = float(score)
-    except (TypeError, ValueError):
-        return None
-    if s <= 25:
-        return "极度恐惧 —— 历史常见中长期底部区域，关注错杀机会，建议暂停做空"
-    if s <= 45:
-        return "恐惧 —— 情绪低迷，建议逢低分批建仓，控制仓位"
-    if s <= 55:
-        return "中性 —— 多空均衡，跟随趋势操作"
-    if s <= 75:
-        return "贪婪 —— 情绪升温，持仓待涨，注意止盈线"
-    return "极度贪婪 —— 风险积聚，警惕回调，建议逢高减仓"
-
 def fetch_fear_greed():
     """返回 (data, error)。data=None 表示本源失败。"""
     try:
@@ -74,7 +58,6 @@ def fetch_fear_greed():
             "timestamp": snap.get("timestamp"),
             "subindicators": snap.get("indicators", {}) or {},
             "history_30d": history_30d,
-        "fear_greed_conclusion": _fg_conclusion(snap.get("score")),
         }, None
     except Exception as e:
         return None, f"F&G 抓取失败：{e}"

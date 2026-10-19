@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-10-19T15:29:58Z",
+  "generated_at": "2026-10-19T15:30:34Z",
   "fear_greed": {
     "score": 26.62,
     "rating": "fear",
@@ -141,11 +141,48 @@
         "score": 34.17,
         "rating": "fear"
       }
-    ],
-    "fear_greed_conclusion": "恐惧 —— 情绪低迷，建议逢低分批建仓，控制仓位"
+    ]
   },
-  "fedwatch": null,
-  "error": {
-    "fedwatch": "FedWatch 抓取失败：Failed to perform, curl: (28) Failed to connect to www.cmegroup.com:443 after 21238 ms: Could not connect to server. See https://curl.se/libcurl/c/libcurl-errors.html first for more details."
-  }
+  "fedwatch": {
+    "next_meeting": "2026-10-28",
+    "current_target": "3.75%-4.00%",
+    "effr": 3.88,
+    "trade_date": "2026-10-16",
+    "probabilities": {
+      "hold": 84.5,
+      "hike_25bp": 15.5
+    },
+    "meetings": [
+      {
+        "date": "2026-10-28",
+        "contract": "ZQV6",
+        "probabilities": {
+          "hold": 84.5,
+          "hike_25bp": 15.5
+        }
+      },
+      {
+        "date": "2026-12-09",
+        "contract": "ZQZ6",
+        "probabilities": {
+          "hold": 11.0,
+          "hike_25bp": 75.5,
+          "hike_50bp": 13.5
+        }
+      },
+      {
+        "date": "2027-01-27",
+        "contract": "ZQF7",
+        "probabilities": {
+          "hold": 6.7,
+          "hike_25bp": 50.3,
+          "hike_50bp": 37.7,
+          "hike_75bp": 5.3
+        }
+      }
+    ],
+    "max_meetings": 3,
+    "source": "cme"
+  },
+  "error": null
 }

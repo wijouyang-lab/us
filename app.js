@@ -1140,9 +1140,6 @@
         html += '<span class="mi-ts">' + esc(String(fg.timestamp).replace('T', ' ').replace('Z', ' UTC')) + '</span>';
       }
       html += '</div>';
-      if (fg.fear_greed_conclusion) {
-        html += '<div class="mi-conclusion" style="font-size:12px;color:#d97706;margin-top:4px;">' + esc(fg.fear_greed_conclusion) + '</div>';
-      }
       if (fg.subindicators && Object.keys(fg.subindicators).length) {
         html += '<div class="mi-sub">';
         html += Object.keys(fg.subindicators).map(function (k) {
