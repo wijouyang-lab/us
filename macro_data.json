@@ -1,6 +1,6 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-19T09:14:30Z",
+  "generated_at": "2026-10-19T09:42:09Z",
   "economic": [
     {
       "indicator": "10Y国债",
@@ -8,8 +8,8 @@
       "prev": "5.09%",
       "date": "2026-10-16",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "10年期国债收益率上升，反映市场对通胀/加息预期升温"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "5Y国债",
@@ -17,8 +17,8 @@
       "prev": "4.90%",
       "date": "2026-10-16",
       "source": "Yahoo Finance",
-      "sentiment": "neutral",
-      "rationale": "5年期国债收益率持平，无明显方向信号"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "13周国债",
@@ -26,8 +26,8 @@
       "prev": "4.09%",
       "date": "2026-10-16",
       "source": "Yahoo Finance",
-      "sentiment": "bullish",
-      "rationale": "13周国债收益率下降，短期利率预期略有缓和"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "CPI",
@@ -35,8 +35,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "CPI 4.00%显著高于美联储2%目标，通胀压力大"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心CPI",
@@ -44,8 +44,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "核心CPI 2.79%高于目标，反映持续通胀压力"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "失业率",
@@ -53,8 +53,8 @@
       "prev": "4.10%",
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "失业率从4.1%升至4.2%，劳动力市场走弱"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心PCE",
@@ -62,8 +62,8 @@
       "prev": null,
       "date": "August 2026",
       "source": "BEA 官方网页",
-      "sentiment": "bearish",
-      "rationale": "核心PCE 3.00%高于2%目标，通胀粘性强"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "Fear & Greed",
@@ -71,8 +71,8 @@
       "prev": "46",
       "date": "2026-10-19",
       "source": "CNN",
-      "sentiment": "bearish",
-      "rationale": "恐慌指数跌至20（极度恐慌），市场情绪严重恶化"
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "speakers": [
@@ -83,20 +83,9 @@
       "time": "10-16 13:21",
       "source": "PBS",
       "age_tag": "📑前日-低权重",
-      "content_cn": "美联储主席沃什表示价格稳定是关键，但回避关于利率的信号 - PBS",
-      "sentiment": "neutral",
-      "rationale": "美联储主席沃什强调价格稳定但回避利率信号，立场中性"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Warsh signals steady Fed outlook despite inflation jump - Yahoo Finance",
-      "time": "10-16 06:25",
-      "source": "Google News Macro",
-      "age_tag": "📑前日-低权重",
-      "content_cn": "沃什尽管通胀跳升仍释放美联储稳定展望信号 - 雅虎财经",
-      "sentiment": "neutral",
-      "rationale": "沃什尽管通胀跳升仍释放稳定展望，偏中性表态"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": "Warsh",
@@ -105,9 +94,31 @@
       "time": "10-16 06:08",
       "source": "WSJ",
       "age_tag": "📑前日-低权重",
-      "content_cn": "凯文·沃什IMF发言的关键时刻 - 华尔街日报",
-      "sentiment": "neutral",
-      "rationale": "沃什在IMF发言关键时刻，未明确鹰鸽立场"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "Sick of rising prices? It’s Trump’s inflation now (Editorial Board Opinion) - Syracuse.com",
+      "time": "10-18 09:30",
+      "source": "Syracuse.com",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "US Dollar Forecast: Fed Rates and DXY Key Levels - www.equiti.com",
+      "time": "10-19 04:27",
+      "source": "www.equiti.com",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -116,64 +127,64 @@
       "time": "10-16 14:54",
       "source": "Yahoo Finance",
       "age_tag": "📑前日-低权重",
-      "content_cn": "未来5年抵押贷款利率预测：基准情景及最好最坏情景 - 雅虎财经",
-      "sentiment": "neutral",
-      "rationale": "抵押贷款利率预测属市场分析，非政策表态"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Japanese Prime Minister Takaichi rejects criticism around weak yen and high interest rates",
-      "time": "10-19 01:29",
-      "source": "CNBC",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "日本首相高市早苗驳回围绕日元疲软和高利率的批评",
-      "sentiment": "neutral",
-      "rationale": "日本首相高市早苗回应日元/利率批评，对美股无直接影响"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Inflation is retreating from most of the store — why your biggest bills are the holdouts: Chart of the Day - Yahoo Finance",
-      "time": "10-18 07:33",
-      "source": "Google News Macro",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "通胀正从大部分商店撤退——为何你的最大账单仍是例外：今日图表 - 雅虎财经",
-      "sentiment": "neutral",
-      "rationale": "通胀分析文章，属市场观察非政策信号"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "The Fed Will Have to Raise Interest Rates More, Even If It Pauses in October - Barron's",
-      "time": "10-17 06:30",
-      "source": "Google News Macro",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "美联储将不得不进一步加息，即使10月暂停 - 巴伦周刊",
-      "sentiment": "bearish",
-      "rationale": "暗示美联储即使10月暂停也需进一步加息，鹰派倾向"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": "Trump",
       "title": null,
-      "content": "Sick of rising prices? It’s Trump’s inflation now (Editorial Board Opinion) - Syracuse.com",
-      "time": "10-18 09:30",
-      "source": "Google News Macro",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "厌倦了物价上涨？这是特朗普的通胀了（编辑部观点）- Syracuse.com",
-      "sentiment": "neutral",
-      "rationale": "政治评论文章，非经济政策表态"
+      "content": "GOP troubles brew as Trump economic pitch clashes with voter sentiment - USA Today",
+      "time": "10-19 04:04",
+      "source": "USA Today",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "US inflation complicates Fed policy outlook ahead of midterm elections - CGTN",
-      "time": "10-17 02:28",
-      "source": "Google News Macro",
+      "content": "Why We Can’t Solve the Affordability Crisis - Politico",
+      "time": "10-18 07:00",
+      "source": "Politico",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "3 Charts That Explain the Economy as Voters Head to the Polls - The New York Times",
+      "time": "10-18 05:00",
+      "source": "The New York Times",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "President Donald Trump Claims Gasoline Prices Will \"Drop Like a Rock\" When the Iran War Ends, but He's Completely Missed the Bigger Picture - Yahoo Finance",
+      "time": "10-17 04:26",
+      "source": "Yahoo Finance",
       "age_tag": "📑前日-低权重",
-      "content_cn": "美国通胀使中期选举前美联储政策展望复杂化 - CGTN",
-      "sentiment": "bearish",
-      "rationale": "美国通胀使美联储政策展望复杂化，偏负面解读"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "A Perfect Economic Storm - The American Prospect",
+      "time": "10-16 15:00",
+      "source": "The American Prospect",
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -182,9 +193,9 @@
       "time": "10-18 17:32",
       "source": "StoneX",
       "age_tag": "📰今日-高权重",
-      "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
-      "sentiment": "neutral",
-      "rationale": "外汇及黄金技术分析，非宏观政策信号"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "error": null
