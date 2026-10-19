@@ -1044,6 +1044,15 @@
       econHtml += '<div class="na">暂无经济数据</div>';
     } else {
       econHtml += '<div class="macro-econ-grid">' + econ.map(macroEconCard).join('') + '</div>';
+      var cpiItem = econ.find(function (e) { return e.indicator === 'CPI'; });
+      if (cpiItem && num(cpiItem.value) !== null) {
+        var cpiVal = num(cpiItem.value);
+        var cpiConclusion = cpiVal >= 4 ? '通胀显著偏高 —— 利率环境承压，估值扩张受限'
+          : cpiVal > 3 ? '通胀偏高 —— 宏观利率环境承压，限制估值扩张'
+          : cpiVal >= 2 ? '通胀温和 —— 处于目标区间附近，对估值中性'
+          : '通胀偏低 —— 利好久期资产，警惕需求走弱';
+        econHtml += '<div class="mi-conclusion" style="font-size:12px;color:#d97706;margin-top:4px;">' + esc(cpiConclusion) + '</div>';
+      }
     }
 
     var spkHtml = '<div class="news-sub" style="margin-top:10px">🎙️ 重要人物讲话</div>';
