@@ -1,16 +1,27 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-19T16:28:04Z",
+  "generated_at": "2026-10-19T17:09:53Z",
   "market_news": [
+    {
+      "headline": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict? - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQVEFCaTJXdXlZR1NxZkpndXE3d0hRYWpmRUtBOXpXeTI3M2hUVnFSVVJrQm1NS29LLWlobDd4enF2OWxOY1h1SmJidXVlUksxeDdZdVMyZF9tVklTdWJiQzJZZzRNVnFEX0tMQUdCTW04WHhmdWdhQW42cERybkd1QzBDTHgxMklXU3dvbF9mbUt3a3RSb3NhZlpNbkpWcFNaWXZhMWE5TUkzTTVFMlI1YWV3NXJjb0lSMTRQVFNqbzFsRmZwRmtB?oc=5",
+      "datetime": 1792425194,
+      "summary": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict?  Reuters",
+      "headline_cn": "解读：埃及可能军事介入沙特-也门冲突的背后原因",
+      "sentiment": "bearish",
+      "rationale": "地缘冲突升级推高油价和避险情绪",
+      "market_relevant": true
+    },
     {
       "headline": "We're buying more of a beaten-up stock before another overhang is lifted",
       "source": "CNBC",
       "url": "https://www.cnbc.com/investingclub/2026/10/19/were-buying-more-of-a-beaten-up-stock-before-another-overhang-is-lifted.html",
       "datetime": 1792424596,
       "summary": "The stock is still down big from its Aug. 5 close.",
-      "headline_cn": "我们正在增持一只遭受重挫的股票，下一个压制因素即将解除",
+      "headline_cn": "我们正在加仓一只受挫股票，等待利空出清",
       "sentiment": "bullish",
-      "rationale": "机构增持预示信心恢复，压制解除将带来估值修复",
+      "rationale": "机构逢低加仓显示信心",
       "market_relevant": true
     },
     {
@@ -19,21 +30,10 @@
       "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNa2lPVEdrVzBfenM5SXI3MVNXTDdLQ1R5Si12OHFWQzF1TUtJaUZYdjl6SmZjSkdZeS1FSWV2a2JzeXc5TEFGdkliY09WTFE2SWYwRUQwVUJaWWsxV2dSNGZwYWlOMFMyd0kzaTZoN0xJZmJTRm9NUjdmdmhPeG9sYlJ5d05PVDREcWlFbF9YZ0U?oc=5",
       "datetime": 1792423629,
       "summary": "Every look from the Victoria's Secret Fashion Show  Reuters",
-      "headline_cn": "维密时装秀全部造型一览 - 路透社",
+      "headline_cn": "维密时尚秀全部造型回顾",
       "sentiment": "neutral",
-      "rationale": "时尚展示为常规活动，未披露业绩或战略变化",
+      "rationale": "娱乐内容无财务影响",
       "market_relevant": false
-    },
-    {
-      "headline": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict? - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQVEFCaTJXdXlZR1NxZkpndXE3d0hRYWpmRUtBOXpXeTI3M2hUVnFSVVJrQm1NS29LLWlobDd4enF2OWxOY1h1SmJidXVlUksxeDdZdVMyZF9tVklTdWJiQzJZZzRNVnFEX0tMQUdCTW04WHhmdWdhQW42cERybkd1QzBDTHgxMklXU3dvbF9mbUt3a3RSb3NhZlpNbkpWcFNaWXZhMWE5TUkzTTVFMlI1YWV3NXJjb0lSMTRQVFNqbzFsRmZwRmtB?oc=5",
-      "datetime": 1792422187,
-      "summary": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict?  Reuters",
-      "headline_cn": "解读：埃及可能军事介入沙特-也门冲突的背后原因 - 路透社",
-      "sentiment": "bearish",
-      "rationale": "地缘紧张升级可能推高油价，增加通胀和避险情绪",
-      "market_relevant": true
     },
     {
       "headline": "Houthi attack kills 53 at Yemen government training camp, officials say - Reuters",
@@ -41,9 +41,9 @@
       "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOSXFqMTJmVlRrSjR1NmNocW1VRWFpV1pSMjlNZDh1YXBsS2gyRkE0c19uRXJCQXN4Nklqajh6Tk4yeHhlRWRpWG81WXJMRVJmWXREaXZ2UkJfT3FNOFJndW9PNHBTZFRvVGJnbmFkeU10ZDlWdWY2N0kzVkFDVTh5NG0zZlZiM0N3bWthZmF2LUJjUXlEd29WOVRLZFdodFA0YlcwRl9fX0ptQ2dyN2I5RjVfRWJxRW1vYmF6VURGWQ?oc=5",
       "datetime": 1792422183,
       "summary": "Houthi attack kills 53 at Yemen government training camp, officials say  Reuters",
-      "headline_cn": "也门政府训练营遭胡塞武装袭击致53人死亡，官员称 - 路透社",
+      "headline_cn": "胡塞武装袭击也门政府训练营致53人死亡",
       "sentiment": "bearish",
-      "rationale": "中东冲突加剧威胁红海航运与能源供应链稳定",
+      "rationale": "中东冲突加剧威胁能源供应",
       "market_relevant": true
     },
     {
@@ -52,9 +52,9 @@
       "url": "https://www.cnbc.com/2026/10/19/nyse-extends-options-trading-hours.html",
       "datetime": 1792417610,
       "summary": "The New York Stock Exchange becomes second major exchange to announce extended-hours options trading for heavily traded ETFs and single stocks, following CBOE.",
-      "headline_cn": "纽交所成为最新延长期权交易时间的交易所，全天候交易需求增长",
+      "headline_cn": "纽交所延长期权交易时间，响应全天候交易需求",
       "sentiment": "bullish",
-      "rationale": "交易时长扩展提升市场流动性和交易所收入潜力",
+      "rationale": "增加流动性和交易机会",
       "market_relevant": true
     },
     {
@@ -63,9 +63,9 @@
       "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNenIya2dWLVowN3ZJZjB5eXlJekpqc3VCajlVN0N3eldBMzg4d05JSG9MQXVKQWdqbVZRYnZ3VXlVSGktNEE2MndNU1dZX2FFd0YyeW9teDFfN19WNk9RS09rV0JlM2dnbEluVlgydFFJc3QtQ0RNRkRSWkkxV0V6WjNRM21NX0FqRVZLdnp0WWFtNmFWZEh6YUJXXzJRRVU5Sy1MbmtjRm5pc1VVc1daWk9MTmFScG5yRmh4SHZBNno1eUloQXVDRkRVNU5kUQ?oc=5",
       "datetime": 1792416258,
       "summary": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, cites funding shortages  Reuters",
-      "headline_cn": "世界粮食计划署削减50万加沙巴勒斯坦人援助，称资金短缺 - 路透社",
+      "headline_cn": "世界粮食计划署因资金短缺削减对50万加沙巴勒斯坦人援助",
       "sentiment": "neutral",
-      "rationale": "人道危机严重但对市场影响有限，未触发大宗商品或地缘溢价",
+      "rationale": "人道事件无直接市场影响",
       "market_relevant": false
     },
     {
@@ -74,9 +74,9 @@
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQWVF3TGpvSmg1YmEyMnhhWXhnUFkwdS13ak14NldscXdsZm92dVkzbGdnU3lwd2VjY255bXJKeGZOX09ZM3AxN1JjWHRSbXRGNDdFaTVhMU9SMWxKZXRDNDd2bnBuaE5pSjJwbkgtVXF6dzJWNWFJOUw5X2U1TjJPQjdUaG1ldHRudHRVTF9FeWhOM3gxaTloUEcxaVdJdHg2M29sUHJwc2NFWFdRV0xjS3Y2UlZ6ZEJLOEw3ZEpR?oc=5",
       "datetime": 1792413317,
       "summary": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month  Reuters",
-      "headline_cn": "克里姆林宫称普京、特朗普和习近平可能下月在中国举行三方会晤 - 路透社",
+      "headline_cn": "克里姆林宫称普京、特朗普和习近平可能下月在华举行三方会晤",
       "sentiment": "bullish",
-      "rationale": "大国对话释放缓和信号，降低贸易战和地缘风险",
+      "rationale": "大国对话利好贸易和地缘稳定预期",
       "market_relevant": true
     },
     {
@@ -85,9 +85,9 @@
       "url": "https://www.cnbc.com/2026/10/19/oracle-debt-faces-an-ai-stress-test-why-some-investors-arent-worried-.html",
       "datetime": 1792411027,
       "summary": "Investors are pushing up the cost of insurance against an Oracle default.",
-      "headline_cn": "信贷压力威胁AI牛市逆转，所有目光聚焦甲骨文能否守住阵地",
+      "headline_cn": "信贷压力威胁AI牛市，市场聚焦甲骨文能否守住防线",
       "sentiment": "bearish",
-      "rationale": "融资成本上升抑制AI投资，龙头承压恐引发板块调整",
+      "rationale": "融资成本上升打击科技股估值",
       "market_relevant": true
     },
     {
@@ -96,9 +96,9 @@
       "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNRjBMUkU1SEVNclFaMVR1SnljVENrS3N5RUdNcnV5UFZkdlB3RHdiWTFoSFRxcVRBVkRSOEowM0h4bHZyYmd4dDhKYlJQSzUzTUJ2QmxzaGtha2lxUldoLXRPSmczQndXbTNHRWxwRHBhZF9vdDdZRVl4WXJ0M3B0dEJrOWh1SkVzTXhIUTVydk11cEFPaXc3dGZBX0JnMk9hYlpOdkpXc3R3cllKTllGRG5MVC01QkZHNl9Td3J1VHhSckE?oc=5",
       "datetime": 1792410470,
       "summary": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit  Reuters",
-      "headline_cn": "鲁比奥以盛大访问乌兹别克斯坦寻求扩大中亚关系 - 路透社",
+      "headline_cn": "鲁比奥高调访问乌兹别克斯坦寻求扩大中亚关系",
       "sentiment": "neutral",
-      "rationale": "外交访问属常规事务，暂无具体经贸协议或市场影响",
+      "rationale": "外交访问无明确经济影响",
       "market_relevant": false
     },
     {
@@ -107,9 +107,9 @@
       "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPX1JDdGd6aEZHMGQ5OXppVnA5d3FlSzNmbDdjOURNajl2Sjg3T0VrRzRLSC1DdVpLekQ5ZHBVdjQ1eV9UcF81anZNVklVYjZnQlNfQUlWRVMtNzEwVVVDQWlYTmQtU29FOU5xTFlGYTFUVV90bXI3dXU5UU5IUG9ZNjNYVHNUdzNjT3JXb244bm84d240TG56ZDVLbXNhMWpucjVTZXdtaTZQYjViOFU3bDZnZlFEQjduUDBfMWdwMVBXUFl3VFRJ?oc=5",
       "datetime": 1792409771,
       "summary": "Trump's Russia sanctions waiver eases India's energy woes, lifts trade deal chances  Reuters",
-      "headline_cn": "特朗普对俄制裁豁免缓解印度能源困境，提升贸易协议前景 - 路透社",
+      "headline_cn": "特朗普对俄制裁豁免缓解印度能源困境，提升贸易协议前景",
       "sentiment": "bullish",
-      "rationale": "制裁放松稳定能源供应，利好印度市场及美印贸易",
+      "rationale": "制裁放松利好能源供应和贸易",
       "market_relevant": true
     },
     {
@@ -153,6 +153,13 @@
       "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxORXo3cnhIZDJzWmtCS3BfenR2LVNIbWYxQ2dfNTVOdFlnMm8wZGIwemtWUC1vdTlTd2V3SzhIUTJWRmY5cG1JbWg5QzJfUGQ5UlZ0aDlydmVQbTZWNURyWGtFWlY3NDY4Y215MnpVT0xMdFlBaWlBMllnd0h0Zjh6TzdDMk5UT1JxR1FQSHkxRlhJeE5qQjF6SzduTTVOMUdLTFdDSG9hOGVoY3BPY2t3eUVVa0g2MDV1SktDc2ljaUJzWUkycGhubEgxUl8?oc=5",
       "datetime": 1792389600,
       "summary": "COMMENTARY: Asian refiners' pain is Middle East oil producers' problem  Reuters"
+    },
+    {
+      "headline": "Morning Bid: Markets left to figure out sanctions - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE15Zk9kSXZkOVBJMWZjbXNlSmI2a2F6VG5EUFFfcHlMUjhaX25qaW1qWGNCVFpRaUlMN042UHdTNEh1eHY0MUFmS2RLZTJOd2VLRTlkX082UFNjTHdSZjBlQTB4b0hpeXlzY2UzZXlTNWoyX1pOVi1RTVV6UEhtOG8?oc=5",
+      "datetime": 1792384260,
+      "summary": "Morning Bid: Markets left to figure out sanctions  Reuters"
     },
     {
       "headline": "Global food inflation is expected to intensify as supply shocks pile up - Reuters",
@@ -279,6 +286,13 @@
       "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNMmFpc0NDcHNWM0tpSVFxYURNSGY4OTFCRlhISGVnLUZqUGtaWEpJUXhsTVpyNzZaRmV3R1JhRnRIdjJjS21DaVFjTDRHaEtIUXEySXNwd0U3el93cmNJeEtHblpNc2VhZERoMXliOUFxXzFMVHhnTUNpY1dRVHJEMGxVR1Uxb0ctRThOeGNxN0ZxaW8wQjhJVTJpSG5sSWVNWndGWWRTOW40TjFEa0d3MDVYcU1Id2tRekxlbURxS2gxcDQ5dlZYUnJ4UWlRUQ?oc=5",
       "datetime": 1792299780,
       "summary": "Rubio arrives in Central Asia while other US officials hit foreign policy hot spots  Reuters"
+    },
+    {
+      "headline": "Rubio says Trump to take up to 60 days to weigh Russia sanctions - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNRlRkQlBQYXFvck1VQUYxcVpwM2dEVDMwQThIY3ZHRldBd0M0dmV5NXFnZlBXMnpuUnozQlhLbkg4ZjZCT3kzVW5mcnl3RVEwUXRpdUJsZGViRlE1MFdJbHZWZ3pRTXNOUDQtOTRsQU5nSzd4a3d5Z3c2dTkzZWZSNlZsbXZBamFSMS1qVEVnaHc2MTZJUHZ4YU1zS0hfNVM4eVE?oc=5",
+      "datetime": 1792294680,
+      "summary": "Rubio says Trump to take up to 60 days to weigh Russia sanctions  Reuters"
     },
     {
       "headline": "Saudi-led coalition says helicopter crash in Najran kills two crew members - Reuters",
@@ -727,20 +741,6 @@
       "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOS3ZFXzhIZDFZNFRJUnBMSktQd0xFd3pPb3NlekhlNTFBdFdfVnZtMkRZaDhBRTlienVxbW5jMGRuTGFJRkxkODBBSmVYQUFrWkNfa1dVU2t2c2hhblJlaUdBVnpyNlhXSGNZbjF3RnJUTDdoRFNESklnUXNtWUdkVmh6R3p3dkFXLW9iVG5KemtHZW52QXJoaVloRHZhWHpZenVJdkdB?oc=5",
       "datetime": 1792100806,
       "summary": "India raises windfall tax on petrol, cuts duty on diesel  Reuters"
-    },
-    {
-      "headline": "Photos of the week - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxOemFjTlZYNE9sVmVZUHN5RFdwcndtSzlpVTM2VXd4T2NoSDhfMWQyNWdKZl9naUF6eloyRXJwQTU2SjBiU0kyakQ3UWg1SzdMTmk4ZDFkWlVGSFFHZl96emJhbE9reWw4RXBwSzA5X3RfNGRoNG91ZExIM1E3ek5EZDBTZHZ4bDhmQ1NJN1hueEMyUQ?oc=5",
-      "datetime": 1792098120,
-      "summary": "Photos of the week  Reuters"
-    },
-    {
-      "headline": "Photos of the week - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiZ0FVX3lxTFAxaUlzcGNmcDFvOGZOa1huX24wY2VmSnFtaG1qVjZsVVRZSUNPbFdUR3UzejVZckNxcWZwSURFV2l4QU9BZkVTMGVlSVNDaGtWOXktQmNDRDFVTmZlXzhlTnZvWGZCems?oc=5",
-      "datetime": 1792098120,
-      "summary": "Photos of the week  Reuters"
     }
   ],
   "ticker_news": {
