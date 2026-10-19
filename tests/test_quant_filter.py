@@ -100,20 +100,33 @@ def test_strict_filter_all_pass():
 
 
 def test_strict_filter_score_below_min():
+    # 守卫的是「过滤逻辑」，不是具体阈值：用 qf.MIN_SCORE 动态构造，改阈值不会撞测试。
     rows = [
-        _row("AAA", score=75),   # 评分 < 80（MIN_SCORE）→ 排除
-        _row("BBB", score=95),
+        _row("AAA", score=qf.MIN_SCORE - 5),   # 明确低于阈值 → 排除
+        _row("BBB", score=qf.MIN_SCORE + 2),   # 明确高于阈值 → 放行
     ]
     out = qf.strict_filter(rows)
     assert [x["Ticker"] for x in out] == ["BBB"]
 
 
+def test_min_score_in_sane_range():
+    """阈值是业务决策，但必须落在合理范围，防止误改成荒谬值。
+
+    · MIN_SCORE：0-100 分制，50-95 之外说明配置异常
+    · MIN_RR：风险回报比，0.5-5.0 之外不现实
+    · 止损距离：下限必须 < 上限，且都在 1%-10% 内
+    """
+    assert 50 <= qf.MIN_SCORE <= 95, f"MIN_SCORE={qf.MIN_SCORE} 超出合理范围"
+    assert 0.5 <= qf.MIN_RR <= 5.0, f"MIN_RR={qf.MIN_RR} 超出合理范围"
+    assert 0.01 <= qf.MIN_STOP_DIST < qf.MAX_STOP_DIST <= 0.10, (
+        f"止损区间异常：{qf.MIN_STOP_DIST} / {qf.MAX_STOP_DIST}")
+
+
 def test_strict_filter_score_between_old_and_new_threshold():
-    # MIN_SCORE 由 90 下调到 80 后，评分落在 (80, 90) 的行应被新阈值放行
-    # （旧阈值 90 会排除它）。本用例锁定该行为，防止阈值被误改回 90。
+    # 评分略高于阈值的行应被放行（锁定「阈值之上放行」这一逻辑，不锁定具体数值）。
     row = {
         "Ticker": "MID",
-        "Quant_Score": 82,   # 旧阈值 90 不过、新阈值 80 过
+        "Quant_Score": qf.MIN_SCORE + 2,   # 刚过阈值 ⇒ 应放行
         "Price": 100,
         "Stop_Loss": 96,     # 止损距离 4% ∈ [2%, 5%]
         "target_price": 110,  # R/R = (110-100)/(100-96) = 2.5 ≥ 2.0
