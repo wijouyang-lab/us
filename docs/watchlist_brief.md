@@ -2,24 +2,59 @@
 
 > 生成：`scripts/ticker_brief.py --watchlist ... --md`　仓库：us　日期：latest
 
-- 共 **24** 只票（APA, NXPI, WRB, OXY, ABNB, AMGN, COP, MNST, AAPL, SYK, MSFT, NVDA, GOOGL, AMZN, META, TSLA, AVGO, TSM, BRK-B, JPM, V, UNH, XOM, COST）：**5** 只有 AI 快照记录，**7** 只有交易记录
+- 共 **24** 只票（COP, APA, NXPI, WRB, OXY, ABNB, AMGN, MNST, AAPL, SYK, MSFT, NVDA, GOOGL, AMZN, META, TSLA, AVGO, TSM, BRK-B, JPM, V, UNH, XOM, COST）：**5** 只有 AI 快照记录，**7** 只有交易记录
 
 ## 宏观环境（结论化，仅打印一次）
 
-- 恐惧贪婪指数：**20.05（极度恐惧）**　时间戳：2026-10-19T10:57:01+00:00
+- 恐惧贪婪指数：**26.86（恐惧）**　时间戳：2026-10-19T12:42:16+00:00
 - FedWatch（会议 2026-10-28，目标区间 3.75%-4.00%）：维持不变 **84.5%** / 加息 25bp **15.5%**
 - 宏观指标：
-  - 10Y国债：**5.10%**（前值 5.09%，2026-10-16，偏空）
-  - 5Y国债：**4.90%**（前值 4.90%，2026-10-16，中性）
-  - 13周国债：**4.07%**（前值 4.09%，2026-10-16，偏多）
+  - 10Y国债：**5.10%**（前值 5.10%，2026-10-19，中性）
+  - 5Y国债：**4.90%**（前值 4.90%，2026-10-19，中性）
+  - 13周国债：**4.07%**（前值 4.07%，2026-10-19，中性）
   - CPI：**4.00%**（前值 N/A，2026-09-01，偏空）
-  - 核心CPI：**2.79%**（前值 N/A，2026-09-01，偏空）
+  - 核心CPI：**2.79%**（前值 N/A，2026-09-01，中性）
   - 失业率：**4.20%**（前值 4.10%，2026-09-01，偏空）
-- 美联储讲话：最近一次 **Warsh**（10-16 13:21，PBS）：美联储主席沃什表示物价稳定是关键，但回避了有关利率的明确信号 - PBS　立场：**中性**
+- 美联储讲话：最近一次 **Warsh**（10-16 13:21，PBS）：美联储主席沃什表示价格稳定是关键，但未就利率发出信号　立场：**中性**
 
 ---
 
-## 1. `APA`
+## 1. `COP`
+
+### 1. AI 历史（ai_snapshot.csv）
+
+- N/A（无 AI 快照记录）
+
+### 2. 因子位置（quant_factor_snapshot.csv）
+
+- 快照日期：2026-10-19（该日共 285 只；全表 9 个日期 / 2479 行）
+- Sector：Energy　Price：146.51
+
+| 因子 | 值 | 当日百分位 |
+|---|---|---|
+| Momentum_5D_Pct | 9.2543 | 99 |
+| Momentum_20D_Pct | 11.1355 | 95 |
+| Momentum_60D_Pct | 21.8885 | 92 |
+| Realized_Volatility_20D_Pct | 27.9233 | 53 |
+| Volume_Ratio_20D | 1.1772 | 67 |
+| ZScore_20D | 2.7553 | 87 |
+| Beta_60D_SPY | -1.0239 | 1 |
+| Stock_RS_20D_vs_SPY | 10.9307 | 95 |
+| Quant_Score | 81.0000 | 100 |
+| MA20 | 131.6400 | 61 |
+| MA50 | 131.7700 | 60 |
+| ATR_Pct | 2.2100 | 26 |
+| KDJ_J | 107.3900 | 95 |
+
+### 3. 交易明细（portfolio_50000_transactions.csv）
+
+- **数据源缺少精确时间，仅有日期**（无 portfolio_50000_txn_time.csv 侧车）
+- 该 ticker 无成交记录 → 退化为 同 Sector（Energy）
+- N/A（无成交记录）
+
+---
+
+## 2. `APA`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -71,7 +106,7 @@
 
 ---
 
-## 2. `NXPI`
+## 3. `NXPI`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -117,7 +152,7 @@
 
 ---
 
-## 3. `WRB`
+## 4. `WRB`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -167,7 +202,7 @@
 
 ---
 
-## 4. `OXY`
+## 5. `OXY`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -188,7 +223,7 @@
 | ZScore_20D | 2.0229 | 71 |
 | Beta_60D_SPY | -0.9404 | 2 |
 | Stock_RS_20D_vs_SPY | 5.8115 | 78 |
-| Quant_Score | 79.0000 | 99 |
+| Quant_Score | 79.0000 | 98 |
 | MA20 | 58.5300 | 27 |
 | MA50 | 59.3200 | 25 |
 | ATR_Pct | 2.4500 | 35 |
@@ -202,7 +237,7 @@
 
 ---
 
-## 5. `ABNB`
+## 6. `ABNB`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -248,7 +283,7 @@
 
 ---
 
-## 6. `AMGN`
+## 7. `AMGN`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -279,41 +314,6 @@
 
 - **数据源缺少精确时间，仅有日期**（无 portfolio_50000_txn_time.csv 侧车）
 - 该 ticker 无成交记录 → 退化为 同 Sector（Healthcare）
-- N/A（无成交记录）
-
----
-
-## 7. `COP`
-
-### 1. AI 历史（ai_snapshot.csv）
-
-- N/A（无 AI 快照记录）
-
-### 2. 因子位置（quant_factor_snapshot.csv）
-
-- 快照日期：2026-10-19（该日共 285 只；全表 9 个日期 / 2479 行）
-- Sector：Energy　Price：146.51
-
-| 因子 | 值 | 当日百分位 |
-|---|---|---|
-| Momentum_5D_Pct | 9.2543 | 99 |
-| Momentum_20D_Pct | 11.1355 | 95 |
-| Momentum_60D_Pct | 21.8885 | 92 |
-| Realized_Volatility_20D_Pct | 27.9233 | 53 |
-| Volume_Ratio_20D | 1.1772 | 67 |
-| ZScore_20D | 2.7553 | 87 |
-| Beta_60D_SPY | -1.0239 | 1 |
-| Stock_RS_20D_vs_SPY | 10.9307 | 95 |
-| Quant_Score | 78.0000 | 97 |
-| MA20 | 131.6400 | 61 |
-| MA50 | 131.7700 | 60 |
-| ATR_Pct | 2.2100 | 26 |
-| KDJ_J | 107.3900 | 95 |
-
-### 3. 交易明细（portfolio_50000_transactions.csv）
-
-- **数据源缺少精确时间，仅有日期**（无 portfolio_50000_txn_time.csv 侧车）
-- 该 ticker 无成交记录 → 退化为 同 Sector（Energy）
 - N/A（无成交记录）
 
 ---
@@ -528,7 +528,7 @@
 | ZScore_20D | -1.2544 | 22 |
 | Beta_60D_SPY | 1.1957 | 69 |
 | Stock_RS_20D_vs_SPY | -2.7653 | 35 |
-| Quant_Score | 22.0000 | 11 |
+| Quant_Score | 25.0000 | 18 |
 | MA20 | 346.4100 | 91 |
 | MA50 | 344.5800 | 90 |
 | ATR_Pct | 2.6100 | 45 |
@@ -633,7 +633,7 @@
 | ZScore_20D | -1.6409 | 18 |
 | Beta_60D_SPY | 2.1297 | 88 |
 | Stock_RS_20D_vs_SPY | -2.8265 | 34 |
-| Quant_Score | 27.0000 | 27 |
+| Quant_Score | 27.0000 | 28 |
 | MA20 | 370.3300 | 92 |
 | MA50 | 359.4600 | 91 |
 | ATR_Pct | 3.3400 | 69 |
@@ -807,7 +807,7 @@
 | ZScore_20D | 2.3722 | 80 |
 | Beta_60D_SPY | 0.2402 | 40 |
 | Stock_RS_20D_vs_SPY | 9.1139 | 92 |
-| Quant_Score | 72.0000 | 90 |
+| Quant_Score | 72.0000 | 91 |
 | MA20 | 374.7200 | 92 |
 | MA50 | 372.5000 | 92 |
 | ATR_Pct | 1.7200 | 7 |
@@ -842,7 +842,7 @@
 | ZScore_20D | 2.6281 | 86 |
 | Beta_60D_SPY | 0.0851 | 30 |
 | Stock_RS_20D_vs_SPY | 6.3036 | 80 |
-| Quant_Score | 73.0000 | 92 |
+| Quant_Score | 66.0000 | 79 |
 | MA20 | 378.5700 | 92 |
 | MA50 | 387.3000 | 94 |
 | ATR_Pct | 3.0100 | 62 |
