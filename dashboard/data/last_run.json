@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-19T22:16:27Z",
-  "market_updated_at": "2026-10-19T22:16:24Z",
-  "technical_updated_at": "2026-10-19T22:16:27Z",
+  "generated_at": "2026-10-19T22:32:39Z",
+  "market_updated_at": "2026-10-19T22:32:37Z",
+  "technical_updated_at": "2026-10-19T22:32:39Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -17,21 +17,21 @@
     "missing": []
   },
   "stocks": {
-    "total": 19,
+    "total": 18,
     "core": 6,
-    "observation": 13,
-    "kline_ok": 19,
-    "technical_ok": 19,
+    "observation": 12,
+    "kline_ok": 18,
+    "technical_ok": 18,
     "price_source_breakdown": {
-      "realtime": 19
+      "realtime": 18
     }
   },
   "review": {
     "core_closed": 3,
-    "core_open": 22,
+    "core_open": 23,
     "observation_closed": 0,
     "observation_open": 60,
-    "actual_active": 2,
+    "actual_active": 3,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
     "price_backfill_count": 11,
@@ -64,22 +64,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 39197791204,
+        "run_id": 39334556430,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-19T04:06:03Z",
-        "started_at": "2026-10-19T04:06:03Z",
-        "updated_at": "2026-10-19T04:09:20Z",
-        "head_sha": "3d80cbe2d040",
+        "created_at": "2026-10-19T22:23:08Z",
+        "started_at": "2026-10-19T22:23:08Z",
+        "updated_at": "2026-10-19T22:26:54Z",
+        "head_sha": "be9ebcc609b4",
         "event": "workflow_dispatch",
-        "run_number": 144,
+        "run_number": 145,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39197791204"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39334556430"
       },
       "last_success": {
-        "run_id": 39197791204,
-        "completed_at": "2026-10-19T04:09:20Z",
-        "head_sha": "3d80cbe2d040"
+        "run_id": 39334556430,
+        "completed_at": "2026-10-19T22:26:54Z",
+        "head_sha": "be9ebcc609b4"
       },
       "error": null
     },

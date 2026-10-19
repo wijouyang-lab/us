@@ -2,8 +2,8 @@
 dashboard_export.py —— Dashboard 真实数据导出（只读）
 ==============================================================
 数据目录：/home/runner/work/us/us
-pending CSV（本次 Scan 新推荐）：us_stocks_pending_20261019.csv
-当前有效股票池：19 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
+[WARN] 未找到任何 us_stocks_pending_YYYYMMDD.csv（通常是盘后复盘已消费当日文件，或当日尚未扫描）。当前股票池将从 trade_history 仍有效事件构建，不受影响。
+当前有效股票池：18 个事件（trade_history 有效持仓 + pending 新推荐，非「当天新推荐」）
 行情提供者优先级    ： yfinance -> yahoo_http -> stooq
 $2YY=F: possibly delisted; no price data found  (period=1d)
 HTTP Error 404: {"quoteSummary":{"result":null,"error":{"code":"Not Found","description":"Quote not found for symbol: XAUUSD=X"}}}
@@ -23,22 +23,22 @@ $XAGUSD=X: No data found, symbol may be delisted
 全球市场：15/15 可用，实时 12 只（CNBC 现货收益率 0 只；盘外静态收盘 3 只；绝不使用旧 JSON 宏观缓存）
 已读取 workflow runtimes：runtimes.json
 --------------------------------------------------------------
-pending CSV          : us_stocks_pending_20261019.csv   股票名单来源：active_events
+pending CSV          : （无）   股票名单来源：active_events
 Core 数量            : 6
-Observation 数量     : 13
+Observation 数量     : 12
 Options 数量         : 0（Active 0）
 Market 数据数量      : 15/15 可用（来源 ['yfinance']）
-K线成功 / 失败       : 19 / 0   技术指标成功 19/19
-当前价来源           : 实时 19 · 最新收盘 0 · 合计可取 19/19
+K线成功 / 失败       : 18 / 0   技术指标成功 18/18
+当前价来源           : 实时 18 · 最新收盘 0 · 合计可取 18/18
 Review 数据状态      :
    · core_closed_count            = 3  [complete]
-   · core_open_count              = 22  [complete]
+   · core_open_count              = 23  [complete]
    · observation_closed_count     = 0  [complete]
    · observation_open_count       = 60  [complete]
-   · actual_active_count          = 2  [complete]
-history 条数         : 48
+   · actual_active_count          = 3  [complete]
+history 条数         : 49
 Quant 研究状态       : RESEARCH · 数据可用性 PARTIAL · 生产 V1 V1_ACTIVE · V2 DISABLED · Gate NOT_READY
-AI 六段状态          : partial（16/19 只股票有内容，来源 Scan 2026-10-19）
+AI 六段状态          : partial（15/18 只股票有内容，CSV 缺失列 6 个，来源 Scan 未知）
 AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）
 输出 JSON 路径       : /home/runner/work/us/us/dashboard/data/dashboard_data.json
 字段 null 统计       : {'quant_score': 3, 'ai_score': 3, 'fundamental_score': 3, 'technical_score': 3, 'risk_liquidity_score': 3, 'pe_ttm': 3, 'pe_forward': 3, 'pb': 3, 'eps_ttm': 3, 'roe': 5, 'revenue_growth': 3, 'earnings_growth': 3, 'profit_margin': 3, 'market_cap': 3, 'market_regime': 3, 'vix': 3}
