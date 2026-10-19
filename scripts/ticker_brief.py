@@ -193,6 +193,38 @@ def collect(ticker: str, as_of) -> dict:
     return out
 
 
+def fear_greed_conclusion(score):
+    """恐惧贪婪 -> 一行操作结论。"""
+    try:
+        s = float(score)
+    except (TypeError, ValueError):
+        return NA
+    if s <= 25:
+        return "极度恐惧 —— 历史常见中长期底部区域，关注错杀机会，**建议暂停做空**"
+    if s <= 45:
+        return "恐惧 —— 情绪低迷，**建议逢低分批建仓，控制仓位**"
+    if s <= 55:
+        return "中性 —— 多空均衡，**跟随趋势操作**"
+    if s <= 75:
+        return "贪婪 —— 情绪升温，**持仓待涨，注意止盈线**"
+    return "极度贪婪 —— 风险积聚，**警惕回调，建议逢高减仓**"
+
+
+def cpi_conclusion(value):
+    """CPI 同比 -> 一行宏观结论。"""
+    try:
+        v = float(str(value).replace("%", "").strip())
+    except (TypeError, ValueError):
+        return NA
+    if v >= 4:
+        return "通胀显著偏高 —— 利率环境承压，**估值扩张受限**"
+    if v > 3:
+        return "通胀偏高 —— 宏观利率环境承压，**限制估值扩张**"
+    if v >= 2:
+        return "通胀温和 —— 处于目标区间附近，**对估值中性**"
+    return "通胀偏低 —— **利好久期资产，警惕需求走弱**"
+
+
 def render_text(d: dict) -> str:
     L = [f"# Ticker Brief: {d['ticker']}", ""]
     ai = d["ai_history"]
@@ -246,6 +278,7 @@ def render_text(d: dict) -> str:
     fgv = m["fear_greed"]
     L.append(f"- 恐惧贪婪指数：**{fmt(fgv['score'])}（{fgv['rating']}）**　"
              f"时间戳：{fgv['timestamp']}")
+    L.append(f"  - **分析结论**：{fear_greed_conclusion(fgv['score'])}")
     fw = m["fedwatch"]
     parts = []
     for k, label in (("cut_25bp", "降息 25bp"), ("hold", "维持不变"),
@@ -256,10 +289,16 @@ def render_text(d: dict) -> str:
     L.append(f"- FedWatch（会议 {fw['next_meeting']}，目标区间 {fw['target_range']}）："
              + (" / ".join(parts) if parts else NA))
     if m["economic"]:
-        L.append(f"- 宏观指标（{len(m['economic'])} 项）：")
+        L.append(f"- 宏观指标（{len(m['economic'])} 项，最新发布值）：")
         for e in m["economic"]:
             L.append(f"  - {e['indicator']}：**{e['value']}**（前值 {e['prev']}，"
                      f"{e['date']}，{e['sentiment']}）")
+        _cpi = next((e for e in m["economic"]
+                     if "CPI" in str(e.get("indicator", "")) and "核心" not in str(e.get("indicator", ""))),
+                    None)
+        if _cpi:
+            L.append(f"  - **CPI 结论**：{cpi_conclusion(_cpi.get('value'))}"
+                     f"（数据月份 {_cpi.get('date')}，为最新已发布月度值）")
     else:
         L.append(f"- 宏观指标：{NA}")
     if m["speakers"]:
