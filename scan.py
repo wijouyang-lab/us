@@ -4361,7 +4361,8 @@ if __name__ == "__main__":
                   if _x.get("Price") is None or isinstance(_x.get("Price"), (int, float))]
     to_write = []
     for item in chosen:
-        if item.get("Tag") not in {"Core_Dragon","Candidate"}:
+        if item.get("Tag") not in {"Core_Dragon","Candidate","Observation"}:
+            print(f"[Tag过滤] {item.get(\"Ticker\")}: Tag={item.get(\"Tag\")} 不入 pending")
             continue
         item = dict(item)
         if item.get("Tag") == "Core_Dragon":
