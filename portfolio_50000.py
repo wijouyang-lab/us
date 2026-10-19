@@ -67,7 +67,7 @@ POSITION_COLUMNS = [
     "Recommendation_ID", "Last_Update", "Cooldown_Until",
 ]
 TRANSACTION_COLUMNS = [
-    "Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
+    "Txn_ID", "Date", "Trade_Date", "Ticker", "Action", "Shares", "Price", "Amount",
     "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
     "Portfolio_ID", "Unit_ID", "Pending_Reason",
 ]
@@ -117,6 +117,22 @@ def us_today_str() -> str:
         # 兜底：UTC-5（不引入额外依赖，且仅影响日期，不影响任何价格）
         from datetime import timedelta, timezone
         return datetime.now(timezone.utc - timedelta(hours=5)).strftime("%Y-%m-%d")
+
+
+
+def us_now_str() -> str:
+    """美东当前时刻 YYYY-MM-DD HH:MM:SS（与 us_today_str 同一时区基准）。"""
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception:
+        from datetime import timedelta, timezone
+        return datetime.now(timezone.utc - timedelta(hours=5)).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _date_only(value) -> str:
+    """兼容旧数据：'2026-10-19 14:03:22' / '2026-10-19' / '2026-10-19 00:00:00' 一律取日期部分。"""
+    return str(value or "").strip().split(" ")[0]
 
 
 # ------------------------------------------------------------------ 买入冷却
@@ -175,7 +191,7 @@ def _had_stop_today(transactions: list[dict], today: str) -> bool:
     return any(
         str(t.get("Action", "")).upper() == "SELL"
         and str(t.get("Reason", "")) == "Intraday Stop Loss"
-        and str(t.get("Date", "")) == today
+        and _date_only(t.get("Date")) == today
         for t in transactions
     )
 
@@ -484,7 +500,8 @@ def process_sells(positions, transactions, recs, today) -> list[str]:
         amount = exit_px * Decimal(shares)
         transactions.append({
             "Txn_ID": txn_id,
-            "Date": exit_date,
+            "Date": us_now_str(),
+            "Trade_Date": exit_date,
             "Ticker": p.get("Ticker", ""),
             "Action": "SELL",
             "Shares": str(shares),
@@ -666,7 +683,9 @@ def process_buys(positions, transactions, recs, meta, today, offline: bool = Fal
             continue
         transactions.append({
             "Txn_ID": buy_id,
-            "Date": today,                 # P0：记账用【实际执行日】而非推荐日（推荐日见 Scan_Date / Recommendation_ID）
+            "Date": us_now_str(),          # 精确到秒（ET）
+        "Trade_Date": today,            # 兼容列：仅日期
+        # P0：记账用【实际执行日】而非推荐日（推荐日见 Scan_Date / Recommendation_ID）
             "Ticker": rec["Ticker"],
             "Action": "BUY",
             "Shares": str(shares),
@@ -875,7 +894,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         1 for t in transactions
         if str(t.get("Action", "")).upper() == "SELL"
         and str(t.get("Reason", "")) == "Intraday Stop Loss"
-        and str(t.get("Date", "")) == today
+        and _date_only(t.get("Date")) == today
     )
 
     triggered = 0
@@ -908,7 +927,8 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         amount = px * Decimal(shares)
         new_txns.append({
             "Txn_ID": txn_id,
-            "Date": today,
+            "Date": us_now_str(),
+            "Trade_Date": today,
             "Ticker": tkr,
             "Action": "SELL",
             "Shares": str(shares),
