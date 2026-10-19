@@ -4220,7 +4220,17 @@ if __name__ == "__main__":
             continue
         try:
             _kdf = get_kline_data(_it.get("Ticker"))
-            _it["target_price"] = compute_20d_high(_kdf) if _kdf is not None and not _kdf.empty else None
+            # 2026-10-19：target 从「20日高点」改为「ATR 外推」。
+            # 原定义（20日高点）目标涨幅仅 0~3%，与 5% 止损不匹配，R/R 恒 < 0.5，
+            # 导致严筛永久 0 通过（实测 17/17 被 R/R 淘汰）。新定义使目标涨幅 = 3.5×ATR，
+            # 与 5% 止损形成合理 R/R（中位约 1.9）。k=3.5 经 2026-10-19 真实数据扫描：
+            # 出货约 3 只/天，落在合理区间（k=3.0→1 只、k=4.0→7 只）。
+            _atr_pct = float(_it.get("ATR_Pct", 0) or 0)
+            _px = float(_it.get("Price", 0) or 0)
+            if _atr_pct > 0 and _px > 0:
+                _it["target_price"] = _px * (1 + 3.5 * _atr_pct / 100.0)
+            else:
+                _it["target_price"] = None
         except Exception:
             _it["target_price"] = None
     redef_eligible = [x for x in (pool_data or []) if str(x.get("Ticker", "")).upper() not in redef_held]
