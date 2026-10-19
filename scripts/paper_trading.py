@@ -103,7 +103,13 @@ def main() -> int:
             continue
         # 按【交易日】计算持有天数（与回测的 20D 前瞻口径一致，跳过周末）
         try:
-            hold = len(pd.bdate_range(r["Entry_Date"], today)) - 1
+            d0 = datetime.strptime(r["Entry_Date"], "%Y-%m-%d").date()
+            d1 = datetime.strptime(today, "%Y-%m-%d").date()
+            hold, _c = 0, d0
+            while _c < d1:
+                _c += timedelta(days=1)
+                if _c.weekday() < 5:
+                    hold += 1
         except Exception:
             hold = 0
         reason = None
