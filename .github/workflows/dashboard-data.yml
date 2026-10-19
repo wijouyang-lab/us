@@ -13,7 +13,7 @@ on:
   schedule:
     # 工作日 24 小时每 15 分钟刷新（周一~周五全天），确保宏观资产在亚洲时段也持续更新
     # 注意：GitHub cron 最短间隔为 5 分钟，高峰期可能延迟或跳跑。
-    - cron: "*/15 * * * 1-5"
+    - cron: "0 * * * 1-5"
   workflow_dispatch:
     inputs:
       kline_bars:
