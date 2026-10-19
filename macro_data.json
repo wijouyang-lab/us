@@ -1,24 +1,24 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-16T13:02:21Z",
+  "generated_at": "2026-10-19T08:03:24Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "5.11%",
+      "value": "5.10%",
       "prev": "5.09%",
       "date": "2026-10-16",
       "source": "Yahoo Finance",
       "sentiment": "bearish",
-      "rationale": "10年期国债收益率上升，融资成本提高"
+      "rationale": "10年期国债收益率上升，反映市场对通胀或利率预期升温"
     },
     {
       "indicator": "5Y国债",
-      "value": "4.92%",
+      "value": "4.90%",
       "prev": "4.90%",
       "date": "2026-10-16",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "5年期国债收益率上升，借贷成本增加"
+      "sentiment": "neutral",
+      "rationale": "5年期国债收益率持平，无明显变化"
     },
     {
       "indicator": "13周国债",
@@ -26,8 +26,8 @@
       "prev": "4.09%",
       "date": "2026-10-16",
       "source": "Yahoo Finance",
-      "sentiment": "neutral",
-      "rationale": "13周短期国债收益率小幅下降，影响有限"
+      "sentiment": "bullish",
+      "rationale": "13周国债收益率下降，短期利率预期略有缓和"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI 4.00%显示通胀压力，可能维持高利率"
+      "rationale": "CPI 4.00%显著高于美联储目标，通胀压力较大"
     },
     {
       "indicator": "核心CPI",
@@ -44,8 +44,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "neutral",
-      "rationale": "核心CPI 2.79%接近目标但仍偏高"
+      "sentiment": "bearish",
+      "rationale": "核心CPI 2.79%仍高于2%目标，持续通胀压力"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率从4.10%升至4.20%，经济走弱信号"
+      "rationale": "失业率从4.10%上升至4.20%，就业市场走弱"
     },
     {
       "indicator": "核心PCE",
@@ -63,183 +63,73 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE 3.00%高于2%目标，通胀压力持续"
+      "rationale": "核心PCE 3.00%明显高于2%目标，通胀粘性强"
     },
     {
       "indicator": "Fear & Greed",
-      "value": "32 (fear)",
+      "value": "20 (extreme fear)",
       "prev": "46",
-      "date": "2026-10-16",
+      "date": "2026-10-19",
       "source": "CNN",
       "sentiment": "bearish",
-      "rationale": "恐慌贪婪指数从46降至32（恐慌），市场情绪转差"
+      "rationale": "恐慌指数从46骤降至20（极度恐慌），市场情绪极差"
     }
   ],
   "speakers": [
     {
       "person": "Warsh",
       "title": null,
-      "content": "Warsh Avoids Signal on October Rate Move - WSJ",
-      "time": "10-16 00:41",
-      "source": "WSJ",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "Warsh避免对10月利率行动发出信号 - 华尔街日报",
-      "sentiment": "neutral",
-      "rationale": "Warsh避免对10月利率决策表态，立场不明"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Fed's Warsh withholds rate signal, praises recent global tightening with 'no free riders' - CNBC",
-      "time": "10-16 00:08",
-      "source": "CNBC",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美联储Warsh不给出利率信号，赞扬近期全球紧缩政策'无搭便车者' - CNBC",
-      "sentiment": "neutral",
-      "rationale": "Warsh不表态利率路径，仅赞扬全球紧缩政策"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Fed's Warsh sees US resilience, mum on rate-path view - Reuters",
-      "time": "10-15 23:57",
-      "source": "Reuters",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美联储Warsh认为美国经济有韧性，对利率路径观点保持沉默 - 路透社",
-      "sentiment": "neutral",
-      "rationale": "Warsh看好美国韧性但对利率路径保持沉默"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Stocks, futures rise as Fed bets ease after Warsh: Markets wrap - The Straits Times",
-      "time": "10-16 03:00",
-      "source": "The Straits Times",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "Warsh讲话后美联储押注放松，股票、期货上涨：市场综述 - 海峡时报",
-      "sentiment": "bullish",
-      "rationale": "市场对美联储押注放松后股票和期货上涨"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Breaking: Fed’s Warsh says he would deliver price stability, but won’t pre-judge meetings - FXStreet",
-      "time": "10-16 00:10",
-      "source": "FXStreet",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "突发：美联储Warsh称将实现价格稳定，但不会预判会议决策 - FXStreet",
-      "sentiment": "neutral",
-      "rationale": "Warsh承诺实现价格稳定但不预判会议决策"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Gold rebounds above $4,150 as yields fall, Fed Warsh’s speech in focus | FXStreet - شبكة تواصل الإخبارية",
-      "time": "10-15 20:03",
-      "source": "شبكة تواصل الإخبارية",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "收益率下降、Warsh讲话受关注，黄金反弹至4150美元上方 - FXStreet",
-      "sentiment": "bullish",
-      "rationale": "国债收益率下降、黄金反弹，市场预期偏鸽派"
-    },
-    {
-      "person": "Bowman",
-      "title": null,
-      "content": "Fed's Bowman says there's time to 'wait and see' before any more action - Reuters",
-      "time": "10-14 07:39",
-      "source": "Reuters",
+      "content": "Fed chair Warsh says price stability is key but shies away from signals about rates - PBS",
+      "time": "10-16 13:21",
+      "source": "PBS",
       "age_tag": "📑前日-低权重",
-      "content_cn": "美联储Bowman称在采取更多行动前有时间'观望' - 路透社",
-      "sentiment": "bullish",
-      "rationale": "Bowman表示有时间'观望'，暗示暂不急于行动"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US labour market remains stuck in low-hire, low-fire state as inflation intensifies: Fed - inkl",
-      "time": "10-15 04:24",
-      "source": "inkl",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "美联储：美国劳动力市场陷入低雇佣、低解雇状态，通胀加剧 - inkl",
-      "sentiment": "bearish",
-      "rationale": "劳动力市场低雇佣低解雇且通胀加剧，经济停滞"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US inflation rises more than expected - here's what is happening with prices - BBC",
-      "time": "10-14 11:26",
-      "source": "BBC",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "美国通胀超预期上升 - 价格走势解析 - BBC",
-      "sentiment": "bearish",
-      "rationale": "美国通胀超预期上升，加息压力增加"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Fannie Mae Raises Mortgage-Rate Forecast to 7.5% for 2027 - Globest",
-      "time": "10-16 05:57",
-      "source": "Globest",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "房利美将2027年抵押贷款利率预测上调至7.5% - Globest",
-      "sentiment": "bearish",
-      "rationale": "房美将2027年抵押贷款利率预测上调至7.5%，融资成本高"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US Inflation Tops Forecasts, but 10-Year Treasury Yield Falls as Growth Slowdown Fears Spread - bloomingbit",
-      "time": "10-15 18:15",
-      "source": "bloomingbit",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美国通胀超预期，但10年期国债收益率因经济增长放缓担忧而下降 - bloomingbit",
-      "sentiment": "bearish",
-      "rationale": "通胀超预期但国债收益率下降反映经济增长放缓担忧"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US Dollar Forecast: Fed Rates and DXY Key Levels - www.equiti.com",
-      "time": "10-15 15:46",
-      "source": "www.equiti.com",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "美元预测：美联储利率和美元指数关键水平 - www.equiti.com",
+      "content_cn": "美联储主席Warsh表示物价稳定是关键，但对利率走向避而不谈 - PBS",
       "sentiment": "neutral",
-      "rationale": "美联储利率和美元指数关键水平分析，方向不明"
+      "rationale": "美联储主席Warsh强调物价稳定但未明确利率信号"
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Key Moments From Kevin Warsh’s IMF Appearance - WSJ",
+      "time": "10-16 06:08",
+      "source": "WSJ",
+      "age_tag": "📑前日-低权重",
+      "content_cn": "Kevin Warsh在IMF亮相的关键时刻 - 华尔街日报",
+      "sentiment": "neutral",
+      "rationale": "Warsh在IMF发言的关键时刻报道，未明确政策倾向"
     },
     {
       "person": null,
       "title": null,
-      "content": "Mortgage rate predictions for the next five years: How high will they rise? - Yahoo Finance",
-      "time": "10-15 11:29",
+      "content": "Mortgage rate predictions for the next 5 years: A base case plus best and worst case scenarios - Yahoo Finance",
+      "time": "10-16 14:54",
       "source": "Yahoo Finance",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "未来五年抵押贷款利率预测：将升至多高？ - 雅虎财经",
-      "sentiment": "bearish",
-      "rationale": "未来五年抵押贷款利率预测显示持续高位"
+      "age_tag": "📑前日-低权重",
+      "content_cn": "未来5年抵押贷款利率预测：基准情形及最好最坏情况 - 雅虎财经",
+      "sentiment": "neutral",
+      "rationale": "抵押贷款利率预测属于住房市场分析，对大盘影响中性"
     },
     {
       "person": null,
       "title": null,
-      "content": "GBP/USD, DAX Forecast Two trades to watch 81026 - StoneX",
-      "time": "10-16 01:14",
+      "content": "Japanese Prime Minister Takaichi rejects criticism around weak yen and high interest rates",
+      "time": "10-19 01:29",
+      "source": "CNBC",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "日本首相高市早苗驳斥围绕日元疲软和高利率的批评",
+      "sentiment": "neutral",
+      "rationale": "日本首相高市早苗回应日元和利率批评，与美股关联较弱"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
+      "time": "10-18 17:32",
       "source": "StoneX",
       "age_tag": "📰今日-高权重",
-      "content_cn": "英镑/美元、DAX预测 81026年值得关注的两笔交易 - StoneX",
+      "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
       "sentiment": "neutral",
-      "rationale": "英镑/美元和德国DAX技术分析，无明确方向信号"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "U.S. Treasury dismisses IMF debt warning and 'messy' forecasting - CNBC",
-      "time": "10-15 08:40",
-      "source": "CNBC",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "美国财政部驳回IMF债务警告和'混乱'预测 - CNBC",
-      "sentiment": "neutral",
-      "rationale": "美国财政部驳回IMF债务警告，立场偏乐观但非货币政策"
+      "rationale": "英镑美元和黄金技术分析，对美股大盘无直接影响"
     }
   ],
   "error": null
