@@ -1,0 +1,63 @@
+name: Paper Trading
+
+# 触发：scan 成功后自动跑（不依赖 news / quant-research 链式 job）
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["美股盘中扫描"]
+    types: [completed]
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: us-paper-trading
+  cancel-in-progress: false
+
+jobs:
+  paper:
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Update paper ledger
+        run: python scripts/paper_trading.py
+
+      - name: Generate report
+        run: python scripts/paper_trading_report.py
+
+      - name: Show ledger tail
+        if: always()
+        run: |
+          if [ -f portfolio_paper_transactions.csv ]; then
+            head -n 3 portfolio_paper_transactions.csv
+            tail -n 5 portfolio_paper_transactions.csv
+          fi
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add portfolio_paper_transactions.csv docs/PAPER_TRADING_REPORT.md
+          if git diff --cached --quiet; then
+            echo "no change to commit"
+            exit 0
+          fi
+          git commit -m "chore(paper): update paper trading ledger and daily report [skip ci]"
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "paper ledger pushed to main"
+            exit 0
+          fi
+          echo "::error::push failed after retries"
+          exit 1
