@@ -203,7 +203,8 @@ def test_bookkeeping_still_filters_holdings():
     # (1) 原并集字面仍在
     assert LITERAL in src, "风控并集字面被删除"
     # (2) 分级收窄调用与赋值都在
-    assert "build_hard_blocked(" in src, "分级封锁函数调用被删除"
+    CALL = "build_hard_blocked(_hist, today_us_str())"
+    assert CALL in src, "分级封锁的**调用**被删除（仅保留函数定义不算）"
     assert NARROW in src, "分级收窄（& _by_status）被删除"
     # (3) 顺序：收窄必须在并集之后
     idx_literal = src.find(LITERAL)
