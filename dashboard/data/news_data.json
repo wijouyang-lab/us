@@ -1,6 +1,6 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-19T09:52:49Z",
+  "generated_at": "2026-10-19T10:11:56Z",
   "market_news": [
     {
       "headline": "French unrest compounds debt crisis fears. Paris-listed stocks, bonds and the euro fall",
@@ -8,9 +8,9 @@
       "url": "https://www.cnbc.com/2026/10/19/france-protests-bond-yields-markets.html",
       "datetime": 1792400829,
       "summary": "\"It looks like either the bond markets riot, or the people riot, or both,\" one analyst told CNBC.",
-      "headline_cn": "法国动荡加剧债务危机担忧，巴黎上市股票、债券和欧元下跌",
+      "headline_cn": "法国动荡加剧债务危机担忧，巴黎股市、债券和欧元下跌",
       "sentiment": "bearish",
-      "rationale": "欧元区金融稳定性受威胁，引发避险情绪",
+      "rationale": "社会动荡推高主权风险，资产全线承压",
       "market_relevant": true
     },
     {
@@ -21,7 +21,7 @@
       "summary": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, citing funding shortages  Reuters",
       "headline_cn": "世界粮食计划署因资金短缺削减对加沙50万巴勒斯坦人的援助",
       "sentiment": "neutral",
-      "rationale": "人道主义事件，对市场无直接影响",
+      "rationale": "人道危机但无直接经济传导机制",
       "market_relevant": false
     },
     {
@@ -30,9 +30,9 @@
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNaWFjYmdlWlpxc2JxSGc1YnZhM3ptTFp2bHdQbUUwVS1XTnoyeFpMVXh5TjNINy0tWm5hMmViQ2xpdzRFZWRHZjRyMHF4TkhDY0l0ZXhjS2FUTWpaNlpGRjl0ZEFUTm9qR1B2bUpYTnpWQjVNWXhwZDR0OFo0V2RheDdobm5jMGFCNWZuXzQ5WUdzM20xQ2dkd3JkUW9PWFh3Z1JrREVxcnJyNG1UR0M5ZXM0SQ?oc=5",
       "datetime": 1792364768,
       "summary": "UK housing market showing signs of mortgage rates impact, Rightmove says  Reuters",
-      "headline_cn": "Rightmove称英国房地产市场显示出抵押贷款利率影响迹象",
+      "headline_cn": "英国房地产市场显现抵押贷款利率影响迹象",
       "sentiment": "bearish",
-      "rationale": "高利率抑制房地产需求，拖累相关板块",
+      "rationale": "高利率抑制房市需求，经济降温信号",
       "market_relevant": true
     },
     {
@@ -41,9 +41,9 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/18/jim-cramer-why-i-am-taking-the-other-side-of-the-trade-that-crushed-the-market-friday.html",
       "datetime": 1792362188,
       "summary": "How did this happen so quickly? Where were the buyers? I have some answers.",
-      "headline_cn": "为何我要做与周五暴跌行情相反的交易",
+      "headline_cn": "为何我要做上周五暴跌后的反向交易",
       "sentiment": "neutral",
-      "rationale": "个人观点文章，信息价值有限",
+      "rationale": "个人观点类文章，不构成市场事实",
       "market_relevant": false
     },
     {
@@ -52,9 +52,9 @@
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
       "datetime": 1792362180,
       "summary": "Oil slips from 5-month high as Trump's Russia sanctions waiver may bring more supplies  Reuters",
-      "headline_cn": "特朗普俄罗斯制裁豁免可能增加供应，油价从5个月高位回落",
+      "headline_cn": "特朗普对俄制裁豁免可能增加供应，油价从5个月高点回落",
       "sentiment": "bearish",
-      "rationale": "供应增加压低油价，利空能源板块",
+      "rationale": "供应增加压制油价，能源股承压",
       "market_relevant": true
     },
     {
@@ -63,9 +63,9 @@
       "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxNaUsxbVVqQ0FFUl81U25IbG1NaXhrNzFqZzIzaFpRUVhKbF9rYlZoMXg1Z3NzYjR1TEtkeHNCU1BrOWs4ZXR5VHFqMTBoX3VjSV9FRV9neGVDSkdUNWIxMlNhZWRJbldocDM5Q2hiMXYxUXpHVUJqWkkyOEF5OGNBNWduQXFPMXp6VXhYRjUyNmsxaV9pbXJhS29uVGh6Tm51emp4S3YtdmI5c21HZE9HeFkycENlNGxHRUlJd29YWkxwRF85eXc?oc=5",
       "datetime": 1792357478,
       "summary": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis  Reuters",
-      "headline_cn": "埃及称准备支持沙特对抗伊朗盟友胡塞武装",
+      "headline_cn": "埃及表示准备支持沙特对抗伊朗盟友胡塞武装",
       "sentiment": "bearish",
-      "rationale": "地缘冲突升级风险推高油价和避险需求",
+      "rationale": "地缘冲突升级风险推高油价和避险情绪",
       "market_relevant": true
     },
     {
@@ -74,9 +74,9 @@
       "url": "https://www.cnbc.com/investingclub/2026/10/18/here-are-the-3-big-things-were-watching-in-the-stock-market-this-week.html",
       "datetime": 1792337077,
       "summary": "Meta and Capital One are set to report earnings. We'll also hear from plenty of important companies outside the Club portfolio.",
-      "headline_cn": "本周股市我们关注的三件大事",
+      "headline_cn": "本周股市关注的三大要点",
       "sentiment": "neutral",
-      "rationale": "前瞻性内容，无实质性信息披露",
+      "rationale": "前瞻性总结文章，无新增信息",
       "market_relevant": false
     },
     {
@@ -85,10 +85,10 @@
       "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQeXNEX0FibmplMGVhLVA1TDdESTEzdk9PR1JYNWtsQzJkTG5ER1lrMkhfV05saHNXYndlOXFxdFJONU4zOEZhZUdtXzR0WGpVSHBuLUUyOExTWHktR3AtMjlnU08yNXpaUWFVOXE1Q3dNaDFkZG4yT0JFMmlkYzdvTXFudjFQOF9rcFBaM0VBbjBaOFQ5bndSNS1fZw?oc=5",
       "datetime": 1792336320,
       "summary": "Trump endorses Netanyahu in close Israeli election  Reuters",
-      "headline_cn": "特朗普在胶着的以色列选举中为内塔尼亚胡背书",
+      "headline_cn": "特朗普在以色列胶着选举中支持内塔尼亚胡",
       "sentiment": "neutral",
-      "rationale": "政治背书，对市场影响不确定",
-      "market_relevant": true
+      "rationale": "政治表态，对市场影响有限",
+      "market_relevant": false
     },
     {
       "headline": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions - Reuters",
@@ -96,9 +96,9 @@
       "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPdkJ2LXpMXzV0dEQ2b1NYcm9XT1FZMTUyZUlVQlZaZ2RYNFhvVFlnVFRJM1RJTU5CNzlDNVdKTmtzX2E0S0xvV2h6UEpOWFJtUlNGczZxeGR4a2NYQlU5NktIN0JQbE54SlRaS3QzRVVvWUdSRGpqWmNYWXlQSWtMbkM2R3lnRWtERTVLcTNadXMwbGxVQm9GXzVLRmVpZDY1OFFDVmI1ZlM3cGVZ?oc=5",
       "datetime": 1792331503,
       "summary": "Oil lifts Saudi bourse; Egypt tumbles on regional tensions  Reuters",
-      "headline_cn": "油价提振沙特股市；埃及因地区紧张局势暴跌",
+      "headline_cn": "油价提振沙特股市，埃及因地区紧张局势暴跌",
       "sentiment": "neutral",
-      "rationale": "区域市场分化，对美股影响间接",
+      "rationale": "区域市场分化，美股无直接影响",
       "market_relevant": true
     },
     {
@@ -107,9 +107,9 @@
       "url": "https://www.cnbc.com/make-it/2026/10/18/parenting-lessons-resilient-successful-well-adjusted.html",
       "datetime": 1792330621,
       "summary": "Parenting coach Reem Raouda shares lessons to help kids feel worthy regardless of achievements and handle disappointment, disagreement and difficult feelings.",
-      "headline_cn": "研究200多名儿童后发现，成功父母早期教这6课",
+      "headline_cn": "研究200名儿童发现：成功父母早期教这6课",
       "sentiment": "neutral",
-      "rationale": "育儿话题，与市场无关",
+      "rationale": "育儿类内容，与市场无关",
       "market_relevant": false
     },
     {
