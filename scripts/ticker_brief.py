@@ -31,6 +31,7 @@ AI_SNAPSHOT = REPO / "ai_snapshot.csv"
 QUANT_SNAPSHOT = REPO / "quant_factor_snapshot.csv"
 TRADE_HISTORY = REPO / "trade_history.csv"
 TXN = REPO / "portfolio_50000_transactions.csv"
+TXN_TIME = REPO / "portfolio_50000_txn_time.csv"
 MACRO_DATA = REPO / "macro_data.json"
 MARKET_INDICATORS = REPO / "dashboard" / "data" / "market_indicators.json"
 NA = "N/A"
@@ -194,15 +195,27 @@ def block_history(ticker: str) -> None:
             print(f"- {NA}（{scope} 亦无成交记录）")
             return
 
+    # 侧车：按 Txn_ID 关联精确时刻
+    tmap = {}
+    for r in read_csv(TXN_TIME):
+        tid = (r.get("Txn_ID") or "").strip()
+        if tid and r.get("Execution_Time"):
+            tmap[tid] = r["Execution_Time"]
+    if tmap:
+        print(f"- 侧车命中：{sum(1 for r in mine if (r.get('Txn_ID') or '') in tmap)}/{len(mine)} 条有精确时刻")
+    else:
+        print(f"- {NA}（无 {TXN_TIME.name} 侧车，时刻不可得）")
+
     print(f"- 样本数：{len(mine)}（{scope}）")
     print()
-    print("| 日期 | Ticker | 操作 | 价格 | 股数 | 金额 | 已实现盈亏 |")
+    print("| 时间 | Ticker | 操作 | 价格 | 股数 | 金额 | 已实现盈亏 |")
     print("|---|---|---|---|---|---|---|")
     for r in sorted(mine, key=lambda x: x.get("Date") or "", reverse=True)[:10]:
         action = (r.get("Action") or "").strip().upper()
         action_cn = {"BUY": "买入", "SELL": "卖出"}.get(action, action or NA)
+        when = tmap.get((r.get("Txn_ID") or "").strip()) or f"{r.get('Date') or NA}（仅日期）"
         print("| {} | {} | {} | {} | {} | {} | {} |".format(
-            r.get("Date") or NA,
+            when,
             r.get("Ticker") or NA,
             action_cn,
             fmt(r.get("Price")),

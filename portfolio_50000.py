@@ -58,6 +58,8 @@ TERMINAL_STATUSES = {
 META_FILE = "portfolio_50000_meta.json"
 POSITIONS_FILE = "portfolio_50000_positions.csv"
 TRANSACTIONS_FILE = "portfolio_50000_transactions.csv"
+TXN_TIME_FILE = "portfolio_50000_txn_time.csv"
+TXN_TIME_COLUMNS = ["Txn_ID", "Execution_Time", "Trade_Date"]
 HISTORY_FILE = "portfolio_50000_history.csv"
 
 POSITION_COLUMNS = [
@@ -119,6 +121,57 @@ def us_today_str() -> str:
         return datetime.now(timezone.utc - timedelta(hours=5)).strftime("%Y-%m-%d")
 
 
+
+def us_now_str() -> str:
+    """美东当前时刻 YYYY-MM-DD HH:MM:SS（与 us_today_str 同一时区基准）。"""
+    try:
+        from zoneinfo import ZoneInfo
+        return datetime.now(ZoneInfo("America/New_York")).strftime("%Y-%m-%d %H:%M:%S")
+    except Exception:
+        from datetime import timedelta, timezone
+        return datetime.now(timezone.utc - timedelta(hours=5)).strftime("%Y-%m-%d %H:%M:%S")
+
+
+def append_txn_times(data_dir: Path, txns, today: str) -> int:
+    """把本次成交的精确时刻写入侧车 CSV（按 Txn_ID 幂等去重）。
+
+    不改 transactions.csv 的任何列/取值，纯粹旁路记录。
+    """
+    if not txns:
+        return 0
+    path = data_dir / TXN_TIME_FILE
+    seen = set()
+    if path.exists() and path.stat().st_size > 0:
+        try:
+            for r in read_csv_rows(path):
+                seen.add(str(r.get("Txn_ID", "")))
+        except Exception:
+            pass
+    now = us_now_str()
+    rows = []
+    for x in txns:
+        tid = str(x.get("Txn_ID", ""))
+        if not tid or tid in seen:
+            continue
+        seen.add(tid)
+        rows.append({"Txn_ID": tid, "Execution_Time": now,
+                     "Trade_Date": str(x.get("Date") or today)})
+    if not rows:
+        return 0
+    new_file = not path.exists() or path.stat().st_size == 0
+    with path.open("a", encoding="utf-8", newline="") as f:
+        if new_file:
+            f.write(",".join(TXN_TIME_COLUMNS) + "\n")
+        for r in rows:
+            f.write(",".join(str(r[c]).replace(",", " ") for c in TXN_TIME_COLUMNS) + "\n")
+    return len(rows)
+
+
+def _date_only(value) -> str:
+    """兼容旧数据：取日期部分。"""
+    return str(value or "").strip().split(" ")[0]
+
+
 # ------------------------------------------------------------------ 买入冷却
 COOLDOWN_DAYS = 3   # 止损后同名 ticker 冷却天数
                     # 2026-10-15: 7→3，缩短止损后半仓期；
@@ -175,7 +228,7 @@ def _had_stop_today(transactions: list[dict], today: str) -> bool:
     return any(
         str(t.get("Action", "")).upper() == "SELL"
         and str(t.get("Reason", "")) == "Intraday Stop Loss"
-        and str(t.get("Date", "")) == today
+        and _date_only(t.get("Date")) == today
         for t in transactions
     )
 
@@ -875,7 +928,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         1 for t in transactions
         if str(t.get("Action", "")).upper() == "SELL"
         and str(t.get("Reason", "")) == "Intraday Stop Loss"
-        and str(t.get("Date", "")) == today
+        and _date_only(t.get("Date")) == today
     )
 
     triggered = 0
@@ -939,6 +992,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
     if new_txns:
         transactions.extend(new_txns)
         write_csv_rows(data_dir / TRANSACTIONS_FILE, TRANSACTION_COLUMNS, transactions)
+        append_txn_times(data_dir, new_txns, today)          # 侧车：精确时刻（旁路）
         write_csv_rows(data_dir / POSITIONS_FILE, POSITION_COLUMNS, positions)
     else:
         print("[intraday-stop] 本次无触发")
@@ -1046,6 +1100,9 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
     # 4) 写回
     write_csv_rows(data_dir / POSITIONS_FILE, POSITION_COLUMNS, positions)
     write_csv_rows(data_dir / TRANSACTIONS_FILE, TRANSACTION_COLUMNS, transactions)
+    append_txn_times(data_dir,
+                      [x for x in transactions if _date_only(x.get("Date")) == today],
+                      today)          # 侧车：仅本轮（今日）成交，旁路幂等          # 侧车：仅本轮新增成交（旁路，幂等）
     upsert_history(history, {
         "Date": today,
         "Cash": str(cash),
