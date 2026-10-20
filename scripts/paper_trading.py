@@ -436,7 +436,12 @@ def main() -> int:
 
     candidates = sorted(REPO.glob(PENDING_GLOB))
     candidates = [p for p in candidates if not p.name.endswith(".processed")]
-    candidate_file = candidates[-1].name if candidates else ""
+    latest_candidate = candidates[-1] if candidates else None
+    candidate_file = (
+        latest_candidate.name
+        if latest_candidate is not None and _parse_signal_date(latest_candidate, today) == today
+        else ""
+    )
     created = _create_signal_orders(rows, candidates, today)
 
     filled, expired = _fill_pending_orders(rows, prices, today=today)
@@ -447,11 +452,14 @@ def main() -> int:
     write_rows(LEDGER, rows)
     opened_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "BUY" and not r.get("Exit_Date"))
     pending_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "PENDING")
-    record_observation(
-        run_date=today, prices=prices, candidate_file=candidate_file,
-        signals_queued=created, fills=filled, closes=closed_before + closed_after,
-        expired=expired, open_positions=opened_now, pending_orders=pending_now,
-    )
+    if os.environ.get("PAPER_RECORD_OBSERVATION", "0") == "1":
+        record_observation(
+            run_date=today, prices=prices, candidate_file=candidate_file,
+            signals_queued=created, fills=filled, closes=closed_before + closed_after,
+            expired=expired, open_positions=opened_now, pending_orders=pending_now,
+        )
+    else:
+        print("[paper] 本次不是 Scan 成功后自动触发；账本可维护，但不计入有效观察日")
     print(
         f"[paper] 完成：新增信号 {created} / 新成交 {filled} / 新平仓 {closed_before + closed_after} / "
         f"过期订单 {expired} / 当前持仓 {opened_now} / 待成交 {pending_now} / "
