@@ -87,6 +87,13 @@ def main() -> int:
     print(f"  fixed: gross_total={sfg['total']:+.2f}% net_total={sf['total']:+.2f}% net_sharpe={sf['sharpe']:.2f} net_mdd={sf['mdd']:.2f}%")
     print(f"  atr  : gross_total={sag['total']:+.2f}% net_total={sa['total']:+.2f}% net_sharpe={sa['sharpe']:.2f} net_mdd={sa['mdd']:.2f}%")
 
+    # Cost sensitivity across plausible round-trip assumptions; models only, not broker quotes.
+    cost_sensitivity = []
+    for scenario_bps in sorted(set([ROUND_TRIP_COST_BPS, 25.0, 50.0, 100.0])):
+        fixed_s = stats(Fg - scenario_bps / 10000.0)
+        atr_s = stats(Ag - scenario_bps / 10000.0)
+        cost_sensitivity.append((scenario_bps, fixed_s, atr_s))
+
     # 仓位离散度（ATR 平价的权重分布）
     W = np.array(atr_w)
     w_min, w_max = float(W.min()), float(W.max())
@@ -112,8 +119,25 @@ def main() -> int:
         f"- 单票权重区间：**{w_min:.3%} ~ {w_max:.3%}**",
         f"- 等权基准权重 = {100 / TOPK:.1f}% ⇒ " + ("ATR 平价显著偏离等权" if (w_max - w_min) > 0.05 else "接近等权"),
         "",
-        "## 3. 结论\n",
+        "## 4. 结论\n",
     ]
+    L += [
+        "## 3. 交易成本敏感性\n",
+        "> 每个场景的 bps 是一个完整 20D 持有期的往返成本；不代表实际券商报价。",
+        "| 往返成本（bps） | 固定仓位平均净 20D | 固定仓位累计净复利 | 固定仓位净夏普 | ATR 平均净 20D | ATR 累计净复利 | ATR 净夏普 |",
+        "|---:|---:|---:|---:|---:|---:|---:|",
+    ]
+    for scenario_bps, fixed_s, atr_s in cost_sensitivity:
+        L.append(
+            f"| {scenario_bps:.1f} | {fixed_s['mean_period']:+.3f}% | {fixed_s['total']:+.2f}% | "
+            f"{fixed_s['sharpe']:.3f} | {atr_s['mean_period']:+.3f}% | {atr_s['total']:+.2f}% | "
+            f"{atr_s['sharpe']:.3f} |"
+        )
+    L += [
+        "",
+        "> 成本敏感性只用于检验结论对假设的依赖程度；不补足市场冲击、流动性、税费或真实订单回报。\n",
+    ]
+
     if pd.notna(sa["sharpe"]) and pd.notna(sf["sharpe"]):
         if sa["sharpe"] > sf["sharpe"]:
             L.append(f"- ✅ **ATR 平价提升夏普**：{sf['sharpe']:.3f} → **{sa['sharpe']:.3f}**"
@@ -124,8 +148,8 @@ def main() -> int:
         L.append(f"- 回撤变化：{sf['mdd']:.2f}% → **{sa['mdd']:.2f}%**"
                  + ("（**改善** ✓）" if sa["mdd"] > sf["mdd"] else "（**恶化** ✗）"))
         L.append(f"- 收益变化：{sf['total']:+.2f}% → {sa['total']:+.2f}%")
-    L += ["", "## 4. ⚠️ 限制\n",
-          "1. **20D 前瞻重叠** ⇒ 夏普高估；绝对收益不可外推 ✓",
+    L += ["", "## 5. ⚠️ 限制\n",
+          "1. 从每日滚动 20D 前瞻收益每隔 20 个 Scan_Date 抽样形成非重叠期近似；这不是完整逐日组合权益曲线，绝对收益不可外推。",
           "2. 权重只按 `ATR_Pct` 归一，**未考虑相关性/行业集中** ✓",
           f"3. 已扣除每个 20D 持有期往返 {ROUND_TRIP_COST_BPS:.1f} bps；仍未考虑市场冲击、税费与资金约束（总仓位可能超 5×10,000）✓",
           "4. 选股用 `Momentum_20D_Pct` 代理，**非生产严筛逻辑** ✓",
