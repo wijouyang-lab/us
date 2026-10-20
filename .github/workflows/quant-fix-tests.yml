@@ -64,5 +64,18 @@ jobs:
       - name: Test PIT sector and attribution guards
         run: python tests/test_turnover_cost_analysis.py
 
+      - name: Generate cost-aware ATR report (integration check)
+        run: |
+          python tools/research/atr_position_sizing.py
+          grep -q "平均单期 20D 净收益" docs/ATR_POSITION_SIZING.md
+          grep -q "非重叠 20D 期累计净复利" docs/ATR_POSITION_SIZING.md
+          grep -q "未扣成本" docs/ATR_POSITION_SIZING.md && exit 1 || true
+
+      - name: Generate PIT-gated death-autopsy report (integration check)
+        run: |
+          python tools/research/turnover_and_cost_analysis.py
+          grep -q "不计算行业轮动毛/净收益" docs/DEATH_AUTOPSY.md
+          grep -q "log(Price)" docs/DEATH_AUTOPSY.md
+
       - name: Generate paper report (integration check)
         run: python scripts/paper_trading_report.py
