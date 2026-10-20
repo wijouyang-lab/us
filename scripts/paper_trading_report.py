@@ -16,6 +16,7 @@ if str(REPO) not in sys.path:
 from scripts.paper_trading import SLIPPAGE_BPS, COMMISSION_BPS
 LEDGER = REPO / "portfolio_paper_transactions.csv"
 PRICE_FILE = REPO / "quant_factor_price_history.csv"
+OBSERVATIONS_FILE = REPO / "portfolio_paper_observation_dates.csv"
 OUT = REPO / "docs" / "PAPER_TRADING_REPORT.md"
 
 INITIAL_CAPITAL = 50000.0
@@ -68,6 +69,23 @@ def last_price(tk: str, prices: dict):
     return series[-1] if series else (None, None)
 
 
+def count_observation_dates(today: str) -> int:
+    """Count successful Paper Trading runs by ET date, including successful zero-signal days."""
+    if not OBSERVATIONS_FILE.exists() or OBSERVATIONS_FILE.stat().st_size == 0:
+        return 0
+    dates = set()
+    with OBSERVATIONS_FILE.open(encoding="utf-8-sig", newline="") as fh:
+        for row in csv.DictReader(fh):
+            d = (row.get("Run_Date") or "").strip()
+            try:
+                parsed = datetime.strptime(d, "%Y-%m-%d").strftime("%Y-%m-%d")
+            except ValueError:
+                continue
+            if PLAN_START <= parsed <= today:
+                dates.add(parsed)
+    return len(dates)
+
+
 def estimated_net_unrealized(row: dict, current_close: float):
     shares = fnum(row.get("Shares"))
     entry = fnum(row.get("Entry_Price"))
@@ -92,7 +110,7 @@ def fmt_num(v, decimals=2):
 def main() -> int:
     today = datetime.now(US_TZ).strftime("%Y-%m-%d")
     rows = read_rows(LEDGER)
-    prices, observation_dates = read_prices(today)
+    prices, _price_dates = read_prices(today)
 
     open_rows = [
         r for r in rows
@@ -130,7 +148,7 @@ def main() -> int:
         peak = max(peak, run)
         dd = min(dd, run - peak)
     max_dd = dd / INITIAL_CAPITAL * 100
-    days = len(observation_dates)
+    days = count_observation_dates(today)
 
     def ok(cond):
         return "PASS" if cond else "NOT MET"
