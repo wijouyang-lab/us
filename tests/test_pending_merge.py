@@ -38,11 +38,24 @@ def test_malformed_existing_file_fails_closed():
             raise AssertionError("Expected malformed pending file to fail closed")
 
 
+def test_schema_mismatch_fails_closed_before_append():
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "pending.csv"
+        path.write_text("Ticker,Status\\nAAPL,pending\\n", encoding="utf-8")
+        try:
+            unseen_pending_items(path, [{"Ticker": "NVDA"}], expected_columns=["Ticker", "Status", "AI_risks"])
+        except ValueError as exc:
+            assert "schema mismatch" in str(exc)
+        else:
+            raise AssertionError("Expected mismatched CSV schema to fail closed")
+
+
 if __name__ == "__main__":
     tests = [
         test_new_file_keeps_unique_candidates,
         test_rerun_does_not_rewrite_existing_tickers,
         test_malformed_existing_file_fails_closed,
+        test_schema_mismatch_fails_closed_before_append,
     ]
     for test in tests:
         test()
