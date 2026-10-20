@@ -119,6 +119,9 @@ jobs:
             exit 0
           fi
           git commit -m "fix(quant): rebuild price history with correct session dates"
-          git fetch origin main
-          git rebase origin/main
-          git push origin HEAD:main
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "Corrected price history pushed to main"
+            exit 0
+          fi
+          echo "::error::Could not publish corrected price history after retries; backup artifact is retained"
+          exit 1
