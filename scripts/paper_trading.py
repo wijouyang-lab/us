@@ -410,14 +410,31 @@ def observation_eligible() -> bool:
 
 
 def observation_data_ready(prices: dict[str, list[dict]], run_date: str) -> bool:
-    """Do not count a day unless corrected price history includes a completed bar for that date."""
-    dates = [
-        bar.get("date", "")
-        for bars in prices.values()
-        for bar in bars
-        if bar.get("date") and bar.get("date") <= run_date
-    ]
-    return bool(dates) and max(dates) == run_date
+    """Require recent completed daily data as of Scan time; premarket scans naturally use the prior close.
+
+    Allow up to four calendar days of lag to cover weekends and a Monday market holiday, but
+    reject missing, future-dated, or older price history so a stale-data period cannot advance
+    the 40-run observation gate.
+    """
+    try:
+        run_day = datetime.strptime(run_date, "%Y-%m-%d").date()
+    except ValueError:
+        return False
+    dates = []
+    for bars in prices.values():
+        for bar in bars:
+            raw = bar.get("date", "")
+            try:
+                day = datetime.strptime(raw, "%Y-%m-%d").date()
+            except (TypeError, ValueError):
+                continue
+            if day <= run_day:
+                dates.append(day)
+    if not dates:
+        return False
+    latest = max(dates)
+    age = (run_day - latest).days
+    return 0 <= age <= PENDING_MAX_AGE_CALENDAR_DAYS
 
 
 def record_observation(run_date: str, prices: dict[str, list[dict]], candidate_file: str,
