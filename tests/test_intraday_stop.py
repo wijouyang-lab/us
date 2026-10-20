@@ -84,8 +84,11 @@ def test_weekend_silent_exit(monkeypatch, tmp_path):
     # 补 mock fetch_last_closes 保证确定性（原本依赖外网抓价，不稳定）。
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0, day=10))
     monkeypatch.setattr(
-        pf, "fetch_last_closes",
-        lambda tickers: {t: {"current": Decimal("110.00")} for t in tickers}
+        pf, "fetch_intraday_last_prices",
+        lambda tickers, now_et=None: {
+            t: {"current": Decimal("110.00"), "as_of": _et(11, 55).isoformat()}
+            for t in tickers
+        }
     )
     d = _setup(tmp_path, [_base_row("AAA")])
     res = pf.run(d, intraday_stop=True)
@@ -96,8 +99,11 @@ def test_weekend_silent_exit(monkeypatch, tmp_path):
 # —— 必验 2：实时价 > 止损 → 不触发 ——
 def test_price_above_stop_no_trigger(monkeypatch, tmp_path):
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0))
-    monkeypatch.setattr(pf, "fetch_last_closes",
-                        lambda tickers: {t: {"current": Decimal("110.00")} for t in tickers})
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices",
+                        lambda tickers, now_et=None: {
+                            t: {"current": Decimal("110.00"), "as_of": _et(11, 55).isoformat()}
+                            for t in tickers
+                        })
     d = _setup(tmp_path, [_base_row("AAA", stop="95.00")])
     res = pf.run(d, intraday_stop=True)
     assert res["triggered"] == 0
@@ -108,8 +114,11 @@ def test_price_above_stop_no_trigger(monkeypatch, tmp_path):
 # —— 必验 3：实时价 ≤ 止损 → 触发 + 写 transactions ——
 def test_price_below_stop_triggers(monkeypatch, tmp_path):
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0))
-    monkeypatch.setattr(pf, "fetch_last_closes",
-                        lambda tickers: {t: {"current": Decimal("90.00")} for t in tickers})
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices",
+                        lambda tickers, now_et=None: {
+                            t: {"current": Decimal("90.00"), "as_of": _et(11, 55).isoformat()}
+                            for t in tickers
+                        })
     d = _setup(tmp_path, [_base_row("AAA", stop="95.00", entry="100.00", shares="10")])
     res = pf.run(d, intraday_stop=True)
     assert res["triggered"] == 1
@@ -118,7 +127,8 @@ def test_price_below_stop_triggers(monkeypatch, tmp_path):
     t = txns[0]
     assert t["Action"] == "SELL"
     assert t["Ticker"] == "AAA"
-    assert t["Price"] == "90.00"                           # 执行价 = 触发实时价
+    assert t["Price"] == "90.00"                           # 执行价 = 最近有效 5 分钟 bar Close
+    assert t["Quote_As_Of"] == _et(11, 55).isoformat()       # 单独留存报价 bar 时间戳
     assert t["Reason"] == "Intraday Stop Loss"
     assert t["Pending_Reason"] == "True"                   # 待 AI 补原因
     assert t["Txn_ID"] == "INTRADAY|AAA|2026-10-09"        # 与 Review 的 {rid}|SELL|date 区分
@@ -178,8 +188,8 @@ def test_transaction_columns_append_only():
         "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
         "Portfolio_ID", "Unit_ID",
     ]
-    assert pf.TRANSACTION_COLUMNS[:-1] == expected_prior      # 原 14 列顺序不变
-    assert pf.TRANSACTION_COLUMNS[-1] == "Pending_Reason"    # 仅追加
+    assert pf.TRANSACTION_COLUMNS[:14] == expected_prior     # 原 14 列顺序不变
+    assert pf.TRANSACTION_COLUMNS[-2:] == ["Pending_Reason", "Quote_As_Of"]  # 仅在尾部追加
 
 
 # —— 附加：离线（取不到价）→ 不触发（绝不猜价）——
