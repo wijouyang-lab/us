@@ -18,7 +18,7 @@
 
 ## 3. 观察期如何计数
 
-`portfolio_paper_observation_dates.csv` 按美东日期记录 Paper Trading 的成功运行，包括没有新候选的日期；同一天重复运行只保留一条观察记录。日报的 40 日门槛读取该观察日志，不再把价格历史文件中的交易日数当作实际 Scan 观察日数。
+`portfolio_paper_observation_dates.csv` 只由 **Scan 成功后自动触发**的 Paper Trading 运行写入，按美东日期记录，包括没有新候选的日期；同一天重复运行只保留一条观察记录。手动触发可用于修复账本/重新生成报告，但明确不增加观察日。日报的 40 日门槛读取该观察日志，不再把价格历史文件中的交易日数当作实际 Scan 观察日数。
 
 如果价格历史不是全量 `phase2b.v2`，模拟成交与未实现盈亏估值会 fail-closed。必须先运行手动的 Rebuild Quant Price History 工作流并通过数据校验；单纯存在新版增量行，不代表旧历史已经修复。
 
