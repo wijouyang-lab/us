@@ -1,4 +1,4 @@
-# Paper Trading 日报 — 2026-10-19
+# Paper Trading 日报 — 2026-10-20
 
 > 数据：`portfolio_paper_transactions.csv`（**与实盘完全隔离**）
 > 评估标准见 `docs/PAPER_TRADING_PLAN.md`
