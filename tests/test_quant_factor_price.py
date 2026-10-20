@@ -166,8 +166,10 @@ def test_update_with_injected_fetch():
     snap_path = os.path.join(tmp, "snap.csv")
     ph_path = os.path.join(tmp, "price_history.csv")
     make_snapshot().to_csv(snap_path, index=False)
+    requested_starts = []
 
     def fake_fetch(tickers, start, end):
+        requested_starts.append(start)
         rows = []
         for t in tickers:
             for d in ["2026-01-30", "2026-02-02"]:
@@ -185,6 +187,8 @@ def test_update_with_injected_fetch():
     r2 = update_price_history(snapshot_path=snap_path, price_history_path=ph_path, fetch_func=fake_fetch)
     check("二次运行无重复", r2["total_rows"] == 6 and r2["new_rows"] == 0,
           f"total={r2['total_rows']} new={r2['new_rows']}")
+    check("二次运行只刷新最新历史附近七天", requested_starts[1] == "2026-01-26",
+          f"requested starts={requested_starts}")
 
 
 def test_rebuild_preserves_historical_tickers():
