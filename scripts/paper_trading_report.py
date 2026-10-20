@@ -113,6 +113,11 @@ def estimated_net_unrealized(row: dict, current_close: float):
     return net, (net / denominator * 100.0 if denominator > 0 else None)
 
 
+def drawdown_gate_pass(closed_trade_count: int, max_drawdown_pct: float) -> bool:
+    """A drawdown threshold cannot pass until at least one closed trade exists."""
+    return closed_trade_count > 0 and max_drawdown_pct >= TH_DD
+
+
 def fmt_pct(v, decimals=2):
     return "N/A" if v is None or not math.isfinite(v) else f"{v:+.{decimals}f}%"
 
@@ -185,7 +190,7 @@ def main() -> int:
         f"| 盈亏比 | ≥ {TH_RR:.2f} | {fmt_num(rr, 2)} | {ok(rr is not None and rr >= TH_RR)} |",
         f"| 平均净期望值 | ≥ +{TH_EXP:.2f}%/笔 | {fmt_pct(exp)} | {ok(exp is not None and exp >= TH_EXP)} |",
         f"| 盈亏平衡所需盈亏比 | < 实际盈亏比 | {fmt_num(be_rr, 2)} vs {fmt_num(rr, 2)} | {ok(be_rr is not None and rr is not None and rr > be_rr)} |",
-        f"| 最大回撤 | 不低于 {TH_DD:.2f}% | {fmt_pct(max_dd) if n else 'N/A'} | {ok(n > 0 and max_dd >= TH_DD)} |",
+        f"| 最大回撤 | 不低于 {TH_DD:.2f}% | {fmt_pct(max_dd) if n else 'N/A'} | {ok(drawdown_gate_pass(n, max_dd))} |",
         f"| 成功 Scan 观察日 | ≥ {TH_DAYS} 日 | {days} 日（实际记录区间：{observation_range}） | {ok(days >= TH_DAYS)} |",
         "\n任一项未达标或样本不足，都不构成转实盘依据。\n",
         f"## 当前持仓：{len(open_rows)} 只\n",
