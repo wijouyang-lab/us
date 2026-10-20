@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import sys
+from types import SimpleNamespace
 from datetime import datetime
 from decimal import Decimal
 from pathlib import Path
@@ -73,8 +74,8 @@ def test_numeric_parser_accepts_currency_formatted_prices():
 def test_intraday_stop_triggers_on_valid_dollar_formatted_stop(tmp_path, monkeypatch):
     _setup(tmp_path, "$95.00")
     monkeypatch.setattr(
-        pf, "fetch_last_closes",
-        lambda tickers: {"AAA": {"current": Decimal("94.00"), "extended": None, "extended_time": ""}},
+        pf, "fetch_intraday_last_prices",
+        lambda tickers, now_et=None: {"AAA": {"current": Decimal("94.00"), "as_of": NOW_OPEN.isoformat()}},
     )
 
     result = pf._run_intraday_stop(tmp_path, TODAY, offline=False, now_et=NOW_OPEN)
@@ -93,7 +94,7 @@ def test_intraday_stop_triggers_on_valid_dollar_formatted_stop(tmp_path, monkeyp
 def test_intraday_stop_fails_closed_when_quote_missing(tmp_path, monkeypatch):
     _setup(tmp_path, "$95.00")
     before = (tmp_path / pf.POSITIONS_FILE).read_text(encoding="utf-8")
-    monkeypatch.setattr(pf, "fetch_last_closes", lambda tickers: {})
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices", lambda tickers, now_et=None: {})
 
     result = pf._run_intraday_stop(tmp_path, TODAY, offline=False, now_et=NOW_OPEN)
 
@@ -106,7 +107,7 @@ def test_intraday_stop_does_not_run_outside_regular_session(tmp_path, monkeypatc
     _setup(tmp_path, "$95.00")
     before = (tmp_path / pf.POSITIONS_FILE).read_text(encoding="utf-8")
     called = []
-    monkeypatch.setattr(pf, "fetch_last_closes", lambda tickers: called.append(True) or {})
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices", lambda tickers, now_et=None: called.append(True) or {})
 
     after_hours = datetime(2026, 10, 20, 17, 0, tzinfo=ET)
     result = pf._run_intraday_stop(tmp_path, TODAY, offline=False, now_et=after_hours)
@@ -116,3 +117,85 @@ def test_intraday_stop_does_not_run_outside_regular_session(tmp_path, monkeypatc
     assert (tmp_path / pf.POSITIONS_FILE).read_text(encoding="utf-8") == before
     assert _read_rows(tmp_path / pf.TRANSACTIONS_FILE) == []
 
+
+
+class _FakeSeries:
+    def __init__(self, timestamp, price):
+        self.index = [timestamp]
+        self._prices = [price]
+        self.iloc = self
+        self.empty = False
+
+    def dropna(self):
+        return self
+
+    def __len__(self):
+        return len(self._prices)
+
+    def __getitem__(self, index):
+        return self._prices[index]
+
+
+class _FakeFrame:
+    def __init__(self, timestamp, price):
+        self.empty = False
+        self.columns = ["Close"]
+        self._close = _FakeSeries(timestamp, price)
+
+    def __getitem__(self, key):
+        if key != "Close":
+            raise KeyError(key)
+        return self._close
+
+
+def _mock_yfinance(monkeypatch, timestamp, price=Decimal("94.00")):
+    calls = []
+
+    class FakeTicker:
+        def __init__(self, ticker):
+            self.ticker = ticker
+
+        def history(self, **kwargs):
+            calls.append({"ticker": self.ticker, **kwargs})
+            return _FakeFrame(timestamp, price)
+
+    monkeypatch.setitem(sys.modules, "yfinance", SimpleNamespace(Ticker=FakeTicker))
+    return calls
+
+
+def test_intraday_quote_requests_regular_session_five_minute_bars(monkeypatch):
+    stamp = datetime(2026, 10, 20, 10, 25, tzinfo=ET)
+    calls = _mock_yfinance(monkeypatch, stamp)
+
+    quotes = pf.fetch_intraday_last_prices(["AAA"], now_et=NOW_OPEN)
+
+    assert quotes["AAA"]["current"] == Decimal("94.00")
+    assert quotes["AAA"]["as_of"] == stamp.isoformat()
+    assert calls == [{
+        "ticker": "AAA",
+        "period": "1d",
+        "interval": "5m",
+        "prepost": False,
+        "auto_adjust": False,
+    }]
+
+
+def test_intraday_quote_fails_closed_when_bar_is_stale(monkeypatch):
+    stale = datetime(2026, 10, 20, 10, 10, tzinfo=ET)
+    _mock_yfinance(monkeypatch, stale)
+
+    assert pf.fetch_intraday_last_prices(["AAA"], now_et=NOW_OPEN) == {}
+
+
+def test_intraday_quote_fails_closed_when_bar_timestamp_is_naive(monkeypatch):
+    naive = datetime(2026, 10, 20, 10, 25)
+    _mock_yfinance(monkeypatch, naive)
+
+    assert pf.fetch_intraday_last_prices(["AAA"], now_et=NOW_OPEN) == {}
+
+
+def test_intraday_quote_fails_closed_when_bar_is_from_another_session(monkeypatch):
+    prior_day = datetime(2026, 10, 19, 15, 55, tzinfo=ET)
+    _mock_yfinance(monkeypatch, prior_day)
+
+    assert pf.fetch_intraday_last_prices(["AAA"], now_et=NOW_OPEN) == {}
