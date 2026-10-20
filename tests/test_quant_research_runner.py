@@ -180,9 +180,14 @@ def test_single_phase_failure_isolated(workdir):
         _clear_override()
     assert summary["phases"]["2"]["status"] == "ERROR"
     assert summary["phases"]["2"]["_error"] is not None
-    for n in ("3", "4", "5", "6", "7"):
+    # Fail-isolation means independent phases continue; dependent phases must not consume
+    # stale artifacts left by an earlier successful run.
+    for n in ("3", "4", "5"):
+        assert summary["phases"][n]["status"] == "NOT_ENOUGH_DATA"
+        assert "阻止复用旧文件" in summary["phases"][n]["reason"]
+    for n in ("6", "7"):
         assert summary["phases"][n]["status"] == "OK"
-    # 失败隔离：非 strict 下仍退出 0
+    # 非 strict 下失败与依赖阻断均留在状态报告，不中断独立阶段。
     assert code == 0
 
 
