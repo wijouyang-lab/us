@@ -3528,7 +3528,7 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
 
 【输出粒度（务必区分 tag）】
 - tag="Core_Dragon" 的股票：输出完整六字段 industry_logic / news_cn / premarket_conclusion / catalysts / risks / invalidation，每字段都必须有内容，不能输出空字符串、N/A、null。
-- tag="Observation" 的股票：只输出三字段 industry_logic（简短因果链）/ catalysts（最多1-2条）/ risks（最多1-2条）；禁止输出 news_cn / premarket_conclusion / invalidation，也禁止生成 Core 级别的完整技术分析、完整基本面分析或长篇新闻分析。
+- tag="Observation" 或 tag="Candidate" 的股票：两者都按轻量观察项处理，只输出三字段 industry_logic（简短因果链）/ catalysts（最多1-2条）/ risks（最多1-2条）；禁止输出 news_cn / premarket_conclusion / invalidation，也禁止生成 Core 级别的完整技术分析、完整基本面分析或长篇新闻分析。Candidate 是程序内部候选标签，不代表要输出另一种 schema；保留输入 ticker，不得改标签对应的股票。
 
 【当前事件环境】
 {event_regime_text[:5000]}
