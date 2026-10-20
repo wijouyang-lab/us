@@ -107,10 +107,10 @@ def load_prices(path: Path = PRICE_FILE) -> dict[str, list[dict]]:
 
 
 def next_open_bar(series: list[dict], signal_date: str):
-    """返回 signal_date 之后首个具有有效 Open 的 bar；没有则返回 None。"""
+    """只检查信号日后的第一根交易日 bar；缺 Open 就拒绝成交，不能延迟到更晚日期。"""
     for bar in series:
-        if bar["date"] > signal_date and _positive_float(bar.get("open")) is not None:
-            return bar
+        if bar["date"] > signal_date:
+            return bar if _positive_float(bar.get("open")) is not None else None
     return None
 
 
@@ -288,9 +288,19 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]]) -> tup
             r["Reason"] = "INVALID_PENDING_ORDER_FIELDS"
             expired += 1
             continue
-        bar = next_open_bar(prices.get(tk, []), signal_date)
+        series = prices.get(tk, [])
+        first_post_signal = next((b for b in series if b["date"] > signal_date), None)
+        if first_post_signal is None:
+            # The next regular session has not arrived in completed-bar history yet.
+            continue
+        bar = next_open_bar(series, signal_date)
         if bar is None:
-            # Fail closed: retain pending order until the first post-signal bar's Open exists.
+            # The first post-signal session exists but has no Open: never use a later session instead.
+            r["Action"] = "EXPIRED"
+            r["Entry_Source_Date"] = first_post_signal["date"]
+            r["Reason"] = "MISSING_OPEN_ON_FIRST_POST_SIGNAL_BAR"
+            expired += 1
+            print(f"[paper] EXPIRED {tk} signal={signal_date}: missing Open on first post-signal bar")
             continue
         if _open_positions(rows) >= MAX_OPEN:
             r["Action"] = "EXPIRED"
