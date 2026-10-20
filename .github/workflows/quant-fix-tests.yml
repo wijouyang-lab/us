@@ -99,6 +99,11 @@ jobs:
           python tools/research/atr_position_sizing.py
           grep -q "平均单期 20D 净收益" docs/ATR_POSITION_SIZING.md
           grep -q "非重叠 20D 期累计净复利" docs/ATR_POSITION_SIZING.md
+          grep -q "交易成本敏感性" docs/ATR_POSITION_SIZING.md
+          if grep -q "20D 前瞻重叠.*夏普高估" docs/ATR_POSITION_SIZING.md; then
+            echo "::error::ATR report still labels the non-overlapping estimate as overlap-inflated Sharpe"
+            exit 1
+          fi
           if grep -q "未扣成本" docs/ATR_POSITION_SIZING.md; then
             echo "::error::ATR report still advertises a gross-only result as if it were net"
             exit 1
