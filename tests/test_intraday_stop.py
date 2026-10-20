@@ -140,8 +140,11 @@ def test_price_below_stop_triggers(monkeypatch, tmp_path):
 # —— 必验 4：单日止损 ≥ 2 → 不再触发 ——
 def test_max_two_stops_per_day(monkeypatch, tmp_path):
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0))
-    monkeypatch.setattr(pf, "fetch_last_closes",
-                        lambda tickers: {t: {"current": Decimal("90.00")} for t in tickers})
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices",
+                        lambda tickers, now_et=None: {
+                            t: {"current": Decimal("90.00"), "as_of": _et(11, 55).isoformat()}
+                            for t in tickers
+                        })
     positions = [
         _base_row("AAA", stop="95.00"),
         _base_row("BBB", stop="95.00"),
@@ -195,7 +198,7 @@ def test_transaction_columns_append_only():
 # —— 附加：离线（取不到价）→ 不触发（绝不猜价）——
 def test_offline_no_trigger(monkeypatch, tmp_path):
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0))
-    # offline=True → fetch_last_closes 返回 {} → 取不到价
+    # offline=True → 不调用盘中报价源 → 取不到价
     d = _setup(tmp_path, [_base_row("AAA", stop="95.00")])
     res = pf.run(d, intraday_stop=True, offline=True)
     assert res["triggered"] == 0
@@ -205,8 +208,11 @@ def test_offline_no_trigger(monkeypatch, tmp_path):
 # —— 附加：已今日盘中止损 → 幂等不重复处理 ——
 def test_idempotent_already_stopped_today(monkeypatch, tmp_path):
     monkeypatch.setattr(pf, "_et_now", lambda: _et(12, 0))
-    monkeypatch.setattr(pf, "fetch_last_closes",
-                        lambda tickers: {t: {"current": Decimal("90.00")} for t in tickers})
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices",
+                        lambda tickers, now_et=None: {
+                            t: {"current": Decimal("90.00"), "as_of": _et(11, 55).isoformat()}
+                            for t in tickers
+                        })
     prior = [{
         "Txn_ID": "INTRADAY|AAA|2026-10-09", "Date": "2026-10-09", "Ticker": "AAA",
         "Action": "SELL", "Shares": "10", "Price": "90.00", "Amount": "900.00",
