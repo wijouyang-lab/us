@@ -73,12 +73,14 @@ jobs:
             echo "::error::ATR report still advertises a gross-only result as if it were net"
             exit 1
           fi
+          cat docs/ATR_POSITION_SIZING.md
 
       - name: Generate PIT-gated death-autopsy report (integration check)
         run: |
           python tools/research/turnover_and_cost_analysis.py
           grep -q "不计算行业轮动毛/净收益" docs/DEATH_AUTOPSY.md
           grep -q "log(Price)" docs/DEATH_AUTOPSY.md
+          cat docs/DEATH_AUTOPSY.md
 
       - name: Generate paper report (integration check)
         run: python scripts/paper_trading_report.py
