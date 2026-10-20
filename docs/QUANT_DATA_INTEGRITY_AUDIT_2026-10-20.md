@@ -2,9 +2,11 @@
 
 ## Scope and safety
 
-This audit was computed from the Git-tracked files on `main` at commit `97d1de81c47d5944d31e884ea860e1ae341f8204`, using read-only file retrieval. The audit script added in this PR is `tools/research/audit_date_integrity.py`.
+This data audit was computed from the Git-tracked files on `main` at commit `97d1de81c47d5944d31e884ea860e1ae341f8204`, using read-only file retrieval. The auditor in this PR, `tools/research/audit_date_integrity.py`, only reads input CSVs and prints JSON.
 
-No CSV, price history, paper ledger, portfolio ledger, or trading workflow was executed or rewritten during this audit. The counts below describe repository files, not a live broker feed.
+**Automation incident during this work, corrected on 2026-10-20:** pushing a change to `dashboard_export.py` on this feature branch unexpectedly triggered `Dashboard Data Refresh`. That workflow was not branch-restricted and its final step can push `HEAD:main`; it published the feature-branch tree as commit `c9f0b2c92074465da687bc127006ea98b3c46807`. It temporarily changed application code, workflow files, and the paper-simulation ledger file. The workflow log confirms the `--intraday-stop` step exited with `非交易时段（09:30-16:00 ET），静默退出` and did not trigger a stop. I immediately restored the exact pre-incident Git tree in commit `c67302084c14bd12a187855cff5af0f37fda4c84`; a comparison against the pre-incident commit shows that the main tree is restored. I then added a production guard in `8cadf8bca14b092adb617e6b898d117998300e72`: `dashboard-data.yml` push events are restricted to `main`, and the job itself also skips non-main refs. The same guard is in this PR branch. The accidental Pages build for the transient commit was cancelled.
+
+No production scan, review, or price-history rebuild was started. The audit statistics below describe the pre-incident repository data, not a live broker feed. The temporary main-branch tree change was reverted; the only intentional lasting main-branch change from this incident is the workflow branch guard.
 
 ## Findings
 
