@@ -24,9 +24,9 @@
   - **取价（历史实现，已被上方当前状态更新取代）**：最初版本复用 `fetch_last_closes`；当前 PR 分支改为独立的 `fetch_intraday_last_prices`，只接受新鲜的 5 分钟常规时段 bar。
   - **触发**：`最近有效 5 分钟 bar Close ≤ Stop_Loss` → 模拟卖出；`Status=CLOSED`、`Current_Price=bar Close`、写 `transactions`（Action=SELL, Reason=`Intraday Stop Loss`, **Pending_Reason=True** 待 AI 补原因）并保存 `Quote_As_Of`。
   - **不调用 `process_buys`/`process_sells`**——只做"检查 + 卖"。
-  - **守卫**：单日最多 2 只（`MAX_INTRADAY_STOPS_PER_DAY`）；全部 CLOSED 不再触发；已今日止损幂等不重复；取不到价不猜价（与 Review `DATA_MISSING` 一致）。
+  - **守卫**：单日最多 2 只（`MAX_INTRADAY_STOPS_PER_DAY`）；全部 CLOSED 不再触发；已今日止损幂等不重复；取不到/过期报价不猜价（与 Review `DATA_MISSING` 一致）。
 - **Txn_ID** 用 `INTRADAY|{TICKER}|{today}`，与 Review 的 `{rid}|SELL|{date}` 区分，避免幂等冲突。
-- **`TRANSACTION_COLUMNS`** 仅追加 `Pending_Reason`（原 14 列顺序不变）。
+- **`TRANSACTION_COLUMNS`** 在原 14 列之后追加 `Pending_Reason`，再追加 `Quote_As_Of`；原 14 列顺序不变，老行读取时新字段为空，不要求历史账本迁移。
 
 ## 2. Review 路径安全性验证（无 flag 时行为一致的证据）
 
@@ -48,7 +48,7 @@ Review 的命令是 `python portfolio_50000.py --data-dir .`（**不带 `--intra
 | ③ 实时价 ≤ 止损 → 触发 + 写 transactions | `test_price_below_stop_triggers`（断言 Action/Price/Reason/Pending_Reason/Txn_ID/Status） |
 | ④ 单日 ≥ 2 → 不再触发 | `test_max_two_stops_per_day`（3 只全破 → 只触发 2） |
 | ⑤ 默认 run() 行为不变 | `test_default_run_does_not_invoke_intraday` + `test_default_run_review_path_unchanged` |
-| ⑥ 交易结构只追加字段 | `test_transaction_columns_append_only`（原 14 列顺序不变，仅追加 `Pending_Reason`） |
+| ⑥ 交易结构只追加字段 | `test_transaction_columns_append_only`（原 14 列顺序不变，最后两列为 `Pending_Reason`、`Quote_As_Of`） |
 | 附加 | 离线不触发 / 幂等已止损 / 全平仓不触发 |
 
 **全量**：`pytest tests/` → **281 passed**（基线 267 + 14），≥270 达标。
