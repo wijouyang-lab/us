@@ -6,9 +6,11 @@
 |---|---|---|---|
 | 美股 Scan（`.github/workflows/scan.yml`） | 仅 `workflow_dispatch`；预期由外部调度器触发 | 选股、生成当日 pending、AI Snapshot 与 Quant 价格历史更新 | Dashboard 刷新了，不代表 Scan 已运行 |
 | Dashboard Data Refresh（`.github/workflows/dashboard-data.yml`） | GitHub Actions 工作日每小时 schedule | 刷新 Dashboard 数据；另有既有持仓价格同步与盘中机械止损步骤 | 不会运行 `scan.py`，不代表当天产生了新选股信号 |
-| Paper Trading（`.github/workflows/paper-trading.yml`） | Scan workflow 成功后触发；也支持手动运行 | 更新隔离的模拟账本、记录观察日期、生成净收益报告 | 不是实盘委托，也不应把旧价格填补成真实成交 |
+| Paper Trading（`.github/workflows/paper-trading.yml`） | Scan 成功后立即登记信号；工作日收盘后另有 UTC 双 cron + 纽约时区门禁 | Scan 运行登记信号/观察日；EOD 任务先刷新完整 OHLCV，再处理当日有效开盘模拟成交与退出、更新日报 | 不允许用旧日开盘价补成交；OHLC 模拟成交不是券商真实回报 |
 
-**唯一业务选股时间点是 Scan 完成并产出当日数据的时间。** Dashboard 页面中的行情刷新时间、Scan 完成时间和 Paper Trading 观察记录应分别展示，不能用其中一个替代另一个。
+**唯一业务选股时间点是 Scan 完成并产出当日数据的时间。** Dashboard 页面中的行情刷新时间、Scan 完成时间、EOD 完整行情更新时间和 Paper Trading 观察记录应分别展示，不能用其中一个替代另一个。
+
+Paper Trading 的 Scan 触发只登记信号，不执行买卖；收盘后任务刷新完整日线后才执行。两个 UTC cron 覆盖夏令时与冬令时，任务会检查纽约本地时间，只在 16:00–18:00 ET 执行。错过预期交易日时，订单会过期而不是事后用旧价格成交。
 
 ## 2. 外部 Scan 调度监控
 
