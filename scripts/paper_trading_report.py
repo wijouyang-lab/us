@@ -83,12 +83,12 @@ def last_price(tk: str, prices: dict):
     return series[-1] if series else (None, None)
 
 
-def count_observation_dates(today: str) -> int:
-    """Count successful Paper Trading runs by ET date, including successful zero-signal days."""
-    if not OBSERVATIONS_FILE.exists() or OBSERVATIONS_FILE.stat().st_size == 0:
-        return 0
+def read_observation_dates(today: str, path: Path = OBSERVATIONS_FILE) -> list[str]:
+    """Return actual ET dates on which Paper Trading successfully wrote an observation."""
+    if not path.exists() or path.stat().st_size == 0:
+        return []
     dates = set()
-    with OBSERVATIONS_FILE.open(encoding="utf-8-sig", newline="") as fh:
+    with path.open(encoding="utf-8-sig", newline="") as fh:
         for row in csv.DictReader(fh):
             d = (row.get("Run_Date") or "").strip()
             try:
@@ -97,7 +97,7 @@ def count_observation_dates(today: str) -> int:
                 continue
             if PLAN_START <= parsed <= today:
                 dates.add(parsed)
-    return len(dates)
+    return sorted(dates)
 
 
 def estimated_net_unrealized(row: dict, current_close: float):
@@ -162,7 +162,12 @@ def main() -> int:
         peak = max(peak, run)
         dd = min(dd, run - peak)
     max_dd = dd / INITIAL_CAPITAL * 100
-    days = count_observation_dates(today)
+    observation_dates = read_observation_dates(today)
+    days = len(observation_dates)
+    observation_range = (
+        f"{observation_dates[0]} 至 {observation_dates[-1]}"
+        if observation_dates else "尚无成功运行记录"
+    )
 
     def ok(cond):
         return "PASS" if cond else "NOT MET"
@@ -171,7 +176,7 @@ def main() -> int:
         f"# Paper Trading 日报 — {today}\n",
         "> 数据源：portfolio_paper_transactions.csv + quant_factor_price_history.csv",
         "> 本报告只统计已成交模拟交易；PENDING 不算持仓，VOID 不参与业绩。所有 PnL 为扣除模型滑点与佣金后的净值。\n",
-        "> 观察期按 Paper Trading 在 Scan 成功后实际运行的 ET 日期统计；仅有行情数据但没有成功运行记录的日期不计入。\n",
+        "> 观察期按 Paper Trading 在 Scan 成功后实际运行的 ET 日期统计；本轮实际记录区间会按观察日志计算，仅有行情数据但没有成功运行记录的日期不计入。\n",
         f"> 模型成本：单边滑点 {SLIPPAGE_BPS:.1f} bps；单边佣金 {COMMISSION_BPS:.1f} bps。成本为研究假设，不代表任何特定券商实际费率。\n",
         "## 评估门槛\n",
         "| 指标 | 要求 | 当前值 | 状态 |",
@@ -181,7 +186,7 @@ def main() -> int:
         f"| 平均净期望值 | ≥ +{TH_EXP:.2f}%/笔 | {fmt_pct(exp)} | {ok(exp is not None and exp >= TH_EXP)} |",
         f"| 盈亏平衡所需盈亏比 | < 实际盈亏比 | {fmt_num(be_rr, 2)} vs {fmt_num(rr, 2)} | {ok(be_rr is not None and rr is not None and rr > be_rr)} |",
         f"| 最大回撤 | 不低于 {TH_DD:.2f}% | {fmt_pct(max_dd)} | {ok(max_dd >= TH_DD)} |",
-        f"| 成功 Scan 观察日 | ≥ {TH_DAYS} 日 | {days} 日（运行记录覆盖 {PLAN_START} 至 {today}） | {ok(days >= TH_DAYS)} |",
+        f"| 成功 Scan 观察日 | ≥ {TH_DAYS} 日 | {days} 日（实际记录区间：{observation_range}） | {ok(days >= TH_DAYS)} |",
         "\n任一项未达标或样本不足，都不构成转实盘依据。\n",
         f"## 当前持仓：{len(open_rows)} 只\n",
     ]
