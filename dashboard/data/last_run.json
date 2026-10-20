@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-10-20T08:01:11Z",
-  "market_updated_at": "2026-10-20T08:01:09Z",
-  "technical_updated_at": "2026-10-20T08:01:11Z",
+  "generated_at": "2026-10-20T08:02:08Z",
+  "market_updated_at": "2026-10-20T08:02:06Z",
+  "technical_updated_at": "2026-10-20T08:02:08Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -23,8 +23,8 @@
     "kline_ok": 18,
     "technical_ok": 18,
     "price_source_breakdown": {
-      "realtime_unverified": 13,
-      "realtime": 5
+      "realtime_unverified": 11,
+      "realtime": 7
     }
   },
   "review": {
