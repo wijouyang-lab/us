@@ -44,6 +44,12 @@ jobs:
         if: steps.guard.outputs.skip != 'true'
         run: python tools/research/atr_position_sizing.py
 
+      # PIT sector history / Market_Cap are mandatory; script writes an explicit skipped status
+      # rather than using current sector membership or log(Price) as a size proxy.
+      - name: Recalculate turnover-cost and attribution audit
+        if: steps.guard.outputs.skip != 'true'
+        run: python tools/research/turnover_and_cost_analysis.py
+
       # P0-2 门禁（方案 ②）：runner 默认 exit_code=0，因为 NOT_ENOUGH_DATA（数据未就绪 /
       # SHADOW_ENABLE 未开启）属预期状态；但真实 Phase 异常会写入 overall_status=FAILED。
       # 这里只对 FAILED 失败，既能让 scipy 这类真实故障变红，又不把预期状态误判为失败。
@@ -84,7 +90,8 @@ jobs:
               quant_production_config.json \
               quant_production_state.json \
               quant_research_status.json \
-              docs/ATR_POSITION_SIZING.md ; do
+              docs/ATR_POSITION_SIZING.md \
+              docs/DEATH_AUTOPSY.md ; do
               if [ -f "$f" ]; then git add "$f"; fi
             done
           }
