@@ -391,6 +391,11 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
     return filled, expired
 
 
+def observation_eligible() -> bool:
+    """Only successful Scan-triggered workflow runs count toward the evaluation window."""
+    return os.environ.get("PAPER_RECORD_OBSERVATION", "0") == "1"
+
+
 def record_observation(run_date: str, prices: dict[str, list[dict]], candidate_file: str,
                        signals_queued: int, fills: int, closes: int, expired: int,
                        open_positions: int, pending_orders: int,
@@ -452,7 +457,7 @@ def main() -> int:
     write_rows(LEDGER, rows)
     opened_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "BUY" and not r.get("Exit_Date"))
     pending_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "PENDING")
-    if os.environ.get("PAPER_RECORD_OBSERVATION", "0") == "1":
+    if observation_eligible():
         record_observation(
             run_date=today, prices=prices, candidate_file=candidate_file,
             signals_queued=created, fills=filled, closes=closed_before + closed_after,
