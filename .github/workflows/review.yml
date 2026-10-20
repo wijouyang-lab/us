@@ -15,6 +15,7 @@ concurrency:
 jobs:
   review:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: 检出代码
@@ -57,6 +58,7 @@ jobs:
       # 买入决策已前置到 scan（flag 门控）时，review 跳过 process_buys（--no-buy）；
       # flag 未设（默认）→ 走 else 分支，与改动前逐字节一致。
       - name: 更新 $50,000 Portfolio Ledger
+        if: hashFiles('.review_session_ready') != '' && hashFiles('.review_session_skipped') == ''
         env:
           ENABLE_STOP_LOSS_SYNC: "1"
         run: |
@@ -65,6 +67,12 @@ jobs:
           else
             python portfolio_50000.py --data-dir .
           fi
+
+      # 成功标记必须在 review.py 业务落盘 + portfolio 账本步骤都成功后才写。
+      # 任一步失败 -> 无标记 -> 下一次同 session 重跑；新 pending 会改变指纹，不会被误跳过。
+      - name: 写入 Review 交易日成功标记
+        if: hashFiles('.review_session_ready') != '' && hashFiles('.review_session_skipped') == ''
+        run: python review_session_guard.py mark --session "$(cat .review_session_ready)"
 
       # 安全网：即使后面 git push 失败，本轮复盘产物也不会随 runner 销毁而丢失
       - name: 上传复盘产物（防止推送失败导致数据丢失）
@@ -82,12 +90,19 @@ jobs:
             portfolio_50000_positions.csv
             portfolio_50000_transactions.csv
             portfolio_50000_history.csv
+            review_session_state.json
           if-no-files-found: warn
 
       - name: 提交账本和处理记录
+        if: hashFiles('.review_session_ready') != '' && hashFiles('.review_session_skipped') == ''
         run: |
           # 只 add 明确需要持久化的业务文件，绝不 git add -A
           git add trade_history.csv review_history.csv
+
+          # 交易日成功标记：随业务数据一起入库；push 失败时下次会重新执行
+          if [ -f review_session_state.json ]; then
+            git add review_session_state.json
+          fi
 
           # $50,000 Portfolio Ledger：必须随复盘一并入库，否则账户状态会丢失
           if [ -f portfolio_50000_meta.json ]; then

@@ -11,6 +11,8 @@ import atexit
 import pandas as pd
 import os
 import json
+import tempfile
+import sys
 from clawsocket_compat import ClawSocketClient, set_context, write_model_usage
 import datetime
 import math
@@ -22,6 +24,105 @@ EVOLVE_LOG     = "strategy_evolution.json"
 EVOLVED_RULES  = "evolved_rules.json"
 
 MIN_CLOSED = 8   # 最小已平仓样本数
+
+STRATEGY_PARAMS_FILE = "strategy_params.json"
+STRATEGY_PARAMS = None
+
+
+class StrategyParamsError(RuntimeError):
+    """Raised when strategy_params.json is missing or structurally invalid."""
+
+
+def _validate_strategy_params(data):
+    if not isinstance(data, dict):
+        raise StrategyParamsError("strategy_params.json 顶层必须是 JSON object")
+    scoring = data.get("scoring")
+    if not isinstance(scoring, dict):
+        raise StrategyParamsError("strategy_params.json 缺少 scoring object")
+    core = scoring.get("core_min_score")
+    if isinstance(core, bool) or not isinstance(core, (int, float)):
+        raise StrategyParamsError("strategy_params.json.scoring.core_min_score 必须为数值")
+    if not (0 <= float(core) <= 100):
+        raise StrategyParamsError("strategy_params.json.scoring.core_min_score 必须在 0-100")
+    obs = scoring.get("observation_min_score")
+    if obs is not None:
+        if isinstance(obs, bool) or not isinstance(obs, (int, float)) or not (0 <= float(obs) <= 100):
+            raise StrategyParamsError("strategy_params.json.scoring.observation_min_score 必须在 0-100")
+    return data
+
+
+def load_strategy_params(path=None):
+    """Load and validate the existing production parameter file.
+
+    There is deliberately no silent default: a missing/invalid file is an
+    explicit error, because Evolve must never invent trading thresholds.
+    """
+    target = path or STRATEGY_PARAMS_FILE
+    if not os.path.exists(target):
+        raise StrategyParamsError("未找到策略参数文件：%s" % target)
+    try:
+        with open(target, "r", encoding="utf-8") as handle:
+            data = json.load(handle)
+    except json.JSONDecodeError as exc:
+        raise StrategyParamsError("策略参数文件 JSON 解析失败：%s: %s" % (target, exc)) from exc
+    except OSError as exc:
+        raise StrategyParamsError("策略参数文件读取失败：%s: %s" % (target, exc)) from exc
+    return _validate_strategy_params(data)
+
+
+def get_strategy_params():
+    global STRATEGY_PARAMS
+    if STRATEGY_PARAMS is None:
+        STRATEGY_PARAMS = load_strategy_params()
+    return STRATEGY_PARAMS
+
+
+def save_strategy_params(params, path=None):
+    """Atomically persist validated parameters; never leave a half-written file."""
+    target = path or STRATEGY_PARAMS_FILE
+    _validate_strategy_params(params)
+    directory = os.path.dirname(os.path.abspath(target)) or "."
+    fd, tmp_name = tempfile.mkstemp(prefix=os.path.basename(target) + ".", suffix=".tmp", dir=directory)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+            json.dump(params, handle, ensure_ascii=False, indent=2)
+            handle.write("\n")
+            handle.flush()
+            os.fsync(handle.fileno())
+        os.replace(tmp_name, target)
+    except Exception:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
+    return target
+
+
+def apply_parameter_updates(strategy_params, threshold_validation, audit):
+    """Apply only the existing whitelisted core_min_score rule.
+
+    Returns (updated_params_copy, applied_updates).  Pure function so the
+    output/persistence contract can be tested without calling the AI.
+    """
+    updated = json.loads(json.dumps(strategy_params))
+    _validate_strategy_params(updated)
+    applied = []
+    tv = threshold_validation or {}
+    if tv.get("eligible") and tv.get("best") and audit.get("approve") is True and audit.get("risk_level") != "high":
+        best_t = int(tv["best"]["threshold"])
+        if not (0 <= best_t <= 100):
+            raise StrategyParamsError("OOS threshold 超出 0-100：%s" % best_t)
+        current_t = int(updated["scoring"].get("core_min_score", 65))
+        if best_t != current_t:
+            updated["scoring"]["core_min_score"] = best_t
+            applied.append({
+                "name": "core_min_score",
+                "old": current_t,
+                "new": best_t,
+                "reason": "time-ordered OOS EV >= baseline",
+            })
+    return updated, applied
 
 CLOSED_STATUSES = {"Dropped", "Stop_Loss_Hit", "Period_Matured", "Forced_Exit"}
 ACTIVE_STATUSES = {"Active"}
@@ -112,14 +213,15 @@ def _segment_by_generation(df_c, boundaries):
 
 
 
-def evaluate_score_thresholds_oos(df_c):
+def evaluate_score_thresholds_oos(df_c, strategy_params=None):
     """时间顺序 60/40 切分，用推荐事件的历史 Score 做简单门槛验证；不足样本时不自动改参数。"""
+    params = _validate_strategy_params(strategy_params) if strategy_params is not None else get_strategy_params()
     work=df_c.copy()
     work["score_num"]=pd.to_numeric(work["score"],errors="coerce")
     work=work.dropna(subset=["score_num","pnl_pct"]).sort_values("date")
     if len(work)<30:
         return {"eligible":False,"reason":"样本不足30笔"}
-    cut=max(1,int(len(work)*0.6)); val=work.iloc[cut:].copy(); base=float(STRATEGY_PARAMS["scoring"].get("core_min_score",65))
+    cut=max(1,int(len(work)*0.6)); val=work.iloc[cut:].copy(); base=float(params["scoring"].get("core_min_score",65))
     def ev(g): return float(g["pnl_pct"].mean()) if len(g) else None
     base_g=val[val["score_num"]>=base]
     base_ev=ev(base_g)
@@ -439,18 +541,13 @@ def evolve_strategy(metrics: dict):
         print(f"🛡️ Claude红队：approve={audit.get('approve')} risk={audit.get('risk_level')}")
 
         # 代码级参数：白名单 + OOS 门槛验证 + Claude 红队批准，避免 AI 随意改阈值。
-        applied_parameter_updates = []
-        tv = metrics.get("threshold_validation") or {}
-        if tv.get("eligible") and tv.get("best") and audit.get("approve") is True and audit.get("risk_level") != "high":
-            best_t = int(tv["best"]["threshold"])
-            current_t = int(STRATEGY_PARAMS["scoring"].get("core_min_score",65))
-            if best_t != current_t:
-                STRATEGY_PARAMS["scoring"]["core_min_score"] = best_t
-                applied_parameter_updates.append({"name":"core_min_score","old":current_t,"new":best_t,"reason":"time-ordered OOS EV >= baseline"})
+        strategy_params = get_strategy_params()
+        updated_params, applied_parameter_updates = apply_parameter_updates(
+            strategy_params, metrics.get("threshold_validation") or {}, audit
+        )
         # Observation 门槛不单独自动降低；保持更保守的下限，避免用 Observation 扩大低质量样本。
         if applied_parameter_updates:
-            with open(STRATEGY_PARAMS_FILE,"w",encoding="utf-8") as f:
-                json.dump(STRATEGY_PARAMS,f,ensure_ascii=False,indent=2)
+            save_strategy_params(updated_params)
         result["applied_parameter_updates"] = applied_parameter_updates
         result["date"]    = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
         result["metrics"] = {k: v for k, v in metrics.items()
@@ -545,7 +642,11 @@ if __name__ == "__main__":
         print("⚠️ 过滤后无有效记录，进化中止。")
         exit()
 
-    metrics = calculate_metrics(df)
+    try:
+        metrics = calculate_metrics(df)
+    except StrategyParamsError as exc:
+        print(f"::error::策略参数配置错误，Evolve 拒绝继续：{exc}")
+        sys.exit(1)
     if metrics is None:
         exit()
 

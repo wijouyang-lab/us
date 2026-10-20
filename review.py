@@ -34,6 +34,14 @@ import yfinance as yf
 # Trade History 数据质量纯函数层（去重 + 价格精度），与测试共享同一套规则。
 from trade_history_quality import deduplicate_trade_history, fmt_price
 
+# 统一美股交易日历 + Review 交易日幂等保护
+from us_market_calendar import (
+    CalendarUnavailable,
+    is_trading_day,
+    review_session_date as calendar_review_session_date,
+)
+from review_session_guard import ReviewSessionGuard
+
 
 # ============================================================
 # 0. 环境与时间
@@ -71,39 +79,60 @@ def get_us_time():
 def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
 
-def _previous_business_day(date_obj):
-    d = date_obj
-    while d.weekday() >= 5:
-        d -= datetime.timedelta(days=1)
-    return d
-
 def review_session_date():
     """返回本次盘后 Review 应该评估的最近一个已完成美股常规交易日。
 
-    Review 可能在美东午夜后运行（例如 GitHub Actions 的 UTC cron），
-    此时“美东今天”尚未开盘，不能把当天当成已完成交易日。
-    16:00 ET 之后才把当天视为已完成常规交易日；此前统一评估上一交易日。
+    使用统一 NYSE 日历（节假日、提前收盘、DST）。16:00 ET 之后（提前收盘日
+    为 13:00 ET 之后）才把当天视为已完成常规交易日。
     """
-    now = get_us_time()
-    if now.weekday() >= 5:
-        d = now.date() - datetime.timedelta(days=1)
-        return _previous_business_day(d).strftime("%Y-%m-%d")
-    if now.time() >= datetime.time(16, 0):
-        return now.strftime("%Y-%m-%d")
-    d = now.date() - datetime.timedelta(days=1)
-    return _previous_business_day(d).strftime("%Y-%m-%d")
+    return calendar_review_session_date(get_us_time()).strftime("%Y-%m-%d")
 
-REVIEW_SESSION_DATE = review_session_date()
-
-if get_us_time().weekday() >= 5:
-    print("当前为周末，美股休市，退出复盘。")
-    sys.exit(0)
+try:
+    _review_now = get_us_time()
+    if not is_trading_day(_review_now.date()):
+        _state = "MARKET_CLOSED_WEEKEND" if _review_now.weekday() >= 5 else "MARKET_CLOSED_HOLIDAY"
+        print(f"[{_review_now.strftime('%Y-%m-%d %H:%M:%S ET')}] 非 NYSE 交易日"
+              f"（status={_state}），退出复盘。")
+        print(f"::warning::Review 被市场日历门禁跳过（status={_state}）")
+        sys.exit(0)
+    REVIEW_SESSION_DATE = calendar_review_session_date(_review_now).strftime("%Y-%m-%d")
+except CalendarUnavailable as _cal_err:
+    print(f"::error::美股交易日历不可用，Review 拒绝继续：{_cal_err}")
+    sys.exit(1)
 
 print("=" * 60)
 print("启动美股盘后复盘与风控审查引擎")
 print(f"📅 本次复盘交易日：{REVIEW_SESSION_DATE}（美股最近已完成常规交易日）")
 print(f"🕒 Review运行时间：{get_us_time().strftime('%Y-%m-%d %H:%M:%S %Z')}")
 print("=" * 60)
+
+# 交易日级幂等保护：只有在成功标记存在且输入/账本指纹未变化时才跳过。
+# 允许同一交易日在本轮新增推荐/账本变化后安全重跑。
+for _flag_name in (".review_session_skipped", ".review_session_ready"):
+    try:
+        Path(_flag_name).unlink(missing_ok=True)
+    except OSError:
+        pass
+
+try:
+    _review_guard = ReviewSessionGuard(".")
+    _review_guard_decision = _review_guard.begin(REVIEW_SESSION_DATE)
+except Exception as _guard_err:
+    print(f"::error::Review 交易日幂等保护初始化失败：{_guard_err}")
+    sys.exit(1)
+
+atexit.register(_review_guard.release)
+
+if _review_guard_decision.skip:
+    print(f"ℹ️ [ReviewGuard] {_review_guard_decision.reason}，本次跳过（session={REVIEW_SESSION_DATE}）")
+    try:
+        Path(".review_session_skipped").write_text(REVIEW_SESSION_DATE, encoding="utf-8")
+    except OSError:
+        pass
+    _review_guard.release()
+    sys.exit(0)
+
+print(f"ℹ️ [ReviewGuard] {_review_guard_decision.reason}，开始处理 session={REVIEW_SESSION_DATE}")
 
 
 # ============================================================
@@ -3889,11 +3918,13 @@ body {{
 </html>
 """
 
+_report_ok = True
 for path in ("report.html","review_report.html"):
     try:
         Path(path).write_text(full_html, encoding="utf-8")
     except Exception as e:
-        print(f"⚠️ 保存 {path} 失败：{e}")
+        _report_ok = False
+        print(f"::error::保存 {path} 失败：{e}")
 
 
 print("=" * 60)
@@ -3915,3 +3946,12 @@ if os.environ.get("ENABLE_AI_REASON_BACKFILL") == "1":
         backfill_pending_reasons(".")
     except Exception as e:
         print(f"⚠️ AI 原因回填失败（不影响 review）：{type(e).__name__}: {e}")
+
+if not _report_ok:
+    print("::error::Review 报告文件未全部保存，拒绝写成功标记，允许下次安全重试")
+    sys.exit(1)
+
+# 业务数据处理与报告已保存；workflow 在 portfolio 步骤成功后会写最终成功标记。
+Path(".review_session_ready").write_text(REVIEW_SESSION_DATE, encoding="utf-8")
+print(f"ℹ️ [ReviewGuard] 业务处理完成，等待 workflow finalizer 写成功标记（session={REVIEW_SESSION_DATE}）")
+_review_guard.release()
