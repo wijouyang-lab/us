@@ -26,6 +26,11 @@ REPO = Path(__file__).resolve().parent.parent
 PENDING_GLOB = "us_stocks_pending_*.csv"
 PRICE_FILE = REPO / "quant_factor_price_history.csv"
 LEDGER = REPO / "portfolio_paper_transactions.csv"
+OBSERVATIONS_FILE = REPO / "portfolio_paper_observation_dates.csv"
+OBSERVATION_COLUMNS = [
+    "Run_Date", "Data_AsOf_Date", "Candidate_File", "Signals_Queued",
+    "Fills", "Closes", "Orders_Expired", "Open_Positions", "Pending_Orders",
+]
 
 COLUMNS = [
     "Txn_ID", "Signal_Date", "Ticker", "Action", "Shares",
@@ -348,6 +353,41 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
     return filled, expired
 
 
+def record_observation(run_date: str, prices: dict[str, list[dict]], candidate_file: str,
+                       signals_queued: int, fills: int, closes: int, expired: int,
+                       open_positions: int, pending_orders: int,
+                       path: Path = OBSERVATIONS_FILE) -> None:
+    """Record one successful paper-workflow observation per ET calendar date, including zero-signal days."""
+    previous = []
+    if path.exists() and path.stat().st_size:
+        with path.open(encoding="utf-8-sig", newline="") as fh:
+            previous = list(csv.DictReader(fh))
+    by_date = {r.get("Run_Date", ""): r for r in previous if r.get("Run_Date")}
+    asof_dates = [
+        bar["date"] for ticker_bars in prices.values() for bar in ticker_bars
+        if bar.get("date") and bar["date"] <= run_date
+    ]
+    by_date[run_date] = {
+        "Run_Date": run_date,
+        "Data_AsOf_Date": max(asof_dates) if asof_dates else "",
+        "Candidate_File": candidate_file,
+        "Signals_Queued": str(signals_queued),
+        "Fills": str(fills),
+        "Closes": str(closes),
+        "Orders_Expired": str(expired),
+        "Open_Positions": str(open_positions),
+        "Pending_Orders": str(pending_orders),
+    }
+    rows = [by_date[d] for d in sorted(by_date) if d]
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", encoding="utf-8", newline="") as fh:
+        writer = csv.DictWriter(fh, fieldnames=OBSERVATION_COLUMNS, extrasaction="ignore")
+        writer.writeheader()
+        writer.writerows(rows)
+    tmp.replace(path)
+
+
 def main() -> int:
     today = et_today()
     rows = read_rows(LEDGER)
@@ -358,6 +398,7 @@ def main() -> int:
 
     candidates = sorted(REPO.glob(PENDING_GLOB))
     candidates = [p for p in candidates if not p.name.endswith(".processed")]
+    candidate_file = candidates[-1].name if candidates else ""
     created = _create_signal_orders(rows, candidates, today)
 
     filled, expired = _fill_pending_orders(rows, prices, today=today)
@@ -368,6 +409,11 @@ def main() -> int:
     write_rows(LEDGER, rows)
     opened_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "BUY" and not r.get("Exit_Date"))
     pending_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "PENDING")
+    record_observation(
+        run_date=today, prices=prices, candidate_file=candidate_file,
+        signals_queued=created, fills=filled, closes=closed_before + closed_after,
+        expired=expired, open_positions=opened_now, pending_orders=pending_now,
+    )
     print(
         f"[paper] 完成：新增信号 {created} / 新成交 {filled} / 新平仓 {closed_before + closed_after} / "
         f"过期订单 {expired} / 当前持仓 {opened_now} / 待成交 {pending_now} / "
