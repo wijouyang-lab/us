@@ -238,3 +238,8 @@ PIT（Point-in-Time）筛选依据 `sp500_constituents.csv` 的 `Date_Added` 列
 - 保留 ``MIN_RR = 2.0``（有微弱信息）、止损距离 ``[2%, 5%]``、板块 ≤1 只。
 - 三类偏差（``Gate_Status`` 不可复现 / 重叠偏差 / ``Composite`` 替代）已在
   ``docs/STRICT_FILTER_BACKTEST_2Y.md`` 开头显式标注。
+---
+
+## 研究阶段收束（2026-10-20）
+
+技术面、基本面、行业轮动、严筛逻辑四条独立路线均无可用 Alpha。严筛的价值在于风控过滤，不在超额收益。研究侧收束，转入 40 天 Paper Trading 观察期。
