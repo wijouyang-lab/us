@@ -69,7 +69,10 @@ jobs:
           python tools/research/atr_position_sizing.py
           grep -q "平均单期 20D 净收益" docs/ATR_POSITION_SIZING.md
           grep -q "非重叠 20D 期累计净复利" docs/ATR_POSITION_SIZING.md
-          grep -q "未扣成本" docs/ATR_POSITION_SIZING.md && exit 1 || true
+          if grep -q "未扣成本" docs/ATR_POSITION_SIZING.md; then
+            echo "::error::ATR report still advertises a gross-only result as if it were net"
+            exit 1
+          fi
 
       - name: Generate PIT-gated death-autopsy report (integration check)
         run: |
