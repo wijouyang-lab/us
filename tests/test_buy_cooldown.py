@@ -13,6 +13,7 @@ import portfolio_50000 as pf
 from datetime import date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 
 def _today() -> str:
@@ -95,8 +96,12 @@ def test_intraday_stop_writes_cooldown(monkeypatch, tmp_path):
     """
     TODAY = "2026-10-09"
     monkeypatch.setattr(pf, "us_today_str", lambda: TODAY)
-    monkeypatch.setattr(pf, "fetch_last_closes",
-                        lambda tickers: {t: {"current": Decimal("90.00")} for t in tickers})
+    quote_as_of = datetime(2026, 10, 9, 11, 55, tzinfo=ZoneInfo("America/New_York")).isoformat()
+    monkeypatch.setattr(pf, "fetch_intraday_last_prices",
+                        lambda tickers, now_et=None: {
+                            t: {"current": Decimal("90.00"), "as_of": quote_as_of}
+                            for t in tickers
+                        })
     d = Path(tmp_path)
     pf.write_csv_rows(d / pf.POSITIONS_FILE, pf.POSITION_COLUMNS, [{
         "Portfolio_ID": "US-50000-001", "Unit_ID": "U001", "Ticker": "AAA",
@@ -107,7 +112,10 @@ def test_intraday_stop_writes_cooldown(monkeypatch, tmp_path):
         "Recommendation_ID": "AAA|2026-10-07|Core_Dragon", "Last_Update": TODAY,
     }])
     pf.write_csv_rows(d / pf.TRANSACTIONS_FILE, pf.TRANSACTION_COLUMNS, [])
-    res = pf._run_intraday_stop(d, TODAY, offline=False, now_et=datetime(2026, 10, 9, 12, 0))
+    res = pf._run_intraday_stop(
+        d, TODAY, offline=False,
+        now_et=datetime(2026, 10, 9, 12, 0, tzinfo=ZoneInfo("America/New_York")),
+    )
     assert res["triggered"] == 1
     pos = pf.read_csv_rows(d / pf.POSITIONS_FILE)[0]
     assert pos["Status"] == "CLOSED"
