@@ -157,7 +157,7 @@ def main() -> int:
         f"# Paper Trading 日报 — {today}\n",
         "> 数据源：portfolio_paper_transactions.csv + quant_factor_price_history.csv",
         "> 本报告只统计已成交模拟交易；PENDING 不算持仓，VOID 不参与业绩。所有 PnL 为扣除模型滑点与佣金后的净值。\n",
-        "> 观察期按 Paper Trading 在 Scan 成功后实际运行的 ET 日期统计；仅有行情数据但没有成功运行记录的日期不计入。\\n",
+        "> 观察期按 Paper Trading 在 Scan 成功后实际运行的 ET 日期统计；仅有行情数据但没有成功运行记录的日期不计入。\n",
         f"> 模型成本：单边滑点 {SLIPPAGE_BPS:.1f} bps；单边佣金 {COMMISSION_BPS:.1f} bps。成本为研究假设，不代表任何特定券商实际费率。\n",
         "## 评估门槛\n",
         "| 指标 | 要求 | 当前值 | 状态 |",
