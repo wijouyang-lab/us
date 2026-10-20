@@ -43,8 +43,6 @@ import yfinance as yf
 
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
-from scripts.pending_merge import ensure_pending_schema, unseen_pending_items
-from scripts.ai_item_matching import match_ai_rows, normalize_ai_fields
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
 from quant_factor_lab import (
@@ -724,12 +722,8 @@ def _filter_completed_daily_bars(df, asof=None):
     out = out.loc[valid].copy()
     idx = pd.DatetimeIndex(idx[valid])
     if idx.tz is None:
-        # Yahoo/yfinance 日线的 tz-naive 索引是交易日标签（例如周一 00:00），
-        # 不是 UTC 瞬时。若先当 UTC 转 ET，会把周一误标为周日 20:00，
-        # 盘前又可能把当天未完成日线错误保留下来，污染技术指标/Technical_Date。
-        idx_us = idx.tz_localize(US_TZ)
+        idx_us = idx.tz_localize("UTC").tz_convert(US_TZ)
     else:
-        # 只有明确带时区的索引才按真实时间戳转换到美东。
         idx_us = idx.tz_convert(US_TZ)
     cutoff = _last_completed_regular_date_us(asof)
     out.index = idx_us
@@ -3546,44 +3540,15 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
         client=ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
         txt=_model_stream_text(client, model=TARGET_MODEL, max_tokens=10000, messages=[{"role":"user","content":prompt}])
         obj=_extract_json_object(txt)
-        if not isinstance(obj, dict):
-            print(f"⚠️ [AI解释层结构诊断] JSON根对象解析失败或不是对象（type={type(obj).__name__}）")
-            rows = []
-        else:
-            raw_rows = obj.get("items", [])
-            if not isinstance(raw_rows, list):
-                print(
-                    "⚠️ [AI解释层结构诊断] 顶层 items 不是数组："
-                    f"type={type(raw_rows).__name__}，顶层keys={list(obj.keys())[:12]}"
-                )
-                rows = []
-            else:
-                rows = raw_rows
-                if not rows:
-                    print(f"⚠️ [AI解释层结构诊断] items 数组为空；顶层keys={list(obj.keys())[:12]}")
-        by_ticker, match_diagnostics = match_ai_rows(items, rows)
-        if match_diagnostics:
-            print("⚠️ [AI解释层匹配诊断] " + "；".join(match_diagnostics[:12]))
-        core_required = ("industry_logic", "news_cn", "premarket_conclusion", "catalysts", "risks", "invalidation")
-        obs_required = ("industry_logic", "catalysts", "risks")
-        field_diagnostics = []
+        rows=obj.get("items", []) if isinstance(obj, dict) else []
+        by_ticker={str(x.get("ticker","")).upper():x for x in rows if isinstance(x,dict) and x.get("ticker")}
         for item in items:
-            ticker = str(item.get("Ticker","")).strip().upper()
-            d=normalize_ai_fields(by_ticker.get(ticker,{}))
+            d=by_ticker.get(str(item.get("Ticker","")).upper(),{})
             for key in ("industry_logic","news_cn","premarket_conclusion","catalysts","risks","invalidation"):
                 item[f"AI_{key}"]=str(d.get(key) or "").strip()
-            required = core_required if item.get("Tag") == "Core_Dragon" else obs_required
-            missing_fields = [key for key in required if not item.get(f"AI_{key}")]
-            if missing_fields:
-                field_diagnostics.append(f"{ticker}:缺少{','.join(missing_fields)}")
-        if field_diagnostics:
-            print("⚠️ [AI解释层字段诊断] " + "；".join(field_diagnostics[:12]))
-        if rows and not by_ticker:
-            sample_keys = list(rows[0].keys())[:20] if isinstance(rows[0], dict) else [type(rows[0]).__name__]
-            print(f"⚠️ [AI解释层返回样本结构] rows={len(rows)} keys={sample_keys}")
-        ok_core = sum(all(bool(item.get(f"AI_{key}")) for key in core_required)
+        ok_core = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn"))
                       for item in items if item.get("Tag") == "Core_Dragon")
-        ok_obs = sum(all(bool(item.get(f"AI_{key}")) for key in obs_required)
+        ok_obs = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_catalysts"))
                      for item in items if item.get("Tag") == "Observation")
         ok = ok_core + ok_obs
         print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation {ok_obs} 极简）")
@@ -4293,8 +4258,8 @@ if __name__ == "__main__":
             _cutoff,
             trading_dates=_known_dates,
         )
-        if _diag.get("status") in {"STALE", "INVALID_SESSION_DATE", "NO_REFERENCE"}:
-            print("⚠️ [Quant Factor Lab][契约] " + _diag["message"])
+        if _diag.get("status") == "STALE":
+            print("⚠️ " + _diag["message"])
         else:
             print(f"[Quant Factor Lab][契约] Technical_Date={_t_dates[-1] if _t_dates else None} "
                   f"理论={_diag.get('expected_date')} status={_diag.get('status')} "
@@ -4426,65 +4391,23 @@ if __name__ == "__main__":
     #   不再从 to_write 捕获（chosen 为空时它必定为空）。
     _ai_persist_source = list(_enriched)
     _ai_persist = list(_ai_persist_source)
-    active_skipped = []
-    active = set()
-    if os.path.exists(log_file):
+    if os.path.exists(log_file) and to_write:
         try:
             old = pd.read_csv(log_file, keep_default_na=False)
-            active_tags = {"Core_Double_Dragon", "Sub_Pioneer", "Core_Dragon"}
-            active = (
-                set(old[old["Tag"].isin(active_tags)]["Ticker"].astype(str).str.strip().str.upper().tolist())
-                if "Tag" in old.columns else set()
-            )
+            active_tags = {"Core_Double_Dragon","Sub_Pioneer","Core_Dragon"}
+            active = set(old[old.get("Tag","").isin(active_tags)]["Ticker"].astype(str).tolist()) if "Tag" in old.columns else set()
             before = len(to_write)
-            active_skipped = [
-                item for item in to_write
-                if str(item.get("Ticker", "")).strip().upper() in active
-            ]
-            for item in active_skipped:
-                print(
-                    f"[pending去重/活跃持仓] {str(item.get('Ticker', '')).strip().upper()} "
-                    f"Tag={item.get('Tag', '')} 已存在活跃持仓日志，跳过写入 pending"
-                )
-            # Normalize candidate keys first; preserve the established filter contract used by
-            # regression tests and downstream review of this bookkeeping step.
-            for item in to_write:
-                item["Ticker"] = str(item.get("Ticker", "")).strip().upper()
             to_write = [x for x in to_write if x["Ticker"] not in active]
-            print(
-                f"[pending去重统计] 输入={before} / 活跃持仓跳过={len(active_skipped)} "
-                f"/ 最终to_write={len(to_write)}"
-            )
+            print(f"📋 跳过 {before-len(to_write)} 只已在持仓中的标的")
         except Exception as e:
             print(f"⚠️ 持仓去重失败：{e}")
-    if not to_write:
-        print(
-            f"[pending写入诊断] to_write=0；chosen={len(chosen)}，"
-            f"活跃持仓跳过={len(active_skipped)}，当前没有待写入候选"
-        )
-
-    # 同日重跑时只追加新 ticker；不覆盖旧 pending 行及其已更新的 Status。
-    pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
-    try:
-        to_append = unseen_pending_items(pending_file, to_write)
-        if len(to_append) != len(to_write):
-            print(
-                f"[pending追加保护] 本次候选={len(to_write)}，新 ticker={len(to_append)}；"
-                "已存在 ticker 不重复追加，旧行/状态保持不变"
-            )
-    except Exception as _pending_read_error:
-        # 无法安全读取既有文件时，不把它当成空文件，也不覆盖它。
-        to_append = []
-        print(
-            f"⚠️ [pending追加保护] 无法验证既有文件，拒绝写入新 pending 行："
-            f"{type(_pending_read_error).__name__}: {_pending_read_error}"
-        )
 
     # 关键：先完成“实际入账集合”的确定，再用同一集合渲染邮件 Core。
     # 因此候选池外 AI 推荐、历史持仓去重等都不会再导致邮件与 pending 分裂。
     ai_html = build_verified_core_html(ai_html, to_write)
 
     if to_write:
+        pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
         header_cols = [
             "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线",
             "Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX",
@@ -4492,30 +4415,9 @@ if __name__ == "__main__":
             #     AI 六段文本原样持久化（不新增 GPT 调用、不改写、不摘要、不截断）
             "AI_industry_logic","AI_news_cn","AI_premarket_conclusion","AI_catalysts","AI_risks","AI_invalidation"
         ]
-        try:
-            # Safely migrate older same-day headers before append. Existing rows/statuses
-            # are preserved and a one-time backup is kept; malformed files fail closed.
-            pending_columns = ensure_pending_schema(pending_file, header_cols)
-            to_append = unseen_pending_items(
-                pending_file, to_write, expected_columns=pending_columns
-            )
-            if pending_columns != header_cols:
-                print(
-                    f"[pending追加保护] 已兼容旧表头，保留额外旧列："
-                    f"{[x for x in pending_columns if x not in header_cols]}"
-                )
-        except Exception as _schema_error:
-            pending_columns = list(header_cols)
-            to_append = []
-            print(
-                f"⚠️ [pending追加保护] 今日文件表头迁移/校验失败，拒绝追加："
-                f"{type(_schema_error).__name__}: {_schema_error}"
-            )
-        pending_exists = os.path.exists(pending_file)
-        with open(pending_file, "a" if pending_exists else "w", encoding="utf-8", newline="") as f:
-            if not pending_exists:
-                f.write(",".join(pending_columns)+"\n")
-            for item in to_append:
+        with open(pending_file,"w",encoding="utf-8",newline="") as f:
+            f.write(",".join(header_cols)+"\n")
+            for item in to_write:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
                     item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("Premarket_Status_Display",""), item.get("Premarket_Source",""), item.get("News_AsOf_ET",""),
@@ -4530,13 +4432,8 @@ if __name__ == "__main__":
                     item.get("AI_catalysts",""), item.get("AI_risks",""), item.get("AI_invalidation","")
                 ]
                 safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
-                # Legacy-only columns are retained after canonical columns; new rows leave them blank.
-                safe_vals.extend([""] * max(0, len(pending_columns) - len(safe_vals)))
                 f.write(",".join(safe_vals)+"\n")
-        if to_append:
-            print(f"✅ 已追加 {len(to_append)} 条新美股待确认记录：{pending_file}")
-        else:
-            print(f"ℹ️ 今日 pending 文件未追加新行，既有记录保持不变：{pending_file}")
+        print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
 
         # AI 文本持久化缓存：按 Ticker Upsert 到 ai_text_cache.csv，
         # 由 scan.yml 随 pending CSV 一并提交推送；云端 dashboard_export.py
