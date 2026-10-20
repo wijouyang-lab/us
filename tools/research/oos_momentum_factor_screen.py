@@ -193,7 +193,7 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
     splits = chronological_splits(date_list)
     report = [
         "# Chronological OOS screen — 20D Momentum baseline\n",
-        "> Status: research-only diagnostic. This is a single, predeclared factor screen, not the production strategy and not an execution backtest.",
+        "> Status: research-only diagnostic. This is a chronological holdout screen, not the production strategy and not an execution backtest. The same source dataset has appeared in earlier exploratory research reports, so the late period is not a pristine, never-inspected blind test.",
         f"> Input: {input_path.name}; {len(frame):,} rows; {frame['Ticker'].nunique():,} tickers; {len(date_list)} signal dates.",
         f"> Period: {pd.Timestamp(date_list[0]).date()} to {pd.Timestamp(date_list[-1]).date()}.",
         f"> Signal: {FACTOR}; direction is selected from TRAIN only per horizon and then frozen for validation/test; daily Top {TOP_FRACTION:.0%} vs Bottom {TOP_FRACTION:.0%}.",
@@ -272,7 +272,7 @@ def main() -> int:
     if not INPUT.exists() or INPUT.stat().st_size == 0:
         raise SystemExit(f"missing or empty research input: {INPUT}")
     frame = pd.read_csv(INPUT, dtype=str, keep_default_na=False)
-    required = {"Scan_Date", "Ticker", FACTOR, *(f"Forward_Return_{h}D" for h in HORIZONS)}
+    required = {"Scan_Date", "Technical_Date", "Ticker", FACTOR, *(f"Forward_Return_{h}D" for h in HORIZONS)}
     missing = sorted(required - set(frame.columns))
     if missing:
         raise SystemExit(f"missing required columns: {missing}")
@@ -283,14 +283,21 @@ def main() -> int:
         frame[col] = pd.to_numeric(frame[col].replace("", np.nan), errors="coerce")
     if frame["Scan_Date"].isna().any():
         raise SystemExit(f"invalid Scan_Date rows: {int(frame['Scan_Date'].isna().sum())}")
-    if frame.duplicated(["Scan_Date", "Ticker"]).any():
-        raise SystemExit("duplicate Scan_Date|Ticker rows; refusing silent de-duplication")
-    if "Technical_Date" in frame.columns:
-        frame["Technical_Date"] = pd.to_datetime(frame["Technical_Date"], errors="coerce").dt.normalize()
-        future_technical = frame["Technical_Date"] > frame["Scan_Date"]
-        if future_technical.any():
-            raise SystemExit(f"Technical_Date later than Scan_Date in {int(future_technical.sum())} rows")
     frame["Ticker"] = frame["Ticker"].astype(str).str.strip().str.upper()
+    if frame["Ticker"].eq("").any():
+        raise SystemExit("blank Ticker rows; refusing ambiguous research universe")
+    if frame.duplicated(["Scan_Date", "Ticker"]).any():
+        raise SystemExit("duplicate normalized Scan_Date|Ticker rows; refusing silent de-duplication")
+    frame["Technical_Date"] = pd.to_datetime(frame["Technical_Date"], errors="coerce").dt.normalize()
+    if frame["Technical_Date"].isna().any():
+        raise SystemExit(f"invalid Technical_Date rows: {int(frame['Technical_Date'].isna().sum())}")
+    future_technical = frame["Technical_Date"] > frame["Scan_Date"]
+    if future_technical.any():
+        raise SystemExit(f"Technical_Date later than Scan_Date in {int(future_technical.sum())} rows")
+    weekend_technical = frame["Technical_Date"].dt.weekday >= 5
+    if weekend_technical.any():
+        sample = frame.loc[weekend_technical, ["Scan_Date", "Technical_Date", "Ticker"]].head(10).to_dict("records")
+        raise SystemExit(f"Technical_Date contains weekend session labels; refusing to backtest: {sample}")
     frame = frame.dropna(subset=[FACTOR])
     report = build_report(frame)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
