@@ -43,6 +43,28 @@ def test_report_refuses_legacy_and_mixed_prices():
         report.PRICE_FILE = old
 
 
+def test_observation_dates_are_actual_logged_runs_and_deduplicated():
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "observations.csv"
+        fields = [
+            "Run_Date", "Data_AsOf_Date", "Candidate_File", "Signals_Queued",
+            "Fills", "Closes", "Orders_Expired", "Open_Positions", "Pending_Orders",
+        ]
+        rows = [
+            {"Run_Date": "2026-10-19"},
+            {"Run_Date": "2026-10-19"},
+            {"Run_Date": "2026-10-20"},
+            {"Run_Date": "2026-10-21"},
+            {"Run_Date": "not-a-date"},
+        ]
+        with path.open("w", encoding="utf-8", newline="") as fh:
+            writer = csv.DictWriter(fh, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(rows)
+        got = report.read_observation_dates("2026-10-20", path=path)
+        assert got == ["2026-10-19", "2026-10-20"]
+
+
 def test_report_accepts_only_rebuilt_v2_prices():
     old = report.PRICE_FILE
     try:
@@ -61,6 +83,7 @@ def main():
     tests = [
         test_report_refuses_legacy_and_mixed_prices,
         test_report_accepts_only_rebuilt_v2_prices,
+        test_observation_dates_are_actual_logged_runs_and_deduplicated,
     ]
     failures = 0
     for test in tests:
