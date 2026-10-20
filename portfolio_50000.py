@@ -104,7 +104,10 @@ def dec(v) -> Decimal | None:
     try:
         if v is None or v == "":
             return None
-        d = Decimal(str(v).replace(",", "").strip())
+        # Stop-loss values in historical positions sometimes include "$" (e.g. "$95.00").
+        # Strip common display formatting before numeric validation so an otherwise valid
+        # protective stop is not silently skipped by the intraday fail-closed path.
+        d = Decimal(str(v).replace("$", "").replace(",", "").strip())
         return d if d.is_finite() else None
     except (InvalidOperation, ValueError, TypeError):
         return None
