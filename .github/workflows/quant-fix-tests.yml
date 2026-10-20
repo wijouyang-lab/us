@@ -8,6 +8,14 @@ on:
       - "scan.py"
       - "portfolio_50000.py"
       - "tests/test_portfolio_intraday_stop.py"
+      - "tests/test_intraday_stop.py"
+      - "tests/test_buy_cooldown.py"
+      - "tests/test_dashboard_workflow_branch_guard.py"
+      - "tests/test_date_integrity_audit.py"
+      - "tests/test_price_history_repair_plan.py"
+      - "tools/research/audit_date_integrity.py"
+      - "tools/research/plan_price_history_repair.py"
+      - ".github/workflows/dashboard-data.yml"
       - "tests/test_scan_daily_date_contract.py"
       - "quant_factor_lab.py"
       - "tests/test_quant_factor_lab.py"
@@ -45,6 +53,14 @@ on:
       - "scan.py"
       - "portfolio_50000.py"
       - "tests/test_portfolio_intraday_stop.py"
+      - "tests/test_intraday_stop.py"
+      - "tests/test_buy_cooldown.py"
+      - "tests/test_dashboard_workflow_branch_guard.py"
+      - "tests/test_date_integrity_audit.py"
+      - "tests/test_price_history_repair_plan.py"
+      - "tools/research/audit_date_integrity.py"
+      - "tools/research/plan_price_history_repair.py"
+      - ".github/workflows/dashboard-data.yml"
       - "tests/test_scan_daily_date_contract.py"
       - "quant_factor_lab.py"
       - "tests/test_quant_factor_lab.py"
@@ -109,10 +125,20 @@ jobs:
 
       - name: Compile modified Python modules
         run: |
-          python -m py_compile scan.py portfolio_50000.py dashboard_export.py scripts/ai_coverage.py quant_factor_price.py quant_factor_backtest.py quant_research_runner.py scripts/paper_trading.py scripts/paper_trading_schedule.py scripts/pending_merge.py scripts/ai_item_matching.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
+          python -m py_compile scan.py portfolio_50000.py dashboard_export.py scripts/ai_coverage.py quant_factor_price.py quant_factor_backtest.py quant_research_runner.py scripts/paper_trading.py scripts/paper_trading_schedule.py scripts/pending_merge.py scripts/ai_item_matching.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tools/research/audit_date_integrity.py tools/research/plan_price_history_repair.py tests/test_dashboard_workflow_branch_guard.py tests/test_date_integrity_audit.py tests/test_price_history_repair_plan.py tests/test_intraday_stop.py tests/test_buy_cooldown.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
 
       - name: Test paper portfolio intraday stop
         run: python -m pytest tests/test_portfolio_intraday_stop.py -q
+
+      - name: Test stop-loss scheduling, quote freshness, and repair-plan safety
+        run: |
+          python -m pytest -q \
+            tests/test_portfolio_intraday_stop.py \
+            tests/test_intraday_stop.py \
+            tests/test_buy_cooldown.py \
+            tests/test_dashboard_workflow_branch_guard.py \
+            tests/test_date_integrity_audit.py \
+            tests/test_price_history_repair_plan.py
 
       - name: Test Scan daily session-date contract
         run: python tests/test_scan_daily_date_contract.py
