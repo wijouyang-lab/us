@@ -12,6 +12,24 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tools.research import turnover_and_cost_analysis as ta
 
 
+def test_mean_ic_is_cross_sectional_per_date_not_pooled():
+    rows = []
+    values = list(range(10))
+    for i, value in enumerate(values):
+        rows.append({
+            "Scan_Date": "2025-01-02", "Factor": value, "Ret": value / 100.0,
+        })
+        rows.append({
+            "Scan_Date": "2025-01-03", "Factor": value, "Ret": (9 - value) / 100.0,
+        })
+    result = ta.mean_daily_ic(pd.DataFrame(rows), "Factor", "Ret", min_cross_section=10)
+    assert result["status"] == "OK", result
+    assert result["n_dates"] == 2
+    assert abs(result["mean_ic"]) < 1e-9, result
+    assert abs(result["median_ic"]) < 1e-9, result
+    assert abs(result["positive_date_pct"] - 50.0) < 1e-9, result
+
+
 def test_missing_pit_sector_file_fails_closed():
     with tempfile.TemporaryDirectory() as tmp:
         history, reason = ta.load_pit_sector_history(Path(tmp) / "missing.csv")
@@ -74,6 +92,7 @@ def test_bp_attribution_skips_without_market_cap_in_fundamentals():
 
 def main():
     tests = [
+        test_mean_ic_is_cross_sectional_per_date_not_pooled,
         test_missing_pit_sector_file_fails_closed,
         test_pit_sector_intervals_attach_by_effective_date,
         test_part1_computes_gross_and_cost_from_input_not_hardcoded_result,
