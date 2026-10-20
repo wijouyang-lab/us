@@ -27,8 +27,8 @@ REPO = Path(__file__).resolve().parent.parent.parent
 CONST = REPO / "sp500_constituents.csv"
 OUT = REPO / "docs" / "EARNINGS_SURPRISE_RECON.md"
 
-N_TICKERS = 100
-YEARS_BACK = 2
+N_TICKERS = 300
+YEARS_BACK = 5
 HORIZONS = (5, 20)
 SURPRISE_HI = 5.0
 SURPRISE_LO = -5.0
