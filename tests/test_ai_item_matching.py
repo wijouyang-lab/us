@@ -5,7 +5,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO))
-from scripts.ai_item_matching import match_ai_rows
+from scripts.ai_item_matching import match_ai_rows, normalize_ai_fields
 
 
 def test_matches_case_insensitive_tickers():
@@ -44,6 +44,31 @@ def test_unexpected_and_duplicate_tickers_are_reported():
     assert "unexpected ticker ZZZZ" in diagnostics
 
 
+def test_ticker_key_matching_is_case_insensitive():
+    matched, diagnostics = match_ai_rows([{"Ticker": "AAPL"}], [{"TICKER": "AAPL", "industry_logic": "x"}])
+    assert matched["AAPL"]["industry_logic"] == "x"
+    assert not any("missing tickers" in item for item in diagnostics)
+
+
+def test_ai_field_aliases_are_normalized():
+    fields = normalize_ai_fields({
+        "Industry Logic": "逻辑",
+        "AI_NEWS_CN": "新闻",
+        "PremarketConclusion": "时段",
+        "AI_Catalysts": "催化",
+        "RISKS": "风险",
+        "AI_invalidation": "失效",
+    })
+    assert fields == {
+        "industry_logic": "逻辑",
+        "news_cn": "新闻",
+        "premarket_conclusion": "时段",
+        "catalysts": "催化",
+        "risks": "风险",
+        "invalidation": "失效",
+    }
+
+
 if __name__ == "__main__":
     tests = [
         test_matches_case_insensitive_tickers,
@@ -51,6 +76,8 @@ if __name__ == "__main__":
         test_single_candidate_can_use_safe_positional_fallback,
         test_multi_candidate_missing_tickers_are_never_guessed,
         test_unexpected_and_duplicate_tickers_are_reported,
+        test_ticker_key_matching_is_case_insensitive,
+        test_ai_field_aliases_are_normalized,
     ]
     for test in tests:
         test()
