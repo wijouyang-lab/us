@@ -1,6 +1,7 @@
 # Paper Trading 计划（观察期从 2026-10-19 起）
 
 > 账本：`portfolio_paper_transactions.csv`（**与实盘 `portfolio_50000_*` 完全隔离**）
+> 观察日志：`portfolio_paper_observation_dates.csv`（记录 Scan 成功后实际运行的日期，包括零候选日）
 > 日报：`docs/PAPER_TRADING_REPORT.md`（每日由 `scripts/paper_trading_report.py` 覆盖生成）
 > 代码：`scripts/paper_trading.py`（记账） + `scripts/paper_trading_report.py`（统计）
 > 自动化：`.github/workflows/paper-trading.yml`（scan 成功后自动运行并回写 main）
@@ -46,7 +47,7 @@
 
 1. **完全独立的 CSV**：`portfolio_paper_transactions.csv`（实盘用 `portfolio_50000_transactions.csv`）。
 2. **零代码复用**：`paper_trading.py` 不 import 任何生产模块（`scan` / `review` / `portfolio_50000` / `quant_filter`）。
-3. **零回写风险**：workflow 只 `git add` 两个 paper 文件。
+3. **零回写风险**：workflow 只 `git add` 两个模拟交易/报告文件及一个观察日志文件；不提交 `portfolio_50000_*` 实盘账本。
 4. **初始资金相同**（5 万）以支持后期"paper vs 实盘"对照。
 
 ## 5. 已知偏差（必须随结论一起报告）
