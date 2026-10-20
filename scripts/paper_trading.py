@@ -107,11 +107,14 @@ def load_prices(path: Path = PRICE_FILE) -> dict[str, list[dict]]:
     return out
 
 
-def next_open_bar(series: list[dict], signal_date: str, asof_date: str | None = None):
-    """只检查信号日后的第一根交易日 bar；可选地限制为已完整的数据日期。"""
+def next_open_bar(series: list[dict], signal_date: str, asof_date: str | None = None,
+                   expected_session_date: str | None = None):
+    """只检查预期的首个后续市场交易日；缺 bar/Open 就拒绝成交，不能延迟到更晚日期。"""
     for bar in series:
         if bar["date"] > signal_date:
             if asof_date is not None and bar["date"] > asof_date:
+                return None
+            if expected_session_date is not None and bar["date"] != expected_session_date:
                 return None
             return bar if _positive_float(bar.get("open")) is not None else None
     return None
@@ -296,18 +299,28 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
             expired += 1
             continue
         series = prices.get(tk, [])
-        first_post_signal = next((b for b in series if b["date"] > signal_date), None)
-        if first_post_signal is None:
+        # Infer the first completed market session after the signal from the full cross-ticker
+        # history, not just this ticker's next available row (which could skip a missing bar).
+        session_dates = sorted({
+            b["date"]
+            for ticker_bars in prices.values()
+            for b in ticker_bars
+            if b["date"] > signal_date and (today is None or b["date"] <= today)
+        })
+        if not session_dates:
             # The next regular session has not arrived in completed-bar history yet.
             continue
-        bar = next_open_bar(series, signal_date, asof_date=today)
+        expected_session = session_dates[0]
+        bar = next_open_bar(
+            series, signal_date, asof_date=today, expected_session_date=expected_session
+        )
         if bar is None:
-            # The first post-signal session exists but has no Open: never use a later session instead.
+            # A session exists in the market-wide history but this ticker lacks that session/Open.
             r["Action"] = "EXPIRED"
-            r["Entry_Source_Date"] = first_post_signal["date"]
-            r["Reason"] = "MISSING_OPEN_ON_FIRST_POST_SIGNAL_BAR"
+            r["Entry_Source_Date"] = expected_session
+            r["Reason"] = "MISSING_TICKER_BAR_OR_OPEN_ON_FIRST_POST_SIGNAL_SESSION"
             expired += 1
-            print(f"[paper] EXPIRED {tk} signal={signal_date}: missing Open on first post-signal bar")
+            print(f"[paper] EXPIRED {tk} signal={signal_date}: missing ticker bar/Open on {expected_session}")
             continue
         if _open_positions(rows) >= MAX_OPEN:
             r["Action"] = "EXPIRED"
