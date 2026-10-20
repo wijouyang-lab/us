@@ -6,6 +6,9 @@ on:
       - fix/quant-price-session-date-integrity
     paths:
       - "scan.py"
+      - "dashboard_export.py"
+      - "scripts/ai_coverage.py"
+      - "tests/test_ai_coverage.py"
       - "quant_factor_price.py"
       - "quant_factor_backtest.py"
       - "quant_research_runner.py"
@@ -33,6 +36,9 @@ on:
   pull_request:
     paths:
       - "scan.py"
+      - "dashboard_export.py"
+      - "scripts/ai_coverage.py"
+      - "tests/test_ai_coverage.py"
       - "quant_factor_price.py"
       - "quant_factor_backtest.py"
       - "quant_research_runner.py"
@@ -89,7 +95,7 @@ jobs:
 
       - name: Compile modified Python modules
         run: |
-          python -m py_compile scan.py quant_factor_price.py quant_factor_backtest.py quant_research_runner.py scripts/paper_trading.py scripts/paper_trading_schedule.py scripts/pending_merge.py scripts/ai_item_matching.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
+          python -m py_compile scan.py dashboard_export.py scripts/ai_coverage.py quant_factor_price.py quant_factor_backtest.py quant_research_runner.py scripts/paper_trading.py scripts/paper_trading_schedule.py scripts/pending_merge.py scripts/ai_item_matching.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
 
       - name: Test price history date contract
         run: python tests/test_quant_factor_price.py
@@ -114,6 +120,9 @@ jobs:
 
       - name: Test AI explanation wiring and diagnostics
         run: python tests/test_ai_explanation_wiring.py
+
+      - name: Test Dashboard event-level AI coverage
+        run: python tests/test_ai_coverage.py
 
       - name: Test paper report schema guard
         run: python tests/test_paper_trading_report.py
