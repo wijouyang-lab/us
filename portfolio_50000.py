@@ -71,7 +71,7 @@ POSITION_COLUMNS = [
 TRANSACTION_COLUMNS = [
     "Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
     "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
-    "Portfolio_ID", "Unit_ID", "Pending_Reason",
+    "Portfolio_ID", "Unit_ID", "Pending_Reason", "Quote_As_Of",
 ]
 HISTORY_COLUMNS = [
     "Date", "Cash", "Stock_Value", "Total_Equity", "Realized_PnL",
@@ -104,7 +104,10 @@ def dec(v) -> Decimal | None:
     try:
         if v is None or v == "":
             return None
-        d = Decimal(str(v).replace(",", "").strip())
+        # Stop-loss values in historical positions sometimes include "$" (e.g. "$95.00").
+        # Strip common display formatting before numeric validation so an otherwise valid
+        # protective stop is not silently skipped by the intraday fail-closed path.
+        d = Decimal(str(v).replace("$", "").replace(",", "").strip())
         return d if d.is_finite() else None
     except (InvalidOperation, ValueError, TypeError):
         return None
@@ -786,11 +789,10 @@ def _sync_stop_loss_from_recs(p: dict, recs: dict) -> None:
         raw_stop = str((recs.get(rid) or {}).get("Stop_Loss", "")).strip()
         if not raw_stop:
             return
-        # 归一化为「裸数字」：
-        #   positions.csv 的历史值带 "$"（实测 4 只持仓全是 "$214.76"/"$197.69"/…），
-        #   而下游 `_run_intraday_stop`（:687）用 `dec()` 解析，`dec()` 只剥逗号不剥 "$"
-        #   → dec("$197.69") 返回 None → 该持仓被 `continue` 跳过 → **盘中机械止损形同虚设**。
-        #   所以这里剥掉 "$"（和逗号）后再校验/写入，保证同步后的值真正可被解析。
+        # 归一化为「裸数字」后保存：
+        #   历史 positions.csv 中有 "$214.76"/"$197.69" 等展示格式。
+        #   dec() 现已兼容 "$" 和逗号，避免这些值被盘中止损解析时误判为无效；
+        #   此处仍统一写入裸数字，保持 positions.csv 规范、便于审计与跨版本兼容。
         norm_stop = raw_stop.replace("$", "").replace(",", "").strip()
         val = dec(norm_stop)
         if val is None or val <= 0:
@@ -887,14 +889,82 @@ def _et_now():
         return datetime.now(timezone.utc - timedelta(hours=4))
 
 
+def fetch_intraday_last_prices(
+    tickers: list[str],
+    now_et=None,
+    max_age_minutes: int = 15,
+) -> dict[str, dict]:
+    """Read fresh 5-minute regular-session bars for the simulated intraday stop.
+
+    Fail closed when yfinance is unavailable, the last bar has no timezone, is
+    outside today's regular session, is future-dated, or is older than the
+    freshness limit. This is still market-data polling, not a broker quote/feed.
+    """
+    from datetime import time as _dtime, timedelta
+    from zoneinfo import ZoneInfo
+
+    if not tickers or max_age_minutes <= 0:
+        return {}
+    now = now_et if now_et is not None else _et_now()
+    if now.tzinfo is None or now.utcoffset() is None:
+        return {}
+    now = now.astimezone(ZoneInfo("America/New_York"))
+    if now.weekday() >= 5 or not (_dtime(9, 30) <= now.time().replace(tzinfo=None) < _dtime(16, 0)):
+        return {}
+
+    try:
+        import yfinance as yf
+    except Exception:
+        return {}
+
+    out: dict[str, dict] = {}
+    for ticker in sorted({str(t).strip().upper() for t in tickers if str(t).strip()}):
+        try:
+            hist = yf.Ticker(ticker).history(
+                period="1d", interval="5m", prepost=False, auto_adjust=False
+            )
+            if hist is None or getattr(hist, "empty", True) or "Close" not in hist.columns:
+                continue
+            series = hist["Close"].dropna()
+            if getattr(series, "empty", True) or len(series) == 0:
+                continue
+
+            stamp = series.index[-1]
+            if hasattr(stamp, "to_pydatetime"):
+                stamp = stamp.to_pydatetime()
+            if not isinstance(stamp, datetime) or stamp.tzinfo is None or stamp.utcoffset() is None:
+                continue
+            stamp = stamp.astimezone(ZoneInfo("America/New_York"))
+            if stamp.date() != now.date():
+                continue
+            if stamp.weekday() >= 5 or not (_dtime(9, 30) <= stamp.time().replace(tzinfo=None) < _dtime(16, 0)):
+                continue
+
+            age = now - stamp
+            if age < timedelta(minutes=-2) or age > timedelta(minutes=max_age_minutes):
+                continue
+
+            price = dec(series.iloc[-1])
+            if price is None or price <= 0:
+                continue
+            out[ticker] = {
+                "current": price,
+                "as_of": stamp.isoformat(),
+            }
+        except Exception:
+            # No fresh quote means no simulated stop; never substitute a daily/EOD close.
+            continue
+    return out
+
+
 def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
                        now_et=None) -> dict:
-    """盘中机械止损：检查 OPEN 持仓，实时价 ≤ Stop_Loss 则机械卖出。
+    """盘中模拟止损：仅使用时区明确且新鲜的 5 分钟常规时段 bar。
 
     设计约束（只加不改）：
       · 不调用 process_buys / process_sells —— 只做"检查 + 卖"；
-      · 执行价 = 触发时实时价（fetch_last_closes 的 current，prepost=False）；
-      · 取不到实时价 → 不触发（绝不猜价，与 Review DATA_MISSING 一致）；
+      · 执行价 = 最近有效 5 分钟 bar 的 Close，不声称是交易所实时 tick；
+      · 报价缺失、时间戳无时区/不是当天/过旧 → 不触发（绝不猜价）；
       · 单日最多止损 2 只；全部持仓 CLOSED → 不再触发；已 CLOSED/已今日止损的不重复处理；
       · 触发写 transactions（Reason="Intraday Stop Loss", Pending_Reason="True" 待 AI 补原因）；
       · 交易日守卫：周末（weekday ≥ 5）静默退出（与 review.py/scan.py 一致）；
@@ -920,7 +990,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         return {"triggered": 0, "total_equity": None, "positions": []}
 
     open_tickers = sorted({str(p.get("Ticker", "")).upper() for p in open_pos})
-    prices = {} if offline else fetch_last_closes(open_tickers)
+    prices = {} if offline else fetch_intraday_last_prices(open_tickers, now_et=now)
 
     existing_txn = {str(t.get("Txn_ID", "")) for t in transactions}
     # 今日已盘中止损数（与本次本批次计数合计，封顶单日上限）
@@ -944,7 +1014,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
         info = prices.get(tkr) or {}
         px = info.get("current")
         if px is None:
-            print(f"[intraday-stop] {tkr} 取不到实时价，跳过（不猜价）")
+            print(f"[intraday-stop] {tkr} 无新鲜盘中报价，跳过（不回退到日线收盘价）")
             continue
         if px > stop:
             continue                                    # 未触及止损
@@ -975,6 +1045,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
             "Portfolio_ID": PORTFOLIO_ID,
             "Unit_ID": str(p.get("Unit_ID", "")),
             "Pending_Reason": "True",
+            "Quote_As_Of": str(info.get("as_of") or ""),
         })
         p["Shares"] = "0"
         p["Status"] = "CLOSED"
@@ -1005,7 +1076,7 @@ def run(data_dir: Path, offline: bool = False, price_only: bool = False,
         no_buy: bool = False) -> dict:
     today = us_today_str()
     if intraday_stop:
-        # 盘中机械止损：只在 09:30 ≤ ET < 16:00 触发，复用 fetch_last_closes（prepost=False）。
+        # 盘中模拟止损只使用 fetch_intraday_last_prices 的新鲜 5 分钟常规时段 bar。
         # 不调用 process_buys / process_sells，只做"检查 + 卖"。默认（无此 flag）完全不进入此分支。
         return _run_intraday_stop(data_dir, today, offline)
     positions = read_csv_rows(data_dir / POSITIONS_FILE)

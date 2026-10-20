@@ -86,16 +86,16 @@ jobs:
           cat dashboard/data/runtimes.json
 
       - name: Refresh portfolio prices
-        # 盘前/盘后扩展价跟随 dashboard-data 每 15 分钟刷新（仅写 portfolio_50000_positions.csv）。
-        # continue-on-error：即使本步骤失败，也不拖垮整体 dashboard 刷新（三重兜底之一）。
+        # 当前 workflow 每小时触发；本步骤只刷新持仓价格快照，不是 15 分钟任务。
+        # continue-on-error：即使本步骤失败，也不拖垮整体 dashboard 刷新。
         env:
           ENABLE_STOP_LOSS_SYNC: "1"
         run: python portfolio_50000.py --price-only --data-dir .
         continue-on-error: true
 
       - name: Intraday stop loss check
-        # 盘中机械止损：挂 dashboard-data 每 15 分钟，仅在 09:30-16:00 ET 触发，
-        # 实时价≤止损线则机械卖出（执行价=触发实时价）。continue-on-error：失败不拖垮整体刷新。
+        # 当前最多每小时检查一次；只在 09:30-16:00 ET 运行，使用时间戳新鲜的 5 分钟常规时段 bar。
+        # 这是模拟账本记账，不是券商下单；数据不可用或过旧会 fail closed。continue-on-error：不拖垮 dashboard。
         run: python portfolio_50000.py --intraday-stop --data-dir .
         continue-on-error: true
 

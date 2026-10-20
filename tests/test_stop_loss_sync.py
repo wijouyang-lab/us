@@ -145,8 +145,8 @@ def test_synced_value_is_parseable_by_dec(monkeypatch):
     等于这次修复白做。
     """
     monkeypatch.setenv("ENABLE_STOP_LOSS_SYNC", "1")
-    pos = _pos(Stop_Loss="$197.69")                       # 旧值不可解析
-    assert pf.dec(pos["Stop_Loss"]) is None               # 先证明旧值确实是坏的
+    pos = _pos(Stop_Loss="$197.69")                       # 历史货币格式仍应可解析
+    assert pf.dec(pos["Stop_Loss"]) == Decimal("197.69")  # 解析旧仓位值，不应跳过止损
     pf.mark_to_market([pos], _prices(), TODAY, _recs(stop="$210.24"))
     assert pos["Stop_Loss"] == "210.24"
     assert pf.dec(pos["Stop_Loss"]) == Decimal("210.24")  # 同步后可用

@@ -48,7 +48,7 @@ def _seed_inputs(workdir):
     """
     files = {
         "quant_factor_snapshot.csv": "phase1.v1",
-        "quant_factor_price_history.csv": "phase2b.v1",
+        "quant_factor_price_history.csv": "phase2b.v2",
         "quant_factor_backtest.csv": "phase2.v1",
         "quant_factor_validation.csv": "phase3.v1",
         "quant_factor_correlation.csv": "phase3.v1",
@@ -83,6 +83,85 @@ def test_full_pipeline_ok(workdir):
     assert set(summary["phases"].keys()) == {"2", "3", "4", "5", "6", "7"}
     for p in summary["phases"].values():
         assert p["status"] == "OK"
+
+
+def test_mixed_price_history_schema_blocks_phase2(workdir):
+    _seed_inputs(workdir)
+    price_file = os.path.join(workdir, "quant_factor_price_history.csv")
+    with open(price_file, "w", encoding="utf-8", newline="") as fh:
+        fh.write("Date,Ticker,Close,schema_version\n")
+        fh.write("2026-10-19,AAA,10,phase2b.v1\n")
+        fh.write("2026-10-20,AAA,11,phase2b.v2\n")
+
+    called = []
+    runner.PHASE_FUNCS = {2: lambda: called.append(True) or {"status": "OK", "written": True}}
+    try:
+        summary, code = runner.run(workdir=workdir, strict=False, only_phase=2)
+    finally:
+        _clear_override()
+    phase = summary["phases"]["2"]
+    assert phase["status"] == "NOT_ENOUGH_DATA"
+    assert "完整 Rebuild Quant Price History" in phase["reason"]
+    assert called == []
+    assert code == 0
+
+
+def test_missing_schema_version_row_blocks_phase2(workdir):
+    _seed_inputs(workdir)
+    price_file = os.path.join(workdir, "quant_factor_price_history.csv")
+    with open(price_file, "w", encoding="utf-8", newline="") as fh:
+        fh.write("Date,Ticker,Close,schema_version\n")
+        fh.write("2026-10-19,AAA,10,phase2b.v2\n")
+        fh.write("2026-10-20,BBB,11,\n")
+
+    called = []
+    runner.PHASE_FUNCS = {2: lambda: called.append(True) or {"status": "OK", "written": True}}
+    try:
+        summary, code = runner.run(workdir=workdir, strict=False, only_phase=2)
+    finally:
+        _clear_override()
+    phase = summary["phases"]["2"]
+    assert phase["status"] == "NOT_ENOUGH_DATA"
+    assert "<MISSING>" in phase["reason"]
+    assert called == []
+    assert code == 0
+
+
+def test_downstream_phases_do_not_consume_stale_outputs_when_phase2_blocks(workdir):
+    _seed_inputs(workdir)
+    # Mimic a previous successful backtest and downstream artifacts from an older run.
+    with open(os.path.join(workdir, "quant_factor_price_history.csv"), "w", encoding="utf-8", newline="") as fh:
+        fh.write("Date,Ticker,Close,schema_version\n")
+        fh.write("2026-10-19,AAA,10,phase2b.v1\n")
+        fh.write("2026-10-20,AAA,11,phase2b.v2\n")
+    with open(os.path.join(workdir, "quant_factor_backtest.csv"), "w", encoding="utf-8", newline="") as fh:
+        fh.write("Ticker,Forward_Return_20D,schema_version\nAAA,0.1,phase2.v1\n")
+    with open(os.path.join(workdir, "quant_factor_validation.csv"), "w", encoding="utf-8", newline="") as fh:
+        fh.write("Factor,Status,schema_version\nRSI_14,PROMISING,phase3.v1\n")
+    with open(os.path.join(workdir, "quant_factor_correlation.csv"), "w", encoding="utf-8", newline="") as fh:
+        fh.write("Factor_A,Factor_B,schema_version\nRSI_14,Momentum_20D_Pct,phase3.v1\n")
+
+    called = []
+    runner.PHASE_FUNCS = {
+        2: lambda: called.append(2) or {"status": "OK", "written": True},
+        3: lambda: called.append(3) or {"status": "OK", "written": True},
+        4: lambda: called.append(4) or {"status": "OK", "written": True},
+        5: lambda: called.append(5) or {"status": "OK", "written": True},
+        6: lambda: called.append(6) or {"status": "OK", "written": True},
+        7: lambda: called.append(7) or {"status": "OK", "written": True},
+    }
+    try:
+        summary, code = runner.run(workdir=workdir, strict=False)
+    finally:
+        _clear_override()
+
+    assert summary["phases"]["2"]["status"] == "NOT_ENOUGH_DATA"
+    for phase_num in ("3", "4", "5"):
+        assert summary["phases"][phase_num]["status"] == "NOT_ENOUGH_DATA"
+        assert "阻止复用旧文件" in summary["phases"][phase_num]["reason"]
+        assert summary["phases"][phase_num]["written"] is False
+    assert called == [6, 7], called
+    assert code == 0
 
 
 def test_missing_input_degrades_no_file(workdir):
@@ -122,9 +201,14 @@ def test_single_phase_failure_isolated(workdir):
         _clear_override()
     assert summary["phases"]["2"]["status"] == "ERROR"
     assert summary["phases"]["2"]["_error"] is not None
-    for n in ("3", "4", "5", "6", "7"):
+    # Fail-isolation means independent phases continue; dependent phases must not consume
+    # stale artifacts left by an earlier successful run.
+    for n in ("3", "4", "5"):
+        assert summary["phases"][n]["status"] == "NOT_ENOUGH_DATA"
+        assert "阻止复用旧文件" in summary["phases"][n]["reason"]
+    for n in ("6", "7"):
         assert summary["phases"][n]["status"] == "OK"
-    # 失败隔离：非 strict 下仍退出 0
+    # 非 strict 下失败与依赖阻断均留在状态报告，不中断独立阶段。
     assert code == 0
 
 
