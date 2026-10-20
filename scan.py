@@ -4411,10 +4411,11 @@ if __name__ == "__main__":
                     f"[pending去重/活跃持仓] {str(item.get('Ticker', '')).strip().upper()} "
                     f"Tag={item.get('Tag', '')} 已存在活跃持仓日志，跳过写入 pending"
                 )
-            to_write = [
-                item for item in to_write
-                if str(item.get("Ticker", "")).strip().upper() not in active
-            ]
+            # Normalize candidate keys first; preserve the established filter contract used by
+            # regression tests and downstream review of this bookkeeping step.
+            for item in to_write:
+                item["Ticker"] = str(item.get("Ticker", "")).strip().upper()
+            to_write = [x for x in to_write if x["Ticker"] not in active]
             print(
                 f"[pending去重统计] 输入={before} / 活跃持仓跳过={len(active_skipped)} "
                 f"/ 最终to_write={len(to_write)}"
