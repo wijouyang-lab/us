@@ -44,6 +44,7 @@ import yfinance as yf
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 from scripts.pending_merge import unseen_pending_items
+from scripts.ai_item_matching import match_ai_rows
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
 from quant_factor_lab import (
@@ -3542,9 +3543,12 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
         txt=_model_stream_text(client, model=TARGET_MODEL, max_tokens=10000, messages=[{"role":"user","content":prompt}])
         obj=_extract_json_object(txt)
         rows=obj.get("items", []) if isinstance(obj, dict) else []
-        by_ticker={str(x.get("ticker","")).upper():x for x in rows if isinstance(x,dict) and x.get("ticker")}
+        by_ticker, match_diagnostics = match_ai_rows(items, rows if isinstance(rows, list) else [])
+        if match_diagnostics:
+            print("⚠️ [AI解释层匹配诊断] " + "；".join(match_diagnostics[:12]))
         for item in items:
-            d=by_ticker.get(str(item.get("Ticker","")).upper(),{})
+            ticker = str(item.get("Ticker","")).strip().upper()
+            d=by_ticker.get(ticker,{})
             for key in ("industry_logic","news_cn","premarket_conclusion","catalysts","risks","invalidation"):
                 item[f"AI_{key}"]=str(d.get(key) or "").strip()
         ok_core = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn"))
