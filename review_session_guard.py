@@ -20,6 +20,7 @@ import glob
 import hashlib
 import json
 import os
+import re
 import sys
 import tempfile
 from dataclasses import dataclass
@@ -29,7 +30,7 @@ from pending_store import file_lock
 
 
 MARKER_NAME = "review_session_state.json"
-SCHEMA_VERSION = 1
+SCHEMA_VERSION = 2
 LEDGER_FILES = (
     "trade_history.csv",
     "review_history.csv",
@@ -86,23 +87,52 @@ def _read_pending_rows(path: Path) -> dict[tuple[str, str, str], dict[str, str]]
         raise ReviewGuardError("cannot read pending file %s: %s" % (path, exc)) from exc
 
 
-def pending_payload_fingerprint(root: str | Path, session_date: str) -> str:
-    """Hash normalized event rows, independent of .csv -> .processed rename."""
+def _pending_files(root: Path) -> list[Path]:
+    """All pending inputs Review may consume, regardless of session date.
+
+    ``review.py`` scans every ``us_stocks_pending_*.csv`` and
+    ``*.csv.processed`` file (supplement and recommendation-price lookup), so
+    the guard fingerprint must cover the same universe, not just today's file.
+    """
+    names = set(glob.glob(str(root / "us_stocks_pending_*.csv")))
+    names.update(glob.glob(str(root / "us_stocks_pending_*.csv.processed")))
+    return sorted(Path(name) for name in names)
+
+
+def unprocessed_pending_files(root: str | Path) -> list[Path]:
+    """Pending .csv files that have not been renamed to .processed yet."""
     root = Path(root)
-    day = str(session_date)[:10].replace("-", "")
-    patterns = [
-        str(root / ("us_stocks_pending_%s.csv" % day)),
-        str(root / ("us_stocks_pending_%s.csv.processed" % day)),
+    return [
+        path for path in _pending_files(root)
+        if not path.name.endswith(".csv.processed")
+        and re.search(r"us_stocks_pending_\d{8}\.csv$", path.name)
     ]
-    merged: dict[tuple[str, str, str], dict[str, str]] = {}
-    for pattern in patterns:
-        for name in sorted(glob.glob(pattern)):
-            path = Path(name)
-            # Later .processed rows represent the consumed snapshot.
-            merged.update(_read_pending_rows(path))
-    ordered = [merged[key] for key in sorted(merged)]
-    payload = json.dumps(ordered, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return _sha_bytes(payload.encode("utf-8"))
+
+
+def pending_payload_fingerprint(root: str | Path, session_date: str | None = None) -> str:
+    """Hash normalized rows of every pending file; rename-stable.
+
+    The payload is keyed by the date embedded in the filename and contains the
+    normalized event rows for that date.  Renaming ``.csv`` to ``.processed``
+    does not change the payload.  A new/changed file for any date does.
+    """
+    root = Path(root)
+    by_date: dict[str, dict[tuple[str, str, str], dict[str, str]]] = {}
+    for path in _pending_files(root):
+        match = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", path.name)
+        if not match:
+            continue
+        day = match.group(1)
+        bucket = by_date.setdefault(day, {})
+        # A later .processed snapshot supersedes the same event in .csv;
+        # distinct events from .csv are retained.
+        bucket.update(_read_pending_rows(path))
+    payload = [
+        [day, [rows[key] for key in sorted(rows)]]
+        for day, rows in sorted(by_date.items())
+    ]
+    raw = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return _sha_bytes(raw.encode("utf-8"))
 
 
 def ledger_fingerprint(root: str | Path) -> dict[str, str]:
@@ -114,7 +144,8 @@ def build_fingerprint(root: str | Path, session_date: str) -> dict[str, object]:
     return {
         "schema_version": SCHEMA_VERSION,
         "session_date": str(session_date)[:10],
-        "pending": pending_payload_fingerprint(root, session_date),
+        "pending_scope": "all_dates",
+        "pending": pending_payload_fingerprint(root),
         "ledgers": ledger_fingerprint(root),
     }
 
@@ -155,8 +186,17 @@ class ReviewSessionGuard:
         if marker and marker.get("status") == "success":
             same_session = str(marker.get("session_date") or "")[:10] == str(session_date)[:10]
             same_fingerprint = marker.get("fingerprint") == current
-            if same_session and same_fingerprint:
-                return GuardDecision(True, "同一交易日、输入与账本指纹未变化，已成功处理", digest)
+            same_schema = marker.get("schema_version") == SCHEMA_VERSION
+            if same_session and same_fingerprint and same_schema:
+                unprocessed = unprocessed_pending_files(self.root)
+                if unprocessed:
+                    names = ", ".join(p.name for p in unprocessed[:5])
+                    return GuardDecision(
+                        False,
+                        "同一交易日但仍有未处理 pending 文件：%s" % names,
+                        digest,
+                    )
+                return GuardDecision(True, "同一交易日、输入与账本指纹未变化，且无未处理 pending，已成功处理", digest)
             if same_session:
                 return GuardDecision(False, "同一交易日但输入/账本已变化，需要安全重跑", digest)
             return GuardDecision(False, "新的交易日", digest)
@@ -164,6 +204,12 @@ class ReviewSessionGuard:
 
     def mark_success(self, session_date: str, metadata: dict | None = None) -> Path:
         """Write the success marker atomically after all required steps."""
+        unprocessed = unprocessed_pending_files(self.root)
+        if unprocessed:
+            names = ", ".join(p.name for p in unprocessed[:5])
+            raise ReviewGuardError(
+                "仍有未处理 pending 文件，拒绝写成功标记：%s" % names
+            )
         current = build_fingerprint(self.root, session_date)
         marker = {
             "schema_version": SCHEMA_VERSION,

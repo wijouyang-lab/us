@@ -601,10 +601,11 @@ def supplement_us_stocks_from_pending():
         pending.append(f)
     if not pending:
         print("📋 无待确认/恢复美股文件，跳过补充。")
-        return
+        return []
     ensure_trade_history_columns()
     existing = load_trade_history()
     print(f"📋 发现 {len(pending)} 份待确认文件。")
+    failures = []
 
     for pf in pending:
         m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", os.path.basename(pf))
@@ -620,6 +621,7 @@ def supplement_us_stocks_from_pending():
                 continue
             if "Ticker" not in p.columns:
                 print(f"❌ {pf} 没有 Ticker 列。")
+                failures.append(pf)
                 continue
 
             resolved = []
@@ -719,9 +721,11 @@ def supplement_us_stocks_from_pending():
                 os.rename(pf, pf + ".processed")
         except Exception as e:
             print(f"❌ 处理 {pf} 出错：{e}")
+            failures.append(pf)
+    return failures
 
 
-supplement_us_stocks_from_pending()
+_pending_failures = supplement_us_stocks_from_pending()
 backfill_missing_trade_history_recommendation_prices()
 
 
@@ -3946,6 +3950,11 @@ if os.environ.get("ENABLE_AI_REASON_BACKFILL") == "1":
         backfill_pending_reasons(".")
     except Exception as e:
         print(f"⚠️ AI 原因回填失败（不影响 review）：{type(e).__name__}: {e}")
+
+if _pending_failures:
+    print("::error::以下 pending 文件未成功处理，拒绝写成功标记，允许下次安全重试：%s"
+          % ", ".join(str(p) for p in _pending_failures))
+    sys.exit(1)
 
 if not _report_ok:
     print("::error::Review 报告文件未全部保存，拒绝写成功标记，允许下次安全重试")
