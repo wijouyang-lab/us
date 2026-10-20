@@ -311,16 +311,28 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
         result["reason"] = "没有可用于下载的历史/当前 ticker"
         return result
 
-    # 下载区间：rebuild 时从旧文件最早日期起，覆盖完整保留期。
+    # Rebuild covers the entire retained history; incremental updates only refresh a short
+    # overlap before the latest stored date. This avoids redownloading years of OHLCV daily.
     if start is None:
-        min_date = (
-            pd.to_datetime(snap["Technical_Date"], errors="coerce").min()
-            if not snap.empty and "Technical_Date" in snap.columns else pd.NaT
-        )
-        if rebuild and not existing.empty and "Date" in existing.columns:
-            old_min_date = pd.to_datetime(existing["Date"], errors="coerce").min()
-            if not pd.isna(old_min_date):
-                min_date = old_min_date if pd.isna(min_date) else min(min_date, old_min_date)
+        if rebuild:
+            min_date = (
+                pd.to_datetime(snap["Technical_Date"], errors="coerce").min()
+                if not snap.empty and "Technical_Date" in snap.columns else pd.NaT
+            )
+            if not existing.empty and "Date" in existing.columns:
+                old_min_date = pd.to_datetime(existing["Date"], errors="coerce").min()
+                if not pd.isna(old_min_date):
+                    min_date = old_min_date if pd.isna(min_date) else min(min_date, old_min_date)
+        elif not existing.empty and "Date" in existing.columns:
+            # A 7-calendar-day overlap allows recent missing bars to be repaired and
+            # catches up from the most recent stored date if a previous run was delayed.
+            latest_date = pd.to_datetime(existing["Date"], errors="coerce").max()
+            min_date = latest_date - pd.Timedelta(days=7) if not pd.isna(latest_date) else pd.NaT
+        else:
+            min_date = (
+                pd.to_datetime(snap["Technical_Date"], errors="coerce").min()
+                if not snap.empty and "Technical_Date" in snap.columns else pd.NaT
+            )
         if pd.isna(min_date):
             min_date = pd.Timestamp.today()
         start = (min_date - pd.Timedelta(days=7)).strftime("%Y-%m-%d")
