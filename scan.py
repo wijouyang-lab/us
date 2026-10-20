@@ -4293,8 +4293,8 @@ if __name__ == "__main__":
             _cutoff,
             trading_dates=_known_dates,
         )
-        if _diag.get("status") == "STALE":
-            print("⚠️ " + _diag["message"])
+        if _diag.get("status") in {"STALE", "INVALID_SESSION_DATE", "NO_REFERENCE"}:
+            print("⚠️ [Quant Factor Lab][契约] " + _diag["message"])
         else:
             print(f"[Quant Factor Lab][契约] Technical_Date={_t_dates[-1] if _t_dates else None} "
                   f"理论={_diag.get('expected_date')} status={_diag.get('status')} "
