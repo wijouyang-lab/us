@@ -2,9 +2,13 @@ from __future__ import annotations
 
 import csv
 import json
+import sys
 from pathlib import Path
 
-from tools.research.audit_date_integrity import (
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "tools" / "research"))
+
+from audit_date_integrity import (
     audit_files,
     audit_price_history,
     audit_snapshot,
@@ -136,3 +140,20 @@ def test_strict_cli_returns_nonzero_and_prints_json_for_issues(tmp_path, capsys)
     assert exit_code == 1
     assert parsed["strict_pass"] is False
     assert parsed["issues"]
+
+
+def test_empty_input_files_are_reported(tmp_path):
+    snapshot = tmp_path / "snapshot.csv"
+    prices = tmp_path / "prices.csv"
+    write_csv(snapshot, ["Scan_Date", "Technical_Date", "Ticker", "schema_version"], [])
+    write_csv(
+        prices,
+        ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"],
+        [],
+    )
+
+    report = audit_files(snapshot, prices)
+
+    assert report["strict_pass"] is False
+    assert any("snapshot has no data rows" in item for item in report["issues"])
+    assert any("price history has no data rows" in item for item in report["issues"])
