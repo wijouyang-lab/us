@@ -42,19 +42,9 @@ jobs:
         id: window
         if: github.event_name == 'schedule'
         run: |
-          python - <<'PY'
-          import os
-          from datetime import datetime
-          from zoneinfo import ZoneInfo
-
-          now = datetime.now(ZoneInfo("America/New_York"))
-          # Only execute from 16:00 to before 18:00 ET; at least one of the two
-          # UTC schedules should land near 16:30 across DST/standard time.
-          allowed = now.weekday() < 5 and 16 <= now.hour < 18
-          print(f"ET now={now.isoformat()} allowed={allowed}")
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-              f.write(f"run_eod={'true' if allowed else 'false'}\n")
-          PY
+          RUN_EOD=$(python scripts/paper_trading_schedule.py | tail -n 1)
+          echo "run_eod=$RUN_EOD" >> "$GITHUB_OUTPUT"
+          echo "Scheduled EOD gate result: $RUN_EOD"
 
       - name: Install production dependencies for scheduled price refresh
         if: github.event_name == 'schedule' && steps.window.outputs.run_eod == 'true'
