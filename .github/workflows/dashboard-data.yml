@@ -1,18 +1,14 @@
 name: Dashboard Data Refresh
 
-# ============================================================
-# 这个 Workflow 只做一件事：运行 dashboard_export.py，刷新 dashboard_data.json。
-#
-# 【明确不做】
-#   · 不运行 scan.py，不触发任何选股 / 评分 / 止损 / Review / Options 逻辑
-#   · 不调用 GPT / Claude / Gemini 或任何 AI API（AI 六段由 scan.py 独立产出）
-#   · 不读取、不写入任何 API Key；不伪造、不硬编码任何行情数值
-# ============================================================
+# Dashboard 数据刷新 + 组合价格快照 + 盘中模拟止损检查。
+# 该 workflow 必须只在 main 分支上运行：其 push 步骤会将生成的数据推回 main。
+# 不运行 scan.py / review.py / options 逻辑；止损仅写入模拟组合 CSV，不下券商订单。
+# 不调用 AI API、不硬编码行情数值。
 
 on:
   schedule:
-    # 工作日 24 小时每 15 分钟刷新（周一~周五全天），确保宏观资产在亚洲时段也持续更新
-    # 注意：GitHub cron 最短间隔为 5 分钟，高峰期可能延迟或跳跑。
+    # 当前实际频率为每小时（周一至周五）；GitHub cron 触发可能延迟。
+    # 盘中止损也因此按小时检查；15 分钟设计尚未启用。
     - cron: "0 * * * 1-5"
   workflow_dispatch:
     inputs:
@@ -25,6 +21,9 @@ on:
         required: false
         default: "false"
   push:
+    # Critical safety guard: this workflow pushes generated files to main.
+    # Never run it from PR/feature branches.
+    branches: [main]
     paths:
       - dashboard_export.py
       - dashboard/fetch_runtimes.py
@@ -45,6 +44,8 @@ concurrency:
 
 jobs:
   refresh:
+    # Defense in depth for workflow_dispatch and schedule contexts.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
