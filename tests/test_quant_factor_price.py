@@ -10,6 +10,7 @@ import pandas as pd
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from quant_factor_price import (
+    SCHEMA_VERSION,
     PRICE_HISTORY_COLUMNS,
     filter_completed_daily_bars,
     get_snapshot_tickers,
