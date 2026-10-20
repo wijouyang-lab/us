@@ -31,10 +31,19 @@ def test_dashboard_writer_job_has_main_ref_guard():
     )
 
 
-def test_dashboard_writer_documents_actual_hourly_cadence():
+def test_dashboard_writer_documents_actual_fifteen_minute_cadence():
     source = WORKFLOW.read_text(encoding="utf-8")
-    assert re.search(r'(?m)^\s*- cron:\s*"0 \* \* \* 1-5"\s*$', source)
-    assert "当前实际频率为每小时" in source
+    assert re.search(r'(?m)^\s*- cron:\s*"\*/15 \* \* \* 1-5"\s*
+
+
+
+def test_dashboard_stop_comments_match_schedule_and_fresh_intraday_data():
+    source = WORKFLOW.read_text(encoding="utf-8")
+    assert "预期每 15 分钟检查" in source
+    assert "时间戳新鲜的 5 分钟常规时段 bar" in source
+    assert "任务延迟/数据过旧会 fail closed" in source
+, source)
+    assert "工作日每 15 分钟刷新" in source
 
 
 
