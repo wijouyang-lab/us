@@ -246,7 +246,7 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
             for horizon in HORIZONS
         ],
         "",
-        "## Held-out test verdicts by horizon\\n",
+        "## Held-out test verdicts by horizon\n",
         "| Horizon | Test verdict | Top-bottom spread | HAC t-stat | Valid dates |",
         "|---|---|---:|---:|---:|",
         *[
