@@ -133,7 +133,7 @@ def commission(notional: float, commission_bps: float = COMMISSION_BPS) -> float
 
 
 def net_trade_pnl(entry_exec: float, exit_exec: float, shares: float,
-                  entry_commission: float, exit_commission: float) -> tuple[float, float]:
+                  entry_commission: float, exit_commission: float) -> tuple[float, float, float]:
     gross = (exit_exec - entry_exec) * shares
     net = gross - entry_commission - exit_commission
     denominator = entry_exec * shares + entry_commission
