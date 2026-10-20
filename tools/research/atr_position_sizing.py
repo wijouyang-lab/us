@@ -34,7 +34,7 @@ if not np.isfinite(ROUND_TRIP_COST_BPS) or ROUND_TRIP_COST_BPS < 0:
 
 def stats(series, h=H):
     """Stats for non-overlapping h-day portfolio returns (returns are decimal fractions)."""
-    s = pd.to_numeric(series, errors="coerce").dropna()
+    s = pd.to_numeric(pd.Series(series), errors="coerce").dropna()
     if s.empty:
         return dict(total=float("nan"), mean_period=float("nan"), sharpe=float("nan"),
                     mdd=float("nan"), n=0, vol=float("nan"))
