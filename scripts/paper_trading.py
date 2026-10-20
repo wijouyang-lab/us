@@ -401,16 +401,6 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
             # must not create retroactive fills.
             print(f"[paper] PENDING {tk}: missing execution as-of date; no fill")
             continue
-        if expected_session < today:
-            r["Action"] = "EXPIRED"
-            r["Entry_Source_Date"] = expected_session
-            r["Reason"] = "MISSED_EXPECTED_SESSION_EXECUTION_WINDOW"
-            expired += 1
-            print(
-                f"[paper] EXPIRED {tk} signal={signal_date}: expected session "
-                f"{expected_session} was missed; refusing historical open backfill"
-            )
-            continue
         if expected_session > today:
             # The current session's completed daily bar is not available yet.
             continue
@@ -424,6 +414,16 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
             r["Reason"] = "MISSING_TICKER_BAR_OR_OPEN_ON_FIRST_POST_SIGNAL_SESSION"
             expired += 1
             print(f"[paper] EXPIRED {tk} signal={signal_date}: missing ticker bar/Open on {expected_session}")
+            continue
+        if expected_session < today:
+            r["Action"] = "EXPIRED"
+            r["Entry_Source_Date"] = expected_session
+            r["Reason"] = "MISSED_EXPECTED_SESSION_EXECUTION_WINDOW"
+            expired += 1
+            print(
+                f"[paper] EXPIRED {tk} signal={signal_date}: expected session "
+                f"{expected_session} was missed; refusing historical open backfill"
+            )
             continue
         if _open_positions(rows) >= MAX_OPEN:
             r["Action"] = "EXPIRED"
