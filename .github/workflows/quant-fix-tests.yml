@@ -146,6 +146,30 @@ jobs:
       - name: Test Quant Factor Lab date contract
         run: python tests/test_quant_factor_lab.py
 
+      - name: Read-only audit of mixed legacy price history
+        run: |
+          python tools/research/plan_price_history_repair.py > /tmp/price_history_repair_summary.json
+          cat /tmp/price_history_repair_summary.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          result = json.loads(Path("/tmp/price_history_repair_summary.json").read_text(encoding="utf-8"))
+          assert result["read_only"] is True
+          assert result["input_mutated"] is False
+          assert result["automatic_repair_performed"] is False
+          assert result["close_mismatches"] == 0, result.get("classifications")
+          print(
+              "[repair-plan audit] rows=%s legacy=%s references=%s close_mismatch=%s"
+              % (
+                  result["rows_in_input"],
+                  result["legacy_schema_rows_planned"],
+                  result["legacy_rows_with_v2_reference_at_proposed_date"],
+                  result["close_mismatches"],
+              )
+          )
+          PY
+
       - name: Test price history date contract
         run: python tests/test_quant_factor_price.py
 
