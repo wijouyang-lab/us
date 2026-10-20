@@ -29,8 +29,9 @@ COST_ONE_WAY = 0.0005      # 万分之五
 HOLD = 20
 
 
-def load_pit_sector_history(path=SECTOR_HISTORY):
+def load_pit_sector_history(path=None):
     """Load interval-based PIT GICS sectors. No current-sector fallback is allowed."""
+    path = Path(path) if path is not None else SECTOR_HISTORY
     if not path.exists():
         return None, f"缺少 {path.name}；当前 Sector 映射不能替代历史 PIT 行业归属"
     try:
