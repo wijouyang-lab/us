@@ -164,6 +164,21 @@ def select_directions_from_train(train_metrics: dict[int, dict], horizons: Itera
     return directions
 
 
+def classify_test_result(metrics: dict, min_dates: int = MIN_TEST_DATES_FOR_SCREEN) -> str:
+    """Conservative per-horizon held-out interpretation; never auto-approves a factor."""
+    if int(metrics.get("valid_dates", 0)) < min_dates:
+        return f"INSUFFICIENT_TEST_DATES (need >= {min_dates}, got {metrics.get('valid_dates', 0)})"
+    spread = metrics.get("top_bottom_spread")
+    tstat = metrics.get("spread_hac_t")
+    if spread is None or tstat is None:
+        return "INSUFFICIENT_OUTCOME_DATA"
+    if spread > 0 and tstat >= 1.96:
+        return "PRELIMINARY_POSITIVE_ONLY"
+    if spread < 0 and tstat <= -1.96:
+        return "SIGNIFICANT_NEGATIVE_SPREAD"
+    return "NOT_CONFIRMED"
+
+
 def _pct(v, decimals=3):
     return "N/A" if v is None or not math.isfinite(float(v)) else f"{float(v) * 100:+.{decimals}f}%"
 
@@ -215,15 +230,11 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
                 f"{_pct(m['top_bottom_spread'])} | {_fmt(m['spread_hac_t'], 2)} | {top_win} |"
             )
 
-    test20 = metrics["test"][20]
-    if test20["valid_dates"] < MIN_TEST_DATES_FOR_SCREEN:
-        verdict = f"INSUFFICIENT_TEST_DATES (need >= {MIN_TEST_DATES_FOR_SCREEN}, got {test20['valid_dates']})"
-    elif test20["top_bottom_spread"] is None or test20["spread_hac_t"] is None:
-        verdict = "INSUFFICIENT_OUTCOME_DATA"
-    elif test20["top_bottom_spread"] <= 0 or test20["spread_hac_t"] < 1.96:
-        verdict = "NOT_CONFIRMED"
-    else:
-        verdict = "PRELIMINARY_POSITIVE_SIGNAL_ONLY"
+    test_verdicts = {
+        horizon: classify_test_result(metrics["test"][horizon])
+        for horizon in HORIZONS
+    }
+    verdict = test_verdicts[20]
     report += [
         "",
         "## TRAIN-only direction lock\n",
@@ -232,6 +243,17 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
             + ("higher factor value" if directions[horizon] == 1
                else "lower factor value" if directions[horizon] == -1
                else "undetermined; this horizon is not evaluated")
+            for horizon in HORIZONS
+        ],
+        "",
+        "## Held-out test verdicts by horizon\\n",
+        "| Horizon | Test verdict | Top-bottom spread | HAC t-stat | Valid dates |",
+        "|---|---|---:|---:|---:|",
+        *[
+            f"| {horizon}D | {test_verdicts[horizon]} | "
+            f"{_pct(metrics['test'][horizon]['top_bottom_spread'])} | "
+            f"{_fmt(metrics['test'][horizon]['spread_hac_t'], 2)} | "
+            f"{metrics['test'][horizon]['valid_dates']} |"
             for horizon in HORIZONS
         ],
         "",
