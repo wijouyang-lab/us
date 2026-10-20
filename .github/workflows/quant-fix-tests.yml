@@ -1,0 +1,55 @@
+name: Quant Fix Regression Tests
+
+on:
+  push:
+    branches:
+      - fix/quant-price-session-date-integrity
+    paths:
+      - "quant_factor_price.py"
+      - "scripts/paper_trading.py"
+      - "scripts/paper_trading_report.py"
+      - "tests/test_quant_factor_price.py"
+      - "tests/test_paper_trading.py"
+      - ".github/workflows/quant-fix-tests.yml"
+  pull_request:
+    paths:
+      - "quant_factor_price.py"
+      - "scripts/paper_trading.py"
+      - "scripts/paper_trading_report.py"
+      - "tests/test_quant_factor_price.py"
+      - "tests/test_paper_trading.py"
+      - ".github/workflows/quant-fix-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quant-fix-tests-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements-production.txt
+
+      - name: Install production dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-production.txt
+
+      - name: Test price history date contract
+        run: python tests/test_quant_factor_price.py
+
+      - name: Test paper trading execution and costs
+        run: python tests/test_paper_trading.py
