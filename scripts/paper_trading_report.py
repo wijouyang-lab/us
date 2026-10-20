@@ -83,17 +83,26 @@ def last_price(tk: str, prices: dict):
     return series[-1] if series else (None, None)
 
 
-def read_observation_dates(today: str, path: Path = OBSERVATIONS_FILE) -> list[str]:
-    """Return actual ET dates on which Paper Trading successfully wrote an observation."""
+def read_observation_dates(today: str, path: Path | None = None) -> list[str]:
+    """Return only Scan-backed observation dates whose price history had a same-day completed bar.
+
+    Historical rows lacking Data_AsOf_Date are rejected because they cannot prove that the
+    observation was made against corrected same-day market data.
+    """
+    path = path or OBSERVATIONS_FILE
     if not path.exists() or path.stat().st_size == 0:
         return []
     dates = set()
     with path.open(encoding="utf-8-sig", newline="") as fh:
         for row in csv.DictReader(fh):
             d = (row.get("Run_Date") or "").strip()
+            asof = (row.get("Data_AsOf_Date") or "").strip()
             try:
                 parsed = datetime.strptime(d, "%Y-%m-%d").strftime("%Y-%m-%d")
+                parsed_asof = datetime.strptime(asof, "%Y-%m-%d").strftime("%Y-%m-%d")
             except ValueError:
+                continue
+            if parsed_asof != parsed:
                 continue
             if PLAN_START <= parsed <= today:
                 dates.add(parsed)
