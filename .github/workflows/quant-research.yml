@@ -39,6 +39,11 @@ jobs:
         if: steps.guard.outputs.skip != 'true'
         run: python quant_research_runner.py
 
+      # 独立的 ATR 风险平价研究：报告正确区分单期平均收益/累计复利，并扣除显式往返成本假设。
+      - name: Recalculate cost-aware ATR position-sizing report
+        if: steps.guard.outputs.skip != 'true'
+        run: python tools/research/atr_position_sizing.py
+
       # P0-2 门禁（方案 ②）：runner 默认 exit_code=0，因为 NOT_ENOUGH_DATA（数据未就绪 /
       # SHADOW_ENABLE 未开启）属预期状态；但真实 Phase 异常会写入 overall_status=FAILED。
       # 这里只对 FAILED 失败，既能让 scipy 这类真实故障变红，又不把预期状态误判为失败。
@@ -78,7 +83,8 @@ jobs:
               quant_production_approval.json \
               quant_production_config.json \
               quant_production_state.json \
-              quant_research_status.json ; do
+              quant_research_status.json \
+              docs/ATR_POSITION_SIZING.md ; do
               if [ -f "$f" ]; then git add "$f"; fi
             done
           }
