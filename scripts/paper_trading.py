@@ -328,6 +328,19 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
             r["Reason"] = "INVALID_PENDING_ORDER_FIELDS"
             expired += 1
             continue
+        if today is not None:
+            try:
+                signal_dt = datetime.strptime(signal_date, "%Y-%m-%d").date()
+                today_dt = datetime.strptime(today, "%Y-%m-%d").date()
+                age = (today_dt - signal_dt).days
+            except ValueError:
+                age = PENDING_MAX_AGE_CALENDAR_DAYS + 1
+            if age > PENDING_MAX_AGE_CALENDAR_DAYS:
+                r["Action"] = "EXPIRED"
+                r["Reason"] = "SIGNAL_TOO_OLD_TO_FILL"
+                expired += 1
+                print(f"[paper] EXPIRED {tk} signal={signal_date}: order age={age} calendar days exceeds limit")
+                continue
         series = prices.get(tk, [])
         # Infer the first completed market session after the signal from the full cross-ticker
         # history, not just this ticker's next available row (which could skip a missing bar).
