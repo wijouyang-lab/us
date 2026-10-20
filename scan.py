@@ -43,7 +43,7 @@ import yfinance as yf
 
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
-from scripts.pending_merge import unseen_pending_items
+from scripts.pending_merge import ensure_pending_schema, unseen_pending_items
 from scripts.ai_item_matching import match_ai_rows
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
@@ -4462,22 +4462,29 @@ if __name__ == "__main__":
             #     AI 六段文本原样持久化（不新增 GPT 调用、不改写、不摘要、不截断）
             "AI_industry_logic","AI_news_cn","AI_premarket_conclusion","AI_catalysts","AI_risks","AI_invalidation"
         ]
-        pending_exists = os.path.exists(pending_file)
         try:
-            # Before appending, require exact header compatibility. Old rows remain untouched
-            # and a legacy header must never receive new-schema values under wrong columns.
+            # Safely migrate older same-day headers before append. Existing rows/statuses
+            # are preserved and a one-time backup is kept; malformed files fail closed.
+            pending_columns = ensure_pending_schema(pending_file, header_cols)
             to_append = unseen_pending_items(
-                pending_file, to_write, expected_columns=header_cols
+                pending_file, to_write, expected_columns=pending_columns
             )
+            if pending_columns != header_cols:
+                print(
+                    f"[pending追加保护] 已兼容旧表头，保留额外旧列："
+                    f"{[x for x in pending_columns if x not in header_cols]}"
+                )
         except Exception as _schema_error:
+            pending_columns = list(header_cols)
             to_append = []
             print(
-                f"⚠️ [pending追加保护] 今日文件表头不兼容或不可读，拒绝追加："
+                f"⚠️ [pending追加保护] 今日文件表头迁移/校验失败，拒绝追加："
                 f"{type(_schema_error).__name__}: {_schema_error}"
             )
+        pending_exists = os.path.exists(pending_file)
         with open(pending_file, "a" if pending_exists else "w", encoding="utf-8", newline="") as f:
             if not pending_exists:
-                f.write(",".join(header_cols)+"\n")
+                f.write(",".join(pending_columns)+"\n")
             for item in to_append:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
@@ -4493,6 +4500,8 @@ if __name__ == "__main__":
                     item.get("AI_catalysts",""), item.get("AI_risks",""), item.get("AI_invalidation","")
                 ]
                 safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
+                # Legacy-only columns are retained after canonical columns; new rows leave them blank.
+                safe_vals.extend([""] * max(0, len(pending_columns) - len(safe_vals)))
                 f.write(",".join(safe_vals)+"\n")
         if to_append:
             print(f"✅ 已追加 {len(to_append)} 条新美股待确认记录：{pending_file}")
