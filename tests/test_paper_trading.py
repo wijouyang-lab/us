@@ -15,6 +15,7 @@ from scripts.paper_trading import (
     next_open_bar,
     net_trade_pnl,
     observation_eligible,
+    observation_data_ready,
     load_prices,
     PRICE_SCHEMA_VERSION,
     record_observation,
@@ -185,6 +186,28 @@ def test_missing_ticker_session_expires_instead_of_late_fill():
     assert rows[0]["Entry_Source_Date"] == "2026-10-20"
 
 
+def test_observation_requires_same_day_completed_price_bar():
+    assert observation_data_ready({}, "2026-10-20") is False
+    assert observation_data_ready(
+        {"AAA": [{"date": "2026-10-19", "open": 10.0, "close": 11.0}]},
+        "2026-10-20",
+    ) is False
+    assert observation_data_ready(
+        {
+            "AAA": [
+                {"date": "2026-10-19", "open": 10.0, "close": 11.0},
+                {"date": "2026-10-20", "open": 11.0, "close": 12.0},
+            ]
+        },
+        "2026-10-20",
+    ) is True
+    # Future-dated data must not be used to establish readiness for an earlier run date.
+    assert observation_data_ready(
+        {"AAA": [{"date": "2026-10-21", "open": 12.0, "close": 13.0}]},
+        "2026-10-20",
+    ) is False
+
+
 def test_manual_runs_do_not_advance_observation_gate(monkeypatch=None):
     import os
     previous = os.environ.get("PAPER_RECORD_OBSERVATION")
@@ -251,7 +274,7 @@ def test_pending_order_expires_when_corrected_history_is_delayed_too_long():
     filled, expired = _fill_pending_orders(rows, {}, today="2026-10-24")
     assert (filled, expired) == (0, 1)
     assert rows[0]["Action"] == "EXPIRED"
-    assert rows[0]["Reason"] == "PRICE_HISTORY_UNAVAILABLE_TOO_LONG"
+    assert rows[0]["Reason"] == "SIGNAL_TOO_OLD_TO_FILL"
 
 
 def test_legacy_or_mixed_price_schema_fails_closed():
@@ -319,6 +342,7 @@ def main():
         test_missing_ticker_session_expires_instead_of_late_fill,
         test_observation_log_counts_zero_signal_days_and_is_idempotent,
         test_manual_runs_do_not_advance_observation_gate,
+        test_observation_requires_same_day_completed_price_bar,
         test_stale_pending_file_does_not_create_backdated_order,
         test_pending_order_expires_when_corrected_history_is_delayed_too_long,
         test_legacy_or_mixed_price_schema_fails_closed,
