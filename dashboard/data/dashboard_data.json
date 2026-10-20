@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-20T13:01:08Z",
+  "generated_at": "2026-10-20T13:16:13Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:52Z",
+        "computed_at": "2026-10-20T13:15:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1534,12 +1534,12 @@
       "recommendation_date": "2026-10-19",
       "rec_price": 49.15,
       "recommendation_tag": "Core_Dragon",
-      "ai_snapshot_id": "APA|2026-10-19|Core_Dragon",
-      "ai_snapshot_date": "2026-10-19",
+      "ai_snapshot_id": "APA|2026-10-20|Core_Dragon",
+      "ai_snapshot_date": "2026-10-20",
       "price": 50.2852,
       "price_source": "realtime",
       "current_price": 50.2852,
-      "current_price_updated_at": "2026-10-20T12:48:31Z",
+      "current_price_updated_at": "2026-10-20T12:48:00Z",
       "pending_price": 49.15,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 49.15,
@@ -1550,7 +1550,7 @@
       "final_score": 74.6,
       "quant_score": 80.0,
       "ai_score": 62.0,
-      "ai_score_display": "62.0（2026-10-19）",
+      "ai_score_display": "62.0（2026-10-20）",
       "fundamental_score": 33.0,
       "technical_score": 23.0,
       "risk_liquidity_score": 16.0,
@@ -1571,7 +1571,7 @@
       "vix": 18.57,
       "status": "Active",
       "technical_date": null,
-      "scan_date": "2026-10-19",
+      "scan_date": "2026-10-20",
       "avg_dollar_volume_20d": 278631112.9,
       "sector_rs_20d_pct": null,
       "bias": 10.32,
@@ -1579,12 +1579,12 @@
       "technical_confirmations": "4",
       "technical_confirmation_signals": "MA20结构 MACD改善 周线改善 量能确认",
       "ai": {
-        "industry_logic": "原油价格波动 → APA作为上游E&P公司直接受益于油价上涨，但当前WTI原油期货大跌3.45%、布伦特原油下跌1.35%，行业价格环境转空 → 公司盈利能力与油价高度相关(PE_F=10.6、PB=2.45估值合理)，但商品价格下行将压制收入预期 → 当前交易含义：技术面虽强势(MACD金叉、量能放大1.38倍)，但RSI=69.7接近超买、Bias=10.32%偏离过大，盘前-1.32%已开始回调，需等待回踩MA20(44.55)附近且原油止跌后再评估入场时机。",
-        "news_cn": "1. Scotiabank上调评级至持有(10-17)，显示机构对估值认可度提升；2. 本周进入除息周期，分红稳定性获24/7 Wall St.关注；3. 无重大负面新闻，但缺乏个股层面催化剂，价格主要跟随商品端波动。",
-        "premarket_conclusion": "盘前实时价格48.50美元，较昨收49.15下跌1.32%。当前已进入常规盘前交易时段，价格回调反映原油期货大跌对板块的即时冲击。技术结构上，盘前价格仍高于MA20(44.55)，但RSI=69.7和Bias=10.32%显示前期涨幅已较充分，短期追高风险明显。需观察盘中是否进一步回踩至MA20区间(44.5-45.0)形成支撑，以及原油期货能否企稳。",
-        "catalysts": "1. 技术面多重确认信号(MA20上穿、MACD金叉、周线改善、量能放大)；2. 估值合理且分红稳定，本周除息吸引收益型资金；3. Scotiabank上调评级至持有，机构认可度提升。",
-        "risks": "1. 原油价格风险：WTI和布伦特原油今日分别大跌3.45%和1.35%，若地缘政治缓和或全球需求放缓导致油价跌破90美元/桶心理关口，公司盈利预期将受重创；2. 技术超买风险：RSI=69.7接近超买区、Bias=10.32%偏离过大，短期存在技术性回调压力；3. 缺乏个股催化：公司自身无重大基本面催化剂，纯粹跟随商品价格波动，被动性强；4. 宏观环境：美10年国债收益率5.10%处于高位，能源板块估值扩张空间受限。",
-        "invalidation": "1. 技术失效：跌破MA20(44.55美元)且MACD出现死叉，技术多头结构破坏；2. 商品价格失效：WTI原油跌破90美元/桶或布伦特跌破100美元/桶心理关口，行业基本面恶化；3. 估值失效：若油价持续下行导致盈利预测下调，PE_F扩张至15倍以上则估值吸引力丧失。"
+        "industry_logic": "数据缺失，无法构建产业链逻辑。APA通常为Apache Corporation（能源板块），但当前未提供任何基本面、技术面或新闻数据，无法验证行业逻辑、催化剂或风险。",
+        "news_cn": "无新闻数据提供。",
+        "premarket_conclusion": "无数据，无法给出盘前结论。",
+        "catalysts": "无已验证的催化剂。",
+        "risks": "数据完全缺失，无法评估风险。",
+        "invalidation": "数据缺失，无法设定失效条件。"
       },
       "ohlcv": [
         {
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:53Z",
+        "computed_at": "2026-10-20T13:15:48Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3060,14 +3060,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "APP|2026-10-07|Observation",
       "ai_snapshot_date": "2026-10-07",
-      "price": 267.37,
+      "price": 266.0,
       "price_source": "realtime",
-      "current_price": 267.37,
-      "current_price_updated_at": "2026-10-20T12:50:38Z",
+      "current_price": 266.0,
+      "current_price_updated_at": "2026-10-20T13:12:31Z",
       "pending_price": 274.85,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.29,
-      "change_1d": -0.6503,
+      "change_1d": -1.1593,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.2895,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:53Z",
+        "computed_at": "2026-10-20T13:15:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4587,7 +4587,7 @@
       "price": 296.15,
       "price_source": "realtime",
       "current_price": 296.15,
-      "current_price_updated_at": "2026-10-20T12:56:24Z",
+      "current_price_updated_at": "2026-10-20T12:56:00Z",
       "pending_price": 270.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.44,
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:53Z",
+        "computed_at": "2026-10-20T13:15:49Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:53Z",
+        "computed_at": "2026-10-20T13:15:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:54Z",
+        "computed_at": "2026-10-20T13:15:50Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:54Z",
+        "computed_at": "2026-10-20T13:15:51Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10680,14 +10680,14 @@
       "recommendation_tag": "Observation",
       "ai_snapshot_id": "HST|2026-10-08|Observation",
       "ai_snapshot_date": "2026-10-08",
-      "price": 24.3537,
+      "price": 24.33,
       "price_source": "realtime",
-      "current_price": 24.3537,
-      "current_price_updated_at": "2026-10-20T12:05:00Z",
+      "current_price": 24.33,
+      "current_price_updated_at": "2026-10-20T13:01:00Z",
       "pending_price": 22.2,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 22.54,
-      "change_1d": 0.6767,
+      "change_1d": 0.5787,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -1.5084,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:54Z",
+        "computed_at": "2026-10-20T13:15:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:54Z",
+        "computed_at": "2026-10-20T13:15:52Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -15236,7 +15236,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:55Z",
+        "computed_at": "2026-10-20T13:15:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16760,7 +16760,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:55Z",
+        "computed_at": "2026-10-20T13:15:53Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -16779,7 +16779,7 @@
       "price": 291.94,
       "price_source": "realtime",
       "current_price": 291.94,
-      "current_price_updated_at": "2026-10-20T12:56:27Z",
+      "current_price_updated_at": "2026-10-20T12:56:00Z",
       "pending_price": 274.89,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 281.6,
@@ -18284,7 +18284,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:55Z",
+        "computed_at": "2026-10-20T13:15:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -19808,7 +19808,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:55Z",
+        "computed_at": "2026-10-20T13:15:54Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -21332,7 +21332,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:56Z",
+        "computed_at": "2026-10-20T13:15:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22856,7 +22856,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:56Z",
+        "computed_at": "2026-10-20T13:15:55Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -22872,14 +22872,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 68.39,
+      "price": 68.45,
       "price_source": "realtime",
-      "current_price": 68.39,
-      "current_price_updated_at": "2026-10-20T12:59:04Z",
+      "current_price": 68.45,
+      "current_price_updated_at": "2026-10-20T13:15:36Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": 0.8702,
+      "change_1d": 0.9587,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -24380,7 +24380,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:56Z",
+        "computed_at": "2026-10-20T13:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -24396,14 +24396,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 179.55,
+      "price": 179.63,
       "price_source": "realtime",
-      "current_price": 179.55,
-      "current_price_updated_at": "2026-10-20T12:59:15Z",
+      "current_price": 179.63,
+      "current_price_updated_at": "2026-10-20T13:11:56Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": 0.7124,
+      "change_1d": 0.7572,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -25904,7 +25904,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:57Z",
+        "computed_at": "2026-10-20T13:15:56Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27428,7 +27428,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-19",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-20T13:00:57Z",
+        "computed_at": "2026-10-20T13:15:57Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -27451,7 +27451,7 @@
         "change_1d": -0.07,
         "change_5d": 0.2227,
         "change_20d": -0.1591,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27469,7 +27469,7 @@
         "change_1d": 0.4085,
         "change_5d": -1.4923,
         "change_20d": -0.9526,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27487,7 +27487,7 @@
         "change_1d": 1.1127,
         "change_5d": -2.9913,
         "change_20d": -2.5485,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -27505,12 +27505,12 @@
         "change_1d": 1.5184,
         "change_5d": 23.0769,
         "change_20d": 25.8911,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500300,
+        "quote_ts": 1792501200,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27519,16 +27519,16 @@
         "name": "US10Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.1,
-        "change_1d": -0.7009,
-        "change_5d": -2.6718,
-        "change_20d": 2.7604,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 5.115,
+        "change_1d": -0.4089,
+        "change_5d": -2.3855,
+        "change_20d": 3.0627,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500300,
+        "quote_ts": 1792501200,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27541,7 +27541,7 @@
         "change_1d": 0.0,
         "change_5d": null,
         "change_20d": null,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -27555,16 +27555,16 @@
         "name": "US5Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.911,
-        "change_1d": -0.3652,
-        "change_5d": -2.1518,
-        "change_20d": 1.5929,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 4.927,
+        "change_1d": -0.0406,
+        "change_5d": -1.833,
+        "change_20d": 1.9239,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500300,
+        "quote_ts": 1792501200,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27573,16 +27573,16 @@
         "name": "US30Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.424,
-        "change_1d": -0.8772,
-        "change_5d": -3.1083,
-        "change_20d": 2.4169,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 5.434,
+        "change_1d": -0.6944,
+        "change_5d": -2.9296,
+        "change_20d": 2.6057,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500300,
+        "quote_ts": 1792501200,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27591,16 +27591,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.77,
-        "change_1d": -0.2059,
-        "change_5d": -0.7896,
-        "change_20d": 1.3343,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 101.745,
+        "change_1d": -0.2304,
+        "change_5d": -0.814,
+        "change_20d": 1.3094,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500600,
+        "quote_ts": 1792501500,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27609,16 +27609,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4137.3999,
-        "change_1d": -0.5457,
-        "change_5d": -1.2695,
-        "change_20d": -5.6228,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 4135.1001,
+        "change_1d": -0.6009,
+        "change_5d": -1.3244,
+        "change_20d": -5.6753,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500660,
+        "quote_ts": 1792501560,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27627,16 +27627,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 57.135,
-        "change_1d": 0.2826,
-        "change_5d": -4.9983,
-        "change_20d": -13.2017,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 57.33,
+        "change_1d": 0.6249,
+        "change_5d": -4.674,
+        "change_20d": -12.9054,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500600,
+        "quote_ts": 1792501560,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27645,16 +27645,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.5795,
-        "change_1d": 0.6348,
-        "change_5d": -1.7765,
-        "change_20d": -1.6002,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 6.574,
+        "change_1d": 0.5506,
+        "change_5d": -1.8586,
+        "change_20d": -1.6825,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500660,
+        "quote_ts": 1792501560,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27663,16 +27663,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 99.71,
-        "change_1d": -3.8105,
-        "change_5d": 6.3687,
-        "change_20d": 4.1032,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 99.53,
+        "change_1d": -3.9842,
+        "change_5d": 6.1767,
+        "change_20d": 3.9152,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500660,
+        "quote_ts": 1792501560,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27681,16 +27681,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 110.52,
-        "change_1d": 0.8854,
-        "change_5d": 3.6287,
-        "change_20d": 10.1455,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 110.31,
+        "change_1d": 0.6937,
+        "change_5d": 3.4318,
+        "change_20d": 9.9362,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500600,
+        "quote_ts": 1792501560,
         "last_bar_date": "2026-10-19"
       },
       {
@@ -27699,16 +27699,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 2.991,
-        "change_1d": -2.191,
-        "change_5d": -5.5573,
-        "change_20d": 5.4654,
-        "updated_at": "2026-10-20T13:00:57Z",
+        "price": 3.006,
+        "change_1d": -1.7005,
+        "change_5d": -5.0837,
+        "change_20d": 5.9944,
+        "updated_at": "2026-10-20T13:15:57Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1792500660,
+        "quote_ts": 1792501560,
         "last_bar_date": "2026-10-19"
       }
     ],
@@ -27721,12 +27721,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-20T13:01:06Z"
+    "updated_at": "2026-10-20T13:16:11Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-20 09:01:08",
+    "as_of_us": "2026-10-20 09:16:13",
     "window_start": "2026-09-20",
     "core_closed_count": 3,
     "core_open_count": 23,
@@ -27757,7 +27757,7 @@
     "unresolved_pnl_events": 0,
     "notes": [
       "期权 Wall 本次未重算（无缺失项或期权链不可用）。",
-      "AI Snapshot 索引：ai_snapshot.csv 命中 88 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 58/412 条",
+      "AI Snapshot 索引：ai_snapshot.csv 命中 90 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 58/412 条",
       "history：基于 review_history.csv 的每日快照，统计口径=当日仍在跟踪(持仓中/观察推荐)的去重推荐事件数（Ticker+Rec_Date），非当日新增数。"
     ],
     "missing_fields": [],
@@ -29829,8 +29829,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 226.35,
-        "pnl_pct": -8.81,
+        "cur_price": 225.51,
+        "pnl_pct": -9.15,
         "days_held": 28,
         "stop_loss": null,
         "score": "64.2",
@@ -30312,8 +30312,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 412.0,
-        "cur_price": 437.99,
-        "pnl_pct": 6.31,
+        "cur_price": 437.5,
+        "pnl_pct": 6.19,
         "days_held": 32,
         "stop_loss": null,
         "score": "74.7",
@@ -34245,8 +34245,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 223.0221,
-        "pnl_pct": -46.76,
+        "cur_price": 223.94,
+        "pnl_pct": -46.54,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -35096,8 +35096,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.3,
-        "pnl_pct": -7.77,
+        "cur_price": 50.2753,
+        "pnl_pct": -7.82,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -35165,8 +35165,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 21.98,
-        "cur_price": 20.1448,
-        "pnl_pct": -8.35,
+        "cur_price": 19.94,
+        "pnl_pct": -9.28,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -35464,8 +35464,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 55.1714,
-        "pnl_pct": 6.16,
+        "cur_price": 55.2,
+        "pnl_pct": 6.22,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -37759,7 +37759,7 @@
       "review_stage"
     ],
     "records_note": "review.records[] = build_events() 事件账本原样展开；去重 key 复用 _event_key(Ticker,Rec_Date,Tag)；按 rec_date DESC 排序；ai_snapshot 只来自 ai_snapshot.csv 的 (Ticker,Rec_Date,Tag) 精确匹配，匹配不到为 null，禁止按 Ticker 回退到 ai_text_cache.csv。price_5d/10d/20d 与 review_stage 只透传 review_history.csv 原值（review.py 按 OHLCV 交易日历计算），本导出器不重算、不补值。",
-    "ai_snapshot_total": 88,
+    "ai_snapshot_total": 90,
     "ai_snapshot_matched": 58,
     "ai_snapshot_source": "ai_snapshot.csv"
   },
@@ -38014,11 +38014,11 @@
     "scan": {
       "latest": {
         "run_id": 39426771059,
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "created_at": "2026-10-20T13:00:30Z",
         "started_at": "2026-10-20T13:00:30Z",
-        "updated_at": "2026-10-20T13:00:35Z",
+        "updated_at": "2026-10-20T13:12:29Z",
         "head_sha": "9cd14c4f7555",
         "event": "workflow_dispatch",
         "run_number": 182,
@@ -38026,9 +38026,9 @@
         "html_url": "https://github.com/wijouyang-lab/us/actions/runs/39426771059"
       },
       "last_success": {
-        "run_id": 39290136715,
-        "completed_at": "2026-10-19T17:09:59Z",
-        "head_sha": "1b3701b102ea"
+        "run_id": 39426771059,
+        "completed_at": "2026-10-20T13:12:29Z",
+        "head_sha": "9cd14c4f7555"
       },
       "error": null
     },
@@ -38351,7 +38351,7 @@
         }
       ],
       "snapshot_file": "quant_factor_snapshot.csv",
-      "snapshot_rows": 2506
+      "snapshot_rows": 2792
     },
     "backtest": {
       "phase": 2,
@@ -38454,117 +38454,320 @@
   },
   "news": {
     "schema_version": "news.v1",
-    "generated_at": "2026-10-19T17:09:53Z",
+    "generated_at": "2026-10-20T13:11:35Z",
     "market_news": [
+      {
+        "headline": "Investors look to earnings to reset the bull market. The key level to watch on the S&P 500",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/20/santoli-key-sp-500-level-to-watch.html",
+        "datetime": 1792500749,
+        "summary": "The key level traders are watching on the S&P 500 that could mean an even bigger decline is ahead.",
+        "headline_cn": "投资者关注财报以重置牛市，标普500关键点位值得关注",
+        "sentiment": "neutral",
+        "rationale": "仅提示关注财报与技术位，未明确方向",
+        "market_relevant": true
+      },
+      {
+        "headline": "Novo's next-generation obesity drug shows 25% weight loss in women in late-stage analysis",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/20/novo-cagrisema-women-weight-loss-analysis.html",
+        "datetime": 1792500624,
+        "summary": "Novo released new evidence that its experimental CagriSema injection can improve upon the weight loss with its blockbuster GLP-1 obesity injection, Wegovy.",
+        "headline_cn": "诺和诺德新一代减肥药在后期分析中显示女性体重减轻25%",
+        "sentiment": "bullish",
+        "rationale": "临床数据积极，增强产品竞争力",
+        "market_relevant": true
+      },
+      {
+        "headline": "Data center stocks slide as Korea IPO plunges 30%, pressuring tech sentiment",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/20/data-center-stocks-slide-as-korea-ipo-plunges-30percent-pressuring-tech-sentiment.html",
+        "datetime": 1792499811,
+        "summary": "Neocloud stocks are falling again following the sector's troubles last week",
+        "headline_cn": "韩国IPO暴跌30%，数据中心股下滑，打压科技股情绪",
+        "sentiment": "bearish",
+        "rationale": "IPO表现差施压板块情绪",
+        "market_relevant": true
+      },
+      {
+        "headline": "Britain says it will carry out defensive air missions over Saudi Arabia - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQTGh1LWkyRVZqaTRQMEdnRXhvWFhvWnJ6TW5WdlEyM0dxTFQwLWczNjAwLU95SDFDZVVSdUNQUE1uYkREcG05THRjbmhiQk5FWlBjb2p2V01DVmhGRFppUmFHQUFwMm4yZHFLRndUbU9PcEVjY0JBY1JpZjROd0JnOTdoZXFodTRDSzJEQURHQkVzd21pMmtUZmdnLUE3SGI1UGt5Wno0WWVKR1ZWV0FaQ0FmZUY5aVlQZVAtRGV4WEhoTmVnbHRsZ0taZ2d2NFBxOFIzdQ?oc=5",
+        "datetime": 1792498222,
+        "summary": "Britain says it will carry out defensive air missions over Saudi Arabia  Reuters",
+        "headline_cn": "英国称将在沙特上空执行防御性空中任务",
+        "sentiment": "neutral",
+        "rationale": "地缘紧张但未直接影响油价或供应",
+        "market_relevant": true
+      },
+      {
+        "headline": "Draymond Green says he's 'not Steph Curry,' wants to play another year even if he leaves Golden State Warriors",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/20/draymond-green-says-hell-play-in-2027-with-or-without-the-warriors.html",
+        "datetime": 1792497602,
+        "summary": "NBA star Draymond Green said he would love to retire as a member of the Warriors but plans to keep playing next season even if that means joining another team.",
+        "headline_cn": "格林称自己不是库里，即使离开勇士也想再打一年",
+        "sentiment": "neutral",
+        "rationale": "体育花边新闻，无市场影响",
+        "market_relevant": false
+      },
+      {
+        "headline": "Iran prolongs talks in stalemate to influence US midterms, officials say - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPUEYwdEFGeHhKUmdIMXF2VEppVElubGVKYlNlbk5xRGlnY1pVMEFsc0pma1ZGOGdOXzFBWUVCWHVab2MxQ2t5ZlNGRG1oZkdCMENnOFktSm1OakZNUUZJX0w2ZHJmM1ZLV2JyS245RjFoUVNPTmZ3dVNfNDNWemZ2V3dZdTFZdmFwdTJhRVdjODhObHZIbXp5c181UFdKOVJTX2o0LWFDN3E3dm1TOGpj?oc=5",
+        "datetime": 1792493534,
+        "summary": "Iran prolongs talks in stalemate to influence US midterms, officials say  Reuters",
+        "headline_cn": "官员称伊朗延长僵局谈判以影响美国中期选举",
+        "sentiment": "neutral",
+        "rationale": "地缘政治不确定性，方向待明",
+        "market_relevant": true
+      },
+      {
+        "headline": "Israeli fire kills four people in Gaza, medics say - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPNTMzR3ZQMmZ1R0RFZHQyOUxldnFwaXF4QVhEUmpwUUEwM2lGYUZXUXBILVhjS3BUZXl1WUNCbTNZTDY1RnYwWDg2Qi1EbGxqczBnY2FwcGE0eUxzOG1OQmJEZWdWbHFkbTctcHdKcDVOXzRsQ2JJQjJRUDdyN2lUUTJIYXJxSk1mLVJLYUs0UEdFTVZMMG5QcEVyRWgtWUQ4RVE?oc=5",
+        "datetime": 1792492783,
+        "summary": "Israeli fire kills four people in Gaza, medics say  Reuters",
+        "headline_cn": "医护人员称以色列炮火在加沙造成4人死亡",
+        "sentiment": "neutral",
+        "rationale": "地区冲突持续但规模有限",
+        "market_relevant": true
+      },
+      {
+        "headline": "GE Aerospace raises 2026 profit forecast as services strength drives growth - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQNnVUT0tINU83dGVFSG5iTnFZNFlyQk9vT3lHZEY0dU5rUUFJRGlTYndPWEdiM2M0a0lKLU5FUW5CV2JvZ2NJTDI5MXlkVk85NlFwOU1XdUk0VzdKZ2FpZXJDUUJNMlZWZURPcVpXLWVKQzZ4SUcyYkEwQnhZY2xUd0VIc3g3dHEyU0RncnZrVkV5MzQtTGdWbFAwXzJzR1RNU1BBb2pjdm5EcVBaTVZtajBzV1B4XzRHY2YyaG93YXR1Z05ESGR4TlAxR0N6Q2xq?oc=5",
+        "datetime": 1792492183,
+        "summary": "GE Aerospace raises 2026 profit forecast as services strength drives growth  Reuters",
+        "headline_cn": "通用航空上调2026年利润预期，服务业务强劲推动增长",
+        "sentiment": "bullish",
+        "rationale": "上调盈利预期显示业务向好",
+        "market_relevant": true
+      },
+      {
+        "headline": "Most Gulf bourses retreat after Houthis claim attacks on Saudi energy, airport sites - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxOcXpWQlZUSjN2cnJReUppaUEyRldXVWpqOVNvVFpMZ0xMc09WanRpdEhEeE9iZmpMUnIyWmlGeVdNVTczOWIxYUd5VnZ2Mk80VGFheGlPVTdyM1NWS1pCdmhHekh1ZlhKbHdfNnRObnQyNVhycjFtdGQ5RmgydVhHRkthWDlBYWhkQnlsOUlsV0wzNzg2bGZqWGNVcURLMVBpNFZRaWZ6b2NBaGNCMGpuLWFndTRqd21mZzNUSVJ0Q3gzUFlnWGdLN0xQUUdOcHM?oc=5",
+        "datetime": 1792484169,
+        "summary": "Most Gulf bourses retreat after Houthis claim attacks on Saudi energy, airport sites  Reuters",
+        "headline_cn": "胡塞武装声称袭击沙特能源和机场设施后，海湾多数股市下跌",
+        "sentiment": "bearish",
+        "rationale": "能源设施遇袭增加供应风险",
+        "market_relevant": true
+      },
+      {
+        "headline": "Oil majors face spending test from Iran war windfall cash - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQemV5ZWpZWkdhUzlRTmJsLXMyNVFMa0EzLTYxSGJubDVlSkVWMGVuckZDRVZOOS05eGc1aHlSOGJva3A5d2R2SENNNVBNeTM5eXNEeWJWTDlDbzBUdlZTTDdFZDRlT3dkVWtSWmJJekhvc3BSQk5KbnlTcjR2Q1otUEFlS0JYSUVZclR1d0NGRzJJaHBXbFdBS1RPZWZqOVNXemZtVmlRQQ?oc=5",
+        "datetime": 1792476240,
+        "summary": "Oil majors face spending test from Iran war windfall cash  Reuters",
+        "headline_cn": "石油巨头面临伊朗战争意外之财的支出考验",
+        "sentiment": "neutral",
+        "rationale": "资本配置决策影响不明确",
+        "market_relevant": true
+      },
+      {
+        "headline": "As France erupts, Europe's far right gains from fuel-price anger ahead of elections - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPRjl5VmhGZHJ1bUpkdTZQaElWaWdnSFVkdVVQOUhzN3Y5SFdHOUNpS0pXQjdsVzhMVm1YOFloSGhHbnNYT29talRoNVJWdlRDVkdCM0VQV1lIUFZSbG9MV3BPclJZZGVtejVZZFNNWWxxdFdBM19hS2pQdHNaWm51MFRFNWxLWHdzVzQwN1ZxeXFFenRPREthTGRvVW9vOW1JdWpiVWk0VE9UQWlqRnZJWEJ0aFVYd2xBR3FN?oc=5",
+        "datetime": 1792476120,
+        "summary": "As France erupts, Europe's far right gains from fuel-price anger ahead of elections  Reuters"
+      },
+      {
+        "headline": "How safe havens stack up as tech, energy and France fears grip markets - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNcHQwSENyS3lkNi05UkRqMGdnZVg3dUlBWC1KdE8wemZkNmthdFBhSG9MSXB5VV9Yd3ExSWI1ZDBFVEdpY1JKSl92RzlOOHhfbHpqeEdmUWlwa09IdlVqb0pyNDAzTzVGZjJDd05xMHlRazVZTUQ0eWxZWm8wZEFSRlllNkg5Mml6MFNBNEJ1OXdnTHlE?oc=5",
+        "datetime": 1792469160,
+        "summary": "How safe havens stack up as tech, energy and France fears grip markets  Reuters"
+      },
+      {
+        "headline": "Brent hits five-month high as attacks on ships, Saudi sites fuel supply worries - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPZlA3RXBMd0lXRU1feWpodXpZQ2tnUERkUHFQSlFGX2hCMjdrOVdhRVd2eVk3dmhLYklUdVM1WGtoXzc0cUt2OG44WjBYVFVZazFvQWo1UmJWRlliNzJHWlZBU1hScTU1RU9sVEdDVllsSWE4UXh5b0ZHX0VlU01fNDc3ckpxRkw3ZGdaM0xxMW1qOEhWck1XYUlSVkJWeVZyZWRRSkpqdTFQSmZhejlBRmkxZUJmMGtPVWx6Ym82SnNTcElaWGc?oc=5",
+        "datetime": 1792457880,
+        "summary": "Brent hits five-month high as attacks on ships, Saudi sites fuel supply worries  Reuters"
+      },
+      {
+        "headline": "Hegseth discusses Iran with Netanyahu in unannounced visit to Israel, officials say - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOazNPMm5GbVJUYTRwVVVraElGMVptZkdyb0pkbklkdWMzY01zYWlkYTNNTDlxMFVnanBvVkczd3ozNUxZbDJ0Wl9JQ1hDOGtLZjJsM0hzeXRDTUpFYkhnWHFnQUFqRnZEVFFXZ1hHY1Vrb2hmbk1kaVNUTWZEZ0hoWURkZ080ZUlNQnVBaFhLWVNpTDliV3BmVHMzU05EQWUzTWdlNVd4dHpFNmhEUTZoRWVYVFJLQ1U?oc=5",
+        "datetime": 1792450020,
+        "summary": "Hegseth discusses Iran with Netanyahu in unannounced visit to Israel, officials say  Reuters"
+      },
+      {
+        "headline": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQWVF3TGpvSmg1YmEyMnhhWXhnUFkwdS13ak14NldscXdsZm92dVkzbGdnU3lwd2VjY255bXJKeGZOX09ZM3AxN1JjWHRSbXRGNDdFaTVhMU9SMWxKZXRDNDd2bnBuaE5pSjJwbkgtVXF6dzJWNWFJOUw5X2U1TjJPQjdUaG1ldHRudHRVTF9FeWhOM3gxaTloUEcxaVdJdHg2M29sUHJwc2NFWFdRV0xjS3Y2UlZ6ZEJLOEw3ZEpR?oc=5",
+        "datetime": 1792445760,
+        "summary": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month  Reuters"
+      },
+      {
+        "headline": "Tech stocks had a nice oversold bounce on Monday. Earnings this week will determine if it's for real",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/19/tech-stocks-rebound-meta-tesla-earnings.html",
+        "datetime": 1792443434,
+        "summary": "Investors are hopeful that last week's pullback was a clearing event for equities, but lingering concerns remain."
+      },
+      {
+        "headline": "Oil stocks in US strategic petroleum reserve fall to lowest level since 1982 - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOTS1qZEVDSUY0Z2dXY0l6TzZCaGpGRnJOMF9Wb0Q1Q0pCVTI5YjN2Q2VyVXJKVnlQa1RuOEdYWWdZc3dQYjRxTVQ5RUVpZzUtc2hJMU50NlA2aUFhcHZCd3o1TFZ4c0hmdnZPckxSTHduS0JNN05CRWdKVUJBSzdkYm10U2pCSFIyLTlvT2NrRWVVOVhYSnpGSEdjSVJTZnJXbGhaXy1GUDBjVGttZl9BUkpzd0tYNDBGUUh4cUt4cw?oc=5",
+        "datetime": 1792442984,
+        "summary": "Oil stocks in US strategic petroleum reserve fall to lowest level since 1982  Reuters"
+      },
+      {
+        "headline": "Pakistan army chief Asim Munir to visit Tehran on Tuesday - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNNU5NeHoza1RQRlByV2lvS2dQTDZXOExwUktiVjJnaUE2YUJoVE1BN3N4VlhMNm1wd25CanBNSGlUeGhuSzZMTDlLUUdsMEtka0x5aWNBNGNpUEpwd1AxMnowV3RIYnZHZGxzb1ZNNGZqenFkbHNQLWlCcUxuekpVZ09UYUVlaWVsVjNmNjJpMHpjLVJiTnFiSnJLaVgyM1FlMEZuYnBUOXVhQQ?oc=5",
+        "datetime": 1792439686,
+        "summary": "Pakistan army chief Asim Munir to visit Tehran on Tuesday  Reuters"
+      },
+      {
+        "headline": "Crushed tech stocks bounce — plus, new doctor survey keeps us positive on Lilly",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/investingclub/2026/10/19/crushed-tech-stocks-bounce-new-doctor-survey-keeps-us-positive-on-lilly.html",
+        "datetime": 1792435955,
+        "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
+      },
+      {
+        "headline": "Germany summons Iranian envoy over plot to kill Jewish community leader - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPMTBxMkF3RnVSeWFVMnUwOEZFYVAyeFRhRE9IVll1Q2czRDV3aWEtNzdvcV81TFZ1YzNjNDRkSHloSUFCUW9va0NyNEtSa1k0Wm9MeG9ZVE1sYkFpd0JoUjNXYm96NFdyY1FjNUFnNlljcEZQR3ByMUdXYVZOY2RDdnk3cEZXVHlfaTMzV19Xc0JTMDdPQmJlNHRrUE1Ua1ZtM0E5Umc2T3FrVmpXa3o3U29pZWdoSjNl?oc=5",
+        "datetime": 1792431949,
+        "summary": "Germany summons Iranian envoy over plot to kill Jewish community leader  Reuters"
+      },
+      {
+        "headline": "Canadian dollar notches nearly four-week high on BoC rate hike bets - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQejFjMHFhbTY3RGNrb3ZLNnZvd2QtWjl4eDg5cG9vRmR3Qk9zbGNBWXM1VXE5Z0ZWamFZYUptd0RwTmdieTRjQXVjWE5YVEhlVzFOUEo3WnF4aVRqSmNvUUFTZnVwVHo2aHVuTXZybk5UT0ZqSmtGNHdfRXZhNWdzVnpDRWRja2ExdFFHNTYwUDg2bmxzWjdRekRHeUtKU3RuY1Z3M2FZSktjdXliQlpZZjBn?oc=5",
+        "datetime": 1792431673,
+        "summary": "Canadian dollar notches nearly four-week high on BoC rate hike bets  Reuters"
+      },
+      {
+        "headline": "Saudi Arabia postpones its 'Davos in the Desert' conference after attacks - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPaXJvV3ktdmE4WU9ZNjVBcDRBYW9yNXJVYVI3MV83aWtIV0pYN0lGNzM4UlNRZDdpRGs1bGsxR18wcjY5STVhU1Q1VEZJUmRKWFZPUnoxSlpFaThtMzhjRlVIZGl2VVVYYTlYM181N0Jyb0h4ZWRrM2FVZFZsSFRBT1haU0QtdEp5QlZ6dVg2VVpyX2RsaDEzbnN2Q1NvSFc5WW5jT2VmVQ?oc=5",
+        "datetime": 1792431283,
+        "summary": "Saudi Arabia postpones its 'Davos in the Desert' conference after attacks  Reuters"
+      },
+      {
+        "headline": "Christiane Amanpour to leave CNN after four decades as Ellison era begins - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQb1RuM0JKcU9Qaks5eThna1hYUlptN2YyRWlqc2dDX1kySU51MWZPNFd6bXpCVnVPZXptVl80VmlwLU9NbTVrVmNjeWpNUEs4WFFKekVFRGU2NTZJQlZxeEFINFJRa3RmTEVJbnhvUm83R2gyMDVEb3V5cmgxNHFBWnd6OVN5ZlBKQ09HcWJnSlhvM0FxTm9ORkNBdzg4RzJSZzhVWHdROU1oT0d6VEY3LXdLdUV5VkwzZGkxWlVjOTlqcG1l?oc=5",
+        "datetime": 1792429945,
+        "summary": "Christiane Amanpour to leave CNN after four decades as Ellison era begins  Reuters"
+      },
+      {
+        "headline": "Gartner analyst behind tech rout: AI returns are not yet large enough to justify neocloud build-out",
+        "source": "CNBC",
+        "url": "https://www.cnbc.com/2026/10/19/gartner-analyst-warns-about-ai-neccloud-build-out.html",
+        "datetime": 1792429036,
+        "summary": "The firm stands behind analysis that sent shockwaves through the market last week."
+      },
+      {
+        "headline": "Governments warn citizens over security in France after riots - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPWmxMTDYtS1VOLVA5TE5qSGZzeW96a0g0N2dXWlpSaUVZMk93MkNIS2ZsLUpHNmtCNElLaXdmVHNaalNzbTdyUkxsMUdNUFFEZTZES0hmMmxSNERLWnlJUjB6MkE3bXExVW9mMTI2WmZOeGVrcDhlUkpLRjRKSXRGeUVmMU5FUUhHUkw3TGpmdFp5UDRHSnVwMlBXdDI4T2JwR1kwOVZydmROQlFzQlE?oc=5",
+        "datetime": 1792427532,
+        "summary": "Governments warn citizens over security in France after riots  Reuters"
+      },
+      {
+        "headline": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNRjBMUkU1SEVNclFaMVR1SnljVENrS3N5RUdNcnV5UFZkdlB3RHdiWTFoSFRxcVRBVkRSOEowM0h4bHZyYmd4dDhKYlJQSzUzTUJ2QmxzaGtha2lxUldoLXRPSmczQndXbTNHRWxwRHBhZF9vdDdZRVl4WXJ0M3B0dEJrOWh1SkVzTXhIUTVydk11cEFPaXc3dGZBX0JnMk9hYlpOdkpXc3R3cllKTllGRG5MVC01QkZHNl9Td3J1VHhSckE?oc=5",
+        "datetime": 1792426585,
+        "summary": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit  Reuters"
+      },
       {
         "headline": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict? - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQVEFCaTJXdXlZR1NxZkpndXE3d0hRYWpmRUtBOXpXeTI3M2hUVnFSVVJrQm1NS29LLWlobDd4enF2OWxOY1h1SmJidXVlUksxeDdZdVMyZF9tVklTdWJiQzJZZzRNVnFEX0tMQUdCTW04WHhmdWdhQW42cERybkd1QzBDTHgxMklXU3dvbF9mbUt3a3RSb3NhZlpNbkpWcFNaWXZhMWE5TUkzTTVFMlI1YWV3NXJjb0lSMTRQVFNqbzFsRmZwRmtB?oc=5",
         "datetime": 1792425194,
-        "summary": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict?  Reuters",
-        "headline_cn": "解读：埃及可能军事介入沙特-也门冲突的背后原因",
-        "sentiment": "bearish",
-        "rationale": "地缘冲突升级推高油价和避险情绪",
-        "market_relevant": true
+        "summary": "Explainer: What's behind Egypt's move towards possible military involvement in Saudi-Yemen conflict?  Reuters"
+      },
+      {
+        "headline": "Israel to resume commercial shipments to Gaza after Hamas fee dispute - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxQTE16ZHdCQXFFa1VvMzZRSFhtMER6Mmh2WVltcWZHcE9MYTByYXRIMWJvV2RJb1B4RXpoekFiTDV5Z1lyU1BmQ2FtUnZxT3ZqTnJwWEhSSnZUSmlobGRXcUYwYWxycU5NRjlNYWF0elNBR0FJUnRLZHJGeDRuSWNaXzI2aWhxbHpjNnFtbkN2N1lZa3luUHlXaHNVTnV3TzNjbmVnQVdsWnFIRGRCU2JDamM0SVZHTng0?oc=5",
+        "datetime": 1792424895,
+        "summary": "Israel to resume commercial shipments to Gaza after Hamas fee dispute  Reuters"
+      },
+      {
+        "headline": "Egypt delays vote on military support for Saudi Arabia until October 26 - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOWHFMcmFaWmtRSEtzRmtXSnVKVzRKRGVaMXY4dDJ4TmZDU3JPZHlkWFZOdWViVDJvbk1lVUlCQ0dHT1BwZGQ2VVl3LUdHc1hDS2tpZlBfeXYxSDNCS3JuZzNBWEpnekVrcWxmY2wzNFBLUUxQV05tT1dlNlg2ZWRNbkZ3bDZFbU93U2NTV0VSVTc4NjZIcHE3SEdoeXBZZ3ItRHNaa19yYXZ5V1lZaTEtZXpPQUNHbkJhblE?oc=5",
+        "datetime": 1792424863,
+        "summary": "Egypt delays vote on military support for Saudi Arabia until October 26  Reuters"
       },
       {
         "headline": "We're buying more of a beaten-up stock before another overhang is lifted",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/19/were-buying-more-of-a-beaten-up-stock-before-another-overhang-is-lifted.html",
         "datetime": 1792424596,
-        "summary": "The stock is still down big from its Aug. 5 close.",
-        "headline_cn": "我们正在加仓一只受挫股票，等待利空出清",
-        "sentiment": "bullish",
-        "rationale": "机构逢低加仓显示信心",
-        "market_relevant": true
+        "summary": "The stock is still down big from its Aug. 5 close."
       },
       {
-        "headline": "Every look from the Victoria's Secret Fashion Show - Reuters",
+        "headline": "France in turmoil: What might follow a weekend of riots? - Reuters",
         "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNa2lPVEdrVzBfenM5SXI3MVNXTDdLQ1R5Si12OHFWQzF1TUtJaUZYdjl6SmZjSkdZeS1FSWV2a2JzeXc5TEFGdkliY09WTFE2SWYwRUQwVUJaWWsxV2dSNGZwYWlOMFMyd0kzaTZoN0xJZmJTRm9NUjdmdmhPeG9sYlJ5d05PVDREcWlFbF9YZ0U?oc=5",
-        "datetime": 1792423629,
-        "summary": "Every look from the Victoria's Secret Fashion Show  Reuters",
-        "headline_cn": "维密时尚秀全部造型回顾",
-        "sentiment": "neutral",
-        "rationale": "娱乐内容无财务影响",
-        "market_relevant": false
+        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxQdnU5M25aUmFwSHBYZjhkMFl5RlU1dkZMVTVuSlBWeHZPX01SUGVZUGF3Wm94U2wwUlYzdWxxbGowVXhMM09ON3NFbjV0WElKTFVsZVlGQkprLTZQTGxkaEYwSDBxcHNUMWVDQmczLVlJWHd5Ym5Id2ozZDRENTBvWURQekl2NW9ablROeHI4Z0c4ZFlZM0x0Y2V3ZEFJUQ?oc=5",
+        "datetime": 1792423980,
+        "summary": "France in turmoil: What might follow a weekend of riots?  Reuters"
       },
       {
-        "headline": "Houthi attack kills 53 at Yemen government training camp, officials say - Reuters",
+        "headline": "Meta apologizes after suspending \"No Kings\" Instagram account - Reuters",
         "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOSXFqMTJmVlRrSjR1NmNocW1VRWFpV1pSMjlNZDh1YXBsS2gyRkE0c19uRXJCQXN4Nklqajh6Tk4yeHhlRWRpWG81WXJMRVJmWXREaXZ2UkJfT3FNOFJndW9PNHBTZFRvVGJnbmFkeU10ZDlWdWY2N0kzVkFDVTh5NG0zZlZiM0N3bWthZmF2LUJjUXlEd29WOVRLZFdodFA0YlcwRl9fX0ptQ2dyN2I5RjVfRWJxRW1vYmF6VURGWQ?oc=5",
-        "datetime": 1792422183,
-        "summary": "Houthi attack kills 53 at Yemen government training camp, officials say  Reuters",
-        "headline_cn": "胡塞武装袭击也门政府训练营致53人死亡",
-        "sentiment": "bearish",
-        "rationale": "中东冲突加剧威胁能源供应",
-        "market_relevant": true
+        "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxQRS0zZWNoLW9WajlJVDROa1puZGVHU0FTMGhMOWNXWGVieWUzM2ZWekUxcWlBX2tjb0sxOEVRYnozR0l3TW90YmlRV2FodkJENFZYY0Y2VVdLelM1MHFlc1FHUVFXdUVLeUpURHFFTjU3ZmZ1RGsyZzYtZmVIeUFxc0JEYm02LU5SRzVGQmx3VEdGd1lza19TZlk0alFEaU5LeHNPUDFNSlpKdw?oc=5",
+        "datetime": 1792422441,
+        "summary": "Meta apologizes after suspending \"No Kings\" Instagram account  Reuters"
+      },
+      {
+        "headline": "US homebuilder sentiment tumbles to near 14-1/2-year low in October - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxNYzZUb09NNUZyTi1nanEwMHNsSGE4XzB4Y2tFSWVXYU5XU2Q3ODdBMkZmSFN4LVB3NHZjUG5FY2ZDQjJtYlZpbXpkQTMzQnVIOTF6bGZhWkstcWItVWxtbklsTHg4YnhuVkxiXy0td2oxbExYN1R1bjdmeGFkdlU2TDZ6b0Zqb1k3Q0VwbWVZRjdPbm1odHVZMzZ5NDltVG0zampuN2JzMXo?oc=5",
+        "datetime": 1792420437,
+        "summary": "US homebuilder sentiment tumbles to near 14-1/2-year low in October  Reuters"
+      },
+      {
+        "headline": "Iran's Araqchi blames US for Strait of Hormuz tensions, calls for diplomacy - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQVlo2WUlLX2EybUtYaE1xNVNaUWZvMFUtd1BrNk1meXpwa1ZoUDhVa21IWGZ3SmJ2b2U4ZmV6VDlqUzIxWVBoQVZqblJyaDlBa3ptUFJFZHZkVjBkRmY0d1cyZzlnazA3R1pDWVo3M2I1a1ViLWZMYmVpNHVmQzg0aXRnYnVoWDFNMk5kbWR5bGVuelNhRGh2c1had0pKYVoyY3ByS0dXUQ?oc=5",
+        "datetime": 1792419466,
+        "summary": "Iran's Araqchi blames US for Strait of Hormuz tensions, calls for diplomacy  Reuters"
       },
       {
         "headline": "NYSE becomes latest exchange to extend options hours as appetite for around-the-clock trading grows",
         "source": "CNBC",
         "url": "https://www.cnbc.com/2026/10/19/nyse-extends-options-trading-hours.html",
         "datetime": 1792417610,
-        "summary": "The New York Stock Exchange becomes second major exchange to announce extended-hours options trading for heavily traded ETFs and single stocks, following CBOE.",
-        "headline_cn": "纽交所延长期权交易时间，响应全天候交易需求",
-        "sentiment": "bullish",
-        "rationale": "增加流动性和交易机会",
-        "market_relevant": true
+        "summary": "The New York Stock Exchange becomes second major exchange to announce extended-hours options trading for heavily traded ETFs and single stocks, following CBOE."
       },
       {
         "headline": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, cites funding shortages - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxNenIya2dWLVowN3ZJZjB5eXlJekpqc3VCajlVN0N3eldBMzg4d05JSG9MQXVKQWdqbVZRYnZ3VXlVSGktNEE2MndNU1dZX2FFd0YyeW9teDFfN19WNk9RS09rV0JlM2dnbEluVlgydFFJc3QtQ0RNRkRSWkkxV0V6WjNRM21NX0FqRVZLdnp0WWFtNmFWZEh6YUJXXzJRRVU5Sy1MbmtjRm5pc1VVc1daWk9MTmFScG5yRmh4SHZBNno1eUloQXVDRkRVNU5kUQ?oc=5",
         "datetime": 1792416258,
-        "summary": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, cites funding shortages  Reuters",
-        "headline_cn": "世界粮食计划署因资金短缺削减对50万加沙巴勒斯坦人援助",
-        "sentiment": "neutral",
-        "rationale": "人道事件无直接市场影响",
-        "market_relevant": false
+        "summary": "World Food Programme cuts aid to 500,000 Palestinians in Gaza, cites funding shortages  Reuters"
       },
       {
-        "headline": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month - Reuters",
+        "headline": "Gulf bourses subdued as regional worries weigh - Reuters",
         "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQWVF3TGpvSmg1YmEyMnhhWXhnUFkwdS13ak14NldscXdsZm92dVkzbGdnU3lwd2VjY255bXJKeGZOX09ZM3AxN1JjWHRSbXRGNDdFaTVhMU9SMWxKZXRDNDd2bnBuaE5pSjJwbkgtVXF6dzJWNWFJOUw5X2U1TjJPQjdUaG1ldHRudHRVTF9FeWhOM3gxaTloUEcxaVdJdHg2M29sUHJwc2NFWFdRV0xjS3Y2UlZ6ZEJLOEw3ZEpR?oc=5",
-        "datetime": 1792413317,
-        "summary": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month  Reuters",
-        "headline_cn": "克里姆林宫称普京、特朗普和习近平可能下月在华举行三方会晤",
-        "sentiment": "bullish",
-        "rationale": "大国对话利好贸易和地缘稳定预期",
-        "market_relevant": true
+        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxNSDhxbkFLUVRpNGVVNVgtZENoWkNyazY4aGlJWERFQXp5Snc1TDk4b19qMkZtWnBGV0M4UWtSUlhraTlDSmZndkVJZm9vX0h1NGxWeWQyT09oQjNZNnQyUjc3SHZiSVFaRTR2RVpqVmF4aC1CLThPYnJnZ0NjSG9zLUdKMFRYd1BUZWIwc1V5aXVFbW9WbVVrSXBFZzhtQQ?oc=5",
+        "datetime": 1792416219,
+        "summary": "Gulf bourses subdued as regional worries weigh  Reuters"
       },
       {
         "headline": "Credit stress is threatening to unwind the AI bull. All eyes are on Oracle to hold the line",
         "source": "CNBC",
         "url": "https://www.cnbc.com/2026/10/19/oracle-debt-faces-an-ai-stress-test-why-some-investors-arent-worried-.html",
         "datetime": 1792411027,
-        "summary": "Investors are pushing up the cost of insurance against an Oracle default.",
-        "headline_cn": "信贷压力威胁AI牛市，市场聚焦甲骨文能否守住防线",
-        "sentiment": "bearish",
-        "rationale": "融资成本上升打击科技股估值",
-        "market_relevant": true
-      },
-      {
-        "headline": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNRjBMUkU1SEVNclFaMVR1SnljVENrS3N5RUdNcnV5UFZkdlB3RHdiWTFoSFRxcVRBVkRSOEowM0h4bHZyYmd4dDhKYlJQSzUzTUJ2QmxzaGtha2lxUldoLXRPSmczQndXbTNHRWxwRHBhZF9vdDdZRVl4WXJ0M3B0dEJrOWh1SkVzTXhIUTVydk11cEFPaXc3dGZBX0JnMk9hYlpOdkpXc3R3cllKTllGRG5MVC01QkZHNl9Td3J1VHhSckE?oc=5",
-        "datetime": 1792410470,
-        "summary": "Rubio seeks to expand Central Asia ties with pomp-filled Uzbekistan visit  Reuters",
-        "headline_cn": "鲁比奥高调访问乌兹别克斯坦寻求扩大中亚关系",
-        "sentiment": "neutral",
-        "rationale": "外交访问无明确经济影响",
-        "market_relevant": false
+        "summary": "Investors are pushing up the cost of insurance against an Oracle default."
       },
       {
         "headline": "Trump's Russia sanctions waiver eases India's energy woes, lifts trade deal chances - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxPX1JDdGd6aEZHMGQ5OXppVnA5d3FlSzNmbDdjOURNajl2Sjg3T0VrRzRLSC1DdVpLekQ5ZHBVdjQ1eV9UcF81anZNVklVYjZnQlNfQUlWRVMtNzEwVVVDQWlYTmQtU29FOU5xTFlGYTFUVV90bXI3dXU5UU5IUG9ZNjNYVHNUdzNjT3JXb244bm84d240TG56ZDVLbXNhMWpucjVTZXdtaTZQYjViOFU3bDZnZlFEQjduUDBfMWdwMVBXUFl3VFRJ?oc=5",
         "datetime": 1792409771,
-        "summary": "Trump's Russia sanctions waiver eases India's energy woes, lifts trade deal chances  Reuters",
-        "headline_cn": "特朗普对俄制裁豁免缓解印度能源困境，提升贸易协议前景",
-        "sentiment": "bullish",
-        "rationale": "制裁放松利好能源供应和贸易",
-        "market_relevant": true
+        "summary": "Trump's Russia sanctions waiver eases India's energy woes, lifts trade deal chances  Reuters"
       },
       {
         "headline": "French Prime Minister calls for partial curfews after weekend riots - Reuters",
@@ -38581,6 +38784,20 @@
         "summary": "UK urges firms not to take part in E1 settlement tender or risk sanctions  Reuters"
       },
       {
+        "headline": "JPMorgan brings deposit token to Ethereum for institutional clients",
+        "source": "Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-10-19/jpmorgan-brings-deposit-token-jpm-coin-to-ethereum-for-institutional-clients",
+        "datetime": 1792402831,
+        "summary": "JPM Coin, which represents US dollar deposits at the largest US bank, will be made available to the company’s institutional clients on the Ethereum network"
+      },
+      {
+        "headline": "Houthi attack kills 58 at Yemen government training camp, governor says - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOSXFqMTJmVlRrSjR1NmNocW1VRWFpV1pSMjlNZDh1YXBsS2gyRkE0c19uRXJCQXN4Nklqajh6Tk4yeHhlRWRpWG81WXJMRVJmWXREaXZ2UkJfT3FNOFJndW9PNHBTZFRvVGJnbmFkeU10ZDlWdWY2N0kzVkFDVTh5NG0zZlZiM0N3bWthZmF2LUJjUXlEd29WOVRLZFdodFA0YlcwRl9fX0ptQ2dyN2I5RjVfRWJxRW1vYmF6VURGWQ?oc=5",
+        "datetime": 1792402320,
+        "summary": "Houthi attack kills 58 at Yemen government training camp, governor says  Reuters"
+      },
+      {
         "headline": "Qatar will soon announce local defence production hub, minister of state says - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxOa1NSbS1JNV82NURyOVROZGxMc29reXNCU1RIdzlnVFFxbWhtMmdiV0w4TVFiXzJFRmZrREY0TzJDVGFjcUQteV9FVkRkT3VFRkd6TnY2Wk5pQVFZb3NSWHg1R1RDUkQ3UHFQRkpZUVA0ZGpJeEh0LW1uUmV6LVRHRm82eXZEbVlTWi1oeVFuZGdJalp6ZVplUDkwdE9CN2pqZmhrWlNMUzFYb2szTzdSLUNzR3dXRFhHTnR2VGJ5X2pGSnN6THc?oc=5",
@@ -38595,11 +38812,32 @@
         "summary": "\"It looks like either the bond markets riot, or the people riot, or both,\" one analyst told CNBC."
       },
       {
+        "headline": "Every look from the Victoria's Secret Fashion Show - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxNa2lPVEdrVzBfenM5SXI3MVNXTDdLQ1R5Si12OHFWQzF1TUtJaUZYdjl6SmZjSkdZeS1FSWV2a2JzeXc5TEFGdkliY09WTFE2SWYwRUQwVUJaWWsxV2dSNGZwYWlOMFMyd0kzaTZoN0xJZmJTRm9NUjdmdmhPeG9sYlJ5d05PVDREcWlFbF9YZ0U?oc=5",
+        "datetime": 1792393200,
+        "summary": "Every look from the Victoria's Secret Fashion Show  Reuters"
+      },
+      {
+        "headline": "The races that will decide control of the US Senate - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxNdmlCY2NZdjdJb2JzTGRxMHRhQW5tRGdqMUdsckMwUU9WM0hERzJkWjkwYnBINW5oa2VDN2FHSFRIMUtPM2hmV0dSMGlBalh2LW5WOW92WlYzT0VZYU00MmhOWEZrci1zMUVXeGZ4dGZkTWhOZDlqUXhXTUtlYnBXT2lLUkE5Uk5yV3Z4ZHVwRkZMdWVBYkFoNw?oc=5",
+        "datetime": 1792393200,
+        "summary": "The races that will decide control of the US Senate  Reuters"
+      },
+      {
         "headline": "Putin approves minor Russian government reshuffle - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxORXFIbEpxSmkybWNGczBUYVEyMnFKYm1GN1BwVTBkaWZDREF1Sk5WcEVFOHVwaTF4YXc2Z0RQcnB2TlNGdTY3bHFMODUtckcwMWdXWUV0eWtLWndTc1A0TTNlcUQ2S2ptUVFYN2hSRWVpMmdyNG1kbk43U0NaOHNYc1BzSHEzck0?oc=5",
         "datetime": 1792392780,
         "summary": "Putin approves minor Russian government reshuffle  Reuters"
+      },
+      {
+        "headline": "Bitcoin rebounds above $82,000 as oil’s retreat lifts risk mood",
+        "source": "Bloomberg",
+        "url": "https://www.bloomberg.com/news/articles/2026-10-19/bitcoin-rebounds-above-82-000-as-oil-s-retreat-lifts-risk-mood",
+        "datetime": 1792392298,
+        "summary": "Bitcoin rebounds above $82k as oil slips, lifting risk appetite; Ethereum and Solana rise, markets cautious about highs."
       },
       {
         "headline": "COMMENTARY: Asian refiners' pain is Middle East oil producers' problem - Reuters",
@@ -38619,7 +38857,7 @@
         "headline": "Global food inflation is expected to intensify as supply shocks pile up - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQUVRkb2hsTDU1SE9pWjNla2I5RTYxUFJQZndkWkVIQ05EbzhUOWlfbGp5X2J2SHA0bTJpMGptenRDdXdWZ3E2VkthVVdBY2YxTFQ0SjhPc2xadGJWRFR2dENBZ1luZ1lEOUlsVTFxYnJxYmJ4ck9kZmtaQlg1bzFjemN5Rk1WdFhSb0tpT2c2OVVGd2lRenlBVnRud2E5S2ZsMlRucENKZ0hpLWJBd1dCX0R5VG10YkU?oc=5",
-        "datetime": 1792382640,
+        "datetime": 1792382796,
         "summary": "Global food inflation is expected to intensify as supply shocks pile up  Reuters"
       },
       {
@@ -38644,11 +38882,18 @@
         "summary": "How did this happen so quickly? Where were the buyers? I have some answers."
       },
       {
-        "headline": "Oil slips from five-month highs with Hormuz crossings, Russian sanctions waiver in focus - Reuters",
+        "headline": "Brent crude edges lower, even after Houthi attacks on Saudi infrastructure - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
         "datetime": 1792362180,
-        "summary": "Oil slips from five-month highs with Hormuz crossings, Russian sanctions waiver in focus  Reuters"
+        "summary": "Brent crude edges lower, even after Houthi attacks on Saudi infrastructure  Reuters"
+      },
+      {
+        "headline": "Gurman on HomeView: ‘Finished Units Have Been Sitting Boxed Up in Warehouses for the Better Part of a Year’",
+        "source": "Bloomberg",
+        "url": "https://www.bloomberg.com/news/newsletters/2026-10-18/apple-homeview-with-robotic-arm-new-mac-ipad-mini-nov-6-release-iphone-duo?accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzb3VyY2UiOiJTdWJzY3JpYmVyR2lmdGVkQXJ0aWNsZSIsImlhdCI6MTc5MjMzMjQwNiwiZXhwIjoxNzkyOTM3MjA2LCJhcnRpY2xlSWQiOiJUTjNXODFLR1pBSjQwMCIsImJjb25uZWN0SWQiOiJDNEVEQ0FFMUZBMDU0MEJFQTI0QTlGMjExQzFFOTA4MCJ9.eu94lgz5qU35YdXhWFRwjbVBeJEKzpwFqF-pzh_GPJU&leadSource=article-gifting",
+        "datetime": 1792360713,
+        "summary": ""
       },
       {
         "headline": "Egypt says ready to back Saudi Arabia in war against Iran-allied Houthis - Reuters",
@@ -38770,6 +39015,13 @@
         "summary": "Lebanon says military delegation will press for halt to Israeli attacks at US talks  Reuters"
       },
       {
+        "headline": "Israeli settlers attack Palestinians, European diplomats in West Bank, Belgium says - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNWXplRm9KdGNaY1RUZFA0UUFLbUxVWmx3TlBnRXRCQU5BUjBBRXNDcm9TSEQ2SUthUlpYMl92X052ZGdjMzFZLUd6amZ3UHdFNG5ic0k5LURwUDFOaDZQNE1CYWFlN1JRWDhlcFRWVVZTU0tzN0l5OHVaZXh0dkVFOFFwYkQ5WTIycElqQk5ZeHh3OTZVQWpVWHNkMDFDWk1ndEc5OHUtR2EzbV9iQVZHaWx4REljaTYxSFhsSkdDRkw?oc=5",
+        "datetime": 1792257616,
+        "summary": "Israeli settlers attack Palestinians, European diplomats in West Bank, Belgium says  Reuters"
+      },
+      {
         "headline": "Tens of thousands march in Lisbon over housing and living costs - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxOa3NQRHI0VTRqeGpNXzZSN0hkTU1aOTh3M3BKdHBQVGc1b1pGdmRRVWJ4WTdSbnVaNlJXQXNJeklhMEJlYkhocVVwRGtzcjlISk43UW9tU2RYWXNQR09Wd3k4a2xCQm9Ua1Z4bkY2UlI3NFpzMXZKcHNGTy1PdlJBMkV6YTN0Y210eHJWN0xtbVByX0o1RlV6V2lOVQ?oc=5",
@@ -38782,13 +39034,6 @@
         "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOMFdrc1I4NnJ2Z0NQeUM2c25pYzF4ekRXcFVHRHlYVWVVYXhhV0hDXzhVUWtUc2JCRnZmU0lZRkJlRkZudWNzUzJINWpDWWdFcG13SG5YVHJnMk9tcEE2Z3BtdHJ1VHdJcXA4eGNQYXVfcE1VX293QjhYQ0YtaVJUOU1kYjJoR2hPeUJJNlNDUzVfVnlxVUhINGJEV2UzTllWRWVrRmpuNG5ZVGY2SFFvcFpySlJsNUEtYmF6LVNEcEpnck0?oc=5",
         "datetime": 1792254917,
         "summary": "Explosion at Iraqi paramilitary alliance base kills one member, sources say  Reuters"
-      },
-      {
-        "headline": "Israeli settlers attack Palestinians, European diplomats in West Bank, Belgium says - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxNWXplRm9KdGNaY1RUZFA0UUFLbUxVWmx3TlBnRXRCQU5BUjBBRXNDcm9TSEQ2SUthUlpYMl92X052ZGdjMzFZLUd6amZ3UHdFNG5ic0k5LURwUDFOaDZQNE1CYWFlN1JRWDhlcFRWVVZTU0tzN0l5OHVaZXh0dkVFOFFwYkQ5WTIycElqQk5ZeHh3OTZVQWpVWHNkMDFDWk1ndEc5OHUtR2EzbV9iQVZHaWx4REljaTYxSFhsSkdDRkw?oc=5",
-        "datetime": 1792252260,
-        "summary": "Israeli settlers attack Palestinians, European diplomats in West Bank, Belgium says  Reuters"
       },
       {
         "headline": "Zelenskiy criticizes Trump's waiver of sanctions on Russia as 'wrong' - Reuters",
@@ -38882,6 +39127,13 @@
         "summary": "CoreWeave’s bond yields and credit default swaps have surged as its stock sells off. Here’s what those credit signals mean for stock investors."
       },
       {
+        "headline": "Why is the battle for Yemen's Taiz so important? - Reuters",
+        "source": "Reuters",
+        "url": "https://news.google.com/rss/articles/CBMihwFBVV95cUxQVE5NX1dPV1lsbk1MeFB4OGoyZHJ0OUhNV3hxRkQxT3FmcGo4emVHVi1fRDhrV1ByWlUwSURBZ1pPUzQzanIxbWx4MXVwUnFmQWtPNjAzd3NTUDEzOU5NSmJTVHF3OHoxdHk1d0VpUm13YjcwQ2FjT1djOGVGTC1MSkFvVjhVTmM?oc=5",
+        "datetime": 1792181392,
+        "summary": "Why is the battle for Yemen's Taiz so important?  Reuters"
+      },
+      {
         "headline": "Israeli settlers burn olive trees, injure journalist in West Bank attack - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQkU1bHk0ei02ZkZRZndPemRvNGZFQnM5ODdrR2EyTU9WRjBUN3MwcGdtLXY2NnZnWld0UkM2MjBUMDUzWVV6ak1vcGNSV05KMllWVWotQS1TdGNLQnVFOERMRElid09YaVB2bUhGLXE4TlFJelBfRFg3QS1vOVBSLXVJWTV3R01CQ3FSZzVZMHlub3V1ZjFtYlJYNGwwRDRFeUxTeWFzNlJjS1dwSGo1a0xOaXRMc0tiWnlrbVBtMA?oc=5",
@@ -38943,258 +39195,6 @@
         "url": "https://www.cnbc.com/2026/10/16/netflix-peter-rice-chief-content-officer.html",
         "datetime": 1792170170,
         "summary": "Peter Rice brings a wealth of experience in TV and film, including scripted and unscripted shows, live sports, prestige television and theatrical distribution."
-      },
-      {
-        "headline": "Schwab to create 'tax-aware' strategy that's been attracting billions from wealthy investors",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/16/tax-strategies-capital-gains-wealthy-investors-schwab.html",
-        "datetime": 1792167674,
-        "summary": "Wealthy investors are flocking to tax-aware long short strategies, adding billions into these super-powered versions of tax-loss harvesting accounts."
-      },
-      {
-        "headline": "What we want to see when Capital One and Meta report earnings next week",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/16/what-we-want-to-see-when-capital-one-and-meta-report-earnings-next-week-.html",
-        "datetime": 1792166789,
-        "summary": "The Investing Club holds its \"Morning Meeting\" every weekday at 10:20 a.m. ET."
-      },
-      {
-        "headline": "UK watchdog moves to protect energy market from wholesale price swings - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPenRiT0NLdHdEVVlBVUVzNmpCemctNi1rSGl2VjNvaE91ZnZLSFZBUlJZY2ljVkw3LTY0S0pWZmxiRlNxbHVyQmV4T0hSV044dWNPT2Nyckk2Njg5UklOTTRLVXh4V3praHZQU1lTWk5Nb2pSaklDU01BQTg1NDlUTzgxTHV6Z1d5RkdTaDIzcEtQRnB2QURnNmFFanQ0Y3JsNk8ybDhucVl6NUtWMmcwazQzWEk?oc=5",
-        "datetime": 1792165545,
-        "summary": "UK watchdog moves to protect energy market from wholesale price swings  Reuters"
-      },
-      {
-        "headline": "Kimberly-Clark is having its best week in four years. Here's what is propelling shares higher",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/16/kimberly-clark-stock-q3-kenvue-deal-cramer.html",
-        "datetime": 1792163545,
-        "summary": "After a bruising September for the stock, the good news is starting to pile up."
-      },
-      {
-        "headline": "EXCLUSIVE: Order to limit Starshield for Ukraine came from inside White House, sources say - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxQTFVmdXZNRHVvVzZhYTJWZTRETDgtRElBT0RibUJvX2VfUkI1NGt6Q1lTVmdON21mNjdXTjFNcXBkZlJ5X0NFYkMzOVQwWjZZTjNPN3hlY09Ta3ZUMUVoRm9lWWV4N29rWXV6dXpQNTNCRUhXTHVySUlUZTNaR2dORUVPd3l0SEJOTmJFaTJURnNyTi1icE5qZmsxSDNuNFRKTEd5Q21iSEdtUXJCWEI0UWNwOGZDdw?oc=5",
-        "datetime": 1792161480,
-        "summary": "EXCLUSIVE: Order to limit Starshield for Ukraine came from inside White House, sources say  Reuters"
-      },
-      {
-        "headline": "Jio Platforms IPO: Ambani taps massive Reliance workforce to boost offering",
-        "source": "Bloomberg",
-        "url": "https://www.bloomberg.com/news/articles/2026-10-16/ambani-taps-massive-reliance-workforce-to-boost-jio-s-record-ipo",
-        "datetime": 1792161076,
-        "summary": "The conglomerate has reached out to most of its nearly 420,000 employees across all group companies, encouraging them to consider investing in the $3.2 billion IPO"
-      },
-      {
-        "headline": "Supertanker rates fall from record highs - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMikAFBVV95cUxPVkk0WDVQcnY0THRwaTVSenJQTEQ0U1VuVHdEY2xKTl9CdEw2NjlFN0FvTnBGbldlREpWRGZ6YV9kWnRjNjVuTlJqTWVBR0U3VXAwbXgwRjlSY1pfSVd3SjRKYU5KMVJwVm56blVQMnFFbV9EejlRNlZuSWo2OGd1TVl4ZlVwOXlvVGttb0ZLVkk?oc=5",
-        "datetime": 1792160741,
-        "summary": "Supertanker rates fall from record highs  Reuters"
-      },
-      {
-        "headline": "Italy names senior Israelis, Katz in probe over Gaza flotilla activists - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxOTjVCUjhWQ05fM0dEYS1oR29yb3RhREZxYkUyX2hTeS1xQlVHSjk3SWZSZHVNb2Zla0lsTmhKLXNsYXBQNlBHTkdiQ1AzYW5rdWp0SEtiZWNUZk5lMDlKallXUEZKT0xROWpJS3JzaFRTaGV0SmdwQmw1VVluWlYyRjFjT1FKWWJldWo5RUNNQlN3YWd3c3daOURld0NjNEczVlU5cUhtc2NPNUJzcVFwVWVqdzdXSlZmNTViWmNR?oc=5",
-        "datetime": 1792160465,
-        "summary": "Italy names senior Israelis, Katz in probe over Gaza flotilla activists  Reuters"
-      },
-      {
-        "headline": "Norwegian teen jailed for 20 years for UK murder plot after being recruited online - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQNmZOcW5JOVBKWUFDdmZYUWpCbUJndTRTUHlkOVBUOUtIQUF3MzFBQm5yQkJCX3lFRVpydU5tOGdfaFFhSWt4alFxNWZSeDl3dDQzZGxleDRpT0xEQUZqYU5KRTR6THFBWGxlOHBoZ3FrV0RYUnZjbVV4YU9CN1JsaXFuMUZRSWk0cllaYWp4dzJHaTBLU3BtQTVnNlJYOGlTeEdmQzlELVFoeXFEX2hnVUVBR1RmVGJGUXc2bnNXR2ZlT1p5Ri1Oc3l3?oc=5",
-        "datetime": 1792160049,
-        "summary": "Norwegian teen jailed for 20 years for UK murder plot after being recruited online  Reuters"
-      },
-      {
-        "headline": "Italian airports controller fixes network failure that caused flight delays - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQM2ZBSmFBTmI3c3pYWTF2Z1NvTF9zVUZodUdvNTh2MGxlUWxCUGtQN2pBYnlhLTNnNzhWTGc3S1BYQWVnX2paSTZ5Y0Vwd3FzaGVVckZfeU1PR1RqSm9hZUNQU0ZuSUhrYTAwRjZlMndCM3hNeV9Qb0FCRHhUMWNrR1lrRXRkYUJRWUc1YzFaa1NiaENwNHliY3JxSGJ0QzR2clBqSGhhODNGYmZKYUVn?oc=5",
-        "datetime": 1792159332,
-        "summary": "Italian airports controller fixes network failure that caused flight delays  Reuters"
-      },
-      {
-        "headline": "AI 'espionage' is a reality that companies need to be 'wary of,' Jay Clayton says",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/16/ai-espionage-openai-jay-clayton.html",
-        "datetime": 1792158956,
-        "summary": "AI \"amplifies\" existing cybersecurity risks toward U.S. digital infrastructure, Clayton said on \"Squawk Box.\""
-      },
-      {
-        "headline": "Here's how the CoreWeave sell-off is affecting OpenAI vs. Anthropic valuations",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/16/coreweave-openai-anthropic-perps.html",
-        "datetime": 1792158233,
-        "summary": "The spread is widening between AI leaders OpenAI and Anthropic as a sell-off in CoreWeave leads neocloud stocks lower."
-      },
-      {
-        "headline": "Our top 10 things to watch in the stock market Friday",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/investingclub/2026/10/16/our-top-10-things-to-watch-in-the-stock-market-friday-.html",
-        "datetime": 1792156770,
-        "summary": "Wall Street is headed for a mixed open, as CoreWeave shares tumble again."
-      },
-      {
-        "headline": "ExxonMobil signals $4.5 billion refining earnings boost as margins soar - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxQTjlyZU82NGZleDhibTRDcWl1NzJId0JjZUpmMEVGZ1lRbzU2enR3WXV5a2xDME12TXdfYS1TaHJlMXh1bTIyNmNjbHVzNS1yb1laSVFHdWkxbnV4YTFyVXFVeGxzQktWV1ppWmZnQ1VHa2ljVVFrZjFOSHNqUjQ1U0lOTDJfTTRKT2FIWnRHRjg0MjhtXzlIYTJ2ZmdhUnJY?oc=5",
-        "datetime": 1792156690,
-        "summary": "ExxonMobil signals $4.5 billion refining earnings boost as margins soar  Reuters"
-      },
-      {
-        "headline": "Longtime money columnist on the advice everyone needs to hear: 'If debt was a person I would slap it'",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/make-it/2026/10/16/michelle-singletary-debt-money-advice.html",
-        "datetime": 1792155602,
-        "summary": "Michelle Singletary rejects 'good debt,' supports living with parents to save and says folks knowing your numbers is key to beating the affordability crunch."
-      },
-      {
-        "headline": "Trump says US may need to strike Iran's Pickaxe Mountain - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxPTWRtOEIzSmZRLXc0aEx6YkF3cGY5a2RwX1pzYmdQZnhqcmkzQUFkbndObFlvZEZybDNwU0lYT1I3U0pUdG9tZzNQTldkRktZajhWaXY2Vjh1NFQtU3BSbE10T2tXREh0dUVVWFQ0TVVsMmcyWDVUS21mQ21FVHVLaTF6M1dCX0NCZndtUy1fd3dXMzZPVDc1WXh3?oc=5",
-        "datetime": 1792155269,
-        "summary": "Trump says US may need to strike Iran's Pickaxe Mountain  Reuters"
-      },
-      {
-        "headline": "UN says Gaza malnutrition gains fragile as commercial supplies halt - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxOUmRYa1dxTlJBS2hzeXFCOVVCOU9iS21iUVhhd3N0NkpQSkxvb1BCYng0c3JhS0FndlVEemJ2dEtrRmVvVE5HOG8yTFpqQzFLM21mM3hDYzNqZnA5UHFVRUUzak90elBWOFlfcHpGWWYtZ1hENFJpY1M5d1Nza1dQWl8yWXUzQmNEODJfU1MzSkk4aFJJdlNJRDhLR1o5TmMtZGVaVWJGcEY0TjdUZW9uTTJvdFZtOW9uZEE?oc=5",
-        "datetime": 1792153194,
-        "summary": "UN says Gaza malnutrition gains fragile as commercial supplies halt  Reuters"
-      },
-      {
-        "headline": "EXCLUSIVE: Iran ships some LPG, jet fuel despite US blockade, data shows - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNUW43alBLT1ZtZE5UZF9VNEY2ZDhBNjNOdk93dG1BZTNBZWZkQ050OVZGQmxUWURPdG16Q1pwTmRtNkFfQTNNWDJEazN2aHBRY1UwLW1MbGRSWXpLdVZRenB6SGY2cFhVcmFlRzRQZkhzV24xeTVtWnJfRTdfUHlIbktueERWSGNCLUw2bzIwdUw1a3FpQ3pMdEk4NE9HaVppTnlvaWNLV19xMy1pOEc0bw?oc=5",
-        "datetime": 1792152207,
-        "summary": "EXCLUSIVE: Iran ships some LPG, jet fuel despite US blockade, data shows  Reuters"
-      },
-      {
-        "headline": "COMMENTARY: AI jitters, Trump's fading oil clout and China shock 2.0: The financial week in five charts - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMi3gFBVV95cUxPT0JUeTlGZHJqb29Dcnp1dEhpLXFEN0EwdG1IX0pzb29pampFTEhISTdSODVqdDd4a2dSRllSSy12YzBHSXR1bmZCVmJyRXFmTl9IN2tDVTkwbWFXa09hTUFhaER0U2hZMkh3YTZwaXlMZzkyUUNMUWtRUW96clBaR3JpNnVFanlyUjFqek1FWTV3TGtqbHRHWDR1RDZZZnBiRFlzdElpcEw3czFJaVkyT3pMLURLQm1FQzhxY0lJdHBUbUYwd25Ralk4R21xb1VQdUdqempCX2lpRUNwbHc?oc=5",
-        "datetime": 1792149600,
-        "summary": "COMMENTARY: AI jitters, Trump's fading oil clout and China shock 2.0: The financial week in five charts  Reuters"
-      },
-      {
-        "headline": "Two ships sink near Hormuz after being hit by projectiles amid surge in attacks - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNVlQtcHJibXBpYWEwWTQ4dFdfWUFJbTVteGY0WThGcTFybEdUTERvVG9DcGdoY09vUjh0TG1QeG5zMWx0LTFvV09teVNXY1NLdXZVNlpuMVBIV3pndWJKWVBRdENjLVd0dnVwdUxPTHFPU002S0ZqR0lkcjgyNVl2ZFFXc05MdTJHenM3LVNUSlBUb1RyeDVxY3VTdUxEamxrbS1OXzJJR3o3SlltandncHAwVXFNSTFYcmJXblh2U25vN2xMMW1ibQ?oc=5",
-        "datetime": 1792149201,
-        "summary": "Two ships sink near Hormuz after being hit by projectiles amid surge in attacks  Reuters"
-      },
-      {
-        "headline": "Norway's $2 trillion wealth fund was frozen out of major defense companies. That may be about to change",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/16/norway-sovereign-wealth-fund-defense-investment.html",
-        "datetime": 1792148207,
-        "summary": "Existing ethical rules mean the fund is not permitted to invest in companies like Lockheed Martin and Boeing."
-      },
-      {
-        "headline": "US considers removing sanctions on some shadow fleet vessels to cut freight rates, official says - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOdC1hR0pwcGJWU2NSX0szSlhYNlBMYUc2Y1ktS0NseE5MeEVKdE9jUVVqUHlva3dxeDg4NXRTQXM0UlpyMWJlTHNSN1ZiOWFqcWdIX1NNcGRhYzBsak5iVnZrYnJaX2xGbkRLcjNrQmFkUUd2ejVHWm0ydVJ2RVJhS1VFbkRhTHg5MVJXbnJDQ3YtRmVLWWpKU2xwUXNZSzMtUWI4cjJfaXp4djM0V2lQQmc4X2VsaVkxMHFpVUZ2bWNLaldpQnBNZmNn?oc=5",
-        "datetime": 1792147995,
-        "summary": "US considers removing sanctions on some shadow fleet vessels to cut freight rates, official says  Reuters"
-      },
-      {
-        "headline": "IMF expects at least one more 25 bps ECB rate hike in 2026 - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMingFBVV95cUxPbUVycFZsRzVkXzRQNHZLVXlhMUxUbmtmVW1fRDdjN1hOTWQwS18zX0VqeklHb0oydmE0bjJvdHJSbFFaM3dhZThqTkV5NHJVVFNyb29PMTJfNlRfUTZjSV84cWF4aC03b1l1eEdQWE1ZX1l4TXlwQjhOc29vajRoWGhsMVFEVEZZdlhjUWk3bDZ6YTdhV25iQ25VZE9RZw?oc=5",
-        "datetime": 1792145115,
-        "summary": "IMF expects at least one more 25 bps ECB rate hike in 2026  Reuters"
-      },
-      {
-        "headline": "On the campaign trail, JB Pritzker courts farmers like he's running for president - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQaG9mNDloV2MxakdrMTJablNtYWZaQVhmMmYtMUdxSE9JR0ZVRWdYWnlucG1laHRRWXVhZkZjOGlyWkxZWlJVZlY1dU1nc1pHRUlzcGEtWXJEQi1XN1Z2N2VjTzR4YXBiSE55MUtsQjZ5RUFqUURxa2E2VGpOYUtHRXFQVU1sMzBuc1BSbGg0WG9GeHBCaXdVcjJySEdJUDVwWUxWNFpybGp1NVRxeExZTm4yTQ?oc=5",
-        "datetime": 1792144980,
-        "summary": "On the campaign trail, JB Pritzker courts farmers like he's running for president  Reuters"
-      },
-      {
-        "headline": "Festive demand drives India's diesel sales in October, data shows - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPY0I4NWpld19ZWEJQUW4zcUcyZVNNdHNRaGxvVi1iaUI2bVBFY3hfOFRYTkpQSkdFeGJXbGtDTVlFRE95RERkZzB0SzRETjB0SW93U0s3cWhEcV9CeUk0NmlxZWc5RThQYnNydVVmU0Ryam5fRlJpaDBXcGc5d0VfQkFwYkowTkJ1VFdYdUVXS3ZYN0hsZ0VhdzZKY0c3b1B0Rm1QUjJITzVhcmF3ZU1nSzBn?oc=5",
-        "datetime": 1792144386,
-        "summary": "Festive demand drives India's diesel sales in October, data shows  Reuters"
-      },
-      {
-        "headline": "EXCLUSIVE: PetroChina set for record trading profit as war upends market, sources say - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNQW5fbkZTYm9qdzQzT19nUjIyTVZDN1hhOEhkRmI5Rm9PQ3RKUk10Z00wUWZ3a0JFZlVyQV9NQlFSVF9jZU5MTXBPQXBwbFE4UlJEa3lGTVpELVktUWJVRHB5MHRFMWNHVEJHMWc3LXFaYXd3LVNtbW9ycDJydGN2Q3pOWWk1bTRsaWV5c0RvLTZDM3JhdUVSWHc5U01CLU9GTHlObjNqRXNibU5MbUxndFFBWV9jR0tyU0E?oc=5",
-        "datetime": 1792138795,
-        "summary": "EXCLUSIVE: PetroChina set for record trading profit as war upends market, sources say  Reuters"
-      },
-      {
-        "headline": "Mideast war alters global bunker buying patterns, industry execs say - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOYVpkb09PNk1QUW1DQ3BsSGh1WC0wMktpR19NNDJFSF9ZY0JlXy1uZElBakltTzR2MDZRMUFLMnpxVndDRk9MR1kwai1SWHk4RnNfOVZvX0NwMk1LTk5yUm5YU3JrOXhiZ21SVEQ0VUpoLUdVb05YbmwyRUlPYk1sandmYzdVNjBIeHZyR0FfMVhpUVBkMFhUT1RsM3BaRWNGZ0tqVzhMMVQ0cGFqV2t6VXl5ZjVhWjNIY1RISm9rMA?oc=5",
-        "datetime": 1792133656,
-        "summary": "Mideast war alters global bunker buying patterns, industry execs say  Reuters"
-      },
-      {
-        "headline": "Asian Tour postpone Saudi International after Riyadh attacks - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOYXVTNUVpMVVuX0R4S3dEYm15QjZ6MXBkdU5FN2xNTWFuVTNiZlB6QmljejgxWi1qaDRocVJjV3NRQUY3MDQ4OVpUbmxZYWtmSE1JTnhkWWZ1eG9MQVl4Qk5wMWZIa2F3c3ZmNUc5WVdZMFJaVnVYT1JPbDhMQ1ZUdDllX0NMWERiWmh6MWdacG1jdFNackp6QUF3OS1zQlBpMzZNM0VHS1NOLWM3?oc=5",
-        "datetime": 1792129560,
-        "summary": "Asian Tour postpone Saudi International after Riyadh attacks  Reuters"
-      },
-      {
-        "headline": "How Healey's first UK budget could ripple through markets - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPbzdqOHBldnlRU2ZTLXFjY2EyMVdjQ2hfMmJWWkg0M1hpU2ZwY2J6YU5GTHRfMUR2TE96NzJrdHlJMGFsZW1YYzhzZEFfRXFfTjFfRWctQXZuWlQxRU85czFUT0w5eDJPcWZrXzFZc3N4RjJ0MWJkd2tzdkpqTFpQNFFSM3VXd3dyektwSHJaaF9BaXI5ZDY4NTNXODhLV0prdHMzTTlmYU1QUjlSZkE?oc=5",
-        "datetime": 1792126860,
-        "summary": "How Healey's first UK budget could ripple through markets  Reuters"
-      },
-      {
-        "headline": "Morning Bid: Calm after CoreWeave shock, but for how long? - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE44b1lGM1JLZENYQ1N1OEhhcmloOHVTUzl0X0JYZm5FZmFtLXhFTDVLWThlQzVxVnJRcjZkUDBVT20zYlJxRGRwVVBWQzRCVHNfbWt6QTFSWWtneFdWQ2I2LUxPZC15Tk95Z3d2dlBaXzlkX0dOdE44Z0RPdDQ2ZnM?oc=5",
-        "datetime": 1792125060,
-        "summary": "Morning Bid: Calm after CoreWeave shock, but for how long?  Reuters"
-      },
-      {
-        "headline": "US Treasury says Japan no longer faces deflationary environment, yen level must change - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOVnlFbzgwbXQ1Q3RjNk9wS2U2dHhqUzJLMENfa3Q1NU5pSUc2ZW96Mlg4Uk9sbDhic0N4YVhaNkpvbmphcTJSSnlJNjRUdFhXNWoxc3dzbUhRV054M0YyMjZBT3hRRFhSLWhYbFh0QUZjRThCUDFSRlptWVJ6YUN0OWkzYlJEQi14Z1ZMazE0WnJmU18yUHVmc2x4OXd4VU5DVlh3dUZ0cTV5UWRFQ2JrMnNEZXBSM0VjcjRxOHhabk1CY0oxaEF0SmF0ZUxJdw?oc=5",
-        "datetime": 1792123860,
-        "summary": "US Treasury says Japan no longer faces deflationary environment, yen level must change  Reuters"
-      },
-      {
-        "headline": "Fed's Warsh says AI path will be 'very bumpy' but ultimately 'very good' for wealth",
-        "source": "CNBC",
-        "url": "https://www.cnbc.com/2026/10/16/feds-warsh-says-ai-development-path-will-be-very-bumpy-.html",
-        "datetime": 1792123707,
-        "summary": "Warsh said he's optimistic that AI will make economies that use it well more productive and wealthier, warning the road there will be \"very bumpy.\""
-      },
-      {
-        "headline": "South Korea reviews expanding military mission in Middle East, report says - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNRmF3NllOSF9QUzVkUjZzNWVkQlo1MWRmdHkxQ082ZE5DTGdEVWtoS2JpRjUwLWtSYnpNNG9nR2Uyak9ESFBZNlh4LXZQenczNnB3YUNubmlmTUN2cTlzSDEyUzB3eTlqa1MySVZFSzQwYm9vM0kxU3VTMkdYMGhMRUlvOUE0bjFEeURLMmE1VklPRmxfU1l3Y2lOQVNkalBxUGhUaFRvdmV0a1FwREVhdG14ODVHYVlXaFZfenFneDFBWms?oc=5",
-        "datetime": 1792123140,
-        "summary": "South Korea reviews expanding military mission in Middle East, report says  Reuters"
-      },
-      {
-        "headline": "Bank of England's Bailey sees 'quite subdued' second-round price pressures so far - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPTG5XUks5NHU3SnZ2Wk1EVklSZm9Od1ljNWFieUZmZTlibEZHOGJiSlBWWlVsMGttUi1pZjlkc2hfZjA4TEZaTGltSEJfMjdDUDJZZ2dLQ1hqX05TcklZd2J4dTFXQVA3V0p0ZG1uSWV2aFpGVnFrRUEza0hTUm9hdXVyMk1icGxLQk9LMUFrc3VTcF9RR1N3VHVxZjE4eld5dnM3TUxySGRfSXYzQV82R1haZUx6VDIwMi15YWJickk?oc=5",
-        "datetime": 1792122031,
-        "summary": "Bank of England's Bailey sees 'quite subdued' second-round price pressures so far  Reuters"
-      },
-      {
-        "headline": "Rubio urges Lebanon to not return confiscated explosives to Hezbollah, US official says - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxPSlpQMDZaUUhySG1lc3RRT0R1SWZYemxuYVBWTHMyeXRnYzJwWm1JWnlLa19QQ0dqd01CcERwQkc5dGNxc0kwODZHek5YcnlNRzZCRHVxb3VQYlE1Ukd6WXJMY1JQSmRNQkYyaUtRZU1WMmo4cU10RDAzVE5xb1NhWFNDMEZfOURHMGZHQzlZMUxZNDlmUVZ3dkZ0YURzRFk1Y0xWSnVRS0hHVjBGbEdLNXc4blhCMDluZm05ZVpvcGNtb2VjbzNaOHhzVWxILU0?oc=5",
-        "datetime": 1792106322,
-        "summary": "Rubio urges Lebanon to not return confiscated explosives to Hezbollah, US official says  Reuters"
-      },
-      {
-        "headline": "India raises windfall tax on petrol, cuts duty on diesel - Reuters",
-        "source": "Reuters",
-        "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOS3ZFXzhIZDFZNFRJUnBMSktQd0xFd3pPb3NlekhlNTFBdFdfVnZtMkRZaDhBRTlienVxbW5jMGRuTGFJRkxkODBBSmVYQUFrWkNfa1dVU2t2c2hhblJlaUdBVnpyNlhXSGNZbjF3RnJUTDdoRFNESklnUXNtWUdkVmh6R3p3dkFXLW9iVG5KemtHZW52QXJoaVloRHZhWHpZenVJdkdB?oc=5",
-        "datetime": 1792100806,
-        "summary": "India raises windfall tax on petrol, cuts duty on diesel  Reuters"
       }
     ],
     "ticker_news": {
@@ -39216,25 +39216,59 @@
       ],
       "APA": [
         {
+          "headline": "APA (APA) Surpasses Market Returns: Some Facts Worth Knowing",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=d43afb5cabf2da210d6d55fd6f342ab588bd135c0e35bfe060fbefb7324c4301",
+          "datetime": 1792444502,
+          "summary": "In the closing of the recent trading day, APA (APA) stood at $49.76, denoting a +1.24% move from the preceding trading day.",
+          "headline_cn": "APA公司超越市场回报：一些值得了解的事实",
+          "sentiment": "bullish",
+          "rationale": "跑赢大盘显示个股表现强劲",
+          "market_relevant": true
+        },
+        {
+          "headline": "Earnings Estimates Rising for APA (APA): Will It Gain?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=5e755419cac40dc1d5fb6198eebc49ebfe883e2cbfc3a76d2c096e2123cc05af",
+          "datetime": 1792423202,
+          "summary": "APA (APA) shares have started gaining and might continue moving higher in the near term, as indicated by solid earnings estimate revisions.",
+          "headline_cn": "APA公司盈利预期上调：股价会上涨吗？",
+          "sentiment": "bullish",
+          "rationale": "分析师上调预期反映乐观预期",
+          "market_relevant": true
+        },
+        {
           "headline": "APA (APA) is a Great Momentum Stock: Should You Buy?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=90dc4b5a62ec1e8b4ee49caa5eee04dce85ea7c3227819240aaf980113f65fb7",
           "datetime": 1792422003,
-          "summary": "Does APA (APA) have what it takes to be a top stock pick for momentum investors? Let's find out."
+          "summary": "Does APA (APA) have what it takes to be a top stock pick for momentum investors? Let's find out.",
+          "headline_cn": "APA是优质动量股：应该买入吗？",
+          "sentiment": "bullish",
+          "rationale": "动量强劲暗示短期看涨",
+          "market_relevant": true
         },
         {
           "headline": "5 Dividend Stocks Going Ex-Dividend This Week. Which Payouts Are Safest?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=f85d249733daf46e2f4e52023b52a3b983235e14c3485519e0ddcb3b4d4fd613",
           "datetime": 1792412144,
-          "summary": "Five dividend deadlines are closing fast this week, but the payouts behind those yields vary wildly in how well they are actually covered. Before you buy, find out which names could keep the cash flowing and which one already burned through its free cash flow last year."
+          "summary": "Five dividend deadlines are closing fast this week, but the payouts behind those yields vary wildly in how well they are actually covered. Before you buy, find out which names could keep the cash flowing and which one already burned through its free cash flow last year.",
+          "headline_cn": "本周5只股票除息，哪些分红最安全？",
+          "sentiment": "neutral",
+          "rationale": "常规除息信息，无方向指引",
+          "market_relevant": true
         },
         {
           "headline": "The Zacks Analyst Blog Highlights Ross Stores, Roku, APA, Corcept Therapeutics and Halozyme Therapeutics",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=c0584ac4dc400289cb4bbcf4f0604a50724f59376fabb3b013c5a60889b15c77",
           "datetime": 1792411200,
-          "summary": "Ross Stores, Roku, APA, Corcept Therapeutics and Halozyme Therapeutics earn top Zacks rankings, backed by growth drivers ranging from streaming ads to drug demand."
+          "summary": "Ross Stores, Roku, APA, Corcept Therapeutics and Halozyme Therapeutics earn top Zacks rankings, backed by growth drivers ranging from streaming ads to drug demand.",
+          "headline_cn": "Zacks分析师博客重点关注Ross Stores、Roku、APA、Corcept和Halozyme",
+          "sentiment": "neutral",
+          "rationale": "仅为分析师关注列表，无评级",
+          "market_relevant": true
         },
         {
           "headline": "The Winners Inside SCHD - October 2026",
@@ -39354,58 +39388,51 @@
           "url": "https://finnhub.io/api/news?id=3717427e3699eecce81170c7a0d0d6a7730ca704a9faf56bcedebcb5be85cfe8",
           "datetime": 1791894904,
           "summary": "The S&P 500 (^GSPC) is full of established businesses, but only some continue to outperform the market. A few standout companies are thriving thanks to strong fundamentals and sustained competitive advantages."
-        },
-        {
-          "headline": "UBS Maintains Neutral on APA, Raises Price Target to $52",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=8d1acf4cf95b0927e81653bdd4eb1443e23a79a19dbf4da1481aa40aeebdc492",
-          "datetime": 1791825243,
-          "summary": "UBS  analyst Josh Silverstein   maintains APA (NASDAQ:APA) with a Neutral and raises the price target from $47 to $52."
-        },
-        {
-          "headline": "Shell and Equinor Deepen Canadian Ties With Bay du Nord Deal",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=ebaaf2a00a4ba57d1c0007b07c52def3844d13046845980dbd396dc0507dc634",
-          "datetime": 1791816720,
-          "summary": "SHEL is acquiring a 30% stake in Canada's proposed Bay du Nord oil project from EQNR, targeting long-term growth while maintaining capital discipline."
-        },
-        {
-          "headline": "APA vs. LNG: Which Stock Is the Better Value Option?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=a745b37a723b7fe5961452464cbd6ba1b1dba1e5b1422dccc2682fd5fe70ba11",
-          "datetime": 1791816004,
-          "summary": "APA vs. LNG: Which Stock Is the Better Value Option?"
-        },
-        {
-          "headline": "3 Elite Dividend Stocks to Buy Right Now to Lock In the Next Payout",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=cdf3a520616c6a4f000447a52e01c2dd58a21fee0e17d9a442dbf8933d90a12a",
-          "datetime": 1791814668,
-          "summary": "Three dividend stocks with ex-dates clustering in a single week of late October could hand income investors their next November paycheck, but the window to qualify is closing fast."
-        },
-        {
-          "headline": "Truist Securities Maintains Hold on APA, Raises Price Target to $45",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=0c2864a24be2996ac3cc6b72e59827e43c023549ad828b14a4ce2a6b3eab6c0d",
-          "datetime": 1791814406,
-          "summary": "Truist Securities  analyst Gabe Daoud   maintains APA (NASDAQ:APA) with a Hold and raises the price target from $44 to $45."
-        },
-        {
-          "headline": "3 Energy Growth Stocks to Buy as Oil Supply Risks Persist",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b9d54cd9bfe9038a95c8fb1ba6b294cc60df50e7f4885c7814a444e1509b090e",
-          "datetime": 1791810840,
-          "summary": "With crude prices elevated and fuel supplies strained, APA, EQNR and DINO offer distinct growth opportunities backed by production plans and strategic initiatives."
-        },
-        {
-          "headline": "Is APA (APA) Outperforming Other Oils-Energy Stocks This Year?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=8dc6cd586bdfe3339ac3b17a5dfc6061e421c20c7664328336f061d3ecdb195c",
-          "datetime": 1791808804,
-          "summary": "Here is how APA (APA) and Phillips 66 (PSX) have performed compared to their sector so far this year."
         }
       ],
       "APP": [
+        {
+          "headline": "AppLovin (APP) Stock Could Trade At a Discount After a 7x Run",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=42b9e1924fb98dfd549313810e6fd7ed0add0cb2dbc0fda857084b594ddf32d3",
+          "datetime": 1792444155,
+          "summary": "AppLovin has been through a wild few years in the market, and the current share price now puts the focus squarely on what its earnings really justify. After such a big move, the question for you is whether today's valuation can still be explained by the profit engine behind the ad tech platform. Over the past 3 years the stock has delivered a gain of about 7x, which raises the stakes on whether the underlying earnings power has kept pace with that kind of share price reset. Strong recent..."
+        },
+        {
+          "headline": "AppLovin (APP) Beats Stock Market Upswing: What Investors Need to Know",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=b5293c6641f20345a0c09a53a276adc1092817ddd450a079abb90da7f43462df",
+          "datetime": 1792442703,
+          "summary": "AppLovin (APP) concluded the recent trading session at $268.92, signifying a +1.05% move from its prior day's close."
+        },
+        {
+          "headline": "How Quarterly Results Will Impact AppLovin Stock Investors",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=0725ec4a724d26ad135de2d280f45a78a9c36bc41a55e5492a12ba8b143da8c4",
+          "datetime": 1792440759,
+          "summary": "AppLovin recently opened its Ads Manager platform to public self-serve access, while guiding for high adjusted EBITDA margins and acknowledging a slower revenue trajectory and an execution miss against earlier expectations. The AI powered ad engine that drives almost all of AppLovin’s sales is now both the growth lever and the primary operational risk, as management works to improve models without letting compute and legal costs erode profitability. The focus now turns to how this earnings..."
+        },
+        {
+          "headline": "Why Some of America’s Biggest Companies Are Objecting to Tokenized Shares",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=6b696838ce199f88a1f3bdc8550aedad41ae9110c59d1cfc5aa9169fc5568371",
+          "datetime": 1792435565,
+          "summary": "Nine companies, including Verizon, Broadcom and UnitedHealth, have objected to having their shares traded on the planned OKX-ICE tokenized stock venue."
+        },
+        {
+          "headline": "Why AppLovin’s Discount May Be Unwarranted Ahead of Q3",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=94c4a96a3b9875920563541bac779eb534cdd5853d8c598810e4545a263e2cf5",
+          "datetime": 1792433890,
+          "summary": "AppLovin (NASDAQ:APP) reports third-quarter results in early November, and the question hanging over it is whether the company can keep growing this fast. In the second quarter, revenue rose 53% to $1,924 million, and net income grew even faster. Yet the stock is priced as if that pace is about to fade. At about 16 […]"
+        },
+        {
+          "headline": "Nine Public Companies Object to OKX-ICE Tokenized Stock Plans",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=955434f5e6e47215b21ab196357894dc9fea2253d4f3842136ca8b609a2650f0",
+          "datetime": 1792427340,
+          "summary": "Nine public companies have objected to having their shares offered as blockchain-based tokens on a proposed trading..."
+        },
         {
           "headline": "AppLovin Corporation (APP) Grew Revenue 53%. What Must Happen to Defend Its Valuation?",
           "source": "Yahoo",
@@ -39615,102 +39642,16 @@
           "url": "https://finnhub.io/api/news?id=9ddeb9c52e5c4aae1003a15b54e7b6df98d4cf0c36ca7f964fa4d771dfda680d",
           "datetime": 1791892277,
           "summary": "Morgan Stanley  analyst Matthew Cost   maintains AppLovin (NASDAQ:APP) with a Overweight and lowers the price target from $450 to $400."
-        },
-        {
-          "headline": "AppLovin (APP) Falls More Steeply Than Broader Market: What Investors Need to Know",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=a612f1982b27b7d0d721f682d3baba341068b7dd369ab2f4cd4117e9d7f0e253",
-          "datetime": 1791837903,
-          "summary": "In the latest trading session, AppLovin (APP) closed at $270.71, marking a -2.28% move from the previous day."
-        },
-        {
-          "headline": "Oppenheimer Maintains Outperform on AppLovin, Lowers Price Target to $490",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=2caf210a4a174fe166c60874ce2aaeae6805645d95216ef72a8633364ad8164c",
-          "datetime": 1791812777,
-          "summary": "Oppenheimer  analyst Martin Yang   maintains AppLovin (NASDAQ:APP) with a Outperform and lowers the price target from $560 to $490."
-        }
-      ],
-      "BRO": [
-        {
-          "headline": "Brown & Brown (BRO) Earnings Expected to Grow: Should You Buy?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=5369cdc70f4a47f91423b5a32d1afbbd5ec18df091cd2593b4b88df232707845",
-          "datetime": 1792414803,
-          "summary": "Brown & Brown (BRO) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
-        },
-        {
-          "headline": "Brown & Brown (BRO) Stock May Be 28% Undervalued On Excess Returns",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=4fdfd87ed4d8d53288d3bd7469ba0d97ef74889f47443fc9df025ea293916331",
-          "datetime": 1792260798,
-          "summary": "Brown & Brown has seen its share price move around over the past year, and the question now is whether the current US$69.40 level lines up with the returns the insurer earns on the capital it puts to work. For anyone tracking the stock, the key issue is how that price squares with the profitability of the business model rather than just the recent trading pattern. The share price is down 20.3% over the past year, which puts the spotlight firmly on whether the underlying returns on capital..."
-        },
-        {
-          "headline": "WTW Stock Trading at a Discount to Industry at 13.47X: Time to Hold?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=311fd91a9ed1dbcc012db7e1cbd6c065b4c6e3f00b97e4db101bddd1281b7b06",
-          "datetime": 1792071600,
-          "summary": "Willis Towers' diversified growth, AI-driven cost savings and expanding margins strengthen its outlook, with acquisitions and share repurchases adding further support."
-        },
-        {
-          "headline": "Marsh shares are trading higher after the company reported better-than-expected Q1 financial results.",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=f8957bb866cb1e37bd5f2b26974a2dc503807b725eb255767549d55cbc0b3d68",
-          "datetime": 1792060857,
-          "summary": ""
-        },
-        {
-          "headline": "Brown & Brown’s Valuation Has Taken a Hit. Is Now the Time to Buy?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=c02ebde85dff26eb195e7fcddd48ac45e39ceb8f953488fe727d935d7d73fb38",
-          "datetime": 1791913824,
-          "summary": "Brown & Brown, Inc. (NYSE:BRO) is an insurance brokerage company that obtains commissions and fees by matching individuals and businesses with insurance carriers. The company’s asset-light business model, its ongoing relationships with clients, and its relatively small exposure to underwriting risk all contribute to steady cash generation. While acquisitions offer a means of expanding the […]"
-        },
-        {
-          "headline": "Can AI Products and Automation Drive WTW's Growth and Higher Margins?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=561da34a454494d669fd5ae06015965d6b848a55cd15f79951a1ccdb827a768b",
-          "datetime": 1791903480,
-          "summary": "Willis Towers Watson's AI-powered insurance tools and automation initiatives could fuel growth, unlock $400 million in annualized savings and lift margins by 2028."
-        },
-        {
-          "headline": "Brown & Brown (BRO): Are Insurer Payments Hiding Weakness in Its Core Business?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=24a1e332845d1224f48c8b7cb3937c7a4507cd5aa2762bd6dee30c973b9eae8f",
-          "datetime": 1791831399,
-          "summary": "Brown & Brown, Inc. (NYSE:BRO) earns commissions and fees by arranging insurance and providing risk-management services. Customers need advice and access to coverage; insurers value brokers that bring them profitable business. Its retail and specialty distribution operations connect those interests. The company appears in Insider Monkey’s 10 Best Insurance Stocks for the Long Term. Falling […]"
-        },
-        {
-          "headline": "Spotify upgraded, Alibaba initiated: Wall Street's top analyst calls",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=3f89e8879d586e5cd629005d198da398df5b90ad7a78af13079c92adb0c779d5",
-          "datetime": 1791812513,
-          "summary": "Spotify upgraded, Alibaba initiated: Wall Street's top analyst calls"
-        },
-        {
-          "headline": "Wells Fargo Maintains Equal-Weight on Brown & Brown, Lowers Price Target to $68",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=17b54c74f17f662380acaa6e2d37f787cc746eabd6f214c09209a8b60154f21b",
-          "datetime": 1791804406,
-          "summary": "Wells Fargo  analyst Elyse Greenspan   maintains Brown &amp; Brown (NYSE:BRO) with a Equal-Weight and lowers the price target from $69 to $68."
-        },
-        {
-          "headline": "TD Cowen Initiates Coverage On Brown & Brown with Buy Rating, Announces Price Target of $82",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=aa1d53fcd2fb305dc678c708923237a3f169c1adf3589b439d273a21d9d9e8ce",
-          "datetime": 1791801337,
-          "summary": "TD Cowen  analyst Andrew Kligerman   initiates coverage on Brown &amp; Brown (NYSE:BRO) with a Buy rating and announces Price Target of $82."
-        },
-        {
-          "headline": "Citizens Maintains Market Outperform on Brown & Brown, Lowers Price Target to $75",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=60534e150e68a4b09fdfa86c85731e354d77366681412d66b576f800369b6494",
-          "datetime": 1791796370,
-          "summary": "Citizens  analyst Matthew J. Carletti   maintains Brown &amp; Brown (NYSE:BRO) with a Market Outperform and lowers the price target from $78 to $75."
         }
       ],
       "CME": [
+        {
+          "headline": "U.S. Treasury Yields Turn Higher With Oil; French Bond Yields Rise on Protests",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=fdf18c77a118c9fdcb11e594ca9f9461fac4661b9f4bab1253fd8f22908b7a74",
+          "datetime": 1792438020,
+          "summary": "U.S. Treasury yields moved higher as oil prices erased early declines, though long-dated yields still remain comfortably below recent multidecade highs."
+        },
         {
           "headline": "CME vs. Coinbase Global: Which Financial Stock Is a Better Buy in 2026?",
           "source": "Yahoo",
@@ -39731,6 +39672,13 @@
           "url": "https://finnhub.io/api/news?id=e46853a1cc5696809a443dc53458d26ed60ed3d5507790793556defa0dc86b29",
           "datetime": 1792412100,
           "summary": "American News Group News Commentary - China held $590.7 billion of U.S. Treasury securities at the end of August, down from $699.7 billion a year earlier, according to U.S. Treasury data released Friday. Fortune called it the lowest level in 18 years, and for anyone watching de-dollarization, the trend looks clear. But over the same year, holdings attributed to Belgium and Canada kept climbing, and a former Treasury official who follows the data says some of China's bonds may simply be sitting i"
+        },
+        {
+          "headline": "JPMorgan Global Select Equity ETF (JGLO) Adds Meta and Broadcom on Thursday",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=bc383485b060d11ef619414376ec63c417d51b318f519b9bee319873bb75f5b5",
+          "datetime": 1792407873,
+          "summary": "The fund bought $19.0 million of Meta and $18.3 million of Broadcom while selling out of Micron and trimming Microsoft."
         },
         {
           "headline": "CME Group Expands Dairy Business with New European Futures and Options",
@@ -40046,41 +39994,6 @@
           "url": "https://finnhub.io/api/news?id=9d0e1639006cf3c2f1b743d39784afb66ea4098c925a106e0e23b926052f91ce",
           "datetime": 1791871200,
           "summary": "Here's a historical look at Fed moves before midterm elections."
-        },
-        {
-          "headline": "CME Group's Corn Futures Set New Daily Volume Record After USDA Raised Outlook",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=effed6d82c1629bb813d91fc85bf6f773a353321a51f29aaf23b4f95bbe69fb6",
-          "datetime": 1791844560,
-          "summary": "CME Group, the world's leading derivatives marketplace, today announced that its Corn futures reached a new daily volume record of 1,206,376 contracts on October 9, surpassing the previous record of 1,128,597 contracts traded on March 29, 2019."
-        },
-        {
-          "headline": "CME Group Announces Cloud Migration Milestones",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b1828fa53a1354344b6f40c17e43d84840324e52cd99a3c1154d277613fffbd3",
-          "datetime": 1791838920,
-          "summary": "CME Group, the world's leading derivatives marketplace, today announced it has completed initial performance testing for CME Globex in the cloud, reaching new milestones in the ongoing migration of its markets, including:"
-        },
-        {
-          "headline": "Can CME Group Sustain Trading Momentum Amid Easing Volatility?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=5a2001554b39364d735a09e99423b6f1232ddc9b47225580dec4a58acdb3cfa6",
-          "datetime": 1791817560,
-          "summary": "CME can sustain strong trading volumes through product diversification, global demand and new derivatives offerings, despite moderating volatility."
-        },
-        {
-          "headline": "Wall Street Futures Flat as Investors Await US Inflation Data and Major Bank Earnings: Dow Jones, S&P, Nasdaq",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=bac6d0509aa1db7fc6c23623a3d5adac40e245ec97c869e4b79b695c17e5a3ae",
-          "datetime": 1791811217,
-          "summary": "US stock futures pointed to a broadly unchanged opening on Monday, suggesting a cautious start to trading as investors prepared for important inflation figures and the beginning of a busy corporate earnings period. The subdued outlook followed Friday’s recovery on Wall Street, when the major indices advanced after experiencing selling pressure during the previous session."
-        },
-        {
-          "headline": "Is the Stock Market Open Today? Here Are the Trading Hours for Columbus Day.",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b09f8903e8e8a2ebfb13b229aa3a39155b2f4a1131687daad383ac3f68ec511f",
-          "datetime": 1791777660,
-          "summary": "Not everyone will catch a break on Columbus Day."
         }
       ],
       "CNP": [
@@ -40118,13 +40031,6 @@
           "url": "https://finnhub.io/api/news?id=779c71243958a1dea98b9ef9b7ab8ea5ff1e637f13c3e72a0872e9d7f39b43e5",
           "datetime": 1791878538,
           "summary": "Keybanc  analyst Sophie Karp   maintains CenterPoint Energy (NYSE:CNP) with a Overweight and lowers the price target from $46 to $44."
-        },
-        {
-          "headline": "Truist Securities Maintains Buy on CenterPoint Energy, Lowers Price Target to $44",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=f9bb36c2c16b9daa84e055a5dc8b6e053a2981238c044e739a6ea491e51bfa52",
-          "datetime": 1791814103,
-          "summary": "Truist Securities  analyst Richard Sunderland   maintains CenterPoint Energy (NYSE:CNP) with a Buy and lowers the price target from $46 to $44."
         }
       ],
       "ED": [
@@ -40200,6 +40106,48 @@
         }
       ],
       "EOG": [
+        {
+          "headline": "EOG Resources (EOG) Stock May Trade Below Fair Value After Its 113% Run",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=18b10e05d13e5379a0ed536a9ef08b611f8d0e8e32dd3cbbdb3c764fcaa56b6c",
+          "datetime": 1792462577,
+          "summary": "EOG Resources has ridden a strong multi year run in the energy sector, and at around US$157.65 a share the real question for you is whether that climb is still matched by the cash the business can produce over time. With a Discounted Cash Flow (DCF) estimate available, the focus turns to how today’s price compares to the stream of cash flows that valuation tool is measuring. Over the past 5 years, EOG Resources has delivered a share price gain of 112.7%, which places real emphasis on whether..."
+        },
+        {
+          "headline": "What EOG Resources (EOG) Earnings Beat Means For Shareholders",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=29de0492c8d591703ac49e9027d23899529e5313d6fbab57516077a96a67b2c7",
+          "datetime": 1792458994,
+          "summary": "EOG Resources recently reported earnings growth and consistent quarterly outperformance, supported by efficient asset use, production gains in key basins, and disciplined execution across its portfolio. The company’s recent momentum is closely tied to rising earnings estimates, where repeated upward revisions reflect how operators view its drilling efficiency and infrastructure buildout as contributing to its long-term profitability potential. We will now see how EOG Resources' investment..."
+        },
+        {
+          "headline": "Is EOG Resources (EOG) Still Cheap On Strong Earnings And A New 52 Week High?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=0c34afd8277e29baec412c36fd7501bed1d478a9992a846b790618bfc3054400",
+          "datetime": 1792455392,
+          "summary": "EOG Resources (EOG) recently reached a new 52 week high following a series of quarterly earnings beats and sustained upward revisions to profit forecasts, bringing renewed focus to its growth profile and valuation. Recent headlines around EOG Resources have centred on its earnings beats and stronger profit forecasts, and the share price has responded with a 30 day share price return of 9.3% and a year to date share price gain of 46.97% at a recent price of $157.65. The 1 year total..."
+        },
+        {
+          "headline": "What Is The Market Seeing In Texas Pacific Land Stock?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=f87edb412789836df67dbd86a97a02936f2ed69bc04e00d50b9341a0325dc100",
+          "datetime": 1792425628,
+          "summary": "Shares of Texas Pacific Land (TPL) currently trade at 44.7 times the company's earnings over the past twelve months. That compares with a multiple of 22.9 for the S&P 500. At this level, buyers are paying upfront for profit Texas Pacific Land has not earned yet. So how fast would Texas Pacific Land have to grow to earn that price."
+        },
+        {
+          "headline": "3 Reasons Why EOG Resources (EOG) Is a Great Growth Stock",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=627c7e7d95f049771b23872bc8f31556c9a23d0d91049f57b5ee1d02be04708b",
+          "datetime": 1792424702,
+          "summary": "EOG Resources (EOG) is well positioned to outperform the market, as it exhibits above-average growth in financials."
+        },
+        {
+          "headline": "Are You Looking for a Top Momentum Pick? Why EOG Resources (EOG) is a Great Choice",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=691d4a0b224fa6c49e35961a0f1def02d6f895e24268e6b02a039284a0a6f771",
+          "datetime": 1792422003,
+          "summary": "Does EOG Resources (EOG) have what it takes to be a top stock pick for momentum investors? Let's find out."
+        },
         {
           "headline": "Best Momentum Stock to Buy for October 19th",
           "source": "Yahoo",
@@ -40367,23 +40315,16 @@
           "url": "https://finnhub.io/api/news?id=63dbe88f799811fe3138e19a7382d94116d112fc36effdfcb181b6470513c979",
           "datetime": 1791914143,
           "summary": "Investors holding Occidental Petroleum (OXY) stock most likely carry it alongside funds tracking the S&P 500. As an oil and gas producer, Occidental can either amplify existing market risks in a portfolio or provide a counterbalance. So what does Occidental stock do to the rest of your money when the market rises or falls."
-        },
-        {
-          "headline": "How Has Occidental Petroleum's Story Changed?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=4d0b670b76adbd8450182ea7c61422d9ebb68bde54e8eda8350e8b3a5a78a7d5",
-          "datetime": 1791815060,
-          "summary": "Investors are currently weighing a distinct valuation gap: Occidental Petroleum (OXY) stock is priced at 8.3 times earnings, well below the 21.9 multiple for the S&P 500. Anyone buying at that level is betting on a company that recently shifted its core priorities. In late 2024, executives led with CrownRock, a newly acquired business undergoing integration. They no longer lead with CrownRock. So what does management lead with today."
-        },
-        {
-          "headline": "9 Of 11 Sectors Rise Monday As Cyclicals Lead",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=e1653d7aeda60f7ea34359a76d5b1d0fd246b68d4a28466a7e6e006123c1e812",
-          "datetime": 1791803057,
-          "summary": "Nine of 11 sectors are higher in Monday’s regular session, with cyclical sectors holding two of the top three positions. The leaders are separated rather than clustered, with Energy, Communication Services and Financials setting a varied pace across the top of the table."
         }
       ],
       "HST": [
+        {
+          "headline": "Host Hotels & Resorts (HST) Stock May Be A Bargain As Guidance Rises",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=b758a561c0cb372bf0210e4bc44e4b9ef9004f20eccc50d041510cc07d70caf4",
+          "datetime": 1792452263,
+          "summary": "Host Hotels & Resorts has delivered a strong multi year share price run, so the live question now is whether the current valuation lines up with the cash being generated by its portfolio of hotels. With investors reacting to fresh operating news and a rising stock, the focus naturally shifts to what its cash flows can support. Over the past 3 years the stock has returned 86.4%, which puts real pressure on the cash flow story to justify how far the market has already moved. Recent operating..."
+        },
         {
           "headline": "The Zacks Analyst Blog Highlights Host Hotels & Resorts, Realty Income and Simon Property",
           "source": "Yahoo",
@@ -40404,13 +40345,6 @@
           "url": "https://finnhub.io/api/news?id=3850ca680496d40a4802e368a5af428867616a4726995a2334d04052de7ec5e1",
           "datetime": 1791893643,
           "summary": "Barclays  analyst Richard Hightower   maintains Host Hotels &amp; Resorts (NASDAQ:HST) with a Equal-Weight and raises the price target from $24 to $25."
-        },
-        {
-          "headline": "Morgan Stanley Maintains Equal-Weight on Host Hotels & Resorts, Raises Price Target to $24",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=e48bb4cf513d8a4b3adcfc17873c78259627bd27673e8407e08cdc9d013a651d",
-          "datetime": 1791809386,
-          "summary": "Morgan Stanley  analyst Stephen Grambling   maintains Host Hotels &amp; Resorts (NASDAQ:HST) with a Equal-Weight and raises the price target from $22 to $24."
         }
       ],
       "INVH": [
@@ -40455,20 +40389,6 @@
           "url": "https://finnhub.io/api/news?id=6cb12e215dc37cfab9ab341f32fb68c8cc241088f51fd1593de83d66d7f90d18",
           "datetime": 1791890150,
           "summary": "RBC Capital  analyst Brad Heffern   maintains Invitation Homes (NYSE:INVH) with a Sector Perform and lowers the price target from $31 to $29."
-        },
-        {
-          "headline": "UBS Maintains Buy on Invitation Homes, Lowers Price Target to $31",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=51808c95efcbec267b26e3e5debd1eb27d67adeaca77f59ccddbb778646a72eb",
-          "datetime": 1791824687,
-          "summary": "UBS  analyst Michael Goldsmith   maintains Invitation Homes (NYSE:INVH) with a Buy and lowers the price target from $35 to $31."
-        },
-        {
-          "headline": "FTC Sending $15.8 Million To 2.1 Million Cash Advance App Users: Here’s When Payments Begin",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=303f8d5bf4ef7c4359f9db9a83efce5a9cde6465d7e372dce0115ae6280ba9fd",
-          "datetime": 1791771781,
-          "summary": "The FTC is distributing $15.8 million in refunds to 2.1 million Cleo AI users over alleged misleading cash advance claims and hidden fees."
         }
       ],
       "JCI": [
@@ -40548,16 +40468,23 @@
           "url": "https://finnhub.io/api/news?id=68c64a6f02eeff45faf7beb52dd5a4b445bd14ebed7ce26cd8d09d8f0ca8062f",
           "datetime": 1791857217,
           "summary": "Johnson Controls (JCI) rated Buy: EPS growth, margin gains & disciplined costs."
-        },
-        {
-          "headline": "Citigroup Maintains Neutral on Johnson Controls Intl, Raises Price Target to $170",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=073b7fb4355bc6eaa657ad6382de3373c8732faae61b0f3e71e216f3730ff7ff",
-          "datetime": 1791822406,
-          "summary": "Citigroup  analyst Andrew Kaplowitz   maintains Johnson Controls Intl (NYSE:JCI) with a Neutral and raises the price target from $157 to $170."
         }
       ],
       "PM": [
+        {
+          "headline": "Philip Morris (PM) Q3 Earnings Report Preview: What To Look For",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=229ccd6c795122e6f8af93f24b654e170371c0cafdf3b17ae3f22b85ef16e2a8",
+          "datetime": 1792481630,
+          "summary": "Tobacco company Philip Morris International (NYSE:PM) will be announcing earnings results this Wednesday before market open. Here’s what to look for."
+        },
+        {
+          "headline": "15 Undervalued Stocks: Yield Up To 7.8% And 15 Overvalued Not To Pursue Now",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=5cc767b9143d7093cf8d07efb52939d79cc2dd4f555b5fa8a896fb2d81c14981",
+          "datetime": 1792458299,
+          "summary": "RIG portfolio review ranks 15 undervalued vs. 15 overvalued dividend stocks using 52-week highs/lows. Check out the list here."
+        },
         {
           "headline": "Update: Tech Stock Rebound Nudges US Equity Futures Mostly Higher Pre-Bell",
           "source": "Yahoo",
@@ -40753,30 +40680,30 @@
           "url": "https://finnhub.io/api/news?id=5aa89dfa1d5fa38a825b535ae0a531450c62a316e860baa5b5f610eea219b4bb",
           "datetime": 1791894424,
           "summary": "A company that generates cash isn’t automatically a winner. Some businesses stockpile cash but fail to reinvest wisely, limiting their ability to expand."
-        },
-        {
-          "headline": "5 Dividend Stocks That Could Pay You $5,364 a Year Without the IRS Taking a Cut",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=a2ff98822fe296c469f91b82fd0f0b286100d8bff9a50af9e672a874b300f6d0",
-          "datetime": 1791812752,
-          "summary": "A $100,000 dividend portfolio spread across five names generates thousands in annual income, but the account type you choose determines how much of that income you actually keep rather than hand over to the IRS every April."
-        },
-        {
-          "headline": "PM vs. MO: Which Tobacco Dividend to Trust for the Next Decade",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=c1611377974bca051c1f3a875ccd86cea480a4463ba70c718ac2420739b92de3",
-          "datetime": 1791809126,
-          "summary": "Both tobacco giants just raised their dividends and both stocks are up over 28% this year, but the one paying nearly twice the yield may actually be the riskier bet for retirees building income over the next decade."
-        },
-        {
-          "headline": "What is Philip Morris’ (PM) Economic Moat, and is it Widening or Narrowing?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=4316a6757091c2027316e25f991e92d497823cea9bce346ec49ff6a26696c310",
-          "datetime": 1791766625,
-          "summary": "Philip Morris International Inc. (NYSE:PM) closed at $201.19 on October 9. The stock has returned 25.4% during the last 6 months, compared to a 33.9% return for the Insider Monkey Billionaire Index and 18.2% for the State Street SPDR S&P 500 ETF Trust. The company’s stated plan is to stop selling cigarettes, which is the […]"
         }
       ],
       "PSX": [
+        {
+          "headline": "Marathon Petroleum: Booming Profits From A Long-Term Structural Bull Market",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=a5885d4fd19076db7852045c4052643f647711f09f00371a8abba32ea3ec80e2",
+          "datetime": 1792476393,
+          "summary": ""
+        },
+        {
+          "headline": "Is Chevron Stock Worth More Than Its Competitors?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=78225f5d72b2c6b2286c736f152ac9ff42afbd26ed544039b1a019f8c74eebc5",
+          "datetime": 1792432429,
+          "summary": "Chevron (CVX) stock currently trades at 21.5 times earnings, giving it the second-highest P/E among a peer group of six oil and gas companies. Yet the stock recorded the smallest gain in that group after rising 53.7% over the year to October 16, 2026. Three refiners in the same peer group saw their shares more than double during that period. So what does Chevron deliver for a price near the top of its group."
+        },
+        {
+          "headline": "Gas Never Used To Be This Pricey In October; West Coast Imports Are Surging",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=0cb9ce5db6b512b2ef563e699f3c7e8da7ae88c6112bd5dad416bdd93301269c",
+          "datetime": 1792427453,
+          "summary": "U.S. gas prices have never been so high in Oct. as West Coast drivers face $5.50/gallon and shuttered refineries trigger \"structural shift.\""
+        },
         {
           "headline": "Phillips 66 Stock Is Up 133%. Can Its Dividend Keep Growing?",
           "source": "Yahoo",
@@ -41007,55 +40934,6 @@
           "url": "https://finnhub.io/api/news?id=4ebc07b5ac6a04fd1e01d0d50850cbc6e5c1a2cc6d7c6b8947599625fde32adc",
           "datetime": 1791850205,
           "summary": "Phillips 66 (PSX) doubled on strong refining margins, midstream cash flow, and shareholder returns. Read here for a detailed analysis."
-        },
-        {
-          "headline": "Barclays Maintains Equal-Weight on Phillips 66, Raises Price Target to $282",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=bd7212c05bc6d13a1a26b349165c4b51a2e3c01edc97f1ae51651a8ccc50fa50",
-          "datetime": 1791819669,
-          "summary": "Barclays  analyst Theresa Chen   maintains Phillips 66 (NYSE:PSX) with a Equal-Weight and raises the price target from $216 to $282."
-        },
-        {
-          "headline": "Can AI Drive Refining Efficiency & Profits for Phillips 66?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b356e2ecc34121c33f7113ded1365c4dbb131cee112b91754c9e26b6efb4265e",
-          "datetime": 1791817440,
-          "summary": "PSX is scaling AI to accelerate refinery problem-solving, optimize maintenance and build on cost savings exceeding $1 per barrel."
-        },
-        {
-          "headline": "Sector Update: Energy Stocks Mostly Higher Early Monday",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=21012b2444bea3f6d3ca57051e5a2af05a06b6267f1486f2ce94366449f79712",
-          "datetime": 1791811972,
-          "summary": "Energy stocks were mostly higher in early trading Monday, with the State Street Energy Select Sector"
-        },
-        {
-          "headline": "Earnings Preview: What to Expect From Phillips 66's Report",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=1923e691a29ce8dbf07cb1b2dc898bab7a44be01b5cf6a5232dff0fab9f5e9e4",
-          "datetime": 1791810506,
-          "summary": "Phillips 66 will release its third-quarter earnings later this month, and analysts anticipate a robust triple-digit bottom-line growth."
-        },
-        {
-          "headline": "Is APA (APA) Outperforming Other Oils-Energy Stocks This Year?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=8dc6cd586bdfe3339ac3b17a5dfc6061e421c20c7664328336f061d3ecdb195c",
-          "datetime": 1791808804,
-          "summary": "Here is how APA (APA) and Phillips 66 (PSX) have performed compared to their sector so far this year."
-        },
-        {
-          "headline": "Evercore ISI Group Maintains Outperform on Phillips 66, Raises Price Target to $250",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=00bc6bbe566cddad400799a4982e47a7507c22cadeddc4f53307b352f542be4d",
-          "datetime": 1791807015,
-          "summary": "Evercore ISI Group  analyst Stephen Richardson   maintains Phillips 66 (NYSE:PSX) with a Outperform and raises the price target from $220 to $250."
-        },
-        {
-          "headline": "This Insmed Analyst Is No Longer Bullish; Here Are Top 5 Downgrades For Monday",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=19035c9ae1c9d5f42560101adeeba5cccc07ea7f2d938468e651843298f1c5b3",
-          "datetime": 1791795819,
-          "summary": "Analysts downgraded UWMC, ACT, ROIV, INSM; ACT’s target fell to $44."
         }
       ],
       "RCL": [
@@ -41139,7 +41017,7 @@
         {
           "headline": "ROYAL CARIBBEAN UNVEILS MORE WAYS TO EXPLORE EUROPE IN 2028-29 WITH NEW YEAR-ROUND SEASON",
           "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=347d946bfa870f6d0dc0870073ac7be77b0282446f0657f9a2b5e941aaf76ead",
+          "url": "https://finnhub.io/api/news?id=0db52626ce0ac4b810875f012bc038d1e260bc2c7620fa57a0492e0be33aacf1",
           "datetime": 1791986400,
           "summary": "Royal Caribbean is expanding its 2028-29 Europe lineup with the brand's boldest year-round season, offering more ways to explore the Mediterranean, Northern Europe and the Canary Islands across seven ships. For the first time, holidaymakers can explore Europe any time of year on Rhapsody of the Seas, from summer adventures with overnight stays in Egypt to winter getaways to the Canary Islands. Across the season, travellers can discover sought-after destinations throughout Greece, Turkey, Portuga"
         },
@@ -41177,34 +41055,6 @@
           "url": "https://finnhub.io/api/news?id=27853cd27fd8cb0dca703a33db23b94f6887ec945899dae2998b8c415ed50091",
           "datetime": 1791858780,
           "summary": "Some travelers now lose 50% of their cruise fare even earlier."
-        },
-        {
-          "headline": "Can Carnival's 0.5% Capacity Growth Support Higher FY27 Yields?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=f6526039eb7076afbd73aef3e012c3503277343aba8930b1cbc1dfe0b18ba08a",
-          "datetime": 1791816240,
-          "summary": "CCL is leveraging record advance bookings and strong demand to drive higher yields in FY27, while Caribbean competition and loyalty-related headwinds ail."
-        },
-        {
-          "headline": "Royal Caribbean's Repeat Guests Spend More: Can Loyalty Drive Growth?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=eeb0192b08cc0433ec6949c37ccaa30497c03288e8b15d0f6a4594d2e3a2474b",
-          "datetime": 1791811800,
-          "summary": "RCL's repeat guests spend 20% to 25% more, while loyalty programs and digital engagement aim to drive bookings and onboard revenue growth."
-        },
-        {
-          "headline": "What the Sandals Deal Means for Royal Caribbean's Next Leg of Growth?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=d6aa3b324c1d23cda2fa7b95ab6c40ab0ac300c171023e5574099f77ee697325",
-          "datetime": 1791808500,
-          "summary": "Royal Caribbean's $3 billion Sandals resort stake has driven shares up amid analyst optimism, though debt and fuel costs pose risks as the cruise business remains strong heading into 2027."
-        },
-        {
-          "headline": "Wells Fargo Maintains Overweight on Royal Caribbean Group, Lowers Price Target to $358",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=bea2f1acadffec8e8cabefe567c3d45ea8b3117e43bd244488e029d050ed09a3",
-          "datetime": 1791801054,
-          "summary": "Wells Fargo  analyst Trey Bowers   maintains Royal Caribbean Group (NYSE:RCL) with a Overweight and lowers the price target from $388 to $358."
         }
       ],
       "VRSN": [
@@ -41221,13 +41071,6 @@
           "url": "https://finnhub.io/api/news?id=dff80b3c786be8596830e025a71fc21992198d2c131ef5aa23c28f7ff9b70230",
           "datetime": 1792210823,
           "summary": "VeriSign offers an attractive earnings compounding opportunity at $301.41, supported by a recovering domain base. Learn why VRSN stock is a buy."
-        },
-        {
-          "headline": "VeriSign Looks Too Expensive Despite Its Monopoly",
-          "source": "SeekingAlpha",
-          "url": "https://finnhub.io/api/news?id=59b21f5d3bb2f1ff65484ab54abeccb3b9902bc94dd80888d324d4894f6e8ba0",
-          "datetime": 1791807601,
-          "summary": "VeriSign (VRSN) rated Hold: $262 fair value vs $303 price. Guidance raised but renewal risks loom; 33x earnings limits upside."
         }
       ],
       "WM": [
@@ -41328,37 +41171,37 @@
           "url": "https://finnhub.io/api/news?id=617c0c4e30febf5ce2fd7ba16b8458c88c6de21a00233ee09e91cae1aa1702bb",
           "datetime": 1791861754,
           "summary": "Waste Management, Inc. (NYSE:WM) and Republic Services, Inc. (NYSE:RSG) are the two giants of North American trash, a quiet duopoly built on landfills almost impossible to replicate and pricing power that runs ahead of inflation. Both are the kind of recession-resistant compounder investors prize. And both trade near 30 times trailing earnings. But the spread […]"
-        },
-        {
-          "headline": "Waste Management vs. Republic Services: How Much Cash Is Left After Investment?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=05741e35790d6d09fffc216d4dcd4f40f3d62c5255f61c68d8bd111b637cec14",
-          "datetime": 1791838286,
-          "summary": "Waste Management and Republic Services made our recycling-stock list. See the waste operators and metal producers competing for a place in that portfolio. For investors choosing between the two waste operators, reported free cash flow needs a closer look: each company’s preferred measure differs from operating cash flow less the equipment spending actually paid during […]"
-        },
-        {
-          "headline": "4 Boring Stocks That Make More Money Every Time Your Bills Go Up",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=31b07df1a4c3d64b398aced05314c6b30518edfe56be2d1a187a7fe8f8b36267",
-          "datetime": 1791803745,
-          "summary": "Your trash hauler, pest control company, and elevator servicer quietly raise prices every year, and most customers never push back. Four overlooked businesses are turning that habit into something worth paying attention to."
-        },
-        {
-          "headline": "2 Dividend Growers I'm Accumulating Ahead Of Earnings With Long-Term Double-Digit Upside Potential",
-          "source": "SeekingAlpha",
-          "url": "https://finnhub.io/api/news?id=0d89ca8579c148932a370265ca649f7be2fa326d7cf3e83e469f687cab9e04bc",
-          "datetime": 1791795600,
-          "summary": "Discover why Waste Management (WM) and T-Mobile (TMUS) are top dividend growth picksârecession resilience, strong cash flow, and upsideâread now."
-        },
-        {
-          "headline": "3 Large-Cap Stocks to Keep an Eye On",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=ce4d215f7abe7ed1a373bffd52a4d170f97961a14fb40902116beb3c70f35e5b",
-          "datetime": 1791792423,
-          "summary": "Large-cap stocks have the power to shape entire industries thanks to their size and widespread influence. With such vast footprints, however, finding new areas for growth is much harder than for smaller, more agile players."
         }
       ],
       "XLE": [
+        {
+          "headline": "Sector Update: Energy Stocks Softer Late Afternoon",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=77b434eef02af4371bee1a85050950d1e362a47d8bf20ce74a9dc89974e8e251",
+          "datetime": 1792439888,
+          "summary": "Energy stocks were lower late Monday afternoon, with the NYSE Energy Sector Index decreasing 0.5% an"
+        },
+        {
+          "headline": "Sector Update: Energy Stocks Decline Monday Afternoon",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=68b4cf5fb2b3b4a5e69673195dc14bd4f5104c29df62abf9218a227629fd62b2",
+          "datetime": 1792431545,
+          "summary": "Energy stocks were lower Monday afternoon, with the NYSE Energy Sector Index decreasing 0.7% and the"
+        },
+        {
+          "headline": "Exchange-Traded Funds Higher as US Equities Rise After Midday",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=663ccb68adb1662f21de3df6cc2ade757a94e00fbc61e351c9324f0a0aeb862e",
+          "datetime": 1792430742,
+          "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV rose. Actively traded I"
+        },
+        {
+          "headline": "ValuEngine Weekly Market Commentary",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=65f6955d7e37181274569549bd08ac674281fe8c8e15222005245f3364c8ead6",
+          "datetime": 1792426200,
+          "summary": "US equity markets faced significant selling pressure this week, with sharp declines in tech and growth-oriented stocks contrasting with strong gains across defensive, energy, and value."
+        },
         {
           "headline": "9 Of 11 Sectors Fall As Growth Leads",
           "source": "Benzinga",
@@ -41372,6 +41215,13 @@
           "url": "https://finnhub.io/api/news?id=05643ef60cbdcf20ac86ece6b742712b6fce3ce67af17065f3f3819b5b57941b",
           "datetime": 1792379199,
           "summary": "Compare AMLP vs. MLPX ETF picks rated Buy: higher yield vs growth potential from U.S."
+        },
+        {
+          "headline": "Sector Update: Energy Stocks Gain Late Afternoon",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=abbdf924b4db0700f27a835fb20a4b692a29f19d5209f0cab9d93df43881a159",
+          "datetime": 1792180854,
+          "summary": "Energy stocks were higher late Friday afternoon, with the NYSE Energy Sector Index rising 1.9% and t"
         },
         {
           "headline": "Sector Update: Energy Stocks Rise Friday Afternoon",
@@ -41563,13 +41413,6 @@
           "summary": ""
         },
         {
-          "headline": "Sector Update: Energy Stocks Gain Late Afternoon",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=2fb534b4f4f7e97cec77f862b86ad785a85b67e13a471cd544abd18d408d2763",
-          "datetime": 1791920994,
-          "summary": "Energy stocks were higher late Tuesday afternoon, with the NYSE Energy Sector Index rising 1.6% and"
-        },
-        {
           "headline": "Sector Update: Energy Stocks Gain Tuesday Afternoon",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=4897a1843768fbc7aec066a827d83e2665801bdc363514b707544440455236b5",
@@ -41638,65 +41481,86 @@
           "url": "https://finnhub.io/api/news?id=f843c667c1f1aff32298a466beea6683e567e51295284d94a0c8160a3e8a63e8",
           "datetime": 1791871005,
           "summary": "Iran war-driven inflation boosts oil stocks, with XLE up 50%, while soaring fuel and commodity prices squeeze consumers."
-        },
-        {
-          "headline": "Ray Dalio Says the AI Bubble Is Close to Bursting. A Strategist Says Zombie Companies Are the Real Risk",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=03429845ba8a0de4f096bc886508dd490baa0a0e88033bff405cc95bb7b6e338",
-          "datetime": 1791847808,
-          "summary": "Ray Dalio and Jordi Visser agree that markets have a bubble. They disagree on where it is. Last week, Dalio, the founder of Bridgewater Associates, described artificial intelligence as a classic bubble. \"I think we’re close to that,\" Dalio said..."
-        },
-        {
-          "headline": "Sector Update: Energy Stocks Gain Monday Afternoon",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=1c052641fdd5636efd07126a39d19f04a5ecd1590c0a51c6dc03486205e7a6f5",
-          "datetime": 1791827465,
-          "summary": "Energy stocks were higher Monday afternoon, with the NYSE Energy Sector Index rising 1.5% and the St"
-        },
-        {
-          "headline": "Exchange-Traded Funds Fall as US Equities Turn Mixed After Midday",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=72d46c05524e0ff6ce03f286996fd419d35c5f02ac7ccfe9d7905f9e1816e2c8",
-          "datetime": 1791825109,
-          "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV fell. Actively traded I"
-        },
-        {
-          "headline": "Sector Update: Energy Stocks Mostly Higher Early Monday",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=21012b2444bea3f6d3ca57051e5a2af05a06b6267f1486f2ce94366449f79712",
-          "datetime": 1791811972,
-          "summary": "Energy stocks were mostly higher in early trading Monday, with the State Street Energy Select Sector"
-        },
-        {
-          "headline": "Nasdaq 100 Drops, SanDisk Tumbles 6% as AI Trade Falters: Stock Market Today",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=a66fe926909ddd2d92bb48922cbfb0bdb1162b38fdd30431d7516e636cdfa008",
-          "datetime": 1791810151,
-          "summary": "An AI-infrastructure selloff hits the Nasdaq 100 and small caps while the Dow edges up and oil rebounds as Trump&#39;s energy ceasefire claim unravels."
-        },
-        {
-          "headline": "Exchange-Traded Funds Lower, Equity Futures Mixed Pre-Bell Monday as Investors Weigh Oil, Earnings",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b96ea48580f1f8224b0f8c3e3f7307c466d3fc6011f89d7e7c73717906aaa739",
-          "datetime": 1791810027,
-          "summary": "The broad market exchange-traded fund SPDR S&P 500 ETF Trust (SPY) was up 0.03%, and the actively tr"
-        },
-        {
-          "headline": "9 Of 11 Sectors Rise Monday As Cyclicals Lead",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=e1653d7aeda60f7ea34359a76d5b1d0fd246b68d4a28466a7e6e006123c1e812",
-          "datetime": 1791803057,
-          "summary": "Nine of 11 sectors are higher in Monday’s regular session, with cyclical sectors holding two of the top three positions. The leaders are separated rather than clustered, with Energy, Communication Services and Financials setting a varied pace across the top of the table."
-        },
-        {
-          "headline": "Getting a Little Defensive? Investors Tiptoe into Utilities, Low-Vol Funds",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=077da01be3dc1b0f88bb89ad8b6d9f6c00f995c0ae3052f22d3660c7756d1d28",
-          "datetime": 1791777720,
-          "summary": "September flows into low-vol funds, bonds and defensive sectors suggest investors could be playing it safe — or just playing with shortselling."
         }
       ],
       "XOM": [
+        {
+          "headline": "Which Stocks Are Paying For $4.33 Gas?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=4c294c2186f68de6d35c76536ee6b21b4d81b3621db570d25c5ea79d0970fcb6",
+          "datetime": 1792496962,
+          "summary": "Inflation is back. Consumer prices are rising 3.7% a year, a gallon of gas costs $4.33 against $3.06 a year ago, and oil is above $100 a barrel. Yet the S&P 500 is up 12.3% this year. So who is actually paying for it."
+        },
+        {
+          "headline": "Inflation Is Back. Is A Stock Market Crash Next?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=f45f67b09edc64c802da58ba40dced9202917d46e71c711bc00f38ed4c475e93",
+          "datetime": 1792496960,
+          "summary": "The S&P 500 has gained 12.3% this year. That's with oil above $100 a barrel, consumer prices climbing 3.7% a year and a 10-year Treasury yielding 5.1%. Stocks are behaving as though none of that counts. So could inflation knock the index down 40."
+        },
+        {
+          "headline": "Does Cash Beat Debt When Markets Turn?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=eae5e5cfef111a384d5403eec3fa3a8987ce037f39e0ad3636faf74d4223d1ba",
+          "datetime": 1792496958,
+          "summary": "Inflation is back at 3.7%, the 10-year Treasury pays about 5.1%, and US oil is above $100 a barrel. Money is getting more expensive, and some companies need it more than others. When the market turns in a setting like this, does it matter what you own inside an industry."
+        },
+        {
+          "headline": "Why Did XOM, CVX, MPC Stocks Surge To 52-Week Highs Today?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=cc074c7d9c2ee91eda7ac0f28a1bb0b9e268b9578fc0f19e75cb25c07152fde7",
+          "datetime": 1792469488,
+          "summary": "Energy companies surged as Brent crude prices touched nearly $110 a barrel on Monday amid growing tensions in the Middle East."
+        },
+        {
+          "headline": "15 Undervalued Stocks: Yield Up To 7.8% And 15 Overvalued Not To Pursue Now",
+          "source": "SeekingAlpha",
+          "url": "https://finnhub.io/api/news?id=5cc767b9143d7093cf8d07efb52939d79cc2dd4f555b5fa8a896fb2d81c14981",
+          "datetime": 1792458299,
+          "summary": "RIG portfolio review ranks 15 undervalued vs. 15 overvalued dividend stocks using 52-week highs/lows. Check out the list here."
+        },
+        {
+          "headline": "Forget Tech. Energy Will Be The Big Winner This Earnings Season.",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=2850e686748cd95bcb3de9d2f388a77648fabb0781bdaf4d5edbd61e124c91ac",
+          "datetime": 1792445580,
+          "summary": "Energy companies have benefited from the Iran war, which has pushed up prices for gasoline and other fuels."
+        },
+        {
+          "headline": "Citgo Raises Profit Outlook by $2 Billion as Fuel Margins Surge",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=430e719ca59aa5a113da8996c82a15ee3df239253a69c0023d140e691642363e",
+          "datetime": 1792440881,
+          "summary": "Citgo Petroleum Corp., the Venezuelan-owned, US-based refiner, has raised its 2026 operating profit outlook by $2 billion because of surging fuel margins, according to a document seen by Bloomberg News."
+        },
+        {
+          "headline": "Better Oil Stock: Chevron (CVX) vs. ExxonMobil (XOM)",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=392077190a878712c8ae958ebdb23d702c351007cf7027d3dcdfd8d896881996",
+          "datetime": 1792437300,
+          "summary": "Which of these integrated energy giants is a better investment right now?"
+        },
+        {
+          "headline": "Is Chevron Stock Worth More Than Its Competitors?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=78225f5d72b2c6b2286c736f152ac9ff42afbd26ed544039b1a019f8c74eebc5",
+          "datetime": 1792432429,
+          "summary": "Chevron (CVX) stock currently trades at 21.5 times earnings, giving it the second-highest P/E among a peer group of six oil and gas companies. Yet the stock recorded the smallest gain in that group after rising 53.7% over the year to October 16, 2026. Three refiners in the same peer group saw their shares more than double during that period. So what does Chevron deliver for a price near the top of its group."
+        },
+        {
+          "headline": "Exxon just showed why gas prices didn't fall with oil",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=a6666e56dafed89e7414ca0516cec186ae9ccac1f8200338f748706995357a2b",
+          "datetime": 1792427580,
+          "summary": "Crude got cheaper last quarter. Pump prices barely moved, and Exxon’s new filing shows who kept the difference."
+        },
+        {
+          "headline": "What Is The Market Seeing In Texas Pacific Land Stock?",
+          "source": "Yahoo",
+          "url": "https://finnhub.io/api/news?id=f87edb412789836df67dbd86a97a02936f2ed69bc04e00d50b9341a0325dc100",
+          "datetime": 1792425628,
+          "summary": "Shares of Texas Pacific Land (TPL) currently trade at 44.7 times the company's earnings over the past twelve months. That compares with a multiple of 22.9 for the S&P 500. At this level, buyers are paying upfront for profit Texas Pacific Land has not earned yet. So how fast would Texas Pacific Land have to grow to earn that price."
+        },
         {
           "headline": "ExxonMobil’s Dividend Has Deep Pockets, but a Shallow Yield",
           "source": "Yahoo",
@@ -42144,132 +42008,6 @@
           "url": "https://finnhub.io/api/news?id=e4f2a0731ff2aa0a8381559229c72b75fcb53be602c1b4f205c54c9d8c7aa500",
           "datetime": 1791880920,
           "summary": "Trenchless pipe relining can cut lifecycle costs by up to 40%, shorten timelines, reduce excavation and carbon footprints, and support low-disruption smart city upgrades.Dublin, Oct. 13, 2026 (GLOBE NEWSWIRE) -- \"South & Central America Pipe Relining Market Size and Forecast (2021 - 2031)\" has been added to ResearchAndMarkets.com's offering. The report projects that the South and Central America pipe relining market will grow from US$ 355.9 million in 2024 to US$ 484.5 million by 2031, registeri"
-        },
-        {
-          "headline": "Exxon, Oil Giants Top Buy Points After Deadly Saudi Airport Attacks",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=27207fe903afa40becfc1c195e3d83b3d028759275e0d5b3fcba3e0028120993",
-          "datetime": 1791828395,
-          "summary": "Attacks on a major Saudi airport and oil tankers in Hormuz revived supply fears and lifted oil prices. Exxon, Chevron and other oil majors are in buy areas."
-        },
-        {
-          "headline": "Stock Market Today: Nasdaq Drops As Lumentum Dives; Tanker Firm Navios Glides Into Buy Zone (Live Coverage)",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=77f078c5eba658e547f103903be4bd9b08cee267c3db86d2d90f1e7b276a3562",
-          "datetime": 1791825736,
-          "summary": "The Dow Jones index rises Monday amid Trump's \"energy ceasefire.\" Salesforce stock jumps on an upgrade."
-        },
-        {
-          "headline": "ExxonMobil (XOM) Blocks $5.2 Billion Kashagan Fine Settlement",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=fce1fb35091a79d8d4eaac3a8d49c6faa6f7f5a85723e6b7cb3dc1b9c4347464",
-          "datetime": 1791824939,
-          "summary": "ExxonMobil Holdings (NYSE:XOM) has blocked a proposed US$5.2b environmental fine settlement tied to Kazakhstan's Kashagan oil field project. The company is linking resolution of the Kashagan environmental dispute to approval of an US$80b production expansion at the field. Kazakhstan's regulators now face a stalled settlement process as talks over Kashagan's future output plans remain unresolved. ExxonMobil's move to tie the US$5.2b Kashagan fine settlement to expansion approval is only one..."
-        },
-        {
-          "headline": "How Surging Guyana and Permian Output Will Impact ExxonMobil (XOM) Investors",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=cc2aad4da6e3172b8ee9a1c04d4461c18866a7b4aa8f8c6d6c7e30b680391978",
-          "datetime": 1791821472,
-          "summary": "Recent reports highlight ExxonMobil Holdings’ strong production growth from high-return assets in Guyana and the Permian Basin, with upstream volumes outside the Middle East reaching their highest level in more than two decades and reinforcing its role as a major integrated energy producer. At the same time, analysts and commentators point to ExxonMobil’s valuation resilience and ability to sustain future cash generation despite sector headwinds such as weaker crude price forecasts, climate..."
-        },
-        {
-          "headline": "Stock Market Today: Dow Outperforms In Mixed Trade; Tanker Firm Navios Glides Into Buy Zone (Live Coverage)",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=70fecb3ac5defad33ee7d7fe28e99e784a13908d02991ed0fb929fe34d368554",
-          "datetime": 1791820562,
-          "summary": "The Dow Jones index rises Monday amid Trump's \"energy ceasefire.\" Salesforce stock jumps on an upgrade."
-        },
-        {
-          "headline": "Helmerich & Payne Positioned for Steady Demand, Geothermal Growth, RBC Says",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=2d1e1367756fb176b55a0982076a7ceab291e4f4c1f2863e1b8b73eed56a7fbc",
-          "datetime": 1791819561,
-          "summary": "Helmerich & Payne (HP) highlighted its competitive positioning through automation, cost savings and"
-        },
-        {
-          "headline": "SEC closes CA100+ probe, signals increased scrutiny on climate groups",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=56e4ddd3e532ed1354e708265dda057ef725ff86681af603825c6f7d48428d06",
-          "datetime": 1791818400,
-          "summary": "The agency said it won’t take enforcement action, but will put members of groups like Climate Action 100+ and Ceres’ investor network on notice for alleged shareholder activism."
-        },
-        {
-          "headline": "1 Safe-and-Steady Stock to Consider Right Now and 2 Facing Challenges",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=2a25477f1444868f1443800bf9a5a1e96e64a8c4a26f12bfa36f63a9df572507",
-          "datetime": 1791816903,
-          "summary": "Low-volatility stocks may offer stability, but that often comes at the cost of slower growth and the upside potential of more dynamic companies."
-        },
-        {
-          "headline": "CVX Outpaces Industry in Past 6 Months: Should Investors Stay Bullish?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=cb6158b1d87e6d52aa6101ab04dc8054305a7cccdb354ef26233ec53858bed3e",
-          "datetime": 1791816900,
-          "summary": "Chevron's 10.6% stock gain outpaces the energy sector as strong cash flow, expanding production, cost savings and upbeat 2026 earnings bolster its investment appeal."
-        },
-        {
-          "headline": "In Court and on the Record",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=0d14b64e04b17c9b240e0639d9a9ca53461403fa331b18f7a7a9a0b03eca8951",
-          "datetime": 1791815400,
-          "summary": "G&A's Sustainability Highlights ( 10.2026 )NORTHAMPTON, MA / ACCESS Newswire / October 12, 2026 / This Monday, the U."
-        },
-        {
-          "headline": "How Has Occidental Petroleum's Story Changed?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=4d0b670b76adbd8450182ea7c61422d9ebb68bde54e8eda8350e8b3a5a78a7d5",
-          "datetime": 1791815060,
-          "summary": "Investors are currently weighing a distinct valuation gap: Occidental Petroleum (OXY) stock is priced at 8.3 times earnings, well below the 21.9 multiple for the S&P 500. Anyone buying at that level is betting on a company that recently shifted its core priorities. In late 2024, executives led with CrownRock, a newly acquired business undergoing integration. They no longer lead with CrownRock. So what does management lead with today."
-        },
-        {
-          "headline": "Stock Market Today: S&P 500 Futures Pause Near Record Highs as Oil Rises Ahead of Bank Earnings",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=b52db9957dbcdb5219be516bed820c70e342a1b1b095a52990c0840601d44a3d",
-          "datetime": 1791812685,
-          "summary": "Oil surging past $100 is lifting energy stocks while high bond yields drag on tech, and underneath a deceptively calm index, a quiet rotation is reshaping portfolios before bank earnings reveal whether the slowdown is finally catching up to borrowers."
-        },
-        {
-          "headline": "Exxon’s 43-Year Dividend Streak Faces Its Biggest Test Yet as Oil Prices Slide",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=53986dc2da9ad52c11959c414be231c5dfadb959625f4a0e4faa03ae70a65d06",
-          "datetime": 1791805511,
-          "summary": "Exxon has handed investors a larger dividend check every year for 43 consecutive years, but sliding crude prices and a 61% quarterly free cash flow drop are now stress-testing the limits of that promise."
-        },
-        {
-          "headline": "What Projected Job Cuts at These Two Mag 7 Firms Says About AI in 2027",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=0fa360b13baf1471febdee0366e7a186ff8bfd88fbecaabf835486fc5aa08fe7",
-          "datetime": 1791803739,
-          "summary": "Amazon and Meta are both slashing jobs while pouring record billions into AI, but the strategies behind their cuts reveal something unexpected about which company actually profits from replacing its own workers."
-        },
-        {
-          "headline": "9 Of 11 Sectors Rise Monday As Cyclicals Lead",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=e1653d7aeda60f7ea34359a76d5b1d0fd246b68d4a28466a7e6e006123c1e812",
-          "datetime": 1791803057,
-          "summary": "Nine of 11 sectors are higher in Monday’s regular session, with cyclical sectors holding two of the top three positions. The leaders are separated rather than clustered, with Energy, Communication Services and Financials setting a varied pace across the top of the table."
-        },
-        {
-          "headline": "How to Pick the Right Energy ETF",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=1c3cf4e8c693268b107339987081308d8412eb525438cd2a19ace22510cc2c0b",
-          "datetime": 1791798900,
-          "summary": "From broad large-cap exposure to more volatile bets, here’s how to evaluate different exchange-traded funds."
-        },
-        {
-          "headline": "Iran Offers to Broker Saudi-Houthi Talks as Riyadh Vows an ‘Equally Serious’ Response to Deadly Airport Strikes: Report",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=168d004d1b35f4edfecfaff7babeb96b1183a22c3678e20856736a11db09d77a",
-          "datetime": 1791783515,
-          "summary": "Iran’s Araghchi urges diplomacy in call with Saudi FM as Riyadh vows a serious response to Houthi attacks amid rising regional tensions."
-        },
-        {
-          "headline": "BP (BP) vs Exxon Mobil (XOM): Which Oil Major is a Better Buy?",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=f269f44dbb13a8401df327878d9f3800154e55069cb830e1f6c69dcb2fc38260",
-          "datetime": 1791764612,
-          "summary": "BP p.l.c. (NYSE:BP) closed at $46.25 on October 9. The stock has returned -0.4% during the last six months, compared to a 33.9% return for Insider Monkey Billionaire Index and 18.2% for the State Street SPDR S&P 500 ETF Trust. Exxon Mobil Corporation (NYSE:XOM) closed at $168.94 and has returned 10.8% over the same six […]"
         }
       ],
       "XYL": [
@@ -42307,20 +42045,6 @@
           "url": "https://finnhub.io/api/news?id=36b44a1713f74c465e16759ebab4e0992d5e401ff6d2e707b04b8c024167a725",
           "datetime": 1791900339,
           "summary": "Barclays  analyst William Grippin   maintains Xylem (NYSE:XYL) with a Overweight and lowers the price target from $159 to $139."
-        },
-        {
-          "headline": "Citigroup Maintains Buy on Xylem, Lowers Price Target to $148",
-          "source": "Benzinga",
-          "url": "https://finnhub.io/api/news?id=93c5f8be274e500f5dd82866832cfe4fbe4311e200eb40c1a62646eca36986ac",
-          "datetime": 1791822965,
-          "summary": "Citigroup  analyst Andrew Kaplowitz   maintains Xylem (NYSE:XYL) with a Buy and lowers the price target from $172 to $148."
-        },
-        {
-          "headline": "Targeting Water Scarcity: Rain Enhancement Technologies CEO Randy Seidl, Live at Nasdaq",
-          "source": "Yahoo",
-          "url": "https://finnhub.io/api/news?id=26ab2fd8b8383424415cf5f6bc561f3de1a29ed439df6683b99a673a78d22c91",
-          "datetime": 1791812812,
-          "summary": "IPO Edge hosted a fireside chat at Nasdaq MarketSite on Oct. 5 with Randy Seidl, Chief Executive Officer of Rain Enhancement Technologies Holdco, Inc. (Nasdaq: RAIN). The in-person interview was […]"
         }
       ]
     },
@@ -42331,34 +42055,34 @@
   },
   "macro": {
     "schema_version": "macro.v1",
-    "generated_at": "2026-10-19T17:00:28Z",
+    "generated_at": "2026-10-20T13:02:08Z",
     "economic": [
       {
         "indicator": "10Y国债",
-        "value": "5.14%",
-        "prev": "5.10%",
-        "date": "2026-10-19",
+        "value": "5.10%",
+        "prev": "5.14%",
+        "date": "2026-10-20",
         "source": "Yahoo Finance",
-        "sentiment": "bearish",
-        "rationale": "10年期国债收益率上升，融资成本上升，对股市估值构成压力"
+        "sentiment": "bullish",
+        "rationale": "10年期国债收益率下降，融资成本降低利好股市"
       },
       {
         "indicator": "5Y国债",
-        "value": "4.94%",
-        "prev": "4.90%",
-        "date": "2026-10-19",
+        "value": "4.91%",
+        "prev": "4.93%",
+        "date": "2026-10-20",
         "source": "Yahoo Finance",
-        "sentiment": "bearish",
-        "rationale": "5年期国债收益率上升，反映市场对未来利率预期升温"
+        "sentiment": "bullish",
+        "rationale": "5年期国债收益率下降，融资成本降低利好股市"
       },
       {
         "indicator": "13周国债",
-        "value": "4.08%",
+        "value": "4.09%",
         "prev": "4.07%",
-        "date": "2026-10-19",
+        "date": "2026-10-20",
         "source": "Yahoo Finance",
-        "sentiment": "neutral",
-        "rationale": "13周短期国债收益率微升，影响有限"
+        "sentiment": "bearish",
+        "rationale": "13周国债收益率上升，短期利率压力增加"
       },
       {
         "indicator": "CPI",
@@ -42367,7 +42091,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "CPI为4.00%，通胀压力仍存，可能延缓降息预期"
+        "rationale": "CPI 4.00%显示通胀压力，可能强化加息预期"
       },
       {
         "indicator": "核心CPI",
@@ -42375,8 +42099,8 @@
         "prev": null,
         "date": "2026-09-01",
         "source": "BLS API",
-        "sentiment": "neutral",
-        "rationale": "核心CPI为2.79%，接近美联储目标，但仍略高"
+        "sentiment": "bearish",
+        "rationale": "核心CPI 2.79%高于美联储2%目标，通胀粘性"
       },
       {
         "indicator": "失业率",
@@ -42385,7 +42109,7 @@
         "date": "2026-09-01",
         "source": "BLS API",
         "sentiment": "bearish",
-        "rationale": "失业率从4.10%升至4.20%，经济走弱信号"
+        "rationale": "失业率上升至4.20%，经济走弱信号"
       },
       {
         "indicator": "核心PCE",
@@ -42394,84 +42118,73 @@
         "date": "August 2026",
         "source": "BEA 官方网页",
         "sentiment": "bearish",
-        "rationale": "核心PCE为3.00%，高于美联储2%目标，通胀压力持续"
+        "rationale": "核心PCE 3.00%高于目标，通胀压力持续"
       },
       {
         "indicator": "Fear & Greed",
-        "value": "25 (extreme fear)",
-        "prev": "46",
-        "date": "2026-10-19",
+        "value": "22 (extreme fear)",
+        "prev": "44",
+        "date": "2026-10-20",
         "source": "CNN",
         "sentiment": "bearish",
-        "rationale": "恐慌与贪婪指数从46降至25（极度恐慌），市场情绪恶化"
+        "rationale": "恐慌指数22极度恐慌，市场情绪极度悲观"
       }
     ],
     "speakers": [
       {
-        "person": "Warsh",
-        "title": null,
-        "content": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech - Yahoo Finance",
-        "time": "10-18 19:47",
-        "source": "Yahoo Finance",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "黄金小幅走高，因交易员根据Warsh讲话放松加息押注 - 雅虎财经",
-        "sentiment": "neutral",
-        "rationale": "Warsh讲话缓和加息预期推高黄金，对股市影响中性"
-      },
-      {
         "person": null,
         "title": null,
-        "content": "US Dollar Forecast: Fed Rates and DXY Key Levels - Equiti Global",
-        "time": "10-19 05:00",
-        "source": "Equiti Global",
-        "age_tag": "📰今日-高权重",
-        "content_cn": "美元预测：美联储利率与美元指数关键水平 - Equiti Global",
-        "sentiment": "neutral",
-        "rationale": "美元与美联储利率预测，方向性不明确"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "Mortgage rate predictions for the next 5 years: A base case plus best and worst case scenarios - Yahoo Finance",
-        "time": "10-16 14:54",
-        "source": "Yahoo Finance",
-        "age_tag": "📑前日-低权重",
-        "content_cn": "未来5年抵押贷款利率预测：基准情景及最佳/最坏情景 - 雅虎财经",
-        "sentiment": "neutral",
-        "rationale": "抵押贷款利率预测，对股市直接影响有限"
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "Silver Price Forecast: Descending channel keeps sellers in control - FXStreet",
-        "time": "10-19 08:36",
-        "source": "FXStreet",
+        "content": "Strategist Tom Lee says he’s buying the AI-stock dip, and Cisco holds the key",
+        "time": "10-20 06:15",
+        "source": "MarketWatch",
         "age_tag": "🔥今日最新-权重最高",
-        "content_cn": "白银价格预测：下降通道令卖方保持控制 - FXStreet",
-        "sentiment": "neutral",
-        "rationale": "白银价格技术分析，与股市宏观关联较弱"
+        "content_cn": "策略师Tom Lee表示正在买入AI股票的回调，思科是关键",
+        "sentiment": "bullish",
+        "rationale": "策略师看多AI股票回调，思科是关键"
       },
       {
         "person": null,
         "title": null,
         "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
-        "time": "10-19 07:10",
+        "time": "10-20 05:30",
         "source": "StoneX",
         "age_tag": "🔥今日最新-权重最高",
         "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
         "sentiment": "neutral",
-        "rationale": "英镑/美元及黄金技术面分析，对美股大盘影响有限"
+        "rationale": "外汇和黄金预测，与美股大盘关联不明确"
       },
       {
         "person": null,
         "title": null,
-        "content": "Treasury dismisses IMF debt alarm as US yields hold above 5% - Mortgage Professional America",
-        "time": "10-16 19:52",
-        "source": "Mortgage Professional America",
-        "age_tag": "📑前日-低权重",
-        "content_cn": "美国财政部驳回IMF债务警告，美债收益率维持5%以上 - 抵押贷款专业美国",
-        "sentiment": "bearish",
-        "rationale": "美国国债收益率维持5%以上，融资成本高企对股市不利"
+        "content": "Silver Price Forecast: XAG/USD rises to near $57.30 amid drop in US bond yields - FXStreet",
+        "time": "10-20 04:38",
+        "source": "FXStreet",
+        "age_tag": "🔥今日最新-权重最高",
+        "content_cn": "白银价格预测：美国国债收益率下降推动银价升至57.30美元附近 - FXStreet",
+        "sentiment": "neutral",
+        "rationale": "白银价格预测，与美股大盘关联不明确"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "Gold Price Forecast: High Treasury Yields Put $4,000 Support in Focus - FXEmpire",
+        "time": "10-20 04:19",
+        "source": "FXEmpire",
+        "age_tag": "🔥今日最新-权重最高",
+        "content_cn": "黄金价格预测：高国债收益率使4000美元支撑位成为焦点 - FXEmpire",
+        "sentiment": "neutral",
+        "rationale": "黄金价格预测，与美股大盘关联不明确"
+      },
+      {
+        "person": null,
+        "title": null,
+        "content": "See What 71 Economists Told Us About Where Growth and Yields Are Headed - WSJ",
+        "time": "10-19 11:44",
+        "source": "WSJ",
+        "age_tag": "📰今日-高权重",
+        "content_cn": "71位经济学家告诉我们增长和收益率的走向 - 华尔街日报",
+        "sentiment": "neutral",
+        "rationale": "经济学家调查，未明确鹰派或鸽派倾向"
       }
     ],
     "error": null
@@ -42520,8 +42233,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-20T13:01:06Z",
-    "technical_updated_at": "2026-10-20T13:01:08Z",
+    "market_updated_at": "2026-10-20T13:16:11Z",
+    "technical_updated_at": "2026-10-20T13:16:13Z",
     "counts": {
       "core": 6,
       "observation": 12,
@@ -42602,7 +42315,7 @@
     "anomalies": [],
     "notes": [
       "期权 Wall 本次未重算（无缺失项或期权链不可用）。",
-      "AI Snapshot 索引：ai_snapshot.csv 命中 88 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 58/412 条",
+      "AI Snapshot 索引：ai_snapshot.csv 命中 90 个三元组（其中 legacy 9 条，不绑定任何历史推荐） · Review 历史精确匹配 58/412 条",
       "history：基于 review_history.csv 的每日快照，统计口径=当日仍在跟踪(持仓中/观察推荐)的去重推荐事件数（Ticker+Rec_Date），非当日新增数。"
     ],
     "missing_fields": [],
@@ -42618,11 +42331,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-20T13:00:51Z",
+    "generated_at": "2026-10-20T13:15:47Z",
     "fear_greed": {
-      "score": 22.09,
+      "score": 21.52,
       "rating": "extreme fear",
-      "timestamp": "2026-10-20T12:44:21+00:00",
+      "timestamp": "2026-10-20T12:59:28+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 29.4,
@@ -42637,7 +42350,7 @@
           "rating": "extreme fear"
         },
         "put_call_options": {
-          "score": 8.2,
+          "score": 4.2,
           "rating": "extreme fear"
         },
         "market_volatility_vix": {
@@ -42656,12 +42369,12 @@
       "history_30d": [
         {
           "date": "2026-10-20",
-          "score": 22.09,
+          "score": 21.52,
           "rating": "extreme fear"
         },
         {
           "date": "2026-10-19",
-          "score": 22.09,
+          "score": 21.52,
           "rating": "extreme fear"
         },
         {
@@ -43481,7 +43194,7 @@
       "model": "claude-fable-5-1",
       "requested": "claude-fable-5-1",
       "fallback": false,
-      "updated_at": "2026-10-19T17:07:05.256011+00:00"
+      "updated_at": "2026-10-20T13:09:57.001872+00:00"
     }
   }
 }
