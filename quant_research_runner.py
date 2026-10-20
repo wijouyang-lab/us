@@ -102,7 +102,7 @@ def _read_schema_version(path):
 
 
 def _read_schema_versions(path):
-    """返回 CSV 内全部非空 schema_version；读取失败、缺列或空数据返回空集合。"""
+    """Return all schema versions, preserving a sentinel for missing versions in data rows."""
     try:
         if not os.path.exists(path) or os.path.getsize(path) == 0:
             return set()
@@ -111,11 +111,11 @@ def _read_schema_versions(path):
             reader = csv.DictReader(fh)
             if not reader.fieldnames or "schema_version" not in reader.fieldnames:
                 return set()
-            return {
-                str(row.get("schema_version") or "").strip()
-                for row in reader
-                if str(row.get("schema_version") or "").strip()
-            }
+            versions = set()
+            for row in reader:
+                value = str(row.get("schema_version") or "").strip()
+                versions.add(value if value else "<MISSING>")
+            return versions
     except Exception:
         return set()
 
@@ -127,22 +127,17 @@ def _precheck(spec, workdir):
         fpath = os.path.join(workdir, fname)
         if not os.path.exists(fpath) or os.path.getsize(fpath) == 0:
             return False, "输入缺失或为空: %s" % fname, warnings
-        if fname == "quant_factor_price_history.csv" and expected == "phase2b.v2":
-            # Price history dates were previously shifted. Require the entire file to have
-            # been rebuilt, not merely a v2 tail row appended to legacy v1 data.
+        if expected is not None:
             versions = _read_schema_versions(fpath)
             if versions != {expected}:
-                return (
-                    False,
-                    "%s 存在旧版/混合 schema=%s；必须先运行完整 Rebuild Quant Price History" %
-                    (fname, sorted(versions)),
-                    warnings,
-                )
-            continue
-        if expected is not None:
-            actual = _read_schema_version(fpath)
-            if actual is not None and actual != expected:
-                warnings.append("%s schema_version=%s 期望 %s" % (fname, actual, expected))
+                if fname == "quant_factor_price_history.csv" and expected == "phase2b.v2":
+                    reason = (
+                        "%s 存在旧版/混合/缺失 schema=%s；必须先运行完整 Rebuild Quant Price History"
+                        % (fname, sorted(versions))
+                    )
+                else:
+                    reason = "%s schema 集合=%s，要求全文件只有 %s" % (fname, sorted(versions), expected)
+                return False, reason, warnings
     return True, None, warnings
 
 
