@@ -58,5 +58,8 @@ jobs:
       - name: Test paper trading execution and costs
         run: python tests/test_paper_trading.py
 
+      - name: Test ATR research metrics and cost accounting
+        run: python tests/test_atr_position_sizing.py
+
       - name: Generate paper report (integration check)
         run: python scripts/paper_trading_report.py
