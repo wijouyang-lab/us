@@ -33,6 +33,10 @@ jobs:
           python-version: '3.12'
 
       - name: Update paper ledger
+        env:
+          # Only a successful Scan workflow_run contributes an observation day.
+          # Manual dispatch may repair/re-render the ledger but cannot advance the 40-day gate.
+          PAPER_RECORD_OBSERVATION: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && '1' || '0' }}
         run: python scripts/paper_trading.py
 
       - name: Generate report
