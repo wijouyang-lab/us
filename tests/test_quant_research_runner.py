@@ -48,7 +48,7 @@ def _seed_inputs(workdir):
     """
     files = {
         "quant_factor_snapshot.csv": "phase1.v1",
-        "quant_factor_price_history.csv": "phase2b.v1",
+        "quant_factor_price_history.csv": "phase2b.v2",
         "quant_factor_backtest.csv": "phase2.v1",
         "quant_factor_validation.csv": "phase3.v1",
         "quant_factor_correlation.csv": "phase3.v1",
@@ -83,6 +83,27 @@ def test_full_pipeline_ok(workdir):
     assert set(summary["phases"].keys()) == {"2", "3", "4", "5", "6", "7"}
     for p in summary["phases"].values():
         assert p["status"] == "OK"
+
+
+def test_mixed_price_history_schema_blocks_phase2(workdir):
+    _seed_inputs(workdir)
+    price_file = os.path.join(workdir, "quant_factor_price_history.csv")
+    with open(price_file, "w", encoding="utf-8", newline="") as fh:
+        fh.write("Date,Ticker,Close,schema_version\\n")
+        fh.write("2026-10-19,AAA,10,phase2b.v1\\n")
+        fh.write("2026-10-20,AAA,11,phase2b.v2\\n")
+
+    called = []
+    runner.PHASE_FUNCS = {2: lambda: called.append(True) or {"status": "OK", "written": True}}
+    try:
+        summary, code = runner.run(workdir=workdir, strict=False, only_phase=2)
+    finally:
+        _clear_override()
+    phase = summary["phases"]["2"]
+    assert phase["status"] == "NOT_ENOUGH_DATA"
+    assert "完整 Rebuild Quant Price History" in phase["reason"]
+    assert called == []
+    assert code == 0
 
 
 def test_missing_input_degrades_no_file(workdir):
