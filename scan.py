@@ -44,7 +44,7 @@ import yfinance as yf
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
 from scripts.pending_merge import ensure_pending_schema, unseen_pending_items
-from scripts.ai_item_matching import match_ai_rows
+from scripts.ai_item_matching import match_ai_rows, normalize_ai_fields
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
 from quant_factor_lab import (
@@ -3542,18 +3542,44 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
         client=ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
         txt=_model_stream_text(client, model=TARGET_MODEL, max_tokens=10000, messages=[{"role":"user","content":prompt}])
         obj=_extract_json_object(txt)
-        rows=obj.get("items", []) if isinstance(obj, dict) else []
-        by_ticker, match_diagnostics = match_ai_rows(items, rows if isinstance(rows, list) else [])
+        if not isinstance(obj, dict):
+            print(f"⚠️ [AI解释层结构诊断] JSON根对象解析失败或不是对象（type={type(obj).__name__}）")
+            rows = []
+        else:
+            raw_rows = obj.get("items", [])
+            if not isinstance(raw_rows, list):
+                print(
+                    "⚠️ [AI解释层结构诊断] 顶层 items 不是数组："
+                    f"type={type(raw_rows).__name__}，顶层keys={list(obj.keys())[:12]}"
+                )
+                rows = []
+            else:
+                rows = raw_rows
+                if not rows:
+                    print(f"⚠️ [AI解释层结构诊断] items 数组为空；顶层keys={list(obj.keys())[:12]}")
+        by_ticker, match_diagnostics = match_ai_rows(items, rows)
         if match_diagnostics:
             print("⚠️ [AI解释层匹配诊断] " + "；".join(match_diagnostics[:12]))
+        core_required = ("industry_logic", "news_cn", "premarket_conclusion", "catalysts", "risks", "invalidation")
+        obs_required = ("industry_logic", "catalysts", "risks")
+        field_diagnostics = []
         for item in items:
             ticker = str(item.get("Ticker","")).strip().upper()
-            d=by_ticker.get(ticker,{})
+            d=normalize_ai_fields(by_ticker.get(ticker,{}))
             for key in ("industry_logic","news_cn","premarket_conclusion","catalysts","risks","invalidation"):
                 item[f"AI_{key}"]=str(d.get(key) or "").strip()
-        ok_core = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn"))
+            required = core_required if item.get("Tag") == "Core_Dragon" else obs_required
+            missing_fields = [key for key in required if not item.get(f"AI_{key}")]
+            if missing_fields:
+                field_diagnostics.append(f"{ticker}:缺少{','.join(missing_fields)}")
+        if field_diagnostics:
+            print("⚠️ [AI解释层字段诊断] " + "；".join(field_diagnostics[:12]))
+        if rows and not by_ticker:
+            sample_keys = list(rows[0].keys())[:20] if isinstance(rows[0], dict) else [type(rows[0]).__name__]
+            print(f"⚠️ [AI解释层返回样本结构] rows={len(rows)} keys={sample_keys}")
+        ok_core = sum(all(bool(item.get(f"AI_{key}")) for key in core_required)
                       for item in items if item.get("Tag") == "Core_Dragon")
-        ok_obs = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_catalysts"))
+        ok_obs = sum(all(bool(item.get(f"AI_{key}")) for key in obs_required)
                      for item in items if item.get("Tag") == "Observation")
         ok = ok_core + ok_obs
         print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation {ok_obs} 极简）")
