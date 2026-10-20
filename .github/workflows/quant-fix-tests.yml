@@ -98,4 +98,6 @@ jobs:
           cat docs/DEATH_AUTOPSY.md
 
       - name: Generate paper report (integration check)
-        run: python scripts/paper_trading_report.py
+        run: |
+          python scripts/paper_trading_report.py
+          cat docs/PAPER_TRADING_REPORT.md
