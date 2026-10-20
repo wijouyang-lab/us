@@ -91,13 +91,19 @@ def evaluate_factor_segment(
     horizons: Iterable[int] = HORIZONS,
     top_fraction: float = TOP_FRACTION,
     min_names_per_date: int = MIN_NAMES_PER_DATE,
+    direction: int | dict[int, int] = 1,
 ) -> dict[int, dict]:
-    """Evaluate a fixed cross-sectional factor direction for each horizon."""
+    """Evaluate a fixed cross-sectional factor direction for each horizon.
+
+    direction=1 means higher raw factor is stronger; -1 reverses it; 0 skips that
+    horizon because the training segment did not define a direction.
+    """
     date_set = {pd.Timestamp(d).normalize() for d in dates}
     segment = frame[frame["Scan_Date"].isin(date_set)].copy()
     results = {}
     for horizon in horizons:
         ret_col = f"Forward_Return_{horizon}D"
+        dir_h = int(direction.get(int(horizon), 0)) if isinstance(direction, dict) else int(direction)
         spreads, daily_ics, top_returns, bottom_returns, top_win_rates = [], [], [], [], []
         rows_used = 0
         for _, day in segment.groupby("Scan_Date", sort=True):
@@ -109,14 +115,19 @@ def evaluate_factor_segment(
             valid = valid.replace([np.inf, -np.inf], np.nan).dropna(subset=[factor, ret_col])
             if len(valid) < min_names_per_date or valid[factor].nunique() < 2:
                 continue
+            if dir_h == 0:
+                continue
             k = max(1, int(np.ceil(len(valid) * top_fraction)))
-            ordered = valid.sort_values([factor, "Ticker"], kind="mergesort")
+            # Direction is determined from the training segment and must remain fixed
+            # for validation/test; it is never refit on held-out outcomes.
+            valid["_signal"] = valid[factor] * dir_h
+            ordered = valid.sort_values(["_signal", "Ticker"], kind="mergesort")
             bottom = ordered.head(k)
             top = ordered.tail(k)
             top_mean = float(top[ret_col].mean())
             bottom_mean = float(bottom[ret_col].mean())
             spreads.append(top_mean - bottom_mean)
-            ic = valid[factor].corr(valid[ret_col], method="spearman")
+            ic = valid["_signal"].corr(valid[ret_col], method="spearman")
             if pd.notna(ic):
                 daily_ics.append(float(ic))
             top_returns.append(top_mean)
@@ -127,6 +138,7 @@ def evaluate_factor_segment(
         mean_ic = float(np.mean(daily_ics)) if daily_ics else None
         ic_std = float(np.std(daily_ics, ddof=1)) if len(daily_ics) > 1 else None
         results[int(horizon)] = {
+            "direction": dir_h,
             "valid_dates": len(spreads),
             "valid_rows": rows_used,
             "mean_daily_ic": mean_ic,
@@ -139,6 +151,17 @@ def evaluate_factor_segment(
             "top_win_rate_pct": (100.0 * float(np.mean(top_win_rates)) if top_win_rates else None),
         }
     return results
+
+
+def select_directions_from_train(train_metrics: dict[int, dict], horizons: Iterable[int] = HORIZONS) -> dict[int, int]:
+    """Freeze each horizon's signal sign using training-period IC only."""
+    directions = {}
+    for horizon in horizons:
+        ic = train_metrics.get(int(horizon), {}).get("mean_daily_ic")
+        directions[int(horizon)] = 1 if ic is not None and ic > 0 else (
+            -1 if ic is not None and ic < 0 else 0
+        )
+    return directions
 
 
 def _pct(v, decimals=3):
@@ -158,7 +181,7 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
         "> Status: research-only diagnostic. This is a single, predeclared factor screen, not the production strategy and not an execution backtest.",
         f"> Input: {input_path.name}; {len(frame):,} rows; {frame['Ticker'].nunique():,} tickers; {len(date_list)} signal dates.",
         f"> Period: {pd.Timestamp(date_list[0]).date()} to {pd.Timestamp(date_list[-1]).date()}.",
-        f"> Signal: {FACTOR} higher is better; daily Top {TOP_FRACTION:.0%} vs Bottom {TOP_FRACTION:.0%}; no weights or thresholds fitted to this dataset.",
+        f"> Signal: {FACTOR}; direction is selected from TRAIN only per horizon and then frozen for validation/test; daily Top {TOP_FRACTION:.0%} vs Bottom {TOP_FRACTION:.0%}.",
         f"> Split: chronological {TRAIN_FRACTION:.0%}/{VALIDATION_FRACTION:.0%}/{1-TRAIN_FRACTION-VALIDATION_FRACTION:.0%}; purge {PURGE_DATES} signal dates before each next segment so forward-return labels do not straddle split boundaries.",
         "> Test uncertainty: spread t-stat uses Newey-West HAC with lag horizon-1 to account for overlapping forward-return labels; this is not a full trading-cost-adjusted return estimate.\n",
         "## Chronological date partitions\n",
@@ -175,9 +198,12 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
         "| Segment | Horizon | Valid dates | Rows | Mean daily rank IC | Positive IC days | Top 20% mean return | Bottom 20% mean return | Top-bottom spread | HAC t-stat | Top win rate |",
         "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
+    # Select each horizon's sign from TRAIN outcomes only; then freeze for all later data.
+    train_raw = evaluate_factor_segment(frame, splits["train"], direction=1)
+    directions = select_directions_from_train(train_raw)
     metrics = {}
     for name in ("train", "validation", "test"):
-        metrics[name] = evaluate_factor_segment(frame, splits[name])
+        metrics[name] = evaluate_factor_segment(frame, splits[name], direction=directions)
         for horizon in HORIZONS:
             m = metrics[name][horizon]
             positive_ic = "N/A" if m["positive_ic_days_pct"] is None else f"{m['positive_ic_days_pct']:.1f}%"
@@ -199,6 +225,15 @@ def build_report(frame: pd.DataFrame, input_path: Path = INPUT) -> str:
     else:
         verdict = "PRELIMINARY_POSITIVE_SIGNAL_ONLY"
     report += [
+        "",
+        "## TRAIN-only direction lock\n",
+        *[
+            f"- {horizon}D selected direction: "
+            + ("higher factor value" if directions[horizon] == 1
+               else "lower factor value" if directions[horizon] == -1
+               else "undetermined; this horizon is not evaluated")
+            for horizon in HORIZONS
+        ],
         "",
         "## Test-set interpretation\n",
         f"- 20D spread verdict: **{verdict}**.",
