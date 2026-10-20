@@ -35,7 +35,7 @@ PHASE_SPECS = [
         "num": 2, "name": "backtest",
         "module": "quant_factor_backtest", "func": "run_backtest_from_history",
         "inputs": [("quant_factor_snapshot.csv", "phase1.v1"),
-                   ("quant_factor_price_history.csv", "phase2b.v1")],
+                   ("quant_factor_price_history.csv", "phase2b.v2")],
     },
     {
         "num": 3, "name": "validation",
@@ -93,6 +93,25 @@ def _read_schema_version(path):
         return None
 
 
+def _read_schema_versions(path):
+    """返回 CSV 内全部非空 schema_version；读取失败、缺列或空数据返回空集合。"""
+    try:
+        if not os.path.exists(path) or os.path.getsize(path) == 0:
+            return set()
+        import csv
+        with open(path, "r", encoding="utf-8", newline="") as fh:
+            reader = csv.DictReader(fh)
+            if not reader.fieldnames or "schema_version" not in reader.fieldnames:
+                return set()
+            return {
+                str(row.get("schema_version") or "").strip()
+                for row in reader
+                if str(row.get("schema_version") or "").strip()
+            }
+    except Exception:
+        return set()
+
+
 def _precheck(spec, workdir):
     """返回 (ok, reason, schema_warnings)。ok=False 时该 Phase 应降级跳过（不调用 run_*）。"""
     warnings = []
@@ -100,6 +119,18 @@ def _precheck(spec, workdir):
         fpath = os.path.join(workdir, fname)
         if not os.path.exists(fpath) or os.path.getsize(fpath) == 0:
             return False, "输入缺失或为空: %s" % fname, warnings
+        if fname == "quant_factor_price_history.csv" and expected == "phase2b.v2":
+            # Price history dates were previously shifted. Require the entire file to have
+            # been rebuilt, not merely a v2 tail row appended to legacy v1 data.
+            versions = _read_schema_versions(fpath)
+            if versions != {expected}:
+                return (
+                    False,
+                    "%s 存在旧版/混合 schema=%s；必须先运行完整 Rebuild Quant Price History" %
+                    (fname, sorted(versions)),
+                    warnings,
+                )
+            continue
         if expected is not None:
             actual = _read_schema_version(fpath)
             if actual is not None and actual != expected:
