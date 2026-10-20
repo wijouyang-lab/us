@@ -1,8 +1,13 @@
 name: Paper Trading
 
-# 触发：scan 成功后自动跑（不依赖 news / quant-research 链式 job）
+# Scan 成功后先登记信号/观察日；美股收盘后独立刷新完整 OHLCV，再处理模拟成交。
 on:
   workflow_dispatch:
+  schedule:
+    # 20:30 UTC = 16:30 ET during DST; 21:30 UTC = 16:30 ET during standard time.
+    # Runtime ET guard below skips the schedule that fires before the close.
+    - cron: "30 20 * * 1-5"
+    - cron: "30 21 * * 1-5"
   workflow_run:
     workflows: ["美股盘中扫描"]
     types: [completed]
@@ -11,14 +16,15 @@ permissions:
   contents: write
   actions: read
 
+# Share with Scan so both jobs cannot write quant_factor_price_history.csv concurrently.
 concurrency:
-  group: us-paper-trading
+  group: us-stock-scan
   cancel-in-progress: false
 
 jobs:
   paper:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     steps:
       - name: Checkout
@@ -32,14 +38,39 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Check scheduled execution window in New York time
+        id: window
+        if: github.event_name == 'schedule'
+        run: |
+          python - <<'PY'
+          import os
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+
+          now = datetime.now(ZoneInfo("America/New_York"))
+          # Only execute from 16:00 to before 18:00 ET; one of the two UTC
+          # schedules should land near 16:30 across DST/standard time.
+          allowed = now.weekday() < 5 and 16 <= now.hour < 18
+          print(f"ET now={now.isoformat()} allowed={allowed}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"run_eod={'true' if allowed else 'false'}\n")
+          PY
+
+      - name: Refresh completed daily OHLCV before EOD simulation
+        if: github.event_name == 'schedule' && steps.window.outputs.run_eod == 'true'
+        run: python quant_factor_price.py
+
       - name: Update paper ledger
+        if: github.event_name != 'schedule' || steps.window.outputs.run_eod == 'true'
         env:
-          # Only a successful Scan workflow_run contributes an observation day.
-          # Manual dispatch may repair/re-render the ledger but cannot advance the 40-day gate.
+          # Only a successful Scan workflow_run contributes an observation date.
           PAPER_RECORD_OBSERVATION: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && '1' || '0' }}
+          # The Scan event queues signals; only the post-close schedule executes fills/exits.
+          PAPER_EXECUTION_WINDOW: ${{ github.event_name == 'schedule' && steps.window.outputs.run_eod == 'true' && 'EOD' || 'SCAN' }}
         run: python scripts/paper_trading.py
 
       - name: Generate report
+        if: github.event_name != 'schedule' || steps.window.outputs.run_eod == 'true'
         run: python scripts/paper_trading_report.py
 
       - name: Show ledger tail
@@ -51,10 +82,11 @@ jobs:
           fi
 
       - name: Commit and push if changed
+        if: github.event_name != 'schedule' || steps.window.outputs.run_eod == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add portfolio_paper_transactions.csv docs/PAPER_TRADING_REPORT.md
+          git add quant_factor_price_history.csv portfolio_paper_transactions.csv docs/PAPER_TRADING_REPORT.md
           if [ -f portfolio_paper_observation_dates.csv ]; then
             git add portfolio_paper_observation_dates.csv
           fi
@@ -62,9 +94,9 @@ jobs:
             echo "no change to commit"
             exit 0
           fi
-          git commit -m "chore(paper): update paper trading ledger and daily report [skip ci]"
+          git commit -m "chore(paper): refresh EOD prices and process simulation [skip ci]"
           if bash tools/ci/push_with_retry.sh 3 5; then
-            echo "paper ledger pushed to main"
+            echo "EOD prices and paper ledger pushed to main"
             exit 0
           fi
           echo "::error::push failed after retries"
