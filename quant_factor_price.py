@@ -28,7 +28,9 @@ Persistent Price History Layer —— 阶段 2B：为 Factor Snapshot 提供 For
       当前回测/验证/候选/Shadow/Walk-Forward/治理 均不消费这四列，加列不影响任何既有链路。
 """
 
+import argparse
 import os
+import shutil
 import sys
 from datetime import datetime, time as dtime, timedelta
 from zoneinfo import ZoneInfo
@@ -43,10 +45,9 @@ PRICE_HISTORY_PATH = "quant_factor_price_history.csv"
 # Close 列名与位置含义不变（仍紧邻 Ticker 之后、Volume 之前），兼容 Phase 2 回测的 price_map。
 PRICE_HISTORY_COLUMNS = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"]
 
-# 输出 schema 版本（STEP 3-A）：写入 quant_factor_price_history.csv 的 schema_version 列。
-# 命名规则：phase<阶段>.v<主版本>，与 Phase 1–7 完全一致；字段结构变更时递增主版本号。
-# 本次为纯追加列（OHLCV），向后兼容、所有读取方按列名读，Close 口径不变 → 不升版本，保持 v1。
-SCHEMA_VERSION = "phase2b.v1"
+# 数据语义版本：v2 修复 yfinance 日线 tz-naive 日期标签被误当 UTC 瞬时、从而错标为前一日的问题。
+# 字段仍然向后兼容；版本递增用于识别修复后的正确交易日口径。
+SCHEMA_VERSION = "phase2b.v2"
 
 SNAPSHOT_PATH = "quant_factor_snapshot.csv"
 
@@ -66,14 +67,24 @@ def last_completed_regular_date_us(asof=None):
 
 
 def _normalize_us_date_index(df):
-    """把 yfinance 日线 index 统一为美东时区的 DatetimeIndex（tz-naive）。"""
+    """统一日线索引到美东时区，同时保留无时区日线的交易日期标签。
+
+    yfinance.download 对日线及更高周期默认 ignore_tz=True，可能返回 tz-naive
+    的 session-date 标签（例如 2026-10-19 00:00:00）。该值不是 UTC 瞬时：
+    不能先 localize 到 UTC 再转美东，否则会把日期移到前一天（通常变成前一日 20:00）。
+
+    规则：
+      - tz-naive 日线：把现有日期标签直接 localize 到美东，不改变年月日；
+      - tz-aware index：按真实时间戳转换到美东。
+    """
     out = df.copy()
     idx = pd.to_datetime(out.index, errors="coerce")
     valid = ~idx.isna()
     out = out.loc[valid].copy()
     idx = pd.DatetimeIndex(idx[valid])
     if idx.tz is None:
-        idx_us = idx.tz_localize("UTC").tz_convert(US_TZ)
+        # 日线 tz-naive index 表示交易所 session-date 标签，不是 UTC 时间戳。
+        idx_us = idx.tz_localize(US_TZ)
     else:
         idx_us = idx.tz_convert(US_TZ)
     out.index = idx_us
@@ -234,7 +245,7 @@ def price_map_from_history(price_history_df):
 # 主入口：更新价格历史
 # ============================================================================
 def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_HISTORY_PATH,
-                         start=None, end=None, fetch_func=None):
+                         start=None, end=None, fetch_func=None, rebuild=False):
     """读 snapshot → 找历史所有 ticker → 批量下载 → 幂等 upsert → 原子写。返回状态 dict。
 
     fetch_func 可注入（测试用），默认 fetch_batch_prices。
@@ -268,9 +279,16 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
         result["status"] = "NO_TICKERS"
         return result
 
-    # 下载范围：覆盖 snapshot 最早 Technical_Date（往前留缓冲）到今天
+    existing = load_price_history(price_history_path)
+
+    # 下载范围：覆盖 snapshot 最早 Technical_Date（往前留缓冲）到今天。
+    # rebuild 时也保留现有历史文件的最早日期，确保整段旧数据被重新下载，而不是只下载当前 snapshot 窗口。
     if start is None:
         min_date = pd.to_datetime(snap.get("Technical_Date"), errors="coerce").min()
+        if rebuild and not existing.empty and "Date" in existing.columns:
+            old_min_date = pd.to_datetime(existing["Date"], errors="coerce").min()
+            if not pd.isna(old_min_date):
+                min_date = old_min_date if pd.isna(min_date) else min(min_date, old_min_date)
         if pd.isna(min_date):
             min_date = pd.Timestamp.today()
         start = (min_date - pd.Timedelta(days=7)).strftime("%Y-%m-%d")
@@ -280,8 +298,37 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
     fn = fetch_func or fetch_batch_prices
     new_df = fn(tickers, start, end)
 
-    existing = load_price_history(price_history_path)
-    merged = upsert_price_history(existing, new_df)
+    # rebuild 只有在拿到非空新数据时才允许替换原文件；网络故障不得清空历史。
+    if rebuild:
+        if new_df is None or new_df.empty:
+            result["status"] = "REBUILD_NO_DATA"
+            result["reason"] = "rebuild 下载结果为空；原价格历史未修改"
+            return result
+        incoming = new_df.copy()
+        for col in PRICE_HISTORY_COLUMNS:
+            if col not in incoming.columns:
+                incoming[col] = ""
+        incoming = incoming[PRICE_HISTORY_COLUMNS]
+        incoming = incoming[
+            incoming["Date"].astype(str).str.strip().ne("")
+            & incoming["Ticker"].astype(str).str.strip().ne("")
+        ]
+        merged = (incoming.drop_duplicates(subset=["Date", "Ticker"], keep="last")
+                  .sort_values(["Ticker", "Date"]).reset_index(drop=True))
+        if merged.empty:
+            result["status"] = "REBUILD_NO_DATA"
+            result["reason"] = "rebuild 结果没有有效 Date/Ticker；原价格历史未修改"
+            return result
+
+        # 保留原文件备份；只有新数据验证为非空后才创建备份与替换。
+        if os.path.exists(price_history_path):
+            stamp = datetime.now(US_TZ).strftime("%Y%m%dT%H%M%S%f")
+            backup_path = f"{price_history_path}.bak.{stamp}"
+            shutil.copy2(price_history_path, backup_path)
+            result["backup_path"] = backup_path
+    else:
+        merged = upsert_price_history(existing, new_df)
+
     result["new_rows"] = int(len(merged) - len(existing))
     result["total_rows"] = int(len(merged))
 
@@ -295,7 +342,14 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
 
 
 def main(argv=None):
-    r = update_price_history()
+    parser = argparse.ArgumentParser(description="更新美股日线价格历史")
+    parser.add_argument(
+        "--rebuild",
+        action="store_true",
+        help="重新下载现有历史区间并替换文件（先备份原 CSV；下载为空时拒绝覆盖）",
+    )
+    args = parser.parse_args(argv)
+    r = update_price_history(rebuild=args.rebuild)
     print("[Price History]", r)
     return 0 if r["status"] in ("OK", "NO_SNAPSHOT", "EMPTY_SNAPSHOT", "NO_TICKERS") else 1
 
