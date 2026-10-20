@@ -112,7 +112,7 @@ jobs:
           python -m py_compile scan.py portfolio_50000.py dashboard_export.py scripts/ai_coverage.py quant_factor_price.py quant_factor_backtest.py quant_research_runner.py scripts/paper_trading.py scripts/paper_trading_schedule.py scripts/pending_merge.py scripts/ai_item_matching.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
 
       - name: Test paper portfolio intraday stop
-        run: python tests/test_portfolio_intraday_stop.py
+        run: python -m pytest tests/test_portfolio_intraday_stop.py -q
 
       - name: Test Scan daily session-date contract
         run: python tests/test_scan_daily_date_contract.py
