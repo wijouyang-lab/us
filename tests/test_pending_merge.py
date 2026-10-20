@@ -41,7 +41,7 @@ def test_malformed_existing_file_fails_closed():
 def test_schema_mismatch_fails_closed_before_append():
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "pending.csv"
-        path.write_text("Ticker,Status\\nAAPL,pending\\n", encoding="utf-8")
+        path.write_text("Ticker,Status\nAAPL,pending\n", encoding="utf-8")
         try:
             unseen_pending_items(path, [{"Ticker": "NVDA"}], expected_columns=["Ticker", "Status", "AI_risks"])
         except ValueError as exc:
@@ -53,7 +53,7 @@ def test_schema_mismatch_fails_closed_before_append():
 def test_schema_migration_preserves_old_rows_and_backup():
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "pending.csv"
-        original = "Ticker,Status,LegacyNote\\nAAPL,bought,keep me\\nMSFT,pending,also keep\\n"
+        original = "Ticker,Status,LegacyNote\nAAPL,bought,keep me\nMSFT,pending,also keep\n"
         path.write_text(original, encoding="utf-8")
         columns = ensure_pending_schema(path, ["Ticker", "Status", "AI_risks"])
         assert columns == ["Ticker", "Status", "AI_risks", "LegacyNote"]
@@ -68,7 +68,7 @@ def test_schema_migration_preserves_old_rows_and_backup():
 def test_schema_migration_rejects_file_without_ticker():
     with tempfile.TemporaryDirectory() as tmp:
         path = Path(tmp) / "pending.csv"
-        path.write_text("Symbol,Status\\nAAPL,pending\\n", encoding="utf-8")
+        path.write_text("Symbol,Status\nAAPL,pending\n", encoding="utf-8")
         try:
             ensure_pending_schema(path, ["Ticker", "Status", "AI_risks"])
         except ValueError as exc:
