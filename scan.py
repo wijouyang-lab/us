@@ -43,6 +43,7 @@ import yfinance as yf
 
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
+from scripts.pending_merge import unseen_pending_items
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
 from quant_factor_lab import (
@@ -4428,22 +4429,28 @@ if __name__ == "__main__":
             f"活跃持仓跳过={len(active_skipped)}，当前没有待写入候选"
         )
 
+    # 同日重跑时只追加新 ticker；不覆盖旧 pending 行及其已更新的 Status。
+    pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
+    try:
+        to_append = unseen_pending_items(pending_file, to_write)
+        if len(to_append) != len(to_write):
+            print(
+                f"[pending追加保护] 本次候选={len(to_write)}，新 ticker={len(to_append)}；"
+                "已存在 ticker 不重复追加，旧行/状态保持不变"
+            )
+    except Exception as _pending_read_error:
+        # 无法安全读取既有文件时，不把它当成空文件，也不覆盖它。
+        to_append = []
+        print(
+            f"⚠️ [pending追加保护] 无法验证既有文件，拒绝写入新 pending 行："
+            f"{type(_pending_read_error).__name__}: {_pending_read_error}"
+        )
+
     # 关键：先完成“实际入账集合”的确定，再用同一集合渲染邮件 Core。
     # 因此候选池外 AI 推荐、历史持仓去重等都不会再导致邮件与 pending 分裂。
     ai_html = build_verified_core_html(ai_html, to_write)
 
     if to_write:
-        pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
-        if os.path.exists(pending_file):
-            try:
-                existing_pending = pd.read_csv(pending_file, dtype=str, keep_default_na=False)
-                print(
-                    f"[pending写入] 今日文件已存在 {pending_file}，"
-                    f"旧行数={len(existing_pending)}；本次将按最终to_write={len(to_write)} 覆盖写入，"
-                    "不会因文件存在而静默跳过"
-                )
-            except Exception as _pending_read_error:
-                print(f"[pending写入] 今日旧文件读取失败，将仍按本次to_write覆盖：{_pending_read_error}")
         header_cols = [
             "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线",
             "Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX",
@@ -4451,9 +4458,11 @@ if __name__ == "__main__":
             #     AI 六段文本原样持久化（不新增 GPT 调用、不改写、不摘要、不截断）
             "AI_industry_logic","AI_news_cn","AI_premarket_conclusion","AI_catalysts","AI_risks","AI_invalidation"
         ]
-        with open(pending_file,"w",encoding="utf-8",newline="") as f:
-            f.write(",".join(header_cols)+"\n")
-            for item in to_write:
+        pending_exists = os.path.exists(pending_file)
+        with open(pending_file, "a" if pending_exists else "w", encoding="utf-8", newline="") as f:
+            if not pending_exists:
+                f.write(",".join(header_cols)+"\n")
+            for item in to_append:
                 vals = [
                     today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
                     item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("Premarket_Status_Display",""), item.get("Premarket_Source",""), item.get("News_AsOf_ET",""),
@@ -4469,7 +4478,10 @@ if __name__ == "__main__":
                 ]
                 safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
                 f.write(",".join(safe_vals)+"\n")
-        print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
+        if to_append:
+            print(f"✅ 已追加 {len(to_append)} 条新美股待确认记录：{pending_file}")
+        else:
+            print(f"ℹ️ 今日 pending 文件未追加新行，既有记录保持不变：{pending_file}")
 
         # AI 文本持久化缓存：按 Ticker Upsert 到 ai_text_cache.csv，
         # 由 scan.yml 随 pending CSV 一并提交推送；云端 dashboard_export.py
