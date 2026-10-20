@@ -45,6 +45,7 @@ UNIT = 10000.0
 MAX_OPEN = 5
 HOLD_DAYS = 20
 STOP_PCT = 0.95
+PENDING_MAX_AGE_CALENDAR_DAYS = 4
 SLIPPAGE_BPS = float(os.environ.get("PAPER_SLIPPAGE_BPS", "5.0"))
 COMMISSION_BPS = float(os.environ.get("PAPER_COMMISSION_BPS", "0.5"))
 PRICE_SCHEMA_VERSION = "phase2b.v2"
@@ -266,6 +267,9 @@ def _create_signal_orders(rows: list[dict], pending_files: list[Path], today: st
     if signal_date is None:
         print(f"[paper] 无法识别 pending 日期，跳过文件：{pf.name}")
         return 0
+    if signal_date != today:
+        print(f"[paper] 跳过过期候选文件 {pf.name}（today={today}）；不补建历史模拟订单")
+        return 0
     candidates = read_rows(pf)
     # VOID rows are audit traces only; they must not block a corrected replacement order.
     existing = {
@@ -330,7 +334,20 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
             if b["date"] > signal_date and (today is None or b["date"] <= today)
         })
         if not session_dates:
-            # The next regular session has not arrived in completed-bar history yet.
+            # Daily bars only become "complete" after the session has closed. Allow a short
+            # data-publication window, but never backfill a weeks-old order after a later rebuild.
+            try:
+                signal_dt = datetime.strptime(signal_date, "%Y-%m-%d").date()
+                today_dt = datetime.strptime(today, "%Y-%m-%d").date() if today else signal_dt
+                age = (today_dt - signal_dt).days
+            except ValueError:
+                age = PENDING_MAX_AGE_CALENDAR_DAYS + 1
+            if today is not None and age > PENDING_MAX_AGE_CALENDAR_DAYS:
+                r["Action"] = "EXPIRED"
+                r["Reason"] = "PRICE_HISTORY_UNAVAILABLE_TOO_LONG"
+                expired += 1
+                print(f"[paper] EXPIRED {tk} signal={signal_date}: no corrected price history after {age} calendar days")
+            # Otherwise the next completed daily bar may not have been published yet.
             continue
         expected_session = session_dates[0]
         bar = next_open_bar(
