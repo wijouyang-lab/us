@@ -180,7 +180,7 @@ def main() -> int:
     L.append("")
 
     L += [
-        "## 已平仓净绩效\n",
+        "## 已平仓净绩效\\n",
         "| 指标 | 值 |",
         "|---|---:|",
         f"| 已平仓交易数 | {n} |",
@@ -193,7 +193,28 @@ def main() -> int:
         f"| 相对初始资金净收益 | {fmt_pct(cum)} |",
         f"| 已平仓权益曲线最大回撤 | {fmt_pct(max_dd)} |",
         "",
-        "## 数据质量提示\n",
+    ]
+
+    L += ["## 已平仓明细\\n"]
+    if closed:
+        L += [
+            "| Ticker | 信号日 | 成交日 | 退出日 | 买入成交价 | 卖出成交价 | 净 PnL USD | 净收益率 | 持有交易日 | 退出原因 |",
+            "|---|---|---|---|---:|---:|---:|---:|---:|---|",
+        ]
+        for r in sorted(closed, key=lambda x: x.get("Exit_Date") or ""):
+            L.append(
+                f"| {r.get('Ticker', '')} | {r.get('Signal_Date') or '-'} | "
+                f"{r.get('Entry_Date') or '-'} | {r.get('Exit_Date') or '-'} | "
+                f"{fmt_num(fnum(r.get('Entry_Price')))} | {fmt_num(fnum(r.get('Exit_Price')))} | "
+                f"{fmt_num(fnum(r.get('PnL')))} | {fmt_pct(fnum(r.get('PnL_Pct')))} | "
+                f"{r.get('Hold_Days') or '-'} | {r.get('Reason') or '-'} |"
+            )
+    else:
+        L.append("（尚无有效平仓记录）")
+
+    L += [
+        "",
+        "## 数据质量提示\\n",
         "- 成交价取信号日之后首个有有效 Open 的完整日线；若不存在，订单留在 PENDING，绝不退回旧收盘价。",
         "- 净 PnL 已含进出场滑点和佣金；尚未包含可能的税费、借券费、市场冲击与券商特定收费。",
         "- 20 个持有交易日根据价格数据中的实际交易日计数，而非只跳过周末的日历近似。",
