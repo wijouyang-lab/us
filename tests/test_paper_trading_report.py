@@ -26,6 +26,34 @@ def _write_price_file(path: Path, versions):
             })
 
 
+def test_generated_report_uses_real_markdown_line_breaks():
+    old_values = (report.OUT, report.LEDGER, report.PRICE_FILE, report.OBSERVATIONS_FILE)
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            report.OUT = root / "report.md"
+            report.LEDGER = root / "ledger.csv"
+            report.PRICE_FILE = root / "prices.csv"
+            report.OBSERVATIONS_FILE = root / "observations.csv"
+            with report.LEDGER.open("w", encoding="utf-8", newline="") as fh:
+                writer = csv.DictWriter(
+                    fh,
+                    fieldnames=[
+                        "Txn_ID", "Signal_Date", "Ticker", "Action", "Shares",
+                        "Entry_Price", "Entry_Date", "Exit_Date", "PnL", "PnL_Pct",
+                    ],
+                )
+                writer.writeheader()
+            report.main()
+            text = report.OUT.read_text(encoding="utf-8")
+            assert "\\n" not in text
+            assert "## 已平仓净绩效" in text.splitlines()
+            assert "## 已平仓明细" in text.splitlines()
+            assert "## 数据质量提示" in text.splitlines()
+    finally:
+        report.OUT, report.LEDGER, report.PRICE_FILE, report.OBSERVATIONS_FILE = old_values
+
+
 def test_drawdown_gate_fails_closed_without_closed_trades():
     assert drawdown_gate_pass(0, 0.0) is False
     assert drawdown_gate_pass(0, -10.0) is False
@@ -90,6 +118,7 @@ def test_report_accepts_only_rebuilt_v2_prices():
 def main():
     tests = [
         test_drawdown_gate_fails_closed_without_closed_trades,
+        test_generated_report_uses_real_markdown_line_breaks,
         test_report_refuses_legacy_and_mixed_prices,
         test_report_accepts_only_rebuilt_v2_prices,
         test_observation_dates_are_actual_logged_runs_and_deduplicated,
