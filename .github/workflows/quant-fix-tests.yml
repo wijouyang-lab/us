@@ -61,5 +61,8 @@ jobs:
       - name: Test ATR research metrics and cost accounting
         run: python tests/test_atr_position_sizing.py
 
+      - name: Test PIT sector and attribution guards
+        run: python tests/test_turnover_cost_analysis.py
+
       - name: Generate paper report (integration check)
         run: python scripts/paper_trading_report.py
