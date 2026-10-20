@@ -1,5 +1,17 @@
 # 盘中机械止损 实施报告
 
+> **当前状态更新（2026-10-20；以本段为准）**
+>
+> 原报告记录的是最初版本。草稿 PR #33 现已进一步收紧报价逻辑：
+> - `portfolio_50000.py` 的盘中路径单独请求 Yahoo/yfinance 的 `5m` 常规时段 K 线（`prepost=False`），不再把默认日线 `Close` 当作盘中实时价。
+> - 报价必须带时区、属于当天常规交易时段、时间不在未来超过 2 分钟、并且时间戳不旧于 15 分钟；不满足就 fail closed，不写模拟卖出。
+> - 触发卖出时，`Quote_As_Of` 会作为最后一列追加到模拟交易流水，记录用于比较止损线的 K 线时间戳；`Pending_Reason` 原列继续保留，原 14 列顺序不变。
+> - PR 分支把 `dashboard-data.yml` 的 cron 改为 `*/15 * * * 1-5`（工作日每 15 分钟）；GitHub 的计划任务仍可能延迟或漏跑，因此这不是券商级保护性止损。
+>
+> **部署边界：**以上是 Draft PR #33 的待审变更，尚未合并到 `main`。生产主分支目前仍是每小时调度和旧取价路径。在审查/合并前，不要据此声称生产已具备可靠盘中止损。
+>
+> 当前全量测试在前一代码提交 `1966df10342ae315f87f6ac5d8aa598efef2f6bb` 上通过：**948 passed, 1 skipped**；最新 PR 提交改变了调度与相应守卫测试，需以该提交对应的 CI 结果为最终依据。
+
 > 已 commit + push。约束全部遵守：未改 `process_buys`/`process_sells`/`run()` 默认行为、未改 `review.yml`、未改 `scan.py` 主逻辑、未激活 `ENABLE_TARGET_FILE`、未碰监控、未调 AI（触发不调 AI，AI 回填本期延后）。
 
 ## 1. --intraday-stop 实现摘要
@@ -9,8 +21,8 @@
 - **入口**：`run()` 新增 `intraday_stop=False` 参数与早退分支 `if intraday_stop: return _run_intraday_stop(...)`。默认（无 flag，即 Review 路径）**完全不进入此分支**，函数体其余逻辑一字未改。
 - **`_run_intraday_stop()`**（新增纯函数）：
   - **时段守卫**：仅 `09:30 ≤ ET < 16:00` 执行，其他时间（含盘前/盘后/周末）**静默退出 exit 0**，不读价、不写文件。
-  - **取价**：`fetch_last_closes`（其 `current` 为 `prepost=False`，决策 5 满足），实时价即执行价。
-  - **触发**：`实时价 ≤ Stop_Loss` → 机械卖出；`Status=CLOSED`、`Current_Price=执行价`、写 `transactions`（Action=SELL, Reason=`Intraday Stop Loss`, **Pending_Reason=True** 待 AI 补原因）。
+  - **取价（历史实现，已被上方当前状态更新取代）**：最初版本复用 `fetch_last_closes`；当前 PR 分支改为独立的 `fetch_intraday_last_prices`，只接受新鲜的 5 分钟常规时段 bar。
+  - **触发**：`最近有效 5 分钟 bar Close ≤ Stop_Loss` → 模拟卖出；`Status=CLOSED`、`Current_Price=bar Close`、写 `transactions`（Action=SELL, Reason=`Intraday Stop Loss`, **Pending_Reason=True** 待 AI 补原因）并保存 `Quote_As_Of`。
   - **不调用 `process_buys`/`process_sells`**——只做"检查 + 卖"。
   - **守卫**：单日最多 2 只（`MAX_INTRADAY_STOPS_PER_DAY`）；全部 CLOSED 不再触发；已今日止损幂等不重复；取不到价不猜价（与 Review `DATA_MISSING` 一致）。
 - **Txn_ID** 用 `INTRADAY|{TICKER}|{today}`，与 Review 的 `{rid}|SELL|{date}` 区分，避免幂等冲突。
@@ -53,12 +65,12 @@ Review 的命令是 `python portfolio_50000.py --data-dir .`（**不带 `--intra
 
 ## 5. 下周一首次真实验证预期行为
 
-- **触发**（09:30–16:00 ET 内某次 15 分钟运行）：读 OPEN 持仓 → `fetch_last_closes` 取实时价 → 若某仓 `实时价 ≤ Stop_Loss` → 机械 SELL（执行价=触发实时价），`positions.csv` 该仓 `Status=CLOSED`，`transactions.csv` 追加 SELL 行（Reason=`Intraday Stop Loss`, Pending_Reason=`True`）。
+- **触发**（PR 合并且计划任务正常运行后）：读 OPEN 持仓 → 请求 5 分钟常规时段 K 线 → 时间戳有效且不旧于 15 分钟时，比较最后一根有效 bar 的 Close 与 `Stop_Loss` → 条件满足则写模拟 SELL，流水保存 `Quote_As_Of`。
 - **前端**：dashboard_export 下一轮刷新后，持仓区下方出现 `🔴 盘中止损` 横幅（ticker + 触发价 + 原因）。
 - **不触发**：所有持仓价 > 止损 → 静默，仅 `--price-only` 已更新的价格被提交；时段外 → 静默退出。
 - **上限/幂等**：单日最多 2 只；同一 ticker 当日只止损一次；全 CLOSED 后不再触发。
 - **盘后 Review**：跑完整 `run()`（无 `--intraday-stop`）→ 见 CLOSED 仓位跳过卖出、回填 `Cash_After`，与改前完全一致。
-- **风险点**：实时价取自 yfinance `prepost=False`；若沙箱被 Yahoo 429 限流取不到价 → 按"不猜价"原则**不触发**（安全优先）。15 分钟间隔内价格可能已跌更深，执行价为检查时刻价（模拟账户可接受）。
+- **风险点**：报价取自 yfinance，而不是券商/交易所直连实时报价。若 Yahoo 限流、bar 时间戳无效/过旧或 GitHub 调度延迟 → fail closed、不触发模拟卖出。每 15 分钟的设计仍可能错过两次检查间的快速下跌；这套账本不下券商订单，不能作为真实资金止损保证。
 
 ## 6. 本期明确延后（待后续）
 
