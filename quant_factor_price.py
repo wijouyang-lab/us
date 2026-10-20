@@ -327,7 +327,7 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
             # A 7-calendar-day overlap allows recent missing bars to be repaired and
             # catches up from the most recent stored date if a previous run was delayed.
             latest_date = pd.to_datetime(existing["Date"], errors="coerce").max()
-            min_date = latest_date - pd.Timedelta(days=7) if not pd.isna(latest_date) else pd.NaT
+            min_date = latest_date if not pd.isna(latest_date) else pd.NaT
         else:
             min_date = (
                 pd.to_datetime(snap["Technical_Date"], errors="coerce").min()
