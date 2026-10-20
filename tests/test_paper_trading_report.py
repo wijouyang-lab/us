@@ -10,6 +10,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts import paper_trading_report as report
 from scripts.paper_trading import PRICE_SCHEMA_VERSION
+from scripts.paper_trading_report import drawdown_gate_pass
 
 
 def _write_price_file(path: Path, versions):
@@ -23,6 +24,13 @@ def _write_price_file(path: Path, versions):
                 "Open": "10", "High": "11", "Low": "9", "Close": str(10+i),
                 "Volume": "1000", "schema_version": version,
             })
+
+
+def test_drawdown_gate_fails_closed_without_closed_trades():
+    assert drawdown_gate_pass(0, 0.0) is False
+    assert drawdown_gate_pass(0, -10.0) is False
+    assert drawdown_gate_pass(1, -4.9) is True
+    assert drawdown_gate_pass(1, -5.1) is False
 
 
 def test_report_refuses_legacy_and_mixed_prices():
@@ -81,6 +89,7 @@ def test_report_accepts_only_rebuilt_v2_prices():
 
 def main():
     tests = [
+        test_drawdown_gate_fails_closed_without_closed_trades,
         test_report_refuses_legacy_and_mixed_prices,
         test_report_accepts_only_rebuilt_v2_prices,
         test_observation_dates_are_actual_logged_runs_and_deduplicated,
