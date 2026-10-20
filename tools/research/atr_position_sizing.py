@@ -92,12 +92,12 @@ def main() -> int:
     w_min, w_max = float(W.min()), float(W.max())
 
     L = [
-        "# ATR 风险平价仓位 vs 固定仓位（2y PIT，20D 持有）\\n",
+        "# ATR 风险平价仓位 vs 固定仓位（2y PIT，20D 持有）\n",
         "> 脚本：tools/research/atr_position_sizing.py",
         f"> 样本：**{len(d):,}** 行 / **{d['Scan_Date'].nunique()}** 个 Scan_Date；每日取 {MOM} Top{TOPK}",
         "> 两策略同池同票，唯一差异是仓位权重。",
-        "## 1. 结果对比\\n",
-        f"> 交易成本假设：每个完整 20D 持有期往返 {ROUND_TRIP_COST_BPS:.1f} bps（进场滑点 5 bps + 出场滑点 5 bps + 双边佣金 1 bps）。这是模型假设，不是券商报价。\\n",
+        "## 1. 结果对比\n",
+        f"> 交易成本假设：每个完整 20D 持有期往返 {ROUND_TRIP_COST_BPS:.1f} bps（进场滑点 5 bps + 出场滑点 5 bps + 双边佣金 1 bps）。这是模型假设，不是券商报价。\n",
         "| 指标 | 固定仓位（等权 Top5） | ATR 风险平价 Top5 | 差异 |",
         "|---|---:|---:|---:|",
         f"| 平均单期 20D 毛收益 | {sfg['mean_period']:+.3f}% | {sag['mean_period']:+.3f}% | {sag['mean_period'] - sfg['mean_period']:+.3f} pp |",
@@ -107,12 +107,12 @@ def main() -> int:
         f"| 夏普（净收益） | {sf['sharpe']:.3f} | {sa['sharpe']:.3f} | {sa['sharpe'] - sf['sharpe']:+.3f} |",
         f"| 最大回撤（净收益） | {sf['mdd']:.2f}% | {sa['mdd']:.2f}% | {sa['mdd'] - sf['mdd']:+.2f} pp |",
         f"| 非重叠 20D 持有期数量 | {sf['n']} | {sa['n']} | — |",
-        "\\n夏普按非重叠 20D 持有期收益 × √(252/20) 年化；单期收益不是日收益。\\n",
-        "## 2. 权重分布（ATR 平价）\\n",
+        "\n夏普按非重叠 20D 持有期收益 × √(252/20) 年化；单期收益不是日收益。\n",
+        "## 2. 权重分布（ATR 平价）\n",
         f"- 单票权重区间：**{w_min:.3%} ~ {w_max:.3%}**",
         f"- 等权基准权重 = {100 / TOPK:.1f}% ⇒ " + ("ATR 平价显著偏离等权" if (w_max - w_min) > 0.05 else "接近等权"),
         "",
-        "## 3. 结论\\n",
+        "## 3. 结论\n",
     ]
     if pd.notna(sa["sharpe"]) and pd.notna(sf["sharpe"]):
         if sa["sharpe"] > sf["sharpe"]:
