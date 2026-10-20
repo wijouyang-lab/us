@@ -13,7 +13,7 @@ from zoneinfo import ZoneInfo
 REPO = Path(__file__).resolve().parent.parent
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
-from scripts.paper_trading import SLIPPAGE_BPS, COMMISSION_BPS
+from scripts.paper_trading import SLIPPAGE_BPS, COMMISSION_BPS, PRICE_SCHEMA_VERSION
 LEDGER = REPO / "portfolio_paper_transactions.csv"
 PRICE_FILE = REPO / "quant_factor_price_history.csv"
 OBSERVATIONS_FILE = REPO / "portfolio_paper_observation_dates.csv"
@@ -47,16 +47,30 @@ def fnum(v):
 def read_prices(today: str):
     by_ticker: dict[str, list[tuple[str, float]]] = {}
     observed_dates = set()
-    if PRICE_FILE.exists():
-        with PRICE_FILE.open(encoding="utf-8-sig", newline="") as f:
-            for r in csv.DictReader(f):
-                tk = (r.get("Ticker") or "").strip().upper()
-                d = (r.get("Date") or "").strip()
-                px = fnum(r.get("Close"))
-                if tk and d and px is not None and px > 0:
-                    by_ticker.setdefault(tk, []).append((d, px))
-                    if PLAN_START <= d <= today:
-                        observed_dates.add(d)
+    if not PRICE_FILE.exists():
+        return by_ticker, []
+    with PRICE_FILE.open(encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        if not reader.fieldnames or "schema_version" not in reader.fieldnames:
+            print("[paper-report] FAIL-CLOSED：价格历史没有 schema_version；当前价与浮盈亏不显示")
+            return by_ticker, []
+        rows = list(reader)
+    versions = {str(r.get("schema_version") or "").strip() for r in rows}
+    if not rows or versions != {PRICE_SCHEMA_VERSION}:
+        print(
+            "[paper-report] FAIL-CLOSED：价格历史不是全量 "
+            f"{PRICE_SCHEMA_VERSION}（versions={sorted(versions)}）；"
+            "当前价与未实现盈亏显示 N/A，需先完成全量历史重建"
+        )
+        return by_ticker, []
+    for r in rows:
+        tk = (r.get("Ticker") or "").strip().upper()
+        d = (r.get("Date") or "").strip()
+        px = fnum(r.get("Close"))
+        if tk and d and px is not None and px > 0:
+            by_ticker.setdefault(tk, []).append((d, px))
+            if PLAN_START <= d <= today:
+                observed_dates.add(d)
     for tk in by_ticker:
         by_ticker[tk].sort(key=lambda x: x[0])
         tmp = {d: px for d, px in by_ticker[tk]}
