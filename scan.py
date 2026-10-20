@@ -3583,10 +3583,11 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
             print(f"⚠️ [AI解释层返回样本结构] rows={len(rows)} keys={sample_keys}")
         ok_core = sum(all(bool(item.get(f"AI_{key}")) for key in core_required)
                       for item in items if item.get("Tag") == "Core_Dragon")
+        # Candidate 与 Observation 共用三字段 schema；统计口径必须与上面的 required 规则一致。
         ok_obs = sum(all(bool(item.get(f"AI_{key}")) for key in obs_required)
-                     for item in items if item.get("Tag") == "Observation")
+                     for item in items if item.get("Tag") in {"Observation", "Candidate"})
         ok = ok_core + ok_obs
-        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation {ok_obs} 极简）")
+        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation+Candidate {ok_obs} 极简）")
     except Exception as e:
         print(f"⚠️ [AI最终解释层] 生成失败，邮件使用确定性字段兜底：{type(e).__name__}: {e}")
     return items
