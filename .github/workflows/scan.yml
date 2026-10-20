@@ -1,11 +1,10 @@
 name: 美股盘中扫描
 
 on:
-  schedule:
-    # ET 15:00 = UTC 19:00（EDT, UTC-4）；EST 季（UTC-5）对应 ET 14:00，仍在常规时段内。
-    # 依据：历史上唯一稳定产出 pending 的 run 是 ET 14:52-15:18 的 schedule 触发
-    #       （37830469167: 10-08 19:14Z = 15:14 ET, 35m58s, 产出 pending_20261008）
-    - cron: '0 12 * * 1-5'
+  # 由**外部定时任务**通过 workflow_dispatch 触发（外部调度器已覆盖定时，避免 GitHub
+  # 自带 schedule 与外部触发重复占用并发额度）。
+  # 下游 paper-trading.yml / watchlist-brief.yml 使用 workflow_run: types [completed]，
+  # 对 workflow_dispatch 触发的 completed 事件同样生效 ✓。
   workflow_dispatch:
 
 # 防重复：同一时间只允许一个 Scan 在执行/排队。
