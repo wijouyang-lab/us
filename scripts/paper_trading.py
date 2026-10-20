@@ -271,7 +271,12 @@ def close_positions(rows: list[dict], prices: dict[str, list[dict]], today: str)
         r["Gross_PnL"] = f"{gross:.2f}"
         r["PnL"] = f"{net:.2f}"
         r["PnL_Pct"] = f"{net_pct:.4f}"
-        r["Hold_Days"] = str(elapsed)
+        elapsed_to_exit = sum(
+            1 for bar in series
+            if signal_date < bar.get("date", "") <= chosen["date"]
+            and _positive_float(bar.get("close")) is not None
+        )
+        r["Hold_Days"] = str(elapsed_to_exit)
         r["Reason"] = reason
         closed += 1
     return closed
