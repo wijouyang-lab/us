@@ -84,6 +84,46 @@ def attach_pit_sectors(d: pd.DataFrame, history: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+def mean_daily_ic(d: pd.DataFrame, factor: str, return_col: str, min_cross_section: int = 10) -> dict:
+    """Cross-sectional Spearman IC per Scan_Date, summarized across dates.
+
+    A pooled correlation across all ticker-date rows mixes cross-sectional signal with
+    time-series effects and is not the standard daily factor-IC definition.
+    """
+    required = {"Scan_Date", factor, return_col}
+    if not required.issubset(d.columns):
+        return {"status": "SKIPPED", "reason": f"缺少字段 {sorted(required - set(d.columns))}", "n_dates": 0}
+    work = d[["Scan_Date", factor, return_col]].copy()
+    work["Scan_Date"] = pd.to_datetime(work["Scan_Date"], errors="coerce")
+    work[factor] = pd.to_numeric(work[factor], errors="coerce")
+    work[return_col] = pd.to_numeric(work[return_col], errors="coerce")
+    work = work.dropna(subset=["Scan_Date", factor, return_col])
+    daily = []
+    for date, group in work.groupby("Scan_Date"):
+        if len(group) < min_cross_section:
+            continue
+        if group[factor].nunique() < 2 or group[return_col].nunique() < 2:
+            continue
+        ic = group[factor].corr(group[return_col], method="spearman")
+        if pd.notna(ic) and np.isfinite(ic):
+            daily.append({"date": date, "ic": float(ic), "n": len(group)})
+    if not daily:
+        return {
+            "status": "SKIPPED",
+            "reason": f"无横截面样本数 ≥ {min_cross_section} 且两变量非恒定的日期",
+            "n_dates": 0,
+        }
+    values = pd.Series([item["ic"] for item in daily], dtype=float)
+    return {
+        "status": "OK",
+        "mean_ic": float(values.mean()),
+        "median_ic": float(values.median()),
+        "positive_date_pct": float((values > 0).mean() * 100),
+        "n_dates": int(len(daily)),
+        "median_cross_section": float(np.median([item["n"] for item in daily])),
+    }
+
+
 def part1_turnover(d: pd.DataFrame) -> dict:
     """PIT Sector 数据下，按 Momentum 选 Top/Bottom 3 行业并估算 20D 毛多空与换手成本。"""
     required = {"Scan_Date", "Sector", MOM, f"Forward_Return_{HOLD}D"}
@@ -278,29 +318,31 @@ def main() -> int:
         ]
 
     L += [
-        "## 2. IC 衰减（数据受限）\n",
+        "## 2. IC 衰减（数据受限）\\n",
         "⚠️ **无法生成完整的 T+1~T+20 连续衰减曲线**：",
         "`research_backtest_sp500_pit_2y.csv` 只提供 **5D / 10D / 20D** 三档前瞻收益，",
         "**没有逐日前瞻列** ⇒ 只能给出三点，无法定位【第几天衰减到 0】。",
-        "",
-        "| 期限 | BP 的 IC | Momentum 的 IC |",
-        "|---|---|---|",
+        "IC 按每个 `Scan_Date` 单独计算横截面 Spearman 相关，再对日期取均值；不使用混合所有日期的 pooled correlation。\\n",
+        "| 期限 | BP 日均 IC | BP 有效日期 | Momentum 日均 IC | Momentum 有效日期 | Momentum 正 IC 日期占比 |",
+        "|---|---:|---:|---:|---:|---:|",
     ]
     for h in (5, 10, 20):
         col = f"Forward_Return_{h}D"
         if col not in d.columns:
-            L.append(f"| {h}D | N/A（缺 {col}） | N/A |")
+            L.append(f"| {h}D | N/A（缺 {col}） | 0 | N/A | 0 | N/A |")
             continue
-        d[col] = pd.to_numeric(d[col], errors="coerce")
-        b = d[[col]].copy()
-        b["MOM"] = d[MOM].values
-        valid = b.dropna()
-        ic_mom = valid.corr(method="spearman").iloc[0, 1] if len(valid) > 10 else np.nan
-        L.append(f"| {h}D | N/A（需 BP IC 单独计算） | {ic_mom:+.4f}（n={len(valid)}）|")
+        bp_ic = mean_daily_ic(d, "BP", col)
+        mom_ic = mean_daily_ic(d, MOM, col)
+        bp_value = f"{bp_ic['mean_ic']:+.4f}" if bp_ic["status"] == "OK" else "N/A"
+        bp_dates = bp_ic.get("n_dates", 0)
+        mom_value = f"{mom_ic['mean_ic']:+.4f}" if mom_ic["status"] == "OK" else "N/A"
+        mom_dates = mom_ic.get("n_dates", 0)
+        mom_positive = f"{mom_ic['positive_date_pct']:.1f}%" if mom_ic["status"] == "OK" else "N/A"
+        L.append(f"| {h}D | {bp_value} | {bp_dates} | {mom_value} | {mom_dates} | {mom_positive} |")
     L += [
         "",
-        "> IC/相关性是因子研究统计，不是扣成本后的可交易策略收益。\n",
-        "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）\n",
+        "> 日均 IC 是因子预测相关性，不是扣成本后的可交易策略收益；不同日期的 IC 仍可能存在序列相关。\\n",
+        "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）\\n",
     ]
     if t3.get("status") == "OK":
         L += [
