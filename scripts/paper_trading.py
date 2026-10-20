@@ -104,23 +104,23 @@ def load_prices(path: Path = PRICE_FILE) -> dict[str, list[dict]]:
         )
         return out
     for r in source_rows:
-            tk = (r.get("Ticker") or "").strip().upper()
-            d = (r.get("Date") or "").strip()
-            close = _positive_float(r.get("Close"))
-            if not tk or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) or close is None:
-                continue
-            try:
-                # 日期列必须严格可解析，防止错误标签参与交易。
-                datetime.strptime(d, "%Y-%m-%d")
-            except ValueError:
-                continue
-            out.setdefault(tk, []).append({
-                "date": d,
-                "open": _positive_float(r.get("Open")),
-                "high": _positive_float(r.get("High")),
-                "low": _positive_float(r.get("Low")),
-                "close": close,
-            })
+        tk = (r.get("Ticker") or "").strip().upper()
+        d = (r.get("Date") or "").strip()
+        close = _positive_float(r.get("Close"))
+        if not tk or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d) or close is None:
+            continue
+        try:
+            # 日期列必须严格可解析，防止错误标签参与交易。
+            datetime.strptime(d, "%Y-%m-%d")
+        except ValueError:
+            continue
+        out.setdefault(tk, []).append({
+            "date": d,
+            "open": _positive_float(r.get("Open")),
+            "high": _positive_float(r.get("High")),
+            "low": _positive_float(r.get("Low")),
+            "close": close,
+        })
     for tk in out:
         out[tk].sort(key=lambda b: b["date"])
         # Duplicate dates are unsafe: retain the last file row deterministically.
