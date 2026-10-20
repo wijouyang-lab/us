@@ -2,9 +2,32 @@
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
+import re
 
 
-_TICKER_KEYS = ("ticker", "symbol", "stock_ticker", "stock_symbol", "code")
+_TICKER_KEYS = {"ticker", "symbol", "stockticker", "stocksymbol", "code"}
+_FIELD_ALIASES = {
+    "industrylogic": "industry_logic", "aiindustrylogic": "industry_logic",
+    "newscn": "news_cn", "ainewscn": "news_cn",
+    "premarketconclusion": "premarket_conclusion", "aipremarketconclusion": "premarket_conclusion",
+    "catalysts": "catalysts", "aicatalysts": "catalysts",
+    "risks": "risks", "airisks": "risks",
+    "invalidation": "invalidation", "aiinvalidation": "invalidation",
+}
+
+
+def _normalize_key(value) -> str:
+    return re.sub(r"[^a-z0-9]", "", str(value or "").lower())
+
+
+def normalize_ai_fields(row: Mapping) -> dict[str, str]:
+    """Normalize common key-casing/format variants to the expected AI fields."""
+    result: dict[str, str] = {}
+    for key, value in row.items():
+        canonical = _FIELD_ALIASES.get(_normalize_key(key))
+        if canonical and canonical not in result:
+            result[canonical] = str(value or "").strip()
+    return result
 
 
 def _normalize_ticker(value) -> str:
@@ -37,7 +60,7 @@ def match_ai_rows(expected_items: Sequence[Mapping], rows: Sequence[Mapping]) ->
         if not isinstance(row, Mapping):
             diagnostics.append(f"row[{index}] is not an object")
             continue
-        raw_ticker = next((row.get(key) for key in _TICKER_KEYS if _normalize_ticker(row.get(key))), None)
+        raw_ticker = next((value for key, value in row.items() if _normalize_key(key) in _TICKER_KEYS and _normalize_ticker(value)), None)
         ticker = _normalize_ticker(raw_ticker)
         if not ticker:
             unidentified.append(row)
