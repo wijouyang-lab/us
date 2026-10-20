@@ -186,21 +186,22 @@ def test_missing_ticker_session_expires_instead_of_late_fill():
     assert rows[0]["Entry_Source_Date"] == "2026-10-20"
 
 
-def test_observation_requires_same_day_completed_price_bar():
+def test_observation_requires_recent_completed_price_bar():
     assert observation_data_ready({}, "2026-10-20") is False
+    # Premarket scan can only consume the previous session's completed close.
     assert observation_data_ready(
         {"AAA": [{"date": "2026-10-19", "open": 10.0, "close": 11.0}]},
         "2026-10-20",
-    ) is False
+    ) is True
+    # A four-calendar-day gap allows a long weekend plus a Monday market holiday.
     assert observation_data_ready(
-        {
-            "AAA": [
-                {"date": "2026-10-19", "open": 10.0, "close": 11.0},
-                {"date": "2026-10-20", "open": 11.0, "close": 12.0},
-            ]
-        },
+        {"AAA": [{"date": "2026-10-16", "open": 10.0, "close": 11.0}]},
         "2026-10-20",
     ) is True
+    assert observation_data_ready(
+        {"AAA": [{"date": "2026-10-15", "open": 10.0, "close": 11.0}]},
+        "2026-10-20",
+    ) is False
     # Future-dated data must not be used to establish readiness for an earlier run date.
     assert observation_data_ready(
         {"AAA": [{"date": "2026-10-21", "open": 12.0, "close": 13.0}]},
