@@ -409,6 +409,17 @@ def observation_eligible() -> bool:
     return os.environ.get("PAPER_RECORD_OBSERVATION", "0") == "1"
 
 
+def observation_data_ready(prices: dict[str, list[dict]], run_date: str) -> bool:
+    """Do not count a day unless corrected price history includes a completed bar for that date."""
+    dates = [
+        bar.get("date", "")
+        for bars in prices.values()
+        for bar in bars
+        if bar.get("date") and bar.get("date") <= run_date
+    ]
+    return bool(dates) and max(dates) == run_date
+
+
 def record_observation(run_date: str, prices: dict[str, list[dict]], candidate_file: str,
                        signals_queued: int, fills: int, closes: int, expired: int,
                        open_positions: int, pending_orders: int,
@@ -470,11 +481,20 @@ def main() -> int:
     write_rows(LEDGER, rows)
     opened_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "BUY" and not r.get("Exit_Date"))
     pending_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "PENDING")
-    if observation_eligible():
+    if observation_eligible() and observation_data_ready(prices, today):
         record_observation(
             run_date=today, prices=prices, candidate_file=candidate_file,
             signals_queued=created, fills=filled, closes=closed_before + closed_after,
             expired=expired, open_positions=opened_now, pending_orders=pending_now,
+        )
+    elif observation_eligible():
+        latest_price_date = max(
+            (bar.get("date", "") for bars in prices.values() for bar in bars if bar.get("date") <= today),
+            default="N/A",
+        )
+        print(
+            f"[paper] Scan 成功但价格历史未确认当日完整 bar（as_of={latest_price_date}, run_date={today}）；"
+            "本次不计入 40 日有效观察期"
         )
     else:
         print("[paper] 本次不是 Scan 成功后自动触发；账本可维护，但不计入有效观察日")
