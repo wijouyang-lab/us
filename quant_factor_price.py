@@ -246,10 +246,7 @@ def price_map_from_history(price_history_df):
 # ============================================================================
 def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_HISTORY_PATH,
                          start=None, end=None, fetch_func=None, rebuild=False):
-    """读 snapshot → 找历史所有 ticker → 批量下载 → 幂等 upsert → 原子写。返回状态 dict。
-
-    fetch_func 可注入（测试用），默认 fetch_batch_prices。
-    """
+    """更新价格历史；rebuild 时覆盖历史前必须包含旧有 ticker universe 并验证完整性。"""
     result = {
         "snapshot_rows": 0,
         "unique_tickers": 0,
@@ -258,33 +255,65 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
         "status": "NO_SNAPSHOT",
     }
 
-    if not os.path.exists(snapshot_path):
-        result["reason"] = f"snapshot 不存在：{snapshot_path}"
-        return result
-    try:
-        snap = pd.read_csv(snapshot_path, dtype=str, keep_default_na=False)
-    except Exception as e:
-        result["reason"] = f"snapshot 读取失败：{type(e).__name__}: {e}"
-        return result
+    existing = load_price_history(price_history_path)
+    if rebuild and os.path.exists(price_history_path) and os.path.getsize(price_history_path) > 0:
+        try:
+            raw_existing = pd.read_csv(price_history_path, dtype=str, keep_default_na=False)
+        except Exception as exc:
+            result["status"] = "REBUILD_INVALID_EXISTING"
+            result["reason"] = f"现有价格历史无法读取，拒绝覆盖：{type(exc).__name__}: {exc}"
+            return result
+        required_existing = {"Date", "Ticker", "Close"}
+        if not required_existing.issubset(raw_existing.columns) or existing.empty:
+            result["status"] = "REBUILD_INVALID_EXISTING"
+            result["reason"] = (
+                "现有价格历史缺少 Date/Ticker/Close 或无法解析；"
+                "为防止丢失旧 ticker universe，拒绝重建覆盖"
+            )
+            return result
 
-    if snap.empty:
+    if not os.path.exists(snapshot_path):
+        if not rebuild:
+            result["reason"] = f"snapshot 不存在：{snapshot_path}"
+            return result
+        snap = pd.DataFrame()
+        result["reason"] = "rebuild 未发现当前 snapshot；尝试仅使用历史价格文件中的 ticker universe"
+    else:
+        try:
+            snap = pd.read_csv(snapshot_path, dtype=str, keep_default_na=False)
+        except Exception as exc:
+            result["status"] = "SNAPSHOT_READ_ERROR"
+            result["reason"] = f"snapshot 读取失败：{type(exc).__name__}: {exc}"
+            return result
+
+    if snap.empty and not rebuild:
         result["status"] = "EMPTY_SNAPSHOT"
-        result["reason"] = "snapshot 为空（Price History 保持为空，Backtest 将 NOT_ENOUGH_DATA）"
+        result["reason"] = "snapshot 为空（Price History 保持不变，Backtest 将 NOT_ENOUGH_DATA）"
         return result
 
     result["snapshot_rows"] = int(len(snap))
-    tickers = get_snapshot_tickers(snap)
+    snapshot_tickers = get_snapshot_tickers(snap)
+    existing_tickers = (
+        sorted(set(existing["Ticker"].astype(str).str.strip().str.upper()) - {""})
+        if not existing.empty and "Ticker" in existing.columns else []
+    )
+    if rebuild:
+        # Full rebuild MUST preserve the whole historical universe, not only today's candidates.
+        tickers = sorted(set(snapshot_tickers).union(existing_tickers))
+    else:
+        tickers = snapshot_tickers
     result["unique_tickers"] = len(tickers)
+    result["snapshot_tickers"] = len(snapshot_tickers)
+    result["historical_tickers"] = len(existing_tickers)
+
     if not tickers:
-        result["status"] = "NO_TICKERS"
+        result["status"] = "REBUILD_NO_TICKERS" if rebuild else "NO_TICKERS"
+        result["reason"] = "没有可用于下载的历史/当前 ticker"
         return result
 
-    existing = load_price_history(price_history_path)
-
-    # 下载范围：覆盖 snapshot 最早 Technical_Date（往前留缓冲）到今天。
-    # rebuild 时也保留现有历史文件的最早日期，确保整段旧数据被重新下载，而不是只下载当前 snapshot 窗口。
+    # 下载区间：rebuild 时从旧文件最早日期起，覆盖完整保留期。
     if start is None:
-        min_date = pd.to_datetime(snap.get("Technical_Date"), errors="coerce").min()
+        min_date = pd.to_datetime(snap.get("Technical_Date"), errors="coerce").min() if not snap.empty else pd.NaT
         if rebuild and not existing.empty and "Date" in existing.columns:
             old_min_date = pd.to_datetime(existing["Date"], errors="coerce").min()
             if not pd.isna(old_min_date):
@@ -298,7 +327,6 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
     fn = fetch_func or fetch_batch_prices
     new_df = fn(tickers, start, end)
 
-    # rebuild 只有在拿到非空新数据时才允许替换原文件；网络故障不得清空历史。
     if rebuild:
         if new_df is None or new_df.empty:
             result["status"] = "REBUILD_NO_DATA"
@@ -309,18 +337,32 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
             if col not in incoming.columns:
                 incoming[col] = ""
         incoming = incoming[PRICE_HISTORY_COLUMNS]
+        incoming["Ticker"] = incoming["Ticker"].astype(str).str.strip().str.upper()
+        incoming["Date"] = incoming["Date"].astype(str).str.strip()
         incoming = incoming[
-            incoming["Date"].astype(str).str.strip().ne("")
-            & incoming["Ticker"].astype(str).str.strip().ne("")
+            incoming["Date"].ne("") & incoming["Ticker"].ne("")
         ]
-        merged = (incoming.drop_duplicates(subset=["Date", "Ticker"], keep="last")
-                  .sort_values(["Ticker", "Date"]).reset_index(drop=True))
-        if merged.empty:
-            result["status"] = "REBUILD_NO_DATA"
-            result["reason"] = "rebuild 结果没有有效 Date/Ticker；原价格历史未修改"
+        incoming = incoming.drop_duplicates(subset=["Date", "Ticker"], keep="last")
+        received_tickers = set(incoming["Ticker"].tolist())
+        missing_tickers = sorted(set(tickers) - received_tickers)
+        if missing_tickers:
+            result["status"] = "REBUILD_INCOMPLETE"
+            result["missing_tickers"] = missing_tickers
+            result["received_tickers"] = len(received_tickers)
+            result["reason"] = (
+                f"重建数据缺少 {len(missing_tickers)} 个预期 ticker，"
+                f"例如 {missing_tickers[:20]}；原价格历史未修改。"
+                "需调查退市/更名/数据源缺口，不能静默丢弃历史股票。"
+            )
             return result
+        versions = set(incoming["schema_version"].astype(str).str.strip().unique())
+        if versions != {SCHEMA_VERSION}:
+            result["status"] = "REBUILD_INVALID_SCHEMA"
+            result["reason"] = f"重建数据 schema={sorted(versions)}，期望全为 {SCHEMA_VERSION}；原文件未修改"
+            return result
+        merged = incoming.sort_values(["Ticker", "Date"]).reset_index(drop=True)
 
-        # 保留原文件备份；只有新数据验证为非空后才创建备份与替换。
+        # 保留原文件备份；只有完整 ticker universe 与 schema 验证通过后才备份并替换。
         if os.path.exists(price_history_path):
             stamp = datetime.now(US_TZ).strftime("%Y%m%dT%H%M%S%f")
             backup_path = f"{price_history_path}.bak.{stamp}"
@@ -332,14 +374,12 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
     result["new_rows"] = int(len(merged) - len(existing))
     result["total_rows"] = int(len(merged))
 
-    # 原子写
     tmp = price_history_path + ".tmp"
     merged.to_csv(tmp, index=False, encoding="utf-8")
     os.replace(tmp, price_history_path)
 
     result["status"] = "OK"
     return result
-
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description="更新美股日线价格历史")
