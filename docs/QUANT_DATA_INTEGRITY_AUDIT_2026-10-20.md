@@ -89,3 +89,16 @@ python tools/research/audit_date_integrity.py --strict
 ```
 
 The default mode prints a JSON report and exits successfully so findings remain inspectable. `--strict` returns exit code 1 when integrity issues are present. Both modes are read-only.
+
+## Generate a row-by-row repair plan (dry run only)
+
+The separate planner tests a proposed `Date + 1 calendar day` mapping for legacy rows against v2 rows with the same ticker. It classifies each row, captures the source file SHA-256, and reports missing fields/mismatches. The offset is a research hypothesis, **not an approved repair rule**.
+
+From the repository root:
+
+```bash
+python tools/research/plan_price_history_repair.py
+python tools/research/plan_price_history_repair.py --plan-csv /tmp/price_history_repair_plan.csv
+```
+
+The first command prints JSON summary only. The second writes a separate per-row plan to `/tmp/price_history_repair_plan.csv`. The planner never writes the input price-history CSV and refuses to overwrite it. It will not silently overwrite an existing plan CSV unless `--overwrite-plan` is explicitly provided. A plan is not a corrected dataset; do not promote any date shifts or deduplicate records until a separate candidate file has been rebuilt and independently validated.
