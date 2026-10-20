@@ -5,7 +5,7 @@
 策略口径（两支独立模拟，同日同票，仅仓位不同）：
   · 原策略（固定）：每日取 Composite/Momentum 排名前 5 只，每只固定 10,000 名义
   · 新策略（ATR 平价）：每只名义 = 10,000 / (ATR_Pct/1%)  （波动越大买得越少）
-  · 持有 20D，按 Forward_Return_20D 计算组合收益（日度序列，重叠偏差已标注）
+  · 用 Forward_Return_20D 构建滚动 20D 前瞻收益，每隔 20 个 Scan_Date 抽样近似非重叠持有期；不是完整逐日权益曲线
 
 数据：research_backtest_sp500_pit_2y.csv（含 ATR_Pct / Forward_Return_20D / Momentum_20D_Pct）
 输出：docs/ATR_POSITION_SIZING.md
