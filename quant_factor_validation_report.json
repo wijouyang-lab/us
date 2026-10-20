@@ -1,7 +1,7 @@
 {
   "schema_version": "phase3.v1",
   "data_maturity": {
-    "backtest_rows": 2503,
+    "backtest_rows": 2506,
     "n_factors": 24,
     "n_horizons": 3
   },
@@ -73,20 +73,20 @@
     {
       "Factor_A": "RSI_14",
       "Factor_B": "Bias_Pct",
-      "Pearson": 0.8248,
-      "Spearman": 0.9151
+      "Pearson": 0.825,
+      "Spearman": 0.9159
     },
     {
       "Factor_A": "RSI_14",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8768,
-      "Spearman": 0.9211
+      "Pearson": 0.877,
+      "Spearman": 0.9217
     },
     {
       "Factor_A": "Bias_Pct",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8163,
-      "Spearman": 0.9567
+      "Pearson": 0.8167,
+      "Spearman": 0.9568
     },
     {
       "Factor_A": "MA20",
@@ -97,26 +97,26 @@
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Momentum_20D_Pct",
-      "Pearson": 0.9231,
-      "Spearman": 0.9017
+      "Pearson": 0.9223,
+      "Spearman": 0.9012
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9232,
-      "Spearman": 0.9021
+      "Pearson": 0.9225,
+      "Spearman": 0.9015
     },
     {
       "Factor_A": "Volume_Ratio_5D",
       "Factor_B": "Volume_Ratio_20D",
-      "Pearson": 0.9406,
-      "Spearman": 0.9551
+      "Pearson": 0.9395,
+      "Spearman": 0.9534
     },
     {
       "Factor_A": "Momentum_20D_Pct",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9947,
-      "Spearman": 0.9914
+      "Pearson": 0.9943,
+      "Spearman": 0.9909
     }
   ],
   "insufficient_data_reasons": [
