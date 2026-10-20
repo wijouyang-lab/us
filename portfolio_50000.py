@@ -104,7 +104,10 @@ def dec(v) -> Decimal | None:
     try:
         if v is None or v == "":
             return None
-        d = Decimal(str(v).replace(",", "").strip())
+        # Stop-loss values in historical positions sometimes include "$" (e.g. "$95.00").
+        # Strip common display formatting before numeric validation so an otherwise valid
+        # protective stop is not silently skipped by the intraday fail-closed path.
+        d = Decimal(str(v).replace("$", "").replace(",", "").strip())
         return d if d.is_finite() else None
     except (InvalidOperation, ValueError, TypeError):
         return None
@@ -786,11 +789,10 @@ def _sync_stop_loss_from_recs(p: dict, recs: dict) -> None:
         raw_stop = str((recs.get(rid) or {}).get("Stop_Loss", "")).strip()
         if not raw_stop:
             return
-        # 归一化为「裸数字」：
-        #   positions.csv 的历史值带 "$"（实测 4 只持仓全是 "$214.76"/"$197.69"/…），
-        #   而下游 `_run_intraday_stop`（:687）用 `dec()` 解析，`dec()` 只剥逗号不剥 "$"
-        #   → dec("$197.69") 返回 None → 该持仓被 `continue` 跳过 → **盘中机械止损形同虚设**。
-        #   所以这里剥掉 "$"（和逗号）后再校验/写入，保证同步后的值真正可被解析。
+        # 归一化为「裸数字」后保存：
+        #   历史 positions.csv 中有 "$214.76"/"$197.69" 等展示格式。
+        #   dec() 现已兼容 "$" 和逗号，避免这些值被盘中止损解析时误判为无效；
+        #   此处仍统一写入裸数字，保持 positions.csv 规范、便于审计与跨版本兼容。
         norm_stop = raw_stop.replace("$", "").replace(",", "").strip()
         val = dec(norm_stop)
         if val is None or val <= 0:

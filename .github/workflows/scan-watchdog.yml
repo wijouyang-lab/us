@@ -1,0 +1,101 @@
+name: Scan Scheduler Watchdog
+
+on:
+  schedule:
+    # Check after the expected evening scan window; scheduler is external to GitHub.
+    - cron: "0 23 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  issues: write
+
+concurrency:
+  group: us-scan-watchdog
+  cancel-in-progress: false
+
+jobs:
+  check-scan-heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check recent Scan workflow activity
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const workflowId = "scan.yml";
+            const now = new Date();
+            const weekdayUtc = now.getUTCDay();
+
+            // Scan is expected on US market weekdays. On Monday, allow the weekend;
+            // Tue-Fri, 36 hours catches a missed weekday without depending on an exact minute.
+            const thresholdHours = weekdayUtc === 1 ? 96 : 36;
+            const { data } = await github.rest.actions.listWorkflowRuns({
+              owner,
+              repo,
+              workflow_id: workflowId,
+              per_page: 50,
+            });
+
+            const runs = (data.workflow_runs || [])
+              .filter(run => run.event === "workflow_dispatch" || run.event === "schedule")
+              .sort((a, b) => Date.parse(b.created_at) - Date.parse(a.created_at));
+            const latest = runs[0] || null;
+            const ageHours = latest
+              ? (now.getTime() - Date.parse(latest.created_at)) / 3600000
+              : Infinity;
+            const failedLatest = Boolean(
+              latest && latest.status === "completed" && latest.conclusion !== "success"
+            );
+            const stale = !latest || ageHours > thresholdHours || failedLatest;
+
+            const title = "[Scan Watchdog] No recent Scan workflow run";
+            const { data: issues } = await github.rest.issues.listForRepo({
+              owner, repo, state: "open", per_page: 100,
+            });
+            const existing = issues.find(issue => !issue.pull_request && issue.title === title);
+
+            const latestSummary = latest
+              ? `Latest run: ${latest.html_url}\nCreated: ${latest.created_at}\nStatus: ${latest.status}\nConclusion: ${latest.conclusion || "not completed"}\nAge: ${ageHours.toFixed(1)} hours`
+              : "No Scan workflow run was found in the returned run history.";
+
+            if (stale) {
+              const body = [
+                failedLatest
+                  ? "The most recent Scan workflow run completed unsuccessfully."
+                  : "The Scan workflow has no recent recorded run within the watchdog threshold.",
+                "",
+                `Checked at: ${now.toISOString()}`,
+                `Allowed age: ${thresholdHours} hours (UTC weekday ${weekdayUtc})`,
+                `Latest-run failure: ${failedLatest}`,
+                "",
+                latestSummary,
+                "",
+                "This alert detects workflow silence; it does not prove the external scheduler is absent. Check the scheduler and GitHub Actions permissions before changing trading rules.",
+              ].join("\n");
+
+              if (!existing) {
+                const created = await github.rest.issues.create({ owner, repo, title, body });
+                core.warning(`Opened Scan watchdog issue: ${created.data.html_url}`);
+              } else {
+                core.warning(`Scan watchdog issue remains open: ${existing.html_url}`);
+              }
+            } else if (existing) {
+              await github.rest.issues.createComment({
+                owner,
+                repo,
+                issue_number: existing.number,
+                body: `Scan workflow activity recovered. Checked at ${now.toISOString()}.\n\n${latestSummary}`,
+              });
+              await github.rest.issues.update({
+                owner,
+                repo,
+                issue_number: existing.number,
+                state: "closed",
+              });
+              core.notice(`Closed recovered Scan watchdog issue: ${existing.html_url}`);
+            } else {
+              core.notice(`Scan heartbeat healthy: latest run age ${ageHours.toFixed(1)} hours; threshold ${thresholdHours} hours.`);
+            }
