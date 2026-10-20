@@ -43,10 +43,12 @@ def test_holdings_persisted_without_new_recommendations():
 def test_pending_csv_not_written_for_holdings():
     """pending CSV 仍只写「新推荐」：它在 if to_write: 门控内，持久化块在其后。"""
     gate = _ln("if to_write:")
-    pend = _ln('pending_file = f"us_stocks_pending_')
+    # The filename and duplicate-check are prepared before the gate; only the
+    # physical append/create operation must remain inside the new-recommendation gate.
+    write = _ln('with open(pending_file, "a" if pending_exists else "w"')
     persist = _ln("if _ai_persist:")
-    assert gate > 0 and pend > 0 and persist > 0
-    assert gate < pend < persist, "pending 应在门控内(L%d<%d)，持久化在其后(L%d)" % (gate, pend, persist)
+    assert gate > 0 and write > 0 and persist > 0
+    assert gate < write < persist, "pending 实际写入应在 if to_write 门控内、AI 持久化块之前(L%d<%d<%d)" % (gate, write, persist)
 
 
 def test_no_write_when_no_holdings_no_recommendations():
