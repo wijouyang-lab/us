@@ -89,9 +89,9 @@ def test_mixed_price_history_schema_blocks_phase2(workdir):
     _seed_inputs(workdir)
     price_file = os.path.join(workdir, "quant_factor_price_history.csv")
     with open(price_file, "w", encoding="utf-8", newline="") as fh:
-        fh.write("Date,Ticker,Close,schema_version\\n")
-        fh.write("2026-10-19,AAA,10,phase2b.v1\\n")
-        fh.write("2026-10-20,AAA,11,phase2b.v2\\n")
+        fh.write("Date,Ticker,Close,schema_version\n")
+        fh.write("2026-10-19,AAA,10,phase2b.v1\n")
+        fh.write("2026-10-20,AAA,11,phase2b.v2\n")
 
     called = []
     runner.PHASE_FUNCS = {2: lambda: called.append(True) or {"status": "OK", "written": True}}
