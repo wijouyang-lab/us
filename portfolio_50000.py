@@ -71,7 +71,7 @@ POSITION_COLUMNS = [
 TRANSACTION_COLUMNS = [
     "Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
     "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
-    "Portfolio_ID", "Unit_ID", "Pending_Reason",
+    "Portfolio_ID", "Unit_ID", "Pending_Reason", "Quote_As_Of",
 ]
 HISTORY_COLUMNS = [
     "Date", "Cash", "Stock_Value", "Total_Equity", "Realized_PnL",
@@ -1045,6 +1045,7 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
             "Portfolio_ID": PORTFOLIO_ID,
             "Unit_ID": str(p.get("Unit_ID", "")),
             "Pending_Reason": "True",
+            "Quote_As_Of": str(info.get("as_of") or ""),
         })
         p["Shares"] = "0"
         p["Status"] = "CLOSED"
