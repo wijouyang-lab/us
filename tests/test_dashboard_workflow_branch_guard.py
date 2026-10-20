@@ -35,3 +35,11 @@ def test_dashboard_writer_documents_actual_hourly_cadence():
     source = WORKFLOW.read_text(encoding="utf-8")
     assert re.search(r'(?m)^\s*- cron:\s*"0 \* \* \* 1-5"\s*$', source)
     assert "当前实际频率为每小时" in source
+
+
+
+def test_dashboard_stop_comments_match_hourly_schedule_and_fresh_intraday_data():
+    source = WORKFLOW.read_text(encoding="utf-8")
+    assert "当前最多每小时检查一次" in source
+    assert "时间戳新鲜的 5 分钟常规时段 bar" in source
+    assert "dashboard-data 每 15 分钟" not in source
