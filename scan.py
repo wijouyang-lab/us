@@ -724,8 +724,12 @@ def _filter_completed_daily_bars(df, asof=None):
     out = out.loc[valid].copy()
     idx = pd.DatetimeIndex(idx[valid])
     if idx.tz is None:
-        idx_us = idx.tz_localize("UTC").tz_convert(US_TZ)
+        # Yahoo/yfinance 日线的 tz-naive 索引是交易日标签（例如周一 00:00），
+        # 不是 UTC 瞬时。若先当 UTC 转 ET，会把周一误标为周日 20:00，
+        # 盘前又可能把当天未完成日线错误保留下来，污染技术指标/Technical_Date。
+        idx_us = idx.tz_localize(US_TZ)
     else:
+        # 只有明确带时区的索引才按真实时间戳转换到美东。
         idx_us = idx.tz_convert(US_TZ)
     cutoff = _last_completed_regular_date_us(asof)
     out.index = idx_us
