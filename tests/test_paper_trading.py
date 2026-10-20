@@ -60,7 +60,7 @@ def test_void_row_does_not_block_corrected_signal():
             "Txn_ID": "APA|2026-10-19|BUY|VOID", "Ticker": "APA",
             "Action": "VOID", "Entry_Date": "2026-10-19",
         }]
-        created = _create_signal_orders(rows, [path], "2026-10-20")
+        created = _create_signal_orders(rows, [path], "2026-10-19")
         assert created == 1
         assert rows[-1]["Action"] == "PENDING"
         assert rows[-1]["Txn_ID"] == "APA|2026-10-19|BUY"
@@ -188,6 +188,37 @@ def test_observation_log_counts_zero_signal_days_and_is_idempotent():
         assert rows[1]["Signals_Queued"] == "0"
 
 
+def test_stale_pending_file_does_not_create_backdated_order():
+    import csv
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "us_stocks_pending_20261019.csv"
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=["Ticker", "Status"])
+            w.writeheader()
+            w.writerow({"Ticker": "APA", "Status": "pending"})
+        rows = []
+        created = _create_signal_orders(rows, [path], "2026-10-20")
+        assert created == 0
+        assert rows == []
+
+
+def test_pending_order_expires_when_corrected_history_is_delayed_too_long():
+    rows = [{
+        "Txn_ID": "APA|2026-10-19|BUY", "Signal_Date": "2026-10-19",
+        "Ticker": "APA", "Action": "PENDING", "Entry_Date": "",
+        "Entry_Price": "", "Shares": "", "Entry_Commission": "",
+        "Exit_Date": "", "Mode": "PAPER",
+    }]
+    # Schema guard makes prices empty until the full history rebuild is published.
+    filled, expired = _fill_pending_orders(rows, {}, today="2026-10-24")
+    assert (filled, expired) == (0, 1)
+    assert rows[0]["Action"] == "EXPIRED"
+    assert rows[0]["Reason"] == "PRICE_HISTORY_UNAVAILABLE_TOO_LONG"
+
+
 def test_legacy_or_mixed_price_schema_fails_closed():
     import csv
     import tempfile
@@ -251,6 +282,8 @@ def main():
         test_pending_order_stays_pending_without_future_bar,
         test_missing_ticker_session_expires_instead_of_late_fill,
         test_observation_log_counts_zero_signal_days_and_is_idempotent,
+        test_stale_pending_file_does_not_create_backdated_order,
+        test_pending_order_expires_when_corrected_history_is_delayed_too_long,
         test_legacy_or_mixed_price_schema_fails_closed,
         test_corrected_price_schema_is_accepted,
         test_candidate_ticker_filter_honors_status,
