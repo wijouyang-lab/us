@@ -57,13 +57,14 @@ def test_void_row_does_not_block_corrected_signal():
             w.writeheader()
             w.writerow({"Ticker": "APA", "Status": "pending"})
         rows = [{
-            "Txn_ID": "APA|2026-10-19|BUY", "Ticker": "APA",
+            "Txn_ID": "APA|2026-10-19|BUY|VOID", "Ticker": "APA",
             "Action": "VOID", "Entry_Date": "2026-10-19",
         }]
         created = _create_signal_orders(rows, [path], "2026-10-20")
         assert created == 1
         assert rows[-1]["Action"] == "PENDING"
-        assert rows[-1]["Txn_ID"] == rows[0]["Txn_ID"]
+        assert rows[-1]["Txn_ID"] == "APA|2026-10-19|BUY"
+        assert len({row["Txn_ID"] for row in rows}) == len(rows)
 
 
 def test_missing_first_open_expires_order_instead_of_late_fill():
