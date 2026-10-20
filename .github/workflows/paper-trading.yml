@@ -56,6 +56,12 @@ jobs:
               f.write(f"run_eod={'true' if allowed else 'false'}\n")
           PY
 
+      - name: Install production dependencies for scheduled price refresh
+        if: github.event_name == 'schedule' && steps.window.outputs.run_eod == 'true'
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-production.txt
+
       - name: Refresh completed daily OHLCV before EOD simulation
         if: github.event_name == 'schedule' && steps.window.outputs.run_eod == 'true'
         run: python quant_factor_price.py
