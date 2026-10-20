@@ -40,6 +40,9 @@ def test_candidate_tag_has_explicit_observation_schema():
     src = _source()
     assert 'tag="Observation" 或 tag="Candidate"' in src
     assert "Candidate 是程序内部候选标签，不代表要输出另一种 schema" in src
+    # Coverage counters must include Candidate because it shares the lightweight schema.
+    assert 'item.get("Tag") in {"Observation", "Candidate"}' in src
+    assert "Observation+Candidate" in src
 
 
 if __name__ == "__main__":
