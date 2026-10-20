@@ -14,6 +14,8 @@ from scripts.paper_trading import (
     commission,
     next_open_bar,
     net_trade_pnl,
+    load_prices,
+    PRICE_SCHEMA_VERSION,
     record_observation,
     sell_execution_price,
 )
@@ -185,6 +187,46 @@ def test_observation_log_counts_zero_signal_days_and_is_idempotent():
         assert rows[1]["Signals_Queued"] == "0"
 
 
+def test_legacy_or_mixed_price_schema_fails_closed():
+    import csv
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "prices.csv"
+        fields = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"]
+        rows = [
+            {"Date": "2026-10-19", "Ticker": "AAA", "Open": "49", "High": "51",
+             "Low": "48", "Close": "50", "Volume": "1000", "schema_version": "phase2b.v1"},
+            {"Date": "2026-10-20", "Ticker": "AAA", "Open": "50", "High": "52",
+             "Low": "49", "Close": "51", "Volume": "1100", "schema_version": PRICE_SCHEMA_VERSION},
+        ]
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=fields)
+            writer.writeheader()
+            writer.writerows(rows)
+        assert load_prices(path) == {}
+
+
+def test_corrected_price_schema_is_accepted():
+    import csv
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "prices.csv"
+        fields = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"]
+        row = {"Date": "2026-10-20", "Ticker": "AAA", "Open": "50", "High": "52",
+               "Low": "49", "Close": "51", "Volume": "1100", "schema_version": PRICE_SCHEMA_VERSION}
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            writer = csv.DictWriter(fh, fieldnames=fields)
+            writer.writeheader()
+            writer.writerow(row)
+        prices = load_prices(path)
+        assert prices["AAA"][0]["date"] == "2026-10-20"
+        assert prices["AAA"][0]["open"] == 50.0
+
+
 def test_candidate_ticker_filter_honors_status():
     rows = [
         {"Ticker": "APA", "Status": "pending"},
@@ -198,12 +240,18 @@ def test_candidate_ticker_filter_honors_status():
 def main():
     tests = [
         test_next_open_uses_exact_first_post_signal_bar,
-        test_missing_first_open_expires_order_instead_of_late_fill,
         test_missing_next_open_fails_closed,
+        test_asof_date_blocks_future_bar,
+        test_void_row_does_not_block_corrected_signal,
+        test_missing_first_open_expires_order_instead_of_late_fill,
         test_buy_sell_slippage_is_adverse,
         test_commission_and_net_pnl_include_both_sides,
         test_fill_pending_uses_next_real_open_and_records_costs,
         test_pending_order_stays_pending_without_future_bar,
+        test_missing_ticker_session_expires_instead_of_late_fill,
+        test_observation_log_counts_zero_signal_days_and_is_idempotent,
+        test_legacy_or_mixed_price_schema_fails_closed,
+        test_corrected_price_schema_is_accepted,
         test_candidate_ticker_filter_honors_status,
     ]
     failures = 0
