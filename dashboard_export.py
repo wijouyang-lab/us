@@ -3240,6 +3240,10 @@ def main(argv=None):
     first_row = pending_rows[0] if pending_rows else {}
     # Only inspect the pending CSV header when a pending row actually exists.
     # A missing pending file is normal after Review consumes it; it is not a six-column schema failure.
+    ai_cols_present = (
+        [c for c, _ in AI_FIELD_MAP if c in first_row]
+        if pending_rows else []
+    )
     ai_cols_missing = (
         [c for c, _ in AI_FIELD_MAP if c not in first_row]
         if pending_rows else []
