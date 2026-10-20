@@ -10,6 +10,8 @@ from scripts.paper_trading import (
     _candidate_tickers,
     _create_signal_orders,
     _fill_pending_orders,
+    close_positions,
+    execution_window_enabled,
     buy_execution_price,
     commission,
     next_open_bar,
@@ -98,7 +100,7 @@ def test_missing_first_open_expires_order_instead_of_late_fill():
         {"date": "2026-10-20", "open": None, "high": 51.0, "low": 47.0, "close": 49.0},
         {"date": "2026-10-21", "open": 52.0, "high": 54.0, "low": 51.0, "close": 53.0},
     ]}
-    filled, expired = _fill_pending_orders(rows, prices)
+    filled, expired = _fill_pending_orders(rows, prices, today="2026-10-20")
     assert (filled, expired) == (0, 1)
     assert rows[0]["Action"] == "EXPIRED"
     assert rows[0]["Reason"] == "MISSING_TICKER_BAR_OR_OPEN_ON_FIRST_POST_SIGNAL_SESSION"
@@ -136,7 +138,7 @@ def test_fill_pending_uses_next_real_open_and_records_costs():
         {"date": "2026-10-19", "open": 49.0, "high": 51.0, "low": 48.0, "close": 50.0},
         {"date": "2026-10-20", "open": 48.5, "high": 50.0, "low": 47.0, "close": 49.0},
     ]}
-    filled, expired = _fill_pending_orders(rows, prices)
+    filled, expired = _fill_pending_orders(rows, prices, today="2026-10-20")
     assert (filled, expired) == (1, 0)
     row = rows[0]
     assert row["Action"] == "BUY"
@@ -184,6 +186,57 @@ def test_missing_ticker_session_expires_instead_of_late_fill():
     assert (filled, expired) == (0, 1)
     assert rows[0]["Action"] == "EXPIRED"
     assert rows[0]["Entry_Source_Date"] == "2026-10-20"
+
+
+def test_execution_window_defaults_to_non_executing_scan_mode():
+    import os
+    previous = os.environ.get("PAPER_EXECUTION_WINDOW")
+    try:
+        os.environ.pop("PAPER_EXECUTION_WINDOW", None)
+        assert execution_window_enabled() is False
+        os.environ["PAPER_EXECUTION_WINDOW"] = "SCAN"
+        assert execution_window_enabled() is False
+        os.environ["PAPER_EXECUTION_WINDOW"] = "EOD"
+        assert execution_window_enabled() is True
+    finally:
+        if previous is None:
+            os.environ.pop("PAPER_EXECUTION_WINDOW", None)
+        else:
+            os.environ["PAPER_EXECUTION_WINDOW"] = previous
+
+
+def test_exit_does_not_backdate_trigger_to_old_close():
+    rows = [{
+        "Ticker": "AAA", "Action": "BUY", "Signal_Date": "2026-10-16",
+        "Entry_Date": "2026-10-19", "Entry_Price": "100.0", "Shares": "10",
+        "Entry_Commission": "0.50", "Exit_Date": "",
+    }]
+    prices = {"AAA": [
+        {"date": "2026-10-16", "open": 100.0, "high": 101.0, "low": 99.0, "close": 100.0},
+        {"date": "2026-10-19", "open": 100.0, "high": 101.0, "low": 89.0, "close": 90.0},
+        {"date": "2026-10-20", "open": 96.0, "high": 99.0, "low": 95.0, "close": 98.0},
+    ]}
+    closed = close_positions(rows, prices, today="2026-10-20")
+    assert closed == 1
+    assert rows[0]["Exit_Date"] == "2026-10-20"
+    assert rows[0]["Exit_Source_Date"] == "2026-10-20"
+    assert rows[0]["Reason"] == "Delayed_Stop_Loss_Close_Trigger_2026-10-19"
+    assert float(rows[0]["Exit_Reference_Price"]) == 98.0
+
+
+def test_exit_waits_when_no_current_completed_bar_exists():
+    rows = [{
+        "Ticker": "AAA", "Action": "BUY", "Signal_Date": "2026-10-16",
+        "Entry_Date": "2026-10-19", "Entry_Price": "100.0", "Shares": "10",
+        "Entry_Commission": "0.50", "Exit_Date": "",
+    }]
+    prices = {"AAA": [
+        {"date": "2026-10-19", "open": 100.0, "high": 101.0, "low": 89.0, "close": 90.0},
+    ]}
+    closed = close_positions(rows, prices, today="2026-10-20")
+    assert closed == 0
+    assert rows[0]["Action"] == "BUY"
+    assert rows[0]["Exit_Date"] == ""
 
 
 def test_observation_requires_recent_completed_price_bar():
@@ -344,6 +397,9 @@ def main():
         test_observation_log_counts_zero_signal_days_and_is_idempotent,
         test_manual_runs_do_not_advance_observation_gate,
         test_observation_requires_recent_completed_price_bar,
+        test_execution_window_defaults_to_non_executing_scan_mode,
+        test_exit_does_not_backdate_trigger_to_old_close,
+        test_exit_waits_when_no_current_completed_bar_exists,
         test_stale_pending_file_does_not_create_backdated_order,
         test_pending_order_expires_when_corrected_history_is_delayed_too_long,
         test_legacy_or_mixed_price_schema_fails_closed,
