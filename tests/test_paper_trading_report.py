@@ -87,10 +87,11 @@ def test_observation_dates_are_actual_logged_runs_and_deduplicated():
             "Fills", "Closes", "Orders_Expired", "Open_Positions", "Pending_Orders",
         ]
         rows = [
-            {"Run_Date": "2026-10-19", "Data_AsOf_Date": "2026-10-19"},
-            {"Run_Date": "2026-10-19", "Data_AsOf_Date": "2026-10-19"},
+            {"Run_Date": "2026-10-19", "Data_AsOf_Date": "2026-10-16"},
+            {"Run_Date": "2026-10-19", "Data_AsOf_Date": "2026-10-16"},
             {"Run_Date": "2026-10-20", "Data_AsOf_Date": "2026-10-19"},
-            {"Run_Date": "2026-10-21", "Data_AsOf_Date": "2026-10-21"},
+            {"Run_Date": "2026-10-21", "Data_AsOf_Date": "2026-10-16"},
+            {"Run_Date": "2026-10-21", "Data_AsOf_Date": "2026-10-22"},
             {"Run_Date": "not-a-date", "Data_AsOf_Date": "not-a-date"},
             {"Run_Date": "2026-10-20", "Data_AsOf_Date": ""},
         ]
