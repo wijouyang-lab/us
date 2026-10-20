@@ -1,0 +1,29 @@
+# Scan 调度、Dashboard 刷新与 Paper 观察期
+
+## 1. 三条时间线不要混为一谈
+
+| 流程 | 触发方式 | 实际职责 | 不能据此推断 |
+|---|---|---|---|
+| 美股 Scan（`.github/workflows/scan.yml`） | 仅 `workflow_dispatch`；预期由外部调度器触发 | 选股、生成当日 pending、AI Snapshot 与 Quant 价格历史更新 | Dashboard 刷新了，不代表 Scan 已运行 |
+| Dashboard Data Refresh（`.github/workflows/dashboard-data.yml`） | GitHub Actions 工作日每小时 schedule | 刷新 Dashboard 数据；另有既有持仓价格同步与盘中机械止损步骤 | 不会运行 `scan.py`，不代表当天产生了新选股信号 |
+| Paper Trading（`.github/workflows/paper-trading.yml`） | Scan workflow 成功后触发；也支持手动运行 | 更新隔离的模拟账本、记录观察日期、生成净收益报告 | 不是实盘委托，也不应把旧价格填补成真实成交 |
+
+**唯一业务选股时间点是 Scan 完成并产出当日数据的时间。** Dashboard 页面中的行情刷新时间、Scan 完成时间和 Paper Trading 观察记录应分别展示，不能用其中一个替代另一个。
+
+## 2. 外部 Scan 调度监控
+
+`.github/workflows/scan-watchdog.yml` 检查最近的 Scan workflow 运行记录；如果没有近期运行，或最新一次已完成的 Scan 失败，则开一个统一的 GitHub Issue；恢复后在同一个 Issue 留言并关闭。
+
+这只验证 GitHub Actions 中是否出现了运行记录，**并不证明外部调度器本身存在、仍已正确配置或一定按时发送请求**。如果看门狗报警，应同时检查外部任务、GitHub token/权限以及 Scan 最近一次运行结果，而不是直接放宽选股条件。
+
+## 3. 观察期如何计数
+
+`portfolio_paper_observation_dates.csv` 按美东日期记录 Paper Trading 的成功运行，包括没有新候选的日期；同一天重复运行只保留一条观察记录。日报的 40 日门槛读取该观察日志，不再把价格历史文件中的交易日数当作实际 Scan 观察日数。
+
+如果价格历史不是全量 `phase2b.v2`，模拟成交与未实现盈亏估值会 fail-closed。必须先运行手动的 Rebuild Quant Price History 工作流并通过数据校验；单纯存在新版增量行，不代表旧历史已经修复。
+
+## 4. 安全边界
+
+- `portfolio_paper_transactions.csv` 和观察日志与 `portfolio_50000_*` 实盘账本隔离。
+- Paper 成交是根据完整日线重建的模拟价，包含明确标注的滑点/佣金假设，不是券商真实成交回报。
+- 调度失效、行情历史缺失或样本不足时，系统应报告“未验证/不可用”，不得把未知结果当成零收益或策略成功。
