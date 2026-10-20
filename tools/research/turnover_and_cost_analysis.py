@@ -133,37 +133,54 @@ def part2_ic_decay() -> dict:
     return dict(note="仅 5/10/20D")
 
 
-def part3_attribution(d: pd.DataFrame, smap: dict) -> dict:
-    """BP ~ 20D 前瞻收益，控制 Sector 哑变量与 log(Price)（size 代理）。"""
+def part3_attribution(d: pd.DataFrame) -> dict:
+    """BP return attribution requiring true PIT Market_Cap and effective-date PIT Sector."""
     if not FUND.exists():
-        return {}
+        return {"status": "SKIPPED", "reason": f"缺少 {FUND.name}"}
+    if "Sector" not in d.columns or d["Sector"].astype(str).str.strip().eq("").any():
+        return {"status": "SKIPPED", "reason": "缺少完整 PIT Sector 归属；不使用当前成分股行业映射替代"}
     f = pd.read_csv(FUND, dtype=str, keep_default_na=False)
-    for c in ("BP", "Price"):
+    required = {"Date", "Ticker", "BP", "Market_Cap"}
+    missing = required - set(f.columns)
+    if missing:
+        return {
+            "status": "SKIPPED",
+            "reason": f"{FUND.name} 缺少真实市值字段 {sorted(missing)}；不再用 log(Price) 代理 Size",
+        }
+    f["Ticker"] = f["Ticker"].astype(str).str.strip().str.upper()
+    for c in ("BP", "Market_Cap"):
         f[c] = pd.to_numeric(f[c], errors="coerce")
-    f["Date"] = pd.to_datetime(f["Date"], errors="coerce")
-    f = f.dropna(subset=["BP", "Date"]).rename(columns={"Date": "Scan_Date"})
+    f["Scan_Date"] = pd.to_datetime(f["Date"], errors="coerce")
+    f = f.dropna(subset=["BP", "Market_Cap", "Scan_Date"])
+    f = f[(f["Market_Cap"] > 0) & (f["BP"].notna())]
     dd = d.copy()
     dd["Scan_Date"] = pd.to_datetime(dd["Scan_Date"], errors="coerce")
     dd[f"R{HOLD}"] = pd.to_numeric(dd[f"Forward_Return_{HOLD}D"], errors="coerce")
-    dd = dd.dropna(subset=[f"R{HOLD}"])
-
+    dd = dd.dropna(subset=["Scan_Date", "Sector", f"R{HOLD}"])
     merged = []
     for tk, g in dd.groupby("Ticker"):
-        fg = f[f["Ticker"] == tk].sort_values("Scan_Date")
+        fg = f[f["Ticker"] == str(tk).upper()].sort_values("Scan_Date")
         if fg.empty:
             continue
-        m = pd.merge_asof(g.sort_values("Scan_Date"), fg[["Scan_Date", "BP"]],
-                          on="Scan_Date", direction="backward")
+        m = pd.merge_asof(
+            g.sort_values("Scan_Date"),
+            fg[["Scan_Date", "BP", "Market_Cap"]],
+            on="Scan_Date",
+            direction="backward",
+        )
         merged.append(m)
     if not merged:
-        return {}
-    m = pd.concat(merged).dropna(subset=["BP", f"R{HOLD}"])
-    m["logP"] = np.log(m["Price"].astype(float).clip(lower=1e-6))
-    m["Sector"] = m["Ticker"].astype(str).str.upper().map(smap).fillna("NA")
+        return {"status": "SKIPPED", "reason": "无法将 PIT BP/Market_Cap 与前瞻收益按日期对齐"}
+    m = pd.concat(merged, ignore_index=True).dropna(subset=["BP", "Market_Cap", f"R{HOLD}"])
+    m = m[m["Market_Cap"] > 0]
+    if len(m) < 30:
+        return {"status": "SKIPPED", "reason": f"真实市值可匹配样本不足 30 行（n={len(m)}）"}
+    m["log_market_cap"] = np.log(m["Market_Cap"].astype(float).clip(lower=1.0))
+    m["Sector"] = m["Sector"].astype(str)
 
     y = m[f"R{HOLD}"].to_numpy(float)
     Xb = m[["BP"]].to_numpy(float)
-    Xs = m[["logP"]].to_numpy(float)
+    Xm = m[["log_market_cap"]].to_numpy(float)
     dum = pd.get_dummies(m["Sector"], drop_first=True).to_numpy(float)
 
     def ols(X, y):
@@ -181,14 +198,16 @@ def part3_attribution(d: pd.DataFrame, smap: dict) -> dict:
         r2 = 1 - (resid @ resid) / max(float(((y - y.mean()) ** 2).sum()), 1e-12)
         return dict(beta=beta, t=t, r2=r2, n=n, k=k)
 
-    r1 = ols(Xb, y)
-    r2_ = ols(np.column_stack([Xb, Xs]), y)
-    r3 = ols(np.column_stack([Xb, Xs, dum]), y)
-    out = {"n": len(m)}
-    for name, r in (("BP_only", r1), ("BP+size", r2_), ("BP+size+sector", r3)):
+    results = {}
+    for name, model in (
+        ("BP_only", Xb),
+        ("BP+market_cap", np.column_stack([Xb, Xm])),
+        ("BP+market_cap+sector", np.column_stack([Xb, Xm, dum])),
+    ):
+        r = ols(model, y)
         if r:
-            out[name] = dict(coef=float(r["beta"][1]), t=float(r["t"][1]), r2=float(r["r2"]))
-    return out
+            results[name] = dict(coef=float(r["beta"][1]), t=float(r["t"][1]), r2=float(r["r2"]))
+    return {"status": "OK", "n": len(m), **results}
 
 
 def main() -> int:
