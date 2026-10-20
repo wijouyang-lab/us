@@ -318,11 +318,11 @@ def main() -> int:
         ]
 
     L += [
-        "## 2. IC 衰减（数据受限）\\n",
+        "## 2. IC 衰减（数据受限）\n",
         "⚠️ **无法生成完整的 T+1~T+20 连续衰减曲线**：",
         "`research_backtest_sp500_pit_2y.csv` 只提供 **5D / 10D / 20D** 三档前瞻收益，",
         "**没有逐日前瞻列** ⇒ 只能给出三点，无法定位【第几天衰减到 0】。",
-        "IC 按每个 `Scan_Date` 单独计算横截面 Spearman 相关，再对日期取均值；不使用混合所有日期的 pooled correlation。\\n",
+        "IC 按每个 `Scan_Date` 单独计算横截面 Spearman 相关，再对日期取均值；不使用混合所有日期的 pooled correlation。\n",
         "| 期限 | BP 日均 IC | BP 有效日期 | Momentum 日均 IC | Momentum 有效日期 | Momentum 正 IC 日期占比 |",
         "|---|---:|---:|---:|---:|---:|",
     ]
@@ -341,8 +341,8 @@ def main() -> int:
         L.append(f"| {h}D | {bp_value} | {bp_dates} | {mom_value} | {mom_dates} | {mom_positive} |")
     L += [
         "",
-        "> 日均 IC 是因子预测相关性，不是扣成本后的可交易策略收益；不同日期的 IC 仍可能存在序列相关。\\n",
-        "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）\\n",
+        "> 日均 IC 是因子预测相关性，不是扣成本后的可交易策略收益；不同日期的 IC 仍可能存在序列相关。\n",
+        "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）\n",
     ]
     if t3.get("status") == "OK":
         L += [
