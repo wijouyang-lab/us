@@ -47,7 +47,7 @@ def test_plan_matches_v2_close_but_flags_volume_mismatch(tmp_path):
     assert plan[0]["Classification"] == "CLOSE_MATCH_OTHER_FIELDS_DIFFER"
     assert plan[0]["Mismatched_Fields"] == "Volume"
     assert plan[0]["Recommended_Next_Action"] == "REVIEW_FIELD_DIFFERENCES_AND_PREFER_VERIFIED_V2"
-    assert summary["legacy_rows_planned"] == 1
+    assert summary["legacy_schema_rows_planned"] == 1
     assert summary["legacy_rows_with_v2_reference_at_proposed_date"] == 1
     assert summary["close_equal"] == 1
     assert summary["close_mismatches"] == 0
@@ -63,7 +63,7 @@ def test_plan_classifies_rows_without_v2_reference(tmp_path):
         [
             ["2026-10-08", "AAPL", "10", "12", "9", "11", "300", "phase2b.v2"],
             ["2026-10-09", "MSFT", "", "", "", "20", "", "phase2b.v1"],
-            ["2026-10-18", "NVDA", "", "", "", "30", "", "phase2b.v1"],
+            ["2026-10-17", "NVDA", "", "", "", "30", "", "phase2b.v1"],
         ],
     )
 
@@ -72,7 +72,7 @@ def test_plan_classifies_rows_without_v2_reference(tmp_path):
 
     assert by_ticker["MSFT"]["Proposed_Date_Offset"] == "2026-10-10"
     assert by_ticker["MSFT"]["Classification"] == "NO_V2_REFERENCE_AFTER_V2_RANGE"
-    assert by_ticker["NVDA"]["Proposed_Date_Offset"] == "2026-10-19"
+    assert by_ticker["NVDA"]["Proposed_Date_Offset"] == "2026-10-18"
     assert by_ticker["NVDA"]["Classification"] == "NO_V2_REFERENCE_AFTER_V2_RANGE"
     assert summary["proposed_target_weekend_rows"] == 1
     assert summary["close_mismatches"] == 0
