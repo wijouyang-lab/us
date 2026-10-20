@@ -20,7 +20,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parent.parent.parent
 BT = REPO / "research_backtest_sp500_pit_2y.csv"
 FUND = REPO / "research_fundamentals_pit_corrected.csv"
-CONST = REPO / "sp500_constituents.csv"
+SECTOR_HISTORY = REPO / "research_sector_history_pit.csv"
 OUT = REPO / "docs" / "DEATH_AUTOPSY.md"
 
 TOP_N = 3
@@ -29,39 +29,103 @@ COST_ONE_WAY = 0.0005      # 万分之五
 HOLD = 20
 
 
-def sector_map():
-    if not CONST.exists():
-        return {}
-    sm = pd.read_csv(CONST, dtype=str)
-    return {str(r["Ticker"]).strip().upper(): str(r.get("Sector") or "NA")
-            for _, r in sm.iterrows()}
+def load_pit_sector_history(path=SECTOR_HISTORY):
+    """Load interval-based PIT GICS sectors. No current-sector fallback is allowed."""
+    if not path.exists():
+        return None, f"缺少 {path.name}；当前 Sector 映射不能替代历史 PIT 行业归属"
+    try:
+        h = pd.read_csv(path, dtype=str, keep_default_na=False)
+    except Exception as exc:
+        return None, f"PIT 行业历史读取失败：{type(exc).__name__}: {exc}"
+    required = {"Ticker", "Effective_From", "Effective_To", "Sector"}
+    if not required.issubset(h.columns):
+        return None, f"PIT 行业历史缺少字段：{sorted(required - set(h.columns))}"
+    h["Ticker"] = h["Ticker"].astype(str).str.strip().str.upper()
+    h["Sector"] = h["Sector"].astype(str).str.strip()
+    h["Effective_From"] = pd.to_datetime(h["Effective_From"], errors="coerce")
+    raw_to = h["Effective_To"].astype(str).str.strip()
+    h["Effective_To"] = pd.to_datetime(raw_to.replace("", pd.NA), errors="coerce")
+    h["Effective_To"] = h["Effective_To"].fillna(pd.Timestamp.max)
+    h = h.dropna(subset=["Effective_From"])
+    h = h[(h["Ticker"] != "") & (h["Sector"] != "")]
+    if h.empty:
+        return None, "PIT 行业历史没有有效区间记录"
+    if (h["Effective_To"] < h["Effective_From"]).any():
+        return None, "PIT 行业历史包含 Effective_To 早于 Effective_From 的区间"
+    for tk, g in h.sort_values("Effective_From").groupby("Ticker"):
+        prev_end = None
+        for _, row in g.iterrows():
+            if prev_end is not None and row["Effective_From"] <= prev_end:
+                return None, f"PIT 行业历史区间重叠：{tk}"
+            prev_end = row["Effective_To"]
+    return h.sort_values(["Ticker", "Effective_From"]).reset_index(drop=True), ""
+
+
+def attach_pit_sectors(d: pd.DataFrame, history: pd.DataFrame) -> pd.DataFrame:
+    """Attach each ticker's sector effective on that row's Scan_Date; missing mappings stay NA."""
+    out = d.copy()
+    out["Ticker"] = out["Ticker"].astype(str).str.strip().str.upper()
+    out["Scan_Date"] = pd.to_datetime(out["Scan_Date"], errors="coerce")
+    out["Sector"] = ""
+    for tk, group in out.groupby("Ticker"):
+        hist = history[history["Ticker"] == tk]
+        if hist.empty:
+            continue
+        left = group[["Scan_Date"]].copy()
+        left["_row_index"] = group.index
+        left = left.sort_values("Scan_Date")
+        right = hist[["Effective_From", "Effective_To", "Sector"]].sort_values("Effective_From")
+        merged = pd.merge_asof(
+            left, right, left_on="Scan_Date", right_on="Effective_From", direction="backward"
+        )
+        valid = merged["Effective_To"].notna() & (merged["Scan_Date"] <= merged["Effective_To"])
+        sectors = merged["Sector"].where(valid, "")
+        out.loc[merged["_row_index"].to_numpy(), "Sector"] = sectors.fillna("").to_numpy()
+    return out
 
 
 def part1_turnover(d: pd.DataFrame) -> dict:
-    """每日按 Sector 内 Momentum 均值取最强 3 行业，计算行业层面的换手率。"""
-    sets = []
-    for dt, day in d.groupby("Scan_Date"):
-        g = day.groupby("Sector")[MOM].mean().sort_values(ascending=False)
-        if len(g) < TOP_N * 2:
-            continue
-        sets.append((dt, set(g.index[:TOP_N])))
-    if len(sets) < 3:
+    """PIT Sector 数据下，按 Momentum 选 Top/Bottom 3 行业并估算 20D 毛多空与换手成本。"""
+    required = {"Scan_Date", "Sector", MOM, f"Forward_Return_{HOLD}D"}
+    if not required.issubset(d.columns):
         return {}
-    turnovers = []
-    for (_, prev), (_, cur) in zip(sets[:-1], sets[1:]):
-        # 换掉的行业数 / 持仓数 ⇒ 单边换手
-        churn = len(prev - cur) / max(len(prev), 1)
-        turnovers.append(churn)
+    work = d.copy()
+    work["Scan_Date"] = pd.to_datetime(work["Scan_Date"], errors="coerce")
+    work[MOM] = pd.to_numeric(work[MOM], errors="coerce")
+    ret_col = f"Forward_Return_{HOLD}D"
+    work[ret_col] = pd.to_numeric(work[ret_col], errors="coerce")
+    work = work.dropna(subset=["Scan_Date", MOM, ret_col])
+    work = work[work["Sector"].astype(str).str.strip().ne("")]
+    selections, spreads = [], []
+    for dt, day in work.groupby("Scan_Date"):
+        scores = day.groupby("Sector")[MOM].mean().sort_values(ascending=False)
+        sector_returns = day.groupby("Sector")[ret_col].mean()
+        common = scores.index.intersection(sector_returns.dropna().index)
+        scores = scores.loc[common]
+        if len(scores) < TOP_N * 2:
+            continue
+        top = list(scores.nlargest(TOP_N).index)
+        bottom = list(scores.nsmallest(TOP_N).index)
+        spread = float(sector_returns.loc[top].mean() - sector_returns.loc[bottom].mean())
+        selections.append((dt, set(top)))
+        spreads.append(spread)
+    if len(selections) < 3:
+        return {}
+    turnovers = [
+        len(prev - cur) / max(len(prev), 1)
+        for (_, prev), (_, cur) in zip(selections[:-1], selections[1:])
+    ]
     t = pd.Series(turnovers)
     avg = float(t.mean())
-    # 每 20 个交易日累计换手（近似：avg × 20，双边计）
     cum_single = avg * HOLD
     cum_double = cum_single * 2
-    cost = cum_double * COST_ONE_WAY * 100        # %
-    return dict(days=int(len(t)), avg_daily_single=avg * 100,
-                avg_daily_double=avg * 2 * 100,
+    cost = cum_double * COST_ONE_WAY * 100
+    gross = float(np.mean(spreads)) * 100
+    return dict(days=int(len(t)), spread_samples=len(spreads), gross20_pct=gross,
+                avg_daily_single=avg * 100, avg_daily_double=avg * 2 * 100,
                 cum20_single=cum_single * 100, cum20_double=cum_double * 100,
-                cost20_pct=cost, changes=int((t > 0).sum()))
+                cost20_pct=cost, net20_pct=gross - cost,
+                changes=int((t > 0).sum()))
 
 
 def part2_ic_decay() -> dict:
