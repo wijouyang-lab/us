@@ -235,6 +235,8 @@ def audit_files(
 
     if snapshot.get("read_error"):
         issues.append(f"snapshot read error: {snapshot['read_error']}")
+    elif snapshot.get("rows", 0) == 0:
+        issues.append("snapshot has no data rows")
     if snapshot.get("invalid_scan_date_rows", 0) or snapshot.get("invalid_technical_date_rows", 0):
         issues.append("snapshot contains invalid or missing scan/session dates")
     if snapshot.get("technical_weekend_rows", 0):
@@ -248,6 +250,8 @@ def audit_files(
 
     if prices.get("read_error"):
         issues.append(f"price history read error: {prices['read_error']}")
+    elif prices.get("rows", 0) == 0:
+        issues.append("price history has no data rows")
     if prices.get("invalid_date_rows", 0) or prices.get("missing_ticker_rows", 0):
         issues.append("price history contains invalid dates or missing tickers")
     if prices.get("invalid_or_missing_close_rows", 0):
