@@ -22,6 +22,7 @@ on:
       - "tests/test_turnover_cost_analysis.py"
       - ".github/workflows/quant-fix-tests.yml"
       - ".github/workflows/paper-trading.yml"
+      - ".github/workflows/rebuild-quant-price-history.yml"
   pull_request:
     paths:
       - "scan.py"
@@ -41,6 +42,7 @@ on:
       - "tests/test_turnover_cost_analysis.py"
       - ".github/workflows/quant-fix-tests.yml"
       - ".github/workflows/paper-trading.yml"
+      - ".github/workflows/rebuild-quant-price-history.yml"
   workflow_dispatch:
 
 permissions:
