@@ -83,6 +83,12 @@ jobs:
           close = pd.to_numeric(df["Close"], errors="coerce")
           if close.isna().any() or (close <= 0).any():
               raise SystemExit("Invalid or non-positive Close prices exist")
+          open_price = pd.to_numeric(df["Open"], errors="coerce")
+          open_missing_rate = float(open_price.isna().mean())
+          if open_missing_rate > 0.01:
+              raise SystemExit(f"More than 1% of rows lack Open prices ({open_missing_rate:.2%}); refusing to publish")
+          if (open_price.dropna() <= 0).any():
+              raise SystemExit("Non-positive Open prices exist")
           baseline = int(os.environ.get("BASELINE_ROWS", "0"))
           if baseline > 0 and len(df) < int(baseline * 0.80):
               raise SystemExit(
