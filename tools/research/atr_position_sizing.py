@@ -112,7 +112,7 @@ def main() -> int:
         f"| 非重叠 20D 期累计净复利 | {sf['total']:+.2f}% | {sa['total']:+.2f}% | {sa['total'] - sf['total']:+.2f} pp |",
         f"| 非重叠 20D 净收益标准差 | {sf['vol']:.3f}% | {sa['vol']:.3f}% | {sa['vol'] - sf['vol']:+.3f} pp |",
         f"| 夏普（净收益） | {sf['sharpe']:.3f} | {sa['sharpe']:.3f} | {sa['sharpe'] - sf['sharpe']:+.3f} |",
-        f"| 最大回撤（净收益） | {sf['mdd']:.2f}% | {sa['mdd']:.2f}% | {sa['mdd'] - sf['mdd']:+.2f} pp |",
+        f"| 非重叠 20D 期最大回撤（近似） | {sf['mdd']:.2f}% | {sa['mdd']:.2f}% | {sa['mdd'] - sf['mdd']:+.2f} pp |",
         f"| 非重叠 20D 持有期数量 | {sf['n']} | {sa['n']} | — |",
         "\n夏普按非重叠 20D 持有期收益 × √(252/20) 年化；单期收益不是日收益。\n",
         "## 2. 权重分布（ATR 平价）\n",
