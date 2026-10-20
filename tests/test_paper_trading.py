@@ -8,6 +8,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.paper_trading import (
     _candidate_tickers,
+    _create_signal_orders,
     _fill_pending_orders,
     buy_execution_price,
     commission,
@@ -30,6 +31,36 @@ def test_next_open_uses_exact_first_post_signal_bar():
 def test_missing_next_open_fails_closed():
     series = [{"date": "2026-10-19", "open": 49.0, "close": 50.0}]
     assert next_open_bar(series, "2026-10-19") is None
+
+
+def test_asof_date_blocks_future_bar():
+    series = [
+        {"date": "2026-10-19", "open": 49.0, "close": 50.0},
+        {"date": "2026-10-20", "open": 48.5, "close": 49.0},
+    ]
+    assert next_open_bar(series, "2026-10-19", asof_date="2026-10-19") is None
+    assert next_open_bar(series, "2026-10-19", asof_date="2026-10-20") is series[1]
+
+
+def test_void_row_does_not_block_corrected_signal():
+    import csv
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "us_stocks_pending_20261019.csv"
+        with path.open("w", newline="", encoding="utf-8") as fh:
+            w = csv.DictWriter(fh, fieldnames=["Ticker", "Status"])
+            w.writeheader()
+            w.writerow({"Ticker": "APA", "Status": "pending"})
+        rows = [{
+            "Txn_ID": "APA|2026-10-19|BUY", "Ticker": "APA",
+            "Action": "VOID", "Entry_Date": "2026-10-19",
+        }]
+        created = _create_signal_orders(rows, [path], "2026-10-20")
+        assert created == 1
+        assert rows[-1]["Action"] == "PENDING"
+        assert rows[-1]["Txn_ID"] == rows[0]["Txn_ID"]
 
 
 def test_missing_first_open_expires_order_instead_of_late_fill():
