@@ -313,7 +313,10 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
 
     # 下载区间：rebuild 时从旧文件最早日期起，覆盖完整保留期。
     if start is None:
-        min_date = pd.to_datetime(snap.get("Technical_Date"), errors="coerce").min() if not snap.empty else pd.NaT
+        min_date = (
+            pd.to_datetime(snap["Technical_Date"], errors="coerce").min()
+            if not snap.empty and "Technical_Date" in snap.columns else pd.NaT
+        )
         if rebuild and not existing.empty and "Date" in existing.columns:
             old_min_date = pd.to_datetime(existing["Date"], errors="coerce").min()
             if not pd.isna(old_min_date):
