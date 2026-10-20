@@ -17,6 +17,7 @@ from quant_factor_price import (
     price_map_from_history,
     update_price_history,
     upsert_price_history,
+    _normalize_us_date_index,
 )
 from quant_factor_backtest import forward_return_nd
 
@@ -258,6 +259,26 @@ def test_load_backward_compat_old_csv():
     check("旧 CSV Close 保留", df.iloc[0]["Close"] == "100.0")
 
 
+
+def test_naive_daily_session_date_preserved():
+    """tz-naive yfinance daily indexes are session-date labels, not UTC instants."""
+    idx = pd.DatetimeIndex(["2026-10-16", "2026-10-19", "2026-10-20"])
+    df = pd.DataFrame({"Open": [1.0, 2.0, 3.0], "Close": [1.1, 2.1, 3.1]}, index=idx)
+    normalized = _normalize_us_date_index(df)
+    dates = [x.strftime("%Y-%m-%d") for x in normalized.index]
+    check("tz-naive daily dates preserve session labels", dates == ["2026-10-16", "2026-10-19", "2026-10-20"], f"got {dates}")
+    check("naive session labels are assigned US timezone", str(normalized.index.tz) == "America/New_York", f"got {normalized.index.tz}")
+
+
+def test_aware_utc_daily_timestamp_converts_to_us_date():
+    """tz-aware timestamps represent instants and should be converted, not relabeled."""
+    idx = pd.DatetimeIndex(["2026-10-19 20:00:00"], tz="UTC")
+    df = pd.DataFrame({"Close": [10.0]}, index=idx)
+    normalized = _normalize_us_date_index(df)
+    check("UTC bar converts to same ET calendar date", normalized.index[0].strftime("%Y-%m-%d") == "2026-10-19",
+          f"got {normalized.index[0]}")
+
+
 def main():
     _tests = [
         test_upsert,
@@ -275,6 +296,8 @@ def main():
         test_schema_has_ohlcv,
         test_update_writes_ohlcv,
         test_load_backward_compat_old_csv,
+        test_naive_daily_session_date_preserved,
+        test_aware_utc_daily_timestamp_converts_to_us_date,
     ]
     _failed = 0
     for _t in _tests:
