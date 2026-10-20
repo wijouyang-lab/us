@@ -4391,16 +4391,41 @@ if __name__ == "__main__":
     #   不再从 to_write 捕获（chosen 为空时它必定为空）。
     _ai_persist_source = list(_enriched)
     _ai_persist = list(_ai_persist_source)
-    if os.path.exists(log_file) and to_write:
+    active_skipped = []
+    active = set()
+    if os.path.exists(log_file):
         try:
             old = pd.read_csv(log_file, keep_default_na=False)
-            active_tags = {"Core_Double_Dragon","Sub_Pioneer","Core_Dragon"}
-            active = set(old[old.get("Tag","").isin(active_tags)]["Ticker"].astype(str).tolist()) if "Tag" in old.columns else set()
+            active_tags = {"Core_Double_Dragon", "Sub_Pioneer", "Core_Dragon"}
+            active = (
+                set(old[old["Tag"].isin(active_tags)]["Ticker"].astype(str).str.strip().str.upper().tolist())
+                if "Tag" in old.columns else set()
+            )
             before = len(to_write)
-            to_write = [x for x in to_write if x["Ticker"] not in active]
-            print(f"📋 跳过 {before-len(to_write)} 只已在持仓中的标的")
+            active_skipped = [
+                item for item in to_write
+                if str(item.get("Ticker", "")).strip().upper() in active
+            ]
+            for item in active_skipped:
+                print(
+                    f"[pending去重/活跃持仓] {str(item.get('Ticker', '')).strip().upper()} "
+                    f"Tag={item.get('Tag', '')} 已存在活跃持仓日志，跳过写入 pending"
+                )
+            to_write = [
+                item for item in to_write
+                if str(item.get("Ticker", "")).strip().upper() not in active
+            ]
+            print(
+                f"[pending去重统计] 输入={before} / 活跃持仓跳过={len(active_skipped)} "
+                f"/ 最终to_write={len(to_write)}"
+            )
         except Exception as e:
             print(f"⚠️ 持仓去重失败：{e}")
+    if not to_write:
+        print(
+            f"[pending写入诊断] to_write=0；chosen={len(chosen)}，"
+            f"活跃持仓跳过={len(active_skipped)}，当前没有待写入候选"
+        )
 
     # 关键：先完成“实际入账集合”的确定，再用同一集合渲染邮件 Core。
     # 因此候选池外 AI 推荐、历史持仓去重等都不会再导致邮件与 pending 分裂。
@@ -4408,6 +4433,16 @@ if __name__ == "__main__":
 
     if to_write:
         pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
+        if os.path.exists(pending_file):
+            try:
+                existing_pending = pd.read_csv(pending_file, dtype=str, keep_default_na=False)
+                print(
+                    f"[pending写入] 今日文件已存在 {pending_file}，"
+                    f"旧行数={len(existing_pending)}；本次将按最终to_write={len(to_write)} 覆盖写入，"
+                    "不会因文件存在而静默跳过"
+                )
+            except Exception as _pending_read_error:
+                print(f"[pending写入] 今日旧文件读取失败，将仍按本次to_write覆盖：{_pending_read_error}")
         header_cols = [
             "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线",
             "Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX",
