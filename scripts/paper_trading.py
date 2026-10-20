@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import csv
 import math
+import os
 import re
 import sys
 from datetime import datetime
@@ -39,8 +40,8 @@ UNIT = 10000.0
 MAX_OPEN = 5
 HOLD_DAYS = 20
 STOP_PCT = 0.95
-SLIPPAGE_BPS = 5.0
-COMMISSION_BPS = 0.5
+SLIPPAGE_BPS = float(os.environ.get("PAPER_SLIPPAGE_BPS", "5.0"))
+COMMISSION_BPS = float(os.environ.get("PAPER_COMMISSION_BPS", "0.5"))
 US_TZ = ZoneInfo("America/New_York")
 
 
@@ -106,10 +107,12 @@ def load_prices(path: Path = PRICE_FILE) -> dict[str, list[dict]]:
     return out
 
 
-def next_open_bar(series: list[dict], signal_date: str):
-    """只检查信号日后的第一根交易日 bar；缺 Open 就拒绝成交，不能延迟到更晚日期。"""
+def next_open_bar(series: list[dict], signal_date: str, asof_date: str | None = None):
+    """只检查信号日后的第一根交易日 bar；可选地限制为已完整的数据日期。"""
     for bar in series:
         if bar["date"] > signal_date:
+            if asof_date is not None and bar["date"] > asof_date:
+                return None
             return bar if _positive_float(bar.get("open")) is not None else None
     return None
 
@@ -239,7 +242,11 @@ def _create_signal_orders(rows: list[dict], pending_files: list[Path], today: st
         print(f"[paper] 无法识别 pending 日期，跳过文件：{pf.name}")
         return 0
     candidates = read_rows(pf)
-    existing = {r.get("Txn_ID", "") for r in rows}
+    # VOID rows are audit traces only; they must not block a corrected replacement order.
+    existing = {
+        r.get("Txn_ID", "") for r in rows
+        if (r.get("Action") or "").upper() != "VOID"
+    }
     created = 0
     for tk in _candidate_tickers(candidates):
         tid = f"{tk}|{signal_date}|BUY"
@@ -276,7 +283,7 @@ def _create_signal_orders(rows: list[dict], pending_files: list[Path], today: st
     return created
 
 
-def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]]) -> tuple[int, int]:
+def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today: str | None = None) -> tuple[int, int]:
     filled = expired = 0
     for r in rows:
         if (r.get("Action") or "").upper() != "PENDING":
@@ -293,7 +300,7 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]]) -> tup
         if first_post_signal is None:
             # The next regular session has not arrived in completed-bar history yet.
             continue
-        bar = next_open_bar(series, signal_date)
+        bar = next_open_bar(series, signal_date, asof_date=today)
         if bar is None:
             # The first post-signal session exists but has no Open: never use a later session instead.
             r["Action"] = "EXPIRED"
@@ -311,7 +318,7 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]]) -> tup
             continue
         ref_open = float(bar["open"])
         exec_open = buy_execution_price(ref_open)
-        shares = round(UNIT / ref_open, 4)
+        shares = round(UNIT / exec_open, 4)
         entry_comm = commission(exec_open * shares)
         r["Action"] = "BUY"
         r["Shares"] = f"{shares:.4f}"
@@ -340,7 +347,7 @@ def main() -> int:
     candidates = [p for p in candidates if not p.name.endswith(".processed")]
     created = _create_signal_orders(rows, candidates, today)
 
-    filled, expired = _fill_pending_orders(rows, prices)
+    filled, expired = _fill_pending_orders(rows, prices, today=today)
     # If an order is filled from a historical bar after a delayed data refresh, replay
     # subsequent completed bars so the ledger does not pretend that the position is still open.
     closed_after = close_positions(rows, prices, today)
