@@ -5,11 +5,15 @@ from __future__ import annotations
 
 import csv
 import math
+import sys
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
 REPO = Path(__file__).resolve().parent.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+from scripts.paper_trading import SLIPPAGE_BPS, COMMISSION_BPS
 LEDGER = REPO / "portfolio_paper_transactions.csv"
 PRICE_FILE = REPO / "quant_factor_price_history.csv"
 OUT = REPO / "docs" / "PAPER_TRADING_REPORT.md"
@@ -21,8 +25,6 @@ TH_EXP = 0.5
 TH_DD = -5.0
 TH_DAYS = 40
 PLAN_START = "2026-10-19"
-SLIPPAGE_BPS = 5.0
-COMMISSION_BPS = 0.5
 US_TZ = ZoneInfo("America/New_York")
 
 
