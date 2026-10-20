@@ -246,13 +246,13 @@ def main() -> int:
     print("part3:", t3)
 
     L = [
-        "# 死亡解剖：换手率 / IC 衰减 / 归因\\n",
-        "> 脚本：`tools/research/turnover_and_cost_analysis.py`\\n",
-        "## 1. 行业轮动收益与换手成本\\n",
+        "# 死亡解剖：换手率 / IC 衰减 / 归因\n",
+        "> 脚本：`tools/research/turnover_and_cost_analysis.py`\n",
+        "## 1. 行业轮动收益与换手成本\n",
     ]
     if t1:
         L += [
-            "> 行业标签来自 `research_sector_history_pit.csv` 的有效日期区间；收益为每日 Top 3 行业多头减 Bottom 3 行业空头的平均 20D 前瞻收益。\\n",
+            "> 行业标签来自 `research_sector_history_pit.csv` 的有效日期区间；收益为每日 Top 3 行业多头减 Bottom 3 行业空头的平均 20D 前瞻收益。\n",
             "| 指标 | 值 |", "|---|---:|",
             f"| PIT 有效样本日期 | {t1.get('spread_samples', 0)} |",
             f"| 行业发生变化的日期间隔数 | {t1.get('changes', 0)} |",
@@ -264,18 +264,18 @@ def main() -> int:
             f"| 平均 20D 多空毛超额 | {t1.get('gross20_pct', float('nan')):+.4f}% |",
             f"| **平均 20D 多空净超额（毛收益−估计成本）** | **{t1.get('net20_pct', float('nan')):+.4f}%** |",
             "",
-            "> 注意：行业换手是等权行业篮子的近似，不是逐只股票真实换手；结果仍需逐只股票的交易成本与容量检验。\\n",
+            "> 注意：行业换手是等权行业篮子的近似，不是逐只股票真实换手；结果仍需逐只股票的交易成本与容量检验。\n",
         ]
     else:
         L += [
             "⚠️ **本轮不计算行业轮动毛/净收益或换手成本。**",
             f"> 原因：{sector_reason or 'PIT 行业数据不可用'}。",
             "> 不允许把当前 `sp500_constituents.csv` 的现行行业标签套回两年历史，也不复用旧的硬编码 +0.1701% 毛超额。",
-            "> 之前报告的 −0.184% 是基于当前行业映射的探索性估计，尚未通过 PIT 行业归属验证；不能把它当作已验证的净 Alpha 结论。\\n",
+            "> 之前报告的 −0.184% 是基于当前行业映射的探索性估计，尚未通过 PIT 行业归属验证；不能把它当作已验证的净 Alpha 结论。\n",
         ]
 
     L += [
-        "## 2. IC 衰减（数据受限）\\n",
+        "## 2. IC 衰减（数据受限）\n",
         "⚠️ **无法生成完整的 T+1~T+20 连续衰减曲线**：",
         "`research_backtest_sp500_pit_2y.csv` 只提供 **5D / 10D / 20D** 三档前瞻收益，",
         "**没有逐日前瞻列** ⇒ 只能给出三点，无法定位【第几天衰减到 0】。",
@@ -296,12 +296,12 @@ def main() -> int:
         L.append(f"| {h}D | N/A（需 BP IC 单独计算） | {ic_mom:+.4f}（n={len(valid)}）|")
     L += [
         "",
-        "> IC/相关性是因子研究统计，不是扣成本后的可交易策略收益。\\n",
-        "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）\\n",
+        "> IC/相关性是因子研究统计，不是扣成本后的可交易策略收益。\n",
+        "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）\n",
     ]
     if t3.get("status") == "OK":
         L += [
-            f"> 样本 **{t3['n']:,}** 行；Size 使用真实 `Market_Cap` 的对数；Sector 为有效日期对应的 PIT 行业。\\n",
+            f"> 样本 **{t3['n']:,}** 行；Size 使用真实 `Market_Cap` 的对数；Sector 为有效日期对应的 PIT 行业。\n",
             "| 模型 | BP 系数 | **BP 的 t 值** | R² |",
             "|---|---:|---:|---:|",
             f"| 仅 BP | {t3['BP_only']['coef']:.6f} | **{t3['BP_only']['t']:+.2f}** | {t3['BP_only']['r2']:.5f} |",
@@ -314,11 +314,11 @@ def main() -> int:
         L += [
             "⚠️ **本轮不输出 BP 的风格调整 t 值。**",
             f"> 原因：{t3.get('reason', '真实 PIT 市值或 PIT 行业输入不可用')}。",
-            "> 缺少 Market_Cap 时严格跳过；禁止继续把 `log(Price)` 当作 Size 代理。\\n",
+            "> 缺少 Market_Cap 时严格跳过；禁止继续把 `log(Price)` 当作 Size 代理。\n",
         ]
 
     L += [
-        "## 4. 数据完整性与限制\\n",
+        "## 4. 数据完整性与限制\n",
         "1. `research_sector_history_pit.csv` 必须含 `Ticker, Effective_From, Effective_To, Sector`；区间重叠、缺失或覆盖低于 99% 时不计算行业收益。",
         "2. 当前 `research_fundamentals_pit_corrected.csv` 若没有真实 `Market_Cap`，BP 市值归因会跳过，不会用 `log(Price)` 静默替代。",
         "3. 现有换手模型只估算等权行业篮子的权重更换，非个股级订单流或实际成交成本。",
@@ -326,7 +326,7 @@ def main() -> int:
         "",
     ]
     OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text("\\n".join(L), encoding="utf-8")
+    OUT.write_text("\n".join(L), encoding="utf-8")
     print(f"written: {OUT} ({OUT.stat().st_size} bytes)")
     return 0
 
