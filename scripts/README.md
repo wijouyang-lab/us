@@ -65,3 +65,34 @@ python scripts/ticker_brief.py --watchlist AAPL,MSFT                # 纯文本�
 
 日报顶部含**汇总行**（共 X 只票、Y 只有 AI 快照、Z 只有交易记录）与**唯一一次**的宏观环境段；
 逐票小节依次为 AI 历史 / 因子位置 / 交易明细（宏观不重复打印）。ticker 自动大写去重，顺序即输入顺序。
+## push_notification.py —— 手机推送（无硬编码密钥）
+
+```bash
+# 只看通道配置
+python scripts/push_notification.py --check
+
+# 把 watchlist 日报推到手机
+PUSH_CHANNEL=serverchan SERVERCHAN_KEY=SCTxxxx \\
+  python scripts/push_notification.py --file docs/watchlist_brief.md --title "Watchlist Brief"
+
+# Telegram
+PUSH_CHANNEL=telegram TELEGRAM_BOT_TOKEN=123:abc TELEGRAM_CHAT_ID=123456 \\
+  python scripts/push_notification.py --text "盘前扫描完成" --title "US Terminal"
+```
+
+**环境变量**：`PUSH_CHANNEL`（`serverchan` / `telegram`）、`SERVERCHAN_KEY`、
+`TELEGRAM_BOT_TOKEN`、`TELEGRAM_CHAT_ID`。
+**缺失任一 ⇒ 打印警告并跳过、退出码 0**（不阻塞 workflow ✓）。仅用标准库，零第三方依赖 ✓。
+
+**接入 workflow 的建议（尚未改动生产）**：在 `watchlist-brief.yml` 的 push 步骤之后追加
+
+```yaml
+      - name: Push to phone (optional)
+        continue-on-error: true
+        env:
+          PUSH_CHANNEL: ${{ vars.PUSH_CHANNEL }}
+          SERVERCHAN_KEY: ${{ secrets.SERVERCHAN_KEY }}
+        run: python scripts/push_notification.py --file docs/watchlist_brief.md --title "Watchlist Brief"
+```
+
+`continue-on-error: true` 保证推送失败不影响主流程 ✓。
