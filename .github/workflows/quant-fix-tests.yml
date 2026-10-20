@@ -21,6 +21,7 @@ on:
       - "tests/test_atr_position_sizing.py"
       - "tests/test_turnover_cost_analysis.py"
       - ".github/workflows/quant-fix-tests.yml"
+      - ".github/workflows/paper-trading.yml"
   pull_request:
     paths:
       - "scan.py"
@@ -39,6 +40,7 @@ on:
       - "tests/test_atr_position_sizing.py"
       - "tests/test_turnover_cost_analysis.py"
       - ".github/workflows/quant-fix-tests.yml"
+      - ".github/workflows/paper-trading.yml"
   workflow_dispatch:
 
 permissions:
