@@ -78,7 +78,7 @@ def test_missing_first_open_expires_order_instead_of_late_fill():
     filled, expired = _fill_pending_orders(rows, prices)
     assert (filled, expired) == (0, 1)
     assert rows[0]["Action"] == "EXPIRED"
-    assert rows[0]["Reason"] == "MISSING_OPEN_ON_FIRST_POST_SIGNAL_BAR"
+    assert rows[0]["Reason"] == "MISSING_TICKER_BAR_OR_OPEN_ON_FIRST_POST_SIGNAL_SESSION"
 
 
 def test_buy_sell_slippage_is_adverse():
@@ -137,6 +137,30 @@ def test_pending_order_stays_pending_without_future_bar():
     filled, expired = _fill_pending_orders(rows, prices)
     assert (filled, expired) == (0, 0)
     assert rows[0]["Action"] == "PENDING"
+
+
+def test_missing_ticker_session_expires_instead_of_late_fill():
+    rows = [{
+        "Txn_ID": "AAA|2026-10-19|BUY", "Signal_Date": "2026-10-19",
+        "Ticker": "AAA", "Action": "PENDING", "Entry_Date": "",
+        "Entry_Price": "", "Shares": "", "Entry_Commission": "",
+        "Exit_Date": "", "Mode": "PAPER",
+    }]
+    # SPY proves 2026-10-20 was a market session; AAA has a later bar but is missing that session.
+    prices = {
+        "SPY": [
+            {"date": "2026-10-19", "open": 100.0, "high": 101.0, "low": 99.0, "close": 100.5},
+            {"date": "2026-10-20", "open": 101.0, "high": 102.0, "low": 100.0, "close": 101.5},
+        ],
+        "AAA": [
+            {"date": "2026-10-19", "open": 49.0, "high": 51.0, "low": 48.0, "close": 50.0},
+            {"date": "2026-10-21", "open": 52.0, "high": 54.0, "low": 51.0, "close": 53.0},
+        ],
+    }
+    filled, expired = _fill_pending_orders(rows, prices, today="2026-10-21")
+    assert (filled, expired) == (0, 1)
+    assert rows[0]["Action"] == "EXPIRED"
+    assert rows[0]["Entry_Source_Date"] == "2026-10-20"
 
 
 def test_candidate_ticker_filter_honors_status():
