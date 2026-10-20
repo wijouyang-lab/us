@@ -17,19 +17,37 @@ from scripts.paper_trading import (
 )
 
 
-def test_next_open_requires_post_signal_bar():
+def test_next_open_uses_exact_first_post_signal_bar():
     series = [
         {"date": "2026-10-19", "open": 49.0, "close": 50.0},
-        {"date": "2026-10-20", "open": None, "close": 51.0},
+        {"date": "2026-10-20", "open": 48.5, "close": 49.0},
         {"date": "2026-10-21", "open": 52.0, "close": 53.0},
     ]
     bar = next_open_bar(series, "2026-10-19")
-    assert bar is series[2], bar
+    assert bar is series[1], bar
 
 
 def test_missing_next_open_fails_closed():
     series = [{"date": "2026-10-19", "open": 49.0, "close": 50.0}]
     assert next_open_bar(series, "2026-10-19") is None
+
+
+def test_missing_first_open_expires_order_instead_of_late_fill():
+    rows = [{
+        "Txn_ID": "AAA|2026-10-19|BUY", "Signal_Date": "2026-10-19",
+        "Ticker": "AAA", "Action": "PENDING", "Entry_Date": "",
+        "Entry_Price": "", "Shares": "", "Entry_Commission": "",
+        "Exit_Date": "", "Mode": "PAPER",
+    }]
+    prices = {"AAA": [
+        {"date": "2026-10-19", "open": 49.0, "high": 51.0, "low": 48.0, "close": 50.0},
+        {"date": "2026-10-20", "open": None, "high": 51.0, "low": 47.0, "close": 49.0},
+        {"date": "2026-10-21", "open": 52.0, "high": 54.0, "low": 51.0, "close": 53.0},
+    ]}
+    filled, expired = _fill_pending_orders(rows, prices)
+    assert (filled, expired) == (0, 1)
+    assert rows[0]["Action"] == "EXPIRED"
+    assert rows[0]["Reason"] == "MISSING_OPEN_ON_FIRST_POST_SIGNAL_BAR"
 
 
 def test_buy_sell_slippage_is_adverse():
@@ -102,7 +120,8 @@ def test_candidate_ticker_filter_honors_status():
 
 def main():
     tests = [
-        test_next_open_requires_post_signal_bar,
+        test_next_open_uses_exact_first_post_signal_bar,
+        test_missing_first_open_expires_order_instead_of_late_fill,
         test_missing_next_open_fails_closed,
         test_buy_sell_slippage_is_adverse,
         test_commission_and_net_pnl_include_both_sides,
