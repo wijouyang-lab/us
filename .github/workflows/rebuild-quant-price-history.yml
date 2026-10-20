@@ -14,6 +14,8 @@ concurrency:
 
 jobs:
   rebuild:
+    # Only allow a selected workflow_dispatch on main to publish to main.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
