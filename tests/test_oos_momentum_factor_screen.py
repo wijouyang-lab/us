@@ -13,6 +13,7 @@ from oos_momentum_factor_screen import (
     evaluate_factor_segment,
     newey_west_mean_tstat,
     select_directions_from_train,
+    classify_test_result,
 )
 
 
@@ -101,12 +102,28 @@ def test_direction_is_selected_from_training_only_and_can_reverse_factor():
     assert all(frozen[h]["direction"] == -1 for h in (5, 10, 20))
 
 
+def test_heldout_verdicts_distinguish_positive_negative_and_insufficient():
+    assert classify_test_result({
+        "valid_dates": 50, "top_bottom_spread": 0.01, "spread_hac_t": 2.1
+    }) == "PRELIMINARY_POSITIVE_ONLY"
+    assert classify_test_result({
+        "valid_dates": 50, "top_bottom_spread": -0.01, "spread_hac_t": -2.4
+    }) == "SIGNIFICANT_NEGATIVE_SPREAD"
+    assert classify_test_result({
+        "valid_dates": 50, "top_bottom_spread": 0.01, "spread_hac_t": 1.4
+    }) == "NOT_CONFIRMED"
+    assert classify_test_result({
+        "valid_dates": 39, "top_bottom_spread": 0.01, "spread_hac_t": 3.0
+    }).startswith("INSUFFICIENT_TEST_DATES")
+
+
 if __name__ == "__main__":
     tests = [
         test_chronological_splits_are_ordered_disjoint_and_purged,
         test_factor_segment_finds_positive_predeclared_momentum_spread,
         test_hac_t_statistic_is_finite_and_deterministic,
         test_direction_is_selected_from_training_only_and_can_reverse_factor,
+        test_heldout_verdicts_distinguish_positive_negative_and_insufficient,
     ]
     for test in tests:
         test()
