@@ -4463,6 +4463,18 @@ if __name__ == "__main__":
             "AI_industry_logic","AI_news_cn","AI_premarket_conclusion","AI_catalysts","AI_risks","AI_invalidation"
         ]
         pending_exists = os.path.exists(pending_file)
+        try:
+            # Before appending, require exact header compatibility. Old rows remain untouched
+            # and a legacy header must never receive new-schema values under wrong columns.
+            to_append = unseen_pending_items(
+                pending_file, to_write, expected_columns=header_cols
+            )
+        except Exception as _schema_error:
+            to_append = []
+            print(
+                f"⚠️ [pending追加保护] 今日文件表头不兼容或不可读，拒绝追加："
+                f"{type(_schema_error).__name__}: {_schema_error}"
+            )
         with open(pending_file, "a" if pending_exists else "w", encoding="utf-8", newline="") as f:
             if not pending_exists:
                 f.write(",".join(header_cols)+"\n")
