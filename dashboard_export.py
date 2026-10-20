@@ -62,6 +62,8 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+from scripts.ai_coverage import summarize_ai_coverage
+
 # ============================================================
 # 0. 常量
 # ============================================================
@@ -3236,16 +3238,18 @@ def main(argv=None):
 
     # ---- AI 六段状态（只统计，不生成内容）----
     first_row = pending_rows[0] if pending_rows else {}
-    ai_cols_present = [c for c, _ in AI_FIELD_MAP if c in first_row]
-    ai_cols_missing = [c for c, _ in AI_FIELD_MAP if c not in first_row]
-    ai_filled = sum(1 for s in stocks if any((s.get("ai") or {}).values()))
+    # Only inspect the pending CSV header when a pending row actually exists.
+    # A missing pending file is normal after Review consumes it; it is not a six-column schema failure.
+    ai_cols_missing = (
+        [c for c, _ in AI_FIELD_MAP if c not in first_row]
+        if pending_rows else []
+    )
+    ai_summary = summarize_ai_coverage(stocks)
+    ai_filled = ai_summary["any_text"]
+    ai_complete = ai_summary["complete"]
+    ai_missing_details = ai_summary["missing"]
     ai_scan_date = clean_text(first_row.get("Date")) or None
-    if ai_filled == 0:
-        ai_status = "pending"          # 本次与历史都没有可用的 AI 文本
-    elif ai_filled < len(stocks):
-        ai_status = "partial"
-    else:
-        ai_status = "complete"
+    ai_status = ai_summary["status"]
 
     # ---- MARKET ----
     # 无论正常导出还是兜底降级（stocks_source == existing_dashboard_json），
@@ -3517,9 +3521,19 @@ def main(argv=None):
     log(f"Quant 研究状态       : {quant['status']} · 数据可用性 {quant['data_availability']} · "
         f"生产 {quant['production']['active_version']} {quant['production']['status']} · "
         f"V2 {quant['production']['v2_status']} · Gate {quant['production']['production_gate']}")
-    log(f"AI 六段状态          : {ai_status}（{ai_filled}/{len(stocks)} 只股票有内容"
-        + (f"，CSV 缺失列 {len(ai_cols_missing)} 个" if ai_cols_missing else "")
-        + f"，来源 Scan {ai_scan_date or '未知'}）")
+    log(f"AI 六段状态          : {ai_status}（{ai_filled}/{len(stocks)} 只至少有一段内容；"
+        f"完整解释 {ai_complete}/{len(stocks)}）"
+        + (f"，当前 pending CSV 缺失列 {len(ai_cols_missing)} 个" if ai_cols_missing else "")
+        + (f"，Scan 日期 {ai_scan_date}" if ai_scan_date else "，当前无 pending CSV 日期（通常已由 Review 消费）")
+    )
+    if ai_missing_details:
+        labels = [
+            f"{x['ticker']}[{x['recommendation_id'] or '事件ID未知'}]:"
+            f"{','.join(x['missing_fields'])}"
+            for x in ai_missing_details[:12]
+        ]
+        more = f" 等{len(ai_missing_details)}条" if len(ai_missing_details) > len(labels) else ""
+        log("AI 缺失/不完整事件  : " + "；".join(labels) + more)
     log("AI / GPT             : 未调用（本脚本只透传 Scan 已落盘的 AI 文本）")
     log(f"输出 JSON 路径       : {out_path}"
         + (f"\n同步副本             : {mirror_path}" if mirror_path else ""))
