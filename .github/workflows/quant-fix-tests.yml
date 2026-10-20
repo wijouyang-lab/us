@@ -25,6 +25,10 @@ on:
     paths:
       - "scan.py"
       - "quant_factor_price.py"
+      - "quant_factor_backtest.py"
+      - "quant_research_runner.py"
+      - "tests/test_quant_research_runner.py"
+      - "tests/test_quant_price_history_schema_guard.py"
       - "scripts/paper_trading.py"
       - "scripts/paper_trading_report.py"
       - "tools/research/atr_position_sizing.py"
