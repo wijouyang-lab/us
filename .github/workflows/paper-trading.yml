@@ -48,8 +48,8 @@ jobs:
           from zoneinfo import ZoneInfo
 
           now = datetime.now(ZoneInfo("America/New_York"))
-          # Only execute from 16:00 to before 18:00 ET; one of the two UTC
-          # schedules should land near 16:30 across DST/standard time.
+          # Only execute from 16:00 to before 18:00 ET; at least one of the two
+          # UTC schedules should land near 16:30 across DST/standard time.
           allowed = now.weekday() < 5 and 16 <= now.hour < 18
           print(f"ET now={now.isoformat()} allowed={allowed}")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
@@ -65,7 +65,7 @@ jobs:
         env:
           # Only a successful Scan workflow_run contributes an observation date.
           PAPER_RECORD_OBSERVATION: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && '1' || '0' }}
-          # The Scan event queues signals; only the post-close schedule executes fills/exits.
+          # Scan event queues signals; only the post-close schedule executes fills/exits.
           PAPER_EXECUTION_WINDOW: ${{ github.event_name == 'schedule' && steps.window.outputs.run_eod == 'true' && 'EOD' || 'SCAN' }}
         run: python scripts/paper_trading.py
 
