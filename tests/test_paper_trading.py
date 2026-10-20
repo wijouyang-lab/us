@@ -14,6 +14,7 @@ from scripts.paper_trading import (
     commission,
     next_open_bar,
     net_trade_pnl,
+    record_observation,
     sell_execution_price,
 )
 
@@ -161,6 +162,27 @@ def test_missing_ticker_session_expires_instead_of_late_fill():
     assert (filled, expired) == (0, 1)
     assert rows[0]["Action"] == "EXPIRED"
     assert rows[0]["Entry_Source_Date"] == "2026-10-20"
+
+
+def test_observation_log_counts_zero_signal_days_and_is_idempotent():
+    import csv
+    import tempfile
+    from pathlib import Path
+
+    with tempfile.TemporaryDirectory() as tmp:
+        path = Path(tmp) / "observations.csv"
+        prices = {"SPY": [{"date": "2026-10-19", "open": 100.0, "close": 101.0}]}
+        record_observation("2026-10-19", prices, "", 0, 0, 0, 0, 0, 0, path=path)
+        # Repeat run the same ET date: update that date's row rather than duplicating it.
+        record_observation("2026-10-19", prices, "us_stocks_pending_20261019.csv", 1, 0, 0, 0, 0, 1, path=path)
+        record_observation("2026-10-20", prices, "", 0, 0, 0, 0, 0, 0, path=path)
+        with path.open(encoding="utf-8", newline="") as fh:
+            rows = list(csv.DictReader(fh))
+        assert len(rows) == 2
+        assert rows[0]["Run_Date"] == "2026-10-19"
+        assert rows[0]["Signals_Queued"] == "1"
+        assert rows[1]["Run_Date"] == "2026-10-20"
+        assert rows[1]["Signals_Queued"] == "0"
 
 
 def test_candidate_ticker_filter_honors_status():
