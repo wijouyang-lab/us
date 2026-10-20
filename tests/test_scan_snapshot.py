@@ -187,7 +187,9 @@ def test_enrich_called_even_when_chosen_empty():
 
 def test_bookkeeping_still_filters_holdings():
     """不变量：pending CSV 仍只写新推荐 —— 剔持仓仍在 enrich 之后、to_write 门控之前。"""
-    call = _at("chosen = enrich_verified_items_with_ai_details(")
+    # Current implementation enriches the combined risk-cleared recommendations + holdings
+    # into _enriched, then restores the recommendation-only chosen set before pending filtering.
+    call = _at("_enriched = enrich_verified_items_with_ai_details(")
     rm = _at('to_write = [x for x in to_write if x["Ticker"] not in active]')
     gate = _at("if to_write:")
     persist = _at("if _ai_persist:")
