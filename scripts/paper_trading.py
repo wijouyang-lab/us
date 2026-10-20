@@ -47,6 +47,7 @@ HOLD_DAYS = 20
 STOP_PCT = 0.95
 SLIPPAGE_BPS = float(os.environ.get("PAPER_SLIPPAGE_BPS", "5.0"))
 COMMISSION_BPS = float(os.environ.get("PAPER_COMMISSION_BPS", "0.5"))
+PRICE_SCHEMA_VERSION = "phase2b.v2"
 US_TZ = ZoneInfo("America/New_York")
 
 
@@ -81,12 +82,28 @@ def _positive_float(value):
 
 
 def load_prices(path: Path = PRICE_FILE) -> dict[str, list[dict]]:
-    """返回 {ticker: [{date, open, high, low, close}, ...]}，按真实日线日期升序。"""
+    """返回 {ticker: [{date, open, high, low, close}, ...]}；不完整/旧版历史一律拒绝交易。"""
     out: dict[str, list[dict]] = {}
     if not path.exists():
+        print(f"[paper] 等待价格历史：{path.name} 不存在")
         return out
     with path.open(encoding="utf-8-sig", newline="") as f:
-        for r in csv.DictReader(f):
+        reader = csv.DictReader(f)
+        if not reader.fieldnames or "schema_version" not in reader.fieldnames:
+            print("[paper] FAIL-CLOSED：价格历史没有 schema_version；请运行手动历史重建工作流")
+            return out
+        source_rows = list(reader)
+    # Do not mix shifted legacy dates with corrected session-date bars. Normal incremental
+    # updates may append v2 rows to the v1 file, so require the entire file to be rebuilt.
+    versions = {str(r.get("schema_version") or "").strip() for r in source_rows}
+    if not source_rows or versions != {PRICE_SCHEMA_VERSION}:
+        print(
+            "[paper] FAIL-CLOSED：价格历史不是全量 "
+            f"{PRICE_SCHEMA_VERSION}（versions={sorted(versions)}）；"
+            "模拟成交暂停，需先运行 Rebuild Quant Price History"
+        )
+        return out
+    for r in source_rows:
             tk = (r.get("Ticker") or "").strip().upper()
             d = (r.get("Date") or "").strip()
             close = _positive_float(r.get("Close"))
