@@ -7,6 +7,10 @@ on:
     paths:
       - "scan.py"
       - "quant_factor_price.py"
+      - "quant_factor_backtest.py"
+      - "quant_research_runner.py"
+      - "tests/test_quant_research_runner.py"
+      - "tests/test_quant_price_history_schema_guard.py"
       - "scripts/paper_trading.py"
       - "scripts/paper_trading_report.py"
       - "tools/research/atr_position_sizing.py"
@@ -62,10 +66,16 @@ jobs:
 
       - name: Compile modified Python modules
         run: |
-          python -m py_compile scan.py quant_factor_price.py scripts/paper_trading.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
+          python -m py_compile scan.py quant_factor_price.py quant_factor_backtest.py quant_research_runner.py scripts/paper_trading.py scripts/paper_trading_report.py tools/research/atr_position_sizing.py tools/research/turnover_and_cost_analysis.py tests/test_quant_factor_price.py tests/test_paper_trading.py tests/test_paper_trading_report.py tests/test_atr_position_sizing.py tests/test_turnover_cost_analysis.py
 
       - name: Test price history date contract
         run: python tests/test_quant_factor_price.py
+
+      - name: Test Phase 2 direct-entry schema guard
+        run: python tests/test_quant_price_history_schema_guard.py
+
+      - name: Test research-runner mixed-schema guard
+        run: python tests/test_quant_research_runner.py
 
       - name: Test paper trading execution and costs
         run: python tests/test_paper_trading.py
