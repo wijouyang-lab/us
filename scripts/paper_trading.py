@@ -195,39 +195,68 @@ def _open_positions(rows: list[dict]) -> int:
 
 
 def close_positions(rows: list[dict], prices: dict[str, list[dict]], today: str) -> int:
-    """按每一根完整 bar 顺序退出，避免只检查最新价而漏掉历史止损。"""
+    """Exit only on today's completed bar; never backdate a fill to an older close.
+
+    The holding period is measured from Signal_Date (the previous close used to form the
+    signal), so the 20th post-signal session matches Forward_Return_20D. If a scheduled
+    execution was missed, an earlier trigger is recorded as delayed and priced at today's
+    close, never at the stale trigger-day price.
+    """
     closed = 0
     for r in rows:
         if (r.get("Action") or "").upper() != "BUY" or r.get("Exit_Date"):
             continue
         tk = (r.get("Ticker") or "").strip().upper()
         entry_date = (r.get("Entry_Date") or "").strip()
+        signal_date = (r.get("Signal_Date") or "").strip()
         entry_exec = _positive_float(r.get("Entry_Price"))
         shares = _positive_float(r.get("Shares"))
         entry_comm = max(0.0, float(r.get("Entry_Commission") or 0.0))
-        if not tk or not entry_date or entry_exec is None or shares is None:
+        if not tk or not entry_date or not signal_date or entry_exec is None or shares is None:
             continue
-        series = prices.get(tk, [])
+        series = sorted(prices.get(tk, []), key=lambda b: b.get("date", ""))
+        today_bar = next(
+            (b for b in reversed(series)
+             if b.get("date") == today and _positive_float(b.get("close")) is not None),
+            None,
+        )
+        if today_bar is None:
+            # No complete daily bar for the current session means no current executable mark.
+            continue
+
         elapsed = 0
-        chosen = None
-        reason = ""
+        trigger = None
         for bar in series:
-            d = bar["date"]
-            if d < entry_date or d > today:
+            d = bar.get("date", "")
+            if d <= signal_date or d > today:
                 continue
-            if d > entry_date:
-                elapsed += 1
+            elapsed += 1
+            if d < entry_date:
+                continue
             close = _positive_float(bar.get("close"))
             if close is None:
                 continue
             if close <= entry_exec * STOP_PCT:
-                chosen, reason = bar, "Stop_Loss_Close"
+                trigger = (bar, "Stop_Loss_Close")
                 break
             if elapsed >= HOLD_DAYS:
-                chosen, reason = bar, "Hold_20_Trading_Bars"
+                trigger = (bar, "Hold_20_Trading_Bars")
                 break
-        if chosen is None:
+        if trigger is None:
             continue
+
+        trigger_bar, trigger_reason = trigger
+        if trigger_bar["date"] < today:
+            chosen = today_bar
+            reason = f"Delayed_{trigger_reason}_Trigger_{trigger_bar['date']}"
+            print(
+                f"[paper] 延迟退出 {tk}：原触发日={trigger_bar['date']}，"
+                f"使用当前完整收盘价 {today}，不回写旧日成交价"
+            )
+        else:
+            chosen = trigger_bar
+            reason = trigger_reason
+
         ref_exit = float(chosen["close"])
         exec_exit = sell_execution_price(ref_exit)
         exit_comm = commission(exec_exit * shares)
@@ -367,6 +396,24 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
             # Otherwise the next completed daily bar may not have been published yet.
             continue
         expected_session = session_dates[0]
+        if today is None:
+            # An execution date is required; helper calls without an explicit as-of date
+            # must not create retroactive fills.
+            print(f"[paper] PENDING {tk}: missing execution as-of date; no fill")
+            continue
+        if expected_session < today:
+            r["Action"] = "EXPIRED"
+            r["Entry_Source_Date"] = expected_session
+            r["Reason"] = "MISSED_EXPECTED_SESSION_EXECUTION_WINDOW"
+            expired += 1
+            print(
+                f"[paper] EXPIRED {tk} signal={signal_date}: expected session "
+                f"{expected_session} was missed; refusing historical open backfill"
+            )
+            continue
+        if expected_session > today:
+            # The current session's completed daily bar is not available yet.
+            continue
         bar = next_open_bar(
             series, signal_date, asof_date=today, expected_session_date=expected_session
         )
@@ -402,6 +449,11 @@ def _fill_pending_orders(rows: list[dict], prices: dict[str, list[dict]], today:
         print(f"[paper] BUY {tk} {shares:.4f} @ {exec_open:.4f} "
               f"(reference open={ref_open:.4f}, signal={signal_date}, entry={bar['date']})")
     return filled, expired
+
+
+def execution_window_enabled() -> bool:
+    """Historical daily-bar fills/exits are processed only in the after-close EOD workflow."""
+    return os.environ.get("PAPER_EXECUTION_WINDOW", "SCAN").strip().upper() == "EOD"
 
 
 def observation_eligible() -> bool:
@@ -477,8 +529,10 @@ def main() -> int:
     rows = read_rows(LEDGER)
     prices = load_prices()
 
-    # Existing open positions are evaluated against all available completed bars.
-    closed_before = close_positions(rows, prices, today)
+    # Scan-triggered runs only register signals and observations. Execution is reserved for
+    # the separate after-close EOD workflow after refreshing today's completed daily bars.
+    execution_enabled = execution_window_enabled()
+    closed_before = close_positions(rows, prices, today) if execution_enabled else 0
 
     candidates = sorted(REPO.glob(PENDING_GLOB))
     candidates = [p for p in candidates if not p.name.endswith(".processed")]
@@ -490,10 +544,11 @@ def main() -> int:
     )
     created = _create_signal_orders(rows, candidates, today)
 
-    filled, expired = _fill_pending_orders(rows, prices, today=today)
-    # If an order is filled from a historical bar after a delayed data refresh, replay
-    # subsequent completed bars so the ledger does not pretend that the position is still open.
-    closed_after = close_positions(rows, prices, today)
+    if execution_enabled:
+        filled, expired = _fill_pending_orders(rows, prices, today=today)
+        closed_after = close_positions(rows, prices, today)
+    else:
+        filled, expired, closed_after = 0, 0, 0
 
     write_rows(LEDGER, rows)
     opened_now = sum(1 for r in rows if (r.get("Action") or "").upper() == "BUY" and not r.get("Exit_Date"))
