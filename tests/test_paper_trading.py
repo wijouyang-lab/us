@@ -241,6 +241,7 @@ def test_exit_does_not_backdate_trigger_to_old_close():
     assert rows[0]["Exit_Source_Date"] == "2026-10-20"
     assert rows[0]["Reason"] == "Delayed_Stop_Loss_Close_Trigger_2026-10-19"
     assert float(rows[0]["Exit_Reference_Price"]) == 98.0
+    assert rows[0]["Hold_Days"] == "2"
 
 
 def test_exit_waits_when_no_current_completed_bar_exists():
