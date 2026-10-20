@@ -30,6 +30,37 @@ def test_mean_ic_is_cross_sectional_per_date_not_pooled():
     assert abs(result["positive_date_pct"] - 50.0) < 1e-9, result
 
 
+def test_generated_death_autopsy_has_real_markdown_line_breaks_and_daily_ic():
+    old_values = (ta.BT, ta.SECTOR_HISTORY, ta.FUND, ta.OUT)
+    try:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            ta.BT = root / "backtest.csv"
+            ta.SECTOR_HISTORY = root / "missing_sector_history.csv"
+            ta.FUND = root / "missing_fundamentals.csv"
+            ta.OUT = root / "report.md"
+            rows = []
+            for date in ["2025-01-02", "2025-01-03"]:
+                for i in range(12):
+                    rows.append({
+                        "Scan_Date": date, "Ticker": f"T{i:02d}",
+                        "Momentum_20D_Pct": float(i), "BP": float(i) / 10,
+                        "Forward_Return_5D": float(i) / 100,
+                        "Forward_Return_10D": float(i % 5) / 100,
+                        "Forward_Return_20D": float(11-i) / 100,
+                    })
+            pd.DataFrame(rows).to_csv(ta.BT, index=False)
+            assert ta.main() == 0
+            text = ta.OUT.read_text(encoding="utf-8")
+            assert "\\n" not in text
+            lines = text.splitlines()
+            assert "## 2. IC 衰减（数据受限）" in lines
+            assert "## 3. BP 归因回归（必须有真实 PIT 市值与 PIT 行业）" in lines
+            assert "| 5D |" in text
+    finally:
+        ta.BT, ta.SECTOR_HISTORY, ta.FUND, ta.OUT = old_values
+
+
 def test_missing_pit_sector_file_fails_closed():
     with tempfile.TemporaryDirectory() as tmp:
         history, reason = ta.load_pit_sector_history(Path(tmp) / "missing.csv")
@@ -93,6 +124,7 @@ def test_bp_attribution_skips_without_market_cap_in_fundamentals():
 def main():
     tests = [
         test_mean_ic_is_cross_sectional_per_date_not_pooled,
+        test_generated_death_autopsy_has_real_markdown_line_breaks_and_daily_ic,
         test_missing_pit_sector_file_fails_closed,
         test_pit_sector_intervals_attach_by_effective_date,
         test_part1_computes_gross_and_cost_from_input_not_hardcoded_result,
