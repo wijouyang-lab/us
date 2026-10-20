@@ -84,10 +84,10 @@ def last_price(tk: str, prices: dict):
 
 
 def read_observation_dates(today: str, path: Path | None = None) -> list[str]:
-    """Return only Scan-backed observation dates whose price history had a same-day completed bar.
+    """Return Scan-backed dates only when completed price data was recent as of each run.
 
-    Historical rows lacking Data_AsOf_Date are rejected because they cannot prove that the
-    observation was made against corrected same-day market data.
+    Premarket Scan runs normally use the latest prior close. Allow up to four calendar days
+    of lag for weekends and a Monday market holiday; reject missing, stale, or future as-of dates.
     """
     path = path or OBSERVATIONS_FILE
     if not path.exists() or path.stat().st_size == 0:
@@ -98,13 +98,16 @@ def read_observation_dates(today: str, path: Path | None = None) -> list[str]:
             d = (row.get("Run_Date") or "").strip()
             asof = (row.get("Data_AsOf_Date") or "").strip()
             try:
-                parsed = datetime.strptime(d, "%Y-%m-%d").strftime("%Y-%m-%d")
-                parsed_asof = datetime.strptime(asof, "%Y-%m-%d").strftime("%Y-%m-%d")
+                run_day = datetime.strptime(d, "%Y-%m-%d").date()
+                data_day = datetime.strptime(asof, "%Y-%m-%d").date()
+                today_day = datetime.strptime(today, "%Y-%m-%d").date()
             except ValueError:
                 continue
-            if parsed_asof != parsed:
+            age = (run_day - data_day).days
+            if age < 0 or age > 4:
                 continue
-            if PLAN_START <= parsed <= today:
+            parsed = run_day.strftime("%Y-%m-%d")
+            if PLAN_START <= parsed <= today_day.strftime("%Y-%m-%d"):
                 dates.add(parsed)
     return sorted(dates)
 
