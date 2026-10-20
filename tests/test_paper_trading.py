@@ -14,6 +14,7 @@ from scripts.paper_trading import (
     commission,
     next_open_bar,
     net_trade_pnl,
+    observation_eligible,
     load_prices,
     PRICE_SCHEMA_VERSION,
     record_observation,
@@ -167,6 +168,23 @@ def test_missing_ticker_session_expires_instead_of_late_fill():
     assert rows[0]["Entry_Source_Date"] == "2026-10-20"
 
 
+def test_manual_runs_do_not_advance_observation_gate(monkeypatch=None):
+    import os
+    previous = os.environ.get("PAPER_RECORD_OBSERVATION")
+    try:
+        os.environ.pop("PAPER_RECORD_OBSERVATION", None)
+        assert observation_eligible() is False
+        os.environ["PAPER_RECORD_OBSERVATION"] = "0"
+        assert observation_eligible() is False
+        os.environ["PAPER_RECORD_OBSERVATION"] = "1"
+        assert observation_eligible() is True
+    finally:
+        if previous is None:
+            os.environ.pop("PAPER_RECORD_OBSERVATION", None)
+        else:
+            os.environ["PAPER_RECORD_OBSERVATION"] = previous
+
+
 def test_observation_log_counts_zero_signal_days_and_is_idempotent():
     import csv
     import tempfile
@@ -282,6 +300,7 @@ def main():
         test_pending_order_stays_pending_without_future_bar,
         test_missing_ticker_session_expires_instead_of_late_fill,
         test_observation_log_counts_zero_signal_days_and_is_idempotent,
+        test_manual_runs_do_not_advance_observation_gate,
         test_stale_pending_file_does_not_create_backdated_order,
         test_pending_order_expires_when_corrected_history_is_delayed_too_long,
         test_legacy_or_mixed_price_schema_fails_closed,
