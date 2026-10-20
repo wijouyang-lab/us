@@ -46,7 +46,10 @@ jobs:
             const ageHours = latest
               ? (now.getTime() - Date.parse(latest.created_at)) / 3600000
               : Infinity;
-            const stale = !latest || ageHours > thresholdHours;
+            const failedLatest = Boolean(
+              latest && latest.status === "completed" && latest.conclusion !== "success"
+            );
+            const stale = !latest || ageHours > thresholdHours || failedLatest;
 
             const title = "[Scan Watchdog] No recent Scan workflow run";
             const { data: issues } = await github.rest.issues.listForRepo({
@@ -60,10 +63,13 @@ jobs:
 
             if (stale) {
               const body = [
-                "The Scan workflow has no recent recorded run within the watchdog threshold.",
+                failedLatest
+                  ? "The most recent Scan workflow run completed unsuccessfully."
+                  : "The Scan workflow has no recent recorded run within the watchdog threshold.",
                 "",
                 `Checked at: ${now.toISOString()}`,
                 `Allowed age: ${thresholdHours} hours (UTC weekday ${weekdayUtc})`,
+                `Latest-run failure: ${failedLatest}`,
                 "",
                 latestSummary,
                 "",
