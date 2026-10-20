@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import Iterable, Mapping
 
 
-def unseen_pending_items(path: str | Path, candidates: Iterable[Mapping]) -> list[Mapping]:
+def unseen_pending_items(path: str | Path, candidates: Iterable[Mapping], expected_columns: list[str] | None = None) -> list[Mapping]:
     """Return first-seen ticker candidates not already present in a pending CSV.
 
     Existing rows are never modified. A malformed existing file raises instead of
@@ -22,6 +22,11 @@ def unseen_pending_items(path: str | Path, candidates: Iterable[Mapping]) -> lis
             reader = csv.DictReader(fh)
             if not reader.fieldnames or "Ticker" not in reader.fieldnames:
                 raise ValueError(f"pending CSV has no Ticker column: {target}")
+            if expected_columns is not None and reader.fieldnames != expected_columns:
+                raise ValueError(
+                    f"pending CSV schema mismatch: {target}; "
+                    f"expected {expected_columns!r}, found {reader.fieldnames!r}"
+                )
             for row in reader:
                 ticker = str(row.get("Ticker", "")).strip().upper()
                 if ticker:
