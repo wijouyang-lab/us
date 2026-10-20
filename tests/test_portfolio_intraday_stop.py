@@ -116,15 +116,3 @@ def test_intraday_stop_does_not_run_outside_regular_session(tmp_path, monkeypatc
     assert (tmp_path / pf.POSITIONS_FILE).read_text(encoding="utf-8") == before
     assert _read_rows(tmp_path / pf.TRANSACTIONS_FILE) == []
 
-
-if __name__ == "__main__":
-    tests = [
-        test_numeric_parser_accepts_currency_formatted_prices,
-        test_intraday_stop_triggers_on_valid_dollar_formatted_stop,
-        test_intraday_stop_fails_closed_when_quote_missing,
-        test_intraday_stop_does_not_run_outside_regular_session,
-    ]
-    for test in tests:
-        test()
-        print(f"[PASS] {test.__name__}")
-    print(f"Result: {len(tests)}/{len(tests)} passed")
