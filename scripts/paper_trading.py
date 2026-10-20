@@ -49,6 +49,10 @@ PENDING_MAX_AGE_CALENDAR_DAYS = 4
 SLIPPAGE_BPS = float(os.environ.get("PAPER_SLIPPAGE_BPS", "5.0"))
 COMMISSION_BPS = float(os.environ.get("PAPER_COMMISSION_BPS", "0.5"))
 PRICE_SCHEMA_VERSION = "phase2b.v2"
+if not math.isfinite(SLIPPAGE_BPS) or SLIPPAGE_BPS < 0:
+    raise ValueError("PAPER_SLIPPAGE_BPS must be finite and non-negative")
+if not math.isfinite(COMMISSION_BPS) or COMMISSION_BPS < 0:
+    raise ValueError("PAPER_COMMISSION_BPS must be finite and non-negative")
 US_TZ = ZoneInfo("America/New_York")
 
 
@@ -144,20 +148,20 @@ def next_open_bar(series: list[dict], signal_date: str, asof_date: str | None = 
 
 
 def buy_execution_price(reference_open: float, slippage_bps: float = SLIPPAGE_BPS) -> float:
-    if _positive_float(reference_open) is None or slippage_bps < 0:
-        raise ValueError("买入参考价必须为正数，滑点不能为负")
+    if _positive_float(reference_open) is None or not math.isfinite(slippage_bps) or slippage_bps < 0:
+        raise ValueError("买入参考价必须为正数，滑点必须有限且不能为负")
     return reference_open * (1.0 + slippage_bps / 10000.0)
 
 
 def sell_execution_price(reference_close: float, slippage_bps: float = SLIPPAGE_BPS) -> float:
-    if _positive_float(reference_close) is None or slippage_bps < 0:
-        raise ValueError("卖出参考价必须为正数，滑点不能为负")
+    if _positive_float(reference_close) is None or not math.isfinite(slippage_bps) or slippage_bps < 0:
+        raise ValueError("卖出参考价必须为正数，滑点必须有限且不能为负")
     return reference_close * (1.0 - slippage_bps / 10000.0)
 
 
 def commission(notional: float, commission_bps: float = COMMISSION_BPS) -> float:
-    if not math.isfinite(notional) or notional < 0 or commission_bps < 0:
-        raise ValueError("名义金额必须非负且有限，佣金不能为负")
+    if not math.isfinite(notional) or notional < 0 or not math.isfinite(commission_bps) or commission_bps < 0:
+        raise ValueError("名义金额必须非负且有限，佣金费率必须有限且不能为负")
     return notional * commission_bps / 10000.0
 
 
