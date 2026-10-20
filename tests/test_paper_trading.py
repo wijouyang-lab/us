@@ -343,7 +343,7 @@ def main():
         test_missing_ticker_session_expires_instead_of_late_fill,
         test_observation_log_counts_zero_signal_days_and_is_idempotent,
         test_manual_runs_do_not_advance_observation_gate,
-        test_observation_requires_same_day_completed_price_bar,
+        test_observation_requires_recent_completed_price_bar,
         test_stale_pending_file_does_not_create_backdated_order,
         test_pending_order_expires_when_corrected_history_is_delayed_too_long,
         test_legacy_or_mixed_price_schema_fails_closed,
