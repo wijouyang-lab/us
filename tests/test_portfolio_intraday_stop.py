@@ -75,7 +75,7 @@ def test_intraday_stop_triggers_on_valid_dollar_formatted_stop(tmp_path, monkeyp
     _setup(tmp_path, "$95.00")
     monkeypatch.setattr(
         pf, "fetch_intraday_last_prices",
-        lambda tickers, now_et=None: {"AAA": {"current": Decimal("94.00"), "as_of": NOW_OPEN.isoformat()}},
+        lambda tickers, now_et=None: {"AAA": {"current": Decimal("94.00"), "as_of": datetime(2026, 10, 20, 10, 25, tzinfo=ET).isoformat()}},
     )
 
     result = pf._run_intraday_stop(tmp_path, TODAY, offline=False, now_et=NOW_OPEN)
@@ -89,6 +89,7 @@ def test_intraday_stop_triggers_on_valid_dollar_formatted_stop(tmp_path, monkeyp
     assert txns[0]["Action"] == "SELL"
     assert txns[0]["Reason"] == "Intraday Stop Loss"
     assert txns[0]["Price"] == "94.00"
+    assert txns[0]["Quote_As_Of"] == datetime(2026, 10, 20, 10, 25, tzinfo=ET).isoformat()
 
 
 def test_intraday_stop_fails_closed_when_quote_missing(tmp_path, monkeypatch):
@@ -199,3 +200,13 @@ def test_intraday_quote_fails_closed_when_bar_is_from_another_session(monkeypatc
     _mock_yfinance(monkeypatch, prior_day)
 
     assert pf.fetch_intraday_last_prices(["AAA"], now_et=NOW_OPEN) == {}
+
+
+
+def test_stop_transaction_schema_appends_quote_timestamp_without_reordering():
+    assert pf.TRANSACTION_COLUMNS[:14] == [
+        "Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
+        "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
+        "Portfolio_ID", "Unit_ID",
+    ]
+    assert pf.TRANSACTION_COLUMNS[-2:] == ["Pending_Reason", "Quote_As_Of"]
