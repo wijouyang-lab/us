@@ -68,6 +68,23 @@ def test_void_row_does_not_block_corrected_signal():
         assert len({row["Txn_ID"] for row in rows}) == len(rows)
 
 
+def test_stale_pending_expires_even_if_history_has_next_open():
+    rows = [{
+        "Txn_ID": "AAA|2026-10-19|BUY", "Signal_Date": "2026-10-19",
+        "Ticker": "AAA", "Action": "PENDING", "Entry_Date": "",
+        "Entry_Price": "", "Shares": "", "Entry_Commission": "",
+        "Exit_Date": "", "Mode": "PAPER",
+    }]
+    prices = {"AAA": [
+        {"date": "2026-10-19", "open": 49.0, "high": 51.0, "low": 48.0, "close": 50.0},
+        {"date": "2026-10-20", "open": 48.5, "high": 50.0, "low": 47.0, "close": 49.0},
+    ]}
+    filled, expired = _fill_pending_orders(rows, prices, today="2026-10-25")
+    assert (filled, expired) == (0, 1)
+    assert rows[0]["Action"] == "EXPIRED"
+    assert rows[0]["Reason"] == "SIGNAL_TOO_OLD_TO_FILL"
+
+
 def test_missing_first_open_expires_order_instead_of_late_fill():
     rows = [{
         "Txn_ID": "AAA|2026-10-19|BUY", "Signal_Date": "2026-10-19",
@@ -294,6 +311,7 @@ def main():
         test_asof_date_blocks_future_bar,
         test_void_row_does_not_block_corrected_signal,
         test_missing_first_open_expires_order_instead_of_late_fill,
+        test_stale_pending_expires_even_if_history_has_next_open,
         test_buy_sell_slippage_is_adverse,
         test_commission_and_net_pnl_include_both_sides,
         test_fill_pending_uses_next_real_open_and_records_costs,
