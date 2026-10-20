@@ -23,6 +23,7 @@ on:
       - "scripts/pending_merge.py"
       - "tests/test_ai_item_matching.py"
       - "scripts/ai_item_matching.py"
+      - "tests/test_ai_explanation_wiring.py"
       - "tests/test_paper_trading_report.py"
       - "tests/test_atr_position_sizing.py"
       - "tests/test_turnover_cost_analysis.py"
@@ -49,6 +50,7 @@ on:
       - "scripts/pending_merge.py"
       - "tests/test_ai_item_matching.py"
       - "scripts/ai_item_matching.py"
+      - "tests/test_ai_explanation_wiring.py"
       - "tests/test_paper_trading_report.py"
       - "tests/test_atr_position_sizing.py"
       - "tests/test_turnover_cost_analysis.py"
@@ -109,6 +111,9 @@ jobs:
 
       - name: Test AI explanation ticker matching
         run: python tests/test_ai_item_matching.py
+
+      - name: Test AI explanation wiring and diagnostics
+        run: python tests/test_ai_explanation_wiring.py
 
       - name: Test paper report schema guard
         run: python tests/test_paper_trading_report.py
