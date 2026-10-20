@@ -5,7 +5,7 @@
 三部分：
   ① 换手率与成本（行业轮动策略）—— 全量可算 ✓
   ② IC 衰减曲线 —— **仅 5/10/20D 三档可用**（数据无逐日前瞻）✗，如实标注
-  ③ BP 归因回归（控制 Size 与 Sector）—— 用 Price 作 size 代理 ✗（无市值字段）
+  ③ BP 归因回归——必须具备真实 PIT Market_Cap 与有效日期 PIT Sector；任一缺失则 fail-closed
 
 输出 docs/DEATH_AUTOPSY.md
 """
@@ -218,6 +218,9 @@ def main() -> int:
         raise SystemExit("backtest CSV 缺少 Scan_Date/Ticker/Momentum 必需字段")
     d["Scan_Date"] = pd.to_datetime(d["Scan_Date"], errors="coerce")
     d[MOM] = pd.to_numeric(d[MOM], errors="coerce")
+    d["Ticker"] = d["Ticker"].astype(str).str.strip().str.upper()
+    d = d.dropna(subset=["Scan_Date", MOM])
+    d = d[d["Ticker"].ne("")]
     history, sector_reason = load_pit_sector_history()
     if history is None:
         d["Sector"] = ""
