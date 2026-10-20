@@ -54,7 +54,10 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add portfolio_paper_transactions.csv portfolio_paper_observation_dates.csv docs/PAPER_TRADING_REPORT.md
+          git add portfolio_paper_transactions.csv docs/PAPER_TRADING_REPORT.md
+          if [ -f portfolio_paper_observation_dates.csv ]; then
+            git add portfolio_paper_observation_dates.csv
+          fi
           if git diff --cached --quiet; then
             echo "no change to commit"
             exit 0
