@@ -48,6 +48,23 @@ All 1,516 weekend labels belong to `phase2b.v1`; the `phase2b.v2` rows have no w
 
 Code/data mismatch also exists on the inspected production baseline: `quant_factor_price.py` on `main` declares `SCHEMA_VERSION = phase2b.v1`, while the file is mixed between v1 and v2. The PR branch's writer uses v2. The PR branch's Paper Trading reader correctly fails closed unless the entire history is v2, while the currently inspected `main` reader does not validate the version column before consuming Date/Ticker/Close.
 
+### 2a. Read-only cross-schema overlap check
+
+To test the suspected one-calendar-day label shift without changing any rows, I matched each `phase2b.v1` record to a `phase2b.v2` record using `(v1.Date + 1 calendar day, uppercase Ticker)`. This is diagnostic evidence only; it is not a migration rule.
+
+| Cross-check | Observed |
+|---|---:|
+| v1 rows with an existing v2 row at `Date + 1` for the same ticker | 594 |
+| Matched rows with equal `Close` | **594 / 594** |
+| Matched rows with a differing `Close` | **0** |
+| Matched rows where Open/High/Low are present in both versions and differ | **0** (260 comparable rows per field) |
+| Matched rows with Volume present in both versions and differing | **46 / 260** |
+| Matched v1 rows with blank Open/High/Low/Volume | 334 for each field |
+| v1 rows whose `Date + 1` target is after the latest v2 date (2026-10-14) | 939 |
+| v1 rows whose `Date + 1` target still falls on a weekend | 0 |
+
+The overlap supports the hypothesis that at least part of v1 is mislabeled one calendar day early: every overlapping close matches exactly after a +1-day match. But the evidence covers only 594 of 3,886 legacy rows. Some legacy rows have incomplete OHLCV values, 46 observed Volume values differ from v2, and most legacy rows have no same-ticker v2 match at the shifted date. **Do not auto-shift all v1 rows or discard them based on this overlap alone.** A candidate rebuild from authoritative daily bars remains the safer repair.
+
 ### 3. Intraday stop scheduling is not the documented cadence
 
 The production `.github/workflows/dashboard-data.yml` contains an `--intraday-stop` call. Its current cron is `0 * * * 1-5` (hourly), although the workflow comment says every 15 minutes and the design document specifies 15-minute monitoring. The workflow also contains a stale top-level comment saying the dashboard workflow does not run stop logic. The actual stop step uses `continue-on-error: true`, so the workflow can complete even if that step fails.
