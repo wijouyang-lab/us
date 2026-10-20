@@ -36,6 +36,12 @@ def test_missing_tickers_and_fields_are_explicitly_diagnosed():
     assert "Core {ok_core} 六段 / Observation {ok_obs} 极简" in src
 
 
+def test_candidate_tag_has_explicit_observation_schema():
+    src = _source()
+    assert 'tag="Observation" 或 tag="Candidate"' in src
+    assert "Candidate 是程序内部候选标签，不代表要输出另一种 schema" in src
+
+
 if __name__ == "__main__":
     tests = [
         test_ai_matcher_and_field_normalizer_are_wired,
