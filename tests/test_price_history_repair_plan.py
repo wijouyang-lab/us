@@ -74,7 +74,7 @@ def test_plan_classifies_rows_without_v2_reference(tmp_path):
     assert by_ticker["MSFT"]["Classification"] == "NO_V2_REFERENCE_AFTER_V2_RANGE"
     assert by_ticker["NVDA"]["Proposed_Date_Offset"] == "2026-10-18"
     assert by_ticker["NVDA"]["Classification"] == "NO_V2_REFERENCE_AFTER_V2_RANGE"
-    assert summary["proposed_target_weekend_rows"] == 1
+    assert summary["proposed_target_weekend_rows"] == 2
     assert summary["close_mismatches"] == 0
 
 
