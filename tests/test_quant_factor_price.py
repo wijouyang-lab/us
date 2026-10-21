@@ -9,6 +9,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import quant_factor_price as price_mod
 from quant_factor_price import (
     PRICE_HISTORY_COLUMNS,
     filter_completed_daily_bars,
@@ -185,6 +186,65 @@ def test_update_with_injected_fetch():
           f"total={r2['total_rows']} new={r2['new_rows']}")
 
 
+# ---- empty price-fetch behavior: preserve history and keep Scan flowing ----
+def test_empty_fetch_preserves_existing_file():
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "snap.csv")
+    ph_path = os.path.join(tmp, "price_history.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+    original = (
+        "Date,Ticker,Open,High,Low,Close,Volume,schema_version\n"
+        "2026-02-02,AAA,,,,100,,phase2b.v1\n"
+    ).encode("utf-8")
+    with open(ph_path, "wb") as fh:
+        fh.write(original)
+
+    def empty_fetch(tickers, start, end):
+        return pd.DataFrame(columns=PRICE_HISTORY_COLUMNS)
+
+    result = update_price_history(
+        snapshot_path=snap_path, price_history_path=ph_path, fetch_func=empty_fetch
+    )
+    with open(ph_path, "rb") as fh:
+        after = fh.read()
+    check("空 fetch 明确标为 FETCH_EMPTY", result["status"] == "FETCH_EMPTY",
+          f"got {result['status']}")
+    check("空 fetch 保留历史行数", result["total_rows"] == 1,
+          f"got {result['total_rows']}")
+    check("空 fetch 不改写已有文件字节", after == original)
+    check("空 fetch 不留下临时文件", not os.path.exists(ph_path + ".tmp"))
+
+
+def test_empty_fetch_does_not_create_header_only_csv():
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "snap.csv")
+    ph_path = os.path.join(tmp, "price_history.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+
+    def empty_fetch(tickers, start, end):
+        return pd.DataFrame(columns=PRICE_HISTORY_COLUMNS)
+
+    result = update_price_history(
+        snapshot_path=snap_path, price_history_path=ph_path, fetch_func=empty_fetch
+    )
+    check("首次空 fetch 返回 FETCH_EMPTY", result["status"] == "FETCH_EMPTY",
+          f"got {result['status']}")
+    check("首次空 fetch 不创建只有表头的历史文件", not os.path.exists(ph_path))
+    check("首次空 fetch 不写临时文件", not os.path.exists(ph_path + ".tmp"))
+
+
+def test_fetch_empty_does_not_fail_scan_step():
+    original = price_mod.update_price_history
+    try:
+        price_mod.update_price_history = lambda: {
+            "status": "FETCH_EMPTY",
+            "reason": "test-only empty result",
+        }
+        check("FETCH_EMPTY 只产生 warning，不阻断 Scan", price_mod.main() == 0)
+    finally:
+        price_mod.update_price_history = original
+
+
 # ---- price_map_from_history ----
 def test_price_map():
     df = make_history_df()
@@ -270,6 +330,9 @@ def main():
         test_empty_snapshot,
         test_full_universe,
         test_update_with_injected_fetch,
+        test_empty_fetch_preserves_existing_file,
+        test_empty_fetch_does_not_create_header_only_csv,
+        test_fetch_empty_does_not_fail_scan_step,
         test_price_map,
         test_filter_bars,
         test_schema_has_ohlcv,

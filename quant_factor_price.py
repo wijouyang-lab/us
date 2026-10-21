@@ -281,6 +281,18 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
     new_df = fn(tickers, start, end)
 
     existing = load_price_history(price_history_path)
+    if new_df is None or not isinstance(new_df, pd.DataFrame) or new_df.empty:
+        # A network/data-source failure must never be reported as a successful refresh.
+        # Keep the existing file byte-for-byte (or keep it absent on first-run failure)
+        # rather than rewriting stale data or creating a header-only CSV.
+        result["status"] = "FETCH_EMPTY"
+        result["total_rows"] = int(len(existing))
+        result["reason"] = (
+            "行情下载返回 0 行；保留已有价格历史，不写入空文件。"
+            "研究收益标签可能暂时不完整，下一次 Scan 将重试。"
+        )
+        return result
+
     merged = upsert_price_history(existing, new_df)
     result["new_rows"] = int(len(merged) - len(existing))
     result["total_rows"] = int(len(merged))
@@ -297,6 +309,12 @@ def update_price_history(snapshot_path=SNAPSHOT_PATH, price_history_path=PRICE_H
 def main(argv=None):
     r = update_price_history()
     print("[Price History]", r)
+    if r["status"] == "FETCH_EMPTY":
+        # Research price collection must not prevent a valid production Scan from
+        # committing its Pending output. The warning remains visible in Actions;
+        # backtest's strict missing-future-data rules prevent fabricated returns.
+        print("::warning::[QUANT_PRICE_HISTORY_FETCH_EMPTY] " + str(r.get("reason", "no rows fetched")))
+        return 0
     return 0 if r["status"] in ("OK", "NO_SNAPSHOT", "EMPTY_SNAPSHOT", "NO_TICKERS") else 1
 
 
