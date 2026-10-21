@@ -219,7 +219,13 @@ def test_single_phase_failure_isolated(workdir):
         _clear_override()
     assert summary["phases"]["2"]["status"] == "ERROR"
     assert summary["phases"]["2"]["_error"] is not None
-    for n in ("3", "4", "5", "6", "7"):
+    # Phase 3/4/5 must not reuse stale downstream artifacts after Phase 2 failed.
+    for n in ("3", "4", "5"):
+        assert summary["phases"][n]["status"] == "NOT_ENOUGH_DATA"
+        assert summary["phases"][n]["written"] is False
+        assert "阻止复用旧文件" in summary["phases"][n]["reason"]
+    # Independent Shadow/Production phases still run and are isolated from Phase 2.
+    for n in ("6", "7"):
         assert summary["phases"][n]["status"] == "OK"
     # 失败隔离：非 strict 下仍退出 0
     assert code == 0
