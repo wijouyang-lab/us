@@ -120,8 +120,24 @@ jobs:
             ARGS="$ARGS --no-stooq"
           fi
           ARGS="$ARGS --runtimes dashboard/data/runtimes.json"
+          # The default Actions shell enables -e but not necessarily pipefail.
+          # Capture both pipeline statuses so a failed Python exporter cannot be hidden
+          # by a successful tee process.
+          set +e
           python dashboard_export.py $ARGS 2>&1 | tee dashboard/data/last_run.log
-          echo "exit=${PIPESTATUS[0]}"
+          pipeline_status=("${PIPESTATUS[@]}")
+          set -e
+          exporter_status="${pipeline_status[0]:-1}"
+          tee_status="${pipeline_status[1]:-1}"
+          echo "exporter_exit=${exporter_status} tee_exit=${tee_status}"
+          if [ "${exporter_status}" -ne 0 ]; then
+            echo "::error::dashboard_export.py failed with exit code ${exporter_status}"
+            exit "${exporter_status}"
+          fi
+          if [ "${tee_status}" -ne 0 ]; then
+            echo "::error::tee failed to persist dashboard_export logs"
+            exit "${tee_status}"
+          fi
 
       - name: Summarize run
         run: |
