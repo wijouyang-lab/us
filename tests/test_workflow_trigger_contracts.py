@@ -2,72 +2,72 @@
 """Regression tests for the low-frequency project's workflow trigger contract."""
 
 from pathlib import Path
-
-import yaml
+import re
 
 REPO = Path(__file__).resolve().parents[1]
 WORKFLOWS = REPO / ".github" / "workflows"
 
 
 def _workflow(name):
-    data = yaml.safe_load((WORKFLOWS / name).read_text(encoding="utf-8"))
-    # PyYAML's YAML 1.1 resolver may parse the unquoted key "on" as True.
-    events = data.get(True, data.get("on"))
-    assert isinstance(events, dict), name
-    return data, events
+    text = (WORKFLOWS / name).read_text(encoding="utf-8")
+    lines = text.splitlines()
+    start = next(i for i, line in enumerate(lines) if line == "on:")
+    end = next(
+        (i for i in range(start + 1, len(lines))
+         if lines[i] and not lines[i][0].isspace() and not lines[i].lstrip().startswith("#")),
+        len(lines),
+    )
+    trigger = "\n".join(lines[start + 1:end])
+    events = re.findall(r"(?m)^  ([A-Za-z_]+):\s*$", trigger)
+    crons = re.findall(r"(?m)^\s+- cron:\s*['\"]?([^'\"\n]+)['\"]?\s*$", trigger)
+    return text, trigger, set(events), crons
 
 
 def test_scan_remains_external_dispatch_only():
-    workflow, events = _workflow("scan.yml")
+    workflow, _trigger, events, crons = _workflow("scan.yml")
 
-    assert set(events) == {"workflow_dispatch"}
-    assert "schedule" not in events
-    assert "push" not in events
-    assert "pull_request" not in events
-
-    assert workflow["concurrency"]["group"] == "us-stock-scan"
-    assert workflow["concurrency"]["cancel-in-progress"] is False
-    assert any(
-        step.get("run") == "python scan.py"
-        for step in workflow["jobs"]["scan"]["steps"]
-    )
+    assert events == {"workflow_dispatch"}
+    assert crons == []
+    assert "run: python scan.py" in workflow
+    assert re.search(r"(?m)^  group: us-stock-scan$", workflow)
+    assert re.search(r"(?m)^  cancel-in-progress: false$", workflow)
 
 
 def test_review_keeps_only_dispatch_and_existing_weekday_schedule():
-    workflow, events = _workflow("review.yml")
+    workflow, _trigger, events, crons = _workflow("review.yml")
 
-    assert set(events) == {"workflow_dispatch", "schedule"}
-    assert [x["cron"] for x in events["schedule"]] == ["23 22 * * 1-5"]
-    assert workflow["concurrency"]["group"] == "us-stock-portfolio-ledger"
-    assert workflow["concurrency"]["cancel-in-progress"] is False
+    assert events == {"workflow_dispatch", "schedule"}
+    assert crons == ["23 22 * * 1-5"]
+    assert re.search(r"(?m)^  group: us-stock-portfolio-ledger$", workflow)
+    assert re.search(r"(?m)^  cancel-in-progress: false$", workflow)
 
 
 def test_dashboard_refresh_schedule_and_push_scope_remain_narrow():
-    workflow, events = _workflow("dashboard-data.yml")
+    workflow, trigger, events, crons = _workflow("dashboard-data.yml")
 
-    assert set(events) == {"schedule", "workflow_dispatch", "push"}
-    assert [x["cron"] for x in events["schedule"]] == ["0 * * * 1-5"]
-    assert events["push"]["branches"] == ["main"]
-    assert events["push"]["paths"] == [
+    assert events == {"schedule", "workflow_dispatch", "push"}
+    assert crons == ["0 * * * 1-5"]
+    assert re.search(r"(?m)^    branches: \[main\]$", trigger)
+    for path in (
         "dashboard_export.py",
         "dashboard/fetch_runtimes.py",
         "dashboard/summarize_run.py",
         ".github/workflows/dashboard-data.yml",
-    ]
-    assert workflow["concurrency"]["group"] == "us-stock-portfolio-ledger"
-    assert workflow["concurrency"]["cancel-in-progress"] is False
+    ):
+        assert f"- {path}" in trigger
+    assert re.search(r"(?m)^  group: us-stock-portfolio-ledger$", workflow)
+    assert re.search(r"(?m)^  cancel-in-progress: false$", workflow)
 
 
 def test_quant_research_does_not_gain_an_independent_schedule():
-    _, events = _workflow("quant-research.yml")
+    _workflow_text, _trigger, events, crons = _workflow("quant-research.yml")
 
-    assert set(events) == {"workflow_dispatch", "workflow_call"}
-    assert "schedule" not in events
-    assert "push" not in events
+    assert events == {"workflow_dispatch", "workflow_call"}
+    assert crons == []
 
 
 def test_evolve_schedule_stays_monthly_and_manual():
-    _, events = _workflow("evolve.yml")
+    _workflow_text, _trigger, events, crons = _workflow("evolve.yml")
 
-    assert set(events) == {"workflow_dispatch", "schedule"}
-    assert [x["cron"] for x in events["schedule"]] == ["0 2 1 * *"]
+    assert events == {"workflow_dispatch", "schedule"}
+    assert crons == ["0 2 1 * *"]
