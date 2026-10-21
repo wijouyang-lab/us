@@ -21,12 +21,14 @@ def test_dashboard_writer_is_restricted_to_main_pushes():
 
 def test_dashboard_writer_job_has_main_ref_guard():
     source = WORKFLOW.read_text(encoding="utf-8")
-    assert re.search(
-        r"(?m)^\s{4}if:\s*github\.ref\s*==\s*'refs/heads/main'\s*$",
+    job = re.search(
+        r"(?ms)^  refresh:\n(?P<body>(?:^[ ]{4,}.*\n)+)",
         source,
-    ), (
-        "The Dashboard Data Refresh job needs a second main-ref guard so workflow_dispatch "
-        "on a feature branch cannot run the main-writing job"
+    )
+    assert job is not None, "Dashboard Data Refresh refresh job must exist"
+    assert re.search(r"github\.ref\s*==\s*'refs/heads/main'", job.group("body")), (
+        "The Dashboard Data Refresh job must retain a main-ref guard, including when "
+        "the guard is combined with workflow_run success checks"
     )
 
 
