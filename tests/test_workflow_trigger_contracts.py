@@ -79,7 +79,7 @@ def test_price_history_rebuild_is_manual_and_fails_closed():
     assert "github.ref == 'refs/heads/main'" in workflow
     assert "Invalid non-positive/non-finite" in workflow
     assert "expected_tickers - actual_tickers" in workflow
-    assert "backup SHA256" in workflow
+    assert "Backup SHA256" in workflow
     assert ".quant_price_history_rebuild_baseline.json" in workflow
 
 
