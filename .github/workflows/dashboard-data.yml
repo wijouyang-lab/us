@@ -110,21 +110,35 @@ jobs:
 
       - name: Run dashboard_export.py
         id: export
+        env:
+          # Pass workflow_dispatch input through the environment; never interpolate
+          # user-controlled input into shell source.
+          INPUT_KLINE_BARS: ${{ github.event.inputs.kline_bars }}
+          INPUT_NO_STOOQ: ${{ github.event.inputs.no_stooq }}
         run: |
           mkdir -p dashboard/data
-          ARGS="--data-dir . --out dashboard/data/dashboard_data.json --timeout 20 --retries 3"
-          if [ "${{ github.event.inputs.kline_bars }}" != "" ]; then
-            ARGS="$ARGS --kline-bars ${{ github.event.inputs.kline_bars }}"
+          ARGS=(--data-dir . --out dashboard/data/dashboard_data.json --timeout 20 --retries 3)
+          if [[ -n "${INPUT_KLINE_BARS:-}" ]]; then
+            if [[ ! "${INPUT_KLINE_BARS}" =~ ^[1-9][0-9]{0,3}$ ]]; then
+              echo "::error::kline_bars must be a positive integer no greater than 9999"
+              exit 2
+            fi
+            ARGS+=(--kline-bars "${INPUT_KLINE_BARS}")
           fi
-          if [ "${{ github.event.inputs.no_stooq }}" = "true" ]; then
-            ARGS="$ARGS --no-stooq"
-          fi
-          ARGS="$ARGS --runtimes dashboard/data/runtimes.json"
+          case "${INPUT_NO_STOOQ:-false}" in
+            true) ARGS+=(--no-stooq) ;;
+            false|"") ;;
+            *)
+              echo "::error::no_stooq must be true or false"
+              exit 2
+              ;;
+          esac
+          ARGS+=(--runtimes dashboard/data/runtimes.json)
           # The default Actions shell enables -e but not necessarily pipefail.
           # Capture both pipeline statuses so a failed Python exporter cannot be hidden
           # by a successful tee process.
           set +e
-          python dashboard_export.py $ARGS 2>&1 | tee dashboard/data/last_run.log
+          python dashboard_export.py "${ARGS[@]}" 2>&1 | tee dashboard/data/last_run.log
           pipeline_status=("${PIPESTATUS[@]}")
           set -e
           exporter_status="${pipeline_status[0]:-1}"
