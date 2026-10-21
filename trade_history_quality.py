@@ -23,13 +23,18 @@ def field_is_informative(value):
 def review_event_key(df):
     """构造 Review Event Key = Ticker|Date|Tag（幂等键）。"""
     date_str = pd.to_datetime(df["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
+    tags = (df["Tag"].astype(str).str.strip()
+            if "Tag" in df.columns else pd.Series([""] * len(df), index=df.index))
     return (df["Ticker"].astype(str).str.upper().str.strip()
             + "|" + date_str.fillna("")
-            + "|" + df["Tag"].astype(str).str.strip())
+            + "|" + tags)
 
 
 def deduplicate_trade_history(df):
     """按 Review Event Key (Ticker|Date|Tag) 确定性去重。
+
+    Tag 只做首尾空白规范化；大小写保留，空 Tag 作为独立事件，不与
+    Core_Dragon/Observation 合并。旧格式缺少 Tag 列时按空 Tag 处理。
 
     Canonical Record 规则（勿随意更改，测试覆盖）：
       - 同一个 Event Key 的多行中，优先保留信息更完整的一行 —— 即
