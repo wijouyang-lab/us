@@ -160,6 +160,10 @@ check("D4. 明确列出三个正式数据文件",
                             "dashboard/data/last_run.log")))
 check("D5. 存在提交范围守卫（非预期文件即失败）",
       "检测到非预期文件进入提交范围" in wf)
+check("D6. dashboard_export.py / tee 任一失败都会让步骤失败",
+      'pipeline_status=("${PIPESTATUS[@]}")' in wf
+      and 'if [ "${exporter_status}" -ne 0 ]; then' in wf
+      and 'if [ "${tee_status}" -ne 0 ]; then' in wf)
 
 # ---------------------------------------------------------------- E
 print("\n--- E. concurrency ---")
