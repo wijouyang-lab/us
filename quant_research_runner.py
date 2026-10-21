@@ -35,7 +35,7 @@ PHASE_SPECS = [
         "num": 2, "name": "backtest",
         "module": "quant_factor_backtest", "func": "run_backtest_from_history",
         "inputs": [("quant_factor_snapshot.csv", "phase1.v1"),
-                   ("quant_factor_price_history.csv", "phase2b.v1")],
+                   ("quant_factor_price_history.csv", "phase2b.v2")],
     },
     {
         "num": 3, "name": "validation",
@@ -93,6 +93,32 @@ def _read_schema_version(path):
         return None
 
 
+def _read_schema_versions(path):
+    """Read every row's schema version; missing values are explicit failures."""
+    try:
+        if not os.path.exists(path) or os.path.getsize(path) == 0:
+            return set()
+        import csv
+        with open(path, "r", encoding="utf-8", newline="") as fh:
+            reader = csv.DictReader(fh)
+            if not reader.fieldnames or "schema_version" not in reader.fieldnames:
+                return set()
+            versions = set()
+            for row in reader:
+                value = str(row.get("schema_version") or "").strip()
+                versions.add(value if value else "<MISSING>")
+            return versions
+    except Exception:
+        return set()
+
+
+PHASE_DEPENDENCIES = {
+    3: (2,),  # Validation depends on a fresh successful Phase 2 result.
+    4: (3,),  # Candidate scoring depends on fresh validation/correlation.
+    5: (2,),  # Walk-forward depends on a fresh successful Phase 2 result.
+}
+
+
 def _precheck(spec, workdir):
     """返回 (ok, reason, schema_warnings)。ok=False 时该 Phase 应降级跳过（不调用 run_*）。"""
     warnings = []
@@ -101,9 +127,16 @@ def _precheck(spec, workdir):
         if not os.path.exists(fpath) or os.path.getsize(fpath) == 0:
             return False, "输入缺失或为空: %s" % fname, warnings
         if expected is not None:
-            actual = _read_schema_version(fpath)
-            if actual is not None and actual != expected:
-                warnings.append("%s schema_version=%s 期望 %s" % (fname, actual, expected))
+            versions = _read_schema_versions(fpath)
+            if versions != {expected}:
+                if fname == "quant_factor_price_history.csv" and expected == "phase2b.v2":
+                    reason = (
+                        "%s 存在旧版/混合/缺失 schema=%s；必须先运行完整手动 Rebuild Quant Price History"
+                        % (fname, sorted(versions))
+                    )
+                else:
+                    reason = "%s schema 集合=%s，要求全文件只有 %s" % (fname, sorted(versions), expected)
+                return False, reason, warnings
     return True, None, warnings
 
 
@@ -161,7 +194,28 @@ def run(workdir=".", strict=False, only_phase=None,
     try:
         os.chdir(workdir)
         for spec in specs:
-            res = run_phase(spec, workdir)
+            failed_dependencies = []
+            # During full-pipeline runs, never consume stale downstream outputs if
+            # an upstream phase did not write a valid artifact this run.
+            for dep_num in PHASE_DEPENDENCIES.get(spec["num"], ()):
+                if dep_num in phases_out:
+                    dep = phases_out[dep_num]
+                    if dep.get("status") != "OK" or not dep.get("written", False):
+                        failed_dependencies.append(
+                            f"Phase {dep_num} {dep.get('name')} "
+                            f"status={dep.get('status')} written={dep.get('written')}"
+                        )
+            if failed_dependencies:
+                res = {
+                    "name": spec["name"],
+                    "status": "NOT_ENOUGH_DATA",
+                    "written": False,
+                    "reason": "上游本轮未产出有效结果，阻止复用旧文件：" + "; ".join(failed_dependencies),
+                    "schema_warnings": [],
+                    "_error": None,
+                }
+            else:
+                res = run_phase(spec, workdir)
             phases_out[spec["num"]] = res
             tag = res["status"]
             err = ("  <- " + res["_error"]) if res["_error"] else ""
