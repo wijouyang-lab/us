@@ -246,7 +246,7 @@ def test_fetch_empty_does_not_fail_scan_step():
             "status": "FETCH_EMPTY",
             "reason": "test-only empty result",
         }
-        check("FETCH_EMPTY 只产生 warning，不阻断 Scan", price_mod.main() == 0)
+        check("FETCH_EMPTY 只产生 warning，不阻断 Scan", price_mod.main([]) == 0)
     finally:
         price_mod.update_price_history = original
 
