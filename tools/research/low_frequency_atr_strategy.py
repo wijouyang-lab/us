@@ -150,7 +150,7 @@ def main():
     a=p.parse_args()
     if not a.input.exists(): raise SystemExit(f"missing input data: {a.input}")
     result=run_research(pd.read_csv(a.input,dtype=str,keep_default_na=False))
-    a.output.parent.mkdir(parents=True,exist_ok=True); a.output.write_text(render_report(result),encoding="utf-8")
+    a.output.parent.mkdir(parents=True,exist_ok=True); report=render_report(result).replace(DEFAULT_INPUT.name, a.input.name); a.output.write_text(report,encoding="utf-8")
     print(f"rows={result['rows']} tickers={result['tickers']} dates={result['dates']} direction={result['direction']} verdict={result['verdict']}")
     print(f"report={a.output}")
 if __name__=="__main__": main()
