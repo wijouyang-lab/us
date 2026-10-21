@@ -235,6 +235,77 @@ def test_corrupt_csv_is_failure_not_processed(tmp_path, monkeypatch):
     assert len(_trade_rows()) == 1
 
 
+@pytest.mark.parametrize("bad_date", ["2026-10-19", "", "not-a-date"])
+def test_date_mismatch_fails_closed_and_keeps_pending(tmp_path, monkeypatch, bad_date):
+    monkeypatch.chdir(tmp_path)
+    fn, ns = _load_supplement(tmp_path)
+    path = _write_pending(tmp_path, _rows("AAA"))
+    path.write_text(
+        "Date,Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\n"
+        f"{bad_date},AAA,Core_Dragon,AAA Inc,100,$95\n",
+        encoding="utf-8",
+    )
+    # If the code attempted to use the filename date despite the row mismatch,
+    # market data would be available; the file must fail before reaching that point.
+    ns["OHLC"][( "AAA", TARGET_DATE)] = {"open": "100", "close": "105"}
+    ensure_calls = []
+    ns["ensure_trade_history_columns"] = lambda: ensure_calls.append(True)
+
+    result = fn()
+
+    assert result["failed_files"] == [path.name]
+    assert result["incomplete_files"] == []
+    assert ensure_calls == []
+    assert path.exists()
+    assert not (tmp_path / (path.name + ".processed")).exists()
+    assert _trade_rows() == []
+
+
+def test_one_mismatched_row_rejects_entire_pending_file(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    fn, ns = _load_supplement(tmp_path)
+    path = _write_pending(tmp_path, _rows("AAA", "BBB"))
+    path.write_text(
+        "Date,Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\n"
+        "2026-10-20,AAA,Core_Dragon,AAA Inc,100,$95\n"
+        "2026-10-19,BBB,Core_Dragon,BBB Inc,100,$95\n",
+        encoding="utf-8",
+    )
+    ns["OHLC"][( "AAA", TARGET_DATE)] = {"open": "100", "close": "105"}
+    ns["OHLC"][( "BBB", TARGET_DATE)] = {"open": "100", "close": "105"}
+    ensure_calls = []
+    ns["ensure_trade_history_columns"] = lambda: ensure_calls.append(True)
+
+    result = fn()
+
+    assert result["failed_files"] == [path.name]
+    assert ensure_calls == []
+    assert path.exists() and not (tmp_path / (path.name + ".processed")).exists()
+    # Even the valid AAA row must not be partially written.
+    assert _trade_rows() == []
+
+
+def test_data_row_without_date_column_fails_closed(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    fn, ns = _load_supplement(tmp_path)
+    path = tmp_path / "us_stocks_pending_20261020.csv"
+    path.write_text(
+        "Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\n"
+        "AAA,Core_Dragon,AAA Inc,100,$95\n",
+        encoding="utf-8",
+    )
+
+    ensure_calls = []
+    ns["ensure_trade_history_columns"] = lambda: ensure_calls.append(True)
+
+    result = fn()
+
+    assert result["failed_files"] == [path.name]
+    assert ensure_calls == []
+    assert path.exists() and not (tmp_path / (path.name + ".processed")).exists()
+    assert _trade_rows() == []
+
+
 def test_header_only_empty_file_is_processed_without_rows(tmp_path, monkeypatch):
     monkeypatch.chdir(tmp_path)
     fn, ns = _load_supplement(tmp_path)

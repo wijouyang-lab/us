@@ -625,8 +625,11 @@ def supplement_us_stocks_from_pending():
     if not pending:
         print("📋 无待确认/恢复美股文件，跳过补充。")
         return {"failed_files": [], "incomplete_files": [], "incomplete_details": []}
-    ensure_trade_history_columns()
+    # Defer ledger schema normalization until a non-empty Pending file has
+    # passed filename-vs-row Date validation. A mismatched file must cause no
+    # ledger write side effects at all.
     existing = load_trade_history()
+    columns_ensured = False
     print(f"📋 发现 {len(pending)} 份待确认文件。")
     failures = []
     incomplete_files = []
@@ -645,10 +648,55 @@ def supplement_us_stocks_from_pending():
                 if not pf.endswith(".processed"):
                     os.replace(pf, pf + ".processed")
                 continue
+            # Validate every row's Date against the filename before any market-data
+            # lookup or ledger write. One mismatch rejects the entire file: no partial
+            # rows, no .processed rename, and the failure blocks the Review success marker.
+            if "Date" not in p.columns:
+                print(
+                    f"::error::[PENDING_DATE_MISMATCH] file={pf} "
+                    f"missing_column=Date filename_date={target_date} action=kept_pending"
+                )
+                failures.append(pf)
+                continue
+
+            mismatched_dates = []
+            for row_index, row_date in p["Date"].items():
+                try:
+                    parsed_date = pd.to_datetime(
+                        row_date, errors="coerce", format="mixed"
+                    )
+                    if pd.isna(parsed_date):
+                        normalized_row_date = ""
+                    else:
+                        if getattr(parsed_date, "tzinfo", None) is not None:
+                            parsed_date = parsed_date.tz_localize(None)
+                        normalized_row_date = parsed_date.strftime("%Y-%m-%d")
+                except Exception:
+                    normalized_row_date = ""
+                if normalized_row_date != target_date:
+                    row_number = int(row_index) + 2  # CSV header is line 1.
+                    row_date_text = clean_text(row_date) or "<blank>"
+                    mismatched_dates.append((row_number, row_date_text))
+
+            if mismatched_dates:
+                for row_number, row_date_text in mismatched_dates:
+                    print(
+                        f"::error::[PENDING_DATE_MISMATCH] file={pf} "
+                        f"row={row_number} filename_date={target_date} "
+                        f"row_date={row_date_text} action=kept_pending"
+                    )
+                failures.append(pf)
+                continue
+
             if "Ticker" not in p.columns:
                 print(f"❌ {pf} 没有 Ticker 列。")
                 failures.append(pf)
                 continue
+
+            if not columns_ensured:
+                ensure_trade_history_columns()
+                existing = load_trade_history()
+                columns_ensured = True
 
             resolved = []
             for _, row in p.iterrows():
