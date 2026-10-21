@@ -1,2 +1,3 @@
 Txn_ID,Signal_Date,Ticker,Action,Shares,Reference_Entry_Price,Entry_Date,Entry_Source_Date,Entry_Price,Entry_Slippage_Bps,Entry_Commission,Exit_Date,Exit_Source_Date,Exit_Reference_Price,Exit_Price,Exit_Slippage_Bps,Exit_Commission,Gross_PnL,PnL,PnL_Pct,Hold_Days,Mode,Reason
 APA|2026-10-19|BUY|VOID,,APA,VOID,203.4588,,2026-10-19,,49.1500,,,2026-10-20,,,,,,,,,,PAPER,VOID_INVALID_STALE_ENTRY; original Txn_ID=APA|2026-10-19|BUY; original Entry_Date=2026-10-19; original Entry_Price=49.1500; original Shares=203.4588; invalid because price source was 2026-10-15 close
+BX|2026-10-21|BUY,2026-10-21,BX,PENDING,,,,,,,,,,,,,,,,,,PAPER,Await_Next_Trading_Day_Open
