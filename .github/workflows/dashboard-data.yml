@@ -7,9 +7,8 @@ name: Dashboard Data Refresh
 
 on:
   schedule:
-    # 当前实际频率为每小时（周一至周五）；GitHub cron 触发可能延迟。
-    # 盘中止损也因此按小时检查；15 分钟设计尚未启用。
-    - cron: "0 * * * 1-5"
+    # 工作日每 15 分钟刷新；GitHub cron 可能延迟或漏跑，不能作为真实交易止损保证。
+    - cron: "*/15 * * * 1-5"
   workflow_dispatch:
     inputs:
       kline_bars:
@@ -97,16 +96,16 @@ jobs:
           cat dashboard/data/runtimes.json
 
       - name: Refresh portfolio prices
-        # 盘前/盘后扩展价跟随 dashboard-data 每 15 分钟刷新（仅写 portfolio_50000_positions.csv）。
-        # continue-on-error：即使本步骤失败，也不拖垮整体 dashboard 刷新（三重兜底之一）。
+        # 每 15 分钟刷新持仓价格快照；这不代表实时行情保证。
+        # continue-on-error：即使本步骤失败，也不拖垮整体 dashboard 刷新。
         env:
           ENABLE_STOP_LOSS_SYNC: "1"
         run: python portfolio_50000.py --price-only --data-dir .
         continue-on-error: true
 
       - name: Intraday stop loss check
-        # 盘中机械止损：挂 dashboard-data 每 15 分钟，仅在 09:30-16:00 ET 触发，
-        # 实时价≤止损线则机械卖出（执行价=触发实时价）。continue-on-error：失败不拖垮整体刷新。
+        # 预期每 15 分钟检查；只使用时间戳新鲜的 5 分钟常规时段 bar。
+        # 仅更新模拟账本，不是券商下单；任务延迟/数据过旧会 fail closed。
         run: python portfolio_50000.py --intraday-stop --data-dir .
         continue-on-error: true
 

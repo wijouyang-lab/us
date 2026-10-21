@@ -282,6 +282,20 @@ def test_technical_date_contract_warning():
     b = check_technical_date_contract(prev1, last, trading_dates=cal)
     check("确定性：重复调用结果一致", a == b)
 
+    # (9) 周末不可能是美股常规交易日，即使与 cutoff 相同也不得误报 OK。
+    last_day = pd.Timestamp(last)
+    days_to_saturday = (5 - last_day.weekday()) % 7
+    saturday = (last_day + pd.Timedelta(days=days_to_saturday)).strftime("%Y-%m-%d")
+    weekend_result = check_technical_date_contract(saturday, saturday, trading_dates=[])
+    check("周末 Technical_Date → INVALID_SESSION_DATE",
+          weekend_result["status"] == "INVALID_SESSION_DATE", str(weekend_result))
+    check("周末日期诊断指出 session-date 问题", "周末" in weekend_result["message"])
+
+    # (10) 显式空交易日历意味着无法独立验证，不能把日历日当作交易日。
+    no_calendar = check_technical_date_contract(last, last, trading_dates=[])
+    check("空交易日历 → NO_REFERENCE", no_calendar["status"] == "NO_REFERENCE", str(no_calendar))
+    check("空交易日历不误报 OK", no_calendar["status"] != "OK")
+
 
 def main():
     _tests = [

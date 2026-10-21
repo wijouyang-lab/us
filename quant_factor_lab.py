@@ -348,6 +348,16 @@ def check_technical_date_contract(technical_date, cutoff_date, trading_dates=Non
         )
         return out
 
+    # 美股常规交易日不在周末。即使缺少历史行情日历，也不能把周末标签误报成契约成立。
+    if t.weekday() >= 5:
+        out["status"] = "INVALID_SESSION_DATE"
+        out["message"] = (
+            f"Technical_Date={t} 落在周末（{t.strftime('%A')}），"
+            "不可能是美股常规交易日的日线 session-date；"
+            "请检查时区转换与未完成 K 棒过滤。"
+        )
+        return out
+
     # 已知交易日（升序、去重），用于精确定位期望日与相差交易日数
     known = []
     if trading_dates:
@@ -356,6 +366,16 @@ def check_technical_date_contract(technical_date, cutoff_date, trading_dates=Non
             if nd is not None:
                 known.append(nd)
         known = sorted(set(known))
+
+    if trading_dates is not None and not known:
+        # 调用方显式提供了空日历（例如历史行情文件缺失/空文件）；不要用日历日冒充交易日，
+        # 否则周一盘前 cutoff=周日时，会把错误的 Sunday Technical_Date 误判为 OK。
+        out["status"] = "NO_REFERENCE"
+        out["message"] = (
+            f"无法验证 Technical_Date={t}：没有可用的历史交易日参考（价格历史缺失或为空）；"
+            "本次不判为 OK，也不据此修改数据。"
+        )
+        return out
 
     expected = c
     if known:

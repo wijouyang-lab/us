@@ -11,6 +11,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import quant_factor_price as price_mod
 from quant_factor_price import (
+    SCHEMA_VERSION,
+    _normalize_us_date_index,
     PRICE_HISTORY_COLUMNS,
     filter_completed_daily_bars,
     get_snapshot_tickers,
@@ -165,8 +167,10 @@ def test_update_with_injected_fetch():
     snap_path = os.path.join(tmp, "snap.csv")
     ph_path = os.path.join(tmp, "price_history.csv")
     make_snapshot().to_csv(snap_path, index=False)
+    requested_starts = []
 
     def fake_fetch(tickers, start, end):
+        requested_starts.append(start)
         rows = []
         for t in tickers:
             for d in ["2026-01-30", "2026-02-02"]:
@@ -184,6 +188,8 @@ def test_update_with_injected_fetch():
     r2 = update_price_history(snapshot_path=snap_path, price_history_path=ph_path, fetch_func=fake_fetch)
     check("二次运行无重复", r2["total_rows"] == 6 and r2["new_rows"] == 0,
           f"total={r2['total_rows']} new={r2['new_rows']}")
+    check("二次运行只刷新最新历史附近七天", requested_starts[1] == "2026-01-26",
+          f"requested starts={requested_starts}")
 
 
 # ---- empty price-fetch behavior: preserve history and keep Scan flowing ----
@@ -236,14 +242,72 @@ def test_empty_fetch_does_not_create_header_only_csv():
 def test_fetch_empty_does_not_fail_scan_step():
     original = price_mod.update_price_history
     try:
-        price_mod.update_price_history = lambda: {
+        price_mod.update_price_history = lambda rebuild=False: {
             "status": "FETCH_EMPTY",
             "reason": "test-only empty result",
         }
-        check("FETCH_EMPTY 只产生 warning，不阻断 Scan", price_mod.main() == 0)
+        check("FETCH_EMPTY 只产生 warning，不阻断 Scan", price_mod.main([]) == 0)
     finally:
         price_mod.update_price_history = original
 
+
+def test_rebuild_preserves_historical_tickers():
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "snap.csv")
+    ph_path = os.path.join(tmp, "price_history.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+    old = pd.DataFrame([{
+        "Date": "2024-01-02", "Ticker": "OLD", "Open": 9.0, "High": 11.0,
+        "Low": 8.0, "Close": 10.0, "Volume": 1000, "schema_version": "phase2b.v1",
+    }], columns=PRICE_HISTORY_COLUMNS)
+    old.to_csv(ph_path, index=False)
+    original_tickers = set()
+
+    def fake_fetch(tickers, start, end):
+        original_tickers.update(tickers)
+        rows = []
+        for ticker in tickers:
+            rows.append({
+                "Date": "2024-01-02", "Ticker": ticker, "Open": 9.5, "High": 10.5,
+                "Low": 9.0, "Close": 10.0, "Volume": 1000, "schema_version": SCHEMA_VERSION,
+            })
+        return pd.DataFrame(rows, columns=PRICE_HISTORY_COLUMNS)
+
+    result = update_price_history(
+        snapshot_path=snap_path, price_history_path=ph_path, fetch_func=fake_fetch, rebuild=True
+    )
+    check("rebuild 成功保留旧 ticker", result["status"] == "OK", str(result))
+    check("rebuild 下载集包含历史 ticker", "OLD" in original_tickers, str(original_tickers))
+    rebuilt = load_price_history(ph_path)
+    check("rebuild schema 全部更新", set(rebuilt["schema_version"]) == {SCHEMA_VERSION})
+    check("rebuild 没静默丢旧 ticker", set(rebuilt["Ticker"]) == original_tickers)
+    check("rebuild 生成旧文件备份", bool(result.get("backup_path")) and os.path.exists(result["backup_path"]))
+
+
+def test_rebuild_missing_historical_ticker_preserves_original_file():
+    tmp = tempfile.mkdtemp()
+    snap_path = os.path.join(tmp, "snap.csv")
+    ph_path = os.path.join(tmp, "price_history.csv")
+    make_snapshot().to_csv(snap_path, index=False)
+    old = pd.DataFrame([{
+        "Date": "2024-01-02", "Ticker": "OLD", "Open": 9.0, "High": 11.0,
+        "Low": 8.0, "Close": 10.0, "Volume": 1000, "schema_version": "phase2b.v1",
+    }], columns=PRICE_HISTORY_COLUMNS)
+    old.to_csv(ph_path, index=False)
+    before = open(ph_path, "rb").read()
+
+    def incomplete_fetch(tickers, start, end):
+        # Deliberately omit OLD to verify that rebuild refuses a lossy replacement.
+        return pd.DataFrame([{
+            "Date": "2024-01-02", "Ticker": "AAA", "Open": 9.5, "High": 10.5,
+            "Low": 9.0, "Close": 10.0, "Volume": 1000, "schema_version": SCHEMA_VERSION,
+        }], columns=PRICE_HISTORY_COLUMNS)
+
+    result = update_price_history(
+        snapshot_path=snap_path, price_history_path=ph_path, fetch_func=incomplete_fetch, rebuild=True
+    )
+    check("缺少旧 ticker 时拒绝覆盖", result["status"] == "REBUILD_INCOMPLETE", str(result))
+    check("拒绝覆盖后原 CSV 字节不变", open(ph_path, "rb").read() == before)
 
 # ---- price_map_from_history ----
 def test_price_map():
@@ -266,11 +330,30 @@ def test_filter_bars():
     check("未完成 bar 被剔除", len(filtered) == 2, f"got {len(filtered)}")
 
 
+def test_naive_daily_session_date_preserved():
+    """tz-naive yfinance daily indexes are session-date labels, not UTC instants."""
+    idx = pd.DatetimeIndex(["2026-10-16", "2026-10-19", "2026-10-20"])
+    df = pd.DataFrame({"Open": [1.0, 2.0, 3.0], "Close": [1.1, 2.1, 3.1]}, index=idx)
+    normalized = _normalize_us_date_index(df)
+    dates = [x.strftime("%Y-%m-%d") for x in normalized.index]
+    check("tz-naive daily dates preserve session labels", dates == ["2026-10-16", "2026-10-19", "2026-10-20"], f"got {dates}")
+    check("naive session labels are assigned US timezone", str(normalized.index.tz) == "America/New_York", f"got {normalized.index.tz}")
+
+
+def test_aware_utc_daily_timestamp_converts_to_us_date():
+    """tz-aware timestamps represent instants and should be converted, not relabeled."""
+    idx = pd.DatetimeIndex(["2026-10-19 20:00:00"], tz="UTC")
+    df = pd.DataFrame({"Close": [10.0]}, index=idx)
+    normalized = _normalize_us_date_index(df)
+    check("UTC bar converts to same ET calendar date", normalized.index[0].strftime("%Y-%m-%d") == "2026-10-19",
+          f"got {normalized.index[0]}")
+
 # ---- OHLCV 补采（STEP）：schema + 写入 + 向后兼容 ----
 def test_schema_has_ohlcv():
     expected = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"]
     check("PRICE_HISTORY_COLUMNS 扩到 OHLCV", PRICE_HISTORY_COLUMNS == expected, f"got {PRICE_HISTORY_COLUMNS}")
     check("Close 列名保留（兼容 Phase 2）", "Close" in PRICE_HISTORY_COLUMNS)
+    check("日期语义修复版本为 phase2b.v2", SCHEMA_VERSION == "phase2b.v2", f"got {SCHEMA_VERSION}")
 
 
 def test_update_writes_ohlcv():
@@ -338,6 +421,10 @@ def main():
         test_schema_has_ohlcv,
         test_update_writes_ohlcv,
         test_load_backward_compat_old_csv,
+        test_naive_daily_session_date_preserved,
+        test_aware_utc_daily_timestamp_converts_to_us_date,
+        test_rebuild_preserves_historical_tickers,
+        test_rebuild_missing_historical_ticker_preserves_original_file,
     ]
     _failed = 0
     for _t in _tests:
