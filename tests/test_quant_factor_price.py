@@ -7,10 +7,9 @@ import tempfile
 import numpy as np
 import pandas as pd
 
-import quant_factor_price as price_mod
-
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import quant_factor_price as price_mod
 from quant_factor_price import (
     PRICE_HISTORY_COLUMNS,
     filter_completed_daily_bars,
@@ -194,8 +193,8 @@ def test_empty_fetch_preserves_existing_file():
     ph_path = os.path.join(tmp, "price_history.csv")
     make_snapshot().to_csv(snap_path, index=False)
     original = (
-        "Date,Ticker,Open,High,Low,Close,Volume,schema_version\\n"
-        "2026-02-02,AAA,,,,100,,phase2b.v1\\n"
+        "Date,Ticker,Open,High,Low,Close,Volume,schema_version\n"
+        "2026-02-02,AAA,,,,100,,phase2b.v1\n"
     ).encode("utf-8")
     with open(ph_path, "wb") as fh:
         fh.write(original)
