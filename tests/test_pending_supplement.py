@@ -246,6 +246,7 @@ def test_date_mismatch_fails_closed_and_keeps_pending(tmp_path, monkeypatch, bad
 
     assert result["failed_files"] == [path.name]
     assert result["incomplete_files"] == []
+    assert ensure_calls == []
     assert path.exists()
     assert not (tmp_path / (path.name + ".processed")).exists()
     assert _trade_rows() == []
@@ -263,10 +264,13 @@ def test_one_mismatched_row_rejects_entire_pending_file(tmp_path, monkeypatch):
     )
     ns["OHLC"][( "AAA", TARGET_DATE)] = {"open": "100", "close": "105"}
     ns["OHLC"][( "BBB", TARGET_DATE)] = {"open": "100", "close": "105"}
+    ensure_calls = []
+    ns["ensure_trade_history_columns"] = lambda: ensure_calls.append(True)
 
     result = fn()
 
     assert result["failed_files"] == [path.name]
+    assert ensure_calls == []
     assert path.exists() and not (tmp_path / (path.name + ".processed")).exists()
     # Even the valid AAA row must not be partially written.
     assert _trade_rows() == []
