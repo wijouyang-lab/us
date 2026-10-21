@@ -85,6 +85,24 @@ def test_full_pipeline_ok(workdir):
         assert p["status"] == "OK"
 
 
+def test_relative_workdir_resolves_once(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    relative_dir = "research-data"
+    os.makedirs(relative_dir, exist_ok=True)
+    _seed_inputs(relative_dir)
+    _override({2: "OK", 3: "OK", 4: "OK", 5: "OK", 6: "OK", 7: "OK"})
+    try:
+        summary, code = runner.run(workdir=relative_dir, strict=False)
+    finally:
+        _clear_override()
+
+    expected = str((tmp_path / relative_dir).resolve())
+    assert code == 0
+    assert summary["overall_status"] == "OK"
+    assert summary["workdir"] == expected
+    assert os.path.exists(tmp_path / relative_dir / "quant_research_status.json")
+
+
 def test_missing_input_degrades_no_file(workdir):
     # 仅覆盖 Phase 7（无输入，否则会真实导入模块并写治理文件）。
     # Phase 2-6 走真实前置检查 -> 输入缺失 -> 跳过（不调用 run_*，不落数据文件）。
