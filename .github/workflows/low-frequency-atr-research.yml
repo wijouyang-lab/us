@@ -1,0 +1,54 @@
+name: Low-Frequency ATR Strategy Research
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/low_frequency_atr_strategy.py"
+      - "tests/test_low_frequency_atr_strategy.py"
+      - ".github/workflows/low-frequency-atr-research.yml"
+      - "research_backtest_sp500_pit_2y.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+concurrency:
+  group: low-frequency-atr-research
+  cancel-in-progress: false
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-production.txt
+          pip install pytest
+      - run: python -m pytest tests/test_low_frequency_atr_strategy.py -v
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-production.txt
+      - name: Run research on stored PIT dataset
+        run: |
+          python tools/research/low_frequency_atr_strategy.py \
+            --input research_backtest_sp500_pit_2y.csv \
+            --output /tmp/LOW_FREQUENCY_ATR_STRATEGY.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: low-frequency-atr-strategy-report
+          path: /tmp/LOW_FREQUENCY_ATR_STRATEGY.md
+          if-no-files-found: error
+          retention-days: 30
