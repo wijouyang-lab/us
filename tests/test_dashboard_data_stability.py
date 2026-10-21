@@ -160,6 +160,19 @@ check("D4. 明确列出三个正式数据文件",
                             "dashboard/data/last_run.log")))
 check("D5. 存在提交范围守卫（非预期文件即失败）",
       "检测到非预期文件进入提交范围" in wf)
+check("D6. dashboard_export.py / tee 任一失败都会让步骤失败",
+      'pipeline_status=("${PIPESTATUS[@]}")' in wf
+      and 'if [ "${exporter_status}" -ne 0 ]; then' in wf
+      and 'if [ "${tee_status}" -ne 0 ]; then' in wf)
+_export_step = wf.split("- name: Run dashboard_export.py", 1)[1].split("- name: Summarize run", 1)[0]
+_export_run = _export_step.split("        run: |", 1)[1]
+check("D7. workflow_dispatch 参数通过 env 传递，不直接注入 shell",
+      "INPUT_KLINE_BARS: ${{ github.event.inputs.kline_bars }}" in _export_step
+      and "INPUT_NO_STOOQ: ${{ github.event.inputs.no_stooq }}" in _export_step
+      and "${{ github.event.inputs.kline_bars }}" not in _export_run
+      and "${{ github.event.inputs.no_stooq }}" not in _export_run)
+check("D8. dashboard_export.py 使用 Bash 参数数组传参",
+      'python dashboard_export.py "${ARGS[@]}"' in _export_run)
 
 # ---------------------------------------------------------------- E
 print("\n--- E. concurrency ---")
