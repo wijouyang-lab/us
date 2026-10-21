@@ -58,11 +58,41 @@ jobs:
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "Alpha Bot"
-        # 运行时模型使用记录：evolve 结束时落盘 dashboard/data/model_usage.json。
-        # （下面的 git add -A 其实已覆盖，此处显式列出以免将来改成逐个 add 时被漏掉。）
-        if [ -f dashboard/data/model_usage.json ]; then
-          git add dashboard/data/model_usage.json
+
+        # Evolve has a narrow output contract. Never stage the entire runner
+        # workspace: generated caches or unrelated files must not be swept into
+        # a monthly strategy commit.
+        for f in \
+          strategy_params.json \
+          strategy_evolution.json \
+          evolved_rules.json \
+          dashboard/data/model_usage.json ; do
+          if [ -f "$f" ]; then
+            git add -- "$f"
+          fi
+        done
+
+        # Defense in depth: stop if anything outside the allowlist was staged.
+        STAGED="$(git diff --cached --name-only)"
+        if [ -z "$STAGED" ]; then
+          echo "Evolve 无已授权产物变化，跳过提交"
+          exit 0
         fi
-        git add -A
-        git diff --quiet && git diff --staged --quiet || git commit -m "Auto evolve US"
-        git push
+        while IFS= read -r f; do
+          case "$f" in
+            strategy_params.json|strategy_evolution.json|evolved_rules.json|dashboard/data/model_usage.json)
+              ;;
+            *)
+              echo "::error::Evolve staged an unexpected path: $f"
+              exit 1
+              ;;
+          esac
+        done <<< "$STAGED"
+
+        git commit -m "chore(evolve): persist approved evolution outputs"
+        if bash tools/ci/push_with_retry.sh 3 5; then
+          echo "Evolve outputs safely pushed to main"
+          exit 0
+        fi
+        echo "::error::Evolve outputs could not be pushed after retries"
+        exit 1
