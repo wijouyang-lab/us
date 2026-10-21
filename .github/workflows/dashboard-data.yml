@@ -104,8 +104,8 @@ jobs:
         continue-on-error: true
 
       - name: Intraday stop loss check
-        # 预期每 15 分钟检查；只使用带时间戳且足够新鲜的 5 分钟常规时段 bar。
-        # 仅更新模拟账本，不是券商下单；延迟或报价过旧时 fail closed。
+        # 预期每 15 分钟检查；只使用时间戳新鲜的 5 分钟常规时段 bar。
+        # 仅更新模拟账本，不是券商下单；任务延迟/数据过旧会 fail closed。
         run: python portfolio_50000.py --intraday-stop --data-dir .
         continue-on-error: true
 
