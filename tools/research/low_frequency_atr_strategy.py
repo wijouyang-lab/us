@@ -142,7 +142,7 @@ def render_report(r):
               "- PRELIMINARY_POSITIVE_ONLY 只表示测试段净收益和净超额均为正且至少有 8 个非重叠观察，不等于证明 alpha。",
               "- 不做参数搜索，不使用验证/测试段挑方向，不改生产评分、Scan、止损或交易账本。",
               "- 通过后仍需真实 OHLCV、下一交易日开盘成交、实际止损路径、公司行动/退市和可交易股票池验证。", ""]
-    return "\\n".join(lines)
+    return "\n".join(lines)
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
