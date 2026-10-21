@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-20T13:02:08Z",
+  "generated_at": "2026-10-21T13:02:17Z",
   "economic": [
     {
       "indicator": "10Y国债",
       "value": "5.10%",
-      "prev": "5.14%",
-      "date": "2026-10-20",
+      "prev": "5.12%",
+      "date": "2026-10-21",
       "source": "Yahoo Finance",
       "sentiment": "bullish",
-      "rationale": "10年期国债收益率下降，融资成本降低利好股市"
+      "rationale": "10年期国债收益率下降，融资成本降低"
     },
     {
       "indicator": "5Y国债",
-      "value": "4.91%",
+      "value": "4.92%",
       "prev": "4.93%",
-      "date": "2026-10-20",
+      "date": "2026-10-21",
       "source": "Yahoo Finance",
       "sentiment": "bullish",
-      "rationale": "5年期国债收益率下降，融资成本降低利好股市"
+      "rationale": "5年期国债收益率下降，融资成本降低"
     },
     {
       "indicator": "13周国债",
-      "value": "4.09%",
-      "prev": "4.07%",
-      "date": "2026-10-20",
+      "value": "4.07%",
+      "prev": "4.08%",
+      "date": "2026-10-21",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "13周国债收益率上升，短期利率压力增加"
+      "sentiment": "bullish",
+      "rationale": "13周国债收益率下降，短期利率压力缓解"
     },
     {
       "indicator": "CPI",
@@ -36,7 +36,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI 4.00%显示通胀压力，可能强化加息预期"
+      "rationale": "CPI 4.00%偏高，通胀压力加大"
     },
     {
       "indicator": "核心CPI",
@@ -44,8 +44,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "核心CPI 2.79%高于美联储2%目标，通胀粘性"
+      "sentiment": "neutral",
+      "rationale": "核心CPI 2.79%接近目标，通胀压力温和"
     },
     {
       "indicator": "失业率",
@@ -63,73 +63,128 @@
       "date": "August 2026",
       "source": "BEA 官方网页",
       "sentiment": "bearish",
-      "rationale": "核心PCE 3.00%高于目标，通胀压力持续"
+      "rationale": "核心PCE 3.00%高于2%目标，通胀压力"
     },
     {
       "indicator": "Fear & Greed",
-      "value": "22 (extreme fear)",
-      "prev": "44",
-      "date": "2026-10-20",
+      "value": "29 (fear)",
+      "prev": "27",
+      "date": "2026-10-21",
       "source": "CNN",
       "sentiment": "bearish",
-      "rationale": "恐慌指数22极度恐慌，市场情绪极度悲观"
+      "rationale": "恐慌贪婪指数29显示市场恐慌情绪"
     }
   ],
   "speakers": [
     {
+      "person": "Warsh",
+      "title": null,
+      "content": "Gold Edges Higher as Traders Ease Rate-Hike Bets on Warsh Speech - Yahoo Finance",
+      "time": "10-18 19:47",
+      "source": "Yahoo Finance",
+      "age_tag": "📑前日-低权重",
+      "content_cn": "黄金小幅上涨，交易员因Warsh讲话放松加息预期",
+      "sentiment": "bullish",
+      "rationale": "交易员因Warsh讲话放松加息预期"
+    },
+    {
       "person": null,
       "title": null,
-      "content": "Strategist Tom Lee says he’s buying the AI-stock dip, and Cisco holds the key",
-      "time": "10-20 06:15",
-      "source": "MarketWatch",
+      "content": "Fed sees AI boom adding to inflation headache, but others may pay for the medicine - Reuters",
+      "time": "10-19 14:39",
+      "source": "Reuters",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "美联储认为AI繁荣加剧通胀难题，但其他人可能为此付出代价",
+      "sentiment": "bearish",
+      "rationale": "AI繁荣加剧通胀担忧"
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "3 Words From Fed Chair Kevin Warsh Suggest the Worst Is Yet to Come for Wall Street - The Motley Fool",
+      "time": "10-19 05:06",
+      "source": "The Motley Fool",
+      "age_tag": "📑前日-低权重",
+      "content_cn": "美联储主席Kevin Warsh的三个词暗示华尔街最坏时刻尚未到来",
+      "sentiment": "bearish",
+      "rationale": "美联储主席Warsh暗示华尔街最坏时刻未至"
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "Trumpflation Is Evolving, and There's a New Twist That Threatens to Sink Stocks - The Globe and Mail",
+      "time": "10-21 04:26",
+      "source": "The Globe and Mail",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "策略师Tom Lee表示正在买入AI股票的回调，思科是关键",
-      "sentiment": "bullish",
-      "rationale": "策略师看多AI股票回调，思科是关键"
+      "content_cn": "特朗普通胀正在演变，新变化威胁股市下跌",
+      "sentiment": "bearish",
+      "rationale": "特朗普通胀新动向威胁股市下跌"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Silver Price Forecast: Recovery Stalls as Treasury Yields Rise - FXEmpire",
+      "time": "10-21 04:31",
+      "source": "FXEmpire",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": "白银价格预测：国债收益率上升导致反弹停滞",
+      "sentiment": "bearish",
+      "rationale": "国债收益率上升抑制白银反弹"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Gold Price Forecast: XAU/USD extends losing spree as US bond yields hold ground - FXStreet",
+      "time": "10-20 23:35",
+      "source": "FXStreet",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "黄金价格预测：美债收益率维持高位，金价延续跌势",
+      "sentiment": "bearish",
+      "rationale": "美债收益率高位持续压制黄金"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Yield On ‘The Most Important Financial Asset In The World’ Forecast To Stay High Through 2026 - Investopedia",
+      "time": "10-20 15:01",
+      "source": "Investopedia",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "全球最重要金融资产收益率预计在2026年前保持高位",
+      "sentiment": "bearish",
+      "rationale": "全球最重要金融资产收益率预计持续高位"
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Yield On ‘The Most Important Financial Asset In The World’ Forecast To Stay High Through 2026 - AOL.com",
+      "time": "10-20 15:01",
+      "source": "AOL.com",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "全球最重要金融资产收益率预计在2026年前保持高位",
+      "sentiment": "bearish",
+      "rationale": "全球最重要金融资产收益率预计持续高位"
     },
     {
       "person": null,
       "title": null,
       "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
-      "time": "10-20 05:30",
+      "time": "10-20 14:54",
       "source": "StoneX",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易 - StoneX",
+      "age_tag": "📰今日-高权重",
+      "content_cn": "英镑/美元、黄金/美元预测：两个值得关注的交易",
       "sentiment": "neutral",
-      "rationale": "外汇和黄金预测，与美股大盘关联不明确"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Silver Price Forecast: XAG/USD rises to near $57.30 amid drop in US bond yields - FXStreet",
-      "time": "10-20 04:38",
-      "source": "FXStreet",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "白银价格预测：美国国债收益率下降推动银价升至57.30美元附近 - FXStreet",
-      "sentiment": "neutral",
-      "rationale": "白银价格预测，与美股大盘关联不明确"
+      "rationale": "技术分析文章，未明确宏观方向"
     },
     {
       "person": null,
       "title": null,
       "content": "Gold Price Forecast: High Treasury Yields Put $4,000 Support in Focus - FXEmpire",
-      "time": "10-20 04:19",
+      "time": "10-20 04:24",
       "source": "FXEmpire",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "黄金价格预测：高国债收益率使4000美元支撑位成为焦点 - FXEmpire",
-      "sentiment": "neutral",
-      "rationale": "黄金价格预测，与美股大盘关联不明确"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "See What 71 Economists Told Us About Where Growth and Yields Are Headed - WSJ",
-      "time": "10-19 11:44",
-      "source": "WSJ",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "71位经济学家告诉我们增长和收益率的走向 - 华尔街日报",
-      "sentiment": "neutral",
-      "rationale": "经济学家调查，未明确鹰派或鸽派倾向"
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": "黄金价格预测：高国债收益率使4000美元支撑位面临考验",
+      "sentiment": "bearish",
+      "rationale": "高国债收益率威胁黄金4000美元支撑"
     }
   ],
   "error": null
