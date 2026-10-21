@@ -48,6 +48,9 @@ jobs:
           fi
           git commit -m "chore(research): backfill 2Y price history for factor analysis"
           # 并发安全推送：fetch + rebase + 3 次重试（照抄 scan.yml）
-          bash tools/ci/push_with_retry.sh 3 5
-          echo "❌ push failed after 3 retries"
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "研究价格历史已推送到 main"
+            exit 0
+          fi
+          echo "::error::push failed after 3 retries"
           exit 1
