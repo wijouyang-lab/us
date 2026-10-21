@@ -509,3 +509,26 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+def test_factor_summary_excludes_missing_factor_values():
+    """Summary N/statistics must use rows where both the factor and return exist."""
+    bt = pd.DataFrame({
+        "Momentum_5D_Pct": [1.0, 2.0, 3.0],
+        "ATR_Pct": [np.nan, np.nan, 3.0],
+        "Forward_Return_5D": [0.10, 0.20, 0.30],
+        "Forward_Return_10D": [0.01, 0.02, 0.03],
+        "Forward_Return_20D": [-0.10, 0.00, 0.10],
+    })
+    summary = compute_factor_summary(bt)
+    momentum = summary[(summary["Factor"] == "Momentum_5D_Pct") &
+                       (summary["Horizon"] == "5D")].iloc[0]
+    atr = summary[(summary["Factor"] == "ATR_Pct") &
+                  (summary["Horizon"] == "5D")].iloc[0]
+    check("summary 按因子可用样本计数", int(momentum["N"]) == 3 and int(atr["N"]) == 1,
+          f"Momentum N={momentum['N']}, ATR N={atr['N']}")
+    check("summary 均值只使用因子有效行",
+          abs(float(momentum["Average_Return"]) - 0.20) < 1e-9 and
+          abs(float(atr["Average_Return"]) - 0.30) < 1e-9,
+          f"Momentum mean={momentum['Average_Return']}, ATR mean={atr['Average_Return']}")
