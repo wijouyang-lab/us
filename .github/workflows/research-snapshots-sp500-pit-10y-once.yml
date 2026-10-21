@@ -2,9 +2,15 @@ name: Research Snapshots + IC S&P500 PIT 10Y (one-shot)
 
 on:
   workflow_dispatch:
+  # One-time bootstrap: allow the specially marked merge commit to launch the long PIT run.
+  push:
+    paths:
+      - '.github/workflows/research-snapshots-sp500-pit-10y-once.yml'
 
 jobs:
   snapshots:
+    # Pushes only launch this job when the commit explicitly carries the one-time trigger marker.
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run-10y-research]')
     runs-on: ubuntu-latest
     permissions:
       contents: write
