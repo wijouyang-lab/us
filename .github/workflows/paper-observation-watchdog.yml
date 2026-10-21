@@ -83,6 +83,7 @@ jobs:
             const stale = observationFileState === "read-error"
               || dates.length === 0
               || ageDays === null
+              || ageDays < 0
               || ageDays > 4
               || Boolean(latestScanDate && (!latestObservationDate || latestScanDate > latestObservationDate));
 
