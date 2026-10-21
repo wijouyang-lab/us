@@ -234,8 +234,8 @@ def test_date_mismatch_fails_closed_and_keeps_pending(tmp_path, monkeypatch, bad
     fn, ns = _load_supplement(tmp_path)
     path = _write_pending(tmp_path, _rows("AAA"))
     path.write_text(
-        "Date,Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\\n"
-        f"{bad_date},AAA,Core_Dragon,AAA Inc,100,$95\\n",
+        "Date,Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\n"
+        f"{bad_date},AAA,Core_Dragon,AAA Inc,100,$95\n",
         encoding="utf-8",
     )
     # If the code attempted to use the filename date despite the row mismatch,
@@ -256,9 +256,9 @@ def test_one_mismatched_row_rejects_entire_pending_file(tmp_path, monkeypatch):
     fn, ns = _load_supplement(tmp_path)
     path = _write_pending(tmp_path, _rows("AAA", "BBB"))
     path.write_text(
-        "Date,Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\\n"
-        "2026-10-20,AAA,Core_Dragon,AAA Inc,100,$95\\n"
-        "2026-10-19,BBB,Core_Dragon,BBB Inc,100,$95\\n",
+        "Date,Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\n"
+        "2026-10-20,AAA,Core_Dragon,AAA Inc,100,$95\n"
+        "2026-10-19,BBB,Core_Dragon,BBB Inc,100,$95\n",
         encoding="utf-8",
     )
     ns["OHLC"][( "AAA", TARGET_DATE)] = {"open": "100", "close": "105"}
@@ -277,8 +277,8 @@ def test_data_row_without_date_column_fails_closed(tmp_path, monkeypatch):
     fn, ns = _load_supplement(tmp_path)
     path = tmp_path / "us_stocks_pending_20261020.csv"
     path.write_text(
-        "Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\\n"
-        "AAA,Core_Dragon,AAA Inc,100,$95\\n",
+        "Ticker,Tag,Name,Scan_Ref_Price,Stop_Loss\n"
+        "AAA,Core_Dragon,AAA Inc,100,$95\n",
         encoding="utf-8",
     )
 
