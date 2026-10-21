@@ -442,16 +442,38 @@ def _no_data_skip_write(backtest_path, summary_path):
 def run_backtest_from_history(snapshot_path=SNAPSHOT_PATH,
                               price_history_path="quant_factor_price_history.csv",
                               backtest_path=BACKTEST_PATH, summary_path=SUMMARY_PATH):
-    """从 quant_factor_price_history.csv 构建 price_map 并运行回测（便捷入口）。"""
-    from quant_factor_price import load_price_history, price_map_from_history
+    """从价格历史构建 price_map；历史必须全量使用修复后的 schema 才允许回测。"""
+    from quant_factor_price import (
+        SCHEMA_VERSION as REQUIRED_PRICE_SCHEMA,
+        load_price_history,
+        price_map_from_history,
+    )
 
-    price_map = {}
     try:
         ph = load_price_history(price_history_path)
-        if not ph.empty:
-            price_map = price_map_from_history(ph)
-    except Exception:
-        price_map = {}
+        versions = (
+            set(ph["schema_version"].astype(str).str.strip().unique())
+            if not ph.empty and "schema_version" in ph.columns
+            else set()
+        )
+        if versions != {REQUIRED_PRICE_SCHEMA}:
+            result = run_backtest(
+                snapshot_path=snapshot_path, price_map={},
+                backtest_path=backtest_path, summary_path=summary_path,
+            )
+            result["reason"] = (
+                f"价格历史 schema={sorted(versions)}；需要全量 {REQUIRED_PRICE_SCHEMA}。"
+                "请先运行 Rebuild Quant Price History，绝不将旧版与新版日期混合回测。"
+            )
+            return result
+        price_map = price_map_from_history(ph)
+    except Exception as exc:
+        result = run_backtest(
+            snapshot_path=snapshot_path, price_map={},
+            backtest_path=backtest_path, summary_path=summary_path,
+        )
+        result["reason"] = f"价格历史读取失败：{type(exc).__name__}: {exc}"
+        return result
     return run_backtest(snapshot_path=snapshot_path, price_map=price_map,
                         backtest_path=backtest_path, summary_path=summary_path)
 

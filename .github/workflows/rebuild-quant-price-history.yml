@@ -1,0 +1,127 @@
+name: Rebuild Quant Price History (Manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Share the Scan concurrency group so this one-off history rebuild does not race
+# with the normal Scan workflow while both write quant_factor_price_history.csv.
+concurrency:
+  group: us-stock-scan
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    # Only allow a selected workflow_dispatch on main to publish to main.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install production dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements-production.txt
+
+      - name: Record baseline
+        id: baseline
+        run: |
+          python - <<'PY'
+          import os
+          import pandas as pd
+          p = "quant_factor_price_history.csv"
+          try:
+              df = pd.read_csv(p, dtype=str, keep_default_na=False)
+              n = len(df)
+          except Exception:
+              n = 0
+          print(f"Existing price-history rows: {n}")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
+              f.write(f"rows={n}\n")
+          PY
+
+      - name: Rebuild historical OHLCV with corrected session dates
+        run: python quant_factor_price.py --rebuild
+
+      - name: Validate rebuilt price history
+        env:
+          BASELINE_ROWS: ${{ steps.baseline.outputs.rows }}
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+          import pandas as pd
+
+          path = "quant_factor_price_history.csv"
+          df = pd.read_csv(path, dtype=str, keep_default_na=False)
+          required = {"Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"}
+          missing = required - set(df.columns)
+          if missing:
+              raise SystemExit(f"Missing columns: {sorted(missing)}")
+          if df.empty:
+              raise SystemExit("Rebuild returned zero rows; refusing to publish")
+          dates = pd.to_datetime(df["Date"], errors="coerce")
+          if dates.isna().any():
+              raise SystemExit("Invalid dates exist in rebuilt file")
+          if (dates.dt.weekday >= 5).any():
+              samples = df.loc[dates.dt.weekday >= 5, ["Date", "Ticker"]].head(10).to_dict("records")
+              raise SystemExit(f"Weekend session dates remain: {samples}")
+          if df.duplicated(subset=["Date", "Ticker"]).any():
+              raise SystemExit("Duplicate Date|Ticker keys exist")
+          versions = set(df["schema_version"].astype(str))
+          if versions != {"phase2b.v2"}:
+              raise SystemExit(f"Unexpected schema versions after rebuild: {versions}")
+          close = pd.to_numeric(df["Close"], errors="coerce")
+          if close.isna().any() or (close <= 0).any():
+              raise SystemExit("Invalid or non-positive Close prices exist")
+          open_price = pd.to_numeric(df["Open"], errors="coerce")
+          open_missing_rate = float(open_price.isna().mean())
+          if open_missing_rate > 0.01:
+              raise SystemExit(f"More than 1% of rows lack Open prices ({open_missing_rate:.2%}); refusing to publish")
+          if (open_price.dropna() <= 0).any():
+              raise SystemExit("Non-positive Open prices exist")
+          baseline = int(os.environ.get("BASELINE_ROWS", "0"))
+          if baseline > 0 and len(df) < int(baseline * 0.80):
+              raise SystemExit(
+                  f"Row count dropped more than 20%: baseline={baseline}, rebuilt={len(df)}; refusing to publish"
+              )
+          print(f"Validated rows={len(df)}, tickers={df['Ticker'].nunique()}, "
+                f"dates={df['Date'].nunique()}, schema={versions}")
+          PY
+
+      - name: Upload pre-rebuild backup
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quant-price-history-pre-rebuild-backup-${{ github.run_id }}
+          path: quant_factor_price_history.csv.bak.*
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Commit and push corrected history
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add quant_factor_price_history.csv
+          if git diff --cached --quiet; then
+            echo "Corrected history is unchanged; nothing to commit."
+            exit 0
+          fi
+          git commit -m "fix(quant): rebuild price history with correct session dates"
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "Corrected price history pushed to main"
+            exit 0
+          fi
+          echo "::error::Could not publish corrected price history after retries; backup artifact is retained"
+          exit 1
