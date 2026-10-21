@@ -30,6 +30,14 @@ jobs:
       - name: Run IC
         run: python tools/research/run_research_ic_sp500_pit_10y.py
 
+      # Isolated low-frequency ATR strategy validation on the 10Y PIT forward-return dataset.
+      # This is research-only and does not modify production scores, Scan, stops, or ledgers.
+      - name: Run low-frequency ATR strategy validation
+        run: |
+          python tools/research/low_frequency_atr_strategy.py \\
+            --input research_backtest_sp500_pit_10y.csv \\
+            --output LOW_FREQUENCY_ATR_STRATEGY_10Y.md
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -40,6 +48,7 @@ jobs:
             research_backtest_sp500_pit_10y.csv
             research_summary_sp500_pit_10y.csv
             research_ic_sp500_pit_10y.csv
+            LOW_FREQUENCY_ATR_STRATEGY_10Y.md
           retention-days: 30
 
       - name: Commit and push
