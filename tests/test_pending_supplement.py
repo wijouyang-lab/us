@@ -241,6 +241,8 @@ def test_date_mismatch_fails_closed_and_keeps_pending(tmp_path, monkeypatch, bad
     # If the code attempted to use the filename date despite the row mismatch,
     # market data would be available; the file must fail before reaching that point.
     ns["OHLC"][( "AAA", TARGET_DATE)] = {"open": "100", "close": "105"}
+    ensure_calls = []
+    ns["ensure_trade_history_columns"] = lambda: ensure_calls.append(True)
 
     result = fn()
 
@@ -286,9 +288,13 @@ def test_data_row_without_date_column_fails_closed(tmp_path, monkeypatch):
         encoding="utf-8",
     )
 
+    ensure_calls = []
+    ns["ensure_trade_history_columns"] = lambda: ensure_calls.append(True)
+
     result = fn()
 
     assert result["failed_files"] == [path.name]
+    assert ensure_calls == []
     assert path.exists() and not (tmp_path / (path.name + ".processed")).exists()
     assert _trade_rows() == []
 
