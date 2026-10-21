@@ -461,6 +461,10 @@ def load_trade_history():
             return pd.DataFrame()
         if "Name" not in d.columns:
             d["Name"] = ""
+        if "Tag" not in d.columns:
+            # Legacy files without Tag are explicit empty-tag events, never a
+            # wildcard that would swallow new Core/Observation signals.
+            d["Tag"] = ""
         d["Date"] = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
         d = d.dropna(subset=["Date"])
         # 防御层：即使历史文件存在 duplicate event，也按 canonical 规则去重，
@@ -479,16 +483,26 @@ def safe_record_price(row):
     p = safe_float(row.get("Price"))
     return p if (p is not None and p > 0) else None
 
-def find_existing_record(df_existing, date_value, ticker):
+def find_existing_record(df_existing, date_value, ticker, tag):
+    """Return True when this exact (Date, Ticker, Tag) event already exists.
+
+    Tag is compared after whitespace trimming only.  Case is preserved so
+    ``Core_Dragon`` and ``core_dragon`` remain distinct; an empty Tag is its
+    own event and is not treated as a wildcard.
+    """
     if df_existing.empty:
         return False
     target = normalize_date(date_value)
     if target is None:
         return False
     try:
+        tags = (df_existing["Tag"].astype(str).str.strip()
+                if "Tag" in df_existing.columns
+                else pd.Series([""] * len(df_existing), index=df_existing.index))
         return bool((
             (df_existing["Date"] == target) &
-            (df_existing["Ticker"].astype(str).str.upper() == str(ticker).upper())
+            (df_existing["Ticker"].astype(str).str.upper() == str(ticker).upper()) &
+            (tags == clean_text(tag).strip())
         ).any())
     except Exception:
         return False
@@ -628,7 +642,7 @@ def supplement_us_stocks_from_pending():
             p = pd.DataFrame(_rows, columns=_header)
             if p.empty:
                 if not pf.endswith(".processed"):
-                    os.rename(pf, pf + ".processed")
+                    os.replace(pf, pf + ".processed")
                 continue
             if "Ticker" not in p.columns:
                 print(f"❌ {pf} 没有 Ticker 列。")
@@ -649,8 +663,11 @@ def supplement_us_stocks_from_pending():
                     target_map[t] = exact
 
             new_rows, missing = [], []
+            seen_events = set()
             for row, ticker in resolved:
-                if find_existing_record(existing, target_date, ticker):
+                tag = clean_text(row.get("Tag")).strip()
+                event_key = (target_date, ticker, tag)
+                if event_key in seen_events or find_existing_record(existing, target_date, ticker, tag):
                     continue
                 pdx = target_map.get(ticker)
                 op = safe_float(pdx.get("open")) if pdx else None
@@ -723,6 +740,7 @@ def supplement_us_stocks_from_pending():
                     "Review_Stop_Distance_Pct": "",
                     "Review_Risk_Note": "",
                 })
+                seen_events.add(event_key)
             if missing:
                 incomplete_files.append(pf)
                 for item in missing:
@@ -753,7 +771,7 @@ def supplement_us_stocks_from_pending():
                 existing = final
                 print(f"✅ 新增 {len(new_rows)} 条美股记录。")
             if not pf.endswith(".processed") and not missing:
-                os.rename(pf, pf + ".processed")
+                os.replace(pf, pf + ".processed")
         except PendingCsvError as e:
             print(f"::error::[PENDING_CSV_INVALID] file={pf} error={e}")
             failures.append(pf)
@@ -1587,7 +1605,7 @@ def get_trailing_stop_context(ticker, current_stop=None, before_date=None, entry
         print(f"⚠️ 移动止损计算失败 {ticker}: {e}"); return None
 
 
-def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
+def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx, tag=None):
     if not os.path.exists(TRADE_HISTORY):
         return
     try:
@@ -1600,6 +1618,10 @@ def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
             dates.dt.strftime("%Y-%m-%d").eq(str(buy_date)[:10]) &
             d["Status"].astype(str).str.strip().eq("Active")
         )
+        if tag is not None:
+            tags = (d["Tag"].astype(str).str.strip()
+                    if "Tag" in d.columns else pd.Series([""] * len(d), index=d.index))
+            mask &= tags.eq(str(tag).strip())
         if mask.any():
             d.loc[mask,"Stop_Loss"] = str(stop_price)
             d.loc[mask,"Trail_Stop"] = str(stop_price)
@@ -1611,7 +1633,7 @@ def update_trade_history_trailing_stop(ticker, buy_date, stop_price, ctx):
     except Exception as e:
         print(f"⚠️ 更新移动止损失败 {ticker}: {e}")
 
-def update_trade_history_status(ticker, buy_date, new_status, exit_price):
+def update_trade_history_status(ticker, buy_date, new_status, exit_price, tag=None):
     if not os.path.exists(TRADE_HISTORY):
         return
     try:
@@ -1624,6 +1646,10 @@ def update_trade_history_status(ticker, buy_date, new_status, exit_price):
             dates.dt.strftime("%Y-%m-%d").eq(str(buy_date)[:10]) &
             d["Status"].astype(str).str.strip().eq("Active")
         )
+        if tag is not None:
+            tags = (d["Tag"].astype(str).str.strip()
+                    if "Tag" in d.columns else pd.Series([""] * len(d), index=d.index))
+            mask &= tags.eq(str(tag).strip())
         if mask.any():
             d.loc[mask,"Status"] = new_status
             d.loc[mask,"Exit_Date"] = REVIEW_SESSION_DATE
@@ -1632,7 +1658,7 @@ def update_trade_history_status(ticker, buy_date, new_status, exit_price):
     except Exception as e:
         print(f"⚠️ 更新状态失败 {ticker}: {e}")
 
-def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=None, current_price=None, note=""):
+def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=None, current_price=None, note="", tag=None):
     if not os.path.exists(TRADE_HISTORY):
         return
     try:
@@ -1647,6 +1673,10 @@ def write_review_risk_linkage_us(ticker, rec_date_str, risk_status, stop_price=N
             dates.dt.strftime("%Y-%m-%d").eq(str(rec_date_str)[:10]) &
             d["Status"].astype(str).str.strip().eq("Active")
         )
+        if tag is not None:
+            tags = (d["Tag"].astype(str).str.strip()
+                    if "Tag" in d.columns else pd.Series([""] * len(d), index=d.index))
+            mask &= tags.eq(str(tag).strip())
         if not mask.any(): return
         d.loc[mask,"Review_Risk_Status"] = risk_status
         d.loc[mask,"Review_Risk_Date"] = REVIEW_SESSION_DATE
@@ -1872,6 +1902,7 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
         continue
     rec_date_str = rec_date.strftime("%Y-%m-%d")
     status = clean_text(latest.get("Status"))
+    event_tag = clean_text(latest.get("Tag")).strip()
 
     # 已经结束 / 已退出的旧生命周期不再作为 active 检查（含 Exit_Date 已设置的清仓）。
     # 统一用 is_active_holding 判定，确保 Exit_Date="N/A" 等占位符不会被误判为"已退出"。
@@ -1885,7 +1916,7 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
     rec_price = safe_record_price(latest)
 
     # ---- Observation：每一条 Scan Observation 都独立追踪 ----
-    if clean_text(latest.get("Tag")).strip() == "Observation":
+    if event_tag == "Observation":
         if rec_price is None or rec_price <= 0:
             rec_price = _recommendation_price_lookup.get((rec_date_str, ticker.upper(), "Observation"))
         cur = safe_float(price_map_today.get(ticker))
@@ -1948,7 +1979,7 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
                 "Review_Risk_Status":"DATA_MISSING","Review_Risk_Date":REVIEW_SESSION_DATE,
                 "Review_Stop_Distance_Pct":"","Review_Risk_Note":f"{REVIEW_SESSION_DATE} 行情缺失，待下一次Review补算"
             })
-            write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, f"{REVIEW_SESSION_DATE} 行情缺失，暂不执行该交易日止损判断。")
+            write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None, f"{REVIEW_SESSION_DATE} 行情缺失，暂不执行该交易日止损判断。", tag=event_tag)
             continue
 
         cur_float = safe_float(cur)
@@ -1967,7 +1998,7 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
             "Review_Stop_Distance_Pct":round((cur_float-stop)/cur_float*100,2) if stop and cur_float else "",
             "Review_Risk_Note":f"{REVIEW_SESSION_DATE} 完整OHLC未返回；已使用最近有效价格跟踪，不执行该交易日止损触发。"
         })
-        write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, cur_float, "今日完整OHLC未返回；使用最近有效价格跟踪，不执行当日止损触发。")
+        write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, cur_float, "今日完整OHLC未返回；使用最近有效价格跟踪，不执行当日止损触发。", tag=event_tag)
         continue
 
     # ---- 统一行情快照：ohlc 已确保来自本次 Review 交易日同一份 OHLC（见上文 ohlc_map_today 选取）----
@@ -1992,13 +2023,15 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
         # Stop_Loss 无效：不触发价格止损，但必须输出明确 warning。
         print(f"⚠️ [风控] {ticker} {rec_date_str} Stop_Loss 无效({exec_stop})，跳过价格止损（仅跟踪）。")
         write_review_risk_linkage_us(ticker, rec_date_str, "NO_STOP", None, closep,
-                                     f"Stop_Loss 无效({exec_stop})，不触发价格止损，仅跟踪。")
+                                     f"Stop_Loss 无效({exec_stop})，不触发价格止损，仅跟踪。",
+                                     tag=event_tag)
     elif trigger_result == "STOP_TRIGGERED":
         # 已确认跌破止损（Low 或 可靠 Close）→ STOP_TRIGGERED。
         print(f"ℹ️ [风控] {ticker} {rec_date_str} 确认触及止损 {exec_stop:.2f}（Low={low} Close={closep} Open={openp}）-> Exit={exitp}。")
         write_review_risk_linkage_us(
             ticker, rec_date_str, "STOP_TRIGGERED", exec_stop, closep,
-            f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。"
+            f"今日最低价 {low:.2f} 已触及/跌破移动止损 {exec_stop:.2f}；次日 Scan 禁止重新推荐。",
+            tag=event_tag,
         )
         pnl = round((exitp-rec_price)/rec_price*100,2)
         stopped_list.append({
@@ -2010,11 +2043,12 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
             "触发方式":"移动止损：今日完整OHLC触发","Stop_Method":"MA20/MA50 + ATR + MACD/KDJ"
         })
         _exit_status = _classify_exit_status(exitp, rec_price)
-        update_trade_history_status(ticker, rec_date_str, _exit_status, exitp)
+        update_trade_history_status(ticker, rec_date_str, _exit_status, exitp, tag=event_tag)
     elif trigger_result == "DATA_MISSING":
         # 无任何可靠 OHLC：不能猜测，输出数据不足 warning（不触发）。
         write_review_risk_linkage_us(ticker, rec_date_str, "DATA_MISSING", None, None,
-                                     f"{REVIEW_SESSION_DATE} 行情缺失，暂不执行该交易日止损判断。")
+                                     f"{REVIEW_SESSION_DATE} 行情缺失，暂不执行该交易日止损判断。",
+                                     tag=event_tag)
         cur = price_map_today.get(ticker); cur_float = safe_float(cur)
         active_list.append({
             "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
@@ -2044,7 +2078,7 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
     # 同日新仓保持原始保护线；从下一个 Review 日起才允许移动止损抬升。
     next_stop = exec_stop if is_same_day_entry and exec_stop else (next_ctx.get("exec_stop") if next_ctx else exec_stop)
     if next_stop and not is_same_day_entry:
-        update_trade_history_trailing_stop(ticker, rec_date_str, next_stop, next_ctx or ctx or {})
+        update_trade_history_trailing_stop(ticker, rec_date_str, next_stop, next_ctx or ctx or {}, tag=event_tag)
     c = dict(next_ctx or ctx or {})
     # 展示指标以“复盘交易日收盘后的技术状态”为准；止损触发本身仍使用交易日前已知的 ctx。
     if tech_snapshot:
@@ -2058,7 +2092,7 @@ for (_event_date, _event_ticker, _event_tag), latest, group in _recent_event_gro
     distance = ((closep-next_stop)/closep*100) if next_stop and closep else None
     risk_status = "STOP_NEAR" if distance is not None and distance <= 3.0 else "CLEAR"
     risk_note = f"收盘距离移动止损约 {distance:.2f}%，次日 Scan 强提醒。" if risk_status == "STOP_NEAR" else "本次 Review 未发现触及或接近移动止损。"
-    write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note)
+    write_review_risk_linkage_us(ticker, rec_date_str, risk_status, next_stop, closep, risk_note, tag=event_tag)
 
     active_list.append({
         "代码":ticker,"名称":clean_text(latest.get("Name"),ticker),"标签":clean_text(latest.get("Tag")),
@@ -3020,7 +3054,7 @@ def _load_scan_recommendation_files():
 
 
 def _load_trade_event_lookup():
-    """按 Date+Ticker 保存 trade_history 中与推荐事件对应的状态。"""
+    """按 Date+Ticker+Tag 保存 trade_history 中与推荐事件对应的状态。"""
     d = load_trade_history()
     lookup = {}
     if d.empty:
@@ -3031,7 +3065,7 @@ def _load_trade_event_lookup():
         ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
         if rec_date is None or not ticker:
             continue
-        key = (rec_date.strftime("%Y-%m-%d"), ticker)
+        key = (rec_date.strftime("%Y-%m-%d"), ticker, clean_text(row.get("Tag")).strip())
         lookup[key] = row.to_dict()
 
     return lookup
@@ -3058,7 +3092,7 @@ def _load_review_closed_lookup():
                 continue
             status = clean_text(row.get("Status"))
             if status in {"移动止损清仓", "止损触发清仓", "已超期归档", "周期到期清仓", "突发清仓暂停"}:
-                key = (rec_date.strftime("%Y-%m-%d"), ticker)
+                key = (rec_date.strftime("%Y-%m-%d"), ticker, clean_text(row.get("Tag")).strip())
                 lookup[key] = row.to_dict()
         return lookup
     except Exception as e:

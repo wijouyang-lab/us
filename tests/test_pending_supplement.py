@@ -50,13 +50,16 @@ def _load_supplement(tmp_path):
     def resolve_ticker(t, n=""):
         return str(t or "").strip().upper()
 
-    def find_existing_record(df, date_value, ticker):
+    def find_existing_record(df, date_value, ticker, tag):
         if df is None or df.empty:
             return False
+        tags = (df["Tag"].astype(str).str.strip()
+                if "Tag" in df.columns else pd.Series([""] * len(df), index=df.index))
         try:
             return bool((
                 (df["Date"].astype(str).str[:10] == str(date_value)[:10]) &
-                (df["Ticker"].astype(str).str.upper() == str(ticker).upper())
+                (df["Ticker"].astype(str).str.upper() == str(ticker).upper()) &
+                (tags == str(tag).strip())
             ).any())
         except Exception:
             return False
