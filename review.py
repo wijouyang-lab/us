@@ -41,6 +41,7 @@ from us_market_calendar import (
     review_session_date as calendar_review_session_date,
 )
 from review_session_guard import ReviewSessionGuard
+from pending_csv import PendingCsvError, read_pending_csv
 
 
 # ============================================================
@@ -411,6 +412,10 @@ TRADE_HISTORY = "trade_history.csv"
 REVIEW_HISTORY = "review_history.csv"
 OPTION_LOG_FILE = "option_strategies.csv"
 
+# Pending CSV files that could not be parsed strictly; any entry blocks the
+# success marker because a row may have been lost.
+_pending_csv_errors = set()
+
 TRADE_COLUMNS = [
     "Date","Ticker","Name","Tag","Score","Price","RSI","Bias","Hold_Period",
     "Stop_Loss","Stop_Method","Trail_Stop","Exit_Date","Exit_Price","Status",
@@ -518,7 +523,8 @@ def _build_recommendation_price_lookup():
             continue
         rec_date = f"{m.group(1)[:4]}-{m.group(1)[4:6]}-{m.group(1)[6:]}"
         try:
-            d = pd.read_csv(filename, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            _header, _rows = read_pending_csv(filename)
+            d = pd.DataFrame(_rows, columns=_header)
             for _, row in d.iterrows():
                 ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
                 tag = clean_text(row.get("Tag"))
@@ -528,7 +534,9 @@ def _build_recommendation_price_lookup():
                 if ticker and price is not None and price > 0:
                     key = (rec_date, ticker.upper(), tag)
                     lookup[key] = price
-        except Exception:
+        except PendingCsvError as e:
+            print(f"::error::[PENDING_CSV_INVALID] file={filename} error={e}")
+            _pending_csv_errors.add(filename)
             continue
 
     return lookup
@@ -601,11 +609,13 @@ def supplement_us_stocks_from_pending():
         pending.append(f)
     if not pending:
         print("📋 无待确认/恢复美股文件，跳过补充。")
-        return []
+        return {"failed_files": [], "incomplete_files": [], "incomplete_details": []}
     ensure_trade_history_columns()
     existing = load_trade_history()
     print(f"📋 发现 {len(pending)} 份待确认文件。")
     failures = []
+    incomplete_files = []
+    incomplete_details = []
 
     for pf in pending:
         m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", os.path.basename(pf))
@@ -614,7 +624,8 @@ def supplement_us_stocks_from_pending():
         raw_date = m.group(1)
         target_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
         try:
-            p = pd.read_csv(pf, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            _header, _rows = read_pending_csv(pf)
+            p = pd.DataFrame(_rows, columns=_header)
             if p.empty:
                 if not pf.endswith(".processed"):
                     os.rename(pf, pf + ".processed")
@@ -650,8 +661,21 @@ def supplement_us_stocks_from_pending():
                 # 注意：op（正式买入价 = 推荐日 Open）在盘前/盘中尚未产生时必须保持 None，
                 # 绝不 get_live_quote_bootstrap() 把实时价假装成 Open。Price 列随之留空，
                 # 由后续 Review 的 backfill_rec_price() 取得 Rec_Date 真实 Open 后幂等回填。
-                if op is None or cp is None:
-                    missing.append(ticker)
+                missing_fields = []
+                if op is None:
+                    missing_fields.append("Open")
+                if cp is None:
+                    missing_fields.append("Close")
+                if missing_fields:
+                    # Fail closed: do not create an Active row with a missing price.
+                    # Keep the .csv file so the next Review retries the market data.
+                    missing.append({"ticker": ticker, "missing": missing_fields})
+                    print(
+                        f"::warning::[PENDING_INCOMPLETE_OHLC] file={pf} "
+                        f"ticker={ticker} missing={','.join(missing_fields)} "
+                        f"action=kept_pending"
+                    )
+                    continue
                 scan_ref = row.get("Scan_Ref_Price", row.get("Price", ""))
                 stop = row.get("Stop_Loss", "N/A")
                 if op is not None:
@@ -672,7 +696,7 @@ def supplement_us_stocks_from_pending():
                     "Exit_Date": "",
                     "Exit_Price": "",
                     "Status": "Active",
-                    "Close_Price": cp if cp is not None else "",
+                    "Close_Price": cp,
                     "技术评分": clean_text(row.get("技术评分")),
                     "技术确认数": clean_text(row.get("技术确认数")),
                     "技术确认信号": clean_text(row.get("技术确认信号")),
@@ -700,7 +724,18 @@ def supplement_us_stocks_from_pending():
                     "Review_Risk_Note": "",
                 })
             if missing:
-                print(f"⚠️ 以下 ticker 暂时没有 OHLC：{missing}")
+                incomplete_files.append(pf)
+                for item in missing:
+                    incomplete_details.append({
+                        "file": pf,
+                        "target_date": target_date,
+                        "ticker": item["ticker"],
+                        "missing": item["missing"],
+                    })
+                print(
+                    f"⚠️ [PENDING_INCOMPLETE] file={pf} 有 {len(missing)} 个 ticker 缺少行情，"
+                    f"保留 .csv 等待下次 Review 重试，不写 Active 记录。"
+                )
             if new_rows:
                 nd = pd.DataFrame(new_rows)
                 for c in TRADE_COLUMNS:
@@ -717,15 +752,27 @@ def supplement_us_stocks_from_pending():
                 final.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
                 existing = final
                 print(f"✅ 新增 {len(new_rows)} 条美股记录。")
-            if not pf.endswith(".processed"):
+            if not pf.endswith(".processed") and not missing:
                 os.rename(pf, pf + ".processed")
+        except PendingCsvError as e:
+            print(f"::error::[PENDING_CSV_INVALID] file={pf} error={e}")
+            failures.append(pf)
         except Exception as e:
             print(f"❌ 处理 {pf} 出错：{e}")
             failures.append(pf)
-    return failures
+    return {
+        "failed_files": failures,
+        "incomplete_files": incomplete_files,
+        "incomplete_details": incomplete_details,
+    }
 
 
-_pending_failures = supplement_us_stocks_from_pending()
+_pending_ingest = supplement_us_stocks_from_pending()
+_pending_failures = list(dict.fromkeys(
+    list(_pending_ingest.get("failed_files", []))
+    + list(_pending_ingest.get("incomplete_files", []))
+))
+_pending_incomplete_details = list(_pending_ingest.get("incomplete_details", []))
 backfill_missing_trade_history_recommendation_prices()
 
 
@@ -2939,14 +2986,11 @@ def _load_scan_recommendation_files():
             continue
 
         try:
-            d = pd.read_csv(
-                filename,
-                dtype=str,
-                keep_default_na=False,
-                on_bad_lines="skip",
-            )
-        except Exception as e:
-            print(f"⚠️ 读取 Scan 推荐文件失败 {filename}: {e}")
+            _header, _rows = read_pending_csv(filename)
+            d = pd.DataFrame(_rows, columns=_header)
+        except PendingCsvError as e:
+            print(f"::error::[PENDING_CSV_INVALID] file={filename} error={e}")
+            _pending_csv_errors.add(filename)
             continue
 
         if d.empty or "Ticker" not in d.columns:
@@ -3951,9 +3995,19 @@ if os.environ.get("ENABLE_AI_REASON_BACKFILL") == "1":
     except Exception as e:
         print(f"⚠️ AI 原因回填失败（不影响 review）：{type(e).__name__}: {e}")
 
-if _pending_failures:
+_unsolved_pending = list(dict.fromkeys(
+    [str(p) for p in _pending_failures] + sorted(_pending_csv_errors)
+))
+if _pending_incomplete_details:
+    for item in _pending_incomplete_details:
+        print(
+            f"::error::[PENDING_INCOMPLETE_OHLC] file={item['file']} "
+            f"ticker={item['ticker']} missing={','.join(item['missing'])} "
+            f"target_date={item['target_date']} result=retry_required"
+        )
+if _unsolved_pending:
     print("::error::以下 pending 文件未成功处理，拒绝写成功标记，允许下次安全重试：%s"
-          % ", ".join(str(p) for p in _pending_failures))
+          % ", ".join(_unsolved_pending))
     sys.exit(1)
 
 if not _report_ok:
