@@ -1,73 +1,73 @@
 Factor,Factor_Type,Horizon,N,Valid_Returns,Win_Rate,Average_Return,Median_Return,Std_Return,Positive_Return_Count,Negative_Return_Count,schema_version
-RSI_14,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-RSI_14,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+RSI_14,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+RSI_14,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 RSI_14,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Bias_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Bias_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Bias_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Bias_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Bias_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-MACD_Hist,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-MACD_Hist,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+MACD_Hist,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+MACD_Hist,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 MACD_Hist,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-MA20,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-MA20,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+MA20,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+MA20,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 MA20,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-MA50,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-MA50,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+MA50,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+MA50,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 MA50,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-MA20_Slope_5D,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-MA20_Slope_5D,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+MA20_Slope_5D,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+MA20_Slope_5D,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 MA20_Slope_5D,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-ATR_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-ATR_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+ATR_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+ATR_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 ATR_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-KDJ_J,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-KDJ_J,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+KDJ_J,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+KDJ_J,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 KDJ_J,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Volume_Ratio_5D,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Volume_Ratio_5D,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Volume_Ratio_5D,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Volume_Ratio_5D,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Volume_Ratio_5D,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Momentum_5D_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Momentum_5D_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Momentum_5D_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Momentum_5D_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Momentum_5D_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Momentum_20D_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Momentum_20D_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Momentum_20D_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Momentum_20D_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Momentum_20D_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Momentum_60D_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Momentum_60D_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Momentum_60D_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Momentum_60D_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Momentum_60D_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Realized_Volatility_20D_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Realized_Volatility_20D_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Realized_Volatility_20D_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Realized_Volatility_20D_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Realized_Volatility_20D_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Volume_Ratio_20D,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Volume_Ratio_20D,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Volume_Ratio_20D,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Volume_Ratio_20D,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Volume_Ratio_20D,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-ZScore_20D,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-ZScore_20D,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+ZScore_20D,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+ZScore_20D,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 ZScore_20D,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Beta_60D_SPY,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Beta_60D_SPY,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Beta_60D_SPY,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Beta_60D_SPY,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Beta_60D_SPY,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Stock_RS_20D_vs_SPY,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Stock_RS_20D_vs_SPY,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Stock_RS_20D_vs_SPY,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Stock_RS_20D_vs_SPY,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Stock_RS_20D_vs_SPY,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Sector_RS_20D_Pct,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Sector_RS_20D_Pct,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Sector_RS_20D_Pct,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Sector_RS_20D_Pct,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Sector_RS_20D_Pct,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-VIX,Raw Factor,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-VIX,Raw Factor,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+VIX,Raw Factor,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+VIX,Raw Factor,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 VIX,Raw Factor,20D,0,0,,,,,0,0,phase2.v1
-Quant_Score,Composite,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Quant_Score,Composite,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Quant_Score,Composite,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Quant_Score,Composite,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Quant_Score,Composite,20D,0,0,,,,,0,0,phase2.v1
-Fundamental_Score,Existing Scan Score,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Fundamental_Score,Existing Scan Score,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Fundamental_Score,Existing Scan Score,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Fundamental_Score,Existing Scan Score,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Fundamental_Score,Existing Scan Score,20D,0,0,,,,,0,0,phase2.v1
-Event_Score,Existing Scan Score,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Event_Score,Existing Scan Score,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Event_Score,Existing Scan Score,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Event_Score,Existing Scan Score,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Event_Score,Existing Scan Score,20D,0,0,,,,,0,0,phase2.v1
-Technical_Score_25,Existing Scan Score,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Technical_Score_25,Existing Scan Score,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Technical_Score_25,Existing Scan Score,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Technical_Score_25,Existing Scan Score,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Technical_Score_25,Existing Scan Score,20D,0,0,,,,,0,0,phase2.v1
-Risk_Liquidity_Score,Existing Scan Score,5D,1342,1342,61.92,0.000593,0.012063,0.052833,831,511,phase2.v1
-Risk_Liquidity_Score,Existing Scan Score,10D,5,5,80.0,0.034834,0.058374,0.058743,4,1,phase2.v1
+Risk_Liquidity_Score,Existing Scan Score,5D,1914,1914,66.3,0.005077,0.016025,0.052244,1269,645,phase2.v1
+Risk_Liquidity_Score,Existing Scan Score,10D,286,286,70.98,0.016613,0.035361,0.08419,203,83,phase2.v1
 Risk_Liquidity_Score,Existing Scan Score,20D,0,0,,,,,0,0,phase2.v1

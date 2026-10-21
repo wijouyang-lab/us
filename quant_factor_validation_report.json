@@ -1,18 +1,18 @@
 {
   "schema_version": "phase3.v1",
   "data_maturity": {
-    "backtest_rows": 2506,
+    "backtest_rows": 2792,
     "n_factors": 24,
     "n_horizons": 3
   },
   "horizon_maturity": {
     "5D": {
-      "max_sample_count": 1342,
+      "max_sample_count": 1914,
       "mature": true
     },
     "10D": {
-      "max_sample_count": 5,
-      "mature": false
+      "max_sample_count": 286,
+      "mature": true
     },
     "20D": {
       "max_sample_count": 0,
@@ -22,12 +22,12 @@
   "sample_counts": {
     "max_N_by_horizon": {
       "5D": {
-        "max_sample_count": 1342,
+        "max_sample_count": 1914,
         "mature": true
       },
       "10D": {
-        "max_sample_count": 5,
-        "mature": false
+        "max_sample_count": 286,
+        "mature": true
       },
       "20D": {
         "max_sample_count": 0,
@@ -37,35 +37,58 @@
   },
   "validation_status": {
     "status_counts": {
-      "REGIME_DEPENDENT": 24,
-      "EXPLORATORY": 24,
+      "REGIME_DEPENDENT": 48,
       "NOT_ENOUGH_DATA": 24
     },
     "promising": [],
     "regime_dependent": [
       "RSI_14",
+      "RSI_14",
+      "Bias_Pct",
       "Bias_Pct",
       "MACD_Hist",
+      "MACD_Hist",
+      "MA20",
       "MA20",
       "MA50",
+      "MA50",
+      "MA20_Slope_5D",
       "MA20_Slope_5D",
       "ATR_Pct",
+      "ATR_Pct",
+      "KDJ_J",
       "KDJ_J",
       "Volume_Ratio_5D",
+      "Volume_Ratio_5D",
+      "Momentum_5D_Pct",
       "Momentum_5D_Pct",
       "Momentum_20D_Pct",
+      "Momentum_20D_Pct",
+      "Momentum_60D_Pct",
       "Momentum_60D_Pct",
       "Realized_Volatility_20D_Pct",
+      "Realized_Volatility_20D_Pct",
+      "Volume_Ratio_20D",
       "Volume_Ratio_20D",
       "ZScore_20D",
+      "ZScore_20D",
+      "Beta_60D_SPY",
       "Beta_60D_SPY",
       "Stock_RS_20D_vs_SPY",
+      "Stock_RS_20D_vs_SPY",
+      "Sector_RS_20D_Pct",
       "Sector_RS_20D_Pct",
       "VIX",
+      "VIX",
+      "Quant_Score",
       "Quant_Score",
       "Fundamental_Score",
+      "Fundamental_Score",
+      "Event_Score",
       "Event_Score",
       "Technical_Score_25",
+      "Technical_Score_25",
+      "Risk_Liquidity_Score",
       "Risk_Liquidity_Score"
     ]
   },
@@ -73,50 +96,50 @@
     {
       "Factor_A": "RSI_14",
       "Factor_B": "Bias_Pct",
-      "Pearson": 0.825,
-      "Spearman": 0.9159
+      "Pearson": 0.8247,
+      "Spearman": 0.9167
     },
     {
       "Factor_A": "RSI_14",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.877,
-      "Spearman": 0.9217
+      "Pearson": 0.8785,
+      "Spearman": 0.9216
     },
     {
       "Factor_A": "Bias_Pct",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8167,
-      "Spearman": 0.9568
+      "Pearson": 0.8239,
+      "Spearman": 0.9573
     },
     {
       "Factor_A": "MA20",
       "Factor_B": "MA50",
-      "Pearson": 0.9976,
+      "Pearson": 0.9977,
       "Spearman": 0.9985
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Momentum_20D_Pct",
-      "Pearson": 0.9223,
-      "Spearman": 0.9012
+      "Pearson": 0.9175,
+      "Spearman": 0.897
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9225,
-      "Spearman": 0.9015
+      "Pearson": 0.9186,
+      "Spearman": 0.8988
     },
     {
       "Factor_A": "Volume_Ratio_5D",
       "Factor_B": "Volume_Ratio_20D",
-      "Pearson": 0.9395,
-      "Spearman": 0.9534
+      "Pearson": 0.9356,
+      "Spearman": 0.9443
     },
     {
       "Factor_A": "Momentum_20D_Pct",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9943,
-      "Spearman": 0.9909
+      "Pearson": 0.9912,
+      "Spearman": 0.9862
     }
   ],
   "insufficient_data_reasons": [
