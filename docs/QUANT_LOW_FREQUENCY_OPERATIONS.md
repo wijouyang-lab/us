@@ -8,7 +8,7 @@
 |---|---|---|
 | `.github/workflows/scan.yml` | 只有 `workflow_dispatch` | 由仓库外部调度器触发。GitHub 不会自行定时启动 Scan；不要加 cron。 |
 | `.github/workflows/review.yml` | `workflow_dispatch` + 工作日 cron `23 22 * * 1-5` UTC | 写 Review / 风控 / 账本结果；不要未经授权补跑生产 Review。 |
-| `.github/workflows/dashboard-data.yml` | 工作日每小时 `0 * * * 1-5` UTC、手动触发，以及限定路径的 main push | 与 Review 使用同一账本并发组；导出器和日志管道失败都必须使步骤失败。 |
+| `.github/workflows/dashboard-data.yml` | 工作日每小时 `0 * * * 1-5` UTC、手动触发、限定路径的 main push，以及 Scan 成功结束后的 `workflow_run` | 与 Review 使用同一账本并发组；Scan 失败不触发跟随刷新；导出器和日志管道失败都必须使步骤失败。 |
 | `.github/workflows/quant-research.yml` | `workflow_dispatch` + `workflow_call` | Scan 后执行研究 Phase 2–7；没有独立 cron。 |
 | `.github/workflows/evolve.yml` | 手动触发 + 每月 1 日 `0 2 1 * *` UTC | 只提交策略进化明确允许的文件；不得全量暂存 runner 工作目录。 |
 | `paper-trading.yml` | 手动触发或 Scan 成功后的工作流事件 | 纸面组合；不是券商实盘下单接口。 |
