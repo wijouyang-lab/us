@@ -12,10 +12,17 @@
 | `dashboard_export.py` | 生成 `dashboard/data/dashboard_data.json` | `dashboard-data.yml` |
 | `quant_research_runner.py` | Quant Phase 2–7 研究（研究态，无生产入口） | `quant-research.yml`（由 `scan.yml` 调用） |
 
-## Workflow（10 个）
+## Workflow 与触发边界
 
-`scan` · `review` · `evolve` · `dashboard-data` · `news-fetch` · `quant-research` ·
-`skill-weekly` · `test` · `_temp-acceleration` · `_temp-test-datasources`
+主要入口是 `scan`、`review`、`dashboard-data`、`quant-research`、`evolve` 和纸面组合流程；另有手动触发的一次性历史研究工作流。
+
+- `scan.yml` **仅接收 `workflow_dispatch`**，由仓库外部触发；不要增加 GitHub cron。
+- `review.yml` 按工作日计划运行；避免未经授权的手动补跑。
+- `dashboard-data.yml` 按工作日每小时刷新；与 Review 共用账本并发组，提交路径有白名单。
+- `quant-research.yml` 是研究流水线，由 Scan 调用，也保留手动调试入口；它不是策略激活入口。
+- `evolve.yml` 每月 1 日运行；只允许提交明确列出的进化产物。
+
+更完整的触发规则、Phase 2–7 语义、样本成熟度以及生产隔离约束见 `docs/QUANT_LOW_FREQUENCY_OPERATIONS.md`。
 
 ## 快速上手
 
