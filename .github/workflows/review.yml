@@ -85,6 +85,7 @@ jobs:
             review_history.csv
             option_strategies.csv
             review_report.html
+            us_stocks_pending_*.csv
             us_stocks_pending_*.csv.processed
             portfolio_50000_meta.json
             portfolio_50000_positions.csv
@@ -128,6 +129,8 @@ jobs:
           fi
 
           # review.py 消费过的 pending 原文件（未 .processed）从工作区移除，避免下一轮重复入账
+          # 注意：这会把 rename 表达为删除；push_with_retry.sh 的 pending-guard（参数 1）
+          # 会在 origin/main 上的 Pending 已被 Scan 更新/新增时拒绝 push，避免 rebase 静默丢行。
           git rm -f us_stocks_pending_*.csv 2>/dev/null || true
 
           if git diff --cached --quiet; then
@@ -155,7 +158,7 @@ jobs:
 
           # 并发安全推送：必须先 fetch + rebase 到最新 origin/main，再推送
           # 绝对禁止 git push --force / -f：绝不覆盖远端 main
-          if bash tools/ci/push_with_retry.sh 5 5; then
+          if bash tools/ci/push_with_retry.sh 5 5 1; then
             echo "复盘数据已推送到 main"
             exit 0
           fi
