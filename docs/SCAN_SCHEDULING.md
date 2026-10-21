@@ -5,7 +5,7 @@
 | 流程 | 触发方式 | 实际职责 | 不能据此推断 |
 |---|---|---|---|
 | 美股 Scan（`.github/workflows/scan.yml`） | 仅 `workflow_dispatch`；预期由外部调度器触发 | 选股、生成当日 pending、AI Snapshot 与 Quant 价格历史更新 | Dashboard 刷新了，不代表 Scan 已运行 |
-| Dashboard Data Refresh（`.github/workflows/dashboard-data.yml`） | GitHub Actions 工作日每小时 schedule | 刷新 Dashboard 数据；另有既有持仓价格同步与盘中机械止损步骤 | 不会运行 `scan.py`，不代表当天产生了新选股信号 |
+| Dashboard Data Refresh（`.github/workflows/dashboard-data.yml`） | GitHub Actions 工作日每 15 分钟 schedule | 刷新 Dashboard 数据；另有既有持仓价格同步与盘中机械止损步骤 | 不会运行 `scan.py`，不代表当天产生了新选股信号 |
 | Paper Trading（`.github/workflows/paper-trading.yml`） | Scan 成功后立即登记信号；工作日收盘后另有 UTC 双 cron + 纽约时区门禁 | Scan 运行登记信号/观察日；EOD 任务先刷新完整 OHLCV，再处理当日有效开盘模拟成交与退出、更新日报 | 不允许用旧日开盘价补成交；OHLC 模拟成交不是券商真实回报 |
 
 **唯一业务选股时间点是 Scan 完成并产出当日数据的时间。** Dashboard 页面中的行情刷新时间、Scan 完成时间、EOD 完整行情更新时间和 Paper Trading 观察记录应分别展示，不能用其中一个替代另一个。
