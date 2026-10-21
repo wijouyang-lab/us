@@ -126,6 +126,7 @@ def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None)
     - auto_adjust=False，与 Phase 1 因子口径一致。
     - cutoff_date 默认为最后完整交易日（剔除未完成 bar）。
     - Close 仍为必填（前瞻收益口径不变）；Open/High/Low/Volume 缺失则该行留空（不强行补 0 / 不阻断）。
+    - Open/High/Low 的非有限值或 <= 0 值按缺失处理并留空；Close 的非正值由重建验证拒绝。
     """
     import yfinance as yf
 
@@ -141,6 +142,8 @@ def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None)
         return pd.DataFrame(columns=PRICE_HISTORY_COLUMNS)
 
     rows = []
+    invalid_ohlc_counts = {c: 0 for c in ("Open", "High", "Low")}
+    invalid_ohlc_samples = {c: [] for c in ("Open", "High", "Low")}
     for t in tickers:
         try:
             if len(tickers) == 1:
@@ -169,6 +172,19 @@ def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None)
                     v = row.get(c)
                     if v is None or pd.isna(v):
                         rec[c] = ""
+                    elif c in ("Open", "High", "Low"):
+                        numeric = float(v)
+                        if not np.isfinite(numeric) or numeric <= 0:
+                            invalid_ohlc_counts[c] += 1
+                            if len(invalid_ohlc_samples[c]) < 10:
+                                invalid_ohlc_samples[c].append({
+                                    "Date": d.normalize().strftime("%Y-%m-%d"),
+                                    "Ticker": t,
+                                    "value": str(v),
+                                })
+                            rec[c] = ""
+                        else:
+                            rec[c] = round(numeric, 6)
                     elif c == "Volume":
                         rec[c] = int(round(float(v)))
                     else:
@@ -176,6 +192,11 @@ def fetch_batch_prices(tickers, start, end, auto_adjust=False, cutoff_date=None)
                 rows.append(rec)
         except Exception:
             continue
+    if any(invalid_ohlc_counts.values()):
+        print(
+            "[Price History] normalized non-positive/non-finite OHLC prices to blank: "
+            f"counts={invalid_ohlc_counts}; samples={invalid_ohlc_samples}"
+        )
     if not rows:
         return pd.DataFrame(columns=PRICE_HISTORY_COLUMNS)
     out = pd.DataFrame(rows, columns=PRICE_HISTORY_COLUMNS)

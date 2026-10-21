@@ -3,6 +3,8 @@
 import os
 import sys
 import tempfile
+import types
+from unittest.mock import patch
 
 import numpy as np
 import pandas as pd
@@ -388,6 +390,42 @@ def test_update_writes_ohlcv():
     check("Close 值不变", abs(float(sample["Close"]) - 100.0) < 1e-9)
 
 
+def test_fetch_blanks_nonpositive_or_nonfinite_ohl_fields():
+    """Invalid Open/High/Low values become blanks without changing valid fields."""
+    idx = pd.DatetimeIndex(["2026-10-05", "2026-10-06", "2026-10-07"])
+    raw = pd.DataFrame({
+        "Open": [0.0, 31.0, np.inf],
+        "High": [30.99, 32.0, 0.0],
+        "Low": [30.94, -1.0, -np.inf],
+        "Close": [30.95, 31.5, 31.0],
+        "Volume": [40, 50, 60],
+    }, index=idx)
+    fake_yfinance = types.ModuleType("yfinance")
+    fake_yfinance.download = lambda *args, **kwargs: raw
+
+    with patch.dict(sys.modules, {"yfinance": fake_yfinance}):
+        fetched = price_mod.fetch_batch_prices(
+            ["WBD"], "2026-10-05", "2026-10-08", cutoff_date="2026-10-07"
+        )
+
+    check("fetch 返回三行合成行情", len(fetched) == 3, f"got {len(fetched)}")
+    day_05 = fetched[fetched["Date"] == "2026-10-05"].iloc[0]
+    check("Open=0 转为空", day_05["Open"] == "", f"got {day_05['Open']!r}")
+    check("合法 High 保留", abs(float(day_05["High"]) - 30.99) < 1e-9)
+    check("合法 Low 保留", abs(float(day_05["Low"]) - 30.94) < 1e-9)
+    check("Close 不被改写", abs(float(day_05["Close"]) - 30.95) < 1e-9)
+
+    day_06 = fetched[fetched["Date"] == "2026-10-06"].iloc[0]
+    check("负数 Low 转为空", day_06["Low"] == "", f"got {day_06['Low']!r}")
+    check("合法 Open/High 保留", float(day_06["Open"]) == 31.0 and float(day_06["High"]) == 32.0)
+
+    day_07 = fetched[fetched["Date"] == "2026-10-07"].iloc[0]
+    check("无限 Open 转为空", day_07["Open"] == "", f"got {day_07['Open']!r}")
+    check("High=0 转为空", day_07["High"] == "", f"got {day_07['High']!r}")
+    check("负无限 Low 转为空", day_07["Low"] == "", f"got {day_07['Low']!r}")
+    check("合法 Volume 保留", int(day_07["Volume"]) == 60)
+
+
 def test_load_backward_compat_old_csv():
     """旧 4 列 CSV（仅 Date/Ticker/Close/schema_version）读入后自动补空 OHLCV，Close 保留。"""
     tmp = tempfile.mkdtemp()
@@ -420,6 +458,7 @@ def main():
         test_filter_bars,
         test_schema_has_ohlcv,
         test_update_writes_ohlcv,
+        test_fetch_blanks_nonpositive_or_nonfinite_ohl_fields,
         test_load_backward_compat_old_csv,
         test_naive_daily_session_date_preserved,
         test_aware_utc_daily_timestamp_converts_to_us_date,

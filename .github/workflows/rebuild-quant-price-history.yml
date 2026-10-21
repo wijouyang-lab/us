@@ -38,32 +38,57 @@ jobs:
         id: baseline
         run: |
           python - <<'PY'
-          import os
+          import hashlib
+          import json
+          from pathlib import Path
           import pandas as pd
-          p = "quant_factor_price_history.csv"
-          try:
-              df = pd.read_csv(p, dtype=str, keep_default_na=False)
-              n = len(df)
-          except Exception:
-              n = 0
-          print(f"Existing price-history rows: {n}")
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as f:
-              f.write(f"rows={n}\n")
+
+          path = Path("quant_factor_price_history.csv")
+          if not path.is_file():
+              raise SystemExit("Existing price history is missing; refusing an unbaselined rebuild")
+          raw = path.read_bytes()
+          df = pd.read_csv(path, dtype=str, keep_default_na=False)
+          required = {"Date", "Ticker", "Close"}
+          missing = required - set(df.columns)
+          if missing or df.empty:
+              raise SystemExit(f"Existing price history is invalid: missing={sorted(missing)}, rows={len(df)}")
+          tickers = sorted({str(t).strip().upper() for t in df["Ticker"] if str(t).strip()})
+          if not tickers:
+              raise SystemExit("Existing price history has no ticker universe; refusing rebuild")
+          baseline = {
+              "rows": int(len(df)),
+              "sha256": hashlib.sha256(raw).hexdigest(),
+              "tickers": tickers,
+          }
+          Path(".quant_price_history_rebuild_baseline.json").write_text(
+              json.dumps(baseline, sort_keys=True), encoding="utf-8"
+          )
+          print(f"Existing price-history rows: {baseline['rows']}")
+          print(f"Existing ticker count: {len(tickers)}")
+          print(f"Existing price-history SHA256: {baseline['sha256']}")
           PY
 
       - name: Rebuild historical OHLCV with corrected session dates
         run: python quant_factor_price.py --rebuild
 
       - name: Validate rebuilt price history
-        env:
-          BASELINE_ROWS: ${{ steps.baseline.outputs.rows }}
         run: |
           python - <<'PY'
-          import os
-          import sys
+          import glob
+          import hashlib
+          import json
+          from pathlib import Path
+          import numpy as np
           import pandas as pd
 
-          path = "quant_factor_price_history.csv"
+          path = Path("quant_factor_price_history.csv")
+          baseline_path = Path(".quant_price_history_rebuild_baseline.json")
+          if not baseline_path.is_file():
+              raise SystemExit("Rebuild baseline is missing; refusing to publish")
+          baseline = json.loads(baseline_path.read_text(encoding="utf-8"))
+          if not path.is_file():
+              raise SystemExit("Rebuild did not produce a price-history CSV")
+          raw = path.read_bytes()
           df = pd.read_csv(path, dtype=str, keep_default_na=False)
           required = {"Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "schema_version"}
           missing = required - set(df.columns)
@@ -73,31 +98,92 @@ jobs:
               raise SystemExit("Rebuild returned zero rows; refusing to publish")
           dates = pd.to_datetime(df["Date"], errors="coerce")
           if dates.isna().any():
-              raise SystemExit("Invalid dates exist in rebuilt file")
+              samples = df.loc[dates.isna(), ["Date", "Ticker"]].head(10).to_dict("records")
+              raise SystemExit(f"Invalid dates exist: {samples}")
           if (dates.dt.weekday >= 5).any():
               samples = df.loc[dates.dt.weekday >= 5, ["Date", "Ticker"]].head(10).to_dict("records")
               raise SystemExit(f"Weekend session dates remain: {samples}")
           if df.duplicated(subset=["Date", "Ticker"]).any():
-              raise SystemExit("Duplicate Date|Ticker keys exist")
+              samples = df.loc[df.duplicated(subset=["Date", "Ticker"], keep=False), ["Date", "Ticker"]].head(10).to_dict("records")
+              raise SystemExit(f"Duplicate Date|Ticker keys exist: {samples}")
           versions = set(df["schema_version"].astype(str))
           if versions != {"phase2b.v2"}:
               raise SystemExit(f"Unexpected schema versions after rebuild: {versions}")
           close = pd.to_numeric(df["Close"], errors="coerce")
-          if close.isna().any() or (close <= 0).any():
-              raise SystemExit("Invalid or non-positive Close prices exist")
+          invalid_close = close.isna() | ~np.isfinite(close) | (close <= 0)
+          if invalid_close.any():
+              samples = df.loc[invalid_close, ["Date", "Ticker", "Close"]].head(10).to_dict("records")
+              raise SystemExit(f"Invalid or non-positive Close prices: count={int(invalid_close.sum())}, samples={samples}")
+
+          # A bad Open/High/Low must have been normalized to an empty field at ingestion.
+          # Any remaining numeric non-positive/infinite value indicates a pipeline defect.
+          for col in ("Open", "High", "Low"):
+              values = pd.to_numeric(df[col], errors="coerce")
+              invalid = values.notna() & (~np.isfinite(values) | (values <= 0))
+              count = int(invalid.sum())
+              print(f"Invalid non-positive/non-finite {col} values remaining: {count}")
+              if count:
+                  samples = df.loc[invalid, ["Date", "Ticker", col]].head(10).to_dict("records")
+                  raise SystemExit(f"Invalid non-positive/non-finite {col}: count={count}, samples={samples}")
+
           open_price = pd.to_numeric(df["Open"], errors="coerce")
-          open_missing_rate = float(open_price.isna().mean())
+          open_missing = open_price.isna() | ~np.isfinite(open_price)
+          open_missing_rate = float(open_missing.mean())
           if open_missing_rate > 0.01:
-              raise SystemExit(f"More than 1% of rows lack Open prices ({open_missing_rate:.2%}); refusing to publish")
-          if (open_price.dropna() <= 0).any():
-              raise SystemExit("Non-positive Open prices exist")
-          baseline = int(os.environ.get("BASELINE_ROWS", "0"))
-          if baseline > 0 and len(df) < int(baseline * 0.80):
+              examples = df.loc[open_missing, ["Date", "Ticker", "Open"]].head(10).to_dict("records")
               raise SystemExit(
-                  f"Row count dropped more than 20%: baseline={baseline}, rebuilt={len(df)}; refusing to publish"
+                  f"More than 1% of rows lack a valid Open ({open_missing_rate:.2%}); "
+                  f"count={int(open_missing.sum())}, samples={examples}"
               )
-          print(f"Validated rows={len(df)}, tickers={df['Ticker'].nunique()}, "
-                f"dates={df['Date'].nunique()}, schema={versions}")
+
+          baseline_rows = int(baseline["rows"])
+          if baseline_rows > 0 and len(df) < int(baseline_rows * 0.80):
+              raise SystemExit(
+                  f"Row count dropped more than 20%: baseline={baseline_rows}, rebuilt={len(df)}; refusing to publish"
+              )
+
+          expected_tickers = {str(t).strip().upper() for t in baseline.get("tickers", []) if str(t).strip()}
+          snapshot_path = Path("quant_factor_snapshot.csv")
+          if snapshot_path.is_file():
+              snapshot = pd.read_csv(snapshot_path, dtype=str, keep_default_na=False)
+              if not snapshot.empty and "Ticker" not in snapshot.columns:
+                  raise SystemExit("Snapshot has data but no Ticker column; cannot validate ticker universe")
+              if "Ticker" in snapshot.columns:
+                  expected_tickers |= {
+                      str(t).strip().upper() for t in snapshot["Ticker"] if str(t).strip()
+                  }
+          actual_tickers = {str(t).strip().upper() for t in df["Ticker"] if str(t).strip()}
+          missing_tickers = sorted(expected_tickers - actual_tickers)
+          extra_tickers = sorted(actual_tickers - expected_tickers)
+          if missing_tickers or extra_tickers:
+              raise SystemExit(
+                  f"Ticker universe mismatch: missing={missing_tickers[:30]} "
+                  f"(count={len(missing_tickers)}), extra={extra_tickers[:30]} "
+                  f"(count={len(extra_tickers)})"
+              )
+
+          backup_paths = sorted(glob.glob("quant_factor_price_history.csv.bak.*"))
+          baseline_sha = str(baseline["sha256"])
+          matching_backups = [
+              name for name in backup_paths
+              if hashlib.sha256(Path(name).read_bytes()).hexdigest() == baseline_sha
+          ]
+          if not matching_backups:
+              raise SystemExit("No pre-rebuild backup matches the exact baseline SHA256; refusing to publish")
+          backup_path = matching_backups[-1]
+          backup_sha = hashlib.sha256(Path(backup_path).read_bytes()).hexdigest()
+          final_sha = hashlib.sha256(raw).hexdigest()
+
+          print(
+              f"Validated rows={len(df)}, baseline_rows={baseline_rows}, "
+              f"tickers={len(actual_tickers)}, dates={df['Date'].nunique()}, "
+              f"schema={sorted(versions)}"
+          )
+          print(f"Historical ticker set: exact match ({len(expected_tickers)} tickers)")
+          print(f"Baseline SHA256: {baseline_sha}")
+          print(f"Backup path: {backup_path}")
+          print(f"Backup SHA256: {backup_sha}")
+          print(f"Rebuilt CSV SHA256: {final_sha}")
           PY
 
       - name: Upload pre-rebuild backup
