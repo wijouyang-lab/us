@@ -40,8 +40,8 @@ jobs:
       # This is research-only and does not modify production scores, Scan, stops, or ledgers.
       - name: Run low-frequency ATR strategy validation
         run: |
-          python tools/research/low_frequency_atr_strategy.py \\
-            --input research_backtest_sp500_pit_10y.csv \\
+          python tools/research/low_frequency_atr_strategy.py \
+            --input research_backtest_sp500_pit_10y.csv \
             --output LOW_FREQUENCY_ATR_STRATEGY_10Y.md
 
       - name: Upload artifacts
