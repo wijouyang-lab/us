@@ -222,7 +222,12 @@ def compute_factor_summary(bt_df):
             ret_col = f"Forward_Return_{n}D"
             if ret_col not in bt_df.columns:
                 continue
-            r = pd.to_numeric(bt_df[ret_col], errors="coerce").dropna()
+            # Summary is conditional on the factor being available for that row.
+            # Otherwise missing factor values are incorrectly counted as valid samples,
+            # making every factor report the same N and unconditional return statistics.
+            factor_values = pd.to_numeric(bt_df[factor], errors="coerce")
+            returns = pd.to_numeric(bt_df[ret_col], errors="coerce")
+            r = returns[factor_values.notna() & returns.notna()]
             if r.empty:
                 rows.append({
                     "Factor": factor, "Factor_Type": factor_type(factor),
