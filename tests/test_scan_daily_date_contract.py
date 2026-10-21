@@ -8,11 +8,14 @@ import sys
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
+REPO = Path(__file__).resolve().parents[1]
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
 import pandas as pd
 
 from us_market_calendar import last_completed_regular_session
 
-REPO = Path(__file__).resolve().parents[1]
 SCAN = REPO / "scan.py"
 US_TZ = ZoneInfo("America/New_York")
 
