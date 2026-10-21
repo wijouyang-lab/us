@@ -59,6 +59,16 @@ from quant_filter import (
     strict_filter,
 )
 
+# 统一美股交易日历：节假日/提前收盘/DST 的单一事实来源（Scan 与 Review 共用）
+from us_market_calendar import (
+    CalendarUnavailable,
+    is_trading_day,
+    last_completed_regular_session,
+    market_session_state,
+)
+# 同日多次 Scan 的 pending 安全合并（原子写 + 锁 + 已处理事件排除）
+from pending_store import PendingStoreError, merge_pending_file
+
 # ==================== 环境检查 ====================
 TARGET_MODEL = os.environ.get("GPT_MODEL") or "claude-fable-5-1"
 TARGET_REGION = "美国市场"
@@ -164,22 +174,24 @@ def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
 
 def get_market_session_state(asof=None):
-    """按 America/New_York 判断真实交易时段。"""
-    now = asof or get_scan_asof_us()
-    if now.weekday() >= 5:
-        return "MARKET_CLOSED_WEEKEND"
-    t = now.time()
-    if t < datetime.time(4, 0):
-        return "PREMARKET_NOT_STARTED"
-    if t < datetime.time(9, 30):
-        return "PREMARKET"
-    if t < datetime.time(16, 0):
-        return "REGULAR_SESSION"
-    return "AFTER_HOURS"
+    """按 America/New_York 判断真实交易时段（含节假日/提前收盘）。"""
+    return market_session_state(asof or get_scan_asof_us())
 
 
-if get_us_time().weekday() >= 5:
-    print(f"[{get_us_time()}] 周末休市，脚本自动跳过。")
+try:
+    _is_trading_day = is_trading_day(RUN_ASOF_US.date())
+except CalendarUnavailable as _cal_err:
+    print(f"::error::美股交易日历不可用，Scan 拒绝继续：{_cal_err}")
+    sys.exit(1)
+
+if not _is_trading_day:
+    _closed_state = get_market_session_state(RUN_ASOF_US)
+    print(
+        f"[{RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S ET')}] 非 NYSE 交易日"
+        f"（status={_closed_state}），脚本自动跳过。"
+    )
+    print(f"::warning::Scan 被市场日历门禁跳过（status={_closed_state}，"
+          f"ET {RUN_ASOF_US.strftime('%Y-%m-%d %H:%M:%S')}）")
     sys.exit(0)
 
 _scan_session_state = get_market_session_state(RUN_ASOF_US)
@@ -705,11 +717,8 @@ def enrich_pool_with_fundamentals(pool_data, limit=80):
 
 # ==================== 5. K线与技术指标 ====================
 def _last_completed_regular_date_us(asof=None):
-    """返回本次 Scan 可以使用的最后完整美股常规交易日日期。"""
-    now = asof or get_scan_asof_us()
-    if now.time() < datetime.time(16, 0):
-        return now.date() - datetime.timedelta(days=1)
-    return now.date()
+    """返回本次 Scan 可以使用的最后完整美股常规交易日日期（含节假日/提前收盘）。"""
+    return last_completed_regular_session(asof or get_scan_asof_us())
 
 
 def _filter_completed_daily_bars(df, asof=None):
@@ -4407,7 +4416,9 @@ if __name__ == "__main__":
     ai_html = build_verified_core_html(ai_html, to_write)
 
     if to_write:
-        pending_file = f"us_stocks_pending_{get_us_time().strftime('%Y%m%d')}.csv"
+        _pending_now = RUN_ASOF_US
+        _pending_date = _pending_now.strftime("%Y-%m-%d")
+        pending_file = f"us_stocks_pending_{_pending_now.strftime('%Y%m%d')}.csv"
         header_cols = [
             "Date","Ticker","Name","Tag","Technical_Date","Prev_Close","Premarket_Price","Premarket_Change_Pct","Premarket_AsOf_ET","Premarket_Status","Premarket_Source","News_AsOf_ET","RSI","Bias","技术评分","技术确认数","技术确认信号","估值评分","PE_TTM","PE_Forward","EPS_TTM","PB","Revenue_Growth","Earnings_Growth","ROE","Profit_Margin","Market_Cap","Avg_Dollar_Volume_20D","Fundamental_Score","Event_Score","Technical_Score_25","Risk_Liquidity_Score","Quant_Score","AI_Score","Final_Score","MACD金叉","周线共振","KDJ_J回升","量能放大","近5日放量阳线",
             "Hold_Period","Stop_Loss","Stop_Method","Score","Status","Scan_Ref_Price","ATR_Pct","周期共振","Sector_RS_20D_Pct","Market_Regime","VIX",
@@ -4415,25 +4426,49 @@ if __name__ == "__main__":
             #     AI 六段文本原样持久化（不新增 GPT 调用、不改写、不摘要、不截断）
             "AI_industry_logic","AI_news_cn","AI_premarket_conclusion","AI_catalysts","AI_risks","AI_invalidation"
         ]
-        with open(pending_file,"w",encoding="utf-8",newline="") as f:
-            f.write(",".join(header_cols)+"\n")
-            for item in to_write:
-                vals = [
-                    today_us_str(), item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
-                    item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("Premarket_Status_Display",""), item.get("Premarket_Source",""), item.get("News_AsOf_ET",""),
-                    item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("技术确认数",0), ",".join(item.get("技术确认信号",[]) or []), item.get("估值评分",0),
-                    item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
-                    item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",""), item.get("Final_Score",item.get("Score","")),
-                    item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("近5日放量阳线",False), item.get("Hold_Period","动态持有"),
-                    item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")), item.get("ATR_Pct",""),
-                    item.get("周期共振",False), item.get("Sector_RS_20D_Pct",""), item.get("Market_Regime",""), item.get("VIX",""),
-                    # >>> Dashboard 阶段 C：AI 六段文本原样落盘（缺失即空字符串，不允许补写）
-                    item.get("AI_industry_logic",""), item.get("AI_news_cn",""), item.get("AI_premarket_conclusion",""),
-                    item.get("AI_catalysts",""), item.get("AI_risks",""), item.get("AI_invalidation","")
-                ]
-                safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
-                f.write(",".join(safe_vals)+"\n")
-        print(f"✅ 已生成 {len(to_write)} 条美股待确认记录：{pending_file}")
+        new_pending_rows = []
+        for item in to_write:
+            vals = [
+                _pending_date, item.get("Ticker",""), item.get("Name",""), item.get("Tag",""),
+                item.get("Technical_Date",""), item.get("Prev_Close",item.get("Price","")), item.get("Premarket_Price",""), item.get("Premarket_Change_Pct",""), item.get("Premarket_AsOf_ET",""), item.get("Premarket_Status_Display",""), item.get("Premarket_Source",""), item.get("News_AsOf_ET",""),
+                item.get("RSI",""), item.get("乖离率(%)",""), item.get("技术评分",0), item.get("技术确认数",0), ",".join(item.get("技术确认信号",[]) or []), item.get("估值评分",0),
+                item.get("PE_TTM",""), item.get("PE_Forward",""), item.get("EPS_TTM",""), item.get("PB",""), item.get("Revenue_Growth",""), item.get("Earnings_Growth",""), item.get("ROE",""), item.get("Profit_Margin",""), item.get("Market_Cap",""), item.get("Avg_Dollar_Volume_20D",""),
+                item.get("Fundamental_Score",0), item.get("Event_Score",0), item.get("Technical_Score_25",0), item.get("Risk_Liquidity_Score",0), item.get("Quant_Score",0), item.get("AI_Score",""), item.get("Final_Score",item.get("Score","")),
+                item.get("MACD金叉",False), item.get("周线共振",False), item.get("KDJ_J回升",False), item.get("量能放大",False), item.get("近5日放量阳线",False), item.get("Hold_Period","动态持有"),
+                item.get("Stop_Loss",""), item.get("Stop_Method","ATR初始保护"), item.get("Score",""), "pending", item.get("Price",item.get("Open_Price","")), item.get("ATR_Pct",""),
+                item.get("周期共振",False), item.get("Sector_RS_20D_Pct",""), item.get("Market_Regime",""), item.get("VIX",""),
+                # >>> Dashboard 阶段 C：AI 六段文本原样落盘（缺失即空字符串，不允许补写）
+                item.get("AI_industry_logic",""), item.get("AI_news_cn",""), item.get("AI_premarket_conclusion",""),
+                item.get("AI_catalysts",""), item.get("AI_risks",""), item.get("AI_invalidation","")
+            ]
+            safe_vals = [str(v).replace("\r"," ").replace("\n"," ").replace(","," ") for v in vals]
+            if len(safe_vals) != len(header_cols):
+                raise RuntimeError("pending header/value length mismatch: %d vs %d" % (len(header_cols), len(safe_vals)))
+            new_pending_rows.append(dict(zip(header_cols, safe_vals)))
+
+        try:
+            _merge_stats = merge_pending_file(
+                pending_file,
+                new_pending_rows,
+                header_cols,
+                processed_path=pending_file + ".processed",
+            )
+        except PendingStoreError as _pending_err:
+            print(f"::error::pending CSV 安全合并失败，拒绝覆盖原文件：{_pending_err}")
+            sys.exit(1)
+
+        _skipped_keys = set(_merge_stats.get("skipped_event_keys", []))
+        if _skipped_keys:
+            _before_skip = len(to_write)
+            to_write = [
+                x for x in to_write
+                if (_pending_date, str(x.get("Ticker","")).upper(), str(x.get("Tag","")).strip())
+                not in _skipped_keys
+            ]
+            print(f"ℹ️ [pending] {_before_skip - len(to_write)} 条已处理事件不再进入待审核队列")
+        print(f"✅ 已合并 {len(new_pending_rows)} 条美股待确认记录：{pending_file} "
+              f"（kept={_merge_stats.get('kept',0)} added={_merge_stats.get('added',0)} "
+              f"updated={_merge_stats.get('updated',0)}）")
 
         # AI 文本持久化缓存：按 Ticker Upsert 到 ai_text_cache.csv，
         # 由 scan.yml 随 pending CSV 一并提交推送；云端 dashboard_export.py

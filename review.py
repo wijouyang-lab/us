@@ -34,6 +34,15 @@ import yfinance as yf
 # Trade History 数据质量纯函数层（去重 + 价格精度），与测试共享同一套规则。
 from trade_history_quality import deduplicate_trade_history, fmt_price
 
+# 统一美股交易日历 + Review 交易日幂等保护
+from us_market_calendar import (
+    CalendarUnavailable,
+    is_trading_day,
+    review_session_date as calendar_review_session_date,
+)
+from review_session_guard import ReviewSessionGuard
+from pending_csv import PendingCsvError, read_pending_csv
+
 
 # ============================================================
 # 0. 环境与时间
@@ -71,39 +80,60 @@ def get_us_time():
 def today_us_str():
     return get_us_time().strftime("%Y-%m-%d")
 
-def _previous_business_day(date_obj):
-    d = date_obj
-    while d.weekday() >= 5:
-        d -= datetime.timedelta(days=1)
-    return d
-
 def review_session_date():
     """返回本次盘后 Review 应该评估的最近一个已完成美股常规交易日。
 
-    Review 可能在美东午夜后运行（例如 GitHub Actions 的 UTC cron），
-    此时“美东今天”尚未开盘，不能把当天当成已完成交易日。
-    16:00 ET 之后才把当天视为已完成常规交易日；此前统一评估上一交易日。
+    使用统一 NYSE 日历（节假日、提前收盘、DST）。16:00 ET 之后（提前收盘日
+    为 13:00 ET 之后）才把当天视为已完成常规交易日。
     """
-    now = get_us_time()
-    if now.weekday() >= 5:
-        d = now.date() - datetime.timedelta(days=1)
-        return _previous_business_day(d).strftime("%Y-%m-%d")
-    if now.time() >= datetime.time(16, 0):
-        return now.strftime("%Y-%m-%d")
-    d = now.date() - datetime.timedelta(days=1)
-    return _previous_business_day(d).strftime("%Y-%m-%d")
+    return calendar_review_session_date(get_us_time()).strftime("%Y-%m-%d")
 
-REVIEW_SESSION_DATE = review_session_date()
-
-if get_us_time().weekday() >= 5:
-    print("当前为周末，美股休市，退出复盘。")
-    sys.exit(0)
+try:
+    _review_now = get_us_time()
+    if not is_trading_day(_review_now.date()):
+        _state = "MARKET_CLOSED_WEEKEND" if _review_now.weekday() >= 5 else "MARKET_CLOSED_HOLIDAY"
+        print(f"[{_review_now.strftime('%Y-%m-%d %H:%M:%S ET')}] 非 NYSE 交易日"
+              f"（status={_state}），退出复盘。")
+        print(f"::warning::Review 被市场日历门禁跳过（status={_state}）")
+        sys.exit(0)
+    REVIEW_SESSION_DATE = calendar_review_session_date(_review_now).strftime("%Y-%m-%d")
+except CalendarUnavailable as _cal_err:
+    print(f"::error::美股交易日历不可用，Review 拒绝继续：{_cal_err}")
+    sys.exit(1)
 
 print("=" * 60)
 print("启动美股盘后复盘与风控审查引擎")
 print(f"📅 本次复盘交易日：{REVIEW_SESSION_DATE}（美股最近已完成常规交易日）")
 print(f"🕒 Review运行时间：{get_us_time().strftime('%Y-%m-%d %H:%M:%S %Z')}")
 print("=" * 60)
+
+# 交易日级幂等保护：只有在成功标记存在且输入/账本指纹未变化时才跳过。
+# 允许同一交易日在本轮新增推荐/账本变化后安全重跑。
+for _flag_name in (".review_session_skipped", ".review_session_ready"):
+    try:
+        Path(_flag_name).unlink(missing_ok=True)
+    except OSError:
+        pass
+
+try:
+    _review_guard = ReviewSessionGuard(".")
+    _review_guard_decision = _review_guard.begin(REVIEW_SESSION_DATE)
+except Exception as _guard_err:
+    print(f"::error::Review 交易日幂等保护初始化失败：{_guard_err}")
+    sys.exit(1)
+
+atexit.register(_review_guard.release)
+
+if _review_guard_decision.skip:
+    print(f"ℹ️ [ReviewGuard] {_review_guard_decision.reason}，本次跳过（session={REVIEW_SESSION_DATE}）")
+    try:
+        Path(".review_session_skipped").write_text(REVIEW_SESSION_DATE, encoding="utf-8")
+    except OSError:
+        pass
+    _review_guard.release()
+    sys.exit(0)
+
+print(f"ℹ️ [ReviewGuard] {_review_guard_decision.reason}，开始处理 session={REVIEW_SESSION_DATE}")
 
 
 # ============================================================
@@ -382,6 +412,10 @@ TRADE_HISTORY = "trade_history.csv"
 REVIEW_HISTORY = "review_history.csv"
 OPTION_LOG_FILE = "option_strategies.csv"
 
+# Pending CSV files that could not be parsed strictly; any entry blocks the
+# success marker because a row may have been lost.
+_pending_csv_errors = set()
+
 TRADE_COLUMNS = [
     "Date","Ticker","Name","Tag","Score","Price","RSI","Bias","Hold_Period",
     "Stop_Loss","Stop_Method","Trail_Stop","Exit_Date","Exit_Price","Status",
@@ -489,7 +523,8 @@ def _build_recommendation_price_lookup():
             continue
         rec_date = f"{m.group(1)[:4]}-{m.group(1)[4:6]}-{m.group(1)[6:]}"
         try:
-            d = pd.read_csv(filename, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            _header, _rows = read_pending_csv(filename)
+            d = pd.DataFrame(_rows, columns=_header)
             for _, row in d.iterrows():
                 ticker = resolve_ticker(row.get("Ticker"), row.get("Name"))
                 tag = clean_text(row.get("Tag"))
@@ -499,7 +534,9 @@ def _build_recommendation_price_lookup():
                 if ticker and price is not None and price > 0:
                     key = (rec_date, ticker.upper(), tag)
                     lookup[key] = price
-        except Exception:
+        except PendingCsvError as e:
+            print(f"::error::[PENDING_CSV_INVALID] file={filename} error={e}")
+            _pending_csv_errors.add(filename)
             continue
 
     return lookup
@@ -572,10 +609,13 @@ def supplement_us_stocks_from_pending():
         pending.append(f)
     if not pending:
         print("📋 无待确认/恢复美股文件，跳过补充。")
-        return
+        return {"failed_files": [], "incomplete_files": [], "incomplete_details": []}
     ensure_trade_history_columns()
     existing = load_trade_history()
     print(f"📋 发现 {len(pending)} 份待确认文件。")
+    failures = []
+    incomplete_files = []
+    incomplete_details = []
 
     for pf in pending:
         m = re.search(r"us_stocks_pending_(\d{8})\.csv(?:\.processed)?$", os.path.basename(pf))
@@ -584,13 +624,15 @@ def supplement_us_stocks_from_pending():
         raw_date = m.group(1)
         target_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
         try:
-            p = pd.read_csv(pf, dtype=str, keep_default_na=False, on_bad_lines="skip")
+            _header, _rows = read_pending_csv(pf)
+            p = pd.DataFrame(_rows, columns=_header)
             if p.empty:
                 if not pf.endswith(".processed"):
                     os.rename(pf, pf + ".processed")
                 continue
             if "Ticker" not in p.columns:
                 print(f"❌ {pf} 没有 Ticker 列。")
+                failures.append(pf)
                 continue
 
             resolved = []
@@ -619,8 +661,21 @@ def supplement_us_stocks_from_pending():
                 # 注意：op（正式买入价 = 推荐日 Open）在盘前/盘中尚未产生时必须保持 None，
                 # 绝不 get_live_quote_bootstrap() 把实时价假装成 Open。Price 列随之留空，
                 # 由后续 Review 的 backfill_rec_price() 取得 Rec_Date 真实 Open 后幂等回填。
-                if op is None or cp is None:
-                    missing.append(ticker)
+                missing_fields = []
+                if op is None:
+                    missing_fields.append("Open")
+                if cp is None:
+                    missing_fields.append("Close")
+                if missing_fields:
+                    # Fail closed: do not create an Active row with a missing price.
+                    # Keep the .csv file so the next Review retries the market data.
+                    missing.append({"ticker": ticker, "missing": missing_fields})
+                    print(
+                        f"::warning::[PENDING_INCOMPLETE_OHLC] file={pf} "
+                        f"ticker={ticker} missing={','.join(missing_fields)} "
+                        f"action=kept_pending"
+                    )
+                    continue
                 scan_ref = row.get("Scan_Ref_Price", row.get("Price", ""))
                 stop = row.get("Stop_Loss", "N/A")
                 if op is not None:
@@ -641,7 +696,7 @@ def supplement_us_stocks_from_pending():
                     "Exit_Date": "",
                     "Exit_Price": "",
                     "Status": "Active",
-                    "Close_Price": cp if cp is not None else "",
+                    "Close_Price": cp,
                     "技术评分": clean_text(row.get("技术评分")),
                     "技术确认数": clean_text(row.get("技术确认数")),
                     "技术确认信号": clean_text(row.get("技术确认信号")),
@@ -669,7 +724,18 @@ def supplement_us_stocks_from_pending():
                     "Review_Risk_Note": "",
                 })
             if missing:
-                print(f"⚠️ 以下 ticker 暂时没有 OHLC：{missing}")
+                incomplete_files.append(pf)
+                for item in missing:
+                    incomplete_details.append({
+                        "file": pf,
+                        "target_date": target_date,
+                        "ticker": item["ticker"],
+                        "missing": item["missing"],
+                    })
+                print(
+                    f"⚠️ [PENDING_INCOMPLETE] file={pf} 有 {len(missing)} 个 ticker 缺少行情，"
+                    f"保留 .csv 等待下次 Review 重试，不写 Active 记录。"
+                )
             if new_rows:
                 nd = pd.DataFrame(new_rows)
                 for c in TRADE_COLUMNS:
@@ -686,13 +752,27 @@ def supplement_us_stocks_from_pending():
                 final.to_csv(TRADE_HISTORY, index=False, encoding="utf-8")
                 existing = final
                 print(f"✅ 新增 {len(new_rows)} 条美股记录。")
-            if not pf.endswith(".processed"):
+            if not pf.endswith(".processed") and not missing:
                 os.rename(pf, pf + ".processed")
+        except PendingCsvError as e:
+            print(f"::error::[PENDING_CSV_INVALID] file={pf} error={e}")
+            failures.append(pf)
         except Exception as e:
             print(f"❌ 处理 {pf} 出错：{e}")
+            failures.append(pf)
+    return {
+        "failed_files": failures,
+        "incomplete_files": incomplete_files,
+        "incomplete_details": incomplete_details,
+    }
 
 
-supplement_us_stocks_from_pending()
+_pending_ingest = supplement_us_stocks_from_pending()
+_pending_failures = list(dict.fromkeys(
+    list(_pending_ingest.get("failed_files", []))
+    + list(_pending_ingest.get("incomplete_files", []))
+))
+_pending_incomplete_details = list(_pending_ingest.get("incomplete_details", []))
 backfill_missing_trade_history_recommendation_prices()
 
 
@@ -2906,14 +2986,11 @@ def _load_scan_recommendation_files():
             continue
 
         try:
-            d = pd.read_csv(
-                filename,
-                dtype=str,
-                keep_default_na=False,
-                on_bad_lines="skip",
-            )
-        except Exception as e:
-            print(f"⚠️ 读取 Scan 推荐文件失败 {filename}: {e}")
+            _header, _rows = read_pending_csv(filename)
+            d = pd.DataFrame(_rows, columns=_header)
+        except PendingCsvError as e:
+            print(f"::error::[PENDING_CSV_INVALID] file={filename} error={e}")
+            _pending_csv_errors.add(filename)
             continue
 
         if d.empty or "Ticker" not in d.columns:
@@ -3889,11 +3966,13 @@ body {{
 </html>
 """
 
+_report_ok = True
 for path in ("report.html","review_report.html"):
     try:
         Path(path).write_text(full_html, encoding="utf-8")
     except Exception as e:
-        print(f"⚠️ 保存 {path} 失败：{e}")
+        _report_ok = False
+        print(f"::error::保存 {path} 失败：{e}")
 
 
 print("=" * 60)
@@ -3915,3 +3994,27 @@ if os.environ.get("ENABLE_AI_REASON_BACKFILL") == "1":
         backfill_pending_reasons(".")
     except Exception as e:
         print(f"⚠️ AI 原因回填失败（不影响 review）：{type(e).__name__}: {e}")
+
+_unsolved_pending = list(dict.fromkeys(
+    [str(p) for p in _pending_failures] + sorted(_pending_csv_errors)
+))
+if _pending_incomplete_details:
+    for item in _pending_incomplete_details:
+        print(
+            f"::error::[PENDING_INCOMPLETE_OHLC] file={item['file']} "
+            f"ticker={item['ticker']} missing={','.join(item['missing'])} "
+            f"target_date={item['target_date']} result=retry_required"
+        )
+if _unsolved_pending:
+    print("::error::以下 pending 文件未成功处理，拒绝写成功标记，允许下次安全重试：%s"
+          % ", ".join(_unsolved_pending))
+    sys.exit(1)
+
+if not _report_ok:
+    print("::error::Review 报告文件未全部保存，拒绝写成功标记，允许下次安全重试")
+    sys.exit(1)
+
+# 业务数据处理与报告已保存；workflow 在 portfolio 步骤成功后会写最终成功标记。
+Path(".review_session_ready").write_text(REVIEW_SESSION_DATE, encoding="utf-8")
+print(f"ℹ️ [ReviewGuard] 业务处理完成，等待 workflow finalizer 写成功标记（session={REVIEW_SESSION_DATE}）")
+_review_guard.release()
