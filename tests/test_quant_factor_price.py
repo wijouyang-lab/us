@@ -242,7 +242,7 @@ def test_empty_fetch_does_not_create_header_only_csv():
 def test_fetch_empty_does_not_fail_scan_step():
     original = price_mod.update_price_history
     try:
-        price_mod.update_price_history = lambda: {
+        price_mod.update_price_history = lambda rebuild=False: {
             "status": "FETCH_EMPTY",
             "reason": "test-only empty result",
         }
