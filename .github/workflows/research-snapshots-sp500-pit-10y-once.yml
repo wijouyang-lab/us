@@ -44,6 +44,16 @@ jobs:
             --input research_backtest_sp500_pit_10y.csv \
             --output LOW_FREQUENCY_ATR_STRATEGY_10Y.md
 
+      # Independent execution-timing check: signal known after prior close, entry at Scan_Date Open.
+      # Reports limitations of raw, unadjusted OHLC and incomplete membership history.
+      - name: Run next-open ATR execution validation
+        run: |
+          python tools/research/low_frequency_atr_execution_validation.py \
+            --snapshot research_factor_snapshots_sp500_pit_10y.csv \
+            --prices research_price_history_sp500_10y.csv \
+            --constituents sp500_constituents.csv \
+            --output LOW_FREQUENCY_ATR_EXECUTION_10Y.md
+
       - name: Upload artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -55,6 +65,7 @@ jobs:
             research_summary_sp500_pit_10y.csv
             research_ic_sp500_pit_10y.csv
             LOW_FREQUENCY_ATR_STRATEGY_10Y.md
+            LOW_FREQUENCY_ATR_EXECUTION_10Y.md
           retention-days: 30
 
       - name: Commit and push
