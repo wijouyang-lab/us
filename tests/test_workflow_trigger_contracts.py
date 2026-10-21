@@ -71,6 +71,18 @@ def test_quant_research_does_not_gain_an_independent_schedule():
     assert crons == []
 
 
+def test_price_history_rebuild_is_manual_and_fails_closed():
+    workflow = (WORKFLOWS / "rebuild-quant-price-history.yml").read_text(encoding="utf-8")
+    _text, _trigger, events, crons = _workflow("rebuild-quant-price-history.yml")
+    assert events == {"workflow_dispatch"}
+    assert crons == []
+    assert "github.ref == 'refs/heads/main'" in workflow
+    assert "Invalid non-positive/non-finite" in workflow
+    assert "expected_tickers - actual_tickers" in workflow
+    assert "backup SHA256" in workflow
+    assert ".quant_price_history_rebuild_baseline.json" in workflow
+
+
 def test_evolve_schedule_stays_monthly_and_manual():
     _workflow_text, _trigger, events, crons = _workflow("evolve.yml")
 
