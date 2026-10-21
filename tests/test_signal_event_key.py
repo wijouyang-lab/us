@@ -100,6 +100,13 @@ def test_core_then_later_observation_is_not_skipped(tmp_path, monkeypatch):
     assert set(_trade(tmp_path)["Tag"]) == {"Core_Dragon", "Observation"}
 
 
+def test_observation_then_later_core_is_not_skipped(tmp_path, monkeypatch):
+    _run(tmp_path, monkeypatch, [_row("Observation")])
+    assert set(_trade(tmp_path)["Tag"]) == {"Observation"}
+    _run(tmp_path, monkeypatch, [_row("Core_Dragon")])
+    assert set(_trade(tmp_path)["Tag"]) == {"Observation", "Core_Dragon"}
+
+
 def test_same_event_rerun_is_idempotent(tmp_path, monkeypatch):
     _run(tmp_path, monkeypatch, [_row("Core_Dragon")])
     _run(tmp_path, monkeypatch, [_row("Core_Dragon")])
@@ -115,13 +122,39 @@ def test_duplicate_rows_in_one_file_are_deduped(tmp_path, monkeypatch):
     assert trade.iloc[0]["Tag"] == "Core_Dragon"
 
 
-def test_portfolio_rerun_has_no_duplicate_buy(tmp_path, monkeypatch):
+def test_portfolio_persisted_rerun_has_no_duplicate_buy(tmp_path, monkeypatch):
+    """Run the production Portfolio entry point twice against the same files."""
     _run(tmp_path, monkeypatch, [_row("Core_Dragon"), _row("Observation")])
-    positions, txns = _portfolio(tmp_path)
-    positions2, txns2 = _portfolio(tmp_path)
-    assert len(positions) == 1 and len(positions2) == 1
-    assert len(txns) == 1 and len(txns2) == 1
-    assert txns[0]["Action"] == "BUY"
+    monkeypatch.setattr(pf, "us_today_str", lambda: TARGET_DATE)
+
+    pf.run(tmp_path, offline=True)
+    pos1 = pd.read_csv(tmp_path / pf.POSITIONS_FILE, dtype=str, keep_default_na=False)
+    tx1 = pd.read_csv(tmp_path / pf.TRANSACTIONS_FILE, dtype=str, keep_default_na=False)
+    hist1 = pd.read_csv(tmp_path / pf.HISTORY_FILE, dtype=str, keep_default_na=False)
+
+    buys1 = tx1[tx1["Action"].astype(str).str.upper() == "BUY"]
+    assert len(pos1) == 1 and pos1.iloc[0]["Status"] == "OPEN"
+    assert len(buys1) == 1 and len(tx1) == 1
+    assert len(hist1) == 1
+    txn_id = buys1.iloc[0]["Txn_ID"]
+    rec_id = buys1.iloc[0]["Recommendation_ID"]
+    assert pos1.iloc[0]["Ticker"] == "AAA"
+    assert pos1.iloc[0]["Recommendation_ID"] == rec_id
+
+    # Keep all persisted files; run the same production flow again.
+    pf.run(tmp_path, offline=True)
+    pos2 = pd.read_csv(tmp_path / pf.POSITIONS_FILE, dtype=str, keep_default_na=False)
+    tx2 = pd.read_csv(tmp_path / pf.TRANSACTIONS_FILE, dtype=str, keep_default_na=False)
+    hist2 = pd.read_csv(tmp_path / pf.HISTORY_FILE, dtype=str, keep_default_na=False)
+
+    buys2 = tx2[tx2["Action"].astype(str).str.upper() == "BUY"]
+    assert len(pos2) == 1 and pos2.iloc[0]["Status"] == "OPEN"
+    assert len(buys2) == 1 and len(tx2) == 1
+    assert len(hist2) == 1
+    assert buys2.iloc[0]["Txn_ID"] == txn_id
+    assert buys2.iloc[0]["Recommendation_ID"] == rec_id
+    assert pos2.iloc[0]["Recommendation_ID"] == rec_id
+    assert pos2.iloc[0]["Ticker"] == "AAA"
 
 
 def test_tag_whitespace_case_and_missing_are_stable():

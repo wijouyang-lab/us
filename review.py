@@ -499,8 +499,9 @@ def find_existing_record(df_existing, date_value, ticker, tag):
         tags = (df_existing["Tag"].astype(str).str.strip()
                 if "Tag" in df_existing.columns
                 else pd.Series([""] * len(df_existing), index=df_existing.index))
+        dates = pd.to_datetime(df_existing["Date"], errors="coerce", format="mixed")
         return bool((
-            (df_existing["Date"] == target) &
+            (dates == target) &
             (df_existing["Ticker"].astype(str).str.upper() == str(ticker).upper()) &
             (tags == clean_text(tag).strip())
         ).any())

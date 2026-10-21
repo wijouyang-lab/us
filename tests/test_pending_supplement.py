@@ -50,25 +50,29 @@ def _load_supplement(tmp_path):
     def resolve_ticker(t, n=""):
         return str(t or "").strip().upper()
 
-    def find_existing_record(df, date_value, ticker, tag):
-        if df is None or df.empty:
-            return False
-        tags = (df["Tag"].astype(str).str.strip()
-                if "Tag" in df.columns else pd.Series([""] * len(df), index=df.index))
-        try:
-            return bool((
-                (df["Date"].astype(str).str[:10] == str(date_value)[:10]) &
-                (df["Ticker"].astype(str).str.upper() == str(ticker).upper()) &
-                (tags == str(tag).strip())
-            ).any())
-        except Exception:
-            return False
+    # Use the production implementation, not a second hand-written copy.
+    find_node = next(
+        node for node in tree.body
+        if isinstance(node, ast.FunctionDef) and node.name == "find_existing_record"
+    )
+    find_module = ast.Module(body=[find_node], type_ignores=[])
+    ast.fix_missing_locations(find_module)
+    find_ns = {
+        "pd": pd,
+        "normalize_date": lambda value: pd.to_datetime(value, errors="coerce"),
+        "clean_text": clean_text,
+    }
+    exec(compile(find_module, "<find-existing-record>", "exec"), find_ns)
+    find_existing_record = find_ns["find_existing_record"]
 
     def load_trade_history():
         path = Path("trade_history.csv")
         if not path.exists():
             return pd.DataFrame(columns=TRADE_COLUMNS)
-        return pd.read_csv(path, dtype=str, keep_default_na=False)
+        d = pd.read_csv(path, dtype=str, keep_default_na=False)
+        if "Date" in d.columns:
+            d["Date"] = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
+        return d
 
     ns.update({
         "glob": glob,
