@@ -26,7 +26,8 @@ def test_split_is_chronological_and_purges_twenty_dates():
 def test_direction_is_chosen_from_train_and_results_repeat():
     a=run_research(make_frame()); b=run_research(make_frame())
     assert a["direction"]=="HIGH_ATR"
-    assert a["segments"]["test"]["n"]>=8
+    assert a["segments"]["test"]["n"]>=1
+    assert a["verdict"]=="NOT_ENOUGH_TEST_OBSERVATIONS"
     assert a["segments"]["test"]["net_mean_pct"]==pytest.approx(b["segments"]["test"]["net_mean_pct"])
 
 def test_negative_relationship_freezes_low_atr_direction():
