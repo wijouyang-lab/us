@@ -45,7 +45,7 @@ def test_review_keeps_only_dispatch_and_existing_weekday_schedule():
 def test_dashboard_refresh_schedule_and_push_scope_remain_narrow():
     workflow, trigger, events, crons = _workflow("dashboard-data.yml")
 
-    assert events == {"schedule", "workflow_dispatch", "push"}
+    assert events == {"schedule", "workflow_dispatch", "push", "workflow_run"}
     assert crons == ["0 * * * 1-5"]
     assert re.search(r"(?m)^    branches: \[main\]$", trigger)
     for path in (
@@ -57,6 +57,11 @@ def test_dashboard_refresh_schedule_and_push_scope_remain_narrow():
         assert f"- {path}" in trigger
     assert re.search(r"(?m)^  group: us-stock-portfolio-ledger$", workflow)
     assert re.search(r"(?m)^  cancel-in-progress: false$", workflow)
+    assert 'workflows: ["美股盘中扫描"]' in trigger
+    assert "types: [completed]" in trigger
+    assert "branches: [main]" in trigger
+    assert "github.event.workflow_run.conclusion == 'success'" in workflow
+    assert "github.event.workflow_run.head_branch == 'main'" in workflow
 
 
 def test_quant_research_does_not_gain_an_independent_schedule():
