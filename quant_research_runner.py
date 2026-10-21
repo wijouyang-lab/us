@@ -153,6 +153,9 @@ def run(workdir=".", strict=False, only_phase=None,
         status_json="quant_research_status.json"):
     """执行编排。返回 (summary_dict, exit_code)。"""
     specs = [s for s in PHASE_SPECS if only_phase is None or s["num"] == only_phase]
+    # Resolve once before chdir: passing a relative path and then using it from
+    # inside that directory incorrectly checks <workdir>/<workdir>/<input>.
+    workdir = os.path.abspath(workdir)
     prev_cwd = os.getcwd()
     phases_out = {}
     try:
