@@ -731,7 +731,9 @@ def _filter_completed_daily_bars(df, asof=None):
     out = out.loc[valid].copy()
     idx = pd.DatetimeIndex(idx[valid])
     if idx.tz is None:
-        idx_us = idx.tz_localize("UTC").tz_convert(US_TZ)
+        # yfinance daily tz-naive values are exchange session-date labels,
+        # not UTC instants. Localize directly to ET to preserve the date.
+        idx_us = idx.tz_localize(US_TZ)
     else:
         idx_us = idx.tz_convert(US_TZ)
     cutoff = _last_completed_regular_date_us(asof)
