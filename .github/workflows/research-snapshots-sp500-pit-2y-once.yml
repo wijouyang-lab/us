@@ -45,6 +45,9 @@ jobs:
             exit 0
           fi
           git commit -m "chore(research): generate S&P500 PIT 2Y factor snapshots"
-          bash tools/ci/push_with_retry.sh 3 5
-          echo "❌ push failed after 3 retries"
+          if bash tools/ci/push_with_retry.sh 3 5; then
+            echo "S&P500 PIT 研究快照已推送到 main"
+            exit 0
+          fi
+          echo "::error::push failed after 3 retries"
           exit 1
