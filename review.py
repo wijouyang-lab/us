@@ -610,8 +610,11 @@ def supplement_us_stocks_from_pending():
     if not pending:
         print("📋 无待确认/恢复美股文件，跳过补充。")
         return {"failed_files": [], "incomplete_files": [], "incomplete_details": []}
-    ensure_trade_history_columns()
+    # Defer ledger schema normalization until a non-empty Pending file has
+    # passed filename-vs-row Date validation. A mismatched file must cause no
+    # ledger write side effects at all.
     existing = load_trade_history()
+    columns_ensured = False
     print(f"📋 发现 {len(pending)} 份待确认文件。")
     failures = []
     incomplete_files = []
@@ -674,6 +677,11 @@ def supplement_us_stocks_from_pending():
                 print(f"❌ {pf} 没有 Ticker 列。")
                 failures.append(pf)
                 continue
+
+            if not columns_ensured:
+                ensure_trade_history_columns()
+                existing = load_trade_history()
+                columns_ensured = True
 
             resolved = []
             for _, row in p.iterrows():
