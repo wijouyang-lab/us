@@ -49,7 +49,7 @@ def test_dashboard_stop_comments_match_schedule_and_fresh_intraday_data():
 def test_paper_trading_writer_is_main_only_and_scan_success_is_main_only():
     source = PAPER_WORKFLOW.read_text(encoding="utf-8")
     job = re.search(
-        r"(?ms)^  paper:\\n(?P<body>(?:^[ ]{4,}.*\\n)+)",
+        r"(?ms)^  paper:\n(?P<body>(?:^[ ]{4,}.*\n)+)",
         source,
     )
     assert job is not None, "Paper Trading writer job must exist"
