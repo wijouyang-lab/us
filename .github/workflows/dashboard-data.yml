@@ -29,6 +29,12 @@ on:
       - dashboard/fetch_runtimes.py
       - dashboard/summarize_run.py
       - .github/workflows/dashboard-data.yml
+  workflow_run:
+    # Refresh the public dashboard as soon as the externally-triggered Scan
+    # finishes successfully. This does not trigger Scan or make an AI call.
+    workflows: ["美股盘中扫描"]
+    types: [completed]
+    branches: [main]
 
 permissions:
   contents: write
@@ -44,8 +50,13 @@ concurrency:
 
 jobs:
   refresh:
-    # Defense in depth for workflow_dispatch and schedule contexts.
-    if: github.ref == 'refs/heads/main'
+    # Keep the workflow main-only. When invoked by workflow_run, only refresh
+    # after a successful Scan run on main; failed/cancelled Scan runs do nothing.
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name != 'workflow_run' ||
+       (github.event.workflow_run.conclusion == 'success' &&
+        github.event.workflow_run.head_branch == 'main'))
     runs-on: ubuntu-latest
     timeout-minutes: 25
     env:
