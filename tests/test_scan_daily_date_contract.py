@@ -10,6 +10,8 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
+from us_market_calendar import last_completed_regular_session
+
 REPO = Path(__file__).resolve().parents[1]
 SCAN = REPO / "scan.py"
 US_TZ = ZoneInfo("America/New_York")
@@ -24,7 +26,7 @@ def _load_scan_date_functions():
         if isinstance(node, ast.FunctionDef) and node.name in wanted
     ]
     assert {node.name for node in nodes} == wanted
-    namespace = {"pd": pd, "datetime": datetime, "US_TZ": US_TZ}
+    namespace = {"pd": pd, "datetime": datetime, "US_TZ": US_TZ, "last_completed_regular_session": last_completed_regular_session}
     for node in nodes:
         exec(compile(ast.Module(body=[node], type_ignores=[]), str(SCAN), "exec"), namespace)
     return namespace["_filter_completed_daily_bars"]
