@@ -29,9 +29,11 @@ def _ln(pat):
 def test_holdings_persisted_without_new_recommendations():
     """★ 捕获必须在「剔除持仓」之前，否则 to_write 为空时永远不写快照。"""
     cap = _ln("_ai_persist_source = list(_enriched)")
-    rm = _ln('to_write = [x for x in to_write if x["Ticker"] not in active]')
+    rm = _ln('to_write = [item for item in to_write if item["Ticker"] not in active]')
+    skipped = _ln("active_skipped = [")
     assert cap > 0, "缺少 _ai_persist 捕获"
-    assert rm > 0
+    assert skipped > 0, "缺少活跃持仓去重诊断"
+    assert rm > 0, "缺少活跃持仓过滤"
     assert cap < rm, "捕获必须在剔除持仓之前（L%d 应 < L%d）" % (cap, rm)
     # 持久化块必须存在且独立于 to_write 门控
     assert _ln("if _ai_persist:") > 0
@@ -45,10 +47,13 @@ def test_pending_csv_not_written_for_holdings():
     gate = _ln("if to_write:")
     # The filename and duplicate-check are prepared before the gate; only the
     # physical append/create operation must remain inside the new-recommendation gate.
-    write = _ln('with open(pending_file, "a" if pending_exists else "w"')
+    write = _ln("merge_pending_file(")
     persist = _ln("if _ai_persist:")
     assert gate > 0 and write > 0 and persist > 0
-    assert gate < write < persist, "pending 实际写入应在 if to_write 门控内、AI 持久化块之前(L%d<%d<%d)" % (gate, write, persist)
+    assert gate < write < persist, "Pending 安全合并应在 if to_write 门控内、独立 AI 持久化块之前(L%d<%d<%d)" % (gate, write, persist)
+    src = SCAN.read_text(encoding="utf-8")
+    assert "from pending_store import PendingStoreError, merge_pending_file" in src
+    assert 'processed_path=pending_file + ".processed"' in src
 
 
 def test_no_write_when_no_holdings_no_recommendations():
@@ -192,7 +197,7 @@ def test_bookkeeping_still_filters_holdings():
     # Current implementation enriches the combined risk-cleared recommendations + holdings
     # into _enriched, then restores the recommendation-only chosen set before pending filtering.
     call = _at("_enriched = enrich_verified_items_with_ai_details(")
-    rm = _at('to_write = [x for x in to_write if x["Ticker"] not in active]')
+    rm = _at('to_write = [item for item in to_write if item["Ticker"] not in active]')
     gate = _at("if to_write:")
     persist = _at("if _ai_persist:")
     assert call < rm < gate < persist, "顺序: enrich(%d) < 剔持仓(%d) < 门控(%d) < 持久化(%d)" % (
