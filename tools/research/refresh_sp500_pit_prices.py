@@ -176,7 +176,10 @@ def download_historical_prices(
         reverse[yahoo] = ticker
 
     all_records: list[dict] = []
-    batch_failures: list[dict] = []
+    ticker_bulk_errors: dict[str, str] = {}
+    download_diagnostics: list[dict] = []
+    record_cutoff = end_exclusive - timedelta(days=1)
+
     for offset in range(0, len(symbols), batch_size):
         canonical_batch = symbols[offset:offset + batch_size]
         yahoo_batch = [requests[t] for t in canonical_batch]
@@ -204,22 +207,84 @@ def download_historical_prices(
                 error = f"{type(exc).__name__}: {exc}"
             if attempt < retries:
                 sleeper(float(attempt * 2))
+
         if raw is None or raw.empty:
-            batch_failures.append({"tickers": canonical_batch, "error": error or "empty batch response"})
+            for ticker in canonical_batch:
+                ticker_bulk_errors[ticker] = error or "empty batch response"
             continue
+
         for ticker in canonical_batch:
             frame = _symbol_frame(raw, requests[ticker], len(canonical_batch))
             if frame is None or frame.empty:
-                batch_failures.append({"tickers": [ticker], "error": "no ticker-level frame in response"})
+                ticker_bulk_errors[ticker] = "no ticker-level frame in bulk response"
                 continue
-            all_records.extend(_records_for_symbol(frame, ticker, end_exclusive - timedelta(days=1), start))
+            ticker_records = _records_for_symbol(frame, ticker, record_cutoff, start)
+            if ticker_records:
+                all_records.extend(ticker_records)
+            else:
+                ticker_bulk_errors[ticker] = (
+                    "ticker frame returned no valid raw/adjusted OHLC rows"
+                )
+
+    # Bulk yfinance calls can omit individual symbols even when neighbouring symbols
+    # succeed. Retry only tickers with zero usable rows, one at a time and without
+    # yfinance internal threading, so a failed group does not masquerade as success.
+    recovered_tickers: list[dict] = []
+    unresolved_failures: list[dict] = []
+    for ticker, bulk_error in ticker_bulk_errors.items():
+        fallback_error = None
+        recovered_rows = []
+        for attempt in range(1, 3):
+            try:
+                raw_single = downloader(
+                    tickers=[requests[ticker]],
+                    start=start.isoformat(),
+                    end=end_exclusive.isoformat(),
+                    auto_adjust=False,
+                    actions=False,
+                    group_by="ticker",
+                    threads=False,
+                    progress=False,
+                    ignore_tz=True,
+                    repair=False,
+                )
+                frame = _symbol_frame(raw_single, requests[ticker], 1)
+                recovered_rows = (
+                    _records_for_symbol(frame, ticker, record_cutoff, start)
+                    if frame is not None and not frame.empty else []
+                )
+                if recovered_rows:
+                    break
+                fallback_error = "single-ticker response contained no valid raw/adjusted OHLC rows"
+            except Exception as exc:
+                fallback_error = f"{type(exc).__name__}: {exc}"
+            if attempt < 2:
+                sleeper(1.0)
+
+        if recovered_rows:
+            all_records.extend(recovered_rows)
+            recovered_tickers.append({
+                "ticker": ticker,
+                "status": "recovered",
+                "bulk_error": bulk_error,
+                "fallback_attempts": attempt,
+                "rows": len(recovered_rows),
+            })
+        else:
+            unresolved_failures.append({
+                "ticker": ticker,
+                "status": "failed",
+                "bulk_error": bulk_error,
+                "fallback_error": fallback_error or "single-ticker request returned no data",
+                "fallback_attempts": 2,
+            })
 
     if not all_records:
-        return pd.DataFrame(columns=PRICE_COLUMNS), batch_failures
+        return pd.DataFrame(columns=PRICE_COLUMNS), recovered_tickers + unresolved_failures
     output = pd.DataFrame(all_records, columns=PRICE_COLUMNS)
     output = output.drop_duplicates(["Date", "Ticker"], keep="last")
     output = output.sort_values(["Ticker", "Date"]).reset_index(drop=True)
-    return output, batch_failures
+    return output, recovered_tickers + unresolved_failures
 
 
 def calculate_member_session_coverage(
