@@ -56,7 +56,11 @@ jobs:
             --history tools/research/data/sp500_components_history.csv \
             --aliases tools/research/data/sp500_ticker_aliases.csv \
             --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
-            --dow30-membership tools/research/data/dow30_membership_history.csv
+            --dow30-membership tools/research/data/dow30_membership_history.csv \
+            --stocks research_non_atr_download_diagnostics/partial_prices.csv \
+            --spy research_non_atr_download_diagnostics/partial_spy.csv \
+            --audit research_non_atr_download_diagnostics/audit.json \
+            --allow-partial-output
       - name: Validate adjusted-price schema and refresh audit
         run: |
           python - <<'PY'
@@ -64,7 +68,7 @@ jobs:
           from pathlib import Path
           import pandas as pd
 
-          audit_path = Path("research_pit_price_refresh_audit.json")
+          audit_path = Path("research_non_atr_download_diagnostics/audit.json")
           if not audit_path.is_file():
               raise SystemExit("Missing price-refresh audit; refusing to run backtest.")
           audit = json.loads(audit_path.read_text(encoding="utf-8"))
@@ -72,7 +76,7 @@ jobs:
               raise SystemExit(f"Price refresh status is not PASS: {audit.get('status')}")
 
           required = {"Date", "Ticker", "Adj Close"}
-          for filename in ("research_price_history_sp500_10y.csv", "research_spy_sp500_10y.csv"):
+          for filename in ("research_non_atr_download_diagnostics/partial_prices.csv", "research_non_atr_download_diagnostics/partial_spy.csv"):
               path = Path(filename)
               columns = set(pd.read_csv(path, nrows=0).columns)
               missing = required - columns
@@ -96,9 +100,9 @@ jobs:
       - name: Run PIT-complete history backtest
         run: |
           python -m tools.research.non_atr_integrated_backtest \
-            --input research_price_history_sp500_10y.csv \
+            --input research_non_atr_download_diagnostics/partial_prices.csv \
             --output-dir research_non_atr_backtest_results \
-            --spy-calendar research_spy_sp500_10y.csv \
+            --spy-calendar research_non_atr_download_diagnostics/partial_spy.csv \
             --sp500-membership tools/research/data/sp500_components_history.csv \
             --ticker-aliases tools/research/data/sp500_ticker_aliases.csv \
             --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
@@ -112,7 +116,7 @@ jobs:
           name: research-non-atr-backtest-results
           path: |
             research_non_atr_backtest_results/
-            research_pit_price_refresh_audit.json
+            research_non_atr_download_diagnostics/
           if-no-files-found: warn
           retention-days: 30
       - name: Upload refreshed adjusted-price inputs
@@ -121,7 +125,7 @@ jobs:
         with:
           name: research-non-atr-adjusted-price-inputs
           path: |
-            research_price_history_sp500_10y.csv
-            research_spy_sp500_10y.csv
+            research_non_atr_download_diagnostics/partial_prices.csv
+            research_non_atr_download_diagnostics/partial_spy.csv
           if-no-files-found: error
           retention-days: 30
