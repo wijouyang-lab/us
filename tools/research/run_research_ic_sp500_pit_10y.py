@@ -10,6 +10,7 @@ research_backtest_sp500_pit_10y.csv / research_summary_sp500_pit_10y.csv，
 与 PIT 2 年版的唯一差异 = 4 个路径常量 + 末尾 import 的模块名。
 """
 import sys
+import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent.parent
@@ -36,21 +37,61 @@ def main():
     print(f"snapshot: {snap} ({snap.stat().st_size} bytes)")
     print(f"price:    {price} ({price.stat().st_size} bytes)")
 
-    # This is an isolated research dataset, not the production price-history ledger.
-    # Validate its own schema and build a price map directly; do not apply the
-    # production phase2b.v2 gate to the separate 10Y research CSV.
+    # Keep raw OHLC-derived factors unchanged. Only forward-return labels use
+    # adjusted closes, and the original snapshot CSV is never overwritten.
+    snap_df = pd.read_csv(snap, dtype=str, keep_default_na=False)
     price_df = pd.read_csv(price, dtype=str, keep_default_na=False)
-    required_price_cols = {"Date", "Ticker", "Close"}
+    required_snapshot_cols = {"Ticker", "Technical_Date", "Price"}
+    missing_snapshot_cols = sorted(required_snapshot_cols - set(snap_df.columns))
+    if missing_snapshot_cols:
+        raise ValueError(f"10Y research snapshot missing columns: {missing_snapshot_cols}")
+    required_price_cols = {"Date", "Ticker", "Close", "Adj Close", "Price_Basis"}
     missing_price_cols = sorted(required_price_cols - set(price_df.columns))
     if missing_price_cols:
         raise ValueError(f"10Y research price history missing columns: {missing_price_cols}")
-    price_map = price_map_from_history(price_df)
-    result = run_backtest(
-        snapshot_path=str(snap),
-        price_map=price_map,
-        backtest_path=str(backtest),
-        summary_path=str(summary),
+    basis = sorted(set(price_df["Price_Basis"].astype(str).str.strip()))
+    if basis != ["raw_ohlc_adj_close"]:
+        raise ValueError(f"Unexpected 10Y research price basis: {basis}")
+
+    snap_df["Ticker"] = snap_df["Ticker"].astype(str).str.strip().str.upper()
+    snap_df["Technical_Date"] = pd.to_datetime(snap_df["Technical_Date"], errors="coerce").dt.strftime("%Y-%m-%d")
+    price_df["Ticker"] = price_df["Ticker"].astype(str).str.strip().str.upper()
+    price_df["Date"] = pd.to_datetime(price_df["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
+    price_df["Adj Close"] = pd.to_numeric(price_df["Adj Close"], errors="coerce")
+    price_df = price_df.dropna(subset=["Date", "Ticker", "Adj Close"])
+    if price_df.duplicated(["Ticker", "Date"]).any():
+        raise ValueError("duplicate Ticker/Date keys in 10Y research price history")
+
+    adjusted_close = price_df[["Ticker", "Date", "Adj Close"]].rename(
+        columns={"Date": "Technical_Date"}
     )
+    adjusted_close = adjusted_close.drop_duplicates(["Ticker", "Technical_Date"])
+    joined = snap_df[["Ticker", "Technical_Date"]].merge(
+        adjusted_close, on=["Ticker", "Technical_Date"], how="left", validate="one_to_one"
+    )
+    if joined["Adj Close"].isna().any() or (joined["Adj Close"] <= 0).any():
+        examples = joined.loc[
+            joined["Adj Close"].isna() | (joined["Adj Close"] <= 0),
+            ["Ticker", "Technical_Date", "Adj Close"],
+        ].head(10).to_dict("records")
+        raise ValueError(
+            f"Adjusted close missing/invalid for {int((joined['Adj Close'].isna() | (joined['Adj Close'] <= 0)).sum())} snapshot rows; examples={examples}"
+        )
+    snap_df["Price"] = joined["Adj Close"].map(lambda value: f"{float(value):.8f}")
+    adjusted_prices = price_df[["Date", "Ticker", "Adj Close"]].rename(
+        columns={"Adj Close": "Close"}
+    )
+    price_map = price_map_from_history(adjusted_prices)
+
+    with tempfile.TemporaryDirectory(prefix="pit-adjusted-backtest-") as tmpdir:
+        temp_snapshot = Path(tmpdir) / "research_factor_snapshots_sp500_pit_10y.adjusted-labels.csv"
+        snap_df.to_csv(temp_snapshot, index=False, encoding="utf-8")
+        result = run_backtest(
+            snapshot_path=str(temp_snapshot),
+            price_map=price_map,
+            backtest_path=str(backtest),
+            summary_path=str(summary),
+        )
     if result.get("status") != "OK" or not result.get("written"):
         raise RuntimeError(f"10Y research backtest did not produce output: {result}")
     if not backtest.exists() or backtest.stat().st_size == 0:
