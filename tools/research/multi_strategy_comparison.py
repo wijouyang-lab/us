@@ -127,7 +127,7 @@ def render_report(r):
     lines += ["","*Sharpe is a rough annualization of non-overlapping 20-day returns. Small test counts mean weak evidence.","",
       "## Test cost sensitivity (net % per 20 sessions)","","| Strategy | 5 bps/side | 10 bps/side | 20 bps/side |","|---|---:|---:|---:|"]
     for label,x in r["results"].items():
-        vals=[x["costs"][str(c)]["net_pct"] for c in COSTS]
+        vals=[x["costs"][str(int(c))]["net_pct"] for c in COSTS]
         lines.append("| "+label+" | "+" | ".join("NA" if v is None else f"{v:+.3f}%" for v in vals)+" |")
     lines += ["","## Split details","","| Strategy | Split | n | Net %/20D | Net excess %/20D | Win % | Sharpe |","|---|---|---:|---:|---:|---:|---:|"]
     for label,x in r["results"].items():
