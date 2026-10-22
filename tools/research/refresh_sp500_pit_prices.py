@@ -223,9 +223,9 @@ def download_historical_prices(
                     auto_adjust=False,
                     actions=False,
                     group_by="ticker",
-                    # Keep Yahoo request bursts bounded; concurrent downloads have
-                    # caused false YFTzMissingError responses for otherwise valid symbols.
-                    threads=False,
+                    # Bound per-ticker concurrency to reduce Yahoo throttling while avoiding
+                    # the very slow all-serial path across the historical universe.
+                    threads=4,
                     progress=False,
                     ignore_tz=True,
                     repair=True,
