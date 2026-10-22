@@ -12,10 +12,13 @@ def test_loader_excludes_ticker_with_missing_shared_date(tmp_path):
         {"Date": "2020-01-03", "Ticker": "AAA", "Adj Close": 12},
         {"Date": "2020-01-01", "Ticker": "BBB", "Adj Close": 20},
         {"Date": "2020-01-03", "Ticker": "BBB", "Adj Close": 22},
+        {"Date": "2020-01-02", "Ticker": "CCC", "Adj Close": 30},
+        {"Date": "2020-01-03", "Ticker": "CCC", "Adj Close": 31},
     ]).to_csv(path, index=False)
     eligible, audit = load_complete_tickers(path, min_rows=2)
-    assert list(eligible) == ["AAA"]
+    assert list(eligible) == ["AAA", "CCC"]
     assert audit.set_index("Ticker").loc["BBB", "reason"] == "incomplete_shared_date_history"
+    assert audit.set_index("Ticker").loc["CCC", "status"] == "eligible"
 
 
 def test_runner_writes_audit_and_metrics(tmp_path):
