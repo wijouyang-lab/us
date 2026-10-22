@@ -378,7 +378,7 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
 
     def fake_download(**kwargs):
         calls.append(kwargs.copy())
-        if kwargs["threads"] is True:
+        if kwargs["repair"] is True:
             return bulk
         return pd.DataFrame(columns=fields)
 
@@ -394,6 +394,7 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
 
     assert output.empty
     assert len(calls) == 3
+    assert all(call["threads"] is False for call in calls)
     assert len(diagnostics) == 1
     assert diagnostics[0]["ticker"] == "BBB"
     assert diagnostics[0]["status"] == "failed"
@@ -415,7 +416,7 @@ def test_ticker_history_api_recovers_symbol_missing_from_download_api():
 
     def fake_download(**kwargs):
         calls.append(kwargs.copy())
-        if kwargs["threads"] is True:
+        if kwargs["repair"] is True:
             return bulk
         return pd.DataFrame(columns=fields)
 
