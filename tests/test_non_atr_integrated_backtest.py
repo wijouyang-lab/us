@@ -4,7 +4,7 @@ import pytest
 from tools.research.non_atr_integrated_backtest import load_complete_tickers, run_backtest
 
 
-def test_loader_excludes_ticker_with_missing_shared_date(tmp_path):
+def test_loader_excludes_ticker_with_missing_expected_session(tmp_path):
     path = tmp_path / "prices.csv"
     pd.DataFrame([
         {"Date": "2020-01-01", "Ticker": "AAA", "Adj Close": 10},
@@ -17,7 +17,7 @@ def test_loader_excludes_ticker_with_missing_shared_date(tmp_path):
     ]).to_csv(path, index=False)
     eligible, audit = load_complete_tickers(path, min_rows=2)
     assert list(eligible) == ["AAA", "CCC"]
-    assert audit.set_index("Ticker").loc["BBB", "reason"] == "incomplete_shared_date_history"
+    assert audit.set_index("Ticker").loc["BBB", "reason"] == "incomplete_expected_session_history:1_missing_of_3"
     assert audit.set_index("Ticker").loc["CCC", "status"] == "eligible"
 
 

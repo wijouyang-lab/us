@@ -8,6 +8,12 @@ on:
       - "tools/research/non_atr_integrated_backtest.py"
       - "tools/research/non_atr_strategy_baselines.py"
       - "tools/research/non_atr_validation.py"
+      - "tools/research/refresh_sp500_pit_prices.py"
+      - "tools/research/pit_membership.py"
+      - "tools/research/multi_index_membership.py"
+      - "tools/research/wayback_delisted_prices.py"
+      - "tools/research/data/*.csv"
+      - "tools/research/requirements-research.txt"
   pull_request:
     branches:
       - main
@@ -16,13 +22,19 @@ on:
       - "tools/research/non_atr_integrated_backtest.py"
       - "tools/research/non_atr_strategy_baselines.py"
       - "tools/research/non_atr_validation.py"
+      - "tools/research/refresh_sp500_pit_prices.py"
+      - "tools/research/pit_membership.py"
+      - "tools/research/multi_index_membership.py"
+      - "tools/research/wayback_delisted_prices.py"
+      - "tools/research/data/*.csv"
+      - "tools/research/requirements-research.txt"
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   historical-backtest:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
@@ -31,24 +43,50 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install research dependencies
-        run: python -m pip install "pandas>=2.2,<4" "numpy>=1.26,<3"
-      - name: Confirm required research inputs
+        run: python -m pip install -r tools/research/requirements-research.txt
+      - name: Refresh point-in-time adjusted prices
+        id: refresh_prices
+        run: |
+          python tools/research/refresh_sp500_pit_prices.py \
+            --history tools/research/data/sp500_components_history.csv \
+            --aliases tools/research/data/sp500_ticker_aliases.csv \
+            --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
+            --dow30-membership tools/research/data/dow30_membership_history.csv
+      - name: Validate adjusted-price schema and refresh audit
         run: |
           python - <<'PY'
+          import json
           from pathlib import Path
-          paths = [
-              "research_price_history_sp500_10y.csv",
-              "research_spy_sp500_10y.csv",
-              "tools/research/data/sp500_components_history.csv",
-              "tools/research/data/sp500_ticker_aliases.csv",
-              "tools/research/data/nasdaq100_membership_history.csv",
-              "tools/research/data/dow30_membership_history.csv",
-          ]
-          for value in paths:
-              path = Path(value)
-              if not path.is_file():
-                  raise SystemExit(f"Missing required input: {value}")
-              print(f"{value}: {path.stat().st_size} bytes")
+          import pandas as pd
+
+          audit_path = Path("research_pit_price_refresh_audit.json")
+          if not audit_path.is_file():
+              raise SystemExit("Missing price-refresh audit; refusing to run backtest.")
+          audit = json.loads(audit_path.read_text(encoding="utf-8"))
+          if audit.get("status") != "PASS":
+              raise SystemExit(f"Price refresh status is not PASS: {audit.get('status')}")
+
+          required = {"Date", "Ticker", "Adj Close"}
+          for filename in ("research_price_history_sp500_10y.csv", "research_spy_sp500_10y.csv"):
+              path = Path(filename)
+              columns = set(pd.read_csv(path, nrows=0).columns)
+              missing = required - columns
+              if missing:
+                  raise SystemExit(f"{filename} missing required adjusted-price columns: {sorted(missing)}")
+              rows = 0
+              valid_adjusted = 0
+              latest = None
+              for chunk in pd.read_csv(path, usecols=["Date", "Ticker", "Adj Close"], chunksize=200000):
+                  rows += len(chunk)
+                  prices = pd.to_numeric(chunk["Adj Close"], errors="coerce")
+                  valid_adjusted += int((prices > 0).sum())
+                  dates = pd.to_datetime(chunk["Date"], errors="coerce").dropna()
+                  if not dates.empty:
+                      chunk_latest = dates.max()
+                      latest = chunk_latest if latest is None else max(latest, chunk_latest)
+              if rows == 0 or valid_adjusted == 0:
+                  raise SystemExit(f"{filename} has no valid positive adjusted-close observations")
+              print(f"{filename}: rows={rows}, valid_adjusted_close={valid_adjusted}, latest={latest.date() if latest is not None else 'unknown'}")
           PY
       - name: Run PIT-complete history backtest
         run: |
@@ -62,11 +100,23 @@ jobs:
             --dow30-membership tools/research/data/dow30_membership_history.csv \
             --min-rows 756 --min-train-rows 756 --test-rows 252 \
             --one-way-cost-bps 5
-      - name: Upload research results even if analysis fails
+      - name: Upload research results and refresh audit even if analysis fails
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: research-non-atr-backtest-results
-          path: research_non_atr_backtest_results/
+          path: |
+            research_non_atr_backtest_results/
+            research_pit_price_refresh_audit.json
           if-no-files-found: warn
+          retention-days: 30
+      - name: Upload refreshed adjusted-price inputs
+        if: steps.refresh_prices.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-non-atr-adjusted-price-inputs
+          path: |
+            research_price_history_sp500_10y.csv
+            research_spy_sp500_10y.csv
+          if-no-files-found: error
           retention-days: 30
