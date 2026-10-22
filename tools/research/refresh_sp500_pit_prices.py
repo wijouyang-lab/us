@@ -24,12 +24,13 @@ import pandas as pd
 from pit_membership import (
     active_tickers_on,
     approximate_date_counts,
-    load_membership_history,
+    load_membership_history_with_aliases,
     tickers_overlapping,
 )
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_HISTORY = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
+DEFAULT_TICKER_ALIASES = REPO / "tools" / "research" / "data" / "sp500_ticker_aliases.csv"
 DEFAULT_STOCKS = REPO / "research_price_history_sp500_10y.csv"
 DEFAULT_SPY = REPO / "research_spy_sp500_10y.csv"
 DEFAULT_AUDIT = REPO / "research_pit_price_refresh_audit.json"
@@ -40,6 +41,7 @@ WARMUP_DAYS = 120
 MIN_VALID_TICKER_SESSION_COVERAGE = 0.90
 PINNED_MEMBERSHIP_COMMIT = "2d0556e4ca01dc9203231c8b60d503a227be4512"
 PINNED_MEMBERSHIP_BLOB_SHA = "c025e09a6bbb2e12310a3f9fcef9114a0b59df90"
+PINNED_TICKER_ALIAS_BLOB_SHA = "b2a0b057271e7c2991adc8f3c90a306cbbbb4605"
 
 
 def last_completed_session_cutoff(now: datetime | None = None) -> date:
@@ -352,14 +354,25 @@ def git_blob_sha(path: Path) -> str:
 
 
 def refresh(args) -> dict:
+    aliases_path = Path(getattr(args, "aliases", DEFAULT_TICKER_ALIASES))
     actual_membership_blob_sha = git_blob_sha(args.history)
+    actual_alias_blob_sha = git_blob_sha(aliases_path)
     using_vendored_source = args.history.resolve() == DEFAULT_HISTORY.resolve()
+    using_vendored_aliases = aliases_path.resolve() == DEFAULT_TICKER_ALIASES.resolve()
     if using_vendored_source and actual_membership_blob_sha != PINNED_MEMBERSHIP_BLOB_SHA:
         raise SystemExit(
             "Vendored membership history hash does not match its pinned source; "
             "review provenance and update the pin before refreshing prices."
         )
-    history = load_membership_history(args.history)
+    if using_vendored_aliases and actual_alias_blob_sha != PINNED_TICKER_ALIAS_BLOB_SHA:
+        raise SystemExit(
+            "Vendored ticker alias registry hash does not match its pin; "
+            "review registry provenance and update the pin before refreshing prices."
+        )
+    alias_usage: dict = {}
+    history = load_membership_history_with_aliases(
+        args.history, aliases_path, alias_usage=alias_usage
+    )
     cutoff = args.cutoff_date or last_completed_session_cutoff()
     analysis_start = args.analysis_start or subtract_years(cutoff, 10)
     if analysis_start > cutoff:
@@ -424,6 +437,9 @@ def refresh(args) -> dict:
         "membership_source": str(args.history.relative_to(REPO) if args.history.is_relative_to(REPO) else args.history),
         "membership_source_commit": PINNED_MEMBERSHIP_COMMIT if using_vendored_source else None,
         "membership_source_blob_sha": actual_membership_blob_sha,
+        "ticker_alias_registry": str(aliases_path.relative_to(REPO) if aliases_path.is_relative_to(REPO) else aliases_path),
+        "ticker_alias_registry_blob_sha": actual_alias_blob_sha,
+        "ticker_alias_usage": alias_usage,
         "membership_ticker_count_all_spans": len(history),
         "membership_tickers_overlapping_window": len(in_scope),
         "membership_date_quality": source_stats,
@@ -471,6 +487,7 @@ def refresh(args) -> dict:
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
+    parser.add_argument("--aliases", type=Path, default=DEFAULT_TICKER_ALIASES)
     parser.add_argument("--stocks", type=Path, default=DEFAULT_STOCKS)
     parser.add_argument("--spy", type=Path, default=DEFAULT_SPY)
     parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT)
