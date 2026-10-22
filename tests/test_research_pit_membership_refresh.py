@@ -688,3 +688,12 @@ def test_vendored_ticker_alias_registry_matches_historical_ciks():
     assert "LHX" in history
     assert "RTX" in history
     assert "ECHO" in history
+    aliases = dict(usage["applied_source_symbols"])
+    assert aliases["HCP"] == "DOC"
+    assert aliases["PEAK"] == "DOC"
+    assert aliases["BHI"] == "BKR"
+    assert aliases["DPS"] == "KDP"
+    assert aliases["HFC"] == "DINO"
+    assert aliases["HRS"] == "LHX"
+    assert aliases["SATS"] == "ECHO"
+    assert aliases["UTX"] == "RTX"
