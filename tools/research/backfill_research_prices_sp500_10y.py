@@ -69,7 +69,8 @@ def fetch_batch(tickers, start, end):
                 continue
             for idx, r in sub.iterrows():
                 close = r.get("Close")
-                if pd.isna(close):
+                adj_close = r.get("Adj Close")
+                if pd.isna(close) or pd.isna(adj_close):
                     continue
 
                 def _v(x):
@@ -83,6 +84,7 @@ def fetch_batch(tickers, start, end):
                     "High": _v(r.get("High")),
                     "Low": _v(r.get("Low")),
                     "Close": round(float(close), 6),
+                    "Adj Close": round(float(adj_close), 6),
                     "Volume": "" if pd.isna(vol) else int(vol),
                     "schema_version": "phase2b.v1",
                 })
