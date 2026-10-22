@@ -462,6 +462,128 @@ def test_ticker_history_api_recovers_symbol_missing_from_download_api():
     }]
 
 
+def test_direct_yahoo_chart_parser_accepts_history_without_timezone_metadata():
+    from datetime import datetime, timezone
+
+    timestamps = [
+        int(datetime(2020, 1, 2, 5, tzinfo=timezone.utc).timestamp()),
+        int(datetime(2020, 1, 3, 5, tzinfo=timezone.utc).timestamp()),
+    ]
+    payload = {
+        "chart": {
+            "result": [{
+                "timestamp": timestamps,
+                "indicators": {
+                    "quote": [{
+                        "open": [10.0, 11.0],
+                        "high": [12.0, 13.0],
+                        "low": [9.0, 10.0],
+                        "close": [11.0, 12.0],
+                        "volume": [100, 110],
+                    }],
+                    "adjclose": [{"adjclose": [10.5, 11.5]}],
+                },
+            }],
+            "error": None,
+        }
+    }
+
+    class FakeResponse:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return payload
+
+    class FakeSession:
+        def __init__(self):
+            self.calls = []
+
+        def get(self, url, *, params, timeout):
+            self.calls.append((url, params, timeout))
+            return FakeResponse()
+
+    session = FakeSession()
+    frame = refresh_prices.fetch_yahoo_chart_history(
+        session, "AAA", date(2020, 1, 1), date(2020, 1, 4)
+    )
+
+    assert len(session.calls) == 1
+    assert session.calls[0][0].startswith("https://query1.finance.yahoo.com/v8/finance/chart/AAA")
+    assert session.calls[0][1]["period2"] > session.calls[0][1]["period1"]
+    assert session.calls[0][2] == 30
+    assert len(frame) == 2
+    assert frame["Adj Close"].tolist() == [10.5, 11.5]
+    records = refresh_prices._records_for_symbol(
+        frame, "AAA", date(2020, 1, 3), date(2020, 1, 1)
+    )
+    assert len(records) == 2
+    assert [row["Date"] for row in records] == ["2020-01-02", "2020-01-03"]
+
+
+def test_direct_yahoo_chart_fallback_recovers_when_yfinance_timezone_lookup_fails():
+    index = pd.to_datetime(["2020-01-02", "2020-01-03"])
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    missing_frame = pd.DataFrame(float("nan"), index=index, columns=fields)
+    bulk = pd.concat({"AAA": missing_frame}, axis=1)
+    valid_frame = pd.DataFrame(
+        {
+            "Open": [10.0, 11.0],
+            "High": [12.0, 13.0],
+            "Low": [9.0, 10.0],
+            "Close": [11.0, 12.0],
+            "Adj Close": [10.5, 11.5],
+            "Volume": [100, 110],
+        },
+        index=index,
+    )
+    calls = []
+
+    def fake_download(**kwargs):
+        calls.append(kwargs.copy())
+        if kwargs["repair"] is True:
+            return bulk
+        return pd.DataFrame(columns=fields)
+
+    history_calls = []
+
+    def failing_history(ticker, start, end):
+        history_calls.append((ticker, start, end))
+        raise RuntimeError("YFTzMissingError: no timezone found")
+
+    chart_calls = []
+
+    def fake_chart(ticker, start, end):
+        chart_calls.append((ticker, start, end))
+        return valid_frame
+
+    output, diagnostics = refresh_prices.download_historical_prices(
+        ["AAA"],
+        date(2020, 1, 1),
+        date(2020, 1, 4),
+        batch_size=1,
+        retries=1,
+        sleeper=lambda _seconds: None,
+        downloader=fake_download,
+        history_fetcher=failing_history,
+        chart_fetcher=fake_chart,
+    )
+
+    assert len(calls) == 3
+    assert history_calls == [("AAA", date(2020, 1, 1), date(2020, 1, 4))]
+    assert chart_calls == [("AAA", date(2020, 1, 1), date(2020, 1, 4))]
+    assert len(output) == 2
+    assert set(output["Ticker"]) == {"AAA"}
+    assert diagnostics == [{
+        "ticker": "AAA",
+        "status": "recovered",
+        "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
+        "fallback_attempts": 4,
+        "recovery_method": "direct_yahoo_chart",
+        "rows": 2,
+    }]
+
+
 def write_aliases(path: Path, rows: str) -> Path:
     path.write_text(
         "old_ticker,canonical_ticker,cik,source_url,change_type\n" + rows,
