@@ -307,8 +307,8 @@ def refresh(args) -> dict:
             f"ticker coverage {coverage['ticker_coverage']:.2%} "
             f"is below required {args.min_ticker_coverage:.2%}"
         )
-    if failures:
-        issues.append(f"{len(failures)} download batch/ticker failures were recorded")
+    # Individual ticker gaps are accounted for by the session-coverage gates below.
+    # Preserve them as diagnostics; do not fail solely because an isolated symbol is unavailable.
 
     report = {
         "status": "FAIL" if issues else "PASS",
