@@ -28,6 +28,7 @@ from pit_membership import (
     load_membership_history_with_aliases,
     tickers_overlapping,
 )
+from wayback_delisted_prices import fetch_wayback_yahoo_csv_history
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_HISTORY = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
@@ -300,6 +301,7 @@ def download_historical_prices(
     downloader=None,
     history_fetcher=None,
     chart_fetcher=None,
+    wayback_fetcher=None,
     eodhd_fetcher=None,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Batch-download raw OHLC plus adjusted close; derive adjusted OHLC for returns.
@@ -333,6 +335,14 @@ def download_historical_prices(
         if chart_fetcher is None and download_session is not None:
             chart_fetcher = lambda ticker, start, end: fetch_yahoo_chart_history(
                 download_session, ticker, start, end
+            )
+        if wayback_fetcher is None:
+            wayback_session = download_session
+            if wayback_session is None:
+                import requests
+                wayback_session = requests.Session()
+            wayback_fetcher = lambda ticker, start, end: fetch_wayback_yahoo_csv_history(
+                wayback_session, ticker, start, end
             )
         eodhd_token = os.environ.get("EODHD_API_TOKEN", "").strip()
         if eodhd_fetcher is None and eodhd_token:
@@ -453,6 +463,7 @@ def download_historical_prices(
         recovery_method = "single_ticker_download"
         history_attempted = False
         chart_attempted = False
+        wayback_attempted = False
         if not recovered_rows and history_fetcher is not None:
             history_attempted = True
             try:
@@ -491,6 +502,24 @@ def download_historical_prices(
                     (fallback_error + "; ") if fallback_error else ""
                 ) + f"direct Yahoo chart {type(exc).__name__}: {exc}"
 
+        # Free, unauthenticated Internet Archive recovery comes before any optional
+        # paid provider. Use a conservative delay because the public archive is rate-limited.
+        if not recovered_rows and wayback_fetcher is not None:
+            wayback_attempted = True
+            sleeper(1.0)
+            try:
+                wayback_frame = wayback_fetcher(ticker, start, end_exclusive)
+                recovered_rows = (
+                    _records_for_symbol(wayback_frame, ticker, record_cutoff, start)
+                    if wayback_frame is not None and not wayback_frame.empty else []
+                )
+                if recovered_rows:
+                    recovery_method = "wayback_yahoo_csv"
+                else:
+                    fallback_error = ((fallback_error + "; ") if fallback_error else "") + "Wayback returned no valid raw/adjusted OHLC rows"
+            except Exception as exc:
+                fallback_error = ((fallback_error + "; ") if fallback_error else "") + f"Wayback {type(exc).__name__}: {exc}"
+
         if not recovered_rows and eodhd_fetcher is not None and not eodhd_disabled:
             eodhd_attempted = True
             try:
@@ -516,7 +545,7 @@ def download_historical_prices(
                 attempt if recovery_method == "single_ticker_download"
                 else 3 if recovery_method == "ticker_history"
                 else 4 if recovery_method == "direct_yahoo_chart"
-                else 5
+                else 5 + int(wayback_attempted)
             )
             recovered_entry = {
                 "ticker": ticker,
@@ -526,6 +555,8 @@ def download_historical_prices(
                 "recovery_method": recovery_method,
                 "rows": len(recovered_rows),
             }
+            if wayback_attempted:
+                recovered_entry["wayback_attempted"] = True
             if eodhd_fetcher is not None:
                 recovered_entry["eodhd_attempted"] = eodhd_attempted
             recovered_tickers.append(recovered_entry)
@@ -535,14 +566,17 @@ def download_historical_prices(
                 "status": "failed",
                 "bulk_error": bulk_error,
                 "fallback_error": fallback_error or "single-ticker request returned no data",
-                "fallback_attempts": 2 + int(history_attempted) + int(chart_attempted) + int(eodhd_attempted),
+                "fallback_attempts": 2 + int(history_attempted) + int(chart_attempted) + int(wayback_attempted) + int(eodhd_attempted),
                 "recovery_method": (
                     "eodhd_history_failed" if eodhd_attempted
+                    else "wayback_yahoo_csv_failed" if wayback_attempted
                     else "direct_yahoo_chart_failed" if chart_attempted
                     else "ticker_history_failed" if history_attempted
                     else "single_ticker_download_failed"
                 ),
             }
+            if wayback_attempted:
+                failure_entry["wayback_attempted"] = True
             if eodhd_fetcher is not None:
                 failure_entry["eodhd_attempted"] = eodhd_attempted
                 if eodhd_disabled_error:
@@ -722,8 +756,15 @@ def refresh(args) -> dict:
         "download_failures": failures[:200],
         "fallback_recovered_ticker_count": len(recovered_tickers),
         "fallback_recovered_tickers": recovered_tickers[:200],
+        "free_secondary_price_provider": {
+            "name": "Internet Archive legacy Yahoo CSV snapshots",
+            "configured": True,
+            "attempted_ticker_count": sum(1 for item in download_diagnostics if item.get("wayback_attempted")),
+            "recovered_ticker_count": sum(1 for item in recovered_tickers if item.get("recovery_method") == "wayback_yahoo_csv"),
+            "limitations": "Only archived legacy CSV snapshots are searched; coverage is partial and adjusted prices reflect the snapshot date.",
+        },
         "secondary_price_provider": {
-            "name": "EOD Historical Data (EODHD)",
+            "name": "EOD Historical Data (EODHD), optional paid fallback",
             "configured": bool(os.environ.get("EODHD_API_TOKEN", "").strip()),
             "attempted_ticker_count": sum(1 for item in download_diagnostics if item.get("eodhd_attempted")),
             "recovered_ticker_count": sum(1 for item in recovered_tickers if item.get("recovery_method") == "eodhd_history"),

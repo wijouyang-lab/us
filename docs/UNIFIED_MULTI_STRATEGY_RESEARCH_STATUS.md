@@ -83,3 +83,12 @@ The fresh 10Y snapshot workflow also regenerated the dedicated ATR reports. Thes
 - The multi-factor comparator was vectorized to rank each factor/date panel once rather than repeating the expensive grouping for every direction, split, and cost scenario.
 - A regression test verifies that the vectorized daily portfolio constituents match the previous reference implementation, with only floating-point aggregation tolerance.
 - Production scoring, scan, stops, portfolio, and ledger behavior remain unchanged.
+
+
+## Free delisted-price recovery update (2026-10-22)
+
+- The PIT refresh now tries the Internet Archive's legacy Yahoo Finance CSV snapshots after live Yahoo fallback paths and before the optional EODHD provider.
+- This fallback requires no API token and searches only archived CSVs from known legacy Yahoo chart hosts. The existing raw-OHLC / adjusted-close validator and the original 95% member-session-bar / 98% ticker-coverage gates remain unchanged.
+- Wayback availability is partial: some symbols have no archived CSV, snapshots can be incomplete, and adjusted-close values reflect the archived snapshot date. A failed lookup is recorded in the PIT audit rather than silently filled with another issuer's prices.
+- EODHD remains optional and may incur a subscription fee; it is not required for the free fallback to run.
+- Automated tests cover successful CSV recovery/date filtering, empty CDX results, and rejection of non-Yahoo snapshot hosts.
