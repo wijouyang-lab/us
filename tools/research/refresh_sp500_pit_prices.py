@@ -394,7 +394,7 @@ def main(argv=None) -> int:
     parser.add_argument("--warmup-days", type=int, default=WARMUP_DAYS)
     parser.add_argument("--batch-size", type=int, default=BATCH_SIZE)
     parser.add_argument("--min-member-bar-coverage", type=float, default=0.95)
-    parser.add_argument("--min-ticker-coverage", type=float, default=0.90)
+    parser.add_argument("--min-ticker-coverage", type=float, default=0.98)
     parser.add_argument("--max-spy-staleness-days", type=int, default=4)
     args = parser.parse_args(argv)
     if not 0 < args.min_member_bar_coverage <= 1 or not 0 < args.min_ticker_coverage <= 1:
