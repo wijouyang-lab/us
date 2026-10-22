@@ -12,6 +12,9 @@ on:
       - 'tools/research/wayback_delisted_prices.py'
       - 'tools/research/data/sp500_components_history.csv'
       - 'tools/research/data/sp500_ticker_aliases.csv'
+      - 'tools/research/data/nasdaq100_membership_history.csv'
+      - 'tools/research/data/dow30_membership_history.csv'
+      - 'tools/research/multi_index_membership.py'
 
 permissions:
   contents: read
@@ -75,8 +78,11 @@ jobs:
               --prices research_complete_history/partial_prices.csv \
               --spy research_complete_history/partial_spy.csv \
               --membership tools/research/data/sp500_components_history.csv \
+              --aliases tools/research/data/sp500_ticker_aliases.csv \
+              --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
+              --dow30-membership tools/research/data/dow30_membership_history.csv \
               --out-dir research_complete_history/drawdowns \
-              --min-coverage 0.90 \
+              --min-coverage 1.0 \
               --min-valid-rows 252
           else
             echo "Partial price files were not produced; retaining audit/logs for diagnosis."
