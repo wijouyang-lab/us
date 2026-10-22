@@ -93,7 +93,9 @@ def run_backtest(
         )
         for strategy, (return_col, position_col) in STRATEGIES.items():
             gross = returns[return_col]
-            # Returns are earned by the prior close signal; charge turnover on that same held exposure.\n            held_positions = returns[position_col].shift(1).fillna(0.0)\n            costs = apply_turnover_costs(gross, held_positions, one_way_cost_bps=one_way_cost_bps)
+            # Returns are earned by the prior close signal; charge turnover on that same held exposure.
+            held_positions = returns[position_col].shift(1).fillna(0.0)
+            costs = apply_turnover_costs(gross, held_positions, one_way_cost_bps=one_way_cost_bps)
             summary = summarize_returns(costs["net_return"])
             metric_rows.append({"Ticker": ticker, "strategy": strategy, "cost_bps_one_way": one_way_cost_bps,
                                 "gross_total_return": summarize_returns(gross)["total_return"],
