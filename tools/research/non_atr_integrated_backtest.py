@@ -91,9 +91,10 @@ def load_complete_tickers(
         dates = pd.DatetimeIndex(group["Date"])
         if expected_by_ticker is not None:
             expected_set = expected_by_ticker.get(str(ticker), set())
-            expected_dates = pd.DatetimeIndex(sorted(
-                d for d in expected_set if dates.min().normalize() <= d <= dates.max().normalize()
-            ))
+            # The expected window comes from the SPY calendar and PIT membership,
+            # not from observed ticker endpoints; otherwise missing first/last prices
+            # could be hidden by shrinking the window to the available data.
+            expected_dates = pd.DatetimeIndex(sorted(expected_set))
             observed_dates = pd.DatetimeIndex(group["Date"].dt.normalize())
             observed_expected = observed_dates.intersection(expected_dates)
             complete = len(expected_dates) > 0 and observed_expected.equals(expected_dates)
