@@ -13,8 +13,68 @@ import sys
 import tempfile
 from pathlib import Path
 
+import pandas as pd
+
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
+
+
+def prepare_adjusted_label_inputs(snapshot_df, price_df):
+    """Return a temporary adjusted-label snapshot and an adjusted-close price table.
+
+    Factor values and raw snapshot files are left unchanged. Only the copy's Price
+    field is replaced with the same session's Adj Close, so forward-return labels
+    compare adjusted values on both T and T+N.
+    """
+    required_snapshot_cols = {"Ticker", "Technical_Date", "Price"}
+    missing_snapshot_cols = sorted(required_snapshot_cols - set(snapshot_df.columns))
+    if missing_snapshot_cols:
+        raise ValueError(f"10Y research snapshot missing columns: {missing_snapshot_cols}")
+    required_price_cols = {"Date", "Ticker", "Close", "Adj Close", "Price_Basis"}
+    missing_price_cols = sorted(required_price_cols - set(price_df.columns))
+    if missing_price_cols:
+        raise ValueError(f"10Y research price history missing columns: {missing_price_cols}")
+    basis = sorted(set(price_df["Price_Basis"].astype(str).str.strip()))
+    if basis != ["raw_ohlc_adj_close"]:
+        raise ValueError(f"Unexpected 10Y research price basis: {basis}")
+
+    snapshot = snapshot_df.copy()
+    prices = price_df.copy()
+    snapshot["Ticker"] = snapshot["Ticker"].astype(str).str.strip().str.upper()
+    snapshot["Technical_Date"] = pd.to_datetime(
+        snapshot["Technical_Date"], errors="coerce"
+    ).dt.strftime("%Y-%m-%d")
+    prices["Ticker"] = prices["Ticker"].astype(str).str.strip().str.upper()
+    prices["Date"] = pd.to_datetime(prices["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
+    prices["Adj Close"] = pd.to_numeric(prices["Adj Close"], errors="coerce")
+    prices = prices.dropna(subset=["Date", "Ticker", "Adj Close"])
+    if prices.duplicated(["Ticker", "Date"]).any():
+        raise ValueError("duplicate Ticker/Date keys in 10Y research price history")
+
+    row_key = "__pit_research_row_order__"
+    if row_key in snapshot.columns:
+        raise ValueError(f"snapshot contains reserved helper column: {row_key}")
+    snapshot[row_key] = range(len(snapshot))
+    adjusted_close = prices[["Ticker", "Date", "Adj Close"]].rename(
+        columns={"Date": "Technical_Date"}
+    )
+    joined = snapshot[[row_key, "Ticker", "Technical_Date"]].merge(
+        adjusted_close, on=["Ticker", "Technical_Date"], how="left", validate="many_to_one"
+    ).sort_values(row_key)
+    missing = joined["Adj Close"].isna() | (joined["Adj Close"] <= 0)
+    if missing.any():
+        examples = joined.loc[
+            missing, ["Ticker", "Technical_Date", "Adj Close"]
+        ].head(10).to_dict("records")
+        raise ValueError(
+            f"Adjusted close missing/invalid for {int(missing.sum())} snapshot rows; examples={examples}"
+        )
+    snapshot["Price"] = joined["Adj Close"].map(lambda value: f"{float(value):.8f}").to_numpy()
+    snapshot = snapshot.drop(columns=[row_key])
+    adjusted_prices = prices[["Date", "Ticker", "Adj Close"]].rename(
+        columns={"Adj Close": "Close"}
+    )
+    return snapshot, adjusted_prices
 
 
 def main():
@@ -41,46 +101,7 @@ def main():
     # adjusted closes, and the original snapshot CSV is never overwritten.
     snap_df = pd.read_csv(snap, dtype=str, keep_default_na=False)
     price_df = pd.read_csv(price, dtype=str, keep_default_na=False)
-    required_snapshot_cols = {"Ticker", "Technical_Date", "Price"}
-    missing_snapshot_cols = sorted(required_snapshot_cols - set(snap_df.columns))
-    if missing_snapshot_cols:
-        raise ValueError(f"10Y research snapshot missing columns: {missing_snapshot_cols}")
-    required_price_cols = {"Date", "Ticker", "Close", "Adj Close", "Price_Basis"}
-    missing_price_cols = sorted(required_price_cols - set(price_df.columns))
-    if missing_price_cols:
-        raise ValueError(f"10Y research price history missing columns: {missing_price_cols}")
-    basis = sorted(set(price_df["Price_Basis"].astype(str).str.strip()))
-    if basis != ["raw_ohlc_adj_close"]:
-        raise ValueError(f"Unexpected 10Y research price basis: {basis}")
-
-    snap_df["Ticker"] = snap_df["Ticker"].astype(str).str.strip().str.upper()
-    snap_df["Technical_Date"] = pd.to_datetime(snap_df["Technical_Date"], errors="coerce").dt.strftime("%Y-%m-%d")
-    price_df["Ticker"] = price_df["Ticker"].astype(str).str.strip().str.upper()
-    price_df["Date"] = pd.to_datetime(price_df["Date"], errors="coerce").dt.strftime("%Y-%m-%d")
-    price_df["Adj Close"] = pd.to_numeric(price_df["Adj Close"], errors="coerce")
-    price_df = price_df.dropna(subset=["Date", "Ticker", "Adj Close"])
-    if price_df.duplicated(["Ticker", "Date"]).any():
-        raise ValueError("duplicate Ticker/Date keys in 10Y research price history")
-
-    adjusted_close = price_df[["Ticker", "Date", "Adj Close"]].rename(
-        columns={"Date": "Technical_Date"}
-    )
-    adjusted_close = adjusted_close.drop_duplicates(["Ticker", "Technical_Date"])
-    joined = snap_df[["Ticker", "Technical_Date"]].merge(
-        adjusted_close, on=["Ticker", "Technical_Date"], how="left", validate="one_to_one"
-    )
-    if joined["Adj Close"].isna().any() or (joined["Adj Close"] <= 0).any():
-        examples = joined.loc[
-            joined["Adj Close"].isna() | (joined["Adj Close"] <= 0),
-            ["Ticker", "Technical_Date", "Adj Close"],
-        ].head(10).to_dict("records")
-        raise ValueError(
-            f"Adjusted close missing/invalid for {int((joined['Adj Close'].isna() | (joined['Adj Close'] <= 0)).sum())} snapshot rows; examples={examples}"
-        )
-    snap_df["Price"] = joined["Adj Close"].map(lambda value: f"{float(value):.8f}")
-    adjusted_prices = price_df[["Date", "Ticker", "Adj Close"]].rename(
-        columns={"Adj Close": "Close"}
-    )
+    snap_df, adjusted_prices = prepare_adjusted_label_inputs(snap_df, price_df)
     price_map = price_map_from_history(adjusted_prices)
 
     with tempfile.TemporaryDirectory(prefix="pit-adjusted-backtest-") as tmpdir:
