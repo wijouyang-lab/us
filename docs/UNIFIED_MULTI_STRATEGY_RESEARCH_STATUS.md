@@ -7,9 +7,6 @@
 **Status date:** 2026-10-22  
 **Scope:** research-only. No production scoring, scan, stops, portfolio, or ledger changes.
 
-**Status date:** 2026-10-22  
-**Scope:** research-only. No production scoring, scan, stops, portfolio, or ledger changes.
-
 ## Data sources and method
 
 - Prior 10Y PIT snapshot artifact: [run 39712671160](https://github.com/wijouyang-lab/us/actions/runs/39712671160) completed successfully on 2026-10-22, but reused static price inputs ending at signal date 2026-09-16; diagnostic only.
