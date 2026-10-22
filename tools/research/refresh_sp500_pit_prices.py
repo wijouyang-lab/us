@@ -336,11 +336,12 @@ def download_historical_prices(
             )
         eodhd_token = os.environ.get("EODHD_API_TOKEN", "").strip()
         if eodhd_fetcher is None and eodhd_token:
-            if download_session is None:
+            eodhd_session = download_session
+            if eodhd_session is None:
                 import requests
-                download_session = requests.Session()
+                eodhd_session = requests.Session()
             eodhd_fetcher = lambda ticker, start, end: fetch_eodhd_history(
-                download_session, ticker, start, end, eodhd_token
+                eodhd_session, ticker, start, end, eodhd_token
             )
 
     def run_download(**kwargs):
