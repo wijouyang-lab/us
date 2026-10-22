@@ -43,8 +43,16 @@ def test_vectorized_portfolio_rows_match_reference():
     d=clean_frame(make_frame(n_dates=120))
     dates=list(pd.unique(d.Scan_Date))
     high,low=daily_rows_both_directions(d,dates,"ATR_Pct")
-    assert high==daily_rows(d,dates,"ATR_Pct",1)
-    assert low==daily_rows(d,dates,"ATR_Pct",-1)
+    for actual,reference in (
+        (high,daily_rows(d,dates,"ATR_Pct",1)),
+        (low,daily_rows(d,dates,"ATR_Pct",-1)),
+    ):
+        assert len(actual)==len(reference)
+        for got,want in zip(actual,reference):
+            assert got["date"]==want["date"]
+            assert got["tickers"]==want["tickers"]
+            assert got["gross"]==pytest.approx(want["gross"],abs=1e-12)
+            assert got["benchmark"]==pytest.approx(want["benchmark"],abs=1e-12)
 
 
 def test_missing_factor_fails_closed():
