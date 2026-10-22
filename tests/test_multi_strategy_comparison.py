@@ -6,7 +6,7 @@ import pytest
 
 REPO=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(REPO/"tools"/"research"))
-from multi_strategy_comparison import clean_frame, split_dates, render_report, run_comparison, daily_rows, daily_rows_both_directions
+from multi_strategy_comparison import clean_frame, split_dates, render_report, run_comparison, daily_rows, daily_rows_both_directions, metrics
 
 def make_frame(n_dates=260,n_tickers=50,direction=1):
     rows=[]
@@ -83,3 +83,14 @@ def test_duplicate_rows_fail_closed():
     d=make_frame(n_dates=120)
     with pytest.raises(ValueError,match="duplicate Scan_Date/Ticker"):
         clean_frame(pd.concat([d,d.iloc[[0]]],ignore_index=True))
+
+
+def test_drawdown_includes_initial_capital_baseline():
+    rows = [
+        {"tickers": frozenset({"A"}), "gross": -0.10, "benchmark": 0.0},
+        {"tickers": frozenset({"A"}), "gross": 0.05, "benchmark": 0.0},
+    ]
+    result = metrics(rows, cost_bps=0)
+    # First period drops equity from 1.0 to 0.9; the following rebound
+    # remains below the initial peak, so the maximum drawdown is -10%.
+    assert result["drawdown_pct"] == pytest.approx(-10.0)

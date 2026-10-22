@@ -133,11 +133,15 @@ def metrics(rows, cost_bps):
         excess.append(nr-row["benchmark"]); turns.append(turnover); prev=curr
     arr=np.asarray(net); sd=float(np.std(arr,ddof=1)) if len(arr)>1 else float("nan")
     sh=float(np.mean(arr)/sd*math.sqrt(252/HORIZON)) if len(arr)>1 and math.isfinite(sd) and sd>0 else None
-    wealth=np.cumprod(1+arr); peaks=np.maximum.accumulate(np.concatenate(([1.0],wealth)))[1:]
+    # Include initial capital as a real point in the equity curve. Slicing it
+    # out before computing drawdown misses a loss in the first observation.
+    wealth = np.concatenate(([1.0], np.cumprod(1 + arr)))
+    peaks = np.maximum.accumulate(wealth)
+    drawdowns = wealth / peaks - 1.0
     return {"n":len(rows),"gross_pct":float(np.mean(gross)*100),"net_pct":float(np.mean(net)*100),
             "benchmark_pct":float(np.mean(bench)*100),"excess_pct":float(np.mean(excess)*100),
             "win_pct":float(np.mean(arr>0)*100),"sharpe":sh,
-            "drawdown_pct":float(np.min(wealth/peaks-1)*100),"turnover_pct":float(np.mean(turns)*100)}
+            "drawdown_pct":float(np.min(drawdowns)*100),"turnover_pct":float(np.mean(turns)*100)}
 
 def run_comparison(frame):
     d = clean_frame(frame)
