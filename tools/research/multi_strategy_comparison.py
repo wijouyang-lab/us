@@ -69,6 +69,11 @@ def daily_rows_both_directions(d, dates, factor):
     """Vectorize per-date ranks, then aggregate both long-only directions."""
     wanted = set(pd.Timestamp(x).normalize() for x in dates)
     panel = d[d.Scan_Date.isin(wanted)].copy()
+    # Match the reference implementation: factor-missing names are removed
+    # before counting the cross-section, ranking, and computing the benchmark.
+    # Counting them first can create false eligible dates and distort both
+    # portfolio size and benchmark returns.
+    panel = panel.dropna(subset=[factor, "Forward_Return_20D"])
     if panel.empty:
         return [], []
 
