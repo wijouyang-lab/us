@@ -70,9 +70,11 @@ def build_reports(
         ticker_prices = p[p["Ticker"] == ticker].set_index("Date")["Adj Close"].sort_index()
         expected = set()
         for interval in intervals:
-            start = max(interval.date_added, sessions[0])
-            end = min(interval.date_removed or sessions[-1], sessions[-1] + pd.Timedelta(days=1))
-            expected.update(day for day in sessions if start <= day < end)
+            expected.update(
+                day for day in sessions
+                if interval.date_added <= day
+                and (interval.date_removed is None or day < interval.date_removed)
+            )
         observed = expected.intersection(set(ticker_prices.index))
         coverage = len(observed) / len(expected) if expected else 0.0
         valid = len(observed)
