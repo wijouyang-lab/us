@@ -370,9 +370,9 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
 
     def fake_download(**kwargs):
         calls.append(kwargs.copy())
-        if kwargs["tickers"] == ["BBB"]:
-            return pd.DataFrame(columns=fields)
-        return bulk
+        if kwargs["threads"] is True:
+            return bulk
+        return pd.DataFrame(columns=fields)
 
     output, diagnostics = refresh_prices.download_historical_prices(
         ["BBB"],
