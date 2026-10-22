@@ -276,7 +276,9 @@ def download_historical_prices(
                 sleeper(1.0)
 
         recovery_method = "single_ticker_download"
+        history_attempted = False
         if not recovered_rows and history_fetcher is not None:
+            history_attempted = True
             try:
                 history_frame = history_fetcher(
                     requests[ticker], start, end_exclusive
@@ -311,7 +313,11 @@ def download_historical_prices(
                 "status": "failed",
                 "bulk_error": bulk_error,
                 "fallback_error": fallback_error or "single-ticker request returned no data",
-                "fallback_attempts": 3 if history_fetcher is not None else 2,
+                "fallback_attempts": 3 if history_attempted else 2,
+                "recovery_method": (
+                    "ticker_history_failed" if history_attempted
+                    else "single_ticker_download_failed"
+                ),
             })
 
     if not all_records:
