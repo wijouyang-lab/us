@@ -18,7 +18,7 @@ def make_frame(n_dates=260,n_tickers=50,direction=1):
                 "Forward_Return_20D":direction*x*0.01+noise,"ATR_Pct":float(ti),
                 "Realized_Volatility_20D_Pct":float(ti),"ZScore_20D":float(ti),
                 "Momentum_20D_Pct":float(ti),"Momentum_60D_Pct":float(ti),
-                "Stock_RS_20D_vs_SPY":float(ti),"MA20_Slope_Pct_5D":float(ti)})
+                "RSI":float(ti),"MA20_Slope_Pct_5D":float(ti)})
     return pd.DataFrame(rows)
 
 def test_split_purges_twenty_dates():
@@ -29,7 +29,7 @@ def test_split_purges_twenty_dates():
 
 def test_comparison_is_deterministic_and_research_only():
     a=run_comparison(make_frame()); b=run_comparison(make_frame())
-    assert list(a["results"])==["ATR volatility","Low volatility","Mean reversion","20D momentum","60D momentum","Relative strength vs SPY","MA slope reversal"]
+    assert list(a["results"])==["ATR volatility","Low volatility","Mean reversion","RSI signal","20D momentum","60D momentum","MA slope reversal"]
     for k in a["results"]:
         assert a["results"][k]["direction"]=="HIGH"
         assert a["results"][k]["segments"]["test"]["n"]>=1
