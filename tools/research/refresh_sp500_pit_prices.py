@@ -89,7 +89,7 @@ def fetch_yahoo_chart_history(session, symbol: str, start: date, end_exclusive: 
     for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
         url = f"https://{host}/v8/finance/chart/{quote(str(symbol), safe='.-^=')}"
         try:
-            response = session.get(url, params=params, timeout=30)
+            response = session.get(url, params=params, timeout=8)
             response.raise_for_status()
             payload = response.json()
             chart = payload.get("chart") or {}
@@ -124,6 +124,11 @@ def fetch_yahoo_chart_history(session, symbol: str, start: date, end_exclusive: 
             return frame
         except Exception as exc:
             last_error = f"{host} {type(exc).__name__}: {exc}"
+            error_text = f"{type(exc).__name__}: {exc}".lower()
+            # A timeout on one Yahoo host usually means the endpoint is unreachable;
+            # do not double the wait by retrying the mirror for the same ticker.
+            if "timeout" in error_text or "timed out" in error_text:
+                break
     raise RuntimeError(f"direct Yahoo chart fallback failed: {last_error}")
 
 
