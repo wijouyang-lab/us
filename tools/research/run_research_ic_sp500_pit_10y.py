@@ -118,7 +118,6 @@ def main():
 
     import pandas as pd
     from quant_factor_backtest import run_backtest
-    from quant_factor_backtest import forward_return_nd
 
     print(f"snapshot: {snap} ({snap.stat().st_size} bytes)")
     print(f"price:    {price} ({price.stat().st_size} bytes)")
