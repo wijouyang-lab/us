@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sys
 from datetime import date
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,14 +9,17 @@ from types import SimpleNamespace
 import pandas as pd
 import pytest
 
-from tools.research.pit_membership import (
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "tools" / "research"))
+
+from pit_membership import (
     active_tickers_on,
     approximate_date_counts,
     is_member_on,
     load_membership_history,
     tickers_overlapping,
 )
-from tools.research import refresh_sp500_pit_prices as refresh_prices
+import refresh_sp500_pit_prices as refresh_prices
 
 
 def write_membership(path: Path, rows: str) -> Path:
