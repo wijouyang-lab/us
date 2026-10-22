@@ -6,7 +6,7 @@ import pytest
 
 REPO=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(REPO/"tools"/"research"))
-from multi_strategy_comparison import clean_frame, split_dates, render_report, run_comparison
+from multi_strategy_comparison import clean_frame, split_dates, render_report, run_comparison, daily_rows, daily_rows_both_directions
 
 def make_frame(n_dates=260,n_tickers=50,direction=1):
     rows=[]
@@ -38,6 +38,14 @@ def test_comparison_is_deterministic_and_research_only():
     assert "Research-only" in report
     assert "Test cost sensitivity" in report
     assert "Do not pick a winner" in report
+
+def test_vectorized_portfolio_rows_match_reference():
+    d=clean_frame(make_frame(n_dates=120))
+    dates=list(pd.unique(d.Scan_Date))
+    high,low=daily_rows_both_directions(d,dates,"ATR_Pct")
+    assert high==daily_rows(d,dates,"ATR_Pct",1)
+    assert low==daily_rows(d,dates,"ATR_Pct",-1)
+
 
 def test_missing_factor_fails_closed():
     with pytest.raises(ValueError,match="missing required columns"):
