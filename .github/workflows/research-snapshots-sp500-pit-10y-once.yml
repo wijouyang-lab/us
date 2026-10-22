@@ -47,7 +47,7 @@ jobs:
           print(f"analysis_start={start.isoformat()}")
           PY
 
-      - name: Refresh adjusted prices for historical PIT constituents
+      - name: Refresh raw OHLC and adjusted return prices for PIT constituents
         run: |
           python tools/research/refresh_sp500_pit_prices.py \
             --analysis-start "${{ steps.period.outputs.analysis_start }}" \
