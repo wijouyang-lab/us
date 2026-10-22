@@ -36,6 +36,9 @@ class FakeSession:
         return self.responses.pop(0)
 
 
+EMPTY_CDX = [["timestamp", "original", "statuscode", "length", "mimetype"]]
+
+
 def test_wayback_fetches_and_date_filters_archived_yahoo_csv():
     cdx = [
         ["timestamp", "original", "statuscode", "length", "mimetype"],
@@ -47,7 +50,12 @@ def test_wayback_fetches_and_date_filters_archived_yahoo_csv():
         "2016-01-04,10.5,12,10,11.5,1200,11.5\n"
         "2016-01-05,11.5,12,11,11.8,1300,11.8\n"
     )
-    session = FakeSession([FakeResponse(payload=cdx), FakeResponse(text=csv_text)])
+    session = FakeSession([
+        FakeResponse(payload=cdx),
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(text=csv_text),
+    ])
 
     frame = fetch_wayback_yahoo_csv_history(
         session, "DEAD", date(2016, 1, 1), date(2016, 1, 5)
@@ -56,27 +64,61 @@ def test_wayback_fetches_and_date_filters_archived_yahoo_csv():
     assert list(frame.columns) == ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
     assert frame.index.strftime("%Y-%m-%d").tolist() == ["2016-01-04"]
     assert frame.iloc[0]["Adj Close"] == 11.5
-    assert len(session.calls) == 2
+    assert len(session.calls) == 4
+
+
+def test_wayback_finds_snapshot_on_alternate_legacy_host():
+    cdx = [
+        ["timestamp", "original", "statuscode", "length", "mimetype"],
+        ["20170102030405", "https://ichart.finance.yahoo.com/table.csv?s=DEAD", "200", "700", "text/csv"],
+    ]
+    csv_text = (
+        "Date,Open,High,Low,Close,Volume,Adj Close\n"
+        "2016-02-01,10,11,9,10.5,1000,10.5\n"
+    )
+    session = FakeSession([
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(payload=cdx),
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(text=csv_text),
+    ])
+
+    frame = fetch_wayback_yahoo_csv_history(
+        session, "DEAD", date(2016, 1, 1), date(2017, 1, 1)
+    )
+
+    assert len(frame) == 1
+    assert "ichart.finance.yahoo.com" in session.calls[3][0]
+    assert len(session.calls) == 4
 
 
 def test_wayback_rejects_non_yahoo_snapshot_hosts():
     cdx = [
         ["timestamp", "original", "statuscode", "length", "mimetype"],
-        ["20160102030405", "https://attacker.example/table.csv", "200", "9999", "text/csv"],
+        ["20160102030405", "https://attacker.example/table.csv?s=DEAD", "200", "9999", "text/csv"],
     ]
-    session = FakeSession([FakeResponse(payload=cdx)])
+    session = FakeSession([
+        FakeResponse(payload=cdx),
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(payload=EMPTY_CDX),
+    ])
 
     with pytest.raises(RuntimeError, match="no usable legacy Yahoo CSV"):
         fetch_wayback_yahoo_csv_history(
             session, "DEAD", date(2016, 1, 1), date(2017, 1, 1)
         )
-    assert len(session.calls) == 1
+    assert len(session.calls) == 3
 
 
 def test_wayback_empty_cdx_is_a_clear_nonfatal_provider_error():
-    session = FakeSession([FakeResponse(payload=[["timestamp", "original"]])])
+    session = FakeSession([
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(payload=EMPTY_CDX),
+        FakeResponse(payload=EMPTY_CDX),
+    ])
 
-    with pytest.raises(RuntimeError, match="no indexed legacy Yahoo CSV"):
+    with pytest.raises(RuntimeError, match="no usable legacy Yahoo CSV"):
         fetch_wayback_yahoo_csv_history(
             session, "DEAD", date(2016, 1, 1), date(2017, 1, 1)
         )
+    assert len(session.calls) == 3
