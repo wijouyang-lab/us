@@ -33,7 +33,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-production.txt
-      - name: Run four-strategy comparison on 2Y PIT data
+      - name: Run multi-factor comparison on 2Y PIT data
         run: |
           python tools/research/multi_strategy_comparison.py \
             --input research_backtest_sp500_pit_2y.csv \
@@ -91,7 +91,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-production.txt
-      - name: Run four-strategy comparison on latest available 10Y PIT artifact
+      - name: Run multi-factor comparison on latest available 10Y PIT artifact
         env:
           SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
           SOURCE_HEAD_SHA: ${{ steps.source.outputs.head_sha }}
