@@ -2,6 +2,7 @@ name: Research Snapshots + IC S&P500 PIT 10Y (one-shot)
 
 on:
   workflow_dispatch:
+  # Intentional rerun: merge a change to this workflow with [run-10y-research] in the commit title.
   # One-time bootstrap: allow the specially marked merge commit to launch the long PIT run.
   push:
     paths:
