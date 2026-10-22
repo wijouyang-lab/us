@@ -14,7 +14,7 @@ HORIZON, PURGE, MIN_NAMES, TOP_FRAC = 20, 20, 30, 0.20
 COSTS = (5.0, 10.0, 20.0)
 FACTORS = {
     "ATR volatility": "ATR_Pct",
-    "Low volatility": "Realized_Volatility_20D_Pct",
+    "Realized volatility": "Realized_Volatility_20D_Pct",
     "Mean reversion": "ZScore_20D",
     "RSI signal": "RSI",
     "20D momentum": "Momentum_20D_Pct",

@@ -29,7 +29,7 @@ def test_split_purges_twenty_dates():
 
 def test_comparison_is_deterministic_and_research_only():
     a=run_comparison(make_frame()); b=run_comparison(make_frame())
-    assert list(a["results"])==["ATR volatility","Low volatility","Mean reversion","RSI signal","20D momentum","60D momentum","MA slope reversal"]
+    assert list(a["results"])==["ATR volatility","Realized volatility","Mean reversion","RSI signal","20D momentum","60D momentum","MA slope reversal"]
     for k in a["results"]:
         assert a["results"][k]["direction"]=="HIGH"
         assert a["results"][k]["segments"]["test"]["n"]>=1
