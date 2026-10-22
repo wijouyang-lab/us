@@ -164,20 +164,35 @@ def download_historical_prices(
 
     downloader is injectable for regression tests. It should behave like yf.download.
     """
+    download_session = None
     if downloader is None:
         import yfinance as yf
         downloader = yf.download
+        try:
+            # Explicit browser-impersonating session helps avoid intermittent Yahoo
+            # chart/timezone failures seen when requesting many symbols in one run.
+            from curl_cffi import requests as curl_requests
+            download_session = curl_requests.Session(impersonate="chrome")
+        except Exception:
+            # yfinance can still create its own default session if curl_cffi is unavailable.
+            download_session = None
         if history_fetcher is None:
-            # Independent API path: yf.download can omit a symbol from bulk and
-            # single-symbol frames even while Ticker.history can still return chart data.
-            history_fetcher = lambda ticker, start, end: yf.Ticker(ticker).history(
-                start=start.isoformat(),
-                end=end.isoformat(),
-                auto_adjust=False,
-                actions=False,
-                repair=False,
-                raise_errors=True,
-            )
+            def fetch_history(ticker, start, end):
+                ticker_kwargs = {"session": download_session} if download_session is not None else {}
+                return yf.Ticker(ticker, **ticker_kwargs).history(
+                    start=start.isoformat(),
+                    end=end.isoformat(),
+                    auto_adjust=False,
+                    actions=False,
+                    repair=False,
+                    raise_errors=True,
+                )
+            history_fetcher = fetch_history
+
+    def run_download(**kwargs):
+        if download_session is not None:
+            kwargs["session"] = download_session
+        return downloader(**kwargs)
 
     symbols = list(dict.fromkeys(str(t).strip().upper() for t in tickers if str(t).strip()))
     requests: dict[str, str] = {}
@@ -201,14 +216,16 @@ def download_historical_prices(
         error = None
         for attempt in range(1, retries + 1):
             try:
-                raw = downloader(
+                raw = run_download(
                     tickers=yahoo_batch,
                     start=start.isoformat(),
                     end=end_exclusive.isoformat(),
                     auto_adjust=False,
                     actions=False,
                     group_by="ticker",
-                    threads=True,
+                    # Keep Yahoo request bursts bounded; concurrent downloads have
+                    # caused false YFTzMissingError responses for otherwise valid symbols.
+                    threads=False,
                     progress=False,
                     ignore_tz=True,
                     repair=True,
@@ -250,7 +267,7 @@ def download_historical_prices(
         recovered_rows = []
         for attempt in range(1, 3):
             try:
-                raw_single = downloader(
+                raw_single = run_download(
                     tickers=[requests[ticker]],
                     start=start.isoformat(),
                     end=end_exclusive.isoformat(),
