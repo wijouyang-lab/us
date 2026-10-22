@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from pit_membership import load_membership_history
+try:  # Support both package imports in tests and direct script execution.\n    from .pit_membership import load_membership_history\nexcept ImportError:  # pragma: no cover - exercised by CLI invocation\n    from pit_membership import load_membership_history
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_PRICES = REPO / "research_price_history_sp500_10y.csv"
