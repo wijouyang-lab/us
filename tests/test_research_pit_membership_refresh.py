@@ -399,6 +399,7 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
     assert diagnostics[0]["status"] == "failed"
     assert "no valid raw/adjusted OHLC rows" in diagnostics[0]["bulk_error"]
     assert diagnostics[0]["fallback_attempts"] == 2
+    assert diagnostics[0]["recovery_method"] == "single_ticker_download_failed"
 
 
 
