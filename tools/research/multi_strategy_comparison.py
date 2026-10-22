@@ -8,6 +8,7 @@ import pandas as pd
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_INPUT = REPO / "research_backtest_sp500_pit_2y.csv"
+DEFAULT_SNAPSHOTS = REPO / "research_factor_snapshots_sp500_pit_2y.csv"
 DEFAULT_OUTPUT = REPO / "docs" / "UNIFIED_MULTI_STRATEGY_COMPARISON.md"
 HORIZON, PURGE, MIN_NAMES, TOP_FRAC = 20, 20, 30, 0.20
 COSTS = (5.0, 10.0, 20.0)
@@ -146,11 +147,23 @@ def render_report(r):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument("--input",type=Path,default=DEFAULT_INPUT)
+    p.add_argument("--input",type=Path,default=DEFAULT_INPUT,help="backtest returns CSV")
+    p.add_argument("--snapshots",type=Path,default=DEFAULT_SNAPSHOTS,help="factor snapshot CSV")
     p.add_argument("--output",type=Path,default=DEFAULT_OUTPUT)
     a=p.parse_args()
-    if not a.input.exists(): raise SystemExit(f"missing input: {a.input}")
-    result=run_comparison(pd.read_csv(a.input,dtype=str,keep_default_na=False))
+    for path in (a.input, a.snapshots):
+        if not path.exists(): raise SystemExit(f"missing input: {path}")
+    # Factors and forward returns live in separate panels; join on the PIT
+    # ticker/date key used by the existing research pipeline.
+    snap=pd.read_csv(a.snapshots,dtype=str,keep_default_na=False)
+    bt=pd.read_csv(a.input,dtype=str,keep_default_na=False,
+                   usecols=["Ticker","Technical_Date","Forward_Return_20D"])
+    key=["Ticker","Technical_Date"]
+    missing=[col for col in key + list(FACTORS.values()) if col not in snap.columns]
+    if missing: raise SystemExit(f"snapshot file missing required columns: {missing}")
+    frame=snap[key + list(FACTORS.values())].merge(bt,on=key,how="inner",validate="one_to_one")
+    frame=frame.rename(columns={"Technical_Date":"Scan_Date"})
+    result=run_comparison(frame)
     a.output.parent.mkdir(parents=True,exist_ok=True)
     a.output.write_text(render_report(result),encoding="utf-8")
     print(f"wrote {a.output}; rows={result['rows']} dates={result['dates']} strategies={len(result['results'])}")
