@@ -20,6 +20,7 @@ from pit_membership import (
     tickers_overlapping,
 )
 import refresh_sp500_pit_prices as refresh_prices
+from low_frequency_atr_execution_validation import attach_execution_returns, load_inputs
 from run_research_ic_sp500_pit_10y import prepare_adjusted_label_inputs
 
 
@@ -257,3 +258,28 @@ def test_adjusted_return_labels_fail_when_adjusted_close_is_missing():
 
     with pytest.raises(ValueError, match="Adjusted close missing/invalid"):
         prepare_adjusted_label_inputs(snapshot, prices)
+
+
+
+def test_execution_validation_uses_adjusted_open_and_close():
+    snapshot = pd.DataFrame(
+        [{
+            "Ticker": "AAA",
+            "Scan_Date": "2020-01-03",
+            "Technical_Date": "2020-01-02",
+            "ATR_Pct": 4.5,
+        }]
+    )
+    prices = pd.DataFrame(
+        [
+            {"Date": "2020-01-02", "Ticker": "AAA", "Open": 90, "Close": 95, "Adj Open": 81, "Adj Close": 85.5, "Price_Basis": "raw_ohlc_adj_close"},
+            {"Date": "2020-01-03", "Ticker": "AAA", "Open": 100, "Close": 110, "Adj Open": 80, "Adj Close": 88, "Price_Basis": "raw_ohlc_adj_close"},
+            {"Date": "2020-01-06", "Ticker": "AAA", "Open": 110, "Close": 120, "Adj Open": 86.25, "Adj Close": 90, "Price_Basis": "raw_ohlc_adj_close"},
+        ]
+    )
+    clean_snapshot, by_ticker = load_inputs(snapshot, prices)
+    result, audit = attach_execution_returns(clean_snapshot, by_ticker, hold_sessions=2)
+
+    assert audit["rows_valid"] == 1
+    assert result.loc[0, "Execution_Return"] == pytest.approx(90 / 80 - 1)
+    assert result.loc[0, "Execution_Return"] != pytest.approx(120 / 100 - 1)
