@@ -113,15 +113,31 @@ def _records_for_symbol(frame: pd.DataFrame, ticker: str, cutoff: date, start: d
         row = frame.iloc[pos]
         close = _valid_number(row.get("Close"))
         adj_close = _valid_number(row.get("Adj Close"))
-        if close is None or close <= 0 or adj_close is None or adj_close <= 0:
+        high = _valid_number(row.get("High"))
+        low = _valid_number(row.get("Low"))
+        if (
+            close is None or close <= 0
+            or adj_close is None or adj_close <= 0
+            or high is None or high <= 0
+            or low is None or low <= 0
+            or high < low
+            or not low <= close <= high
+        ):
             continue
         adjustment_factor = adj_close / close
         record = {"Date": day, "Ticker": ticker}
         for field in ("Open", "High", "Low"):
             value = _valid_number(row.get(field))
             valid_raw = value is not None and value > 0
+            if field in ("High", "Low") and not valid_raw:
+                record = {}
+                break
+            if valid_raw and not low <= value <= high:
+                valid_raw = False
             record[field] = round(value, 6) if valid_raw else ""
             record[f"Adj {field}"] = round(value * adjustment_factor, 6) if valid_raw else ""
+        if not record:
+            continue
         volume = _valid_number(row.get("Volume"))
         record["Volume"] = int(round(volume)) if volume is not None and volume >= 0 else ""
         record["Close"] = round(close, 6)
