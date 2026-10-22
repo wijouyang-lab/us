@@ -29,6 +29,7 @@ from pit_membership import (
     tickers_overlapping,
 )
 from wayback_delisted_prices import fetch_wayback_yahoo_csv_history
+from multi_index_membership import load_multi_index_membership
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_HISTORY = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
@@ -672,9 +673,20 @@ def refresh(args) -> dict:
             "review registry provenance and update the pin before refreshing prices."
         )
     alias_usage: dict = {}
-    history = load_membership_history_with_aliases(
-        args.history, aliases_path, alias_usage=alias_usage
-    )
+    nasdaq_path = getattr(args, "nasdaq100_membership", None)
+    dow_path = getattr(args, "dow30_membership", None)
+    if bool(nasdaq_path) != bool(dow_path):
+        raise ValueError("Nasdaq-100 and Dow membership paths must be supplied together")
+    if nasdaq_path and dow_path:
+        history = load_multi_index_membership(
+            args.history, aliases_path, Path(nasdaq_path), Path(dow_path)
+        )
+        membership_scope = ["S&P 500", "Nasdaq-100", "Dow Jones 30"]
+    else:
+        history = load_membership_history_with_aliases(
+            args.history, aliases_path, alias_usage=alias_usage
+        )
+        membership_scope = ["S&P 500"]
     cutoff = args.cutoff_date or last_completed_session_cutoff()
     analysis_start = args.analysis_start or subtract_years(cutoff, 10)
     if analysis_start > cutoff:
@@ -737,6 +749,9 @@ def refresh(args) -> dict:
         "yfinance_end_exclusive": end_exclusive.isoformat(),
         "price_basis": "raw OHLC for factor features; Adj Close and same-session-adjusted OHLC for research return labels",
         "membership_source": str(args.history.relative_to(REPO) if args.history.is_relative_to(REPO) else args.history),
+        "membership_scope": membership_scope,
+        "nasdaq100_membership_source": str(Path(nasdaq_path).relative_to(REPO) if nasdaq_path and Path(nasdaq_path).is_relative_to(REPO) else nasdaq_path),
+        "dow30_membership_source": str(Path(dow_path).relative_to(REPO) if dow_path and Path(dow_path).is_relative_to(REPO) else dow_path),
         "membership_source_commit": PINNED_MEMBERSHIP_COMMIT if using_vendored_source else None,
         "membership_source_blob_sha": actual_membership_blob_sha,
         "ticker_alias_registry": str(aliases_path.relative_to(REPO) if aliases_path.is_relative_to(REPO) else aliases_path),
@@ -806,6 +821,8 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--history", type=Path, default=DEFAULT_HISTORY)
     parser.add_argument("--aliases", type=Path, default=DEFAULT_TICKER_ALIASES)
+    parser.add_argument("--nasdaq100-membership", type=Path, default=None)
+    parser.add_argument("--dow30-membership", type=Path, default=None)
     parser.add_argument("--stocks", type=Path, default=DEFAULT_STOCKS)
     parser.add_argument("--spy", type=Path, default=DEFAULT_SPY)
     parser.add_argument("--audit", type=Path, default=DEFAULT_AUDIT)
