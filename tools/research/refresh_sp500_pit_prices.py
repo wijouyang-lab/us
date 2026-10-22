@@ -347,6 +347,7 @@ def refresh(args) -> dict:
         "latest_spy_date": latest_spy,
         "spy_staleness_calendar_days": stale_days,
         "coverage": coverage,
+        "download_failure_count": len(failures),
         "download_failures": failures[:100],
         "requirements": {
             "min_member_bar_coverage": args.min_member_bar_coverage,
