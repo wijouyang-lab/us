@@ -1,0 +1,122 @@
+name: Unified Multi-Strategy Research
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/multi_strategy_comparison.py"
+      - "tests/test_multi_strategy_comparison.py"
+      - ".github/workflows/multi-strategy-comparison.yml"
+      - "research_factor_snapshots_sp500_pit_2y.csv"
+      - "research_backtest_sp500_pit_2y.csv"
+      - "docs/UNIFIED_MULTI_STRATEGY_RESEARCH_STATUS.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: unified-multi-strategy-research
+  cancel-in-progress: false
+
+jobs:
+  compare-2y:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-production.txt
+      - name: Run multi-factor comparison on 2Y PIT data
+        run: |
+          python tools/research/multi_strategy_comparison.py \
+            --input research_backtest_sp500_pit_2y.csv \
+            --snapshots research_factor_snapshots_sp500_pit_2y.csv \
+            --output /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_2Y.md
+          cat /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_2Y.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unified-multi-strategy-comparison-2y
+          path: /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_2Y.md
+          if-no-files-found: error
+          retention-days: 30
+
+  compare-10y-latest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Resolve latest successful 10Y PIT snapshot run and download artifact
+        id: source
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          RUNS="$(gh run list \
+            --workflow research-snapshots-sp500-pit-10y-once.yml \
+            --status success \
+            --limit 1 \
+            --json databaseId,headSha,createdAt,url)"
+          RUN_ID="$(printf '%s' "$RUNS" | jq -r '.[0].databaseId // empty')"
+          if [[ -z "$RUN_ID" ]]; then
+            echo "::error::No successful 10Y PIT snapshot workflow run is available."
+            exit 1
+          fi
+          RUN_HEAD_SHA="$(printf '%s' "$RUNS" | jq -r '.[0].headSha // empty')"
+          RUN_CREATED_AT="$(printf '%s' "$RUNS" | jq -r '.[0].createdAt // empty')"
+          RUN_URL="$(printf '%s' "$RUNS" | jq -r '.[0].url // empty')"
+          echo "run_id=$RUN_ID" >> "$GITHUB_OUTPUT"
+          echo "head_sha=$RUN_HEAD_SHA" >> "$GITHUB_OUTPUT"
+          echo "created_at=$RUN_CREATED_AT" >> "$GITHUB_OUTPUT"
+          echo "url=$RUN_URL" >> "$GITHUB_OUTPUT"
+          echo "Selected latest successful 10Y PIT workflow run: $RUN_ID"
+          echo "Source commit: $RUN_HEAD_SHA"
+          echo "Created at: $RUN_CREATED_AT"
+          gh run download "$RUN_ID" \
+            --repo "$GITHUB_REPOSITORY" \
+            --name research-snapshots-ic-sp500-pit-10y \
+            --dir 10y-data
+          test -s 10y-data/research_backtest_sp500_pit_10y.csv
+          test -s 10y-data/research_factor_snapshots_sp500_pit_10y.csv
+      - name: Install research dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-production.txt
+      - name: Run multi-factor comparison on latest available 10Y PIT artifact
+        env:
+          SOURCE_RUN_ID: ${{ steps.source.outputs.run_id }}
+          SOURCE_HEAD_SHA: ${{ steps.source.outputs.head_sha }}
+          SOURCE_CREATED_AT: ${{ steps.source.outputs.created_at }}
+          SOURCE_URL: ${{ steps.source.outputs.url }}
+        run: |
+          python tools/research/multi_strategy_comparison.py \
+            --input 10y-data/research_backtest_sp500_pit_10y.csv \
+            --snapshots 10y-data/research_factor_snapshots_sp500_pit_10y.csv \
+            --output /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
+          {
+            echo
+            echo "## Input provenance and freshness gate"
+            echo
+            echo "- Snapshot workflow run: [${SOURCE_RUN_ID}](${SOURCE_URL})"
+            echo "- Snapshot source commit: ${SOURCE_HEAD_SHA}"
+            echo "- Snapshot workflow created at: ${SOURCE_CREATED_AT}"
+            echo
+            echo "> **Research limitation:** this job uses the most recent successful 10Y snapshot artifact and records its provenance; it does not rebuild the dataset itself. The selected artifact must still be reviewed for PIT membership quality, corporate actions, delistings, and execution realism. Positive historical results are not proof of live alpha."
+            echo
+          } >> /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
+          cat /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unified-multi-strategy-comparison-10y-latest
+          path: /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
+          if-no-files-found: error
+          retention-days: 30
