@@ -95,9 +95,10 @@ def load_complete_tickers(
                 d for d in expected_set if dates.min().normalize() <= d <= dates.max().normalize()
             ))
             observed_dates = pd.DatetimeIndex(group["Date"].dt.normalize())
-            complete = len(expected_dates) > 0 and observed_dates.equals(expected_dates)
+            observed_expected = observed_dates.intersection(expected_dates)
+            complete = len(expected_dates) > 0 and observed_expected.equals(expected_dates)
             expected_count = len(expected_dates)
-            missing_count = max(0, expected_count - len(observed_dates.intersection(expected_dates)))
+            missing_count = max(0, expected_count - len(observed_expected))
         else:
             expected_dates = session_calendar[(session_calendar >= dates.min().normalize()) & (session_calendar <= dates.max().normalize())]
             observed_dates = pd.DatetimeIndex(group["Date"].dt.normalize())
@@ -118,7 +119,13 @@ def load_complete_tickers(
             "status": status, "reason": ";".join(reasons),
         })
         if status == "eligible":
-            eligible[str(ticker)] = group[["Date", "Adj Close"]].reset_index(drop=True)
+            if expected_by_ticker is not None:
+                keep_dates = set(expected_dates)
+                eligible[str(ticker)] = group[
+                    group["Date"].dt.normalize().isin(keep_dates)
+                ][["Date", "Adj Close"]].reset_index(drop=True)
+            else:
+                eligible[str(ticker)] = group[["Date", "Adj Close"]].reset_index(drop=True)
     return eligible, pd.DataFrame(audit)
 
 
