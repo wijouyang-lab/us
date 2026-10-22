@@ -5,7 +5,9 @@
 Signals use factors known after Technical_Date close. Entry is the next session's
 Open on Scan_Date; exit is that session's Close after HOLD_SESSIONS sessions.
 This deliberately does not change production strategy or the existing close-close
-research labels. Current raw OHLC prices are not corporate-action adjusted.
+research labels. Raw OHLC is used for factor features; same-session adjusted open
+and adjusted close are used for execution returns. Provider history and symbol-
+transition limitations still apply.
 """
 from __future__ import annotations
 
@@ -20,7 +22,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_SNAPSHOT = REPO / "research_factor_snapshots_sp500_pit_10y.csv"
 DEFAULT_PRICES = REPO / "research_price_history_sp500_10y.csv"
-DEFAULT_CONSTITUENTS = REPO / "sp500_constituents.csv"
+DEFAULT_CONSTITUENTS = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
 DEFAULT_OUTPUT = REPO / "LOW_FREQUENCY_ATR_EXECUTION_10Y.md"
 FACTOR = "ATR_Pct"
 HOLD_SESSIONS = 20
@@ -32,7 +34,7 @@ COST_BPS = (5.0, 10.0, 20.0, 50.0)
 
 def load_inputs(snapshot: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
     required_snap = {"Ticker", "Scan_Date", "Technical_Date", FACTOR}
-    required_price = {"Date", "Ticker", "Open", "Close"}
+    required_price = {"Date", "Ticker", "Open", "Close", "Adj Open", "Adj Close", "Price_Basis"}
     missing = sorted(required_snap - set(snapshot.columns))
     if missing:
         raise ValueError(f"snapshot missing required columns: {missing}")
@@ -50,11 +52,14 @@ def load_inputs(snapshot: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFr
     if s.duplicated(["Scan_Date", "Ticker"]).any():
         raise ValueError("duplicate snapshot Scan_Date/Ticker rows")
 
-    p = prices[["Date", "Ticker", "Open", "Close"]].copy()
+    p = prices[["Date", "Ticker", "Open", "Close", "Adj Open", "Adj Close", "Price_Basis"]].copy()
     p["Ticker"] = p["Ticker"].astype(str).str.strip().str.upper()
     p["Date"] = pd.to_datetime(p["Date"], errors="coerce").dt.normalize()
-    for col in ("Open", "Close"):
+    for col in ("Open", "Close", "Adj Open", "Adj Close"):
         p[col] = pd.to_numeric(p[col], errors="coerce")
+    basis = sorted(set(p["Price_Basis"].astype(str).str.strip()))
+    if basis != ["raw_ohlc_adj_close"]:
+        raise ValueError(f"unexpected research price basis: {basis}")
     p = p.dropna(subset=["Date", "Ticker"])
     if p.duplicated(["Date", "Ticker"]).any():
         raise ValueError("duplicate price Date/Ticker rows")
@@ -84,7 +89,7 @@ def attach_execution_returns(snapshot: pd.DataFrame, by_ticker: dict[str, pd.Dat
         if bars.iloc[pos]["Date"] != row["Scan_Date"]:
             stats["date_alignment_mismatch"] += 1
             continue
-        entry_open = bars.iloc[pos]["Open"]
+        entry_open = bars.iloc[pos]["Adj Open"]
         if pd.isna(entry_open) or not np.isfinite(entry_open) or entry_open <= 0:
             stats["missing_or_invalid_open"] += 1
             continue
@@ -92,7 +97,7 @@ def attach_execution_returns(snapshot: pd.DataFrame, by_ticker: dict[str, pd.Dat
         if exit_pos >= len(bars):
             stats["insufficient_exit_history"] += 1
             continue
-        exit_close = bars.iloc[exit_pos]["Close"]
+        exit_close = bars.iloc[exit_pos]["Adj Close"]
         if pd.isna(exit_close) or not np.isfinite(exit_close) or exit_close <= 0:
             stats["missing_or_invalid_exit_close"] += 1
             continue
@@ -193,16 +198,16 @@ def run_research(snapshot: pd.DataFrame, prices: pd.DataFrame) -> dict[str, Any]
             "segments": segments, "costs": costs, "verdict": verdict, "audit": audit}
 
 
-def render_report(r: dict[str, Any], membership_has_removals: bool) -> str:
+def render_report(r: dict[str, Any], membership_has_removals: bool, price_basis: str = "not verified") -> str:
     def fmt(v: Any) -> str:
         return "N/A" if v is None or not math.isfinite(float(v)) else f"{float(v):+.3f}"
     lines = [
         "# 低频 ATR 开盘入场执行验证（研究层，不接生产）", "",
         f"> 数据：{r['rows']:,} 个可计算样本，{r['tickers']} 个 ticker，{r['dates']} 个有效信号日。",
         f"> 日期：{r['start']} 至 {r['end']}；因子 ATR_Pct；入场为信号日开盘，持有 {HOLD_SESSIONS} 个交易日并在第 20 个交易日收盘退出。",
-        "> 与旧报告的收盘到收盘标签不同：此报告使用开盘入场和持有期末收盘，独立计算收益，不复用 Forward_Return_20D。",
-        "> 价格源目前是未复权 OHLC；拆股、分红和公司行动可能扭曲收益，不能作为最终经济收益。",
-        f"> 股票池限制：{'成分文件含退出日期字段' if membership_has_removals else '当前成分文件缺少 Date_Removed，存在幸存者偏差；该样本不能称为严格 PIT 股票池'}。",
+        "> 信号因子继续来自未复权 OHLC；执行收益用同日调整后的 Adj Open 与期末 Adj Close。" ,
+        f"> 价格源：{price_basis}。即使使用复权 OHLC，也不能保证数据供应商的公司行动历史完全正确。",
+        f"> 股票池限制：{'使用了带 date_removed 的历史有效期数据' if membership_has_removals else '缺少 date_removed，存在明显幸存者偏差；该样本不能称为严格 PIT 股票池'}。上游带星号日期是近似值，ticker 更名/重用仍需审计。",
         "", "## 数据对齐审计", "",
         "| 项目 | 行数 |", "|---|---:|",
     ]
@@ -227,7 +232,7 @@ def render_report(r: dict[str, Any], membership_has_removals: bool) -> str:
         lines.append(f"| {cost} bps | {m['n']} | {fmt(m['net_mean_pct'])}% | {fmt(m['excess_mean_pct'])}% | {fmt(m['sharpe'])} |")
     lines += ["", "## 判定", "", f"**{r['verdict']}**", "",
               "- 该结果仅用于检查成交时点对 ATR 结论的影响；即使结果为正，也不证明 alpha。",
-              "- 当前价格未复权，且若成分文件无退出日期，则存在公司行动与幸存者偏差。",
+              "- 价格调整口径见报告顶部；复权不保证供应商的公司行动、退市价和 ticker 变更记录完整。",
               "- 生产使用前必须接入拆股/分红调整数据和有加入、退出日期的历史成分表，并用真实可交易约束复验。", ""]
     return "\n".join(lines)
 
@@ -249,8 +254,17 @@ def main() -> int:
     membership_has_removals = False
     if args.constituents.exists():
         const = pd.read_csv(args.constituents, dtype=str, keep_default_na=False)
-        membership_has_removals = "Date_Removed" in const.columns
-    report = render_report(result, membership_has_removals)
+        membership_has_removals = "date_removed" in {str(col).strip().lower() for col in const.columns}
+    basis_values = sorted({
+        str(value).strip() for value in prices.get("Price_Basis", pd.Series(dtype=str)).dropna()
+        if str(value).strip()
+    })
+    price_basis = (
+        "raw_ohlc_adj_close（因子用原始 OHLC，收益用调整价格）"
+        if basis_values == ["raw_ohlc_adj_close"]
+        else "未验证（输入 CSV 缺少一致的 Price_Basis 标记）"
+    )
+    report = render_report(result, membership_has_removals, price_basis)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(report, encoding="utf-8")
     print(f"rows={result['rows']} tickers={result['tickers']} dates={result['dates']} direction={result['direction']} verdict={result['verdict']}")

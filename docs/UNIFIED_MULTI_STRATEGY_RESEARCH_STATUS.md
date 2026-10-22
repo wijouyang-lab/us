@@ -1,5 +1,7 @@
 # Unified Multi-Factor Low-Frequency Research Status
 
+> **Status override — 2026-10-22:** the metrics below are from the previously available research inputs, whose last signal date was 2026-09-16. That run did not refresh the underlying price history and used a current/addition-only membership file without exit dates. Treat the tables below as historical diagnostics, **not as a valid point-in-time strategy ranking**. A gated refresh path is being added to rebuild research inputs with raw OHLC for factor features and same-session-adjusted prices for return labels, using effective-dated historical members; this status must not be upgraded until its data-coverage audit and new artifacts pass.
+
 **Status date:** 2026-10-22  
 **Scope:** research-only. No production scoring, scan, stops, portfolio, or ledger changes.
 
