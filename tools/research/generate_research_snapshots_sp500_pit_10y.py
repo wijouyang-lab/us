@@ -7,7 +7,9 @@
   · _calc_kdj_scan_style 改用 N=100 尾部优化版（已验证 diff = 9.95e-14 < 1e-6）
 输出 research_factor_snapshots_sp500_pit_10y.csv（22 列）。
 """
+import argparse
 import sys
+from datetime import date
 from pathlib import Path
 
 import numpy as np
@@ -15,10 +17,12 @@ import pandas as pd
 
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
+from pit_membership import active_tickers_on, approximate_date_counts, load_membership_history, tickers_overlapping
+
 PRICE_IN = REPO / "research_price_history_sp500_10y.csv"
 SPY_IN = REPO / "research_spy_sp500_10y.csv"
 SNAPSHOT_OUT = REPO / "research_factor_snapshots_sp500_pit_10y.csv"
-CONSTITUENTS = REPO / "sp500_constituents.csv"
+MEMBERSHIP_HISTORY = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
 
 
 def _load_calc_extended():
@@ -127,7 +131,12 @@ def _extract_tech_factors(win):
     return out
 
 
-def main():
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Build research-only S&P 500 factor snapshots using effective-dated historical constituents.")
+    parser.add_argument("--analysis-start", type=lambda value: pd.Timestamp(value).normalize(), default=None,
+                        help="first Scan_Date to include; price history still retains the lookback warmup")
+    args = parser.parse_args(argv)
+
     print(f"Loading price history... (loader mode: {_MODE})")
     stocks = pd.read_csv(PRICE_IN, dtype={"Date": str, "Ticker": str})
     spy = pd.read_csv(SPY_IN, dtype={"Date": str})
@@ -136,19 +145,33 @@ def main():
     stocks = stocks.sort_values(["Ticker", "Date"]).reset_index(drop=True)
     spy = spy.sort_values("Date").reset_index(drop=True)
 
-    date_added = {}
-    if CONSTITUENTS.exists():
-        const_df = pd.read_csv(CONSTITUENTS, dtype={"Ticker": str, "Date_Added": str})
-        date_added = dict(zip(const_df["Ticker"].str.upper(), const_df["Date_Added"]))
-        print(f"[pit] loaded {len(date_added)} constituents")
-    else:
-        print(f"[pit] WARNING: {CONSTITUENTS} not found -> static universe")
+    history = load_membership_history(MEMBERSHIP_HISTORY)
+    membership_counts = approximate_date_counts(history)
+    print(
+        f"[pit] loaded {len(history)} historical ticker symbols from {MEMBERSHIP_HISTORY}; "
+        f"membership intervals={membership_counts['membership_intervals']}; "
+        f"approximate add/remove dates={membership_counts['approximate_date_added']}/"
+        f"{membership_counts['approximate_date_removed']}"
+    )
 
     all_dates = sorted(spy["Date"].unique())
     print(f"Trading days: {len(all_dates)}")
 
     by_ticker = {t: g.reset_index(drop=True) for t, g in stocks.groupby("Ticker")}
-    print(f"Tickers: {len(by_ticker)}")
+    print(f"Tickers with downloaded history: {len(by_ticker)}")
+    if len(all_dates) <= 60:
+        raise RuntimeError(f"SPY price history has only {len(all_dates)} sessions; at least 61 are required")
+
+    inferred_start = args.analysis_start.date() if args.analysis_start is not None else pd.Timestamp(all_dates[60]).date()
+    last_price_date = pd.Timestamp(all_dates[-1]).date()
+    expected_tickers = tickers_overlapping(inferred_start, last_price_date, history)
+    missing_tickers = sorted(expected_tickers - set(by_ticker))
+    print(
+        f"[pit] symbols with membership spans overlapping the analysis window={len(expected_tickers)}; "
+        f"missing entirely from price input={len(missing_tickers)}"
+    )
+    if missing_tickers:
+        print(f"[pit] missing ticker sample={missing_tickers[:50]}")
 
     rows = []
     fail_count = 0
@@ -156,17 +179,19 @@ def main():
     # 从第 60 个交易日开始（60D Beta 需要 60 根 bar）
     for i, T in enumerate(all_dates[60:], start=60):
         T_prev = all_dates[i - 1]
+        if args.analysis_start is not None and pd.Timestamp(T).normalize() < args.analysis_start:
+            continue
+        active_members = active_tickers_on(pd.Timestamp(T_prev).date(), history)
         spy_win = spy[spy["Date"] <= T_prev]
         if len(spy_win) < 60:
             continue
         spy_close = spy_win.set_index("Date")["Close"]
         for tk, g in by_ticker.items():
-            # 点内筛选：T_prev 日该股必须已是 S&P500 成分（SPY 除外）
-            if tk != "SPY":
-                da = date_added.get(tk.upper(), "")
-                if da and T_prev.strftime("%Y-%m-%d") < da:
-                    skipped_pit += 1
-                    continue
+            # The signal uses T_prev close: require actual historical S&P 500 membership on T_prev.
+            # Unmatched tickers fail closed rather than silently acting as an unfiltered universe.
+            if tk != "SPY" and tk not in active_members:
+                skipped_pit += 1
+                continue
             win = g[g["Date"] <= T_prev]
             if len(win) < 60:
                 continue
