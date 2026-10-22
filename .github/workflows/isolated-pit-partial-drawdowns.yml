@@ -1,0 +1,93 @@
+name: Isolated PIT Partial History Drawdowns
+
+on:
+  workflow_dispatch:
+  # Run only when a reviewed merge explicitly carries this marker.
+  push:
+    paths:
+      - '.github/workflows/isolated-pit-partial-drawdowns.yml'
+      - 'tools/research/refresh_sp500_pit_prices.py'
+      - 'tools/research/analyze_complete_history_drawdowns.py'
+      - 'tools/research/pit_membership.py'
+      - 'tools/research/wayback_delisted_prices.py'
+      - 'tools/research/data/sp500_components_history.csv'
+      - 'tools/research/data/sp500_ticker_aliases.csv'
+
+permissions:
+  contents: read
+
+jobs:
+  isolated-drawdowns:
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run-isolated-pit-drawdowns]')
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: tools/research/requirements-research.txt
+
+      - name: Install research dependencies
+        run: pip install -r tools/research/requirements-research.txt
+
+      - name: Calculate rolling ten-year window
+        id: period
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from datetime import datetime, time, timedelta
+          from zoneinfo import ZoneInfo
+          now = datetime.now(ZoneInfo("America/New_York"))
+          cutoff = now.date() if now.time() >= time(16, 0) else now.date() - timedelta(days=1)
+          try:
+              start = cutoff.replace(year=cutoff.year - 10)
+          except ValueError:
+              start = cutoff.replace(year=cutoff.year - 10, day=28)
+          print(f"analysis_start={start.isoformat()}")
+          print(f"cutoff_date={cutoff.isoformat()}")
+          PY
+
+      - name: Refresh isolated PIT prices (partial cohort permitted, audit remains strict)
+        env:
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
+        run: |
+          python tools/research/refresh_sp500_pit_prices.py \
+            --analysis-start "${{ steps.period.outputs.analysis_start }}" \
+            --cutoff-date "${{ steps.period.outputs.cutoff_date }}" \
+            --history tools/research/data/sp500_components_history.csv \
+            --aliases tools/research/data/sp500_ticker_aliases.csv \
+            --allow-partial-output \
+            --stocks research_complete_history/partial_prices.csv \
+            --spy research_complete_history/partial_spy.csv \
+            --audit research_complete_history/pit_price_refresh_audit.json
+
+      - name: Analyze eligible tickers with sufficient history
+        if: always()
+        shell: bash
+        run: |
+          if [ -s research_complete_history/partial_prices.csv ] && [ -s research_complete_history/partial_spy.csv ]; then
+            python tools/research/analyze_complete_history_drawdowns.py \
+              --prices research_complete_history/partial_prices.csv \
+              --spy research_complete_history/partial_spy.csv \
+              --membership tools/research/data/sp500_components_history.csv \
+              --out-dir research_complete_history/drawdowns \
+              --min-coverage 0.90 \
+              --min-valid-rows 252
+          else
+            echo "Partial price files were not produced; retaining audit/logs for diagnosis."
+          fi
+
+      - name: Upload isolated research artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: isolated-pit-drawdowns-${{ github.run_id }}
+          path: |
+            research_complete_history/
+          if-no-files-found: warn
+          retention-days: 30
