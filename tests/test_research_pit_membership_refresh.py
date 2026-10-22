@@ -394,7 +394,8 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
 
     assert output.empty
     assert len(calls) == 3
-    assert all(call["threads"] is False for call in calls)
+    assert calls[0]["threads"] == 4
+    assert all(call["threads"] is False for call in calls[1:])
     assert len(diagnostics) == 1
     assert diagnostics[0]["ticker"] == "BBB"
     assert diagnostics[0]["status"] == "failed"
