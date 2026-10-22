@@ -132,6 +132,80 @@ def fetch_yahoo_chart_history(session, symbol: str, start: date, end_exclusive: 
     raise RuntimeError(f"direct Yahoo chart fallback failed: {last_error}")
 
 
+def fetch_eodhd_history(session, symbol: str, start: date, end_exclusive: date, api_token: str) -> pd.DataFrame:
+    """Fetch adjusted daily OHLCV from EODHD, including historical delisted listings.
+
+    EODHD supplies raw OHLCV and an adjusted close (split/dividend adjusted); the
+    existing validator derives same-session adjusted OHLC from the adjusted-close
+    factor. For symbols reused by another issuer, EODHD may expose the older listing
+    with an _old suffix, so that code is tried when the current code is empty or 404.
+    """
+    token = str(api_token or "").strip()
+    if not token:
+        raise RuntimeError("EODHD_API_TOKEN is not configured")
+
+    base_symbol = yahoo_symbol(symbol)
+    candidate_symbols = [f"{base_symbol}.US", f"{base_symbol}_old.US"]
+    errors: list[str] = []
+    end_inclusive = end_exclusive - timedelta(days=1)
+
+    for provider_symbol in dict.fromkeys(candidate_symbols):
+        url = f"https://eodhd.com/api/eod/{quote(provider_symbol, safe='.-_')}"
+        params = {
+            "api_token": token,
+            "from": start.isoformat(),
+            "to": end_inclusive.isoformat(),
+            "fmt": "json",
+        }
+        try:
+            response = session.get(url, params=params, timeout=20)
+        except Exception as exc:
+            # Never include the request exception or URL: its query string contains the API token.
+            raise RuntimeError(f"EODHD request failed ({type(exc).__name__})") from None
+
+        status_code = int(getattr(response, "status_code", 200))
+        if status_code == 404:
+            errors.append("HTTP 404")
+            continue
+        if status_code >= 400:
+            raise RuntimeError(f"EODHD HTTP {status_code}")
+
+        try:
+            payload = response.json()
+        except Exception:
+            raise RuntimeError("EODHD response was not valid JSON") from None
+        if not isinstance(payload, list):
+            raise RuntimeError("EODHD returned a non-list response")
+        if not payload:
+            errors.append("empty history")
+            continue
+
+        rows = []
+        for item in payload:
+            if not isinstance(item, dict):
+                continue
+            adjusted_close = item.get("adjusted_close", item.get("adjustedClose", item.get("adjusted close")))
+            rows.append({
+                "Date": item.get("date"),
+                "Open": item.get("open"),
+                "High": item.get("high"),
+                "Low": item.get("low"),
+                "Close": item.get("close"),
+                "Adj Close": adjusted_close,
+                "Volume": item.get("volume"),
+            })
+        frame = pd.DataFrame(rows)
+        if frame.empty or frame["Adj Close"].notna().sum() == 0:
+            errors.append("no usable OHLC and adjusted-close rows")
+            continue
+        frame["Date"] = pd.to_datetime(frame["Date"], errors="coerce")
+        frame = frame.dropna(subset=["Date"]).set_index("Date")
+        return frame[["Open", "High", "Low", "Close", "Adj Close", "Volume"]].sort_index()
+
+    raise RuntimeError(
+        f"EODHD returned no usable history for {symbol}: {', '.join(errors) or 'empty history'}"
+    )
+
 def _symbol_frame(data: pd.DataFrame, symbol: str, batch_len: int) -> pd.DataFrame | None:
     if data is None or data.empty:
         return None
@@ -226,6 +300,7 @@ def download_historical_prices(
     downloader=None,
     history_fetcher=None,
     chart_fetcher=None,
+    eodhd_fetcher=None,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Batch-download raw OHLC plus adjusted close; derive adjusted OHLC for returns.
 
@@ -258,6 +333,15 @@ def download_historical_prices(
         if chart_fetcher is None and download_session is not None:
             chart_fetcher = lambda ticker, start, end: fetch_yahoo_chart_history(
                 download_session, ticker, start, end
+            )
+        eodhd_token = os.environ.get("EODHD_API_TOKEN", "").strip()
+        if eodhd_fetcher is None and eodhd_token:
+            eodhd_session = download_session
+            if eodhd_session is None:
+                import requests
+                eodhd_session = requests.Session()
+            eodhd_fetcher = lambda ticker, start, end: fetch_eodhd_history(
+                eodhd_session, ticker, start, end, eodhd_token
             )
 
     def run_download(**kwargs):
@@ -333,9 +417,12 @@ def download_historical_prices(
     # yfinance internal threading, so a failed group does not masquerade as success.
     recovered_tickers: list[dict] = []
     unresolved_failures: list[dict] = []
+    eodhd_disabled = False
+    eodhd_disabled_error = None
     for ticker, bulk_error in ticker_bulk_errors.items():
         fallback_error = None
         recovered_rows = []
+        eodhd_attempted = False
         for attempt in range(1, 3):
             try:
                 raw_single = run_download(
@@ -404,34 +491,63 @@ def download_historical_prices(
                     (fallback_error + "; ") if fallback_error else ""
                 ) + f"direct Yahoo chart {type(exc).__name__}: {exc}"
 
+        if not recovered_rows and eodhd_fetcher is not None and not eodhd_disabled:
+            eodhd_attempted = True
+            try:
+                eodhd_frame = eodhd_fetcher(ticker, start, end_exclusive)
+                recovered_rows = (
+                    _records_for_symbol(eodhd_frame, ticker, record_cutoff, start)
+                    if eodhd_frame is not None and not eodhd_frame.empty else []
+                )
+                if recovered_rows:
+                    recovery_method = "eodhd_history"
+                else:
+                    fallback_error = ((fallback_error + "; ") if fallback_error else "") + "EODHD returned no valid raw/adjusted OHLC rows"
+            except Exception as exc:
+                safe_error = f"{type(exc).__name__}: {exc}"
+                fallback_error = ((fallback_error + "; ") if fallback_error else "") + f"EODHD {safe_error}"
+                if safe_error in {"RuntimeError: EODHD HTTP 401", "RuntimeError: EODHD HTTP 403"}:
+                    eodhd_disabled = True
+                    eodhd_disabled_error = safe_error.replace("RuntimeError: ", "")
+
         if recovered_rows:
             all_records.extend(recovered_rows)
             fallback_attempts = (
                 attempt if recovery_method == "single_ticker_download"
                 else 3 if recovery_method == "ticker_history"
-                else 4
+                else 4 if recovery_method == "direct_yahoo_chart"
+                else 5
             )
-            recovered_tickers.append({
+            recovered_entry = {
                 "ticker": ticker,
                 "status": "recovered",
                 "bulk_error": bulk_error,
                 "fallback_attempts": fallback_attempts,
                 "recovery_method": recovery_method,
                 "rows": len(recovered_rows),
-            })
+            }
+            if eodhd_fetcher is not None:
+                recovered_entry["eodhd_attempted"] = eodhd_attempted
+            recovered_tickers.append(recovered_entry)
         else:
-            unresolved_failures.append({
+            failure_entry = {
                 "ticker": ticker,
                 "status": "failed",
                 "bulk_error": bulk_error,
                 "fallback_error": fallback_error or "single-ticker request returned no data",
-                "fallback_attempts": 2 + int(history_attempted) + int(chart_attempted),
+                "fallback_attempts": 2 + int(history_attempted) + int(chart_attempted) + int(eodhd_attempted),
                 "recovery_method": (
-                    "direct_yahoo_chart_failed" if chart_attempted
+                    "eodhd_history_failed" if eodhd_attempted
+                    else "direct_yahoo_chart_failed" if chart_attempted
                     else "ticker_history_failed" if history_attempted
                     else "single_ticker_download_failed"
                 ),
-            })
+            }
+            if eodhd_fetcher is not None:
+                failure_entry["eodhd_attempted"] = eodhd_attempted
+                if eodhd_disabled_error:
+                    failure_entry["eodhd_error"] = eodhd_disabled_error
+            unresolved_failures.append(failure_entry)
 
     if not all_records:
         return pd.DataFrame(columns=PRICE_COLUMNS), recovered_tickers + unresolved_failures
@@ -606,6 +722,13 @@ def refresh(args) -> dict:
         "download_failures": failures[:200],
         "fallback_recovered_ticker_count": len(recovered_tickers),
         "fallback_recovered_tickers": recovered_tickers[:200],
+        "secondary_price_provider": {
+            "name": "EOD Historical Data (EODHD)",
+            "configured": bool(os.environ.get("EODHD_API_TOKEN", "").strip()),
+            "attempted_ticker_count": sum(1 for item in download_diagnostics if item.get("eodhd_attempted")),
+            "recovered_ticker_count": sum(1 for item in recovered_tickers if item.get("recovery_method") == "eodhd_history"),
+            "first_provider_error": next((item.get("eodhd_error") for item in download_diagnostics if item.get("eodhd_error")), None),
+        },
         "requirements": {
             "min_member_bar_coverage": args.min_member_bar_coverage,
             "min_ticker_coverage": args.min_ticker_coverage,

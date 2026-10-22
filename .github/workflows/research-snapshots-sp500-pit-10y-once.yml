@@ -53,6 +53,8 @@ jobs:
           PY
 
       - name: Refresh raw OHLC and adjusted return prices for PIT constituents
+        env:
+          EODHD_API_TOKEN: ${{ secrets.EODHD_API_TOKEN }}
         run: |
           python tools/research/refresh_sp500_pit_prices.py \
             --analysis-start "${{ steps.period.outputs.analysis_start }}" \
