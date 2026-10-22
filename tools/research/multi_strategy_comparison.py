@@ -16,9 +16,9 @@ FACTORS = {
     "ATR volatility": "ATR_Pct",
     "Low volatility": "Realized_Volatility_20D_Pct",
     "Mean reversion": "ZScore_20D",
+    "RSI signal": "RSI",
     "20D momentum": "Momentum_20D_Pct",
     "60D momentum": "Momentum_60D_Pct",
-    "Relative strength vs SPY": "Stock_RS_20D_vs_SPY",
     "MA slope reversal": "MA20_Slope_Pct_5D",
 }
 
