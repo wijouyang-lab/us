@@ -511,7 +511,7 @@ def test_direct_yahoo_chart_parser_accepts_history_without_timezone_metadata():
     assert len(session.calls) == 1
     assert session.calls[0][0].startswith("https://query1.finance.yahoo.com/v8/finance/chart/AAA")
     assert session.calls[0][1]["period2"] > session.calls[0][1]["period1"]
-    assert session.calls[0][2] == 30
+    assert session.calls[0][2] == 8
     assert len(frame) == 2
     assert frame["Adj Close"].tolist() == [10.5, 11.5]
     records = refresh_prices._records_for_symbol(
@@ -519,6 +519,33 @@ def test_direct_yahoo_chart_parser_accepts_history_without_timezone_metadata():
     )
     assert len(records) == 2
     assert [row["Date"] for row in records] == ["2020-01-02", "2020-01-03"]
+
+
+def test_direct_yahoo_chart_fallback_does_not_retry_mirror_after_timeout():
+    class FakeResponse:
+        def raise_for_status(self):
+            raise TimeoutError("request timed out")
+
+        def json(self):
+            raise AssertionError("timed-out response must not be parsed")
+
+    class FakeSession:
+        def __init__(self):
+            self.calls = []
+
+        def get(self, url, *, params, timeout):
+            self.calls.append((url, params, timeout))
+            return FakeResponse()
+
+    session = FakeSession()
+    with pytest.raises(RuntimeError, match="direct Yahoo chart fallback failed"):
+        refresh_prices.fetch_yahoo_chart_history(
+            session, "AAA", date(2020, 1, 1), date(2020, 1, 4)
+        )
+
+    assert len(session.calls) == 1
+    assert session.calls[0][0].startswith("https://query1.finance.yahoo.com/")
+    assert session.calls[0][2] == 8
 
 
 def test_direct_yahoo_chart_fallback_recovers_when_yfinance_timezone_lookup_fails():
