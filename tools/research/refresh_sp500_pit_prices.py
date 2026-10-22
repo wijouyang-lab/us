@@ -9,6 +9,7 @@ replaces the research input CSVs. Downloaded OHLC prices are yfinance auto-adjus
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -38,6 +39,8 @@ PRICE_COLUMNS = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "Pr
 BATCH_SIZE = 30
 WARMUP_DAYS = 120
 MIN_VALID_TICKER_SESSION_COVERAGE = 0.90
+PINNED_MEMBERSHIP_COMMIT = "2d0556e4ca01dc9203231c8b60d503a227be4512"
+PINNED_MEMBERSHIP_BLOB_SHA = "c025e09a6bbb2e12310a3f9fcef9114a0b59df90"
 
 
 def last_completed_session_cutoff(now: datetime | None = None) -> date:
@@ -257,7 +260,20 @@ def calculate_member_session_coverage(
     }
 
 
+def git_blob_sha(path: Path) -> str:
+    raw = path.read_bytes()
+    header = f"blob {len(raw)}\\0".encode("ascii")
+    return hashlib.sha1(header + raw).hexdigest()
+
+
 def refresh(args) -> dict:
+    actual_membership_blob_sha = git_blob_sha(args.history)
+    using_vendored_source = args.history.resolve() == DEFAULT_HISTORY.resolve()
+    if using_vendored_source and actual_membership_blob_sha != PINNED_MEMBERSHIP_BLOB_SHA:
+        raise SystemExit(
+            "Vendored membership history hash does not match its pinned source; "
+            "review provenance and update the pin before refreshing prices."
+        )
     history = load_membership_history(args.history)
     cutoff = args.cutoff_date or last_completed_session_cutoff()
     analysis_start = args.analysis_start or subtract_years(cutoff, 10)
@@ -319,7 +335,8 @@ def refresh(args) -> dict:
         "yfinance_end_exclusive": end_exclusive.isoformat(),
         "price_basis": "yfinance auto_adjust=True; OHLC and Close are adjusted research prices",
         "membership_source": str(args.history.relative_to(REPO) if args.history.is_relative_to(REPO) else args.history),
-        "membership_source_blob_sha": "c025e09a6bbb2e12310a3f9fcef9114a0b59df90",
+        "membership_source_commit": PINNED_MEMBERSHIP_COMMIT if using_vendored_source else None,
+        "membership_source_blob_sha": actual_membership_blob_sha,
         "membership_ticker_count_all_spans": len(history),
         "membership_tickers_overlapping_window": len(in_scope),
         "membership_date_quality": source_stats,
