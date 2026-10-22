@@ -193,6 +193,9 @@ def main(argv=None):
                 skipped_pit += 1
                 continue
             win = g[g["Date"] <= T_prev]
+            # Never carry a stale last-available bar forward into a later signal date.
+            if win.empty or pd.Timestamp(win["Date"].iloc[-1]).normalize() != pd.Timestamp(T_prev).normalize():
+                continue
             if len(win) < 60:
                 continue
             win2 = win.set_index("Date")
