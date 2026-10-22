@@ -1,0 +1,27 @@
+old_ticker,canonical_ticker,cik,source_url,change_type
+ABC,COR,1140859,https://www.cencora.com/newsroom/amerisourcebergen-becomes-cencora,same-issuer ticker/name change
+ANTM,ELV,1156039,https://www.elevancehealth.com/newsroom, same-issuer ticker/name change
+BK,BNY,1390777,https://www.bny.com/corporate/global/en/about-us.html,same-issuer ticker change
+BLL,BALL,9389,https://www.ball.com/newsroom,same-issuer ticker change
+CBG,CBRE,1138118,https://ir.cbre.com/,same-issuer ticker/name change
+CDAY,DAY,1725057,https://investors.dayforce.com/,same-issuer ticker/name change
+COH,TPR,1116132,https://www.sec.gov/Archives/edgar/data/1116132/000115752317002666/a51697272.htm,same-issuer ticker/name change
+CTL,LUMN,18926,https://ir.lumen.com/news/news-details/2020/CenturyLink-Transforms-Rebrands-as-Lumen/default.aspx,same-issuer ticker/name change
+FI,FISV,798354,https://investor.fiserv.com/,same-issuer ticker change
+FB,META,1326801,https://about.fb.com/news/2021/10/facebook-company-is-now-meta/,same-issuer ticker/name change
+FLT,CPAY,1175454,https://investor.corpay.com/,same-issuer ticker/name change
+HCN,WELL,766704,https://welltower.com/newsroom/,same-issuer ticker/name change
+HCP,PEAK,765880,https://ir.healthpeak.com/news-releases,same-issuer ticker/name change; do not map merger successor DOC
+JEC,J,52988,https://investor.jacobs.com/news-releases,same-issuer ticker/name change
+KORS,CPRI,1530721,https://www.capriholdings.com/news-events/press-releases,same-issuer ticker/name change
+LUK,JEF,96223,https://ir.jefferies.com/news-releases,same-issuer ticker/name change
+NLOK,GEN,849399,https://investor.gendigital.com/news-releases,same-issuer ticker/name change
+SYMC,GEN,849399,https://investor.gendigital.com/news-releases,same-issuer ticker/name change; same registrant after asset divestiture
+RE,EG,1095073,https://www.everestglobal.com/investors/overview,same-issuer ticker/name change
+TMK,GL,320335,https://investors.globelifeinsurance.com/news-and-events,same-issuer ticker/name change
+WLTW,WTW,1140536,https://investors.wtwco.com/news-releases,same-issuer ticker/name change
+ARNC,HWM,4281,https://www.howmet.com/news/,ticker reused by a different CIK; mapping applies only to historical CIK 4281
+ADS,BFH,1101215,https://investor.breadfinancial.com/news,same-issuer ticker/name change
+DLPH,APTV,1521332,https://ir.aptiv.com/news-releases,same-issuer ticker/name change; CIK guard prevents mapping a separately formed Delphi entity
+FBHS,FBIN,1519751,https://ir.fbin.com/news-releases,same-issuer ticker/name change
+MMC,MRSH,62709,https://www.marsh.com/us/about/media/press-releases.html,same-issuer ticker/name change
