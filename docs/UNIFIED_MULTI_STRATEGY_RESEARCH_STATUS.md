@@ -1,14 +1,16 @@
 # Unified Multi-Factor Low-Frequency Research Status
 
-> **Status override — 2026-10-22:** the metrics below are from the previously available research inputs, whose last signal date was 2026-09-16. That run did not refresh the underlying price history and used a current/addition-only membership file without exit dates. Treat the tables below as historical diagnostics, **not as a valid point-in-time strategy ranking**. A gated refresh path is being added to rebuild research inputs with raw OHLC for factor features and same-session-adjusted prices for return labels, using effective-dated historical members; this status must not be upgraded until its data-coverage audit and new artifacts pass.
+> **Data-validity hold — latest refresh attempt 2026-10-22:** [Research run 39733042272](https://github.com/wijouyang-lab/us/actions/runs/39733042272) failed its publication gate. For the 2016-10-21 to 2026-10-21 research window, member-session coverage was **89.00%** (1,167,262 of 1,311,530 expected bars); only **589 of 738 historical tickers (79.81%)** met the 90% individual coverage threshold. The workflow requires at least 95% member-session coverage and at least 98% ticker coverage. Single-ticker fallback recovered some data for 11 symbols, but only six additional tickers reached the individual coverage bar; **126 tickers still had no usable price history** after the bounded retries. The gate blocked publication and the previous research CSV inputs were preserved.
+>
+> The older reports below were generated from a static price CSV whose last signal date was 2026-09-16, despite the workflow completing successfully on 2026-10-22. They are historical diagnostics, **not a valid point-in-time strategy ranking**. Do not promote or select a strategy using those metrics. The remaining gaps include renamed and delisted historical symbols as well as no-data responses for some symbols; this run does not prove every missing symbol is truly delisted. Reaching the required coverage needs a verified historical ticker/corporate-action mapping and/or a source that retains historical delisted securities. Do not lower the coverage thresholds to make the refresh pass.
 
 **Status date:** 2026-10-22  
 **Scope:** research-only. No production scoring, scan, stops, portfolio, or ledger changes.
 
 ## Data sources and method
 
-- Fresh 10Y PIT snapshot artifact: [run 39712671160](https://github.com/wijouyang-lab/us/actions/runs/39712671160), successfully regenerated 2026-10-22.
-- Multi-factor 7-strategy comparison: [run 39726814223](https://github.com/wijouyang-lab/us/actions/runs/39726814223), both 2Y and 10Y jobs succeeded and uploaded full reports. The comparison logic has since been optimized using vectorized cross-sectional ranks; reference-equivalence regression coverage is included in the current PR.
+- Prior 10Y PIT snapshot artifact: [run 39712671160](https://github.com/wijouyang-lab/us/actions/runs/39712671160) completed successfully on 2026-10-22, but reused static price inputs ending at signal date 2026-09-16; diagnostic only.
+- Prior 7-strategy comparison: [run 39726814223](https://github.com/wijouyang-lab/us/actions/runs/39726814223) generated full reports successfully, but its 10Y leg depended on that stale price input; diagnostic only. The newer gated refresh failed as documented above, so no fresh comparison was produced.
 - Portfolio: rank the factor cross-section each signal date; equal-weight the top or bottom 20%; 20-session forward-return horizon; non-overlapping observations; 20 signal-date purge at train/validation/test boundaries.
 - Strategy direction is selected using training data only and then held fixed for validation and test. Costs are turnover-based estimates at 5/10/20 bps per side, not a fill-level slippage model.
 - Candidate factors: ATR percent, realized 20-day volatility, 20-day Z-score, RSI, 20-day momentum, 60-day momentum, and 5-day MA20 slope.
