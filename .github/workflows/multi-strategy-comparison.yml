@@ -11,6 +11,11 @@ on:
       - "research_backtest_sp500_pit_2y.csv"
       - "docs/UNIFIED_MULTI_STRATEGY_RESEARCH_STATUS.md"
   workflow_dispatch:
+  workflow_run:
+    workflows:
+      - "Research Snapshots + IC S&P500 PIT 10Y (one-shot)"
+    types:
+      - completed
 
 permissions:
   contents: read
@@ -22,6 +27,7 @@ concurrency:
 
 jobs:
   compare-2y:
+    if: github.event_name != 'workflow_run'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -48,6 +54,7 @@ jobs:
           retention-days: 30
 
   compare-10y-latest:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
