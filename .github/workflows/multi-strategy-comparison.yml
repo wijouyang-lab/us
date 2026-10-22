@@ -1,0 +1,45 @@
+name: Unified Multi-Strategy Research
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/multi_strategy_comparison.py"
+      - "tests/test_multi_strategy_comparison.py"
+      - ".github/workflows/multi-strategy-comparison.yml"
+      - "research_factor_snapshots_sp500_pit_2y.csv"
+      - "research_backtest_sp500_pit_2y.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: unified-multi-strategy-research
+  cancel-in-progress: false
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-production.txt
+      - name: Run four-strategy historical comparison
+        run: |
+          python tools/research/multi_strategy_comparison.py \
+            --input research_backtest_sp500_pit_2y.csv \
+            --snapshots research_factor_snapshots_sp500_pit_2y.csv \
+            --output /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON.md
+      - uses: actions/upload-artifact@v4
+        with:
+          name: unified-multi-strategy-comparison-report
+          path: /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON.md
+          if-no-files-found: error
+          retention-days: 30
