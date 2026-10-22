@@ -17,6 +17,7 @@ from pit_membership import (
     approximate_date_counts,
     is_member_on,
     load_membership_history,
+    load_membership_history_with_aliases,
     tickers_overlapping,
 )
 import refresh_sp500_pit_prices as refresh_prices
@@ -184,8 +185,14 @@ def test_refresh_failure_preserves_prior_price_inputs(tmp_path, monkeypatch):
     downloaded = pd.DataFrame(rows, columns=refresh_prices.PRICE_COLUMNS)
 
     monkeypatch.setattr(refresh_prices, "download_historical_prices", lambda *a, **k: (downloaded, []))
+    aliases_path = tmp_path / "aliases.csv"
+    aliases_path.write_text(
+        "old_ticker,canonical_ticker,cik,source_url,change_type\n",
+        encoding="utf-8",
+    )
     args = SimpleNamespace(
         history=history_path,
+        aliases=aliases_path,
         stocks=stocks_path,
         spy=spy_path,
         audit=audit_path,
@@ -391,3 +398,72 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
     assert diagnostics[0]["status"] == "failed"
     assert "no valid raw/adjusted OHLC rows" in diagnostics[0]["bulk_error"]
     assert diagnostics[0]["fallback_attempts"] == 2
+
+
+
+def write_aliases(path: Path, rows: str) -> Path:
+    path.write_text(
+        "old_ticker,canonical_ticker,cik,source_url,change_type\n" + rows,
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_alias_loader_canonicalizes_same_security_symbols(tmp_path):
+    membership = write_membership(
+        tmp_path / "history.csv",
+        "OLD,0000000001,Old Name,technology,2020-01-01,2020-12-31,2020-01-01\n"
+        "NEW,1,New Name,technology,2020-12-01,,2020-12-01\n",
+    )
+    aliases = write_aliases(
+        tmp_path / "aliases.csv",
+        "OLD,NEW,1,https://example.com/issuer,ticker/name change\n",
+    )
+    usage = {}
+
+    history = load_membership_history_with_aliases(membership, aliases, alias_usage=usage)
+
+    assert set(history) == {"NEW"}
+    assert is_member_on("NEW", date(2020, 12, 15), history)
+    assert active_tickers_on(date(2020, 12, 15), history) == {"NEW"}
+    assert usage["registry_rows"] == 1
+    assert usage["applied_source_symbols"] == [("OLD", "NEW")]
+
+
+def test_alias_loader_guards_reused_ticker_by_cik(tmp_path):
+    membership = write_membership(
+        tmp_path / "history.csv",
+        "ARNC,0000004281,Former issuer,industrials,2016-01-01,2020-01-01,2016-01-01\n"
+        "ARNC,0000182322,Reused symbol issuer,industrials,2020-01-01,,2020-01-01\n",
+    )
+    aliases = write_aliases(
+        tmp_path / "aliases.csv",
+        "ARNC,HWM,4281,https://example.com/issuer,ticker reused by another CIK\n",
+    )
+
+    history = load_membership_history_with_aliases(membership, aliases)
+
+    assert "HWM" in history
+    assert "ARNC" in history
+    assert is_member_on("HWM", date(2019, 6, 1), history)
+    assert not is_member_on("HWM", date(2021, 1, 1), history)
+    assert is_member_on("ARNC", date(2021, 1, 1), history)
+
+
+def test_vendored_ticker_alias_registry_matches_historical_ciks():
+    usage = {}
+    history = load_membership_history_with_aliases(
+        refresh_prices.DEFAULT_HISTORY,
+        refresh_prices.DEFAULT_TICKER_ALIASES,
+        alias_usage=usage,
+    )
+
+    assert usage["registry_rows"] == 26
+    assert usage["applied_source_symbol_count"] == 26
+    assert refresh_prices.git_blob_sha(refresh_prices.DEFAULT_TICKER_ALIASES) == (
+        refresh_prices.PINNED_TICKER_ALIAS_BLOB_SHA
+    )
+    assert "COR" in history
+    assert "ELV" in history
+    assert "HWM" in history
+    assert "MRSH" in history

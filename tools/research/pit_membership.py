@@ -6,6 +6,7 @@ import csv
 from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
+import tempfile
 from typing import Iterable
 
 
@@ -129,3 +130,99 @@ def approximate_date_counts(history: dict[str, list[MembershipInterval]]) -> dic
         "approximate_date_added": sum(row.date_added_approximate for row in rows),
         "approximate_date_removed": sum(row.date_removed_approximate for row in rows),
     }
+
+
+
+def _normalise_cik(value: object) -> str:
+    raw = str(value or "").strip()
+    digits = "".join(char for char in raw if char.isdigit())
+    return digits.lstrip("0") or "0" if digits else ""
+
+
+def load_membership_history_with_aliases(
+    path: Path,
+    aliases_path: Path,
+    alias_usage: dict | None = None,
+):
+    """Load membership intervals after CIK-guarded same-security ticker canonicalization.
+
+    The historical source can contain overlapping rows for a company's former and
+    replacement ticker. The alias registry only rewrites a source ticker when both
+    the ticker and SEC CIK match. This is important for reused symbols such as ARNC.
+    It does not map acquirers to acquired companies or span a merger into a different
+    security. The regular loader remains responsible for date/schema validation.
+    """
+    path = Path(path)
+    aliases_path = Path(aliases_path)
+    with aliases_path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        required_alias_columns = {"old_ticker", "canonical_ticker", "cik", "source_url", "change_type"}
+        actual_alias_columns = {str(name or "").strip().lower() for name in (reader.fieldnames or [])}
+        if not required_alias_columns.issubset(actual_alias_columns):
+            raise ValueError(
+                f"ticker alias registry missing columns: {sorted(required_alias_columns - actual_alias_columns)}"
+            )
+        alias_map: dict[tuple[str, str], str] = {}
+        for row in reader:
+            normalized = {str(key or "").strip().lower(): str(value or "").strip() for key, value in row.items()}
+            old_ticker = normalized.get("old_ticker", "").upper()
+            canonical_ticker = normalized.get("canonical_ticker", "").upper()
+            cik = _normalise_cik(normalized.get("cik", ""))
+            source_url = normalized.get("source_url", "")
+            if not old_ticker or not canonical_ticker or old_ticker == canonical_ticker or not cik:
+                raise ValueError(f"invalid ticker alias row: {normalized}")
+            if not source_url.startswith("https://"):
+                raise ValueError(f"ticker alias source_url must use HTTPS: {normalized}")
+            key = (old_ticker, cik)
+            prior = alias_map.get(key)
+            if prior is not None and prior != canonical_ticker:
+                raise ValueError(f"conflicting ticker aliases for {key}: {prior} vs {canonical_ticker}")
+            alias_map[key] = canonical_ticker
+
+    with path.open("r", encoding="utf-8-sig", newline="") as handle:
+        reader = csv.DictReader(handle)
+        fieldnames = list(reader.fieldnames or [])
+        lowered_columns = {str(name or "").strip().lower() for name in fieldnames}
+        if "symbol" not in lowered_columns or "cik" not in lowered_columns:
+            raise ValueError("historical membership source must contain symbol and cik columns")
+        symbol_column = next(name for name in fieldnames if name.strip().lower() == "symbol")
+        cik_column = next(name for name in fieldnames if name.strip().lower() == "cik")
+        rows = list(reader)
+
+    matched_aliases: set[tuple[str, str]] = set()
+    applied: dict[str, str] = {}
+    for row in rows:
+        old_ticker = str(row.get(symbol_column) or "").strip().upper()
+        cik = _normalise_cik(row.get(cik_column))
+        key = (old_ticker, cik)
+        canonical_ticker = alias_map.get(key)
+        if canonical_ticker:
+            row[symbol_column] = canonical_ticker
+            matched_aliases.add(key)
+            applied[old_ticker] = canonical_ticker
+
+    unmatched = sorted(set(alias_map) - matched_aliases)
+    if unmatched:
+        examples = [{"old_ticker": ticker, "cik": cik, "expected_canonical": alias_map[(ticker, cik)]} for ticker, cik in unmatched[:20]]
+        raise ValueError(
+            f"{len(unmatched)} alias registry entries did not match a source ticker+CIK row; examples={examples}"
+        )
+
+    with tempfile.TemporaryDirectory(prefix="pit-membership-alias-") as tmpdir:
+        normalized_path = Path(tmpdir) / path.name
+        with normalized_path.open("w", encoding="utf-8", newline="") as handle:
+            writer = csv.DictWriter(handle, fieldnames=fieldnames, extrasaction="raise")
+            writer.writeheader()
+            writer.writerows(rows)
+        history = load_membership_history(normalized_path)
+
+    if alias_usage is not None:
+        alias_usage.clear()
+        alias_usage.update({
+            "registry_rows": len(alias_map),
+            "applied_source_symbols": sorted(applied.items()),
+            "applied_source_symbol_count": len(applied),
+            "source_membership_rows": len(rows),
+            "canonical_symbol_count": len(history),
+        })
+    return history
