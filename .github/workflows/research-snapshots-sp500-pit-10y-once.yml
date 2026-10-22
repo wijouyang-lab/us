@@ -30,8 +30,33 @@ jobs:
       - name: Install deps
         run: pip install -r tools/research/requirements-research.txt
 
-      - name: Run snapshots
-        run: python tools/research/generate_research_snapshots_sp500_pit_10y.py
+      - name: Calculate rolling ten-year analysis start
+        id: period
+        shell: bash
+        run: |
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          from datetime import datetime, time, timedelta
+          from zoneinfo import ZoneInfo
+
+          now = datetime.now(ZoneInfo("America/New_York"))
+          cutoff = now.date() if now.time() >= time(16, 0) else now.date() - timedelta(days=1)
+          try:
+              start = cutoff.replace(year=cutoff.year - 10)
+          except ValueError:
+              start = cutoff.replace(year=cutoff.year - 10, day=28)
+          print(f"analysis_start={start.isoformat()}")
+          PY
+
+      - name: Refresh adjusted prices for historical PIT constituents
+        run: |
+          python tools/research/refresh_sp500_pit_prices.py \
+            --analysis-start "${{ steps.period.outputs.analysis_start }}" \
+            --history tools/research/data/sp500_components_history.csv
+
+      - name: Run snapshots on validated ten-year window
+        run: |
+          python tools/research/generate_research_snapshots_sp500_pit_10y.py \
+            --analysis-start "${{ steps.period.outputs.analysis_start }}"
 
       - name: Run IC
         run: python tools/research/run_research_ic_sp500_pit_10y.py
@@ -60,12 +85,17 @@ jobs:
         with:
           name: research-snapshots-ic-sp500-pit-10y
           path: |
+            research_price_history_sp500_10y.csv
+            research_spy_sp500_10y.csv
+            research_pit_price_refresh_audit.json
+            tools/research/data/sp500_components_history.csv
             research_factor_snapshots_sp500_pit_10y.csv
             research_backtest_sp500_pit_10y.csv
             research_summary_sp500_pit_10y.csv
             research_ic_sp500_pit_10y.csv
             LOW_FREQUENCY_ATR_STRATEGY_10Y.md
             LOW_FREQUENCY_ATR_EXECUTION_10Y.md
+          if-no-files-found: warn
           retention-days: 30
 
       - name: Commit and push
