@@ -81,6 +81,7 @@ def test_price_ticker_mapping_and_adjusted_bar_normalization():
             "High": [11.0, 12.0],
             "Low": [9.0, 8.0],
             "Close": [10.5, 0.0],
+            "Adj Close": [10.0, 0.0],
             "Volume": [100.0, 200.0],
         },
         index=pd.to_datetime(["2020-01-02", "2020-01-03"]),
@@ -90,13 +91,15 @@ def test_price_ticker_mapping_and_adjusted_bar_normalization():
     assert len(rows) == 1
     assert rows[0]["Ticker"] == "BRK.B"
     assert rows[0]["Close"] == 10.5
+    assert rows[0]["Adj Close"] == 10.0
     assert rows[0]["Open"] == 10.0
-    assert rows[0]["Price_Basis"] == "yfinance_auto_adjusted"
+    assert rows[0]["Adj Open"] == pytest.approx(10.0 * 10.0 / 10.5)
+    assert rows[0]["Price_Basis"] == "raw_ohlc_adj_close"
 
 
 def test_batched_download_preserves_canonical_ticker_names():
     index = pd.to_datetime(["2020-01-02", "2020-01-03"])
-    fields = ["Open", "High", "Low", "Close", "Volume"]
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
 
     def rows(base):
         return pd.DataFrame(
@@ -105,6 +108,7 @@ def test_batched_download_preserves_canonical_ticker_names():
                 "High": [base + 2, base + 3],
                 "Low": [base - 1, base],
                 "Close": [base + 0.5, base + 1.5],
+                "Adj Close": [base + 0.25, base + 1.25],
                 "Volume": [100, 110],
             },
             index=index,
@@ -113,7 +117,7 @@ def test_batched_download_preserves_canonical_ticker_names():
     raw = pd.concat({"AAA": rows(10.0), "BRK-B": rows(20.0)}, axis=1)
 
     def fake_download(**kwargs):
-        assert kwargs["auto_adjust"] is True
+        assert kwargs["auto_adjust"] is False
         assert kwargs["start"] == "2020-01-01"
         assert kwargs["end"] == "2020-01-04"
         return raw
@@ -126,7 +130,8 @@ def test_batched_download_preserves_canonical_ticker_names():
     assert failures == []
     assert set(output["Ticker"]) == {"AAA", "BRK.B"}
     assert len(output) == 4
-    assert set(output["Price_Basis"]) == {"yfinance_auto_adjusted"}
+    assert set(output["Price_Basis"]) == {"raw_ohlc_adj_close"}
+    assert (output["Adj Close"] < output["Close"]).all()
 
 
 def test_member_session_coverage_detects_missing_historical_constituents(tmp_path):
@@ -168,8 +173,8 @@ def test_refresh_failure_preserves_prior_price_inputs(tmp_path, monkeypatch):
     dates = ["2020-01-02", "2020-01-03", "2020-01-06"]
     rows = []
     for day in dates:
-        rows.append({"Date": day, "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9, "Close": 10, "Volume": 10, "Price_Basis": "yfinance_auto_adjusted"})
-        rows.append({"Date": day, "Ticker": "SPY", "Open": 100, "High": 101, "Low": 99, "Close": 100, "Volume": 10, "Price_Basis": "yfinance_auto_adjusted"})
+        rows.append({"Date": day, "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9, "Close": 10, "Adj Open": 9.9, "Adj High": 10.89, "Adj Low": 8.91, "Adj Close": 9.9, "Volume": 10, "Price_Basis": "raw_ohlc_adj_close"})
+        rows.append({"Date": day, "Ticker": "SPY", "Open": 100, "High": 101, "Low": 99, "Close": 100, "Adj Open": 99, "Adj High": 99.99, "Adj Low": 98.01, "Adj Close": 99, "Volume": 10, "Price_Basis": "raw_ohlc_adj_close"})
     downloaded = pd.DataFrame(rows, columns=refresh_prices.PRICE_COLUMNS)
 
     monkeypatch.setattr(refresh_prices, "download_historical_prices", lambda *a, **k: (downloaded, []))
