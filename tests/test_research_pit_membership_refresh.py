@@ -21,7 +21,11 @@ from pit_membership import (
 )
 import refresh_sp500_pit_prices as refresh_prices
 from low_frequency_atr_execution_validation import attach_execution_returns, load_inputs
-from run_research_ic_sp500_pit_10y import prepare_adjusted_label_inputs
+from quant_factor_backtest import forward_return_nd
+from run_research_ic_sp500_pit_10y import (
+    build_market_aligned_adjusted_price_map,
+    prepare_adjusted_label_inputs,
+)
 
 
 def write_membership(path: Path, rows: str) -> Path:
@@ -283,3 +287,20 @@ def test_execution_validation_uses_adjusted_open_and_close():
     assert audit["rows_valid"] == 1
     assert result.loc[0, "Execution_Return"] == pytest.approx(90 / 80 - 1)
     assert result.loc[0, "Execution_Return"] != pytest.approx(120 / 100 - 1)
+
+
+
+def test_missing_stock_bar_does_not_shift_forward_return_horizon():
+    prices = pd.DataFrame(
+        [
+            {"Date": "2020-01-02", "Ticker": "AAA", "Close": 10.0},
+            {"Date": "2020-01-06", "Ticker": "AAA", "Close": 12.0},
+        ]
+    )
+    market_dates = ["2020-01-02", "2020-01-03", "2020-01-06"]
+
+    price_map = build_market_aligned_adjusted_price_map(prices, market_dates)
+
+    assert pd.isna(price_map["AAA"].loc[pd.Timestamp("2020-01-03")])
+    assert forward_return_nd(price_map["AAA"], "2020-01-02", 10.0, 1) is None
+    assert forward_return_nd(price_map["AAA"], "2020-01-02", 10.0, 2) == pytest.approx(0.2)
