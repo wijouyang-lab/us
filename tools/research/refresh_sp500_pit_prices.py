@@ -18,6 +18,7 @@ from collections import Counter
 from datetime import date, datetime, time as clock_time, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
+from urllib.parse import quote
 
 import pandas as pd
 
@@ -64,6 +65,66 @@ def subtract_years(day: date, years: int) -> date:
 def yahoo_symbol(ticker: str) -> str:
     """Map canonical S&P source symbols to Yahoo's common US ticker notation."""
     return str(ticker).strip().upper().replace(".", "-")
+
+
+def fetch_yahoo_chart_history(session, symbol: str, start: date, end_exclusive: date) -> pd.DataFrame:
+    """Read Yahoo chart data directly, without yfinance's preliminary timezone lookup.
+
+    yfinance can raise YFTzMissingError before it requests the historical window. Some
+    valid historical chart responses still contain epoch timestamps and OHLC values
+    even when that preliminary metadata lookup fails. This path accepts only chart
+    payloads with timestamps, OHLCV fields, and adjusted close; normal OHLC validation
+    remains downstream in _records_for_symbol.
+    """
+    period1 = int(datetime.combine(start, clock_time.min, tzinfo=TZ).timestamp())
+    period2 = int(datetime.combine(end_exclusive, clock_time.min, tzinfo=TZ).timestamp())
+    params = {
+        "period1": period1,
+        "period2": period2,
+        "interval": "1d",
+        "events": "div,splits",
+        "includePrePost": "false",
+    }
+    last_error = None
+    for host in ("query1.finance.yahoo.com", "query2.finance.yahoo.com"):
+        url = f"https://{host}/v8/finance/chart/{quote(str(symbol), safe='.-^=')}"
+        try:
+            response = session.get(url, params=params, timeout=30)
+            response.raise_for_status()
+            payload = response.json()
+            chart = payload.get("chart") or {}
+            if chart.get("error"):
+                raise RuntimeError(f"Yahoo chart error: {chart['error']}")
+            results = chart.get("result") or []
+            if not results:
+                raise RuntimeError("Yahoo chart response contains no result")
+            result = results[0]
+            timestamps = result.get("timestamp") or []
+            indicators = result.get("indicators") or {}
+            quote_rows = indicators.get("quote") or []
+            adjusted_rows = indicators.get("adjclose") or []
+            if not timestamps or not quote_rows or not adjusted_rows:
+                raise RuntimeError("Yahoo chart response lacks timestamps, OHLC, or adjusted close")
+            quote_row = quote_rows[0]
+            adjusted_row = adjusted_rows[0]
+            index = pd.to_datetime(timestamps, unit="s", utc=True, errors="coerce")
+            frame = pd.DataFrame(
+                {
+                    "Open": quote_row.get("open", []),
+                    "High": quote_row.get("high", []),
+                    "Low": quote_row.get("low", []),
+                    "Close": quote_row.get("close", []),
+                    "Adj Close": adjusted_row.get("adjclose", []),
+                    "Volume": quote_row.get("volume", []),
+                },
+                index=index,
+            )
+            if frame.empty or frame["Close"].notna().sum() == 0:
+                raise RuntimeError("Yahoo chart response contains no close prices")
+            return frame
+        except Exception as exc:
+            last_error = f"{host} {type(exc).__name__}: {exc}"
+    raise RuntimeError(f"direct Yahoo chart fallback failed: {last_error}")
 
 
 def _symbol_frame(data: pd.DataFrame, symbol: str, batch_len: int) -> pd.DataFrame | None:
@@ -159,6 +220,7 @@ def download_historical_prices(
     sleeper=time.sleep,
     downloader=None,
     history_fetcher=None,
+    chart_fetcher=None,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Batch-download raw OHLC plus adjusted close; derive adjusted OHLC for returns.
 
@@ -188,6 +250,10 @@ def download_historical_prices(
                     raise_errors=True,
                 )
             history_fetcher = fetch_history
+        if chart_fetcher is None and download_session is not None:
+            chart_fetcher = lambda ticker, start, end: fetch_yahoo_chart_history(
+                download_session, ticker, start, end
+            )
 
     def run_download(**kwargs):
         if download_session is not None:
@@ -294,6 +360,7 @@ def download_historical_prices(
 
         recovery_method = "single_ticker_download"
         history_attempted = False
+        chart_attempted = False
         if not recovered_rows and history_fetcher is not None:
             history_attempted = True
             try:
@@ -314,13 +381,36 @@ def download_historical_prices(
                     (fallback_error + "; ") if fallback_error else ""
                 ) + f"Ticker.history {type(exc).__name__}: {exc}"
 
+        if not recovered_rows and chart_fetcher is not None:
+            chart_attempted = True
+            try:
+                chart_frame = chart_fetcher(requests[ticker], start, end_exclusive)
+                recovered_rows = _records_for_symbol(
+                    chart_frame, ticker, record_cutoff, start
+                ) if chart_frame is not None and not chart_frame.empty else []
+                if recovered_rows:
+                    recovery_method = "direct_yahoo_chart"
+                else:
+                    fallback_error = (
+                        (fallback_error + "; ") if fallback_error else ""
+                    ) + "direct Yahoo chart returned no valid raw/adjusted OHLC rows"
+            except Exception as exc:
+                fallback_error = (
+                    (fallback_error + "; ") if fallback_error else ""
+                ) + f"direct Yahoo chart {type(exc).__name__}: {exc}"
+
         if recovered_rows:
             all_records.extend(recovered_rows)
+            fallback_attempts = (
+                attempt if recovery_method == "single_ticker_download"
+                else 3 if recovery_method == "ticker_history"
+                else 4
+            )
             recovered_tickers.append({
                 "ticker": ticker,
                 "status": "recovered",
                 "bulk_error": bulk_error,
-                "fallback_attempts": attempt if recovery_method == "single_ticker_download" else 3,
+                "fallback_attempts": fallback_attempts,
                 "recovery_method": recovery_method,
                 "rows": len(recovered_rows),
             })
@@ -330,9 +420,10 @@ def download_historical_prices(
                 "status": "failed",
                 "bulk_error": bulk_error,
                 "fallback_error": fallback_error or "single-ticker request returned no data",
-                "fallback_attempts": 3 if history_attempted else 2,
+                "fallback_attempts": 2 + int(history_attempted) + int(chart_attempted),
                 "recovery_method": (
-                    "ticker_history_failed" if history_attempted
+                    "direct_yahoo_chart_failed" if chart_attempted
+                    else "ticker_history_failed" if history_attempted
                     else "single_ticker_download_failed"
                 ),
             })
