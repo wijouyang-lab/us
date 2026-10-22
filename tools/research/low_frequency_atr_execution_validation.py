@@ -5,7 +5,8 @@
 Signals use factors known after Technical_Date close. Entry is the next session's
 Open on Scan_Date; exit is that session's Close after HOLD_SESSIONS sessions.
 This deliberately does not change production strategy or the existing close-close
-research labels. Current raw OHLC prices are not corporate-action adjusted.
+research labels. The refreshed workflow uses yfinance auto-adjusted OHLC; provider
+history and symbol-transition limitations still apply.
 """
 from __future__ import annotations
 
@@ -20,7 +21,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_SNAPSHOT = REPO / "research_factor_snapshots_sp500_pit_10y.csv"
 DEFAULT_PRICES = REPO / "research_price_history_sp500_10y.csv"
-DEFAULT_CONSTITUENTS = REPO / "sp500_constituents.csv"
+DEFAULT_CONSTITUENTS = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
 DEFAULT_OUTPUT = REPO / "LOW_FREQUENCY_ATR_EXECUTION_10Y.md"
 FACTOR = "ATR_Pct"
 HOLD_SESSIONS = 20
@@ -193,7 +194,7 @@ def run_research(snapshot: pd.DataFrame, prices: pd.DataFrame) -> dict[str, Any]
             "segments": segments, "costs": costs, "verdict": verdict, "audit": audit}
 
 
-def render_report(r: dict[str, Any], membership_has_removals: bool) -> str:
+def render_report(r: dict[str, Any], membership_has_removals: bool, price_basis: str = "not verified") -> str:
     def fmt(v: Any) -> str:
         return "N/A" if v is None or not math.isfinite(float(v)) else f"{float(v):+.3f}"
     lines = [
@@ -201,8 +202,8 @@ def render_report(r: dict[str, Any], membership_has_removals: bool) -> str:
         f"> 数据：{r['rows']:,} 个可计算样本，{r['tickers']} 个 ticker，{r['dates']} 个有效信号日。",
         f"> 日期：{r['start']} 至 {r['end']}；因子 ATR_Pct；入场为信号日开盘，持有 {HOLD_SESSIONS} 个交易日并在第 20 个交易日收盘退出。",
         "> 与旧报告的收盘到收盘标签不同：此报告使用开盘入场和持有期末收盘，独立计算收益，不复用 Forward_Return_20D。",
-        "> 价格源目前是未复权 OHLC；拆股、分红和公司行动可能扭曲收益，不能作为最终经济收益。",
-        f"> 股票池限制：{'成分文件含退出日期字段' if membership_has_removals else '当前成分文件缺少 Date_Removed，存在幸存者偏差；该样本不能称为严格 PIT 股票池'}。",
+        f"> 价格源：{price_basis}。即使使用复权 OHLC，也不能保证数据供应商的公司行动历史完全正确。",
+        f"> 股票池限制：{'使用了带 date_removed 的历史有效期数据' if membership_has_removals else '缺少 date_removed，存在明显幸存者偏差；该样本不能称为严格 PIT 股票池'}。上游带星号日期是近似值，ticker 更名/重用仍需审计。",
         "", "## 数据对齐审计", "",
         "| 项目 | 行数 |", "|---|---:|",
     ]
@@ -249,8 +250,17 @@ def main() -> int:
     membership_has_removals = False
     if args.constituents.exists():
         const = pd.read_csv(args.constituents, dtype=str, keep_default_na=False)
-        membership_has_removals = "Date_Removed" in const.columns
-    report = render_report(result, membership_has_removals)
+        membership_has_removals = "date_removed" in {str(col).strip().lower() for col in const.columns}
+    basis_values = sorted({
+        str(value).strip() for value in prices.get("Price_Basis", pd.Series(dtype=str)).dropna()
+        if str(value).strip()
+    })
+    price_basis = (
+        "yfinance auto_adjust=True（OHLC 已复权）"
+        if basis_values == ["yfinance_auto_adjusted"]
+        else "未验证（输入 CSV 缺少一致的 Price_Basis 标记）"
+    )
+    report = render_report(result, membership_has_removals, price_basis)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(report, encoding="utf-8")
     print(f"rows={result['rows']} tickers={result['tickers']} dates={result['dates']} direction={result['direction']} verdict={result['verdict']}")
