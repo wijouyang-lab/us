@@ -519,12 +519,17 @@ def test_vendored_ticker_alias_registry_matches_historical_ciks():
         alias_usage=usage,
     )
 
-    assert usage["registry_rows"] == 26
-    assert usage["applied_source_symbol_count"] == 26
+    assert usage["registry_rows"] == 31
+    assert usage["applied_source_symbol_count"] == 31
     assert refresh_prices.git_blob_sha(refresh_prices.DEFAULT_TICKER_ALIASES) == (
         refresh_prices.PINNED_TICKER_ALIAS_BLOB_SHA
     )
     assert "COR" in history
+    assert "GAP" in history
+    assert "BKNG" in history
+    assert "BKR" in history
+    assert "RVTY" in history
+    assert "PARA" in history
     assert "ELV" in history
     assert "HWM" in history
     assert "MRSH" in history
