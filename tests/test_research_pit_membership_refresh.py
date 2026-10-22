@@ -611,6 +611,124 @@ def test_direct_yahoo_chart_fallback_recovers_when_yfinance_timezone_lookup_fail
     }]
 
 
+def test_eodhd_eod_parser_keeps_adjusted_close_and_inclusive_date_bounds(monkeypatch):
+    import requests
+
+    captured = {}
+
+    class FakeResponse:
+        status_code = 200
+
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return [
+                {
+                    "date": "2020-01-02",
+                    "open": 10.0,
+                    "high": 12.0,
+                    "low": 9.0,
+                    "close": 11.0,
+                    "adjusted_close": 10.5,
+                    "volume": 100,
+                },
+                {
+                    "date": "2020-01-03",
+                    "open": 11.0,
+                    "high": 13.0,
+                    "low": 10.0,
+                    "close": 12.0,
+                    "adjusted_close": 11.5,
+                    "volume": 110,
+                },
+            ]
+
+    def fake_get(url, *, params, timeout):
+        captured.update(url=url, params=params.copy(), timeout=timeout)
+        return FakeResponse()
+
+    monkeypatch.setattr(requests, "get", fake_get)
+    frame = refresh_prices.fetch_eodhd_history(
+        "fake-token", "OLD.TICKER", date(2020, 1, 1), date(2020, 1, 4)
+    )
+
+    assert captured["url"] == "https://eodhd.com/api/eod/OLD-TICKER.US"
+    assert captured["params"]["from"] == "2020-01-01"
+    assert captured["params"]["to"] == "2020-01-03"
+    assert captured["params"]["api_token"] == "fake-token"
+    assert captured["timeout"] == 8
+    assert frame["Adj Close"].tolist() == [10.5, 11.5]
+    rows = refresh_prices._records_for_symbol(
+        frame, "OLD.TICKER", date(2020, 1, 3), date(2020, 1, 1)
+    )
+    assert len(rows) == 2
+    assert [row["Adj Close"] for row in rows] == [10.5, 11.5]
+
+
+def test_eodhd_eod_fallback_recovers_failed_yahoo_historical_symbol():
+    index = pd.to_datetime(["2020-01-02", "2020-01-03"])
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    missing_frame = pd.DataFrame(float("nan"), index=index, columns=fields)
+    bulk = pd.concat({"OLD": missing_frame}, axis=1)
+    valid_frame = pd.DataFrame(
+        {
+            "Open": [10.0, 11.0],
+            "High": [12.0, 13.0],
+            "Low": [9.0, 10.0],
+            "Close": [11.0, 12.0],
+            "Adj Close": [10.5, 11.5],
+            "Volume": [100, 110],
+        },
+        index=index,
+    )
+    calls = []
+
+    def fake_download(**kwargs):
+        calls.append(kwargs.copy())
+        if kwargs["repair"] is True:
+            return bulk
+        return pd.DataFrame(columns=fields)
+
+    def failing_history(ticker, start, end):
+        raise RuntimeError("YFTzMissingError: no timezone found")
+
+    def failing_chart(ticker, start, end):
+        raise RuntimeError("direct Yahoo chart returned HTTP 404")
+
+    eodhd_calls = []
+
+    def fake_eodhd(ticker, start, end):
+        eodhd_calls.append((ticker, start, end))
+        return valid_frame
+
+    output, diagnostics = refresh_prices.download_historical_prices(
+        ["OLD"],
+        date(2020, 1, 1),
+        date(2020, 1, 4),
+        batch_size=1,
+        retries=1,
+        sleeper=lambda _seconds: None,
+        downloader=fake_download,
+        history_fetcher=failing_history,
+        chart_fetcher=failing_chart,
+        eodhd_fetcher=fake_eodhd,
+    )
+
+    assert len(calls) == 3
+    assert eodhd_calls == [("OLD", date(2020, 1, 1), date(2020, 1, 4))]
+    assert len(output) == 2
+    assert set(output["Ticker"]) == {"OLD"}
+    assert diagnostics == [{
+        "ticker": "OLD",
+        "status": "recovered",
+        "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
+        "fallback_attempts": 5,
+        "recovery_method": "eodhd_eod",
+        "rows": 2,
+    }]
+
+
 def write_aliases(path: Path, rows: str) -> Path:
     path.write_text(
         "old_ticker,canonical_ticker,cik,source_url,change_type\n" + rows,
