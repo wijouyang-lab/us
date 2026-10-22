@@ -2,7 +2,7 @@
 """Build a research-only complete-history cohort and adjusted-close drawdown report.
 
 This does not alter the PIT refresh audit or production data. Coverage is measured
-only on SPY trading sessions during each ticker's documented S&P 500 membership.
+only on SPY trading sessions during each ticker's documented index membership.
 """
 from __future__ import annotations
 
@@ -156,7 +156,7 @@ def main() -> int:
     parser.add_argument("--spy", type=Path, default=DEFAULT_SPY)
     parser.add_argument("--membership", type=Path, default=DEFAULT_MEMBERSHIP)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--min-coverage", type=float, default=0.90)
+    parser.add_argument("--min-coverage", type=float, default=1.0)
     parser.add_argument("--min-valid-rows", type=int, default=252)
     args = parser.parse_args()
 
@@ -167,6 +167,12 @@ def main() -> int:
     )
     args.out_dir.mkdir(parents=True, exist_ok=True)
     coverage.to_csv(args.out_dir / "ticker_coverage.csv", index=False)
+    coverage.loc[coverage["Eligible_For_Drawdown_Research"]].to_csv(
+        args.out_dir / "eligible_tickers.csv", index=False
+    )
+    coverage.loc[~coverage["Eligible_For_Drawdown_Research"]].to_csv(
+        args.out_dir / "excluded_tickers.csv", index=False
+    )
     drawdowns.to_csv(args.out_dir / "max_drawdowns.csv", index=False)
     (args.out_dir / "summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
