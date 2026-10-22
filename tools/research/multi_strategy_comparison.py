@@ -14,8 +14,11 @@ HORIZON, PURGE, MIN_NAMES, TOP_FRAC = 20, 20, 30, 0.20
 COSTS = (5.0, 10.0, 20.0)
 FACTORS = {
     "ATR volatility": "ATR_Pct",
+    "Low volatility": "Realized_Volatility_20D_Pct",
     "Mean reversion": "ZScore_20D",
     "20D momentum": "Momentum_20D_Pct",
+    "60D momentum": "Momentum_60D_Pct",
+    "Relative strength vs SPY": "Stock_RS_20D_vs_SPY",
     "MA slope reversal": "MA20_Slope_Pct_5D",
 }
 
@@ -141,7 +144,7 @@ def render_report(r):
     lines += ["","## Interpretation guardrails","",
       "- Do not pick a winner after looking at the test results or reverse a direction using test data.",
       "- Positive historical net excess is not proof of live alpha; production gates, stop execution, liquidity, slippage, and fill failures are not fully simulated.",
-      "- Treat any strategy with fewer than 8 test observations as insufficient evidence.",
+      "- Treat any strategy with fewer than 8 test observations as insufficient evidence. Evaluating more candidate factors increases multiple-comparison/data-mining risk; do not infer a winner from this exploratory panel.",
       "- This script does not change production scoring, scan, stops, portfolio, or ledger.",""]
     return "\n".join(lines)
 
