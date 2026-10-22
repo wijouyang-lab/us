@@ -1,123 +1,599 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-21T13:12:07Z",
+  "generated_at": "2026-10-22T13:13:24Z",
   "market_news": [
+    {
+      "headline": "American Express brings Airbnb bookings and rewards to Amex Travel platform",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/22/american-express-airbnb-travel-platform.html",
+      "datetime": 1792670402,
+      "summary": "More than 1 million Airbnb listings are now available to book through Amex Travel, allowing customers to earn membership points on prepaid bookings.",
+      "headline_cn": "美国运通将Airbnb预订和奖励整合至Amex Travel平台",
+      "sentiment": "bullish",
+      "rationale": "拓展旅游生态，增强客户粘性",
+      "market_relevant": true
+    },
+    {
+      "headline": "Comcast beats earnings expectations as media revenue offsets weakness in connectivity",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/22/comcast-cmcsa-earnings-q3-2026.html",
+      "datetime": 1792669346,
+      "summary": "Comcast is in the process of spinning off its media business into a separate publicly traded company.",
+      "headline_cn": "康卡斯特超预期，媒体收入抵消连接业务疲软",
+      "sentiment": "bullish",
+      "rationale": "业绩超预期，收入结构优化",
+      "market_relevant": true
+    },
+    {
+      "headline": "Trump's approval rating on economy hits all-time low as midterm looms: CNBC survey",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/22/trump-economic-approval-rating-midterms-poll.html",
+      "datetime": 1792669201,
+      "summary": "Eight out of 10 Americans now rate the economy as fair or poor, one of several findings in a CNBC poll that show why Republican candidates face uphill battles.",
+      "headline_cn": "CNBC调查：中期选举临近，特朗普经济支持率创历史新低",
+      "sentiment": "bearish",
+      "rationale": "政治不确定性上升，政策风险增加",
+      "market_relevant": true
+    },
+    {
+      "headline": "Saudi Aramco tells staff to evacuate Dhahran headquarters, sources say - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNNDNYdWIxY2pGbkhqRTlJNmJRMUE4N1RsclJwWklRYzdQUy04Wi1ObjlQNm1JaER4QVpRREs1NkdOeVNzYi1wd3lURFQ0S29OYkdJOERlQUdlSlBQMU1Mb2VzRDVaZlpUbWt0UGdpODc3a0FjWkVoUDIyWEZCeHlSd2JfZkIzLVNNVV9LSFcyVGpNaFU0S3JOV19wc29qWU90SGJrV04xRlQ5cjlBMUp0dFZ5UlgzR3F0MEdJXw?oc=5",
+      "datetime": 1792668481,
+      "summary": "Saudi Aramco tells staff to evacuate Dhahran headquarters, sources say  Reuters",
+      "headline_cn": "路透：沙特阿美通知员工撤离达兰总部",
+      "sentiment": "bearish",
+      "rationale": "地缘风险升级，油价波动加剧",
+      "market_relevant": true
+    },
+    {
+      "headline": "Procter & Gamble earnings beat as sales rise 4%, boosted by laundry and home products",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/22/procter-gamble-pg-q1-2027-earnings.html",
+      "datetime": 1792668087,
+      "summary": "Procter & Gamble topped Wall Street's estimates for its quarterly earnings and revenue.",
+      "headline_cn": "宝洁超预期，销售增长4%，洗衣及家居产品带动",
+      "sentiment": "bullish",
+      "rationale": "业绩强劲，消费需求韧性显现",
+      "market_relevant": true
+    },
+    {
+      "headline": "As Trump's support slips, white evangelicals remain his Republican bedrock - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxQRnNVTGtmN2VWX3RIWkxlUEx6d2hVV1djTnhWellIdWZMM1JMa1RrbTVKMlIycEI0em5CcHYtMXhucUFOdk5vZW9LZHVLRzNNWExIcHZqeVFtRFFxTlY3MDNka0l1VjE4T2NnOExIWFBlWXI1V1ZSVXRaRXVIVFB0UTFCcGpGZjZYUk9SekxGNE9GUWg0V3p4VW14MHVEUkY3MWNPQzdGMzRJVTZRVmIzZDRkS2Y?oc=5",
+      "datetime": 1792667205,
+      "summary": "As Trump's support slips, white evangelicals remain his Republican bedrock  Reuters",
+      "headline_cn": "路透：特朗普支持率下滑，白人福音派仍是共和党基石",
+      "sentiment": "neutral",
+      "rationale": "政治民调，无直接经济影响",
+      "market_relevant": false
+    },
+    {
+      "headline": "COMMENTARY: Asia buys more LNG despite surging prices, El Nino clouds outlook - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOZEd6MUJ0RzZBWktFMGFuNkUzNVZKejZBX3EtdmdGUW5SQWpmM18yNEpWb212MzA5dENESGNJcHVWaXNBdTFNc2oyM1FNS2l5bmJLaWNCb3cwaG1WX3FYUXItdHo4cDhsV1Q1ZXNpVXZaVE1ReTVpY0hXN0V3NDFpYVJpWWY0OTk0MV85VHFJSmVNa001SVdnOF9EUkhieURyQjlfX1NzTGY2WmZZcVQxenhkZVBIMVVQdTBHTVZucWpONFdWOXBQQnRudFpEdw?oc=5",
+      "datetime": 1792666271,
+      "summary": "COMMENTARY: Asia buys more LNG despite surging prices, El Nino clouds outlook  Reuters",
+      "headline_cn": "路透评论：亚洲在价格飙升下仍增购LNG，厄尔尼诺增添不确定性",
+      "sentiment": "neutral",
+      "rationale": "供需两端因素交织，市场预期内",
+      "market_relevant": true
+    },
+    {
+      "headline": "Turkey says it is waiting for sale contract from Qatar for Eurofighter Typhoon jet procurement - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxNVHJnNUdUM0NlRTI1djAxTXEzYlZzNVlZS2JteGFITk4ydU1BRlJQREZwbXBnLW9wMmEteGlEVEhkdE9ja0JQc1Vwc0ZwaHY3UU5NVU9YQklMRm9TVjVuTHdHa3hyZ0FIbGRHdDN6bzhvUGE3d3c4QU1NOUVBcnM4M19wTjk5dlJfWWNtZXE0RElaVWlIUGo1ZDBsWWV0UWZGb0gxX2NjZkZheXVaV1EtZjNhWVBydnJOTXNxYmxaaHpMRkZ0SEtJ?oc=5",
+      "datetime": 1792662347,
+      "summary": "Turkey says it is waiting for sale contract from Qatar for Eurofighter Typhoon jet procurement  Reuters",
+      "headline_cn": "路透：土耳其称正等待卡塔尔签订台风战机采购合同",
+      "sentiment": "neutral",
+      "rationale": "军购进展，对市场无实质影响",
+      "market_relevant": false
+    },
+    {
+      "headline": "Greece says it is implementing sanctions linked to Iran - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNMFJaZ0t6eFMxSzJVenJlSEdyVkFjWXVuYmsxUy14ajVPdWZEMEUybm1ySE5zbzE1N05TNlVaeW1rZmNHOWVkLWxMQ193QzlRMTdYMGFYZmk2TzROdWptVDB5LXAtV3BiSW9nVERSSTF0bkpLWGVSREdja21vcFpGcnZmb1UtbUtFdE9QSUtVZENOMzJURl9Rd1lEbGZTVW1ISk5PamhUaUhGZw?oc=5",
+      "datetime": 1792660458,
+      "summary": "Greece says it is implementing sanctions linked to Iran  Reuters",
+      "headline_cn": "路透：希腊称正在执行与伊朗相关制裁",
+      "sentiment": "neutral",
+      "rationale": "制裁执行属常规操作，无新增冲击",
+      "market_relevant": false
+    },
+    {
+      "headline": "Turkey to host regional and European foreign ministers for talks on regional conflicts, source says - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxNdXA0LVlsLUUxQlBxM1VZaU14NHVwZjgwSkhtQlcxdjd5Y00xS2ZRcmU3N040TFVYc3dvNVphMlJCcjJ2S3QzeTJBMGhocVZOYkFTVWdJM20zSHFLM1pMMmNzcEhyNm9sLVpkX0pRTXN6cG55a0VrX01MUG5TOVAwWGNDbUROUmNOSHBfOVVMX0hQV3p2RTROb25HaWFILUZOZWM5aV9oeGhJeFV2OG5FMEJiVW9lSXo5eUx3SlgyQjNlTjF3X3d3LUJ6MVg4bmM?oc=5",
+      "datetime": 1792660005,
+      "summary": "Turkey to host regional and European foreign ministers for talks on regional conflicts, source says  Reuters",
+      "headline_cn": "路透：土耳其将主办地区与欧洲外长会议讨论地区冲突",
+      "sentiment": "neutral",
+      "rationale": "外交会议，无直接市场影响",
+      "market_relevant": false
+    },
+    {
+      "headline": "Gulf markets fall as fresh Houthi strikes on Saudi Arabia raise regional risk - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOQS1ESU5ra242UzdCbkxuVkNzUkV2NWZVTGlRcDZnSzJBeE5KTkFyMEZvaTd0ZEl4LWduc0lmbGZkRnV6REF1dV9VUkRESHpVM3lLUkt0SmtfQzJDLXdnZ0l6akwwOWZpS1lza2tSbHczcnlpU2JPSXo5eHNrY0c4aWNpWjNJSlFYa2M2UEhDNnVsUnQySGF6MVJSY1FPam1LSlliSkJUTzFKck9tZ2J6S2xlUnVSam1TTllJbUxQWmtTcjQ?oc=5",
+      "datetime": 1792655983,
+      "summary": "Gulf markets fall as fresh Houthi strikes on Saudi Arabia raise regional risk  Reuters"
+    },
+    {
+      "headline": "Middle East, North Africa and Pakistan GDP to contract 1.3% in 2026, IMF says - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQc0pwaXRXY250QlJhREhaOWJuV1A0a0tWNGRXLW9VdjlFS2dSR09IdFNSRnA1VnotZW9ydlUwYy1GN3Rhb3JmaDlFRzZROVZyUUtqcUg4NzN3S1lfRzBtMERGcmREaFdvUXFwS2pCSXlLdzVUaDRLVm91TVZ4c1p2Q2xwSEZudGhuRkVhOGJLUDY0SUhuMFlVeFkyOEtWYlBvOVFBQW9lV2IzSTFxb09lT0k4d2tmZlk?oc=5",
+      "datetime": 1792649040,
+      "summary": "Middle East, North Africa and Pakistan GDP to contract 1.3% in 2026, IMF says  Reuters"
+    },
+    {
+      "headline": "India's Mideast oil imports return to pre-war levels in September - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNRl9GVUFVbTBqSFIzbnJpZmJ0c3Q5ZFJlQ0hQUkkwZW5aVDdVWTMwczBlRFRTbF9zM0NNODcyWG9PUTg5WXZKOXRfSUdJSXhHM1FPcFhUOTVmb0pIUHh5Rl9tYldSWDd1all5UV9fV2VMSmNxSUU4anJpUVVvMkFadHpQcmwxdFhRSHlvSXhpMEY1bXNkV2NnUnVNelltUHVRQjFzWE14TWZVVnhrRndv?oc=5",
+      "datetime": 1792648920,
+      "summary": "India's Mideast oil imports return to pre-war levels in September  Reuters"
+    },
+    {
+      "headline": "COMMENTARY: Don't mistake Mideast oil rebound for normality - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPNnNNcW94aG5WWHAzeXd2Zzl1TFVkQ3BxSzdlbm50RE9WS2tXcFBwLXk2TGdpQ25GZjcwb05fekJTZUY4eWxHSW9udnBqdDRhQ0JvLXZPSUFmNWZPYmR3T1hOaVZBb0hXWHFIODJPeVBWWERsVDRHelhSODBoWEZVbzFQTnBQRmFZT0h6MS04WlQ3eThuYUEzNjAtcHphdkNGNGpUSW5BNFVRNGlJQU1Mcw?oc=5",
+      "datetime": 1792648800,
+      "summary": "COMMENTARY: Don't mistake Mideast oil rebound for normality  Reuters"
+    },
+    {
+      "headline": "German regulator revokes license of Bank Saderat Iran in Hamburg - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNLUpGcUpQSDMwN3g2aktoXzFtWXpvNWlaWjhRaks5YzNMRGgwYU5tZ2xiNm1fN1pVZVFzOWVsRlVqdUljN0xQenJlSnJkLVRYQmd3ZG1SeW9kVFVMT2FnT0Q3b3hGVHNadlRGZTlYSV9lazVIQWI2ZV90aWhyWWlJSXdZWlNDNG52S3BVcFQwUERITHNPanJGTVRYVHJDdDkydEFnVWY3QlREdFBzaUlOLQ?oc=5",
+      "datetime": 1792647540,
+      "summary": "German regulator revokes license of Bank Saderat Iran in Hamburg  Reuters"
+    },
+    {
+      "headline": "Iran's IRGC Navy says seven vessels hit, warns US of wider response - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxNcjlJZ1lSN1BZWFJWdDlKUWh3LWRselVrNHpobGthcDVzdnZ6bjJfM1dZcTJONUtTdURHc0ZaQkk0cUhzTlp0NVZocWlTNEhIWTB4TkN6VVZPMHdfN2ZsYXVmY2NISEN6dnRERW01T2dXbXNsb2dMNHl1UFdiTW1LVzJsZU1KYThwVDZ5OHdvYzZQMEZ6djduOERMNEI4YVVVTDFqVHBNZlpOcmJiNnppOVNJVjVzbUU?oc=5",
+      "datetime": 1792644000,
+      "summary": "Iran's IRGC Navy says seven vessels hit, warns US of wider response  Reuters"
+    },
+    {
+      "headline": "Morning Bid: France's debt strains, AI in focus - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMif0FVX3lxTE5iY1JOSkkwSHo0X2pQdzhWZFJuX2JIdGZEaWxKQy1oWlFJcHFuMXFhOFBoVHk4MHdRWTN6V09XOHVQZWw5d2tWMHIyRHVYcURiZmEzY1BGaFliTlJNcTJkUlZJZ0M0U19HbVJfX3BYakVkZExGNUZPYTRzOFBKT1U?oc=5",
+      "datetime": 1792643580,
+      "summary": "Morning Bid: France's debt strains, AI in focus  Reuters"
+    },
+    {
+      "headline": "DeepSeek wrapping up $15 billion fundraising to fuel AI race - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxOQkI4b1B0WkYzUnhGdTF6b0VTRnBCWjRxelF3Q2g4VlRjTzNUOFFTZUhrM3VHSWs2M1VpWkZqN0FleF9JREgzdXpEWFNHM0VvSXhhNm5pdHRXZkRrNUR0UGFJVUMzRjNDWWRwZ0ZtOEsyMm93VU82Rno1R3FxQTNxMllyeWh2YnJRY19hUjZMbExjank3YUg5anFYdjRHRUdnSlN3cFMwMU9TLVBDSldIYUpUdy1vYTdtS3RHTnphNU1KYTdtYWVzNFFR?oc=5",
+      "datetime": 1792637160,
+      "summary": "DeepSeek wrapping up $15 billion fundraising to fuel AI race  Reuters"
+    },
+    {
+      "headline": "Dip in the dollar takes a breather with Fed in focus - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxPeE9SaFExZHZyS2plVTA2NHNkbDFpcGpBSVVhc3J2NmZrRmtMRW1uY0FUU0JDMGtFQncxcnB3bUlFY21oa3V2VTZtOWsxcEVrWFhfOWZOd2oxY09XaWtpQ2ltWnE2NFFTYmg0OVNhaHJLVFdocG9NdGh1N3hjVzRPZUJlVW8wRFU3N24zR0tZbjk2bkNGVFhXaE1qbw?oc=5",
+      "datetime": 1792635000,
+      "summary": "Dip in the dollar takes a breather with Fed in focus  Reuters"
+    },
+    {
+      "headline": "Bank of Korea holds rates as expected after back-to-back hikes - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQMzRuNnZCZUpPMFJ1WldoWm9JSVNjVmxUNUpsdDk5dlBhbTZIS1FPUmRPNlNlTjdkdFJVVjVUS0JrZzJPZHJmTjVMZG9CWGFoY3pyM0JVdUVOQVBGeHJ2U2RXWUNLTUZsVWs0TGMxbWFtcHZ4OWxiLUM1QjRaZzUwemU3aFRZNFY3LWlrY25oaVYycWw3M19jdnBERlFHQ2Y5ckoyMnl0UklxOFFlVVctNg?oc=5",
+      "datetime": 1792630440,
+      "summary": "Bank of Korea holds rates as expected after back-to-back hikes  Reuters"
+    },
+    {
+      "headline": "Oil jumps on escalating Middle East conflict - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOYzBEdGVKYmZ3VVpJajg0TW5DN2VHVEM2aDVTcFJKQVduMnVMTU5NbVcyMGxBanBHY3VvMzJQR1VrQWM4b0hLeG1YaTFWcldTeU9yTlBXc3FiR1FtcUp0SmxhRkJkWmpmZ2x6X3VGZHZEUDNLTE9LTFZNSlBWWjNJVGtaV3YwWkc4QVhxbHozYkx5THpZMVlYVDAtd0dqbUMyOUcyVk91NEYxaFFCZklRWWhjQm5qN2NvVHdWdnZIQVJSMk0?oc=5",
+      "datetime": 1792629960,
+      "summary": "Oil jumps on escalating Middle East conflict  Reuters"
+    },
+    {
+      "headline": "China, Djibouti say all countries should enjoy freedom of navigation in Red Sea - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNS3l2ZmtzUVhITGFNRFEzdmNhN3NLUkZJcTdoZHpXYklPc2NYYU4zN1lTandfbnFqZllHR2FnamxwbTBpd1k5R0xnSG0tYktwWDJMbGZqMl9fbHlnN3Vjb1oxQWJBYjJNdHFrSEJ5Mm1iU1R4MV9VSG80UHZEWG1uMzRrckxUVDE2SlJpdU5nSmktaVJpdkhrN2VIb1hHSlpxQ1RMSFd5Tk8xNFVOUEhqdTJtbWYzYU9MNnV0Sg?oc=5",
+      "datetime": 1792627020,
+      "summary": "China, Djibouti say all countries should enjoy freedom of navigation in Red Sea  Reuters"
+    },
+    {
+      "headline": "From groceries to home loans, high oil prices permeate daily life - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxPam52bzA3TTBVZjZQOC1ISHZJal8xZmcyc3hYZVJEYXpTZ1VUWHBvUVBQZDlKUUlwSFIwWFYtMUxucy1lS1ZRRDZEaW0tZmd5WndsSnNDNVUycTJVYWUyaFVVNDJIZnlfb0tMNGY5dW9BNkU1R0lVOWY0czhfN3pxcUhzejl5SUdLaGlMWFpjWnhWekJ4TWxzM3E2YXo3VVZzbGdCdi1CblkyTzRP?oc=5",
+      "datetime": 1792623840,
+      "summary": "From groceries to home loans, high oil prices permeate daily life  Reuters"
+    },
+    {
+      "headline": "Two killed, 8 injured in attack on airport in Saudi oil city Dammam - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNSGNWYThfTTlBMk0yXzZJMVdvRkp2NDRwOEItSlJxRjN3NE5nVmRMbFkybld2UUFLWHFzel8zTEVMMUt4T3A3QUxMN0dObTR6WHMwOHUwYmh2RGJYX1hIOFBSb1ppQ0VIUW0xdTFzTHB2NENTTElkMTRqOHBVWGFoejRhb3dhclZtS09kNkZra055RUlyVm82M1ZpNmhHZWctLUtfelg5blVrbW5aVHhpSzBvVmsyNVZm?oc=5",
+      "datetime": 1792621260,
+      "summary": "Two killed, 8 injured in attack on airport in Saudi oil city Dammam  Reuters"
+    },
+    {
+      "headline": "Anthropic announces preview of Claude Duet, a personal AI agent to take on Muse, Dots",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/21/anthropic-preview-of-claude-duet-personal-ai-agent-take-on-muse-dots.html",
+      "datetime": 1792618974,
+      "summary": "Claude Duet follows the launch of competing products from Meta and OpenAI, which have shown traction with users."
+    },
+    {
+      "headline": "Southwest Airlines cuts 2026 profit forecast on higher fuel",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/21/southwest-airlines-luv-3q-2026-earnings.html",
+      "datetime": 1792615003,
+      "summary": "Southwest Airlines became the third major U.S. airline this month to cut its 2026 profit forecast due to higher fuel prices."
+    },
+    {
+      "headline": "El Salvador says Haiti gangs holding 4 force members hostage, announces new rescue mission - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPWXFZb1FxUlowcWMwdURfWXIyRlQ0Q09mOWltdHd1bVR5V2I4Mlg4LTNKbmNCQ2RURk90MjMwVXlSRFYxZVJ0ZEJMN0JMRlNiNS1qOEZITmtNRjdkU204QUtEV2ZkVlEzdUR5T2pHSENXcjFzN0pkelBfRV9DZXE1RU9waFlRVVJLYXcwcnNnZ1RFelNwSW83ZVBLRE9YbDdLblhveDJwTVZic1RGOWMxWUZhZ3V2Y3JLa0tVdUQ4VzZjeVk?oc=5",
+      "datetime": 1792613421,
+      "summary": "El Salvador says Haiti gangs holding 4 force members hostage, announces new rescue mission  Reuters"
+    },
+    {
+      "headline": "SpaceX gives the AI trade a shot in the arm. What it means for our stocks",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/21/spacex-gives-the-ai-trade-a-shot-in-the-arm-what-it-means-for-our-stocks-.html",
+      "datetime": 1792609283,
+      "summary": "SpaceX indicated there's been no slowdown in demand for AI computing."
+    },
+    {
+      "headline": "EXCLUSIVE: US orders diplomats to depart Saudi Arabia amid Houthi strikes - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxONDg0WFNBeGFxeHpUVUsya2RYd0k3XzF6bXU3eGpZVnh2T25MWHVsQzVrbE9PNEdaWnpfN1dmRmtxajMtbl8yZ29EWUxYaXAxcnkxcFN1NEVDLVE3bUtkR0NwZDVPN2haVXFERXRUeHRnQ2QyVDhVdjBNa2FIUFVDOWFicGJOQVVWR0JFMnZSM0NLV09nZHk5UzA2LTgtbmFEVnlYZDI1Uk9ic1hyLTZ0Z2NKbWI5QWgtWWE3ZzV4eE11bmpCcGstTFAzQnVGUQ?oc=5",
+      "datetime": 1792609080,
+      "summary": "EXCLUSIVE: US orders diplomats to depart Saudi Arabia amid Houthi strikes  Reuters"
+    },
+    {
+      "headline": "Apple's iPhone Duo in short supply — plus, the 2 stocks fueling an AI rebound",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/21/apples-iphone-duo-in-short-supply-plus-2-stocks-fueling-an-ai-rebound.html",
+      "datetime": 1792608328,
+      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
+    },
+    {
+      "headline": "US sanctions Greece-, Panama-based law firm over aid to Iranian shipping - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPZFh4ZEdDSDhEcmZJWFR1VDVOUDVaYTR6aURwNjEzRnpsVGV4aTl1RFR3LVZpa1ZRZW5DY1ByTnBXZmk3RVl4VHRZM0x6UGRnUWp1dUJJUWItY3lYU3dmZ1RBYU1OLTdjc3JXOVB3V09mM051WGM1dEJsaW1WQXRmd3BmVXRaRUZMNzR4bkVBY3RTNWt1aXYxcGdWZVdUMy0xNUNzMlpJMkpyR0RaQVdKbUNENzFIdw?oc=5",
+      "datetime": 1792607879,
+      "summary": "US sanctions Greece-, Panama-based law firm over aid to Iranian shipping  Reuters"
+    },
+    {
+      "headline": "Canadian publisher says Thelyson Orelien used AI to write award-winning book, ends relationship - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOWHJjNGwwdFdCWEo1NlJGa3R4cG1GalQ2N0RGYWFMdGZaWWZWcDVTTlN4bmVfWlhROTQzeGo1MTcyZzk4TmI5Tk1UeW5xRnllQ21NdHVFU2JqZGNIdVp4aFhkY0ZNNEtRYWRZTHBGNnE1OW96ZHliSDE2Y0EwbGZ5UzBZQ0VjR1dUMGY4d2pNQVl2eGt2OHZwRGt5ZVg4UklCQlpCeEg0VHJzMGpfNlhKeHQ3MTNpUzdjaW5vbzh5MTE0empEUXVCdw?oc=5",
+      "datetime": 1792607440,
+      "summary": "Canadian publisher says Thelyson Orelien used AI to write award-winning book, ends relationship  Reuters"
+    },
+    {
+      "headline": "Egypt rejects Libyan approval of maritime deal with Turkey - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQSlBhSWRTTVJEdVc1eUlhVmRvUExLdXVQS084ZFhadGdEOEV4aXZPZjZLUjltWUdRdzFhY3VFVFNGV1gwNkFtclVzZDZaYUZSdzBrUFB4amNkNmc4VlRPY0hLRjdnQVp2X0NrX2NJQXZuZTJ2SFNwSzBmX2RVZ2NGOG9ZRFRlVmVvV2lsZklZblMxQTVYUTJFZ1REbGJqX3JlNW9LRUYtY094MmppTEtjM3gyUUFfOTRCZ2ZUOQ?oc=5",
+      "datetime": 1792606470,
+      "summary": "Egypt rejects Libyan approval of maritime deal with Turkey  Reuters"
+    },
+    {
+      "headline": "Sisi says Egypt would defend Saudi territory but rules out attack on Yemen - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPaTVZLWNRalc0ZzFmaXlERE8ySDhISTVTVjV0c0o2ZzU1UThTS2RMd0RRaVlsdmlNcFZfR3BiRHAwejM0dGFaUVA2V2JtVW4zMFZUVm1JMnViVGI1M2ZQa2VySHo2M3pJemxlRmJBanJSOTgwZko5VjFoeEFpTndNRHF4TGZNT25MMmRTMDRDdENwa3ZsZ1ZkY2NGOUo4a04wNmMxNk5OUE5nSXQ1TWxuZTNsQWF6U1JuX0FHcw?oc=5",
+      "datetime": 1792605257,
+      "summary": "Sisi says Egypt would defend Saudi territory but rules out attack on Yemen  Reuters"
+    },
+    {
+      "headline": "Trump-aligned super PACs pour millions into once-safe GOP House seats",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/21/trump-pac-spending-midterm-election-house-republicans.html",
+      "datetime": 1792605081,
+      "summary": "Trump-aligned PACs are pouring hundreds of millions into House and Senate races as Republicans defend an expanding midterm election battleground map."
+    },
+    {
+      "headline": "NEWSLETTER: A shield, not a sword, for Saudi Arabia - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiiwFBVV95cUxPejhlNmFXWWw2WWRTcFZzUEJQTGNSejBNNlUzbUZyOXdiME4yYWItM3FtbFdfQjhUWWVoZ2JVMWdKTEQ5cHBLc1kzeFA3eUtuR09sa3dNaUsxaVZ3clZaUWs5MHFJeGxiNXY3eFJtYXh6ckZ4TmZSRHlqeW5rTzk4aXplbGRhd0dneFpv?oc=5",
+      "datetime": 1792602600,
+      "summary": "NEWSLETTER: A shield, not a sword, for Saudi Arabia  Reuters"
+    },
+    {
+      "headline": "UK's FTSE 100 ticks higher on energy boost; hot inflation report limits gains - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMirAFBVV95cUxOMG9KdWFSdV90N2s0bHM3d0xsTVlOMGduRE1RZ1FvSi1SbnU4MFlRQUIteDlZTC03TmNHVFl3Z2lhV2FrN1NwQjV5Wk1rU096X1pUNXB4M2c2bS1MdXlSeEZHaTJobmFsQzlvYTN6WHpyd2FkRzFqOFdkbzZUdjZoNzJCa1B6c2RxMzBmemg3RnBWdldpM0x0VEtCR0F0YXE3N3V2YXppNnN6ejBs?oc=5",
+      "datetime": 1792600122,
+      "summary": "UK's FTSE 100 ticks higher on energy boost; hot inflation report limits gains  Reuters"
+    },
+    {
+      "headline": "Meta stock advances ahead of after-the-bell earnings. What we're looking for",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/21/meta-stock-advances-ahead-of-after-the-bell-earnings-what-were-looking-for.html",
+      "datetime": 1792598425,
+      "summary": "The Investing Club holds its \"Morning Meeting\" every weekday at 10:20 a.m. ET."
+    },
+    {
+      "headline": "How the Republican redistricting gambit faltered under Trump slump - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQOWFMMElucW1ZWW1jdUI5Y1lCYzAzZXNNQVAxZ3NjVFZjaU5iVjYwUXN2dXpsNFFaLU1GM3ZnNnRMY2tES1J3b2ctM1JYU2xrMG1Ea21FUkpNcUIxMmxxTWljaFJIMUw4eENzZGhzNkpvOG1yMUo1RWFfV3NsQmloSWlFOVlOR2JkcjIyZ0N5NGJwWWV1M0lfQzM1ajVKTUxwZXpnNnR1WFZvZVU?oc=5",
+      "datetime": 1792596869,
+      "summary": "How the Republican redistricting gambit faltered under Trump slump  Reuters"
+    },
+    {
+      "headline": "Salesforce goes back to the M&A well to fortify a weaker business. Why it's a smart move",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/21/salesforce-goes-back-to-the-ma-well-to-fortify-a-weaker-business-why-its-a-smart-move.html",
+      "datetime": 1792596423,
+      "summary": "The enterprise software giant's planned acquisition of Braze will beef up its marketing business and avoids diluting shareholders in the process."
+    },
+    {
+      "headline": "The political ad wars are still being fought over the airwaves even as digital gains share",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/21/why-broadcast-tv-still-dominates-political-ad-spending.html",
+      "datetime": 1792593602,
+      "summary": "Broadcast TV is set to capture nearly half of political advertising spending ahead of the midterm election as local stations benefit from record spending."
+    },
+    {
+      "headline": "Nigeria says private capital to drive next growth phase, petrol subsidy gone - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQOUJTb3c0eUxoUUVtTGQybDhrSHByRjVzSWFMV0JzV0VjTEY5STBqMEh4c1VnMkRycFcwY1JjYW1XUTdGaERyazgxR0tYRXBXTi1YYU5iS2dFeThfMGxpMmJ0bVl3UUhQQ2tHWlMzelBYOHlzN3BQbGdhbzRucXRBTGVRXzNGM0tsay1SY2pQSG5oMjRHQVF1STZsc0s4ZkJ6YTNsUHVfZms2eDhKWWpTa2ZYY3pBSnZ0Y2N6UFJB?oc=5",
+      "datetime": 1792591243,
+      "summary": "Nigeria says private capital to drive next growth phase, petrol subsidy gone  Reuters"
+    },
+    {
+      "headline": "Most Gulf bourses slip as Iran-US diplomacy hits a standstill - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOdGVfYlNJZFNZQ3pscG5sYjNSVGZITlhmSl9MbjJHWXVFVjJPWEFCU2FaMTZmeFFRVnM4LTdGNWFhTm1USllBY3FOeTRQaWdDaEp5NVNtb0c0Q1hrejNVbGR4a1hHc3hkUGJ1NU1TMlFBamlCaTJEWUJZQjlkVW94VGJUYzFQWm1UOE40RUlRMkZGTmY5bW5pb3dGM21YOTBFV1BKX1Fn?oc=5",
+      "datetime": 1792589417,
+      "summary": "Most Gulf bourses slip as Iran-US diplomacy hits a standstill  Reuters"
+    },
+    {
+      "headline": "Our top 10 things to watch in the stock market Wednesday",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/21/our-top-10-things-to-watch-in-the-stock-market-wednesday.html",
+      "datetime": 1792588104,
+      "summary": "SpaceX is giving a boost to the Nasdaq, and Capital One shares are rising after a better-than-expected quarter."
+    },
+    {
+      "headline": "OpenAI expands ChatGPT Ads to 26 new countries as diversification push accelerates",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/21/openai-chatgpt-ads-26-countries.html",
+      "datetime": 1792587601,
+      "summary": "OpenAI is rolling out ChatGPT Ads in 26 new countries as it works to expand its advertising business"
+    },
+    {
+      "headline": "Thousands of Greek students, teachers protest over education, pay - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPWmpDNmowRGc0cUFFMXR4M1dHWXpTODZPQVBWV2ZjSXVhbXpHaFY4NlpBX1QtTEtISkJiQ1BUVkt6UWNhM2FubFVSdmhDNjZOZkZNcGlzR2ZqQkhLY3FadE5WWFcyMXZRcXdOVEY0a3otMnllaTQ1cFgza1EwMHVsbDdoMXlXVTMyM0dtS3J2YzkyWmcyQlVhV1RIUjZqTGV3a281Vg?oc=5",
+      "datetime": 1792586983,
+      "summary": "Thousands of Greek students, teachers protest over education, pay  Reuters"
+    },
+    {
+      "headline": "Israel's election may change its leader, but not Iran war policy - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOZm1ibWE2TFE3M0JlejZpUkp2aHJkY1NBTFRUR2tvaVV5dmtrbkFjbTlYMGM5WkpOTUp6MXFka3pyX1FGeUthY1NlS25oamJ6R1kzdjR2NHJIWWJDay1VWm00WmJkNjhnWlBwNFp0RDhvdnBZbjMyZHNabGZPSjFhbzJ0eU5lRGpvZXFaN0pXb1F0aWVveW93WWw2a0k1eFg0anJWQllTODdPaDkyejZVNVF3?oc=5",
+      "datetime": 1792586820,
+      "summary": "Israel's election may change its leader, but not Iran war policy  Reuters"
+    },
     {
       "headline": "Investors are questioning neoclouds' business model but Nebius says AI computing prices are rising",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/10/21/nebius-ai-computing-nvidia-gpu-prices.html",
       "datetime": 1792585267,
-      "summary": "The comments come as investors scrutinize the debt, borrowing costs and economics of companies building AI infrastructure.",
-      "headline_cn": "投资者质疑新云计算商业模式，但Nebius称AI算力价格正在上涨",
-      "sentiment": "neutral",
-      "rationale": "利空质疑与利好涨价信息相互抵消",
-      "market_relevant": true
+      "summary": "The comments come as investors scrutinize the debt, borrowing costs and economics of companies building AI infrastructure."
     },
     {
-      "headline": "Trump envoy asks Putin to resume three-way Ukraine peace talks, secures release of US citizen - Reuters",
+      "headline": "Saudi crude oil exports hit five-month high in August, data shows - Reuters",
       "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOQXZaYTY5blYzZWJWYkJaQnI2M2RSSGJUcnpzSF9OMldoZjZxckRDRzhyb2JReEVNbEE5bjdZcUZlNzJ2b0YzQkRIZjltamVxVHVSaElldGhNUmlFZzdmZHpPOFBOSDNhbFV0NEdpYXBBN0w3VjlHV0JkSVQ3NG1hMHJMay14MWNuNDdQTldXaVE2Z205bjFkN05lVUh4TkloZWFvSm5FcGp0aS1nQ2JKcmNGTHB1NDhqdWJCaEM2NnoyRUE?oc=5",
-      "datetime": 1792582862,
-      "summary": "Trump envoy asks Putin to resume three-way Ukraine peace talks, secures release of US citizen  Reuters",
-      "headline_cn": "特朗普特使要求普京恢复乌克兰三方和谈，确保美国公民获释",
-      "sentiment": "bullish",
-      "rationale": "地缘政治缓和降低市场不确定性",
-      "market_relevant": true
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNekotZUduQW5FQm0wOVZHbVlzT3U0OWxVdVhNNDRfUjZlVjlxZmNMWEh2M09yTGhwNUhSOGlGQWJDTkg4NDBxdVNSNC1oZWN5cldTZ0xBSzFlYTNXRjBUOVpuMlYzWUo1aWEyaDJSM2NlSURCSFhQWlRHallSdU43TUU0ckpkXzI0UWhINjZqbW9IU0FhcUZjdlhNbi15djVCSktpVEE0LXNXOGFITzluWDBTRQ?oc=5",
+      "datetime": 1792585063,
+      "summary": "Saudi crude oil exports hit five-month high in August, data shows  Reuters"
+    },
+    {
+      "headline": "Water rationing, rubbish pile-up raise disease fears in Yemen's besieged Taiz - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxQNEZmbFdBRmdDNEtQdFQxUzFxNk94SktoeDF3aTlLRlBxRkQ3dzdoOGFCQ0ZyUks2bkMwNmpRWjd1dnZtYW9xM2ptWEoyMlp2WVZrV2pua2pjZzkwV2Jab0RVSjdVM1dBdXdQUkJOWHlnckpmNXczSDNpQnlUTlB5TDdaNXhZb3NFS3lmS0VUUEZxMlpEaU1SQmgtazROaHE2WTVLYXRwTUgzN0lfamRtLTI2eGVoX0xHS3MwZERndEVPb0NnZnpaTA?oc=5",
+      "datetime": 1792582599,
+      "summary": "Water rationing, rubbish pile-up raise disease fears in Yemen's besieged Taiz  Reuters"
+    },
+    {
+      "headline": "SpaceX, Tesla boards study possible $3.5 trillion merger",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-20/spacex-profit-beats-estimates-on-big-jump-in-ai-business-revenue",
+      "datetime": 1792582189,
+      "summary": "SpaceX and Tesla boards form independent committees to explore a potential $3.5 trillion merger, a blockbuster spanning AI, rockets, and EVs."
+    },
+    {
+      "headline": "Yemen's Houthis deny launching drones towards Saudi Arabia's Medina - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQc2ZjQXV3eDBJb0ZSQVR6eGFkazItZW9IbnhpQVJESVNVekFRZzJNSFhSRFZjMlRLMmQ0TDFBMHlBQkJ0dlBUY1dVSEQ5Z204MVZ2ODJpQ2xuaVpNb2N3WGdVUExETTdTbXdnMGNYZmVUN1Y2ajZmRUc3ZmZvMFJpT2ozdW85bng5QnRhQVBtUjhocVZwVmt2Q3RIdDdRSU9RcXA1T2JlUmNvVk5vMVk0c21WcDhTbWhIdGdyWnh3?oc=5",
+      "datetime": 1792582044,
+      "summary": "Yemen's Houthis deny launching drones towards Saudi Arabia's Medina  Reuters"
+    },
+    {
+      "headline": "Republicans bet Musk’s millions can rescue Texas' Paxton in US Senate race - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPcW45ZmliNmV4MkZfNnRfZnpsVmo4LVdlQnlPeV9WRE9SRS1fZW1sQW5Vb3BDU1JOeXRldG1LZUlOMDBvOHFrRzQyNFVtcEpGZDFlTVhnVnB1d0NYaWVDN01qTTZrNmZVUVBpOUo4STUxOE92TUp3dWRuSm9vaFMxaHJtNkU4RGxsenZjbldQSUFBUGp6S0VOSnBoLXJEU3FNMmVzdkFrdEcyOWViekRiNXU2aEY?oc=5",
+      "datetime": 1792579533,
+      "summary": "Republicans bet Musk’s millions can rescue Texas' Paxton in US Senate race  Reuters"
+    },
+    {
+      "headline": "Putin, at talks with Witkoff, suggests he and Trump could meet in China - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQaENGOEc3LXlxbThzSDVIZ3ZtSTMyd2VodlpOOEg0TjM0dHpJRkxTZ2xoWEhZUmk5WHVudmp4cGZBaUNtMnNCYzVjN3V3LWUxTjhfa0x4YjI0NXVURVQ2bkNkSlVfLUJ5aFV6eXJkRm5MOV9JRDg4aTdsT01nLWtlb3ZiLVF3TzhOTlVlcTRlaVQ5ZkNSbFJxVU13aVc1aG5TSTcwbnFsRjNseG8?oc=5",
+      "datetime": 1792578343,
+      "summary": "Putin, at talks with Witkoff, suggests he and Trump could meet in China  Reuters"
+    },
+    {
+      "headline": "South African inflation rises modestly but bigger fuel-driven jump seen in October - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOampUMVFEMmRCN2JXOXg1dTR6aGdjaFVmRF9IeGF4Q3J4a05MQ2hpdmk3ZU04MU01dTFVQzZ6dGoxUGxTRktfbUpURUxtZmdMdWdid054OFJHWGVYVmI4eTdvWUlCak1LM0JZNjJTRDB5NWllNlI0TUZfOTZEMlhUbV9PMW1nWE5hNTV5ZUVHQjNnVkw5UU5oTUkzNVZPSWhNVkZPMV9fcTc?oc=5",
+      "datetime": 1792578060,
+      "summary": "South African inflation rises modestly but bigger fuel-driven jump seen in October  Reuters"
     },
     {
       "headline": "Trump to rally for Graham in tight South Carolina Senate race amid Russia rift - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNMHk5a3JmU3lLWWtaN3RQRDVPRUdfWVA5czZfWk5WQlBNcnFmdndzTnZQV2RZRFBrOGdXU3ByMHMtS0EtQXNSaDc1OXZ6UTl2UDZrYk8wcFlPc1FaYlFFUVVTVUd6RG5uaDZhYk55elN4TGRXNFFGeklyUzJkXzQtUzBBTzJUS0YxNGJhdF9HOE9zRzVJc1VTcE5HUEg1OVpMYS1UTGVYLWhvSXlEMU1yZW1HMA?oc=5",
       "datetime": 1792577863,
-      "summary": "Trump to rally for Graham in tight South Carolina Senate race amid Russia rift  Reuters",
-      "headline_cn": "特朗普将在俄罗斯分歧中为格雷厄姆南卡参议院竞选造势",
-      "sentiment": "neutral",
-      "rationale": "国内政治事件，对市场无直接影响",
-      "market_relevant": false
+      "summary": "Trump to rally for Graham in tight South Carolina Senate race amid Russia rift  Reuters"
+    },
+    {
+      "headline": "Jio Platforms' IPO-linked inflows boost rupee; elevated oil prices spur caution - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxPMFFMSF9nLXRwYy1COGJKYnBBYXkzOTFESWIxSnROTmJGa2hQZ3BTTExjMEUtTXhrUVFka3kzdXBjQXBqV1d6WW9wcDV0Z2NHbEhnellaWHpwMEx0d19NOHdaaGxyTUd5NEV0VHozczYxeVlVNU1NMjNRaEc0ZVFEMTFpamJVNWl1N0swSkdRbERORjN2c3dlVGhMMXVTQjFJUDVWZnhhMnY4MzZvMW1kQ25QSGY5dmhLc1d5aTNrRGR6N2c?oc=5",
+      "datetime": 1792577535,
+      "summary": "Jio Platforms' IPO-linked inflows boost rupee; elevated oil prices spur caution  Reuters"
+    },
+    {
+      "headline": "EXCLUSIVE: US aims to loan about a third of heating oil reserve in bid to tame prices - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNUzkxVzJaMlBtRGhfVVdxVERodk94eEllV09nNDlZVFV5MnZxMUttc2d5djloZTFuVEN6UUlfbFo4aGFNZk83RGQ4MzNZV0ZzMXU1RjM0bnhNelR3Tmd6cUNacEJjdko4dnd5Q081U3dheFNZVm9aVmM1aHc1a2xJaVZadUFEX1YyWm9XSTNOT29RYk1wckVnZllWLUU2aUFkclNYS3NQQmpkUnMxakhDcUNR?oc=5",
+      "datetime": 1792577348,
+      "summary": "EXCLUSIVE: US aims to loan about a third of heating oil reserve in bid to tame prices  Reuters"
+    },
+    {
+      "headline": "Global diesel prices seen staying high despite Trump's deal with Russia - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPUzdlb2JMYTdYUzZ1QlFvV005cGMyek55X3ZiblV4RDhKUTA2dEprNUlEVjVSb3FvVGxXTmdvNkJWdlB1ZVgxU0xFNHNXOWstN0RNT0Z2b2hXVG9zbkwxWGk2YlpodXNsaU5hSmNFekRSaDdEc3NqWWtJR0tyeTRSTlZjMHFuOWlUdUw2ZFVDSkh3Q0pKUGNBbzBSdWxuVUZDN3ZPM2E4X1lpTHByV1YwXzhieVNlS2s5OUJ4MnpUbw?oc=5",
+      "datetime": 1792577100,
+      "summary": "Global diesel prices seen staying high despite Trump's deal with Russia  Reuters"
+    },
+    {
+      "headline": "Pound gains against dollar, euro as inflation data cements future rate hike bets - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxONEtnY2tIVF9OZTdBSTNUOHpQWjFKYzlBd1JYdEx6eXBBTGV3M0U1RGVQT08tT1o2NEdXTzUzZ3d4eGV4OVN2Ukc3c0h1RjRMNy02VHNpd3hiSl9fcFNnV2tyUjNyaVpzeWc0akVmVk94Z3VTU3VFZi1TMlp6S2xUR2habU5BYkVhWWtoMVhCNGlDMmFCa245OUJPWlFvRl9PcFdFdWo4VGEwVFNPalVITEkzYWZtT3pBMUNrT0hR?oc=5",
+      "datetime": 1792576478,
+      "summary": "Pound gains against dollar, euro as inflation data cements future rate hike bets  Reuters"
+    },
+    {
+      "headline": "Putin agrees to resume 3-way peace talks with Ukraine and US - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxOQXZaYTY5blYzZWJWYkJaQnI2M2RSSGJUcnpzSF9OMldoZjZxckRDRzhyb2JReEVNbEE5bjdZcUZlNzJ2b0YzQkRIZjltamVxVHVSaElldGhNUmlFZzdmZHpPOFBOSDNhbFV0NEdpYXBBN0w3VjlHV0JkSVQ3NG1hMHJMay14MWNuNDdQTldXaVE2Z205bjFkN05lVUh4TkloZWFvSm5FcGp0aS1nQ2JKcmNGTHB1NDhqdWJCaEM2NnoyRUE?oc=5",
+      "datetime": 1792574580,
+      "summary": "Putin agrees to resume 3-way peace talks with Ukraine and US  Reuters"
     },
     {
       "headline": "Indian Oil to trim Middle East oil imports under annual deals amid Iran war - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOMXE3WlNvck1LNktoX2lmc1NPNVZaNkRJdnJidHRaRE1RcWxTSC1rYzgyS3J1RnlpeEMwTlh5YnRBMXNPLXJiYTJOR2o2RGF0eTlMQm9Wa24wMUJXX0VzaDVGc042V0JLcnJlTTJYdzVNLWtIbFVuQkN4cXFielNxdi1RUUNRcTY2Zlo3MXJEUEZQaE1DWnh0aTludkNSWlZfbjc2TXZPSVVQZUFpaW5SXzVFSU1WVzZ1TzVLNFFSYkNCZw?oc=5",
       "datetime": 1792572410,
-      "summary": "Indian Oil to trim Middle East oil imports under annual deals amid Iran war  Reuters",
-      "headline_cn": "印度石油公司因伊朗战争削减中东年度进口合同",
-      "sentiment": "bearish",
-      "rationale": "地缘冲突影响供应链推高油价成本",
-      "market_relevant": true
+      "summary": "Indian Oil to trim Middle East oil imports under annual deals amid Iran war  Reuters"
     },
     {
-      "headline": "Most Gulf shares retreat as Iran-US diplomacy stalls - Reuters",
+      "headline": "HDFC Bank probe finds two senior executives shared confidential information with outsiders",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-21/hdfc-bank-probe-finds-that-senior-executives-leaked-secrets",
+      "datetime": 1792572148,
+      "summary": "HDFC Bank’s internal probe found evidence that two senior executives shared confidential business strategies and possible market-sensitive information with outsiders."
+    },
+    {
+      "headline": "Carlsberg said to near public filing for $700 million India IPO",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-21/carlsberg-said-to-near-public-filing-for-700-million-india-ipo",
+      "datetime": 1792570854,
+      "summary": "Carlsberg India, the country’s second-largest brewer, is expected to begin investor roadshows next week and could launch the IPO as early as December"
+    },
+    {
+      "headline": "Apple announces October 28 ‘Pro and tell’ event for touch-screen MacBook Pro",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-19/apple-announces-oct-28-event-for-touch-screen-macbook-pro",
+      "datetime": 1792566472,
+      "summary": "Apple will host an event in Los Angeles dubbed “Pro and tell,” teasing a MacBook Pro refresh. The company is also set to unveil a lower-end MacBook Pro with an M6 chip, a refreshed iMac and a revamped iPad mini with a sharper display"
+    },
+    {
+      "headline": "Fighter jet crashes in northeast France, at least one person dead - Reuters",
       "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxOdGVfYlNJZFNZQ3pscG5sYjNSVGZITlhmSl9MbjJHWXVFVjJPWEFCU2FaMTZmeFFRVnM4LTdGNWFhTm1USllBY3FOeTRQaWdDaEp5NVNtb0c0Q1hrejNVbGR4a1hHc3hkUGJ1NU1TMlFBamlCaTJEWUJZQjlkVW94VGJUYzFQWm1UOE40RUlRMkZGTmY5bW5pb3dGM21YOTBFV1BKX1Fn?oc=5",
-      "datetime": 1792571383,
-      "summary": "Most Gulf shares retreat as Iran-US diplomacy stalls  Reuters",
-      "headline_cn": "伊美外交停滞导致多数海湾股市下跌",
-      "sentiment": "bearish",
-      "rationale": "地缘紧张情绪蔓延至区域市场",
-      "market_relevant": true
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNbjRieTdHWUNzMHlHelpvbDNtSE91c1Z2LWVjNlN5djlBQWVraHByNkRRSEpZOE5raDloOE40ZWxUWXNDMmRoQXFEZVNwYzBmSEliSmo0eWxfam5SZ1FpdWFGZXpTWGRRMlJRZDlpRnBaUkdCTVExeXNFaFQtRkhBUS1aY0xGR3dBdjBJdFF2OEVnNGxZcGVkMlpwYnBhblF1YWRMOQ?oc=5",
+      "datetime": 1792565580,
+      "summary": "Fighter jet crashes in northeast France, at least one person dead  Reuters"
     },
     {
       "headline": "Iraq closes Sheeb border crossing with Iran to review security, sources say - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPSXVnY3hDdkhUd05mS1J1MFR3RHdnX09veTI2UXB3a0ZlOVNPU1NDa184ZXhWMmpFMTFmYjFYb1ZORGlzb2FtZWdET2txWUtUUEZhTHc5MWp0YUY0ck1jcVlWc21RTWt0a0hHd1VfOG5fdVZLNmV2NmpVQzJWY0UwaHQ2c2NhUlZFMVpTejI4aE84OUNNUmNsLURqMVcyVEtJNEJOdGpxbWV6UGtJYU0wMnFvMWhVdDl3M2ZrWFRtdDItSTlvbGJLaGVqZ2xOUQ?oc=5",
       "datetime": 1792564860,
-      "summary": "Iraq closes Sheeb border crossing with Iran to review security, sources say  Reuters",
-      "headline_cn": "消息人士称伊拉克关闭与伊朗希卜口岸审查安全",
-      "sentiment": "bearish",
-      "rationale": "边境关闭加剧地区紧张影响贸易",
-      "market_relevant": true
+      "summary": "Iraq closes Sheeb border crossing with Iran to review security, sources say  Reuters"
+    },
+    {
+      "headline": "Getty files for bankruptcy in process that will take it private",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-21/getty-files-for-bankruptcy-in-process-that-will-take-it-private",
+      "datetime": 1792564514,
+      "summary": "Getty Images files for prepackaged Chapter 11 bankruptcy to privatize with new equity and $533 million from Getty/Koch affiliates."
+    },
+    {
+      "headline": "Ambani’s Jio has record India IPO fully subscribed within hours",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-21/ambani-s-jio-seeks-historic-ipo-a-decade-after-disrupting-india-telecom",
+      "datetime": 1792564059,
+      "summary": "Jio Platforms’ IPO attracts rapid demand, signaling India’s largest listing yet, amid a cautious valuation shift and growth optimism."
     },
     {
       "headline": "UK inflation jumps to highest in nearly a year at 3.5% - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMinwFBVV95cUxNOURnbmVSYmVXLUUxTlpGWGFUbXplMlVvWTlhVlpKTkZKb1E1Q0pSTGthMmVLRkt0VTc0ZHllSnd0X2J6c1M2ajRXWGEzbUgyUHhLWlF5RVk2QktQWHU5eXFKQmxzVWdnQ0N3RkhXZXlKemNkZ3hWd2JIR1N1SW5ZeW4wWjAyOVBNLXVDWklIZEZaeHVHM1lzOUNHN2x1aEk?oc=5",
       "datetime": 1792562640,
-      "summary": "UK inflation jumps to highest in nearly a year at 3.5%  Reuters",
-      "headline_cn": "英国通胀跳升至3.5%创近一年新高",
-      "sentiment": "bearish",
-      "rationale": "通胀升温可能推高利率预期",
-      "market_relevant": true
+      "summary": "UK inflation jumps to highest in nearly a year at 3.5%  Reuters"
     },
     {
       "headline": "UK approves long-delayed Jackdaw gas field on energy security grounds - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOMVhqQWZMc3FMQ2lhTXRCMm92QVlKRlk3Y2lNenRKRTJmWWxHUlNWc3pTZWJyOU92aHlVTmtwLXVTeE01WFZxU3NpQ19Eazh6TkM5VWZaaUpqRFo5SFZJbmRHeFVvYkRiZGJUYUpza0ZyMWZ1NThlMFpEM1U5dlRZeUNJQVBqN0VpbTFscWViMFNHdm84T1FhMWxB?oc=5",
       "datetime": 1792562280,
-      "summary": "UK approves long-delayed Jackdaw gas field on energy security grounds  Reuters",
-      "headline_cn": "英国基于能源安全批准长期延迟的杰克道天然气田",
-      "sentiment": "bullish",
-      "rationale": "能源供应增加缓解成本压力",
-      "market_relevant": true
+      "summary": "UK approves long-delayed Jackdaw gas field on energy security grounds  Reuters"
+    },
+    {
+      "headline": "Oil shipping costs surge sevenfold to over $20 a barrel amid war: Goldman Sachs",
+      "source": "Bloomberg",
+      "url": "https://www.bloomberg.com/news/articles/2026-10-21/goldman-sachs-says-war-spurs-sevenfold-jump-in-oil-freight-rates",
+      "datetime": 1792558110,
+      "summary": "Higher war-risk premiums, fuel expenses and ship-to-ship transfers are driving freight rates up, potentially reshaping crude trade and refinery sourcing."
+    },
+    {
+      "headline": "Bangladesh yet to receive Saudi response on execution of two nationals - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxQb0h1UHUxMTlhdjg5T3hlQTRrLWhueTVDRmtCWmt6TzF2U2Jib3RweXNUZmQwVEZKQkN4RnR4ejYxcnYxR0xSZ3ZYaU9Cb2d4VlhrQlU1OWhmRlBUZWwxNlB6THVwWHdKaUZsS1dBcUxsR2E2SmZvdktIdzVnSW14N1pIQk00VC16Y3l3dHN4SGh3c19ZVFMyYkZsQ3NQTEN1ZWxjVFVqWFlRV1NCLXhLX0ZBUEMxS0U?oc=5",
+      "datetime": 1792556400,
+      "summary": "Bangladesh yet to receive Saudi response on execution of two nationals  Reuters"
+    },
+    {
+      "headline": "Trump, in North Carolina, says Republicans will defy midterm odds - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxPc0VzbUJHdVl3eEtoMVBmbmo2cUk2cUNmR29kVG9sc2NHenE1NkVGY2txM3pNX0QydXVjSWRqb0FSNGdSY1hKX3REeVpZcmJ5REVBYWxNNnUzMmhpeVQ1dGI3WDFNLWdLYTUzYTN1aFhjQTV2RGRZa0pINE1UdHpYX25STVMyeUJ4Y21UcENsWFNYUmpaZHlndGhRWVF5ZjRXSUpYUlkwNkM?oc=5",
+      "datetime": 1792553640,
+      "summary": "Trump, in North Carolina, says Republicans will defy midterm odds  Reuters"
     },
     {
       "headline": "Half of India's coal plants run critically low on fuel as power demand surges - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOazNuSjVoOWdWeU9fY0hvSjV6UEpBQjNpVTZhaFg1Y3NXZUdobzk4Wk54a0ZMdHAtTk1CV1Z6OWstTlJ1dDdoSzV6aFZlRFpsVjRjdExPVDNrS2x3WTBSR3N2NThhRnRnYVJZdmkzN0ttNzFOdE9rTnkwS2pYdTNBWDFOcVZyb2xYRF9IU0F3S25fczdoWElJaFh3ajVndWF2bTFMeEVVLUlxbllnQUhxbjJBemxGS1MybXlZ?oc=5",
       "datetime": 1792545900,
-      "summary": "Half of India's coal plants run critically low on fuel as power demand surges  Reuters",
-      "headline_cn": "印度一半燃煤电厂因电力需求激增燃料严重短缺",
-      "sentiment": "bearish",
-      "rationale": "能源短缺推高大宗商品价格预期",
-      "market_relevant": true
+      "summary": "Half of India's coal plants run critically low on fuel as power demand surges  Reuters"
     },
     {
-      "headline": "Dollar holds steady as Middle East tensions simmer, oil rises - Reuters",
+      "headline": "Dollar dips as traders wait on Fed; Aussie gains - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQMmhtRnJCbDhIc08yUUUxQnBOU0tmczBNT3JOTjBKVy1LY0VCUW1pdk9hNW83QXdqM3pKOGthelR0NldvLUx6ZHdfUWpTTnpHOVhVeG9nR0tUWjVqNlUyT09jbVp3eUZDb1RLbjhLakZYUXZfcXNoVndFSG50cUw5alpFRHVpNWdUMWtxLWpXMUZsdFE1RVhtX0RWVkVLazFFNUlIZi1fcHRJUjZYY090OVBwaTZMUnJ4TmdtbWFR?oc=5",
       "datetime": 1792545600,
-      "summary": "Dollar holds steady as Middle East tensions simmer, oil rises  Reuters",
-      "headline_cn": "中东紧张局势持续美元持稳油价上涨",
-      "sentiment": "neutral",
-      "rationale": "美元稳定但油价上涨影响相互抵消",
-      "market_relevant": true
+      "summary": "Dollar dips as traders wait on Fed; Aussie gains  Reuters"
     },
     {
-      "headline": "Oil prices jump $2 as Iran knocks hopes of diplomatic progress - Reuters",
+      "headline": "Japan shifting to wage-driven inflation phase, finance minister says - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOM0Fielo1REtWUHdnb2xnMDZvaHhmc1BWQjg4NS1YYlZJYWJLelVpTUQ1a2xuRk8yNkw2R1RiSE5kbVVEMW84ZjZMQmlxalZ3WG02ODJBb1BsSXR3b2tiUlNVc3dGV1ZWZF8yM2Z4SUhqRURzTGNqcC1BcHdacG1fV1NLQnpVOXZFTVRQWVdlWUdyV1k2Zmh2ZDlKWlNHZU03MDA0RjhZeDBwWnF6bFpQS1dzWmJYdEx0NTJJ?oc=5",
+      "datetime": 1792544040,
+      "summary": "Japan shifting to wage-driven inflation phase, finance minister says  Reuters"
+    },
+    {
+      "headline": "Oil prices steady as investors weigh geopolitics, lower US stockpiles - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMikgFBVV95cUxPNTdIRmp3MTB3c3JZNGxXMUl1Wk5haXFwcjdJNXgtQnJkOEM4aWVVWG5tai03TmhHSWZidkliV1VlRkRvOVJCX3Q3QXhCWVdZeXlYQmViOUdOaU85anVWMXpSWFNCOHAtVU5id3Fad1BhX1BzVEt6S1A4N2s1YjJocFh6QXFTVXhHdDJJVzZBX21WUQ?oc=5",
       "datetime": 1792543800,
-      "summary": "Oil prices jump $2 as Iran knocks hopes of diplomatic progress  Reuters"
+      "summary": "Oil prices steady as investors weigh geopolitics, lower US stockpiles  Reuters"
+    },
+    {
+      "headline": "COMMENTARY: China uses crude stockpiles, but rising oil imports may curtail draws - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxQMXlFU3FvdEtaU3AxTmhWTm5iUHV1R1pLeWhhM3JFR0FUSm9ua3pod2x4WUdUWHZXMW5Mc1FaY0RMakFzNkN3akV5OE0tODVVRHp4QWlMS0ZiUTg3NkhuODdNVkdkR3RHRGh0Mkhaa2QzNl9aUEl0bVlvSWRoTjJfTnhxeEVpU0pzbE5lcjFUS0R5b2xTSTB2ZkdGX1VtcUxyOTRhejdLWmxVUmRFTElxV01JZXUtaUZWb2s1cTNlM1hyZ1ltUF82NkxVV3RZdw?oc=5",
+      "datetime": 1792542660,
+      "summary": "COMMENTARY: China uses crude stockpiles, but rising oil imports may curtail draws  Reuters"
     },
     {
       "headline": "Canada, Turkey to agree during Carney visit to deepen defence and energy ties, source says - Reuters",
@@ -146,6 +622,13 @@
       "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxPSFhacmtBdGRlT0NRV3BIbVVtYnI5NXJXTWlPYzUtei1CemFlOW5aWk55cUF3Z2loa3pvNjM4UUxJa0FsdGNuLTdaLTdUcTJiZ0lXZjM1Nk51Xzh2dmxoVXVVRU1XOHBYM0RwbVo2MmxQUDBfemdPREFTSG5velNHTFhNbTB6M25yM2ZBcnBSbm1DY0NvMFJQX05XTUV0djdUNVl2aXBmYWJ6aDEwNnEtbExqVjBpYWRWb3c?oc=5",
       "datetime": 1792531800,
       "summary": "Iran says Saudi Arabia, Houthis have not answered mediation offer  Reuters"
+    },
+    {
+      "headline": "Portugal housing protesters return to squares, vow to press on - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOdWwxLWtmTWFlcG1YV2s1RV91eXlPVFlCeFNzY2ZkX2Z4T1pnZllxOXB0eFlkX3hnWllLT1N5SmVNUnJZRnI3UDBxcTNuQnRsYUFZeWFyUktlcEMxbkdBQW96VGJxdjNjbjRNTXFrdDVVbUhSOUw1OFRDaE9jNkpGdmQzbUZMR0thZUY1MklFcTU4YXhvNDRmNHlyMGxiNDd4clE?oc=5",
+      "datetime": 1792531699,
+      "summary": "Portugal housing protesters return to squares, vow to press on  Reuters"
     },
     {
       "headline": "Obsessed with CoreWeave and the AI trade? You're missing out on some great stocks",
@@ -204,6 +687,13 @@
       "summary": "China says US' DeepSeek ban disregards Xi-Trump consensus  Reuters"
     },
     {
+      "headline": "Dollar dips as traders weigh Iran, AI risks - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOazFGS3ZwNDhmME9ZUDdoZVQzMkV3UEJQUEJsTE1LdnFTcjNXRzI2emE2Z3VvZE1YNGRpam95VTF3UGgyTVFjRExnWkJ1TGxpenBQUHFhbmU1MUpEYVhDcURRS05xQ1BycHRUT3F3bExRQjZfaUFVeGlKcHpmaGFEMkVwQ0RxSk5iLU4zaDVaVDJzQzEyQ0R4OVFZeHZuVXJKZ3pESWtudFQ?oc=5",
+      "datetime": 1792525654,
+      "summary": "Dollar dips as traders weigh Iran, AI risks  Reuters"
+    },
+    {
       "headline": "Boeing wins FAA approval for 737 Max 10 after years of delays",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/10/20/boeing-737-max-10-certification.html",
@@ -221,7 +711,7 @@
       "headline": "North Dakota oil companies speed up well completions as prices rise, state regulator says - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPTUkzdkdLbmthMWJveTRsTWs4U2p2VV9ZQlo3VkRmWHhubU5ZOTVfaXpBOFBaQ0Y0Y1FEcWwxUURhcnUtOHVreDl1VXRwNUFvczE0UFVVNmM0N0lzNnVMQkNwclFtclJzOVY3bUUyOVVidjRHVW1Ydnc1Vl9KWUZkeDEzdHR0dlhNUl9IbGJBYXFhZFRnaHJMbzFLYXh3NFZNVW5VX29EWkhxamx6a2lJNTN1LXoxTEZfbElJZzJHWjlRQ1FuWGY5WTNjZl8?oc=5",
-      "datetime": 1792521463,
+      "datetime": 1792521420,
       "summary": "North Dakota oil companies speed up well completions as prices rise, state regulator says  Reuters"
     },
     {
@@ -251,496 +741,6 @@
       "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxPNTMzR3ZQMmZ1R0RFZHQyOUxldnFwaXF4QVhEUmpwUUEwM2lGYUZXUXBILVhjS3BUZXl1WUNCbTNZTDY1RnYwWDg2Qi1EbGxqczBnY2FwcGE0eUxzOG1OQmJEZWdWbHFkbTctcHdKcDVOXzRsQ2JJQjJRUDdyN2lUUTJIYXJxSk1mLVJLYUs0UEdFTVZMMG5QcEVyRWgtWUQ4RVE?oc=5",
       "datetime": 1792518716,
       "summary": "Israeli fire kills four people in Gaza, medics say  Reuters"
-    },
-    {
-      "headline": "Eastern Libya parliament approves maritime deal with Turkey, drawing Greek rejection - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQSDNpNHR3ZzZNNnVsTXE1c1N1RDVPdHFvRjBrRWJiQTltVlRmNlM3VzdkX1dEZmNhcW5rRFI4QzJvUjJXdU9XVWlVQklGLUV4LWc2S2VGczdPanlEb09Vb1hJakM5Z2pfRl9YOVZqNGtmVDFveXZscGhaLXpoRlF5WEUwLWVWSGwzU3JvSmJXb3djX3R6dmRfaGRKclNtRDQ4Smd2TUQ0eG43WEQzZXo1SmNRTmFkdE1JYnNoeGFwMXNlLTlrNGc?oc=5",
-      "datetime": 1792518319,
-      "summary": "Eastern Libya parliament approves maritime deal with Turkey, drawing Greek rejection  Reuters"
-    },
-    {
-      "headline": "Turkey submits Saudi-Pakistan defence pact to parliament for ratification, sources say - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxNUFRNd3JZYUQ0bDBIdTYxNDczNExsX1h3ZUN5RU0xdTRUeThLVVljcjBHTkRlRUpxaUotM2tTUExONi15T29YQlJTZ2FPaEpoS0VkMXdiUlBGcTNNWXFoc0lEVUlHT0pIZWRZR1RUeXpVYW5aRlNZd2dGZXFIVFMyanFXcGh3V1JQcXRzM1ZzNnBSazBIT2NSVDNCa2pRTlZhNWt1cGpNeFNZTTFkd09iQ1hKZURpLThleHlNUmpFdVp2Yjg0WVA3VThydDI?oc=5",
-      "datetime": 1792517275,
-      "summary": "Turkey submits Saudi-Pakistan defence pact to parliament for ratification, sources say  Reuters"
-    },
-    {
-      "headline": "UK police arrest pair on suspicion of helping Iranian intelligence over RAF Fairford incident - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxNOWtHNEd1UkNWcGVXUE1HOW96YUlFbUQtRE8xdGstc1FlMTFSR0plZjc0Z21kR3lGczUwaEprd3pUcUtvX0x1VE5Cb28xSWNOd0R2UTM1TklYUFZjZVlJalVuZjRHZ0RpZVJHYVNuREdGeHJDdU9zLTRfTnRuOHNsellBOXBhLTAwSWxMV2g2d3FTa1c1dFNUM1o2c3Q4RWo5bjNpOVN3N25MaW9KZEpHQl9KRDlydlNP?oc=5",
-      "datetime": 1792516212,
-      "summary": "UK police arrest pair on suspicion of helping Iranian intelligence over RAF Fairford incident  Reuters"
-    },
-    {
-      "headline": "Britain says it will carry out defensive air missions over Saudi Arabia - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMi1AFBVV95cUxQTGh1LWkyRVZqaTRQMEdnRXhvWFhvWnJ6TW5WdlEyM0dxTFQwLWczNjAwLU95SDFDZVVSdUNQUE1uYkREcG05THRjbmhiQk5FWlBjb2p2V01DVmhGRFppUmFHQUFwMm4yZHFLRndUbU9PcEVjY0JBY1JpZjROd0JnOTdoZXFodTRDSzJEQURHQkVzd21pMmtUZmdnLUE3SGI1UGt5Wno0WWVKR1ZWV0FaQ0FmZUY5aVlQZVAtRGV4WEhoTmVnbHRsZ0taZ2d2NFBxOFIzdQ?oc=5",
-      "datetime": 1792515926,
-      "summary": "Britain says it will carry out defensive air missions over Saudi Arabia  Reuters"
-    },
-    {
-      "headline": "Israel's Ben-Gvir poised for election gains as young voters turn to far right - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPRG9Wc1hmTWh4V3JfNXMxV3FjbVI1WTJ6Vy1JY1p5ZUdXa2wxbFQ3V2VyMmhFTm9NaG5LMm5NdjJNQ08zbksyODZtd1NFQS03V0x1MGtrZ3JmTGg1Z3lWc0JnNjVjZ1NUUEU1clZLS0g5Y1JqQlpvRTlheG1LQkxrTHY1TUIzQVAzcDh2dVdpMVU5ekUwbFdRTC1wWHBLTFRUY0FuMUhpdDJ0by1OTmp1akRtbTFvT3l1YjczXw?oc=5",
-      "datetime": 1792515707,
-      "summary": "Israel's Ben-Gvir poised for election gains as young voters turn to far right  Reuters"
-    },
-    {
-      "headline": "US bank J.P. Morgan facilitates Syrian deal for Saudi oil products - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMitAFBVV95cUxPMDBMZWE2MDdMSEVnOWduZE83YjRxc3l0TW44dEktSFZGMHdVUVl4anNIX2tmUFFyVExXN2xMRmdLX3p1UWV6YW15UE85NTBId3lKc0Uxekk4OXV3RHpFWFBSVDNDN09WS1N1NDFVREFGVGp1blR1dml1eU1ZYnFuc0I1bXJXQmktdVNQSHZGNEJleU5tSzhiQ3RHMjBBcktqMWhIQzM0TEFEclAzMkVfY240X2g?oc=5",
-      "datetime": 1792515429,
-      "summary": "US bank J.P. Morgan facilitates Syrian deal for Saudi oil products  Reuters"
-    },
-    {
-      "headline": "Iran tells Pakistan army chief no talks with Washington until demands are met - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxOVDRWMklOYkRvUmtPYU1tcnN0MVJCbzRxWlJzS3lSUFhsZzQ3SnQ2N0FKXzRsZFpmdmMwS1lVYWhKenNoNEF6UmhhcThrbVM1V0ZHQUk0aXFwWHlvbXFNWVhzQkV2aHVzM1I2am9fOHFHa19CQlN0Z3FqUG5nc2VwQUJxazBhbGZlSUhDMHExSWJLbDJNNXRjc3BOYkZrTThIUW1IUkE4QUI2azl6MzZHT0Nrb2M4aDZBQzZKYVp4OTg0VV9xWWllLUJGYkFkdw?oc=5",
-      "datetime": 1792514820,
-      "summary": "Iran tells Pakistan army chief no talks with Washington until demands are met  Reuters"
-    },
-    {
-      "headline": "UK's Capita postpones capital markets event to focus on pension scheme contract - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNVW5xNTZVVFoyczE2LU5kSEpUdHJTUzRqNnV0alZ1dS1zdUpsZzRpdEVpbHdvV2R2dzVTRFAwZklsOUdha1ViVC1kS3BMbmxzN0hWV0s5d0FlVkJrd1pwNjRGM2Z5amFmdjh4cGZ4cGlXY2Q4d01sT3p3QTZYa29GWlM5OXBEbmZYdWpwRFNSVFJKTEFGTWZTbzhyTE1JdS1xaHRZMHR3WHBWYWExRWRIX3RNQ2d1TEJNUHVjdEFCdzBMUU0?oc=5",
-      "datetime": 1792513498,
-      "summary": "UK's Capita postpones capital markets event to focus on pension scheme contract  Reuters"
-    },
-    {
-      "headline": "Jim Cramer says this is the 'magic elixir' driving Tuesday's stock market",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/20/jim-cramer-says-this-is-the-magic-elixir-driving-tuesdays-stock-market.html",
-      "datetime": 1792512077,
-      "summary": "The Investing Club holds its \"Morning Meeting\" every weekday at 10:20 a.m. ET."
-    },
-    {
-      "headline": "Greece rejects Libyan approval of Turkey-Libya maritime deal - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxQcE5VcWJMSm15UUQ4VVRWa1FOVkw1TV8zZE51eDVoOEloSFdPNmhIWTZYelZXTkljMF9ZbzNiai0tVlhpRDlQZXFiOWJLZHdIcGQ1bVRJOXRvWDhvSzJ5OG80SXVCNEl5U25PaGFkWWMtWDFqczU2Z3lhVTQzaG14R2tGTG9Kem9pUXhYNnFOWGp6WUhVaGhZYmx2SEtNb0xwV29rbmkxYlUwbzZVRy1EQg?oc=5",
-      "datetime": 1792511877,
-      "summary": "Greece rejects Libyan approval of Turkey-Libya maritime deal  Reuters"
-    },
-    {
-      "headline": "To get a reply when reaching out to people, make 1 simple change, says LinkedIn career expert",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/make-it/2026/10/20/networking-specific-ask-linkedin-career-expert.html",
-      "datetime": 1792508973,
-      "summary": "LinkedIn career expert Catherine Fisher says making this change when reaching out to people could boost the chances of hearing a yes."
-    },
-    {
-      "headline": "Ahead of elections, Bessent says a Democrat-led Congress could do little to stop Trump agenda - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxObkxLVGNxelN2TDhGZUtrbUROaWc5TEFGR2lYX1laNGZBZGRkbGJocUhUY0t1Z1U1ZXByeWZyYmdPS25xZkdPODFrSzZHRk5Bci1nWGM3bGVoT211SGhRSGlvcnp5b1JrMnVVVXRkZk5iNk5vN3JXdFhvdTBjcDdxMGQ5LWdQMzl0SGtRcXF4UXlnM2oxUnRqSWV5REdLRl8yX2NVVUNwNndUeDV0a1hNRHliUQ?oc=5",
-      "datetime": 1792506139,
-      "summary": "Ahead of elections, Bessent says a Democrat-led Congress could do little to stop Trump agenda  Reuters"
-    },
-    {
-      "headline": "Anthropic in talks with neocloud Nscale over second multibillion-dollar deal, source tells CNBC",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/anthropic-nscale-data-center-deal.html",
-      "datetime": 1792505558,
-      "summary": "Anthropic and Nscale previously inked a similar deal for a data center on the same site in the U.S."
-    },
-    {
-      "headline": "US pending home sales tumble to record low in September - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOcnloTUlMUnNMZHRTVFI0cWN6NlVrUldDOE1FTlFRY19yNTZhN0dldThjYnVVRHNHYlhVVWFrUkM4cWxqLXNBdURSODZPMURQN1JTVUZubjZpOHJBdllXVDhpMkNVakEzT1owYzFpQktxdUdTaXJvSk9DekhJWmI5MHRFZFI5VzR4Nm5rM2FRTkFJU1o0N1oyLXB3?oc=5",
-      "datetime": 1792504903,
-      "summary": "US pending home sales tumble to record low in September  Reuters"
-    },
-    {
-      "headline": "Google Cloud outage in UK eases after impacting digital banks, public sector websites - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMimwFBVV95cUxQS0VTdUFWc1FhZzJaWWZDMkN3dkl0RzdnMU84OHNOS1g0eDdGZ0RNWDVJcVd1MXZzMHU2Unp0QXBXN0tvc3ZZcW1iRlg1Y1h4TFl3Yi1oM2pWRW5KLUNTT0M1NU1YMGdrUjY2MkZTNW82U2FOX0VYRkRVaTlmckJ0ZElGcjJYNzlhSnVCQzA3X0tiVTZ2Z092U2haTQ?oc=5",
-      "datetime": 1792504790,
-      "summary": "Google Cloud outage in UK eases after impacting digital banks, public sector websites  Reuters"
-    },
-    {
-      "headline": "US judge dismisses Sam Altman's sister's sexual abuse lawsuit - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiowFBVV95cUxNQVJnQzNVSG9xLUh4YjJRTXRpLU5xMnlLTkhXWjJtc2YtYVdMcE1IYVV6cmx5Snp3WGZraHlCSXhteWQzNjlKSW5XRUZCVTMza3N6NE43el9kODgxTG1fc19NM2xxVmNTRVl4ZjN4T0tHT1FvNVdUd0ZwR3JabGNCNkFxbWM4ZURfdmpFeDZwVng5ZWU1RmxmeWR5ZWVCZlVXY0hr?oc=5",
-      "datetime": 1792504395,
-      "summary": "US judge dismisses Sam Altman's sister's sexual abuse lawsuit  Reuters"
-    },
-    {
-      "headline": "Apple shares aren't cheap. Here's how to get long for less",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/apple-shares-arent-cheap-heres-how-to-get-long-for-less.html",
-      "datetime": 1792503833,
-      "summary": "The primary headwind for Apple is valuation."
-    },
-    {
-      "headline": "SpaceX reports after the bell. Here's what options traders expect",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/spacex-reports-after-the-bell-heres-what-options-traders-expect-.html",
-      "datetime": 1792503628,
-      "summary": "It's been a busy three months for SpaceX. Traders think that means more gains for the stock after it reports earnings after the bell today."
-    },
-    {
-      "headline": "Most Gulf bourses in red after Houthis claim attacks on Saudi energy, airport sites - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxOcXpWQlZUSjN2cnJReUppaUEyRldXVWpqOVNvVFpMZ0xMc09WanRpdEhEeE9iZmpMUnIyWmlGeVdNVTczOWIxYUd5VnZ2Mk80VGFheGlPVTdyM1NWS1pCdmhHekh1ZlhKbHdfNnRObnQyNVhycjFtdGQ5RmgydVhHRkthWDlBYWhkQnlsOUlsV0wzNzg2bGZqWGNVcURLMVBpNFZRaWZ6b2NBaGNCMGpuLWFndTRqd21mZzNUSVJ0Q3gzUFlnWGdLN0xQUUdOcHM?oc=5",
-      "datetime": 1792503295,
-      "summary": "Most Gulf bourses in red after Houthis claim attacks on Saudi energy, airport sites  Reuters"
-    },
-    {
-      "headline": "Jim Cramer's top 10 things to watch in the stock market Tuesday",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/20/jim-cramers-top-10-things-to-watch-in-the-stock-market-tuesday.html",
-      "datetime": 1792501515,
-      "summary": "Nasdaq futures are under pressure this morning, and General Motors is selling off on earnings."
-    },
-    {
-      "headline": "Investors look to earnings to reset the bull market. The key level to watch on the S&P 500",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/santoli-key-sp-500-level-to-watch.html",
-      "datetime": 1792500749,
-      "summary": "The key level traders are watching on the S&P 500 that could mean an even bigger decline is ahead."
-    },
-    {
-      "headline": "Death toll from Houthi attack on Yemen training camp rises to 73 - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNczREeXpXbTRhWHcyRTNlVkNaRTc4YjAzZWtxWnRXQV9BUUx3cUZ4S1B6Y2FaNW0xbk1XTURjeXI4LXhjWnFDVjJydll6ZXFmWVRjNDViT1lJZVMtaEpXa3NfLUlybDE0MU1YLTR4UEoyZGd6bTZEZjNUWHZPYXN5cXRlN3lyVjRCTjdqRUZBNld2UGFrTDNJaFpTbzhNQ2Q4MWlBWTlsanp1T1E?oc=5",
-      "datetime": 1792500720,
-      "summary": "Death toll from Houthi attack on Yemen training camp rises to 73  Reuters"
-    },
-    {
-      "headline": "Novo's next-generation obesity drug shows 25% weight loss in women in late-stage analysis",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/novo-cagrisema-women-weight-loss-analysis.html",
-      "datetime": 1792500624,
-      "summary": "Novo released new evidence that its experimental CagriSema injection can improve upon the weight loss with its blockbuster GLP-1 obesity injection, Wegovy."
-    },
-    {
-      "headline": "US single-family housing starts, building permits tumble in September - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNY2htS1FUS3p1M0dBYTAxbU9HY1ViSVBFQ1JpU3NERnNQSkVTWFBTS1R4ekZVb0NEajZtM3RwTnlGVi1VZmxQdms4cHVqVGgyVWdvbERHc0ZLdUNvTFRCNVowOFR6OTFmUml2cmtsdzdfRE9sRHdDYnVXS3dtTEFqUmdjZ2tUSlNranZGNklxNzhWcmd0dHdFUElxRlA1cm9JXzcxNzhmeXphenFCUHJz?oc=5",
-      "datetime": 1792500038,
-      "summary": "US single-family housing starts, building permits tumble in September  Reuters"
-    },
-    {
-      "headline": "Google Cloud outage takes down C and other banks in UK",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-20/google-cloud-outage-takes-down-revolut-and-other-banks-in-uk",
-      "datetime": 1792499870,
-      "summary": "Alphabet Inc.’s Google said its London-region services “are experiencing issues” on its status page, with no further details on the cause"
-    },
-    {
-      "headline": "Data center stocks slide as Korea IPO plunges 30%, pressuring tech sentiment",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/data-center-stocks-slide-as-korea-ipo-plunges-30percent-pressuring-tech-sentiment.html",
-      "datetime": 1792499811,
-      "summary": "Neocloud stocks are falling again following the sector's troubles last week"
-    },
-    {
-      "headline": "Bank of Israel to pause rate cuts ahead of October 27 election - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxNUVQ5UjE5RFoyXzlHb3ZYbVAtbFRSUnMyYzhYZ1N1QWktUmtLZXpNY3JyRlpYNUFONmg0MGQ3Zzk1NV8yNTE1NkRrS0liYU1vZXdsUkxvdlY1VDNQVEVkcHVCRXJjcDlZcS1KaU83aEdLOGlLYklsNGdaVnVWa0EzTVRzeWVmRVFVVmpuSTk5VUgzYTFZY29hN2h3ZndiRnc5RUdGNHd6ZFVHY3c?oc=5",
-      "datetime": 1792499027,
-      "summary": "Bank of Israel to pause rate cuts ahead of October 27 election  Reuters"
-    },
-    {
-      "headline": "Iran prolongs talks in stalemate to influence US midterms, officials say - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxPUEYwdEFGeHhKUmdIMXF2VEppVElubGVKYlNlbk5xRGlnY1pVMEFsc0pma1ZGOGdOXzFBWUVCWHVab2MxQ2t5ZlNGRG1oZkdCMENnOFktSm1OakZNUUZJX0w2ZHJmM1ZLV2JyS245RjFoUVNPTmZ3dVNfNDNWemZ2V3dZdTFZdmFwdTJhRVdjODhObHZIbXp5c181UFdKOVJTX2o0LWFDN3E3dm1TOGpj?oc=5",
-      "datetime": 1792498282,
-      "summary": "Iran prolongs talks in stalemate to influence US midterms, officials say  Reuters"
-    },
-    {
-      "headline": "Draymond Green says he's 'not Steph Curry,' wants to play another year even if he leaves Golden State Warriors",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/20/draymond-green-says-hell-play-in-2027-with-or-without-the-warriors.html",
-      "datetime": 1792497602,
-      "summary": "NBA star Draymond Green said he would love to retire as a member of the Warriors but plans to keep playing next season even if that means joining another team."
-    },
-    {
-      "headline": "Portuguese police clear housing protest camps, arresting 55 - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOdWwxLWtmTWFlcG1YV2s1RV91eXlPVFlCeFNzY2ZkX2Z4T1pnZllxOXB0eFlkX3hnWllLT1N5SmVNUnJZRnI3UDBxcTNuQnRsYUFZeWFyUktlcEMxbkdBQW96VGJxdjNjbjRNTXFrdDVVbUhSOUw1OFRDaE9jNkpGdmQzbUZMR0thZUY1MklFcTU4YXhvNDRmNHlyMGxiNDd4clE?oc=5",
-      "datetime": 1792494584,
-      "summary": "Portuguese police clear housing protest camps, arresting 55  Reuters"
-    },
-    {
-      "headline": "Ryanair CEO tells Europe to ready for biggest airfare hike in history - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxOMXZ5Mmp5bkRpM3otNFRBOHdTY0c4WWFsQWctOFFEUndibTNUOGVUdFVNOE9GVHZ0VHVjWFdnLUsxYkx6NFJZNXlSYV80M1d2N2c3czVaeTZ2WjI1YkZCZ1FPcHExWXpvYWlNSlFLd092ZTRDSkVmR1ZHYzcwazVpNl94X1ZkbzhIejhnbF90LW9MUmFkNzg2alYyQ1VxUGhIT1NnSEZudHJLSVpPcGZseDZB?oc=5",
-      "datetime": 1792493825,
-      "summary": "Ryanair CEO tells Europe to ready for biggest airfare hike in history  Reuters"
-    },
-    {
-      "headline": "GE Aerospace raises 2026 profit forecast as services strength drives growth - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMi0AFBVV95cUxQNnVUT0tINU83dGVFSG5iTnFZNFlyQk9vT3lHZEY0dU5rUUFJRGlTYndPWEdiM2M0a0lKLU5FUW5CV2JvZ2NJTDI5MXlkVk85NlFwOU1XdUk0VzdKZ2FpZXJDUUJNMlZWZURPcVpXLWVKQzZ4SUcyYkEwQnhZY2xUd0VIc3g3dHEyU0RncnZrVkV5MzQtTGdWbFAwXzJzR1RNU1BBb2pjdm5EcVBaTVZtajBzV1B4XzRHY2YyaG93YXR1Z05ESGR4TlAxR0N6Q2xq?oc=5",
-      "datetime": 1792492183,
-      "summary": "GE Aerospace raises 2026 profit forecast as services strength drives growth  Reuters"
-    },
-    {
-      "headline": "Asian refiners in dispute with Saudis over 2027 oil contracts",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-20/asian-refiners-in-dispute-with-saudis-over-2027-oil-contracts",
-      "datetime": 1792486863,
-      "summary": "The disputes are a byproduct of the West Asia war, which cut exports from the region and meant that Saudi Arabia’s customers weren’t able to collect their contracted supply."
-    },
-    {
-      "headline": "Ryanair predicts biggest jump in air fares in history next year",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-20/ryanair-ceo-predicts-highest-air-fares-in-history-next-year",
-      "datetime": 1792485651,
-      "summary": "Ryanair predicts Europe’s airfares could rise up to 20% next year due to higher oil costs and limited hedging."
-    },
-    {
-      "headline": "China flags APEC's role as key for a challenged global economy - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxOQXlaQTdVSjB0cS1HeThNc1hMYlJiZjdrT1VTLUNhZjl5QjNpYU1EQTEtaDVfUWtSeGEtZG5ZNWxxeS0zbmpVV202NnJwQlVUWWU3RUo2QzFlV25nX2haVEg2YU5VaUh3UmxTZndSSG1fZGVRU0FIcnIySnRIcXA3c3FUbnBIcUJPZEUtQVZsNTgxS2JudFZpMl9RZUVkR284STBrek9md3JlSjg?oc=5",
-      "datetime": 1792481143,
-      "summary": "China flags APEC's role as key for a challenged global economy  Reuters"
-    },
-    {
-      "headline": "Malaysia de-registers main opposition bloc as elections loom - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQZXJhdklRSEUwTWdWSkF3UjlTWC0wZks1NWJnVk00QjlfaGw0b0U4WjhRZXpvdERDTVVYWjVKTEE1eEh1enV2VTF1aUI5UzE2ZHVTUVJCU091Q1hoSWdOVGFuSW9YaGZtTUdkYXluNXQ1TzQyZ015T3pQMmNjMmh3SXpQeVA3S1RoSjhxdWp5UThzLTF3SVZfZUVqLWx2NGl5am5kWHdMSnFEcl82aHF6dWhB?oc=5",
-      "datetime": 1792478940,
-      "summary": "Malaysia de-registers main opposition bloc as elections loom  Reuters"
-    },
-    {
-      "headline": "Oil majors face spending test from Iran war windfall cash - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxQemV5ZWpZWkdhUzlRTmJsLXMyNVFMa0EzLTYxSGJubDVlSkVWMGVuckZDRVZOOS05eGc1aHlSOGJva3A5d2R2SENNNVBNeTM5eXNEeWJWTDlDbzBUdlZTTDdFZDRlT3dkVWtSWmJJekhvc3BSQk5KbnlTcjR2Q1otUEFlS0JYSUVZclR1d0NGRzJJaHBXbFdBS1RPZWZqOVNXemZtVmlRQQ?oc=5",
-      "datetime": 1792476240,
-      "summary": "Oil majors face spending test from Iran war windfall cash  Reuters"
-    },
-    {
-      "headline": "As France erupts, Europe's far right gains from fuel-price anger ahead of elections - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPRjl5VmhGZHJ1bUpkdTZQaElWaWdnSFVkdVVQOUhzN3Y5SFdHOUNpS0pXQjdsVzhMVm1YOFloSGhHbnNYT29talRoNVJWdlRDVkdCM0VQV1lIUFZSbG9MV3BPclJZZGVtejVZZFNNWWxxdFdBM19hS2pQdHNaWm51MFRFNWxLWHdzVzQwN1ZxeXFFenRPREthTGRvVW9vOW1JdWpiVWk0VE9UQWlqRnZJWEJ0aFVYd2xBR3FN?oc=5",
-      "datetime": 1792476120,
-      "summary": "As France erupts, Europe's far right gains from fuel-price anger ahead of elections  Reuters"
-    },
-    {
-      "headline": "Zelenskiy to meet Witkoff after Trump says Russia has been 'fine' on Ukraine - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxNcGUzUUpJZDlBeHJNb3ZDUGd2a21yM3ZCY0lfOTc0ZjYxQ01jX1RoTC1wQlZzU0xRN3c3YnZBWGJuNG95ZnRSeXdESktNM1dFUnFLNTBJX3Zjem9rSVdKckVVckh2VGVCLXc2VVpPOTBKbUhnUU1jYUtHUzF5YVNMM0ZhWFBZeXBmZktWQ3VKaW5ubHVnOGt1Zy1VMTNGMDZqMWlyeg?oc=5",
-      "datetime": 1792475220,
-      "summary": "Zelenskiy to meet Witkoff after Trump says Russia has been 'fine' on Ukraine  Reuters"
-    },
-    {
-      "headline": "Gold holds decline as energy-led inflation weighs on rate path",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-19/gold-holds-decline-as-energy-led-inflation-weighs-on-rate-path",
-      "datetime": 1792474413,
-      "summary": "Gold slips as energy-driven inflation and Fed rate expectations weigh on prices, with investors eyeing next moves amid yields and dollar movement."
-    },
-    {
-      "headline": "As Japan pursues a chip-industry reboot, it's being pressed to build America's - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQ2l4SE9UYmpaWGdDWERaQTFBMEYwWDNidzZ6X1AxWnJiVXpUdWVQOUVZMzBXWTBpeWdiMGo0eXlCYkFJejV2VDBDQ0NkX0p1TTNNSU5reVNKWDB1U3duU3lzU1FaUmJDNTZrTjk0UDNiQ0dzUlpoYlFENTFBOXNVSkhZVVppeDduLVVueW9VTG9PRXNPcG91b0VxSjU2aEhuYzY4OVNaWmU1WnpWNmdZbzJVN3MyRUF3UTJUWGd0bw?oc=5",
-      "datetime": 1792471860,
-      "summary": "As Japan pursues a chip-industry reboot, it's being pressed to build America's  Reuters"
-    },
-    {
-      "headline": "Trump open to Putin, Xi summit but would focus on nuclear arms",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-19/trump-open-to-putin-xi-summit-but-would-focus-on-nuclear-arms",
-      "datetime": 1792471083,
-      "summary": "The US President is slated to visit China next month for the Asia-Pacific Economic Cooperation summit and for talks with Xi on the sidelines"
-    },
-    {
-      "headline": "Sea plans IPO for financial services arm Monee, memo says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQTnJhT0dMNmJNYTNMN2pSWnlhTXBXdkZTSFF1c3JhdnpGOVZ4TXN3Umh2MlczQ0xNN0s4MGJEM3hVTmU2RTFITGpWOWR6OHR4RlZCUFhJdWFldTg0SHlOYjREa3A3T2VJNzl5c0w0TldZSDFfQ2NVMXQyX1lnUXRxeFhkcG5nc0xDYUZQSnpONkJtNzNSZnZ4NFlZaC1USmtNRlFMekY4QTdYems?oc=5",
-      "datetime": 1792469520,
-      "summary": "Sea plans IPO for financial services arm Monee, memo says  Reuters"
-    },
-    {
-      "headline": "How safe havens stack up as tech, energy and France fears grip markets - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMilAFBVV95cUxNcHQwSENyS3lkNi05UkRqMGdnZVg3dUlBWC1KdE8wemZkNmthdFBhSG9MSXB5VV9Yd3ExSWI1ZDBFVEdpY1JKSl92RzlOOHhfbHpqeEdmUWlwa09IdlVqb0pyNDAzTzVGZjJDd05xMHlRazVZTUQ0eWxZWm8wZEFSRlllNkg5Mml6MFNBNEJ1OXdnTHlE?oc=5",
-      "datetime": 1792469160,
-      "summary": "How safe havens stack up as tech, energy and France fears grip markets  Reuters"
-    },
-    {
-      "headline": "China adds extra Havana flight as Cuba fuel crisis strands travellers - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQaEFNYzFnckJuaWpWZXVNT1BiUDBwSkJJNWpVVTBSS3ZCc1FDRzJhSW1RcFpCQU93cXFweDFoSUpqUG9QRC1BdlN0RTZ1bWpVV3g1cDB6eUFjRURrbXVVa05NaXRsUEJPT0ZTQUtKRUZVU09rZkJtYnVJcDIzYTdVS0NTMWQ4cWtpR29tMkFacjJIZ0RwOW9kTTU3a3VLSVJSVXVMUlJDMXN4Z2ZiR0hFck1MUmFkd0ozQ09rYUdB?oc=5",
-      "datetime": 1792469100,
-      "summary": "China adds extra Havana flight as Cuba fuel crisis strands travellers  Reuters"
-    },
-    {
-      "headline": "RBI steps up overseas investment checks as rupee slides",
-      "source": "Bloomberg",
-      "url": "https://www.bloomberg.com/news/articles/2026-10-20/india-s-rbi-steps-up-overseas-investment-checks-as-rupee-slides",
-      "datetime": 1792468929,
-      "summary": "The RBI issued a standardized checklist to major banks last week, requiring detailed information on overseas direct investments exceeding $1 billion and transactions above the regulatory limit"
-    },
-    {
-      "headline": "Indonesia to deploy more than 9,000 security officers at protests marking Prabowo's two years in power - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizwFBVV95cUxOLURVRDUyaUE0MkV5QVpTUkUwVnZTMEJObDM0am1raVVQbEVGb3lWbmZvVHZJRWtCaVY5MWNIZHYtZFpwTWVROXhvOVFncVdhNTJldDVrLWRsOGtvQ0F6LUk0aFZFbTdPWDc0VmFZTThiOGlDenBGb1dwRWFUTHJVTUVrU3BYRVBrTnA0WFpYSFg3RXBIN3REUGdxcFh0b1RIcGtzaF8tczRveVlqRy1VWjNiN1NGT19GejM3V2l4QXI1VXNtX1hvSTlsckNhb2s?oc=5",
-      "datetime": 1792468620,
-      "summary": "Indonesia to deploy more than 9,000 security officers at protests marking Prabowo's two years in power  Reuters"
-    },
-    {
-      "headline": "Seoul vows 'resolute punishment' after North Korea threatens new border measures - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPZWdtaW1Yc0NpcFhkcEVtMndXS1F4bnlXUUJaSzRLQ3B2ZE5GbjdxMV9IYzB3U1BhMk5LdGtDUlFhVTdDeW9iNXZ3RGp2Ums5dUVlZTFPeDdzTU96WjI3MzlIcWtSTzFQRFNqOU0xMVdUWGJObzJLQXhNTVlXS29lcWdhX3BTWjJvRm5PblVZMDV1b3FwN3YtXzJQdS1mZGlOY0xPd2pFZE1nQ1lLd242amRZcTV1dVRJbjJIUjA5U3VSem5mNUZCeFRDcVd0QQ?oc=5",
-      "datetime": 1792464780,
-      "summary": "Seoul vows 'resolute punishment' after North Korea threatens new border measures  Reuters"
-    },
-    {
-      "headline": "China's September US soybean imports rebound from zero a year earlier, data shows - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxNX3Z1Y0FYWF9KYnBhb3VJazV4NTlFRGVvX010YzJYVnlPSE96a25GT0ZWLXVIZWQwbDZ0VHJWc2l3bllMR0ptRUlKOVhLODJyRVBsX01XTG16S0J4RXZnczlzS3hRX29VUGdjakh3TWUyR3lpNldYNDVmcXJBYlpLSFQyU21qR0ZEYmpjZTdQREtNb2kwNHc3T0t2OFlTOWhBQ3hZTXVPYzdxSVJSQ1dPSDJjLU1SblA1cmJZMg?oc=5",
-      "datetime": 1792461840,
-      "summary": "China's September US soybean imports rebound from zero a year earlier, data shows  Reuters"
-    },
-    {
-      "headline": "Gold edges lower as investors weigh Fed rate signals - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMilgFBVV95cUxOLVJCYm9CRFhWY01aUkRqYnVXb0RzRC1RUnhfOEFicHItalFBMnRMc0ZjcWRVcGNnZVg3ZXQ3WXNXeUZLN183enN0NFAtdmxuUHJhRU5jOHlQbTg1TldhNVdtbF9IWU1GZ1BfOEZvTnJpUEhGTE5xUkRSbl9FZVR4NlFJMEE2V1VYZ1hVRzk3SmpJMi1qelE?oc=5",
-      "datetime": 1792459980,
-      "summary": "Gold edges lower as investors weigh Fed rate signals  Reuters"
-    },
-    {
-      "headline": "Dollar dips as traders weigh Iran, AI risks - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOazFGS3ZwNDhmME9ZUDdoZVQzMkV3UEJQUEJsTE1LdnFTcjNXRzI2emE2Z3VvZE1YNGRpam95VTF3UGgyTVFjRExnWkJ1TGxpenBQUHFhbmU1MUpEYVhDcURRS05xQ1BycHRUT3F3bExRQjZfaUFVeGlKcHpmaGFEMkVwQ0RxSk5iLU4zaDVaVDJzQzEyQ0R4OVFZeHZuVXJKZ3pESWtudFQ?oc=5",
-      "datetime": 1792458840,
-      "summary": "Dollar dips as traders weigh Iran, AI risks  Reuters"
-    },
-    {
-      "headline": "Brent falls as Iran's president discusses mediation with Pakistani army chief - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxPZlA3RXBMd0lXRU1feWpodXpZQ2tnUERkUHFQSlFGX2hCMjdrOVdhRVd2eVk3dmhLYklUdVM1WGtoXzc0cUt2OG44WjBYVFVZazFvQWo1UmJWRlliNzJHWlZBU1hScTU1RU9sVEdDVllsSWE4UXh5b0ZHX0VlU01fNDc3ckpxRkw3ZGdaM0xxMW1qOEhWck1XYUlSVkJWeVZyZWRRSkpqdTFQSmZhejlBRmkxZUJmMGtPVWx6Ym82SnNTcElaWGc?oc=5",
-      "datetime": 1792457880,
-      "summary": "Brent falls as Iran's president discusses mediation with Pakistani army chief  Reuters"
-    },
-    {
-      "headline": "Cuba accuses US of letting terrorists operate with impunity after speedboat raid - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxOZVlrd2ZUN2tTTmJpa1ZUbHZlV2hsWXJmc3Z2NWRBWC1HY1JRa1dMS2NFQmwwZEs5YlU1c0JSTlFPOElRb2Z3Y1R4SUNJY1VDNzVCeElwWVVKM3I2ZDVSdUhCUVFKOFBWYnJIWW1TZ19hcmtKbXpmWGwyby11UWpUTlBhUWVZcV8zZlZDNG0xVHZSbjc2UXpINWUxdUlKZHBnYWNYQ2JXak1UNkJwTmswQm84cEM3UDBwR0ZHc3UzMVNkb0lFV3hr?oc=5",
-      "datetime": 1792457400,
-      "summary": "Cuba accuses US of letting terrorists operate with impunity after speedboat raid  Reuters"
-    },
-    {
-      "headline": "Hegseth discusses Iran with Netanyahu in unannounced visit to Israel, officials say - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxOazNPMm5GbVJUYTRwVVVraElGMVptZkdyb0pkbklkdWMzY01zYWlkYTNNTDlxMFVnanBvVkczd3ozNUxZbDJ0Wl9JQ1hDOGtLZjJsM0hzeXRDTUpFYkhnWHFnQUFqRnZEVFFXZ1hHY1Vrb2hmbk1kaVNUTWZEZ0hoWURkZ080ZUlNQnVBaFhLWVNpTDliV3BmVHMzU05EQWUzTWdlNVd4dHpFNmhEUTZoRWVYVFJLQ1U?oc=5",
-      "datetime": 1792450020,
-      "summary": "Hegseth discusses Iran with Netanyahu in unannounced visit to Israel, officials say  Reuters"
-    },
-    {
-      "headline": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivgFBVV95cUxQWVF3TGpvSmg1YmEyMnhhWXhnUFkwdS13ak14NldscXdsZm92dVkzbGdnU3lwd2VjY255bXJKeGZOX09ZM3AxN1JjWHRSbXRGNDdFaTVhMU9SMWxKZXRDNDd2bnBuaE5pSjJwbkgtVXF6dzJWNWFJOUw5X2U1TjJPQjdUaG1ldHRudHRVTF9FeWhOM3gxaTloUEcxaVdJdHg2M29sUHJwc2NFWFdRV0xjS3Y2UlZ6ZEJLOEw3ZEpR?oc=5",
-      "datetime": 1792445760,
-      "summary": "Kremlin says Putin, Trump and Xi could hold a three-way meeting in China next month  Reuters"
-    },
-    {
-      "headline": "US, Cuba trade barbs at UN ahead of sanctions vote - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOU0VYTGZPd2RmZlZvZWJBZmRHbEsxWFdtYXF3b1ZJVU9FZmRncmoxSERRWldzS0Z0TTJsbVRoLThDT2FfZi1XVHB2QkhmemJGX0M2S3RsUVBTSnN1engtaURsamc3TGxRa0E2RmpVaEJOdVFCQlVhaDJWaG5qQzVCNkRYckxRMmdOZElvLU1zZjROb1p2X1AxYUVB?oc=5",
-      "datetime": 1792443943,
-      "summary": "US, Cuba trade barbs at UN ahead of sanctions vote  Reuters"
-    },
-    {
-      "headline": "Tech stocks had a nice oversold bounce on Monday. Earnings this week will determine if it's for real",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/19/tech-stocks-rebound-meta-tesla-earnings.html",
-      "datetime": 1792443434,
-      "summary": "Investors are hopeful that last week's pullback was a clearing event for equities, but lingering concerns remain."
-    },
-    {
-      "headline": "Oil stocks in US strategic petroleum reserve fall to lowest level since 1982 - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxOTS1qZEVDSUY0Z2dXY0l6TzZCaGpGRnJOMF9Wb0Q1Q0pCVTI5YjN2Q2VyVXJKVnlQa1RuOEdYWWdZc3dQYjRxTVQ5RUVpZzUtc2hJMU50NlA2aUFhcHZCd3o1TFZ4c0hmdnZPckxSTHduS0JNN05CRWdKVUJBSzdkYm10U2pCSFIyLTlvT2NrRWVVOVhYSnpGSEdjSVJTZnJXbGhaXy1GUDBjVGttZl9BUkpzd0tYNDBGUUh4cUt4cw?oc=5",
-      "datetime": 1792442984,
-      "summary": "Oil stocks in US strategic petroleum reserve fall to lowest level since 1982  Reuters"
-    },
-    {
-      "headline": "Pakistan army chief Asim Munir to visit Tehran on Tuesday - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNNU5NeHoza1RQRlByV2lvS2dQTDZXOExwUktiVjJnaUE2YUJoVE1BN3N4VlhMNm1wd25CanBNSGlUeGhuSzZMTDlLUUdsMEtka0x5aWNBNGNpUEpwd1AxMnowV3RIYnZHZGxzb1ZNNGZqenFkbHNQLWlCcUxuekpVZ09UYUVlaWVsVjNmNjJpMHpjLVJiTnFiSnJLaVgyM1FlMEZuYnBUOXVhQQ?oc=5",
-      "datetime": 1792439686,
-      "summary": "Pakistan army chief Asim Munir to visit Tehran on Tuesday  Reuters"
-    },
-    {
-      "headline": "Brent crude edges lower, even after Houthi attacks on Saudi infrastructure - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxPMmVLc19hd0VSYXIydVNTWENKZ2J5WVNvVDRQUjRfTUJXWGhjOGxGZkFHVm9SNnZzeU9TWUhrYnJTRU1sVFRnX1BwZVd3NHB5a0NLdThkbDRldlg2eHdhTll2b3RnQTJ4U3dHVGczM25FdjJHRGQ5WGJDV2Qxd1hzLV9EcjNWaUQ4cXEzbWVHRzNuS1dGVVNBSmdXWGR6THN1dXhvSUdFS0dMMTJZTnBBZEFfZ2JoYVVFSWNMZw?oc=5",
-      "datetime": 1792437486,
-      "summary": "Brent crude edges lower, even after Houthi attacks on Saudi infrastructure  Reuters"
-    },
-    {
-      "headline": "Milan luxury shops close for fear of new unrest as government prepares to deploy troops - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPZWNGMGIzTEZwQjVYM1BNU3lmemRQZTk3OGtQTnhXTWM0UXRFNXhqTTg3WFFQYXdQWVZZTUphR3FGZDd3SE5RaGZlTWdWZ1owRklLYnQzSWN5RlotVjY2OEdjMUtsUGpMZ1RxRk5QS1djT3hnbDZwR0lUSmVwZjlYX243eGIyRHpKLV80NkltM3NmZkk2ZEl0WGNGVEpGRHZUei1LRGJYMnRoME0?oc=5",
-      "datetime": 1792437291,
-      "summary": "Milan luxury shops close for fear of new unrest as government prepares to deploy troops  Reuters"
-    },
-    {
-      "headline": "Crushed tech stocks bounce — plus, new doctor survey keeps us positive on Lilly",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/19/crushed-tech-stocks-bounce-new-doctor-survey-keeps-us-positive-on-lilly.html",
-      "datetime": 1792435955,
-      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
-    },
-    {
-      "headline": "Apple to host 'Pro and tell' event on October 28 in LA - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxObEhNTVQ4dnFORUtDNXdWaUU0UHVSOGJlLVh1YzZzS1A3OUdwRkl3a2o0Z2NuTmtURG5kY0tVWkpOSUExUmFtaVJ2eEV4b0o5YnMwQTdXcmpUX2dXQnZZQW5wemMwcE00RXJvcUNZbjBTUTNKem01c3N5cGNFckxab0pjN1JLR0VjUVVVeGdtOHNvdzVrMzdiSXBEV2c?oc=5",
-      "datetime": 1792434505,
-      "summary": "Apple to host 'Pro and tell' event on October 28 in LA  Reuters"
-    },
-    {
-      "headline": "Germany summons Iranian envoy over plot to kill Jewish community leader - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuAFBVV95cUxPMTBxMkF3RnVSeWFVMnUwOEZFYVAyeFRhRE9IVll1Q2czRDV3aWEtNzdvcV81TFZ1YzNjNDRkSHloSUFCUW9va0NyNEtSa1k0Wm9MeG9ZVE1sYkFpd0JoUjNXYm96NFdyY1FjNUFnNlljcEZQR3ByMUdXYVZOY2RDdnk3cEZXVHlfaTMzV19Xc0JTMDdPQmJlNHRrUE1Ua1ZtM0E5Umc2T3FrVmpXa3o3U29pZWdoSjNl?oc=5",
-      "datetime": 1792431949,
-      "summary": "Germany summons Iranian envoy over plot to kill Jewish community leader  Reuters"
-    },
-    {
-      "headline": "Canadian dollar notches nearly four-week high on BoC rate hike bets - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxQejFjMHFhbTY3RGNrb3ZLNnZvd2QtWjl4eDg5cG9vRmR3Qk9zbGNBWXM1VXE5Z0ZWamFZYUptd0RwTmdieTRjQXVjWE5YVEhlVzFOUEo3WnF4aVRqSmNvUUFTZnVwVHo2aHVuTXZybk5UT0ZqSmtGNHdfRXZhNWdzVnpDRWRja2ExdFFHNTYwUDg2bmxzWjdRekRHeUtKU3RuY1Z3M2FZSktjdXliQlpZZjBn?oc=5",
-      "datetime": 1792431673,
-      "summary": "Canadian dollar notches nearly four-week high on BoC rate hike bets  Reuters"
-    },
-    {
-      "headline": "Saudi Arabia postpones its 'Davos in the Desert' conference after attacks - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipwFBVV95cUxPaXJvV3ktdmE4WU9ZNjVBcDRBYW9yNXJVYVI3MV83aWtIV0pYN0lGNzM4UlNRZDdpRGs1bGsxR18wcjY5STVhU1Q1VEZJUmRKWFZPUnoxSlpFaThtMzhjRlVIZGl2VVVYYTlYM181N0Jyb0h4ZWRrM2FVZFZsSFRBT1haU0QtdEp5QlZ6dVg2VVpyX2RsaDEzbnN2Q1NvSFc5WW5jT2VmVQ?oc=5",
-      "datetime": 1792431283,
-      "summary": "Saudi Arabia postpones its 'Davos in the Desert' conference after attacks  Reuters"
-    },
-    {
-      "headline": "French Prime Minister calls for partial curfews after weekend riots - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOS05IaFlBa0paMExacEp0cGpsM0JDeGF2RmZTR3JDZWxxRUZ4TGF4TVMtV09yay1PQjFhMnJRT3UteEtWQV9nUU9DMHFfaU1Kd054UlF3aFh1WGtuaUlFWTQ0RXExNVNfT3RwRFhLLW82XzhpNEFNdjd6X2RmVXNETzVsYTR5TjBFWTFrbHZ5NVhpcnNpbDF6UGVaSU9sMnR4d1hxZlVSLTY?oc=5",
-      "datetime": 1792430658,
-      "summary": "French Prime Minister calls for partial curfews after weekend riots  Reuters"
-    },
-    {
-      "headline": "Christiane Amanpour to leave CNN after four decades as Ellison era begins - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxQb1RuM0JKcU9Qaks5eThna1hYUlptN2YyRWlqc2dDX1kySU51MWZPNFd6bXpCVnVPZXptVl80VmlwLU9NbTVrVmNjeWpNUEs4WFFKekVFRGU2NTZJQlZxeEFINFJRa3RmTEVJbnhvUm83R2gyMDVEb3V5cmgxNHFBWnd6OVN5ZlBKQ09HcWJnSlhvM0FxTm9ORkNBdzg4RzJSZzhVWHdROU1oT0d6VEY3LXdLdUV5VkwzZGkxWlVjOTlqcG1l?oc=5",
-      "datetime": 1792429945,
-      "summary": "Christiane Amanpour to leave CNN after four decades as Ellison era begins  Reuters"
-    },
-    {
-      "headline": "Gartner analyst behind tech rout: AI returns are not yet large enough to justify neocloud build-out",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/19/gartner-analyst-warns-about-ai-neccloud-build-out.html",
-      "datetime": 1792429036,
-      "summary": "The firm stands behind analysis that sent shockwaves through the market last week."
-    },
-    {
-      "headline": "Governments warn citizens over security in France after riots - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPWmxMTDYtS1VOLVA5TE5qSGZzeW96a0g0N2dXWlpSaUVZMk93MkNIS2ZsLUpHNmtCNElLaXdmVHNaalNzbTdyUkxsMUdNUFFEZTZES0hmMmxSNERLWnlJUjB6MkE3bXExVW9mMTI2WmZOeGVrcDhlUkpLRjRKSXRGeUVmMU5FUUhHUkw3TGpmdFp5UDRHSnVwMlBXdDI4T2JwR1kwOVZydmROQlFzQlE?oc=5",
-      "datetime": 1792427532,
-      "summary": "Governments warn citizens over security in France after riots  Reuters"
     }
   ],
   "ticker_news": {
@@ -767,9 +767,9 @@
         "url": "https://finnhub.io/api/news?id=f08741ee7143a3f80f0f50166c5189df2074240c7c982f450f312ed3947a7410",
         "datetime": 1792582787,
         "summary": "The S&P 500 stocks getting the heftiest EPS upgrades have something in common.",
-        "headline_cn": "10只标普500成分股财报前预期大幅上调",
+        "headline_cn": "财报季前盈利预期上调最多的10只标普500成分股",
         "sentiment": "bullish",
-        "rationale": "分析师上调预期反映业绩乐观",
+        "rationale": "分析师上调预期，业绩向好信号",
         "market_relevant": true
       },
       {
@@ -778,9 +778,9 @@
         "url": "https://finnhub.io/api/news?id=837e20e0a179b08e93d922d8798fad1137e2d2c400063212bdc1a09822b146d7",
         "datetime": 1792481895,
         "summary": "Susquehanna  analyst Biju Perincheril   maintains APA (NASDAQ:APA) with a Positive and raises the price target from $47 to $58.",
-        "headline_cn": "Susquehanna维持APA正面评级目标价上调至58美元",
+        "headline_cn": "Susquehanna维持APA正面评级，目标价上调至58美元",
         "sentiment": "bullish",
-        "rationale": "机构上调目标价增强投资信心",
+        "rationale": "机构上调目标价，看好后市",
         "market_relevant": true
       },
       {
@@ -789,9 +789,9 @@
         "url": "https://finnhub.io/api/news?id=d43afb5cabf2da210d6d55fd6f342ab588bd135c0e35bfe060fbefb7324c4301",
         "datetime": 1792444502,
         "summary": "In the closing of the recent trading day, APA (APA) stood at $49.76, denoting a +1.24% move from the preceding trading day.",
-        "headline_cn": "APA跑赢市场回报：值得关注的事实",
+        "headline_cn": "APA超越市场回报：值得关注的事实",
         "sentiment": "bullish",
-        "rationale": "超额收益显示公司基本面强劲",
+        "rationale": "超额收益显示公司表现强劲",
         "market_relevant": true
       },
       {
@@ -800,9 +800,9 @@
         "url": "https://finnhub.io/api/news?id=5e755419cac40dc1d5fb6198eebc49ebfe883e2cbfc3a76d2c096e2123cc05af",
         "datetime": 1792423202,
         "summary": "APA (APA) shares have started gaining and might continue moving higher in the near term, as indicated by solid earnings estimate revisions.",
-        "headline_cn": "APA盈利预期上升：能否继续上涨？",
+        "headline_cn": "APA盈利预期上升：能否继续上涨?",
         "sentiment": "bullish",
-        "rationale": "盈利预期上调支撑股价上行",
+        "rationale": "盈利预期提升，估值支撑增强",
         "market_relevant": true
       },
       {
@@ -811,9 +811,9 @@
         "url": "https://finnhub.io/api/news?id=90dc4b5a62ec1e8b4ee49caa5eee04dce85ea7c3227819240aaf980113f65fb7",
         "datetime": 1792422003,
         "summary": "Does APA (APA) have what it takes to be a top stock pick for momentum investors? Let's find out.",
-        "headline_cn": "APA是优秀动量股：应该买入吗？",
+        "headline_cn": "APA是优质动量股：是否值得买入?",
         "sentiment": "bullish",
-        "rationale": "动量效应强化短期买入信号",
+        "rationale": "动量强劲，技术面支持买入",
         "market_relevant": true
       },
       {
@@ -913,30 +913,37 @@
         "url": "https://finnhub.io/api/news?id=97f506870ca52fba7288b1e4ecee9e32d0f01fbf5fd7e01e6e32ad19a976278c",
         "datetime": 1792062257,
         "summary": "RBC Capital  analyst Scott Hanold   maintains APA (NASDAQ:APA) with a Sector Perform and raises the price target from $47 to $49."
-      },
-      {
-        "headline": "APA Corporation (APA) Hit a 52 Week High, Can the Run Continue?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=a7408477fe194f8aa968c23b3c068c2353bfbd58ad08a148a3ee7bd8348dd8c9",
-        "datetime": 1791980102,
-        "summary": "APA (APA) is at a 52-week high, but can investors hope for more gains in the future? We take a look at the company's fundamentals for clues."
-      },
-      {
-        "headline": "APA Corp (NASDAQ:APA): An Undervalued Value Stock Backed by Strong Cash Flow",
-        "source": "ChartMill",
-        "url": "https://finnhub.io/api/news?id=3ab581ca2ae5eb820e6da01025c383733fd0d642758acc1f240fc1fb7e622ddf",
-        "datetime": 1791973848,
-        "summary": "APA stock screens as deep value with strong cash flow, top-decile returns and low debt, but weak growth keeps it a cyclical value play."
-      },
-      {
-        "headline": "Wells Fargo Maintains Equal-Weight on APA, Raises Price Target to $51",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=cecdab612d4af42eff445037572389655542ab07b871a3903f23d7c44ed8a2ef",
-        "datetime": 1791973183,
-        "summary": "Wells Fargo  analyst Noah Hungness   maintains APA (NASDAQ:APA) with a Equal-Weight and raises the price target from $50 to $51."
       }
     ],
     "APP": [
+      {
+        "headline": "Microsoft and Alphabet opt out of tokenized stocks in latest blow to ambitious plan from OKK and NYSE parent firm",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=713ef4752a76965c5b1fdf5a33d63d62336e22e1062899b8e5d65030cb6d74a1",
+        "datetime": 1792602501,
+        "summary": "Sixteen companies have opposed plans to trade tokenized versions of their shares on Cuomo-backed platform OKXICE."
+      },
+      {
+        "headline": "AppLovin vs. Pinterest: Which Stock Is a Better Buy in 2026?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=404baccc4090c80db1eb5feecb678de0bd57d49181508a34430db173160e9ea7",
+        "datetime": 1792595894,
+        "summary": "AppLovin is growing revenue and profits at an extraordinary pace with advertisers increasing budgets. Pinterest has 640 million monthly users and improving AI-powered ad tools, but is still posting net losses."
+      },
+      {
+        "headline": "AppLovin vs. Snap: Which Technology Stock Is a Better Buy in 2026?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d95060a94d264f3c7e1612e82240983b769bde0a13a95e3c24e5eb3c4117f1d4",
+        "datetime": 1792586021,
+        "summary": "AppLovin is growing revenue and profits at an extraordinary pace with strong free cash flow. Snap is improving steadily but still posting net losses despite nearly 1 billion monthly users."
+      },
+      {
+        "headline": "AppLovin: If I Liked It At $340, I Am Lovin' It At $270 (Earnings Preview)",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=faa28c5ba811d49fb33d3307311b5d1292d5757b374769066193eed733addb48",
+        "datetime": 1792576687,
+        "summary": ""
+      },
       {
         "headline": "The AppLovin Playbook Is Working Again - But For Unity",
         "source": "SeekingAlpha",
@@ -1125,92 +1132,388 @@
         "url": "https://finnhub.io/api/news?id=2d248cfa989506dcd1065692b2117bc7f6abe76fab747bf2f2d0508f4b8c398b",
         "datetime": 1792047168,
         "summary": "AppLovin (APP) stock fell as top analysts lowered price forecasts amid ongoing legal battles and slowing revenue growth."
-      },
+      }
+    ],
+    "BX": [
       {
-        "headline": "What Does AppLovin Offer That Omnicom Does Not?",
+        "headline": "Blackstone (NYSE:BX) misses Q3 2026 revenue estimates",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=53053681e99deaf2d264770b456e6a372a93f4bf90e7ce1b549ff8e82f7321af",
-        "datetime": 1792019476,
-        "summary": "Two distinct approaches define how Omnicom (OMC) and AppLovin capture what brands spend on advertising. Omnicom sells the work of its agencies across media, advertising, and public relations. By contrast, AppLovin runs an ad platform built on its own models, focused mostly on games. Investors have treated the two differently over the past year. AppLovin stock lost 52% over that period, while Omnicom returned 6.9%, even though AppLovin recorded faster revenue growth. So what is each company actua"
+        "url": "https://finnhub.io/api/news?id=f3ffcfccfacd9928de72e3cd9d39f77c62779b1a64f24d902b06f76a50862593",
+        "datetime": 1792670176,
+        "summary": "Alternative investment manager Blackstone (NYSE:BX) fell short of the market’s revenue expectations in Q3 2026, with sales falling 8.2% year on year to $3.06 billion. Its GAAP profit of $0.83 per share was 34% below analysts’ consensus estimates."
       },
       {
-        "headline": "AppLovin Q3 seen by Wedbush as key test of model update",
+        "headline": "Blackstone Inc.: Q3 Earnings Snapshot",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=59b0df22d1c0f02ebb4a7c3af33a4f82ea8e96a0a41416526fc359f1d041ec40",
-        "datetime": 1792007880,
-        "summary": "AppLovin Corp (NASDAQ:APP) is valued as if it is losing market share, but Wedbush Securities says its checks show otherwise. Advertisers the firm spoke with held spend steady in the third quarter and expect an e-commerce-led lift in the fourth. They pointed to creative, rather than demand,..."
+        "url": "https://finnhub.io/api/news?id=c5ff3b7493d77338ba4860c8c3339368cfbe990fc670f0eeb1e0e9df90239d35",
+        "datetime": 1792667596,
+        "summary": "NEW YORK (AP) — NEW YORK (AP) — Blackstone Inc. (BX) on Thursday reported third-quarter earnings of $662."
       },
       {
-        "headline": "Unity price target lifted as Vector attracts bigger advertising budgets",
+        "headline": "Lender Wants Blackstone, Hudson Pacific To Sell Vacant Sun Valley Studio",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=036d34dc3d1c3f32abb08e44fb012c281d9a571ddb036e7778d231ee6e137a2e",
-        "datetime": 1792004100,
-        "summary": "Wedbush has raised its price target for Unity Software Inc (NYSE:U), the video game development software and advertising technology company, to $55 from $50, citing growing adoption of its Vector advertising platform. The broker reiterated its 'outperform' rating after industry checks..."
+        "url": "https://finnhub.io/api/news?id=bb7ed8c57763938e2582ffa0a6182ec7f07e0af02755d2cff5da9a485db3fedd",
+        "datetime": 1792611529,
+        "summary": "Marketing materials ask for the best offer on Sunset Glenoaks Studios, rather than suggesting an asking price."
       },
       {
-        "headline": "AppLovin (APP) Following Strong Q2 Results Has Its Valuation Story Changed",
+        "headline": "NFL Weighs Letting Blackstone, Apollo Unit Buy Minority Team Stakes",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b133f90239c71562d00a931f70c43caf2d78b0011dd8b5e1d7d3e4b35b5b3dbe",
-        "datetime": 1792001485,
-        "summary": "AppLovin (APP) just posted a 53% jump in second quarter 2026 revenue and even faster profit growth, yet the share price has retreated sharply, forcing investors to weigh fundamentals against market skepticism. Despite the strong second quarter update, AppLovin’s share price has been sliding, with a 30 day share price return of down 16% and a year to date share price return of down 56%, even though the three year total shareholder return is very large and remains far ahead of shorter term..."
+        "url": "https://finnhub.io/api/news?id=a30db5f09f2eab6f908009bfe9c73d89ace7b4b2d2cb52e50345fe6fcd80bdab",
+        "datetime": 1792611413,
+        "summary": "Blackstone Inc. (NYSE:BX) and a unit of Apollo Global Management (NYSE:APO) are holding early-stage conversations with the NFL about becoming approved investors eligible to acquire minority stakes in league teams. The conversations remain preliminary, and both firms would likely need..."
       },
       {
-        "headline": "Unity Software Sinks 10% Despite Wedbush Target Hike on Vector Ad Platform; AppLovin Falls 3%, Trade Desk Slips",
+        "headline": "Apollo, Blackstone Have NFL Aspirations, Seek Approval to Buy Stakes in Teams",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=975f324f86a5bfcd2af9cd2170f92d1c8d6e6379fc1603fb13df75605c48259a",
-        "datetime": 1792000675,
-        "summary": "Wedbush just raised its price target on Unity Software and praised its Vector ad platform, yet the stock is sinking hard while rivals escape with minor bruises. Something beyond the numbers is spooking investors, and the answer cuts to the heart of whether Vector can actually challenge AppLovin."
+        "url": "https://finnhub.io/api/news?id=4d2ca63d34d6af762a0a2e1d1f072e052682dab8d056a787ed6e1e1a30e51d0c",
+        "datetime": 1792599321,
+        "summary": "Blackstone Inc. and a unit of Apollo Global Management Inc. are in talks with the NFL to join the league’s list of approved private equity firms that can take minority stakes in its teams, according to people familiar with the matter."
       },
       {
-        "headline": "AppLovin (APP) vs. U and TTD: Can AXON’s AI Advantage Outpace Execution Risks?",
+        "headline": "Lender pushes for sale of Blackstone, Hudson Pacific’s totally vacant Sun Valley studio",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=1152e2c2bbf1f1df6afb431c732afcda3458283af5d87094e272e2d23aa79002",
-        "datetime": 1791996178,
-        "summary": "Is APP a good stock to buy? We came across a bullish thesis on AppLovin Corporation on Astute Optics – US’s Substack. The thesis was published on September 11th, when the stock was trading at $323.96, and APP lost 16.38% since then. The decline appears to reflect concerns about slowing advertising growth and stalled market-share gains. In […]"
+        "url": "https://finnhub.io/api/news?id=766d9449c97cd37dc76b8903d23eb2a30140ba64ad5c0510a8f1592657527fc0",
+        "datetime": 1792596600,
+        "summary": "Hudson Pacific Properties’ Victor Coleman and Blackstone’s Stephen Schwarzman and 11100 West Peoria Street (Getty, Google Maps)Colliers is shopping a production campus in Sun Valley on behalf of Blackstone and Hudson Pacific Properties’ lender. Marketing materials viewed by The Real Deal call the offering a lender-facilitated sale and do not include an asking price — instead calling for the best offer. The 240,000-square foot campus in the Valley is empty, per the materials. In 2021, Victor Cole"
       },
       {
-        "headline": "Unity Software Looks Positive as Vector Advertising Platform Gains Traction, Wedbush Says",
+        "headline": "A Data-Center Stock’s 40% Selloff in Australia Exposes Risks in the AI Buildout",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d5779e770d810507ba457c909e8b25d1559d0828eb5b1898ce3659c9cb52a84f",
-        "datetime": 1791992321,
-        "summary": "Unity Software (U) continues to look positive heading into Q3 results, as its Vector advertising pla"
+        "url": "https://finnhub.io/api/news?id=0367af75872599637462ee68b64180a2cb4b2cf8aeb94ece43f77ba4577b6320",
+        "datetime": 1792593420,
+        "summary": "NextDC’s earnings warning highlights power constraints and community opposition that could slow the AI-infrastructure buildout."
       },
       {
-        "headline": "AppLovin Estimates Reset as Advertiser Checks Point to Stable Share, Wedbush Says",
+        "headline": "Blackstone (BX) Reports Q3: Everything You Need To Know Ahead Of Earnings",
         "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=3f77c587f79c96ba8561abf46026fc4114ee7b9aa769906f4d535eeba3a87cb5",
-        "datetime": 1791991855,
-        "summary": "AppLovin (APP) estimates were reset to a more achievable baseline, excluding potential upside from m"
+        "url": "https://finnhub.io/api/news?id=21b632c89abea4c115d1a20804ac90495d9ebff624464d96a38c59eb30330b81",
+        "datetime": 1792552239,
+        "summary": "Alternative investment manager Blackstone (NYSE:BX) will be announcing earnings results this Thursday before market open. Here’s what you need to know."
       },
       {
-        "headline": "Goldman Sachs Maintains Neutral on AppLovin, Lowers Price Target to $400",
+        "headline": "Blackstone (BX) Lands $8.7 Billion Energy Fund Close While Pursuing India Deal",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=2478c88d9914a97a93ce39801f2da65da9ad03afc583ef68e293f377f31df0b2",
+        "datetime": 1792534449,
+        "summary": "Blackstone (NYSE:BX) announced a final close of US$8.7b for its Energy Transition Partners V fund on 20 October 2026. The Energy Transition Partners V vehicle is focused on financing projects and companies linked to the global shift toward cleaner energy. Blackstone is in active discussions to invest US$400m to US$500m for a significant minority stake in Accord Software Systems in India. The US$8.7b Energy Transition Partners V close and Accord Software talks are worth setting against the..."
+      },
+      {
+        "headline": "6 Blackstone multifamily properties move to servicing",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=0e4b8f35f0313f47267b296ffcb12d9fa959554878d39bbd0223fec694c21b7a",
+        "datetime": 1792522251,
+        "summary": "The assets transferred after the private equity giant was able to sell 15 other apartment communities backed by a $1.3 billion loan."
+      },
+      {
+        "headline": "Blackstone's $1.3B Multifamily Loan Hits Special Servicing After Missing Maturity",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=45c7559f9463a2649ea11d3fbc8a559a3df3f14d0708bb36aa74436cfc83b7d5",
+        "datetime": 1792520182,
+        "summary": "Blackstone has been selling properties from a nationwide portfolio to pay down the $1.3B loan that matured earlier this month."
+      },
+      {
+        "headline": "Blackstone’s $1.3B Apartment CMBS Loan Hits Special Servicing",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c836432375fd7d34f32e0784926fafb75aedc1f2a084a6b86bab5d7760b75b90",
+        "datetime": 1792518769,
+        "summary": "Blackstone's $1.3B apartment CMBS loan moved to special servicing after maturing this month, with $517.7M still owed, per Morningstar Credit."
+      },
+      {
+        "headline": "BlackRock's Q3 AUM Rises 15% to $15.5T: Will Inflows Boost Revenues?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=cf64e2b985110523b09f4339e909d08ebd20b5ed099797fb22bb671ec4cc6725",
+        "datetime": 1792501200,
+        "summary": "BLK's AUM surged 15% to $15.49 trillion in Q3, fueled by robust inflows and market gains. Can rising assets and higher fees sustain revenue growth?"
+      },
+      {
+        "headline": "Blackstone, Warburg Pincus Explore Sale Of Intrafi",
         "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=b4608fd9ec7bd1d2d88bb341b3d327e95c58358b0e907ab1464bf3ee62c7540f",
-        "datetime": 1791986121,
-        "summary": "Goldman Sachs  analyst Eric Sheridan   maintains AppLovin (NASDAQ:APP) with a Neutral and lowers the price target from $465 to $400."
+        "url": "https://finnhub.io/api/news?id=e5004825198c3bda8079baf6ebffd6c14d93f4ee4368e2212d418add98ed12c5",
+        "datetime": 1792499690,
+        "summary": "-Reuters Citing Sources. "
       },
       {
-        "headline": "10 Communication Services Stocks Whale Activity In Today’s Session",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=6e9d2b6a3cbdcb8645a9ca27188f8e62a61b3f8c345da2e7edfc07976436e2c6",
-        "datetime": 1791984911,
-        "summary": "This whale alert can help traders discover the next big trading opportunities.\nWhales are entities with large sums of money and we track their transactions here at Benzinga on our options activity scanner.\nTraders often"
+        "headline": "Blackstone: Expectations Sit Low Going Into Q3 Earnings While The Yield Approaches 5%",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=db2248ba2e3be4a2df681ce460b8be99161aa47d5df05b2ef0bb9fc809f68dd8",
+        "datetime": 1792485000,
+        "summary": "Blackstone (BX) nears 52-week lows despite rising earnings and record AUM."
       },
       {
-        "headline": "Wedbush Maintains Outperform on AppLovin, Lowers Price Target to $560",
+        "headline": "Multifamily distress isn’t just for syndicators: Blackstone’s $1.3B CMBS loan heads to special servicing",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e221e8b5d8590c5f02800bc86a8035102233c8e29e6851df81d180d5d7e37986",
+        "datetime": 1792440900,
+        "summary": "Blackstone’s Stephen Schwarzman with the West Oaks Apartments at 14838 Vance Jackson Road (Getty, Google Maps, Blackstone) Sun Belt apartment distress isn’t just for multifamily syndicators. Blackstone’s $1.3 billion CMBS loan was flagged for special servicing after the loan matured earlier this month, according to Morningstar Credit. The loan was first put on the watchlist in December 2024 after property inspections showed deferred maintenance and remained on it due to its impending maturity da"
+      },
+      {
+        "headline": "BGB: Tactical Opportunity With Liquidation Potential",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=19ac78687bf9e78419fe17dfdbe0268699ea2ed463a8133730b66deda70ccb87",
+        "datetime": 1792416037,
+        "summary": "The Blackstone Strategic Credit 2027 Term Fund offers a floating-rate, high-yield portfolio with a current ~5% discount & ~8% yield. Learn more about BGB here."
+      },
+      {
+        "headline": "Curious about Blackstone Inc. (BX) Q3 Performance? Explore Wall Street Estimates for Key Metrics",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=13e61b68d262446f4210193dac216bd5378f65f593c877a97e8ea69e32fbbe44",
+        "datetime": 1792412109,
+        "summary": "Evaluate the expected performance of Blackstone Inc. (BX) for the quarter ended September 2026, looking beyond the conventional Wall Street top-and-bottom-line estimates and examining some of its key metrics for better insight."
+      },
+      {
+        "headline": "Blackstone Announces $8.7 Billion Final Close for Blackstone Energy Transition Partners V",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=bca76ca157f5e363b6e71fc2c6de48974004e5207e98a2e172d2edb7be93bcf6",
+        "datetime": 1792411200,
+        "summary": "NEW YORK, October 19, 2026--Blackstone (NYSE: BX) today announced the final close of Blackstone Energy Transition Partners V (\"BETP V\") at $8.7 billion – more than 50% larger than its predecessor vehicle. The significantly oversubscribed fund reached its hard cap and builds on the strong performance of the strategy’s prior vintages."
+      },
+      {
+        "headline": "Piper Sandler Maintains Neutral on Blackstone, Lowers Price Target to $125",
         "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=523b04541400badc9d562c040d33e08a9f5a41d37cb7a3efa2ed499121f61e09",
-        "datetime": 1791966587,
-        "summary": "Wedbush  analyst Alicia Reese   maintains AppLovin (NASDAQ:APP) with a Outperform and lowers the price target from $610 to $560."
+        "url": "https://finnhub.io/api/news?id=32c99a274c5a5b92d4121c7db3334cb3e510685f62f02989476782278ce42f46",
+        "datetime": 1792410035,
+        "summary": "Piper Sandler  analyst Crispin Love   maintains Blackstone (NYSE:BX) with a Neutral and lowers the price target from $130 to $125."
+      },
+      {
+        "headline": "2 Profitable Stocks for Long-Term Investors and 1 We Ignore",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e8f818d5e00d16f67aad4b3365a957d7c8d0c6159ae9bdd774c3fcdf9b4d0b1b",
+        "datetime": 1792404055,
+        "summary": "While profitability is essential, it doesn’t guarantee long-term success. Some companies that rest on their margins will lose ground as competition intensifies — as Jeff Bezos said, “Your margin is my opportunity”."
+      },
+      {
+        "headline": "Market Chatter: Anthropic Offers Blackstone High Yield in Chip Financing Deal",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=953957750ae2154fa9ea248a977db4eb6611890ba9c3265fcb614834c9b93396",
+        "datetime": 1792400183,
+        "summary": "Anthropic has offered Blackstone (BX) a yield of more than 10% on its investment as part of a larger"
+      },
+      {
+        "headline": "The Winners Inside SCHD - October 2026",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=338e046f3cae53ba7d15e9918dd078db2c4d26bc477673975dbc84454a9e73f7",
+        "datetime": 1792366040,
+        "summary": ""
+      },
+      {
+        "headline": "The Data Center Doomsday Scenario",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=d733269d580b8f457fbc381c431850ac865267f6f47bd6dfb7175a21c0285369",
+        "datetime": 1792310400,
+        "summary": ""
+      },
+      {
+        "headline": "3 AI Stocks With Earnings Growth Of Up To 98%",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1bb591d34e53036ccdc4a660845009e15cef240211e82e2e70ba1ff78f8abb86",
+        "datetime": 1792260632,
+        "summary": "Anthropic is offering Blackstone a yield above 10% to fund a massive AI chip buildout, a sign that the easy money phase of artificial intelligence is giving way to businesses that must earn their keep. High borrowing costs punish cash burners and reward companies already turning AI spending into profits. This article highlights three profitable AI players from our screener that show how that shift is playing out. The three profitable AI stocks below are just a small sample from our work, and..."
+      },
+      {
+        "headline": "Jersey Mike's: The Risk-Reward Finally Tastes Better (Ratings Upgrade)",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=5ddfb5ec8f4c31986d9dea0ebbc1e5af62b4efbc928ad071b70199921dda242f",
+        "datetime": 1792157909,
+        "summary": "Jersey Mike's now trades at ~18x EBITDA, offering improved asymmetry and double-digit upside, justifying an upgrade to 'Buy.' Click for more on JMKE stock."
+      },
+      {
+        "headline": "American Express (AXP) Earnings Expected to Grow: Should You Buy?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a9957aed042dd1602ad9b64056e61cb4c3cd2ed52ef1979aa8e9984898daa1cb",
+        "datetime": 1792155605,
+        "summary": "American Express (AXP) doesn't possess the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
+      {
+        "headline": "Blackstone's Q3 Earnings on the Deck: What's in Store for BX?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d6a601d99c99a0ed7522cc22f098b543cec66cca6555641c69534bf08070e34d",
+        "datetime": 1792149180,
+        "summary": "Blackstone's Q3 earnings are expected to have declined despite AUM growth. Will rising expenses, muted deal exit and weaker revenues weigh on its results?"
+      },
+      {
+        "headline": "Blackstone’s $200B Data Center Empire Anchors Its AI Bet",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1a6833ddcc72c770b7fe8cac205dc010507d9c3f33b7352e5cf24cf7d1f4772b",
+        "datetime": 1792081130,
+        "summary": "Blackstone's data center investments reached $200B in July, up from $55B in June 2024, as the firm extends its AI push into chips and cloud."
+      },
+      {
+        "headline": "BayFirst Financial shares are trading higher. The company reported Q4 financial results.",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=aeda637e1e5f6ebbd512046afacaf2e49af9fa669708b7395b47f11fb2b1deb9",
+        "datetime": 1792074643,
+        "summary": ""
+      },
+      {
+        "headline": "3 Utility Stocks Riding The AI Data Center Power Boom",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3d602da8d1e6b287ccc74d44d2138c0604198b0558c9bf5d60273d8510358471",
+        "datetime": 1792073665,
+        "summary": "AI data centers are quietly turning into some of the hungriest power users on the planet, and that surge in electricity demand is reshaping how investors think about grid infrastructure and utility stocks. With Blackstone targeting a $200b data-center platform and backing massive AI financing, capital is flooding toward the pipes and plugs of the digital world. This article walks through three stocks exposed to that news and explains why their AI power story deserves a closer look. The three..."
+      },
+      {
+        "headline": "How To Build A $100,000 Dividend Portfolio With 10 High-Yield Picks",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=ce4ed1cf425921fd1fc13d7da32e2b6b2b0acfe822c6cab16cf46c1cecaad817",
+        "datetime": 1792072800,
+        "summary": "Looking for a diversified dividend portfolio emphasizing risk-adjusted returns and sustainable dividend profiles? Click here to read about one approach."
+      },
+      {
+        "headline": "Earnings Preview: Blackstone Inc. (BX) Q3 Earnings Expected to Decline",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=55ba78bd9fa296919604a30039a197281760553a49e56da1fc1c5641d49197f4",
+        "datetime": 1792069210,
+        "summary": "Blackstone Inc. (BX) doesn't possess the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
+      {
+        "headline": "Blackstone (BX) Stock Fair Value Edges Lower As Analysts Weigh Softer Realizations",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=6b88fd28fde5db253896816c059468aa9ec2e3419c1a525f133e62cf18e53307",
+        "datetime": 1792066261,
+        "summary": "Blackstone’s assessed fair value has shifted from about US$144.38 to roughly US$140.55, which frames the latest price target tweak as relatively modest. Analysts link these kinds of moves to a more mixed backdrop, with some focusing on fundraising strength and alternative asset exposure, while others point to softer realization trends and tighter valuation room. As you read on, you will see how these cross currents shape the evolving narrative around Blackstone and what to watch next in..."
+      },
+      {
+        "headline": "Foundation honoring Blackstone's Wesley LePatner aims to develop 1,000 next-gen leaders",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=68397fbc6c8a25e339e15bdeefa863619ecfe30274421ce10a44cf1c6df62424",
+        "datetime": 1792062013,
+        "summary": "Wesley LePatner, a Blackstone real estate executive, was killed last year in a shooting at her Manhattan office building. On Fortune Daily, her husband, Evan LePatner, explained why launched the Wesley Mittman LePatner Foundation with the goal to develop 1,000 leaders who will put their private-sector skills to work for nonprofits and civic institutions."
       }
     ],
     "CME": [
+      {
+        "headline": "What Happens to AI Stocks if the Fed Hikes Rates Again?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=28cbd06e1c1475151a294e7b97be08e005d834c7959080b541a4852bef23fe34",
+        "datetime": 1792669022,
+        "summary": "Short answer: Higher rates hurt some AI companies a lot more than others."
+      },
+      {
+        "headline": "CME Q3 deep dive: diversified volume growth and product innovation underpin results",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=6e4fa4b934695cca4d9546ea981684aa7f33d27e55eb464cc19a4863b6f16848",
+        "datetime": 1792661667,
+        "summary": "Financial derivatives exchange CME Group (NASDAQ:CME) announced better-than-expected revenue in Q3 2026, with sales up 13% year on year to $1.74 billion. Its non-GAAP profit of $3.02 per share was 1% above analysts’ consensus estimates."
+      },
+      {
+        "headline": "Should One Shrinking Number Scare You About Coinbase Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=b30f97dd49f14270f13c82582bd570dd6e1b74a9de1cf7578d891edf982221a3",
+        "datetime": 1792636135,
+        "summary": "For questions about this article or underlying research, email help@trefis.com."
+      },
+      {
+        "headline": "CME CEO Says Crypto Perps Are Swaps While Suing CFTC Over Their Approval",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a66f60233bfb64c17e700df4eeb7b0fea3c10c5fe7b9bccb8ae6f0e5d24d29e9",
+        "datetime": 1792634700,
+        "summary": "CME CEO Terry Duffy calls crypto perps swaps while CME sues the CFTC over their approval. Here is how the regulator answers."
+      },
+      {
+        "headline": "What Will 100 Hyperliquid (HYPE) Be Worth by 2030?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=fdb9c0b34569022a1da25232313d52074bb6e4cbb7b1eb25b4961395a62b16cd",
+        "datetime": 1792620053,
+        "summary": "Multicoin Capital just made Hyperliquid its largest hedge fund position, and a fee buyback mechanism quietly purchases HYPE every single day. Whether those forces can push 100 tokens to $15,000 by 2030 depends on three factors that have nothing to do with hype."
+      },
+      {
+        "headline": "CME Group: 3 Key Takeaways for Long-Term Investors",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=dfd4e7dba1b339e1a11eae982d024da82b394bf9dfe9327150dac40aae123b6a",
+        "datetime": 1792607642,
+        "summary": "Market data has now grown for 34 straight quarters, cementing a predictable revenue engine independent of trading swings."
+      },
+      {
+        "headline": "CME (CME) Q3 2026 Earnings Call Transcript",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c1453e42218ec5a0b44fc9499bb6b58e4b5735bc78608883b27e68cabd2637ea",
+        "datetime": 1792606425,
+        "summary": "Record revenue and trading volumes drove 13% EPS growth as international markets surged."
+      },
+      {
+        "headline": "Nasdaq and Small Caps Lead Three Day Surge as Crude Slides and Blue Chips Hold Firm",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=be02be6f96fead083a997d7f199ba116473960d862f500e1f10d82278ccbd307",
+        "datetime": 1792604640,
+        "summary": "Stock Preachers News Commentary - Three sessions into the week, growth and small caps are setting the pace. The Nasdaq Composite jumped 1.04% on the day and is up 2.14% for the week to 26,700.62, while the Russell 2000 added 0.44% to push its weekly gain to 2.36%. The Dow and S&P 500 are contributing too, both up more than 1.2% for the week, as earnings from industrial, healthcare, exchange and homebuilding names give investors fresh data points to sort leaders from laggards. Active Companies fr"
+      },
+      {
+        "headline": "The Coinbase Bull Case Comes Down to One Very Big Number",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=f789710a92a62260b4359065ed581dcffe30f038c68d9fde3fb794d83f837476",
+        "datetime": 1792603816,
+        "summary": "Coinbase shares have been cut nearly in half over the past year, yet one staggering market projection sits at the heart of the bull case and could justify a dramatic reversal if it plays out."
+      },
+      {
+        "headline": "CME Group Inc. Q3 2026 Earnings Call Summary",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=276aa54d517245d1be4fdd4749083f76d948a2084bfe70131a2fff14d04de6f7",
+        "datetime": 1792602025,
+        "summary": "Moby summary of CME Group Inc.'s Q3 2026 earnings call"
+      },
+      {
+        "headline": "CME Group Q3 Earnings Call Highlights",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=34a64af6b4a553c2f0c557a0618e9f62929c6919ef4df547b8a6428500b15681",
+        "datetime": 1792598679,
+        "summary": "CME Group (NASDAQ:CME) reported record third-quarter activity and financial results, citing broad-based demand for risk-management products amid shifting central-bank policies, geopolitical uncertainty and market volatility. Chairman and CEO Terry Duffy said average daily volume reached 29.4 millio"
+      },
+      {
+        "headline": "Millionaire CEO: The GPU Market Will Be “Multiples” Bigger than Crypto by 2030",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=5bdf0ab89a9a66a3268f8fedc99279297eac0df513b1c5c5e996badbda67738e",
+        "datetime": 1792594935,
+        "summary": "Key TakeawaysCME Group CEO Terry Duffy said on Bloomberg’s Odd Lots podcast that the GPU market will be “multiples of the size of crypto by 2030. ”GPU futures, which CME wants to list but regulators are holding back, would let chip buyers hedge rental prices and borrow more cheaply."
+      },
+      {
+        "headline": "Pre-Markets Up on Cooling Metrics, Decent Q3 Reports",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=0a2a4210cda985abee4c47e3837d04a802a9b5cdc57ec7544f780b8627b00307",
+        "datetime": 1792590120,
+        "summary": "The blue-chip Dow enjoys its best trading month since April. Bond yields and spot oil prices remain inflated, but off highs seen a week ago or more."
+      },
+      {
+        "headline": "CME Group Disciplinary Activity Remained Steady in 2025 with Lower Aggregate Monetary Penalties",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=95fe3e286f7b06cd25bd858c87c78f173d8e7ea6fa39610b04d6e28fafe9fb87",
+        "datetime": 1792587600,
+        "summary": "The CME Group imposed the second-lowest level of aggregate monetary penalties since 2018, while disciplinary activity remained steady, according to a new report by Cornerstone Research."
+      },
+      {
+        "headline": "CME Group Q3 Earnings Surpass Estimates, Revenues Rise Y/Y",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=8a9cc0c8fd8fe9b838dd93abcf9df691dceed38a972869bfd4861d8b94ba592d",
+        "datetime": 1792587540,
+        "summary": "CME's record trading volumes and higher transaction fees fuel double-digit revenue and earnings growth in the third quarter of 2026."
+      },
+      {
+        "headline": "Compared to Estimates, CME (CME) Q3 Earnings: A Look at Key Metrics",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e80c621915325d9a7d638c88ec78aefa2127be9ca957be42698dd91001653110",
+        "datetime": 1792585803,
+        "summary": "Although the revenue and EPS for CME (CME) give a sense of how its business performed in the quarter ended September 2026, it might be worth considering how some key metrics compare with Wall Street estimates and the year-ago numbers."
+      },
       {
         "headline": "CME Group (NASDAQ:CME) Posts Record Q3 Revenue as Results Meet Expectations",
         "source": "ChartMill",
         "url": "https://finnhub.io/api/news?id=9246c8516d707716eeef64c7e9ebe6862188098c2782122c87410c076583af0e",
         "datetime": 1792585301,
         "summary": "CME Q3 2026 results were inline with estimates, featuring record quarterly revenue and $3.02 EPS, but shares dipped after a strong recent run."
+      },
+      {
+        "headline": "CME Group (NASDAQ:CME) Surprises With Q3 2026 Sales",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=8cdd5750a2a96290e0576e1569f530757da8cde26c5ed15402c52e2c8941f434",
+        "datetime": 1792582299,
+        "summary": "Financial derivatives exchange CME Group (NASDAQ:CME) reported Q3 2026 results beating Wall Street’s revenue expectations, with sales up 13% year on year to $1.74 billion. Its non-GAAP profit of $3.02 per share was 1% above analysts’ consensus estimates."
+      },
+      {
+        "headline": "CME Group (CME) Surpasses Q3 Earnings and Revenue Estimates",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c0e90295e8ac8ead1d479262856497241b42caf611bebd9a580e19dc3d4dde08",
+        "datetime": 1792581303,
+        "summary": "CME (CME) delivered earnings and revenue surprises of +1.34% and +1.43%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?"
       },
       {
         "headline": "CME: Q3 Earnings Snapshot",
@@ -1227,11 +1530,39 @@
         "summary": "CME Group Inc. (NASDAQ: CME) today reported financial results for the third quarter of 2026."
       },
       {
+        "headline": "Meta, Tesla On Deck Wednesday As AI Spending, Auto Demand Face Test",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=0525866144638cbf100085dcc0a4ee68a96516d61352555e3f65b08a322853ae",
+        "datetime": 1792580028,
+        "summary": "Meta Platforms and Tesla headline Wednesday’s reports, with investors focused on whether AI investment can keep driving growth while Tesla’s core auto business weakens. Philip Morris International, Thermo Fisher"
+      },
+      {
+        "headline": "CME Group Inc. 2026 Q3 - Results - Earnings Call Presentation",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=dd83de742438a00ee537e97f894efe278cd3107347f8b029d71125d0c1cedde3",
+        "datetime": 1792579309,
+        "summary": "2026-10-21. The following slide deck was published by CME Group Inc."
+      },
+      {
+        "headline": "CME Group Q3 2026 Earnings Call Transcript",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=b95618b19f484f31cf595d87abf8b60b17e81a521c9a7ba02e79edff17460264",
+        "datetime": 1792575785,
+        "summary": "CME Group (NASDAQ:CME) reported third-quarter financial results on Wednesday. The transcript from the company’s third-quarter earnings call has been provided below.This transcript is brought to you by Benzinga APIs. For"
+      },
+      {
         "headline": "Aerodrome-Velodrome Merger Targets NYSE, Nasdaq With Multichain Crypto Exchange Expansion",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=23944b8ad5f57ebf5ed8c3de42abbdfb7f8ecf58ec79af3e965ae163e30d8ef6",
         "datetime": 1792573725,
         "summary": "Referring to the merger, Dromos Labs CEO Cutler said, \"Every CME needs a New York stock exchange.\""
+      },
+      {
+        "headline": "US Dollar Price Forecast: UK CPI Hits 3.5%, DXY Eyes 102.01 as EUR/USD, GBP/USD Split",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=54fde43cdb5869bb5e3fb2b8ead6d83a35bb23e6825bf338402e4dcc1bd72ef3",
+        "datetime": 1792567800,
+        "summary": "US dollar price forecast: AI doubts weigh on DXY near 101.81, EUR/USD faces French risk below 1.1241, and UK CPI at 3.5% backs GBP/USD above 1.3353."
       },
       {
         "headline": "What Is CME Group (CME) Expanding With Tungsten And New Crypto Futures?",
@@ -1302,6 +1633,13 @@
         "url": "https://finnhub.io/api/news?id=82d290d13e4f79f4a6eec98740fcb0e607fb6549701fb56d0a16f150163fbbf9",
         "datetime": 1792506650,
         "summary": "Multicoin Capital just named Hyperliquid its largest hedge fund holding, yet HYPE keeps sliding. Before you treat that endorsement as a buy signal, there are several uncomfortable questions about what the announcement actually guarantees."
+      },
+      {
+        "headline": "Meet the college students trying to reverse an obscure ban on trading onion futures",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1e3d430da08754aa2080b37f341f4e7a6813c2d7f73fef7a6760aeb49bac547a",
+        "datetime": 1792502640,
+        "summary": "In the U.S., investors can legally trade futures contracts tied to all sorts of commodities, from pork bellies to oil to the computing power needed to power artificial-intelligence models."
       },
       {
         "headline": "US Financial 15 Split Corp. Preferred Dividend Declared",
@@ -1533,107 +1871,23 @@
         "url": "https://finnhub.io/api/news?id=181d7ed53aae3a0209092a94a2d6afcdbc317d89fad8fcd0fd8629e9494c2f1b",
         "datetime": 1792052811,
         "summary": "Fed Chair Kevin Warsh faces a decision in late October that the central bank has avoided almost without exception for over three decades, and hot inflation data just doubled the odds it could happen again."
-      },
-      {
-        "headline": "CME Group (CME) Stock Seems Overvalued After Its 65% Five Year Run",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d275e3cc3893fc507d02f251ddf0d0f4fdf0939d38126179ceaba5021379ffe7",
-        "datetime": 1792020290,
-        "summary": "CME Group has ridden a powerful five year run, and the question now is whether that price momentum lines up with the returns the business earns on the capital tied up in its clearinghouses and trading infrastructure. Over the past 5 years the stock has returned 64.5%, which puts real weight on whether those gains are backed by strong profitability on the equity and cash invested in the exchange platform. The planned futures tied to AI computing power, along with expanding contracts in areas..."
-      },
-      {
-        "headline": "September's CPI Came in Hotter Than Expected and Geopolitical Tensions Climbed. Stocks Fell.",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=23613140b5d386114a1751204ffcba610001c200602fa5bdc813107efa625155",
-        "datetime": 1792008213,
-        "summary": "Traders believe there are higher chances that the Federal Reserve will hike rates in October's meeting, although they moderated their expectations throughout the day."
-      },
-      {
-        "headline": "Sector Update: Financial Stocks Decline Late Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=15aeb90d759de27fa6470fdbd8a54097dd9649995e2fb699d41014de18b25f6f",
-        "datetime": 1792007659,
-        "summary": "Financial stocks were lower in late Wednesday afternoon trading, with the NYSE Financial Index falli"
-      },
-      {
-        "headline": "Fed's Williams says no need for rate hikes in 2027",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0a0be6a5c53a3dbbee0e01fbbaa249e9b46475d07df03c8bcfb6bbcfa6200857",
-        "datetime": 1792005259,
-        "summary": "New York Fed President John Williams said he sees no need for further rate hikes in 2027, weakening the dollar and lifting bitcoin in Asian morning hours. But CME's FedWatch tool shows traders still pricing in several more hikes, setting up Thursday's inflation report as the next test. CoinDesk's Uyen Truong hosts \"CoinDesk Daily.\""
-      },
-      {
-        "headline": "What CME Group (CME)'s Regulated Baseball Futures Launch Means For Shareholders",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d3122e584615222aecb588804d5a0a2f4fd290abe30c5f46f30160273eaa2ac0",
-        "datetime": 1792001801,
-        "summary": "CME Group has launched the world’s first regulated Baseball futures, based on its CME FutureSports Performance Indexes that convert official team statistics into tradable benchmarks on standard and micro contracts. This move links professional sports performance with traditional derivatives infrastructure, potentially widening CME’s user base to include fans, sponsors and non‑traditional market participants seeking regulated exposure. Next, we’ll examine how this innovative sports contract..."
-      },
-      {
-        "headline": "Sector Update: Financial Stocks Decline Wednesday Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=6d4a7355e531fc41189ec18ca5aae733c46190a048d28862acf4d55308717edd",
-        "datetime": 1791998863,
-        "summary": "Financial stocks were lower in Wednesday afternoon trading, with the NYSE Financial Index and the St"
-      },
-      {
-        "headline": "CME Group (CME) Stock Fair Value Edges Higher As Analysts Weigh Growth And Competition",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b7c3e1bab1e572b18e3fd3c2b0f6cfaafccf7ab0fef97894af84076eb9066607",
-        "datetime": 1791998079,
-        "summary": "CME Group’s latest analyst work points to a slightly higher fair value, with the model’s estimate moving from US$283.6 to US$292.0. This shift aligns with research that highlights a strong derivatives franchise and new product opportunities, while also acknowledging pushback from firms that see competition and valuation as constraints after the stock’s rally. As you read on, you will see how these differing views are shaping the evolving narrative around CME Group and what that means for..."
-      },
-      {
-        "headline": "CME Group (CME) Expands Sports Futures, Is The Stock Still Undervalued?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=2256397b647650cac2b6548bc861823ed90f712a3a887185fb2dfa078055e482",
-        "datetime": 1791994348,
-        "summary": "CME Group (CME) is drawing fresh attention after outlining plans to launch Baseball futures contracts tied to its CMEFutureSports Performance Indexes, adding a new category of sports based derivatives to its existing platform. CME Group shares have been gaining traction, with a roughly 13.4% 90 day share price return and a 1 year total shareholder return of about 8.1%, while multi year total shareholder returns above 45% suggest that momentum has been building rather than fading. Scan the..."
-      },
-      {
-        "headline": "Update: US Equity Indexes Fall After Core Inflation Rate Rises, Odds for Fed Rate Increases Jump",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=dd9528a2373ecd4475b948ddbe530a6adf6f9fc02abbbd6ebb96b9aa34eed27b",
-        "datetime": 1791993090,
-        "summary": "(Updates with index/price moves, macroeconomic data and geopolitical news from the first paragraph.)"
-      },
-      {
-        "headline": "Bond Traders Shift Bets Toward Rate Hike After Latest Inflation Data",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b0ebcafa2d6a7f1a681053153bcd5bb6d38513cddcb49ff54a2597df73d3fa4c",
-        "datetime": 1791988896,
-        "summary": "The CPI came in at 3.7% in September, slightly above analyst expectations, leading bond traders to jump."
-      },
-      {
-        "headline": "Nasdaq (NDAQ) Can Index Growth Hold Up Without a Rising Market?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=100f0e57f80ea813d0f21a0ad5ea811f1381fcadcded0698ac689005f5b6d22e",
-        "datetime": 1791986448,
-        "summary": "Nasdaq, Inc. (NASDAQ:NDAQ) is attracting more money into investment products tracking its indexes. Year-over-year index revenue growth accelerated from 14% in the first quarter to 38% in the second quarter of 2026. That strengthens the investment case, but asset-based licensing fees rise with markets as well as customer inflows. The question is how much growth […]"
-      },
-      {
-        "headline": "Inflation Came in Hotter Than Expected Last Month. Odds of a Fed Rate Hike In October Are Surging.",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7035e329369aead25a2c61f8ef0e6f4223e3c6ac220f818a471eb8e37287dfe3",
-        "datetime": 1791983658,
-        "summary": "Chances now stand close to 50%, more than 27 percentage points than Tuesday."
-      },
-      {
-        "headline": "CME Group (CME) Earnings Expected to Grow: What to Know Ahead of Next Week's Release",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b3c7f741e39daffdf04b848355e6c62efd4f0315b22a763cb30e4cdca88d6241",
-        "datetime": 1791982811,
-        "summary": "CME (CME) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
-      },
-      {
-        "headline": "Wells Fargo Maintains Overweight on CME Group, Raises Price Target to $315",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=d6459dd6ecd601fece427041115bc9c32fd33ba0189282acbb2fa8a70681d807",
-        "datetime": 1791974434,
-        "summary": "Wells Fargo  analyst Daniel Welden   maintains CME Group (NASDAQ:CME) with a Overweight and raises the price target from $301 to $315."
       }
     ],
     "CNP": [
+      {
+        "headline": "American Electric Power (AEP) Reports Next Week: Wall Street Expects Earnings Growth",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9086c0b18904e344cd88db2108def896f3af46ea05177619f905d46714012495",
+        "datetime": 1792587607,
+        "summary": "AEP (AEP) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
+      {
+        "headline": "CenterPoint Energy to Report Q3 Earnings: What's in the Cards?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1d2d76442237a7dcc832a53b15c516ed55b39f8bfa86dc1701db57f5fa8978cd",
+        "datetime": 1792585200,
+        "summary": "CNP's Q3 earnings are likely to benefit from grid investments, rising electricity demand and rate-base growth, while higher financing costs could offset gains."
+      },
       {
         "headline": "CenterPoint Energy (CNP) Expected to Beat Earnings Estimates: Can the Stock Move Higher?",
         "source": "Yahoo",
@@ -1668,13 +1922,6 @@
         "url": "https://finnhub.io/api/news?id=adf431018f73212430abc158eb34450984d39455d7cdca70ab7e61e2a37c35a0",
         "datetime": 1792155117,
         "summary": "abrdn Global Infrastructure Income Fund offers a 13.76% yield, primarily through distributions from global infra equities & PE holdings. Click for more on ASGI."
-      },
-      {
-        "headline": "CenterPoint Energy to Pay Additional Interest on its 2.0% Zero-Premium Exchangeable Subordinated Notes due 2029",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=f6499bdf238ca01fc0adca6edfd811fc2ab6577162c2e6a7e32903e6998f4be5",
-        "datetime": 1792015380,
-        "summary": "HOUSTON, October 14, 2026--CenterPoint Energy, Inc. (NYSE: CNP) has established October 21, 2026 as an Additional Interest Regular Record Date under the terms of its 2.0 percent Zero-Premium Exchangeable Subordinated Notes due 2029 (ZENS). Additional Interest of $5.39122 per ZENS note will be paid on November 4, 2026 to holders of record of the ZENS as of the close of business on the Additional Interest Regular Record Date."
       }
     ],
     "ED": [
@@ -1733,23 +1980,23 @@
         "url": "https://finnhub.io/api/news?id=2ec839ff095b0f217378ecbc5a246b186a3cd2d83afa5b85289d59fb96cf8b25",
         "datetime": 1792078500,
         "summary": "Essential Utilities expands its New Jersey water operations with the Lake Tamarack acquisition, adding 255 customers and planning $1.4M in infrastructure upgrades."
-      },
-      {
-        "headline": "Con Edison to Report 3rd Quarter 2026 Earnings on November 5",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=badc17dbf99dbb19851c32df2476ce2467914ae0eca5996ce7afa2264907de2b",
-        "datetime": 1792009800,
-        "summary": "Consolidated Edison, Inc. (Con Edison) (NYSE: ED) plans to report its 3rd Quarter 2026 earnings on November 5, 2026 after the market closes."
-      },
-      {
-        "headline": "5 Utility Stocks With Yields High Enough to Matter and Coverage Strong Enough to Trust",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0f8428621f5a95c73e10b5735043eeb3de9616130fd621a35a65241c2cfcf1c3",
-        "datetime": 1791989803,
-        "summary": "Regulated utilities promise predictable dividends, but rising interest rates and shifting demand are testing that promise right now. These five names have yields worth collecting and raise records worth trusting, including one payer that has not missed a dividend increase in 56 consecutive years."
       }
     ],
     "EOG": [
+      {
+        "headline": "Eni SpA Q3 Earnings Ahead: What's in Store for the Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=67d398b66ed0adc0f469eba5bceaafc17ef6e0b0698536de6951635767c3a6e5",
+        "datetime": 1792581300,
+        "summary": "E gears up for Q3 2026 earnings, with EPS expected to surge 113.3% despite lower revenues. Will stronger oil prices fuel its upstream performance?"
+      },
+      {
+        "headline": "Two Tactical ETFs For Collecting High Income From High Oil And Commodity Prices",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=aa7b29e9a31cbe7d583a4641b916f8ce105e6bccbe776774f488c9108bc51630",
+        "datetime": 1792573700,
+        "summary": "I focus on high-yield income ETFs XLEI and FTGC for tactical portfolio allocation amid rising energy and commodity prices."
+      },
       {
         "headline": "Is EOG Resources (EOG) Stock Undervalued Right Now?",
         "source": "Yahoo",
@@ -1973,13 +2220,6 @@
         "url": "https://finnhub.io/api/news?id=5c8d4f08d7e2661a181db1733a6cf7e57310b3e6aabce0bdcd71f2ec8715afe0",
         "datetime": 1792029499,
         "summary": "EOG Resources (NYSE:EOG) released second-quarter financial results and hosted an earnings call on Wednesday. Read the complete transcript below.\nThis content is powered by Benzinga APIs. For comprehensive financial data"
-      },
-      {
-        "headline": "Should You Buy Occidental Petroleum Stock For Its Cash?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=6d9fdad133f9c063298b3c16bd7f84cdc7d257f39f1c64cbc4ccd877f0d8a8c7",
-        "datetime": 1792013143,
-        "summary": "Occidental Petroleum (OXY) generates free cash flow equal to 7.8% of its market value per year. That compares with 4.4% for the median S&P 500 company. A yield this high presents a clear binary. Either the shares are cheap for what the business makes, or the market expects that cash to fall. So can Occidental keep that cash coming while it pays down its debt."
       }
     ],
     "INVH": [
@@ -2024,22 +2264,29 @@
         "url": "https://finnhub.io/api/news?id=c73a4ccd7c410776111da306a1a1085a46cc559c7e8935f99927949381d3efce",
         "datetime": 1792068000,
         "summary": "Mortgage rates near 7.5% are pushing first-time buyers out of the market, boosting affordability-focused housing stocks Sun Communities, Invitation Homes, and Champion Homes."
-      },
-      {
-        "headline": "Barclays Maintains Overweight on Invitation Homes, Lowers Price Target to $35",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=9345f5613906a9e68eb3a6046ee054c45b2a84226cf6ced2fb57050e546c8b24",
-        "datetime": 1791971438,
-        "summary": "Barclays  analyst Richard Hightower   maintains Invitation Homes (NYSE:INVH) with a Overweight and lowers the price target from $36 to $35."
       }
     ],
     "JCI": [
+      {
+        "headline": "UFP Industries (UFPI) Expected to Beat Earnings Estimates: Can the Stock Move Higher?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=856316202f7ee9c8fd5e1cc1f673c06fbd7d68d4b91afa6791d6333d633e9b43",
+        "datetime": 1792587625,
+        "summary": "UFP Industries (UFPI) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
       {
         "headline": "Armada Unveils Superintelligence Factories Built Within NVIDIA DSX POD, Deployable in Months, Not Years",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=21ea23ec3934db13bdc9e93783553148e7c6397752594a00c7010a6bc275fe97",
         "datetime": 1792582200,
         "summary": "Today at NVIDIA GTC, Armada, the leader in Sovereign SI Infrastructure, announced support for the NVIDIA DSX POD reference design. DSX POD enables partners to build standardized, factory-integrated containers for deploying SI capacity faster and at scale. Under the collaboration, Armada and Johnson Controls will engineer, manufacture, integrate, and deploy pre-fabricated SI factories built on the NVIDIA Vera Rubin platform, with cabling, wiring, piping, and functional validation completed before"
+      },
+      {
+        "headline": "Johnson Controls: Strong Backlog, Margin Expansion, And Potential For Upward Revision In Estimates",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=c917788a72b8c40ca500d12eea23bfe64ca98704b924538420b67180f27e5d39",
+        "datetime": 1792576384,
+        "summary": "Johnson Controls is a Buy, driven by robust demand, strong order growth, and expanding backlog, especially from data centers. Read more on JCI stock here."
       },
       {
         "headline": "Stephen K. Brannan, MD, and John D. Young Appointed to Slate Medicines Board of Directors",
@@ -2110,16 +2357,128 @@
         "url": "https://finnhub.io/api/news?id=3aa2690b9c36973ec4681907d45b550bacc904724350932fec7110a79661f6fa",
         "datetime": 1792052725,
         "summary": "Mizuho  analyst Brett Linzey   maintains Johnson Controls Intl (NYSE:JCI) with a Neutral and raises the price target from $150 to $165."
-      },
-      {
-        "headline": "RBC Capital Maintains Sector Perform on Johnson Controls Intl, Raises Price Target to $165",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=76128401aaf2353064d3b626c1bec14cd9ea03d4dc564cfa478ab7b700569463",
-        "datetime": 1791972016,
-        "summary": "RBC Capital  analyst Jeffrey Reive   maintains Johnson Controls Intl (NYSE:JCI) with a Sector Perform and raises the price target from $161 to $165."
       }
     ],
     "PM": [
+      {
+        "headline": "Stock Market Today: SpaceX and Super Micro Revive the AI Trade as Meta Lifts Its Capex Floor and Tesla Beats on a Shrinking Car Business",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=d5df35fb2fd8f77c3ef3e05888cdbd1aab8ca92c62737317b74072bc48857b1c",
+        "datetime": 1792664941,
+        "summary": "The Nasdaq gained 1.1% as SpaceX and Super Micro reignited the AI trade. After the bell, Meta beat and raised the low end of its capex range, Tesla topped estimates despite a 43% profit drop, and Texas Instruments and IBM delivered solid quarters."
+      },
+      {
+        "headline": "PM Q3 deep dive: smoke-free growth and U.S. investment shape outlook",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=167ea1f1d6d6939ec309824e27e832e666ae37045d14dd7564607c7e5fa2daf5",
+        "datetime": 1792662627,
+        "summary": "Tobacco company Philip Morris International (NYSE:PM) beat Wall Street’s revenue expectations in Q3 2026, with sales up 5.5% year on year to $11.44 billion. Its non-GAAP profit of $2.36 per share was 1.9% above analysts’ consensus estimates."
+      },
+      {
+        "headline": "Philip Morris Beat Q3, Then Handed It Back: ZYN’s 25% Price Cut Explained",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=f0b742d812db096c8e43e9ce6f10d38233ba10e46ba895c21c765e84f30bd800",
+        "datetime": 1792645939,
+        "summary": "Philip Morris International (PM:NYSE) beat third-quarter estimates on October 21, and the stock still slipped. Adjusted EPS came in at $2."
+      },
+      {
+        "headline": "Philip Morris: 3 Key Takeaways for Long-Term Investors",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=16bd6bde1ddaeef78f82f6f9b0776b542f50908738f9fe13fad6e38f67d4bb7a",
+        "datetime": 1792632210,
+        "summary": "The company is sacrificing near-term margins to defend its nicotine pouch dominance while traditional cigarettes fund the shift."
+      },
+      {
+        "headline": "Philip Morris International Inc. Q3 2026 Earnings Call Summary",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a9c57d8ddbb07d45a02b7151e1650f82c2ee7c9eb32fed1aa9140fe4c05b6fdd",
+        "datetime": 1792615468,
+        "summary": "Moby summary of Philip Morris International Inc.'s Q3 2026 earnings call"
+      },
+      {
+        "headline": "Philip Morris International Inc. Reports 2026 Third-Quarter Results",
+        "source": "Fintel",
+        "url": "https://finnhub.io/api/news?id=b146b0147251c3486e09ed9a8b84e29194b5f614d502c7bdb38d7c286857cc42",
+        "datetime": 1792615007,
+        "summary": ""
+      },
+      {
+        "headline": "Should Altria Stock's New High Stop You From Buying?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=bbb3fdb6af4958b1868ecb785704fe7e18b1532b88e23c5a715033ae11d1033f",
+        "datetime": 1792606452,
+        "summary": "For questions about this article or underlying research, email help@trefis.com."
+      },
+      {
+        "headline": "Philip Morris (PM) Q3 2026 Earnings Call Transcript",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d8838a3dd92714f930fd4d0900da4f7d4cd61762167598533f59b3418814cd3b",
+        "datetime": 1792606425,
+        "summary": "Smoke-free products hit 40% of revenue as IQOS and ZYN drive growth."
+      },
+      {
+        "headline": "Philip Morris (PM) Passed 40% Smoke-Free Revenue, but Cigarettes Did the Growing",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c5bbf02326b4d1ebc7f704568c1dcfcc6fff73923161ed3ab1483baa9d04af95",
+        "datetime": 1792603843,
+        "summary": "Philip Morris International (NYSE:PM) just reported a record quarter that looks like proof its smoke-free bet is working. Adjusted earnings per share reached $2.36, a quarterly high, and smoke-free products made up more than 40% of net revenue. But cigarettes grew faster, with sales of cigarettes and other combustibles up 6.4%, ahead of the 4.1% […]"
+      },
+      {
+        "headline": "Philip Morris International Q3 Earnings Call Highlights",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=0d06db11da14dc3b5ee912578c6f15639aaaaef0c01617d63d5a3e255381c7eb",
+        "datetime": 1792602272,
+        "summary": "Philip Morris International (NYSE:PM) reported third-quarter results marked by higher revenue, operating income and adjusted earnings per share, as growth in smoke-free products and resilient cigarette performance helped offset increased costs tied to geopolitical disruptions and U.S. investments."
+      },
+      {
+        "headline": "Philip Morris Tops Third-Quarter Estimates on Smoke-Free Volume Growth",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=116438efeb2790ef85089f882c5293604327fc2bdef6b22b9d098922e88a3217",
+        "datetime": 1792597850,
+        "summary": "Philip Morris International's (PM) third-quarter results topped Wall Street's views driven by accele"
+      },
+      {
+        "headline": "S&P 500 Gap Movers: Oct. 21, 2026 Session",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=d74c0b1d6183970ddb0214699a48237d62e527c352455b0eeb268c354bcfe056",
+        "datetime": 1792593363,
+        "summary": "S&P 500 gap movers on Oct. 21, 2026: SMCI, DELL, VRT and HPE rose on data-center AI news, while PM, T, CMG, NFLX and CHTR fell."
+      },
+      {
+        "headline": "SpaceX earnings roundup, Meta earnings preview, and tech trade fears",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=76609308cca98e5095bb1be13805a13eb1102b42fe134ba83e8cd3213a109974",
+        "datetime": 1792591572,
+        "summary": "Slatestone Wealth Partner & Chief Market Strategist Kenny Polcari talks about the biggest stories to start your trading day. Earnings are coming and causing stocks to rebound. SpaceX (SPCX) is topping its Q3 estimates, investors are watching health care earnings like Elevance Health (ELV), and what to expect with Meta's earnings coming later today. Kenny Polcari then sits down with Futurum CEO Daniel Newman to discuss Amazon (AMZN), Alphabet (GOOGL) (GOOG), and Microsoft (MSFT), the uncertainty in the tech trade, and how companies are monetizing AI."
+      },
+      {
+        "headline": "Wounded Veterans Relief Fund Launches \"Salute to Smiles\" Event to Deliver Free Dental Care for Florida Veterans",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e87a7c6953778f7f5adf50e5a3d851281eeff99da001744405401de48ba70165",
+        "datetime": 1792591200,
+        "summary": "Wounded Veterans Relief Fund (WVRF), a veteran-led nonprofit dedicated to supporting Florida veterans with essential care and services, today announced \"Salute to Smiles,\" a one-time-only community dental-care event on November 21st, expected to provide free treatment to up to 50 veterans in Port Richey, Florida. The effort is sponsored by long-time partner Philip Morris International U.S. (PMI U.S.) and delivered in partnership with Dentology Solutions. Dentology Solutions will serve as the hos"
+      },
+      {
+        "headline": "PM Q3 Earnings Beat Estimates on Strong Pricing & Sales Growth",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=5e81ce998338d9f67163905e654ecb28fb0d0c2a6d58549951931c3be9d7f92d",
+        "datetime": 1792590600,
+        "summary": "Philip Morris beats Q3 earnings and revenue estimates on strong pricing and smoke-free demand, updates its 2026 EPS outlook and reports margin expansion."
+      },
+      {
+        "headline": "Philip Morris Shares Fall 2.5% Despite Q3 Earnings Beat as Investors Assess 2026 Outlook",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c75e6471486608779237f23626418fc0c24c2c91ef8e37fdacd20f021dc31e68",
+        "datetime": 1792590527,
+        "summary": "Philip Morris International (NYSE:PM) shares declined 2. 48% in pre-market trading on Wednesday despite the tobacco company reporting third-quarter 2026 earnings and revenue above analysts’ expectations, as investors assessed its full-year guidance and the impact of rising operating costs."
+      },
+      {
+        "headline": "Philip Morris (PM) Q3 Earnings: Taking a Look at Key Metrics Versus Estimates",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7f31b7d6a6836ef2106dc2548d862c37698074033aede9d233d7cbe9cc9b5d99",
+        "datetime": 1792585803,
+        "summary": "The headline numbers for Philip Morris (PM) give insight into how the company performed in the quarter ended September 2026, but it may be worthwhile to compare some of its key metrics to Wall Street estimates and the year-ago actuals."
+      },
       {
         "headline": "Philip Morris International (NYSE:PM) Posts In-Line Q3 EPS but Revenue Slightly Light and Guidance Below Consensus",
         "source": "ChartMill",
@@ -2128,11 +2487,32 @@
         "summary": "Philip Morris Q3 2026 results met EPS estimates but revenue missed slightly; shares fell as guidance and higher ZYN investment weighed on outlook."
       },
       {
+        "headline": "Philip Morris’s (NYSE:PM) Q3 2026: beats on revenue",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=8f7262f26ec17ef2f30e49367eeb1a91cf87539a3ce304a2177085fa201fc13b",
+        "datetime": 1792584338,
+        "summary": "Tobacco company Philip Morris International (NYSE:PM) reported Q3 2026 results beating Wall Street’s revenue expectations, with sales up 5.5% year on year to $11.44 billion. Its non-GAAP profit of $2.36 per share was 1.9% above analysts’ consensus estimates."
+      },
+      {
         "headline": "Philip Morris beats estimates but shares slip on cost pressures",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=86537c12c6d2185dcd15c14e59d87bba9a9096346f33cd97602cd40fe9618f4c",
         "datetime": 1792583040,
         "summary": "Investing.com -- Philip Morris International Inc.'s (NYSE: PM) third-quarter results were posted before the open today, with the company topping consensus expectations. However, shares are down around 2.5% premarket."
+      },
+      {
+        "headline": "Philip Morris Says Global Wars Have Disrupted Its Business and Clouded Earnings Outlook",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e08269899f53745489f446be044e219bd6ecbc6f9183c3f5583165a32258ad04",
+        "datetime": 1792582800,
+        "summary": "The tobacco giant says it anticipates these global conflicts will impact operating income this year."
+      },
+      {
+        "headline": "Philip Morris (PM) Q3 Earnings and Revenues Surpass Estimates",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=94a0f798bb7f78ea26dcbd9c13cc45a63795283ec2ee6ce090b01dc3362dd98c",
+        "datetime": 1792581925,
+        "summary": "Philip Morris (PM) delivered earnings and revenue surprises of +2.61% and +0.26%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?"
       },
       {
         "headline": "Stocks Rise Pre-Bell as Traders Await Meta, Tesla Earnings",
@@ -2149,6 +2529,13 @@
         "summary": "(AP) — Philip Morris International Inc. (PM) on Wednesday reported third-quarter earnings of $3."
       },
       {
+        "headline": "Philip Morris International Inc. 2026 Q3 - Results - Earnings Call Presentation",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=6f209c1fd0c34c6d08e13856ee347d0756a09d1d5b9dbb82d3bd9c6a70e8a177",
+        "datetime": 1792580766,
+        "summary": "2026-10-21. The following slide deck was published by Philip Morris International Inc."
+      },
+      {
         "headline": "Philip Morris International Reports 2026 Third-Quarter & First Nine-Months Results and Updates 2026 Full-Year Adjusted Diluted EPS Forecast for Currency Only;",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=120f5af9e240cc8ae7f78eced22050b37ccc007140fd281dbe384ddd74d8a68a",
@@ -2156,11 +2543,67 @@
         "summary": "STAMFORD, CT, October 21, 2026--Regulatory News: Philip Morris International Inc. (PMI) (NYSE: PM) today announces its 2026 third-quarter results.1"
       },
       {
+        "headline": "Meta, Tesla On Deck Wednesday As AI Spending, Auto Demand Face Test",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=0525866144638cbf100085dcc0a4ee68a96516d61352555e3f65b08a322853ae",
+        "datetime": 1792580028,
+        "summary": "Meta Platforms and Tesla headline Wednesday’s reports, with investors focused on whether AI investment can keep driving growth while Tesla’s core auto business weakens. Philip Morris International, Thermo Fisher"
+      },
+      {
+        "headline": "Stock Market Today: Major Indexes Surge Amid Earnings Flurry; SpaceX Soars, Netflix Falls",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d509c560db8e3940cc1e8cdb11bd8aa1e166675e87a360c47691a033e04a52db",
+        "datetime": 1792578275,
+        "summary": "Major U.S. stock indexes jumped Wednesday, another busy day of corporate earnings reports, with SpaceX shares powering the Nasdaq Composite."
+      },
+      {
+        "headline": "Marlboro Maker Philip Morris Leans on Higher Cigarette Prices to Fight Rising Costs",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=87f18e8baf2f8d46c65bc84aa239ae664608afb37e8daf0c1e4f7fbc99887b1b",
+        "datetime": 1792577867,
+        "summary": "Philip Morris stock falls despite beating Q3 earnings, as PM lowers its 2026 outlook due to rising costs and ZYN investments."
+      },
+      {
+        "headline": "Philip Morris CFO Massimo Andolina Says Expects Abnormally Low U.S. Profitability In Q4; We Expect FY Tobacco Pricing Above 8%; We Expect FY Adjusted EPS In The Middle Or Lower Half Of Our Forecast Range",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=0abdd832c0ad4429ec6d2f229492a9d0be6ea2f564126ee845487420c48a68a8",
+        "datetime": 1792575965,
+        "summary": "-Conference Call. "
+      },
+      {
+        "headline": "CORRECTION: Philip Morris Intl Q3 Adj. EPS $2.36 Beats $2.29 Estimate, Sales $11.438B Beat $11.277B Estimate",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=2a70e23117b80d922d10dfd54084f39a58df08fa35f50a5d1675e95c018fa980",
+        "datetime": 1792569471,
+        "summary": "Philip Morris Intl (NYSE:PM) reported quarterly earnings of $2.36 per share which beat the analyst consensus estimate of $2.29 by 3.06 percent. This is a 5.36 percent increase over earnings of $2.24 per share from the"
+      },
+      {
         "headline": "QQMG: QQQ's Unknown Rival With More Growth, More Risk",
         "source": "SeekingAlpha",
         "url": "https://finnhub.io/api/news?id=c28535b1070c86e9e7933ec636b9be0429a514fc42a665e9689303103924007a",
         "datetime": 1792568700,
         "summary": ""
+      },
+      {
+        "headline": "Philip Morris Intl Lowers FY2026 Adj EPS Guidance from $8.35-$8.50 to $8.29-$8.44 vs $8.41 Est",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=14c19dd31ea23eee0098a71a88adb0864f3003d3fac5be195c8d054298a07b64",
+        "datetime": 1792565977,
+        "summary": "Philip Morris Intl (NYSE:PM) lowers FY2026 Adj EPS guidance from $8.35-$8.50 to $8.29-$8.44 vs $8.41 analyst estimate.."
+      },
+      {
+        "headline": "Philip Morris Intl Lowers FY2026 GAAP EPS Guidance from $7.28-$7.43 to $7.11-$7.26 vs $7.72 Est",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=d0310a04fc77f50507702953aa2f57d444f6a8f331968427ee8ddc9ed3cf51c4",
+        "datetime": 1792565960,
+        "summary": "Philip Morris Intl (NYSE:PM) lowers FY2026 GAAP EPS guidance from $7.28-$7.43 to $7.11-$7.26 vs $7.72 analyst estimate.."
+      },
+      {
+        "headline": "Meta Platforms, Tesla Could Swing More Than $100 Billion After Earnings",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=14977901376770be794f27f46339bbfed20a9a4f797384f4ceaaa732c295a5d5",
+        "datetime": 1792510221,
+        "summary": "Discover 9 stocks to watch ahead of Wednesday’s earnings, including Meta, Tesla and Lam Research, with options-implied moves reaching 7.42%."
       },
       {
         "headline": "Philip Morris (PM) Q3 Earnings Report Preview: What To Look For",
@@ -2315,53 +2758,39 @@
         "url": "https://finnhub.io/api/news?id=399b7129ac260331f50b88c028adfbba30a29b0034b7ed4b22b7fa9c0b602c5e",
         "datetime": 1792062000,
         "summary": "Americans and Europeans are drinking less alcohol, but that’s no problem for AB InBev. The Bud and Michelob brewer’s shares are trading at a discount as new zero-alcohol concoctions hit store shelves."
-      },
-      {
-        "headline": "These 3 Stocks Just Declared Dividend Raises",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=c08db247b9b2449cf3e085eac4c89f9a76136d53a0b24b6e4e226ff92fbbc5f5",
-        "datetime": 1792001100,
-        "summary": "One of the trio just became a Dividend King."
-      },
-      {
-        "headline": "These 4 Dividend Stocks Passed the 2020 Stress Test. Are They Buys in Now October?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=a6a4f6f24c866e68c6cde594f797d5868f29abd7851bb0d3528f7a171b7a2d54",
-        "datetime": 1791998106,
-        "summary": "Four companies kept raising their dividends even as the pandemic hammered their sectors in 2020, and they are still raising today. The question is whether their yields and valuations make them worth buying right now."
-      },
-      {
-        "headline": "Morningstar’s Dividend ETF Is Kind of Perfect for Retirees Right Now",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=5313c7c30a68c51cd37b4545c20a44f5d29631bb3b630b7d2eeedfe04a523c7d",
-        "datetime": 1791987161,
-        "summary": "FDL has handed retirees growing income and strong returns for nearly two decades, but the fund comes with a concentrated bet and a quarterly payout quirk that can wreck a fixed expense budget if you are not prepared for it."
-      },
-      {
-        "headline": "How To Retire: Hope For 95, Prepare For 105",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=2eb132da1e00b89ebe033b6e08337f524981d6412c48c58cd5cbcdcc18f6afed",
-        "datetime": 1791986068,
-        "summary": "Want to retire on income? Learn how a dividend portfolio using preferred shares and baby bonds can boost yield on cost and preserve principal."
-      },
-      {
-        "headline": "Philip Morris International to Host Webcast of 2026 Third-Quarter and First Nine-Months Results",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d4d9c2bbfc76223a42ffaa60ecc7eae0df8f9bfb967ca908b021010e4d801918",
-        "datetime": 1791978960,
-        "summary": "STAMFORD, CT, October 14, 2026--Regulatory News: Philip Morris International Inc. (PMI) (NYSE: PM) will host a live audio webcast on Wednesday, October 21, 2026, at 9:00 a.m. ET, to discuss its 2026 third-quarter and first nine-months financial results, which will be issued at approximately 7:00 a.m. ET the same day. The webcast can be accessed here."
       }
     ],
     "PSX": [
+      {
+        "headline": "These 3 Companies Raised Their Dividends. The Biggest Raise May Not Be the Safest",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=912b789f85697413451dda173ac7c4e4974a6e4470f6aa8bb1a49b1f8a36cf50",
+        "datetime": 1792595737,
+        "summary": "Three companies just raised their dividends, but the one with the biggest increase is also carrying the thinnest cash cushion. Knowing which raise is actually the safest requires looking past the headline numbers."
+      },
+      {
+        "headline": "Phillips 66 (PSX) Is Up 5.39% in One Week: What You Should Know",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1d8317a70c7a61e0af58267a7b410d76ca00f12ab18759cd86262b8a3b7799ef",
+        "datetime": 1792594804,
+        "summary": "Does Phillips 66 (PSX) have what it takes to be a top stock pick for momentum investors? Let's find out."
+      },
+      {
+        "headline": "Phillips 66 (PSX) Reports Next Week: Wall Street Expects Earnings Growth",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=e60e2db3d6bfc6a1339487f5b086721baa1dff8443e1ae0a4d3a1a5b5d2ca972",
+        "datetime": 1792587615,
+        "summary": "Phillips 66 (PSX) doesn't possess the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
       {
         "headline": "10 S&P 500 Stocks Seeing The Biggest Estimate Hikes Ahead Of Earnings",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=f08741ee7143a3f80f0f50166c5189df2074240c7c982f450f312ed3947a7410",
         "datetime": 1792582787,
         "summary": "The S&P 500 stocks getting the heftiest EPS upgrades have something in common.",
-        "headline_cn": "10只标普500成分股财报前预期大幅上调",
+        "headline_cn": "财报季前盈利预期上调最多的10只标普500成分股",
         "sentiment": "bullish",
-        "rationale": "分析师上调预期反映业绩乐观",
+        "rationale": "分析师上调预期，业绩向好信号",
         "market_relevant": true
       },
       {
@@ -2370,6 +2799,13 @@
         "url": "https://finnhub.io/api/news?id=748bbe18dfcf8e34a6c02457991ceda241eae27290ade754d2fe7aa80936416e",
         "datetime": 1792530420,
         "summary": "Valero Energy (VLO), one of the largest independent petroleum refiners in the U.S., is set to report its much-anticipated Q3 results before market hours on Thursday, Oct. 22."
+      },
+      {
+        "headline": "$100 Invested In Phillips 66 5 Years Ago Would Be Worth This Much Today",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=fa841977e29fde3b7ecf0d240d01eaa40823d7494f9a4f47d5cd59d342cdf2e2",
+        "datetime": 1792519356,
+        "summary": "Phillips 66 (NYSE:PSX) has outperformed the market over the past 5 years by 17.25% on an annualized basis producing an average annual return of 28.3%. Currently, Phillips 66 has a market capitalization of $116.49"
       },
       {
         "headline": "4 Dividend Raises, 4 Different Risks. Which Stock Comes Out on Top?",
@@ -2496,62 +2932,6 @@
         "url": "https://finnhub.io/api/news?id=cce138726645bdc151f8d60feb60e40dbbd03f03cea518ed7426417a74986c31",
         "datetime": 1792024800,
         "summary": "Wall Street consensus has turned heavily favored on the Energy sector heading into the final stretch of 2026."
-      },
-      {
-        "headline": "How a Hurricane Could Help Some Refineries—and Hurt Others",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e201d1c213c6e0821d2b9136ebb86e950798d8e7597958fabf0423068ffb53ef",
-        "datetime": 1791996300,
-        "summary": "Hurricane Isaias showed how Gulf Coast storms affect energy stocks differently, with Chevron, Phillips 66, and the VanEck Oil Refiners ETF reacting based on asset location and diversification."
-      },
-      {
-        "headline": "Phillips 66: Not My Favorite, But A Solid Pick For Investors Seeking Predictability",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=55ee7909703ebc075c2518f553d99a1beab892b19feca62fbe81ebc069b74026",
-        "datetime": 1791994947,
-        "summary": "Phillips 66 rated Buy: strong macro tailwinds, Q2 beat, top dividend yield, and debt reduction. Click for this PSX update and see if the stock is right for you."
-      },
-      {
-        "headline": "What Did Valero Stock Investors Miss Before The Run?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=45542ef98f52712de6811c92df48e7cff137c8370f1f2eddac90d21884ea7339",
-        "datetime": 1791992135,
-        "summary": "A $10,000 stake in Valero Energy (VLO) on October 10, 2025, was worth about $29,500 by October 13, 2026. Over that window, the refiner returned to large profits, helped by sturdy fuel demand and tighter supply. So what was Valero itself saying about its refineries before October 10, 2025."
-      },
-      {
-        "headline": "Can Government-Backed Refinery Expansion Fuel Delek Stock Gains?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=139d9a9098aeedd1f5462d38561888f5f5d9f091281e17cec0ddb574234c3025",
-        "datetime": 1791987120,
-        "summary": "DK's government-backed Tyler refinery expansion, stronger refining margins and a $220M cash flow improvement plan could fuel further stock gains."
-      },
-      {
-        "headline": "Here's How Much You'd Have If You Invested $1000 in Phillips 66 a Decade Ago",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b57b84d82a1c0c19537c0381cf7b16e54b7c78461e1e3712341b6abbe361225c",
-        "datetime": 1791977405,
-        "summary": "Investing in certain stocks can pay off in the long run, especially if you hold on for a decade or more."
-      },
-      {
-        "headline": "What are the Prospects for Phillips 66's Refining Operations?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=9e38094d070c3ac7acacf6e5e6ebcfa7b985f87c9b1378ace0828c57c738813a",
-        "datetime": 1791976260,
-        "summary": "PSX could sustain strong refining profits into 2027 as tight global fuel supplies and elevated crack spreads offset pressure from rising crude oil prices."
-      },
-      {
-        "headline": "Wells Fargo Maintains Overweight on Phillips 66, Raises Price Target to $345",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=b77d96e24df6bf3f77f725cd397327fe5f0230093e087a1f6022c703fd307551",
-        "datetime": 1791974105,
-        "summary": "Wells Fargo  analyst Sam Margolin   maintains Phillips 66 (NYSE:PSX) with a Overweight and raises the price target from $335 to $345."
-      },
-      {
-        "headline": "Top 3 Energy Stocks That May Fall Off A Cliff In October",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=f334a1f0818be483e96566e75e2694a4927965384464499f5808f66a7585731e",
-        "datetime": 1791967148,
-        "summary": "CVR Energy, HF Sinclair and Phillips 66 show overbought momentum signals, with RSI readings of 81.2, 80.4 and 77.2."
       }
     ],
     "VRSN": [
@@ -2578,6 +2958,34 @@
       }
     ],
     "XLE": [
+      {
+        "headline": "Sector Update: Energy Stocks Rise Late Afternoon",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=98e666974931697666afc3a1ac8e2b8bf29230101a6015d2341a9203820d6c50",
+        "datetime": 1792612360,
+        "summary": "Energy stocks were higher late Wednesday afternoon, with the NYSE Energy Sector Index adding 0.8% an"
+      },
+      {
+        "headline": "Sector Update: Energy Stocks Edge Higher in Afternoon Trading",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ca8a516f0a56e6bde50967d2a7c9315a337fa7d882b9c6c5f1512a32f546873c",
+        "datetime": 1792605519,
+        "summary": "Energy stocks were slightly higher Wednesday afternoon, with the NYSE Energy Sector Index adding 0.3"
+      },
+      {
+        "headline": "Exchange-Traded Funds Higher as US Equities Rise After Midday",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=54f0ba8245d3c794bd17f43f716a4044d6b4128ffecd5a1295e007831c4378d1",
+        "datetime": 1792602738,
+        "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV rose. Actively traded I"
+      },
+      {
+        "headline": "Sector Update: Energy Stocks Lean Lower Premarket Wednesday",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=919cdc3b0a706cb5d0f3c40415963e6e10b1b809989f6efc7240c473061e31f6",
+        "datetime": 1792589181,
+        "summary": "Energy stocks were leaning lower premarket Wednesday, with the State Street Energy Select Sector SPD"
+      },
       {
         "headline": "Sector Update: Energy Stocks Mixed Late Afternoon",
         "source": "Yahoo",
@@ -2635,6 +3043,13 @@
         "summary": "Energy stocks were edging higher premarket Tuesday, with the State Street Energy Select Sector SPDR"
       },
       {
+        "headline": "Health Care Stocks Hit Record Highs, GM Drops Nearly 8%: Stock Market Today",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=3482c1924b89e162572ba246e9d18ef4c7056d94d57c36f352953a973a66610a",
+        "datetime": 1792501134,
+        "summary": "Health care stocks climbed to record highs by midday Tuesday, with defensives and small caps leading a recovery from an early dip."
+      },
+      {
         "headline": "Energy Stocks Lead This Year, But Tech Still Drives The S&P 500",
         "source": "SeekingAlpha",
         "url": "https://finnhub.io/api/news?id=d31e55802d509a5b455b03bbb9c1c8f4573b521a5ddcd01db8d6b021a70a3548",
@@ -2675,13 +3090,6 @@
         "url": "https://finnhub.io/api/news?id=68b4cf5fb2b3b4a5e69673195dc14bd4f5104c29df62abf9218a227629fd62b2",
         "datetime": 1792431545,
         "summary": "Energy stocks were lower Monday afternoon, with the NYSE Energy Sector Index decreasing 0.7% and the"
-      },
-      {
-        "headline": "Exchange-Traded Funds Higher as US Equities Rise After Midday",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=663ccb68adb1662f21de3df6cc2ade757a94e00fbc61e351c9324f0a0aeb862e",
-        "datetime": 1792430742,
-        "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV rose. Actively traded I"
       },
       {
         "headline": "ValuEngine Weekly Market Commentary",
@@ -2857,64 +3265,71 @@
         "url": "https://finnhub.io/api/news?id=65cbbf77d3f9b0d9e84b63fbae9cfb14f58e51d7bc9c93e94b94f1b85b4a657a",
         "datetime": 1792024200,
         "summary": "Energyâs strong rally this year reached another milestone on Tuesday, with the sector closing up more than 50% YTD for the first time in 2026."
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Rise Late Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=321d2ff2c3b5055328dd39036907004275ecf1516c8071e83e3b59ef13f97f5e",
-        "datetime": 1792008214,
-        "summary": "Energy stocks were higher late Wednesday afternoon, with the NYSE Energy Sector Index rising 0.3% an"
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Rise Wednesday Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=ff8418e348b3382744c42d5f5e57d235ec6b3a99204452d28ed602203ccbfec0",
-        "datetime": 1792000313,
-        "summary": "Energy stocks were higher Wednesday afternoon, with the NYSE Energy Sector Index rising 0.3% and the"
-      },
-      {
-        "headline": "Exchange-Traded Funds Lower as US Equities Drop After Midday",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=705c9f5cb43327835ee8191da9a43d8ee09416a2a9cf10a75c97207403c9648e",
-        "datetime": 1791997705,
-        "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV fell. Actively traded I"
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Rise Pre-Bell Wednesday",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=a7e7abd95163e74c2b1a77fc5d6ccc014391bbfab49c7013b9f6338abe0c93e3",
-        "datetime": 1791984496,
-        "summary": "Energy stocks were rising pre-bell Wednesday, with the State Street Energy Select Sector SPDR ETF (X"
-      },
-      {
-        "headline": "Nasdaq 100 Drops 1% on Hot CPI, SOXX Falls 7th Day: Stock Market Today",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=96ad35f5ef177e04917a658689de84478274bbf6edf6e6f298c9a08636fefbf6",
-        "datetime": 1791977994,
-        "summary": "The Nasdaq 100 fell 1% by midday Wednesday after September CPI topped forecasts, pushing Treasury yields and rate-hike bets higher."
-      },
-      {
-        "headline": "8 Of 11 Sectors Fall Wednesday As Defensives Lead",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=2b743e7a2c154c563c192ced156b0a277e5f5114d04f6476217f58acbd737cb7",
-        "datetime": 1791976493,
-        "summary": "Three sectors are higher and eight are lower in Wednesday&#39;s regular session, with defensive sectors holding the top three positions. The leaders are separated rather than clustered, with no single sector pulling away from the group."
-      },
-      {
-        "headline": "The Midterms Could Be Bullish For Stocks: Here's What Worries Me",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=20104e59ef8137075d470d563dfdee11b1dae4bb10f346c7366a5052640e67ea",
-        "datetime": 1791961500,
-        "summary": ""
       }
     ],
     "XOM": [
+      {
+        "headline": "Should You Forget ExxonMobil and Buy Cameco Stock Instead?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=83f06c52e1fd11beb8b8fd3912b0eadacdc17b304d292505f0273051e48e5ae9",
+        "datetime": 1792667100,
+        "summary": "ExxonMobil and Cameco stock have gone in different directions this year. Here's why Cameco may be worth a look."
+      },
+      {
+        "headline": "Is Exxon Mobil's Next Big Thing Already Here?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=ab5c4cde7fd42cd67efc6ec6f5df59280e814b7bd4825f0798343c8500f33bca",
+        "datetime": 1792630089,
+        "summary": "For questions about this article or underlying research, email help@trefis.com."
+      },
+      {
+        "headline": "As BP Leaves the North Sea, These Independents Are Buying In",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9a3ba5670afc877bb2dab111ecc7647568c9cbf0d7e214aa1fdffb8c526161bd",
+        "datetime": 1792612800,
+        "summary": "Oil majors are retreating from the UK North Sea, as declining production and a 78% tax rate drive companies to divest or diversify abroad."
+      },
+      {
+        "headline": "SpaceX earnings roundup, Meta earnings preview, and tech trade fears",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=76609308cca98e5095bb1be13805a13eb1102b42fe134ba83e8cd3213a109974",
+        "datetime": 1792591572,
+        "summary": "Slatestone Wealth Partner & Chief Market Strategist Kenny Polcari talks about the biggest stories to start your trading day. Earnings are coming and causing stocks to rebound. SpaceX (SPCX) is topping its Q3 estimates, investors are watching health care earnings like Elevance Health (ELV), and what to expect with Meta's earnings coming later today. Kenny Polcari then sits down with Futurum CEO Daniel Newman to discuss Amazon (AMZN), Alphabet (GOOGL) (GOOG), and Microsoft (MSFT), the uncertainty in the tech trade, and how companies are monetizing AI."
+      },
+      {
+        "headline": "The Barrel That Matters Most Right Now Is Diesel",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=847034ceac34a840bfccda608a571a22f6ba188e8e21c852013b01405eb13ab8",
+        "datetime": 1792591200,
+        "summary": "Crude oil gets the headlines, but the tightest corner of the oil market right now is diesel. The average U.S. on-highway diesel price rose 9.7 cents last week to $6.276 a gallon, $2.656 higher than a year ago, even as regular gasoline slipped 4.7 cents to $4.284, according to the U.S. Energy Information Administration. In its October Oil Market Report, the International Energy Agency said that while global diesel prices have eased from all-time highs of more than $200 a barrel reached in Septemb"
+      },
+      {
+        "headline": "Can ExxonMobil Strengthen Its Long-Term Upstream Production Capacity?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=22108e61a71c9c2f5bfd482bb97cb449ccc15cdce368d9ae782129eaa100d19d",
+        "datetime": 1792585800,
+        "summary": "XOM's low-cost Permian and Guyana assets support production growth as higher crude prices and disciplined investment drive its 2030 upstream ambitions."
+      },
+      {
+        "headline": "Eni SpA Q3 Earnings Ahead: What's in Store for the Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=67d398b66ed0adc0f469eba5bceaafc17ef6e0b0698536de6951635767c3a6e5",
+        "datetime": 1792581300,
+        "summary": "E gears up for Q3 2026 earnings, with EPS expected to surge 113.3% despite lower revenues. Will stronger oil prices fuel its upstream performance?"
+      },
       {
         "headline": "The massive risk hiding inside your S&P 500 index fund",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=917a8b7559ed671bc269c4026f0411980c8de8f45d8d2dc9ed87ca3443dd097b",
         "datetime": 1792576800,
         "summary": "The Bahnsen Group Chief Investment Officer David Bahnsen and Roundhill Investments Chief Investment Strategist Drew Pettit discuss the hidden dangers of top-heavy passive index funds."
+      },
+      {
+        "headline": "Two Tactical ETFs For Collecting High Income From High Oil And Commodity Prices",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=aa7b29e9a31cbe7d583a4641b916f8ce105e6bccbe776774f488c9108bc51630",
+        "datetime": 1792573700,
+        "summary": "I focus on high-yield income ETFs XLEI and FTGC for tactical portfolio allocation amid rising energy and commodity prices."
       },
       {
         "headline": "The way we consume energy is changing. Abu Dhabi’s integrated system has already embraced that change",
@@ -3377,100 +3792,16 @@
         "url": "https://finnhub.io/api/news?id=0103bf25e8581959718d3a35a72a74df079f943fb6a99ac2614af958d7cec01c",
         "datetime": 1792041585,
         "summary": "ExxonMobil's valuation is stretched, trading at 20.6x P/E and a normalized 27.3x, which is excessive. See why I rate XOM stock a Sell now."
-      },
-      {
-        "headline": "Exxon Wants to Repeat Its Guyana Success in Trinidad. Should You Buy the Stock Now or Wait for the First Well?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=492b0883335b9dace7d7b346a2517d928f9c15982672df0aa6cb303b77250ec1",
-        "datetime": 1792014600,
-        "summary": "Trinidad offers upside, but Exxon's existing business remains strong."
-      },
-      {
-        "headline": "Should You Buy Occidental Petroleum Stock For Its Cash?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=6d9fdad133f9c063298b3c16bd7f84cdc7d257f39f1c64cbc4ccd877f0d8a8c7",
-        "datetime": 1792013143,
-        "summary": "Occidental Petroleum (OXY) generates free cash flow equal to 7.8% of its market value per year. That compares with 4.4% for the median S&P 500 company. A yield this high presents a clear binary. Either the shares are cheap for what the business makes, or the market expects that cash to fall. So can Occidental keep that cash coming while it pays down its debt."
-      },
-      {
-        "headline": "Exxon Mobil Holdings (XOM) Rises As Market Takes a Dip: Key Facts",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=4fef0e2bcd97d32c40a5fed355544db8804452ee8c139a0d59be0e855a872744",
-        "datetime": 1792010702,
-        "summary": "Exxon Mobil Holdings (XOM) closed the most recent trading day at $177.01, moving +1.68% from the previous trading session."
-      },
-      {
-        "headline": "Stock Market Today: Nasdaq Hit As Inflation Runs Hot; Dell Slumps, But These Biotech Names Gain (Live Coverage)",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=3b9dea2a69b3fc425658f3f7c97088ad4174d1c9c84f442b341272d8f330253c",
-        "datetime": 1792004900,
-        "summary": "The Dow Jones index wavers Wednesday on a surprise CPI inflation report. Bank of America plunges on earnings."
-      },
-      {
-        "headline": "What Did Valero Stock Investors Miss Before The Run?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=45542ef98f52712de6811c92df48e7cff137c8370f1f2eddac90d21884ea7339",
-        "datetime": 1791992135,
-        "summary": "A $10,000 stake in Valero Energy (VLO) on October 10, 2025, was worth about $29,500 by October 13, 2026. Over that window, the refiner returned to large profits, helped by sturdy fuel demand and tighter supply. So what was Valero itself saying about its refineries before October 10, 2025."
-      },
-      {
-        "headline": "ExxonMobil (XOM) Stock May Be 10% Undervalued As Kashagan Risk Looms",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=f99ce54c2e80d219a481c533aa21eaa3f745c97b4be6fb33f4dd20086f6c4fcf",
-        "datetime": 1791991277,
-        "summary": "ExxonMobil Holdings has delivered a powerful run in recent years, and that puts fresh attention on a simple issue for anyone looking at the stock today: how much of the current share price is really supported by the cash the business can generate over time. Over the past 5 years the stock has returned 226.7%. This raises the question of how much of that move reflects durable cash flow strength versus changing sentiment toward big oil. New headlines around large scale projects, regulatory..."
-      },
-      {
-        "headline": "Has ExxonMobil Stock Become A Different Bet?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=47a05529d4d2d42577a0530001eb2dd2f324e8805c529f2b57fb807c87b1d89e",
-        "datetime": 1791991029,
-        "summary": "At 22.2 times earnings, ExxonMobil (XOM) stock trades near the S&P 500's 22.5. Shareholders paying that multiple need a clear view of the underlying assets, and the priorities inside the company have shifted. During the fiscal Q3 2024 call, executives promoted Pioneer Natural Resources, a producer ExxonMobil now owns outright. Management no longer emphasizes that deal. So what does management talk up instead."
-      },
-      {
-        "headline": "All You Need to Know About Exxon (XOM) Rating Upgrade to Buy",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=851780f9bde17f5f83b1ae2bc3c60cb056cca428655e8914322d4a9ce88b10ad",
-        "datetime": 1791990004,
-        "summary": "Exxon (XOM) has been upgraded to a Zacks Rank #2 (Buy), reflecting growing optimism about the company's earnings prospects. This might drive the stock higher in the near term."
-      },
-      {
-        "headline": "Chevron vs. ExxonMobil: Which Energy Stock Is a Better Buy in 2026?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=1ed426915290f3b8defbfd892c8a99cb45a7f3984fb414fd594dae815a3f5462",
-        "datetime": 1791988502,
-        "summary": "ExxonMobil's 8.9% net margin outpaces Chevron's 6.7%, but Chevron's Guyana expansion could reshape the competitive landscape."
-      },
-      {
-        "headline": "These 3 Oil Giants Make Money Beyond the Wellhead. That’s Good News for Dividends",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=6aa4d597c01f50ab4b4d0d0b6c02ba64376c8bef18a6739bca16844622af1ea5",
-        "datetime": 1791987334,
-        "summary": "Oil prices crashed 14% last year, yet three energy giants kept raising their dividends anyway. The integrated business model behind that trick also explains why analysts see one of them as the most recession-proof income stock in the sector."
-      },
-      {
-        "headline": "How To Retire: Hope For 95, Prepare For 105",
-        "source": "SeekingAlpha",
-        "url": "https://finnhub.io/api/news?id=2eb132da1e00b89ebe033b6e08337f524981d6412c48c58cd5cbcdcc18f6afed",
-        "datetime": 1791986068,
-        "summary": "Want to retire on income? Learn how a dividend portfolio using preferred shares and baby bonds can boost yield on cost and preserve principal."
-      },
-      {
-        "headline": "ExxonMobil (XOM): Can Its Chemical Recovery Survive a Smaller Cost Advantage?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0f4720e9faee9c68227859d3f42a8c37bf46675d16f80e80add5fcfaa944d18e",
-        "datetime": 1791985527,
-        "summary": "ExxonMobil Holdings Corporation (NYSE:XOM) increased chemical earnings from $110 million in the first quarter to $1.13 billion in the second, even as sales volumes fell. Stronger North American feedstock economics helped, but industry chemical margins remained below the company’s historical benchmark. The investment question is whether integration can protect returns when that regional advantage narrows. […]"
-      },
-      {
-        "headline": "8 Of 11 Sectors Fall Wednesday As Defensives Lead",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=2b743e7a2c154c563c192ced156b0a277e5f5114d04f6476217f58acbd737cb7",
-        "datetime": 1791976493,
-        "summary": "Three sectors are higher and eight are lower in Wednesday&#39;s regular session, with defensive sectors holding the top three positions. The leaders are separated rather than clustered, with no single sector pulling away from the group."
       }
     ],
     "XYL": [
+      {
+        "headline": "GFL Environmental Inc. (GFL) Earnings Expected to Grow: What to Know Ahead of Next Week's Release",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=adf654074aa478349825ad936629cefd193d3560d09a77bc71c955588a638bbf",
+        "datetime": 1792587611,
+        "summary": "GFL Environmental (GFL) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
       {
         "headline": "Xylem (XYL) Reports Next Week: Wall Street Expects Earnings Growth",
         "source": "Yahoo",
@@ -3491,20 +3822,6 @@
         "url": "https://finnhub.io/api/news?id=75b4f28fa35643ec3cce184ed307ca5a1b3b413dea9ace3f0930b9b794081228",
         "datetime": 1792071092,
         "summary": "Mizuho  analyst Brett Linzey   maintains Xylem (NYSE:XYL) with a Neutral and lowers the price target from $130 to $110."
-      },
-      {
-        "headline": "Oppenheimer Reiterates Outperform on Xylem, Lowers Price Target to $150",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=5fa8ef09d1af51c41328c86172c6247576ec35208afa44ceed769df085f53900",
-        "datetime": 1791983991,
-        "summary": "Oppenheimer  analyst Bryan Blair   reiterates Xylem (NYSE:XYL) with a Outperform and lowers the price target from $158 to $150."
-      },
-      {
-        "headline": "RBC Capital Maintains Outperform on Xylem, Lowers Price Target to $135",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=4aeba46dc4517b578e3edbe7dd25cb5f1e55c7d5246e3a141181ac9eee4245b0",
-        "datetime": 1791973194,
-        "summary": "RBC Capital  analyst Jeffrey Reive   maintains Xylem (NYSE:XYL) with a Outperform and lowers the price target from $164 to $135."
       }
     ]
   },
