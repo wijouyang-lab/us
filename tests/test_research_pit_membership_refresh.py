@@ -20,6 +20,7 @@ from pit_membership import (
     tickers_overlapping,
 )
 import refresh_sp500_pit_prices as refresh_prices
+from run_research_ic_sp500_pit_10y import prepare_adjusted_label_inputs
 
 
 def write_membership(path: Path, rows: str) -> Path:
@@ -209,3 +210,50 @@ def test_vendored_membership_source_hash_is_pinned():
     )
 
     assert git_blob_sha(DEFAULT_HISTORY) == PINNED_MEMBERSHIP_BLOB_SHA
+
+
+
+def test_adjusted_return_labels_do_not_change_raw_factor_values():
+    snapshot = pd.DataFrame(
+        [{
+            "Ticker": "AAA",
+            "Technical_Date": "2020-01-02",
+            "Price": "10.00",
+            "Momentum_20D_Pct": "3.25",
+        }]
+    )
+    prices = pd.DataFrame(
+        [{
+            "Date": "2020-01-02",
+            "Ticker": "AAA",
+            "Open": "10.0",
+            "Close": "10.0",
+            "Adj Close": "9.5",
+            "Price_Basis": "raw_ohlc_adj_close",
+        }]
+    )
+
+    adjusted_snapshot, adjusted_prices = prepare_adjusted_label_inputs(snapshot, prices)
+
+    assert adjusted_snapshot.loc[0, "Price"] == "9.50000000"
+    assert adjusted_snapshot.loc[0, "Momentum_20D_Pct"] == "3.25"
+    assert snapshot.loc[0, "Price"] == "10.00"
+    assert adjusted_prices.loc[0, "Close"] == 9.5
+
+
+def test_adjusted_return_labels_fail_when_adjusted_close_is_missing():
+    snapshot = pd.DataFrame(
+        [{"Ticker": "AAA", "Technical_Date": "2020-01-02", "Price": "10.0"}]
+    )
+    prices = pd.DataFrame(
+        [{
+            "Date": "2020-01-02",
+            "Ticker": "AAA",
+            "Close": "10.0",
+            "Adj Close": "",
+            "Price_Basis": "raw_ohlc_adj_close",
+        }]
+    )
+
+    with pytest.raises(ValueError, match="Adjusted close missing/invalid"):
+        prepare_adjusted_label_inputs(snapshot, prices)
