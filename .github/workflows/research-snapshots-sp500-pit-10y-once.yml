@@ -80,8 +80,17 @@ jobs:
             --constituents tools/research/data/sp500_components_history.csv \
             --output LOW_FREQUENCY_ATR_EXECUTION_10Y.md
 
+      - name: Upload price-refresh audit on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-price-refresh-audit-${{ github.run_id }}
+          path: research_pit_price_refresh_audit.json
+          if-no-files-found: warn
+          retention-days: 30
+
       - name: Upload artifacts
-        if: always()
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: research-snapshots-ic-sp500-pit-10y
