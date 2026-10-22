@@ -70,13 +70,13 @@ jobs:
             --output LOW_FREQUENCY_ATR_STRATEGY_10Y.md
 
       # Independent execution-timing check: signal known after prior close, entry at Scan_Date Open.
-      # Reports limitations of raw, unadjusted OHLC and incomplete membership history.
+      # Reports the refreshed adjusted-price basis and historical membership caveats.
       - name: Run next-open ATR execution validation
         run: |
           python tools/research/low_frequency_atr_execution_validation.py \
             --snapshot research_factor_snapshots_sp500_pit_10y.csv \
             --prices research_price_history_sp500_10y.csv \
-            --constituents sp500_constituents.csv \
+            --constituents tools/research/data/sp500_components_history.csv \
             --output LOW_FREQUENCY_ATR_EXECUTION_10Y.md
 
       - name: Upload artifacts
