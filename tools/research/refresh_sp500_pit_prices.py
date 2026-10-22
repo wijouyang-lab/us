@@ -262,7 +262,7 @@ def calculate_member_session_coverage(
 
 def git_blob_sha(path: Path) -> str:
     raw = path.read_bytes()
-    header = f"blob {len(raw)}\\0".encode("ascii")
+    header = f"blob {len(raw)}\0".encode("ascii")
     return hashlib.sha1(header + raw).hexdigest()
 
 
