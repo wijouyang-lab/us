@@ -1,4 +1,9 @@
 name: Research Non-ATR Historical Backtest
+
+# Keep expensive historical refresh/backtest runs serialized per ref.
+concurrency:
+  group: research-non-atr-backtest-${{ github.ref }}
+  cancel-in-progress: false
 on:
   push:
     branches:
