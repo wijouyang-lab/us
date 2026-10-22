@@ -376,9 +376,11 @@ def refresh(args) -> dict:
         f"historical member tickers={len(in_scope)}; requested with SPY={len(requested)}"
     )
 
-    stocks, failures = download_historical_prices(
+    stocks, download_diagnostics = download_historical_prices(
         requested, fetch_start, end_exclusive, batch_size=args.batch_size
     )
+    recovered_tickers = [item for item in download_diagnostics if item.get("status") == "recovered"]
+    failures = [item for item in download_diagnostics if item.get("status") == "failed"]
     spy = stocks[stocks["Ticker"] == "SPY"].copy() if not stocks.empty else pd.DataFrame(columns=PRICE_COLUMNS)
     stock_rows = stocks[stocks["Ticker"] != "SPY"].copy() if not stocks.empty else pd.DataFrame(columns=PRICE_COLUMNS)
     market_dates = sorted(pd.to_datetime(spy["Date"], errors="coerce").dropna().dt.date.unique().tolist()) if not spy.empty else []
@@ -433,7 +435,9 @@ def refresh(args) -> dict:
         "spy_staleness_calendar_days": stale_days,
         "coverage": coverage,
         "download_failure_count": len(failures),
-        "download_failures": failures[:100],
+        "download_failures": failures[:200],
+        "fallback_recovered_ticker_count": len(recovered_tickers),
+        "fallback_recovered_tickers": recovered_tickers[:200],
         "requirements": {
             "min_member_bar_coverage": args.min_member_bar_coverage,
             "min_ticker_coverage": args.min_ticker_coverage,
