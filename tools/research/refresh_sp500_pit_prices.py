@@ -786,8 +786,10 @@ def refresh(args) -> dict:
     args.audit.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False, indent=2))
 
-    # Never replace prior input files unless both source freshness and membership coverage pass.
-    if issues:
+    # By default, never replace prior input files unless source freshness and membership
+    # coverage pass. Partial outputs are permitted only with explicit opt-in AND isolated
+    # non-default output paths; the audit retains status=FAIL and the normal inputs remain safe.
+    if issues and not getattr(args, "allow_partial_output", False):
         raise SystemExit("PIT price refresh blocked; existing research price inputs were preserved. See audit JSON.")
 
     args.stocks.parent.mkdir(parents=True, exist_ok=True)
@@ -814,7 +816,23 @@ def main(argv=None) -> int:
     parser.add_argument("--min-member-bar-coverage", type=float, default=0.95)
     parser.add_argument("--min-ticker-coverage", type=float, default=0.98)
     parser.add_argument("--max-spy-staleness-days", type=int, default=4)
+    parser.add_argument(
+        "--allow-partial-output",
+        action="store_true",
+        help=(
+            "Research-only escape hatch: write partial prices despite failed coverage/freshness "
+            "gates. Requires both --stocks and --spy to be non-default isolated paths; the audit "
+            "remains FAIL and default research inputs are never overwritten."
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.allow_partial_output and (
+        args.stocks.resolve() == DEFAULT_STOCKS.resolve()
+        or args.spy.resolve() == DEFAULT_SPY.resolve()
+    ):
+        parser.error(
+            "--allow-partial-output requires both --stocks and --spy to use isolated non-default paths"
+        )
     if not 0 < args.min_member_bar_coverage <= 1 or not 0 < args.min_ticker_coverage <= 1:
         parser.error("coverage thresholds must be in the interval (0, 1]")
     if args.warmup_days < 60:
