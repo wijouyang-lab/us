@@ -556,7 +556,8 @@ def download_historical_prices(
                 "recovery_method": recovery_method,
                 "rows": len(recovered_rows),
             }
-            recovered_entry["wayback_attempted"] = wayback_attempted
+            if wayback_attempted:
+                recovered_entry["wayback_attempted"] = True
             if eodhd_fetcher is not None:
                 recovered_entry["eodhd_attempted"] = eodhd_attempted
             recovered_tickers.append(recovered_entry)
@@ -574,8 +575,9 @@ def download_historical_prices(
                     else "ticker_history_failed" if history_attempted
                     else "single_ticker_download_failed"
                 ),
-                "wayback_attempted": wayback_attempted,
             }
+            if wayback_attempted:
+                failure_entry["wayback_attempted"] = True
             if eodhd_fetcher is not None:
                 failure_entry["eodhd_attempted"] = eodhd_attempted
                 if eodhd_disabled_error:
