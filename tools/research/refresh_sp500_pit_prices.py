@@ -29,7 +29,10 @@ from pit_membership import (
     tickers_overlapping,
 )
 from wayback_delisted_prices import fetch_wayback_yahoo_csv_history
-from multi_index_membership import load_multi_index_membership
+try:
+    from .multi_index_membership import load_multi_index_membership
+except ImportError:  # direct script execution from tools/research
+    from multi_index_membership import load_multi_index_membership
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_HISTORY = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
