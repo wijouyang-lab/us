@@ -857,7 +857,7 @@ def test_eodhd_fallback_recovers_unresolved_symbol_with_adjusted_ohlc():
         "ticker": "AAA",
         "status": "recovered",
         "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
-        "fallback_attempts": 5,
+        "fallback_attempts": 6,
         "recovery_method": "eodhd_history",
         "rows": 2,
         "eodhd_attempted": True,
