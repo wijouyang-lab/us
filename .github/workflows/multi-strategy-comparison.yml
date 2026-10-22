@@ -112,11 +112,11 @@ jobs:
             echo
             echo "> **Research limitation:** this job uses the most recent successful 10Y snapshot artifact and records its provenance; it does not rebuild the dataset itself. The selected artifact must still be reviewed for PIT membership quality, corporate actions, delistings, and execution realism. Positive historical results are not proof of live alpha."
             echo
-          } >> /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
-          cat /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
+          } >> /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
+          cat /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
       - uses: actions/upload-artifact@v4
         with:
           name: unified-multi-strategy-comparison-10y-latest
-          path: /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
+          path: /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
           if-no-files-found: error
           retention-days: 30
