@@ -2,7 +2,6 @@ name: Isolated PIT Partial History Drawdowns
 
 on:
   workflow_dispatch:
-  # Run only when a reviewed merge explicitly carries this marker.
   push:
     paths:
       - '.github/workflows/isolated-pit-partial-drawdowns.yml'
@@ -21,7 +20,6 @@ permissions:
 
 jobs:
   isolated-drawdowns:
-    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[run-isolated-pit-drawdowns]')
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
@@ -64,6 +62,8 @@ jobs:
             --cutoff-date "${{ steps.period.outputs.cutoff_date }}" \
             --history tools/research/data/sp500_components_history.csv \
             --aliases tools/research/data/sp500_ticker_aliases.csv \
+            --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
+            --dow30-membership tools/research/data/dow30_membership_history.csv \
             --allow-partial-output \
             --stocks research_complete_history/partial_prices.csv \
             --spy research_complete_history/partial_spy.csv \
