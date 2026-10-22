@@ -77,6 +77,32 @@ def prepare_adjusted_label_inputs(snapshot_df, price_df):
     return snapshot, adjusted_prices
 
 
+def build_market_aligned_adjusted_price_map(adjusted_prices, market_dates):
+    """Align adjusted stock closes to every SPY session, preserving missing bars as NaN.
+
+    This makes an N-session return mean N market sessions later. A missing stock bar
+    yields a missing label instead of silently shifting the horizon to a later date.
+    """
+    parsed_market_dates = pd.to_datetime(pd.Series(list(market_dates)), errors="coerce").dropna()
+    market_index = pd.DatetimeIndex(sorted(parsed_market_dates.drop_duplicates().tolist()))
+    if market_index.empty:
+        raise ValueError("SPY market-session calendar is empty")
+
+    prices = adjusted_prices.copy()
+    prices["Ticker"] = prices["Ticker"].astype(str).str.strip().str.upper()
+    prices["Date"] = pd.to_datetime(prices["Date"], errors="coerce")
+    prices["Close"] = pd.to_numeric(prices["Close"], errors="coerce")
+    prices = prices.dropna(subset=["Date", "Ticker"])
+    if prices.duplicated(["Ticker", "Date"]).any():
+        raise ValueError("duplicate Ticker/Date keys in adjusted return price map")
+
+    aligned = {}
+    for ticker, group in prices.groupby("Ticker", sort=False):
+        series = group.set_index("Date")["Close"].sort_index()
+        aligned[str(ticker)] = series.reindex(market_index)
+    return aligned
+
+
 def main():
     snap = REPO / "research_factor_snapshots_sp500_pit_10y.csv"
     price = REPO / "research_price_history_sp500_10y.csv"
@@ -92,7 +118,7 @@ def main():
 
     import pandas as pd
     from quant_factor_backtest import run_backtest
-    from quant_factor_price import price_map_from_history
+    from quant_factor_backtest import forward_return_nd
 
     print(f"snapshot: {snap} ({snap.stat().st_size} bytes)")
     print(f"price:    {price} ({price.stat().st_size} bytes)")
@@ -102,7 +128,13 @@ def main():
     snap_df = pd.read_csv(snap, dtype=str, keep_default_na=False)
     price_df = pd.read_csv(price, dtype=str, keep_default_na=False)
     snap_df, adjusted_prices = prepare_adjusted_label_inputs(snap_df, price_df)
-    price_map = price_map_from_history(adjusted_prices)
+    spy_path = REPO / "research_spy_sp500_10y.csv"
+    if not spy_path.exists():
+        raise FileNotFoundError(f"SPY market-session calendar is missing: {spy_path}")
+    spy_df = pd.read_csv(spy_path, dtype=str, keep_default_na=False)
+    if "Date" not in spy_df.columns:
+        raise ValueError("SPY research price history must contain Date")
+    price_map = build_market_aligned_adjusted_price_map(adjusted_prices, spy_df["Date"])
 
     with tempfile.TemporaryDirectory(prefix="pit-adjusted-backtest-") as tmpdir:
         temp_snapshot = Path(tmpdir) / "research_factor_snapshots_sp500_pit_10y.adjusted-labels.csv"
