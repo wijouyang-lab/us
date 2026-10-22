@@ -2,7 +2,6 @@
 pandas>=3.0,<4
 numpy>=2.0,<3
 scipy>=1.14,<2
-pandas-ta>=0.4,<0.5
 yfinance>=1.0,<2
 requests>=2.31,<3
 lxml>=5.0,<7
