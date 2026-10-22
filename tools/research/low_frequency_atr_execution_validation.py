@@ -5,8 +5,9 @@
 Signals use factors known after Technical_Date close. Entry is the next session's
 Open on Scan_Date; exit is that session's Close after HOLD_SESSIONS sessions.
 This deliberately does not change production strategy or the existing close-close
-research labels. The refreshed workflow uses yfinance auto-adjusted OHLC; provider
-history and symbol-transition limitations still apply.
+research labels. Raw OHLC is used for factor features; same-session adjusted open
+and adjusted close are used for execution returns. Provider history and symbol-
+transition limitations still apply.
 """
 from __future__ import annotations
 
@@ -54,8 +55,11 @@ def load_inputs(snapshot: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFr
     p = prices[["Date", "Ticker", "Open", "Close", "Adj Open", "Adj Close", "Price_Basis"]].copy()
     p["Ticker"] = p["Ticker"].astype(str).str.strip().str.upper()
     p["Date"] = pd.to_datetime(p["Date"], errors="coerce").dt.normalize()
-    for col in ("Open", "Close"):
+    for col in ("Open", "Close", "Adj Open", "Adj Close"):
         p[col] = pd.to_numeric(p[col], errors="coerce")
+    basis = sorted(set(p["Price_Basis"].astype(str).str.strip()))
+    if basis != ["raw_ohlc_adj_close"]:
+        raise ValueError(f"unexpected research price basis: {basis}")
     p = p.dropna(subset=["Date", "Ticker"])
     if p.duplicated(["Date", "Ticker"]).any():
         raise ValueError("duplicate price Date/Ticker rows")
@@ -257,7 +261,7 @@ def main() -> int:
     })
     price_basis = (
         "raw_ohlc_adj_close（因子用原始 OHLC，收益用调整价格）"
-        if basis_values == ["yfinance_auto_adjusted"]
+        if basis_values == ["raw_ohlc_adj_close"]
         else "未验证（输入 CSV 缺少一致的 Price_Basis 标记）"
     )
     report = render_report(result, membership_has_removals, price_basis)
