@@ -65,6 +65,29 @@ def daily_rows(d, dates, factor, direction):
 def non_overlap(rows):
     return rows[::HORIZON]
 
+def daily_rows_both_directions(d, dates, factor):
+    """Build both long-only portfolio directions in one date-grouping pass."""
+    wanted = set(pd.Timestamp(x).normalize() for x in dates)
+    high_rows, low_rows = [], []
+    selected = d[d.Scan_Date.isin(wanted)]
+    for date, day in selected.groupby("Scan_Date", sort=True):
+        day = day.dropna(subset=[factor, "Forward_Return_20D"]).sort_values("Ticker")
+        if day.Ticker.nunique() < MIN_NAMES:
+            continue
+        n = max(1, int(math.ceil(len(day) * TOP_FRAC)))
+        ranked = day.assign(_rank=day[factor].rank(method="first"))
+        for bucket, chosen in (
+            (high_rows, ranked.nlargest(n, "_rank")),
+            (low_rows, ranked.nsmallest(n, "_rank")),
+        ):
+            bucket.append({
+                "date": date,
+                "tickers": frozenset(chosen.Ticker),
+                "gross": float(chosen.Forward_Return_20D.mean()),
+                "benchmark": float(day.Forward_Return_20D.mean()),
+            })
+    return high_rows, low_rows
+
 def choose_direction(d, dates, factor):
     hi = non_overlap(daily_rows(d, dates, factor, 1))
     lo = non_overlap(daily_rows(d, dates, factor, -1))
@@ -95,23 +118,60 @@ def metrics(rows, cost_bps):
             "drawdown_pct":float(np.min(wealth/peaks-1)*100),"turnover_pct":float(np.mean(turns)*100)}
 
 def run_comparison(frame):
-    d=clean_frame(frame)
-    date_counts=d.groupby("Scan_Date").Ticker.nunique()
-    dates=sorted(date_counts[date_counts>=MIN_NAMES].index.tolist())
-    splits=split_dates(dates)
-    result={}
-    for label,factor in FACTORS.items():
-        sub=d.dropna(subset=[factor]).copy()
-        usable_dates=sorted(set(dates)&set(sub.Scan_Date.unique()))
-        local=split_dates(usable_dates)
-        direction,train_spread=choose_direction(sub,local["train"],factor)
-        segments={name:metrics(non_overlap(daily_rows(sub,ds,factor,direction)),10.0) for name,ds in local.items()}
-        costs={str(int(c)):metrics(non_overlap(daily_rows(sub,local["test"],factor,direction)),c) for c in COSTS}
-        result[label]={"factor":factor,"direction":"HIGH" if direction>0 else "LOW",
-            "train_spread_pct":train_spread*100,"segments":segments,"costs":costs,
-            "dates":len(usable_dates),"tickers":int(sub.Ticker.nunique())}
-    return {"rows":len(d),"tickers":int(d.Ticker.nunique()),"dates":len(dates),
-            "start":dates[0].strftime("%Y-%m-%d"),"end":dates[-1].strftime("%Y-%m-%d"),"results":result}
+    d = clean_frame(frame)
+    date_counts = d.groupby("Scan_Date").Ticker.nunique()
+    dates = sorted(date_counts[date_counts >= MIN_NAMES].index.tolist())
+    split_dates(dates)
+    result = {}
+    for label, factor in FACTORS.items():
+        sub = d.dropna(subset=[factor]).copy()
+        usable_dates = sorted(set(dates) & set(sub.Scan_Date.unique()))
+        local = split_dates(usable_dates)
+
+        # Group/sort each factor's date panel once. The former implementation
+        # repeated this expensive grouping eight times per factor (both
+        # directions, three splits, and three cost cases), which made the 10Y
+        # job needlessly slow. Keep the same rows, direction rule, spacing,
+        # turnover/cost calculation, and segment-specific non-overlap reset.
+        high_rows, low_rows = daily_rows_both_directions(sub, usable_dates, factor)
+        train_dates = set(local["train"])
+        high_train = non_overlap([r for r in high_rows if r["date"] in train_dates])
+        low_train = non_overlap([r for r in low_rows if r["date"] in train_dates])
+        if min(len(high_train), len(low_train)) < 3:
+            raise ValueError(f"{factor}: fewer than 3 non-overlapping training observations")
+        train_spread = float(
+            np.mean([x["gross"] for x in high_train]) -
+            np.mean([x["gross"] for x in low_train])
+        )
+        direction = 1 if train_spread >= 0 else -1
+        chosen_rows = high_rows if direction > 0 else low_rows
+
+        segments = {}
+        for name, ds in local.items():
+            date_set = set(ds)
+            segment_rows = [r for r in chosen_rows if r["date"] in date_set]
+            segments[name] = metrics(non_overlap(segment_rows), 10.0)
+
+        test_dates = set(local["test"])
+        test_rows = non_overlap([r for r in chosen_rows if r["date"] in test_dates])
+        costs = {str(int(c)): metrics(test_rows, c) for c in COSTS}
+        result[label] = {
+            "factor": factor,
+            "direction": "HIGH" if direction > 0 else "LOW",
+            "train_spread_pct": train_spread * 100,
+            "segments": segments,
+            "costs": costs,
+            "dates": len(usable_dates),
+            "tickers": int(sub.Ticker.nunique()),
+        }
+    return {
+        "rows": len(d),
+        "tickers": int(d.Ticker.nunique()),
+        "dates": len(dates),
+        "start": dates[0].strftime("%Y-%m-%d"),
+        "end": dates[-1].strftime("%Y-%m-%d"),
+        "results": result,
+    }
 
 def render_report(r):
     lines=["# Unified low-frequency strategy comparison (research only)","",
