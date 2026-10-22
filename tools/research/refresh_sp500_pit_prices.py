@@ -158,14 +158,29 @@ def download_historical_prices(
     retries: int = 3,
     sleeper=time.sleep,
     downloader=None,
+    history_fetcher=None,
 ) -> tuple[pd.DataFrame, list[dict]]:
     """Batch-download raw OHLC plus adjusted close; derive adjusted OHLC for returns.
 
     downloader is injectable for regression tests. It should behave like yf.download.
     """
-    if downloader is None:
+    default_yfinance_client = None
+    if downloader is None or history_fetcher is None:
         import yfinance as yf
-        downloader = yf.download
+        default_yfinance_client = yf
+    if downloader is None:
+        downloader = default_yfinance_client.download
+    if history_fetcher is None and default_yfinance_client is not None:
+        # Independent API path: yf.download can omit a symbol from bulk and
+        # single-symbol frames even while Ticker.history can still return its chart data.
+        history_fetcher = lambda ticker, start, end: default_yfinance_client.Ticker(ticker).history(
+            start=start.isoformat(),
+            end=end.isoformat(),
+            auto_adjust=False,
+            actions=False,
+            repair=False,
+            raise_errors=True,
+        )
 
     symbols = list(dict.fromkeys(str(t).strip().upper() for t in tickers if str(t).strip()))
     requests: dict[str, str] = {}
@@ -263,13 +278,34 @@ def download_historical_prices(
             if attempt < 2:
                 sleeper(1.0)
 
+        recovery_method = "single_ticker_download"
+        if not recovered_rows and history_fetcher is not None:
+            try:
+                history_frame = history_fetcher(
+                    requests[ticker], start, end_exclusive
+                )
+                recovered_rows = _records_for_symbol(
+                    history_frame, ticker, record_cutoff, start
+                ) if history_frame is not None and not history_frame.empty else []
+                if recovered_rows:
+                    recovery_method = "ticker_history"
+                else:
+                    fallback_error = (
+                        (fallback_error + "; ") if fallback_error else ""
+                    ) + "Ticker.history returned no valid raw/adjusted OHLC rows"
+            except Exception as exc:
+                fallback_error = (
+                    (fallback_error + "; ") if fallback_error else ""
+                ) + f"Ticker.history {type(exc).__name__}: {exc}"
+
         if recovered_rows:
             all_records.extend(recovered_rows)
             recovered_tickers.append({
                 "ticker": ticker,
                 "status": "recovered",
                 "bulk_error": bulk_error,
-                "fallback_attempts": attempt,
+                "fallback_attempts": attempt if recovery_method == "single_ticker_download" else 3,
+                "recovery_method": recovery_method,
                 "rows": len(recovered_rows),
             })
         else:
@@ -278,7 +314,7 @@ def download_historical_prices(
                 "status": "failed",
                 "bulk_error": bulk_error,
                 "fallback_error": fallback_error or "single-ticker request returned no data",
-                "fallback_attempts": 2,
+                "fallback_attempts": 3 if history_fetcher is not None else 2,
             })
 
     if not all_records:
