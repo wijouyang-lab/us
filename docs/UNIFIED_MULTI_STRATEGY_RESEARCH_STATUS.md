@@ -5,7 +5,7 @@
 
 ## Latest 2Y PIT comparison
 
-Source: GitHub Actions [run 39712068759](https://github.com/wijouyang-lab/us/actions/runs/39712068759), both comparison jobs completed successfully. The comparison code and tests at commit `b53e971a90acc323ef229f33b73ab75d97a38180` passed in the corresponding [Test run 39712068805](https://github.com/wijouyang-lab/us/actions/runs/39712068805). A follow-up workflow hardening change is now in this PR and requires its own CI run before it is considered validated.
+Source: GitHub Actions [run 39712068759](https://github.com/wijouyang-lab/us/actions/runs/39712068759), both comparison jobs completed successfully. The dynamic 10Y artifact-resolution change then passed in [workflow run 39712479021](https://github.com/wijouyang-lab/us/actions/runs/39712479021), and its corresponding [Test run 39712479045](https://github.com/wijouyang-lab/us/actions/runs/39712479045) also succeeded. A separate 10Y point-in-time rebuild has now been launched in the temporary research branch via [run 39712671160](https://github.com/wijouyang-lab/us/actions/runs/39712671160); its generated data and downstream comparison have not yet completed review.
 
 - 212,869 rows, 498 tickers, 443 valid signal dates (2024-12-09 through 2026-09-16).
 - Signal direction was chosen on the training segment and then frozen for validation/test.
