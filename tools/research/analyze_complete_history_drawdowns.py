@@ -2,7 +2,7 @@
 """Build a research-only complete-history cohort and adjusted-close drawdown report.
 
 This does not alter the PIT refresh audit or production data. Coverage is measured
-only on SPY trading sessions during each ticker's documented S&P 500 membership.
+only on SPY trading sessions during each ticker's documented index membership.
 """
 from __future__ import annotations
 
@@ -14,14 +14,17 @@ from pathlib import Path
 import pandas as pd
 
 try:  # Support both package imports in tests and direct script execution.
-    from .pit_membership import load_membership_history
+    from .multi_index_membership import load_multi_index_membership
 except ImportError:  # pragma: no cover - exercised by CLI invocation
-    from pit_membership import load_membership_history
+    from multi_index_membership import load_multi_index_membership
 
 REPO = Path(__file__).resolve().parents[2]
 DEFAULT_PRICES = REPO / "research_price_history_sp500_10y.csv"
 DEFAULT_SPY = REPO / "research_spy_sp500_10y.csv"
 DEFAULT_MEMBERSHIP = REPO / "tools/research/data/sp500_components_history.csv"
+DEFAULT_ALIASES = REPO / "tools/research/data/sp500_ticker_aliases.csv"
+DEFAULT_NASDAQ100 = REPO / "tools/research/data/nasdaq100_membership_history.csv"
+DEFAULT_DOW30 = REPO / "tools/research/data/dow30_membership_history.csv"
 DEFAULT_OUT = REPO / "research_complete_history"
 
 
@@ -155,18 +158,29 @@ def main() -> int:
     parser.add_argument("--prices", type=Path, default=DEFAULT_PRICES)
     parser.add_argument("--spy", type=Path, default=DEFAULT_SPY)
     parser.add_argument("--membership", type=Path, default=DEFAULT_MEMBERSHIP)
+    parser.add_argument("--aliases", type=Path, default=DEFAULT_ALIASES)
+    parser.add_argument("--nasdaq100-membership", type=Path, default=DEFAULT_NASDAQ100)
+    parser.add_argument("--dow30-membership", type=Path, default=DEFAULT_DOW30)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT)
-    parser.add_argument("--min-coverage", type=float, default=0.90)
+    parser.add_argument("--min-coverage", type=float, default=1.0)
     parser.add_argument("--min-valid-rows", type=int, default=252)
     args = parser.parse_args()
 
-    membership = load_membership_history(args.membership)
+    membership = load_multi_index_membership(
+        args.membership, args.aliases, args.nasdaq100_membership, args.dow30_membership
+    )
     coverage, drawdowns, summary = build_reports(
         _read_csv(args.prices), _read_csv(args.spy), membership,
         min_coverage=args.min_coverage, min_valid_rows=args.min_valid_rows,
     )
     args.out_dir.mkdir(parents=True, exist_ok=True)
     coverage.to_csv(args.out_dir / "ticker_coverage.csv", index=False)
+    coverage.loc[coverage["Eligible_For_Drawdown_Research"]].to_csv(
+        args.out_dir / "eligible_tickers.csv", index=False
+    )
+    coverage.loc[~coverage["Eligible_For_Drawdown_Research"]].to_csv(
+        args.out_dir / "excluded_tickers.csv", index=False
+    )
     drawdowns.to_csv(args.out_dir / "max_drawdowns.csv", index=False)
     (args.out_dir / "summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
