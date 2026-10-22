@@ -668,8 +668,8 @@ def test_vendored_ticker_alias_registry_matches_historical_ciks():
         alias_usage=usage,
     )
 
-    assert usage["registry_rows"] == 31
-    assert usage["applied_source_symbol_count"] == 31
+    assert usage["registry_rows"] == 38
+    assert usage["applied_source_symbol_count"] == 38
     assert refresh_prices.git_blob_sha(refresh_prices.DEFAULT_TICKER_ALIASES) == (
         refresh_prices.PINNED_TICKER_ALIAS_BLOB_SHA
     )
@@ -682,3 +682,18 @@ def test_vendored_ticker_alias_registry_matches_historical_ciks():
     assert "ELV" in history
     assert "HWM" in history
     assert "MRSH" in history
+    assert "DOC" in history
+    assert "DINO" in history
+    assert "KDP" in history
+    assert "LHX" in history
+    assert "RTX" in history
+    assert "ECHO" in history
+    aliases = dict(usage["applied_source_symbols"])
+    assert aliases["HCP"] == "DOC"
+    assert aliases["PEAK"] == "DOC"
+    assert aliases["BHI"] == "BKR"
+    assert aliases["DPS"] == "KDP"
+    assert aliases["HFC"] == "DINO"
+    assert aliases["HRS"] == "LHX"
+    assert aliases["SATS"] == "ECHO"
+    assert aliases["UTX"] == "RTX"
