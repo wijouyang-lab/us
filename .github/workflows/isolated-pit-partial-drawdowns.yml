@@ -76,7 +76,7 @@ jobs:
               --spy research_complete_history/partial_spy.csv \
               --membership tools/research/data/sp500_components_history.csv \
               --out-dir research_complete_history/drawdowns \
-              --min-coverage 0.90 \
+              --min-coverage 1.0 \
               --min-valid-rows 252
           else
             echo "Partial price files were not produced; retaining audit/logs for diagnosis."
