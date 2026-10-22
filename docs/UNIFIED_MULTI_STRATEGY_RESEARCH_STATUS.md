@@ -5,7 +5,7 @@
 
 ## Latest 2Y PIT comparison
 
-Source: GitHub Actions run [39711933736](https://github.com/wijouyang-lab/us/actions/runs/39711933736), 2Y comparison job completed successfully.
+Source: GitHub Actions [run 39712068759](https://github.com/wijouyang-lab/us/actions/runs/39712068759), both comparison jobs completed successfully. The comparison code and tests at commit `b53e971a90acc323ef229f33b73ab75d97a38180` passed in the corresponding [Test run 39712068805](https://github.com/wijouyang-lab/us/actions/runs/39712068805). A follow-up workflow hardening change is now in this PR and requires its own CI run before it is considered validated.
 
 - 212,869 rows, 498 tickers, 443 valid signal dates (2024-12-09 through 2026-09-16).
 - Signal direction was chosen on the training segment and then frozen for validation/test.
@@ -28,9 +28,9 @@ Cost sensitivity on the same four observations:
 | 20D momentum | -0.416% | -0.485% | -0.624% |
 | MA-slope reversal | +0.342% | +0.272% | +0.131% |
 
-## 10Y reference comparison — stale input, not decision-grade
+## 10Y reference comparison — historical input, not decision-grade
 
-Source: the same workflow's 10Y reference job used artifact from workflow run `39599854065`, created at commit `1ec710b97ede10fbc9f5ae9298aaea213b954117`. The workflow itself warns that this artifact predates a later research fix. These numbers are included only to record the reference run; **do not use them to select a strategy**.
+The earlier [comparison run 39712068759](https://github.com/wijouyang-lab/us/actions/runs/39712068759) used the 10Y artifact from workflow run `39599854065`, created at commit `1ec710b97ede10fbc9f5ae9298aaea213b954117`. That artifact predates a later research fix. The figures below preserve the old reference results only; **do not use them to select a strategy**.
 
 - 1,038,059 rows, 498 tickers, 2,453 signal dates (2016-12-12 through 2026-09-16).
 - 24 non-overlapping test observations.
@@ -42,10 +42,12 @@ Source: the same workflow's 10Y reference job used artifact from workflow run `3
 | 20D momentum | LOW | +0.501% | -0.209% | 24 |
 | MA-slope reversal | LOW | +0.458% | -0.252% | 24 |
 
+The workflow has been hardened to resolve the latest successful 10Y snapshot run dynamically and include its run ID, source commit, and creation time in the comparison artifact. **This does not refresh the dataset**: the newest available artifact can still be stale. A new successful run of `research-snapshots-sp500-pit-10y-once.yml` is still required before the 10Y results can be considered current.
+
 ## Interpretation and next gate
 
 1. The 2Y test is too small to support a strategy ranking: four observations are not enough, regardless of a positive mean or Sharpe.
-2. The 10Y reference is stale and must be regenerated from the current PIT pipeline before its results can be evaluated.
+2. The historical 10Y reference is stale until a new run of the 10Y point-in-time pipeline succeeds and its generated artifacts are inspected.
 3. The strategy directions above are selected on training data, but this panel has already been used for exploratory research; this is not a blind final holdout.
 4. S&P 500 membership history is not fully point-in-time and OHLC/corporate-action limitations remain. Costs are estimates, not fill-level slippage.
-5. Do not promote any of these strategies into production. Next validation gate: refresh 10Y PIT data, rerun all four strategies, and require sufficient untouched test observations plus robustness to costs and regime splits.
+5. Do not promote any of these strategies into production. Next validation gate: refresh 10Y PIT data, rerun all four strategies, then require sufficient untouched test observations plus robustness to costs and regime splits.
