@@ -17,12 +17,13 @@ import pandas as pd
 
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
-from pit_membership import active_tickers_on, approximate_date_counts, load_membership_history, tickers_overlapping
+from pit_membership import active_tickers_on, approximate_date_counts, load_membership_history_with_aliases, tickers_overlapping
 
 PRICE_IN = REPO / "research_price_history_sp500_10y.csv"
 SPY_IN = REPO / "research_spy_sp500_10y.csv"
 SNAPSHOT_OUT = REPO / "research_factor_snapshots_sp500_pit_10y.csv"
 MEMBERSHIP_HISTORY = REPO / "tools" / "research" / "data" / "sp500_components_history.csv"
+TICKER_ALIASES = REPO / "tools" / "research" / "data" / "sp500_ticker_aliases.csv"
 
 
 def _load_calc_extended():
@@ -145,10 +146,14 @@ def main(argv=None):
     stocks = stocks.sort_values(["Ticker", "Date"]).reset_index(drop=True)
     spy = spy.sort_values("Date").reset_index(drop=True)
 
-    history = load_membership_history(MEMBERSHIP_HISTORY)
+    alias_usage = {}
+    history = load_membership_history_with_aliases(
+        MEMBERSHIP_HISTORY, TICKER_ALIASES, alias_usage=alias_usage
+    )
     membership_counts = approximate_date_counts(history)
     print(
-        f"[pit] loaded {len(history)} historical ticker symbols from {MEMBERSHIP_HISTORY}; "
+        f"[pit] loaded {len(history)} canonical historical symbols from {MEMBERSHIP_HISTORY}; "
+        f"same-CIK aliases applied={alias_usage['applied_source_symbol_count']}; "
         f"membership intervals={membership_counts['membership_intervals']}; "
         f"approximate add/remove dates={membership_counts['approximate_date_added']}/"
         f"{membership_counts['approximate_date_removed']}"
