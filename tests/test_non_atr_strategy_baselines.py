@@ -14,10 +14,11 @@ def test_signals_do_not_earn_same_session_return():
         mean_reversion_lookback=3,
     )
     assert result.loc[0, "momentum_return"] == 0.0
-    # A position formed at t=2 can first earn the return from t=2 to t=3.
+    # Signal known after t=2 close must not earn the t=2 close-to-close return.
     assert result.loc[2, "momentum_position"] == 1.0
     assert result.loc[2, "momentum_return"] == 0.0
-    assert result.loc[3, "momentum_return"] == pytest.approx(107 / 106 - 1) if False else True
+    # It can first earn the following session's return (102 -> 103).
+    assert result.loc[3, "momentum_return"] == pytest.approx(103 / 102 - 1)
 
 
 def test_invalid_windows_raise():
