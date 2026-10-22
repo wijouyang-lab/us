@@ -33,7 +33,7 @@ COST_BPS = (5.0, 10.0, 20.0, 50.0)
 
 def load_inputs(snapshot: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, pd.DataFrame]]:
     required_snap = {"Ticker", "Scan_Date", "Technical_Date", FACTOR}
-    required_price = {"Date", "Ticker", "Open", "Close"}
+    required_price = {"Date", "Ticker", "Open", "Close", "Adj Open", "Adj Close", "Price_Basis"}
     missing = sorted(required_snap - set(snapshot.columns))
     if missing:
         raise ValueError(f"snapshot missing required columns: {missing}")
@@ -51,7 +51,7 @@ def load_inputs(snapshot: pd.DataFrame, prices: pd.DataFrame) -> tuple[pd.DataFr
     if s.duplicated(["Scan_Date", "Ticker"]).any():
         raise ValueError("duplicate snapshot Scan_Date/Ticker rows")
 
-    p = prices[["Date", "Ticker", "Open", "Close"]].copy()
+    p = prices[["Date", "Ticker", "Open", "Close", "Adj Open", "Adj Close", "Price_Basis"]].copy()
     p["Ticker"] = p["Ticker"].astype(str).str.strip().str.upper()
     p["Date"] = pd.to_datetime(p["Date"], errors="coerce").dt.normalize()
     for col in ("Open", "Close"):
@@ -85,7 +85,7 @@ def attach_execution_returns(snapshot: pd.DataFrame, by_ticker: dict[str, pd.Dat
         if bars.iloc[pos]["Date"] != row["Scan_Date"]:
             stats["date_alignment_mismatch"] += 1
             continue
-        entry_open = bars.iloc[pos]["Open"]
+        entry_open = bars.iloc[pos]["Adj Open"]
         if pd.isna(entry_open) or not np.isfinite(entry_open) or entry_open <= 0:
             stats["missing_or_invalid_open"] += 1
             continue
@@ -93,7 +93,7 @@ def attach_execution_returns(snapshot: pd.DataFrame, by_ticker: dict[str, pd.Dat
         if exit_pos >= len(bars):
             stats["insufficient_exit_history"] += 1
             continue
-        exit_close = bars.iloc[exit_pos]["Close"]
+        exit_close = bars.iloc[exit_pos]["Adj Close"]
         if pd.isna(exit_close) or not np.isfinite(exit_close) or exit_close <= 0:
             stats["missing_or_invalid_exit_close"] += 1
             continue
@@ -201,7 +201,7 @@ def render_report(r: dict[str, Any], membership_has_removals: bool, price_basis:
         "# 低频 ATR 开盘入场执行验证（研究层，不接生产）", "",
         f"> 数据：{r['rows']:,} 个可计算样本，{r['tickers']} 个 ticker，{r['dates']} 个有效信号日。",
         f"> 日期：{r['start']} 至 {r['end']}；因子 ATR_Pct；入场为信号日开盘，持有 {HOLD_SESSIONS} 个交易日并在第 20 个交易日收盘退出。",
-        "> 与旧报告的收盘到收盘标签不同：此报告使用开盘入场和持有期末收盘，独立计算收益，不复用 Forward_Return_20D。",
+        "> 信号因子继续来自未复权 OHLC；执行收益用同日调整后的 Adj Open 与期末 Adj Close。" ,
         f"> 价格源：{price_basis}。即使使用复权 OHLC，也不能保证数据供应商的公司行动历史完全正确。",
         f"> 股票池限制：{'使用了带 date_removed 的历史有效期数据' if membership_has_removals else '缺少 date_removed，存在明显幸存者偏差；该样本不能称为严格 PIT 股票池'}。上游带星号日期是近似值，ticker 更名/重用仍需审计。",
         "", "## 数据对齐审计", "",
@@ -256,7 +256,7 @@ def main() -> int:
         if str(value).strip()
     })
     price_basis = (
-        "yfinance auto_adjust=True（OHLC 已复权）"
+        "raw_ohlc_adj_close（因子用原始 OHLC，收益用调整价格）"
         if basis_values == ["yfinance_auto_adjusted"]
         else "未验证（输入 CSV 缺少一致的 Price_Basis 标记）"
     )
