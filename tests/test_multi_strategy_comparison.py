@@ -55,6 +55,26 @@ def test_vectorized_portfolio_rows_match_reference():
             assert got["benchmark"]==pytest.approx(want["benchmark"],abs=1e-12)
 
 
+def test_vectorized_rows_exclude_missing_factor_names_before_count_and_benchmark():
+    d = clean_frame(make_frame(n_dates=120, n_tickers=40))
+    date = min(d.Scan_Date)
+    d.loc[(d.Scan_Date == date) & (d.Ticker.isin([f"T{i:03d}" for i in range(15)])), "ATR_Pct"] = float("nan")
+    dates = list(pd.unique(d.Scan_Date))
+    high, low = daily_rows_both_directions(d, dates, "ATR_Pct")
+    for actual, reference in (
+        (high, daily_rows(d, dates, "ATR_Pct", 1)),
+        (low, daily_rows(d, dates, "ATR_Pct", -1)),
+    ):
+        assert len(actual) == len(reference)
+        assert all(got["date"] == want["date"] for got, want in zip(actual, reference))
+        for got, want in zip(actual, reference):
+            assert got["tickers"] == want["tickers"]
+            assert got["gross"] == pytest.approx(want["gross"], abs=1e-12)
+            assert got["benchmark"] == pytest.approx(want["benchmark"], abs=1e-12)
+    # Only 25 factor-valid names remain on this date, below MIN_NAMES=30.
+    assert date not in {row["date"] for row in high}
+    assert date not in {row["date"] for row in low}
+
 def test_missing_factor_fails_closed():
     with pytest.raises(ValueError,match="missing required columns"):
         clean_frame(make_frame(n_dates=120).drop(columns=["ZScore_20D"]))
