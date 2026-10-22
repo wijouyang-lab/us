@@ -394,7 +394,7 @@ def download_historical_prices(
                     group_by="ticker",
                     # Bound per-ticker concurrency to reduce Yahoo throttling while avoiding
                     # the very slow all-serial path across the historical universe.
-                    threads=4,
+                    threads=2,
                     progress=False,
                     ignore_tz=True,
                     repair=True,
