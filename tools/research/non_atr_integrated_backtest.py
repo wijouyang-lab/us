@@ -1,7 +1,7 @@
 """Research-only CSV backtest runner for non-ATR strategy baselines.
 
-Input CSV must contain Date, Ticker, and Adj Close columns. Only tickers with
-complete valid daily rows across the requested shared date range are included.
+Input CSV must contain Date, Ticker, and Adj Close columns. Tickers are checked against the available trading-session calendar only between
+their own first and last observed dates, so later IPOs are not penalized for earlier sessions.
 Outputs are research artifacts only and never feed production signals/orders.
 """
 from __future__ import annotations
@@ -41,13 +41,15 @@ def load_complete_tickers(path: str | Path, *, min_rows: int = 756) -> tuple[dic
     if frame.empty:
         return {}, pd.DataFrame(columns=["Ticker", "rows", "start_date", "end_date", "status", "reason"])
 
-    # Enforce a shared date grid so tickers missing any date from the union are not
-    # silently compared over different market regimes. This is deliberately strict.
-    expected_dates = pd.DatetimeIndex(sorted(frame["Date"].unique()))
+    # Use the union as a trading-session calendar, but compare each ticker only
+    # over its own observed span. This catches internal gaps without excluding
+    # later IPOs or tickers whose membership/history starts later.
+    session_calendar = pd.DatetimeIndex(sorted(frame["Date"].unique()))
     eligible: dict[str, pd.DataFrame] = {}
     audit = []
     for ticker, group in frame.groupby("Ticker", sort=True):
         dates = pd.DatetimeIndex(group["Date"])
+        expected_dates = session_calendar[(session_calendar >= dates.min()) & (session_calendar <= dates.max())]
         complete = len(dates) == len(expected_dates) and dates.equals(expected_dates)
         enough = len(group) >= min_rows
         status = "eligible" if complete and enough else "excluded"
