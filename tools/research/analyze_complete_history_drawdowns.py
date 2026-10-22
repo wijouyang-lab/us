@@ -65,8 +65,6 @@ def build_reports(
     sessions = sorted(set(s["Date"].dropna()))
     if not sessions:
         raise ValueError("SPY input contains no valid trading-session dates")
-    session_set = set(sessions)
-
     coverage_rows = []
     drawdown_rows = []
     for ticker, intervals in sorted(membership.items()):
@@ -171,7 +169,7 @@ def main() -> int:
     coverage.to_csv(args.out_dir / "ticker_coverage.csv", index=False)
     drawdowns.to_csv(args.out_dir / "max_drawdowns.csv", index=False)
     (args.out_dir / "summary.json").write_text(
-        json.dumps(summary, indent=2) + "\\n", encoding="utf-8"
+        json.dumps(summary, indent=2) + "\n", encoding="utf-8"
     )
     print(json.dumps(summary, indent=2))
     return 0
