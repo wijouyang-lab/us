@@ -697,3 +697,168 @@ def test_vendored_ticker_alias_registry_matches_historical_ciks():
     assert aliases["HRS"] == "LHX"
     assert aliases["SATS"] == "ECHO"
     assert aliases["UTX"] == "RTX"
+
+
+
+def test_fetch_eodhd_history_parses_adjusted_daily_ohlcv_and_dates():
+    class FakeResponse:
+        status_code = 200
+
+        def json(self):
+            return [
+                {
+                    "date": "2020-01-02",
+                    "open": 10.0,
+                    "high": 12.0,
+                    "low": 9.0,
+                    "close": 11.0,
+                    "adjusted_close": 10.5,
+                    "volume": 100,
+                },
+                {
+                    "date": "2020-01-03",
+                    "open": 11.0,
+                    "high": 13.0,
+                    "low": 10.0,
+                    "close": 12.0,
+                    "adjusted_close": 11.5,
+                    "volume": 110,
+                },
+            ]
+
+    class FakeSession:
+        def __init__(self):
+            self.calls = []
+
+        def get(self, url, *, params, timeout):
+            self.calls.append((url, params.copy(), timeout))
+            return FakeResponse()
+
+    session = FakeSession()
+    frame = refresh_prices.fetch_eodhd_history(
+        session, "AAA", date(2020, 1, 1), date(2020, 1, 4), "test-token"
+    )
+
+    assert list(frame.columns) == ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    assert list(frame.index.strftime("%Y-%m-%d")) == ["2020-01-02", "2020-01-03"]
+    assert frame["Adj Close"].tolist() == [10.5, 11.5]
+    assert session.calls[0][0].endswith("/AAA.US")
+    assert session.calls[0][1]["from"] == "2020-01-01"
+    assert session.calls[0][1]["to"] == "2020-01-03"
+    assert session.calls[0][1]["api_token"] == "test-token"
+    assert session.calls[0][2] == 20
+
+
+def test_fetch_eodhd_history_tries_old_suffix_when_symbol_is_not_found():
+    class FakeResponse:
+        def __init__(self, status_code, payload):
+            self.status_code = status_code
+            self.payload = payload
+
+        def json(self):
+            return self.payload
+
+    class FakeSession:
+        def __init__(self):
+            self.calls = []
+            self.responses = [
+                FakeResponse(404, []),
+                FakeResponse(
+                    200,
+                    [{
+                        "date": "2020-01-02",
+                        "open": 10.0,
+                        "high": 12.0,
+                        "low": 9.0,
+                        "close": 11.0,
+                        "adjusted_close": 10.5,
+                        "volume": 100,
+                    }],
+                ),
+            ]
+
+        def get(self, url, *, params, timeout):
+            self.calls.append(url)
+            return self.responses.pop(0)
+
+    session = FakeSession()
+    frame = refresh_prices.fetch_eodhd_history(
+        session, "AAA", date(2020, 1, 1), date(2020, 1, 4), "test-token"
+    )
+
+    assert len(frame) == 1
+    assert session.calls[0].endswith("/AAA.US")
+    assert session.calls[1].endswith("/AAA_old.US")
+
+
+def test_fetch_eodhd_history_does_not_leak_token_on_http_error():
+    class FakeResponse:
+        status_code = 401
+
+    class FakeSession:
+        def get(self, url, *, params, timeout):
+            return FakeResponse()
+
+    with pytest.raises(RuntimeError, match="EODHD HTTP 401") as error:
+        refresh_prices.fetch_eodhd_history(
+            FakeSession(), "AAA", date(2020, 1, 1), date(2020, 1, 4), "private-test-token"
+        )
+    assert "private-test-token" not in str(error.value)
+
+
+def test_eodhd_fallback_recovers_unresolved_symbol_with_adjusted_ohlc():
+    index = pd.to_datetime(["2020-01-02", "2020-01-03"])
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    missing_frame = pd.DataFrame(float("nan"), index=index, columns=fields)
+    bulk = pd.concat({"AAA": missing_frame}, axis=1)
+
+    def fake_download(**kwargs):
+        if kwargs["repair"] is True:
+            return bulk
+        return pd.DataFrame(columns=fields)
+
+    def empty_history(_ticker, _start, _end):
+        return pd.DataFrame()
+
+    def missing_chart(_ticker, _start, _end):
+        raise RuntimeError("Yahoo chart 404")
+
+    def eodhd_history(_ticker, _start, _end):
+        return pd.DataFrame(
+            {
+                "Open": [10.0, 11.0],
+                "High": [12.0, 13.0],
+                "Low": [9.0, 10.0],
+                "Close": [11.0, 12.0],
+                "Adj Close": [10.5, 11.5],
+                "Volume": [100, 110],
+            },
+            index=index,
+        )
+
+    output, diagnostics = refresh_prices.download_historical_prices(
+        ["AAA"],
+        date(2020, 1, 1),
+        date(2020, 1, 4),
+        batch_size=1,
+        retries=1,
+        sleeper=lambda _seconds: None,
+        downloader=fake_download,
+        history_fetcher=empty_history,
+        chart_fetcher=missing_chart,
+        eodhd_fetcher=eodhd_history,
+    )
+
+    assert len(output) == 2
+    assert output["Ticker"].unique().tolist() == ["AAA"]
+    assert output["Adj Close"].tolist() == [10.5, 11.5]
+    assert output.loc[0, "Adj Open"] == pytest.approx(10.0 * 10.5 / 11.0)
+    assert diagnostics == [{
+        "ticker": "AAA",
+        "status": "recovered",
+        "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
+        "fallback_attempts": 5,
+        "recovery_method": "eodhd_history",
+        "rows": 2,
+        "eodhd_attempted": True,
+    }]
