@@ -304,3 +304,90 @@ def test_missing_stock_bar_does_not_shift_forward_return_horizon():
     assert pd.isna(price_map["AAA"].loc[pd.Timestamp("2020-01-03")])
     assert forward_return_nd(price_map["AAA"], "2020-01-02", 10.0, 1) is None
     assert forward_return_nd(price_map["AAA"], "2020-01-02", 10.0, 2) == pytest.approx(0.2)
+
+
+
+def test_missing_bulk_ticker_is_retried_singly_and_reported_as_recovered():
+    index = pd.to_datetime(["2020-01-02", "2020-01-03"])
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+
+    def valid_frame(base):
+        return pd.DataFrame(
+            {
+                "Open": [base, base + 1],
+                "High": [base + 2, base + 3],
+                "Low": [base - 1, base],
+                "Close": [base + 0.5, base + 1.5],
+                "Adj Close": [base + 0.25, base + 1.25],
+                "Volume": [100, 110],
+            },
+            index=index,
+        )[fields]
+
+    missing_frame = pd.DataFrame(float("nan"), index=index, columns=fields)
+    bulk = pd.concat(
+        {"AAA": valid_frame(10.0), "BBB": missing_frame},
+        axis=1,
+    )
+    calls = []
+
+    def fake_download(**kwargs):
+        calls.append(kwargs.copy())
+        if kwargs["tickers"] == ["AAA", "BBB"]:
+            return bulk
+        assert kwargs["tickers"] == ["BBB"]
+        assert kwargs["threads"] is False
+        return valid_frame(20.0)
+
+    output, diagnostics = refresh_prices.download_historical_prices(
+        ["AAA", "BBB"],
+        date(2020, 1, 1),
+        date(2020, 1, 4),
+        batch_size=2,
+        retries=1,
+        sleeper=lambda _seconds: None,
+        downloader=fake_download,
+    )
+
+    assert set(output["Ticker"]) == {"AAA", "BBB"}
+    assert len(output) == 4
+    assert len(calls) == 2
+    assert diagnostics == [{
+        "ticker": "BBB",
+        "status": "recovered",
+        "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
+        "fallback_attempts": 1,
+        "rows": 2,
+    }]
+
+
+def test_unrecoverable_ticker_is_counted_as_a_download_failure():
+    index = pd.to_datetime(["2020-01-02", "2020-01-03"])
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    missing_frame = pd.DataFrame(float("nan"), index=index, columns=fields)
+    bulk = pd.concat({"BBB": missing_frame}, axis=1)
+    calls = []
+
+    def fake_download(**kwargs):
+        calls.append(kwargs.copy())
+        if kwargs["threads"] is True:
+            return bulk
+        return pd.DataFrame(columns=fields)
+
+    output, diagnostics = refresh_prices.download_historical_prices(
+        ["BBB"],
+        date(2020, 1, 1),
+        date(2020, 1, 4),
+        batch_size=1,
+        retries=1,
+        sleeper=lambda _seconds: None,
+        downloader=fake_download,
+    )
+
+    assert output.empty
+    assert len(calls) == 3
+    assert len(diagnostics) == 1
+    assert diagnostics[0]["ticker"] == "BBB"
+    assert diagnostics[0]["status"] == "failed"
+    assert "no valid raw/adjusted OHLC rows" in diagnostics[0]["bulk_error"]
+    assert diagnostics[0]["fallback_attempts"] == 2
