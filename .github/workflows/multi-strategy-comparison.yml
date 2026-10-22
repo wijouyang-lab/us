@@ -9,6 +9,7 @@ on:
       - ".github/workflows/multi-strategy-comparison.yml"
       - "research_factor_snapshots_sp500_pit_2y.csv"
       - "research_backtest_sp500_pit_2y.csv"
+      - "docs/UNIFIED_MULTI_STRATEGY_RESEARCH_STATUS.md"
   workflow_dispatch:
 
 permissions:
@@ -46,7 +47,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  compare-10y-reference:
+  compare-10y-latest:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -100,7 +101,7 @@ jobs:
           python tools/research/multi_strategy_comparison.py \
             --input 10y-data/research_backtest_sp500_pit_10y.csv \
             --snapshots 10y-data/research_factor_snapshots_sp500_pit_10y.csv \
-            --output /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
+            --output /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_LATEST.md
           {
             echo
             echo "## Input provenance and freshness gate"
@@ -109,13 +110,13 @@ jobs:
             echo "- Snapshot source commit: ${SOURCE_HEAD_SHA}"
             echo "- Snapshot workflow created at: ${SOURCE_CREATED_AT}"
             echo
-            echo "> **Freshness warning:** this job selects the latest successful artifact that already exists; it does not regenerate the 10Y PIT data. Until the dedicated 10Y snapshot workflow has been run against the intended current pipeline and its output reviewed, treat these figures as reference-only and do not use them to select a strategy."
+            echo "> **Research limitation:** this job uses the most recent successful 10Y snapshot artifact and records its provenance; it does not rebuild the dataset itself. The selected artifact must still be reviewed for PIT membership quality, corporate actions, delistings, and execution realism. Positive historical results are not proof of live alpha."
             echo
           } >> /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
           cat /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
       - uses: actions/upload-artifact@v4
         with:
-          name: unified-multi-strategy-comparison-10y-reference
+          name: unified-multi-strategy-comparison-10y-latest
           path: /tmp/UNIFIED_MULTI_STRATEGY_COMPARISON_10Y_REFERENCE.md
           if-no-files-found: error
           retention-days: 30
