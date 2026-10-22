@@ -6,6 +6,7 @@ on:
   push:
     paths:
       - '.github/workflows/research-snapshots-sp500-pit-10y-once.yml'
+      - 'tools/research/refresh_sp500_pit_prices.py'
 
 jobs:
   snapshots:
