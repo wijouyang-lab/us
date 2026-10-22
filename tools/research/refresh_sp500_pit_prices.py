@@ -164,23 +164,20 @@ def download_historical_prices(
 
     downloader is injectable for regression tests. It should behave like yf.download.
     """
-    default_yfinance_client = None
-    if downloader is None or history_fetcher is None:
-        import yfinance as yf
-        default_yfinance_client = yf
     if downloader is None:
-        downloader = default_yfinance_client.download
-    if history_fetcher is None and default_yfinance_client is not None:
-        # Independent API path: yf.download can omit a symbol from bulk and
-        # single-symbol frames even while Ticker.history can still return its chart data.
-        history_fetcher = lambda ticker, start, end: default_yfinance_client.Ticker(ticker).history(
-            start=start.isoformat(),
-            end=end.isoformat(),
-            auto_adjust=False,
-            actions=False,
-            repair=False,
-            raise_errors=True,
-        )
+        import yfinance as yf
+        downloader = yf.download
+        if history_fetcher is None:
+            # Independent API path: yf.download can omit a symbol from bulk and
+            # single-symbol frames even while Ticker.history can still return chart data.
+            history_fetcher = lambda ticker, start, end: yf.Ticker(ticker).history(
+                start=start.isoformat(),
+                end=end.isoformat(),
+                auto_adjust=False,
+                actions=False,
+                repair=False,
+                raise_errors=True,
+            )
 
     symbols = list(dict.fromkeys(str(t).strip().upper() for t in tickers if str(t).strip()))
     requests: dict[str, str] = {}
