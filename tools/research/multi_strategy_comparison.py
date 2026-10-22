@@ -66,27 +66,44 @@ def non_overlap(rows):
     return rows[::HORIZON]
 
 def daily_rows_both_directions(d, dates, factor):
-    """Build both long-only portfolio directions in one date-grouping pass."""
+    """Vectorize per-date ranks, then aggregate both long-only directions."""
     wanted = set(pd.Timestamp(x).normalize() for x in dates)
-    high_rows, low_rows = [], []
-    selected = d[d.Scan_Date.isin(wanted)]
-    for date, day in selected.groupby("Scan_Date", sort=True):
-        day = day.dropna(subset=[factor, "Forward_Return_20D"]).sort_values("Ticker")
-        if day.Ticker.nunique() < MIN_NAMES:
-            continue
-        n = max(1, int(math.ceil(len(day) * TOP_FRAC)))
-        ranked = day.assign(_rank=day[factor].rank(method="first"))
-        for bucket, chosen in (
-            (high_rows, ranked.nlargest(n, "_rank")),
-            (low_rows, ranked.nsmallest(n, "_rank")),
-        ):
-            bucket.append({
+    panel = d[d.Scan_Date.isin(wanted)].copy()
+    if panel.empty:
+        return [], []
+
+    groups = panel.groupby("Scan_Date", sort=True)
+    counts = groups["Ticker"].transform("nunique")
+    ranks = groups[factor].rank(method="first")
+    picks = np.ceil(counts.to_numpy() * TOP_FRAC).astype(int)
+    panel["_count"] = counts.to_numpy()
+    panel["_rank"] = ranks.to_numpy()
+    panel["_pick_count"] = picks
+    panel = panel[panel["_count"] >= MIN_NAMES]
+    if panel.empty:
+        return [], []
+
+    benchmark = panel.groupby("Scan_Date", sort=True)["Forward_Return_20D"].mean()
+
+    def materialize(mask):
+        chosen = panel.loc[mask, ["Scan_Date", "Ticker", "Forward_Return_20D"]]
+        if chosen.empty:
+            return []
+        gross = chosen.groupby("Scan_Date", sort=True)["Forward_Return_20D"].mean()
+        positions = chosen.groupby("Scan_Date", sort=True)["Ticker"].agg(frozenset)
+        return [
+            {
                 "date": date,
-                "tickers": frozenset(chosen.Ticker),
-                "gross": float(chosen.Forward_Return_20D.mean()),
-                "benchmark": float(day.Forward_Return_20D.mean()),
-            })
-    return high_rows, low_rows
+                "tickers": positions.loc[date],
+                "gross": float(gross.loc[date]),
+                "benchmark": float(benchmark.loc[date]),
+            }
+            for date in gross.index
+        ]
+
+    high_mask = panel["_rank"] > (panel["_count"] - panel["_pick_count"])
+    low_mask = panel["_rank"] <= panel["_pick_count"]
+    return materialize(high_mask), materialize(low_mask)
 
 def choose_direction(d, dates, factor):
     hi = non_overlap(daily_rows(d, dates, factor, 1))
