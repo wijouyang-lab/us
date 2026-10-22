@@ -228,7 +228,7 @@ def render_report(r: dict[str, Any], membership_has_removals: bool, price_basis:
         lines.append(f"| {cost} bps | {m['n']} | {fmt(m['net_mean_pct'])}% | {fmt(m['excess_mean_pct'])}% | {fmt(m['sharpe'])} |")
     lines += ["", "## 判定", "", f"**{r['verdict']}**", "",
               "- 该结果仅用于检查成交时点对 ATR 结论的影响；即使结果为正，也不证明 alpha。",
-              "- 当前价格未复权，且若成分文件无退出日期，则存在公司行动与幸存者偏差。",
+              "- 价格调整口径见报告顶部；复权不保证供应商的公司行动、退市价和 ticker 变更记录完整。",
               "- 生产使用前必须接入拆股/分红调整数据和有加入、退出日期的历史成分表，并用真实可交易约束复验。", ""]
     return "\n".join(lines)
 
