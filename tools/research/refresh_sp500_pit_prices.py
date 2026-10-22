@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Refresh adjusted historical prices for research-only S&P 500 PIT backtests.
+"""Refresh research prices with raw feature OHLC plus adjusted return levels.
 
+Raw OHLC is kept for factor engineering. Adjusted Close and same-session adjusted
+OHLC are used only for forward-return labels and execution-timing research.
 This script never reads or writes production price history or transaction ledgers.
-It downloads price bars for every historical member span intersecting the analysis
-window, applies explicit membership/session coverage gates, and only then atomically
-replaces the research input CSVs. Downloaded OHLC prices are yfinance auto-adjusted.
 """
 from __future__ import annotations
 
@@ -35,7 +34,7 @@ DEFAULT_STOCKS = REPO / "research_price_history_sp500_10y.csv"
 DEFAULT_SPY = REPO / "research_spy_sp500_10y.csv"
 DEFAULT_AUDIT = REPO / "research_pit_price_refresh_audit.json"
 TZ = ZoneInfo("America/New_York")
-PRICE_COLUMNS = ["Date", "Ticker", "Open", "High", "Low", "Close", "Volume", "Price_Basis"]
+PRICE_COLUMNS = ["Date", "Ticker", "Open", "High", "Low", "Close", "Adj Open", "Adj High", "Adj Low", "Adj Close", "Volume", "Price_Basis"]
 BATCH_SIZE = 30
 WARMUP_DAYS = 120
 MIN_VALID_TICKER_SESSION_COVERAGE = 0.90
@@ -104,7 +103,7 @@ def _valid_number(value) -> float | None:
 
 
 def _records_for_symbol(frame: pd.DataFrame, ticker: str, cutoff: date, start: date) -> list[dict]:
-    if frame is None or frame.empty or "Close" not in frame.columns:
+    if frame is None or frame.empty or not {"Close", "Adj Close"}.issubset(frame.columns):
         return []
     dates = _normalise_daily_index(frame.index, cutoff, start)
     records = []
@@ -113,16 +112,21 @@ def _records_for_symbol(frame: pd.DataFrame, ticker: str, cutoff: date, start: d
             continue
         row = frame.iloc[pos]
         close = _valid_number(row.get("Close"))
-        if close is None or close <= 0:
+        adj_close = _valid_number(row.get("Adj Close"))
+        if close is None or close <= 0 or adj_close is None or adj_close <= 0:
             continue
+        adjustment_factor = adj_close / close
         record = {"Date": day, "Ticker": ticker}
         for field in ("Open", "High", "Low"):
             value = _valid_number(row.get(field))
-            record[field] = round(value, 6) if value is not None and value > 0 else ""
+            valid_raw = value is not None and value > 0
+            record[field] = round(value, 6) if valid_raw else ""
+            record[f"Adj {field}"] = round(value * adjustment_factor, 6) if valid_raw else ""
         volume = _valid_number(row.get("Volume"))
         record["Volume"] = int(round(volume)) if volume is not None and volume >= 0 else ""
         record["Close"] = round(close, 6)
-        record["Price_Basis"] = "yfinance_auto_adjusted"
+        record["Adj Close"] = round(adj_close, 6)
+        record["Price_Basis"] = "raw_ohlc_adj_close"
         records.append(record)
     return records
 
@@ -137,7 +141,7 @@ def download_historical_prices(
     sleeper=time.sleep,
     downloader=None,
 ) -> tuple[pd.DataFrame, list[dict]]:
-    """Batch-download auto-adjusted bars and return rows plus batch failure evidence.
+    """Batch-download raw OHLC plus adjusted close; derive adjusted OHLC for returns.
 
     downloader is injectable for regression tests. It should behave like yf.download.
     """
@@ -168,7 +172,7 @@ def download_historical_prices(
                     tickers=yahoo_batch,
                     start=start.isoformat(),
                     end=end_exclusive.isoformat(),
-                    auto_adjust=True,
+                    auto_adjust=False,
                     actions=False,
                     group_by="ticker",
                     threads=True,
@@ -333,7 +337,7 @@ def refresh(args) -> dict:
         "price_fetch_start": fetch_start.isoformat(),
         "cutoff_date": cutoff.isoformat(),
         "yfinance_end_exclusive": end_exclusive.isoformat(),
-        "price_basis": "yfinance auto_adjust=True; OHLC and Close are adjusted research prices",
+        "price_basis": "raw OHLC for factor features; Adj Close and same-session-adjusted OHLC for research return labels",
         "membership_source": str(args.history.relative_to(REPO) if args.history.is_relative_to(REPO) else args.history),
         "membership_source_commit": PINNED_MEMBERSHIP_COMMIT if using_vendored_source else None,
         "membership_source_blob_sha": actual_membership_blob_sha,
@@ -357,7 +361,7 @@ def refresh(args) -> dict:
         "issues": issues,
         "limitations": [
             "Membership dates are community-maintained and some upstream dates are explicitly approximate.",
-            "yfinance auto-adjusted OHLC is suitable for adjusted research returns, not production signal-price parity.",
+            "Raw OHLC is used for signal features; adjusted price levels are used only for labels and execution validation. Provider corporate-action and delisted-ticker history must still be audited.",
             "Corporate actions, symbol changes, and delisted ticker availability must still be audited before promotion.",
         ],
     }
