@@ -1,13 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""S&P 500 点内（PIT）10 年版 · IC 流程入口（合并 workflow 用）
+"""S&P 500 点内（PIT）10 年版 · research-only IC/backtest workflow entry point.
 
-调用 quant_factor_backtest.run_backtest_from_history 生成
-research_backtest_sp500_pit_10y.csv / research_summary_sp500_pit_10y.csv，
-随后调用 compute_ic_sp500_pit_10y 重算 IC 表 research_ic_sp500_pit_10y.csv。
-
-注意：10 年快照（188 MB）走 artifact 不入库；IC 表（几 KB）才入库。
-与 PIT 2 年版的唯一差异 = 4 个路径常量 + 末尾 import 的模块名。
+Builds forward-return labels from adjusted closes while preserving raw-OHLC-derived
+factor features, then invokes the existing research backtest and IC calculation.
+The original factor-snapshot CSV is never rewritten by the adjusted-label step.
 """
 import sys
 import tempfile
