@@ -364,6 +364,7 @@ def test_missing_bulk_ticker_is_retried_singly_and_reported_as_recovered():
         "status": "recovered",
         "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
         "fallback_attempts": 1,
+        "recovery_method": "single_ticker_download",
         "rows": 2,
     }]
 
@@ -399,6 +400,63 @@ def test_unrecoverable_ticker_is_counted_as_a_download_failure():
     assert "no valid raw/adjusted OHLC rows" in diagnostics[0]["bulk_error"]
     assert diagnostics[0]["fallback_attempts"] == 2
 
+
+
+
+
+
+def test_ticker_history_api_recovers_symbol_missing_from_download_api():
+    index = pd.to_datetime(["2020-01-02", "2020-01-03"])
+    fields = ["Open", "High", "Low", "Close", "Adj Close", "Volume"]
+    missing_frame = pd.DataFrame(float("nan"), index=index, columns=fields)
+    bulk = pd.concat({"AAA": missing_frame}, axis=1)
+    calls = []
+
+    def fake_download(**kwargs):
+        calls.append(kwargs.copy())
+        if kwargs["threads"] is True:
+            return bulk
+        return pd.DataFrame(columns=fields)
+
+    history_calls = []
+
+    def fake_history(ticker, start, end):
+        history_calls.append((ticker, start, end))
+        return pd.DataFrame(
+            {
+                "Open": [10.0, 11.0],
+                "High": [12.0, 13.0],
+                "Low": [9.0, 10.0],
+                "Close": [11.0, 12.0],
+                "Adj Close": [10.5, 11.5],
+                "Volume": [100, 110],
+            },
+            index=index,
+        )
+
+    output, diagnostics = refresh_prices.download_historical_prices(
+        ["AAA"],
+        date(2020, 1, 1),
+        date(2020, 1, 4),
+        batch_size=1,
+        retries=1,
+        sleeper=lambda _seconds: None,
+        downloader=fake_download,
+        history_fetcher=fake_history,
+    )
+
+    assert len(calls) == 3
+    assert history_calls == [("AAA", date(2020, 1, 1), date(2020, 1, 4))]
+    assert len(output) == 2
+    assert set(output["Ticker"]) == {"AAA"}
+    assert diagnostics == [{
+        "ticker": "AAA",
+        "status": "recovered",
+        "bulk_error": "ticker frame returned no valid raw/adjusted OHLC rows",
+        "fallback_attempts": 3,
+        "recovery_method": "ticker_history",
+        "rows": 2,
+    }]
 
 
 def write_aliases(path: Path, rows: str) -> Path:
