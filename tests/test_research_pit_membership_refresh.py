@@ -195,3 +195,12 @@ def test_refresh_failure_preserves_prior_price_inputs(tmp_path, monkeypatch):
     report = json.loads(audit_path.read_text(encoding="utf-8"))
     assert report["status"] == "FAIL"
     assert report["coverage"]["member_bar_coverage"] == pytest.approx(0.5)
+
+def test_vendored_membership_source_hash_is_pinned():
+    from refresh_sp500_pit_prices import (
+        DEFAULT_HISTORY,
+        PINNED_MEMBERSHIP_BLOB_SHA,
+        git_blob_sha,
+    )
+
+    assert git_blob_sha(DEFAULT_HISTORY) == PINNED_MEMBERSHIP_BLOB_SHA
