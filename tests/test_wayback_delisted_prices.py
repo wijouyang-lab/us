@@ -1,10 +1,13 @@
 from datetime import date
-from io import StringIO
+import sys
+from pathlib import Path
 
-import pandas as pd
 import pytest
 
-from tools.research.wayback_delisted_prices import fetch_wayback_yahoo_csv_history
+REPO = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(REPO / "tools" / "research"))
+
+from wayback_delisted_prices import fetch_wayback_yahoo_csv_history
 
 
 class FakeResponse:
