@@ -28,7 +28,16 @@ def small_inputs(n_dates=260, n_tickers=40):
         for di, date in enumerate(dates):
             open_px = base * (1 + drift) ** di
             close_px = open_px * (1 + (ti + 1) * 0.00005)
-            price_rows.append({"Date": date, "Ticker": ticker, "Open": open_px, "Close": close_px})
+            adjustment_factor = 1.0 - 0.0001 * di
+            price_rows.append({
+                "Date": date,
+                "Ticker": ticker,
+                "Open": open_px,
+                "Close": close_px,
+                "Adj Open": open_px * adjustment_factor,
+                "Adj Close": close_px * adjustment_factor,
+                "Price_Basis": "raw_ohlc_adj_close",
+            })
         for di in range(1, n_dates + 1):
             snapshot_rows.append({
                 "Ticker": ticker,
@@ -46,7 +55,7 @@ def test_execution_return_enters_scan_date_open_and_exits_after_twenty_sessions(
     row = actual.iloc[0]
     bars = by_ticker[row["Ticker"]]
     pos = bars.index[bars["Date"] == row["Scan_Date"]][0]
-    expected = bars.iloc[pos + 19]["Close"] / bars.iloc[pos]["Open"] - 1
+    expected = bars.iloc[pos + 19]["Adj Close"] / bars.iloc[pos]["Adj Open"] - 1
     assert row["Execution_Return"] == pytest.approx(expected)
     assert audit["rows_valid"] == len(snapshot)
 
@@ -58,12 +67,17 @@ def test_duplicate_snapshot_keys_fail_closed():
         load_inputs(snapshot, prices)
 
 
-def test_report_discloses_survivorship_and_unadjusted_prices():
+def test_report_discloses_survivorship_and_adjusted_return_basis():
     snapshot, prices = small_inputs(n_dates=260, n_tickers=40)
     result = run_research(snapshot, prices)
-    report = render_report(result, membership_has_removals=False)
+    report = render_report(
+        result,
+        membership_has_removals=False,
+        price_basis="raw_ohlc_adj_close（因子用原始 OHLC，收益用调整价格）",
+    )
     assert "幸存者偏差" in report
     assert "未复权 OHLC" in report
+    assert "调整价格" in report
     assert "不接生产" in report
 
 
