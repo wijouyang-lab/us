@@ -41,7 +41,7 @@ WARMUP_DAYS = 120
 MIN_VALID_TICKER_SESSION_COVERAGE = 0.90
 PINNED_MEMBERSHIP_COMMIT = "2d0556e4ca01dc9203231c8b60d503a227be4512"
 PINNED_MEMBERSHIP_BLOB_SHA = "c025e09a6bbb2e12310a3f9fcef9114a0b59df90"
-PINNED_TICKER_ALIAS_BLOB_SHA = "e5a9b07f799450f53439833c05491c58706c0229"
+PINNED_TICKER_ALIAS_BLOB_SHA = "51a403df8d27f27f97a60bd9a625c04944421d67"
 
 
 def last_completed_session_cutoff(now: datetime | None = None) -> date:
@@ -223,9 +223,9 @@ def download_historical_prices(
                     auto_adjust=False,
                     actions=False,
                     group_by="ticker",
-                    # Keep Yahoo request bursts bounded; concurrent downloads have
-                    # caused false YFTzMissingError responses for otherwise valid symbols.
-                    threads=False,
+                    # Bound per-ticker concurrency to reduce Yahoo throttling while avoiding
+                    # the very slow all-serial path across the historical universe.
+                    threads=4,
                     progress=False,
                     ignore_tz=True,
                     repair=True,
