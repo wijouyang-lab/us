@@ -8,6 +8,14 @@ on:
       - "tools/research/non_atr_integrated_backtest.py"
       - "tools/research/non_atr_strategy_baselines.py"
       - "tools/research/non_atr_validation.py"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/research-non-atr-backtest.yml"
+      - "tools/research/non_atr_integrated_backtest.py"
+      - "tools/research/non_atr_strategy_baselines.py"
+      - "tools/research/non_atr_validation.py"
   workflow_dispatch:
 permissions:
   contents: read
