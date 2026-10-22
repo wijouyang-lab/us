@@ -545,8 +545,7 @@ def download_historical_prices(
                 attempt if recovery_method == "single_ticker_download"
                 else 3 if recovery_method == "ticker_history"
                 else 4 if recovery_method == "direct_yahoo_chart"
-                else 5 if recovery_method == "wayback_yahoo_csv"
-                else 6
+                else 5 + int(wayback_attempted)
             )
             recovered_entry = {
                 "ticker": ticker,
