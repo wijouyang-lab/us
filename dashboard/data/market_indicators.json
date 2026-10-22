@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-10-22T04:30:51Z",
+  "generated_at": "2026-10-22T04:46:53Z",
   "fear_greed": {
     "score": 31.31,
     "rating": "fear",
@@ -148,8 +148,46 @@
       }
     ]
   },
-  "fedwatch": null,
-  "error": {
-    "fedwatch": "FedWatch 抓取失败：Could not fetch EFFR from FRED"
-  }
+  "fedwatch": {
+    "next_meeting": "2026-10-28",
+    "current_target": "3.75%-4.00%",
+    "effr": 3.88,
+    "trade_date": "2026-10-20",
+    "probabilities": {
+      "hold": 84.5,
+      "hike_25bp": 15.5
+    },
+    "meetings": [
+      {
+        "date": "2026-10-28",
+        "contract": "ZQV6",
+        "probabilities": {
+          "hold": 84.5,
+          "hike_25bp": 15.5
+        }
+      },
+      {
+        "date": "2026-12-09",
+        "contract": "ZQZ6",
+        "probabilities": {
+          "hold": 10.1,
+          "hike_25bp": 76.3,
+          "hike_50bp": 13.7
+        }
+      },
+      {
+        "date": "2027-01-27",
+        "contract": "ZQF7",
+        "probabilities": {
+          "hold": 5.4,
+          "hike_25bp": 45.9,
+          "hike_50bp": 42.4,
+          "hike_75bp": 6.3
+        }
+      }
+    ],
+    "max_meetings": 3,
+    "source": "cme"
+  },
+  "error": null
 }
