@@ -177,6 +177,20 @@ activate production signals.
 
 TreasuryDirect auction announcement/result headlines are included in the manual capture. They are event observations only; do not treat the headlines as numeric auction signals. A separate, validated adapter is still needed for bid-to-cover ratios, auction tails, and Treasury yield-curve changes.
 
+## Capture Treasury yield curve values
+
+Capture the official daily par yield curve as a separate immutable research snapshot:
+
+```bash
+python -m tools.research.treasury_yield_curve_capture \
+  --year 2026 \
+  --output data/research/captures/treasury_yield_curve_2026.json
+```
+
+The output contains per-maturity yields, 2-year/10-year and 3-month/10-year spreads, and daily changes where both adjacent observations exist. Empty values stay null. This is a manual collector and does not change the production scanner or create a scheduled workflow.
+
+**Point-in-time warning:** the Treasury feed can return historical rows today, but a current download does not establish when each old value was first available. Each row records the actual retrieval time and may only be used for decisions at or after that time unless a separately validated historical availability timestamp exists. Do not backtest earlier dates using this file as if it were archived contemporaneously.
+
 ## Current limitations
 
 - The score is a transparent weighted aggregation of explicit, externally validated
