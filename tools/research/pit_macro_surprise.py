@@ -24,6 +24,13 @@ def macro_surprise(
     decision = _parse_aware_timestamp(decision_at)
     if decision is None:
         return {"eligible": False, "reason": "invalid_decision_timestamp", "surprise": None}
+    availability = release.get("availability_status")
+    if availability is not None and availability != "available":
+        return {
+            "eligible": False,
+            "reason": f"event_unavailable:{availability}",
+            "surprise": None,
+        }
     if actual_time is None:
         return {"eligible": False, "reason": "actual_release_timestamp_missing", "surprise": None}
     if first_seen is None:

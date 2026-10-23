@@ -46,3 +46,15 @@ def test_rejects_missing_consensus_timestamp_or_non_numeric_values():
     assert macro_surprise(
         release(actual_value="unknown"), "2026-10-15T12:31:00Z"
     )["reason"] == "actual_or_consensus_not_numeric"
+
+
+def test_rejects_unavailable_event_even_if_timestamps_and_values_look_valid():
+    result = macro_surprise(
+        release(availability_status="fetch_error"),
+        "2026-10-15T12:31:00Z",
+    )
+    assert result == {
+        "eligible": False,
+        "reason": "event_unavailable:fetch_error",
+        "surprise": None,
+    }

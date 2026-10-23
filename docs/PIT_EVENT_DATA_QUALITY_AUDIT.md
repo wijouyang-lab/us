@@ -8,6 +8,7 @@ Status: research-only implementation note. No production scanner, scheduler, ran
 - \`tools/research/pit_macro_releases.py\`: normalizes caller-supplied macro release records while keeping the observation period, scheduled time, actual publication time, consensus timestamp, and vintage timestamp separate.
 - \`tools/research/pit_event_coverage.py\`: reports event counts, availability statuses, eligibility reasons, eligible counts by family, and duplicate-version IDs.
 - `tools/research/pit_event_archive.py`: maintains a deduplicated logical event-version archive, preserves the earliest first-seen time for unchanged versions, and selects the latest version known at a historical decision time.
+- `tools/research/official_event_rss_collector.py`: captures BLS CPI, BLS Employment Situation, and Federal Reserve press-release RSS from a built-in official-host allowlist, with timestamp missingness, source-content hashes, and first-seen times.
 - \`tools/research/pit_event_eligibility.py\`: rejects missing/naive timestamps, future events, observation timestamps preceding publication, unverifiable revisions, and stale records.
 
 ## Hard rules
@@ -71,3 +72,17 @@ The audit report distinguishes the full archive hash from the decision-time anal
 
 - SEC Webmaster FAQ: https://www.sec.gov/about/webmaster-frequently-asked-questions — defines Acceptance Time as EST and notes that no timestamp identifies exactly when filing content first becomes available on SEC.gov.
 - EDGAR Public Dissemination Technical Specification (10 March 2025): https://www.sec.gov/info/edgar/specifications/pds_dissemination_spec.pdf — identifies the acceptance time field as EST.
+
+
+## Optional official macro/policy RSS capture
+
+The RSS collector uses no API token, has a fixed allowlist of official feeds, and refuses to overwrite snapshot files unless explicitly told to. Set a real contact address for the User-Agent, then run:
+
+    export OFFICIAL_FEED_USER_AGENT="US Quant Research your-real-email@domain.com"
+    python -m tools.research.official_event_rss_collector --feeds bls_cpi,bls_employment,fed_all --output official_events.json
+
+Supported feed keys are `bls_cpi` (https://www.bls.gov/feed/cpi.rss), `bls_employment` (https://www.bls.gov/feed/empsit.rss), and `fed_all` (https://www.federalreserve.gov/feeds/press_all.xml). The BLS feeds are tagged as macro-release events; Federal Reserve items are deterministically tagged as central-bank communications when the title/description contains preselected monetary-policy terms, and otherwise as policy events.
+
+RSS publication dates are retained as provider metadata but are not assumed to be proof of the instant the item first became public. The collector records its own first-seen time, saves a feed payload hash and coverage report, and flags missing timestamps. These feeds are useful for forward-observation of official headlines, but do not provide historical consensus snapshots and cannot by themselves establish an earnings/macro surprise alpha. Append the resulting JSON to the same logical archive with `python -m tools.research.pit_event_archive --input official_events.json --archive event_archive.json`.
+
+Official feed directories: https://www.bls.gov/feed/ and https://www.federalreserve.gov/feeds/feeds.htm.
