@@ -266,8 +266,8 @@ class OfficialRssCollector:
         sleep: Callable[[float], None] | None = None,
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        if not isinstance(user_agent, str) or "@" not in user_agent or not user_agent.strip():
-            raise ValueError("User-Agent must identify the research application and a contact email")
+        if not isinstance(user_agent, str) or not user_agent.strip():
+            raise ValueError("User-Agent must identify the research application")
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         if min_request_interval_seconds < 0.1:
