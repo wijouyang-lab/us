@@ -95,12 +95,6 @@ def build_treasury_macro_panel(
         _aware(value, "decision_at") for value in decisions["decision_at"].astype(str)
     ]
     records: list[dict[str, Any]] = []
-    maturity_columns = {
-        "nominal_2y_pct": ("nominal", "2y"),
-        "nominal_3m_pct": ("nominal", "3m"),
-        "nominal_10y_pct": ("nominal", "10y"),
-        "real_10y_pct": ("real", "10y"),
-    }
     both_available_at = max(nominal_retrieved, real_retrieved)
     eligible_decisions = 0
     for row in decisions.to_dict("records"):
@@ -122,15 +116,16 @@ def build_treasury_macro_panel(
         front_slope = round((float(n10) - float(n3)) * 100, 4) if n10 is not None and n3 is not None else None
         breakeven = round((float(n10) - float(r10)) * 100, 4) if n10 is not None and r10 is not None and decision >= both_available_at else None
         dates = [d for d in (ndate, rdate) if d is not None]
-        selected_date = min(dates) if len(dates) < 2 else min(dates)
-        age = (decision.date() - datetime.fromisoformat(selected_date).date()).days if selected_date else None
+        nominal_age = (decision.date() - datetime.fromisoformat(ndate).date()).days if ndate else None
+        real_age = (decision.date() - datetime.fromisoformat(rdate).date()).days if rdate else None
         if nominal_ok or real_ok:
             eligible_decisions += 1
         record = dict(row)
         record.update({
             "treasury_nominal_observation_date": ndate,
             "treasury_real_observation_date": rdate,
-            "treasury_feature_age_days": age,
+            "treasury_nominal_age_days": nominal_age,
+            "treasury_real_age_days": real_age,
             "treasury_nominal_2y_pct": n2 if nominal_ok else None,
             "treasury_nominal_3m_pct": n3 if nominal_ok else None,
             "treasury_nominal_10y_pct": n10 if nominal_ok else None,
@@ -141,7 +136,9 @@ def build_treasury_macro_panel(
             "treasury_nominal_available": nominal_ok and ndate is not None,
             "treasury_real_available": real_ok and rdate is not None,
             "treasury_breakeven_available": decision >= both_available_at and ndate is not None and rdate is not None,
-            "treasury_available_at_utc": max(nominal_retrieved, real_retrieved).isoformat().replace("+00:00", "Z"),
+            "treasury_nominal_available_at_utc": nominal_retrieved.isoformat().replace("+00:00", "Z"),
+            "treasury_real_available_at_utc": real_retrieved.isoformat().replace("+00:00", "Z"),
+            "treasury_breakeven_available_at_utc": max(nominal_retrieved, real_retrieved).isoformat().replace("+00:00", "Z"),
             "research_only": True,
         })
         records.append(record)
