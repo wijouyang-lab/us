@@ -15,6 +15,16 @@ def test_pipeline_report_is_deterministic_and_input_order_independent():
         "consensus_value": 3.0,
         "consensus_asof_utc": "2026-10-15T12:00:00Z",
     })
+    macro_2 = normalize_event(
+        "bls", "cpi-2026-08", "macro_release",
+        "2026-10-15T12:29:00Z", "2026-10-15T12:29:05Z",
+        raw_payload={"series": "CPI", "value": 3.0},
+    )
+    macro_2.update({
+        "actual_value": 3.0,
+        "consensus_value": 2.9,
+        "consensus_asof_utc": "2026-10-15T12:10:00Z",
+    })
     news = normalize_event(
         "sec_edgar", "filing-1", "company_news",
         "2026-10-15T11:00:00Z", "2026-10-15T11:00:05Z",
@@ -22,17 +32,17 @@ def test_pipeline_report_is_deterministic_and_input_order_independent():
     )
     decision_at = "2026-10-15T12:31:00Z"
     one = build_event_research_report(
-        [macro, news], decision_at,
+        [macro, news, macro_2], decision_at,
         max_age_by_type={"macro_release": timedelta(days=1)},
     )
     two = build_event_research_report(
-        [news, macro], decision_at,
+        [macro_2, news, macro], decision_at,
         max_age_by_type={"macro_release": timedelta(days=1)},
     )
     assert one == two
     assert len(one["input_snapshot_sha256"]) == 64
-    assert one["coverage_audit"]["eligible_events"] == 2
-    assert one["macro_surprise"]["eligible_count"] == 1
+    assert one["coverage_audit"]["eligible_events"] == 3
+    assert one["macro_surprise"]["eligible_count"] == 2
     assert one["trading_signal_generated"] is False
 
 
