@@ -174,6 +174,9 @@ overrepresent events covered by every source, so report its row count and covera
 Missing family labels remain missing. This evaluator is research-only and does not
 activate production signals.
 
+
+TreasuryDirect auction announcement/result headlines are included in the manual capture. They are event observations only; do not treat the headlines as numeric auction signals. A separate, validated adapter is still needed for bid-to-cover ratios, auction tails, and Treasury yield-curve changes.
+
 ## Current limitations
 
 - The score is a transparent weighted aggregation of explicit, externally validated
