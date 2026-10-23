@@ -132,3 +132,16 @@ def test_audit_marks_empty_archive_as_no_data(tmp_path):
 
     assert result["status"] == "fail_no_data"
     assert result["readiness_gates"]["archive_nonempty"] is False
+
+
+
+def test_audit_reports_recoverable_official_url_without_hiding_it(tmp_path):
+    archive = tmp_path / "archive.json"
+    row = event(source_url="www.bea.gov/news/2026/release")
+    archive.write_text(json.dumps([row]), encoding="utf-8")
+    result = audit_event_archive(str(archive), audited_at="2026-10-23T13:00:00Z")
+    assert result["timestamp_quality"]["canonicalizable_source_url"] == 1
+    assert result["timestamp_quality"].get("invalid_source_url", 0) == 0
+    assert result["canonicalizable_source_urls"][0]["canonical_source_url"] == "https://www.bea.gov/news/2026/release"
+    assert result["readiness_gates"]["source_urls_valid_https"] is False
+    assert result["readiness_gates"]["source_urls_valid_or_canonicalizable"] is True
