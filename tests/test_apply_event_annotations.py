@@ -77,3 +77,19 @@ def test_apply_annotations_requires_review_provenance_and_valid_timestamps():
         apply_annotations([event], [reviewed_row(event, labeler_id="analyst-1", reviewer_id="analyst-1")], as_of="2026-10-23T14:00:00Z")
     with pytest.raises(ValueError, match="not email addresses"):
         apply_annotations([event], [reviewed_row(event, labeler_id="analyst@example.com")], as_of="2026-10-23T14:00:00Z")
+
+
+
+def test_apply_annotations_preserves_reviewed_ambiguous_scores_as_blank():
+    event = archive_event()
+    output, report = apply_annotations(
+        [event],
+        [reviewed_row(event, direction_score="", impact_score="", label_review_status="reviewed",
+                      label_rationale="The source supports no defensible directional or impact score.")],
+        as_of="2026-10-23T14:00:00Z",
+    )
+    assert output[0]["direction_score"] is None
+    assert output[0]["impact_score"] is None
+    assert output[0]["label_review_status"] == "reviewed"
+    assert report["reviewed_annotations_applied"] == 1
+    assert report["validated_annotations_applied"] == 0
