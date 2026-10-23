@@ -191,6 +191,19 @@ The default output contains nominal per-maturity yields, 2-year/10-year and 3-mo
 
 **Point-in-time warning:** the Treasury feed can return historical rows today, but a current download does not establish when each old value was first available. Each row records the actual retrieval time and may only be used for decisions at or after that time unless a separately validated historical availability timestamp exists. Do not backtest earlier dates using this file as if it were archived contemporaneously.
 
+## Build a nominal-minus-real inflation-compensation proxy
+
+After capturing separate nominal and real Treasury snapshots, join common observation dates without interpolation:
+
+```bash
+python -m tools.research.treasury_breakeven_proxy \
+  --nominal data/research/captures/treasury_yield_curve_2026.json \
+  --real data/research/captures/treasury_real_yield_curve_2026.json \
+  --output data/research/captures/treasury_breakeven_proxy_2026.json
+```
+
+The maturity spread is calculated as nominal yield minus real yield, in basis points. This is an **inflation-compensation proxy**, not a pure expected-inflation estimate: inflation-risk and liquidity premia can contribute. The output is only usable at or after the later of the two snapshots' actual retrieval timestamps. Historical observation dates do not reconstruct historical point-in-time availability; do not use these rows in earlier backtests without separately validated vintage timestamps.
+
 ## Current limitations
 
 - The score is a transparent weighted aggregation of explicit, externally validated
