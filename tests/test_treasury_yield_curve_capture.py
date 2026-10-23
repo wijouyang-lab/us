@@ -107,7 +107,7 @@ def test_fetch_uses_official_endpoint_and_records_actual_retrieval_time():
 
 
 def test_fetch_rejects_year_before_source_coverage():
-    with pytest.raises(ValueError, match="between 1990 and 9999"):
+    with pytest.raises(ValueError, match="between 1990 and the current UTC year"):
         fetch_treasury_yield_curve(1989)
 
 
@@ -155,3 +155,56 @@ def test_fetch_real_curve_uses_official_real_curve_key():
     )
     assert "data=daily_treasury_real_yield_curve" in seen[0]
     assert result["metadata"]["curve_type"] == "real"
+
+
+
+def test_fetch_real_curve_falls_back_to_official_static_xml_when_parameterized_feed_empty():
+    seen = []
+    real_xml = """<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+      xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
+      <entry><content><m:properties>
+        <d:NEW_DATE>2026-10-22T00:00:00</d:NEW_DATE>
+        <d:BC_5YEAR>1.8</d:BC_5YEAR><d:BC_7YEAR>2.0</d:BC_7YEAR>
+        <d:BC_10YEAR>2.1</d:BC_10YEAR><d:BC_20YEAR>2.3</d:BC_20YEAR>
+        <d:BC_30YEAR>2.4</d:BC_30YEAR>
+      </m:properties></content></entry>
+    </feed>"""
+
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return FakeResponse("<feed></feed>" if len(seen) == 1 else real_xml)
+
+    result = fetch_treasury_yield_curve(
+        2026, curve_type="real", opener=opener,
+        now=lambda: datetime(2026, 10, 23, 16, 0, tzinfo=timezone.utc),
+    )
+    assert len(seen) == 2
+    assert seen[0].endswith("data=daily_treasury_real_yield_curve&field_tdr_date_value=2026")
+    assert seen[1] == "https://home.treasury.gov/sites/default/files/interest-rates/real_yield.xml"
+    assert result["metadata"]["fallback_used"] is True
+    assert result["metadata"]["row_count"] == 1
+    assert result["rows"][0]["yield_pct"]["10y"] == 2.1
+
+
+def test_fetch_rejects_empty_real_curve_after_official_fallback():
+    seen = []
+
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return FakeResponse("<feed></feed>")
+
+    with pytest.raises(ValueError, match="returned no valid yield rows"):
+        fetch_treasury_yield_curve(
+            2026, curve_type="real", opener=opener,
+            now=lambda: datetime(2026, 10, 23, 16, 0, tzinfo=timezone.utc),
+        )
+    assert len(seen) == 2
+
+
+def test_real_curve_rejects_year_before_source_coverage():
+    with pytest.raises(ValueError, match="between 2003 and the current UTC year"):
+        fetch_treasury_yield_curve(
+            2002, curve_type="real",
+            now=lambda: datetime(2026, 10, 23, 16, 0, tzinfo=timezone.utc),
+        )
