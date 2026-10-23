@@ -1,4 +1,7 @@
-from tools.research.pit_sec_edgar import parse_sec_submissions
+from tools.research.pit_sec_edgar import (
+    parse_sec_acceptance_datetime,
+    parse_sec_submissions,
+)
 
 
 def test_parse_sec_does_not_treat_raw_acceptance_datetime_as_verified_utc():
@@ -21,6 +24,7 @@ def test_parse_sec_does_not_treat_raw_acceptance_datetime_as_verified_utc():
     assert len(records) == 2
     assert records[0]["published_at_utc"] is None
     assert records[0]["availability_status"] == "timestamp_missing"
+    assert records[0]["publication_timestamp_status"] == "header_missing"
     assert records[0]["event_type"] == "earnings"
     assert records[1]["published_at_utc"] is None
     assert records[1]["availability_status"] == "timestamp_missing"
@@ -28,7 +32,7 @@ def test_parse_sec_does_not_treat_raw_acceptance_datetime_as_verified_utc():
     assert records[0]["tickers"] == ["EXM"]
 
 
-def test_parse_sec_accepts_separately_verified_utc_timestamp():
+def test_parse_sec_uses_separately_supplied_sgml_header_time_as_new_york_time():
     payload = {
         "name": "Example Corp",
         "filings": {
@@ -36,17 +40,24 @@ def test_parse_sec_accepts_separately_verified_utc_timestamp():
                 "accessionNumber": ["0000123456-26-000004"],
                 "form": ["8-K"],
                 "acceptanceDateTime": ["2026-10-22T16:30:00Z"],
-                "verifiedPublishedAtUtc": ["2026-10-22T15:30:00Z"],
                 "primaryDocument": ["current.htm"],
                 "items": ["2.02"],
             }
         },
     }
+    headers = {
+        "000012345626000004": "<SUBMISSION>\n<ACCEPTANCE-DATETIME>20261022093000\n",
+    }
     record = parse_sec_submissions(
-        payload, first_seen_at_utc="2026-10-22T15:31:00Z", ticker="EXM",
+        payload,
+        first_seen_at_utc="2026-10-22T13:31:00Z",
+        ticker="EXM",
+        submission_headers_by_accession=headers,
     )[0]
-    assert record["published_at_utc"] == "2026-10-22T15:30:00Z"
+    assert record["published_at_utc"] == "2026-10-22T13:30:00Z"
     assert record["availability_status"] == "available"
+    assert record["publication_timestamp_source"] == "sec_sgml_acceptance_datetime"
+    assert record["publication_timestamp_status"] == "verified_from_sgml_header"
     assert record["event_type"] == "earnings"
 
 
@@ -69,6 +80,25 @@ def test_parse_sec_does_not_treat_filing_date_as_publication_time():
     assert record["published_at_utc"] is None
     assert record["availability_status"] == "timestamp_missing"
     assert record["event_type"] == "company_news"
+
+
+def test_parse_sec_acceptance_datetime_rejects_missing_duplicate_and_bad_header():
+    assert parse_sec_acceptance_datetime(None)["status"] == "header_missing"
+    assert parse_sec_acceptance_datetime("<SUBMISSION>no timestamp")["status"] == "acceptance_datetime_missing"
+    duplicate = "<ACCEPTANCE-DATETIME>20261022093000\n<ACCEPTANCE-DATETIME>20261022093100"
+    assert parse_sec_acceptance_datetime(duplicate)["status"] == "acceptance_datetime_ambiguous"
+    invalid = "<ACCEPTANCE-DATETIME>20261342093000"
+    assert parse_sec_acceptance_datetime(invalid)["status"] == "acceptance_datetime_invalid"
+
+
+def test_parse_sec_acceptance_datetime_rejects_dst_ambiguous_or_nonexistent_times():
+    ambiguous = parse_sec_acceptance_datetime("<ACCEPTANCE-DATETIME>20261101013000")
+    assert ambiguous["published_at_utc"] is None
+    assert ambiguous["status"] == "acceptance_datetime_dst_ambiguous"
+
+    nonexistent = parse_sec_acceptance_datetime("<ACCEPTANCE-DATETIME>20260308023000")
+    assert nonexistent["published_at_utc"] is None
+    assert nonexistent["status"] == "acceptance_datetime_dst_nonexistent"
 
 
 def test_parse_sec_handles_missing_or_malformed_payload_safely():
