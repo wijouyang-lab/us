@@ -114,7 +114,8 @@ def parse_sec_submissions(
     The raw acceptanceDateTime and filingDate arrays are never used as verified
     UTC timestamps. To enable a filing timestamp, supply its official SGML header
     keyed by accession number (with or without dashes); the parser converts the
-    header's ACCEPTANCE-DATETIME from America/New_York to UTC.
+    header's ACCEPTANCE-DATETIME from the SEC-documented fixed EST offset
+    (UTC-05:00) to UTC.
     """
     filings = payload.get("filings")
     if not isinstance(filings, Mapping):
