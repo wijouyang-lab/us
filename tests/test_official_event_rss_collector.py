@@ -58,6 +58,7 @@ def test_parse_bls_feed_normalizes_time_hash_and_missingness():
     assert first["published_at_utc"] == "2026-09-11T12:30:00Z"
     assert first["first_seen_at_utc"] == "2026-09-11T12:31:00Z"
     assert first["availability_status"] == "available"
+    assert first["market_scope"] == "market"
     assert first["source_url"] == "https://www.bls.gov/news.release/cpi.htm"
     assert len(first["content_hash"]) == 64
     assert first["headline"] == "CPI rose in August"
@@ -79,6 +80,7 @@ def test_federal_reserve_feed_classification_is_deterministic():
         body, feed_key="fed_all", first_seen_at_utc="2026-10-01T14:20:00Z",
     )
     assert [event["event_type"] for event in result["events"]] == ["central_bank", "policy"]
+    assert all(event["market_scope"] == "market" for event in result["events"])
     assert result["events"][0]["published_at_utc"] == "2026-10-01T14:00:00Z"
 
 
