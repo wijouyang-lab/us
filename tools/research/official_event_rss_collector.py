@@ -45,6 +45,12 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "event_type": "policy",
         "source_quality": "official",
     },
+    "fed_speeches": {
+        "url": "https://www.federalreserve.gov/feeds/speeches_and_testimony.xml",
+        "source": "federal_reserve_speeches_rss",
+        "event_type": "central_bank",
+        "source_quality": "official",
+    },
 }
 _ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov"}
 _CENTRAL_BANK_TERMS = (
@@ -121,6 +127,8 @@ def _plain_text(value: str) -> str:
 
 def _feed_event_type(feed_key: str, title: str, description: str) -> str:
     configured = OFFICIAL_FEEDS[feed_key]["event_type"]
+    if feed_key == "fed_speeches":
+        return "central_bank"
     if feed_key != "fed_all":
         return configured
     text = f"{title} {description}".lower()
@@ -205,6 +213,7 @@ def parse_official_feed(
         records.append(record)
 
     records.sort(key=lambda row: (
+        row.get("published_at_utc") is None,
         str(row.get("published_at_utc") or ""),
         str(row.get("event_id") or ""),
     ))
@@ -322,6 +331,7 @@ class OfficialRssCollector:
                 })
 
         all_events.sort(key=lambda row: (
+            row.get("published_at_utc") is None,
             str(row.get("published_at_utc") or ""),
             str(row.get("event_id") or ""),
         ))
@@ -360,7 +370,7 @@ def _load_feed_keys(raw: str) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--feeds", default="bls_cpi,bls_employment,fed_all")
+    parser.add_argument("--feeds", default="bls_cpi,bls_employment,fed_all,fed_speeches")
     parser.add_argument("--output", required=True, help="Path for normalized event JSON array")
     parser.add_argument("--metadata-output", help="Path for collection metadata JSON")
     parser.add_argument("--user-agent", default=os.environ.get("OFFICIAL_FEED_USER_AGENT", ""))

@@ -131,3 +131,26 @@ def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
     )
     with pytest.raises(ValueError, match="unsupported official feed"):
         collector.collect(["custom_url"])
+
+
+def test_federal_reserve_speeches_feed_is_classified_as_central_bank():
+    body = """<rss><channel>
+    <item><title>Chair gives remarks on the economic outlook</title>
+    <link>https://www.federalreserve.gov/newsevents/speech/chair20261001a.htm</link>
+    <guid>fed-speech-1</guid><pubDate>Thu, 01 Oct 2026 14:00:00 GMT</pubDate></item>
+    </channel></rss>"""
+    result = parse_official_feed(
+        body, feed_key="fed_speeches", first_seen_at_utc="2026-10-01T14:20:00Z",
+    )
+    assert result["events"][0]["event_type"] == "central_bank"
+    assert result["events"][0]["feed_key"] == "fed_speeches"
+
+
+def test_feed_sort_places_missing_source_timestamps_last():
+    result = parse_official_feed(
+        sample_bls_feed(),
+        feed_key="bls_cpi",
+        first_seen_at_utc="2026-09-11T12:31:00Z",
+    )
+    assert result["events"][0]["published_at_utc"] == "2026-09-11T12:30:00Z"
+    assert result["events"][1]["published_at_utc"] is None
