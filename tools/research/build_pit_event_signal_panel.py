@@ -16,8 +16,9 @@ from __future__ import annotations
 import argparse
 import json
 import math
+from datetime import timedelta
 from pathlib import Path
-from typing import Any
+from typing import Any, Mapping
 
 import pandas as pd
 
@@ -38,6 +39,9 @@ def build_panel(
     universe_path: str,
     decisions_path: str,
     weights_path: str,
+    *,
+    default_max_age_days: float = 30.0,
+    max_age_days_by_type: Mapping[str, float] | None = None,
 ) -> tuple[pd.DataFrame, dict[str, Any]]:
     events = _read_json(archive_path)
     weights = _read_json(weights_path)
@@ -56,6 +60,22 @@ def build_panel(
         if not math.isfinite(weight):
             raise ValueError(f"weight for {family} must be finite")
         parsed_weights[str(family)] = weight
+
+    if not math.isfinite(float(default_max_age_days)) or default_max_age_days < 0:
+        raise ValueError("default_max_age_days must be finite and non-negative")
+    age_config: dict[str, timedelta] = {
+        family: timedelta(days=float(default_max_age_days)) for family in parsed_weights
+    }
+    for family, raw_days in (max_age_days_by_type or {}).items():
+        if isinstance(raw_days, bool):
+            raise ValueError(f"max age for {family} must be numeric")
+        try:
+            days = float(raw_days)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"max age for {family} must be numeric") from exc
+        if not math.isfinite(days) or days < 0:
+            raise ValueError(f"max age for {family} must be finite and non-negative")
+        age_config[str(family)] = timedelta(days=days)
 
     universe = pd.read_csv(universe_path, dtype=str).fillna("")
     if "ticker" not in universe.columns or universe.empty:
@@ -94,6 +114,7 @@ def build_panel(
                 sector=sector or None,
                 decision_at=decision_text,
                 family_weights=parsed_weights,
+                max_age_by_type=age_config,
             )
             row = {
                 "decision_at": decision_text,
@@ -110,6 +131,7 @@ def build_panel(
                     sector=sector or None,
                     decision_at=decision_text,
                     family_weights={family: weight},
+                    max_age_by_type=age_config,
                 )
                 row[f"event_score_family__{family}"] = family_result["event_score"]
                 row[f"event_coverage_family__{family}"] = family_result["coverage_status"]
@@ -139,6 +161,8 @@ def build_panel(
             for family in parsed_weights
         },
         "archive_input_versions": len(events),
+        "default_max_age_days": float(default_max_age_days),
+        "max_age_days_by_type": {family: age.total_seconds() / 86400 for family, age in sorted(age_config.items())},
         "asof_event_count_min": min(asof_event_counts) if asof_event_counts else 0,
         "asof_event_count_max": max(asof_event_counts) if asof_event_counts else 0,
         "rejection_reason_counts": dict(sorted(reason_totals.items())),
@@ -163,8 +187,20 @@ def main() -> int:
     parser.add_argument("--weights", required=True)
     parser.add_argument("--output", required=True)
     parser.add_argument("--report", required=True)
+    parser.add_argument("--default-max-age-days", type=float, default=30.0)
+    parser.add_argument("--max-age-days-by-type", default="{}", help='JSON object overriding family freshness, e.g. {"macro_release":7,"policy":14}')
     args = parser.parse_args()
-    panel, report = build_panel(args.archive, args.universe, args.decisions, args.weights)
+    try:
+        age_overrides = json.loads(args.max_age_days_by_type)
+        if not isinstance(age_overrides, dict):
+            raise ValueError("--max-age-days-by-type must be a JSON object")
+        panel, report = build_panel(
+            args.archive, args.universe, args.decisions, args.weights,
+            default_max_age_days=args.default_max_age_days,
+            max_age_days_by_type=age_overrides,
+        )
+    except (json.JSONDecodeError, ValueError) as exc:
+        parser.error(str(exc))
     output = Path(args.output)
     report_path = Path(args.report)
     output.parent.mkdir(parents=True, exist_ok=True)
