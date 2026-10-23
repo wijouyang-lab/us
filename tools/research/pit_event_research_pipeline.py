@@ -73,6 +73,7 @@ def build_event_research_report(
             "consensus_asof_utc": result.get("consensus_asof_utc"),
         })
 
+    surprise_records.sort(key=_canonical_json)
     payload_for_hash = {
         "schema_version": PIPELINE_SCHEMA_VERSION,
         "decision_at_utc": decision_at,
