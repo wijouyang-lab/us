@@ -153,7 +153,8 @@ def parse_treasury_yield_curve_xml(
     canonical = json.dumps(rows, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
     return {
         "metadata": {
-            "source": "us_treasury_daily_par_yield_curve",
+            "source": source_name,
+            "curve_type": curve_type,
             "source_url": source_url,
             "retrieved_at_utc": observed_iso,
             "source_payload_sha256": sha256(payload.encode("utf-8") if isinstance(payload, str) else payload).hexdigest(),
