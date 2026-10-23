@@ -1,0 +1,32 @@
+name: Non-ATR Robustness Report Tests
+
+on:
+  push:
+    branches:
+      - "research/non-atr-integrated-backtest"
+    paths:
+      - "tools/research/non_atr_robustness_report.py"
+      - "tests/test_non_atr_robustness_report.py"
+      - ".github/workflows/non-atr-robustness-tests.yml"
+  pull_request:
+    paths:
+      - "tools/research/non_atr_robustness_report.py"
+      - "tests/test_non_atr_robustness_report.py"
+      - ".github/workflows/non-atr-robustness-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  robustness-report-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install focused dependencies
+        run: python -m pip install pandas pytest
+      - name: Test OOS robustness report
+        run: python -m pytest tests/test_non_atr_robustness_report.py -q
