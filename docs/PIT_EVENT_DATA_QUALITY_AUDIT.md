@@ -86,3 +86,15 @@ Supported feed keys are `bls_cpi` (https://www.bls.gov/feed/cpi.rss), `bls_emplo
 RSS publication dates are retained as provider metadata but are not assumed to be proof of the instant the item first became public. The collector records its own first-seen time, saves a feed payload hash and coverage report, and flags missing timestamps. These feeds are useful for forward-observation of official headlines, but do not provide historical consensus snapshots and cannot by themselves establish an earnings/macro surprise alpha. Append the resulting JSON to the same logical archive with `python -m tools.research.pit_event_archive --input official_events.json --archive event_archive.json`.
 
 Official feed directories: https://www.bls.gov/feed/ and https://www.federalreserve.gov/feeds/feeds.htm.
+
+
+## One-command manual capture and audit
+
+Run a manual research capture to save a unique snapshot, append it to the event-version archive, and audit the archive as of an explicit decision timestamp. No schedule or production hook is created.
+
+    export OFFICIAL_FEED_USER_AGENT="US Quant Research your-real-email@domain.com"
+    python -m tools.research.run_event_capture_cycle --output-dir research/event-data --decision-at 2026-10-23T13:00:00Z --max-age-days-by-type '{"macro_release":2,"central_bank":3,"policy":3,"company_news":2,"earnings":3}'
+
+It writes timestamped `.events.json`, `.metadata.json`, and `.audit.json` files plus `event_archive.json`. Repeated captures preserve individual snapshots while deduplicating unchanged event versions in the archive. To optionally collect SEC company filings, add `--sec-universe universe.json --sec-start-date YYYY-MM-DD --sec-end-date YYYY-MM-DD` and configure `SEC_USER_AGENT` with a real contact email. Backfilled historical filings retain the actual observation time and cannot be presented as known at earlier decisions.
+
+The command returns a nonzero status if every requested source fails, but a successful fetch can still produce a failing coverage audit. Review the saved audit before research use; this command never generates a buy/sell signal.
