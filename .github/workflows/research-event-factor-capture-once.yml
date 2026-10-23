@@ -55,12 +55,16 @@ jobs:
         run: |
           set -euo pipefail
           YEAR="$(date -u +%Y)"
-          python -m tools.research.treasury_yield_curve_capture \
+          if ! python -m tools.research.treasury_yield_curve_capture \
             --year "$YEAR" \
-            --output "data/research/event-capture/treasury_nominal_${GITHUB_RUN_ID}.json"
-          python -m tools.research.treasury_yield_curve_capture \
+            --output "data/research/event-capture/treasury_nominal_${GITHUB_RUN_ID}.json"; then
+            echo "::warning::Nominal Treasury curve capture failed; preserving event RSS capture."
+          fi
+          if ! python -m tools.research.treasury_yield_curve_capture \
             --year "$YEAR" --curve-type real \
-            --output "data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"
+            --output "data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"; then
+            echo "::warning::Real Treasury curve capture failed; preserving event RSS capture."
+          fi
 
       - name: Commit immutable capture and updated event archive
         shell: bash
