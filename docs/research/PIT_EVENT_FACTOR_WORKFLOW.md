@@ -3,6 +3,8 @@
 This workflow is research-only. It does not change the production scanner, ranking,
 external trigger, portfolio construction, or trading behavior.
 
+Before interpreting family coverage, consult the [free official event-source inventory](PIT_EVENT_SOURCE_INVENTORY.md), which distinguishes implemented adapters from important gaps such as BEA PCE/GDP and verified company earnings surprises.
+
 ## Data requirements
 
 1. Capture normalized events prospectively using `tools/research/run_event_capture_cycle.py`.
