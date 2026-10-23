@@ -71,7 +71,17 @@ def audit_event_archive(
     rejection_counts: Counter[str] = Counter()
     missing_fields: Counter[str] = Counter()
     timestamp_checks = Counter()
-    label_counts = Counter()
+    label_counts = Counter({
+        "direction_valid": 0,
+        "direction_missing_or_invalid": 0,
+        "impact_valid": 0,
+        "impact_missing_or_invalid": 0,
+        "both_labels_valid": 0,
+        "not_fully_labeled": 0,
+        "reviewed_labels": 0,
+        "reviewed_annotations_with_valid_provenance": 0,
+        "unverified_label_provenance": 0,
+    })
     label_review_status_counts: Counter[str] = Counter()
     version_ids: list[str] = []
     canonicalizable_source_urls: list[dict[str, str]] = []
