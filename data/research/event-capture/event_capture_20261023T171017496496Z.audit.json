@@ -1,0 +1,594 @@
+{
+  "asof_event_count": 85,
+  "asof_selection_applied": true,
+  "capture_cycle": {
+    "all_sources_failed": false,
+    "archive_file": "data/research/event-capture/event_archive.json",
+    "archive_update": {
+      "archive_event_version_count": 86,
+      "archive_path": "data/research/event-capture/event_archive.json",
+      "archive_snapshot_sha256": "6c68aa6c4de739f14a0cff7a85ca0c2e550ee35a0d2b6a0ee3fe2f89dd808ec1",
+      "duplicate_version_count": 85,
+      "fetch_error_skipped_count": 0,
+      "first_seen_adjustment_count": 0,
+      "input_event_count": 85,
+      "new_version_count": 0,
+      "production_scanner_modified": false,
+      "research_only": true,
+      "source_snapshot_sha256": "cdcce498e746d51ba6563b2ad0c6f2e1fba2ec9c6778ae7350a93a141a7b3bd5"
+    },
+    "configured_source_count": 7,
+    "events_file": "data/research/event-capture/event_capture_20261023T171017496496Z.events.json",
+    "metadata_file": "data/research/event-capture/event_capture_20261023T171017496496Z.metadata.json",
+    "source_collection_coverage": [
+      {
+        "error_type": null,
+        "event_count": 48,
+        "feed_key": "bea_releases",
+        "item_count": 48,
+        "source": "bea_news_release_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": "RuntimeError",
+        "event_count": 0,
+        "feed_key": "bls_cpi",
+        "item_count": null,
+        "source": "bls_cpi_rss",
+        "source_kind": "official_rss",
+        "status": "fetch_or_parse_error"
+      },
+      {
+        "error_type": "RuntimeError",
+        "event_count": 0,
+        "feed_key": "bls_employment",
+        "item_count": null,
+        "source": "bls_employment_situation_rss",
+        "source_kind": "official_rss",
+        "status": "fetch_or_parse_error"
+      },
+      {
+        "error_type": null,
+        "event_count": 20,
+        "feed_key": "fed_all",
+        "item_count": 20,
+        "source": "federal_reserve_press_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 15,
+        "feed_key": "fed_speeches",
+        "item_count": 15,
+        "source": "federal_reserve_speeches_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 1,
+        "feed_key": "treasury_auction_announcements",
+        "item_count": 20,
+        "source": "treasury_auction_announcements_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 1,
+        "feed_key": "treasury_auction_results",
+        "item_count": 15,
+        "source": "treasury_auction_results_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      }
+    ],
+    "successful_source_count": 5
+  },
+  "coverage_audit": {
+    "audit_flags": [],
+    "audit_status": "pass",
+    "availability_status_counts": {
+      "available": 85
+    },
+    "decision_at_utc": "2026-10-23T17:10:20.332780Z",
+    "duplicate_event_id_count": 0,
+    "duplicate_event_version_id_count": 0,
+    "eligibility_reason_counts": {
+      "eligible": 85
+    },
+    "eligible_by_event_type": {
+      "central_bank": 18,
+      "macro_release": 50,
+      "policy": 17
+    },
+    "eligible_events": 85,
+    "eligible_rate": 1.0,
+    "event_type_counts": {
+      "central_bank": 18,
+      "macro_release": 50,
+      "policy": 17
+    },
+    "expected_sources": [],
+    "ineligible_events": 0,
+    "missing_sources": [],
+    "observed_sources": [
+      "bea_news_release_rss",
+      "federal_reserve_press_rss",
+      "federal_reserve_speeches_rss",
+      "treasury_auction_announcements_rss",
+      "treasury_auction_results_rss"
+    ],
+    "total_events": 85
+  },
+  "decision_at_utc": "2026-10-23T17:10:20.332780Z",
+  "input_event_count": 86,
+  "input_snapshot_sha256": "535d56ab466a4903f491dfb6c95655d9db00e0428ad24514d4af4e22df66eaa3",
+  "macro_surprise": {
+    "candidate_count": 50,
+    "eligible_count": 0,
+    "ineligible_count": 50,
+    "reason_counts": {
+      "consensus_timestamp_missing": 50
+    },
+    "records": [
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "1036c5c2f470857eaa3d58fca25b79ec9345dca3092e1b3b07893d9c2ff8f570",
+        "event_version_id": "17e1179d5eb07b5d2944e22f590fcd2b386c3d8433b541e75c6146be40e99c2c",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "109012512dab6e8e99bf756a860ceefa9abdc109dcc9bb4292d2c8915fa22b52",
+        "event_version_id": "aca73b52c5f2da1f5cffd196c706ee21b3a811cc2448ef5ece81a3fff15be7f1",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "1d3b271e17f9afb57f3b873296b8dd03bb33046a88ebb6c07350f4280f70e4c2",
+        "event_version_id": "50c2426a51faeb78a86f93972ea4e697aae7c5aa2b95fff4eaba305248614cb2",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "20e52efbe280666037480651c2229ca1fc103050892b9448dae32f1bbd976781",
+        "event_version_id": "e92cfeda58ba83f8b915c5b68a51778b973846215be8e04b05de4d3271011ed6",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "2744198da90cb368284b9742d81ea15d4e643a758be03e186d3b89fb23339b87",
+        "event_version_id": "607b640ef78cb4498716a666e51ecd8e91e5cec1553aa25699ebd494a8f4331f",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "312fd234e2a12fb9451377308bb81bc27c52feacfa9adce413be8e0eee59f2b6",
+        "event_version_id": "9495a9b479a7f65cf93a748e536e77172bee985e8eb7fbc17e379256913f3ce2",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "36be584a33fc2d196bac996520085828077d8dc7caa4f8d71b417818560fd81c",
+        "event_version_id": "efe2e6880e59d59fba52763b547fe79c7f2761954f569bc56aefd1e05f829b0e",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "37d3a0f112a6e85cd172c9acbddd06102a44d739b2e61ad7bb4837398b77b02f",
+        "event_version_id": "9b0d7a92bb3a719a2b3dd425ca4662bc569bfe71d9cf59c06e0102bc036f64a8",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "3f754ec0dc3757e4e212f332be74bacceb1b66ddc81a420514d7fe516b39b714",
+        "event_version_id": "167b4f94a38e753da2d24fcd28bf4ed0426d91fe53f58ed2b052ebc9ba22b7ad",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "3f912b5907f8de86748f431d87345c8c1dda30adec58b7d5dc224001dc5a8952",
+        "event_version_id": "f91fb5e70e7566f9b4191dc2399679b7d65bda48b509db59d889f75696150d9f",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "42bd485ae7d4de0de1b1341e0dbcad0d74b15cf95d76bea254327cdd8ab91fe5",
+        "event_version_id": "d63afe3f6c44850477d8352be98f832a1a38dcbea2a596ca97ed59b2ea582496",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "451ee7131cc3c28958a691bbedfaa45642129d3b5639e007d073e43128f52d61",
+        "event_version_id": "c6f97d8bd8faf5a438a869b9fb1cf8e44c6cf97e7dcd2cf8a81b08507714194d",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "4774f449909311f6e963aac10cb3b6e78af79ae8de28502c934ac14e715d64c4",
+        "event_version_id": "decfb2d9469e56a1370e9112b5327f0e8a4696db64fa40ea8189b718c4b8a405",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "49e57f3cb8053e83523f6af47add394e2fa894f1e703b938347da31dc738ba1d",
+        "event_version_id": "f5ed6b93df066bd926321e9dfda1d88160ced1790bb05cb91955895ffd6163f4",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "52fef922c1ec94830bebc0437144ed92e9b473699a019991bce1ddddd4853909",
+        "event_version_id": "53eaa98d5dc80f55a8ca44cc5039023a4a7cc7466b5a62c5b679b87804215867",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "5ae5f43ac425160ad67b46b142a98f8c9abdea48fe6b677cd973c6b516928425",
+        "event_version_id": "1f90fd354233d32a7234136be0d05c66badcb434268f78447dad509d26f79178",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "6516be9e72a063b23c8c20b794ea04beb392f27c697e246a0be3dc152b7922ae",
+        "event_version_id": "30a582d9a9fb4e3e9b4e22c04f1aa8c5ae1c30e32976616a9f8a8e6a1db7dd81",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "690d57d8c158647b08153a12ed86173bdb527fc3a544f6223831944edc5ddda9",
+        "event_version_id": "fa9965f1c096ee3394ca4b3710099be24fe5c7459b8eba34aad2cf619d37f53e",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "69fcef02b198c729aca464337afa0ab95cb3887da569d501b5f604214f008820",
+        "event_version_id": "4aa7a5e20c7d00fd856f07609dd55bcdb7b4f7afec22bbbf452a28d51d1bc300",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "6d2bec7b862b3c025718038f56be2809151e21c1f32a164d668d8aecf10fa3e1",
+        "event_version_id": "71a862e4cca5be68f86669e857882252446a763b1e14193d412babd8ce5e8e33",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "716367e49f489fba620453f83f247fc0d4b2cf1d41b566f7c7446952d74d5f86",
+        "event_version_id": "d7a2991148db8aca51f37dab16e9c0821c4469f1940800027a6c312249568388",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "73d93fe2036c62c13844223499cbaaef160f32b1ac1512c2b9d3b9f15e075db8",
+        "event_version_id": "619ff22089a6f447a09c75d00824d50a999b3d9c7454cbce28ac1f05a708fda2",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "797791e983bcdf36c841757350bdf3e9ecdc7f06930fc31c5140542d7913f38e",
+        "event_version_id": "c568af4ec3daf0daffd6f5b8d97cc3c364080f5737b33a9817db9fef7e719424",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "79f62d7c8a574e035b093dc1039e58889d79db7a35887c73305d7725386719ca",
+        "event_version_id": "4a0101ce5d473f78b0f0ac36392e20facc2b8c38745319feb1d569aa5c81e231",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "810351864452841dde03ad27137a3bce28362271f1fb893069898ef35b87be95",
+        "event_version_id": "990a2da4b7217d8988c86dcd9c059c02e6cce000f56c2403576af60c81fa8990",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "93400cbcfaac49e6c2c8256f977b6c22f7293e5ec59db4d1999f1c43928fb9cb",
+        "event_version_id": "86540530acdc1c7574f202374fa19c9963c21562489b59fbb336ae887ad260f5",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "9b329042153baddaafdc14b14672799d976710edcdec843583947d40f683e817",
+        "event_version_id": "6055179eb3c0a1b8c7daf56fc08db619cf322d46a3fe44f03060a7836a002fd4",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "9ddfc740eac1f7cc9b35b45199d476525dd2222bf046f9fb9a9476e0868e2f34",
+        "event_version_id": "fbbc415d1b5d94638c181c968da7ebb7ddc11706d82bb8916f43d4cc2b018575",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "a1179f56a4c6369d9679579a960798c93a17a75b877d2a33d5a408ab904d2dc4",
+        "event_version_id": "dca59c400a5949e70fe64faf69aab4878e8c7b5f31f70d128199351bde9f4524",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "a683696a0b5279bac8bd43476f4e3173aea4f6354d0db3d144f56f1e1798b7c3",
+        "event_version_id": "96987ab8faf640cc98ae1944f8542e66b32a8a7ce088ef0ba6788b78800a9ad4",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "a74e4cbd00bba7125842cbca23b9c2b28d37dbdc37627a68da4612fad7a7eac1",
+        "event_version_id": "169a0886776949a27bc48117f7c0e67458b7a5e0506f1abc8f4195a00a9829ae",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "abae5560b4ed73afbbcfafdd70d348dbe91dd1b533ca59502223f5f74999e7ce",
+        "event_version_id": "2e707591f15a7dd57a03424614020ddabdb7bea2b888c5acefa16d852e6c029b",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "ada817ff99d4026df9f94682e3fc45d21f716872c936c7b9d9ca3b7e0dfbd61a",
+        "event_version_id": "b30ad6a9c610f5f2c1c1a7960eb520bb19bf738b702e815d1ef642ba51135d24",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "b215b67ca00fb77c498aa0f35dd56ff273db507bc4343aff6f40397af54c809b",
+        "event_version_id": "8fd3c72af29ecf2bc736caa485b90dd523520775c5a0cf6756df4414e33aa027",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "b36fac72691c1fcf2f0934d6b55278bd50ef5d7ed8a8a8f377283f62d0b057a4",
+        "event_version_id": "4971e2d6f85f2b9a927a6ec4b2b7cf58f2c4b19f42e41d6a3008aac7708ca2ff",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "b560730f029da990526b94f131cb34e8acb2458a47ba665e9c7019468bf2b0b5",
+        "event_version_id": "9e12be06f6f3762c914b1c019256b31b7224dd24fff0e2d7cde511e3de9d13db",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "bc62a1166ac64bf88daa0b32bed580ec6923f6e17743b6518e46ab2946ed0962",
+        "event_version_id": "b2a59f9701677a5ad54f40ac2c2f62c70fff4ed3ac0df9773352ceb2f635f629",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "c078d90d81a60fc8b706802f7782a3ff045522c83c852ad4c857dfa48f99937a",
+        "event_version_id": "5b2eb8351ddfa8210bccf712910ff2bcc55d41031a01abc28ce0d68cc7cecfa3",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "c3cf71a7eefb2e5e30aa6bc94cc6357b1dd844c39bd6a64c4f1072bbc9431ba2",
+        "event_version_id": "f8a4b6f27aac89b85fdd5c0fa2fc883ea15f3ea4335783568e72c7fbae46adf3",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "c7152121d8329ab93039f88d671e3e4333e9f273f229e4238e06eccad1372baf",
+        "event_version_id": "8bcae5db4639b30d30729224e4f089cf426d52f4d40f93051a3b8fc955e7b430",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "cd26e1752615989b2ab1eebdefbc1d6ef153130a3ff9bd84e485a27de1267f57",
+        "event_version_id": "4f285dd277a876644ed5cb4478c73e0d3ef58202c9570b0fc97c2cbdefbd8afd",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "d3c890a1e7cd17ba5a089af7aeb9811389f86f7df4c708e3fbeccb74ba8d1157",
+        "event_version_id": "072f39695ea19ee3216b6671c81487cd4e942de34bf4f229452e1efad05d2652",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "deda6b16885d527f006e12fcc79621563e3bf69fd8f63e68ed39c6e9d35520ed",
+        "event_version_id": "64901af12a586c52f1305112abb74713e8d0913924385618f0af0ed87db1efc5",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "f0e9b8ef78eabb3200047e510d16ccf34d2fb19137af76f1eb562a044e95ee3e",
+        "event_version_id": "03dadccfded019bb808ac1846fdf7b9ee844b95c1abefadca44cc444766bcabb",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "f38a270e68f2bb9958f98a48a746a7c357a6f5f5dec9f0fdb7f2496399982d5e",
+        "event_version_id": "26f6c52d20e3e21f24105fe6b6754b13b4a379b36c882877da8ba42d2ff86795",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "f463ea17d7bf5813b708821ba89628ca9b84dc1e9c407fe1e6c1cf1a4626e835",
+        "event_version_id": "f9f0bf4fcecaf0820925118d5d8e1565b29aae28bcf83143075a21c14ee3f138",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "f7e3586e7b35e47a150981b74ef4233ea46a17796a079c087a95cfdacd521323",
+        "event_version_id": "0411a0fe79aef06dea412af8ab60a8625792c8144ea90f0710fda03e70c1a9cc",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "fbc6d484e4f9f1305db3cb6ed9be7acc7c1ef54789b1128d0f4c7f10eec1a4dd",
+        "event_version_id": "c18a07e892a8acefd4c50464703ec54219c5d0774a0575a7ba49b63390889c2d",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "fc23bb8e7571e8020a0da3d7ffa5ca2554dc166be88d1621284537834a85df81",
+        "event_version_id": "9d4551962e95b4cc8dc233d795b908862f76fa8bbfb21d867d26b7b36ff35aad",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      },
+      {
+        "consensus_asof_utc": null,
+        "eligible": false,
+        "event_id": "fc6d53aaec1c14196ee6424001bfe0c01f037b88d58e922d4127926cc818c14c",
+        "event_version_id": "b5271534708d14354d1d1d4a69f59a8940a71fa205a46dae786a84966d58662c",
+        "published_at_utc": null,
+        "reason": "consensus_timestamp_missing",
+        "surprise": null
+      }
+    ]
+  },
+  "max_age_seconds_by_type": {},
+  "pipeline_schema_version": "1.1",
+  "research_only": true,
+  "source_snapshot_sha256": "5ba8769a934675e805776fe96bc41db45a3d177ff389b7f086f4823ea95e31d5",
+  "trading_signal_generated": false
+}
