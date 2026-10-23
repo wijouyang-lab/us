@@ -61,6 +61,10 @@ def build_breakeven_proxy(
 
     nominal_by_date = by_date(nominal_rows, "nominal")
     real_by_date = by_date(real_rows, "real")
+    for label, indexed, retrieved in (("nominal", nominal_by_date, nominal_retrieved), ("real", real_by_date, real_retrieved)):
+        future_dates = sorted(date for date in indexed if date > retrieved.date().isoformat())
+        if future_dates:
+            raise ValueError(f"{label} snapshot contains observation dates after retrieval date: {future_dates[0]}")
     maturities = ("5y", "7y", "10y", "20y", "30y")
     rows: list[dict[str, Any]] = []
     for date in sorted(nominal_by_date.keys() & real_by_date.keys()):
