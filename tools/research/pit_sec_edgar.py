@@ -21,6 +21,10 @@ _ACCEPTANCE_PATTERN = re.compile(
     r"<ACCEPTANCE-DATETIME>\s*(\d{14})\b",
     re.IGNORECASE,
 )
+_ACCESSION_PATTERN = re.compile(
+    r"<ACCESSION-NUMBER>\s*([0-9-]+)",
+    re.IGNORECASE,
+)
 
 
 def _rows_from_columnar_recent(recent: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -43,7 +47,11 @@ def _rows_from_columnar_recent(recent: Mapping[str, Any]) -> list[dict[str, Any]
     return rows
 
 
-def parse_sec_acceptance_datetime(submission_text: str | None) -> dict[str, str | None]:
+def parse_sec_acceptance_datetime(
+    submission_text: str | None,
+    *,
+    expected_accession: str | None = None,
+) -> dict[str, str | None]:
     """Parse a single ACCEPTANCE-DATETIME from an official SEC SGML submission.
 
     The header timestamp is interpreted as America/New_York local wall time.
@@ -52,6 +60,15 @@ def parse_sec_acceptance_datetime(submission_text: str | None) -> dict[str, str 
     """
     if not isinstance(submission_text, str) or not submission_text.strip():
         return {"published_at_utc": None, "status": "header_missing"}
+    if expected_accession:
+        accession_matches = _ACCESSION_PATTERN.findall(submission_text)
+        if len(accession_matches) != 1:
+            return {"published_at_utc": None, "status": "accession_missing_or_ambiguous"}
+        expected = re.sub(r"\D", "", expected_accession)
+        observed = re.sub(r"\D", "", accession_matches[0])
+        if not expected or observed != expected:
+            return {"published_at_utc": None, "status": "accession_mismatch"}
+
     matches = _ACCEPTANCE_PATTERN.findall(submission_text)
     if not matches:
         return {"published_at_utc": None, "status": "acceptance_datetime_missing"}
@@ -130,7 +147,10 @@ def parse_sec_submissions(
         items = str(row.get("items") or "")
 
         header_text = headers.get(normalized_accession) or headers.get(accession)
-        timestamp_result = parse_sec_acceptance_datetime(header_text)
+        timestamp_result = parse_sec_acceptance_datetime(
+            header_text,
+            expected_accession=accession,
+        )
         normalized = dict(row)
         normalized["companyName"] = company_name
         normalized["verifiedPublishedAtUtc"] = timestamp_result["published_at_utc"]
