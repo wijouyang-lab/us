@@ -39,6 +39,12 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "event_type": "macro_release",
         "source_quality": "official",
     },
+    "bea_releases": {
+        "url": "https://apps.bea.gov/rss/rss.xml",
+        "source": "bea_news_release_rss",
+        "event_type": "macro_release",
+        "source_quality": "official",
+    },
     "fed_all": {
         "url": "https://www.federalreserve.gov/feeds/press_all.xml",
         "source": "federal_reserve_press_rss",
@@ -52,7 +58,7 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "source_quality": "official",
     },
 }
-_ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov"}
+_ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov", "apps.bea.gov"}
 _CENTRAL_BANK_TERMS = (
     "fomc",
     "monetary policy",
@@ -236,7 +242,7 @@ def parse_official_feed(
 
 
 class OfficialRssCollector:
-    """Paced client limited to preconfigured BLS and Federal Reserve RSS feeds."""
+    """Paced client limited to preconfigured BLS, BEA, and Federal Reserve RSS feeds."""
 
     def __init__(
         self,
