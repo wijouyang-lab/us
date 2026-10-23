@@ -434,7 +434,7 @@ def main(argv: list[str] | None = None) -> int:
             "event_count": len(all_events),
             "event_snapshot_sha256": sha256(snapshot_json.encode("utf-8")).hexdigest(),
             "submissions_fetch_error_count": submission_errors,
-            "companies_with_partial_history": sum(
+            "companies_with_partial_coverage": sum(
                 row.get("coverage_status") == "partial" for row in company_reports
             ),
             "company_reports": company_reports,
