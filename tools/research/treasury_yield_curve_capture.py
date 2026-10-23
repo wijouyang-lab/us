@@ -37,11 +37,12 @@ MATURITY_FIELDS = {
     "30y": "BC_30YEAR",
 }
 REAL_MATURITY_FIELDS = {
-    "5y": "BC_5YEAR",
-    "7y": "BC_7YEAR",
-    "10y": "BC_10YEAR",
-    "20y": "BC_20YEAR",
-    "30y": "BC_30YEAR",
+    # Treasury's real-yield XML schema uses TC_* fields, unlike nominal BC_* fields.
+    "5y": "TC_5YEAR",
+    "7y": "TC_7YEAR",
+    "10y": "TC_10YEAR",
+    "20y": "TC_20YEAR",
+    "30y": "TC_30YEAR",
 }
 
 
