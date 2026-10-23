@@ -1,0 +1,35 @@
+# PIT event-factor research status
+
+Last verified capture: **2026-10-23 17:10 UTC**. This is a data-readiness status report, not an alpha claim.
+
+## Evidence captured
+
+- **86** immutable event versions in the archive.
+- **30** event versions were published within the 30-day annotation window at the latest capture cutoff. The workflow generated a separate queue with **30 pending rows**.
+- Source coverage in the archive: BEA releases (49), Federal Reserve press releases (20), Fed speeches/testimony (15), Treasury auction announcements (1), Treasury auction results (1).
+- The BLS CPI and employment RSS feeds returned **HTTP 403** from the GitHub Actions runner. A separate public BLS API snapshot succeeded with **5/5 current series**: CPI, core CPI, nonfarm payrolls, unemployment rate, and average hourly earnings.
+- Treasury current-year XML capture returned **203 nominal rows and 203 real-yield rows**. The real-yield schema uses `TC_*` fields; nominal uses `BC_*`.
+- Capture and readiness evidence files are stored under `data/research/event-capture/`, including immutable event snapshots, source reports, BLS snapshots, Treasury snapshots, and pending annotation queues.
+
+## What is not complete
+
+- **0 event versions have direction/impact labels; 0 are reviewed or validated.** The annotation queue intentionally leaves scores blank. No labels were invented.
+- Current BLS values and current-year Treasury downloads are snapshots retrieved now. Their historical observation periods do not reconstruct when those values were first available. They must not be backfilled into earlier decisions.
+- BLS RSS is still unavailable from the runner. The public API provides current levels but not consensus expectations or release surprises.
+- Historical company earnings beat/miss, guidance surprise, and timestamped consensus snapshots are not yet validated.
+- A point-in-time-correct universe, aligned price labels, and the reviewed event score panel have not yet been evaluated together in the final chronological out-of-sample test.
+
+## Research gates
+
+| Gate | Current status |
+|---|---|
+| Official event capture and immutable archive | Partial pass; several official feeds work, BLS RSS returns 403 |
+| Nominal and real Treasury capture | Pass for current snapshot; historical PIT eligibility begins at retrieval |
+| Current BLS macro snapshot | Pass for 5 series; no historical vintage or consensus |
+| Human-reviewed event labels | **Blocked** |
+| PIT event signal panel | Not yet valid for empirical scoring without reviewed labels |
+| Walk-forward event factor vs price-only baseline | **Not yet evaluated on validated labeled data** |
+| Empirical alpha established | **False** |
+| Production activation allowed | **False** |
+
+Do not promote this research to production or describe it as profitable until the label review, point-in-time data gates, and frozen out-of-sample evaluation are complete. A source-coverage audit passing only means that the capture itself was structurally valid.
