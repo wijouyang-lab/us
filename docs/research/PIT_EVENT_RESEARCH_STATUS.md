@@ -5,11 +5,11 @@ Last verified capture: **2026-10-23 17:11 UTC**. This is a data-readiness status
 ## Evidence captured
 
 - **86** immutable event versions in the archive.
-- **30** event versions were published within the 30-day annotation window at the latest capture cutoff. The workflow generated a separate queue with **30 pending rows** ([CSV](../../data/research/event-capture/annotation_queue_39992913372.csv), [report](../../data/research/event-capture/annotation_queue_39992913372.report.json)).
+- **30** event versions were published within the 30-day annotation window at the latest capture cutoff. The workflow generated a separate queue with **30 pending rows** ([CSV](../../data/research/event-capture/annotation_queue_39993404661.csv), [report](../../data/research/event-capture/annotation_queue_39993404661.report.json)).
 - Source coverage in the archive: BEA releases (49), Federal Reserve press releases (20), Fed speeches/testimony (15), Treasury auction announcements (1), Treasury auction results (1).
-- The BLS CPI and employment RSS feeds returned **HTTP 403** from the GitHub Actions runner. A separate public BLS API snapshot succeeded with **5/5 current series**: CPI, core CPI, nonfarm payrolls, unemployment rate, and average hourly earnings.
+- The BLS CPI and employment RSS feeds returned **HTTP 403** from the GitHub Actions runner. A separate public BLS API snapshot succeeded with **5/5 current series**: CPI, core CPI, nonfarm payrolls, unemployment rate, and average hourly earnings. The SEC company-ticker mapping endpoint also returned **HTTP 403**, so SEC filing capture was skipped for this run; the workflow now continues with the other sources rather than failing the whole capture.
 - Treasury current-year XML capture returned **203 nominal rows and 203 real-yield rows**. The real-yield schema uses `TC_*` fields; nominal uses `BC_*`.
-- Capture and readiness evidence files are stored under `data/research/event-capture/`, including immutable event snapshots, source reports, BLS snapshots, Treasury snapshots, and pending annotation queues.
+- Capture and readiness evidence files are stored under `data/research/event-capture/`, including immutable event snapshots, source reports, BLS snapshots, Treasury snapshots, and pending annotation queues. One older BEA item contains a scheme-less but recoverable official URL; this is reported explicitly by the readiness audit, while new captures normalize such links to HTTPS.
 
 ## What is not complete
 
