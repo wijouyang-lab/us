@@ -224,3 +224,17 @@ def test_treasury_feed_fetch_uses_configured_official_url(feed_key):
     assert seen == [OFFICIAL_FEEDS[feed_key]["url"]]
     assert result["metadata"]["feed_reports"][0]["status"] == "ok"
     assert result["metadata"]["event_count"] == 1
+
+
+
+def test_bare_official_item_link_is_canonicalized_to_https():
+    body = """<rss><channel>
+    <item><title>GDP advance estimate</title>
+    <link>www.bea.gov/news/2026/gdp-advance-estimate</link>
+    <guid>bea-gdp-bare-link</guid>
+    <pubDate>Fri, 23 Oct 2026 12:30:00 GMT</pubDate></item>
+    </channel></rss>"""
+    result = parse_official_feed(
+        body, feed_key="bea_releases", first_seen_at_utc="2026-10-23T12:31:00Z",
+    )
+    assert result["events"][0]["source_url"] == "https://www.bea.gov/news/2026/gdp-advance-estimate"
