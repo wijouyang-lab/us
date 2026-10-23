@@ -38,6 +38,8 @@ jobs:
         run: pip install -r tools/research/requirements-research.txt
 
       - name: Capture official macro, policy, speech and Treasury auction RSS
+        env:
+          OFFICIAL_FEED_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
         shell: bash
         run: |
           set -euo pipefail
