@@ -68,12 +68,12 @@ def test_coverage_audit_flags_stale_events():
     assert report["audit_status"] == "fail_stale_events"
 
 
-def test_empty_coverage_audit_is_deterministic():
+def test_empty_coverage_audit_is_fail_closed_not_pass():
     report = audit_event_coverage([], "2026-10-13T13:00:00Z")
     assert report["eligible_rate"] == 0.0
     assert report["total_events"] == 0
-    assert report["audit_status"] == "pass"
-    assert report["audit_flags"] == []
+    assert report["audit_status"] == "fail_no_data"
+    assert report["audit_flags"] == ["fail_no_data"]
 
 
 def test_coverage_does_not_treat_distinct_event_versions_as_duplicate_ids():
@@ -87,3 +87,33 @@ def test_coverage_does_not_treat_distinct_event_versions_as_duplicate_ids():
     report = audit_event_coverage([v1, v2], "2026-10-13T13:00:00Z")
     assert report["duplicate_event_id_count"] == 0
     assert report["duplicate_event_version_id_count"] == 0
+
+
+def test_coverage_audit_reports_expected_source_gaps():
+    event = normalize_event(
+        "bls_cpi_rss", "cpi-1", "macro_release",
+        "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
+    )
+    report = audit_event_coverage(
+        [event],
+        "2026-10-13T13:00:00Z",
+        expected_sources=["bls_cpi_rss", "federal_reserve_press_rss"],
+    )
+    assert report["observed_sources"] == ["bls_cpi_rss"]
+    assert report["missing_sources"] == ["federal_reserve_press_rss"]
+    assert report["audit_status"] == "fail_source_coverage"
+    assert report["audit_flags"] == ["fail_source_coverage"]
+
+
+def test_source_presence_uses_normalized_case_and_whitespace():
+    event = normalize_event(
+        "BLS_CPI_RSS", "cpi-1", "macro_release",
+        "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
+    )
+    report = audit_event_coverage(
+        [event],
+        "2026-10-13T13:00:00Z",
+        expected_sources=[" bls_cpi_rss "],
+    )
+    assert report["missing_sources"] == []
+    assert report["audit_status"] == "pass"
