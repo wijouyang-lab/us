@@ -154,16 +154,34 @@ def audit_event_archive(
         review_status = str(event.get("label_review_status") or "missing").strip().lower()
         label_review_status_counts[review_status] += 1
         reviewed_at = _parse_aware_timestamp(event.get("label_reviewed_at_utc"))
-        reviewed = (
-            direction_ok and impact_ok
-            and review_status in {"reviewed", "validated"}
+        labeler_id = str(event.get("labeler_id") or "").strip()
+        reviewer_id = str(event.get("reviewer_id") or "").strip()
+        label_rationale = str(event.get("label_rationale") or "").strip()
+        label_schema_version = str(event.get("label_schema_version") or "").strip()
+        provenance_valid = (
+            review_status in {"reviewed", "validated"}
             and reviewed_at is not None
             and reviewed_at <= audit_time
+            and bool(labeler_id)
+            and bool(reviewer_id)
+            and "@" not in labeler_id
+            and "@" not in reviewer_id
+            and bool(label_rationale)
+            and bool(label_schema_version)
+            and not (review_status == "validated" and labeler_id == reviewer_id)
         )
+        if provenance_valid:
+            label_counts["reviewed_annotations_with_valid_provenance"] += 1
+        has_label_claim = (
+            event.get("direction_score") not in (None, "")
+            or event.get("impact_score") not in (None, "")
+            or review_status in {"reviewed", "validated"}
+        )
+        if has_label_claim and not provenance_valid:
+            label_counts["unverified_label_provenance"] += 1
+        reviewed = direction_ok and impact_ok and provenance_valid
         if reviewed:
             label_counts["reviewed_labels"] += 1
-        else:
-            label_counts["unverified_label_provenance"] += 1
         if event.get("label_reviewed_at_utc") not in (None, "") and reviewed_at is None:
             timestamp_checks["invalid_label_reviewed_at_utc"] += 1
         elif reviewed_at is not None and reviewed_at > audit_time:
@@ -238,7 +256,7 @@ def audit_event_archive(
             ),
             "all_first_seen_after_publication": timestamp_checks["first_seen_before_publication"] == 0,
             "validated_labels_present": labelled > 0,
-            "label_review_provenance_present": labelled == label_counts["both_labels_valid"],
+            "label_review_provenance_present": label_counts["unverified_label_provenance"] == 0,
             "pit_eligible_for_at_least_one_decision": not decisions or any(eligible_by_decision.values()),
             "empirical_alpha_established": False,
             "production_activation_allowed": False,
