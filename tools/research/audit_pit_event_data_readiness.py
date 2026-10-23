@@ -209,6 +209,8 @@ def audit_event_archive(
         or timestamp_checks["first_seen_before_publication"]
         or timestamp_checks["publication_after_audit_time"]
         or timestamp_checks["first_seen_after_audit_time"]
+        or timestamp_checks["label_review_after_audit_time"]
+        or label_counts["unverified_label_provenance"]
         or duplicate_version_count
         or missing_fields["source_url"]
     ):
