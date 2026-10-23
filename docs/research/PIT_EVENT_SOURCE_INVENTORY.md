@@ -11,7 +11,7 @@ This inventory separates sources already implemented in the research collector f
 | Employment/unemployment releases | U.S. Bureau of Labor Statistics | `bls_employment` | RSS is a rolling feed, not a complete historical event archive |
 | Central-bank releases and policy | Federal Reserve press feed | `fed_all` | Broad press feed; classification is based on title/description terms and should be reviewed |
 | Fed speeches/testimony | Federal Reserve | `fed_speeches` | Captures official feed items, not every live remark or transcript revision |
-| Treasury auction announcements and results | TreasuryDirect official RSS | `treasury_auction_announcements`, `treasury_auction_results` | Captures announcement/result headlines and source timestamps; does not itself parse auction bid-to-cover, tail, or yield statistics |\n| Company filings / earnings-related disclosures | SEC EDGAR submissions and filing headers | optional SEC universe in `run_event_capture_cycle.py` | Filing events are not equivalent to verified earnings beat/miss or guidance surprise; a current backfill does not reconstruct historical first-seen |
+| Treasury auction announcements and results | TreasuryDirect official RSS | `treasury_auction_announcements`, `treasury_auction_results` | Captures announcement/result headlines and source timestamps; does not itself parse auction bid-to-cover, tail, or yield statistics |\n| Daily Treasury par yield curve | U.S. Treasury official XML feed | `tools/research/treasury_yield_curve_capture.py` | Produces maturity yields, 2s10s/3m10y spreads, and daily changes; current historical downloads do not reconstruct historical first-seen times and are not PIT-eligible before retrieval |\n| Company filings / earnings-related disclosures | SEC EDGAR submissions and filing headers | optional SEC universe in `run_event_capture_cycle.py` | Filing events are not equivalent to verified earnings beat/miss or guidance surprise; a current backfill does not reconstruct historical first-seen |
 
 ## Required next adapters / data work
 
@@ -35,7 +35,7 @@ This inventory separates sources already implemented in the research collector f
 
 ## Operational command
 
-The existing manual collector supports BLS CPI, BLS employment, BEA news releases, Fed press and speeches, plus TreasuryDirect auction announcements and results by default. SEC collection is optional and requires an explicit CIK/ticker universe plus a contact-bearing SEC User-Agent. It creates no scheduled workflow:
+The existing manual collector supports BLS CPI, BLS employment, BEA news releases, Fed press and speeches, plus TreasuryDirect auction announcements and results by default. Daily Treasury yield curve values can be captured separately with `tools.research.treasury_yield_curve_capture`; that command is manual and creates an immutable JSON snapshot. SEC collection is optional and requires an explicit CIK/ticker universe plus a contact-bearing SEC User-Agent. It creates no scheduled workflow:
 
 ```bash
 python -m tools.research.run_event_capture_cycle \
