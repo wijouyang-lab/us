@@ -117,3 +117,28 @@ def test_risk_controls_do_not_use_future_returns_for_earlier_scales():
         original["risk_scale"].iloc[:5],
         altered["risk_scale"].iloc[:5],
     )
+
+
+
+def test_risk_controls_do_not_double_count_first_entry_turnover():
+    date = pd.Timestamp("2024-01-02")
+    portfolio = pd.DataFrame({
+        "gross_return": [0.01],
+        "turnover": [0.50],
+        "cost": [0.0],
+        "net_return": [0.01],
+        "exposure": [0.50],
+    }, index=[date])
+    controlled = apply_risk_controls(
+        portfolio,
+        one_way_cost_bps=5,
+        target_annual_volatility=1.0,
+        volatility_lookback=2,
+        max_exposure=0.25,
+        drawdown_limit=0.15,
+        cooldown_sessions=20,
+    )
+    # Scale is 0.5, so the initial 0.50 entry turnover becomes 0.25.
+    # It must not be charged a second time as a scale-change turnover.
+    assert controlled["risk_scale"].iloc[0] == pytest.approx(0.5)
+    assert controlled["turnover"].iloc[0] == pytest.approx(0.25)
