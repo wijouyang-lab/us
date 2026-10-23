@@ -46,7 +46,7 @@ def test_parse_sec_uses_separately_supplied_sgml_header_time_as_new_york_time():
         },
     }
     headers = {
-        "000012345626000004": "<SEC-DOCUMENT>\n<ACCEPTANCE-DATETIME>20261022093000\nACCESSION NUMBER:\\t0000123456-26-000004\n",
+        "000012345626000004": "<SEC-DOCUMENT>\n<ACCEPTANCE-DATETIME>20261022093000\nACCESSION NUMBER: 0000123456-26-000004\n",
     }
     record = parse_sec_submissions(
         payload,
