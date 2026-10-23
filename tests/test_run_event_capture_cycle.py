@@ -172,3 +172,21 @@ def test_max_age_config_validates_values():
         cycle._parse_max_age_days('{"macro_release":-1}')
     with pytest.raises(ValueError, match="finite non-negative"):
         cycle._parse_max_age_days('{"macro_release":1e999}')
+
+
+
+def test_audit_after_capture_uses_actual_completion_cutoff(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T11:00:00Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@example.com",
+        audit_after_capture=True,
+    )
+    metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert metadata["audit_after_capture"] is True
+    assert metadata["audit_decision_at_utc"] == audit["decision_at_utc"]
+    assert audit["decision_at_utc"] >= "2026-10-23T12:01:00Z"
+    assert audit["coverage_audit"]["eligible_events"] == 1
