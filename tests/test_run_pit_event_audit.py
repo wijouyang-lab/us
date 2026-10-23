@@ -61,3 +61,44 @@ def test_cli_rejects_non_timezone_aware_decision(tmp_path, capsys):
     assert exc.value.code == 2
     captured = capsys.readouterr()
     assert "timezone-aware" in captured.err
+
+
+
+def test_cli_expected_sources_are_reported_as_coverage_failure(tmp_path):
+    source = tmp_path / "events.json"
+    output = tmp_path / "report.json"
+    source.write_text(json.dumps([{
+        "event_id": "event-1",
+        "source": "bls_cpi_rss",
+        "event_type": "macro_release",
+        "availability_status": "available",
+        "published_at_utc": "2026-10-15T10:00:00Z",
+        "first_seen_at_utc": "2026-10-15T10:01:00Z",
+    }]), encoding="utf-8")
+
+    result = main([
+        "--input", str(source),
+        "--decision-at", "2026-10-15T12:00:00Z",
+        "--expected-sources", "bls_cpi_rss,federal_reserve_press_rss",
+        "--output", str(output),
+    ])
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert result == 0
+    assert report["coverage_audit"]["missing_sources"] == ["federal_reserve_press_rss"]
+    assert report["coverage_audit"]["audit_status"] == "fail_source_coverage"
+
+
+def test_cli_empty_input_is_written_as_fail_no_data(tmp_path):
+    source = tmp_path / "events.json"
+    output = tmp_path / "report.json"
+    source.write_text("[]", encoding="utf-8")
+
+    result = main([
+        "--input", str(source),
+        "--decision-at", "2026-10-15T12:00:00Z",
+        "--output", str(output),
+    ])
+    report = json.loads(output.read_text(encoding="utf-8"))
+    assert result == 0
+    assert report["coverage_audit"]["audit_status"] == "fail_no_data"
+    assert report["coverage_audit"]["eligible_rate"] == 0.0
