@@ -69,6 +69,37 @@ def test_pit_membership_checks_only_expected_member_sessions(tmp_path, monkeypat
     assert eligible["AAA"]["Date"].dt.strftime("%Y-%m-%d").tolist() == ["2024-01-02", "2024-01-03"]
 
 
+def test_pit_membership_audits_ticker_with_zero_downloaded_rows(tmp_path, monkeypatch):
+    from datetime import date
+    from tools.research import non_atr_integrated_backtest as runner
+    from tools.research.pit_membership import MembershipInterval
+
+    source = tmp_path / "prices.csv"
+    spy = tmp_path / "spy.csv"
+    pd.DataFrame([
+        {"Date": "2024-01-01", "Ticker": "AAA", "Adj Close": 10},
+        {"Date": "2024-01-02", "Ticker": "AAA", "Adj Close": 11},
+        {"Date": "2024-01-03", "Ticker": "AAA", "Adj Close": 12},
+    ]).to_csv(source, index=False)
+    pd.DataFrame({"Date": ["2024-01-01", "2024-01-02", "2024-01-03"]}).to_csv(spy, index=False)
+    membership = {
+        "AAA": [MembershipInterval("AAA", date(2024, 1, 1), None)],
+        "MISSING": [MembershipInterval("MISSING", date(2024, 1, 1), None)],
+    }
+    monkeypatch.setattr(runner, "load_multi_index_membership", lambda *args: membership)
+    paths = tuple(tmp_path / name for name in ("sp500.csv", "aliases.csv", "nasdaq.csv", "dow.csv"))
+    eligible, audit = runner.load_complete_tickers(
+        source, min_rows=2, spy_path=spy, membership_paths=paths
+    )
+    missing = audit.set_index("Ticker").loc["MISSING"]
+    assert missing["status"] == "excluded"
+    assert missing["rows"] == 0
+    assert missing["reason"] == (
+        "incomplete_expected_session_history:3_missing_of_3;no_downloaded_price_rows"
+    )
+    assert "MISSING" not in eligible
+
+
 def test_pit_membership_excludes_missing_expected_member_session(tmp_path, monkeypatch):
     from datetime import date
     from tools.research import non_atr_integrated_backtest as runner
