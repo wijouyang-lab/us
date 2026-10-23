@@ -305,8 +305,13 @@ class OfficialRssCollector:
         except RuntimeError:
             raise
         except Exception as exc:
+            status_code = getattr(exc, "code", None)
+            cause = getattr(exc, "__cause__", None)
+            if status_code is None:
+                status_code = getattr(cause, "code", None)
+            detail = f" HTTP {status_code}" if status_code is not None else ""
             raise RuntimeError(
-                f"failed to fetch official feed {feed_key}: {type(exc).__name__}"
+                f"failed to fetch official feed {feed_key}: {type(exc).__name__}{detail}"
             ) from exc
 
     def collect(self, feed_keys: list[str]) -> dict[str, Any]:
