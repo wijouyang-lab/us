@@ -41,3 +41,46 @@ def test_reindexes_missing_members_to_zero_weight():
     portfolio = combine_equal_weight_portfolio(panel, dates, one_way_cost_bps=0)
     assert portfolio.loc[dates[2], "exposure"] == 0.0
     assert portfolio.loc[dates[2], "active_tickers"] == 0
+
+from tools.research.non_atr_portfolio_backtest import apply_risk_controls
+
+
+def test_risk_controls_cap_exposure_and_pause_after_drawdown():
+    dates = pd.date_range("2024-01-02", periods=6, freq="B")
+    portfolio = pd.DataFrame({
+        "gross_return": [0.0, -0.30, 0.01, 0.01, 0.01, 0.01],
+        "turnover": [0.5] * 6,
+        "cost": [0.00025] * 6,
+        "net_return": [0.0, -0.30, 0.01, 0.01, 0.01, 0.01],
+        "exposure": [0.5] * 6,
+        "active_tickers": [10] * 6,
+    }, index=dates)
+    controlled = apply_risk_controls(
+        portfolio,
+        one_way_cost_bps=5,
+        target_annual_volatility=1.0,
+        volatility_lookback=2,
+        max_exposure=0.25,
+        drawdown_limit=0.10,
+        cooldown_sessions=2,
+    )
+    assert controlled["exposure"].iloc[0] == pytest.approx(0.25)
+    # The first session's loss is observed only after that session closes;
+    # the next session therefore enters the cooldown in cash.
+    assert controlled["risk_scale"].iloc[2] == pytest.approx(0.0)
+    assert controlled["exposure"].iloc[2] == pytest.approx(0.0)
+    assert controlled["risk_scale"].iloc[3] == pytest.approx(0.0)
+    assert controlled["risk_scale"].iloc[4] > 0.0
+
+
+def test_risk_controls_reject_invalid_parameters():
+    dates = pd.date_range("2024-01-02", periods=2, freq="B")
+    portfolio = pd.DataFrame({
+        "gross_return": [0.0, 0.0],
+        "turnover": [0.0, 0.0],
+        "cost": [0.0, 0.0],
+        "net_return": [0.0, 0.0],
+        "exposure": [0.0, 0.0],
+    }, index=dates)
+    with pytest.raises(ValueError, match="max_exposure"):
+        apply_risk_controls(portfolio, one_way_cost_bps=5, max_exposure=0)
