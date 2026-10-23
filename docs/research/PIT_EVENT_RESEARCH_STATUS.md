@@ -1,6 +1,6 @@
 # PIT event-factor research status
 
-Last verified capture: **2026-10-23 17:11 UTC**. This is a data-readiness status report, not an alpha claim.
+Last verified capture: **2026-10-23 17:14 UTC**. This is a data-readiness status report, not an alpha claim.
 
 ## Evidence captured
 
