@@ -269,6 +269,7 @@ class SecEventCollector:
                 if not records:
                     raise ValueError("SEC filing row could not be normalized")
                 event = records[0]
+                event["source_header_sha256"] = sha256(header_text.encode("utf-8")).hexdigest()
             except Exception as exc:
                 header_fetch_errors += 1
                 first_seen_at_utc = _utc_iso(self.now())
