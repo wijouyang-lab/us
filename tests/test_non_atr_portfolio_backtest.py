@@ -48,10 +48,10 @@ from tools.research.non_atr_portfolio_backtest import apply_risk_controls
 def test_risk_controls_cap_exposure_and_pause_after_drawdown():
     dates = pd.date_range("2024-01-02", periods=6, freq="B")
     portfolio = pd.DataFrame({
-        "gross_return": [0.0, -0.30, 0.01, 0.01, 0.01, 0.01],
+        "gross_return": [0.0, -0.60, 0.01, 0.01, 0.01, 0.01],
         "turnover": [0.5] * 6,
         "cost": [0.00025] * 6,
-        "net_return": [0.0, -0.30, 0.01, 0.01, 0.01, 0.01],
+        "net_return": [0.0, -0.60, 0.01, 0.01, 0.01, 0.01],
         "exposure": [0.5] * 6,
         "active_tickers": [10] * 6,
     }, index=dates)
