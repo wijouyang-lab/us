@@ -111,6 +111,7 @@ def test_collector_fetches_official_headers_and_uses_verified_local_acceptance_t
     assert event["availability_status"] == "available"
     assert event["publication_timestamp_source"] == "sec_sgml_acceptance_datetime"
     assert event["source_url"] == header_url
+    assert len(event["source_header_sha256"]) == 64
     assert result["metadata"]["verified_header_timestamp_count"] == 1
     assert result["metadata"]["header_fetch_error_count"] == 0
     assert "must not be treated" in result["metadata"]["historical_pit_warning"]
