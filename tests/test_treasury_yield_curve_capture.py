@@ -131,6 +131,9 @@ def test_real_yield_curve_uses_real_data_key_and_maturity_fields():
     )
     assert result["metadata"]["source"] == "us_treasury_daily_par_real_yield_curve"
     assert result["metadata"]["curve_type"] == "real"
+    assert result["metadata"]["source_diagnostics"]["xml_entry_count"] == 1
+    assert result["metadata"]["source_diagnostics"]["entries_with_valid_observation_date"] == 1
+    assert result["metadata"]["source_diagnostics"]["entries_with_any_maturity_yield"] == 1
     assert result["rows"][0]["yield_pct"]["5y"] == 1.8
     assert result["rows"][0]["yield_pct"]["10y"] == 2.1
     assert result["rows"][0]["slope_2s10s_bp"] is None
