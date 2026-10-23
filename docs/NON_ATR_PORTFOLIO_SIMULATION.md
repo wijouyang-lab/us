@@ -50,3 +50,36 @@ These windows show regime dependence: momentum and trend performed poorly in the
 5. Before considering paper deployment, test position caps, volatility targeting, drawdown circuit breakers, and a benchmark with matched exposure. Keep walk-forward folds untouched while setting risk rules, then validate those rules on later held-out data.
 
 This simulation excludes taxes, market impact beyond the fixed bps scenarios, borrow/financing costs, and operational execution failures. The universe is not complete due to known historical coverage limitations. Do not treat these figures as expected live returns.
+
+
+## Risk-managed overlay results (run 39892241227)
+
+The follow-up simulation reused the same adjusted-price artifact and compared the original baseline against a risk overlay with a 8% annualized volatility target, 63-session lookback, 50% gross-exposure cap, and a 15% drawdown trigger followed by a 20-session cash cooldown. It only scales exposure down and does not use leverage. The table below uses the 5 bps one-way cost scenario.
+
+| Strategy | Profile | CAGR | Annualized volatility | Sharpe (0% RF) | Max drawdown | Mean exposure | Max exposure | Annualized turnover | Worst calendar year |
+|---|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| Momentum | Baseline | 5.45% | 8.30% | 0.681 | -15.92% | 57.90% | 95.58% | 8.91x | -9.20% |
+| Momentum | Risk-managed | 4.43% | 6.34% | 0.715 | -11.01% | 44.20% | 50.00% | 10.09x | -7.26% |
+| Trend | Baseline | 5.62% | 9.94% | 0.600 | -27.40% | 56.12% | 90.46% | 1.48x | -7.05% |
+| Trend | Risk-managed | 4.08% | 6.80% | 0.623 | -15.72% | 42.31% | 50.00% | 1.77x | -5.80% |
+| Mean reversion | Baseline | 3.50% | 9.06% | 0.425 | -22.39% | 24.29% | 96.54% | 34.32x | -7.85% |
+| Mean reversion | Risk-managed | 1.82% | 5.85% | 0.337 | -16.84% | 22.42% | 50.00% | 34.80x | -7.81% |
+
+### Held-out window summary at 5 bps
+
+| Strategy | Profile | Mean annualized return across 7 windows | Worst window annualized return | Worst window max drawdown | Mean window Sharpe |
+|---|---|---:|---:|---:|---:|
+| Momentum | Baseline | 6.79% | -6.89% | -15.92% | 0.666 |
+| Momentum | Risk-managed | 5.05% | -4.21% | -11.01% | 0.741 |
+| Trend | Baseline | 6.97% | -12.06% | -27.40% | 0.806 |
+| Trend | Risk-managed | 4.72% | -9.98% | -15.72% | 0.751 |
+| Mean reversion | Baseline | 4.78% | -1.59% | -21.03% | 0.775 |
+| Mean reversion | Risk-managed | 2.52% | -6.93% | -14.34% | 0.579 |
+
+### Interpretation
+
+- The overlay reduced full-period maximum drawdown for all three strategies and capped observed gross exposure at 50%.
+- **Momentum is the most promising candidate for further risk-budget research**: at 5 bps, CAGR falls by about 1.02 percentage points, but max drawdown improves by about 4.91 points and Sharpe rises from 0.681 to 0.715. Its worst held-out annualized window also improves from -6.89% to -4.21%.
+- Trend's maximum drawdown improves materially (from -27.40% to -15.72%), but CAGR falls by about 1.54 points and mean held-out Sharpe declines. This is a trade-off, not a universal improvement.
+- Mean reversion's full-period drawdown improves, but its Sharpe and held-out performance deteriorate; its high turnover remains a material cost risk.
+- This overlay is **not validated for production**. It was assessed on the same historical sample used for research, the price universe has known coverage limitations, and the drawdown cooldown can alter later exposures. The next validation should freeze these settings and evaluate a genuinely later untouched period, with matched-exposure SPY comparison and execution-cost stress, before any paper/live decision.
