@@ -47,10 +47,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python -m tools.research.build_sec_research_universe \
+          if ! python -m tools.research.build_sec_research_universe \
             --tickers-file watchlist.txt \
             --output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
-            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json"
+            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json"; then
+            echo "::warning::SEC universe mapping failed; the capture will continue with official RSS and macro snapshots."
+          fi
 
       - name: Capture official macro, policy, speech, Treasury auction and SEC filing events
         env:
@@ -62,13 +64,11 @@ jobs:
           DECISION_AT="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
           END_DATE="$(date -u +%F)"
           START_DATE="$(date -u -d '30 days ago' +%F)"
-          python -m tools.research.run_event_capture_cycle \
-            --output-dir data/research/event-capture \
-            --decision-at "$DECISION_AT" \
-            --audit-after-capture \
-            --sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
-            --sec-start-date "$START_DATE" \
-            --sec-end-date "$END_DATE"
+          ARGS=(--output-dir data/research/event-capture --decision-at "$DECISION_AT" --audit-after-capture)
+          if [[ -s "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" ]]; then
+            ARGS+=(--sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" --sec-start-date "$START_DATE" --sec-end-date "$END_DATE")
+          fi
+          python -m tools.research.run_event_capture_cycle "${ARGS[@]}"
 
       - name: Capture official Treasury nominal and real curves
         shell: bash
