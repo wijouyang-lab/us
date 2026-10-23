@@ -80,3 +80,4 @@ def test_sec_filing_uses_only_separately_verified_utc_timestamp():
     )
     assert record["published_at_utc"] == "2026-10-22T15:30:00Z"
     assert record["availability_status"] == "available"
+    assert record["event_type"] == "company_news"
