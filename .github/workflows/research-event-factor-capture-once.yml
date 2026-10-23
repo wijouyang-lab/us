@@ -7,6 +7,7 @@ on:
       - research/event-factor-walk-forward
     paths:
       - .github/workflows/research-event-factor-capture-once.yml
+      - tools/research/treasury_yield_curve_capture.py
 
 permissions:
   contents: write
