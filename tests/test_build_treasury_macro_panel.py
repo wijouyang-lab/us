@@ -14,11 +14,9 @@ def snapshot(curve_type, retrieved_at, rows):
 def test_macro_panel_enforces_snapshot_retrieval_time_and_no_future_observation():
     nominal = snapshot("nominal", "2026-10-23T16:00:00Z", [
         {"observation_date": "2026-10-22", "yield_pct": {"2y": 3.5, "3m": 3.0, "10y": 4.0}},
-        {"observation_date": "2026-10-26", "yield_pct": {"2y": 3.6, "3m": 3.1, "10y": 4.1}},
     ])
     real = snapshot("real", "2026-10-24T12:00:00Z", [
         {"observation_date": "2026-10-22", "yield_pct": {"10y": 1.8}},
-        {"observation_date": "2026-10-26", "yield_pct": {"10y": 1.9}},
     ])
     decisions = pd.DataFrame({"decision_at": [
         "2026-10-23T15:00:00Z",
@@ -71,3 +69,15 @@ def test_macro_panel_rejects_duplicate_dates_and_wrong_curve_type():
     nominal = snapshot("real", "2026-10-20T16:00:00Z", [])
     with pytest.raises(ValueError, match="curve_type=nominal"):
         build_treasury_macro_panel(pd.DataFrame({"decision_at": ["2026-10-21T16:00:00Z"]}), nominal, real)
+
+
+def test_macro_panel_rejects_observation_dated_after_snapshot_retrieval():
+    nominal = snapshot("nominal", "2026-10-20T16:00:00Z", [
+        {"observation_date": "2026-10-21", "yield_pct": {"10y": 4.0}},
+    ])
+    real = snapshot("real", "2026-10-20T16:00:00Z", [])
+    with pytest.raises(ValueError, match="after retrieval date"):
+        build_treasury_macro_panel(
+            pd.DataFrame({"decision_at": ["2026-10-22T15:00:00Z"]}),
+            nominal, real,
+        )
