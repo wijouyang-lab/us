@@ -18,6 +18,7 @@ def sample_event():
         raw_payload={"headline": "CPI report"},
     )
     event.update({
+        "source_url": "https://www.bls.gov/feed/cpi.rss",
         "actual_value": 3.1,
         "consensus_value": 3.0,
         "consensus_asof_utc": "2026-10-23T11:30:00Z",
