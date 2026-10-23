@@ -14,6 +14,23 @@ For each archived event version, retain the original collector fields and add:
 - `labeler_id` and `reviewer_id`: non-secret internal identifiers if available. Do not put personal email addresses or credentials in the archive.
 - `label_schema_version`: version of the written scoring rubric.
 
+## Generate a pending review queue
+
+The capture workflow stores prospective events at `data/research/event-capture/event_archive.json`. Create a separate, non-overwriting CSV queue for recent items:
+
+```bash
+STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+AS_OF="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+python -m tools.research.build_event_annotation_queue \
+  --archive data/research/event-capture/event_archive.json \
+  --as-of "$AS_OF" \
+  --max-age-days 30 \
+  --output "data/research/event-capture/annotation_queue_$STAMP.csv" \
+  --report "data/research/event-capture/annotation_queue_$STAMP.report.json"
+```
+
+The queue contains no proposed scores. Direction and impact stay blank, every row remains `pending`, and only events within the declared age window that were actually observed by `AS_OF` are included. A queue report is not evidence that labels have been reviewed.
+
 ## Direction rubric
 
 Score the likely direction for the named ticker or clearly stated market scope, based only on information actually available in the archived source at its point-in-time cutoff:
