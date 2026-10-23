@@ -1,4 +1,5 @@
 import json
+from hashlib import sha256
 from datetime import date, timedelta
 from pathlib import Path
 
