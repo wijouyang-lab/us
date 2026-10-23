@@ -148,8 +148,16 @@ def apply_risk_controls(
                 if cooldown == 0:
                     peak = equity
 
-        prior_scale = scales[-1] if scales else 0.0
-        turnover = float(row["turnover"]) * scale + abs(scale - prior_scale) * base_exposure
+        if not scales:
+            # On the first observation, base turnover already represents entry
+            # from cash. Applying the scale-change term as well would double-count
+            # the initial entry cost.
+            turnover = float(row["turnover"]) * scale
+        else:
+            prior_scale = scales[-1]
+            # Aggregate inputs do not retain ticker-level target weights, so this
+            # is a conservative turnover estimate when the risk scale changes.
+            turnover = float(row["turnover"]) * scale + abs(scale - prior_scale) * base_exposure
         gross = float(row["gross_return"]) * scale
         cost = turnover * (one_way_cost_bps / 10000.0)
         net = (1.0 + gross) * (1.0 - cost) - 1.0
