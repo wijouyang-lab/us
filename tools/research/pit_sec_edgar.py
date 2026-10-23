@@ -2,7 +2,7 @@
 
 This module consumes caller-supplied payloads only: no network requests and no
 production scanner integration. It deliberately does not infer an exact public
-timestamp from filingDate.
+timestamp from filingDate or the raw submissions acceptanceDateTime field.
 """
 from __future__ import annotations
 
@@ -52,7 +52,10 @@ def parse_sec_submissions(
 
     Expected shape is the SEC company-submissions response containing a
     filings.recent object with parallel arrays. The first-seen timestamp must
-    be supplied by the collector, not copied from the source payload.
+    be supplied by the collector, not copied from the source payload. Raw
+    acceptanceDateTime is retained only in neither the publication field nor
+    point-in-time eligibility: it must be independently verified first and then
+    supplied in a separate verifiedPublishedAtUtc array by an upstream adapter.
     """
     filings = payload.get("filings")
     if not isinstance(filings, Mapping):
@@ -66,7 +69,7 @@ def parse_sec_submissions(
         items = str(row.get("items") or "")
         normalized = dict(row)
         normalized["companyName"] = company_name
-        normalized["acceptanceDateTimeUtc"] = row.get("acceptanceDateTime")
+        normalized["verifiedPublishedAtUtc"] = row.get("verifiedPublishedAtUtc")
         record = normalize_sec_filing(
             normalized,
             first_seen_at_utc=first_seen_at_utc,
