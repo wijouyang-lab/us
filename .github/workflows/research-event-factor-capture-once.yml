@@ -10,6 +10,7 @@ on:
       - tools/research/treasury_yield_curve_capture.py
       - tools/research/official_event_rss_collector.py
       - tools/research/bls_macro_series_capture.py
+      - tools/research/build_event_annotation_queue.py
 
 permissions:
   contents: write
@@ -79,6 +80,17 @@ jobs:
             --output "data/research/event-capture/bls_macro_series_${GITHUB_RUN_ID}.json"; then
             echo "::warning::BLS public API snapshot failed; RSS and Treasury evidence are preserved."
           fi
+
+      - name: Build pending event annotation queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          AS_OF="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
+          python -m tools.research.build_event_annotation_queue \
+            --archive data/research/event-capture/event_archive.json \
+            --as-of "$AS_OF" --max-age-days 30 \
+            --output "data/research/event-capture/annotation_queue_${GITHUB_RUN_ID}.csv" \
+            --report "data/research/event-capture/annotation_queue_${GITHUB_RUN_ID}.report.json"
 
       - name: Commit immutable capture and updated event archive
         shell: bash
