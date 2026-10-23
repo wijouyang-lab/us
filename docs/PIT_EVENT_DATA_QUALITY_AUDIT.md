@@ -27,3 +27,14 @@ Status: research-only implementation note. No production scanner, scheduler, ran
 - \`fail_duplicates\`: duplicate event IDs were found.
 
 The audit is a data-integrity gate, not a performance evaluation. Do not run strategy selection or claim event-factor alpha until frozen snapshots, first-release vintages, and chronological walk-forward folds are available.
+
+
+## Reproducible local audit
+
+Prepare a JSON array containing already-normalized event records. Keep the input snapshot immutable and record its origin and collection time. Run:
+
+    python -m tools.research.run_pit_event_audit --input normalized_events.json --decision-at 2026-10-15T13:00:00Z --max-age-days-by-type '{"macro_release":2,"earnings":3}' --output audit_report.json
+
+The output includes input_snapshot_sha256, the decision timestamp, freshness configuration, per-family coverage, rejection reasons, and macro-surprise eligibility. Reordering identical input rows does not change the snapshot hash. Any event content, timestamp, or freshness-configuration change does.
+
+The CLI requires a timezone-aware ISO-8601 decision timestamp and a JSON array of event objects. It does not collect data. A pass status means only that the supplied batch passed the implemented structural checks; it does not prove source completeness, point-in-time correctness beyond recorded metadata, or predictive value. A macro surprise marked eligible is still a research feature, not a buy/sell recommendation.
