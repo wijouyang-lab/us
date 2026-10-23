@@ -14,7 +14,7 @@ Status: research-only implementation note. No production scanner, scheduler, ran
 
 1. A scheduled release timestamp is not proof that the actual release was published at that time.
 2. A macro observation period (for example, a month or quarter) is not a publication timestamp.
-3. A SEC filing date is not an exact publication timestamp. The raw submissions JSON acceptanceDateTime must also not be assumed to be verified UTC; it can be inconsistent for some records. Only a timestamp converted from the corresponding SGML submission header (or another independently verified UTC source) is accepted in verifiedPublishedAtUtc for primary point-in-time eligibility. Ambiguous or nonexistent New York local times are rejected.
+3. A SEC filing date is not an exact publication timestamp. The raw submissions JSON acceptanceDateTime must also not be assumed to be verified UTC; it can be inconsistent for some records. Only a timestamp converted from the corresponding SGML submission header (or another independently verified UTC source) is accepted in verifiedPublishedAtUtc for primary point-in-time eligibility. The conversion uses fixed EST (UTC−05:00) as the SEC documentation specifies, rather than automatically applying daylight-saving offsets. This is an acceptance time, not a timestamp proving the instant the filing first became visible on SEC.gov; the collector's actual first-seen time remains mandatory for strict replay.
 4. Events marked \`timestamp_missing\`, \`mapping_missing\`, \`fetch_error\`, or \`parse_error\` are counted but excluded from eligible signals.
 5. Event updates must have a verifiable source update timestamp and a collector observation timestamp that is not earlier than the update.
 6. The same event version ID appearing more than once causes a duplicate audit failure. Different versions of the same event are preserved, and a decision-time replay must select the latest version that had been observed by that decision.
@@ -65,3 +65,9 @@ The archive keeps distinct content/timestamp versions and ignores transient `fet
     python -m tools.research.run_pit_event_audit --input sec_event_archive.json --decision-at 2026-10-23T13:00:00Z --max-age-days-by-type '{"earnings":3,"company_news":2}' --output audit_report.json
 
 The audit report distinguishes the full archive hash from the decision-time analysis snapshot hash. As with the collector, archive replay is only point-in-time verifiable from the first actual observation timestamp onward; it does not repair missing historical capture logs.
+
+
+## SEC timestamp semantics references
+
+- SEC Webmaster FAQ: https://www.sec.gov/about/webmaster-frequently-asked-questions — defines Acceptance Time as EST and notes that no timestamp identifies exactly when filing content first becomes available on SEC.gov.
+- EDGAR Public Dissemination Technical Specification (10 March 2025): https://www.sec.gov/info/edgar/specifications/pds_dissemination_spec.pdf — identifies the acceptance time field as EST.

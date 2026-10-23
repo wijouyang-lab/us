@@ -8,15 +8,14 @@ UTC, with DST ambiguity/nonexistence rejected.
 """
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 import re
 from typing import Any, Mapping
-from zoneinfo import ZoneInfo
 
 from tools.research.pit_event_records import normalize_sec_filing
 
 
-_NEW_YORK = ZoneInfo("America/New_York")
+_SEC_ACCEPTANCE_TZ = timezone(timedelta(hours=-5), name="EST")
 _ACCEPTANCE_PATTERN = re.compile(
     r"<ACCEPTANCE-DATETIME>\s*(\d{14})\b",
     re.IGNORECASE,
@@ -54,9 +53,10 @@ def parse_sec_acceptance_datetime(
 ) -> dict[str, str | None]:
     """Parse a single ACCEPTANCE-DATETIME from an official SEC SGML submission.
 
-    The header timestamp is interpreted as America/New_York local wall time.
-    Returns a normalized UTC timestamp only if exactly one valid, unambiguous
-    local timestamp is found; all other cases fail closed with a status.
+    The SEC documents Acceptance Time as EST, so this conversion uses fixed
+    UTC-05:00 rather than applying seasonal daylight-saving offsets. This is an
+    EDGAR acceptance timestamp, not a claim about when content first became
+    available on SEC.gov. Malformed or multiple timestamps fail closed.
     """
     if not isinstance(submission_text, str) or not submission_text.strip():
         return {"published_at_utc": None, "status": "header_missing"}
@@ -80,24 +80,8 @@ def parse_sec_acceptance_datetime(
     except ValueError:
         return {"published_at_utc": None, "status": "acceptance_datetime_invalid"}
 
-    candidates = [
-        local_naive.replace(tzinfo=_NEW_YORK, fold=0),
-        local_naive.replace(tzinfo=_NEW_YORK, fold=1),
-    ]
-    valid_candidates = [
-        candidate for candidate in candidates
-        if candidate.astimezone(timezone.utc).astimezone(_NEW_YORK).replace(tzinfo=None)
-        == local_naive
-    ]
-    if not valid_candidates:
-        return {"published_at_utc": None, "status": "acceptance_datetime_dst_nonexistent"}
-    if (
-        len(valid_candidates) > 1
-        and valid_candidates[0].utcoffset() != valid_candidates[1].utcoffset()
-    ):
-        return {"published_at_utc": None, "status": "acceptance_datetime_dst_ambiguous"}
-
-    utc_value = valid_candidates[0].astimezone(timezone.utc)
+    est_value = local_naive.replace(tzinfo=_SEC_ACCEPTANCE_TZ)
+    utc_value = est_value.astimezone(timezone.utc)
 
     return {
         "published_at_utc": utc_value.isoformat().replace("+00:00", "Z"),

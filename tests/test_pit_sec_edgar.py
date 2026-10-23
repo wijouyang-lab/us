@@ -54,7 +54,7 @@ def test_parse_sec_uses_separately_supplied_sgml_header_time_as_new_york_time():
         ticker="EXM",
         submission_headers_by_accession=headers,
     )[0]
-    assert record["published_at_utc"] == "2026-10-22T13:30:00Z"
+    assert record["published_at_utc"] == "2026-10-22T14:30:00Z"
     assert record["availability_status"] == "available"
     assert record["publication_timestamp_source"] == "sec_sgml_acceptance_datetime"
     assert record["publication_timestamp_status"] == "verified_from_sgml_header"
@@ -99,14 +99,15 @@ def test_parse_sec_acceptance_datetime_rejects_missing_duplicate_and_bad_header(
     assert parse_sec_acceptance_datetime(invalid)["status"] == "acceptance_datetime_invalid"
 
 
-def test_parse_sec_acceptance_datetime_rejects_dst_ambiguous_or_nonexistent_times():
-    ambiguous = parse_sec_acceptance_datetime("<ACCEPTANCE-DATETIME>20261101013000")
-    assert ambiguous["published_at_utc"] is None
-    assert ambiguous["status"] == "acceptance_datetime_dst_ambiguous"
+def test_parse_sec_acceptance_datetime_uses_fixed_est_in_summer_and_winter():
+    # The SEC specification calls this field EST; do not apply a seasonal UTC-4 offset.
+    winter = parse_sec_acceptance_datetime("<ACCEPTANCE-DATETIME>20261101013000")
+    assert winter["published_at_utc"] == "2026-11-01T06:30:00Z"
+    assert winter["status"] == "verified_from_sgml_header"
 
-    nonexistent = parse_sec_acceptance_datetime("<ACCEPTANCE-DATETIME>20260308023000")
-    assert nonexistent["published_at_utc"] is None
-    assert nonexistent["status"] == "acceptance_datetime_dst_nonexistent"
+    summer = parse_sec_acceptance_datetime("<ACCEPTANCE-DATETIME>20260308023000")
+    assert summer["published_at_utc"] == "2026-03-08T07:30:00Z"
+    assert summer["status"] == "verified_from_sgml_header"
 
 
 def test_parse_sec_handles_missing_or_malformed_payload_safely():

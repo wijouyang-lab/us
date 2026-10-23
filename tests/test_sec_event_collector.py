@@ -106,7 +106,7 @@ def test_collector_fetches_official_headers_and_uses_verified_local_acceptance_t
     assert len(result["events"]) == 1
     event = result["events"][0]
     assert event["event_type"] == "earnings"
-    assert event["published_at_utc"] == "2026-10-22T13:30:00Z"
+    assert event["published_at_utc"] == "2026-10-22T14:30:00Z"
     assert event["first_seen_at_utc"] == "2026-10-23T14:00:00Z"
     assert event["availability_status"] == "available"
     assert event["publication_timestamp_source"] == "sec_sgml_acceptance_datetime"
@@ -143,7 +143,7 @@ def test_collector_flags_recent_history_gap_and_does_not_infer_release_from_fili
     )
     assert result["metadata"]["recent_history_may_be_incomplete"] is True
     assert result["metadata"]["coverage_status"] == "partial"
-    assert result["events"][0]["published_at_utc"] == "2026-10-22T13:30:00Z"
+    assert result["events"][0]["published_at_utc"] == "2026-10-22T14:30:00Z"
     assert result["events"][0]["sec_filing_date"] == "2026-10-22"
 
 
