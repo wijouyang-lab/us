@@ -109,7 +109,7 @@ def main() -> int:
     )
     output = Path(args.output)
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\\n", encoding="utf-8")
+    output.write_text(json.dumps(result, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
     print(json.dumps({
         "status": result["status"],
         "common_universe_rows": result["common_universe"]["common_universe_rows"],
