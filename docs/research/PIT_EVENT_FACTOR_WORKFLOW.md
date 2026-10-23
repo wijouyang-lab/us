@@ -26,6 +26,12 @@ Before interpreting family coverage, consult the [free official event-source inv
 
 For a consistent annotation rubric, use the companion [PIT event label annotation guide](PIT_EVENT_LABEL_ANNOTATION_GUIDE.md). It defines direction/impact scales, review provenance, and safeguards against hindsight leakage.
 
+## Start accumulating genuine point-in-time captures
+
+A manual-only GitHub Actions workflow is available on the research branch: [Research Event Factor Capture](../../actions/workflows/research-event-factor-capture-once.yml). Open the workflow, choose **Run workflow**, and select `research/event-factor-walk-forward`. Each run collects the allowlisted official RSS feeds and Treasury nominal/real curve snapshots, stores immutable capture files, updates the versioned event archive, and uploads a 90-day evidence artifact. It does not run on a schedule and does not call the production scanner.
+
+Run it repeatedly over time to accumulate genuine first-seen timestamps. A single capture is not a historical event dataset. The workflow deliberately does not invent earnings surprise labels, reconstruct historical consensus, or infer historical availability from today's downloads. Event labels still require documented human review before event-factor evaluation.
+
 ## Audit data readiness before scoring
 
 Before generating any signal panel, audit the archive and (optionally) the exact
