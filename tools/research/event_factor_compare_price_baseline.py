@@ -13,6 +13,7 @@ from pathlib import Path
 import tempfile
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 from tools.research.event_factor_backtest import evaluate
@@ -35,6 +36,7 @@ def build_paired_signals(
         raise ValueError("signals contain invalid decision_at timestamps")
     signals["ticker"] = signals["ticker"].astype(str).str.strip().str.upper()
     signals["event_score"] = pd.to_numeric(signals["event_score"], errors="coerce")
+    signals.loc[~np.isfinite(signals["event_score"]), "event_score"] = np.nan
     if signals.duplicated(["decision_at", "ticker"]).any():
         raise ValueError("duplicate decision_at/ticker signal rows")
     signals = signals[(signals["coverage_status"].str.lower() == "available") & signals["event_score"].notna()].copy()
@@ -46,7 +48,7 @@ def build_paired_signals(
     prices["ticker"] = prices["ticker"].astype(str).str.strip().str.upper()
     prices["close"] = pd.to_numeric(prices["close"], errors="coerce")
     prices = prices.dropna(subset=["date", "close"])
-    prices = prices[prices["close"] > 0].sort_values(["ticker", "date"])
+    prices = prices[np.isfinite(prices["close"]) & (prices["close"] > 0)].sort_values(["ticker", "date"])
     if prices.duplicated(["ticker", "date"]).any():
         raise ValueError("duplicate ticker/date price rows")
 
