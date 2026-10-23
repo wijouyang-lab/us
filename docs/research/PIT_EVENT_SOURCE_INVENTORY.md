@@ -7,6 +7,7 @@ This inventory separates sources already implemented in the research collector f
 | Event family | Source | Current collector key | Important limitation |
 |---|---|---|---|
 | CPI/core CPI releases | U.S. Bureau of Labor Statistics | `bls_cpi` | RSS publication time and retrieval time are distinct; historical first-seen is not reconstructed |
+| PCE/core PCE, GDP, personal income/outlays and other BEA releases | U.S. Bureau of Economic Analysis | `bea_releases` | Official release RSS is now collected; parsed publication time is not a vintage data history or a consensus snapshot |
 | Employment/unemployment releases | U.S. Bureau of Labor Statistics | `bls_employment` | RSS is a rolling feed, not a complete historical event archive |
 | Central-bank releases and policy | Federal Reserve press feed | `fed_all` | Broad press feed; classification is based on title/description terms and should be reviewed |
 | Fed speeches/testimony | Federal Reserve | `fed_speeches` | Captures official feed items, not every live remark or transcript revision |
@@ -34,7 +35,7 @@ This inventory separates sources already implemented in the research collector f
 
 ## Operational command
 
-The existing manual collector supports BLS CPI, BLS employment, Fed press, and Fed speeches by default. SEC collection is optional and requires an explicit CIK/ticker universe plus a contact-bearing SEC User-Agent. It creates no scheduled workflow:
+The existing manual collector supports BLS CPI, BLS employment, BEA news releases, Fed press, and Fed speeches by default. SEC collection is optional and requires an explicit CIK/ticker universe plus a contact-bearing SEC User-Agent. It creates no scheduled workflow:
 
 ```bash
 python -m tools.research.run_event_capture_cycle \
