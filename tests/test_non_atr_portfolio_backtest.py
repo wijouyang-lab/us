@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from tools.research.non_atr_portfolio_backtest import combine_equal_weight_portfolio
+from tools.research.non_atr_portfolio_backtest import combine_equal_weight_portfolio, exposure_matched_benchmark
 
 
 def test_equal_weight_portfolio_keeps_cash_and_charges_weight_changes():
@@ -142,3 +142,28 @@ def test_risk_controls_do_not_double_count_first_entry_turnover():
     # It must not be charged a second time as a scale-change turnover.
     assert controlled["risk_scale"].iloc[0] == pytest.approx(0.5)
     assert controlled["turnover"].iloc[0] == pytest.approx(0.25)
+
+
+
+def test_exposure_matched_benchmark_tracks_strategy_exposure_and_costs():
+    dates = pd.to_datetime(["2024-01-02", "2024-01-03", "2024-01-04"])
+    spy = pd.Series([0.10, -0.05, 0.02], index=dates)
+    exposure = pd.Series([0.50, 0.25, 0.25], index=dates)
+    result = exposure_matched_benchmark(spy, exposure, one_way_cost_bps=10)
+
+    assert result["exposure"].tolist() == pytest.approx([0.50, 0.25, 0.25])
+    assert result["gross_return"].tolist() == pytest.approx([0.05, -0.0125, 0.005])
+    assert result["turnover"].tolist() == pytest.approx([0.50, 0.25, 0.0])
+    assert result["cost"].tolist() == pytest.approx([0.0005, 0.00025, 0.0])
+    assert result["net_return"].iloc[0] == pytest.approx((1 + 0.05) * (1 - 0.0005) - 1)
+    assert result["net_return"].iloc[1] == pytest.approx((1 - 0.0125) * (1 - 0.00025) - 1)
+
+
+def test_exposure_matched_benchmark_rejects_invalid_exposure():
+    dates = pd.to_datetime(["2024-01-02"])
+    with pytest.raises(ValueError, match="between 0 and 1"):
+        exposure_matched_benchmark(
+            pd.Series([0.01], index=dates),
+            pd.Series([1.2], index=dates),
+            one_way_cost_bps=5,
+        )
