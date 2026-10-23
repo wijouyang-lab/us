@@ -111,8 +111,36 @@ jobs:
           if not audit_path.is_file():
               raise SystemExit("Missing price-refresh audit; refusing to run backtest.")
           audit = json.loads(audit_path.read_text(encoding="utf-8"))
+          issues = audit.get("issues") or []
+          coverage_prefixes = (
+              "member-session bar coverage ",
+              "ticker coverage ",
+          )
+          non_coverage_issues = [
+              issue for issue in issues
+              if not str(issue).startswith(coverage_prefixes)
+          ]
           if audit.get("status") != "PASS":
-              raise SystemExit(f"Price refresh status is not PASS: {audit.get('status')}")
+              if non_coverage_issues:
+                  raise SystemExit(
+                      "Price refresh has blocking non-coverage issues: "
+                      + "; ".join(map(str, non_coverage_issues))
+                  )
+              if not issues:
+                  raise SystemExit(
+                      f"Price refresh status is not PASS: {audit.get('status')}"
+                  )
+              print(
+                  "WARNING: Universe-wide coverage gates are below target; "
+                  "continuing only to the strict point-in-time per-ticker eligibility "
+                  "screen. Incomplete tickers must be excluded by the backtest audit. "
+                  "This is not a full-universe PASS."
+              )
+              Path("research_non_atr_download_diagnostics/coverage_gate_warning.txt").write_text(
+                  "Universe-wide coverage below target. Results are filtered research "
+                  "only; inspect audit.json and ticker_eligibility_audit.csv.\n",
+                  encoding="utf-8",
+              )
 
           required = {"Date", "Ticker", "Adj Close"}
           for filename in ("research_non_atr_download_diagnostics/partial_prices.csv", "research_non_atr_download_diagnostics/partial_spy.csv"):
