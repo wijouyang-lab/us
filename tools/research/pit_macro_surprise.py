@@ -21,6 +21,8 @@ def macro_surprise(
     )
     first_seen = _parse_aware_timestamp(release.get("first_seen_at_utc"))
     consensus_time = _parse_aware_timestamp(release.get("consensus_asof_utc"))
+    vintage_raw = release.get("vintage_at_utc")
+    vintage_time = _parse_aware_timestamp(vintage_raw) if vintage_raw is not None else None
     decision = _parse_aware_timestamp(decision_at)
     if decision is None:
         return {"eligible": False, "reason": "invalid_decision_timestamp", "surprise": None}
@@ -41,6 +43,13 @@ def macro_surprise(
         return {"eligible": False, "reason": "first_seen_after_decision", "surprise": None}
     if first_seen < actual_time:
         return {"eligible": False, "reason": "first_seen_before_publication", "surprise": None}
+    if vintage_raw is not None:
+        if vintage_time is None:
+            return {"eligible": False, "reason": "vintage_timestamp_invalid", "surprise": None}
+        if vintage_time > decision:
+            return {"eligible": False, "reason": "vintage_after_decision", "surprise": None}
+        if vintage_time > first_seen:
+            return {"eligible": False, "reason": "vintage_after_first_seen", "surprise": None}
     if consensus_time is None:
         return {"eligible": False, "reason": "consensus_timestamp_missing", "surprise": None}
     if consensus_time > actual_time:
@@ -66,4 +75,5 @@ def macro_surprise(
         "surprise": actual - consensus,
         "published_at_utc": actual_time.isoformat().replace("+00:00", "Z"),
         "consensus_asof_utc": consensus_time.isoformat().replace("+00:00", "Z"),
+        "vintage_at_utc": vintage_time.isoformat().replace("+00:00", "Z") if vintage_time else None,
     }
