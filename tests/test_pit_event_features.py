@@ -33,6 +33,31 @@ def test_features_include_only_explicitly_mapped_and_eligible_events():
     assert result["coverage_status"] == "available"
 
 
+def test_official_macro_events_can_flow_into_ticker_features_as_market_context():
+    from tools.research.official_event_rss_collector import parse_official_feed
+
+    feed = """<rss><channel><item>
+    <title>CPI release</title>
+    <link>https://www.bls.gov/news.release/cpi.htm</link>
+    <guid>cpi-market-context-1</guid>
+    <pubDate>Fri, 23 Oct 2026 08:30:00 -0400</pubDate>
+    </item></channel></rss>"""
+    parsed = parse_official_feed(
+        feed,
+        feed_key="bls_cpi",
+        first_seen_at_utc="2026-10-23T12:31:00Z",
+    )
+    result = build_event_features(
+        parsed["events"],
+        ticker="AAPL",
+        decision_at="2026-10-23T13:00:00Z",
+    )
+    family = result["event_families"]["macro_release"]
+    assert family["eligible_event_count"] == 1
+    assert family["eligible_event_ids"] == [parsed["events"][0]["event_id"]]
+    assert result["coverage_status"] == "available"
+
+
 def test_unmapped_market_events_do_not_leak_to_every_ticker():
     result = build_event_features(
         [event(event_type="macro_release", tickers=[], sectors=[])],
