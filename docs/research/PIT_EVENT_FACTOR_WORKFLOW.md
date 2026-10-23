@@ -123,10 +123,23 @@ python -m tools.research.event_factor_family_ablation \
 ```
 
 Families may have different coverage universes. Their raw returns must not be
-ranked against one another as if they shared identical observations; use a
-common-universe comparison for direct family ranking. Missing family labels
-remain missing. This evaluator is research-only and does not activate production
-signals.
+ranked against one another as if they shared identical observations. For a stricter
+comparison, run the common-universe evaluator:
+
+```bash
+python -m tools.research.event_factor_common_universe \
+  --signals data/research/event_signals.csv \
+  --prices data/research/prices.csv \
+  --lookback 20 --horizon 20 --cost-bps-per-side 5 \
+  --output data/research/event_family_common_universe.json
+```
+
+This keeps only ticker/decision rows where every configured family has available
+coverage and a finite score, then compares all families on those same rows before
+price-history eligibility. The stricter universe may be much smaller and may
+overrepresent events covered by every source, so report its row count and coverage.
+Missing family labels remain missing. This evaluator is research-only and does not
+activate production signals.
 
 ## Current limitations
 
