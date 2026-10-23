@@ -1868,5 +1868,27 @@
     "tickers": [],
     "update_first_seen_at_utc": null,
     "updated_at_utc": null
+  },
+  {
+    "availability_status": "available",
+    "content_hash": "34bed4be0e69d4e4926c01937a68f4670c0b60d0d4fcc0b4dd1d3740cd8ec985",
+    "event_id": "79f62d7c8a574e035b093dc1039e58889d79db7a35887c73305d7725386719ca",
+    "event_type": "macro_release",
+    "event_version_id": "4a0101ce5d473f78b0f0ac36392e20facc2b8c38745319feb1d569aa5c81e231",
+    "feed_key": "bea_releases",
+    "first_seen_at_utc": "2026-10-23T17:07:48.522288Z",
+    "headline": "GDP (Advance Estimate), 4th Quarter and Year 2025",
+    "market_scope": "market",
+    "published_at_utc": "2026-02-20T13:30:00Z",
+    "sectors": [],
+    "source": "bea_news_release_rss",
+    "source_event_id": "www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+    "source_quality": "official",
+    "source_timestamp_kind": "rss_published_at",
+    "source_timestamp_status": "parsed",
+    "source_url": "https://www.bea.gov/news/2026/gdp-advance-estimate-4th-quarter-and-year-2025",
+    "tickers": [],
+    "update_first_seen_at_utc": null,
+    "updated_at_utc": null
   }
 ]
