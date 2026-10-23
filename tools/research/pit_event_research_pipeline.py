@@ -39,6 +39,7 @@ def build_event_research_report(
     decision_at: str,
     *,
     max_age_by_type: Mapping[str, timedelta] | None = None,
+    expected_sources: Iterable[str] | None = None,
 ) -> dict[str, Any]:
     """Build deterministic integrity/coverage report for one decision timestamp.
 
@@ -65,6 +66,7 @@ def build_event_research_report(
         rows,
         decision_at,
         max_age_by_type=max_age_by_type,
+        expected_sources=expected_sources,
     )
 
     surprise_records: list[dict[str, Any]] = []
