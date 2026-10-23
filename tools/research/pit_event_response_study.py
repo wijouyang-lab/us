@@ -92,7 +92,20 @@ def _load_events(path: str | Path) -> list[dict[str, Any]]:
     return payload
 
 
-def _load_price_bars(path: str | Path, study_end_date: date) -> tuple[dict[str, list[dict[str, Any]]], str]:
+def _load_price_bars(
+    path: str | Path,
+    study_end_date: date,
+    *,
+    price_basis: str = "auto",
+) -> tuple[dict[str, list[dict[str, Any]]], str, dict[str, Any]]:
+    """Load one consistent price basis; prefer adjusted prices when available.
+
+    The adjusted route accepts either Adj Open + Adj Close, or raw Open/Close
+    plus Adj Close, in which case adjusted Open is derived using the same-day
+    Adj Close / Close factor. It never mixes adjusted and raw prices by row.
+    """
+    if price_basis not in {"auto", "adjusted", "raw"}:
+        raise ValueError("price_basis must be auto, adjusted, or raw")
     source = Path(path)
     try:
         raw_bytes = source.read_bytes()
@@ -107,40 +120,120 @@ def _load_price_bars(path: str | Path, study_end_date: date) -> tuple[dict[str, 
     if not reader.fieldnames:
         raise ValueError("price CSV is missing a header row")
     fields = {name.strip().lower(): name for name in reader.fieldnames if name}
-    if not {"date", "ticker", "open", "close"}.issubset(fields):
-        raise ValueError("price CSV requires date,ticker,open,close columns")
+    if not {"date", "ticker"}.issubset(fields):
+        raise ValueError("price CSV requires date,ticker columns")
+
+    raw_open = fields.get("open")
+    raw_close = fields.get("close")
+    adj_open = fields.get("adj open") or fields.get("adjusted open")
+    adj_close = fields.get("adj close") or fields.get("adjusted close")
+
+    if price_basis == "raw":
+        if not raw_open or not raw_close:
+            raise ValueError("raw price basis requires Open and Close columns")
+        selected_basis = "raw_ohlc"
+    elif price_basis == "adjusted":
+        if adj_open and adj_close:
+            selected_basis = "adjusted_ohlc"
+        elif adj_close and raw_open and raw_close:
+            selected_basis = "adjusted_ohlc_derived_open"
+        else:
+            raise ValueError(
+                "adjusted price basis requires Adj Open + Adj Close, or raw Open + raw Close + Adj Close"
+            )
+    else:
+        has_adjusted = bool(adj_open or adj_close)
+        if not has_adjusted:
+            if not raw_open or not raw_close:
+                raise ValueError("price CSV requires Open and Close columns")
+            selected_basis = "raw_ohlc"
+        elif adj_open and adj_close:
+            selected_basis = "adjusted_ohlc"
+        elif adj_close and raw_open and raw_close:
+            selected_basis = "adjusted_ohlc_derived_open"
+        else:
+            raise ValueError(
+                "partial adjusted-price columns are present but cannot form a consistent adjusted basis"
+            )
+
+    if selected_basis == "adjusted_ohlc":
+        open_field, close_field = adj_open, adj_close
+    elif selected_basis == "adjusted_ohlc_derived_open":
+        open_field, close_field = raw_open, adj_close
+    else:
+        open_field, close_field = raw_open, raw_close
 
     rows: dict[str, dict[date, dict[str, Any]]] = defaultdict(dict)
+    seen_keys: set[tuple[str, date]] = set()
+    input_rows = 0
+    used_rows = 0
+    skipped_missing_price_rows = 0
     for line_num, raw in enumerate(reader, start=2):
         if not raw or not any(str(value or "").strip() for value in raw.values()):
             continue
+        input_rows += 1
         date_text = str(raw.get(fields["date"]) or "").strip()
         ticker = str(raw.get(fields["ticker"]) or "").strip().upper().replace("$", "")
         if not ticker:
             raise ValueError(f"missing ticker at CSV line {line_num}")
         try:
             session_date = date.fromisoformat(date_text[:10])
-            open_price = float(str(raw.get(fields["open"]) or "").strip())
-            close_price = float(str(raw.get(fields["close"]) or "").strip())
         except (TypeError, ValueError) as exc:
-            raise ValueError(f"invalid date or OHLC price at CSV line {line_num}") from exc
-        if not math.isfinite(open_price) or not math.isfinite(close_price) or open_price <= 0 or close_price <= 0:
-            raise ValueError(f"prices must be finite and positive at CSV line {line_num}")
-        if session_date in rows[ticker]:
+            raise ValueError(f"invalid date at CSV line {line_num}") from exc
+
+        key = (ticker, session_date)
+        if key in seen_keys:
             raise ValueError(f"duplicate ticker/date row for {ticker} on {session_date.isoformat()}")
-        if session_date <= study_end_date:
-            rows[ticker][session_date] = {
-                "date": session_date,
-                "open": open_price,
-                "close": close_price,
-            }
+        seen_keys.add(key)
+        if session_date > study_end_date:
+            continue
+
+        try:
+            raw_open_value = float(str(raw.get(raw_open) or "").strip()) if raw_open else None
+            raw_close_value = float(str(raw.get(raw_close) or "").strip()) if raw_close else None
+            open_text = str(raw.get(open_field) or "").strip() if open_field else ""
+            close_text = str(raw.get(close_field) or "").strip() if close_field else ""
+            open_price = float(open_text) if open_text else math.nan
+            close_price = float(close_text) if close_text else math.nan
+        except (TypeError, ValueError):
+            skipped_missing_price_rows += 1
+            continue
+
+        if selected_basis == "adjusted_ohlc_derived_open":
+            if not math.isfinite(raw_open_value or math.nan) or not math.isfinite(raw_close_value or math.nan) or raw_close_value is None or raw_close_value <= 0:
+                skipped_missing_price_rows += 1
+                continue
+            open_price = raw_open_value * close_price / raw_close_value
+
+        if (
+            not math.isfinite(open_price) or not math.isfinite(close_price)
+            or open_price <= 0 or close_price <= 0
+        ):
+            skipped_missing_price_rows += 1
+            continue
+
+        rows[ticker][session_date] = {
+            "date": session_date,
+            "open": open_price,
+            "close": close_price,
+        }
+        used_rows += 1
 
     output = {
         ticker: [day_map[d] for d in sorted(day_map)]
         for ticker, day_map in rows.items()
     }
-    return output, price_hash
-
+    quality = {
+        "selected_price_basis": selected_basis,
+        "input_row_count": input_rows,
+        "usable_price_row_count": used_rows,
+        "skipped_rows_missing_or_invalid_selected_basis": skipped_missing_price_rows,
+        "adjusted_open_derivation": (
+            "raw_open * adj_close / raw_close"
+            if selected_basis == "adjusted_ohlc_derived_open" else None
+        ),
+    }
+    return output, price_hash, quality
 
 def _first_observed_versions(
     events: Iterable[Mapping[str, Any]],
@@ -290,6 +383,7 @@ def run_event_response_study(
     max_age_by_type: Mapping[str, timedelta] | None = None,
     event_snapshot_sha256: str | None = None,
     price_snapshot_sha256: str | None = None,
+    price_quality: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Report price outcomes after first observed versions; never generate signals."""
     if isinstance(study_end_date, str):
@@ -407,6 +501,7 @@ def run_event_response_study(
         "skip_reason_counts": dict(sorted(skip_reasons.items())),
         "event_snapshot_sha256": event_snapshot_sha256,
         "price_snapshot_sha256": price_snapshot_sha256,
+        "price_quality": dict(price_quality or {"selected_price_basis": "caller_supplied_ohlc"}),
         "observations": observations,
         "aggregates_by_event_type": aggregates,
         "methodology": {
@@ -456,7 +551,8 @@ def write_observations_csv(path: str | Path, report: Mapping[str, Any]) -> None:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--events", required=True, help="Normalized event JSON array or version archive")
-    parser.add_argument("--prices-csv", required=True, help="CSV with date,ticker,open,close columns")
+    parser.add_argument("--prices-csv", required=True, help="CSV with date,ticker,open,close columns; adjusted columns are preferred when available")
+    parser.add_argument("--price-basis", choices=("auto", "adjusted", "raw"), default="auto", help="auto prefers adjusted OHLC, deriving Adj Open from Adj Close if needed")
     parser.add_argument("--study-end-date", required=True, help="Last trading session permitted in study (YYYY-MM-DD)")
     parser.add_argument("--report", required=True, help="New JSON report path")
     parser.add_argument("--observations-csv", help="Optional new CSV output for event-level observations")
@@ -468,7 +564,9 @@ def main(argv: list[str] | None = None) -> int:
     try:
         study_end_date = date.fromisoformat(args.study_end_date)
         event_rows = _load_events(args.events)
-        bars, price_hash = _load_price_bars(args.prices_csv, study_end_date)
+        bars, price_hash, price_quality = _load_price_bars(
+            args.prices_csv, study_end_date, price_basis=args.price_basis
+        )
         horizons = [int(value.strip()) for value in args.horizons.split(",") if value.strip()]
         freshness = parse_max_age_days(args.max_age_days_by_type)
         report_path = Path(args.report)
@@ -487,6 +585,7 @@ def main(argv: list[str] | None = None) -> int:
             max_age_by_type=freshness,
             event_snapshot_sha256=event_hash,
             price_snapshot_sha256=price_hash,
+            price_quality=price_quality,
         )
         report_path.parent.mkdir(parents=True, exist_ok=True)
         temporary = report_path.with_name(report_path.name + ".tmp")
