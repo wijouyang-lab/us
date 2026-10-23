@@ -18,6 +18,7 @@ from typing import Any
 
 from tools.research.official_event_rss_collector import OFFICIAL_FEEDS, OfficialRssCollector
 from tools.research.pit_event_archive import append_archive_file
+from tools.research.audit_pit_event_data_readiness import audit_event_archive
 from tools.research.pit_event_eligibility import _parse_aware_timestamp
 from tools.research.pit_event_research_pipeline import build_event_research_report
 from tools.research.sec_event_collector import SecEventCollector, load_universe
@@ -114,8 +115,9 @@ def run_cycle(
     events_path = root / f"{prefix}.events.json"
     metadata_path = root / f"{prefix}.metadata.json"
     audit_path = root / f"{prefix}.audit.json"
+    readiness_path = root / f"{prefix}.readiness.json"
     archive_path = root / "event_archive.json"
-    if any(path.exists() for path in (events_path, metadata_path, audit_path)):
+    if any(path.exists() for path in (events_path, metadata_path, audit_path, readiness_path)):
         raise ValueError("capture filename collision; retry the command")
 
     cycle_started = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -256,11 +258,15 @@ def run_cycle(
         "source_collection_coverage": source_collection_coverage,
     }
     _write_new(audit_path, audit)
+    readiness = audit_event_archive(archive_path, audited_at=audit_decision_at)
+    _write_new(readiness_path, readiness)
     return {
         "events_path": str(events_path),
         "metadata_path": str(metadata_path),
         "archive_path": str(archive_path),
         "audit_path": str(audit_path),
+        "readiness_path": str(readiness_path),
+        "readiness_status": readiness["status"],
         "event_count": len(all_events),
         "successful_source_count": successful_sources,
         "configured_source_count": configured_sources,
