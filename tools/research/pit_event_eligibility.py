@@ -37,14 +37,7 @@ def event_eligibility(
     *,
     max_age: timedelta | None = None,
 ) -> tuple[bool, str]:
-    """Return (eligible, reason) using only timestamps known at decision time.
-
-    Required timestamps are published_at_utc and first_seen_at_utc.
-    If an event has updated_at_utc, its update must also have been observed by
-    decision_at via update_first_seen_at_utc; an unverified update is rejected.
-    Freshness is measured from publication time. Missing/invalid times are
-    explicit failures and never silently become a neutral feature.
-    """
+    """Return (eligible, reason) using only timestamps known at decision time."""
     decision = _parse_aware_timestamp(decision_at)
     if decision is None:
         return False, "invalid_decision_timestamp"
@@ -58,6 +51,8 @@ def event_eligibility(
         return False, "published_after_decision"
     if first_seen > decision:
         return False, "first_seen_after_decision"
+    if first_seen < published:
+        return False, "first_seen_before_publication"
 
     updated_value = event.get("updated_at_utc")
     if updated_value is not None:
@@ -67,6 +62,8 @@ def event_eligibility(
             return False, "unverifiable_update_timestamp"
         if updated > decision or update_seen > decision:
             return False, "update_after_decision"
+        if update_seen < updated:
+            return False, "update_seen_before_update"
 
     if max_age is not None:
         if max_age < timedelta(0):
