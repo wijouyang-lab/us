@@ -121,7 +121,15 @@ def normalize_sec_filing(
     company = _stable_text(filing.get("companyName"))
     headline = " ".join(part for part in (form, company, primary) if part)
     published = filing.get("verifiedPublishedAtUtc")
-    kind = "earnings" if form in {"10-K", "10-Q", "8-K"} else "company_news"
+    items = {
+        part.strip() for part in _stable_text(filing.get("items")).split(",")
+        if part.strip()
+    }
+    kind = (
+        "earnings"
+        if form in {"10-K", "10-Q"} or (form == "8-K" and "2.02" in items)
+        else "company_news"
+    )
     return normalize_event(
         source="sec_edgar",
         source_event_id=source_id,
