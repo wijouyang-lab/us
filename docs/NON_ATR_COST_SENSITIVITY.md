@@ -36,9 +36,8 @@ Returns and drawdowns are medians across ticker-level backtests, not portfolio-l
 | Trend | 0 bps | 4,141 | 49.8% | 0.00% | -23.16% | -20.37% |
 | Trend | 5 bps | 4,141 | 49.6% | 0.00% | -23.23% | -20.40% |
 | Trend | 10 bps | 4,141 | 49.5% | 0.00% | -23.29% | -20.42% |
-| Trend | 20 bps | 49.3% | 0.00% | -23.49% | -20.44% |
+| Trend | 20 bps | 4,141 | 49.3% | 0.00% | -23.49% | -20.44% |
 
-**Correction to table alignment:** Trend at 20 bps has 4,141 OOS rows, 49.3% positive rows, median window return 0.00%, 10th percentile -23.49%, and median max drawdown -20.44%.
 
 ## Findings
 
