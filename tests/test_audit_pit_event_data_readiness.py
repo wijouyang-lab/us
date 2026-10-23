@@ -1,0 +1,81 @@
+from __future__ import annotations
+
+import json
+
+import pandas as pd
+import pytest
+
+from tools.research.audit_pit_event_data_readiness import audit_event_archive
+
+
+def event(**updates):
+    row = {
+        "event_id": "event-1",
+        "event_version_id": "version-1",
+        "source": "official_test_feed",
+        "source_event_id": "source-1",
+        "event_type": "macro_release",
+        "availability_status": "available",
+        "published_at_utc": "2026-01-02T12:00:00Z",
+        "first_seen_at_utc": "2026-01-02T12:01:00Z",
+        "source_quality": "official",
+        "content_hash": "hash-1",
+        "direction_score": 0.5,
+        "impact_score": 0.8,
+    }
+    row.update(updates)
+    return row
+
+
+def test_audit_reports_label_timestamp_and_pit_readiness(tmp_path):
+    archive = tmp_path / "archive.json"
+    decisions = tmp_path / "decisions.csv"
+    archive.write_text(json.dumps([event()]), encoding="utf-8")
+    pd.DataFrame([{"decision_at": "2026-01-03T12:00:00Z"}]).to_csv(decisions, index=False)
+
+    result = audit_event_archive(
+        archive, decisions_path=decisions, audited_at="2026-01-04T00:00:00Z"
+    )
+
+    assert result["status"] == "review_required"
+    assert result["archive_event_version_rows"] == 1
+    assert result["event_families"] == {"macro_release": 1}
+    assert result["label_quality"]["fully_labeled_fraction"] == 1.0
+    assert result["pit_eligibility"]["eligible_events_by_decision"]["2026-01-03T12:00:00Z"] == 1
+    assert result["readiness_gates"]["empirical_alpha_established"] is False
+    assert result["readiness_gates"]["production_activation_allowed"] is False
+
+
+def test_audit_flags_missing_labels_and_timestamp_quality(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([
+        event(direction_score=None, first_seen_at_utc="2026-01-02T11:00:00Z"),
+        event(event_id="event-2", event_version_id="version-1", direction_score=2.0),
+    ]), encoding="utf-8")
+
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+
+    assert result["status"] == "blocked_no_validated_labels"
+    assert result["duplicate_event_version_id_count"] == 1
+    assert result["timestamp_quality"]["first_seen_before_publication"] == 1
+    assert result["label_quality"]["fully_labeled_fraction"] == 0.0
+
+
+def test_audit_rejects_naive_decision_timestamps(tmp_path):
+    archive = tmp_path / "archive.json"
+    decisions = tmp_path / "decisions.csv"
+    archive.write_text("[]", encoding="utf-8")
+    pd.DataFrame([{"decision_at": "2026-01-03T12:00:00"}]).to_csv(decisions, index=False)
+
+    with pytest.raises(ValueError, match="timezone-aware"):
+        audit_event_archive(archive, decisions_path=decisions)
+
+
+def test_audit_marks_empty_archive_as_no_data(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text("[]", encoding="utf-8")
+
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+
+    assert result["status"] == "fail_no_data"
+    assert result["readiness_gates"]["archive_nonempty"] is False
