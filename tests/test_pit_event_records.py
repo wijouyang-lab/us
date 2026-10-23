@@ -66,11 +66,12 @@ def test_sec_filing_does_not_assume_filing_date_is_publication_timestamp():
     assert record["tickers"] == ["EXM"]
 
 
-def test_sec_filing_acceptance_timestamp_is_used_only_when_verified_field_exists():
+def test_sec_filing_uses_only_separately_verified_utc_timestamp():
     filing = {
         "accessionNumber": "0000123456-26-000002",
         "form": "8-K",
         "acceptanceDateTimeUtc": "2026-10-22T15:30:00Z",
+        "verifiedPublishedAtUtc": "2026-10-22T15:30:00Z",
         "primaryDocument": "current.htm",
         "companyName": "Example Corp",
     }
