@@ -65,7 +65,19 @@ jobs:
             exit 0
           fi
           git commit -m "research: capture official event and Treasury data run ${GITHUB_RUN_ID}"
-          bash tools/ci/push_with_retry.sh 3 5
+          for attempt in 1 2 3; do
+            git fetch origin "$GITHUB_REF_NAME"
+            if git rebase "origin/$GITHUB_REF_NAME"; then
+              if git push origin "HEAD:$GITHUB_REF_NAME"; then
+                exit 0
+              fi
+            else
+              git rebase --abort || true
+            fi
+            sleep 5
+          done
+          echo "::error::Unable to push capture to the selected research branch; main was not targeted."
+          exit 1
 
       - name: Upload capture evidence
         if: always()
