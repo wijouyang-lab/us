@@ -173,3 +173,17 @@ def test_audit_does_not_accept_numeric_scores_without_reviewer_provenance(tmp_pa
     assert result["label_quality"]["reviewed_labels"] == 0
     assert result["label_quality"]["unverified_label_provenance"] == 1
     assert result["readiness_gates"]["label_review_provenance_present"] is False
+
+
+
+def test_audit_blocks_mixed_archive_with_unverified_label_claim(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([
+        event(),
+        event(event_id="event-2", event_version_id="version-2", reviewer_id="", label_rationale=""),
+    ]), encoding="utf-8")
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+    assert result["status"] == "blocked_data_quality"
+    assert result["label_quality"]["reviewed_labels"] == 1
+    assert result["label_quality"]["unverified_label_provenance"] == 1
+    assert result["readiness_gates"]["label_review_provenance_present"] is False
