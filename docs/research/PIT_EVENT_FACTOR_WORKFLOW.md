@@ -191,6 +191,21 @@ The default output contains nominal per-maturity yields, 2-year/10-year and 3-mo
 
 **Point-in-time warning:** the Treasury feed can return historical rows today, but a current download does not establish when each old value was first available. Each row records the actual retrieval time and may only be used for decisions at or after that time unless a separately validated historical availability timestamp exists. Do not backtest earlier dates using this file as if it were archived contemporaneously.
 
+## Attach Treasury macro features to decision timestamps
+
+The Treasury capture commands create immutable snapshots, and a historical download is not evidence that the values were available historically. To make that constraint explicit when preparing a feature panel, use:
+
+```bash
+python -m tools.research.build_treasury_macro_panel \
+  --decisions data/research/decision_timestamps.csv \
+  --nominal data/research/captures/treasury_yield_curve_2026.json \
+  --real data/research/captures/treasury_real_yield_curve_2026.json \
+  --output data/research/treasury_macro_panel.csv \
+  --report data/research/treasury_macro_panel_report.json
+```
+
+The decision CSV must contain timezone-aware ISO-8601 `decision_at` values. The output retains original decision columns and adds nominal 2y/3m/10y yields, 2s10s and 3m10y slopes, real 10y yield, and a nominal-minus-real 10y inflation-compensation proxy. Each snapshot is eligible only at or after its actual retrieval timestamp; observation dates after a decision date are excluded. Missing yields remain null. Separate nominal/real age columns let a later evaluation apply a predeclared staleness limit. Review the JSON report before evaluation; this utility does not generate a trade signal or prove alpha.
+
 ## Build a nominal-minus-real inflation-compensation proxy
 
 After capturing separate nominal and real Treasury snapshots, join common observation dates without interpolation:
