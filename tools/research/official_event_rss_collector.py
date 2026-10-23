@@ -20,7 +20,7 @@ import re
 import sys
 import time
 from typing import Any, Callable
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
@@ -153,6 +153,37 @@ def _feed_event_type(feed_key: str, title: str, description: str) -> str:
     return "central_bank" if any(term in text for term in _CENTRAL_BANK_TERMS) else "policy"
 
 
+_OFFICIAL_ITEM_HOSTS = {
+    "www.bls.gov",
+    "www.bea.gov",
+    "apps.bea.gov",
+    "www.federalreserve.gov",
+    "www.treasurydirect.gov",
+    "home.treasury.gov",
+}
+
+
+def _normalize_item_url(link: str | None, feed_url: str) -> str:
+    """Canonicalize relative and scheme-less links from known official feeds."""
+    raw = str(link or "").strip()
+    if not raw:
+        return feed_url
+    if raw.startswith("//"):
+        return "https:" + raw
+    if raw.startswith("https://"):
+        return raw
+    if raw.startswith("http://"):
+        # Preserve explicitly insecure source URLs so the readiness audit can flag them.
+        return raw
+    candidate = raw.lstrip("/")
+    host = candidate.split("/", 1)[0].lower()
+    if host in _OFFICIAL_ITEM_HOSTS:
+        return "https://" + candidate
+    if raw.startswith("/"):
+        return urljoin(feed_url, raw)
+    return urljoin(feed_url, raw)
+
+
 def parse_official_feed(
     payload: bytes | str,
     *,
@@ -224,7 +255,7 @@ def parse_official_feed(
                 "pubDate_raw": published_raw or None,
             },
         )
-        record["source_url"] = link or source_info["url"]
+        record["source_url"] = _normalize_item_url(link, source_info["url"])
         record["feed_key"] = feed_key
         # These allowlisted feeds publish market-wide macro/policy information.
         # Explicit scope lets the point-in-time feature builder include them for
