@@ -107,9 +107,10 @@ def normalize_sec_filing(
 ) -> dict[str, Any]:
     """Normalize SEC submissions-style filing metadata.
 
-    filingDate is not proof of an exact public-availability timestamp. Unless a
-    verified acceptance/publication timestamp is supplied, published_at_utc stays
-    missing so point-in-time evaluation fails closed.
+    filingDate and the SEC submissions JSON acceptanceDateTime field are not
+    accepted as verified UTC publication times. Some records in that field have
+    timezone/clock inconsistencies. Only an independently verified UTC timestamp
+    in verifiedPublishedAtUtc is eligible; otherwise the timestamp stays missing.
     """
     accession = _stable_text(filing.get("accessionNumber"))
     form = _stable_text(filing.get("form")).upper()
@@ -119,7 +120,7 @@ def normalize_sec_filing(
     source_id = accession.replace("-", "")
     company = _stable_text(filing.get("companyName"))
     headline = " ".join(part for part in (form, company, primary) if part)
-    published = filing.get("publishedAtUtc") or filing.get("acceptanceDateTimeUtc")
+    published = filing.get("verifiedPublishedAtUtc")
     kind = "earnings" if form in {"10-K", "10-Q", "8-K"} else "company_news"
     return normalize_event(
         source="sec_edgar",
