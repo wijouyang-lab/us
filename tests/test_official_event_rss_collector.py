@@ -143,6 +143,29 @@ def test_bea_release_feed_is_allowlisted_and_normalized_as_macro():
     assert event["market_scope"] == "market"
 
 
+
+def test_bea_feed_fetch_uses_official_allowlisted_host():
+    seen = []
+    body = """<rss><channel>
+    <item><title>GDP release</title><link>https://www.bea.gov/news/current-releases</link>
+    <guid>bea-gdp-1</guid><pubDate>Thu, 29 Oct 2026 08:30:00 -0400</pubDate></item>
+    </channel></rss>"""
+
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return FakeResponse(body)
+
+    collector = OfficialRssCollector(
+        "Quant research test@example.com",
+        opener=opener,
+        sleep=lambda _: None,
+        now=lambda: datetime(2026, 10, 29, 12, 31, tzinfo=timezone.utc),
+    )
+    result = collector.collect(["bea_releases"])
+    assert seen == ["https://apps.bea.gov/rss/rss.xml"]
+    assert result["metadata"]["feed_reports"][0]["status"] == "ok"
+    assert result["metadata"]["event_count"] == 1
+
 def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
     with pytest.raises(ValueError, match="contact email"):
         OfficialRssCollector("no email")
