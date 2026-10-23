@@ -11,7 +11,7 @@ This inventory separates sources already implemented in the research collector f
 | Employment/unemployment releases | U.S. Bureau of Labor Statistics | `bls_employment` | RSS is a rolling feed, not a complete historical event archive |
 | Central-bank releases and policy | Federal Reserve press feed | `fed_all` | Broad press feed; classification is based on title/description terms and should be reviewed |
 | Fed speeches/testimony | Federal Reserve | `fed_speeches` | Captures official feed items, not every live remark or transcript revision |
-| Company filings / earnings-related disclosures | SEC EDGAR submissions and filing headers | optional SEC universe in `run_event_capture_cycle.py` | Filing events are not equivalent to verified earnings beat/miss or guidance surprise; a current backfill does not reconstruct historical first-seen |
+| Treasury auction announcements and results | TreasuryDirect official RSS | `treasury_auction_announcements`, `treasury_auction_results` | Captures announcement/result headlines and source timestamps; does not itself parse auction bid-to-cover, tail, or yield statistics |\n| Company filings / earnings-related disclosures | SEC EDGAR submissions and filing headers | optional SEC universe in `run_event_capture_cycle.py` | Filing events are not equivalent to verified earnings beat/miss or guidance surprise; a current backfill does not reconstruct historical first-seen |
 
 ## Required next adapters / data work
 
@@ -35,13 +35,13 @@ This inventory separates sources already implemented in the research collector f
 
 ## Operational command
 
-The existing manual collector supports BLS CPI, BLS employment, BEA news releases, Fed press, and Fed speeches by default. SEC collection is optional and requires an explicit CIK/ticker universe plus a contact-bearing SEC User-Agent. It creates no scheduled workflow:
+The existing manual collector supports BLS CPI, BLS employment, BEA news releases, Fed press and speeches, plus TreasuryDirect auction announcements and results by default. SEC collection is optional and requires an explicit CIK/ticker universe plus a contact-bearing SEC User-Agent. It creates no scheduled workflow:
 
 ```bash
 python -m tools.research.run_event_capture_cycle \
   --output-dir data/research/captures \
   --decision-at 2026-10-23T13:00:00Z \
-  --feeds bls_cpi,bls_employment,fed_all,fed_speeches
+  --feeds bls_cpi,bls_employment,bea_releases,fed_all,fed_speeches,treasury_auction_announcements,treasury_auction_results
 ```
 
 Replace the example decision time with the actual timezone-aware cutoff for the run. Do not use an example timestamp as if it were the current time. A run with no reviewed labels is expected to remain blocked from empirical scoring; do not loosen the gate to make the report green.
