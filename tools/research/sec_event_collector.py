@@ -354,6 +354,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--end-date", required=True, help="Last SEC filing date to include (YYYY-MM-DD)")
     parser.add_argument("--output", required=True, help="Path for normalized event JSON array")
     parser.add_argument("--metadata-output", help="Path for per-company coverage metadata JSON")
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Allow replacing an existing snapshot; otherwise output paths are protected",
+    )
     parser.add_argument("--max-filings-per-company", type=int, default=25)
     parser.add_argument("--timeout-seconds", type=float, default=20.0)
     parser.add_argument("--min-request-interval-seconds", type=float, default=0.15)
@@ -368,6 +373,17 @@ def main(argv: list[str] | None = None) -> int:
         universe = load_universe(args.universe)
         _as_date(args.start_date, "start_date")
         _as_date(args.end_date, "end_date")
+        output_path = Path(args.output)
+        metadata_path = Path(args.metadata_output) if args.metadata_output else output_path.with_suffix(".metadata.json")
+        if output_path.resolve() == metadata_path.resolve():
+            raise ValueError("event output and metadata output must be different files")
+        existing_outputs = [path for path in (output_path, metadata_path) if path.exists()]
+        if existing_outputs and not args.overwrite:
+            names = ", ".join(str(path) for path in existing_outputs)
+            raise ValueError(
+                f"refusing to overwrite existing snapshot output(s): {names}; "
+                "choose a new output path or explicitly pass --overwrite"
+            )
         collector = SecEventCollector(
             args.user_agent,
             timeout_seconds=args.timeout_seconds,
@@ -431,8 +447,6 @@ def main(argv: list[str] | None = None) -> int:
             "research_only": True,
             "production_scanner_modified": False,
         }
-        output_path = Path(args.output)
-        metadata_path = Path(args.metadata_output) if args.metadata_output else output_path.with_suffix(".metadata.json")
         output_path.write_text(json.dumps(all_events, sort_keys=True, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
         metadata_path.write_text(json.dumps(metadata, sort_keys=True, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     except (OSError, ValueError, RuntimeError) as exc:
