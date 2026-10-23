@@ -151,6 +151,26 @@ def parse_treasury_yield_curve_xml(
         )
         previous = row
     canonical = json.dumps(rows, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    entries = [node for node in root.iter() if _local_name(node.tag) == "entry"]
+    valid_date_count = sum(bool(_parse_date(_child_text(entry, "NEW_DATE"))) for entry in entries)
+    entries_with_yields = sum(
+        any(_parse_yield(_child_text(entry, xml_field)) is not None for xml_field in maturity_fields.values())
+        for entry in entries
+    )
+    diagnostics: dict[str, Any] = {
+        "xml_entry_count": len(entries),
+        "entries_with_valid_observation_date": valid_date_count,
+        "entries_with_any_maturity_yield": entries_with_yields,
+    }
+    if not rows and entries:
+        sample = entries[0]
+        diagnostics["first_entry_field_names"] = sorted({
+            _local_name(node.tag) for node in sample.iter() if node is not sample
+        })
+        diagnostics["first_entry_date_raw"] = _child_text(sample, "NEW_DATE")
+        diagnostics["first_entry_expected_yield_values"] = {
+            maturity: _child_text(sample, xml_field) for maturity, xml_field in maturity_fields.items()
+        }
     return {
         "metadata": {
             "source": source_name,
@@ -159,6 +179,7 @@ def parse_treasury_yield_curve_xml(
             "retrieved_at_utc": observed_iso,
             "source_payload_sha256": sha256(payload.encode("utf-8") if isinstance(payload, str) else payload).hexdigest(),
             "row_count": len(rows),
+            "source_diagnostics": diagnostics,
             "research_only": True,
             "production_scanner_modified": False,
             "limitations": [
