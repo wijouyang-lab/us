@@ -14,7 +14,7 @@ def audit_event_coverage(
     *,
     max_age_by_type: Mapping[str, timedelta] | None = None,
 ) -> dict[str, Any]:
-    """Summarize eligibility, missingness, duplicate IDs, and reasons deterministically."""
+    """Summarize eligibility, explicit missingness, duplicate IDs, and reasons."""
     rows = list(events)
     family_counts: Counter[str] = Counter()
     status_counts: Counter[str] = Counter()
@@ -26,12 +26,17 @@ def audit_event_coverage(
     for event in rows:
         family = str(event.get("event_type") or "unknown")
         family_counts[family] += 1
-        status_counts[str(event.get("availability_status") or "status_missing")] += 1
+        status = str(event.get("availability_status") or "status_missing")
+        status_counts[status] += 1
         event_id = str(event.get("event_id") or "")
         if event_id:
             ids.append(event_id)
-        max_age = (max_age_by_type or {}).get(family)
-        eligible, reason = event_eligibility(event, decision_at, max_age=max_age)
+
+        if status != "available":
+            eligible, reason = False, f"availability_{status}"
+        else:
+            max_age = (max_age_by_type or {}).get(family)
+            eligible, reason = event_eligibility(event, decision_at, max_age=max_age)
         reason_counts[reason] += 1
         if eligible:
             eligible_total += 1
@@ -39,6 +44,13 @@ def audit_event_coverage(
 
     duplicate_count = len(ids) - len(set(ids))
     total = len(rows)
+    audit_status = "fail_duplicates" if duplicate_count else "pass"
+    if any(reason.startswith("availability_") for reason in reason_counts):
+        audit_status = "fail_missing_data"
+    if any(reason in {"published_after_decision", "first_seen_after_decision",
+                      "first_seen_before_publication", "update_after_decision",
+                      "update_seen_before_update"} for reason in reason_counts):
+        audit_status = "fail_temporal_integrity"
     return {
         "decision_at_utc": decision_at,
         "total_events": total,
@@ -50,5 +62,5 @@ def audit_event_coverage(
         "eligible_by_event_type": dict(sorted(eligible_counts.items())),
         "availability_status_counts": dict(sorted(status_counts.items())),
         "eligibility_reason_counts": dict(sorted(reason_counts.items())),
-        "audit_status": "pass" if duplicate_count == 0 else "fail_duplicates",
+        "audit_status": audit_status,
     }
