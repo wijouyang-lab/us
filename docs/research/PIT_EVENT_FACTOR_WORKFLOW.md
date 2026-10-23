@@ -74,7 +74,7 @@ Run:
 
 ```bash
 python -m tools.research.build_pit_event_signal_panel \
-  --archive data/research/event_archive.json \
+  --archive data/research/event-capture/event_archive.json \
   --universe data/research/universe_pit.csv \
   --decisions data/research/decision_times.csv \
   --weights data/research/event_family_weights.json \
