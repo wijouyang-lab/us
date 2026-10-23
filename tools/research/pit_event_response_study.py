@@ -189,8 +189,12 @@ def _load_price_bars(
             continue
 
         try:
-            raw_open_value = float(str(raw.get(raw_open) or "").strip()) if raw_open else None
-            raw_close_value = float(str(raw.get(raw_close) or "").strip()) if raw_close else None
+            if selected_basis == "adjusted_ohlc_derived_open":
+                raw_open_value = float(str(raw.get(raw_open) or "").strip()) if raw_open else None
+                raw_close_value = float(str(raw.get(raw_close) or "").strip()) if raw_close else None
+            else:
+                raw_open_value = None
+                raw_close_value = None
             open_text = str(raw.get(open_field) or "").strip() if open_field else ""
             close_text = str(raw.get(close_field) or "").strip() if close_field else ""
             open_price = float(open_text) if open_text else math.nan
