@@ -1,33 +1,33 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-22T13:02:31Z",
+  "generated_at": "2026-10-23T13:02:49Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "5.04%",
-      "prev": "5.15%",
-      "date": "2026-10-22",
+      "value": "4.97%",
+      "prev": "4.95%",
+      "date": "2026-10-23",
       "source": "Yahoo Finance",
-      "sentiment": "bullish",
-      "rationale": "国债收益率下降，融资成本降低利好股市"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "5Y国债",
-      "value": "4.86%",
-      "prev": "4.97%",
-      "date": "2026-10-22",
+      "value": "4.79%",
+      "prev": "4.77%",
+      "date": "2026-10-23",
       "source": "Yahoo Finance",
-      "sentiment": "bullish",
-      "rationale": "国债收益率下降，融资成本降低利好股市"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "13周国债",
-      "value": "4.05%",
-      "prev": "4.06%",
-      "date": "2026-10-22",
+      "value": "4.04%",
+      "prev": "4.02%",
+      "date": "2026-10-23",
       "source": "Yahoo Finance",
-      "sentiment": "neutral",
-      "rationale": "短期国债收益率变化微小，影响有限"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "CPI",
@@ -35,8 +35,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "CPI为4%显示通胀压力，加息预期上升"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心CPI",
@@ -44,8 +44,8 @@
       "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "neutral",
-      "rationale": "核心CPI为2.79%接近目标，通胀压力可控"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "失业率",
@@ -53,8 +53,8 @@
       "prev": "4.10%",
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "失业率上升显示经济走弱信号"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心PCE",
@@ -62,30 +62,74 @@
       "prev": null,
       "date": "August 2026",
       "source": "BEA 官方网页",
-      "sentiment": "bearish",
-      "rationale": "核心PCE为3%高于目标，通胀压力持续"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "Fear & Greed",
-      "value": "29 (fear)",
-      "prev": "30",
-      "date": "2026-10-22",
+      "value": "23 (extreme fear)",
+      "prev": "22",
+      "date": "2026-10-23",
       "source": "CNN",
-      "sentiment": "bearish",
-      "rationale": "恐慌指数处于恐慌区间，市场情绪偏负面"
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "speakers": [
     {
+      "person": "Warsh",
+      "title": null,
+      "content": "The Latest Inflation Data Spells Bad News for Fed Chair Kevin Warsh and the Stock Market - Yahoo Finance",
+      "time": "10-22 04:43",
+      "source": "Yahoo Finance",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Two Cheers For Kevin Warsh's \"Quiet\" Fed - RealClearMarkets",
+      "time": "10-21 17:13",
+      "source": "RealClearMarkets",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Sticky Inflation Is Testing the Fed’s Resolve - Bloomberg.com",
+      "time": "10-21 06:00",
+      "source": "Bloomberg.com",
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
       "person": null,
       "title": null,
       "content": "Gold Price Forecast: Inflation, Treasury Yields and the Dollar - www.equiti.com",
-      "time": "10-22 05:55",
+      "time": "10-23 06:02",
       "source": "www.equiti.com",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "黄金价格预测：通胀、国债收益率和美元",
-      "sentiment": "bearish",
-      "rationale": "通胀、国债收益率和美元走强对黄金构成压力"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Mortgage rate predictions for the next 5 years: When should you buy? - Yahoo Finance",
+      "time": "10-22 12:00",
+      "source": "Yahoo Finance",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -93,21 +137,10 @@
       "content": "Fed to skip October but raise rates again in December, nearly all economists say - Reuters",
       "time": "10-20 09:27",
       "source": "Reuters",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "几乎所有经济学家称美联储将跳过10月但在12月再次加息",
-      "sentiment": "bearish",
-      "rationale": "美联储预计12月再次加息，鹰派立场利空"
-    },
-    {
-      "person": "Trump",
-      "title": null,
-      "content": "Trumpflation Is Evolving, and There's a New Twist That Threatens to Sink Stocks - The Globe and Mail",
-      "time": "10-21 04:26",
-      "source": "The Globe and Mail",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "特朗普通胀正在演变，新变化威胁股市下跌",
-      "sentiment": "bearish",
-      "rationale": "特朗普通胀预期演变，新变化可能打压股市"
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -115,10 +148,10 @@
       "content": "Treasury expected to be harder on China biotech deals in new rules - Endpoints News",
       "time": "10-21 14:48",
       "source": "Endpoints News",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "财政部预计在新规中对中国生物技术交易采取更强硬立场",
-      "sentiment": "bearish",
-      "rationale": "财政部对华生物技术交易趋严，地缘政治风险"
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -126,21 +159,10 @@
       "content": "EUR/USD and DXY Forecast: French Yields Hit 2002 Highs - FOREX.com",
       "time": "10-22 07:33",
       "source": "FOREX.com",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "欧元/美元和美元指数预测：法国国债收益率触及2002年高点",
-      "sentiment": "neutral",
-      "rationale": "欧元美元和美元指数预测，对美股影响间接"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "GBP/USD, XAU/USD Forecast: Two trades to watch - StoneX",
-      "time": "10-21 21:15",
-      "source": "StoneX",
-      "age_tag": "📰今日-高权重",
-      "content_cn": "英镑/美元、黄金预测：两个值得关注的交易",
-      "sentiment": "neutral",
-      "rationale": "英镑美元和黄金预测，对美股影响间接"
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -148,21 +170,21 @@
       "content": "Yield On ‘The Most Important Financial Asset In The World’ Forecast To Stay High Through 2026 - Investopedia",
       "time": "10-20 15:01",
       "source": "Investopedia",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "\"全球最重要金融资产\"收益率预计将维持高位至2026年",
-      "sentiment": "bearish",
-      "rationale": "全球最重要金融资产收益率将维持高位至2026年"
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "Gold Price Forecast: High Treasury Yields Put $4,000 Support in Focus - FXEmpire",
-      "time": "10-20 04:24",
-      "source": "FXEmpire",
+      "content": "S&P500 Forecast: SPX rises to a record high on tech boost & falling yields - StoneX",
+      "time": "10-20 09:28",
+      "source": "StoneX",
       "age_tag": "📑前日-低权重",
-      "content_cn": "黄金价格预测：高国债收益率使4000美元支撑位受关注",
-      "sentiment": "bearish",
-      "rationale": "高国债收益率对黄金构成压力，避险需求减弱"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "error": null
