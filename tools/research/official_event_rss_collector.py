@@ -208,6 +208,10 @@ def parse_official_feed(
         )
         record["source_url"] = link or source_info["url"]
         record["feed_key"] = feed_key
+        # These allowlisted feeds publish market-wide macro/policy information.
+        # Explicit scope lets the point-in-time feature builder include them for
+        # each ticker; unrelated company news still requires an explicit ticker.
+        record["market_scope"] = "market"
         record["source_timestamp_kind"] = "rss_published_at" if published else None
         record["source_timestamp_status"] = "parsed" if published else "timestamp_missing"
         records.append(record)
