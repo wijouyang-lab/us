@@ -198,6 +198,20 @@ The default output contains nominal per-maturity yields, 2-year/10-year and 3-mo
 
 **Point-in-time warning:** the Treasury feed can return historical rows today, but a current download does not establish when each old value was first available. Each row records the actual retrieval time and may only be used for decisions at or after that time unless a separately validated historical availability timestamp exists. Do not backtest earlier dates using this file as if it were archived contemporaneously.
 
+## Align prospective BLS macro snapshots to decisions
+
+Each capture run saves a BLS API snapshot with an actual retrieval timestamp. To build a decision-time panel from multiple snapshots:
+
+```bash
+python -m tools.research.build_bls_macro_panel \
+  --decisions data/research/decision_timestamps.csv \
+  --snapshot-dir data/research/event-capture \
+  --output data/research/bls_macro_panel.csv \
+  --report data/research/bls_macro_panel_report.json
+```
+
+The panel selects only snapshots retrieved at or before each decision timestamp. It retains observation periods and missing values, and it never reconstructs historical vintages or consensus surprises. A single capture is not enough to estimate a historical macro factor; collect repeated prospective snapshots and keep the original immutable files.
+
 ## Attach Treasury macro features to decision timestamps
 
 The Treasury capture commands create immutable snapshots, and a historical download is not evidence that the values were available historically. To make that constraint explicit when preparing a feature panel, use:
