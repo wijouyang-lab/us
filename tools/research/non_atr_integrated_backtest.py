@@ -57,7 +57,12 @@ def load_complete_tickers(
     frame = frame.sort_values(["Ticker", "Date"]).drop_duplicates(["Ticker", "Date"], keep="last")
 
     if frame.empty:
-        return {}, pd.DataFrame(columns=["Ticker", "rows", "start_date", "end_date", "status", "reason"])
+        # Keep the required schema so PIT membership can still be audited when every
+        # requested ticker is missing from the downloaded price file.
+        frame = pd.DataFrame(columns=["Date", "Ticker", "Adj Close"])
+        frame["Date"] = pd.to_datetime(frame["Date"])
+        frame["Ticker"] = frame["Ticker"].astype("string")
+        frame["Adj Close"] = pd.to_numeric(frame["Adj Close"])
 
     if (spy_path is None) != (membership_paths is None):
         raise ValueError("spy_path and membership_paths must be supplied together")
@@ -127,6 +132,26 @@ def load_complete_tickers(
                 ][["Date", "Adj Close"]].reset_index(drop=True)
             else:
                 eligible[str(ticker)] = group[["Date", "Adj Close"]].reset_index(drop=True)
+    # A ticker with zero downloaded rows never appears in groupby above. Add every
+    # expected PIT member explicitly so completely missing symbols are visible in the
+    # eligibility audit instead of silently disappearing from the denominator.
+    if expected_by_ticker is not None:
+        audited_tickers = {str(item["Ticker"]) for item in audit}
+        for ticker, expected_set in sorted(expected_by_ticker.items()):
+            if ticker in audited_tickers:
+                continue
+            expected_count = len(expected_set)
+            audit.append({
+                "Ticker": ticker,
+                "rows": 0,
+                "start_date": "",
+                "end_date": "",
+                "status": "excluded",
+                "reason": (
+                    f"incomplete_expected_session_history:{expected_count}_missing_of_{expected_count};"
+                    f"no_downloaded_price_rows"
+                ),
+            })
     return eligible, pd.DataFrame(audit)
 
 
