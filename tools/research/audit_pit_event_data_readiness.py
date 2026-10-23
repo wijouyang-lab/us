@@ -12,6 +12,7 @@ import json
 import math
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 from tools.research.pit_event_eligibility import _parse_aware_timestamp, event_eligibility
 
@@ -87,6 +88,21 @@ def audit_event_archive(
             if event.get(field) in (None, ""):
                 missing_fields[field] += 1
 
+        source_url = event.get("source_url")
+        if source_url not in (None, ""):
+            try:
+                parsed_url = urlsplit(str(source_url).strip())
+                valid_source_url = (
+                    parsed_url.scheme.lower() == "https"
+                    and bool(parsed_url.hostname)
+                    and parsed_url.username is None
+                    and parsed_url.password is None
+                )
+            except ValueError:
+                valid_source_url = False
+            if not valid_source_url:
+                timestamp_checks["invalid_source_url"] += 1
+
         for field in ("published_at_utc", "first_seen_at_utc", "updated_at_utc", "update_first_seen_at_utc"):
             raw = event.get(field)
             parsed = _parse_aware_timestamp(raw) if raw is not None else None
@@ -127,8 +143,16 @@ def audit_event_archive(
         status = "fail_no_pit_eligible_events"
     elif labelled == 0:
         status = "blocked_no_validated_labels"
-    elif (timestamp_checks["missing_published_at_utc"] or timestamp_checks["missing_first_seen_at_utc"]
-          or duplicate_version_count or missing_fields["source_url"]):
+    elif (
+        timestamp_checks["missing_published_at_utc"]
+        or timestamp_checks["missing_first_seen_at_utc"]
+        or any(key.startswith("invalid_") for key in timestamp_checks)
+        or timestamp_checks["first_seen_before_publication"]
+        or timestamp_checks["publication_after_audit_time"]
+        or timestamp_checks["first_seen_after_audit_time"]
+        or duplicate_version_count
+        or missing_fields["source_url"]
+    ):
         status = "blocked_data_quality"
     else:
         status = "review_required"
@@ -162,6 +186,11 @@ def audit_event_archive(
             "version_ids_unique": duplicate_version_count == 0,
             "required_timestamps_present": not timestamp_checks["missing_published_at_utc"] and not timestamp_checks["missing_first_seen_at_utc"],
             "source_urls_present": missing_fields["source_url"] == 0,
+            "source_urls_valid_https": timestamp_checks["invalid_source_url"] == 0,
+            "all_timestamps_valid_and_not_future": not any(
+                key.startswith("invalid_") or key.endswith("_after_audit_time")
+                for key in timestamp_checks
+            ),
             "all_first_seen_after_publication": timestamp_checks["first_seen_before_publication"] == 0,
             "validated_labels_present": labelled > 0,
             "pit_eligible_for_at_least_one_decision": not decisions or any(eligible_by_decision.values()),
