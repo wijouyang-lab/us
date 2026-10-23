@@ -8,6 +8,7 @@ on:
     paths:
       - .github/workflows/research-event-factor-capture-once.yml
       - tools/research/treasury_yield_curve_capture.py
+      - tools/research/official_event_rss_collector.py
 
 permissions:
   contents: write
