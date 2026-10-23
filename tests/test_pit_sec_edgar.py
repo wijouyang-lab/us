@@ -46,7 +46,7 @@ def test_parse_sec_uses_separately_supplied_sgml_header_time_as_new_york_time():
         },
     }
     headers = {
-        "000012345626000004": "<SUBMISSION>\n<ACCESSION-NUMBER>0000123456-26-000004\n<ACCEPTANCE-DATETIME>20261022093000\n",
+        "000012345626000004": "<SEC-DOCUMENT>\n<ACCEPTANCE-DATETIME>20261022093000\nACCESSION NUMBER:\\t0000123456-26-000004\n",
     }
     record = parse_sec_submissions(
         payload,
@@ -87,7 +87,7 @@ def test_parse_sec_acceptance_datetime_rejects_missing_duplicate_and_bad_header(
     assert parse_sec_acceptance_datetime("<SUBMISSION>no timestamp")["status"] == "acceptance_datetime_missing"
     duplicate = "<ACCEPTANCE-DATETIME>20261022093000\n<ACCEPTANCE-DATETIME>20261022093100"
     assert parse_sec_acceptance_datetime(duplicate)["status"] == "acceptance_datetime_ambiguous"
-    wrong_accession = "<ACCESSION-NUMBER>0000123456-26-000099\n<ACCEPTANCE-DATETIME>20261022093000"
+    wrong_accession = "ACCESSION NUMBER: 0000123456-26-000099\n<ACCEPTANCE-DATETIME>20261022093000"
     assert parse_sec_acceptance_datetime(
         wrong_accession, expected_accession="0000123456-26-000004"
     )["status"] == "accession_mismatch"
