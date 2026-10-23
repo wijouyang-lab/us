@@ -115,49 +115,57 @@ def apply_risk_controls(
         return portfolio.copy()
 
     base = portfolio.copy().sort_index()
-    prior_vol = base["net_return"].rolling(
-        volatility_lookback, min_periods=volatility_lookback
-    ).std(ddof=1).shift(1) * (252 ** 0.5)
-    vol_scale = (target_annual_volatility / prior_vol.replace(0, float("nan"))).clip(upper=1.0).fillna(1.0)
-    exposure_scale = (
-        max_exposure / base["exposure"].replace(0, float("nan"))
-    ).clip(upper=1.0).fillna(1.0)
-    proposed_scale = pd.concat([vol_scale, exposure_scale], axis=1).min(axis=1).clip(0.0, 1.0)
-
     scales = []
+    controlled_returns = []
+    turnovers = []
+    gross_returns = []
+    costs = []
+    net_returns = []
+    exposures = []
     cooldown = 0
     equity = 1.0
     peak = 1.0
-    for date, row in base.iterrows():
+    for i, (date, row) in enumerate(base.iterrows()):
+        if len(controlled_returns) >= volatility_lookback:
+            trailing_vol = pd.Series(controlled_returns[-volatility_lookback:]).std(ddof=1) * (252 ** 0.5)
+            vol_scale = min(1.0, target_annual_volatility / trailing_vol) if trailing_vol > 0 else 1.0
+        else:
+            vol_scale = 1.0
+        base_exposure = float(row["exposure"])
+        exposure_scale = min(1.0, max_exposure / base_exposure) if base_exposure > 0 else 1.0
+        proposed_scale = min(vol_scale, exposure_scale)
+
         if cooldown > 0:
             scale = 0.0
             cooldown -= 1
         else:
-            scale = float(proposed_scale.loc[date])
+            scale = proposed_scale
             if equity / peak - 1.0 <= -drawdown_limit:
                 scale = 0.0
                 cooldown = cooldown_sessions - 1
-        base_turnover = float(row["turnover"])
+
         prior_scale = scales[-1] if scales else 0.0
-        turnover = base_turnover * scale + abs(scale - prior_scale) * float(row["exposure"])
+        turnover = float(row["turnover"]) * scale + abs(scale - prior_scale) * base_exposure
         gross = float(row["gross_return"]) * scale
         cost = turnover * (one_way_cost_bps / 10000.0)
         net = (1.0 + gross) * (1.0 - cost) - 1.0
         scales.append(scale)
+        turnovers.append(turnover)
+        gross_returns.append(gross)
+        costs.append(cost)
+        net_returns.append(net)
+        exposures.append(base_exposure * scale)
+        controlled_returns.append(net)
         equity *= 1.0 + net
         peak = max(peak, equity)
 
     result = base.copy()
     result["risk_scale"] = scales
-    result["gross_return"] = base["gross_return"] * result["risk_scale"]
-    result["turnover"] = [
-        float(row["turnover"]) * scale
-        + abs(scale - (scales[i - 1] if i else 0.0)) * float(row["exposure"])
-        for i, (scale, (_, row)) in enumerate(zip(scales, base.iterrows()))
-    ]
-    result["cost"] = result["turnover"] * (one_way_cost_bps / 10000.0)
-    result["net_return"] = (1.0 + result["gross_return"]) * (1.0 - result["cost"]) - 1.0
-    result["exposure"] = base["exposure"] * result["risk_scale"]
+    result["gross_return"] = gross_returns
+    result["turnover"] = turnovers
+    result["cost"] = costs
+    result["net_return"] = net_returns
+    result["exposure"] = exposures
     return result
 
 
