@@ -182,3 +182,26 @@ def test_collector_requires_contact_user_agent_and_restricts_hosts():
     )
     with pytest.raises(ValueError, match="only permits HTTPS"):
         collector._request_text("https://example.com/unknown.json")
+
+
+def test_collector_marks_timestamp_unverified_as_partial_even_if_http_succeeded():
+    def opener(request, timeout):
+        if request.full_url.endswith("/submissions/CIK0000320193.json"):
+            return FakeResponse(json.dumps(submissions_payload()))
+        return FakeResponse("<html>no accession or timestamp here</html>")
+
+    collector = SecEventCollector(
+        "Quant research test@example.com",
+        opener=opener,
+        sleep=lambda _: None,
+        now=lambda: datetime(2026, 10, 23, 14, 0, tzinfo=timezone.utc),
+    )
+    result = collector.collect_company(
+        "320193", "AAPL",
+        start_date="2026-10-22", end_date="2026-10-22",
+    )
+    assert result["events"][0]["published_at_utc"] is None
+    assert result["events"][0]["availability_status"] == "timestamp_missing"
+    assert result["metadata"]["header_fetch_error_count"] == 0
+    assert result["metadata"]["unverified_header_timestamp_count"] == 1
+    assert result["metadata"]["coverage_status"] == "partial"
