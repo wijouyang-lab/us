@@ -84,7 +84,7 @@ jobs:
           if summary.empty:
               lines.append("No portfolio summary rows were produced.")
           else:
-              columns = ["strategy", "cost_bps_one_way", "annualized_return", "annualized_volatility", "sharpe_zero_rf", "max_drawdown", "mean_exposure", "annualized_turnover", "worst_calendar_year_return", "benchmark_annualized_return"]
+              columns = ["strategy", "profile", "cost_bps_one_way", "annualized_return", "annualized_volatility", "sharpe_zero_rf", "max_drawdown", "mean_exposure", "annualized_turnover", "worst_calendar_year_return", "benchmark_annualized_return"]
               columns = [c for c in columns if c in summary.columns]
               lines.append("| " + " | ".join(columns) + " |")
               lines.append("|" + "|".join(["---"] * len(columns)) + "|")
@@ -105,7 +105,7 @@ jobs:
           if oos.empty:
               lines.append("No OOS windows were produced.")
           else:
-              columns = ["strategy", "cost_bps_one_way", "split", "test_start", "test_end", "annualized_return", "sharpe_zero_rf", "max_drawdown", "benchmark_total_return"]
+              columns = ["strategy", "profile", "cost_bps_one_way", "split", "test_start", "test_end", "annualized_return", "sharpe_zero_rf", "max_drawdown", "benchmark_total_return"]
               columns = [c for c in columns if c in oos.columns]
               lines.append("| " + " | ".join(columns) + " |")
               lines.append("|" + "|".join(["---"] * len(columns)) + "|")
@@ -126,7 +126,7 @@ jobs:
           if annual.empty:
               lines.append("No annual-return rows were produced.")
           else:
-              columns = ["strategy", "cost_bps_one_way", "year", "total_return", "max_drawdown"]
+              columns = ["strategy", "profile", "cost_bps_one_way", "year", "total_return", "max_drawdown"]
               columns = [c for c in columns if c in annual.columns]
               lines.append("| " + " | ".join(columns) + " |")
               lines.append("|" + "|".join(["---"] * len(columns)) + "|")
