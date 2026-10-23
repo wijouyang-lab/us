@@ -28,7 +28,7 @@ For a consistent annotation rubric, use the companion [PIT event label annotatio
 
 ## Start accumulating genuine point-in-time captures
 
-A manual-only GitHub Actions workflow is available on the research branch: [Research Event Factor Capture](../../actions/workflows/research-event-factor-capture-once.yml). Open the workflow, choose **Run workflow**, and select `research/event-factor-walk-forward`. Each run collects the allowlisted official RSS feeds and Treasury nominal/real curve snapshots, stores immutable capture files, updates the versioned event archive, and uploads a 90-day evidence artifact. It does not run on a schedule and does not call the production scanner.
+The research branch includes a one-shot bootstrap capture workflow: [Research Event Factor Capture](https://github.com/wijouyang-lab/us/actions/workflows/research-event-factor-capture-once.yml). Updating the workflow file on this branch triggers a capture; the workflow also defines `workflow_dispatch` for future use if it is available from the repository default branch. Each run collects the allowlisted official RSS feeds and Treasury nominal/real curve snapshots, stores immutable capture files, updates the versioned event archive, and uploads a 90-day evidence artifact. It does not run on a schedule and does not call the production scanner.
 
 Run it repeatedly over time to accumulate genuine first-seen timestamps. A single capture is not a historical event dataset. The workflow deliberately does not invent earnings surprise labels, reconstruct historical consensus, or infer historical availability from today's downloads. Event labels still require documented human review before event-factor evaluation.
 
