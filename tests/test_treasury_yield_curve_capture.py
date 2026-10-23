@@ -141,11 +141,17 @@ def test_real_yield_curve_uses_real_data_key_and_maturity_fields():
 
 def test_fetch_real_curve_uses_official_real_curve_key():
     seen = []
-    response = FakeResponse(sample_xml())
+    real_xml = """<feed xmlns="http://www.w3.org/2005/Atom"
+      xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+      xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
+      <entry><content><m:properties>
+        <d:NEW_DATE>2026-10-22T00:00:00</d:NEW_DATE>
+        <d:TC_5YEAR>1.8</d:TC_5YEAR><d:TC_10YEAR>2.1</d:TC_10YEAR>
+      </m:properties></content></entry></feed>"""
 
     def opener(request, timeout):
         seen.append(request.full_url)
-        return response
+        return FakeResponse(real_xml)
 
     result = fetch_treasury_yield_curve(
         2026,
@@ -165,9 +171,9 @@ def test_fetch_real_curve_falls_back_to_official_static_xml_when_parameterized_f
       xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
       <entry><content><m:properties>
         <d:NEW_DATE>2026-10-22T00:00:00</d:NEW_DATE>
-        <d:BC_5YEAR>1.8</d:BC_5YEAR><d:BC_7YEAR>2.0</d:BC_7YEAR>
-        <d:BC_10YEAR>2.1</d:BC_10YEAR><d:BC_20YEAR>2.3</d:BC_20YEAR>
-        <d:BC_30YEAR>2.4</d:BC_30YEAR>
+        <d:TC_5YEAR>1.8</d:TC_5YEAR><d:TC_7YEAR>2.0</d:TC_7YEAR>
+        <d:TC_10YEAR>2.1</d:TC_10YEAR><d:TC_20YEAR>2.3</d:TC_20YEAR>
+        <d:TC_30YEAR>2.4</d:TC_30YEAR>
       </m:properties></content></entry>
     </feed>"""
 
