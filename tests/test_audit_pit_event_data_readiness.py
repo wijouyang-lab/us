@@ -75,6 +75,28 @@ def test_audit_blocks_archive_without_source_urls(tmp_path):
     assert result["missing_required_fields"]["source_url"] == 1
     assert result["readiness_gates"]["source_urls_present"] is False
 
+def test_audit_blocks_malformed_source_urls(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([event(source_url="javascript:alert(1)")]), encoding="utf-8")
+
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+
+    assert result["status"] == "blocked_data_quality"
+    assert result["timestamp_quality"]["invalid_source_url"] == 1
+    assert result["readiness_gates"]["source_urls_valid_https"] is False
+
+
+def test_audit_blocks_future_event_timestamps(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([event(first_seen_at_utc="2026-01-05T00:00:00Z")]), encoding="utf-8")
+
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+
+    assert result["status"] == "blocked_data_quality"
+    assert result["timestamp_quality"]["first_seen_after_audit_time"] == 1
+    assert result["readiness_gates"]["all_timestamps_valid_and_not_future"] is False
+
+
 def test_audit_rejects_naive_decision_timestamps(tmp_path):
     archive = tmp_path / "archive.json"
     decisions = tmp_path / "decisions.csv"
