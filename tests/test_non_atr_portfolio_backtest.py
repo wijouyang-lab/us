@@ -84,3 +84,36 @@ def test_risk_controls_reject_invalid_parameters():
     }, index=dates)
     with pytest.raises(ValueError, match="max_exposure"):
         apply_risk_controls(portfolio, one_way_cost_bps=5, max_exposure=0)
+
+
+
+def test_risk_controls_do_not_use_future_returns_for_earlier_scales():
+    dates = pd.date_range("2024-01-02", periods=8, freq="B")
+    base = pd.DataFrame({
+        "gross_return": [0.01, -0.01, 0.02, 0.00, 0.01, -0.02, 0.01, 0.00],
+        "turnover": [0.1] * 8,
+        "cost": [0.00005] * 8,
+        "net_return": [0.01, -0.01, 0.02, 0.00, 0.01, -0.02, 0.01, 0.00],
+        "exposure": [0.4] * 8,
+    }, index=dates)
+    changed_future = base.copy()
+    changed_future.loc[dates[5]:, "gross_return"] = [-0.80, 0.70, -0.50]
+    changed_future.loc[dates[5]:, "net_return"] = [-0.80, 0.70, -0.50]
+
+    kwargs = {
+        "one_way_cost_bps": 5,
+        "target_annual_volatility": 0.10,
+        "volatility_lookback": 3,
+        "max_exposure": 0.50,
+        "drawdown_limit": 0.20,
+        "cooldown_sessions": 2,
+    }
+    original = apply_risk_controls(base, **kwargs)
+    altered = apply_risk_controls(changed_future, **kwargs)
+
+    # Future shocks may change their own and later risk state, but cannot rewrite
+    # risk scales chosen before the altered returns occur.
+    pd.testing.assert_series_equal(
+        original["risk_scale"].iloc[:5],
+        altered["risk_scale"].iloc[:5],
+    )
