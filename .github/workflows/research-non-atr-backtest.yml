@@ -61,6 +61,45 @@ jobs:
             --spy research_non_atr_download_diagnostics/partial_spy.csv \
             --audit research_non_atr_download_diagnostics/audit.json \
             --allow-partial-output
+      - name: Summarize price-refresh diagnostics even on failure
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("research_non_atr_download_diagnostics/audit.json")
+          if not path.is_file():
+              print("PRICE_REFRESH_AUDIT_MISSING: refresh failed before writing its audit.")
+              raise SystemExit(0)
+
+          audit = json.loads(path.read_text(encoding="utf-8"))
+          coverage = audit.get("coverage") or {}
+          print(f"PRICE_REFRESH_STATUS={audit.get('status', 'UNKNOWN')}")
+          print(f"CUTOFF_DATE={audit.get('cutoff_date', 'unknown')}")
+          print(f"MEMBER_BAR_COVERAGE={coverage.get('member_bar_coverage', 'unknown')}")
+          print(f"TICKER_COVERAGE={coverage.get('ticker_coverage', 'unknown')}")
+          print(f"DOWNLOADED_UNIQUE_TICKERS={audit.get('downloaded_unique_tickers', 'unknown')}")
+          print(f"DOWNLOAD_FAILURE_COUNT={audit.get('download_failure_count', 'unknown')}")
+          print("AUDIT_ISSUES:")
+          for issue in audit.get("issues", []):
+              print(f"- {issue}")
+          print("FIRST_20_DOWNLOAD_FAILURES:")
+          for failure in (audit.get("download_failures") or [])[:20]:
+              print(
+                  f"- {failure.get('ticker', '?')}: "
+                  f"bulk={failure.get('bulk_error', 'unknown')}; "
+                  f"fallback={failure.get('fallback_error', 'unknown')}"
+              )
+          print("LOW_COVERAGE_TICKERS:")
+          for ticker in (coverage.get("low_coverage_tickers") or [])[:20]:
+              print(
+                  f"- {ticker.get('ticker', '?')}: "
+                  f"{ticker.get('coverage', 'unknown')} "
+                  f"({ticker.get('observed_sessions', '?')}/"
+                  f"{ticker.get('expected_sessions', '?')} sessions)"
+              )
+          PY
       - name: Validate adjusted-price schema and refresh audit
         run: |
           python - <<'PY'
