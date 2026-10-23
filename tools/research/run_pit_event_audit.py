@@ -71,6 +71,11 @@ def main(argv: list[str] | None = None) -> int:
         default="{}",
         help='JSON object such as {"macro_release":2,"earnings":3}',
     )
+    parser.add_argument(
+        "--expected-sources",
+        default="",
+        help="Optional comma-separated source IDs that must be present, e.g. bls_cpi_rss,federal_reserve_press_rss",
+    )
     parser.add_argument("--output", help="Optional report path; stdout when omitted")
     args = parser.parse_args(argv)
 
@@ -79,10 +84,12 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--decision-at must be a timezone-aware ISO-8601 timestamp")
         events = load_event_rows(args.input)
         max_age = parse_max_age_days(args.max_age_days_by_type)
+        expected_sources = [item.strip() for item in args.expected_sources.split(",") if item.strip()]
         report = build_event_research_report(
             events,
             args.decision_at,
             max_age_by_type=max_age,
+            expected_sources=expected_sources,
         )
         serialized = json.dumps(report, sort_keys=True, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
         if args.output:
