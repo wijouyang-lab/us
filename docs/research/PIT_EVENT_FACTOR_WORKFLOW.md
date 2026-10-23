@@ -22,6 +22,8 @@ external trigger, portfolio construction, or trading behavior.
    a reviewer was independent or that the annotation was available at each historical
    decision time.
 
+For a consistent annotation rubric, use the companion [PIT event label annotation guide](PIT_EVENT_LABEL_ANNOTATION_GUIDE.md). It defines direction/impact scales, review provenance, and safeguards against hindsight leakage.
+
 ## Audit data readiness before scoring
 
 Before generating any signal panel, audit the archive and (optionally) the exact
