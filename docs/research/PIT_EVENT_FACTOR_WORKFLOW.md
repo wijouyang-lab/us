@@ -83,3 +83,24 @@ eligibility, turnover, costs, drawdown, and exposure-matched benchmark results.
   not an alpha estimate.
 - No live collection or empirical event-factor alpha claim is implied by passing
   unit tests. Production signal generation remains disabled.
+
+
+## Compare with a price-only baseline
+
+After generating the event-score panel, run a paired comparison. Both strategies use
+the same ticker/decision rows with event coverage and sufficient prior prices, so
+the comparison is not driven merely by different coverage universes.
+
+```bash
+python -m tools.research.event_factor_compare_price_baseline \
+  --signals data/research/event_signals.csv \
+  --prices data/research/prices.csv \
+  --lookback 20 --horizon 20 --cost-bps-per-side 5 \
+  --output data/research/event_vs_momentum.json
+```
+
+The baseline is a simple trailing close-to-close momentum score, using only price
+sessions strictly before the decision calendar date. This is a research comparator,
+not a production strategy. The comparison remains preliminary until evaluated across
+multiple chronological out-of-sample decision dates and against exposure-matched
+benchmark returns.
