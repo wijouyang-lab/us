@@ -54,3 +54,33 @@ def test_event_factor_and_price_baseline_share_paired_universe(tmp_path):
     assert result["event_factor"]["decision_dates_tested"] == 1
     assert result["price_only_momentum_baseline"]["decision_dates_tested"] == 1
     assert result["production_signal_generated"] is False
+
+
+
+def test_paired_universe_excludes_non_finite_scores_and_prices(tmp_path):
+    signals_path = tmp_path / "signals.csv"
+    prices_path = tmp_path / "prices.csv"
+    signals = []
+    prices = []
+    for i in range(8):
+        ticker = f"T{i}"
+        signals.append({
+            "decision_at": "2026-01-04T12:00:00Z",
+            "ticker": ticker,
+            "event_score": "inf" if i == 7 else i,
+            "coverage_status": "available",
+        })
+        prices.extend([
+            {"date": "2026-01-01T00:00:00Z", "ticker": ticker, "close": 100},
+            {"date": "2026-01-02T00:00:00Z", "ticker": ticker, "close": "inf" if i == 6 else 100 + i},
+            {"date": "2026-01-05T00:00:00Z", "ticker": ticker, "close": 110 + i},
+            {"date": "2026-01-06T00:00:00Z", "ticker": ticker, "close": 111 + i},
+        ])
+    pd.DataFrame(signals).to_csv(signals_path, index=False)
+    pd.DataFrame(prices).to_csv(prices_path, index=False)
+
+    paired, report = build_paired_signals(str(signals_path), str(prices_path), lookback=2)
+    assert report["paired_universe"] is True
+    assert "T6" not in set(paired["ticker"])
+    assert "T7" not in set(paired["ticker"])
+    assert len(paired) == 6
