@@ -84,3 +84,25 @@ def test_paired_universe_excludes_non_finite_scores_and_prices(tmp_path):
     assert "T6" not in set(paired["ticker"])
     assert "T7" not in set(paired["ticker"])
     assert len(paired) == 6
+
+
+
+def test_paired_comparison_reports_hac_uncertainty(tmp_path):
+    from tools.research.event_factor_compare_price_baseline import _newey_west_mean_interval
+
+    result = _newey_west_mean_interval([0.01, 0.02, 0.03, 0.04], max_lag=1)
+    assert result["status"] == "estimated"
+    assert result["observations"] == 4
+    assert result["max_lag"] == 1
+    assert result["mean_difference_pct"] == 2.5
+    assert result["ci95_lower_pct"] < result["mean_difference_pct"] < result["ci95_upper_pct"]
+    assert "does not remove selection bias" in result["interpretation_warning"]
+
+
+def test_hac_uncertainty_stays_unavailable_for_too_few_dates():
+    from tools.research.event_factor_compare_price_baseline import _newey_west_mean_interval
+
+    result = _newey_west_mean_interval([0.01, 0.02], max_lag=19)
+    assert result["status"] == "insufficient_data"
+    assert result["ci95_lower_pct"] is None
+    assert result["ci95_upper_pct"] is None
