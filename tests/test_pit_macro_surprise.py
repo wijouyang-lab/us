@@ -58,3 +58,40 @@ def test_rejects_unavailable_event_even_if_timestamps_and_values_look_valid():
         "reason": "event_unavailable:fetch_error",
         "surprise": None,
     }
+
+
+
+def test_rejects_revised_macro_vintage_not_yet_available_at_decision():
+    result = macro_surprise(
+        release(vintage_at_utc="2026-10-16T12:30:00Z"),
+        "2026-10-15T12:31:00Z",
+    )
+    assert result == {
+        "eligible": False,
+        "reason": "vintage_after_decision",
+        "surprise": None,
+    }
+
+
+def test_rejects_macro_vintage_observed_before_its_vintage_timestamp():
+    result = macro_surprise(
+        release(vintage_at_utc="2026-10-15T12:30:10Z"),
+        "2026-10-15T12:31:00Z",
+    )
+    assert result == {
+        "eligible": False,
+        "reason": "vintage_after_first_seen",
+        "surprise": None,
+    }
+
+
+def test_rejects_invalid_macro_vintage_timestamp():
+    result = macro_surprise(
+        release(vintage_at_utc="2026-10-15 12:30:00"),
+        "2026-10-15T12:31:00Z",
+    )
+    assert result == {
+        "eligible": False,
+        "reason": "vintage_timestamp_invalid",
+        "surprise": None,
+    }
