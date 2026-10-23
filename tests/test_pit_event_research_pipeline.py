@@ -116,3 +116,18 @@ def test_pipeline_rejects_mixed_versioned_and_unversioned_input():
 
     with pytest.raises(ValueError, match="cannot mix"):
         build_event_research_report([event, versioned], "2026-10-15T12:00:00Z")
+
+
+
+def test_pipeline_propagates_expected_source_coverage_contract():
+    event = normalize_event(
+        "bls_cpi_rss", "cpi-1", "macro_release",
+        "2026-10-15T12:30:00Z", "2026-10-15T12:30:05Z",
+    )
+    report = build_event_research_report(
+        [event],
+        "2026-10-15T12:31:00Z",
+        expected_sources=["bls_cpi_rss", "federal_reserve_press_rss"],
+    )
+    assert report["coverage_audit"]["missing_sources"] == ["federal_reserve_press_rss"]
+    assert report["coverage_audit"]["audit_status"] == "fail_source_coverage"
