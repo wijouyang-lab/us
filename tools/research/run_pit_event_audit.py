@@ -20,6 +20,7 @@ from pathlib import Path
 import sys
 from typing import Any
 
+from tools.research.pit_event_eligibility import _parse_aware_timestamp
 from tools.research.pit_event_research_pipeline import build_event_research_report
 
 
@@ -74,6 +75,8 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
+        if _parse_aware_timestamp(args.decision_at) is None:
+            raise ValueError("--decision-at must be a timezone-aware ISO-8601 timestamp")
         events = load_event_rows(args.input)
         max_age = parse_max_age_days(args.max_age_days_by_type)
         report = build_event_research_report(
