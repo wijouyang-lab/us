@@ -44,7 +44,7 @@ python -m tools.research.build_pit_event_signal_panel \
 ```
 
 The output signal CSV is compatible with the event factor backtest. Missing or
-ineligible event coverage remains missing and is excluded, never filled with zero.
+ineligible event coverage remains missing, never filled with zero.
 
 ## Evaluate score tails and cost/horizon sensitivity
 
@@ -68,28 +68,15 @@ python -m tools.research.event_factor_cost_sensitivity \
   --output data/research/event_sensitivity.json
 ```
 
-Do not select the best grid cell and report it as an unbiased result. Use a
-chronological train/validation/test split, freeze score definitions before the
-final test, compare with a price-only baseline, and report coverage, timestamp
-eligibility, turnover, costs, drawdown, and exposure-matched benchmark results.
-
-## Current limitations
-
-- The score is a transparent weighted aggregation of explicit labels, not a
-  trained or validated predictive model.
-- The backtest uses a close-price proxy and overlapping holding periods; its
-  Sharpe estimate is not adjusted for dependence.
-- The optional benchmark field in the initial backtest is a data-presence check,
-  not an alpha estimate.
-- No live collection or empirical event-factor alpha claim is implied by passing
-  unit tests. Production signal generation remains disabled.
-
+Do not select the best grid cell and report it as an unbiased result. Freeze score
+definitions and parameters before the final test. Report coverage, timestamp eligibility,
+turnover, costs, drawdown, and an exposure-matched benchmark when data permit.
 
 ## Compare with a price-only baseline
 
-After generating the event-score panel, run a paired comparison. Both strategies use
-the same ticker/decision rows with event coverage and sufficient prior prices, so
-the comparison is not driven merely by different coverage universes.
+Both strategies use the same ticker/decision rows with event coverage and sufficient
+prior prices. The baseline is trailing close-to-close momentum using price sessions
+strictly before the decision calendar date.
 
 ```bash
 python -m tools.research.event_factor_compare_price_baseline \
@@ -99,8 +86,35 @@ python -m tools.research.event_factor_compare_price_baseline \
   --output data/research/event_vs_momentum.json
 ```
 
-The baseline is a simple trailing close-to-close momentum score, using only price
-sessions strictly before the decision calendar date. This is a research comparator,
-not a production strategy. The comparison remains preliminary until evaluated across
-multiple chronological out-of-sample decision dates and against exposure-matched
-benchmark returns.
+## Chronological walk-forward evaluation
+
+Run the fixed chronological train/validation/test evaluation after freezing score
+definitions and cost assumptions:
+
+```bash
+python -m tools.research.event_factor_walk_forward \
+  --signals data/research/event_signals.csv \
+  --prices data/research/prices.csv \
+  --lookback 20 --horizon 20 --cost-bps-per-side 5 \
+  --train-fraction 0.6 --validation-fraction 0.2 \
+  --output data/research/event_walk_forward.json
+```
+
+The tool keeps contiguous time blocks, removes the last horizon decision timestamps
+from the train and validation blocks to reduce cross-boundary overlap of forward-return
+labels, and reports each split separately. Only the test block is the final OOS
+diagnostic. The purge is based on decision timestamps and is only an approximation
+to trading-session overlap; it does not guarantee independent returns. The tool does
+not fit parameters or choose the best configuration.
+
+## Current limitations
+
+- The score is a transparent weighted aggregation of explicit, externally validated
+  labels, not a trained or validated predictive model.
+- Historical first-seen times cannot be reconstructed from current RSS/SEC backfills.
+  Meaningful PIT evaluation requires prospective archives or validated historical data.
+- The backtest uses a close-price proxy and overlapping holding periods; its Sharpe
+  estimate is not adjusted for dependence.
+- The initial benchmark field is a data-presence check, not an alpha estimate.
+- No live collection or empirical event-factor alpha claim is implied by passing unit
+  tests. Production signal generation remains disabled.
