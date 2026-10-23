@@ -299,6 +299,7 @@ class SecEventCollector:
             row.get("publication_timestamp_status") == "verified_from_sgml_header"
             for row in events
         )
+        timestamp_unverified = len(events) - timestamp_verified
         report = {
             "cik": cik10,
             "ticker": ticker_value,
@@ -316,10 +317,16 @@ class SecEventCollector:
             "selected_filing_count": len(selected),
             "event_count": len(events),
             "verified_header_timestamp_count": timestamp_verified,
+            "unverified_header_timestamp_count": timestamp_unverified,
             "header_fetch_error_count": header_fetch_errors,
             "coverage_status": (
                 "partial"
-                if history_may_be_incomplete or truncated_by_limit or header_fetch_errors
+                if (
+                    history_may_be_incomplete
+                    or truncated_by_limit
+                    or header_fetch_errors
+                    or timestamp_unverified
+                )
                 else "bounded_recent_window"
             ),
             "historical_pit_warning": (
