@@ -9,6 +9,7 @@ on:
       - .github/workflows/research-event-factor-capture-once.yml
       - tools/research/treasury_yield_curve_capture.py
       - tools/research/official_event_rss_collector.py
+      - tools/research/bls_macro_series_capture.py
 
 permissions:
   contents: write
@@ -65,6 +66,18 @@ jobs:
             --year "$YEAR" --curve-type real \
             --output "data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"; then
             echo "::warning::Real Treasury curve capture failed; preserving event RSS capture."
+          fi
+
+      - name: Capture current BLS macro series through public API
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          YEAR="$(date -u +%Y)"
+          if ! python -m tools.research.bls_macro_series_capture \
+            --start-year "$((YEAR - 2))" --end-year "$YEAR" \
+            --output "data/research/event-capture/bls_macro_series_${GITHUB_RUN_ID}.json"; then
+            echo "::warning::BLS public API snapshot failed; RSS and Treasury evidence are preserved."
           fi
 
       - name: Commit immutable capture and updated event archive
