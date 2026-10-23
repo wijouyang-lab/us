@@ -1,0 +1,198 @@
+name: Research Non-ATR Historical Backtest
+
+# Keep expensive historical refresh/backtest runs serialized per ref.
+concurrency:
+  group: research-non-atr-backtest-${{ github.ref }}
+  cancel-in-progress: false
+on:
+  push:
+    branches:
+      - "research/non-atr-integrated-backtest"
+    paths:
+      - ".github/workflows/research-non-atr-backtest.yml"
+      - "tools/research/non_atr_integrated_backtest.py"
+      - "tools/research/non_atr_strategy_baselines.py"
+      - "tools/research/non_atr_validation.py"
+      - "tools/research/refresh_sp500_pit_prices.py"
+      - "tools/research/pit_membership.py"
+      - "tools/research/multi_index_membership.py"
+      - "tools/research/wayback_delisted_prices.py"
+      - "tools/research/data/*.csv"
+      - "tools/research/requirements-research.txt"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/research-non-atr-backtest.yml"
+      - "tools/research/non_atr_integrated_backtest.py"
+      - "tools/research/non_atr_strategy_baselines.py"
+      - "tools/research/non_atr_validation.py"
+      - "tools/research/refresh_sp500_pit_prices.py"
+      - "tools/research/pit_membership.py"
+      - "tools/research/multi_index_membership.py"
+      - "tools/research/wayback_delisted_prices.py"
+      - "tools/research/data/*.csv"
+      - "tools/research/requirements-research.txt"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  historical-backtest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: research/non-atr-integrated-backtest
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research dependencies
+        run: python -m pip install -r tools/research/requirements-research.txt
+      - name: Refresh point-in-time adjusted prices
+        id: refresh_prices
+        run: |
+          python tools/research/refresh_sp500_pit_prices.py \
+            --history tools/research/data/sp500_components_history.csv \
+            --aliases tools/research/data/sp500_ticker_aliases.csv \
+            --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
+            --dow30-membership tools/research/data/dow30_membership_history.csv \
+            --stocks research_non_atr_download_diagnostics/partial_prices.csv \
+            --spy research_non_atr_download_diagnostics/partial_spy.csv \
+            --audit research_non_atr_download_diagnostics/audit.json \
+            --allow-partial-output
+      - name: Summarize price-refresh diagnostics even on failure
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          path = Path("research_non_atr_download_diagnostics/audit.json")
+          if not path.is_file():
+              print("PRICE_REFRESH_AUDIT_MISSING: refresh failed before writing its audit.")
+              raise SystemExit(0)
+
+          audit = json.loads(path.read_text(encoding="utf-8"))
+          coverage = audit.get("coverage") or {}
+          print(f"PRICE_REFRESH_STATUS={audit.get('status', 'UNKNOWN')}")
+          print(f"CUTOFF_DATE={audit.get('cutoff_date', 'unknown')}")
+          print(f"MEMBER_BAR_COVERAGE={coverage.get('member_bar_coverage', 'unknown')}")
+          print(f"TICKER_COVERAGE={coverage.get('ticker_coverage', 'unknown')}")
+          print(f"DOWNLOADED_UNIQUE_TICKERS={audit.get('downloaded_unique_tickers', 'unknown')}")
+          print(f"DOWNLOAD_FAILURE_COUNT={audit.get('download_failure_count', 'unknown')}")
+          print("AUDIT_ISSUES:")
+          for issue in audit.get("issues", []):
+              print(f"- {issue}")
+          print("FIRST_20_DOWNLOAD_FAILURES:")
+          for failure in (audit.get("download_failures") or [])[:20]:
+              print(
+                  f"- {failure.get('ticker', '?')}: "
+                  f"bulk={failure.get('bulk_error', 'unknown')}; "
+                  f"fallback={failure.get('fallback_error', 'unknown')}"
+              )
+          print("LOW_COVERAGE_TICKERS:")
+          for ticker in (coverage.get("low_coverage_tickers") or [])[:20]:
+              print(
+                  f"- {ticker.get('ticker', '?')}: "
+                  f"{ticker.get('coverage', 'unknown')} "
+                  f"({ticker.get('observed_sessions', '?')}/"
+                  f"{ticker.get('expected_sessions', '?')} sessions)"
+              )
+          PY
+      - name: Validate adjusted-price schema and refresh audit
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import pandas as pd
+
+          audit_path = Path("research_non_atr_download_diagnostics/audit.json")
+          if not audit_path.is_file():
+              raise SystemExit("Missing price-refresh audit; refusing to run backtest.")
+          audit = json.loads(audit_path.read_text(encoding="utf-8"))
+          issues = audit.get("issues") or []
+          coverage_prefixes = (
+              "member-session bar coverage ",
+              "ticker coverage ",
+          )
+          non_coverage_issues = [
+              issue for issue in issues
+              if not str(issue).startswith(coverage_prefixes)
+          ]
+          if audit.get("status") != "PASS":
+              if non_coverage_issues:
+                  raise SystemExit(
+                      "Price refresh has blocking non-coverage issues: "
+                      + "; ".join(map(str, non_coverage_issues))
+                  )
+              if not issues:
+                  raise SystemExit(
+                      f"Price refresh status is not PASS: {audit.get('status')}"
+                  )
+              print(
+                  "WARNING: Universe-wide coverage gates are below target; "
+                  "continuing only to the strict point-in-time per-ticker eligibility "
+                  "screen. Incomplete tickers must be excluded by the backtest audit. "
+                  "This is not a full-universe PASS."
+              )
+              Path("research_non_atr_download_diagnostics/coverage_gate_warning.txt").write_text(
+                  "Universe-wide coverage below target. Results are filtered research "
+                  "only; inspect audit.json and ticker_eligibility_audit.csv.\n",
+                  encoding="utf-8",
+              )
+
+          required = {"Date", "Ticker", "Adj Close"}
+          for filename in ("research_non_atr_download_diagnostics/partial_prices.csv", "research_non_atr_download_diagnostics/partial_spy.csv"):
+              path = Path(filename)
+              columns = set(pd.read_csv(path, nrows=0).columns)
+              missing = required - columns
+              if missing:
+                  raise SystemExit(f"{filename} missing required adjusted-price columns: {sorted(missing)}")
+              rows = 0
+              valid_adjusted = 0
+              latest = None
+              for chunk in pd.read_csv(path, usecols=["Date", "Ticker", "Adj Close"], chunksize=200000):
+                  rows += len(chunk)
+                  prices = pd.to_numeric(chunk["Adj Close"], errors="coerce")
+                  valid_adjusted += int((prices > 0).sum())
+                  dates = pd.to_datetime(chunk["Date"], errors="coerce").dropna()
+                  if not dates.empty:
+                      chunk_latest = dates.max()
+                      latest = chunk_latest if latest is None else max(latest, chunk_latest)
+              if rows == 0 or valid_adjusted == 0:
+                  raise SystemExit(f"{filename} has no valid positive adjusted-close observations")
+              print(f"{filename}: rows={rows}, valid_adjusted_close={valid_adjusted}, latest={latest.date() if latest is not None else 'unknown'}")
+          PY
+      - name: Run PIT-complete history backtest
+        run: |
+          python -m tools.research.non_atr_integrated_backtest \
+            --input research_non_atr_download_diagnostics/partial_prices.csv \
+            --output-dir research_non_atr_backtest_results \
+            --spy-calendar research_non_atr_download_diagnostics/partial_spy.csv \
+            --sp500-membership tools/research/data/sp500_components_history.csv \
+            --ticker-aliases tools/research/data/sp500_ticker_aliases.csv \
+            --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
+            --dow30-membership tools/research/data/dow30_membership_history.csv \
+            --min-rows 756 --min-train-rows 756 --test-rows 252 \
+            --one-way-cost-bps 5
+      - name: Upload research results and refresh audit even if analysis fails
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-non-atr-backtest-results
+          path: |
+            research_non_atr_backtest_results/
+            research_non_atr_download_diagnostics/
+          if-no-files-found: warn
+          retention-days: 30
+      - name: Upload refreshed adjusted-price inputs
+        if: steps.refresh_prices.outcome == 'success'
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-non-atr-adjusted-price-inputs
+          path: |
+            research_non_atr_download_diagnostics/partial_prices.csv
+            research_non_atr_download_diagnostics/partial_spy.csv
+          if-no-files-found: error
+          retention-days: 30

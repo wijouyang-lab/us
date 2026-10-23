@@ -1,0 +1,251 @@
+"""Research-only CSV backtest runner for non-ATR strategy baselines.
+
+Input CSV must contain Date, Ticker, and Adj Close columns. Tickers are checked against the available trading-session calendar only between
+their own first and last observed dates, so later IPOs are not penalized for earlier sessions.
+Outputs are research artifacts only and never feed production signals/orders.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import date
+from pathlib import Path
+
+try:
+    from .multi_index_membership import load_multi_index_membership
+except ImportError:  # direct script execution
+    from multi_index_membership import load_multi_index_membership
+
+import pandas as pd
+
+from tools.research.non_atr_strategy_baselines import build_strategy_returns, summarize_returns
+from tools.research.non_atr_validation import apply_turnover_costs, chronological_walk_forward_splits
+
+STRATEGIES = {
+    "momentum": ("momentum_return", "momentum_position"),
+    "trend": ("trend_return", "trend_position"),
+    "mean_reversion": ("mean_reversion_return", "mean_reversion_position"),
+}
+
+
+def load_complete_tickers(
+    path: str | Path,
+    *,
+    min_rows: int = 756,
+    spy_path: str | Path | None = None,
+    membership_paths: tuple[str | Path, str | Path, str | Path, str | Path] | None = None,
+) -> tuple[dict[str, pd.DataFrame], pd.DataFrame]:
+    """Load complete per-ticker histories, optionally measured against PIT membership sessions.
+
+    When both SPY and the three membership datasets are supplied, each ticker is
+    checked only on SPY sessions during its documented S&P 500/Nasdaq-100/Dow 30
+    membership intervals. This avoids treating pre-IPO or non-member dates as gaps.
+    Without them, completeness is measured within each ticker's observed span.
+    """
+    if min_rows < 2:
+        raise ValueError("min_rows must be >= 2")
+    frame = pd.read_csv(path)
+    required = {"Date", "Ticker", "Adj Close"}
+    missing = required - set(frame.columns)
+    if missing:
+        raise ValueError(f"input missing required columns: {', '.join(sorted(missing))}")
+    frame = frame[list(required)].copy()
+    frame["Date"] = pd.to_datetime(frame["Date"], errors="coerce")
+    frame["Ticker"] = frame["Ticker"].astype("string").str.strip().str.upper()
+    frame["Adj Close"] = pd.to_numeric(frame["Adj Close"], errors="coerce")
+    frame = frame.dropna(subset=["Date", "Ticker", "Adj Close"])
+    frame = frame[(frame["Ticker"] != "") & (frame["Adj Close"] > 0)]
+    frame = frame.sort_values(["Ticker", "Date"]).drop_duplicates(["Ticker", "Date"], keep="last")
+
+    if frame.empty:
+        # Keep the required schema so PIT membership can still be audited when every
+        # requested ticker is missing from the downloaded price file.
+        frame = pd.DataFrame(columns=["Date", "Ticker", "Adj Close"])
+        frame["Date"] = pd.to_datetime(frame["Date"])
+        frame["Ticker"] = frame["Ticker"].astype("string")
+        frame["Adj Close"] = pd.to_numeric(frame["Adj Close"])
+
+    if (spy_path is None) != (membership_paths is None):
+        raise ValueError("spy_path and membership_paths must be supplied together")
+    expected_by_ticker: dict[str, set[pd.Timestamp]] | None = None
+    if spy_path is not None and membership_paths is not None:
+        spy = pd.read_csv(spy_path)
+        if "Date" not in spy.columns:
+            raise ValueError("SPY calendar CSV must contain Date")
+        sessions = pd.to_datetime(spy["Date"], errors="coerce").dropna().dt.normalize().drop_duplicates().sort_values()
+        if sessions.empty:
+            raise ValueError("SPY calendar CSV contains no valid sessions")
+        sp500_path, aliases_path, nasdaq100_path, dow30_path = map(Path, membership_paths)
+        membership = load_multi_index_membership(sp500_path, aliases_path, nasdaq100_path, dow30_path)
+        expected_by_ticker = {}
+        for ticker, intervals in membership.items():
+            expected = set()
+            for interval in intervals:
+                expected.update(
+                    pd.Timestamp(session) for session in sessions
+                    if interval.date_added <= session.date()
+                    and (interval.date_removed is None or session.date() < interval.date_removed)
+                )
+            if expected:
+                expected_by_ticker[ticker] = expected
+
+    # Fallback calendar for research inputs without documented PIT membership.
+    session_calendar = pd.DatetimeIndex(sorted(frame["Date"].dt.normalize().unique()))
+    eligible: dict[str, pd.DataFrame] = {}
+    audit = []
+    for ticker, group in frame.groupby("Ticker", sort=True):
+        dates = pd.DatetimeIndex(group["Date"])
+        if expected_by_ticker is not None:
+            expected_set = expected_by_ticker.get(str(ticker), set())
+            # The expected window comes from the SPY calendar and PIT membership,
+            # not from observed ticker endpoints; otherwise missing first/last prices
+            # could be hidden by shrinking the window to the available data.
+            expected_dates = pd.DatetimeIndex(sorted(expected_set))
+            observed_dates = pd.DatetimeIndex(group["Date"].dt.normalize())
+            observed_expected = observed_dates.intersection(expected_dates)
+            complete = len(expected_dates) > 0 and observed_expected.equals(expected_dates)
+            expected_count = len(expected_dates)
+            missing_count = max(0, expected_count - len(observed_expected))
+        else:
+            expected_dates = session_calendar[(session_calendar >= dates.min().normalize()) & (session_calendar <= dates.max().normalize())]
+            observed_dates = pd.DatetimeIndex(group["Date"].dt.normalize())
+            complete = len(observed_dates) == len(expected_dates) and observed_dates.equals(expected_dates)
+            expected_count = len(expected_dates)
+            missing_count = max(0, expected_count - len(observed_dates))
+        enough = len(group) >= min_rows
+        status = "eligible" if complete and enough else "excluded"
+        reasons = []
+        if not complete:
+            reasons.append(f"incomplete_expected_session_history:{missing_count}_missing_of_{expected_count}")
+        if not enough:
+            reasons.append(f"fewer_than_{min_rows}_rows")
+        audit.append({
+            "Ticker": str(ticker), "rows": int(len(group)),
+            "start_date": group["Date"].min().date().isoformat(),
+            "end_date": group["Date"].max().date().isoformat(),
+            "status": status, "reason": ";".join(reasons),
+        })
+        if status == "eligible":
+            if expected_by_ticker is not None:
+                keep_dates = set(expected_dates)
+                eligible[str(ticker)] = group[
+                    group["Date"].dt.normalize().isin(keep_dates)
+                ][["Date", "Adj Close"]].reset_index(drop=True)
+            else:
+                eligible[str(ticker)] = group[["Date", "Adj Close"]].reset_index(drop=True)
+    # A ticker with zero downloaded rows never appears in groupby above. Add every
+    # expected PIT member explicitly so completely missing symbols are visible in the
+    # eligibility audit instead of silently disappearing from the denominator.
+    if expected_by_ticker is not None:
+        audited_tickers = {str(item["Ticker"]) for item in audit}
+        for ticker, expected_set in sorted(expected_by_ticker.items()):
+            if ticker in audited_tickers:
+                continue
+            expected_count = len(expected_set)
+            audit.append({
+                "Ticker": ticker,
+                "rows": 0,
+                "start_date": "",
+                "end_date": "",
+                "status": "excluded",
+                "reason": (
+                    f"incomplete_expected_session_history:{expected_count}_missing_of_{expected_count};"
+                    f"no_downloaded_price_rows"
+                ),
+            })
+    return eligible, pd.DataFrame(audit)
+
+
+def run_backtest(
+    input_csv: str | Path,
+    output_dir: str | Path,
+    *,
+    min_rows: int = 756,
+    spy_path: str | Path | None = None,
+    membership_paths: tuple[str | Path, str | Path, str | Path, str | Path] | None = None,
+    one_way_cost_bps: float = 5.0,
+    min_train_rows: int = 756,
+    test_rows: int = 252,
+) -> dict[str, int]:
+    """Run fixed baselines and chronological OOS summaries on complete ticker histories."""
+    if one_way_cost_bps < 0:
+        raise ValueError("one_way_cost_bps cannot be negative")
+    eligible, audit = load_complete_tickers(input_csv, min_rows=min_rows, spy_path=spy_path, membership_paths=membership_paths)
+    output = Path(output_dir)
+    output.mkdir(parents=True, exist_ok=True)
+    audit.to_csv(output / "ticker_eligibility_audit.csv", index=False)
+
+    metric_rows = []
+    oos_rows = []
+    for ticker, prices in eligible.items():
+        returns = build_strategy_returns(prices)
+        splits = chronological_walk_forward_splits(
+            returns["Date"], min_train_rows=min_train_rows, test_rows=test_rows
+        )
+        for strategy, (return_col, position_col) in STRATEGIES.items():
+            gross = returns[return_col]
+            # Returns are earned by the prior close signal; charge turnover on that same held exposure.
+            held_positions = returns[position_col].shift(1).fillna(0.0)
+            costs = apply_turnover_costs(gross, held_positions, one_way_cost_bps=one_way_cost_bps)
+            summary = summarize_returns(costs["net_return"])
+            metric_rows.append({"Ticker": ticker, "strategy": strategy, "cost_bps_one_way": one_way_cost_bps,
+                                "gross_total_return": summarize_returns(gross)["total_return"],
+                                **summary})
+            for split_number, split in enumerate(splits, start=1):
+                mask = (returns["Date"] >= pd.Timestamp(split["test_start"])) & (
+                    returns["Date"] <= pd.Timestamp(split["test_end"])
+                )
+                test_returns = costs.loc[mask, "net_return"]
+                oos_rows.append({
+                    "Ticker": ticker, "strategy": strategy, "split": split_number,
+                    **split, **summarize_returns(test_returns),
+                    "cost_bps_one_way": one_way_cost_bps,
+                })
+
+    metrics = pd.DataFrame(metric_rows)
+    oos = pd.DataFrame(oos_rows)
+    metrics.to_csv(output / "strategy_metrics.csv", index=False)
+    oos.to_csv(output / "walk_forward_oos_metrics.csv", index=False)
+    # Metadata makes empty outputs explicit instead of implying a successful backtest.
+    summary = {
+        "input_tickers": int(audit["Ticker"].nunique()) if not audit.empty else 0,
+        "eligible_tickers": len(eligible),
+        "excluded_tickers": int((audit["status"] == "excluded").sum()) if not audit.empty else 0,
+        "metric_rows": len(metrics),
+        "oos_rows": len(oos),
+    }
+    pd.Series(summary, name="value").to_csv(output / "run_summary.csv", header=True)
+    return summary
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input", required=True, help="CSV with Date,Ticker,Adj Close")
+    parser.add_argument("--output-dir", required=True)
+    parser.add_argument("--min-rows", type=int, default=756)
+    parser.add_argument("--spy-calendar", help="SPY CSV calendar for PIT completeness checks")
+    parser.add_argument("--sp500-membership", help="S&P 500 membership history CSV")
+    parser.add_argument("--ticker-aliases", help="CIK-guarded ticker alias registry CSV")
+    parser.add_argument("--nasdaq100-membership", help="Nasdaq-100 membership history CSV")
+    parser.add_argument("--dow30-membership", help="Dow 30 membership history CSV")
+    parser.add_argument("--one-way-cost-bps", type=float, default=5.0)
+    parser.add_argument("--min-train-rows", type=int, default=756)
+    parser.add_argument("--test-rows", type=int, default=252)
+    args = parser.parse_args()
+    pit_args = [args.spy_calendar, args.sp500_membership, args.ticker_aliases,
+                args.nasdaq100_membership, args.dow30_membership]
+    if any(pit_args) and not all(pit_args):
+        parser.error("PIT mode requires --spy-calendar and all four membership/alias CSV paths")
+    membership_paths = tuple(pit_args[1:]) if all(pit_args) else None
+    summary = run_backtest(
+        args.input, args.output_dir, min_rows=args.min_rows,
+        spy_path=args.spy_calendar, membership_paths=membership_paths,
+        one_way_cost_bps=args.one_way_cost_bps,
+        min_train_rows=args.min_train_rows, test_rows=args.test_rows,
+    )
+    print(pd.Series(summary).to_string())
+    if summary["eligible_tickers"] == 0:
+        raise SystemExit("No complete eligible tickers; inspect ticker_eligibility_audit.csv")
+
+
+if __name__ == "__main__":
+    main()
