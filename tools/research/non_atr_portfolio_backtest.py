@@ -138,11 +138,15 @@ def apply_risk_controls(
         if cooldown > 0:
             scale = 0.0
             cooldown -= 1
+            if cooldown == 0:
+                peak = equity
         else:
             scale = proposed_scale
             if equity / peak - 1.0 <= -drawdown_limit:
                 scale = 0.0
                 cooldown = cooldown_sessions - 1
+                if cooldown == 0:
+                    peak = equity
 
         prior_scale = scales[-1] if scales else 0.0
         turnover = float(row["turnover"]) * scale + abs(scale - prior_scale) * base_exposure
