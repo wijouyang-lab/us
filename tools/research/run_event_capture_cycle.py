@@ -23,7 +23,7 @@ from tools.research.pit_event_research_pipeline import build_event_research_repo
 from tools.research.sec_event_collector import SecEventCollector, load_universe
 
 
-DEFAULT_FEEDS = "bls_cpi,bls_employment,fed_all,fed_speeches"
+DEFAULT_FEEDS = "bls_cpi,bls_employment,bea_releases,fed_all,fed_speeches"
 
 
 def _dump(payload: Any) -> str:
