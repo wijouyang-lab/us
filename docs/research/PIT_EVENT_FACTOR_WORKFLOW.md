@@ -206,6 +206,21 @@ python -m tools.research.build_treasury_macro_panel \
 
 The decision CSV must contain timezone-aware ISO-8601 `decision_at` values. The output retains original decision columns and adds nominal 2y/3m/10y yields, 2s10s and 3m10y slopes, real 10y yield, and a nominal-minus-real 10y inflation-compensation proxy. Each snapshot is eligible only at or after its actual retrieval timestamp; observation dates after a decision date are excluded. Missing yields remain null. Separate nominal/real age columns let a later evaluation apply a predeclared staleness limit. Review the JSON report before evaluation; this utility does not generate a trade signal or prove alpha.
 
+## Compare event-factor performance across Treasury curve regimes
+
+After building the strict PIT macro panel, run a predeclared descriptive regime split:
+
+```bash
+python -m tools.research.event_factor_macro_regime \
+  --signals data/research/event_signal_panel.csv \
+  --prices data/research/prices.csv \
+  --macro-panel data/research/treasury_macro_panel.csv \
+  --output data/research/event_factor_macro_regime_report.json \
+  --max-feature-age-days 5
+```
+
+The tool compares event-factor portfolios with their paired price-only momentum baseline separately when the nominal 10y-minus-2y spread is below zero (inverted) and at/above zero (non-inverted). The zero-basis-point threshold and five-day maximum feature age are explicit defaults, not optimized parameters. Change them only as a predeclared research design before examining the final test block. Unavailable, stale, and missing macro rows are excluded rather than filled. Small or empty regime samples remain insufficient-data results, not evidence of no effect. This descriptive split alone cannot establish causal impact or alpha.
+
 ## Build a nominal-minus-real inflation-compensation proxy
 
 After capturing separate nominal and real Treasury snapshots, join common observation dates without interpolation:
