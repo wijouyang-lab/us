@@ -1,7 +1,7 @@
 from tools.research.pit_sec_edgar import parse_sec_submissions
 
 
-def test_parse_sec_recent_filings_uses_acceptance_time_and_stable_rows():
+def test_parse_sec_does_not_treat_raw_acceptance_datetime_as_verified_utc():
     payload = {
         "name": "Example Corp",
         "filings": {
@@ -19,10 +19,35 @@ def test_parse_sec_recent_filings_uses_acceptance_time_and_stable_rows():
         payload, first_seen_at_utc="2026-10-22T17:00:00Z", ticker="EXM",
     )
     assert len(records) == 2
-    assert records[0]["published_at_utc"] == "2026-10-22T15:30:00Z"
+    assert records[0]["published_at_utc"] is None
+    assert records[0]["availability_status"] == "timestamp_missing"
     assert records[0]["event_type"] == "earnings"
+    assert records[1]["published_at_utc"] is None
+    assert records[1]["availability_status"] == "timestamp_missing"
     assert records[1]["event_type"] == "earnings"
     assert records[0]["tickers"] == ["EXM"]
+
+
+def test_parse_sec_accepts_separately_verified_utc_timestamp():
+    payload = {
+        "name": "Example Corp",
+        "filings": {
+            "recent": {
+                "accessionNumber": ["0000123456-26-000004"],
+                "form": ["8-K"],
+                "acceptanceDateTime": ["2026-10-22T16:30:00Z"],
+                "verifiedPublishedAtUtc": ["2026-10-22T15:30:00Z"],
+                "primaryDocument": ["current.htm"],
+                "items": ["2.02"],
+            }
+        },
+    }
+    record = parse_sec_submissions(
+        payload, first_seen_at_utc="2026-10-22T15:31:00Z", ticker="EXM",
+    )[0]
+    assert record["published_at_utc"] == "2026-10-22T15:30:00Z"
+    assert record["availability_status"] == "available"
+    assert record["event_type"] == "earnings"
 
 
 def test_parse_sec_does_not_treat_filing_date_as_publication_time():
