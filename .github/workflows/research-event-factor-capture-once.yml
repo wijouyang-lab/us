@@ -46,7 +46,8 @@ jobs:
           DECISION_AT="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
           python -m tools.research.run_event_capture_cycle \
             --output-dir data/research/event-capture \
-            --decision-at "$DECISION_AT"
+            --decision-at "$DECISION_AT" \
+            --audit-after-capture
 
       - name: Capture official Treasury nominal and real curves
         shell: bash
