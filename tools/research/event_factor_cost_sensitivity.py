@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 from typing import Any
 
@@ -30,8 +31,8 @@ def _float_grid(value: str, label: str) -> list[float]:
         values = sorted(set(float(part.strip()) for part in value.split(",") if part.strip()))
     except ValueError as exc:
         raise ValueError(f"{label} must be comma-separated numbers") from exc
-    if not values or any(v < 0 for v in values):
-        raise ValueError(f"{label} must contain non-negative numbers")
+    if not values or any(not math.isfinite(v) or v < 0 for v in values):
+        raise ValueError(f"{label} must contain finite non-negative numbers")
     return values
 
 
