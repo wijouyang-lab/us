@@ -82,8 +82,6 @@ def apply_annotations(
         labeler = str(row.get("labeler_id") or "").strip()
         reviewer = str(row.get("reviewer_id") or "").strip()
         schema_version = str(row.get("label_schema_version") or "").strip()
-        if direction is None or impact is None:
-            raise ValueError(f"reviewed annotation {version} requires both numeric scores")
         if not rationale or not labeler or not reviewer or not schema_version:
             raise ValueError(f"reviewed annotation {version} requires rationale, labeler, reviewer and schema version")
         if "@" in labeler or "@" in reviewer:
