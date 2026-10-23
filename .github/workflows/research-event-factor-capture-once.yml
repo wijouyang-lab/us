@@ -41,17 +41,34 @@ jobs:
       - name: Install research dependencies
         run: pip install -r tools/research/requirements-research.txt
 
-      - name: Capture official macro, policy, speech and Treasury auction RSS
+      - name: Build current SEC mapping for prospective watchlist filings
+        env:
+          SEC_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m tools.research.build_sec_research_universe \
+            --tickers-file watchlist.txt \
+            --output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
+            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json"
+
+      - name: Capture official macro, policy, speech, Treasury auction and SEC filing events
         env:
           OFFICIAL_FEED_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+          SEC_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
         shell: bash
         run: |
           set -euo pipefail
           DECISION_AT="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
+          END_DATE="$(date -u +%F)"
+          START_DATE="$(date -u -d '30 days ago' +%F)"
           python -m tools.research.run_event_capture_cycle \
             --output-dir data/research/event-capture \
             --decision-at "$DECISION_AT" \
-            --audit-after-capture
+            --audit-after-capture \
+            --sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
+            --sec-start-date "$START_DATE" \
+            --sec-end-date "$END_DATE"
 
       - name: Capture official Treasury nominal and real curves
         shell: bash
