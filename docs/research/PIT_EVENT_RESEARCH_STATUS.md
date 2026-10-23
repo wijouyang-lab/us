@@ -1,11 +1,11 @@
 # PIT event-factor research status
 
-Last verified capture: **2026-10-23 17:10 UTC**. This is a data-readiness status report, not an alpha claim.
+Last verified capture: **2026-10-23 17:11 UTC**. This is a data-readiness status report, not an alpha claim.
 
 ## Evidence captured
 
 - **86** immutable event versions in the archive.
-- **30** event versions were published within the 30-day annotation window at the latest capture cutoff. The workflow generated a separate queue with **30 pending rows**.
+- **30** event versions were published within the 30-day annotation window at the latest capture cutoff. The workflow generated a separate queue with **30 pending rows** ([CSV](../../data/research/event-capture/annotation_queue_39992913372.csv), [report](../../data/research/event-capture/annotation_queue_39992913372.report.json)).
 - Source coverage in the archive: BEA releases (49), Federal Reserve press releases (20), Fed speeches/testimony (15), Treasury auction announcements (1), Treasury auction results (1).
 - The BLS CPI and employment RSS feeds returned **HTTP 403** from the GitHub Actions runner. A separate public BLS API snapshot succeeded with **5/5 current series**: CPI, core CPI, nonfarm payrolls, unemployment rate, and average hourly earnings.
 - Treasury current-year XML capture returned **203 nominal rows and 203 real-yield rows**. The real-yield schema uses `TC_*` fields; nominal uses `BC_*`.
