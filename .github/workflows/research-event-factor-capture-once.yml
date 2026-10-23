@@ -92,17 +92,6 @@ jobs:
             --output "data/research/event-capture/annotation_queue_${GITHUB_RUN_ID}.csv" \
             --report "data/research/event-capture/annotation_queue_${GITHUB_RUN_ID}.report.json"
 
-      - name: Build pending human-review label queue
-        shell: bash
-        run: |
-          set -euo pipefail
-          AS_OF="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
-          python -m tools.research.build_event_annotation_queue \
-            --archive data/research/event-capture/event_archive.json \
-            --as-of "$AS_OF" --max-age-days 30 \
-            --output "data/research/event-capture/event_annotation_queue_${GITHUB_RUN_ID}.csv" \
-            --report "data/research/event-capture/event_annotation_queue_${GITHUB_RUN_ID}.json"
-
       - name: Commit immutable capture and updated event archive
         shell: bash
         run: |
