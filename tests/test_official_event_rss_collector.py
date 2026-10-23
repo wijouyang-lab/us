@@ -123,6 +123,26 @@ def test_collector_uses_only_allowlisted_feeds_and_reports_failures():
     assert len(result["metadata"]["event_snapshot_sha256"]) == 64
 
 
+
+def test_bea_release_feed_is_allowlisted_and_normalized_as_macro():
+    body = """<rss><channel>
+    <item><title>Personal Income and Outlays, August 2026</title>
+    <link>https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026</link>
+    <guid>bea-pce-2026-08</guid><pubDate>Wed, 30 Sep 2026 08:30:00 -0400</pubDate>
+    <description>Personal income and outlays release.</description></item>
+    </channel></rss>"""
+    result = parse_official_feed(
+        body, feed_key="bea_releases", first_seen_at_utc="2026-09-30T12:31:00Z",
+    )
+    event = result["events"][0]
+    assert event["event_type"] == "macro_release"
+    assert event["source"] == "bea_news_release_rss"
+    assert event["feed_key"] == "bea_releases"
+    assert event["published_at_utc"] == "2026-09-30T12:30:00Z"
+    assert event["source_url"] == "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+    assert event["market_scope"] == "market"
+
+
 def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
     with pytest.raises(ValueError, match="contact email"):
         OfficialRssCollector("no email")
