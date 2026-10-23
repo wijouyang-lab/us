@@ -72,6 +72,7 @@ def audit_event_archive(
     missing_fields: Counter[str] = Counter()
     timestamp_checks = Counter()
     label_counts = Counter()
+    label_review_status_counts: Counter[str] = Counter()
     version_ids: list[str] = []
     eligible_by_decision: dict[str, int] = {d.isoformat().replace("+00:00", "Z"): 0 for d in decisions}
 
@@ -127,6 +128,23 @@ def audit_event_archive(
         label_counts["direction_valid" if direction_ok else "direction_missing_or_invalid"] += 1
         label_counts["impact_valid" if impact_ok else "impact_missing_or_invalid"] += 1
         label_counts["both_labels_valid" if direction_ok and impact_ok else "not_fully_labeled"] += 1
+        review_status = str(event.get("label_review_status") or "missing").strip().lower()
+        label_review_status_counts[review_status] += 1
+        reviewed_at = _parse_aware_timestamp(event.get("label_reviewed_at_utc"))
+        reviewed = (
+            direction_ok and impact_ok
+            and review_status in {"reviewed", "validated"}
+            and reviewed_at is not None
+            and reviewed_at <= audit_time
+        )
+        if reviewed:
+            label_counts["reviewed_labels"] += 1
+        else:
+            label_counts["unverified_label_provenance"] += 1
+        if event.get("label_reviewed_at_utc") not in (None, "") and reviewed_at is None:
+            timestamp_checks["invalid_label_reviewed_at_utc"] += 1
+        elif reviewed_at is not None and reviewed_at > audit_time:
+            timestamp_checks["label_review_after_audit_time"] += 1
 
         for decision in decisions:
             ok, reason = event_eligibility(event, decision)
@@ -136,7 +154,7 @@ def audit_event_archive(
                 rejection_counts[reason] += 1
 
     duplicate_version_count = len(version_ids) - len(set(version_ids))
-    labelled = label_counts["both_labels_valid"]
+    labelled = label_counts["reviewed_labels"]
     if not events:
         status = "fail_no_data"
     elif decisions and not any(eligible_by_decision.values()):
@@ -172,9 +190,11 @@ def audit_event_archive(
         "timestamp_quality": dict(sorted(timestamp_checks.items())),
         "label_quality": {
             **dict(sorted(label_counts.items())),
+            "review_status_counts": dict(sorted(label_review_status_counts.items())),
             "valid_direction_fraction": round(label_counts["direction_valid"] / len(events), 4) if events else 0.0,
             "valid_impact_fraction": round(label_counts["impact_valid"] / len(events), 4) if events else 0.0,
-            "fully_labeled_fraction": round(labelled / len(events), 4) if events else 0.0,
+            "fully_labeled_fraction": round(label_counts["both_labels_valid"] / len(events), 4) if events else 0.0,
+            "reviewed_label_fraction": round(label_counts["reviewed_labels"] / len(events), 4) if events else 0.0,
         },
         "pit_eligibility": {
             "decision_dates": len(decisions),
@@ -193,6 +213,7 @@ def audit_event_archive(
             ),
             "all_first_seen_after_publication": timestamp_checks["first_seen_before_publication"] == 0,
             "validated_labels_present": labelled > 0,
+            "label_review_provenance_present": labelled == label_counts["both_labels_valid"],
             "pit_eligible_for_at_least_one_decision": not decisions or any(eligible_by_decision.values()),
             "empirical_alpha_established": False,
             "production_activation_allowed": False,
