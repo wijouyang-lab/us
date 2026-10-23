@@ -118,11 +118,11 @@ def build_treasury_macro_panel(
         r10 = ry.get("10y")
         slope = round((float(n10) - float(n2)) * 100, 4) if n10 is not None and n2 is not None else None
         front_slope = round((float(n10) - float(n3)) * 100, 4) if n10 is not None and n3 is not None else None
-        breakeven = round((float(n10) - float(r10)) * 100, 4) if n10 is not None and r10 is not None and decision >= both_available_at else None
+        breakeven = round((float(n10) - float(r10)) * 100, 4) if ndate is not None and ndate == rdate and n10 is not None and r10 is not None and decision >= both_available_at else None
         dates = [d for d in (ndate, rdate) if d is not None]
         nominal_age = (decision.date() - datetime.fromisoformat(ndate).date()).days if ndate else None
         real_age = (decision.date() - datetime.fromisoformat(rdate).date()).days if rdate else None
-        if nominal_ok or real_ok:
+        if (nominal_ok and ndate is not None) or (real_ok and rdate is not None):
             eligible_decisions += 1
         record = dict(row)
         record.update({
@@ -139,7 +139,7 @@ def build_treasury_macro_panel(
             "treasury_breakeven_10y_proxy_bp": breakeven,
             "treasury_nominal_available": nominal_ok and ndate is not None,
             "treasury_real_available": real_ok and rdate is not None,
-            "treasury_breakeven_available": decision >= both_available_at and ndate is not None and rdate is not None,
+            "treasury_breakeven_available": decision >= both_available_at and ndate is not None and ndate == rdate and r10 is not None and n10 is not None,
             "treasury_nominal_available_at_utc": nominal_retrieved.isoformat().replace("+00:00", "Z"),
             "treasury_real_available_at_utc": real_retrieved.isoformat().replace("+00:00", "Z"),
             "treasury_breakeven_available_at_utc": max(nominal_retrieved, real_retrieved).isoformat().replace("+00:00", "Z"),
