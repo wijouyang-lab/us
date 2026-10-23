@@ -35,7 +35,7 @@ The audit is a data-integrity gate, not a performance evaluation. Do not run str
 
 Prepare a JSON array containing already-normalized event records. Keep the input snapshot immutable and record its origin and collection time. Run:
 
-    python -m tools.research.run_pit_event_audit --input normalized_events.json --decision-at 2026-10-15T13:00:00Z --max-age-days-by-type '{"macro_release":2,"earnings":3}' --output audit_report.json
+    python -m tools.research.run_pit_event_audit --input normalized_events.json --decision-at 2026-10-15T13:00:00Z --max-age-days-by-type '{"macro_release":2,"earnings":3}' --expected-sources bls_cpi_rss,federal_reserve_press_rss --output audit_report.json
 
 The output includes input_snapshot_sha256, the decision timestamp, freshness configuration, per-family coverage, rejection reasons, and macro-surprise eligibility. Reordering identical input rows does not change the snapshot hash. Any event content, timestamp, or freshness-configuration change does.
 
