@@ -14,7 +14,13 @@ external trigger, portfolio construction, or trading behavior.
 4. Direction and impact annotations must be reviewed/validated before use:
    - `direction_score`: numeric value from -1 (negative) to +1 (positive)
    - `impact_score`: numeric value from 0 (irrelevant) to 1 (high impact)
-   The pipeline deliberately does not infer these labels from headlines.
+   - `label_review_status`: `reviewed` or `validated` only after an actual review
+   - `label_reviewed_at_utc`: timezone-aware timestamp for when that review occurred
+   The audit does not treat in-range numeric scores alone as validated labels. The
+   pipeline deliberately does not infer these labels from headlines. Label review
+   timestamps document annotation provenance; they do not by themselves prove that
+   a reviewer was independent or that the annotation was available at each historical
+   decision time.
 
 ## Audit data readiness before scoring
 
