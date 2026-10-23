@@ -149,3 +149,57 @@ def test_freshness_config_rejects_bad_values():
         parse_max_age_days('{"macro_release":1e999}')
     with pytest.raises(ValueError, match="finite"):
         parse_max_age_days('{"macro_release":-1}')
+
+
+def test_price_loader_derives_adjusted_open_from_same_session_adjustment_factor(tmp_path):
+    path = tmp_path / "prices.csv"
+    path.write_text(
+        "Date,Ticker,Open,Close,Adj Close\n"
+        "2026-10-23,SPY,100,110,105\n"
+        "2026-10-26,SPY,105,112,107\n",
+        encoding="utf-8",
+    )
+    price_map, _, quality = _load_price_bars(path, date(2026, 10, 26))
+    assert quality["selected_price_basis"] == "adjusted_ohlc_derived_open"
+    assert quality["usable_price_row_count"] == 2
+    assert quality["adjusted_open_derivation"] == "raw_open * adj_close / raw_close"
+    assert price_map["SPY"][0]["open"] == pytest.approx(100 * 105 / 110)
+    assert price_map["SPY"][0]["close"] == 105
+
+
+def test_price_loader_prefers_explicit_adjusted_open_and_close(tmp_path):
+    path = tmp_path / "adjusted.csv"
+    path.write_text(
+        "Date,Ticker,Open,Close,Adj Open,Adj Close\n"
+        "2026-10-23,SPY,100,110,95,105\n",
+        encoding="utf-8",
+    )
+    price_map, _, quality = _load_price_bars(path, date(2026, 10, 23))
+    assert quality["selected_price_basis"] == "adjusted_ohlc"
+    assert price_map["SPY"][0]["open"] == 95
+    assert price_map["SPY"][0]["close"] == 105
+
+
+def test_price_loader_does_not_fallback_to_raw_on_missing_adjusted_values(tmp_path):
+    path = tmp_path / "missing_adj.csv"
+    path.write_text(
+        "Date,Ticker,Open,Close,Adj Close\n"
+        "2026-10-23,SPY,100,110,\n"
+        "2026-10-26,SPY,105,112,107\n",
+        encoding="utf-8",
+    )
+    price_map, _, quality = _load_price_bars(path, date(2026, 10, 26))
+    assert quality["selected_price_basis"] == "adjusted_ohlc_derived_open"
+    assert len(price_map["SPY"]) == 1
+    assert quality["skipped_rows_missing_or_invalid_selected_basis"] == 1
+
+
+def test_explicit_adjusted_basis_requires_adjustment_fields(tmp_path):
+    path = tmp_path / "raw.csv"
+    path.write_text(
+        "Date,Ticker,Open,Close\n"
+        "2026-10-23,SPY,100,110\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(ValueError, match="adjusted price basis requires"):
+        _load_price_bars(path, date(2026, 10, 23), price_basis="adjusted")
