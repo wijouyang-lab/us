@@ -38,3 +38,19 @@ Prepare a JSON array containing already-normalized event records. Keep the input
 The output includes input_snapshot_sha256, the decision timestamp, freshness configuration, per-family coverage, rejection reasons, and macro-surprise eligibility. Reordering identical input rows does not change the snapshot hash. Any event content, timestamp, or freshness-configuration change does.
 
 The CLI requires a timezone-aware ISO-8601 decision timestamp and a JSON array of event objects. It does not collect data. A pass status means only that the supplied batch passed the implemented structural checks; it does not prove source completeness, point-in-time correctness beyond recorded metadata, or predictive value. A macro surprise marked eligible is still a research feature, not a buy/sell recommendation.
+
+
+## Optional official SEC source capture
+
+The collector uses no API token, but SEC requests must identify the research application and a contact email in the User-Agent. Supply a JSON file with an explicit universe, for example:
+
+    [{"cik":"0000320193","ticker":"AAPL"}]
+
+Then run with your own contact address (do not use the placeholder literally):
+
+    export SEC_USER_AGENT="US Quant Research your-real-email@domain.com"
+    python -m tools.research.sec_event_collector --universe universe.json --start-date 2026-10-01 --end-date 2026-10-23 --output sec_events.json
+
+The command writes the normalized JSON event array and a sibling metadata file. The metadata flags whether the request reaches earlier than the SEC submissions.recent window, whether the per-company limit truncated results, and any header fetch errors. This first implementation does not download older filings.files archives. It is rate-limited and research-only; it does not hook into Scan or the external scheduler.
+
+The capture timestamp is the time this collector first observed each header. Backfilled historical filings do not acquire a fictional historical first-seen time, and therefore are not eligible for decisions before the current capture under the strict audit. Use repeated forward captures to build a proper observation archive before trying a no-lookahead event-factor backtest.
