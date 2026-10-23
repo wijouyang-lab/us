@@ -95,16 +95,34 @@ def build_panel(
                 decision_at=decision_text,
                 family_weights=parsed_weights,
             )
-            rows.append({
+            row = {
                 "decision_at": decision_text,
                 "ticker": ticker,
                 "event_score": result["event_score"],
                 "coverage_status": result["coverage_status"],
-            })
+            }
+            # Preserve independently auditable event-family scores for predeclared
+            # ablation studies. A family with no eligible labeled events remains NaN.
+            for family, weight in parsed_weights.items():
+                family_result = score_events_for_ticker(
+                    asof,
+                    ticker=ticker,
+                    sector=sector or None,
+                    decision_at=decision_text,
+                    family_weights={family: weight},
+                )
+                row[f"event_score_family__{family}"] = family_result["event_score"]
+                row[f"event_coverage_family__{family}"] = family_result["coverage_status"]
+            rows.append(row)
             for reason, count in result["rejection_reason_counts"].items():
                 reason_totals[reason] = reason_totals.get(reason, 0) + int(count)
 
-    panel = pd.DataFrame(rows, columns=["decision_at", "ticker", "event_score", "coverage_status"])
+    panel = pd.DataFrame(rows)
+    if panel.empty:
+        panel = pd.DataFrame(columns=["decision_at", "ticker", "event_score", "coverage_status"])
+        for family in parsed_weights:
+            panel[f"event_score_family__{family}"] = pd.Series(dtype="float64")
+            panel[f"event_coverage_family__{family}"] = pd.Series(dtype="object")
     report = {
         "schema_version": "1.0",
         "decision_dates": len(decisions),
@@ -112,6 +130,14 @@ def build_panel(
         "panel_rows": len(panel),
         "available_score_rows": int((panel["coverage_status"] == "available").sum()),
         "missing_score_rows": int((panel["coverage_status"] != "available").sum()),
+        "family_score_columns": {
+            family: {
+                "score_column": f"event_score_family__{family}",
+                "coverage_column": f"event_coverage_family__{family}",
+                "available_rows": int((panel.get(f"event_coverage_family__{family}", pd.Series(dtype=str)) == "available").sum()),
+            }
+            for family in parsed_weights
+        },
         "archive_input_versions": len(events),
         "asof_event_count_min": min(asof_event_counts) if asof_event_counts else 0,
         "asof_event_count_max": max(asof_event_counts) if asof_event_counts else 0,
