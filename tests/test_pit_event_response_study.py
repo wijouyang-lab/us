@@ -9,23 +9,38 @@ from tools.research.pit_event_response_study import (
     parse_max_age_days,
     run_event_response_study,
 )
-from tools.research.pit_event_records import normalize_event
 
 
 def event(source_id, first_seen, published, *, kind="macro_release", tickers=None, status="available", payload=None):
-    row = normalize_event(
-        source="study_test",
-        source_event_id=source_id,
-        event_type=kind,
-        published_at_utc=published,
-        first_seen_at_utc=first_seen,
-        tickers=tickers or [],
-        raw_payload=payload or {"title": source_id},
-    )
-    if status != "available":
-        row["availability_status"] = status
+    normalized_tickers = sorted({
+        str(value).strip().upper().replace("$", "")
+        for value in (tickers or [])
+        if str(value).strip()
+    })
+    raw_payload = payload or {"title": source_id}
+    row = {
+        "event_id": sha256(f"study_test|{source_id}".encode("utf-8")).hexdigest(),
+        "source": "study_test",
+        "source_event_id": source_id,
+        "event_type": kind,
+        "published_at_utc": published,
+        "first_seen_at_utc": first_seen,
+        "updated_at_utc": None,
+        "update_first_seen_at_utc": None,
+        "headline": str(raw_payload.get("title") or source_id),
+        "tickers": normalized_tickers,
+        "sectors": [],
+        "source_quality": "official",
+        "content_hash": sha256(json.dumps(raw_payload, sort_keys=True, ensure_ascii=False, separators=(",", ":")).encode("utf-8")).hexdigest(),
+    }
+    if published is None or not first_seen:
+        availability = "timestamp_missing"
+    elif not normalized_tickers and kind in {"company_news", "earnings"}:
+        availability = "mapping_missing"
+    else:
+        availability = "available"
+    row["availability_status"] = status if status != "available" else availability
     return row
-
 
 def price_bars():
     days = [
