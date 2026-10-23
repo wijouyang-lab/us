@@ -59,4 +59,5 @@ def test_cli_rejects_non_timezone_aware_decision(tmp_path, capsys):
     with pytest.raises(SystemExit) as exc:
         main(["--input", str(source), "--decision-at", "2026-10-15T12:00:00"])
     assert exc.value.code == 2
-    assert "invalid_decision_timestamp" in capsys.readouterr().err or "error:" in capsys.readouterr().err
+    captured = capsys.readouterr()
+    assert "timezone-aware" in captured.err
