@@ -181,6 +181,47 @@ def apply_risk_controls(
     return result
 
 
+
+def exposure_matched_benchmark(
+    benchmark_returns: pd.Series,
+    exposure: pd.Series,
+    *,
+    one_way_cost_bps: float,
+) -> pd.DataFrame:
+    """Build a SPY-plus-cash benchmark with the strategy's same daily exposure.
+
+    Exposure is the fraction of capital invested in SPY; the remainder stays in
+    cash. Exposure changes incur the same one-way turnover cost assumption as the
+    strategy. This is a diagnostic comparator, not a tradable index product.
+    """
+    if one_way_cost_bps < 0:
+        raise ValueError("one_way_cost_bps cannot be negative")
+    returns = pd.to_numeric(benchmark_returns, errors="coerce")
+    weights = pd.to_numeric(exposure, errors="coerce")
+    aligned = pd.concat(
+        [returns.rename("benchmark_return"), weights.rename("exposure")], axis=1
+    ).sort_index()
+    aligned = aligned.dropna(subset=["benchmark_return", "exposure"])
+    if aligned.empty:
+        raise ValueError("benchmark_returns and exposure have no aligned valid rows")
+    if not aligned["exposure"].between(0, 1).all():
+        raise ValueError("exposure must be between 0 and 1")
+    if (aligned["benchmark_return"] <= -1).any():
+        raise ValueError("benchmark_returns must be greater than -100%")
+    turnover = aligned["exposure"].diff().abs()
+    if not turnover.empty:
+        turnover.iloc[0] = abs(float(aligned["exposure"].iloc[0]))
+    gross = aligned["benchmark_return"] * aligned["exposure"]
+    cost = turnover * (one_way_cost_bps / 10000.0)
+    net = (1.0 + gross) * (1.0 - cost) - 1.0
+    return pd.DataFrame({
+        "gross_return": gross,
+        "turnover": turnover,
+        "cost": cost,
+        "net_return": net,
+        "exposure": aligned["exposure"],
+    }, index=aligned.index)
+
 def _read_spy_calendar(path: str | Path) -> tuple[pd.DataFrame, pd.DatetimeIndex]:
     spy = pd.read_csv(path)
     required = {"Date", "Adj Close"}
@@ -256,6 +297,10 @@ def run_portfolio_simulation(
             benchmark_stats = summarize_returns(benchmark)
             for profile, portfolio in (("baseline", base_portfolio), ("risk_managed", risk_portfolio)):
                 stats = summarize_returns(portfolio["net_return"])
+                matched_benchmark = exposure_matched_benchmark(
+                    benchmark, portfolio["exposure"], one_way_cost_bps=cost_bps
+                )
+                matched_stats = summarize_returns(matched_benchmark["net_return"])
                 full_rows.append({
                     "strategy": strategy,
                     "profile": profile,
@@ -264,6 +309,11 @@ def run_portfolio_simulation(
                     "benchmark_total_return": benchmark_stats["total_return"],
                     "benchmark_annualized_return": benchmark_stats["annualized_return"],
                     "benchmark_sharpe_zero_rf": benchmark_stats["sharpe_zero_rf"],
+                    "matched_benchmark_total_return": matched_stats["total_return"],
+                    "matched_benchmark_annualized_return": matched_stats["annualized_return"],
+                    "matched_benchmark_sharpe_zero_rf": matched_stats["sharpe_zero_rf"],
+                    "matched_benchmark_max_drawdown": matched_stats["max_drawdown"],
+                    "matched_benchmark_annualized_turnover": float(matched_benchmark["turnover"].mean() * 252),
                     "mean_exposure": float(portfolio["exposure"].mean()),
                     "max_exposure": float(portfolio["exposure"].max()),
                     "annualized_turnover": float(portfolio["turnover"].mean() * 252),
@@ -282,8 +332,10 @@ def run_portfolio_simulation(
                     )
                     test = portfolio.loc[mask, "net_return"]
                     benchmark_test = benchmark.loc[mask]
+                    matched_test = matched_benchmark.loc[mask, "net_return"]
                     if test.empty:
                         continue
+                    matched_test_stats = summarize_returns(matched_test)
                     oos_rows.append({
                         "strategy": strategy,
                         "profile": profile,
@@ -293,6 +345,10 @@ def run_portfolio_simulation(
                         "test_end": split["test_end"],
                         **summarize_returns(test),
                         "benchmark_total_return": summarize_returns(benchmark_test)["total_return"],
+                        "matched_benchmark_total_return": matched_test_stats["total_return"],
+                        "matched_benchmark_annualized_return": matched_test_stats["annualized_return"],
+                        "matched_benchmark_sharpe_zero_rf": matched_test_stats["sharpe_zero_rf"],
+                        "matched_benchmark_max_drawdown": matched_test_stats["max_drawdown"],
                         "mean_exposure": float(portfolio.loc[mask, "exposure"].mean()),
                         "annualized_turnover": float(portfolio.loc[mask, "turnover"].mean() * 252),
                     })
