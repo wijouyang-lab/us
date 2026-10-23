@@ -30,6 +30,7 @@ def test_accepts_event_observed_before_decision():
         ({"published_at_utc": None}, "missing_or_invalid_required_timestamp"),
         ({"first_seen_at_utc": "2026-10-22 13:01:00"}, "missing_or_invalid_required_timestamp"),
         ({"published_at_utc": "not-a-date"}, "missing_or_invalid_required_timestamp"),
+        ({"first_seen_at_utc": "2026-10-22T12:59:00Z"}, "first_seen_before_publication"),
     ],
 )
 def test_rejects_future_or_unverifiable_event_timestamps(overrides, reason):
@@ -51,10 +52,18 @@ def test_rejects_update_without_verifiable_observation_time():
     assert event_eligibility(revised, DECISION) == (False, "unverifiable_update_timestamp")
 
 
+def test_rejects_update_observed_before_source_update_timestamp():
+    revised = event(
+        updated_at_utc="2026-10-22T13:55:00Z",
+        update_first_seen_at_utc="2026-10-22T13:54:00Z",
+    )
+    assert event_eligibility(revised, DECISION) == (False, "update_seen_before_update")
+
+
 def test_freshness_uses_publication_time_and_boundary_is_inclusive():
-    fresh = event(published_at_utc="2026-10-21T14:00:00Z")
+    fresh = event(published_at_utc="2026-10-21T14:00:00Z", first_seen_at_utc="2026-10-21T14:01:00Z")
     assert event_eligibility(fresh, DECISION, max_age=timedelta(days=1)) == (True, "eligible")
-    stale = event(published_at_utc="2026-10-21T13:59:59Z")
+    stale = event(published_at_utc="2026-10-21T13:59:59Z", first_seen_at_utc="2026-10-21T14:01:00Z")
     assert event_eligibility(stale, DECISION, max_age=timedelta(days=1)) == (False, "stale_event")
 
 
