@@ -3,8 +3,8 @@
 This module consumes caller-supplied payloads only: no network requests and no
 production scanner integration. It never treats the raw submissions JSON
 acceptanceDateTime field as verified UTC. A separately supplied official SGML
-submission header can be parsed as America/New_York local time and converted to
-UTC, with DST ambiguity/nonexistence rejected.
+submission header can be parsed using the SEC-documented fixed EST offset
+(UTC-05:00) and converted to UTC. This timestamp is not first-public-availability time.
 """
 from __future__ import annotations
 
