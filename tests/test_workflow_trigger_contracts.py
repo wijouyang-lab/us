@@ -88,3 +88,17 @@ def test_evolve_schedule_stays_monthly_and_manual():
 
     assert events == {"workflow_dispatch", "schedule"}
     assert crons == ["0 2 1 * *"]
+
+
+
+def test_premarket_trigger_documentation_is_dst_safe_and_uses_opening_timezone():
+    doc = (REPO / "docs" / "TRIGGER_ARCHITECTURE.md").read_text(encoding="utf-8")
+
+    # 09:00 America/New_York is 30 minutes before the regular 09:30 ET open.
+    # Beijing wall-clock time changes from 21:00 to 22:00 when US DST ends.
+    assert "09:00 ET" in doc
+    assert "America/New_York" in doc
+    assert "冬令时 22:00" in doc
+    assert "夏令时 21:00" in doc
+    assert "0 9 * * 1-5" in doc
+    assert "0 21 * * 1-5" not in doc
