@@ -107,6 +107,27 @@ diagnostic. The purge is based on decision timestamps and is only an approximati
 to trading-session overlap; it does not guarantee independent returns. The tool does
 not fit parameters or choose the best configuration.
 
+## Event-family ablation
+
+The signal panel also emits `event_score_family__<family>` and
+`event_coverage_family__<family>` columns for each configured family. Run the
+family evaluator to compare each family's score with a price-only momentum
+baseline on that family's own paired ticker/decision rows:
+
+```bash
+python -m tools.research.event_factor_family_ablation \
+  --signals data/research/event_signals.csv \
+  --prices data/research/prices.csv \
+  --lookback 20 --horizon 20 --cost-bps-per-side 5 \
+  --output data/research/event_family_ablation.json
+```
+
+Families may have different coverage universes. Their raw returns must not be
+ranked against one another as if they shared identical observations; use a
+common-universe comparison for direct family ranking. Missing family labels
+remain missing. This evaluator is research-only and does not activate production
+signals.
+
 ## Current limitations
 
 - The score is a transparent weighted aggregation of explicit, externally validated
