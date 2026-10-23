@@ -1,0 +1,164 @@
+name: Non-ATR Portfolio Simulation (Reuse Existing Prices)
+
+on:
+  push:
+    branches:
+      - "research/non-atr-portfolio-simulation"
+    paths:
+      - "tools/research/non_atr_portfolio_backtest.py"
+      - ".github/workflows/non-atr-portfolio-simulation.yml"
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: "Successful history run containing research-non-atr-adjusted-price-inputs"
+        required: true
+        default: "39885406985"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  portfolio-simulation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SOURCE_RUN_ID: ${{ inputs.source_run_id || '39885406985' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research dependencies
+        run: python -m pip install pandas
+      - name: Download existing adjusted-price artifact (no refresh)
+        uses: actions/download-artifact@v4
+        with:
+          name: research-non-atr-adjusted-price-inputs
+          run-id: ${{ inputs.source_run_id || '39885406985' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: research_non_atr_download_diagnostics
+      - name: Verify existing inputs
+        run: |
+          test -s research_non_atr_download_diagnostics/partial_prices.csv
+          test -s research_non_atr_download_diagnostics/partial_spy.csv
+          echo "Using existing price artifact from workflow run ${SOURCE_RUN_ID}; no market-data download will be performed."
+      - name: Run portfolio-level simulation
+        run: |
+          python -m tools.research.non_atr_portfolio_backtest \
+            --input research_non_atr_download_diagnostics/partial_prices.csv \
+            --spy-calendar research_non_atr_download_diagnostics/partial_spy.csv \
+            --sp500-membership tools/research/data/sp500_components_history.csv \
+            --ticker-aliases tools/research/data/sp500_ticker_aliases.csv \
+            --nasdaq100-membership tools/research/data/nasdaq100_membership_history.csv \
+            --dow30-membership tools/research/data/dow30_membership_history.csv \
+            --output-dir research_non_atr_portfolio_results \
+            --costs-bps 0,5,10,20
+      - name: Render concise portfolio report
+        if: always()
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import pandas as pd
+
+          out = Path("research_non_atr_portfolio_results")
+          summary_path = out / "portfolio_strategy_summary.csv"
+          oos_path = out / "portfolio_oos_by_window.csv"
+          annual_path = out / "portfolio_annual_returns.csv"
+          if not summary_path.exists():
+              print("Portfolio summary was not produced.")
+              raise SystemExit(0)
+
+          summary = pd.read_csv(summary_path)
+          oos = pd.read_csv(oos_path) if oos_path.exists() else pd.DataFrame()
+          annual = pd.read_csv(annual_path) if annual_path.exists() else pd.DataFrame()
+          lines = [
+              "# Non-ATR Portfolio Simulation",
+              "",
+              "Research-only synchronized portfolio simulation using an existing adjusted-price artifact. No price refresh was run.",
+              "The input universe has incomplete market-wide coverage; results apply only to the strictly eligible point-in-time subset.",
+              "",
+              "## Full-period summary",
+              "",
+          ]
+          if summary.empty:
+              lines.append("No portfolio summary rows were produced.")
+          else:
+              columns = ["strategy", "cost_bps_one_way", "annualized_return", "annualized_volatility", "sharpe_zero_rf", "max_drawdown", "mean_exposure", "annualized_turnover", "worst_calendar_year_return", "benchmark_annualized_return"]
+              columns = [c for c in columns if c in summary.columns]
+              lines.append("| " + " | ".join(columns) + " |")
+              lines.append("|" + "|".join(["---"] * len(columns)) + "|")
+              for _, row in summary[columns].iterrows():
+                  vals = []
+                  for c in columns:
+                      v = row[c]
+                      if pd.isna(v):
+                          vals.append("n/a")
+                      elif c in {"annualized_return", "annualized_volatility", "max_drawdown", "mean_exposure", "max_exposure", "worst_calendar_year_return", "benchmark_annualized_return"}:
+                          vals.append(f"{v:.2%}")
+                      elif c == "sharpe_zero_rf":
+                          vals.append(f"{v:.3f}")
+                      else:
+                          vals.append(str(v))
+                  lines.append("| " + " | ".join(vals) + " |")
+          lines += ["", "## Walk-forward held-out windows", ""]
+          if oos.empty:
+              lines.append("No OOS windows were produced.")
+          else:
+              columns = ["strategy", "cost_bps_one_way", "split", "test_start", "test_end", "annualized_return", "sharpe_zero_rf", "max_drawdown", "benchmark_total_return"]
+              columns = [c for c in columns if c in oos.columns]
+              lines.append("| " + " | ".join(columns) + " |")
+              lines.append("|" + "|".join(["---"] * len(columns)) + "|")
+              for _, row in oos[columns].iterrows():
+                  vals = []
+                  for c in columns:
+                      v = row[c]
+                      if pd.isna(v):
+                          vals.append("n/a")
+                      elif c in {"annualized_return", "max_drawdown", "benchmark_total_return"}:
+                          vals.append(f"{v:.2%}")
+                      elif c == "sharpe_zero_rf":
+                          vals.append(f"{v:.3f}")
+                      else:
+                          vals.append(str(v))
+                  lines.append("| " + " | ".join(vals) + " |")
+          lines += ["", "## Calendar-year results", ""]
+          if annual.empty:
+              lines.append("No annual-return rows were produced.")
+          else:
+              columns = ["strategy", "cost_bps_one_way", "year", "total_return", "max_drawdown"]
+              columns = [c for c in columns if c in annual.columns]
+              lines.append("| " + " | ".join(columns) + " |")
+              lines.append("|" + "|".join(["---"] * len(columns)) + "|")
+              for _, row in annual[columns].iterrows():
+                  vals = []
+                  for c in columns:
+                      v = row[c]
+                      if pd.isna(v):
+                          vals.append("n/a")
+                      elif c in {"total_return", "max_drawdown"}:
+                          vals.append(f"{v:.2%}")
+                      else:
+                          vals.append(str(v))
+                  lines.append("| " + " | ".join(vals) + " |")
+          lines += [
+              "",
+              "## Caveats",
+              "",
+              "- Costs are fixed scenarios of 0/5/10/20 bps per one-way traded notional, not observed fills.",
+              "- Cash is retained when strategy signals are flat; eligible ticker weights are equal-weighted on each session.",
+              "- Costs include changes in target portfolio weights, including universe reweighting; taxes, market impact, and financing are not modeled.",
+              "- Results are research diagnostics, not a recommendation or live-trading approval.",
+              "",
+          ]
+          (out / "portfolio_simulation_report.md").write_text("\n".join(lines), encoding="utf-8")
+          print((out / "portfolio_simulation_report.md").read_text(encoding="utf-8"))
+          PY
+      - name: Upload portfolio results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: non-atr-portfolio-simulation-results
+          path: research_non_atr_portfolio_results/
+          if-no-files-found: warn
+          retention-days: 30
