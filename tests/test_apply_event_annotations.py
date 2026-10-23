@@ -50,6 +50,7 @@ def test_apply_annotations_creates_derived_archive_without_mutating_source():
     assert output[0]["direction_score"] == 0.5
     assert output[0]["impact_score"] == 0.75
     assert output[0]["label_review_status"] == "validated"
+    assert event_version_id(output[0]) == output[0]["event_version_id"]
     assert report["reviewed_annotations_applied"] == 1
     assert report["validated_annotations_applied"] == 1
     assert report["pending_rows_ignored"] == 1
