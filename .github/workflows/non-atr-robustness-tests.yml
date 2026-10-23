@@ -8,12 +8,14 @@ on:
       - "tools/research/non_atr_robustness_report.py"
       - "tools/research/non_atr_cost_sensitivity.py"
       - "tests/test_non_atr_robustness_report.py"
+      - "tests/test_non_atr_cost_sensitivity.py"
       - ".github/workflows/non-atr-robustness-tests.yml"
   pull_request:
     paths:
       - "tools/research/non_atr_robustness_report.py"
       - "tools/research/non_atr_cost_sensitivity.py"
       - "tests/test_non_atr_robustness_report.py"
+      - "tests/test_non_atr_cost_sensitivity.py"
       - ".github/workflows/non-atr-robustness-tests.yml"
 
 permissions:
@@ -33,4 +35,4 @@ jobs:
       - name: Compile cost sensitivity utility
         run: python -m py_compile tools/research/non_atr_cost_sensitivity.py
       - name: Test OOS robustness report
-        run: python -m pytest tests/test_non_atr_robustness_report.py -q
+        run: python -m pytest tests/test_non_atr_robustness_report.py tests/test_non_atr_cost_sensitivity.py -q
