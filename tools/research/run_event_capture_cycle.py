@@ -211,6 +211,34 @@ def run_cycle(
         decision_at,
         max_age_by_type=max_age_by_type,
     )
+    source_collection_coverage: list[dict[str, Any]] = []
+    for feed_report in source_reports.get("official_rss", {}).get("feed_reports", []):
+        feed_key = str(feed_report.get("feed_key") or "")
+        feed_config = OFFICIAL_FEEDS.get(feed_key, {})
+        source_collection_coverage.append({
+            "source_kind": "official_rss",
+            "feed_key": feed_key or None,
+            "source": feed_config.get("source"),
+            "status": str(feed_report.get("status") or "status_missing"),
+            "event_count": int(feed_report.get("event_count") or 0),
+            "item_count": feed_report.get("item_count"),
+            "error_type": feed_report.get("error_type"),
+        })
+    sec_report = source_reports.get("sec_edgar", {})
+    for company_report in sec_report.get("company_reports", []):
+        source_collection_coverage.append({
+            "source_kind": "sec_edgar",
+            "ticker": company_report.get("ticker"),
+            "cik": company_report.get("cik"),
+            "status": str(company_report.get("coverage_status") or "status_missing"),
+            "event_count": int(company_report.get("event_count") or 0),
+            "error_type": company_report.get("error_type"),
+        })
+    source_collection_coverage.sort(key=lambda row: (
+        str(row.get("source_kind") or ""),
+        str(row.get("feed_key") or row.get("ticker") or ""),
+    ))
+
     audit["capture_cycle"] = {
         "events_file": str(events_path),
         "metadata_file": str(metadata_path),
@@ -219,6 +247,7 @@ def run_cycle(
         "successful_source_count": successful_sources,
         "configured_source_count": configured_sources,
         "all_sources_failed": successful_sources == 0,
+        "source_collection_coverage": source_collection_coverage,
     }
     _write_new(audit_path, audit)
     return {
