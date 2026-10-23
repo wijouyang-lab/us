@@ -90,6 +90,10 @@ def build_treasury_macro_panel(
 
     nominal_by_date = index_rows(nominal_rows, "nominal")
     real_by_date = index_rows(real_rows, "real")
+    for label, indexed, retrieved in (("nominal", nominal_by_date, nominal_retrieved), ("real", real_by_date, real_retrieved)):
+        future_dates = sorted(date for date in indexed if date > retrieved.date().isoformat())
+        if future_dates:
+            raise ValueError(f"{label} snapshot contains observation dates after retrieval date: {future_dates[0]}")
     decisions = decisions.copy()
     decisions["_decision_parsed"] = [
         _aware(value, "decision_at") for value in decisions["decision_at"].astype(str)
