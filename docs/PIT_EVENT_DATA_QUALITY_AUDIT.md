@@ -13,7 +13,7 @@ Status: research-only implementation note. No production scanner, scheduler, ran
 
 1. A scheduled release timestamp is not proof that the actual release was published at that time.
 2. A macro observation period (for example, a month or quarter) is not a publication timestamp.
-3. A SEC filing date without a verifiable timestamp is not sufficient for primary point-in-time eligibility.
+3. A SEC filing date is not an exact publication timestamp. The raw submissions JSON acceptanceDateTime must also not be assumed to be verified UTC; it can be inconsistent for some records. Only an independently verified UTC time supplied in verifiedPublishedAtUtc is accepted for primary point-in-time eligibility.
 4. Events marked \`timestamp_missing\`, \`mapping_missing\`, \`fetch_error\`, or \`parse_error\` are counted but excluded from eligible signals.
 5. Event updates must have a verifiable source update timestamp and a collector observation timestamp that is not earlier than the update.
 6. The same event ID appearing more than once causes a duplicate audit failure; downstream feature generation must deduplicate/version records explicitly rather than silently count duplicates.
