@@ -202,10 +202,11 @@ def fetch_treasury_yield_curve(
     timeout_seconds: float = 20.0,
     curve_type: str = "nominal",
 ) -> dict[str, Any]:
-    if year < 1990 or year > 9999:
-        raise ValueError("year must be between 1990 and 9999")
     if curve_type not in {"nominal", "real"}:
         raise ValueError("curve_type must be nominal or real")
+    minimum_year = 2003 if curve_type == "real" else 1990
+    if year < minimum_year or year > datetime.now(timezone.utc).year:
+        raise ValueError(f"year must be between {minimum_year} and the current UTC year for {curve_type} data")
     data_key = DATA_KEY if curve_type == "nominal" else REAL_DATA_KEY
     url = BASE_URL + "?" + urlencode({
         "data": data_key,
@@ -218,11 +219,43 @@ def fetch_treasury_yield_curve(
         "User-Agent": "us-quant-research/1.0 (research-only)",
         "Accept": "application/atom+xml, application/xml, text/xml",
     })
+    retrieved = (now or (lambda: datetime.now(timezone.utc)))()
     response = (opener or urlopen)(request, timeout=timeout_seconds)
     with response if hasattr(response, "__enter__") else _ResponseContext(response) as opened:
         payload = opened.read()
-    retrieved = (now or (lambda: datetime.now(timezone.utc)))()
-    return parse_treasury_yield_curve_xml(payload, retrieved_at_utc=retrieved, source_url=url, curve_type=curve_type)
+    result = parse_treasury_yield_curve_xml(
+        payload, retrieved_at_utc=retrieved, source_url=url, curve_type=curve_type
+    )
+    if result["metadata"]["row_count"] == 0 and year == retrieved.astimezone(timezone.utc).year:
+        # Treasury's documented static XML feed is a fallback for current-year
+        # queries that return an empty/HTML response from the parameterized endpoint.
+        static_name = "yield.xml" if curve_type == "nominal" else "real_yield.xml"
+        fallback_url = f"https://home.treasury.gov/sites/default/files/interest-rates/{static_name}"
+        fallback_request = Request(fallback_url, headers={
+            "User-Agent": "us-quant-research/1.0 (research-only)",
+            "Accept": "application/atom+xml, application/xml, text/xml",
+        })
+        fallback_response = (opener or urlopen)(fallback_request, timeout=timeout_seconds)
+        with fallback_response if hasattr(fallback_response, "__enter__") else _ResponseContext(fallback_response) as opened:
+            fallback_payload = opened.read()
+        fallback = parse_treasury_yield_curve_xml(
+            fallback_payload, retrieved_at_utc=retrieved, source_url=fallback_url, curve_type=curve_type
+        )
+        fallback["rows"] = [
+            row for row in fallback["rows"]
+            if str(row.get("observation_date", "")).startswith(f"{year}-")
+        ]
+        fallback["metadata"]["row_count"] = len(fallback["rows"])
+        canonical = json.dumps(
+            fallback["rows"], sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False
+        )
+        fallback["metadata"]["normalized_rows_sha256"] = sha256(canonical.encode("utf-8")).hexdigest()
+        fallback["metadata"]["fallback_used"] = True
+        fallback["metadata"]["source_url"] = fallback_url
+        result = fallback
+    if result["metadata"]["row_count"] == 0:
+        raise ValueError(f"Treasury {curve_type} feed returned no valid yield rows for {year}")
+    return result
 
 
 class _ResponseContext:
