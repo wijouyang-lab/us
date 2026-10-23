@@ -22,7 +22,7 @@ _ACCEPTANCE_PATTERN = re.compile(
     re.IGNORECASE,
 )
 _ACCESSION_PATTERN = re.compile(
-    r"<ACCESSION-NUMBER>\s*([0-9-]+)",
+    r"(?:<ACCESSION-NUMBER>\s*|ACCESSION\s+NUMBER\s*:\s*)([0-9-]{18,})",
     re.IGNORECASE,
 )
 
