@@ -109,3 +109,46 @@ def test_fetch_uses_official_endpoint_and_records_actual_retrieval_time():
 def test_fetch_rejects_year_before_source_coverage():
     with pytest.raises(ValueError, match="between 1990 and 9999"):
         fetch_treasury_yield_curve(1989)
+
+
+
+def test_real_yield_curve_uses_real_data_key_and_maturity_fields():
+    xml = """<feed xmlns="http://www.w3.org/2005/Atom"
+        xmlns:m="http://schemas.microsoft.com/ado/2007/08/dataservices/metadata"
+        xmlns:d="http://schemas.microsoft.com/ado/2007/08/dataservices">
+      <entry><content><m:properties>
+        <d:NEW_DATE>2026-10-22T00:00:00</d:NEW_DATE>
+        <d:BC_5YEAR>1.8</d:BC_5YEAR><d:BC_7YEAR>2.0</d:BC_7YEAR>
+        <d:BC_10YEAR>2.1</d:BC_10YEAR><d:BC_20YEAR>2.3</d:BC_20YEAR>
+        <d:BC_30YEAR>2.4</d:BC_30YEAR>
+      </m:properties></content></entry>
+    </feed>"""
+    result = parse_treasury_yield_curve_xml(
+        xml,
+        retrieved_at_utc="2026-10-23T16:00:00Z",
+        source_url=BASE_URL + "?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+        curve_type="real",
+    )
+    assert result["metadata"]["source"] == "us_treasury_daily_par_real_yield_curve"
+    assert result["metadata"]["curve_type"] == "real"
+    assert result["rows"][0]["yield_pct"]["5y"] == 1.8
+    assert result["rows"][0]["yield_pct"]["10y"] == 2.1
+    assert result["rows"][0]["slope_2s10s_bp"] is None
+
+
+def test_fetch_real_curve_uses_official_real_curve_key():
+    seen = []
+    response = FakeResponse(sample_xml())
+
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return response
+
+    result = fetch_treasury_yield_curve(
+        2026,
+        opener=opener,
+        now=lambda: datetime(2026, 10, 23, 16, 0, tzinfo=timezone.utc),
+        curve_type="real",
+    )
+    assert "data=daily_treasury_real_yield_curve" in seen[0]
+    assert result["metadata"]["curve_type"] == "real"
