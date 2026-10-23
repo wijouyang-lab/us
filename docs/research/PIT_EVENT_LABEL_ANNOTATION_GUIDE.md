@@ -33,7 +33,7 @@ The queue contains no proposed scores. Direction and impact stay blank, every ro
 
 ## Import reviewed annotations without overwriting the source archive
 
-After a real review, fill the score, review timestamp, rationale, labeler, reviewer, and schema columns. Keep ambiguous scores blank rather than inventing values; the import tool requires both scores for rows marked `reviewed` or `validated`. It ignores `pending` rows and refuses unknown or duplicate event-version IDs, invalid ranges, missing provenance, future review timestamps, and self-validated rows.
+After a real review, fill the score, review timestamp, rationale, labeler, reviewer, and schema columns. Keep ambiguous scores blank rather than inventing values; the import tool preserves reviewed rows with blank scores and those rows will not count as fully labeled for scoring. It ignores `pending` rows and refuses unknown or duplicate event-version IDs, invalid ranges, missing provenance, future review timestamps, and self-validated rows.
 
 ```bash
 STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
