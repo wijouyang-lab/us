@@ -113,9 +113,9 @@ turnover, costs, drawdown, and an exposure-matched benchmark when data permit.
 
 ## Compare with a price-only baseline
 
-Both strategies use the same ticker/decision rows with event coverage and sufficient
+The comparison restricts both portfolios to the same ticker/decision rows with event coverage and sufficient
 prior prices. The baseline is trailing close-to-close momentum using price sessions
-strictly before the decision calendar date.
+strictly before the decision calendar date. The comparison report also includes a paired event-minus-momentum mean-return difference with a Newey-West HAC confidence interval using a predeclared maximum lag of `horizon - 1`, when at least three paired decision dates are available. This is an asymptotic uncertainty diagnostic for serial dependence from overlapping returns, not proof of alpha; small samples, strategy selection, and residual dependence remain limitations.
 
 ```bash
 python -m tools.research.event_factor_compare_price_baseline \
