@@ -1,6 +1,6 @@
 # Non-ATR Risk-Control Results
 
-Research-only evaluation of portfolio-level risk controls using the existing adjusted-price artifact. This report was generated from workflow run 39892241227 at commit 219396081a2bc97c6418c1ce34ec4fbe76770d3d. No historical prices were refreshed.
+Research-only evaluation of portfolio-level risk controls using the existing adjusted-price artifact. This report was rechecked against workflow run 39894660308 at code commit f76d88d0267de533e4b969a380b93f07889feddb, after correcting first-session turnover accounting. Regression tests including future-return leakage and initial-entry turnover pass on follow-up commit 963b2583ef604e9cc29a42a6c3cb8fb7b8f125d3. No historical prices were refreshed.
 
 ## Configuration tested
 
@@ -12,14 +12,14 @@ Research-only evaluation of portfolio-level risk controls using the existing adj
 
 ## Full-period comparison at 5 bps one-way cost
 
-| Strategy | Profile | CAGR | Annualized volatility | Sharpe (0% RF) | Max drawdown | Mean exposure | Annual turnover | Worst calendar year |
+| Strategy | Profile | CAGR | Annualized volatility | Sharpe (0% RF) | Max drawdown | Mean exposure | Max exposure | Annual turnover | Worst calendar year |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
-| Momentum | Baseline | 5.45% | 8.30% | 0.681 | -15.92% | 57.90% | 8.91x | -9.20% |
-| Momentum | Risk-managed | 4.43% | 6.34% | 0.715 | -11.01% | 44.20% | 10.09x | -7.26% |
-| Trend | Baseline | 5.62% | 9.94% | 0.600 | -27.40% | 56.12% | 1.48x | -7.05% |
-| Trend | Risk-managed | 4.08% | 6.80% | 0.623 | -15.72% | 42.31% | 1.77x | -5.80% |
-| Mean reversion | Baseline | 3.50% | 9.06% | 0.425 | -22.39% | 24.29% | 34.32x | -7.85% |
-| Mean reversion | Risk-managed | 1.82% | 5.85% | 0.337 | -16.84% | 22.42% | 34.80x | -7.81% |
+| Momentum | Baseline | 5.45% | 8.30% | 0.681 | -15.92% | 57.90% | 95.58% | 8.91x | -9.20% |
+| Momentum | Risk-managed | 4.43% | 6.34% | 0.715 | -11.01% | 44.20% | 50.00% | 10.09x | -7.26% |
+| Trend | Baseline | 5.62% | 9.94% | 0.600 | -27.40% | 56.12% | 90.46% | 1.48x | -7.05% |
+| Trend | Risk-managed | 4.08% | 6.80% | 0.623 | -15.72% | 42.31% | 50.00% | 1.77x | -5.80% |
+| Mean reversion | Baseline | 3.50% | 9.06% | 0.425 | -22.39% | 24.29% | 96.54% | 34.32x | -7.85% |
+| Mean reversion | Risk-managed | 1.82% | 5.85% | 0.337 | -16.84% | 22.42% | 50.00% | 34.80x | -7.81% |
 
 ## Interpretation
 
