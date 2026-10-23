@@ -23,6 +23,8 @@ def event(**updates):
         "content_hash": "hash-1",
         "direction_score": 0.5,
         "impact_score": 0.8,
+        "label_review_status": "reviewed",
+        "label_reviewed_at_utc": "2026-01-02T12:02:00Z",
     }
     row.update(updates)
     return row
@@ -95,6 +97,21 @@ def test_audit_blocks_future_event_timestamps(tmp_path):
     assert result["status"] == "blocked_data_quality"
     assert result["timestamp_quality"]["first_seen_after_audit_time"] == 1
     assert result["readiness_gates"]["all_timestamps_valid_and_not_future"] is False
+
+
+def test_audit_does_not_treat_unreviewed_numeric_labels_as_validated(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(
+        json.dumps([event(label_review_status="pending", label_reviewed_at_utc=None)]),
+        encoding="utf-8",
+    )
+
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+
+    assert result["status"] == "blocked_no_validated_labels"
+    assert result["label_quality"]["fully_labeled_fraction"] == 1.0
+    assert result["label_quality"]["reviewed_label_fraction"] == 0.0
+    assert result["readiness_gates"]["validated_labels_present"] is False
 
 
 def test_audit_rejects_naive_decision_timestamps(tmp_path):
