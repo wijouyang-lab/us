@@ -10,11 +10,11 @@ Supply a frozen JSON array of normalized events/versioned archive records and a 
     2026-10-23,SPY,100.00,101.25
     2026-10-23,AAPL,250.00,252.00
 
-Use consistent price adjustment across Open and Close; for equities, adjusted daily Open and Close are preferable for split/dividend consistency. The script does not download prices.
+The loader supports `--price-basis auto|adjusted|raw` (default `auto`). If the CSV contains Adj Open and Adj Close, it uses those. If only Adj Close is present alongside raw Open and Close, it derives same-session adjusted Open as `Open * Adj Close / Close`. Missing adjustment values are skipped rather than silently falling back to raw prices. If no adjusted fields exist, `auto` uses raw OHLC and records that basis in the report; pass `--price-basis adjusted` to require adjusted fields. The script does not download prices. For the repository's `research_price_history_sp500_10y.csv`, the `auto` mode uses its Adj Close and derives Adj Open consistently. For `quant_factor_price_history.csv`, which has raw OHLCV only, the report will mark raw price basis.
 
 ## Manual run
 
-    python -m tools.research.pit_event_response_study --events event_archive.json --prices-csv daily_prices.csv --study-end-date 2026-10-23 --horizons 1,5,10 --round-trip-cost-bps 5 --max-age-days-by-type '{"macro_release":2,"policy":3,"central_bank":3,"company_news":2,"earnings":3}' --report event_response_report.json --observations-csv event_response_observations.csv
+    python -m tools.research.pit_event_response_study --events event_archive.json --prices-csv daily_prices.csv --price-basis auto --study-end-date 2026-10-23 --horizons 1,5,10 --round-trip-cost-bps 5 --max-age-days-by-type '{"macro_release":2,"policy":3,"central_bank":3,"company_news":2,"earnings":3}' --report event_response_report.json --observations-csv event_response_observations.csv
 
 The report includes event-level observations, family-level mean and median gross returns, win rates, assumed cost-adjusted returns, source-delay minutes, snapshot hashes, and explicit skip counts. Horizon N counts the entry session as session one. A 1-session return is entry Open to that session Close.
 
