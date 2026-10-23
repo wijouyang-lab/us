@@ -39,7 +39,7 @@ decision timestamps used in the proposed evaluation:
 
 ```bash
 python -m tools.research.audit_pit_event_data_readiness \
-  --archive data/research/event_archive.json \
+  --archive data/research/event-capture/event_archive.json \
   --decisions data/research/decision_times.csv \
   --output data/research/event_data_readiness.json
 ```
@@ -78,12 +78,13 @@ python -m tools.research.build_pit_event_signal_panel \
   --universe data/research/universe_pit.csv \
   --decisions data/research/decision_times.csv \
   --weights data/research/event_family_weights.json \
+  --default-max-age-days 30 \
+  --max-age-days-by-type '{"macro_release":30,"policy":14,"central_bank":14}' \
   --output data/research/event_signals.csv \
   --report data/research/event_signal_panel_report.json
 ```
 
-The output signal CSV is compatible with the event factor backtest. Missing or
-ineligible event coverage remains missing, never filled with zero.
+The panel applies a 30-day default freshness cap, with the macro-release and policy-family overrides shown above. This prevents old items retained in rolling RSS feeds from being scored as fresh events. Review and predeclare family-specific freshness windows before final testing. The output signal CSV is compatible with the event factor backtest. Missing or ineligible event coverage remains missing, never filled with zero.
 
 ## Evaluate score tails and cost/horizon sensitivity
 
