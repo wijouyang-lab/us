@@ -60,6 +60,50 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
     assert audit["macro_surprise"]["eligible_count"] == 1
     assert audit["research_only"] is True
     assert audit["trading_signal_generated"] is False
+    source_coverage = audit["capture_cycle"]["source_collection_coverage"]
+    assert source_coverage == [{
+        "source_kind": "official_rss",
+        "feed_key": "bls_cpi",
+        "source": "bls_cpi_rss",
+        "status": "ok",
+        "event_count": 1,
+        "item_count": None,
+        "error_type": None,
+    }]
+
+
+def test_successful_empty_feed_is_visible_in_source_coverage(tmp_path, monkeypatch):
+    class EmptySuccessCollector:
+        def __init__(self, user_agent, **kwargs):
+            assert "@" in user_agent
+
+        def collect(self, feed_keys):
+            return {
+                "events": [],
+                "metadata": {
+                    "requested_feed_keys": feed_keys,
+                    "event_count": 0,
+                    "feed_reports": [{
+                        "feed_key": "bls_cpi",
+                        "status": "ok",
+                        "event_count": 0,
+                        "item_count": 0,
+                    }],
+                },
+            }
+
+    monkeypatch.setattr(cycle, "OfficialRssCollector", EmptySuccessCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T13:00:00Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@example.com",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert result["successful_source_count"] == 1
+    assert audit["capture_cycle"]["source_collection_coverage"][0]["status"] == "ok"
+    assert audit["capture_cycle"]["source_collection_coverage"][0]["event_count"] == 0
+    assert audit["coverage_audit"]["audit_status"] == "fail_no_data"
 
 
 def test_repeated_capture_deduplicates_the_same_event_version(tmp_path, monkeypatch):
