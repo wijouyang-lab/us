@@ -51,11 +51,16 @@ def test_panel_builds_asof_scores_and_preserves_missingness(tmp_path):
     abc = panel.loc[panel["ticker"] == "ABC"].iloc[0]
     xyz = panel.loc[panel["ticker"] == "XYZ"].iloc[0]
     assert abc["event_score"] == 1.0
+    assert abc["event_score_family__earnings"] == 1.0
+    assert abc["event_coverage_family__earnings"] == "available"
     assert abc["coverage_status"] == "available"
     assert pd.isna(xyz["event_score"])
+    assert pd.isna(xyz["event_score_family__earnings"])
+    assert xyz["event_coverage_family__earnings"] == "missing"
     assert xyz["coverage_status"] == "missing"
     assert report["archive_input_versions"] == 2
     assert report["available_score_rows"] == 1
+    assert report["family_score_columns"]["earnings"]["available_rows"] == 1
     assert report["production_signal_generated"] is False
 
 
