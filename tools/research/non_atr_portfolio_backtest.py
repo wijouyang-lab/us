@@ -78,6 +78,89 @@ def combine_equal_weight_portfolio(
     }, index=dates).rename_axis("Date")
 
 
+
+def apply_risk_controls(
+    portfolio: pd.DataFrame,
+    *,
+    one_way_cost_bps: float,
+    target_annual_volatility: float = 0.08,
+    volatility_lookback: int = 63,
+    max_exposure: float = 0.50,
+    drawdown_limit: float = 0.15,
+    cooldown_sessions: int = 20,
+) -> pd.DataFrame:
+    """Apply lagged volatility targeting, an exposure cap, and drawdown cooldown.
+
+    All controls use information available before each session. The overlay only
+    scales exposure down; it never adds leverage. A drawdown breach pauses exposure
+    for cooldown_sessions, then permits a fresh attempt.
+    """
+    if one_way_cost_bps < 0:
+        raise ValueError("one_way_cost_bps cannot be negative")
+    if not 0 < target_annual_volatility <= 1:
+        raise ValueError("target_annual_volatility must be in (0, 1]")
+    if volatility_lookback < 2:
+        raise ValueError("volatility_lookback must be at least 2")
+    if not 0 < max_exposure <= 1:
+        raise ValueError("max_exposure must be in (0, 1]")
+    if not 0 < drawdown_limit < 1:
+        raise ValueError("drawdown_limit must be in (0, 1)")
+    if cooldown_sessions < 1:
+        raise ValueError("cooldown_sessions must be at least 1")
+    required = {"gross_return", "turnover", "exposure", "net_return"}
+    missing = required - set(portfolio.columns)
+    if missing:
+        raise ValueError(f"portfolio missing columns: {', '.join(sorted(missing))}")
+    if portfolio.empty:
+        return portfolio.copy()
+
+    base = portfolio.copy().sort_index()
+    prior_vol = base["net_return"].rolling(
+        volatility_lookback, min_periods=volatility_lookback
+    ).std(ddof=1).shift(1) * (252 ** 0.5)
+    vol_scale = (target_annual_volatility / prior_vol.replace(0, float("nan"))).clip(upper=1.0).fillna(1.0)
+    exposure_scale = (
+        max_exposure / base["exposure"].replace(0, float("nan"))
+    ).clip(upper=1.0).fillna(1.0)
+    proposed_scale = pd.concat([vol_scale, exposure_scale], axis=1).min(axis=1).clip(0.0, 1.0)
+
+    scales = []
+    cooldown = 0
+    equity = 1.0
+    peak = 1.0
+    for date, row in base.iterrows():
+        if cooldown > 0:
+            scale = 0.0
+            cooldown -= 1
+        else:
+            scale = float(proposed_scale.loc[date])
+            if equity / peak - 1.0 <= -drawdown_limit:
+                scale = 0.0
+                cooldown = cooldown_sessions - 1
+        base_turnover = float(row["turnover"])
+        prior_scale = scales[-1] if scales else 0.0
+        turnover = base_turnover * scale + abs(scale - prior_scale) * float(row["exposure"])
+        gross = float(row["gross_return"]) * scale
+        cost = turnover * (one_way_cost_bps / 10000.0)
+        net = (1.0 + gross) * (1.0 - cost) - 1.0
+        scales.append(scale)
+        equity *= 1.0 + net
+        peak = max(peak, equity)
+
+    result = base.copy()
+    result["risk_scale"] = scales
+    result["gross_return"] = base["gross_return"] * result["risk_scale"]
+    result["turnover"] = [
+        float(row["turnover"]) * scale
+        + abs(scale - (scales[i - 1] if i else 0.0)) * float(row["exposure"])
+        for i, (scale, (_, row)) in enumerate(zip(scales, base.iterrows()))
+    ]
+    result["cost"] = result["turnover"] * (one_way_cost_bps / 10000.0)
+    result["net_return"] = (1.0 + result["gross_return"]) * (1.0 - result["cost"]) - 1.0
+    result["exposure"] = base["exposure"] * result["risk_scale"]
+    return result
+
+
 def _read_spy_calendar(path: str | Path) -> tuple[pd.DataFrame, pd.DatetimeIndex]:
     spy = pd.read_csv(path)
     required = {"Date", "Adj Close"}
@@ -145,50 +228,58 @@ def run_portfolio_simulation(
         if ticker_daily.empty:
             continue
         for cost_bps in costs_bps:
-            portfolio = combine_equal_weight_portfolio(
+            base_portfolio = combine_equal_weight_portfolio(
                 ticker_daily, calendar, one_way_cost_bps=cost_bps
             )
-            benchmark = spy.set_index("Date")["benchmark_return"].reindex(portfolio.index).fillna(0.0)
-            stats = summarize_returns(portfolio["net_return"])
+            risk_portfolio = apply_risk_controls(base_portfolio, one_way_cost_bps=cost_bps)
+            benchmark = spy.set_index("Date")["benchmark_return"].reindex(base_portfolio.index).fillna(0.0)
             benchmark_stats = summarize_returns(benchmark)
-            full_rows.append({
-                "strategy": strategy,
-                "cost_bps_one_way": float(cost_bps),
-                **stats,
-                "benchmark_total_return": benchmark_stats["total_return"],
-                "benchmark_annualized_return": benchmark_stats["annualized_return"],
-                "benchmark_sharpe_zero_rf": benchmark_stats["sharpe_zero_rf"],
-                "mean_exposure": float(portfolio["exposure"].mean()),
-                "max_exposure": float(portfolio["exposure"].max()),
-                "annualized_turnover": float(portfolio["turnover"].mean() * 252),
-                "worst_calendar_year_return": float(
-                    (1.0 + portfolio["net_return"]).groupby(portfolio.index.year).prod().sub(1.0).min()
-                ),
-            })
-            for year, group in portfolio["net_return"].groupby(portfolio.index.year):
-                annual_rows.append({
-                    "strategy": strategy, "cost_bps_one_way": float(cost_bps),
-                    "year": int(year), **summarize_returns(group),
-                })
-            for split_number, split in enumerate(splits, start=1):
-                mask = (portfolio.index >= pd.Timestamp(split["test_start"])) & (
-                    portfolio.index <= pd.Timestamp(split["test_end"])
-                )
-                test = portfolio.loc[mask, "net_return"]
-                benchmark_test = benchmark.loc[mask]
-                if test.empty:
-                    continue
-                oos_rows.append({
+            for profile, portfolio in (("baseline", base_portfolio), ("risk_managed", risk_portfolio)):
+                stats = summarize_returns(portfolio["net_return"])
+                full_rows.append({
                     "strategy": strategy,
+                    "profile": profile,
                     "cost_bps_one_way": float(cost_bps),
-                    "split": split_number,
-                    "test_start": split["test_start"],
-                    "test_end": split["test_end"],
-                    **summarize_returns(test),
-                    "benchmark_total_return": summarize_returns(benchmark_test)["total_return"],
-                    "mean_exposure": float(portfolio.loc[mask, "exposure"].mean()),
-                    "annualized_turnover": float(portfolio.loc[mask, "turnover"].mean() * 252),
+                    **stats,
+                    "benchmark_total_return": benchmark_stats["total_return"],
+                    "benchmark_annualized_return": benchmark_stats["annualized_return"],
+                    "benchmark_sharpe_zero_rf": benchmark_stats["sharpe_zero_rf"],
+                    "mean_exposure": float(portfolio["exposure"].mean()),
+                    "max_exposure": float(portfolio["exposure"].max()),
+                    "annualized_turnover": float(portfolio["turnover"].mean() * 252),
+                    "worst_calendar_year_return": float(
+                        (1.0 + portfolio["net_return"]).groupby(portfolio.index.year).prod().sub(1.0).min()
+                    ),
                 })
+                for year, group in portfolio["net_return"].groupby(portfolio.index.year):
+                    annual_rows.append({
+                        "strategy": strategy, "profile": profile, "cost_bps_one_way": float(cost_bps),
+                        "year": int(year), **summarize_returns(group),
+                    })
+                for split_number, split in enumerate(splits, start=1):
+                    mask = (portfolio.index >= pd.Timestamp(split["test_start"])) & (
+                        portfolio.index <= pd.Timestamp(split["test_end"])
+                    )
+                    test = portfolio.loc[mask, "net_return"]
+                    benchmark_test = benchmark.loc[mask]
+                    if test.empty:
+                        continue
+                    oos_rows.append({
+                        "strategy": strategy,
+                        "profile": profile,
+                        "cost_bps_one_way": float(cost_bps),
+                        "split": split_number,
+                        "test_start": split["test_start"],
+                        "test_end": split["test_end"],
+                        **summarize_returns(test),
+                        "benchmark_total_return": summarize_returns(benchmark_test)["total_return"],
+                        "mean_exposure": float(portfolio.loc[mask, "exposure"].mean()),
+                        "annualized_turnover": float(portfolio.loc[mask, "turnover"].mean() * 252),
+                    })
+                if profile == "risk_managed":
+                    portfolio.assign(strategy=strategy, profile=profile, cost_bps_one_way=float(cost_bps)).to_csv(
+                        output / f"daily_{strategy}_{profile}_{int(cost_bps)}bps.csv", index=True
+                    )
 
     summary = pd.DataFrame(full_rows)
     oos_summary = pd.DataFrame(oos_rows)
