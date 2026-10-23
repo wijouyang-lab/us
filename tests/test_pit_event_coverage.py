@@ -74,3 +74,16 @@ def test_empty_coverage_audit_is_deterministic():
     assert report["total_events"] == 0
     assert report["audit_status"] == "pass"
     assert report["audit_flags"] == []
+
+
+def test_coverage_does_not_treat_distinct_event_versions_as_duplicate_ids():
+    event = normalize_event(
+        "sec_edgar", "accession-1", "company_news",
+        "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
+        tickers=["EXM"],
+    )
+    v1 = dict(event, event_version_id="version-1")
+    v2 = dict(event, event_version_id="version-2", content_hash="revised-content")
+    report = audit_event_coverage([v1, v2], "2026-10-13T13:00:00Z")
+    assert report["duplicate_event_id_count"] == 0
+    assert report["duplicate_event_version_id_count"] == 0

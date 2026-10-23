@@ -24,13 +24,17 @@ def audit_event_coverage(
     *,
     max_age_by_type: Mapping[str, timedelta] | None = None,
 ) -> dict[str, Any]:
-    """Summarize eligibility, explicit missingness, duplicates, and failure flags."""
+    """Summarize eligibility, explicit missingness, duplicates, and failure flags.
+
+    When a versioned archive is supplied, duplicate checks use event_version_id:
+    multiple valid versions of the same logical event are expected over time.
+    """
     rows = list(events)
     family_counts: Counter[str] = Counter()
     status_counts: Counter[str] = Counter()
     reason_counts: Counter[str] = Counter()
     eligible_counts: Counter[str] = Counter()
-    ids: list[str] = []
+    version_ids: list[str] = []
     eligible_total = 0
 
     for event in rows:
@@ -38,9 +42,9 @@ def audit_event_coverage(
         family_counts[family] += 1
         status = str(event.get("availability_status") or "status_missing")
         status_counts[status] += 1
-        event_id = str(event.get("event_id") or "")
-        if event_id:
-            ids.append(event_id)
+        version_id = str(event.get("event_version_id") or event.get("event_id") or "")
+        if version_id:
+            version_ids.append(version_id)
 
         if status != "available":
             eligible, reason = False, f"availability_{status}"
@@ -52,7 +56,7 @@ def audit_event_coverage(
             eligible_total += 1
             eligible_counts[family] += 1
 
-    duplicate_count = len(ids) - len(set(ids))
+    duplicate_count = len(version_ids) - len(set(version_ids))
     data_failure_reasons = {
         "missing_or_invalid_required_timestamp",
         "unverifiable_update_timestamp",
@@ -84,6 +88,7 @@ def audit_event_coverage(
         "ineligible_events": total - eligible_total,
         "eligible_rate": eligible_total / total if total else 0.0,
         "duplicate_event_id_count": duplicate_count,
+        "duplicate_event_version_id_count": duplicate_count,
         "event_type_counts": dict(sorted(family_counts.items())),
         "eligible_by_event_type": dict(sorted(eligible_counts.items())),
         "availability_status_counts": dict(sorted(status_counts.items())),

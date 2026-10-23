@@ -6,7 +6,8 @@ Status: research-only implementation note. No production scanner, scheduler, ran
 
 - \`tools/research/pit_sec_edgar.py\`: parses caller-supplied SEC submissions JSON recent-filing arrays. It never makes a network request.
 - \`tools/research/pit_macro_releases.py\`: normalizes caller-supplied macro release records while keeping the observation period, scheduled time, actual publication time, consensus timestamp, and vintage timestamp separate.
-- \`tools/research/pit_event_coverage.py\`: reports event counts, availability statuses, eligibility reasons, eligible counts by family, and duplicate IDs.
+- \`tools/research/pit_event_coverage.py\`: reports event counts, availability statuses, eligibility reasons, eligible counts by family, and duplicate-version IDs.
+- `tools/research/pit_event_archive.py`: maintains a deduplicated logical event-version archive, preserves the earliest first-seen time for unchanged versions, and selects the latest version known at a historical decision time.
 - \`tools/research/pit_event_eligibility.py\`: rejects missing/naive timestamps, future events, observation timestamps preceding publication, unverifiable revisions, and stale records.
 
 ## Hard rules
@@ -16,7 +17,7 @@ Status: research-only implementation note. No production scanner, scheduler, ran
 3. A SEC filing date is not an exact publication timestamp. The raw submissions JSON acceptanceDateTime must also not be assumed to be verified UTC; it can be inconsistent for some records. Only a timestamp converted from the corresponding SGML submission header (or another independently verified UTC source) is accepted in verifiedPublishedAtUtc for primary point-in-time eligibility. Ambiguous or nonexistent New York local times are rejected.
 4. Events marked \`timestamp_missing\`, \`mapping_missing\`, \`fetch_error\`, or \`parse_error\` are counted but excluded from eligible signals.
 5. Event updates must have a verifiable source update timestamp and a collector observation timestamp that is not earlier than the update.
-6. The same event ID appearing more than once causes a duplicate audit failure; downstream feature generation must deduplicate/version records explicitly rather than silently count duplicates.
+6. The same event version ID appearing more than once causes a duplicate audit failure. Different versions of the same event are preserved, and a decision-time replay must select the latest version that had been observed by that decision.
 7. Missing event coverage is not converted to a zero or neutral score.
 
 ## Audit report interpretation
@@ -53,4 +54,14 @@ Then run with your own contact address (do not use the placeholder literally):
 
 The command writes the normalized JSON event array and a sibling metadata file. Each fetched official header gets a SHA-256 hash in the output for reproducibility. Existing output files are protected by default: choose new output names for each snapshot, or deliberately pass --overwrite only when replacement is intended. The metadata flags whether the request reaches earlier than the SEC submissions.recent window, whether the per-company limit truncated results, whether header timestamps were unverified, and any header fetch errors. This first implementation does not download older filings.files archives. It is rate-limited and research-only; it does not hook into Scan or the external scheduler.
 
-The capture timestamp is the time this collector first observed each header. Backfilled historical filings do not acquire a fictional historical first-seen time, and therefore are not eligible for decisions before the current capture under the strict audit. Use repeated forward captures to build a proper observation archive before trying a no-lookahead event-factor backtest.
+The capture timestamp is the time this collector first observed each header. Backfilled historical filings do not acquire a fictional historical first-seen time, and therefore are not eligible for decisions before the current capture under the strict audit. Use repeated forward captures to build the observation archive.
+
+To append a collected snapshot while deduplicating unchanged versions, run:
+
+    python -m tools.research.pit_event_archive --input sec_events.json --archive sec_event_archive.json
+
+The archive keeps distinct content/timestamp versions and ignores transient `fetch_error` rows as event versions; collection errors remain in the collector metadata. The audit pipeline automatically selects one event version per event ID as of `--decision-at` when given this versioned archive:
+
+    python -m tools.research.run_pit_event_audit --input sec_event_archive.json --decision-at 2026-10-23T13:00:00Z --max-age-days-by-type '{"earnings":3,"company_news":2}' --output audit_report.json
+
+The audit report distinguishes the full archive hash from the decision-time analysis snapshot hash. As with the collector, archive replay is only point-in-time verifiable from the first actual observation timestamp onward; it does not repair missing historical capture logs.

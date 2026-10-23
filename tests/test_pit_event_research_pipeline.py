@@ -1,5 +1,6 @@
 from datetime import timedelta
 
+from tools.research.pit_event_archive import merge_event_archive
 from tools.research.pit_event_records import normalize_event
 from tools.research.pit_event_research_pipeline import build_event_research_report
 
@@ -79,3 +80,39 @@ def test_pipeline_handles_empty_data_as_zero_coverage_not_alpha():
     assert report["coverage_audit"]["eligible_rate"] == 0.0
     assert report["macro_surprise"]["candidate_count"] == 0
     assert report["research_only"] is True
+
+
+def test_pipeline_uses_latest_archive_version_available_by_decision_time():
+    older = normalize_event(
+        "sec_edgar", "filing-2", "company_news",
+        "2026-10-20T10:00:00Z", "2026-10-21T10:00:00Z",
+        tickers=["EXM"], raw_payload={"headline": "Original"},
+    )
+    newer = normalize_event(
+        "sec_edgar", "filing-2", "company_news",
+        "2026-10-20T10:00:00Z", "2026-10-23T10:00:00Z",
+        tickers=["EXM"], raw_payload={"headline": "Revised"},
+    )
+    archive, _ = merge_event_archive([], [older, newer])
+
+    early = build_event_research_report(archive, "2026-10-22T12:00:00Z")
+    late = build_event_research_report(archive, "2026-10-24T12:00:00Z")
+    assert early["asof_selection_applied"] is True
+    assert early["input_event_count"] == 2
+    assert early["asof_event_count"] == 1
+    assert late["asof_event_count"] == 1
+    assert early["input_snapshot_sha256"] != late["input_snapshot_sha256"]
+    assert early["coverage_audit"]["eligible_events"] == 1
+    assert late["coverage_audit"]["eligible_events"] == 1
+
+
+def test_pipeline_rejects_mixed_versioned_and_unversioned_input():
+    event = normalize_event(
+        "rss", "story-3", "other", "2026-10-15T10:00:00Z",
+        "2026-10-15T10:01:00Z",
+    )
+    versioned = dict(event, event_version_id="made-up")
+    import pytest
+
+    with pytest.raises(ValueError, match="cannot mix"):
+        build_event_research_report([event, versioned], "2026-10-15T12:00:00Z")

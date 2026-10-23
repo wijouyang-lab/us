@@ -10,10 +10,11 @@ from hashlib import sha256
 import json
 from typing import Any, Iterable, Mapping
 
+from tools.research.pit_event_archive import select_event_versions_asof
 from tools.research.pit_event_coverage import audit_event_coverage
 from tools.research.pit_macro_surprise import macro_surprise
 
-PIPELINE_SCHEMA_VERSION = "1.0"
+PIPELINE_SCHEMA_VERSION = "1.1"
 
 
 def _canonical_json(value: Any) -> str:
@@ -41,11 +42,21 @@ def build_event_research_report(
 ) -> dict[str, Any]:
     """Build deterministic integrity/coverage report for one decision timestamp.
 
-    Macro surprises are evaluated only when a record claims a macro event. Missing
-    consensus timestamps/values stay explicit in the reason counts; no values are
-    imputed. This function does not compute strategy returns or create positions.
+    If the input contains a versioned event archive, first select the latest
+    observed version of each event known by decision_at. The selected records
+    then pass through the ordinary publication/first-seen/freshness audit.
     """
-    rows = [dict(row) for row in events]
+    source_rows = [dict(row) for row in events]
+    versioned_rows = [bool(row.get("event_version_id")) for row in source_rows]
+    if any(versioned_rows) and not all(versioned_rows):
+        raise ValueError("input cannot mix versioned archive records with unversioned events")
+    asof_selection_applied = bool(source_rows) and all(versioned_rows)
+    rows = (
+        select_event_versions_asof(source_rows, decision_at)
+        if asof_selection_applied
+        else source_rows
+    )
+
     age_config = {
         str(event_type): age.total_seconds()
         for event_type, age in sorted((max_age_by_type or {}).items())
@@ -66,6 +77,7 @@ def build_event_research_report(
         surprise_reasons[reason] = surprise_reasons.get(reason, 0) + 1
         surprise_records.append({
             "event_id": str(event.get("event_id") or event.get("source_event_id") or f"row:{index}"),
+            "event_version_id": str(event.get("event_version_id") or ""),
             "eligible": bool(result["eligible"]),
             "reason": reason,
             "surprise": result.get("surprise"),
@@ -85,7 +97,10 @@ def build_event_research_report(
     return {
         "pipeline_schema_version": PIPELINE_SCHEMA_VERSION,
         "decision_at_utc": decision_at,
-        "input_event_count": len(rows),
+        "input_event_count": len(source_rows),
+        "asof_event_count": len(rows),
+        "asof_selection_applied": asof_selection_applied,
+        "source_snapshot_sha256": _snapshot_hash(source_rows),
         "input_snapshot_sha256": snapshot_hash,
         "max_age_seconds_by_type": age_config,
         "coverage_audit": coverage,
