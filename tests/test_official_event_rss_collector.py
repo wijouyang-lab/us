@@ -210,3 +210,17 @@ def test_treasury_feeds_are_allowlisted_and_normalized(feed_key):
     assert result["events"][0]["source"] == cfg["source"]
     assert result["events"][0]["event_type"] == "macro_release"
     assert result["events"][0]["market_scope"] == "market"
+
+
+@pytest.mark.parametrize("feed_key", ["treasury_auction_announcements", "treasury_auction_results"])
+def test_treasury_feed_fetch_uses_configured_official_url(feed_key):
+    seen = []
+    body = "<rss><channel><item><title>Auction event</title><link>https://www.treasurydirect.gov/news</link><guid>auction-fetch-test</guid><pubDate>Thu, 29 Oct 2026 08:30:00 -0400</pubDate></item></channel></rss>"
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return FakeResponse(body)
+    collector = OfficialRssCollector("Quant research test@example.com", opener=opener, sleep=lambda _: None, now=lambda: datetime(2026, 10, 29, 12, 31, tzinfo=timezone.utc))
+    result = collector.collect([feed_key])
+    assert seen == [OFFICIAL_FEEDS[feed_key]["url"]]
+    assert result["metadata"]["feed_reports"][0]["status"] == "ok"
+    assert result["metadata"]["event_count"] == 1
