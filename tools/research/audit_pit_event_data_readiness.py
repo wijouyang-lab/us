@@ -83,11 +83,9 @@ def audit_event_archive(
 
         for field in ("event_id", "event_version_id", "source", "source_event_id",
                       "event_type", "published_at_utc", "first_seen_at_utc",
-                      "source_quality", "content_hash"):
+                      "source_quality", "content_hash", "source_url"):
             if event.get(field) in (None, ""):
                 missing_fields[field] += 1
-        if not event.get("source_url") and not event.get("source"):
-            missing_fields["source_reference"] += 1
 
         for field in ("published_at_utc", "first_seen_at_utc", "updated_at_utc", "update_first_seen_at_utc"):
             raw = event.get(field)
@@ -162,6 +160,7 @@ def audit_event_archive(
             "archive_nonempty": bool(events),
             "version_ids_unique": duplicate_version_count == 0,
             "required_timestamps_present": not timestamp_checks["missing_published_at_utc"] and not timestamp_checks["missing_first_seen_at_utc"],
+            "source_urls_present": missing_fields["source_url"] == 0,
             "all_first_seen_after_publication": timestamp_checks["first_seen_before_publication"] == 0,
             "validated_labels_present": labelled > 0,
             "pit_eligible_for_at_least_one_decision": not decisions or any(eligible_by_decision.values()),
