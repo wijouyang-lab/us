@@ -57,3 +57,12 @@ def test_breakeven_proxy_rejects_wrong_curve_type_and_duplicate_dates():
     ], "https://home.treasury.gov/nominal.xml")
     with pytest.raises(ValueError, match="duplicate observation_date"):
         build_breakeven_proxy(nominal, real)
+
+
+def test_breakeven_proxy_rejects_observation_after_retrieval_date():
+    nominal = snapshot("nominal", "2026-10-20T16:00:00Z", [
+        {"observation_date": "2026-10-21", "yield_pct": {"10y": 4.0}},
+    ], "https://home.treasury.gov/nominal.xml")
+    real = snapshot("real", "2026-10-20T16:00:00Z", [], "https://home.treasury.gov/real.xml")
+    with pytest.raises(ValueError, match="after retrieval date"):
+        build_breakeven_proxy(nominal, real)
