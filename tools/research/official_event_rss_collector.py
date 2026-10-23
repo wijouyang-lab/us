@@ -1,4 +1,4 @@
-"""Free official BLS/Federal Reserve RSS capture for research-only event observation.
+"""Free official BLS, BEA, Federal Reserve, and TreasuryDirect RSS capture for research-only event observation.
 
 The collector uses a built-in allowlist of official feeds and local parsing tests.
 Publisher-supplied RSS dates are preserved as source timestamps, not treated as
@@ -45,6 +45,18 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "event_type": "macro_release",
         "source_quality": "official",
     },
+    "treasury_auction_announcements": {
+        "url": "https://www.treasurydirect.gov/TA_WS/securities/announced/rss",
+        "source": "treasury_auction_announcements_rss",
+        "event_type": "macro_release",
+        "source_quality": "official",
+    },
+    "treasury_auction_results": {
+        "url": "https://www.treasurydirect.gov/TA_WS/securities/auctioned/rss",
+        "source": "treasury_auction_results_rss",
+        "event_type": "macro_release",
+        "source_quality": "official",
+    },
     "fed_all": {
         "url": "https://www.federalreserve.gov/feeds/press_all.xml",
         "source": "federal_reserve_press_rss",
@@ -58,7 +70,7 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "source_quality": "official",
     },
 }
-_ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov", "apps.bea.gov"}
+_ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov", "apps.bea.gov", "www.treasurydirect.gov"}
 _CENTRAL_BANK_TERMS = (
     "fomc",
     "monetary policy",
@@ -242,7 +254,7 @@ def parse_official_feed(
 
 
 class OfficialRssCollector:
-    """Paced client limited to preconfigured BLS, BEA, and Federal Reserve RSS feeds."""
+    """Paced client limited to preconfigured official BLS, BEA, Fed, and TreasuryDirect feeds."""
 
     def __init__(
         self,
@@ -380,7 +392,7 @@ def _load_feed_keys(raw: str) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--feeds", default="bls_cpi,bls_employment,fed_all,fed_speeches")
+    parser.add_argument("--feeds", default="bls_cpi,bls_employment,bea_releases,fed_all,fed_speeches,treasury_auction_announcements,treasury_auction_results")
     parser.add_argument("--output", required=True, help="Path for normalized event JSON array")
     parser.add_argument("--metadata-output", help="Path for collection metadata JSON")
     parser.add_argument("--user-agent", default=os.environ.get("OFFICIAL_FEED_USER_AGENT", ""))
