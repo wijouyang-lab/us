@@ -49,17 +49,21 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
         feed_keys=["bls_cpi"],
         feed_user_agent="Quant research tester@example.com",
         max_age_by_type={"macro_release": timedelta(days=1)},
+        audit_after_capture=True,
     )
     assert result["event_count"] == 1
     assert result["successful_source_count"] == 1
     assert not result["all_sources_failed"]
-    for key in ("events_path", "metadata_path", "archive_path", "audit_path"):
+    for key in ("events_path", "metadata_path", "archive_path", "audit_path", "readiness_path"):
         assert Path(result[key]).exists()
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
     assert audit["coverage_audit"]["eligible_events"] == 1
     assert audit["macro_surprise"]["eligible_count"] == 1
     assert audit["research_only"] is True
     assert audit["trading_signal_generated"] is False
+    readiness = json.loads(Path(result["readiness_path"]).read_text(encoding="utf-8"))
+    assert readiness["status"] == "blocked_no_validated_labels"
+    assert readiness["readiness_gates"]["empirical_alpha_established"] is False
     source_coverage = audit["capture_cycle"]["source_collection_coverage"]
     assert source_coverage == [{
         "source_kind": "official_rss",
