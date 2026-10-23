@@ -2,6 +2,11 @@ name: Research Event Factor Capture (manual)
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - research/event-factor-walk-forward
+    paths:
+      - .github/workflows/research-event-factor-capture-once.yml
 
 permissions:
   contents: write
