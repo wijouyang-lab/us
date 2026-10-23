@@ -171,7 +171,7 @@ def test_price_loader_prefers_explicit_adjusted_open_and_close(tmp_path):
     path = tmp_path / "adjusted.csv"
     path.write_text(
         "Date,Ticker,Open,Close,Adj Open,Adj Close\n"
-        "2026-10-23,SPY,100,110,95,105\n",
+        "2026-10-23,SPY,,,95,105\n",
         encoding="utf-8",
     )
     price_map, _, quality = _load_price_bars(path, date(2026, 10, 23))
