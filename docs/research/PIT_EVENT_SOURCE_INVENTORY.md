@@ -23,7 +23,7 @@ This inventory separates sources already implemented in the research collector f
 | Macro release vintages and consensus snapshots | BEA release/vintage data plus timestamped consensus source | Official BEA RSS headlines are collected; historical vintages and pre-release consensus snapshots are not integrated |
 | Structured Treasury auction surprise metrics | TreasuryDirect auction result data | RSS headlines are captured; bid-to-cover, tail, and comparable surprise fields are not yet normalized |
 | FOMC decision calendar, statements, minutes and voting-official communications | Federal Reserve official releases and calendars | Partially represented by Fed press/speeches feeds; event-specific parsing and coverage checks remain |
-| Company earnings release, guidance and consensus surprise | Company investor-relations releases plus a source with timestamped consensus snapshots | Not yet implemented as a verified beat/miss pipeline |
+| Company earnings release, guidance and consensus surprise | Company investor-relations releases plus a source with timestamped consensus snapshots | An exploratory yfinance EPS-surprise recon exists, but historical first-seen and consensus provenance are not validated; do not treat it as a PIT factor or production-ready evidence |
 | Market-wide / sector headlines and policy/person events | Official agency sources and vetted public feeds | Partial coverage only; source inventory and coverage must be expanded before claiming broad coverage |
 
 ## Collection and evaluation controls
