@@ -29,6 +29,8 @@ def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
              min_names_per_side: int = 5, benchmark_path: str | None = None) -> dict[str, Any]:
     if horizon < 1 or cost_bps_per_side < 0 or not 0 < quantile < 0.5 or min_names_per_side < 1:
         raise ValueError("invalid horizon, cost, quantile, or minimum names")
+    if not np.isfinite(cost_bps_per_side):
+        raise ValueError("cost_bps_per_side must be finite")
     s = pd.read_csv(signals_path, dtype={"ticker": str})
     required_s = {"decision_at", "ticker", "event_score", "coverage_status"}
     if not required_s.issubset(s.columns):
@@ -36,6 +38,7 @@ def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
     s["decision_at"] = _utc(s["decision_at"], "signals.decision_at")
     s["ticker"] = s["ticker"].astype(str).str.strip().str.upper()
     s["event_score"] = pd.to_numeric(s["event_score"], errors="coerce")
+    s.loc[~np.isfinite(s["event_score"]), "event_score"] = np.nan
     s["coverage_status"] = s["coverage_status"].astype(str).str.strip().str.lower()
     if s.duplicated(["decision_at", "ticker"]).any():
         raise ValueError("duplicate decision_at/ticker signal rows")
@@ -48,7 +51,7 @@ def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
     p["ticker"] = p["ticker"].astype(str).str.strip().str.upper()
     p["close"] = pd.to_numeric(p["close"], errors="coerce")
     p = p.dropna(subset=["close"])
-    p = p[p["close"] > 0].sort_values(["ticker", "date"])
+    p = p[np.isfinite(p["close"]) & (p["close"] > 0)].sort_values(["ticker", "date"])
     if p.duplicated(["ticker", "date"]).any():
         raise ValueError("duplicate ticker/date price rows")
     by_ticker = {t: g.reset_index(drop=True) for t, g in p.groupby("ticker")}
@@ -108,7 +111,7 @@ def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
             raise ValueError("benchmark CSV requires date,close")
         b["date"] = _utc(b["date"], "benchmark.date")
         b["close"] = pd.to_numeric(b["close"], errors="coerce")
-        benchmark = {"rows": int(b["close"].notna().sum()),
+        benchmark = {"rows": int((b["close"].notna() & np.isfinite(b["close"])).sum()),
                      "note": "Not exposure-matched; no benchmark alpha claim is made."}
     return {
         "status": "evaluated",
