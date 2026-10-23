@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import tempfile
 from typing import Any
 
 import pandas as pd
@@ -106,12 +107,12 @@ def compare(
             "research_only": True,
             "production_signal_generated": False,
         }
-    event_path = Path(signals_path).with_name(Path(signals_path).stem + ".paired_event.tmp.csv")
-    momentum_path = Path(signals_path).with_name(Path(signals_path).stem + ".paired_momentum.tmp.csv")
-    try:
-        event = paired[["decision_at", "ticker", "event_score", "coverage_status"]].rename(
-            columns={"event_score": "event_score"}
-        )
+    # Keep scratch files outside the input directory. This avoids write-permission
+    # failures and collisions when independent comparisons run concurrently.
+    with tempfile.TemporaryDirectory(prefix="event-factor-paired-") as temp_dir:
+        event_path = Path(temp_dir) / "paired_event.csv"
+        momentum_path = Path(temp_dir) / "paired_momentum.csv"
+        event = paired[["decision_at", "ticker", "event_score", "coverage_status"]]
         momentum = paired[["decision_at", "ticker", "momentum_score", "coverage_status"]].rename(
             columns={"momentum_score": "event_score"}
         )
@@ -127,9 +128,6 @@ def compare(
             cost_bps_per_side=cost_bps_per_side, quantile=quantile,
             min_names_per_side=min_names_per_side,
         )
-    finally:
-        event_path.unlink(missing_ok=True)
-        momentum_path.unlink(missing_ok=True)
     return {
         "status": "evaluated" if event_result["status"] == momentum_result["status"] == "evaluated" else "insufficient_data",
         "pairing": pair_report,
