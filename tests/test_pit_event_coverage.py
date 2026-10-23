@@ -11,14 +11,12 @@ def test_coverage_audit_counts_missing_timestamps_and_eligible_events():
         "sec_edgar", "filing-2", "company_news",
         None, "2026-10-13T12:30:05Z", tickers=["EXM"],
     )
-    report = audit_event_coverage(
-        [good, missing], "2026-10-13T13:00:00Z",
-    )
+    report = audit_event_coverage([good, missing], "2026-10-13T13:00:00Z")
     assert report["total_events"] == 2
     assert report["eligible_events"] == 1
     assert report["ineligible_events"] == 1
     assert report["availability_status_counts"]["timestamp_missing"] == 1
-    assert report["audit_status"] == "pass"
+    assert report["audit_status"] == "fail_missing_data"
 
 
 def test_coverage_audit_flags_duplicate_event_ids():
@@ -26,11 +24,19 @@ def test_coverage_audit_flags_duplicate_event_ids():
         "bls", "cpi-1", "macro_release",
         "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
     )
-    report = audit_event_coverage(
-        [event, event], "2026-10-13T13:00:00Z",
-    )
+    report = audit_event_coverage([event, event], "2026-10-13T13:00:00Z")
     assert report["duplicate_event_id_count"] == 1
     assert report["audit_status"] == "fail_duplicates"
+
+
+def test_coverage_audit_rejects_unmapped_company_news_even_with_valid_times():
+    event = normalize_event(
+        "rss", "story-1", "company_news",
+        "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
+    )
+    report = audit_event_coverage([event], "2026-10-13T13:00:00Z")
+    assert report["eligible_events"] == 0
+    assert report["audit_status"] == "fail_missing_data"
 
 
 def test_empty_coverage_audit_is_deterministic():
