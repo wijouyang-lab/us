@@ -31,6 +31,24 @@ python -m tools.research.build_event_annotation_queue \
 
 The queue contains no proposed scores. Direction and impact stay blank, every row remains `pending`, and only events within the declared age window that were actually observed by `AS_OF` are included. A queue report is not evidence that labels have been reviewed.
 
+## Import reviewed annotations without overwriting the source archive
+
+After a real review, fill the score, review timestamp, rationale, labeler, reviewer, and schema columns. Keep ambiguous scores blank rather than inventing values; the import tool requires both scores for rows marked `reviewed` or `validated`. It ignores `pending` rows and refuses unknown or duplicate event-version IDs, invalid ranges, missing provenance, future review timestamps, and self-validated rows.
+
+```bash
+STAMP="$(date -u +%Y%m%dT%H%M%SZ)"
+AS_OF="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+python -m tools.research.apply_event_annotations \
+  --archive data/research/event-capture/event_archive.json \
+  --annotations-csv data/research/event-capture/annotation_queue_39993404661.csv \
+  --as-of "$AS_OF" \
+  --output "data/research/event-capture/event_archive_labeled_$STAMP.json" \
+  --report "data/research/event-capture/event_annotation_import_$STAMP.json"
+```
+
+This creates a separate derived archive; the original append-only source archive remains unchanged. Re-run the readiness audit against the derived archive before building the reviewed signal panel.
+
+
 ## Direction rubric
 
 Score the likely direction for the named ticker or clearly stated market scope, based only on information actually available in the archived source at its point-in-time cutoff:
