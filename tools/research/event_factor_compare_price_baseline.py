@@ -90,6 +90,50 @@ def build_paired_signals(
     return paired, report
 
 
+def _newey_west_mean_interval(values: list[float], *, max_lag: int) -> dict[str, Any]:
+    """Approximate 95% CI for a mean using Bartlett/Newey-West HAC variance.
+
+    This corrects the standard error for short-range serial dependence such as
+    overlapping holding-period returns. It is an asymptotic diagnostic, not a
+    substitute for a larger independent out-of-sample sample.
+    """
+    x = np.asarray(values, dtype=float)
+    x = x[np.isfinite(x)]
+    n = int(len(x))
+    if n < 3:
+        return {
+            "status": "insufficient_data",
+            "observations": n,
+            "mean_difference_pct": None,
+            "hac_standard_error_pct": None,
+            "ci95_lower_pct": None,
+            "ci95_upper_pct": None,
+            "max_lag": None,
+        }
+    mean = float(np.mean(x))
+    centered = x - mean
+    lag = min(max(0, int(max_lag)), n - 1)
+    # Long-run variance estimate for the sample mean; gamma uses denominator n.
+    long_run_variance = float(np.dot(centered, centered) / n)
+    for k in range(1, lag + 1):
+        gamma = float(np.dot(centered[k:], centered[:-k]) / n)
+        weight = 1.0 - k / (lag + 1.0)
+        long_run_variance += 2.0 * weight * gamma
+    variance_of_mean = max(0.0, long_run_variance) / n
+    standard_error = float(np.sqrt(variance_of_mean))
+    return {
+        "status": "estimated",
+        "method": "Newey-West HAC mean interval with Bartlett weights; normal 1.96 multiplier",
+        "observations": n,
+        "mean_difference_pct": round(mean * 100.0, 6),
+        "hac_standard_error_pct": round(standard_error * 100.0, 6),
+        "ci95_lower_pct": round((mean - 1.96 * standard_error) * 100.0, 6),
+        "ci95_upper_pct": round((mean + 1.96 * standard_error) * 100.0, 6),
+        "max_lag": lag,
+        "interpretation_warning": "Asymptotic interval; overlapping-return HAC correction does not remove selection bias or establish alpha.",
+    }
+
+
 def compare(
     signals_path: str,
     prices_path: str,
@@ -130,8 +174,22 @@ def compare(
             cost_bps_per_side=cost_bps_per_side, quantile=quantile,
             min_names_per_side=min_names_per_side,
         )
+    event_by_date = {
+        row["decision_at"]: float(row["long_short_net_return"])
+        for row in event_result.get("per_decision_date", [])
+    }
+    momentum_by_date = {
+        row["decision_at"]: float(row["long_short_net_return"])
+        for row in momentum_result.get("per_decision_date", [])
+    }
+    paired_dates = sorted(event_by_date.keys() & momentum_by_date.keys())
+    paired_differences = [event_by_date[date] - momentum_by_date[date] for date in paired_dates]
+    paired_hac = _newey_west_mean_interval(paired_differences, max_lag=horizon - 1)
+    paired_hac["paired_decision_dates"] = len(paired_dates)
+    paired_hac["comparison"] = "event-factor net return minus price-only momentum net return on the same decision dates"
     return {
         "status": "evaluated" if event_result["status"] == momentum_result["status"] == "evaluated" else "insufficient_data",
+        "paired_return_difference_hac": paired_hac,
         "pairing": pair_report,
         "configuration": {
             "momentum_lookback_observations": lookback,
