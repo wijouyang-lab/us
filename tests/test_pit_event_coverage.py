@@ -1,0 +1,40 @@
+from tools.research.pit_event_records import normalize_event
+from tools.research.pit_event_coverage import audit_event_coverage
+
+
+def test_coverage_audit_counts_missing_timestamps_and_eligible_events():
+    good = normalize_event(
+        "bls", "cpi-1", "macro_release",
+        "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
+    )
+    missing = normalize_event(
+        "sec_edgar", "filing-2", "company_news",
+        None, "2026-10-13T12:30:05Z", tickers=["EXM"],
+    )
+    report = audit_event_coverage(
+        [good, missing], "2026-10-13T13:00:00Z",
+    )
+    assert report["total_events"] == 2
+    assert report["eligible_events"] == 1
+    assert report["ineligible_events"] == 1
+    assert report["availability_status_counts"]["timestamp_missing"] == 1
+    assert report["audit_status"] == "pass"
+
+
+def test_coverage_audit_flags_duplicate_event_ids():
+    event = normalize_event(
+        "bls", "cpi-1", "macro_release",
+        "2026-10-13T12:30:00Z", "2026-10-13T12:30:05Z",
+    )
+    report = audit_event_coverage(
+        [event, event], "2026-10-13T13:00:00Z",
+    )
+    assert report["duplicate_event_id_count"] == 1
+    assert report["audit_status"] == "fail_duplicates"
+
+
+def test_empty_coverage_audit_is_deterministic():
+    report = audit_event_coverage([], "2026-10-13T13:00:00Z")
+    assert report["eligible_rate"] == 0.0
+    assert report["total_events"] == 0
+    assert report["audit_status"] == "pass"
