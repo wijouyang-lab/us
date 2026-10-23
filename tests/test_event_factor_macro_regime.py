@@ -75,3 +75,25 @@ def test_macro_regime_evaluation_requires_expected_columns(tmp_path):
     pd.DataFrame({"date": ["2026-10-16"], "ticker": ["AAA"], "close": [10.0]}).to_csv(prices_path, index=False)
     with pytest.raises(ValueError, match="macro panel requires"):
         evaluate_macro_regimes(str(signal_path), str(prices_path), str(macro_path))
+
+
+def test_macro_regime_evaluation_rechecks_availability_timestamp(tmp_path):
+    signals = pd.DataFrame({
+        "decision_at": ["2026-10-20T13:00:00Z"], "ticker": ["AAA"],
+        "event_score": [0.8], "coverage_status": ["available"],
+    })
+    macro = pd.DataFrame({
+        "decision_at": ["2026-10-20T13:00:00Z"],
+        "treasury_nominal_2s10s_bp": [-20.0],
+        "treasury_nominal_available_at_utc": ["2026-10-20T14:00:00Z"],
+        "treasury_nominal_age_days": [0],
+        "treasury_nominal_available": [True],
+    })
+    signal_path, macro_path = tmp_path / "signals.csv", tmp_path / "macro.csv"
+    signals.to_csv(signal_path, index=False)
+    macro.to_csv(macro_path, index=False)
+    prices_path = tmp_path / "prices.csv"
+    pd.DataFrame({"date": ["2026-10-16"], "ticker": ["AAA"], "close": [10.0]}).to_csv(prices_path, index=False)
+    result = evaluate_macro_regimes(str(signal_path), str(prices_path), str(macro_path))
+    assert result["rows_after_pit_and_staleness_filter"] == 0
+    assert result["excluded_rows"] == 1
