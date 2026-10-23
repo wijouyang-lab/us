@@ -23,11 +23,13 @@ def audit_event_coverage(
     decision_at: str,
     *,
     max_age_by_type: Mapping[str, timedelta] | None = None,
+    expected_sources: Iterable[str] | None = None,
 ) -> dict[str, Any]:
-    """Summarize eligibility, explicit missingness, duplicates, and failure flags.
+    """Summarize eligibility, expected-source coverage, missingness, and leakage.
 
-    When a versioned archive is supplied, duplicate checks use event_version_id:
-    multiple valid versions of the same logical event are expected over time.
+    expected_sources is an optional list of source identifiers expected in this
+    capture. It is a strict presence check, not a claim that a source's feed is
+    historically complete. An empty batch always fails closed with fail_no_data.
     """
     rows = list(events)
     family_counts: Counter[str] = Counter()
@@ -69,7 +71,23 @@ def audit_event_coverage(
     has_temporal = any(reason in _TEMPORAL_FAILURES for reason in reason_counts)
     has_stale = "stale_event" in reason_counts
 
+    seen_sources = sorted({
+        str(event.get("source") or "").strip().lower()
+        for event in rows
+        if str(event.get("source") or "").strip()
+    })
+    expected = sorted({
+        str(source).strip().lower()
+        for source in (expected_sources or [])
+        if str(source).strip()
+    })
+    missing_sources = sorted(set(expected) - set(seen_sources))
+
     flags: list[str] = []
+    if not rows:
+        flags.append("fail_no_data")
+    if missing_sources:
+        flags.append("fail_source_coverage")
     if has_temporal:
         flags.append("fail_temporal_integrity")
     if has_stale:
@@ -93,6 +111,9 @@ def audit_event_coverage(
         "eligible_by_event_type": dict(sorted(eligible_counts.items())),
         "availability_status_counts": dict(sorted(status_counts.items())),
         "eligibility_reason_counts": dict(sorted(reason_counts.items())),
+        "expected_sources": expected,
+        "observed_sources": seen_sources,
+        "missing_sources": missing_sources,
         "audit_flags": flags,
         "audit_status": audit_status,
     }
