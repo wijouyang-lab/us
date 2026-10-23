@@ -16,6 +16,29 @@ external trigger, portfolio construction, or trading behavior.
    - `impact_score`: numeric value from 0 (irrelevant) to 1 (high impact)
    The pipeline deliberately does not infer these labels from headlines.
 
+## Audit data readiness before scoring
+
+Before generating any signal panel, audit the archive and (optionally) the exact
+decision timestamps used in the proposed evaluation:
+
+```bash
+python -m tools.research.audit_pit_event_data_readiness \
+  --archive data/research/event_archive.json \
+  --decisions data/research/decision_times.csv \
+  --output data/research/event_data_readiness.json
+```
+
+The report counts event families and sources, missing required metadata, timestamp
+ordering problems, duplicate version IDs, direction/impact label coverage, and
+point-in-time eligibility for each decision time. Use a fixed `--audited-at`
+timestamp when a reproducible audit snapshot is required.
+
+A `review_required` result is not proof that annotations are trustworthy or that
+the factor has predictive power. `blocked_*` and `fail_*` statuses mean the
+archive is not ready for empirical evaluation. The report always leaves
+`empirical_alpha_established` and `production_activation_allowed` false; neither
+unit-test success nor data completeness enables production trading.
+
 ## Build a point-in-time signal panel
 
 Create a CSV with one column `decision_at` containing timezone-aware timestamps,
