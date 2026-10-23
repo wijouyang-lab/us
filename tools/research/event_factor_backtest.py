@@ -27,10 +27,10 @@ def _utc(series: pd.Series, label: str) -> pd.Series:
 def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
              cost_bps_per_side: float = 5.0, quantile: float = 0.2,
              min_names_per_side: int = 5, benchmark_path: str | None = None) -> dict[str, Any]:
-    if horizon < 1 or cost_bps_per_side < 0 or not 0 < quantile < 0.5 or min_names_per_side < 1:
-        raise ValueError("invalid horizon, cost, quantile, or minimum names")
     if not np.isfinite(cost_bps_per_side):
         raise ValueError("cost_bps_per_side must be finite")
+    if horizon < 1 or cost_bps_per_side < 0 or not 0 < quantile < 0.5 or min_names_per_side < 1:
+        raise ValueError("invalid horizon, cost, quantile, or minimum names")
     s = pd.read_csv(signals_path, dtype={"ticker": str})
     required_s = {"decision_at", "ticker", "event_score", "coverage_status"}
     if not required_s.issubset(s.columns):
