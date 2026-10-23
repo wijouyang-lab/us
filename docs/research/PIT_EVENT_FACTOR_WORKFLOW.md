@@ -187,7 +187,7 @@ python -m tools.research.treasury_yield_curve_capture \
   --output data/research/captures/treasury_yield_curve_2026.json
 ```
 
-The output contains per-maturity yields, 2-year/10-year and 3-month/10-year spreads, and daily changes where both adjacent observations exist. Empty values stay null. This is a manual collector and does not change the production scanner or create a scheduled workflow.
+The default output contains nominal per-maturity yields, 2-year/10-year and 3-month/10-year spreads, and daily changes where both adjacent observations exist. To capture real (inflation-protected/TIPS-derived) yields instead, use `--curve-type real` and a separate output path. Real yields cover 5-, 7-, 10-, 20-, and 30-year maturities; they do not produce the nominal 2s10s/3m10y spreads. Empty values stay null. This is a manual collector and does not change the production scanner or create a scheduled workflow.
 
 **Point-in-time warning:** the Treasury feed can return historical rows today, but a current download does not establish when each old value was first available. Each row records the actual retrieval time and may only be used for decisions at or after that time unless a separately validated historical availability timestamp exists. Do not backtest earlier dates using this file as if it were archived contemporaneously.
 
