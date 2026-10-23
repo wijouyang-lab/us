@@ -25,6 +25,10 @@ def event(**updates):
         "impact_score": 0.8,
         "label_review_status": "reviewed",
         "label_reviewed_at_utc": "2026-01-02T12:02:00Z",
+        "label_rationale": "Reviewed against source content only.",
+        "labeler_id": "analyst-1",
+        "reviewer_id": "reviewer-2",
+        "label_schema_version": "1.0",
     }
     row.update(updates)
     return row
@@ -145,3 +149,27 @@ def test_audit_reports_recoverable_official_url_without_hiding_it(tmp_path):
     assert result["canonicalizable_source_urls"][0]["canonical_source_url"] == "https://www.bea.gov/news/2026/release"
     assert result["readiness_gates"]["source_urls_valid_https"] is False
     assert result["readiness_gates"]["source_urls_valid_or_canonicalizable"] is True
+
+
+
+def test_audit_requires_review_provenance_and_separates_ambiguous_labels(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([
+        event(direction_score=None, impact_score=None),
+    ]), encoding="utf-8")
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+    assert result["status"] == "blocked_no_validated_labels"
+    assert result["label_quality"]["reviewed_annotations_with_valid_provenance"] == 1
+    assert result["label_quality"]["reviewed_labels"] == 0
+    assert result["label_quality"]["unverified_label_provenance"] == 0
+    assert result["readiness_gates"]["label_review_provenance_present"] is True
+
+
+def test_audit_does_not_accept_numeric_scores_without_reviewer_provenance(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([event(reviewer_id="", label_rationale="")]), encoding="utf-8")
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+    assert result["status"] == "blocked_no_validated_labels"
+    assert result["label_quality"]["reviewed_labels"] == 0
+    assert result["label_quality"]["unverified_label_provenance"] == 1
+    assert result["readiness_gates"]["label_review_provenance_present"] is False
