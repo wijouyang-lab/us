@@ -25,6 +25,8 @@ Fixed-cost scenarios charge 0, 5, 10, or 20 bps per one-way traded notional. Cap
 
 SPY buy-and-hold over the same price calendar had a 15.52% annualized return and 0.901 Sharpe (zero risk-free rate). This is a raw-return comparison, not a risk-matched comparison: the strategies held substantial cash, with mean exposure between 24% and 58%.
 
+The updated research workflow also computes an **exposure-matched SPY-plus-cash benchmark** separately for each baseline and risk-managed portfolio. Each session invests the same fraction of capital as the strategy's realized target exposure and leaves the remainder in cash; exposure changes incur the same one-way cost assumption. The output includes matched-benchmark annualized return, Sharpe, maximum drawdown, and walk-forward window results. This is a diagnostic comparison rather than a claim that the strategy's actual holdings can be replicated by SPY.
+
 ## Walk-forward held-out results at 5 bps
 
 Seven chronological 252-session windows were evaluated. Annualized returns by window:
