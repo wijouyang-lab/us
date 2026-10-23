@@ -19,6 +19,7 @@ import xml.etree.ElementTree as ET
 
 BASE_URL = "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml"
 DATA_KEY = "daily_treasury_yield_curve"
+REAL_DATA_KEY = "daily_treasury_real_yield_curve"
 _ALLOWED_HOST = "home.treasury.gov"
 MATURITY_FIELDS = {
     "1m": "BC_1MONTH",
@@ -29,6 +30,13 @@ MATURITY_FIELDS = {
     "1y": "BC_1YEAR",
     "2y": "BC_2YEAR",
     "3y": "BC_3YEAR",
+    "5y": "BC_5YEAR",
+    "7y": "BC_7YEAR",
+    "10y": "BC_10YEAR",
+    "20y": "BC_20YEAR",
+    "30y": "BC_30YEAR",
+}
+REAL_MATURITY_FIELDS = {
     "5y": "BC_5YEAR",
     "7y": "BC_7YEAR",
     "10y": "BC_10YEAR",
@@ -79,8 +87,9 @@ def parse_treasury_yield_curve_xml(
     *,
     retrieved_at_utc: str | datetime,
     source_url: str,
+    curve_type: str = "nominal",
 ) -> dict[str, Any]:
-    """Normalize Treasury Atom/OData XML without filling missing yields."""
+    """Normalize nominal or real Treasury Atom/OData XML without filling missing yields."""
     observed = retrieved_at_utc if isinstance(retrieved_at_utc, datetime) else datetime.fromisoformat(
         str(retrieved_at_utc).replace("Z", "+00:00")
     )
@@ -95,6 +104,10 @@ def parse_treasury_yield_curve_xml(
     except (ET.ParseError, TypeError, ValueError) as exc:
         raise ValueError("invalid Treasury yield curve XML") from exc
 
+    if curve_type not in {"nominal", "real"}:
+        raise ValueError("curve_type must be nominal or real")
+    maturity_fields = MATURITY_FIELDS if curve_type == "nominal" else REAL_MATURITY_FIELDS
+    source_name = "us_treasury_daily_par_yield_curve" if curve_type == "nominal" else "us_treasury_daily_par_real_yield_curve"
     rows: list[dict[str, Any]] = []
     for entry in (node for node in root.iter() if _local_name(node.tag) == "entry"):
         date_raw = _child_text(entry, "NEW_DATE")
@@ -103,7 +116,7 @@ def parse_treasury_yield_curve_xml(
             continue
         yields = {
             maturity: _parse_yield(_child_text(entry, xml_field))
-            for maturity, xml_field in MATURITY_FIELDS.items()
+            for maturity, xml_field in maturity_fields.items()
         }
         if not any(value is not None for value in yields.values()):
             continue
@@ -115,7 +128,7 @@ def parse_treasury_yield_curve_xml(
             "slope_3m10y_bp": round((y10 - y3m) * 100, 4) if y10 is not None and y3m is not None else None,
             "retrieved_at_utc": observed_iso,
             "source_url": source_url,
-            "source": "us_treasury_daily_par_yield_curve",
+            "source": source_name,
             "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
             "research_only": True,
         })
@@ -165,11 +178,15 @@ def fetch_treasury_yield_curve(
     opener: Callable[..., Any] | None = None,
     now: Callable[[], datetime] | None = None,
     timeout_seconds: float = 20.0,
+    curve_type: str = "nominal",
 ) -> dict[str, Any]:
     if year < 1990 or year > 9999:
         raise ValueError("year must be between 1990 and 9999")
+    if curve_type not in {"nominal", "real"}:
+        raise ValueError("curve_type must be nominal or real")
+    data_key = DATA_KEY if curve_type == "nominal" else REAL_DATA_KEY
     url = BASE_URL + "?" + urlencode({
-        "data": DATA_KEY,
+        "data": data_key,
         "field_tdr_date_value": str(year),
     })
     parsed = urlparse(url)
@@ -183,7 +200,7 @@ def fetch_treasury_yield_curve(
     with response if hasattr(response, "__enter__") else _ResponseContext(response) as opened:
         payload = opened.read()
     retrieved = (now or (lambda: datetime.now(timezone.utc)))()
-    return parse_treasury_yield_curve_xml(payload, retrieved_at_utc=retrieved, source_url=url)
+    return parse_treasury_yield_curve_xml(payload, retrieved_at_utc=retrieved, source_url=url, curve_type=curve_type)
 
 
 class _ResponseContext:
@@ -202,18 +219,19 @@ class _ResponseContext:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--year", type=int, default=datetime.now(timezone.utc).year)
+    parser.add_argument("--curve-type", choices=("nominal", "real"), default="nominal")
     parser.add_argument("--output", required=True, help="New immutable JSON snapshot path")
     args = parser.parse_args(argv)
     output = Path(args.output)
     if output.exists():
         parser.error(f"refusing to overwrite existing snapshot: {output}")
     try:
-        result = fetch_treasury_yield_curve(args.year)
+        result = fetch_treasury_yield_curve(args.year, curve_type=args.curve_type)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(result, sort_keys=True, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
-    print(f"Captured {result['metadata']['row_count']} Treasury yield rows to {output}")
+    print(f"Captured {result['metadata']['row_count']} Treasury {args.curve_type} yield rows to {output}")
     print(f"Retrieval timestamp: {result['metadata']['retrieved_at_utc']}")
     return 0
 
