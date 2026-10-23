@@ -127,7 +127,8 @@ def audit_event_archive(
         status = "fail_no_pit_eligible_events"
     elif labelled == 0:
         status = "blocked_no_validated_labels"
-    elif timestamp_checks["missing_published_at_utc"] or timestamp_checks["missing_first_seen_at_utc"] or duplicate_version_count:
+    elif (timestamp_checks["missing_published_at_utc"] or timestamp_checks["missing_first_seen_at_utc"]
+          or duplicate_version_count or missing_fields["source_url"]):
         status = "blocked_data_quality"
     else:
         status = "review_required"
