@@ -74,6 +74,7 @@ def audit_event_archive(
     label_counts = Counter()
     label_review_status_counts: Counter[str] = Counter()
     version_ids: list[str] = []
+    canonicalizable_source_urls: list[dict[str, str]] = []
     eligible_by_decision: dict[str, int] = {d.isoformat().replace("+00:00", "Z"): 0 for d in decisions}
 
     for event in events:
@@ -91,14 +92,36 @@ def audit_event_archive(
 
         source_url = event.get("source_url")
         if source_url not in (None, ""):
+            raw_source_url = str(source_url).strip()
             try:
-                parsed_url = urlsplit(str(source_url).strip())
+                parsed_url = urlsplit(raw_source_url)
                 valid_source_url = (
                     parsed_url.scheme.lower() == "https"
                     and bool(parsed_url.hostname)
                     and parsed_url.username is None
                     and parsed_url.password is None
                 )
+                if not valid_source_url and not parsed_url.scheme:
+                    candidate = urlsplit("https://" + raw_source_url)
+                    official_hosts = {
+                        "www.bls.gov", "www.bea.gov", "apps.bea.gov",
+                        "www.federalreserve.gov", "www.treasurydirect.gov",
+                        "home.treasury.gov",
+                    }
+                    if (
+                        candidate.hostname in official_hosts
+                        and candidate.username is None
+                        and candidate.password is None
+                        and bool(candidate.path)
+                    ):
+                        canonicalizable_source_urls.append({
+                            "event_id": str(event.get("event_id") or ""),
+                            "event_version_id": str(event.get("event_version_id") or ""),
+                            "stored_source_url": raw_source_url,
+                            "canonical_source_url": "https://" + raw_source_url,
+                        })
+                        timestamp_checks["canonicalizable_source_url"] += 1
+                        valid_source_url = True
             except ValueError:
                 valid_source_url = False
             if not valid_source_url:
@@ -188,6 +211,7 @@ def audit_event_archive(
         "availability_statuses": dict(sorted(availability_counts.items())),
         "missing_required_fields": dict(sorted(missing_fields.items())),
         "timestamp_quality": dict(sorted(timestamp_checks.items())),
+        "canonicalizable_source_urls": canonicalizable_source_urls,
         "label_quality": {
             **dict(sorted(label_counts.items())),
             "review_status_counts": dict(sorted(label_review_status_counts.items())),
@@ -206,7 +230,8 @@ def audit_event_archive(
             "version_ids_unique": duplicate_version_count == 0,
             "required_timestamps_present": not timestamp_checks["missing_published_at_utc"] and not timestamp_checks["missing_first_seen_at_utc"],
             "source_urls_present": missing_fields["source_url"] == 0,
-            "source_urls_valid_https": timestamp_checks["invalid_source_url"] == 0,
+            "source_urls_valid_https": timestamp_checks["invalid_source_url"] == 0 and timestamp_checks["canonicalizable_source_url"] == 0,
+            "source_urls_valid_or_canonicalizable": timestamp_checks["invalid_source_url"] == 0,
             "all_timestamps_valid_and_not_future": not any(
                 key.startswith("invalid_") or key.endswith("_after_audit_time")
                 for key in timestamp_checks
