@@ -63,15 +63,24 @@ def parse_sec_acceptance_datetime(submission_text: str | None) -> dict[str, str 
     except ValueError:
         return {"published_at_utc": None, "status": "acceptance_datetime_invalid"}
 
-    local_fold0 = local_naive.replace(tzinfo=_NEW_YORK, fold=0)
-    local_fold1 = local_naive.replace(tzinfo=_NEW_YORK, fold=1)
-    if local_fold0.utcoffset() != local_fold1.utcoffset():
+    candidates = [
+        local_naive.replace(tzinfo=_NEW_YORK, fold=0),
+        local_naive.replace(tzinfo=_NEW_YORK, fold=1),
+    ]
+    valid_candidates = [
+        candidate for candidate in candidates
+        if candidate.astimezone(timezone.utc).astimezone(_NEW_YORK).replace(tzinfo=None)
+        == local_naive
+    ]
+    if not valid_candidates:
+        return {"published_at_utc": None, "status": "acceptance_datetime_dst_nonexistent"}
+    if (
+        len(valid_candidates) > 1
+        and valid_candidates[0].utcoffset() != valid_candidates[1].utcoffset()
+    ):
         return {"published_at_utc": None, "status": "acceptance_datetime_dst_ambiguous"}
 
-    utc_value = local_fold0.astimezone(timezone.utc)
-    round_trip = utc_value.astimezone(_NEW_YORK).replace(tzinfo=None)
-    if round_trip != local_naive:
-        return {"published_at_utc": None, "status": "acceptance_datetime_dst_nonexistent"}
+    utc_value = valid_candidates[0].astimezone(timezone.utc)
 
     return {
         "published_at_utc": utc_value.isoformat().replace("+00:00", "Z"),
