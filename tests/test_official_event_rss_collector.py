@@ -166,9 +166,9 @@ def test_bea_feed_fetch_uses_official_allowlisted_host():
     assert result["metadata"]["feed_reports"][0]["status"] == "ok"
     assert result["metadata"]["event_count"] == 1
 
-def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
-    with pytest.raises(ValueError, match="contact email"):
-        OfficialRssCollector("no email")
+def test_collector_requires_application_user_agent_and_recognized_feed_keys():
+    with pytest.raises(ValueError, match="research application"):
+        OfficialRssCollector("")
     collector = OfficialRssCollector(
         "Quant research test@example.com",
         opener=lambda *args, **kwargs: pytest.fail("should not perform a request"),
