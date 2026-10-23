@@ -42,6 +42,8 @@ def test_audit_reports_label_timestamp_and_pit_readiness(tmp_path):
     assert result["event_families"] == {"macro_release": 1}
     assert result["label_quality"]["fully_labeled_fraction"] == 1.0
     assert result["pit_eligibility"]["eligible_events_by_decision"]["2026-01-03T12:00:00Z"] == 1
+    assert result["missing_required_fields"]["source_url"] == 1
+    assert result["readiness_gates"]["source_urls_present"] is False
     assert result["readiness_gates"]["empirical_alpha_established"] is False
     assert result["readiness_gates"]["production_activation_allowed"] is False
 
