@@ -206,3 +206,44 @@ def test_collector_marks_timestamp_unverified_as_partial_even_if_http_succeeded(
     assert result["metadata"]["header_fetch_error_count"] == 0
     assert result["metadata"]["unverified_header_timestamp_count"] == 1
     assert result["metadata"]["coverage_status"] == "partial"
+
+
+def test_collector_cli_refuses_to_overwrite_existing_snapshot_without_flag(tmp_path, capsys):
+    from tools.research.sec_event_collector import main
+
+    universe = tmp_path / "universe.json"
+    universe.write_text(json.dumps([{"cik": "320193", "ticker": "AAPL"}]), encoding="utf-8")
+    output = tmp_path / "events.json"
+    output.write_text("previous immutable snapshot", encoding="utf-8")
+
+    with pytest.raises(SystemExit) as exc:
+        main([
+            "--universe", str(universe),
+            "--start-date", "2026-10-22",
+            "--end-date", "2026-10-23",
+            "--output", str(output),
+            "--user-agent", "Quant research test@example.com",
+        ])
+    assert exc.value.code == 2
+    assert "refusing to overwrite" in capsys.readouterr().err
+    assert output.read_text(encoding="utf-8") == "previous immutable snapshot"
+
+
+def test_collector_cli_requires_distinct_event_and_metadata_outputs(tmp_path, capsys):
+    from tools.research.sec_event_collector import main
+
+    universe = tmp_path / "universe.json"
+    universe.write_text(json.dumps([{"cik": "320193", "ticker": "AAPL"}]), encoding="utf-8")
+    output = tmp_path / "events.json"
+
+    with pytest.raises(SystemExit) as exc:
+        main([
+            "--universe", str(universe),
+            "--start-date", "2026-10-22",
+            "--end-date", "2026-10-23",
+            "--output", str(output),
+            "--metadata-output", str(output),
+            "--user-agent", "Quant research test@example.com",
+        ])
+    assert exc.value.code == 2
+    assert "must be different files" in capsys.readouterr().err
