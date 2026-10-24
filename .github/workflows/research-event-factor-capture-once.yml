@@ -8,6 +8,7 @@ on:
     paths:
       - .github/workflows/research-event-factor-capture-once.yml
       - tools/research/treasury_yield_curve_capture.py
+      - tools/research/treasury_breakeven_proxy.py
       - tools/research/official_event_rss_collector.py
       - tools/research/bls_macro_series_capture.py
       - tools/research/build_event_annotation_queue.py
@@ -84,6 +85,22 @@ jobs:
             --year "$YEAR" --curve-type real \
             --output "data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"; then
             echo "::warning::Real Treasury curve capture failed; preserving event RSS capture."
+          fi
+
+      - name: Derive matched-date Treasury inflation-compensation proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          NOMINAL="data/research/event-capture/treasury_nominal_${GITHUB_RUN_ID}.json"
+          REAL="data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"
+          OUTPUT="data/research/event-capture/treasury_breakeven_proxy_${GITHUB_RUN_ID}.json"
+          if [[ -s "$NOMINAL" && -s "$REAL" ]]; then
+            if ! python -m tools.research.treasury_breakeven_proxy \
+              --nominal "$NOMINAL" --real "$REAL" --output "$OUTPUT"; then
+              echo "::warning::Treasury inflation-compensation proxy failed; raw nominal and real captures are preserved."
+            fi
+          else
+            echo "::warning::Nominal or real curve snapshot missing; proxy not generated."
           fi
 
       - name: Capture current BLS macro series through public API
