@@ -142,8 +142,22 @@ def test_n_and_nan():
     row = summ[(summ["Factor"] == "RSI_14") & (summ["Horizon"] == "5D")].iloc[0]
     check("N = 5（全部样本）", row["N"] == 5, f"got {row['N']}")
 
-    # NaN 因子不进入：给一行 RSI 设 NaN，仍应有 N=5（因为 RSI 不是 dropna 条件，只有 return 是）
-    # 但 summary 只 drop return 的 NaN，不 drop 因子 NaN。这里验证 return NaN 被排除。
+    # 因子缺失也必须排除：否则会把无该因子值的股票混入该因子收益统计。
+    bt_missing_factor = bt.copy()
+    bt_missing_factor.loc[0, "RSI_14"] = None
+    summ_missing_factor = compute_factor_summary(bt_missing_factor)
+    row_missing_factor = summ_missing_factor[
+        (summ_missing_factor["Factor"] == "RSI_14") &
+        (summ_missing_factor["Horizon"] == "5D")
+    ].iloc[0]
+    expected_returns = pd.to_numeric(bt.loc[1:, "Forward_Return_5D"], errors="coerce")
+    check("factor NaN 不进入统计（N=4）", row_missing_factor["N"] == 4,
+          f"got {row_missing_factor['N']}")
+    check("factor NaN 时均值仅使用其余有效因子样本",
+          abs(row_missing_factor["Average_Return"] - expected_returns.mean()) < 1e-6,
+          f"got {row_missing_factor['Average_Return']} expected {expected_returns.mean()}")
+
+    # Return NaN 也必须排除。
     bt2 = bt.copy()
     bt2.loc[0, "Forward_Return_5D"] = None
     bt2.loc[0, "Win_5D"] = None
