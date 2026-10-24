@@ -95,6 +95,11 @@ def test_breakeven_proxy_rejects_non_official_source_url():
 
 def test_breakeven_proxy_rejects_swapped_treasury_data_key():
     nominal = snapshot("nominal", "2026-10-23T16:00:00Z", [], "https://home.treasury.gov/nominal.xml")
-    real = snapshot("real", "2026-10-24T12:00:00Z", [], "https://home.treasury.gov/nominal.xml")
+    real = snapshot("real", "2026-10-24T12:00:00Z", [], "https://home.treasury.gov/real.xml")
+    # Deliberately corrupt the real snapshot after fixture normalization.
+    real["metadata"]["source_url"] = (
+        "https://home.treasury.gov/resource-center/data-chart-center/"
+        "interest-rates/pages/xml?data=daily_treasury_yield_curve&field_tdr_date_value=2026"
+    )
     with pytest.raises(ValueError, match="unexpected Treasury data key"):
         build_breakeven_proxy(nominal, real)
