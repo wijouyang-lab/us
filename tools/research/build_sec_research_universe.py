@@ -14,6 +14,7 @@ from pathlib import Path
 from typing import Any, Callable
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 SEC_TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
 _ALLOWED_HOST = "www.sec.gov"
@@ -108,6 +109,68 @@ def build_sec_universe(
     return result, metadata
 
 
+def build_sec_universe_from_fallback(
+    requested_tickers: list[str],
+    payload: bytes | str,
+    *,
+    loaded_at_utc: str | datetime,
+    lookup_error: str,
+) -> tuple[list[dict[str, str]], dict[str, Any]]:
+    """Build only exact ticker/CIK matches from a pinned fallback file."""
+    loaded = _utc(loaded_at_utc)
+    raw = payload.encode("utf-8") if isinstance(payload, str) else payload
+    try:
+        data = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError, TypeError) as exc:
+        raise ValueError("invalid SEC fallback mapping JSON") from exc
+    if not isinstance(data, dict) or not isinstance(data.get("tickers"), dict):
+        raise ValueError("SEC fallback mapping must contain a tickers object")
+    lookup: dict[str, str] = {}
+    for raw_ticker, raw_cik in data["tickers"].items():
+        ticker = _ticker_key(raw_ticker)
+        cik = str(raw_cik or "").strip()
+        if not ticker or not cik.isdigit() or len(cik) > 10 or int(cik) < 1:
+            raise ValueError(f"invalid fallback ticker/CIK mapping: {raw_ticker!r}")
+        if ticker in lookup:
+            raise ValueError(f"duplicate fallback ticker: {ticker}")
+        lookup[ticker] = cik.zfill(10)
+    result: list[dict[str, str]] = []
+    matched: list[str] = []
+    unmatched: list[str] = []
+    seen_ciks: set[str] = set()
+    for requested in requested_tickers:
+        ticker = _ticker_key(requested)
+        cik = lookup.get(ticker)
+        if cik is None:
+            unmatched.append(requested)
+            continue
+        if cik in seen_ciks:
+            continue
+        seen_ciks.add(cik)
+        result.append({"cik": cik, "ticker": requested})
+        matched.append(requested)
+    if not result:
+        raise ValueError("none of the requested tickers matched the SEC fallback mapping")
+    return result, {
+        "source": "static_sec_ticker_cik_fallback",
+        "mapping_mode": "static_fallback",
+        "mapping_loaded_at_utc": loaded,
+        "source_url": data.get("source_base_url", "https://www.sec.gov/edgar/browse/"),
+        "source_payload_sha256": sha256(raw).hexdigest(),
+        "requested_tickers": requested_tickers,
+        "matched_tickers": matched,
+        "unmatched_tickers": unmatched,
+        "matched_count": len(result),
+        "historical_membership_inferred": False,
+        "live_lookup_error": lookup_error,
+        "research_only": True,
+        "limitations": list(data.get("limitations", [])) + [
+            "The live SEC ticker mapping request failed; this run used the pinned fallback instead.",
+            "Mapping load time is not a source publication timestamp and does not establish historical point-in-time availability.",
+        ],
+    }
+
+
 def fetch_sec_universe(
     requested_tickers: list[str],
     *,
@@ -147,6 +210,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--tickers-file", required=True, help="One ticker per line")
     parser.add_argument("--output", required=True, help="New JSON array for sec_event_collector")
     parser.add_argument("--metadata-output", required=True, help="New mapping provenance JSON")
+    parser.add_argument("--fallback-mapping", help="Optional pinned ticker-to-CIK JSON used only if live SEC mapping fails")
     parser.add_argument("--user-agent", default=os.environ.get("SEC_USER_AGENT", ""))
     args = parser.parse_args(argv)
     outputs = [Path(args.output), Path(args.metadata_output)]
@@ -154,7 +218,18 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("refusing to overwrite an existing SEC universe snapshot")
     try:
         requested = load_requested_tickers(args.tickers_file)
-        universe, metadata = fetch_sec_universe(requested, user_agent=args.user_agent)
+        try:
+            universe, metadata = fetch_sec_universe(requested, user_agent=args.user_agent)
+        except (HTTPError, URLError, TimeoutError, OSError) as exc:
+            if not args.fallback_mapping:
+                raise
+            fallback_path = Path(args.fallback_mapping)
+            fallback_payload = fallback_path.read_bytes()
+            universe, metadata = build_sec_universe_from_fallback(
+                requested, fallback_payload,
+                loaded_at_utc=datetime.now(timezone.utc),
+                lookup_error=f"{type(exc).__name__}: {exc}",
+            )
         outputs[0].parent.mkdir(parents=True, exist_ok=True)
         outputs[1].parent.mkdir(parents=True, exist_ok=True)
         outputs[0].write_text(json.dumps(universe, indent=2, sort_keys=True, allow_nan=False) + "\n", encoding="utf-8")
