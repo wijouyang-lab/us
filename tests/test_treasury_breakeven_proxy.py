@@ -66,3 +66,17 @@ def test_breakeven_proxy_rejects_observation_after_retrieval_date():
     real = snapshot("real", "2026-10-20T16:00:00Z", [], "https://home.treasury.gov/real.xml")
     with pytest.raises(ValueError, match="after retrieval date"):
         build_breakeven_proxy(nominal, real)
+
+
+
+def test_breakeven_proxy_preserves_microsecond_precision_for_pit_cutoff():
+    nominal = snapshot("nominal", "2026-10-23T17:14:52.414209Z", [
+        {"observation_date": "2026-10-22", "yield_pct": {"10y": 4.5}},
+    ], "https://home.treasury.gov/nominal.xml")
+    real = snapshot("real", "2026-10-23T17:14:52.697468Z", [
+        {"observation_date": "2026-10-22", "yield_pct": {"10y": 2.1}},
+    ], "https://home.treasury.gov/real.xml")
+    result = build_breakeven_proxy(nominal, real)
+    expected = "2026-10-23T17:14:52.697468Z"
+    assert result["metadata"]["available_at_utc"] == expected
+    assert result["rows"][0]["available_at_utc"] == expected
