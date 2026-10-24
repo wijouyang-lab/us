@@ -9,6 +9,8 @@ on:
       - .github/workflows/research-event-factor-capture-once.yml
       - tools/research/treasury_yield_curve_capture.py
       - tools/research/treasury_breakeven_proxy.py
+      - tools/research/build_sec_research_universe.py
+      - data/research/sec_ticker_cik_fallback.json
       - tools/research/official_event_rss_collector.py
       - tools/research/bls_macro_series_capture.py
       - tools/research/build_event_annotation_queue.py
@@ -51,7 +53,8 @@ jobs:
           if ! python -m tools.research.build_sec_research_universe \
             --tickers-file watchlist.txt \
             --output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
-            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json"; then
+            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json" \\
+            --fallback-mapping data/research/sec_ticker_cik_fallback.json; then
             echo "::warning::SEC universe mapping failed; the capture will continue with official RSS and macro snapshots."
           fi
 
