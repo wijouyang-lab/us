@@ -249,6 +249,8 @@ class SecEventCollector:
 
         events: list[dict[str, Any]] = []
         header_fetch_errors = 0
+        header_fetch_error_types: dict[str, int] = {}
+        header_http_status_counts: dict[str, int] = {}
         for _, row in selected:
             accession = str(row.get("accessionNumber") or "").strip()
             accession_compact = accession.replace("-", "")
@@ -272,6 +274,14 @@ class SecEventCollector:
                 event["source_header_sha256"] = sha256(header_text.encode("utf-8")).hexdigest()
             except Exception as exc:
                 header_fetch_errors += 1
+                error_type = type(exc).__name__
+                header_fetch_error_types[error_type] = header_fetch_error_types.get(error_type, 0) + 1
+                # Preserve HTTP status as a diagnostic dimension without retrying
+                # access-denied responses or misclassifying them as transient.
+                status_match = re.search(r"HTTP (\d{3})", str(exc))
+                if status_match:
+                    status_key = status_match.group(1)
+                    header_http_status_counts[status_key] = header_http_status_counts.get(status_key, 0) + 1
                 first_seen_at_utc = _utc_iso(self.now())
                 records = parse_sec_submissions(
                     filing_payload,
@@ -281,7 +291,10 @@ class SecEventCollector:
                 event = records[0]
                 event["availability_status"] = "fetch_error"
                 event["publication_timestamp_status"] = "fetch_error"
-                event["fetch_error_type"] = type(exc).__name__
+                event["fetch_error_type"] = error_type
+                event["fetch_error_detail"] = str(exc)[:300]
+                if status_match:
+                    event["fetch_http_status"] = int(status_match.group(1))
             event["source_url"] = header_url
             event["collector_source"] = "sec_edgar_public_archives"
             event["sec_filing_date"] = str(row.get("filingDate") or "")
@@ -320,6 +333,8 @@ class SecEventCollector:
             "verified_header_timestamp_count": timestamp_verified,
             "unverified_header_timestamp_count": timestamp_unverified,
             "header_fetch_error_count": header_fetch_errors,
+            "header_fetch_error_types": dict(sorted(header_fetch_error_types.items())),
+            "header_http_status_counts": dict(sorted(header_http_status_counts.items())),
             "coverage_status": (
                 "partial"
                 if (
