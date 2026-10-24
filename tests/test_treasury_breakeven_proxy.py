@@ -4,6 +4,9 @@ from tools.research.treasury_breakeven_proxy import build_breakeven_proxy
 
 
 def snapshot(curve_type, retrieved_at, rows, url):
+    if url in {"https://home.treasury.gov/nominal.xml", "https://home.treasury.gov/real.xml"}:
+        data_key = "daily_treasury_yield_curve" if curve_type == "nominal" else "daily_treasury_real_yield_curve"
+        url = f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data={data_key}&field_tdr_date_value=2026"
     return {
         "metadata": {
             "curve_type": curve_type,
@@ -80,3 +83,18 @@ def test_breakeven_proxy_preserves_microsecond_precision_for_pit_cutoff():
     expected = "2026-10-23T17:14:52.697468Z"
     assert result["metadata"]["available_at_utc"] == expected
     assert result["rows"][0]["available_at_utc"] == expected
+
+
+
+def test_breakeven_proxy_rejects_non_official_source_url():
+    nominal = snapshot("nominal", "2026-10-23T16:00:00Z", [], "https://example.com/nominal.xml")
+    real = snapshot("real", "2026-10-24T12:00:00Z", [], "https://home.treasury.gov/real.xml")
+    with pytest.raises(ValueError, match="official HTTPS Treasury host"):
+        build_breakeven_proxy(nominal, real)
+
+
+def test_breakeven_proxy_rejects_swapped_treasury_data_key():
+    nominal = snapshot("nominal", "2026-10-23T16:00:00Z", [], "https://home.treasury.gov/nominal.xml")
+    real = snapshot("real", "2026-10-24T12:00:00Z", [], "https://home.treasury.gov/nominal.xml")
+    with pytest.raises(ValueError, match="unexpected Treasury data key"):
+        build_breakeven_proxy(nominal, real)
