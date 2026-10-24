@@ -8,12 +8,18 @@ import tools.research.run_event_capture_cycle as cycle
 from tools.research.pit_event_records import normalize_event
 
 
-def sample_event():
-    # Use a fresh event timestamp so this freshness test stays valid over time.
-    now = datetime.now(timezone.utc)
-    published = (now - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
-    first_seen = (now - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
-    consensus_asof = (now - timedelta(minutes=3)).isoformat().replace("+00:00", "Z")
+def sample_event(fresh=True):
+    # Fresh timestamps keep freshness checks valid; stable timestamps let dedupe tests
+    # model the exact same immutable event version across repeated captures.
+    if fresh:
+        now = datetime.now(timezone.utc)
+        published = (now - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
+        first_seen = (now - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+        consensus_asof = (now - timedelta(minutes=3)).isoformat().replace("+00:00", "Z")
+    else:
+        published = "2026-10-23T12:00:00Z"
+        first_seen = "2026-10-23T12:01:00Z"
+        consensus_asof = "2026-10-23T11:30:00Z"
     event = normalize_event(
         source="bls_cpi_rss",
         source_event_id="cpi-item-1",
@@ -117,7 +123,22 @@ def test_successful_empty_feed_is_visible_in_source_coverage(tmp_path, monkeypat
 
 
 def test_repeated_capture_deduplicates_the_same_event_version(tmp_path, monkeypatch):
-    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    class StableRssCollector:
+        def __init__(self, user_agent, **kwargs):
+            assert "@" in user_agent
+
+        def collect(self, feed_keys):
+            assert feed_keys == ["bls_cpi"]
+            return {
+                "events": [sample_event(fresh=False)],
+                "metadata": {
+                    "requested_feed_keys": feed_keys,
+                    "event_count": 1,
+                    "feed_reports": [{"feed_key": "bls_cpi", "status": "ok", "event_count": 1}],
+                },
+            }
+
+    monkeypatch.setattr(cycle, "OfficialRssCollector", StableRssCollector)
     args = dict(
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
