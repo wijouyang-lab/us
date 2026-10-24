@@ -181,7 +181,7 @@ def test_factor_missing_values_do_not_contaminate_metrics():
     r = validate_factor_horizon(bt, "RSI_14", 5)
     check("N only counts rows with both factor and return", r["N"] == 2, f"got {r['N']}")
     check("Average_Return excludes rows missing factor", r["Average_Return"] == 0.2, f"got {r['Average_Return']}")
-    check("correlation sample excludes missing factor", r["Pearson"] is not None)
+    check("fewer than three valid pairs leave correlation undefined", r["Pearson"] is None and r["Spearman"] is None)
 
 
 # ---- 14. deterministic repeat ----
