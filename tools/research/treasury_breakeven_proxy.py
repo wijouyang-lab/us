@@ -13,6 +13,7 @@ from hashlib import sha256
 import json
 from pathlib import Path
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 
 def _aware_utc(value: Any, field: str) -> datetime:
@@ -41,6 +42,24 @@ def build_breakeven_proxy(
     nominal_retrieved = _aware_utc(nm.get("retrieved_at_utc"), "nominal retrieved_at_utc")
     real_retrieved = _aware_utc(rm.get("retrieved_at_utc"), "real retrieved_at_utc")
     available_at = max(nominal_retrieved, real_retrieved)
+
+    def validate_source_url(value: Any, expected_data_key: str, label: str) -> str:
+        if not isinstance(value, str) or not value:
+            raise ValueError(f"{label} source_url is required")
+        parsed = urlparse(value)
+        query = parse_qs(parsed.query)
+        if parsed.scheme != "https" or parsed.hostname != "home.treasury.gov":
+            raise ValueError(f"{label} source_url must use the official HTTPS Treasury host")
+        if query.get("data") != [expected_data_key]:
+            raise ValueError(f"{label} source_url has an unexpected Treasury data key")
+        return value
+
+    nominal_source_url = validate_source_url(
+        nm.get("source_url"), "daily_treasury_yield_curve", "nominal"
+    )
+    real_source_url = validate_source_url(
+        rm.get("source_url"), "daily_treasury_real_yield_curve", "real"
+    )
     nominal_rows = nominal_snapshot.get("rows")
     real_rows = real_snapshot.get("rows")
     if not isinstance(nominal_rows, list) or not isinstance(real_rows, list):
@@ -81,8 +100,8 @@ def build_breakeven_proxy(
             "nominal_retrieved_at_utc": nominal_retrieved.isoformat().replace("+00:00", "Z"),
             "real_retrieved_at_utc": real_retrieved.isoformat().replace("+00:00", "Z"),
             "source": "us_treasury_nominal_minus_real_yield_proxy",
-            "source_nominal_url": nm.get("source_url"),
-            "source_real_url": rm.get("source_url"),
+            "source_nominal_url": nominal_source_url,
+            "source_real_url": real_source_url,
             "availability_rule": "usable_only_at_or_after_available_at_utc",
             "research_only": True,
         })
