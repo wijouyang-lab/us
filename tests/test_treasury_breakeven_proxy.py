@@ -103,3 +103,16 @@ def test_breakeven_proxy_rejects_swapped_treasury_data_key():
     )
     with pytest.raises(ValueError, match="unexpected Treasury data key"):
         build_breakeven_proxy(nominal, real)
+
+
+
+@pytest.mark.parametrize("bad_value", ["not-a-number", "NaN", "inf", float("inf"), float("nan")])
+def test_breakeven_proxy_rejects_invalid_nonmissing_yield_values(bad_value):
+    nominal = snapshot("nominal", "2026-10-23T16:00:00Z", [
+        {"observation_date": "2026-10-22", "yield_pct": {"10y": bad_value}},
+    ], "https://home.treasury.gov/nominal.xml")
+    real = snapshot("real", "2026-10-24T12:00:00Z", [
+        {"observation_date": "2026-10-22", "yield_pct": {"10y": 2.1}},
+    ], "https://home.treasury.gov/real.xml")
+    with pytest.raises(ValueError, match="yield"):
+        build_breakeven_proxy(nominal, real)
