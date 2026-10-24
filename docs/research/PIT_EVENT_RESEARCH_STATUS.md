@@ -11,6 +11,9 @@ Last verified capture: **2026-10-23 17:14 UTC**. This is a data-readiness status
 - Treasury current-year XML capture returned **203 nominal rows and 203 real-yield rows**. The real-yield schema uses `TC_*` fields; nominal uses `BC_*`.
 - Capture and readiness evidence files are stored under `data/research/event-capture/`, including immutable event snapshots, source reports, BLS snapshots, Treasury snapshots, and pending annotation queues. One older BEA item contains a scheme-less but recoverable official URL; this is reported explicitly by the readiness audit, while new captures normalize such links to HTTPS.
 
+
+- **Derived Treasury inflation-compensation proxy:** 203 nominal/real observation dates matched (0 unmatched dates) in `data/research/event-capture/treasury_breakeven_proxy_39993404661.json`, covering 2026-01-02 through 2026-10-22. The exact conservative availability timestamp is **2026-10-23 17:14:52.697468 UTC**, the later actual retrieval time. These historical observation dates are not valid for earlier point-in-time decisions; this snapshot is only eligible at/after that retrieval time. The nominal-minus-real spread is a proxy, not pure expected inflation.
+
 ## What is not complete
 
 - **0 event versions have direction/impact labels; 0 are reviewed or validated.** The annotation queue intentionally leaves scores blank. No labels were invented.
