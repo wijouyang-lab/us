@@ -359,7 +359,7 @@ def _mk_status_df(n, mode="promising", base=None, seed=7):
             f = float(rng.uniform(0, 100))
             r = float(rng.normal(0, 5))
         rows.append({
-            "Technical_Date": (pd.Timestamp(base) + pd.Timedelta(days=i)).strftime("%Y-%m-%d"),
+            "Technical_Date": (pd.Timestamp(base) + pd.Timedelta(days=i // 10)).strftime("%Y-%m-%d"),
             "Ticker": "T%d" % (i % 10),
             "Market_Regime": regime,
             "RSI_14": str(round(f, 4)),
