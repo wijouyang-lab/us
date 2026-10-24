@@ -164,10 +164,24 @@ def test_missing_none():
     ]
     bt = pd.DataFrame(rows)
     r = validate_factor_horizon(bt, "RSI_14", 5)
-    # 有效 forward return 有 2 条（B 和 C），C 的 RSI 也有效 → N=2
-    check("缺失 forward 不计入 N", r["N"] == 2, f"got {r['N']}")
-    # N=2（>0 但 <30）→ EXPLORATORY，而非 NOT_ENOUGH_DATA
-    check("N=2 → EXPLORATORY", r["Status"] == "EXPLORATORY", f"got {r['Status']}")
+    # 只有 C 同时有有效因子值与有效 forward return，B 的因子缺失必须排除 → N=1
+    check("因子或 forward 缺失都不计入 N", r["N"] == 1, f"got {r['N']}")
+    # N=1（>0 但 <30）→ EXPLORATORY，而非 NOT_ENOUGH_DATA
+    check("N=1 → EXPLORATORY", r["Status"] == "EXPLORATORY", f"got {r['Status']}")
+
+
+# ---- Regression: factor statistics must be conditional on factor availability ----
+def test_factor_missing_values_do_not_contaminate_metrics():
+    bt = pd.DataFrame([
+        {"Technical_Date": "2026-01-05", "Ticker": "A", "RSI_14": "1", "Market_Regime": "NORMAL", "Forward_Return_5D": "0.10"},
+        {"Technical_Date": "2026-01-06", "Ticker": "B", "RSI_14": "",  "Market_Regime": "NORMAL", "Forward_Return_5D": "0.90"},
+        {"Technical_Date": "2026-01-07", "Ticker": "C", "RSI_14": "3", "Market_Regime": "STRESSED", "Forward_Return_5D": "0.30"},
+        {"Technical_Date": "2026-01-08", "Ticker": "D", "RSI_14": "4", "Market_Regime": "STRESSED", "Forward_Return_5D": ""},
+    ])
+    r = validate_factor_horizon(bt, "RSI_14", 5)
+    check("N only counts rows with both factor and return", r["N"] == 2, f"got {r['N']}")
+    check("Average_Return excludes rows missing factor", r["Average_Return"] == 0.2, f"got {r['Average_Return']}")
+    check("correlation sample excludes missing factor", r["Pearson"] is not None)
 
 
 # ---- 14. deterministic repeat ----
