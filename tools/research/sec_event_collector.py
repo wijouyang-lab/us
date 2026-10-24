@@ -278,7 +278,7 @@ class SecEventCollector:
                 header_fetch_error_types[error_type] = header_fetch_error_types.get(error_type, 0) + 1
                 # Preserve HTTP status as a diagnostic dimension without retrying
                 # access-denied responses or misclassifying them as transient.
-                status_match = re.search(r"HTTP (\\d{3})", str(exc))
+                status_match = re.search(r"HTTP (\d{3})", str(exc))
                 if status_match:
                     status_key = status_match.group(1)
                     header_http_status_counts[status_key] = header_http_status_counts.get(status_key, 0) + 1
