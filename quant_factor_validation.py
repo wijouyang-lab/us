@@ -167,7 +167,7 @@ def validate_factor_horizon(df, factor, horizon):
     if "Market_Regime" in df.columns:
         work["_regime"] = df["Market_Regime"].astype(str)
 
-    valid = work.dropna(subset=["r"]).copy()  # 无 forward return 的样本不进入统计
+    valid = work.dropna(subset=["f", "r"]).copy()  # 因子与未来收益都有效才进入该因子的统计
     result["N"] = int(len(valid))
     if valid.empty:
         return result
