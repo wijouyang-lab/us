@@ -36,7 +36,7 @@ def make_bt(n_rows, seed=42, with_regime=True):
     base = pd.Timestamp("2026-01-05")
     for i in range(n_rows):
         r = {
-            "Technical_Date": (base + pd.Timedelta(days=i)).strftime("%Y-%m-%d"),
+            "Technical_Date": (base + pd.Timedelta(days=i // 10)).strftime("%Y-%m-%d"),
             "Ticker": f"T{i % 10}",
             "RSI_14": str(round(float(rng.uniform(30, 70)), 2)),
             "Bias_Pct": str(round(float(rng.uniform(-5, 15)), 2)),
@@ -93,6 +93,28 @@ def test_quintile():
     r = validate_factor_horizon(bt, "RSI_14", 5)
     for q in ["Q1_Avg_Return", "Q2_Avg_Return", "Q3_Avg_Return", "Q4_Avg_Return", "Q5_Avg_Return"]:
         check(f"{q} 有值", r[q] is not None, f"got {r[q]}")
+
+
+# ---- Regression: quintiles must be formed within each date ----
+def test_quintiles_are_cross_sectional_by_date():
+    rows = []
+    # 每日各 10 个标的。第二天因子整体平移，但收益与因子在当天内部反向。
+    # 正确的逐日分组应使聚合 Q5-Q1 spread 接近 0；全历史分组会混入日期效应。
+    for i in range(10):
+        rows.append({
+            "Technical_Date": "2026-01-05", "Ticker": f"A{i}",
+            "RSI_14": str(i), "Market_Regime": "NORMAL",
+            "Forward_Return_5D": str(i),
+        })
+        rows.append({
+            "Technical_Date": "2026-01-06", "Ticker": f"B{i}",
+            "RSI_14": str(100 + i), "Market_Regime": "STRESSED",
+            "Forward_Return_5D": str(10 - i),
+        })
+    r = validate_factor_horizon(pd.DataFrame(rows), "RSI_14", 5)
+    spread = r["Q5_Avg_Return"] - r["Q1_Avg_Return"]
+    check("daily cross-sectional quintiles avoid date-level factor shift", abs(spread) < 1e-9,
+          f"Q1={r['Q1_Avg_Return']}, Q5={r['Q5_Avg_Return']}, spread={spread}")
 
 
 # ---- 7. monotonicity ----
