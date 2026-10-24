@@ -53,7 +53,7 @@ jobs:
           if ! python -m tools.research.build_sec_research_universe \
             --tickers-file watchlist.txt \
             --output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
-            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json" \\
+            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json" \
             --fallback-mapping data/research/sec_ticker_cik_fallback.json; then
             echo "::warning::SEC universe mapping failed; the capture will continue with official RSS and macro snapshots."
           fi
