@@ -1,0 +1,35 @@
+{
+  "schema_version": "1.0",
+  "mapping_mode": "static_fallback",
+  "purpose": "Fallback for the explicit current research watchlist when the live SEC ticker mapping endpoint is unavailable.",
+  "source": "SEC EDGAR company identity mappings; verify against official SEC entity pages when updating this file.",
+  "source_base_url": "https://www.sec.gov/edgar/browse/",
+  "limitations": [
+    "This is not a live or historical universe snapshot.",
+    "Only use mappings for symbols explicitly present in the current watchlist.",
+    "Unlisted symbols remain unmatched; never guess a CIK.",
+    "SEC filing events are only eligible from actual first-seen capture time unless independently validated otherwise."
+  ],
+  "tickers": {
+    "AAPL": "0000320193",
+    "MSFT": "0000789019",
+    "NVDA": "0001045810",
+    "GOOGL": "0001652044",
+    "AMZN": "0001018724",
+    "META": "0001326801",
+    "TSLA": "0001318605",
+    "AVGO": "0001730168",
+    "TSM": "0001046179",
+    "BRK-B": "0001067983",
+    "JPM": "0000019617",
+    "V": "0001403161",
+    "UNH": "0000731766",
+    "XOM": "0000034088",
+    "COST": "0000909832",
+    "WMT": "0000104169",
+    "LLY": "0000059478",
+    "MA": "0001141391",
+    "ORCL": "0001341439",
+    "NFLX": "0001065280"
+  }
+}
