@@ -1,4 +1,4 @@
-"""Free official BLS/Federal Reserve RSS capture for research-only event observation.
+"""Free official BLS, BEA, Federal Reserve, and TreasuryDirect RSS capture for research-only event observation.
 
 The collector uses a built-in allowlist of official feeds and local parsing tests.
 Publisher-supplied RSS dates are preserved as source timestamps, not treated as
@@ -20,7 +20,7 @@ import re
 import sys
 import time
 from typing import Any, Callable
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
@@ -39,6 +39,24 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "event_type": "macro_release",
         "source_quality": "official",
     },
+    "bea_releases": {
+        "url": "https://apps.bea.gov/rss/rss.xml",
+        "source": "bea_news_release_rss",
+        "event_type": "macro_release",
+        "source_quality": "official",
+    },
+    "treasury_auction_announcements": {
+        "url": "https://www.treasurydirect.gov/TA_WS/securities/announced/rss",
+        "source": "treasury_auction_announcements_rss",
+        "event_type": "macro_release",
+        "source_quality": "official",
+    },
+    "treasury_auction_results": {
+        "url": "https://www.treasurydirect.gov/TA_WS/securities/auctioned/rss",
+        "source": "treasury_auction_results_rss",
+        "event_type": "macro_release",
+        "source_quality": "official",
+    },
     "fed_all": {
         "url": "https://www.federalreserve.gov/feeds/press_all.xml",
         "source": "federal_reserve_press_rss",
@@ -52,7 +70,7 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
         "source_quality": "official",
     },
 }
-_ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov"}
+_ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov", "apps.bea.gov", "www.treasurydirect.gov"}
 _CENTRAL_BANK_TERMS = (
     "fomc",
     "monetary policy",
@@ -135,6 +153,37 @@ def _feed_event_type(feed_key: str, title: str, description: str) -> str:
     return "central_bank" if any(term in text for term in _CENTRAL_BANK_TERMS) else "policy"
 
 
+_OFFICIAL_ITEM_HOSTS = {
+    "www.bls.gov",
+    "www.bea.gov",
+    "apps.bea.gov",
+    "www.federalreserve.gov",
+    "www.treasurydirect.gov",
+    "home.treasury.gov",
+}
+
+
+def _normalize_item_url(link: str | None, feed_url: str) -> str:
+    """Canonicalize relative and scheme-less links from known official feeds."""
+    raw = str(link or "").strip()
+    if not raw:
+        return feed_url
+    if raw.startswith("//"):
+        return "https:" + raw
+    if raw.startswith("https://"):
+        return raw
+    if raw.startswith("http://"):
+        # Preserve explicitly insecure source URLs so the readiness audit can flag them.
+        return raw
+    candidate = raw.lstrip("/")
+    host = candidate.split("/", 1)[0].lower()
+    if host in _OFFICIAL_ITEM_HOSTS:
+        return "https://" + candidate
+    if raw.startswith("/"):
+        return urljoin(feed_url, raw)
+    return urljoin(feed_url, raw)
+
+
 def parse_official_feed(
     payload: bytes | str,
     *,
@@ -206,7 +255,7 @@ def parse_official_feed(
                 "pubDate_raw": published_raw or None,
             },
         )
-        record["source_url"] = link or source_info["url"]
+        record["source_url"] = _normalize_item_url(link, source_info["url"])
         record["feed_key"] = feed_key
         # These allowlisted feeds publish market-wide macro/policy information.
         # Explicit scope lets the point-in-time feature builder include them for
@@ -236,7 +285,7 @@ def parse_official_feed(
 
 
 class OfficialRssCollector:
-    """Paced client limited to preconfigured BLS and Federal Reserve RSS feeds."""
+    """Paced client limited to preconfigured official BLS, BEA, Fed, and TreasuryDirect feeds."""
 
     def __init__(
         self,
@@ -248,8 +297,8 @@ class OfficialRssCollector:
         sleep: Callable[[float], None] | None = None,
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        if not isinstance(user_agent, str) or "@" not in user_agent or not user_agent.strip():
-            raise ValueError("User-Agent must identify the research application and a contact email")
+        if not isinstance(user_agent, str) or not user_agent.strip():
+            raise ValueError("User-Agent must identify the research application")
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         if min_request_interval_seconds < 0.1:
@@ -287,8 +336,13 @@ class OfficialRssCollector:
         except RuntimeError:
             raise
         except Exception as exc:
+            status_code = getattr(exc, "code", None)
+            cause = getattr(exc, "__cause__", None)
+            if status_code is None:
+                status_code = getattr(cause, "code", None)
+            detail = f" HTTP {status_code}" if status_code is not None else ""
             raise RuntimeError(
-                f"failed to fetch official feed {feed_key}: {type(exc).__name__}"
+                f"failed to fetch official feed {feed_key}: {type(exc).__name__}{detail}"
             ) from exc
 
     def collect(self, feed_keys: list[str]) -> dict[str, Any]:
@@ -374,7 +428,7 @@ def _load_feed_keys(raw: str) -> list[str]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--feeds", default="bls_cpi,bls_employment,fed_all,fed_speeches")
+    parser.add_argument("--feeds", default="bls_cpi,bls_employment,bea_releases,fed_all,fed_speeches,treasury_auction_announcements,treasury_auction_results")
     parser.add_argument("--output", required=True, help="Path for normalized event JSON array")
     parser.add_argument("--metadata-output", help="Path for collection metadata JSON")
     parser.add_argument("--user-agent", default=os.environ.get("OFFICIAL_FEED_USER_AGENT", ""))

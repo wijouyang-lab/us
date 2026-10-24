@@ -18,12 +18,13 @@ from typing import Any
 
 from tools.research.official_event_rss_collector import OFFICIAL_FEEDS, OfficialRssCollector
 from tools.research.pit_event_archive import append_archive_file
+from tools.research.audit_pit_event_data_readiness import audit_event_archive
 from tools.research.pit_event_eligibility import _parse_aware_timestamp
 from tools.research.pit_event_research_pipeline import build_event_research_report
 from tools.research.sec_event_collector import SecEventCollector, load_universe
 
 
-DEFAULT_FEEDS = "bls_cpi,bls_employment,fed_all,fed_speeches"
+DEFAULT_FEEDS = "bls_cpi,bls_employment,bea_releases,fed_all,fed_speeches,treasury_auction_announcements,treasury_auction_results"
 
 
 def _dump(payload: Any) -> str:
@@ -89,6 +90,7 @@ def run_cycle(
     max_age_by_type: dict[str, timedelta] | None = None,
     feed_user_agent: str | None = None,
     sec_user_agent: str | None = None,
+    audit_after_capture: bool = False,
 ) -> dict[str, Any]:
     if _parse_aware_timestamp(decision_at) is None:
         raise ValueError("decision_at must be a timezone-aware ISO-8601 timestamp")
@@ -113,8 +115,9 @@ def run_cycle(
     events_path = root / f"{prefix}.events.json"
     metadata_path = root / f"{prefix}.metadata.json"
     audit_path = root / f"{prefix}.audit.json"
+    readiness_path = root / f"{prefix}.readiness.json"
     archive_path = root / "event_archive.json"
-    if any(path.exists() for path in (events_path, metadata_path, audit_path)):
+    if any(path.exists() for path in (events_path, metadata_path, audit_path, readiness_path)):
         raise ValueError("capture filename collision; retry the command")
 
     cycle_started = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
@@ -185,10 +188,15 @@ def run_cycle(
         str(row.get("first_seen_at_utc") or ""),
     ))
     event_json = json.dumps(all_events, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    cycle_completed_at = datetime.now(timezone.utc)
+    cycle_completed_at_utc = cycle_completed_at.isoformat().replace("+00:00", "Z")
+    audit_decision_at = cycle_completed_at_utc if audit_after_capture else decision_at
     metadata = {
         "pipeline_version": "1.0",
         "cycle_started_at_utc": cycle_started,
-        "cycle_completed_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+        "cycle_completed_at_utc": cycle_completed_at_utc,
+        "audit_decision_at_utc": audit_decision_at,
+        "audit_after_capture": audit_after_capture,
         "decision_at_utc": decision_at,
         "requested_feed_keys": feed_keys,
         "sec_universe": universe,
@@ -208,7 +216,7 @@ def run_cycle(
     archive_rows = json.loads(archive_path.read_text(encoding="utf-8"))
     audit = build_event_research_report(
         archive_rows,
-        decision_at,
+        audit_decision_at,
         max_age_by_type=max_age_by_type,
     )
     source_collection_coverage: list[dict[str, Any]] = []
@@ -250,11 +258,15 @@ def run_cycle(
         "source_collection_coverage": source_collection_coverage,
     }
     _write_new(audit_path, audit)
+    readiness = audit_event_archive(archive_path, audited_at=audit_decision_at)
+    _write_new(readiness_path, readiness)
     return {
         "events_path": str(events_path),
         "metadata_path": str(metadata_path),
         "archive_path": str(archive_path),
         "audit_path": str(audit_path),
+        "readiness_path": str(readiness_path),
+        "readiness_status": readiness["status"],
         "event_count": len(all_events),
         "successful_source_count": successful_sources,
         "configured_source_count": configured_sources,
@@ -268,6 +280,7 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", required=True)
     parser.add_argument("--decision-at", required=True, help="Timezone-aware ISO-8601 decision timestamp")
+    parser.add_argument("--audit-after-capture", action="store_true", help="Audit events as of actual capture completion time rather than the supplied pre-capture timestamp")
     parser.add_argument("--feeds", default=DEFAULT_FEEDS, help="Comma-separated official feed keys; empty for SEC-only")
     parser.add_argument("--sec-universe", help="Optional JSON array containing explicit CIK/ticker pairs")
     parser.add_argument("--sec-start-date")
@@ -289,6 +302,7 @@ def main(argv: list[str] | None = None) -> int:
             max_filings_per_company=args.max_filings_per_company,
             min_request_interval_seconds=args.min_request_interval_seconds,
             max_age_by_type=freshness,
+            audit_after_capture=args.audit_after_capture,
         )
     except (OSError, ValueError, RuntimeError) as exc:
         parser.error(str(exc))

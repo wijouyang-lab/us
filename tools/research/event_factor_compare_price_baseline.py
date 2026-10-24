@@ -10,8 +10,10 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
+import tempfile
 from typing import Any
 
+import numpy as np
 import pandas as pd
 
 from tools.research.event_factor_backtest import evaluate
@@ -34,6 +36,7 @@ def build_paired_signals(
         raise ValueError("signals contain invalid decision_at timestamps")
     signals["ticker"] = signals["ticker"].astype(str).str.strip().str.upper()
     signals["event_score"] = pd.to_numeric(signals["event_score"], errors="coerce")
+    signals.loc[~np.isfinite(signals["event_score"]), "event_score"] = np.nan
     if signals.duplicated(["decision_at", "ticker"]).any():
         raise ValueError("duplicate decision_at/ticker signal rows")
     signals = signals[(signals["coverage_status"].str.lower() == "available") & signals["event_score"].notna()].copy()
@@ -45,7 +48,7 @@ def build_paired_signals(
     prices["ticker"] = prices["ticker"].astype(str).str.strip().str.upper()
     prices["close"] = pd.to_numeric(prices["close"], errors="coerce")
     prices = prices.dropna(subset=["date", "close"])
-    prices = prices[prices["close"] > 0].sort_values(["ticker", "date"])
+    prices = prices[np.isfinite(prices["close"]) & (prices["close"] > 0)].sort_values(["ticker", "date"])
     if prices.duplicated(["ticker", "date"]).any():
         raise ValueError("duplicate ticker/date price rows")
 
@@ -87,6 +90,50 @@ def build_paired_signals(
     return paired, report
 
 
+def _newey_west_mean_interval(values: list[float], *, max_lag: int) -> dict[str, Any]:
+    """Approximate 95% CI for a mean using Bartlett/Newey-West HAC variance.
+
+    This corrects the standard error for short-range serial dependence such as
+    overlapping holding-period returns. It is an asymptotic diagnostic, not a
+    substitute for a larger independent out-of-sample sample.
+    """
+    x = np.asarray(values, dtype=float)
+    x = x[np.isfinite(x)]
+    n = int(len(x))
+    if n < 3:
+        return {
+            "status": "insufficient_data",
+            "observations": n,
+            "mean_difference_pct": None,
+            "hac_standard_error_pct": None,
+            "ci95_lower_pct": None,
+            "ci95_upper_pct": None,
+            "max_lag": None,
+        }
+    mean = float(np.mean(x))
+    centered = x - mean
+    lag = min(max(0, int(max_lag)), n - 1)
+    # Long-run variance estimate for the sample mean; gamma uses denominator n.
+    long_run_variance = float(np.dot(centered, centered) / n)
+    for k in range(1, lag + 1):
+        gamma = float(np.dot(centered[k:], centered[:-k]) / n)
+        weight = 1.0 - k / (lag + 1.0)
+        long_run_variance += 2.0 * weight * gamma
+    variance_of_mean = max(0.0, long_run_variance) / n
+    standard_error = float(np.sqrt(variance_of_mean))
+    return {
+        "status": "estimated",
+        "method": "Newey-West HAC mean interval with Bartlett weights; normal 1.96 multiplier",
+        "observations": n,
+        "mean_difference_pct": round(mean * 100.0, 6),
+        "hac_standard_error_pct": round(standard_error * 100.0, 6),
+        "ci95_lower_pct": round((mean - 1.96 * standard_error) * 100.0, 6),
+        "ci95_upper_pct": round((mean + 1.96 * standard_error) * 100.0, 6),
+        "max_lag": lag,
+        "interpretation_warning": "Asymptotic interval; overlapping-return HAC correction does not remove selection bias or establish alpha.",
+    }
+
+
 def compare(
     signals_path: str,
     prices_path: str,
@@ -106,12 +153,12 @@ def compare(
             "research_only": True,
             "production_signal_generated": False,
         }
-    event_path = Path(signals_path).with_name(Path(signals_path).stem + ".paired_event.tmp.csv")
-    momentum_path = Path(signals_path).with_name(Path(signals_path).stem + ".paired_momentum.tmp.csv")
-    try:
-        event = paired[["decision_at", "ticker", "event_score", "coverage_status"]].rename(
-            columns={"event_score": "event_score"}
-        )
+    # Keep scratch files outside the input directory. This avoids write-permission
+    # failures and collisions when independent comparisons run concurrently.
+    with tempfile.TemporaryDirectory(prefix="event-factor-paired-") as temp_dir:
+        event_path = Path(temp_dir) / "paired_event.csv"
+        momentum_path = Path(temp_dir) / "paired_momentum.csv"
+        event = paired[["decision_at", "ticker", "event_score", "coverage_status"]]
         momentum = paired[["decision_at", "ticker", "momentum_score", "coverage_status"]].rename(
             columns={"momentum_score": "event_score"}
         )
@@ -127,11 +174,22 @@ def compare(
             cost_bps_per_side=cost_bps_per_side, quantile=quantile,
             min_names_per_side=min_names_per_side,
         )
-    finally:
-        event_path.unlink(missing_ok=True)
-        momentum_path.unlink(missing_ok=True)
+    event_by_date = {
+        row["decision_at"]: float(row["long_short_net_return"])
+        for row in event_result.get("per_decision_date", [])
+    }
+    momentum_by_date = {
+        row["decision_at"]: float(row["long_short_net_return"])
+        for row in momentum_result.get("per_decision_date", [])
+    }
+    paired_dates = sorted(event_by_date.keys() & momentum_by_date.keys())
+    paired_differences = [event_by_date[date] - momentum_by_date[date] for date in paired_dates]
+    paired_hac = _newey_west_mean_interval(paired_differences, max_lag=horizon - 1)
+    paired_hac["paired_decision_dates"] = len(paired_dates)
+    paired_hac["comparison"] = "event-factor net return minus price-only momentum net return on the same decision dates"
     return {
         "status": "evaluated" if event_result["status"] == momentum_result["status"] == "evaluated" else "insufficient_data",
+        "paired_return_difference_hac": paired_hac,
         "pairing": pair_report,
         "configuration": {
             "momentum_lookback_observations": lookback,

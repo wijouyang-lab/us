@@ -1,0 +1,69 @@
+{
+  "archive_event_version_rows": 85,
+  "archive_path": "data/research/event-capture/event_archive.json",
+  "audit_time_utc": "2026-10-23T17:05:58.376332Z",
+  "availability_statuses": {
+    "available": 85
+  },
+  "duplicate_event_version_id_count": 0,
+  "event_families": {
+    "central_bank": 18,
+    "macro_release": 50,
+    "policy": 17
+  },
+  "label_quality": {
+    "direction_missing_or_invalid": 85,
+    "fully_labeled_fraction": 0.0,
+    "impact_missing_or_invalid": 85,
+    "not_fully_labeled": 85,
+    "review_status_counts": {
+      "missing": 85
+    },
+    "reviewed_label_fraction": 0.0,
+    "unverified_label_provenance": 85,
+    "valid_direction_fraction": 0.0,
+    "valid_impact_fraction": 0.0
+  },
+  "limitations": [
+    "Presence and range checks do not prove that event labels were independently reviewed.",
+    "A source identifier is not necessarily a retrievable source URL; verify provenance before research use.",
+    "Historical first-seen timestamps are trustworthy only when captured prospectively or validated independently.",
+    "Eligibility counts do not establish predictive power; use frozen chronological out-of-sample tests.",
+    "This audit is read-only, research-only, and does not repair or impute records."
+  ],
+  "missing_required_fields": {},
+  "pit_eligibility": {
+    "decision_dates": 0,
+    "eligible_events_by_decision": {},
+    "rejection_reason_counts_across_decisions": {}
+  },
+  "production_signal_generated": false,
+  "readiness_gates": {
+    "all_first_seen_after_publication": true,
+    "all_timestamps_valid_and_not_future": false,
+    "archive_nonempty": true,
+    "empirical_alpha_established": false,
+    "label_review_provenance_present": true,
+    "pit_eligible_for_at_least_one_decision": true,
+    "production_activation_allowed": false,
+    "required_timestamps_present": true,
+    "source_urls_present": true,
+    "source_urls_valid_https": false,
+    "validated_labels_present": false,
+    "version_ids_unique": true
+  },
+  "research_only": true,
+  "schema_version": "1.0",
+  "sources": {
+    "bea_news_release_rss": 48,
+    "federal_reserve_press_rss": 20,
+    "federal_reserve_speeches_rss": 15,
+    "treasury_auction_announcements_rss": 1,
+    "treasury_auction_results_rss": 1
+  },
+  "status": "blocked_no_validated_labels",
+  "timestamp_quality": {
+    "invalid_source_url": 1
+  },
+  "unique_event_version_ids": 85
+}

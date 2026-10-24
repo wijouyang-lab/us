@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "curve_type": "real",
+    "limitations": [
+      "A current historical download does not reconstruct when each historical value first became available.",
+      "Rows are eligible only for decision timestamps at or after retrieved_at_utc unless a separate validated historical availability timestamp is supplied.",
+      "Empty Treasury fields remain null and are never coerced to zero.",
+      "Yield curve rates are Treasury's daily published par yields, not intraday executable bond prices."
+    ],
+    "normalized_rows_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "production_scanner_modified": false,
+    "research_only": true,
+    "retrieved_at_utc": "2026-10-23T16:57:18.877622Z",
+    "row_count": 0,
+    "source": "us_treasury_daily_par_real_yield_curve",
+    "source_payload_sha256": "207ac346def30c84fd93baef241f30735a01bfcd1848d066158ffea9e1333fc8",
+    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026"
+  },
+  "rows": []
+}

@@ -1,5 +1,5 @@
 import json
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -8,19 +8,31 @@ import tools.research.run_event_capture_cycle as cycle
 from tools.research.pit_event_records import normalize_event
 
 
-def sample_event():
+def sample_event(fresh=True):
+    # Fresh timestamps keep freshness checks valid; stable timestamps let dedupe tests
+    # model the exact same immutable event version across repeated captures.
+    if fresh:
+        now = datetime.now(timezone.utc)
+        published = (now - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
+        first_seen = (now - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+        consensus_asof = (now - timedelta(minutes=3)).isoformat().replace("+00:00", "Z")
+    else:
+        published = "2026-10-23T12:00:00Z"
+        first_seen = "2026-10-23T12:01:00Z"
+        consensus_asof = "2026-10-23T11:30:00Z"
     event = normalize_event(
         source="bls_cpi_rss",
         source_event_id="cpi-item-1",
         event_type="macro_release",
-        published_at_utc="2026-10-23T12:00:00Z",
-        first_seen_at_utc="2026-10-23T12:01:00Z",
+        published_at_utc=published,
+        first_seen_at_utc=first_seen,
         raw_payload={"headline": "CPI report"},
     )
     event.update({
+        "source_url": "https://www.bls.gov/feed/cpi.rss",
         "actual_value": 3.1,
         "consensus_value": 3.0,
-        "consensus_asof_utc": "2026-10-23T11:30:00Z",
+        "consensus_asof_utc": consensus_asof,
     })
     return event
 
@@ -49,17 +61,21 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
         feed_keys=["bls_cpi"],
         feed_user_agent="Quant research tester@example.com",
         max_age_by_type={"macro_release": timedelta(days=1)},
+        audit_after_capture=True,
     )
     assert result["event_count"] == 1
     assert result["successful_source_count"] == 1
     assert not result["all_sources_failed"]
-    for key in ("events_path", "metadata_path", "archive_path", "audit_path"):
+    for key in ("events_path", "metadata_path", "archive_path", "audit_path", "readiness_path"):
         assert Path(result[key]).exists()
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
     assert audit["coverage_audit"]["eligible_events"] == 1
     assert audit["macro_surprise"]["eligible_count"] == 1
     assert audit["research_only"] is True
     assert audit["trading_signal_generated"] is False
+    readiness = json.loads(Path(result["readiness_path"]).read_text(encoding="utf-8"))
+    assert readiness["status"] == "blocked_no_validated_labels"
+    assert readiness["readiness_gates"]["empirical_alpha_established"] is False
     source_coverage = audit["capture_cycle"]["source_collection_coverage"]
     assert source_coverage == [{
         "source_kind": "official_rss",
@@ -107,7 +123,22 @@ def test_successful_empty_feed_is_visible_in_source_coverage(tmp_path, monkeypat
 
 
 def test_repeated_capture_deduplicates_the_same_event_version(tmp_path, monkeypatch):
-    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    class StableRssCollector:
+        def __init__(self, user_agent, **kwargs):
+            assert "@" in user_agent
+
+        def collect(self, feed_keys):
+            assert feed_keys == ["bls_cpi"]
+            return {
+                "events": [sample_event(fresh=False)],
+                "metadata": {
+                    "requested_feed_keys": feed_keys,
+                    "event_count": 1,
+                    "feed_reports": [{"feed_key": "bls_cpi", "status": "ok", "event_count": 1}],
+                },
+            }
+
+    monkeypatch.setattr(cycle, "OfficialRssCollector", StableRssCollector)
     args = dict(
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
@@ -172,3 +203,21 @@ def test_max_age_config_validates_values():
         cycle._parse_max_age_days('{"macro_release":-1}')
     with pytest.raises(ValueError, match="finite non-negative"):
         cycle._parse_max_age_days('{"macro_release":1e999}')
+
+
+
+def test_audit_after_capture_uses_actual_completion_cutoff(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T11:00:00Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@example.com",
+        audit_after_capture=True,
+    )
+    metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert metadata["audit_after_capture"] is True
+    assert metadata["audit_decision_at_utc"] == audit["decision_at_utc"]
+    assert audit["decision_at_utc"] >= "2026-10-23T12:01:00Z"
+    assert audit["coverage_audit"]["eligible_events"] == 1
