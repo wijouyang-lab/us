@@ -89,7 +89,8 @@ def parse_sec_master_index(
         if form.upper() not in accepted_forms or not start <= filed_date <= end:
             continue
         path = filename.removeprefix("/")
-        match = _ACCESSION_COMPACT.match(path)
+        index_path = path.removeprefix("edgar/data/")
+        match = _ACCESSION_COMPACT.match(index_path)
         if not match:
             malformed_rows += 1
             continue
