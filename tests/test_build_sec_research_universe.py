@@ -6,6 +6,7 @@ import pytest
 from tools.research.build_sec_research_universe import (
     SEC_TICKERS_URL,
     build_sec_universe,
+    build_sec_universe_from_fallback,
     fetch_sec_universe,
     load_requested_tickers,
 )
@@ -85,3 +86,46 @@ def test_load_requested_tickers_deduplicates_and_rejects_empty(tmp_path):
     path.write_text("# no symbols\n", encoding="utf-8")
     with pytest.raises(ValueError, match="at least one ticker"):
         load_requested_tickers(path)
+
+
+
+def test_fallback_mapping_uses_only_explicit_matches_and_marks_static_provenance():
+    fallback = json.dumps({
+        "schema_version": "1.0",
+        "source_base_url": "https://www.sec.gov/edgar/browse/",
+        "tickers": {"AAPL": "320193", "BRK-B": "1067983"},
+        "limitations": ["static fallback"],
+    })
+    universe, metadata = build_sec_universe_from_fallback(
+        ["AAPL", "BRK-B", "UNKNOWN"],
+        fallback,
+        loaded_at_utc="2026-10-24T10:00:00Z",
+        lookup_error="HTTPError: 403 Forbidden",
+    )
+    assert universe == [
+        {"cik": "0000320193", "ticker": "AAPL"},
+        {"cik": "0001067983", "ticker": "BRK-B"},
+    ]
+    assert metadata["mapping_mode"] == "static_fallback"
+    assert metadata["matched_count"] == 2
+    assert metadata["unmatched_tickers"] == ["UNKNOWN"]
+    assert metadata["historical_membership_inferred"] is False
+    assert "HTTPError: 403 Forbidden" == metadata["live_lookup_error"]
+    assert any("not a source publication timestamp" in item for item in metadata["limitations"])
+
+
+def test_fallback_mapping_rejects_invalid_cik_and_unknown_only_watchlist():
+    with pytest.raises(ValueError, match="invalid fallback ticker/CIK"):
+        build_sec_universe_from_fallback(
+            ["AAPL"],
+            json.dumps({"tickers": {"AAPL": "bad"}}),
+            loaded_at_utc="2026-10-24T10:00:00Z",
+            lookup_error="403",
+        )
+    with pytest.raises(ValueError, match="none of the requested tickers"):
+        build_sec_universe_from_fallback(
+            ["UNKNOWN"],
+            json.dumps({"tickers": {"AAPL": "320193"}}),
+            loaded_at_utc="2026-10-24T10:00:00Z",
+            lookup_error="403",
+        )
