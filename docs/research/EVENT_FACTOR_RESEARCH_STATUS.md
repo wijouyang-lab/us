@@ -17,10 +17,10 @@
 | Empirical event-factor result | Not established | No validated label set and no qualifying event-factor out-of-sample result are available |
 
 Evidence links:
-- [Latest capture readiness report](../data/research/event-capture/event_capture_20261024T103806501408Z.readiness.json)
-- [Latest capture metadata and source coverage](../data/research/event-capture/event_capture_20261024T103806501408Z.metadata.json)
-- [Latest SEC mapping provenance](../data/research/event-capture/sec_universe_40086652063.metadata.json)
-- [Latest derived Treasury proxy](../data/research/event-capture/treasury_breakeven_proxy_40086652063.json)
+- [Latest capture readiness report](../../data/research/event-capture/event_capture_20261024T103806501408Z.readiness.json)
+- [Latest capture metadata and source coverage](../../data/research/event-capture/event_capture_20261024T103806501408Z.metadata.json)
+- [Latest SEC mapping provenance](../../data/research/event-capture/sec_universe_40086652063.metadata.json)
+- [Latest derived Treasury proxy](../../data/research/event-capture/treasury_breakeven_proxy_40086652063.json)
 - [Source inventory](PIT_EVENT_SOURCE_INVENTORY.md)
 - [Annotation guide](PIT_EVENT_LABEL_ANNOTATION_GUIDE.md)
 
