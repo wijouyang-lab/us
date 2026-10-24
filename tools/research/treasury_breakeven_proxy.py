@@ -11,6 +11,7 @@ import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
 import json
+import math
 from pathlib import Path
 from typing import Any
 from urllib.parse import parse_qs, urlparse
@@ -92,7 +93,16 @@ def build_breakeven_proxy(
         spreads: dict[str, float | None] = {}
         for maturity in maturities:
             n, r = ny.get(maturity), ry.get(maturity)
-            spreads[maturity] = round((float(n) - float(r)) * 100, 4) if n is not None and r is not None else None
+            if n is None or r is None:
+                spreads[maturity] = None
+                continue
+            try:
+                nominal_yield, real_yield = float(n), float(r)
+            except (TypeError, ValueError) as exc:
+                raise ValueError(f"non-numeric yield for {date} {maturity}") from exc
+            if not math.isfinite(nominal_yield) or not math.isfinite(real_yield):
+                raise ValueError(f"non-finite yield for {date} {maturity}")
+            spreads[maturity] = round((nominal_yield - real_yield) * 100, 4)
         rows.append({
             "observation_date": date,
             "breakeven_proxy_bp": spreads,
