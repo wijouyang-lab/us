@@ -1,5 +1,5 @@
 import json
-from datetime import timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import pytest
@@ -9,19 +9,24 @@ from tools.research.pit_event_records import normalize_event
 
 
 def sample_event():
+    # Use a fresh event timestamp so this freshness test stays valid over time.
+    now = datetime.now(timezone.utc)
+    published = (now - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
+    first_seen = (now - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+    consensus_asof = (now - timedelta(minutes=3)).isoformat().replace("+00:00", "Z")
     event = normalize_event(
         source="bls_cpi_rss",
         source_event_id="cpi-item-1",
         event_type="macro_release",
-        published_at_utc="2026-10-23T12:00:00Z",
-        first_seen_at_utc="2026-10-23T12:01:00Z",
+        published_at_utc=published,
+        first_seen_at_utc=first_seen,
         raw_payload={"headline": "CPI report"},
     )
     event.update({
         "source_url": "https://www.bls.gov/feed/cpi.rss",
         "actual_value": 3.1,
         "consensus_value": 3.0,
-        "consensus_asof_utc": "2026-10-23T11:30:00Z",
+        "consensus_asof_utc": consensus_asof,
     })
     return event
 
