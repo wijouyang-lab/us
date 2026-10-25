@@ -179,7 +179,10 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
                 chunks = [list(x) for x in np.array_split(np.array(dates, dtype="datetime64[ns]"), 3) if len(x)]
                 for fold_no, chunk in enumerate(chunks, start=1):
                     allowed = set(pd.Timestamp(x) for x in chunk)
-                    if fold_no > 1 and len(chunk) > horizon:
+                    if fold_no > 1:
+                        # Always apply the embargo. If a fold is no longer than
+                        # the label horizon, it has no independent dates left and
+                        # must report zero observations rather than skip the purge.
                         allowed = set(pd.Timestamp(x) for x in chunk[horizon:])
                     fold = daily[daily["date"].isin(allowed)]
                     fold_summaries.append({"fold": fold_no, **_summary(fold, cost_bps)})
