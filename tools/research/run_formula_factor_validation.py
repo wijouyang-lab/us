@@ -150,6 +150,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             evaluated = work[["Snapshot_Date", name]].copy()
             evaluated[target] = pd.to_numeric(source[target].values, errors="coerce")
             daily = _daily_metrics(evaluated, name, target, min_names)
+            horizon = int(target.upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
             summary = _summary(daily, cost_bps)
             hac_t, hac_p = _hac_ic_test(daily, max_lag=horizon - 1)
             summary["ic_hac_t"] = round(hac_t, 4) if hac_t is not None else None
@@ -159,7 +160,6 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             # Three chronological test folds. Embargo the first horizon trading
             # dates of folds 2/3 to reduce overlap from forward-return labels.
             fold_summaries = []
-            horizon = int(target.upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
             if dates:
                 chunks = [list(x) for x in np.array_split(np.array(dates, dtype="datetime64[ns]"), 3) if len(x)]
                 for fold_no, chunk in enumerate(chunks, start=1):
