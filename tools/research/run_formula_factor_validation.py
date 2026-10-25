@@ -87,7 +87,8 @@ def _summary(daily: pd.DataFrame, cost_bps: float):
 
 
 def run(input_path: str, output_dir: str, max_base_factors: int = 8,
-        cost_bps: float = 5.0, min_names: int = 10):
+        cost_bps: float = 5.0, min_names: int = 10,
+        requested_factors: list[str] | None = None):
     source = pd.read_csv(input_path)
     date_col = next((c for c in ("Snapshot_Date", "Technical_Date", "Scan_Date") if c in source), None)
     if date_col is None:
@@ -108,8 +109,15 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     if not feature_cols:
         raise ValueError("no numeric feature columns available after label/metadata exclusion")
 
+    # Explicitly requested factors take precedence over CSV column order. This is
+    # important because a capped search must not silently omit known baselines
+    # (e.g. ATR_Pct) merely because they occur later in a wide CSV.
+    requested_factors = requested_factors or []
+    prioritized = [c for c in dict.fromkeys(requested_factors) if c in feature_cols]
+    selected = prioritized + [c for c in feature_cols if c not in prioritized]
+    selected = selected[:max_base_factors]
     candidates, metadata = generate_formula_candidates(
-        source, feature_cols, date_column="Snapshot_Date",
+        source, selected, date_column="Snapshot_Date",
         max_base_factors=max_base_factors,
     )
     work = pd.concat([source[["Snapshot_Date"]].reset_index(drop=True),
@@ -168,7 +176,8 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "rows": int(len(source)),
             "date_min": str(source["Snapshot_Date"].min().date()) if len(source) else None,
             "date_max": str(source["Snapshot_Date"].max().date()) if len(source) else None,
-            "base_feature_count": min(len(feature_cols), max_base_factors),
+            "available_numeric_feature_count": len(feature_cols),
+            "selected_base_features": selected,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
             "warning": "Formula candidates are hypotheses. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, or full portfolio simulation is included.",
@@ -187,10 +196,15 @@ def main():
     parser.add_argument("--max-base-factors", type=int, default=8)
     parser.add_argument("--cost-bps", type=float, default=5.0, help="One-way cost in basis points per leg")
     parser.add_argument("--min-names", type=int, default=10)
+    parser.add_argument(
+        "--factor-columns", default="",
+        help="Comma-separated priority list; available columns are selected first before the cap",
+    )
     args = parser.parse_args()
     if args.max_base_factors < 2 or args.min_names < 5 or args.cost_bps < 0:
         parser.error("max-base-factors >= 2, min-names >= 5, and cost-bps >= 0 are required")
-    run(args.input, args.output_dir, args.max_base_factors, args.cost_bps, args.min_names)
+    requested = [x.strip() for x in args.factor_columns.split(",") if x.strip()]
+    run(args.input, args.output_dir, args.max_base_factors, args.cost_bps, args.min_names, requested)
 
 
 if __name__ == "__main__":
