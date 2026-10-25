@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from tools.research.run_formula_factor_validation import _bh_qvalues, run
+from tools.research.run_formula_factor_validation import _bh_qvalues, _hac_mean_test, run
 
 
 def test_bh_qvalues_are_monotone_in_p_value_order():
@@ -13,6 +13,19 @@ def test_bh_qvalues_are_monotone_in_p_value_order():
     assert len(q) == len(p)
     assert all(0 <= x <= 1 for x in q)
     assert q[1] <= q[2] <= q[0] <= q[3]
+
+
+def test_hac_mean_test_handles_both_ic_and_spread_metrics():
+    daily = pd.DataFrame({
+        "ic": np.linspace(0.02, 0.08, 40),
+        "spread": np.linspace(0.001, 0.012, 40),
+    })
+    ic_t, ic_p = _hac_mean_test(daily, "ic", max_lag=4)
+    spread_t, spread_p = _hac_mean_test(daily, "spread", max_lag=4)
+    assert ic_t is not None and ic_t > 0
+    assert ic_p is not None and 0 <= ic_p <= 1
+    assert spread_t is not None and spread_t > 0
+    assert spread_p is not None and 0 <= spread_p <= 1
 
 
 def test_run_excludes_forward_returns_from_features_and_writes_reports(tmp_path):
@@ -41,6 +54,8 @@ def test_run_excludes_forward_returns_from_features_and_writes_reports(tmp_path)
     assert not metrics.empty
     assert not any("Forward_Return" in str(row["candidate"]) for row in report["results"])
     assert all("ic_fdr_q_value" in row for row in report["results"])
+    assert all("spread_hac_p_value" in row for row in report["results"])
+    assert all("spread_fdr_q_value" in row for row in report["results"])
 
 
 def test_run_rejects_input_without_forward_labels(tmp_path):
