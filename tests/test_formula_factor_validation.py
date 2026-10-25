@@ -48,3 +48,23 @@ def test_run_rejects_input_without_forward_labels(tmp_path):
     pd.DataFrame({"Technical_Date": ["2024-01-01"], "Signal": [1]}).to_csv(path, index=False)
     with pytest.raises(ValueError, match="Forward_Return"):
         run(str(path), str(tmp_path / "out"))
+
+def test_requested_baselines_are_prioritized_before_feature_cap(tmp_path):
+    rng = np.random.default_rng(19)
+    rows = []
+    for day in pd.date_range("2024-02-01", periods=12, freq="B"):
+        for i in range(12):
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{i:02}",
+                "Earlier_Column": float(rng.normal()),
+                "ATR_Pct": float(rng.normal()),
+                "Momentum_20D_Pct": float(rng.normal()),
+                "Forward_Return_5D": float(rng.normal(scale=0.02)),
+            })
+    inp, out = tmp_path / "input.csv", tmp_path / "out"
+    pd.DataFrame(rows).to_csv(inp, index=False)
+    run(str(inp), str(out), max_base_factors=2, cost_bps=5, min_names=10,
+        requested_factors=["ATR_Pct", "Momentum_20D_Pct"])
+    report = json.loads((out / "formula_factor_report.json").read_text())
+    assert report["selected_base_features"] == ["ATR_Pct", "Momentum_20D_Pct"]
