@@ -64,9 +64,16 @@ def _daily_metrics(frame: pd.DataFrame, factor: str, target: str, min_names: int
     return pd.DataFrame(rows)
 
 
-def _hac_ic_test(daily: pd.DataFrame, max_lag: int) -> tuple[float | None, float | None]:
-    """Newey-West HAC test for mean daily IC; accounts approximately for overlap."""
-    values = daily["ic"].to_numpy(dtype=float)
+def _hac_mean_test(daily: pd.DataFrame, metric: str, max_lag: int) -> tuple[float | None, float | None]:
+    """Newey-West HAC test for a daily metric mean; normal approximation for p-value.
+
+    The test can be applied to both daily IC and the daily Q5-Q1 return spread.
+    Overlapping forward-return labels induce serial dependence, so an IID standard
+    error is not appropriate. This is still an approximation, not a proof of alpha.
+    """
+    if metric not in daily.columns:
+        raise ValueError(f"missing HAC metric column: {metric}")
+    values = pd.to_numeric(daily[metric], errors="coerce").to_numpy(dtype=float)
     values = values[np.isfinite(values)]
     n = len(values)
     if n < 10:
@@ -84,6 +91,11 @@ def _hac_ic_test(daily: pd.DataFrame, max_lag: int) -> tuple[float | None, float
     t_stat = mean / math.sqrt(long_run_var / n)
     p_value = math.erfc(abs(t_stat) / math.sqrt(2.0))
     return float(t_stat), float(min(1.0, max(0.0, p_value)))
+
+
+def _hac_ic_test(daily: pd.DataFrame, max_lag: int) -> tuple[float | None, float | None]:
+    """Backward-compatible wrapper for the mean daily IC HAC test."""
+    return _hac_mean_test(daily, "ic", max_lag)
 
 def _summary(daily: pd.DataFrame, cost_bps: float):
     if daily.empty:
@@ -152,10 +164,13 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             daily = _daily_metrics(evaluated, name, target, min_names)
             horizon = int(target.upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
             summary = _summary(daily, cost_bps)
-            hac_t, hac_p = _hac_ic_test(daily, max_lag=horizon - 1)
+            hac_t, hac_p = _hac_mean_test(daily, "ic", max_lag=horizon - 1)
+            spread_hac_t, spread_hac_p = _hac_mean_test(daily, "spread", max_lag=horizon - 1)
             summary["ic_hac_t"] = round(hac_t, 4) if hac_t is not None else None
             summary["ic_hac_p_value"] = round(hac_p, 8) if hac_p is not None else None
-            summary["ic_hac_lag_days"] = min(horizon - 1, max(len(daily) - 1, 0))
+            summary["spread_hac_t"] = round(spread_hac_t, 4) if spread_hac_t is not None else None
+            summary["spread_hac_p_value"] = round(spread_hac_p, 8) if spread_hac_p is not None else None
+            summary["hac_lag_days"] = min(horizon - 1, max(len(daily) - 1, 0))
             dates = sorted(daily["date"].dropna().unique()) if not daily.empty else []
             # Three chronological test folds. Embargo the first horizon trading
             # dates of folds 2/3 to reduce overlap from forward-return labels.
@@ -173,19 +188,24 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
                 "horizon": target, **summary, "folds": fold_summaries,
             })
 
-    # Correct within each horizon using Newey-West HAC p-values, not IID assumptions.
+    # Correct each metric family separately within each horizon. Testing IC alone
+    # cannot establish that the portfolio-like Q5-Q1 spread is statistically nonzero.
     for target in targets:
-        idxs = [
-            i for i, row in enumerate(out_rows)
-            if row["horizon"] == target and row.get("ic_hac_p_value") is not None
-        ]
-        pvals = [float(out_rows[i]["ic_hac_p_value"]) for i in idxs]
-        qvals = _bh_qvalues(pvals)
-        for i, q in zip(idxs, qvals):
-            out_rows[i]["ic_fdr_q_value"] = round(q, 8)
-        for i, row in enumerate(out_rows):
-            if row["horizon"] == target and "ic_fdr_q_value" not in row:
-                row["ic_fdr_q_value"] = None
+        for metric, p_column, q_column in (
+            ("ic", "ic_hac_p_value", "ic_fdr_q_value"),
+            ("spread", "spread_hac_p_value", "spread_fdr_q_value"),
+        ):
+            idxs = [
+                i for i, row in enumerate(out_rows)
+                if row["horizon"] == target and row.get(p_column) is not None
+            ]
+            pvals = [float(out_rows[i][p_column]) for i in idxs]
+            qvals = _bh_qvalues(pvals)
+            for i, q in zip(idxs, qvals):
+                out_rows[i][q_column] = round(q, 8)
+            for i, row in enumerate(out_rows):
+                if row["horizon"] == target and q_column not in row:
+                    row[q_column] = None
 
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -202,7 +222,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "selected_base_features": selected,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
-            "inference_method": "Newey-West HAC mean-IC test with lag horizon-1, then Benjamini-Hochberg FDR within each horizon; two-sided normal approximation.",
+            "inference_method": "Newey-West HAC tests for mean daily IC and mean daily Q5-Q1 spread with lag horizon-1; separate Benjamini-Hochberg FDR families within each horizon; two-sided normal approximation.",
             "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),
