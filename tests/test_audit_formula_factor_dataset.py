@@ -19,6 +19,11 @@ def test_audit_reports_duplicates_missingness_and_labels(tmp_path):
     assert report["unique_dates"] == 2
     assert report["missing_fraction_by_feature_or_label"]["ATR_Pct"] == pytest.approx(1 / 3)
     assert report["forward_return_summary"]["Forward_Return_5D"]["outside_abs_100pct"] == 1
+    examples = report["suspicious_forward_return_examples"]["Forward_Return_5D"]
+    assert len(examples) == 1
+    assert examples[0]["ticker"] == "BBB"
+    assert examples[0]["date"] == "2024-01-02"
+    assert examples[0]["forward_return"] == 1.5
     assert any("Duplicate" in warning for warning in report["warnings"])
     assert any("exceed +/-100%" in warning for warning in report["warnings"])
 
