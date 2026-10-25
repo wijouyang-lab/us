@@ -1,0 +1,29 @@
+name: Research Factor Validation Tests
+
+on:
+  push:
+    branches:
+      - research/fix-factor-fold-embargo
+    paths:
+      - "tools/research/run_formula_factor_validation.py"
+      - "tests/test_formula_factor_validation.py"
+      - ".github/workflows/research-factor-validation-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research test dependencies
+        run: python -m pip install --upgrade pip numpy pandas scipy pytest
+      - name: Compile research validator and tests
+        run: python -m py_compile tools/research/run_formula_factor_validation.py tests/test_formula_factor_validation.py
+      - name: Run formula-factor validation tests
+        run: python -m pytest tests/test_formula_factor_validation.py -q
