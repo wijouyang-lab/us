@@ -48,8 +48,8 @@ jobs:
 
       - name: Audit tracked dataset structure before factor evaluation
         run: |
-          python tools/research/audit_formula_factor_dataset.py \\
-            --input research_backtest_sp500_pit_2y.csv \\
+          python tools/research/audit_formula_factor_dataset.py \
+            --input research_backtest_sp500_pit_2y.csv \
             --output formula-factor-results/dataset_audit.json
 
       - name: Evaluate bounded formula family on PIT history
