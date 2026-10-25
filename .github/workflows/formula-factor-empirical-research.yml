@@ -10,6 +10,8 @@ on:
       - tools/research/run_formula_factor_validation.py
       - tools/research/formula_factor_discovery.py
       - tests/test_formula_factor_validation.py
+      - tools/research/audit_formula_factor_dataset.py
+      - tests/test_audit_formula_factor_dataset.py
 
 permissions:
   contents: read
@@ -43,6 +45,12 @@ jobs:
           test -s research_backtest_sp500_pit_2y.csv
           echo "Dataset bytes: $(wc -c < research_backtest_sp500_pit_2y.csv)"
           head -n 1 research_backtest_sp500_pit_2y.csv
+
+      - name: Audit tracked dataset structure before factor evaluation
+        run: |
+          python tools/research/audit_formula_factor_dataset.py \\
+            --input research_backtest_sp500_pit_2y.csv \\
+            --output formula-factor-results/dataset_audit.json
 
       - name: Evaluate bounded formula family on PIT history
         run: |
