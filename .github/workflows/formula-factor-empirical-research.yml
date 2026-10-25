@@ -49,7 +49,8 @@ jobs:
           python tools/research/run_formula_factor_validation.py \
             --input research_backtest_sp500_pit_2y.csv \
             --output-dir formula-factor-results \
-            --max-base-factors 4 \
+            --max-base-factors 8 \
+            --factor-columns ATR_Pct,Realized_Volatility_20D_Pct,Momentum_5D_Pct,Momentum_20D_Pct,Momentum_60D_Pct,RSI,MA20_Slope_Pct_5D,Beta_60D_SPY \
             --cost-bps 5 \
             --min-names 10
 
