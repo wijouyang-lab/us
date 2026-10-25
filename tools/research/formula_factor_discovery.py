@@ -58,7 +58,7 @@ def generate_formula_candidates(
         return (
             upper.startswith("FORWARD_RETURN_")
             or upper.startswith("WIN_")
-            or upper in {"TARGET", "LABEL", "Y", "OUTCOME"}
+            or upper in {"TARGET", "LABEL", "OUTCOME"}
         )
 
     columns = list(dict.fromkeys(
