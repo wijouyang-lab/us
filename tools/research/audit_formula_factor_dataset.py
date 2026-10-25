@@ -37,8 +37,10 @@ def audit_dataset(input_path: str) -> dict:
         values = pd.to_numeric(frame[col], errors="coerce")
         missingness[col] = round(float(values.isna().mean()), 6)
     label_stats = {}
+    suspicious_label_examples = {}
     for col in forward_cols:
-        values = pd.to_numeric(frame[col], errors="coerce").replace([np.inf, -np.inf], np.nan).dropna()
+        numeric = pd.to_numeric(frame[col], errors="coerce").replace([np.inf, -np.inf], np.nan)
+        values = numeric.dropna()
         label_stats[col] = {
             "n": int(values.size),
             "mean": round(float(values.mean()), 8) if len(values) else None,
@@ -47,6 +49,20 @@ def audit_dataset(input_path: str) -> dict:
             "max": round(float(values.max()), 8) if len(values) else None,
             "outside_abs_100pct": int((values.abs() > 1.0).sum()),
         }
+        # Keep concrete examples so researchers can trace extreme labels to
+        # their source rows and investigate corporate actions/label alignment.
+        unusual = numeric[numeric.abs() > 1.0]
+        if len(unusual):
+            example_indices = unusual.abs().sort_values(ascending=False).head(10).index
+            suspicious_label_examples[col] = [
+                {
+                    "row_index": int(idx),
+                    "date": str(dates.loc[idx].date()) if pd.notna(dates.loc[idx]) else None,
+                    "ticker": str(frame.loc[idx, "Ticker"]),
+                    "forward_return": round(float(numeric.loc[idx]), 8),
+                }
+                for idx in example_indices
+            ]
     return {
         "input": str(input_path),
         "row_count": int(len(frame)),
@@ -67,6 +83,7 @@ def audit_dataset(input_path: str) -> dict:
         "forward_return_columns": forward_cols,
         "missing_fraction_by_feature_or_label": missingness,
         "forward_return_summary": label_stats,
+        "suspicious_forward_return_examples": suspicious_label_examples,
         "warnings": [
             msg for condition, msg in [
                 (duplicate_rows > 0, "Duplicate date/ticker rows exist; investigate before interpreting cross-sectional ranks."),
