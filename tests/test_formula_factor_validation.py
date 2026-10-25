@@ -110,3 +110,5 @@ def test_requested_baselines_are_prioritized_before_feature_cap(tmp_path):
         requested_factors=["ATR_Pct", "Momentum_20D_Pct"])
     report = json.loads((out / "formula_factor_report.json").read_text())
     assert report["selected_base_features"] == ["ATR_Pct", "Momentum_20D_Pct"]
+
+# Regression coverage for mandatory fold embargo remains research-only.
