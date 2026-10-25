@@ -19,8 +19,12 @@ def test_formula_candidates_are_deterministic_and_cross_sectional():
         "ATR_Pct": [1, 2, 3, 4, 5] * 2,
         "Forward_Return_5D": [999] * 10,  # must never be used by generator
     })
-    a, meta_a = generate_formula_candidates(frame, ["Momentum_20D_Pct", "ATR_Pct"])
-    b, meta_b = generate_formula_candidates(frame, ["Momentum_20D_Pct", "ATR_Pct"])
+    a, meta_a = generate_formula_candidates(
+        frame, ["Momentum_20D_Pct", "ATR_Pct", "Forward_Return_5D"]
+    )
+    b, meta_b = generate_formula_candidates(
+        frame, ["Momentum_20D_Pct", "ATR_Pct", "Forward_Return_5D"]
+    )
     pd.testing.assert_frame_equal(a, b)
     assert meta_a == meta_b
     assert "Forward_Return_5D" not in a.columns
