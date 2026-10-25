@@ -34,7 +34,7 @@ jobs:
           python-version: '3.12'
 
       - name: Install research dependencies
-        run: python -m pip install --upgrade pip numpy pandas
+        run: python -m pip install --upgrade pip numpy pandas scipy
 
       - name: Check tracked PIT dataset exists
         shell: bash
