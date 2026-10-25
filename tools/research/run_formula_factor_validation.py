@@ -64,6 +64,27 @@ def _daily_metrics(frame: pd.DataFrame, factor: str, target: str, min_names: int
     return pd.DataFrame(rows)
 
 
+def _hac_ic_test(daily: pd.DataFrame, max_lag: int) -> tuple[float | None, float | None]:
+    """Newey-West HAC test for mean daily IC; accounts approximately for overlap."""
+    values = daily["ic"].to_numpy(dtype=float)
+    values = values[np.isfinite(values)]
+    n = len(values)
+    if n < 10:
+        return None, None
+    mean = float(values.mean())
+    centered = values - mean
+    lag_max = min(max(int(max_lag), 0), n - 1)
+    long_run_var = float(np.dot(centered, centered) / n)
+    for lag in range(1, lag_max + 1):
+        weight = 1.0 - lag / (lag_max + 1.0)
+        covariance = float(np.dot(centered[lag:], centered[:-lag]) / n)
+        long_run_var += 2.0 * weight * covariance
+    if not np.isfinite(long_run_var) or long_run_var <= 0:
+        return None, None
+    t_stat = mean / math.sqrt(long_run_var / n)
+    p_value = math.erfc(abs(t_stat) / math.sqrt(2.0))
+    return float(t_stat), float(min(1.0, max(0.0, p_value)))
+
 def _summary(daily: pd.DataFrame, cost_bps: float):
     if daily.empty:
         return {"n_days": 0, "mean_daily_ic": None, "icir": None,
@@ -130,6 +151,10 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             evaluated[target] = pd.to_numeric(source[target].values, errors="coerce")
             daily = _daily_metrics(evaluated, name, target, min_names)
             summary = _summary(daily, cost_bps)
+            hac_t, hac_p = _hac_ic_test(daily, max_lag=horizon - 1)
+            summary["ic_hac_t"] = round(hac_t, 4) if hac_t is not None else None
+            summary["ic_hac_p_value"] = round(hac_p, 8) if hac_p is not None else None
+            summary["ic_hac_lag_days"] = min(horizon - 1, max(len(daily) - 1, 0))
             dates = sorted(daily["date"].dropna().unique()) if not daily.empty else []
             # Three chronological test folds. Embargo the first horizon trading
             # dates of folds 2/3 to reduce overlap from forward-return labels.
@@ -148,19 +173,16 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
                 "horizon": target, **summary, "folds": fold_summaries,
             })
 
-    # Correct approximate two-sided normal p-values for mean daily IC across the
-    # full candidate family per horizon; these are diagnostics, not proof of alpha.
+    # Correct within each horizon using Newey-West HAC p-values, not IID assumptions.
     for target in targets:
-        idxs = [i for i, row in enumerate(out_rows) if row["horizon"] == target and row["n_days"] >= 10]
-        pvals = []
-        for i in idxs:
-            row = out_rows[i]
-            # Recover a conservative normal approximation from ICIR and n_days.
-            z = abs(row["icir"] or 0.0) * math.sqrt(row["n_days"])
-            pvals.append(math.erfc(z / math.sqrt(2.0)))
+        idxs = [
+            i for i, row in enumerate(out_rows)
+            if row["horizon"] == target and row.get("ic_hac_p_value") is not None
+        ]
+        pvals = [float(out_rows[i]["ic_hac_p_value"]) for i in idxs]
         qvals = _bh_qvalues(pvals)
         for i, q in zip(idxs, qvals):
-            out_rows[i]["ic_fdr_q_value"] = round(q, 6)
+            out_rows[i]["ic_fdr_q_value"] = round(q, 8)
         for i, row in enumerate(out_rows):
             if row["horizon"] == target and "ic_fdr_q_value" not in row:
                 row["ic_fdr_q_value"] = None
@@ -180,7 +202,8 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "selected_base_features": selected,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
-            "warning": "Formula candidates are hypotheses. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, or full portfolio simulation is included.",
+            "inference_method": "Newey-West HAC mean-IC test with lag horizon-1, then Benjamini-Hochberg FDR within each horizon; two-sided normal approximation.",
+            "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),
         encoding="utf-8",
