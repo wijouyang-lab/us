@@ -51,8 +51,19 @@ def generate_formula_candidates(
     if date_column not in frame.columns:
         raise ValueError(f"missing required date column: {date_column}")
 
+    # Exclude common target/label columns even if accidentally requested.
+    # This is a defensive guard; callers must still supply point-in-time features.
+    def is_target_column(name: str) -> bool:
+        upper = name.upper()
+        return (
+            upper.startswith("FORWARD_RETURN_")
+            or upper.startswith("WIN_")
+            or upper in {"TARGET", "LABEL", "Y", "OUTCOME"}
+        )
+
     columns = list(dict.fromkeys(
-        c for c in factor_columns if c in frame.columns and c != date_column
+        c for c in factor_columns
+        if c in frame.columns and c != date_column and not is_target_column(c)
     ))[:max_base_factors]
     dates = frame[date_column]
     standardized: dict[str, pd.Series] = {}
