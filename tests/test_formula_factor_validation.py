@@ -260,3 +260,45 @@ def test_low_frequency_phase_metrics_use_horizon_spaced_rebalances_and_report_by
     ).all()
 
 
+
+def test_turnover_cost_sensitivity_grid_reprices_same_portfolios_and_corrects_scenarios(tmp_path):
+    rng = np.random.default_rng(20261026)
+    rows = []
+    for day in pd.date_range("2024-07-01", periods=60, freq="B"):
+        for i in range(20):
+            signal = float(i)
+            noise = float(rng.normal(scale=0.01))
+            base_return = 0.015 if i >= 16 else (-0.008 if i < 4 else 0.0)
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{i:02}",
+                "Signal": signal,
+                "Forward_Return_5D": base_return + noise,
+            })
+    input_path, output_dir = tmp_path / "cost_grid.csv", tmp_path / "cost_grid_out"
+    pd.DataFrame(rows).to_csv(input_path, index=False)
+    run(
+        str(input_path), str(output_dir), max_base_factors=1, cost_bps=5,
+        min_names=10, requested_factors=["Signal"],
+    )
+    report = json.loads((output_dir / "formula_factor_report.json").read_text())
+    metrics = pd.read_csv(output_dir / "formula_factor_cost_sensitivity.csv")
+    low_freq_costs = pd.read_csv(output_dir / "low_frequency_phase_cost_sensitivity.csv")
+    row = next(item for item in report["results"] if item["candidate"] == "z__Signal")
+    scenarios = row["cost_sensitivity_results"]
+    expected_costs = [0.0, 5.0, 10.0, 25.0, 50.0, 100.0]
+    assert [item["one_way_cost_bps"] for item in scenarios] == expected_costs
+    raw_net = [item["turnover_aware_net_q5_q1_spread"] for item in scenarios]
+    winsorized_net = [item["winsorized_turnover_aware_net_q5_q1_spread"] for item in scenarios]
+    assert all(a >= b for a, b in zip(raw_net, raw_net[1:]))
+    assert all(a >= b for a, b in zip(winsorized_net, winsorized_net[1:]))
+    assert scenarios[0]["turnover_aware_net_q5_q1_spread"] > scenarios[-1]["turnover_aware_net_q5_q1_spread"]
+    assert scenarios[0]["turnover_aware_spread_by_q_value"] >= scenarios[0]["turnover_aware_spread_hac_p_value"]
+    assert scenarios[0]["winsorized_turnover_aware_spread_by_q_value"] >= scenarios[0]["winsorized_turnover_aware_spread_hac_p_value"]
+    assert len(metrics) == 6
+    assert len(low_freq_costs) == 5 * 6
+    assert (low_freq_costs["one_way_cost_bps"].nunique() == 6)
+    for phase, group in low_freq_costs.groupby("phase_offset_sessions"):
+        values = group.sort_values("one_way_cost_bps")["turnover_aware_net_q5_q1_spread"].tolist()
+        assert all(a >= b for a, b in zip(values, values[1:]))
+    assert "cost_sensitivity_one_way_bps" in report

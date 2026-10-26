@@ -24,6 +24,8 @@ ID_COLUMNS = {"Ticker", "Scan_Date", "Technical_Date", "Snapshot_Date", "schema_
 LABEL_PREFIXES = ("FORWARD_RETURN_", "WIN_")
 LABEL_NAMES = {"TARGET", "LABEL", "OUTCOME"}
 
+COST_SENSITIVITY_BPS = (0.0, 5.0, 10.0, 25.0, 50.0, 100.0)
+
 
 def _is_label(name: str) -> bool:
     upper = name.upper()
@@ -170,6 +172,74 @@ def _attach_turnover_costs(daily: pd.DataFrame, cost_bps: float) -> pd.DataFrame
     return result
 
 
+def _reprice_turnover_costs(daily: pd.DataFrame, cost_bps: float) -> pd.DataFrame:
+    """Recalculate net spread from cached portfolio turnover at another one-way cost."""
+    result = daily.copy()
+    if result.empty:
+        return result
+    required = {"spread", "total_turnover", "turnover_cost_available"}
+    if not required.issubset(result.columns):
+        result["turnover_aware_spread"] = np.nan
+        result["turnover_cost_bps"] = np.nan
+        result["turnover_cost_available"] = False
+        return result
+    if not result["turnover_cost_available"].fillna(False).astype(bool).all():
+        result["turnover_aware_spread"] = np.nan
+        result["turnover_cost_bps"] = np.nan
+        result["turnover_cost_available"] = False
+        return result
+    turnover = pd.to_numeric(result["total_turnover"], errors="coerce")
+    spread = pd.to_numeric(result["spread"], errors="coerce")
+    if turnover.isna().any() or spread.isna().any():
+        result["turnover_aware_spread"] = np.nan
+        result["turnover_cost_bps"] = np.nan
+        result["turnover_cost_available"] = False
+        return result
+    result["turnover_cost_bps"] = turnover * float(cost_bps)
+    result["turnover_aware_spread"] = spread - result["turnover_cost_bps"] / 10000.0
+    result["turnover_cost_available"] = True
+    return result
+
+
+def _cost_sensitivity_metrics(
+    daily_with_turnover: pd.DataFrame,
+    winsorized_with_turnover: pd.DataFrame,
+    horizon: int,
+    cost_scenarios: list[float],
+) -> list[dict]:
+    """Reprice the same portfolio turnover across cost levels; no rankings are retuned."""
+    rows = []
+    for scenario_bps in cost_scenarios:
+        raw = _reprice_turnover_costs(daily_with_turnover, scenario_bps)
+        winsorized = _reprice_turnover_costs(winsorized_with_turnover, scenario_bps)
+        raw_summary = _summary(raw, scenario_bps)
+        winsorized_summary = _summary(winsorized, scenario_bps)
+        raw_t, raw_p = _hac_mean_test(raw, "turnover_aware_spread", max_lag=horizon - 1)
+        winsorized_t, winsorized_p = _hac_mean_test(
+            winsorized, "turnover_aware_spread", max_lag=horizon - 1
+        )
+        rows.append({
+            "one_way_cost_bps": float(scenario_bps),
+            "n_days": raw_summary["n_days"],
+            "turnover_cost_available": raw_summary["turnover_cost_available"],
+            "mean_total_turnover": raw_summary["mean_total_turnover"],
+            "mean_turnover_cost_bps": raw_summary["mean_turnover_cost_bps"],
+            "turnover_aware_net_q5_q1_spread": raw_summary["turnover_aware_net_q5_q1_spread"],
+            "turnover_aware_positive_spread_day_pct": raw_summary["turnover_aware_positive_spread_day_pct"],
+            "turnover_aware_spread_hac_t": round(raw_t, 4) if raw_t is not None else None,
+            "turnover_aware_spread_hac_p_value": round(raw_p, 8) if raw_p is not None else None,
+            "turnover_aware_spread_by_q_value": None,
+            "winsorized_turnover_aware_net_q5_q1_spread": winsorized_summary["turnover_aware_net_q5_q1_spread"],
+            "winsorized_mean_total_turnover": winsorized_summary["mean_total_turnover"],
+            "winsorized_mean_turnover_cost_bps": winsorized_summary["mean_turnover_cost_bps"],
+            "winsorized_turnover_aware_positive_spread_day_pct": winsorized_summary["turnover_aware_positive_spread_day_pct"],
+            "winsorized_turnover_aware_spread_hac_t": round(winsorized_t, 4) if winsorized_t is not None else None,
+            "winsorized_turnover_aware_spread_hac_p_value": round(winsorized_p, 8) if winsorized_p is not None else None,
+            "winsorized_turnover_aware_spread_by_q_value": None,
+        })
+    return rows
+
+
 def _hac_mean_test(daily: pd.DataFrame, metric: str, max_lag: int) -> tuple[float | None, float | None]:
     """Newey-West HAC test for a daily metric mean; normal approximation for p-value.
 
@@ -259,6 +329,7 @@ def _low_frequency_phase_metrics(
     session_dates: list[pd.Timestamp],
     horizon: int,
     cost_bps: float,
+    cost_scenarios: list[float],
 ) -> list[dict]:
     """Evaluate horizon-spaced, non-overlapping holding windows for every start phase.
 
@@ -294,6 +365,9 @@ def _low_frequency_phase_metrics(
         )
         raw_summary = _summary(phase_raw, cost_bps)
         winsorized_summary = _summary(phase_winsorized, cost_bps)
+        cost_sensitivity_results = _cost_sensitivity_metrics(
+            phase_raw, phase_winsorized, horizon, cost_scenarios
+        )
         raw_t, raw_p = _hac_mean_test(
             phase_raw, "turnover_aware_spread", max_lag=1
         )
@@ -320,6 +394,7 @@ def _low_frequency_phase_metrics(
             "winsorized_turnover_aware_spread_hac_t": round(winsorized_t, 4) if winsorized_t is not None else None,
             "winsorized_turnover_aware_spread_hac_p_value": round(winsorized_p, 8) if winsorized_p is not None else None,
             "winsorized_turnover_aware_spread_by_q_value": None,
+            "cost_sensitivity_results": cost_sensitivity_results,
         })
     return phase_rows
 
@@ -338,6 +413,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     # so missing factor values cannot shift a candidate's rebalance calendar.
     session_dates = [pd.Timestamp(value) for value in sorted(source["Snapshot_Date"].unique())]
     targets = [c for c in source.columns if c.upper().startswith("FORWARD_RETURN_")]
+    cost_scenarios = sorted(set(float(value) for value in COST_SENSITIVITY_BPS) | {float(cost_bps)})
     if not targets:
         raise ValueError("input contains no Forward_Return_ND label columns")
     feature_cols = []
@@ -388,8 +464,12 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             winsorized_metrics = _daily_metrics(winsorized_eval, name, target, min_names)
             winsorized_daily = _attach_turnover_costs(winsorized_metrics, cost_bps)
             winsorized_summary = _summary(winsorized_daily, cost_bps)
+            cost_sensitivity_results = _cost_sensitivity_metrics(
+                daily, winsorized_daily, horizon, cost_scenarios
+            )
             low_frequency_phase_results = _low_frequency_phase_metrics(
-                daily_metrics, winsorized_metrics, session_dates, horizon, cost_bps
+                daily_metrics, winsorized_metrics, session_dates, horizon, cost_bps,
+                cost_scenarios,
             )
             for key, value in winsorized_summary.items():
                 summary[f"winsorized_{key}"] = value
@@ -438,6 +518,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             out_rows.append({
                 "candidate": name, "formula": meta["formula"], "family": meta["family"],
                 "horizon": target, **summary, "folds": fold_summaries,
+                "cost_sensitivity_results": cost_sensitivity_results,
                 "low_frequency_phase_results": low_frequency_phase_results,
             })
 
@@ -463,6 +544,43 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             for i, row in enumerate(out_rows):
                 if row["horizon"] == target and q_column not in row:
                     row[q_column] = None
+
+    # Cost scenario selection is itself another research degree of freedom.
+    # Correct candidate × cost-level p-values jointly per horizon with BY,
+    # separately for raw and winsorized labels.
+    for target in targets:
+        for p_column, q_column in (
+            ("turnover_aware_spread_hac_p_value", "turnover_aware_spread_by_q_value"),
+            ("winsorized_turnover_aware_spread_hac_p_value", "winsorized_turnover_aware_spread_by_q_value"),
+        ):
+            refs = [
+                (scenario, row)
+                for row in out_rows if row["horizon"] == target
+                for scenario in row["cost_sensitivity_results"]
+                if scenario.get(p_column) is not None
+            ]
+            qs = _by_qvalues([float(scenario[p_column]) for scenario, _row in refs])
+            for (scenario, _row), q_value in zip(refs, qs):
+                scenario[q_column] = round(q_value, 8)
+
+    # Low-frequency cost sensitivity also searches over candidate × phase × cost.
+    # Correct all those p-values jointly within horizon; phase offsets and cost
+    # levels are dependent and must not be treated as independent trials.
+    for target in targets:
+        for p_column, q_column in (
+            ("turnover_aware_spread_hac_p_value", "turnover_aware_spread_by_q_value"),
+            ("winsorized_turnover_aware_spread_hac_p_value", "winsorized_turnover_aware_spread_by_q_value"),
+        ):
+            refs = [
+                (scenario, phase, row)
+                for row in out_rows if row["horizon"] == target
+                for phase in row["low_frequency_phase_results"]
+                for scenario in phase["cost_sensitivity_results"]
+                if scenario.get(p_column) is not None
+            ]
+            qs = _by_qvalues([float(scenario[p_column]) for scenario, _phase, _row in refs])
+            for (scenario, _phase, _row), q_value in zip(refs, qs):
+                scenario[q_column] = round(q_value, 8)
 
     # Correct low-frequency phase tests jointly over every candidate × phase
     # within a horizon. BY is more conservative than BH under arbitrary
@@ -528,20 +646,38 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     out.mkdir(parents=True, exist_ok=True)
     flat = [{
         k: v for k, v in row.items()
-        if k not in ("folds", "low_frequency_phase_results")
+        if k not in ("folds", "low_frequency_phase_results", "cost_sensitivity_results")
     } for row in out_rows]
     pd.DataFrame(flat).to_csv(out / "formula_factor_metrics.csv", index=False)
+
+    cost_rows = []
+    for row in out_rows:
+        for scenario in row.get("cost_sensitivity_results", []):
+            cost_rows.append({
+                "candidate": row["candidate"], "formula": row["formula"],
+                "family": row["family"], "horizon": row["horizon"], **scenario,
+            })
+    pd.DataFrame(cost_rows).to_csv(out / "formula_factor_cost_sensitivity.csv", index=False)
+
     phase_rows = []
+    phase_cost_rows = []
     for row in out_rows:
         for phase in row.get("low_frequency_phase_results", []):
             phase_rows.append({
-                "candidate": row["candidate"],
-                "formula": row["formula"],
-                "family": row["family"],
-                "horizon": row["horizon"],
-                **phase,
+                "candidate": row["candidate"], "formula": row["formula"],
+                "family": row["family"], "horizon": row["horizon"],
+                **{k: v for k, v in phase.items() if k != "cost_sensitivity_results"},
             })
+            for scenario in phase.get("cost_sensitivity_results", []):
+                phase_cost_rows.append({
+                    "candidate": row["candidate"], "formula": row["formula"],
+                    "family": row["family"], "horizon": row["horizon"],
+                    "phase_offset_sessions": phase["phase_offset_sessions"],
+                    "rebalance_interval_sessions": phase["rebalance_interval_sessions"],
+                    **scenario,
+                })
     pd.DataFrame(phase_rows).to_csv(out / "low_frequency_phase_metrics.csv", index=False)
+    pd.DataFrame(phase_cost_rows).to_csv(out / "low_frequency_phase_cost_sensitivity.csv", index=False)
     (out / "formula_factor_report.json").write_text(
         json.dumps({
             "research_only": True,
@@ -553,14 +689,15 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "selected_base_features": selected,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
-            "inference_method": "Daily overlapping-label metrics use Newey-West HAC with lag horizon-1 and Benjamini-Hochberg q-values within horizon. Low-frequency metrics sample every horizon-th source snapshot session for every possible start phase, estimate turnover between sampled portfolios, use HAC lag 1, and apply Benjamini-Yekutieli q-values jointly across candidate-by-phase tests within horizon; raw and winsorized results are separate families. Phase offsets overlap in their forward-return windows and are sensitivity diagnostics, not independent strategies. P-values use a two-sided normal approximation.",
-            "warning": "Formula candidates are hypotheses, not validated trading strategies. HAC reduces but does not eliminate dependence. Daily metrics use overlapping forward-return labels; low-frequency metrics sample every horizon-th snapshot for each start phase and are phase-sensitivity diagnostics. Candidate-by-phase tests use conservative Benjamini-Yekutieli correction because phases overlap. Per-date 1st/99th percentile winsorized metrics are sensitivity checks only; raw labels remain primary and genuine event returns are not deleted. Turnover cost estimates assume equal-weighted top/bottom quintiles and a fixed one-way bps rate; they do not model spread, market impact, borrow, capacity, taxes, or full portfolio constraints.",
+            "cost_sensitivity_one_way_bps": cost_scenarios,
+            "inference_method": "Daily overlapping-label metrics use Newey-West HAC with lag horizon-1 and Benjamini-Hochberg q-values within horizon. The cost-sensitivity grid corrects candidate × cost-level tests jointly with Benjamini-Yekutieli within each horizon, separately for raw and winsorized labels. Low-frequency metrics sample every horizon-th source snapshot session for every start phase, estimate turnover only between sampled portfolios, and jointly correct candidate × phase × cost-level tests with Benjamini-Yekutieli within horizon. Phase and cost scenarios are correlated diagnostics, not independent strategies. P-values use a two-sided normal approximation.",
+            "warning": "Formula candidates are hypotheses, not validated trading strategies. HAC reduces but does not eliminate dependence. Daily metrics use overlapping forward-return labels; low-frequency metrics sample every horizon-th snapshot for each start phase and are phase-sensitivity diagnostics. Cost levels are sensitivity assumptions and are jointly corrected with factor candidates using Benjamini-Yekutieli. Per-date 1st/99th percentile winsorized metrics are sensitivity checks only; raw labels remain primary and genuine event returns are not deleted. Turnover cost estimates assume equal-weighted top/bottom quintiles and a fixed one-way bps rate; they do not model spread, market impact, borrow, capacity, taxes, or full portfolio constraints.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
     print(f"formula candidates={len(metadata)}; horizons={len(targets)}; rows={len(source)}")
-    print(f"wrote {out / 'formula_factor_metrics.csv'}, {out / 'low_frequency_phase_metrics.csv'} and {out / 'formula_factor_report.json'}")
+    print(f"wrote {out / 'formula_factor_metrics.csv'}, {out / 'formula_factor_cost_sensitivity.csv'}, {out / 'low_frequency_phase_metrics.csv'}, {out / 'low_frequency_phase_cost_sensitivity.csv'} and {out / 'formula_factor_report.json'}")
 
 
 def main():

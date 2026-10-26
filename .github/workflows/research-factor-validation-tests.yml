@@ -7,6 +7,7 @@ on:
       - research/factor-tail-sensitivity
       - research/turnover-aware-factor-cost
       - research/low-frequency-rebalance-validation
+      - research/formula-factor-cost-sensitivity
     paths:
       - "tools/research/run_formula_factor_validation.py"
       - "tests/test_formula_factor_validation.py"
