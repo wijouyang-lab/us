@@ -2911,7 +2911,10 @@ def build_portfolio(data_dir: Path):
     txns = []
     for r in txn_raw:
         txn_id = clean_text(r.get("Txn_ID")) or None
-        exec_ts = txn_times.get(txn_id) if txn_id else None
+        # 时刻优先级：侧车（精确落账时刻）→ 盘中止损行的 Quote_As_Of（触发 K 线时间）
+        sidecar_ts = txn_times.get(txn_id) if txn_id else None
+        quote_as_of = clean_text(r.get("Quote_As_Of")) or None
+        exec_ts = sidecar_ts or quote_as_of
         exec_date, exec_hhmm = _split_exec_time(exec_ts)
         txns.append({
             "txn_id": txn_id,
@@ -2924,10 +2927,11 @@ def build_portfolio(data_dir: Path):
             "realized_pnl": round_num(parse_num(r.get("Realized_PnL")), 2),
             "reason": clean_text(r.get("Reason")) or None,
             "unit_id": clean_text(r.get("Unit_ID")) or None,
-            # 成交时刻（美东）：侧车缺失 → None，前端只显示日期，绝不补造
+            # 成交时刻（美东）：两处来源都缺失 → None，前端只显示日期，绝不补造
             "time": exec_hhmm,
             "execution_time": exec_ts or None,
             "execution_date": exec_date,
+            "time_source": ("sidecar" if sidecar_ts else ("quote_as_of" if quote_as_of else None)),
         })
     # 买卖配对 + 持有时间：必须在 20 条截断之前，基于完整流水配对
     txns = _link_txn_holding(txns, asof)

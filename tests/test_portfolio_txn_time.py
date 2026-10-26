@@ -126,6 +126,33 @@ def test_unmatched_sell_keeps_own_time_only(tmp_path):
     assert sell["holding_days"] is None and sell["holding_hours"] is None
 
 
+def test_intraday_quote_as_of_is_used_when_sidecar_missing(tmp_path):
+    """盘中止损行即便没有侧车，也用它自己的 Quote_As_Of（触发 K 线时间）显示时刻。"""
+    _write_dir(tmp_path, [], None)
+    header = ("Txn_ID,Date,Ticker,Action,Shares,Price,Amount,Realized_PnL,Cash_After,"
+              "Reason,Recommendation_ID,Scan_Date,Portfolio_ID,Unit_ID,Pending_Reason,Quote_As_Of\n")
+    rows = (
+        "APA|2026-10-19|Core_Dragon|BUY,2026-10-19,APA,BUY,200,49.76,9952.00,0.00,"
+        "40496.37,Core recommendation -> 1 Unit long,APA|2026-10-19|Core_Dragon,"
+        "2026-10-19,US-50000-001,U001,,\n"
+        "INTRADAY|APA|2026-10-22,2026-10-22,APA,SELL,200,48.14,9628.00,-324.00,,"
+        "Intraday Stop Loss,APA|2026-10-19|Core_Dragon,2026-10-19,US-50000-001,U001,True,"
+        "2026-10-22T11:30:00-04:00\n"
+    )
+    (tmp_path / "portfolio_50000_transactions.csv").write_text(header + rows, encoding="utf-8")
+    (tmp_path / "portfolio_50000_txn_time.csv").write_text(
+        TIME_HEADER + "APA|2026-10-19|Core_Dragon|BUY,2026-10-19 18:26:47,2026-10-19\n",
+        encoding="utf-8")
+    pf = build_portfolio(tmp_path)
+    sell = _by_ticker_action(pf, "APA", "SELL")
+    assert sell["time"] == "11:30"
+    assert sell["time_source"] == "quote_as_of"
+    assert sell["entry_date"] == "2026-10-19" and sell["entry_time"] == "18:26"
+    assert sell["holding_days"] == 3
+    # 10-19 18:26 -> 10-22 11:30 = 65 小时
+    assert sell["holding_hours"] == 65
+
+
 def test_txn_time_sidecar_is_persisted():
     """侧车必须入库：.gitignore 不忽略 + review/scan/dashboard-data 三个 workflow 都 add。"""
     root = Path(_REPO_ROOT)
