@@ -13,6 +13,8 @@ on:
       - tests/test_sec_daily_index.py
       - tests/test_sec_master_index_capture.py
       - tests/test_sec_master_index_workflow.py
+      - tools/research/sec_event_collector.py
+      - tests/test_sec_event_collector.py
       - .github/workflows/research-event-factor-capture-once.yml
       - .github/workflows/sec-research-tests.yml
 
