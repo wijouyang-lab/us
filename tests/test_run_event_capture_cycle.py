@@ -221,3 +221,102 @@ def test_audit_after_capture_uses_actual_completion_cutoff(tmp_path, monkeypatch
     assert metadata["audit_decision_at_utc"] == audit["decision_at_utc"]
     assert audit["decision_at_utc"] >= "2026-10-23T12:01:00Z"
     assert audit["coverage_audit"]["eligible_events"] == 1
+
+
+def test_yahoo_rss_events_are_archived_with_per_ticker_coverage(tmp_path, monkeypatch):
+    now = datetime.now(timezone.utc)
+    published = (now - timedelta(minutes=2)).isoformat().replace("+00:00", "Z")
+    first_seen = (now - timedelta(minutes=1)).isoformat().replace("+00:00", "Z")
+    yahoo_event = normalize_event(
+        source="yahoo_finance_rss",
+        source_event_id="AAPL|story-001",
+        event_type="company_news",
+        published_at_utc=published,
+        first_seen_at_utc=first_seen,
+        headline="Apple announces a product update",
+        tickers=["AAPL"],
+        source_quality="aggregator",
+        raw_payload={"ticker": "AAPL", "guid": "story-001"},
+    )
+    yahoo_event.update({
+        "source_url": "https://finance.yahoo.com/news/example.html",
+        "provider": "Yahoo Finance RSS",
+        "publisher_name": "Example Publisher",
+        "source_timestamp_kind": "rss_pubDate",
+        "source_timestamp_status": "parsed",
+        "research_only": True,
+    })
+
+    class FakeSecCollector:
+        def __init__(self, user_agent, **kwargs):
+            pass
+
+        def collect_company(self, cik, ticker, *, start_date, end_date, max_filings):
+            return {
+                "events": [],
+                "metadata": {
+                    "cik": cik, "ticker": ticker,
+                    "coverage_status": "submissions_fetch_error",
+                    "error_type": "RuntimeError", "event_count": 0,
+                },
+            }
+
+    class FakeYahooCollector:
+        def __init__(self, user_agent, **kwargs):
+            pass
+
+        def collect(self, tickers):
+            assert tickers == ["AAPL"]
+            return {
+                "events": [yahoo_event],
+                "metadata": {
+                    "source": "yahoo_finance_rss",
+                    "requested_tickers": tickers,
+                    "successful_ticker_count": 1,
+                    "failed_ticker_count": 0,
+                    "event_count": 1,
+                    "ticker_reports": [{
+                        "ticker": "AAPL", "status": "ok",
+                        "item_count": 1, "event_count": 1, "error_type": None,
+                    }],
+                    "limitations": ["aggregator, prospective only"],
+                },
+            }
+
+    monkeypatch.setattr(cycle, "SecEventCollector", FakeSecCollector)
+    monkeypatch.setattr(cycle, "YahooFinanceRssCollector", FakeYahooCollector)
+    universe_path = tmp_path / "universe.json"
+    universe_path.write_text(json.dumps([{"cik": "0000320193", "ticker": "AAPL"}]), encoding="utf-8")
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at=now.isoformat().replace("+00:00", "Z"),
+        feed_keys=[],
+        sec_universe_path=universe_path,
+        sec_start_date="2026-10-01",
+        sec_end_date="2026-10-26",
+        yahoo_finance_rss_enabled=True,
+        sec_user_agent="research tester@example.com",
+        audit_after_capture=True,
+    )
+    metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    archive = json.loads(Path(result["archive_path"]).read_text(encoding="utf-8"))
+
+    assert result["event_count"] == 1
+    assert result["successful_source_count"] == 1
+    assert result["configured_source_count"] == 2
+    assert metadata["yahoo_finance_rss_enabled"] is True
+    assert metadata["source_reports"]["yahoo_finance_rss"]["event_count"] == 1
+    assert len(archive) == 1
+    assert archive[0]["source"] == "yahoo_finance_rss"
+    yahoo_coverage = [row for row in audit["capture_cycle"]["source_collection_coverage"] if row["source_kind"] == "yahoo_finance_rss"]
+    assert yahoo_coverage == [{
+        "source_kind": "yahoo_finance_rss",
+        "source": "yahoo_finance_rss",
+        "ticker": "AAPL",
+        "status": "ok",
+        "event_count": 1,
+        "item_count": 1,
+        "error_type": None,
+    }]
+

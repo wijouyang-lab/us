@@ -16,8 +16,12 @@ on:
       - tools/research/build_event_annotation_queue.py
       - tools/research/sec_daily_index.py
       - tools/research/sec_master_index_capture.py
+      - tools/research/yahoo_finance_news_capture.py
+      - tools/research/run_event_capture_cycle.py
       - tests/test_sec_daily_index.py
       - tests/test_sec_master_index_capture.py
+      - tests/test_yahoo_finance_news_capture.py
+      - tests/test_run_event_capture_cycle.py
 
 permissions:
   contents: write
@@ -74,7 +78,7 @@ jobs:
           START_DATE="$(date -u -d '30 days ago' +%F)"
           ARGS=(--output-dir data/research/event-capture --decision-at "$DECISION_AT" --audit-after-capture)
           if [[ -s "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" ]]; then
-            ARGS+=(--sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" --sec-start-date "$START_DATE" --sec-end-date "$END_DATE")
+            ARGS+=(--sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" --sec-start-date "$START_DATE" --sec-end-date "$END_DATE" --yahoo-finance-rss)
           fi
           python -m tools.research.run_event_capture_cycle "${ARGS[@]}"
 

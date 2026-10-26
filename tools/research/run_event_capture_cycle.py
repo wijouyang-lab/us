@@ -22,6 +22,7 @@ from tools.research.audit_pit_event_data_readiness import audit_event_archive
 from tools.research.pit_event_eligibility import _parse_aware_timestamp
 from tools.research.pit_event_research_pipeline import build_event_research_report
 from tools.research.sec_event_collector import SecEventCollector, load_universe
+from tools.research.yahoo_finance_news_capture import YahooFinanceRssCollector
 
 
 DEFAULT_FEEDS = "bls_cpi,bls_employment,bea_releases,fed_all,fed_speeches,treasury_auction_announcements,treasury_auction_results"
@@ -90,6 +91,7 @@ def run_cycle(
     max_age_by_type: dict[str, timedelta] | None = None,
     feed_user_agent: str | None = None,
     sec_user_agent: str | None = None,
+    yahoo_finance_rss_enabled: bool = False,
     audit_after_capture: bool = False,
 ) -> dict[str, Any]:
     if _parse_aware_timestamp(decision_at) is None:
@@ -98,6 +100,8 @@ def run_cycle(
         raise ValueError("request interval must be at least 0.1 seconds")
     if not feed_keys and not sec_universe_path:
         raise ValueError("select at least one RSS feed or provide --sec-universe")
+    if yahoo_finance_rss_enabled and not sec_universe_path:
+        raise ValueError("--yahoo-finance-rss requires --sec-universe")
     if sec_universe_path and (not sec_start_date or not sec_end_date):
         raise ValueError("--sec-start-date and --sec-end-date are required with --sec-universe")
 
@@ -123,7 +127,9 @@ def run_cycle(
     cycle_started = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
     all_events: list[dict[str, Any]] = []
     source_reports: dict[str, Any] = {}
-    configured_sources = len(feed_keys) + len(universe)
+    configured_sources = len(feed_keys) + len(universe) + (
+        len(universe) if yahoo_finance_rss_enabled else 0
+    )
     successful_sources = 0
 
     if feed_keys:
@@ -181,6 +187,17 @@ def run_cycle(
             "research_only": True,
         }
 
+    if yahoo_finance_rss_enabled:
+        agent = feed_user_agent if feed_user_agent is not None else os.environ.get("OFFICIAL_FEED_USER_AGENT", "")
+        yahoo = YahooFinanceRssCollector(
+            agent,
+            min_request_interval_seconds=max(0.1, min_request_interval_seconds),
+        )
+        result = yahoo.collect([company["ticker"] for company in universe])
+        source_reports["yahoo_finance_rss"] = result["metadata"]
+        all_events.extend(result["events"])
+        successful_sources += int(result["metadata"].get("successful_ticker_count") or 0)
+
     all_events.sort(key=lambda row: (
         row.get("published_at_utc") is None,
         str(row.get("published_at_utc") or ""),
@@ -200,6 +217,7 @@ def run_cycle(
         "decision_at_utc": decision_at,
         "requested_feed_keys": feed_keys,
         "sec_universe": universe,
+        "yahoo_finance_rss_enabled": yahoo_finance_rss_enabled,
         "event_count": len(all_events),
         "event_snapshot_sha256": sha256(event_json.encode("utf-8")).hexdigest(),
         "source_reports": source_reports,
@@ -241,6 +259,17 @@ def run_cycle(
             "status": str(company_report.get("coverage_status") or "status_missing"),
             "event_count": int(company_report.get("event_count") or 0),
             "error_type": company_report.get("error_type"),
+        })
+    yahoo_report = source_reports.get("yahoo_finance_rss", {})
+    for ticker_report in yahoo_report.get("ticker_reports", []):
+        source_collection_coverage.append({
+            "source_kind": "yahoo_finance_rss",
+            "source": "yahoo_finance_rss",
+            "ticker": ticker_report.get("ticker"),
+            "status": str(ticker_report.get("status") or "status_missing"),
+            "event_count": int(ticker_report.get("event_count") or 0),
+            "item_count": ticker_report.get("item_count"),
+            "error_type": ticker_report.get("error_type"),
         })
     source_collection_coverage.sort(key=lambda row: (
         str(row.get("source_kind") or ""),
@@ -285,6 +314,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--sec-universe", help="Optional JSON array containing explicit CIK/ticker pairs")
     parser.add_argument("--sec-start-date")
     parser.add_argument("--sec-end-date")
+    parser.add_argument(
+        "--yahoo-finance-rss",
+        action="store_true",
+        help="Capture free Yahoo Finance per-ticker headline RSS as a research-only aggregator source",
+    )
     parser.add_argument("--max-filings-per-company", type=int, default=25)
     parser.add_argument("--min-request-interval-seconds", type=float, default=0.2)
     parser.add_argument("--max-age-days-by-type", default="{}", help='Optional JSON freshness config such as {"macro_release":2}')
@@ -300,6 +334,7 @@ def main(argv: list[str] | None = None) -> int:
             sec_start_date=args.sec_start_date,
             sec_end_date=args.sec_end_date,
             max_filings_per_company=args.max_filings_per_company,
+            yahoo_finance_rss_enabled=args.yahoo_finance_rss,
             min_request_interval_seconds=args.min_request_interval_seconds,
             max_age_by_type=freshness,
             audit_after_capture=args.audit_after_capture,
