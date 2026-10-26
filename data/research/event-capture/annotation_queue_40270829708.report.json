@@ -1,0 +1,20 @@
+{
+  "as_of_utc": "2026-10-26T04:47:47.729420Z",
+  "excluded_counts": {
+    "already_reviewed": 0,
+    "invalid_timestamps": 0,
+    "not_yet_available": 0,
+    "stale": 60
+  },
+  "labels_generated": false,
+  "limitations": [
+    "This file is an annotation work queue, not reviewed data.",
+    "Do not change pending to reviewed/validated until a real review is completed.",
+    "Use only the archived source version and do not use future returns or later information."
+  ],
+  "max_age_days": 30.0,
+  "queue_rows": 26,
+  "research_only": true,
+  "review_status_set_to_pending": true,
+  "status": "queue_created"
+}
