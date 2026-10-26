@@ -94,3 +94,31 @@ def test_history_in_sync_is_unchanged(tmp_path):
     assert pf["total_pnl"] == pytest.approx(124.37, abs=0.01)
     assert pf["asof"] == "2026-10-22"
     assert len(pf["equity_curve"]) == 2          # 原点 + 快照，无重复追加
+
+
+def test_exit_rules_are_passed_from_strategy_params(tmp_path):
+    """前端「止盈价何时激活」必须用真实阈值，不能硬编码。"""
+    _write(tmp_path)
+    (tmp_path / "strategy_params.json").write_text(json.dumps({
+        "exit": {
+            "breakeven_trigger_pct": 5.0,
+            "breakeven_floor_multiplier": 1.0,
+            "profit_lock_1_pct": 15.0, "profit_lock_1_drawdown_pct": 10.0,
+            "profit_lock_2_pct": 30.0, "profit_lock_2_drawdown_pct": 8.0,
+            "profit_lock_3_pct": 50.0, "profit_lock_3_drawdown_pct": 12.0,
+            "early_stop_pct": -5.0,
+        }
+    }), encoding="utf-8")
+    pf = build_portfolio(tmp_path)
+    rules = pf["exit_rules"]
+    assert rules is not None
+    assert rules["breakeven_trigger_pct"] == 5.0
+    assert rules["profit_lock_1_pct"] == 15.0
+    assert rules["early_stop_pct"] == -5.0
+
+
+def test_exit_rules_null_when_params_missing(tmp_path):
+    _write(tmp_path)
+    pf = build_portfolio(tmp_path)
+    assert pf["exit_rules"] is None          # 前端回退为「浮盈达标后抬保本」文案
+

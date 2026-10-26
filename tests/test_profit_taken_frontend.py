@@ -126,28 +126,30 @@ def test_position_card_marks_trailing_profit_vs_stop_loss():
             "current_price": 240.0, "market_value": 10320.0,
             "unrealized_pnl": 368.94, "unrealized_pnl_pct": 3.7,
             "weight_pct": 20.0, "holding_days": 9}
+    rules = {"exit_rules": {"breakeven_trigger_pct": 5.0}}
 
-    up = _run({"portfolio": {"target": [], "transactions": [],
-                             "positions": [dict(base, stop_loss="240.00", stop_loss_price=240.0)]}})
+    up = _run({"portfolio": dict(rules, target=[], transactions=[],
+                                 positions=[dict(base, stop_loss="240.00", stop_loss_price=240.0)])})
     html_up = up["positions"] or ""
-    assert "移动止盈" in html_up, html_up
-    assert "锁定 +3.7%" in html_up, html_up
-    # 风控距离条：止损/入场/现价三个刻度 + 距现价说明
+    # 止损线已抬到入场价上方 → 止损价与止盈价是同一条移动线
+    assert "止损价" in html_up and "止盈价" in html_up, html_up
+    assert "止损价</span><b class=\"down\">$240.00（距现价 0.0%）" in html_up, html_up
+    assert "止盈价</span><b class=\"up\">$240.00（锁定 +3.7%）" in html_up, html_up
+    # 风控距离条：止损/入场/现价三个刻度 + 色带
     assert 'class="prb-track"' in html_up, html_up
     assert 'class="prb-stop"' in html_up and 'class="prb-entry"' in html_up and 'class="prb-cur"' in html_up, html_up
-    assert "止损 $240.00（距现价 0.0%）" in html_up, html_up
     assert "入场 $231.42（+3.7%）" in html_up, html_up
     assert "现价 $240.00" in html_up, html_up
     # 色带：止损线已抬到入场价上方 → 只有「已锁定盈利」绿段，没有风险红段
     assert 'class="prb-zone up"' in html_up, html_up
     assert 'class="prb-zone down"' not in html_up, html_up
 
-    down = _run({"portfolio": {"target": [], "transactions": [],
-                               "positions": [dict(base, stop_loss="220.00", stop_loss_price=220.0)]}})
+    down = _run({"portfolio": dict(rules, target=[], transactions=[],
+                                   positions=[dict(base, stop_loss="220.00", stop_loss_price=220.0)])})
     html_down = down["positions"] or ""
-    assert "止损" in html_down, html_down
-    assert "距入场 -4.9%" in html_down, html_down
-    assert "止损 $220.00（距现价 -8.3%）" in html_down, html_down
+    assert "止损价</span><b class=\"down\">$220.00（距现价 -8.3%）" in html_down, html_down
+    # 未激活：不编目标价，显示保本价 + 真实的 +5% 激活阈值（来自 exit_rules）
+    assert "止盈价</span><b class=\"flat\">$231.42（保本待激活，浮盈 +5% 后抬保本）" in html_down, html_down
     # 色带：止损→入场为红（风险区），入场→现价为绿（浮盈区）
     assert 'class="prb-zone down"' in html_down, html_down
     assert 'class="prb-zone up"' in html_down, html_down

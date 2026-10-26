@@ -440,28 +440,38 @@
 
     var foot = s ? posTechFoot(s) : '';
 
-    /* 风控线：账本里的 Stop_Loss 是「移动止损/移动止盈」同一条线
-       （review 浮盈后只抬止损、不强制止盈）。线上分两种语义展示：
-         · 止损线在入场价下方 → 「止损」（距入场 %）；
-         · 已抬到入场价上方 → 「移动止盈」（锁定 +%）。 */
+    /* 风控两行：止损价 / 止盈价。
+       策略真相（review.py）：
+         · 每笔持仓都有一条 Stop_Loss（硬止损）；
+         · 「止盈」不是独立目标价，而是移动止盈——浮盈 ≥ breakeven_trigger_pct 后把
+           止损抬到保本，≥ profit_lock_1/2/3_pct 时按回撤锁利；
+         · 因此止损线一旦抬到入场价上方，同一价格既是止损线也是止盈线。
+       卡片把两者都写出来，未激活时明确显示"保本待激活"而不是编一个目标价。 */
     var stopP = (p.stop_loss_price != null) ? num(p.stop_loss_price) : numLoose(p.stop_loss);
     var entryP = num(p.entry_price);
-    var riskK = '止损', riskV = p.stop_loss || NA, riskCls = '';
-    if (stopP != null) {
-      riskV = '$' + fmt(stopP, 2);
-      if (entryP) {
-        var lockPct = (stopP / entryP - 1) * 100;
-        riskV += '（' + (lockPct >= 0 ? '锁定 +' : '距入场 ') + fmt(lockPct, 1) + '%）';
-        if (stopP >= entryP) { riskK = '移动止盈'; riskCls = 'up'; }
-        else { riskCls = 'down'; }
-      }
-    }
-    var risk = '<div><span class="pmk">' + riskK + '</span><b class="' + riskCls + '">' + esc(riskV) + '</b></div>';
-
-    /* 风控距离条（色带版）：把 止损线 / 入场价 / 现价 落在同一条轴上，
-       红色段 = 风险区（止损→入场），绿色段 = 盈利区（入场→现价，或入场→移动止盈线）。
-       三个价格都有效才画，任何缺失则整条不画。 */
     var curP = num(p.current_price);
+    var sgn = function (v) { return v > 0 ? '+' : ''; };
+    var pctTo = function (a, b) { return (a / b - 1) * 100; };   // a 相对 b 的百分比
+
+    var stopTxt = p.stop_loss || NA;
+    if (stopP != null) {
+      stopTxt = '$' + fmt(stopP, 2);
+      if (curP) stopTxt += '（距现价 ' + sgn(pctTo(stopP, curP)) + fmt(pctTo(stopP, curP), 1) + '%）';
+    }
+    var stopCell = '<div><span class="pmk">止损价</span><b class="down">' + esc(stopTxt) + '</b></div>';
+
+    var takeTxt = NA, takeCls = '';
+    var beTrig = num((((DATA && DATA.portfolio && DATA.portfolio.exit_rules) || {}).breakeven_trigger_pct));
+    if (stopP != null && entryP && stopP >= entryP) {
+      // 已激活：止损线上移，同一条线就是移动止盈线
+      takeTxt = '$' + fmt(stopP, 2) + '（锁定 +' + fmt(pctTo(stopP, entryP), 1) + '%）';
+      takeCls = 'up';
+    } else if (entryP) {
+      takeTxt = '$' + fmt(entryP, 2) + '（保本待激活' +
+        (beTrig != null ? '，浮盈 +' + fmt(beTrig, 0) + '% 后抬保本' : '，浮盈达标后抬保本') + '）';
+      takeCls = 'flat';
+    }
+    var takeCell = '<div><span class="pmk">止盈价</span><b class="' + takeCls + '">' + esc(takeTxt) + '</b></div>';
     var riskBar = '';
     if (stopP != null && entryP && curP != null && curP > 0 && stopP > 0) {
       var lo = Math.min(stopP, entryP, curP), hi = Math.max(stopP, entryP, curP);
@@ -486,7 +496,6 @@
         if (greenHi > entryP) zones += zone(entryP, greenHi, 'up');
         var distStop = (stopP / curP - 1) * 100;      // 止损线在当前价下方多少
         var distEntry = (curP / entryP - 1) * 100;    // 现价相对入场价
-        var sgn = function (v) { return v > 0 ? '+' : ''; };
         riskBar = '<div class="pos-risk">' +
           '<div class="prb-track">' + zones +
             '<i class="prb-stop" style="left:' + pos(stopP) + '%" title="止损 $' + fmt(stopP, 2) + '"></i>' +
@@ -512,7 +521,7 @@
       ' (' + (rt > 0 ? '+' : '') + nv(rt, 2) + '%)</b></div>' +
       '<div><span class="pmk">权重</span><b>' + nv(p.weight_pct, 2) + '%</b></div>' +
       '<div><span class="pmk">持有</span><b>' + (p.holding_days == null ? NA : p.holding_days) + ' 天</b></div>' +
-      risk +
+      stopCell + takeCell +
       '</div>';
 
     return '<article class="poscard' + (s ? '' : ' poscard-na') + '" data-tk="' + esc(tk) + '">' +

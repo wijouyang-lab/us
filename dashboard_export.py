@@ -2496,6 +2496,33 @@ def count_nulls(stocks, keys):
     return res
 
 
+def _read_exit_rules(data_dir: Path):
+    """读取 strategy_params.json 的 exit 段 → 前端展示用的风控阈值（只读透传）。
+
+    为什么需要：前端要说明「止盈价何时激活」。真实规则是
+    浮盈 ≥ breakeven_trigger_pct 后把止损抬到保本，≥ profit_lock_N_pct 锁利；
+    这些阈值来自 strategy_params.json，绝不在前端硬编码。
+    """
+    p = data_dir / "strategy_params.json"
+    if not p.exists():
+        return None
+    try:
+        cfg = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] strategy_params.json 解析失败（{e}），exit_rules 输出 null")
+        return None
+    ex = cfg.get("exit") or {}
+    keys = (
+        "breakeven_trigger_pct", "breakeven_floor_multiplier",
+        "profit_lock_1_pct", "profit_lock_1_drawdown_pct",
+        "profit_lock_2_pct", "profit_lock_2_drawdown_pct",
+        "profit_lock_3_pct", "profit_lock_3_drawdown_pct",
+        "early_stop_pct",
+    )
+    out = {k: round_num(parse_num(ex.get(k)), 2) for k in keys}
+    return out if any(v is not None for v in out.values()) else None
+
+
 def _read_portfolio_target(data_dir: Path):
     """读 portfolio_50000_target.csv → 目标持仓列表（前端「AI 目标持仓」板块用）。
 
@@ -2972,6 +2999,9 @@ def build_portfolio(data_dir: Path):
     if os.environ.get("ENABLE_TARGET_FILE") == "1":
         target = _read_portfolio_target(data_dir)
 
+    # 风控阈值（只读透传，供前端解释「止盈价何时激活」；缺失时前端不硬编码）
+    exit_rules = _read_exit_rules(data_dir)
+
     # >>> 汇总字段单一数据源 <<<
     # 持仓市值/浮盈 → positions.csv（最新，Review / price-only 每轮刷新）。
     # 现金/已实现盈亏 → history 末行 + 该快照【之后】的流水滚动。
@@ -3023,6 +3053,7 @@ def build_portfolio(data_dir: Path):
     return {
         "portfolio_id": clean_text(meta.get("portfolio_id")) or None,
         "target": target,
+        "exit_rules": exit_rules,
         "initial_capital": round_num(parse_num(meta.get("initial_capital")), 2),
         "start_date": clean_text(meta.get("start_date")) or None,
         "unit_dollars": round_num(parse_num(meta.get("unit_dollars")), 2),

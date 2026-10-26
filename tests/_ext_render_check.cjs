@@ -33,6 +33,8 @@ const numLoose = (v) => {
   const n = Number(String(v).replace(/[^0-9.\-]/g, ''));
   return isFinite(n) ? n : null;
 };
+// positionCard 读取 DATA.portfolio.exit_rules 来显示「止盈价何时激活」。
+const DATA = { portfolio: { exit_rules: { breakeven_trigger_pct: 5 } } };
 
 // 抽取 positionCard 与其依赖的 extLabel，包进同一工厂函数，
 // 让 positionCard 闭包捕获真实的 extLabel（不加载整个 app.js）。
