@@ -176,10 +176,11 @@ def test_turnover_cost_model_recognizes_stable_quintile_membership(tmp_path):
     report = json.loads((out / "formula_factor_report.json").read_text())
     row = next(r for r in report["results"] if r["candidate"] == "z__Signal")
     assert row["turnover_cost_available"] is True
-    assert row["mean_long_turnover"] == pytest.approx(1 / 30)
-    assert row["mean_short_turnover"] == pytest.approx(1 / 30)
-    assert row["mean_total_turnover"] == pytest.approx(2 / 30)
-    assert row["mean_turnover_cost_bps"] == pytest.approx(10 / 30)
+    # The JSON report deliberately rounds published metrics to six decimals.
+    assert row["mean_long_turnover"] == pytest.approx(round(1 / 30, 6))
+    assert row["mean_short_turnover"] == pytest.approx(round(1 / 30, 6))
+    assert row["mean_total_turnover"] == pytest.approx(round(2 / 30, 6))
+    assert row["mean_turnover_cost_bps"] == pytest.approx(round(10 / 30, 6))
     assert row["turnover_aware_net_q5_q1_spread"] > row["net_q5_q1_spread"]
     assert "turnover_aware_spread_hac_p_value" in row
     assert "turnover_aware_spread_fdr_q_value" in row
