@@ -50,6 +50,8 @@ jobs:
             factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_5D_Pct,Momentum_20D_Pct,Momentum_60D_Pct,RSI,MA20_Slope_Pct_5D,Beta_60D_SPY,Volume_Ratio_20D,ZScore_20D"
           - family: relative_strength_and_oscillators
             factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,Stock_RS_20D_vs_SPY,MA20,MA50,乖离率(%),MACD_HIST_LAST,KDJ_J,量比"
+          - family: rolling_high_proximity
+            factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,Stock_RS_20D_vs_SPY,MA20,MA50,乖离率(%),MACD_HIST_LAST,KDJ_J,Close_to_252D_High_Pct"
           - family: temporal_signal_dynamics
             factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,Stock_RS_20D_vs_SPY,RSI,Momentum_20D_Acceleration_20_Snapshots,RSI_Change_5_Snapshots,ATR_Pct_Change_20_Snapshots"
     steps:

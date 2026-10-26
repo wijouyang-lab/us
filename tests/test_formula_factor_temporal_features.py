@@ -60,3 +60,49 @@ def test_temporal_changes_reject_duplicate_ticker_snapshot_rows() -> None:
     duplicate = pd.concat([frame, frame.iloc[[0]]], ignore_index=True)
     with pytest.raises(ValueError, match="unique ticker/date"):
         _add_temporal_feature_changes(duplicate)
+
+def test_252_session_high_proximity_uses_exact_history_and_not_future_rows() -> None:
+    dates = pd.date_range("2025-01-06", periods=255, freq="B")
+    rows = []
+    for session, date in enumerate(dates):
+        rows.append({
+            "Snapshot_Date": date,
+            "Ticker": "AAA",
+            "Price": float(10 + session),
+        })
+        # The source calendar is still supplied by AAA, while BBB's missing
+        # session must not be hidden by a shorter ticker-specific rolling window.
+        if session != 1:
+            rows.append({
+                "Snapshot_Date": date,
+                "Ticker": "BBB",
+                "Price": float(10 + session),
+            })
+    frame = pd.DataFrame(rows)
+    result = _add_temporal_feature_changes(frame)
+    feature = "Close_to_252D_High_Pct"
+
+    b_before_missing_session_leaves_window = result.loc[
+        (result["Ticker"] == "BBB") & (result["Snapshot_Date"] == dates[252])
+    ].iloc[0]
+    b_after_missing_session_leaves_window = result.loc[
+        (result["Ticker"] == "BBB") & (result["Snapshot_Date"] == dates[253])
+    ].iloc[0]
+    assert np.isnan(b_before_missing_session_leaves_window[feature])
+    assert b_after_missing_session_leaves_window[feature] == pytest.approx(0.0)
+
+    a_before_future_peak = result.loc[
+        (result["Ticker"] == "AAA") & (result["Snapshot_Date"] == dates[252])
+    ].iloc[0][feature]
+    changed_future = frame.copy()
+    future_peak = (
+        (changed_future["Ticker"] == "AAA")
+        & (changed_future["Snapshot_Date"] == dates[253])
+    )
+    changed_future.loc[future_peak, "Price"] = 10000.0
+    future_result = _add_temporal_feature_changes(changed_future)
+    a_after_future_change = future_result.loc[
+        (future_result["Ticker"] == "AAA")
+        & (future_result["Snapshot_Date"] == dates[252])
+    ].iloc[0][feature]
+    assert a_before_future_peak == pytest.approx(a_after_future_change)

@@ -425,6 +425,7 @@ TEMPORAL_FEATURE_SPECS = (
     ("RSI_Change_5_Snapshots", "RSI", 5),
     ("ATR_Pct_Change_20_Snapshots", "ATR_Pct", 20),
 )
+PRICE_HIGH_LOOKBACK_SESSIONS = 252
 
 
 def _add_temporal_feature_changes(
@@ -437,7 +438,9 @@ def _add_temporal_feature_changes(
 
     Lags use the sorted snapshot calendar in the source dataset, not calendar
     days and not a ticker-specific row shift. Missing ticker snapshots stay
-    missing rather than silently extending the lookback.
+    missing rather than silently extending the lookback. When Price is present,
+    also add the close's distance from its rolling 252-session high, requiring
+    a complete window on that same shared snapshot calendar.
     """
     if date_column not in frame.columns:
         raise ValueError(f"missing required date column for temporal factors: {date_column}")
@@ -461,6 +464,41 @@ def _add_temporal_feature_changes(
     lookup_index = pd.MultiIndex.from_arrays([ticker_values, session_index])
     if lookup_index.has_duplicates:
         raise ValueError("temporal factors require unique ticker/date rows")
+
+    if "Price" in result.columns:
+        # A 252-session rolling high is built on the shared source calendar.
+        # Reindexing each ticker onto every session means any missing bar inside
+        # the window keeps the feature missing rather than shortening lookback.
+        price_values = pd.to_numeric(result["Price"], errors="coerce").replace(
+            [np.inf, -np.inf], np.nan
+        ).to_numpy(dtype=float, na_value=np.nan)
+        unique_tickers, row_ticker_positions = np.unique(
+            ticker_values, return_inverse=True
+        )
+        price_history = np.full(
+            (len(unique_tickers), len(session_positions)), np.nan, dtype=float
+        )
+        price_history[row_ticker_positions, session_index] = price_values
+        rolling_high = np.full_like(price_history, np.nan)
+        for ticker_position, ticker_prices in enumerate(price_history):
+            rolling_high[ticker_position] = (
+                pd.Series(ticker_prices)
+                .rolling(
+                    window=PRICE_HIGH_LOOKBACK_SESSIONS,
+                    min_periods=PRICE_HIGH_LOOKBACK_SESSIONS,
+                )
+                .max()
+                .to_numpy(dtype=float)
+            )
+        row_high = rolling_high[row_ticker_positions, session_index]
+        valid = (
+            np.isfinite(price_values)
+            & np.isfinite(row_high)
+            & (row_high > 0)
+        )
+        proximity = np.full(len(result), np.nan, dtype=float)
+        proximity[valid] = (price_values[valid] / row_high[valid] - 1.0) * 100.0
+        result["Close_to_252D_High_Pct"] = proximity
 
     for output_column, source_column, lag_snapshots in TEMPORAL_FEATURE_SPECS:
         if source_column not in result.columns:
