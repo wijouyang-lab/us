@@ -16,10 +16,12 @@ on:
       - tools/research/build_event_annotation_queue.py
       - tools/research/sec_daily_index.py
       - tools/research/sec_master_index_capture.py
+      - tools/research/record_sec_capture_failure.py
       - tools/research/yahoo_finance_news_capture.py
       - tools/research/run_event_capture_cycle.py
       - tests/test_sec_daily_index.py
       - tests/test_sec_master_index_capture.py
+      - tests/test_record_sec_capture_failure.py
       - tests/test_yahoo_finance_news_capture.py
       - tests/test_run_event_capture_cycle.py
 
@@ -103,36 +105,7 @@ jobs:
             else
               SEC_CAPTURE_EXIT_CODE=$?
               cat "$SEC_CAPTURE_OUTPUT"
-              python - "$SEC_CAPTURE_OUTPUT" "$SEC_CAPTURE_ERROR" "$INDEX_START_DATE" "$INDEX_END_DATE" "$SEC_CAPTURE_EXIT_CODE" <<'PY'
-          import json
-          import sys
-          from datetime import datetime, timezone
-          from pathlib import Path
-
-          log_path, error_path, start_date, end_date, exit_code = sys.argv[1:]
-          log = Path(log_path).read_text(encoding="utf-8", errors="replace")
-          status_code = "http_403" if "HTTP 403" in log else "capture_failed"
-          payload = {
-              "source": "sec_edgar_master_index",
-              "status": "failed",
-              "failure_code": status_code,
-              "failure_log": Path(log_path).name,
-              "failure_excerpt": log[-4000:],
-              "attempted_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
-              "requested_start_date": start_date,
-              "requested_end_date": end_date,
-              "exit_code": int(exit_code),
-              "source_retrieval_succeeded": False,
-              "historical_pit_eligible": False,
-              "research_only": True,
-              "limitations": [
-                  "No filing rows were captured by this attempt.",
-                  "A retrieval failure must not be interpreted as proof that no filings occurred.",
-                  "Do not infer publication timestamps or historical first-seen times from this failure record."
-              ]
-          }
-          Path(error_path).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-          PY
+              python -m tools.research.record_sec_capture_failure "$SEC_CAPTURE_OUTPUT" "$SEC_CAPTURE_ERROR" "$INDEX_START_DATE" "$INDEX_END_DATE" "$SEC_CAPTURE_EXIT_CODE"
               echo "::warning::SEC master index fallback failed; a structured failure record was saved. Other source captures will be preserved."
             fi
           else
