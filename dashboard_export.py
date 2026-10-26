@@ -2719,6 +2719,131 @@ def _build_trade_stats(txn_rows, open_positions):
         return None
 
 
+# ---------------------------------------------------------------- 成交时刻 / 持有时间
+# 数据来源：portfolio_50000.py 旁路写出的侧车 portfolio_50000_txn_time.csv
+#   Txn_ID,Execution_Time,Trade_Date
+# 该侧车只记录「账本落账时刻」（美东），不改 transactions.csv 任何列。
+# 历史交易若没有侧车行 → time 为 None，前端只显示日期，绝不猜时刻。
+def _split_exec_time(value):
+    """'2026-10-13 18:26:54' / '2026-10-13T22:26:54Z' -> ('2026-10-13', '18:26')。
+
+    注意：侧车里的时刻必须是美东时间（portfolio_50000.us_now_str 保证），
+    这里只做切片，不做时区换算。解析失败返回 (None, None)。
+    """
+    s = clean_text(value)
+    if not s:
+        return None, None
+    s = s.replace("T", " ").strip()
+    parts = s.split(" ")
+    d = parse_date(parts[0]) if parts else None
+    hhmm = None
+    if len(parts) > 1:
+        m = re.match(r"^(\d{1,2}):(\d{2})", parts[1])
+        if m:
+            hhmm = "%02d:%02d" % (int(m.group(1)), int(m.group(2)))
+    return (d.isoformat() if d else None), hhmm
+
+
+def _load_txn_times(data_dir: Path) -> dict:
+    """读取成交时刻侧车 → {Txn_ID: Execution_Time}。文件缺失/损坏一律降级为空表。"""
+    path = data_dir / "portfolio_50000_txn_time.csv"
+    out = {}
+    if not path.exists():
+        return out
+    try:
+        for r in read_csv_rows(path):
+            tid = clean_text(r.get("Txn_ID"))
+            ts = clean_text(r.get("Execution_Time"))
+            if tid and ts:
+                out[tid] = ts
+    except Exception as e:
+        log(f"[WARN] 成交时刻侧车解析失败（{e}），transactions.time 输出 null")
+    return out
+
+
+def _holding_span(entry_date, entry_hhmm, exit_date, exit_hhmm):
+    """持有时间 → (净天数, 总小时数)。小时数仅在首尾两端都有时刻时给出。"""
+    try:
+        d1 = dt.date.fromisoformat(str(entry_date))
+        d2 = dt.date.fromisoformat(str(exit_date))
+    except Exception:
+        return None, None
+    days = max((d2 - d1).days, 0)
+    hours = None
+    if entry_hhmm and exit_hhmm:
+        try:
+            t1 = dt.datetime.combine(d1, dt.time.fromisoformat(str(entry_hhmm)))
+            t2 = dt.datetime.combine(d2, dt.time.fromisoformat(str(exit_hhmm)))
+            hours = max(int((t2 - t1).total_seconds() // 3600), 0)
+        except Exception:
+            hours = None
+    return days, hours
+
+
+def _link_txn_holding(txns, asof):
+    """为流水平补「买入日/时 → 卖出日/时 + 持有时间」（只读计算，不改账本）。
+
+    配对规则（确定性）：
+      · SELL 回溯同一 Unit_ID + Ticker 的最近一笔未配对 BUY（Unit 为空时退化为 Ticker）；
+      · 买入日不得晚于卖出日；配对成功后 BUY/SELL 两行共享同一段持有时间；
+      · 未卖出的 BUY：holding_open=True，holding_days 以 asof（最新快照日）为基准，
+        与持仓卡片口径一致；绝不臆造时刻。
+    """
+    for t in txns:
+        t.setdefault("entry_date", None)
+        t.setdefault("entry_time", None)
+        t.setdefault("exit_date", None)
+        t.setdefault("exit_time", None)
+        t.setdefault("holding_days", None)
+        t.setdefault("holding_hours", None)
+        t.setdefault("holding_open", None)
+
+    order = sorted(range(len(txns)), key=lambda i: (txns[i].get("date") or "", i))
+    pending = []
+    for i in order:
+        t = txns[i]
+        act = (t.get("action") or "").upper()
+        d = t.get("date") or ""
+        if act == "BUY":
+            t["entry_date"] = d or None
+            t["entry_time"] = t.get("time")
+            t["holding_open"] = True
+            pending.append(t)
+        elif act == "SELL":
+            t["exit_date"] = d or None
+            t["exit_time"] = t.get("time")
+            match = None
+            for b in reversed(pending):
+                if (b.get("ticker") or "") != (t.get("ticker") or ""):
+                    continue
+                if b.get("unit_id") and t.get("unit_id") and b["unit_id"] != t["unit_id"]:
+                    continue
+                if (b.get("entry_date") or "") > d:
+                    continue
+                match = b
+                break
+            if match is None:
+                continue
+            pending.remove(match)
+            match["holding_open"] = False
+            match["exit_date"] = t["exit_date"]
+            match["exit_time"] = t["exit_time"]
+            days, hours = _holding_span(
+                match.get("entry_date"), match.get("entry_time"),
+                t.get("exit_date"), t.get("exit_time"))
+            for x in (match, t):
+                x["entry_date"] = match.get("entry_date")
+                x["entry_time"] = match.get("entry_time")
+                x["holding_days"] = days
+                x["holding_hours"] = hours
+
+    # 仍持仓的 BUY：持有天数按最新快照日计算（与 position.holding_days 同口径）
+    for b in pending:
+        days, _ = _holding_span(b.get("entry_date"), None, asof, None)
+        b["holding_days"] = days
+    return txns
+
+
 def build_portfolio(data_dir: Path):
     """$50,000 长期模拟投资组合（Portfolio Ledger）。
 
@@ -2782,9 +2907,14 @@ def build_portfolio(data_dir: Path):
     txn_raw = read_csv_rows(txn_p)
     # 交易观测统计：从完整流水计算（不被下方 20 条截断窗口影响）
     trade_stats = _build_trade_stats(txn_raw, positions)
+    txn_times = _load_txn_times(data_dir)
     txns = []
     for r in txn_raw:
+        txn_id = clean_text(r.get("Txn_ID")) or None
+        exec_ts = txn_times.get(txn_id) if txn_id else None
+        exec_date, exec_hhmm = _split_exec_time(exec_ts)
         txns.append({
+            "txn_id": txn_id,
             "date": clean_text(r.get("Date")) or None,
             "ticker": clean_text(r.get("Ticker")).upper() or None,
             "action": clean_text(r.get("Action")).upper() or None,
@@ -2794,7 +2924,13 @@ def build_portfolio(data_dir: Path):
             "realized_pnl": round_num(parse_num(r.get("Realized_PnL")), 2),
             "reason": clean_text(r.get("Reason")) or None,
             "unit_id": clean_text(r.get("Unit_ID")) or None,
+            # 成交时刻（美东）：侧车缺失 → None，前端只显示日期，绝不补造
+            "time": exec_hhmm,
+            "execution_time": exec_ts or None,
+            "execution_date": exec_date,
         })
+    # 买卖配对 + 持有时间：必须在 20 条截断之前，基于完整流水配对
+    txns = _link_txn_holding(txns, asof)
     txns = sorted(txns, key=lambda t: (t["date"] or ""), reverse=True)[:20]
 
     curve = [{

@@ -91,6 +91,7 @@ jobs:
             portfolio_50000_positions.csv
             portfolio_50000_transactions.csv
             portfolio_50000_history.csv
+            portfolio_50000_txn_time.csv
             review_session_state.json
           if-no-files-found: warn
 
@@ -111,6 +112,12 @@ jobs:
             git add portfolio_50000_positions.csv
             git add portfolio_50000_transactions.csv
             git add portfolio_50000_history.csv
+          fi
+
+          # 成交时刻侧车：Dashboard 用它显示买入/卖出几点几分与持有时间；
+          # 必须持久化，否则每次 checkout 都丢失历史时刻（缺失时文件不存在，跳过）
+          if [ -f portfolio_50000_txn_time.csv ]; then
+            git add portfolio_50000_txn_time.csv
           fi
 
           # review.py 平仓时会改写期权账本，必须入库

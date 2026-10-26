@@ -139,6 +139,8 @@ jobs:
           # 关闭时 vars 为空 → 条件为假 → 不执行 → 与现在逐字节一致。
           if [ "${{ vars.ENABLE_SCAN_BUY_DECISION }}" = "1" ]; then
             git add portfolio_50000_positions.csv portfolio_50000_transactions.csv portfolio_50000_history.csv portfolio_50000_meta.json
+            # 成交时刻侧车（买入几点几分）随账本一起入库，Dashboard 才有时刻可显示
+            if [ -f portfolio_50000_txn_time.csv ]; then git add portfolio_50000_txn_time.csv; fi
           fi
 
           if git diff --cached --quiet; then

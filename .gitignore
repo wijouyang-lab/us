@@ -15,6 +15,7 @@ dashboard/data/news_translation_cache.json
 .DS_Store
 
 .pytest_tmp/
-portfolio_50000_txn_time.csv
+# 成交时刻侧车必须入库：Dashboard「Recent Portfolio Transactions」用它显示买入/卖出时刻与持有时间
+# （仅记录账本落账时刻，不含任何账户密钥，与 portfolio_50000_transactions.csv 同级数据）
 watchlist.dynamic.txt
 watchlist.dynamic.meta.txt

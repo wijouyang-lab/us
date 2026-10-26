@@ -569,14 +569,18 @@
     if (!ts.length) {
       txEl.innerHTML = '';
     } else {
-      var th = '<div class="pf-hd">Recent Portfolio Transactions</div>' +
-        '<table class="pf-tbl"><thead><tr><th>Date</th><th>Action</th><th>Ticker</th>' +
-        '<th>Shares</th><th>Price</th><th>Amount</th><th>Realized PnL</th><th>Reason</th>' +
+      var missingTime = false;
+      ts.forEach(function (t) { if (!t.time) missingTime = true; });
+      var th = '<div class="pf-hd">Recent Portfolio Transactions' +
+        '<span class="pf-note">美东时间 ET' +
+        (missingTime ? ' · 部分历史成交未记录时刻' : '') + '</span></div>' +
+        '<div class="pf-wrap"><table class="pf-tbl"><thead><tr><th>Date</th><th>Action</th><th>Ticker</th>' +
+        '<th>Shares</th><th>Price</th><th>Amount</th><th>Realized PnL</th><th>Holding</th><th>Reason</th>' +
         '</tr></thead><tbody>';
       ts.forEach(function (t) {
         var rp = num(t.realized_pnl);
         th += '<tr>' +
-          '<td>' + esc(t.date || NA) + '</td>' +
+          '<td class="pf-date">' + esc(t.date || NA) + txnTimeHtml(t) + '</td>' +
           '<td class="' + (String(t.action).toUpperCase() === 'BUY' ? 'up' : 'down') + '">' +
           esc(t.action || NA) + '</td>' +
           '<td class="tk">' + esc(t.ticker || NA) + '</td>' +
@@ -585,14 +589,65 @@
           '<td>$' + nv(t.amount, 2) + '</td>' +
           '<td class="' + (rp ? pctCls(rp) : '') + '">' +
           (rp == null ? NA : (rp > 0 ? '+' : '') + '$' + nv(rp, 2)) + '</td>' +
+          txnHoldingHtml(t) +
           '<td class="rsn">' + esc(t.reason || NA) + '</td>' +
           '</tr>';
       });
-      th += '</tbody></table>';
+      th += '</tbody></table></div>';
       txEl.innerHTML = th;
     }
 
     drawPortfolioCurve(pf);
+  }
+
+  /* ---------------- 交易流水：成交时刻 / 持有时间 ----------------
+     字段全部来自 dashboard_export.build_portfolio（后端单一数据源）：
+       time          : 本笔成交时刻 HH:MM（美东）｜历史无侧车 → null
+       entry_date/time : 买入日/时（SELL 行由后端按 Unit 配对回填）
+       exit_date/time  : 卖出日/时（BUY 行已平仓时回填，未平仓为 null）
+       holding_days   : 净持有天数（未平仓 BUY 以最新快照日为基准）
+       holding_hours  : 首尾都有时刻时的持有总小时数（否则 null）
+       holding_open   : BUY 未平仓 = true
+     铁律：缺失显示 "—"，绝不按 0 / 当天 / 猜测时间填充。 */
+  function txnTimeHtml(t) {
+    return t.time ? '<span class="pf-time">' + esc(String(t.time)) + '</span>' : '';
+  }
+
+  function shortDT(d, tm) {
+    var s = d ? String(d).slice(5) : '';          /* YYYY-MM-DD → MM-DD */
+    if (!tm) return s;
+    return s ? (s + ' ' + tm) : String(tm);
+  }
+
+  function txnHoldingHtml(t) {
+    var entryD = t.entry_date || null, entryT = t.entry_time || null;
+    var exitD = t.exit_date || null, exitT = t.exit_time || null;
+    var main = NA, sub = '', tip = '';
+
+    if (t.holding_open && entryD) {
+      main = '持有中' + (t.holding_days == null ? '' : ' · ' + t.holding_days + ' 天');
+      sub = '自 ' + shortDT(entryD, entryT);
+    } else if (entryD && exitD) {
+      if (t.holding_hours != null) {
+        main = (t.holding_hours >= 24)
+          ? (Math.floor(t.holding_hours / 24) + ' 天 ' + (t.holding_hours % 24) + ' 小时')
+          : (t.holding_hours + ' 小时');
+      } else if (t.holding_days != null) {
+        main = t.holding_days + ' 天';
+      }
+      sub = shortDT(entryD, entryT) + ' → ' + shortDT(exitD, exitT);
+    } else if (exitD) {
+      sub = '卖出 ' + shortDT(exitD, exitT);
+    } else if (entryD) {
+      sub = '买入 ' + shortDT(entryD, entryT);
+    }
+
+    if (entryD) tip = '买入 ' + entryD + (entryT ? ' ' + entryT : '');
+    if (exitD) tip += (tip ? ' → ' : '') + '卖出 ' + exitD + (exitT ? ' ' + exitT : '');
+    return '<td class="pf-hold"' + (tip ? ' title="' + esc(tip) + '"' : '') + '>' +
+      '<div class="pf-hold-main">' + main + '</div>' +
+      (sub ? '<div class="pf-hold-sub">' + esc(sub) + '</div>' : '') +
+      '</td>';
   }
 
   /* 已止损记录板块（近 30 天）：纯前端只读 portfolio.transactions，

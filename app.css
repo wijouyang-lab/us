@@ -437,6 +437,14 @@ button{font-family:inherit}
 .pf-tbl td.rsn{text-align:left;color:var(--muted,#94a3b8);max-width:260px;overflow:hidden;text-overflow:ellipsis}
 .pf-tbl tr:last-child td{border-bottom:none}
 .pf-hd{margin:12px 0 2px;font-size:12px;font-weight:700;color:var(--muted,#94a3b8)}
+/* 交易流水：成交时刻 + 持有时间（列变多，窄屏横向滚动，不挤压其它板块） */
+.pf-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pf-tbl td.pf-date{font-variant-numeric:tabular-nums}
+.pf-tbl .pf-time{display:block;color:var(--muted,#94a3b8);font-size:10.5px;font-weight:500;line-height:1.3;font-variant-numeric:tabular-nums}
+.pf-tbl td.pf-hold{text-align:right;white-space:nowrap}
+.pf-tbl .pf-hold-main{font-weight:700;font-variant-numeric:tabular-nums}
+.pf-tbl .pf-hold-sub{color:var(--muted,#94a3b8);font-size:10.5px;line-height:1.35;font-variant-numeric:tabular-nums}
+.pf-hd .pf-note{margin-left:8px;font-weight:500;font-size:10.5px;color:var(--muted,#94a3b8);letter-spacing:0}
 
 /* ===== Quant / 量化研究 =====
    状态徽章使用中性/语义化颜色，绝不使用涨跌红绿表达 Quant 状态：
