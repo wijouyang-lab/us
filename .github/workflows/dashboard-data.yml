@@ -209,6 +209,9 @@ jobs:
           # 也不提交已停止维护的旧前端 us-market-terminal/（导出层默认已不再产生该副本）。
           git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
           if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
+          # 盘中止损卖出后必须同步权益快照（Cash / Total_Equity / Open_Positions），
+          # 否则下一次 checkout 回到旧 history，Dashboard 仍会显示假亏损。
+          if [ -f portfolio_50000_history.csv ]; then git add portfolio_50000_history.csv; fi
           # 成交时刻侧车：盘中止损与本轮价格刷新可能追加成交时刻，必须一并入库，
           # 否则 Dashboard 的买入/卖出时刻会在下次 checkout 后丢失。
           if [ -f portfolio_50000_txn_time.csv ]; then git add portfolio_50000_txn_time.csv; fi
@@ -222,7 +225,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi

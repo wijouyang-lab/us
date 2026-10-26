@@ -64,6 +64,15 @@
     return (typeof n === 'number' && isFinite(n)) ? n : null;
   }
 
+  /* 宽松数值：账本里 Stop_Loss 可能是 "$197.69" / "197.69" / 197.69 三种形态，
+     只做字符清洗后转数字；仍不可解析则返回 null（绝不按 0 处理）。 */
+  function numLoose(v) {
+    if (v === null || v === undefined || v === '') return null;
+    if (typeof v === 'number') return isFinite(v) ? v : null;
+    var n = Number(String(v).replace(/[^0-9.\-]/g, ''));
+    return isFinite(n) ? n : null;
+  }
+
   /* Actionable Option 判定（与后端 MIN_REWARD_RISK = 2.0 同口径）：
      · Status 必须为 Active
      · reward_risk 必须可计算且 >= 2.0
@@ -431,6 +440,24 @@
 
     var foot = s ? posTechFoot(s) : '';
 
+    /* 风控线：账本里的 Stop_Loss 是「移动止损/移动止盈」同一条线
+       （review 浮盈后只抬止损、不强制止盈）。线上分两种语义展示：
+         · 止损线在入场价下方 → 「止损」（距入场 %）；
+         · 已抬到入场价上方 → 「移动止盈」（锁定 +%）。 */
+    var stopP = (p.stop_loss_price != null) ? num(p.stop_loss_price) : numLoose(p.stop_loss);
+    var entryP = num(p.entry_price);
+    var riskK = '止损', riskV = p.stop_loss || NA, riskCls = '';
+    if (stopP != null) {
+      riskV = '$' + fmt(stopP, 2);
+      if (entryP) {
+        var lockPct = (stopP / entryP - 1) * 100;
+        riskV += '（' + (lockPct >= 0 ? '锁定 +' : '距入场 ') + fmt(lockPct, 1) + '%）';
+        if (stopP >= entryP) { riskK = '移动止盈'; riskCls = 'up'; }
+        else { riskCls = 'down'; }
+      }
+    }
+    var risk = '<div><span class="pmk">' + riskK + '</span><b class="' + riskCls + '">' + esc(riskV) + '</b></div>';
+
     var meta = '<div class="pos-meta">' +
       '<div><span class="pmk">股数</span><b>' + (p.shares == null ? NA : p.shares) + '</b></div>' +
       '<div><span class="pmk">Entry</span><b>$' + nv(p.entry_price, 2) + '</b></div>' +
@@ -439,7 +466,7 @@
       ' (' + (rt > 0 ? '+' : '') + nv(rt, 2) + '%)</b></div>' +
       '<div><span class="pmk">权重</span><b>' + nv(p.weight_pct, 2) + '%</b></div>' +
       '<div><span class="pmk">持有</span><b>' + (p.holding_days == null ? NA : p.holding_days) + ' 天</b></div>' +
-      '<div><span class="pmk">止损</span><b>' + esc(p.stop_loss || NA) + '</b></div>' +
+      risk +
       '</div>';
 
     return '<article class="poscard' + (s ? '' : ' poscard-na') + '" data-tk="' + esc(tk) + '">' +
@@ -449,15 +476,23 @@
 
   /* 盘中机械止损横幅：扫描 pf.transactions 中 Reason="Intraday Stop Loss" 的 SELL，
      在持仓区下方展示"🔴 盘中止损"徽章 + 触发价 + 原因（AI 回填后原因会变）。
+     只展示「最新交易日」触发的盘中止损：标题此前写"今日触发"却列出全部历史，
+     与事实不符；这里以流水最大日期为锚，历史止损请到「已止损记录」板块看。
      注：dashboard_export.build_portfolio 只保留 Status=OPEN 的持仓，CLOSED 仓位不进 positions[]，
      故盘中止损经由交易流水展示，而非 positionCard。 */
   function renderIntradayStops(pf) {
     var txEl = document.querySelector('#pfTxns');   // 自行获取，避免依赖外层局部变量作用域
     if (!txEl) return;
     var ts = pf.transactions || [];
+    var maxDate = '';
+    ts.forEach(function (t) {
+      var d = String(t.date || '');
+      if (d && d > maxDate) maxDate = d;
+    });
     var stops = ts.filter(function (t) {
-      return String(t.action || '').toUpperCase() === 'SELL' &&
-        String(t.reason || '') === 'Intraday Stop Loss';
+      if (String(t.action || '').toUpperCase() !== 'SELL') return false;
+      if (String(t.reason || '') !== 'Intraday Stop Loss') return false;
+      return !maxDate || String(t.date || '') === maxDate;
     });
     if (window.__intradayStopEl && window.__intradayStopEl.parentNode) {
       window.__intradayStopEl.parentNode.removeChild(window.__intradayStopEl);
@@ -475,7 +510,8 @@
     }).join('');
     var banner = document.createElement('div');
     banner.className = 'intraday-stop';
-    banner.innerHTML = '<div class="is-hd">⚠️ 盘中机械止损（今日触发）</div>' + rows;
+    banner.innerHTML = '<div class="is-hd">⚠️ 盘中机械止损（' +
+      esc(maxDate || '最新交易日') + ' 触发）</div>' + rows;
     txEl.parentNode.insertBefore(banner, txEl);
     window.__intradayStopEl = banner;
   }
@@ -499,6 +535,21 @@
       var price = (t.ref_price != null && t.ref_price !== '') ? '$' + nv(t.ref_price, 2) : NA;
       var shares = (t.target_shares == null) ? NA : t.target_shares;
       var reason = t.ai_reason || '';
+      // 盘前目标必须带风控线：止损价来自 portfolio_50000_target.csv 的 Stop_Loss，
+      // 同时给出相对参考价的跌幅，便于一眼判断这笔计划的单笔风险。
+      var stopP = (t.stop_loss_price != null) ? num(t.stop_loss_price) : numLoose(t.stop_loss);
+      var refP = num(t.ref_price);
+      var stopTxt = '', stopPctTxt = '';
+      if (stopP != null) {
+        stopTxt = '$' + fmt(stopP, 2);
+        if (refP) stopPctTxt = fmt((stopP / refP - 1) * 100, 1) + '%';
+      } else if (t.stop_loss) {
+        stopTxt = String(t.stop_loss);
+      }
+      var stopHtml = stopTxt
+        ? '<span class="at-stop">止损 <b>' + esc(stopTxt) + '</b>' +
+          (stopPctTxt ? '<i>' + esc(stopPctTxt) + '</i>' : '') + '</span>'
+        : '<span class="at-stop na">止损 ' + NA + '</span>';
       return '<div class="at-row">' +
         '<div class="at-head">' +
           '<span class="at-tk">' + esc(t.ticker || NA) + '</span>' +
@@ -506,6 +557,7 @@
           '<span class="at-shares">×' + esc(String(shares)) + '</span>' +
           '<span class="at-price">' + price + '</span>' +
         '</div>' +
+        '<div class="at-risk">' + stopHtml + '</div>' +
         (reason ? '<div class="at-reason" onclick="this.classList.toggle(\'open\')">' + esc(reason) + '</div>' : '') +
       '</div>';
     }).join('');
@@ -619,6 +671,17 @@
     return s ? (s + ' ' + tm) : String(tm);
   }
 
+  /* 持有时间文本：两端都有成交时刻 → 天+小时；否则退化为天数；未知 → '' */
+  function holdText(t) {
+    if (t.holding_hours != null) {
+      return t.holding_hours >= 24
+        ? (Math.floor(t.holding_hours / 24) + ' 天 ' + (t.holding_hours % 24) + ' 小时')
+        : (t.holding_hours + ' 小时');
+    }
+    if (t.holding_days != null) return t.holding_days + ' 天';
+    return '';
+  }
+
   function txnHoldingHtml(t) {
     var entryD = t.entry_date || null, entryT = t.entry_time || null;
     var exitD = t.exit_date || null, exitT = t.exit_time || null;
@@ -654,15 +717,15 @@
      筛选 Action=SELL 且 Reason 含 "Stop Loss" 的记录，按日期降序展示。
      兼容两种真实写法：`Stop_Loss_Hit`（账本，Review exit）与 `Stop Loss`（盘中止损）。
      注意：止盈离场 `Trailing_Profit_Take` 不含 stop-loss 语义，按设计排除在本板块外。
-     字段来源（dashboard_export.build_portfolio 透传，零改后端）：
-       date / ticker / action / shares / price(成交价=退出价) / amount(成交额) /
-       realized_pnl(已实现盈亏，直接可用) / reason / unit_id
+     字段来源（dashboard_export.build_portfolio 透传）：
+       date / time / ticker / action / shares / price(成交价=退出价) / amount /
+       realized_pnl / reason / entry_price / entry_date / entry_time /
+       holding_days / holding_hours
      说明：
        · transactions 后端只保留最近 20 条（不分 action，见 dashboard_export.py），
          故本板块可见范围受此上限约束；止损离场多为近期事件，实践中可见。
-       · entry_price / entry_date 非透传字段，故入场价由 amount/realized_pnl/shares
-         反推（cost_basis = amount - realized_pnl），持有天数因无 entry_date 不展示
-         （缺则显 "—"，绝不捏造）。 */
+       · 入场价优先用配对出的 entry_price；老数据缺失时退回
+         cost_basis = amount - realized_pnl 反推，绝不捏造。 */
   function renderStopped() {
     var subEl = $('#stoppedSub'), bodyEl = $('#stoppedBody');
     if (!subEl || !bodyEl) return;
@@ -722,29 +785,125 @@
     var rows = stops.map(function (t) {
       var tk = t.ticker || NA;
       var dt = String(t.date || '').slice(5);            // YYYY-MM-DD → MM-DD
+      if (t.time) dt += ' ' + t.time;
       var px = num(t.price), sh = num(t.shares),
           amt = num(t.amount), rp = num(t.realized_pnl);
-      var cost = (amt !== null && rp !== null) ? (amt - rp) : null;
+      var entryPx = num(t.entry_price), exitPx = num(t.exit_price);
+      var cost = (entryPx !== null && sh !== null && sh > 0) ? entryPx * sh
+        : ((amt !== null && rp !== null) ? (amt - rp) : null);
       var entryTxt, retTxt;
-      if (cost !== null && cost > 0 && sh !== null && sh > 0) {
-        var entry = cost / sh;
-        entryTxt = '$' + fmt(entry, 2) + ' → $' + nv(px, 2);
+      if (entryPx !== null && exitPx !== null) {
+        entryTxt = '$' + fmt(entryPx, 2) + ' → $' + fmt(exitPx, 2);
+      } else if (cost !== null && cost > 0 && sh !== null && sh > 0) {
+        entryTxt = '$' + fmt(cost / sh, 2) + ' → $' + nv(px, 2);
+      } else {
+        entryTxt = (px === null ? NA : '$' + fmt(px, 2));
+      }
+      if (cost !== null && cost > 0 && rp !== null) {
         var retPct = rp / cost * 100;
         retTxt = (retPct >= 0 ? '+' : '') + fmt(retPct, 1) + '%';
       } else {
-        entryTxt = (px === null ? NA : '$' + fmt(px, 2));
         retTxt = '—';
       }
       var retCls = rp !== null ? pctCls(rp) : '';
+      var holdTxt = holdText(t);
       var reason = t.reason || NA;
       return '<div class="stp-row">' +
         '<div class="stp-line1">' +
           '<span class="stp-tk">' + esc(tk) + '</span>' +
           '<span class="stp-date">' + esc(dt || NA) + '</span>' +
-          '<span class="stp-px">' + entryTxt + '</span>' +
-          '<span class="stp-ret ' + retCls + '">' + retTxt + '</span>' +
+          '<span class="stp-px">' + esc(entryTxt) + '</span>' +
+          '<span class="stp-ret ' + retCls + '">' + esc(retTxt) + '</span>' +
         '</div>' +
-        '<div class="stp-reason">原因: ' + esc(reason) + '</div>' +
+        '<div class="stp-reason">原因: ' + esc(reason) +
+          (holdTxt ? ' · 持有 ' + esc(holdTxt) : '') + '</div>' +
+      '</div>';
+    }).join('');
+
+    bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>';
+  }
+
+  /* 已止盈记录板块（近 30 天）：只读 portfolio.transactions。
+     后端的止盈是「移动止盈 + 保本线」：浮盈后只抬高止损线，触发离场时若
+     卖出价 > 入场价记为 Trailing_Profit_Take（见 review._classify_exit_status）。
+     筛选 Action=SELL 且 Reason 含 profit take / trailing_profit，按日期降序。
+     与「已止损记录」并列，避免止盈离场只藏在流水行里。 */
+  function renderProfitTaken() {
+    var subEl = $('#profitSub'), bodyEl = $('#profitBody');
+    if (!subEl || !bodyEl) return;
+    var pf = DATA && DATA.portfolio;
+    var ts = (pf && pf.transactions) || [];
+
+    var empty = function (txt) {
+      subEl.textContent = '—';
+      bodyEl.innerHTML = '<div class="mx"><div class="k">已止盈记录</div>' +
+        '<div class="v na">' + txt + '</div></div>';
+    };
+    if (!ts.length) { empty('暂无止盈记录'); return; }
+
+    var maxDate = '';
+    ts.forEach(function (t) {
+      var d = String(t.date || '');
+      if (d && d > maxDate) maxDate = d;
+    });
+    var anchor = maxDate ? new Date(maxDate) : null;
+    var threshold = anchor ? new Date(anchor.getTime() - 30 * 86400000) : null;
+
+    var takes = ts.filter(function (t) {
+      if (String(t.action || '').toUpperCase() !== 'SELL') return false;
+      if (!/profit[\s_]*take|trailing_profit/i.test(String(t.reason || ''))) return false;
+      if (threshold) {
+        var d = new Date(String(t.date || ''));
+        if (!isNaN(d.getTime()) && d < threshold) return false;
+      }
+      return true;
+    }).sort(function (a, b) {
+      var da = String(a.date || ''), db = String(b.date || '');
+      return db > da ? 1 : (db < da ? -1 : 0);
+    });
+
+    if (!takes.length) { empty('暂无止盈记录'); return; }
+
+    var n = takes.length, sumPnl = 0, sumRet = 0, counted = 0;
+    takes.forEach(function (t) {
+      var rp = num(t.realized_pnl), amt = num(t.amount);
+      if (rp !== null) sumPnl += rp;
+      var cost = (amt !== null && rp !== null) ? (amt - rp) : null;
+      if (cost !== null && cost > 0) { sumRet += rp / cost * 100; counted++; }
+    });
+    var avg = counted ? (sumRet / counted >= 0 ? '+' : '') + fmt(sumRet / counted, 1) + '%' : NA;
+    var pnlTxt = (sumPnl >= 0 ? '+$' : '-$') + fmt(Math.abs(sumPnl), 2);
+    subEl.textContent = '总计: ' + n + ' 笔 | 合计: ' + pnlTxt + ' | 平均: ' + avg;
+
+    var rows = takes.map(function (t) {
+      var tk = t.ticker || NA;
+      var dt = String(t.date || '').slice(5);            // YYYY-MM-DD → MM-DD
+      if (t.time) dt += ' ' + t.time;
+      var rp = num(t.realized_pnl), amt = num(t.amount);
+      var entryP = num(t.entry_price), exitP = num(t.exit_price);
+      var cost = (amt !== null && rp !== null) ? (amt - rp) : (entryP !== null && num(t.shares) ? entryP * num(t.shares) : null);
+      var retPct = (cost !== null && cost > 0 && rp !== null) ? rp / cost * 100 : null;
+      var pxTxt;
+      if (entryP !== null && exitP !== null) {
+        pxTxt = '$' + fmt(entryP, 2) + ' → $' + fmt(exitP, 2);
+      } else {
+        pxTxt = (num(t.price) === null ? NA : '$' + fmt(num(t.price), 2));
+      }
+      var retTxt = retPct === null ? NA :
+        (retPct >= 0 ? '+' : '') + fmt(retPct, 1) + '%';
+      var holdTxt = holdText(t);
+      var metaTxt = [];
+      if (holdTxt) metaTxt.push('持有 ' + holdTxt);
+      if (rp !== null) metaTxt.push((rp >= 0 ? '+' : '') + '$' + fmt(rp, 2));
+      metaTxt.push(t.reason || NA);
+      return '<div class="stp-row pt">' +
+        '<div class="stp-line1">' +
+          '<span class="stp-tk">' + esc(tk) + '</span>' +
+          '<span class="stp-date">' + esc(dt || NA) + '</span>' +
+          '<span class="stp-px">' + esc(pxTxt) + '</span>' +
+          '<span class="stp-ret ' + pctCls(retPct) + '">' + esc(retTxt) + '</span>' +
+        '</div>' +
+        '<div class="stp-reason">' + esc(metaTxt.join(' · ')) + '</div>' +
       '</div>';
     }).join('');
 
@@ -993,6 +1152,7 @@
     renderTarget();
     renderPortfolio();
     renderStopped();
+    renderProfitTaken();
     renderTradeStats();
     renderQuant();
     renderNews();

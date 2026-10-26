@@ -78,8 +78,8 @@ def _tail(portfolio_json):
     )
 
 
-def test_intraday_banner_renders_two():
-    """含 2 条 Intraday Stop Loss SELL → 横幅渲染，.is-row = 2。"""
+def test_intraday_banner_renders_latest_day_only():
+    """横幅只展示「最新交易日」触发的盘中止损：同日 2 条都显示，更早的被过滤。"""
     app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
     exposed = _expose(app_js)
     data = {"portfolio": {"transactions": [
@@ -87,15 +87,34 @@ def test_intraday_banner_renders_two():
          "price": 231.42, "amount": 9951.06, "realized_pnl": 0.0, "reason": "Core"},
         {"date": "2026-10-09", "ticker": "ADSK", "action": "SELL", "shares": 43,
          "price": 226.10, "amount": 9722.30, "realized_pnl": -228.76, "reason": "Intraday Stop Loss"},
-        {"date": "2026-10-08", "ticker": "ANET", "action": "SELL", "shares": 15,
+        {"date": "2026-10-09", "ticker": "ANET", "action": "SELL", "shares": 15,
          "price": 139.40, "amount": 2091.00, "realized_pnl": -121.50, "reason": "Intraday Stop Loss"},
+        {"date": "2026-10-08", "ticker": "OLD", "action": "SELL", "shares": 10,
+         "price": 50.00, "amount": 500.00, "realized_pnl": -10.00, "reason": "Intraday Stop Loss"},
     ]}}
     r = _run_node(exposed, _tail(json.dumps(data["portfolio"])))
     assert r["bannerExists"] is True, r
     assert r["bannerClass"] == "intraday-stop", r
     assert r["isRows"] == 2, r
-    assert "ADSK" in (r["html"] or "") and "ANET" in (r["html"] or ""), r
-    assert "盘中机械止损" in (r["html"] or ""), r
+    html = r["html"] or ""
+    assert "ADSK" in html and "ANET" in html, r
+    assert "OLD" not in html, r          # 非最新交易日的止损不在横幅里
+    assert "2026-10-09 触发" in html, r
+    assert "盘中机械止损" in html, r
+
+
+def test_intraday_banner_absent_when_latest_day_has_no_stop():
+    """最新交易日只有 BUY、旧日期才有盘中止损 → 横幅不渲染（避免"今日触发"误导）。"""
+    app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    exposed = _expose(app_js)
+    data = {"portfolio": {"transactions": [
+        {"date": "2026-10-08", "ticker": "ANET", "action": "SELL", "shares": 15,
+         "price": 139.40, "amount": 2091.00, "realized_pnl": -121.50, "reason": "Intraday Stop Loss"},
+        {"date": "2026-10-09", "ticker": "APA", "action": "BUY", "shares": 200,
+         "price": 49.76, "amount": 9952.00, "realized_pnl": 0.0, "reason": "Core"},
+    ]}}
+    r = _run_node(exposed, _tail(json.dumps(data["portfolio"])))
+    assert r["bannerExists"] is False, r
 
 
 def test_intraday_banner_absent_without_intraday():

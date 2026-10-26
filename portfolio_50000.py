@@ -1062,9 +1062,58 @@ def _run_intraday_stop(data_dir: Path, today: str, offline: bool,
 
     if new_txns:
         transactions.extend(new_txns)
+        # 现金/已实现盈亏由"完整流水"重算并回填 Cash_After（与 run() 同口径）。
+        # 盘中止损过去只写 transactions + positions、不写 history，导致 Dashboard
+        # 读到的是上一交易日的 Cash：刚卖出回笼的现金被当成"蒸发"，
+        # Total PnL 会显示成 -$9,503 这类假亏损。这里必须在卖出当日落一条权益快照。
+        transactions.sort(key=lambda t: (str(t.get("Date", "")), str(t.get("Txn_ID", ""))))
+        cash = INITIAL_CAPITAL
+        realized_total = ZERO
+        for t in transactions:
+            amt = dec(t.get("Amount")) or ZERO
+            act = str(t.get("Action", "")).upper()
+            if act == "BUY":
+                cash -= amt
+            elif act == "SELL":
+                cash += amt
+                realized_total += dec(t.get("Realized_PnL")) or ZERO
+            t["Cash_After"] = str(cash.quantize(CENT, rounding=ROUND_HALF_UP))
+        cash = cash.quantize(CENT, rounding=ROUND_HALF_UP)
+        realized_total = realized_total.quantize(CENT, rounding=ROUND_HALF_UP)
+        open_rows = [p for p in positions if str(p.get("Status", "")).upper() == "OPEN"]
+        stock_value = sum((dec(p.get("Market_Value")) or ZERO for p in open_rows), ZERO)
+        unrealized = sum((dec(p.get("Unrealized_PnL")) or ZERO for p in open_rows), ZERO)
+        stock_value = stock_value.quantize(CENT, rounding=ROUND_HALF_UP)
+        unrealized = unrealized.quantize(CENT, rounding=ROUND_HALF_UP)
+        total_equity = (cash + stock_value).quantize(CENT, rounding=ROUND_HALF_UP)
+        total_pnl = (realized_total + unrealized).quantize(CENT, rounding=ROUND_HALF_UP)
+        return_pct = (total_pnl / INITIAL_CAPITAL * Decimal("100")).quantize(CENT, rounding=ROUND_HALF_UP)
+        fill_weights(positions, total_equity)
+
         write_csv_rows(data_dir / TRANSACTIONS_FILE, TRANSACTION_COLUMNS, transactions)
-        append_txn_times(data_dir, new_txns, today)          # 侧车：精确时刻（旁路）
         write_csv_rows(data_dir / POSITIONS_FILE, POSITION_COLUMNS, positions)
+        append_txn_times(data_dir, new_txns, today)          # 侧车：精确时刻（旁路）
+
+        try:
+            history = read_csv_rows(data_dir / HISTORY_FILE)
+        except FileNotFoundError:
+            history = []          # 全新账户/异常的首次运行：从空历史开始，不阻断卖出
+        upsert_history(history, {
+            "Date": today,
+            "Cash": str(cash),
+            "Stock_Value": str(stock_value),
+            "Total_Equity": str(total_equity),
+            "Realized_PnL": str(realized_total),
+            "Unrealized_PnL": str(unrealized),
+            "Total_PnL": str(total_pnl),
+            "Return_Pct": str(return_pct),
+            "Open_Positions": str(len(open_rows)),
+            "Portfolio_ID": PORTFOLIO_ID,
+        })
+        history.sort(key=lambda h: str(h.get("Date", "")))
+        write_csv_rows(data_dir / HISTORY_FILE, HISTORY_COLUMNS, history)
+        print(f"[intraday-stop] 权益快照已落盘 {today}: Cash={cash} Equity={total_equity} "
+              f"TotalPnL={total_pnl} ({return_pct}%)")
     else:
         print("[intraday-stop] 本次无触发")
     return {"triggered": triggered, "total_equity": None, "positions": positions}

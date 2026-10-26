@@ -485,11 +485,20 @@ button{font-family:inherit}
 .at-act.buy{background:#e8f5e9;color:#2e7d32;border-color:#a5d6a7}
 .at-act.sell{background:#ffebee;color:#c62828;border-color:#ef9a9a}
 .at-act.hold{background:#e3f2fd;color:#1565c0;border-color:#90caf9}
+.at-risk{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.at-stop{font-size:11.5px;color:var(--text-2);font-variant-numeric:tabular-nums}
+.at-stop b{color:var(--down);font-weight:700}
+.at-stop i{margin-left:3px;font-style:normal;color:var(--down)}
+.at-stop.na{color:var(--text-3)}
+.at-stop.na b{color:var(--text-3);font-weight:600}
 
 /* 已止损记录（近 30 天）—— 纯前端板块 */
 #stoppedCard .sec-sub{font-variant-numeric:tabular-nums}
 .stp-list{display:flex;flex-direction:column;gap:8px}
 .stp-row{border:1px solid var(--border-2);border-radius:var(--r-sm);background:var(--soft);padding:8px 10px}
+/* 已止盈记录：左侧绿色标记，与止损记录区分 */
+.stp-row.pt{border-left:3px solid var(--up)}
+#profitCard .sec-sub{font-variant-numeric:tabular-nums}
 .stp-line1{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;font-variant-numeric:tabular-nums}
 .stp-tk{font-weight:700;font-size:14px;color:var(--text);min-width:42px}
 .stp-date{font-size:11px;color:var(--text-3);font-weight:600}

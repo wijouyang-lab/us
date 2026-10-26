@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
-<link rel="stylesheet" href="app.css?v=runtime3">
+<link rel="stylesheet" href="app.css?v=runtime4">
 </head>
 <body>
 
@@ -110,6 +110,15 @@
       <span class="sec-sub" id="stoppedSub">—</span>
     </div>
     <div id="stoppedBody"></div>
+  </section>
+
+  <!-- 1.56 已止盈记录（近 30 天）：移动止盈/保本线触发离场（Trailing_Profit_Take） -->
+  <section class="card sec" id="profitCard">
+    <div class="sec-h">
+      <h2>已止盈记录（近 30 天）</h2>
+      <span class="sec-sub" id="profitSub">—</span>
+    </div>
+    <div id="profitBody"></div>
   </section>
 
   <!-- 1.6 Quant / 量化研究 -->
@@ -294,6 +303,6 @@
   </div>
 </div>
 
-<script src="app.js?v=runtime3"></script>
+<script src="app.js?v=runtime4"></script>
 </body>
 </html>

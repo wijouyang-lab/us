@@ -2518,6 +2518,7 @@ def _read_portfolio_target(data_dir: Path):
             "target_shares": int(parse_num(r.get("Target_Shares")) or 0),
             "ref_price": round_num(parse_num(r.get("Ref_Price")), 2),
             "stop_loss": clean_text(r.get("Stop_Loss")) or None,
+            "stop_loss_price": round_num(parse_num(r.get("Stop_Loss")), 2),
             "ai_reason": clean_text(r.get("AI_Reason")) or None,
         })
     return out
@@ -2794,6 +2795,8 @@ def _link_txn_holding(txns, asof):
         t.setdefault("entry_time", None)
         t.setdefault("exit_date", None)
         t.setdefault("exit_time", None)
+        t.setdefault("entry_price", None)
+        t.setdefault("exit_price", None)
         t.setdefault("holding_days", None)
         t.setdefault("holding_hours", None)
         t.setdefault("holding_open", None)
@@ -2807,6 +2810,7 @@ def _link_txn_holding(txns, asof):
         if act == "BUY":
             t["entry_date"] = d or None
             t["entry_time"] = t.get("time")
+            t["entry_price"] = t.get("price")
             t["holding_open"] = True
             pending.append(t)
         elif act == "SELL":
@@ -2828,12 +2832,15 @@ def _link_txn_holding(txns, asof):
             match["holding_open"] = False
             match["exit_date"] = t["exit_date"]
             match["exit_time"] = t["exit_time"]
+            match["exit_price"] = t.get("price")
             days, hours = _holding_span(
                 match.get("entry_date"), match.get("entry_time"),
                 t.get("exit_date"), t.get("exit_time"))
             for x in (match, t):
                 x["entry_date"] = match.get("entry_date")
                 x["entry_time"] = match.get("entry_time")
+                x["entry_price"] = match.get("price")
+                x["exit_price"] = t.get("price")
                 x["holding_days"] = days
                 x["holding_hours"] = hours
 
@@ -2901,6 +2908,8 @@ def build_portfolio(data_dir: Path):
             "unrealized_pnl_pct": round_num(parse_num(r.get("Unrealized_PnL_Pct")), 2),
             "weight_pct": round_num(parse_num(r.get("Weight_Pct")), 2),
             "stop_loss": clean_text(r.get("Stop_Loss")) or None,
+            # 止损/移动止盈线的数值形态（CSV 里是 "$197.69" 这类字符串，前端不能直接算）
+            "stop_loss_price": round_num(parse_num(r.get("Stop_Loss")), 2),
             "holding_days": _days(entry_date),
         })
 
@@ -2963,18 +2972,53 @@ def build_portfolio(data_dir: Path):
     if os.environ.get("ENABLE_TARGET_FILE") == "1":
         target = _read_portfolio_target(data_dir)
 
-    # >>> 汇总字段单一数据源：全部从 positions 派生，避免与 history 末行（旧快照）不同源 <<<
-    # 持仓市值/浮盈来自 positions.csv（最新，由 review 写入）；history 末行是 15 分钟前的旧快照。
-    # 若汇总继续读 history，会出现"汇总 ≠ 个股之和"的视觉不一致。现金 15 分钟内不变，保留 history 来源。
+    # >>> 汇总字段单一数据源 <<<
+    # 持仓市值/浮盈 → positions.csv（最新，Review / price-only 每轮刷新）。
+    # 现金/已实现盈亏 → history 末行 + 该快照【之后】的流水滚动。
+    # 背景：盘中止损（--intraday-stop）曾经只写 transactions、不写 history，
+    # 若直接读 history 里的 Cash，就会把刚卖出回笼的现金当成"蒸发"，
+    # 出现 Total PnL -$9,503（-19%）这类假亏损。这里按账本把快照之后的买卖补上，
+    # 不猜价格、不造流水，只做确定性加减。
     _stock_value = round_num(sum(p["market_value"] for p in positions), 2)
     _unrealized_pnl = round_num(sum(p["unrealized_pnl"] for p in positions), 2)
-    _cash = round_num(parse_num(last.get("Cash")), 2)
-    _total_equity = round_num(_cash + _stock_value, 2)  # 不变量：total_equity = cash + stock_value
     _initial = round_num(parse_num(meta.get("initial_capital")), 2)
+    _snap_asof = asof
+    _asof = asof
+    _cash = parse_num(last.get("Cash"))
+    _cash = float(_cash) if _cash is not None else (float(_initial) if _initial else 0.0)
+    _realized = parse_num(last.get("Realized_PnL"))
+    _realized = float(_realized) if _realized is not None else 0.0
+    for t in txn_raw:
+        td = clean_text(t.get("Date"))
+        if not td or (_snap_asof and td <= _snap_asof):
+            continue
+        amt = parse_num(t.get("Amount")) or 0.0
+        act = clean_text(t.get("Action")).upper()
+        if act == "BUY":
+            _cash -= amt
+        elif act == "SELL":
+            _cash += amt
+            _realized += parse_num(t.get("Realized_PnL")) or 0.0
+        if not _asof or td > _asof:
+            _asof = td
+    _cash = round_num(_cash, 2)
+    _realized = round_num(_realized, 2)
+    _total_equity = round_num(_cash + _stock_value, 2)  # 不变量：total_equity = cash + stock_value
     _total_pnl = round_num(_total_equity - _initial, 2)
     _return_pct = round_num((_total_pnl / _initial * 100) if _initial else 0.0, 2)  # 百分比量纲，与历史 Return_Pct 一致
     _open_pct = round_num(
         (_stock_value / _total_equity * 100) if (_total_equity and _total_equity > 0) else 0.0, 2)
+
+    # 账本已推进到快照日之后（上面的滚动生效）→ 曲线补一个"当前权益"点，
+    # 保证「曲线终点 == 汇总 Total Equity」不变量，且不是凭空的点：
+    # 现金来自账本滚动、市值来自 positions 最新快照。
+    if _asof and curve and (curve[-1].get("date") or "") < _asof:
+        curve.append({
+            "date": _asof,
+            "total_equity": _total_equity,
+            "cash": _cash,
+            "stock_value": _stock_value,
+        })
 
     return {
         "portfolio_id": clean_text(meta.get("portfolio_id")) or None,
@@ -2983,15 +3027,15 @@ def build_portfolio(data_dir: Path):
         "start_date": clean_text(meta.get("start_date")) or None,
         "unit_dollars": round_num(parse_num(meta.get("unit_dollars")), 2),
         "max_open_positions": int(parse_num(meta.get("max_open_positions")) or 0) or None,
-        "asof": asof,
+        "asof": _asof,
         "cash": _cash,
         "stock_value": _stock_value,
         "total_equity": _total_equity,
-        "realized_pnl": round_num(parse_num(last.get("Realized_PnL")), 2),
+        "realized_pnl": _realized,
         "unrealized_pnl": _unrealized_pnl,
         "total_pnl": _total_pnl,
         "return_pct": _return_pct,
-        "open_positions": int(parse_num(last.get("Open_Positions")) or 0),
+        "open_positions": len(positions),
         "open_pct": _open_pct,
         "positions": positions,
         "transactions": txns,
