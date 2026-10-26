@@ -14,11 +14,13 @@ from hashlib import sha256
 import csv
 import json
 import math
+import re
 from pathlib import Path
 import statistics
 import sys
 from typing import Any, Iterable, Mapping
 from zoneinfo import ZoneInfo
+from tools.research.pit_event_archive import event_version_id as archived_event_version_id
 
 NY = ZoneInfo("America/New_York")
 MARKET_WIDE_TYPES = {"macro_release", "central_bank", "policy", "geopolitical"}
@@ -47,10 +49,9 @@ def _parse_timestamp(value: Any) -> datetime | None:
 
 
 def _event_version_id(event: Mapping[str, Any]) -> str:
-    row = dict(event)
-    row.pop("first_seen_at_utc", None)
-    row.pop("event_version_id", None)
-    return sha256(_canonical_json(row).encode("utf-8")).hexdigest()
+    """Return the immutable archived source-version hash, excluding annotations."""
+    return archived_event_version_id(event)
+
 
 
 def _parse_horizons(raw: Iterable[int]) -> list[int]:
@@ -334,17 +335,47 @@ def _first_observed_versions(
     return selected
 
 
+def _reviewed_mapping_tickers(event: Mapping[str, Any]) -> list[str] | None:
+    """Accept a company mapping override only with complete, timestamped provenance."""
+    if str(event.get("ticker_mapping_review_status") or "").strip().lower() != "human_reviewed":
+        return None
+    values = event.get("ticker_mapping_reviewed_tickers")
+    reviewed_at = _parse_timestamp(event.get("ticker_mapping_reviewed_at_utc"))
+    first_seen = _parse_timestamp(event.get("first_seen_at_utc"))
+    reviewer = str(event.get("ticker_mapping_reviewer_id") or "").strip()
+    rationale = str(event.get("ticker_mapping_rationale") or "").strip()
+    schema = str(event.get("ticker_mapping_schema_version") or "").strip()
+    if (
+        not isinstance(values, list)
+        or reviewed_at is None
+        or first_seen is None
+        or reviewed_at < first_seen
+        or not reviewer
+        or "@" in reviewer
+        or not rationale
+        or not schema
+    ):
+        return None
+    tickers: set[str] = set()
+    for value in values:
+        if not isinstance(value, str):
+            return None
+        ticker = value.strip().upper().replace("$", "")
+        if not ticker:
+            continue
+        if not re.fullmatch(r"[A-Z0-9][A-Z0-9.-]{0,14}", ticker):
+            return None
+        tickers.add(ticker)
+    return sorted(tickers)
+
+
 def _targets_for_event(event: Mapping[str, Any], skip_reasons: Counter[str]) -> list[str]:
     kind = str(event.get("event_type") or "unknown")
     if kind in MARKET_WIDE_TYPES:
         return ["SPY"]
 
-    # A symbol-scoped aggregator feed is only a query scope, not proof that the
-    # story itself concerns the queried company. Require an explicit verification
-    # status before using these company-level events in response studies.
     source = str(event.get("source") or "").strip().lower()
     mapping_status = str(event.get("ticker_mapping_status") or "").strip().lower()
-    verified_mapping_statuses = {"verified", "content_verified", "human_reviewed"}
     is_aggregator_company_event = (
         kind in {"company_news", "earnings"}
         and (
@@ -352,23 +383,29 @@ def _targets_for_event(event: Mapping[str, Any], skip_reasons: Counter[str]) -> 
             or str(event.get("source_quality") or "").strip().lower() == "aggregator"
         )
     )
-    has_unverified_explicit_mapping = bool(mapping_status) and mapping_status not in verified_mapping_statuses
-    if kind in {"company_news", "earnings"} and (
-        (is_aggregator_company_event and mapping_status not in verified_mapping_statuses)
-        or has_unverified_explicit_mapping
-    ):
-        skip_reasons["company_event_ticker_mapping_unverified"] += 1
-        return []
+    reviewed_tickers = _reviewed_mapping_tickers(event)
+    if is_aggregator_company_event:
+        if reviewed_tickers is None:
+            skip_reasons["company_event_ticker_mapping_unverified"] += 1
+            return []
+        values = reviewed_tickers
+    else:
+        verified_mapping_statuses = {"verified", "content_verified", "human_reviewed"}
+        has_unverified_explicit_mapping = bool(mapping_status) and mapping_status not in verified_mapping_statuses
+        if kind in {"company_news", "earnings"} and has_unverified_explicit_mapping:
+            skip_reasons["company_event_ticker_mapping_unverified"] += 1
+            return []
+        values = event.get("tickers")
 
-    values = event.get("tickers")
     tickers = sorted({
         str(value).strip().upper().replace("$", "")
         for value in values
-        if str(value).strip()
+        if isinstance(value, str) and str(value).strip()
     }) if isinstance(values, list) else []
     if not tickers:
         skip_reasons["company_event_ticker_mapping_missing"] += 1
     return tickers
+
 
 
 def _aggregate(observations: list[dict[str, Any]], horizons: list[int], cost_bps: float) -> list[dict[str, Any]]:
@@ -494,6 +531,18 @@ def run_event_response_study(
                 "source_delay_minutes": (first_seen - published).total_seconds() / 60.0,
                 "entry_date": entry["date"].isoformat(),
                 "entry_open": float(entry["open"]),
+                "ticker_mapping_status": (
+                    "human_reviewed" if _reviewed_mapping_tickers(event) is not None
+                    else str(event.get("ticker_mapping_status") or "")
+                ),
+                "ticker_mapping_reviewed_at_utc": str(event.get("ticker_mapping_reviewed_at_utc") or ""),
+                "ticker_mapping_reviewer_id": str(event.get("ticker_mapping_reviewer_id") or ""),
+                "ticker_mapping_review_rationale": str(event.get("ticker_mapping_rationale") or ""),
+                "ticker_mapping_review_was_available_by_entry": (
+                    _parse_timestamp(event.get("ticker_mapping_reviewed_at_utc"))
+                    <= datetime.combine(entry["date"], time(9, 30), tzinfo=NY).astimezone(timezone.utc)
+                    if _reviewed_mapping_tickers(event) is not None else None
+                ),
             }
             has_any_return = False
             for horizon in horizon_list:

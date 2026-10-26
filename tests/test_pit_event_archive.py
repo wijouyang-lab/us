@@ -107,3 +107,30 @@ def test_archive_rejects_non_timezone_aware_decision_for_asof_selection():
     event = make_event("2026-10-21T12:00:00Z")
     with pytest.raises(ValueError, match="timezone-aware"):
         select_event_versions_asof([event], "2026-10-22T12:00:00")
+
+
+
+def test_event_version_id_is_stable_after_separate_mapping_review_metadata():
+    event = {
+        "event_id": "event-mapping",
+        "event_type": "company_news",
+        "source": "yahoo_finance_rss",
+        "source_event_id": "AAPL|story",
+        "published_at_utc": "2026-10-23T12:00:00Z",
+        "first_seen_at_utc": "2026-10-23T12:01:00Z",
+        "source_url": "https://finance.yahoo.com/news/story",
+        "content_hash": "story-hash",
+        "tickers": ["AAPL"],
+        "ticker_mapping_status": "unverified_query_scope",
+    }
+    version_before = event_version_id(event)
+    reviewed = dict(event)
+    reviewed.update({
+        "ticker_mapping_review_status": "human_reviewed",
+        "ticker_mapping_reviewed_tickers": ["MSFT"],
+        "ticker_mapping_reviewed_at_utc": "2026-10-23T13:00:00Z",
+        "ticker_mapping_reviewer_id": "reviewer-1",
+        "ticker_mapping_rationale": "Headline is about Microsoft.",
+        "ticker_mapping_schema_version": "1.0",
+    })
+    assert event_version_id(reviewed) == version_before
