@@ -14,6 +14,10 @@ on:
       - tools/research/official_event_rss_collector.py
       - tools/research/bls_macro_series_capture.py
       - tools/research/build_event_annotation_queue.py
+      - tools/research/sec_daily_index.py
+      - tools/research/sec_master_index_capture.py
+      - tests/test_sec_daily_index.py
+      - tests/test_sec_master_index_capture.py
 
 permissions:
   contents: write
@@ -73,6 +77,27 @@ jobs:
             ARGS+=(--sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" --sec-start-date "$START_DATE" --sec-end-date "$END_DATE")
           fi
           python -m tools.research.run_event_capture_cycle "${ARGS[@]}"
+
+      - name: Capture SEC quarterly master index fallback
+        env:
+          SEC_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+        shell: bash
+        run: |
+          set -euo pipefail
+          UNIVERSE="data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json"
+          if [[ -s "$UNIVERSE" ]]; then
+            INDEX_START_DATE="$(python -c 'from datetime import date; d=date.today(); print(date(d.year, ((d.month-1)//3)*3+1, 1).isoformat())')"
+            INDEX_END_DATE="$(date -u +%F)"
+            if ! python -m tools.research.sec_master_index_capture \\
+              --universe "$UNIVERSE" \\
+              --start-date "$INDEX_START_DATE" \\
+              --end-date "$INDEX_END_DATE" \\
+              --output "data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.json"; then
+              echo "::warning::SEC master index fallback failed; keeping other official-source captures and recording the access limitation."
+            fi
+          else
+            echo "::warning::No SEC universe snapshot available; master index fallback skipped."
+          fi
 
       - name: Capture official Treasury nominal and real curves
         shell: bash
