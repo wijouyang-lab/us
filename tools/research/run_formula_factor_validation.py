@@ -46,6 +46,20 @@ def _bh_qvalues(p_values: list[float]) -> list[float]:
     return q
 
 
+def _by_qvalues(p_values: list[float]) -> list[float]:
+    """Benjamini-Yekutieli q-values, controlling FDR under arbitrary dependence.
+
+    This is more conservative than Benjamini-Hochberg and is used for the
+    low-frequency phase sweep because neighbouring start phases have overlapping
+    holding windows and are not independent tests.
+    """
+    q = _bh_qvalues(p_values)
+    if not q:
+        return []
+    harmonic_factor = sum(1.0 / rank for rank in range(1, len(p_values) + 1))
+    return [min(1.0, value * harmonic_factor) for value in q]
+
+
 def _winsorize_target_by_date(frame: pd.DataFrame, target: str,
                                lower_quantile: float = 0.01,
                                upper_quantile: float = 0.99) -> pd.Series:
@@ -239,6 +253,77 @@ def _summary(daily: pd.DataFrame, cost_bps: float):
     return result
 
 
+def _low_frequency_phase_metrics(
+    daily: pd.DataFrame,
+    winsorized_daily: pd.DataFrame,
+    session_dates: list[pd.Timestamp],
+    horizon: int,
+    cost_bps: float,
+) -> list[dict]:
+    """Evaluate horizon-spaced, non-overlapping holding windows for every start phase.
+
+    Each phase selects one out of every horizon snapshot sessions, then estimates
+    turnover only between those sampled portfolios. Different phases overlap in
+    their forward-return windows; they are sensitivity analyses, not independent
+    strategies. Candidate-by-phase p-values must therefore be corrected jointly
+    and conservatively.
+    """
+    if horizon < 1:
+        raise ValueError("horizon must be positive")
+    session_positions = {
+        pd.Timestamp(session_date): index
+        for index, session_date in enumerate(session_dates)
+    }
+
+    def select_phase(frame: pd.DataFrame, phase: int) -> pd.DataFrame:
+        if frame.empty:
+            return frame.copy()
+        sampled = frame.copy()
+        sampled["_session_index"] = sampled["date"].map(
+            lambda value: session_positions.get(pd.Timestamp(value))
+        )
+        positions = pd.to_numeric(sampled["_session_index"], errors="coerce")
+        keep = positions.notna() & (positions.mod(horizon) == phase)
+        return sampled.loc[keep].drop(columns=["_session_index"]).copy()
+
+    phase_rows = []
+    for phase in range(horizon):
+        phase_raw = _attach_turnover_costs(select_phase(daily, phase), cost_bps)
+        phase_winsorized = _attach_turnover_costs(
+            select_phase(winsorized_daily, phase), cost_bps
+        )
+        raw_summary = _summary(phase_raw, cost_bps)
+        winsorized_summary = _summary(phase_winsorized, cost_bps)
+        raw_t, raw_p = _hac_mean_test(
+            phase_raw, "turnover_aware_spread", max_lag=1
+        )
+        winsorized_t, winsorized_p = _hac_mean_test(
+            phase_winsorized, "turnover_aware_spread", max_lag=1
+        )
+        phase_rows.append({
+            "phase_offset_sessions": phase,
+            "rebalance_interval_sessions": horizon,
+            "n_rebalance_observations": raw_summary["n_days"],
+            "gross_q5_q1_spread": raw_summary["gross_q5_q1_spread"],
+            "fixed_cost_net_q5_q1_spread": raw_summary["net_q5_q1_spread"],
+            "turnover_aware_net_q5_q1_spread": raw_summary["turnover_aware_net_q5_q1_spread"],
+            "mean_total_turnover": raw_summary["mean_total_turnover"],
+            "mean_turnover_cost_bps": raw_summary["mean_turnover_cost_bps"],
+            "turnover_aware_positive_spread_day_pct": raw_summary["turnover_aware_positive_spread_day_pct"],
+            "turnover_aware_spread_hac_t": round(raw_t, 4) if raw_t is not None else None,
+            "turnover_aware_spread_hac_p_value": round(raw_p, 8) if raw_p is not None else None,
+            "turnover_aware_spread_by_q_value": None,
+            "winsorized_turnover_aware_net_q5_q1_spread": winsorized_summary["turnover_aware_net_q5_q1_spread"],
+            "winsorized_mean_total_turnover": winsorized_summary["mean_total_turnover"],
+            "winsorized_mean_turnover_cost_bps": winsorized_summary["mean_turnover_cost_bps"],
+            "winsorized_turnover_aware_positive_spread_day_pct": winsorized_summary["turnover_aware_positive_spread_day_pct"],
+            "winsorized_turnover_aware_spread_hac_t": round(winsorized_t, 4) if winsorized_t is not None else None,
+            "winsorized_turnover_aware_spread_hac_p_value": round(winsorized_p, 8) if winsorized_p is not None else None,
+            "winsorized_turnover_aware_spread_by_q_value": None,
+        })
+    return phase_rows
+
+
 def run(input_path: str, output_dir: str, max_base_factors: int = 8,
         cost_bps: float = 5.0, min_names: int = 10,
         requested_factors: list[str] | None = None):
@@ -249,6 +334,9 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     source = source.copy()
     source["Snapshot_Date"] = pd.to_datetime(source[date_col], errors="coerce").dt.normalize()
     source = source.dropna(subset=["Snapshot_Date"])
+    # Anchor phases to sorted source snapshot dates, not a factor-specific subset,
+    # so missing factor values cannot shift a candidate's rebalance calendar.
+    session_dates = [pd.Timestamp(value) for value in sorted(source["Snapshot_Date"].unique())]
     targets = [c for c in source.columns if c.upper().startswith("FORWARD_RETURN_")]
     if not targets:
         raise ValueError("input contains no Forward_Return_ND label columns")
@@ -291,17 +379,18 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             name = meta["candidate"]
             evaluated = work[["Snapshot_Date", "Ticker", name]].copy()
             evaluated[target] = pd.to_numeric(source[target].values, errors="coerce")
-            daily = _attach_turnover_costs(
-                _daily_metrics(evaluated, name, target, min_names), cost_bps
-            )
+            daily_metrics = _daily_metrics(evaluated, name, target, min_names)
+            daily = _attach_turnover_costs(daily_metrics, cost_bps)
             horizon = int(target.upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
             summary = _summary(daily, cost_bps)
             winsorized_eval = work[["Snapshot_Date", "Ticker", name]].copy()
             winsorized_eval[target] = winsorized_targets[target].to_numpy()
-            winsorized_daily = _attach_turnover_costs(
-                _daily_metrics(winsorized_eval, name, target, min_names), cost_bps
-            )
+            winsorized_metrics = _daily_metrics(winsorized_eval, name, target, min_names)
+            winsorized_daily = _attach_turnover_costs(winsorized_metrics, cost_bps)
             winsorized_summary = _summary(winsorized_daily, cost_bps)
+            low_frequency_phase_results = _low_frequency_phase_metrics(
+                daily_metrics, winsorized_metrics, session_dates, horizon, cost_bps
+            )
             for key, value in winsorized_summary.items():
                 summary[f"winsorized_{key}"] = value
             winsorized_ic_t, winsorized_ic_p = _hac_mean_test(
@@ -349,6 +438,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             out_rows.append({
                 "candidate": name, "formula": meta["formula"], "family": meta["family"],
                 "horizon": target, **summary, "folds": fold_summaries,
+                "low_frequency_phase_results": low_frequency_phase_results,
             })
 
     # Correct each metric family separately within each horizon. Testing IC alone
@@ -374,10 +464,84 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
                 if row["horizon"] == target and q_column not in row:
                     row[q_column] = None
 
+    # Correct low-frequency phase tests jointly over every candidate × phase
+    # within a horizon. BY is more conservative than BH under arbitrary
+    # dependence. Raw and winsorized outcomes are separate testing families.
+    for target in targets:
+        for p_column, q_column in (
+            ("turnover_aware_spread_hac_p_value", "turnover_aware_spread_by_q_value"),
+            ("winsorized_turnover_aware_spread_hac_p_value", "winsorized_turnover_aware_spread_by_q_value"),
+        ):
+            phase_refs = [
+                (phase, row)
+                for row in out_rows if row["horizon"] == target
+                for phase in row["low_frequency_phase_results"]
+                if phase.get(p_column) is not None
+            ]
+            q_values = _by_qvalues([float(phase[p_column]) for phase, _row in phase_refs])
+            for (phase, _row), q_value in zip(phase_refs, q_values):
+                phase[q_column] = round(q_value, 8)
+
+    # Keep each phase's results visible, but never pool overlapping phases as if
+    # they were independent observations.
+    for row in out_rows:
+        phases = row["low_frequency_phase_results"]
+        raw_values = [
+            float(phase["turnover_aware_net_q5_q1_spread"])
+            for phase in phases
+            if phase["turnover_aware_net_q5_q1_spread"] is not None
+        ]
+        winsorized_values = [
+            float(phase["winsorized_turnover_aware_net_q5_q1_spread"])
+            for phase in phases
+            if phase["winsorized_turnover_aware_net_q5_q1_spread"] is not None
+        ]
+        raw_q_values = [
+            float(phase["turnover_aware_spread_by_q_value"])
+            for phase in phases
+            if phase["turnover_aware_spread_by_q_value"] is not None
+        ]
+        winsorized_q_values = [
+            float(phase["winsorized_turnover_aware_spread_by_q_value"])
+            for phase in phases
+            if phase["winsorized_turnover_aware_spread_by_q_value"] is not None
+        ]
+        row["low_frequency_rebalance_interval_sessions"] = int(
+            phases[0]["rebalance_interval_sessions"] if phases else
+            int(row["horizon"].upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
+        )
+        row["low_frequency_phase_count"] = len(phases)
+        row["low_frequency_mean_net_spread_across_phases"] = round(float(np.mean(raw_values)), 6) if raw_values else None
+        row["low_frequency_median_net_spread_across_phases"] = round(float(np.median(raw_values)), 6) if raw_values else None
+        row["low_frequency_min_net_spread_across_phases"] = round(float(np.min(raw_values)), 6) if raw_values else None
+        row["low_frequency_max_net_spread_across_phases"] = round(float(np.max(raw_values)), 6) if raw_values else None
+        row["low_frequency_positive_phase_pct"] = round(float(np.mean(np.asarray(raw_values) > 0) * 100), 2) if raw_values else None
+        row["low_frequency_best_phase_by_q_value"] = round(min(raw_q_values), 8) if raw_q_values else None
+        row["low_frequency_winsorized_mean_net_spread_across_phases"] = round(float(np.mean(winsorized_values)), 6) if winsorized_values else None
+        row["low_frequency_winsorized_median_net_spread_across_phases"] = round(float(np.median(winsorized_values)), 6) if winsorized_values else None
+        row["low_frequency_winsorized_min_net_spread_across_phases"] = round(float(np.min(winsorized_values)), 6) if winsorized_values else None
+        row["low_frequency_winsorized_max_net_spread_across_phases"] = round(float(np.max(winsorized_values)), 6) if winsorized_values else None
+        row["low_frequency_winsorized_positive_phase_pct"] = round(float(np.mean(np.asarray(winsorized_values) > 0) * 100), 2) if winsorized_values else None
+        row["low_frequency_winsorized_best_phase_by_q_value"] = round(min(winsorized_q_values), 8) if winsorized_q_values else None
+
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
-    flat = [{k: v for k, v in row.items() if k != "folds"} for row in out_rows]
+    flat = [{
+        k: v for k, v in row.items()
+        if k not in ("folds", "low_frequency_phase_results")
+    } for row in out_rows]
     pd.DataFrame(flat).to_csv(out / "formula_factor_metrics.csv", index=False)
+    phase_rows = []
+    for row in out_rows:
+        for phase in row.get("low_frequency_phase_results", []):
+            phase_rows.append({
+                "candidate": row["candidate"],
+                "formula": row["formula"],
+                "family": row["family"],
+                "horizon": row["horizon"],
+                **phase,
+            })
+    pd.DataFrame(phase_rows).to_csv(out / "low_frequency_phase_metrics.csv", index=False)
     (out / "formula_factor_report.json").write_text(
         json.dumps({
             "research_only": True,
@@ -389,14 +553,14 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "selected_base_features": selected,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
-            "inference_method": "Newey-West HAC tests for mean daily IC and mean daily Q5-Q1 spread with lag horizon-1; separate Benjamini-Hochberg FDR families within each horizon; two-sided normal approximation.",
-            "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included. Per-date 1st/99th percentile winsorized metrics are a tail-sensitivity check only; raw results remain primary and genuine event returns are not deleted. Turnover-aware net spread estimates equal-weighted top/bottom quintile portfolio turnover and one-way costs; it is a simplified diagnostic, not a full execution simulation.",
+            "inference_method": "Daily overlapping-label metrics use Newey-West HAC with lag horizon-1 and Benjamini-Hochberg q-values within horizon. Low-frequency metrics sample every horizon-th source snapshot session for every possible start phase, estimate turnover between sampled portfolios, use HAC lag 1, and apply Benjamini-Yekutieli q-values jointly across candidate-by-phase tests within horizon; raw and winsorized results are separate families. Phase offsets overlap in their forward-return windows and are sensitivity diagnostics, not independent strategies. P-values use a two-sided normal approximation.",
+            "warning": "Formula candidates are hypotheses, not validated trading strategies. HAC reduces but does not eliminate dependence. Daily metrics use overlapping forward-return labels; low-frequency metrics sample every horizon-th snapshot for each start phase and are phase-sensitivity diagnostics. Candidate-by-phase tests use conservative Benjamini-Yekutieli correction because phases overlap. Per-date 1st/99th percentile winsorized metrics are sensitivity checks only; raw labels remain primary and genuine event returns are not deleted. Turnover cost estimates assume equal-weighted top/bottom quintiles and a fixed one-way bps rate; they do not model spread, market impact, borrow, capacity, taxes, or full portfolio constraints.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),
         encoding="utf-8",
     )
     print(f"formula candidates={len(metadata)}; horizons={len(targets)}; rows={len(source)}")
-    print(f"wrote {out / 'formula_factor_metrics.csv'} and {out / 'formula_factor_report.json'}")
+    print(f"wrote {out / 'formula_factor_metrics.csv'}, {out / 'low_frequency_phase_metrics.csv'} and {out / 'formula_factor_report.json'}")
 
 
 def main():
