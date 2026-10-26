@@ -20,7 +20,7 @@ from urllib.request import Request, urlopen
 from tools.research.sec_daily_index import parse_sec_master_index
 
 _ALLOWED_HOST = "www.sec.gov"
-_BASE_URL = "https://www.sec.gov/Archives/edgar/daily-index"
+_BASE_URL = "https://www.sec.gov/Archives/edgar/full-index"
 
 
 def _utc(value: str | datetime) -> str:
