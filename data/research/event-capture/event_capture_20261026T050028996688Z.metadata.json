@@ -1,0 +1,697 @@
+{
+  "audit_after_capture": true,
+  "audit_decision_at_utc": "2026-10-26T05:00:41.740877Z",
+  "configured_source_count": 47,
+  "cycle_completed_at_utc": "2026-10-26T05:00:41.740877Z",
+  "cycle_started_at_utc": "2026-10-26T05:00:28.996805Z",
+  "decision_at_utc": "2026-10-26T05:00:28.878037Z",
+  "event_count": 439,
+  "event_snapshot_sha256": "b51fc9cc5b49b5b094892b6e18b641c93eab2566959872644f01c4aad6f615bb",
+  "pipeline_version": "1.0",
+  "production_scanner_modified": false,
+  "requested_feed_keys": [
+    "bls_cpi",
+    "bls_employment",
+    "bea_releases",
+    "fed_all",
+    "fed_speeches",
+    "treasury_auction_announcements",
+    "treasury_auction_results"
+  ],
+  "research_only": true,
+  "scheduled_workflow_created": false,
+  "sec_universe": [
+    {
+      "cik": "0000320193",
+      "ticker": "AAPL"
+    },
+    {
+      "cik": "0000789019",
+      "ticker": "MSFT"
+    },
+    {
+      "cik": "0001045810",
+      "ticker": "NVDA"
+    },
+    {
+      "cik": "0001652044",
+      "ticker": "GOOGL"
+    },
+    {
+      "cik": "0001018724",
+      "ticker": "AMZN"
+    },
+    {
+      "cik": "0001326801",
+      "ticker": "META"
+    },
+    {
+      "cik": "0001318605",
+      "ticker": "TSLA"
+    },
+    {
+      "cik": "0001730168",
+      "ticker": "AVGO"
+    },
+    {
+      "cik": "0001046179",
+      "ticker": "TSM"
+    },
+    {
+      "cik": "0001067983",
+      "ticker": "BRK-B"
+    },
+    {
+      "cik": "0000019617",
+      "ticker": "JPM"
+    },
+    {
+      "cik": "0001403161",
+      "ticker": "V"
+    },
+    {
+      "cik": "0000731766",
+      "ticker": "UNH"
+    },
+    {
+      "cik": "0000034088",
+      "ticker": "XOM"
+    },
+    {
+      "cik": "0000909832",
+      "ticker": "COST"
+    },
+    {
+      "cik": "0000104169",
+      "ticker": "WMT"
+    },
+    {
+      "cik": "0000059478",
+      "ticker": "LLY"
+    },
+    {
+      "cik": "0001141391",
+      "ticker": "MA"
+    },
+    {
+      "cik": "0001341439",
+      "ticker": "ORCL"
+    },
+    {
+      "cik": "0001065280",
+      "ticker": "NFLX"
+    }
+  ],
+  "source_reports": {
+    "official_rss": {
+      "collection_completed_at_utc": "2026-10-26T05:00:31.020386Z",
+      "collection_started_at_utc": "2026-10-26T05:00:28.996825Z",
+      "collector_version": "1.0",
+      "event_count": 85,
+      "event_snapshot_sha256": "43702d08f7a2631d73d8c5a943b47b3b2cb47e9ad40e9cd42f86a3d54beac537",
+      "feed_reports": [
+        {
+          "error": "failed to fetch official feed bls_cpi: HTTPError HTTP 403",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "feed_key": "bls_cpi",
+          "feed_url": "https://www.bls.gov/feed/cpi.rss",
+          "status": "fetch_or_parse_error"
+        },
+        {
+          "error": "failed to fetch official feed bls_employment: HTTPError HTTP 403",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "feed_key": "bls_employment",
+          "feed_url": "https://www.bls.gov/feed/empsit.rss",
+          "status": "fetch_or_parse_error"
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 48,
+          "feed_key": "bea_releases",
+          "feed_url": "https://apps.bea.gov/rss/rss.xml",
+          "first_seen_at_utc": "2026-10-26T05:00:29.780527Z",
+          "item_count": 48,
+          "source_payload_sha256": "8a5160d26d699a6073a2cd0dd075c442f0baf73e25e469af744519e19f36d1a4",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 20,
+          "feed_key": "fed_all",
+          "feed_url": "https://www.federalreserve.gov/feeds/press_all.xml",
+          "first_seen_at_utc": "2026-10-26T05:00:30.044550Z",
+          "item_count": 20,
+          "source_payload_sha256": "529e889a916423a3979c1bebdd94c2b8d402889700d8c85cc4d125b7f538d327",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 15,
+          "feed_key": "fed_speeches",
+          "feed_url": "https://www.federalreserve.gov/feeds/speeches_and_testimony.xml",
+          "first_seen_at_utc": "2026-10-26T05:00:30.305098Z",
+          "item_count": 15,
+          "source_payload_sha256": "1df94683803aacafbd17ab9bb0718f34f33ea302d2a5bf4394073e4ccdbce4a2",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 19,
+          "event_count": 1,
+          "feed_key": "treasury_auction_announcements",
+          "feed_url": "https://www.treasurydirect.gov/TA_WS/securities/announced/rss",
+          "first_seen_at_utc": "2026-10-26T05:00:30.663585Z",
+          "item_count": 20,
+          "source_payload_sha256": "5d104741f78e4c6dcedc0796b295d57c23f4b38f2ba2bb8edf40258a507b58c9",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 14,
+          "event_count": 1,
+          "feed_key": "treasury_auction_results",
+          "feed_url": "https://www.treasurydirect.gov/TA_WS/securities/auctioned/rss",
+          "first_seen_at_utc": "2026-10-26T05:00:31.013975Z",
+          "item_count": 15,
+          "source_payload_sha256": "2e67bfe0e58b05a28c25b40e5e6809c69ab4dd93f0b123a0ec5efbe1ded8fd97",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        }
+      ],
+      "limitations": [
+        "RSS pubDate is provider metadata and is not proof of the exact instant the item first became publicly visible.",
+        "first_seen_at_utc is the collector's actual observation timestamp and must be used for strict point-in-time replay.",
+        "RSS feeds expose a limited recent window; feed absence is not proof that no event occurred.",
+        "This collector does not provide historical consensus values; it cannot calculate valid historical macro surprises by itself."
+      ],
+      "production_scanner_modified": false,
+      "requested_feed_keys": [
+        "bls_cpi",
+        "bls_employment",
+        "bea_releases",
+        "fed_all",
+        "fed_speeches",
+        "treasury_auction_announcements",
+        "treasury_auction_results"
+      ],
+      "research_only": true
+    },
+    "sec_edgar": {
+      "company_count": 20,
+      "company_reports": [
+        {
+          "cik": "0000320193",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000320193.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "AAPL"
+        },
+        {
+          "cik": "0000789019",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000789019.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "MSFT"
+        },
+        {
+          "cik": "0001045810",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001045810.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "NVDA"
+        },
+        {
+          "cik": "0001652044",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001652044.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "GOOGL"
+        },
+        {
+          "cik": "0001018724",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001018724.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "AMZN"
+        },
+        {
+          "cik": "0001326801",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001326801.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "META"
+        },
+        {
+          "cik": "0001318605",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001318605.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "TSLA"
+        },
+        {
+          "cik": "0001730168",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001730168.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "AVGO"
+        },
+        {
+          "cik": "0001046179",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001046179.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "TSM"
+        },
+        {
+          "cik": "0001067983",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001067983.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "BRK-B"
+        },
+        {
+          "cik": "0000019617",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000019617.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "JPM"
+        },
+        {
+          "cik": "0001403161",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001403161.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "V"
+        },
+        {
+          "cik": "0000731766",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000731766.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "UNH"
+        },
+        {
+          "cik": "0000034088",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000034088.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "XOM"
+        },
+        {
+          "cik": "0000909832",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000909832.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "COST"
+        },
+        {
+          "cik": "0000104169",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000104169.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "WMT"
+        },
+        {
+          "cik": "0000059478",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000059478.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "LLY"
+        },
+        {
+          "cik": "0001141391",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001141391.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "MA"
+        },
+        {
+          "cik": "0001341439",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001341439.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "ORCL"
+        },
+        {
+          "cik": "0001065280",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001065280.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "NFLX"
+        }
+      ],
+      "event_count": 0,
+      "partial_company_count": 20,
+      "research_only": true,
+      "verified_header_timestamp_count": 0
+    },
+    "yahoo_finance_rss": {
+      "collector_version": "1.0",
+      "event_count": 354,
+      "failed_ticker_count": 0,
+      "limitations": [
+        "Yahoo Finance RSS is an aggregator, not an official filing source.",
+        "RSS pubDate is publisher metadata, not proof of the exact first-public instant.",
+        "Only the collector's recorded first_seen_at_utc establishes when this system observed an item.",
+        "The feed exposes a limited rolling window; absence does not prove no event occurred.",
+        "The collector does not infer event sentiment or earnings labels from headline text."
+      ],
+      "production_scanner_modified": false,
+      "requested_ticker_count": 20,
+      "requested_tickers": [
+        "AAPL",
+        "MSFT",
+        "NVDA",
+        "GOOGL",
+        "AMZN",
+        "META",
+        "TSLA",
+        "AVGO",
+        "TSM",
+        "BRK-B",
+        "JPM",
+        "V",
+        "UNH",
+        "XOM",
+        "COST",
+        "WMT",
+        "LLY",
+        "MA",
+        "ORCL",
+        "NFLX"
+      ],
+      "research_only": true,
+      "source": "yahoo_finance_rss",
+      "source_quality": "aggregator",
+      "successful_ticker_count": 20,
+      "ticker_reports": [
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 19,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=AAPL&region=US&lang=en-US",
+          "item_count": 19,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:35.656224Z",
+          "source_payload_sha256": "92e66ae412d4817bdb380cd383facc115124a61a747bc59e96479eaaecf69ab6",
+          "status": "ok",
+          "ticker": "AAPL"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=MSFT&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:35.956484Z",
+          "source_payload_sha256": "8da09bd1f1bc70613ebaa2c599ce4e7885f225db77786db19006657a66fd1b87",
+          "status": "ok",
+          "ticker": "MSFT"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 20,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=NVDA&region=US&lang=en-US",
+          "item_count": 20,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:36.280385Z",
+          "source_payload_sha256": "0ad6f328da3057dbde7a1327f75190e08703acc5caeb2462ff40dfc30ac5fb3b",
+          "status": "ok",
+          "ticker": "NVDA"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 19,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GOOGL&region=US&lang=en-US",
+          "item_count": 19,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:36.646396Z",
+          "source_payload_sha256": "89b56b02b6f22e7dacbcea03d77e465c845d95040d52344f8165709c26d68b47",
+          "status": "ok",
+          "ticker": "GOOGL"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 17,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=AMZN&region=US&lang=en-US",
+          "item_count": 17,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:37.012492Z",
+          "source_payload_sha256": "fcd74ba65ec2f64c1b794519fc31bc4a920b4a67d15d88b51a72adbdb21bc1e2",
+          "status": "ok",
+          "ticker": "AMZN"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=META&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:37.303571Z",
+          "source_payload_sha256": "2bc97812e24209a9812ea8045e2b4d5acd2692ba063d7b3fb29a241d38cc3066",
+          "status": "ok",
+          "ticker": "META"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=TSLA&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:37.597902Z",
+          "source_payload_sha256": "e36989caf729c432644802314b6c70bd52d971c443d4587591143def948f9e93",
+          "status": "ok",
+          "ticker": "TSLA"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=AVGO&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:37.890657Z",
+          "source_payload_sha256": "074d4268bcb3b56b3ac49b69569cf13639e241ba9159aa42741b400696772444",
+          "status": "ok",
+          "ticker": "AVGO"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 17,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=TSM&region=US&lang=en-US",
+          "item_count": 17,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:38.182130Z",
+          "source_payload_sha256": "288ccdb0dc6c79568fde8a0c9d2f9c197383acb12e4372683afb79ffa8437022",
+          "status": "ok",
+          "ticker": "TSM"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=BRK-B&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:38.479120Z",
+          "source_payload_sha256": "8194c3414389c3796a8e7df39be9e3d616889802b4acc81d24945f3af8037942",
+          "status": "ok",
+          "ticker": "BRK-B"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 19,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=JPM&region=US&lang=en-US",
+          "item_count": 19,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:38.800037Z",
+          "source_payload_sha256": "c620920ecf3418b4609e2273ed1f57e8f058455271997b9625a334c8779face1",
+          "status": "ok",
+          "ticker": "JPM"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=V&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:39.190360Z",
+          "source_payload_sha256": "a4581495637ba21a7f532e2429cd47d9cbae7fb06481b53e52ca2cd1b0a0c657",
+          "status": "ok",
+          "ticker": "V"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 12,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=UNH&region=US&lang=en-US",
+          "item_count": 12,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:39.480688Z",
+          "source_payload_sha256": "7a1462027d74549e8615dd8316c2938475a0aad1267ed7070cff78213a523140",
+          "status": "ok",
+          "ticker": "UNH"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 19,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=XOM&region=US&lang=en-US",
+          "item_count": 19,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:39.874258Z",
+          "source_payload_sha256": "543fa9ecd69600e94725066c927ea904d416e5b312e7503e21d395be7c929523",
+          "status": "ok",
+          "ticker": "XOM"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 20,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=COST&region=US&lang=en-US",
+          "item_count": 20,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:40.164469Z",
+          "source_payload_sha256": "e35152bd30b8e1a4b9387aa3eca0f3edfdba31105af4930729027c561c310073",
+          "status": "ok",
+          "ticker": "COST"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 14,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=WMT&region=US&lang=en-US",
+          "item_count": 14,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:40.493680Z",
+          "source_payload_sha256": "f2806954d199802d077f204772c1c4203027bf0e6c405623b83da53692e45913",
+          "status": "ok",
+          "ticker": "WMT"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 19,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=LLY&region=US&lang=en-US",
+          "item_count": 19,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:40.804335Z",
+          "source_payload_sha256": "af8ecd063f1dec7cdb6ea879bd12d11abf8545543fc60c30edf490c455ffc593",
+          "status": "ok",
+          "ticker": "LLY"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=MA&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:41.156032Z",
+          "source_payload_sha256": "8f6836649b1f7c0e6c74c1bfdb903492138bfe29ecea9137f79be2a6c6e964d4",
+          "status": "ok",
+          "ticker": "MA"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 15,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=ORCL&region=US&lang=en-US",
+          "item_count": 15,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:41.448825Z",
+          "source_payload_sha256": "ed307ae1f9e119f97a37dd01b6a3020b02d1b05aa2a72cbbc678bfb3655bb08d",
+          "status": "ok",
+          "ticker": "ORCL"
+        },
+        {
+          "duplicate_count_removed": 0,
+          "error": null,
+          "error_type": null,
+          "event_count": 18,
+          "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=NFLX&region=US&lang=en-US",
+          "item_count": 18,
+          "malformed_item_count": 0,
+          "missing_or_invalid_published_at_count": 0,
+          "retrieved_at_utc": "2026-10-26T05:00:41.735015Z",
+          "source_payload_sha256": "c36dcebb133e311e8b2c8972104294ed7cb8f4a33b2c416427f5b0f90c696408",
+          "status": "ok",
+          "ticker": "NFLX"
+        }
+      ]
+    }
+  },
+  "successful_source_count": 25,
+  "yahoo_finance_rss_enabled": true
+}
