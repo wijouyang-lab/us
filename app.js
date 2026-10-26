@@ -458,8 +458,9 @@
     }
     var risk = '<div><span class="pmk">' + riskK + '</span><b class="' + riskCls + '">' + esc(riskV) + '</b></div>';
 
-    /* 风控距离条：把 止损线 / 入场价 / 现价 落在同一条轴上，
-       一眼看出「离止损还有多远」。三个价格都有效才画，任何缺失则整条不画。 */
+    /* 风控距离条（色带版）：把 止损线 / 入场价 / 现价 落在同一条轴上，
+       红色段 = 风险区（止损→入场），绿色段 = 盈利区（入场→现价，或入场→移动止盈线）。
+       三个价格都有效才画，任何缺失则整条不画。 */
     var curP = num(p.current_price);
     var riskBar = '';
     if (stopP != null && entryP && curP != null && curP > 0 && stopP > 0) {
@@ -470,19 +471,33 @@
         var pos = function (v) {
           return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)).toFixed(1);
         };
-        var distStop = (curP / stopP - 1) * 100;
-        var distEntry = (curP / entryP - 1) * 100;
+        // 色带：[a,b] 映射到轨道百分比；a/b 顺序不限
+        var zone = function (a, b, cls) {
+          var x1 = parseFloat(pos(Math.min(a, b)));
+          var x2 = parseFloat(pos(Math.max(a, b)));
+          if (x2 - x1 <= 0.1) return '';
+          return '<span class="prb-zone ' + cls + '" style="left:' + x1.toFixed(1) +
+            '%;width:' + (x2 - x1).toFixed(1) + '%"></span>';
+        };
+        var zones = '';
+        if (stopP < entryP) zones += zone(stopP, entryP, 'down');   // 风险区：止损→入场
+        // 盈利区：入场→max(现价, 移动止盈线)；现价低于入场（浮亏）时不画绿段
+        var greenHi = Math.max(curP, stopP);
+        if (greenHi > entryP) zones += zone(entryP, greenHi, 'up');
+        var distStop = (stopP / curP - 1) * 100;      // 止损线在当前价下方多少
+        var distEntry = (curP / entryP - 1) * 100;    // 现价相对入场价
+        var sgn = function (v) { return v > 0 ? '+' : ''; };
         riskBar = '<div class="pos-risk">' +
-          '<div class="prb-track">' +
+          '<div class="prb-track">' + zones +
             '<i class="prb-stop" style="left:' + pos(stopP) + '%" title="止损 $' + fmt(stopP, 2) + '"></i>' +
             '<i class="prb-entry" style="left:' + pos(entryP) + '%" title="入场 $' + fmt(entryP, 2) + '"></i>' +
             '<i class="prb-cur" style="left:' + pos(curP) + '%" title="现价 $' + fmt(curP, 2) + '"></i>' +
           '</div>' +
           '<div class="prb-legend">' +
             '<span class="prb-s">止损 $' + fmt(stopP, 2) + '（距现价 ' +
-              (distStop >= 0 ? '+' : '') + fmt(distStop, 1) + '%）</span>' +
+              sgn(distStop) + fmt(distStop, 1) + '%）</span>' +
             '<span class="prb-e">入场 $' + fmt(entryP, 2) + '（' +
-              (distEntry >= 0 ? '+' : '') + fmt(distEntry, 1) + '%）</span>' +
+              sgn(distEntry) + fmt(distEntry, 1) + '%）</span>' +
             '<span class="prb-c">现价 $' + fmt(curP, 2) + '</span>' +
           '</div>' +
         '</div>';

@@ -517,7 +517,11 @@ button{font-family:inherit}
 .pos-risk{margin-top:8px;border-top:1px solid var(--border-2);padding-top:8px}
 .prb-track{position:relative;height:6px;border-radius:99px;background:var(--soft);
   border:1px solid var(--border-2);margin:6px 0 0}
-.prb-track i{position:absolute;top:-4px;width:2px;height:12px;transform:translateX(-1px);border-radius:1px}
+.prb-track i{position:absolute;top:-4px;width:2px;height:12px;transform:translateX(-1px);border-radius:1px;z-index:2}
+/* 色带：红=止损→入场的风险区，绿=入场→现价/移动止盈线的盈利区 */
+.prb-zone{position:absolute;top:1px;height:4px;border-radius:2px;z-index:1;opacity:.9}
+.prb-zone.up{background:var(--up)}
+.prb-zone.down{background:var(--down)}
 .prb-stop{background:var(--down)}
 .prb-entry{background:var(--text-3)}
 .prb-cur{background:var(--text);width:3px;border-radius:2px}
