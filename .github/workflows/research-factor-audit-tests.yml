@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - research/factor-label-audit-diagnostics
+      - research/group-extreme-labels-by-ticker
     paths:
       - "tools/research/audit_formula_factor_dataset.py"
       - "tests/test_audit_formula_factor_dataset.py"

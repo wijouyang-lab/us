@@ -63,6 +63,36 @@ def audit_dataset(input_path: str) -> dict:
                 }
                 for idx in example_indices
             ]
+    # Summarize anomalies by ticker so repeated overlapping labels caused by
+    # one underlying price discontinuity are visible without dropping any rows.
+    extreme_rows = []
+    for col in forward_cols:
+        numeric = pd.to_numeric(frame[col], errors="coerce").replace([np.inf, -np.inf], np.nan)
+        mask = numeric.abs() > 1.0
+        if mask.any():
+            extreme_rows.append(pd.DataFrame({
+                "ticker": frame.loc[mask, "Ticker"].astype(str),
+                "date": dates.loc[mask],
+                "label": col,
+                "value": numeric.loc[mask],
+            }))
+    if extreme_rows:
+        extreme_frame = pd.concat(extreme_rows, ignore_index=True)
+        extreme_by_ticker = []
+        for ticker, group in extreme_frame.groupby("ticker", sort=True):
+            extreme_by_ticker.append({
+                "ticker": str(ticker),
+                "extreme_label_count": int(len(group)),
+                "distinct_dates": int(group["date"].nunique()),
+                "labels_affected": sorted(group["label"].unique().tolist()),
+                "max_abs_forward_return": round(float(group["value"].abs().max()), 8),
+                "first_date": str(group["date"].min().date()) if group["date"].notna().any() else None,
+                "last_date": str(group["date"].max().date()) if group["date"].notna().any() else None,
+            })
+        extreme_by_ticker.sort(key=lambda item: (-item["extreme_label_count"], -item["max_abs_forward_return"], item["ticker"]))
+    else:
+        extreme_by_ticker = []
+
     return {
         "input": str(input_path),
         "row_count": int(len(frame)),
@@ -84,6 +114,7 @@ def audit_dataset(input_path: str) -> dict:
         "missing_fraction_by_feature_or_label": missingness,
         "forward_return_summary": label_stats,
         "suspicious_forward_return_examples": suspicious_label_examples,
+        "extreme_forward_returns_by_ticker": extreme_by_ticker,
         "warnings": [
             msg for condition, msg in [
                 (duplicate_rows > 0, "Duplicate date/ticker rows exist; investigate before interpreting cross-sectional ranks."),
