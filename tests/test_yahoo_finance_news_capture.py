@@ -81,6 +81,10 @@ def test_yahoo_collector_records_first_seen_and_rss_timestamp_and_deduplicates()
     assert first["first_seen_at_utc"] == "2026-10-26T17:00:00Z"
     assert first["source_url"] == "https://finance.yahoo.com/news/example-results.html"
     assert first["publisher_name"] == "Reuters"
+    assert first["queried_ticker"] == "AAPL"
+    assert first["ticker_mapping_method"] == "per_ticker_yahoo_rss_query"
+    assert first["ticker_mapping_status"] == "unverified_query_scope"
+    assert first["ticker_mapping_confidence"] == "unverified"
     second = next(event for event in result["events"] if "another statement" in event["headline"])
     assert second["published_at_utc"] is None
     assert second["availability_status"] == "timestamp_missing"
