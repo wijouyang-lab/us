@@ -77,16 +77,83 @@ def _daily_metrics(frame: pd.DataFrame, factor: str, target: str, min_names: int
         pair = group[[factor, target]].apply(pd.to_numeric, errors="coerce").replace(
             [np.inf, -np.inf], np.nan
         ).dropna()
+        has_tickers = "Ticker" in group.columns
+        if has_tickers:
+            pair["_ticker"] = group.loc[pair.index, "Ticker"].astype(str)
         if len(pair) < min_names or pair[factor].nunique() < 2:
             continue
         ic = pair[factor].corr(pair[target], method="spearman")
         if not np.isfinite(ic):
             continue
         pair = pair.assign(_q=pd.qcut(pair[factor].rank(method="first"), 5, labels=False) + 1)
-        q5 = pair.loc[pair["_q"] == 5, target].mean()
-        q1 = pair.loc[pair["_q"] == 1, target].mean()
-        rows.append({"date": date, "ic": float(ic), "spread": float(q5 - q1), "n": len(pair)})
+        q5_rows = pair.loc[pair["_q"] == 5]
+        q1_rows = pair.loc[pair["_q"] == 1]
+        rows.append({
+            "date": date,
+            "ic": float(ic),
+            "spread": float(q5_rows[target].mean() - q1_rows[target].mean()),
+            "n": len(pair),
+            "long_names": tuple(q5_rows["_ticker"].tolist()) if has_tickers else None,
+            "short_names": tuple(q1_rows["_ticker"].tolist()) if has_tickers else None,
+            "duplicate_tickers": bool(pair["_ticker"].duplicated().any()) if has_tickers else False,
+        })
     return pd.DataFrame(rows)
+
+
+def _portfolio_one_way_turnover(previous: tuple[str, ...] | None,
+                                current: tuple[str, ...]) -> float:
+    """Half-L1 weight change for an equal-weight leg, from 0 to 100% turnover."""
+    if not current:
+        return float("nan")
+    current_names = set(current)
+    if previous is None:
+        # Initial establishment of a fully invested long/short leg.
+        return 1.0
+    previous_names = set(previous)
+    if not previous_names:
+        return 1.0
+    old_weights = {name: 1.0 / len(previous_names) for name in previous_names}
+    new_weights = {name: 1.0 / len(current_names) for name in current_names}
+    return 0.5 * sum(
+        abs(new_weights.get(name, 0.0) - old_weights.get(name, 0.0))
+        for name in old_weights.keys() | new_weights.keys()
+    )
+
+
+def _attach_turnover_costs(daily: pd.DataFrame, cost_bps: float) -> pd.DataFrame:
+    """Attach estimated one-way turnover and net spread; never changes source labels."""
+    result = daily.copy()
+    for col in ("long_turnover", "short_turnover", "total_turnover",
+                "turnover_cost_bps", "turnover_aware_spread"):
+        result[col] = np.nan
+    result["turnover_cost_available"] = False
+    required = {"long_names", "short_names", "duplicate_tickers", "spread"}
+    if daily.empty or not required.issubset(daily.columns):
+        return result
+    if daily["duplicate_tickers"].fillna(True).astype(bool).any():
+        # Do not claim executable turnover when duplicate date/ticker rows make
+        # portfolio weights ambiguous. The raw cross-sectional metrics remain.
+        return result
+    if daily["long_names"].isna().any() or daily["short_names"].isna().any():
+        return result
+
+    previous_long = None
+    previous_short = None
+    for idx, row in result.sort_values("date").iterrows():
+        long_names = tuple(row["long_names"])
+        short_names = tuple(row["short_names"])
+        long_turnover = _portfolio_one_way_turnover(previous_long, long_names)
+        short_turnover = _portfolio_one_way_turnover(previous_short, short_names)
+        total_turnover = long_turnover + short_turnover
+        cost = total_turnover * float(cost_bps)
+        result.loc[idx, "long_turnover"] = long_turnover
+        result.loc[idx, "short_turnover"] = short_turnover
+        result.loc[idx, "total_turnover"] = total_turnover
+        result.loc[idx, "turnover_cost_bps"] = cost
+        result.loc[idx, "turnover_aware_spread"] = float(row["spread"]) - cost / 10000.0
+        result.loc[idx, "turnover_cost_available"] = True
+        previous_long, previous_short = long_names, short_names
+    return result
 
 
 def _hac_mean_test(daily: pd.DataFrame, metric: str, max_lag: int) -> tuple[float | None, float | None]:
@@ -123,17 +190,26 @@ def _hac_ic_test(daily: pd.DataFrame, max_lag: int) -> tuple[float | None, float
     return _hac_mean_test(daily, "ic", max_lag)
 
 def _summary(daily: pd.DataFrame, cost_bps: float):
+    empty_turnover = {
+        "turnover_cost_available": False,
+        "mean_long_turnover": None, "mean_short_turnover": None,
+        "mean_total_turnover": None, "mean_turnover_cost_bps": None,
+        "turnover_aware_net_q5_q1_spread": None,
+        "turnover_aware_positive_spread_day_pct": None,
+    }
     if daily.empty:
-        return {"n_days": 0, "mean_daily_ic": None, "icir": None,
-                "gross_q5_q1_spread": None, "net_q5_q1_spread": None,
-                "positive_spread_day_pct": None}
+        return {
+            "n_days": 0, "mean_daily_ic": None, "icir": None,
+            "gross_q5_q1_spread": None, "net_q5_q1_spread": None,
+            "positive_spread_day_pct": None, **empty_turnover,
+        }
     ic = daily["ic"].to_numpy(dtype=float)
     spread = daily["spread"].to_numpy(dtype=float)
     ic_std = float(np.std(ic, ddof=1)) if len(ic) > 1 else 0.0
     gross = float(np.mean(spread))
-    # Approximation: one long and one short leg, each incurring one-way cost.
+    # Preserve the prior fixed-cost estimate so existing reports remain comparable.
     net = gross - 2.0 * cost_bps / 10000.0
-    return {
+    result = {
         "n_days": int(len(daily)),
         "n_stock_day_observations": int(daily["n"].sum()),
         "mean_daily_ic": round(float(np.mean(ic)), 6),
@@ -141,7 +217,26 @@ def _summary(daily: pd.DataFrame, cost_bps: float):
         "gross_q5_q1_spread": round(gross, 6),
         "net_q5_q1_spread": round(net, 6),
         "positive_spread_day_pct": round(float(np.mean(spread > 0) * 100), 2),
+        **empty_turnover,
     }
+    available = (
+        "turnover_aware_spread" in daily
+        and "turnover_cost_available" in daily
+        and daily["turnover_cost_available"].astype(bool).all()
+    )
+    if available:
+        turnover_spread = pd.to_numeric(daily["turnover_aware_spread"], errors="coerce").to_numpy(dtype=float)
+        if len(turnover_spread) and np.isfinite(turnover_spread).all():
+            result.update({
+                "turnover_cost_available": True,
+                "mean_long_turnover": round(float(daily["long_turnover"].mean()), 6),
+                "mean_short_turnover": round(float(daily["short_turnover"].mean()), 6),
+                "mean_total_turnover": round(float(daily["total_turnover"].mean()), 6),
+                "mean_turnover_cost_bps": round(float(daily["turnover_cost_bps"].mean()), 6),
+                "turnover_aware_net_q5_q1_spread": round(float(np.mean(turnover_spread)), 6),
+                "turnover_aware_positive_spread_day_pct": round(float(np.mean(turnover_spread > 0) * 100), 2),
+            })
+    return result
 
 
 def run(input_path: str, output_dir: str, max_base_factors: int = 8,
@@ -178,7 +273,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
         source, selected, date_column="Snapshot_Date",
         max_base_factors=max_base_factors,
     )
-    work = pd.concat([source[["Snapshot_Date"]].reset_index(drop=True),
+    work = pd.concat([source[["Snapshot_Date", "Ticker"]].reset_index(drop=True),
                       candidates.reset_index(drop=True)], axis=1)
     # Keep the raw labels as the primary analysis. A separate per-date
     # winsorized sensitivity reveals whether results depend on a tiny number of
@@ -194,14 +289,18 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     for target in targets:
         for meta in metadata:
             name = meta["candidate"]
-            evaluated = work[["Snapshot_Date", name]].copy()
+            evaluated = work[["Snapshot_Date", "Ticker", name]].copy()
             evaluated[target] = pd.to_numeric(source[target].values, errors="coerce")
-            daily = _daily_metrics(evaluated, name, target, min_names)
+            daily = _attach_turnover_costs(
+                _daily_metrics(evaluated, name, target, min_names), cost_bps
+            )
             horizon = int(target.upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
             summary = _summary(daily, cost_bps)
-            winsorized_eval = work[["Snapshot_Date", name]].copy()
+            winsorized_eval = work[["Snapshot_Date", "Ticker", name]].copy()
             winsorized_eval[target] = winsorized_targets[target].to_numpy()
-            winsorized_daily = _daily_metrics(winsorized_eval, name, target, min_names)
+            winsorized_daily = _attach_turnover_costs(
+                _daily_metrics(winsorized_eval, name, target, min_names), cost_bps
+            )
             winsorized_summary = _summary(winsorized_daily, cost_bps)
             for key, value in winsorized_summary.items():
                 summary[f"winsorized_{key}"] = value
@@ -215,6 +314,16 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             summary["winsorized_ic_hac_p_value"] = round(winsorized_ic_p, 8) if winsorized_ic_p is not None else None
             summary["winsorized_spread_hac_t"] = round(winsorized_spread_t, 4) if winsorized_spread_t is not None else None
             summary["winsorized_spread_hac_p_value"] = round(winsorized_spread_p, 8) if winsorized_spread_p is not None else None
+            turnover_spread_t, turnover_spread_p = _hac_mean_test(
+                daily, "turnover_aware_spread", max_lag=horizon - 1
+            )
+            winsorized_turnover_spread_t, winsorized_turnover_spread_p = _hac_mean_test(
+                winsorized_daily, "turnover_aware_spread", max_lag=horizon - 1
+            )
+            summary["turnover_aware_spread_hac_t"] = round(turnover_spread_t, 4) if turnover_spread_t is not None else None
+            summary["turnover_aware_spread_hac_p_value"] = round(turnover_spread_p, 8) if turnover_spread_p is not None else None
+            summary["winsorized_turnover_aware_spread_hac_t"] = round(winsorized_turnover_spread_t, 4) if winsorized_turnover_spread_t is not None else None
+            summary["winsorized_turnover_aware_spread_hac_p_value"] = round(winsorized_turnover_spread_p, 8) if winsorized_turnover_spread_p is not None else None
             hac_t, hac_p = _hac_mean_test(daily, "ic", max_lag=horizon - 1)
             spread_hac_t, spread_hac_p = _hac_mean_test(daily, "spread", max_lag=horizon - 1)
             summary["ic_hac_t"] = round(hac_t, 4) if hac_t is not None else None
@@ -235,7 +344,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
                         # the label horizon, it has no independent dates left and
                         # must report zero observations rather than skip the purge.
                         allowed = set(pd.Timestamp(x) for x in chunk[horizon:])
-                    fold = daily[daily["date"].isin(allowed)]
+                    fold = _attach_turnover_costs(daily[daily["date"].isin(allowed)], cost_bps)
                     fold_summaries.append({"fold": fold_no, **_summary(fold, cost_bps)})
             out_rows.append({
                 "candidate": name, "formula": meta["formula"], "family": meta["family"],
@@ -250,6 +359,8 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             ("spread", "spread_hac_p_value", "spread_fdr_q_value"),
             ("winsorized_ic", "winsorized_ic_hac_p_value", "winsorized_ic_fdr_q_value"),
             ("winsorized_spread", "winsorized_spread_hac_p_value", "winsorized_spread_fdr_q_value"),
+            ("turnover_aware_spread", "turnover_aware_spread_hac_p_value", "turnover_aware_spread_fdr_q_value"),
+            ("winsorized_turnover_aware_spread", "winsorized_turnover_aware_spread_hac_p_value", "winsorized_turnover_aware_spread_fdr_q_value"),
         ):
             idxs = [
                 i for i, row in enumerate(out_rows)
@@ -279,7 +390,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
             "inference_method": "Newey-West HAC tests for mean daily IC and mean daily Q5-Q1 spread with lag horizon-1; separate Benjamini-Hochberg FDR families within each horizon; two-sided normal approximation.",
-            "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included. Per-date 1st/99th percentile winsorized metrics are a tail-sensitivity check only; raw results remain primary and genuine event returns are not deleted.",
+            "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included. Per-date 1st/99th percentile winsorized metrics are a tail-sensitivity check only; raw results remain primary and genuine event returns are not deleted. Turnover-aware net spread estimates equal-weighted top/bottom quintile portfolio turnover and one-way costs; it is a simplified diagnostic, not a full execution simulation.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),
         encoding="utf-8",

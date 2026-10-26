@@ -156,3 +156,50 @@ def test_run_reports_raw_and_winsorized_metrics_separately(tmp_path):
     assert "winsorized_spread_fdr_q_value" in row
     assert report["research_only"] is True
 
+def test_turnover_cost_model_recognizes_stable_quintile_membership(tmp_path):
+    rng = np.random.default_rng(2026)
+    rows = []
+    for day in pd.date_range("2024-06-03", periods=30, freq="B"):
+        for i in range(20):
+            signal = float(i)
+            base_return = 0.02 if i >= 16 else (-0.01 if i < 4 else 0.0)
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{i:02}",
+                "Signal": signal,
+                "Forward_Return_5D": base_return + float(rng.normal(scale=0.008)),
+            })
+    inp, out = tmp_path / "stable_membership.csv", tmp_path / "stable_out"
+    pd.DataFrame(rows).to_csv(inp, index=False)
+    run(str(inp), str(out), max_base_factors=1, cost_bps=5, min_names=10,
+        requested_factors=["Signal"])
+    report = json.loads((out / "formula_factor_report.json").read_text())
+    row = next(r for r in report["results"] if r["candidate"] == "z__Signal")
+    assert row["turnover_cost_available"] is True
+    # The JSON report deliberately rounds published metrics to six decimals.
+    assert row["mean_long_turnover"] == pytest.approx(round(1 / 30, 6))
+    assert row["mean_short_turnover"] == pytest.approx(round(1 / 30, 6))
+    assert row["mean_total_turnover"] == pytest.approx(round(2 / 30, 6))
+    assert row["mean_turnover_cost_bps"] == pytest.approx(round(10 / 30, 6))
+    assert row["turnover_aware_net_q5_q1_spread"] > row["net_q5_q1_spread"]
+    assert "turnover_aware_spread_hac_p_value" in row
+    assert "turnover_aware_spread_fdr_q_value" in row
+    assert "winsorized_turnover_aware_spread_fdr_q_value" in row
+
+
+def test_turnover_cost_model_declines_duplicate_ticker_weights():
+    from tools.research.run_formula_factor_validation import _attach_turnover_costs
+
+    daily = pd.DataFrame([{
+        "date": pd.Timestamp("2024-01-02"),
+        "ic": 0.1,
+        "spread": 0.02,
+        "n": 10,
+        "long_names": ("AAA", "AAA"),
+        "short_names": ("BBB", "CCC"),
+        "duplicate_tickers": True,
+    }])
+    result = _attach_turnover_costs(daily, 5)
+    assert result["turnover_cost_available"].eq(False).all()
+    assert result["turnover_aware_spread"].isna().all()
+
