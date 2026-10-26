@@ -11,7 +11,7 @@ import re
 from typing import Any
 
 _RELEVANT_FORMS = {"8-K", "10-K", "10-Q"}
-_ACCESSION_COMPACT = re.compile(r"^(?P<cik>\d{1,10})/(?P<accession>\d{18})/(?P<filename>[^/]+)$")
+_MASTER_INDEX_ENTRY = re.compile(r"^(?P<cik>\d{1,10})/(?P<accession>\d{10}-\d{2}-\d{6})\.txt$", re.IGNORECASE)
 
 
 def _date(value: str, field: str) -> date:
@@ -90,16 +90,17 @@ def parse_sec_master_index(
             continue
         path = filename.removeprefix("/")
         index_path = path.removeprefix("edgar/data/")
-        match = _ACCESSION_COMPACT.match(index_path)
+        match = _MASTER_INDEX_ENTRY.fullmatch(index_path)
         if not match:
+            # Quarterly master.idx entries point at the complete submission text
+            # (CIK/accession-with-dashes.txt), not the no-dash filing directory
+            # used for individual HTML exhibits.
             malformed_rows += 1
             continue
         path_cik = match.group("cik").lstrip("0") or "0"
-        if path_cik != normalized_cik:
-            malformed_rows += 1
-            continue
-        accession = _accession_from_compact(match.group("accession"))
-        if accession is None:
+        accession = match.group("accession")
+        accession_cik = accession.split("-", 1)[0].lstrip("0") or "0"
+        if path_cik != normalized_cik or accession_cik != normalized_cik:
             malformed_rows += 1
             continue
         event_key = f"{normalized_cik}:{accession}"
