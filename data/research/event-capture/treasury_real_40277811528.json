@@ -1,0 +1,4106 @@
+{
+  "metadata": {
+    "curve_type": "real",
+    "limitations": [
+      "A current historical download does not reconstruct when each historical value first became available.",
+      "Rows are eligible only for decision timestamps at or after retrieved_at_utc unless a separate validated historical availability timestamp is supplied.",
+      "Empty Treasury fields remain null and are never coerced to zero.",
+      "Yield curve rates are Treasury's daily published par yields, not intraday executable bond prices."
+    ],
+    "normalized_rows_sha256": "f068f64aaeb73066f6e3cca3f630b6d635d52e5894ae83ea8fc814892f9715c2",
+    "production_scanner_modified": false,
+    "research_only": true,
+    "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+    "row_count": 204,
+    "source": "us_treasury_daily_par_real_yield_curve",
+    "source_diagnostics": {
+      "entries_with_any_maturity_yield": 204,
+      "entries_with_valid_observation_date": 204,
+      "xml_entry_count": 204
+    },
+    "source_payload_sha256": "fe7a3ded9e0b9d8b49a50a7b35a2eb4a035aab3c24cbcc3dfabd081f12370ddb",
+    "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026"
+  },
+  "rows": [
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": null,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.94,
+        "20y": 2.39,
+        "30y": 2.63,
+        "5y": 1.46,
+        "7y": 1.69
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.91,
+        "20y": 2.37,
+        "30y": 2.61,
+        "5y": 1.42,
+        "7y": 1.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.91,
+        "20y": 2.38,
+        "30y": 2.62,
+        "5y": 1.42,
+        "7y": 1.66
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-07",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.88,
+        "20y": 2.35,
+        "30y": 2.59,
+        "5y": 1.4,
+        "7y": 1.63
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.39,
+        "30y": 2.62,
+        "5y": 1.43,
+        "7y": 1.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.35,
+        "30y": 2.58,
+        "5y": 1.43,
+        "7y": 1.66
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-12",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.36,
+        "30y": 2.59,
+        "5y": 1.41,
+        "7y": 1.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.88,
+        "20y": 2.34,
+        "30y": 2.58,
+        "5y": 1.38,
+        "7y": 1.63
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.86,
+        "20y": 2.32,
+        "30y": 2.56,
+        "5y": 1.36,
+        "7y": 1.6
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.88,
+        "20y": 2.32,
+        "30y": 2.55,
+        "5y": 1.41,
+        "7y": 1.64
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.91,
+        "20y": 2.35,
+        "30y": 2.58,
+        "5y": 1.43,
+        "7y": 1.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.97,
+        "20y": 2.42,
+        "30y": 2.65,
+        "5y": 1.46,
+        "7y": 1.72
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.37,
+        "30y": 2.6,
+        "5y": 1.41,
+        "7y": 1.66
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.95,
+        "20y": 2.37,
+        "30y": 2.58,
+        "5y": 1.43,
+        "7y": 1.69
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.35,
+        "30y": 2.56,
+        "5y": 1.38,
+        "7y": 1.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-26",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.33,
+        "30y": 2.54,
+        "5y": 1.37,
+        "7y": 1.63
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.34,
+        "30y": 2.56,
+        "5y": 1.34,
+        "7y": 1.62
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-28",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.35,
+        "30y": 2.57,
+        "5y": 1.33,
+        "7y": 1.62
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-29",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.89,
+        "20y": 2.36,
+        "30y": 2.58,
+        "5y": 1.28,
+        "7y": 1.59
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-01-30",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.38,
+        "30y": 2.6,
+        "5y": 1.26,
+        "7y": 1.59
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.94,
+        "20y": 2.42,
+        "30y": 2.63,
+        "5y": 1.31,
+        "7y": 1.64
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-03",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.4,
+        "30y": 2.62,
+        "5y": 1.3,
+        "7y": 1.62
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-04",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.94,
+        "20y": 2.41,
+        "30y": 2.63,
+        "5y": 1.32,
+        "7y": 1.64
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.89,
+        "20y": 2.37,
+        "30y": 2.59,
+        "5y": 1.26,
+        "7y": 1.59
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.88,
+        "20y": 2.36,
+        "30y": 2.58,
+        "5y": 1.26,
+        "7y": 1.58
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.87,
+        "20y": 2.35,
+        "30y": 2.57,
+        "5y": 1.25,
+        "7y": 1.57
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.84,
+        "20y": 2.31,
+        "30y": 2.53,
+        "5y": 1.23,
+        "7y": 1.54
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-11",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.86,
+        "20y": 2.33,
+        "30y": 2.55,
+        "5y": 1.26,
+        "7y": 1.56
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-12",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.8,
+        "20y": 2.26,
+        "30y": 2.48,
+        "5y": 1.22,
+        "7y": 1.51
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.77,
+        "20y": 2.24,
+        "30y": 2.46,
+        "5y": 1.19,
+        "7y": 1.48
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.79,
+        "20y": 2.24,
+        "30y": 2.47,
+        "5y": 1.24,
+        "7y": 1.51
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-18",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.8,
+        "20y": 2.26,
+        "30y": 2.48,
+        "5y": 1.23,
+        "7y": 1.52
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-19",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.79,
+        "20y": 2.24,
+        "30y": 2.47,
+        "5y": 1.22,
+        "7y": 1.51
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.8,
+        "20y": 2.25,
+        "30y": 2.48,
+        "5y": 1.22,
+        "7y": 1.52
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.77,
+        "20y": 2.24,
+        "30y": 2.49,
+        "5y": 1.19,
+        "7y": 1.49
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.78,
+        "20y": 2.24,
+        "30y": 2.48,
+        "5y": 1.21,
+        "7y": 1.5
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-25",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.77,
+        "20y": 2.23,
+        "30y": 2.47,
+        "5y": 1.19,
+        "7y": 1.49
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-26",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.74,
+        "20y": 2.2,
+        "30y": 2.44,
+        "5y": 1.14,
+        "7y": 1.45
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-02-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.72,
+        "20y": 2.19,
+        "30y": 2.43,
+        "5y": 1.11,
+        "7y": 1.42
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.76,
+        "20y": 2.23,
+        "30y": 2.47,
+        "5y": 1.16,
+        "7y": 1.47
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-03",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.77,
+        "20y": 2.24,
+        "30y": 2.48,
+        "5y": 1.17,
+        "7y": 1.48
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-04",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.8,
+        "20y": 2.27,
+        "30y": 2.5,
+        "5y": 1.21,
+        "7y": 1.52
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.82,
+        "20y": 2.28,
+        "30y": 2.52,
+        "5y": 1.21,
+        "7y": 1.53
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.8,
+        "20y": 2.29,
+        "30y": 2.54,
+        "5y": 1.16,
+        "7y": 1.49
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.78,
+        "20y": 2.27,
+        "30y": 2.51,
+        "5y": 1.15,
+        "7y": 1.48
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.82,
+        "20y": 2.31,
+        "30y": 2.56,
+        "5y": 1.2,
+        "7y": 1.52
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-11",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.85,
+        "20y": 2.35,
+        "30y": 2.61,
+        "5y": 1.21,
+        "7y": 1.53
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-12",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.89,
+        "20y": 2.38,
+        "30y": 2.63,
+        "5y": 1.25,
+        "7y": 1.58
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.41,
+        "30y": 2.66,
+        "5y": 1.26,
+        "7y": 1.61
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.87,
+        "20y": 2.37,
+        "30y": 2.62,
+        "5y": 1.22,
+        "7y": 1.56
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.83,
+        "20y": 2.34,
+        "30y": 2.6,
+        "5y": 1.17,
+        "7y": 1.51
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-18",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.86,
+        "20y": 2.36,
+        "30y": 2.61,
+        "5y": 1.21,
+        "7y": 1.55
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-19",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.88,
+        "20y": 2.36,
+        "30y": 2.6,
+        "5y": 1.27,
+        "7y": 1.59
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 13.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.01,
+        "20y": 2.49,
+        "30y": 2.72,
+        "5y": 1.38,
+        "7y": 1.71
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.01,
+        "20y": 2.46,
+        "30y": 2.69,
+        "5y": 1.42,
+        "7y": 1.73
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.06,
+        "20y": 2.5,
+        "30y": 2.72,
+        "5y": 1.48,
+        "7y": 1.79
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-25",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.02,
+        "20y": 2.46,
+        "30y": 2.69,
+        "5y": 1.45,
+        "7y": 1.75
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-26",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.08,
+        "20y": 2.5,
+        "30y": 2.71,
+        "5y": 1.52,
+        "7y": 1.82
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.13,
+        "20y": 2.57,
+        "30y": 2.78,
+        "5y": 1.5,
+        "7y": 1.84
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -9.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-30",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.04,
+        "20y": 2.49,
+        "30y": 2.72,
+        "5y": 1.4,
+        "7y": 1.74
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-03-31",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.0,
+        "20y": 2.46,
+        "30y": 2.69,
+        "5y": 1.38,
+        "7y": 1.7
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-01",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.02,
+        "20y": 2.48,
+        "30y": 2.71,
+        "5y": 1.42,
+        "7y": 1.74
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.97,
+        "20y": 2.43,
+        "30y": 2.66,
+        "5y": 1.37,
+        "7y": 1.68
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-03",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.99,
+        "20y": 2.44,
+        "30y": 2.67,
+        "5y": 1.38,
+        "7y": 1.7
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.98,
+        "20y": 2.43,
+        "30y": 2.65,
+        "5y": 1.38,
+        "7y": 1.7
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-07",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.96,
+        "20y": 2.43,
+        "30y": 2.67,
+        "5y": 1.34,
+        "7y": 1.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.96,
+        "20y": 2.43,
+        "30y": 2.66,
+        "5y": 1.36,
+        "7y": 1.68
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.95,
+        "20y": 2.43,
+        "30y": 2.67,
+        "5y": 1.35,
+        "7y": 1.66
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.95,
+        "20y": 2.42,
+        "30y": 2.67,
+        "5y": 1.36,
+        "7y": 1.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.4,
+        "30y": 2.65,
+        "5y": 1.31,
+        "7y": 1.63
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.89,
+        "20y": 2.37,
+        "30y": 2.62,
+        "5y": 1.28,
+        "7y": 1.6
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.38,
+        "30y": 2.63,
+        "5y": 1.29,
+        "7y": 1.61
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.93,
+        "20y": 2.43,
+        "30y": 2.68,
+        "5y": 1.31,
+        "7y": 1.64
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.9,
+        "20y": 2.4,
+        "30y": 2.65,
+        "5y": 1.28,
+        "7y": 1.61
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.91,
+        "20y": 2.4,
+        "30y": 2.65,
+        "5y": 1.29,
+        "7y": 1.61
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.4,
+        "30y": 2.65,
+        "5y": 1.31,
+        "7y": 1.63
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.4,
+        "30y": 2.65,
+        "5y": 1.3,
+        "7y": 1.62
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.4,
+        "30y": 2.65,
+        "5y": 1.38,
+        "7y": 1.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.89,
+        "20y": 2.39,
+        "30y": 2.65,
+        "5y": 1.31,
+        "7y": 1.59
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.91,
+        "20y": 2.42,
+        "30y": 2.68,
+        "5y": 1.32,
+        "7y": 1.61
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-28",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.92,
+        "20y": 2.42,
+        "30y": 2.68,
+        "5y": 1.34,
+        "7y": 1.63
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-29",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.96,
+        "20y": 2.45,
+        "30y": 2.71,
+        "5y": 1.38,
+        "7y": 1.66
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-04-30",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.94,
+        "20y": 2.45,
+        "30y": 2.71,
+        "5y": 1.35,
+        "7y": 1.64
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-01",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.91,
+        "20y": 2.41,
+        "30y": 2.67,
+        "5y": 1.33,
+        "7y": 1.61
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-04",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.95,
+        "20y": 2.45,
+        "30y": 2.71,
+        "5y": 1.36,
+        "7y": 1.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.96,
+        "20y": 2.44,
+        "30y": 2.69,
+        "5y": 1.41,
+        "7y": 1.68
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.94,
+        "20y": 2.42,
+        "30y": 2.67,
+        "5y": 1.41,
+        "7y": 1.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-07",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.96,
+        "20y": 2.43,
+        "30y": 2.68,
+        "5y": 1.43,
+        "7y": 1.69
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.93,
+        "20y": 2.41,
+        "30y": 2.66,
+        "5y": 1.4,
+        "7y": 1.66
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-11",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.95,
+        "20y": 2.44,
+        "30y": 2.69,
+        "5y": 1.4,
+        "7y": 1.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-12",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.99,
+        "20y": 2.48,
+        "30y": 2.74,
+        "5y": 1.43,
+        "7y": 1.7
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 1.99,
+        "20y": 2.48,
+        "30y": 2.74,
+        "5y": 1.42,
+        "7y": 1.7
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.0,
+        "20y": 2.48,
+        "30y": 2.73,
+        "5y": 1.46,
+        "7y": 1.73
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 10.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.1,
+        "20y": 2.57,
+        "30y": 2.81,
+        "5y": 1.56,
+        "7y": 1.83
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-18",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.13,
+        "20y": 2.59,
+        "30y": 2.82,
+        "5y": 1.58,
+        "7y": 1.85
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-19",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.18,
+        "20y": 2.62,
+        "30y": 2.84,
+        "5y": 1.66,
+        "7y": 1.92
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.13,
+        "20y": 2.58,
+        "30y": 2.81,
+        "5y": 1.63,
+        "7y": 1.88
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.18,
+        "20y": 2.59,
+        "30y": 2.8,
+        "5y": 1.68,
+        "7y": 1.93
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.16,
+        "20y": 2.56,
+        "30y": 2.77,
+        "5y": 1.73,
+        "7y": 1.94
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-26",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.1,
+        "20y": 2.51,
+        "30y": 2.73,
+        "5y": 1.66,
+        "7y": 1.87
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.09,
+        "20y": 2.5,
+        "30y": 2.72,
+        "5y": 1.64,
+        "7y": 1.86
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-28",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.06,
+        "20y": 2.48,
+        "30y": 2.7,
+        "5y": 1.61,
+        "7y": 1.83
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-05-29",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.07,
+        "20y": 2.49,
+        "30y": 2.71,
+        "5y": 1.61,
+        "7y": 1.83
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-01",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.07,
+        "20y": 2.49,
+        "30y": 2.71,
+        "5y": 1.64,
+        "7y": 1.85
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.07,
+        "20y": 2.48,
+        "30y": 2.69,
+        "5y": 1.65,
+        "7y": 1.85
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-03",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.11,
+        "20y": 2.51,
+        "30y": 2.72,
+        "5y": 1.68,
+        "7y": 1.89
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-04",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.11,
+        "20y": 2.5,
+        "30y": 2.71,
+        "5y": 1.7,
+        "7y": 1.9
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 8.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.19,
+        "20y": 2.55,
+        "30y": 2.74,
+        "5y": 1.81,
+        "7y": 1.99
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.21,
+        "20y": 2.57,
+        "30y": 2.77,
+        "5y": 1.82,
+        "7y": 2.01
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.2,
+        "20y": 2.56,
+        "30y": 2.75,
+        "5y": 1.82,
+        "7y": 2.0
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.21,
+        "20y": 2.58,
+        "30y": 2.78,
+        "5y": 1.83,
+        "7y": 2.02
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-11",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.16,
+        "20y": 2.53,
+        "30y": 2.72,
+        "5y": 1.78,
+        "7y": 1.96
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-12",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.17,
+        "20y": 2.53,
+        "30y": 2.73,
+        "5y": 1.82,
+        "7y": 1.98
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.15,
+        "20y": 2.52,
+        "30y": 2.72,
+        "5y": 1.78,
+        "7y": 1.96
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.14,
+        "20y": 2.5,
+        "30y": 2.7,
+        "5y": 1.8,
+        "7y": 1.96
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 9.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.23,
+        "20y": 2.55,
+        "30y": 2.73,
+        "5y": 1.96,
+        "7y": 2.09
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-18",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.21,
+        "20y": 2.52,
+        "30y": 2.7,
+        "5y": 1.96,
+        "7y": 2.07
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 7.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.28,
+        "20y": 2.58,
+        "30y": 2.75,
+        "5y": 2.01,
+        "7y": 2.13
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.29,
+        "20y": 2.59,
+        "30y": 2.76,
+        "5y": 2.03,
+        "7y": 2.15
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.23,
+        "20y": 2.53,
+        "30y": 2.71,
+        "5y": 1.98,
+        "7y": 2.09
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-25",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.19,
+        "20y": 2.51,
+        "30y": 2.69,
+        "5y": 1.92,
+        "7y": 2.05
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-26",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.18,
+        "20y": 2.5,
+        "30y": 2.69,
+        "5y": 1.91,
+        "7y": 2.03
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-29",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.16,
+        "20y": 2.49,
+        "30y": 2.68,
+        "5y": 1.9,
+        "7y": 2.02
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-06-30",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.2,
+        "20y": 2.54,
+        "30y": 2.73,
+        "5y": 1.93,
+        "7y": 2.06
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-01",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.25,
+        "20y": 2.58,
+        "30y": 2.78,
+        "5y": 1.98,
+        "7y": 2.11
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.26,
+        "20y": 2.6,
+        "30y": 2.79,
+        "5y": 1.99,
+        "7y": 2.11
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.24,
+        "20y": 2.59,
+        "30y": 2.79,
+        "5y": 1.94,
+        "7y": 2.08
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-07",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.3,
+        "20y": 2.65,
+        "30y": 2.84,
+        "5y": 1.99,
+        "7y": 2.14
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.31,
+        "20y": 2.66,
+        "30y": 2.86,
+        "5y": 2.0,
+        "7y": 2.14
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.31,
+        "20y": 2.66,
+        "30y": 2.86,
+        "5y": 1.99,
+        "7y": 2.14
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.32,
+        "20y": 2.66,
+        "30y": 2.86,
+        "5y": 2.02,
+        "7y": 2.16
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.36,
+        "20y": 2.69,
+        "30y": 2.89,
+        "5y": 2.06,
+        "7y": 2.2
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.33,
+        "20y": 2.67,
+        "30y": 2.87,
+        "5y": 2.03,
+        "7y": 2.17
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.32,
+        "20y": 2.68,
+        "30y": 2.88,
+        "5y": 2.01,
+        "7y": 2.15
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.35,
+        "20y": 2.71,
+        "30y": 2.91,
+        "5y": 2.04,
+        "7y": 2.18
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.31,
+        "20y": 2.67,
+        "30y": 2.87,
+        "5y": 2.01,
+        "7y": 2.15
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.35,
+        "20y": 2.7,
+        "30y": 2.91,
+        "5y": 2.05,
+        "7y": 2.19
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.37,
+        "20y": 2.71,
+        "30y": 2.91,
+        "5y": 2.09,
+        "7y": 2.22
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.39,
+        "20y": 2.73,
+        "30y": 2.93,
+        "5y": 2.11,
+        "7y": 2.24
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.76,
+        "30y": 2.95,
+        "5y": 2.17,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.75,
+        "30y": 2.95,
+        "5y": 2.19,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.44,
+        "20y": 2.76,
+        "30y": 2.95,
+        "5y": 2.22,
+        "7y": 2.32
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-28",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.41,
+        "20y": 2.72,
+        "30y": 2.92,
+        "5y": 2.19,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-29",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.41,
+        "20y": 2.76,
+        "30y": 2.98,
+        "5y": 2.13,
+        "7y": 2.25
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-30",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.41,
+        "20y": 2.77,
+        "30y": 2.98,
+        "5y": 2.14,
+        "7y": 2.26
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-07-31",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.47,
+        "20y": 2.82,
+        "30y": 3.03,
+        "5y": 2.19,
+        "7y": 2.32
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-03",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.78,
+        "30y": 2.99,
+        "5y": 2.17,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-04",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.4,
+        "20y": 2.75,
+        "30y": 2.96,
+        "5y": 2.14,
+        "7y": 2.26
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.41,
+        "20y": 2.75,
+        "30y": 2.96,
+        "5y": 2.15,
+        "7y": 2.27
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.78,
+        "30y": 2.98,
+        "5y": 2.17,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-07",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.4,
+        "20y": 2.75,
+        "30y": 2.96,
+        "5y": 2.13,
+        "7y": 2.25
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.79,
+        "30y": 3.0,
+        "5y": 2.16,
+        "7y": 2.28
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-11",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.79,
+        "30y": 3.0,
+        "5y": 2.16,
+        "7y": 2.28
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-12",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.42,
+        "20y": 2.78,
+        "30y": 2.99,
+        "5y": 2.14,
+        "7y": 2.26
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.39,
+        "20y": 2.76,
+        "30y": 2.97,
+        "5y": 2.11,
+        "7y": 2.23
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.41,
+        "20y": 2.78,
+        "30y": 3.0,
+        "5y": 2.12,
+        "7y": 2.25
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.44,
+        "20y": 2.84,
+        "30y": 3.06,
+        "5y": 2.13,
+        "7y": 2.27
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-18",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.41,
+        "20y": 2.81,
+        "30y": 3.03,
+        "5y": 2.1,
+        "7y": 2.24
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-19",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.35,
+        "20y": 2.72,
+        "30y": 2.94,
+        "5y": 2.07,
+        "7y": 2.19
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.35,
+        "20y": 2.73,
+        "30y": 2.95,
+        "5y": 2.05,
+        "7y": 2.18
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.4,
+        "20y": 2.78,
+        "30y": 3.0,
+        "5y": 2.09,
+        "7y": 2.23
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.38,
+        "20y": 2.75,
+        "30y": 2.97,
+        "5y": 2.09,
+        "7y": 2.22
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-25",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.32,
+        "20y": 2.7,
+        "30y": 2.92,
+        "5y": 2.04,
+        "7y": 2.16
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-26",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.34,
+        "20y": 2.71,
+        "30y": 2.92,
+        "5y": 2.06,
+        "7y": 2.18
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-27",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.34,
+        "20y": 2.71,
+        "30y": 2.92,
+        "5y": 2.07,
+        "7y": 2.19
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 8.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-28",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.42,
+        "20y": 2.76,
+        "30y": 2.96,
+        "5y": 2.18,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-08-31",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.44,
+        "20y": 2.78,
+        "30y": 2.99,
+        "5y": 2.18,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-01",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.44,
+        "20y": 2.78,
+        "30y": 2.98,
+        "5y": 2.18,
+        "7y": 2.3
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.45,
+        "20y": 2.78,
+        "30y": 2.98,
+        "5y": 2.19,
+        "7y": 2.31
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-03",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.42,
+        "20y": 2.76,
+        "30y": 2.96,
+        "5y": 2.15,
+        "7y": 2.27
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-04",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.77,
+        "30y": 2.96,
+        "5y": 2.17,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.43,
+        "20y": 2.77,
+        "30y": 2.96,
+        "5y": 2.17,
+        "7y": 2.29
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.46,
+        "20y": 2.79,
+        "30y": 2.98,
+        "5y": 2.2,
+        "7y": 2.32
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 9.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-10",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.55,
+        "20y": 2.87,
+        "30y": 3.05,
+        "5y": 2.29,
+        "7y": 2.41
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-11",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.6,
+        "20y": 2.89,
+        "30y": 3.07,
+        "5y": 2.38,
+        "7y": 2.48
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 0.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.6,
+        "20y": 2.89,
+        "30y": 3.05,
+        "5y": 2.4,
+        "7y": 2.49
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.62,
+        "20y": 2.9,
+        "30y": 3.07,
+        "5y": 2.42,
+        "7y": 2.51
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.68,
+        "20y": 2.93,
+        "30y": 3.09,
+        "5y": 2.51,
+        "7y": 2.59
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -7.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-17",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.61,
+        "20y": 2.87,
+        "30y": 3.04,
+        "5y": 2.46,
+        "7y": 2.52
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 7.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-18",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.68,
+        "20y": 2.93,
+        "30y": 3.09,
+        "5y": 2.55,
+        "7y": 2.6
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.62,
+        "20y": 2.86,
+        "30y": 3.02,
+        "5y": 2.5,
+        "7y": 2.55
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.63,
+        "20y": 2.88,
+        "30y": 3.04,
+        "5y": 2.51,
+        "7y": 2.56
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 13.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.76,
+        "20y": 2.99,
+        "30y": 3.14,
+        "5y": 2.65,
+        "7y": 2.7
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 9.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-24",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.85,
+        "20y": 3.08,
+        "30y": 3.21,
+        "5y": 2.7,
+        "7y": 2.77
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-25",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.83,
+        "20y": 3.08,
+        "30y": 3.22,
+        "5y": 2.64,
+        "7y": 2.73
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 7.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-28",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.9,
+        "20y": 3.14,
+        "30y": 3.28,
+        "5y": 2.73,
+        "7y": 2.8
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-29",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.91,
+        "20y": 3.15,
+        "30y": 3.29,
+        "5y": 2.72,
+        "7y": 2.8
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-09-30",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.93,
+        "20y": 3.18,
+        "30y": 3.33,
+        "5y": 2.73,
+        "7y": 2.82
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-01",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.88,
+        "20y": 3.16,
+        "30y": 3.31,
+        "5y": 2.65,
+        "7y": 2.76
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-02",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.92,
+        "20y": 3.19,
+        "30y": 3.34,
+        "5y": 2.69,
+        "7y": 2.8
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-05",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.95,
+        "20y": 3.22,
+        "30y": 3.37,
+        "5y": 2.7,
+        "7y": 2.82
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-06",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.91,
+        "20y": 3.19,
+        "30y": 3.35,
+        "5y": 2.66,
+        "7y": 2.77
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-07",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.92,
+        "20y": 3.2,
+        "30y": 3.36,
+        "5y": 2.66,
+        "7y": 2.78
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -5.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-08",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.87,
+        "20y": 3.15,
+        "30y": 3.31,
+        "5y": 2.62,
+        "7y": 2.74
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-09",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.91,
+        "20y": 3.17,
+        "30y": 3.32,
+        "5y": 2.68,
+        "7y": 2.79
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-13",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.88,
+        "20y": 3.13,
+        "30y": 3.28,
+        "5y": 2.67,
+        "7y": 2.77
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-14",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.84,
+        "20y": 3.09,
+        "30y": 3.24,
+        "5y": 2.64,
+        "7y": 2.73
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-15",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.78,
+        "20y": 3.03,
+        "30y": 3.18,
+        "5y": 2.58,
+        "7y": 2.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -4.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-16",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.74,
+        "20y": 3.01,
+        "30y": 3.16,
+        "5y": 2.52,
+        "7y": 2.62
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 6.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-19",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.8,
+        "20y": 3.06,
+        "30y": 3.21,
+        "5y": 2.56,
+        "7y": 2.67
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -3.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-20",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.77,
+        "20y": 3.02,
+        "30y": 3.16,
+        "5y": 2.55,
+        "7y": 2.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -1.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-21",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.76,
+        "20y": 3.01,
+        "30y": 3.15,
+        "5y": 2.55,
+        "7y": 2.65
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": -12.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-22",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.64,
+        "20y": 2.91,
+        "30y": 3.05,
+        "5y": 2.33,
+        "7y": 2.48
+      }
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "change_10y_bp": 2.0,
+      "change_2s10s_bp": null,
+      "change_2y_bp": null,
+      "observation_date": "2026-10-23",
+      "research_only": true,
+      "retrieved_at_utc": "2026-10-26T06:06:15.022690Z",
+      "slope_2s10s_bp": null,
+      "slope_3m10y_bp": null,
+      "source": "us_treasury_daily_par_real_yield_curve",
+      "source_url": "https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value=2026",
+      "yield_pct": {
+        "10y": 2.66,
+        "20y": 2.94,
+        "30y": 3.08,
+        "5y": 2.34,
+        "7y": 2.49
+      }
+    }
+  ]
+}
