@@ -1,17 +1,17 @@
 {
   "schema_version": "phase3.v1",
   "data_maturity": {
-    "backtest_rows": 3369,
+    "backtest_rows": 3659,
     "n_factors": 24,
     "n_horizons": 3
   },
   "horizon_maturity": {
     "5D": {
-      "max_sample_count": 2194,
+      "max_sample_count": 2219,
       "mature": true
     },
     "10D": {
-      "max_sample_count": 561,
+      "max_sample_count": 1076,
       "mature": true
     },
     "20D": {
@@ -22,11 +22,11 @@
   "sample_counts": {
     "max_N_by_horizon": {
       "5D": {
-        "max_sample_count": 2194,
+        "max_sample_count": 2219,
         "mature": true
       },
       "10D": {
-        "max_sample_count": 561,
+        "max_sample_count": 1076,
         "mature": true
       },
       "20D": {
@@ -96,50 +96,50 @@
     {
       "Factor_A": "RSI_14",
       "Factor_B": "Bias_Pct",
-      "Pearson": 0.832,
-      "Spearman": 0.9212
+      "Pearson": 0.8385,
+      "Spearman": 0.9254
     },
     {
       "Factor_A": "RSI_14",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8799,
-      "Spearman": 0.9215
+      "Pearson": 0.8807,
+      "Spearman": 0.9231
     },
     {
       "Factor_A": "Bias_Pct",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8317,
-      "Spearman": 0.9528
+      "Pearson": 0.834,
+      "Spearman": 0.9521
     },
     {
       "Factor_A": "MA20",
       "Factor_B": "MA50",
-      "Pearson": 0.9978,
-      "Spearman": 0.9985
+      "Pearson": 0.9979,
+      "Spearman": 0.9986
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Momentum_20D_Pct",
-      "Pearson": 0.9213,
-      "Spearman": 0.9071
+      "Pearson": 0.9199,
+      "Spearman": 0.9093
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9209,
-      "Spearman": 0.9066
+      "Pearson": 0.9177,
+      "Spearman": 0.9073
     },
     {
       "Factor_A": "Volume_Ratio_5D",
       "Factor_B": "Volume_Ratio_20D",
-      "Pearson": 0.9321,
-      "Spearman": 0.9299
+      "Pearson": 0.9308,
+      "Spearman": 0.9294
     },
     {
       "Factor_A": "Momentum_20D_Pct",
       "Factor_B": "Stock_RS_20D_vs_SPY",
       "Pearson": 0.9908,
-      "Spearman": 0.9862
+      "Spearman": 0.9868
     }
   ],
   "insufficient_data_reasons": [
