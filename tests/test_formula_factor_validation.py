@@ -319,3 +319,39 @@ def test_turnover_cost_sensitivity_grid_reprices_same_portfolios_and_corrects_sc
         phase_zero["winsorized_turnover_aware_spread_hac_p_value"], abs=1e-8
     )
     assert "cost_sensitivity_one_way_bps" in report
+
+
+def test_low_frequency_cost_sensitivity_uses_same_hac_as_phase_summary(tmp_path):
+    rng = np.random.default_rng(20261026)
+    rows = []
+    for day in pd.date_range("2024-07-01", periods=120, freq="B"):
+        for i in range(20):
+            signal = float(i)
+            noise = float(rng.normal(scale=0.01))
+            base_return = 0.02 if i >= 16 else (-0.01 if i < 4 else 0.0)
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{i:02}",
+                "Signal": signal,
+                "Forward_Return_20D": base_return + noise,
+            })
+    input_path, output_dir = tmp_path / "cost_hac.csv", tmp_path / "cost_hac_out"
+    pd.DataFrame(rows).to_csv(input_path, index=False)
+    run(
+        str(input_path), str(output_dir), max_base_factors=1, cost_bps=5,
+        min_names=10, requested_factors=["Signal"],
+    )
+    report = json.loads((output_dir / "formula_factor_report.json").read_text())
+    row = next(item for item in report["results"] if item["candidate"] == "z__Signal")
+    for phase in row["low_frequency_phase_results"]:
+        scenario = next(
+            item for item in phase["cost_sensitivity_results"]
+            if item["one_way_cost_bps"] == 5.0
+        )
+        assert scenario["hac_max_lag"] == 1
+        assert scenario["turnover_aware_spread_hac_p_value"] == (
+            phase["turnover_aware_spread_hac_p_value"]
+        )
+        assert scenario["winsorized_turnover_aware_spread_hac_p_value"] == (
+            phase["winsorized_turnover_aware_spread_hac_p_value"]
+        )
