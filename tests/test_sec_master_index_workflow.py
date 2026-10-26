@@ -28,10 +28,17 @@ def test_sec_master_index_failure_writes_structured_research_record():
         / "research-event-factor-capture-once.yml"
     ).read_text(encoding="utf-8")
     assert 'SEC_CAPTURE_ERROR="data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.error.json"' in workflow
-    assert '"source": "sec_edgar_master_index"' in workflow
-    assert '"status": "failed"' in workflow
-    assert '"historical_pit_eligible": False' in workflow
-    assert "A retrieval failure must not be interpreted as proof that no filings occurred." in workflow
+    assert 'python -m tools.research.record_sec_capture_failure ' in workflow
+    helper = (
+        Path(__file__).resolve().parents[1]
+        / "tools"
+        / "research"
+        / "record_sec_capture_failure.py"
+    ).read_text(encoding="utf-8")
+    assert '"source": "sec_edgar_master_index"' in helper
+    assert '"status": "failed"' in helper
+    assert '"historical_pit_eligible": False' in helper
+    assert "A retrieval failure must not be interpreted as proof that no filings occurred." in helper
     assert '2>&1; then' in workflow
 
     lines = workflow.splitlines()
