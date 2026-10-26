@@ -38,8 +38,8 @@ jobs:
             --input research_backtest_sp500_pit_2y.csv \
             --output-dir formula-factor-frozen-confirmation \
             --max-base-factors 8 \
-            --factor-columns "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,RSI,Momentum_20D_Acceleration_20_Snapshots,RSI_Change_5_Snapshots,ATR_Pct_Change_20_Snapshots" \
-            --candidate-allowlist "diff__Realized_Volatility_20D_Pct__RSI_Change_5_Snapshots,prod__ATR_Pct__Momentum_20D_Acceleration_20_Snapshots,prod__Realized_Volatility_20D_Pct__Momentum_20D_Acceleration_20_Snapshots" \
+            --factor-columns "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,RSI,Momentum_20D_Acceleration_20_Snapshots,RSI_Change_5_Snapshots,ATR_Pct_Change_20_Snapshots,Close_to_252D_High_Pct" \
+            --candidate-allowlist "diff__Realized_Volatility_20D_Pct__RSI_Change_5_Snapshots,prod__ATR_Pct__Momentum_20D_Acceleration_20_Snapshots,prod__Realized_Volatility_20D_Pct__Momentum_20D_Acceleration_20_Snapshots,z__Close_to_252D_High_Pct" \
             --target-columns "Forward_Return_20D" \
             --evaluation-start-date "${{ inputs.evaluation_start_date }}" \
             --preregistered-on "2026-10-26" \
