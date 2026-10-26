@@ -112,6 +112,8 @@ def test_stopped_render_with_stats():
     assert "ADSK" in body and "INTC" in body, body
     assert "NVDA" not in body, body         # Profit Take 被排除
     assert "Intraday Stop Loss" in body and "Trailing Stop Loss" in body, body
+    # 月度汇总：两笔同为 2026-10，净额 -258 + 50 = -$208.00
+    assert "2026-10 · 2 笔 · -$208.00" in body, body
 
     # 入场价反推：ADSK $220.00 → $214.00；ret -2.7%
     assert "$220.00 → $214.00" in body, body

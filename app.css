@@ -507,6 +507,24 @@ button{font-family:inherit}
 .stp-ret.up{color:var(--up)}
 .stp-ret.down{color:var(--down)}
 .stp-reason{margin-top:3px;font-size:11px;color:var(--text-2);line-height:1.4}
+/* 月度汇总（已止盈/已止损板块底部）：按 YYYY-MM 聚合笔数与净额 */
+.stp-months{display:flex;gap:6px;flex-wrap:wrap;align-items:baseline;margin-top:8px}
+.stp-mlab{font-size:10.5px;color:var(--text-3);font-weight:650}
+.stp-mchip{font-size:10.5px;padding:1px 7px;border-radius:99px;border:1px solid var(--border-2);
+  background:var(--soft);color:var(--text-2);font-variant-numeric:tabular-nums}
+
+/* 持仓卡片：止损/入场/现价 的风控距离条 */
+.pos-risk{margin-top:8px;border-top:1px solid var(--border-2);padding-top:8px}
+.prb-track{position:relative;height:6px;border-radius:99px;background:var(--soft);
+  border:1px solid var(--border-2);margin:6px 0 0}
+.prb-track i{position:absolute;top:-4px;width:2px;height:12px;transform:translateX(-1px);border-radius:1px}
+.prb-stop{background:var(--down)}
+.prb-entry{background:var(--text-3)}
+.prb-cur{background:var(--text);width:3px;border-radius:2px}
+.prb-legend{display:flex;gap:10px;flex-wrap:wrap;margin-top:7px;font-size:10.5px;
+  color:var(--text-3);font-variant-numeric:tabular-nums}
+.prb-legend .prb-s{color:var(--down)}
+.prb-legend .prb-c{color:var(--text-2);font-weight:650}
 
 /* 交易观测（频率 + 胜率 + 盈亏）—— 观测面板，不加硬闸门 */
 #tradeCard .sec-sub{font-variant-numeric:tabular-nums}

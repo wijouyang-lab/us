@@ -101,6 +101,9 @@ def test_profit_taken_panel_filters_and_formats():
     assert "持有 8 天 20 小时" in body, body
     assert "+2.8%" in body, body
     assert "Trailing_Profit_Take" in body, body
+    # 月度汇总：只剩 2026-10 的 2 笔，合计 +$324.77
+    assert "2026-10 · 2 笔 · +$324.77" in body, body
+    assert "2026-08" not in body, body        # 超窗记录不参与月度汇总
 
 
 def test_target_card_renders_stop_loss():
@@ -129,6 +132,12 @@ def test_position_card_marks_trailing_profit_vs_stop_loss():
     html_up = up["positions"] or ""
     assert "移动止盈" in html_up, html_up
     assert "锁定 +3.7%" in html_up, html_up
+    # 风控距离条：止损/入场/现价三个刻度 + 距现价说明
+    assert 'class="prb-track"' in html_up, html_up
+    assert 'class="prb-stop"' in html_up and 'class="prb-entry"' in html_up and 'class="prb-cur"' in html_up, html_up
+    assert "止损 $240.00（距现价 +0.0%）" in html_up, html_up
+    assert "入场 $231.42（+3.7%）" in html_up, html_up
+    assert "现价 $240.00" in html_up, html_up
 
     down = _run({"portfolio": {"target": [], "transactions": [],
                                "positions": [dict(base, stop_loss="220.00", stop_loss_price=220.0)]}})

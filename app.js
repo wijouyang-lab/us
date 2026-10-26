@@ -458,6 +458,37 @@
     }
     var risk = '<div><span class="pmk">' + riskK + '</span><b class="' + riskCls + '">' + esc(riskV) + '</b></div>';
 
+    /* 风控距离条：把 止损线 / 入场价 / 现价 落在同一条轴上，
+       一眼看出「离止损还有多远」。三个价格都有效才画，任何缺失则整条不画。 */
+    var curP = num(p.current_price);
+    var riskBar = '';
+    if (stopP != null && entryP && curP != null && curP > 0 && stopP > 0) {
+      var lo = Math.min(stopP, entryP, curP), hi = Math.max(stopP, entryP, curP);
+      if (hi > lo) {
+        var pad = (hi - lo) * 0.12;
+        lo -= pad; hi += pad;
+        var pos = function (v) {
+          return Math.max(0, Math.min(100, (v - lo) / (hi - lo) * 100)).toFixed(1);
+        };
+        var distStop = (curP / stopP - 1) * 100;
+        var distEntry = (curP / entryP - 1) * 100;
+        riskBar = '<div class="pos-risk">' +
+          '<div class="prb-track">' +
+            '<i class="prb-stop" style="left:' + pos(stopP) + '%" title="止损 $' + fmt(stopP, 2) + '"></i>' +
+            '<i class="prb-entry" style="left:' + pos(entryP) + '%" title="入场 $' + fmt(entryP, 2) + '"></i>' +
+            '<i class="prb-cur" style="left:' + pos(curP) + '%" title="现价 $' + fmt(curP, 2) + '"></i>' +
+          '</div>' +
+          '<div class="prb-legend">' +
+            '<span class="prb-s">止损 $' + fmt(stopP, 2) + '（距现价 ' +
+              (distStop >= 0 ? '+' : '') + fmt(distStop, 1) + '%）</span>' +
+            '<span class="prb-e">入场 $' + fmt(entryP, 2) + '（' +
+              (distEntry >= 0 ? '+' : '') + fmt(distEntry, 1) + '%）</span>' +
+            '<span class="prb-c">现价 $' + fmt(curP, 2) + '</span>' +
+          '</div>' +
+        '</div>';
+      }
+    }
+
     var meta = '<div class="pos-meta">' +
       '<div><span class="pmk">股数</span><b>' + (p.shares == null ? NA : p.shares) + '</b></div>' +
       '<div><span class="pmk">Entry</span><b>$' + nv(p.entry_price, 2) + '</b></div>' +
@@ -470,7 +501,7 @@
       '</div>';
 
     return '<article class="poscard' + (s ? '' : ' poscard-na') + '" data-tk="' + esc(tk) + '">' +
-      head + quick + (s ? sparkHtml(s, false) : '') + bars + foot + meta +
+      head + quick + (s ? sparkHtml(s, false) : '') + bars + foot + meta + riskBar +
       '</article>';
   }
 
@@ -713,6 +744,30 @@
       '</td>';
   }
 
+  /* 月度汇总：把已平仓记录按 YYYY-MM 分组，给出「笔数 · 净额」。
+     只聚合当前板块已筛选出的记录（同一 30 天窗口/同一离场类型），
+     不重算、不引入新数据源。 */
+  function monthSummaryHtml(list, label) {
+    if (!list || !list.length) return '';
+    var by = {}, order = [];
+    list.forEach(function (t) {
+      var m = String(t.date || '').slice(0, 7);
+      if (!m) return;
+      if (!by[m]) { by[m] = { n: 0, pnl: 0 }; order.push(m); }
+      by[m].n++;
+      var rp = num(t.realized_pnl);
+      if (rp !== null) by[m].pnl += rp;
+    });
+    order.sort().reverse();
+    var chips = order.map(function (m) {
+      var x = by[m];
+      return '<span class="stp-mchip">' + esc(m) + ' · ' + x.n + ' 笔 · ' +
+        (x.pnl >= 0 ? '+$' : '-$') + fmt(Math.abs(x.pnl), 2) + '</span>';
+    }).join('');
+    return '<div class="stp-months">' + (label ? '<span class="stp-mlab">' + esc(label) + '</span>' : '') +
+      chips + '</div>';
+  }
+
   /* 已止损记录板块（近 30 天）：纯前端只读 portfolio.transactions，
      筛选 Action=SELL 且 Reason 含 "Stop Loss" 的记录，按日期降序展示。
      兼容两种真实写法：`Stop_Loss_Hit`（账本，Review exit）与 `Stop Loss`（盘中止损）。
@@ -820,7 +875,8 @@
       '</div>';
     }).join('');
 
-    bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>';
+    bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>' +
+      monthSummaryHtml(stops, '按月');
   }
 
   /* 已止盈记录板块（近 30 天）：只读 portfolio.transactions。
@@ -907,7 +963,8 @@
       '</div>';
     }).join('');
 
-    bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>';
+    bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>' +
+      monthSummaryHtml(takes, '按月');
   }
 
   /* 交易观测面板：只读 portfolio.trade_stats（dashboard_export 计算，前端绝不重算）。
