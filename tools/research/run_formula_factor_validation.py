@@ -206,20 +206,29 @@ def _cost_sensitivity_metrics(
     winsorized_with_turnover: pd.DataFrame,
     horizon: int,
     cost_scenarios: list[float],
+    *,
+    max_lag: int | None = None,
 ) -> list[dict]:
-    """Reprice the same portfolio turnover across cost levels; no rankings are retuned."""
+    """Reprice turnover across cost levels without reselecting portfolio members.
+
+    Daily overlapping-label series default to horizon-1 HAC lags. Horizon-spaced
+    rebalance-phase series pass max_lag=1 because consecutive observations
+    represent adjacent, non-overlapping holding periods.
+    """
+    inference_lag = max(0, horizon - 1) if max_lag is None else max(0, int(max_lag))
     rows = []
     for scenario_bps in cost_scenarios:
         raw = _reprice_turnover_costs(daily_with_turnover, scenario_bps)
         winsorized = _reprice_turnover_costs(winsorized_with_turnover, scenario_bps)
         raw_summary = _summary(raw, scenario_bps)
         winsorized_summary = _summary(winsorized, scenario_bps)
-        raw_t, raw_p = _hac_mean_test(raw, "turnover_aware_spread", max_lag=horizon - 1)
+        raw_t, raw_p = _hac_mean_test(raw, "turnover_aware_spread", max_lag=inference_lag)
         winsorized_t, winsorized_p = _hac_mean_test(
-            winsorized, "turnover_aware_spread", max_lag=horizon - 1
+            winsorized, "turnover_aware_spread", max_lag=inference_lag
         )
         rows.append({
             "one_way_cost_bps": float(scenario_bps),
+            "hac_max_lag": inference_lag,
             "n_days": raw_summary["n_days"],
             "turnover_cost_available": raw_summary["turnover_cost_available"],
             "mean_total_turnover": raw_summary["mean_total_turnover"],
@@ -365,8 +374,11 @@ def _low_frequency_phase_metrics(
         )
         raw_summary = _summary(phase_raw, cost_bps)
         winsorized_summary = _summary(phase_winsorized, cost_bps)
+        # Phase portfolios rebalance every horizon sessions, so their
+        # sequential observations do not have the overlapping forward labels
+        # present in the daily diagnostic. Keep inference aligned with phase tests.
         cost_sensitivity_results = _cost_sensitivity_metrics(
-            phase_raw, phase_winsorized, horizon, cost_scenarios
+            phase_raw, phase_winsorized, horizon, cost_scenarios, max_lag=1
         )
         raw_t, raw_p = _hac_mean_test(
             phase_raw, "turnover_aware_spread", max_lag=1
@@ -690,7 +702,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
             "cost_sensitivity_one_way_bps": cost_scenarios,
-            "inference_method": "Daily overlapping-label metrics use Newey-West HAC with lag horizon-1 and Benjamini-Hochberg q-values within horizon. The cost-sensitivity grid corrects candidate × cost-level tests jointly with Benjamini-Yekutieli within each horizon, separately for raw and winsorized labels. Low-frequency metrics sample every horizon-th source snapshot session for every start phase, estimate turnover only between sampled portfolios, and jointly correct candidate × phase × cost-level tests with Benjamini-Yekutieli within horizon. Phase and cost scenarios are correlated diagnostics, not independent strategies. P-values use a two-sided normal approximation.",
+            "inference_method": "Daily overlapping-label metrics and their cost sensitivities use Newey-West HAC with lag horizon-1. Horizon-spaced low-frequency phase results and their cost sensitivities use HAC lag 1, matching one non-overlapping holding period between rebalance observations. Daily cost tests correct candidate × cost-level tests jointly with Benjamini-Yekutieli within each horizon; low-frequency cost tests correct candidate × phase × cost-level tests jointly with Benjamini-Yekutieli within horizon. Raw and winsorized outcomes are separate families. Phase and cost scenarios are correlated diagnostics, not independent strategies. P-values use a two-sided normal approximation.",
             "warning": "Formula candidates are hypotheses, not validated trading strategies. HAC reduces but does not eliminate dependence. Daily metrics use overlapping forward-return labels; low-frequency metrics sample every horizon-th snapshot for each start phase and are phase-sensitivity diagnostics. Cost levels are sensitivity assumptions and are jointly corrected with factor candidates using Benjamini-Yekutieli. Per-date 1st/99th percentile winsorized metrics are sensitivity checks only; raw labels remain primary and genuine event returns are not deleted. Turnover cost estimates assume equal-weighted top/bottom quintiles and a fixed one-way bps rate; they do not model spread, market impact, borrow, capacity, taxes, or full portfolio constraints.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),

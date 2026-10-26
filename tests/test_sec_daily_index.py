@@ -2,11 +2,11 @@ from tools.research.sec_daily_index import parse_sec_master_index
 
 
 ROWS = """CIK|Company Name|Form Type|Date Filed|Filename
-320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/000032019326000001/aapl-20261022.htm
-320193|Apple Inc.|4|2026-10-22|edgar/data/320193/000032019326000002/ownership.xml
-789019|Microsoft Corp.|10-Q|2026-10-23|edgar/data/789019/000078901926000003/msft-20261023.htm
-320193|Apple Inc.|8-K|2026-09-30|edgar/data/320193/000032019326000004/old.htm
-320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/000032019326000001/aapl-20261022.htm
+320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/0000320193-26-000001.txt
+320193|Apple Inc.|4|2026-10-22|edgar/data/320193/0000320193-26-000002.txt
+789019|Microsoft Corp.|10-Q|2026-10-23|edgar/data/789019/0000789019-26-000003.txt
+320193|Apple Inc.|8-K|2026-09-30|edgar/data/320193/0000320193-26-000004.txt
+320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/0000320193-26-000001.txt
 """
 
 
@@ -39,14 +39,18 @@ def test_master_index_does_not_invent_publication_or_first_seen_time():
 
 
 def test_master_index_counts_malformed_rows_and_excludes_unknown_cik():
-    payload = ROWS + "bad|row\n999999|Unknown|8-K|2026-10-22|edgar/data/999999/000099999926000001/x.htm\n"
+    payload = ROWS + (
+        "bad|row\n"
+        "999999|Unknown|8-K|2026-10-22|edgar/data/999999/0000999999-26-000001.txt\n"
+        "320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/000032019326000001/aapl.htm\n"
+    )
     result = parse_sec_master_index(
         payload,
         cik_tickers={"320193": "AAPL"},
         start_date="2026-10-01",
         end_date="2026-10-31",
     )
-    assert result["metadata"]["malformed_row_count"] == 1
+    assert result["metadata"]["malformed_row_count"] == 2
     assert len(result["events"]) == 1
 
 

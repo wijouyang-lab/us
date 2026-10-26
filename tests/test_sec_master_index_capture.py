@@ -11,8 +11,8 @@ from tools.research.sec_master_index_capture import (
 
 
 INDEX = b"""CIK|Company Name|Form Type|Date Filed|Filename
-320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/000032019326000001/aapl-20261022.htm
-789019|Microsoft Corp.|10-Q|2026-10-23|edgar/data/789019/000078901926000003/msft-20261023.htm
+320193|Apple Inc.|8-K|2026-10-22|edgar/data/320193/0000320193-26-000001.txt
+789019|Microsoft Corp.|10-Q|2026-10-23|edgar/data/789019/0000789019-26-000003.txt
 """
 NOW = datetime(2026, 10, 24, 11, 0, tzinfo=timezone.utc)
 
@@ -23,7 +23,7 @@ class Response(BytesIO):
 
 def test_build_master_index_url_is_quarter_bounded():
     assert build_master_index_url("2026-10-01", "2026-10-24") == (
-        "https://www.sec.gov/Archives/edgar/daily-index/2026/QTR4/master.idx"
+        "https://www.sec.gov/Archives/edgar/full-index/2026/QTR4/master.idx"
     )
     with pytest.raises(ValueError, match="single calendar quarter"):
         build_master_index_url("2026-09-30", "2026-10-01")
