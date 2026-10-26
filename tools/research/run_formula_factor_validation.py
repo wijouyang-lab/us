@@ -206,20 +206,30 @@ def _cost_sensitivity_metrics(
     winsorized_with_turnover: pd.DataFrame,
     horizon: int,
     cost_scenarios: list[float],
+    *,
+    max_lag: int | None = None,
 ) -> list[dict]:
-    """Reprice the same portfolio turnover across cost levels; no rankings are retuned."""
+    """Reprice the same portfolio turnover across cost levels; no rankings are retuned.
+
+    Overlapping daily labels use horizon-1 HAC lags. Horizon-spaced low-frequency
+    portfolios must pass an explicit smaller lag (currently 1), because applying
+    horizon-1 lags to only ~N/h observations can make the long-run variance
+    numerically unstable and yield spuriously tiny p-values.
+    """
+    hac_max_lag = max(0, int(horizon - 1 if max_lag is None else max_lag))
     rows = []
     for scenario_bps in cost_scenarios:
         raw = _reprice_turnover_costs(daily_with_turnover, scenario_bps)
         winsorized = _reprice_turnover_costs(winsorized_with_turnover, scenario_bps)
         raw_summary = _summary(raw, scenario_bps)
         winsorized_summary = _summary(winsorized, scenario_bps)
-        raw_t, raw_p = _hac_mean_test(raw, "turnover_aware_spread", max_lag=horizon - 1)
+        raw_t, raw_p = _hac_mean_test(raw, "turnover_aware_spread", max_lag=hac_max_lag)
         winsorized_t, winsorized_p = _hac_mean_test(
-            winsorized, "turnover_aware_spread", max_lag=horizon - 1
+            winsorized, "turnover_aware_spread", max_lag=hac_max_lag
         )
         rows.append({
             "one_way_cost_bps": float(scenario_bps),
+            "hac_max_lag": hac_max_lag,
             "n_days": raw_summary["n_days"],
             "turnover_cost_available": raw_summary["turnover_cost_available"],
             "mean_total_turnover": raw_summary["mean_total_turnover"],
@@ -366,7 +376,7 @@ def _low_frequency_phase_metrics(
         raw_summary = _summary(phase_raw, cost_bps)
         winsorized_summary = _summary(phase_winsorized, cost_bps)
         cost_sensitivity_results = _cost_sensitivity_metrics(
-            phase_raw, phase_winsorized, horizon, cost_scenarios
+            phase_raw, phase_winsorized, horizon, cost_scenarios, max_lag=1
         )
         raw_t, raw_p = _hac_mean_test(
             phase_raw, "turnover_aware_spread", max_lag=1
