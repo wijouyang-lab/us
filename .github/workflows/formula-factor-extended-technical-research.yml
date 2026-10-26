@@ -86,7 +86,7 @@ jobs:
       - name: Download both family results
         uses: actions/download-artifact@v4
         with:
-          pattern: formula-factor-extended-* ${{ github.run_id }}
+          pattern: formula-factor-extended-*-${{ github.run_id }}
           path: formula-factor-inputs
           merge-multiple: false
       - name: Aggregate unique candidates and correct across families
