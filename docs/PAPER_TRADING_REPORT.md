@@ -1,4 +1,4 @@
-# Paper Trading 日报 — 2026-10-26
+# Paper Trading 日报 — 2026-10-23
 
 > 数据源：portfolio_paper_transactions.csv + quant_factor_price_history.csv
 > 本报告只统计已成交模拟交易；PENDING 不算持仓，VOID 不参与业绩。所有 PnL 为扣除模型滑点与佣金后的净值。
@@ -16,7 +16,7 @@
 | 平均净期望值 | ≥ +0.50%/笔 | N/A | NOT MET |
 | 盈亏平衡所需盈亏比 | < 实际盈亏比 | N/A vs N/A | NOT MET |
 | 最大回撤 | 不低于 -5.00% | N/A | NOT MET |
-| 成功 Scan 观察日 | ≥ 40 日 | 4 日（实际记录区间：2026-10-21 至 2026-10-26） | NOT MET |
+| 成功 Scan 观察日 | ≥ 40 日 | 3 日（实际记录区间：2026-10-21 至 2026-10-23） | NOT MET |
 
 任一项未达标或样本不足，都不构成转实盘依据。
 
@@ -24,13 +24,12 @@
 
 （无已成交持仓）
 
-## 待成交信号：3 条
+## 待成交信号：2 条
 
 | Ticker | 信号日 | 当前状态 |
 |---|---|---|
 | BX | 2026-10-21 | Await_Next_Trading_Day_Open |
 | DHR | 2026-10-22 | Await_Next_Trading_Day_Open |
-| AMT | 2026-10-26 | Await_Next_Trading_Day_Open |
 
 ## 已平仓净绩效
 
