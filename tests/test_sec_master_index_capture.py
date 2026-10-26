@@ -23,7 +23,7 @@ class Response(BytesIO):
 
 def test_build_master_index_url_is_quarter_bounded():
     assert build_master_index_url("2026-10-01", "2026-10-24") == (
-        "https://www.sec.gov/Archives/edgar/daily-index/2026/QTR4/master.idx"
+        "https://www.sec.gov/Archives/edgar/full-index/2026/QTR4/master.idx"
     )
     with pytest.raises(ValueError, match="single calendar quarter"):
         build_master_index_url("2026-09-30", "2026-10-01")
