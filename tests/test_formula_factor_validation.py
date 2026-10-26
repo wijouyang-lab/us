@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from tools.research.run_formula_factor_validation import _bh_qvalues, _hac_mean_test, run
+from tools.research.run_formula_factor_validation import _bh_qvalues, _by_qvalues, _hac_mean_test, run
 
 
 def test_bh_qvalues_are_monotone_in_p_value_order():
@@ -202,4 +202,61 @@ def test_turnover_cost_model_declines_duplicate_ticker_weights():
     result = _attach_turnover_costs(daily, 5)
     assert result["turnover_cost_available"].eq(False).all()
     assert result["turnover_aware_spread"].isna().all()
+
+def test_by_qvalues_are_at_least_as_conservative_as_bh():
+    p_values = [0.04, 0.001, 0.03, 0.8]
+    bh = _bh_qvalues(p_values)
+    by = _by_qvalues(p_values)
+    assert len(by) == len(p_values)
+    assert all(b >= a for a, b in zip(bh, by))
+    assert all(0 <= value <= 1 for value in by)
+    sorted_pairs = sorted(zip(p_values, by))
+    assert [q for _p, q in sorted_pairs] == sorted(q for _p, q in sorted_pairs)
+
+
+def test_low_frequency_phase_metrics_use_horizon_spaced_rebalances_and_report_by_q(tmp_path):
+    rng = np.random.default_rng(20261026)
+    rows = []
+    for day in pd.date_range("2024-07-01", periods=60, freq="B"):
+        for i in range(20):
+            signal = float(i)
+            noise = float(rng.normal(scale=0.01))
+            base_return = 0.015 if i >= 16 else (-0.008 if i < 4 else 0.0)
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{i:02}",
+                "Signal": signal,
+                "Forward_Return_5D": base_return + noise,
+            })
+    input_path, output_dir = tmp_path / "low_frequency.csv", tmp_path / "low_frequency_out"
+    pd.DataFrame(rows).to_csv(input_path, index=False)
+    run(
+        str(input_path), str(output_dir), max_base_factors=1, cost_bps=5,
+        min_names=10, requested_factors=["Signal"],
+    )
+
+    report = json.loads((output_dir / "formula_factor_report.json").read_text())
+    metrics = pd.read_csv(output_dir / "formula_factor_metrics.csv")
+    phase_metrics = pd.read_csv(output_dir / "low_frequency_phase_metrics.csv")
+    row = next(item for item in report["results"] if item["candidate"] == "z__Signal")
+
+    assert row["low_frequency_rebalance_interval_sessions"] == 5
+    assert row["low_frequency_phase_count"] == 5
+    assert len(row["low_frequency_phase_results"]) == 5
+    phase_zero = next(p for p in row["low_frequency_phase_results"] if p["phase_offset_sessions"] == 0)
+    phase_one = next(p for p in row["low_frequency_phase_results"] if p["phase_offset_sessions"] == 1)
+    assert phase_zero["n_rebalance_observations"] == 12
+    assert phase_one["n_rebalance_observations"] == 12
+    assert phase_zero["turnover_aware_spread_hac_p_value"] is not None
+    assert phase_zero["turnover_aware_spread_by_q_value"] is not None
+    assert phase_zero["winsorized_turnover_aware_spread_by_q_value"] is not None
+    assert "low_frequency_min_net_spread_across_phases" in row
+    assert "low_frequency_winsorized_min_net_spread_across_phases" in metrics.columns
+    assert len(phase_metrics) == len(report["results"]) * 5
+    assert (phase_metrics["rebalance_interval_sessions"] == 5).all()
+    assert (
+        phase_metrics["turnover_aware_spread_by_q_value"].dropna()
+        >= phase_metrics["turnover_aware_spread_hac_p_value"].dropna()
+    ).all()
+
 

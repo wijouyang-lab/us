@@ -6,6 +6,7 @@ on:
       - research/fix-factor-fold-embargo
       - research/factor-tail-sensitivity
       - research/turnover-aware-factor-cost
+      - research/low-frequency-rebalance-validation
     paths:
       - "tools/research/run_formula_factor_validation.py"
       - "tests/test_formula_factor_validation.py"
