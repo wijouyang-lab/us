@@ -12,6 +12,8 @@ on:
       - tools/research/sec_master_index_capture.py
       - tests/test_sec_daily_index.py
       - tests/test_sec_master_index_capture.py
+      - tests/test_sec_master_index_workflow.py
+      - .github/workflows/research-event-factor-capture-once.yml
       - .github/workflows/sec-research-tests.yml
 
 permissions:
@@ -31,4 +33,4 @@ jobs:
       - name: Install test runner
         run: python -m pip install --upgrade pytest
       - name: Test SEC research parser and capture adapter
-        run: python -m pytest -q tests/test_sec_daily_index.py tests/test_sec_master_index_capture.py
+        run: python -m pytest -q tests/test_sec_daily_index.py tests/test_sec_master_index_capture.py tests/test_sec_master_index_workflow.py

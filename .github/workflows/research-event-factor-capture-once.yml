@@ -88,10 +88,10 @@ jobs:
           if [[ -s "$UNIVERSE" ]]; then
             INDEX_START_DATE="$(python -c 'from datetime import date; d=date.today(); print(date(d.year, ((d.month-1)//3)*3+1, 1).isoformat())')"
             INDEX_END_DATE="$(date -u +%F)"
-            if ! python -m tools.research.sec_master_index_capture \\
-              --universe "$UNIVERSE" \\
-              --start-date "$INDEX_START_DATE" \\
-              --end-date "$INDEX_END_DATE" \\
+            if ! python -m tools.research.sec_master_index_capture \
+              --universe "$UNIVERSE" \
+              --start-date "$INDEX_START_DATE" \
+              --end-date "$INDEX_END_DATE" \
               --output "data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.json"; then
               echo "::warning::SEC master index fallback failed; keeping other official-source captures and recording the access limitation."
             fi
