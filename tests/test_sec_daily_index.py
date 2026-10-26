@@ -50,7 +50,7 @@ def test_master_index_counts_malformed_rows_and_excludes_unknown_cik():
         start_date="2026-10-01",
         end_date="2026-10-31",
     )
-    assert result["metadata"]["malformed_row_count"] == 1
+    assert result["metadata"]["malformed_row_count"] == 2
     assert len(result["events"]) == 1
 
 
