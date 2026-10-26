@@ -228,6 +228,7 @@ def _cost_sensitivity_metrics(
         )
         rows.append({
             "one_way_cost_bps": float(scenario_bps),
+            "hac_max_lag": inference_lag,
             "n_days": raw_summary["n_days"],
             "turnover_cost_available": raw_summary["turnover_cost_available"],
             "mean_total_turnover": raw_summary["mean_total_turnover"],
