@@ -46,6 +46,31 @@ def _bh_qvalues(p_values: list[float]) -> list[float]:
     return q
 
 
+def _winsorize_target_by_date(frame: pd.DataFrame, target: str,
+                               lower_quantile: float = 0.01,
+                               upper_quantile: float = 0.99) -> pd.Series:
+    """Return a cross-sectionally winsorized copy of a forward-return label.
+
+    This is a sensitivity analysis only; the original target column is never
+    modified. Each date is clipped independently so one event-driven outlier
+    does not set bounds for every other date.
+    """
+    if not 0 <= lower_quantile < upper_quantile <= 1:
+        raise ValueError("winsorization quantiles must satisfy 0 <= lower < upper <= 1")
+    if "Snapshot_Date" not in frame or target not in frame:
+        raise ValueError("frame must contain Snapshot_Date and the requested target")
+    values = pd.to_numeric(frame[target], errors="coerce").replace([np.inf, -np.inf], np.nan).copy()
+    for indices in frame.groupby("Snapshot_Date", sort=False).groups.values():
+        idx = list(indices)
+        valid = values.loc[idx].dropna()
+        if len(valid) < 10:
+            continue
+        lower = float(valid.quantile(lower_quantile))
+        upper = float(valid.quantile(upper_quantile))
+        values.loc[idx] = values.loc[idx].clip(lower=lower, upper=upper)
+    return values
+
+
 def _daily_metrics(frame: pd.DataFrame, factor: str, target: str, min_names: int):
     rows = []
     for date, group in frame.groupby("Snapshot_Date", sort=True):
@@ -155,6 +180,16 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     )
     work = pd.concat([source[["Snapshot_Date"]].reset_index(drop=True),
                       candidates.reset_index(drop=True)], axis=1)
+    # Keep the raw labels as the primary analysis. A separate per-date
+    # winsorized sensitivity reveals whether results depend on a tiny number of
+    # extreme outcomes; it is not a replacement for genuine event returns.
+    target_frame = pd.DataFrame({
+        "Snapshot_Date": source["Snapshot_Date"].reset_index(drop=True),
+    })
+    winsorized_targets = {}
+    for target in targets:
+        target_frame[target] = pd.to_numeric(source[target].values, errors="coerce")
+        winsorized_targets[target] = _winsorize_target_by_date(target_frame, target)
     out_rows = []
     for target in targets:
         for meta in metadata:
@@ -164,6 +199,22 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             daily = _daily_metrics(evaluated, name, target, min_names)
             horizon = int(target.upper().removeprefix("FORWARD_RETURN_").removesuffix("D"))
             summary = _summary(daily, cost_bps)
+            winsorized_eval = work[["Snapshot_Date", name]].copy()
+            winsorized_eval[target] = winsorized_targets[target].to_numpy()
+            winsorized_daily = _daily_metrics(winsorized_eval, name, target, min_names)
+            winsorized_summary = _summary(winsorized_daily, cost_bps)
+            for key, value in winsorized_summary.items():
+                summary[f"winsorized_{key}"] = value
+            winsorized_ic_t, winsorized_ic_p = _hac_mean_test(
+                winsorized_daily, "ic", max_lag=horizon - 1
+            )
+            winsorized_spread_t, winsorized_spread_p = _hac_mean_test(
+                winsorized_daily, "spread", max_lag=horizon - 1
+            )
+            summary["winsorized_ic_hac_t"] = round(winsorized_ic_t, 4) if winsorized_ic_t is not None else None
+            summary["winsorized_ic_hac_p_value"] = round(winsorized_ic_p, 8) if winsorized_ic_p is not None else None
+            summary["winsorized_spread_hac_t"] = round(winsorized_spread_t, 4) if winsorized_spread_t is not None else None
+            summary["winsorized_spread_hac_p_value"] = round(winsorized_spread_p, 8) if winsorized_spread_p is not None else None
             hac_t, hac_p = _hac_mean_test(daily, "ic", max_lag=horizon - 1)
             spread_hac_t, spread_hac_p = _hac_mean_test(daily, "spread", max_lag=horizon - 1)
             summary["ic_hac_t"] = round(hac_t, 4) if hac_t is not None else None
@@ -197,6 +248,8 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
         for metric, p_column, q_column in (
             ("ic", "ic_hac_p_value", "ic_fdr_q_value"),
             ("spread", "spread_hac_p_value", "spread_fdr_q_value"),
+            ("winsorized_ic", "winsorized_ic_hac_p_value", "winsorized_ic_fdr_q_value"),
+            ("winsorized_spread", "winsorized_spread_hac_p_value", "winsorized_spread_fdr_q_value"),
         ):
             idxs = [
                 i for i, row in enumerate(out_rows)
@@ -226,7 +279,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "candidate_count": len(metadata),
             "cost_bps_per_leg": cost_bps,
             "inference_method": "Newey-West HAC tests for mean daily IC and mean daily Q5-Q1 spread with lag horizon-1; separate Benjamini-Hochberg FDR families within each horizon; two-sided normal approximation.",
-            "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included.",
+            "warning": "Formula candidates are hypotheses. HAC reduces but does not eliminate dependence from overlapping labels. Cost-adjusted Q5-Q1 is approximate; no capacity, borrow, turnover-aware cost, or full portfolio simulation is included. Per-date 1st/99th percentile winsorized metrics are a tail-sensitivity check only; raw results remain primary and genuine event returns are not deleted.",
             "results": out_rows,
         }, indent=2, ensure_ascii=False),
         encoding="utf-8",

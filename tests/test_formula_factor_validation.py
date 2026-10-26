@@ -112,3 +112,47 @@ def test_requested_baselines_are_prioritized_before_feature_cap(tmp_path):
     assert report["selected_base_features"] == ["ATR_Pct", "Momentum_20D_Pct"]
 
 # Regression coverage for mandatory fold embargo remains research-only.
+
+def test_winsorize_target_by_date_is_cross_sectional_and_preserves_input():
+    from tools.research.run_formula_factor_validation import _winsorize_target_by_date
+
+    frame = pd.DataFrame({
+        "Snapshot_Date": [pd.Timestamp("2024-01-02")] * 100
+                         + [pd.Timestamp("2024-01-03")] * 100,
+        "Forward_Return_5D": [0.0] * 99 + [100.0] + [0.0] * 99 + [5.0],
+    })
+    original = frame["Forward_Return_5D"].copy()
+    clipped = _winsorize_target_by_date(frame, "Forward_Return_5D")
+    assert frame["Forward_Return_5D"].equals(original)
+    assert clipped.iloc[99] < 100.0
+    assert clipped.iloc[199] < 5.0
+    assert clipped.iloc[0] == 0.0
+
+
+def test_run_reports_raw_and_winsorized_metrics_separately(tmp_path):
+    rng = np.random.default_rng(88)
+    rows = []
+    for day in pd.date_range("2024-05-01", periods=30, freq="B"):
+        for i in range(20):
+            signal = float(rng.normal())
+            ret = 0.01 * signal + float(rng.normal(scale=0.02))
+            if day == pd.Timestamp("2024-05-15") and i == 0:
+                ret = 2.0
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{i:02}",
+                "Signal": signal,
+                "Forward_Return_5D": ret,
+            })
+    inp, out = tmp_path / "input.csv", tmp_path / "out"
+    pd.DataFrame(rows).to_csv(inp, index=False)
+    run(str(inp), str(out), max_base_factors=1, cost_bps=5, min_names=10,
+        requested_factors=["Signal"])
+    report = json.loads((out / "formula_factor_report.json").read_text())
+    row = next(r for r in report["results"] if r["candidate"] == "z__Signal")
+    assert "net_q5_q1_spread" in row
+    assert "winsorized_net_q5_q1_spread" in row
+    assert "winsorized_spread_hac_p_value" in row
+    assert "winsorized_spread_fdr_q_value" in row
+    assert report["research_only"] is True
+
