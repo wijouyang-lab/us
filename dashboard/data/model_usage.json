@@ -4,5 +4,11 @@
     "requested": "claude-fable-5-1",
     "fallback": false,
     "updated_at": "2026-10-26T13:12:09.815321+00:00"
+  },
+  "review": {
+    "model": "claude-fable-5-1",
+    "requested": "claude-fable-5-1",
+    "fallback": false,
+    "updated_at": "2026-10-26T22:27:06.334463+00:00"
   }
 }
