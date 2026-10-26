@@ -8,6 +8,8 @@ on:
     paths:
       - ".github/workflows/formula-factor-extended-technical-research.yml"
       - "tools/research/run_formula_factor_validation.py"
+      - "tests/test_formula_factor_temporal_features.py"
+      - "tests/test_formula_factor_validation.py"
       - "tools/research/formula_factor_discovery.py"
       - "tools/research/aggregate_formula_factor_reports.py"
       - "tests/test_formula_factor_report_aggregation.py"
@@ -29,12 +31,12 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install aggregation test runner
-        run: python -m pip install --upgrade pytest
-      - name: Compile extended-family aggregation tool
-        run: python -m py_compile tools/research/aggregate_formula_factor_reports.py tests/test_formula_factor_report_aggregation.py
-      - name: Test combined-family correction
-        run: python -m pytest -q tests/test_formula_factor_report_aggregation.py
+      - name: Install research test dependencies
+        run: python -m pip install --upgrade pytest numpy pandas
+      - name: Compile temporal-factor and aggregation tools
+        run: python -m py_compile tools/research/run_formula_factor_validation.py tools/research/aggregate_formula_factor_reports.py tests/test_formula_factor_temporal_features.py tests/test_formula_factor_validation.py tests/test_formula_factor_report_aggregation.py
+      - name: Test temporal factors and research reports
+        run: python -m pytest -q tests/test_formula_factor_temporal_features.py tests/test_formula_factor_validation.py tests/test_formula_factor_report_aggregation.py
 
   evaluate:
     needs: validate
@@ -48,6 +50,8 @@ jobs:
             factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_5D_Pct,Momentum_20D_Pct,Momentum_60D_Pct,RSI,MA20_Slope_Pct_5D,Beta_60D_SPY,Volume_Ratio_20D,ZScore_20D"
           - family: relative_strength_and_oscillators
             factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,Stock_RS_20D_vs_SPY,MA20,MA50,乖离率(%),MACD_HIST_LAST,KDJ_J,量比"
+          - family: temporal_signal_dynamics
+            factor_columns: "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,Stock_RS_20D_vs_SPY,RSI,Momentum_20D_Acceleration_20_Snapshots,RSI_Change_5_Snapshots,ATR_Pct_Change_20_Snapshots"
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -83,7 +87,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Download both family results
+      - name: Download all factor-family results
         uses: actions/download-artifact@v4
         with:
           pattern: formula-factor-extended-*-${{ github.run_id }}

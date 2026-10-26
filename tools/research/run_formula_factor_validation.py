@@ -411,6 +411,67 @@ def _low_frequency_phase_metrics(
     return phase_rows
 
 
+TEMPORAL_FEATURE_SPECS = (
+    ("Momentum_20D_Acceleration_20_Snapshots", "Momentum_20D_Pct", 20),
+    ("RSI_Change_5_Snapshots", "RSI", 5),
+    ("ATR_Pct_Change_20_Snapshots", "ATR_Pct", 20),
+)
+
+
+def _add_temporal_feature_changes(
+    frame: pd.DataFrame,
+    *,
+    date_column: str = "Snapshot_Date",
+    ticker_column: str = "Ticker",
+) -> pd.DataFrame:
+    """Add lagged feature changes using only the same ticker's prior snapshots.
+
+    Lags use the sorted snapshot calendar in the source dataset, not calendar
+    days and not a ticker-specific row shift. Missing ticker snapshots stay
+    missing rather than silently extending the lookback.
+    """
+    if date_column not in frame.columns:
+        raise ValueError(f"missing required date column for temporal factors: {date_column}")
+    if ticker_column not in frame.columns:
+        return frame.copy()
+
+    result = frame.copy()
+    dates = pd.to_datetime(result[date_column], errors="coerce").dt.normalize()
+    if dates.isna().any():
+        raise ValueError("temporal factors require valid snapshot dates")
+    tickers = result[ticker_column].astype("string")
+    if tickers.isna().any():
+        raise ValueError("temporal factors require non-missing ticker identifiers")
+
+    session_positions = {
+        pd.Timestamp(value): index
+        for index, value in enumerate(sorted(dates.unique()))
+    }
+    session_index = dates.map(session_positions).to_numpy(dtype=int)
+    ticker_values = tickers.astype(str).to_numpy()
+    lookup_index = pd.MultiIndex.from_arrays([ticker_values, session_index])
+    if lookup_index.has_duplicates:
+        raise ValueError("temporal factors require unique ticker/date rows")
+
+    for output_column, source_column, lag_snapshots in TEMPORAL_FEATURE_SPECS:
+        if source_column not in result.columns:
+            continue
+        values = pd.to_numeric(result[source_column], errors="coerce").replace(
+            [np.inf, -np.inf], np.nan
+        )
+        history = pd.Series(
+            values.to_numpy(dtype=float, na_value=np.nan),
+            index=lookup_index,
+        )
+        lag_index = pd.MultiIndex.from_arrays([
+            ticker_values,
+            session_index - lag_snapshots,
+        ])
+        lagged = history.reindex(lag_index).to_numpy(dtype=float)
+        result[output_column] = values.to_numpy(dtype=float, na_value=np.nan) - lagged
+    return result
+
+
 def run(input_path: str, output_dir: str, max_base_factors: int = 8,
         cost_bps: float = 5.0, min_names: int = 10,
         requested_factors: list[str] | None = None):
@@ -421,6 +482,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     source = source.copy()
     source["Snapshot_Date"] = pd.to_datetime(source[date_col], errors="coerce").dt.normalize()
     source = source.dropna(subset=["Snapshot_Date"])
+    source = _add_temporal_feature_changes(source)
     # Anchor phases to sorted source snapshot dates, not a factor-specific subset,
     # so missing factor values cannot shift a candidate's rebalance calendar.
     session_dates = [pd.Timestamp(value) for value in sorted(source["Snapshot_Date"].unique())]
