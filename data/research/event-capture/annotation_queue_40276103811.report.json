@@ -1,0 +1,32 @@
+{
+  "archive_rows": 803,
+  "as_of_utc": "2026-10-26T05:48:05.370168Z",
+  "deduplicated_later_versions": 355,
+  "deferred_rows": 289,
+  "eligible_candidate_count": 389,
+  "excluded_counts": {
+    "already_reviewed": 0,
+    "ambiguous_first_seen": 0,
+    "invalid_timestamps": 0,
+    "missing_event_id": 0,
+    "missing_event_version_id": 0,
+    "not_yet_available": 0,
+    "stale": 59
+  },
+  "labels_generated": false,
+  "limitations": [
+    "This file is an annotation work queue, not reviewed data.",
+    "Yahoo Finance query ticker is not proof of company relevance; review mapping fields separately.",
+    "Do not change pending to reviewed until a real review is completed with provenance.",
+    "Use only the archived source version; do not use future returns or later information.",
+    "A reviewed mapping completed after an entry decision is retrospective and is not valid evidence of information available at that decision."
+  ],
+  "max_age_days": 30.0,
+  "max_rows": 100,
+  "queue_rows": 100,
+  "queue_selection_policy": "earliest source version per event ID; round-robin by event family/source; newest published events first within each family/source",
+  "research_only": true,
+  "review_status_set_to_pending": true,
+  "status": "queue_created",
+  "unique_event_ids": 448
+}
