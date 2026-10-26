@@ -461,17 +461,47 @@
     var stopCell = '<div><span class="pmk">止损价</span><b class="down">' + esc(stopTxt) + '</b></div>';
 
     var takeTxt = NA, takeCls = '';
-    var beTrig = num((((DATA && DATA.portfolio && DATA.portfolio.exit_rules) || {}).breakeven_trigger_pct));
+    var exitRules = (DATA && DATA.portfolio && DATA.portfolio.exit_rules) || {};
+    var beTrig = num(exitRules.breakeven_trigger_pct);
+    // 止盈档位（来自 strategy_params.exit，按阈值升序）：保本 → 锁利 1/2/3
+    var tiers = [];
+    if (beTrig != null) tiers.push({ pct: beTrig, act: '抬保本' });
+    [1, 2, 3].forEach(function (i) {
+      var t = num(exitRules['profit_lock_' + i + '_pct']);
+      var dd = num(exitRules['profit_lock_' + i + '_drawdown_pct']);
+      if (t != null) tiers.push({ pct: t, act: dd != null ? ('锁 ' + fmt(dd, 0) + '% 回撤') : '锁利' });
+    });
+    tiers.sort(function (a, b) { return a.pct - b.pct; });
+
     if (stopP != null && entryP && stopP >= entryP) {
-      // 已激活：止损线上移，同一条线就是移动止盈线
+      // 已激活：止损线上移，同一条线就是移动止盈线（实际出场价）
       takeTxt = '$' + fmt(stopP, 2) + '（锁定 +' + fmt(pctTo(stopP, entryP), 1) + '%）';
       takeCls = 'up';
+    } else if (entryP && curP) {
+      // 未激活：显示「下一档锁利目标价」＝入场 × (1 + 阈值%)，明确标注是目标参考，
+      // 不是固定出场价（真实出场仍是止损线被触发）。
+      var pnlPct = pctTo(curP, entryP);
+      var next = null;
+      for (var ti = 0; ti < tiers.length; ti++) {
+        if (pnlPct < tiers[ti].pct) { next = tiers[ti]; break; }
+      }
+      if (next) {
+        var tp = entryP * (1 + next.pct / 100);
+        takeTxt = '$' + fmt(tp, 2) + '（目标参考 +' + fmt(next.pct, 0) + '% · ' + next.act + '）';
+        takeCls = 'flat';
+      } else if (tiers.length) {
+        takeTxt = '已达最高锁利档' + (stopP != null ? ' · 现止盈价 $' + fmt(stopP, 2) : '');
+        takeCls = 'flat';
+      } else {
+        takeTxt = '$' + fmt(entryP, 2) + '（保本待激活，浮盈达标后抬保本）';
+        takeCls = 'flat';
+      }
     } else if (entryP) {
-      takeTxt = '$' + fmt(entryP, 2) + '（保本待激活' +
-        (beTrig != null ? '，浮盈 +' + fmt(beTrig, 0) + '% 后抬保本' : '，浮盈达标后抬保本') + '）';
+      takeTxt = '$' + fmt(entryP, 2) + '（保本待激活，浮盈达标后抬保本）';
       takeCls = 'flat';
     }
-    var takeCell = '<div><span class="pmk">止盈价</span><b class="' + takeCls + '">' + esc(takeTxt) + '</b></div>';
+    var takeCell = '<div title="止盈＝移动止盈：浮盈达标后抬高止损线；未激活时显示的是下一档目标参考价，不是固定出场价">' +
+      '<span class="pmk">止盈价</span><b class="' + takeCls + '">' + esc(takeTxt) + '</b></div>';
     var riskBar = '';
     if (stopP != null && entryP && curP != null && curP > 0 && stopP > 0) {
       var lo = Math.min(stopP, entryP, curP), hi = Math.max(stopP, entryP, curP);

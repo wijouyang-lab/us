@@ -148,8 +148,29 @@ def test_position_card_marks_trailing_profit_vs_stop_loss():
                                    positions=[dict(base, stop_loss="220.00", stop_loss_price=220.0)])})
     html_down = down["positions"] or ""
     assert "止损价</span><b class=\"down\">$220.00（距现价 -8.3%）" in html_down, html_down
-    # 未激活：不编目标价，显示保本价 + 真实的 +5% 激活阈值（来自 exit_rules）
-    assert "止盈价</span><b class=\"flat\">$231.42（保本待激活，浮盈 +5% 后抬保本）" in html_down, html_down
+    # 未激活：显示下一档「目标参考价」= 入场 × (1+5%)，并标注是目标参考而非固定出场价
+    assert "止盈价</span><b class=\"flat\">$242.99（目标参考 +5% · 抬保本）" in html_down, html_down
     # 色带：止损→入场为红（风险区），入场→现价为绿（浮盈区）
     assert 'class="prb-zone down"' in html_down, html_down
     assert 'class="prb-zone up"' in html_down, html_down
+
+
+def test_position_card_next_profit_target_tier():
+    """浮盈 16.7% 已过 +15% 档 → 止盈价显示下一档 +30% 的目标参考价（锁 8% 回撤）。"""
+    rules = {"exit_rules": {"breakeven_trigger_pct": 5.0,
+                            "profit_lock_1_pct": 15.0, "profit_lock_1_drawdown_pct": 10.0,
+                            "profit_lock_2_pct": 30.0, "profit_lock_2_drawdown_pct": 8.0,
+                            "profit_lock_3_pct": 50.0, "profit_lock_3_drawdown_pct": 12.0}}
+    pos = {"ticker": "MSFT", "shares": 10, "entry_price": 240.0, "current_price": 280.0,
+           "market_value": 2800.0, "unrealized_pnl": 400.0, "unrealized_pnl_pct": 16.67,
+           "weight_pct": 10.0, "holding_days": 12,
+           "stop_loss": "252.00", "stop_loss_price": 252.0}   # 已抬到入场上方 → 已激活
+    r = _run({"portfolio": dict(rules, target=[], transactions=[], positions=[pos])})
+    html = r["positions"] or ""
+    assert "止盈价</span><b class=\"up\">$252.00（锁定 +5.0%）" in html, html
+
+    # 把止损线放回入场下方（未激活）→ 看下一档目标参考价
+    pos2 = dict(pos, stop_loss="230.00", stop_loss_price=230.0)
+    r2 = _run({"portfolio": dict(rules, target=[], transactions=[], positions=[pos2])})
+    html2 = r2["positions"] or ""
+    assert "止盈价</span><b class=\"flat\">$312.00（目标参考 +30% · 锁 8% 回撤）" in html2, html2
