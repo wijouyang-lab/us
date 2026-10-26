@@ -301,4 +301,21 @@ def test_turnover_cost_sensitivity_grid_reprices_same_portfolios_and_corrects_sc
     for phase, group in low_freq_costs.groupby("phase_offset_sessions"):
         values = group.sort_values("one_way_cost_bps")["turnover_aware_net_q5_q1_spread"].tolist()
         assert all(a >= b for a, b in zip(values, values[1:]))
+
+    # The phase summary and cost grid describe the same portfolio at 5 bps.
+    # They must use the same HAC lag and report identical p-values.
+    phase_zero = next(
+        phase for phase in row["low_frequency_phase_results"]
+        if phase["phase_offset_sessions"] == 0
+    )
+    phase_cost = next(
+        scenario for scenario in phase_zero["cost_sensitivity_results"]
+        if scenario["one_way_cost_bps"] == 5.0
+    )
+    assert phase_cost["turnover_aware_spread_hac_p_value"] == pytest.approx(
+        phase_zero["turnover_aware_spread_hac_p_value"], abs=1e-8
+    )
+    assert phase_cost["winsorized_turnover_aware_spread_hac_p_value"] == pytest.approx(
+        phase_zero["winsorized_turnover_aware_spread_hac_p_value"], abs=1e-8
+    )
     assert "cost_sensitivity_one_way_bps" in report
