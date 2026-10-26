@@ -134,6 +134,7 @@ jobs:
           Path(error_path).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
           PY
               echo "::warning::SEC master index fallback failed; a structured failure record was saved. Other source captures will be preserved."
+            fi
           else
             echo "::warning::No SEC universe snapshot available; master index fallback skipped."
           fi

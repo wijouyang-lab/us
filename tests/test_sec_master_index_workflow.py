@@ -34,3 +34,11 @@ def test_sec_master_index_failure_writes_structured_research_record():
     assert "A retrieval failure must not be interpreted as proof that no filings occurred." in workflow
     assert '2>&1; then' in workflow
 
+    lines = workflow.splitlines()
+    warning_index = next(
+        i for i, line in enumerate(lines)
+        if "structured failure record was saved" in line
+    )
+    assert lines[warning_index + 1].strip() == "fi"
+    assert lines[warning_index + 2].strip() == "else"
+
