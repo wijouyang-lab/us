@@ -53,7 +53,8 @@ def price_bars():
     ]
     spy = [{"date": date.fromisoformat(d), "open": op, "close": close} for d, op, close in days]
     exm = [{"date": date.fromisoformat(d), "open": 50.0+i, "close": 50.5+i} for i, (d, _, _) in enumerate(days)]
-    return {"SPY": spy, "EXM": exm}
+    aapl = [{"date": date.fromisoformat(d), "open": 200.0+i, "close": 201.0+i} for i, (d, _, _) in enumerate(days)]
+    return {"SPY": spy, "EXM": exm, "AAPL": aapl}
 
 
 def test_premarket_event_enters_same_day_open_and_reports_forward_returns():
