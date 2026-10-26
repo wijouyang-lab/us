@@ -205,6 +205,10 @@ class YahooFinanceRssCollector:
                         "publisher_name": publisher or None,
                         "source_timestamp_kind": "rss_pubDate",
                         "source_timestamp_status": "parsed" if published_at else "missing_or_invalid",
+                        "queried_ticker": ticker,
+                        "ticker_mapping_method": "per_ticker_yahoo_rss_query",
+                        "ticker_mapping_status": "unverified_query_scope",
+                        "ticker_mapping_confidence": "unverified",
                         "research_only": True,
                     })
                     all_events.append(event)
@@ -240,6 +244,7 @@ class YahooFinanceRssCollector:
                 "Yahoo Finance RSS is an aggregator, not an official filing source.",
                 "RSS pubDate is publisher metadata, not proof of the exact first-public instant.",
                 "Only the collector's recorded first_seen_at_utc establishes when this system observed an item.",
+                "A ticker-scoped query is not proof that each returned headline is about that company; ticker mapping is explicitly unverified until content review.",
                 "The feed exposes a limited rolling window; absence does not prove no event occurred.",
                 "The collector does not infer event sentiment or earnings labels from headline text.",
             ],
