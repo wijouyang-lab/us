@@ -9,7 +9,7 @@ def test_sec_master_index_shell_continuations_are_single_backslashes():
         / "research-event-factor-capture-once.yml"
     ).read_text(encoding="utf-8")
     command_fragments = (
-        "if ! python -m tools.research.sec_master_index_capture ",
+        "if python -m tools.research.sec_master_index_capture ",
         '--universe "$UNIVERSE" ',
         '--start-date "$INDEX_START_DATE" ',
         '--end-date "$INDEX_END_DATE" ',
