@@ -24,6 +24,15 @@ const esc = (s) => String(s == null ? '' : s).replace(/[&<>]/g, (c) => ({ '&': '
 const nv = (v, d = 2) => (v == null || v === '' || isNaN(Number(v))) ? '—' : Number(v).toFixed(d);
 const num = (v) => (v == null || v === '') ? null : Number(v);
 const NA = '—';
+// positionCard 现在还会用到 fmt（风控线文案）与 numLoose（"$197.69" → 197.69）。
+// 与 app.js 的真实实现保持等价的最小桩。
+const fmt = (n, d = 2) => (n == null || isNaN(Number(n))) ? '—' : Number(n).toFixed(d);
+const numLoose = (v) => {
+  if (v == null || v === '') return null;
+  if (typeof v === 'number') return isFinite(v) ? v : null;
+  const n = Number(String(v).replace(/[^0-9.\-]/g, ''));
+  return isFinite(n) ? n : null;
+};
 
 // 抽取 positionCard 与其依赖的 extLabel，包进同一工厂函数，
 // 让 positionCard 闭包捕获真实的 extLabel（不加载整个 app.js）。
