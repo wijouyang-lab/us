@@ -33,3 +33,20 @@ def test_audit_rejects_missing_forward_labels(tmp_path):
     pd.DataFrame({"Technical_Date": ["2024-01-01"], "Ticker": ["AAA"], "ATR_Pct": [0.2]}).to_csv(path, index=False)
     with pytest.raises(ValueError, match="Forward_Return"):
         audit_dataset(str(path))
+
+def test_audit_groups_overlapping_extreme_labels_by_ticker(tmp_path):
+    frame = pd.DataFrame({
+        "Technical_Date": ["2024-01-01", "2024-01-02", "2024-01-02", "2024-01-03"],
+        "Ticker": ["AAA", "AAA", "BBB", "AAA"],
+        "Forward_Return_5D": [1.2, 1.5, 0.1, -1.3],
+        "Forward_Return_10D": [1.1, 0.2, 0.3, -1.4],
+    })
+    path = tmp_path / "dataset.csv"
+    frame.to_csv(path, index=False)
+    report = audit_dataset(str(path))
+    summaries = report["extreme_forward_returns_by_ticker"]
+    assert summaries[0]["ticker"] == "AAA"
+    assert summaries[0]["extreme_label_count"] == 5
+    assert summaries[0]["distinct_dates"] == 3
+    assert summaries[0]["labels_affected"] == ["Forward_Return_10D", "Forward_Return_5D"]
+    assert summaries[0]["max_abs_forward_return"] == pytest.approx(1.5)
