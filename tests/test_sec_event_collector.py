@@ -171,6 +171,10 @@ def test_collector_marks_header_fetch_failures_instead_of_inventing_timestamps()
     assert result["events"][0]["published_at_utc"] is None
     assert result["metadata"]["coverage_status"] == "partial"
     assert result["metadata"]["header_fetch_error_count"] == 1
+    assert result["metadata"]["header_fetch_error_types"] == {"RuntimeError": 1}
+    assert result["metadata"]["header_http_status_counts"] == {"404": 1}
+    assert result["events"][0]["fetch_http_status"] == 404
+    assert "HTTP 404" in result["events"][0]["fetch_error_detail"]
 
 
 def test_collector_requires_contact_user_agent_and_restricts_hosts():
