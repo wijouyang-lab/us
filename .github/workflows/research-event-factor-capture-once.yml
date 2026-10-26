@@ -92,13 +92,48 @@ jobs:
           if [[ -s "$UNIVERSE" ]]; then
             INDEX_START_DATE="$(python -c 'from datetime import date; d=date.today(); print(date(d.year, ((d.month-1)//3)*3+1, 1).isoformat())')"
             INDEX_END_DATE="$(date -u +%F)"
-            if ! python -m tools.research.sec_master_index_capture \
+            SEC_CAPTURE_OUTPUT="data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.log"
+            SEC_CAPTURE_ERROR="data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.error.json"
+            if python -m tools.research.sec_master_index_capture \
               --universe "$UNIVERSE" \
               --start-date "$INDEX_START_DATE" \
               --end-date "$INDEX_END_DATE" \
-              --output "data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.json"; then
-              echo "::warning::SEC master index fallback failed; keeping other official-source captures and recording the access limitation."
-            fi
+              --output "data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.json" > "$SEC_CAPTURE_OUTPUT" 2>&1; then
+              cat "$SEC_CAPTURE_OUTPUT"
+            else
+              SEC_CAPTURE_EXIT_CODE=$?
+              cat "$SEC_CAPTURE_OUTPUT"
+              python - "$SEC_CAPTURE_OUTPUT" "$SEC_CAPTURE_ERROR" "$INDEX_START_DATE" "$INDEX_END_DATE" "$SEC_CAPTURE_EXIT_CODE" <<'PY'
+          import json
+          import sys
+          from datetime import datetime, timezone
+          from pathlib import Path
+
+          log_path, error_path, start_date, end_date, exit_code = sys.argv[1:]
+          log = Path(log_path).read_text(encoding="utf-8", errors="replace")
+          status_code = "http_403" if "HTTP 403" in log else "capture_failed"
+          payload = {
+              "source": "sec_edgar_master_index",
+              "status": "failed",
+              "failure_code": status_code,
+              "failure_log": Path(log_path).name,
+              "failure_excerpt": log[-4000:],
+              "attempted_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+              "requested_start_date": start_date,
+              "requested_end_date": end_date,
+              "exit_code": int(exit_code),
+              "source_retrieval_succeeded": False,
+              "historical_pit_eligible": False,
+              "research_only": True,
+              "limitations": [
+                  "No filing rows were captured by this attempt.",
+                  "A retrieval failure must not be interpreted as proof that no filings occurred.",
+                  "Do not infer publication timestamps or historical first-seen times from this failure record."
+              ]
+          }
+          Path(error_path).write_text(json.dumps(payload, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+          PY
+              echo "::warning::SEC master index fallback failed; a structured failure record was saved. Other source captures will be preserved."
           else
             echo "::warning::No SEC universe snapshot available; master index fallback skipped."
           fi
