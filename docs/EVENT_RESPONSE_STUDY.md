@@ -30,3 +30,23 @@ The report includes event-level observations, family-level mean and median gross
 ## Interpretation limit
 
 The event is anchored to the time this collector first observed it, which may be later than the publisher timestamp or the instant the item first became public. Therefore this measures returns after system observation, not necessarily the original market reaction. Historical backfill cannot reconstruct an unrecorded historical first-seen time. Verify coverage before any walk-forward strategy evaluation.
+
+
+## Bounded review queue and human mapping verification
+
+The capture workflow now exports at most 100 eligible review rows by default. It selects the earliest observed version per logical event ID and rotates across event family/source so Yahoo headlines do not crowd out macro releases and policy events. All captured versions remain in the immutable archive; rows beyond the cap are deferred to later queues. Use \`--max-rows 0\` for an unlimited manual export.
+
+For Yahoo Finance RSS, \`queried_ticker\` is just the RSS query symbol. Review \`mapped_tickers_json\` using headline/source content only, then set \`mapping_review_status=reviewed\` and fill \`mapping_reviewed_at_utc\`, \`mapping_reviewer_id\`, \`mapping_rationale\`, and \`mapping_schema_version\`. Use \`[]\` if the story is not actually about the queried symbol. Do not use later price moves to decide company relevance.
+
+Directional/impact labels are a separate review. Populate the label fields only after a real annotation; the queue tool leaves them blank and pending. Import a completed queue into a **new derived archive**, never the source archive:
+
+\`\`\`bash
+python -m tools.research.apply_event_annotations \\
+  --archive data/research/event-capture/event_archive.json \\
+  --annotations-csv reviewed_queue.csv \\
+  --as-of 2026-10-26T20:00:00Z \\
+  --output data/research/event-capture/event_archive_reviewed.json \\
+  --report data/research/event-capture/event_archive_reviewed.report.json
+\`\`\`
+
+The event-response study reports the mapping review timestamp and reviewer, and indicates whether the review existed before that session's 09:30 New York open. A review after entry is retrospective classification, not evidence the trading system had that mapping at the decision time. The study remains descriptive, not proof of predictive alpha.

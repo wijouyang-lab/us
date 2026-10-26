@@ -233,6 +233,8 @@ def test_unverified_ticker_scoped_aggregator_news_is_not_matched_to_stock_return
 
 
 def test_verified_aggregator_company_mapping_can_be_studied():
+    from tools.research.pit_event_archive import event_version_id
+
     yahoo_event = event(
         "yahoo-story-reviewed",
         "2026-10-26T15:00:00Z",
@@ -243,16 +245,23 @@ def test_verified_aggregator_company_mapping_can_be_studied():
     )
     yahoo_event["source"] = "yahoo_finance_rss"
     yahoo_event["source_quality"] = "aggregator"
-    yahoo_event["ticker_mapping_method"] = "human_content_review"
-    yahoo_event["ticker_mapping_status"] = "human_reviewed"
-    yahoo_event["ticker_mapping_confidence"] = "verified"
-
+    yahoo_event["ticker_mapping_method"] = "per_ticker_yahoo_rss_query"
+    yahoo_event["ticker_mapping_status"] = "unverified_query_scope"
+    yahoo_event["ticker_mapping_confidence"] = "unverified"
+    yahoo_event["event_version_id"] = event_version_id(yahoo_event)
+    yahoo_event.update({
+        "ticker_mapping_review_status": "human_reviewed",
+        "ticker_mapping_reviewed_tickers": ["AAPL"],
+        "ticker_mapping_reviewed_at_utc": "2026-10-26T15:30:00Z",
+        "ticker_mapping_reviewer_id": "mapping-reviewer-1",
+        "ticker_mapping_rationale": "The reviewed headline is explicitly about Apple.",
+        "ticker_mapping_schema_version": "1.0",
+    })
     report = run_event_response_study(
-        [yahoo_event],
-        price_bars(),
-        study_end_date="2026-10-30",
-        horizons=[1],
+        [yahoo_event], price_bars(), study_end_date="2026-10-30", horizons=[1],
     )
-
     assert report["observation_count"] == 1
-    assert report["observations"][0]["ticker_mapping_status"] == "human_reviewed"
+    observation = report["observations"][0]
+    assert observation["ticker_mapping_status"] == "human_reviewed"
+    assert observation["ticker_mapping_reviewer_id"] == "mapping-reviewer-1"
+    assert observation["ticker_mapping_review_was_available_by_entry"] is True
