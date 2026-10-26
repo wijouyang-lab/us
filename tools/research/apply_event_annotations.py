@@ -11,6 +11,7 @@ from datetime import datetime, timezone
 from hashlib import sha256
 import json
 import math
+import re
 from pathlib import Path
 from typing import Any
 
@@ -39,6 +40,26 @@ def _score(value: Any, field: str, lower: float, upper: float) -> float | None:
     return number
 
 
+def _parse_reviewed_tickers(value: Any) -> list[str]:
+    try:
+        parsed = json.loads(value) if isinstance(value, str) else value
+    except (json.JSONDecodeError, TypeError) as exc:
+        raise ValueError("mapped_tickers_json must be a JSON array of ticker strings") from exc
+    if not isinstance(parsed, list):
+        raise ValueError("mapped_tickers_json must be a JSON array of ticker strings")
+    tickers: set[str] = set()
+    for raw in parsed:
+        if not isinstance(raw, str):
+            raise ValueError("each reviewed ticker must be a string")
+        ticker = raw.strip().upper().replace("$", "")
+        if not ticker:
+            continue
+        if not re.fullmatch(r"[A-Z0-9][A-Z0-9.-]{0,14}", ticker):
+            raise ValueError(f"invalid reviewed ticker symbol: {raw!r}")
+        tickers.add(ticker)
+    return sorted(tickers)
+
+
 def apply_annotations(
     archive: list[dict[str, Any]],
     annotation_rows: list[dict[str, Any]],
@@ -55,25 +76,73 @@ def apply_annotations(
             raise ValueError(f"duplicate event_version_id in archive: {version}")
         by_version[version] = dict(event)
 
-    applied: dict[str, dict[str, Any]] = {}
+    applied_labels: dict[str, dict[str, Any]] = {}
+    applied_mappings: dict[str, dict[str, Any]] = {}
+    seen_active_reviews: set[str] = set()
     ignored_pending = 0
+    pending_mapping_rows_ignored = 0
     reviewed_count = 0
     validated_count = 0
+    reviewed_mappings_count = 0
+
     for index, row in enumerate(annotation_rows):
         version = str(row.get("event_version_id") or "").strip()
         if not version:
             raise ValueError(f"annotation row {index} is missing event_version_id")
         if version not in by_version:
             raise ValueError(f"annotation references unknown event_version_id: {version}")
-        status = str(row.get("label_review_status") or "pending").strip().lower()
-        if status == "pending":
+
+        label_status = str(row.get("label_review_status") or "pending").strip().lower()
+        if label_status not in {"pending", "reviewed", "validated"}:
+            raise ValueError(f"annotation row {index} has invalid review status: {label_status}")
+        mapping_status = str(row.get("mapping_review_status") or "not_required").strip().lower()
+        if mapping_status not in {"pending", "not_required", "reviewed"}:
+            raise ValueError(f"annotation row {index} has invalid mapping review status: {mapping_status}")
+
+        label_active = label_status in {"reviewed", "validated"}
+        mapping_active = mapping_status == "reviewed"
+        if not label_active:
             ignored_pending += 1
+        if mapping_status == "pending":
+            pending_mapping_rows_ignored += 1
+        if not label_active and not mapping_active:
             continue
-        if status not in {"reviewed", "validated"}:
-            raise ValueError(f"annotation row {index} has invalid review status: {status}")
-        if version in applied:
+        if version in seen_active_reviews:
             raise ValueError(f"duplicate annotation for event_version_id: {version}")
+        seen_active_reviews.add(version)
+
         event = by_version[version]
+        if mapping_active:
+            if str(event.get("ticker_mapping_review_status") or "").strip().lower() == "human_reviewed":
+                raise ValueError(f"archive event already has reviewed mapping: {version}")
+            mapped_tickers = _parse_reviewed_tickers(row.get("mapped_tickers_json"))
+            mapping_rationale = str(row.get("mapping_rationale") or "").strip()
+            mapping_reviewer = str(row.get("mapping_reviewer_id") or "").strip()
+            mapping_schema = str(row.get("mapping_schema_version") or "").strip()
+            if not mapping_rationale or not mapping_reviewer or not mapping_schema:
+                raise ValueError(
+                    f"reviewed mapping {version} requires mapping rationale, reviewer and schema version"
+                )
+            if "@" in mapping_reviewer:
+                raise ValueError("mapping_reviewer_id must be a non-secret identifier, not an email address")
+            mapping_reviewed_at = _aware(row.get("mapping_reviewed_at_utc"), "mapping_reviewed_at_utc")
+            first_seen = _aware(event.get("first_seen_at_utc"), "first_seen_at_utc")
+            if mapping_reviewed_at < first_seen:
+                raise ValueError(f"mapping review timestamp precedes event first-seen time: {version}")
+            if mapping_reviewed_at > cutoff:
+                raise ValueError(f"mapping review timestamp is after the import cutoff: {version}")
+            applied_mappings[version] = {
+                "ticker_mapping_review_status": "human_reviewed",
+                "ticker_mapping_reviewed_tickers": mapped_tickers,
+                "ticker_mapping_reviewed_at_utc": mapping_reviewed_at.isoformat().replace("+00:00", "Z"),
+                "ticker_mapping_reviewer_id": mapping_reviewer,
+                "ticker_mapping_rationale": mapping_rationale,
+                "ticker_mapping_schema_version": mapping_schema,
+            }
+            reviewed_mappings_count += 1
+
+        if not label_active:
+            continue
         if event.get("label_review_status") in {"reviewed", "validated"}:
             raise ValueError(f"archive event already has reviewed labels: {version}")
         direction = _score(row.get("direction_score"), "direction_score", -1.0, 1.0)
@@ -92,12 +161,12 @@ def apply_annotations(
             raise ValueError(f"review timestamp precedes event first-seen time: {version}")
         if reviewed_at > cutoff:
             raise ValueError(f"review timestamp is after the import cutoff: {version}")
-        if status == "validated" and labeler == reviewer:
+        if label_status == "validated" and labeler == reviewer:
             raise ValueError(f"validated annotation {version} requires a distinct reviewer")
-        applied[version] = {
+        applied_labels[version] = {
             "direction_score": direction,
             "impact_score": impact,
-            "label_review_status": status,
+            "label_review_status": label_status,
             "label_reviewed_at_utc": reviewed_at.isoformat().replace("+00:00", "Z"),
             "label_rationale": rationale,
             "labeler_id": labeler,
@@ -105,37 +174,42 @@ def apply_annotations(
             "label_schema_version": schema_version,
         }
         reviewed_count += 1
-        validated_count += int(status == "validated")
+        validated_count += int(label_status == "validated")
 
     output = []
     for event in archive:
         row = dict(event)
         version = str(row.get("event_version_id") or "")
-        if version in applied:
-            row.update(applied[version])
+        if version in applied_mappings:
+            row.update(applied_mappings[version])
+        if version in applied_labels:
+            row.update(applied_labels[version])
         output.append(row)
     canonical = json.dumps(output, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
     report = {
-        "status": "annotations_applied" if reviewed_count else "no_reviewed_annotations",
+        "status": "annotations_applied" if reviewed_count or reviewed_mappings_count else "no_reviewed_annotations",
         "as_of_utc": cutoff.isoformat().replace("+00:00", "Z"),
         "archive_rows": len(archive),
         "annotation_rows_received": len(annotation_rows),
         "reviewed_annotations_applied": reviewed_count,
         "validated_annotations_applied": validated_count,
+        "reviewed_mappings_applied": reviewed_mappings_count,
         "pending_rows_ignored": ignored_pending,
+        "pending_mapping_rows_ignored": pending_mapping_rows_ignored,
         "unreviewed_archive_rows": len(output) - reviewed_count,
         "labels_generated_by_tool": False,
+        "mappings_inferred_by_tool": False,
         "source_archive_overwritten": False,
         "output_archive_sha256": sha256(canonical.encode("utf-8")).hexdigest(),
         "research_only": True,
         "limitations": [
-            "This tool imports human-entered annotations only; it never generates or infers scores.",
+            "This tool imports human-entered annotations and mappings only; it never generates or infers scores.",
             "The source archive remains unchanged; the output is a separate derived archive.",
             "A successful import does not establish predictive value or empirical alpha.",
+            "Mapping review is stored separately from immutable source tickers and does not prove it was available before a historical trading decision.",
         ],
     }
     return output, report
-
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
