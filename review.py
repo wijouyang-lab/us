@@ -281,18 +281,29 @@ def resolve_ticker(raw_ticker, company_name=""):
 # 3. 行情
 # ============================================================
 
-def extract_single_ticker_df(hist_data, ticker, ticker_count):
+def extract_single_ticker_df(hist_data, ticker, ticker_count=None):
+    """从 yf.download 的结果里取出单只 ticker 的 OHLC。
+
+    yfinance >= 1.0 对**单只** ticker 也返回 MultiIndex 列（group_by="ticker" 时
+    第 0 层是 ticker）。旧实现用 ticker_count == 1 判断"列是扁平的"，于是单行
+    pending 文件（如只有 BX / DHR）永远取不到 Open/Close：review 连续多天
+    [PENDING_INCOMPLETE_OHLC] 并 exit 1。这里改为只看列结构，不看 ticker 数量。
+    ticker_count 仅为兼容旧调用保留，不再参与判断。
+    """
     try:
         if hist_data is None or hist_data.empty:
             return pd.DataFrame()
-        if ticker_count == 1:
-            sub = hist_data.copy()
+        if isinstance(hist_data.columns, pd.MultiIndex):
+            level0 = hist_data.columns.get_level_values(0)
+            level1 = hist_data.columns.get_level_values(1)
+            if ticker in level0:
+                sub = hist_data[ticker].copy()
+            elif ticker in level1:  # group_by="column"：第 1 层才是 ticker
+                sub = hist_data.xs(ticker, axis=1, level=1).copy()
+            else:
+                return pd.DataFrame()
         else:
-            if not isinstance(hist_data.columns, pd.MultiIndex):
-                return pd.DataFrame()
-            if ticker not in hist_data.columns.get_level_values(0):
-                return pd.DataFrame()
-            sub = hist_data[ticker].copy()
+            sub = hist_data.copy()
         required = ["Open", "High", "Low", "Close"]
         if any(c not in sub.columns for c in required):
             return pd.DataFrame()
@@ -328,7 +339,7 @@ def download_ohlc_safe(tickers, period="60d", start=None, end=None):
         return pd.DataFrame(), {}
     rows, latest = [], {}
     for ticker in tickers:
-        sub = extract_single_ticker_df(hist, ticker, len(tickers))
+        sub = extract_single_ticker_df(hist, ticker)
         if sub.empty:
             print(f"⚠️ 无法获取 {ticker} OHLC，跳过该 ticker。")
             continue
@@ -704,7 +715,24 @@ def supplement_us_stocks_from_pending():
                 if rt:
                     resolved.append((row, rt))
             tickers = list(dict.fromkeys(t for _, t in resolved if is_probable_us_ticker(t)))
-            hist, _ = download_ohlc_safe(tickers, period="10d")
+            # 行情窗口必须显式覆盖 target_date 本身，不能用 period="10d"：
+            # pending 文件缺行情时会一直保留重试（fail-closed），而固定 10 天窗口会
+            # 随日期推移把 target_date 挤出窗口 —— 那时该文件永远补不上 OHLC，
+            # review 每天都是 [PENDING_INCOMPLETE_OHLC] + exit 1。按 target_date 取窗口后，
+            # 文件滞留多久都能取到那一天的真实 bar。
+            try:
+                _target_ts = pd.Timestamp(target_date).normalize()
+                _today_ts = pd.Timestamp(today_us_str()).normalize()
+                _start = (_target_ts - pd.Timedelta(days=10)).strftime("%Y-%m-%d")
+                _end = min(
+                    _target_ts + pd.Timedelta(days=3),
+                    _today_ts + pd.Timedelta(days=1),
+                ).strftime("%Y-%m-%d")
+                _window = ({"start": _start, "end": _end}
+                           if _start < _end else {"period": "10d"})
+            except Exception:
+                _window = {"period": "10d"}
+            hist, _ = download_ohlc_safe(tickers, **_window)
             target_map = {}
             for t in tickers:
                 exact = get_exact_date_ohlc(hist, t, target_date)

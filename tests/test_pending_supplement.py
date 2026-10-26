@@ -74,6 +74,13 @@ def _load_supplement(tmp_path):
             d["Date"] = pd.to_datetime(d["Date"], errors="coerce", format="mixed")
         return d
 
+    def fake_download_ohlc_safe(tickers, period="10d", start=None, end=None):
+        ns["DOWNLOAD_CALLS"].append({
+            "tickers": list(tickers), "period": period,
+            "start": start, "end": end,
+        })
+        return None, None
+
     ns.update({
         "glob": glob,
         "os": os,
@@ -86,7 +93,7 @@ def _load_supplement(tmp_path):
         "load_trade_history": load_trade_history,
         "resolve_ticker": resolve_ticker,
         "is_probable_us_ticker": lambda t: bool(t),
-        "download_ohlc_safe": lambda tickers, period="10d": (None, None),
+        "download_ohlc_safe": fake_download_ohlc_safe,
         "get_exact_date_ohlc": lambda hist, ticker, target: ns["OHLC"].get((ticker, target)),
         "find_existing_record": find_existing_record,
         "today_us_str": lambda: TARGET_DATE,
@@ -99,6 +106,7 @@ def _load_supplement(tmp_path):
         "PendingCsvError": PendingCsvError,
         "get_us_time": lambda: dt.datetime(2026, 10, 20, 9, 0),
         "OHLC": {},
+        "DOWNLOAD_CALLS": [],
     })
     return ns["supplement_us_stocks_from_pending"], ns
 
@@ -316,3 +324,41 @@ def test_header_only_empty_file_is_processed_without_rows(tmp_path, monkeypatch)
     assert result["failed_files"] == [] and result["incomplete_files"] == []
     assert not path.exists() and (tmp_path / (path.name + ".processed")).exists()
     assert _trade_rows() == []
+
+
+def test_market_window_covers_pending_target_date(tmp_path, monkeypatch):
+    """行情请求必须显式给出覆盖 target_date 的窗口，不能只依赖 period="10d"。
+
+    pending 文件缺行情时会被保留重试；固定 10 天窗口随日期推移会把 target_date
+    挤出窗口，届时该文件永远补不上 OHLC，review 每晚 exit 1（2026-10-22 → 10-24 事故）。
+    """
+    monkeypatch.chdir(tmp_path)
+    fn, ns = _load_supplement(tmp_path)
+    _write_pending(tmp_path, _rows("AAA"))
+    ns["OHLC"][("AAA", TARGET_DATE)] = {"open": "100", "close": "105"}
+
+    assert fn()["incomplete_files"] == []
+
+    call = ns["DOWNLOAD_CALLS"][-1]
+    assert call["tickers"] == ["AAA"]
+    assert call["start"] is not None and call["end"] is not None
+    assert call["start"] <= TARGET_DATE < call["end"]
+
+
+def test_stale_pending_file_gets_window_around_its_own_date(tmp_path, monkeypatch):
+    """滞留多日的 pending 文件：窗口围绕文件自己的日期，而不是"今天往前 10 天"。"""
+    monkeypatch.chdir(tmp_path)
+    fn, ns = _load_supplement(tmp_path)
+    stale_date = "2026-09-01"
+    path = _write_pending(tmp_path, [{
+        "Date": stale_date, "Ticker": "AAA", "Tag": "Core_Dragon",
+        "Name": "AAA Inc", "Scan_Ref_Price": "100", "Stop_Loss": "$95",
+    }], name="us_stocks_pending_20260901.csv")
+    ns["OHLC"][("AAA", stale_date)] = {"open": "100", "close": "105"}
+
+    assert fn()["incomplete_files"] == []
+
+    call = ns["DOWNLOAD_CALLS"][-1]
+    assert call["start"] <= stale_date < call["end"]
+    assert not path.exists() and (tmp_path / (path.name + ".processed")).exists()
+
