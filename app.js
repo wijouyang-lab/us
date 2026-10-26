@@ -652,6 +652,8 @@
 
   /* 已止损记录板块（近 30 天）：纯前端只读 portfolio.transactions，
      筛选 Action=SELL 且 Reason 含 "Stop Loss" 的记录，按日期降序展示。
+     兼容两种真实写法：`Stop_Loss_Hit`（账本，Review exit）与 `Stop Loss`（盘中止损）。
+     注意：止盈离场 `Trailing_Profit_Take` 不含 stop-loss 语义，按设计排除在本板块外。
      字段来源（dashboard_export.build_portfolio 透传，零改后端）：
        date / ticker / action / shares / price(成交价=退出价) / amount(成交额) /
        realized_pnl(已实现盈亏，直接可用) / reason / unit_id
@@ -683,10 +685,10 @@
     var anchor = maxDate ? new Date(maxDate) : null;
     var threshold = anchor ? new Date(anchor.getTime() - 30 * 86400000) : null;
 
-    // 筛选：SELL + Reason 含 "stop loss"（不区分大小写）+ 落在近 30 天
+    // 筛选：SELL + Reason 含 "stop loss"（不含时兼容下划线 Stop_Loss_Hit）+ 落在近 30 天
     var stops = ts.filter(function (t) {
       if (String(t.action || '').toUpperCase() !== 'SELL') return false;
-      if (!/stop\s*loss/i.test(String(t.reason || ''))) return false;
+      if (!/stop[\s_-]*loss/i.test(String(t.reason || ''))) return false;
       if (threshold) {
         var d = new Date(String(t.date || ''));
         if (!isNaN(d.getTime()) && d < threshold) return false;

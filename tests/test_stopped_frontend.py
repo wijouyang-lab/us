@@ -133,6 +133,42 @@ def test_stopped_render_with_stats():
     assert "胜率: 33%" in (r2["sub"] or ""), r2["sub"]
 
 
+def test_stopped_matches_underscore_stop_loss_hit():
+    """账本真实写法 `Review exit: Stop_Loss_Hit`（下划线）必须计入；止盈离场不计入。
+
+    回归：旧正则 /stop\\s*loss/ 只认空格，导致线上“已止损记录”漏掉 ISRG/ANET/KR。
+    """
+    app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    exposed = _expose(app_js)
+
+    data = {"portfolio": {"transactions": [
+        {"date": "2026-10-13", "ticker": "ANET", "action": "SELL", "shares": 47,
+         "price": 204.98, "amount": 9634.06, "realized_pnl": -297.04,
+         "reason": "Review exit: Stop_Loss_Hit"},
+        {"date": "2026-10-13", "ticker": "KR", "action": "SELL", "shares": 168,
+         "price": 60.68, "amount": 10194.24, "realized_pnl": 236.88,
+         "reason": "Review exit: Stop_Loss_Hit"},
+        {"date": "2026-10-14", "ticker": "ISRG", "action": "SELL", "shares": 24,
+         "price": 414.81, "amount": 9955.44, "realized_pnl": 233.76,
+         "reason": "Review exit: Stop_Loss_Hit"},
+        {"date": "2026-10-16", "ticker": "ADSK", "action": "SELL", "shares": 43,
+         "price": 237.81, "amount": 10225.83, "realized_pnl": 274.77,
+         "reason": "Review exit: Trailing_Profit_Take"},
+        {"date": "2026-10-22", "ticker": "APA", "action": "SELL", "shares": 200,
+         "price": 48.14, "amount": 9628.0, "realized_pnl": -324.0,
+         "reason": "Intraday Stop Loss"},
+    ]}}
+    r = _run_node(exposed, _tail(json.dumps(data)))
+    body = r["body"] or ""
+    sub = r["sub"] or ""
+
+    assert "总计: 4 笔" in sub, sub           # 3 笔 Stop_Loss_Hit + 1 笔盘中止损
+    for tk in ("ANET", "KR", "ISRG", "APA"):
+        assert tk in body, (tk, body)
+    assert "ADSK" not in body, body          # 止盈离场不进“已止损记录”
+    assert "Trailing_Profit_Take" not in body, body
+
+
 def test_stopped_missing_fields_no_crash():
     """单条字段缺失 → 不崩，缺值显示「—」。"""
     app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
