@@ -27,7 +27,7 @@ if str(REPO) not in sys.path:
 REPO = Path(__file__).resolve().parent.parent
 NEWS = REPO / "dashboard" / "data" / "news_data.json"
 CACHE = REPO / "dashboard" / "data" / "news_translations.json"
-BATCH = 20
+BATCH = 50
 
 SYSTEM = (
     "你是财经新闻翻译。把用户给的英文标题逐条翻成简洁中文（不超过 40 字），"

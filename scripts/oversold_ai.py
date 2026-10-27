@@ -300,11 +300,23 @@ def main(argv=None) -> int:
     ap.add_argument("--data", default=str(DEFAULT_DATA))
     ap.add_argument("--offline", action="store_true", help="不联网、不调用 AI，只做板块上限")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="store_true", help="忽略未变化门控，强制重新分析")
     args = ap.parse_args(argv)
 
     asof, rows = load_latest_rows(Path(args.snapshot))
     if not rows:
         print("[WARN] 因子快照缺失或为空，保留现有候选文件不动", file=sys.stderr)
+        return 0
+
+    # 成本门控：同一交易日（asof 未变）且已有 AI 结果 → 不再重复调用模型。
+    existing = {}
+    try:
+        existing = json.loads(Path(args.out).read_text(encoding="utf-8"))
+    except Exception:
+        existing = {}
+    if (not args.force and existing.get("asof") == asof
+            and int(existing.get("ai_count") or 0) > 0):
+        print(f"[SKIP] {asof} 候选未变化且已有 AI 结果，跳过模型调用", file=sys.stderr)
         return 0
 
     pool = screen(rows, asof, max_candidates=POOL_MAX)
