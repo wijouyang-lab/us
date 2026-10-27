@@ -3218,6 +3218,33 @@ def _closed_months(txns, anchor, days=30):
     return out
 
 
+def _read_intraday_bars(ticker: str):
+    """当日 5 分钟 K 线（最多 78 根）；失败返回 None，绝不补假数据。"""
+    try:
+        import yfinance as yf
+        df = yf.Ticker(ticker).history(period="1d", interval="5m", prepost=False,
+                                       auto_adjust=False)
+        if df is None or df.empty:
+            return None
+        bars = []
+        for ts, row in df.tail(78).iterrows():
+            try:
+                bars.append([
+                    ts.strftime("%H:%M"),
+                    round(float(row["Open"]), 2),
+                    round(float(row["High"]), 2),
+                    round(float(row["Low"]), 2),
+                    round(float(row["Close"]), 2),
+                ])
+            except Exception:
+                continue
+        if not bars:
+            return None
+        return {"date": str(df.index[-1].date()), "bars": bars}
+    except Exception:
+        return None
+
+
 def build_portfolio(data_dir: Path):
     """$50,000 长期模拟投资组合（Portfolio Ledger）。
 
@@ -3279,6 +3306,11 @@ def build_portfolio(data_dir: Path):
             "stop_loss_price": round_num(parse_num(r.get("Stop_Loss")), 2),
             "holding_days": _days(entry_date),
         })
+
+    # 持仓卡片：当日 5 分钟 K 线（逐只抓取，失败则无该字段）
+    for pos in positions:
+        if pos.get("ticker"):
+            pos["intraday"] = _read_intraday_bars(pos["ticker"])
 
     txn_raw = read_csv_rows(txn_p)
     # 交易观测统计：从完整流水计算（不被下方 20 条截断窗口影响）

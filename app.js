@@ -399,6 +399,43 @@
   }
 
   /* p: portfolio.positions[] 条目；s: STOCKS[] 里同 ticker 的详情（找不到则 null → 降级只显示持仓字段） */
+  /* 持仓卡片：当日 5 分钟 K 线（内联 SVG，无第三方库；数据由后端 intraday 提供） */
+  function klineHtml(it) {
+    var bars = it && it.bars;
+    if (!bars || !bars.length) return '';
+    var w = 168, h = 44, pad = 2;
+    var hi = -Infinity, lo = Infinity;
+    bars.forEach(function (b) {
+      if (b[2] > hi) hi = b[2];
+      if (b[3] < lo) lo = b[3];
+    });
+    var span = (hi - lo) || 1;
+    var step = (w - pad * 2) / bars.length;
+    var bw = Math.max(1, step * 0.55);
+    var y = function (v) { return pad + (hi - v) / span * (h - pad * 2); };
+    var parts = bars.map(function (b, i) {
+      var x = pad + step * i + step / 2;
+      var up = b[4] >= b[1];
+      var col = up ? 'var(--up)' : 'var(--down)';
+      var o = y(b[1]), c = y(b[4]);
+      return '<line x1="' + x.toFixed(2) + '" y1="' + y(b[2]).toFixed(2) +
+        '" x2="' + x.toFixed(2) + '" y2="' + y(b[3]).toFixed(2) +
+        '" stroke="' + col + '" stroke-width="1"/>' +
+        '<rect x="' + (x - bw / 2).toFixed(2) + '" y="' + Math.min(o, c).toFixed(2) +
+        '" width="' + bw.toFixed(2) + '" height="' + Math.max(1, Math.abs(c - o)).toFixed(2) +
+        '" fill="' + col + '"/>';
+    }).join('');
+    var last = bars[bars.length - 1];
+    var first = bars[0];
+    var chg = first[1] ? (last[4] / first[1] - 1) * 100 : null;
+    return '<div class="pos-kline">' +
+      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + '</svg>' +
+      '<div class="pk-meta">今日 5m' + (it.date ? ' · ' + esc(it.date) : '') +
+        (chg === null ? '' : ' · <b class="' + (chg >= 0 ? 'up' : 'down') + '">' +
+          (chg >= 0 ? '+' : '') + fmt(chg, 2) + '%</b>') + '</div>' +
+      '</div>';
+  }
+
   function positionCard(p, s) {
     var tk = String(p.ticker || '').toUpperCase();
     var up = num(p.unrealized_pnl) || 0;
@@ -418,7 +455,7 @@
       extLine +
       '</div>' +
       (s ? '<div class="pos-ring">' + ring(s.s.final, 54, 'Final') + '</div>' : '') +
-      '</div>';
+      '</div>' + klineHtml(p.intraday);
 
     var quick = s
       ? '<div class="pos-quick">' +
