@@ -729,3 +729,19 @@ button{font-family:inherit}
 .pk-meta b.down{color:var(--down)}
 .pk-meta b.pk-entry{color:#3b82f6}
 .pk-axis{display:flex;justify-content:space-between;font-size:9px;color:var(--text-3);margin-top:1px;font-variant-numeric:tabular-nums}
+
+/* 统一空态 */
+.es{display:flex;align-items:center;gap:8px;padding:10px 12px;border:1px dashed var(--border-2);
+  border-radius:8px;background:var(--soft);font-size:11.5px;color:var(--text-3)}
+.es-i{font-size:13px;opacity:.85}
+.es-err{border-color:rgba(239,68,68,.4);color:#b91c1c;background:rgba(239,68,68,.05)}
+.es-off{opacity:.8}
+.es-pending{border-style:solid}
+
+/* 移动端：窄屏下宏观九宫格/持仓/K线更紧凑 */
+@media (max-width: 640px){
+  .macro-econ-grid{grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:6px}
+  .pos-kline svg{height:34px}
+  .macro-fc{font-size:10px;gap:6px}
+  .ss-grid{grid-template-columns:1fr}
+}

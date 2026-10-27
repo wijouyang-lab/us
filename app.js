@@ -1605,13 +1605,21 @@
   /* ---------------- 金融新闻板块（市场流 + 个股联动，Q6 混合方案）---------------- */
   /* 数据来源：DATA.news（dashboard_export.py 从 news_data.json 嵌入 dashboard_data.json）。
      不参与 60s runtime 刷新，仅整页加载时渲染一次。null / 空 → 显示「暂无新闻」不报错。 */
+  /* 统一空态：na=无数据 / err=加载失败 / off=未启用 / pending=等待生成 */
+  function emptyState(kind, msg) {
+    var k = kind || 'na';
+    var icon = { na: '—', err: '⚠️', off: '⏸', pending: '⏳' }[k] || '—';
+    return '<div class="es es-' + k + '"><span class="es-i">' + icon + '</span>' +
+      '<span class="es-t">' + esc(msg || '') + '</span></div>';
+  }
+
   function renderNews() {
     var news = DATA && DATA.news;
     var mEl = $('#newsMarket'), tEl = $('#newsTickers'), uEl = $('#newsUpdated');
     if (!mEl || !tEl) return;
 
     if (!news) {
-      mEl.innerHTML = '<div class="na">暂无新闻（数据尚未生成）</div>';
+      mEl.innerHTML = emptyState('na', '暂无新闻（数据尚未生成）');
       tEl.innerHTML = '';
       return;
     }
@@ -1628,7 +1636,7 @@
     /* 市场流：top 10（过滤无市场影响的条目 + 砍掉中性情绪） */
     var m = (news.market_news || []).filter(isNewsVisible);
     if (!m.length) {
-      mEl.innerHTML = '<div class="na">暂无相关市场新闻</div>';
+      mEl.innerHTML = emptyState('na', '暂无相关市场新闻');
     } else {
       mEl.innerHTML = '<div class="news-sub">📡 市场动态</div>' +
         m.slice(0, 10).map(newsRow).join('');
@@ -1694,7 +1702,7 @@
           '<div class="macro-ai-b">' + esc(aiBox.analysis) + '</div></div>';
       }
     } else if (!econ.length) {
-      econHtml += '<div class="na">暂无经济数据</div>';
+      econHtml += emptyState('na', '暂无经济数据');
     } else {
       econHtml += '<div class="macro-econ-grid">' + econ.map(macroEconCard).join('') + '</div>';
       var cpiItem = econ.find(function (e) { return e.indicator === 'CPI'; });
