@@ -14,6 +14,7 @@ from __future__ import annotations
 
 import json
 import os
+from pathlib import Path
 from typing import Any, Dict, Iterable, Optional
 from urllib.parse import urlsplit, urlunsplit
 
@@ -164,6 +165,24 @@ def _gpt_via_clawsocket(
                 raise first_error
         else:
             raise
+
+    try:
+        _u = getattr(response, "usage", None)
+        if _u is not None:
+            import json as _json
+            from datetime import datetime as _dt, timezone as _tz
+            _rec = {
+                "ts": _dt.now(_tz.utc).isoformat(timespec="seconds"),
+                "model": model,
+                "prompt_tokens": getattr(_u, "prompt_tokens", None),
+                "completion_tokens": getattr(_u, "completion_tokens", None),
+            }
+            _p = Path(__file__).resolve().parent / "dashboard" / "data" / "ai_usage.jsonl"
+            _p.parent.mkdir(parents=True, exist_ok=True)
+            with _p.open("a", encoding="utf-8") as _fh:
+                _fh.write(_json.dumps(_rec, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
 
     text = _extract_openai_chat_text(response)
     if not text:
