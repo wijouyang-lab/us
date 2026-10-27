@@ -1181,6 +1181,25 @@
       var lines = '';
       if (c.confirm) lines += '<div class="os-line"><b>确认</b> ' + esc(c.confirm) + '</div>';
       if (c.invalid) lines += '<div class="os-line"><b>失效</b> ' + esc(c.invalid) + '</div>';
+      /* AI 三维分析（技术/基本面/消息）：由 scripts/oversold_ai.py 预生成，
+         页面不调用 AI；缺失时显示 pending，绝不补写内容。 */
+      if (c.ai) {
+        var a = c.ai;
+        var vcls = { '关注': 'up', '观察': 'flat', '谨慎': 'warn', '回避': 'down' }[a.verdict] || 'flat';
+        var arow = function (label, val) {
+          return val ? '<div class="os-ai-row"><i>' + label + '</i>' + esc(val) + '</div>' : '';
+        };
+        lines += '<div class="os-ai">' +
+          '<div class="os-ai-h">🤖 AI 综合 <span class="os-ai-v ' + vcls + '">' +
+            esc(a.verdict || '观察') + '</span></div>' +
+          arow('技术', a.technical) +
+          arow('基本面', a.fundamental) +
+          arow('消息', a.news) +
+          arow('风险', a.risk) +
+          '</div>';
+      } else {
+        lines += '<div class="os-ai-pending">🤖 AI 三维分析 pending（下次刷新生成）</div>';
+      }
       if (c.reason) {
         lines += '<div class="os-why" onclick="this.classList.toggle(\'open\')" ' +
           'title="点击展开/收起">' + esc(c.reason) + '</div>';

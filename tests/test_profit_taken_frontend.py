@@ -462,3 +462,24 @@ def test_macro_forecast_block_hidden_without_data():
               "macro": _macro([])})
     html = r["macro"] or ""
     assert "预期 vs 实际" not in html, html
+
+def test_oversold_ai_block_rendered():
+    data = {"portfolio": {"target": [], "transactions": [], "positions": []},
+            "oversold": {"asof": "2026-10-26", "candidates": [{
+                "ticker": "AAA", "name": "AAA Inc", "score": 60, "rsi": 22,
+                "bias_pct": -15, "drawdown_pct": -20, "ref_price": 50, "stop_loss": 46,
+                "ai": {"verdict": "关注", "technical": "RSI 22 超卖，接近 MA20 支撑",
+                       "fundamental": "PE 20x、ROE 18%", "news": "财报超预期",
+                       "risk": "板块同步下跌，反弹需成交量配合"}}]}}
+    html = _run(data)["oversold"] or ""
+    assert "AI 综合" in html and "关注" in html, html
+    assert "RSI 22 超卖" in html and "PE 20x" in html and "财报超预期" in html, html
+    assert "板块同步下跌" in html, html
+
+
+def test_oversold_ai_pending_without_block():
+    data = {"portfolio": {"target": [], "transactions": [], "positions": []},
+            "oversold": {"asof": "2026-10-26", "candidates": [{
+                "ticker": "BBB", "score": 50, "rsi": 25}]}}
+    html = _run(data)["oversold"] or ""
+    assert "AI 三维分析 pending" in html, html
