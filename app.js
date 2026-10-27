@@ -1174,7 +1174,7 @@
       };
       var metrics = mcell('RSI', c.rsi) +
         mcell('Bias', c.bias_pct == null ? null : c.bias_pct + '%') +
-        mcell('回撤', c.drawdown_pct == null ? null : c.drawdown_pct + '%') +
+        mcell('20日', c.drawdown_pct == null ? null : c.drawdown_pct + '%') +
         mcell('参考价', c.ref_price == null ? null : '$' + fmt(c.ref_price, 2)) +
         mcell('止损', c.stop_loss == null ? null : '$' + fmt(c.stop_loss, 2));
 
