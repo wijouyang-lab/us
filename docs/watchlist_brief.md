@@ -2,11 +2,11 @@
 
 > 生成：`scripts/ticker_brief.py --watchlist ... --md`　仓库：us　日期：latest
 
-- 共 **24** 只票（AMT, AVGO, CDNS, NXPI, DVN, FAST, NDAQ, ADI, CSX, TXN, COP, AAPL, MSFT, NVDA, GOOGL, AMZN, META, TSLA, TSM, BRK-B, JPM, V, UNH, XOM）：**5** 只有 AI 快照记录，**9** 只有交易记录
+- 共 **24** 只票（AVGO, CDNS, NXPI, DVN, FAST, NDAQ, ADI, CSX, TXN, COP, AAPL, MSFT, NVDA, GOOGL, AMZN, META, TSLA, TSM, BRK-B, JPM, V, UNH, XOM, COST）：**4** 只有 AI 快照记录，**8** 只有交易记录
 
 ## 宏观环境（结论化，仅打印一次）
 
-- 恐惧贪婪指数：**29.80（恐惧）**　时间戳：2026-10-27T12:44:37+00:00
+- 恐惧贪婪指数：**33.60（恐惧）**　时间戳：2026-10-27T23:30:31+00:00
 - FedWatch（会议 2026-10-28，目标区间 3.75%-4.00%）：维持不变 **88.9%** / 加息 25bp **11.1%**
 - 宏观指标：
   - 10Y国债：**4.99%**（前值 4.99%，2026-10-27，N/A）
@@ -19,34 +19,7 @@
 
 ---
 
-## 1. `AMT`
-
-### 1. AI 历史（ai_snapshot.csv）
-
-- 记录数：1
-
-| Rec_Date | Tag | Snapshot_Type | Final_Score | AI_Score |
-|---|---|---|---|---|
-| 2026-10-26 | Core_Dragon | scan | N/A | N/A |
-
-### 2. 因子位置（quant_factor_snapshot.csv）
-
-- 快照日期：2026-10-27（该日共 292 只；全表 15 个日期 / 4237 行）
-- Sector：N/A　Price：N/A
-- 提示：该 ticker 在 2026-10-27 无因子快照
-
-### 3. 交易明细（portfolio_50000_transactions.csv）
-
-- 已启用侧车精确时刻（portfolio_50000_txn_time.csv）
-- 样本数：1（按日期倒序展示最近 1 笔）
-
-| 时间 | Ticker | 操作 | 价格 | 股数 | 金额 | 已实现盈亏 |
-|---|---|---|---|---|---|---|
-| 2026-10-26 18:27:07 | AMT | 买入 | 188.28 | 53 | 9978.84 | 0.00 |
-
----
-
-## 2. `AVGO`
+## 1. `AVGO`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -81,7 +54,7 @@
 
 ---
 
-## 3. `CDNS`
+## 2. `CDNS`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -130,7 +103,7 @@
 
 ---
 
-## 4. `NXPI`
+## 3. `NXPI`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -184,7 +157,7 @@
 
 ---
 
-## 5. `DVN`
+## 4. `DVN`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -237,7 +210,7 @@
 
 ---
 
-## 6. `FAST`
+## 5. `FAST`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -286,7 +259,7 @@
 
 ---
 
-## 7. `NDAQ`
+## 6. `NDAQ`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -335,7 +308,7 @@
 
 ---
 
-## 8. `ADI`
+## 7. `ADI`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -384,7 +357,7 @@
 
 ---
 
-## 9. `CSX`
+## 8. `CSX`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -438,7 +411,7 @@
 
 ---
 
-## 10. `TXN`
+## 9. `TXN`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -473,7 +446,7 @@
 
 ---
 
-## 11. `COP`
+## 10. `COP`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -508,7 +481,7 @@
 
 ---
 
-## 12. `AAPL`
+## 11. `AAPL`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -543,7 +516,7 @@
 
 ---
 
-## 13. `MSFT`
+## 12. `MSFT`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -578,7 +551,7 @@
 
 ---
 
-## 14. `NVDA`
+## 13. `NVDA`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -613,7 +586,7 @@
 
 ---
 
-## 15. `GOOGL`
+## 14. `GOOGL`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -648,7 +621,7 @@
 
 ---
 
-## 16. `AMZN`
+## 15. `AMZN`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -683,7 +656,7 @@
 
 ---
 
-## 17. `META`
+## 16. `META`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -718,7 +691,7 @@
 
 ---
 
-## 18. `TSLA`
+## 17. `TSLA`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -753,7 +726,7 @@
 
 ---
 
-## 19. `TSM`
+## 18. `TSM`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -772,7 +745,7 @@
 
 ---
 
-## 20. `BRK-B`
+## 19. `BRK-B`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -825,7 +798,7 @@
 
 ---
 
-## 21. `JPM`
+## 20. `JPM`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -860,7 +833,7 @@
 
 ---
 
-## 22. `V`
+## 21. `V`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -895,7 +868,7 @@
 
 ---
 
-## 23. `UNH`
+## 22. `UNH`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -930,7 +903,7 @@
 
 ---
 
-## 24. `XOM`
+## 23. `XOM`
 
 ### 1. AI 历史（ai_snapshot.csv）
 
@@ -945,6 +918,41 @@
 ### 3. 交易明细（portfolio_50000_transactions.csv）
 
 - 已启用侧车精确时刻（portfolio_50000_txn_time.csv）
+- N/A（无成交记录）
+
+---
+
+## 24. `COST`
+
+### 1. AI 历史（ai_snapshot.csv）
+
+- N/A（无 AI 快照记录）
+
+### 2. 因子位置（quant_factor_snapshot.csv）
+
+- 快照日期：2026-10-27（该日共 292 只；全表 15 个日期 / 4237 行）
+- Sector：Consumer Staples　Price：1005.16
+
+| 因子 | 值 | 当日百分位 |
+|---|---|---|
+| Momentum_5D_Pct | 0.9673 | 43 |
+| Momentum_20D_Pct | 8.9108 | 75 |
+| Momentum_60D_Pct | 5.5962 | 70 |
+| Realized_Volatility_20D_Pct | 16.4453 | 3 |
+| Volume_Ratio_20D | 1.1097 | 74 |
+| ZScore_20D | 1.3805 | 62 |
+| Beta_60D_SPY | -0.0566 | 22 |
+| Stock_RS_20D_vs_SPY | 8.9422 | 75 |
+| Quant_Score | 70.0000 | 87 |
+| MA20 | 962.2600 | 99 |
+| MA50 | 939.7500 | 98 |
+| ATR_Pct | 1.6100 | 2 |
+| KDJ_J | 74.3400 | 55 |
+
+### 3. 交易明细（portfolio_50000_transactions.csv）
+
+- 已启用侧车精确时刻（portfolio_50000_txn_time.csv）
+- 该 ticker 无成交记录 → 退化为 同 Sector（Consumer Staples）
 - N/A（无成交记录）
 
 ---
