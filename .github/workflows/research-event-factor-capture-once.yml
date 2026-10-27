@@ -14,6 +14,9 @@ on:
       - tools/research/official_event_rss_collector.py
       - tools/research/bls_macro_series_capture.py
       - tools/research/build_event_annotation_queue.py
+      - tools/research/audit_pit_event_data_readiness.py
+      - tests/test_audit_pit_event_data_readiness.py
+      - tests/test_event_readiness_capture_workflow.py
       - tools/research/sec_daily_index.py
       - tools/research/sec_master_index_capture.py
       - tools/research/record_sec_capture_failure.py
@@ -154,6 +157,40 @@ jobs:
             --start-year "$((YEAR - 2))" --end-year "$YEAR" \
             --output "data/research/event-capture/bls_macro_series_${GITHUB_RUN_ID}.json"; then
             echo "::warning::BLS public API snapshot failed; RSS and Treasury evidence are preserved."
+          fi
+
+      - name: Audit point-in-time event archive readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARCHIVE="data/research/event-capture/event_archive.json"
+          OUTPUT="data/research/event-capture/event_archive_readiness_${GITHUB_RUN_ID}.json"
+          DECISIONS="data/research/event-capture/event_readiness_decisions_${GITHUB_RUN_ID}.csv"
+          AUDIT_SOURCE="$(python - <<'PY'
+          from pathlib import Path
+          candidates = sorted(
+              Path("data/research/event-capture").glob("event_capture_*.audit.json"),
+              key=lambda path: path.stat().st_mtime,
+          )
+          print(candidates[-1] if candidates else "")
+          PY
+          )"
+          if [[ -n "$AUDIT_SOURCE" && -s "$ARCHIVE" ]]; then
+            DECISION_AT="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["decision_at_utc"])' "$AUDIT_SOURCE")"
+            printf 'decision_at\\n%s\\n' "$DECISION_AT" > "$DECISIONS"
+            set +e
+            python -m tools.research.audit_pit_event_data_readiness \\
+              --archive "$ARCHIVE" \\
+              --decisions "$DECISIONS" \\
+              --audited-at "$DECISION_AT" \\
+              --output "$OUTPUT"
+            AUDIT_STATUS=$?
+            set -e
+            if [[ "$AUDIT_STATUS" -ne 0 ]]; then
+              echo "::warning::Event archive readiness is blocked; see $OUTPUT. Capture remains research-only and no labels are auto-approved."
+            fi
+          else
+            echo "::warning::Event archive or capture audit missing; readiness report was not generated."
           fi
 
       - name: Build pending event annotation queue
