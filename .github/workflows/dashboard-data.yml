@@ -262,7 +262,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_indicators\.json|macro_cpi_ai\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi
