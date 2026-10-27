@@ -452,7 +452,9 @@
     var chg = first[1] ? (last[4] / first[1] - 1) * 100 : null;
     return '<div class="pos-kline">' +
       '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + stopLine + entryLine + '</svg>' +
-      '<div class="pk-meta">今日 5m' + (it.date ? ' · ' + esc(it.date) : '') +
+      '<div class="pk-meta">今日 5m' +
+        (bars.length ? ' · ' + esc(bars[0][0]) + '-' + esc(bars[bars.length - 1][0]) : '') +
+        (it.date ? ' · ' + esc(it.date) : '') +
         (chg === null ? '' : ' · <b class="' + (chg >= 0 ? 'up' : 'down') + '">' +
           (chg >= 0 ? '+' : '') + fmt(chg, 2) + '%</b>') +
         (entry === null ? '' : ' · <b class="pk-entry">成本 $' + fmt(entry, 2) + '</b>') +

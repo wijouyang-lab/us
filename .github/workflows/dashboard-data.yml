@@ -8,7 +8,7 @@ name: Dashboard Data Refresh
 on:
   schedule:
     # 工作日每 15 分钟刷新；GitHub cron 可能延迟或漏跑，不能作为真实交易止损保证。
-    - cron: "*/15 * * * 1-5"
+    - cron: "*/15 13-21 * * 1-5"
   workflow_dispatch:
     inputs:
       kline_bars:
