@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T18:17:52Z",
+  "generated_at": "2026-10-27T18:29:24Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -12,14 +12,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 15.0299,
+      "price": 15.03,
       "price_source": "realtime",
-      "current_price": 15.0299,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 15.03,
+      "current_price_updated_at": "2026-10-27T18:28:00Z",
       "pending_price": 14.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 14.75,
-      "change_1d": -0.0007,
+      "change_1d": 0.0,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:36Z",
+        "computed_at": "2026-10-27T18:29:08Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1536,14 +1536,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "AMT|2026-10-26|Core_Dragon",
       "ai_snapshot_date": "2026-10-26",
-      "price": 183.135,
+      "price": 182.2825,
       "price_source": "realtime",
-      "current_price": 183.135,
-      "current_price_updated_at": "2026-10-27T18:16:00Z",
+      "current_price": 182.2825,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 188.5,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 188.28,
-      "change_1d": -2.7326,
+      "change_1d": -3.1854,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.1168,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:36Z",
+        "computed_at": "2026-10-27T18:29:08Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3060,14 +3060,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "APA|2026-10-21|Core_Dragon",
       "ai_snapshot_date": "2026-10-21",
-      "price": 50.85,
+      "price": 50.73,
       "price_source": "realtime",
-      "current_price": 50.85,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 50.73,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 49.15,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 49.15,
-      "change_1d": -1.5679,
+      "change_1d": -1.8002,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:36Z",
+        "computed_at": "2026-10-27T18:29:09Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4584,14 +4584,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "BX|2026-10-21|Core_Dragon",
       "ai_snapshot_date": "2026-10-21",
-      "price": 117.34,
+      "price": 116.95,
       "price_source": "realtime",
-      "current_price": 117.34,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 116.95,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 111.74,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 109.57,
-      "change_1d": -1.4447,
+      "change_1d": -1.7722,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.9805,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:37Z",
+        "computed_at": "2026-10-27T18:29:09Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6108,14 +6108,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "CME|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 294.04,
+      "price": 294.22,
       "price_source": "realtime",
-      "current_price": 294.04,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 294.22,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 270.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.44,
-      "change_1d": -4.5511,
+      "change_1d": -4.4926,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.0583,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:37Z",
+        "computed_at": "2026-10-27T18:29:09Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7632,14 +7632,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "DHR|2026-10-22|Core_Dragon",
       "ai_snapshot_date": "2026-10-22",
-      "price": 232.12,
+      "price": 231.75,
       "price_source": "realtime",
-      "current_price": 232.12,
-      "current_price_updated_at": "2026-10-27T18:16:00Z",
+      "current_price": 231.75,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 233.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 229.75,
-      "change_1d": -0.3649,
+      "change_1d": -0.5237,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.7628,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:37Z",
+        "computed_at": "2026-10-27T18:29:09Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9156,14 +9156,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "EOG|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 161.9,
+      "price": 161.615,
       "price_source": "realtime",
-      "current_price": 161.9,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 161.615,
+      "current_price_updated_at": "2026-10-27T18:28:00Z",
       "pending_price": 147.09,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 148.51,
-      "change_1d": -1.0875,
+      "change_1d": -1.2616,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.9562,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:38Z",
+        "computed_at": "2026-10-27T18:29:10Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10680,14 +10680,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 68.41,
+      "price": 68.33,
       "price_source": "realtime",
-      "current_price": 68.41,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 68.33,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": -1.7662,
+      "change_1d": -1.8811,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:38Z",
+        "computed_at": "2026-10-27T18:29:10Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12204,14 +12204,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 181.105,
+      "price": 180.86,
       "price_source": "realtime",
-      "current_price": 181.105,
-      "current_price_updated_at": "2026-10-27T18:17:00Z",
+      "current_price": 180.86,
+      "current_price_updated_at": "2026-10-27T18:29:00Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": -1.8614,
+      "change_1d": -1.9941,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:17:38Z",
+        "computed_at": "2026-10-27T18:29:10Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13731,16 +13731,16 @@
         "name": "Dow Jones",
         "group": "index",
         "unit": "index point",
-        "price": 52387.8711,
-        "change_1d": 0.0502,
-        "change_5d": 0.8118,
-        "change_20d": 1.7606,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 52371.8906,
+        "change_1d": 0.0197,
+        "change_5d": 0.781,
+        "change_20d": 1.7295,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793125020,
+        "quote_ts": 1793125740,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13749,16 +13749,16 @@
         "name": "S&P 500",
         "group": "index",
         "unit": "index point",
-        "price": 7720.9102,
-        "change_1d": 0.575,
-        "change_5d": 0.3924,
-        "change_20d": 0.4844,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 7716.9102,
+        "change_1d": 0.5229,
+        "change_5d": 0.3404,
+        "change_20d": 0.4323,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793125020,
+        "quote_ts": 1793125740,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13767,16 +13767,16 @@
         "name": "Nasdaq",
         "group": "index",
         "unit": "index point",
-        "price": 26467.9668,
-        "change_1d": 1.141,
-        "change_5d": 0.1403,
-        "change_20d": -1.314,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 26451.8516,
+        "change_1d": 1.0794,
+        "change_5d": 0.0793,
+        "change_20d": -1.3741,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793125020,
+        "quote_ts": 1793125740,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13785,16 +13785,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 17.72,
-        "change_1d": -3.6433,
-        "change_5d": -3.9046,
-        "change_20d": 10.2676,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 17.78,
+        "change_1d": -3.317,
+        "change_5d": -3.5792,
+        "change_20d": 10.6409,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124120,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13803,16 +13803,16 @@
         "name": "US10Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.99,
-        "change_1d": 0.0802,
-        "change_5d": -2.8427,
-        "change_20d": -4.771,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 4.986,
+        "change_1d": 0.0,
+        "change_5d": -2.9206,
+        "change_20d": -4.8473,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124120,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13823,15 +13823,15 @@
         "unit": "percent yield",
         "price": 4.75,
         "change_1d": 0.0,
-        "change_5d": 0.0,
-        "change_20d": 5.5556,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "change_5d": null,
+        "change_20d": null,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
         "quote_ts": null,
-        "last_bar_date": "2026-10-26"
+        "last_bar_date": "2026-10-13"
       },
       {
         "symbol": "^FVX",
@@ -13839,16 +13839,16 @@
         "name": "US5Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.835,
-        "change_1d": 0.228,
-        "change_5d": -1.9071,
-        "change_20d": -4.5975,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 4.833,
+        "change_1d": 0.1866,
+        "change_5d": -1.9477,
+        "change_20d": -4.6369,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124120,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13857,16 +13857,16 @@
         "name": "US30Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.305,
-        "change_1d": 0.0755,
-        "change_5d": -3.0519,
-        "change_20d": -4.6035,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 5.303,
+        "change_1d": 0.0377,
+        "change_5d": -3.0885,
+        "change_20d": -4.6395,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124120,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13875,16 +13875,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.316,
-        "change_1d": 0.3492,
-        "change_5d": 0.3295,
-        "change_20d": 1.1028,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 102.315,
+        "change_1d": 0.3482,
+        "change_5d": 0.3285,
+        "change_20d": 1.1018,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124420,
+        "quote_ts": 1793125140,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13893,16 +13893,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4071.7,
-        "change_1d": 0.8246,
-        "change_5d": -2.125,
-        "change_20d": -2.3198,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 4070.8999,
+        "change_1d": 0.8048,
+        "change_5d": -2.1442,
+        "change_20d": -2.339,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124420,
+        "quote_ts": 1793125140,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13911,16 +13911,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 54.41,
-        "change_1d": 0.5581,
-        "change_5d": -4.5003,
-        "change_20d": -11.1238,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 54.36,
+        "change_1d": 0.4657,
+        "change_5d": -4.5881,
+        "change_20d": -11.2055,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124360,
+        "quote_ts": 1793125080,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13929,16 +13929,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.658,
-        "change_1d": 2.3049,
-        "change_5d": 1.8354,
-        "change_20d": 1.4012,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 6.657,
+        "change_1d": 2.2895,
+        "change_5d": 1.8201,
+        "change_20d": 1.3859,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124420,
+        "quote_ts": 1793125080,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13947,16 +13947,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 99.93,
-        "change_1d": -1.7984,
-        "change_5d": -3.5983,
-        "change_20d": 7.9158,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 100.02,
+        "change_1d": -1.7099,
+        "change_5d": -3.5115,
+        "change_20d": 8.013,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124420,
+        "quote_ts": 1793125140,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13965,16 +13965,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 109.44,
-        "change_1d": -5.5004,
-        "change_5d": -0.1004,
-        "change_20d": 3.9514,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 109.51,
+        "change_1d": -5.4399,
+        "change_5d": -0.0365,
+        "change_20d": 4.0179,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124360,
+        "quote_ts": 1793125080,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13983,16 +13983,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.017,
-        "change_1d": 15.9493,
-        "change_5d": -1.3407,
-        "change_20d": 0.5667,
-        "updated_at": "2026-10-27T18:17:38Z",
+        "price": 3.008,
+        "change_1d": 15.6034,
+        "change_5d": -1.6351,
+        "change_20d": 0.2667,
+        "updated_at": "2026-10-27T18:29:10Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124420,
+        "quote_ts": 1793125140,
         "last_bar_date": "2026-10-26"
       }
     ],
@@ -14005,12 +14005,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-27T18:17:50Z"
+    "updated_at": "2026-10-27T18:29:22Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-27 14:17:51",
+    "as_of_us": "2026-10-27 14:29:24",
     "window_start": "2026-09-27",
     "core_closed_count": 0,
     "core_open_count": 22,
@@ -16212,8 +16212,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 268.510009765625,
-        "pnl_pct": 8.18,
+        "cur_price": 268.06500244140625,
+        "pnl_pct": 8.0,
         "days_held": 35,
         "stop_loss": null,
         "score": "64.2",
@@ -16626,8 +16626,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 172.46,
-        "cur_price": 185.25,
-        "pnl_pct": 7.42,
+        "cur_price": 185.47000122070312,
+        "pnl_pct": 7.54,
         "days_held": 39,
         "stop_loss": null,
         "score": "74.0",
@@ -16695,8 +16695,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 412.0,
-        "cur_price": 392.4700012207031,
-        "pnl_pct": -4.74,
+        "cur_price": 392.2749938964844,
+        "pnl_pct": -4.79,
         "days_held": 39,
         "stop_loss": null,
         "score": "74.7",
@@ -20628,8 +20628,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 226.6999969482422,
-        "pnl_pct": -45.88,
+        "cur_price": 226.62820434570312,
+        "pnl_pct": -45.9,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -21180,8 +21180,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 47.57,
-        "cur_price": 51.98500061035156,
-        "pnl_pct": 9.28,
+        "cur_price": 51.97999954223633,
+        "pnl_pct": 9.27,
         "days_held": 99,
         "stop_loss": null,
         "score": "0",
@@ -21479,8 +21479,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.70989990234375,
-        "pnl_pct": -7.02,
+        "cur_price": 50.73500061035156,
+        "pnl_pct": -6.98,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -21548,7 +21548,7 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 21.98,
-        "cur_price": 21.155799865722656,
+        "cur_price": 21.155000686645508,
         "pnl_pct": -3.75,
         "days_held": 104,
         "stop_loss": null,
@@ -21847,8 +21847,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 55.869998931884766,
-        "pnl_pct": 7.5,
+        "cur_price": 55.86000061035156,
+        "pnl_pct": 7.49,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -24503,14 +24503,14 @@
     "snapshot_asof": "2026-10-26",
     "rolled_txns": 0,
     "cash": 40145.53,
-    "stock_value": 9705.36,
-    "total_equity": 49850.89,
+    "stock_value": 9669.85,
+    "total_equity": 49815.38,
     "realized_pnl": 124.37,
-    "unrealized_pnl": -273.48,
-    "total_pnl": -149.11,
-    "return_pct": -0.3,
+    "unrealized_pnl": -308.99,
+    "total_pnl": -184.62,
+    "return_pct": -0.37,
     "open_positions": 1,
-    "open_pct": 19.47,
+    "open_pct": 19.41,
     "positions": [
       {
         "portfolio_id": "US-50000-001",
@@ -24520,13 +24520,13 @@
         "entry_price": 188.28,
         "entry_date": "2026-10-26",
         "cost_basis": 9978.84,
-        "current_price": 183.12,
-        "extended_price": 183.12,
-        "extended_time": "10-27 14:15 ET",
-        "market_value": 9705.36,
-        "unrealized_pnl": -273.48,
-        "unrealized_pnl_pct": -2.74,
-        "weight_pct": 19.47,
+        "current_price": 182.45,
+        "extended_price": 182.45,
+        "extended_time": "10-27 14:27 ET",
+        "market_value": 9669.85,
+        "unrealized_pnl": -308.99,
+        "unrealized_pnl_pct": -3.1,
+        "weight_pct": 19.41,
         "stop_loss": "176.78",
         "stop_loss_price": 176.78,
         "holding_days": 0,
@@ -24549,7 +24549,7 @@
             ],
             [
               "09:40",
-              186.93,
+              187.01,
               187.54,
               186.2,
               186.75
@@ -24815,7 +24815,7 @@
             ],
             [
               "12:50",
-              184.43,
+              184.57,
               184.7,
               184.43,
               184.54
@@ -24850,7 +24850,7 @@
             ],
             [
               "13:15",
-              184.02,
+              183.99,
               184.47,
               183.92,
               184.47
@@ -24922,7 +24922,7 @@
               "14:05",
               183.48,
               183.48,
-              183.16,
+              183.15,
               183.28
             ],
             [
@@ -24936,8 +24936,22 @@
               "14:15",
               183.15,
               183.15,
-              182.97,
-              182.97
+              182.78,
+              182.88
+            ],
+            [
+              "14:20",
+              182.91,
+              182.91,
+              182.58,
+              182.64
+            ],
+            [
+              "14:25",
+              182.59,
+              182.65,
+              182.17,
+              182.17
             ]
           ]
         }
@@ -27025,266 +27039,304 @@
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=babdffacd35a6982284a04706edc2c0645c7566da0b3919b51e85550e294399c",
           "datetime": 1792688771,
-          "summary": "S&P 500 unusual volume movers in today's session include PG, GEV, SNA, KMI, LMT, BX, URI, DXCM, CSX and VST, with both gainers and decliners seeing heavier-than-average activity."
+          "summary": "S&P 500 unusual volume movers in today's session include PG, GEV, SNA, KMI, LMT, BX, URI, DXCM, CSX and VST, with both gainers and decliners seeing heavier-than-average activity.",
+          "headline_cn": "标普500今日异动放量个股"
         },
         {
           "headline": "What Blackstone (BX) Said on Its Q3 Earnings Call",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=813a9bc2b32a950c1567cf8e4bd8fe728ff3bb0ff22b2873748fc5f43417b938",
           "datetime": 1792688709,
-          "summary": "Blackstone (NYSE:BX) reported third-quarter distributable earnings of $1.7 billion, or $1.32 per common share, as fundraising momentum and fee-related earnings growth offset a sequential decline in realizations amid volatile markets and higher interest rates. The alternative asset manager reported"
+          "summary": "Blackstone (NYSE:BX) reported third-quarter distributable earnings of $1.7 billion, or $1.32 per common share, as fundraising momentum and fee-related earnings growth offset a sequential decline in realizations amid volatile markets and higher interest rates. The alternative asset manager reported",
+          "headline_cn": "黑石(BX)第三季度财报电话会要点"
         },
         {
           "headline": "Blackstone Soars 6% on Earnings Beat as Schwarzman Says “Inflows Reached $63 Billion”",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=f551701a7ce88110b9be3bb660bfec7ddf14661501be3a2323f68cfe8c8a588c",
           "datetime": 1792687933,
-          "summary": "Key TakeawaysBlackstone shares rose 6% today after its third-quarter distributable earnings of $1. 32 a share beat the $1."
+          "summary": "Key TakeawaysBlackstone shares rose 6% today after its third-quarter distributable earnings of $1. 32 a share beat the $1.",
+          "headline_cn": "黑石业绩超预期涨6%，施瓦茨曼称流入630亿美元"
         },
         {
           "headline": "S&P 500 Top Movers: Gainers and Losers in Today's Session",
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=51f992e7d1a0d25e891ecf23d9ee9e29de2639e286d463e8e3dcaab8e7305397",
           "datetime": 1792686972,
-          "summary": "S&P 500 top movers for today's session, led by ALLE, ROP, LEN, NDAQ and BX among gainers, while COHR, LRCX, FLEX, VST and CIEN ranked among losers."
+          "summary": "S&P 500 top movers for today's session, led by ALLE, ROP, LEN, NDAQ and BX among gainers, while COHR, LRCX, FLEX, VST and CIEN ranked among losers.",
+          "headline_cn": "标普500今日涨跌幅居前个股"
         },
         {
           "headline": "Blackstone Writes Down Real Estate Values But Remains Bullish On Data Centers",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=2bb668fdc436b2e89bd096853265cbbea4ca8c74a14e05f3f27264bfb4e9e3c3",
           "datetime": 1792679720,
-          "summary": "Blackstone reduced real estate values, but it remains optimistic about growth in data centers."
+          "summary": "Blackstone reduced real estate values, but it remains optimistic about growth in data centers.",
+          "headline_cn": "黑石减记房地产价值，仍看多数据中心"
         },
         {
           "headline": "Blackstone CEO Sounds Alarm on AI Supply Crunch: 'Seldom in My Career Have I Seen' Anything Like It",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=7cef3405173b644078c534ed5683e991f3a019cfeddf74cef4116a9047604f74",
           "datetime": 1792678720,
-          "summary": "Blackstone (NYSE: BX) Q3 earnings beat estimates on $1.4T record AUM, driven by AI infrastructure and private credit expansion."
+          "summary": "Blackstone (NYSE: BX) Q3 earnings beat estimates on $1.4T record AUM, driven by AI infrastructure and private credit expansion.",
+          "headline_cn": "黑石CEO警告AI供应短缺：职业生涯罕见"
         },
         {
           "headline": "Blackstone Inc. Reports Third Quarter 2026 Results",
           "source": "Fintel",
           "url": "https://finnhub.io/api/news?id=5e4ca74df9b0c16ed8c4c141e98a055456a62ea483034a7948bcd1ce8b0c181e",
           "datetime": 1792677259,
-          "summary": ""
+          "summary": "",
+          "headline_cn": "黑石公司公布2026年第三季度业绩"
         },
         {
           "headline": "Blackstone earnings: Why profits are feeling the squeeze",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=54b988765ee4700bd3635bb671362840df54c3e43443ff98a27f404a4f56a1df",
           "datetime": 1792677060,
-          "summary": "The 8:30 Hosts Julie Hyman, Pras Subramanian, and Jake Conley break down Blackstone's (BX) third-quarter earnings  beat as the investment giant faces pressure on profitability."
+          "summary": "The 8:30 Hosts Julie Hyman, Pras Subramanian, and Jake Conley break down Blackstone's (BX) third-quarter earnings  beat as the investment giant faces pressure on profitability.",
+          "headline_cn": "黑石财报：利润为何承压"
         },
         {
           "headline": "Blackstone's Gray Says AI Demand Is 'Parabolic'",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=fdcaf6e79dd6d274ccaae37378044e9aceddd8c7be31a8e35c62dce4e045c7f2",
           "datetime": 1792675616,
-          "summary": "Blackstone Inc. President Jon Gray pushes back against the idea that there is an AI bubble. He says demand for AI is \"almost parabolic.\" He speaks to Dani Burger on \"Bloomberg Open Interest\" about investing in AI and the firm's third-quarter earnings results."
+          "summary": "Blackstone Inc. President Jon Gray pushes back against the idea that there is an AI bubble. He says demand for AI is \"almost parabolic.\" He speaks to Dani Burger on \"Bloomberg Open Interest\" about investing in AI and the firm's third-quarter earnings results.",
+          "headline_cn": "黑石格雷称AI需求呈“抛物线式”增长"
         },
         {
           "headline": "BX's Q3 Earnings Decline Y/Y Despite Record AUM Amid Tough Environment",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=6c9e70b23d9cedde58d653ca15fc3823e0fa243e6be3d431a14d197c872b4694",
           "datetime": 1792674180,
-          "summary": "Blackstone's Q3 earnings fall 13% y/y despite record AUM of $1.37T and higher fee-related earnings. What's weighing on the investment giant's performance?"
+          "summary": "Blackstone's Q3 earnings fall 13% y/y despite record AUM of $1.37T and higher fee-related earnings. What's weighing on the investment giant's performance?",
+          "headline_cn": "BX第三季度利润同比下滑，尽管AUM创纪录"
         },
         {
           "headline": "Compared to Estimates, Blackstone Inc. (BX) Q3 Earnings: A Look at Key Metrics",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=348984be88e9cfc46deef8f8508f14de0af6a723db31050c81c18526f7d656ef",
           "datetime": 1792672204,
-          "summary": "The headline numbers for Blackstone Inc. (BX) give insight into how the company performed in the quarter ended September 2026, but it may be worthwhile to compare some of its key metrics to Wall Street estimates and the year-ago actuals."
+          "summary": "The headline numbers for Blackstone Inc. (BX) give insight into how the company performed in the quarter ended September 2026, but it may be worthwhile to compare some of its key metrics to Wall Street estimates and the year-ago actuals.",
+          "headline_cn": "黑石(BX)第三季度业绩对比预期：关键指标一览"
         },
         {
           "headline": "Blackstone CEO Dismisses AI Bubble Fears: 'Critical Scarcity of Supply Has Intensified'",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=a51c0aa659ea8960ff171b9f75a0cf50bea17498368a5809fef0acf82f2ea6af",
           "datetime": 1792670251,
-          "summary": "Steve Schwarzman, a top billionaire, has dismissed AI bubble fears, pointing to the rising demand for AI and constrained supply"
+          "summary": "Steve Schwarzman, a top billionaire, has dismissed AI bubble fears, pointing to the rising demand for AI and constrained supply",
+          "headline_cn": "黑石CEO否认AI泡沫：供应严重稀缺加剧"
         },
         {
           "headline": "Blackstone (NYSE:BX) misses Q3 2026 revenue estimates",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=f3ffcfccfacd9928de72e3cd9d39f77c62779b1a64f24d902b06f76a50862593",
           "datetime": 1792670176,
-          "summary": "Alternative investment manager Blackstone (NYSE:BX) fell short of the market’s revenue expectations in Q3 2026, with sales falling 8.2% year on year to $3.06 billion. Its GAAP profit of $0.83 per share was 34% below analysts’ consensus estimates."
+          "summary": "Alternative investment manager Blackstone (NYSE:BX) fell short of the market’s revenue expectations in Q3 2026, with sales falling 8.2% year on year to $3.06 billion. Its GAAP profit of $0.83 per share was 34% below analysts’ consensus estimates.",
+          "headline_cn": "黑石(NYSE:BX)2026年第三季度营收不及预期"
         },
         {
           "headline": "Blackstone Inc. (BX) Surpasses Q3 Earnings and Revenue Estimates",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=e701bf633644f532ce65eff692f5189613ec1d71e6760b3de98419929b001ec7",
           "datetime": 1792668602,
-          "summary": "Blackstone Inc. (BX) delivered earnings and revenue surprises of +4.76% and +3.03%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?"
+          "summary": "Blackstone Inc. (BX) delivered earnings and revenue surprises of +4.76% and +3.03%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?",
+          "headline_cn": "黑石(BX)第三季度利润和营收均超预期"
         },
         {
           "headline": "Blackstone Inc.: Q3 Earnings Snapshot",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=c5ff3b7493d77338ba4860c8c3339368cfbe990fc670f0eeb1e0e9df90239d35",
           "datetime": 1792667596,
-          "summary": "NEW YORK (AP) — NEW YORK (AP) — Blackstone Inc. (BX) on Thursday reported third-quarter earnings of $662."
+          "summary": "NEW YORK (AP) — NEW YORK (AP) — Blackstone Inc. (BX) on Thursday reported third-quarter earnings of $662.",
+          "headline_cn": "黑石公司：第三季度业绩快照"
         },
         {
           "headline": "Blackstone Profit Drops 9.2% as Rates, Inflation Curb Dealmaking",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=c7f9a0cbc77c120cb2d3d80dc790286221dc73d39b9520b51145b375d1bb586a",
           "datetime": 1792667206,
-          "summary": "Blackstone Inc. reported a drop in third-quarter income as surging energy prices stoked inflation and higher interest rates subdued dealmaking."
+          "summary": "Blackstone Inc. reported a drop in third-quarter income as surging energy prices stoked inflation and higher interest rates subdued dealmaking.",
+          "headline_cn": "利率和通胀抑制交易，黑石利润下降9.2%"
         },
         {
           "headline": "Blackstone cuts property valuations as higher rates hit returns",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=0fb55e6a70aaee67bdbc3f8efad7b4a6feb327541b957fc261b909717c9e85c8",
           "datetime": 1792667001,
-          "summary": "The president of Blackstone Group said soaring interest rates and geopolitical unrest had caused the world's largest private capital group to..."
+          "summary": "The president of Blackstone Group said soaring interest rates and geopolitical unrest had caused the world's largest private capital group to...",
+          "headline_cn": "高利率打击回报，黑石下调房地产估值"
         },
         {
           "headline": "Blackstone Q3 2026 Earnings Call Transcript",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=5b1bf20071fa94f06d76a84b682f648de6fe913be556ca355cd9c85413508181",
           "datetime": 1792665602,
-          "summary": "Blackstone (NYSE:BX) reported third-quarter financial results on Thursday. The transcript from the company’s third-quarter earnings call has been provided below.This transcript is brought to you by Benzinga APIs. For"
+          "summary": "Blackstone (NYSE:BX) reported third-quarter financial results on Thursday. The transcript from the company’s third-quarter earnings call has been provided below.This transcript is brought to you by Benzinga APIs. For",
+          "headline_cn": "黑石2026年第三季度财报电话会记录"
         },
         {
           "headline": "Blackstone's Jon Gray says CoreWeave can 'find a way through' financing pressure",
           "source": "CNBC",
           "url": "https://finnhub.io/api/news?id=d0b031df4d9c5062163dea024d0ec4505af0236e81ffa380178ed096ad497dc1",
           "datetime": 1792663553,
-          "summary": "Blackstone COO Jon Gray says CoreWeave's underlying business is strong despite concerns over its mounting debt."
+          "summary": "Blackstone COO Jon Gray says CoreWeave's underlying business is strong despite concerns over its mounting debt.",
+          "headline_cn": "黑石格雷：CoreWeave能化解融资压力"
         },
         {
           "headline": "Stock market today: Dow, S&P 500, Nasdaq tumble as oil climbs, investors weigh Meta, Tesla earnings",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=bb6a3f1912434ed834c4bf29fa42b3b27044dee497f2030329a3fec0df717558",
           "datetime": 1792662300,
-          "summary": "Stocks tumbled as oil prices surged and investors digested the latest earnings from Meta and Tesla."
+          "summary": "Stocks tumbled as oil prices surged and investors digested the latest earnings from Meta and Tesla.",
+          "headline_cn": "美股：油价升，道指、标普500、纳指跌，投资者看Meta、特斯拉财报"
         },
         {
           "headline": "Blackstone President Jon Gray on Q3 results: We're seeing real earnings strength",
           "source": "CNBC",
           "url": "https://finnhub.io/api/news?id=787d244a19967aaf1bc10e918c07baa23e2e229c94eac4d0c635fe4a4f4943e8",
           "datetime": 1792657185,
-          "summary": "Jon Gray, Blackstone president and COO, joins 'Squawk Box' to discuss the company's quarterly earnings results, growth outlook, state of the AI boom, M&A landscape, state of the economy, the Fed's inflation fight, and more."
+          "summary": "Jon Gray, Blackstone president and COO, joins 'Squawk Box' to discuss the company's quarterly earnings results, growth outlook, state of the AI boom, M&A landscape, state of the economy, the Fed's inflation fight, and more.",
+          "headline_cn": "黑石总裁格雷谈Q3：看到真实盈利强劲"
         },
         {
           "headline": "Blackstone Q3 Adj. EPS $1.32 Beats $1.26 Estimate, Sales $3.217B Miss $3.280B Estimate",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=dbe5a267ccf5e517aec0b4f75289f2e2f600b0d774aa38cdc21229c21fd60f8f",
           "datetime": 1792652202,
-          "summary": "Blackstone (NYSE:BX) reported quarterly earnings of $1.32 per share which beat the analyst consensus estimate of $1.26 by 4.76 percent. This is a 13.16 percent decrease over earnings of $1.52 per share from the same"
+          "summary": "Blackstone (NYSE:BX) reported quarterly earnings of $1.32 per share which beat the analyst consensus estimate of $1.26 by 4.76 percent. This is a 13.16 percent decrease over earnings of $1.52 per share from the same",
+          "headline_cn": "黑石Q3调整后EPS 1.32美元超预期，营收32.17亿美元不及预期"
         },
         {
           "headline": "Lender Wants Blackstone, Hudson Pacific To Sell Vacant Sun Valley Studio",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=bb7ed8c57763938e2582ffa0a6182ec7f07e0af02755d2cff5da9a485db3fedd",
           "datetime": 1792611529,
-          "summary": "Marketing materials ask for the best offer on Sunset Glenoaks Studios, rather than suggesting an asking price."
+          "summary": "Marketing materials ask for the best offer on Sunset Glenoaks Studios, rather than suggesting an asking price.",
+          "headline_cn": "贷款人要求黑石和Hudson Pacific出售空置Sun Valley影棚"
         },
         {
           "headline": "NFL Weighs Letting Blackstone, Apollo Unit Buy Minority Team Stakes",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=a30db5f09f2eab6f908009bfe9c73d89ace7b4b2d2cb52e50345fe6fcd80bdab",
           "datetime": 1792611413,
-          "summary": "Blackstone Inc. (NYSE:BX) and a unit of Apollo Global Management (NYSE:APO) are holding early-stage conversations with the NFL about becoming approved investors eligible to acquire minority stakes in league teams. The conversations remain preliminary, and both firms would likely need..."
+          "summary": "Blackstone Inc. (NYSE:BX) and a unit of Apollo Global Management (NYSE:APO) are holding early-stage conversations with the NFL about becoming approved investors eligible to acquire minority stakes in league teams. The conversations remain preliminary, and both firms would likely need...",
+          "headline_cn": "NFL考虑允许黑石、Apollo部门收购球队少数股权"
         },
         {
           "headline": "Apollo’s New AI-Proof Investment? The New York Yankees",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=0983214824d16ee6fdcd80c441857ec8195a4dc3cd5bdcf9afc955e681cc00e3",
           "datetime": 1792604228,
-          "summary": "Apollo described its recent $2.6 billion financing deal with the Yankee’s owners as an “AI-resilient” leisure investment."
+          "summary": "Apollo described its recent $2.6 billion financing deal with the Yankee’s owners as an “AI-resilient” leisure investment.",
+          "headline_cn": "Apollo新的抗AI投资？纽约洋基队"
         },
         {
           "headline": "Apollo, Blackstone Have NFL Aspirations, Seek Approval to Buy Stakes in Teams",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=4d2ca63d34d6af762a0a2e1d1f072e052682dab8d056a787ed6e1e1a30e51d0c",
           "datetime": 1792599321,
-          "summary": "Blackstone Inc. and a unit of Apollo Global Management Inc. are in talks with the NFL to join the league’s list of approved private equity firms that can take minority stakes in its teams, according to people familiar with the matter."
+          "summary": "Blackstone Inc. and a unit of Apollo Global Management Inc. are in talks with the NFL to join the league’s list of approved private equity firms that can take minority stakes in its teams, according to people familiar with the matter.",
+          "headline_cn": "Apollo、黑石有意NFL，寻求批准收购球队股权"
         },
         {
           "headline": "Procter & Gamble, Western Digital On Deck Thursday As Growth, AI Demand Face Test",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=193a22696077603ac318e840808902ba8db27e0b47fb9a6c04ac36436b33ad52",
           "datetime": 1792596625,
-          "summary": "Procter &amp; Gamble headlines Thursday’s reports, with investors weighing resilient consumer demand against cost pressures and softer earnings growth. Union Pacific, Lockheed Martin, Valero Energy and Spotify report"
+          "summary": "Procter &amp; Gamble headlines Thursday’s reports, with investors weighing resilient consumer demand against cost pressures and softer earnings growth. Union Pacific, Lockheed Martin, Valero Energy and Spotify report",
+          "headline_cn": "宝洁、西部数据周四登场，增长与AI需求面临考验"
         },
         {
           "headline": "Lender pushes for sale of Blackstone, Hudson Pacific’s totally vacant Sun Valley studio",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=766d9449c97cd37dc76b8903d23eb2a30140ba64ad5c0510a8f1592657527fc0",
           "datetime": 1792596600,
-          "summary": "Hudson Pacific Properties’ Victor Coleman and Blackstone’s Stephen Schwarzman and 11100 West Peoria Street (Getty, Google Maps)Colliers is shopping a production campus in Sun Valley on behalf of Blackstone and Hudson Pacific Properties’ lender. Marketing materials viewed by The Real Deal call the offering a lender-facilitated sale and do not include an asking price — instead calling for the best offer. The 240,000-square foot campus in the Valley is empty, per the materials. In 2021, Victor Cole"
+          "summary": "Hudson Pacific Properties’ Victor Coleman and Blackstone’s Stephen Schwarzman and 11100 West Peoria Street (Getty, Google Maps)Colliers is shopping a production campus in Sun Valley on behalf of Blackstone and Hudson Pacific Properties’ lender. Marketing materials viewed by The Real Deal call the offering a lender-facilitated sale and do not include an asking price — instead calling for the best offer. The 240,000-square foot campus in the Valley is empty, per the materials. In 2021, Victor Cole",
+          "headline_cn": "贷款人推动出售黑石与Hudson Pacific完全空置Sun Valley影棚"
         },
         {
           "headline": "A Data-Center Stock’s 40% Selloff in Australia Exposes Risks in the AI Buildout",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=0367af75872599637462ee68b64180a2cb4b2cf8aeb94ece43f77ba4577b6320",
           "datetime": 1792593420,
-          "summary": "NextDC’s earnings warning highlights power constraints and community opposition that could slow the AI-infrastructure buildout."
+          "summary": "NextDC’s earnings warning highlights power constraints and community opposition that could slow the AI-infrastructure buildout.",
+          "headline_cn": "澳洲一数据中心股跌40%，暴露AI建设风险"
         },
         {
           "headline": "'Apollo, Blackstone Have NFL Aspirations, Seek Approval To Buy Stakes In Teams' - Bloomberg News",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=5be090455f8306519b6a77531b37d77ab00885e2e7703c08eedb07c421d597f5",
           "datetime": 1792585223,
-          "summary": "https://www.bloomberg.com/news/articles/2026-10-21/apollo-blackstone-have-nfl-aspirations-seek-approval-to-buy-stakes-in-teams"
+          "summary": "https://www.bloomberg.com/news/articles/2026-10-21/apollo-blackstone-have-nfl-aspirations-seek-approval-to-buy-stakes-in-teams",
+          "headline_cn": "彭博：Apollo、黑石有意NFL，寻求批准收购球队股权"
         },
         {
           "headline": "Blackstone (BX) Reports Q3: Everything You Need To Know Ahead Of Earnings",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=21b632c89abea4c115d1a20804ac90495d9ebff624464d96a38c59eb30330b81",
           "datetime": 1792552239,
-          "summary": "Alternative investment manager Blackstone (NYSE:BX) will be announcing earnings results this Thursday before market open. Here’s what you need to know."
+          "summary": "Alternative investment manager Blackstone (NYSE:BX) will be announcing earnings results this Thursday before market open. Here’s what you need to know.",
+          "headline_cn": "黑石(BX)Q3财报前须知"
         },
         {
           "headline": "Blackstone (BX) Lands $8.7 Billion Energy Fund Close While Pursuing India Deal",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=2478c88d9914a97a93ce39801f2da65da9ad03afc583ef68e293f377f31df0b2",
           "datetime": 1792534449,
-          "summary": "Blackstone (NYSE:BX) announced a final close of US$8.7b for its Energy Transition Partners V fund on 20 October 2026. The Energy Transition Partners V vehicle is focused on financing projects and companies linked to the global shift toward cleaner energy. Blackstone is in active discussions to invest US$400m to US$500m for a significant minority stake in Accord Software Systems in India. The US$8.7b Energy Transition Partners V close and Accord Software talks are worth setting against the..."
+          "summary": "Blackstone (NYSE:BX) announced a final close of US$8.7b for its Energy Transition Partners V fund on 20 October 2026. The Energy Transition Partners V vehicle is focused on financing projects and companies linked to the global shift toward cleaner energy. Blackstone is in active discussions to invest US$400m to US$500m for a significant minority stake in Accord Software Systems in India. The US$8.7b Energy Transition Partners V close and Accord Software talks are worth setting against the...",
+          "headline_cn": "黑石(BX)完成87亿美元能源基金，同时推进印度交易"
         },
         {
           "headline": "6 Blackstone multifamily properties move to servicing",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=0e4b8f35f0313f47267b296ffcb12d9fa959554878d39bbd0223fec694c21b7a",
           "datetime": 1792522251,
-          "summary": "The assets transferred after the private equity giant was able to sell 15 other apartment communities backed by a $1.3 billion loan."
+          "summary": "The assets transferred after the private equity giant was able to sell 15 other apartment communities backed by a $1.3 billion loan.",
+          "headline_cn": "黑石6处多户住宅物业转入特别服务"
         },
         {
           "headline": "Blackstone's $1.3B Multifamily Loan Hits Special Servicing After Missing Maturity",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=45c7559f9463a2649ea11d3fbc8a559a3df3f14d0708bb36aa74436cfc83b7d5",
           "datetime": 1792520182,
-          "summary": "Blackstone has been selling properties from a nationwide portfolio to pay down the $1.3B loan that matured earlier this month."
+          "summary": "Blackstone has been selling properties from a nationwide portfolio to pay down the $1.3B loan that matured earlier this month.",
+          "headline_cn": "黑石13亿美元多户住宅贷款到期未还转入特别服务"
         },
         {
           "headline": "Blackstone’s $1.3B Apartment CMBS Loan Hits Special Servicing",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=c836432375fd7d34f32e0784926fafb75aedc1f2a084a6b86bab5d7760b75b90",
           "datetime": 1792518769,
-          "summary": "Blackstone's $1.3B apartment CMBS loan moved to special servicing after maturing this month, with $517.7M still owed, per Morningstar Credit."
+          "summary": "Blackstone's $1.3B apartment CMBS loan moved to special servicing after maturing this month, with $517.7M still owed, per Morningstar Credit.",
+          "headline_cn": "黑石13亿美元公寓CMBS贷款转入特别服务"
         },
         {
           "headline": "BlackRock's Q3 AUM Rises 15% to $15.5T: Will Inflows Boost Revenues?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=cf64e2b985110523b09f4339e909d08ebd20b5ed099797fb22bb671ec4cc6725",
           "datetime": 1792501200,
-          "summary": "BLK's AUM surged 15% to $15.49 trillion in Q3, fueled by robust inflows and market gains. Can rising assets and higher fees sustain revenue growth?"
+          "summary": "BLK's AUM surged 15% to $15.49 trillion in Q3, fueled by robust inflows and market gains. Can rising assets and higher fees sustain revenue growth?",
+          "headline_cn": "贝莱德Q3 AUM增15%至15.5万亿美元，流入能提振营收？"
         },
         {
           "headline": "Blackstone, Warburg Pincus Explore Sale Of Intrafi",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=e5004825198c3bda8079baf6ebffd6c14d93f4ee4368e2212d418add98ed12c5",
           "datetime": 1792499690,
-          "summary": "-Reuters Citing Sources. "
+          "summary": "-Reuters Citing Sources. ",
+          "headline_cn": "黑石、华平探索出售Intrafi"
         },
         {
           "headline": "Blackstone: Expectations Sit Low Going Into Q3 Earnings While The Yield Approaches 5%",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=db2248ba2e3be4a2df681ce460b8be99161aa47d5df05b2ef0bb9fc809f68dd8",
           "datetime": 1792485000,
-          "summary": "Blackstone (BX) nears 52-week lows despite rising earnings and record AUM."
+          "summary": "Blackstone (BX) nears 52-week lows despite rising earnings and record AUM.",
+          "headline_cn": "黑石：Q3财报前预期低迷，收益率逼近5%"
         }
       ],
       "CME": [
@@ -27293,84 +27345,96 @@
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=095f02979b736561e19fe0f144085507c36402d3834023acbe3d8d44baa4fa77",
           "datetime": 1793100720,
-          "summary": "Inflation is usually a bad development if you're buying what's rising in price. But it's a potential boon for the sellers and their investors."
+          "summary": "Inflation is usually a bad development if you're buying what's rising in price. But it's a potential boon for the sellers and their investors.",
+          "headline_cn": "抗通胀赢家：10只标普500股票享溢价"
         },
         {
           "headline": "Why Market Caution Could Quickly Turn to Panic",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=8f24befce33cf23889c6b67ca11e58bcd92644ecf2c6a31741af02ec84f324c1",
           "datetime": 1793097193,
-          "summary": "It’s a cautious morning on markets as investors take a wait-and-see approach in premarket trading Tuesday ahead of mega-cap tech earnings and the Fed’s latest interest-rate call tomorrow."
+          "summary": "It’s a cautious morning on markets as investors take a wait-and-see approach in premarket trading Tuesday ahead of mega-cap tech earnings and the Fed’s latest interest-rate call tomorrow.",
+          "headline_cn": "市场谨慎为何可能迅速转为恐慌"
         },
         {
           "headline": "Dollar Moves Firmly Higher With Fed Rate Meeting In Focus",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=f8314f1f800da6e4e344c95ab9cd9a787633aecb47c22343fa4047012c066112",
           "datetime": 1793097046,
-          "summary": "The U.S. dollar powered higher in early trading, moving toward its recent six-month high on foreign exchange markets, as this week’s Federal Reserve rate decision, and the steady climb in global crude prices, provides a solid lift for the greenback."
+          "summary": "The U.S. dollar powered higher in early trading, moving toward its recent six-month high on foreign exchange markets, as this week’s Federal Reserve rate decision, and the steady climb in global crude prices, provides a solid lift for the greenback.",
+          "headline_cn": "关注美联储会议，美元坚挺走高"
         },
         {
           "headline": "HYPE Climbs As Hyperliquid Gets A Regulated Gateway To Enter The US Market Through Payward",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=27d87151ad79804e93063df6a6acd3ab51dca4cc4187fddfe137efef3b9b1ed7",
           "datetime": 1793096966,
-          "summary": "If approved, Payward's Bitnomial would run and settle the markets, and a planned upgrade would let it limit trading to approved users."
+          "summary": "If approved, Payward's Bitnomial would run and settle the markets, and a planned upgrade would let it limit trading to approved users.",
+          "headline_cn": "Hyperliquid经Payward获合规通道入美，HYPE上涨"
         },
         {
           "headline": "Fed is Expected to Pause Rate Hikes, But Stubborn Inflation Could Make the Break Brief",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=6694bb19c7b8550d1e580b4b6090fc3a09a59009b1e3e34446f64058efd732e8",
           "datetime": 1793096221,
-          "summary": "Investors assigned a 90% probability to the Fed holding its benchmark rate at 3.75% to 4.00% at its October 27-28 meeting."
+          "summary": "Investors assigned a 90% probability to the Fed holding its benchmark rate at 3.75% to 4.00% at its October 27-28 meeting.",
+          "headline_cn": "美联储预计暂停加息，但顽固通胀或使暂停短暂"
         },
         {
           "headline": "CME Group (CME) Eyes European Dairy With New Futures And Options",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=248703ebcc4294703f8f2a463464aa38b70ba8729b1719305cc015a3f8d2215d",
           "datetime": 1793078039,
-          "summary": "CME Group (NasdaqGS:CME) plans to introduce new European dairy futures and options in collaboration with the European Energy Exchange. The upcoming contracts are designed around key European dairy products, aiming to serve regional producers, processors and traders. The agreement with EEX extends CME Group's commodity derivatives offering into the European dairy sector for the first time. CME Group's move into European dairy futures and options is one chapter in a broader story for this..."
+          "summary": "CME Group (NasdaqGS:CME) plans to introduce new European dairy futures and options in collaboration with the European Energy Exchange. The upcoming contracts are designed around key European dairy products, aiming to serve regional producers, processors and traders. The agreement with EEX extends CME Group's commodity derivatives offering into the European dairy sector for the first time. CME Group's move into European dairy futures and options is one chapter in a broader story for this...",
+          "headline_cn": "CME集团(CME)推新期货期权，瞄准欧洲乳制品"
         },
         {
           "headline": "Parnassus Value Equity Fund Q3 2026 Portfolio Review",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=3f707d335b6539023d5e35bd6f3feb412aba88315a015bedc7909295586dd410",
           "datetime": 1793072700,
-          "summary": "Top contributors include Thermo Fisher, CME Group, NICE, Willis Towers Watson and Verizon. Learn more about the bottom contributors."
+          "summary": "Top contributors include Thermo Fisher, CME Group, NICE, Willis Towers Watson and Verizon. Learn more about the bottom contributors.",
+          "headline_cn": "Parnassus价值股票基金2026年Q3组合回顾"
         },
         {
           "headline": "This Week Could Help Decide Whether the Fed Raises Interest Rates in December",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=77933e31805157a065a8690b37e7e29b43dbb0ecd00706f52fdc904be8244084",
           "datetime": 1793046180,
-          "summary": "What happens to markets and oil prices along with new economic data could push the central bank in one direction or another."
+          "summary": "What happens to markets and oil prices along with new economic data could push the central bank in one direction or another.",
+          "headline_cn": "本周或决定美联储12月是否加息"
         },
         {
           "headline": "AI Price Prediction: ChatGPT Predicts Where Ethereum, Chainlink and Uniswap Could Be by the End of 2026",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=46570a8587c622978029750db578859d78cf36b27166ddc55d5a16e5f8cbe7a4",
           "datetime": 1793043039,
-          "summary": "ChatGPT ran the numbers on Ethereum, Chainlink, and Uniswap heading into 2026, and the results reveal a surprising split between which coins stand the best shot at hitting their targets and which faces the steepest climb despite its size."
+          "summary": "ChatGPT ran the numbers on Ethereum, Chainlink, and Uniswap heading into 2026, and the results reveal a surprising split between which coins stand the best shot at hitting their targets and which faces the steepest climb despite its size.",
+          "headline_cn": "AI预测：ChatGPT看以太坊、Chainlink、Uniswap 2026年底价位"
         },
         {
           "headline": "The Fed Could Hike Interest Rates Again in 2026. Here's What Investors Should Do Right Now.",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=d387c9f2d68e969f7894cb72bb8b1387b5794181e82f4b5786e6175f4cdb401e",
           "datetime": 1793040600,
-          "summary": "There's some big news on the radar that could affect stock prices, but how, and for how long?"
+          "summary": "There's some big news on the radar that could affect stock prices, but how, and for how long?",
+          "headline_cn": "美联储2026年或再加息，投资者现在该怎么做"
         },
         {
           "headline": "US Equity Futures Rise Pre-Bell as Traders Assess Declining Oil Prices, Await Fed Rate Decision This Week",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=14f86e0b5ee81c897498d6b56b2ed129d718943c39c72fda7fe6fe3f16655540",
           "datetime": 1793015952,
-          "summary": "US equity futures were edging higher pre-bell Monday as traders observed oil prices declining while"
+          "summary": "US equity futures were edging higher pre-bell Monday as traders observed oil prices declining while",
+          "headline_cn": "美股期货盘前上涨，油价下跌，交易员等待美联储决议"
         },
         {
           "headline": "Silver prices today, Monday, October 26, 2026: Silver prices open near levels last seen in November 2025",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=02aefbda554b28dcdf27d4acb00350aa4721d7a1c744b2d519a2a3b6bd73bf3d",
           "datetime": 1793014855,
-          "summary": "Silver futures opened at $54.29 per ounce on Monday, October 26, 2026, up 0.6% from Friday's closing price. Silver is down slightly this morning, trading at $53.89 as of 7:20 a.m. ET."
+          "summary": "Silver futures opened at $54.29 per ounce on Monday, October 26, 2026, up 0.6% from Friday's closing price. Silver is down slightly this morning, trading at $53.89 as of 7:20 a.m. ET.",
+          "headline_cn": "2026年10月26日周一白银开盘近2025年11月水平"
         },
         {
           "headline": "Gold prices today, Monday, October 26, 2026: Gold opens at 3-month lows at the start of Fed week",
@@ -29595,8 +29659,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-27T18:17:50Z",
-    "technical_updated_at": "2026-10-27T18:17:52Z",
+    "market_updated_at": "2026-10-27T18:29:22Z",
+    "technical_updated_at": "2026-10-27T18:29:24Z",
     "counts": {
       "core": 9,
       "observation": 0,
@@ -29693,14 +29757,14 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-27T18:17:35Z",
+    "generated_at": "2026-10-27T18:29:07Z",
     "fear_greed": {
-      "score": 32.54,
+      "score": 32.51,
       "rating": "fear",
-      "timestamp": "2026-10-27T18:14:42+00:00",
+      "timestamp": "2026-10-27T18:23:39+00:00",
       "subindicators": {
         "market_momentum_sp500": {
-          "score": 35.8,
+          "score": 36,
           "rating": "fear"
         },
         "stock_price_strength": {
@@ -29712,7 +29776,7 @@
           "rating": "fear"
         },
         "put_call_options": {
-          "score": 26.2,
+          "score": 25.6,
           "rating": "fear"
         },
         "market_volatility_vix": {
@@ -29720,7 +29784,7 @@
           "rating": "neutral"
         },
         "junk_bond_demand": {
-          "score": 48.2,
+          "score": 46.6,
           "rating": "neutral"
         },
         "safe_haven_demand": {
@@ -29731,7 +29795,7 @@
       "history_30d": [
         {
           "date": "2026-10-27",
-          "score": 32.54,
+          "score": 32.51,
           "rating": "fear"
         },
         {
@@ -29954,7 +30018,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-10-27T18:17:18Z",
+    "generated_at": "2026-10-27T18:28:46Z",
     "count": 9,
     "ok": 9,
     "items": [
@@ -30145,6 +30209,318 @@
     "exposure_rationale": "能源与基础设施权重过高，缺乏半导体、AI算力、云原生等结构性增长赛道；多数标的处于周期性行业，当前宏观环境下防御属性强于进攻性，建议中性偏低配置。",
     "degraded_reason": "api_error: PermissionDeniedError: Error code: 403 - {'error': {'type': '<nil>', 'message': 'API Key 所属专属分组不再允许当前用户使用 (request id: 202610252217090659850138268d9d6mPQojRqk) (request id: 20261026061707273276139qeaPsjsI) (request id: 202610252216561032580908268d9d6YMB1iopz)'}, 'type': 'error'}",
     "error": null
+  },
+  "serenity_verified": {
+    "generated_at": "2026-10-27T18:29:05Z",
+    "source": "SEC EDGAR + yfinance + news_data",
+    "count": 10,
+    "items": [
+      {
+        "ticker": "DHR",
+        "earnings_date": "<built-in",
+        "missing": [],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "8-K",
+            "date": "2026-10-21",
+            "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000201/dhr-20261021.htm"
+          },
+          {
+            "form": "10-Q",
+            "date": "2026-10-21",
+            "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000199/dhr-20260925.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-10-13",
+            "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000193/dhr-20261009.htm"
+          }
+        ],
+        "news": [
+          {
+            "title": "Avantor appoints new Chief Information Officer",
+            "url": "https://finnhub.io/api/news?id=33ebb764a9a897186304d7a7617db95c9b69c523f1e5575abf107030ad6f20a4"
+          },
+          {
+            "title": "Dividend Champion, Contender, And Challenger Highlights: Week October 25",
+            "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa"
+          },
+          {
+            "title": "Should Illumina Stock Holders Look At Thermo Fisher Instead?",
+            "url": "https://finnhub.io/api/news?id=324ee5b3a38ddfccd02201049082a470e6a07e75ff50bef2f94295ef71da456f"
+          }
+        ]
+      },
+      {
+        "ticker": "APP",
+        "earnings_date": "<built-in",
+        "missing": [
+          "新闻"
+        ],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "10-Q",
+            "date": "2026-08-05",
+            "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000059/app-20260630.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-08-05",
+            "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000057/app-20260805.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-06-05",
+            "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000050/app-20260603.htm"
+          }
+        ],
+        "news": []
+      },
+      {
+        "ticker": "CME",
+        "earnings_date": "<built-in",
+        "missing": [],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "10-Q",
+            "date": "2026-10-23",
+            "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000068/cme-20260930.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-10-21",
+            "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000065/cme-20261021.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-09-25",
+            "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000060/cme-20260924.htm"
+          }
+        ],
+        "news": [
+          {
+            "title": "Inflation Beaters: 10 S&P 500 Stocks Charge A Premium",
+            "url": "https://finnhub.io/api/news?id=095f02979b736561e19fe0f144085507c36402d3834023acbe3d8d44baa4fa77"
+          },
+          {
+            "title": "Why Market Caution Could Quickly Turn to Panic",
+            "url": "https://finnhub.io/api/news?id=8f24befce33cf23889c6b67ca11e58bcd92644ecf2c6a31741af02ec84f324c1"
+          },
+          {
+            "title": "Dollar Moves Firmly Higher With Fed Rate Meeting In Focus",
+            "url": "https://finnhub.io/api/news?id=f8314f1f800da6e4e344c95ab9cd9a787633aecb47c22343fa4047012c066112"
+          }
+        ]
+      },
+      {
+        "ticker": "XYL",
+        "earnings_date": "<built-in",
+        "missing": [
+          "新闻"
+        ],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "10-Q",
+            "date": "2026-10-27",
+            "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000148/xyl-20260930.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-10-27",
+            "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000146/xyl-20261027.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-09-29",
+            "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000134/xyl-20260929.htm"
+          }
+        ],
+        "news": []
+      },
+      {
+        "ticker": "JCI",
+        "earnings_date": "<built-in",
+        "missing": [
+          "新闻"
+        ],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "8-K",
+            "date": "2026-10-27",
+            "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000101/jci-20261027.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-09-30",
+            "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000098/jci-20260925.htm"
+          },
+          {
+            "form": "10-Q",
+            "date": "2026-07-29",
+            "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000087/jci-20260630.htm"
+          }
+        ],
+        "news": []
+      },
+      {
+        "ticker": "AES",
+        "earnings_date": "<built-in",
+        "missing": [],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "8-K",
+            "date": "2026-10-19",
+            "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126040117/ef20083812_8k.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-09-17",
+            "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126036994/ef20082051_8k.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-09-16",
+            "url": "https://www.sec.gov/Archives/edgar/data/874761/000087476126000153/aes-20260914.htm"
+          }
+        ],
+        "news": [
+          {
+            "title": "Dividend Champion, Contender, And Challenger Highlights: Week October 25",
+            "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa"
+          }
+        ]
+      },
+      {
+        "ticker": "XLE",
+        "earnings_date": null,
+        "missing": [
+          "财报日",
+          "SEC 文件"
+        ],
+        "status": "verified",
+        "filings": [],
+        "news": [
+          {
+            "title": "ValuEngine Weekly Market Commentary",
+            "url": "https://finnhub.io/api/news?id=9b6cff4781badee365837f3726ec6e231ca26d78e0010faf19813617c440df97"
+          },
+          {
+            "title": "Sector Update: Energy Stocks Edge Higher Late Afternoon",
+            "url": "https://finnhub.io/api/news?id=1f5d341b12ad1dfb2bec885e1275e065e810cec5f56b7d2393e0ed59e4830938"
+          },
+          {
+            "title": "Sector Update: Energy Stocks Mixed Monday Afternoon",
+            "url": "https://finnhub.io/api/news?id=05738a0e14a869ccd9ebd79a169159af9800c55052ad9a967d081f0929a7cfa8"
+          }
+        ]
+      },
+      {
+        "ticker": "EOG",
+        "earnings_date": "<built-in",
+        "missing": [],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "8-K",
+            "date": "2026-10-08",
+            "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000202/eog-20261008.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-09-24",
+            "url": "https://www.sec.gov/Archives/edgar/data/821189/000119312526400333/d40889d8k.htm"
+          },
+          {
+            "form": "10-Q",
+            "date": "2026-08-04",
+            "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000149/eog-20260630.htm"
+          }
+        ],
+        "news": [
+          {
+            "title": "Diamondback Energy (FANG) vs. EOG and COP: Can Its Permian Advantage Drive Long-Term Shareholder Returns?",
+            "url": "https://finnhub.io/api/news?id=ef3bb52c3a4555d95b4a8ff38e77b6077b6e537d1a9c974e1e3cec886593a6d7"
+          },
+          {
+            "title": "Was The Run In Devon Energy Stock Hiding In Plain Sight?",
+            "url": "https://finnhub.io/api/news?id=4eb0e3a29898733fc206265bd98d575e62058abcecb055b380ae459f49458afc"
+          },
+          {
+            "title": "Here's What to Expect From EOG Resources' Next Earnings Report",
+            "url": "https://finnhub.io/api/news?id=fd0d1298cd2bc88b4763d6896e147581dfe84f1ed75ffe278969ef667c1bda9a"
+          }
+        ]
+      },
+      {
+        "ticker": "APA",
+        "earnings_date": "<built-in",
+        "missing": [],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "8-K",
+            "date": "2026-10-07",
+            "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000058/apa8k-20261007.htm"
+          },
+          {
+            "form": "10-Q",
+            "date": "2026-08-06",
+            "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000053/apa-20260630.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-08-05",
+            "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000050/apa8k-20260805.htm"
+          }
+        ],
+        "news": [
+          {
+            "title": "Was The Run In Devon Energy Stock Hiding In Plain Sight?",
+            "url": "https://finnhub.io/api/news?id=4eb0e3a29898733fc206265bd98d575e62058abcecb055b380ae459f49458afc"
+          },
+          {
+            "title": "1 surging  stock with impressive fundamentals and 2 we find risky",
+            "url": "https://finnhub.io/api/news?id=bc1b972315c51623c3a917435a43b3efa1f520dac08c58a0af814414667f3b5c"
+          },
+          {
+            "title": "Are Investors Undervaluing APA (APA) Right Now?",
+            "url": "https://finnhub.io/api/news?id=accecc85423e337429e5a1d76ba96ea55e23e453df3ca848697be8c04528ce68"
+          }
+        ]
+      },
+      {
+        "ticker": "CNP",
+        "earnings_date": "<built-in",
+        "missing": [
+          "新闻"
+        ],
+        "status": "verified",
+        "filings": [
+          {
+            "form": "8-K",
+            "date": "2026-10-27",
+            "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926118963/tm2628051d1_8k.htm"
+          },
+          {
+            "form": "10-Q",
+            "date": "2026-10-27",
+            "url": "https://www.sec.gov/Archives/edgar/data/1130310/000113031026000048/cnp-20260930.htm"
+          },
+          {
+            "form": "8-K",
+            "date": "2026-10-20",
+            "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926117423/tm2627902d1_8k.htm"
+          }
+        ],
+        "news": []
+      }
+    ]
   },
   "model_usage": {
     "scan": {
