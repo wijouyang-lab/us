@@ -236,6 +236,13 @@ def build_items():
         items_ok = sum(1 for i in items if i["value"] is not None)
         print(f"[INFO] TE 兜底后有值 {items_ok}/{len(items)}", file=sys.stderr)
 
+    for it in items:
+        if it["value"] is None:
+            it["source_status"] = "missing"
+        elif "TradingEconomics" in str(it.get("source") or ""):
+            it["source_status"] = "fallback"
+        else:
+            it["source_status"] = "primary"
     return items
 
 

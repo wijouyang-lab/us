@@ -1976,7 +1976,8 @@
     }
     return '<div class="macro-econ">' +
       '<div class="macro-econ-h">' + esc(it.name || '') +
-        (it.value === null ? ' <span class="macro-kind">数据缺失</span>' : '') + '</div>' +
+        (it.value === null ? ' <span class="macro-kind">数据缺失</span>'
+          : (it.source_status === 'fallback' ? ' <span class="macro-kind">兜底源</span>' : '')) + '</div>' +
       '<div class="macro-econ-v">' + esc(valTxt) +
         (chgTxt ? ' <span class="macro-d ' + chgCls + '">' + (chg > 0 ? '▲' : (chg < 0 ? '▼' : '→')) + chgTxt.replace(/^[+-]/, '') + '</span>' : '') +
       '</div>' +

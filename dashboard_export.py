@@ -2791,6 +2791,7 @@ def _read_macro_indicators(data_dir: Path):
             "prev": round_num(parse_num(r.get("prev")), 2),
             "change": round_num(parse_num(r.get("change")), 2),
             "source": clean_text(r.get("source")) or None,
+            "source_status": clean_text(r.get("source_status")) or None,
             "note": clean_text(r.get("note")) or None,
         })
     return {
