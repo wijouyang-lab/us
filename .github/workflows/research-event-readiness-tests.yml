@@ -16,6 +16,8 @@ on:
     paths:
       - "tools/research/audit_pit_event_data_readiness.py"
       - "tests/test_audit_pit_event_data_readiness.py"
+      - "tests/test_event_readiness_capture_workflow.py"
+      - ".github/workflows/research-event-factor-capture-once.yml"
       - ".github/workflows/research-event-readiness-tests.yml"
 
 permissions:
