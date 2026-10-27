@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T18:07:01Z",
+  "generated_at": "2026-10-27T18:14:35Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -12,14 +12,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 15.025,
+      "price": 15.03,
       "price_source": "realtime",
-      "current_price": 15.025,
-      "current_price_updated_at": "2026-10-27T18:05:00Z",
+      "current_price": 15.03,
+      "current_price_updated_at": "2026-10-27T18:14:00Z",
       "pending_price": 14.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 14.75,
-      "change_1d": -0.0333,
+      "change_1d": 0.0,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:42Z",
+        "computed_at": "2026-10-27T18:14:16Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -1536,14 +1536,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "AMT|2026-10-26|Core_Dragon",
       "ai_snapshot_date": "2026-10-26",
-      "price": 183.25,
+      "price": 183.22,
       "price_source": "realtime",
-      "current_price": 183.25,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 183.22,
+      "current_price_updated_at": "2026-10-27T18:14:00Z",
       "pending_price": 188.5,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 188.28,
-      "change_1d": -2.6716,
+      "change_1d": -2.6875,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.1168,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:42Z",
+        "computed_at": "2026-10-27T18:14:16Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3060,14 +3060,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "APA|2026-10-21|Core_Dragon",
       "ai_snapshot_date": "2026-10-21",
-      "price": 50.82,
+      "price": 50.865,
       "price_source": "realtime",
-      "current_price": 50.82,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 50.865,
+      "current_price_updated_at": "2026-10-27T18:13:00Z",
       "pending_price": 49.15,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 49.15,
-      "change_1d": -1.626,
+      "change_1d": -1.5389,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:42Z",
+        "computed_at": "2026-10-27T18:14:17Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4584,14 +4584,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "BX|2026-10-21|Core_Dragon",
       "ai_snapshot_date": "2026-10-21",
-      "price": 117.3709,
+      "price": 117.27,
       "price_source": "realtime",
-      "current_price": 117.3709,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 117.27,
+      "current_price_updated_at": "2026-10-27T18:14:00Z",
       "pending_price": 111.74,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 109.57,
-      "change_1d": -1.4187,
+      "change_1d": -1.5034,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.9805,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:42Z",
+        "computed_at": "2026-10-27T18:14:17Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6108,14 +6108,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "CME|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 294.66,
+      "price": 294.295,
       "price_source": "realtime",
-      "current_price": 294.66,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 294.295,
+      "current_price_updated_at": "2026-10-27T18:13:00Z",
       "pending_price": 270.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 276.44,
-      "change_1d": -4.3498,
+      "change_1d": -4.4683,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -2.0583,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:43Z",
+        "computed_at": "2026-10-27T18:14:18Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7635,7 +7635,7 @@
       "price": 232.18,
       "price_source": "realtime",
       "current_price": 232.18,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price_updated_at": "2026-10-27T18:13:00Z",
       "pending_price": 233.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 229.75,
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:43Z",
+        "computed_at": "2026-10-27T18:14:18Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9156,14 +9156,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "EOG|2026-10-08|Core_Dragon",
       "ai_snapshot_date": "2026-10-08",
-      "price": 161.855,
+      "price": 161.979,
       "price_source": "realtime",
-      "current_price": 161.855,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 161.979,
+      "current_price_updated_at": "2026-10-27T18:14:00Z",
       "pending_price": 147.09,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 148.51,
-      "change_1d": -1.115,
+      "change_1d": -1.0392,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.9562,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:44Z",
+        "computed_at": "2026-10-27T18:14:18Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10680,14 +10680,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 68.365,
+      "price": 68.415,
       "price_source": "realtime",
-      "current_price": 68.365,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 68.415,
+      "current_price_updated_at": "2026-10-27T18:14:00Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": -1.8308,
+      "change_1d": -1.759,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:44Z",
+        "computed_at": "2026-10-27T18:14:19Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -12204,14 +12204,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 181.08,
+      "price": 181.21,
       "price_source": "realtime",
-      "current_price": 181.08,
-      "current_price_updated_at": "2026-10-27T18:06:00Z",
+      "current_price": 181.21,
+      "current_price_updated_at": "2026-10-27T18:14:00Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": -1.8749,
+      "change_1d": -1.8045,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T18:06:44Z",
+        "computed_at": "2026-10-27T18:14:19Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13731,16 +13731,16 @@
         "name": "Dow Jones",
         "group": "index",
         "unit": "index point",
-        "price": 52382.1016,
-        "change_1d": 0.0392,
-        "change_5d": 0.8007,
-        "change_20d": 1.7493,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 52386.3086,
+        "change_1d": 0.0472,
+        "change_5d": 0.8088,
+        "change_20d": 1.7575,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124360,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13749,16 +13749,16 @@
         "name": "S&P 500",
         "group": "index",
         "unit": "index point",
-        "price": 7720.9199,
-        "change_1d": 0.5751,
-        "change_5d": 0.3925,
-        "change_20d": 0.4845,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 7720.23,
+        "change_1d": 0.5661,
+        "change_5d": 0.3836,
+        "change_20d": 0.4756,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124360,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13767,16 +13767,16 @@
         "name": "Nasdaq",
         "group": "index",
         "unit": "index point",
-        "price": 26467.3418,
-        "change_1d": 1.1386,
-        "change_5d": 0.1379,
-        "change_20d": -1.3163,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 26462.7695,
+        "change_1d": 1.1211,
+        "change_5d": 0.1206,
+        "change_20d": -1.3334,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793124360,
+        "quote_ts": 1793124840,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13785,16 +13785,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 17.71,
-        "change_1d": -3.6977,
-        "change_5d": -3.9588,
-        "change_20d": 10.2054,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 17.72,
+        "change_1d": -3.6433,
+        "change_5d": -3.9046,
+        "change_20d": 10.2676,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123460,
+        "quote_ts": 1793123940,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13803,16 +13803,16 @@
         "name": "US10Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.99,
-        "change_1d": 0.0802,
-        "change_5d": -2.8427,
-        "change_20d": -4.771,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 4.995,
+        "change_1d": 0.1805,
+        "change_5d": -2.7453,
+        "change_20d": -4.6756,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123460,
+        "quote_ts": 1793123940,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13825,7 +13825,7 @@
         "change_1d": 0.0,
         "change_5d": 0.0,
         "change_20d": 5.5556,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -13843,12 +13843,12 @@
         "change_1d": 0.3109,
         "change_5d": -1.8259,
         "change_20d": -4.5185,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123460,
+        "quote_ts": 1793123940,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13857,16 +13857,16 @@
         "name": "US30Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 5.302,
-        "change_1d": 0.0189,
-        "change_5d": -3.1067,
-        "change_20d": -4.6574,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 5.309,
+        "change_1d": 0.1509,
+        "change_5d": -2.9788,
+        "change_20d": -4.5316,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123460,
+        "quote_ts": 1793123940,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13875,16 +13875,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.305,
-        "change_1d": 0.3384,
-        "change_5d": 0.3187,
-        "change_20d": 1.0919,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 102.318,
+        "change_1d": 0.3511,
+        "change_5d": 0.3314,
+        "change_20d": 1.1047,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124240,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13893,16 +13893,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4071.3999,
-        "change_1d": 0.8172,
-        "change_5d": -2.1322,
-        "change_20d": -2.327,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 4071.8,
+        "change_1d": 0.8271,
+        "change_5d": -2.1225,
+        "change_20d": -2.3174,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124240,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13915,12 +13915,12 @@
         "change_1d": 0.5027,
         "change_5d": -4.553,
         "change_20d": -11.1728,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124180,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13929,16 +13929,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.6615,
-        "change_1d": 2.3586,
-        "change_5d": 1.889,
-        "change_20d": 1.4545,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 6.656,
+        "change_1d": 2.2741,
+        "change_5d": 1.8048,
+        "change_20d": 1.3707,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124240,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13947,16 +13947,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 99.77,
-        "change_1d": -1.9556,
-        "change_5d": -3.7527,
-        "change_20d": 7.743,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 99.8,
+        "change_1d": -1.9261,
+        "change_5d": -3.7237,
+        "change_20d": 7.7754,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124240,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13965,16 +13965,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 109.44,
-        "change_1d": -5.5004,
-        "change_5d": -0.1004,
-        "change_20d": 3.9514,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 109.39,
+        "change_1d": -5.5436,
+        "change_5d": -0.1461,
+        "change_20d": 3.9039,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124240,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13983,16 +13983,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.004,
-        "change_1d": 15.4497,
-        "change_5d": -1.7659,
-        "change_20d": 0.1333,
-        "updated_at": "2026-10-27T18:06:44Z",
+        "price": 3.013,
+        "change_1d": 15.7955,
+        "change_5d": -1.4716,
+        "change_20d": 0.4333,
+        "updated_at": "2026-10-27T18:14:19Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793123760,
+        "quote_ts": 1793124240,
         "last_bar_date": "2026-10-26"
       }
     ],
@@ -14005,12 +14005,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-27T18:06:58Z"
+    "updated_at": "2026-10-27T18:14:32Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-27 14:07:00",
+    "as_of_us": "2026-10-27 14:14:34",
     "window_start": "2026-09-27",
     "core_closed_count": 0,
     "core_open_count": 22,
@@ -16212,8 +16212,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 268.2900085449219,
-        "pnl_pct": 8.09,
+        "cur_price": 268.5899963378906,
+        "pnl_pct": 8.21,
         "days_held": 35,
         "stop_loss": null,
         "score": "64.2",
@@ -16626,8 +16626,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 172.46,
-        "cur_price": 185.27000427246094,
-        "pnl_pct": 7.43,
+        "cur_price": 185.2449951171875,
+        "pnl_pct": 7.41,
         "days_held": 39,
         "stop_loss": null,
         "score": "74.0",
@@ -16695,8 +16695,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 412.0,
-        "cur_price": 391.6099853515625,
-        "pnl_pct": -4.95,
+        "cur_price": 392.20001220703125,
+        "pnl_pct": -4.81,
         "days_held": 39,
         "stop_loss": null,
         "score": "74.7",
@@ -20628,8 +20628,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 226.47000122070312,
-        "pnl_pct": -45.93,
+        "cur_price": 226.9149932861328,
+        "pnl_pct": -45.83,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -21180,8 +21180,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 47.57,
-        "cur_price": 51.935001373291016,
-        "pnl_pct": 9.18,
+        "cur_price": 52.005001068115234,
+        "pnl_pct": 9.32,
         "days_held": 99,
         "stop_loss": null,
         "score": "0",
@@ -21479,7 +21479,7 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.7400016784668,
+        "cur_price": 50.739898681640625,
         "pnl_pct": -6.97,
         "days_held": 104,
         "stop_loss": null,
@@ -21548,8 +21548,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 21.98,
-        "cur_price": 21.174999237060547,
-        "pnl_pct": -3.66,
+        "cur_price": 21.155000686645508,
+        "pnl_pct": -3.75,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -21847,8 +21847,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 55.89500045776367,
-        "pnl_pct": 7.55,
+        "cur_price": 55.8849983215332,
+        "pnl_pct": 7.53,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -24503,14 +24503,14 @@
     "snapshot_asof": "2026-10-26",
     "rolled_txns": 0,
     "cash": 40145.53,
-    "stock_value": 9724.44,
-    "total_equity": 49869.97,
+    "stock_value": 9707.48,
+    "total_equity": 49853.01,
     "realized_pnl": 124.37,
-    "unrealized_pnl": -254.4,
-    "total_pnl": -130.03,
-    "return_pct": -0.26,
+    "unrealized_pnl": -271.36,
+    "total_pnl": -146.99,
+    "return_pct": -0.29,
     "open_positions": 1,
-    "open_pct": 19.5,
+    "open_pct": 19.47,
     "positions": [
       {
         "portfolio_id": "US-50000-001",
@@ -24520,16 +24520,420 @@
         "entry_price": 188.28,
         "entry_date": "2026-10-26",
         "cost_basis": 9978.84,
-        "current_price": 183.48,
-        "extended_price": 183.4,
-        "extended_time": "10-27 14:04 ET",
-        "market_value": 9724.44,
-        "unrealized_pnl": -254.4,
-        "unrealized_pnl_pct": -2.55,
-        "weight_pct": 19.5,
+        "current_price": 183.16,
+        "extended_price": 183.16,
+        "extended_time": "10-27 14:12 ET",
+        "market_value": 9707.48,
+        "unrealized_pnl": -271.36,
+        "unrealized_pnl_pct": -2.72,
+        "weight_pct": 19.47,
         "stop_loss": "176.78",
         "stop_loss_price": 176.78,
-        "holding_days": 0
+        "holding_days": 0,
+        "intraday": {
+          "date": "2026-10-27",
+          "bars": [
+            [
+              "09:30",
+              186.5,
+              187.48,
+              183.1,
+              186.96
+            ],
+            [
+              "09:35",
+              186.91,
+              187.15,
+              186.18,
+              187.15
+            ],
+            [
+              "09:40",
+              186.93,
+              187.54,
+              186.2,
+              186.75
+            ],
+            [
+              "09:45",
+              186.03,
+              186.73,
+              185.75,
+              186.64
+            ],
+            [
+              "09:50",
+              186.42,
+              187.18,
+              186.35,
+              187.17
+            ],
+            [
+              "09:55",
+              187.01,
+              187.73,
+              187.01,
+              187.24
+            ],
+            [
+              "10:00",
+              187.18,
+              187.61,
+              187.0,
+              187.02
+            ],
+            [
+              "10:05",
+              186.77,
+              187.71,
+              186.56,
+              187.55
+            ],
+            [
+              "10:10",
+              187.57,
+              187.7,
+              186.86,
+              187.46
+            ],
+            [
+              "10:15",
+              187.23,
+              187.41,
+              186.46,
+              186.66
+            ],
+            [
+              "10:20",
+              186.79,
+              186.79,
+              186.26,
+              186.26
+            ],
+            [
+              "10:25",
+              186.26,
+              186.61,
+              186.11,
+              186.55
+            ],
+            [
+              "10:30",
+              186.49,
+              186.72,
+              185.69,
+              185.71
+            ],
+            [
+              "10:35",
+              185.7,
+              186.36,
+              185.7,
+              186.36
+            ],
+            [
+              "10:40",
+              186.22,
+              186.61,
+              186.06,
+              186.27
+            ],
+            [
+              "10:45",
+              186.23,
+              186.66,
+              186.21,
+              186.48
+            ],
+            [
+              "10:50",
+              186.37,
+              186.37,
+              186.03,
+              186.03
+            ],
+            [
+              "10:55",
+              186.2,
+              186.42,
+              185.73,
+              186.39
+            ],
+            [
+              "11:00",
+              186.24,
+              186.79,
+              186.24,
+              186.4
+            ],
+            [
+              "11:05",
+              186.44,
+              186.5,
+              186.32,
+              186.48
+            ],
+            [
+              "11:10",
+              186.4,
+              186.95,
+              186.38,
+              186.79
+            ],
+            [
+              "11:15",
+              186.79,
+              187.19,
+              186.74,
+              187.04
+            ],
+            [
+              "11:20",
+              187.18,
+              187.19,
+              186.52,
+              186.61
+            ],
+            [
+              "11:25",
+              186.8,
+              186.96,
+              186.43,
+              186.43
+            ],
+            [
+              "11:30",
+              186.47,
+              186.47,
+              186.09,
+              186.24
+            ],
+            [
+              "11:35",
+              186.25,
+              186.82,
+              186.25,
+              186.74
+            ],
+            [
+              "11:40",
+              186.83,
+              187.18,
+              186.49,
+              186.97
+            ],
+            [
+              "11:45",
+              187.08,
+              187.11,
+              186.49,
+              186.74
+            ],
+            [
+              "11:50",
+              186.7,
+              186.77,
+              186.36,
+              186.62
+            ],
+            [
+              "11:55",
+              186.63,
+              186.9,
+              186.51,
+              186.8
+            ],
+            [
+              "12:00",
+              186.8,
+              186.93,
+              186.29,
+              186.32
+            ],
+            [
+              "12:05",
+              186.24,
+              186.45,
+              186.11,
+              186.11
+            ],
+            [
+              "12:10",
+              186.01,
+              186.3,
+              185.99,
+              186.05
+            ],
+            [
+              "12:15",
+              186.05,
+              186.11,
+              185.81,
+              185.87
+            ],
+            [
+              "12:20",
+              185.92,
+              185.92,
+              185.35,
+              185.35
+            ],
+            [
+              "12:25",
+              185.35,
+              185.59,
+              185.33,
+              185.48
+            ],
+            [
+              "12:30",
+              185.43,
+              185.43,
+              184.94,
+              185.05
+            ],
+            [
+              "12:35",
+              185.01,
+              185.2,
+              184.64,
+              184.64
+            ],
+            [
+              "12:40",
+              184.54,
+              184.65,
+              184.41,
+              184.63
+            ],
+            [
+              "12:45",
+              184.63,
+              184.78,
+              184.55,
+              184.66
+            ],
+            [
+              "12:50",
+              184.43,
+              184.7,
+              184.43,
+              184.54
+            ],
+            [
+              "12:55",
+              184.7,
+              184.74,
+              183.87,
+              183.91
+            ],
+            [
+              "13:00",
+              183.99,
+              184.12,
+              183.52,
+              183.65
+            ],
+            [
+              "13:05",
+              183.75,
+              184.3,
+              183.73,
+              183.99
+            ],
+            [
+              "13:10",
+              184.0,
+              184.22,
+              183.82,
+              184.05
+            ],
+            [
+              "13:15",
+              184.02,
+              184.47,
+              183.92,
+              184.47
+            ],
+            [
+              "13:20",
+              184.57,
+              184.75,
+              184.32,
+              184.66
+            ],
+            [
+              "13:25",
+              184.66,
+              184.88,
+              184.58,
+              184.67
+            ],
+            [
+              "13:30",
+              184.67,
+              184.76,
+              184.38,
+              184.39
+            ],
+            [
+              "13:35",
+              184.37,
+              184.5,
+              184.07,
+              184.38
+            ],
+            [
+              "13:40",
+              184.35,
+              184.52,
+              184.35,
+              184.4
+            ],
+            [
+              "13:45",
+              184.41,
+              184.46,
+              183.99,
+              184.24
+            ],
+            [
+              "13:50",
+              184.14,
+              184.27,
+              183.65,
+              183.76
+            ],
+            [
+              "13:55",
+              183.76,
+              183.9,
+              183.69,
+              183.83
+            ],
+            [
+              "14:00",
+              183.83,
+              183.96,
+              183.4,
+              183.4
+            ],
+            [
+              "14:05",
+              183.48,
+              183.48,
+              183.16,
+              183.28
+            ],
+            [
+              "14:10",
+              183.28,
+              183.34,
+              183.08,
+              183.21
+            ]
+          ]
+        }
       }
     ],
     "transactions": [
@@ -25797,70 +26201,80 @@
         "source": "Bloomberg",
         "url": "https://www.bloomberg.com/news/articles/2026-10-25/riyadh-airport-resumes-flights-as-saudis-fight-houthi-missiles",
         "datetime": 1792921412,
-        "summary": "Dozens of flights departed King Khalid International Airport early on Sunday to destinations including London, Dubai and Beijing, according to the airport’s website"
+        "summary": "Dozens of flights departed King Khalid International Airport early on Sunday to destinations including London, Dubai and Beijing, according to the airport’s website",
+        "headline_cn": "利雅得机场恢复航班，沙特抗击胡塞导弹"
       },
       {
         "headline": "Drone attack injures five people, damages industrial facility in Russia’s Perm region, governor says - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPQlpoQ2lWbHFpTkRvZUpZV1ZOVFlJNjY3RDY4UHBmS01keXdDNndROG1PY2lRRjJGWG5zVjRadmRua1hJNU1kUHZ1RUxyVHA4Z213eWN4Z3VjMnc0bVM3aW41eG9ucUpyZXFpQmtRNzJHM012TXBIa2tnZU5teFhpTnNwMWljQ01JMHZSdHNPUHFzUk5abDJBWXJWcEZ1UTdDbThaUE9PWTlGc3dWVmdDS3FrbVE2UGdiSGY0OURUWQ?oc=5",
         "datetime": 1792915314,
-        "summary": "Drone attack injures five people, damages industrial facility in Russia’s Perm region, governor says  Reuters"
+        "summary": "Drone attack injures five people, damages industrial facility in Russia’s Perm region, governor says  Reuters",
+        "headline_cn": "俄Perm地区遭无人机袭击致5伤、工业设施受损，州长称-路透"
       },
       {
         "headline": "Iranian army says it shot down US drone over Bandar Abbas, Tasnim reports - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxNNjlxWUNjczg2SHFQamFEZDV0SVhZaHA5bFdqaVQzT1oxSjd0b2ZQQjd6MldHeEhKcUstbGJEa1QxMmFBMFhad2VnREVIa2xoT0tPWlFXVW5lcXVEYjMwdUd5NTRIYm0zTFpabXUxY2pCakRGM3JnWE1iNHc3MmtlbWduRno3ZWVGVWVpa2JtRjF4VDh5TEFHN21hUV9sQUhxOWpJMVVPNlhFMDd5SkJMekZkTFdtQzlnYnBQNkd2MG1TNzZy?oc=5",
         "datetime": 1792912959,
-        "summary": "Iranian army says it shot down US drone over Bandar Abbas, Tasnim reports  Reuters"
+        "summary": "Iranian army says it shot down US drone over Bandar Abbas, Tasnim reports  Reuters",
+        "headline_cn": "伊朗军方称在Bandar Abbas上空击落美国无人机，Tasnim报道-路透"
       },
       {
         "headline": "Saudis say Riyadh airport partly reopens despite renewed Houthi threats - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNT0JBTVByRUdVWnYzNWpyRUlfbGRFR2RnQzZpbTgzR05tX1AzU2VkVC10RUswYWthSGtJa2FZamVSa2E2ckdSeG5FN3VGTFU5SVJfbjY4NEZjR2tQSWJfZmxtbTJvUU5YSEpKWHRQQWpHMGRfR29xeFhkR1BwcHA5NlA3MnJmRnloYzF6Q0tBZG92ZDgzWmRubVNpNi1CajBmdXdNZmNTYnkzLWFnMldvaQ?oc=5",
         "datetime": 1792886160,
-        "summary": "Saudis say Riyadh airport partly reopens despite renewed Houthi threats  Reuters"
+        "summary": "Saudis say Riyadh airport partly reopens despite renewed Houthi threats  Reuters",
+        "headline_cn": "沙特称利雅得机场部分重开，尽管胡塞再威胁-路透"
       },
       {
         "headline": "Arrests in Barcelona after 'anti-system' rioters loot shops, set fires - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiqgFBVV95cUxNdkJsZklZVktpY0kyUTVuR29QdnVJMDVjODZLSFVPMjlRQV94czZ2YWZvdTlvQUp6N1N4Z19PNzA1OGdUWGhLNG1yY3lfTTZoMDl4VmVlSkF5bW5ZMHBJUHRJVVFscE41czlEOHhZZEYzZ1kwSlJJWVQxYm1TcGc1cjhmTXBYekVBQTVrWjNUdEFVZTJLTlhFSFRCbWdxa3FVdUYyU1ozTDdKQQ?oc=5",
         "datetime": 1792880127,
-        "summary": "Arrests in Barcelona after 'anti-system' rioters loot shops, set fires  Reuters"
+        "summary": "Arrests in Barcelona after 'anti-system' rioters loot shops, set fires  Reuters",
+        "headline_cn": "巴塞罗那逮捕“反体制”骚乱者，其抢劫商店并纵火-路透"
       },
       {
         "headline": "Houthis say they targeted Saudi oil sites; attacks reported in Aden - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxNU1JpTkpxd3RUSFgwb29mWkRuSmg5UFd5d1RMQkZMdE5tV3F4cEN6SXFOODhTQUZTbTZucHJGVnpxMWpGZVFuSXJzZ045Q0o1Uzh5NFNvVENFX1M2dFQ0NzRGYjUtWk9TYjBWcldGNS1hY21yS2IyOXBsX29hcFg5N2ZENUlIV2oyTE1OT3hJQUFaS1pjTHV3VnZUTkRWbVFnd0JqYV9iZmVwUW4xcGNVOUdUZmgtaWpkVGdsVzJ1SXR1U1hyWG5uWg?oc=5",
         "datetime": 1792869879,
-        "summary": "Houthis say they targeted Saudi oil sites; attacks reported in Aden  Reuters"
+        "summary": "Houthis say they targeted Saudi oil sites; attacks reported in Aden  Reuters",
+        "headline_cn": "胡塞称袭击沙特石油设施；亚丁据报遭袭-路透"
       },
       {
         "headline": "AI funding fears rattle Wall Street. Here's how we're adjusting our portfolio",
         "source": "CNBC",
         "url": "https://www.cnbc.com/investingclub/2026/10/24/ai-funding-fears-rattle-wall-street-heres-how-were-adjusting-our-portfolio.html",
         "datetime": 1792858440,
-        "summary": "The rotation out of AI stocks benefited several defensive Club stocks."
+        "summary": "The rotation out of AI stocks benefited several defensive Club stocks.",
+        "headline_cn": "AI融资担忧震动华尔街。我们这样调整投资组合"
       },
       {
         "headline": "Libya's Dbeibah says ready to address Egypt's maritime concerns - Reuters",
         "source": "Reuters",
         "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxPVmxsRWg3NGtsREw4YWtPYlZUcjJVN0FJcDJkbzY1ZjdycTZzVzNjVFpwajFzTk9pT1V5QW5JdmQyMWNaOTIxU1pGdHRQQ2ZXcnh2UnFFQTJjUUlrSlpTZVBkNHBvaGpVY3JZMjZoSkliSWYxWm44dEpaQTdsNmNrb0RMV1FfX0p5eUpSQWFCYkpQRWE4WXllX1FYTW1IbE01SDk2bjVpNHVLOHI5RnllbE93?oc=5",
         "datetime": 1792857849,
-        "summary": "Libya's Dbeibah says ready to address Egypt's maritime concerns  Reuters"
+        "summary": "Libya's Dbeibah says ready to address Egypt's maritime concerns  Reuters",
+        "headline_cn": "利比亚Dbeibah称愿解决埃及海事关切-路透"
       },
       {
         "headline": "Retail investors are not more sophisticated than 30 years ago, says former hedge fund manager",
         "source": "CNBC",
         "url": "https://www.cnbc.com/2026/10/24/stock-picking-could-hurt-investors-warns-former-hedge-fund-manager.html",
         "datetime": 1792854001,
-        "summary": "Retail investors trying to beat the market by buying individual stocks and complex exchange-traded funds may be better off with broad market index funds."
+        "summary": "Retail investors trying to beat the market by buying individual stocks and complex exchange-traded funds may be better off with broad market index funds.",
+        "headline_cn": "前对冲基金经理：散户并不比30年前更老练"
       },
       {
         "headline": "I quit my marketing job to walk dogs for 4 months: It's 'one of the most valuable professional experiences I've ever had'",
         "source": "CNBC",
         "url": "https://www.cnbc.com/make-it/2026/10/24/quit-marketing-job-walk-dogs.html",
         "datetime": 1792852561,
-        "summary": "\"People sometimes assume dog walking was a gap or detour in my career. I see it as one of the most valuable professional experiences I've had,\" says Sally Simmons."
+        "summary": "\"People sometimes assume dog walking was a gap or detour in my career. I see it as one of the most valuable professional experiences I've had,\" says Sally Simmons.",
+        "headline_cn": "我辞去营销工作遛狗4个月：这是“最有价值的职业经历之一”"
       }
     ],
     "ticker_news": {
@@ -25870,7 +26284,8 @@
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa",
           "datetime": 1792793778,
-          "summary": "Get a weekly summary of dividend activity for Dividend Champions, Contenders, and Challengers, including dividend changes and key ex-dividend dates."
+          "summary": "Get a weekly summary of dividend activity for Dividend Champions, Contenders, and Challengers, including dividend changes and key ex-dividend dates.",
+          "headline_cn": "股息冠军、竞争者和挑战者亮点：10月25日当周"
         }
       ],
       "AMT": [
@@ -25879,273 +26294,312 @@
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=97eabf63b8909600f33fb955511e358723419ee2bc3c096cdf0b9ce98e6bef5b",
           "datetime": 1793103806,
-          "summary": "American Tower Q3 2026 results: revenue in line, non-GAAP EPS beats, mixed guidance, modest premarket dip; property revenue outlook raised."
+          "summary": "American Tower Q3 2026 results: revenue in line, non-GAAP EPS beats, mixed guidance, modest premarket dip; property revenue outlook raised.",
+          "headline_cn": "American Tower (AMT) 2026Q3：EPS超预期，营收符预期，指引混合"
         },
         {
           "headline": "American Tower: Q3 Earnings Snapshot",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=b8e77c728dc356bebef6c06dd65393f7baf5969aefe9dc994e6671bdedfa1c4b",
           "datetime": 1793099143,
-          "summary": "BOSTON (AP) — BOSTON (AP) — American Tower Corp. (AMT) on Tuesday reported a key measure of profitability in its third quarter."
+          "summary": "BOSTON (AP) — BOSTON (AP) — American Tower Corp. (AMT) on Tuesday reported a key measure of profitability in its third quarter.",
+          "headline_cn": "American Tower：Q3财报快照"
         },
         {
           "headline": "High Yield And Tax Advantaged Income Funds From NEOS (October Update)",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=1010bd0f58158467111b075f88be34e897880c98bbe1f657f7030ab940b32bf9",
           "datetime": 1793084569,
-          "summary": "Goldman Sachs is acquiring NEOS Investments, adding $30B in active income ETFs to its platform, solidifying its position as a top active ETF provider."
+          "summary": "Goldman Sachs is acquiring NEOS Investments, adding $30B in active income ETFs to its platform, solidifying its position as a top active ETF provider.",
+          "headline_cn": "NEOS高收益与税优收入基金（10月更新）"
         },
         {
           "headline": "These 3 REITs Own the Towers Behind America’s Wireless Networks. Which Pays Best?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=d57a3132b0a7e3a8d8f6f67aa6a0b609a31c49b3e1e99204b86fbaef349b4dea",
           "datetime": 1793013340,
-          "summary": "Three REITs quietly collect rent from the antennas powering every call and text in America, but their dividends tell very different stories about risk, safety, and how much longer each payout can hold."
+          "summary": "Three REITs quietly collect rent from the antennas powering every call and text in America, but their dividends tell very different stories about risk, safety, and how much longer each payout can hold.",
+          "headline_cn": "这3只REIT持有美国无线网络背后的铁塔。哪只派息最佳？"
         },
         {
           "headline": "Stock Market Today: SpaceX’s Cell Tower Push Rattles Telecom as $116 Oil Drags the Dow Lower",
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=680804ec7ab364b9238395909d0cbea8412c57aa2ac70f81df072354d8928f82",
           "datetime": 1793010720,
-          "summary": "The Dow fell 1.2% as Brent climbed above $116 and the 10-year yield neared 5%. AT&T and T-Mobile sank on SpaceX’s reported cell tower talks, while cybersecurity and oil service stocks rallied."
+          "summary": "The Dow fell 1.2% as Brent climbed above $116 and the 10-year yield neared 5%. AT&T and T-Mobile sank on SpaceX’s reported cell tower talks, while cybersecurity and oil service stocks rallied.",
+          "headline_cn": "今日股市：SpaceX铁塔计划震动电信，$116油价拖累道指"
         },
         {
           "headline": "Baron Real Estate Income Fund Q3 2026 Portfolio Activity",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=64643c8991ec859b46ff204d63ac0764ce08bbd7c765c9d7e039a6cc13ca10f5",
           "datetime": 1793008320,
-          "summary": "Baron Real Estate Income Fund decreased 7.58% (Institutional Shares) in the third quarter, underperforming the MSCI US REIT Index, which decreased 6.33%. Read more here."
+          "summary": "Baron Real Estate Income Fund decreased 7.58% (Institutional Shares) in the third quarter, underperforming the MSCI US REIT Index, which decreased 6.33%. Read more here.",
+          "headline_cn": "Baron Real Estate Income Fund 2026Q3组合操作"
         },
         {
           "headline": "Alluvial Capital Management's Q3 2026 Top 10 Holdings",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=dd27046ed17632aa3c17d5757f70e49384abfd58ec44ed0a4523261101ef5856",
           "datetime": 1792981800,
-          "summary": ""
+          "summary": "",
+          "headline_cn": "Alluvial Capital Management 2026Q3前十大持仓"
         },
         {
           "headline": "SpaceX Could Be a Game Changer for These 2 Dividend Stocks",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=fe810a8b2cd77ae6f1140fbbeba0ac71f96bf089ed789343b675b4e4174334e0",
           "datetime": 1792952462,
-          "summary": "SpaceX reportedly wants to build a U.S. mobile network."
+          "summary": "SpaceX reportedly wants to build a U.S. mobile network.",
+          "headline_cn": "SpaceX或成这两只股息股的游戏规则改变者"
         },
         {
           "headline": "REITs Rebound As Earnings Deliver",
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=ed68723fdb151eb5010839b703bfae077a92c27a9bac2474805f54cde8d2f1d8",
           "datetime": 1792939518,
-          "summary": "Markets waver as AI and oil reshape Fed bets, while REIT earnings stay strong."
+          "summary": "Markets waver as AI and oil reshape Fed bets, while REIT earnings stay strong.",
+          "headline_cn": "REITs因财报兑现而反弹"
         },
         {
           "headline": "Does Higher Data Center Guidance Change The Bull Case For American Tower Stock (AMT)?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=7aaf47e8f4142efac7006d8a6994777850e658e15e1a838aa9ea9b2ffc43e7b5",
           "datetime": 1792883769,
-          "summary": "American Tower raised its full-year data center revenue growth outlook to about 15%, citing record leasing activity and healthier demand trends across that segment. The updated guidance highlights how data centers are becoming a more meaningful driver alongside American Tower's tower portfolio, with leasing momentum reinforcing management's focus on digital infrastructure scale. We will explore how American Tower's higher data center growth outlook might reshape the investment narrative..."
+          "summary": "American Tower raised its full-year data center revenue growth outlook to about 15%, citing record leasing activity and healthier demand trends across that segment. The updated guidance highlights how data centers are becoming a more meaningful driver alongside American Tower's tower portfolio, with leasing momentum reinforcing management's focus on digital infrastructure scale. We will explore how American Tower's higher data center growth outlook might reshape the investment narrative...",
+          "headline_cn": "数据中心指引上调会改变American Tower (AMT)看涨逻辑吗？"
         },
         {
           "headline": "4 Data Center REITs With Growing Dividends and an AI Tailwind",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=bb2f4a5481bd1729a61b71c3a3a15683c5c62097da91f68d4d382a5039c239c7",
           "datetime": 1792861226,
-          "summary": "AI data centers consume enough power to light entire cities, and the landlords collecting rent on those facilities are quietly growing their dividends. Four REITs sit at the center of this buildout, but their payout safety and growth outlooks differ in ways that matter."
+          "summary": "AI data centers consume enough power to light entire cities, and the landlords collecting rent on those facilities are quietly growing their dividends. Four REITs sit at the center of this buildout, but their payout safety and growth outlooks differ in ways that matter.",
+          "headline_cn": "4只数据中心REIT：股息增长且受AI顺风"
         },
         {
           "headline": "American Tower (AMT) Heads Into Earnings As Its Undervalued Narrative Faces A Big Test",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=2afcfa9ffa016758bbbd6e8f395bf40fd4ae3ef40593005618afd6e97f12ea70",
           "datetime": 1792847275,
-          "summary": "American Tower (AMT) heads into its third quarter 2026 earnings release on October 27, with investor attention fixed on how tower leasing, global sites and data center trends are shaping the overall story. The recent 1 month share price return of 10.65% and 90 day gain of 13.38% suggest momentum has picked up for American Tower. However, the 5 year total shareholder return is down 21.17%, which keeps questions about longer term value creation on the table. Compare American Tower's recent move..."
+          "summary": "American Tower (AMT) heads into its third quarter 2026 earnings release on October 27, with investor attention fixed on how tower leasing, global sites and data center trends are shaping the overall story. The recent 1 month share price return of 10.65% and 90 day gain of 13.38% suggest momentum has picked up for American Tower. However, the 5 year total shareholder return is down 21.17%, which keeps questions about longer term value creation on the table. Compare American Tower's recent move...",
+          "headline_cn": "American Tower (AMT)迎财报，低估叙事面临大考"
         },
         {
           "headline": "American Tower (AMT) Stock Could Still Be A Bargain Following A 22% Run",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=ef4a76487e9a44d9e510f5942ee4ddeccbdb4797d6dae75eb6391e7c6c4c1ea9",
           "datetime": 1792829233,
-          "summary": "American Tower has delivered a mixed ride for holders in recent years, and the recent share price around US$188.97 puts fresh focus on whether that level is supported by the cash the business can generate. For anyone looking at the stock today, the real issue is how that current quote lines up against an intrinsic value estimate grounded in its future cash flows. The share price has returned 22.1% over the past 3 years, which puts meaningful weight on whether those gains are backed by the..."
+          "summary": "American Tower has delivered a mixed ride for holders in recent years, and the recent share price around US$188.97 puts fresh focus on whether that level is supported by the cash the business can generate. For anyone looking at the stock today, the real issue is how that current quote lines up against an intrinsic value estimate grounded in its future cash flows. The share price has returned 22.1% over the past 3 years, which puts meaningful weight on whether those gains are backed by the...",
+          "headline_cn": "American Tower (AMT)股价涨22%后仍可能便宜"
         },
         {
           "headline": "SpaceX’s 80,000 Cell Site Push A Win For ASTS, Ericsson, Nokia, NextNav, Among Others, Says Roth Capital",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=239415d60d9c91010b25277b787551c6118bd0609bbc6fdc2257ce64162ee46d",
           "datetime": 1792798435,
-          "summary": "SpaceX is reportedly pursuing agreements for a minimum of 80,000 cell sites across the United States as it advances plans to build a fourth nationwide wireless carrier."
+          "summary": "SpaceX is reportedly pursuing agreements for a minimum of 80,000 cell sites across the United States as it advances plans to build a fourth nationwide wireless carrier.",
+          "headline_cn": "Roth：SpaceX 8万基站计划利好ASTS、Ericsson、Nokia、NextNav等"
         },
         {
           "headline": "SpaceX Just Made Cell Towers Cool Again. Verizon, AT&T, and T-Mobile Are Paying the Price",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=559a4938596535cbc36b0e40cc1217459a2c8cda69874cc7ec416c5408daa47f",
           "datetime": 1792781461,
-          "summary": "Tower owners are celebrating a potential big new tenant."
+          "summary": "Tower owners are celebrating a potential big new tenant.",
+          "headline_cn": "SpaceX让铁塔再受追捧，Verizon、AT&T和T-Mobile付出代价"
         },
         {
           "headline": "S&P 500 Unusual Volume Movers for Oct. 23, 2026",
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=0c9e7555d3dd94b3db388d837875000e635cc8de23ac827640b5044e01835e2c",
           "datetime": 1792775157,
-          "summary": "S&P 500 unusual volume movers on Oct. 23, 2026 include CCI, AMT, SBAC, GL, FIX, DECK, BE and SNA, with sharp price moves in both directions."
+          "summary": "S&P 500 unusual volume movers on Oct. 23, 2026 include CCI, AMT, SBAC, GL, FIX, DECK, BE and SNA, with sharp price moves in both directions.",
+          "headline_cn": "2026年10月23日标普500异常成交量个股"
         },
         {
           "headline": "VZ, TMUS, T Stocks Face Valuation Pressure From SpaceX Wireless Push But Tower Operators Stand To Gain, Says Citi",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=7979a2406a992553d27a9de3c2e3b2d5eeec85d22278599bec6c9cc21a03ecea",
           "datetime": 1792772940,
-          "summary": "The firm sees additional downside for established wireless carriers but views SpaceX's potential network expansion as a positive development for cell tower operators."
+          "summary": "The firm sees additional downside for established wireless carriers but views SpaceX's potential network expansion as a positive development for cell tower operators.",
+          "headline_cn": "Citi：VZ、TMUS、T受SpaceX无线计划估值压力，铁塔商受益"
         },
         {
           "headline": "SpaceX wants to be America's fourth phone carrier — tower owners are cashing in",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=7837c0912b4ca08b59c17ea60ca2c6d1723765175fe268ebc3f16a32019d38a7",
           "datetime": 1792772459,
-          "summary": "Musk's SpaceX wants to sell you a phone plan, and the companies that own the cell towers are already cashing in."
+          "summary": "Musk's SpaceX wants to sell you a phone plan, and the companies that own the cell towers are already cashing in.",
+          "headline_cn": "SpaceX欲成美国第四大手机运营商——铁塔所有者获利"
         },
         {
           "headline": "Crown Castle Stock and Others Get a Huge Boost From SpaceX’s Cell Tower Push",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=52c093846136ee7c3363fe1f09a5f00c8ab427cee9299c148cf6f0e0b40eb1ed",
           "datetime": 1792764780,
-          "summary": "SpaceX is working to secure access to cell towers just weeks after buying more wireless spectrum. It’s upending wireless stocks."
+          "summary": "SpaceX is working to secure access to cell towers just weeks after buying more wireless spectrum. It’s upending wireless stocks.",
+          "headline_cn": "Crown Castle等因SpaceX铁塔计划大涨"
         },
         {
           "headline": "Apple is catching up to Nvidia's market cap, and investors are waiting on Anthropic's IPO",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=22c6cfe7d8dceeff28163eb03e53c601dd94522269f309cdc6dcf277207c3695",
           "datetime": 1792764114,
-          "summary": "Yahoo Finance Executive Editor Brian Sozzi talks about the biggest stories to start your trading day. Starting with SpaceX (SPCX), looking at a massive cell tower deal, Apple (AAPL) hot on the heels of Nvidia (NVDA) as the top dog in market cap, and investors licking their lips, waiting for Anthropic's (ANTH.PVT) IPO. Sozzi then sits down with Manhattan Venture Partners Managing Partner Jared Carmel to discuss Anthropic's (ANTH.PVT) S-1 filing and what to expect, and how it compares to SpaceX's (SPCX) own, what to expect, and how it compares to SpaceX's (SPCX) IPO."
+          "summary": "Yahoo Finance Executive Editor Brian Sozzi talks about the biggest stories to start your trading day. Starting with SpaceX (SPCX), looking at a massive cell tower deal, Apple (AAPL) hot on the heels of Nvidia (NVDA) as the top dog in market cap, and investors licking their lips, waiting for Anthropic's (ANTH.PVT) IPO. Sozzi then sits down with Manhattan Venture Partners Managing Partner Jared Carmel to discuss Anthropic's (ANTH.PVT) S-1 filing and what to expect, and how it compares to SpaceX's (SPCX) own, what to expect, and how it compares to SpaceX's (SPCX) IPO.",
+          "headline_cn": "Apple市值追赶Nvidia，投资者等待Anthropic IPO"
         },
         {
           "headline": "Moderna, Meta, SpaceX, Bloom Energy, AT&T, and More Stocks That Explain Today’s Market",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=122afabb1d922fd13fff731ae77d1b88e0baf208043574e70ed81a11821b0414",
           "datetime": 1792764000,
-          "summary": "Moderna falls following a data leak for its developing cancer vaccine candidate."
+          "summary": "Moderna falls following a data leak for its developing cancer vaccine candidate.",
+          "headline_cn": "Moderna、Meta、SpaceX、Bloom Energy、AT&T等股票解释今日市场"
         },
         {
           "headline": "SpaceX Talks Send Cell Tower Stocks Surging",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=b4b7c576235e2be4fec10aa26ebba84297c52be3d82b67cefe615be3f7c9953a",
           "datetime": 1792763850,
-          "summary": "Cell tower stocks are jumping after a report that SpaceX is in talks with providers to secure thousands of cell sites to support its mobile carrier ambitions."
+          "summary": "Cell tower stocks are jumping after a report that SpaceX is in talks with providers to secure thousands of cell sites to support its mobile carrier ambitions.",
+          "headline_cn": "SpaceX谈判消息令铁塔股大涨"
         },
         {
           "headline": "Oil Tops $100 on Iran Fears, Energy ETF XLE Hits New Record: Stock Market Today",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=b0986c4c3346cb6a0b4a48385ffd2137a17dc708668c1b6d7107cdfb1f29e7ab",
           "datetime": 1792761348,
-          "summary": "WTI crude rose above $100 on fears of renewed U.S. strikes on Iran, lifting XLE to a record while staples, telecoms and the Dow slipped at midday Friday."
+          "summary": "WTI crude rose above $100 on fears of renewed U.S. strikes on Iran, lifting XLE to a record while staples, telecoms and the Dow slipped at midday Friday.",
+          "headline_cn": "伊朗担忧令油价破$100，能源ETF XLE创新高：今日股市"
         },
         {
           "headline": "ETFs to Capitalize on SpaceX's Wireless Carrier Ambitions",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=da266de120d0dc5625ee713a97a10178c043e8ec8dcaf7622feb01b876e48613",
           "datetime": 1792760400,
-          "summary": "SpaceX's wireless ambitions could create opportunities for cellular tower operators. Explore ETFs positioned to benefit from its expansion."
+          "summary": "SpaceX's wireless ambitions could create opportunities for cellular tower operators. Explore ETFs positioned to benefit from its expansion.",
+          "headline_cn": "借SpaceX无线运营商雄心获利的ETF"
         },
         {
           "headline": "SpaceX Is Coming for the Phone Companies, but the Tower Owners Win Either Way",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=61f1c5e03a7791a7bb58d396095f7a57d4120089300faf4c5dc42b4b997b4679",
           "datetime": 1792759555,
-          "summary": "SpaceX is reportedly chasing 80,000 cell towers to build a fourth nationwide wireless carrier, and the move sent shockwaves through the stocks of every major player except the ones that actually own the towers."
+          "summary": "SpaceX is reportedly chasing 80,000 cell towers to build a fourth nationwide wireless carrier, and the move sent shockwaves through the stocks of every major player except the ones that actually own the towers.",
+          "headline_cn": "SpaceX进军电信，铁塔所有者无论如何都赢"
         },
         {
           "headline": "American Tower Stock Before Q3 Earnings: Smart Buy or Risky Move?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=344902538d18f9cfeaa636bdc4d8503b18dae0ae3e0469d8f9e1172c330589a7",
           "datetime": 1792759500,
-          "summary": "AMT's Q3 results are expected to show revenue and AFFO growth, driven by 5G deployments, leasing demand and CoreSite's data center momentum."
+          "summary": "AMT's Q3 results are expected to show revenue and AFFO growth, driven by 5G deployments, leasing demand and CoreSite's data center momentum.",
+          "headline_cn": "American Tower财报前：明智买入还是冒险？"
         },
         {
           "headline": "S&P 500 Premarket Movers: CCI and SBAC Lead Gainers, TYL and DECK Top Decliners",
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=f7aeafe2d5b153f5909d94565469f4bc1606dd552cf8f7821b8778b910e7a703",
           "datetime": 1792758963,
-          "summary": "S&P 500 premarket scan: CCI and SBAC led gainers, while TYL and DECK topped declines ahead of the open."
+          "summary": "S&P 500 premarket scan: CCI and SBAC led gainers, while TYL and DECK topped declines ahead of the open.",
+          "headline_cn": "标普500盘前：CCI和SBAC领涨，TYL和DECK领跌"
         },
         {
           "headline": "SpaceX Mobile Wireless Ambition Sends Crown Castle Stock Soaring",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=6fa38394ea14358d9ab0e8ac4e09784edc4d763ca25df02c1a1f139a199748b2",
           "datetime": 1792754640,
-          "summary": "SpaceX is working to secure access to cell towers just weeks after buying more wireless spectrum. It’s upending wireless stocks."
+          "summary": "SpaceX is working to secure access to cell towers just weeks after buying more wireless spectrum. It’s upending wireless stocks.",
+          "headline_cn": "SpaceX移动无线雄心令Crown Castle股价飙升"
         },
         {
           "headline": "SpaceX Is Killing Telecom Stocks: IYZ ETF Hits Longest Losing Streak Ever Against the S&P 500",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=50a5d6257345039a7a4cf1605affa5e231fa45089b13464be6faecb6de6e200f",
           "datetime": 1792753237,
-          "summary": "IYZ telecom ETF lagged SPY for 12 sessions, its longest run since 2000, as SpaceX moves into U.S. wireless. AT&amp;T, Verizon, T-Mobile slide premarket."
+          "summary": "IYZ telecom ETF lagged SPY for 12 sessions, its longest run since 2000, as SpaceX moves into U.S. wireless. AT&amp;T, Verizon, T-Mobile slide premarket.",
+          "headline_cn": "SpaceX打击电信股：IYZ ETF对标普500创最长连跌"
         },
         {
           "headline": "8 Of 11 Sectors Fall In Friday Trading As Energy Leads",
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=9fe2731c81e6a01f6a64bb839414f5ad8f7e8d3787cf132e4ac3eafd5b777673",
           "datetime": 1792753224,
-          "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two."
+          "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two.",
+          "headline_cn": "周五交易11个板块中8个下跌，能源领涨"
         },
         {
           "headline": "Moderna, Meta, SpaceX, AT&T, CoreWeave, Sandisk, and More Stocks That Explain Today’s Market",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=52583a86016f59a1ab4a26fb91db39681d7e7d5e880d440ea2d6af10e0447e10",
           "datetime": 1792752300,
-          "summary": "Stock futures pointed lower as oil prices climbed above $114 a barrel, but some of the hard-hit tech names were enjoying a modest rebound."
+          "summary": "Stock futures pointed lower as oil prices climbed above $114 a barrel, but some of the hard-hit tech names were enjoying a modest rebound.",
+          "headline_cn": "Moderna、Meta、SpaceX、AT&T、CoreWeave、Sandisk等股票解释今日市场"
         },
         {
           "headline": "SpaceX Negotiates Access To 80,000 Cellular Sites For Wireless Network",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=8e1732c26316acb332a45ceff099bb9d7d49687e46d0a9c63eea53172796d711",
           "datetime": 1792751147,
-          "summary": "Key Stats for SpaceX StockPrice change for SpaceX stock: -9%$SPCX Stock Price as of Oct. 22: $14552-Week High: $226$SPCX Stock Price Target: $258__Now Live: Discover how much upside your favorite stocks could have using TIKR’s new Valuation Model (It’s free)__>>> What Happened?SpaceX (SPCX:NASDAQ) is in talks with cellular infrastructure companies to get access to at least 80,000 sites across the U."
+          "summary": "Key Stats for SpaceX StockPrice change for SpaceX stock: -9%$SPCX Stock Price as of Oct. 22: $14552-Week High: $226$SPCX Stock Price Target: $258__Now Live: Discover how much upside your favorite stocks could have using TIKR’s new Valuation Model (It’s free)__>>> What Happened?SpaceX (SPCX:NASDAQ) is in talks with cellular infrastructure companies to get access to at least 80,000 sites across the U.",
+          "headline_cn": "SpaceX谈判接入8万个蜂窝站点建无线网络"
         },
         {
           "headline": "SpaceX cell-site ambitions lift tower stocks and weigh on carriers",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=40cab0345dc7d36578c891aa2ad6c5864c485e82f2e375681af5bc0a5b9235e6",
           "datetime": 1792750482,
-          "summary": "Investing.com -- Shares of communications infrastructure firms jumped in premarket trading Friday after Bloomberg reported that SpaceX aims to secure cell sites across the U.S."
+          "summary": "Investing.com -- Shares of communications infrastructure firms jumped in premarket trading Friday after Bloomberg reported that SpaceX aims to secure cell sites across the U.S.",
+          "headline_cn": "SpaceX站点雄心提振铁塔股，拖累运营商"
         },
         {
           "headline": "SpaceX Cell Site Report Hits Verizon, AT&T, Lifts These Tower Plays",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=8d93fd14084b94b3e725d85eb62fda6c30a5f2f930b0634793ad621238b4e69c",
           "datetime": 1792750100,
-          "summary": "SpaceX reportedly is looking to secure at least 80,000 cell sites. Crown Castle, American Tower jumped while Verizon, AT&T and T-Mobile fell."
+          "summary": "SpaceX reportedly is looking to secure at least 80,000 cell sites. Crown Castle, American Tower jumped while Verizon, AT&T and T-Mobile fell.",
+          "headline_cn": "SpaceX站点报告打击Verizon、AT&T，提振这些铁塔股"
         },
         {
           "headline": "SpaceX could be on the cusp of buying 80,000 cell towers in a bid to really challenge Verizon, AT&T and T-Mobile",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=93e1e112cbd91f46ad488fe752f20a95fa55a8d8d4e70d5a32927e51799e314b",
           "datetime": 1792746268,
-          "summary": "Elon Musk’s SpaceX (SPCX) may be close to sending another message to the telecom giants: we are seriously coming for you."
+          "summary": "Elon Musk’s SpaceX (SPCX) may be close to sending another message to the telecom giants: we are seriously coming for you.",
+          "headline_cn": "SpaceX或收购8万铁塔，真正挑战Verizon、AT&T和T-Mobile"
         },
         {
           "headline": "Crown Castle, American Tower Stocks Catch A SpaceX Boost — Which Tower REIT Does Wall Street Favor?",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=9c586ef8ff92e4ce2a3c360b9689205270fcf38c79bbde6c2fae91a03df23d92",
           "datetime": 1792743198,
-          "summary": "SpaceX’s spectrum purchase could open new revenue opportunities for tower operators."
+          "summary": "SpaceX’s spectrum purchase could open new revenue opportunities for tower operators.",
+          "headline_cn": "Crown Castle、American Tower获SpaceX提振，华尔街偏爱哪只铁塔REIT？"
         },
         {
           "headline": "Stocks making the biggest moves premarket: AT&T, SpaceX, Moderna, Deckers, Bloom Energy and more",
           "source": "CNBC",
           "url": "https://finnhub.io/api/news?id=65f67dca8e8c0627f05fe326b82e3e01671b18680048120912960a93c05bd5b8",
           "datetime": 1792741263,
-          "summary": "These are the stocks posting the largest moves in early trading."
+          "summary": "These are the stocks posting the largest moves in early trading.",
+          "headline_cn": "盘前大动作股票：AT&T、SpaceX、Moderna、Deckers、Bloom Energy等"
         },
         {
           "headline": "SpaceX Reportedly Eyes 80,000 Cell Sites In Push To Become Fourth US Wireless Carrier: T, TMUS, VZ Stocks Slip After-Hours",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=d761dcc4aa24218327141964173619a9990a3bc972b7e9efc0c2a581388d3fda",
           "datetime": 1792709240,
-          "summary": "SpaceX is in discussions with at least one major cellular infrastructure team, Bloomberg reported, citing people familiar with the matter."
+          "summary": "SpaceX is in discussions with at least one major cellular infrastructure team, Bloomberg reported, citing people familiar with the matter.",
+          "headline_cn": "传SpaceX拟接入8万站点成美国第四大无线商：T、TMUS、VZ盘后跌"
         },
         {
           "headline": "SpaceX in Talks to Access 80,000 Cell Sites for Wireless Network",
           "source": "Yahoo",
           "url": "https://finnhub.io/api/news?id=0edba9b37369d5e684cea7d7c9f54675ad5f80ae2ed9fe5e017aa12c63d725de",
           "datetime": 1792704702,
-          "summary": "SpaceX aims to secure a minimum of 80,000 cell sites across the US, and it’s in talks with at least one major cellular infrastructure company to reach that goal, according to people familiar with the matter."
+          "summary": "SpaceX aims to secure a minimum of 80,000 cell sites across the US, and it’s in talks with at least one major cellular infrastructure company to reach that goal, according to people familiar with the matter.",
+          "headline_cn": "SpaceX洽谈接入8万蜂窝站点建无线网络"
         },
         {
           "headline": "Fast Money: PFE, GOOGN, CAPRI, AMT",
@@ -26224,7 +26678,8 @@
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=680804ec7ab364b9238395909d0cbea8412c57aa2ac70f81df072354d8928f82",
           "datetime": 1793010720,
-          "summary": "The Dow fell 1.2% as Brent climbed above $116 and the 10-year yield neared 5%. AT&T and T-Mobile sank on SpaceX’s reported cell tower talks, while cybersecurity and oil service stocks rallied."
+          "summary": "The Dow fell 1.2% as Brent climbed above $116 and the 10-year yield neared 5%. AT&T and T-Mobile sank on SpaceX’s reported cell tower talks, while cybersecurity and oil service stocks rallied.",
+          "headline_cn": "今日股市：SpaceX铁塔计划震动电信，$116油价拖累道指"
         },
         {
           "headline": "APA CORP (NASDAQ:APA): A Quality Investing Candidate With Mixed Growth Signals",
@@ -27344,7 +27799,8 @@
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa",
           "datetime": 1792793778,
-          "summary": "Get a weekly summary of dividend activity for Dividend Champions, Contenders, and Challengers, including dividend changes and key ex-dividend dates."
+          "summary": "Get a weekly summary of dividend activity for Dividend Champions, Contenders, and Challengers, including dividend changes and key ex-dividend dates.",
+          "headline_cn": "股息冠军、竞争者和挑战者亮点：10月25日当周"
         },
         {
           "headline": "Should Illumina Stock Holders Look At Thermo Fisher Instead?",
@@ -27801,7 +28257,8 @@
           "source": "SeekingAlpha",
           "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa",
           "datetime": 1792793778,
-          "summary": "Get a weekly summary of dividend activity for Dividend Champions, Contenders, and Challengers, including dividend changes and key ex-dividend dates."
+          "summary": "Get a weekly summary of dividend activity for Dividend Champions, Contenders, and Challengers, including dividend changes and key ex-dividend dates.",
+          "headline_cn": "股息冠军、竞争者和挑战者亮点：10月25日当周"
         },
         {
           "headline": "Can Baker Hughes Keep Its Winning Streak Alive in Q3 Earnings?",
@@ -27822,7 +28279,8 @@
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=9fe2731c81e6a01f6a64bb839414f5ad8f7e8d3787cf132e4ac3eafd5b777673",
           "datetime": 1792753224,
-          "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two."
+          "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two.",
+          "headline_cn": "周五交易11个板块中8个下跌，能源领涨"
         },
         {
           "headline": "What Is Matador Getting For All That Spending?",
@@ -28034,7 +28492,8 @@
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=b0986c4c3346cb6a0b4a48385ffd2137a17dc708668c1b6d7107cdfb1f29e7ab",
           "datetime": 1792761348,
-          "summary": "WTI crude rose above $100 on fears of renewed U.S. strikes on Iran, lifting XLE to a record while staples, telecoms and the Dow slipped at midday Friday."
+          "summary": "WTI crude rose above $100 on fears of renewed U.S. strikes on Iran, lifting XLE to a record while staples, telecoms and the Dow slipped at midday Friday.",
+          "headline_cn": "伊朗担忧令油价破$100，能源ETF XLE创新高：今日股市"
         },
         {
           "headline": "Lower Fees, Higher Yield: Why XLE Tops XOP",
@@ -28048,7 +28507,8 @@
           "source": "Benzinga",
           "url": "https://finnhub.io/api/news?id=9fe2731c81e6a01f6a64bb839414f5ad8f7e8d3787cf132e4ac3eafd5b777673",
           "datetime": 1792753224,
-          "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two."
+          "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two.",
+          "headline_cn": "周五交易11个板块中8个下跌，能源领涨"
         },
         {
           "headline": "Strategic Petroleum Reserve Is Emptying, Here’s Why Permian Producers Can’t Fill It Up",
@@ -28337,7 +28797,8 @@
           "source": "ChartMill",
           "url": "https://finnhub.io/api/news?id=680804ec7ab364b9238395909d0cbea8412c57aa2ac70f81df072354d8928f82",
           "datetime": 1793010720,
-          "summary": "The Dow fell 1.2% as Brent climbed above $116 and the 10-year yield neared 5%. AT&T and T-Mobile sank on SpaceX’s reported cell tower talks, while cybersecurity and oil service stocks rallied."
+          "summary": "The Dow fell 1.2% as Brent climbed above $116 and the 10-year yield neared 5%. AT&T and T-Mobile sank on SpaceX’s reported cell tower talks, while cybersecurity and oil service stocks rallied.",
+          "headline_cn": "今日股市：SpaceX铁塔计划震动电信，$116油价拖累道指"
         },
         {
           "headline": "US Equity Investors to Monitor Mag-7 Earnings, Fed's Monetary Policy Path, Inflation Data This Week Amid Faltering AI Trade",
@@ -29074,8 +29535,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-27T18:06:58Z",
-    "technical_updated_at": "2026-10-27T18:07:01Z",
+    "market_updated_at": "2026-10-27T18:14:32Z",
+    "technical_updated_at": "2026-10-27T18:14:35Z",
     "counts": {
       "core": 9,
       "observation": 0,
@@ -29172,7 +29633,7 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-27T18:06:40Z",
+    "generated_at": "2026-10-27T18:14:14Z",
     "fear_greed": {
       "score": 32.66,
       "rating": "fear",
@@ -29199,7 +29660,7 @@
           "rating": "neutral"
         },
         "junk_bond_demand": {
-          "score": 47.4,
+          "score": 48.2,
           "rating": "neutral"
         },
         "safe_haven_demand": {
@@ -29433,7 +29894,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-10-27T18:06:20Z",
+    "generated_at": "2026-10-27T18:13:56Z",
     "count": 9,
     "ok": 9,
     "items": [

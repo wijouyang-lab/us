@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-10-27T18:06:40Z",
+  "generated_at": "2026-10-27T18:14:14Z",
   "fear_greed": {
     "score": 32.66,
     "rating": "fear",
@@ -27,7 +27,7 @@
         "rating": "neutral"
       },
       "junk_bond_demand": {
-        "score": 47.4,
+        "score": 48.2,
         "rating": "neutral"
       },
       "safe_haven_demand": {
