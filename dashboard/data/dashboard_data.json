@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T09:32:22Z",
+  "generated_at": "2026-10-27T09:34:35Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -1520,7 +1520,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:07Z",
+        "computed_at": "2026-10-27T09:34:12Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -3044,7 +3044,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:08Z",
+        "computed_at": "2026-10-27T09:34:12Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -4568,7 +4568,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:08Z",
+        "computed_at": "2026-10-27T09:34:13Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -6092,7 +6092,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:08Z",
+        "computed_at": "2026-10-27T09:34:13Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -7616,7 +7616,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:09Z",
+        "computed_at": "2026-10-27T09:34:14Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -9140,7 +9140,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:09Z",
+        "computed_at": "2026-10-27T09:34:15Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10664,7 +10664,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:10Z",
+        "computed_at": "2026-10-27T09:34:15Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -10680,14 +10680,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 69.7816,
+      "price": 69.8029,
       "price_source": "realtime",
-      "current_price": 69.7816,
-      "current_price_updated_at": "2026-10-27T09:07:00Z",
+      "current_price": 69.8029,
+      "current_price_updated_at": "2026-10-27T09:33:33Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": 0.2033,
+      "change_1d": 0.2339,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -12188,7 +12188,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:10Z",
+        "computed_at": "2026-10-27T09:34:16Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13712,7 +13712,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-26",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T09:32:10Z",
+        "computed_at": "2026-10-27T09:34:16Z",
         "status": "ok"
       },
       "ohlcv_status": "ok"
@@ -13735,7 +13735,7 @@
         "change_1d": 0.2804,
         "change_5d": 0.7612,
         "change_20d": 1.7095,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -13753,7 +13753,7 @@
         "change_1d": 0.6964,
         "change_5d": -0.1815,
         "change_20d": -0.0901,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -13771,7 +13771,7 @@
         "change_1d": 0.8247,
         "change_5d": -0.9894,
         "change_20d": -2.4273,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -13785,16 +13785,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 18.27,
-        "change_1d": -0.6525,
-        "change_5d": -0.9219,
-        "change_20d": 13.6901,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 18.24,
+        "change_1d": -0.8157,
+        "change_5d": -1.0846,
+        "change_20d": 13.5034,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092620,
+        "quote_ts": 1793092740,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13807,7 +13807,7 @@
         "change_1d": 0.0,
         "change_5d": -2.9206,
         "change_20d": -4.8473,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -13825,7 +13825,7 @@
         "change_1d": 0.0,
         "change_5d": 0.0,
         "change_20d": 5.5556,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -13843,7 +13843,7 @@
         "change_1d": 0.0,
         "change_5d": -2.1302,
         "change_20d": -4.8145,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -13861,7 +13861,7 @@
         "change_1d": -0.0,
         "change_5d": -3.125,
         "change_20d": -4.6754,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -13875,16 +13875,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 102.26,
-        "change_1d": 0.2942,
-        "change_5d": 0.2746,
-        "change_20d": 1.0474,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 102.255,
+        "change_1d": 0.2893,
+        "change_5d": 0.2697,
+        "change_20d": 1.0425,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092920,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13893,16 +13893,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4009.3,
-        "change_1d": -0.7206,
-        "change_5d": -3.6249,
-        "change_20d": -3.8168,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 4008.5,
+        "change_1d": -0.7404,
+        "change_5d": -3.6441,
+        "change_20d": -3.836,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092920,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13911,16 +13911,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 53.16,
-        "change_1d": -1.7521,
-        "change_5d": -6.6943,
-        "change_20d": -13.1656,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 53.18,
+        "change_1d": -1.7151,
+        "change_5d": -6.6592,
+        "change_20d": -13.133,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092920,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13929,16 +13929,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.591,
-        "change_1d": 1.2754,
-        "change_5d": 0.8106,
-        "change_20d": 0.3807,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 6.592,
+        "change_1d": 1.2907,
+        "change_5d": 0.8259,
+        "change_20d": 0.396,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092860,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13947,16 +13947,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 102.1,
-        "change_1d": 0.3341,
-        "change_5d": -1.5049,
-        "change_20d": 10.2592,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 102.23,
+        "change_1d": 0.4619,
+        "change_5d": -1.3795,
+        "change_20d": 10.3996,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092920,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13965,16 +13965,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 111.26,
-        "change_1d": -3.9288,
-        "change_5d": 1.5609,
-        "change_20d": 5.6801,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 111.4,
+        "change_1d": -3.808,
+        "change_5d": 1.6887,
+        "change_20d": 5.8131,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092920,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       },
       {
@@ -13983,16 +13983,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.044,
-        "change_1d": 16.9869,
-        "change_5d": -0.4578,
-        "change_20d": 1.4667,
-        "updated_at": "2026-10-27T09:32:10Z",
+        "price": 3.041,
+        "change_1d": 16.8716,
+        "change_5d": -0.5559,
+        "change_20d": 1.3667,
+        "updated_at": "2026-10-27T09:34:16Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793092920,
+        "quote_ts": 1793093040,
         "last_bar_date": "2026-10-26"
       }
     ],
@@ -14005,12 +14005,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-27T09:32:20Z"
+    "updated_at": "2026-10-27T09:34:32Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-27 05:32:22",
+    "as_of_us": "2026-10-27 05:34:35",
     "window_start": "2026-09-27",
     "core_closed_count": 0,
     "core_open_count": 22,
@@ -29382,8 +29382,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-27T09:32:20Z",
-    "technical_updated_at": "2026-10-27T09:32:22Z",
+    "market_updated_at": "2026-10-27T09:34:32Z",
+    "technical_updated_at": "2026-10-27T09:34:35Z",
     "counts": {
       "core": 9,
       "observation": 0,
@@ -29480,7 +29480,7 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-27T09:32:06Z",
+    "generated_at": "2026-10-27T09:34:10Z",
     "fear_greed": {
       "score": 28.45,
       "rating": "fear",
@@ -29836,7 +29836,7 @@
   },
   "oversold": {
     "schema": 1,
-    "generated_at": "2026-10-27T09:32:05Z",
+    "generated_at": "2026-10-27T09:34:09Z",
     "asof": "2026-10-26",
     "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
     "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
@@ -29861,11 +29861,11 @@
         "reason": "RSI 19.5 / Bias -15.3% / ZScore -3.79；ATR 4.4% · 20日量比 1.9804；板块 Other。规则版筛选，未回测。",
         "ai": {
           "verdict": "观察",
-          "technical": "RSI低至19.5，严重超卖；20日动量-20%，60日-33%，相对SPY落后18.6%。短期跌幅过大，或有技术反弹，但趋势仍空。",
-          "fundamental": "PE TTM 41.9、前瞻PE 29.9，估值偏高；PB 13.6偏贵。但ROE 34.7%、利润率20.5%、营收增24%、盈利增33%，基本面强劲。",
-          "news": "个股新闻数据缺失。市场层面：中东局势缓和、AI交易降温引发对冲需求，整体消息面偏谨慎。",
-          "risk": "Beta约1.04，ATR 4.4%，波动中等偏高。高估值叠加短期暴跌，若基本面预期下修仍有下行风险。",
-          "summary": "Howmet基本面优秀但估值高，短期严重超卖跌幅大，关注技术反弹机会，但需警惕高估值回调风险，暂列为观察。"
+          "technical": "RSI仅19.5，严重超卖；20日偏离-15.3%，Z分-3.79，动量20日/60日分别-20%/-33%，技术分25/25极低。成交量放大2倍，或为恐慌性抛售。技术评分5/25，超卖但趋势未止。",
+          "fundamental": "PE(TTM)41.9倍偏高，远期PE29.9相对合理；PB13.6溢价明显。ROE 34.7%优秀，利润率20.5%，营收/盈利增速24%/33%，基本面实质健康，估值仍需消化。",
+          "news": "个股新闻缺失。市场层面：中东地缘紧张（胡塞袭击、伊朗局势）短期压制风险资产，但外交斡旋有所缓解；航空需求受扰或间接影响航空零部件需求端预期。",
+          "risk": "止损参考173.67，当前185.91距止损约6.6%。股价已大幅下跌，若市场情绪持续恶化或中东局势再度升级，跌破止损风险较高。高PB下估值保护有限。",
+          "summary": "HWM基本面扎实但估值偏高，近期遭剧烈抛售技术面极度超卖。中东不确定性叠加市场情绪偏弱，反弹时机未明。待趋势企稳信号出现前宜观察，不宜追跌。"
         }
       },
       {
@@ -29885,11 +29885,11 @@
         "reason": "RSI 22.3 / Bias -26.8% / ZScore -2.18；ATR 8.4% · 20日量比 1.3369；板块 Other。规则版筛选，未回测。",
         "ai": {
           "verdict": "谨慎",
-          "technical": "RSI 14低至22.3深度超卖，偏离MA20达-26.8%，20日动量-33.3%，相对SPY弱势-31.8%，beta 3.69极端高波动，技术面严重恶化但已进入超卖极端区。",
-          "fundamental": "前瞻PE仅10.4倍，TTM PE 29.7倍，盈利增长52%且营收增20.6%，ROE 18.4%，基本面稳健但利润率仅3.3%属代工行业特征。",
-          "news": "个股新闻数据缺失。市场层面：AI交易降温令华尔街寻求对冲，中东地缘局势缓和但仍存不确定性，全球风险偏好波动较大。",
-          "risk": "beta 3.69极高波动，20日跌幅33%属异常剧烈，高beta品种在市场避险情绪升温时承压更大，接刀风险显著。",
-          "summary": "基本面健康但技术面崩塌，超卖极端可能技术反弹，但高beta叠加暴力下跌趋势未止，需等待RSI回升与量能企稳信号后再考虑介入。"
+          "technical": "RSI 22.3深度超卖，20日动量-33%，偏离MA20达-26.8%，beta 3.69高波动，技术面极度弱势但超卖迹象明显。",
+          "fundamental": "PE TTM 29.7偏高但前瞻PE 10.4显著低，营收增20.6%、盈利增52%，利润率仅3.3%偏薄，ROE 18.4%尚可。",
+          "news": "数据缺失（个股新闻为空）。市场层面：中东局势缓和带动区域反弹，AI交易降温引发对冲需求，整体消息面偏中性偏稳。",
+          "risk": "高beta叠加高波动率(ATR 8.4%)，短期下行风险大；利润率薄使盈利韧性存疑；超卖不代表见底，需防继续下探。",
+          "summary": "技术面深度超卖、基本面前瞻估值偏低但利润率薄，个股新闻缺失，短期波动风险高，维持谨慎观望。"
         }
       },
       {
@@ -29909,11 +29909,11 @@
         "reason": "RSI 24.5 / Bias -23.3% / ZScore -2.24；ATR 6.5% · 20日量比 1.3415；板块 Technology。规则版筛选，未回测。",
         "ai": {
           "verdict": "观察",
-          "technical": "RSI 14为24.5，深度超卖；股价低于MA20达23.3%，20日Z值-2.24，统计极端偏离。20日动量-27%，60日-22.7%，下行趋势持续。相对SPY弱25.5个百分点，成交量放大至1.34倍，抛压明显。",
-          "fundamental": "前瞻PE 19.5倍较合理，但TTM PE 34.3倍偏高，PB 21.3倍偏贵。亮点突出：营收增长54.4%，盈利增长76.6%，ROE 70.1%，利润率32.3%。基本面强劲但已被市场大幅折价。",
-          "news": "个股新闻数据缺失。市场层面：AI交易降温，华尔街寻求对冲；中东外交斡旋缓解伊朗紧张局势，地缘风险有所缓和；整体消息面偏中性偏谨慎。",
-          "risk": "Beta高达2.62，波动率（ATR）6.53%，若半导体板块或大盘走弱，下行风险被放大。当前处于深度超卖，反弹随时可能发生，但趋势未反转前追涨风险大。参考止损207.56。",
-          "summary": "基本面优秀但技术面极度超卖且趋势仍在下行，短期存在反弹可能但方向未明。属深度超卖等待反转信号的阶段，适合密切观察而非立即行动。"
+          "technical": "RSI 14仅24.5，严重超卖；20日偏离度-23.28%，Z-Score-2.24，动量20日-27%，技术面全面弱势。成交量比率1.34略有放量，Beta 2.62波动剧烈，相对SPY跑输25.5%。技术评分5/25极低。",
+          "fundamental": "PE(TTM)34.3，远期PE 19.5，估值有所回落。ROE 70%、利润率32%基本面扎实。营收增长54.4%、盈利增长76.6%，成长性突出。市值约2972亿，基本面相对健康。",
+          "news": "个股无新闻。市场层面：中东地缘局势有所缓和（外交斡旋），但漏油及胡塞袭击仍存不确定性；AI交易降温令科技/半导体板块承压；华尔街量化对冲情绪升温，风险偏好偏谨慎。",
+          "risk": "Beta 2.62意味着大盘波动将被显著放大。参考止损207.56，当前价230.1，下行空间约9.8%。半导体设备受出口管制及地缘风险敏感，超卖反弹力度与持续性存不确定性。",
+          "summary": "技术面深度超卖但趋势尚未企稳，基本面成长强劲。市场环境偏谨慎，地缘与AI降温构成压力。适合列入观察名单，待企稳信号出现再评估介入时机。这是观察笔记，不是投资建议。"
         }
       },
       {
@@ -29933,11 +29933,11 @@
         "reason": "RSI 29.9 / Bias -14.3% / ZScore -2.94；ATR 5.7% · 20日量比 1.6181；板块 Other。规则版筛选，未回测。",
         "ai": {
           "verdict": "观察",
-          "technical": "RSI 29.9超卖，偏离MA20达-14.29%，Z-score -2.94极度超卖；但动能持续负值（-14.89%/-17%），Beta 1.92高波动，相对SPY弱势-13.42%，量比1.62显示恐慌抛售。技术面极度超卖但无止跌信号。",
-          "fundamental": "PE(TTM)24.5尚可，但远期PE 33.9偏高；PB 19高估值；ROE 82.6%优秀；利润率23%强健；营收增长21.9%、盈利增长32.8%基本面扎实。估值与成长性需权衡。",
-          "news": "个股无新闻数据。市场层面：中东地缘风险（胡塞袭击、漏油事件）持续扰动，外交斡旋略缓和伊朗紧张；英国预算审慎向好；AI交易降温影响高Beta成长股情绪。",
-          "risk": "Beta 1.92放大波动；参考止损745.68，现价815.0下行空间约8.6%；地缘不确定性叠加AI主题降温对高估值工业/能源科技股压力显著；动能未见企稳。",
-          "summary": "GEV基本面优质但当前处于急速下跌趋势，技术面极度超卖尚无止跌确认，市场情绪偏谨慎，建议观察企稳信号再行决策，暂不追跌。"
+          "technical": "RSI 29.9 超卖，跌破 MA20 达 14.3%，20 日 Z 分数 -2.94 属极端偏离；动量连续疲弱（20 日 -14.9%、60 日 -17%），成交量放大 1.62 倍，波动率 5.67% 偏高；相对 SPY 弱势 13.4 个百分点，Beta 1.92 高敏感。技术面严重超卖但尚未出现企稳信号。",
+          "fundamental": "市值 2277 亿美元，PE(TTM) 24.5 倍合理但远期 PE 33.9 倍估值偏高；PB 19 倍、ROE 82.6% 显示资产效率极佳；利润率 23%、营收增 21.9%、盈利增 32.8% 反映强劲成长性。基本面优异但估值已透支部分增长预期。",
+          "news": "数据缺失。市场层面：中东地缘风险（胡塞袭击、伊朗局势）和能源市场波动（阿联酋漏油）或影响工业品需求预期，英国预算审慎、AI 交易降温增加市场不确定性。",
+          "risk": "高 Beta 叠加超卖状态，短期反弹或大幅回撤均可能；远期估值偏贵若业绩不及预期将承压；工业机械板块受全球经济与能源价格传导影响，地缘风险发酵需密切关注订单与毛利率变化。",
+          "summary": "GE Vernova 基本面强劲（高增长、高 ROE）但技术面极度超卖且动能持续疲弱，远期估值偏高限制安全边际。当前适合观察企稳信号（RSI 回升、相对强度改善）和下季财报验证成长持续性，短期不宜追跌抄底。"
         }
       },
       {
@@ -29957,11 +29957,11 @@
         "reason": "RSI 24.9 / Bias -10.1% / ZScore -2.58；ATR 4.1% · 20日量比 0.8312；板块 Other。规则版筛选，未回测。",
         "ai": {
           "verdict": "观察",
-          "technical": "RSI 24.9 极度超卖，跌破 MA20 达 10%，20 日 Z 值 -2.58 偏离严重；20 日动能 -12.16%、60 日动能 -28.56% 显示持续弱势；成交量萎缩至 0.83 倍，Beta -1.06 与大盘负相关，相对标普 20 日跑输 10.69%；技术面 5 分属超卖低位。",
-          "fundamental": "市值 359.5 亿美元，动态 PE 20.8、ROE 49.56%、利润率 11.43% 显示盈利能力强劲；PB 16.37 估值偏高；营收增长 9.3% 但盈利增长 -1.3% 出现分化，需关注成本压力或利润率压缩风险。",
-          "news": "个股新闻数据缺失。市场层面：中东地缘缓和带来反弹，但阿联酋漏油、英国财政审慎、AI 交易降温等因素交织，消费板块未见明显催化剂。",
-          "risk": "技术面深度超卖但动能未止跌，成交量萎缩显示买盘观望；盈利增长转负需警惕基本面拐点；高估值（PB 16+）在市场波动期易受冲击；当前 27.52 美元已接近参考止损 25.82，下行空间有限但反弹力度待验证。",
-          "summary": "CMG 技术面极度超卖（RSI 24.9、Z 值 -2.58）且动能持续疲弱，但基本面 ROE 近 50% 仍具竞争力，盈利增长转负需跟踪后续财报；高估值叠加成交量萎缩，短期反弹需确认量能配合，建议观察是否企稳再布局，严守止损位 25.82。"
+          "technical": "RSI 24.9深度超卖，偏离20日均线-10%，动量指标20日-12%、60日-28%显著走弱；与大盘负相关beta -1.06，相对强度落后SPY达10.69%；成交量萎缩至0.83倍；技术评分5分属极弱状态，存在超卖反弹窗口但下行趋势未明确扭转",
+          "fundamental": "市盈率26.1倍（远期20.8）处行业合理区间，ROE 49.6%盈利能力强劲，利润率11.4%；营收增长9.3%但盈利同比-1.3%显示成本压力；市净率16.4倍估值偏高，市值359亿美元；基本面稳健但增长放缓需关注成本管控",
+          "news": "数据缺失。市场层面：中东地缘风险（胡塞袭击、伊朗局势）及英国财政政策主导情绪，AI交易降温引发对冲需求；餐饮消费板块未见直接利空，但宏观风险偏好下降或拖累可选消费估值",
+          "risk": "技术面深度超卖但趋势向下，止损25.82距当前价27.52仅6.2%空间，跌破后或加速下探；盈利增长停滞叠加高估值存在进一步收缩风险；成交量低迷显示资金观望，反弹持续性存疑",
+          "summary": "CMG技术面超卖触及支撑位，但动量指标与相对强度双双走弱，止损空间有限；基本面ROE亮眼但盈利零增长暴露成本端压力，高估值缺乏安全边际；个股无新闻催化，宏观风险偏好下降不利可选消费。建议观察止损位25.82表现，跌破回避，企稳后可博弈超卖反弹但需严控仓位"
         }
       },
       {
@@ -29980,12 +29980,12 @@
         "observe_until": "2026-11-05",
         "reason": "RSI 31.1 / Bias -11.0% / ZScore -2.85；ATR 3.8% · 20日量比 2.0863；板块 Communication。规则版筛选，未回测。",
         "ai": {
-          "verdict": "观察",
-          "technical": "RSI 31.1 超卖，距20日均线-10.96%，Z值-2.85显著偏离，20日动能-17.53%弱势，成交量放大2.09倍，与SPY负相关-0.371，相对强度-16.06%明显落后大盘，技术面承压但超卖信号显现。",
-          "fundamental": "市值1405亿美元，前瞻PE 8.04估值偏低，PB 1.32合理，ROE 11.61%及利润率10.19%稳健，营收增长5.3%温和，但盈利同比-90.4%大幅下滑，基本面存在盈利质量疑虑。",
-          "news": "个股无特定新闻。市场层面：中东紧张局势缓和带动反弹，AI交易降温引发华尔街对冲需求，阿联酋漏油、胡塞袭击等地缘风险持续，英国财政审慎以稳市场，整体风险偏好回升但不确定性犹存。",
-          "risk": "盈利增长-90.4%为核心风险，技术面超卖但下行动能仍强，负Beta特征在市场波动时表现异常，电信行业竞争及资本开支压力，参考止损19.74距当前价20.93仅5.7%缓冲有限。",
-          "summary": "AT&T技术面超卖但趋势偏弱，估值低廉但盈利大幅下滑削弱吸引力，行业稳定性部分对冲风险，当前适合观察超卖修复或基本面改善信号，暂不宜重仓介入，需关注盈利拐点及止损距离。"
+          "verdict": "谨慎",
+          "technical": "RSI 31.1 接近超卖，但 20 日动量 -17.5%、Z-score -2.85，跌势仍在加速。成交量比率 2.09 放量下跌信号明显。Beta 负值显示防御属性，但相对 SPY 强度 -16% 显著跑输。",
+          "fundamental": "PE(TTM) 11.1 / 前向 PE 8.0 估值偏低，PB 1.32，ROE 11.6%，利润率 10.2%。营收增长 5.3% 尚可，但盈利增长 -90.4% 大幅恶化，需警惕一次性项目或债务压力。",
+          "news": "个股新闻缺失。市场层面：中东地缘紧张（胡塞武装、伊朗局势、漏油事件）对避险情绪有支撑，电信防御股或受一定关注，但整体扰动有限。",
+          "risk": "盈利增长骤降 -90% 为核心风险，须核实原因。技术面破位下行，参考止损 19.74 距现价约 -5.7%，下行空间仍需确认支撑。高债务特征在利率环境下压制估值。",
+          "summary": "估值便宜但盈利质量存疑，技术面超卖却未见企稳信号，综合评分 38.7 偏低。数据缺失个股催化剂，暂列谨慎，待盈利原因明朗或技术止跌信号出现后再评估。"
         }
       }
     ]
