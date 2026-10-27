@@ -4047,7 +4047,7 @@ def main(argv=None):
         "runtimes": runtimes,
         "portfolio": portfolio,
         "quant": quant,
-        "news": news,
+        "news": None,   # 已拆到 dashboard/data/news_data.json（前端按需加载）
         "macro": macro,
         "meta": {
             "data_source": (

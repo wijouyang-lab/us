@@ -370,6 +370,14 @@
             try { drawAllSparks(); } catch (e) { /* 忽略 */ }
             try { if (cur) drawDetailCharts(); } catch (e) { /* 忽略 */ }
           }).catch(function () { /* 拆分包缺失时静默降级 */ });
+          /* 新闻单独文件：直接读 news_data.json（翻译后的 headline_cn 也在这里） */
+          fetch('dashboard/data/news_data.json?t=' + Date.now()).then(function (r) {
+            return r.ok ? r.json() : null;
+          }).then(function (x) {
+            if (!x) return;
+            DATA.news = x;
+            try { renderNews(); } catch (e) { /* 忽略 */ }
+          }).catch(function () { /* 新闻缺失时保持空态 */ });
         }
         catch (err) {
           console.error('[Dashboard] render failed:', err);
