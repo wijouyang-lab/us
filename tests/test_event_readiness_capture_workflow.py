@@ -23,6 +23,7 @@ def test_capture_workflow_uses_single_shell_continuations_and_valid_csv_newlines
         / "workflows"
         / "research-event-factor-capture-once.yml"
     ).read_text(encoding="utf-8")
+    audit_section = workflow[workflow.index("Audit point-in-time event archive readiness"):]
     command_fragments = (
         "python -m tools.research.audit_pit_event_data_readiness ",
         '--archive "$ARCHIVE" ',
@@ -30,7 +31,7 @@ def test_capture_workflow_uses_single_shell_continuations_and_valid_csv_newlines
         '--audited-at "$DECISION_AT" ',
     )
     for fragment in command_fragments:
-        line = next((line for line in workflow.splitlines() if fragment in line), None)
+        line = next((line for line in audit_section.splitlines() if fragment in line), None)
         assert line is not None, f"missing readiness command fragment: {fragment}"
         assert line.endswith("\\"), f"missing shell continuation: {line}"
         assert not line.endswith("\\\\"), f"doubled shell continuation: {line}"
