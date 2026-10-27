@@ -248,6 +248,18 @@ jobs:
               git rebase --abort 2>/dev/null || true
               echo "rebase conflict, using reset --soft replay (attempt $i)"
               git reset --soft origin/main
+              # reset --soft 会保留「陈旧 checkout」的索引：若本轮运行期间 main 上
+              # 有了 UI/代码变更（如 app.js / index.html），直接用该索引提交会把它们
+              # 回退掉。这里只保留本轮数据文件，其它路径一律恢复成 origin/main 版本。
+              for f in $(git diff --cached --name-only); do
+                case "$f" in
+                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
+                    ;;
+                  *)
+                    git checkout origin/main -- "$f" 2>/dev/null || true
+                    ;;
+                esac
+              done
               git commit -m "chore(dashboard): refresh market data [skip ci]" || true
               if git push origin HEAD:main; then
                 echo "push succeeded via reset --soft (attempt $i)"

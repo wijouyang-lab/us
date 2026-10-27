@@ -42,7 +42,8 @@ def _expose():
     out = app_js.replace(
         "\n  boot();\n",
         "\n  globalThis.__setData = function(d){ DATA = d; };\n"
-        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); renderMarketIndicators(); };\n")
+        "  globalThis.__setMacro = function(m){ MACRO = m; };\n"
+        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); renderMarketIndicators(); renderMacro(); };\n")
     assert "__setData" in out, "未能注入 expose 钩子"
     return out
 
@@ -51,6 +52,7 @@ def _run(data):
     js = REPO_ROOT / "tests" / "_profit_harness.js"
     tail = (
         "\nglobalThis.__setData(" + json.dumps(data, ensure_ascii=False) + ");\n"
+        "globalThis.__setMacro((" + json.dumps(data, ensure_ascii=False) + ").macro || null);\n"
         "globalThis.__run();\n"
         "var e = globalThis.__els || {};\n"
         "console.log(JSON.stringify({\n"
@@ -63,7 +65,8 @@ def _run(data):
         "  oversold: e['#oversoldBody'] ? e['#oversoldBody'].innerHTML : null,\n"
         "  oversoldHidden: e['#oversoldCard'] ? e['#oversoldCard'].hidden : null,\n"
         "  oversoldSub: e['#oversoldSub'] ? e['#oversoldSub'].textContent : null,\n"
-        "  market: e['#marketIndicatorsBody'] ? e['#marketIndicatorsBody'].innerHTML : null\n"
+        "  market: e['#marketIndicatorsBody'] ? e['#marketIndicatorsBody'].innerHTML : null,\n"
+        "  macro: e['#macroBody'] ? e['#macroBody'].innerHTML : null\n"
         "}));\n"
     )
     js.write_text(_harness() + _expose() + tail, encoding="utf-8")
@@ -380,3 +383,39 @@ def test_target_plan_vs_actual_pending():
     assert "待建仓" in html, html
     assert "实际 0 股" in html, html
     assert "差 +10 股" in html, html
+
+
+# ---------------------------------------------------------------- 宏观：数据期展示
+def _macro(econ):
+    return {"generated_at": "2026-10-26T13:02:45Z", "economic": econ, "speakers": []}
+
+
+def test_macro_monthly_date_is_period_not_day():
+    """2026-09-01 是「9 月数据期」，不是 9 月 1 日抓的数据；前端要显示成 2026年9月。"""
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "macro": _macro([
+                  {"indicator": "CPI", "value": "4.00%", "date": "2026-09-01",
+                   "source": "BLS API", "sentiment": "bearish", "rationale": "x"},
+                  {"indicator": "核心PCE", "value": "3.00%", "date": "August 2026",
+                   "source": "BEA 官方网页", "sentiment": "bearish", "rationale": "x"},
+                  {"indicator": "10Y国债", "value": "4.99%", "date": "2026-10-26",
+                   "source": "Yahoo Finance", "sentiment": "neutral", "rationale": "x"},
+              ])})
+    html = r["macro"] or ""
+    assert "数据期 2026年9月" in html, html
+    assert "2026-09-01" not in html, html          # 不再暴露"9月1日"这种错觉
+    assert "数据期 2026年8月" in html, html
+    assert "10-26" in html, html
+    assert "月度" in html, html
+    assert "滞后" not in html, html                # 9 月数据在 10 月底不算滞后
+
+
+def test_macro_stale_period_flagged():
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "macro": _macro([
+                  {"indicator": "CPI", "value": "4.00%", "date": "2026-06-01",
+                   "source": "BLS API", "sentiment": "bearish", "rationale": "x"},
+              ])})
+    html = r["macro"] or ""
+    assert "数据期 2026年6月" in html, html
+    assert "滞后" in html, html
