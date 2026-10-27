@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T11:15:58Z",
+  "generated_at": "2026-10-27T11:30:50Z",
   "asof": "2026-10-26",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
@@ -77,7 +77,7 @@
         "sector": "Technology",
         "industry": "Electronic Components",
         "pe_ttm": 29.725868,
-        "pe_forward": 10.908993,
+        "pe_forward": 10.432249,
         "pb": 5.170584,
         "roe": 0.18378,
         "profit_margin": 0.03325,
@@ -116,7 +116,7 @@
       "enrich": {
         "sector": "Technology",
         "industry": "Semiconductor Equipment & Materials",
-        "pe_ttm": 35.39493,
+        "pe_ttm": 34.271286,
         "pe_forward": 19.542324,
         "pb": 21.331059,
         "roe": 0.7012,
