@@ -90,7 +90,13 @@ def earnings_date(ticker: str):
         dates = cal.get("Earnings Date") or []
         if dates:
             d = dates[0]
-            return str(getattr(d, "isoformat", d))[:10]
+            try:
+                s = d.isoformat()
+            except Exception:
+                s = str(d)
+            s = (s or "").strip()[:10]
+            if s[:4].isdigit():
+                return s
     except Exception:
         pass
     return None
