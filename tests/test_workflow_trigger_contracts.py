@@ -46,7 +46,7 @@ def test_dashboard_refresh_schedule_and_push_scope_remain_narrow():
     workflow, trigger, events, crons = _workflow("dashboard-data.yml")
 
     assert events == {"schedule", "workflow_dispatch", "push", "workflow_run"}
-    assert crons == ["*/15 * * * 1-5"]
+    assert crons == ["*/15 13-21 * * 1-5"]
     assert re.search(r"(?m)^    branches: \[main\]$", trigger)
     for path in (
         "dashboard_export.py",

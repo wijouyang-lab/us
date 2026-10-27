@@ -452,7 +452,8 @@
   /* p: portfolio.positions[] 条目；s: STOCKS[] 里同 ticker 的详情（找不到则 null → 降级只显示持仓字段） */
   /* 持仓卡片：当日 5 分钟 K 线 + 止损价横线（内联 SVG，无第三方库） */
   function klineHtml(p) {
-    var it = (DATA && DATA.intraday && DATA.intraday[String(p.ticker || '').toUpperCase()]) || (p && p.intraday);
+    var it = ((typeof DATA !== 'undefined' && DATA.intraday &&
+      DATA.intraday[String(p.ticker || '').toUpperCase()])) || (p && p.intraday);
     var bars = it && it.bars;
     if (!bars || !bars.length) return '';
     var stop = num(p.stop_loss_price);
@@ -538,7 +539,7 @@
       extLine +
       '</div>' +
       (s ? '<div class="pos-ring">' + ring(s.s.final, 54, 'Final') + '</div>' : '') +
-      '</div>' + klineHtml(p);
+      '</div>' + (typeof klineHtml === 'function' ? klineHtml(p) : '');
 
     var quick = s
       ? '<div class="pos-quick">' +
