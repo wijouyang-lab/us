@@ -1809,12 +1809,14 @@
         staleTxt = '<span class="macro-stale" title="该月度指标已超过 60 天未更新">⚠️ 滞后 ' + lag + ' 天</span>';
       }
     }
+    var isYoy = e.indicator === 'CPI' || e.indicator === '核心CPI' || e.indicator === '核心PCE';
     var tip = pinfo && pinfo.monthly
       ? ' title="月度指标：显示的是数据所属月份（美国 CPI/失业率通常在每月中旬公布上月数据）"'
       : '';
     return '<div class="macro-econ"' + tip + '>' +
       '<div class="macro-econ-h">' + esc(e.indicator || '') + ' ' + sent +
-        (pinfo && pinfo.monthly ? ' <span class="macro-kind">月度</span>' : '') + '</div>' +
+        (pinfo && pinfo.monthly ? ' <span class="macro-kind">月度</span>' : '') +
+        (isYoy ? ' <span class="macro-kind">同比</span>' : '') + '</div>' +
       '<div class="macro-econ-v">' + esc(e.value != null && e.value !== '' ? String(e.value) : '—') +
       (delta ? (' <span class="macro-d ' + delta.cls + '">' + delta.txt + '</span>') : '') + '</div>' +
       '<div class="macro-econ-m">' + prevTxt + src + dateTxt + staleTxt + '</div>' +

@@ -419,3 +419,18 @@ def test_macro_stale_period_flagged():
     html = r["macro"] or ""
     assert "数据期 2026年6月" in html, html
     assert "滞后" in html, html
+
+
+def test_macro_inflation_marked_yoy_only():
+    """CPI/核心CPI/核心PCE 标「同比」；失业率不标（避免和财经日历的年化季率混淆）。"""
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "macro": _macro([
+                  {"indicator": "CPI", "value": "4.00%", "date": "2026-09-01",
+                   "source": "BLS API", "sentiment": "bearish", "rationale": "x"},
+                  {"indicator": "核心PCE", "value": "3.00%", "date": "August 2026",
+                   "source": "BEA 官方网页", "sentiment": "bearish", "rationale": "x"},
+                  {"indicator": "失业率", "value": "4.20%", "date": "2026-09-01",
+                   "source": "BLS API", "sentiment": "bearish", "rationale": "x"},
+              ])})
+    html = r["macro"] or ""
+    assert html.count("同比") == 2, html
