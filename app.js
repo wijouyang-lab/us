@@ -469,12 +469,15 @@
       var up = b[4] >= b[1];
       var col = up ? 'var(--up)' : 'var(--down)';
       var o = y(b[1]), c = y(b[4]);
-      return '<line x1="' + x.toFixed(2) + '" y1="' + y(b[2]).toFixed(2) +
+      var tip = esc(b[0] + '  O ' + fmt(b[1], 2) + '  H ' + fmt(b[2], 2) +
+        '  L ' + fmt(b[3], 2) + '  C ' + fmt(b[4], 2));
+      return '<g><title>' + tip + '</title>' +
+        '<line x1="' + x.toFixed(2) + '" y1="' + y(b[2]).toFixed(2) +
         '" x2="' + x.toFixed(2) + '" y2="' + y(b[3]).toFixed(2) +
         '" stroke="' + col + '" stroke-width="1"/>' +
         '<rect x="' + (x - bw / 2).toFixed(2) + '" y="' + Math.min(o, c).toFixed(2) +
         '" width="' + bw.toFixed(2) + '" height="' + Math.max(1, Math.abs(c - o)).toFixed(2) +
-        '" fill="' + col + '"/>';
+        '" fill="' + col + '"/></g>';
     }).join('');
     var stopLine = '';
     if (stop !== null) {
@@ -493,6 +496,9 @@
     var chg = first[1] ? (last[4] / first[1] - 1) * 100 : null;
     return '<div class="pos-kline">' +
       '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + stopLine + entryLine + '</svg>' +
+      '<div class="pk-axis"><span>' + esc(bars[0][0]) + '</span>' +
+        '<span>' + esc(bars[Math.floor(bars.length / 2)][0]) + '</span>' +
+        '<span>' + esc(bars[bars.length - 1][0]) + '</span></div>' +
       '<div class="pk-meta">今日 5m' +
         (bars.length ? ' · ' + esc(bars[0][0]) + '-' + esc(bars[bars.length - 1][0]) : '') +
         (it.date ? ' · ' + esc(it.date) : '') +

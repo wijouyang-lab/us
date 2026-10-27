@@ -728,3 +728,4 @@ button{font-family:inherit}
 .pk-meta b.up{color:var(--up)}
 .pk-meta b.down{color:var(--down)}
 .pk-meta b.pk-entry{color:#3b82f6}
+.pk-axis{display:flex;justify-content:space-between;font-size:9px;color:var(--text-3);margin-top:1px;font-variant-numeric:tabular-nums}
