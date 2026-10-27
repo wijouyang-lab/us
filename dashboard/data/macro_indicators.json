@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T18:34:55Z",
+  "generated_at": "2026-10-27T18:37:48Z",
   "source": "FRED + ISM + EIA",
   "count": 9,
   "ok": 9,
@@ -14,7 +14,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "nonfarm",
@@ -25,7 +26,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "cpi_yoy",
@@ -36,7 +38,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "cpi_mom",
@@ -47,7 +50,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "umich",
@@ -58,7 +62,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "ism",
@@ -69,7 +74,8 @@
       "prev": null,
       "change": null,
       "source": "tradingeconomics.com",
-      "note": null
+      "note": null,
+      "source_status": "primary"
     },
     {
       "key": "adp",
@@ -80,7 +86,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     },
     {
       "key": "eia_crude",
@@ -91,7 +98,8 @@
       "prev": 415577,
       "change": -3060,
       "source": "EIA 周报",
-      "note": "不含战略储备（SPR）"
+      "note": "不含战略储备（SPR）",
+      "source_status": "primary"
     },
     {
       "key": "claims",
@@ -102,7 +110,8 @@
       "prev": null,
       "change": null,
       "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null
+      "note": null,
+      "source_status": "fallback"
     }
   ]
 }
