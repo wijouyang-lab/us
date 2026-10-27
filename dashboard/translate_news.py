@@ -118,9 +118,9 @@ def main(argv=None) -> int:
         print("[SKIP] 没有可翻译的标题", file=sys.stderr)
         return 0
 
+    # 只写翻译缓存，绝不回写 news_data.json（避免与新闻刷新工作流互相覆盖）。
     _atomic_write(CACHE, cache)
-    _atomic_write(NEWS, news)
-    done = sum(1 for it in items if it.get("headline_cn"))
+    done = sum(1 for it in items if it.get("headline_cn") or cache.get((it.get("headline") or "").strip()))
     print(f"[OK] 标题中文 {done}/{len(items)}（本次新增 {len(todo)}）", file=sys.stderr)
     return 0
 

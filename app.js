@@ -371,10 +371,20 @@
             try { if (cur) drawDetailCharts(); } catch (e) { /* 忽略 */ }
           }).catch(function () { /* 拆分包缺失时静默降级 */ });
           /* 新闻单独文件：直接读 news_data.json（翻译后的 headline_cn 也在这里） */
-          fetch('dashboard/data/news_data.json?t=' + Date.now()).then(function (r) {
-            return r.ok ? r.json() : null;
-          }).then(function (x) {
+          Promise.all([
+            fetch('dashboard/data/news_data.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }),
+            fetch('dashboard/data/news_translations.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; })
+          ]).then(function (pair) {
+            var x = pair[0], tr = pair[1] || {};
             if (!x) return;
+            var apply = function (it) {
+              var h = (it && it.headline || '').trim();
+              if (it && !it.headline_cn && h && tr[h]) it.headline_cn = tr[h];
+            };
+            (x.market_news || []).forEach(apply);
+            Object.keys(x.ticker_news || {}).forEach(function (k) {
+              (x.ticker_news[k] || []).forEach(apply);
+            });
             DATA.news = x;
             try { renderNews(); } catch (e) { /* 忽略 */ }
           }).catch(function () { /* 新闻缺失时保持空态 */ });
