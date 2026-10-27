@@ -23,6 +23,7 @@ def test_capture_workflow_uses_single_shell_continuations_and_valid_csv_newlines
         / "workflows"
         / "research-event-factor-capture-once.yml"
     ).read_text(encoding="utf-8")
+    audit_section = workflow[workflow.index("Audit point-in-time event archive readiness"):]
     command_fragments = (
         "python -m tools.research.audit_pit_event_data_readiness ",
         '--archive "$ARCHIVE" ',
@@ -30,9 +31,24 @@ def test_capture_workflow_uses_single_shell_continuations_and_valid_csv_newlines
         '--audited-at "$DECISION_AT" ',
     )
     for fragment in command_fragments:
-        line = next((line for line in workflow.splitlines() if fragment in line), None)
+        line = next((line for line in audit_section.splitlines() if fragment in line), None)
         assert line is not None, f"missing readiness command fragment: {fragment}"
         assert line.endswith("\\"), f"missing shell continuation: {line}"
         assert not line.endswith("\\\\"), f"doubled shell continuation: {line}"
     csv_line = next(line.strip() for line in workflow.splitlines() if "printf 'decision_at" in line)
     assert csv_line == "printf 'decision_at\\n%s\\n' \"$DECISION_AT\" > \"$DECISIONS\""
+
+
+def test_capture_workflow_collects_prices_and_runs_descriptive_event_study():
+    workflow = (
+        Path(__file__).resolve().parents[1]
+        / ".github"
+        / "workflows"
+        / "research-event-factor-capture-once.yml"
+    ).read_text(encoding="utf-8")
+    assert "Capture recent prices and run descriptive event-response study" in workflow
+    assert "tools.research.capture_event_response_prices" in workflow
+    assert "tools.research.pit_event_response_study" in workflow
+    assert '--study-end-date "$STUDY_END_DATE"' in workflow
+    assert "--price-basis auto" in workflow
+    assert "no price rows" in workflow

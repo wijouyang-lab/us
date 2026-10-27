@@ -8,6 +8,10 @@ on:
       - "tools/research/audit_pit_event_data_readiness.py"
       - "tests/test_audit_pit_event_data_readiness.py"
       - "tests/test_event_readiness_capture_workflow.py"
+      - "tools/research/capture_event_response_prices.py"
+      - "tests/test_capture_event_response_prices.py"
+      - "tools/research/pit_event_response_study.py"
+      - "tests/test_pit_event_response_study.py"
       - ".github/workflows/research-event-factor-capture-once.yml"
       - ".github/workflows/research-event-readiness-tests.yml"
   pull_request:
@@ -33,8 +37,8 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install research audit dependencies
-        run: python -m pip install --upgrade pip pandas pytest
+        run: python -m pip install --upgrade pip pandas pytest requests
       - name: Compile event readiness audit and tests
         run: python -m py_compile tools/research/audit_pit_event_data_readiness.py tests/test_audit_pit_event_data_readiness.py
       - name: Run event readiness audit tests
-        run: python -m pytest tests/test_audit_pit_event_data_readiness.py tests/test_event_readiness_capture_workflow.py -q
+        run: python -m pytest tests/test_audit_pit_event_data_readiness.py tests/test_event_readiness_capture_workflow.py tests/test_capture_event_response_prices.py tests/test_pit_event_response_study.py -q
