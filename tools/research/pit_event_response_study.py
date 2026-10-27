@@ -419,19 +419,35 @@ def _aggregate(observations: list[dict[str, Any]], horizons: list[int], cost_bps
     for (event_type, horizon), rows in sorted(groups.items()):
         returns = [float(row[f"gross_return_{horizon}s"]) for row in rows]
         net = [value - cost_bps / 10000.0 for value in returns]
+        # Multiple distinct events can resolve to the same ticker/session return.
+        # Preserve event-weighted figures, but also report one return per ticker,
+        # entry session and horizon to expose pseudo-replication from RSS batches.
+        by_ticker_session: dict[tuple[str, str], dict[str, Any]] = {}
+        for row in rows:
+            by_ticker_session.setdefault((str(row["ticker"]), str(row["entry_date"])), row)
+        session_rows = list(by_ticker_session.values())
+        session_returns = [float(row[f"gross_return_{horizon}s"]) for row in session_rows]
+        session_net = [value - cost_bps / 10000.0 for value in session_returns]
         output.append({
             "event_type": event_type,
             "horizon_sessions": horizon,
             "observation_count": len(rows),
             "distinct_event_count": len({row["event_id"] for row in rows}),
             "distinct_ticker_count": len({row["ticker"] for row in rows}),
+            "distinct_ticker_entry_sessions": len(session_rows),
+            "session_deduplicated_observation_count": len(session_rows),
             "mean_gross_return": statistics.mean(returns),
             "median_gross_return": statistics.median(returns),
             "gross_win_rate": sum(value > 0 for value in returns) / len(returns),
             "mean_net_return_after_assumed_cost": statistics.mean(net),
             "median_net_return_after_assumed_cost": statistics.median(net),
+            "session_deduplicated_mean_gross_return": statistics.mean(session_returns),
+            "session_deduplicated_median_gross_return": statistics.median(session_returns),
+            "session_deduplicated_gross_win_rate": sum(value > 0 for value in session_returns) / len(session_returns),
+            "session_deduplicated_mean_net_return_after_assumed_cost": statistics.mean(session_net),
+            "session_deduplicated_median_net_return_after_assumed_cost": statistics.median(session_net),
             "assumed_round_trip_cost_bps": cost_bps,
-            "interpretation": "descriptive only; observations can overlap and are not a trading signal",
+            "interpretation": "descriptive only; event-weighted rows can overlap; session-deduplicated metrics count each ticker-entry-session once; not a trading signal",
         })
     return output
 
