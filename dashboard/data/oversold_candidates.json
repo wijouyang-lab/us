@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T17:15:59Z",
+  "generated_at": "2026-10-27T17:31:11Z",
   "asof": "2026-10-27",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
@@ -36,14 +36,14 @@
       "enrich": {
         "sector": "Technology",
         "industry": "Electronic Components",
-        "pe_ttm": 31.41699,
-        "pe_forward": 11.529612,
-        "pb": 5.4647417,
+        "pe_ttm": 31.50193,
+        "pe_forward": 11.055555,
+        "pb": 5.479516,
         "roe": 0.18378,
         "profit_margin": 0.03325,
         "revenue_growth": 0.206,
         "earnings_growth": 0.52,
-        "market_cap": 30062997504.0,
+        "market_cap": 30144276480.0,
         "news": []
       }
     },
@@ -76,14 +76,14 @@
       "enrich": {
         "sector": "Technology",
         "industry": "Semiconductor Equipment & Materials",
-        "pe_ttm": 41.852486,
-        "pe_forward": 22.725704,
-        "pb": 31.531517,
+        "pe_ttm": 41.87978,
+        "pe_forward": 22.740524,
+        "pb": 31.55208,
         "roe": 0.87496,
         "profit_margin": 0.35574,
         "revenue_growth": 0.152,
         "earnings_growth": 0.138,
-        "market_cap": 199901020160.0,
+        "market_cap": 200031387648.0,
         "news": []
       }
     },
@@ -116,14 +116,14 @@
       "enrich": {
         "sector": "Communication Services",
         "industry": "Telecom Services",
-        "pe_ttm": 11.189839,
-        "pe_forward": 8.07055,
-        "pb": 1.325038,
+        "pe_ttm": 11.195187,
+        "pe_forward": 8.074407,
+        "pb": 1.3256712,
         "roe": 0.11613,
         "profit_margin": 0.101940006,
         "revenue_growth": 0.053,
         "earnings_growth": -0.904,
-        "market_cap": 140960710656.0,
+        "market_cap": 141028065280.0,
         "news": []
       }
     },
@@ -156,14 +156,14 @@
       "enrich": {
         "sector": "Industrials",
         "industry": "Aerospace & Defense",
-        "pe_ttm": 41.271553,
-        "pe_forward": 29.44523,
-        "pb": 13.363573,
+        "pe_ttm": 41.299572,
+        "pe_forward": 29.46522,
+        "pb": 13.372645,
         "roe": 0.34732,
         "profit_margin": 0.20522,
         "revenue_growth": 0.241,
         "earnings_growth": 0.33,
-        "market_cap": 76370468864.0,
+        "market_cap": 76422316032.0,
         "news": []
       }
     },
@@ -196,14 +196,14 @@
       "enrich": {
         "sector": "Industrials",
         "industry": "Farm & Heavy Construction Machinery",
-        "pe_ttm": 30.62204,
-        "pe_forward": 21.830408,
-        "pb": 16.85943,
+        "pe_ttm": 30.653467,
+        "pe_forward": 21.852812,
+        "pb": 16.876734,
         "roe": 0.56972003,
         "profit_margin": 0.14511,
         "revenue_growth": 0.24,
         "earnings_growth": 0.682,
-        "market_cap": 326989709312.0,
+        "market_cap": 327325286400.0,
         "news": []
       }
     }
