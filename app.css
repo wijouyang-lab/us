@@ -529,6 +529,19 @@ button{font-family:inherit}
   color:var(--text-3);font-variant-numeric:tabular-nums}
 .prb-legend .prb-s{color:var(--down)}
 .prb-legend .prb-c{color:var(--text-2);font-weight:650}
+/* 色带文字图例（色盲友好：不只靠颜色，另有 ▲/▼ 文字标记） */
+.prb-keys{display:flex;gap:12px;flex-wrap:wrap;margin-top:5px;font-size:10px;color:var(--text-3)}
+.prb-k.up{color:var(--up)}
+.prb-k.down{color:var(--down)}
+/* 单笔最大亏损金额 / 无止损警告 */
+.pos-riskamt{margin-top:7px;font-size:11px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.pos-riskamt b{font-weight:700}
+.pos-riskamt b.down{color:var(--down)}
+.pos-riskamt b.up{color:var(--up)}
+.pos-warn{margin-top:7px;padding:5px 8px;border-radius:6px;font-size:11px;line-height:1.4;
+  color:var(--down);background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.35)}
+/* 快照落后提示（汇总下方） */
+.pf-note2{margin-top:6px;font-size:10.5px;line-height:1.45;color:var(--text-3)}
 
 /* 交易观测（频率 + 胜率 + 盈亏）—— 观测面板，不加硬闸门 */
 #tradeCard .sec-sub{font-variant-numeric:tabular-nums}

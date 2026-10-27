@@ -2878,6 +2878,65 @@ def _link_txn_holding(txns, asof):
     return txns
 
 
+def _classify_exit_kind(reason):
+    """离场归类的展示口径（不改策略、不改账本 Reason）。
+
+    · profit_take：移动止盈离场（Trailing_Profit_Take / Profit Take）
+    · stop_loss  ：止损离场（Stop_Loss_Hit / Intraday Stop Loss / Stop Loss）
+    · other      ：其它离场原因（不进入止盈/止损两个板块的统计）
+
+    注意：止损离场也可能是盈利的（止损线被抬高到入场价上方后触发），
+    这里只归类「离场机制」，盈亏由 realized_pnl 单独表达。
+    """
+    r = clean_text(reason).lower().replace("_", " ").replace("-", " ")
+    if "profit" in r and "take" in r:
+        return "profit_take"
+    if "stop" in r and "loss" in r:
+        return "stop_loss"
+    return "other"
+
+
+def _closed_months(txns, anchor, days=30):
+    """全量流水 → 月度聚合（近 N 天窗口内，按 profit_take / stop_loss 分桶）。
+
+    输出：[{month, profit:{n,pnl}, stop:{n,pnl}}]，月份降序。
+    为什么放后端：前端 transactions 只保留最近 20 条，月度汇总会被截断。
+    """
+    if not anchor:
+        return []
+    try:
+        d_anchor = dt.date.fromisoformat(str(anchor))
+    except Exception:
+        return []
+    threshold = (d_anchor - dt.timedelta(days=days)).isoformat()
+    agg = {}
+    for t in txns:
+        if (t.get("action") or "").upper() != "SELL":
+            continue
+        d = t.get("date") or ""
+        if not d or d < threshold:
+            continue
+        kind = t.get("exit_kind") or "other"
+        if kind == "other":
+            continue
+        month = d[:7]
+        slot = agg.setdefault(month, {
+            "month": month,
+            "profit": {"n": 0, "pnl": 0.0},
+            "stop": {"n": 0, "pnl": 0.0},
+        })
+        bucket = slot["profit"] if kind == "profit_take" else slot["stop"]
+        bucket["n"] += 1
+        bucket["pnl"] += parse_num(t.get("realized_pnl")) or 0.0
+    out = []
+    for month in sorted(agg, reverse=True):
+        slot = agg[month]
+        slot["profit"]["pnl"] = round_num(slot["profit"]["pnl"], 2)
+        slot["stop"]["pnl"] = round_num(slot["stop"]["pnl"], 2)
+        out.append(slot)
+    return out
+
+
 def build_portfolio(data_dir: Path):
     """$50,000 长期模拟投资组合（Portfolio Ledger）。
 
@@ -2971,6 +3030,18 @@ def build_portfolio(data_dir: Path):
         })
     # 买卖配对 + 持有时间：必须在 20 条截断之前，基于完整流水配对
     txns = _link_txn_holding(txns, asof)
+    # 离场归类（展示口径，不改策略）：
+    #   profit_take = 移动止盈离场（Reason 含 Profit Take）
+    #   stop_loss   = 止损/盘中止损离场（含保本以上卖出的情形）
+    for t in txns:
+        if (t.get("action") or "").upper() == "SELL":
+            t["exit_kind"] = _classify_exit_kind(t.get("reason"))
+    # 全量流水的月度聚合（不受下方 20 条展示窗口截断）
+    _anchor = max((t.get("date") or "" for t in txns), default="")
+    closed_months = _closed_months(txns, _anchor)
+    # 快照之后发生了几笔成交（用于页面提示「已按流水滚动」）
+    _rolled_txns = sum(1 for t in txns
+                       if (t.get("date") or "") and asof and t["date"] > asof)
     txns = sorted(txns, key=lambda t: (t["date"] or ""), reverse=True)[:20]
 
     curve = [{
@@ -3059,6 +3130,8 @@ def build_portfolio(data_dir: Path):
         "unit_dollars": round_num(parse_num(meta.get("unit_dollars")), 2),
         "max_open_positions": int(parse_num(meta.get("max_open_positions")) or 0) or None,
         "asof": _asof,
+        "snapshot_asof": asof,
+        "rolled_txns": _rolled_txns,
         "cash": _cash,
         "stock_value": _stock_value,
         "total_equity": _total_equity,
@@ -3070,6 +3143,7 @@ def build_portfolio(data_dir: Path):
         "open_pct": _open_pct,
         "positions": positions,
         "transactions": txns,
+        "closed_months": closed_months,
         "trade_stats": trade_stats,
         "equity_curve": curve,
     }

@@ -539,6 +539,10 @@
               sgn(distEntry) + fmt(distEntry, 1) + '%）</span>' +
             '<span class="prb-c">现价 $' + fmt(curP, 2) + '</span>' +
           '</div>' +
+          '<div class="prb-keys">' +
+            '<span class="prb-k up">▲ 盈利区（入场 → 现价/止盈线）</span>' +
+            '<span class="prb-k down">▼ 风险区（止损 → 入场）</span>' +
+          '</div>' +
         '</div>';
       }
     }
@@ -554,8 +558,28 @@
       stopCell + takeCell +
       '</div>';
 
+    /* 单笔风险金额：(入场 − 止损) × 股数，再除以总权益。
+       止损已抬到入场上方时本金风险为 0，改显「已锁定金额」。 */
+    var riskAmtHtml = '';
+    var shNum = num(p.shares);
+    if (stopP != null && entryP && shNum) {
+      var betRisk = (entryP - stopP) * shNum;
+      var pfEq = num((DATA && DATA.portfolio) ? DATA.portfolio.total_equity : null);
+      if (betRisk > 0) {
+        var betPct = (pfEq && pfEq > 0) ? betRisk / pfEq * 100 : null;
+        riskAmtHtml = '<div class="pos-riskamt">最大亏损 <b class="down">-$' + fmt(betRisk, 2) + '</b>' +
+          (betPct != null ? '（' + fmt(betPct, 1) + '% 权益）' : '') + '</div>';
+      } else {
+        riskAmtHtml = '<div class="pos-riskamt">止损已高于入场 <b class="up">锁定 +$' +
+          fmt((stopP - entryP) * shNum, 2) + '</b></div>';
+      }
+    }
+    var noStopWarn = (stopP == null)
+      ? '<div class="pos-warn">⚠️ 无有效止损：盘中止损不会保护这笔持仓</div>' : '';
+
     return '<article class="poscard' + (s ? '' : ' poscard-na') + '" data-tk="' + esc(tk) + '">' +
-      head + quick + (s ? sparkHtml(s, false) : '') + bars + foot + meta + riskBar +
+      head + quick + (s ? sparkHtml(s, false) : '') + bars + foot + meta +
+      riskBar + riskAmtHtml + noStopWarn +
       '</article>';
   }
 
@@ -651,6 +675,16 @@
       '<div class="at-list">' + rows + '</div>';
   }
 
+  /* 快照落后提示：权益快照日之后仍有成交时，汇总已按流水滚动，
+     这里必须显式说明，避免用户把"滚动后的现在"误读成"快照当天的数据"。 */
+  function txnFreshNote(pf) {
+    var rolled = (pf && pf.rolled_txns) || 0;
+    if (!rolled) return '';
+    return '<div class="pf-note2">数据截至 ' + esc(pf.asof || NA) +
+      '：其中 ' + rolled + ' 笔成交发生在权益快照（' + esc(pf.snapshot_asof || NA) +
+      '）之后，已按交易流水滚动计入现金与盈亏。</div>';
+  }
+
   function renderPortfolio() {
     var pf = DATA.portfolio;
     var sumEl = $('#pfSummary'), posEl = $('#pfPositions'),
@@ -681,11 +715,28 @@
     cells += cell('Unrealized PnL', '$' + nv(pf.unrealized_pnl, 2), pctCls(num(pf.unrealized_pnl)));
     cells += cell('持仓只数', (pf.open_positions == null ? NA : pf.open_positions) + ' 只' +
       (pf.open_pct == null ? '' : '（股票 ' + pf.open_pct + '%）'));
+
+    /* 组合最大风险：Σ(入场 − 止损) × 股数（只统计止损在入场下方的持仓），
+       再除以总权益。全部来自 positions 现有字段，不做任何策略推断。 */
+    var ps = pf.positions || [];
+    var riskAmt = 0, noStopN = 0;
+    ps.forEach(function (p) {
+      var sp = (p.stop_loss_price != null) ? num(p.stop_loss_price) : numLoose(p.stop_loss);
+      var ep = num(p.entry_price), sh = num(p.shares);
+      if (sp == null) { noStopN++; return; }
+      if (ep != null && sh != null && sp < ep) riskAmt += (ep - sp) * sh;
+    });
+    var eqn = num(pf.total_equity);
+    var riskPct = (eqn && eqn > 0) ? riskAmt / eqn * 100 : null;
+    cells += cell('组合最大风险',
+      riskPct == null ? NA : fmt(riskPct, 2) + '%（$' + fmt(riskAmt, 2) + '）',
+      riskPct != null && riskPct > 10 ? 'down' : '');
+    if (noStopN > 0) cells += cell('无止损持仓', noStopN + ' 只', 'down');
     cells += cell('Start Date', esc(pf.start_date || NA));
-    sumEl.innerHTML = '<div class="matrix">' + cells + '</div>';
+    sumEl.innerHTML = '<div class="matrix">' + cells + '</div>' +
+      txnFreshNote(pf);
 
     // --- 持仓（卡片网格：positions[] 主表，按 ticker join STOCKS[]）---
-    var ps = pf.positions || [];
     if (!ps.length) {
       posEl.innerHTML = '<div class="mx"><div class="k">当前持仓</div>' +
         '<div class="v na">空仓（等待新的 Core 推荐触发建仓）</div></div>';
@@ -798,28 +849,42 @@
       '</td>';
   }
 
-  /* 月度汇总：把已平仓记录按 YYYY-MM 分组，给出「笔数 · 净额」。
-     只聚合当前板块已筛选出的记录（同一 30 天窗口/同一离场类型），
-     不重算、不引入新数据源。 */
-  function monthSummaryHtml(list, label) {
-    if (!list || !list.length) return '';
-    var by = {}, order = [];
-    list.forEach(function (t) {
-      var m = String(t.date || '').slice(0, 7);
-      if (!m) return;
-      if (!by[m]) { by[m] = { n: 0, pnl: 0 }; order.push(m); }
-      by[m].n++;
-      var rp = num(t.realized_pnl);
-      if (rp !== null) by[m].pnl += rp;
-    });
-    order.sort().reverse();
-    var chips = order.map(function (m) {
-      var x = by[m];
-      return '<span class="stp-mchip">' + esc(m) + ' · ' + x.n + ' 笔 · ' +
-        (x.pnl >= 0 ? '+$' : '-$') + fmt(Math.abs(x.pnl), 2) + '</span>';
-    }).join('');
+  /* 月度汇总：优先用后端基于【全量流水】算好的 portfolio.closed_months
+     （不受 transactions 20 条截断影响）；后端缺失时退回本板块已筛选记录聚合。
+     kind: 'stop' | 'profit' */
+  function monthSummaryHtml(kind, list, label) {
+    var pf = DATA && DATA.portfolio;
+    var months = (pf && pf.closed_months) || null;
+    var chips = [];
+
+    if (months && months.length) {
+      chips = months.map(function (m) {
+        var b = (kind === 'profit') ? m.profit : m.stop;
+        if (!b || !b.n) return '';
+        return '<span class="stp-mchip">' + esc(m.month || '') + ' · ' + b.n + ' 笔 · ' +
+          ((b.pnl || 0) >= 0 ? '+$' : '-$') + fmt(Math.abs(b.pnl || 0), 2) + '</span>';
+      }).filter(Boolean);
+    } else if (list && list.length) {
+      var by = {}, order = [];
+      list.forEach(function (t) {
+        var m = String(t.date || '').slice(0, 7);
+        if (!m) return;
+        if (!by[m]) { by[m] = { n: 0, pnl: 0 }; order.push(m); }
+        by[m].n++;
+        var rp = num(t.realized_pnl);
+        if (rp !== null) by[m].pnl += rp;
+      });
+      order.sort().reverse();
+      chips = order.map(function (m) {
+        var x = by[m];
+        return '<span class="stp-mchip">' + esc(m) + ' · ' + x.n + ' 笔 · ' +
+          (x.pnl >= 0 ? '+$' : '-$') + fmt(Math.abs(x.pnl), 2) + '</span>';
+      });
+    }
+
+    if (!chips.length) return '';
     return '<div class="stp-months">' + (label ? '<span class="stp-mlab">' + esc(label) + '</span>' : '') +
-      chips + '</div>';
+      chips.join('') + '</div>';
   }
 
   /* 已止损记录板块（近 30 天）：纯前端只读 portfolio.transactions，
@@ -874,7 +939,7 @@
     if (!stops.length) {
       subEl.textContent = '—';
       bodyEl.innerHTML = '<div class="mx"><div class="k">已止损记录</div>' +
-        '<div class="v na">暂无止损记录</div></div>';
+        '<div class="v na">暂无止损记录</div></div>' + monthSummaryHtml('stop', [], '按月');
       return;
     }
 
@@ -917,6 +982,8 @@
       var retCls = rp !== null ? pctCls(rp) : '';
       var holdTxt = holdText(t);
       var reason = t.reason || NA;
+      // 止损机制离场也可能是盈利的（止损线被抬到入场价上方后触发）→ 明确标注结果
+      var resTxt = (rp !== null && rp > 0) ? '保本以上离场' : '亏损离场';
       return '<div class="stp-row">' +
         '<div class="stp-line1">' +
           '<span class="stp-tk">' + esc(tk) + '</span>' +
@@ -925,12 +992,13 @@
           '<span class="stp-ret ' + retCls + '">' + esc(retTxt) + '</span>' +
         '</div>' +
         '<div class="stp-reason">原因: ' + esc(reason) +
-          (holdTxt ? ' · 持有 ' + esc(holdTxt) : '') + '</div>' +
+          (holdTxt ? ' · 持有 ' + esc(holdTxt) : '') +
+          ' · 结果: ' + esc(resTxt) + '</div>' +
       '</div>';
     }).join('');
 
     bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>' +
-      monthSummaryHtml(stops, '按月');
+      monthSummaryHtml('stop', stops, '按月');
   }
 
   /* 已止盈记录板块（近 30 天）：只读 portfolio.transactions。
@@ -947,7 +1015,7 @@
     var empty = function (txt) {
       subEl.textContent = '—';
       bodyEl.innerHTML = '<div class="mx"><div class="k">已止盈记录</div>' +
-        '<div class="v na">' + txt + '</div></div>';
+        '<div class="v na">' + txt + '</div></div>' + monthSummaryHtml('profit', [], '按月');
     };
     if (!ts.length) { empty('暂无止盈记录'); return; }
 
@@ -1018,7 +1086,7 @@
     }).join('');
 
     bodyEl.innerHTML = '<div class="stp-list">' + rows + '</div>' +
-      monthSummaryHtml(takes, '按月');
+      monthSummaryHtml('profit', takes, '按月');
   }
 
   /* 交易观测面板：只读 portfolio.trade_stats（dashboard_export 计算，前端绝不重算）。

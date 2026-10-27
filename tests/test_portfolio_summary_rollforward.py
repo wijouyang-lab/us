@@ -14,6 +14,8 @@
   4) open_positions 以 positions 实际 OPEN 数为准，不再信 history 的旧计数。
 """
 import json
+import csv
+import datetime as dt
 import os
 import sys
 from pathlib import Path
@@ -121,4 +123,58 @@ def test_exit_rules_null_when_params_missing(tmp_path):
     _write(tmp_path)
     pf = build_portfolio(tmp_path)
     assert pf["exit_rules"] is None          # 前端回退为「浮盈达标后抬保本」文案
+
+
+def _write_many_sells(tmp_path, n=25, start="2026-09-25", history_date="2026-10-01"):
+    """写 n 笔 SELL（跨 9/10 月），用于验证月度聚合不受 20 条展示截断影响。"""
+    _write(tmp_path)
+    cols = ["Txn_ID", "Date", "Ticker", "Action", "Shares", "Price", "Amount",
+            "Realized_PnL", "Cash_After", "Reason", "Recommendation_ID", "Scan_Date",
+            "Portfolio_ID", "Unit_ID", "Pending_Reason", "Quote_As_Of"]
+    d0 = dt.date.fromisoformat(start)
+    rows = []
+    for i in range(n):
+        day = (d0 + dt.timedelta(days=i)).isoformat()
+        profit = i % 2 == 0
+        rows.append({
+            "Txn_ID": f"T{i}|SELL|{day}", "Date": day, "Ticker": f"T{i}", "Action": "SELL",
+            "Shares": "10", "Price": "20.00", "Amount": "200.00",
+            "Realized_PnL": "10.00" if profit else "-5.00",
+            "Reason": "Review exit: Trailing_Profit_Take" if profit else "Review exit: Stop_Loss_Hit",
+            "Recommendation_ID": f"T{i}", "Scan_Date": day,
+            "Portfolio_ID": "US-50000-001", "Unit_ID": f"U{i}",
+        })
+    with (tmp_path / "portfolio_50000_transactions.csv").open("w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        w.writerows(rows)
+    (tmp_path / "portfolio_50000_history.csv").write_text(
+        "Date,Cash,Stock_Value,Total_Equity,Realized_PnL,Unrealized_PnL,Total_PnL,"
+        "Return_Pct,Open_Positions\n"
+        f"{history_date},50000.00,0.00,50000.00,0.00,0.00,0.00,0.00,0\n",
+        encoding="utf-8")
+
+
+def test_closed_months_covers_full_ledger_beyond_20_rows(tmp_path):
+    _write_many_sells(tmp_path, n=25)
+    pf = build_portfolio(tmp_path)
+
+    # 展示窗口仍只有 20 条
+    assert len(pf["transactions"]) == 20
+    # 但月度聚合基于全量流水：25 笔一个不少
+    months = pf["closed_months"]
+    assert months, months
+    total = sum((m["profit"]["n"] + m["stop"]["n"]) for m in months)
+    assert total == 25, months
+    assert sum(m["profit"]["n"] for m in months) == 13
+    assert sum(m["stop"]["n"] for m in months) == 12
+    assert [m["month"] for m in months] == sorted((m["month"] for m in months), reverse=True)
+
+
+def test_snapshot_lag_flags_rolled_txns(tmp_path):
+    _write_many_sells(tmp_path, n=5, start="2026-09-25", history_date="2026-09-26")
+    pf = build_portfolio(tmp_path)
+    assert pf["snapshot_asof"] == "2026-09-26"
+    assert pf["asof"] == "2026-09-29"          # 最后一笔 SELL 日期
+    assert pf["rolled_txns"] == 3              # 快照日(09-26)之后仍有 3 笔成交
 

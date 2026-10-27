@@ -57,7 +57,9 @@ def _run(data):
         "  profitSub: e['#profitSub'] ? e['#profitSub'].textContent : null,\n"
         "  profitBody: e['#profitBody'] ? e['#profitBody'].innerHTML : null,\n"
         "  target: e['#pfTarget'] ? e['#pfTarget'].innerHTML : null,\n"
-        "  positions: e['#pfPositions'] ? e['#pfPositions'].innerHTML : null\n"
+        "  positions: e['#pfPositions'] ? e['#pfPositions'].innerHTML : null,\n"
+        "  summary: e['#pfSummary'] ? e['#pfSummary'].innerHTML : null,\n"
+        "  stopped: e['#stoppedBody'] ? e['#stoppedBody'].innerHTML : null\n"
         "}));\n"
     )
     js.write_text(_harness() + _expose() + tail, encoding="utf-8")
@@ -174,3 +176,86 @@ def test_position_card_next_profit_target_tier():
     r2 = _run({"portfolio": dict(rules, target=[], transactions=[], positions=[pos2])})
     html2 = r2["positions"] or ""
     assert "止盈价</span><b class=\"flat\">$312.00（目标参考 +30% · 锁 8% 回撤）" in html2, html2
+
+
+def test_month_chips_use_backend_full_ledger():
+    """月度汇总优先用后端全量聚合（closed_months），不受 20 条展示截断影响。"""
+    data = {"portfolio": {
+        "target": [], "positions": [],
+        "closed_months": [
+            {"month": "2026-10", "profit": {"n": 3, "pnl": 100.0},
+             "stop": {"n": 7, "pnl": -50.0}},
+            {"month": "2026-09", "profit": {"n": 2, "pnl": 40.0},
+             "stop": {"n": 1, "pnl": -10.0}},
+        ],
+        # 展示窗口只剩 1 条，但月度 chip 应该是全量的 7 笔
+        "transactions": [
+            {"date": "2026-10-13", "ticker": "KR", "action": "SELL", "shares": 168,
+             "price": 60.68, "amount": 10194.24, "realized_pnl": 236.88,
+             "reason": "Review exit: Stop_Loss_Hit"},
+        ],
+    }}
+    r = _run(data)
+    stopped = r["stopped"] or ""
+    assert "2026-10 · 7 笔 · -$50.00" in stopped, stopped
+    assert "2026-09 · 1 笔 · -$10.00" in stopped, stopped
+    profit = r["profitBody"] or ""
+    assert "2026-10 · 3 笔 · +$100.00" in profit, profit
+    assert "2026-09 · 2 笔 · +$40.00" in profit, profit
+
+
+def test_summary_risk_and_snapshot_note():
+    """概览：组合最大风险 + 快照落后提示；卡片：单笔最大亏损 + 色带图例。"""
+    pos = {"ticker": "ADSK", "shares": 10, "entry_price": 100.0, "current_price": 105.0,
+           "market_value": 1050.0, "unrealized_pnl": 50.0, "unrealized_pnl_pct": 5.0,
+           "weight_pct": 10.0, "holding_days": 3,
+           "stop_loss": "90.00", "stop_loss_price": 90.0}
+    data = {"portfolio": {
+        "target": [], "transactions": [], "positions": [pos],
+        "total_equity": 10000.0, "initial_capital": 10000.0, "cash": 8950.0,
+        "stock_value": 1050.0, "total_pnl": 0.0, "return_pct": 0.0,
+        "realized_pnl": 0.0, "unrealized_pnl": 50.0, "open_positions": 1,
+        "open_pct": 10.5, "start_date": "2026-10-01",
+        "asof": "2026-10-22", "snapshot_asof": "2026-10-20", "rolled_txns": 2,
+    }}
+    r = _run(data)
+    summary = r["summary"] or ""
+    # (100-90)*10 = $100 → 100 / 10000 = 1.00%
+    assert "组合最大风险" in summary, summary
+    assert "1.00%（$100.00）" in summary, summary
+    assert "2 笔成交发生在权益快照（2026-10-20）之后" in summary, summary
+
+    html = r["positions"] or ""
+    assert "最大亏损" in html and "-$100.00" in html, html
+    assert "（1.0% 权益）" in html, html
+    assert "▲ 盈利区（入场 → 现价/止盈线）" in html, html
+    assert "▼ 风险区（止损 → 入场）" in html, html
+
+
+def test_position_without_stop_warns():
+    pos = {"ticker": "XYZ", "shares": 10, "entry_price": 100.0, "current_price": 101.0,
+           "market_value": 1010.0, "unrealized_pnl": 10.0, "unrealized_pnl_pct": 1.0,
+           "weight_pct": 10.0, "holding_days": 2, "stop_loss": None}
+    data = {"portfolio": {"target": [], "transactions": [], "positions": [pos],
+                          "total_equity": 10000.0, "open_positions": 1}}
+    r = _run(data)
+    html = r["positions"] or ""
+    assert "无有效止损：盘中止损不会保护这笔持仓" in html, html
+    summary = r["summary"] or ""
+    assert "无止损持仓" in summary and "1 只" in summary, summary
+
+
+def test_stopped_row_labels_profit_above_breakeven():
+    """止损机制离场但盈利 → 标注「保本以上离场」，避免误读为亏损止损。"""
+    data = {"portfolio": {"target": [], "positions": [], "transactions": [
+        {"date": "2026-10-14", "ticker": "ISRG", "action": "SELL", "shares": 24,
+         "price": 414.81, "amount": 9955.44, "realized_pnl": 233.76,
+         "reason": "Review exit: Stop_Loss_Hit", "entry_price": 405.07},
+        {"date": "2026-10-13", "ticker": "ANET", "action": "SELL", "shares": 47,
+         "price": 204.98, "amount": 9634.06, "realized_pnl": -297.04,
+         "reason": "Review exit: Stop_Loss_Hit", "entry_price": 211.30},
+    ]}}
+    r = _run(data)
+    stopped = r["stopped"] or ""
+    assert "结果: 保本以上离场" in stopped, stopped
+    assert "结果: 亏损离场" in stopped, stopped
