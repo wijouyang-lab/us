@@ -612,6 +612,9 @@ def write_observations_csv(path: str | Path, report: Mapping[str, Any]) -> None:
         "event_id", "event_version_id", "event_type", "source", "ticker",
         "published_at_utc", "first_seen_at_utc", "source_delay_minutes",
         "entry_date", "entry_open",
+        "ticker_mapping_status", "ticker_mapping_confidence", "ticker_mapping_method",
+        "ticker_mapping_review_was_available_by_entry", "ticker_mapping_reviewed_at_utc",
+        "ticker_mapping_reviewer_id", "ticker_mapping_review_rationale",
     ]
     for horizon in horizons:
         fields.extend([f"exit_date_{horizon}s", f"gross_return_{horizon}s", f"net_return_{horizon}s"])
