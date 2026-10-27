@@ -42,7 +42,8 @@ jobs:
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
-          python -m pip install "requests>=2.31,<3"
+          # ai_router 的 ClawSocket 路径使用 openai SDK（OpenAI-compatible 中转）
+          python -m pip install "requests>=2.31,<3" "openai>=1.0,<3"
 
       - name: Generate market sentiment commentary
         env:
