@@ -2842,6 +2842,7 @@ def _read_macro_forecast(data_dir: Path):
         if not indicator or forecast is None or actual is None:
             continue
         items.append({
+            "key": clean_text(r.get("key")) or None,
             "indicator": indicator,
             "period": clean_text(r.get("period")) or None,
             "forecast": round_num(forecast, 2),
