@@ -159,10 +159,11 @@ def test_audit_requires_review_provenance_and_separates_ambiguous_labels(tmp_pat
     ]), encoding="utf-8")
     result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
     assert result["status"] == "blocked_no_validated_labels"
-    assert result["label_quality"]["reviewed_annotations_with_valid_provenance"] == 0
+    assert result["label_quality"]["reviewed_annotations_with_valid_provenance"] == 1
     assert result["label_quality"]["reviewed_labels"] == 0
     assert result["label_quality"]["unverified_label_provenance"] == 0
-    assert result["readiness_gates"]["label_review_provenance_present"] is False
+    assert result["readiness_gates"]["label_review_provenance_present"] is True
+    assert result["readiness_gates"]["validated_labels_present"] is False
     assert result["readiness_gates"]["pit_eligibility_evaluated"] is False
     assert result["readiness_gates"]["pit_eligible_for_at_least_one_decision"] is False
 
