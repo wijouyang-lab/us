@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T06:54:25Z",
+  "generated_at": "2026-10-27T07:00:51Z",
   "asof": "2026-10-26",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 未回测 · 仅供观察",
   "note": "规则版观察信号：由 scripts/oversold_screen.py 从 quant_factor_snapshot.csv 生成，不是量化研究产出、未做回测；阈值固定写在脚本里，不构成投资建议。",
