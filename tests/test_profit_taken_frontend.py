@@ -43,7 +43,7 @@ def _expose():
         "\n  boot();\n",
         "\n  globalThis.__setData = function(d){ DATA = d; };\n"
         "  globalThis.__setMacro = function(m){ MACRO = m; };\n"
-        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); renderMarketIndicators(); renderMacro(); };\n")
+        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); renderMarketIndicators(); renderMacro(); renderSkillSerenity(); renderNews(); };\n")
     assert "__setData" in out, "未能注入 expose 钩子"
     return out
 
@@ -66,6 +66,8 @@ def _run(data):
         "  oversoldHidden: e['#oversoldCard'] ? e['#oversoldCard'].hidden : null,\n"
         "  oversoldSub: e['#oversoldSub'] ? e['#oversoldSub'].textContent : null,\n"
         "  market: e['#marketIndicatorsBody'] ? e['#marketIndicatorsBody'].innerHTML : null,\n"
+        "  serenity: e['#skillSerenityBody'] ? e['#skillSerenityBody'].innerHTML : null,\n"
+        "  news: e['#newsMarket'] ? e['#newsMarket'].innerHTML : null,\n"
         "  macro: e['#macroBody'] ? e['#macroBody'].innerHTML : null\n"
         "}));\n"
     )
