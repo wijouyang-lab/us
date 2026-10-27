@@ -123,3 +123,20 @@ def test_dashboard_export_passes_ai_and_sector(tmp_path):
     assert c["sector"] == "Technology"
     assert c["ai"]["verdict"] == "观察"          # 非法结论归为观察
     assert c["ai"]["technical"] == "RSI 超卖"
+
+def test_load_news_reads_market_and_ticker_news(tmp_path):
+    data = tmp_path / "dashboard_data.json"
+    data.write_text(
+        '{"news": {"market_news": [{"headline": "M1"}, {"headline": "M2"}],'
+        ' "ticker_news": {"AAA": [{"headline": "H1", "source": "Reuters"}]}}}',
+        encoding="utf-8")
+    market, ticker_news = ai_mod.load_news(data)
+    assert market == ["M1", "M2"]
+    assert ticker_news["AAA"][0]["title"] == "H1"
+    assert ticker_news["AAA"][0]["publisher"] == "Reuters"
+
+
+def test_build_facts_prefers_ticker_news():
+    c = {"ticker": "AAA", "enrich": {"news": [{"title": "yf"}]}}
+    facts = ai_mod.build_facts(c, ["m"], {"AAA": [{"title": "ticker"}]})
+    assert facts["news"][0]["title"] == "ticker"

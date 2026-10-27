@@ -125,8 +125,9 @@ def cap_by_sector(cands, cap: int = SECTOR_CAP, final: int = FINAL_MAX):
     return out
 
 
-def build_facts(c: dict, market_news) -> dict:
+def build_facts(c: dict, market_news, ticker_news=None) -> dict:
     e = c.get("enrich") or {}
+    news = (ticker_news or {}).get(c["ticker"]) or e.get("news") or []
     return {
         "ticker": c["ticker"],
         "name": c.get("name"),
@@ -158,7 +159,7 @@ def build_facts(c: dict, market_news) -> dict:
             "earnings_growth": e.get("earnings_growth"),
             "market_cap": e.get("market_cap"),
         },
-        "news": e.get("news") or [],
+        "news": news,
         "market_news": market_news,
         "reference_stop": c.get("stop_loss"),
         "reference_price": c.get("ref_price"),
@@ -175,12 +176,12 @@ SYSTEM = (
 )
 
 
-def analyze_one(c: dict, market_news) -> dict | None:
+def analyze_one(c: dict, market_news, ticker_news=None) -> dict | None:
     try:
         from ai_router import gpt_generate_text, extract_json_object
     except Exception:
         return None
-    facts = build_facts(c, market_news)
+    facts = build_facts(c, market_news, ticker_news)
     try:
         text = gpt_generate_text(
             messages=[
@@ -219,20 +220,43 @@ def normalize_ai(obj: dict) -> dict:
     }
 
 
-def load_market_news(data_path: Path, limit: int = 6):
+def load_news(data_path: Path, limit: int = 6):
+    """从 dashboard_data.json 读取市场新闻与个股新闻。
+
+    结构：news = {market_news: [...], ticker_news: {TICKER: [...]}, ...}
+    返回 (market_headlines, {TICKER: [{title, publisher}]})。
+    """
     try:
         raw = json.loads(data_path.read_text(encoding="utf-8"))
     except Exception:
-        return []
+        return [], {}
     news = raw.get("news")
-    items = news if isinstance(news, list) else (news or {}).get("items") or []
-    out = []
-    for n in items[:limit]:
-        if isinstance(n, dict):
-            title = n.get("headline_cn") or n.get("headline")
-            if title:
-                out.append(str(title)[:120])
-    return out
+    market, ticker_news = [], {}
+    if isinstance(news, dict):
+        for n in (news.get("market_news") or [])[:limit]:
+            if isinstance(n, dict):
+                title = n.get("headline_cn") or n.get("headline")
+                if title:
+                    market.append(str(title)[:140])
+        for tk, items in (news.get("ticker_news") or {}).items():
+            if not isinstance(items, list):
+                continue
+            rows = []
+            for n in items[:4]:
+                if isinstance(n, dict) and (n.get("headline") or n.get("headline_cn")):
+                    rows.append({
+                        "title": str(n.get("headline_cn") or n.get("headline"))[:160],
+                        "publisher": n.get("source"),
+                    })
+            if rows:
+                ticker_news[str(tk).upper()] = rows
+    elif isinstance(news, list):
+        for n in news[:limit]:
+            if isinstance(n, dict):
+                title = n.get("headline_cn") or n.get("headline")
+                if title:
+                    market.append(str(title)[:140])
+    return market, ticker_news
 
 
 def build_payload(asof, cands, ai_ok: int, model: str | None):
@@ -289,7 +313,7 @@ def main(argv=None) -> int:
         print(f"[OK] {asof}：无候选", file=sys.stderr)
         return 0
 
-    market_news = [] if args.offline else load_market_news(Path(args.data))
+    market_news, ticker_news = ([], {}) if args.offline else load_news(Path(args.data))
     if not args.offline:
         pool = merge_enrich(pool)
 
@@ -300,7 +324,7 @@ def main(argv=None) -> int:
     if not args.offline:
         model = os.environ.get(AI_MODEL_ENV) or None
         for c in final:
-            ai = analyze_one(c, market_news)
+            ai = analyze_one(c, market_news, ticker_news)
             if ai:
                 c["ai"] = ai
                 ai_ok += 1
