@@ -2773,9 +2773,24 @@ def _read_oversold(data_dir: Path):
         tk = clean_text(r.get("ticker")).upper()
         if not tk:
             continue
+        ai_raw = r.get("ai") if isinstance(r.get("ai"), dict) else None
+        ai = None
+        if ai_raw:
+            verdict = clean_text(ai_raw.get("verdict")) or ""
+            if verdict not in {"关注", "观察", "谨慎", "回避"}:
+                verdict = "观察"
+            ai = {
+                "verdict": verdict,
+                "technical": clean_text(ai_raw.get("technical"))[:160] or None,
+                "fundamental": clean_text(ai_raw.get("fundamental"))[:160] or None,
+                "news": clean_text(ai_raw.get("news"))[:160] or None,
+                "risk": clean_text(ai_raw.get("risk"))[:160] or None,
+                "summary": clean_text(ai_raw.get("summary"))[:160] or None,
+            }
         out.append({
             "ticker": tk,
             "name": clean_text(r.get("name")) or None,
+            "sector": clean_text(r.get("sector")) or None,
             "score": round_num(parse_num(r.get("score")), 1),
             "tag": clean_text(r.get("tag")) or None,
             "rsi": round_num(parse_num(r.get("rsi")), 1),
@@ -2787,6 +2802,7 @@ def _read_oversold(data_dir: Path):
             "invalid": clean_text(r.get("invalid")) or None,
             "observe_until": clean_text(r.get("observe_until")) or None,
             "reason": clean_text(r.get("reason")) or None,
+            "ai": ai,
         })
     return {
         "schema": int(parse_num(raw.get("schema")) or 1),
@@ -2794,6 +2810,8 @@ def _read_oversold(data_dir: Path):
         "asof": clean_text(raw.get("asof")) or None,
         "source": clean_text(raw.get("source")) or None,
         "note": clean_text(raw.get("note")) or None,
+        "ai_model": clean_text(raw.get("ai_model")) or None,
+        "ai_count": int(parse_num(raw.get("ai_count")) or 0),
         "count": len(out),
         "candidates": out,
     }

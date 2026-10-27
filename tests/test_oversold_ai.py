@@ -15,6 +15,8 @@ _spec = importlib.util.spec_from_file_location(
 ai_mod = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(ai_mod)
 
+import dashboard_export as de  # noqa: E402
+
 HEADER = ("Scan_Date,Technical_Date,Ticker,Name,Sector,Price,RSI_14,Bias_Pct,"
           "ZScore_20D,ATR_Pct,Volume_Ratio_20D,Momentum_20D_Pct,Momentum_60D_Pct,"
           "MA20,MA50,Technical_Score_25,Event_Score,Quant_Score,Beta_60D_SPY,"
@@ -103,3 +105,21 @@ def test_missing_snapshot_keeps_old_file(tmp_path):
                       "--out", str(out), "--offline"])
     assert rc == 0
     assert "KEEP" in out.read_text(encoding="utf-8")
+
+def test_dashboard_export_passes_ai_and_sector(tmp_path):
+    repo = tmp_path / "repo"
+    data = repo / "dashboard" / "data"
+    data.mkdir(parents=True)
+    (data / "oversold_candidates.json").write_text(
+        '{"schema": 1, "ai_model": "m", "ai_count": 1, "candidates": ['
+        '{"ticker": "aaa", "sector": "Technology", "score": 60,'
+        ' "ai": {"verdict": "买入", "technical": "RSI 超卖", "news": "财报超预期"}}]}',
+        encoding="utf-8")
+    parsed = de._read_oversold(repo)
+    assert parsed["ai_model"] == "m"
+    assert parsed["ai_count"] == 1
+    c = parsed["candidates"][0]
+    assert c["ticker"] == "AAA"
+    assert c["sector"] == "Technology"
+    assert c["ai"]["verdict"] == "观察"          # 非法结论归为观察
+    assert c["ai"]["technical"] == "RSI 超卖"
