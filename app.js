@@ -1696,12 +1696,6 @@
     if (ind && ind.items && ind.items.length) {
       /* 新的九项宏观指标（fetch_macro_indicators.py 生成）；旧 economic 仅作降级。 */
       econHtml += '<div class="macro-econ-grid">' + ind.items.map(macroIndicatorCard).join('') + '</div>';
-      var aiBox = DATA.macro_cpi_ai;
-      if (aiBox && aiBox.analysis) {
-        econHtml += '<div class="macro-ai"><div class="macro-ai-h">🤖 CPI 预期差解读' +
-          (aiBox.model ? '<span class="macro-ai-m">' + esc(aiBox.model) + '</span>' : '') + '</div>' +
-          '<div class="macro-ai-b">' + esc(aiBox.analysis) + '</div></div>';
-      }
     } else if (!econ.length) {
       econHtml += emptyState('na', '暂无经济数据');
     } else {
@@ -2000,6 +1994,8 @@
   function forecastFor(key) {
     var mf = DATA && DATA.macro_forecast;
     if (!mf || !mf.items) return null;
+    var hit = mf.items.find(function (x) { return x.key === key; });
+    if (hit) return hit;
     if (key === 'cpi_yoy') {
       return mf.items.find(function (x) {
         return /CPI/.test(x.indicator || '') && !/核心/.test(x.indicator || '');
@@ -2048,6 +2044,9 @@
         (chgTxt ? ' <span class="macro-d ' + chgCls + '">' + (chg > 0 ? '▲' : (chg < 0 ? '▼' : '→')) + chgTxt.replace(/^[+-]/, '') + '</span>' : '') +
       '</div>' +
       (fHtml || '') +
+      ((DATA && DATA.macro_cpi_ai && DATA.macro_cpi_ai.analyses && DATA.macro_cpi_ai.analyses[it.key])
+        ? '<div class="macro-ai-b">🤖 ' + esc(DATA.macro_cpi_ai.analyses[it.key]) + '</div>'
+        : '') +
       (meta.length ? '<div class="macro-econ-m">' + esc(meta.join(' · ')) + '</div>' : '') +
       '</div>';
   }

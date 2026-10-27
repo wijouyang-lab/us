@@ -40,6 +40,9 @@ def test_export_readers_flow_into_rendered_sections(tmp_path):
             {"key": "cpi_yoy", "name": "未季调CPI年率", "value": 3.7, "unit": "%",
              "date": "2026-09-01", "prev": 3.4, "change": 0.3,
              "source": "TradingEconomics", "source_status": "fallback"},
+            {"key": "core_cpi_yoy", "name": "核心CPI年率", "value": 2.6, "unit": "%",
+             "date": "2026-09-01", "prev": 2.5, "change": 0.1,
+             "source": "FRED CPILFESL", "source_status": "primary"},
         ]})
     _write(tmp_path, "dashboard/data/macro_forecast.json", {
         "schema": 1, "source": "自动", "items": [
@@ -50,6 +53,7 @@ def test_export_readers_flow_into_rendered_sections(tmp_path):
     _write(tmp_path, "dashboard/data/macro_cpi_ai.json", {
         "signature": "x", "model": "deepseek-flash",
         "analysis": "CPI 高于预期，利率预期上修。",
+        "analyses": {"cpi_yoy": "CPI 高于预期，利率预期上修。"},
     })
     _write(tmp_path, "dashboard/data/oversold_candidates.json", {
         "schema": 1, "asof": "2026-10-27", "ai_count": 1,

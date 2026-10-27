@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""CPI / 核心CPI 预期 vs 实际：自动写入 macro_forecast.json。
+"""经济数据「预期 vs 实际」自动写入 macro_forecast.json。
 
-数据源：TradingEconomics 指标页正文
-  · 实际值："... accelerated to 3.7% in September 2026 ..."
-  · 预期值："... above market expectations of 3.6% ..."
+数据源：TradingEconomics 各指标页正文
+  · 实际："... to 3.7% in September 2026" / "rose by 29K in September"
+  · 预期："... above market expectations of 3.6%"
 
-只写 CPI 同比 / 核心CPI 同比两行；解析失败保留旧文件（fail-closed）。
-不调用 AI、不改策略；前端已有「预期 vs 实际」渲染。
+按 key 对齐 macro_indicators（unrate/nonfarm/cpi_yoy/core_cpi_yoy/cpi_mom/
+umich/ism/adp/claims）。解析不到的指标跳过；全部失败则保留旧文件。
+不调用 AI。
 """
 from __future__ import annotations
 
@@ -25,10 +26,17 @@ REPO = Path(__file__).resolve().parent.parent
 OUT = REPO / "dashboard" / "data" / "macro_forecast.json"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; US-Dashboard/1.0)"}
 
-PAGES = [
-    ("CPI 同比", "https://tradingeconomics.com/united-states/inflation-cpi"),
-    ("核心CPI 同比", "https://tradingeconomics.com/united-states/core-inflation-rate"),
-]
+PAGES = {
+    "unrate": ("失业率", "https://tradingeconomics.com/united-states/unemployment-rate"),
+    "nonfarm": ("季调后非农", "https://tradingeconomics.com/united-states/nonfarm-payrolls"),
+    "cpi_yoy": ("未季调CPI年率", "https://tradingeconomics.com/united-states/inflation-cpi"),
+    "core_cpi_yoy": ("核心CPI年率", "https://tradingeconomics.com/united-states/core-inflation-rate"),
+    "cpi_mom": ("季调后CPI月率", "https://tradingeconomics.com/united-states/inflation-rate-mom"),
+    "umich": ("密歇根消费者信心", "https://tradingeconomics.com/united-states/consumer-confidence"),
+    "ism": ("ISM制造业PMI", "https://tradingeconomics.com/united-states/manufacturing-pmi"),
+    "adp": ("ADP就业人数", "https://tradingeconomics.com/united-states/adp-employment-change"),
+    "claims": ("初请失业金", "https://tradingeconomics.com/united-states/initial-jobless-claims"),
+}
 
 MONTHS = {m: i for i, m in enumerate(
     ["January", "February", "March", "April", "May", "June", "July",
@@ -42,47 +50,53 @@ def _get(url: str) -> str:
 
 
 def parse(text: str):
-    """返回 (actual, forecast, previous, period) 或 None。"""
-    m = re.search(r"(?:to|at) ([0-9]+\.[0-9])% in ([A-Z][a-z]+) (\d{4})", text)
+    """返回 (actual, forecast, unit, period) 或 None。"""
+    m = re.search(
+        r"(?:rose|fell|increased|decreased|was|stood at|to|at|of|by)\s+(?:by\s+)?"
+        r"([0-9]+(?:\.[0-9]+)?)(%|K)? in ([A-Z][a-z]+)(?: (\d{4}))?", text)
     if not m:
         return None
-    actual, month, year = float(m.group(1)), m.group(2), m.group(3)
+    actual = float(m.group(1))
+    unit = m.group(2) or "%"
+    month = m.group(3)
+    year = m.group(4) or str(datetime.now().year)
     e = re.search(
         r"(?:above|below|exceeding|beating|missing|surpassing)[^.]{0,120}?"
-        r"expectations? of ([0-9]+\.[0-9])%", text, re.I)
-    p = re.search(r"from ([0-9]+\.[0-9])%", text)
+        r"expectations? of ([0-9]+(?:\.[0-9]+)?)(%|K)?", text, re.I)
     if not e:
-        e = re.search(r"(?:expected|consensus)[^.]{0,60}?([0-9]+\.[0-9])%", text, re.I)
+        e = re.search(r"(?:expected|consensus)[^.]{0,60}?([0-9]+(?:\.[0-9]+)?)(%|K)?",
+                      text, re.I)
     if not e:
         return None
     period = f"{year}年{MONTHS.get(month, 0)}月"
-    return actual, float(e.group(1)), (float(p.group(1)) if p else None), period
+    return actual, float(e.group(1)), unit, period
 
 
 def build():
     rows = []
-    for name, url in PAGES:
+    for key, (name, url) in PAGES.items():
         try:
             got = parse(_get(url))
         except Exception as exc:
             print(f"[WARN] {name} 抓取失败：{exc}", file=sys.stderr)
             continue
         if not got:
-            print(f"[WARN] {name} 解析失败（页面结构可能变了）", file=sys.stderr)
+            print(f"[WARN] {name} 解析不到预期/实际，跳过", file=sys.stderr)
             continue
-        actual, forecast, prev, period = got
+        actual, forecast, unit, period = got
+        diff = round(actual - forecast, 2)
         rows.append({
+            "key": key,
             "indicator": name,
             "period": period,
             "forecast": forecast,
             "actual": actual,
-            "previous": prev,
-            "unit": "%",
+            "previous": None,
+            "unit": unit,
             "released_at": None,
-            "impact": f"实际 {actual}% vs 预期 {forecast}%（{'+' if actual >= forecast else ''}"
-                      f"{round(actual - forecast, 2)}pp）。",
+            "impact": f"实际 {actual}{unit} vs 预期 {forecast}{unit}（{'+' if diff >= 0 else ''}{diff}）。",
         })
-    if len(rows) < 2:
+    if not rows:
         return None
     return {
         "schema": 1,
@@ -94,14 +108,14 @@ def build():
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="自动更新 CPI 预期 vs 实际")
+    ap = argparse.ArgumentParser(description="自动更新经济数据预期 vs 实际")
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
 
     payload = build()
     if not payload:
-        print("[WARN] CPI 解析不足 2 条，保留旧 macro_forecast.json", file=sys.stderr)
+        print("[WARN] 全部指标解析失败，保留旧 macro_forecast.json", file=sys.stderr)
         return 0
     if args.dry_run:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
@@ -118,7 +132,7 @@ def main(argv=None) -> int:
     finally:
         if os.path.exists(tmp):
             os.unlink(tmp)
-    print(f"[OK] 已更新 {len(payload['items'])} 条 CPI 预期差 -> {out}", file=sys.stderr)
+    print(f"[OK] 已更新 {len(payload['items'])} 条预期差 -> {out}", file=sys.stderr)
     return 0
 
 

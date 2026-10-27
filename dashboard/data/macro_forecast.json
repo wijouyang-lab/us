@@ -1,28 +1,74 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T19:17:10Z",
+  "generated_at": "2026-10-27T19:18:39Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
     {
-      "indicator": "CPI 同比",
+      "key": "unrate",
+      "indicator": "失业率",
+      "period": "2026年9月",
+      "forecast": 4.1,
+      "actual": 4.2,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 4.2% vs 预期 4.1%（+0.1）。"
+    },
+    {
+      "key": "cpi_yoy",
+      "indicator": "未季调CPI年率",
       "period": "2026年9月",
       "forecast": 3.6,
       "actual": 3.7,
-      "previous": 3.4,
+      "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 3.7% vs 预期 3.6%（+0.1pp）。"
+      "impact": "实际 3.7% vs 预期 3.6%（+0.1）。"
     },
     {
-      "indicator": "核心CPI 同比",
+      "key": "core_cpi_yoy",
+      "indicator": "核心CPI年率",
       "period": "2026年9月",
       "forecast": 2.5,
       "actual": 2.6,
-      "previous": 2.5,
+      "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 2.6% vs 预期 2.5%（+0.1pp）。"
+      "impact": "实际 2.6% vs 预期 2.5%（+0.1）。"
+    },
+    {
+      "key": "cpi_mom",
+      "indicator": "季调后CPI月率",
+      "period": "2026年8月",
+      "forecast": 0.3,
+      "actual": 0.3,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 0.3% vs 预期 0.3%（+0.0）。"
+    },
+    {
+      "key": "umich",
+      "indicator": "密歇根消费者信心",
+      "period": "2026年9月",
+      "forecast": 47.6,
+      "actual": 48.1,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 48.1% vs 预期 47.6%（+0.5）。"
+    },
+    {
+      "key": "ism",
+      "indicator": "ISM制造业PMI",
+      "period": "2026年10月",
+      "forecast": 53.6,
+      "actual": 56.0,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 56.0% vs 预期 53.6%（+2.4）。"
     }
   ]
 }

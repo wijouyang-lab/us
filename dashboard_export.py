@@ -2752,13 +2752,19 @@ def _read_macro_cpi_ai(data_dir: Path):
     if not isinstance(raw, dict):
         return None
     analysis = clean_text(raw.get("analysis"))
-    if not analysis:
+    analyses = {}
+    for k, v in (raw.get("analyses") or {}).items():
+        t = clean_text(v)
+        if t:
+            analyses[clean_text(k)] = t[:400]
+    if not analysis and not analyses:
         return None
     return {
         "signature": clean_text(raw.get("signature")) or None,
         "generated_at": clean_text(raw.get("generated_at")) or None,
         "model": clean_text(raw.get("model")) or None,
-        "analysis": analysis[:800],
+        "analysis": (analysis or "")[:800] or None,
+        "analyses": analyses,
     }
 
 

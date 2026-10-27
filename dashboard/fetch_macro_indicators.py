@@ -99,6 +99,7 @@ def _item(key, name, value, unit, date, prev=None, change=None, source="", note=
 
 TE_ALIASES = {
     "unrate": ["Unemployment Rate"],
+    "core_cpi_yoy": ["Core Inflation Rate"],
     "nonfarm": ["Non Farm Payrolls", "Nonfarm Payrolls", "Nonfarm Payrolls Private"],
     "cpi_yoy": ["Inflation Rate"],
     "cpi_mom": ["Inflation Rate MoM"],
@@ -172,6 +173,19 @@ def build_items():
                            "FRED CPIAUCNS"))
     else:
         items.append(_item("cpi_yoy", "未季调CPI年率", None, "%", None, source="FRED CPIAUCNS"))
+
+    # 3b. 核心 CPI 年率
+    rows = fred_series("CPILFESL")
+    y2 = yoy(rows)
+    if rows:
+        d2 = rows[-1][0]
+        prev_y2 = yoy(rows[:-1]) if len(rows) >= 14 else None
+        items.append(_item("core_cpi_yoy", "核心CPI年率", y2, "%", d2, prev_y2,
+                           round(y2 - prev_y2, 2) if (y2 is not None and prev_y2 is not None) else None,
+                           "FRED CPILFESL"))
+    else:
+        items.append(_item("core_cpi_yoy", "核心CPI年率", None, "%", None,
+                           source="FRED CPILFESL"))
 
     # 4. 季调后 CPI 月率
     rows = fred_series("CPIAUCSL")
