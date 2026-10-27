@@ -177,12 +177,12 @@ jobs:
           )"
           if [[ -n "$AUDIT_SOURCE" && -s "$ARCHIVE" ]]; then
             DECISION_AT="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["decision_at_utc"])' "$AUDIT_SOURCE")"
-            printf 'decision_at\\n%s\\n' "$DECISION_AT" > "$DECISIONS"
+            printf 'decision_at\n%s\n' "$DECISION_AT" > "$DECISIONS"
             set +e
-            python -m tools.research.audit_pit_event_data_readiness \\
-              --archive "$ARCHIVE" \\
-              --decisions "$DECISIONS" \\
-              --audited-at "$DECISION_AT" \\
+            python -m tools.research.audit_pit_event_data_readiness \
+              --archive "$ARCHIVE" \
+              --decisions "$DECISIONS" \
+              --audited-at "$DECISION_AT" \
               --output "$OUTPUT"
             AUDIT_STATUS=$?
             set -e
