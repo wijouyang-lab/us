@@ -2736,6 +2736,43 @@ def _read_skill_serenity(data_dir: Path):
         return None
 
 
+# 哨兵：decision_inputs.json 不存在 → 不注入键（前端隐藏总览面板）。
+_DECISION_INPUTS_MISSING = object()
+
+
+def _read_decision_inputs(data_dir: Path):
+    """读「决策输入快照」（只读聚合层，不含权重/买卖规则）。"""
+    p = data_dir / "dashboard" / "data" / "decision_inputs.json"
+    if not p.exists():
+        return _DECISION_INPUTS_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(raw, dict):
+        return None
+    feats = []
+    for f in (raw.get("features") or [])[:40]:
+        if not isinstance(f, dict) or not f.get("key"):
+            continue
+        feats.append({
+            "key": clean_text(f.get("key")),
+            "label": clean_text(f.get("label")) or None,
+            "group": clean_text(f.get("group")) or None,
+            "value": round_num(parse_num(f.get("value")), 2),
+            "unit": clean_text(f.get("unit")) or "",
+            "status": clean_text(f.get("status")) or "missing",
+            "source": clean_text(f.get("source")) or None,
+        })
+    return {
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "asof": clean_text(raw.get("asof")) or None,
+        "note": clean_text(raw.get("note")) or None,
+        "count": len(feats),
+        "features": feats,
+    }
+
+
 # 哨兵：macro_cpi_ai.json 不存在 → 不注入键（前端不显示 CPI AI 解读）。
 _MACRO_CPI_AI_MISSING = object()
 
@@ -4143,6 +4180,11 @@ def main(argv=None):
     mi = _read_macro_indicators(data_dir)
     if mi is not _MACRO_IND_MISSING:
         payload["macro_indicators"] = mi
+
+    # ---- 决策输入快照（只读聚合；文件缺失 → 不注入键）----
+    di = _read_decision_inputs(data_dir)
+    if di is not _DECISION_INPUTS_MISSING:
+        payload["decision_inputs"] = di
 
     # ---- CPI 预期差 AI 解读（文件缺失 → 不注入键）----
     cai = _read_macro_cpi_ai(data_dir)

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
-<link rel="stylesheet" href="app.css?v=runtime36">
+<link rel="stylesheet" href="app.css?v=runtime37">
 </head>
 <body>
 
@@ -62,6 +62,15 @@
       </div>
       <div id="marketIndicatorsBody"></div>
     </section>
+
+  <!-- 决策输入总览（只读聚合；数据来自 decision_inputs.json，缺失时整块隐藏） -->
+  <section class="card sec" id="decisionInputsCard" style="display:none">
+    <div class="sec-h">
+      <h2>🧩 决策输入总览</h2>
+      <span class="sec-sub" id="decisionInputsSub">只读快照 · 权重/规则由量化研究定义</span>
+    </div>
+    <div id="decisionInputsBody"></div>
+  </section>
 
   <!-- 金融新闻板块（市场流 + 个股联动；数据来自 dashboard/data/news_data.json，独立低频刷新） -->
   <section class="card sec" id="newsCard">
@@ -308,6 +317,6 @@
   </div>
 </div>
 
-<script src="app.js?v=runtime36"></script>
+<script src="app.js?v=runtime37"></script>
 </body>
 </html>

@@ -1587,6 +1587,7 @@
     renderNews();
     renderMacro();
     renderSkillSerenity();
+    renderDecisionInputs();
     drawAllSparks();
 
     console.info('[Dashboard] loaded ' + DATA_URL +
@@ -1614,6 +1615,42 @@
     var icon = { na: '—', err: '⚠️', off: '⏸', pending: '⏳' }[k] || '—';
     return '<div class="es es-' + k + '"><span class="es-i">' + icon + '</span>' +
       '<span class="es-t">' + esc(msg || '') + '</span></div>';
+  }
+
+  /* 决策输入总览：只读聚合快照，不做加权/买卖判断 */
+  function renderDecisionInputs() {
+    var di = DATA && DATA.decision_inputs;
+    var card = $('#decisionInputsCard'), body = $('#decisionInputsBody'), sub = $('#decisionInputsSub');
+    if (!card || !body) return;
+    if (!di || !di.features || !di.features.length) {
+      card.style.display = 'none';
+      return;
+    }
+    card.style.display = 'block';
+    if (sub) {
+      sub.textContent = '只读快照' + (di.asof ? ' · ' + di.asof : '') +
+        ' · 权重/规则由量化研究定义';
+    }
+    var groups = {};
+    di.features.forEach(function (f) {
+      var g = f.group || '其他';
+      (groups[g] = groups[g] || []).push(f);
+    });
+    body.innerHTML = Object.keys(groups).map(function (g) {
+      return '<div class="di-group"><div class="di-g">' + esc(g) + '</div><div class="di-grid">' +
+        groups[g].map(function (f) {
+          var cls = f.status === 'missing' ? 'na' : (f.status === 'partial' ? 'part' : 'ok');
+          var v = f.value;
+          var txt;
+          if (v === null || v === undefined) txt = '—';
+          else if (f.unit === 'pp') txt = (v > 0 ? '+' : '') + fmt(v, 2) + 'pp';
+          else if (f.unit === '%') txt = fmt(v, 1) + '%';
+          else txt = fmt(v, 0) + (f.unit || '');
+          return '<div class="di-item ' + cls + '">' +
+            '<div class="di-l">' + esc(f.label || f.key) + '</div>' +
+            '<div class="di-v">' + esc(txt) + '</div></div>';
+        }).join('') + '</div></div>';
+    }).join('') + (di.note ? '<div class="di-note">' + esc(di.note) + '</div>' : '');
   }
 
   function renderNews() {
