@@ -167,6 +167,17 @@ def _gpt_via_clawsocket(
 
     text = _extract_openai_chat_text(response)
     if not text:
+        # deepseek 系模型先消耗 reasoning tokens；max_tokens 偏小时正文可能为空。
+        # 只针对“空文本”加倍一次，不改模型、不改其它参数。
+        retry_kwargs = dict(kwargs)
+        retry_kwargs.pop("reasoning_effort", None)
+        retry_kwargs["max_tokens"] = max_tokens * 2
+        try:
+            response = client.chat.completions.create(**retry_kwargs)
+            text = _extract_openai_chat_text(response)
+        except Exception:
+            text = ""
+    if not text:
         raise RuntimeError(f"ClawSocket GPT 返回空文本：model={model}")
     return text
 
