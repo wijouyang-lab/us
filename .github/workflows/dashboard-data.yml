@@ -132,7 +132,7 @@ jobs:
         # FRED + ISM + EIA；逐项 fail-closed（拿不到写 null），只写 macro_indicators.json。
         run: python dashboard/fetch_macro_indicators.py
         continue-on-error: true
-        timeout-minutes: 5
+        timeout-minutes: 10
 
       - name: CPI expected-diff AI (only on change)
         # 只有 CPI/核心CPI 的期间/预期/实际变化时才调用 AI；signature 相同直接跳过。
