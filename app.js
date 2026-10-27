@@ -399,16 +399,24 @@
   }
 
   /* p: portfolio.positions[] 条目；s: STOCKS[] 里同 ticker 的详情（找不到则 null → 降级只显示持仓字段） */
-  /* 持仓卡片：当日 5 分钟 K 线（内联 SVG，无第三方库；数据由后端 intraday 提供） */
-  function klineHtml(it) {
+  /* 持仓卡片：当日 5 分钟 K 线 + 止损价横线（内联 SVG，无第三方库） */
+  function klineHtml(p) {
+    var it = p && p.intraday;
     var bars = it && it.bars;
     if (!bars || !bars.length) return '';
+    var stop = num(p.stop_loss_price);
+    if (stop === null) stop = numLoose(p.stop_loss);
     var w = 168, h = 44, pad = 2;
     var hi = -Infinity, lo = Infinity;
     bars.forEach(function (b) {
       if (b[2] > hi) hi = b[2];
       if (b[3] < lo) lo = b[3];
     });
+    /* 把止损价纳入纵轴范围，横线才不会被裁掉 */
+    if (stop !== null) {
+      if (stop > hi) hi = stop;
+      if (stop < lo) lo = stop;
+    }
     var span = (hi - lo) || 1;
     var step = (w - pad * 2) / bars.length;
     var bw = Math.max(1, step * 0.55);
@@ -425,14 +433,21 @@
         '" width="' + bw.toFixed(2) + '" height="' + Math.max(1, Math.abs(c - o)).toFixed(2) +
         '" fill="' + col + '"/>';
     }).join('');
+    var stopLine = '';
+    if (stop !== null) {
+      var sy = y(stop).toFixed(2);
+      stopLine = '<line x1="' + pad + '" y1="' + sy + '" x2="' + (w - pad) + '" y2="' + sy +
+        '" stroke="var(--down)" stroke-width="1" stroke-dasharray="3 2" opacity="0.9"/>';
+    }
     var last = bars[bars.length - 1];
     var first = bars[0];
     var chg = first[1] ? (last[4] / first[1] - 1) * 100 : null;
     return '<div class="pos-kline">' +
-      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + '</svg>' +
+      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + stopLine + '</svg>' +
       '<div class="pk-meta">今日 5m' + (it.date ? ' · ' + esc(it.date) : '') +
         (chg === null ? '' : ' · <b class="' + (chg >= 0 ? 'up' : 'down') + '">' +
-          (chg >= 0 ? '+' : '') + fmt(chg, 2) + '%</b>') + '</div>' +
+          (chg >= 0 ? '+' : '') + fmt(chg, 2) + '%</b>') +
+        (stop === null ? '' : ' · <b class="down">止损 $' + fmt(stop, 2) + '</b>') + '</div>' +
       '</div>';
   }
 
@@ -455,7 +470,7 @@
       extLine +
       '</div>' +
       (s ? '<div class="pos-ring">' + ring(s.s.final, 54, 'Final') + '</div>' : '') +
-      '</div>' + klineHtml(p.intraday);
+      '</div>' + klineHtml(p);
 
     var quick = s
       ? '<div class="pos-quick">' +
