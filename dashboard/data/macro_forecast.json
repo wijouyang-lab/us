@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T19:55:01Z",
+  "generated_at": "2026-10-27T20:01:49Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -20,11 +20,11 @@
       "indicator": "未季调CPI年率",
       "period": "2026年9月",
       "forecast": 3.6,
-      "actual": 3.74,
+      "actual": 3.7,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 3.74% vs 预期 3.6%（+0.14）。"
+      "impact": "实际 3.7% vs 预期 3.6%（+0.1）。"
     },
     {
       "key": "core_cpi_yoy",
@@ -42,22 +42,22 @@
       "indicator": "季调后CPI月率",
       "period": "2026年8月",
       "forecast": 0.2,
-      "actual": 0.65,
+      "actual": 0.6,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 0.65% vs 预期 0.2%（+0.45）。"
+      "impact": "实际 0.6% vs 预期 0.2%（+0.4）。"
     },
     {
       "key": "umich",
       "indicator": "密歇根消费者信心",
       "period": "2026年9月",
       "forecast": 47.6,
-      "actual": 48.1,
+      "actual": 48.0,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 48.1% vs 预期 47.6%（+0.5）。"
+      "impact": "实际 48.0% vs 预期 47.6%（+0.4）。"
     },
     {
       "key": "ism",
