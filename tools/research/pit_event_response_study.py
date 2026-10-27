@@ -573,6 +573,10 @@ def run_event_response_study(
         "study_end_date": end_date.isoformat(),
         "horizons_sessions": horizon_list,
         "round_trip_cost_bps": round_trip_cost_bps,
+        "max_publication_to_first_seen_delay_days_by_type": {
+            kind: round(max_delay.total_seconds() / 86400, 6)
+            for kind, max_delay in sorted((max_age_by_type or {}).items())
+        },
         "input_event_record_count": len(source_events),
         "first_observed_event_count": len(selected_events),
         "observation_count": len(observations),
@@ -589,6 +593,7 @@ def run_event_response_study(
             "market_wide_proxy": "macro_release, central_bank, policy, and geopolitical events map to SPY",
             "mapping_rule": "company_news and earnings require explicit ticker mapping; ticker-query aggregator results are skipped unless the company mapping is explicitly verified",
             "cost_rule": "assumed round-trip cost is subtracted from each forward return; set by the caller",
+            "freshness_rule": "events whose publication-to-first-seen delay exceeds the configured per-type maximum are excluded before price matching",
             "known_limitations": [
                 "This measures returns after the collector first observed an event, not necessarily after the event first became public.",
                 "Publisher timestamps are metadata and can differ from the actual first-public-availability time.",

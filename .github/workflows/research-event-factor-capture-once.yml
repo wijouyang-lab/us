@@ -179,7 +179,7 @@ jobs:
           if [[ -s "$PRICE_CSV" && -s "$PRICE_REPORT" ]]; then
             STUDY_END_DATE="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["study_price_end_date"])' "$PRICE_REPORT")"
             set +e
-            python -m tools.research.pit_event_response_study --events "$ARCHIVE" --prices-csv "$PRICE_CSV" --price-basis auto --study-end-date "$STUDY_END_DATE" --horizons 1,5,10 --round-trip-cost-bps 5 --max-age-days-by-type '{"macro_release":30,"policy":30,"central_bank":30,"company_news":30,"earnings":30}' --report "$STUDY_REPORT" --observations-csv "$OBSERVATIONS"
+            python -m tools.research.pit_event_response_study --events "$ARCHIVE" --prices-csv "$PRICE_CSV" --price-basis auto --study-end-date "$STUDY_END_DATE" --horizons 1,5,10 --round-trip-cost-bps 5 --max-age-days-by-type '{"macro_release":2,"policy":2,"central_bank":2,"company_news":2,"earnings":2}' --report "$STUDY_REPORT" --observations-csv "$OBSERVATIONS"
             STUDY_STATUS=$?
             set -e
             if [[ "$STUDY_STATUS" -ne 0 ]]; then

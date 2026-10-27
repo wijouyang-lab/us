@@ -308,3 +308,21 @@ def test_observation_csv_preserves_reviewed_ticker_mapping_provenance(tmp_path):
     assert rows[0]["ticker_mapping_reviewer_id"] == "mapping-reviewer-1"
     assert rows[0]["ticker_mapping_review_was_available_by_entry"] == "True"
     assert rows[0]["ticker_mapping_reviewed_at_utc"] == "2026-10-26T15:30:00Z"
+
+
+def test_publication_to_first_seen_delay_gate_excludes_stale_rss_backfill():
+    first_seen = "2026-10-23T16:57:17Z"
+    stale = event("old-rss-backfill", first_seen, "2026-09-24T18:30:00Z")
+    fresh = event("fresh-release", first_seen, "2026-10-23T16:00:00Z")
+    report = run_event_response_study(
+        [stale, fresh],
+        price_bars(),
+        study_end_date="2026-10-29",
+        horizons=[1],
+        max_age_by_type={"macro_release": timedelta(days=2)},
+    )
+    assert report["observation_count"] == 1
+    assert report["observations"][0]["event_id"] == fresh["event_id"]
+    assert report["skip_reason_counts"]["stale_event_at_first_observation"] == 1
+    assert report["max_publication_to_first_seen_delay_days_by_type"] == {"macro_release": 2.0}
+    assert "publication-to-first-seen delay" in report["methodology"]["freshness_rule"]
