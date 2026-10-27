@@ -1,13 +1,25 @@
 # 市场情绪 AI 解读 · 数据契约
 
-「📊 市场情绪指标」板块（CNN 恐惧贪婪 + CME FedWatch）本身是**纯数据**：
+「📊 市场情绪指标」板块（CNN 恐惧贪婪 + CME FedWatch）的数据抓取是**纯数据**：
 `dashboard/fetch_market_indicators.py` 只抓行情/概率，**不调用任何 AI**。
 
-AI 解读作为**外部研究文本**单独写入下面这个文件，Dashboard 只读展示：
+AI 解读由独立的生成器写入下面这个文件，Dashboard 只读展示：
 
 ```
 dashboard/data/market_ai_commentary.json
 ```
+
+## 谁生成
+
+`dashboard/market_ai_commentary.py` + `.github/workflows/market-ai-commentary.yml`：
+
+- 每个交易日 **22:40 UTC**（≈ 美东 18:40）自动运行一次，也可在 Actions 里手动 `workflow_dispatch`；
+- 只读取 `market_indicators.json`，把数据交给 ClawSocket（`ai_router.gpt_generate_text`）生成中文解读；
+- 模型输出必须是 JSON（`summary` + `sections`），解析失败则**保留旧文件**、退出码 1；
+- 未配置 `CLAWSOCKET_API_KEY/BASE_URL` → 脚本跳过（exit 0），前端继续显示 pending；
+- 无指标数据（文件缺失/为空）→ 跳过，不写文件。
+
+也可以手工写入同结构 JSON（例如复盘时补充人工观点）。
 
 ## 文件不存在时
 

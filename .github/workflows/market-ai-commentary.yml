@@ -1,0 +1,78 @@
+name: 市场情绪 AI 解读
+
+# 每天美股收盘后，用 AI 把 CNN 恐惧贪婪 + CME FedWatch 数据写成中文解读，
+# 落盘 dashboard/data/market_ai_commentary.json，供 Dashboard「市场情绪指标」卡片展示。
+#
+# 边界：
+#   · 只分析市场情绪/利率数据，不选股、不给买卖建议、不进入任何账本；
+#   · 没有 CLAWSOCKET 凭证时脚本自行跳过（exit 0），不会失败、也不会写假内容；
+#   · 只提交这一个 JSON 文件，绝不 git add -A。
+
+on:
+  schedule:
+    # 22:40 UTC ≈ 美东 18:40（夏令时），在 dashboard-data 收盘后刷新之后
+    - cron: "40 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: us-stock-market-ai
+  cancel-in-progress: false
+
+jobs:
+  commentary:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install "requests>=2.31,<3"
+
+      - name: Generate market sentiment commentary
+        env:
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+          MARKET_AI_MODEL: ${{ vars.MARKET_AI_MODEL }}
+        run: python dashboard/market_ai_commentary.py
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dashboard/data/market_ai_commentary.json
+          if git diff --cached --quiet; then
+            echo "AI 解读无变化，跳过提交"
+            exit 0
+          fi
+          git commit -m "chore(ai): refresh market sentiment commentary [skip ci]"
+          for i in 1 2 3; do
+            git fetch origin main
+            if git rebase origin/main; then
+              if git push origin HEAD:main; then
+                echo "push succeeded (attempt $i)"
+                exit 0
+              fi
+            else
+              git rebase --abort 2>/dev/null || true
+            fi
+            echo "push failed (attempt $i), retrying..."
+            sleep 5
+          done
+          echo "::error::AI 解读无法推送到 main"
+          exit 1
