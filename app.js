@@ -2027,14 +2027,19 @@
     var f = forecastFor(it.key);
     var fHtml = '';
     if (f) {
-      var d = num(f.surprise);
+      /* 实际值以当前指标为准（不同页面可能修订），避免卡片数值与「实际」打架 */
+      var act = v !== null ? v : num(f.actual);
+      var d = (act !== null && num(f.forecast) !== null) ? act - num(f.forecast) : null;
       var cls = d === null ? 'flat' : (d > 0.05 ? 'up' : (d < -0.05 ? 'down' : 'flat'));
       var dir = d === null ? '' : (d > 0.05 ? '高于预期' : (d < -0.05 ? '低于预期' : '符合预期'));
+      var u = it.unit === '%' ? '%' : '';
       fHtml = '<div class="macro-fc">' +
-        '<span>预期 <b>' + fmt(f.forecast, 1) + '%</b></span>' +
-        '<span>实际 <b>' + fmt(f.actual, 1) + '%</b></span>' +
-        '<span>差值 <b>' + (d > 0 ? '+' : '') + fmt(d, 2) + 'pp</b></span>' +
+        '<span>预期 <b>' + fmt(f.forecast, 1) + u + '</b></span>' +
+        '<span>实际 <b>' + (act === null ? NA : fmt(act, 1) + u) + '</b></span>' +
+        '<span>差值 <b>' + (d === null ? NA : (d > 0 ? '+' : '') + fmt(d, 2) + 'pp') + '</b></span>' +
         '<span class="' + cls + '">' + dir + '</span></div>';
+    } else {
+      fHtml = '<div class="macro-fc na">一致预期：暂无</div>';
     }
     return '<div class="macro-econ">' +
       '<div class="macro-econ-h">' + esc(it.name || '') +
