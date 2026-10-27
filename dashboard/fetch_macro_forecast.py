@@ -98,6 +98,22 @@ def build():
         })
     if not rows:
         return None
+
+    # 用 macro_indicators 的实际值覆盖 TE 页面解析值，保证卡片/AI/预期差一致
+    try:
+        mi = json.loads((REPO / "dashboard" / "data" / "macro_indicators.json")
+                        .read_text(encoding="utf-8"))
+        actual_map = {i.get("key"): i.get("value") for i in (mi.get("items") or [])}
+        for r in rows:
+            v = actual_map.get(r["key"])
+            if v is not None:
+                r["actual"] = round(float(v), 2)
+                diff = round(r["actual"] - r["forecast"], 2)
+                r["impact"] = (f"实际 {r['actual']}{r['unit']} vs 预期 {r['forecast']}{r['unit']}"
+                               f"（{'+' if diff >= 0 else ''}{diff}）。")
+    except Exception as exc:
+        print(f"[WARN] 用宏观指标覆盖实际值失败：{exc}", file=sys.stderr)
+
     return {
         "schema": 1,
         "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
