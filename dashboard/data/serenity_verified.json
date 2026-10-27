@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T18:32:28Z",
+  "generated_at": "2026-10-27T18:35:20Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
   "items": [
     {
       "ticker": "DHR",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-10-21",
       "filings": [
         {
           "form": "8-K",
@@ -44,7 +44,7 @@
     },
     {
       "ticker": "APP",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-11-04",
       "filings": [
         {
           "form": "10-Q",
@@ -70,7 +70,7 @@
     },
     {
       "ticker": "CME",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-10-21",
       "filings": [
         {
           "form": "10-Q",
@@ -107,7 +107,7 @@
     },
     {
       "ticker": "XYL",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-10-27",
       "filings": [
         {
           "form": "10-Q",
@@ -133,7 +133,7 @@
     },
     {
       "ticker": "JCI",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-10-27",
       "filings": [
         {
           "form": "8-K",
@@ -159,7 +159,7 @@
     },
     {
       "ticker": "AES",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-11-04",
       "filings": [
         {
           "form": "8-K",
@@ -212,7 +212,7 @@
     },
     {
       "ticker": "EOG",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-11-05",
       "filings": [
         {
           "form": "8-K",
@@ -249,7 +249,7 @@
     },
     {
       "ticker": "APA",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-11-04",
       "filings": [
         {
           "form": "8-K",
@@ -286,7 +286,7 @@
     },
     {
       "ticker": "CNP",
-      "earnings_date": "<built-in ",
+      "earnings_date": "2026-10-27",
       "filings": [
         {
           "form": "8-K",
