@@ -1,63 +1,63 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T14:56:37Z",
+  "generated_at": "2026-10-27T15:43:05Z",
   "source": "FRED + ISM + EIA",
   "count": 9,
-  "ok": 2,
+  "ok": 9,
   "items": [
     {
       "key": "unrate",
       "name": "美国失业率",
-      "value": null,
+      "value": 4.2,
       "unit": "%",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED UNRATE",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     },
     {
       "key": "nonfarm",
       "name": "季调后非农业就业人口",
-      "value": null,
+      "value": 29.0,
       "unit": "K",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED PAYEMS（月增）",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     },
     {
       "key": "cpi_yoy",
       "name": "未季调CPI年率",
-      "value": null,
+      "value": 3.7,
       "unit": "%",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED CPIAUCNS",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     },
     {
       "key": "cpi_mom",
       "name": "季调后CPI月率",
-      "value": null,
+      "value": 0.6,
       "unit": "%",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED CPIAUCSL",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     },
     {
       "key": "umich",
       "name": "密歇根大学消费者信心指数终值",
-      "value": null,
+      "value": 48.0,
       "unit": "",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED UMCSENT",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     },
     {
@@ -74,12 +74,12 @@
     {
       "key": "adp",
       "name": "ADP就业人数",
-      "value": null,
+      "value": 90.0,
       "unit": "K",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED ADPMNUSNERSA（月增）",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     },
     {
@@ -96,12 +96,12 @@
     {
       "key": "claims",
       "name": "每周初请失业金人数",
-      "value": null,
+      "value": 194.0,
       "unit": "K",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "FRED ICSA",
+      "source": "TradingEconomics（FRED 不可用时的兜底）",
       "note": null
     }
   ]
