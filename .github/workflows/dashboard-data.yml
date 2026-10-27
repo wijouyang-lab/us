@@ -109,6 +109,12 @@ jobs:
         run: python portfolio_50000.py --intraday-stop --data-dir .
         continue-on-error: true
 
+      - name: Install openai SDK (oversold AI)
+        # ai_router 的 ClawSocket 路径依赖 openai SDK；requirements-production 未包含，
+        # 单独补装。装不上不影响规则候选，AI 字段会缺失并显示 pending。
+        run: python -m pip install "openai>=1.0,<3"
+        continue-on-error: true
+
       - name: Screen + AI analyze oversold candidates
         # 规则筛选 → yfinance 补板块/基本面/新闻 → 板块上限 2 → AI 三维解读。
         # 不修改 quant_* 研究文件、不产生交易；无密钥/模型失败时仍写出规则候选。
