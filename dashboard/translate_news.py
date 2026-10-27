@@ -93,6 +93,14 @@ def main(argv=None) -> int:
         cache = {}
 
     items = list(iter_items(news))
+    # 重要人物讲话（macro_data.json）也走同一缓存
+    try:
+        macro = _load(REPO / "macro_data.json", {}) or {}
+        for sp in (macro.get("speakers") or []):
+            if isinstance(sp, dict) and sp.get("content"):
+                items.append({"headline": sp["content"], "content_cn": sp.get("content_cn")})
+    except Exception:
+        pass
     pending = []
     for it in items:
         h = (it.get("headline") or "").strip()

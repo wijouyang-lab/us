@@ -386,7 +386,9 @@
               (x.ticker_news[k] || []).forEach(apply);
             });
             DATA.news = x;
+            DATA.translations = tr;
             try { renderNews(); } catch (e) { /* 忽略 */ }
+            try { renderMacro(); } catch (e) { /* 忽略 */ }
           }).catch(function () { /* 新闻缺失时保持空态 */ });
         }
         catch (err) {
@@ -2146,10 +2148,13 @@
       ? '<div class="news-rationale">' + esc(s.rationale) + '</div>' : '';
     var meta = [s.time, s.source, s.age_tag].filter(Boolean).map(esc).join(' · ');
     var sSent = e_sentiment(s.sentiment);
+    if (sSent === 'neutral' && !s.sentiment) sSent = newsSentiment(s);
     return '<div class="macro-spk sent-' + sSent + '">' +
       '<span class="sent-badge s-' + sSent + '">' + sentLabel(sSent) + '</span>' +
       '<div class="macro-spk-h">' + person + sent + '</div>' +
-      '<div class="macro-spk-c">' + esc(s.content_cn || s.content || '') + '</div>' +
+      '<div class="macro-spk-c">' + esc(
+        (s.content_cn) || (DATA && DATA.translations && DATA.translations[s.content]) ||
+        s.content || '') + '</div>' +
       (meta ? ('<div class="macro-econ-m">' + meta + '</div>') : '') +
       rationale +
       '</div>';
