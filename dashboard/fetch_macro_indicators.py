@@ -97,33 +97,36 @@ def _item(key, name, value, unit, date, prev=None, change=None, source="", note=
 
 
 
-TE_MAP = {
-    "unrate": "Unemployment Rate",
-    "nonfarm": "Nonfarm Payrolls",
-    "cpi_yoy": "Inflation Rate",
-    "cpi_mom": "Inflation Rate MoM",
-    "umich": "Consumer Sentiment",
-    "adp": "ADP Employment Change",
-    "claims": "Initial Jobless Claims",
+TE_ALIASES = {
+    "unrate": ["Unemployment Rate"],
+    "nonfarm": ["Non Farm Payrolls", "Nonfarm Payrolls", "Nonfarm Payrolls Private"],
+    "cpi_yoy": ["Inflation Rate"],
+    "cpi_mom": ["Inflation Rate MoM"],
+    "umich": ["Consumer Confidence", "Consumer Sentiment"],
+    "adp": ["ADP Employment Change"],
+    "claims": ["Initial Jobless Claims"],
 }
 
 
 def _te_values():
-    """从 TradingEconomics 美国指标页抓一张 {指标名: 数值} 表（FRED 被封时的兜底）。"""
+    """从 TradingEconomics 美国指标页抓 {key: 数值}（FRED 不可达时的兜底）。"""
     try:
-        text = _get("https://tradingeconomics.com/united-states/indicators", timeout=25)
+        text = _get("https://tradingeconomics.com/united-states/indicators", timeout=30)
     except Exception as exc:
         print(f"[WARN] TE 指标页失败：{exc}", file=sys.stderr)
         return {}
     out = {}
-    for name in TE_MAP.values():
-        pat = r">" + re.escape(name) + r"</a></td>\s*<td[^>]*>\s*([-\d.,]+)"
-        m = re.search(pat, text)
-        if m:
-            try:
-                out[name] = float(m.group(1).replace(",", ""))
-            except ValueError:
-                pass
+    for key, aliases in TE_ALIASES.items():
+        for name in aliases:
+            pat = (r">\s*" + re.escape(name) + r"\s*</a></td>\s*<td[^>]*>\s*"
+                   r"(?:<span[^>]*>)?\s*([-\d.,]+)")
+            m = re.search(pat, text)
+            if m:
+                try:
+                    out[key] = float(m.group(1).replace(",", ""))
+                    break
+                except ValueError:
+                    continue
     return out
 
 
@@ -224,12 +227,11 @@ def build_items():
         items.append(_item("claims", "每周初请失业金人数", None, "K", None, source="FRED ICSA"))
 
     # FRED 被封 / 失败时，用 TradingEconomics 指标页兜底（只补空值）
-    if any(i["value"] is None and i["key"] in TE_MAP for i in items):
+    if any(i["value"] is None and i["key"] in TE_ALIASES for i in items):
         te = _te_values()
         for it in items:
-            name = TE_MAP.get(it["key"])
-            if it["value"] is None and name and te.get(name) is not None:
-                it["value"] = te[name]
+            if it["value"] is None and it["key"] in te:
+                it["value"] = te[it["key"]]
                 it["source"] = "TradingEconomics（FRED 不可用时的兜底）"
         items_ok = sum(1 for i in items if i["value"] is not None)
         print(f"[INFO] TE 兜底后有值 {items_ok}/{len(items)}", file=sys.stderr)
