@@ -2576,6 +2576,51 @@ def _read_market_indicators(data_dir: Path):
         return None
 
 
+# 哨兵：market_ai_commentary.json 不存在 → 不注入键（前端显示「AI 解读 pending」）。
+_MARKET_AI_MISSING = object()
+
+
+def _read_market_ai(data_dir: Path):
+    """读「市场情绪 AI 解读」→ 注入 dashboard_data.json 的 `market_ai`。
+
+    数据由**外部研究**（GPT）写入 `dashboard/data/market_ai_commentary.json`；
+    导出层只做透传与清洗，**绝不调用任何 AI**（与 fetch_market_indicators.py 的
+    「纯行情/概率数据」边界一致）。
+
+    fail-closed：
+      · 文件不存在 → 哨兵（不注入键 → 前端显示 pending 占位）；
+      · 解析失败/非对象 → None；
+      · 正常 → {generated_at, model, summary, sections[{title,text}]}（最多 10 段）。
+    """
+    p = data_dir / "dashboard" / "data" / "market_ai_commentary.json"
+    if not p.exists():
+        return _MARKET_AI_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 市场 AI 解读读取失败（{e}），market_ai 输出 null")
+        return None
+    if not isinstance(raw, dict):
+        return None
+    sections = []
+    for s in (raw.get("sections") or [])[:10]:
+        if not isinstance(s, dict):
+            continue
+        text = clean_text(s.get("text"))
+        if not text:
+            continue
+        sections.append({
+            "title": clean_text(s.get("title")) or None,
+            "text": text,
+        })
+    return {
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "model": clean_text(raw.get("model")) or None,
+        "summary": clean_text(raw.get("summary")) or None,
+        "sections": sections,
+    }
+
+
 # 哨兵：skill_serenity.json 不存在（flag 关 / 全部失败未写文件）时返回，用于「不注入键」。
 _SKILL_SERENITY_MISSING = object()
 
@@ -3815,6 +3860,11 @@ def main(argv=None):
     mi = _read_market_indicators(data_dir)
     if mi is not _MARKET_INDICATORS_MISSING:
         payload["market_indicators"] = mi
+
+    # ---- 市场情绪 AI 解读（外部研究写入；缺失 → 不注入键，前端显示 pending）----
+    mai = _read_market_ai(data_dir)
+    if mai is not _MARKET_AI_MISSING:
+        payload["market_ai"] = mai
 
     # ---- serenity-skill 供应链分析（flag 关 / 文件缺失 → 不注入键，保持逐字节一致）----
     sk = _read_skill_serenity(data_dir)

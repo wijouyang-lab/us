@@ -42,7 +42,7 @@ def _expose():
     out = app_js.replace(
         "\n  boot();\n",
         "\n  globalThis.__setData = function(d){ DATA = d; };\n"
-        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); };\n")
+        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); renderMarketIndicators(); };\n")
     assert "__setData" in out, "未能注入 expose 钩子"
     return out
 
@@ -62,7 +62,8 @@ def _run(data):
         "  stopped: e['#stoppedBody'] ? e['#stoppedBody'].innerHTML : null,\n"
         "  oversold: e['#oversoldBody'] ? e['#oversoldBody'].innerHTML : null,\n"
         "  oversoldHidden: e['#oversoldCard'] ? e['#oversoldCard'].hidden : null,\n"
-        "  oversoldSub: e['#oversoldSub'] ? e['#oversoldSub'].textContent : null\n"
+        "  oversoldSub: e['#oversoldSub'] ? e['#oversoldSub'].textContent : null,\n"
+        "  market: e['#marketIndicatorsBody'] ? e['#marketIndicatorsBody'].innerHTML : null\n"
         "}));\n"
     )
     js.write_text(_harness() + _expose() + tail, encoding="utf-8")
@@ -309,3 +310,41 @@ def test_oversold_missing_optional_fields_no_placeholder_zero():
     assert "ABC" in html, html
     assert "NaN" not in html and "undefined" not in html, html
     assert "0.00" not in html, html
+
+
+# ---------------------------------------------------------------- 市场情绪 AI 解读
+_MI = {"fear_greed": {"score": 27.1, "rating": "fear", "subindicators": {}},
+       "fedwatch": {"meetings": [], "current_target": "3.75%-4.00%"}, "error": None}
+
+
+def test_market_ai_commentary_rendered():
+    data = {"portfolio": {"target": [], "transactions": [], "positions": []},
+            "market_indicators": _MI,
+            "market_ai": {"generated_at": "2026-10-27T00:00:00Z", "model": "gpt-x",
+                          "summary": "整体情绪偏恐慌，但尚未到极端。",
+                          "sections": [{"title": "F&G 结构", "text": "六个子项全部处于恐惧区间。"}]}}
+    r = _run(data)
+    html = r["market"] or ""
+    assert "AI 解读" in html, html
+    assert "整体情绪偏恐慌" in html, html
+    assert "F&amp;G 结构" in html and "六个子项" in html, html
+    assert "外部研究生成" in html, html
+    assert "gpt-x" in html, html
+    assert "AI 解读 pending" not in html, html
+
+
+def test_market_ai_pending_when_missing():
+    data = {"portfolio": {"target": [], "transactions": [], "positions": []},
+            "market_indicators": _MI}
+    r = _run(data)
+    html = r["market"] or ""
+    assert "AI 解读 pending" in html, html
+    assert "market_ai_commentary.json" in html, html
+
+
+def test_detail_review_shows_take_profit_row():
+    """个股详情 Review 复盘必须含「止盈价」，且复用 takeProfitInfo（与持仓卡片同口径）。"""
+    src = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
+    assert "mx('止盈价'" in src, "个股详情缺止盈价"
+    assert "takeProfitInfo(numLoose(s.stop), num(s.recPrice), num(s.px))" in src, \
+        "个股详情未复用 takeProfitInfo"

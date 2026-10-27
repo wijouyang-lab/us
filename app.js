@@ -460,48 +460,9 @@
     }
     var stopCell = '<div><span class="pmk">止损价</span><b class="down">' + esc(stopTxt) + '</b></div>';
 
-    var takeTxt = NA, takeCls = '';
-    var exitRules = (DATA && DATA.portfolio && DATA.portfolio.exit_rules) || {};
-    var beTrig = num(exitRules.breakeven_trigger_pct);
-    // 止盈档位（来自 strategy_params.exit，按阈值升序）：保本 → 锁利 1/2/3
-    var tiers = [];
-    if (beTrig != null) tiers.push({ pct: beTrig, act: '抬保本' });
-    [1, 2, 3].forEach(function (i) {
-      var t = num(exitRules['profit_lock_' + i + '_pct']);
-      var dd = num(exitRules['profit_lock_' + i + '_drawdown_pct']);
-      if (t != null) tiers.push({ pct: t, act: dd != null ? ('锁 ' + fmt(dd, 0) + '% 回撤') : '锁利' });
-    });
-    tiers.sort(function (a, b) { return a.pct - b.pct; });
-
-    if (stopP != null && entryP && stopP >= entryP) {
-      // 已激活：止损线上移，同一条线就是移动止盈线（实际出场价）
-      takeTxt = '$' + fmt(stopP, 2) + '（锁定 +' + fmt(pctTo(stopP, entryP), 1) + '%）';
-      takeCls = 'up';
-    } else if (entryP && curP) {
-      // 未激活：显示「下一档锁利目标价」＝入场 × (1 + 阈值%)，明确标注是目标参考，
-      // 不是固定出场价（真实出场仍是止损线被触发）。
-      var pnlPct = pctTo(curP, entryP);
-      var next = null;
-      for (var ti = 0; ti < tiers.length; ti++) {
-        if (pnlPct < tiers[ti].pct) { next = tiers[ti]; break; }
-      }
-      if (next) {
-        var tp = entryP * (1 + next.pct / 100);
-        takeTxt = '$' + fmt(tp, 2) + '（目标参考 +' + fmt(next.pct, 0) + '% · ' + next.act + '）';
-        takeCls = 'flat';
-      } else if (tiers.length) {
-        takeTxt = '已达最高锁利档' + (stopP != null ? ' · 现止盈价 $' + fmt(stopP, 2) : '');
-        takeCls = 'flat';
-      } else {
-        takeTxt = '$' + fmt(entryP, 2) + '（保本待激活，浮盈达标后抬保本）';
-        takeCls = 'flat';
-      }
-    } else if (entryP) {
-      takeTxt = '$' + fmt(entryP, 2) + '（保本待激活，浮盈达标后抬保本）';
-      takeCls = 'flat';
-    }
+    var takeInfo = takeProfitInfo(stopP, entryP, curP);
     var takeCell = '<div title="止盈＝移动止盈：浮盈达标后抬高止损线；未激活时显示的是下一档目标参考价，不是固定出场价">' +
-      '<span class="pmk">止盈价</span><b class="' + takeCls + '">' + esc(takeTxt) + '</b></div>';
+      '<span class="pmk">止盈价</span><b class="' + takeInfo.cls + '">' + esc(takeInfo.txt) + '</b></div>';
     var riskBar = '';
     if (stopP != null && entryP && curP != null && curP > 0 && stopP > 0) {
       var lo = Math.min(stopP, entryP, curP), hi = Math.max(stopP, entryP, curP);
@@ -581,6 +542,52 @@
       head + quick + (s ? sparkHtml(s, false) : '') + bars + foot + meta +
       riskBar + riskAmtHtml + noStopWarn +
       '</article>';
+  }
+
+  /* 止盈价计算（展示口径，不改策略）。持仓卡片与个股详情共用同一套文案：
+     · 止损线已抬到入场价上方 → 同一价格即移动止盈价（显示「锁定 +x%」）；
+     · 未激活 → 下一档锁利「目标参考价」= 入场 × (1 + 阈值%)，并标注是目标参考，
+       真实出场仍是止损线被触发；
+     · 阈值来自 DATA.portfolio.exit_rules（strategy_params.exit），缺失则回退保本文案。 */
+  function takeProfitInfo(stopP, entryP, curP) {
+    var out = { txt: NA, cls: '' };
+    var exitRules = (DATA && DATA.portfolio && DATA.portfolio.exit_rules) || {};
+    var beTrig = num(exitRules.breakeven_trigger_pct);
+    var tiers = [];
+    if (beTrig != null) tiers.push({ pct: beTrig, act: '抬保本' });
+    [1, 2, 3].forEach(function (i) {
+      var t = num(exitRules['profit_lock_' + i + '_pct']);
+      var dd = num(exitRules['profit_lock_' + i + '_drawdown_pct']);
+      if (t != null) tiers.push({ pct: t, act: dd != null ? ('锁 ' + fmt(dd, 0) + '% 回撤') : '锁利' });
+    });
+    tiers.sort(function (a, b) { return a.pct - b.pct; });
+
+    var pctTo = function (a, b) { return (a / b - 1) * 100; };
+    if (stopP != null && entryP && stopP >= entryP) {
+      out.txt = '$' + fmt(stopP, 2) + '（锁定 +' + fmt(pctTo(stopP, entryP), 1) + '%）';
+      out.cls = 'up';
+    } else if (entryP && curP) {
+      var pnlPct = pctTo(curP, entryP);
+      var next = null;
+      for (var i = 0; i < tiers.length; i++) {
+        if (pnlPct < tiers[i].pct) { next = tiers[i]; break; }
+      }
+      if (next) {
+        out.txt = '$' + fmt(entryP * (1 + next.pct / 100), 2) +
+          '（目标参考 +' + fmt(next.pct, 0) + '% · ' + next.act + '）';
+        out.cls = 'flat';
+      } else if (tiers.length) {
+        out.txt = '已达最高锁利档' + (stopP != null ? ' · 现止盈价 $' + fmt(stopP, 2) : '');
+        out.cls = 'flat';
+      } else {
+        out.txt = '$' + fmt(entryP, 2) + '（保本待激活，浮盈达标后抬保本）';
+        out.cls = 'flat';
+      }
+    } else if (entryP) {
+      out.txt = '$' + fmt(entryP, 2) + '（保本待激活，浮盈达标后抬保本）';
+      out.cls = 'flat';
+    }
+    return out;
   }
 
   /* 盘中机械止损横幅：扫描 pf.transactions 中 Reason="Intraday Stop Loss" 的 SELL，
@@ -1665,6 +1672,28 @@
       html += '<div class="mi-err">数据异常：' + esc(JSON.stringify(mi.error)) + '</div>';
     }
 
+    // ---- AI 解读：只展示外部研究写入的文本（本页 0 次 AI 调用）----
+    var mai = DATA && DATA.market_ai;
+    var maiSections = (mai && mai.sections) || [];
+    if (mai && (mai.summary || maiSections.length)) {
+      var maiMeta = [mai.generated_at, mai.model].filter(Boolean).join(' · ');
+      html += '<div class="mi-block mi-ai">';
+      html += '<div class="mi-title">🤖 AI 解读' +
+        (maiMeta ? ' <span class="mi-ts">' + esc(maiMeta) + '</span>' : '') + '</div>';
+      if (mai.summary) html += '<div class="mi-ai-text">' + esc(mai.summary) + '</div>';
+      maiSections.forEach(function (sec) {
+        if (!sec || !sec.text) return;
+        html += '<div class="mi-ai-sec">' +
+          (sec.title ? '<div class="mi-ai-h">' + esc(sec.title) + '</div>' : '') +
+          '<div class="mi-ai-text">' + esc(sec.text) + '</div></div>';
+      });
+      html += '<div class="mi-ai-foot">外部研究生成 · 本页不调用 AI</div>';
+      html += '</div>';
+    } else {
+      html += '<div class="mi-ai-pending">🤖 AI 解读 pending · 等待外部研究写入 ' +
+        '<code>market_ai_commentary.json</code>（本页不调用 AI）</div>';
+    }
+
     body.innerHTML = html;
   }
 
@@ -2434,6 +2463,9 @@
     /* 12. Review（真实字段） */
     $('#revSub').textContent = s.bucketLabel + ' · ' + (s.status || NA);
     var stopPct = (s.stop !== null && s.px) ? (s.stop / s.px - 1) * 100 : null;
+    /* 个股详情也显示止盈价（与持仓卡片同一套口径与文案）：
+       入场价用 s.recPrice（正式买入价），现价 s.px，止损 s.stop。 */
+    var dTake = takeProfitInfo(numLoose(s.stop), num(s.recPrice), num(s.px));
     $('#posMatrix').innerHTML =
       mx('Bucket', esc(s.bucketLabel)) +
       mx('Status', esc(s.status || NA)) +
@@ -2443,6 +2475,7 @@
       mx('Prev Close', nv(s.prevClose, 2)) +
       mx('Change 1D', s.pct === null ? NA : signed(s.pct) + '%', s.pct === null ? '' : dirCls(s.pct)) +
       mx('止损价', nv(s.stop, 2)) +
+      mx('止盈价', esc(dTake.txt), dTake.cls) +
       mx('距止损', stopPct === null ? NA : fmt(stopPct, 1) + '%', 'down') +
       mx('止损方式', esc(s.stopMethod || NA)) +
       mx('RSI', nv(m.rsi, 1)) +
