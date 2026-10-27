@@ -27,7 +27,7 @@ if str(REPO) not in sys.path:
 REPO = Path(__file__).resolve().parent.parent
 NEWS = REPO / "dashboard" / "data" / "news_data.json"
 CACHE = REPO / "dashboard" / "data" / "news_translations.json"
-BATCH = 40
+BATCH = 20
 
 SYSTEM = (
     "你是财经新闻翻译。把用户给的英文标题逐条翻成简洁中文（不超过 40 字），"
@@ -71,7 +71,7 @@ def translate_batch(titles):
         text = gpt_generate_text(
             messages=[{"role": "system", "content": SYSTEM},
                       {"role": "user", "content": json.dumps(titles, ensure_ascii=False)}],
-            max_tokens=2000,
+            max_tokens=6000,
             reasoning_effort="low",
             model=os.environ.get("NEWS_TRANSLATE_MODEL") or None,
         )

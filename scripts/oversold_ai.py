@@ -188,7 +188,7 @@ def analyze_one(c: dict, market_news, ticker_news=None) -> dict | None:
                 {"role": "system", "content": SYSTEM},
                 {"role": "user", "content": json.dumps(facts, ensure_ascii=False)},
             ],
-            max_tokens=700,
+            max_tokens=2500,
             reasoning_effort="low",
             model=os.environ.get(AI_MODEL_ENV) or None,
         )
