@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "signature": "ac590af1b9b17ada",
+  "generated_at": "2026-10-27T17:40:47Z",
+  "model": "default",
+  "analysis": "美国 2026 年 9 月 CPI 同比实际为 3.7%，高于预期的 3.6%；核心 CPI 同比实际为 2.6%，也高于预期的 2.5%。两项数据均小幅高于预期，因此“通胀黏性”信号偏强，市场可能因此削弱降息预期或推迟对宽松时点的判断。若利率预期随之调整，美债收益率和美元可能短线承压或走强，风险资产波动也可能加大，但具体反应仍取决于后续数据与政策沟通。",
+  "items": [
+    {
+      "indicator": "CPI 同比",
+      "period": "2026年9月",
+      "forecast": 3.6,
+      "actual": 3.7,
+      "surprise": null
+    },
+    {
+      "indicator": "核心CPI 同比",
+      "period": "2026年9月",
+      "forecast": 2.5,
+      "actual": 2.6,
+      "surprise": null
+    }
+  ]
+}
