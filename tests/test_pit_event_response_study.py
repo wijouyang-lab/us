@@ -326,3 +326,21 @@ def test_publication_to_first_seen_delay_gate_excludes_stale_rss_backfill():
     assert report["skip_reason_counts"]["stale_event_at_first_observation"] == 1
     assert report["max_publication_to_first_seen_delay_days_by_type"] == {"macro_release": 2.0}
     assert "publication-to-first-seen delay" in report["methodology"]["freshness_rule"]
+
+
+def test_aggregates_expose_duplicate_events_sharing_same_ticker_entry_session():
+    first_seen = "2026-10-23T12:00:00Z"
+    one = event("same-session-one", first_seen, "2026-10-23T11:30:00Z")
+    two = event("same-session-two", first_seen, "2026-10-23T11:45:00Z")
+    report = run_event_response_study(
+        [one, two], price_bars(), study_end_date="2026-10-29", horizons=[1],
+    )
+    assert report["observation_count"] == 2
+    aggregate = report["aggregates_by_event_type"][0]
+    assert aggregate["observation_count"] == 2
+    assert aggregate["distinct_event_count"] == 2
+    assert aggregate["distinct_ticker_entry_sessions"] == 1
+    assert aggregate["session_deduplicated_observation_count"] == 1
+    assert aggregate["session_deduplicated_mean_gross_return"] == pytest.approx(
+        report["observations"][0]["gross_return_1s"]
+    )
