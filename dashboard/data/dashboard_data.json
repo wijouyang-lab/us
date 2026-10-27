@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-27T22:17:43Z",
+  "generated_at": "2026-10-27T22:32:38Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -31,8 +31,8 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 64.2,
-      "atr_pct": 0.3,
-      "stop_loss": 14.7,
+      "atr_pct": 0.31,
+      "stop_loss": 14.73,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -78,90 +78,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-27",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:25Z",
-        "status": "ok"
-      },
-      "ohlcv_status": "ok",
-      "has_ohlcv": true
-    },
-    {
-      "ticker": "AMT",
-      "name": "American Tower",
-      "bucket": "Core",
-      "tag_raw": "Core_Dragon",
-      "recommendation_id": "AMT|2026-10-26|Core_Dragon",
-      "recommendation_date": "2026-10-26",
-      "rec_price": 188.5,
-      "recommendation_tag": "Core_Dragon",
-      "ai_snapshot_id": "AMT|2026-10-26|Core_Dragon",
-      "ai_snapshot_date": "2026-10-26",
-      "price": 183.91,
-      "price_source": "realtime",
-      "current_price": 183.91,
-      "current_price_updated_at": "2026-10-27T22:08:26Z",
-      "pending_price": 188.5,
-      "pending_price_source": "Scan_Ref_Price",
-      "prev_close": 188.28,
-      "change_1d": 0.0435,
-      "change_1d_source": "computed(current vs last completed close)",
-      "pending_change_1d": 0.1168,
-      "pending_change_1d_source": "computed(price vs Prev_Close)",
-      "final_score": 69.5,
-      "quant_score": 80.0,
-      "ai_score": 45.0,
-      "ai_score_display": "45.0（2026-10-26）",
-      "fundamental_score": 28.0,
-      "technical_score": 23.0,
-      "risk_liquidity_score": 18.0,
-      "rsi": 65.7,
-      "atr_pct": 3.11,
-      "stop_loss": 176.78,
-      "stop_method": "ATR初始保护",
-      "pe_ttm": 25.9931,
-      "pe_forward": 27.0859,
-      "pb": 23.6716,
-      "eps_ttm": 7.27,
-      "roe": 0.3391,
-      "revenue_growth": 0.047,
-      "earnings_growth": 1.385,
-      "profit_margin": 0.3108,
-      "market_cap": 88052473856.0,
-      "market_regime": "NORMAL",
-      "vix": 19.23,
-      "status": "Active",
-      "technical_date": null,
-      "scan_date": "2026-10-26",
-      "avg_dollar_volume_20d": 606231826.37,
-      "sector_rs_20d_pct": 3.91,
-      "bias": 8.38,
-      "event_score": 11.0,
-      "technical_confirmations": "4",
-      "technical_confirmation_signals": "MA20结构 MACD改善 周线改善 量能确认",
-      "ai": {
-        "industry_logic": "Verizon-AWS边缘计算协议引发塔类REITs业务模式重估:电信运营商向AI边缘基础设施转型(分布式计算节点替代传统集中式塔站)→传统塔租赁需求增长逻辑受挑战,资金明确轮动至VZ+云巨头MSFT/AMZN,AMT相对吸引力下降→估值极高(PE_F=27.1、PB=23.67)在REITs板块内失去竞争力,10Y=4.99%高利率环境下股息收益率(隐含<3%)不足以补偿增长放缓风险→技术面虽有4项确认(MA20上行+MACD走强+周线改善+量能确认)但产业链逻辑转空优先级更高,当前盘前-1.17%回调至$186.75仅是结构性逆风的开始,需等待财报/指引证实边缘计算租赁可对冲传统业务或估值回调至PE<20方能重建吸引力。",
-        "news_cn": "1. [今日最高权重] Yahoo Finance报道\"3家塔类REITs拥有美国无线网络基础设施,哪家股息最优\",显示市场开始横向比较塔类REITs投资价值,AMT高估值可能在对比中处于劣势; 2. [今日高权重] Stocks Down Under发布AMT股价预测分析,未披露具体目标价但显示机构持续评估; 3. [今日高权重] Yahoo Finance报道\"SpaceX可能是这两只股息股的game changer\",暗示卫星通信等新技术对传统塔租赁模式的潜在颠覆; 4. [昨日中等权重] Yahoo Finance质疑\"更高的数据中心指引是否改变AMT牛市逻辑\",显示市场对数据中心业务能否对冲传统塔租赁放缓存在分歧; 5. [昨日中等权重] Yahoo Finance报道\"4家数据中心REITs具有股息增长+AI顺风\",资金可能流向纯数据中心REITs而非AMT这类混合型; 6. 无明确负面但存在结构性担忧:未见诉讼/违规/业绩预警,但多篇报道隐含对业务模式转型、估值合理性、竞争格局的质疑。",
-        "premarket_conclusion": "盘前实时$186.75、-1.17%,从昨收$188.97回调$2.22,符合ATR%=3.11%日均波动范围但方向明确向下。技术面矛盾:MA20=$174.36上方保持+8.38% Bias强势结构,MACD走强+周线改善+量能确认显示中期多头未破,但KDJ=38.35回落至中性+盘前跳空低开显示短期动能转弱。关键支撑$180(心理关口)/$174.36(MA20),阻力$190(昨日高点)/$195(前期平台)。当前处于\"技术健康vs基本面逻辑转空\"博弈初期,盘前-1.17%反映Verizon-AWS协议消息面冲击,若盘中跌破$185且成交量放大,可能加速向$180回踩;若企稳$186-188且VZ股价回落,短线存在超跌反弹至$190-192可能,但中期趋势需基本面证伪或证实方能明朗。",
-        "catalysts": "1. 5G densification需求韧性:尽管边缘计算兴起,5G网络密集化建设(small cell部署)仍需大量塔站/站址租赁,若后续财报显示传统租赁收入增速稳定在5-8%,可部分对冲市场担忧; 2. 数据中心指引上调(Yahoo报道):管理层若在财报中上调数据中心相关租赁指引,显示边缘计算节点部署反而增加站址需求(边缘需要分布式微型数据中心),可扭转业务模式重估叙事; 3. 技术多头结构完整:4项技术确认+MA20斜率+1.687%加速上行+Bias=+8.38%显示中期趋势未破,若产业链担忧证伪,技术面将主导反弹至$200-205(+7-10%空间)。",
-        "risks": "1. 业务模式结构性重估:Verizon-AWS协议证实电信向边缘计算转型,若后续AT&T、T-Mobile等运营商跟进类似合作,传统塔租赁需求增速可能从当前8-10%降至3-5%,AMT收入增长预期需下调; 2. 估值极高失去相对吸引力:PE_F=27.1倍、PB=23.67倍远高于REITs板块中位数(PE 15-18、PB 1.5-2.5),在10Y=4.99%环境下隐含股息收益率<3%不足以吸引资金,同类数据中心REITs(如DLR、EQIX)估值更合理+增长更确定,资金轮动压力持续; 3. 盘前跳空缺口:$186.75-188.97缺口若盘中无法回补,将形成技术阻力+心理压力,限制反弹高度; 4. Sector轮动风险:Real Estate sector RS20D=+3.91%虽相对强势,但在HAWKISH_REPRICING regime下REITs板块整体承压(利率敏感性高),若10Y进一步上行突破5.1%,AMT可能随板块回调-5%至-8%; 5. 竞争格局恶化:SpaceX卫星通信(Yahoo报道\"game changer\")若快速商业化,低轨卫星可能替代部分偏远地区塔站需求,长期威胁AMT营收基础; 6. 财报指引不及预期:若Q3财报显示传统租赁增速放缓至<5%且管理层未能提供边缘计算租赁实质性增长路径,市场将下调2027-2028盈利预测,高估值面临-10%至-15%杀估值风险。",
-        "invalidation": "1. 基本面证实担忧:Q3财报传统塔租赁收入增速<5%,且管理层指引2027增速下调+未能提供边缘计算租赁实质性贡献路径,验证业务模式重估逻辑; 2. 技术多头破坏:收盘价跌破MA20=$174.36,同时MACD死叉(DIF下穿DEA)+KDJ-J跌破20+成交量放大至1.5倍以上,显示中期趋势转空; 3. 估值进一步失控:PE_F上行至>30倍(若股价反弹但盈利预期下调),或竞争对手(CCI、SBAC)公布更优财报+更低估值,AMT相对吸引力彻底丧失; 4. 产业链持续转空:AT&T、T-Mobile等主要客户公布类似Verizon-AWS的边缘计算合作,证实行业趋势从塔租赁转向分布式计算节点,AMT长期增长逻辑根本性破坏; 5. 宏观利率冲击:10Y突破5.2%且持续1周以上,REITs板块整体估值重估,AMT作为高估值标的首当其冲,可能回调至$165-170(MA50附近-10%至-12%)。"
-      },
-      "technical": {
-        "ma20": 176.202,
-        "ma50": 175.1712,
-        "kdj_j": 20.54,
-        "kdj_k": 44.4,
-        "kdj_d": 56.33,
-        "macd_hist": 1.0133,
-        "macd": 3.7308,
-        "macd_signal": 2.7175,
-        "atr_abs": 6.6636,
-        "atr_pct_computed": 3.6249,
-        "rsi": 65.7,
-        "rsi_source": "pending_csv",
-        "bars_used": 180,
-        "last_bar_date": "2026-10-27",
-        "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:25Z",
+        "computed_at": "2026-10-27T22:32:21Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -197,7 +114,7 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 16.0,
       "rsi": 69.7,
-      "atr_pct": 3.2,
+      "atr_pct": 3.21,
       "stop_loss": 50.34,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 10.3911,
@@ -244,173 +161,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-27",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:26Z",
-        "status": "ok"
-      },
-      "ohlcv_status": "ok",
-      "has_ohlcv": true
-    },
-    {
-      "ticker": "BX",
-      "name": "Blackstone Inc.",
-      "bucket": "Core",
-      "tag_raw": "Core_Dragon",
-      "recommendation_id": "BX|2026-10-21|Core_Dragon",
-      "recommendation_date": "2026-10-21",
-      "rec_price": 111.74,
-      "recommendation_tag": "Core_Dragon",
-      "ai_snapshot_id": "BX|2026-10-21|Core_Dragon",
-      "ai_snapshot_date": "2026-10-21",
-      "price": 116.84,
-      "price_source": "realtime",
-      "current_price": 116.84,
-      "current_price_updated_at": "2026-10-27T21:33:00Z",
-      "pending_price": 111.74,
-      "pending_price_source": "Scan_Ref_Price",
-      "prev_close": 109.57,
-      "change_1d": 0.12,
-      "change_1d_source": "computed(current vs last completed close)",
-      "pending_change_1d": 1.9805,
-      "pending_change_1d_source": "computed(price vs Prev_Close)",
-      "final_score": 77.8,
-      "quant_score": 79.0,
-      "ai_score": 75.0,
-      "ai_score_display": "75.0（2026-10-21）⚠️",
-      "fundamental_score": 32.0,
-      "technical_score": 20.0,
-      "risk_liquidity_score": 16.0,
-      "rsi": 39.7,
-      "atr_pct": 3.51,
-      "stop_loss": 115.61,
-      "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
-      "pe_ttm": 24.7955,
-      "pe_forward": 14.8866,
-      "pb": 9.7915,
-      "eps_ttm": 4.45,
-      "roe": 0.3137,
-      "revenue_growth": 0.286,
-      "earnings_growth": 0.573,
-      "profit_margin": 0.2273,
-      "market_cap": 131889152000.0,
-      "market_regime": "NORMAL",
-      "vix": 17.13,
-      "status": "Active",
-      "technical_date": null,
-      "scan_date": "2026-10-21",
-      "avg_dollar_volume_20d": 600915481.96,
-      "sector_rs_20d_pct": null,
-      "bias": -1.81,
-      "event_score": 11.0,
-      "technical_confirmations": "4",
-      "technical_confirmation_signals": "MACD改善 KDJ回升 周线改善 量能确认",
-      "ai": {
-        "industry_logic": "Fed鹰派环境+10Y国债5.09%背景下,利率上行改善另类资产管理公司的业务环境 → (1)固收替代产品吸引力上升,私募信贷/基础设施债权基金募资加速; (2)$8.7B能源转型基金final close验证机构LP配置意愿强劲,能源基础设施(数据中心电力+传统能源)享受长周期资本流入 → 管理费(2%)+业绩提成(20%)的商业模式在经济不确定性中显示韧性,Q3财报若显示AUM增长+carry实现加速,将验证\"利率上行利好另类资管\"逻辑 → 当前PE Forward 14.89低于5年均值18x,PB 9.79合理,估值提供安全边际 → 技术面MACD走强+KDJ 33.31低位反弹+盘前+1.5%,构成短期修复窗口",
-        "news_cn": "【有效催化/无重大负面】(1)完成$8.7B能源转型基金募集,为史上最大能源基础设施基金之一,同步推进印度市场扩张(Simply Wall Street/Yahoo Finance); (2)Q3财报即将公布,市场关注AUM增长和carry实现情况(Yahoo Finance多篇前瞻); (3)技术面Trading Systems监测到波动率信号,显示量化资金开始关注(Stock Traders Daily); 无负面新闻,机构coverage保持积极",
-        "premarket_conclusion": "当前已进入常规交易时段。前一交易日收盘价$110.34,技术面处于超卖修复初期:RSI 39.7未超卖但有反弹空间,MACD出现金叉苗头,KDJ 33.31从低位回升。价格-1.81%低于MA20($112.38)但MA20斜率-3.635%显示下跌动能减弱。Q3财报窗口期+$8.7B基金催化+技术底部特征形成三重共振。关键观察:能否放量突破MA20并站稳$112以上,若成功则确认短期趋势反转;若回踩$108前期低点则技术形态失效",
-        "catalysts": "(1)Q3财报即将公布(具体日期未明确,但市场已positioning),关注AUM环比增长和realized carry数据; (2)$8.7B能源转型基金final close,验证机构配置需求强劲,为未来管理费收入提供可见性; (3)印度市场扩张推进中,新兴市场布局打开增量空间; (4)技术面MACD潜在金叉+KDJ低位反弹,构成短期交易催化",
-        "risks": "(1)事件风险:Q3财报若AUM增长不及预期或carry实现低于指引,市场预期已较高,可能触发-5%+快速回调; (2)技术风险:MA20斜率-3.635%仍为负,价格需放量突破$112.38并站稳才能确认趋势反转,当前仅为反弹初期; (3)宏观风险:若Fed 12月再次鹰派或10Y突破5.25%,虽利好固收替代品但也压制风险资产估值,PE可能继续承压; (4)行业风险:私募股权退出环境若恶化(IPO市场冷淡+并购放缓),carry实现将延后,影响盈利预期",
-        "invalidation": "(1)价格跌破$106.50(前期技术支撑+约MA20-1×ATR位置),则技术底部失败,应止损; (2)Q3财报公布后若AUM环比负增长或管理层下调2024指引,基本面逻辑受损; (3)MACD再次死叉且KDJ跌破20,则短期反弹结束; (4)10Y国债收益率快速冲至5.40%+且金融板块出现系统性抛售,需主动减仓"
-      },
-      "technical": {
-        "ma20": 112.3075,
-        "ma50": 124.0608,
-        "kdj_j": 100.58,
-        "kdj_k": 76.81,
-        "kdj_d": 64.93,
-        "macd_hist": 1.7436,
-        "macd": -1.7081,
-        "macd_signal": -3.4517,
-        "atr_abs": 4.1689,
-        "atr_pct_computed": 3.5723,
-        "rsi": 39.7,
-        "rsi_source": "pending_csv",
-        "bars_used": 180,
-        "last_bar_date": "2026-10-27",
-        "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:26Z",
-        "status": "ok"
-      },
-      "ohlcv_status": "ok",
-      "has_ohlcv": true
-    },
-    {
-      "ticker": "CME",
-      "name": "CME Group",
-      "bucket": "Core",
-      "tag_raw": "Core_Dragon",
-      "recommendation_id": "CME|2026-10-08|Core_Dragon",
-      "recommendation_date": "2026-10-08",
-      "rec_price": 270.75,
-      "recommendation_tag": "Core_Dragon",
-      "ai_snapshot_id": "CME|2026-10-08|Core_Dragon",
-      "ai_snapshot_date": "2026-10-08",
-      "price": 293.39,
-      "price_source": "realtime",
-      "current_price": 293.39,
-      "current_price_updated_at": "2026-10-27T20:36:00Z",
-      "pending_price": 270.75,
-      "pending_price_source": "Scan_Ref_Price",
-      "prev_close": 276.44,
-      "change_1d": -0.0307,
-      "change_1d_source": "computed(current vs last completed close)",
-      "pending_change_1d": -2.0583,
-      "pending_change_1d_source": "computed(price vs Prev_Close)",
-      "final_score": 69.5,
-      "quant_score": 68.0,
-      "ai_score": 73.0,
-      "ai_score_display": "AI 数据已过期（最后 2026-10-08）",
-      "fundamental_score": 24.0,
-      "technical_score": 15.0,
-      "risk_liquidity_score": 18.0,
-      "rsi": 58.7,
-      "atr_pct": 2.0,
-      "stop_loss": 296.54,
-      "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
-      "pe_ttm": 23.4801,
-      "pe_forward": 21.3666,
-      "pb": 3.7503,
-      "eps_ttm": 11.79,
-      "roe": 0.158,
-      "revenue_growth": 0.008,
-      "earnings_growth": 0.025,
-      "profit_margin": 0.6344,
-      "market_cap": 99542319104.0,
-      "market_regime": "NORMAL",
-      "vix": 15.6,
-      "status": "Active",
-      "technical_date": null,
-      "scan_date": "2026-10-08",
-      "avg_dollar_volume_20d": 474627497.71,
-      "sector_rs_20d_pct": null,
-      "bias": 2.51,
-      "event_score": 11.0,
-      "technical_confirmations": "3",
-      "technical_confirmation_signals": "MACD改善 周线改善 量能确认",
-      "ai": {
-        "industry_logic": "鹰派政策重定价增加利率路径不确定性 → 衍生品对冲与交易需求可能上升，新闻已报告国际日均成交量增长 → 成交活跃有望支持交易及清算收入，但营收仅增长0.8%、盈利增长2.5%，说明成交增长不能等比例外推利润 → 当前催化明确，仍需收入兑现及均线趋势确认。",
-        "news_cn": "1. 已给新闻报告2026年第三季度国际日均成交量同比增长22%，达到900万份合约。2. 10月8日报道新增气候相关期货产品，未提供其收入贡献。负面核查：所给直接相关新闻中无明确公司负面；期权报价页面及其他交易所比较文章不作为公司催化。",
-        "premarket_conclusion": "本次为盘中补发，已经进入常规交易时段，无有效盘前报价及实时成交价。昨收276.85美元，高于MA50的271.54及MA20的270.08；MACD、周线及量能有改善确认，RSI 58.7，但MA20五日斜率为-0.733且仍低于MA50，属于修复结构。当前鹰派重定价可能支持对冲需求，但不能据此认定股价已突破或盘前上涨。",
-        "catalysts": "第三季度国际日均成交量同比增长22%至900万份合约；新增气候相关期货产品，实际盈利贡献尚未给出。",
-        "risks": "估值：滚动市盈率23.48倍、远期21.37倍，对照营收增长0.8%、盈利增长2.5%，估值需后续增长支撑。技术：MA20仍下行，KDJ J值109.88偏热。经营：国际成交量增长未必按相同比例转化为整体收入与利润。跳空：盘前数据缺失，无法核验。",
-        "invalidation": "若日线收盘跌破当前271.54—270.08美元均线区且无法收复，同时MACD转弱，则修复结构失效；若后续披露国际成交增长未能带动收入或盈利改善，则成交催化的估值支撑需下调。"
-      },
-      "technical": {
-        "ma20": 283.9875,
-        "ma50": 278.649,
-        "kdj_j": 48.25,
-        "kdj_k": 72.66,
-        "kdj_d": 84.86,
-        "macd_hist": 1.8689,
-        "macd": 8.1618,
-        "macd_signal": 6.2929,
-        "atr_abs": 6.885,
-        "atr_pct_computed": 2.346,
-        "rsi": 58.7,
-        "rsi_source": "pending_csv",
-        "bars_used": 180,
-        "last_bar_date": "2026-10-27",
-        "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:26Z",
+        "computed_at": "2026-10-27T22:32:21Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -427,14 +178,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": "DHR|2026-10-22|Core_Dragon",
       "ai_snapshot_date": "2026-10-22",
-      "price": 232.0,
+      "price": 233.0,
       "price_source": "realtime",
-      "current_price": 232.0,
-      "current_price_updated_at": "2026-10-27T20:10:00Z",
+      "current_price": 233.0,
+      "current_price_updated_at": "2026-10-27T22:10:56Z",
       "pending_price": 233.8,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 229.75,
-      "change_1d": 0.0,
+      "change_1d": 0.431,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 1.7628,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -446,8 +197,8 @@
       "technical_score": 23.0,
       "risk_liquidity_score": 18.0,
       "rsi": 64.5,
-      "atr_pct": 3.09,
-      "stop_loss": 223.59,
+      "atr_pct": 2.78,
+      "stop_loss": 225.98,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 38.7185,
       "pe_forward": 25.0844,
@@ -493,7 +244,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-27",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:27Z",
+        "computed_at": "2026-10-27T22:32:22Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -530,7 +281,7 @@
       "risk_liquidity_score": 18.0,
       "rsi": 59.8,
       "atr_pct": 2.44,
-      "stop_loss": 158.14,
+      "stop_loss": 158.77,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": 11.5658,
       "pe_forward": 9.6889,
@@ -576,7 +327,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-27",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:27Z",
+        "computed_at": "2026-10-27T22:32:22Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -593,14 +344,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 68.1123,
+      "price": 68.05,
       "price_source": "realtime",
-      "current_price": 68.1123,
-      "current_price_updated_at": "2026-10-27T21:55:00Z",
+      "current_price": 68.05,
+      "current_price_updated_at": "2026-10-27T22:26:19Z",
       "pending_price": 58.71,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 58.71,
-      "change_1d": -0.1432,
+      "change_1d": -0.2346,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": 0.0,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -612,8 +363,8 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 53.3,
-      "atr_pct": 2.12,
-      "stop_loss": 67.25,
+      "atr_pct": 2.13,
+      "stop_loss": 67.55,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -659,7 +410,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-27",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:28Z",
+        "computed_at": "2026-10-27T22:32:23Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -676,14 +427,14 @@
       "recommendation_tag": "Core_Dragon",
       "ai_snapshot_id": null,
       "ai_snapshot_date": null,
-      "price": 179.84,
+      "price": 179.55,
       "price_source": "realtime",
-      "current_price": 179.84,
-      "current_price_updated_at": "2026-10-27T22:15:59Z",
+      "current_price": 179.55,
+      "current_price_updated_at": "2026-10-27T22:30:14Z",
       "pending_price": 159.65,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 159.8,
-      "change_1d": -0.0389,
+      "change_1d": -0.2001,
       "change_1d_source": "computed(current vs last completed close)",
       "pending_change_1d": -0.0939,
       "pending_change_1d_source": "computed(price vs Prev_Close)",
@@ -695,8 +446,8 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 65.1,
-      "atr_pct": 2.14,
-      "stop_loss": 177.71,
+      "atr_pct": 2.13,
+      "stop_loss": 179.0,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
       "pe_forward": null,
@@ -742,7 +493,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-27",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-27T22:17:28Z",
+        "computed_at": "2026-10-27T22:32:23Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -752,7 +503,7 @@
   "market": {
     "regime": {
       "market": "NORMAL",
-      "vix": 19.23,
+      "vix": 18.57,
       "source": "pending CSV Market_Regime / VIX 列（不重新设计 Regime 规则）"
     },
     "assets": [
@@ -766,7 +517,7 @@
         "change_1d": 0.0305,
         "change_5d": -0.2254,
         "change_20d": 2.0013,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -784,7 +535,7 @@
         "change_1d": 0.597,
         "change_5d": 0.1301,
         "change_20d": 0.6748,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -802,7 +553,7 @@
         "change_1d": 1.1786,
         "change_5d": 0.2005,
         "change_20d": -1.1931,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -820,7 +571,7 @@
         "change_1d": 0.0,
         "change_5d": 1.2132,
         "change_20d": 9.2269,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -838,7 +589,7 @@
         "change_1d": 0.0,
         "change_5d": -2.4233,
         "change_20d": -4.9857,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -856,7 +607,7 @@
         "change_1d": 0.0,
         "change_5d": 0.0,
         "change_20d": 5.5556,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -874,7 +625,7 @@
         "change_1d": 0.0,
         "change_5d": -1.925,
         "change_20d": -4.4045,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -892,7 +643,7 @@
         "change_1d": 0.0,
         "change_5d": -2.212,
         "change_20d": -5.1662,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -910,7 +661,7 @@
         "change_1d": 0.0,
         "change_5d": 0.6242,
         "change_20d": 0.9815,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -924,16 +675,16 @@
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4073.3,
+        "price": 4076.7,
         "change_1d": 0.0,
-        "change_5d": -1.6729,
-        "change_20d": -2.5456,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "change_5d": -1.5908,
+        "change_20d": -2.4643,
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793138760,
+        "quote_ts": 1793139720,
         "last_bar_date": "2026-10-27"
       },
       {
@@ -942,16 +693,16 @@
         "name": "Silver",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 54.505,
+        "price": 54.56,
         "change_1d": 0.0,
-        "change_5d": -5.5471,
-        "change_20d": -10.1586,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "change_5d": -5.4518,
+        "change_20d": -10.0679,
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793138700,
+        "quote_ts": 1793139720,
         "last_bar_date": "2026-10-27"
       },
       {
@@ -960,16 +711,16 @@
         "name": "Copper",
         "group": "commodity",
         "unit": "usd/lb",
-        "price": 6.6605,
+        "price": 6.6575,
         "change_1d": 0.0,
-        "change_5d": 1.4315,
-        "change_20d": 1.788,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "change_5d": 1.3858,
+        "change_20d": 1.7422,
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793138700,
+        "quote_ts": 1793139540,
         "last_bar_date": "2026-10-27"
       },
       {
@@ -978,16 +729,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 100.09,
+        "price": 99.89,
         "change_1d": 0.0,
-        "change_5d": -1.6701,
-        "change_20d": 11.9825,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "change_5d": -1.8666,
+        "change_20d": 11.7588,
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793138760,
+        "quote_ts": 1793139720,
         "last_bar_date": "2026-10-27"
       },
       {
@@ -996,16 +747,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 109.67,
+        "price": 109.44,
         "change_1d": 0.0,
-        "change_5d": 0.8089,
-        "change_20d": 6.9013,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "change_5d": 0.5975,
+        "change_20d": 6.6771,
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793138580,
+        "quote_ts": 1793139480,
         "last_bar_date": "2026-10-27"
       },
       {
@@ -1014,16 +765,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 3.058,
+        "price": 3.054,
         "change_1d": 0.0,
-        "change_5d": 3.2062,
-        "change_20d": 1.5609,
-        "updated_at": "2026-10-27T22:17:28Z",
+        "change_5d": 3.0712,
+        "change_20d": 1.4281,
+        "updated_at": "2026-10-27T22:32:23Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793138820,
+        "quote_ts": 1793139720,
         "last_bar_date": "2026-10-27"
       }
     ],
@@ -1036,18 +787,18 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-27T22:17:41Z"
+    "updated_at": "2026-10-27T22:32:36Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-27 18:17:43",
+    "as_of_us": "2026-10-27 18:32:38",
     "window_start": "2026-09-27",
     "core_closed_count": 0,
     "core_open_count": 22,
     "observation_closed_count": 0,
     "observation_open_count": 39,
-    "actual_active_count": 6,
+    "actual_active_count": 3,
     "core_closed_count_status": "complete",
     "core_open_count_status": "complete",
     "observation_closed_count_status": "complete",
@@ -1060,7 +811,7 @@
     "actual_active_unresolved": 0,
     "core_event_count": 22,
     "observation_event_count": 39,
-    "actual_active_candidate_count": 6,
+    "actual_active_candidate_count": 3,
     "core_closed_win_rate": null,
     "core_open_win_rate": 54.55,
     "observation_closed_win_rate": null,
@@ -1125,7 +876,7 @@
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "FINAL"
       },
       {
         "event_id": "DHR|2026-10-22|Core_Dragon",
@@ -1191,7 +942,7 @@
         "pnl_10d": null,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "OPEN"
+        "review_stage": "FINAL"
       },
       {
         "event_id": "APA|2026-10-19|Core_Dragon",
@@ -1287,7 +1038,7 @@
         "pnl_10d": 13.01,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "10D"
+        "review_stage": "FINAL"
       },
       {
         "event_id": "CNP|2026-10-08|Observation",
@@ -2485,9 +2236,9 @@
         "pnl_5d": -1.73,
         "price_10d": 109.9800033569336,
         "pnl_10d": -4.66,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 116.69999694824219,
+        "pnl_20d": 1.16,
+        "review_stage": "20D"
       },
       {
         "event_id": "CBOE|2026-09-29|Core_Dragon",
@@ -3243,8 +2994,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 268.4,
-        "pnl_pct": 8.13,
+        "cur_price": 268.75,
+        "pnl_pct": 8.28,
         "days_held": 35,
         "stop_loss": null,
         "score": "64.2",
@@ -7659,8 +7410,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 226.43,
-        "pnl_pct": -45.94,
+        "cur_price": 226.5,
+        "pnl_pct": -45.93,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -8510,8 +8261,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.64,
-        "pnl_pct": -7.15,
+        "cur_price": 50.733,
+        "pnl_pct": -6.98,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -8540,8 +8291,8 @@
         "score": "N/A",
         "source": "review_history",
         "ai_snapshot": null,
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 142.33631896972656,
+        "pnl_5d": 6.44,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -8878,7 +8629,7 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 55.75,
+        "cur_price": 55.7499,
         "pnl_pct": 7.27,
         "days_held": 106,
         "stop_loss": null,
@@ -9061,7 +8812,7 @@
         "rec_date": "2026-06-08",
         "tag": "Trap_Warning",
         "status": null,
-        "rec_price": 0.29,
+        "rec_price": 8.7,
         "cur_price": 0.29,
         "pnl_pct": 0.0,
         "days_held": 0,
@@ -9070,7 +8821,7 @@
         "source": "review_history",
         "ai_snapshot": null,
         "price_5d": 0.28999999165534973,
-        "pnl_5d": -0.0,
+        "pnl_5d": -96.67,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -9577,11 +9328,11 @@
         "ai_snapshot": null,
         "price_5d": 54.87999725341797,
         "pnl_5d": 4.36,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 55.91471862792969,
+        "pnl_10d": 6.33,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "FXI|2026-06-04|Observation",
@@ -9646,11 +9397,11 @@
         "ai_snapshot": null,
         "price_5d": 116.95999908447266,
         "pnl_5d": 7.9,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 133.99000549316406,
+        "pnl_10d": 23.61,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "INTC|2026-06-04|Core_Dragon",
@@ -9669,8 +9420,8 @@
         "ai_snapshot": null,
         "price_5d": 116.95999908447266,
         "pnl_5d": 7.9,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 133.99000549316406,
+        "pnl_10d": 23.61,
         "price_20d": null,
         "pnl_20d": null,
         "review_stage": "FINAL"
@@ -9692,11 +9443,11 @@
         "ai_snapshot": null,
         "price_5d": 26.56999969482422,
         "pnl_5d": -2.53,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 25.239999771118164,
+        "pnl_10d": -7.41,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "META|2026-06-04|Observation",
@@ -9807,11 +9558,11 @@
         "ai_snapshot": null,
         "price_5d": 6.03000020980835,
         "pnl_5d": -1.15,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 5.309999942779541,
+        "pnl_10d": -12.95,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "SNXX|2026-06-04|Trap_Warning",
@@ -9853,11 +9604,11 @@
         "ai_snapshot": null,
         "price_5d": 41.832401275634766,
         "pnl_5d": -4.26,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 39.38319778442383,
+        "pnl_10d": -9.87,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "TZA|2026-06-04|Core_Dragon",
@@ -9876,11 +9627,11 @@
         "ai_snapshot": null,
         "price_5d": 41.832401275634766,
         "pnl_5d": -4.26,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 39.38319778442383,
+        "pnl_10d": -9.87,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "XLE|2026-06-04|Core_Dragon",
@@ -11453,22 +11204,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 40433117129,
+        "run_id": 40594400595,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-10-27T01:31:57Z",
-        "started_at": "2026-10-27T01:31:57Z",
-        "updated_at": "2026-10-27T01:35:19Z",
-        "head_sha": "a273ddb18421",
-        "event": "schedule",
-        "run_number": 156,
+        "created_at": "2026-10-27T22:23:08Z",
+        "started_at": "2026-10-27T22:23:08Z",
+        "updated_at": "2026-10-27T22:25:21Z",
+        "head_sha": "ed6bf1b90997",
+        "event": "workflow_dispatch",
+        "run_number": 157,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/40433117129"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/40594400595"
       },
       "last_success": {
-        "run_id": 40433117129,
-        "completed_at": "2026-10-27T01:35:19Z",
-        "head_sha": "a273ddb18421"
+        "run_id": 40594400595,
+        "completed_at": "2026-10-27T22:25:21Z",
+        "head_sha": "ed6bf1b90997"
       },
       "error": null
     },
@@ -11506,13 +11257,13 @@
         "stop_loss": "$177.22",
         "stop_loss_price": 177.22,
         "ai_reason": "盘前实时$186.75、-1.17% 从昨收$188.97回调$2.22 符合ATR%=3.11%日均波动范围但方向明确向下。技术面矛盾:MA20=$174.36上方保持+8.38% Bias强势结构 MACD走强+周线改善+量能确认显示中期多头未破 但KDJ=38.35回落至中性+盘前跳空低开显示短期动能转弱。关键支撑$180(心理关口)/$174.36(MA20) 阻力$190(昨日高点)/$195(前期平台)。当前处于\"技术健康vs基本面逻辑转空\"博弈初期 盘前-1.1",
-        "actual_shares": 53,
-        "actual_entry_price": 188.28,
-        "actual_entry_date": "2026-10-26",
-        "actual_stop_loss_price": 176.78,
-        "shares_delta": 13,
-        "entry_price_diff_pct": -0.37,
-        "fill_status": "partial"
+        "actual_shares": 0,
+        "actual_entry_price": null,
+        "actual_entry_date": null,
+        "actual_stop_loss_price": null,
+        "shares_delta": 66,
+        "entry_price_diff_pct": null,
+        "fill_status": "pending"
       }
     ],
     "exit_rules": {
@@ -11530,591 +11281,46 @@
     "start_date": "2026-10-06",
     "unit_dollars": 10000.0,
     "max_open_positions": 4,
-    "asof": "2026-10-26",
-    "snapshot_asof": "2026-10-26",
+    "asof": "2026-10-27",
+    "snapshot_asof": "2026-10-27",
     "rolled_txns": 0,
-    "cash": 40145.53,
-    "stock_value": 9742.99,
-    "total_equity": 49888.52,
-    "realized_pnl": 124.37,
-    "unrealized_pnl": -235.85,
-    "total_pnl": -111.48,
-    "return_pct": -0.22,
-    "open_positions": 1,
-    "open_pct": 19.53,
-    "positions": [
-      {
-        "portfolio_id": "US-50000-001",
-        "unit_id": "U001",
-        "ticker": "AMT",
-        "shares": 53,
-        "entry_price": 188.28,
-        "entry_date": "2026-10-26",
-        "cost_basis": 9978.84,
-        "current_price": 183.83,
-        "extended_price": 183.91,
-        "extended_time": "10-27 18:08 ET",
-        "market_value": 9742.99,
-        "unrealized_pnl": -235.85,
-        "unrealized_pnl_pct": -2.36,
-        "weight_pct": 19.53,
-        "stop_loss": "176.78",
-        "stop_loss_price": 176.78,
-        "holding_days": 0,
-        "intraday": {
-          "date": "2026-10-27",
-          "bars": [
-            [
-              "09:30",
-              186.5,
-              187.48,
-              183.1,
-              186.96
-            ],
-            [
-              "09:35",
-              186.91,
-              187.15,
-              186.18,
-              187.15
-            ],
-            [
-              "09:40",
-              186.93,
-              187.54,
-              186.2,
-              186.75
-            ],
-            [
-              "09:45",
-              186.03,
-              186.73,
-              185.75,
-              186.64
-            ],
-            [
-              "09:50",
-              186.42,
-              187.18,
-              186.35,
-              187.17
-            ],
-            [
-              "09:55",
-              187.01,
-              187.73,
-              187.01,
-              187.24
-            ],
-            [
-              "10:00",
-              187.18,
-              187.61,
-              187.0,
-              187.02
-            ],
-            [
-              "10:05",
-              186.77,
-              187.71,
-              186.56,
-              187.55
-            ],
-            [
-              "10:10",
-              187.57,
-              187.7,
-              186.86,
-              187.46
-            ],
-            [
-              "10:15",
-              187.23,
-              187.41,
-              186.46,
-              186.66
-            ],
-            [
-              "10:20",
-              186.79,
-              186.79,
-              186.26,
-              186.26
-            ],
-            [
-              "10:25",
-              186.26,
-              186.61,
-              186.11,
-              186.55
-            ],
-            [
-              "10:30",
-              186.49,
-              186.72,
-              185.69,
-              185.71
-            ],
-            [
-              "10:35",
-              185.7,
-              186.36,
-              185.7,
-              186.36
-            ],
-            [
-              "10:40",
-              186.22,
-              186.61,
-              186.06,
-              186.27
-            ],
-            [
-              "10:45",
-              186.23,
-              186.66,
-              186.21,
-              186.48
-            ],
-            [
-              "10:50",
-              186.37,
-              186.37,
-              186.03,
-              186.03
-            ],
-            [
-              "10:55",
-              186.2,
-              186.42,
-              185.73,
-              186.39
-            ],
-            [
-              "11:00",
-              186.24,
-              186.79,
-              186.24,
-              186.4
-            ],
-            [
-              "11:05",
-              186.44,
-              186.5,
-              186.32,
-              186.48
-            ],
-            [
-              "11:10",
-              186.4,
-              186.95,
-              186.38,
-              186.79
-            ],
-            [
-              "11:15",
-              186.79,
-              187.19,
-              186.74,
-              187.04
-            ],
-            [
-              "11:20",
-              187.18,
-              187.19,
-              186.52,
-              186.61
-            ],
-            [
-              "11:25",
-              186.8,
-              186.96,
-              186.43,
-              186.43
-            ],
-            [
-              "11:30",
-              186.47,
-              186.47,
-              186.09,
-              186.24
-            ],
-            [
-              "11:35",
-              186.25,
-              186.82,
-              186.25,
-              186.74
-            ],
-            [
-              "11:40",
-              186.83,
-              187.18,
-              186.49,
-              186.97
-            ],
-            [
-              "11:45",
-              187.08,
-              187.11,
-              186.49,
-              186.74
-            ],
-            [
-              "11:50",
-              186.7,
-              186.77,
-              186.36,
-              186.62
-            ],
-            [
-              "11:55",
-              186.63,
-              186.9,
-              186.51,
-              186.8
-            ],
-            [
-              "12:00",
-              186.8,
-              186.93,
-              186.29,
-              186.32
-            ],
-            [
-              "12:05",
-              186.24,
-              186.45,
-              186.11,
-              186.11
-            ],
-            [
-              "12:10",
-              186.01,
-              186.3,
-              185.99,
-              186.05
-            ],
-            [
-              "12:15",
-              186.05,
-              186.11,
-              185.81,
-              185.87
-            ],
-            [
-              "12:20",
-              185.92,
-              185.92,
-              185.35,
-              185.35
-            ],
-            [
-              "12:25",
-              185.35,
-              185.59,
-              185.33,
-              185.48
-            ],
-            [
-              "12:30",
-              185.43,
-              185.43,
-              184.94,
-              185.05
-            ],
-            [
-              "12:35",
-              185.01,
-              185.2,
-              184.64,
-              184.64
-            ],
-            [
-              "12:40",
-              184.54,
-              184.65,
-              184.41,
-              184.63
-            ],
-            [
-              "12:45",
-              184.63,
-              184.78,
-              184.55,
-              184.66
-            ],
-            [
-              "12:50",
-              184.43,
-              184.7,
-              184.43,
-              184.54
-            ],
-            [
-              "12:55",
-              184.7,
-              184.74,
-              183.87,
-              183.91
-            ],
-            [
-              "13:00",
-              183.99,
-              184.12,
-              183.52,
-              183.65
-            ],
-            [
-              "13:05",
-              183.75,
-              184.3,
-              183.73,
-              183.99
-            ],
-            [
-              "13:10",
-              184.0,
-              184.22,
-              183.82,
-              184.05
-            ],
-            [
-              "13:15",
-              184.02,
-              184.47,
-              183.92,
-              184.47
-            ],
-            [
-              "13:20",
-              184.57,
-              184.75,
-              184.32,
-              184.66
-            ],
-            [
-              "13:25",
-              184.66,
-              184.88,
-              184.58,
-              184.67
-            ],
-            [
-              "13:30",
-              184.67,
-              184.76,
-              184.38,
-              184.39
-            ],
-            [
-              "13:35",
-              184.37,
-              184.5,
-              184.07,
-              184.38
-            ],
-            [
-              "13:40",
-              184.35,
-              184.52,
-              184.35,
-              184.4
-            ],
-            [
-              "13:45",
-              184.41,
-              184.46,
-              183.99,
-              184.24
-            ],
-            [
-              "13:50",
-              184.14,
-              184.27,
-              183.65,
-              183.76
-            ],
-            [
-              "13:55",
-              183.76,
-              183.9,
-              183.69,
-              183.83
-            ],
-            [
-              "14:00",
-              183.83,
-              183.96,
-              183.4,
-              183.4
-            ],
-            [
-              "14:05",
-              183.48,
-              183.48,
-              183.15,
-              183.28
-            ],
-            [
-              "14:10",
-              183.28,
-              183.34,
-              183.08,
-              183.21
-            ],
-            [
-              "14:15",
-              183.19,
-              183.19,
-              182.78,
-              182.88
-            ],
-            [
-              "14:20",
-              182.91,
-              182.94,
-              182.58,
-              182.66
-            ],
-            [
-              "14:25",
-              182.59,
-              182.65,
-              182.07,
-              182.18
-            ],
-            [
-              "14:30",
-              182.14,
-              182.6,
-              182.07,
-              182.6
-            ],
-            [
-              "14:35",
-              182.54,
-              182.84,
-              182.24,
-              182.55
-            ],
-            [
-              "14:40",
-              182.51,
-              183.04,
-              182.49,
-              182.81
-            ],
-            [
-              "14:45",
-              182.82,
-              182.98,
-              182.5,
-              182.5
-            ],
-            [
-              "14:50",
-              182.56,
-              182.73,
-              182.38,
-              182.57
-            ],
-            [
-              "14:55",
-              182.56,
-              182.78,
-              182.25,
-              182.4
-            ],
-            [
-              "15:00",
-              182.37,
-              182.37,
-              182.06,
-              182.29
-            ],
-            [
-              "15:05",
-              182.32,
-              182.8,
-              182.32,
-              182.49
-            ],
-            [
-              "15:10",
-              182.5,
-              182.66,
-              182.21,
-              182.57
-            ],
-            [
-              "15:15",
-              182.57,
-              183.08,
-              182.42,
-              183.08
-            ],
-            [
-              "15:20",
-              183.04,
-              183.34,
-              182.82,
-              183.32
-            ],
-            [
-              "15:25",
-              183.32,
-              183.45,
-              183.16,
-              183.3
-            ],
-            [
-              "15:30",
-              183.22,
-              183.41,
-              183.05,
-              183.08
-            ],
-            [
-              "15:35",
-              183.1,
-              183.4,
-              182.85,
-              183.23
-            ],
-            [
-              "15:40",
-              183.37,
-              183.95,
-              183.18,
-              183.88
-            ],
-            [
-              "15:45",
-              184.0,
-              184.28,
-              183.63,
-              184.19
-            ],
-            [
-              "15:50",
-              184.19,
-              184.31,
-              183.84,
-              184.17
-            ],
-            [
-              "15:55",
-              184.12,
-              184.22,
-              183.36,
-              183.84
-            ]
-          ]
-        }
-      }
-    ],
+    "cash": 49824.92,
+    "stock_value": 0.0,
+    "total_equity": 49824.92,
+    "realized_pnl": -175.08,
+    "unrealized_pnl": 0.0,
+    "total_pnl": -175.08,
+    "return_pct": -0.35,
+    "open_positions": 0,
+    "open_pct": 0.0,
+    "positions": [],
     "transactions": [
+      {
+        "txn_id": "AMT|2026-10-26|Core_Dragon|SELL|2026-10-27",
+        "date": "2026-10-27",
+        "ticker": "AMT",
+        "action": "SELL",
+        "shares": 53,
+        "price": 182.63,
+        "amount": 9679.39,
+        "realized_pnl": -299.45,
+        "reason": "Review exit: Stop_Loss_Hit",
+        "unit_id": "U001",
+        "time": "18:25",
+        "execution_time": "2026-10-27 18:25:13",
+        "execution_date": "2026-10-27",
+        "time_source": "sidecar",
+        "entry_date": "2026-10-26",
+        "entry_time": "18:27",
+        "exit_date": "2026-10-27",
+        "exit_time": "18:25",
+        "entry_price": 188.28,
+        "exit_price": 182.63,
+        "holding_days": 1,
+        "holding_hours": 23,
+        "holding_open": null,
+        "exit_kind": "stop_loss"
+      },
       {
         "txn_id": "AMT|2026-10-26|Core_Dragon|BUY",
         "date": "2026-10-26",
@@ -12132,13 +11338,13 @@
         "time_source": "sidecar",
         "entry_date": "2026-10-26",
         "entry_time": "18:27",
-        "exit_date": null,
-        "exit_time": null,
+        "exit_date": "2026-10-27",
+        "exit_time": "18:25",
         "entry_price": 188.28,
-        "exit_price": null,
-        "holding_days": 0,
-        "holding_hours": null,
-        "holding_open": true
+        "exit_price": 182.63,
+        "holding_days": 1,
+        "holding_hours": 23,
+        "holding_open": false
       },
       {
         "txn_id": "INTRADAY|APA|2026-10-22",
@@ -12404,25 +11610,25 @@
           "pnl": 274.77
         },
         "stop": {
-          "n": 4,
-          "pnl": -150.4
+          "n": 5,
+          "pnl": -449.85
         }
       }
     ],
     "trade_stats": {
       "total_buys": 6,
-      "total_sells": 5,
-      "buys_last_7d": 2,
+      "total_sells": 6,
+      "buys_last_7d": 1,
       "buys_last_30d": 6,
-      "sells_last_7d": 1,
-      "sells_last_30d": 5,
-      "avg_holding_days": 0.0,
-      "win_rate": 60.0,
+      "sells_last_7d": 2,
+      "sells_last_30d": 6,
+      "avg_holding_days": null,
+      "win_rate": 50.0,
       "wins": 3,
-      "closed_count": 5,
+      "closed_count": 6,
       "avg_win_pct": 2.51,
-      "avg_loss_pct": -3.12,
-      "total_realized_pnl": 124.37
+      "avg_loss_pct": -3.08,
+      "total_realized_pnl": -175.08
     },
     "equity_curve": [
       {
@@ -12502,6 +11708,12 @@
         "total_equity": 50124.37,
         "cash": 40145.53,
         "stock_value": 9978.84
+      },
+      {
+        "date": "2026-10-27",
+        "total_equity": 49824.92,
+        "cash": 49824.92,
+        "stock_value": 0.0
       }
     ]
   },
@@ -12956,18 +12168,15 @@
     "data_source": "trade_history.csv + option_strategies.csv + review_history.csv",
     "ai_generated_at": null,
     "ai_status": "partial",
-    "ai_stocks_filled": 6,
+    "ai_stocks_filled": 3,
     "ai_fields_present": [],
     "ai_fields_pending": [],
     "ai_backfilled": [
-      "AMT",
       "APA",
-      "BX",
-      "CME",
       "DHR",
       "EOG"
     ],
-    "ai_backfilled_count": 6,
+    "ai_backfilled_count": 3,
     "ai_calls": 0,
     "pending_csv": null,
     "stocks_source": "active_events",
@@ -12980,18 +12189,18 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-27T22:17:41Z",
-    "technical_updated_at": "2026-10-27T22:17:43Z",
+    "market_updated_at": "2026-10-27T22:32:36Z",
+    "technical_updated_at": "2026-10-27T22:32:38Z",
     "counts": {
-      "core": 9,
+      "core": 6,
       "observation": 0,
       "market_available": 15,
       "market_total": 15,
-      "kline_ok": 9,
+      "kline_ok": 6,
       "kline_fail": 0,
-      "technical_ok": 9,
-      "price_live": 9,
-      "price_realtime": 9,
+      "technical_ok": 6,
+      "price_live": 6,
+      "price_realtime": 6,
       "price_last_close": 0,
       "wall_recomputed": 0,
       "wall_true_oi": 0
@@ -13078,11 +12287,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-27T22:17:24Z",
+    "generated_at": "2026-10-27T22:32:20Z",
     "fear_greed": {
       "score": 33.6,
       "rating": "fear",
-      "timestamp": "2026-10-27T22:00:20+00:00",
+      "timestamp": "2026-10-27T22:15:28+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 36.4,
@@ -13286,7 +12495,7 @@
   },
   "macro_forecast": {
     "schema": 1,
-    "generated_at": "2026-10-27T22:17:16Z",
+    "generated_at": "2026-10-27T22:32:12Z",
     "as_of": null,
     "source": "TradingEconomics 指标页（自动解析）",
     "count": 7,
@@ -13379,7 +12588,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-10-27T22:17:14Z",
+    "generated_at": "2026-10-27T22:32:10Z",
     "count": 10,
     "ok": 10,
     "items": [
@@ -13506,8 +12715,8 @@
     ]
   },
   "decision_inputs": {
-    "generated_at": "2026-10-27T22:17:22Z",
-    "asof": "2026-10-27T22:17:14Z",
+    "generated_at": "2026-10-27T22:32:18Z",
+    "asof": "2026-10-27T22:32:10Z",
     "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
     "count": 15,
     "features": [
@@ -13569,7 +12778,7 @@
         "key": "fg_score",
         "label": "恐惧贪婪",
         "group": "情绪",
-        "value": 32.69,
+        "value": 33.6,
         "unit": "",
         "status": "ok",
         "source": "market_indicators"
@@ -13745,7 +12954,7 @@
     "error": null
   },
   "serenity_verified": {
-    "generated_at": "2026-10-27T22:17:21Z",
+    "generated_at": "2026-10-27T22:32:18Z",
     "source": "SEC EDGAR + yfinance + news_data",
     "count": 10,
     "items": [
