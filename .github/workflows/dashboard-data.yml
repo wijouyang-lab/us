@@ -118,8 +118,11 @@ jobs:
       - name: Screen + AI analyze oversold candidates
         # 规则筛选 → yfinance 补板块/基本面/新闻 → 板块上限 2 → AI 三维解读。
         # 不修改 quant_* 研究文件、不产生交易；无密钥/模型失败时仍写出规则候选。
+        # timeout-minutes：yfinance / AI 单点卡住时不让整轮刷新挂死（超时该步失败，
+        # 后续仍用旧候选文件继续导出）。
         run: python scripts/oversold_ai.py
         continue-on-error: true
+        timeout-minutes: 12
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}

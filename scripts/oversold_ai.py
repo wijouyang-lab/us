@@ -34,7 +34,7 @@ DEFAULT_SNAPSHOT = REPO_ROOT / "quant_factor_snapshot.csv"
 DEFAULT_OUT = REPO_ROOT / "dashboard" / "data" / "oversold_candidates.json"
 DEFAULT_DATA = REPO_ROOT / "dashboard" / "data" / "dashboard_data.json"
 
-POOL_MAX = 40
+POOL_MAX = 24
 FINAL_MAX = 10
 SECTOR_CAP = 2
 VERDICTS = ("关注", "观察", "谨慎", "回避")
@@ -52,6 +52,8 @@ def enrich_one(c: dict) -> dict:
     """用 yfinance 补板块/基本面/新闻；任何失败都返回空 dict（降级）。"""
     out = {}
     try:
+        import socket
+        socket.setdefaulttimeout(10)
         import yfinance as yf
         t = yf.Ticker(c["ticker"])
         info = t.info or {}
@@ -84,10 +86,25 @@ def enrich_one(c: dict) -> dict:
     return out
 
 
-def merge_enrich(cands, workers: int = 6):
+def merge_enrich(cands, workers: int = 6, timeout: int = 15):
+    """逐只 enrich，每只放到独立子进程里跑并硬超时，避免 yfinance 卡住整个刷新。"""
+    import subprocess
+
+    def run_one(c):
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(Path(__file__).resolve()), "--enrich-one", c["ticker"]],
+                capture_output=True, text=True, timeout=timeout,
+            )
+            if proc.returncode == 0 and proc.stdout.strip():
+                return json.loads(proc.stdout.strip().splitlines()[-1])
+        except Exception:
+            pass
+        return {}
+
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        enriched = list(ex.map(enrich_one, cands))
-    for c, e in zip(cands, enriched):
+        results = list(ex.map(run_one, cands))
+    for c, e in zip(cands, results):
         if e:
             c["enrich"] = e
             if e.get("sector"):
@@ -247,6 +264,11 @@ def _atomic_write(path: Path, payload: dict):
 
 
 def main(argv=None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "--enrich-one" and len(argv) > 1:
+        print(json.dumps(enrich_one({"ticker": argv[1]}), ensure_ascii=False))
+        return 0
+
     ap = argparse.ArgumentParser(description="超跌候选：板块上限 + AI 三维分析")
     ap.add_argument("--snapshot", default=str(DEFAULT_SNAPSHOT))
     ap.add_argument("--out", default=str(DEFAULT_OUT))
