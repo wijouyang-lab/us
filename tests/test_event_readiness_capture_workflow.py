@@ -52,3 +52,5 @@ def test_capture_workflow_collects_prices_and_runs_descriptive_event_study():
     assert '--study-end-date "$STUDY_END_DATE"' in workflow
     assert "--price-basis auto" in workflow
     assert "no price rows" in workflow
+    assert '\"macro_release\":2' in workflow
+    assert "publication-to-first-seen" in workflow or "max-age-days-by-type" in workflow
