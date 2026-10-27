@@ -134,6 +134,13 @@ jobs:
         continue-on-error: true
         timeout-minutes: 10
 
+      - name: Auto-update CPI forecast vs actual
+        # TradingEconomics 指标页解析 CPI / 核心CPI 的预期与实际，写 macro_forecast.json；
+        # 解析失败保留旧文件（fail-closed）。
+        run: python dashboard/fetch_macro_forecast.py
+        continue-on-error: true
+        timeout-minutes: 3
+
       - name: CPI expected-diff AI (only on change)
         # 只有 CPI/核心CPI 的期间/预期/实际变化时才调用 AI；signature 相同直接跳过。
         run: python dashboard/macro_cpi_ai.py
@@ -271,6 +278,7 @@ jobs:
           # 超跌观察候选：规则版筛选每次刷新重写；文件不存在时跳过。
           if [ -f dashboard/data/oversold_candidates.json ]; then git add dashboard/data/oversold_candidates.json; fi
           if [ -f dashboard/data/macro_indicators.json ]; then git add dashboard/data/macro_indicators.json; fi
+          if [ -f dashboard/data/macro_forecast.json ]; then git add dashboard/data/macro_forecast.json; fi
           if [ -f dashboard/data/macro_cpi_ai.json ]; then git add dashboard/data/macro_cpi_ai.json; fi
           if [ -f dashboard/data/serenity_verified.json ]; then git add dashboard/data/serenity_verified.json; fi
           if [ -f dashboard/data/intraday.json ]; then git add dashboard/data/intraday.json; fi
@@ -285,7 +293,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_indicators\.json|macro_cpi_ai\.json|news_data\.json|news_translations\.json|serenity_verified\.json|intraday\.json|ohlcv\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_forecast\.json|macro_indicators\.json|macro_cpi_ai\.json|news_data\.json|news_translations\.json|serenity_verified\.json|intraday\.json|ohlcv\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi
@@ -313,7 +321,7 @@ jobs:
               # 回退掉。这里只保留本轮数据文件，其它路径一律恢复成 origin/main 版本。
               for f in $(git diff --cached --name-only); do
                 case "$f" in
-                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|dashboard/data/news_data.json|dashboard/data/news_translations.json|dashboard/data/serenity_verified.json|dashboard/data/intraday.json|dashboard/data/ohlcv.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
+                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_forecast.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|dashboard/data/news_data.json|dashboard/data/news_translations.json|dashboard/data/serenity_verified.json|dashboard/data/intraday.json|dashboard/data/ohlcv.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
                     ;;
                   *)
                     git checkout origin/main -- "$f" 2>/dev/null || true
