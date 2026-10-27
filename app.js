@@ -349,6 +349,27 @@
               try { renderPortfolio(); } catch (e) { /* 忽略 */ }
             }
           }).catch(function () { /* 拆分包缺失时静默降级 */ });
+          /* 日线 K 线单独文件：补载后重绘 spark，并在详情打开时重画主图 */
+          fetch('dashboard/data/ohlcv.json?t=' + Date.now()).then(function (r) {
+            return r.ok ? r.json() : null;
+          }).then(function (x) {
+            if (!x || !x.positions) return;
+            DATA.ohlcv = x.positions;
+            STOCKS.forEach(function (s) {
+              var raw = x.positions[String(s.t).toUpperCase()] || [];
+              s.ohlcv = raw.map(function (b) {
+                return {
+                  d: b.date || '', o: num(b.open), h: num(b.high),
+                  l: num(b.low), c: num(b.close), v: num(b.volume) || 0
+                };
+              }).filter(function (b) {
+                return b.o !== null && b.h !== null && b.l !== null && b.c !== null;
+              });
+              if (s.ohlcv.length) s.ohlcvStatus = 'ok';
+            });
+            try { drawAllSparks(); } catch (e) { /* 忽略 */ }
+            try { if (cur) drawDetailCharts(); } catch (e) { /* 忽略 */ }
+          }).catch(function () { /* 拆分包缺失时静默降级 */ });
         }
         catch (err) {
           console.error('[Dashboard] render failed:', err);

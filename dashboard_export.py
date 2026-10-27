@@ -4169,6 +4169,22 @@ def main(argv=None):
             "本脚本未调用任何 AI 接口，也未生成替代文案，且不按 Ticker 回退到 ai_text_cache.csv。"
         )
 
+    # ---- 拆分：日线 K 线单独成文件（dashboard_data.json 的主要体积来源）----
+    ohlcv_map = {}
+    for _s in (payload.get("stocks") or []):
+        _bars = _s.pop("ohlcv", None)
+        _tk = str(_s.get("ticker") or "").upper()
+        if _tk and _bars:
+            ohlcv_map[_tk] = _bars
+            _s["has_ohlcv"] = True
+        elif _tk:
+            _s["has_ohlcv"] = False
+    (out_path.parent / "ohlcv.json").write_text(
+        json.dumps({"schema": 1, "positions": ohlcv_map}, ensure_ascii=False,
+                   separators=(",", ":")),
+        encoding="utf-8",
+    )
+
     # ---- 拆分：持仓当日 K 线单独成文件（避免 dashboard_data.json 继续膨胀）----
     intra = {}
     for _pos in ((payload.get("portfolio") or {}).get("positions") or []):
