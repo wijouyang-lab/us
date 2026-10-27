@@ -49,7 +49,7 @@ jobs:
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          GPT_MODEL: deepseek-v4.1-flash
+          GPT_MODEL: deepseek-flash
           MARKET_AI_MODEL: ${{ vars.MARKET_AI_MODEL }}
         run: python dashboard/market_ai_commentary.py
 

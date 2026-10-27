@@ -126,7 +126,7 @@ jobs:
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          GPT_MODEL: deepseek-v4.1-flash
+          GPT_MODEL: deepseek-flash
 
       - name: Fetch macro indicators (9 items)
         # FRED + ISM + EIA；逐项 fail-closed（拿不到写 null），只写 macro_indicators.json。
@@ -142,7 +142,7 @@ jobs:
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          GPT_MODEL: deepseek-v4.1-flash
+          GPT_MODEL: deepseek-flash
 
       - name: Translate news headlines (cache + AI)
         # 只翻译缓存里没有的新标题（每次最多 40 条）；无密钥时只套缓存、不清空。
@@ -152,7 +152,7 @@ jobs:
         env:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
-          GPT_MODEL: deepseek-v4.1-flash
+          GPT_MODEL: deepseek-flash
 
       - name: Fetch market indicators (flag-gated)
         # F&G + FedWatch：flag 关（vars.ENABLE_MARKET_INDICATORS 未设）时整个步骤跳过，
