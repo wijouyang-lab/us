@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T18:49:53Z",
+  "generated_at": "2026-10-27T18:52:38Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
@@ -25,21 +25,10 @@
           "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000193/dhr-20261009.htm"
         }
       ],
-      "news": [
-        {
-          "title": "Avantor appoints new Chief Information Officer",
-          "url": "https://finnhub.io/api/news?id=33ebb764a9a897186304d7a7617db95c9b69c523f1e5575abf107030ad6f20a4"
-        },
-        {
-          "title": "Dividend Champion, Contender, And Challenger Highlights: Week October 25",
-          "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa"
-        },
-        {
-          "title": "Should Illumina Stock Holders Look At Thermo Fisher Instead?",
-          "url": "https://finnhub.io/api/news?id=324ee5b3a38ddfccd02201049082a470e6a07e75ff50bef2f94295ef71da456f"
-        }
+      "news": [],
+      "missing": [
+        "新闻"
       ],
-      "missing": [],
       "status": "verified"
     },
     {
@@ -88,21 +77,10 @@
           "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000060/cme-20260924.htm"
         }
       ],
-      "news": [
-        {
-          "title": "Inflation Beaters: 10 S&P 500 Stocks Charge A Premium",
-          "url": "https://finnhub.io/api/news?id=095f02979b736561e19fe0f144085507c36402d3834023acbe3d8d44baa4fa77"
-        },
-        {
-          "title": "Why Market Caution Could Quickly Turn to Panic",
-          "url": "https://finnhub.io/api/news?id=8f24befce33cf23889c6b67ca11e58bcd92644ecf2c6a31741af02ec84f324c1"
-        },
-        {
-          "title": "Dollar Moves Firmly Higher With Fed Rate Meeting In Focus",
-          "url": "https://finnhub.io/api/news?id=f8314f1f800da6e4e344c95ab9cd9a787633aecb47c22343fa4047012c066112"
-        }
+      "news": [],
+      "missing": [
+        "新闻"
       ],
-      "missing": [],
       "status": "verified"
     },
     {
@@ -177,38 +155,23 @@
           "url": "https://www.sec.gov/Archives/edgar/data/874761/000087476126000153/aes-20260914.htm"
         }
       ],
-      "news": [
-        {
-          "title": "Dividend Champion, Contender, And Challenger Highlights: Week October 25",
-          "url": "https://finnhub.io/api/news?id=1bf25eff3f4e92d5e3da84b6ae1d3b3cef34fe9794d5c4985be63bc283f867aa"
-        }
+      "news": [],
+      "missing": [
+        "新闻"
       ],
-      "missing": [],
       "status": "verified"
     },
     {
       "ticker": "XLE",
       "earnings_date": null,
       "filings": [],
-      "news": [
-        {
-          "title": "ValuEngine Weekly Market Commentary",
-          "url": "https://finnhub.io/api/news?id=9b6cff4781badee365837f3726ec6e231ca26d78e0010faf19813617c440df97"
-        },
-        {
-          "title": "Sector Update: Energy Stocks Edge Higher Late Afternoon",
-          "url": "https://finnhub.io/api/news?id=1f5d341b12ad1dfb2bec885e1275e065e810cec5f56b7d2393e0ed59e4830938"
-        },
-        {
-          "title": "Sector Update: Energy Stocks Mixed Monday Afternoon",
-          "url": "https://finnhub.io/api/news?id=05738a0e14a869ccd9ebd79a169159af9800c55052ad9a967d081f0929a7cfa8"
-        }
-      ],
+      "news": [],
       "missing": [
         "财报日",
-        "SEC 文件"
+        "SEC 文件",
+        "新闻"
       ],
-      "status": "verified"
+      "status": "not_found"
     },
     {
       "ticker": "EOG",
@@ -230,21 +193,10 @@
           "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000149/eog-20260630.htm"
         }
       ],
-      "news": [
-        {
-          "title": "Diamondback Energy (FANG) vs. EOG and COP: Can Its Permian Advantage Drive Long-Term Shareholder Returns?",
-          "url": "https://finnhub.io/api/news?id=ef3bb52c3a4555d95b4a8ff38e77b6077b6e537d1a9c974e1e3cec886593a6d7"
-        },
-        {
-          "title": "Was The Run In Devon Energy Stock Hiding In Plain Sight?",
-          "url": "https://finnhub.io/api/news?id=4eb0e3a29898733fc206265bd98d575e62058abcecb055b380ae459f49458afc"
-        },
-        {
-          "title": "Here's What to Expect From EOG Resources' Next Earnings Report",
-          "url": "https://finnhub.io/api/news?id=fd0d1298cd2bc88b4763d6896e147581dfe84f1ed75ffe278969ef667c1bda9a"
-        }
+      "news": [],
+      "missing": [
+        "新闻"
       ],
-      "missing": [],
       "status": "verified"
     },
     {
@@ -267,21 +219,10 @@
           "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000050/apa8k-20260805.htm"
         }
       ],
-      "news": [
-        {
-          "title": "Was The Run In Devon Energy Stock Hiding In Plain Sight?",
-          "url": "https://finnhub.io/api/news?id=4eb0e3a29898733fc206265bd98d575e62058abcecb055b380ae459f49458afc"
-        },
-        {
-          "title": "1 surging  stock with impressive fundamentals and 2 we find risky",
-          "url": "https://finnhub.io/api/news?id=bc1b972315c51623c3a917435a43b3efa1f520dac08c58a0af814414667f3b5c"
-        },
-        {
-          "title": "Are Investors Undervaluing APA (APA) Right Now?",
-          "url": "https://finnhub.io/api/news?id=accecc85423e337429e5a1d76ba96ea55e23e453df3ca848697be8c04528ce68"
-        }
+      "news": [],
+      "missing": [
+        "新闻"
       ],
-      "missing": [],
       "status": "verified"
     },
     {
