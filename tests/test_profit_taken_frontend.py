@@ -348,3 +348,35 @@ def test_detail_review_shows_take_profit_row():
     assert "mx('止盈价'" in src, "个股详情缺止盈价"
     assert "takeProfitInfo(numLoose(s.stop), num(s.recPrice), num(s.px))" in src, \
         "个股详情未复用 takeProfitInfo"
+
+
+# ---------------------------------------------------------------- 目标持仓：计划 vs 实际
+def test_target_plan_vs_actual_partial():
+    target = {"ticker": "AMT", "action": "BUY", "target_shares": 66,
+              "ref_price": 188.97, "stop_loss": "$177.22", "stop_loss_price": 177.22,
+              "scan_date": "2026-10-26", "ai_reason": "盘前回调",
+              "actual_shares": 53, "actual_entry_price": 188.28,
+              "actual_entry_date": "2026-10-26", "actual_stop_loss_price": 176.78,
+              "shares_delta": 13, "entry_price_diff_pct": -0.37,
+              "fill_status": "partial"}
+    r = _run({"portfolio": {"target": [target], "transactions": [], "positions": []}})
+    html = r["target"] or ""
+    assert "部分建仓" in html, html
+    assert "实际 53 股" in html, html
+    assert "@ $188.28（2026-10-26）" in html, html
+    assert "差 +13 股" in html, html
+    assert "参考价差 -0.37%" in html, html
+    assert "止损 计划 $177.22 / 实际 $176.78" in html, html
+
+
+def test_target_plan_vs_actual_pending():
+    target = {"ticker": "XYZ", "action": "BUY", "target_shares": 10,
+              "ref_price": 50.0, "stop_loss_price": 45.0, "scan_date": "2026-10-26",
+              "actual_shares": 0, "actual_entry_price": None, "actual_entry_date": None,
+              "actual_stop_loss_price": None, "shares_delta": 10,
+              "entry_price_diff_pct": None, "fill_status": "pending"}
+    r = _run({"portfolio": {"target": [target], "transactions": [], "positions": []}})
+    html = r["target"] or ""
+    assert "待建仓" in html, html
+    assert "实际 0 股" in html, html
+    assert "差 +10 股" in html, html

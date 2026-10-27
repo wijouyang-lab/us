@@ -666,6 +666,36 @@
         ? '<span class="at-stop">止损 <b>' + esc(stopTxt) + '</b>' +
           (stopPctTxt ? '<i>' + esc(stopPctTxt) + '</i>' : '') + '</span>'
         : '<span class="at-stop na">止损 ' + NA + '</span>';
+
+      /* 计划 vs 实际（后端 _augment_target_actuals 已算好，这里只渲染）：
+         实际股数/入场价/日期来自 $50k 账本 positions；差异与状态一目了然。 */
+      var fillHtml = '';
+      if (t.fill_status) {
+        var fmap = { pending: '待建仓', partial: '部分建仓', aligned: '已对齐',
+                     over: '超配', exit_pending: '待清仓' };
+        var fcls = { pending: 'flat', partial: 'warn', aligned: 'up',
+                     over: 'warn', exit_pending: 'warn' }[t.fill_status] || 'flat';
+        var bits = [];
+        if (t.actual_shares != null) bits.push('实际 ' + t.actual_shares + ' 股');
+        if (t.actual_entry_price != null) {
+          bits.push('@ $' + fmt(t.actual_entry_price, 2) +
+            (t.actual_entry_date ? '（' + t.actual_entry_date + '）' : ''));
+        }
+        if (t.shares_delta) bits.push('差 ' + (t.shares_delta > 0 ? '+' : '') + t.shares_delta + ' 股');
+        if (t.entry_price_diff_pct != null) {
+          bits.push('参考价差 ' + (t.entry_price_diff_pct > 0 ? '+' : '') +
+            fmt(t.entry_price_diff_pct, 2) + '%');
+        }
+        if (t.stop_loss_price != null && t.actual_stop_loss_price != null &&
+            t.stop_loss_price !== t.actual_stop_loss_price) {
+          bits.push('止损 计划 $' + fmt(t.stop_loss_price, 2) +
+            ' / 实际 $' + fmt(t.actual_stop_loss_price, 2));
+        }
+        fillHtml = '<div class="at-fill"><span class="at-fs ' + fcls + '">' +
+          esc(fmap[t.fill_status] || t.fill_status) + '</span>' +
+          '<span class="at-fd">' + esc(bits.join(' · ')) + '</span></div>';
+      }
+
       return '<div class="at-row">' +
         '<div class="at-head">' +
           '<span class="at-tk">' + esc(t.ticker || NA) + '</span>' +
@@ -674,6 +704,7 @@
           '<span class="at-price">' + price + '</span>' +
         '</div>' +
         '<div class="at-risk">' + stopHtml + '</div>' +
+        fillHtml +
         (reason ? '<div class="at-reason" onclick="this.classList.toggle(\'open\')">' + esc(reason) + '</div>' : '') +
       '</div>';
     }).join('');

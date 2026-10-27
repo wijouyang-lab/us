@@ -491,6 +491,15 @@ button{font-family:inherit}
 .at-stop i{margin-left:3px;font-style:normal;color:var(--down)}
 .at-stop.na{color:var(--text-3)}
 .at-stop.na b{color:var(--text-3);font-weight:600}
+/* 计划 vs 实际（AI 目标持仓） */
+.at-fill{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:11px;
+  color:var(--text-3);font-variant-numeric:tabular-nums}
+.at-fs{font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;
+  border:1px solid var(--border-2);background:var(--card)}
+.at-fs.up{color:var(--up);border-color:rgba(34,197,94,.35)}
+.at-fs.warn{color:#b45309;border-color:rgba(245,158,11,.45);background:rgba(245,158,11,.08)}
+.at-fs.flat{color:var(--text-3)}
+.at-fd{line-height:1.5}
 
 /* 已止损记录（近 30 天）—— 纯前端板块 */
 #stoppedCard .sec-sub{font-variant-numeric:tabular-nums}

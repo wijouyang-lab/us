@@ -2523,6 +2523,47 @@ def _read_exit_rules(data_dir: Path):
     return out if any(v is not None for v in out.values()) else None
 
 
+def _augment_target_actuals(target, positions):
+    """给「AI 目标持仓」补上账本实际执行情况（只读对比，不改目标文件）。
+
+    目标行语义：BUY = 本轮计划建仓（Target_Shares 为目标股数）；HOLD = 目标股数=当前持股。
+    实际值全部来自 positions（OPEN 持仓）：
+      actual_shares / actual_entry_price / actual_entry_date / actual_stop_loss_price
+    派生：
+      shares_delta         = 目标股数 − 实际持股（正=还差多少股，负=超配）
+      entry_price_diff_pct = 实际入场价相对参考价的偏离（%）
+      fill_status          = pending / partial / aligned / over / exit_pending
+    """
+    pos_by = {str(p.get("ticker") or "").upper(): p for p in (positions or [])}
+    for t in target or []:
+        tk = str(t.get("ticker") or "").upper()
+        p = pos_by.get(tk)
+        actual_shares = int(p.get("shares") or 0) if p else 0
+        target_shares = int(t.get("target_shares") or 0)
+        t["actual_shares"] = actual_shares
+        t["actual_entry_price"] = p.get("entry_price") if p else None
+        t["actual_entry_date"] = p.get("entry_date") if p else None
+        t["actual_stop_loss_price"] = p.get("stop_loss_price") if p else None
+        t["shares_delta"] = target_shares - actual_shares
+
+        ref = parse_num(t.get("ref_price"))
+        entry = parse_num(t.get("actual_entry_price"))
+        t["entry_price_diff_pct"] = round_num((entry / ref - 1) * 100, 2) if (ref and entry) else None
+
+        act = str(t.get("action") or "").upper()
+        if act == "SELL":
+            t["fill_status"] = "exit_pending" if actual_shares > 0 else "aligned"
+        elif actual_shares == 0 and target_shares > 0:
+            t["fill_status"] = "pending"
+        elif actual_shares < target_shares:
+            t["fill_status"] = "partial"
+        elif actual_shares == target_shares:
+            t["fill_status"] = "aligned"
+        else:
+            t["fill_status"] = "over"
+    return target
+
+
 def _read_portfolio_target(data_dir: Path):
     """读 portfolio_50000_target.csv → 目标持仓列表（前端「AI 目标持仓」板块用）。
 
@@ -3172,6 +3213,8 @@ def build_portfolio(data_dir: Path):
     target = None
     if os.environ.get("ENABLE_TARGET_FILE") == "1":
         target = _read_portfolio_target(data_dir)
+        if target:
+            _augment_target_actuals(target, positions)
 
     # 风控阈值（只读透传，供前端解释「止盈价何时激活」；缺失时前端不硬编码）
     exit_rules = _read_exit_rules(data_dir)
