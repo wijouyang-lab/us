@@ -745,3 +745,13 @@ button{font-family:inherit}
   .macro-fc{font-size:10px;gap:6px}
   .ss-grid{grid-template-columns:1fr}
 }
+
+/* 情绪颜色：利好绿 / 利空红 / 中性灰 */
+.sent-badge{display:inline-block;font-size:9.5px;font-weight:700;padding:0 5px;border-radius:4px;
+  margin-right:6px;line-height:1.6;vertical-align:middle}
+.sent-badge.s-bull{color:var(--up);background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.35)}
+.sent-badge.s-bear{color:var(--down);background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.35)}
+.sent-badge.s-neutral{color:var(--text-3);background:var(--soft);border:1px solid var(--border-2)}
+.news-item.sent-bull,.macro-spk.sent-bull{border-left:3px solid var(--up)}
+.news-item.sent-bear,.macro-spk.sent-bear{border-left:3px solid var(--down)}
+.news-item.sent-neutral,.macro-spk.sent-neutral{border-left:3px solid var(--border-2)}

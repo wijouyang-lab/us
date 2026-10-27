@@ -2145,7 +2145,9 @@
     var rationale = (s.sentiment && s.rationale)
       ? '<div class="news-rationale">' + esc(s.rationale) + '</div>' : '';
     var meta = [s.time, s.source, s.age_tag].filter(Boolean).map(esc).join(' · ');
-    return '<div class="macro-spk">' +
+    var sSent = e_sentiment(s.sentiment);
+    return '<div class="macro-spk sent-' + sSent + '">' +
+      '<span class="sent-badge s-' + sSent + '">' + sentLabel(sSent) + '</span>' +
       '<div class="macro-spk-h">' + person + sent + '</div>' +
       '<div class="macro-spk-c">' + esc(s.content_cn || s.content || '') + '</div>' +
       (meta ? ('<div class="macro-econ-m">' + meta + '</div>') : '') +
@@ -2169,6 +2171,31 @@
     return m ? parseFloat(m[0]) : null;
   }
 
+  /* 新闻/讲话情绪：关键词打分（纯展示，不改数据） */
+  var SENT_BULL = ['rally', 'surge', 'soar', 'beat', 'beats', 'upgrade', 'record high', 'strong',
+    'growth', 'profit', 'optimistic', 'gain', 'gains', 'rebound', 'buyback', 'raises guidance',
+    '利好', '上涨', '大涨', '超预期', '上调', '增长', '反弹', '创新高', '盈利'];
+  var SENT_BEAR = ['plunge', 'slump', 'fall', 'falls', 'drop', 'miss', 'misses', 'downgrade',
+    'layoff', 'recession', 'warning', 'warns', 'cut', 'cuts', 'loss', 'losses', 'weak',
+    'selloff', 'crash', 'risk', 'tariff', 'inflation', '利空', '下跌', '暴跌', '低于预期',
+    '下调', '裁员', '衰退', '警告', '亏损', '关税', '通胀'];
+  function newsSentiment(x) {
+    var t = ((x && (x.headline_cn || x.headline || x.content_cn || x.content)) || '').toLowerCase();
+    var bull = 0, bear = 0;
+    SENT_BULL.forEach(function (w) { if (t.indexOf(w.toLowerCase()) >= 0) bull++; });
+    SENT_BEAR.forEach(function (w) { if (t.indexOf(w.toLowerCase()) >= 0) bear++; });
+    if (bull > bear) return 'bull';
+    if (bear > bull) return 'bear';
+    return 'neutral';
+  }
+  function sentLabel(k) { return k === 'bull' ? '利好' : (k === 'bear' ? '利空' : '中性'); }
+  function e_sentiment(v) {
+    var t = String(v || '').toLowerCase();
+    if (t.indexOf('bull') >= 0 || t.indexOf('positive') >= 0) return 'bull';
+    if (t.indexOf('bear') >= 0 || t.indexOf('negative') >= 0) return 'bear';
+    return 'neutral';
+  }
+
   function newsRow(x) {
     if (!x || !x.headline) return '';
     var t = fmtBJ(x.datetime);
@@ -2177,11 +2204,15 @@
     var title = x.headline_cn || x.headline;
     var head = '<a class="news-h" href="' + esc(url) + '" target="_blank" rel="noopener noreferrer">' +
       esc(title) + '</a>';
-    var icon = sentIcon(x.sentiment);
+    var sent = (x.sentiment === 'bullish' || x.sentiment === 'bearish' || x.sentiment === 'neutral')
+      ? (x.sentiment === 'bullish' ? 'bull' : (x.sentiment === 'bearish' ? 'bear' : 'neutral'))
+      : newsSentiment(x);
+    var badge = '<span class="sent-badge s-' + sent + '">' + sentLabel(sent) + '</span>';
     /* rationale：1 句中文简评（≤30字）；为空则不渲染该行 */
     var rationale = x.rationale
       ? '<div class="news-rationale">' + esc(x.rationale) + '</div>' : '';
-    return '<div class="news-item">' + icon + '<span class="news-t">' + esc(t) + '</span>' + head +
+    return '<div class="news-item sent-' + sent + '">' + badge +
+      '<span class="news-t">' + esc(t) + '</span>' + head +
       '<span class="news-src">' + src + '</span>' + rationale + '</div>';
   }
 
