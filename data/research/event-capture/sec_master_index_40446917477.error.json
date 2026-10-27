@@ -1,0 +1,19 @@
+{
+  "source": "sec_edgar_master_index",
+  "status": "failed",
+  "failure_code": "http_403",
+  "failure_log": "sec_master_index_40446917477.log",
+  "failure_excerpt": "usage: sec_master_index_capture.py [-h] --universe UNIVERSE --start-date\n                                   START_DATE --end-date END_DATE --output\n                                   OUTPUT [--user-agent USER_AGENT]\nsec_master_index_capture.py: error: SEC master index HTTP 403\n",
+  "attempted_at_utc": "2026-10-27T03:56:51.109110Z",
+  "requested_start_date": "2026-10-01",
+  "requested_end_date": "2026-10-27",
+  "exit_code": 2,
+  "source_retrieval_succeeded": false,
+  "historical_pit_eligible": false,
+  "research_only": true,
+  "limitations": [
+    "No filing rows were captured by this attempt.",
+    "A retrieval failure must not be interpreted as proof that no filings occurred.",
+    "Do not infer publication timestamps or historical first-seen times from this failure record."
+  ]
+}

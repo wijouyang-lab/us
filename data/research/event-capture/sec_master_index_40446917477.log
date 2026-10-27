@@ -1,0 +1,4 @@
+usage: sec_master_index_capture.py [-h] --universe UNIVERSE --start-date
+                                   START_DATE --end-date END_DATE --output
+                                   OUTPUT [--user-agent USER_AGENT]
+sec_master_index_capture.py: error: SEC master index HTTP 403
