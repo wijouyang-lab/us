@@ -43,7 +43,6 @@ import yfinance as yf
 
 # 统一期权引擎：Scan 生成真实可验证期权建议；期权链不可用时明确返回失败，不伪造报价。
 from scan_us_option_engine import append_option_strategy, get_recent_option_recommendations
-from scripts.ai_item_matching import match_ai_rows, normalize_ai_fields
 
 # Quant Factor Lab：研究/数据层，只计算与落盘因子，绝不参与选股/评分/门槛。
 from quant_factor_lab import (
@@ -732,12 +731,8 @@ def _filter_completed_daily_bars(df, asof=None):
     out = out.loc[valid].copy()
     idx = pd.DatetimeIndex(idx[valid])
     if idx.tz is None:
-        # Yahoo/yfinance 日线的 tz-naive 索引是交易日标签（例如周一 00:00），
-        # 不是 UTC 瞬时。若先当 UTC 转 ET，会把周一误标为周日 20:00，
-        # 盘前又可能把当天未完成日线错误保留下来，污染技术指标/Technical_Date。
-        idx_us = idx.tz_localize(US_TZ)
+        idx_us = idx.tz_localize("UTC").tz_convert(US_TZ)
     else:
-        # 只有明确带时区的索引才按真实时间戳转换到美东。
         idx_us = idx.tz_convert(US_TZ)
     cutoff = _last_completed_regular_date_us(asof)
     out.index = idx_us
@@ -1607,12 +1602,12 @@ def get_us_economic_data(combined_news_text=""):
             if val is not None:
                 item = {"value": val, "date": dt.strftime('%Y-%m-%d'), "source": "BLS API", "prev": prev}
                 if label in {"CPI指数", "核心CPI指数"}:
-                    # BLS 返回的是指数值，尝试从网页获取同比
-                    yoy = _fetch_bls_yoy_from_web(label)
+                    # 优先用 BLS API 历史序列自算同比（按同一日历月匹配，最稳）；
+                    # 网页抓取只作兜底：正则容易匹配到页面上的无关百分比。
+                    _series = _fetch_bls_series(bls_map[label])
+                    yoy = _calc_yoy_from_series(_series)
                     if yoy is None:
-                        # A′：用 BLS API 历史序列自算同比（不依赖网页，最稳）
-                        _series = _fetch_bls_series(bls_map[label])
-                        yoy = _calc_yoy_from_series(_series)
+                        yoy = _fetch_bls_yoy_from_web(label)
                     if yoy is None:
                         # B：最后兜底——从 Google News 提取（返回 float 或 None）
                         _gn = _fetch_macro_from_google_news(label)
@@ -2192,40 +2187,58 @@ def _fetch_bls_series(series_id, timeout=10):
 def _calc_yoy_from_series(parsed, periods_back=12):
     """从升序序列 [(date, value), ...] 算同比（与 FRED 层同款算法）。
 
-    假设月度连续：最新 = parsed[-1]，去年同期 = parsed[-1-periods_back]。
-    数据不足 / 基数非正 / 空序列 → None（fail-safe）。
+    关键：必须匹配**同一个日历月**（latest 往前 12 个月），不能用
+    ``parsed[-13]`` 假设月度连续 —— BLS 序列可能缺月（如政府停摆导致某月
+    未发布），按位置回退会拿到 11 个月前的基数，把 3.7% 算成 4.0%。
+
+    数据不足 / 找不到同月基数 / 基数非正 → None（fail-safe）。
     """
-    if not parsed or len(parsed) < periods_back + 1:
+    if not parsed:
         return None
-    latest = parsed[-1][1]
-    base = parsed[-1 - periods_back][1]
-    if base <= 0:
+    parsed = sorted(parsed, key=lambda x: x[0])
+    latest_dt, latest = parsed[-1]
+    try:
+        target = pd.Timestamp(latest_dt).to_period("M") - periods_back
+    except Exception:
         return None
-    return (latest / base - 1) * 100
+    for dt, val in reversed(parsed[:-1]):
+        try:
+            if pd.Timestamp(dt).to_period("M") == target:
+                return (latest / val - 1) * 100 if val > 0 else None
+        except Exception:
+            continue
+    return None
 
 
 def _fetch_bls_yoy_from_web(label):
-    """从 BLS CPI 首页爬取最新同比数据。"""
+    """从 BLS CPI 首页抓「过去 12 个月」同比（仅作序列自算失败后的兜底）。
+
+    只接受明确带 12-month 语境的数字；**不再**使用「All items ... X%」这种
+    宽松正则——它会匹配到页面上的其它百分比（历史踩坑：把 3.7% 抓成 4.0%）。
+    """
     try:
         session = get_robust_session()
         resp = session.get("https://www.bls.gov/cpi/", timeout=8)
         resp.raise_for_status()
         text = resp.text
         if label == "CPI指数":
-            # 查找 "rose X.X percent over the last 12 months" 或类似模式
-            m = re.search(r"CPI for All Urban Consumers.*?rose [\\d.]+ percent.*?over the last 12 months.*?up ([\\d.]+) percent", text, re.S|re.I)
-            if m:
-                return float(m.group(1))
-            m = re.search(r"All items.*?([\\d.]+)%", text)
-            if m:
-                return float(m.group(1))
+            pats = [
+                r"(?:over|for) the (?:last|past) 12 months[^.]{0,160}?([0-9]+(?:\.[0-9]+)?)\s*percent",
+                r"(?:12-month|12 month)[^.]{0,120}?(?:all items|CPI-U)[^.]{0,120}?([0-9]+(?:\.[0-9]+)?)\s*percent",
+            ]
         elif label == "核心CPI指数":
-            m = re.search(r"all items less food and energy.*?up ([\\d.]+) percent", text, re.S|re.I)
+            pats = [
+                r"less food and energy[^.]{0,200}?([0-9]+(?:\.[0-9]+)?)\s*percent",
+                r"([0-9]+(?:\.[0-9]+)?)\s*percent[^.]{0,120}?less food and energy",
+            ]
+        else:
+            return None
+        for pat in pats:
+            m = re.search(pat, text, re.S | re.I)
             if m:
-                return float(m.group(1))
-            m = re.search(r"less food and energy.*?([\\d.]+)%", text)
-            if m:
-                return float(m.group(1))
+                v = float(m.group(1))
+                if 0 <= v <= 15:
+                    return v
     except Exception:
         pass
     return None
@@ -2239,8 +2252,10 @@ def _fetch_bls_webpage(label):
             resp = session.get("https://www.bls.gov/cpi/", timeout=8)
             resp.raise_for_status()
             text = resp.text
-            # 提取 All items 12-month percent change
-            m = re.search(r"All items.*?([\\d.]+)%", text)
+            # 只取「过去 12 个月」语境下的数字，避免匹配页面上的无关百分比
+            m = re.search(
+                r"(?:over|for) the (?:last|past) 12 months[^.]{0,160}?([0-9]+(?:\.[0-9]+)?)\s*percent",
+                text, re.S | re.I)
             if m:
                 yoy = float(m.group(1))
                 # 尝试提取日期
@@ -3536,7 +3551,7 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
 
 【输出粒度（务必区分 tag）】
 - tag="Core_Dragon" 的股票：输出完整六字段 industry_logic / news_cn / premarket_conclusion / catalysts / risks / invalidation，每字段都必须有内容，不能输出空字符串、N/A、null。
-- tag="Observation" 或 tag="Candidate" 的股票：两者都按轻量观察项处理，只输出三字段 industry_logic（简短因果链）/ catalysts（最多1-2条）/ risks（最多1-2条）；禁止输出 news_cn / premarket_conclusion / invalidation，也禁止生成 Core 级别的完整技术分析、完整基本面分析或长篇新闻分析。Candidate 是程序内部候选标签，不代表要输出另一种 schema；保留输入 ticker，不得改标签对应的股票。
+- tag="Observation" 的股票：只输出三字段 industry_logic（简短因果链）/ catalysts（最多1-2条）/ risks（最多1-2条）；禁止输出 news_cn / premarket_conclusion / invalidation，也禁止生成 Core 级别的完整技术分析、完整基本面分析或长篇新闻分析。
 
 【当前事件环境】
 {event_regime_text[:5000]}
@@ -3554,48 +3569,18 @@ def enrich_verified_items_with_ai_details(items, event_regime_text="", macro_mar
         client=ClawSocketClient(api_key=os.environ.get("CLAWSOCKET_API_KEY"), base_url=os.environ.get("CLAWSOCKET_BASE_URL"))
         txt=_model_stream_text(client, model=TARGET_MODEL, max_tokens=10000, messages=[{"role":"user","content":prompt}])
         obj=_extract_json_object(txt)
-        if not isinstance(obj, dict):
-            print(f"⚠️ [AI解释层结构诊断] JSON根对象解析失败或不是对象（type={type(obj).__name__}）")
-            rows = []
-        else:
-            raw_rows = obj.get("items", [])
-            if not isinstance(raw_rows, list):
-                print(
-                    "⚠️ [AI解释层结构诊断] 顶层 items 不是数组："
-                    f"type={type(raw_rows).__name__}，顶层keys={list(obj.keys())[:12]}"
-                )
-                rows = []
-            else:
-                rows = raw_rows
-                if not rows:
-                    print(f"⚠️ [AI解释层结构诊断] items 数组为空；顶层keys={list(obj.keys())[:12]}")
-        by_ticker, match_diagnostics = match_ai_rows(items, rows)
-        if match_diagnostics:
-            print("⚠️ [AI解释层匹配诊断] " + "；".join(match_diagnostics[:12]))
-        core_required = ("industry_logic", "news_cn", "premarket_conclusion", "catalysts", "risks", "invalidation")
-        obs_required = ("industry_logic", "catalysts", "risks")
-        field_diagnostics = []
+        rows=obj.get("items", []) if isinstance(obj, dict) else []
+        by_ticker={str(x.get("ticker","")).upper():x for x in rows if isinstance(x,dict) and x.get("ticker")}
         for item in items:
-            ticker = str(item.get("Ticker","")).strip().upper()
-            d=normalize_ai_fields(by_ticker.get(ticker,{}))
+            d=by_ticker.get(str(item.get("Ticker","")).upper(),{})
             for key in ("industry_logic","news_cn","premarket_conclusion","catalysts","risks","invalidation"):
                 item[f"AI_{key}"]=str(d.get(key) or "").strip()
-            required = core_required if item.get("Tag") == "Core_Dragon" else obs_required
-            missing_fields = [key for key in required if not item.get(f"AI_{key}")]
-            if missing_fields:
-                field_diagnostics.append(f"{ticker}:缺少{','.join(missing_fields)}")
-        if field_diagnostics:
-            print("⚠️ [AI解释层字段诊断] " + "；".join(field_diagnostics[:12]))
-        if rows and not by_ticker:
-            sample_keys = list(rows[0].keys())[:20] if isinstance(rows[0], dict) else [type(rows[0]).__name__]
-            print(f"⚠️ [AI解释层返回样本结构] rows={len(rows)} keys={sample_keys}")
-        ok_core = sum(all(bool(item.get(f"AI_{key}")) for key in core_required)
+        ok_core = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_news_cn"))
                       for item in items if item.get("Tag") == "Core_Dragon")
-        # Candidate 与 Observation 共用三字段 schema；统计口径必须与上面的 required 规则一致。
-        ok_obs = sum(all(bool(item.get(f"AI_{key}")) for key in obs_required)
-                     for item in items if item.get("Tag") in {"Observation", "Candidate"})
+        ok_obs = sum(bool(item.get("AI_industry_logic")) and bool(item.get("AI_catalysts"))
+                     for item in items if item.get("Tag") == "Observation")
         ok = ok_core + ok_obs
-        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation+Candidate {ok_obs} 极简）")
+        print(f"✅ [AI最终解释层] {ok}/{len(items)} 只完成中文解释（Core {ok_core} 六段 / Observation {ok_obs} 极简）")
     except Exception as e:
         print(f"⚠️ [AI最终解释层] 生成失败，邮件使用确定性字段兜底：{type(e).__name__}: {e}")
     return items
@@ -4302,8 +4287,8 @@ if __name__ == "__main__":
             _cutoff,
             trading_dates=_known_dates,
         )
-        if _diag.get("status") in {"STALE", "INVALID_SESSION_DATE", "NO_REFERENCE"}:
-            print("⚠️ [Quant Factor Lab][契约] " + _diag["message"])
+        if _diag.get("status") == "STALE":
+            print("⚠️ " + _diag["message"])
         else:
             print(f"[Quant Factor Lab][契约] Technical_Date={_t_dates[-1] if _t_dates else None} "
                   f"理论={_diag.get('expected_date')} status={_diag.get('status')} "
@@ -4435,40 +4420,16 @@ if __name__ == "__main__":
     #   不再从 to_write 捕获（chosen 为空时它必定为空）。
     _ai_persist_source = list(_enriched)
     _ai_persist = list(_ai_persist_source)
-    active_skipped = []
-    active = set()
-    if os.path.exists(log_file):
+    if os.path.exists(log_file) and to_write:
         try:
-            old = pd.read_csv(log_file, keep_default_na=False, dtype=str)
-            active_tags = {"Core_Double_Dragon", "Sub_Pioneer", "Core_Dragon"}
-            active = (
-                set(old.loc[old["Tag"].isin(active_tags), "Ticker"].astype(str).str.strip().str.upper())
-                if "Tag" in old.columns else set()
-            )
+            old = pd.read_csv(log_file, keep_default_na=False)
+            active_tags = {"Core_Double_Dragon","Sub_Pioneer","Core_Dragon"}
+            active = set(old[old.get("Tag","").isin(active_tags)]["Ticker"].astype(str).tolist()) if "Tag" in old.columns else set()
             before = len(to_write)
-            active_skipped = [
-                item for item in to_write
-                if str(item.get("Ticker", "")).strip().upper() in active
-            ]
-            for item in active_skipped:
-                print(
-                    f"[pending去重/活跃持仓] {str(item.get('Ticker', '')).strip().upper()} "
-                    f"Tag={item.get('Tag', '')} 已存在活跃持仓日志，跳过写入 pending"
-                )
-            for item in to_write:
-                item["Ticker"] = str(item.get("Ticker", "")).strip().upper()
-            to_write = [item for item in to_write if item["Ticker"] not in active]
-            print(
-                f"[pending去重统计] 输入={before} / 活跃持仓跳过={len(active_skipped)} "
-                f"/ 最终to_write={len(to_write)}"
-            )
+            to_write = [x for x in to_write if x["Ticker"] not in active]
+            print(f"📋 跳过 {before-len(to_write)} 只已在持仓中的标的")
         except Exception as e:
             print(f"⚠️ 持仓去重失败：{e}")
-    if not to_write:
-        print(
-            f"[pending写入诊断] to_write=0；chosen={len(chosen)}，"
-            f"活跃持仓跳过={len(active_skipped)}，当前没有待写入候选"
-        )
 
     # 关键：先完成“实际入账集合”的确定，再用同一集合渲染邮件 Core。
     # 因此候选池外 AI 推荐、历史持仓去重等都不会再导致邮件与 pending 分裂。

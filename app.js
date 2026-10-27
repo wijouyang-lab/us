@@ -1559,9 +1559,18 @@
       }
     }
 
+    /* 预期 vs 实际：只读 DATA.macro_forecast（维护者按契约写入），
+       surprise 由后端算好（actual - forecast），这里只负责展示与着色。 */
+    var mf = DATA && DATA.macro_forecast;
+    if (mf && mf.items && mf.items.length) {
+      econHtml += '<div class="news-sub" style="margin-top:12px">🎯 预期 vs 实际</div>' +
+        '<div class="mf-list">' + mf.items.map(macroForecastRow).join('') + '</div>' +
+        (mf.source ? '<div class="mf-src">来源：' + esc(mf.source) +
+          (mf.as_of ? ' · 截至 ' + esc(mf.as_of) : '') + '</div>' : '');
+    }
+
     var spkHtml = '<div class="news-sub" style="margin-top:10px">🎙️ 重要人物讲话</div>';
-    if (!spk.length) {
-      spkHtml += '<div class="na">暂无重要讲话</div>';
+    if (!spk.length) {      spkHtml += '<div class="na">暂无重要讲话</div>';
     } else {
       spkHtml += spk.map(macroSpeakerCard).join('');
     }
@@ -1785,6 +1794,31 @@
     html += '<div class="ss-foot">仅研究优先级排序，非买入建议' + (offline ? ' · 未联网核验' : '') + '</div>';
     if (sk.error) html += '<div class="ss-bad">数据异常：' + esc(String(sk.error)) + '</div>';
     body.innerHTML = html;
+  }
+
+  function macroForecastRow(it) {
+    if (!it) return '';
+    var d = num(it.surprise);
+    var unit = it.unit || '%';
+    var dir = '', cls = '';
+    if (d !== null) {
+      if (d > 0.05) { dir = '高于预期'; cls = 'up'; }
+      else if (d < -0.05) { dir = '低于预期'; cls = 'down'; }
+      else { dir = '符合预期'; cls = 'flat'; }
+    }
+    var nums = '<span>预期 <b>' + nv(it.forecast, 2) + unit + '</b></span>' +
+      '<span>实际 <b class="' + cls + '">' + nv(it.actual, 2) + unit + '</b></span>' +
+      '<span>差值 <b class="' + cls + '">' +
+        (d === null ? NA : (d > 0 ? '+' : '') + fmt(d, 2) + 'pp') + '</b></span>' +
+      '<span class="mf-dir ' + cls + '">' + dir + '</span>';
+    return '<div class="mf-row">' +
+      '<div class="mf-h"><b>' + esc(it.indicator || NA) + '</b>' +
+        (it.period ? '<span class="mf-p">' + esc(it.period) + '</span>' : '') +
+        (it.released_at ? '<span class="mf-d">' + esc(it.released_at) + '</span>' : '') +
+      '</div>' +
+      '<div class="mf-nums">' + nums + '</div>' +
+      (it.impact ? '<div class="mf-imp">' + esc(it.impact) + '</div>' : '') +
+      '</div>';
   }
 
   function macroEconCard(e) {

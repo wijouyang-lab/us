@@ -434,3 +434,31 @@ def test_macro_inflation_marked_yoy_only():
               ])})
     html = r["macro"] or ""
     assert html.count("同比") == 2, html
+
+
+def test_macro_forecast_block_rendered():
+    data = {"portfolio": {"target": [], "transactions": [], "positions": []},
+            "macro": _macro([]),
+            "macro_forecast": {"as_of": "2026-10-26", "source": "财经日历",
+                               "count": 1, "items": [{
+                                   "indicator": "核心PCE物价指数",
+                                   "period": "2026 Q2 · 年化季率终值",
+                                   "forecast": 3.6, "actual": 3.3, "surprise": -0.3,
+                                   "unit": "%", "released_at": "2026-09-30",
+                                   "impact": "低于预期：利好久期资产",
+                               }]}}
+    r = _run(data)
+    html = r["macro"] or ""
+    assert "预期 vs 实际" in html, html
+    assert "核心PCE物价指数" in html and "2026 Q2 · 年化季率终值" in html, html
+    assert "3.60%" in html and "3.30%" in html, html
+    assert "-0.30pp" in html and "低于预期" in html, html
+    assert "利好久期资产" in html, html
+    assert "来源：财经日历" in html, html
+
+
+def test_macro_forecast_block_hidden_without_data():
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "macro": _macro([])})
+    html = r["macro"] or ""
+    assert "预期 vs 实际" not in html, html

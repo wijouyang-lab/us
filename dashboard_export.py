@@ -2688,6 +2688,59 @@ def _read_skill_serenity(data_dir: Path):
         return None
 
 
+# 哨兵：macro_forecast.json 不存在 → 不注入键（前端隐藏「预期 vs 实际」）。
+_MACRO_FORECAST_MISSING = object()
+
+
+def _read_macro_forecast(data_dir: Path):
+    """读「宏观数据预期 vs 实际」→ 注入 dashboard_data.json 的 `macro_forecast`。
+
+    数据由维护者/外部研究写入 `dashboard/data/macro_forecast.json`；
+    导出层只做透传与差值计算（actual − forecast = surprise，单位 pp），
+    不抓日历、不推断一致预期、不调用 AI。
+
+    fail-closed：文件缺失 → 哨兵；解析失败/非对象 → None；缺 forecast/actual 的条目丢弃。
+    """
+    p = data_dir / "dashboard" / "data" / "macro_forecast.json"
+    if not p.exists():
+        return _MACRO_FORECAST_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 宏观预期数据读取失败（{e}），macro_forecast 输出 null")
+        return None
+    if not isinstance(raw, dict):
+        return None
+    items = []
+    for r in (raw.get("items") or [])[:30]:
+        if not isinstance(r, dict):
+            continue
+        indicator = clean_text(r.get("indicator"))
+        forecast = parse_num(r.get("forecast"))
+        actual = parse_num(r.get("actual"))
+        if not indicator or forecast is None or actual is None:
+            continue
+        items.append({
+            "indicator": indicator,
+            "period": clean_text(r.get("period")) or None,
+            "forecast": round_num(forecast, 2),
+            "actual": round_num(actual, 2),
+            "previous": round_num(parse_num(r.get("previous")), 2),
+            "surprise": round_num(actual - forecast, 2),
+            "unit": clean_text(r.get("unit")) or "%",
+            "released_at": clean_text(r.get("released_at")) or None,
+            "impact": clean_text(r.get("impact")) or None,
+        })
+    return {
+        "schema": int(parse_num(raw.get("schema")) or 1),
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "as_of": clean_text(raw.get("as_of")) or None,
+        "source": clean_text(raw.get("source")) or None,
+        "count": len(items),
+        "items": items,
+    }
+
+
 # 哨兵：oversold_candidates.json 不存在时返回，用于「不注入键」（前端整块隐藏）。
 _OVERSOLD_MISSING = object()
 
@@ -3908,6 +3961,11 @@ def main(argv=None):
     mai = _read_market_ai(data_dir)
     if mai is not _MARKET_AI_MISSING:
         payload["market_ai"] = mai
+
+    # ---- 宏观数据「预期 vs 实际」（数据文件缺失 → 不注入键，前端隐藏）----
+    mf = _read_macro_forecast(data_dir)
+    if mf is not _MACRO_FORECAST_MISSING:
+        payload["macro_forecast"] = mf
 
     # ---- serenity-skill 供应链分析（flag 关 / 文件缺失 → 不注入键，保持逐字节一致）----
     sk = _read_skill_serenity(data_dir)

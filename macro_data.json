@@ -31,21 +31,21 @@
     },
     {
       "indicator": "CPI",
-      "value": "4.00%",
-      "prev": null,
+      "value": "3.70%",
+      "prev": "3.40%",
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "CPI 4%高于目标，通胀压力显著"
+      "rationale": "CPI 3.7% 高于预期 3.6%（能源价格推动），通胀压力重新抬头"
     },
     {
       "indicator": "核心CPI",
-      "value": "2.79%",
-      "prev": null,
+      "value": "2.60%",
+      "prev": "2.40%",
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "核心CPI 2.79%虽接近目标但仍偏高"
+      "rationale": "核心CPI 2.6% 高于预期 2.5%，住房项 3.2% 仍是主要支撑"
     },
     {
       "indicator": "失业率",
@@ -54,7 +54,7 @@
       "date": "2026-09-01",
       "source": "BLS API",
       "sentiment": "bearish",
-      "rationale": "失业率上升0.1%，经济走弱信号"
+      "rationale": "失业率 4.2% 高于预期 4.1%，劳动力市场边际走弱"
     },
     {
       "indicator": "核心PCE",

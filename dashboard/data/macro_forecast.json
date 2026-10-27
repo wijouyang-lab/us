@@ -1,0 +1,48 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-27T06:45:00Z",
+  "as_of": "2026-10-26",
+  "source": "Trading Economics 财经日历 + 金十数据（截图核对）",
+  "items": [
+    {
+      "indicator": "CPI 同比",
+      "period": "2026年9月",
+      "forecast": 3.6,
+      "actual": 3.7,
+      "previous": 3.4,
+      "unit": "%",
+      "released_at": "2026-10-14",
+      "impact": "高于预期 0.1pp：能源价格推动（汽油同比 +34.2%），紧缩预期上修，利空长久期/成长资产，美元与短端收益率偏强。"
+    },
+    {
+      "indicator": "核心CPI 同比",
+      "period": "2026年9月",
+      "forecast": 2.5,
+      "actual": 2.6,
+      "previous": 2.4,
+      "unit": "%",
+      "released_at": "2026-10-14",
+      "impact": "高于预期 0.1pp：住房项 3.2% 仍是主要支撑，降息交易降温；但绝对水平仍是 2021 年以来低位附近。"
+    },
+    {
+      "indicator": "失业率",
+      "period": "2026年9月",
+      "forecast": 4.1,
+      "actual": 4.2,
+      "previous": 4.1,
+      "unit": "%",
+      "released_at": "2026-10-02",
+      "impact": "高于预期 0.1pp：劳动力市场边际走弱，宽松预期与衰退担忧并存；若后续继续上行，市场会从'降息交易'转向'衰退交易'。"
+    },
+    {
+      "indicator": "核心PCE 物价指数",
+      "period": "2026 Q2 · 年化季率终值",
+      "forecast": 3.6,
+      "actual": 3.3,
+      "previous": 3.6,
+      "unit": "%",
+      "released_at": "2026-09-30",
+      "impact": "低于预期 0.3pp：反通胀信号，12 月加息概率（当前 72.8%）下修，利好久期/成长与黄金，美元与短端收益率承压。"
+    }
+  ]
+}
