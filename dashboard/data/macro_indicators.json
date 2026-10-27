@@ -1,49 +1,49 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T14:36:45Z",
+  "generated_at": "2026-10-27T14:45:31Z",
   "source": "FRED + ISM + EIA",
   "count": 9,
-  "ok": 9,
+  "ok": 2,
   "items": [
     {
       "key": "unrate",
       "name": "美国失业率",
-      "value": 4.2,
+      "value": null,
       "unit": "%",
-      "date": "2026-09-01",
-      "prev": 4.1,
-      "change": 0.1,
+      "date": null,
+      "prev": null,
+      "change": null,
       "source": "FRED UNRATE",
       "note": null
     },
     {
       "key": "nonfarm",
       "name": "季调后非农业就业人口",
-      "value": 29.0,
+      "value": null,
       "unit": "K",
-      "date": "2026-09-01",
-      "prev": 133.0,
-      "change": 29.0,
+      "date": null,
+      "prev": null,
+      "change": null,
       "source": "FRED PAYEMS（月增）",
-      "note": "单位：千人"
+      "note": null
     },
     {
       "key": "cpi_yoy",
       "name": "未季调CPI年率",
-      "value": 3.74,
+      "value": null,
       "unit": "%",
-      "date": "2026-09-01",
-      "prev": 3.4,
-      "change": 0.34,
+      "date": null,
+      "prev": null,
+      "change": null,
       "source": "FRED CPIAUCNS",
       "note": null
     },
     {
       "key": "cpi_mom",
       "name": "季调后CPI月率",
-      "value": 0.65,
+      "value": null,
       "unit": "%",
-      "date": "2026-09-01",
+      "date": null,
       "prev": null,
       "change": null,
       "source": "FRED CPIAUCSL",
@@ -52,11 +52,11 @@
     {
       "key": "umich",
       "name": "密歇根大学消费者信心指数终值",
-      "value": 48.1,
+      "value": null,
       "unit": "",
-      "date": "2026-09-01",
-      "prev": 51.7,
-      "change": -3.6,
+      "date": null,
+      "prev": null,
+      "change": null,
       "source": "FRED UMCSENT",
       "note": null
     },
@@ -74,13 +74,13 @@
     {
       "key": "adp",
       "name": "ADP就业人数",
-      "value": 90.0,
+      "value": null,
       "unit": "K",
-      "date": "2026-09-01",
-      "prev": 36.0,
-      "change": 90.0,
+      "date": null,
+      "prev": null,
+      "change": null,
       "source": "FRED ADPMNUSNERSA（月增）",
-      "note": "单位：千人"
+      "note": null
     },
     {
       "key": "eia_crude",
@@ -96,13 +96,13 @@
     {
       "key": "claims",
       "name": "每周初请失业金人数",
-      "value": 194.0,
+      "value": null,
       "unit": "K",
-      "date": "2026-10-17",
-      "prev": 200.0,
-      "change": -6.0,
+      "date": null,
+      "prev": null,
+      "change": null,
       "source": "FRED ICSA",
-      "note": "单位：千人"
+      "note": null
     }
   ]
 }
