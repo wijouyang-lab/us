@@ -31859,5 +31859,36 @@
     ],
     "update_first_seen_at_utc": null,
     "updated_at_utc": null
+  },
+  {
+    "availability_status": "available",
+    "content_hash": "809967365b114a1261c9f6b70a9e411c3000d5b95852ff385d24266c407c830a",
+    "event_id": "e1396b7150cba43943934ca40bc4e649859ec14ceda2c8c0add2832d4240fc78",
+    "event_type": "company_news",
+    "event_version_id": "bcd4681d84242adab941e3a4f251018c37b451cacfe83435752cb30ee521d73e",
+    "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GOOGL&region=US&lang=en-US",
+    "first_seen_at_utc": "2026-10-27T04:01:34.037402Z",
+    "headline": "Mark Cuban puts Bitcoin and Apple in the same bucket",
+    "item_url": "https://www.thestreet.com/crypto/markets/mark-cuban-puts-bitcoin-and-apple-in-the-same-bucket?.tsrc=rss",
+    "provider": "Yahoo Finance RSS",
+    "published_at_utc": "2026-10-26T22:05:25Z",
+    "publisher_name": null,
+    "queried_ticker": "GOOGL",
+    "research_only": true,
+    "sectors": [],
+    "source": "yahoo_finance_rss",
+    "source_event_id": "GOOGL|cdff2db9-8218-35cb-b5b0-bcbd90256212",
+    "source_quality": "aggregator",
+    "source_timestamp_kind": "rss_pubDate",
+    "source_timestamp_status": "parsed",
+    "source_url": "https://www.thestreet.com/crypto/markets/mark-cuban-puts-bitcoin-and-apple-in-the-same-bucket?.tsrc=rss",
+    "ticker_mapping_confidence": "unverified",
+    "ticker_mapping_method": "per_ticker_yahoo_rss_query",
+    "ticker_mapping_status": "unverified_query_scope",
+    "tickers": [
+      "GOOGL"
+    ],
+    "update_first_seen_at_utc": null,
+    "updated_at_utc": null
   }
 ]
