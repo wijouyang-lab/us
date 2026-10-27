@@ -31890,5 +31890,36 @@
     ],
     "update_first_seen_at_utc": null,
     "updated_at_utc": null
+  },
+  {
+    "availability_status": "available",
+    "content_hash": "2954644980939148785a1e35cb63e16563f890a943f7b3dddf10172d540fe5d7",
+    "event_id": "912756351a83d950b5bec7cd4aa02bedb833247190888e7753bcc43107e7b643",
+    "event_type": "company_news",
+    "event_version_id": "bc7aa402a27c064533ba0acbdea1656adca1079f5948539de91187e6ae44abeb",
+    "feed_url": "https://feeds.finance.yahoo.com/rss/2.0/headline?s=GOOGL&region=US&lang=en-US",
+    "first_seen_at_utc": "2026-10-27T04:08:07.444002Z",
+    "headline": "IBM Introduces Identity and Control for AI Agents, Securing Frontier Intelligence for the Enterprise",
+    "item_url": "https://finance.yahoo.com/technology/ai/articles/ibm-introduces-identity-control-ai-040100163.html?.tsrc=rss",
+    "provider": "Yahoo Finance RSS",
+    "published_at_utc": "2026-10-27T04:01:00Z",
+    "publisher_name": null,
+    "queried_ticker": "GOOGL",
+    "research_only": true,
+    "sectors": [],
+    "source": "yahoo_finance_rss",
+    "source_event_id": "GOOGL|15be5701-7838-335d-9fa9-75f626706e2b",
+    "source_quality": "aggregator",
+    "source_timestamp_kind": "rss_pubDate",
+    "source_timestamp_status": "parsed",
+    "source_url": "https://finance.yahoo.com/technology/ai/articles/ibm-introduces-identity-control-ai-040100163.html?.tsrc=rss",
+    "ticker_mapping_confidence": "unverified",
+    "ticker_mapping_method": "per_ticker_yahoo_rss_query",
+    "ticker_mapping_status": "unverified_query_scope",
+    "tickers": [
+      "GOOGL"
+    ],
+    "update_first_seen_at_utc": null,
+    "updated_at_utc": null
   }
 ]

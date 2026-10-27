@@ -1,0 +1,156 @@
+{
+  "as_of_utc": "2026-10-27T04:08:14.342997Z",
+  "event_archive_path": "data/research/event-capture/event_archive.json",
+  "event_archive_sha256": "ebcbc3ca86f48919d123c1e5c5b15015a3b02154a5abba46844b5935fe3cb457",
+  "failed_symbol_count": 0,
+  "limitations": [
+    "Yahoo chart data is free but may be rate-limited or revised.",
+    "Adjusted OHLC is derived from adjusted-close factors, not executable fill prices.",
+    "Price capture does not verify company-news ticker mapping or annotate event direction/impact.",
+    "Historical first-seen times are not reconstructed; only recent archived events choose the price window."
+  ],
+  "lookback_days": 30,
+  "price_csv_path": "data/research/event-capture/event_response_prices_40447984321.csv",
+  "price_csv_sha256": "9e91f16a67fe24e6471e6e704611bf89d8b27d46152672539798ef5092bc9e77",
+  "price_row_count": 147,
+  "recent_event_count": 1101,
+  "requested_symbol_count": 21,
+  "research_only": true,
+  "schema_version": "1.0",
+  "source": "yahoo_finance_chart_public_endpoint",
+  "source_url_template": "https://query1.finance.yahoo.com/v8/finance/chart/{ticker}",
+  "status": "complete",
+  "study_price_end_date": "2026-10-26",
+  "study_price_start_date": "2026-10-16",
+  "successful_symbol_count": 21,
+  "symbol_reports": [
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "SPY"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "AAPL"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "AMZN"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "AVGO"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "BRK-B"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "COST"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "GOOGL"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "JPM"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "LLY"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "MA"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "META"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "MSFT"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "NFLX"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "NVDA"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "ORCL"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "TSLA"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "TSM"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "UNH"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "V"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "WMT"
+    },
+    {
+      "error": null,
+      "row_count": 7,
+      "status": "ok",
+      "ticker": "XOM"
+    }
+  ],
+  "trading_signal_generated": false,
+  "unmapped_event_count": 0
+}
