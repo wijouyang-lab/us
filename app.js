@@ -1866,22 +1866,40 @@
         (sk.asof ? ' · ' + sk.asof : '');
     }
     var offline = String(sk.mode || '').indexOf('offline') === 0;
+    var sv = DATA && DATA.serenity_verified;
+    var verMap = {};
+    if (sv && sv.items) {
+      sv.items.forEach(function (v) { if (v.ticker) verMap[String(v.ticker).toUpperCase()] = v; });
+    }
     var html = '';
     if (offline) {
-      html += '<div class="ss-note">⚠️ 离线筛选：AI 仅基于<strong>候选池字段 + serenity 方法论</strong>推理排序，' +
-        '<strong>未联网核验</strong>公告 / 财报 / 客户信息；无法核验的内容一律列在「待核验」里。' +
+      html += '<div class="ss-note">⚠️ 排名来自离线筛选（基于候选池字段 + serenity 方法论）。' +
+        (sv ? '下方「核验」行由 <strong>SEC EDGAR / 财报 / 新闻</strong> 联网补齐，未找到的会标注；'
+            : '<strong>未联网核验</strong>公告 / 财报 / 客户信息；') +
         '<strong>本板块只给研究优先级，不构成买入建议。</strong></div>';
     }
     html += '<div class="ss-grid">' + list.map(function (p) {
       var rank = num(p.priority_rank);
+      var v = verMap[String(p.ticker || '').toUpperCase()];
+      var vBits = [];
+      if (v) {
+        if (v.earnings_date) vBits.push('财报 ' + v.earnings_date);
+        if (v.filings && v.filings.length) vBits.push(v.filings[0].form + ' ' + v.filings[0].date);
+        if (v.news && v.news.length) vBits.push('新闻 ' + v.news.length + ' 条');
+        if (v.missing && v.missing.length) vBits.push('未找到：' + v.missing.join('/'));
+      }
+      var vRow = v
+        ? '<div class="ss-row"><i>核验</i>' + esc(vBits.join(' · ')) + '</div>'
+        : '';
       return '<div class="ss-card">' +
         '<div class="ss-head"><span class="ss-rank">🎯 ' + (rank === null ? '-' : rank) + '</span>' +
         '<b>' + esc(p.ticker || '') + '</b></div>' +
         ssRow('为什么', p.why) +
+        vRow +
         ssRow('待核验', p.what_to_verify) +
         '</div>';
     }).join('') + '</div>';
-    html += '<div class="ss-foot">仅研究优先级排序，非买入建议' + (offline ? ' · 未联网核验' : '') + '</div>';
+    html += '<div class="ss-foot">仅研究优先级排序，非买入建议' + (offline ? ' · 排名未联网' : '') + '</div>';
     if (sk.error) html += '<div class="ss-bad">数据异常：' + esc(String(sk.error)) + '</div>';
     body.innerHTML = html;
   }

@@ -1,0 +1,368 @@
+{
+  "schema": 1,
+  "generated_at": "2026-10-27T18:26:18Z",
+  "source": "SEC EDGAR + yfinance + news_data",
+  "mode": "online_verification",
+  "count": 10,
+  "items": [
+    {
+      "ticker": "EOG",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "8-K",
+          "date": "2026-10-08",
+          "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000202/eog-20261008.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-09-24",
+          "url": "https://www.sec.gov/Archives/edgar/data/821189/000119312526400333/d40889d8k.htm"
+        },
+        {
+          "form": "10-Q",
+          "date": "2026-08-04",
+          "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000149/eog-20260630.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "EOG Resources (EOG) Stock May Trade Below Fair Value After Its 113% Run",
+          "url": "https://finnhub.io/api/news?id=18b10e05d13e5379a0ed536a9ef08b611f8d0e8e32dd3cbbdb3c764fcaa56b6c"
+        },
+        {
+          "title": "What EOG Resources (EOG) Earnings Beat Means For Shareholders",
+          "url": "https://finnhub.io/api/news?id=29de0492c8d591703ac49e9027d23899529e5313d6fbab57516077a96a67b2c7"
+        },
+        {
+          "title": "Is EOG Resources (EOG) Still Cheap On Strong Earnings And A New 52 Week High?",
+          "url": "https://finnhub.io/api/news?id=0c34afd8277e29baec412c36fd7501bed1d478a9992a846b790618bfc3054400"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "PSX",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "8-K",
+          "date": "2026-10-05",
+          "url": "https://www.sec.gov/Archives/edgar/data/1534701/000119312526413219/d76010d8k.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-08-21",
+          "url": "https://www.sec.gov/Archives/edgar/data/1534701/000119312526361266/d131307d8k.htm"
+        },
+        {
+          "form": "10-Q",
+          "date": "2026-08-05",
+          "url": "https://www.sec.gov/Archives/edgar/data/1534701/000153470126000032/psx-20260630.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "Marathon Petroleum: Booming Profits From A Long-Term Structural Bull Market",
+          "url": "https://finnhub.io/api/news?id=a5885d4fd19076db7852045c4052643f647711f09f00371a8abba32ea3ec80e2"
+        },
+        {
+          "title": "Is Chevron Stock Worth More Than Its Competitors?",
+          "url": "https://finnhub.io/api/news?id=78225f5d72b2c6b2286c736f152ac9ff42afbd26ed544039b1a019f8c74eebc5"
+        },
+        {
+          "title": "Gas Never Used To Be This Pricey In October; West Coast Imports Are Surging",
+          "url": "https://finnhub.io/api/news?id=0cb9ce5db6b512b2ef563e699f3c7e8da7ae88c6112bd5dad416bdd93301269c"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "CME",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "10-Q",
+          "date": "2026-10-23",
+          "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000068/cme-20260930.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-10-21",
+          "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000065/cme-20261021.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-09-25",
+          "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000060/cme-20260924.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "U.S. Treasury Yields Turn Higher With Oil; French Bond Yields Rise on Protests",
+          "url": "https://finnhub.io/api/news?id=fdf18c77a118c9fdcb11e594ca9f9461fac4661b9f4bab1253fd8f22908b7a74"
+        },
+        {
+          "title": "CME vs. Coinbase Global: Which Financial Stock Is a Better Buy in 2026?",
+          "url": "https://finnhub.io/api/news?id=5ad3952557a31d03f5b648325d9019592ef885a3ef38c4df1dcdac16f32b7d6f"
+        },
+        {
+          "title": "Is a Beat in the Cards for CME Group This Earnings Season?",
+          "url": "https://finnhub.io/api/news?id=8a3359c95f241d49b948554d4754e823edbd4ca6609a43e51952c32190776c39"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "XOM",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "8-K",
+          "date": "2026-10-16",
+          "url": "https://www.sec.gov/Archives/edgar/data/2115436/000211543626000013/xom-20261016.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-09-25",
+          "url": "https://www.sec.gov/Archives/edgar/data/2115436/000119312526402986/d15072d8k.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-08-28",
+          "url": "https://www.sec.gov/Archives/edgar/data/2115436/000119312526373026/d82162d8k.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "Which Stocks Are Paying For $4.33 Gas?",
+          "url": "https://finnhub.io/api/news?id=4c294c2186f68de6d35c76536ee6b21b4d81b3621db570d25c5ea79d0970fcb6"
+        },
+        {
+          "title": "Inflation Is Back. Is A Stock Market Crash Next?",
+          "url": "https://finnhub.io/api/news?id=f45f67b09edc64c802da58ba40dced9202917d46e71c711bc00f38ed4c475e93"
+        },
+        {
+          "title": "Does Cash Beat Debt When Markets Turn?",
+          "url": "https://finnhub.io/api/news?id=eae5e5cfef111a384d5403eec3fa3a8987ce037f39e0ad3636faf74d4223d1ba"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "APP",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "10-Q",
+          "date": "2026-08-05",
+          "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000059/app-20260630.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-08-05",
+          "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000057/app-20260805.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-06-05",
+          "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000050/app-20260603.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "AppLovin (APP) Stock Could Trade At a Discount After a 7x Run",
+          "url": "https://finnhub.io/api/news?id=42b9e1924fb98dfd549313810e6fd7ed0add0cb2dbc0fda857084b594ddf32d3"
+        },
+        {
+          "title": "AppLovin (APP) Beats Stock Market Upswing: What Investors Need to Know",
+          "url": "https://finnhub.io/api/news?id=b5293c6641f20345a0c09a53a276adc1092817ddd450a079abb90da7f43462df"
+        },
+        {
+          "title": "How Quarterly Results Will Impact AppLovin Stock Investors",
+          "url": "https://finnhub.io/api/news?id=0725ec4a724d26ad135de2d280f45a78a9c36bc41a55e5492a12ba8b143da8c4"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "AES",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "8-K",
+          "date": "2026-10-19",
+          "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126040117/ef20083812_8k.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-09-17",
+          "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126036994/ef20082051_8k.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-09-16",
+          "url": "https://www.sec.gov/Archives/edgar/data/874761/000087476126000153/aes-20260914.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "What to Expect From AES Corporation's Next Quarterly Earnings Report",
+          "url": "https://finnhub.io/api/news?id=f6b6f06def3ec0114d0f410354f36b6db1035c3b7d78a50830b959c6e69245ec"
+        },
+        {
+          "title": "3 US Solar Stocks Investors May Want To Watch After EnergyRe’s $815 Million Deal",
+          "url": "https://finnhub.io/api/news?id=49368034a7c1dfaf1802fb1133791a8fe3b64f6bd862bbf3e91337383343c624"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "CNP",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "8-K",
+          "date": "2026-10-27",
+          "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926118963/tm2628051d1_8k.htm"
+        },
+        {
+          "form": "10-Q",
+          "date": "2026-10-27",
+          "url": "https://www.sec.gov/Archives/edgar/data/1130310/000113031026000048/cnp-20260930.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-10-20",
+          "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926117423/tm2627902d1_8k.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "Are You Looking for a High-Growth Dividend Stock?",
+          "url": "https://finnhub.io/api/news?id=5d040ee3321f5913fb86baca0ed82a822570894f75ae74fa9b0068ae34db4992"
+        },
+        {
+          "title": "ASGI: Infrastructure Offers Very High Yields And Inflation Protection",
+          "url": "https://finnhub.io/api/news?id=adf431018f73212430abc158eb34450984d39455d7cdca70ab7e61e2a37c35a0"
+        },
+        {
+          "title": "CenterPoint Energy to Pay Additional Interest on its 2.0% Zero-Premium Exchangeable Subordinated Notes due 2029",
+          "url": "https://finnhub.io/api/news?id=f6499bdf238ca01fc0adca6edfd811fc2ab6577162c2e6a7e32903e6998f4be5"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "XLE",
+      "earnings_date": null,
+      "filings": [],
+      "news": [
+        {
+          "title": "Sector Update: Energy Stocks Softer Late Afternoon",
+          "url": "https://finnhub.io/api/news?id=77b434eef02af4371bee1a85050950d1e362a47d8bf20ce74a9dc89974e8e251"
+        },
+        {
+          "title": "Sector Update: Energy Stocks Decline Monday Afternoon",
+          "url": "https://finnhub.io/api/news?id=68b4cf5fb2b3b4a5e69673195dc14bd4f5104c29df62abf9218a227629fd62b2"
+        },
+        {
+          "title": "Exchange-Traded Funds Higher as US Equities Rise After Midday",
+          "url": "https://finnhub.io/api/news?id=663ccb68adb1662f21de3df6cc2ade757a94e00fbc61e351c9324f0a0aeb862e"
+        }
+      ],
+      "missing": [
+        "财报日",
+        "SEC 文件"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "BRO",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "10-Q",
+          "date": "2026-10-26",
+          "url": "https://www.sec.gov/Archives/edgar/data/79282/000119312526432146/bro-20260930.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-10-26",
+          "url": "https://www.sec.gov/Archives/edgar/data/79282/000119312526432142/bro-20261026.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-10-22",
+          "url": "https://www.sec.gov/Archives/edgar/data/79282/000119312526429079/bro-20261021.htm"
+        }
+      ],
+      "news": [],
+      "missing": [
+        "财报日",
+        "新闻"
+      ],
+      "status": "verified"
+    },
+    {
+      "ticker": "JCI",
+      "earnings_date": null,
+      "filings": [
+        {
+          "form": "8-K",
+          "date": "2026-10-27",
+          "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000101/jci-20261027.htm"
+        },
+        {
+          "form": "8-K",
+          "date": "2026-09-30",
+          "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000098/jci-20260925.htm"
+        },
+        {
+          "form": "10-Q",
+          "date": "2026-07-29",
+          "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000087/jci-20260630.htm"
+        }
+      ],
+      "news": [
+        {
+          "title": "ClearBridge Large Cap Growth ESG Strategy Q3 2026 Portfolio Update",
+          "url": "https://finnhub.io/api/news?id=4263c4d4f9a2b1ba91f9c7a8164e61cee7c7a448eafee5c99b9dee3175b7bcec"
+        },
+        {
+          "title": "Brian Kesseler Named CEO of TekniPlex",
+          "url": "https://finnhub.io/api/news?id=d2ad82224d3ac525c6961be49396803f87d0bcc74861410244d510334fcc9cb8"
+        },
+        {
+          "title": "Here's How Much $100 Invested In Johnson Controls Intl 15 Years Ago Would Be Worth Today",
+          "url": "https://finnhub.io/api/news?id=a526789649d2f0eb4d08a31347065c714582896f4b099a15f1d5bc8fbca5bc60"
+        }
+      ],
+      "missing": [
+        "财报日"
+      ],
+      "status": "verified"
+    }
+  ]
+}

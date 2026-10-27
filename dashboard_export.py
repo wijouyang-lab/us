@@ -2662,6 +2662,54 @@ def _read_market_ai(data_dir: Path):
     }
 
 
+# 哨兵：serenity_verified.json 不存在时返回，用于「不注入键」。
+_SERENITY_VERIFIED_MISSING = object()
+
+
+def _read_serenity_verified(data_dir: Path):
+    """读 serenity 供应链研究优先级的**联网核验层**（只补证据，不改排名）。"""
+    p = data_dir / "dashboard" / "data" / "serenity_verified.json"
+    if not p.exists():
+        return _SERENITY_VERIFIED_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(raw, dict):
+        return None
+    items = []
+    for r in (raw.get("items") or [])[:20]:
+        if not isinstance(r, dict):
+            continue
+        items.append({
+            "ticker": (clean_text(r.get("ticker")) or "").upper() or None,
+            "earnings_date": clean_text(r.get("earnings_date")) or None,
+            "missing": [clean_text(x) for x in (r.get("missing") or []) if clean_text(x)],
+            "status": clean_text(r.get("status")) or None,
+            "filings": [
+                {
+                    "form": clean_text(f.get("form")) or None,
+                    "date": clean_text(f.get("date")) or None,
+                    "url": clean_text(f.get("url")) or None,
+                }
+                for f in (r.get("filings") or [])[:3] if isinstance(f, dict)
+            ],
+            "news": [
+                {
+                    "title": clean_text(n.get("title"))[:160] or None,
+                    "url": clean_text(n.get("url")) or None,
+                }
+                for n in (r.get("news") or [])[:3] if isinstance(n, dict)
+            ],
+        })
+    return {
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "source": clean_text(raw.get("source")) or None,
+        "count": len(items),
+        "items": items,
+    }
+
+
 # 哨兵：skill_serenity.json 不存在（flag 关 / 全部失败未写文件）时返回，用于「不注入键」。
 _SKILL_SERENITY_MISSING = object()
 
@@ -4097,6 +4145,11 @@ def main(argv=None):
     sk = _read_skill_serenity(data_dir)
     if sk is not _SKILL_SERENITY_MISSING:
         payload["skill_serenity"] = sk
+
+    # ---- serenity 研究优先级的联网核验层（只补证据，不改排名）----
+    sv = _read_serenity_verified(data_dir)
+    if sv is not _SERENITY_VERIFIED_MISSING:
+        payload["serenity_verified"] = sv
 
     # ---- 运行时模型使用记录（文件缺失 → 不注入键，保持逐字节一致）----
     mu = _read_model_usage(data_dir)
