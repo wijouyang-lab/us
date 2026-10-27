@@ -1795,77 +1795,15 @@
       ? '<div class="news-rationale">' + esc(e.rationale) + '</div>' : '';
     var prevTxt = (e.prev != null && e.prev !== '') ? ('前值 ' + esc(String(e.prev))) : '';
     var src = e.source ? (' · ' + esc(e.source)) : '';
-    /* 月度指标（CPI/核心CPI/失业率/PCE）的 date 是**数据期**（如 2026-09-01 = 9 月），
-       不是"9 月 1 日抓的数"。直接显示原始日期会让人误以为数据很旧，这里转成
-       「2026年9月」并标注「数据期」，同时对真正滞后的数据给出天数提示。 */
-    var pinfo = macroPeriodInfo(e.date);
-    var dateTxt = pinfo
-      ? (pinfo.monthly ? (' · 数据期 ' + pinfo.label) : (' · ' + pinfo.label))
-      : (e.date ? (' · ' + esc(String(e.date))) : '');
-    var staleTxt = '';
-    if (pinfo && pinfo.monthly) {
-      var lag = macroLagDays(pinfo.end, MACRO && MACRO.generated_at);
-      if (lag != null && lag > 60) {
-        staleTxt = '<span class="macro-stale" title="该月度指标已超过 60 天未更新">⚠️ 滞后 ' + lag + ' 天</span>';
-      }
-    }
-    var tip = pinfo && pinfo.monthly
-      ? ' title="月度指标：显示的是数据所属月份（美国 CPI/失业率通常在每月中旬公布上月数据）"'
-      : '';
-    return '<div class="macro-econ"' + tip + '>' +
-      '<div class="macro-econ-h">' + esc(e.indicator || '') + ' ' + sent +
-        (pinfo && pinfo.monthly ? ' <span class="macro-kind">月度</span>' : '') + '</div>' +
+    var date = e.date ? (' · ' + esc(String(e.date))) : '';
+    return '<div class="macro-econ">' +
+      '<div class="macro-econ-h">' + esc(e.indicator || '') + ' ' + sent + '</div>' +
       '<div class="macro-econ-v">' + esc(e.value != null && e.value !== '' ? String(e.value) : '—') +
       (delta ? (' <span class="macro-d ' + delta.cls + '">' + delta.txt + '</span>') : '') + '</div>' +
-      '<div class="macro-econ-m">' + prevTxt + src + dateTxt + staleTxt + '</div>' +
+      '<div class="macro-econ-m">' + prevTxt + src + date + '</div>' +
       rationale +
       '</div>';
   }
-
-  var MONTHS_EN = {
-    january: 1, february: 2, march: 3, april: 4, may: 5, june: 6,
-    july: 7, august: 8, september: 9, october: 10, november: 11, december: 12,
-    jan: 1, feb: 2, mar: 3, apr: 4, jun: 6, jul: 7, aug: 8, sep: 9, sept: 9,
-    oct: 10, nov: 11, dec: 12
-  };
-
-  /* '2026-09-01' / 'August 2026' → {label:'2026年9月', end:'2026-09-30', monthly:true}
-     '2026-10-24' → {label:'10-24', end:'2026-10-24', monthly:false}；无法解析 → null */
-  function macroPeriodInfo(d) {
-    if (d == null || d === '') return null;
-    var s = String(d).trim();
-    var m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-    if (m) {
-      var y = +m[1], mo = +m[2], day = +m[3];
-      if (day === 1) {
-        var last = new Date(y, mo, 0).getDate();
-        return { label: y + '年' + mo + '月', monthly: true,
-                 end: y + '-' + (mo < 10 ? '0' : '') + mo + '-' + (last < 10 ? '0' : '') + last };
-      }
-      return { label: (mo < 10 ? '0' : '') + mo + '-' + (day < 10 ? '0' : '') + day,
-               monthly: false, end: s };
-    }
-    var m2 = s.match(/^([A-Za-z]+)\.?\s+(\d{4})$/);
-    if (m2) {
-      var mo2 = MONTHS_EN[String(m2[1]).toLowerCase()];
-      if (mo2) {
-        var y2 = +m2[2], last2 = new Date(y2, mo2, 0).getDate();
-        return { label: y2 + '年' + mo2 + '月', monthly: true,
-                 end: y2 + '-' + (mo2 < 10 ? '0' : '') + mo2 + '-' + (last2 < 10 ? '0' : '') + last2 };
-      }
-    }
-    return null;
-  }
-
-  /* 数据期结束日 → 抓取时间 的天数差；无法解析返回 null */
-  function macroLagDays(endIso, generatedAt) {
-    if (!endIso || !generatedAt) return null;
-    var a = new Date(endIso + 'T00:00:00Z');
-    var b = new Date(String(generatedAt));
-    if (isNaN(a.getTime()) || isNaN(b.getTime())) return null;
-    return Math.max(0, Math.round((b.getTime() - a.getTime()) / 86400000));
-  }
-
 
   function macroSpeakerCard(s) {
     if (!s) return '';

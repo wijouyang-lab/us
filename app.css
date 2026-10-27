@@ -240,11 +240,6 @@ button{font-family:inherit}
 .macro-econ-v{font-size:18px;font-weight:750;letter-spacing:-.3px;font-variant-numeric:tabular-nums;margin-top:2px;line-height:1.1}
 .macro-econ-v .macro-d{font-size:11.5px;font-weight:700;margin-left:6px;vertical-align:middle}
 .macro-econ-m{font-size:10.5px;color:var(--text-3);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-/* 月度指标标记 + 滞后提示（数据期 vs 抓取时间） */
-.macro-kind{font-size:9px;font-weight:700;color:var(--text-3);border:1px solid var(--border-2);
-  border-radius:4px;padding:0 4px;line-height:1.5}
-.macro-stale{margin-left:4px;font-size:10px;color:#b45309;background:rgba(245,158,11,.1);
-  border:1px solid rgba(245,158,11,.4);border-radius:4px;padding:0 4px;white-space:nowrap}
 .macro-spk{border-bottom:1px dashed var(--border-2);padding:6px 0;font-size:12px;line-height:1.5}
 .macro-spk:last-child{border-bottom:none}
 .macro-spk-h{display:flex;align-items:center;gap:4px;font-size:12px}
