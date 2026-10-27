@@ -1,51 +1,51 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-10-26T13:02:45Z",
+  "generated_at": "2026-10-27T13:02:05Z",
   "economic": [
     {
       "indicator": "10Y国债",
       "value": "4.99%",
       "prev": "4.99%",
-      "date": "2026-10-26",
+      "date": "2026-10-27",
       "source": "Yahoo Finance",
-      "sentiment": "neutral",
-      "rationale": "国债收益率持平，无明显变化"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "5Y国债",
-      "value": "4.82%",
-      "prev": "4.80%",
-      "date": "2026-10-26",
+      "value": "4.83%",
+      "prev": "4.82%",
+      "date": "2026-10-27",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "5年期收益率上升，融资成本上行压力"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "13周国债",
       "value": "4.04%",
       "prev": "4.03%",
-      "date": "2026-10-26",
+      "date": "2026-10-27",
       "source": "Yahoo Finance",
-      "sentiment": "bearish",
-      "rationale": "短期利率上升，流动性收紧信号"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "CPI",
-      "value": "3.70%",
-      "prev": "3.40%",
+      "value": "3.74%",
+      "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "CPI 3.7% 高于预期 3.6%（能源价格推动），通胀压力重新抬头"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心CPI",
-      "value": "2.60%",
-      "prev": "2.40%",
+      "value": "2.57%",
+      "prev": null,
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "核心CPI 2.6% 高于预期 2.5%，住房项 3.2% 仍是主要支撑"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "失业率",
@@ -53,8 +53,8 @@
       "prev": "4.10%",
       "date": "2026-09-01",
       "source": "BLS API",
-      "sentiment": "bearish",
-      "rationale": "失业率 4.2% 高于预期 4.1%，劳动力市场边际走弱"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "核心PCE",
@@ -62,195 +62,228 @@
       "prev": null,
       "date": "August 2026",
       "source": "BEA 官方网页",
-      "sentiment": "bearish",
-      "rationale": "核心PCE 3%超目标，通胀压力持续"
+      "sentiment": null,
+      "rationale": null
     },
     {
       "indicator": "Fear & Greed",
-      "value": "22 (extreme fear)",
-      "prev": "21",
-      "date": "2026-10-26",
+      "value": "30 (fear)",
+      "prev": "30",
+      "date": "2026-10-27",
       "source": "CNN",
-      "sentiment": "neutral",
-      "rationale": "恐慌指数小幅上升但仍极度恐慌"
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "speakers": [
     {
+      "person": "Trump",
+      "title": null,
+      "content": "President Donald Trump Just Proclaimed, \"Tariffs Don't Cause Inflation, They Cause Wealth,\" but Data From Federal Reserve Economists Show Otherwise - Yahoo Finance",
+      "time": "10-25 04:26",
+      "source": "Yahoo Finance",
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Fed expected to hold rates steady, but Warsh may point way to more hikes - CNBC",
+      "time": "10-27 07:06",
+      "source": "CNBC",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "The Fed Is Expected to Hold Rates Steady. Warsh Will Have to Explain Why. - The New York Times",
+      "time": "10-27 05:03",
+      "source": "The New York Times",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Kevin Warsh-Led Fed Faces Inflation Test Ahead Of Midterms As Stephen Moore Calls For Another Hike: Crypt - Benzinga",
+      "time": "10-27 03:16",
+      "source": "Benzinga",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Former White House economic adviser on Fed rates: ‘Tough position’ for Warsh - The Hill",
+      "time": "10-26 18:29",
+      "source": "The Hill",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
       "person": null,
       "title": null,
-      "content": "Fed holds interest rates steady as inflation hits 3-year high - ABC News - Breaking News, Latest News and Videos",
-      "time": "10-24 12:56",
-      "source": "Breaking News, Latest News and Videos",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "美联储维持利率不变，但通胀创3年新高",
-      "sentiment": "bearish",
-      "rationale": "通胀创3年新高，虽维持利率但压力大"
+      "content": "Federal Reserve to announce its latest interest rate move this week. Here's what economists expect. - CBS News",
+      "time": "10-26 16:10",
+      "source": "CBS News",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
       "content": "Why the Fed may hold off on another rate hike despite high inflation - USA Today",
-      "time": "10-26 08:52",
+      "time": "10-26 09:00",
       "source": "USA Today",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "为何美联储可能暂缓加息尽管通胀高企",
-      "sentiment": "neutral",
-      "rationale": "暗示尽管通胀高企可能暂停加息"
-    },
-    {
-      "person": "Trump",
-      "title": null,
-      "content": "Inflation under Trump is only about half the rate under Biden. Voters are still just as mad. - Yahoo Finance",
-      "time": "10-26 05:00",
-      "source": "Yahoo Finance",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "特朗普时期通胀率约拜登的一半，选民仍不满",
-      "sentiment": "neutral",
-      "rationale": "通胀对比陈述，未涉及政策方向"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "The I Bond’s new fixed rate should be 1.40%. However … – Treasury Inflation-Protected Securities - https://tipswatch.com/",
-      "time": "10-25 08:00",
-      "source": "https://tipswatch.com/",
       "age_tag": "📄昨日-中等权重",
-      "content_cn": "I债券的新固定利率应为1.40%，然而...",
-      "sentiment": "neutral",
-      "rationale": "技术讨论I债券利率，非政策信号"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Fed is expected to hold rates steady, but Warsh may signal more hikes ahead - Quartz",
+      "time": "10-27 07:35",
+      "source": "Quartz",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
       "title": null,
-      "content": "Fed to hit pause on rate hikes, but maybe not for long - Reuters",
-      "time": "10-26 06:22",
-      "source": "Reuters",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "美联储将暂停加息，但可能不会持续太久",
-      "sentiment": "bearish",
-      "rationale": "暂停后可能很快恢复加息，鹰派倾向"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Fed Meeting Focus Turns to Warsh Messaging With December in Mind - Bloomberg.com",
-      "time": "10-26 06:00",
-      "source": "Bloomberg.com",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "美联储会议焦点转向沃什表态，着眼12月",
-      "sentiment": "neutral",
-      "rationale": "关注12月会议，方向未明"
-    },
-    {
-      "person": "Warsh",
-      "title": null,
-      "content": "Warsh Tells Traders to Watch the Data. They Still Follow the Fed - Bloomberg.com",
-      "time": "10-25 11:00",
-      "source": "Bloomberg.com",
+      "content": "5 things to watch from the Federal Reserve's next meeting - Newsday",
+      "time": "10-26 23:59",
+      "source": "Newsday",
       "age_tag": "📰今日-高权重",
-      "content_cn": "沃什告诉交易员关注数据，但他们仍跟随美联储",
-      "sentiment": "neutral",
-      "rationale": "强调关注数据而非单纯跟随美联储"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
-      "person": "Warsh",
+      "person": null,
       "title": null,
-      "content": "President Donald Trump Just Threw Fed Chair Kevin Warsh Under the Bus, and Things Could Get Ugly for Wall Street - The Motley Fool",
-      "time": "10-24 05:06",
-      "source": "The Motley Fool",
+      "content": "Interest rate odds: Traders forecast a 93% chance the Fed holds in October - Kalshi News",
+      "time": "10-27 08:50",
+      "source": "Kalshi News",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Fed expected to hold rates steady days ahead of US midterms - France 24",
+      "time": "10-24 21:26",
+      "source": "France 24",
       "age_tag": "📑前日-低权重",
-      "content_cn": "特朗普总统批评联储主席沃什，华尔街或面临动荡",
-      "sentiment": "bearish",
-      "rationale": "总统与主席关系紧张，政策不确定性"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "5 things to watch from the Federal Reserve’s next meeting - NewsNation",
+      "time": "10-27 07:51",
+      "source": "NewsNation",
+      "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": "Trump",
       "title": null,
-      "content": "Opinion | How Trump’s forever war and tariffs could sink the GOP - The Washington Post",
-      "time": "10-26 07:33",
+      "content": "Opinion | Brace yourself, GOP. Trump’s Iran war and tariffs are going to sting. - The Washington Post",
+      "time": "10-26 14:30",
       "source": "The Washington Post",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "观点：特朗普的持久战和关税如何拖累共和党",
-      "sentiment": "bearish",
-      "rationale": "批评政策可能损害共和党选情"
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": "Trump",
       "title": null,
       "content": "‘We don’t have inflation’? Five charts show the US economic reality of Trump’s second term so far - The Guardian",
-      "time": "10-26 07:01",
+      "time": "10-26 12:15",
       "source": "The Guardian",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "How a Fed interest rate pause would impact Main Street investors - TheStreet",
+      "time": "10-27 05:03",
+      "source": "TheStreet",
       "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "'我们没有通胀'？五张图表展示特朗普第二任期的美国经济现实",
-      "sentiment": "bearish",
-      "rationale": "数据显示通胀现实存在，反驳否认"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Here's Exactly What Investors Should Look for From the Federal Reserve's October Meeting - Yahoo Finance",
+      "time": "10-26 19:20",
+      "source": "Yahoo Finance",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Economists say that even though an October hike was anticipated, the Fed's monetary policy committee appears unlikely to make a move before midterms. See link below ⬇️ 📸 House TV / Reuters - Facebook",
+      "time": "10-26 13:00",
+      "source": "Facebook",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": "Trump",
       "title": null,
-      "content": "Trump failed to stop inflation. Now Republicans may pay the price in the midterm elections - 10TV",
-      "time": "10-26 06:41",
-      "source": "10TV",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "特朗普未能遏制通胀，共和党或在中期选举付出代价",
-      "sentiment": "bearish",
-      "rationale": "未能遏制通胀，共和党中期选举承压"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Fed rate hikes: What borrowers should expect for the rest of 2026 - Detroit Free Press",
-      "time": "10-26 08:37",
-      "source": "Detroit Free Press",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "美联储加息：借款人2026年余下时间应有何预期",
-      "sentiment": "bearish",
-      "rationale": "预期2026年持续加息，借款成本上升"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Fed is widely expected to hold rates steady despite a case for hiking - Quartz",
-      "time": "10-26 08:20",
-      "source": "Quartz",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "尽管有加息理由，美联储普遍预期维持利率",
-      "sentiment": "neutral",
-      "rationale": "预期维持利率但存在加息理由"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "What To Expect From This Week’s Federal Reserve Meeting - Investopedia",
-      "time": "10-26 07:33",
-      "source": "Investopedia",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "本周美联储会议有何预期",
-      "sentiment": "neutral",
-      "rationale": "会议前瞻，方向未明确"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Why the Fed Is Expected to Hold Rates Steady Despite a Case for Raising Them - WSJ",
-      "time": "10-26 05:30",
-      "source": "WSJ",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": "为何尽管有加息理由美联储预期维持利率",
-      "sentiment": "neutral",
-      "rationale": "预期维持但存在加息压力，方向未定"
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US Interest Rate Forecast: Oil Rally Fuels December Fed Hike Risks - FXEmpire",
-      "time": "10-26 01:25",
-      "source": "FXEmpire",
+      "content": "US midterm elections: Trump's biggest economic problem looks familiar - BBC",
+      "time": "10-27 02:01",
+      "source": "BBC",
       "age_tag": "📰今日-高权重",
-      "content_cn": "美国利率预测：油价上涨加剧12月加息风险",
-      "sentiment": "bearish",
-      "rationale": "油价上涨增加12月加息风险"
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "What time is this week's Fed meeting? - Yahoo Finance",
+      "time": "10-26 12:43",
+      "source": "Yahoo Finance",
+      "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     },
     {
       "person": null,
@@ -258,10 +291,10 @@
       "content": "Dow Jones Forecast: DJIA rises as Oil slips and Treasury yields pause - StoneX",
       "time": "10-25 06:45",
       "source": "StoneX",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": "道指预测：油价下跌、国债收益率暂停，道指上涨",
-      "sentiment": "bullish",
-      "rationale": "油价回落、国债收益率暂停，道指上涨"
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
     }
   ],
   "error": null
