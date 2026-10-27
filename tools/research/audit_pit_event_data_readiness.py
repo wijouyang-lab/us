@@ -268,8 +268,16 @@ def audit_event_archive(
             ),
             "all_first_seen_after_publication": timestamp_checks["first_seen_before_publication"] == 0,
             "validated_labels_present": labelled > 0,
-            "label_review_provenance_present": label_counts["unverified_label_provenance"] == 0,
-            "pit_eligible_for_at_least_one_decision": not decisions or any(eligible_by_decision.values()),
+            # A zero-error empty set is not evidence of valid label provenance.
+            "label_review_provenance_present": (
+                label_counts["reviewed_annotations_with_valid_provenance"] > 0
+                and label_counts["unverified_label_provenance"] == 0
+            ),
+            # Eligibility is untested until at least one explicit decision timestamp is supplied.
+            "pit_eligibility_evaluated": bool(decisions),
+            "pit_eligible_for_at_least_one_decision": (
+                bool(decisions) and any(eligible_by_decision.values())
+            ),
             "empirical_alpha_established": False,
             "production_activation_allowed": False,
         },
