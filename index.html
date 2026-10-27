@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
-<link rel="stylesheet" href="app.css?v=runtime9">
+<link rel="stylesheet" href="app.css?v=runtime10">
 </head>
 <body>
 
@@ -119,6 +119,16 @@
       <span class="sec-sub" id="profitSub">—</span>
     </div>
     <div id="profitBody"></div>
+  </section>
+
+  <!-- 1.57 超跌观察推荐：外部研究写入 dashboard/data/oversold_candidates.json；
+       Dashboard 只展示，不计算分数/阈值，不进入 $50,000 账本，也不改动 Quant 板块 -->
+  <section class="card sec" id="oversoldCard" hidden>
+    <div class="sec-h">
+      <h2>超跌观察推荐</h2>
+      <span class="sec-sub" id="oversoldSub">外部研究信号 · 非生产 · 仅供观察</span>
+    </div>
+    <div id="oversoldBody"></div>
   </section>
 
   <!-- 1.6 Quant / 量化研究 -->
@@ -303,6 +313,6 @@
   </div>
 </div>
 
-<script src="app.js?v=runtime9"></script>
+<script src="app.js?v=runtime10"></script>
 </body>
 </html>

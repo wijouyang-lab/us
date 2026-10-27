@@ -2602,6 +2602,64 @@ def _read_skill_serenity(data_dir: Path):
         return None
 
 
+# 哨兵：oversold_candidates.json 不存在时返回，用于「不注入键」（前端整块隐藏）。
+_OVERSOLD_MISSING = object()
+
+
+def _read_oversold(data_dir: Path):
+    """读「超跌观察候选」→ 注入 dashboard_data.json 的 `oversold`。
+
+    数据由**外部研究**（GPT / 量化）写入 `dashboard/data/oversold_candidates.json`，
+    本导出层只做透传与字段清洗，绝不计算任何超跌分数、阈值或信号。
+
+    fail-closed 约定（与 skill_serenity / market_indicators 一致）：
+      · 文件不存在 → 返回哨兵，调用方不注入键 → 前端板块隐藏；
+      · 文件损坏/结构不对 → 返回 None（键存在但为空 → 前端显示空态）；
+      · 文件正常 → 返回规范化后的 dict（最多 20 条候选）。
+    """
+    p = data_dir / "dashboard" / "data" / "oversold_candidates.json"
+    if not p.exists():
+        return _OVERSOLD_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 超跌候选读取失败（{e}），oversold 输出 null")
+        return None
+    if not isinstance(raw, dict):
+        return None
+    out = []
+    for r in (raw.get("candidates") or [])[:20]:
+        if not isinstance(r, dict):
+            continue
+        tk = clean_text(r.get("ticker")).upper()
+        if not tk:
+            continue
+        out.append({
+            "ticker": tk,
+            "name": clean_text(r.get("name")) or None,
+            "score": round_num(parse_num(r.get("score")), 1),
+            "tag": clean_text(r.get("tag")) or None,
+            "rsi": round_num(parse_num(r.get("rsi")), 1),
+            "bias_pct": round_num(parse_num(r.get("bias_pct")), 2),
+            "drawdown_pct": round_num(parse_num(r.get("drawdown_pct")), 2),
+            "ref_price": round_num(parse_num(r.get("ref_price")), 2),
+            "stop_loss": round_num(parse_num(r.get("stop_loss")), 2),
+            "confirm": clean_text(r.get("confirm")) or None,
+            "invalid": clean_text(r.get("invalid")) or None,
+            "observe_until": clean_text(r.get("observe_until")) or None,
+            "reason": clean_text(r.get("reason")) or None,
+        })
+    return {
+        "schema": int(parse_num(raw.get("schema")) or 1),
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "asof": clean_text(raw.get("asof")) or None,
+        "source": clean_text(raw.get("source")) or None,
+        "note": clean_text(raw.get("note")) or None,
+        "count": len(out),
+        "candidates": out,
+    }
+
+
 # 哨兵：model_usage.json 不存在（从未跑过 / 被清理）时返回，用于「不注入键」。
 _MODEL_USAGE_MISSING = object()
 
@@ -3767,6 +3825,11 @@ def main(argv=None):
     mu = _read_model_usage(data_dir)
     if mu is not _MODEL_USAGE_MISSING:
         payload["model_usage"] = mu
+
+    # ---- 超跌观察候选（外部研究写入；文件缺失 → 不注入键，前端整块隐藏）----
+    ov = _read_oversold(data_dir)
+    if ov is not _OVERSOLD_MISSING:
+        payload["oversold"] = ov
 
     if ai_status == "pending":
         notes.append(

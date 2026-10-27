@@ -42,7 +42,7 @@ def _expose():
     out = app_js.replace(
         "\n  boot();\n",
         "\n  globalThis.__setData = function(d){ DATA = d; };\n"
-        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); };\n")
+        "  globalThis.__run = function(){ renderPortfolio(); renderTarget(); renderProfitTaken(); renderStopped(); renderOversold(); };\n")
     assert "__setData" in out, "未能注入 expose 钩子"
     return out
 
@@ -59,7 +59,10 @@ def _run(data):
         "  target: e['#pfTarget'] ? e['#pfTarget'].innerHTML : null,\n"
         "  positions: e['#pfPositions'] ? e['#pfPositions'].innerHTML : null,\n"
         "  summary: e['#pfSummary'] ? e['#pfSummary'].innerHTML : null,\n"
-        "  stopped: e['#stoppedBody'] ? e['#stoppedBody'].innerHTML : null\n"
+        "  stopped: e['#stoppedBody'] ? e['#stoppedBody'].innerHTML : null,\n"
+        "  oversold: e['#oversoldBody'] ? e['#oversoldBody'].innerHTML : null,\n"
+        "  oversoldHidden: e['#oversoldCard'] ? e['#oversoldCard'].hidden : null,\n"
+        "  oversoldSub: e['#oversoldSub'] ? e['#oversoldSub'].textContent : null\n"
         "}));\n"
     )
     js.write_text(_harness() + _expose() + tail, encoding="utf-8")
@@ -259,3 +262,50 @@ def test_stopped_row_labels_profit_above_breakeven():
     stopped = r["stopped"] or ""
     assert "结果: 保本以上离场" in stopped, stopped
     assert "结果: 亏损离场" in stopped, stopped
+
+
+# ---------------------------------------------------------------- 超跌观察推荐
+def test_oversold_hidden_when_key_missing():
+    """oversold 键缺失（文件不存在）→ 整块隐藏。"""
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []}})
+    assert r["oversoldHidden"] is True, r
+
+
+def test_oversold_empty_state():
+    """文件存在但 candidates 为空 → 显示空态 + 备注，不隐藏。"""
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "oversold": {"schema": 1, "asof": "2026-10-24", "source": "GPT 研究",
+                           "note": "本周暂无候选", "count": 0, "candidates": []}})
+    assert r["oversoldHidden"] is False, r
+    assert "暂无超跌候选" in (r["oversold"] or ""), r
+    assert "本周暂无候选" in (r["oversold"] or ""), r
+    assert "GPT 研究" in (r["oversoldSub"] or ""), r
+    assert "非生产信号" in (r["oversoldSub"] or ""), r
+
+
+def test_oversold_renders_candidate_fields():
+    cand = {"ticker": "XYZ", "name": "XYZ Inc", "score": 82.5, "tag": "超跌反弹",
+            "rsi": 22.4, "bias_pct": -14.2, "drawdown_pct": -28.5,
+            "ref_price": 95.2, "stop_loss": 88.5,
+            "confirm": "RSI 回升过 30 + 放量阳线",
+            "invalid": "跌破前低 $88.50",
+            "observe_until": "2026-11-05",
+            "reason": "板块未同步下跌，个股跌因一次性事件。"}
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "oversold": {"schema": 1, "asof": "2026-10-24", "source": "GPT 研究",
+                           "count": 1, "candidates": [cand]}})
+    html = r["oversold"] or ""
+    assert r["oversoldHidden"] is False, r
+    for s in ("XYZ", "XYZ Inc", "超跌反弹", "82.5", "22.4", "-14.2%", "-28.5%",
+              "$95.20", "$88.50", "确认", "失效", "观察至 2026-11-05", "一次性事件"):
+        assert s in html, (s, html)
+
+
+def test_oversold_missing_optional_fields_no_placeholder_zero():
+    """只有 ticker 的候选也要渲染，缺失字段不能出现 0 / NaN。"""
+    r = _run({"portfolio": {"target": [], "transactions": [], "positions": []},
+              "oversold": {"candidates": [{"ticker": "abc"}]}})
+    html = r["oversold"] or ""
+    assert "ABC" in html, html
+    assert "NaN" not in html and "undefined" not in html, html
+    assert "0.00" not in html, html

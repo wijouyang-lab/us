@@ -1089,6 +1089,75 @@
       monthSummaryHtml('profit', takes, '按月');
   }
 
+  /* 超跌观察推荐：只读 DATA.oversold（外部研究写入的 JSON，见 docs/OVERSOLD_SIGNAL_CONTRACT.md）。
+     本函数不计算任何超跌分/阈值/信号，只做渲染：
+       · 键缺失（文件不存在）→ 整块隐藏；
+       · candidates 为空 → 显示空态（等待研究信号写入）；
+       · 字段缺失 → 显示 — / 直接省略，绝不补 0。 */
+  function renderOversold() {
+    var card = $('#oversoldCard'), body = $('#oversoldBody'), sub = $('#oversoldSub');
+    if (!card || !body) return;
+    var ov = DATA && DATA.oversold;
+    if (!ov) {
+      card.hidden = true;
+      body.innerHTML = '';
+      return;
+    }
+    card.hidden = false;
+    if (sub) {
+      var bits = [];
+      if (ov.asof) bits.push('截至 ' + ov.asof);
+      if (ov.source) bits.push(ov.source);
+      bits.push('非生产信号 · 仅供观察');
+      sub.textContent = bits.join(' · ');
+    }
+
+    var list = ov.candidates || [];
+    var note = ov.note ? '<div class="os-note">' + esc(ov.note) + '</div>' : '';
+
+    if (!list.length) {
+      body.innerHTML = '<div class="mx"><div class="k">超跌候选</div>' +
+        '<div class="v na">暂无超跌候选（等待研究信号写入）</div></div>' + note;
+      return;
+    }
+
+    var rows = list.map(function (c) {
+      var tk = String(c.ticker || NA).toUpperCase();
+      var head = '<div class="os-head">' +
+        '<span class="os-tk">' + esc(tk) + '</span>' +
+        (c.name ? '<span class="os-name">' + esc(c.name) + '</span>' : '') +
+        (c.tag ? '<span class="os-tag">' + esc(c.tag) + '</span>' : '') +
+        (c.score == null ? '' : '<span class="os-score">' + esc(fmt(c.score, 1)) + '</span>') +
+        '</div>';
+
+      var mcell = function (label, val) {
+        if (val == null || val === '') return '';
+        return '<span class="os-m"><i>' + label + '</i>' + esc(String(val)) + '</span>';
+      };
+      var metrics = mcell('RSI', c.rsi) +
+        mcell('Bias', c.bias_pct == null ? null : c.bias_pct + '%') +
+        mcell('回撤', c.drawdown_pct == null ? null : c.drawdown_pct + '%') +
+        mcell('参考价', c.ref_price == null ? null : '$' + fmt(c.ref_price, 2)) +
+        mcell('止损', c.stop_loss == null ? null : '$' + fmt(c.stop_loss, 2));
+
+      var lines = '';
+      if (c.confirm) lines += '<div class="os-line"><b>确认</b> ' + esc(c.confirm) + '</div>';
+      if (c.invalid) lines += '<div class="os-line"><b>失效</b> ' + esc(c.invalid) + '</div>';
+      if (c.reason) {
+        lines += '<div class="os-why" onclick="this.classList.toggle(\'open\')" ' +
+          'title="点击展开/收起">' + esc(c.reason) + '</div>';
+      }
+      var foot = '';
+      if (c.observe_until) foot = '<div class="os-foot">观察至 ' + esc(c.observe_until) + '</div>';
+
+      return '<div class="os-row">' + head +
+        (metrics ? '<div class="os-metrics">' + metrics + '</div>' : '') +
+        lines + foot + '</div>';
+    }).join('');
+
+    body.innerHTML = '<div class="os-list">' + rows + '</div>' + note;
+  }
+
   /* 交易观测面板：只读 portfolio.trade_stats（dashboard_export 计算，前端绝不重算）。
      边界：
        · trade_stats 缺失 / null → 隐藏整块（不渲染、不报错）
@@ -1332,6 +1401,7 @@
     renderPortfolio();
     renderStopped();
     renderProfitTaken();
+    renderOversold();
     renderTradeStats();
     renderQuant();
     renderNews();
