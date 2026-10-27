@@ -23,6 +23,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+REPO = Path(__file__).resolve().parent.parent
 FORECAST = REPO / "dashboard" / "data" / "macro_forecast.json"
 OUT = REPO / "dashboard" / "data" / "macro_cpi_ai.json"
 

@@ -21,6 +21,10 @@ import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
+if str(REPO) not in sys.path:
+    sys.path.insert(0, str(REPO))
+
+REPO = Path(__file__).resolve().parent.parent
 NEWS = REPO / "dashboard" / "data" / "news_data.json"
 CACHE = REPO / "dashboard" / "data" / "news_translations.json"
 BATCH = 40

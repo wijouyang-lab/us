@@ -24,6 +24,7 @@ import json
 import os
 import re
 import sys
+import time
 import tempfile
 import urllib.request
 from datetime import datetime, timezone
@@ -41,9 +42,16 @@ def _get(url: str, timeout: int = 20) -> str:
 
 
 def fred_series(series_id: str):
-    """返回 [(date_str, float)] 升序；失败返回 []。"""
+    """返回 [(date_str, float)] 升序；失败返回 []。FRED 在部分 Runner 上很慢，重试并放宽超时。"""
+    text = ""
+    for attempt in range(2):
+        try:
+            text = _get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}", timeout=45)
+            break
+        except Exception as exc:
+            print(f"[WARN] FRED {series_id} 第 {attempt+1} 次失败：{exc}", file=sys.stderr)
+            time.sleep(2)
     try:
-        text = _get(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}")
         rows = []
         reader = csv.DictReader(io.StringIO(text))
         for row in reader:
