@@ -38,6 +38,17 @@ PAGES = {
     "claims": ("初请失业金", "https://tradingeconomics.com/united-states/initial-jobless-claims"),
 }
 
+def _norm_unit(u):
+    if not u:
+        return "%"
+    u = u.strip()
+    if u in ("thousand",):
+        return "K"
+    if u in ("million",):
+        return "M"
+    return u
+
+
 MONTHS = {m: i for i, m in enumerate(
     ["January", "February", "March", "April", "May", "June", "July",
      "August", "September", "October", "November", "December"], 1)}
@@ -51,24 +62,39 @@ def _get(url: str) -> str:
 
 def parse(text: str):
     """返回 (actual, forecast, unit, period) 或 None。"""
+    unit = "%"
     m = re.search(
-        r"(?:rose|fell|increased|decreased|was|stood at|to|at|of|by)\s+(?:by\s+)?"
-        r"([0-9]+(?:\.[0-9]+)?)(%|K)? in ([A-Z][a-z]+)(?: (\d{4}))?", text)
-    if not m:
-        return None
-    actual = float(m.group(1))
-    unit = m.group(2) or "%"
-    month = m.group(3)
-    year = m.group(4) or str(datetime.now().year)
+        r"(?:added|gained|rose|fell|increased|decreased|was|stood at|to|at|of|by)\s+"
+        r"(?:by\s+)?([0-9]+(?:\.[0-9]+)?)\s*(%|K|M|thousand|million)?\s+"
+        r"(?:jobs\s+)?in\s+([A-Z][a-z]+)(?:\s+of)?\s*(\d{4})?", text)
+    if m:
+        actual = float(m.group(1))
+        unit = _norm_unit(m.group(2))
+        month = m.group(3)
+        year = m.group(4) or str(datetime.now().year)
+    else:
+        m2 = re.search(
+            r"(?:to|at)\s+([0-9]+(?:\.[0-9]+)?)\s*(%|K|M|thousand|million)?\s+"
+            r"in the week", text)
+        if not m2:
+            return None
+        actual = float(m2.group(1))
+        unit = _norm_unit(m2.group(2))
+        month, year = "Week", str(datetime.now().year)
+
     e = re.search(
-        r"(?:above|below|exceeding|beating|missing|surpassing)[^.]{0,120}?"
-        r"expectations? of ([0-9]+(?:\.[0-9]+)?)(%|K)?", text, re.I)
+        r"expectations?\s+of\s+([0-9]+(?:\.[0-9]+)?)\s*(%|K|M|thousand|million)?",
+        text, re.I)
     if not e:
-        e = re.search(r"(?:expected|consensus)[^.]{0,60}?([0-9]+(?:\.[0-9]+)?)(%|K)?",
-                      text, re.I)
+        e = re.search(
+            r"expectations?\s+for\s+(?:a\s+)?([0-9]+(?:\.[0-9]+)?)\s*"
+            r"(%|K|M|thousand|million)?", text, re.I)
+    if not e:
+        e = re.search(r"(?:expected|consensus)[^.]{0,60}?([0-9]+(?:\.[0-9]+)?)"
+                      r"\s*(%|K|M|thousand|million)?", text, re.I)
     if not e:
         return None
-    period = f"{year}年{MONTHS.get(month, 0)}月"
+    period = f"{year}年{MONTHS.get(month, 0)}月" if month in MONTHS else "当周"
     return actual, float(e.group(1)), unit, period
 
 
