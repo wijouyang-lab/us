@@ -35,4 +35,4 @@ def test_capture_workflow_uses_single_shell_continuations_and_valid_csv_newlines
         assert line.endswith("\\"), f"missing shell continuation: {line}"
         assert not line.endswith("\\\\"), f"doubled shell continuation: {line}"
     csv_line = next(line.strip() for line in workflow.splitlines() if "printf 'decision_at" in line)
-    assert csv_line == "printf 'decision_at\\\\n%s\\\\n' \"$DECISION_AT\" > \"$DECISIONS\""
+    assert csv_line == "printf 'decision_at\\n%s\\n' \"$DECISION_AT\" > \"$DECISIONS\""
