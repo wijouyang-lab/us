@@ -337,7 +337,19 @@
         return d;
       })
       .then(function (d) {
-        try { renderDashboard(d); }
+        try {
+          renderDashboard(d);
+          /* 持仓 K 线单独文件（拆分 payload）：异步补载，失败就不画，不影响主数据 */
+          fetch('dashboard/data/intraday.json?t=' + Date.now()).then(function (r) {
+            return r.ok ? r.json() : null;
+          }).then(function (x) {
+            if (x && x.positions) {
+              window.DATA = DATA;
+              DATA.intraday = x.positions;
+              try { renderPortfolio(); } catch (e) { /* 忽略 */ }
+            }
+          }).catch(function () { /* 拆分包缺失时静默降级 */ });
+        }
         catch (err) {
           console.error('[Dashboard] render failed:', err);
           var e4 = new Error((err && err.message) || String(err));
@@ -401,7 +413,7 @@
   /* p: portfolio.positions[] 条目；s: STOCKS[] 里同 ticker 的详情（找不到则 null → 降级只显示持仓字段） */
   /* 持仓卡片：当日 5 分钟 K 线 + 止损价横线（内联 SVG，无第三方库） */
   function klineHtml(p) {
-    var it = p && p.intraday;
+    var it = (DATA && DATA.intraday && DATA.intraday[String(p.ticker || '').toUpperCase()]) || (p && p.intraday);
     var bars = it && it.bars;
     if (!bars || !bars.length) return '';
     var stop = num(p.stop_loss_price);

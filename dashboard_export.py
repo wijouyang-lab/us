@@ -4169,6 +4169,19 @@ def main(argv=None):
             "本脚本未调用任何 AI 接口，也未生成替代文案，且不按 Ticker 回退到 ai_text_cache.csv。"
         )
 
+    # ---- 拆分：持仓当日 K 线单独成文件（避免 dashboard_data.json 继续膨胀）----
+    intra = {}
+    for _pos in ((payload.get("portfolio") or {}).get("positions") or []):
+        _it = _pos.pop("intraday", None)
+        _tk = str(_pos.get("ticker") or "").upper()
+        if _it and _tk:
+            intra[_tk] = _it
+            _pos["has_intraday"] = True
+    (out_path.parent / "intraday.json").write_text(
+        json.dumps({"schema": 1, "positions": intra}, ensure_ascii=False, indent=2),
+        encoding="utf-8",
+    )
+
     # ---- 写出 ----
     out_path.parent.mkdir(parents=True, exist_ok=True)
     text = json.dumps(payload, ensure_ascii=False, indent=2)

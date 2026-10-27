@@ -273,6 +273,7 @@ jobs:
           if [ -f dashboard/data/macro_indicators.json ]; then git add dashboard/data/macro_indicators.json; fi
           if [ -f dashboard/data/macro_cpi_ai.json ]; then git add dashboard/data/macro_cpi_ai.json; fi
           if [ -f dashboard/data/serenity_verified.json ]; then git add dashboard/data/serenity_verified.json; fi
+          if [ -f dashboard/data/intraday.json ]; then git add dashboard/data/intraday.json; fi
           if [ -f dashboard/data/news_translations.json ]; then git add dashboard/data/news_translations.json; fi
           if [ -f dashboard/data/news_data.json ]; then git add dashboard/data/news_data.json; fi
           if git diff --cached --quiet; then
@@ -283,7 +284,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_indicators\.json|macro_cpi_ai\.json|news_data\.json|news_translations\.json|serenity_verified\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_indicators\.json|macro_cpi_ai\.json|news_data\.json|news_translations\.json|serenity_verified\.json|intraday\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi
@@ -311,7 +312,7 @@ jobs:
               # 回退掉。这里只保留本轮数据文件，其它路径一律恢复成 origin/main 版本。
               for f in $(git diff --cached --name-only); do
                 case "$f" in
-                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|dashboard/data/news_data.json|dashboard/data/news_translations.json|dashboard/data/serenity_verified.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
+                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|dashboard/data/news_data.json|dashboard/data/news_translations.json|dashboard/data/serenity_verified.json|dashboard/data/intraday.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
                     ;;
                   *)
                     git checkout origin/main -- "$f" 2>/dev/null || true
