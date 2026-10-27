@@ -281,7 +281,6 @@ jobs:
           if [ -f dashboard/data/macro_forecast.json ]; then git add dashboard/data/macro_forecast.json; fi
           if [ -f dashboard/data/macro_cpi_ai.json ]; then git add dashboard/data/macro_cpi_ai.json; fi
           if [ -f dashboard/data/serenity_verified.json ]; then git add dashboard/data/serenity_verified.json; fi
-          if [ -f dashboard/data/intraday.json ]; then git add dashboard/data/intraday.json; fi
           if [ -f dashboard/data/ohlcv.json ]; then git add dashboard/data/ohlcv.json; fi
           if [ -f dashboard/data/news_translations.json ]; then git add dashboard/data/news_translations.json; fi
           if git diff --cached --quiet; then
