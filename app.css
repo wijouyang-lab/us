@@ -727,3 +727,4 @@ button{font-family:inherit}
 .pk-meta{font-size:9.5px;color:var(--text-3);margin-top:2px}
 .pk-meta b.up{color:var(--up)}
 .pk-meta b.down{color:var(--down)}
+.pk-meta b.pk-entry{color:#3b82f6}

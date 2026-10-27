@@ -406,17 +406,19 @@
     if (!bars || !bars.length) return '';
     var stop = num(p.stop_loss_price);
     if (stop === null) stop = numLoose(p.stop_loss);
+    var entry = num(p.entry_price);
     var w = 168, h = 44, pad = 2;
     var hi = -Infinity, lo = Infinity;
     bars.forEach(function (b) {
       if (b[2] > hi) hi = b[2];
       if (b[3] < lo) lo = b[3];
     });
-    /* 把止损价纳入纵轴范围，横线才不会被裁掉 */
-    if (stop !== null) {
-      if (stop > hi) hi = stop;
-      if (stop < lo) lo = stop;
-    }
+    /* 止损 / 成本都纳入纵轴，横线才不会被裁掉 */
+    [stop, entry].forEach(function (v) {
+      if (v === null) return;
+      if (v > hi) hi = v;
+      if (v < lo) lo = v;
+    });
     var span = (hi - lo) || 1;
     var step = (w - pad * 2) / bars.length;
     var bw = Math.max(1, step * 0.55);
@@ -439,14 +441,21 @@
       stopLine = '<line x1="' + pad + '" y1="' + sy + '" x2="' + (w - pad) + '" y2="' + sy +
         '" stroke="var(--down)" stroke-width="1" stroke-dasharray="3 2" opacity="0.9"/>';
     }
+    var entryLine = '';
+    if (entry !== null) {
+      var ey = y(entry).toFixed(2);
+      entryLine = '<line x1="' + pad + '" y1="' + ey + '" x2="' + (w - pad) + '" y2="' + ey +
+        '" stroke="#3b82f6" stroke-width="1" stroke-dasharray="4 2" opacity="0.85"/>';
+    }
     var last = bars[bars.length - 1];
     var first = bars[0];
     var chg = first[1] ? (last[4] / first[1] - 1) * 100 : null;
     return '<div class="pos-kline">' +
-      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + stopLine + '</svg>' +
+      '<svg viewBox="0 0 ' + w + ' ' + h + '" preserveAspectRatio="none">' + parts + stopLine + entryLine + '</svg>' +
       '<div class="pk-meta">今日 5m' + (it.date ? ' · ' + esc(it.date) : '') +
         (chg === null ? '' : ' · <b class="' + (chg >= 0 ? 'up' : 'down') + '">' +
           (chg >= 0 ? '+' : '') + fmt(chg, 2) + '%</b>') +
+        (entry === null ? '' : ' · <b class="pk-entry">成本 $' + fmt(entry, 2) + '</b>') +
         (stop === null ? '' : ' · <b class="down">止损 $' + fmt(stop, 2) + '</b>') + '</div>' +
       '</div>';
   }
