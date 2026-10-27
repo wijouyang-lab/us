@@ -35,7 +35,7 @@ def test_dashboard_writer_job_has_main_ref_guard():
 
 def test_dashboard_writer_documents_fifteen_minute_cadence():
     source = WORKFLOW.read_text(encoding="utf-8")
-    assert re.search(r'(?m)^\s*- cron:\s*"\*/15 13-21 \* \* \* 1-5"\s*$', source)
+    assert '- cron: "*/15 13-21 * * 1-5"' in source
     assert "工作日每 15 分钟刷新" in source
 
 
