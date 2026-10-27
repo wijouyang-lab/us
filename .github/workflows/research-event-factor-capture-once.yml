@@ -15,6 +15,10 @@ on:
       - tools/research/bls_macro_series_capture.py
       - tools/research/build_event_annotation_queue.py
       - tools/research/audit_pit_event_data_readiness.py
+      - tools/research/capture_event_response_prices.py
+      - tools/research/pit_event_response_study.py
+      - tests/test_capture_event_response_prices.py
+      - tests/test_pit_event_response_study.py
       - tests/test_audit_pit_event_data_readiness.py
       - tests/test_event_readiness_capture_workflow.py
       - tools/research/sec_daily_index.py
@@ -157,6 +161,32 @@ jobs:
             --start-year "$((YEAR - 2))" --end-year "$YEAR" \
             --output "data/research/event-capture/bls_macro_series_${GITHUB_RUN_ID}.json"; then
             echo "::warning::BLS public API snapshot failed; RSS and Treasury evidence are preserved."
+          fi
+
+      - name: Capture recent prices and run descriptive event-response study
+        shell: bash
+        run: |
+          set -euo pipefail
+          AS_OF="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
+          ARCHIVE="data/research/event-capture/event_archive.json"
+          PRICE_CSV="data/research/event-capture/event_response_prices_$GITHUB_RUN_ID.csv"
+          PRICE_REPORT="data/research/event-capture/event_response_prices_$GITHUB_RUN_ID.report.json"
+          STUDY_REPORT="data/research/event-capture/event_response_study_$GITHUB_RUN_ID.json"
+          OBSERVATIONS="data/research/event-capture/event_response_observations_$GITHUB_RUN_ID.csv"
+          if ! python -m tools.research.capture_event_response_prices --archive "$ARCHIVE" --output-csv "$PRICE_CSV" --output-report "$PRICE_REPORT" --as-of-utc "$AS_OF" --lookback-days 30 --max-symbols 100; then
+            echo "::warning::Price capture returned no price rows; inspect $PRICE_REPORT. Other capture evidence is preserved."
+          fi
+          if [[ -s "$PRICE_CSV" && -s "$PRICE_REPORT" ]]; then
+            STUDY_END_DATE="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["study_price_end_date"])' "$PRICE_REPORT")"
+            set +e
+            python -m tools.research.pit_event_response_study --events "$ARCHIVE" --prices-csv "$PRICE_CSV" --price-basis auto --study-end-date "$STUDY_END_DATE" --horizons 1,5,10 --round-trip-cost-bps 5 --max-age-days-by-type '{"macro_release":30,"policy":30,"central_bank":30,"company_news":30,"earnings":30}' --report "$STUDY_REPORT" --observations-csv "$OBSERVATIONS"
+            STUDY_STATUS=$?
+            set -e
+            if [[ "$STUDY_STATUS" -ne 0 ]]; then
+              echo "::warning::Event response study could not complete; inspect the per-run study and price reports."
+            fi
+          else
+            echo "::warning::Price CSV or report missing; event response study skipped."
           fi
 
       - name: Audit point-in-time event archive readiness

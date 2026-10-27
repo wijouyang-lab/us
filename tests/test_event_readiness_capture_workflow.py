@@ -36,3 +36,18 @@ def test_capture_workflow_uses_single_shell_continuations_and_valid_csv_newlines
         assert not line.endswith("\\\\"), f"doubled shell continuation: {line}"
     csv_line = next(line.strip() for line in workflow.splitlines() if "printf 'decision_at" in line)
     assert csv_line == "printf 'decision_at\\n%s\\n' \"$DECISION_AT\" > \"$DECISIONS\""
+
+
+def test_capture_workflow_collects_prices_and_runs_descriptive_event_study():
+    workflow = (
+        Path(__file__).resolve().parents[1]
+        / ".github"
+        / "workflows"
+        / "research-event-factor-capture-once.yml"
+    ).read_text(encoding="utf-8")
+    assert "Capture recent prices and run descriptive event-response study" in workflow
+    assert "tools.research.capture_event_response_prices" in workflow
+    assert "tools.research.pit_event_response_study" in workflow
+    assert '--study-end-date "$STUDY_END_DATE"' in workflow
+    assert "--price-basis auto" in workflow
+    assert "no price rows" in workflow
