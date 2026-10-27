@@ -1,15 +1,15 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-27T19:48:07Z",
-  "asof": "2026-10-27T14:36:45Z",
+  "generated_at": "2026-10-27T19:52:14Z",
+  "asof": "2026-10-27T19:52:05Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
       "key": "macro_ok",
       "label": "宏观有值项",
       "group": "宏观",
-      "value": 9,
-      "unit": "/9",
+      "value": 10,
+      "unit": "/10",
       "status": "ok",
       "source": "macro_indicators"
     },
@@ -26,7 +26,7 @@
       "key": "cpi_yoy_surprise",
       "label": "CPI预期差",
       "group": "宏观",
-      "value": 0.14,
+      "value": 0.1,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
@@ -53,7 +53,7 @@
       "key": "cpi_mom_surprise",
       "label": "CPI月率预期差",
       "group": "宏观",
-      "value": 0.35,
+      "value": 0.3,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
@@ -62,7 +62,7 @@
       "key": "fg_score",
       "label": "恐惧贪婪",
       "group": "情绪",
-      "value": 27.2,
+      "value": 33.14,
       "unit": "",
       "status": "ok",
       "source": "market_indicators"
@@ -71,7 +71,7 @@
       "key": "fed_hold",
       "label": "最近会议按兵不动概率",
       "group": "情绪",
-      "value": 81.2,
+      "value": 88.9,
       "unit": "%",
       "status": "ok",
       "source": "market_indicators"
@@ -107,7 +107,7 @@
       "key": "serenity_verified",
       "label": "已核验",
       "group": "供应链",
-      "value": 10,
+      "value": 9,
       "unit": "/10",
       "status": "ok",
       "source": "serenity_verified"
@@ -116,7 +116,7 @@
       "key": "news_bull",
       "label": "新闻利好",
       "group": "新闻",
-      "value": 6,
+      "value": 8,
       "unit": "/100",
       "status": "ok",
       "source": "news_data"
@@ -125,7 +125,7 @@
       "key": "news_bear",
       "label": "新闻利空",
       "group": "新闻",
-      "value": 8,
+      "value": 4,
       "unit": "/100",
       "status": "ok",
       "source": "news_data"
@@ -134,8 +134,8 @@
       "key": "speaker_bear",
       "label": "讲话利空",
       "group": "新闻",
-      "value": 0,
-      "unit": "/5",
+      "value": 2,
+      "unit": "/20",
       "status": "ok",
       "source": "macro.speakers"
     }
