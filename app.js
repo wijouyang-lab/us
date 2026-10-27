@@ -1563,7 +1563,17 @@
     var spk = m.speakers || [];
 
     var econHtml = '<div class="news-sub">📊 经济数据</div>';
-    if (!econ.length) {
+    var ind = DATA && DATA.macro_indicators;
+    if (ind && ind.items && ind.items.length) {
+      /* 新的九项宏观指标（fetch_macro_indicators.py 生成）；旧 economic 仅作降级。 */
+      econHtml += '<div class="macro-econ-grid">' + ind.items.map(macroIndicatorCard).join('') + '</div>';
+      var aiBox = DATA.macro_cpi_ai;
+      if (aiBox && aiBox.analysis) {
+        econHtml += '<div class="macro-ai"><div class="macro-ai-h">🤖 CPI 预期差解读' +
+          (aiBox.model ? '<span class="macro-ai-m">' + esc(aiBox.model) + '</span>' : '') + '</div>' +
+          '<div class="macro-ai-b">' + esc(aiBox.analysis) + '</div></div>';
+      }
+    } else if (!econ.length) {
       econHtml += '<div class="na">暂无经济数据</div>';
     } else {
       econHtml += '<div class="macro-econ-grid">' + econ.map(macroEconCard).join('') + '</div>';
@@ -1837,6 +1847,60 @@
       '</div>' +
       '<div class="mf-nums">' + nums + '</div>' +
       (it.impact ? '<div class="mf-imp">' + esc(it.impact) + '</div>' : '') +
+      '</div>';
+  }
+
+  function forecastFor(key) {
+    var mf = DATA && DATA.macro_forecast;
+    if (!mf || !mf.items) return null;
+    if (key === 'cpi_yoy') {
+      return mf.items.find(function (x) {
+        return /CPI/.test(x.indicator || '') && !/核心/.test(x.indicator || '');
+      }) || null;
+    }
+    return null;
+  }
+
+  function macroIndicatorCard(it) {
+    if (!it) return '';
+    var v = num(it.value);
+    var unit = it.unit || '';
+    var valTxt = v === null ? NA
+      : (unit === '%' ? fmt(v, 2) + '%'
+        : unit === 'K' ? fmt(v, 0) + 'K'
+          : unit === '千桶' ? fmt(v, 0)
+            : fmt(v, 1));
+    var chg = num(it.change);
+    var chgCls = chg === null ? '' : (chg > 0 ? 'up' : (chg < 0 ? 'down' : 'flat'));
+    var chgTxt = chg === null ? '' : ((chg > 0 ? '+' : '') + fmt(chg, unit === '%' ? 2 : 0) +
+      (unit === '%' ? 'pp' : (unit === 'K' ? 'K' : '')));
+    var meta = [];
+    if (it.prev != null) {
+      meta.push('前值 ' + (unit === 'K' ? fmt(it.prev, 0) + 'K'
+        : unit === '%' ? fmt(it.prev, 2) + '%' : fmt(it.prev, 1)));
+    }
+    if (it.source) meta.push(it.source);
+    if (it.date) meta.push('数据期 ' + String(it.date).slice(0, 7));
+    var f = forecastFor(it.key);
+    var fHtml = '';
+    if (f) {
+      var d = num(f.surprise);
+      var cls = d === null ? 'flat' : (d > 0.05 ? 'up' : (d < -0.05 ? 'down' : 'flat'));
+      var dir = d === null ? '' : (d > 0.05 ? '高于预期' : (d < -0.05 ? '低于预期' : '符合预期'));
+      fHtml = '<div class="macro-fc">' +
+        '<span>预期 <b>' + fmt(f.forecast, 1) + '%</b></span>' +
+        '<span>实际 <b>' + fmt(f.actual, 1) + '%</b></span>' +
+        '<span>差值 <b>' + (d > 0 ? '+' : '') + fmt(d, 2) + 'pp</b></span>' +
+        '<span class="' + cls + '">' + dir + '</span></div>';
+    }
+    return '<div class="macro-econ">' +
+      '<div class="macro-econ-h">' + esc(it.name || '') +
+        (it.value === null ? ' <span class="macro-kind">数据缺失</span>' : '') + '</div>' +
+      '<div class="macro-econ-v">' + esc(valTxt) +
+        (chgTxt ? ' <span class="macro-d ' + chgCls + '">' + (chg > 0 ? '▲' : (chg < 0 ? '▼' : '→')) + chgTxt.replace(/^[+-]/, '') + '</span>' : '') +
+      '</div>' +
+      (fHtml || '') +
+      (meta.length ? '<div class="macro-econ-m">' + esc(meta.join(' · ')) + '</div>' : '') +
       '</div>';
   }
 
@@ -2258,6 +2322,10 @@
     { name: '利率与汇率', keys: ['rate', 'fx'] },
     { name: '商品与能源', keys: ['commodity', 'energy'] }
   ];
+  function nmKey(s) {
+    return String(s || '').replace(/[\s·（）()\-_]/g, '').toLowerCase();
+  }
+
   function renderGlobal() {
     var assets = MARKET.assets || [];
     var avail = num(MARKET.available_count) || assets.filter(function (a) { return a.available; }).length;
@@ -2275,8 +2343,19 @@
     var sub = $('#gmSub');
     if (sub) sub.textContent = '全球市场 · ' + assets.length + ' 项 · 有价 ' + avail;
 
-    $('#globalWrap').innerHTML = GM_GROUPS.map(function (g) {
-      var items = assets.filter(function (a) { return g.keys.indexOf(a.group) >= 0; });
+    var mount = $('#macroGlobal') || $('#globalWrap');
+    if (!mount) return;
+    /* 与宏观九项指标去重：同名（去掉空格/符号后）不再重复展示 */
+    var dup = {};
+    if (DATA && DATA.macro_indicators && DATA.macro_indicators.items) {
+      DATA.macro_indicators.items.forEach(function (i) {
+        if (i && i.name) dup[nmKey(i.name)] = 1;
+      });
+    }
+    mount.innerHTML = GM_GROUPS.map(function (g) {
+      var items = assets.filter(function (a) {
+        return g.keys.indexOf(a.group) >= 0 && !dup[nmKey(a.name)];
+      });
       if (!items.length) return '';
       return '<div class="ggroup"><div class="gg-h">' + g.name + '</div><div class="gg-grid">' +
         items.map(function (a) {

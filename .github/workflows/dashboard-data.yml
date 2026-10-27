@@ -127,6 +127,21 @@ jobs:
           CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
 
+      - name: Fetch macro indicators (9 items)
+        # FRED + ISM + EIA；逐项 fail-closed（拿不到写 null），只写 macro_indicators.json。
+        run: python dashboard/fetch_macro_indicators.py
+        continue-on-error: true
+        timeout-minutes: 5
+
+      - name: CPI expected-diff AI (only on change)
+        # 只有 CPI/核心CPI 的期间/预期/实际变化时才调用 AI；signature 相同直接跳过。
+        run: python dashboard/macro_cpi_ai.py
+        continue-on-error: true
+        timeout-minutes: 5
+        env:
+          CLAWSOCKET_API_KEY: ${{ secrets.CLAWSOCKET_API_KEY }}
+          CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
+
       - name: Fetch market indicators (flag-gated)
         # F&G + FedWatch：flag 关（vars.ENABLE_MARKET_INDICATORS 未设）时整个步骤跳过，
         # dashboard_export 读不到 market_indicators.json → payload 不含该键 → 前端板块隐藏，
@@ -237,6 +252,8 @@ jobs:
           if [ -f dashboard/data/market_indicators.json ]; then git add dashboard/data/market_indicators.json; fi
           # 超跌观察候选：规则版筛选每次刷新重写；文件不存在时跳过。
           if [ -f dashboard/data/oversold_candidates.json ]; then git add dashboard/data/oversold_candidates.json; fi
+          if [ -f dashboard/data/macro_indicators.json ]; then git add dashboard/data/macro_indicators.json; fi
+          if [ -f dashboard/data/macro_cpi_ai.json ]; then git add dashboard/data/macro_cpi_ai.json; fi
           if git diff --cached --quiet; then
             echo "数据无变化，跳过提交"
             exit 0
@@ -273,7 +290,7 @@ jobs:
               # 回退掉。这里只保留本轮数据文件，其它路径一律恢复成 origin/main 版本。
               for f in $(git diff --cached --name-only); do
                 case "$f" in
-                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
+                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
                     ;;
                   *)
                     git checkout origin/main -- "$f" 2>/dev/null || true

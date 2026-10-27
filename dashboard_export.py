@@ -2688,6 +2688,72 @@ def _read_skill_serenity(data_dir: Path):
         return None
 
 
+# 哨兵：macro_cpi_ai.json 不存在 → 不注入键（前端不显示 CPI AI 解读）。
+_MACRO_CPI_AI_MISSING = object()
+
+
+def _read_macro_cpi_ai(data_dir: Path):
+    """读 CPI 预期差 AI 解读（只在数据变化时由脚本重生成）。"""
+    p = data_dir / "dashboard" / "data" / "macro_cpi_ai.json"
+    if not p.exists():
+        return _MACRO_CPI_AI_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    if not isinstance(raw, dict):
+        return None
+    analysis = clean_text(raw.get("analysis"))
+    if not analysis:
+        return None
+    return {
+        "signature": clean_text(raw.get("signature")) or None,
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "model": clean_text(raw.get("model")) or None,
+        "analysis": analysis[:800],
+    }
+
+
+# 哨兵：macro_indicators.json 不存在 → 不注入键（前端沿用旧宏观数据）。
+_MACRO_IND_MISSING = object()
+
+
+def _read_macro_indicators(data_dir: Path):
+    """读「美股宏观九项指标」→ 注入 `macro_indicators`（只透传，不计算）。"""
+    p = data_dir / "dashboard" / "data" / "macro_indicators.json"
+    if not p.exists():
+        return _MACRO_IND_MISSING
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as e:
+        log(f"[WARN] 宏观指标读取失败（{e}），macro_indicators 输出 null")
+        return None
+    if not isinstance(raw, dict):
+        return None
+    items = []
+    for r in (raw.get("items") or [])[:20]:
+        if not isinstance(r, dict):
+            continue
+        items.append({
+            "key": clean_text(r.get("key")) or None,
+            "name": clean_text(r.get("name")) or None,
+            "value": round_num(parse_num(r.get("value")), 2),
+            "unit": clean_text(r.get("unit")) or "",
+            "date": clean_text(r.get("date")) or None,
+            "prev": round_num(parse_num(r.get("prev")), 2),
+            "change": round_num(parse_num(r.get("change")), 2),
+            "source": clean_text(r.get("source")) or None,
+            "note": clean_text(r.get("note")) or None,
+        })
+    return {
+        "schema": int(parse_num(raw.get("schema")) or 1),
+        "generated_at": clean_text(raw.get("generated_at")) or None,
+        "count": len(items),
+        "ok": int(parse_num(raw.get("ok")) or 0),
+        "items": items,
+    }
+
+
 # 哨兵：macro_forecast.json 不存在 → 不注入键（前端隐藏「预期 vs 实际」）。
 _MACRO_FORECAST_MISSING = object()
 
@@ -3984,6 +4050,16 @@ def main(argv=None):
     mf = _read_macro_forecast(data_dir)
     if mf is not _MACRO_FORECAST_MISSING:
         payload["macro_forecast"] = mf
+
+    # ---- 美股宏观九项指标（文件缺失 → 不注入键，前端沿用旧数据）----
+    mi = _read_macro_indicators(data_dir)
+    if mi is not _MACRO_IND_MISSING:
+        payload["macro_indicators"] = mi
+
+    # ---- CPI 预期差 AI 解读（文件缺失 → 不注入键）----
+    cai = _read_macro_cpi_ai(data_dir)
+    if cai is not _MACRO_CPI_AI_MISSING:
+        payload["macro_cpi_ai"] = cai
 
     # ---- serenity-skill 供应链分析（flag 关 / 文件缺失 → 不注入键，保持逐字节一致）----
     sk = _read_skill_serenity(data_dir)

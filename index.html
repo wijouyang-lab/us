@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
-<link rel="stylesheet" href="app.css?v=runtime17">
+<link rel="stylesheet" href="app.css?v=runtime18">
 </head>
 <body>
 
@@ -64,12 +64,14 @@
     <div id="newsTickers" class="news-block"></div>
   </section>
 
-  <!-- 美股宏观板块（经济数据 + 重要人物讲话；数据来自 macro_data.json，ENABLE_MACRO_PANEL=1 时由 scan 生成） -->
+  <!-- 🌍 Global Markets · 美股宏观（合并板块：全球市场 + 九项宏观指标 + 重要讲话） -->
   <section class="card sec" id="macroCard">
     <div class="sec-h">
-      <h2>📈 美股宏观板块</h2>
-      <span class="sec-sub" id="macroSub">经济数据 · 重要人物讲话</span>
+      <h2>🌍 Global Markets · 美股宏观</h2>
+      <span class="sec-sub" id="macroSub">全球市场 · 经济数据 · 重要人物讲话</span>
     </div>
+    <div class="news-sub" style="margin-bottom:6px">🌐 全球市场</div>
+    <div id="macroGlobal"></div>
     <div id="macroBody"></div>
   </section>
 
@@ -141,16 +143,8 @@
     <div id="quantPhases"></div>
   </section>
 
-  <!-- 4. Global Markets + 12. Review + Options + History -->
+  <!-- 4. Review + Options + History（Global Markets 已并入上方宏观板块） -->
   <div class="grid-bottom">
-    <section class="card sec">
-      <div class="sec-h">
-        <h2>Global Markets</h2>
-        <span class="sec-sub" id="gmSub">全球市场</span>
-      </div>
-      <div id="gmNotice"></div>
-      <div id="globalWrap"></div>
-    </section>
 
     <!-- 市场情绪指标（F&G + FedWatch；数据来自 market_indicators.json，flag 关时整块隐藏） -->
     <section class="card sec" id="marketIndicatorsCard" style="display:none">
@@ -313,6 +307,6 @@
   </div>
 </div>
 
-<script src="app.js?v=runtime17"></script>
+<script src="app.js?v=runtime18"></script>
 </body>
 </html>

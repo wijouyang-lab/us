@@ -710,3 +710,13 @@ button{font-family:inherit}
 .ss-rank{display:inline-block;min-width:30px;font-size:12px;font-weight:800;color:#fff;
   background:var(--accent);border-radius:6px;padding:2px 7px;text-align:center}
 .ss-foot{margin-top:12px;font-size:11.5px;color:var(--text-3);text-align:center}
+
+/* 九项宏观指标：预期/实际 + AI 解读 */
+.macro-fc{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;font-size:10.5px;color:var(--text-3)}
+.macro-fc b{color:var(--text);font-variant-numeric:tabular-nums}
+.macro-fc .up{color:var(--up);font-weight:700}
+.macro-fc .down{color:var(--down);font-weight:700}
+.macro-ai{margin-top:8px;border:1px solid var(--border-2);border-radius:8px;background:var(--soft);padding:8px 10px}
+.macro-ai-h{font-size:11.5px;font-weight:700;color:var(--text-2);display:flex;gap:8px;align-items:center}
+.macro-ai-m{font-size:10px;color:var(--text-3);font-weight:400}
+.macro-ai-b{margin-top:4px;font-size:11px;line-height:1.55;color:var(--text-2)}
