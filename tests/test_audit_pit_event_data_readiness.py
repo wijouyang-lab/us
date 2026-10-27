@@ -159,10 +159,12 @@ def test_audit_requires_review_provenance_and_separates_ambiguous_labels(tmp_pat
     ]), encoding="utf-8")
     result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
     assert result["status"] == "blocked_no_validated_labels"
-    assert result["label_quality"]["reviewed_annotations_with_valid_provenance"] == 1
+    assert result["label_quality"]["reviewed_annotations_with_valid_provenance"] == 0
     assert result["label_quality"]["reviewed_labels"] == 0
     assert result["label_quality"]["unverified_label_provenance"] == 0
-    assert result["readiness_gates"]["label_review_provenance_present"] is True
+    assert result["readiness_gates"]["label_review_provenance_present"] is False
+    assert result["readiness_gates"]["pit_eligibility_evaluated"] is False
+    assert result["readiness_gates"]["pit_eligible_for_at_least_one_decision"] is False
 
 
 def test_audit_does_not_accept_numeric_scores_without_reviewer_provenance(tmp_path):
@@ -187,3 +189,28 @@ def test_audit_blocks_mixed_archive_with_unverified_label_claim(tmp_path):
     assert result["label_quality"]["reviewed_labels"] == 1
     assert result["label_quality"]["unverified_label_provenance"] == 1
     assert result["readiness_gates"]["label_review_provenance_present"] is False
+
+
+def test_audit_requires_decision_timestamps_before_claiming_pit_eligibility(tmp_path):
+    archive = tmp_path / "archive.json"
+    archive.write_text(json.dumps([event()]), encoding="utf-8")
+
+    result = audit_event_archive(archive, audited_at="2026-01-04T00:00:00Z")
+
+    assert result["pit_eligibility"]["decision_dates"] == 0
+    assert result["readiness_gates"]["pit_eligibility_evaluated"] is False
+    assert result["readiness_gates"]["pit_eligible_for_at_least_one_decision"] is False
+
+
+def test_audit_marks_pit_eligibility_true_only_after_explicit_decision_passes(tmp_path):
+    archive = tmp_path / "archive.json"
+    decisions = tmp_path / "decisions.csv"
+    archive.write_text(json.dumps([event()]), encoding="utf-8")
+    pd.DataFrame([{"decision_at": "2026-01-03T12:00:00Z"}]).to_csv(decisions, index=False)
+
+    result = audit_event_archive(
+        archive, decisions_path=decisions, audited_at="2026-01-04T00:00:00Z"
+    )
+
+    assert result["readiness_gates"]["pit_eligibility_evaluated"] is True
+    assert result["readiness_gates"]["pit_eligible_for_at_least_one_decision"] is True
