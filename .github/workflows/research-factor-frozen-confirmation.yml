@@ -1,0 +1,55 @@
+name: Research Factor Frozen Confirmation (future holdout)
+
+on:
+  workflow_dispatch:
+    inputs:
+      evaluation_start_date:
+        description: First eligible snapshot date; must be later than the preregistration date.
+        required: true
+        default: "2026-10-27"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: research-factor-frozen-confirmation
+  cancel-in-progress: true
+
+jobs:
+  confirm:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install research test dependencies
+        run: python -m pip install --upgrade pip numpy pandas scipy pytest
+      - name: Compile the research validator and tests
+        run: python -m py_compile tools/research/run_formula_factor_validation.py tests/test_formula_factor_validation.py
+      - name: Test frozen holdout controls
+        run: python -m pytest tests/test_formula_factor_validation.py -q
+      - name: Check tracked point-in-time dataset
+        run: test -s research_backtest_sp500_pit_2y.csv
+      - name: Evaluate preregistered candidates on future snapshots only
+        run: |
+          python tools/research/run_formula_factor_validation.py \
+            --input research_backtest_sp500_pit_2y.csv \
+            --output-dir formula-factor-frozen-confirmation \
+            --max-base-factors 8 \
+            --factor-columns "ATR_Pct,Realized_Volatility_20D_Pct,Momentum_20D_Pct,RSI,Momentum_20D_Acceleration_20_Snapshots,RSI_Change_5_Snapshots,ATR_Pct_Change_20_Snapshots,Close_to_252D_High_Pct" \
+            --candidate-allowlist "diff__Realized_Volatility_20D_Pct__RSI_Change_5_Snapshots,prod__ATR_Pct__Momentum_20D_Acceleration_20_Snapshots,prod__Realized_Volatility_20D_Pct__Momentum_20D_Acceleration_20_Snapshots,z__Close_to_252D_High_Pct" \
+            --target-columns "Forward_Return_20D" \
+            --evaluation-start-date "${{ inputs.evaluation_start_date }}" \
+            --preregistered-on "2026-10-26" \
+            --phase-offsets "1,4" \
+            --cost-bps 5 \
+            --min-names 10
+      - name: Upload frozen confirmation results
+        uses: actions/upload-artifact@v4
+        with:
+          name: formula-factor-frozen-confirmation-${{ github.run_id }}
+          path: formula-factor-frozen-confirmation/
+          if-no-files-found: error
+          retention-days: 90

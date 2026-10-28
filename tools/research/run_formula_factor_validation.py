@@ -339,6 +339,7 @@ def _low_frequency_phase_metrics(
     horizon: int,
     cost_bps: float,
     cost_scenarios: list[float],
+    phase_offsets: list[int] | None = None,
 ) -> list[dict]:
     """Evaluate horizon-spaced, non-overlapping holding windows for every start phase.
 
@@ -350,6 +351,14 @@ def _low_frequency_phase_metrics(
     """
     if horizon < 1:
         raise ValueError("horizon must be positive")
+    if phase_offsets is None:
+        phases = list(range(horizon))
+    else:
+        phases = sorted(set(int(value) for value in phase_offsets))
+        if not phases:
+            raise ValueError("phase_offsets must contain at least one offset")
+        if any(value < 0 or value >= horizon for value in phases):
+            raise ValueError("phase offsets must be between 0 and horizon - 1")
     session_positions = {
         pd.Timestamp(session_date): index
         for index, session_date in enumerate(session_dates)
@@ -367,7 +376,7 @@ def _low_frequency_phase_metrics(
         return sampled.loc[keep].drop(columns=["_session_index"]).copy()
 
     phase_rows = []
-    for phase in range(horizon):
+    for phase in phases:
         phase_raw = _attach_turnover_costs(select_phase(daily, phase), cost_bps)
         phase_winsorized = _attach_turnover_costs(
             select_phase(winsorized_daily, phase), cost_bps
@@ -411,9 +420,113 @@ def _low_frequency_phase_metrics(
     return phase_rows
 
 
+TEMPORAL_FEATURE_SPECS = (
+    ("Momentum_20D_Acceleration_20_Snapshots", "Momentum_20D_Pct", 20),
+    ("RSI_Change_5_Snapshots", "RSI", 5),
+    ("ATR_Pct_Change_20_Snapshots", "ATR_Pct", 20),
+)
+PRICE_HIGH_LOOKBACK_SESSIONS = 252
+
+
+def _add_temporal_feature_changes(
+    frame: pd.DataFrame,
+    *,
+    date_column: str = "Snapshot_Date",
+    ticker_column: str = "Ticker",
+) -> pd.DataFrame:
+    """Add lagged feature changes using only the same ticker's prior snapshots.
+
+    Lags use the sorted snapshot calendar in the source dataset, not calendar
+    days and not a ticker-specific row shift. Missing ticker snapshots stay
+    missing rather than silently extending the lookback. When Price is present,
+    also add the close's distance from its rolling 252-session high, requiring
+    a complete window on that same shared snapshot calendar.
+    """
+    if date_column not in frame.columns:
+        raise ValueError(f"missing required date column for temporal factors: {date_column}")
+    if ticker_column not in frame.columns:
+        return frame.copy()
+
+    result = frame.copy()
+    dates = pd.to_datetime(result[date_column], errors="coerce").dt.normalize()
+    if dates.isna().any():
+        raise ValueError("temporal factors require valid snapshot dates")
+    tickers = result[ticker_column].astype("string")
+    if tickers.isna().any():
+        raise ValueError("temporal factors require non-missing ticker identifiers")
+
+    session_positions = {
+        pd.Timestamp(value): index
+        for index, value in enumerate(sorted(dates.unique()))
+    }
+    session_index = dates.map(session_positions).to_numpy(dtype=int)
+    ticker_values = tickers.astype(str).to_numpy()
+    lookup_index = pd.MultiIndex.from_arrays([ticker_values, session_index])
+    if lookup_index.has_duplicates:
+        raise ValueError("temporal factors require unique ticker/date rows")
+
+    if "Price" in result.columns:
+        # A 252-session rolling high is built on the shared source calendar.
+        # Reindexing each ticker onto every session means any missing bar inside
+        # the window keeps the feature missing rather than shortening lookback.
+        price_values = pd.to_numeric(result["Price"], errors="coerce").replace(
+            [np.inf, -np.inf], np.nan
+        ).to_numpy(dtype=float, na_value=np.nan)
+        unique_tickers, row_ticker_positions = np.unique(
+            ticker_values, return_inverse=True
+        )
+        price_history = np.full(
+            (len(unique_tickers), len(session_positions)), np.nan, dtype=float
+        )
+        price_history[row_ticker_positions, session_index] = price_values
+        rolling_high = np.full_like(price_history, np.nan)
+        for ticker_position, ticker_prices in enumerate(price_history):
+            rolling_high[ticker_position] = (
+                pd.Series(ticker_prices)
+                .rolling(
+                    window=PRICE_HIGH_LOOKBACK_SESSIONS,
+                    min_periods=PRICE_HIGH_LOOKBACK_SESSIONS,
+                )
+                .max()
+                .to_numpy(dtype=float)
+            )
+        row_high = rolling_high[row_ticker_positions, session_index]
+        valid = (
+            np.isfinite(price_values)
+            & np.isfinite(row_high)
+            & (row_high > 0)
+        )
+        proximity = np.full(len(result), np.nan, dtype=float)
+        proximity[valid] = (price_values[valid] / row_high[valid] - 1.0) * 100.0
+        result["Close_to_252D_High_Pct"] = proximity
+
+    for output_column, source_column, lag_snapshots in TEMPORAL_FEATURE_SPECS:
+        if source_column not in result.columns:
+            continue
+        values = pd.to_numeric(result[source_column], errors="coerce").replace(
+            [np.inf, -np.inf], np.nan
+        )
+        history = pd.Series(
+            values.to_numpy(dtype=float, na_value=np.nan),
+            index=lookup_index,
+        )
+        lag_index = pd.MultiIndex.from_arrays([
+            ticker_values,
+            session_index - lag_snapshots,
+        ])
+        lagged = history.reindex(lag_index).to_numpy(dtype=float)
+        result[output_column] = values.to_numpy(dtype=float, na_value=np.nan) - lagged
+    return result
+
+
 def run(input_path: str, output_dir: str, max_base_factors: int = 8,
         cost_bps: float = 5.0, min_names: int = 10,
-        requested_factors: list[str] | None = None):
+        requested_factors: list[str] | None = None,
+        evaluation_start_date: str | None = None,
+        preregistered_on: str | None = None,
+        candidate_allowlist: list[str] | None = None,
+        target_columns: list[str] | None = None,
+        phase_offsets: list[int] | None = None):
     source = pd.read_csv(input_path)
     date_col = next((c for c in ("Snapshot_Date", "Technical_Date", "Scan_Date") if c in source), None)
     if date_col is None:
@@ -421,10 +534,53 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
     source = source.copy()
     source["Snapshot_Date"] = pd.to_datetime(source[date_col], errors="coerce").dt.normalize()
     source = source.dropna(subset=["Snapshot_Date"])
+
+    parsed_evaluation_start = None
+    if evaluation_start_date is not None:
+        parsed_evaluation_start = pd.to_datetime(evaluation_start_date, errors="coerce")
+        if pd.isna(parsed_evaluation_start):
+            raise ValueError("evaluation_start_date must be a valid date")
+        parsed_evaluation_start = parsed_evaluation_start.normalize()
+    parsed_preregistered_on = None
+    if preregistered_on is not None:
+        parsed_preregistered_on = pd.to_datetime(preregistered_on, errors="coerce")
+        if pd.isna(parsed_preregistered_on):
+            raise ValueError("preregistered_on must be a valid date")
+        parsed_preregistered_on = parsed_preregistered_on.normalize()
+    candidate_allowlist = list(dict.fromkeys(candidate_allowlist or []))
+    target_columns = list(dict.fromkeys(target_columns or []))
+    if candidate_allowlist and parsed_evaluation_start is None:
+        raise ValueError("candidate_allowlist requires evaluation_start_date")
+    if parsed_preregistered_on is not None:
+        if parsed_evaluation_start is None:
+            raise ValueError("preregistered_on requires evaluation_start_date")
+        if parsed_evaluation_start <= parsed_preregistered_on:
+            raise ValueError("evaluation_start_date must be after preregistered_on")
+
+    # Construct temporal features on the full history so the first eligible
+    # holdout rows can use only their earlier snapshots.
+    source = _add_temporal_feature_changes(source)
+    if parsed_evaluation_start is not None:
+        latest_snapshot = source["Snapshot_Date"].max()
+        source = source.loc[source["Snapshot_Date"] >= parsed_evaluation_start].copy()
+        if source.empty:
+            raise ValueError(
+                f"no evaluation rows on or after {parsed_evaluation_start.date()}; "
+                f"latest available snapshot is {latest_snapshot.date()}"
+            )
+        source = source.reset_index(drop=True)
+
     # Anchor phases to sorted source snapshot dates, not a factor-specific subset,
     # so missing factor values cannot shift a candidate's rebalance calendar.
     session_dates = [pd.Timestamp(value) for value in sorted(source["Snapshot_Date"].unique())]
-    targets = [c for c in source.columns if c.upper().startswith("FORWARD_RETURN_")]
+    available_targets = [c for c in source.columns if c.upper().startswith("FORWARD_RETURN_")]
+    if target_columns:
+        missing_targets = sorted(set(target_columns) - set(available_targets))
+        if missing_targets:
+            raise ValueError(f"requested target columns are not available: {missing_targets}")
+        targets = target_columns
+    else:
+        targets = available_targets
     cost_scenarios = sorted(set(float(value) for value in COST_SENSITIVITY_BPS) | {float(cost_bps)})
     if not targets:
         raise ValueError("input contains no Forward_Return_ND label columns")
@@ -449,6 +605,16 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
         source, selected, date_column="Snapshot_Date",
         max_base_factors=max_base_factors,
     )
+    if candidate_allowlist:
+        generated_candidates = {meta["candidate"] for meta in metadata}
+        missing_candidates = sorted(set(candidate_allowlist) - generated_candidates)
+        if missing_candidates:
+            raise ValueError(f"allowlisted candidates were not generated: {missing_candidates}")
+        metadata = [
+            meta for meta in metadata
+            if meta["candidate"] in set(candidate_allowlist)
+        ]
+        candidates = candidates[[meta["candidate"] for meta in metadata]]
     work = pd.concat([source[["Snapshot_Date", "Ticker"]].reset_index(drop=True),
                       candidates.reset_index(drop=True)], axis=1)
     # Keep the raw labels as the primary analysis. A separate per-date
@@ -481,7 +647,7 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             )
             low_frequency_phase_results = _low_frequency_phase_metrics(
                 daily_metrics, winsorized_metrics, session_dates, horizon, cost_bps,
-                cost_scenarios,
+                cost_scenarios, phase_offsets=phase_offsets,
             )
             for key, value in winsorized_summary.items():
                 summary[f"winsorized_{key}"] = value
@@ -700,6 +866,12 @@ def run(input_path: str, output_dir: str, max_base_factors: int = 8,
             "available_numeric_feature_count": len(feature_cols),
             "selected_base_features": selected,
             "candidate_count": len(metadata),
+            "candidate_allowlist": candidate_allowlist or None,
+            "target_columns": targets,
+            "evaluation_start_date": parsed_evaluation_start.date().isoformat() if parsed_evaluation_start is not None else None,
+            "preregistered_on": parsed_preregistered_on.date().isoformat() if parsed_preregistered_on is not None else None,
+            "evaluation_snapshot_count": len(session_dates),
+            "phase_offsets": sorted(set(phase_offsets)) if phase_offsets is not None else None,
             "cost_bps_per_leg": cost_bps,
             "cost_sensitivity_one_way_bps": cost_scenarios,
             "inference_method": "Daily overlapping-label metrics and their cost sensitivities use Newey-West HAC with lag horizon-1. Horizon-spaced low-frequency phase results and their cost sensitivities use HAC lag 1, matching one non-overlapping holding period between rebalance observations. Daily cost tests correct candidate × cost-level tests jointly with Benjamini-Yekutieli within each horizon; low-frequency cost tests correct candidate × phase × cost-level tests jointly with Benjamini-Yekutieli within horizon. Raw and winsorized outcomes are separate families. Phase and cost scenarios are correlated diagnostics, not independent strategies. P-values use a two-sided normal approximation.",
@@ -723,11 +895,35 @@ def main():
         "--factor-columns", default="",
         help="Comma-separated priority list; available columns are selected first before the cap",
     )
+    parser.add_argument("--evaluation-start-date", default=None,
+                        help="Include evaluation snapshots on/after this date; temporal features are built from earlier history first")
+    parser.add_argument("--preregistered-on", default=None,
+                        help="Require evaluation-start-date to be strictly later than this registration date")
+    parser.add_argument("--candidate-allowlist", default="",
+                        help="Comma-separated exact candidate names to evaluate; requires an evaluation start date")
+    parser.add_argument("--target-columns", default="",
+                        help="Comma-separated exact Forward_Return_ND target columns")
+    parser.add_argument("--phase-offsets", default="",
+                        help="Comma-separated low-frequency phase offsets to evaluate")
     args = parser.parse_args()
     if args.max_base_factors < 2 or args.min_names < 5 or args.cost_bps < 0:
         parser.error("max-base-factors >= 2, min-names >= 5, and cost-bps >= 0 are required")
     requested = [x.strip() for x in args.factor_columns.split(",") if x.strip()]
-    run(args.input, args.output_dir, args.max_base_factors, args.cost_bps, args.min_names, requested)
+    candidates = [x.strip() for x in args.candidate_allowlist.split(",") if x.strip()]
+    targets = [x.strip() for x in args.target_columns.split(",") if x.strip()]
+    try:
+        phase_offsets = [int(x.strip()) for x in args.phase_offsets.split(",") if x.strip()]
+    except ValueError:
+        parser.error("phase-offsets must be comma-separated integers")
+    run(
+        args.input, args.output_dir, args.max_base_factors, args.cost_bps,
+        args.min_names, requested,
+        evaluation_start_date=args.evaluation_start_date,
+        preregistered_on=args.preregistered_on,
+        candidate_allowlist=candidates,
+        target_columns=targets,
+        phase_offsets=phase_offsets if args.phase_offsets else None,
+    )
 
 
 if __name__ == "__main__":

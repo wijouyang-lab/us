@@ -355,3 +355,82 @@ def test_low_frequency_cost_sensitivity_uses_same_hac_as_phase_summary(tmp_path)
         assert scenario["winsorized_turnover_aware_spread_hac_p_value"] == (
             phase["winsorized_turnover_aware_spread_hac_p_value"]
         )
+
+
+def _frozen_holdout_frame():
+    dates = pd.date_range("2026-08-03", periods=45, freq="B")
+    rows = []
+    for session, day in enumerate(dates):
+        for ticker_no in range(12):
+            rank = ticker_no - 5.5
+            rows.append({
+                "Technical_Date": day,
+                "Ticker": f"T{ticker_no:02}",
+                "Momentum_20D_Pct": float(session * rank),
+                "ATR_Pct": float(1.0 + ticker_no * 0.1),
+                "Forward_Return_5D": float(rank * 0.001 + session * 0.00001),
+                "Forward_Return_20D": float(rank * 0.002 + session * 0.00002),
+            })
+    return pd.DataFrame(rows), dates
+
+
+def test_frozen_candidate_run_uses_future_dates_and_prior_history_for_features(tmp_path):
+    frame, dates = _frozen_holdout_frame()
+    inp, out = tmp_path / "frozen.csv", tmp_path / "frozen_out"
+    frame.to_csv(inp, index=False)
+
+    run(
+        str(inp), str(out), max_base_factors=2, cost_bps=5, min_names=10,
+        requested_factors=["Momentum_20D_Acceleration_20_Snapshots"],
+        evaluation_start_date=dates[25].date().isoformat(),
+        preregistered_on="2026-08-01",
+        candidate_allowlist=["z__Momentum_20D_Acceleration_20_Snapshots"],
+        target_columns=["Forward_Return_5D"],
+        phase_offsets=[1, 4],
+    )
+
+    report = json.loads((out / "formula_factor_report.json").read_text())
+    assert report["research_only"] is True
+    assert report["evaluation_start_date"] == dates[25].date().isoformat()
+    assert report["preregistered_on"] == "2026-08-01"
+    assert report["evaluation_snapshot_count"] == 20
+    assert report["rows"] == 20 * 12
+    assert report["target_columns"] == ["Forward_Return_5D"]
+    assert report["candidate_allowlist"] == ["z__Momentum_20D_Acceleration_20_Snapshots"]
+    assert report["candidate_count"] == 1
+
+    row = report["results"][0]
+    assert row["candidate"] == "z__Momentum_20D_Acceleration_20_Snapshots"
+    assert row["n_days"] == 20
+    assert row["n_stock_day_observations"] == 20 * 12
+    assert [phase["phase_offset_sessions"] for phase in row["low_frequency_phase_results"]] == [1, 4]
+
+
+def test_frozen_candidate_run_rejects_cutoffs_not_after_registration(tmp_path):
+    frame, dates = _frozen_holdout_frame()
+    inp = tmp_path / "frozen.csv"
+    frame.to_csv(inp, index=False)
+
+    with pytest.raises(ValueError, match="after preregistered_on"):
+        run(
+            str(inp), str(tmp_path / "bad_cutoff"), max_base_factors=2,
+            requested_factors=["Momentum_20D_Acceleration_20_Snapshots"],
+            evaluation_start_date="2026-08-03",
+            preregistered_on="2026-08-03",
+            candidate_allowlist=["z__Momentum_20D_Acceleration_20_Snapshots"],
+        )
+
+
+def test_frozen_candidate_run_rejects_dates_without_post_registration_rows(tmp_path):
+    frame, dates = _frozen_holdout_frame()
+    inp = tmp_path / "frozen.csv"
+    frame.to_csv(inp, index=False)
+
+    with pytest.raises(ValueError, match="no evaluation rows"):
+        run(
+            str(inp), str(tmp_path / "no_holdout"), max_base_factors=2,
+            requested_factors=["Momentum_20D_Acceleration_20_Snapshots"],
+            evaluation_start_date="2026-11-01",
+            preregistered_on="2026-10-26",
+            candidate_allowlist=["z__Momentum_20D_Acceleration_20_Snapshots"],
+        )
