@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Readiness check for post-event price bars and forward returns.
 
 This tool does not run an event study. It only answers whether a given event
@@ -34,7 +34,16 @@ def _invalid_ohlc(row: Mapping[str, Any]) -> bool:
 def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
              as_of: str, adjusted_price_available: bool = False,
              corporate_actions_verified: bool = False,
-             market_proxy: str | None = None) -> dict[str, Any]:
+             market_proxy: str | None = None,
+             research_mode: str = "stock",
+             proxy_metadata: Mapping[str, Any] | None = None) -> dict[str, Any]:
+    if research_mode not in {"stock", "market_proxy_spy"}:
+        raise ValueError("research_mode must be stock or market_proxy_spy")
+    proxy_metadata = dict(proxy_metadata or {})
+    proxy_adjusted = bool(proxy_metadata.get("adjusted_close_available"))
+    adj_ok = True if research_mode == "market_proxy_spy" and proxy_adjusted else adjusted_price_available
+    corp_basis = "provider_adjustment_only" if research_mode == "market_proxy_spy" else "unverified"
+    corp_ok = True if research_mode == "market_proxy_spy" and proxy_adjusted else corporate_actions_verified
     as_of_dt = _parse_aware_timestamp(as_of)
     if as_of_dt is None:
         raise ValueError("as_of must be timezone-aware ISO-8601")
@@ -108,9 +117,9 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
                                 reasons.append("invalid_ohlc")
                             else:
                                 returns[f"return_{h}d"] = float(exit_row["Close"] / entry_row["Close"] - 1)
-        if not adjusted_price_available:
+        if not adj_ok:
             reasons.append("adjusted_price_unavailable")
-        if not corporate_actions_verified:
+        if not corp_ok:
             reasons.append("corporate_actions_unverified")
         hard = {
             "missing_event_id", "missing_source", "missing_or_invalid_source_url",
@@ -120,7 +129,7 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
         }
         if any(r in hard for r in reasons):
             status = "excluded"
-        elif any(r.startswith("pending_future_") for r in reasons) or not adjusted_price_available or not corporate_actions_verified:
+        elif any(r.startswith("pending_future_") for r in reasons) or not adj_ok or not corp_ok:
             status = "pending_future_bar"
         else:
             status = "ready"
@@ -134,9 +143,10 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
             "entry_bar_date": entry_date.isoformat() if entry_date else None,
             "entry_close_utc": entry_close.isoformat().replace("+00:00", "Z") if entry_close else None,
             "returns": returns,
-            "price_basis": "raw_close",
-            "adjusted_price_available": adjusted_price_available,
-            "corporate_actions_verified": corporate_actions_verified,
+            "price_basis": "SPY_Adj_Close_provider" if research_mode == "market_proxy_spy" else "raw_close",
+            "adjusted_price_available": adj_ok,
+            "corporate_actions_verified": corp_ok,
+            "corporate_actions_basis": corp_basis,
             "strict_event_time": event_time is not None,
             "publication_forward_candidate": not any(r in hard for r in reasons),
             "status": status,
@@ -152,10 +162,13 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
         "lookahead_flags": 0,
         "panel_duplicate_rows": int(dup),
         "panel_invalid_rows": int(bad),
+        "research_mode": research_mode,
         "market_proxy": market_proxy,
-        "price_basis": "raw_close",
-        "adjusted_price_available": adjusted_price_available,
-        "corporate_actions_verified": corporate_actions_verified,
+        "proxy_metadata": proxy_metadata,
+        "price_basis": "SPY_Adj_Close_provider" if research_mode == "market_proxy_spy" else "raw_close",
+        "adjusted_price_available": adj_ok,
+        "corporate_actions_verified": corp_ok,
+        "corporate_actions_basis": corp_basis,
         "events": rows,
         "research_only": True,
         "no_signal": True,
@@ -168,13 +181,17 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--price-panel", required=True)
     p.add_argument("--as-of", required=True)
     p.add_argument("--output", required=True)
+    p.add_argument("--mode", choices=("stock", "market_proxy_spy"), default="stock")
     p.add_argument("--adjusted-price-available", action="store_true")
     p.add_argument("--corporate-actions-verified", action="store_true")
     p.add_argument("--market-proxy", help="Ticker used for market-wide events when no ticker is present")
     p.add_argument("--market-proxy-file", help="Optional CSV with the market proxy bars")
     p.add_argument("--market-proxy-adjusted", action="store_true",
                    help="Use the proxy Adj_Close as its close (proxy price basis is then adjusted)")
+    p.add_argument("--proxy-metadata", help="JSON metadata for the market proxy")
     args = p.parse_args(argv)
+    if args.mode == "market_proxy_spy" and not (args.market_proxy_file and args.market_proxy and args.market_proxy_adjusted):
+        raise SystemExit("market_proxy_spy requires --market-proxy-file, --market-proxy, and --market-proxy-adjusted")
     events = json.loads(Path(args.events).read_text(encoding="utf-8"))
     price = pd.read_csv(args.price_panel)
     if args.market_proxy_file:
@@ -187,10 +204,13 @@ def main(argv: list[str] | None = None) -> int:
                 raise SystemExit("proxy file has no Adj_Close")
             proxy["Close"] = proxy["Adj_Close"]
         price = pd.concat([price, proxy], ignore_index=True)
+    proxy_metadata = json.loads(Path(args.proxy_metadata).read_text(encoding="utf-8")) if args.proxy_metadata else {}
     result = evaluate(events, price, as_of=args.as_of,
                       adjusted_price_available=args.adjusted_price_available,
                       corporate_actions_verified=args.corporate_actions_verified,
-                      market_proxy=args.market_proxy)
+                      market_proxy=args.market_proxy,
+                      research_mode=args.mode,
+                      proxy_metadata=proxy_metadata)
     result["market_proxy_file"] = args.market_proxy_file
     result["market_proxy_price_basis"] = "adjusted" if args.market_proxy_adjusted else "raw"
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)

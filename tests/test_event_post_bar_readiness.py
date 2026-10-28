@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Tests for post-event price readiness; no network or strategy."""
 
 import sys
@@ -68,6 +68,17 @@ def test_market_wide_event_can_use_explicit_market_proxy():
                        market_proxy="AAA")
     assert out["ready"] == 1
     assert out["events"][0]["entity_id"] == "AAA"
+
+
+def test_market_proxy_mode_uses_provider_adjusted_spy():
+    out = mod.evaluate([event(tickers=[])], prices(ticker="SPY"),
+                       as_of="2026-10-20T00:00:00Z",
+                       market_proxy="SPY", research_mode="market_proxy_spy",
+                       proxy_metadata={"adjusted_close_available": True})
+    assert out["research_mode"] == "market_proxy_spy"
+    assert out["ready"] == 1
+    assert out["events"][0]["price_basis"] == "SPY_Adj_Close_provider"
+    assert out["events"][0]["corporate_actions_basis"] == "provider_adjustment_only"
 
 
 def test_duplicate_and_invalid_bars_are_excluded():

@@ -1,4 +1,4 @@
-﻿# SPY Market Proxy and Readiness
+# SPY Market Proxy and Readiness
 
 Date: 2026-10-28
 Research only. No production changes.
@@ -60,13 +60,15 @@ Actual:
 | publication-forward candidates | 35 |
 | look-ahead flags | 0 |
 
-Reasons on all 35:
+Reasons in explicit `market_proxy_spy` mode:
 
 ```text
 pending_future_entry_bar
-adjusted_price_unavailable
-corporate_actions_unverified
 ```
+
+The proxy uses provider `Adj_Close` (`provider_adjustment_only`). Stock-mode
+raw/unverified price-basis reasons are reported separately and are not applied
+to the market-proxy mode.
 
 The SPY proxy is available through 2026-10-27. Events were first seen
 2026-10-28, and the 2026-10-28 close is not yet available. No same-day or
