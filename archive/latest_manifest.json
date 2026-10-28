@@ -1,0 +1,26 @@
+{
+  "archive_sha256": "f331902dc94303620bee8c2cc6f5e0ae5382fef4d944dac082c8e2016546cc9d",
+  "event_versions": 35,
+  "generated_at_utc": "2026-10-28T09:02:58.711468Z",
+  "latest_run_id": "40661139681",
+  "observations": 35,
+  "observations_sha256": "ca119dc4df2e8ad435ea41589b8320b0429ba5523cf70b1d3aab717d3a3aa4bf",
+  "production_scanner_modified": false,
+  "research_only": true,
+  "run_count": 1,
+  "runs": [
+    {
+      "captured_at": "2026-10-28T09:02:58.709385Z",
+      "commit_sha": "7faac557f4fe91f87489f26daa3a8549f879568d",
+      "manifest_sha256": "81d1d84de95c45ca8403853366f4a19d2f1c4159a41a303fdf7dbb19209edea8",
+      "run_id": "40661139681",
+      "run_url": "https://github.com/wijouyang-lab/us/actions/runs/40661139681",
+      "snapshot_sha256": {
+        "audit.json": "a62403b24bc7996918c79072d86176d4565b039048c4a35a39a60d676af8e6bf",
+        "events.json": "891f77a761f3f595987c9c8c54b4e63b0084ccf1e61495f1f871709573cb28c5",
+        "metadata.json": "2c772a43e74963cb1165981a924ec5c290796dff42962a50e2e712b86a91ece4"
+      }
+    }
+  ],
+  "store_schema_version": 1
+}

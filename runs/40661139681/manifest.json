@@ -1,0 +1,64 @@
+{
+  "captured_at": "2026-10-28T09:02:58.709385Z",
+  "commit_sha": "7faac557f4fe91f87489f26daa3a8549f879568d",
+  "counts": {
+    "duplicate_observations": 0,
+    "new_events": 35,
+    "new_observations": 35,
+    "new_versions": 35,
+    "observations": 35,
+    "retractions": 0,
+    "revisions": 0,
+    "timestamp_conflicts": 0,
+    "unique_event_ids": 35,
+    "versions": 35
+  },
+  "decision_at": "2026-10-28T09:12:55Z",
+  "merge_report": {
+    "archive_event_version_count": 35,
+    "archive_snapshot_sha256": "f331902dc94303620bee8c2cc6f5e0ae5382fef4d944dac082c8e2016546cc9d",
+    "duplicate_version_count": 0,
+    "fetch_error_skipped_count": 0,
+    "first_seen_adjustment_count": 0,
+    "input_event_count": 35,
+    "new_version_count": 35,
+    "production_scanner_modified": false,
+    "research_only": true
+  },
+  "production_scanner_modified": false,
+  "research_only": true,
+  "run_id": "40661139681",
+  "run_url": "https://github.com/wijouyang-lab/us/actions/runs/40661139681",
+  "snapshot_sha256": {
+    "audit.json": "a62403b24bc7996918c79072d86176d4565b039048c4a35a39a60d676af8e6bf",
+    "events.json": "891f77a761f3f595987c9c8c54b4e63b0084ccf1e61495f1f871709573cb28c5",
+    "metadata.json": "2c772a43e74963cb1165981a924ec5c290796dff42962a50e2e712b86a91ece4"
+  },
+  "source_status": [
+    {
+      "error_type": "ContactUserAgentRequired",
+      "event_count": 0,
+      "feed_key": "bls_cpi",
+      "status": "skipped_missing_contact_user_agent"
+    },
+    {
+      "error_type": "ContactUserAgentRequired",
+      "event_count": 0,
+      "feed_key": "bls_employment",
+      "status": "skipped_missing_contact_user_agent"
+    },
+    {
+      "error_type": null,
+      "event_count": 20,
+      "feed_key": "fed_all",
+      "status": "ok"
+    },
+    {
+      "error_type": null,
+      "event_count": 15,
+      "feed_key": "fed_speeches",
+      "status": "ok"
+    }
+  ],
+  "store_schema_version": 1
+}
