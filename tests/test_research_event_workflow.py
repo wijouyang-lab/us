@@ -6,10 +6,11 @@ from pathlib import Path
 WORKFLOW = Path(".github/workflows/research-event-capture.yml")
 
 
-def test_workflow_is_manual_only_and_separate():
+def test_workflow_is_manual_and_weekday_scheduled_only():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "workflow_dispatch:" in text
-    assert "schedule:" not in text
+    assert "schedule:" in text
+    assert 'cron: "15 21 * * 1-5"' in text
     assert "workflow_run:" not in text
     assert "push:" not in text
     assert "pull_request:" not in text

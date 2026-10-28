@@ -1,6 +1,6 @@
 name: Research Event Capture
 
-# Research-only, manual capture. No production scan trigger or schedule.
+# Research-only capture. Manual plus one weekday post-close scheduled run.
 on:
   workflow_dispatch:
     inputs:
@@ -8,6 +8,8 @@ on:
         description: "Comma-separated official feed keys"
         required: false
         default: "bls_cpi,bls_employment,fed_all,fed_speeches"
+  schedule:
+    - cron: "15 21 * * 1-5"
 
 permissions:
   contents: read
