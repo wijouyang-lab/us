@@ -44,7 +44,7 @@ Classification (full CSV in PR #390):
 | Stooq CSV | returned a 796-byte JavaScript challenge, no rows |
 | Nasdaq quote/historical API | 0 historical records for AAPL/AVB/ATVI in the tested range; not usable as a source |
 | Internet Archive | 0/98 recovered |
-| OpenBB | no installed provider stack; no credentials; no independent request |
+| OpenBB | no installed provider stack; no credentials; no independent request |\n| Alpha Vantage | adapter added; no key configured; all probes SKIPPED_NO_API_KEY |
 | Yahoo | existing source; re-reading is not independent |
 
 ## Decision

@@ -156,3 +156,42 @@ No usable historical rows were returned. This is not a viable free OHLCV
 source in this environment.
 
 See the decision record: `RESEARCH_DECISION_2026-10-28.md`.
+
+## 7. Alpha Vantage probe (actual environment status)
+
+A research-only adapter was added:
+
+`tools/research/alpha_vantage_provider.py`
+
+It reads the key only from `ALPHA_VANTAGE_API_KEY`, caches responses, counts
+request per UTC day, enforces a 25-request/day ceiling and a 12-second minimum
+interval, redacts the key from errors, and does not silently mix unadjusted and
+adjusted prices.
+
+Actual probe without a configured key:
+
+```text
+AVB  -> SKIPPED_NO_API_KEY
+ATVI -> SKIPPED_NO_API_KEY
+MYL  -> SKIPPED_NO_API_KEY
+PARA -> SKIPPED_NO_API_KEY
+api_key_present: false
+```
+
+No Alpha Vantage network request was made. Actual free-tier availability,
+delisted-ticker support, daily history range, and adjusted fields remain
+**unverified** until `ALPHA_VANTAGE_API_KEY` is configured in the environment or
+GitHub Actions secret.
+
+Tests (mocked, no network): 6 passed.
+
+## 8. Historical S&P 500 membership file
+
+Existing repository file:
+
+`tools/research/data/sp500_components_history.csv`
+
+- 1,005 rows
+- fields: `symbol, cik, name, sector, date_added, date_removed, created_at`
+- It can support identity and membership-date checks.
+- It does **not** contain OHLCV, so it cannot replace a price source.
