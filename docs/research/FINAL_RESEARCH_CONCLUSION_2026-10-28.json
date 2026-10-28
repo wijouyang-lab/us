@@ -1,0 +1,153 @@
+{
+  "as_of": "2026-10-28",
+  "scope": "CURRENT-UNIVERSE EXPLORATORY — SURVIVORSHIP-BIASED; NOT A FULL PIT RESULT; NOT DEPLOYABLE ALPHA",
+  "data": {
+    "restricted_universe_tickers": 466,
+    "sessions": 2532,
+    "period": "2016-09-19..2026-10-14",
+    "rows": 1179912,
+    "source": "existing Yahoo-derived panel",
+    "price_basis": "raw OHLCV; no adjusted close",
+    "survivorship_bias": true
+  },
+  "experiments": [
+    {
+      "id": "formula_search_399",
+      "hypothesis": "Broad technical formula family contains a positive cost-adjusted predictor.",
+      "data": "2y PIT snapshot; 502 tickers",
+      "status": "failed",
+      "result": "0 positive candidates at BH/BY q<0.05; best positive 20D turnover-aware net 3.1839%, q=0.06687",
+      "reason": "multiple-testing correction; only ~23 monthly observations",
+      "source": "artifact run 40328953758 aggregate report; 399 unique candidates"
+    },
+    {
+      "id": "pit_2y_five_factor",
+      "hypothesis": "Five fixed economic directions survive a five-test family.",
+      "data": "2y PIT snapshot",
+      "status": "failed",
+      "result": "no BH q<0.05; low-vol directions negative",
+      "reason": "no positive significant result"
+    },
+    {
+      "id": "qlib_ridge",
+      "hypothesis": "Qlib Ridge gives stable OOS value.",
+      "data": "2y PIT snapshot",
+      "status": "failed_walk_forward",
+      "result": "fixed annual 39.85%, Sharpe 2.78; walk-forward 13.24%, Sharpe 0.69, t 0.64; alpha CI includes zero",
+      "reason": "fixed result did not survive rolling refit; 9 months only"
+    },
+    {
+      "id": "high_vol_beta",
+      "hypothesis": "High-vol/ATR long-short is market-neutral alpha.",
+      "data": "10y current universe",
+      "status": "rejected_beta",
+      "result": "gross positive but beta ~0.75; alpha t ~0.05",
+      "reason": "market beta, not alpha"
+    },
+    {
+      "id": "restricted_466_five_factor",
+      "hypothesis": "Five fixed technical directions have OOS value.",
+      "data": "466 current-universe tickers; 2016-2026",
+      "status": "failed_significance",
+      "result": "no positive test factor at BH q<0.05",
+      "test": {
+        "vol60_low": {
+          "net_monthly": -0.0173,
+          "ann": -0.2039,
+          "p": 0.0442,
+          "q": 0.1276
+        },
+        "atr_low": {
+          "net_monthly": -0.0161,
+          "ann": -0.1907,
+          "p": 0.051,
+          "q": 0.1276
+        },
+        "mom12_high": {
+          "net_monthly": 0.0072,
+          "ann": 0.0743,
+          "p": 0.3344,
+          "q": 0.3344
+        },
+        "mom1_low": {
+          "net_monthly": -0.01,
+          "ann": -0.1218,
+          "p": 0.0987,
+          "q": 0.1645
+        },
+        "ma50_high": {
+          "net_monthly": 0.0058,
+          "ann": 0.0629,
+          "p": 0.3276,
+          "q": 0.3344
+        }
+      },
+      "cost_bps": 5,
+      "turnover": "22%-78%",
+      "benchmark": {
+        "ann": 0.1431,
+        "sharpe": 0.855,
+        "max_drawdown": -0.216
+      },
+      "reason": "no positive factor survives BH; current-universe survivorship"
+    },
+    {
+      "id": "event_study",
+      "hypothesis": "Fed market events have publication-forward reaction.",
+      "data": "35 real Fed events; SPY proxy",
+      "status": "not_eligible",
+      "result": "35 entry pending; 0 +1; 0 +5; 35 unique < 200; coverage < 365 days",
+      "reason": "event sample/gates not met"
+    }
+  ],
+  "duplicate_cleanup": [
+    "399-formula search and 2y five-factor are different hypothesis families; do not rerun as new research.",
+    "Qlib fixed-model result is superseded by its walk-forward audit.",
+    "High-vol beta and 466 low-vol factor are related but separate tests; neither is alpha.",
+    "Event study is paused at gate; do not count simulated imports as new events."
+  ],
+  "candidate_table": [
+    {
+      "candidate": "Qlib Ridge fixed",
+      "ann": 0.3985,
+      "sharpe": 2.78,
+      "status": "rejected_walk_forward"
+    },
+    {
+      "candidate": "Qlib Ridge walk-forward",
+      "ann": 0.1324,
+      "sharpe": 0.69,
+      "status": "not_significant"
+    },
+    {
+      "candidate": "466 Mom12-1",
+      "ann": 0.0743,
+      "sharpe": 0.44,
+      "status": "not_significant"
+    },
+    {
+      "candidate": "466 MA50",
+      "ann": 0.0629,
+      "sharpe": 0.46,
+      "status": "not_significant"
+    },
+    {
+      "candidate": "466 EW benchmark",
+      "ann": 0.1431,
+      "sharpe": 0.855,
+      "status": "benchmark_only_survivorship"
+    }
+  ],
+  "conclusion": {
+    "reliable_alpha_found": false,
+    "deployable_strategy": false,
+    "paper_trading_candidate": false,
+    "decision": "stop factor/model search on current data; do not promote production",
+    "next_conditions": [
+      "PIT coverage and delisted prices meet acceptance",
+      "independent adjusted-close/corporate-action source",
+      "pre-registered candidate with positive OOS after costs and multiple testing",
+      "paper trading and production review"
+    ]
+  }
+}
