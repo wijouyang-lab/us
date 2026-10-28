@@ -106,6 +106,54 @@ def test_missing_latest_manifest_and_observations_fail(tmp_path):
         store.rebuild(tmp_path / "store")
 
 
+def test_canonical_hash_ignores_json_formatting_and_line_endings(tmp_path):
+    a = tmp_path / "a.json"
+    b = tmp_path / "b.json"
+    a.write_bytes(b'{"b":2,"a":1}\n')
+    b.write_bytes(b'{\r\n  "a": 1,\r\n  "b": 2\r\n}\r\n')
+    assert store._hash_file(a) == store._hash_file(b)
+
+
+def test_store_verifies_after_crlf_rewrite(tmp_path):
+    store.import_snapshot(tmp_path / "store", _snapshot(tmp_path, [_event()], "r1"), run_id="1")
+    for path in (tmp_path / "store").rglob("*.json"):
+        text = path.read_text(encoding="utf-8").replace("\n", "\r\n")
+        path.write_bytes(text.encode("utf-8"))
+    assert store.rebuild(tmp_path / "store")["reproducible"] is True
+
+
+def test_legacy_raw_lf_snapshot_hash_is_accepted(tmp_path):
+    store.import_snapshot(tmp_path / "store", _snapshot(tmp_path, [_event()], "r1"), run_id="1")
+    manifest_path = tmp_path / "store/runs/1/manifest.json"
+    events_path = tmp_path / "store/runs/1/events.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest.pop("snapshot_hash_format", None)
+    manifest["snapshot_sha256"]["events.json"] = store._legacy_hash_file(events_path)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    assert store.rebuild(tmp_path / "store")["reproducible"] is True
+
+
+def test_new_format_rejects_legacy_hash_fallback(tmp_path):
+    store.import_snapshot(tmp_path / "store", _snapshot(tmp_path, [_event()], "r1"), run_id="1")
+    manifest_path = tmp_path / "store/runs/1/manifest.json"
+    events_path = tmp_path / "store/runs/1/events.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["snapshot_sha256"]["events.json"] = store._legacy_hash_file(events_path)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="hash mismatch"):
+        store.rebuild(tmp_path / "store")
+
+
+def test_unknown_hash_format_fails_closed(tmp_path):
+    store.import_snapshot(tmp_path / "store", _snapshot(tmp_path, [_event()], "r1"), run_id="1")
+    manifest_path = tmp_path / "store/runs/1/manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["snapshot_hash_format"] = "unknown-v9"
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    with pytest.raises(ValueError, match="unsupported"):
+        store.rebuild(tmp_path / "store")
+
+
 def test_rebuild_matches_archive(tmp_path):
     store.import_snapshot(tmp_path / "store", _snapshot(tmp_path, [_event()], "r1"), run_id="1")
     store.import_snapshot(tmp_path / "store", _snapshot(tmp_path, [_event("2026-10-21T12:01:00Z")], "r2"), run_id="2")
