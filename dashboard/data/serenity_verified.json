@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T20:17:26Z",
+  "generated_at": "2026-10-28T20:32:14Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
@@ -141,6 +141,11 @@
       "filings": [
         {
           "form": "8-K",
+          "date": "2026-10-28",
+          "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126041045/ef20084505_8k.htm"
+        },
+        {
+          "form": "8-K",
           "date": "2026-10-19",
           "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126040117/ef20083812_8k.htm"
         },
@@ -148,11 +153,6 @@
           "form": "8-K",
           "date": "2026-09-17",
           "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126036994/ef20082051_8k.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-09-16",
-          "url": "https://www.sec.gov/Archives/edgar/data/874761/000087476126000153/aes-20260914.htm"
         }
       ],
       "news": [],
