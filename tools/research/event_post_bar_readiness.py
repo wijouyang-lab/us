@@ -171,13 +171,28 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--adjusted-price-available", action="store_true")
     p.add_argument("--corporate-actions-verified", action="store_true")
     p.add_argument("--market-proxy", help="Ticker used for market-wide events when no ticker is present")
+    p.add_argument("--market-proxy-file", help="Optional CSV with the market proxy bars")
+    p.add_argument("--market-proxy-adjusted", action="store_true",
+                   help="Use the proxy Adj_Close as its close (proxy price basis is then adjusted)")
     args = p.parse_args(argv)
     events = json.loads(Path(args.events).read_text(encoding="utf-8"))
     price = pd.read_csv(args.price_panel)
+    if args.market_proxy_file:
+        if not args.market_proxy:
+            raise SystemExit("--market-proxy is required with --market-proxy-file")
+        proxy = pd.read_csv(args.market_proxy_file)
+        proxy["Ticker"] = str(args.market_proxy).upper()
+        if args.market_proxy_adjusted:
+            if "Adj_Close" not in proxy.columns:
+                raise SystemExit("proxy file has no Adj_Close")
+            proxy["Close"] = proxy["Adj_Close"]
+        price = pd.concat([price, proxy], ignore_index=True)
     result = evaluate(events, price, as_of=args.as_of,
                       adjusted_price_available=args.adjusted_price_available,
                       corporate_actions_verified=args.corporate_actions_verified,
                       market_proxy=args.market_proxy)
+    result["market_proxy_file"] = args.market_proxy_file
+    result["market_proxy_price_basis"] = "adjusted" if args.market_proxy_adjusted else "raw"
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output).write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps({k: result[k] for k in ("selected_events", "ready", "pending_future_bar", "excluded", "lookahead_flags")}, indent=2))
