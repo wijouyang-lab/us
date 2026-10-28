@@ -167,7 +167,7 @@ def validate_factor_horizon(df, factor, horizon):
     if "Market_Regime" in df.columns:
         work["_regime"] = df["Market_Regime"].astype(str)
 
-    valid = work.dropna(subset=["r"]).copy()  # 无 forward return 的样本不进入统计
+    valid = work.dropna(subset=["f", "r"]).copy()  # 因子与未来收益都有效才进入该因子的统计
     result["N"] = int(len(valid))
     if valid.empty:
         return result
@@ -186,10 +186,16 @@ def validate_factor_horizon(df, factor, horizon):
         result["Pearson"] = round(float(corr_work["f"].corr(corr_work["r"])), 4)
         result["Spearman"] = round(float(corr_work["f"].corr(corr_work["r"], method="spearman")), 4)
 
-    # 五分位（全局横截面）
-    q = assign_quantile(valid["f"], 5)
+    # 五分位：若有 Technical_Date，则逐日做横截面分组，避免跨日因子分布漂移。
+    # 日期缺失或当日有效样本少于 5 时不强行分组；无日期字段时才退回全局分组。
     valid = valid.copy()
-    valid["_q"] = q
+    valid["_q"] = None
+    if "_date" in valid.columns:
+        for _, idx in valid.loc[valid["_date"].notna()].groupby("_date", sort=True).groups.items():
+            if len(idx) >= 5:
+                valid.loc[idx, "_q"] = assign_quantile(valid.loc[idx, "f"], 5)
+    else:
+        valid["_q"] = assign_quantile(valid["f"], 5)
     q_avgs = [None] * 5
     q_wins = [None] * 5
     for i, label in enumerate(["Q1", "Q2", "Q3", "Q4", "Q5"]):

@@ -32,6 +32,17 @@ def event_version_id(event: Mapping[str, Any]) -> str:
     version_content = dict(event)
     version_content.pop("first_seen_at_utc", None)
     version_content.pop("event_version_id", None)
+    # Human annotations describe an existing immutable source version; they must
+    # not change that source-version identity when attached in a derived archive.
+    for field in (
+        "direction_score", "impact_score", "label_review_status",
+        "label_reviewed_at_utc", "label_rationale", "labeler_id",
+        "reviewer_id", "label_schema_version",
+        "ticker_mapping_review_status", "ticker_mapping_reviewed_tickers",
+        "ticker_mapping_reviewed_at_utc", "ticker_mapping_reviewer_id",
+        "ticker_mapping_rationale", "ticker_mapping_schema_version",
+    ):
+        version_content.pop(field, None)
     return sha256(_canonical(version_content).encode("utf-8")).hexdigest()
 
 

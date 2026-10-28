@@ -1,0 +1,45 @@
+name: Yahoo Finance RSS research tests
+
+on:
+  push:
+    branches:
+      - research/yahoo-finance-news-rss
+    paths:
+      - "tools/research/yahoo_finance_news_capture.py"
+      - "tools/research/run_event_capture_cycle.py"
+      - "tests/test_yahoo_finance_news_capture.py"
+      - "tests/test_run_event_capture_cycle.py"
+      - "tools/research/pit_event_response_study.py"
+      - "tests/test_pit_event_response_study.py"
+      - "docs/EVENT_RESPONSE_STUDY.md"
+      - ".github/workflows/yahoo-news-research-tests.yml"
+  pull_request:
+    branches:
+      - research/event-factor-walk-forward
+    paths:
+      - "tools/research/yahoo_finance_news_capture.py"
+      - "tools/research/run_event_capture_cycle.py"
+      - "tests/test_yahoo_finance_news_capture.py"
+      - "tests/test_run_event_capture_cycle.py"
+      - "tools/research/pit_event_response_study.py"
+      - "tests/test_pit_event_response_study.py"
+      - "docs/EVENT_RESPONSE_STUDY.md"
+      - ".github/workflows/research-event-factor-capture-once.yml"
+      - ".github/workflows/yahoo-news-research-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test-yahoo-rss:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install --upgrade pytest
+      - name: Test Yahoo Finance RSS collector and archive integration
+        run: python -m pytest -q tests/test_yahoo_finance_news_capture.py tests/test_run_event_capture_cycle.py tests/test_pit_event_response_study.py

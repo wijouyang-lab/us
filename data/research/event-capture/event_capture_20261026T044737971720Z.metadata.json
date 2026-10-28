@@ -1,0 +1,374 @@
+{
+  "audit_after_capture": true,
+  "audit_decision_at_utc": "2026-10-26T04:47:45.634951Z",
+  "configured_source_count": 27,
+  "cycle_completed_at_utc": "2026-10-26T04:47:45.634951Z",
+  "cycle_started_at_utc": "2026-10-26T04:47:37.971843Z",
+  "decision_at_utc": "2026-10-26T04:47:37.860088Z",
+  "event_count": 85,
+  "event_snapshot_sha256": "4e20fa707fd85eb4ad5a8f8c9638e946d8cfc207ee8771e7333f76a5fb6f9bfc",
+  "pipeline_version": "1.0",
+  "production_scanner_modified": false,
+  "requested_feed_keys": [
+    "bls_cpi",
+    "bls_employment",
+    "bea_releases",
+    "fed_all",
+    "fed_speeches",
+    "treasury_auction_announcements",
+    "treasury_auction_results"
+  ],
+  "research_only": true,
+  "scheduled_workflow_created": false,
+  "sec_universe": [
+    {
+      "cik": "0000320193",
+      "ticker": "AAPL"
+    },
+    {
+      "cik": "0000789019",
+      "ticker": "MSFT"
+    },
+    {
+      "cik": "0001045810",
+      "ticker": "NVDA"
+    },
+    {
+      "cik": "0001652044",
+      "ticker": "GOOGL"
+    },
+    {
+      "cik": "0001018724",
+      "ticker": "AMZN"
+    },
+    {
+      "cik": "0001326801",
+      "ticker": "META"
+    },
+    {
+      "cik": "0001318605",
+      "ticker": "TSLA"
+    },
+    {
+      "cik": "0001730168",
+      "ticker": "AVGO"
+    },
+    {
+      "cik": "0001046179",
+      "ticker": "TSM"
+    },
+    {
+      "cik": "0001067983",
+      "ticker": "BRK-B"
+    },
+    {
+      "cik": "0000019617",
+      "ticker": "JPM"
+    },
+    {
+      "cik": "0001403161",
+      "ticker": "V"
+    },
+    {
+      "cik": "0000731766",
+      "ticker": "UNH"
+    },
+    {
+      "cik": "0000034088",
+      "ticker": "XOM"
+    },
+    {
+      "cik": "0000909832",
+      "ticker": "COST"
+    },
+    {
+      "cik": "0000104169",
+      "ticker": "WMT"
+    },
+    {
+      "cik": "0000059478",
+      "ticker": "LLY"
+    },
+    {
+      "cik": "0001141391",
+      "ticker": "MA"
+    },
+    {
+      "cik": "0001341439",
+      "ticker": "ORCL"
+    },
+    {
+      "cik": "0001065280",
+      "ticker": "NFLX"
+    }
+  ],
+  "source_reports": {
+    "official_rss": {
+      "collection_completed_at_utc": "2026-10-26T04:47:40.686100Z",
+      "collection_started_at_utc": "2026-10-26T04:47:37.971862Z",
+      "collector_version": "1.0",
+      "event_count": 85,
+      "event_snapshot_sha256": "4e20fa707fd85eb4ad5a8f8c9638e946d8cfc207ee8771e7333f76a5fb6f9bfc",
+      "feed_reports": [
+        {
+          "error": "failed to fetch official feed bls_cpi: HTTPError HTTP 403",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "feed_key": "bls_cpi",
+          "feed_url": "https://www.bls.gov/feed/cpi.rss",
+          "status": "fetch_or_parse_error"
+        },
+        {
+          "error": "failed to fetch official feed bls_employment: HTTPError HTTP 403",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "feed_key": "bls_employment",
+          "feed_url": "https://www.bls.gov/feed/empsit.rss",
+          "status": "fetch_or_parse_error"
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 48,
+          "feed_key": "bea_releases",
+          "feed_url": "https://apps.bea.gov/rss/rss.xml",
+          "first_seen_at_utc": "2026-10-26T04:47:39.039322Z",
+          "item_count": 48,
+          "source_payload_sha256": "8a5160d26d699a6073a2cd0dd075c442f0baf73e25e469af744519e19f36d1a4",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 20,
+          "feed_key": "fed_all",
+          "feed_url": "https://www.federalreserve.gov/feeds/press_all.xml",
+          "first_seen_at_utc": "2026-10-26T04:47:39.304614Z",
+          "item_count": 20,
+          "source_payload_sha256": "529e889a916423a3979c1bebdd94c2b8d402889700d8c85cc4d125b7f538d327",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 15,
+          "feed_key": "fed_speeches",
+          "feed_url": "https://www.federalreserve.gov/feeds/speeches_and_testimony.xml",
+          "first_seen_at_utc": "2026-10-26T04:47:39.623771Z",
+          "item_count": 15,
+          "source_payload_sha256": "1df94683803aacafbd17ab9bb0718f34f33ea302d2a5bf4394073e4ccdbce4a2",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 19,
+          "event_count": 1,
+          "feed_key": "treasury_auction_announcements",
+          "feed_url": "https://www.treasurydirect.gov/TA_WS/securities/announced/rss",
+          "first_seen_at_utc": "2026-10-26T04:47:40.114468Z",
+          "item_count": 20,
+          "source_payload_sha256": "5d104741f78e4c6dcedc0796b295d57c23f4b38f2ba2bb8edf40258a507b58c9",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 14,
+          "event_count": 1,
+          "feed_key": "treasury_auction_results",
+          "feed_url": "https://www.treasurydirect.gov/TA_WS/securities/auctioned/rss",
+          "first_seen_at_utc": "2026-10-26T04:47:40.678900Z",
+          "item_count": 15,
+          "source_payload_sha256": "2e67bfe0e58b05a28c25b40e5e6809c69ab4dd93f0b123a0ec5efbe1ded8fd97",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        }
+      ],
+      "limitations": [
+        "RSS pubDate is provider metadata and is not proof of the exact instant the item first became publicly visible.",
+        "first_seen_at_utc is the collector's actual observation timestamp and must be used for strict point-in-time replay.",
+        "RSS feeds expose a limited recent window; feed absence is not proof that no event occurred.",
+        "This collector does not provide historical consensus values; it cannot calculate valid historical macro surprises by itself."
+      ],
+      "production_scanner_modified": false,
+      "requested_feed_keys": [
+        "bls_cpi",
+        "bls_employment",
+        "bea_releases",
+        "fed_all",
+        "fed_speeches",
+        "treasury_auction_announcements",
+        "treasury_auction_results"
+      ],
+      "research_only": true
+    },
+    "sec_edgar": {
+      "company_count": 20,
+      "company_reports": [
+        {
+          "cik": "0000320193",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000320193.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "AAPL"
+        },
+        {
+          "cik": "0000789019",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000789019.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "MSFT"
+        },
+        {
+          "cik": "0001045810",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001045810.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "NVDA"
+        },
+        {
+          "cik": "0001652044",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001652044.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "GOOGL"
+        },
+        {
+          "cik": "0001018724",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001018724.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "AMZN"
+        },
+        {
+          "cik": "0001326801",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001326801.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "META"
+        },
+        {
+          "cik": "0001318605",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001318605.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "TSLA"
+        },
+        {
+          "cik": "0001730168",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001730168.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "AVGO"
+        },
+        {
+          "cik": "0001046179",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001046179.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "TSM"
+        },
+        {
+          "cik": "0001067983",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001067983.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "BRK-B"
+        },
+        {
+          "cik": "0000019617",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000019617.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "JPM"
+        },
+        {
+          "cik": "0001403161",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001403161.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "V"
+        },
+        {
+          "cik": "0000731766",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000731766.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "UNH"
+        },
+        {
+          "cik": "0000034088",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000034088.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "XOM"
+        },
+        {
+          "cik": "0000909832",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000909832.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "COST"
+        },
+        {
+          "cik": "0000104169",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000104169.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "WMT"
+        },
+        {
+          "cik": "0000059478",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0000059478.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "LLY"
+        },
+        {
+          "cik": "0001141391",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001141391.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "MA"
+        },
+        {
+          "cik": "0001341439",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001341439.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "ORCL"
+        },
+        {
+          "cik": "0001065280",
+          "coverage_status": "submissions_fetch_error",
+          "error": "SEC request failed with HTTP 403: https://data.sec.gov/submissions/CIK0001065280.json",
+          "error_type": "RuntimeError",
+          "event_count": 0,
+          "ticker": "NFLX"
+        }
+      ],
+      "event_count": 0,
+      "partial_company_count": 20,
+      "research_only": true,
+      "verified_header_timestamp_count": 0
+    }
+  },
+  "successful_source_count": 5
+}

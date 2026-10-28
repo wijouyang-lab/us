@@ -36,7 +36,7 @@ def make_bt(n_rows, seed=42, with_regime=True):
     base = pd.Timestamp("2026-01-05")
     for i in range(n_rows):
         r = {
-            "Technical_Date": (base + pd.Timedelta(days=i)).strftime("%Y-%m-%d"),
+            "Technical_Date": (base + pd.Timedelta(days=i // 10)).strftime("%Y-%m-%d"),
             "Ticker": f"T{i % 10}",
             "RSI_14": str(round(float(rng.uniform(30, 70)), 2)),
             "Bias_Pct": str(round(float(rng.uniform(-5, 15)), 2)),
@@ -93,6 +93,28 @@ def test_quintile():
     r = validate_factor_horizon(bt, "RSI_14", 5)
     for q in ["Q1_Avg_Return", "Q2_Avg_Return", "Q3_Avg_Return", "Q4_Avg_Return", "Q5_Avg_Return"]:
         check(f"{q} 有值", r[q] is not None, f"got {r[q]}")
+
+
+# ---- Regression: quintiles must be formed within each date ----
+def test_quintiles_are_cross_sectional_by_date():
+    rows = []
+    # 每日各 10 个标的。第二天因子整体平移，但收益与因子在当天内部反向。
+    # 正确的逐日分组应使聚合 Q5-Q1 spread 接近 0；全历史分组会混入日期效应。
+    for i in range(10):
+        rows.append({
+            "Technical_Date": "2026-01-05", "Ticker": f"A{i}",
+            "RSI_14": str(i), "Market_Regime": "NORMAL",
+            "Forward_Return_5D": str(i),
+        })
+        rows.append({
+            "Technical_Date": "2026-01-06", "Ticker": f"B{i}",
+            "RSI_14": str(100 + i), "Market_Regime": "STRESSED",
+            "Forward_Return_5D": str(10 - i),
+        })
+    r = validate_factor_horizon(pd.DataFrame(rows), "RSI_14", 5)
+    spread = r["Q5_Avg_Return"] - r["Q1_Avg_Return"]
+    check("daily cross-sectional quintiles avoid date-level factor shift", abs(spread) < 1e-9,
+          f"Q1={r['Q1_Avg_Return']}, Q5={r['Q5_Avg_Return']}, spread={spread}")
 
 
 # ---- 7. monotonicity ----
@@ -164,10 +186,24 @@ def test_missing_none():
     ]
     bt = pd.DataFrame(rows)
     r = validate_factor_horizon(bt, "RSI_14", 5)
-    # 有效 forward return 有 2 条（B 和 C），C 的 RSI 也有效 → N=2
-    check("缺失 forward 不计入 N", r["N"] == 2, f"got {r['N']}")
-    # N=2（>0 但 <30）→ EXPLORATORY，而非 NOT_ENOUGH_DATA
-    check("N=2 → EXPLORATORY", r["Status"] == "EXPLORATORY", f"got {r['Status']}")
+    # 只有 C 同时有有效因子值与有效 forward return，B 的因子缺失必须排除 → N=1
+    check("因子或 forward 缺失都不计入 N", r["N"] == 1, f"got {r['N']}")
+    # N=1（>0 但 <30）→ EXPLORATORY，而非 NOT_ENOUGH_DATA
+    check("N=1 → EXPLORATORY", r["Status"] == "EXPLORATORY", f"got {r['Status']}")
+
+
+# ---- Regression: factor statistics must be conditional on factor availability ----
+def test_factor_missing_values_do_not_contaminate_metrics():
+    bt = pd.DataFrame([
+        {"Technical_Date": "2026-01-05", "Ticker": "A", "RSI_14": "1", "Market_Regime": "NORMAL", "Forward_Return_5D": "0.10"},
+        {"Technical_Date": "2026-01-06", "Ticker": "B", "RSI_14": "",  "Market_Regime": "NORMAL", "Forward_Return_5D": "0.90"},
+        {"Technical_Date": "2026-01-07", "Ticker": "C", "RSI_14": "3", "Market_Regime": "STRESSED", "Forward_Return_5D": "0.30"},
+        {"Technical_Date": "2026-01-08", "Ticker": "D", "RSI_14": "4", "Market_Regime": "STRESSED", "Forward_Return_5D": ""},
+    ])
+    r = validate_factor_horizon(bt, "RSI_14", 5)
+    check("N only counts rows with both factor and return", r["N"] == 2, f"got {r['N']}")
+    check("Average_Return excludes rows missing factor", r["Average_Return"] == 0.2, f"got {r['Average_Return']}")
+    check("fewer than three valid pairs leave correlation undefined", r["Pearson"] is None and r["Spearman"] is None)
 
 
 # ---- 14. deterministic repeat ----
@@ -323,7 +359,7 @@ def _mk_status_df(n, mode="promising", base=None, seed=7):
             f = float(rng.uniform(0, 100))
             r = float(rng.normal(0, 5))
         rows.append({
-            "Technical_Date": (pd.Timestamp(base) + pd.Timedelta(days=i)).strftime("%Y-%m-%d"),
+            "Technical_Date": (pd.Timestamp(base) + pd.Timedelta(days=i // 10)).strftime("%Y-%m-%d"),
             "Ticker": "T%d" % (i % 10),
             "Market_Regime": regime,
             "RSI_14": str(round(f, 4)),

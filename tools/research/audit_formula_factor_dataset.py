@@ -1,0 +1,148 @@
+"""Read-only structural audit for the tracked formula-factor research dataset."""
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+
+def audit_dataset(input_path: str) -> dict:
+    frame = pd.read_csv(input_path)
+    date_col = next((c for c in ("Snapshot_Date", "Technical_Date", "Scan_Date") if c in frame), None)
+    if date_col is None or "Ticker" not in frame:
+        raise ValueError("dataset must contain a supported date column and Ticker")
+    dates = pd.to_datetime(frame[date_col], errors="coerce").dt.normalize()
+    forward_cols = [c for c in frame if c.upper().startswith("FORWARD_RETURN_")]
+    if not forward_cols:
+        raise ValueError("dataset has no Forward_Return_* labels")
+    key = pd.DataFrame({"date": dates, "ticker": frame["Ticker"].astype(str)})
+    valid_key = key.dropna(subset=["date", "ticker"])
+    duplicate_rows = int(valid_key.duplicated(["date", "ticker"], keep=False).sum())
+    daily = pd.DataFrame({"date": dates, "ticker": frame["Ticker"].astype(str)}).dropna(subset=["date"])
+    coverage = daily.groupby("date")["ticker"].nunique()
+    numeric_features = []
+    for col in frame.columns:
+        if col in {"Ticker", "Scan_Date", "Technical_Date", "Snapshot_Date", "schema_version"}:
+            continue
+        if col.upper().startswith(("FORWARD_RETURN_", "WIN_")) or col.upper() in {"TARGET", "LABEL", "OUTCOME"}:
+            continue
+        values = pd.to_numeric(frame[col], errors="coerce")
+        if values.notna().sum() and values.nunique(dropna=True) > 1:
+            numeric_features.append(col)
+    missingness = {}
+    for col in numeric_features + forward_cols:
+        values = pd.to_numeric(frame[col], errors="coerce")
+        missingness[col] = round(float(values.isna().mean()), 6)
+    label_stats = {}
+    suspicious_label_examples = {}
+    for col in forward_cols:
+        numeric = pd.to_numeric(frame[col], errors="coerce").replace([np.inf, -np.inf], np.nan)
+        values = numeric.dropna()
+        label_stats[col] = {
+            "n": int(values.size),
+            "mean": round(float(values.mean()), 8) if len(values) else None,
+            "median": round(float(values.median()), 8) if len(values) else None,
+            "min": round(float(values.min()), 8) if len(values) else None,
+            "max": round(float(values.max()), 8) if len(values) else None,
+            "outside_abs_100pct": int((values.abs() > 1.0).sum()),
+        }
+        # Keep concrete examples so researchers can trace extreme labels to
+        # their source rows and investigate corporate actions/label alignment.
+        unusual = numeric[numeric.abs() > 1.0]
+        if len(unusual):
+            example_indices = unusual.abs().sort_values(ascending=False).head(10).index
+            suspicious_label_examples[col] = [
+                {
+                    "row_index": int(idx),
+                    "date": str(dates.loc[idx].date()) if pd.notna(dates.loc[idx]) else None,
+                    "ticker": str(frame.loc[idx, "Ticker"]),
+                    "forward_return": round(float(numeric.loc[idx]), 8),
+                }
+                for idx in example_indices
+            ]
+    # Summarize anomalies by ticker so repeated overlapping labels caused by
+    # one underlying price discontinuity are visible without dropping any rows.
+    extreme_rows = []
+    for col in forward_cols:
+        numeric = pd.to_numeric(frame[col], errors="coerce").replace([np.inf, -np.inf], np.nan)
+        mask = numeric.abs() > 1.0
+        if mask.any():
+            extreme_rows.append(pd.DataFrame({
+                "ticker": frame.loc[mask, "Ticker"].astype(str),
+                "date": dates.loc[mask],
+                "label": col,
+                "value": numeric.loc[mask],
+            }))
+    if extreme_rows:
+        extreme_frame = pd.concat(extreme_rows, ignore_index=True)
+        extreme_by_ticker = []
+        for ticker, group in extreme_frame.groupby("ticker", sort=True):
+            extreme_by_ticker.append({
+                "ticker": str(ticker),
+                "extreme_label_count": int(len(group)),
+                "distinct_dates": int(group["date"].nunique()),
+                "labels_affected": sorted(group["label"].unique().tolist()),
+                "max_abs_forward_return": round(float(group["value"].abs().max()), 8),
+                "first_date": str(group["date"].min().date()) if group["date"].notna().any() else None,
+                "last_date": str(group["date"].max().date()) if group["date"].notna().any() else None,
+            })
+        extreme_by_ticker.sort(key=lambda item: (-item["extreme_label_count"], -item["max_abs_forward_return"], item["ticker"]))
+    else:
+        extreme_by_ticker = []
+
+    return {
+        "input": str(input_path),
+        "row_count": int(len(frame)),
+        "date_column_used": date_col,
+        "invalid_date_rows": int(dates.isna().sum()),
+        "date_min": str(dates.min().date()) if dates.notna().any() else None,
+        "date_max": str(dates.max().date()) if dates.notna().any() else None,
+        "unique_dates": int(dates.nunique()),
+        "unique_tickers": int(frame["Ticker"].nunique(dropna=True)),
+        "duplicate_date_ticker_rows": duplicate_rows,
+        "daily_ticker_coverage": {
+            "min": int(coverage.min()) if len(coverage) else 0,
+            "median": float(coverage.median()) if len(coverage) else 0,
+            "max": int(coverage.max()) if len(coverage) else 0,
+        },
+        "numeric_feature_count_excluding_labels": len(numeric_features),
+        "numeric_features": numeric_features,
+        "forward_return_columns": forward_cols,
+        "missing_fraction_by_feature_or_label": missingness,
+        "forward_return_summary": label_stats,
+        "suspicious_forward_return_examples": suspicious_label_examples,
+        "extreme_forward_returns_by_ticker": extreme_by_ticker,
+        "warnings": [
+            msg for condition, msg in [
+                (duplicate_rows > 0, "Duplicate date/ticker rows exist; investigate before interpreting cross-sectional ranks."),
+                (dates.isna().any(), "Rows with unparseable dates exist."),
+                (any(v["outside_abs_100pct"] for v in label_stats.values()), "Some forward-return labels exceed +/-100%; verify corporate actions and label construction."),
+                (coverage.nunique() > 1, "Cross-sectional ticker coverage varies over time; confirm point-in-time universe membership."),
+            ] if condition
+        ],
+        "limitations": [
+            "This is a structural/data-distribution audit only; it cannot prove historical universe membership or point-in-time feature availability.",
+            "No rows are modified, imputed, or silently removed from the source dataset.",
+        ],
+    }
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--input", required=True)
+    parser.add_argument("--output", required=True)
+    args = parser.parse_args()
+    result = audit_dataset(args.input)
+    out = Path(args.output)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(f"rows={result['row_count']} dates={result['unique_dates']} tickers={result['unique_tickers']}")
+    print(f"duplicate_date_ticker_rows={result['duplicate_date_ticker_rows']}; warnings={len(result['warnings'])}")
+    print(f"wrote {out}")
+
+
+if __name__ == "__main__":
+    main()

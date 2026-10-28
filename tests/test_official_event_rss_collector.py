@@ -123,9 +123,52 @@ def test_collector_uses_only_allowlisted_feeds_and_reports_failures():
     assert len(result["metadata"]["event_snapshot_sha256"]) == 64
 
 
-def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
-    with pytest.raises(ValueError, match="contact email"):
-        OfficialRssCollector("no email")
+
+def test_bea_release_feed_is_allowlisted_and_normalized_as_macro():
+    body = """<rss><channel>
+    <item><title>Personal Income and Outlays, August 2026</title>
+    <link>https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026</link>
+    <guid>bea-pce-2026-08</guid><pubDate>Wed, 30 Sep 2026 08:30:00 -0400</pubDate>
+    <description>Personal income and outlays release.</description></item>
+    </channel></rss>"""
+    result = parse_official_feed(
+        body, feed_key="bea_releases", first_seen_at_utc="2026-09-30T12:31:00Z",
+    )
+    event = result["events"][0]
+    assert event["event_type"] == "macro_release"
+    assert event["source"] == "bea_news_release_rss"
+    assert event["feed_key"] == "bea_releases"
+    assert event["published_at_utc"] == "2026-09-30T12:30:00Z"
+    assert event["source_url"] == "https://www.bea.gov/news/2026/personal-income-and-outlays-august-2026"
+    assert event["market_scope"] == "market"
+
+
+
+def test_bea_feed_fetch_uses_official_allowlisted_host():
+    seen = []
+    body = """<rss><channel>
+    <item><title>GDP release</title><link>https://www.bea.gov/news/current-releases</link>
+    <guid>bea-gdp-1</guid><pubDate>Thu, 29 Oct 2026 08:30:00 -0400</pubDate></item>
+    </channel></rss>"""
+
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return FakeResponse(body)
+
+    collector = OfficialRssCollector(
+        "Quant research test@example.com",
+        opener=opener,
+        sleep=lambda _: None,
+        now=lambda: datetime(2026, 10, 29, 12, 31, tzinfo=timezone.utc),
+    )
+    result = collector.collect(["bea_releases"])
+    assert seen == ["https://apps.bea.gov/rss/rss.xml"]
+    assert result["metadata"]["feed_reports"][0]["status"] == "ok"
+    assert result["metadata"]["event_count"] == 1
+
+def test_collector_requires_application_user_agent_and_recognized_feed_keys():
+    with pytest.raises(ValueError, match="research application"):
+        OfficialRssCollector("")
     collector = OfficialRssCollector(
         "Quant research test@example.com",
         opener=lambda *args, **kwargs: pytest.fail("should not perform a request"),
@@ -156,3 +199,42 @@ def test_feed_sort_places_missing_source_timestamps_last():
     )
     assert result["events"][0]["published_at_utc"] == "2026-09-11T12:30:00Z"
     assert result["events"][1]["published_at_utc"] is None
+
+
+@pytest.mark.parametrize("feed_key", ["treasury_auction_announcements", "treasury_auction_results"])
+def test_treasury_feeds_are_allowlisted_and_normalized(feed_key):
+    cfg = OFFICIAL_FEEDS[feed_key]
+    assert cfg["url"].startswith("https://www.treasurydirect.gov/")
+    body = "<rss><channel><item><title>Auction event</title><link>https://www.treasurydirect.gov/news</link><guid>auction-test-1</guid><pubDate>Thu, 29 Oct 2026 08:30:00 -0400</pubDate></item></channel></rss>"
+    result = parse_official_feed(body, feed_key=feed_key, first_seen_at_utc="2026-10-29T12:31:00Z")
+    assert result["events"][0]["source"] == cfg["source"]
+    assert result["events"][0]["event_type"] == "macro_release"
+    assert result["events"][0]["market_scope"] == "market"
+
+
+@pytest.mark.parametrize("feed_key", ["treasury_auction_announcements", "treasury_auction_results"])
+def test_treasury_feed_fetch_uses_configured_official_url(feed_key):
+    seen = []
+    body = "<rss><channel><item><title>Auction event</title><link>https://www.treasurydirect.gov/news</link><guid>auction-fetch-test</guid><pubDate>Thu, 29 Oct 2026 08:30:00 -0400</pubDate></item></channel></rss>"
+    def opener(request, timeout):
+        seen.append(request.full_url)
+        return FakeResponse(body)
+    collector = OfficialRssCollector("Quant research test@example.com", opener=opener, sleep=lambda _: None, now=lambda: datetime(2026, 10, 29, 12, 31, tzinfo=timezone.utc))
+    result = collector.collect([feed_key])
+    assert seen == [OFFICIAL_FEEDS[feed_key]["url"]]
+    assert result["metadata"]["feed_reports"][0]["status"] == "ok"
+    assert result["metadata"]["event_count"] == 1
+
+
+
+def test_bare_official_item_link_is_canonicalized_to_https():
+    body = """<rss><channel>
+    <item><title>GDP advance estimate</title>
+    <link>www.bea.gov/news/2026/gdp-advance-estimate</link>
+    <guid>bea-gdp-bare-link</guid>
+    <pubDate>Fri, 23 Oct 2026 12:30:00 GMT</pubDate></item>
+    </channel></rss>"""
+    result = parse_official_feed(
+        body, feed_key="bea_releases", first_seen_at_utc="2026-10-23T12:31:00Z",
+    )
+    assert result["events"][0]["source_url"] == "https://www.bea.gov/news/2026/gdp-advance-estimate"

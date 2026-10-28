@@ -1,0 +1,270 @@
+name: Research Event Factor Capture (manual)
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/event-factor-walk-forward
+    paths:
+      - .github/workflows/research-event-factor-capture-once.yml
+      - tools/research/treasury_yield_curve_capture.py
+      - tools/research/treasury_breakeven_proxy.py
+      - tools/research/build_sec_research_universe.py
+      - data/research/sec_ticker_cik_fallback.json
+      - tools/research/official_event_rss_collector.py
+      - tools/research/bls_macro_series_capture.py
+      - tools/research/build_event_annotation_queue.py
+      - tools/research/audit_pit_event_data_readiness.py
+      - tools/research/capture_event_response_prices.py
+      - tools/research/pit_event_response_study.py
+      - tests/test_capture_event_response_prices.py
+      - tests/test_pit_event_response_study.py
+      - tests/test_audit_pit_event_data_readiness.py
+      - tests/test_event_readiness_capture_workflow.py
+      - tools/research/sec_daily_index.py
+      - tools/research/sec_master_index_capture.py
+      - tools/research/record_sec_capture_failure.py
+      - tools/research/yahoo_finance_news_capture.py
+      - tools/research/run_event_capture_cycle.py
+      - tests/test_sec_daily_index.py
+      - tests/test_sec_master_index_capture.py
+      - tests/test_record_sec_capture_failure.py
+      - tests/test_yahoo_finance_news_capture.py
+      - tests/test_run_event_capture_cycle.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: research-event-factor-capture
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    if: github.ref == 'refs/heads/research/event-factor-walk-forward'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout research branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: tools/research/requirements-research.txt
+
+      - name: Install research dependencies
+        run: pip install -r tools/research/requirements-research.txt
+
+      - name: Build current SEC mapping for prospective watchlist filings
+        env:
+          SEC_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+        shell: bash
+        run: |
+          set -euo pipefail
+          if ! python -m tools.research.build_sec_research_universe \
+            --tickers-file watchlist.txt \
+            --output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" \
+            --metadata-output "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.metadata.json" \
+            --fallback-mapping data/research/sec_ticker_cik_fallback.json; then
+            echo "::warning::SEC universe mapping failed; the capture will continue with official RSS and macro snapshots."
+          fi
+
+      - name: Capture official macro, policy, speech, Treasury auction and SEC filing events
+        env:
+          OFFICIAL_FEED_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+          SEC_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+        shell: bash
+        run: |
+          set -euo pipefail
+          DECISION_AT="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
+          END_DATE="$(date -u +%F)"
+          START_DATE="$(date -u -d '30 days ago' +%F)"
+          ARGS=(--output-dir data/research/event-capture --decision-at "$DECISION_AT" --audit-after-capture)
+          if [[ -s "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" ]]; then
+            ARGS+=(--sec-universe "data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json" --sec-start-date "$START_DATE" --sec-end-date "$END_DATE" --yahoo-finance-rss)
+          fi
+          python -m tools.research.run_event_capture_cycle "${ARGS[@]}"
+
+      - name: Capture SEC quarterly master index fallback
+        env:
+          SEC_USER_AGENT: "wijouyang-lab/us research collector (contact: 288002660+wijouyang-lab@users.noreply.github.com)"
+        shell: bash
+        run: |
+          set -euo pipefail
+          UNIVERSE="data/research/event-capture/sec_universe_${GITHUB_RUN_ID}.json"
+          if [[ -s "$UNIVERSE" ]]; then
+            INDEX_START_DATE="$(python -c 'from datetime import date; d=date.today(); print(date(d.year, ((d.month-1)//3)*3+1, 1).isoformat())')"
+            INDEX_END_DATE="$(date -u +%F)"
+            SEC_CAPTURE_OUTPUT="data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.log"
+            SEC_CAPTURE_ERROR="data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.error.json"
+            if python -m tools.research.sec_master_index_capture \
+              --universe "$UNIVERSE" \
+              --start-date "$INDEX_START_DATE" \
+              --end-date "$INDEX_END_DATE" \
+              --output "data/research/event-capture/sec_master_index_${GITHUB_RUN_ID}.json" > "$SEC_CAPTURE_OUTPUT" 2>&1; then
+              cat "$SEC_CAPTURE_OUTPUT"
+            else
+              SEC_CAPTURE_EXIT_CODE=$?
+              cat "$SEC_CAPTURE_OUTPUT"
+              python -m tools.research.record_sec_capture_failure "$SEC_CAPTURE_OUTPUT" "$SEC_CAPTURE_ERROR" "$INDEX_START_DATE" "$INDEX_END_DATE" "$SEC_CAPTURE_EXIT_CODE"
+              echo "::warning::SEC master index fallback failed; a structured failure record was saved. Other source captures will be preserved."
+            fi
+          else
+            echo "::warning::No SEC universe snapshot available; master index fallback skipped."
+          fi
+
+      - name: Capture official Treasury nominal and real curves
+        shell: bash
+        run: |
+          set -euo pipefail
+          YEAR="$(date -u +%Y)"
+          if ! python -m tools.research.treasury_yield_curve_capture \
+            --year "$YEAR" \
+            --output "data/research/event-capture/treasury_nominal_${GITHUB_RUN_ID}.json"; then
+            echo "::warning::Nominal Treasury curve capture failed; preserving event RSS capture."
+          fi
+          if ! python -m tools.research.treasury_yield_curve_capture \
+            --year "$YEAR" --curve-type real \
+            --output "data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"; then
+            echo "::warning::Real Treasury curve capture failed; preserving event RSS capture."
+          fi
+
+      - name: Derive matched-date Treasury inflation-compensation proxy
+        shell: bash
+        run: |
+          set -euo pipefail
+          NOMINAL="data/research/event-capture/treasury_nominal_${GITHUB_RUN_ID}.json"
+          REAL="data/research/event-capture/treasury_real_${GITHUB_RUN_ID}.json"
+          OUTPUT="data/research/event-capture/treasury_breakeven_proxy_${GITHUB_RUN_ID}.json"
+          if [[ -s "$NOMINAL" && -s "$REAL" ]]; then
+            if ! python -m tools.research.treasury_breakeven_proxy \
+              --nominal "$NOMINAL" --real "$REAL" --output "$OUTPUT"; then
+              echo "::warning::Treasury inflation-compensation proxy failed; raw nominal and real captures are preserved."
+            fi
+          else
+            echo "::warning::Nominal or real curve snapshot missing; proxy not generated."
+          fi
+
+      - name: Capture current BLS macro series through public API
+        continue-on-error: true
+        shell: bash
+        run: |
+          set -euo pipefail
+          YEAR="$(date -u +%Y)"
+          if ! python -m tools.research.bls_macro_series_capture \
+            --start-year "$((YEAR - 2))" --end-year "$YEAR" \
+            --output "data/research/event-capture/bls_macro_series_${GITHUB_RUN_ID}.json"; then
+            echo "::warning::BLS public API snapshot failed; RSS and Treasury evidence are preserved."
+          fi
+
+      - name: Capture recent prices and run descriptive event-response study
+        shell: bash
+        run: |
+          set -euo pipefail
+          AS_OF="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
+          ARCHIVE="data/research/event-capture/event_archive.json"
+          PRICE_CSV="data/research/event-capture/event_response_prices_$GITHUB_RUN_ID.csv"
+          PRICE_REPORT="data/research/event-capture/event_response_prices_$GITHUB_RUN_ID.report.json"
+          STUDY_REPORT="data/research/event-capture/event_response_study_$GITHUB_RUN_ID.json"
+          OBSERVATIONS="data/research/event-capture/event_response_observations_$GITHUB_RUN_ID.csv"
+          if ! python -m tools.research.capture_event_response_prices --archive "$ARCHIVE" --output-csv "$PRICE_CSV" --output-report "$PRICE_REPORT" --as-of-utc "$AS_OF" --lookback-days 30 --max-symbols 100; then
+            echo "::warning::Price capture returned no price rows; inspect $PRICE_REPORT. Other capture evidence is preserved."
+          fi
+          if [[ -s "$PRICE_CSV" && -s "$PRICE_REPORT" ]]; then
+            STUDY_END_DATE="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["study_price_end_date"])' "$PRICE_REPORT")"
+            set +e
+            python -m tools.research.pit_event_response_study --events "$ARCHIVE" --prices-csv "$PRICE_CSV" --price-basis auto --study-end-date "$STUDY_END_DATE" --horizons 1,5,10 --round-trip-cost-bps 5 --max-age-days-by-type '{"macro_release":2,"policy":2,"central_bank":2,"company_news":2,"earnings":2}' --report "$STUDY_REPORT" --observations-csv "$OBSERVATIONS"
+            STUDY_STATUS=$?
+            set -e
+            if [[ "$STUDY_STATUS" -ne 0 ]]; then
+              echo "::warning::Event response study could not complete; inspect the per-run study and price reports."
+            fi
+          else
+            echo "::warning::Price CSV or report missing; event response study skipped."
+          fi
+
+      - name: Audit point-in-time event archive readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          ARCHIVE="data/research/event-capture/event_archive.json"
+          OUTPUT="data/research/event-capture/event_archive_readiness_${GITHUB_RUN_ID}.json"
+          DECISIONS="data/research/event-capture/event_readiness_decisions_${GITHUB_RUN_ID}.csv"
+          AUDIT_SOURCE="$(python - <<'PY'
+          from pathlib import Path
+          candidates = sorted(
+              Path("data/research/event-capture").glob("event_capture_*.audit.json"),
+              key=lambda path: path.stat().st_mtime,
+          )
+          print(candidates[-1] if candidates else "")
+          PY
+          )"
+          if [[ -n "$AUDIT_SOURCE" && -s "$ARCHIVE" ]]; then
+            DECISION_AT="$(python -c 'import json,sys; print(json.load(open(sys.argv[1], encoding="utf-8"))["decision_at_utc"])' "$AUDIT_SOURCE")"
+            printf 'decision_at\n%s\n' "$DECISION_AT" > "$DECISIONS"
+            set +e
+            python -m tools.research.audit_pit_event_data_readiness \
+              --archive "$ARCHIVE" \
+              --decisions "$DECISIONS" \
+              --audited-at "$DECISION_AT" \
+              --output "$OUTPUT"
+            AUDIT_STATUS=$?
+            set -e
+            if [[ "$AUDIT_STATUS" -ne 0 ]]; then
+              echo "::warning::Event archive readiness is blocked; see $OUTPUT. Capture remains research-only and no labels are auto-approved."
+            fi
+          else
+            echo "::warning::Event archive or capture audit missing; readiness report was not generated."
+          fi
+
+      - name: Build pending event annotation queue
+        shell: bash
+        run: |
+          set -euo pipefail
+          AS_OF="$(python -c 'from datetime import datetime, timezone; print(datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))')"
+          python -m tools.research.build_event_annotation_queue \
+            --archive data/research/event-capture/event_archive.json \
+            --as-of "$AS_OF" --max-age-days 30 --max-rows 100 \
+            --output "data/research/event-capture/annotation_queue_${GITHUB_RUN_ID}.csv" \
+            --report "data/research/event-capture/annotation_queue_${GITHUB_RUN_ID}.report.json"
+
+      - name: Commit immutable capture and updated event archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/research/event-capture
+          if git diff --cached --quiet; then
+            echo "No research capture changes to commit."
+            exit 0
+          fi
+          git commit -m "research: capture official event and Treasury data run ${GITHUB_RUN_ID}"
+          for attempt in 1 2 3; do
+            git fetch origin "$GITHUB_REF_NAME"
+            if git rebase "origin/$GITHUB_REF_NAME"; then
+              if git push origin "HEAD:$GITHUB_REF_NAME"; then
+                exit 0
+              fi
+            else
+              git rebase --abort || true
+            fi
+            sleep 5
+          done
+          echo "::error::Unable to push capture to the selected research branch; main was not targeted."
+          exit 1
+
+      - name: Upload capture evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: event-factor-capture-${{ github.run_id }}
+          path: data/research/event-capture/
+          retention-days: 90
+          if-no-files-found: warn

@@ -1,0 +1,125 @@
+{
+  "asof_event_count": 0,
+  "asof_selection_applied": true,
+  "capture_cycle": {
+    "all_sources_failed": false,
+    "archive_file": "data/research/event-capture/event_archive.json",
+    "archive_update": {
+      "archive_event_version_count": 85,
+      "archive_path": "data/research/event-capture/event_archive.json",
+      "archive_snapshot_sha256": "ba83778f1306ea354cd2c905d460f03d432de200df59a7f0affa77b7962c500e",
+      "duplicate_version_count": 0,
+      "fetch_error_skipped_count": 0,
+      "first_seen_adjustment_count": 0,
+      "input_event_count": 85,
+      "new_version_count": 85,
+      "production_scanner_modified": false,
+      "research_only": true,
+      "source_snapshot_sha256": "50b65e69873b603ff9d9eb909e7d944b3f6385dd99a66e7fd04f91e779fa38a7"
+    },
+    "configured_source_count": 7,
+    "events_file": "data/research/event-capture/event_capture_20261023T165716699642Z.events.json",
+    "metadata_file": "data/research/event-capture/event_capture_20261023T165716699642Z.metadata.json",
+    "source_collection_coverage": [
+      {
+        "error_type": null,
+        "event_count": 48,
+        "feed_key": "bea_releases",
+        "item_count": 48,
+        "source": "bea_news_release_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": "RuntimeError",
+        "event_count": 0,
+        "feed_key": "bls_cpi",
+        "item_count": null,
+        "source": "bls_cpi_rss",
+        "source_kind": "official_rss",
+        "status": "fetch_or_parse_error"
+      },
+      {
+        "error_type": "RuntimeError",
+        "event_count": 0,
+        "feed_key": "bls_employment",
+        "item_count": null,
+        "source": "bls_employment_situation_rss",
+        "source_kind": "official_rss",
+        "status": "fetch_or_parse_error"
+      },
+      {
+        "error_type": null,
+        "event_count": 20,
+        "feed_key": "fed_all",
+        "item_count": 20,
+        "source": "federal_reserve_press_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 15,
+        "feed_key": "fed_speeches",
+        "item_count": 15,
+        "source": "federal_reserve_speeches_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 1,
+        "feed_key": "treasury_auction_announcements",
+        "item_count": 20,
+        "source": "treasury_auction_announcements_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 1,
+        "feed_key": "treasury_auction_results",
+        "item_count": 15,
+        "source": "treasury_auction_results_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      }
+    ],
+    "successful_source_count": 5
+  },
+  "coverage_audit": {
+    "audit_flags": [
+      "fail_no_data"
+    ],
+    "audit_status": "fail_no_data",
+    "availability_status_counts": {},
+    "decision_at_utc": "2026-10-23T16:57:16.576715Z",
+    "duplicate_event_id_count": 0,
+    "duplicate_event_version_id_count": 0,
+    "eligibility_reason_counts": {},
+    "eligible_by_event_type": {},
+    "eligible_events": 0,
+    "eligible_rate": 0.0,
+    "event_type_counts": {},
+    "expected_sources": [],
+    "ineligible_events": 0,
+    "missing_sources": [],
+    "observed_sources": [],
+    "total_events": 0
+  },
+  "decision_at_utc": "2026-10-23T16:57:16.576715Z",
+  "input_event_count": 85,
+  "input_snapshot_sha256": "349da01c56b3f555ffde497cb857b170526f33cfd6a2df0a72ac08fb07d23506",
+  "macro_surprise": {
+    "candidate_count": 0,
+    "eligible_count": 0,
+    "ineligible_count": 0,
+    "reason_counts": {},
+    "records": []
+  },
+  "max_age_seconds_by_type": {},
+  "pipeline_schema_version": "1.1",
+  "research_only": true,
+  "source_snapshot_sha256": "a0436f2334225969c372b8fa6f098cdb8743ec26863a61b6d615ac2665d04e1c",
+  "trading_signal_generated": false
+}

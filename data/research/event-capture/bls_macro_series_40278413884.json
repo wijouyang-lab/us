@@ -1,0 +1,123 @@
+{
+  "metadata": {
+    "api_status": "REQUEST_SUCCEEDED",
+    "available_series_count": 5,
+    "limitations": [
+      "This is a current API snapshot, not a validated historical vintage series.",
+      "Values may have been revised since their initial release; revisions are not reconstructed.",
+      "No consensus estimate or release surprise is provided by this capture.",
+      "Rows are usable only at or after retrieved_at_utc; historical observation periods do not imply historical availability."
+    ],
+    "normalized_rows_sha256": "c5a51b34240b1eee5df281f33ef9d41c2a9eaf7ba8a47aa29f3ebc88d72dbc92",
+    "production_scanner_modified": false,
+    "research_only": true,
+    "retrieved_at_utc": "2026-10-26T06:12:45.303067Z",
+    "series_count": 5,
+    "source": "us_bureau_of_labor_statistics_public_api",
+    "source_payload_sha256": "2ebda8598dacdd88e99bde21282f18195d21e63c4178519534724a9af727e4f8",
+    "source_url": "https://api.bls.gov/publicAPI/v2/timeseries/data/"
+  },
+  "series": [
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "available_at_utc": "2026-10-26T06:12:45.303067Z",
+      "latest_observation": {
+        "footnotes": [
+          {}
+        ],
+        "latest_flag": "true",
+        "observation_period": "2026-M09",
+        "period": "M09",
+        "period_name": "September",
+        "value": 336.298,
+        "year": 2026
+      },
+      "research_only": true,
+      "series_id": "CUSR0000SA0",
+      "series_label": "cpi_all_items_sa",
+      "value_available": true
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "available_at_utc": "2026-10-26T06:12:45.303067Z",
+      "latest_observation": {
+        "footnotes": [
+          {}
+        ],
+        "latest_flag": "true",
+        "observation_period": "2026-M09",
+        "period": "M09",
+        "period_name": "September",
+        "value": 338.896,
+        "year": 2026
+      },
+      "research_only": true,
+      "series_id": "CUSR0000SA0L1E",
+      "series_label": "cpi_less_food_energy_sa",
+      "value_available": true
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "available_at_utc": "2026-10-26T06:12:45.303067Z",
+      "latest_observation": {
+        "footnotes": [
+          {
+            "code": "P",
+            "text": "preliminary"
+          }
+        ],
+        "latest_flag": "true",
+        "observation_period": "2026-M09",
+        "period": "M09",
+        "period_name": "September",
+        "value": 159044.0,
+        "year": 2026
+      },
+      "research_only": true,
+      "series_id": "CES0000000001",
+      "series_label": "total_nonfarm_employment",
+      "value_available": true
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "available_at_utc": "2026-10-26T06:12:45.303067Z",
+      "latest_observation": {
+        "footnotes": [
+          {}
+        ],
+        "latest_flag": "true",
+        "observation_period": "2026-M09",
+        "period": "M09",
+        "period_name": "September",
+        "value": 4.2,
+        "year": 2026
+      },
+      "research_only": true,
+      "series_id": "LNS14000000",
+      "series_label": "unemployment_rate",
+      "value_available": true
+    },
+    {
+      "availability_rule": "usable_only_at_or_after_retrieved_at_utc",
+      "available_at_utc": "2026-10-26T06:12:45.303067Z",
+      "latest_observation": {
+        "footnotes": [
+          {
+            "code": "P",
+            "text": "preliminary"
+          }
+        ],
+        "latest_flag": "true",
+        "observation_period": "2026-M09",
+        "period": "M09",
+        "period_name": "September",
+        "value": 37.81,
+        "year": 2026
+      },
+      "research_only": true,
+      "series_id": "CES0500000003",
+      "series_label": "average_hourly_earnings_private",
+      "value_available": true
+    }
+  ]
+}

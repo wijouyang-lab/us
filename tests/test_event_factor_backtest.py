@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pandas as pd
+import pytest
 
 from tools.research.event_factor_backtest import evaluate
 
@@ -68,3 +69,49 @@ def test_event_factor_backtest_returns_insufficient_data_for_missing_coverage(tm
     assert result["status"] == "insufficient_data"
     assert result["decision_dates_tested"] == 0
     assert result["excluded_unknown_coverage"] == 1
+
+
+
+def test_non_finite_event_scores_are_treated_as_missing(tmp_path):
+    signal_path = tmp_path / "signals.csv"
+    price_path = tmp_path / "prices.csv"
+    signals = []
+    prices = []
+    for i in range(8):
+        ticker = f"T{i}"
+        signals.append({
+            "decision_at": "2026-01-02T12:00:00Z",
+            "ticker": ticker,
+            "event_score": "inf" if i == 7 else i,
+            "coverage_status": "available",
+        })
+        prices.extend([
+            {"date": "2026-01-03T00:00:00Z", "ticker": ticker, "close": 100 + i},
+            {"date": "2026-01-04T00:00:00Z", "ticker": ticker, "close": 101 + i},
+        ])
+    pd.DataFrame(signals).to_csv(signal_path, index=False)
+    pd.DataFrame(prices).to_csv(price_path, index=False)
+
+    result = evaluate(
+        str(signal_path), str(price_path), horizon=1,
+        cost_bps_per_side=0, quantile=0.25, min_names_per_side=2,
+    )
+    assert result["status"] == "evaluated"
+    assert result["excluded_missing_score"] == 1
+    assert result["eligible_signal_rows"] == 7
+
+
+@pytest.mark.parametrize("cost", [float("inf"), float("-inf"), float("nan")])
+def test_non_finite_transaction_cost_is_rejected(tmp_path, cost):
+    signal_path = tmp_path / "signals.csv"
+    price_path = tmp_path / "prices.csv"
+    pd.DataFrame([{
+        "decision_at": "2026-01-02T12:00:00Z", "ticker": "A",
+        "event_score": 1, "coverage_status": "available",
+    }]).to_csv(signal_path, index=False)
+    pd.DataFrame([
+        {"date": "2026-01-03T00:00:00Z", "ticker": "A", "close": 10},
+        {"date": "2026-01-04T00:00:00Z", "ticker": "A", "close": 11},
+    ]).to_csv(price_path, index=False)
+    with pytest.raises(ValueError, match="cost_bps_per_side must be finite"):
+        evaluate(str(signal_path), str(price_path), cost_bps_per_side=cost)
