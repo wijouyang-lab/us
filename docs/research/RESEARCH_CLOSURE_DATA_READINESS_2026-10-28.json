@@ -1,0 +1,101 @@
+{
+  "as_of": "2026-10-28T12:14:20Z",
+  "baseline": {
+    "pr": 399,
+    "head": "28060f24d907f0b0b75a323a6314084222a1077a",
+    "result": "no reliable alpha; no deployable strategy; no paper-trading candidate",
+    "formula_399_best_positive_net": 0.031839,
+    "formula_399_best_positive_q": 0.06687,
+    "frozen": true
+  },
+  "research_status": "closed_on_tested_sample_no_alpha",
+  "reopen_status": "blocked_by_data_readiness",
+  "data_gates": [
+    {
+      "id": "pit_universe_delisted_coverage",
+      "owner_role": "research data owner (human)",
+      "verification": "PIT coverage audit + pit_recovery_gate.py",
+      "threshold": "member-session >=95%, ticker >=98%, delisted coverage >=98%",
+      "current": "91.61% member-session, 84.23% ticker, 0/98 delisted OHLCV",
+      "status": "fail",
+      "evidence": [
+        "https://github.com/wijouyang-lab/us/pull/390",
+        "docs/research/DATA_COVERAGE_AUDIT_2026-10-28.md",
+        "docs/research/missing_tickers_identity_2026-10-28.csv"
+      ],
+      "next_action": "obtain lawful PIT/delisted OHLCV or accept permanent restriction"
+    },
+    {
+      "id": "adjusted_prices_corporate_actions",
+      "owner_role": "research data owner (human)",
+      "verification": "independent adjusted-close source + corporate-action reconciliation",
+      "threshold": "466 panel has audited adjusted close and corporate actions",
+      "current": "466 panel raw only; SPY Adj_Close provider-only, not independent",
+      "status": "fail",
+      "evidence": [
+        "docs/research/SPY_MARKET_PROXY_2026-10-28.md",
+        "docs/research/FINAL_LOWFREQ_RESEARCH_CONCLUSION_2026-10-28.md"
+      ],
+      "next_action": "add independent adjusted-price source; do not mix raw/adjusted"
+    },
+    {
+      "id": "qlib_raw_period_results",
+      "owner_role": "strategy research owner (human)",
+      "verification": "committed per-period Qlib JSON + rerun",
+      "threshold": "raw fixed and walk-forward period results stored",
+      "current": "audit report values exist; raw per-period JSON not stored",
+      "status": "fail",
+      "evidence": [
+        "https://github.com/wijouyang-lab/us/pull/389",
+        "docs/research/QLIB_BACKTEST_AUDIT_2026-10-28.md"
+      ],
+      "next_action": "store raw Qlib result JSON before any Qlib revalidation"
+    },
+    {
+      "id": "event_preregistered_sample",
+      "owner_role": "event research owner (human)",
+      "verification": "event_experiment_gate.py",
+      "threshold": ">=200 unique events, >=365 days, complete +1/+5, OOS/cost/BH",
+      "current": "35 unique, 0 entry, 0 +1, 0 +5, coverage <1 day",
+      "status": "not_eligible",
+      "evidence": [
+        "https://github.com/wijouyang-lab/us/pull/397",
+        "docs/research/event_experiment_gate_2026-10-28.json",
+        "docs/research/EVENT_SAMPLE_AUDIT_2026-10-28.md"
+      ],
+      "next_action": "continue real forward captures; do not lower gate"
+    },
+    {
+      "id": "oct28_official_close",
+      "owner_role": "research operations owner (human)",
+      "verification": "provider close availability + incremental updater",
+      "threshold": "official 2026-10-28 close in panel and SPY",
+      "current": "provider latest 2026-10-27 at audit time",
+      "status": "pending",
+      "evidence": [
+        "docs/research/RECENT_PRICE_UPDATE_2026-10-28.md",
+        "docs/research/event_research_acceptance_2026-10-28.json"
+      ],
+      "next_action": "update only after provider publishes official close"
+    },
+    {
+      "id": "second_cross_day_capture",
+      "owner_role": "research operations owner (human)",
+      "verification": "new default-branch workflow run + archive verify",
+      "threshold": "second real run on a later UTC date; old snapshot unchanged",
+      "current": "one run, 2026-10-28; second not executed",
+      "status": "pending",
+      "evidence": [
+        "https://github.com/wijouyang-lab/us/actions/runs/40661139681",
+        "https://github.com/wijouyang-lab/us/tree/research/event-archive"
+      ],
+      "next_action": "run after 2026-10-29 UTC; verify archive"
+    }
+  ],
+  "interpretation": {
+    "no_alpha_on_tested_sample": true,
+    "strategy_proven_impossible": false,
+    "data_not_ready_is_not_strategy_invalidity": true,
+    "qlib_result_independently_reproduced": false
+  }
+}
