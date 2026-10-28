@@ -112,6 +112,8 @@ def align_events(
             "date_only_timestamp", "missing_available_at", "decision_before_available",
             "ticker_mismatch", "no_price_bar_after_available", "entry_close_not_after_available",
         }
+        availability_hard = hard - {"no_price_bar_after_available"}
+        publication_forward_candidate = not any(r in availability_hard for r in reasons)
         if any(r in hard for r in reasons):
             status = "excluded"
         elif event_time is None:
@@ -137,6 +139,7 @@ def align_events(
                 entry_day and available and available.date() == entry_day and _close_utc(entry_day) > available
             ),
             "lookahead_flag": lookahead,
+            "publication_forward_candidate": publication_forward_candidate,
             "timestamp_confidence": "strict" if not reasons else "partial",
             "validation_status": status,
             "validation_reasons": sorted(set(reasons)),
@@ -147,6 +150,7 @@ def align_events(
         "descriptive_only": sum(r["validation_status"] == "descriptive_only" for r in rows),
         "excluded": sum(r["validation_status"] == "excluded" for r in rows),
         "lookahead_flags": sum(r["lookahead_flag"] for r in rows),
+        "publication_forward_candidates": sum(r["publication_forward_candidate"] for r in rows),
         "missing_event_time": sum("event_time_missing" in r["validation_reasons"] for r in rows),
         "date_only": sum("date_only_timestamp" in r["validation_reasons"] for r in rows),
     }

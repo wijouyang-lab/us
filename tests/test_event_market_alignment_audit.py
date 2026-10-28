@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for event-to-daily-bar alignment; no network or strategy."""
 
 import sys
@@ -75,6 +75,7 @@ def test_missing_event_time_is_descriptive_not_strict():
     row = out["events"][0]
     assert row["validation_status"] == "descriptive_only"
     assert "event_time_missing" in row["validation_reasons"]
+    assert row["publication_forward_candidate"] is True
 
 
 def test_revision_after_decision_is_not_used():

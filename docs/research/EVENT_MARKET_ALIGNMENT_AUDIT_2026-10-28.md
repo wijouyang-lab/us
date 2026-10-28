@@ -7,7 +7,7 @@ Research only. No strategy, signal, or production changes.
 
 - 35 real Fed events from archive run `40661139681`
 - Price panel: `research_price_history_sp500_10y.csv`-equivalent local panel,
-  last bar **2026-10-14**
+  last bar **2026-10-27**
 - Decision timestamp: `2026-10-28T09:30:00Z`
 
 Output JSON:
@@ -56,7 +56,7 @@ after 16:00 ET, or on a non-trading day, uses the next trading day's close.
 | Selected events | 35 |
 | Strict PIT | **0** |
 | Descriptive only | **0** |
-| Excluded | **35** |
+| Excluded | **35** |\n| Publication-forward candidates | **35** |\n| Executable post-availability bars | **0** |
 | Look-ahead flags | 0 |
 | Missing `event_time` | 35 |
 | Date-only timestamps | 0 |
