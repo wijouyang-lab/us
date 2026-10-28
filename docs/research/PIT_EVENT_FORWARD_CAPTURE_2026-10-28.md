@@ -203,3 +203,19 @@ Retracted records are kept but marked `validation_status=rejected` with reason
 
 No real retraction was observed in the four RSS snapshots, so the actual
 count is zero; mocked tests cover the path.
+
+## SEC and workflow environment check
+
+- Local `SEC_USER_AGENT`: **absent**.
+- GitHub Actions secret `SEC_USER_AGENT`: **not configured**.
+- GitHub Actions secret `OFFICIAL_FEED_USER_AGENT`: **not configured**.
+- No secret values were printed or committed.
+
+The manual workflow was added to the PR branch, but `workflow_dispatch` cannot
+be run until the workflow exists on the default branch. A local dispatch attempt
+returned HTTP 404 for that reason. This is a repository workflow-availability
+blocker, not a successful run.
+
+After merge/review, the workflow can be dispatched with
+`gh workflow run research-event-capture.yml`. Without the user-agent secret it
+will explicitly skip and leave the run green; it will not fabricate events.
