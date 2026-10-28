@@ -144,6 +144,8 @@ jobs:
         env:
           FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
           EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
+          FMP_KEY_1: ${{ secrets.FMP_KEY_1 }}
+          FMP_KEY_2: ${{ secrets.FMP_KEY_2 }}
 
       - name: CPI expected-diff AI (only on change)
         # 只有 CPI/核心CPI 的期间/预期/实际变化时才调用 AI；signature 相同直接跳过。

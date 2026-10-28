@@ -94,6 +94,51 @@ def calendar_consensus():
     return {k: (v[0], v[1]) for k, v in out.items()}
 
 
+def fmp_nfp():
+    """FMP 经济日历：美国 Nonfarm Payrolls 的 estimate。优先 stable，再回退 v3。"""
+    from datetime import date, timedelta
+    keys = [os.environ.get("FMP_KEY_1"), os.environ.get("FMP_KEY_2")]
+    keys = [k for k in keys if k]
+    if not keys:
+        return None
+    start = (date.today() - timedelta(days=45)).isoformat()
+    end = (date.today() + timedelta(days=15)).isoformat()
+    urls = []
+    for k in keys:
+        urls.append(f"https://financialmodelingprep.com/stable/economic-calendar?from={start}&to={end}&apikey={k}")
+        urls.append(f"https://financialmodelingprep.com/api/v3/economic_calendar?from={start}&to={end}&apikey={k}")
+    for url in urls:
+        try:
+            data = _json(url)
+        except Exception as exc:
+            print(f"[WARN] FMP 日历失败：{exc}", file=sys.stderr)
+            continue
+        rows = data if isinstance(data, list) else (data.get("data") or [])
+        if not rows:
+            continue
+        hits = []
+        for r in rows:
+            ev = str(r.get("event") or "").lower()
+            if r.get("country") not in ("US", "United States"):
+                continue
+            if "nonfarm payroll" not in ev or "private" in ev:
+                continue
+            est = r.get("estimate")
+            if est in (None, ""):
+                continue
+            try:
+                val = float(str(est).replace(",", "").replace("%", ""))
+            except ValueError:
+                continue
+            hits.append((str(r.get("date") or ""), val))
+        if hits:
+            hits.sort(key=lambda x: x[0])
+            val = hits[-1][1]
+            unit = "K" if abs(val) > 5 else "%"
+            return {"forecast": val, "unit": unit}
+    return None
+
+
 def finnhub_nfp():
     """Finnhub 经济日历：美国 Nonfarm Payrolls 的 estimate。免费档可能不含该接口。"""
     key = os.environ.get("FINNHUB_API_KEY")
@@ -222,7 +267,7 @@ def build():
             "unit": unit, "released_at": None, "impact": "",
         })
 
-    fh = finnhub_nfp()
+    fh = fmp_nfp() or finnhub_nfp()
     if fh and not any(r["key"] == "nonfarm" for r in rows):
         act = actual_now.get("nonfarm")
         if act is not None:
