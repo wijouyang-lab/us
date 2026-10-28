@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Tests for the strict PIT canonical event schema; no network."""
 
 import sys
@@ -62,6 +62,14 @@ def test_source_quality_counts_are_per_source():
     assert by["bls"]["date_only"] == 1
     assert by["fed"]["events"] == 1
     assert report["not_alpha_evidence"] is True
+
+
+def test_retraction_is_retained_but_not_validated():
+    row = base(retracted_at_utc="2026-10-02T00:00:00Z")
+    out = mod.to_canonical(row)
+    assert out["retraction_status"] == "retracted"
+    assert out["validation_status"] == "rejected"
+    assert "retracted" in out["validation_reasons"]
 
 
 def test_capture_success_ratio_maps_feed_key_to_source():

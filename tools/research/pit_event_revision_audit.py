@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Multi-snapshot revision audit for forward PIT event captures.
 
 This reads immutable event snapshots and the archive; it never fetches or
@@ -23,7 +23,7 @@ def audit(snapshots: Iterable[Path], archive_path: Path) -> dict[str, Any]:
     by_source = defaultdict(lambda: {
         "events": 0, "unique_event_ids": set(), "version_ids": set(),
         "first_seen": [], "last_seen": [], "published_values": defaultdict(set),
-        "failures": 0,
+        "failures": 0, "retractions": 0,
     })
     total_observations = 0
     for path in snapshots:
@@ -39,6 +39,8 @@ def audit(snapshots: Iterable[Path], archive_path: Path) -> dict[str, Any]:
                 s["first_seen"].append(str(e["first_seen_at_utc"]))
             if e.get("last_seen_at_utc"):
                 s["last_seen"].append(str(e["last_seen_at_utc"]))
+            if e.get("retracted_at_utc") or e.get("retracted") is True or e.get("retraction") is True:
+                s["retractions"] += 1
             if e.get("published_at_utc"):
                 s["published_values"][str(e.get("event_id"))].add(str(e["published_at_utc"]))
     rows = []
@@ -57,6 +59,7 @@ def audit(snapshots: Iterable[Path], archive_path: Path) -> dict[str, Any]:
             "first_observed_at": min(s["first_seen"]) if s["first_seen"] else None,
             "last_observed_at": max(s["last_seen"] or s["first_seen"]) if s["first_seen"] else None,
             "failure_count": s["failures"],
+            "retraction_count": s["retractions"],
         })
     return {
         "schema_version": 1,

@@ -193,3 +193,13 @@ time and warns that filing dates are not exact public moments.
 - reads `OFFICIAL_FEED_USER_AGENT` from a secret
 - skips clearly if the secret is absent
 - uploads immutable capture artifacts
+
+## Retraction and revision support
+
+The canonical adapter retains a `retraction_status` / `retracted_at` field.
+Retracted records are kept but marked `validation_status=rejected` with reason
+`retracted`; they are not silently deleted. The revision audit reports
+`retraction_count` per source.
+
+No real retraction was observed in the four RSS snapshots, so the actual
+count is zero; mocked tests cover the path.

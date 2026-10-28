@@ -16,7 +16,8 @@
       "timestamp_conflict_count": 0,
       "first_observed_at": "2026-10-28T07:33:02.725550Z",
       "last_observed_at": "2026-10-28T07:45:21.783016Z",
-      "failure_count": 0
+      "failure_count": 0,
+      "retraction_count": 0
     },
     {
       "source": "bls_employment_situation_rss",
@@ -28,7 +29,8 @@
       "timestamp_conflict_count": 0,
       "first_observed_at": "2026-10-28T07:33:03.987130Z",
       "last_observed_at": "2026-10-28T07:45:23.120298Z",
-      "failure_count": 0
+      "failure_count": 0,
+      "retraction_count": 0
     },
     {
       "source": "federal_reserve_press_rss",
@@ -40,7 +42,8 @@
       "timestamp_conflict_count": 0,
       "first_observed_at": "2026-10-28T07:33:06.100095Z",
       "last_observed_at": "2026-10-28T07:45:24.928923Z",
-      "failure_count": 0
+      "failure_count": 0,
+      "retraction_count": 0
     },
     {
       "source": "federal_reserve_speeches_rss",
@@ -52,7 +55,8 @@
       "timestamp_conflict_count": 0,
       "first_observed_at": "2026-10-28T07:33:07.568705Z",
       "last_observed_at": "2026-10-28T07:45:26.234354Z",
-      "failure_count": 0
+      "failure_count": 0,
+      "retraction_count": 0
     }
   ],
   "research_only": true,

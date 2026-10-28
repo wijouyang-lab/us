@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Canonical PIT event schema and per-source quality report.
 
 This is an adapter over the existing normalized event records. It does not
@@ -77,6 +77,8 @@ def to_canonical(event: Mapping[str, Any]) -> dict[str, Any]:
     retrieved = _aware(event.get("retrieved_at_utc"))
     update_seen = _aware(event.get("update_first_seen_at_utc"))
     event_time = _aware(event.get("event_time_utc") or event.get("event_time"))
+    retracted_at = _aware(event.get("retracted_at_utc"))
+    is_retracted = bool(retracted_at or event.get("retracted") is True or event.get("retraction") is True)
     available_candidates = [x for x in (published, first_seen, update_seen) if x]
     available = max(available_candidates) if available_candidates else None
 
@@ -106,6 +108,8 @@ def to_canonical(event: Mapping[str, Any]) -> dict[str, Any]:
         reasons.append("first_seen_before_publication")
     if available and first_seen and available < first_seen:
         reasons.append("available_before_first_seen")
+    if is_retracted:
+        reasons.append("retracted")
 
     status = "validated" if not reasons and confidence == "parsed_utc" else "rejected"
     revision_id = event.get("event_version_id") or event.get("content_hash")
@@ -123,6 +127,8 @@ def to_canonical(event: Mapping[str, Any]) -> dict[str, Any]:
         "revision_id": revision_id,
         "payload_hash": event.get("content_hash") or event.get("payload_hash"),
         "supersedes_event_id": event.get("supersedes_event_id"),
+        "retraction_status": "retracted" if is_retracted else "active",
+        "retracted_at": _stamp(retracted_at),
         "timestamp_confidence": confidence,
         "validation_status": status,
         "validation_reasons": reasons,
