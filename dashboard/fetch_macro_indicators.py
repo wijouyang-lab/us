@@ -281,9 +281,15 @@ def _ism_pmi():
 
 
 def _eia_crude():
+    text = ""
+    for attempt in range(2):
+        try:
+            text = _get("https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=WCESTUS1&f=W",
+                        timeout=25)
+            break
+        except Exception as exc:
+            print(f"[WARN] EIA 第 {attempt+1} 次失败：{exc}", file=sys.stderr)
     try:
-        text = _get("https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=WCESTUS1&f=W",
-                    timeout=25)
         pairs = re.findall(
             r"<td class='B5'>(\d{2})/(\d{2})&nbsp;</td>\s*<td class='B3'>([\d,]+)&nbsp;",
             text)
@@ -291,9 +297,6 @@ def _eia_crude():
             _, _, v = pairs[-1]
             val = int(v.replace(",", ""))
             prev = int(pairs[-2][2].replace(",", "")) if len(pairs) > 1 else None
-            chg = round((val - prev) / 1e6, 2) if prev is not None else None
-            items.append(_item("eia_crude_chg", "EIA原油库存变化", chg, "M", None,
-                               None, None, "EIA 周报（环比）", "百万桶"))
             return _item("eia_crude", "每周EIA原油库存", val, "千桶", None,
                          prev, (val - prev) if prev is not None else None,
                          "EIA 周报", "不含战略储备（SPR）")

@@ -58,7 +58,6 @@ CAL_URL = "https://tradingeconomics.com/united-states/calendar"
 CAL_EVENTS = {
     "nonfarm": "Non Farm Payrolls",
     "claims": "Initial Jobless Claims",
-    "eia_crude_chg": "EIA Crude Oil Stocks Change",
 }
 
 
@@ -170,8 +169,7 @@ def build():
         actual_now = {i.get("key"): i.get("value") for i in (mi_now.get("items") or [])}
     except Exception:
         actual_now = {}
-    names = {"nonfarm": "季调后非农", "claims": "初请失业金",
-             "eia_crude_chg": "EIA原油库存变化"}
+    names = {"nonfarm": "季调后非农", "claims": "初请失业金"}
     for key, (fc, unit) in calendar_consensus().items():
         if any(r["key"] == key for r in rows):
             continue
