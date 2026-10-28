@@ -466,19 +466,24 @@ def observation_eligible() -> bool:
     return os.environ.get("PAPER_RECORD_OBSERVATION", "0") == "1"
 
 
-def observation_data_ready(prices: dict[str, list[dict]], run_date: str) -> bool:
-    """Require recent completed daily data as of Scan time; premarket scans naturally use the prior close.
+MIN_OBSERVATION_TICKERS = 30
 
-    Allow up to four calendar days of lag to cover weekends and a Monday market holiday, but
-    reject missing, future-dated, or older price history so a stale-data period cannot advance
-    the 40-run observation gate.
+
+def observation_data_ready(prices: dict[str, list[dict]], run_date: str) -> bool:
+    """Require recent completed bars across a minimum breadth of distinct tickers.
+
+    Allow up to four calendar days of lag to cover weekends and a Monday market holiday.
+    A single fresh ticker must not advance the 40-run observation gate when the rest of the
+    available price history is stale. The 30-ticker floor is a minimum breadth guard, not a
+    claim that the entire scan universe has complete coverage.
     """
     try:
         run_day = datetime.strptime(run_date, "%Y-%m-%d").date()
     except ValueError:
         return False
-    dates = []
-    for bars in prices.values():
+    fresh_tickers = set()
+    for ticker, bars in prices.items():
+        ticker_dates = []
         for bar in bars:
             raw = bar.get("date", "")
             try:
@@ -486,12 +491,14 @@ def observation_data_ready(prices: dict[str, list[dict]], run_date: str) -> bool
             except (TypeError, ValueError):
                 continue
             if day <= run_day:
-                dates.append(day)
-    if not dates:
-        return False
-    latest = max(dates)
-    age = (run_day - latest).days
-    return 0 <= age <= PENDING_MAX_AGE_CALENDAR_DAYS
+                ticker_dates.append(day)
+        if not ticker_dates:
+            continue
+        latest = max(ticker_dates)
+        age = (run_day - latest).days
+        if 0 <= age <= PENDING_MAX_AGE_CALENDAR_DAYS:
+            fresh_tickers.add(str(ticker).strip().upper())
+    return len(fresh_tickers) >= MIN_OBSERVATION_TICKERS
 
 
 def record_observation(run_date: str, prices: dict[str, list[dict]], candidate_file: str,

@@ -261,25 +261,49 @@ def test_exit_waits_when_no_current_completed_bar_exists():
 
 def test_observation_requires_recent_completed_price_bar():
     assert observation_data_ready({}, "2026-10-20") is False
+
+    # A single ticker with a fresh bar must not pass the breadth guard.
+    one_ticker = {
+        "AAA": [{"date": "2026-10-19", "open": 10.0, "close": 11.0}]
+    }
+    assert observation_data_ready(one_ticker, "2026-10-20") is False
+
     # Premarket scan can only consume the previous session's completed close.
-    assert observation_data_ready(
-        {"AAA": [{"date": "2026-10-19", "open": 10.0, "close": 11.0}]},
-        "2026-10-20",
-    ) is True
+    fresh_30 = {
+        f"T{i:03d}": [{"date": "2026-10-19", "open": 10.0, "close": 11.0}]
+        for i in range(30)
+    }
+    assert observation_data_ready(fresh_30, "2026-10-20") is True
+
     # A four-calendar-day gap allows a long weekend plus a Monday market holiday.
-    assert observation_data_ready(
-        {"AAA": [{"date": "2026-10-16", "open": 10.0, "close": 11.0}]},
-        "2026-10-20",
-    ) is True
-    assert observation_data_ready(
-        {"AAA": [{"date": "2026-10-15", "open": 10.0, "close": 11.0}]},
-        "2026-10-20",
-    ) is False
-    # Future-dated data must not be used to establish readiness for an earlier run date.
-    assert observation_data_ready(
-        {"AAA": [{"date": "2026-10-21", "open": 12.0, "close": 13.0}]},
-        "2026-10-20",
-    ) is False
+    holiday_gap = {
+        f"T{i:03d}": [{"date": "2026-10-16", "open": 10.0, "close": 11.0}]
+        for i in range(30)
+    }
+    assert observation_data_ready(holiday_gap, "2026-10-20") is True
+
+    stale = {
+        f"T{i:03d}": [{"date": "2026-10-15", "open": 10.0, "close": 11.0}]
+        for i in range(30)
+    }
+    assert observation_data_ready(stale, "2026-10-20") is False
+
+    # Future-dated data must not establish readiness for an earlier run date.
+    future = {
+        f"T{i:03d}": [{"date": "2026-10-21", "open": 12.0, "close": 13.0}]
+        for i in range(30)
+    }
+    assert observation_data_ready(future, "2026-10-20") is False
+
+    # Mixed coverage: only one fresh ticker is insufficient even when many are stale.
+    mixed = {
+        "FRESH": [{"date": "2026-10-19", "open": 10.0, "close": 11.0}],
+        **{
+            f"OLD{i:03d}": [{"date": "2026-10-15", "open": 10.0, "close": 11.0}]
+            for i in range(50)
+        },
+    }
+    assert observation_data_ready(mixed, "2026-10-20") is False
 
 
 def test_manual_runs_do_not_advance_observation_gate(monkeypatch=None):
