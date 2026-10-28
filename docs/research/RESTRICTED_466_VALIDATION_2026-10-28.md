@@ -104,3 +104,14 @@ restricted current-universe sample. This is exploratory, survivorship-biased
 evidence, not a full PIT result.
 
 Do not promote any factor to production.
+
+## Event/news variables: not included
+
+The existing event pipeline can audit caller-supplied timestamps and first-seen
+capture metadata, but it cannot manufacture historical point-in-time
+availability. Backfilled SEC filings/RSS items do not acquire a historical
+first-seen time, and historical consensus/label snapshots are not verified.
+
+Therefore no news, earnings, macro, or corporate-event feature is included in
+this experiment. Adding one would be a look-ahead risk, not a new predictor.
+This is a documented blocker, not a null result.
