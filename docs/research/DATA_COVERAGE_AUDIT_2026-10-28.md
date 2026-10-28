@@ -142,3 +142,17 @@ treated as deployable.
   exploratory and exclude it from production decisions.
 - Do not fill missing prices, delete hard tickers, or lower the coverage
   denominator.
+
+### Nasdaq quote/historical API
+
+Tested the unauthenticated endpoint for `AAPL`, `AVB`, and `ATVI` with a
+2025-01-01..2025-02-01 range:
+
+- `AAPL`: HTTP 200, `totalRecords=0`
+- `AVB`: HTTP 200, `Symbol not exists`
+- `ATVI`: HTTP 200, `Symbol not exists`
+
+No usable historical rows were returned. This is not a viable free OHLCV
+source in this environment.
+
+See the decision record: `RESEARCH_DECISION_2026-10-28.md`.
