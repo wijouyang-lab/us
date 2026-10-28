@@ -16,8 +16,9 @@
       "hypothesis": "Broad technical formula family contains a positive cost-adjusted predictor.",
       "data": "2y PIT snapshot; 502 tickers",
       "status": "failed",
-      "result": "0 positive candidates at BH q<0.05; best positive 20D net ~2.81%, q~0.546",
-      "reason": "multiple-testing correction; only ~23 monthly observations"
+      "result": "0 positive candidates at BH/BY q<0.05; best positive 20D turnover-aware net 3.1839%, q=0.06687",
+      "reason": "multiple-testing correction; only ~23 monthly observations",
+      "source": "artifact run 40328953758 aggregate report; 399 unique candidates"
     },
     {
       "id": "pit_2y_five_factor",
@@ -50,15 +51,44 @@
       "status": "failed_significance",
       "result": "no positive test factor at BH q<0.05",
       "test": {
-        "vol60_low": {"net_monthly": -0.0173, "ann": -0.2039, "p": 0.0442, "q": 0.1276},
-        "atr_low": {"net_monthly": -0.0161, "ann": -0.1907, "p": 0.0510, "q": 0.1276},
-        "mom12_high": {"net_monthly": 0.0072, "ann": 0.0743, "p": 0.3344, "q": 0.3344},
-        "mom1_low": {"net_monthly": -0.0100, "ann": -0.1218, "p": 0.0987, "q": 0.1645},
-        "ma50_high": {"net_monthly": 0.0058, "ann": 0.0629, "p": 0.3276, "q": 0.3344}
+        "vol60_low": {
+          "net_monthly": -0.0173,
+          "ann": -0.2039,
+          "p": 0.0442,
+          "q": 0.1276
+        },
+        "atr_low": {
+          "net_monthly": -0.0161,
+          "ann": -0.1907,
+          "p": 0.051,
+          "q": 0.1276
+        },
+        "mom12_high": {
+          "net_monthly": 0.0072,
+          "ann": 0.0743,
+          "p": 0.3344,
+          "q": 0.3344
+        },
+        "mom1_low": {
+          "net_monthly": -0.01,
+          "ann": -0.1218,
+          "p": 0.0987,
+          "q": 0.1645
+        },
+        "ma50_high": {
+          "net_monthly": 0.0058,
+          "ann": 0.0629,
+          "p": 0.3276,
+          "q": 0.3344
+        }
       },
       "cost_bps": 5,
       "turnover": "22%-78%",
-      "benchmark": {"ann": 0.1431, "sharpe": 0.855, "max_drawdown": -0.2160},
+      "benchmark": {
+        "ann": 0.1431,
+        "sharpe": 0.855,
+        "max_drawdown": -0.216
+      },
       "reason": "no positive factor survives BH; current-universe survivorship"
     },
     {
@@ -77,11 +107,36 @@
     "Event study is paused at gate; do not count simulated imports as new events."
   ],
   "candidate_table": [
-    {"candidate": "Qlib Ridge fixed", "ann": 0.3985, "sharpe": 2.78, "status": "rejected_walk_forward"},
-    {"candidate": "Qlib Ridge walk-forward", "ann": 0.1324, "sharpe": 0.69, "status": "not_significant"},
-    {"candidate": "466 Mom12-1", "ann": 0.0743, "sharpe": 0.44, "status": "not_significant"},
-    {"candidate": "466 MA50", "ann": 0.0629, "sharpe": 0.46, "status": "not_significant"},
-    {"candidate": "466 EW benchmark", "ann": 0.1431, "sharpe": 0.855, "status": "benchmark_only_survivorship"}
+    {
+      "candidate": "Qlib Ridge fixed",
+      "ann": 0.3985,
+      "sharpe": 2.78,
+      "status": "rejected_walk_forward"
+    },
+    {
+      "candidate": "Qlib Ridge walk-forward",
+      "ann": 0.1324,
+      "sharpe": 0.69,
+      "status": "not_significant"
+    },
+    {
+      "candidate": "466 Mom12-1",
+      "ann": 0.0743,
+      "sharpe": 0.44,
+      "status": "not_significant"
+    },
+    {
+      "candidate": "466 MA50",
+      "ann": 0.0629,
+      "sharpe": 0.46,
+      "status": "not_significant"
+    },
+    {
+      "candidate": "466 EW benchmark",
+      "ann": 0.1431,
+      "sharpe": 0.855,
+      "status": "benchmark_only_survivorship"
+    }
   ],
   "conclusion": {
     "reliable_alpha_found": false,

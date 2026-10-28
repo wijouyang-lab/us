@@ -1,4 +1,4 @@
-﻿# Final Low-Frequency Strategy Research Conclusion
+# Final Low-Frequency Strategy Research Conclusion
 
 Date: 2026-10-28
 Deadline: 2026-11-04
@@ -27,7 +27,7 @@ Machine-readable record:
 
 | Experiment | Data | Status | Main result |
 |---|---|---|---|
-| 399 formula search | 2y PIT, 502 tickers | failed | 0 positive BH q<0.05 |
+| 399 formula search | 2y PIT, 502 tickers | failed | 0 positive BH/BY q<0.05; best 20D positive 3.1839%, q 0.06687 |
 | 2y fixed five-factor | 2y PIT | failed | no positive q<0.05 |
 | Qlib Ridge fixed | 2y PIT | superseded | 39.85% / Sharpe 2.78, 9 months |
 | Qlib Ridge walk-forward | 2y PIT | failed | 13.24% / Sharpe 0.69 / t 0.64 |
