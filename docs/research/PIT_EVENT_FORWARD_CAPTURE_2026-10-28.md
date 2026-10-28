@@ -130,3 +130,66 @@ covered by mocked archive tests.
 - 59 events are not enough for an event alpha claim.
 - No production scan, score, stop, ledger, order path, or external trigger was
   changed.
+
+## Repeated snapshots and revision audit
+
+Four consecutive captures were run against the same feeds:
+
+| Snapshot | Decision mode | Audit | Events | New versions | Duplicate versions |
+|---|---|---|---:|---:|---:|
+| 20261028T073301486355Z | pre-capture | fail_no_data | 0 eligible | 59 | 0 |
+| 20261028T073348231487Z | post-capture | pass | 59 | 0 | 59 |
+| 20261028T074328910024Z | post-capture | pass | 59 | 0 | 59 |
+| 20261028T074518525119Z | post-capture | pass | 59 | 0 | 59 |
+
+Archive: 59 unique event IDs, 59 versions, 236 total observations, 177
+duplicate observations. No duplicate event IDs were created.
+
+Machine-readable:
+
+`docs/research/event_forward_capture_2026-10-28/revision_audit.json`
+
+Per-source revision audit:
+
+| Source | Observations | Unique events | Versions | Duplicates | Revisions | Timestamp conflicts |
+|---|---:|---:|---:|---:|---:|---:|
+| bls_cpi_rss | 48 | 12 | 12 | 36 | 0 | 0 |
+| bls_employment_situation_rss | 48 | 12 | 12 | 36 | 0 | 0 |
+| federal_reserve_press_rss | 80 | 20 | 20 | 60 | 0 | 0 |
+| federal_reserve_speeches_rss | 60 | 15 | 15 | 45 | 0 | 0 |
+
+Current snapshots show no source revisions or timestamp conflicts. Revision
+handling is covered by mocked archive tests, not by a real changed source yet.
+
+## Decision-time protection
+
+`--decision-at` before capture start now requires explicit
+`--allow-pre-capture-decision`; the run is marked
+`decision_mode=retrospective_replay`. Without the flag it fails closed.
+
+Events are still selected only by `first_seen_at_utc <= decision_at_utc`.
+A retrospective decision cannot include an event observed later.
+
+## SEC forward capture
+
+Explicit universe:
+
+`docs/research/sec_forward_universe_2026-10-28.json`
+
+Companies: AAPL, MSFT, AVB, ATVI.
+
+Actual SEC request was **skipped** because `SEC_USER_AGENT` is not configured.
+No SEC data is claimed. The existing `sec_event_collector.py` remains the
+implementation; it separates `acceptanceDateTime` from the actual first-seen
+time and warns that filing dates are not exact public moments.
+
+## Manual research workflow
+
+`.github/workflows/research-event-capture.yml`
+
+- `workflow_dispatch` only
+- no schedule, no production workflow dependency
+- separate concurrency-free research job
+- reads `OFFICIAL_FEED_USER_AGENT` from a secret
+- skips clearly if the secret is absent
+- uploads immutable capture artifacts

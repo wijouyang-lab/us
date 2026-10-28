@@ -89,8 +89,10 @@ def run_cycle(
     max_age_by_type: dict[str, timedelta] | None = None,
     feed_user_agent: str | None = None,
     sec_user_agent: str | None = None,
+    allow_pre_capture_decision: bool = False,
 ) -> dict[str, Any]:
-    if _parse_aware_timestamp(decision_at) is None:
+    decision_dt = _parse_aware_timestamp(decision_at)
+    if decision_dt is None:
         raise ValueError("decision_at must be a timezone-aware ISO-8601 timestamp")
     if min_request_interval_seconds < 0.1:
         raise ValueError("request interval must be at least 0.1 seconds")
@@ -118,6 +120,14 @@ def run_cycle(
         raise ValueError("capture filename collision; retry the command")
 
     cycle_started = datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+    cycle_started_dt = datetime.fromisoformat(cycle_started.replace("Z", "+00:00"))
+    is_pre_capture = decision_dt < cycle_started_dt
+    if is_pre_capture and not allow_pre_capture_decision:
+        raise ValueError(
+            "decision_at is before capture start; pass --allow-pre-capture-decision "
+            "to run an explicitly marked retrospective replay"
+        )
+    decision_mode = "retrospective_replay" if is_pre_capture else "forward_capture"
     all_events: list[dict[str, Any]] = []
     source_reports: dict[str, Any] = {}
     configured_sources = len(feed_keys) + len(universe)
@@ -190,6 +200,12 @@ def run_cycle(
         "cycle_started_at_utc": cycle_started,
         "cycle_completed_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "decision_at_utc": decision_at,
+        "decision_mode": decision_mode,
+        "decision_is_pre_capture": is_pre_capture,
+        "decision_note": (
+            "Events are eligible only when first_seen_at_utc <= decision_at_utc. "
+            "A retrospective replay cannot make later observations historically available."
+        ),
         "requested_feed_keys": feed_keys,
         "sec_universe": universe,
         "event_count": len(all_events),
@@ -275,6 +291,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-filings-per-company", type=int, default=25)
     parser.add_argument("--min-request-interval-seconds", type=float, default=0.2)
     parser.add_argument("--max-age-days-by-type", default="{}", help='Optional JSON freshness config such as {"macro_release":2}')
+    parser.add_argument(
+        "--allow-pre-capture-decision",
+        action="store_true",
+        help="Explicitly allow a retrospective replay with decision_at before capture start; marked in metadata",
+    )
     args = parser.parse_args(argv)
     try:
         feeds = _parse_feeds(args.feeds, bool(args.sec_universe))
@@ -289,6 +310,7 @@ def main(argv: list[str] | None = None) -> int:
             max_filings_per_company=args.max_filings_per_company,
             min_request_interval_seconds=args.min_request_interval_seconds,
             max_age_by_type=freshness,
+            allow_pre_capture_decision=args.allow_pre_capture_decision,
         )
     except (OSError, ValueError, RuntimeError) as exc:
         parser.error(str(exc))

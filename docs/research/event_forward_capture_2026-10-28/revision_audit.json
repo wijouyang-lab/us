@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "snapshot_count": 4,
+  "archive_event_versions": 59,
+  "total_observations": 236,
+  "unique_event_ids": 59,
+  "duplicate_observations": 177,
+  "sources": [
+    {
+      "source": "bls_cpi_rss",
+      "observations": 48,
+      "unique_event_ids": 12,
+      "version_count": 12,
+      "duplicate_observations": 36,
+      "revision_count": 0,
+      "timestamp_conflict_count": 0,
+      "first_observed_at": "2026-10-28T07:33:02.725550Z",
+      "last_observed_at": "2026-10-28T07:45:21.783016Z",
+      "failure_count": 0
+    },
+    {
+      "source": "bls_employment_situation_rss",
+      "observations": 48,
+      "unique_event_ids": 12,
+      "version_count": 12,
+      "duplicate_observations": 36,
+      "revision_count": 0,
+      "timestamp_conflict_count": 0,
+      "first_observed_at": "2026-10-28T07:33:03.987130Z",
+      "last_observed_at": "2026-10-28T07:45:23.120298Z",
+      "failure_count": 0
+    },
+    {
+      "source": "federal_reserve_press_rss",
+      "observations": 80,
+      "unique_event_ids": 20,
+      "version_count": 20,
+      "duplicate_observations": 60,
+      "revision_count": 0,
+      "timestamp_conflict_count": 0,
+      "first_observed_at": "2026-10-28T07:33:06.100095Z",
+      "last_observed_at": "2026-10-28T07:45:24.928923Z",
+      "failure_count": 0
+    },
+    {
+      "source": "federal_reserve_speeches_rss",
+      "observations": 60,
+      "unique_event_ids": 15,
+      "version_count": 15,
+      "duplicate_observations": 45,
+      "revision_count": 0,
+      "timestamp_conflict_count": 0,
+      "first_observed_at": "2026-10-28T07:33:07.568705Z",
+      "last_observed_at": "2026-10-28T07:45:26.234354Z",
+      "failure_count": 0
+    }
+  ],
+  "research_only": true,
+  "not_alpha_evidence": true
+}
