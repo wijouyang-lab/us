@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Incrementally append recent Yahoo daily bars to the research price panel.
 
 Only dates after the panel's last date are appended. No interpolation, no
@@ -113,10 +113,14 @@ def main(argv: list[str] | None = None) -> int:
     downloaded = download_batch(tickers, last, target, args.batch_size)
     updated, report = append_recent(existing, downloaded)
     missing = sorted(set(tickers) - set(downloaded["Ticker"].astype(str).str.upper())) if not downloaded.empty else tickers
+    provider_latest = max(pd.to_datetime(downloaded["Date"]).dt.date) if not downloaded.empty else None
     if downloaded.empty:
-        download_status = "download_empty"
+        download_status = "pending_provider_close" if target.weekday() < 5 else "download_empty"
     elif report["new_rows"] == 0:
-        download_status = "no_new_sessions"
+        if provider_latest and provider_latest < target and target.weekday() < 5:
+            download_status = "pending_provider_close"
+        else:
+            download_status = "no_new_sessions"
     elif missing:
         download_status = "partial"
     else:
@@ -128,6 +132,9 @@ def main(argv: list[str] | None = None) -> int:
         "requested_start": last.isoformat(),
         "requested_end": target.isoformat(),
         "download_status": download_status,
+        "provider_latest_date": provider_latest.isoformat() if provider_latest else None,
+        "failed_tickers": len(missing),
+        "tickers_no_new_rows": len(tickers) - int(report.get("new_tickers") or 0),
         "tickers_requested": len(tickers),
         "tickers_with_rows": int(downloaded["Ticker"].nunique()) if not downloaded.empty else 0,
         "tickers_with_new_rows": int(report.get("new_tickers") or 0),
@@ -144,7 +151,7 @@ def main(argv: list[str] | None = None) -> int:
     updated[COLUMNS].sort_values(["Date", "Ticker"]).to_csv(args.output, index=False, encoding="utf-8")
     Path(args.metadata).write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
     print(json.dumps(report, indent=2, ensure_ascii=False))
-    return 2 if download_status == "download_empty" else 0
+    return 2 if download_status in {"download_empty"} else 0
 
 
 if __name__ == "__main__":
