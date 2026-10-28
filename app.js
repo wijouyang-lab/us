@@ -2051,7 +2051,8 @@
       : (unit === '%' ? fmt(v, 2) + '%'
         : unit === 'K' ? fmt(v, 0) + 'K'
           : unit === '千桶' ? fmt(v, 0)
-            : fmt(v, 1));
+            : unit === 'M' ? fmt(v, 2) + 'M'
+              : fmt(v, 1));
     var chg = num(it.change);
     var chgCls = chg === null ? '' : (chg > 0 ? 'up' : (chg < 0 ? 'down' : 'flat'));
     var chgTxt = chg === null ? '' : ((chg > 0 ? '+' : '') + fmt(chg, unit === '%' ? 2 : 0) +

@@ -58,6 +58,7 @@ CAL_URL = "https://tradingeconomics.com/united-states/calendar"
 CAL_EVENTS = {
     "nonfarm": "Non Farm Payrolls",
     "claims": "Initial Jobless Claims",
+    "eia_crude_chg": "EIA Crude Oil Stocks Change",
 }
 
 
@@ -76,17 +77,22 @@ def calendar_consensus():
             continue
         name = m.group(1).strip()
         key = next((k for k, v in CAL_EVENTS.items() if v == name), None)
-        if not key or key in out:
+        if not key:
             continue
         c = re.search(r"id=['\"]consensus['\"][^>]*>\s*([^<]*)<", row)
+        a = re.search(r"id=['\"]actual['\"][^>]*>\s*([^<]*)<", row)
         if not c or not c.group(1).strip():
             continue
         raw = c.group(1).strip()
         mm = re.match(r"([-0-9.]+)\s*([KMB%]?)", raw)
         if not mm:
             continue
-        out[key] = (float(mm.group(1)), mm.group(2) or "%")
-    return out
+        released = bool(a and a.group(1).strip())
+        prev = out.get(key)
+        # 已发布行优先；否则保留第一条有 consensus 的
+        if prev is None or (released and not prev[2]):
+            out[key] = (float(mm.group(1)), mm.group(2) or "%", released)
+    return {k: (v[0], v[1]) for k, v in out.items()}
 
 
 def _get(url: str) -> str:
@@ -164,7 +170,8 @@ def build():
         actual_now = {i.get("key"): i.get("value") for i in (mi_now.get("items") or [])}
     except Exception:
         actual_now = {}
-    names = {"nonfarm": "季调后非农", "claims": "初请失业金"}
+    names = {"nonfarm": "季调后非农", "claims": "初请失业金",
+             "eia_crude_chg": "EIA原油库存变化"}
     for key, (fc, unit) in calendar_consensus().items():
         if any(r["key"] == key for r in rows):
             continue

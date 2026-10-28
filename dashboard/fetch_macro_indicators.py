@@ -291,6 +291,9 @@ def _eia_crude():
             _, _, v = pairs[-1]
             val = int(v.replace(",", ""))
             prev = int(pairs[-2][2].replace(",", "")) if len(pairs) > 1 else None
+            chg = round((val - prev) / 1e6, 2) if prev is not None else None
+            items.append(_item("eia_crude_chg", "EIA原油库存变化", chg, "M", None,
+                               None, None, "EIA 周报（环比）", "百万桶"))
             return _item("eia_crude", "每周EIA原油库存", val, "千桶", None,
                          prev, (val - prev) if prev is not None else None,
                          "EIA 周报", "不含战略储备（SPR）")
