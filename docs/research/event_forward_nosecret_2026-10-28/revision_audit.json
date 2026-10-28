@@ -1,0 +1,38 @@
+{
+  "schema_version": 1,
+  "snapshot_count": 2,
+  "archive_event_versions": 35,
+  "total_observations": 70,
+  "unique_event_ids": 35,
+  "duplicate_observations": 35,
+  "sources": [
+    {
+      "source": "federal_reserve_press_rss",
+      "observations": 40,
+      "unique_event_ids": 20,
+      "version_count": 20,
+      "duplicate_observations": 20,
+      "revision_count": 0,
+      "timestamp_conflict_count": 0,
+      "first_observed_at": "2026-10-28T08:14:01.799537Z",
+      "last_observed_at": "2026-10-28T08:14:18.288049Z",
+      "failure_count": 0,
+      "retraction_count": 0
+    },
+    {
+      "source": "federal_reserve_speeches_rss",
+      "observations": 30,
+      "unique_event_ids": 15,
+      "version_count": 15,
+      "duplicate_observations": 15,
+      "revision_count": 0,
+      "timestamp_conflict_count": 0,
+      "first_observed_at": "2026-10-28T08:14:03.138793Z",
+      "last_observed_at": "2026-10-28T08:14:19.688110Z",
+      "failure_count": 0,
+      "retraction_count": 0
+    }
+  ],
+  "research_only": true,
+  "not_alpha_evidence": true
+}

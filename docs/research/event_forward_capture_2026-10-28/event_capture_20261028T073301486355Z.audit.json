@@ -1,0 +1,98 @@
+{
+  "asof_event_count": 0,
+  "asof_selection_applied": true,
+  "capture_cycle": {
+    "all_sources_failed": false,
+    "archive_file": "docs\\research\\event_forward_capture_2026-10-28\\event_archive.json",
+    "archive_update": {
+      "archive_event_version_count": 59,
+      "archive_path": "docs\\research\\event_forward_capture_2026-10-28\\event_archive.json",
+      "archive_snapshot_sha256": "2b15f3cf12afef0c98be3eb17e2fab5f3baf4e30d10c065d2d4245b22763de5d",
+      "duplicate_version_count": 0,
+      "fetch_error_skipped_count": 0,
+      "first_seen_adjustment_count": 0,
+      "input_event_count": 59,
+      "new_version_count": 59,
+      "production_scanner_modified": false,
+      "research_only": true,
+      "source_snapshot_sha256": "f919f3628fc43fd69a6654107259f8a3a8e4e4a55b22cbebdb2ed557191ee6c6"
+    },
+    "configured_source_count": 4,
+    "events_file": "docs\\research\\event_forward_capture_2026-10-28\\event_capture_20261028T073301486355Z.events.json",
+    "metadata_file": "docs\\research\\event_forward_capture_2026-10-28\\event_capture_20261028T073301486355Z.metadata.json",
+    "source_collection_coverage": [
+      {
+        "error_type": null,
+        "event_count": 12,
+        "feed_key": "bls_cpi",
+        "item_count": 12,
+        "source": "bls_cpi_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 12,
+        "feed_key": "bls_employment",
+        "item_count": 12,
+        "source": "bls_employment_situation_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 20,
+        "feed_key": "fed_all",
+        "item_count": 20,
+        "source": "federal_reserve_press_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      },
+      {
+        "error_type": null,
+        "event_count": 15,
+        "feed_key": "fed_speeches",
+        "item_count": 15,
+        "source": "federal_reserve_speeches_rss",
+        "source_kind": "official_rss",
+        "status": "ok"
+      }
+    ],
+    "successful_source_count": 4
+  },
+  "coverage_audit": {
+    "audit_flags": [
+      "fail_no_data"
+    ],
+    "audit_status": "fail_no_data",
+    "availability_status_counts": {},
+    "decision_at_utc": "2026-10-28T07:33:01Z",
+    "duplicate_event_id_count": 0,
+    "duplicate_event_version_id_count": 0,
+    "eligibility_reason_counts": {},
+    "eligible_by_event_type": {},
+    "eligible_events": 0,
+    "eligible_rate": 0.0,
+    "event_type_counts": {},
+    "expected_sources": [],
+    "ineligible_events": 0,
+    "missing_sources": [],
+    "observed_sources": [],
+    "total_events": 0
+  },
+  "decision_at_utc": "2026-10-28T07:33:01Z",
+  "input_event_count": 59,
+  "input_snapshot_sha256": "1af27023fa15c7a1ac455bac4939d6cd566ef3ee98f4a07edb3d35fa23798b9f",
+  "macro_surprise": {
+    "candidate_count": 0,
+    "eligible_count": 0,
+    "ineligible_count": 0,
+    "reason_counts": {},
+    "records": []
+  },
+  "max_age_seconds_by_type": {},
+  "pipeline_schema_version": "1.1",
+  "research_only": true,
+  "source_snapshot_sha256": "f39bc8781e74f3e28820ca6bfb1435c68d9ae961d6850d525b45ab4e0bef5b43",
+  "trading_signal_generated": false
+}

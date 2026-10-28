@@ -1,0 +1,89 @@
+{
+  "configured_source_count": 4,
+  "cycle_completed_at_utc": "2026-10-28T07:33:07.570705Z",
+  "cycle_started_at_utc": "2026-10-28T07:33:01.486355Z",
+  "decision_at_utc": "2026-10-28T07:33:01Z",
+  "event_count": 59,
+  "event_snapshot_sha256": "fcccd8421be032b0395ec72ae19f766525b5c8104299163d1b757c69a48331a8",
+  "pipeline_version": "1.0",
+  "production_scanner_modified": false,
+  "requested_feed_keys": [
+    "bls_cpi",
+    "bls_employment",
+    "fed_all",
+    "fed_speeches"
+  ],
+  "research_only": true,
+  "scheduled_workflow_created": false,
+  "sec_universe": [],
+  "source_reports": {
+    "official_rss": {
+      "collection_completed_at_utc": "2026-10-28T07:33:07.569705Z",
+      "collection_started_at_utc": "2026-10-28T07:33:01.486355Z",
+      "collector_version": "1.0",
+      "event_count": 59,
+      "event_snapshot_sha256": "fcccd8421be032b0395ec72ae19f766525b5c8104299163d1b757c69a48331a8",
+      "feed_reports": [
+        {
+          "duplicate_id_count": 0,
+          "event_count": 12,
+          "feed_key": "bls_cpi",
+          "feed_url": "https://www.bls.gov/feed/cpi.rss",
+          "first_seen_at_utc": "2026-10-28T07:33:02.725550Z",
+          "item_count": 12,
+          "source_payload_sha256": "a5f2a686cebc14c09693431899d7e4ce56c15c752febbdba1156b30d33f1f387",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 12,
+          "feed_key": "bls_employment",
+          "feed_url": "https://www.bls.gov/feed/empsit.rss",
+          "first_seen_at_utc": "2026-10-28T07:33:03.987130Z",
+          "item_count": 12,
+          "source_payload_sha256": "aa1107f25de6cf39c9d192b3c20b9d59ca8c32444f660b7e8b462b80c6cc700e",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 20,
+          "feed_key": "fed_all",
+          "feed_url": "https://www.federalreserve.gov/feeds/press_all.xml",
+          "first_seen_at_utc": "2026-10-28T07:33:06.100095Z",
+          "item_count": 20,
+          "source_payload_sha256": "529e889a916423a3979c1bebdd94c2b8d402889700d8c85cc4d125b7f538d327",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        },
+        {
+          "duplicate_id_count": 0,
+          "event_count": 15,
+          "feed_key": "fed_speeches",
+          "feed_url": "https://www.federalreserve.gov/feeds/speeches_and_testimony.xml",
+          "first_seen_at_utc": "2026-10-28T07:33:07.568705Z",
+          "item_count": 15,
+          "source_payload_sha256": "1df94683803aacafbd17ab9bb0718f34f33ea302d2a5bf4394073e4ccdbce4a2",
+          "status": "ok",
+          "timestamp_missing_count": 0
+        }
+      ],
+      "limitations": [
+        "RSS pubDate is provider metadata and is not proof of the exact instant the item first became publicly visible.",
+        "first_seen_at_utc is the collector's actual observation timestamp and must be used for strict point-in-time replay.",
+        "RSS feeds expose a limited recent window; feed absence is not proof that no event occurred.",
+        "This collector does not provide historical consensus values; it cannot calculate valid historical macro surprises by itself."
+      ],
+      "production_scanner_modified": false,
+      "requested_feed_keys": [
+        "bls_cpi",
+        "bls_employment",
+        "fed_all",
+        "fed_speeches"
+      ],
+      "research_only": true
+    }
+  },
+  "successful_source_count": 4
+}
