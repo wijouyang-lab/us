@@ -32,6 +32,22 @@ def test_only_dates_after_last_are_appended_and_invalid_rows_dropped():
     assert len(out) == 2
 
 
+def test_repeated_append_is_idempotent_and_keeps_history():
+    existing = pd.DataFrame([
+        {"Date": "2026-10-14", "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9,
+         "Close": 10.5, "Volume": 100, "schema_version": "phase2b.v1"},
+    ])
+    downloaded = pd.DataFrame([
+        {"Date": "2026-10-15", "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9,
+         "Close": 10.8, "Volume": 120, "schema_version": "phase2b.v1"},
+    ])
+    first, _ = mod.append_recent(existing, downloaded)
+    second, report = mod.append_recent(first, downloaded)
+    assert report["new_rows"] == 0
+    assert len(second) == 2
+    assert second[second.Date.astype(str) == "2026-10-14"].Close.iloc[0] == 10.5
+
+
 def test_missing_new_data_is_reported_without_synthetic_rows():
     existing = pd.DataFrame([
         {"Date": "2026-10-14", "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9,

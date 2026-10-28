@@ -1,0 +1,188 @@
+#!/usr/bin/env python3
+"""Readiness check for post-event price bars and forward returns.
+
+This tool does not run an event study. It only answers whether a given event
+has valid timestamps, a known version, a real post-availability bar, and
+enough +1/+5 bars. Raw close and unverified corporate actions are explicitly
+reported and do not silently become "ready".
+"""
+from __future__ import annotations
+
+import argparse
+import json
+from datetime import date, datetime, timezone
+from pathlib import Path
+from typing import Any, Iterable, Mapping
+
+import pandas as pd
+
+from tools.research.event_market_alignment_audit import _available_at, _close_utc, _date_only, _entry_date
+from tools.research.pit_event_eligibility import _parse_aware_timestamp
+from tools.research.pit_event_archive import select_event_versions_asof
+
+HORIZONS = (1, 5)
+
+
+def _invalid_ohlc(row: Mapping[str, Any]) -> bool:
+    try:
+        o, h, l, c = (float(row[x]) for x in ("Open", "High", "Low", "Close"))
+    except (KeyError, TypeError, ValueError):
+        return True
+    return not (o > 0 and h > 0 and l > 0 and c > 0 and h >= max(o, c, l) and l <= min(o, c, h))
+
+
+def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
+             as_of: str, adjusted_price_available: bool = False,
+             corporate_actions_verified: bool = False,
+             market_proxy: str | None = None) -> dict[str, Any]:
+    as_of_dt = _parse_aware_timestamp(as_of)
+    if as_of_dt is None:
+        raise ValueError("as_of must be timezone-aware ISO-8601")
+    p = price.copy()
+    p["Date"] = pd.to_datetime(p["Date"], errors="coerce").dt.date
+    p["Ticker"] = p["Ticker"].astype(str).str.upper()
+    dup = p.duplicated(["Date", "Ticker"]).sum()
+    bad = p.apply(_invalid_ohlc, axis=1).sum()
+    dates = sorted(p["Date"].dropna().unique())
+    by_ticker = {t: g.set_index("Date").sort_index() for t, g in p.groupby("Ticker")}
+    selected = select_event_versions_asof(events, as_of) if events else []
+    rows = []
+    for e in selected:
+        event_id = str(e.get("event_id") or "")
+        source = str(e.get("source") or "")
+        url = str(e.get("source_url") or "")
+        published = _parse_aware_timestamp(e.get("published_at_utc"))
+        first_seen = _parse_aware_timestamp(e.get("first_seen_at_utc"))
+        event_time = _parse_aware_timestamp(e.get("event_time_utc"))
+        available = _available_at(e)
+        reasons = []
+        if not event_id:
+            reasons.append("missing_event_id")
+        if not source:
+            reasons.append("missing_source")
+        if not url.startswith(("http://", "https://")):
+            reasons.append("missing_or_invalid_source_url")
+        if published is None:
+            reasons.append("missing_or_invalid_source_published_at")
+        if first_seen is None:
+            reasons.append("missing_or_invalid_first_seen_at")
+        if _date_only(e.get("published_at_utc")) or _date_only(e.get("first_seen_at_utc")):
+            reasons.append("date_only_timestamp")
+        if available is None:
+            reasons.append("missing_available_at")
+        if available and first_seen and available < first_seen:
+            reasons.append("available_before_first_seen")
+        if available and available > as_of_dt:
+            reasons.append("available_after_as_of")
+        entity = {str(t).upper() for t in (e.get("tickers") or [])}
+        ticker = next(iter(entity), None)
+        if ticker is None and e.get("market_scope") == "market":
+            ticker = str(market_proxy).upper() if market_proxy else None
+            if ticker is None:
+                reasons.append("missing_market_proxy")
+        entry_date = entry_close = None
+        returns = {}
+        if ticker is None:
+            reasons.append("missing_entity_ticker")
+        elif ticker not in by_ticker:
+            reasons.append("missing_ticker_price")
+        elif available:
+            entry_date, entry_close = _entry_date(available, dates)
+            if entry_date is None:
+                reasons.append("pending_future_entry_bar")
+            else:
+                g = by_ticker[ticker]
+                if g.index.duplicated().any():
+                    reasons.append("duplicate_price_bars")
+                if entry_date not in g.index:
+                    reasons.append("missing_entry_bar")
+                else:
+                    idx = list(g.index).index(entry_date)
+                    for h in HORIZONS:
+                        if idx + h >= len(g):
+                            reasons.append(f"pending_future_{h}d_bar")
+                        else:
+                            exit_row = g.iloc[idx + h]
+                            entry_row = g.loc[entry_date]
+                            if _invalid_ohlc(entry_row) or _invalid_ohlc(exit_row):
+                                reasons.append("invalid_ohlc")
+                            else:
+                                returns[f"return_{h}d"] = float(exit_row["Close"] / entry_row["Close"] - 1)
+        if not adjusted_price_available:
+            reasons.append("adjusted_price_unavailable")
+        if not corporate_actions_verified:
+            reasons.append("corporate_actions_unverified")
+        hard = {
+            "missing_event_id", "missing_source", "missing_or_invalid_source_url",
+            "missing_or_invalid_source_published_at", "missing_or_invalid_first_seen_at",
+            "date_only_timestamp", "missing_available_at", "available_before_first_seen",
+            "available_after_as_of", "invalid_ohlc", "duplicate_price_bars",
+        }
+        if any(r in hard for r in reasons):
+            status = "excluded"
+        elif any(r.startswith("pending_future_") for r in reasons) or not adjusted_price_available or not corporate_actions_verified:
+            status = "pending_future_bar"
+        else:
+            status = "ready"
+        rows.append({
+            "event_id": event_id or None,
+            "event_type": e.get("event_type"),
+            "entity_id": ticker,
+            "source": source or None,
+            "available_at": available.isoformat().replace("+00:00", "Z") if available else None,
+            "as_of": as_of,
+            "entry_bar_date": entry_date.isoformat() if entry_date else None,
+            "entry_close_utc": entry_close.isoformat().replace("+00:00", "Z") if entry_close else None,
+            "returns": returns,
+            "price_basis": "raw_close",
+            "adjusted_price_available": adjusted_price_available,
+            "corporate_actions_verified": corporate_actions_verified,
+            "strict_event_time": event_time is not None,
+            "publication_forward_candidate": not any(r in hard for r in reasons),
+            "status": status,
+            "reasons": sorted(set(reasons)),
+        })
+    return {
+        "as_of": as_of,
+        "selected_events": len(selected),
+        "ready": sum(r["status"] == "ready" for r in rows),
+        "pending_future_bar": sum(r["status"] == "pending_future_bar" for r in rows),
+        "excluded": sum(r["status"] == "excluded" for r in rows),
+        "publication_forward_candidates": sum(r["publication_forward_candidate"] for r in rows),
+        "lookahead_flags": 0,
+        "panel_duplicate_rows": int(dup),
+        "panel_invalid_rows": int(bad),
+        "market_proxy": market_proxy,
+        "price_basis": "raw_close",
+        "adjusted_price_available": adjusted_price_available,
+        "corporate_actions_verified": corporate_actions_verified,
+        "events": rows,
+        "research_only": True,
+        "no_signal": True,
+    }
+
+
+def main(argv: list[str] | None = None) -> int:
+    p = argparse.ArgumentParser(description=__doc__)
+    p.add_argument("--events", required=True)
+    p.add_argument("--price-panel", required=True)
+    p.add_argument("--as-of", required=True)
+    p.add_argument("--output", required=True)
+    p.add_argument("--adjusted-price-available", action="store_true")
+    p.add_argument("--corporate-actions-verified", action="store_true")
+    p.add_argument("--market-proxy", help="Ticker used for market-wide events when no ticker is present")
+    args = p.parse_args(argv)
+    events = json.loads(Path(args.events).read_text(encoding="utf-8"))
+    price = pd.read_csv(args.price_panel)
+    result = evaluate(events, price, as_of=args.as_of,
+                      adjusted_price_available=args.adjusted_price_available,
+                      corporate_actions_verified=args.corporate_actions_verified,
+                      market_proxy=args.market_proxy)
+    Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+    Path(args.output).write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
+    print(json.dumps({k: result[k] for k in ("selected_events", "ready", "pending_future_bar", "excluded", "lookahead_flags")}, indent=2))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
