@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T03:17:10Z",
+  "generated_at": "2026-10-28T03:30:01Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -20,11 +20,11 @@
       "indicator": "未季调CPI年率",
       "period": "2026年9月",
       "forecast": 3.6,
-      "actual": 3.7,
+      "actual": 3.74,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 3.7% vs 预期 3.6%（+0.1）。"
+      "impact": "实际 3.74% vs 预期 3.6%（+0.14）。"
     },
     {
       "key": "core_cpi_yoy",
@@ -42,22 +42,22 @@
       "indicator": "季调后CPI月率",
       "period": "2026年8月",
       "forecast": 0.2,
-      "actual": 0.6,
+      "actual": 0.65,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 0.6% vs 预期 0.2%（+0.4）。"
+      "impact": "实际 0.65% vs 预期 0.2%（+0.45）。"
     },
     {
       "key": "umich",
       "indicator": "密歇根消费者信心",
       "period": "2026年9月",
       "forecast": 47.6,
-      "actual": 48.0,
+      "actual": 48.1,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 48.0% vs 预期 47.6%（+0.4）。"
+      "impact": "实际 48.1% vs 预期 47.6%（+0.5）。"
     },
     {
       "key": "ism",
@@ -80,6 +80,17 @@
       "unit": "K",
       "released_at": null,
       "impact": "实际 90.0K vs 预期 70.0K（+20.0）。"
+    },
+    {
+      "key": "claims",
+      "indicator": "初请失业金",
+      "period": "最新",
+      "forecast": 199.0,
+      "actual": 194.0,
+      "previous": null,
+      "unit": "K",
+      "released_at": null,
+      "impact": "实际 194.0K vs 预期 199.0K（-5.0）。"
     }
   ]
 }

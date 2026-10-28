@@ -54,6 +54,41 @@ MONTHS = {m: i for i, m in enumerate(
      "August", "September", "October", "November", "December"], 1)}
 
 
+CAL_URL = "https://tradingeconomics.com/united-states/calendar"
+CAL_EVENTS = {
+    "nonfarm": "Non Farm Payrolls",
+    "claims": "Initial Jobless Claims",
+}
+
+
+def calendar_consensus():
+    """从 TE 日历抓一致性预期：{key: (forecast, unit)}；取第一条有 consensus 的行。"""
+    try:
+        text = _get(CAL_URL)
+    except Exception as exc:
+        print(f"[WARN] TE 日历抓取失败：{exc}", file=sys.stderr)
+        return {}
+    rows = re.split(r"<tr[^>]*>", text)
+    out = {}
+    for row in rows:
+        m = re.search(r"calendar-event'[^>]*>\s*([^<]+?)\s*</a>", row)
+        if not m:
+            continue
+        name = m.group(1).strip()
+        key = next((k for k, v in CAL_EVENTS.items() if v == name), None)
+        if not key or key in out:
+            continue
+        c = re.search(r"id=['\"]consensus['\"][^>]*>\s*([^<]*)<", row)
+        if not c or not c.group(1).strip():
+            continue
+        raw = c.group(1).strip()
+        mm = re.match(r"([-0-9.]+)\s*([KMB%]?)", raw)
+        if not mm:
+            continue
+        out[key] = (float(mm.group(1)), mm.group(2) or "%")
+    return out
+
+
 def _get(url: str) -> str:
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=30) as r:
@@ -122,6 +157,26 @@ def build():
             "released_at": None,
             "impact": f"实际 {actual}{unit} vs 预期 {forecast}{unit}（{'+' if diff >= 0 else ''}{diff}）。",
         })
+    # 日历兜底：非农 / 初请（指标页没有 consensus 措辞）
+    try:
+        mi_now = json.loads((REPO / "dashboard" / "data" / "macro_indicators.json")
+                            .read_text(encoding="utf-8"))
+        actual_now = {i.get("key"): i.get("value") for i in (mi_now.get("items") or [])}
+    except Exception:
+        actual_now = {}
+    names = {"nonfarm": "季调后非农", "claims": "初请失业金"}
+    for key, (fc, unit) in calendar_consensus().items():
+        if any(r["key"] == key for r in rows):
+            continue
+        act = actual_now.get(key)
+        if act is None:
+            continue
+        rows.append({
+            "key": key, "indicator": names.get(key, key), "period": "最新",
+            "forecast": fc, "actual": round(float(act), 2), "previous": None,
+            "unit": unit, "released_at": None, "impact": "",
+        })
+
     if not rows:
         return None
 
