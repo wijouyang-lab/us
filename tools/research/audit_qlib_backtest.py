@@ -138,22 +138,61 @@ def bootstrap_ci(net: np.ndarray, n_boot: int = 5000, seed: int = 7) -> dict:
     }
 
 
-def walk_forward_predictions(df: pd.DataFrame, handler, test_dates: list[pd.Timestamp]) -> pd.Series:
-    """Refit on an expanding window, purging the final 20 sessions before each date."""
+def walk_forward_records(df: pd.DataFrame, handler, test_dates: list[pd.Timestamp],
+                         one_way_bps: float = 5.0) -> list[dict]:
+    """Refit on an expanding window, purging one full 20-session label window.
+
+    Every test date only uses rows whose labels were complete by the prior
+    session. Winsor thresholds are recomputed from that window's training
+    labels, not from the test dates.
+    """
     sessions = sorted(pd.to_datetime(df["Date"]).dropna().unique())
-    preds = []
+    prev_long, prev_short = set(), set()
+    out = []
     for d in test_dates:
         prior = [s for s in sessions if s < d]
         if len(prior) < 80:
             continue
-        train_end = prior[-21]  # purge one 20-session label window
-        ds = DatasetH(handler, segments={"train": (str(sessions[0].date()), str(pd.Timestamp(train_end).date())),
-                                         "test": (str(d.date()), str(d.date()))})
+        train_end = prior[-21]  # 20-session label + 1-session embargo
+        train = df[(df["Date"] <= train_end) & df["label"].notna()]
+        if len(train) < 500:
+            continue
+        winsor = (float(train["label"].quantile(.01)), float(train["label"].quantile(.99)))
+        ds = DatasetH(handler, segments={
+            "train": (str(sessions[0].date()), str(pd.Timestamp(train_end).date())),
+            "test": (str(d.date()), str(d.date())),
+        })
         model = LinearModel(estimator="ridge", alpha=ALPHA, fit_intercept=True).fit(ds)
-        preds.append(model.predict(ds, segment="test"))
-    if not preds:
-        return pd.Series(dtype=float)
-    return pd.concat(preds).sort_index()
+        pred = model.predict(ds, segment="test")
+        actual = df[df["Date"] == d][["Ticker", "label"]].rename(columns={"label": "next"}).set_index("Ticker")["next"]
+        day = pred.loc[d] if d in pred.index.get_level_values(0) else pd.Series(dtype=float)
+        x = pd.concat([day.rename("pred"), actual.rename("ret")], axis=1).dropna()
+        if len(x) < 50:
+            continue
+        x["r"] = x["ret"].clip(winsor[0], winsor[1])
+        rank = x["pred"].rank(pct=True)
+        long, short = set(x[rank >= .8].index), set(x[rank <= .2].index)
+        q5, q1 = x.loc[list(long), "r"].mean(), x.loc[list(short), "r"].mean()
+        turnover = 1.0 if not (prev_long or prev_short) else (
+            len(long - prev_long) + len(short - prev_short)
+        ) / max(len(long) + len(short), 1)
+        out.append({
+            "date": d.strftime("%Y-%m-%d"),
+            "train_start": str(min(train["Date"]).date()),
+            "train_end": str(pd.Timestamp(train_end).date()),
+            "train_rows": int(len(train)),
+            "feature_count": len(FEATURES),
+            "alpha": ALPHA,
+            "n_all": int(len(x)),
+            "n_missing": int(len(actual) - len(x)),
+            "n_long": len(long), "n_short": len(short),
+            "gross": float(q5 - q1), "cost": float(one_way_bps / 10000 * turnover),
+            "net": float(q5 - q1 - one_way_bps / 10000 * turnover),
+            "turnover": float(turnover),
+            "long": sorted(long), "short": sorted(short),
+        })
+        prev_long, prev_short = long, short
+    return out
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -173,8 +212,7 @@ def main(argv: list[str] | None = None) -> int:
     winsor = (float(train_labels.quantile(.01)), float(train_labels.quantile(.99)))
 
     records = monthly_records(pred, test, dates, winsor)
-    wf_pred = walk_forward_predictions(df, handler, dates)
-    wf_records = monthly_records(wf_pred, test, dates, winsor) if not wf_pred.empty else []
+    wf_records = walk_forward_records(df, handler, dates)
     ew = []
     for d in dates:
         x = test[test["Date"] == d]["next"].dropna()
@@ -198,6 +236,7 @@ def main(argv: list[str] | None = None) -> int:
         "test_10bps": metrics(records, 10.0),
         "test_20bps": metrics(records, 20.0),
         "walk_forward_5bps": metrics(wf_records, 5.0) if wf_records else {"status": "INSUFFICIENT"},
+        "walk_forward_windows": wf_records,
         "test_first_half": metrics(records[:half], 5.0) if half >= 3 else {"status": "INSUFFICIENT"},
         "test_second_half": metrics(records[half:], 5.0) if len(records) - half >= 3 else {"status": "INSUFFICIENT"},
         "benchmark": {

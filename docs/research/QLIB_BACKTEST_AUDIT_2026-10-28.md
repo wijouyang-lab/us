@@ -86,10 +86,10 @@ Refitting an expanding-window Ridge model at each test date, purging the final
 |---|---:|---:|
 | Rebalances | 9 | 9 |
 | Net monthly | 2.91% | 1.12% |
-| Annualized net | 39.9% | **12.5%** |
-| Sharpe | 2.78 | **0.65** |
+| Annualized net | 39.9% | **13.2%** |
+| Sharpe | 2.78 | **0.69** |
 | Max drawdown | -2.7% | **-12.2%** |
-| t-stat | 2.11 | **0.60** |
+| t-stat | 2.11 | **0.64** |
 
 The fixed-model result does not survive honest rolling refits. This is the main
 reason it is not a deployable strategy.
@@ -122,3 +122,20 @@ annualization, turnover/cost, and holdings reporting:
 
 > **No deployable alpha is established. The 9-month test is insufficient, and
 > the walk-forward result is not significant.**
+
+
+### Per-window walk-forward detail
+
+| Date | Train end | Train rows | Long | Short | Gross | Cost | Net | Turnover |
+|---|---|---:|---:|---:|---:|---:|---:|---:|
+| 2026-01-30 | 2025-12-30 | 125,044 | 98 | 97 | -3.47% | 0.05% | -3.52% | 100.0% |
+| 2026-02-27 | 2026-01-28 | 134,244 | 98 | 97 | +0.33% | 0.02% | +0.31% | 39.0% |
+| 2026-03-31 | 2026-03-02 | 144,929 | 99 | 98 | +3.87% | 0.01% | +3.86% | 29.4% |
+| 2026-04-30 | 2026-03-31 | 155,163 | 99 | 98 | +8.76% | 0.01% | +8.74% | 29.4% |
+| 2026-05-29 | 2026-04-29 | 164,978 | 99 | 98 | -4.03% | 0.01% | -4.04% | 28.9% |
+| 2026-06-30 | 2026-05-29 | 175,305 | 99 | 98 | -8.16% | 0.01% | -8.17% | 24.4% |
+| 2026-07-31 | 2026-07-01 | 186,145 | 99 | 98 | +7.34% | 0.01% | +7.32% | 27.9% |
+| 2026-08-31 | 2026-07-31 | 196,519 | 100 | 99 | +3.52% | 0.01% | +3.51% | 28.6% |
+| 2026-09-15 | 2026-08-14 | 201,467 | 100 | 99 | +2.62% | 0.01% | +2.60% | 26.6% |
+
+The window-level results swing from -8.17% to +8.74% per month. This is not a stable return stream.
