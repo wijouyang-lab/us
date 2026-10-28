@@ -19,14 +19,11 @@ from typing import Any, Iterable
 from tools.research.pit_event_archive import event_version_id, merge_event_archive
 
 STORE_SCHEMA_VERSION = 1
+HASH_FORMAT = "canonical-json-v1"
 ARCHIVE = Path("archive/event_archive.json")
 OBSERVATIONS = Path("archive/observations.json")
 LATEST_MANIFEST = Path("archive/latest_manifest.json")
 RUNS = Path("runs")
-
-
-def _canonical(value: Any) -> str:
-    return json.dumps(value, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
 
 
 def _dump(path: Path, value: Any) -> None:
@@ -37,12 +34,30 @@ def _dump(path: Path, value: Any) -> None:
     temporary.replace(path)
 
 
+def _canonical_bytes(value: Any) -> bytes:
+    """Stable UTF-8 bytes: sorted keys, compact separators, no BOM/newline."""
+    return json.dumps(
+        value, sort_keys=True, ensure_ascii=False, separators=(",", ":"), allow_nan=False
+    ).encode("utf-8")
+
+
 def _hash_file(path: Path) -> str:
-    return sha256(path.read_bytes()).hexdigest()
+    """Hash canonical JSON, independent of whitespace and Git line endings."""
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise ValueError(f"cannot hash invalid JSON: {path}: {exc}") from exc
+    return sha256(_canonical_bytes(value)).hexdigest()
+
+
+def _legacy_hash_file(path: Path) -> str:
+    """Pre-canonical manifests hashed raw bytes; normalize CRLF for compatibility."""
+    data = path.read_bytes().replace(b"\r\n", b"\n")
+    return sha256(data).hexdigest()
 
 
 def _hash_value(value: Any) -> str:
-    return sha256(_canonical(value).encode("utf-8")).hexdigest()
+    return sha256(_canonical_bytes(value)).hexdigest()
 
 
 def _run_manifest(store: Path, run_dir: Path) -> dict[str, Any]:
@@ -54,12 +69,19 @@ def _run_manifest(store: Path, run_dir: Path) -> dict[str, Any]:
         raise ValueError(f"run manifest invalid: {run_dir}")
     if str(manifest.get("run_id") or "") != run_dir.name:
         raise ValueError(f"run manifest id mismatch: {run_dir}")
+    hash_format = manifest.get("snapshot_hash_format")
+    if hash_format not in {None, HASH_FORMAT}:
+        raise ValueError(f"unsupported snapshot hash format: {hash_format}")
     hashes = manifest.get("snapshot_sha256") or {}
     for name in ("events.json", "metadata.json", "audit.json"):
         target = run_dir / name
         if not target.exists():
             raise ValueError(f"run snapshot missing {name}: {run_dir}")
-        if hashes.get(name) != _hash_file(target):
+        expected = hashes.get(name)
+        allowed = {_hash_file(target)}
+        if hash_format is None:
+            allowed.add(_legacy_hash_file(target))
+        if expected not in allowed:
             raise ValueError(f"run snapshot hash mismatch {name}: {run_dir}")
     return manifest
 
@@ -74,10 +96,11 @@ def _store_manifest(store: Path, archive: list[dict], observations: list[dict]) 
             "commit_sha": manifest.get("commit_sha", ""),
             "captured_at": manifest.get("captured_at", ""),
             "snapshot_sha256": manifest.get("snapshot_sha256", {}),
-            "manifest_sha256": sha256((run_dir / "manifest.json").read_bytes()).hexdigest(),
+            "manifest_sha256": _hash_file(run_dir / "manifest.json"),
         })
     return {
         "store_schema_version": STORE_SCHEMA_VERSION,
+        "snapshot_hash_format": HASH_FORMAT,
         "generated_at_utc": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "run_count": len(runs),
         "latest_run_id": runs[-1]["run_id"] if runs else None,
@@ -220,11 +243,11 @@ def import_snapshot(store: Path, snapshot: Path, *, run_id: str, run_url: str = 
     for src, name in ((events_path, "events.json"), (metadata_path, "metadata.json"), (audit_path, "audit.json")):
         if not src.exists():
             continue
-        snapshot_hashes[name] = sha256(src.read_bytes()).hexdigest()
+        snapshot_hashes[name] = _hash_file(src)
         run_dir.mkdir(parents=True, exist_ok=True)
         target = run_dir / name
         if target.exists():
-            if sha256(target.read_bytes()).hexdigest() != snapshot_hashes[name]:
+            if _hash_file(target) != snapshot_hashes[name]:
                 raise ValueError(f"run {run_id} already exists with different {name}")
         else:
             shutil.copyfile(src, target)
@@ -256,6 +279,7 @@ def import_snapshot(store: Path, snapshot: Path, *, run_id: str, run_url: str = 
     counts = _counts(existing_archive, merged, observations, events, previous_observation_count)
     manifest = {
         "store_schema_version": STORE_SCHEMA_VERSION,
+        "snapshot_hash_format": HASH_FORMAT,
         "run_id": run_id,
         "run_url": run_url,
         "commit_sha": commit_sha,
@@ -313,6 +337,8 @@ def rebuild(store: Path) -> dict[str, Any]:
     latest = _read_json(latest_path)
     if not isinstance(latest, dict):
         raise ValueError("latest_manifest.json is invalid")
+    if latest.get("snapshot_hash_format") not in {None, HASH_FORMAT}:
+        raise ValueError("latest_manifest has unsupported snapshot hash format")
     if latest.get("run_count") != len(run_dirs):
         raise ValueError("latest_manifest run_count does not match snapshots")
     if latest.get("archive_sha256") != _hash_value(archive):

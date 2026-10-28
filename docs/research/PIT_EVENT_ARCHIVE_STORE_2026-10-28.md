@@ -92,7 +92,7 @@ cumulative archive is not reproducible.
 - timestamp conflict counting;
 - rebuild from run snapshots.
 
-Result: **9 passed**. Missing snapshots, hash mismatches, missing latest manifest, corrupt archive, and conflict counts are covered.
+Result: **14 passed**. Missing snapshots, hash mismatches, missing latest manifest, corrupt archive, and conflict counts are covered.
 
 Also imported the real 35-event workflow artifact twice under different run IDs:
 
@@ -125,3 +125,23 @@ Each Fed-only run adds roughly tens of KB. The branch provides full commit
 history and per-run manifests. If growth becomes material, snapshots can later
 be compacted into monthly files without changing the event ID/version semantics;
 that is not needed at current volume.
+
+## Canonical hash compatibility
+
+Snapshot hashes use a canonical JSON byte representation:
+
+- UTF-8, no BOM, no trailing newline
+- sorted object keys
+- compact separators `("," , ":")`
+- `allow_nan=False`
+
+The hash is computed by parsing the JSON and hashing canonical bytes, not the
+working-tree bytes. LF and CRLF therefore produce the same hash.
+
+Legacy archives created before this change used raw LF bytes in their run
+manifests. Verification accepts the canonical hash or the legacy LF-normalized
+hash. A real content change cannot match either and still fails.
+
+Tests: 12 passed, including LF/CRLF equivalence, CRLF rewrite verification,
+legacy raw hash acceptance, content-change failure, missing snapshots,
+corrupt manifests, and rebuild checks.
