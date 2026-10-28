@@ -1,25 +1,25 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T03:34:59Z",
-  "asof": "2026-10-28T03:34:47Z",
+  "generated_at": "2026-10-28T03:39:14Z",
+  "asof": "2026-10-28T03:39:06Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
       "key": "macro_ok",
       "label": "宏观有值项",
       "group": "宏观",
-      "value": 10,
+      "value": 9,
       "unit": "/10",
-      "status": "ok",
+      "status": "partial",
       "source": "macro_indicators"
     },
     {
       "key": "macro_missing",
       "label": "缺失项",
       "group": "宏观",
-      "value": 0,
+      "value": 1,
       "unit": "",
-      "status": "ok",
+      "status": "partial",
       "source": "macro_indicators"
     },
     {
