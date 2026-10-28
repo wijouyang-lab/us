@@ -1,7 +1,7 @@
 {
   "schema_version": "phase3.v1",
   "data_maturity": {
-    "backtest_rows": 3945,
+    "backtest_rows": 4237,
     "n_factors": 24,
     "n_horizons": 3
   },
@@ -11,7 +11,7 @@
       "mature": true
     },
     "10D": {
-      "max_sample_count": 1342,
+      "max_sample_count": 1365,
       "mature": true
     },
     "20D": {
@@ -26,7 +26,7 @@
         "mature": true
       },
       "10D": {
-        "max_sample_count": 1342,
+        "max_sample_count": 1365,
         "mature": true
       },
       "20D": {
@@ -96,50 +96,50 @@
     {
       "Factor_A": "RSI_14",
       "Factor_B": "Bias_Pct",
-      "Pearson": 0.8422,
-      "Spearman": 0.9277
+      "Pearson": 0.8448,
+      "Spearman": 0.9285
     },
     {
       "Factor_A": "RSI_14",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8824,
-      "Spearman": 0.9229
+      "Pearson": 0.8829,
+      "Spearman": 0.9217
     },
     {
       "Factor_A": "Bias_Pct",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8347,
-      "Spearman": 0.9499
+      "Pearson": 0.835,
+      "Spearman": 0.9467
     },
     {
       "Factor_A": "MA20",
       "Factor_B": "MA50",
-      "Pearson": 0.9979,
+      "Pearson": 0.9978,
       "Spearman": 0.9986
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Momentum_20D_Pct",
-      "Pearson": 0.9217,
-      "Spearman": 0.9125
+      "Pearson": 0.9251,
+      "Spearman": 0.9176
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9187,
-      "Spearman": 0.9102
+      "Pearson": 0.9221,
+      "Spearman": 0.915
     },
     {
       "Factor_A": "Volume_Ratio_5D",
       "Factor_B": "Volume_Ratio_20D",
-      "Pearson": 0.9288,
-      "Spearman": 0.9218
+      "Pearson": 0.9199,
+      "Spearman": 0.9139
     },
     {
       "Factor_A": "Momentum_20D_Pct",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9895,
-      "Spearman": 0.9856
+      "Pearson": 0.9901,
+      "Spearman": 0.9865
     }
   ],
   "insufficient_data_reasons": [
