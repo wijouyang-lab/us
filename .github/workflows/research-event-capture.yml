@@ -12,10 +12,16 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: research-event-archive
+  cancel-in-progress: false
+
 jobs:
   capture:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 15
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -29,6 +35,7 @@ jobs:
           pip install -r requirements-production.txt
 
       - name: Capture official feeds
+        id: capture
         env:
           # Optional override; the collector has an honest project default UA.
           OFFICIAL_FEED_USER_AGENT: ${{ secrets.OFFICIAL_FEED_USER_AGENT }}
@@ -42,8 +49,45 @@ jobs:
             --output-dir "$out" \
             --decision-at "$decision" \
             --feeds "$FEEDS"
+          echo "out=$out" >> "$GITHUB_OUTPUT"
           echo "## Research event capture" >> "$GITHUB_STEP_SUMMARY"
           echo "Artifacts: $out" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Persist cumulative archive branch
+        env:
+          CAPTURE_DIR: ${{ steps.capture.outputs.out }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          PYTHONPATH: ${{ github.workspace }}
+        run: |
+          set -euo pipefail
+          archive_branch="research/event-archive"
+          archive_dir="$RUNNER_TEMP/event-archive"
+          if git ls-remote --exit-code --heads origin "$archive_branch" >/dev/null 2>&1; then
+            git fetch origin "$archive_branch:refs/remotes/origin/$archive_branch"
+            git worktree add --detach "$archive_dir" "origin/$archive_branch"
+          else
+            git worktree add --detach "$archive_dir" HEAD
+            cd "$archive_dir"
+            git checkout --orphan "$archive_branch"
+            git rm -rf .
+          fi
+          cd "$archive_dir"
+          python -m tools.research.event_archive_store import \
+            --store "$archive_dir" \
+            --snapshot "$GITHUB_WORKSPACE/$CAPTURE_DIR" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-url "$RUN_URL" \
+            --commit-sha "$GITHUB_SHA"
+          python -m tools.research.event_archive_store verify --store "$archive_dir"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No archive changes for run $GITHUB_RUN_ID"
+            exit 0
+          fi
+          git commit -m "event archive: run ${GITHUB_RUN_ID}"
+          git push origin "HEAD:${archive_branch}"
 
       - name: Upload capture artifacts
         if: always()

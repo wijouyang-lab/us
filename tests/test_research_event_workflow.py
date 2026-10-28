@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Static contract tests for the research-only event capture workflow."""
 
 from pathlib import Path
@@ -23,6 +23,17 @@ def test_workflow_uses_optional_secret_and_uploads_artifacts():
     assert "upload-artifact" in text
     assert "docs/research/event_forward_runs/" in text
     assert "retention-days: 90" in text
+
+
+def test_workflow_persists_archive_on_separate_branch():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "contents: write" in text
+    assert "research/event-archive" in text
+    assert "concurrency:" in text
+    assert "event_archive_store import" in text
+    assert "event_archive_store verify" in text
+    assert "PYTHONPATH" in text
+    assert 'git push origin "HEAD:${archive_branch}"' in text
 
 
 def test_workflow_does_not_hardcode_secret_values():
