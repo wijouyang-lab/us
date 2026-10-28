@@ -223,6 +223,48 @@ def parse(text: str):
     return actual, float(e.group(1)), unit, period
 
 
+MANUAL = REPO / "dashboard" / "data" / "macro_forecast_manual.json"
+
+
+def apply_manual(rows, manual):
+    """人工预期优先：按 key 覆盖/追加，source 标记 manual。"""
+    by_key = {r.get("key"): r for r in rows}
+    for it in (manual or {}).get("items") or []:
+        key = str(it.get("key") or "").strip()
+        fc = it.get("forecast")
+        if not key or fc is None:
+            continue
+        unit = it.get("unit") or "%"
+        row = {
+            "key": key,
+            "indicator": it.get("indicator") or key,
+            "period": it.get("period"),
+            "forecast": float(fc),
+            "actual": None,
+            "previous": it.get("previous"),
+            "unit": unit,
+            "released_at": it.get("released_at"),
+            "impact": "人工维护的一致预期。",
+            "source": "manual",
+        }
+        if key in by_key:
+            old = by_key[key]
+            row["actual"] = old.get("actual")
+            by_key[key].update({"forecast": row["forecast"], "unit": unit,
+                                "period": row["period"] or old.get("period"),
+                                "source": "manual"})
+        else:
+            rows.append(row)
+    return rows
+
+
+def _manual_payload():
+    try:
+        return json.loads(MANUAL.read_text(encoding="utf-8"))
+    except Exception:
+        return {}
+
+
 def build():
     rows = []
     for key, (name, url) in PAGES.items():
@@ -279,6 +321,8 @@ def build():
 
     if not rows:
         return None
+
+    apply_manual(rows, _manual_payload())
 
     # 用 macro_indicators 的实际值覆盖 TE 页面解析值，保证卡片/AI/预期差一致
     try:

@@ -71,3 +71,18 @@ surprise = actual − forecast   （单位：百分点 pp）
 1. 只在**官方公布之后**写入 `actual`，预期值来自公布前的财经日历，并记录 `source`。
 2. 不同口径要分行（例如「核心PCE 月度同比 3.0%」与「核心PCE 年化季率终值 3.3%」是两条，不能合并）。
 3. 不写没有来源的预期值；拿不到一致预期就不写该行。
+
+## 人工维护预期（免费兜底）
+
+自动抓取拿不到一致预期时（如非农），可在 `dashboard/data/macro_forecast_manual.json`
+手工写入，合并时**人工值优先**：
+
+```json
+{"items":[{"key":"nonfarm","indicator":"季调后非农","forecast":50,"unit":"K",
+  "period":"2026年10月","source":"manual"}]}
+```
+
+- `key` 必须与 macro_indicators 对齐（nonfarm / claims / adp / cpi_yoy /
+  core_cpi_yoy / cpi_mom / unrate / umich / ism / eia_crude_chg）；
+- 实际值仍由 macro_indicators 覆盖，AI 解读照常生成；
+- 文件缺失或 items 为空 → 不影响自动抓取结果。
