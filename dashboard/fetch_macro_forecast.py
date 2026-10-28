@@ -94,6 +94,46 @@ def calendar_consensus():
     return {k: (v[0], v[1]) for k, v in out.items()}
 
 
+def finnhub_nfp():
+    """Finnhub 经济日历：美国 Nonfarm Payrolls 的 estimate。免费档可能不含该接口。"""
+    key = os.environ.get("FINNHUB_API_KEY")
+    if not key:
+        return None
+    from datetime import date, timedelta
+    start = (date.today() - timedelta(days=45)).isoformat()
+    end = (date.today() + timedelta(days=15)).isoformat()
+    url = (f"https://finnhub.io/api/v1/calendar/economic?from={start}&to={end}"
+           f"&token={key}")
+    try:
+        data = _json(url)
+    except Exception as exc:
+        print(f"[WARN] Finnhub 日历失败：{exc}", file=sys.stderr)
+        return None
+    rows = data.get("economicCalendar") or []
+    hits = []
+    for r in rows:
+        ev = str(r.get("event") or "").lower()
+        if r.get("country") == "US" and "nonfarm payroll" in ev and not ev.startswith("private"):
+            est = r.get("estimate")
+            if est is None:
+                continue
+            raw = str(est).replace(",", "").replace("%", "")
+            try:
+                val = float(raw)
+            except ValueError:
+                continue
+            unit = "K" if abs(val) > 5 else "%"
+            hits.append((r.get("date") or "", val, unit))
+    if not hits:
+        return None
+    hits.sort(key=lambda x: x[0])
+    return {"forecast": hits[-1][1], "unit": hits[-1][2]}
+
+
+def _json(url: str):
+    return json.loads(_get(url))
+
+
 def _get(url: str) -> str:
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=30) as r:
@@ -181,6 +221,16 @@ def build():
             "forecast": fc, "actual": round(float(act), 2), "previous": None,
             "unit": unit, "released_at": None, "impact": "",
         })
+
+    fh = finnhub_nfp()
+    if fh and not any(r["key"] == "nonfarm" for r in rows):
+        act = actual_now.get("nonfarm")
+        if act is not None:
+            rows.append({
+                "key": "nonfarm", "indicator": "季调后非农", "period": "最新",
+                "forecast": fh["forecast"], "actual": round(float(act), 2),
+                "previous": None, "unit": fh["unit"], "released_at": None, "impact": "",
+            })
 
     if not rows:
         return None

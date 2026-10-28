@@ -128,18 +128,22 @@ jobs:
           CLAWSOCKET_BASE_URL: ${{ secrets.CLAWSOCKET_BASE_URL }}
           GPT_MODEL: deepseek-flash
 
-      - name: Fetch macro indicators (9 items)
-        # FRED + ISM + EIA；逐项 fail-closed（拿不到写 null），只写 macro_indicators.json。
+      - name: Fetch macro indicators (11 items)
+        # FRED + ISM + EIA（官方 API 优先）；逐项 fail-closed，只写 macro_indicators.json。
         run: python dashboard/fetch_macro_indicators.py
         continue-on-error: true
         timeout-minutes: 10
+        env:
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
 
-      - name: Auto-update CPI forecast vs actual
-        # TradingEconomics 指标页解析 CPI / 核心CPI 的预期与实际，写 macro_forecast.json；
-        # 解析失败保留旧文件（fail-closed）。
+      - name: Auto-update forecast vs actual
+        # TradingEconomics 页面/日历 + Finnhub（非农）；解析失败保留旧文件（fail-closed）。
         run: python dashboard/fetch_macro_forecast.py
         continue-on-error: true
         timeout-minutes: 3
+        env:
+          FINNHUB_API_KEY: ${{ secrets.FINNHUB_API_KEY }}
+          EIA_API_KEY: ${{ secrets.EIA_API_KEY }}
 
       - name: CPI expected-diff AI (only on change)
         # 只有 CPI/核心CPI 的期间/预期/实际变化时才调用 AI；signature 相同直接跳过。

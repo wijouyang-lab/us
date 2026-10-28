@@ -35,6 +35,10 @@ OUT = REPO / "dashboard" / "data" / "macro_indicators.json"
 UA = {"User-Agent": "Mozilla/5.0 (compatible; US-Dashboard-Macro/1.0)"}
 
 
+def _json(url: str, timeout: int = 20):
+    return json.loads(_get(url, timeout=timeout))
+
+
 def _get(url: str, timeout: int = 20) -> str:
     req = urllib.request.Request(url, headers=UA)
     with urllib.request.urlopen(req, timeout=timeout) as r:
@@ -225,8 +229,8 @@ def build_items():
         items.append(_item("adp", "ADP就业人数", None, "K", None,
                            source="FRED ADPMNUSNERSA（月增）"))
 
-    # 8. 每周 EIA 原油库存（千桶）
-    items.append(_eia_crude())
+    # 8. 每周 EIA 原油库存（存量 + 变化）
+    items.extend(_eia_items())
 
     # 9. 每周初请失业金人数（K）
     rows = fred_series("ICSA")
@@ -280,46 +284,65 @@ def _ism_pmi():
     return _item("ism", "ISM制造业PMI", None, "", None, source="ISM 官网（暂不可用）")
 
 
-def _eia_crude():
-    text = ""
-    for attempt in range(2):
+def _eia_api_rows():
+    """EIA 官方 API：最近几周原油库存（千桶）。需要 EIA_API_KEY。"""
+    key = os.environ.get("EIA_API_KEY")
+    if not key:
+        return []
+    url = ("https://api.eia.gov/v2/petroleum/stoc/wstk/data/"
+           "?frequency=weekly&data[0]=value&facets[series][]=WCESTUS1"
+           "&sort[0][column]=period&sort[0][direction]=desc&length=3"
+           f"&api_key={key}")
+    try:
+        data = _json(url)
+        rows = data.get("response", {}).get("data") or []
+        out = []
+        for r in rows:
+            p = str(r.get("period") or "")
+            v = r.get("value")
+            if p and v is not None:
+                out.append((p, int(float(v))))
+        return out
+    except Exception as exc:
+        print(f"[WARN] EIA API 失败：{exc}", file=sys.stderr)
+        return []
+
+
+def _eia_items():
+    """返回 EIA 存量与变化两个 item；API 失败再退回网页抓取。"""
+    rows = _eia_api_rows()
+    if not rows:
         try:
             text = _get("https://www.eia.gov/dnav/pet/hist/LeafHandler.ashx?n=PET&s=WCESTUS1&f=W",
                         timeout=25)
-            break
+            pairs = re.findall(
+                r"<td class='B5'>(\d{2})/(\d{2})&nbsp;</td>\s*<td class='B3'>([\d,]+)&nbsp;",
+                text)
+            rows = [(f"20??-{m}-{d}", int(v.replace(",", ""))) for m, d, v in pairs][::-1]
         except Exception as exc:
-            print(f"[WARN] EIA 第 {attempt+1} 次失败：{exc}", file=sys.stderr)
-    try:
-        pairs = re.findall(
-            r"<td class='B5'>(\d{2})/(\d{2})&nbsp;</td>\s*<td class='B3'>([\d,]+)&nbsp;",
-            text)
-        if pairs:
-            _, _, v = pairs[-1]
-            val = int(v.replace(",", ""))
-            prev = int(pairs[-2][2].replace(",", "")) if len(pairs) > 1 else None
-            return _item("eia_crude", "每周EIA原油库存", val, "千桶", None,
-                         prev, (val - prev) if prev is not None else None,
-                         "EIA 周报", "不含战略储备（SPR）")
-    except Exception as exc:
-        print(f"[WARN] EIA 抓取失败：{exc}", file=sys.stderr)
-    return _item("eia_crude", "每周EIA原油库存", None, "千桶", None, source="EIA 周报")
-
-
-def _atomic_write(path: Path, payload: dict):
-    path.parent.mkdir(parents=True, exist_ok=True)
-    fd, tmp = tempfile.mkstemp(prefix=path.name + ".", suffix=".tmp", dir=str(path.parent))
-    try:
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(payload, f, ensure_ascii=False, indent=2)
-            f.write("\n")
-        os.replace(tmp, path)
-    finally:
-        if os.path.exists(tmp):
-            os.unlink(tmp)
-
+            print(f"[WARN] EIA 网页抓取失败：{exc}", file=sys.stderr)
+            rows = []
+    if not rows:
+        return [
+            _item("eia_crude", "每周EIA原油库存", None, "千桶", None, source="EIA"),
+        ]
+    period, latest = rows[0]
+    prev = rows[1][1] if len(rows) > 1 else None
+    chg = (latest - prev) if prev is not None else None
+    out = [
+        _item("eia_crude", "每周EIA原油库存", latest, "千桶", period, prev, chg,
+              "EIA API" if os.environ.get("EIA_API_KEY") else "EIA 网页"),
+    ]
+    if prev is not None:
+        out.append(_item("eia_crude_chg", "EIA原油库存变化", round((latest - prev) / 1000, 2),
+                         "M", period, None, None, "EIA API（环比）", "百万桶"))
+    return out
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="抓取美股宏观九项指标")
+    import argparse
+    import tempfile
+
+    ap = argparse.ArgumentParser(description="抓取美股宏观指标")
     ap.add_argument("--out", default=str(OUT))
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args(argv)
@@ -337,8 +360,18 @@ def main(argv=None) -> int:
     if args.dry_run:
         print(json.dumps(payload, ensure_ascii=False, indent=2))
         return 0
-    _atomic_write(Path(args.out), payload)
-    print(f"[OK] 宏观指标 {ok}/{len(items)} 项有值 -> {args.out}", file=sys.stderr)
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp = tempfile.mkstemp(prefix=out.name + ".", suffix=".tmp", dir=str(out.parent))
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
+            json.dump(payload, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        os.replace(tmp, out)
+    finally:
+        if os.path.exists(tmp):
+            os.unlink(tmp)
+    print(f"[OK] 宏观指标 {ok}/{len(items)} 项有值 -> {out}", file=sys.stderr)
     return 0
 
 

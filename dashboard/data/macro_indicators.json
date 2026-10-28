@@ -1,81 +1,81 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T03:47:09Z",
+  "generated_at": "2026-10-28T03:51:37Z",
   "source": "FRED + ISM + EIA",
-  "count": 10,
-  "ok": 10,
+  "count": 11,
+  "ok": 11,
   "items": [
     {
       "key": "unrate",
       "name": "美国失业率",
       "value": 4.2,
       "unit": "%",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "date": "2026-09-01",
+      "prev": 4.1,
+      "change": 0.1,
+      "source": "FRED UNRATE",
       "note": null,
-      "source_status": "fallback"
+      "source_status": "primary"
     },
     {
       "key": "nonfarm",
       "name": "季调后非农业就业人口",
       "value": 29.0,
       "unit": "K",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null,
-      "source_status": "fallback"
+      "date": "2026-09-01",
+      "prev": 133.0,
+      "change": 29.0,
+      "source": "FRED PAYEMS（月增）",
+      "note": "单位：千人",
+      "source_status": "primary"
     },
     {
       "key": "cpi_yoy",
       "name": "未季调CPI年率",
-      "value": 3.7,
+      "value": 3.74,
       "unit": "%",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "date": "2026-09-01",
+      "prev": 3.4,
+      "change": 0.34,
+      "source": "FRED CPIAUCNS",
       "note": null,
-      "source_status": "fallback"
+      "source_status": "primary"
     },
     {
       "key": "core_cpi_yoy",
       "name": "核心CPI年率",
-      "value": 2.6,
+      "value": 2.57,
       "unit": "%",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "date": "2026-09-01",
+      "prev": 2.45,
+      "change": 0.12,
+      "source": "FRED CPILFESL",
       "note": null,
-      "source_status": "fallback"
+      "source_status": "primary"
     },
     {
       "key": "cpi_mom",
       "name": "季调后CPI月率",
-      "value": 0.6,
+      "value": 0.65,
       "unit": "%",
-      "date": null,
+      "date": "2026-09-01",
       "prev": null,
       "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "source": "FRED CPIAUCSL",
       "note": null,
-      "source_status": "fallback"
+      "source_status": "primary"
     },
     {
       "key": "umich",
       "name": "密歇根大学消费者信心指数终值",
-      "value": 48.0,
+      "value": 48.1,
       "unit": "",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
+      "date": "2026-09-01",
+      "prev": 51.7,
+      "change": -3.6,
+      "source": "FRED UMCSENT",
       "note": null,
-      "source_status": "fallback"
+      "source_status": "primary"
     },
     {
       "key": "ism",
@@ -94,23 +94,35 @@
       "name": "ADP就业人数",
       "value": 90.0,
       "unit": "K",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null,
-      "source_status": "fallback"
+      "date": "2026-09-01",
+      "prev": 36.0,
+      "change": 90.0,
+      "source": "FRED ADPMNUSNERSA（月增）",
+      "note": "单位：千人",
+      "source_status": "primary"
     },
     {
       "key": "eia_crude",
       "name": "每周EIA原油库存",
       "value": 412517,
       "unit": "千桶",
-      "date": null,
+      "date": "2026-10-16",
       "prev": 415577,
       "change": -3060,
-      "source": "EIA 周报",
-      "note": "不含战略储备（SPR）",
+      "source": "EIA API",
+      "note": null,
+      "source_status": "primary"
+    },
+    {
+      "key": "eia_crude_chg",
+      "name": "EIA原油库存变化",
+      "value": -3.06,
+      "unit": "M",
+      "date": "2026-10-16",
+      "prev": null,
+      "change": null,
+      "source": "EIA API（环比）",
+      "note": "百万桶",
       "source_status": "primary"
     },
     {
@@ -118,12 +130,12 @@
       "name": "每周初请失业金人数",
       "value": 194.0,
       "unit": "K",
-      "date": null,
-      "prev": null,
-      "change": null,
-      "source": "TradingEconomics（FRED 不可用时的兜底）",
-      "note": null,
-      "source_status": "fallback"
+      "date": "2026-10-17",
+      "prev": 200.0,
+      "change": -6.0,
+      "source": "FRED ICSA",
+      "note": "单位：千人",
+      "source_status": "primary"
     }
   ]
 }
