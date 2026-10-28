@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T04:17:13Z",
-  "asof": "2026-10-28T04:17:05Z",
+  "generated_at": "2026-10-28T04:21:45Z",
+  "asof": "2026-10-28T04:21:31Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -62,7 +62,7 @@
       "key": "fg_score",
       "label": "恐惧贪婪",
       "group": "情绪",
-      "value": 33.6,
+      "value": 33.57,
       "unit": "",
       "status": "ok",
       "source": "market_indicators"
