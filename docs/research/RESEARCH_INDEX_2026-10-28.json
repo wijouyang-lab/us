@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-28",
+  "label": "CURRENT-UNIVERSE EXPLORATORY WHERE APPLICABLE; NOT A FULL PIT RESULT; NOT DEPLOYABLE ALPHA",
+  "experiments": [
+    {
+      "id": "formula_search_40328953758",
+      "hypothesis": "A broad technical formula family contains a positive, cost-adjusted, benchmark-adjusted predictor.",
+      "code": "tools/research/run_formula_factor_validation.py; aggregate artifact run 40328953758",
+      "data": "research_factor_snapshots_sp500_pit_2y.csv; 222,388 rows; 502 tickers; 462 dates",
+      "period": "2024-12-10 to 2026-09-15",
+      "method": "399 candidates, 5/10/20D, Q5-Q1, BY correction; fixed costs; no random split",
+      "result": "0 positive candidates with q < 0.05; best positive 20D net ~2.81%, q 0.5458",
+      "status": "failed_significance",
+      "failure_reason": "multiple-testing correction; no positive significant result",
+      "command": "see PR #348 run 40328953758 artifact",
+      "link": "https://github.com/wijouyang-lab/us/pull/348"
+    },
+    {
+      "id": "pit2y_fixed_five_factor",
+      "hypothesis": "Five economically motivated directions survive a fixed five-test family.",
+      "code": "tools/research/focused_lowfreq_validation.py",
+      "data": "PIT 2y snapshot; 211,903 labeled rows; 498 tickers; 441 dates",
+      "period": "2024-12-10 to 2026-09-15",
+      "method": "20D, monthly, Q5-Q1, 1% winsor, 5bps, BH",
+      "result": "no BH q < 0.05; low-vol directions negative",
+      "status": "failed_significance",
+      "failure_reason": "no positive significant result and only 23 monthly observations",
+      "command": "python tools/research/focused_lowfreq_validation.py --snapshot research_factor_snapshots_sp500_pit_2y.csv",
+      "link": "https://github.com/wijouyang-lab/us/pull/387"
+    },
+    {
+      "id": "qlib_ridge_fixed_vs_walk_forward",
+      "hypothesis": "A Qlib Ridge model adds stable OOS value beyond an equal-weight benchmark.",
+      "code": "tools/research/qlib_lowfreq_baseline.py; tools/research/audit_qlib_backtest.py",
+      "data": "PIT 2y snapshot",
+      "period": "train 2024-12-09..2025-06-30; valid 2025-07-01..2025-12-31; test 2026-01-01..2026-10-13",
+      "method": "Qlib 0.9.7, 15 features, 20D, monthly Q5/Q1, 5/10/20bps, expanding-window refit, 21-session purge",
+      "result": "fixed net annual 39.85%, Sharpe 2.78; walk-forward 13.24%, Sharpe 0.69, t 0.64",
+      "status": "failed_walk_forward",
+      "failure_reason": "fixed result did not survive rolling refits; 9 OOS windows only",
+      "command": "python tools/research/audit_qlib_backtest.py --snapshot research_factor_snapshots_sp500_pit_2y.csv --output result.json",
+      "link": "https://github.com/wijouyang-lab/us/pull/389"
+    },
+    {
+      "id": "high_vol_10y_beta",
+      "hypothesis": "High realized volatility/ATR long-short is market-neutral alpha.",
+      "code": "internal audit scripts (not production); documented in QLIB_BACKTEST_AUDIT_2026-10-28.md",
+      "data": "research_price_history_sp500_10y.csv; 503 current tickers",
+      "period": "2016-09-19 to 2026-10-14",
+      "method": "monthly, Q5/Q1, 5bps, beta regression vs equal-weight",
+      "result": "gross looks positive, beta ~0.75, alpha t ~0.05",
+      "status": "rejected_beta",
+      "failure_reason": "market beta, not alpha",
+      "command": "see QLIB_BACKTEST_AUDIT_2026-10-28.md",
+      "link": "https://github.com/wijouyang-lab/us/pull/389"
+    },
+    {
+      "id": "restricted_466_five_factor",
+      "hypothesis": "Five fixed technical directions have OOS value on the 466 fully-priced current universe.",
+      "code": "tools/research/restricted_466_factor_validation.py",
+      "data": "466 fully-priced current tickers; 2,532 sessions; Yahoo panel",
+      "period": "2016-09-19 to 2026-10-14; train <=2022; test >=2023",
+      "method": "20D, monthly, Q5/Q1, 1% winsor, 5bps, turnover cost, BH across 5",
+      "result": "test: ATR low net -1.61% p 0.051 q 0.128; Vol low -1.73% p 0.044 q 0.128; Mom12 +0.72% p 0.334; Mom1 -1.00% p 0.099; MA50 +0.58% p 0.328",
+      "status": "failed_significance",
+      "failure_reason": "no positive test factor with q < 0.05; low-vol directions negative; current-universe bias",
+      "command": "python tools/research/restricted_466_factor_validation.py --price-panel research_price_history_sp500_10y.csv --output-prefix docs/research/restricted_466_factor_validation_2026-10-28",
+      "link": "https://github.com/wijouyang-lab/us/pull/392"
+    },
+    {
+      "id": "membership_coverage",
+      "hypothesis": "Public membership data can close the historical universe gap.",
+      "code": "tools/research/standardize_membership_coverage.py; tools/research/audit_public_membership.py",
+      "data": "coiltrade and shardul membership; 503 price panel",
+      "period": "2016-2026",
+      "method": "interval reconstruction + price matching",
+      "result": "membership adds 381-491 names, but 0 new names have prices; annual member-day coverage 65.8%-96.9%",
+      "status": "partial_data_only",
+      "failure_reason": "membership is not OHLCV",
+      "command": "see MEMBERSHIP_COVERAGE_2026-10-28.md",
+      "link": "https://github.com/wijouyang-lab/us/pull/390"
+    },
+    {
+      "id": "event_research",
+      "hypothesis": "News/fundamental/event variables add PIT incremental value.",
+      "code": "tools/research/pit_event_*",
+      "data": "event archive/readiness audit",
+      "period": "not run",
+      "method": "blocked pending verified event timestamps/labels",
+      "result": "not evaluated",
+      "status": "blocked",
+      "failure_reason": "event labels/timestamps and independent data not sufficiently verified",
+      "command": "see docs/research/PIT_EVENT_DATA_QUALITY_AUDIT.md",
+      "link": "https://github.com/wijouyang-lab/us/pull/286"
+    },
+    {
+      "id": "alpha_vantage_probe",
+      "hypothesis": "Alpha Vantage free tier can recover failed historical OHLCV.",
+      "code": "tools/research/alpha_vantage_provider.py",
+      "data": "AVB, ATVI, MYL, PARA",
+      "period": "pending key",
+      "method": "env-only key, cache, 25/day, 12s interval",
+      "result": "SKIPPED_NO_API_KEY; no real network result",
+      "status": "blocked_no_key",
+      "failure_reason": "ALPHA_VANTAGE_API_KEY not configured",
+      "command": "python tools/research/alpha_vantage_provider.py --tickers AVB,ATVI,MYL,PARA",
+      "link": "https://github.com/wijouyang-lab/us/pull/390"
+    }
+  ]
+}
