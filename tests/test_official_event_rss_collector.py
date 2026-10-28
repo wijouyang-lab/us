@@ -123,16 +123,36 @@ def test_collector_uses_only_allowlisted_feeds_and_reports_failures():
     assert len(result["metadata"]["event_snapshot_sha256"]) == 64
 
 
-def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
-    with pytest.raises(ValueError, match="contact email"):
-        OfficialRssCollector("no email")
+def test_collector_uses_honest_default_user_agent_and_recognized_feed_keys():
     collector = OfficialRssCollector(
-        "Quant research test@example.com",
+        "",
         opener=lambda *args, **kwargs: pytest.fail("should not perform a request"),
         sleep=lambda _: None,
     )
+    assert collector.user_agent.startswith("wj-quant-research/")
+    assert "@" not in collector.user_agent
     with pytest.raises(ValueError, match="unsupported official feed"):
         collector.collect(["custom_url"])
+    with pytest.raises(ValueError, match="single non-empty"):
+        OfficialRssCollector("bad\nagent")
+
+
+def test_bls_skips_without_contact_but_fed_runs(tmp_path):
+    calls = []
+
+    def opener(request, timeout):
+        calls.append(request.full_url)
+        if request.full_url == OFFICIAL_FEEDS["fed_all"]["url"]:
+            return FakeResponse("<rss><channel/></rss>")
+        raise AssertionError("BLS must not be requested without a contact User-Agent")
+
+    collector = OfficialRssCollector("", opener=opener, sleep=lambda _: None)
+    result = collector.collect(["bls_cpi", "fed_all"])
+    reports = {r["feed_key"]: r for r in result["metadata"]["feed_reports"]}
+    assert reports["bls_cpi"]["status"] == "skipped_missing_contact_user_agent"
+    assert reports["fed_all"]["status"] == "ok"
+    assert calls == [OFFICIAL_FEEDS["fed_all"]["url"]]
+    assert result["metadata"]["user_agent"].startswith("wj-quant-research/")
 
 
 def test_federal_reserve_speeches_feed_is_classified_as_central_bank():

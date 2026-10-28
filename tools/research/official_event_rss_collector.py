@@ -53,6 +53,12 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
     },
 }
 _ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov"}
+DEFAULT_USER_AGENT = "wj-quant-research/1.0 (+https://github.com/wijouyang-lab/us)"
+CONTACT_REQUIRED_FEEDS = {"bls_cpi", "bls_employment"}
+
+
+class ContactUserAgentRequired(RuntimeError):
+    """Raised when a feed requires an identifiable contact address."""
 _CENTRAL_BANK_TERMS = (
     "fomc",
     "monetary policy",
@@ -240,7 +246,7 @@ class OfficialRssCollector:
 
     def __init__(
         self,
-        user_agent: str,
+        user_agent: str | None = None,
         *,
         timeout_seconds: float = 20.0,
         min_request_interval_seconds: float = 0.2,
@@ -248,13 +254,14 @@ class OfficialRssCollector:
         sleep: Callable[[float], None] | None = None,
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        if not isinstance(user_agent, str) or "@" not in user_agent or not user_agent.strip():
-            raise ValueError("User-Agent must identify the research application and a contact email")
+        value = (user_agent or DEFAULT_USER_AGENT).strip()
+        if not value or "\n" in value or "\r" in value or len(value) > 256:
+            raise ValueError("User-Agent must be a single non-empty header value")
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         if min_request_interval_seconds < 0.1:
             raise ValueError("request interval must be at least 0.1 seconds")
-        self.user_agent = user_agent.strip()
+        self.user_agent = value
         self.timeout_seconds = timeout_seconds
         self.min_request_interval_seconds = min_request_interval_seconds
         self.opener = opener or urlopen
@@ -269,6 +276,10 @@ class OfficialRssCollector:
         parsed_url = urlparse(url)
         if parsed_url.scheme != "https" or parsed_url.hostname not in _ALLOWED_HOSTS:
             raise ValueError("official feed URL failed host allowlist")
+        if feed_key in CONTACT_REQUIRED_FEEDS and "@" not in self.user_agent:
+            raise ContactUserAgentRequired(
+                f"{feed_key} requires a contact User-Agent; set OFFICIAL_FEED_USER_AGENT"
+            )
         if self._has_requested:
             self.sleep(self.min_request_interval_seconds)
         self._has_requested = True
@@ -317,12 +328,22 @@ class OfficialRssCollector:
                     "feed_key": key,
                     "feed_url": OFFICIAL_FEEDS[key]["url"],
                     "status": "ok",
+                    "user_agent": self.user_agent,
                     "first_seen_at_utc": first_seen,
                     "source_payload_sha256": raw_hash,
                     "item_count": result["item_count"],
                     "event_count": result["event_count"],
                     "duplicate_id_count": result["duplicate_id_count"],
                     "timestamp_missing_count": result["timestamp_missing_count"],
+                })
+            except ContactUserAgentRequired as exc:
+                feed_reports.append({
+                    "feed_key": key,
+                    "feed_url": OFFICIAL_FEEDS[key]["url"],
+                    "status": "skipped_missing_contact_user_agent",
+                    "error_type": "ContactUserAgentRequired",
+                    "error": str(exc),
+                    "event_count": 0,
                 })
             except Exception as exc:
                 feed_reports.append({
@@ -347,6 +368,7 @@ class OfficialRssCollector:
             "collection_started_at_utc": collection_started,
             "collection_completed_at_utc": _aware_utc(self.now()),
             "requested_feed_keys": requested,
+            "user_agent": self.user_agent,
             "event_count": len(all_events),
             "event_snapshot_sha256": sha256(snapshot_json.encode("utf-8")).hexdigest(),
             "feed_reports": feed_reports,
@@ -377,7 +399,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--feeds", default="bls_cpi,bls_employment,fed_all,fed_speeches")
     parser.add_argument("--output", required=True, help="Path for normalized event JSON array")
     parser.add_argument("--metadata-output", help="Path for collection metadata JSON")
-    parser.add_argument("--user-agent", default=os.environ.get("OFFICIAL_FEED_USER_AGENT", ""))
+    parser.add_argument("--user-agent", default=os.environ.get("OFFICIAL_FEED_USER_AGENT") or DEFAULT_USER_AGENT,
+                        help="Optional User-Agent header; defaults to the project research identifier")
     parser.add_argument("--min-request-interval-seconds", type=float, default=0.2)
     parser.add_argument("--overwrite", action="store_true", help="Allow replacing existing output files")
     args = parser.parse_args(argv)
