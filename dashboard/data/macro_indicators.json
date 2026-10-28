@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T03:39:06Z",
+  "generated_at": "2026-10-28T03:44:04Z",
   "source": "FRED + ISM + EIA",
   "count": 10,
-  "ok": 9,
+  "ok": 10,
   "items": [
     {
       "key": "unrate",
@@ -104,14 +104,14 @@
     {
       "key": "eia_crude",
       "name": "每周EIA原油库存",
-      "value": null,
+      "value": 412517,
       "unit": "千桶",
       "date": null,
-      "prev": null,
-      "change": null,
+      "prev": 415577,
+      "change": -3060,
       "source": "EIA 周报",
-      "note": null,
-      "source_status": "missing"
+      "note": "不含战略储备（SPR）",
+      "source_status": "primary"
     },
     {
       "key": "claims",
