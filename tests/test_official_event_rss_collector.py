@@ -123,16 +123,18 @@ def test_collector_uses_only_allowlisted_feeds_and_reports_failures():
     assert len(result["metadata"]["event_snapshot_sha256"]) == 64
 
 
-def test_collector_requires_contact_user_agent_and_recognized_feed_keys():
-    with pytest.raises(ValueError, match="contact email"):
-        OfficialRssCollector("no email")
+def test_collector_uses_honest_default_user_agent_and_recognized_feed_keys():
     collector = OfficialRssCollector(
-        "Quant research test@example.com",
+        "",
         opener=lambda *args, **kwargs: pytest.fail("should not perform a request"),
         sleep=lambda _: None,
     )
+    assert collector.user_agent.startswith("wj-quant-research/")
+    assert "@" not in collector.user_agent
     with pytest.raises(ValueError, match="unsupported official feed"):
         collector.collect(["custom_url"])
+    with pytest.raises(ValueError, match="single non-empty"):
+        OfficialRssCollector("bad\nagent")
 
 
 def test_federal_reserve_speeches_feed_is_classified_as_central_bank():
