@@ -1,4 +1,6 @@
-﻿# Qlib Linear Baseline 鈥?PIT 2-Year Panel
+﻿> Superseded by `QLIB_BACKTEST_AUDIT_2026-10-28.md`. The original numbers used test-set winsor thresholds and arithmetic annualization; use the audit report's corrected metrics.
+
+# Qlib Linear Baseline 鈥?PIT 2-Year Panel
 
 Date: 2026-10-28
 Research only. No production changes.
