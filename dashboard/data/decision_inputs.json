@@ -1,15 +1,15 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-28T03:47:15Z",
-  "asof": "2026-10-28T03:47:09Z",
+  "generated_at": "2026-10-28T03:55:10Z",
+  "asof": "2026-10-28T03:55:05Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
       "key": "macro_ok",
       "label": "宏观有值项",
       "group": "宏观",
-      "value": 10,
-      "unit": "/10",
+      "value": 11,
+      "unit": "/11",
       "status": "ok",
       "source": "macro_indicators"
     },
