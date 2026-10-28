@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Readiness check for post-event price bars and forward returns.
 
 This tool does not run an event study. It only answers whether a given event
@@ -91,6 +91,8 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
                 reasons.append("missing_market_proxy")
         entry_date = entry_close = None
         returns = {}
+        result_dates = {}
+        result_closes = {}
         if ticker is None:
             reasons.append("missing_entity_ticker")
         elif ticker not in by_ticker:
@@ -117,6 +119,8 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
                                 reasons.append("invalid_ohlc")
                             else:
                                 returns[f"return_{h}d"] = float(exit_row["Close"] / entry_row["Close"] - 1)
+                                result_dates[h] = exit_row.name
+                                result_closes[h] = exit_row["Close"]
         if not adj_ok:
             reasons.append("adjusted_price_unavailable")
         if not corp_ok:
@@ -129,8 +133,14 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
         }
         if any(r in hard for r in reasons):
             status = "excluded"
-        elif any(r.startswith("pending_future_") for r in reasons) or not adj_ok or not corp_ok:
-            status = "pending_future_bar"
+        elif entry_date is None:
+            status = "pending_future_entry_bar"
+        elif 1 not in result_dates:
+            status = "pending_future_1d_bar"
+        elif 5 not in result_dates:
+            status = "pending_future_5d_bar"
+        elif not adj_ok or not corp_ok:
+            status = "pending_price_basis"
         else:
             status = "ready"
         rows.append({
@@ -142,6 +152,10 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
             "as_of": as_of,
             "entry_bar_date": entry_date.isoformat() if entry_date else None,
             "entry_close_utc": entry_close.isoformat().replace("+00:00", "Z") if entry_close else None,
+            "result_1d_date": result_dates.get(1).isoformat() if result_dates.get(1) else None,
+            "result_5d_date": result_dates.get(5).isoformat() if result_dates.get(5) else None,
+            "result_1d_close": result_closes.get(1),
+            "result_5d_close": result_closes.get(5),
             "returns": returns,
             "price_basis": "SPY_Adj_Close_provider" if research_mode == "market_proxy_spy" else "raw_close",
             "adjusted_price_available": adj_ok,
@@ -156,7 +170,12 @@ def evaluate(events: list[Mapping[str, Any]], price: pd.DataFrame, *,
         "as_of": as_of,
         "selected_events": len(selected),
         "ready": sum(r["status"] == "ready" for r in rows),
-        "pending_future_bar": sum(r["status"] == "pending_future_bar" for r in rows),
+        "pending": sum(r["status"].startswith("pending_") for r in rows),
+        "pending_future_bar": sum(r["status"].startswith("pending_") for r in rows),
+        "pending_future_entry_bar": sum(r["status"] == "pending_future_entry_bar" for r in rows),
+        "pending_future_1d_bar": sum(r["status"] == "pending_future_1d_bar" for r in rows),
+        "pending_future_5d_bar": sum(r["status"] == "pending_future_5d_bar" for r in rows),
+        "pending_price_basis": sum(r["status"] == "pending_price_basis" for r in rows),
         "excluded": sum(r["status"] == "excluded" for r in rows),
         "publication_forward_candidates": sum(r["publication_forward_candidate"] for r in rows),
         "lookahead_flags": 0,

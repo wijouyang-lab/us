@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for post-event price readiness; no network or strategy."""
 
 import sys
@@ -39,6 +39,8 @@ def test_ready_requires_bars_and_verified_price_basis():
     assert out["ready"] == 1
     assert out["events"][0]["returns"]["return_1d"] is not None
     assert out["events"][0]["returns"]["return_5d"] is not None
+    assert out["events"][0]["result_1d_date"] is not None
+    assert out["events"][0]["result_5d_date"] is not None
 
 
 def test_future_bars_are_pending_not_missing_data_error():
@@ -46,6 +48,7 @@ def test_future_bars_are_pending_not_missing_data_error():
     assert out["pending_future_bar"] == 1
     assert out["excluded"] == 0
     assert "pending_future_5d_bar" in out["events"][0]["reasons"]
+    assert out["events"][0]["status"] == "pending_future_5d_bar"
 
 
 def test_unverified_adjustment_is_pending():
@@ -53,6 +56,7 @@ def test_unverified_adjustment_is_pending():
                        adjusted_price_available=False, corporate_actions_verified=True)
     assert out["pending_future_bar"] == 1
     assert "adjusted_price_unavailable" in out["events"][0]["reasons"]
+    assert out["events"][0]["status"] == "pending_price_basis"
 
 
 def test_missing_timezone_is_excluded():
