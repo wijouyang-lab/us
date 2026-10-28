@@ -165,6 +165,17 @@ def source_quality_report(events: list[Mapping[str, Any]],
                               if s["unique_event_count"] else 0.0)
         s["revision_ids"] = sorted(x for x in s["revision_ids"] if x)
         s["event_ids"] = sorted(x for x in s["event_ids"] if x)
+    if metadata:
+        for item in (metadata.get("source_reports") or {}).get("official_rss", {}).get("feed_reports", []):
+            source_name = str(item.get("source") or FEED_TO_SOURCE.get(item.get("feed_key"), ""))
+            if source_name and source_name not in by_source:
+                by_source[source_name] = {
+                    "source": source_name, "events": 0, "validated": 0, "rejected": 0,
+                    "parsed_utc": 0, "date_only": 0, "timestamp_missing": 0,
+                    "missing_url": 0, "revision_ids": [], "event_ids": [],
+                    "timestamp_parsed_ratio": 0.0, "revision_count": 0,
+                    "unique_event_count": 0, "revision_rate": 0.0,
+                }
     source_rows = []
     for source, s in sorted(by_source.items()):
         source_rows.append(s | {

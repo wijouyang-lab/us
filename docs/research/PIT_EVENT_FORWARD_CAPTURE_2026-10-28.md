@@ -1,7 +1,13 @@
-﻿# Forward PIT Event Capture 鈥?First Real Observation
+# Forward PIT Event Capture 鈥?First Real Observation
 
 Date: 2026-10-28
 Research only. No production changes.
+
+> **Superseding note:** the 59-event BLS captures below used a placeholder
+> contact address and are technical demonstrations, not validated BLS PIT
+> evidence. BLS returns HTTP 403 without a contact-bearing User-Agent. The
+> secret-free Fed-only capture and the per-source skip policy are documented in
+> `PIT_EVENT_NOSECRET_RSS_2026-10-28.md`.
 
 ## Actual capture
 

@@ -137,6 +137,24 @@ def test_collector_uses_honest_default_user_agent_and_recognized_feed_keys():
         OfficialRssCollector("bad\nagent")
 
 
+def test_bls_skips_without_contact_but_fed_runs(tmp_path):
+    calls = []
+
+    def opener(request, timeout):
+        calls.append(request.full_url)
+        if request.full_url == OFFICIAL_FEEDS["fed_all"]["url"]:
+            return FakeResponse("<rss><channel/></rss>")
+        raise AssertionError("BLS must not be requested without a contact User-Agent")
+
+    collector = OfficialRssCollector("", opener=opener, sleep=lambda _: None)
+    result = collector.collect(["bls_cpi", "fed_all"])
+    reports = {r["feed_key"]: r for r in result["metadata"]["feed_reports"]}
+    assert reports["bls_cpi"]["status"] == "skipped_missing_contact_user_agent"
+    assert reports["fed_all"]["status"] == "ok"
+    assert calls == [OFFICIAL_FEEDS["fed_all"]["url"]]
+    assert result["metadata"]["user_agent"].startswith("wj-quant-research/")
+
+
 def test_federal_reserve_speeches_feed_is_classified_as_central_bank():
     body = """<rss><channel>
     <item><title>Chair gives remarks on the economic outlook</title>

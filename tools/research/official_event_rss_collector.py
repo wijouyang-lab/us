@@ -54,6 +54,11 @@ OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
 }
 _ALLOWED_HOSTS = {"www.bls.gov", "www.federalreserve.gov"}
 DEFAULT_USER_AGENT = "wj-quant-research/1.0 (+https://github.com/wijouyang-lab/us)"
+CONTACT_REQUIRED_FEEDS = {"bls_cpi", "bls_employment"}
+
+
+class ContactUserAgentRequired(RuntimeError):
+    """Raised when a feed requires an identifiable contact address."""
 _CENTRAL_BANK_TERMS = (
     "fomc",
     "monetary policy",
@@ -271,6 +276,10 @@ class OfficialRssCollector:
         parsed_url = urlparse(url)
         if parsed_url.scheme != "https" or parsed_url.hostname not in _ALLOWED_HOSTS:
             raise ValueError("official feed URL failed host allowlist")
+        if feed_key in CONTACT_REQUIRED_FEEDS and "@" not in self.user_agent:
+            raise ContactUserAgentRequired(
+                f"{feed_key} requires a contact User-Agent; set OFFICIAL_FEED_USER_AGENT"
+            )
         if self._has_requested:
             self.sleep(self.min_request_interval_seconds)
         self._has_requested = True
@@ -319,12 +328,22 @@ class OfficialRssCollector:
                     "feed_key": key,
                     "feed_url": OFFICIAL_FEEDS[key]["url"],
                     "status": "ok",
+                    "user_agent": self.user_agent,
                     "first_seen_at_utc": first_seen,
                     "source_payload_sha256": raw_hash,
                     "item_count": result["item_count"],
                     "event_count": result["event_count"],
                     "duplicate_id_count": result["duplicate_id_count"],
                     "timestamp_missing_count": result["timestamp_missing_count"],
+                })
+            except ContactUserAgentRequired as exc:
+                feed_reports.append({
+                    "feed_key": key,
+                    "feed_url": OFFICIAL_FEEDS[key]["url"],
+                    "status": "skipped_missing_contact_user_agent",
+                    "error_type": "ContactUserAgentRequired",
+                    "error": str(exc),
+                    "event_count": 0,
                 })
             except Exception as exc:
                 feed_reports.append({

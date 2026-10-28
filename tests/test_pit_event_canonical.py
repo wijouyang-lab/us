@@ -72,6 +72,18 @@ def test_retraction_is_retained_but_not_validated():
     assert "retracted" in out["validation_reasons"]
 
 
+def test_skipped_feed_appears_with_zero_success():
+    metadata = {"source_reports": {"official_rss": {"feed_reports": [
+        {"feed_key": "bls_cpi", "status": "skipped_missing_contact_user_agent",
+         "error_type": "ContactUserAgentRequired"},
+    ]}}}
+    report = mod.source_quality_report([], metadata)
+    row = next(s for s in report["sources"] if s["source"] == "bls_cpi_rss")
+    assert row["events"] == 0
+    assert row["capture_success_ratio"] == 0.0
+    assert row["capture_failure_reasons"] == ["ContactUserAgentRequired"]
+
+
 def test_capture_success_ratio_maps_feed_key_to_source():
     events = [base(source="bls_cpi_rss")]
     metadata = {"source_reports": {"official_rss": {"feed_reports": [
