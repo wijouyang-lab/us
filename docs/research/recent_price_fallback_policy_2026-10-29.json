@@ -58,6 +58,16 @@
       "adjusted_close": false,
       "rights_verified": false,
       "notes": "no API key; free-tier limits and terms not reviewed"
+    },
+    {
+      "provider": "Alpaca Market Data",
+      "status": "not_approved_unverified",
+      "raw_ohlc": "not tested; no secure credentials",
+      "adjusted_close": "no explicit Adj_Close; adjustment parameter only",
+      "update_or_revision_metadata": false,
+      "rights_verified": false,
+      "independent_reference": false,
+      "notes": "Basic real-time IEX only; SIP/historical entitlement and storage rights unverified; no real request executed"
     }
   ],
   "decision": "HUBB 2026-10-28 remains missing; panel partial; acceptance fail",
