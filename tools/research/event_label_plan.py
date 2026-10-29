@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Plan event entry/+1/+5 trading dates without fabricating returns.
 
 Default entry rule is conservative: an event before the session open can enter
@@ -41,16 +41,34 @@ def map_event(event: dict[str, Any], calendar, entry_rule: str = "next_open") ->
     published = _ts(event.get("published_at_utc") or event.get("published_at"))
     first = _ts(event.get("first_seen_at_utc") or event.get("first_seen_at"))
     updated = _ts(event.get("update_first_seen_at_utc"))
+    decision = _ts(event.get("decision_at") or event.get("decision_at_utc"))
     mode = event.get("observation_mode", "retrospective_backfill")
-    if mode == "forward_pit":
+    invalid_reason = None
+    if published is None:
+        available = None
+        availability_known = False
+        mapping_time = None
+        availability_basis = "missing_publication"
+        invalid_reason = ("missing_event_time", "missing_published_at")
+    elif mode == "forward_pit":
         if first is None:
             available = None
             availability_known = False
+            mapping_time = None
+            availability_basis = "missing_first_seen"
+            invalid_reason = ("missing_event_time", "missing_first_seen_at")
         else:
             available = max([x for x in (published, first, updated) if x], default=None)
-            availability_known = available is not None and first is not None
-        mapping_time = available
-        availability_basis = "pit_first_seen"
+            availability_known = available is not None
+            availability_basis = "pit_first_seen"
+            if decision is None:
+                mapping_time = None
+                invalid_reason = ("missing_decision_time", "missing_decision_at")
+            elif available is not None and decision < available:
+                mapping_time = None
+                invalid_reason = ("invalid_decision_time", "decision_before_available")
+            else:
+                mapping_time = decision
     else:
         available = None
         availability_known = False
@@ -59,10 +77,15 @@ def map_event(event: dict[str, Any], calendar, entry_rule: str = "next_open") ->
     out = {
         "event_id": event.get("event_id") or event.get("source_event_id"),
         "published_at": _iso(published),
+        "first_seen_at": _iso(first),
         "available_at": _iso(available),
+        "decision_at": _iso(decision),
         "availability_known": availability_known,
         "availability_basis": availability_basis,
         "mapping_time": _iso(mapping_time),
+        "decision_after_available": bool(decision is not None and available is not None and decision >= available),
+        "plan_type": "pit_planned_entry" if mode == "forward_pit" else "retrospective_counterfactual",
+        "counterfactual": mode != "forward_pit",
         "entry_date": None,
         "entry_time_utc": None,
         "entry_price_point": "open" if entry_rule == "next_open" else "close",
@@ -75,8 +98,11 @@ def map_event(event: dict[str, Any], calendar, entry_rule: str = "next_open") ->
         "observation_mode": mode,
         "entry_rule": entry_rule,
     }
+    if invalid_reason:
+        out.update(label_status=invalid_reason[0], missing_reason=invalid_reason[1])
+        return out
     if mapping_time is None:
-        out.update(label_status="missing_event_time", missing_reason="missing_published_at")
+        out.update(label_status="missing_event_time", missing_reason="missing_mapping_time")
         return out
     sessions = calendar.sessions_in_range(
         (mapping_time.date() - timedelta(days=14)).isoformat(),

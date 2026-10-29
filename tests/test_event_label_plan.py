@@ -83,6 +83,7 @@ def test_pit_uses_first_seen_as_available():
     e = event("2026-10-28T12:00:00Z")
     e["observation_mode"] = "forward_pit"
     e["first_seen_at_utc"] = "2026-10-28T14:00:00Z"
+    e["decision_at"] = "2026-10-28T14:00:00Z"
     out = ep.map_event(e, ep.xcals.get_calendar("XNYS"))
     assert out["available_at"] == "2026-10-28T14:00:00Z"
     assert out["availability_known"] is True
@@ -95,3 +96,28 @@ def test_pit_missing_first_seen_fails():
     out = ep.map_event(e, ep.xcals.get_calendar("XNYS"))
     assert out["available_at"] is None
     assert out["label_status"] == "missing_event_time"
+def test_pit_missing_decision_is_rejected():
+    e = event("2026-10-28T12:00:00Z")
+    e["observation_mode"] = "forward_pit"
+    e["first_seen_at_utc"] = "2026-10-28T14:00:00Z"
+    out = ep.map_event(e, ep.xcals.get_calendar("XNYS"))
+    assert out["entry_date"] is None
+    assert out["label_status"] == "missing_decision_time"
+    assert out["missing_reason"] == "missing_decision_at"
+
+
+def test_decision_before_available_is_rejected():
+    e = event("2026-10-28T12:00:00Z")
+    e["observation_mode"] = "forward_pit"
+    e["first_seen_at_utc"] = "2026-10-28T14:00:00Z"
+    e["decision_at"] = "2026-10-28T13:00:00Z"
+    out = ep.map_event(e, ep.xcals.get_calendar("XNYS"))
+    assert out["entry_date"] is None
+    assert out["label_status"] == "invalid_decision_time"
+    assert out["missing_reason"] == "decision_before_available"
+
+
+def test_retrospective_is_counterfactual():
+    out = row("2026-10-28T12:00:00Z")
+    assert out["plan_type"] == "retrospective_counterfactual"
+    assert out["counterfactual"] is True

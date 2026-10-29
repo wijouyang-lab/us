@@ -123,3 +123,20 @@ retrospective row is promoted to PIT.
 All event timestamps are UTC; XNYS schedule open/close is UTC; timezone labels
 on the Fed page (`EDT`/`EST`) are converted explicitly. No UTC/ET subtraction is
 done manually.
+## PIT plan
+
+PIT input uses `decision_at >= available_at`.
+
+```text
+events: 36
+expected entry dates: 36
+2026-10-28 entry: 35
+2026-10-29 entry: 1
+actual entry price labels: 35
+actual +1/+5: 0/0
+```
+
+The one 10/29 expected entry has no real close yet. Expected entry dates and
+actual price labels are separate states.
+
+See `PIT_LABEL_PLAN_AUDIT_2026-10-29.md`.
