@@ -1,0 +1,60 @@
+{
+  "status": "not_eligible",
+  "exit_code": 1,
+  "reasons": [
+    "unique_events_below_200",
+    "coverage_below_365_days",
+    "entry_results_below_200",
+    "plus_1_results_below_200",
+    "plus_5_results_below_200",
+    "pending_event_results"
+  ],
+  "sample": {
+    "unique_events": 36,
+    "coverage_start": "2026-10-28T09:02:55.813905Z",
+    "coverage_end": "2026-10-29T02:35:30.465604Z",
+    "coverage_days": 0.7309566168865741,
+    "entry_results": 35,
+    "plus_1_results": 0,
+    "plus_5_results": 0,
+    "pending_events": 36,
+    "excluded_events": 0
+  },
+  "minimum": {
+    "unique_events": 200,
+    "coverage_days": 365,
+    "entry_results": 200,
+    "plus_1_results": 200,
+    "plus_5_results": 200,
+    "oos_windows": 2,
+    "cost_bps": [
+      5.0,
+      10.0,
+      20.0
+    ],
+    "horizons": [
+      1,
+      5
+    ],
+    "multiple_testing": "benjamini-hochberg"
+  },
+  "config": {
+    "oos_windows": 2,
+    "cost_bps": [
+      5,
+      10,
+      20
+    ],
+    "horizons": [
+      1,
+      5
+    ],
+    "multiple_testing": "benjamini-hochberg",
+    "time_split": {
+      "note": "training/evaluation periods must be fixed before results; no post-hoc window changes",
+      "minimum_span_days": 365
+    }
+  },
+  "research_only": true,
+  "no_alpha_result": true
+}
