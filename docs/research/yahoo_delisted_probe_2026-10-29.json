@@ -1,0 +1,179 @@
+{
+  "as_of": "2026-10-29T08:20:00Z",
+  "results": [
+    {
+      "ticker": "ADCT",
+      "removed_year": 2007,
+      "http": 200,
+      "status": "ok",
+      "rows": 1414,
+      "first": "2020-05-18",
+      "last": "2025-12-31"
+    },
+    {
+      "ticker": "ALTR",
+      "removed_year": 2015,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "BRCM",
+      "removed_year": 2016,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "CA",
+      "removed_year": 2018,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "TWX",
+      "removed_year": 2018,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "ALXN",
+      "removed_year": 2021,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "XLNX",
+      "removed_year": 2021,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "NUAN",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "CTXS",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "TWTR",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "ATVI",
+      "removed_year": 2023,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "SIVB",
+      "removed_year": 2023,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "FRC",
+      "removed_year": 2023,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "PBCT",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "DISCA",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "CERN",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "INFO",
+      "removed_year": 2022,
+      "http": 200,
+      "status": "ok",
+      "rows": 307,
+      "first": "2024-10-10",
+      "last": "2025-12-31"
+    },
+    {
+      "ticker": "ABMD",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "WLTW",
+      "removed_year": 2022,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "ANSS",
+      "removed_year": 2025,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "MOT",
+      "removed_year": 2011,
+      "http": 200,
+      "status": "empty",
+      "rows": 0,
+      "first": null,
+      "last": null
+    },
+    {
+      "ticker": "WCOM",
+      "removed_year": 2002,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "LEHM",
+      "removed_year": 2008,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    },
+    {
+      "ticker": "BSC",
+      "removed_year": 2008,
+      "http": 404,
+      "status": "http_404",
+      "error": "{\"chart\":{\"result\":null,\"error\":{\"code\":\"Not Found\",\"description\":\"No data found, symbol may be delisted\"}}}"
+    }
+  ]
+}
