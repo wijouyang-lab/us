@@ -1,4 +1,4 @@
-# Historical Event Source Assessment
+﻿# Historical Event Source Assessment
 
 Date: 2026-10-29 UTC
 Research only. No new requests without valid identity.
@@ -13,7 +13,7 @@ the only real event population.
 | Source | Official URL | Historical coverage | Time precision | Revision / vintage | Access | Storage/public artifact | Real request | New events |
 |---|---|---|---|---|---|---|---|---|
 | SEC EDGAR submissions / 8-K | https://www.sec.gov/edgar/sec-api-documentation | provider filing archive; exact start not measured | filingDate = date only; SGML ACCEPTANCE-DATETIME = second (fixed EST) | amendments/accession versions; no one-click vintage API | public; real contact UA required | filing records are public; written terms/retention review **unverified** | **not executed** | 0 |
-| Federal Reserve press/speeches | https://www.federalreserve.gov/newsevents.htm | RSS window; 2026 press archive observed: 114 links | RSS published_at; archive date-only | page corrections not versioned in RSS | public; contact UA for BLS only; Fed RSS works with project UA | public official pages; redistribution terms not formally reviewed | Fed RSS **yes**; 2026 archive **yes** | 0 PIT; 114 retrospective |
+| Federal Reserve press/speeches | https://www.federalreserve.gov/newsevents.htm | RSS window; 2026 press archive observed: 114 links | RSS published_at; archive date-only | page corrections not versioned in RSS | public; contact UA for BLS only; Fed RSS works with project UA | Fed disclaimer: unless otherwise indicated, Board website information is public domain and may be copied/distributed without permission; cite Board. Non-Board images/materials excluded. | Fed RSS **yes**; 2026 archive **yes** | 0 PIT; 114 retrospective |
 | BLS releases / archives | https://www.bls.gov/bls/news-release/ | archive pages, not measured | release date/time; revisions | BLS revisions | API/contact UA; no configured identity | **unverified** | **not executed** | 0 |
 | BEA releases | https://www.bea.gov/news/schedule | archive/schedule, not measured | scheduled/actual release time; revisions | BEA revisions | API key/terms; not configured | **unverified** | **not executed** | 0 |
 | FRED / ALFRED | https://fred.stlouisfed.org/ | long macro history; vintages | release timestamps; ALFRED vintage dates | explicit vintage support | API key/terms; not configured | **unverified** | **not executed** | 0 |
@@ -23,7 +23,7 @@ the only real event population.
 
 - A historical publication timestamp is not a historical `first_seen_at`.
 - `filingDate` alone is not an exact public time.
-- BLS/BEA/FRED revisions must use vintage/release records, not today鈥檚 latest
+- BLS/BEA/FRED revisions must use vintage/release records, not today閳ユ獨 latest
   value substituted backward.
 - SEC accession identity is stable; amendments are separate versions, not
   overwrites.

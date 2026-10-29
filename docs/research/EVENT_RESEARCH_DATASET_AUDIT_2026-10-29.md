@@ -127,7 +127,7 @@ historical publication date into a historical first-seen time. Retrospective
 rows must be explicitly marked and remain separate from PIT counts.
 ## Retrospective Fed archive
 
-A separate real read of the 2026 Fed press archive found **114** links. All are:
+A separate real read of the 2026 Fed press archive found **114** links. All 114 pages yielded exact `For release at` timestamps (92 EDT, 22 EST). They are still:
 
 ```text
 observation_mode: retrospective_backfill
@@ -138,4 +138,4 @@ pit_eligible: false
 
 They are not added to the PIT count and have no return labels.
 
-Evidence: `docs/research/fed_2026_press_retrospective_2026-10-29.json`
+Evidence: `docs/research/fed_2026_press_retrospective_2026-10-29.json` and `docs/research/fed_2026_press_retrospective_timed_2026-10-29.json`
