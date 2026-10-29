@@ -1,11 +1,32 @@
 ﻿import json
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 import tools.research.run_event_capture_cycle as cycle
-from tools.research.pit_event_records import normalize_event
+from tools.research.pit_event_records import normalize_event as _normalize_event
+
+EVIDENCE = {
+    "parse_status": "exact",
+    "source_evidence": "official_fed_page",
+    "published_at_evidence": "official_release_time_in_page",
+    "decision_evidence": "strategy_log",
+    "is_simulated": False,
+    "observation_kind": "live_forward_observation",
+}
+
+
+def normalize_event(*args, **kwargs):
+    event = _normalize_event(*args, **kwargs)
+    event.update(EVIDENCE)
+    event["research_ready_at_utc"] = event.get("first_seen_at_utc")
+    first = event.get("first_seen_at_utc") or ""
+    if first:
+        event["decision_at_utc"] = (
+            datetime.fromisoformat(first.replace("Z", "+00:00")) + timedelta(minutes=5)
+        ).isoformat().replace("+00:00", "Z")
+    return event
 
 
 def sample_event():

@@ -1,7 +1,28 @@
-from datetime import timedelta
+﻿from datetime import datetime, timedelta
 
 from tools.research.pit_event_archive import merge_event_archive
-from tools.research.pit_event_records import normalize_event
+from tools.research.pit_event_records import normalize_event as _normalize_event
+
+EVIDENCE = {
+    "parse_status": "exact",
+    "source_evidence": "official_fed_page",
+    "published_at_evidence": "official_release_time_in_page",
+    "decision_evidence": "strategy_log",
+    "is_simulated": False,
+    "observation_kind": "live_forward_observation",
+}
+
+
+def normalize_event(*args, **kwargs):
+    event = _normalize_event(*args, **kwargs)
+    event.update(EVIDENCE)
+    event["research_ready_at_utc"] = event.get("first_seen_at_utc")
+    first = event.get("first_seen_at_utc") or ""
+    if first:
+        event["decision_at_utc"] = (
+            datetime.fromisoformat(first.replace("Z", "+00:00")) + timedelta(minutes=5)
+        ).isoformat().replace("+00:00", "Z")
+    return event
 from tools.research.pit_event_research_pipeline import build_event_research_report
 
 
@@ -102,8 +123,8 @@ def test_pipeline_uses_latest_archive_version_available_by_decision_time():
     assert early["asof_event_count"] == 1
     assert late["asof_event_count"] == 1
     assert early["input_snapshot_sha256"] != late["input_snapshot_sha256"]
-    assert early["coverage_audit"]["eligible_events"] == 1
-    assert late["coverage_audit"]["eligible_events"] == 1
+    assert early["coverage_audit"]["eligible_events"] == 0
+    assert late["coverage_audit"]["eligible_events"] == 0
 
 
 def test_pipeline_rejects_mixed_versioned_and_unversioned_input():

@@ -15,6 +15,14 @@ def event(**overrides):
         "availability_status": "available",
         "tickers": ["AAPL"],
         "sectors": [],
+        "research_ready_at_utc": "2026-10-23T13:01:00Z",
+        "decision_at_utc": DECISION,
+        "parse_status": "exact",
+        "source_evidence": "official_fed_page",
+        "published_at_evidence": "official_release_time_in_page",
+        "decision_evidence": "strategy_log",
+        "is_simulated": False,
+        "observation_kind": "live_forward_observation",
     }
     row.update(overrides)
     return row
@@ -47,6 +55,16 @@ def test_official_macro_events_can_flow_into_ticker_features_as_market_context()
         feed_key="bls_cpi",
         first_seen_at_utc="2026-10-23T12:31:00Z",
     )
+    parsed["events"][0].update({
+        "research_ready_at_utc": parsed["events"][0]["first_seen_at_utc"],
+        "decision_at_utc": "2026-10-23T13:00:00Z",
+        "parse_status": "exact",
+        "source_evidence": "official_fed_page",
+        "published_at_evidence": "official_release_time_in_page",
+        "decision_evidence": "strategy_log",
+        "is_simulated": False,
+        "observation_kind": "live_forward_observation",
+    })
     result = build_event_features(
         parsed["events"],
         ticker="AAPL",
