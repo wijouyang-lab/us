@@ -1,18 +1,18 @@
 {
-  "archive_sha256": "f331902dc94303620bee8c2cc6f5e0ae5382fef4d944dac082c8e2016546cc9d",
-  "event_versions": 35,
-  "generated_at_utc": "2026-10-28T09:02:58.711468Z",
-  "latest_run_id": "40661139681",
-  "observations": 35,
-  "observations_sha256": "ca119dc4df2e8ad435ea41589b8320b0429ba5523cf70b1d3aab717d3a3aa4bf",
+  "archive_sha256": "be397d480fe059f45aae21f0f27b45d8cf41e794f82c4c4c1bfb1dfe8b34f980",
+  "event_versions": 36,
+  "generated_at_utc": "2026-10-29T02:35:31.719141Z",
+  "latest_run_id": "40807180694",
+  "observations": 70,
+  "observations_sha256": "d5725c0bd2aeac746f538febfdc9c1b73fee45a68ccfe4cebee1743484d3fa51",
   "production_scanner_modified": false,
   "research_only": true,
-  "run_count": 1,
+  "run_count": 2,
   "runs": [
     {
       "captured_at": "2026-10-28T09:02:58.709385Z",
       "commit_sha": "7faac557f4fe91f87489f26daa3a8549f879568d",
-      "manifest_sha256": "81d1d84de95c45ca8403853366f4a19d2f1c4159a41a303fdf7dbb19209edea8",
+      "manifest_sha256": "423ef9cef8e9bfa980aa6e38591dd9e272c886a3dd8a80915790d074ff0e77e5",
       "run_id": "40661139681",
       "run_url": "https://github.com/wijouyang-lab/us/actions/runs/40661139681",
       "snapshot_sha256": {
@@ -20,7 +20,20 @@
         "events.json": "891f77a761f3f595987c9c8c54b4e63b0084ccf1e61495f1f871709573cb28c5",
         "metadata.json": "2c772a43e74963cb1165981a924ec5c290796dff42962a50e2e712b86a91ece4"
       }
+    },
+    {
+      "captured_at": "2026-10-29T02:35:31.715207Z",
+      "commit_sha": "67d962986235f0be53c417071bdd6f2c7d8eac16",
+      "manifest_sha256": "f24a72804aa34569ff34065128e4735fa4544f705baca8a30f384837447bcce1",
+      "run_id": "40807180694",
+      "run_url": "https://github.com/wijouyang-lab/us/actions/runs/40807180694",
+      "snapshot_sha256": {
+        "audit.json": "031ab828343e0fb98a76326c08889a007816ac4477072cfc0b0da45242c3d0dc",
+        "events.json": "1e5d117b8eb7d683df09b05646060bb45e39e6ae428df382385a37f2f31250ee",
+        "metadata.json": "5aed999c7766abae3322bc8544106162b8fd2f233a9402bc6dcde1140639ecac"
+      }
     }
   ],
+  "snapshot_hash_format": "canonical-json-v1",
   "store_schema_version": 1
 }

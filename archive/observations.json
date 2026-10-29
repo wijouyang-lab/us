@@ -313,5 +313,320 @@
     "payload_hash": "67f25caf023042cb576b0f96e5e97e030e83996a6c7172cfcf986003e822d3fe",
     "run_id": "40661139681",
     "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "2272b32b63dcc7dba3c2396f0e97c0c0da3228c10eef7bba141926e1e3238ab4",
+    "event_type": "central_bank",
+    "event_version_id": "f70fab18cf51bcd76a66b0f551e6ad0fa3e5f7f5f777cc2da8ec74b2fd6b64e6",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "82d46c0d0b9acca1c859071da5523b226c8e7117b9b7c8bd6a6f2511722091ab",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "aa95891a993a437fd559dda7348045ae541c2c8e5af2f0bb2ece567f5d8e27a0",
+    "event_type": "central_bank",
+    "event_version_id": "1ee9949c237bb42aa38a6371317d9c5789ef6eb7cd7d858372873b553f4df7b5",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "58cc4312c1ad673b9dbe35abc538de732748032dbee7a91d5a63d1b5bc3f64dd",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "06f6baa9d1cea5da0922b532e2548501ecb348988de85e442e6b1b63569c85bd",
+    "event_type": "central_bank",
+    "event_version_id": "74a0564f30d77af05d29615c76e6bf67cf6caf9ef1ac6ce2f76851a43733781e",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "bb30d208ef2dafb58d0e469944b0d8f982788cb1e11457aee7cb44d6a7d03369",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "71b21f38429ca7174b311dd2a57a3faef256518846cb993504262374a33e3d44",
+    "event_type": "central_bank",
+    "event_version_id": "79092f2c53af378dbc1016ac9825e50760bdce75c39c914bcf01118da23f095c",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "f33189f9a6f80a7193437ef7b4466790b693ebe6ddefd37868a501fe356058a4",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "b879821f1978c592c9ddfeb680dcf982c557f009c73e1c056d5328fb28108393",
+    "event_type": "policy",
+    "event_version_id": "decc07d5b60eccfe8e4115a34e9ccd77e3d6fc29d223db2fd8a887e31b9c0ea0",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "f5c4a37264a313bd9db88a6c5ae527b8bbfb1da4c9360c3705cd86568f4d95f4",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "e1994a020e82b1ac3311ef4de9cdb29950862058413b7bb1cda05f2d050fa7f8",
+    "event_type": "policy",
+    "event_version_id": "9e958af99e833cb3066bf4131cc15106f9625d1929ad26fb7c320050b6a3da3d",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "730af35a63ba0ab86cde2e5a358f361b9f3bb6fabec838f2b0aaf58adb981dc2",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "78ecd8a204ece6d8cc92809e02f2d518749cce2396fe2ec140c1d44a7f06ae15",
+    "event_type": "central_bank",
+    "event_version_id": "1050ed4310bcb209deadbf317f105325645fdb259f48e239f26cf2e403f88f58",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "f8757fb7ba124c4bf50499d229f2e0b6e32c2acbb5886664c0af511e32c591b9",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "153288accca55e9448f42d2ee90fc61456ff9e4fa4f179e793114f02676abdcd",
+    "event_type": "policy",
+    "event_version_id": "baa554361d9730723032db28bb73ff852a474f0f6755887374652c8f48863192",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "188da16b011b80bffd1b729f9cb2a78b03a074716d8e64f8a08600c8cf06f579",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "0f0aa60ad778014fc4a06ef8da61a13e3a2a7fe39c211943c3f6ad94a3afdebf",
+    "event_type": "central_bank",
+    "event_version_id": "d7f219b4cba29f04a490910fff66363c87b8d435433f247e2e4b70991eaf5e93",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "1d375601ab5e423cfae8d362a49f048aba0cdc25938f3a5ccfcf1fe9e55f3d31",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "e11d325edc9feed4f3202039d217167ed35360303a1f8c7f0abc8353eaf4c74e",
+    "event_type": "policy",
+    "event_version_id": "909799395f2c7a4d2fb9ecf181825e3084c95e4c241e1033f60d6335e9e1e4cd",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "bd904aa8cd3dce5404b54300c6f8527a90d8f3ed0ff15170ace6f36326292283",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "2d81d69ed6fa29f0e6ddc97ff9a0dce5d893d10e3c6003adc269dadd6a7fe0aa",
+    "event_type": "policy",
+    "event_version_id": "13fe7c19f3c62e3eb67ab238e7320cfe39e5e51c0cb8424c28eebdd304075b84",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "b66d0242fc0f38001f9842bd9631b2010ae20824aee36d9e6a7bba36839567ac",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "30edbea4163948dc49e3fd8a0588a4fec955a54d5258c2cde04880f77bef4607",
+    "event_type": "policy",
+    "event_version_id": "68c07db06298bd355876fb01e9af1dcf6375b8dc5122e3cd068a4ff410c972d2",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "c13ff08e74bc8b93b25bae7b1275b017ae683f17dd6cec70669a6cb2e6079ce5",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "1f4457e755091c348d1cba321bc64e81bc8cc6fe427b88bc0ae33ba9abc309d1",
+    "event_type": "central_bank",
+    "event_version_id": "14a1d927a01a13acfcec61ddfb48c84aaf123212613ac95dac94aa302feaabfa",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "1fefbe6d4d8e52043d77abbb19515c004c3011e8e25856cf0165dd1edc6a15c7",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "a5102308d257c9cb2aa348bb89a6630b8cd5f696920cb233dba4356404568cab",
+    "event_type": "central_bank",
+    "event_version_id": "01111fa72335219dc1cbdb4661d088e8ed31986355c382b9ac7d0e7f308406b0",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "173dac2b83352e065fd7cb5bd49d935cb1447545e3592ec46de95ff8e053d2f6",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "439dae06a60247a62f0168974ba7a71a4e61705b3a922f83047872fb26c8128a",
+    "event_type": "central_bank",
+    "event_version_id": "5ed5a68f2fd174da2791b4655ad60a1f0fcccf1f207388fdda788b2ce81a649c",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "8101424de118d25b4266e841922f995703f958d7a602a64da3c36773da8385c2",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "77a9b195a3ffe7fc7c50bd013a21188ee534c2b44f6e03c1e98b4bbdc51f3506",
+    "event_type": "central_bank",
+    "event_version_id": "5d430fb8345d2924c4ea5d936ac0ef25d16ad9be8bd28b547e809a31b447d057",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "d1d3fb08661a9889013cfa55f23f182e3697e1be0fc1d2e8c96aab05f2a535b0",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "9845754b56b253c8e90912a3dcfd492ea104627fcfcdd8b85bc3d9b166ba759e",
+    "event_type": "policy",
+    "event_version_id": "06d4054bb22deca0f837ce5a185fdb9a4e67fe8f9da2a97a9c16f11042350d63",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "66aad9c121cbb544e08f7733bff933552331e58ca3e13b4b020976c346ef17f3",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "3a94eb0778b57af4b50325738f5bcf66d5975f3a2b14d97047c613977ca2fa5d",
+    "event_type": "policy",
+    "event_version_id": "484be9358826a38eda705fbd9b1f63f82cd64fd4043f646af16018648c472ba0",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "6fbb0c1d4c4b4e48293388f8da82b901d180141027893b0d835a7c9d620e45c8",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "08f20f3550cc1cc0a1e42b93c38d3dd5906f3707f5c689215f08c055d871fc02",
+    "event_type": "central_bank",
+    "event_version_id": "18ef916babb2446f838cc8a53fffa366ce1b0415626be58153bef1ab41aeb2d3",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "3b2ee82154f78e8f4522a206326afbeb03f80f24f7d2e3ce31abe6bc2ca345cf",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "9fd3c0e14640500682f71b2342f6b34d71c17a29045402594b1356001ddfcf88",
+    "event_type": "central_bank",
+    "event_version_id": "9629d38d14692fbce1d8302b50dd970934ea275e65d70fb1af2783bb42d13a70",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "cb4dce28c881751fc5d5161bbea9628ab3ded31171e0d5eb7683dfe1cd792fe9",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "87ce5ed6ff4c06093c29d46f478c56370aa90a3ca335c5f9e85dfa68cdd3c85a",
+    "event_type": "central_bank",
+    "event_version_id": "9feb5c09aed91945340f740032bbd95092ff9a277dbb62481295a933a136a994",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "e1b09f5ba06e7e12367af7eebb9c5de47d8b86d56d5910a77da1753cb353e2a3",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "af61e077a1f0085c896b674eb1908d85cb54bcc7751cd70261280bbc5c6daa16",
+    "event_type": "central_bank",
+    "event_version_id": "8b628d606c4dfb43f61bf730a20021d6a915d0577276cb69e0020667e5977601",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "09765ca279f553e73ed37067d1e29119e24ac4d21efa5253b5260267e931a006",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "04bff9b6e0af7e3f1f239282b2675c1e1eff132dafba9ac009d4e562a1571ee6",
+    "event_type": "policy",
+    "event_version_id": "45282924ec7ae338a754a0631d8ad119a759d47697a89dc0b3e20ba9d1c4fbe1",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "b117fec888f7057938920add51a2cd6ef9a97bf611bcf23f11cc010d4ce9092d",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "43db0d663eae80cc482e4057751e49d618822dcfa809d08ff8ccae1d82486807",
+    "event_type": "policy",
+    "event_version_id": "c1edabb0a1921b7c34680ec5ec20c54321f22a1b5a2b55a6b0c342871682fdd8",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "1d6d57c0478c819e32e5992cccbdc96fc80500275d2bc809e4d870d4c54b7d1a",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "ba218c7a6c6e8294bff506a417e0bc952aa63ae35f9fa1a9a26871cbd61436d7",
+    "event_type": "policy",
+    "event_version_id": "2abad6331c2246675772cd1d8f5d981fa01dd4c0ddca4f21fa3daa6fc8f0fcd8",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "44c6b3ec8a522810180f616c32a274c79a1acf8dc313ba10433e6747e579ee8f",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "e0ab3929875b5df86870324dc2c5b7c8e8eb0e67f1cbb656ec9eb2e827ad2c14",
+    "event_type": "policy",
+    "event_version_id": "28d58a212c507a66febdd558151885713de0fb714a0b309726b4699b031cbe72",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "b012c2ccc9871e55c3833c77f55455731fc5b4548d96ef161a532c84df10d6a2",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "3feacc2f383499484938a5bd945efee44de11b1e41897c6cfdb0aa53bc389038",
+    "event_type": "central_bank",
+    "event_version_id": "66672b3b40aa57212a9f1de79e467a65b68921a5d96676abdeed1de3e2ebaa32",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "b43240555cd20fcc21cccd054a34917829625393f938b73700ab807ee2ae355b",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "4a42df6979d8d8672a53ea78ea9fd87a2944beebec99b66db63e805236f0a4a4",
+    "event_type": "central_bank",
+    "event_version_id": "8cc551c075221996235b454fc3f4d94f719914ca037d21540d6909b48715cdd3",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "4ee14822ec43ea6b6d3e151abe4ec02110efa35279eab30be324e42e27d5fef5",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "5ffa1f2b64d161b0c45c7eb07e821c1f959fa56f4d6502e5c8570b3a6df75d94",
+    "event_type": "central_bank",
+    "event_version_id": "bf753b33639fe2112b6baaf6266ebe01dcd489fcc5e515c0e9cf7271ce2afa16",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "84d6e03cc05f865d70784d571394757796f38fb4d3a14db6be6604f843f8799f",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "2f3e0d3b8942adb2562fcfca3bc6c87e7e108e0e73f399e8584450b7732b8904",
+    "event_type": "policy",
+    "event_version_id": "287e1c36537f308a89b0f62ff4336e6e59e39e2e6257e2483246729201d82884",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "84d3274b9b1ec84c7bd277d8d9c2556082c52505b79c49555317649623fff63d",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "6f4c3e12ec6cd8a46f1ae67aaa2a554d74fc1a9db26553de3bcfa986b63fbda0",
+    "event_type": "policy",
+    "event_version_id": "9092b408829cf495e96d0e76d7897148d66d149bfe140f19f15f934b451d0986",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "2bbd5d4b7c886482fbce021c4e346759ccc4383f6f27d882c8f5b3cdf96110cc",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "f19754495d409ae151e5e8c8f4ef3c63a64de28ee3b54d24773495845064a0ca",
+    "event_type": "policy",
+    "event_version_id": "1a428644eae4da22a7df7fa199a28179e41ee8d407cab24659f8feda65acc5f6",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "4d703f993ca975d519e65ec2ef010b0d4d9b5a6966765919e2fedb6172cc6669",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "0a633e3ad293438dc6bdbe5c286208a531d3082f8cd472f708e364c01c9a6bde",
+    "event_type": "central_bank",
+    "event_version_id": "d8d65b763502b49123317b1a3e0e4ac494553756fa85e6e55463750a2f764d5d",
+    "first_seen_at_utc": "2026-10-29T02:35:30.802001Z",
+    "payload_hash": "a88c562e9c006bf714fe851272985b1833e6c691ab6adda5c0e48947af45764c",
+    "run_id": "40807180694",
+    "source": "federal_reserve_speeches_rss"
+  },
+  {
+    "event_id": "c3fb92cfdc4cc63802ae74a2ee22962c1e953fdf64379871dfdf5e0ce8e23deb",
+    "event_type": "policy",
+    "event_version_id": "f69428d408278086ee75ba829f29e5333644149527081d697840134b972ba2e1",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "67f25caf023042cb576b0f96e5e97e030e83996a6c7172cfcf986003e822d3fe",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
+  },
+  {
+    "event_id": "8cf2d5350bac4a0876a7ee10a5654c26cfd792b90d96b87530526066b1a57dd2",
+    "event_type": "central_bank",
+    "event_version_id": "dc69359f774f7ed76cae0ee730486921e13899ac0e1995a0461c6fa57b81ab78",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "payload_hash": "7fe1fb49933ca5a492f3cb2bd695c84ecd9cce0fe84684f54ccc7ab09dcb120d",
+    "run_id": "40807180694",
+    "source": "federal_reserve_press_rss"
   }
 ]

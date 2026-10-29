@@ -768,5 +768,27 @@
     "tickers": [],
     "update_first_seen_at_utc": null,
     "updated_at_utc": null
+  },
+  {
+    "availability_status": "available",
+    "content_hash": "7fe1fb49933ca5a492f3cb2bd695c84ecd9cce0fe84684f54ccc7ab09dcb120d",
+    "event_id": "8cf2d5350bac4a0876a7ee10a5654c26cfd792b90d96b87530526066b1a57dd2",
+    "event_type": "central_bank",
+    "event_version_id": "dc69359f774f7ed76cae0ee730486921e13899ac0e1995a0461c6fa57b81ab78",
+    "feed_key": "fed_all",
+    "first_seen_at_utc": "2026-10-29T02:35:30.465604Z",
+    "headline": "Federal Reserve issues FOMC statement",
+    "market_scope": "market",
+    "published_at_utc": "2026-10-28T18:00:00Z",
+    "sectors": [],
+    "source": "federal_reserve_press_rss",
+    "source_event_id": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+    "source_quality": "official",
+    "source_timestamp_kind": "rss_published_at",
+    "source_timestamp_status": "parsed",
+    "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261028a.htm",
+    "tickers": [],
+    "update_first_seen_at_utc": null,
+    "updated_at_utc": null
   }
 ]
