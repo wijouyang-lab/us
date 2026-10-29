@@ -68,6 +68,16 @@
       "rights_verified": false,
       "independent_reference": false,
       "notes": "Basic real-time IEX only; SIP/historical entitlement and storage rights unverified; no real request executed"
+    },
+    {
+      "provider": "AKShare / Sina Finance",
+      "status": "candidate_not_approved",
+      "raw_ohlc": "503/503 on 2026-10-28; HUBB 437.33",
+      "adjusted_close": "qfq available via factor table; no explicit Adj_Close field",
+      "update_or_revision_metadata": false,
+      "rights_verified": false,
+      "independent_reference": true,
+      "notes": "source independent of Yahoo/Nasdaq; no documented storage/redistribution rights or revision metadata"
     }
   ],
   "decision": "HUBB 2026-10-28 remains missing; panel partial; acceptance fail",

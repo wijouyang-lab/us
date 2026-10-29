@@ -1,4 +1,4 @@
-﻿# 2026-10-28 Close Update and Second Real Capture
+# 2026-10-28 Close Update and Second Real Capture
 
 Date: 2026-10-29 UTC
 Research only. No production changes.
@@ -74,6 +74,11 @@ BLS is not represented as success.
 
 HUBB returned `close: null` for 10/28 from Yahoo; no intraday or synthetic
 value was substituted. Therefore the panel is **502/503**, not complete.
+
+An AKShare/Sina cross-check found that AOS had been written with the previous
+session row. The verified 10/28 AOS row (open 62.60, high 62.60, low 60.47,
+close 60.86, volume 2,549,200) replaced it in the local increment. This is a
+provider-verified correction, not a HUBB fill.
 
 Increment: `docs/research/recent_price_increment_2026-10-28.csv`
 
