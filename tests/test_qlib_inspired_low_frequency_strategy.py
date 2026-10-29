@@ -1,4 +1,4 @@
-from __future__ import annotations
+﻿from __future__ import annotations
 
 import numpy as np
 import pandas as pd
@@ -45,3 +45,15 @@ def test_evaluate_does_not_silently_keep_partial_forward_labels():
     rows[-1]["Fwd20"] = np.nan
     result = evaluate(pd.DataFrame(rows), [pd.Timestamp("2024-01-31")], test_start="2024-01-01")
     assert result["rows"] == []
+def test_evaluate_accepts_explicit_single_factor_weights():
+    import pandas as pd
+    from tools.research.qlib_inspired_low_frequency_strategy import MIN_NAMES, FEATURES
+    rows = []
+    for i in range(MIN_NAMES):
+        row = {"Date": pd.Timestamp("2024-01-31"), "Ticker": f"T{i:03d}",
+               "Close": 20.0, "DV20": 10_000_000.0, "Fwd20": 0.01}
+        row.update({name: float(i) for name in FEATURES})
+        rows.append(row)
+    result = evaluate(pd.DataFrame(rows), [pd.Timestamp("2024-01-31")],
+                      test_start="2024-01-01", weights={"Mom12_1": 1.0})
+    assert len(result["rows"]) == 1

@@ -1,4 +1,4 @@
-# Qlib-inspired low-frequency strategy candidate
+﻿# Qlib-inspired low-frequency strategy candidate
 
 Status: research candidate only; not a production strategy.
 
@@ -30,7 +30,7 @@ python -m tools.research.qlib_inspired_low_frequency_strategy \
   --output-prefix docs/research/qlib_inspired_low_frequency_2026-10-30
 ```
 
-The tool writes JSON and CSV results. It must be run against the existing local OHLCV panel; this repository integration does not claim the result has already been run.
+The tool writes JSON and CSV results. Actual run on `price10y_1028.csv` is recorded in `OPEN_SOURCE_STRATEGY_SCREEN_2026-10-30.md`; results are descriptive and rejected for promotion.
 
 ## Guardrails
 

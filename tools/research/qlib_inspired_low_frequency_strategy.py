@@ -77,12 +77,12 @@ def month_ends(df: pd.DataFrame) -> list[pd.Timestamp]:
     return sorted(dates.groupby(dates.dt.to_period("M")).max().tolist())
 
 
-def rank_composite(frame: pd.DataFrame) -> pd.Series:
+def rank_composite(frame: pd.DataFrame, weights: dict[str, float] = WEIGHTS) -> pd.Series:
     """Cross-sectional rank blend. Higher scores are preferred."""
     ranks = pd.DataFrame(index=frame.index)
     for name in FEATURES:
         ranks[name] = frame[name].rank(pct=True, method="average")
-    score = sum(ranks[name] * weight for name, weight in WEIGHTS.items())
+    score = sum(ranks[name] * weight for name, weight in weights.items())
     return score
 
 
@@ -104,6 +104,7 @@ def evaluate(
     dates: list[pd.Timestamp],
     cost_bps: float = COST_BPS,
     test_start: str = TEST_START,
+    weights: dict[str, float] = WEIGHTS,
 ) -> dict:
     previous_strategy: set[str] = set()
     previous_benchmark: set[str] = set()
@@ -118,7 +119,7 @@ def evaluate(
         ].dropna(subset=list(FEATURES))
         if len(eligible) < MIN_NAMES:
             continue
-        eligible["Score"] = rank_composite(eligible)
+        eligible["Score"] = rank_composite(eligible, weights)
         eligible = eligible.sort_values(["Score", "Ticker"], ascending=[False, True])
         count = max(1, int(np.floor(len(eligible) * TOP_FRACTION)))
         selected = set(eligible.head(count)["Ticker"])
