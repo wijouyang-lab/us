@@ -62,3 +62,18 @@ def test_v2_has_all_categories_and_preserves_unknowns():
     assert (d[d.ticker == "AET"].classification == "DELISTED_OR_ACQUIRED").all()
     assert (d[d.ticker == "ABC"].classification == "TICKER_OR_NAME_CHANGED").all()
     assert (d.price_status == "NO_SERIES_IN_CURRENT_PANEL").all()
+def test_v3_batch2_categories():
+    import pandas as pd
+    d = pd.read_csv("docs/research/missing_202_reason_classification_v3_2026-10-29.csv")
+    assert len(d) == 202
+    assert d.classification.value_counts().to_dict() == {
+        "HISTORICAL_MEMBERSHIP_ONLY": 153,
+        "DELISTED_OR_ACQUIRED": 18,
+        "STILL_TRADING": 17,
+        "TICKER_OR_NAME_CHANGED": 11,
+        "TICKER_REUSE_SUSPECTED": 2,
+        "IDENTITY_UNRESOLVED": 1,
+    }
+    assert (d[d.ticker == "FLT"].classification == "TICKER_OR_NAME_CHANGED").all()
+    assert (d[d.ticker == "FRC"].classification == "IDENTITY_UNRESOLVED").all()
+    assert (d[d.ticker == "DXC"].classification == "STILL_TRADING").all()
