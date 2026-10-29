@@ -48,6 +48,23 @@ def test_repeated_append_is_idempotent_and_keeps_history():
     assert second[second.Date.astype(str) == "2026-10-14"].Close.iloc[0] == 10.5
 
 
+def test_null_close_and_invalid_ohlc_are_dropped():
+    existing = pd.DataFrame([
+        {"Date": "2026-10-27", "Ticker": "HUBB", "Open": 430.64, "High": 444.67,
+         "Low": 429.36, "Close": 434.28, "Volume": 1820595,
+         "schema_version": "phase2b.v1"},
+    ])
+    downloaded = pd.DataFrame([
+        {"Date": "2026-10-28", "Ticker": "HUBB", "Open": 444.68, "High": 444.055,
+         "Low": 426.91, "Close": None, "Volume": 1163816,
+         "schema_version": "phase2b.v1"},
+    ])
+    out, report = mod.append_recent(existing, downloaded)
+    assert report["new_rows"] == 0
+    assert len(out) == 1
+    assert out.Date.max() == pd.Timestamp("2026-10-27").date()
+
+
 def test_missing_new_data_is_reported_without_synthetic_rows():
     existing = pd.DataFrame([
         {"Date": "2026-10-14", "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9,
