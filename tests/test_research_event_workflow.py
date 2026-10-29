@@ -58,3 +58,7 @@ def test_schedule_review_doc_exists():
     text = doc.read_text(encoding="utf-8")
     assert "not enabled" in text.lower()
     assert "21:15 UTC" in text
+def test_scheduled_run_has_nonempty_default_feeds():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert 'feeds="${FEEDS:-bls_cpi,bls_employment,fed_all,fed_speeches}"' in text
+    assert '--feeds "$feeds"' in text

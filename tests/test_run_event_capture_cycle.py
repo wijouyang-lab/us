@@ -1,4 +1,4 @@
-import json
+﻿import json
 from datetime import timedelta
 from pathlib import Path
 
@@ -47,7 +47,7 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
         max_age_by_type={"macro_release": timedelta(days=1)},
     )
     assert result["event_count"] == 1
@@ -97,7 +97,7 @@ def test_successful_empty_feed_is_visible_in_source_coverage(tmp_path, monkeypat
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
     )
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
     assert result["successful_source_count"] == 1
@@ -112,7 +112,7 @@ def test_repeated_capture_deduplicates_the_same_event_version(tmp_path, monkeypa
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
     )
     first = cycle.run_cycle(**args)
     second = cycle.run_cycle(**args)
@@ -159,7 +159,7 @@ def test_all_feed_failures_are_recorded_and_signaled(tmp_path, monkeypatch):
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
     )
     assert result["all_sources_failed"]
     metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))

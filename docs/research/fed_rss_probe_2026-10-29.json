@@ -1,0 +1,15 @@
+{
+  "captured_at": "2026-10-29T05:13:59.675716Z",
+  "feeds": [
+    "fed_all",
+    "fed_speeches"
+  ],
+  "events": 35,
+  "unique_ids": 35,
+  "new_ids": 0,
+  "archive_unique": 36,
+  "missing_from_current_feed": 1,
+  "events_sha256": "12d74a6fea5386a762af9a263a15776e27b48519416f08be3317f03daefeca3d",
+  "audit": "fail_no_data",
+  "archive_write": false
+}

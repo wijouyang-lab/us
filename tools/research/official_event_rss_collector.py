@@ -1,4 +1,4 @@
-"""Free official BLS/Federal Reserve RSS capture for research-only event observation.
+﻿"""Free official BLS/Federal Reserve RSS capture for research-only event observation.
 
 The collector uses a built-in allowlist of official feeds and local parsing tests.
 Publisher-supplied RSS dates are preserved as source timestamps, not treated as
@@ -24,6 +24,7 @@ from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
+from tools.research.contact_user_agent import has_contact_email, validate_user_agent
 from tools.research.pit_event_records import normalize_event
 
 OFFICIAL_FEEDS: dict[str, dict[str, str]] = {
@@ -254,9 +255,7 @@ class OfficialRssCollector:
         sleep: Callable[[float], None] | None = None,
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        value = (user_agent or DEFAULT_USER_AGENT).strip()
-        if not value or "\n" in value or "\r" in value or len(value) > 256:
-            raise ValueError("User-Agent must be a single non-empty header value")
+        value = validate_user_agent(user_agent or DEFAULT_USER_AGENT)
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         if min_request_interval_seconds < 0.1:
@@ -276,7 +275,7 @@ class OfficialRssCollector:
         parsed_url = urlparse(url)
         if parsed_url.scheme != "https" or parsed_url.hostname not in _ALLOWED_HOSTS:
             raise ValueError("official feed URL failed host allowlist")
-        if feed_key in CONTACT_REQUIRED_FEEDS and "@" not in self.user_agent:
+        if feed_key in CONTACT_REQUIRED_FEEDS and not has_contact_email(self.user_agent):
             raise ContactUserAgentRequired(
                 f"{feed_key} requires a contact User-Agent; set OFFICIAL_FEED_USER_AGENT"
             )

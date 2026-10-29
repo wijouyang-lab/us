@@ -47,10 +47,11 @@ jobs:
           stamp="$(date -u +%Y%m%dT%H%M%SZ)"
           out="docs/research/event_forward_runs/${stamp}"
           decision="$(date -u -d '+10 minutes' +%Y-%m-%dT%H:%M:%SZ)"
+          feeds="${FEEDS:-bls_cpi,bls_employment,fed_all,fed_speeches}"
           python -m tools.research.run_event_capture_cycle \
             --output-dir "$out" \
             --decision-at "$decision" \
-            --feeds "$FEEDS"
+            --feeds "$feeds"
           echo "out=$out" >> "$GITHUB_OUTPUT"
           echo "## Research event capture" >> "$GITHUB_STEP_SUMMARY"
           echo "Artifacts: $out" >> "$GITHUB_STEP_SUMMARY"

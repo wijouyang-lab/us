@@ -1,4 +1,4 @@
-import json
+﻿import json
 from datetime import datetime, timezone
 
 import pytest
@@ -107,7 +107,7 @@ def test_collector_uses_only_allowlisted_feeds_and_reports_failures():
 
     fixed_now = datetime(2026, 9, 11, 12, 31, tzinfo=timezone.utc)
     collector = OfficialRssCollector(
-        "Quant research test@example.com",
+        "Quant research tester@quantlab.dev",
         opener=opener,
         sleep=sleeps.append,
         now=lambda: fixed_now,
