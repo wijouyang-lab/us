@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Static contract tests for the research-only event capture workflow."""
 
 from pathlib import Path
@@ -41,3 +41,20 @@ def test_workflow_does_not_hardcode_secret_values():
     text = WORKFLOW.read_text(encoding="utf-8")
     for forbidden in ("SECRET_VALUE", "api_key=", "apikey=", "password="):
         assert forbidden not in text
+
+def test_workflow_minimum_permissions_and_retention():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "permissions:\n  contents: read" in text
+    assert "timeout-minutes: 15" in text
+    assert "cancel-in-progress: false" in text
+    assert "retention-days: 90" in text
+    assert "if: always()" in text
+    assert "write-all" not in text
+
+
+def test_schedule_review_doc_exists():
+    doc = Path("docs/research/EVENT_CAPTURE_SCHEDULE_REVIEW_2026-10-29.md")
+    assert doc.exists()
+    text = doc.read_text(encoding="utf-8")
+    assert "not enabled" in text.lower()
+    assert "21:15 UTC" in text
