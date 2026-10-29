@@ -71,6 +71,39 @@ def test_missing_new_data_is_reported_without_synthetic_rows():
          "Close": 10.5, "Volume": 100, "schema_version": "phase2b.v1"},
     ])
     empty = pd.DataFrame(columns=mod.COLUMNS)
-    out, report = mod.append_recent(existing, empty)
+    out, report = mod.append_recent(existing, empty, target_date=pd.Timestamp("2026-10-15").date())
     assert report["new_rows"] == 0
+    assert report["target_date_missing"] is True
+    assert len(out) == 1
+
+
+def test_previous_session_relabeled_as_target_is_not_appended():
+    existing = pd.DataFrame([
+        {"Date": "2026-10-27", "Ticker": "AOS", "Open": 62.0, "High": 62.54, "Low": 61.04,
+         "Close": 62.06, "Volume": 1185400, "schema_version": "phase2b.v1"},
+    ])
+    # Same OHLCV as 10/27 but falsely labeled 10/28.
+    downloaded = pd.DataFrame([
+        {"Date": "2026-10-28", "Ticker": "AOS", "Open": 62.0, "High": 62.54, "Low": 61.04,
+         "Close": 62.06, "Volume": 1185400, "schema_version": "phase2b.v1"},
+    ])
+    out, report = mod.append_recent(existing, downloaded, target_date=pd.Timestamp("2026-10-28").date())
+    assert report["new_rows"] == 0
+    assert report["identical_previous_rows"] == 1
+    assert len(out) == 1
+    assert out.Date.max() == pd.Timestamp("2026-10-27").date()
+
+
+def test_target_not_present_and_no_prior_fill():
+    existing = pd.DataFrame([
+        {"Date": "2026-10-27", "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9,
+         "Close": 10.5, "Volume": 100, "schema_version": "phase2b.v1"},
+    ])
+    downloaded = pd.DataFrame([
+        {"Date": "2026-10-27", "Ticker": "AAA", "Open": 10, "High": 11, "Low": 9,
+         "Close": 10.5, "Volume": 100, "schema_version": "phase2b.v1"},
+    ])
+    out, report = mod.append_recent(existing, downloaded, target_date=pd.Timestamp("2026-10-28").date())
+    assert report["new_rows"] == 0
+    assert report["target_date_missing"] is True
     assert len(out) == 1

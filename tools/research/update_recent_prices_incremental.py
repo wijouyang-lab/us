@@ -31,20 +31,43 @@ def _valid_rows(df: pd.DataFrame) -> pd.DataFrame:
     return d.drop_duplicates(["Date", "Ticker"], keep="last")
 
 
-def append_recent(existing: pd.DataFrame, downloaded: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
+def append_recent(existing: pd.DataFrame, downloaded: pd.DataFrame,
+                  target_date: date | None = None) -> tuple[pd.DataFrame, dict[str, Any]]:
     existing = existing.copy()
     existing["Date"] = pd.to_datetime(existing["Date"]).dt.date
     last = max(existing["Date"])
     fresh = _valid_rows(downloaded)
-    fresh = fresh[fresh["Date"] > last]
+    if target_date is None:
+        fresh = fresh[fresh["Date"] > last]
+    else:
+        fresh = fresh[fresh["Date"] == target_date]
     if fresh.empty:
-        return existing, {"last_existing": last.isoformat(), "new_rows": 0, "new_dates": []}
+        return existing, {
+            "last_existing": last.isoformat(), "new_rows": 0, "new_dates": [],
+            "target_date": target_date.isoformat() if target_date else None,
+            "target_date_missing": target_date is not None,
+        }
     fresh = fresh[fresh["Ticker"].isin(set(existing["Ticker"].astype(str).str.upper()))]
     fresh["Ticker"] = fresh["Ticker"].astype(str).str.upper()
     fresh["schema_version"] = "phase2b.v1"
     for col in ("Open", "High", "Low", "Close"):
         fresh[col] = fresh[col].astype(float).round(6)
     fresh["Volume"] = fresh["Volume"].astype("int64")
+
+    # A target-date row must not be a byte-for-byte copy of the prior session.
+    # This catches the AOS-style retry bug where the previous bar was relabeled.
+    prior = (existing.sort_values(["Ticker", "Date"])
+             .drop_duplicates("Ticker", keep="last").set_index("Ticker"))
+    identical = []
+    for idx, row in fresh.iterrows():
+        if row["Ticker"] in prior.index:
+            old = prior.loc[row["Ticker"]]
+            if all(abs(float(row[c]) - float(old[c])) < 1e-9
+                   for c in ("Open", "High", "Low", "Close", "Volume")):
+                identical.append(idx)
+    if identical:
+        fresh = fresh.drop(index=identical)
+
     combined = pd.concat([existing, fresh[COLUMNS]], ignore_index=True)
     combined = combined.drop_duplicates(["Date", "Ticker"], keep="first")
     return combined, {
@@ -52,6 +75,9 @@ def append_recent(existing: pd.DataFrame, downloaded: pd.DataFrame) -> tuple[pd.
         "new_rows": len(fresh),
         "new_dates": sorted({d.isoformat() for d in fresh["Date"]}),
         "new_tickers": int(fresh["Ticker"].nunique()),
+        "target_date": target_date.isoformat() if target_date else None,
+        "target_date_missing": False,
+        "identical_previous_rows": len(identical),
     }
 
 
@@ -111,13 +137,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"no update needed: last={last} target={target}")
         return 1
     downloaded = download_batch(tickers, last, target, args.batch_size)
-    updated, report = append_recent(existing, downloaded)
+    updated, report = append_recent(existing, downloaded, target_date=target)
     missing = sorted(set(tickers) - set(downloaded["Ticker"].astype(str).str.upper())) if not downloaded.empty else tickers
     provider_latest = max(pd.to_datetime(downloaded["Date"]).dt.date) if not downloaded.empty else None
     if downloaded.empty:
         download_status = "pending_provider_close" if target.weekday() < 5 else "download_empty"
+    elif report.get("identical_previous_rows"):
+        download_status = "rejected_identical_previous_bar"
+        report["failure_reason"] = "target row exactly duplicated prior OHLCV; rejected as possible date misalignment"
     elif report["new_rows"] == 0:
-        if provider_latest and provider_latest < target and target.weekday() < 5:
+        if report.get("target_date_missing"):
+            download_status = "pending_provider_close"
+        elif provider_latest and provider_latest < target and target.weekday() < 5:
             download_status = "pending_provider_close"
         else:
             download_status = "no_new_sessions"
