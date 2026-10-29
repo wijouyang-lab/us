@@ -15,9 +15,13 @@ A record may enter a PIT research sample only if all conditions hold:
 6. A current observation of an old announcement is `late_observation_not_pit`;
    it cannot be used for historical event windows even though
    `first_seen_at_utc` is non-null.
-7. The event was available before the trading decision time.
-8. Event timestamps, price timestamps, timezone and exchange calendar agree.
-9. Failed/revised observations have diagnostic status and version history.
+7. `source_evidence`, `published_at_evidence`, and `decision_evidence` are
+   explicit; unknown values fail closed.
+8. A real strategy `decision_at_utc` exists and is not auto-filled by the
+   auditor; it must be at/after research readiness.
+9. The event was available before the trading decision time.
+10. Event timestamps, price timestamps, timezone and exchange calendar agree.
+11. Failed/revised observations have diagnostic status and version history.
 10. No zero-fill, no interpolation, no synthetic event dates.
 11. Small or overlapping samples are descriptive only; no alpha claim.
 

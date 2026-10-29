@@ -58,7 +58,8 @@ def parse_fomc_statement(html: str, url: str, fetched_at: datetime) -> dict[str,
            "http_status": 200, "source_evidence": "official_fed_page",
            "is_simulated": False}
     if not hr:
-        rec.update({"published_at": None, "release_time_local": None,
+        rec.update({"published_at": None, "published_at_evidence": None,
+                    "release_time_local": None,
                     "source_timezone": None, "parse_status": "date_only"})
         return rec
     hh, mm, ampm, tz = int(hr.group(1)), int(hr.group(2)), hr.group(3).lower(), hr.group(4).upper()
@@ -69,7 +70,8 @@ def parse_fomc_statement(html: str, url: str, fetched_at: datetime) -> dict[str,
     from zoneinfo import ZoneInfo
     dt = datetime(int(event_id[:4]), int(event_id[4:6]), int(event_id[6:8]), hh, mm,
                   tzinfo=ZoneInfo("America/New_York"))
-    rec.update({"published_at": _iso(dt), "release_time_local": f"{hr.group(1)}:{hr.group(2)} {ampm.upper()} {tz}",
+    rec.update({"published_at": _iso(dt), "published_at_evidence": "official_release_time_in_page",
+                "release_time_local": f"{hr.group(1)}:{hr.group(2)} {ampm.upper()} {tz}",
                 "source_timezone": tz, "parse_status": "exact"})
     return rec
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit capture JSONL records against the PIT admission rules."""
+"""Audit capture JSONL records against explicit PIT admission rules."""
 from __future__ import annotations
 
 import argparse
@@ -14,7 +14,6 @@ from tools.research.pit_admission import admit
 def main(argv=None):
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--store", action="append", required=True)
-    p.add_argument("--decision-at", default=None)
     p.add_argument("--output", required=True)
     args = p.parse_args(argv)
     files = []
@@ -29,9 +28,13 @@ def main(argv=None):
                 continue
     latest = {}
     for r in records:
-        if r.get("event_id"):
+        if not r.get("event_id"):
+            continue
+        old = latest.get(r["event_id"])
+        key = (int(r.get("version") or 0), str(r.get("fetched_at_utc") or ""))
+        if old is None or key >= (int(old.get("version") or 0), str(old.get("fetched_at_utc") or "")):
             latest[r["event_id"]] = r
-    decisions = [admit(r, decision_at=args.decision_at) for r in latest.values()]
+    decisions = [admit(r) for r in latest.values()]
     reasons = Counter(x for d in decisions for x in d["reasons"])
     by_event = {d["event_id"]: d["reasons"] for d in decisions}
     payload = {
@@ -39,18 +42,21 @@ def main(argv=None):
         "unique_events": len(latest),
         "real_first_seen_records": sum(
             1 for r in latest.values()
-            if r.get("first_seen_at_utc") and not r.get("is_simulated") and not r.get("is_historical_backfill")
+            if r.get("first_seen_at_utc") and r.get("is_simulated") is False
+            and not r.get("is_historical_backfill")
         ),
-        "simulated_records": sum(1 for r in latest.values() if r.get("is_simulated")),
+        "simulated_records": sum(1 for r in latest.values() if r.get("is_simulated") is True),
+        "simulation_flag_missing": sum(1 for r in latest.values() if r.get("is_simulated") is None),
         "late_observations": sum(
             1 for r in latest.values()
             if r.get("observation_kind") == "late_observation_of_old_event" or r.get("pit_status") == "late_observation_not_pit"
         ),
         "historical_backfills": sum(1 for r in latest.values() if r.get("is_historical_backfill")),
         "published_evidence_insufficient": sum(
-            1 for r in latest.values() if not r.get("published_at") or r.get("parse_status") != "exact"
+            1 for r in latest.values()
+            if not r.get("published_at") or r.get("published_at_evidence") not in {"official_release_time_in_page", "verified_sgml_header"}
         ),
-        "decision_evidence_insufficient": sum(1 for d in decisions if "decision_time_missing" in d["reasons"]),
+        "decision_evidence_insufficient": sum(1 for d in decisions if "decision_time_missing" in d["reasons"] or "decision_evidence_missing" in d["reasons"]),
         "pit_admitted": sum(1 for d in decisions if d["admitted"]),
         "rejection_reason_counts": dict(reasons),
         "events": by_event,

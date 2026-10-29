@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Fixture checks for PIT sample audit."""
 
 import json
@@ -14,6 +14,6 @@ def test_pit_audit_counts_and_rejections():
     assert d["late_observations"] == 2
     assert d["historical_backfills"] == 1
     assert d["simulated_records"] == 0
-    assert d["real_first_seen_records"] == 2
+    assert d["real_first_seen_records"] == 1
     assert "20100127" in d["events"]
     assert "late_observation" in d["events"]["20250319"]

@@ -1,4 +1,4 @@
-# Forward Capture Validation and PIT Semantics Fix
+﻿# Forward Capture Validation and PIT Semantics Fix
 
 Date: 2026-10-29 UTC
 Research only. No production or canonical changes.
@@ -120,14 +120,15 @@ Current evidence:
 
 | Metric | Count |
 |---|---:|
-| raw JSONL records (all stores) | **10** |
+| raw JSONL records (all stores) | **12** |
 | unique captured events | 3 |
-| real first-seen records | 2 |
+| real first-seen records | 1 |
 | simulated records | 0 |
+| simulation flag missing (legacy) | 2 |
 | true live PIT-eligible observations | **0** |
 | late observations of old announcements | 2 unique |
 | historical backfill records | 1 |
-| published-evidence insufficient | 1 |
+| published-evidence insufficient | 2 |
 | decision-evidence insufficient | 3 |
 | SEC records with verified public visibility | **0** |
 | events usable for PIT backtest | **0** |
@@ -143,12 +144,16 @@ python -m tools.research.pit_sample_audit \
 Actual reason counts:
 
 ```text
+simulation_flag_missing: 2
 historical_backfill: 1
 parse_status_not_exact: 1
-published_time_missing: 1
-first_seen_missing: 1
-source_evidence_not_verified: 3 (legacy records)
+source_evidence_not_verified: 2 (legacy records)
+published_at_evidence_missing: 2
+published_time_missing_or_naive: 1
+first_seen_missing_or_naive: 1
+research_ready_missing_or_naive: 2
 decision_time_missing: 3
+decision_evidence_missing: 3
 late_observation: 2
 observation_lag_exceeds_1h: 2
 ```
@@ -163,8 +168,9 @@ No event passes the PIT gate.
 
 ## 7. Tests
 
-Latest targeted: **17 passed** across capture-store, forward-validation,
-SEC-audit and PIT-admission tests. Full CI is reported after commit.
+Latest targeted: **27 passed** across capture-store, forward-validation,
+SEC-audit, batch-capture and PIT-admission tests. Full CI is reported after
+commit.
 
 ## Artifacts
 
