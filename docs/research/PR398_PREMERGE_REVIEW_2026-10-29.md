@@ -2,7 +2,10 @@
 
 Date: 2026-10-29 UTC
 Reviewer: research automation check
-Verdict: **ready for user review after one fix; not merged**.
+Verdict: **code and CI ready; awaiting user approval; not merged**.
+
+Current HEAD: `e9ccba73948ae7a4e8a3775ab7845bb29f57a8f8`
+CI: **1337 passed, 1 skipped**
 
 ## 1. Scope and write paths
 
