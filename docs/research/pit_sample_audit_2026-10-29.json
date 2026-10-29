@@ -1,0 +1,49 @@
+{
+  "records_total": 10,
+  "unique_events": 3,
+  "real_first_seen_records": 2,
+  "simulated_records": 0,
+  "late_observations": 2,
+  "historical_backfills": 1,
+  "published_evidence_insufficient": 1,
+  "decision_evidence_insufficient": 3,
+  "pit_admitted": 0,
+  "rejection_reason_counts": {
+    "historical_backfill": 1,
+    "parse_status_not_exact": 1,
+    "published_time_missing": 1,
+    "first_seen_missing": 1,
+    "source_evidence_not_verified": 2,
+    "decision_time_missing": 3,
+    "late_observation": 2,
+    "observation_lag_exceeds_1h": 2
+  },
+  "events": {
+    "20100127": [
+      "historical_backfill",
+      "parse_status_not_exact",
+      "published_time_missing",
+      "first_seen_missing",
+      "source_evidence_not_verified",
+      "decision_time_missing"
+    ],
+    "20250319": [
+      "late_observation",
+      "observation_lag_exceeds_1h",
+      "source_evidence_not_verified",
+      "decision_time_missing"
+    ],
+    "20261028": [
+      "late_observation",
+      "observation_lag_exceeds_1h",
+      "decision_time_missing"
+    ]
+  },
+  "stores": [
+    "docs/research\\fomc_backfill_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_current_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema2_2026-10-29.jsonl",
+    "docs/research\\fomc_live_capture_final_2026-10-29.jsonl"
+  ]
+}

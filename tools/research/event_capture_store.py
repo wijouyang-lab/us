@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """Minimal event observation store with immutable first-seen semantics.
 
 No production hooks. Live observations preserve first_seen on re-fetch.
@@ -55,7 +55,8 @@ def parse_fomc_statement(html: str, url: str, fetched_at: datetime) -> dict[str,
     rec = {"event_id": event_id, "source_url": url, "canonical_url": normalize_url(url),
            "event_type": "FOMC_statement", "title": title,
            "fetched_at_utc": _iso(fetched_at), "content_hash": content_hash(html),
-           "http_status": 200}
+           "http_status": 200, "source_evidence": "official_fed_page",
+           "is_simulated": False}
     if not hr:
         rec.update({"published_at": None, "release_time_local": None,
                     "source_timezone": None, "parse_status": "date_only"})
@@ -94,6 +95,8 @@ def store_observation(path: str | Path, obs: dict[str, Any], *, backfill: bool =
         rec["observation_kind"] = "historical_backfill"
         rec["pit_eligible"] = False
         rec["decision_ready_at_utc"] = None
+        rec["research_ready_at_utc"] = None
+        rec["is_simulated"] = bool(obs.get("is_simulated", False))
         rec["version"] = int(old.get("version", 0)) + 1 if old else 1
     else:
         first_seen = old.get("first_seen_at_utc") if old else obs.get("fetched_at_utc")
@@ -101,6 +104,8 @@ def store_observation(path: str | Path, obs: dict[str, Any], *, backfill: bool =
         rec["observation_kind"] = "capture_error"
         rec["pit_eligible"] = False
         rec["decision_ready_at_utc"] = None
+        rec["research_ready_at_utc"] = first_seen if rec.get("parse_status") == "exact" else None
+        rec["is_simulated"] = bool(obs.get("is_simulated", False))
         if rec.get("parse_status") != "exact":
             rec["pit_status"] = "capture_error"
         elif not rec.get("published_at"):
@@ -111,14 +116,12 @@ def store_observation(path: str | Path, obs: dict[str, Any], *, backfill: bool =
             seen = datetime.fromisoformat(str(first_seen).replace("Z", "+00:00"))
             lag = seen - published
             if lag <= timedelta(hours=1):
-                rec["pit_status"] = "forward_observed"
+                rec["pit_status"] = "forward_candidate"
                 rec["observation_kind"] = "live_forward_observation"
-                rec["pit_eligible"] = True
                 rec["decision_ready_at_utc"] = first_seen
             else:
                 rec["pit_status"] = "late_observation_not_pit"
                 rec["observation_kind"] = "late_observation_of_old_event"
-                rec["pit_eligible"] = False
                 rec["decision_ready_at_utc"] = None
         same = old and old.get("content_hash") == obs.get("content_hash")
         rec["version"] = old.get("version", 0) if same else (old.get("version", 0) + 1 if old else 1)

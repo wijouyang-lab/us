@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Tests for event capture store; no live network required."""
 
 import json
@@ -82,6 +82,6 @@ def test_same_time_observation_is_forward_pit(tmp_path):
     o = s.parse_fomc_statement(html, "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261029a.htm",
                                datetime.fromisoformat("2026-10-29T18:30:00+00:00"))
     r = s.store_observation(p, o)
-    assert r["pit_status"] == "forward_observed"
-    assert r["pit_eligible"] is True
+    assert r["pit_status"] == "forward_candidate"
+    assert r["pit_eligible"] is False
     assert r["decision_ready_at_utc"] == "2026-10-29T18:30:00Z"

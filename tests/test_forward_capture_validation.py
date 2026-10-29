@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for current forward capture and late-observation semantics."""
 
 import json
@@ -33,3 +33,10 @@ def test_old_2025_capture_is_migrated():
 def test_no_live_pit_record_exists_yet():
     rows = read("fomc_forward_capture_current_2026-10-29.jsonl")
     assert not any(r.get("pit_eligible") is True for r in rows)
+def test_schema2_current_capture_has_evidence_but_is_late():
+    rows = read("fomc_forward_capture_schema2_2026-10-29.jsonl")
+    assert len(rows) == 2
+    assert rows[0]["source_evidence"] == "official_fed_page"
+    assert rows[0]["observation_kind"] == "late_observation_of_old_event"
+    assert rows[0]["pit_eligible"] is False
+    assert rows[0]["research_ready_at_utc"] is not None

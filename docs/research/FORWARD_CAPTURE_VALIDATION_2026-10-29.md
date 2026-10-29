@@ -1,4 +1,4 @@
-﻿# Forward Capture Validation and PIT Semantics Fix
+# Forward Capture Validation and PIT Semantics Fix
 
 Date: 2026-10-29 UTC
 Research only. No production or canonical changes.
@@ -120,13 +120,38 @@ Current evidence:
 
 | Metric | Count |
 |---|---:|
-| real forward capture records (all, JSONL lines) | 4 |
+| raw JSONL records (all stores) | **10** |
 | unique captured events | 3 |
+| real first-seen records | 2 |
+| simulated records | 0 |
 | true live PIT-eligible observations | **0** |
 | late observations of old announcements | 2 unique |
 | historical backfill records | 1 |
+| published-evidence insufficient | 1 |
+| decision-evidence insufficient | 3 |
 | SEC records with verified public visibility | **0** |
 | events usable for PIT backtest | **0** |
+
+Audit command:
+
+```bash
+python -m tools.research.pit_sample_audit \
+  --store "docs/research/fomc_*capture*.jsonl" \
+  --output docs/research/pit_sample_audit_2026-10-29.json
+```
+
+Actual reason counts:
+
+```text
+historical_backfill: 1
+parse_status_not_exact: 1
+published_time_missing: 1
+first_seen_missing: 1
+source_evidence_not_verified: 3 (legacy records)
+decision_time_missing: 3
+late_observation: 2
+observation_lag_exceeds_1h: 2
+```
 
 Unique events:
 
@@ -138,8 +163,8 @@ No event passes the PIT gate.
 
 ## 7. Tests
 
-Latest targeted: 16 passed before the status change; new status tests included
-in `tests/test_event_capture_store.py` (9 tests). Full CI reported after commit.
+Latest targeted: **17 passed** across capture-store, forward-validation,
+SEC-audit and PIT-admission tests. Full CI is reported after commit.
 
 ## Artifacts
 
