@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """Plan event entry/+1/+5 trading dates without fabricating returns.
 
-Uses the NYSE calendar. Returns stay null until an approved price provider is
-available. Fed historical rows remain retrospective.
+Default entry rule is conservative: an event before the session open can enter
+at that open; an event at/after the open enters at the next session open.
+The legacy same-day-close rule is retained only for comparison.
 """
 from __future__ import annotations
 
 import argparse
 import json
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Iterable
+from typing import Any
 
 import exchange_calendars as xcals
-import pandas as pd
 
 
 def _ts(value: Any) -> datetime | None:
@@ -37,7 +37,7 @@ def _events(payload: Any) -> list[dict[str, Any]]:
     raise ValueError("event input must be a list or an object with rows/events")
 
 
-def map_event(event: dict[str, Any], calendar) -> dict[str, Any]:
+def map_event(event: dict[str, Any], calendar, entry_rule: str = "next_open") -> dict[str, Any]:
     published = _ts(event.get("published_at_utc") or event.get("published_at"))
     first = _ts(event.get("first_seen_at_utc") or event.get("first_seen_at"))
     updated = _ts(event.get("update_first_seen_at_utc"))
@@ -47,7 +47,8 @@ def map_event(event: dict[str, Any], calendar) -> dict[str, Any]:
         "published_at": _iso(published),
         "available_at": _iso(available),
         "entry_date": None,
-        "entry_close_utc": None,
+        "entry_time_utc": None,
+        "entry_price_point": "open" if entry_rule == "next_open" else "close",
         "plus1_date": None,
         "plus5_date": None,
         "label_status": "pending_price_provider",
@@ -55,6 +56,7 @@ def map_event(event: dict[str, Any], calendar) -> dict[str, Any]:
         "return_1d": None,
         "return_5d": None,
         "observation_mode": event.get("observation_mode", "retrospective_backfill"),
+        "entry_rule": entry_rule,
     }
     if available is None:
         out.update(label_status="missing_event_time", missing_reason="missing_published_at")
@@ -69,10 +71,16 @@ def map_event(event: dict[str, Any], calendar) -> dict[str, Any]:
     schedule = calendar.schedule.loc[sessions]
     entry = None
     for session in sessions:
-        close = schedule.loc[session, "close"].to_pydatetime()
-        if available < close:
-            entry = session
-            break
+        opens = schedule.loc[session, "open"].to_pydatetime()
+        closes = schedule.loc[session, "close"].to_pydatetime()
+        if entry_rule == "legacy_close":
+            if available < closes:
+                entry = session
+                break
+        else:
+            if available < opens:
+                entry = session
+                break
     if entry is None:
         out.update(label_status="missing_trading_session", missing_reason="no_later_session")
         return out
@@ -80,21 +88,26 @@ def map_event(event: dict[str, Any], calendar) -> dict[str, Any]:
     if idx + 5 >= len(sessions):
         out.update(label_status="missing_trading_session", missing_reason="insufficient_sessions")
         return out
+    point = "close" if entry_rule == "legacy_close" else "open"
+    entry_time = schedule.loc[entry, point].to_pydatetime()
     out.update({
         "entry_date": entry.date().isoformat(),
-        "entry_close_utc": _iso(schedule.loc[entry, "close"].to_pydatetime()),
+        "entry_time_utc": _iso(entry_time),
         "plus1_date": sessions[idx + 1].date().isoformat(),
         "plus5_date": sessions[idx + 5].date().isoformat(),
     })
     return out
 
 
-def build(payload: Any, calendar=None) -> dict[str, Any]:
+def build(payload: Any, calendar=None, entry_rule: str = "next_open") -> dict[str, Any]:
+    if entry_rule not in {"next_open", "legacy_close"}:
+        raise ValueError("entry_rule must be next_open or legacy_close")
     calendar = calendar or xcals.get_calendar("XNYS")
-    rows = [map_event(e, calendar) for e in _events(payload)]
+    rows = [map_event(e, calendar, entry_rule) for e in _events(payload)]
     return {
         "research_only": True,
         "calendar": "XNYS",
+        "entry_rule": entry_rule,
         "event_count": len(rows),
         "mapped_count": sum(r["entry_date"] is not None for r in rows),
         "label_count": sum(r["return_1d"] is not None for r in rows),
@@ -106,12 +119,14 @@ def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--events", required=True)
     p.add_argument("--output", required=True)
+    p.add_argument("--entry-rule", choices=("next_open", "legacy_close"), default="next_open")
     args = p.parse_args(argv)
     payload = json.loads(Path(args.events).read_text(encoding="utf-8"))
-    result = build(payload)
+    result = build(payload, entry_rule=args.entry_rule)
     Path(args.output).parent.mkdir(parents=True, exist_ok=True)
     Path(args.output).write_text(json.dumps(result, indent=2, ensure_ascii=False), encoding="utf-8")
-    print(json.dumps({k: result[k] for k in ("event_count", "mapped_count", "label_count")}, indent=2))
+    print(json.dumps({k: result[k] for k in ("event_count", "mapped_count", "label_count",
+                                             "entry_rule")}, indent=2))
     return 0
 
 

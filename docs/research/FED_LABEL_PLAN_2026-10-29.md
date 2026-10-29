@@ -40,7 +40,7 @@ eligibility.
 - Missing/ambiguous time: `missing_event_time`.
 - Insufficient sessions: `missing_trading_session`.
 
-The rule is deterministic and does not choose a favorable price or session.
+The rule is deterministic and conservative. The old same-day-close rule is kept only as a comparison artifact; see `EVENT_ENTRY_RULE_AUDIT_2026-10-29.md`.
 
 ## Tests
 

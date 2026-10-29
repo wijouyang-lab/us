@@ -13,34 +13,42 @@ def event(published="2026-10-28T14:00:00Z"):
             "observation_mode": "retrospective_backfill"}
 
 
-def row(published):
-    out = ep.map_event(event(published), ep.xcals.get_calendar("XNYS"))
-    return out
+def row(published, rule="next_open"):
+    return ep.map_event(event(published), ep.xcals.get_calendar("XNYS"), rule)
 
 
-def test_premarket_and_intraday_use_same_session():
+def test_conservative_open_rule_premarket_same_session():
     assert row("2026-10-28T12:00:00Z")["entry_date"] == "2026-10-28"
-    assert row("2026-10-28T18:00:00Z")["entry_date"] == "2026-10-28"
+    assert row("2026-10-28T12:00:00Z")["entry_time_utc"] == "2026-10-28T13:30:00Z"
 
 
-def test_after_close_uses_next_session():
+def test_intraday_at_or_after_open_uses_next_session_open():
+    assert row("2026-10-28T18:00:00Z")["entry_date"] == "2026-10-29"
+    assert row("2026-10-28T20:00:00Z")["entry_date"] == "2026-10-29"
     assert row("2026-10-28T21:00:00Z")["entry_date"] == "2026-10-29"
 
 
-def test_weekend_uses_monday():
+def test_legacy_close_rule_has_different_mapping():
+    assert row("2026-10-28T18:00:00Z", "legacy_close")["entry_date"] == "2026-10-28"
+    assert row("2026-10-28T18:00:00Z", "next_open")["entry_date"] == "2026-10-29"
+
+
+def test_weekend_and_holiday_use_next_session_open():
     assert row("2026-10-31T12:00:00Z")["entry_date"] == "2026-11-02"
-
-
-def test_holiday_and_early_close():
     assert row("2026-11-26T12:00:00Z")["entry_date"] == "2026-11-27"
-    # 2026-11-27 is an early close (18:00 UTC); after it -> Monday.
+
+
+def test_early_close_after_close_uses_next_session():
     assert row("2026-11-27T19:00:00Z")["entry_date"] == "2026-11-30"
 
 
-def test_plus1_and_plus5_are_sessions():
-    out = row("2026-10-28T14:00:00Z")
+def test_plus1_and_plus5_are_entry_plus_sessions():
+    out = row("2026-10-28T12:00:00Z")
     assert out["plus1_date"] == "2026-10-29"
     assert out["plus5_date"] == "2026-11-04"
+    out = row("2026-10-28T18:00:00Z")
+    assert out["plus1_date"] == "2026-10-30"
+    assert out["plus5_date"] == "2026-11-05"
 
 
 def test_cross_year():
@@ -59,3 +67,8 @@ def test_returns_are_not_created_without_price_provider():
     assert out["return_1d"] is None
     assert out["return_5d"] is None
     assert out["label_status"] == "pending_price_provider"
+
+
+def test_entry_price_point_is_explicit():
+    assert row("2026-10-28T18:00:00Z")["entry_price_point"] == "open"
+    assert row("2026-10-28T18:00:00Z", "legacy_close")["entry_price_point"] == "close"
