@@ -1,5 +1,5 @@
 ﻿#!/usr/bin/env python3
-"""Fixed five-factor validation on the restricted 466-ticker current universe.
+"""Fixed five-factor validation on the expanded available-history 503-name panel.
 
 CURRENT-UNIVERSE EXPLORATORY 鈥?SURVIVORSHIP-BIASED
 NOT A FULL PIT RESULT

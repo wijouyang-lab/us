@@ -1,7 +1,7 @@
-#!/usr/bin/env python3
-"""Fixed five-factor validation on the restricted 466-ticker current universe.
+﻿#!/usr/bin/env python3
+"""Fixed five-factor validation on the 503-name panel; complete-date mode uses 465 names.
 
-CURRENT-UNIVERSE EXPLORATORY — SURVIVORSHIP-BIASED
+CURRENT-UNIVERSE EXPLORATORY 鈥?SURVIVORSHIP-BIASED
 NOT A FULL PIT RESULT
 NOT DEPLOYABLE ALPHA
 
@@ -32,7 +32,7 @@ FACTORS = {
     "Mom1": (-1, "one-month reversal"),
     "MA50": (1, "price above 50-day average"),
 }
-LABEL = "CURRENT-UNIVERSE EXPLORATORY — SURVIVORSHIP-BIASED | NOT A FULL PIT RESULT | NOT DEPLOYABLE ALPHA"
+LABEL = "CURRENT-UNIVERSE EXPLORATORY 鈥?SURVIVORSHIP-BIASED | NOT A FULL PIT RESULT | NOT DEPLOYABLE ALPHA"
 
 
 def load_panel(path: str | Path) -> pd.DataFrame:
