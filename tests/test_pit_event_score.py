@@ -23,6 +23,7 @@ def event(event_id, event_type, direction, impact, published="2026-01-10T13:00:0
         "published_at_evidence": "official_release_time_in_page",
         "decision_evidence": "strategy_log",
         "is_simulated": False,
+        "is_historical_backfill": False,
         "observation_kind": "live_forward_observation",
     }
 

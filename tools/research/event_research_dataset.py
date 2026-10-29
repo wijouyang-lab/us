@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Build an auditable event-research dataset without changing the archive.
 
 Separates forward-PIT observations from retrospective/backfilled rows. Missing
@@ -85,7 +85,7 @@ def build(events: list[dict[str, Any]], labels: dict[str, dict[str, Any]],
                 "published_at_evidence": e.get("published_at_evidence"),
                 "decision_evidence": e.get("decision_evidence"),
                 "is_simulated": e.get("is_simulated"),
-                "is_historical_backfill": False,
+                "is_historical_backfill": e.get("is_historical_backfill"),
                 "observation_kind": e.get("observation_kind"),
                 "pit_status": e.get("pit_status"),
             })

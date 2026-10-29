@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """Static contract tests for the research-only event capture workflow."""
 
 from pathlib import Path
@@ -6,11 +6,11 @@ from pathlib import Path
 WORKFLOW = Path(".github/workflows/research-event-capture.yml")
 
 
-def test_workflow_is_manual_and_weekday_scheduled_only():
+def test_workflow_is_manual_only_and_has_no_schedule():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "workflow_dispatch:" in text
-    assert "schedule:" in text
-    assert 'cron: "15 21 * * 1-5"' in text
+    assert "schedule:" not in text
+    assert "cron:" not in text
     assert "workflow_run:" not in text
     assert "push:" not in text
     assert "pull_request:" not in text
@@ -42,6 +42,7 @@ def test_workflow_does_not_hardcode_secret_values():
     for forbidden in ("SECRET_VALUE", "api_key=", "apikey=", "password="):
         assert forbidden not in text
 
+
 def test_workflow_minimum_permissions_and_retention():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert "permissions:\n  contents: read" in text
@@ -52,17 +53,14 @@ def test_workflow_minimum_permissions_and_retention():
     assert "write-all" not in text
 
 
-def test_schedule_review_doc_exists():
-    doc = Path("docs/research/EVENT_CAPTURE_SCHEDULE_REVIEW_2026-10-29.md")
-    assert doc.exists()
-    text = doc.read_text(encoding="utf-8")
-    assert "not enabled" in text.lower()
-    assert "21:15 UTC" in text
 def test_scheduled_run_has_nonempty_default_feeds():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert 'feeds="${FEEDS:-bls_cpi,bls_employment,fed_all,fed_speeches}"' in text
     assert '--feeds "$feeds"' in text
-def test_audit_decision_has_post_capture_buffer():
+
+
+def test_no_synthetic_decision_timestamp_in_workflow():
     text = WORKFLOW.read_text(encoding="utf-8")
-    assert "+20 minutes" in text
-    assert "+10 minutes" not in text
+    assert "+20 minutes" not in text
+    assert "date -u -d" not in text
+    assert "--decision-at" not in text

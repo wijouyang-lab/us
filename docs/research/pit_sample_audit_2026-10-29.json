@@ -16,6 +16,8 @@
   "real_first_seen_records": 1,
   "simulated_records": 0,
   "simulation_flag_missing": 2,
+  "unknown_source_records": 2,
+  "historical_backfill_flag_missing": 0,
   "late_observations": 2,
   "historical_backfills": 1,
   "published_evidence_insufficient": 2,

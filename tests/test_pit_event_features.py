@@ -22,6 +22,7 @@ def event(**overrides):
         "published_at_evidence": "official_release_time_in_page",
         "decision_evidence": "strategy_log",
         "is_simulated": False,
+        "is_historical_backfill": False,
         "observation_kind": "live_forward_observation",
     }
     row.update(overrides)
@@ -63,6 +64,7 @@ def test_official_macro_events_can_flow_into_ticker_features_as_market_context()
         "published_at_evidence": "official_release_time_in_page",
         "decision_evidence": "strategy_log",
         "is_simulated": False,
+        "is_historical_backfill": False,
         "observation_kind": "live_forward_observation",
     })
     result = build_event_features(

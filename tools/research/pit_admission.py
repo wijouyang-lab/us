@@ -26,8 +26,10 @@ def admit(record: dict[str, Any]) -> dict[str, Any]:
         reasons.append("simulated_record")
     elif record.get("is_simulated") is not False:
         reasons.append("simulation_flag_missing")
-    if record.get("is_historical_backfill"):
+    if record.get("is_historical_backfill") is True:
         reasons.append("historical_backfill")
+    elif record.get("is_historical_backfill") is not False:
+        reasons.append("historical_backfill_flag_missing")
     if record.get("parse_status") != "exact":
         reasons.append("parse_status_not_exact")
     if record.get("observation_kind") == "late_observation_of_old_event" or record.get("pit_status") == "late_observation_not_pit":

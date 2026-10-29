@@ -61,6 +61,12 @@ def main(argv=None):
         ),
         "simulated_records": sum(1 for r in latest.values() if r.get("is_simulated") is True),
         "simulation_flag_missing": sum(1 for r in latest.values() if r.get("is_simulated") is None),
+        "unknown_source_records": sum(
+            1 for r in latest.values() if r.get("source_evidence") not in {"official_fed_page", "verified_sgml"}
+        ),
+        "historical_backfill_flag_missing": sum(
+            1 for r in latest.values() if r.get("is_historical_backfill") not in (True, False)
+        ),
         "late_observations": sum(
             1 for r in latest.values()
             if r.get("observation_kind") == "late_observation_of_old_event" or r.get("pit_status") == "late_observation_not_pit"

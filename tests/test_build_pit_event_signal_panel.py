@@ -28,6 +28,7 @@ def test_panel_builds_asof_scores_and_preserves_missingness(tmp_path):
             "published_at_evidence": "official_release_time_in_page",
             "decision_evidence": "strategy_log",
             "is_simulated": False,
+        "is_historical_backfill": False,
             "observation_kind": "live_forward_observation",
         },
         {

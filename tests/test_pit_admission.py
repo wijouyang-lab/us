@@ -61,3 +61,16 @@ def test_stored_flags_do_not_bypass():
     out = p.admit(dict(BASE, pit_eligible=True, pit_status="forward_observed",
                        source_evidence="unknown"))
     assert out["admitted"] is False
+
+
+def test_backfill_and_missing_backfill_flag_fail_closed():
+    assert "historical_backfill" in p.admit(dict(BASE, is_historical_backfill=True))["reasons"]
+    r = dict(BASE)
+    del r["is_historical_backfill"]
+    assert "historical_backfill_flag_missing" in p.admit(r)["reasons"]
+
+
+def test_future_synthetic_decision_does_not_fix_missing_evidence():
+    out = p.admit(dict(BASE, source_evidence=None, decision_at_utc="2099-01-01T00:00:00Z"))
+    assert out["admitted"] is False
+    assert "source_evidence_not_verified" in out["reasons"]

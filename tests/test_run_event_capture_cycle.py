@@ -13,6 +13,7 @@ EVIDENCE = {
     "published_at_evidence": "official_release_time_in_page",
     "decision_evidence": "strategy_log",
     "is_simulated": False,
+        "is_historical_backfill": False,
     "observation_kind": "live_forward_observation",
 }
 
@@ -217,3 +218,20 @@ def test_available_event_with_no_new_ids_audits_pass(tmp_path, monkeypatch):
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
     assert audit["coverage_audit"]["audit_status"] != "fail_no_data"
     assert audit["coverage_audit"]["total_events"] == 1
+
+
+def test_capture_without_decision_is_not_pit_evaluated(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at=None,
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@quantlab.dev",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
+    assert audit["pit_status"] == "not_evaluated_no_decision_log"
+    assert audit["coverage_audit"]["eligible_events"] == 0
+    assert metadata["decision_at_utc"] is None
+    assert metadata["pit_evaluated"] is False
+    assert metadata["scheduled_workflow_active"] is False

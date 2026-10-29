@@ -16,6 +16,7 @@ def event(mode=None, first="2026-10-28T09:00:00Z", published="2026-10-28T08:45:0
          "parse_status": "exact", "source_evidence": "official_fed_page",
          "published_at_evidence": "official_release_time_in_page",
          "decision_evidence": "strategy_log", "is_simulated": False,
+        "is_historical_backfill": False,
          "observation_kind": "live_forward_observation",
          "availability_status": "available"}
     if mode:
@@ -90,3 +91,10 @@ def test_missing_labels_are_not_zero_filled():
     assert row["entry_bar_date"] is None
     assert row["label_status"] == "missing_label"
     assert row["missing_reason"] == "no_readiness_label"
+
+
+def test_forward_mode_cannot_hide_historical_backfill():
+    out = ds.build([event("forward_pit", is_historical_backfill=True)], label(), "forward_pit", ev())
+    row = out["rows"][0]
+    assert row["pit_eligible"] is False
+    assert "historical_backfill" in row["admission_reasons"]

@@ -1,6 +1,11 @@
 # Fed Live Capture Runbook (Windows)
 
 Research-only manual procedure. No scheduler or background service.
+Official press-release index:
+`https://www.federalreserve.gov/newsevents/pressreleases/2026-press-fomc.htm`
+
+Next regular FOMC meeting: **2026-12-08..09**. Recheck the official calendar
+before acting. Only a real release-time observation is eligible.
 
 ## 1. Find the official release
 

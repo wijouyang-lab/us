@@ -79,7 +79,7 @@ def _validate_date(value: str, label: str) -> None:
 def run_cycle(
     *,
     output_dir: str | Path,
-    decision_at: str,
+    decision_at: str | None = None,
     feed_keys: list[str],
     sec_universe_path: str | Path | None = None,
     sec_start_date: str | None = None,
@@ -90,7 +90,7 @@ def run_cycle(
     feed_user_agent: str | None = None,
     sec_user_agent: str | None = None,
 ) -> dict[str, Any]:
-    if _parse_aware_timestamp(decision_at) is None:
+    if decision_at is not None and _parse_aware_timestamp(decision_at) is None:
         raise ValueError("decision_at must be a timezone-aware ISO-8601 timestamp")
     if min_request_interval_seconds < 0.1:
         raise ValueError("request interval must be at least 0.1 seconds")
@@ -200,17 +200,31 @@ def run_cycle(
         "research_only": True,
         "production_scanner_modified": False,
         "scheduled_workflow_created": False,
+        "scheduled_workflow_active": False,
+        "pit_evaluated": decision_at is not None,
     }
     _write_new(events_path, all_events)
     _write_new(metadata_path, metadata)
 
     archive_summary = append_archive_file(events_path, archive_path)
     archive_rows = json.loads(archive_path.read_text(encoding="utf-8"))
-    audit = build_event_research_report(
-        archive_rows,
-        decision_at,
-        max_age_by_type=max_age_by_type,
-    )
+    if decision_at is None:
+        audit = {
+            "research_only": True,
+            "decision_at_utc": None,
+            "pit_status": "not_evaluated_no_decision_log",
+            "coverage_audit": {
+                "audit_status": "fail_no_decision",
+                "eligible_events": 0,
+                "eligibility_reason_counts": {"decision_time_missing": 1},
+            },
+        }
+    else:
+        audit = build_event_research_report(
+            archive_rows,
+            decision_at,
+            max_age_by_type=max_age_by_type,
+        )
     source_collection_coverage: list[dict[str, Any]] = []
     for feed_report in source_reports.get("official_rss", {}).get("feed_reports", []):
         feed_key = str(feed_report.get("feed_key") or "")
@@ -267,7 +281,7 @@ def run_cycle(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", required=True)
-    parser.add_argument("--decision-at", required=True, help="Timezone-aware ISO-8601 decision timestamp")
+    parser.add_argument("--decision-at", default=None, help="Optional real strategy decision timestamp; never fabricate it")
     parser.add_argument("--feeds", default=DEFAULT_FEEDS, help="Comma-separated official feed keys; empty for SEC-only")
     parser.add_argument("--sec-universe", help="Optional JSON array containing explicit CIK/ticker pairs")
     parser.add_argument("--sec-start-date")
