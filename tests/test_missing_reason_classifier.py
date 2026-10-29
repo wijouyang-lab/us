@@ -174,3 +174,29 @@ def test_v9_batch8_counts():
     assert (d[d.ticker == "MMC"].classification == "TICKER_OR_NAME_CHANGED").all()
     assert (d[d.ticker == "RHI"].classification == "STILL_TRADING").all()
     assert set(d[d.classification == "HISTORICAL_MEMBERSHIP_ONLY"].ticker) == {"PSKY", "SOLS", "TAP", "TTD"}
+def test_v10_completes_202_and_retains_metadata_only_flags():
+    import pandas as pd
+    d = pd.read_csv("docs/research/missing_202_reason_classification_v10_2026-10-29.csv")
+    assert len(d) == 202
+    assert d.ticker.duplicated().sum() == 0
+    assert d.classification.value_counts().to_dict() == {
+        "DELISTED_OR_ACQUIRED": 84,
+        "STILL_TRADING": 81,
+        "TICKER_OR_NAME_CHANGED": 34,
+        "TICKER_REUSE_SUSPECTED": 2,
+        "IDENTITY_UNRESOLVED": 1,
+    }
+    assert (d[d.ticker == "PSKY"].classification == "TICKER_OR_NAME_CHANGED").all()
+    assert (d[d.ticker == "SOLS"].classification == "STILL_TRADING").all()
+    assert (d[d.ticker == "TAP"].classification == "STILL_TRADING").all()
+    assert (d[d.ticker == "TTD"].classification == "STILL_TRADING").all()
+
+
+def test_quality_audit_has_no_mapping_errors():
+    import pandas as pd
+    q = pd.read_csv("docs/research/classification_quality_audit_2026-10-29.csv")
+    assert len(q) == 202
+    assert q.ticker.duplicated().sum() == 0
+    errs = q.errors.fillna("")
+    assert not errs.str.contains("still_but_old_ticker_missing|dead_or_changed_but_old_ticker_current|cik_mismatch|no_sec_record").any()
+    assert (errs == "delisting_metadata_only_25nse").sum() == 32
