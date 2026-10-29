@@ -1,5 +1,17 @@
 {
-  "records_total": 12,
+  "status": "ok",
+  "files": [
+    "docs/research\\fomc_backfill_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_batch_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_current_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema2_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema3_2026-10-29.jsonl",
+    "docs/research\\fomc_live_capture_final_2026-10-29.jsonl"
+  ],
+  "empty_files": [],
+  "invalid_lines": 0,
+  "records_total": 14,
   "unique_events": 3,
   "real_first_seen_records": 1,
   "simulated_records": 0,
@@ -36,6 +48,12 @@
       "decision_time_missing",
       "decision_evidence_missing"
     ],
+    "20261028": [
+      "late_observation",
+      "observation_lag_exceeds_1h",
+      "decision_time_missing",
+      "decision_evidence_missing"
+    ],
     "20250319": [
       "simulation_flag_missing",
       "late_observation",
@@ -45,16 +63,11 @@
       "observation_lag_exceeds_1h",
       "decision_time_missing",
       "decision_evidence_missing"
-    ],
-    "20261028": [
-      "late_observation",
-      "observation_lag_exceeds_1h",
-      "decision_time_missing",
-      "decision_evidence_missing"
     ]
   },
   "stores": [
     "docs/research\\fomc_backfill_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_batch_capture_2026-10-29.jsonl",
     "docs/research\\fomc_forward_capture_2026-10-29.jsonl",
     "docs/research\\fomc_forward_capture_current_2026-10-29.jsonl",
     "docs/research\\fomc_forward_capture_schema2_2026-10-29.jsonl",

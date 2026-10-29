@@ -18,14 +18,24 @@ def main(argv=None):
     args = p.parse_args(argv)
     files = []
     for pat in args.store:
-        files.extend(glob.glob(pat))
+        matched = [x for x in glob.glob(pat) if not x.endswith(".batches.jsonl")]
+        if not matched:
+            raise SystemExit(f"store pattern matched no files: {pat}")
+        files.extend(matched)
+    files = sorted(set(files))
     records = []
+    invalid_lines = 0
+    empty_files = []
     for f in files:
-        for line in Path(f).read_text(encoding="utf-8").splitlines():
+        text = Path(f).read_text(encoding="utf-8")
+        if not text.strip():
+            empty_files.append(f)
+            continue
+        for line in text.splitlines():
             try:
                 records.append(json.loads(line))
             except json.JSONDecodeError:
-                continue
+                invalid_lines += 1
     latest = {}
     for r in records:
         if not r.get("event_id"):
@@ -38,6 +48,10 @@ def main(argv=None):
     reasons = Counter(x for d in decisions for x in d["reasons"])
     by_event = {d["event_id"]: d["reasons"] for d in decisions}
     payload = {
+        "status": "ok" if records else "no_valid_records",
+        "files": files,
+        "empty_files": empty_files,
+        "invalid_lines": invalid_lines,
         "records_total": len(records),
         "unique_events": len(latest),
         "real_first_seen_records": sum(

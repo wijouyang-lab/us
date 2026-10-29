@@ -1,4 +1,4 @@
-﻿# Forward Capture Validation and PIT Semantics Fix
+# Forward Capture Validation and PIT Semantics Fix
 
 Date: 2026-10-29 UTC
 Research only. No production or canonical changes.
@@ -120,7 +120,7 @@ Current evidence:
 
 | Metric | Count |
 |---|---:|
-| raw JSONL records (all stores) | **12** |
+| raw JSONL records (all stores) | **14** |
 | unique captured events | 3 |
 | real first-seen records | 1 |
 | simulated records | 0 |

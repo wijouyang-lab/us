@@ -8,10 +8,15 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools" / "research
 import event_research_dataset as ds  # noqa: E402
 
 
-def event(mode=None, first="2026-10-28T09:00:00Z", published="2026-10-01T15:00:00Z", **kw):
+def event(mode=None, first="2026-10-28T09:00:00Z", published="2026-10-28T08:45:00Z", **kw):
     d = {"event_id": "e1", "event_type": "policy", "source": "fed",
          "source_url": "https://example.test/e1", "content_hash": "a" * 64,
          "published_at_utc": published, "first_seen_at_utc": first,
+         "research_ready_at_utc": first, "decision_at_utc": "2026-10-28T09:05:00Z",
+         "parse_status": "exact", "source_evidence": "official_fed_page",
+         "published_at_evidence": "official_release_time_in_page",
+         "decision_evidence": "strategy_log", "is_simulated": False,
+         "observation_kind": "live_forward_observation",
          "availability_status": "available"}
     if mode:
         d["observation_mode"] = mode

@@ -12,6 +12,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
+from tools.research.pit_admission import admit
+
 
 def _ts(value: Any) -> datetime | None:
     if not value:
@@ -70,7 +72,26 @@ def build(events: list[dict[str, Any]], labels: dict[str, dict[str, Any]],
             reasons.append("missing_available_at")
         if first and available and available < first:
             reasons.append("available_before_first_seen")
-        pit_eligible = not reasons
+        admission = {"admitted": False, "reasons": []}
+        if mode == "forward_pit":
+            admission = admit({
+                "event_id": event_id,
+                "published_at": _iso(published),
+                "first_seen_at_utc": _iso(first),
+                "research_ready_at_utc": e.get("research_ready_at_utc"),
+                "decision_at_utc": e.get("decision_at_utc"),
+                "parse_status": e.get("parse_status"),
+                "source_evidence": e.get("source_evidence"),
+                "published_at_evidence": e.get("published_at_evidence"),
+                "decision_evidence": e.get("decision_evidence"),
+                "is_simulated": e.get("is_simulated"),
+                "is_historical_backfill": False,
+                "observation_kind": e.get("observation_kind"),
+                "pit_status": e.get("pit_status"),
+            })
+            reasons.extend(r for r in admission["reasons"] if r not in reasons)
+        pit_eligible = bool(admission["admitted"]) and not reasons
+        decision = _ts(e.get("decision_at_utc"))
         rows.append({
             "event_id": event_id,
             "event_type": e.get("event_type"),
@@ -80,14 +101,15 @@ def build(events: list[dict[str, Any]], labels: dict[str, dict[str, Any]],
             "published_at": _iso(published),
             "first_seen_at": _iso(first),
             "available_at": _iso(available),
-            "decision_at": _iso(available),
-            "decision_after_available": bool(available is not None),
+            "decision_at": _iso(decision),
+            "decision_after_available": bool(decision is not None and available is not None and decision >= available),
             "timestamp_precision": "second" if published else "missing",
             "observation_mode": mode,
             "backfill_status": "retrospective" if requested_mode == "retrospective_backfill" else "none",
             "capture_evidence": ev,
             "pit_eligible": pit_eligible,
             "pit_reasons": reasons,
+            "admission_reasons": admission["reasons"],
             "availability_status": e.get("availability_status"),
             "has_entry": bool(label.get("entry_bar_date")),
             "has_plus1": bool(label.get("result_1d_date")),
