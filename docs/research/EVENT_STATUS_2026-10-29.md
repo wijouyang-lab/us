@@ -68,6 +68,14 @@ No alpha experiment was run.
 - Third-party/free event sources (SEC announcements, earnings, macro calendar)
   have not been admitted; they need coverage and licensing review.
 
+## Capture reliability
+
+- Main workflow still has `workflow_dispatch` only; it is not self-scheduling.
+- The scheduled-capture proposal is PR #398, still Draft and **not active**.
+- Two real manual runs exist; no third run is claimed.
+- Duplicate/idempotency and immutable snapshots are covered by archive tests.
+- Missing price observations remain pending; no zero-fill.
+
 ## Next
 
 - After 2026-10-29 close, append the real bar and recompute +1; +5 remains
