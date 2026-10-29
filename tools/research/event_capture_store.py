@@ -10,7 +10,7 @@ import argparse
 import hashlib
 import json
 import re
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
@@ -91,10 +91,35 @@ def store_observation(path: str | Path, obs: dict[str, Any], *, backfill: bool =
     if backfill:
         rec["first_seen_at_utc"] = None
         rec["pit_status"] = "retrospective_non_PIT"
+        rec["observation_kind"] = "historical_backfill"
+        rec["pit_eligible"] = False
+        rec["decision_ready_at_utc"] = None
         rec["version"] = int(old.get("version", 0)) + 1 if old else 1
     else:
-        rec["first_seen_at_utc"] = old.get("first_seen_at_utc") if old else obs.get("fetched_at_utc")
-        rec["pit_status"] = "forward_observed" if rec.get("parse_status") == "exact" else "capture_error"
+        first_seen = old.get("first_seen_at_utc") if old else obs.get("fetched_at_utc")
+        rec["first_seen_at_utc"] = first_seen
+        rec["observation_kind"] = "capture_error"
+        rec["pit_eligible"] = False
+        rec["decision_ready_at_utc"] = None
+        if rec.get("parse_status") != "exact":
+            rec["pit_status"] = "capture_error"
+        elif not rec.get("published_at"):
+            rec["pit_status"] = "published_time_unknown"
+            rec["observation_kind"] = "date_only_or_unknown_time"
+        else:
+            published = datetime.fromisoformat(str(rec["published_at"]).replace("Z", "+00:00"))
+            seen = datetime.fromisoformat(str(first_seen).replace("Z", "+00:00"))
+            lag = seen - published
+            if lag <= timedelta(hours=1):
+                rec["pit_status"] = "forward_observed"
+                rec["observation_kind"] = "live_forward_observation"
+                rec["pit_eligible"] = True
+                rec["decision_ready_at_utc"] = first_seen
+            else:
+                rec["pit_status"] = "late_observation_not_pit"
+                rec["observation_kind"] = "late_observation_of_old_event"
+                rec["pit_eligible"] = False
+                rec["decision_ready_at_utc"] = None
         same = old and old.get("content_hash") == obs.get("content_hash")
         rec["version"] = old.get("version", 0) if same else (old.get("version", 0) + 1 if old else 1)
     with p.open("a", encoding="utf-8") as f:

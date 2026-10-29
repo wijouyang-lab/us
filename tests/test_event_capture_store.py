@@ -66,3 +66,22 @@ def test_url_query_difference_keeps_same_event_id():
 def test_old_url_pattern_event_id():
     u = "https://www.federalreserve.gov/newsevents/press/monetary/20100127a.htm"
     assert s.event_id_from_url(u) == "20100127"
+def test_old_event_observed_later_is_not_pit(tmp_path):
+    p = tmp_path / "store.jsonl"
+    r = s.store_observation(p, obs("2026-10-29T14:00:00Z"))
+    assert r["first_seen_at_utc"] == "2026-10-29T14:00:00Z"
+    assert r["pit_status"] == "late_observation_not_pit"
+    assert r["pit_eligible"] is False
+    assert r["observation_kind"] == "late_observation_of_old_event"
+
+
+def test_same_time_observation_is_forward_pit(tmp_path):
+    p = tmp_path / "store.jsonl"
+    html = HTML.replace("20240320", "20261029")
+    # Published timestamp is 2:00 p.m. EDT; 30 minutes later is inside one hour.
+    o = s.parse_fomc_statement(html, "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261029a.htm",
+                               datetime.fromisoformat("2026-10-29T18:30:00+00:00"))
+    r = s.store_observation(p, o)
+    assert r["pit_status"] == "forward_observed"
+    assert r["pit_eligible"] is True
+    assert r["decision_ready_at_utc"] == "2026-10-29T18:30:00Z"
