@@ -1,0 +1,68 @@
+{
+  "composite": {
+    "status": "DESCRIPTIVE_ONLY",
+    "strategy": {
+      "observations": 60,
+      "mean_monthly": 0.0076014586040384045,
+      "annualized_return": 0.07810033325943033,
+      "annualized_volatility": 0.17818018513479378,
+      "sharpe": 0.43832221411346733,
+      "max_drawdown": -0.17872182786931057,
+      "positive_month_fraction": 0.6166666666666667
+    },
+    "benchmark": {
+      "observations": 60,
+      "mean_monthly": 0.010525719969164824,
+      "annualized_return": 0.10904931873924473,
+      "annualized_volatility": 0.21324322602709392,
+      "sharpe": 0.5113846792272281,
+      "max_drawdown": -0.22080634005670308,
+      "positive_month_fraction": 0.6666666666666666
+    },
+    "excess_net": {
+      "observations": 60,
+      "mean_monthly": -0.0029242613651264196,
+      "annualized_return": -0.03821975082019935,
+      "annualized_volatility": 0.08745556038653035,
+      "sharpe": -0.4370191060611607,
+      "max_drawdown": -0.22932850350320044,
+      "positive_month_fraction": 0.5333333333333333
+    },
+    "mean_strategy_turnover": 0.36933623528578113,
+    "mean_eligible_names": 476.21666666666664,
+    "mean_selected_names": 94.76666666666667
+  },
+  "momentum_12_1": {
+    "status": "DESCRIPTIVE_ONLY",
+    "strategy": {
+      "observations": 60,
+      "mean_monthly": 0.010628945608267963,
+      "annualized_return": 0.11200155688316982,
+      "annualized_volatility": 0.2062906884345437,
+      "sharpe": 0.5429307436661546,
+      "max_drawdown": -0.22609927907974758,
+      "positive_month_fraction": 0.6
+    },
+    "benchmark": {
+      "observations": 60,
+      "mean_monthly": 0.010525719969164824,
+      "annualized_return": 0.10904931873924495,
+      "annualized_volatility": 0.21324322602709392,
+      "sharpe": 0.5113846792272292,
+      "max_drawdown": -0.22080634005670308,
+      "positive_month_fraction": 0.6666666666666666
+    },
+    "excess_net": {
+      "observations": 60,
+      "mean_monthly": 0.0001032256391031382,
+      "annualized_return": -0.0019169943377862486,
+      "annualized_volatility": 0.08006460968348866,
+      "sharpe": -0.023943092277156023,
+      "max_drawdown": -0.1290207636161187,
+      "positive_month_fraction": 0.5333333333333333
+    },
+    "mean_strategy_turnover": 0.2474149802538408,
+    "mean_eligible_names": 476.21666666666664,
+    "mean_selected_names": 94.76666666666667
+  }
+}
