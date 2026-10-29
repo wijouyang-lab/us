@@ -1,0 +1,73 @@
+{
+  "records": [
+    {
+      "ticker": "TWTR",
+      "cik": "0001418091",
+      "company": "TWITTER, INC.",
+      "former_names": [
+        {
+          "name": "Twitter Inc",
+          "from": "2007-11-30",
+          "to": "2010-01-08"
+        }
+      ],
+      "ticker_valid_from": "2013-11-07",
+      "ticker_valid_to": "2022-10-27",
+      "last_trade_date": "2022-10-27",
+      "event_type": "acquisition_completed",
+      "event_date": "2022-10-27",
+      "event_confidence": "medium",
+      "identity_confidence": "high",
+      "sources": [
+        "https://data.sec.gov/submissions/CIK0001418091.json",
+        "https://www.sec.gov/Archives/edgar/data/1418091/000119312522272772/d411753d8k.htm",
+        "https://www.sec.gov/Archives/edgar/data/1418091/000087666122000890/"
+      ],
+      "notes": "2013 IPO date; last trade 2022-10-27; Form 25 filed 2022-10-28; 8-K filed 2022-10-31. Exact merger text not retrievable (SEC 403), so event_confidence medium."
+    },
+    {
+      "ticker": "SIVB",
+      "cik": "0000719739",
+      "company": "SVB FINANCIAL GROUP",
+      "former_names": [
+        {
+          "name": "SILICON VALLEY BANCSHARES",
+          "from": "1995-04-13",
+          "to": "2005-05-24"
+        }
+      ],
+      "ticker_valid_from": "1987-10-26",
+      "ticker_valid_to": "2023-03-09",
+      "last_trade_date": "2023-03-09",
+      "event_type": "receivership",
+      "event_date": "2023-03-10",
+      "event_confidence": "high",
+      "identity_confidence": "high",
+      "sources": [
+        "https://data.sec.gov/submissions/CIK0000719739.json",
+        "https://www.sec.gov/Archives/edgar/data/719739/000119312523067777/d450664d8k.htm"
+      ],
+      "notes": "Last trading date from Sina and price end 2023-03-09; 8-K filed 2023-03-10. Receivership event date is high confidence; filing text was not retrieved."
+    },
+    {
+      "ticker": "ADCT",
+      "cik": "0000061478",
+      "company": "ADC TELECOMMUNICATIONS INC",
+      "former_names": [],
+      "ticker_valid_from": null,
+      "ticker_valid_to": "2010-12-09",
+      "last_trade_date": "2010-12-09",
+      "event_type": "merger_completed",
+      "event_date": "2010-12-09",
+      "event_confidence": "high",
+      "identity_confidence": "high",
+      "sources": [
+        "https://data.sec.gov/submissions/CIK0000061478.json",
+        "https://www.sec.gov/Archives/edgar/data/61478/000129993310004380/htm_40031.htm",
+        "https://www.sec.gov/Archives/edgar/data/61478/000135445710000318/",
+        "https://www.sec.gov/Archives/edgar/data/61478/000095012310114920/c61898e15v12g.htm"
+      ],
+      "notes": "S&P index removal in 2007 is NOT the company delisting; acquisition/Form 25 in 2010. Sina series starting 2020-05-15 is ticker reuse and is rejected."
+    }
+  ]
+}

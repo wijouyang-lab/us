@@ -1,0 +1,52 @@
+{
+  "ticker": "SIVB",
+  "source": "Sina via ak.stock_us_daily",
+  "observed_at": "2026-10-29",
+  "rows": [
+    {
+      "date": "2008-03-19",
+      "field": "close",
+      "value": 44.56,
+      "low": 44.57,
+      "high": 46.24,
+      "type": "close_below_low",
+      "source": "Sina via ak.stock_us_daily",
+      "adjust_raw": "present",
+      "adjust_qfq": "present",
+      "first_seen": "2026-10-29",
+      "status": "OPEN",
+      "evidence": "",
+      "action": "do_not_modify"
+    },
+    {
+      "date": "2008-07-03",
+      "field": "close",
+      "value": 45.83,
+      "low": 45.84,
+      "high": 48.31,
+      "type": "close_below_low",
+      "source": "Sina via ak.stock_us_daily",
+      "adjust_raw": "present",
+      "adjust_qfq": "present",
+      "first_seen": "2026-10-29",
+      "status": "OPEN",
+      "evidence": "",
+      "action": "do_not_modify"
+    },
+    {
+      "date": "2009-09-14",
+      "field": "close",
+      "value": 40.83,
+      "low": 39.62,
+      "high": 40.82,
+      "type": "close_above_high",
+      "source": "Sina via ak.stock_us_daily",
+      "adjust_raw": "present",
+      "adjust_qfq": "present",
+      "first_seen": "2026-10-29",
+      "status": "OPEN",
+      "evidence": "",
+      "action": "do_not_modify"
+    }
+  ]
+}
