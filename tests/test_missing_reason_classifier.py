@@ -94,3 +94,19 @@ def test_v4_batch3_counts_and_overrides():
     assert (d[d.ticker == "CTLT"].classification == "DELISTED_OR_ACQUIRED").all()
     assert (d[d.ticker == "RVTY"].classification == "TICKER_OR_NAME_CHANGED").all()
     assert not d.ticker.duplicated().any()
+def test_v5_batch4_counts():
+    import pandas as pd
+    d = pd.read_csv("docs/research/missing_202_reason_classification_v5_2026-10-29.csv")
+    assert len(d) == 202
+    assert d.classification.value_counts().to_dict() == {
+        "HISTORICAL_MEMBERSHIP_ONLY": 104,
+        "DELISTED_OR_ACQUIRED": 42,
+        "STILL_TRADING": 33,
+        "TICKER_OR_NAME_CHANGED": 20,
+        "TICKER_REUSE_SUSPECTED": 2,
+        "IDENTITY_UNRESOLVED": 1,
+    }
+    assert (d[d.ticker == "FB"].classification == "TICKER_OR_NAME_CHANGED").all()
+    assert (d[d.ticker == "COL"].classification == "DELISTED_OR_ACQUIRED").all()
+    assert (d[d.ticker == "DISCA"].classification == "TICKER_OR_NAME_CHANGED").all()
+    assert not d.ticker.duplicated().any()
