@@ -13,7 +13,7 @@ import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
+from urllib.parse import urlsplit, urlunsplit
 
 import requests
 
@@ -22,6 +22,16 @@ STORE_VERSION = 1
 
 def _iso(dt: datetime) -> str:
     return dt.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def normalize_url(url: str) -> str:
+    parts = urlsplit(url)
+    return urlunsplit((parts.scheme.lower() or "https", parts.netloc.lower(), parts.path, "", ""))
+
+
+def event_id_from_url(url: str) -> str | None:
+    m = re.search(r"monetary/?(\d{8})a\.htm", url)
+    return m.group(1) if m else None
 
 
 def content_hash(text: str) -> str:
@@ -37,15 +47,15 @@ def content_hash(text: str) -> str:
 def parse_fomc_statement(html: str, url: str, fetched_at: datetime) -> dict[str, Any]:
     title_m = re.search(r"<title>(.*?)</title>", html, re.S | re.I)
     title = re.sub(r"\s+", " ", title_m.group(1)).strip() if title_m else ""
-    m = re.search(r"monetary/?(\d{8})a\.htm", url)
-    if not m:
+    event_id = event_id_from_url(url)
+    if not event_id:
         return {"event_id": None, "parse_status": "failed", "parse_reason": "no_event_id",
                 "title": title}
-    event_id = m.group(1)
     hr = re.search(r"For release at\s+(\d{1,2}):(\d{2})\s*(a\.m\.|p\.m\.)\s*(EDT|EST)", html, re.I)
-    rec = {"event_id": event_id, "source_url": url, "event_type": "FOMC_statement",
-           "title": title, "fetched_at_utc": _iso(fetched_at),
-           "content_hash": content_hash(html), "http_status": 200}
+    rec = {"event_id": event_id, "source_url": url, "canonical_url": normalize_url(url),
+           "event_type": "FOMC_statement", "title": title,
+           "fetched_at_utc": _iso(fetched_at), "content_hash": content_hash(html),
+           "http_status": 200}
     if not hr:
         rec.update({"published_at": None, "release_time_local": None,
                     "source_timezone": None, "parse_status": "date_only"})
@@ -92,10 +102,10 @@ def store_observation(path: str | Path, obs: dict[str, Any], *, backfill: bool =
     return rec
 
 
-def fetch(url: str, now: datetime | None = None, *, timeout: int = 20) -> dict[str, Any]:
+def fetch(url: str, now: datetime | None = None, *, timeout: int = 20, user_agent: str = "wj-quant-research/1.0") -> dict[str, Any]:
     now = now or datetime.now(timezone.utc)
     try:
-        r = requests.get(url, headers={"User-Agent": "wj-quant-research/1.0"}, timeout=timeout)
+        r = requests.get(url, headers={"User-Agent": user_agent}, timeout=timeout)
         if r.status_code != 200:
             return {"event_id": None, "source_url": url, "http_status": r.status_code,
                     "parse_status": "http_error", "fetched_at_utc": _iso(now)}

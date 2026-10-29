@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for event capture store; no live network required."""
 
 import json
@@ -56,3 +56,13 @@ def test_http_error_is_recorded(tmp_path):
                                 "parse_status": "http_error", "fetched_at_utc": "2026-10-29T14:00:00Z"})
     assert r["parse_status"] == "http_error"
     assert r["http_status"] == 503
+def test_url_query_difference_keeps_same_event_id():
+    u1 = "https://www.federalreserve.gov/newsevents/pressreleases/monetary20240320a.htm"
+    u2 = u1 + "?utm_source=test&x=1"
+    assert s.event_id_from_url(u1) == s.event_id_from_url(u2) == "20240320"
+    assert s.normalize_url(u1) == s.normalize_url(u2)
+
+
+def test_old_url_pattern_event_id():
+    u = "https://www.federalreserve.gov/newsevents/press/monetary/20100127a.htm"
+    assert s.event_id_from_url(u) == "20100127"

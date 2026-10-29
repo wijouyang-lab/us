@@ -1,0 +1,106 @@
+{
+  "cik": "0000320193",
+  "http": 200,
+  "sample": [
+    {
+      "accession": "0001140361-26-040540",
+      "form": "4",
+      "filing_date": "2026-10-22",
+      "acceptance_datetime": "2026-10-22T22:32:20.000Z",
+      "acceptance_utc": "2026-10-22T22:32:20Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-040127",
+      "form": "4",
+      "filing_date": "2026-10-19",
+      "acceptance_datetime": "2026-10-19T22:32:55.000Z",
+      "acceptance_utc": "2026-10-19T22:32:55Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-040126",
+      "form": "4",
+      "filing_date": "2026-10-19",
+      "acceptance_datetime": "2026-10-19T22:30:18.000Z",
+      "acceptance_utc": "2026-10-19T22:30:18Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001950047-26-010286",
+      "form": "144",
+      "filing_date": "2026-10-16",
+      "acceptance_datetime": "2026-10-16T20:29:07.000Z",
+      "acceptance_utc": "2026-10-16T20:29:07Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-039785",
+      "form": "4",
+      "filing_date": "2026-10-15",
+      "acceptance_datetime": "2026-10-15T22:30:17.000Z",
+      "acceptance_utc": "2026-10-15T22:30:17Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-039158",
+      "form": "4",
+      "filing_date": "2026-10-08",
+      "acceptance_datetime": "2026-10-08T22:30:32.000Z",
+      "acceptance_utc": "2026-10-08T22:30:32Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-038674",
+      "form": "4",
+      "filing_date": "2026-10-05",
+      "acceptance_datetime": "2026-10-05T22:42:45.000Z",
+      "acceptance_utc": "2026-10-05T22:42:45Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-038672",
+      "form": "4",
+      "filing_date": "2026-10-05",
+      "acceptance_datetime": "2026-10-05T22:39:10.000Z",
+      "acceptance_utc": "2026-10-05T22:39:10Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-038669",
+      "form": "4",
+      "filing_date": "2026-10-05",
+      "acceptance_datetime": "2026-10-05T22:35:24.000Z",
+      "acceptance_utc": "2026-10-05T22:35:24Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    },
+    {
+      "accession": "0001140361-26-038667",
+      "form": "4",
+      "filing_date": "2026-10-05",
+      "acceptance_datetime": "2026-10-05T22:32:06.000Z",
+      "acceptance_utc": "2026-10-05T22:32:06Z",
+      "parse_status": "parsed",
+      "filing_date_matches_acceptance_date": true
+    }
+  ],
+  "parsed": 10,
+  "missing": 0,
+  "date_mismatch": 0,
+  "sgml": {
+    "url": "https://www.sec.gov/Archives/edgar/data/320193/000114036126040540/0001140361-26-040540.txt",
+    "http": 403,
+    "bytes": 4818,
+    "acceptance_header_present": false
+  },
+  "note": "JSON acceptanceDateTime is not first-public-availability; no first_seen is implied."
+}
