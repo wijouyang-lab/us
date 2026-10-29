@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-10-28T12:14:20Z",
+  "as_of": "2026-10-29T00:16:38Z",
   "baseline": {
     "pr": 399,
     "head": "28060f24d907f0b0b75a323a6314084222a1077a",
@@ -56,40 +56,51 @@
       "owner_role": "event research owner (human)",
       "verification": "event_experiment_gate.py",
       "threshold": ">=200 unique events, >=365 days, complete +1/+5, OOS/cost/BH",
-      "current": "35 unique, 0 entry, 0 +1, 0 +5, coverage <1 day",
+      "current": "35 unique valid Fed events from run 40661139681; 0 entry, 0 +1, 0 +5. The separate 59-row capture consists of the same 35 Fed event IDs plus 24 BLS rows collected with a placeholder contact identity; those BLS rows are not valid PIT evidence.",
       "status": "not_eligible",
       "evidence": [
         "https://github.com/wijouyang-lab/us/pull/397",
         "docs/research/event_experiment_gate_2026-10-28.json",
-        "docs/research/EVENT_SAMPLE_AUDIT_2026-10-28.md"
+        "docs/research/EVENT_SAMPLE_AUDIT_2026-10-28.md",
+        "https://github.com/wijouyang-lab/us/pull/393",
+        "https://github.com/wijouyang-lab/us/blob/research/pit-event-forward/docs/research/PIT_EVENT_NOSECRET_RSS_2026-10-28.md",
+        "https://github.com/wijouyang-lab/us/blob/research/event-archive/archive/latest_manifest.json",
+        "https://github.com/wijouyang-lab/us/actions/runs/40661139681"
       ],
-      "next_action": "continue real forward captures; do not lower gate"
+      "next_action": "Continue real forward captures without backdating first_seen_at. Keep the preregistered >=200 unique events, >=365 days, complete entry/+1/+5, cost/OOS/BH gates unchanged; the 59-row demo does not increase the eligible sample."
     },
     {
       "id": "oct28_official_close",
       "owner_role": "research operations owner (human)",
       "verification": "provider close availability + incremental updater",
       "threshold": "official 2026-10-28 close in panel and SPY",
-      "current": "provider latest 2026-10-27 at audit time",
+      "current": "The committed 503-ticker increment and SPY proxy both still end on 2026-10-27. Public Yahoo history search results now show a 2026-10-28 SPY row, but locale mirrors disagree on the exact close; the configured updater has not been rerun and neither committed panel has a verified 2026-10-28 row.",
       "status": "pending",
       "evidence": [
         "docs/research/RECENT_PRICE_UPDATE_2026-10-28.md",
-        "docs/research/event_research_acceptance_2026-10-28.json"
+        "docs/research/event_research_acceptance_2026-10-28.json",
+        "https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/recent_price_update_metadata_2026-10-28.json",
+        "https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/market_proxy_spy_metadata_2026-10-28.json",
+        "https://nz.finance.yahoo.com/quote/SPY/history/",
+        "https://de.finance.yahoo.com/quote/SPY/history/"
       ],
-      "next_action": "update only after provider publishes official close"
+      "next_action": "Run the incremental updater against the configured Yahoo Chart/yfinance source; verify the 2026-10-28 official daily bar in the 503-ticker panel and SPY, report any ticker gaps/duplicates/invalid OHLCV, and leave pending_provider_close until both committed datasets are verified. No updater dispatch was available in this session."
     },
     {
       "id": "second_cross_day_capture",
       "owner_role": "research operations owner (human)",
       "verification": "new default-branch workflow run + archive verify",
       "threshold": "second real run on a later UTC date; old snapshot unchanged",
-      "current": "one run, 2026-10-28; second not executed",
+      "current": "The current archive manifest was generated 2026-10-28T09:02:58.711468Z and records run_count=1, latest_run_id=40661139681, 35 unique events/versions/observations; no second run on 2026-10-29 UTC is recorded.",
       "status": "pending",
       "evidence": [
         "https://github.com/wijouyang-lab/us/actions/runs/40661139681",
-        "https://github.com/wijouyang-lab/us/tree/research/event-archive"
+        "https://github.com/wijouyang-lab/us/tree/research/event-archive",
+        "https://github.com/wijouyang-lab/us/blob/research/event-archive/archive/latest_manifest.json",
+        "https://github.com/wijouyang-lab/us/blob/main/.github/workflows/research-event-capture.yml",
+        "https://github.com/wijouyang-lab/us/commit/785b9565a7c603bb43959cd4d504ead80298fc10"
       ],
-      "next_action": "run after 2026-10-29 UTC; verify archive"
+      "next_action": "Dispatch Research Event Capture from the default branch and verify a distinct run ID with a 2026-10-29 UTC capture, new immutable run snapshot, archive verification, and unchanged prior snapshot hashes. The workflow is present on main, but the connected GitHub tools expose no workflow_dispatch operation; no second run was triggered here."
     }
   ],
   "interpretation": {
@@ -97,5 +108,64 @@
     "strategy_proven_impossible": false,
     "data_not_ready_is_not_strategy_invalidity": true,
     "qlib_result_independently_reproduced": false
+  },
+  "event_population_reconciliation": {
+    "checked_at_utc": "2026-10-29T00:16:38Z",
+    "status": "reconciled_without_double_counting",
+    "broad_capture": {
+      "rows": 59,
+      "unique_event_ids": 59,
+      "sources": {
+        "bls_cpi_rss": 12,
+        "bls_employment_rss": 12,
+        "federal_reserve_press_rss": 20,
+        "federal_reserve_speeches_rss": 15
+      },
+      "fed_first_seen_at_utc_range": [
+        "2026-10-28T07:33:06.100095Z",
+        "2026-10-28T07:33:07.568705Z"
+      ],
+      "derived_available_at_rule": "max(published_at_utc, first_seen_at_utc, update_first_seen_at_utc)",
+      "fed_derived_available_at_utc_range": [
+        "2026-10-28T07:33:06.100095Z",
+        "2026-10-28T07:33:07.568705Z"
+      ],
+      "bls_rows_excluded_from_valid_pit_sample": 24,
+      "reason": "The 59-row capture used contact@example.com for BLS; the repository's superseding source note rejects those BLS records as valid PIT evidence."
+    },
+    "gate_capture": {
+      "run_id": "40661139681",
+      "unique_event_ids": 35,
+      "sources": {
+        "federal_reserve_press_rss": 20,
+        "federal_reserve_speeches_rss": 15
+      },
+      "first_seen_at_utc_range": [
+        "2026-10-28T09:02:55.813905Z",
+        "2026-10-28T09:02:56.057755Z"
+      ],
+      "derived_available_at_utc_range": [
+        "2026-10-28T09:02:55.813905Z",
+        "2026-10-28T09:02:56.057755Z"
+      ],
+      "entry_results": 0,
+      "plus_1_results": 0,
+      "plus_5_results": 0,
+      "gate_status": "not_eligible",
+      "coverage_days": 0.0000028223379629629633
+    },
+    "identity_overlap": {
+      "shared_fed_event_ids": 35,
+      "gate_ids_missing_from_59_rows": 0,
+      "unique_bls_ids_not_in_gate_sample": 24,
+      "note": "All 35 gate event IDs exactly match the 35 Fed rows in the 59-row capture. The first-seen/derived-available timestamps differ because the captures occurred at different real observation times; the gate uses the later clean capture's timestamps."
+    },
+    "evidence": [
+      "https://github.com/wijouyang-lab/us/pull/393",
+      "https://github.com/wijouyang-lab/us/pull/397",
+      "https://github.com/wijouyang-lab/us/blob/research/pit-event-forward/docs/research/PIT_EVENT_NOSECRET_RSS_2026-10-28.md",
+      "https://github.com/wijouyang-lab/us/blob/research/event-archive/archive/latest_manifest.json",
+      "https://github.com/wijouyang-lab/us/actions/runs/40661139681"
+    ]
   }
 }
