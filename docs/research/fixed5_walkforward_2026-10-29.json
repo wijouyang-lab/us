@@ -481,6 +481,21 @@
       "benchmark_ann": 0.13649241348949737
     }
   ],
+  "cost_bps": 5.0,
+  "cost_convention": "bps per unit one-way book turnover; initial book = 1.0; benchmark has zero turnover and zero cost",
+  "benchmark_cost": "zero turnover; no trading cost",
+  "test_date_count": 46,
+  "overlapping_windows": 6,
+  "horizon_sessions": 20,
+  "factor_directions": {
+    "Vol60": -1,
+    "ATR_Pct": -1,
+    "Mom12_1": 1,
+    "Mom1": -1,
+    "MA50": 1
+  },
+  "universe": "current 503-name panel, complete history not guaranteed; survivorship-biased",
   "entry_assumption": "month-end close signal, zero execution lag, exploratory",
+  "multiple_testing": "annual metrics descriptive; no q-value claim across years",
   "note": "fixed factors; no selection or parameter search"
 }

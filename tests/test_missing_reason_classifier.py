@@ -142,3 +142,19 @@ def test_v7_batch6_counts():
     assert (d[d.ticker == "FLR"].classification == "STILL_TRADING").all()
     assert (d[d.ticker == "HRS"].classification == "TICKER_OR_NAME_CHANGED").all()
     assert not d.ticker.duplicated().any()
+def test_v8_batch7_counts():
+    import pandas as pd
+    d = pd.read_csv("docs/research/missing_202_reason_classification_v8_2026-10-29.csv")
+    assert len(d) == 202
+    assert d.classification.value_counts().to_dict() == {
+        "DELISTED_OR_ACQUIRED": 73,
+        "STILL_TRADING": 66,
+        "TICKER_OR_NAME_CHANGED": 31,
+        "HISTORICAL_MEMBERSHIP_ONLY": 29,
+        "TICKER_REUSE_SUSPECTED": 2,
+        "IDENTITY_UNRESOLVED": 1,
+    }
+    assert (d[d.ticker == "JWN"].classification == "DELISTED_OR_ACQUIRED").all()
+    assert (d[d.ticker == "GPS"].classification == "TICKER_OR_NAME_CHANGED").all()
+    assert (d[d.ticker == "HOG"].classification == "STILL_TRADING").all()
+    assert not d.ticker.duplicated().any()
