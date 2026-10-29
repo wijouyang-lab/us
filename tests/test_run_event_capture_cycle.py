@@ -172,3 +172,27 @@ def test_max_age_config_validates_values():
         cycle._parse_max_age_days('{"macro_release":-1}')
     with pytest.raises(ValueError, match="finite non-negative"):
         cycle._parse_max_age_days('{"macro_release":1e999}')
+def test_decision_before_first_seen_is_fail_no_data(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T12:00:30Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@quantlab.dev",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert audit["coverage_audit"]["audit_status"] == "fail_no_data"
+    assert audit["coverage_audit"]["total_events"] == 0
+
+
+def test_available_event_with_no_new_ids_audits_pass(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T13:00:00Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@quantlab.dev",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert audit["coverage_audit"]["audit_status"] != "fail_no_data"
+    assert audit["coverage_audit"]["total_events"] == 1

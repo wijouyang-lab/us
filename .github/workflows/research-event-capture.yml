@@ -46,7 +46,7 @@ jobs:
           set -euo pipefail
           stamp="$(date -u +%Y%m%dT%H%M%SZ)"
           out="docs/research/event_forward_runs/${stamp}"
-          decision="$(date -u -d '+10 minutes' +%Y-%m-%dT%H:%M:%SZ)"
+          decision="$(date -u -d '+20 minutes' +%Y-%m-%dT%H:%M:%SZ)"
           feeds="${FEEDS:-bls_cpi,bls_employment,fed_all,fed_speeches}"
           python -m tools.research.run_event_capture_cycle \
             --output-dir "$out" \

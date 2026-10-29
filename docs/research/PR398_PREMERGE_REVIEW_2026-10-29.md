@@ -81,7 +81,7 @@ be delayed, which only increases the post-close margin. The job does not compute
 - no `write-all`;
 - no `pull_request`, `push`, or `workflow_run` trigger;
 - concurrency group `research-event-archive`, cancellation disabled;
-- timeout 15 minutes.
+- timeout 15 minutes;\n- audit decision buffer is +20 minutes after step start, longer than the\n  15-minute capture timeout, avoiding a pre-first-seen `fail_no_data` audit.
 
 ## 6. Idempotency / failures
 

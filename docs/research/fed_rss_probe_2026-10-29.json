@@ -11,5 +11,14 @@
   "missing_from_current_feed": 1,
   "events_sha256": "12d74a6fea5386a762af9a263a15776e27b48519416f08be3317f03daefeca3d",
   "audit": "fail_no_data",
-  "archive_write": false
+  "archive_write": false,
+  "repeat_probe": {
+    "captured_at": "2026-10-29T05:20:23.099846Z",
+    "decision_at": "2026-10-29T05:30:00Z",
+    "events": 35,
+    "new_ids": 0,
+    "audit": "pass",
+    "events_sha256": "2c4f1b6a83b0400f4d4b367606664e1c5ff58810db7a39ceddda16a3f17d8540"
+  },
+  "root_cause": "first probe decision_at preceded first_seen; second probe with post-capture decision passed"
 }

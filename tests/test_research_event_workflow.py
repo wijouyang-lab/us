@@ -62,3 +62,7 @@ def test_scheduled_run_has_nonempty_default_feeds():
     text = WORKFLOW.read_text(encoding="utf-8")
     assert 'feeds="${FEEDS:-bls_cpi,bls_employment,fed_all,fed_speeches}"' in text
     assert '--feeds "$feeds"' in text
+def test_audit_decision_has_post_capture_buffer():
+    text = WORKFLOW.read_text(encoding="utf-8")
+    assert "+20 minutes" in text
+    assert "+10 minutes" not in text
