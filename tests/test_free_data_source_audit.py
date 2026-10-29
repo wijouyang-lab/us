@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Fixture checks for MarketParquet/ADGSTUDIOS source audit."""
 
 import json
@@ -31,3 +31,12 @@ def test_adgstudios_is_network_unverified_not_no_data():
 def test_no_raw_parquet_is_committed():
     # The license forbids raw-file redistribution; only metadata is committed.
     assert not any(p.suffix == ".parquet" for p in ROOT.rglob("*.parquet"))
+def test_marketparquet_free_window_edge():
+    d = json.loads(AUDIT.read_text(encoding="utf-8"))
+    mp = {s["source"]: s for s in d["sources"]}["MarketParquet"]
+    by = {x["date"]: x for x in mp["date_access"]}
+    assert by["2026-10-22"]["http"] == 200
+    assert by["2026-10-21"]["http"] == 401
+    assert by["2026-09-28"]["http"] == 401
+    assert by["2026-04-30"]["http"] == 401
+    assert by["2025-11-03"]["http"] == 401
