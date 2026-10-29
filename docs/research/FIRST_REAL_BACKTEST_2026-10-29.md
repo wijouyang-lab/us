@@ -1,4 +1,4 @@
-# First Real Historical Backtest — 2026-10-29
+﻿# First Real Historical Backtest 鈥?2026-10-29
 
 Research only. No production changes.
 
@@ -26,7 +26,7 @@ The panel is the existing 503-ticker raw OHLCV research panel, updated through
 | Date range | 2016-09-19 .. 2026-10-28 |
 | Price basis | raw OHLCV |
 | Survivorship | current-universe; **survivorship-biased** |
-| Label | CURRENT-UNIVERSE EXPLORATORY — NOT PIT — NOT DEPLOYABLE |
+| Label | CURRENT-UNIVERSE EXPLORATORY 鈥?NOT PIT 鈥?NOT DEPLOYABLE |
 
 ## Design
 
@@ -40,11 +40,11 @@ The panel is the existing 503-ticker raw OHLCV research panel, updated through
 - Monthly cross-sectional Q5/Q1.
 - Winsorize 1%/99% based on current cross-section (exploratory; not full PIT).
 - 5 bps one-way turnover cost.
-- Chronological train ≤2022, test 2023–2026.
+- Chronological train 鈮?022, test 2023鈥?026.
 - No parameter selection on test.
 - Benchmark: equal-weight eligible universe.
 
-## Test-period results (2023–2026)
+## Test-period results (2023鈥?026)
 
 45 rebalances, net:
 
@@ -72,8 +72,8 @@ significant after correction.
 
 ## Cost and turnover
 
-- Cost model: 5 bps one-way × turnover.
-- Mean turnover: ~22%–78% by factor.
+- Cost model: 5 bps one-way 脳 turnover.
+- Mean turnover: ~22%鈥?8% by factor.
 - Gross/net difference is small; absence of edge is not a cost artifact.
 
 ## Out-of-sample status
@@ -98,3 +98,9 @@ result, with small changes from the updated panel.
 
 Next work should improve data/PIT/universe, not search more factors on the same
 sample.
+## Audit correction
+
+The 14.71% benchmark in this first report was **full-sample**, not the 45-month
+test scope. See `BACKTEST_AUDIT_2026-10-29.md` for the corrected test benchmark
+(11.68%, Sharpe 0.881) and next-open execution sensitivity. Original results
+are retained, not overwritten.
