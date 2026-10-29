@@ -1,0 +1,130 @@
+{
+  "as_of": "2026-10-29T12:55:00Z",
+  "sources": [
+    {
+      "source": "MarketParquet",
+      "guide": "https://marketparquet.com/guides/free-historical-stock-data",
+      "license": "https://marketparquet.com/license",
+      "auth": "no signup for newest 7 days; free account/API key for ~365 days",
+      "downloaded_url": "https://marketparquet.com/api/data/download/stock_daily/2026-10-28.parquet",
+      "http": 200,
+      "file": "mp_sample/stock_daily_2026-10-28.parquet",
+      "sha256": "676580077ac560be844b6b2a95a0c172b9a84da65596229f247df7c805bf904c",
+      "bytes": 232449,
+      "rows": 6503,
+      "symbols": 6503,
+      "date_min": "2026-10-28",
+      "date_max": "2026-10-28",
+      "fields": [
+        "date",
+        "symbol",
+        "asset_type",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume"
+      ],
+      "aapl": [
+        {
+          "date": "2026-10-28",
+          "symbol": "AAPL",
+          "asset_type": "Stock",
+          "open": 346.92,
+          "high": 347.18,
+          "low": 343.52,
+          "close": 343.83,
+          "volume": 35714331.0
+        }
+      ],
+      "msft": [
+        {
+          "date": "2026-10-28",
+          "symbol": "MSFT",
+          "asset_type": "Stock",
+          "open": 531.82,
+          "high": 535.0,
+          "low": 526.135,
+          "close": 531.01,
+          "volume": 28594163.0
+        }
+      ],
+      "delisted_samples_present": [],
+      "quality": {
+        "duplicate_date_symbol": 0,
+        "nonpositive_close": 0,
+        "invalid_ohlc": 0
+      },
+      "status": "RECENT_ONLY_NOT_HISTORICAL",
+      "note": "No signup file covers one current date only. Free 365-day tier requires a free account/API key; not created.",
+      "date_access": [
+        {
+          "date": "2026-10-22",
+          "http": 200,
+          "bytes": 233079,
+          "rows": 6521
+        },
+        {
+          "date": "2026-10-27",
+          "http": 200,
+          "bytes": 232014,
+          "rows": 6499
+        },
+        {
+          "date": "2026-10-28",
+          "http": 200,
+          "bytes": 232449,
+          "rows": 6503
+        },
+        {
+          "date": "2026-10-21",
+          "http": 401,
+          "error": "login required"
+        },
+        {
+          "date": "2026-10-20",
+          "http": 401,
+          "error": "login required"
+        },
+        {
+          "date": "2026-09-28",
+          "http": 401,
+          "error": "free account covers last year"
+        },
+        {
+          "date": "2026-04-30",
+          "http": 401,
+          "error": "free account covers last year"
+        },
+        {
+          "date": "2025-11-03",
+          "http": 401,
+          "error": "free account covers last year"
+        }
+      ],
+      "free_window_confirmed": "7 trading days without account; older dates return 401; free account/API key needed for ~365 days"
+    },
+    {
+      "source": "ADGSTUDIOS Stocks API",
+      "url": "https://stocks.adgstudios.co.za/",
+      "http": 502,
+      "auth": "not reached",
+      "status": "UNVERIFIED_NETWORK_502",
+      "note": "Root returned Cloudflare 502 Bad gateway; no API/terms page reachable, so no data and no license conclusion."
+    },
+    {
+      "source": "Stooq",
+      "url": "https://stooq.com/q/d/l/?s=twtr.us&i=d",
+      "http": 200,
+      "status": "UNVERIFIED_ANTI_BOT",
+      "note": "Returned HTML noindex/noscript, not CSV."
+    },
+    {
+      "source": "Nasdaq public quote API",
+      "url": "https://api.nasdaq.com/api/quote/TWTR/historical",
+      "http": 200,
+      "status": "REJECTED_NO_DELISTED_SYMBOL",
+      "note": "AAPL control returned 1,804 rows; TWTR/SIVB returned rCode 400 Symbol not exists."
+    }
+  ]
+}

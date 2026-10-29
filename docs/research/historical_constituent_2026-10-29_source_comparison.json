@@ -1,0 +1,141 @@
+{
+  "sources": {
+    "chino": {
+      "url": "https://github.com/chinobing/historical_sp500_constituents",
+      "license": "MIT",
+      "rows": 3928,
+      "date_min": "1996-01-02",
+      "date_max": "2026-10-29"
+    },
+    "thun": {
+      "url": "https://github.com/thuningxu/sp500nq100",
+      "license": "no repository license found",
+      "rows": 2712,
+      "date_min": "1996-01-02",
+      "date_max": "2026-06-02"
+    },
+    "panel": {
+      "path": "..\\price10y_1028.csv",
+      "tickers": 503,
+      "date_min": "2016-09-19",
+      "date_max": "2026-10-28"
+    }
+  },
+  "common_snapshot_dates": 2709,
+  "jaccard_min": 0.8875502008032129,
+  "jaccard_mean": 0.9339087931485653,
+  "jaccard_below_0_98": 2521,
+  "yearly": [
+    {
+      "year": 2016,
+      "chino_count": 484,
+      "thun_count": 506,
+      "common_count": 484,
+      "chino_only": 0,
+      "thun_only": 22,
+      "in_panel": 336,
+      "missing": 148
+    },
+    {
+      "year": 2017,
+      "chino_count": 491,
+      "thun_count": 505,
+      "common_count": 491,
+      "chino_only": 0,
+      "thun_only": 14,
+      "in_panel": 353,
+      "missing": 138
+    },
+    {
+      "year": 2018,
+      "chino_count": 497,
+      "thun_count": 505,
+      "common_count": 497,
+      "chino_only": 0,
+      "thun_only": 8,
+      "in_panel": 364,
+      "missing": 133
+    },
+    {
+      "year": 2019,
+      "chino_count": 499,
+      "thun_count": 505,
+      "common_count": 499,
+      "chino_only": 0,
+      "thun_only": 6,
+      "in_panel": 384,
+      "missing": 115
+    },
+    {
+      "year": 2020,
+      "chino_count": 501,
+      "thun_count": 505,
+      "common_count": 501,
+      "chino_only": 0,
+      "thun_only": 4,
+      "in_panel": 397,
+      "missing": 104
+    },
+    {
+      "year": 2021,
+      "chino_count": 501,
+      "thun_count": 505,
+      "common_count": 501,
+      "chino_only": 0,
+      "thun_only": 4,
+      "in_panel": 407,
+      "missing": 94
+    },
+    {
+      "year": 2022,
+      "chino_count": 498,
+      "thun_count": 503,
+      "common_count": 498,
+      "chino_only": 0,
+      "thun_only": 5,
+      "in_panel": 425,
+      "missing": 73
+    },
+    {
+      "year": 2023,
+      "chino_count": 503,
+      "thun_count": 503,
+      "common_count": 502,
+      "chino_only": 1,
+      "thun_only": 1,
+      "in_panel": 445,
+      "missing": 58
+    },
+    {
+      "year": 2024,
+      "chino_count": 503,
+      "thun_count": 503,
+      "common_count": 503,
+      "chino_only": 0,
+      "thun_only": 0,
+      "in_panel": 463,
+      "missing": 40
+    },
+    {
+      "year": 2025,
+      "chino_count": 501,
+      "thun_count": 503,
+      "common_count": 500,
+      "chino_only": 1,
+      "thun_only": 3,
+      "in_panel": 478,
+      "missing": 23
+    },
+    {
+      "year": 2026,
+      "chino_count": 503,
+      "thun_count": 503,
+      "common_count": 490,
+      "chino_only": 13,
+      "thun_only": 13,
+      "in_panel": 503,
+      "missing": 0
+    }
+  ],
+  "missing_rows": 926
+}

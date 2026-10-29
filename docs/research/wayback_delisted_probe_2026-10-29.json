@@ -1,0 +1,65 @@
+{
+  "as_of": "2026-10-29T08:10:00Z",
+  "results": [
+    {
+      "ticker": "ADCT",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for ADCT"
+    },
+    {
+      "ticker": "ALTR",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for ALTR"
+    },
+    {
+      "ticker": "BRCM",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for BRCM"
+    },
+    {
+      "ticker": "CA",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for CA"
+    },
+    {
+      "ticker": "TWX",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for TWX"
+    },
+    {
+      "ticker": "ALXN",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for ALXN"
+    },
+    {
+      "ticker": "XLNX",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for XLNX"
+    },
+    {
+      "ticker": "NUAN",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for NUAN"
+    },
+    {
+      "ticker": "CTXS",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for CTXS"
+    },
+    {
+      "ticker": "TWTR",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for TWTR"
+    },
+    {
+      "ticker": "ATVI",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for ATVI (CDX lookup errors occurred)"
+    },
+    {
+      "ticker": "SIVB",
+      "status": "failed",
+      "error": "RuntimeError: Wayback has no usable legacy Yahoo CSV for SIVB (CDX lookup errors occurred)"
+    }
+  ]
+}

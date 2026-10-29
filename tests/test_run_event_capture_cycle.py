@@ -1,11 +1,33 @@
-import json
-from datetime import timedelta
+﻿import json
+from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
 
 import tools.research.run_event_capture_cycle as cycle
-from tools.research.pit_event_records import normalize_event
+from tools.research.pit_event_records import normalize_event as _normalize_event
+
+EVIDENCE = {
+    "parse_status": "exact",
+    "source_evidence": "official_fed_page",
+    "published_at_evidence": "official_release_time_in_page",
+    "decision_evidence": "strategy_log",
+    "is_simulated": False,
+        "is_historical_backfill": False,
+    "observation_kind": "live_forward_observation",
+}
+
+
+def normalize_event(*args, **kwargs):
+    event = _normalize_event(*args, **kwargs)
+    event.update(EVIDENCE)
+    event["research_ready_at_utc"] = event.get("first_seen_at_utc")
+    first = event.get("first_seen_at_utc") or ""
+    if first:
+        event["decision_at_utc"] = (
+            datetime.fromisoformat(first.replace("Z", "+00:00")) + timedelta(minutes=5)
+        ).isoformat().replace("+00:00", "Z")
+    return event
 
 
 def sample_event():
@@ -47,7 +69,7 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
         max_age_by_type={"macro_release": timedelta(days=1)},
     )
     assert result["event_count"] == 1
@@ -97,7 +119,7 @@ def test_successful_empty_feed_is_visible_in_source_coverage(tmp_path, monkeypat
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
     )
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
     assert result["successful_source_count"] == 1
@@ -112,7 +134,7 @@ def test_repeated_capture_deduplicates_the_same_event_version(tmp_path, monkeypa
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
     )
     first = cycle.run_cycle(**args)
     second = cycle.run_cycle(**args)
@@ -159,7 +181,7 @@ def test_all_feed_failures_are_recorded_and_signaled(tmp_path, monkeypatch):
         output_dir=tmp_path,
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
-        feed_user_agent="Quant research tester@example.com",
+        feed_user_agent="Quant research tester@quantlab.dev",
     )
     assert result["all_sources_failed"]
     metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
@@ -172,3 +194,44 @@ def test_max_age_config_validates_values():
         cycle._parse_max_age_days('{"macro_release":-1}')
     with pytest.raises(ValueError, match="finite non-negative"):
         cycle._parse_max_age_days('{"macro_release":1e999}')
+def test_decision_before_first_seen_is_fail_no_data(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T12:00:30Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@quantlab.dev",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert audit["coverage_audit"]["audit_status"] == "fail_no_data"
+    assert audit["coverage_audit"]["total_events"] == 0
+
+
+def test_available_event_with_no_new_ids_audits_pass(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at="2026-10-23T13:00:00Z",
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@quantlab.dev",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    assert audit["coverage_audit"]["audit_status"] != "fail_no_data"
+    assert audit["coverage_audit"]["total_events"] == 1
+
+
+def test_capture_without_decision_is_not_pit_evaluated(tmp_path, monkeypatch):
+    monkeypatch.setattr(cycle, "OfficialRssCollector", FakeRssCollector)
+    result = cycle.run_cycle(
+        output_dir=tmp_path,
+        decision_at=None,
+        feed_keys=["bls_cpi"],
+        feed_user_agent="Quant research tester@quantlab.dev",
+    )
+    audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
+    assert audit["pit_status"] == "not_evaluated_no_decision_log"
+    assert audit["coverage_audit"]["eligible_events"] == 0
+    assert metadata["decision_at_utc"] is None
+    assert metadata["pit_evaluated"] is False
+    assert metadata["scheduled_workflow_active"] is False

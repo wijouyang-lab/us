@@ -1,0 +1,39 @@
+{
+  "as_of": "2026-10-29T14:40:00Z",
+  "rows": [
+    {
+      "ticker": "INFO",
+      "cik": "0001598014",
+      "sec_name": "IHS Markit Ltd.",
+      "tickers": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2022-02-28"
+        }
+      ],
+      "external_event": null
+    },
+    {
+      "ticker": "STI",
+      "cik": "0000750556",
+      "sec_name": "SUNTRUST BANKS INC",
+      "tickers": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2019-12-09"
+        }
+      ],
+      "external_event": null
+    },
+    {
+      "ticker": "SBNY",
+      "cik": "0001288784",
+      "sec_name": "Signature Bank Corp",
+      "tickers": [],
+      "delisting_forms": [],
+      "external_event": "FDIC receivership 2023-03-12"
+    }
+  ]
+}

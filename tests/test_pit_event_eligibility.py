@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+﻿from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -13,6 +13,14 @@ def event(**overrides):
     value = {
         "published_at_utc": "2026-10-22T13:00:00Z",
         "first_seen_at_utc": "2026-10-22T13:01:00+00:00",
+        "research_ready_at_utc": "2026-10-22T13:01:00+00:00",
+        "parse_status": "exact",
+        "source_evidence": "official_fed_page",
+        "published_at_evidence": "official_release_time_in_page",
+        "decision_evidence": "strategy_log",
+        "is_simulated": False,
+        "is_historical_backfill": False,
+        "observation_kind": "live_forward_observation",
     }
     value.update(overrides)
     return value
@@ -71,3 +79,7 @@ def test_rejects_naive_decision_timestamp_and_negative_freshness():
     assert event_eligibility(event(), "2026-10-22T14:00:00") == (False, "invalid_decision_timestamp")
     with pytest.raises(ValueError, match="cannot be negative"):
         event_eligibility(event(), DECISION, max_age=timedelta(seconds=-1))
+def test_strict_admission_rejects_missing_evidence():
+    assert event_eligibility(event(source_evidence=None), DECISION) == (False, "pit_admission:source_evidence_not_verified")
+    assert event_eligibility(event(decision_evidence=None), DECISION) == (False, "pit_admission:decision_evidence_missing")
+    assert event_eligibility(event(is_simulated=True), DECISION) == (False, "pit_admission:simulated_record")

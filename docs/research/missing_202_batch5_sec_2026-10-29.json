@@ -1,0 +1,943 @@
+{
+  "as_of": "2026-10-29T13:05:00Z",
+  "count": 25,
+  "rows": [
+    {
+      "ticker": "ENDP",
+      "component_name": "Endo International",
+      "component_removed": "2017-03-02",
+      "cik": "0001100962",
+      "sec_http": 200,
+      "sec_name": "ENDO HEALTH SOLUTIONS INC.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "ENDO PHARMACEUTICALS HOLDINGS INC",
+          "from": "1999-12-14T00:00:00.000Z",
+          "to": "2012-05-23T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2014-02-28",
+          "accession": "0001354457-14-000036",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2014-03-03",
+        "accession": "0001193125-14-077915",
+        "doc": "d683967d8k.htm"
+      }
+    },
+    {
+      "ticker": "FTR",
+      "component_name": "Frontier Communications",
+      "component_removed": "2017-03-20",
+      "cik": "0000020520",
+      "sec_http": 200,
+      "sec_name": "Frontier Communications Parent, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "FRONTIER COMMUNICATIONS CORP",
+          "from": "2008-05-08T00:00:00.000Z",
+          "to": "2021-05-03T00:00:00.000Z"
+        },
+        {
+          "name": "CITIZENS COMMUNICATIONS CO",
+          "from": "2000-08-10T00:00:00.000Z",
+          "to": "2008-07-21T00:00:00.000Z"
+        },
+        {
+          "name": "CITIZENS UTILITIES CO",
+          "from": "1994-03-31T00:00:00.000Z",
+          "to": "2000-03-22T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-01-30",
+          "accession": "0001193125-26-030616",
+          "doc": "d69670d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-01-20",
+          "accession": "0001354457-26-000054",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-04-29",
+          "accession": "0001354457-20-000170",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-06-29",
+          "accession": "0001354457-18-000241",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-01-20",
+        "accession": "0001140361-26-001612",
+        "doc": "ef20063382_8k.htm"
+      }
+    },
+    {
+      "ticker": "LLTC",
+      "component_name": "Linear Technology Corp.",
+      "component_removed": "2017-03-13",
+      "cik": "0000791907",
+      "sec_http": 200,
+      "sec_name": "LINEAR TECHNOLOGY CORP /CA/",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2017-03-20",
+          "accession": "0001193125-17-088491",
+          "doc": "d552826d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-03-10",
+          "accession": "0001354457-17-000054",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2017-03-10",
+        "accession": "0001193125-17-078946",
+        "doc": "d340243d8k.htm"
+      }
+    },
+    {
+      "ticker": "LVLT",
+      "component_name": "Level 3 Communications",
+      "component_removed": "2017-10-13",
+      "cik": "0000794323",
+      "sec_http": 200,
+      "sec_name": "Level 3 Parent, LLC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "LEVEL 3 COMMUNICATIONS INC",
+          "from": "1998-05-05T00:00:00.000Z",
+          "to": "2017-11-03T00:00:00.000Z"
+        },
+        {
+          "name": "KIEWIT PETER SONS INC",
+          "from": "1994-04-25T00:00:00.000Z",
+          "to": "1998-03-31T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2023-01-30",
+          "accession": "0001193125-23-019060",
+          "doc": "d440406d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-11-01",
+          "accession": "0000876661-17-000651",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2011-10-20",
+          "accession": "0001104659-11-056821",
+          "doc": "a11-28236_225.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-04-30",
+        "accession": "0001193125-26-197116",
+        "doc": "d123618d8k.htm"
+      }
+    },
+    {
+      "ticker": "MJN",
+      "component_name": "Mead Johnson",
+      "component_removed": "2017-06-19",
+      "cik": "0001452575",
+      "sec_http": 200,
+      "sec_name": "Mead Johnson Nutrition Co",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2017-06-15",
+          "accession": "0000876661-17-000315",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2017-06-15",
+        "accession": "0001104659-17-039503",
+        "doc": "a17-15238_28k.htm"
+      }
+    },
+    {
+      "ticker": "MUR",
+      "component_name": "Murphy Oil",
+      "component_removed": "2017-07-26",
+      "cik": "0000717423",
+      "sec_http": 200,
+      "sec_name": "MURPHY OIL CORP",
+      "tickers": [
+        "MUR"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "MURPHY OIL CORP /DE",
+          "from": "1994-02-14T00:00:00.000Z",
+          "to": "2019-07-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-13",
+        "accession": "0001628280-26-065580",
+        "doc": "mur-20261012.htm"
+      }
+    },
+    {
+      "ticker": "PBI",
+      "component_name": "Pitney-Bowes",
+      "component_removed": "2017-03-01",
+      "cik": "0000078814",
+      "sec_http": 200,
+      "sec_name": "PITNEY BOWES INC /DE/",
+      "tickers": [
+        "PBI",
+        "PBI-PB"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2015-12-07",
+          "accession": "0000876661-15-000603",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-28",
+        "accession": "0001628280-26-067888",
+        "doc": "pbi-20261028.htm"
+      }
+    },
+    {
+      "ticker": "R",
+      "component_name": "Ryder System",
+      "component_removed": "2017-06-19",
+      "cik": "0000085961",
+      "sec_http": 200,
+      "sec_name": "RYDER SYSTEM INC",
+      "tickers": [
+        "R"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-22",
+        "accession": "0000085961-26-000023",
+        "doc": "r-20261022.htm"
+      }
+    },
+    {
+      "ticker": "RAI",
+      "component_name": "Reynolds American Inc.",
+      "component_removed": "2017-07-26",
+      "cik": "0001275283",
+      "sec_http": 200,
+      "sec_name": "REYNOLDS AMERICAN INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2026-09-08",
+          "accession": "0000876661-26-000723",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-03-25",
+          "accession": "0000876661-26-000289",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-09-06",
+          "accession": "0000876661-24-000825",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-08-15",
+          "accession": "0000876661-24-000796",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-08-16",
+          "accession": "0000876661-22-000661",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-08-16",
+          "accession": "0000876661-22-000655",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-08-17",
+          "accession": "0000876661-20-000693",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-07-25",
+          "accession": "0001143313-17-000033",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2016-03-02",
+          "accession": "0000876661-16-000844",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2017-07-25",
+        "accession": "0001193125-17-235158",
+        "doc": "d397089d8k.htm"
+      }
+    },
+    {
+      "ticker": "SPLS",
+      "component_name": "Staples Inc.",
+      "component_removed": "2017-09-18",
+      "cik": "0000791519",
+      "sec_http": 200,
+      "sec_name": "STAPLES INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2017-09-22",
+          "accession": "0001104659-17-058398",
+          "doc": "a17-22306_11512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-09-12",
+          "accession": "0001354457-17-000179",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2017-09-12",
+        "accession": "0001104659-17-056727",
+        "doc": "a17-21547_28k.htm"
+      }
+    },
+    {
+      "ticker": "STJ",
+      "component_name": "St Jude Medical",
+      "component_removed": "2017-01-05",
+      "cik": "0000203077",
+      "sec_http": 200,
+      "sec_name": "ST JUDE MEDICAL, LLC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "ST JUDE MEDICAL INC",
+          "from": "1994-01-04T00:00:00.000Z",
+          "to": "2017-01-04T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2017-01-04",
+          "accession": "0000876661-17-000010",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2017-01-05",
+        "accession": "0001104659-17-000936",
+        "doc": "a16-23886_18k.htm"
+      }
+    },
+    {
+      "ticker": "SWN",
+      "component_name": "Southwestern Energy",
+      "component_removed": "2017-04-04",
+      "cik": "0000007332",
+      "sec_http": 200,
+      "sec_name": "SOUTHWESTERN ENERGY CO",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2024-10-11",
+          "accession": "0001104659-24-108043",
+          "doc": "tm2426058d1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-10-01",
+          "accession": "0000876661-24-000892",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "15-12G",
+          "date": "2018-01-26",
+          "accession": "0000007332-18-000004",
+          "doc": "swn01262018form15.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-01-16",
+          "accession": "0000876661-18-000037",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2024-10-01",
+        "accession": "0001104659-24-104962",
+        "doc": "tm2425085d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "TDC",
+      "component_name": "Teradata Corp.",
+      "component_removed": "2017-06-19",
+      "cik": "0000816761",
+      "sec_http": 200,
+      "sec_name": "TERADATA CORP /DE/",
+      "tickers": [
+        "TDC"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "TERADATA CORP /DE/",
+          "from": "2007-05-10T00:00:00.000Z",
+          "to": "2026-09-17T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-08-17",
+        "accession": "0000816761-26-000032",
+        "doc": "tdc-20260812.htm"
+      }
+    },
+    {
+      "ticker": "TGNA",
+      "component_name": "Tegna, Inc.",
+      "component_removed": "2017-06-02",
+      "cik": "0000039899",
+      "sec_http": 200,
+      "sec_name": "TEGNA INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "GANNETT CO INC /DE/",
+          "from": "1994-06-29T00:00:00.000Z",
+          "to": "2015-06-26T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-04-08",
+          "accession": "0001104659-26-040834",
+          "doc": "tm2610841d1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-03-20",
+          "accession": "0000876661-26-000273",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-03-20",
+        "accession": "0001104659-26-032772",
+        "doc": "tm269445d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "WFM",
+      "component_name": "Whole Foods Market",
+      "component_removed": "2017-08-29",
+      "cik": "0000865436",
+      "sec_http": 200,
+      "sec_name": "WHOLE FOODS MARKET INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2017-09-07",
+          "accession": "0001193125-17-278607",
+          "doc": "d436920d1512g.htm"
+        },
+        {
+          "form": "15-12G",
+          "date": "2017-09-07",
+          "accession": "0001193125-17-278601",
+          "doc": "d436926d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-08-28",
+          "accession": "0001354457-17-000163",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2017-08-28",
+        "accession": "0001144204-17-045261",
+        "doc": "v474128_8k.htm"
+      }
+    },
+    {
+      "ticker": "CSRA",
+      "component_name": "CSRA Inc.",
+      "component_removed": "2018-04-04",
+      "cik": "0001646383",
+      "sec_http": 200,
+      "sec_name": "CSRA Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Computer Sciences Government Services Inc.",
+          "from": "2015-07-10T00:00:00.000Z",
+          "to": "2015-11-06T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2018-04-04",
+          "accession": "0000876661-18-000329",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2018-04-03",
+        "accession": "0001193125-18-106369",
+        "doc": "d562306d8k.htm"
+      }
+    },
+    {
+      "ticker": "GGP",
+      "component_name": "Genl Growth Properties",
+      "component_removed": "2009-03-18*",
+      "cik": "0000895648",
+      "sec_http": 200,
+      "sec_name": "GGP, Inc. (fka General Growth Properties Inc. & predecessor to General Growth Properties, Inc.)",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "GENERAL GROWTH PROPERTIES INC",
+          "from": "1996-12-13T00:00:00.000Z",
+          "to": "2011-03-01T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2009-05-11",
+          "accession": "0000876661-09-000236",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2003-07-28",
+          "accession": "9999999997-03-036608",
+          "doc": "9999999997-03-036608.paper"
+        }
+      ],
+      "latest_8k": {
+        "date": "2010-11-12",
+        "accession": "0001104659-10-058191",
+        "doc": "a10-21125_18k.htm"
+      }
+    },
+    {
+      "ticker": "KORS",
+      "component_name": "Michael Kors Holdings",
+      "component_removed": "2018-01-02",
+      "cik": "0001530721",
+      "sec_http": 200,
+      "sec_name": "Capri Holdings Ltd",
+      "tickers": [
+        "CPRI"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "Michael Kors Holdings Ltd",
+          "from": "2011-12-02T05:00:00.000Z",
+          "to": "2018-12-21T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-09-16",
+        "accession": "0000950142-26-002556",
+        "doc": "eh260831247_8k.htm"
+      }
+    },
+    {
+      "ticker": "NAVI",
+      "component_name": "Navient",
+      "component_removed": "2018-06-05",
+      "cik": "0001593538",
+      "sec_http": 200,
+      "sec_name": "Navient LLC",
+      "tickers": [
+        "NAVI",
+        "JSM"
+      ],
+      "exchanges": [
+        "Nasdaq",
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "NAVIENT CORP",
+          "from": "2014-01-03T00:00:00.000Z",
+          "to": "2026-10-21T00:00:00.000Z"
+        },
+        {
+          "name": "New Corp",
+          "from": "2013-12-06T00:00:00.000Z",
+          "to": "2014-02-28T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-10-29",
+          "accession": "0001193125-26-437020",
+          "doc": "d168294d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-01-12",
+          "accession": "0001354457-18-000004",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-03-14",
+          "accession": "0001354457-17-000062",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-21",
+        "accession": "0001140361-26-040389",
+        "doc": "ef20084105_8k.htm"
+      }
+    },
+    {
+      "ticker": "PDCO",
+      "component_name": "Patterson Companies",
+      "component_removed": "2018-03-19",
+      "cik": "0000891024",
+      "sec_http": 200,
+      "sec_name": "PATTERSON COMPANIES, INC.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "PATTERSON DENTAL CO",
+          "from": "1996-12-13T00:00:00.000Z",
+          "to": "2004-07-01T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-04-28",
+          "accession": "0001193125-25-098988",
+          "doc": "d864174d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-04-17",
+          "accession": "0001354457-25-000337",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2025-04-22",
+        "accession": "0001193125-25-087961",
+        "doc": "d913697d8k.htm"
+      }
+    },
+    {
+      "ticker": "RRC",
+      "component_name": "Range Resources Corp.",
+      "component_removed": "2018-06-18",
+      "cik": "0000315852",
+      "sec_http": 200,
+      "sec_name": "RANGE RESOURCES CORP",
+      "tickers": [
+        "RRC"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "LOMAK PETROLEUM INC",
+          "from": "1994-03-28T05:00:00.000Z",
+          "to": "1998-07-16T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-28",
+        "accession": "0001193125-26-435073",
+        "doc": "d174576d8k.htm"
+      }
+    },
+    {
+      "ticker": "SNI",
+      "component_name": "Scripps Networks Interactive Inc.",
+      "component_removed": "2018-03-07",
+      "cik": "0001430602",
+      "sec_http": 200,
+      "sec_name": "Scripps Networks Interactive, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-10-16",
+          "accession": "0001193125-26-423513",
+          "doc": "d188095d1512g.htm"
+        },
+        {
+          "form": "25",
+          "date": "2026-10-06",
+          "accession": "0001193125-26-415091",
+          "doc": "d155700d25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-03-06",
+          "accession": "0001354457-18-000049",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2016-03-14",
+          "accession": "0001193125-16-503595",
+          "doc": "d155787d25.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2018-03-06",
+        "accession": "0001193125-18-072063",
+        "doc": "d545990d8k.htm"
+      }
+    },
+    {
+      "ticker": "SRCL",
+      "component_name": "Stericycle Inc",
+      "component_removed": "2018-12-03",
+      "cik": "0000861878",
+      "sec_http": 200,
+      "sec_name": "STERICYCLE INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2024-11-14",
+          "accession": "0001104659-24-118407",
+          "doc": "tm2428093d1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-11-04",
+          "accession": "0001354457-24-000847",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-09-14",
+          "accession": "0001354457-18-000351",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2024-11-08",
+        "accession": "0001104659-24-115876",
+        "doc": "tm2427742d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "CBS",
+      "component_name": "CBS Corp.",
+      "component_removed": "2019-12-05*",
+      "cik": "0000813828",
+      "sec_http": 200,
+      "sec_name": "Paramount Global",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "ViacomCBS Inc.",
+          "from": "2019-12-04T00:00:00.000Z",
+          "to": "2022-02-15T00:00:00.000Z"
+        },
+        {
+          "name": "CBS CORP",
+          "from": "2006-01-09T00:00:00.000Z",
+          "to": "2019-12-04T00:00:00.000Z"
+        },
+        {
+          "name": "VIACOM INC",
+          "from": "1994-01-11T00:00:00.000Z",
+          "to": "2006-01-05T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-08-18",
+          "accession": "0001193125-25-182662",
+          "doc": "d53500d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-08-07",
+          "accession": "0001354457-25-000781",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-03-28",
+          "accession": "0001354457-24-000211",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2019-12-04",
+          "accession": "0001193125-19-306213",
+          "doc": "d843053d25.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2025-08-07",
+        "accession": "0001193125-25-175027",
+        "doc": "d52142d8k.htm"
+      }
+    },
+    {
+      "ticker": "FL",
+      "component_name": "Foot Locker Inc",
+      "component_removed": "2019-08-09",
+      "cik": "0000850209",
+      "sec_http": 200,
+      "sec_name": "FOOT LOCKER, INC.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "FOOT LOCKER INC",
+          "from": "2001-11-02T00:00:00.000Z",
+          "to": "2016-04-04T00:00:00.000Z"
+        },
+        {
+          "name": "VENATOR GROUP INC",
+          "from": "1998-07-07T00:00:00.000Z",
+          "to": "2001-10-19T00:00:00.000Z"
+        },
+        {
+          "name": "WOOLWORTH CORPORATION",
+          "from": "1995-02-08T00:00:00.000Z",
+          "to": "1998-04-07T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-09-18",
+          "accession": "0001140361-25-035399",
+          "doc": "ef20055669_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-09-08",
+          "accession": "0000876661-25-000643",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-12-09",
+          "accession": "0000876661-21-001720",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2025-09-08",
+        "accession": "0001104659-25-088056",
+        "doc": "tm2525487d1_8k.htm"
+      }
+    }
+  ]
+}
