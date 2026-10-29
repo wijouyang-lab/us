@@ -1,0 +1,64 @@
+﻿# -*- coding: utf-8 -*-
+"""Tests for missing-member reason classification."""
+
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "tools" / "research"))
+import missing_reason_classifier as c  # noqa: E402
+
+
+def test_current_ticker_not_delisted():
+    out = c.classify({"ticker": "MUR", "cik": "1", "sec_name": "MURPHY OIL",
+                      "tickers": ["MUR"], "delisting_forms": []})
+    assert out["category"] == c.STILL
+    assert out["lifecycle_status"] == "LISTED_UNDER_ORIGINAL_TICKER"
+
+
+def test_index_removal_is_not_delisting_without_form():
+    out = c.classify({"ticker": "AN", "cik": "1", "sec_name": "AUTONATION",
+                      "tickers": ["AN"], "delisting_forms": []})
+    assert out["category"] == c.STILL
+
+
+def test_rename_is_not_new_company():
+    out = c.classify({"ticker": "ABC", "cik": "1", "sec_name": "Cencora",
+                      "tickers": ["COR"], "delisting_forms": []})
+    assert out["category"] == c.CHANGED
+    assert out["identity_status"] == "CIK_CONFIRMED"
+
+
+def test_empty_ticker_with_form_is_delisted():
+    out = c.classify({"ticker": "AET", "cik": "1", "sec_name": "AETNA",
+                      "tickers": [], "delisting_forms": [{"form": "25-NSE", "date": "2018-11-29"}]})
+    assert out["category"] == c.DELISTED
+
+
+def test_missing_cik_is_unresolved():
+    out = c.classify({"ticker": "XYZ", "tickers": ["XYZ"]})
+    assert out["category"] == c.UNRESOLVED
+    assert out["identity_status"] == "UNVERIFIED"
+
+
+def test_reuse_requires_evidence_flag():
+    out = c.classify({"ticker": "STI", "cik": "1", "sec_name": "SUNTRUST",
+                      "tickers": [], "delisting_forms": [{"form": "25-NSE"}],
+                      "reuse_suspected": True})
+    assert out["category"] == c.REUSE
+    assert out["recovery_status"] == "TICKER_REUSE_HIGH_RISK"
+def test_v2_has_all_categories_and_preserves_unknowns():
+    import pandas as pd
+    d = pd.read_csv("docs/research/missing_202_reason_classification_v2_2026-10-29.csv")
+    assert len(d) == 202
+    assert d.classification.value_counts().to_dict() == {
+        "HISTORICAL_MEMBERSHIP_ONLY": 176,
+        "DELISTED_OR_ACQUIRED": 10,
+        "STILL_TRADING": 8,
+        "TICKER_OR_NAME_CHANGED": 6,
+        "TICKER_REUSE_SUSPECTED": 2,
+    }
+    assert (d[d.ticker == "AN"].classification == "STILL_TRADING").all()
+    assert (d[d.ticker == "AIV"].classification == "STILL_TRADING").all()
+    assert (d[d.ticker == "AET"].classification == "DELISTED_OR_ACQUIRED").all()
+    assert (d[d.ticker == "ABC"].classification == "TICKER_OR_NAME_CHANGED").all()
+    assert (d.price_status == "NO_SERIES_IN_CURRENT_PANEL").all()
