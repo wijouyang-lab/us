@@ -1,0 +1,62 @@
+{
+  "as_of": "2026-10-29T14:50:00Z",
+  "source": "Yahoo Finance chart API",
+  "usage": "research-only; not canonical; redistribution not established",
+  "tickers": [
+    {
+      "ticker": "SPY",
+      "http": 200,
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/SPY?period1=1672531200&period2=1793491200&interval=1d&events=div%2Csplits",
+      "rows": 960,
+      "first": "2023-01-03",
+      "last": "2026-10-29",
+      "sha256": "5aac95d5f6c84aa605d5a781ced2c1c46993404a6c523d98153a512cde5ccbb7",
+      "dupes": 0,
+      "invalid_ohlc": 0
+    },
+    {
+      "ticker": "QQQ",
+      "http": 200,
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/QQQ?period1=1672531200&period2=1793491200&interval=1d&events=div%2Csplits",
+      "rows": 960,
+      "first": "2023-01-03",
+      "last": "2026-10-29",
+      "sha256": "8feb1a315b2a0657d9a28f5f706d0be2909269a4599d3f701b5571bfd7261ac3",
+      "dupes": 0,
+      "invalid_ohlc": 0
+    },
+    {
+      "ticker": "IWM",
+      "http": 200,
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/IWM?period1=1672531200&period2=1793491200&interval=1d&events=div%2Csplits",
+      "rows": 960,
+      "first": "2023-01-03",
+      "last": "2026-10-29",
+      "sha256": "41699fa6d987293f1f9cad4f62518a52fa9a685110d9d592cb83184cace0c4e2",
+      "dupes": 0,
+      "invalid_ohlc": 0
+    },
+    {
+      "ticker": "TLT",
+      "http": 200,
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/TLT?period1=1672531200&period2=1793491200&interval=1d&events=div%2Csplits",
+      "rows": 960,
+      "first": "2023-01-03",
+      "last": "2026-10-29",
+      "sha256": "ec0c6ced754cfcadc27ff512a82dace09f57aa0b6553331c851c4711ca63e98a",
+      "dupes": 0,
+      "invalid_ohlc": 0
+    },
+    {
+      "ticker": "GLD",
+      "http": 200,
+      "url": "https://query1.finance.yahoo.com/v8/finance/chart/GLD?period1=1672531200&period2=1793491200&interval=1d&events=div%2Csplits",
+      "rows": 960,
+      "first": "2023-01-03",
+      "last": "2026-10-29",
+      "sha256": "9ed4bfc66230c4681c253f013eed4f69432c9ba49978ffd58b25ada6337359bd",
+      "dupes": 0,
+      "invalid_ohlc": 0
+    }
+  ]
+}
