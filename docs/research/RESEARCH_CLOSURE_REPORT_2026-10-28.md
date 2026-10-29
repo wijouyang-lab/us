@@ -1,4 +1,4 @@
-﻿# Research Closure and Data-Readiness Gates
+# Research Closure and Data-Readiness Gates
 
 Date: 2026-10-29 (operational recheck)
 Baseline: PR #399 `28060f24d907f0b0b75a323a6314084222a1077a`
@@ -24,8 +24,8 @@ low-frequency strategies are impossible**.
 | Independent adjusted prices/actions | research data owner (human) | independent adjusted source + action audit | 466 raw; SPY provider-only | **fail** |
 | Qlib raw period results | strategy research owner (human) | committed per-period JSON + rerun | audit doc only | **fail** |
 | Event pre-registered sample | event research owner (human) | `event_experiment_gate.py` | 35 events, 0 entry/+1/+5 | **not_eligible** |
-| 10/28 official close | research operations owner (human) | provider close + incremental updater | committed 503-ticker panel and SPY proxy both still end 10/27; no verified 10/28 row | **pending** |
-| Second real cross-day capture | research operations owner (human) | workflow + archive verify | manifest still records one run (#40661139681); no 10/29 UTC run | **pending** |
+| 10/28 official close | research operations owner (human) | provider close + incremental updater | 502/503 panel; HUBB close null; SPY 2,542 rows through 10/28 | **partial** |
+| Second real cross-day capture | research operations owner (human) | workflow + archive verify | 2 runs; 40807180694 on 10/29; archive 420469c | **pass** |
 
 Machine-readable:
 
@@ -38,7 +38,7 @@ Machine-readable:
   audit document; raw per-period JSON is missing.
 - The event gate remains 35 unique events, 0 entry, 0 +1, and 0 +5; it is not an alpha finding.
 - The 59-row capture has exactly the same 35 Fed event IDs plus 24 BLS rows. The BLS rows are not valid PIT evidence because the earlier capture used the placeholder contact@example.com. The clean gate run uses first-seen and derived available timestamps from run 40661139681, not the earlier observation time.
-- The 10/28 close and second cross-day capture remain pending. No replay is counted as a real run.
+- The 10/28 close is partial (502/503; HUBB missing); the second capture is real and verified (run 40807180694; 2 runs, 36 events, 70 observations). No replay is counted as a real run.
 
 ## Evidence links
 
@@ -54,15 +54,12 @@ Machine-readable:
 
 ### Price panel and SPY close
 
-The last committed increment metadata reports 503 tickers requested, 503 with rows, 4,527 rows across 2026-10-15 through 2026-10-27, and zero missing tickers. Its last date is still **2026-10-27**. The separate SPY proxy has 2,541 rows, no duplicate/invalid rows, and a last date of **2026-10-27**.
-
-Public Yahoo Finance history search results now show a 2026-10-28 SPY row, but the Yahoo locale mirrors returned different exact close values. I therefore did not treat the snippets as verified pipeline evidence. The configured Yahoo Chart/yfinance increment and SPY artifacts have not been refreshed in this run; the GitHub tools available here do not expose a price-updater dispatch or repository execution action. The 10/28 close gate remains pending until both actual datasets contain the official 2026-10-28 bar and pass validation. No intraday price was substituted.
+The configured Yahoo Chart/yfinance updater was rerun on 2026-10-29 UTC. The panel now contains 2026-10-28 for **502/503 tickers**; HUBB returned `close: null`, so the close gate is **partial**, not complete. SPY has 2026-10-28 with 2,542 rows and `Adj_Close` available. Duplicate rows 0; new invalid OHLCV 0; 10/27 overlap max close diff 0.0%. No intraday or synthetic value was substituted.
 
 Evidence:
-- [503-ticker updater metadata](https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/recent_price_update_metadata_2026-10-28.json)
-- [SPY proxy metadata](https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/market_proxy_spy_metadata_2026-10-28.json)
-- [Yahoo Finance SPY history (NZ)](https://nz.finance.yahoo.com/quote/SPY/history/)
-- [Yahoo Finance SPY history (DE)](https://de.finance.yahoo.com/quote/SPY/history/)
+- [10/28 update report](https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/RECENT_PRICE_UPDATE_2026-10-29.md)
+- [increment metadata](https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/recent_price_update_metadata_2026-10-29.json)
+- [SPY metadata](https://github.com/wijouyang-lab/us/blob/research/event-market-alignment/docs/research/market_proxy_spy_metadata_2026-10-29.json)
 
 ### Exact reconciliation of 35 versus 59 events
 
@@ -81,9 +78,16 @@ Evidence:
 
 ### Second real cross-UTC-day capture
 
-The current archive manifest was generated at 2026-10-28T09:02:58.711468Z and contains exactly one run: 40661139681, with 35 unique event IDs, 35 versions, and 35 observations. The archive snapshot hash is f331902dc94303620bee8c2cc6f5e0ae5382fef4d944dac082c8e2016546cc9d; the corresponding archive commit is [785b956](https://github.com/wijouyang-lab/us/commit/785b9565a7c603bb43959cd4d504ead80298fc10). No second run on 2026-10-29 UTC is recorded.
+Completed on 2026-10-29 UTC:
 
-The manual workflow is present on [main](https://github.com/wijouyang-lab/us/blob/main/.github/workflows/research-event-capture.yml) because PR #394 was merged, so GitHub Actions supports dispatching it. However, the connected GitHub toolset in this execution exposes no workflow_dispatch operation. I did **not** rerun or replay the old capture and did **not** claim a second run. A distinct run must still be dispatched and verified.
+- run [40807180694](https://github.com/wijouyang-lab/us/actions/runs/40807180694), success;
+- artifact `research-event-capture-40807180694`, ID `12868333062`;
+- archive commit [420469c](https://github.com/wijouyang-lab/us/commit/420469c897f35a53bd7ecfe5876a629c58e9ce19);
+- `verify`: 2 runs, 36 unique events, 36 versions, 70 observations, reproducible=true;
+- new run: +1 event, +1 version, 35 new observations, 34 duplicates, 0 revisions/retractions/conflicts;
+- old `runs/40661139681/` unchanged in git diff `785b956..420469c`.
+
+BLS remains skipped for missing contact User-Agent; Fed feeds returned 20 + 15 events.
 
 ### Controls
 
