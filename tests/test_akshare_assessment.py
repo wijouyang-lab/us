@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Fixture checks for the AKShare coverage assessment; no network."""
 
 from pathlib import Path
@@ -29,3 +29,10 @@ def test_akshare_hubb_row_is_valid_and_not_adj_close():
     assert row.low == 426.91
     assert row.volume > 0
     assert "Adj_Close" not in df.columns
+def test_raw_and_qfq_evidence_hashes_are_stable():
+    import hashlib
+    root = CSV.parent / "akshare_2026-10-28"
+    assert hashlib.sha256((root / "sina_raw.js").read_bytes()).hexdigest() == \
+        "3b8c52094e5099773b682a035f92cb68a16f6ecdd59d4e5868d7d5c6813f53ce"
+    assert hashlib.sha256((root / "sina_qfq.js").read_bytes()).hexdigest() == \
+        "87f459583c7a56bd8ffea7c3952c94ce6c5e83a5bbac678e75fc5692085ad97c"

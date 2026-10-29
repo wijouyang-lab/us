@@ -1,0 +1,22 @@
+{
+  "TWTR": {
+    "status": 200,
+    "bytes": 24146,
+    "sha256": "fe3d5b7afc213dbbda3a6c4c976ce3bef7de4caea134e5423af5b08c3ae02b98"
+  },
+  "ATVI": {
+    "status": 200,
+    "bytes": 57964,
+    "sha256": "7b4536f7f1e153c66d431593afd731573a2a0742a02a203f186f4862c31c78ba"
+  },
+  "SIVBQ": {
+    "status": 200,
+    "bytes": 83093,
+    "sha256": "5c3dcb3e7b53ee32c6d31ca668793fc0b510d523eafa498bf0829a1982bb3172"
+  },
+  "FRCB": {
+    "status": 200,
+    "bytes": 45517,
+    "sha256": "d01456a266170050a233b5d14a8a408841f638f98d512497c5755958a36a89fb"
+  }
+}
