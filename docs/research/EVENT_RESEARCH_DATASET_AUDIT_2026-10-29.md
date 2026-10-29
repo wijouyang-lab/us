@@ -25,6 +25,31 @@ Current build:
 | +5 labels | 0 |
 | first-seen 2026-10-28 | 35 |
 | first-seen 2026-10-29 | 1 |
+| capture evidence present | **36/36** |
+| evidence run 40661139681 | 35 |
+| evidence run 40807180694 | 1 |
+
+`pit_eligible` now requires explicit capture evidence, not merely
+`observation_mode=forward_pit`:
+
+- event ID present in a real run snapshot;
+- `captured_at` manifest time;
+- events-file SHA-256;
+- `published_at` and `first_seen_at` present;
+- `first_seen_at >= published_at`;
+- `first_seen_at <= captured_at`;
+- `available_at >= first_seen_at`;
+- `decision_at >= available_at` (equal is the earliest allowed decision).
+
+No row currently has a PIT reason; 36/36 pass only because the evidence map is
+complete. Rows without evidence are downgraded to `unknown`.
+
+Per-event audit:
+
+```text
+docs/research/event_pit_audit_2026-10-29.csv
+```
+
 
 ## Field separation
 
@@ -100,3 +125,17 @@ Covered:
 The dataset builder can label historical/backfilled rows, but it cannot turn a
 historical publication date into a historical first-seen time. Retrospective
 rows must be explicitly marked and remain separate from PIT counts.
+## Retrospective Fed archive
+
+A separate real read of the 2026 Fed press archive found **114** links. All are:
+
+```text
+observation_mode: retrospective_backfill
+timestamp_precision: date_only
+first_seen_at: null
+pit_eligible: false
+```
+
+They are not added to the PIT count and have no return labels.
+
+Evidence: `docs/research/fed_2026_press_retrospective_2026-10-29.json`
