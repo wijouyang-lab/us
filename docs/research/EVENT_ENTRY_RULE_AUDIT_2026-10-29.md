@@ -16,7 +16,7 @@ Risks:
 - using same-day close is a look-ahead/execution assumption unless intraday
   execution data and a fill model exist.
 
-## New conservative rule
+## Availability semantics\n\n- PIT rows use evidence-backed `first_seen` as `available_at`.\n- Retrospective rows set `available_at=null`; their exact publication time is\n  `mapping_time`, not a historical system availability time.\n- Entry planning uses `mapping_time` only; it does not promote retrospective\n  rows to PIT.\n\n## New conservative rule
 
 Default: `next_open`.
 
@@ -93,3 +93,33 @@ Covered:
 - old/new rule difference;
 - +1/+5 session mapping;
 - no return without provider.
+## Available-time audit
+
+PIT dataset:
+
+```text
+36 events
+available_at missing: 0
+available_at == first_seen_at: 36/36
+```
+
+PIT entry uses the evidence-backed first-seen time, not publication time.
+
+Retrospective Fed dataset:
+
+```text
+114 events
+available_at: null
+availability_known: false
+mapping_time: exact published_at
+```
+
+These are planning dates only. The exact publication time is not evidence that
+the system could have observed the event at that historical moment. No
+retrospective row is promoted to PIT.
+
+## Timezone consistency
+
+All event timestamps are UTC; XNYS schedule open/close is UTC; timezone labels
+on the Fed page (`EDT`/`EST`) are converted explicitly. No UTC/ET subtraction is
+done manually.

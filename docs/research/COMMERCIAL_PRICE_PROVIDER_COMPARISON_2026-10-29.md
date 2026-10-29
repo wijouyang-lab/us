@@ -43,3 +43,13 @@ project to internal research and publish only aggregate methodology, not raw
 data.
 
 No approved provider; `approved_providers=[]`; HUBB remains missing.
+## Inquiry status
+
+Drafts:
+
+`docs/research/VENDOR_INQUIRY_DRAFTS_2026-10-29.md`
+
+- Polygon contact: https://polygon.io/contact (`sales@massive.com` observed)
+- EODHD contact: `sales@eodhistoricaldata.com` observed on EODHD site
+- No email has been sent.
+- Both are **pending vendor response**.

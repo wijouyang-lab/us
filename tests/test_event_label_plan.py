@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for Fed event expected trading-date mapping; no prices/network."""
 
 import sys
@@ -72,3 +72,26 @@ def test_returns_are_not_created_without_price_provider():
 def test_entry_price_point_is_explicit():
     assert row("2026-10-28T18:00:00Z")["entry_price_point"] == "open"
     assert row("2026-10-28T18:00:00Z", "legacy_close")["entry_price_point"] == "close"
+def test_retrospective_available_at_is_unknown_not_publication():
+    out = row("2026-10-28T12:00:00Z")
+    assert out["available_at"] is None
+    assert out["availability_known"] is False
+    assert out["mapping_time"] == "2026-10-28T12:00:00Z"
+
+
+def test_pit_uses_first_seen_as_available():
+    e = event("2026-10-28T12:00:00Z")
+    e["observation_mode"] = "forward_pit"
+    e["first_seen_at_utc"] = "2026-10-28T14:00:00Z"
+    out = ep.map_event(e, ep.xcals.get_calendar("XNYS"))
+    assert out["available_at"] == "2026-10-28T14:00:00Z"
+    assert out["availability_known"] is True
+    assert out["entry_date"] == "2026-10-29"  # after open
+
+
+def test_pit_missing_first_seen_fails():
+    e = event("2026-10-28T12:00:00Z")
+    e["observation_mode"] = "forward_pit"
+    out = ep.map_event(e, ep.xcals.get_calendar("XNYS"))
+    assert out["available_at"] is None
+    assert out["label_status"] == "missing_event_time"

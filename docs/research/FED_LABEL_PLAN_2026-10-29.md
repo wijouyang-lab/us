@@ -28,7 +28,7 @@ eligibility.
 ## Fixed rules
 
 - Exchange calendar: **XNYS**.
-- Timestamp: exact page `published_at` in UTC.
+- Timestamp: exact page `published_at` in UTC.\n- Retrospective availability: `available_at=null`, `availability_known=false`;\n  `mapping_time=published_at` for planning only.
 - If `published_at < session close`, entry = that session.
 - If `published_at >= session close`, entry = next session.
 - Weekend/holiday: next session.
