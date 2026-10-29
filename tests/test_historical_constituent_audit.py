@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for historical constituent audit and source-boundary handling."""
 
 import sys
@@ -42,3 +42,9 @@ def test_repo_identity_risk_is_not_zero():
     d = pd.read_csv(ROOT / "tools/research/data/sp500_components_history.csv")
     multi = d.groupby("symbol")["cik"].nunique()
     assert (multi > 1).sum() >= 10
+def test_missing_classification_is_auditable_not_filled():
+    m = pd.read_csv(ROOT / "docs/research/missing_202_reason_classification_2026-10-29.csv")
+    assert len(m) == 202
+    assert (m.price_status == "NO_SERIES_IN_CURRENT_PANEL").all()
+    assert (m.action == "DO_NOT_FILL_WITHOUT_IDENTITY_AND_LEGAL_CLEARANCE").all()
+    assert set(m.classification) == {"IDENTITY_REVIEW_REQUIRED", "PRELIMINARY_TICKER_REUSE_FLAG"}
