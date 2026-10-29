@@ -35,6 +35,30 @@ Official sources:
 - https://docs.alpaca.markets/us/docs/market-data-faq
 - https://docs.alpaca.markets/us/reference/stockbars
 
+## SIP/IEX verification status 鈥?not executed
+
+Credential names checked without printing values:
+
+```text
+APCA_API_KEY_ID=absent
+APCA_API_SECRET_KEY=absent
+ALPACA_API_KEY=absent
+ALPACA_API_SECRET=absent
+```
+
+Therefore no real request was sent for any of:
+
+| Request | Status |
+|---|---|
+| HUBB 2026-10-28 `feed=sip`, `adjustment=raw` | **not executed** |
+| HUBB 2026-10-28 `feed=iex`, `adjustment=raw` | **not executed** |
+| HUBB 2026-10-28 `adjustment=all` | **not executed** |
+| 503 batch coverage | **not executed** |
+
+No SIP permission, HTTP status, response hash, HUBB row, or 503 coverage is
+claimed. The adapter's SIP/IEX/`all` behavior is covered only by synthetic
+fixtures; those are not market evidence.
+
 ## Bars API shape
 
 Example documented daily bar:
@@ -81,7 +105,7 @@ have run.
 - raises explicit 401/403/429 errors;
 - does not write the canonical panel.
 
-Tests: `tests/test_alpaca_market_data.py` 鈥?**5 passed**, fixed fixtures only.
+Tests: `tests/test_alpaca_market_data.py` 閳?**8 passed**, fixed fixtures only.
 
 Covered: missing credentials, pagination/provenance, 429/403, null close/invalid
 OHLCV survival for downstream rejection, raw adjustment/no Adj_Close claim.

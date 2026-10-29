@@ -83,3 +83,36 @@ def test_raw_adjustment_is_explicit_and_no_adj_close_is_claimed():
                                session=s, adjustment="raw")
     assert out["request"]["adjustment"] == "raw"
     assert out["has_adjusted_close_field"] is False
+
+
+def test_sip_and_iex_are_explicit_feed_parameters():
+    sip = Session([Resp(200, {"bars": {"HUBB": []}, "next_page_token": None})])
+    mod.fetch_daily_bars(["HUBB"], date(2026, 10, 28), date(2026, 10, 29), env=ENV,
+                         session=sip, feed="sip", adjustment="raw")
+    assert sip.calls[0]["params"]["feed"] == "sip"
+    assert sip.calls[0]["params"]["adjustment"] == "raw"
+
+    iex = Session([Resp(200, {"bars": {"HUBB": []}, "next_page_token": None})])
+    mod.fetch_daily_bars(["HUBB"], date(2026, 10, 28), date(2026, 10, 29), env=ENV,
+                         session=iex, feed="iex", adjustment="raw")
+    assert iex.calls[0]["params"]["feed"] == "iex"
+
+
+def test_adjustment_all_is_not_renamed_adj_close():
+    s = Session([Resp(200, {"bars": {"HUBB": [{"t": "2026-10-28T04:00:00Z",
+                                                "o": 400, "h": 402, "l": 398,
+                                                "c": 401, "v": 1000}]},
+                           "next_page_token": None})])
+    out = mod.fetch_daily_bars(["HUBB"], date(2026, 10, 28), date(2026, 10, 29), env=ENV,
+                               session=s, adjustment="all")
+    assert out["request"]["adjustment"] == "all"
+    assert out["has_adjusted_close_field"] is False
+    assert "Adj_Close" not in out["rows"][0]
+
+
+def test_adapter_output_does_not_include_credentials():
+    s = Session([Resp(200, {"bars": {"HUBB": []}, "next_page_token": None})])
+    out = mod.fetch_daily_bars(["HUBB"], date(2026, 10, 28), date(2026, 10, 29), env=ENV, session=s)
+    blob = repr(out)
+    assert ENV["APCA_API_KEY_ID"] not in blob
+    assert ENV["APCA_API_SECRET_KEY"] not in blob
