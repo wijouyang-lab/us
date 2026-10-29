@@ -67,5 +67,27 @@
   },
   "normalized_row": null,
   "decision": "keep HUBB 2026-10-28 missing; no approved fallback contract",
-  "source_priority": "canonical panel uses yfinance raw OHLCV; no documented fallback for recent panel"
+  "source_priority": "canonical panel uses yfinance raw OHLCV; no documented fallback for recent panel",
+  "fallback_assessment": {
+    "candidate": "Nasdaq historical API",
+    "http_status": 200,
+    "date": "2026-10-28",
+    "date_format": "MM/DD/YYYY",
+    "timezone": "US/Eastern trading date per Nasdaq page; exact timestamp not provided",
+    "volume_units": "shares",
+    "volume": 1163860,
+    "adjusted_close": "not provided",
+    "price_basis": "raw Close/Last only",
+    "update_timestamp": "not provided; Cache-Control no-store only",
+    "revision_history": "not provided",
+    "independent_of_yahoo": true,
+    "source_rights": "no documented storage/redistribution permission; Nasdaq market-data policies require review/license",
+    "decision": "not approved as fallback",
+    "missing_evidence": [
+      "adjusted close",
+      "provider revision/update metadata",
+      "documented data-use/storage permission",
+      "second independent adjusted-close source"
+    ]
+  }
 }

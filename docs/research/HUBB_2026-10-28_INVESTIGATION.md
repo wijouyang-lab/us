@@ -1,4 +1,4 @@
-﻿# HUBB 2026-10-28 Close Investigation
+# HUBB 2026-10-28 Close Investigation
 
 Date: 2026-10-29 UTC
 Research only. No production changes.
@@ -59,6 +59,26 @@ volume: 1,163,860
 This is a valid OHLC row and corroborates 437.33 as the likely close.
 However, the canonical panel's source contract is Yahoo raw OHLCV; Nasdaq is
 not a documented fallback for the recent panel.
+
+### Nasdaq fallback evaluation
+
+| Requirement | Nasdaq result |
+|---|---|
+| exact trading date | 10/28/2026, matches |
+| timezone/trading date | US/Eastern date; no timestamp |
+| OHLC validity | valid |
+| volume | 1,163,860 shares |
+| adjusted close | **not provided** |
+| update/revision metadata | **not provided** |
+| independent of Yahoo | yes |
+| data-use/storage permission | **not documented** |
+| second independent adjusted source | **not found** |
+
+Nasdaq's page is a raw `Close/Last` table, not an adjusted-close feed. The
+existing 503 panel is raw OHLCV, so raw basis is not in itself incompatible.
+The blockers are: no adjusted-close field, no revision/update metadata, no
+documented permission to store/redistribute, and no second independent
+adjusted-close source. Nasdaq is therefore **not approved** as a fallback.
 
 ### Other checks
 

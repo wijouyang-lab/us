@@ -1,0 +1,25 @@
+{
+  "status": 200,
+  "headers": {
+    "Content-Type": "application/json; charset=utf-8",
+    "Server": "Kestrel",
+    "lang": "en",
+    "srctype": "default",
+    "rid": "f6572936-be04-43c4-9cf1-370a4c95fc12",
+    "gid": "102",
+    "Content-Encoding": "gzip",
+    "Content-Length": "284",
+    "X-EdgeConnect-MidMile-RTT": "26",
+    "X-EdgeConnect-Origin-MEX-Latency": "105",
+    "Expires": "Thu, 29 Oct 2026 03:22:15 GMT",
+    "Cache-Control": "max-age=0, no-cache, no-store",
+    "Pragma": "no-cache",
+    "Date": "Thu, 29 Oct 2026 03:22:15 GMT",
+    "Connection": "keep-alive",
+    "Vary": "Accept-Encoding",
+    "Set-Cookie": "akaalb_ALB_Default=~op=ao_api__east1:ao_api_central1|~rv=17~m=ao_api_central1:0|~os=ff51b6e767de05e2054c5c99e232919a~id=24821fae9978af0a673f1f50dbcdc249; path=/; HttpOnly; Secure; SameSite=None, ak_bmsc=FAE363C6E680ADD8E646D55D3458573F~000000000000000000000000000000~YAAQSQ7SF6j22IGhAQAA4gGuhQF1coOPZyYV0/ZwBYYburODFiSu5fGxHL5s4eW7wCMlMLj6LMfYUBIeTklW+zAWRLnNN0oe1BqfIx1nJ0BlUJpMWbFK3d4oOTpVOiL33tS8G4rzQziIKDs5E+W0Kj78VXhV5CHyJAbKTc5GXhupB8G8QZMIx3PlzK/iPpX7o9Zf38xWwkplUGndi2M+T/WUI1DYo6UufiErTUAfFjm/DkqvyfdcomnAX62tIz1kkaq9g/jzyNzM5ijDgr0XqmdT+PAIMG/cTPHAXn/S/1usvqMONFRVUyWYDIb5lVi2FUBgjW0aKRDo1kw6J1PhC8sIt14IAktwwSrrVDCF5r3yUc3PhD+qsN46ZAJ6RJ5dPA==; Domain=.nasdaq.com; Path=/; Expires=Thu, 29 Oct 2026 05:22:15 GMT; Max-Age=7200; HttpOnly",
+    "Strict-Transport-Security": "max-age=86400",
+    "Akamai-GRN": "0.490ed217.1793244135.4e4e151"
+  },
+  "url": "https://api.nasdaq.com/api/quote/HUBB/historical?assetclass=stocks&fromdate=2026-10-27&limit=10&todate=2026-10-29"
+}
