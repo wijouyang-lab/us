@@ -1,0 +1,30 @@
+{
+  "last_existing": "2026-10-27",
+  "new_rows": 502,
+  "new_dates": [
+    "2026-10-28"
+  ],
+  "new_tickers": 502,
+  "source": "yahoo_chart_yfinance",
+  "fetched_at_utc": "2026-10-29T02:39:34Z",
+  "requested_start": "2026-10-27",
+  "requested_end": "2026-10-28",
+  "download_status": "partial",
+  "provider_latest_date": "2026-10-28",
+  "tickers_requested": 503,
+  "tickers_with_rows": 502,
+  "tickers_with_new_rows": 502,
+  "failed_tickers": 1,
+  "missing_sample": [
+    "HUBB"
+  ],
+  "tickers_missing": 1,
+  "legacy_invalid_rows": 1,
+  "new_last": "2026-10-28",
+  "output_rows": 1239013,
+  "duplicate_rows": 0,
+  "overlap_close_max_abs_pct": 0.0,
+  "new_invalid_ohlcv_rows": 0,
+  "increment_file": "docs/research/recent_price_increment_2026-10-28.csv",
+  "failure_reason": "HUBB 2026-10-28 provider close is null; no synthetic fill"
+}

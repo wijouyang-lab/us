@@ -1,0 +1,93 @@
+{
+  "status": "blocked_provider_invalid_bar",
+  "symbol": "HUBB",
+  "target_date": "2026-10-28",
+  "raw_evidence": {
+    "nasdaq.raw": "67deaf0fdde47d21aea28e12a9859bd8cd785e304e8bb5dece89b54f67ca4493",
+    "yahoo_query1.raw": "b0453fe0c1c880f215db3793e8f9f791632aad39e1f7a0778155ec29ca24216b",
+    "yahoo_query2.raw": "ec7c6266b02e29bfe78f44816d2664670fcab4eca8fa7766575933aa1f1e76cc"
+  },
+  "provider": "Yahoo chart via yfinance",
+  "yahoo": {
+    "http_status": 200,
+    "timestamps": [
+      1793107800,
+      1793194200
+    ],
+    "timestamp_mapping": {
+      "1793194200": "2026-10-28T13:30:00Z (09:30 ET session open)"
+    },
+    "open": [
+      430.6400146484375,
+      444.67999267578125
+    ],
+    "high": [
+      444.6700134277344,
+      444.05499267578125
+    ],
+    "low": [
+      429.3655090332031,
+      426.9100036621094
+    ],
+    "close": [
+      434.2799987792969,
+      null
+    ],
+    "adjclose": [
+      434.2799987792969,
+      null
+    ],
+    "volume": [
+      1820595,
+      1163816
+    ],
+    "meta_regularMarketPrice": 437.33,
+    "invalid_reasons": [
+      "close is null",
+      "adjclose is null",
+      "open 444.68 > high 444.055"
+    ]
+  },
+  "nasdaq": {
+    "http_status": 200,
+    "row": {
+      "date": "10/28/2026",
+      "close": "$437.33",
+      "volume": "1,163,860",
+      "open": "$444.68",
+      "high": "$444.805",
+      "low": "$426.91"
+    },
+    "valid_ohlc": true
+  },
+  "other_sources": {
+    "stooq": "blocked: proxy/SSL failure",
+    "hubbell_ir": "no public daily close found",
+    "lseg": "subscription required; no public row"
+  },
+  "normalized_row": null,
+  "decision": "keep HUBB 2026-10-28 missing; no approved fallback contract",
+  "source_priority": "canonical panel uses yfinance raw OHLCV; no documented fallback for recent panel",
+  "fallback_assessment": {
+    "candidate": "Nasdaq historical API",
+    "http_status": 200,
+    "date": "2026-10-28",
+    "date_format": "MM/DD/YYYY",
+    "timezone": "US/Eastern trading date per Nasdaq page; exact timestamp not provided",
+    "volume_units": "shares",
+    "volume": 1163860,
+    "adjusted_close": "not provided",
+    "price_basis": "raw Close/Last only",
+    "update_timestamp": "not provided; Cache-Control no-store only",
+    "revision_history": "not provided",
+    "independent_of_yahoo": true,
+    "source_rights": "no documented storage/redistribution permission; Nasdaq market-data policies require review/license",
+    "decision": "not approved as fallback",
+    "missing_evidence": [
+      "adjusted close",
+      "provider revision/update metadata",
+      "documented data-use/storage permission",
+      "second independent adjusted-close source"
+    ]
+  }
+}

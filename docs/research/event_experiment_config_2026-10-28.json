@@ -1,0 +1,10 @@
+{
+  "oos_windows": 2,
+  "cost_bps": [5, 10, 20],
+  "horizons": [1, 5],
+  "multiple_testing": "benjamini-hochberg",
+  "time_split": {
+    "note": "training/evaluation periods must be fixed before results; no post-hoc window changes",
+    "minimum_span_days": 365
+  }
+}
