@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-10-30T04:47:12Z",
+  "generated_at": "2026-10-30T05:02:17Z",
   "fear_greed": {
     "score": 34.6,
     "rating": "fear",
@@ -149,40 +149,40 @@
     ]
   },
   "fedwatch": {
-    "next_meeting": "2026-10-28",
+    "next_meeting": "2026-12-09",
     "current_target": "3.75%-4.00%",
     "effr": 3.88,
-    "trade_date": "2026-10-28",
+    "trade_date": "2026-10-29",
     "probabilities": {
-      "hold": 98.9,
-      "hike_25bp": 1.1
+      "hold": 20.1,
+      "hike_25bp": 79.9
     },
     "meetings": [
-      {
-        "date": "2026-10-28",
-        "contract": "ZQV6",
-        "probabilities": {
-          "hold": 98.9,
-          "hike_25bp": 1.1
-        }
-      },
       {
         "date": "2026-12-09",
         "contract": "ZQZ6",
         "probabilities": {
-          "hold": 14.9,
-          "hike_25bp": 84.2,
-          "hike_50bp": 0.9
+          "hold": 20.1,
+          "hike_25bp": 79.9
         }
       },
       {
         "date": "2027-01-27",
         "contract": "ZQF7",
         "probabilities": {
-          "hold": 9.1,
-          "hike_25bp": 57.1,
-          "hike_50bp": 33.4,
-          "hike_75bp": 0.4
+          "hold": 13.7,
+          "hike_25bp": 60.7,
+          "hike_50bp": 25.7
+        }
+      },
+      {
+        "date": "2027-03-17",
+        "contract": "ZQH7",
+        "probabilities": {
+          "hold": 5.5,
+          "hike_25bp": 32.5,
+          "hike_50bp": 46.7,
+          "hike_75bp": 15.4
         }
       }
     ],
