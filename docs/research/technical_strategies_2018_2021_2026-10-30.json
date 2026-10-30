@@ -29,24 +29,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.13532762561106915,
-        "annualized_volatility": 0.19457749320755108,
-        "sharpe": 0.6954947531712645,
-        "max_drawdown": -0.22169931768566908
+        "annualized_return": 0.1300989633761651,
+        "annualized_volatility": 0.1945595127982744,
+        "sharpe": 0.668684668793635,
+        "max_drawdown": -0.22740383588036306
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.12995243269499057,
-        "annualized_volatility": 0.19459086503264325,
-        "sharpe": 0.6678239118428845,
-        "max_drawdown": -0.22740383588036317
+        "annualized_return": 0.11956239310241723,
+        "annualized_volatility": 0.19455538310603215,
+        "sharpe": 0.6145416857330339,
+        "max_drawdown": -0.23869469010455147
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.11927185691038078,
-        "annualized_volatility": 0.19461802812530368,
-        "sharpe": 0.6128510192981109,
-        "max_drawdown": -0.2386946901045518
+        "annualized_return": 0.09875847896880274,
+        "annualized_volatility": 0.19454898010716562,
+        "sharpe": 0.507627842173228,
+        "max_drawdown": -0.2608108140473484
       }
     },
     "Momentum60": {
@@ -67,24 +67,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.15239532938526246,
-        "annualized_volatility": 0.20238747628095297,
-        "sharpe": 0.7529879426615719,
-        "max_drawdown": -0.19396410711078005
+        "annualized_return": 0.14923087238196575,
+        "annualized_volatility": 0.20236808852727034,
+        "sharpe": 0.7374229477977007,
+        "max_drawdown": -0.19740017071506244
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.1490800020923735,
-        "annualized_volatility": 0.20240670410812908,
-        "sharpe": 0.7365368788018624,
-        "max_drawdown": -0.197400170715062
+        "annualized_return": 0.14277566939898279,
+        "annualized_volatility": 0.20236820021286822,
+        "sharpe": 0.7055242337916683,
+        "max_drawdown": -0.2048178194139879
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.1424754068696663,
-        "annualized_volatility": 0.2024457654647496,
-        "sharpe": 0.7037707434511615,
-        "max_drawdown": -0.2048178194139878
+        "annualized_return": 0.1299645304988324,
+        "annualized_volatility": 0.20236984434698915,
+        "sharpe": 0.6422129290962515,
+        "max_drawdown": -0.21945961986620333
       }
     },
     "Trend": {
@@ -105,24 +105,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.1475715375550528,
-        "annualized_volatility": 0.196139842739196,
-        "sharpe": 0.7523791978933945,
-        "max_drawdown": -0.19924535567200652
+        "annualized_return": 0.1446862899758723,
+        "annualized_volatility": 0.19610112664409715,
+        "sharpe": 0.737814679863939,
+        "max_drawdown": -0.20266903069080766
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.14453573930909291,
-        "annualized_volatility": 0.1961418348954379,
-        "sharpe": 0.7368939899340907,
-        "max_drawdown": -0.20266903069080777
+        "annualized_return": 0.13878582779268434,
+        "annualized_volatility": 0.19606464882606353,
+        "sharpe": 0.7078574777435098,
+        "max_drawdown": -0.20947501952661118
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.13848606167194366,
-        "annualized_volatility": 0.1961464747294094,
-        "sharpe": 0.706033905850155,
-        "max_drawdown": -0.20947501952661096
+        "annualized_return": 0.12706816105498842,
+        "annualized_volatility": 0.19599308813573937,
+        "sharpe": 0.648329807258226,
+        "max_drawdown": -0.22292301057519637
       }
     },
     "LowVol": {
@@ -143,24 +143,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.10321935218826228,
-        "annualized_volatility": 0.15635893024327363,
-        "sharpe": 0.6601436325233663,
-        "max_drawdown": -0.16224903826362125
+        "annualized_return": 0.09969478540639831,
+        "annualized_volatility": 0.15633047716768272,
+        "sharpe": 0.637718167388845,
+        "max_drawdown": -0.16276428678857136
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.09955008047620284,
-        "annualized_volatility": 0.15637870175707289,
-        "sharpe": 0.6365961563669285,
-        "max_drawdown": -0.16276428678857147
+        "annualized_return": 0.09253270364632127,
+        "annualized_volatility": 0.15632201883431598,
+        "sharpe": 0.59193646766036,
+        "max_drawdown": -0.16379430849221155
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.0922449703931365,
-        "annualized_volatility": 0.15641877921463182,
-        "sharpe": 0.5897307909976813,
-        "max_drawdown": -0.16379430849221155
+        "annualized_return": 0.078336438376444,
+        "annualized_volatility": 0.1563063068113764,
+        "sharpe": 0.5011726012500377,
+        "max_drawdown": -0.16585245051444997
       }
     },
     "MeanReversion": {
@@ -181,24 +181,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.11793267272499519,
-        "annualized_volatility": 0.2938300454010258,
-        "sharpe": 0.4013635588696794,
-        "max_drawdown": -0.34605270299574153
+        "annualized_return": 0.1129196708049982,
+        "annualized_volatility": 0.2938154355883426,
+        "sharpe": 0.3843217786665473,
+        "max_drawdown": -0.34689827989092437
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.11277078355569059,
-        "annualized_volatility": 0.2938494076197285,
-        "sharpe": 0.3837706683473313,
-        "max_drawdown": -0.34689827989092425
+        "annualized_return": 0.10280766656345719,
+        "annualized_volatility": 0.2938203850736992,
+        "sharpe": 0.3498997067125546,
+        "max_drawdown": -0.35091350293624035
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.10251238035852173,
-        "annualized_volatility": 0.2938883070123064,
-        "sharpe": 0.34881408314836115,
-        "max_drawdown": -0.35091350293624035
+        "annualized_return": 0.08283547225367616,
+        "annualized_volatility": 0.29383105023145556,
+        "sharpe": 0.28191531217829185,
+        "max_drawdown": -0.36915237639903986
       }
     },
     "RSI": {
@@ -219,24 +219,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.17585496050559501,
-        "annualized_volatility": 0.23047368681746824,
-        "sharpe": 0.7630153486669806,
-        "max_drawdown": -0.2584028605355617
+        "annualized_return": 0.17037397232328066,
+        "annualized_volatility": 0.23043591191058424,
+        "sharpe": 0.7393551244277874,
+        "max_drawdown": -0.25912137753114584
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.17021847770946175,
-        "annualized_volatility": 0.2304772242405644,
-        "sharpe": 0.7385479336205186,
-        "max_drawdown": -0.25912137753114584
+        "annualized_return": 0.1593279294715788,
+        "annualized_volatility": 0.23040196210367342,
+        "sharpe": 0.6915215826151967,
+        "max_drawdown": -0.26055737440320037
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.15901965008685348,
-        "annualized_volatility": 0.2304845312889389,
-        "sharpe": 0.6899363232645928,
-        "max_drawdown": -0.2605573744032005
+        "annualized_return": 0.13752164399356515,
+        "annualized_volatility": 0.23033515838099003,
+        "sharpe": 0.5970501635972351,
+        "max_drawdown": -0.2634252196708551
       }
     },
     "ATR": {
@@ -257,24 +257,24 @@
       },
       "net_5bps": {
         "observations": 48,
-        "annualized_return": 0.0994364651901789,
-        "annualized_volatility": 0.15182067903330593,
-        "sharpe": 0.6549599555431105,
-        "max_drawdown": -0.16108801785733629
+        "annualized_return": 0.0965835887284272,
+        "annualized_volatility": 0.1517706470467683,
+        "sharpe": 0.6363785791772033,
+        "max_drawdown": -0.16150084965956724
       },
       "net_10bps": {
         "observations": 48,
-        "annualized_return": 0.0964392260285214,
-        "annualized_volatility": 0.15182044037200287,
-        "sharpe": 0.6352189849549778,
-        "max_drawdown": -0.16150084965956735
+        "annualized_return": 0.09075447232317346,
+        "annualized_volatility": 0.15172062162630906,
+        "sharpe": 0.5981683396124197,
+        "max_drawdown": -0.16232621010613435
       },
       "net_20bps": {
         "observations": 48,
-        "annualized_return": 0.09046707358952766,
-        "annualized_volatility": 0.15182072445464462,
-        "sharpe": 0.5958809241261003,
-        "max_drawdown": -0.16232621010613446
+        "annualized_return": 0.07918112881589723,
+        "annualized_volatility": 0.1516220698401017,
+        "sharpe": 0.5222269350326139,
+        "max_drawdown": -0.16397571836768976
       }
     }
   },
