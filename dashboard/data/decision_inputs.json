@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-30T05:02:15Z",
-  "asof": "2026-10-30T05:02:10Z",
+  "generated_at": "2026-10-30T05:17:11Z",
+  "asof": "2026-10-30T05:17:02Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -71,7 +71,7 @@
       "key": "fed_hold",
       "label": "最近会议按兵不动概率",
       "group": "情绪",
-      "value": 98.9,
+      "value": 20.1,
       "unit": "%",
       "status": "ok",
       "source": "market_indicators"
