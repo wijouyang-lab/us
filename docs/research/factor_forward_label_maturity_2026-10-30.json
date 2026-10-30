@@ -1,0 +1,53 @@
+{
+  "snapshot_rows": 1239013,
+  "method": "trading-session index; same rule as forward_return",
+  "horizons": {
+    "1": {
+      "MATURED": 1238007,
+      "NOT_MATURED": 503,
+      "MISSING_PRICE": 503
+    },
+    "5": {
+      "MATURED": 1235995,
+      "NOT_MATURED": 2515,
+      "MISSING_PRICE": 503
+    },
+    "10": {
+      "MATURED": 1233480,
+      "NOT_MATURED": 5030,
+      "MISSING_PRICE": 503
+    },
+    "20": {
+      "MATURED": 1228451,
+      "NOT_MATURED": 10059,
+      "MISSING_PRICE": 503
+    },
+    "60": {
+      "MATURED": 1208371,
+      "NOT_MATURED": 30139,
+      "MISSING_PRICE": 503
+    }
+  },
+  "sample_validation": {
+    "1": {
+      "MATURED": 4997,
+      "NOT_MATURED": 3
+    },
+    "5": {
+      "MATURED": 4992,
+      "NOT_MATURED": 8
+    },
+    "10": {
+      "MATURED": 4987,
+      "NOT_MATURED": 13
+    },
+    "20": {
+      "MATURED": 4972,
+      "NOT_MATURED": 28
+    },
+    "60": {
+      "MATURED": 4907,
+      "NOT_MATURED": 93
+    }
+  }
+}
