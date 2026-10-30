@@ -1,0 +1,13 @@
+{
+  "rows": 1239013,
+  "tickers": 503,
+  "date_min": "2016-09-19",
+  "date_max": "2026-10-28",
+  "duplicate_ticker_date": 0,
+  "null_close": 0,
+  "nonpositive_close": 0,
+  "zero_volume": 2305,
+  "ohlc_invalid": 1,
+  "abs_daily_ret_gt_50pct": 12,
+  "abs_daily_ret_gt_90pct": 1
+}
