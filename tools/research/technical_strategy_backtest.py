@@ -14,6 +14,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from tools.research.portfolio_accounting import cagr, cost_units, max_drawdown, sharpe
+
 HORIZON = 20
 TOP = 0.20
 MIN_PRICE = 5.0
@@ -57,17 +59,23 @@ def month_ends(d):
     return sorted(dates.groupby(dates.dt.to_period("M")).max().tolist())
 
 
-def stats(returns):
-    r = np.asarray(returns, dtype=float)
+def stats(rows, column="gross"):
+    r = np.asarray([x[column] for x in rows], dtype=float)
     n = len(r)
     if n < 3:
         return {"observations": n, "status": "INSUFFICIENT_DATA"}
-    eq = np.cumprod(1 + r)
-    vol = np.std(r, ddof=1) * np.sqrt(12)
-    ann = np.prod(1 + r) ** (12 / n) - 1
-    return {"observations": n, "annualized_return": float(ann), "annualized_volatility": float(vol),
-            "sharpe": float(ann / vol) if vol > 0 else None,
-            "max_drawdown": float((eq / np.maximum.accumulate(eq) - 1).min())}
+    first = pd.Timestamp(rows[0]["entry_date"])
+    last = pd.Timestamp(rows[-1]["exit_date"])
+    years = max((last - first).days / 365.25, 1e-9)
+    ppy = n / years
+    vol = float(np.std(r, ddof=1) * np.sqrt(ppy))
+    try:
+        c = cagr(r, years)
+    except ValueError:
+        c = None
+    return {"observations": n, "cagr": c, "annualized_volatility": vol,
+            "sharpe": sharpe(r, ppy), "max_drawdown": max_drawdown(r),
+            "mean_period": float(np.mean(r)), "periods_per_year": float(ppy)}
 
 
 def spy_monthly(path, dates):
@@ -89,25 +97,31 @@ def spy_monthly(path, dates):
 def run(panel_path, spy_path, output, start="2018-01-01", end=None):
     d = load_panel(panel_path)
     dates = [x for x in month_ends(d) if x >= pd.Timestamp(start) and (end is None or x <= pd.Timestamp(end))]
+    calendar = sorted(pd.to_datetime(d.Date.unique()))
+    calpos = {x: i for i, x in enumerate(calendar)}
     signals = {"Momentum20": "Mom20", "Momentum60": "Mom60", "Trend": "Trend100",
                "LowVol": "LowVol20", "MeanReversion": "Rev5", "RSI": "-RSI14", "ATR": "ATR14"}
     rows_by = {name: [] for name in signals}
-    bench, spy = [], []
+    bench_rows = []
     prev = {name: set() for name in signals}
     prev_bench = set()
     for dt in dates:
-        day = d[d.Date.eq(dt)].copy()
-        elig = day[(day.Close >= MIN_PRICE) & (day.DV20 >= MIN_DV)].dropna(subset=["Fwd20"])
-        if len(elig) < MIN_NAMES:
+        i = calpos[dt]
+        if i + 1 + HORIZON >= len(calendar):
             continue
-        b = elig.Fwd20.mean()
-        bench.append(b)
-        # equal-weight benchmark turnover cost is captured by benchmark net later.
+        entry_date, exit_date = calendar[i + 1], calendar[i + 1 + HORIZON]
+        day = d[d.Date.eq(dt)].copy()
+        elig = day[(day.Close >= MIN_PRICE) & (day.DV20 >= MIN_DV)]
+        if len(elig) < MIN_NAMES or elig.Fwd20.isna().any():
+            continue
+        b = float(elig.Fwd20.mean())
+        cu_b = cost_units(prev_bench, set(elig.Ticker), not prev_bench)
+        bench_rows.append({"date": dt.date().isoformat(), "entry_date": str(entry_date.date()),
+                           "exit_date": str(exit_date.date()), "gross": b,
+                           "net_10": b - 0.001 * cu_b, "turnover": cu_b / 2})
+        prev_bench = set(elig.Ticker)
         for name, col in signals.items():
-            if col == "-RSI14":
-                score = -elig.RSI14
-            else:
-                score = elig[col]
+            score = -elig.RSI14 if col == "-RSI14" else elig[col]
             frame = elig.assign(Score=score).dropna(subset=["Score"]).sort_values(["Score", "Ticker"], ascending=[False, True])
             if len(frame) < MIN_NAMES:
                 continue
@@ -115,25 +129,35 @@ def run(panel_path, spy_path, output, start="2018-01-01", end=None):
             picked = elig[elig.Ticker.isin(selected)]
             if len(picked) != len(selected) or picked.Fwd20.isna().any():
                 continue
-            turnover = 1.0 if not prev[name] else len(selected - prev[name]) / max(len(selected), 1)
+            cu = cost_units(prev[name], selected, not prev[name])
             gross = float(picked.Fwd20.mean())
-            rows_by[name].append({"date": dt.date().isoformat(), "gross": gross,
-                                  "turnover": turnover, "excess_vs_ew": gross - b})
+            rows_by[name].append({"date": dt.date().isoformat(), "entry_date": str(entry_date.date()),
+                                  "exit_date": str(exit_date.date()), "gross": gross,
+                                  "turnover": cu / 2, "cost_units": cu, "benchmark": b})
             prev[name] = selected
-    spy_returns = spy_monthly(spy_path, dates)
-    n = min([len(v) for v in rows_by.values()] + [len(bench), len(spy_returns)])
     out = {"label": LABEL, "window": {"start": str(dates[0].date()), "end": str(dates[-1].date())},
-           "n_months": n, "cost_bps": [5, 10, 20], "strategies": {}}
+           "cost_bps": [5, 10, 20], "strategies": {}}
     for name, rows in rows_by.items():
-        rows = rows[:n]
-        out["strategies"][name] = {"gross": stats([x["gross"] for x in rows]),
-                                  "mean_turnover": float(np.mean([x["turnover"] for x in rows])) if rows else None,
-                                  "excess_vs_ew_gross": stats([x["excess_vs_ew"] for x in rows])}
+        out["strategies"][name] = {"gross": stats(rows), "mean_turnover": float(np.mean([x["turnover"] for x in rows])) if rows else None}
         for c in (5, 10, 20):
-            net = [x["gross"] - c / 10000 * x["turnover"] for x in rows]
-            out["strategies"][name][f"net_{c}bps"] = stats(net)
-    out["equal_weight"] = {"gross": stats(bench[:n])}
-    out["spy_buyhold"] = {"gross": stats(spy_returns[:n])}
+            for x in rows:
+                x[f"net_{c}"] = x["gross"] - c / 10000 * x["cost_units"]
+            out["strategies"][name][f"net_{c}bps"] = stats(rows, f"net_{c}")
+        ex = [x["gross"] - x["benchmark"] for x in rows]
+        out["strategies"][name]["excess_vs_ew_gross"] = {
+            "mean_period": float(np.mean(ex)), "sharpe": sharpe(ex, len(ex) / max((pd.Timestamp(rows[-1]["exit_date"]) - pd.Timestamp(rows[0]["entry_date"])).days / 365.25, 1e-9)),
+            "positive_fraction": float((np.asarray(ex) > 0).mean())}
+    out["equal_weight"] = {"gross": stats(bench_rows, "gross"), "net_10bps": stats(bench_rows, "net_10")}
+    spy_rows = []
+    spy = pd.read_csv(spy_path, usecols=["Date", "Open"])
+    spy["Date"] = pd.to_datetime(spy["Date"])
+    smap = spy.set_index("Date")["Open"]
+    for r in bench_rows:
+        e, x = pd.Timestamp(r["entry_date"]), pd.Timestamp(r["exit_date"])
+        if e in smap.index and x in smap.index:
+            spy_rows.append({"entry_date": r["entry_date"], "exit_date": r["exit_date"],
+                             "gross": float(smap[x] / smap[e] - 1)})
+    out["spy_buyhold"] = {"gross": stats(spy_rows, "gross")}
     Path(output).write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(json.dumps(out, indent=2))
 
