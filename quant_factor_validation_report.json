@@ -1,17 +1,17 @@
 {
   "schema_version": "phase3.v1",
   "data_maturity": {
-    "backtest_rows": 4529,
+    "backtest_rows": 4825,
     "n_factors": 24,
     "n_horizons": 3
   },
   "horizon_maturity": {
     "5D": {
-      "max_sample_count": 3080,
+      "max_sample_count": 3369,
       "mature": true
     },
     "10D": {
-      "max_sample_count": 1914,
+      "max_sample_count": 2194,
       "mature": true
     },
     "20D": {
@@ -22,11 +22,11 @@
   "sample_counts": {
     "max_N_by_horizon": {
       "5D": {
-        "max_sample_count": 3080,
+        "max_sample_count": 3369,
         "mature": true
       },
       "10D": {
-        "max_sample_count": 1914,
+        "max_sample_count": 2194,
         "mature": true
       },
       "20D": {
@@ -96,20 +96,20 @@
     {
       "Factor_A": "RSI_14",
       "Factor_B": "Bias_Pct",
-      "Pearson": 0.847,
-      "Spearman": 0.9288
+      "Pearson": 0.8492,
+      "Spearman": 0.9287
     },
     {
       "Factor_A": "RSI_14",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.881,
-      "Spearman": 0.9212
+      "Pearson": 0.8803,
+      "Spearman": 0.921
     },
     {
       "Factor_A": "Bias_Pct",
       "Factor_B": "ZScore_20D",
-      "Pearson": 0.8345,
-      "Spearman": 0.9447
+      "Pearson": 0.8369,
+      "Spearman": 0.9444
     },
     {
       "Factor_A": "MA20",
@@ -120,26 +120,26 @@
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Momentum_20D_Pct",
-      "Pearson": 0.9272,
-      "Spearman": 0.9212
+      "Pearson": 0.9273,
+      "Spearman": 0.9228
     },
     {
       "Factor_A": "MA20_Slope_5D",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9242,
-      "Spearman": 0.9182
+      "Pearson": 0.9243,
+      "Spearman": 0.9193
     },
     {
       "Factor_A": "Volume_Ratio_5D",
       "Factor_B": "Volume_Ratio_20D",
-      "Pearson": 0.9227,
-      "Spearman": 0.9089
+      "Pearson": 0.923,
+      "Spearman": 0.9044
     },
     {
       "Factor_A": "Momentum_20D_Pct",
       "Factor_B": "Stock_RS_20D_vs_SPY",
-      "Pearson": 0.9908,
-      "Spearman": 0.9875
+      "Pearson": 0.9912,
+      "Spearman": 0.9883
     }
   ],
   "insufficient_data_reasons": [
