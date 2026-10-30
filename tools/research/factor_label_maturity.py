@@ -23,7 +23,7 @@ for t, g in f.groupby("Ticker"):
         # first price strictly after signal
         pos = np.searchsorted(pv, dates, side="right")
         valid = pos < len(pv)
-        counts[h]["MISSING_PRICE"] += int((~valid).sum())
+        counts[h]["NOT_MATURED"] += int((~valid).sum())
         counts[h]["NOT_MATURED"] += int((valid & (pos + h >= len(pv))).sum())
         counts[h]["MATURED"] += int((valid & (pos + h < len(pv))).sum())
 

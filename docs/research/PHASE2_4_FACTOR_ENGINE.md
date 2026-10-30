@@ -1,4 +1,4 @@
-﻿# Phase 2.4 Unified Historical Factor Engine
+# Phase 2.4 Unified Historical Factor Engine
 
 Date: 2026-10-30
 Research only. No production changes.
@@ -102,13 +102,16 @@ validated against the real module on a 5,000-row sample:
 
 | Horizon | MATURED | NOT_MATURED | MISSING_PRICE |
 |---:|---:|---:|---:|
-| 1D | 1,238,007 | 503 | 503 |
-| 5D | 1,235,995 | 2,515 | 503 |
-| 10D | 1,233,480 | 5,030 | 503 |
-| 20D | 1,228,451 | 10,059 | 503 |
-| 60D | 1,208,371 | 30,139 | 503 |
+| 1D | 1,238,007 | 1,006 | 0 |
+| 5D | 1,235,995 | 3,018 | 0 |
+| 10D | 1,233,480 | 5,533 | 0 |
+| 20D | 1,228,451 | 10,562 | 0 |
+| 60D | 1,208,371 | 30,642 | 0 |
 
-`NOT_MATURED` is a label state, not a factor failure.
+`NOT_MATURED` is a label state, not a factor failure. The earlier 503
+`MISSING_PRICE` per horizon was a status bug in the vectorized maturity script:
+the last signal date has no next session and must be `NOT_MATURED`, not missing.
+The checker was corrected and the JSON regenerated.
 
 ## 6. Future-data leakage test
 
