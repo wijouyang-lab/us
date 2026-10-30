@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-30T13:02:27Z",
-  "asof": "2026-10-30T13:02:17Z",
+  "generated_at": "2026-10-30T13:11:45Z",
+  "asof": "2026-10-30T13:11:11Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -62,7 +62,7 @@
       "key": "fg_score",
       "label": "恐惧贪婪",
       "group": "情绪",
-      "value": 31.31,
+      "value": 31.93,
       "unit": "",
       "status": "ok",
       "source": "market_indicators"
@@ -89,7 +89,7 @@
       "key": "oversold_rsi",
       "label": "平均RSI",
       "group": "超跌",
-      "value": 27.9,
+      "value": 26.1,
       "unit": "",
       "status": "ok",
       "source": "oversold"
@@ -116,7 +116,7 @@
       "key": "news_bull",
       "label": "新闻利好",
       "group": "新闻",
-      "value": 16,
+      "value": 21,
       "unit": "/100",
       "status": "ok",
       "source": "news_data"
@@ -125,7 +125,7 @@
       "key": "news_bear",
       "label": "新闻利空",
       "group": "新闻",
-      "value": 9,
+      "value": 6,
       "unit": "/100",
       "status": "ok",
       "source": "news_data"
