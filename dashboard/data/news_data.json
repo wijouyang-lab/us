@@ -1,13 +1,188 @@
 {
   "schema_version": "news.v1",
-  "generated_at": "2026-10-29T13:05:54Z",
+  "generated_at": "2026-10-30T13:08:21Z",
   "market_news": [
+    {
+      "headline": "Swiss central bank posts bumper $23bn profit as gold, foreign assets soar",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/30/swiss-national-bank-q3-profit-gold-foreign-asset.html",
+      "datetime": 1793363500,
+      "summary": "Unlike other major central banks, the Swiss National Bank has a significant equity portfolio."
+    },
+    {
+      "headline": "BP beats forecasts with record profit, targets early settling of Deepwater Horizon bill - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPT3h0ZnhqQXNOaC15cXFDMlJfa0kwa0xKeDloU0hKQVducC1rOERkX2R5bG1rQ1JSUFpYMUVaZ0p5RGw1eDZEMVliNTJ6V2s3elFyaks4UDg4UWNMMklreW9iUHBoZWpVZE5mZmxnY2JybHI3bUI3SWxuVV9lZVFvUDRYREYydzN5dDVHMXV6bXp5T3ZHZTlIXw?oc=5",
+      "datetime": 1793358076,
+      "summary": "BP beats forecasts with record profit, targets early settling of Deepwater Horizon bill  Reuters"
+    },
+    {
+      "headline": "Qatari mediators return to Tehran to push for US-Iran deal, official says - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitwFBVV95cUxORnF1OHJuNjZ6ekdJU25nLXhCNGFUaXB0V2FHRktTVWo0bjBETVRCSTJLM0tnWm5CaXI1TGV5enRhcUxIOEc1Y0dlcXNTMmd6NWdxWVFGa3BNbi1uazdEeG9ZSmR5QWVPdW5hRzVxek12RlgySGc2MTJ2Wlo0SkVzcmc5ZmRXRnVCYjlXeW9ZUGlwalAxdWJJUUpSUDRhdDEwX0RnMlE4eGlkSlBrY21VbWs2Smw3NkE?oc=5",
+      "datetime": 1793345107,
+      "summary": "Qatari mediators return to Tehran to push for US-Iran deal, official says  Reuters"
+    },
+    {
+      "headline": "Yemen's Houthis deny launching drone after coalition reports interception in Mecca region - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxPanlQaWczZ25iem9Yem9mcmYzRGxNbU1pcmZXVkpFUU5YYk5tWUJMNm1MdWdmUkxaMXQzdHJ3RHY2c1pWMVU4eXhfT3VMcUgzNUpHTUhSUWJvUXdQeDl3UklYUzFLSnNrcHRkd01ldEZSNDBuVjViSUtDTFJVcElQVFl2OGltV1FnX1hZMTFNRkxTTG9NZU9QaVJlZ0tWMXU1Vk1wS3E5TEtvVXF4OGotNWZRVjVwUWtqYjdrbVNsQVlxMTg3NkR4Y1ZqWEM?oc=5",
+      "datetime": 1793340720,
+      "summary": "Yemen's Houthis deny launching drone after coalition reports interception in Mecca region  Reuters"
+    },
+    {
+      "headline": "Oil set for fourth monthly gain as Hormuz tanker attack highlights supply risks - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqAFBVV95cUxOWE5IUkRJTVJvTFE5SUdOdFFCM2tVN1lKcDI3ci01cjlleVVuXzB1SjI0MDhuWkhwakZFSzl3SGNUZk9uUUYwdHNfMGJOUXExaW1RdmRRVy1Cd0tHb3RqblJCQWczeXdORDVKbVMxMGFrbnVMM3FCY2h5Xzl6T0ZoeTBtbGdnbW9jdWF6VEtqNi14ZnlFaVVpb0xZcHlGTDhtM0ZmY2RYZ2Q?oc=5",
+      "datetime": 1793327220,
+      "summary": "Oil set for fourth monthly gain as Hormuz tanker attack highlights supply risks  Reuters"
+    },
+    {
+      "headline": "Animal welfare-focused farm group targets Republicans in rural races - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNeFh1UFhvY1FYOW5PdDFOT0V3MERDRm9EUWNmb2ZrYlN6Rk5XbE1mOHN4UW5QUURWQ1JFY0doSG5icl9La1Bwc3NXMVFnZjFZTlpGdkp6M1BhcVBZVDk4eC10YlBYbFE4V3I1UnZYbHpMTVNONjJYY0FKWmZvSlhBZWRESGlpR2pmMFh3cHk5M1NwakZNTDVLQUxSY1ZKamtkOTBncEcxYWZmSlFneEJOSHB1ZzFIWHFqSFVjcTV2VzUyQQ?oc=5",
+      "datetime": 1793310230,
+      "summary": "Animal welfare-focused farm group targets Republicans in rural races  Reuters"
+    },
+    {
+      "headline": "US loans 40 million barrels of oil from SPR, in last share of global agreement - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxPaVRyeXU5bDNSZGF1bUtLNFZ0eGQ3UF9PZm9IYzNBbEppa2s1VFBNVlV6bzJWN0JKSEtvVi00R0xsNHJPOEpZMHYyYWVuYlAzallScHBDWEVSZHRZX3BBczU3S19rMmJ4SlR5eUtkUG5jcXRHQjBYYmVsdzNpM1loU1hRSjdqTGtwWGVCTWlpV0hpbWpXRlUwNTNUZUJCNGxZU2VaeEtHR1lvRC1sWnd2dHc0TmVHdw?oc=5",
+      "datetime": 1793308424,
+      "summary": "US loans 40 million barrels of oil from SPR, in last share of global agreement  Reuters"
+    },
+    {
+      "headline": "Vance outreach to Iran related to medical supplies, says Trump - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMirgFBVV95cUxPQm9INjQwOFV2OFBtTHNrV0F6RnF1Z0NmMHJyT1lJMVJBNm4xNm10VzYtdGF3Zl93aUVxNklqNnpld3VXbHFfRTRZWW9MekFMeXJqcHdWc2pJV2xtYXBiRWE3YmFEbGZIa1dGUVRMbVktYXp5Z3dsenJjZFNORjlJaUdGYjVZQ0E0UEt2VFJVUFBxb1NTMjJTRENRSjN5OTFRaXNpLVFKc1ZGR2xzekE?oc=5",
+      "datetime": 1793306962,
+      "summary": "Vance outreach to Iran related to medical supplies, says Trump  Reuters"
+    },
+    {
+      "headline": "Yemen's hospitals buckle as fighting escalates - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMinAFBVV95cUxPQ2FrR3hGTjlic3RtRHdHQWtvbjJ5cXNPNFExeWlSMGRpOFpIOFk1WFBUX3VoUEs5MWhkMXVIcFlmc3BaMkE0NnlWbXdacUNZRXg0emVrUjhJTENacVRqY2M5aGpvY08wQmhVYWJxbkdOZlB6dzUwZGNLY3ZkUGFQOVJZekxCM19qdVAtajNOdmdrU2JIc0M5QXZuN1M?oc=5",
+      "datetime": 1793305016,
+      "summary": "Yemen's hospitals buckle as fighting escalates  Reuters"
+    },
+    {
+      "headline": "Jim Cramer: Why investors are punishing Alphabet and giving Microsoft a pass",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/29/jim-cramer-why-investors-are-punishing-alphabet-and-giving-microsoft-a-pass.html",
+      "datetime": 1793302233,
+      "summary": "Microsoft is faring better because of its financial spending, Jim Cramer said Thursday, a day after earnings."
+    },
+    {
+      "headline": "We’re downgrading Alphabet after its rough quarter. Here’s where we’d buy again",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/29/were-downgrading-alphabet-after-a-rough-quarter-where-wed-buy-again.html",
+      "datetime": 1793301126,
+      "summary": "Every weekday, the Investing Club releases the Homestretch, an actionable afternoon update just in time for the last hour of trading."
+    },
+    {
+      "headline": "Polymarket reports outage on international exchange, halts trading",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/29/polymarket-reports-outage-on-international-exchange-halts-trading.html",
+      "datetime": 1793300242,
+      "summary": "The outage comes just days before the platform is expected to experience heightened trading during the U.S. midterm elections."
+    },
+    {
+      "headline": "Rare Stanley Druckenmiller post sends crypto-linked stock surging",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/29/druckenmiller-hyperliquid-surge.html",
+      "datetime": 1793300030,
+      "summary": "Options traders pounced on the closest publicly-traded play to the news."
+    },
+    {
+      "headline": "NEWSLETTER: The midterms' final stretch: High stakes, bizarre distractions - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOeXNSQnFVMVFoVGdFQ1ZwRUdhMEpiT2ZvTFlDdFBtd1drX3F3VEg2UVJQUXV0MjVFSlBkZjNuZGZEa1RPTVdFSzE1MUdyQ1ZYTkFGcDI5c1lMYkswOEUxSnhzODFXbEE3dVg2aTc4eWpFTVZUUlROak5HdVR0VDZLVlRvQjhjdTlvTTNsZmVKc0dxYXRzQ0JuUGFuMi05TnprYlE?oc=5",
+      "datetime": 1793296787,
+      "summary": "NEWSLETTER: The midterms' final stretch: High stakes, bizarre distractions  Reuters"
+    },
+    {
+      "headline": "Senior US general fired, accused of leaking classified information - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxORlFfOG1ZdV9STERPRzJZR1dTMFQ0MzhzLWtkUkhXSEFlYm9WOEx1Y2lXMDRKRnpvOF91TWp2a2x5UFhvOVEwTUNtZDQ4TEZvY21GVlZEWTJvT2V3V2JyVGp1WVoxVEIxTVlvX2FScG1vd0o0eko4MkxjeHliaXd0Yzh1ZXJWRlpiNVRoUHFEaXM0WU5Ec1ZsYXhPNzYzWEV2X1RMSVhBdTFJN0ZfdHhMVjc3V3JzUQ?oc=5",
+      "datetime": 1793294943,
+      "summary": "Senior US general fired, accused of leaking classified information  Reuters"
+    },
+    {
+      "headline": "Netanyahu, at risk of losing power, steps up attacks on Israel's Arab parties - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxNdTdkdmZXbFBHWno1WERBemlBX0tpX0lLaDlVUExXWGh6ZjlWSzBZYWYwc3RZTG1vb0ptREw5Nk8tcDFLVGJ0UmU0MzBEVW9hRnFHRWZiOU5SakNDQjEwYUp0aVFZcjc2clhraFNSZ09iLW5Md3V6MkpaSXZBcnoxdUJOVVZBLTJoQThnc0RvZkVEdFZ6WEJlakNwQXlFak5peWhfQ2h6dFdoV2traHgtZU1FN253Z0l0LU9V?oc=5",
+      "datetime": 1793293793,
+      "summary": "Netanyahu, at risk of losing power, steps up attacks on Israel's Arab parties  Reuters"
+    },
+    {
+      "headline": "UK inflation expectations fall in October, Citi/YouGov survey shows - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxPOWRhWERQcmcydHFCRTJEbmJKeTQ5U2oxYjg4QXdrSDhqUlp2bFBMTUs5Zm9JaXMxUUZOcUVOYmZ5ZXJXaDhaUlIwMm8zT3hJV0hjQmdDMEZiQlpiRm1UYjMyazFjek55TTFjQlFGd21xVlY2NFdfV0ZKMTcxc3JuNVBNcXBYamVGamdSOEpkWDZpSUxSc3VaMWtVUGNvTnZocnZkcXhXY0pMTEU?oc=5",
+      "datetime": 1793293580,
+      "summary": "UK inflation expectations fall in October, Citi/YouGov survey shows  Reuters"
+    },
+    {
+      "headline": "Aon CEO warns AI data center insurance risks could threaten financing",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/29/aon-ai-data-center-insurance-financing.html",
+      "datetime": 1793293403,
+      "summary": "Aon CEO Greg Case said concentration risk at AI data centers could constrain insurance capacity and alter financing for new projects."
+    },
+    {
+      "headline": "Europe Inc heads for second-best earnings season since 2022 - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNZHN5RlpkMThjUU5Rd0FRLXJRNEtteHQ3ODBGeE5tOEFFTWhwVmY5Y0Q5N0VtbDBYWU1wLWhYSUs0NHZJazBfUmlkNURTcDlmVHI5UU1uVkRxclEzQk1uWWxXNkswRGhwTHhjczVESE5kQnhkSjkwV0RTenpnaDJsVWNoWlFadnZyeUZpUHE5eFo0TjFILVNROERib18tQXpYdWc?oc=5",
+      "datetime": 1793291065,
+      "summary": "Europe Inc heads for second-best earnings season since 2022  Reuters"
+    },
+    {
+      "headline": "We’re adding to our position in a rebounding bank stock",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/29/were-adding-to-our-position-in-a-rebounding-bank-stock.html",
+      "datetime": 1793288947,
+      "summary": "Today's purchase allows us to increase our position size while lowering our average cost basis."
+    },
+    {
+      "headline": "EXCLUSIVE: QatarEnergy buys US, other LNG to hedge future Hormuz disruptions - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQT19OLUYzbVNkOXdLUFJnQWJpOHRJaDQ0Y3FyVWs5M1IyLTFIZmRsazhqakFvMlFPNnFTeEM1T0VTTnlHTjJyMjFsblVzMlduWlRNeFI0VjlZVXRwNUZGUTVFeWdTY0tLRzlaRWFKam9uU2lRREVFS0lTLXpQME9jR25LRjF5Z0lnZ2lqbV9ybjZfRlZldDRYXzB6UElVU08zVFduMzhCYjFTb25hWTBtNTA4dw?oc=5",
+      "datetime": 1793288391,
+      "summary": "EXCLUSIVE: QatarEnergy buys US, other LNG to hedge future Hormuz disruptions  Reuters"
+    },
     {
       "headline": "Iran’s hidden web of military agencies is slipping hardware past the US blockade - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxPWDdNT2d1X203WGstY0tRd0xFeXFhWlBQVmlXM2hRRXdzZHQ3UmszXzNXcVE3LTB5TWhUcXJwWUVlSi15cGFUNVFqd2xTNllBQm9PdlphUVQ3bU1pOTI5dUtGb3pZYUstMmpaa2hzbk5RXzd2bVp5YmlhR19nYkNJTjdfTG11amxxZ0dOWXBveEowTC1wRHozRWxPYUx5OXo2TWpjdHRnOXc5eTRQWXN6S2RyWVUxVF8wMGk0?oc=5",
-      "datetime": 1793277401,
+      "datetime": 1793286272,
       "summary": "Iran’s hidden web of military agencies is slipping hardware past the US blockade  Reuters"
+    },
+    {
+      "headline": "Steve Eisman gets more conservative with portfolio as AI trade nears 'tipping point'",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/2026/10/29/steve-eisman-gets-more-conservative-with-portfolio-as-ai-trade-nears-tipping-point.html",
+      "datetime": 1793282780,
+      "summary": "The noted investor, famous from \"The Big Short,\" says it would be \"impossible\" for an AI crash not to hurt the broader market"
+    },
+    {
+      "headline": "Open enrollment is a chance to get this ‘sneaky-good’ investment account that can be ‘better than a Roth’",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/make-it/2026/10/29/hsa-retirement-investing.html",
+      "datetime": 1793282401,
+      "summary": "During open enrollment, financial planners say HSAs are worth a closer look for their unusual tax advantages and potential as a long-term investment account."
+    },
+    {
+      "headline": "Jim Cramer's top 10 things to watch in the stock market Thursday",
+      "source": "CNBC",
+      "url": "https://www.cnbc.com/investingclub/2026/10/29/jim-cramers-top-10-things-to-watch-in-the-stock-market-thursday.html",
+      "datetime": 1793279588,
+      "summary": "Tech is taking it on the chin."
+    },
+    {
+      "headline": "US weekly jobless claims hover near 57-year lows - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxOdmxqV3Z1U3hka2I5aWZZbTJGOUE0eWdUR21VSVNUX3BTWllPQ21pUVZtUnZuYVVmRnlTUUdPdUlyVjlBc1JRcFl5SFZ3Ui1LOFJxSmVrZzBYaERQbHJITjZhRy1YZ2IwUlBOdGpUX1pBaXdHY1Jya1dUT041djZPVGlTM3owbFA3eXEzenZHbTZaUUc2cUZndg?oc=5",
+      "datetime": 1793278663,
+      "summary": "US weekly jobless claims hover near 57-year lows  Reuters"
     },
     {
       "headline": "Kalshi valuation jumps to $40 billion in latest funding round",
@@ -24,11 +199,18 @@
       "summary": "More wealthy families are reconsidering a valuable but rigorous tax strategy, lawyers and CPAs told CNBC."
     },
     {
-      "headline": "Farmer-funded attack ads targeting Republicans air across rural America - Reuters",
+      "headline": "South Africa's Absa opens first Gulf office in Dubai - Reuters",
       "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNeFh1UFhvY1FYOW5PdDFOT0V3MERDRm9EUWNmb2ZrYlN6Rk5XbE1mOHN4UW5QUURWQ1JFY0doSG5icl9La1Bwc3NXMVFnZjFZTlpGdkp6M1BhcVBZVDk4eC10YlBYbFE4V3I1UnZYbHpMTVNONjJYY0FKWmZvSlhBZWRESGlpR2pmMFh3cHk5M1NwakZNTDVLQUxSY1ZKamtkOTBncEcxYWZmSlFneEJOSHB1ZzFIWHFqSFVjcTV2VzUyQQ?oc=5",
-      "datetime": 1793273740,
-      "summary": "Farmer-funded attack ads targeting Republicans air across rural America  Reuters"
+      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPdVA3YVNlNUpvSExtRm1xVTZKd1ZaLW10R3pQSFpKZ1JHbUpkTnFrMG9JWEJiQ05DV0lCVnB2LS1RdUZDZWhXSlAweXp4UlQ5LXVNems2b190cEtkZExVak4yRUFDU3Vnak84T01DQm1IVnU3b05RME82N283TDRYUEFQVGdHbXViU055Z1VJWWQ1U3ZxdkFPQ3hheGJ6ZkpjanlXSw?oc=5",
+      "datetime": 1793274730,
+      "summary": "South Africa's Absa opens first Gulf office in Dubai  Reuters"
+    },
+    {
+      "headline": "Three French nationals jailed for life in Iraq for Islamic State ties - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisgFBVV95cUxNWjEwYWNHaUdlQTdfQUJha2NsSGh3UTJvZE52VGhkd3FsdmtpQzRiVEo4R1Z2cGFEOVBsWkFkS1ViYXBMbnMtOEl4SHVBZG1VaXZ1WUdLcWFJTGN4VjlhMWpLdmlHYnkzSkFfYWZFcGFjeXpFUE5iWW1iOERCaUtkdzFGRlVxQlJuSWxTcWlZOHNQcUwxdGhNTXFadEFET09kVDRkbUd0YjBqZk9GQmlKUUpB?oc=5",
+      "datetime": 1793270503,
+      "summary": "Three French nationals jailed for life in Iraq for Islamic State ties  Reuters"
     },
     {
       "headline": "Explainer: How could Israel break the election deadlock? - Reuters",
@@ -36,6 +218,13 @@
       "url": "https://news.google.com/rss/articles/CBMimgFBVV95cUxOTmd1MXZMRF9mb3JPLXFuaUViRXVEX0ZpdUF1LXBWRFZPWkt2VE1TLVlsZk54ckJUd0huTlBSd3ctUm50T2xxRmtPNnQ2Znhaak1sR09jWkgxMDFiV09scHUzek5MbmI4SXRWRzdWMnBuNnVzUnRNbWdUcHFsTENKeU5rZWlrYVN1NXZDX2kzMjN4TWNKelRaX2R3?oc=5",
       "datetime": 1793267726,
       "summary": "Explainer: How could Israel break the election deadlock?  Reuters"
+    },
+    {
+      "headline": "TotalEnergies third-quarter profit surges on refining income - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMimAFBVV95cUxPZDNjZEVFVHlwMjFPbGtabF9JMFVZZWxLVVljNDRhUHdBNDFETWlJZjJBRjBMTE92TDRaMVdEYWFVbmVBX3pkdkFhd0J1TmZrT2tYMGNpWVFzN2FWZEdERUkwT0hoMlRMak1GT0NhRDR4M3U1bmZPU2ZUSW0xakNyLUxhM05fVGlJeTRIdHRiNTVfNEx3UnZHQQ?oc=5",
+      "datetime": 1793264409,
+      "summary": "TotalEnergies third-quarter profit surges on refining income  Reuters"
     },
     {
       "headline": "South Korea says considering deployment options to Strait of Hormuz, including aircraft - Reuters",
@@ -59,11 +248,25 @@
       "summary": "How could the oil spill off the UAE coast affect desalination plants?  Reuters"
     },
     {
-      "headline": "Oil falls as diplomacy hopes outweigh Middle East escalation fears - Reuters",
+      "headline": "Hegseth reassures Southeast Asia of US commitment, pledges stronger defence ties - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxONll3Q29YU0J4a1d4cjRXanpGWDdNc1YwM0dpM1BxX1UtWFZKMkk2MjIyVElVRlUxVVhQUU93bTBwWHdPTk5iM2FhdDVKMU9rVDZDMG55Xzc1d0IzYWwzV2RMZVdzTFhBTTlUSnM4NGFuM1ExcUVZcXBWcklWNm1YM2FFSzRPbUxIZHdnazFqLUJTa29zYWlvU2JnSDJoVTNMXzFVbl9GbW85S2tpcUd3Yg?oc=5",
+      "datetime": 1793239478,
+      "summary": "Hegseth reassures Southeast Asia of US commitment, pledges stronger defence ties  Reuters"
+    },
+    {
+      "headline": "Israel's election gives survivor Netanyahu a path to keep power - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNaUowdTlPaUFzb0tCdUQ3UzdYalJsS2ZEYWNvMUVtUzdKams0b051VWNIcXNPdG5wYlFzaWZIZVJfcVFTb192M3ozWk1kcW8wY1NNd1FSMzAzQ2FGTm9Mb0tfU21BenhMSXg5bFYxcXZqRlkzdHdESlZYVFlnLW82eUNZeER2SFU5ZXNzdExzLWxBYmtRTDRiMVFQQk1BYjB5dUdGQUEwb0pWYlA3VWluaA?oc=5",
+      "datetime": 1793237292,
+      "summary": "Israel's election gives survivor Netanyahu a path to keep power  Reuters"
+    },
+    {
+      "headline": "Oil prices settles lower as diplomacy hopes offset some Mideast supply concerns - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiqwFBVV95cUxQdy1kTGwzTi1ZWVpiLUFTbF9HS0VGbXFnVWhMVzBfOUhieU95OGhLZnpZLTB3ckdrOEFMZms2UU1qYUMyY01yd3VOQmNhNGU4MmZvNE1uUzdqcXc0OWxLYlRRSk5NaU85cUdZYTd0a1d0QU93S0JfaTNMdlpVa3pMeVBUZnFtd0ZMVXhMWGhHejZOVjQtZlN2ekVsaTdWU2hCVE8xaTlpamEzXzQ?oc=5",
       "datetime": 1793233680,
-      "summary": "Oil falls as diplomacy hopes outweigh Middle East escalation fears  Reuters"
+      "summary": "Oil prices settles lower as diplomacy hopes offset some Mideast supply concerns  Reuters"
     },
     {
       "headline": "EU energy ministers discuss soaring fuel prices as winter looms - Reuters",
@@ -80,18 +283,18 @@
       "summary": "Libya's eastern administration bars entry to Iranians, Afghans  Reuters"
     },
     {
+      "headline": "US sways more countries to oppose UN resolution condemning its Cuba embargo - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPbVRGVWZFcktIT3J0X1JWZTI5eTMyM3RXYzkzNGdLclhLcUthY08zNk04SFhuRU4yR0g1OTNyRVI2aVlFYVkxdmZaRTBFZ3BNcTFrT2ZxWWduQTV2ajhvWWpReV9mSWFnSnA5akttbFdNQ0VvUV9mNjVKZXBJc2hwUFJBaEhIRnFsMndEd1RfSXJoTGNyaHBLUDFxWEtuZHBoVHpfVjI4VTd4X3duV2NMZ1ZRQ0NReGhubXBaXzhLTQ?oc=5",
+      "datetime": 1793221962,
+      "summary": "US sways more countries to oppose UN resolution condemning its Cuba embargo  Reuters"
+    },
+    {
       "headline": "Iran sees only unacceptable ideas in latest mediation to end war, official says - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQMTAtQ19McEJXRVg0bmN2S1JaMm9lX2VsbUpzSjZnZi1md09fZnBoREF1U2lKT25ybDRzR0lxcC13XzcxRU1UTFFFUXRzem9TVjdNMHA4cjVPel9Rdk02UHk4M1BDUXFZcGRyR0FqcnlhUDNtTFczdy1Nd0VNNktvM3V0bUEzNC1qdXNLQngwOE9HVGtydEFIa1hqdm5sWjRHVHNNaFVteUZSbnVwa2U0MWxvd2RleGJpaXIxeg?oc=5",
       "datetime": 1793219820,
       "summary": "Iran sees only unacceptable ideas in latest mediation to end war, official says  Reuters"
-    },
-    {
-      "headline": "Phillips 66 posts record quarterly profit on refining strength - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNcFlWNWowWHgxSWhPRVdoRGpud1VHdVdJUGVSMkhVQ0F2RTJZb09lVHNPVjhwdWl6VGU4NVJjUjdNR2pERHV1ci1ickdBVzdIbmlBbVdLWHlRQW85TjMwQzVrcXFRYmc5TG52Skl1YzUtMHg0THVoWVp0bUxpSFZZc01PeTdJM3pmaDZXaWM1Wm1jNEx1RmFtOWdFdTRVRk1FVVQ5bGZteS1fdEkxclFaM1BoZGJDZVQxVmc?oc=5",
-      "datetime": 1793216102,
-      "summary": "Phillips 66 posts record quarterly profit on refining strength  Reuters"
     },
     {
       "headline": "Fed chairman talks tough on inflation — plus, what's behind Micron's big rally",
@@ -115,11 +318,11 @@
       "summary": "With the Club portfolio now down to 31 positions, we are working on new ideas to add to the Bullpen."
     },
     {
-      "headline": "Cruise ship residents left stranded in Cambodia after fuel prices soar - Reuters",
+      "headline": "Oil prices rise on Yemen fighting, Saudi refinery attack - Reuters",
       "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPb3J0MEVjUDYzWV9pcnBYVTBRcFd3SHZZVVF5d29naldtQjRmRGhlOGZkemtiUEdCWU0zUXFNR3FvLS05Mjc2SFRHSXU5SlZpSnRTenZOcFYxV3lyVFBXRmlKZHNxX0lOMXZkRUJHYXNHZGFxMVgzN3kySVRJU2ctb19hYUZYRElpQ1JYY2hmTkhyeFFJVy1GWVZZc08tUERFb3RhR0wwdGM3YnNxWTMzalJISUdJRTRiN3YtczZrRQ?oc=5",
-      "datetime": 1793212106,
-      "summary": "Cruise ship residents left stranded in Cambodia after fuel prices soar  Reuters"
+      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQYUhHblNqOGNPczlpdUR2NDFMWjZxX2FZYjVTTzREX2R4YU5jRzF2ckN1MG9sSnIxWG9hbDJ0TjV4YTZXRjdqSUc3aF9OcTJuUVlJZkZrdUd0V0RMUU1qUWxiNDdmdXhCTmJUczZWOFRUWTRKdzJQLUJYNXZBODhnTjJfOXMyNU01OGVreWM5TkNyamNjbzV5UzAxX3ZOdWcwcUE5SFZHSkEyUjZ1M1dUQ3ByRDdxbC13ZzRQR0xfcTZ0bjh6dnNPalJZRWI?oc=5",
+      "datetime": 1793211840,
+      "summary": "Oil prices rise on Yemen fighting, Saudi refinery attack  Reuters"
     },
     {
       "headline": "GE Vernova shares slip despite a beat-and-raise. What the sellers are getting wrong",
@@ -129,11 +332,18 @@
       "summary": "We're reiterating our buy-equivalent 1 rating on the stock after another strong earnings report."
     },
     {
-      "headline": "Israel's election gives survivor Netanyahu a path to keep power - Reuters",
+      "headline": "Frontier swings to surprise profit on 'healthy balance' between higher fares and demand - Reuters",
       "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNaUowdTlPaUFzb0tCdUQ3UzdYalJsS2ZEYWNvMUVtUzdKams0b051VWNIcXNPdG5wYlFzaWZIZVJfcVFTb192M3ozWk1kcW8wY1NNd1FSMzAzQ2FGTm9Mb0tfU21BenhMSXg5bFYxcXZqRlkzdHdESlZYVFlnLW82eUNZeER2SFU5ZXNzdExzLWxBYmtRTDRiMVFQQk1BYjB5dUdGQUEwb0pWYlA3VWluaA?oc=5",
-      "datetime": 1793208300,
-      "summary": "Israel's election gives survivor Netanyahu a path to keep power  Reuters"
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOQjF1SFA3a1F5dnVSNkNSSEJrMVZGYUxJY3NnU3dMMGtIZWhzME4xUnBRTHU5WEFlMTV0YnB3VVEzenJnYnlxSTBiM0wwWG50UW82U2xDWjdYcG1xSldPX2FUeHBONGVBOEtNMjZvSUYxaHpQSHN3clYxMlRkdFFJWWpTT2FpTXBsTjg1dmNxVWx0djhBbkY4ZnVPZ2VGTWFwTWJfSmF4UDUtYks2cjMxV3RrSW9Hc0NubnlZM203N1F4QQ?oc=5",
+      "datetime": 1793209454,
+      "summary": "Frontier swings to surprise profit on 'healthy balance' between higher fares and demand  Reuters"
+    },
+    {
+      "headline": "NEWSLETTER: Reading Gulf anxiety in the oil price - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMijAFBVV95cUxQTWc0WEJYUlFxU0NnSFFxNkk0X2JUanhWZl9qMlMyTnl4dnlaS1Zlbjd4VEdscXpQbVRwSWNMejdZakVHYVVsQWhRQmQwWWVObTNUVV83c3prVVFab25oVXpkTzd3SnJVYUdiZGFpSEljV3NxS2hwRDdzd3FzVzdFdWNiNUdHa3U1aDg1Qw?oc=5",
+      "datetime": 1793208900,
+      "summary": "NEWSLETTER: Reading Gulf anxiety in the oil price  Reuters"
     },
     {
       "headline": "Explainer: What's at stake for Trump in Israel's deadlocked election? - Reuters",
@@ -176,6 +386,13 @@
       "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOZmZZVVJDOHFvUk81TDltQmFoQmlUOTZqaGNLVEJ6UEtDMnY4VUlJd0dJVTlEZWpMX2Y3NHNOWF92QVpKUjBvdG5ybWZfYlFsNHpTOVRIUlFhWmgtcDRkNFVqdmd0ejhKTU5EWWRlRUd1bTMzM05tYjR3b0RMSHdQb2ZoVGtvQ2hDa0V2blR1bHdlRHdoZF9kbVByNlJPdVd6bTFwZW5lczBfU0p3RU1LZmpJOWtMcnhVWFkxbk9salA?oc=5",
       "datetime": 1793201326,
       "summary": "European gas touches €100 for first time since 2022 energy crisis as consumers, industry feel the pain  Reuters"
+    },
+    {
+      "headline": "India's Pidilite Industries quarterly profit rises on steady demand - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxNaEZPamlRWHk3d1hHY2NhYmk3TzgzaU1YTlFHTFRscGN1Mk9CYko1RHNMVGlVa0ZSWFF1ai10MXUxVm1FTUluTEFpWXdPd1oxNmxmVUo4bDJxNWhRcEd6TWY4ajJEX0oyNjJmb0Y0ZV92ZklsOWFHUElGUnA1aUEyNDVxZ0Y2QmliSW9pR3lmQ2FuZ09lQkxhbXM0SHIxTmVBY3AzaEEyLTlWQTlBODBWMQ?oc=5",
+      "datetime": 1793199049,
+      "summary": "India's Pidilite Industries quarterly profit rises on steady demand  Reuters"
     },
     {
       "headline": "UK inflation forecast to average 3.4% in 2027, OBR says - Reuters",
@@ -237,7 +454,7 @@
       "headline": "Equinor warns Europe is vulnerable to winter gas price spike if cold weather hits - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiygFBVV95cUxQcEt6cnhrTXVDSURqaGNVdGRlT1l4QzNJN3NHcDB0RHB5emRCTWhxYy1LZHVTdDhGbmxmNHBRNWFVR3RWd2lfTlF5bDBNd3lTSkRfTUJsSHZBQl83dldKWkNyemwwdzA4QkxOdGFEZ2VVdGNGOW5TbWZpMmY5M1JIaFg5YXNkRmRObF8wMWp3dDFEOHJhZjRSQTUwc0pGSU1vRFBsQ3lPMDVmTmZQM280S3huclJjdnBXdnpZTHNURGIzLUduMU1DM2tn?oc=5",
-      "datetime": 1793193969,
+      "datetime": 1793193900,
       "summary": "Equinor warns Europe is vulnerable to winter gas price spike if cold weather hits  Reuters"
     },
     {
@@ -290,6 +507,13 @@
       "summary": "Iranians cut essentials and put dreams on hold as war-hit economy bites  Reuters"
     },
     {
+      "headline": "What happens next after Israel's election? - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxOMFVuMXc0NG9yVWhJX1dwRGhpU2lNLW1IUVlIQl9nNlV6NllfazByZ1NqZ2pIN2ZTMExWRnQ0ZWM4RnNmeDg4dkN0c0VmRGhpSXRWMTBWTVJOc0tuaEFMTHFoZFpVYXVkV01qdlFKRmpCdERNLWxzcTRrd2ZTbV9MQ2lNWGNOY2YtbUZNLU01R0YwNk1BbDlOT2pxdGtuenpPZ2c?oc=5",
+      "datetime": 1793191655,
+      "summary": "What happens next after Israel's election?  Reuters"
+    },
+    {
       "headline": "Traders are betting big against this restaurant giant into earnings",
       "source": "CNBC",
       "url": "https://www.cnbc.com/2026/10/28/traders-are-betting-big-against-chipotle-into-earnings.html",
@@ -339,6 +563,27 @@
       "summary": "As Iran war drags on, airlines pull back on fuel hedges and warn on fares  Reuters"
     },
     {
+      "headline": "Cruise ship residents left stranded in Cambodia after fuel prices soar - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxPb3J0MEVjUDYzWV9pcnBYVTBRcFd3SHZZVVF5d29naldtQjRmRGhlOGZkemtiUEdCWU0zUXFNR3FvLS05Mjc2SFRHSXU5SlZpSnRTenZOcFYxV3lyVFBXRmlKZHNxX0lOMXZkRUJHYXNHZGFxMVgzN3kySVRJU2ctb19hYUZYRElpQ1JYY2hmTkhyeFFJVy1GWVZZc08tUERFb3RhR0wwdGM3YnNxWTMzalJISUdJRTRiN3YtczZrRQ?oc=5",
+      "datetime": 1793185440,
+      "summary": "Cruise ship residents left stranded in Cambodia after fuel prices soar  Reuters"
+    },
+    {
+      "headline": "Phillips 66 posts record quarterly profit on refining strength - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiugFBVV95cUxNcFlWNWowWHgxSWhPRVdoRGpud1VHdVdJUGVSMkhVQ0F2RTJZb09lVHNPVjhwdWl6VGU4NVJjUjdNR2pERHV1ci1ickdBVzdIbmlBbVdLWHlRQW85TjMwQzVrcXFRYmc5TG52Skl1YzUtMHg0THVoWVp0bUxpSFZZc01PeTdJM3pmaDZXaWM1Wm1jNEx1RmFtOWdFdTRVRk1FVVQ5bGZteS1fdEkxclFaM1BoZGJDZVQxVmc?oc=5",
+      "datetime": 1793185320,
+      "summary": "Phillips 66 posts record quarterly profit on refining strength  Reuters"
+    },
+    {
+      "headline": "Edison, South Asian gas buyers face QatarEnergy supply halt until year-end - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxNZWRlZmpfTjMzTk8wb2tLV1hzbFprenNTR2JMcDVlWmFUQ3hkemhVVzd3X0loUXlGeHRENDd0Nll3cTh2eUpOSVJNVU53MThUaC1HYjJwSkFpa1BreXRxdm0teFoyZGJpaXowcXgtUmE0OTdSYXdDVzhuV0hCSlZqUjdpMHRNUjJxbDAzNDBfbDRjZjFpZUU2djNfV3RPaENwb1M2TzNUV0xIRUZFTVMtSDVhWmpFQU1ZaG0zZzhEa29Udw?oc=5",
+      "datetime": 1793183485,
+      "summary": "Edison, South Asian gas buyers face QatarEnergy supply halt until year-end  Reuters"
+    },
+    {
       "headline": "Unilever flags price hikes as Iran war costs stack up - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMi0wFBVV95cUxQcDg5bklvcnRaU19mVmpUUVZlUmZ5SHJPTWRTdG9VM09yMDd3T01VclRuMkZBaXlQWTRncUpaUWtCbzdrWklDcXEwUzlFOHRSMW9FTGExdWtpNjAtd3c3TnlYMkxlTkRPbkZyeHBTMlZxVEZoZHVHM2dZczFYOW54YWNidmVuTUFJdWE0SW5IMWNxRklWM1NJN3RyZlRvRzlKNUR2dHRZUF8yRkhPWFBDdngwWElUd25sZl9TRXVXYmZ0STZ4UUk3YnM5X2JoUFhNOVB3?oc=5",
@@ -360,11 +605,25 @@
       "summary": "Jio’s current valuation at over ₹12.5 lakh crore pushes Reliance Group’s combined market value past ₹30 lakh crore, surpassing Tata Group’s ₹25 lakh crore valuation"
     },
     {
+      "headline": "StanChart shares soar after it hikes full-year targets and trounces profit estimates - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOZjdKcHNBRWZiYWhjMnM3MWN5RGUxaVAyQXhnbmJVSzJxUXRGYUh0ejZ0S3ZJRmRvSHFSM0h0eWF2ZEdpeGVSeTY1a1NNeHJSdGZ6dHl0MXROWVFXUTBfRlNRYlhHdTl4eExkSFlRcFFZTzJoTUJNSENkVUExb1kwYnVYTzBWWU5vcmJma0g4MThEd2FuY3dyRUUwTlFBbVBMdmZuRW9ra2Nnd2wxUnlHT0x4WQ?oc=5",
+      "datetime": 1793174465,
+      "summary": "StanChart shares soar after it hikes full-year targets and trounces profit estimates  Reuters"
+    },
+    {
       "headline": "UK's Healey says he will help households by scrapping fixed gas charges - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMivwFBVV95cUxNUU5FNkRLTTZZZnVoR0pVbjlMdXd0b056eUFxaUV2cGpaNjFTM3lsMmg5RW8xSlZiLWZJX1NzSTJJWkpybXhtcloxa0VzUUNxSDBJVk9neHhWZk5jbTNmbVVicXV1d0lkMjh5UlVJX2tBSHBQaUY3WkxlSHgtQUdnV3ltcEs5SDhnQU5RemE0RDJCaFA3b3RFdXZiSlZZSko2dkhneUtLSTI2WmRiSmZIdXdSZzFIQl9wWl9Zd19MVQ?oc=5",
       "datetime": 1793173389,
       "summary": "UK's Healey says he will help households by scrapping fixed gas charges  Reuters"
+    },
+    {
+      "headline": "Trump's red state midterm blitz, in photos - Reuters",
+      "source": "Reuters",
+      "url": "https://news.google.com/rss/articles/CBMiigFBVV95cUxNOGx4NENjR0Z6Q0g0cE1KeDRhcDI0RWxRWVFWN2lIRWFOaHd0TmlCVmJzUF9LcW1nckZNT1pKT0t1MnFWcTgzNzJ6WXItb2tacDFDNERMNGdVaFRkRElKaGJkS0E0TmFwMkNHeFFzX05PdjY4RU1veXluZ2o0TGRfdjRZMGJTTFhWVEE?oc=5",
+      "datetime": 1793170800,
+      "summary": "Trump's red state midterm blitz, in photos  Reuters"
     },
     {
       "headline": "Adani flagship’s $10-billion wipe-out raises stake for earnings",
@@ -379,13 +638,6 @@
       "url": "https://www.bloomberg.com/news/articles/2026-10-27/visa-earnings-beats-estimates-as-payments-volume-rises-9",
       "datetime": 1793160954,
       "summary": "The company’s payments volume increased to $4.08 trillion, up from $3.73 trillion during the period last year"
-    },
-    {
-      "headline": "StanChart shares soar after it hikes full-year targets and trounces profit estimates - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOZjdKcHNBRWZiYWhjMnM3MWN5RGUxaVAyQXhnbmJVSzJxUXRGYUh0ejZ0S3ZJRmRvSHFSM0h0eWF2ZEdpeGVSeTY1a1NNeHJSdGZ6dHl0MXROWVFXUTBfRlNRYlhHdTl4eExkSFlRcFFZTzJoTUJNSENkVUExb1kwYnVYTzBWWU5vcmJma0g4MThEd2FuY3dyRUUwTlFBbVBMdmZuRW9ra2Nnd2wxUnlHT0x4WQ?oc=5",
-      "datetime": 1793160780,
-      "summary": "StanChart shares soar after it hikes full-year targets and trounces profit estimates  Reuters"
     },
     {
       "headline": "Indian central bank likely intervenes to support rupee as oil prices weigh, traders say - Reuters",
@@ -416,13 +668,6 @@
       "summary": "Netanyahu set to remain caretaker after inconclusive Israeli election  Reuters"
     },
     {
-      "headline": "Oil prices rise on Yemen fighting, Saudi refinery attack - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizAFBVV95cUxQYUhHblNqOGNPczlpdUR2NDFMWjZxX2FZYjVTTzREX2R4YU5jRzF2ckN1MG9sSnIxWG9hbDJ0TjV4YTZXRjdqSUc3aF9OcTJuUVlJZkZrdUd0V0RMUU1qUWxiNDdmdXhCTmJUczZWOFRUWTRKdzJQLUJYNXZBODhnTjJfOXMyNU01OGVreWM5TkNyamNjbzV5UzAxX3ZOdWcwcUE5SFZHSkEyUjZ1M1dUQ3ByRDdxbC13ZzRQR0xfcTZ0bjh6dnNPalJZRWI?oc=5",
-      "datetime": 1793152140,
-      "summary": "Oil prices rise on Yemen fighting, Saudi refinery attack  Reuters"
-    },
-    {
       "headline": "ASEAN envoy to lead humanitarian mission to Myanmar - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMiogFBVV95cUxNVDBiTUtVdXhyTk5manktYnZ3anFPSUVJYXdtV3BSLVJRQmRsaXNxVU1COHViWkJ6ZFlhbGplZFQ2MzNBZDNoY1VSVHN2X0FVRnl4QjF4SjNPcU9OS3pNcGpaYWdDelNWYkV4Slg0QnBDSi1JQmY3XzZ3cWpRRUVndGQzWmQwUExuSkNpWHpGVUkzWEVPck9HQndNcGswZnBLYkE?oc=5",
@@ -433,7 +678,7 @@
       "headline": "US costs of Iran war rise to over $47 billion, according to Pentagon estimate - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxQclRmNndRN0ZxR18wcDdQUy01TjRUZnN3V2NOMGRPcmF1WnZCVDM0TzgzWHdHSVpISFgzWnFYbDlpazlmZVpIVEltalZ0cHVSak1YQ1ZkVmtTbXFvcFhUVFFoSE5NTWR1UTFWdnp0bGtxVXJYM0c0VmgxbS1KS1EtUW9qb2xCVEhHVWdNWVdvTWpVZnp6QW13TWVGOEhPeXF1MVlPTWhpTmV2Q0N3MjUxaVdEeU5MZFRLLWRCOA?oc=5",
-      "datetime": 1793149260,
+      "datetime": 1793149693,
       "summary": "US costs of Iran war rise to over $47 billion, according to Pentagon estimate  Reuters"
     },
     {
@@ -451,260 +696,22 @@
       "summary": "Israeli exit polls show deadlock, point to setback for Netanyahu  Reuters"
     },
     {
-      "headline": "Hegseth reassures Southeast Asia of US commitment, pledges stronger defence ties - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxONll3Q29YU0J4a1d4cjRXanpGWDdNc1YwM0dpM1BxX1UtWFZKMkk2MjIyVElVRlUxVVhQUU93bTBwWHdPTk5iM2FhdDVKMU9rVDZDMG55Xzc1d0IzYWwzV2RMZVdzTFhBTTlUSnM4NGFuM1ExcUVZcXBWcklWNm1YM2FFSzRPbUxIZHdnazFqLUJTa29zYWlvU2JnSDJoVTNMXzFVbl9GbW85S2tpcUd3Yg?oc=5",
-      "datetime": 1793142060,
-      "summary": "Hegseth reassures Southeast Asia of US commitment, pledges stronger defence ties  Reuters"
-    },
-    {
       "headline": "UK's Healey to reverse cuts to cash ISA allowances, FT reports - Reuters",
       "source": "Reuters",
       "url": "https://news.google.com/rss/articles/CBMioAFBVV95cUxNY3hqY0RJSHAydENJNjV0Zmg3a2wxQnhUcGdRWFdMSmtWczFseFg3cEx1eURQLXp2QnpVV2FmeVBvM3VYRlBaZ3M2RnRWOHBiZl9QeEkxMXRSX2p3djhjVXFxakVyWndnN3lqR29vbWh3RGxGaWhBdE5XRkttLUI1a3VUX2t4aG1GWUVSSUFlSGF3a2ZLN0h2bkh0VjhPdm9j?oc=5",
       "datetime": 1793141983,
       "summary": "UK's Healey to reverse cuts to cash ISA allowances, FT reports  Reuters"
-    },
-    {
-      "headline": "Rights monitors raise concerns over senior UAE diplomat bid for next UN boss - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixAFBVV95cUxOVEo2NDgyNjdJcHpxNTlUcGpCRURGc2JWTjhjSUx0aHBYUEhCcVlTajg1QjRhczNUeVBRS0JURTlMYU9VMGtUVks5MnBCal8wOWI5TTA1eFA4SU8xZDBHanZ2eUZSTVMwbWVVQTRpS2VWNW5STjRVYjBsVHBKRGZEaG1nRERnS1ExTGxad1NfUllEc28tc2k2NnpiU0l6V0h5dF83WmswWUV5YWpaM1Z0UENqTlpFVFFRanI0Z21aaFZ5cGpD?oc=5",
-      "datetime": 1793140851,
-      "summary": "Rights monitors raise concerns over senior UAE diplomat bid for next UN boss  Reuters"
-    },
-    {
-      "headline": "Oil falls almost $2 as Middle East talks help ease supply worries - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiyAFBVV95cUxOamRMeXF1dF9xaFlNcFlIalRnaGZBQUs2SUwtNThkNExtMzBQa2dYdExLbnJVckRGM3BpMWpjWkhGbEdQUGFHQ1FOWER6SUhadU04ams5RkNXR0tOVDdRTkExX2xnRWhCd3gxUl9icTE4Sk5nSHZFVU1vXzVidVRhOEdESWJCRGR2M3Z3NDVVY2JjZ1dQdjRGelQwTTVnakd6ckIzd2x4bEo5VnFnTjNRaHdNajdIZElQb2pnampYMDZnZW81OTR0NQ?oc=5",
-      "datetime": 1793138194,
-      "summary": "Oil falls almost $2 as Middle East talks help ease supply worries  Reuters"
-    },
-    {
-      "headline": "Jordan, Syria to form security committee after deadly strikes on Islamic State sites - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiywFBVV95cUxOUTlkRXhpdTRCZ2g4U0hDdDlkZlBWVDFkTTg2WWhBUXktS3c4akJZck9XbHdmdkpsazJiSVdjUmcxdFdZRmhITzEwRU9vS0pUNkFWSThqZlhYMUVWVnV3ZHRtRVlvdDdrSWhQSGQ0Zy1HOXhNbDEydkRscGV1eG04Q1A4a0VlajhCLTJpVTJYMVhzVzgzb0VTLUpURGl4c0VvanhreWVJcm1RUFNzRnFUMjliUlVZOURxOHlFWmVMNWNPTWsyT1p5a2trNA?oc=5",
-      "datetime": 1793136608,
-      "summary": "Jordan, Syria to form security committee after deadly strikes on Islamic State sites  Reuters"
-    },
-    {
-      "headline": "Robinhood quarterly revenue rises 12% as event contracts, options offset crypto slump",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/27/robinhood-hood-q3-2026-earnings.html",
-      "datetime": 1793132457,
-      "summary": "Robinhood's third-quarter revenue met expectations, fueled by the company's expansion into options, predictions markets and other financial services."
-    },
-    {
-      "headline": "AI debt fears ease ahead of Oracle, Alphabet and Amazon updates. Here's what to watch.",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/27/ai-debt-hyperscaler-earnings.html",
-      "datetime": 1793131055,
-      "summary": "Credit markets will be closely watching updates from Oracle and other hyperscalers later this week. What to expect."
-    },
-    {
-      "headline": "Yemen's Houthis say they hit Saudi Ras Tanura oil refinery with missile - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxPMU9tRHdmbzQ2ZHlsQzBDVmpqUEhlTk9meXgzN1VMOWlUMnlKOU1ibFRMQ1VQNDNjTkloUG9lb054S2JXZ2YwMS1MMXM4b1pwczl2clNyTHM5RGZVdnd6bzJXTVl4bW4yZ0pGTEV2aEV4dlR2cDNkc0lvNjVMN2ZScklvRDE3S1VyS0FoaC02Z3BqTHJPeTJrekxhM0dONmN0VzdXTmE5QjNfM0pIZ1Q2SHMtSkZzbFNqSThaN2RybDFBdw?oc=5",
-      "datetime": 1793128673,
-      "summary": "Yemen's Houthis say they hit Saudi Ras Tanura oil refinery with missile  Reuters"
-    },
-    {
-      "headline": "Food and household brands warn of more price hikes as Iran war costs bite - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxOUXRiWWdvUGZ0dTBiY2t4aWlWZlNWSlVlYUV4VXR6c25vRFJ0QUJ2NEJ6WTJTSW93cWFhb2xDYURhY2gydkQyRHhvMEFJYkh0S1JjVTVOLWlTbEVOQW83UUZZam5TTnBtV1ZoS2NaV3REUXF6andpWUZfcXpwdzRMQjJmZkxkdUs0eDVFSF94TjN5Tl9INFZ1WVFiUm8wSzBvbHlEQVJJT25TMlBWRVZneE01NGl6ekNHVGhYb2ZqNTRHdw?oc=5",
-      "datetime": 1793125680,
-      "summary": "Food and household brands warn of more price hikes as Iran war costs bite  Reuters"
-    },
-    {
-      "headline": "Pope's cancer is a 'gamechanger' for papacy, Vatican foreign minister says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxNV3FOSEdGM0hJaEZTR3ZvYlR1bldmYm5KU1JmVC1MQ0VVcE1WNG55NnJNcWNicHZOUHVfa1hwYWlsSUJzcFBJNENNdUdzb0NBdU5uOW8wd05yS3hIYU10S3JOQUpmVm5TRGdqUk9EYnR4NHdMQUpnVVd3U1R2WlBsc0FleTJiYUlITDcycEQweW9jNllHUWo2Wlo1a2UwLWtCVVdCLTJqUGdNbGdWMktNd2hsUQ?oc=5",
-      "datetime": 1793125301,
-      "summary": "Pope's cancer is a 'gamechanger' for papacy, Vatican foreign minister says  Reuters"
-    },
-    {
-      "headline": "What's behind the AI trade comeback — plus, our take on Intel's latest deal",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/27/the-ai-trade-comeback-plus-our-take-on-latest-intel-deal.html",
-      "datetime": 1793124831,
-      "summary": "Every weekday, the Investing Club releases the Homestretch; an actionable afternoon update just in time for the last hour of trading."
-    },
-    {
-      "headline": "US energy firms to produce record natgas in 2026 as global demand soars - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMitgFBVV95cUxOTHVMZzUzSnBRM3JTRjN2LTU1RWNESGpJS0dEQV9DWnNZSS05ZDFJb1owWjVmNzI0d2J1ekZBQVdpcllnRlJfeFZlcGZyNWM5WE5DMkdZVi16eTB1d0pobHZzZnVUSVRpZENMNjZpeDNHWkhHcFJlWlZ2enlQbkY3YVM0OHU2TUQ4R1Y3WlhMeEhoR0o4VmRMMFVDX0RPNndvR0V0Ym9XODgyNEFScW1qSlROODlvZw?oc=5",
-      "datetime": 1793122178,
-      "summary": "US energy firms to produce record natgas in 2026 as global demand soars  Reuters"
-    },
-    {
-      "headline": "Anthropic's IPO could be 'speculative fiction' or a 'generational moment' — investors are split",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/27/-anthropic-ipo-investors-growth-losses-s-1.html",
-      "datetime": 1793121994,
-      "summary": "Investors are digesting Anthropic's S-1 filing that the Securities and Exchange Commission released on Monday."
-    },
-    {
-      "headline": "AI investment boom powers US business spending on equipment in September - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipAFBVV95cUxPNlJmQ1NMeEVTRlJIWjMxUGJPOXNBMXRLR0VnVlBkVDQwUFlUNkFKOTRnaWFUc2U5YVhxYWF0UnBVWFVkMXd3c2Juclh5a0FnOHMzeUpaOE1NVWhfYWYtVUc2MHBzVXhESFc3RXRpcTM0R3I3V2tpcFVpSE5aTkNtaEh4LXZpRjlmMUdHcHMzWUFtdjNzY2hIbmt1WThYSUg4OGVlVA?oc=5",
-      "datetime": 1793120358,
-      "summary": "AI investment boom powers US business spending on equipment in September  Reuters"
-    },
-    {
-      "headline": "As holiday shopping approaches, seasonal hiring gives 'mixed signals,' experts say",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/make-it/2026/10/27/seasonal-hiring-2026-holiday-jobs.html",
-      "datetime": 1793119257,
-      "summary": "Companies have posted more seasonal jobs in 2026 than in 2025, boosted by non-retail jobs. Major retailers are, instead, relying on permanent staff."
-    },
-    {
-      "headline": "Two men charged in UK over RAF Fairford incident allegedly linked to Iran - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiuwFBVV95cUxOQTFPZl9fajZtLVJ5V3dXM00xVHAtT2p6VUF5X1loNWtHZ2hSZl9CY1ZtdW01SHgxalNGbXpRVTdkZ09LanNSdVBhZ2YtRzJabk1JdFdEU25pWVMyRU40UmhnZ1UwcXpmMG4yVGJzZ1Y5QWlZYVViWVpvMVJUdGlvU0tUYnRuZUhhRHFzNkpsLURLd0w0dXBocjktUXo0Y1IxOWNMOHdGT29kcFBra2NrT2UySTNNbHNXZGFF?oc=5",
-      "datetime": 1793118886,
-      "summary": "Two men charged in UK over RAF Fairford incident allegedly linked to Iran  Reuters"
-    },
-    {
-      "headline": "Israel's shekel jumps to 5-week high amid record election turnout - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxOVEF1eVg2dldmWWJjaXJHTkxTeWlrU080UldSdDNCazJpWnFMbDIwa2pmN0JhOTJfbFJKS0tqNWVwRDExUEtKZUJIb3kzNGJoM2h1UFFiMzIzcWprMm94eW9qMVVfSC1jX2V4N25xRzlydkQ4aklQaGtLdVhrNF9jX2tFVXh2SlE2cjd0bTZ0R3FXOFp1dFE4bWJROHpGNDMwdW5GX2FwcmQtV25FN0FOSi1ETQ?oc=5",
-      "datetime": 1793118000,
-      "summary": "Israel's shekel jumps to 5-week high amid record election turnout  Reuters"
-    },
-    {
-      "headline": "Cramer says something is missing in Tuesday's market rally and he's not eager to jump in",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/27/cramer-says-something-is-missing-in-tuesdays-market-rally-and-hes-not-eager-to-jump-in.html",
-      "datetime": 1793117587,
-      "summary": "The Investing Club holds its \"Morning Meeting\" every weekday at 10:20 a.m. ET."
-    },
-    {
-      "headline": "Netanyahu warns of Arab voter surge in Israel's election; Arab leaders call tactic racist - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixwFBVV95cUxQbkV3Umx6VUg4THl2S240YVdZcy1jOUNXQThnN1VpQnRMQWxmblRWS3NmYjYyMUNmNTVHRGtIZC1ZUUlHaUItaWVMUzJ1REcxODVmdXA3RkxtdTM3TTdzT21taFdrSll2eFhhMXZrZjQ1blQzSkxTZmpZVmZuYWhKbll2QndUY0RkdlFtR3dhQ0REV1hhMmRwc284RTRXYklZcTlrR1VIWTY5RGM3TUpmaloxMlFqa2VBX3JHN3QtVXlNV3ZyWW9Z?oc=5",
-      "datetime": 1793116666,
-      "summary": "Netanyahu warns of Arab voter surge in Israel's election; Arab leaders call tactic racist  Reuters"
-    },
-    {
-      "headline": "High inflation to persist globally into next year, Reuters poll shows - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiswFBVV95cUxQSGlkNFRUdUxnaVVWLTVGV2pJeEdyQzVIUTBoak15M0dBVjMzcGZrV0NjMnVISDZud2U2RGdDcXc3NUZpSU5QNGtSS0xpc2F3QkR0Y05OOE00czlTSUV6ZUQ1V1Vrdk9BT2x6Qzk1a1IycThjeEJ0bk5MT3FjN0FxTEpvdFV1aEZ6MkRfTkJpbVU5eEZVdlhOVzdxVkJENXpjazlRVk0yZlROcTByLVluVXp0MA?oc=5",
-      "datetime": 1793116036,
-      "summary": "High inflation to persist globally into next year, Reuters poll shows  Reuters"
-    },
-    {
-      "headline": "American Airlines hikes annual fees on rewards cards for first time since 2018",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/27/american-airlines-citi-aadvantage-card-fee.html",
-      "datetime": 1793115591,
-      "summary": "American Airlines joined other airlines and banks in raising their airline credit card fee for one of their major cards."
-    },
-    {
-      "headline": "World to add less clean energy capacity this year, renewables agency chief says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMixgFBVV95cUxQV01DdmUtSFViX0RVSWlQX2o2OFBfM0gzRml3SU5GVWVCeU10bElSWXowNlFyZmhRekRRYkpSWVBDZDRPUHRSR3Z3S2d5MVZ6MGNYdUp3NHVDSlJDczhySGN1V3g4LVZmX3oxQjhfSXVwNGtMZXRHOE5OYjg0VXNua0w2WGhETnprNjFWcE93LWNxbkR0VnhYYk1GWW5sQjAzWGxxQjFSLUJLX0QwRHp3Z2lrSzVWcUdmRUZoTVo0TmdnZTBsNFE?oc=5",
-      "datetime": 1793114765,
-      "summary": "World to add less clean energy capacity this year, renewables agency chief says  Reuters"
-    },
-    {
-      "headline": "Qatar says Iran needs to show good intentions for mediation efforts to succeed - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxPRG1tam9JT0hBZDA3dTlSV21WdUNuNjNzY0ItTjJORk5BZld1Sl9jWUJ2cFhicnJfYlRCdXFQdnFveFcwWm9BVFpTVkJlVnd0R0cwbDdvcVlGSTR3aEE2YXVuRVVnQU1YYWVsTmtRWWZkeVJNMGJmd3pUcm96Y0FXYmdVWjBXcW5RTzlXRHVJdmVIYU1idXBBX3F2bzJRVm5mVlVPd0tkTnFBNEl6bjgzdkpiY1dMVDFUVlhXVFdVQ0o?oc=5",
-      "datetime": 1793113304,
-      "summary": "Qatar says Iran needs to show good intentions for mediation efforts to succeed  Reuters"
-    },
-    {
-      "headline": "Critics attack 'anti-democratic' French bill making rioters pay - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxQU1RoMGJHVE96MkNSdDBSb3o2TnNlN3ItNmNVR2p0eFdBZ0J6UzRrNTdHX2VmYVZ6RVMtUFJINFFBVGhqQkpmcWp3V1FOc1gyV091Q3NtXzJ3WVFMSy1nSDhuS01zbmRjeU9NOF9feU5Xc1hBMXpfNjNHNXJFYlBHLXRjOFdtNEozdmw0LWczVzIwZWRQYzgweWlScGRHcGJCY2lPc21CNWw3WDZ1cWJF?oc=5",
-      "datetime": 1793111820,
-      "summary": "Critics attack 'anti-democratic' French bill making rioters pay  Reuters"
-    },
-    {
-      "headline": "POLL Strong dollar, high yields drag on gold outlook, but central-bank demand lends support - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxNY2N0dGg4Q1VsMUJXaTJYb1J4cjJiQjRGYS16djR0Nnh5VGVsQmFRZXctU0w3UUpfclljaFp4ZW5DVFZTLVYzTUlSWDY5Q0JsQ0JLYjF5aFJoVDBpOGhrWnkxdEZKdUtpQzNPc1kxRGdGRkdTZENtM25LLUNYNTdlMjNnMHdUcU52VVlFTkNXRUJKMDFhWEhFalptcGZvQ0FZeUl1UHF5T3Z2UmpWOUR6ekJmMnlHblRWQU1MUzFUaXZiUzA?oc=5",
-      "datetime": 1793107800,
-      "summary": "POLL Strong dollar, high yields drag on gold outlook, but central-bank demand lends support  Reuters"
-    },
-    {
-      "headline": "Most Gulf bourses advance as Saudi defence pact countries push for peace - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMisAFBVV95cUxPWG9tLV9mV2h5cUZBVmtpdmdNWEFHcUhXR1IyNWJXSGJpY1ZFRTVVdEhEX0l4aWtXRjBBMlBsYU5SSXBISk43OHVfcmFYemVmcm03YndWYzE2OXg4MkRqbnNhNUhnOG1BeDFuQjB5SWp3STNvSWZtMFBaTGNOeWM2a3lDeGROenNGZ19wdDJCaktmc3dOdmZRbGJNZHUySk5BS3hITDc1bkVLMlpfRW1kZw?oc=5",
-      "datetime": 1793107623,
-      "summary": "Most Gulf bourses advance as Saudi defence pact countries push for peace  Reuters"
-    },
-    {
-      "headline": "Drone intercepted near Baghdad's Green Zone, military statement says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMivAFBVV95cUxOVTNIVUxCMHNxOGdwWHVlWDlyVlRGbmx6cnZTOWNnd1BsZ2F4V1NPNDdwQjJrUTJwTUdmX0tUYW5hcGhmbWRjSW03RlVDb3hYUk1BcHQyTV9Lc2VuWEcxNlBrYzZsTnhOeV94LTlNY0lTV2cyNUFlVE5TTHhPN3RfMVliTGFfRkZxaFNyU1JRVzI0Y0FEaDBuTFViTVoyeURjdjFxcmROWXhVak9mMnN6alNibEhtbFBiTktFRQ?oc=5",
-      "datetime": 1793106698,
-      "summary": "Drone intercepted near Baghdad's Green Zone, military statement says  Reuters"
-    },
-    {
-      "headline": "Colombia announces withdrawal from Hague Group, citing body's actions over Israel - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwwFBVV95cUxQckhjWGxOU2JrMmdQNF9EcVJqWGdXd1JvODF2V3dtZHFDRV9LUkRFeDE4bF82TVRxQzhidWtOX3FZQmpVcFFCd1hSY1JaWWJ6RlY4VnJEMGhQWVFxUzRkenRLYXR6RmdxSWxiTVZwOTdyX3lpMEROZWl1dHBRU2EyWUNzd2hXY2ZJSWdoRzR5VXAtVUhOWG1ONlFYQmJDanFVaVpHLU9oS3AwNWZnSmRmX2ltcE1aVUlycWg5SmVtNnBMS0k?oc=5",
-      "datetime": 1793106406,
-      "summary": "Colombia announces withdrawal from Hague Group, citing body's actions over Israel  Reuters"
-    },
-    {
-      "headline": "US single-family home prices rise further in August, FHFA says - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMipgFBVV95cUxQNTQwQ1lFQTZGYVJCSjRXODR2aDVDVGtRQjVoVGl1dGZTcXk5aXNxSGpVOVRoTFFuekRVclpBWTA3VE9yMDVyMGJiaVE1eGFHb3Z5cW5JamU3aFZTR3BrYXJndC1nZWF0OW9uLTAyMjVUc3hSeTJaM2JQZTBDSUlzWTZxZEJndUEtMXRNN0NXVzVvRUN4bnlGcVZtUTJSc1VWNW42WVB3?oc=5",
-      "datetime": 1793106157,
-      "summary": "US single-family home prices rise further in August, FHFA says  Reuters"
-    },
-    {
-      "headline": "Jim Cramer's top 10 things to watch in the stock market Tuesday",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/investingclub/2026/10/27/jim-cramers-top-10-things-to-watch-in-the-stock-market-tuesday.html",
-      "datetime": 1793105476,
-      "summary": "Broadcom arranged chip financing for Anthropic, and Meta upsized its secondary stock sale."
-    },
-    {
-      "headline": "Germany's Merz: Russia, US cannot settle Ukraine war without Kyiv, Europe - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwgFBVV95cUxQNVc2emkxZkxNNXJ3U2E3TTJ5UVhOSGJHQnZKYzZuSjFOVXZiaC1QVkc4dE9pMWJsd2RteE50M1czVlBhN1dRNWhjUjc4VUpNRXVjZ3RrdklENUVTWWNtVVlHQXExRE9DZGZBUXdaRnVOb3RXNlFHY3NVbThyNWRFME9fMElTR19iclFxaUczRkpaOGphRXVlMENMM2tHdWNnUHZKXzl5YWctYVcxLVhEdXhtLTVjcEtab1o3ZnVvaFBDdw?oc=5",
-      "datetime": 1793104561,
-      "summary": "Germany's Merz: Russia, US cannot settle Ukraine war without Kyiv, Europe  Reuters"
-    },
-    {
-      "headline": "Santoli: We are nearing a now-or-never moment for the AI trade to rebound",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/2026/10/27/santoli-now-or-never-for-ai-trade.html",
-      "datetime": 1793104432,
-      "summary": "Pampers over AI? Procter & Gamble's valuation crosses above Alphabet's."
-    },
-    {
-      "headline": "Iran says Sinokor vessels face legal action; South Korean shipowners deny link - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMiwAFBVV95cUxOUW9RVHdDMTVDdzl0ZG9FN0dXZkdIU0JjTW82Y1JybWFpZTlBYlozU3pyS29oMXY4Snlla045azE5VHFIUHJPdXFiSmwzWXhLcl9KMUR2a25MWXN0aVdIVkNRaWJBQm5DbHJjUkFhRGRQS3hscVNiRzJ5bV9wWmc2eE5XT0tKdlA5cTAxRGxRVTBRdzFycnR6V3IwejRuekN6cGg2TlFQNnpUNTR4WFZXZmhMQlI0ZnlBWUQwRUtzLUM?oc=5",
-      "datetime": 1793103480,
-      "summary": "Iran says Sinokor vessels face legal action; South Korean shipowners deny link  Reuters"
-    },
-    {
-      "headline": "Iran security chief meets Supreme Leader after talks with Mecca pact countries - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMizgFBVV95cUxPcVBrY1paZGo4aDlvd1Yta3RvNmNENmRFQXlyQm1PQ1FBVnlkYVVzLWlXRWd4eDNydGJybUpHM09KSElhbjZIOTExUzlMNjFEQ3lSOEpNdllQRmUyWE1mS1BqQ2ltZDdEV0l4cnRJTUpvalRyOXhlakxINTNaZ0tBdEhuVGFUa1Z3M1hESkx5XzU0ZVc2Zmh0anNaY2p6a3plQ0U5WHB4NFJpd1ppSGhDS2h1OFZJa1V5VEE4R1FSMnpraWxLcEF3UVl6Q3Fjdw?oc=5",
-      "datetime": 1793103366,
-      "summary": "Iran security chief meets Supreme Leader after talks with Mecca pact countries  Reuters"
-    },
-    {
-      "headline": "SpaceX, Tesla and Anthropic may reshape the S&P 500—but not right away",
-      "source": "CNBC",
-      "url": "https://www.cnbc.com/make-it/2026/10/27/spacex-tesla-anthropic-and-sp-500-index-rules.html",
-      "datetime": 1793102401,
-      "summary": "SpaceX, Tesla and Anthropic could become major S&P 500 holdings. Here's what that could mean for index fund investors."
-    },
-    {
-      "headline": "France to exempt retailers from replacing diesel released from reserves - Reuters",
-      "source": "Reuters",
-      "url": "https://news.google.com/rss/articles/CBMirwFBVV95cUxNZUYxT1ViMGFGdllJWVo3MWhKOHRrQnNmRVJ3WFhJWUlaSjM4Y3RtSXoxOEN2V01HUHltbkNSSHU1Z1lmMzZqcXZpMElRako4UE10ZFhRZkhwZU9fZmZMWVJuSTdFYTJHdTVjaDBZT1BIbmc5M2g0WFdhNjlRQjZzLVJ5QTBVd1B3c0IyaGRBNVpsUmpyMXBaQWpvWGg0Wk80VHhWUFpaczlzRFJtanFR?oc=5",
-      "datetime": 1793101183,
-      "summary": "France to exempt retailers from replacing diesel released from reserves  Reuters"
     }
   ],
   "ticker_news": {
     "AES": [
+      {
+        "headline": "Big Batteries Haven't Peaked Yet; These Energy-Storage Players Dominate",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3362f31e97287ae6121cbe58247015a4932c475494a0b2925c61fe275ca49f3b",
+        "datetime": 1793277371,
+        "summary": "Tesla stock: The energy-storage market is on track to bring 188 gigawatts online this year, up 45% from last year and more than ever before."
+      },
       {
         "headline": "The AES Corporation Announces European Commission Closed Preliminary Review of Merger on October 28, 2026",
         "source": "Fintel",
@@ -728,6 +735,34 @@
       }
     ],
     "APA": [
+      {
+        "headline": "APA Corp (NASDAQ:APA): High Growth Momentum Meets Breakout Setup",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=76a5e1789b908266aca5ddf79439510db2625cf4a445c486647acb875441062a",
+        "datetime": 1793353266,
+        "summary": "APA Corp is a high growth momentum breakout candidate with strong earnings acceleration, technicals and a constructive setup despite weak revenue."
+      },
+      {
+        "headline": "APA Gears Up to Report Q3 Earnings: Here's How It Will Fare",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=2c16b750a53dd9f651d0e76575352cc9e8a3c33ede11163febb7233f6dd9139b",
+        "datetime": 1793286000,
+        "summary": "APA Corporation is set to report Q3 2026 results, with higher oil prices potentially boosting revenues, while rising operating expenses could pressure earnings."
+      },
+      {
+        "headline": "EOG Resources (EOG) Reports Next Week: Wall Street Expects Earnings Growth",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=5c3a8997cca37f6524ecf35de4d23eff840b6434a2709563192b9456cebb5fe2",
+        "datetime": 1793278815,
+        "summary": "EOG Resources (EOG) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
+      {
+        "headline": "Ariel Focus Fund Q3 2026 Performers And Detractors",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=d5b6814eec876e3bf4bfe243856e9458b0c783376a009950bdaa62c237f86965",
+        "datetime": 1793268000,
+        "summary": "The Ariel Focus Fund experienced a decline in Q3 2026, underperforming major market indices. Read the full analysis for more details."
+      },
       {
         "headline": "1 cash-producing stock for long-term investors and 2 we find risky",
         "source": "Yahoo",
@@ -867,23 +902,58 @@
         "url": "https://finnhub.io/api/news?id=5eaf3ebaf968b9589d2bc7bb6342ef92015fb29a0233e40ce25ebb81f551bfd4",
         "datetime": 1792735080,
         "summary": "DG gains on strong earnings and raised guidance, while LVS struggles with earnings misses, falling margins and declining estimates."
-      },
-      {
-        "headline": "APA Plans to Keep Forties Charlie Operational Amid Strike Threat",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0a1ebb293ce9317e767ef24a034049cc6e5ba5b3586b1c272b2c14f4e692d92b",
-        "datetime": 1792679100,
-        "summary": "APA plans to keep Forties Charlie operational despite a threatened strike, aiming to protect oil flows and avert wider North Sea pipeline disruptions."
-      },
-      {
-        "headline": "Oil Prices Climb: 3 Energy Stocks Poised to Benefit From the Rally",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=2d3ec1497eaaf7431c10570660a5c060dc7bf7ac9c4c0c7f44e52c91747544a0",
-        "datetime": 1792676280,
-        "summary": "CVX, FANG and APA can benefit from higher crude oil prices, with production growth, strong cash flow and disciplined capital spending shaping their earnings potential."
       }
     ],
     "DHR": [
+      {
+        "headline": "The Case Against a SpaceX and Tesla Merger",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=88ab17534752bbf924b90cc37e81263a24a5c40b875e714ddbce57d49ffb89ec",
+        "datetime": 1793343000,
+        "summary": "The market is getting excited about a potential merger, but now may not be the right time for Tesla shareholders to get the best deal."
+      },
+      {
+        "headline": "Repligen Soars 5% as RBC Raises Price Target to $200 After Full-Year Guidance Hike",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=46557c3059d5794ede5ac1a8b32b188faef45ed051136119c0f57516b220cc85",
+        "datetime": 1793299077,
+        "summary": "Key TakeawaysRepligen shares rose 5% after RBC Capital raised its price target to $200, a day after the company beat estimates and raised its full-year revenue outlook. Repligen’s 12."
+      },
+      {
+        "headline": "AI in Pathology Market Size, Share, Trends, and Global Forecast 2026-2036 | A $1.72 Billion Opportunity Featuring Profiles of Key Players Leica Biosystems (Danaher), Roche, Hamamatsu Photonics, Fujifilm, Agilent Technologies",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=77d0db6e0cc4b87e1f432e1ffe96c19e5979aae9f517e298dcd5fdc8a7d661d4",
+        "datetime": 1793289960,
+        "summary": "Boost ROI by targeting services, computer vision, drug discovery, diagnostic labs and Asia-Pacific, supported by cloud integration and strategic partnershipsDublin, Oct. 29, 2026 (GLOBE NEWSWIRE) -- \"AI in Pathology Market Size, Share & Trends Analysis - Global Opportunity Analysis and Industry Forecast (2026-2036)\" has been added to ResearchAndMarkets.com's offering. The global AI in pathology market is estimated at USD 211.4 million in 2026 and is projected to reach USD 1.72 billion by 2036, r"
+      },
+      {
+        "headline": "Molecular Spectroscopy - Global Strategic Business Report: Capitalize on the Surge to $8.7 Billion by 2032 as Agilent, Bruker, Danaher, and Thermo Fisher Scientific Accelerate AI-Driven Analysis",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=26b016e5416dd1d6e4ad31b15c72e80239812c147302a38abb8736382f63b240",
+        "datetime": 1793285700,
+        "summary": "Boost ROI by targeting pharma, portable and AI-enabled spectroscopy, rapid testing, regulatory compliance, and Asia-Pacific expansion.Dublin, Oct. 29, 2026 (GLOBE NEWSWIRE) -- \"Molecular Spectroscopy - Global Strategic Business Report\" has been added to ResearchAndMarkets.com's offering. The global molecular spectroscopy market, valued at US$5.5 billion in 2025, is projected to reach US$8.7 billion by 2032, expanding at a compound annual growth rate (CAGR) of 6.7%. Growth is supported by rising"
+      },
+      {
+        "headline": "Reaction Monitoring - Global Strategic Business Report: Secure Share of the $2 Billion 2030 Market as Tariffs Reshape Danaher, Bruker, Bio-Rad, Waters, and Shimadzu Strategies",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=53da2ace40a480c1625f301fcd5bcdb12b2bce273dbd89bc20ca74c697297a0c",
+        "datetime": 1793285100,
+        "summary": "Boost ROI with real-time analytics, advanced spectroscopy and PAT to optimize yields, cut waste, prevent batch failures and strengthen process safety.Dublin, Oct. 29, 2026 (GLOBE NEWSWIRE) -- \"Reaction Monitoring - Global Strategic Business Report\" has been added to ResearchAndMarkets.com's offering The global reaction monitoring market, valued at US$1.6 billion in 2024, is projected to reach US$2 billion by 2030, expanding at a compound annual growth rate (CAGR) of 4.1% between 2024 and 2030. M"
+      },
+      {
+        "headline": "Global Pooled CRISPR Screening Market Report 2026 | Capitalize on 16.1% CAGR as Thermo Fisher, Merck, Danaher and Agilent Accelerate AI-Driven Multi-Omics Workflows",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=52d61934071d06c06efee8f87910e0bc5481d99eee6a90161cf52597700967fb",
+        "datetime": 1793284380,
+        "summary": "Players: Thermo Fisher, Merck KGaA, Danaher, Agilent and QIAGEN. Profile covers CRISPR screening segments, trends, competition, regions and opportunities.Dublin, Oct. 29, 2026 (GLOBE NEWSWIRE) -- \"Pooled Clustered Regularly Interspaced Short Palindromic Repeats (CRISPR) Screening Global Market Report 2026\" has been added to ResearchAndMarkets.com's offering. The global pooled clustered regularly interspaced short palindromic repeats (CRISPR) screening market is experiencing rapid growth, support"
+      },
+      {
+        "headline": "Bill Ackman’s 20-Year Investing Rule Puts These Cash-Flow and Moat ETFs in Focus",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=221923737b3bd839aed47dbd4cb94f050582ece9656da8b1d0f3c9a67cc1823b",
+        "datetime": 1793265234,
+        "summary": "Bill Ackman’s 20-year investing rule puts cash flow and competitive advantages in focus. See how COWZ and MOAT ETFs stack up amid AI spending fears."
+      },
       {
         "headline": "Top Stock Reports for Tesla, Netflix & American Express",
         "source": "Yahoo",
@@ -939,107 +1009,65 @@
         "url": "https://finnhub.io/api/news?id=edca5e001bd16a60807f771582845c086d7618c87e66903eaf8fd36c74267fbf",
         "datetime": 1792761150,
         "summary": "For questions about this article or underlying research, email help@trefis.com."
-      },
-      {
-        "headline": "What Does Danaher (DHR) FDA Clearance For AI AFib Detection Mean Now?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=4622bac3f7a8068d2fe951cb89a0f6c802c9c1f3320b89c132d5f1c121c61e0a",
-        "datetime": 1792700016,
-        "summary": "Danaher (NYSE:DHR) subsidiary Masimo received FDA clearance for AI-enabled atrial fibrillation detection in its Radius VSM wearable monitor. The approved system uses artificial intelligence to identify potential AFib episodes in patients using Masimo’s hospital-grade wireless device. The AFib detection feature is intended for use in acute care settings, adding a new digital monitoring function to Danaher’s diagnostics tools. Masimo’s new AI atrial fibrillation clearance matters, but..."
-      },
-      {
-        "headline": "Danaher Posts First Earnings Under New CEO; Emphasizes Need For Improved Execution, Innovation",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=68f13f14e0ba53ba78782335f0196ecc086697fcba258f57685161e4e8a94611",
-        "datetime": 1792685160,
-        "summary": "Danaher shares fell despite upbeat Q3 results. TD Cowen raised its target, citing tariffs and a cautious 2027 outlook."
-      },
-      {
-        "headline": "Citigroup Maintains Buy on Danaher, Raises Price Target to $270",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=994348f4e157b2a91a04c13250c07a3792df3d6ceb345531985bf6e0e0db7fdb",
-        "datetime": 1792681956,
-        "summary": "Citigroup  analyst Patrick Donnelly   maintains Danaher (NYSE:DHR) with a Buy and raises the price target from $230 to $270."
-      },
-      {
-        "headline": "Danaher Analysts Raise Their Forecasts Following Better-Than-Expected Q3 Earnings",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=06b5938952a18cccb7c683f986b5f799e7f1144de9b021f4ed19aca15ec7cb65",
-        "datetime": 1792681630,
-        "summary": "Danaher beat Q3 earnings and revenue estimates, raised FY2026 profit guidance, and analysts lifted price targets despite shares falling 1.8%."
-      },
-      {
-        "headline": "LH vs. DHR: Which Stock Is the Better Value Option?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=b4b344ab731dfe270c729e614f55d47c738b7eb41d2e8dd74ba20ff62232a87e",
-        "datetime": 1792680002,
-        "summary": "LH vs. DHR: Which Stock Is the Better Value Option?"
-      },
-      {
-        "headline": "Danaher (DHR) Q3 Earnings Fuel Stock Gains On Margin Expansion",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0f4d38276e32f0709d5ab246fcecc303414f203b187974fda73e6926e7e12c6d",
-        "datetime": 1792671202,
-        "summary": "Danaher came into this Q3 2026 report with the stock already grinding higher over the past three months. It then jumped another 4.3% to about $233.86 after the release. The move looks like a relief rally, yet the core story sits in the income statement. Management delivered roughly $6.6b of revenue and pushed adjusted operating margin to about 29%, while earnings per share over the trailing year reached just above $6. That combination of higher profitability and solid earnings power is what..."
-      },
-      {
-        "headline": "Barclays Maintains Overweight on Danaher, Raises Price Target to $260",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=472c9ad04bb8169930bad51102e343187535af4cf150b532deacf24aae68a09a",
-        "datetime": 1792669718,
-        "summary": "Barclays  analyst Luke Sergott   maintains Danaher (NYSE:DHR) with a Overweight and raises the price target from $255 to $260."
-      },
-      {
-        "headline": "JP Morgan Maintains Overweight on Danaher, Raises Price Target to $270",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=aceb37c3db656e88dee847ffbe445e1fb58f7eba407c4abf4ab6bdc5a149a752",
-        "datetime": 1792662428,
-        "summary": "JP Morgan  analyst Casey Woodring   maintains Danaher (NYSE:DHR) with a Overweight and raises the price target from $250 to $270."
-      },
-      {
-        "headline": "Company News for Oct 22, 2026",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=94e0bcb8dfe9354bc98975c0c8684d258ada717f95f162c7244c1db62b74aa7f",
-        "datetime": 1792662420,
-        "summary": "Companies In The News Are: COF, OZK, TMO, DHR."
-      },
-      {
-        "headline": "TD Cowen Maintains Buy on Danaher, Raises Price Target to $270",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=cfdd8fc6a7e6b50aac7b3d32ab8150ffc7fc0904b3799c793b9910716200884a",
-        "datetime": 1792661699,
-        "summary": "TD Cowen  analyst Dan Brennan   maintains Danaher (NYSE:DHR) with a Buy and raises the price target from $255 to $270."
-      },
-      {
-        "headline": "Stifel Maintains Buy on Danaher, Raises Price Target to $260",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=74b64d4cf7884922290e39ac09df76f018106f8ff928d06942d25899f888d030",
-        "datetime": 1792658920,
-        "summary": "Stifel  analyst Daniel Arias   maintains Danaher (NYSE:DHR) with a Buy and raises the price target from $220 to $260."
-      },
-      {
-        "headline": "DHR Q3 deep dive: execution focus and AI strategy underpin improved outlook",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=2f5969c47fb6bd9d8b36ab7017488eb6a5896df76ecf1e4949871e156be38166",
-        "datetime": 1792656867,
-        "summary": "Diversified science and technology company Danaher (NYSE:DHR) met Wall Street’s revenue expectations in Q3 2026, with sales up 8.3% year on year to $6.55 billion. Its non-GAAP profit of $2.11 per share was 10% above analysts’ consensus estimates."
-      },
-      {
-        "headline": "Baird Maintains Outperform on Danaher, Raises Price Target to $254",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=2be20894d43b87be93b45ad14530e2c0578ce5d07a55f47ce38fdb7072e44b88",
-        "datetime": 1792653821,
-        "summary": "Baird  analyst Catherine Schulte   maintains Danaher (NYSE:DHR) with a Outperform and raises the price target from $246 to $254."
-      },
-      {
-        "headline": "Danaher (DHR) Stock Fair Value Edges Higher After Analysts Lift Targets",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7e5174df82bdc49c5e321a9591ac5e12bfa0470dedb238359c99853a4f7e9004",
-        "datetime": 1792643164,
-        "summary": "Danaher is back in focus as analysts edge price targets into the US$240 to US$255 range, with some models now centering around fair value of about US$244.14. This shift reflects recent research that is divided between optimism on improving demand in life science tools and diagnostics, and concern that current valuations may already factor in a recovery, especially around bioprocessing. In the sections that follow, you will see how these updated targets fit into the broader narrative and what..."
       }
     ],
     "EOG": [
+      {
+        "headline": "CNX Q3 Earnings Miss Estimates on Lower Gas Prices, Output Decline",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=66403844db39718bce6d770d17842d3e8f42eb1be8518c3f6dfc8f655792413d",
+        "datetime": 1793290800,
+        "summary": "CNX's Q3 2026 earnings miss estimates as lower gas prices and production weigh on results, despite improved cost efficiency and 27 straight quarters of positive cash flow."
+      },
+      {
+        "headline": "Seadrill to Report Q3 Earnings: What's in Store for the Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=55f0dbc8e0fbb33e094de9ceb24d001bd6c57af643d33b2347802bc42f1d86f9",
+        "datetime": 1793287980,
+        "summary": "SDRL's Q3 earnings are expected to benefit from rising offshore drilling activity and a strong backlog, but higher operating costs could pressure profits."
+      },
+      {
+        "headline": "Par Pacific to Report Q3 Earnings: What's in Store for the Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1c6c659edfa740daaea0f6d4eb4f0fa736c0e81949ade156369e2dc8e9d1b39c",
+        "datetime": 1793286840,
+        "summary": "PARR heads into Q3 2026 earnings with EPS estimates up 10.4% year over year, as higher crude costs pressure margins despite strong refinery utilization."
+      },
+      {
+        "headline": "Equinor Unveils Karsto Robotics Centre to Target Offshore Savings",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a5d10872fea0b8885fe1a420686edfe23ca2f865e295761efe68a84a786ae89c",
+        "datetime": 1793282640,
+        "summary": "EQNR opens Norway's KNARR robotics center to test offshore technology, improve maintenance safety and target annual savings of hundreds of millions of kroner."
+      },
+      {
+        "headline": "EOG Resources (EOG) Reports Next Week: Wall Street Expects Earnings Growth",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=5c3a8997cca37f6524ecf35de4d23eff840b6434a2709563192b9456cebb5fe2",
+        "datetime": 1793278815,
+        "summary": "EOG Resources (EOG) possesses the right combination of the two key ingredients for a likely earnings beat in its upcoming report. Get prepared with the key expectations."
+      },
+      {
+        "headline": "ConocoPhillips to Report Q3 Earnings: What's in the Cards?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7e5074ac1db19c336f63ea13bb67285bdb9085106dda3eddd9e974c50e5dc576",
+        "datetime": 1793278140,
+        "summary": "COP gears up for Q3 earnings with higher oil prices, strong profit and revenue growth estimates, and positive indicators pointing to a potential beat."
+      },
+      {
+        "headline": "ConocoPhillips vs. EOG Resources: Which Oil Dividend Holds Up Better When Prices Swing?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=93a59999fbe478ef2636dc6df22fef417065eed0312fc42849d3622920266b0e",
+        "datetime": 1793276652,
+        "summary": "When oil prices swung from $55 to $114 in a single year, two beloved dividend stocks held up differently, and for retirees spending those checks, the gap between them matters far more than share price gains."
+      },
+      {
+        "headline": "8 Of 11 Sectors Rise Thursday As Defensives Lead",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=60dfdba246d66acc83cd4212f62d93b341bd8ad7a4e3bf0d4db2b4c40f4294e5",
+        "datetime": 1793271628,
+        "summary": "Eight sectors are higher and three are lower in Thursday’s regular session, with defensive sectors holding two of the top three positions. The leaders are separated rather than clustered, with Health Care ahead of the next group."
+      },
       {
         "headline": "EQT to Acquire Range Resources, Create a Leading Natural Gas Company",
         "source": "Yahoo",
@@ -1151,36 +1179,57 @@
         "url": "https://finnhub.io/api/news?id=9fe2731c81e6a01f6a64bb839414f5ad8f7e8d3787cf132e4ac3eafd5b777673",
         "datetime": 1792753224,
         "summary": "Three sectors are higher and eight are lower in Friday’s regular session, with Energy, Technology and Real Estate holding the top three positions across different market groups. The leaders are separated rather than clustered, with Energy well ahead of the other two."
-      },
-      {
-        "headline": "What Is Matador Getting For All That Spending?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e9fd9e05d517f51f50af29fe7d0cdaf5c9a7ac2c98e71716963a889155824e67",
-        "datetime": 1792691439,
-        "summary": "For questions about this article or underlying research, email help@trefis.com."
-      },
-      {
-        "headline": "EQT Gears Up to Report Q3 Earnings: What's in Store for the Stock?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e0edf8805b781f744420c31f6862edbd87f4edafcca625e74666044e94c5ddca",
-        "datetime": 1792669080,
-        "summary": "EQT heads into Q3 2026 earnings with estimates pointing to lower profits as weaker natural gas prices weigh on results."
       }
     ],
     "XLE": [
+      {
+        "headline": "Sector Update: Energy Stocks Higher Late Afternoon",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d0d6c86939f9b407eb5b79d142bf7ffa2babb9e721e930b8a4841356e8f48045",
+        "datetime": 1793303850,
+        "summary": "Energy stocks were higher late Thursday afternoon, with the NYSE Energy Sector Index rising 0.4% and"
+      },
+      {
+        "headline": "Sector Update: Energy Stocks Mixed in Afternoon Trading",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=8e04fc73a01639de963be812c7c5c2040798828bee5db67b8296236cff378204",
+        "datetime": 1793297633,
+        "summary": "Energy stocks were mixed Thursday afternoon, with the NYSE Energy Sector Index up 0.1% and the State"
+      },
+      {
+        "headline": "Exchange-Traded Funds Mixed, US Equities Fall After Midday",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1a0c603e2de3798d2d19041c01b638a922f717229fd7a8ec05d13c7ba1eb64ec",
+        "datetime": 1793293999,
+        "summary": "Broad Market Indicators Broad-market exchange-traded fund IWM rose while IVV fell after midday"
+      },
+      {
+        "headline": "8 Of 11 Sectors Rise Thursday As Defensives Lead",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=60dfdba246d66acc83cd4212f62d93b341bd8ad7a4e3bf0d4db2b4c40f4294e5",
+        "datetime": 1793271628,
+        "summary": "Eight sectors are higher and three are lower in Thursday’s regular session, with defensive sectors holding two of the top three positions. The leaders are separated rather than clustered, with Health Care ahead of the next group."
+      },
+      {
+        "headline": "Strong, Not Overheated: Why The Fed's October Pause Is Softer Than It Sounds",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=6f5a37ca8fa849037dcc0cf4d2c1ca816f3dbcf6013f4901bfd23a20d29a5add",
+        "datetime": 1793264115,
+        "summary": ""
+      },
+      {
+        "headline": "Beyond the Fed’s Pause: Savers Win, Borrowers Pay, and Oil Fuels the Dollar",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=255e08a5f6dda3d9ae7221d7312df724e45176744d7820fbb5cff0c988dd9a1f",
+        "datetime": 1793252206,
+        "summary": "Borrowing costs surge while cash savers finally win. Explore how high bond yields, costly oil, and Fed policy shape U.S. finances."
+      },
       {
         "headline": "Is Tech Oversold Following Trend Reversals?",
         "source": "SeekingAlpha",
         "url": "https://finnhub.io/api/news?id=fff11d148ab03745e2a23352b74fe74b151077360d1205639a060d203ae165bd",
         "datetime": 1793248380,
         "summary": "The tech sector as a whole is not a blanket bargain, but it has become an increasingly attractive stock-pickerâs market."
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Higher Late Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=d5485453e9fc5ee2a28278836ae651d698ef3d3e0cec4dafd5da88ef938316a6",
-        "datetime": 1793217215,
-        "summary": "Energy stocks advanced late Wednesday afternoon, with the NYSE Energy Sector Index rising 1% and the"
       },
       {
         "headline": "Sector Update: Energy",
@@ -1209,6 +1258,20 @@
         "url": "https://finnhub.io/api/news?id=74917792c6edaf956b5e1f870a442cc02b3ea0b4644419fdce587f5a37a1160f",
         "datetime": 1793199930,
         "summary": "XLE has handed shareholders a stunning rally, but income investors buying in today are getting a very different deal than those who bought a year ago. The question is whether the fund's payout can keep up with its price."
+      },
+      {
+        "headline": "Fed Just Paused, But Prediction Markets Aren't Buying It—Polymarket Sees 82% December Hike Odds",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=095364c9bdc2612aae41c78c54fb87394509b3f978ebbb63bf5eca97e8d1cf0a",
+        "datetime": 1793197893,
+        "summary": "The Fed held rates steady as two officials pushed for a hike and Polymarket raised the odds of a December increase to 82%."
+      },
+      {
+        "headline": "SK Hynix, Vertiv Rescue AI Trade As Oil Tops $102 Before Fed: Stock Market Today",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=b826c76b196dab103f6994eb806a6c2d01287bf4a30bf71f49614c7a11fc06b8",
+        "datetime": 1793190624,
+        "summary": "Stock market today: SK hynix and Vertiv rally on AI-driven results as oil tops $102 on Iran fears and the 10-year yield tops 5% before the Fed; SMH gains."
       },
       {
         "headline": "Cyclicals Lead Sectors In Wednesday Trading As Real Estate Trails",
@@ -1433,51 +1496,170 @@
         "url": "https://finnhub.io/api/news?id=324238a711bac7e36d2f754cfb3c56954c38de3b5697cd0a5a8f35b381511f97",
         "datetime": 1792740373,
         "summary": "U.S. SPR crude reserves hit a 1982 low of 282.7M barrels. Bottlenecks and cautious Permian drillers prevent a quick refill."
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Decline Late Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=3a0f1ef8e6e9a5d9a64a62f212283c4be59c7e72e80c1286a8bc2b63f15e6fab",
-        "datetime": 1792699119,
-        "summary": "Energy stocks were lower late Thursday afternoon, with the NYSE Energy Sector Index falling 1.1% and"
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Decline Thursday Afternoon",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=f6d4bcfbad9f1d292bef9f6159d0311445a11428d1cc1380934607a63caa14cd",
-        "datetime": 1792691598,
-        "summary": "Energy stocks were lower Thursday afternoon, with the NYSE Energy Sector Index falling 1% and the St"
-      },
-      {
-        "headline": "Exchange-Traded Funds, US Equities Lower After Midday",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=27647ae25e444f7d9432df1707a75bb313b523f47e277f9b2c84345bb445184a",
-        "datetime": 1792689200,
-        "summary": "Broad Market Indicators Broad-market exchange-traded funds IWM and IVV fell. Actively traded I"
-      },
-      {
-        "headline": "Sector Update: Energy Stocks Advance Pre-Bell Thursday",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=9140b316df8eed9460e75c2d4426d62c0c0f18a2c33e0210a4a394bb693ed4f8",
-        "datetime": 1792675555,
-        "summary": "Energy stocks were advancing premarket Thursday, with the State Street Energy Select Sector SPDR ETF"
-      },
-      {
-        "headline": "Oil ETFs to Benefit as Oil Prices Rally Due to Geopolitical Tensions",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=fe3b37786beb0329c2a96ebb55ab89344a559099afb0c4761784cd0d4c8b065b",
-        "datetime": 1792673940,
-        "summary": "Oil prices top $110 amid Middle East tensions and falling U.S. inventories. Explore BNO, XLE and OIH as supply risks shape the outlook for oil ETFs."
-      },
-      {
-        "headline": "Defensives Lead Sectors In Thursday Trading As Growth Trails",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=e02aea0905938e8c99013bb3819c14fa895500efa42abcad711a8be5172aeca9",
-        "datetime": 1792666823,
-        "summary": "Five sectors are higher and six are lower in Thursday’s regular session, with defensive sectors holding the top three positions. The leaders are separated rather than clustered, with no single gap clearly standing apart from the other breaks across the table."
       }
     ],
     "XOM": [
+      {
+        "headline": "ExxonMobil (NYSE:XOM) Q3 2026 Earnings Beat Powered by Refining Strength",
+        "source": "ChartMill",
+        "url": "https://finnhub.io/api/news?id=58761ea8fb6629a7c896162a79f60371b7e8ff0214f14f8e6ba182b6b544c6ee",
+        "datetime": 1793364052,
+        "summary": "ExxonMobil Q3 2026 beats estimates on revenue and EPS as refining strength offsets weaker Upstream and Chemicals; shares rise 2% premarket."
+      },
+      {
+        "headline": "A Big Tech Selloff and Crypto Heist to Start the Day. Next Week Brings Apple Earnings and Midterms.",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=b0c6aaea5f318197caea59c46b122b3388a65f5007e7e43db6359fa3c84ae8d9",
+        "datetime": 1793360880,
+        "summary": "Amazon and Intel spark another big tech selloff, a huge crypto heist, and more things to know about the stock market today."
+      },
+      {
+        "headline": "Intel, Amazon, Reddit, Chevron, Exxon, and More Stocks That Explain Today’s Market",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9408cf3fbf8bd322fbff2c48b9e0f2faa3aa358c57b6cc6e1d8adbcc7e7d8276",
+        "datetime": 1793360400,
+        "summary": "Intel stock was plunging and Amazon was contributing to a technology selloff after underwhelming earnings reports."
+      },
+      {
+        "headline": "MARKETS LIVE: FTSE 100 set to rise despite Wall Street sell-off and Asian technology rout",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=cc7ccdbfa6c34a217519bec1225fa8484759d2817e40f725e4e36a72313e21c8",
+        "datetime": 1793358960,
+        "summary": "FTSE 100 called 0.4% higher at 10,764 Wall Street declines Asian technology shares retreat Brent crude rises above $116 7.00 am GMT: London set for positive open London shares are expected to open higher on Friday, with IG pricing the FTSE 100 around 42 points stronger at 10,764..."
+      },
+      {
+        "headline": "Tech Earnings Drive Losses on Wall Street Pre-Bell; Asia Off, Europe Mixed",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=038c42af24367a96c38a9ea931afcc61c9014a3d772547611e9b5c97abd23208",
+        "datetime": 1793358851,
+        "summary": "Wall Street futures pointed lower pre-bell Friday as traders punished less-than-expected earnings an"
+      },
+      {
+        "headline": "ExxonMobil earnings top estimates as diesel, gasoline spike fuels refining margins",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=377c1caad4dce621401b30873666b537466d898e716d7bc469c78c448e91538f",
+        "datetime": 1793358584,
+        "summary": "Investing.com - ExxonMobil reported third-quarter income that topped expectations on Friday, as the oil major was bolstered by a jump in refining margins triggered by ongoing wars in the Middle East and Ukraine."
+      },
+      {
+        "headline": "Exxon Raises Its Dividend Yet Again as Oil-Price Rally Boosts Earnings",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=a36977523a81c905bc9e0671ca77668c56dda59e93a7d68a06a64c9a9ee73638",
+        "datetime": 1793357940,
+        "summary": "ExxonMobil has profited from high prices for crude oil and fuels, despite some production being knocked offline by the Iran war."
+      },
+      {
+        "headline": "Exxon Mobil Holdings (XOM) Q3 Earnings and Revenues Beat Estimates",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d3d96cf71d73bcd41ca3dd428115568ad0ced1cd3b9ee4aab497d5a36ab37311",
+        "datetime": 1793357101,
+        "summary": "Exxon (XOM) delivered earnings and revenue surprises of +8.46% and +9.89%, respectively, for the quarter ended September 2026. Do the numbers hold clues to what lies ahead for the stock?"
+      },
+      {
+        "headline": "BP net profit quadruples as Mideast war lifts oil prices",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=f9128834604b72da1c7d7a47c4949ed36966a3c069b9d9906648f0486717ce68",
+        "datetime": 1793356958,
+        "summary": "British energy giant BP said Friday that its net profit quadrupled in the third quarter as the Middle East war disrupted oil and gas supplies and sent prices surging. Production and exports of refined products in the Middle East remain heavily disrupted, meaning refineries unaffected by the conflict can benefit from tighter global supplies."
+      },
+      {
+        "headline": "Exxon: Q3 Earnings Snapshot",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=c33c83fd147b322a06c819c45952b35327faf0312950ada8bb0e7e3fe24295fe",
+        "datetime": 1793356651,
+        "summary": "SPRING, Texas (AP) — SPRING, Texas (AP) — Exxon Mobil Holdings Corporation (XOM) on Friday reported third-quarter net income of $15.On a per-share basis, the Spring, Texas-based company said it had net income of $3."
+      },
+      {
+        "headline": "ExxonMobil Announces Third-Quarter 2026 Results",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=bd90af06673b0c6b8ac3f7032bd3c8c89762be0694c5433b2bb8cc8d95e47ffc",
+        "datetime": 1793356200,
+        "summary": "SPRING, Texas, October 30, 2026--ExxonMobil Holdings Corporation (NYSE:XOM):"
+      },
+      {
+        "headline": "BP’s Profit Nearly Quadrupled. Exxon and Chevron Report in Hours, and Oil’s Up 21% in a Month. Here We Go Again",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=50b7f3bcfa44255862ca91a0c3f4cd40801c040901bd5ef4d1435147e6c3359c",
+        "datetime": 1793354699,
+        "summary": "BP just posted a quarter that shattered analyst expectations, yet its stock barely flinched. With Exxon and Chevron reporting within hours and crude up sharply, find out whether the refining boom has legs or if the easy money is already gone."
+      },
+      {
+        "headline": "Exxon Will Probably Hike Its Dividend. The Question Is How Much.",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=9ed0340db714955b3f9551a4239539e27f237d3c07ce64026f92fad24381b479",
+        "datetime": 1793306940,
+        "summary": "ExxonMobil has profited from high prices for crude oil and fuels, despite some production being knocked offline by the Iran war."
+      },
+      {
+        "headline": "Exxon and Chevron cancel UAE oil show trips amid safety concerns - report",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=aba460d8d468dccf9afb87c8b77f5b88d16ce39b0158a4df042c077014eb95c6",
+        "datetime": 1793298346,
+        "summary": "Investing.com -- ExxonMobil and Chevron have canceled plans for their executives to travel to the United Arab Emirates for the ADIPEC oil conference next week due to security concerns, Reuters reported Thursday citing people familiar with the matters."
+      },
+      {
+        "headline": "Targa Resources: Needs Balance Sheet Repairing First",
+        "source": "SeekingAlpha",
+        "url": "https://finnhub.io/api/news?id=0ab12a4f98946439ed745b3c71dca5fc89bdd878e2860154417d70fbe8a2d59b",
+        "datetime": 1793294055,
+        "summary": "Targa Resources Corp. is a major NGL infrastructure player with strong macro tailwinds but an overleveraged balance sheet. I rate TRGP stock as Hold. Read my full update now."
+      },
+      {
+        "headline": "Watch These 4 Energy Stocks for Q3 Earnings: Beat or Miss?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=3740a3e1dbe50e7cb0dcb987ac922e59c7048200069aee72b4a7790a4db748ac",
+        "datetime": 1793287740,
+        "summary": "BP, Chevron, Imperial Oil and ExxonMobil gear up for Q3 earnings amid rising crude prices and strong sector growth forecasts. Which stocks are poised to beat?"
+      },
+      {
+        "headline": "Par Pacific to Report Q3 Earnings: What's in Store for the Stock?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=1c6c659edfa740daaea0f6d4eb4f0fa736c0e81949ade156369e2dc8e9d1b39c",
+        "datetime": 1793286840,
+        "summary": "PARR heads into Q3 2026 earnings with EPS estimates up 10.4% year over year, as higher crude costs pressure margins despite strong refinery utilization."
+      },
+      {
+        "headline": "VYM’s Price May Be Soaring, but Its Dividend Isn’t Keeping Up",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=79b17850238688eaf4bc1321a4d63be572d95fea5e261a679532f48140a21ed0",
+        "datetime": 1793282893,
+        "summary": "VYM has handed shareholders a remarkable run, but the gap between share price growth and dividend growth is raising an uncomfortable question for retirees counting on that quarterly check."
+      },
+      {
+        "headline": "Dear ExxonMobil Stock Fans, Mark Your Calendars for October 30",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=26b338eb10495af66b8da7ed12c4c6c1a68a1788ff52222ceb895676d85df301",
+        "datetime": 1793282107,
+        "summary": "ExxonMobil’s Q3 earnings report is just around the corner, and Wall Street analysts are upbeat about its growth prospects."
+      },
+      {
+        "headline": "Alphabet downgraded, eBay upgraded: Wall Street's top analyst calls",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=d1dca4d3fdffce83726c3d3c1177bf517a929e5374054287b78eb18cecb2d657",
+        "datetime": 1793281675,
+        "summary": "Alphabet downgraded, eBay upgraded: Wall Street's top analyst calls"
+      },
+      {
+        "headline": "ConocoPhillips to Report Q3 Earnings: What's in the Cards?",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7e5074ac1db19c336f63ea13bb67285bdb9085106dda3eddd9e974c50e5dc576",
+        "datetime": 1793278140,
+        "summary": "COP gears up for Q3 earnings with higher oil prices, strong profit and revenue growth estimates, and positive indicators pointing to a potential beat."
+      },
+      {
+        "headline": "Jim Cramer Says Chevron Beats Exxon. Earnings Will Put That to the Test",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=fce891a0fc597a2a760319a9ba03334e1c3f854d46ac7c6069c480f1c422facf",
+        "datetime": 1793275585,
+        "summary": "Jim Cramer told Mad Money viewers to swap Exxon for Chevron, and on October 30 both giants report back to back. Six numbers will reveal whether that call holds or collapses."
+      },
+      {
+        "headline": "William Blair launches coverage on U.S. oil majors, sees value in cost leaders",
+        "source": "Yahoo",
+        "url": "https://finnhub.io/api/news?id=7e8fea1ce49c9f6510c3742781d1c0db44dcaaa85c327ffd9599724c087fc33f",
+        "datetime": 1793275210,
+        "summary": "Investing.com -- William Blair launched coverage of the three largest U.S. oil companies with a split verdict, rating Chevron “outperform” with 43% upside while calling Exxon Mobil and ConocoPhillips \"market perform,\" arguing Exxon’s premium multiple already reflects its Guyana and Permian growth."
+      },
       {
         "headline": "Exxon Mobil Stock Is Up 55% in 2026. Is Its Dividend Still Safe?",
         "source": "Yahoo",
@@ -1500,11 +1682,25 @@
         "summary": "Key TakeawaysExxonMobil reports third-quarter results before the open on Friday, Oct. 30, days after President Trump said the US is “making a freaking fortune” from the Iran war’s oil spike."
       },
       {
+        "headline": "Top 3 Energy Stocks You May Want To Dump In Q4",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=5e98b6c158a0b9269dba021fbc6457a611036802e4897a2100856076f5363e9b",
+        "datetime": 1793264247,
+        "summary": "ExxonMobil, Chevron and ConocoPhillips are overbought, with RSI readings above 70 after strong monthly gains, warning momentum investors."
+      },
+      {
         "headline": "ExxonMobil (XOM) Q3 earnings: what to expect",
         "source": "Yahoo",
         "url": "https://finnhub.io/api/news?id=557142b55256f59b9212658915e17f277d5556d8e688665fb913eb68bac68954",
         "datetime": 1793251114,
         "summary": "Integrated energy company ExxonMobil (NYSE:XOM) will be reporting results this Friday before market open. Here’s what you need to know."
+      },
+      {
+        "headline": "Kevin Warsh Admits Rising Oil Prices Are Fueling Inflation Expectations as Trump's Energy Holdings Reportedly Soar 3X Amid Iran War",
+        "source": "Benzinga",
+        "url": "https://finnhub.io/api/news?id=2ba6058543406b0d4615e398f6567e7c0c1d964ce00e76ad1a62fc83272cbc22",
+        "datetime": 1793250680,
+        "summary": "Trump&#39;s energy holdings may reach $81.6M as Iran war boosts oil stocks; Fed&#39;s Warsh admits fuel costs are lifting inflation expectations."
       },
       {
         "headline": "Best Dividend Aristocrats For November 2026",
@@ -1988,90 +2184,6 @@
         "url": "https://finnhub.io/api/news?id=9cf1cd083b3a427e6bd3c9ea15517dd18eb18e1e793e5feae656e50acb3e99fa",
         "datetime": 1792735972,
         "summary": "US Supreme Court heard arguments this week in a climate-cost liability case involving Suncor Energy (TSX:SU) and ExxonMobil. The case examines whether Colorado communities can pursue climate related infrastructure and wildfire cost claims against the oil producers in state court. The hearing coincides with states such as Colorado and California tightening wildfire related building codes and insurance rules for high risk zones. The Supreme Court review of Suncor Energy's climate cost..."
-      },
-      {
-        "headline": "ExxonMobil Stock And Oil Majors With The Most Riding On Crude Prices",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=818eab025d55bff46daac5c9efc6c52346170976f8e5b8df6921d69c2a74a7d6",
-        "datetime": 1792703431,
-        "summary": "Middle East risk is back on the front page, crude is above $111 for Brent and close to $99 for WTI, and suddenly every move in global integrated oil and gas producers feels more important than yesterday. Price shocks like this can reshuffle which stocks quietly gain leverage and which ones carry more risk. This article walks through 3 stocks exposed to this news backdrop and explains what that could mean for your portfolio decisions now. The three stocks below are just a first cut. The full..."
-      },
-      {
-        "headline": "ExxonMobil Just Gained 12% in a Month and Chevron 11%: Take Profits, or Buy More?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=43c19f419c31dff227451edf03ea7f97cf96a06a54d518288ae2ca4f262a7258",
-        "datetime": 1792685290,
-        "summary": "Key TakeawaysExxonMobil stock rose 12% in the past month and Chevron rose 11% as attacks in the Middle East pushed Brent crude above $100 a barrel. The S&P 500 was flat over the same stretch."
-      },
-      {
-        "headline": "Exxon Mobil Holdings (XOM) is a Great Momentum Stock: Should You Buy?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=7832814c2ae5de6ad4502682f7183fbd752ff681a0054659c175b605be5d085d",
-        "datetime": 1792681202,
-        "summary": "Does Exxon Mobil Holdings (XOM) have what it takes to be a top stock pick for momentum investors? Let's find out."
-      },
-      {
-        "headline": "XOM vs. BP: Which Integrated Energy Giant Has the Edge?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=0dd4fb863c9ff2f2b0adcdfcf91e58d4480b20c744ce45675391ee826ef9cf79",
-        "datetime": 1792676700,
-        "summary": "ExxonMobil outpaces BP in stock gains and balance sheet strength, but BP's lower valuation makes the choice between these oil giants worth a closer look."
-      },
-      {
-        "headline": "'Qatar Scours for More LNG to Boost Supply Outside Middle East' - Bloomberg Exclusive",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=42bbfcb90ef234d949778816c1c368c52d41d40ecb51412858fa37e033d0edb1",
-        "datetime": 1792672427,
-        "summary": "https://www.bloomberg.com/news/articles/2026-10-22/qatar-scours-for-more-lng-to-boost-supply-outside-middle-east"
-      },
-      {
-        "headline": "EQT Gears Up to Report Q3 Earnings: What's in Store for the Stock?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=e0edf8805b781f744420c31f6862edbd87f4edafcca625e74666044e94c5ddca",
-        "datetime": 1792669080,
-        "summary": "EQT heads into Q3 2026 earnings with estimates pointing to lower profits as weaker natural gas prices weigh on results."
-      },
-      {
-        "headline": "Under-the-radar stocks to play the next leg of the energy trade with oil prices jumping again",
-        "source": "CNBC",
-        "url": "https://finnhub.io/api/news?id=2cdf09a08d89509cdd5736a813d6c4a11bf628c8d2a876aab8f3294e7fa7bce7",
-        "datetime": 1792667765,
-        "summary": "Iran is going to grow more desperate as oil money dries up, which makes the country even more dangerous."
-      },
-      {
-        "headline": "Should You Forget ExxonMobil and Buy Cameco Stock Instead?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=83f06c52e1fd11beb8b8fd3912b0eadacdc17b304d292505f0273051e48e5ae9",
-        "datetime": 1792667100,
-        "summary": "ExxonMobil and Cameco stock have gone in different directions this year. Here's why Cameco may be worth a look."
-      },
-      {
-        "headline": "Defensives Lead Sectors In Thursday Trading As Growth Trails",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=e02aea0905938e8c99013bb3819c14fa895500efa42abcad711a8be5172aeca9",
-        "datetime": 1792666823,
-        "summary": "Five sectors are higher and six are lower in Thursday’s regular session, with defensive sectors holding the top three positions. The leaders are separated rather than clustered, with no single gap clearly standing apart from the other breaks across the table."
-      },
-      {
-        "headline": "'Shell And Exxon’s $8B UK Chemicals Unit Put Up For Sale' - Financial Times",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=c90b4193821d9352bcbb985f43cc125679e8f1ec04f8dc07980968fe60a35e3e",
-        "datetime": 1792661990,
-        "summary": "https://www.ft.com/content/2d4876ae-c707-4df5-a3ae-ae3268343ef2?syn-25a6b1a6=1"
-      },
-      {
-        "headline": "'Kashagan Arbitration Court Invalidates $12 Billion of Cost Claim' - Bloomberg",
-        "source": "Benzinga",
-        "url": "https://finnhub.io/api/news?id=4ffa0edc36c730829ab0c93413977a7414c5d005f1b1a6812376682733d36c24",
-        "datetime": 1792653561,
-        "summary": "https://www.bloomberg.com/news/articles/2026-10-22/kashagan-arbitration-court-invalidates-12-billion-of-cost-claim"
-      },
-      {
-        "headline": "Is Exxon Mobil's Next Big Thing Already Here?",
-        "source": "Yahoo",
-        "url": "https://finnhub.io/api/news?id=ab5c4cde7fd42cd67efc6ec6f5df59280e814b7bd4825f0798343c8500f33bca",
-        "datetime": 1792630089,
-        "summary": "For questions about this article or underlying research, email help@trefis.com."
       }
     ]
   },
