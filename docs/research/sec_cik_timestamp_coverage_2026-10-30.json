@@ -1,0 +1,361 @@
+{
+  "requested": 50,
+  "rows": [
+    {
+      "ticker": "A",
+      "cik": "0001090872",
+      "http": 200,
+      "filings": 17,
+      "acceptance_parsed": 17
+    },
+    {
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "http": 200,
+      "filings": 12,
+      "acceptance_parsed": 12
+    },
+    {
+      "ticker": "ABBV",
+      "cik": "0001551152",
+      "http": 200,
+      "filings": 24,
+      "acceptance_parsed": 24
+    },
+    {
+      "ticker": "ABNB",
+      "cik": "0001559720",
+      "http": 200,
+      "filings": 3,
+      "acceptance_parsed": 3
+    },
+    {
+      "ticker": "ABT",
+      "cik": "0000001800",
+      "http": 200,
+      "filings": 14,
+      "acceptance_parsed": 14
+    },
+    {
+      "ticker": "ACGL",
+      "cik": "0000947484",
+      "http": 200,
+      "filings": 24,
+      "acceptance_parsed": 24
+    },
+    {
+      "ticker": "ACN",
+      "cik": "0001467373",
+      "http": 200,
+      "filings": 7,
+      "acceptance_parsed": 7
+    },
+    {
+      "ticker": "ADBE",
+      "cik": "0000796343",
+      "http": 200,
+      "filings": 12,
+      "acceptance_parsed": 12
+    },
+    {
+      "ticker": "ADI",
+      "cik": "0000006281",
+      "http": 200,
+      "filings": 10,
+      "acceptance_parsed": 10
+    },
+    {
+      "ticker": "ADM",
+      "cik": "0000007084",
+      "http": 200,
+      "filings": 8,
+      "acceptance_parsed": 8
+    },
+    {
+      "ticker": "ADP",
+      "cik": "0000008670",
+      "http": 200,
+      "filings": 10,
+      "acceptance_parsed": 10
+    },
+    {
+      "ticker": "ADSK",
+      "cik": "0000769397",
+      "http": 200,
+      "filings": 21,
+      "acceptance_parsed": 21
+    },
+    {
+      "ticker": "AEE",
+      "cik": "0001002910",
+      "http": 200,
+      "filings": 17,
+      "acceptance_parsed": 17
+    },
+    {
+      "ticker": "AEP",
+      "cik": "0000004904",
+      "http": 200,
+      "filings": 11,
+      "acceptance_parsed": 11
+    },
+    {
+      "ticker": "AES",
+      "cik": "0000874761",
+      "http": 200,
+      "filings": 27,
+      "acceptance_parsed": 27
+    },
+    {
+      "ticker": "AFL",
+      "cik": "0000004977",
+      "http": 200,
+      "filings": 5,
+      "acceptance_parsed": 5
+    },
+    {
+      "ticker": "AIG",
+      "cik": "0000005272",
+      "http": 200,
+      "filings": 10,
+      "acceptance_parsed": 10
+    },
+    {
+      "ticker": "AIZ",
+      "cik": "0001267238",
+      "http": 200,
+      "filings": 17,
+      "acceptance_parsed": 17
+    },
+    {
+      "ticker": "AJG",
+      "cik": "0000354190",
+      "http": 200,
+      "filings": 11,
+      "acceptance_parsed": 11
+    },
+    {
+      "ticker": "AKAM",
+      "cik": "0001086222",
+      "http": 200,
+      "filings": 10,
+      "acceptance_parsed": 10
+    },
+    {
+      "ticker": "ALB",
+      "cik": "0000915913",
+      "http": 200,
+      "filings": 19,
+      "acceptance_parsed": 19
+    },
+    {
+      "ticker": "ALGN",
+      "cik": "0001097149",
+      "http": 200,
+      "filings": 34,
+      "acceptance_parsed": 34
+    },
+    {
+      "ticker": "ALL",
+      "cik": "0000899051",
+      "http": 200,
+      "filings": 16,
+      "acceptance_parsed": 16
+    },
+    {
+      "ticker": "ALLE",
+      "cik": "0001579241",
+      "http": 200,
+      "filings": 11,
+      "acceptance_parsed": 11
+    },
+    {
+      "ticker": "AMAT",
+      "cik": "0000006951",
+      "http": 200,
+      "filings": 18,
+      "acceptance_parsed": 18
+    },
+    {
+      "ticker": "AMCR",
+      "cik": "0001748790",
+      "http": 200,
+      "filings": 19,
+      "acceptance_parsed": 19
+    },
+    {
+      "ticker": "AMD",
+      "cik": "0000002488",
+      "http": 200,
+      "filings": 9,
+      "acceptance_parsed": 9
+    },
+    {
+      "ticker": "AME",
+      "cik": "0001037868",
+      "http": 200,
+      "filings": 24,
+      "acceptance_parsed": 24
+    },
+    {
+      "ticker": "AMGN",
+      "cik": "0000318154",
+      "http": 200,
+      "filings": 9,
+      "acceptance_parsed": 9
+    },
+    {
+      "ticker": "AMP",
+      "cik": "0000820027",
+      "http": 200,
+      "filings": 5,
+      "acceptance_parsed": 5
+    },
+    {
+      "ticker": "AMT",
+      "cik": "0001053507",
+      "http": 200,
+      "filings": 27,
+      "acceptance_parsed": 27
+    },
+    {
+      "ticker": "AMZN",
+      "cik": "0001018724",
+      "http": 200,
+      "filings": 12,
+      "acceptance_parsed": 12
+    },
+    {
+      "ticker": "ANET",
+      "cik": "0001596532",
+      "http": 200,
+      "filings": 3,
+      "acceptance_parsed": 3
+    },
+    {
+      "ticker": "AON",
+      "cik": "0000315293",
+      "http": 200,
+      "filings": 25,
+      "acceptance_parsed": 25
+    },
+    {
+      "ticker": "AOS",
+      "cik": "0000091142",
+      "http": 200,
+      "filings": 23,
+      "acceptance_parsed": 23
+    },
+    {
+      "ticker": "APA",
+      "cik": "0001841666",
+      "http": 200,
+      "filings": 11,
+      "acceptance_parsed": 11
+    },
+    {
+      "ticker": "APD",
+      "cik": "0000002969",
+      "http": 200,
+      "filings": 12,
+      "acceptance_parsed": 12
+    },
+    {
+      "ticker": "APH",
+      "cik": "0000820313",
+      "http": 200,
+      "filings": 19,
+      "acceptance_parsed": 19
+    },
+    {
+      "ticker": "APO",
+      "cik": "0001858681",
+      "http": 200,
+      "filings": 23,
+      "acceptance_parsed": 23
+    },
+    {
+      "ticker": "APP",
+      "cik": "0001751008",
+      "http": 200,
+      "filings": 8,
+      "acceptance_parsed": 8
+    },
+    {
+      "ticker": "APTV",
+      "cik": "0001521332",
+      "http": 200,
+      "filings": 24,
+      "acceptance_parsed": 24
+    },
+    {
+      "ticker": "ARE",
+      "cik": "0001035443",
+      "http": 200,
+      "filings": 12,
+      "acceptance_parsed": 12
+    },
+    {
+      "ticker": "ARES",
+      "cik": "0001176948",
+      "http": 200,
+      "filings": 16,
+      "acceptance_parsed": 16
+    },
+    {
+      "ticker": "ATO",
+      "cik": "0000731802",
+      "http": 200,
+      "filings": 21,
+      "acceptance_parsed": 21
+    },
+    {
+      "ticker": "AVGO",
+      "cik": "0001730168",
+      "http": 200,
+      "filings": 13,
+      "acceptance_parsed": 13
+    },
+    {
+      "ticker": "AVY",
+      "cik": "0000008818",
+      "http": 200,
+      "filings": 23,
+      "acceptance_parsed": 23
+    },
+    {
+      "ticker": "AWK",
+      "cik": "0001410636",
+      "http": 200,
+      "filings": 25,
+      "acceptance_parsed": 25
+    },
+    {
+      "ticker": "AXON",
+      "cik": "0001069183",
+      "http": 200,
+      "filings": 10,
+      "acceptance_parsed": 10
+    },
+    {
+      "ticker": "AXP",
+      "cik": "0000004962",
+      "http": 200,
+      "filings": 25,
+      "acceptance_parsed": 25
+    },
+    {
+      "ticker": "AZO",
+      "cik": "0000866787",
+      "http": 200,
+      "filings": 15,
+      "acceptance_parsed": 15
+    }
+  ],
+  "http_ok": 50,
+  "with_events": 50,
+  "acceptance_parsed": 781,
+  "first_public_verified": 0,
+  "pit_eligible": 0,
+  "note": "submissions has acceptanceDateTime only; no first-public evidence"
+}
