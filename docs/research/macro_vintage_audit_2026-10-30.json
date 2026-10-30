@@ -1,0 +1,19 @@
+{
+  "series": {
+    "FEDFUNDS": "Federal Funds Rate",
+    "DGS2": "2Y Treasury",
+    "DGS10": "10Y Treasury",
+    "CPIAUCSL": "CPI",
+    "CPILFESL": "Core CPI",
+    "PCEPI": "PCE",
+    "PCEPILFE": "Core PCE",
+    "UNRATE": "Unemployment",
+    "PAYEMS": "Nonfarm Payrolls",
+    "ICSA": "Initial Claims"
+  },
+  "fred_api_key_present": false,
+  "alfred_api_key_present": false,
+  "key_value_printed": false,
+  "status": "UNAVAILABLE_WITHOUT_KEY_OR_VINTAGE",
+  "note": "free current FRED CSV is not a historical vintage; ALFRED requires a key"
+}
