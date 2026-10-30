@@ -66,3 +66,17 @@ def test_drawdown_uses_equity_curve():
 
 def test_repeatable():
     assert capital_return(0.03, 2) == capital_return(0.03, 2)
+
+
+def test_rejects_nan_and_loss_below_minus_one():
+    for bad in ([0.01, float("nan")], [0.01, -1.0]):
+        try:
+            cagr(bad, 1.0)
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("invalid returns accepted")
+
+
+def test_zero_vol_sharpe_is_none():
+    assert sharpe([0.01, 0.01, 0.01], 12) is None

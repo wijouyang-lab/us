@@ -1,0 +1,353 @@
+{
+  "label": "EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED",
+  "window": {
+    "start": "2018-01-31",
+    "end": "2026-10-28"
+  },
+  "cost_bps": [
+    5,
+    10,
+    20
+  ],
+  "strategies": {
+    "Momentum20": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.16098212467021522,
+        "annualized_volatility": 0.18925825034570504,
+        "sharpe": 0.8865797395161656,
+        "max_drawdown": -0.2204964397149325,
+        "mean_period": 0.013971667806983216,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.7786782862151114,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.15029135985488762,
+        "annualized_volatility": 0.1892500157983477,
+        "sharpe": 0.8372047140181068,
+        "max_drawdown": -0.22740383588036306,
+        "mean_period": 0.013192989520768103,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.13969076723027363,
+        "annualized_volatility": 0.18924238047902706,
+        "sharpe": 0.7878228969567327,
+        "max_drawdown": -0.23869469010455147,
+        "mean_period": 0.01241431123455299,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.1187573397538011,
+        "annualized_volatility": 0.1892289078089466,
+        "sharpe": 0.6890407604678134,
+        "max_drawdown": -0.2650650654226955,
+        "mean_period": 0.010856954662122772,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": 0.0034594286220758466,
+        "sharpe": 0.5059971575274861,
+        "positive_fraction": 0.5769230769230769
+      }
+    },
+    "Momentum60": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.13746840031676166,
+        "annualized_volatility": 0.19124101503554014,
+        "sharpe": 0.7717103722179953,
+        "max_drawdown": -0.210351722344019,
+        "mean_period": 0.012288843276401536,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.4734419836642013,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.13108405924270872,
+        "annualized_volatility": 0.19120779305416613,
+        "sharpe": 0.7421082498083907,
+        "max_drawdown": -0.21941703140026758,
+        "mean_period": 0.011815401292737334,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.12473246020817763,
+        "annualized_volatility": 0.19117514156383406,
+        "sharpe": 0.7124937128104553,
+        "max_drawdown": -0.22873302678849983,
+        "mean_period": 0.011341959309073132,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.11212688023931805,
+        "annualized_volatility": 0.19111155122081033,
+        "sharpe": 0.6532284266747306,
+        "max_drawdown": -0.2470468384495098,
+        "mean_period": 0.01039507534174473,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": 0.001776604091494167,
+        "sharpe": 0.2253015277842279,
+        "positive_fraction": 0.5384615384615384
+      }
+    },
+    "Trend": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.15360078687987921,
+        "annualized_volatility": 0.1837008119357417,
+        "sharpe": 0.8733866732049079,
+        "max_drawdown": -0.1958078236537798,
+        "mean_period": 0.013359594142264362,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.4353368940242339,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.14765330919368314,
+        "annualized_volatility": 0.18367281192300916,
+        "sharpe": 0.8450552241402656,
+        "max_drawdown": -0.20266903069080766,
+        "mean_period": 0.01292425724824013,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.14173385361856927,
+        "annualized_volatility": 0.1836452883591127,
+        "sharpe": 0.8167130168962066,
+        "max_drawdown": -0.20947501952661118,
+        "mean_period": 0.012488920354215893,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.1299785305834067,
+        "annualized_volatility": 0.1835916714312537,
+        "sharpe": 0.7599971877795044,
+        "max_drawdown": -0.22292301057519637,
+        "mean_period": 0.011618246566167428,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": 0.002847354957356996,
+        "sharpe": 0.37668349383559907,
+        "positive_fraction": 0.5961538461538461
+      }
+    },
+    "LowVol": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.058607468800027984,
+        "annualized_volatility": 0.1390313869725826,
+        "sharpe": 0.4795450306277614,
+        "max_drawdown": -0.1632339636341238,
+        "mean_period": 0.005551596307059751,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.5425081384322813,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.05176054629504789,
+        "annualized_volatility": 0.1390125519197525,
+        "sharpe": 0.43274198425465704,
+        "max_drawdown": -0.17173262144858625,
+        "mean_period": 0.005009088168627469,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.04495417568346349,
+        "annualized_volatility": 0.13899416287883362,
+        "sharpe": 0.3859250149295,
+        "max_drawdown": -0.1801495115085181,
+        "mean_period": 0.004466580030195187,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.03146221873584554,
+        "annualized_volatility": 0.138958723536708,
+        "sharpe": 0.292251087306075,
+        "max_drawdown": -0.1967409537942333,
+        "mean_period": 0.003381563753330624,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": -0.004960642877847619,
+        "sharpe": -0.6474083312113638,
+        "positive_fraction": 0.4423076923076923
+      }
+    },
+    "MeanReversion": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.09473087682228187,
+        "annualized_volatility": 0.23767139721321656,
+        "sharpe": 0.5001847290339629,
+        "max_drawdown": -0.34520640504435696,
+        "mean_period": 0.00989880970881813,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.7721833977406634,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.08467910833229109,
+        "annualized_volatility": 0.2376551212843977,
+        "sharpe": 0.4611980509698089,
+        "max_drawdown": -0.34689827989092437,
+        "mean_period": 0.009126626311077465,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.07471190171200237,
+        "annualized_volatility": 0.2376391751001225,
+        "sharpe": 0.4222054466492202,
+        "max_drawdown": -0.35091350293624035,
+        "mean_period": 0.008354442913336802,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.05502859294159945,
+        "annualized_volatility": 0.23760827222938527,
+        "sharpe": 0.3442031034838204,
+        "max_drawdown": -0.36915237639903986,
+        "mean_period": 0.006810076117855478,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": -0.0006134294760892398,
+        "sharpe": -0.08202349266408375,
+        "positive_fraction": 0.4326923076923077
+      }
+    },
+    "RSI": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.08375127866957333,
+        "annualized_volatility": 0.20040101578369515,
+        "sharpe": 0.5019514761841927,
+        "max_drawdown": -0.2576839978336065,
+        "mean_period": 0.008376011835245794,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.7937989042828881,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.07351973337278439,
+        "annualized_volatility": 0.20038177450636716,
+        "sharpe": 0.4544249104317079,
+        "max_drawdown": -0.25912137753114584,
+        "mean_period": 0.007582212930962901,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.06337671691048175,
+        "annualized_volatility": 0.2003628642627471,
+        "sharpe": 0.4068885442566792,
+        "max_drawdown": -0.26055737440320037,
+        "mean_period": 0.006788414026680015,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.043353490457495036,
+        "annualized_volatility": 0.2003260372499743,
+        "sharpe": 0.3117873416851913,
+        "max_drawdown": -0.2634252196708551,
+        "mean_period": 0.005200816218114238,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": -0.002136227349661578,
+        "sharpe": -0.3833840714061939,
+        "positive_fraction": 0.5192307692307693
+      }
+    },
+    "ATR": {
+      "gross": {
+        "observations": 104,
+        "cagr": 0.05623945496461835,
+        "annualized_volatility": 0.13741532676443144,
+        "sharpe": 0.46711756510977126,
+        "max_drawdown": -0.16067508500247374,
+        "mean_period": 0.005344868212892899,
+        "periods_per_year": 12.009484666455897
+      },
+      "mean_turnover": 0.42651057471469633,
+      "net_5bps": {
+        "observations": 104,
+        "cagr": 0.05086819286762534,
+        "annualized_volatility": 0.13737171919466232,
+        "sharpe": 0.42997889948619394,
+        "max_drawdown": -0.16229178792391652,
+        "mean_period": 0.004918357638178202,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_10bps": {
+        "observations": 104,
+        "cagr": 0.04552191130656569,
+        "annualized_volatility": 0.13732861007776603,
+        "sharpe": 0.3928152218403888,
+        "max_drawdown": -0.16957316556525792,
+        "mean_period": 0.0044918470634635055,
+        "periods_per_year": 12.009484666455897
+      },
+      "net_20bps": {
+        "observations": 104,
+        "cagr": 0.03490386868593265,
+        "annualized_volatility": 0.13724388907596513,
+        "sharpe": 0.3184143520904355,
+        "max_drawdown": -0.18395532000147152,
+        "mean_period": 0.0036388259140341123,
+        "periods_per_year": 12.009484666455897
+      },
+      "excess_vs_ew_gross": {
+        "mean_period": -0.00516737097201447,
+        "sharpe": -0.6560231027393024,
+        "positive_fraction": 0.47115384615384615
+      }
+    }
+  },
+  "equal_weight": {
+    "gross": {
+      "observations": 104,
+      "cagr": 0.11531803775597704,
+      "annualized_volatility": 0.18320986236809672,
+      "sharpe": 0.6890817648648911,
+      "max_drawdown": -0.2217123663527737,
+      "mean_period": 0.01051223918490737,
+      "periods_per_year": 12.009484666455897
+    },
+    "net_10bps": {
+      "observations": 104,
+      "cagr": 0.11515506367713413,
+      "annualized_volatility": 0.18324784501169017,
+      "sharpe": 0.6881730934843543,
+      "max_drawdown": -0.2217123663527737,
+      "mean_period": 0.010500553510698755,
+      "periods_per_year": 12.009484666455897
+    }
+  },
+  "spy_buyhold": {
+    "gross": {
+      "observations": 104,
+      "cagr": 0.10253167976692246,
+      "annualized_volatility": 0.17014514006747064,
+      "sharpe": 0.6604922893790955,
+      "max_drawdown": -0.2194519790908509,
+      "mean_period": 0.009357566640955188,
+      "periods_per_year": 12.009484666455897
+    }
+  }
+}

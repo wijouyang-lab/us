@@ -39,15 +39,26 @@ def cost_units(previous, current, initial: bool = False) -> float:
     return 2.0 * len(set(current) - set(previous)) / max(len(current), 1)
 
 
-def cagr(returns, years: float) -> float:
+def validate_returns(returns) -> np.ndarray:
     r = np.asarray(returns, float)
-    if len(r) == 0 or years <= 0:
-        raise ValueError("returns and positive years required")
+    if r.ndim != 1 or len(r) == 0:
+        raise ValueError("returns must be a non-empty 1-D sequence")
+    if not np.all(np.isfinite(r)):
+        raise ValueError("returns contain NaN or infinite values")
+    if np.any(r <= -1.0):
+        raise ValueError("returns must be greater than -100%")
+    return r
+
+
+def cagr(returns, years: float) -> float:
+    r = validate_returns(returns)
+    if years <= 0:
+        raise ValueError("positive years required")
     return float(np.prod(1 + r) ** (1 / years) - 1)
 
 
 def sharpe(returns, periods_per_year: float) -> float | None:
-    r = np.asarray(returns, float)
+    r = validate_returns(returns)
     if len(r) < 2:
         return None
     sd = float(np.std(r, ddof=1))
@@ -55,7 +66,7 @@ def sharpe(returns, periods_per_year: float) -> float | None:
 
 
 def max_drawdown(returns) -> float:
-    r = np.asarray(returns, float)
+    r = validate_returns(returns)
     equity = np.concatenate(([1.0], np.cumprod(1 + r)))
     peak = np.maximum.accumulate(equity)
     return float((equity / peak - 1).min())
