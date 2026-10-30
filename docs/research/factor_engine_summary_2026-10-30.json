@@ -1,0 +1,129 @@
+{
+  "rows": 1239013,
+  "tickers": 503,
+  "date_min": "2016-09-19",
+  "date_max": "2026-10-28",
+  "factors": {
+    "MA20": {
+      "valid": 1229456,
+      "missing": 9557,
+      "coverage": 0.9922866023197496,
+      "warmup": 9557
+    },
+    "MA50": {
+      "valid": 1214395,
+      "missing": 24618,
+      "coverage": 0.9801309590779113,
+      "warmup": 24618
+    },
+    "MA200": {
+      "valid": 1139290,
+      "missing": 99723,
+      "coverage": 0.9195141616754626,
+      "warmup": 99723
+    },
+    "MA20_Slope_5D": {
+      "valid": 1226945,
+      "missing": 12068,
+      "coverage": 0.9902599892010818,
+      "warmup": 12068
+    },
+    "MACD_Hist": {
+      "valid": 1222427,
+      "missing": 16586,
+      "coverage": 0.9866135383567404,
+      "warmup": 17088
+    },
+    "ADX14": {
+      "valid": 1225896,
+      "missing": 13117,
+      "coverage": 0.9894133475597109,
+      "warmup": 13574
+    },
+    "Momentum_5D": {
+      "valid": 1236498,
+      "missing": 2515,
+      "coverage": 0.9979701585051973,
+      "warmup": 2012
+    },
+    "Momentum_20D": {
+      "valid": 1228953,
+      "missing": 10060,
+      "coverage": 0.9918806340207891,
+      "warmup": 9557
+    },
+    "Momentum_60D": {
+      "valid": 1208873,
+      "missing": 30140,
+      "coverage": 0.9756741858237161,
+      "warmup": 29638
+    },
+    "Momentum_120D": {
+      "valid": 1178790,
+      "missing": 60223,
+      "coverage": 0.9513943760073542,
+      "warmup": 59723
+    },
+    "RSI14": {
+      "valid": 1231927,
+      "missing": 7086,
+      "coverage": 0.9942809316770688,
+      "warmup": 6539
+    },
+    "KDJ_J": {
+      "valid": 1226892,
+      "missing": 12121,
+      "coverage": 0.9902172132172947,
+      "warmup": 4024
+    },
+    "Bias20": {
+      "valid": 1229456,
+      "missing": 9557,
+      "coverage": 0.9922866023197496,
+      "warmup": 9557
+    },
+    "ATR_Percent": {
+      "valid": 1232474,
+      "missing": 6539,
+      "coverage": 0.994722412113513,
+      "warmup": 6539
+    },
+    "Realized_Volatility_20D": {
+      "valid": 1228953,
+      "missing": 10060,
+      "coverage": 0.9918806340207891,
+      "warmup": 9557
+    },
+    "Beta_60D": {
+      "valid": 1208873,
+      "missing": 30140,
+      "coverage": 0.9756741858237161,
+      "warmup": 29638
+    },
+    "ZScore20": {
+      "valid": 1229392,
+      "missing": 9621,
+      "coverage": 0.9922349483015916,
+      "warmup": 9557
+    },
+    "Volume_Ratio_5D": {
+      "valid": 1236440,
+      "missing": 2573,
+      "coverage": 0.9979233470512416,
+      "warmup": 2012
+    },
+    "Volume_Ratio_20D": {
+      "valid": 1229385,
+      "missing": 9628,
+      "coverage": 0.9922292986433556,
+      "warmup": 9557
+    },
+    "Stock_RS_20D_vs_SPY": {
+      "valid": 1228953,
+      "missing": 10060,
+      "coverage": 0.9918806340207891,
+      "warmup": 9557
+    }
+  },
+  "output": "data/research/factor_snapshots/factors_10y_2026-10-30.parquet"
+}

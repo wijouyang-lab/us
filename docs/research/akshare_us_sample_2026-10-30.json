@@ -1,0 +1,51 @@
+{
+  "AAPL": {
+    "rows": 10064,
+    "date_min": "1984-09-07",
+    "date_max": "2026-10-29",
+    "missing_close": 0,
+    "duplicates": 0,
+    "zero_volume": 0,
+    "invalid_ohlc": 0
+  },
+  "MSFT": {
+    "rows": 9682,
+    "date_min": "1986-03-13",
+    "date_max": "2026-10-29",
+    "missing_close": 0,
+    "duplicates": 0,
+    "zero_volume": 0,
+    "invalid_ohlc": 0
+  },
+  "NVDA": {
+    "rows": 5796,
+    "date_min": "1999-01-22",
+    "date_max": "2026-10-29",
+    "missing_close": 0,
+    "duplicates": 0,
+    "zero_volume": 0,
+    "invalid_ohlc": 0
+  },
+  "TSLA": {
+    "rows": 3935,
+    "date_min": "2011-01-26",
+    "date_max": "2026-10-29",
+    "missing_close": 0,
+    "duplicates": 0,
+    "zero_volume": 0,
+    "invalid_ohlc": 0
+  },
+  "SPY": {
+    "rows": 6494,
+    "date_min": "2001-01-02",
+    "date_max": "2026-10-29",
+    "missing_close": 0,
+    "duplicates": 0,
+    "zero_volume": 0,
+    "invalid_ohlc": 1
+  },
+  "AAPL_stability": {
+    "same_shape": true,
+    "same_last_close": true
+  }
+}
