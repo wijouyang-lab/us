@@ -1,0 +1,762 @@
+{
+  "annual": [
+    {
+      "strategy": "Momentum20",
+      "year": 2018,
+      "return": -0.13964463504048785,
+      "days": 251
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2019,
+      "return": 0.17272518870170472,
+      "days": 252
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2020,
+      "return": 0.07291311787734567,
+      "days": 253
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2021,
+      "return": 0.16479454315093256,
+      "days": 252
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2022,
+      "return": -0.2194196542203546,
+      "days": 251
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2023,
+      "return": 0.21043452633814264,
+      "days": 250
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2024,
+      "return": 0.11477401259182884,
+      "days": 252
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2025,
+      "return": 0.13717268567193797,
+      "days": 250
+    },
+    {
+      "strategy": "Momentum20",
+      "year": 2026,
+      "return": 0.14179836013714064,
+      "days": 195
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2018,
+      "return": -0.12451419258703178,
+      "days": 251
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2019,
+      "return": 0.18981862758741141,
+      "days": 252
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2020,
+      "return": 0.09278628603891836,
+      "days": 253
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2021,
+      "return": 0.2566705616135301,
+      "days": 252
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2022,
+      "return": -0.1761292891787819,
+      "days": 251
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2023,
+      "return": 0.14372715775407197,
+      "days": 250
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2024,
+      "return": 0.1875513976463279,
+      "days": 252
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2025,
+      "return": 0.13168930678629187,
+      "days": 250
+    },
+    {
+      "strategy": "Momentum60",
+      "year": 2026,
+      "return": 0.10812826915674245,
+      "days": 195
+    },
+    {
+      "strategy": "Trend",
+      "year": 2018,
+      "return": -0.12228885650194721,
+      "days": 251
+    },
+    {
+      "strategy": "Trend",
+      "year": 2019,
+      "return": 0.1800859756011124,
+      "days": 252
+    },
+    {
+      "strategy": "Trend",
+      "year": 2020,
+      "return": 0.10540356186935407,
+      "days": 253
+    },
+    {
+      "strategy": "Trend",
+      "year": 2021,
+      "return": 0.22172228378656467,
+      "days": 252
+    },
+    {
+      "strategy": "Trend",
+      "year": 2022,
+      "return": -0.15526574339466204,
+      "days": 251
+    },
+    {
+      "strategy": "Trend",
+      "year": 2023,
+      "return": 0.1525455759258323,
+      "days": 250
+    },
+    {
+      "strategy": "Trend",
+      "year": 2024,
+      "return": 0.1668851232838071,
+      "days": 252
+    },
+    {
+      "strategy": "Trend",
+      "year": 2025,
+      "return": 0.12912101529026399,
+      "days": 250
+    },
+    {
+      "strategy": "Trend",
+      "year": 2026,
+      "return": 0.18465742662736417,
+      "days": 195
+    },
+    {
+      "strategy": "RSI",
+      "year": 2018,
+      "return": -0.1515288146005962,
+      "days": 251
+    },
+    {
+      "strategy": "RSI",
+      "year": 2019,
+      "return": 0.29495062043538756,
+      "days": 252
+    },
+    {
+      "strategy": "RSI",
+      "year": 2020,
+      "return": -0.0537314102648484,
+      "days": 253
+    },
+    {
+      "strategy": "RSI",
+      "year": 2021,
+      "return": 0.18686119797300793,
+      "days": 252
+    },
+    {
+      "strategy": "RSI",
+      "year": 2022,
+      "return": -0.1451458951422594,
+      "days": 251
+    },
+    {
+      "strategy": "RSI",
+      "year": 2023,
+      "return": 0.293693390654886,
+      "days": 250
+    },
+    {
+      "strategy": "RSI",
+      "year": 2024,
+      "return": 0.14427779147821007,
+      "days": 252
+    },
+    {
+      "strategy": "RSI",
+      "year": 2025,
+      "return": -0.06801254807940238,
+      "days": 250
+    },
+    {
+      "strategy": "RSI",
+      "year": 2026,
+      "return": 0.07205792111191034,
+      "days": 195
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2018,
+      "return": -0.15806149866332608,
+      "days": 251
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2019,
+      "return": 0.27889797834929553,
+      "days": 252
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2020,
+      "return": 0.11690438713612417,
+      "days": 253
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2021,
+      "return": 0.31633183539717313,
+      "days": 252
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2022,
+      "return": -0.08412933619109486,
+      "days": 251
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2023,
+      "return": 0.1209311712655099,
+      "days": 250
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2024,
+      "return": 0.24579699872814587,
+      "days": 252
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2025,
+      "return": 0.012103026278027507,
+      "days": 250
+    },
+    {
+      "strategy": "MeanReversion",
+      "year": 2026,
+      "return": 0.10790044408911159,
+      "days": 195
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2018,
+      "return": -0.11408344726113495,
+      "days": 251
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2019,
+      "return": 0.22693744125865112,
+      "days": 252
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2020,
+      "return": 0.010520828619165812,
+      "days": 253
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2021,
+      "return": 0.1860073814224925,
+      "days": 252
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2022,
+      "return": -0.03234533319534838,
+      "days": 251
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2023,
+      "return": 0.009196331493466658,
+      "days": 250
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2024,
+      "return": 0.09120336644870797,
+      "days": 252
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2025,
+      "return": -0.02484706818566873,
+      "days": 250
+    },
+    {
+      "strategy": "LowVol",
+      "year": 2026,
+      "return": -0.017585371797539828,
+      "days": 195
+    },
+    {
+      "strategy": "ATR",
+      "year": 2018,
+      "return": -0.09883557031741752,
+      "days": 251
+    },
+    {
+      "strategy": "ATR",
+      "year": 2019,
+      "return": 0.20425113921301996,
+      "days": 252
+    },
+    {
+      "strategy": "ATR",
+      "year": 2020,
+      "return": -0.03565776894964234,
+      "days": 253
+    },
+    {
+      "strategy": "ATR",
+      "year": 2021,
+      "return": 0.16511628486258023,
+      "days": 252
+    },
+    {
+      "strategy": "ATR",
+      "year": 2022,
+      "return": -0.041279833854618975,
+      "days": 251
+    },
+    {
+      "strategy": "ATR",
+      "year": 2023,
+      "return": 0.011419180784552951,
+      "days": 250
+    },
+    {
+      "strategy": "ATR",
+      "year": 2024,
+      "return": 0.09287709071180572,
+      "days": 252
+    },
+    {
+      "strategy": "ATR",
+      "year": 2025,
+      "return": -0.03512268604318258,
+      "days": 250
+    },
+    {
+      "strategy": "ATR",
+      "year": 2026,
+      "return": -0.051068462597428144,
+      "days": 195
+    }
+  ],
+  "regime": [
+    {
+      "strategy": "Momentum20",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0014257577517392405,
+      "annualized_mean": -0.3592909534382886,
+      "sharpe": -1.1896746222919004
+    },
+    {
+      "strategy": "Momentum20",
+      "key": "trend",
+      "value": "bull",
+      "days": 1767,
+      "mean_daily": 0.0007614676451486004,
+      "annualized_mean": 0.1918898465774473,
+      "sharpe": 1.2048709778488773
+    },
+    {
+      "strategy": "Momentum20",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": -6.629332499465869e-05,
+      "annualized_mean": -0.01670591789865399,
+      "sharpe": -0.05544191072374526
+    },
+    {
+      "strategy": "Momentum20",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1721,
+      "mean_daily": 0.0004376045339995377,
+      "annualized_mean": 0.1102763425678835,
+      "sharpe": 0.7125535024923024
+    },
+    {
+      "strategy": "Momentum20",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.0003479328658039755,
+      "annualized_mean": 0.08767908218260183,
+      "sharpe": 0.3954746657543901
+    },
+    {
+      "strategy": "Momentum20",
+      "key": "regime",
+      "value": "trend",
+      "days": 1404,
+      "mean_daily": 0.00031505499160028864,
+      "annualized_mean": 0.07939385788327273,
+      "sharpe": 0.43965493008480766
+    },
+    {
+      "strategy": "Momentum60",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0015167197105241846,
+      "annualized_mean": -0.3822133670520945,
+      "sharpe": -1.2931647705695246
+    },
+    {
+      "strategy": "Momentum60",
+      "key": "trend",
+      "value": "bull",
+      "days": 1767,
+      "mean_daily": 0.0008792142974487595,
+      "annualized_mean": 0.22156200295708742,
+      "sharpe": 1.328874964012916
+    },
+    {
+      "strategy": "Momentum60",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": 7.001371919551705e-05,
+      "annualized_mean": 0.017643457237270295,
+      "sharpe": 0.06028090183196181
+    },
+    {
+      "strategy": "Momentum60",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1721,
+      "mean_daily": 0.000497014404585552,
+      "annualized_mean": 0.1252476299555591,
+      "sharpe": 0.7627125457196277
+    },
+    {
+      "strategy": "Momentum60",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.00017552524163225652,
+      "annualized_mean": 0.04423236089132864,
+      "sharpe": 0.20691919731898234
+    },
+    {
+      "strategy": "Momentum60",
+      "key": "regime",
+      "value": "trend",
+      "days": 1404,
+      "mean_daily": 0.0005332284272328545,
+      "annualized_mean": 0.13437356366267933,
+      "sharpe": 0.7033928975935527
+    },
+    {
+      "strategy": "Trend",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0014069241621972473,
+      "annualized_mean": -0.35454488887370633,
+      "sharpe": -1.2314959208180412
+    },
+    {
+      "strategy": "Trend",
+      "key": "trend",
+      "value": "bull",
+      "days": 1767,
+      "mean_daily": 0.0008786488534296849,
+      "annualized_mean": 0.2214195110642806,
+      "sharpe": 1.319175358109256
+    },
+    {
+      "strategy": "Trend",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": 4.452408608330542e-05,
+      "annualized_mean": 0.011220069692992964,
+      "sharpe": 0.03940726086890953
+    },
+    {
+      "strategy": "Trend",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1721,
+      "mean_daily": 0.0005315456614198368,
+      "annualized_mean": 0.13394950667779887,
+      "sharpe": 0.8081031732257287
+    },
+    {
+      "strategy": "Trend",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.00028508676303633473,
+      "annualized_mean": 0.07184186428515635,
+      "sharpe": 0.3449968468381837
+    },
+    {
+      "strategy": "Trend",
+      "key": "regime",
+      "value": "trend",
+      "days": 1404,
+      "mean_daily": 0.0005042629941422755,
+      "annualized_mean": 0.12707427452385342,
+      "sharpe": 0.6617273659157682
+    },
+    {
+      "strategy": "RSI",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0014336164787359257,
+      "annualized_mean": -0.36127135264145327,
+      "sharpe": -0.9679879766790791
+    },
+    {
+      "strategy": "RSI",
+      "key": "trend",
+      "value": "bull",
+      "days": 1765,
+      "mean_daily": 0.0007298112011296087,
+      "annualized_mean": 0.18391242268466138,
+      "sharpe": 1.241743109726221
+    },
+    {
+      "strategy": "RSI",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": -0.00027005865002624816,
+      "annualized_mean": -0.06805477980661453,
+      "sharpe": -0.18587577349540646
+    },
+    {
+      "strategy": "RSI",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1719,
+      "mean_daily": 0.0004600937399186317,
+      "annualized_mean": 0.11594362245949519,
+      "sharpe": 0.8102084841857865
+    },
+    {
+      "strategy": "RSI",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.00031253594950493324,
+      "annualized_mean": 0.07875905927524318,
+      "sharpe": 0.3164673793091139
+    },
+    {
+      "strategy": "RSI",
+      "key": "regime",
+      "value": "trend",
+      "days": 1402,
+      "mean_daily": 0.0002923334213651728,
+      "annualized_mean": 0.07366802218402355,
+      "sharpe": 0.38828385462871995
+    },
+    {
+      "strategy": "MeanReversion",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0010748912483760627,
+      "annualized_mean": -0.2708725945907678,
+      "sharpe": -0.6857546152864067
+    },
+    {
+      "strategy": "MeanReversion",
+      "key": "trend",
+      "value": "bull",
+      "days": 1765,
+      "mean_daily": 0.0008747989944359563,
+      "annualized_mean": 0.220449346597861,
+      "sharpe": 1.3921598500225785
+    },
+    {
+      "strategy": "MeanReversion",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": 0.00032400852430636626,
+      "annualized_mean": 0.0816501481252043,
+      "sharpe": 0.21072039878445056
+    },
+    {
+      "strategy": "MeanReversion",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1719,
+      "mean_daily": 0.0005330993208996313,
+      "annualized_mean": 0.1343410288667071,
+      "sharpe": 0.8779170779614939
+    },
+    {
+      "strategy": "MeanReversion",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.0006617103442510882,
+      "annualized_mean": 0.16675100675127422,
+      "sharpe": 0.6227412100940602
+    },
+    {
+      "strategy": "MeanReversion",
+      "key": "regime",
+      "value": "trend",
+      "days": 1402,
+      "mean_daily": 0.00038743785495408406,
+      "annualized_mean": 0.09763433944842918,
+      "sharpe": 0.4910676684842996
+    },
+    {
+      "strategy": "LowVol",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0011269461326214503,
+      "annualized_mean": -0.2839904254206055,
+      "sharpe": -1.0795783625559356
+    },
+    {
+      "strategy": "LowVol",
+      "key": "trend",
+      "value": "bull",
+      "days": 1767,
+      "mean_daily": 0.0004856264020968262,
+      "annualized_mean": 0.12237785332840019,
+      "sharpe": 1.1499531478228902
+    },
+    {
+      "strategy": "LowVol",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": -8.761883462404647e-05,
+      "annualized_mean": -0.02207994632525971,
+      "sharpe": -0.08441474700844215
+    },
+    {
+      "strategy": "LowVol",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1721,
+      "mean_daily": 0.00023643635233871888,
+      "annualized_mean": 0.05958196078935716,
+      "sharpe": 0.5921278678630633
+    },
+    {
+      "strategy": "LowVol",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.00032634114702927966,
+      "annualized_mean": 0.08223796905137848,
+      "sharpe": 0.4920742626119771
+    },
+    {
+      "strategy": "LowVol",
+      "key": "regime",
+      "value": "trend",
+      "days": 1404,
+      "mean_daily": 7.34331820843616e-05,
+      "annualized_mean": 0.018505161885259122,
+      "sharpe": 0.13071778281512725
+    },
+    {
+      "strategy": "ATR",
+      "key": "trend",
+      "value": "bear",
+      "days": 438,
+      "mean_daily": -0.0012024163716090408,
+      "annualized_mean": -0.30300892564547827,
+      "sharpe": -1.1802485566290528
+    },
+    {
+      "strategy": "ATR",
+      "key": "trend",
+      "value": "bull",
+      "days": 1767,
+      "mean_daily": 0.0004346298747786061,
+      "annualized_mean": 0.10952672844420874,
+      "sharpe": 1.0395668423312716
+    },
+    {
+      "strategy": "ATR",
+      "key": "vol",
+      "value": "high_vol",
+      "days": 484,
+      "mean_daily": -0.00022538940642764644,
+      "annualized_mean": -0.056798130419766904,
+      "sharpe": -0.221671745375604
+    },
+    {
+      "strategy": "ATR",
+      "key": "vol",
+      "value": "low_vol",
+      "days": 1721,
+      "mean_daily": 0.00020361481155143407,
+      "annualized_mean": 0.05131093251096139,
+      "sharpe": 0.517393901323736
+    },
+    {
+      "strategy": "ATR",
+      "key": "regime",
+      "value": "range",
+      "days": 801,
+      "mean_daily": 0.00034638472955982383,
+      "annualized_mean": 0.0872889518490756,
+      "sharpe": 0.5181188354686154
+    },
+    {
+      "strategy": "ATR",
+      "key": "regime",
+      "value": "trend",
+      "days": 1404,
+      "mean_daily": -2.5727600005969886e-05,
+      "annualized_mean": -0.006483355201504411,
+      "sharpe": -0.047699729978779894
+    }
+  ]
+}
