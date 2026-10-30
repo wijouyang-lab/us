@@ -1,0 +1,77 @@
+{
+  "price_panel": {
+    "rows": 1239013,
+    "tickers": 503,
+    "date_min": "2016-09-19",
+    "date_max": "2026-10-28",
+    "duplicate_ticker_date": 0,
+    "null_close": 0,
+    "nonpositive_close": 0,
+    "zero_volume": 2305,
+    "ohlc_invalid": 1,
+    "abs_daily_ret_gt_50pct": 12,
+    "abs_daily_ret_gt_90pct": 1
+  },
+  "quant_factor_snapshot.csv": {
+    "rows": 4825,
+    "columns": 34,
+    "dates": 17,
+    "date_min": "2026-10-07",
+    "date_max": "2026-10-29",
+    "tickers": 406
+  },
+  "quant_factor_backtest.csv": {
+    "rows": 4529,
+    "columns": 40,
+    "dates": 16,
+    "date_min": "2026-10-07",
+    "date_max": "2026-10-28",
+    "tickers": 401,
+    "forward20_nonnull": 0
+  },
+  "quant_factor_validation.csv": {
+    "rows": 72,
+    "columns": 25,
+    "horizon_counts": {
+      "5D": 24,
+      "10D": 24,
+      "20D": 24
+    }
+  },
+  "portfolio_50000_history.csv": {
+    "rows": 16,
+    "columns": [
+      "Date",
+      "Cash",
+      "Stock_Value",
+      "Total_Equity",
+      "Realized_PnL",
+      "Unrealized_PnL",
+      "Total_PnL",
+      "Return_Pct",
+      "Open_Positions",
+      "Portfolio_ID"
+    ],
+    "date_min": "2026-10-06",
+    "date_max": "2026-10-29"
+  },
+  "trade_history.csv": {
+    "rows": 397,
+    "columns": [
+      "Date",
+      "Ticker",
+      "Name",
+      "Tag",
+      "Score",
+      "Price",
+      "RSI",
+      "Bias",
+      "Hold_Period",
+      "Stop_Loss",
+      "Stop_Method",
+      "Trail_Stop"
+    ],
+    "date_min": "2026-05-27 00:00:00",
+    "date_max": "2026-10-26"
+  }
+}
