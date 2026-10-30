@@ -1,0 +1,261 @@
+{
+  "source": "fja05680/sp500 GitHub CSV",
+  "snapshot_rows": 2720,
+  "date_min": "1996-01-02",
+  "date_max": "2026-08-18",
+  "unique_tickers": 1209,
+  "current_panel_tickers": 503,
+  "overlap_current_panel": 496,
+  "historical_not_in_price_panel": 713,
+  "yearly": [
+    {
+      "year": 1996,
+      "snapshot_date": "1996-12-27",
+      "members": 488,
+      "factor_price_match": 152,
+      "missing_price": 336
+    },
+    {
+      "year": 1997,
+      "snapshot_date": "1997-12-31",
+      "members": 488,
+      "factor_price_match": 168,
+      "missing_price": 320
+    },
+    {
+      "year": 1998,
+      "snapshot_date": "1998-12-31",
+      "members": 493,
+      "factor_price_match": 179,
+      "missing_price": 314
+    },
+    {
+      "year": 1999,
+      "snapshot_date": "1999-12-31",
+      "members": 492,
+      "factor_price_match": 189,
+      "missing_price": 303
+    },
+    {
+      "year": 2000,
+      "snapshot_date": "2000-12-29",
+      "members": 492,
+      "factor_price_match": 200,
+      "missing_price": 292
+    },
+    {
+      "year": 2001,
+      "snapshot_date": "2001-12-24",
+      "members": 496,
+      "factor_price_match": 205,
+      "missing_price": 291
+    },
+    {
+      "year": 2002,
+      "snapshot_date": "2002-12-30",
+      "members": 494,
+      "factor_price_match": 213,
+      "missing_price": 281
+    },
+    {
+      "year": 2003,
+      "snapshot_date": "2003-12-24",
+      "members": 494,
+      "factor_price_match": 216,
+      "missing_price": 278
+    },
+    {
+      "year": 2004,
+      "snapshot_date": "2004-12-30",
+      "members": 495,
+      "factor_price_match": 221,
+      "missing_price": 274
+    },
+    {
+      "year": 2005,
+      "snapshot_date": "2005-12-29",
+      "members": 497,
+      "factor_price_match": 228,
+      "missing_price": 269
+    },
+    {
+      "year": 2006,
+      "snapshot_date": "2006-12-29",
+      "members": 497,
+      "factor_price_match": 236,
+      "missing_price": 261
+    },
+    {
+      "year": 2007,
+      "snapshot_date": "2007-12-31",
+      "members": 497,
+      "factor_price_match": 244,
+      "missing_price": 253
+    },
+    {
+      "year": 2008,
+      "snapshot_date": "2008-12-29",
+      "members": 498,
+      "factor_price_match": 259,
+      "missing_price": 239
+    },
+    {
+      "year": 2009,
+      "snapshot_date": "2009-12-30",
+      "members": 499,
+      "factor_price_match": 271,
+      "missing_price": 228
+    },
+    {
+      "year": 2010,
+      "snapshot_date": "2010-12-31",
+      "members": 497,
+      "factor_price_match": 276,
+      "missing_price": 221
+    },
+    {
+      "year": 2011,
+      "snapshot_date": "2011-12-30",
+      "members": 497,
+      "factor_price_match": 284,
+      "missing_price": 213
+    },
+    {
+      "year": 2012,
+      "snapshot_date": "2012-12-28",
+      "members": 497,
+      "factor_price_match": 294,
+      "missing_price": 203
+    },
+    {
+      "year": 2013,
+      "snapshot_date": "2013-12-31",
+      "members": 497,
+      "factor_price_match": 298,
+      "missing_price": 199
+    },
+    {
+      "year": 2014,
+      "snapshot_date": "2014-12-24",
+      "members": 499,
+      "factor_price_match": 305,
+      "missing_price": 194
+    },
+    {
+      "year": 2015,
+      "snapshot_date": "2015-12-31",
+      "members": 502,
+      "factor_price_match": 321,
+      "missing_price": 181
+    },
+    {
+      "year": 2016,
+      "snapshot_date": "2016-12-30",
+      "members": 506,
+      "factor_price_match": 338,
+      "missing_price": 168
+    },
+    {
+      "year": 2017,
+      "snapshot_date": "2017-12-29",
+      "members": 505,
+      "factor_price_match": 354,
+      "missing_price": 151
+    },
+    {
+      "year": 2018,
+      "snapshot_date": "2018-12-24",
+      "members": 505,
+      "factor_price_match": 365,
+      "missing_price": 140
+    },
+    {
+      "year": 2019,
+      "snapshot_date": "2019-12-23",
+      "members": 505,
+      "factor_price_match": 386,
+      "missing_price": 119
+    },
+    {
+      "year": 2020,
+      "snapshot_date": "2020-12-21",
+      "members": 505,
+      "factor_price_match": 399,
+      "missing_price": 106
+    },
+    {
+      "year": 2021,
+      "snapshot_date": "2021-12-20",
+      "members": 505,
+      "factor_price_match": 409,
+      "missing_price": 96
+    },
+    {
+      "year": 2022,
+      "snapshot_date": "2022-12-22",
+      "members": 503,
+      "factor_price_match": 428,
+      "missing_price": 75
+    },
+    {
+      "year": 2023,
+      "snapshot_date": "2023-12-18",
+      "members": 503,
+      "factor_price_match": 444,
+      "missing_price": 59
+    },
+    {
+      "year": 2024,
+      "snapshot_date": "2024-12-23",
+      "members": 503,
+      "factor_price_match": 461,
+      "missing_price": 42
+    },
+    {
+      "year": 2025,
+      "snapshot_date": "2025-12-22",
+      "members": 503,
+      "factor_price_match": 479,
+      "missing_price": 24
+    },
+    {
+      "year": 2026,
+      "snapshot_date": "2026-08-18",
+      "members": 503,
+      "factor_price_match": 495,
+      "missing_price": 8
+    }
+  ],
+  "missing_examples": [
+    "AABA",
+    "AAL",
+    "AAMRQ",
+    "AAP",
+    "ABC",
+    "ABI",
+    "ABKFQ",
+    "ABMD",
+    "ABS",
+    "ABX",
+    "ACAS",
+    "ACKH",
+    "ACS",
+    "ACV",
+    "ADCT",
+    "ADS",
+    "ADT",
+    "AET",
+    "AFS.A",
+    "AGC",
+    "AGN",
+    "AHM",
+    "AIT",
+    "AIV",
+    "AKS",
+    "AL",
+    "ALK",
+    "ALTR",
+    "ALXN",
+    "AM"
+  ]
+}
