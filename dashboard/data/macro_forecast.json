@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-30T15:17:19Z",
+  "generated_at": "2026-10-30T15:32:11Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -96,12 +96,12 @@
       "key": "nonfarm",
       "indicator": "季调后非农",
       "period": "最新",
-      "forecast": 56.0,
+      "forecast": 65.0,
       "actual": 29.0,
       "previous": null,
       "unit": "K",
       "released_at": null,
-      "impact": "实际 29.0K vs 预期 56.0K（-27.0）。"
+      "impact": "实际 29.0K vs 预期 65.0K（-36.0）。"
     }
   ]
 }
