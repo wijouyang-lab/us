@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-10-31T08:47:33Z",
+  "generated_at": "2026-10-31T09:02:32Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -78,7 +78,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-30",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-31T08:47:11Z",
+        "computed_at": "2026-10-31T09:02:19Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -161,7 +161,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-30",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-31T08:47:12Z",
+        "computed_at": "2026-10-31T09:02:19Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -244,7 +244,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-30",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-31T08:47:12Z",
+        "computed_at": "2026-10-31T09:02:19Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -327,7 +327,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-30",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-31T08:47:13Z",
+        "computed_at": "2026-10-31T09:02:20Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -410,7 +410,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-30",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-31T08:47:13Z",
+        "computed_at": "2026-10-31T09:02:20Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -493,7 +493,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-10-30",
         "bars_source": "yfinance",
-        "computed_at": "2026-10-31T08:47:14Z",
+        "computed_at": "2026-10-31T09:02:20Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -517,7 +517,7 @@
         "change_1d": -1.0933,
         "change_5d": -0.852,
         "change_20d": 1.1594,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -535,7 +535,7 @@
         "change_1d": -1.8175,
         "change_5d": -0.572,
         "change_20d": -1.8472,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -553,7 +553,7 @@
         "change_1d": -2.8556,
         "change_5d": -1.997,
         "change_20d": -6.4502,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -571,7 +571,7 @@
         "change_1d": 0.0,
         "change_5d": -0.1542,
         "change_20d": 26.8452,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -589,7 +589,7 @@
         "change_1d": 0.0,
         "change_5d": -1.1828,
         "change_20d": -6.5947,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -607,7 +607,7 @@
         "change_1d": 0.0,
         "change_5d": -3.7263,
         "change_20d": -1.3377,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -625,7 +625,7 @@
         "change_1d": -0.0,
         "change_5d": -1.7482,
         "change_20d": -6.6073,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -643,7 +643,7 @@
         "change_1d": 0.0,
         "change_5d": -0.1129,
         "change_20d": -5.7016,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -661,7 +661,7 @@
         "change_1d": 0.0824,
         "change_5d": 0.1513,
         "change_20d": 0.0334,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -679,7 +679,7 @@
         "change_1d": 0.0,
         "change_5d": -2.7196,
         "change_20d": -6.3282,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -697,7 +697,7 @@
         "change_1d": 0.3646,
         "change_5d": -8.2572,
         "change_20d": -17.8418,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -715,7 +715,7 @@
         "change_1d": 0.3639,
         "change_5d": 0.0927,
         "change_20d": -0.154,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -733,7 +733,7 @@
         "change_1d": 0.0,
         "change_5d": 0.8231,
         "change_20d": 14.2794,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -751,7 +751,7 @@
         "change_1d": -3.5787,
         "change_5d": -2.8187,
         "change_20d": 10.934,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -769,7 +769,7 @@
         "change_1d": 0.0,
         "change_5d": 9.7727,
         "change_20d": -4.514,
-        "updated_at": "2026-10-31T08:47:14Z",
+        "updated_at": "2026-10-31T09:02:20Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -787,12 +787,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-10-31T08:47:31Z"
+    "updated_at": "2026-10-31T09:02:30Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-10-31 04:47:33",
+    "as_of_us": "2026-10-31 05:02:32",
     "window_start": "2026-10-01",
     "core_closed_count": 0,
     "core_open_count": 14,
@@ -12251,8 +12251,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-10-31T08:47:31Z",
-    "technical_updated_at": "2026-10-31T08:47:33Z",
+    "market_updated_at": "2026-10-31T09:02:30Z",
+    "technical_updated_at": "2026-10-31T09:02:32Z",
     "counts": {
       "core": 6,
       "observation": 0,
@@ -12349,7 +12349,7 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-10-31T08:47:10Z",
+    "generated_at": "2026-10-31T09:02:18Z",
     "fear_greed": {
       "score": 26.24,
       "rating": "fear",
@@ -12556,23 +12556,11 @@
   },
   "macro_forecast": {
     "schema": 1,
-    "generated_at": "2026-10-31T08:47:03Z",
+    "generated_at": "2026-10-31T09:02:10Z",
     "as_of": null,
     "source": "TradingEconomics 指标页（自动解析）",
-    "count": 9,
+    "count": 8,
     "items": [
-      {
-        "key": "unrate",
-        "indicator": "失业率",
-        "period": "2026年9月",
-        "forecast": 4.1,
-        "actual": 4.2,
-        "previous": null,
-        "surprise": 0.1,
-        "unit": "%",
-        "released_at": null,
-        "impact": "实际 4.2% vs 预期 4.1%（+0.1）。"
-      },
       {
         "key": "cpi_yoy",
         "indicator": "未季调CPI年率",
@@ -12673,7 +12661,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-10-31T08:47:00Z",
+    "generated_at": "2026-10-31T09:02:08Z",
     "count": 11,
     "ok": 11,
     "items": [
@@ -12812,8 +12800,8 @@
     ]
   },
   "decision_inputs": {
-    "generated_at": "2026-10-31T08:47:09Z",
-    "asof": "2026-10-31T08:47:00Z",
+    "generated_at": "2026-10-31T09:02:17Z",
+    "asof": "2026-10-31T09:02:08Z",
     "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
     "count": 15,
     "features": [
@@ -12857,9 +12845,9 @@
         "key": "unrate_surprise",
         "label": "失业率预期差",
         "group": "宏观",
-        "value": 0.1,
+        "value": null,
         "unit": "pp",
-        "status": "ok",
+        "status": "missing",
         "source": "macro_forecast"
       },
       {
@@ -12955,20 +12943,19 @@
     ]
   },
   "macro_cpi_ai": {
-    "signature": "6a39117c63a54363",
-    "generated_at": "2026-10-31T00:05:20Z",
+    "signature": "67702b30a6e290b9",
+    "generated_at": "2026-10-31T09:02:10Z",
     "model": "default",
-    "analysis": "整体CPI年率高于预期，表明通胀回落慢于预期，倾向于推升利率预期并加大市场波动。",
+    "analysis": "CPI年率高于预期，通胀黏性仍在，强化利率维持高位更久的预期，抬升市场波动风险。",
     "analyses": {
-      "unrate": "失业率高于预期0.1个百分点，显示劳动力市场边际走弱，温和强化降息预期、对利率偏鸽。",
-      "cpi_yoy": "整体CPI年率高于预期，表明通胀回落慢于预期，倾向于推升利率预期并加大市场波动。",
-      "core_cpi_yoy": "核心CPI年率高于预期，核心通胀黏性仍在，对降息预期构成压制、利率偏鹰。",
-      "cpi_mom": "CPI月率大幅高于预期，单月通胀动能明显偏强，是最鹰派的信号，易引发利率上行与波动放大。",
-      "umich": "消费者信心略高于预期但绝对水平仍低，对利率预期影响有限，更多体现消费前景的边际稳定。",
-      "ism": "ISM制造业PMI略高于预期，显示制造业景气韧性，对降息预期略有抑制、利率偏鹰一线。",
-      "adp": "ADP就业高于预期，私人部门就业仍具韧性，削弱降息紧迫性、利率预期偏鹰。",
-      "claims": "初请失业金低于预期，劳动力市场仍偏紧，温和不利于降息预期、利率略偏鹰。",
-      "nonfarm": "非农新增远低于预期，就业动能明显走弱，是本轮数据中最鸽派的信号，强化降息预期并可能放大市场波动。"
+      "cpi_yoy": "CPI年率高于预期，通胀黏性仍在，强化利率维持高位更久的预期，抬升市场波动风险。",
+      "core_cpi_yoy": "核心CPI年率超出预期，说明潜在通胀压力未明显缓解，对降息预期形成压制。",
+      "cpi_mom": "CPI月率大幅高于预期，短期通胀动能偏强，可能推动利率预期上修并加大市场波动。",
+      "umich": "消费者信心略高于预期，消费韧性对经济前景偏正面，对利率预期影响相对有限。",
+      "ism": "ISM制造业PMI略超预期且处于扩张区间，制造业景气偏强，边际上支持利率维持偏紧。",
+      "adp": "ADP就业人数高于预期，显示就业市场仍有韧性，对降息预期构成一定抑制。",
+      "claims": "初请失业金人数低于预期，劳动力市场偏紧，支持利率高位持稳的判断。",
+      "nonfarm": "非农新增明显低于预期，就业动能走弱，可能强化降息预期并引发市场波动。"
     }
   },
   "skill_serenity": {
@@ -13053,7 +13040,7 @@
     "error": null
   },
   "serenity_verified": {
-    "generated_at": "2026-10-31T08:47:09Z",
+    "generated_at": "2026-10-31T09:02:17Z",
     "source": "SEC EDGAR + yfinance + news_data",
     "count": 10,
     "items": [

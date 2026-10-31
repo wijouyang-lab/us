@@ -1,20 +1,9 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-31T08:47:03Z",
+  "generated_at": "2026-10-31T09:02:10Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
-    {
-      "key": "unrate",
-      "indicator": "失业率",
-      "period": "2026年9月",
-      "forecast": 4.1,
-      "actual": 4.2,
-      "previous": null,
-      "unit": "%",
-      "released_at": null,
-      "impact": "实际 4.2% vs 预期 4.1%（+0.1）。"
-    },
     {
       "key": "cpi_yoy",
       "indicator": "未季调CPI年率",
