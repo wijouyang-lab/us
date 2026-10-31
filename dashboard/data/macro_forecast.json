@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-30T23:47:10Z",
+  "generated_at": "2026-10-31T00:02:28Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -85,12 +85,12 @@
       "key": "claims",
       "indicator": "初请失业金",
       "period": "最新",
-      "forecast": 199.0,
+      "forecast": 197.0,
       "actual": 194.0,
       "previous": null,
       "unit": "K",
       "released_at": null,
-      "impact": "实际 194.0K vs 预期 199.0K（-5.0）。"
+      "impact": "实际 194.0K vs 预期 197.0K（-3.0）。"
     },
     {
       "key": "nonfarm",
