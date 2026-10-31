@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-31T09:02:17Z",
-  "asof": "2026-10-31T09:02:08Z",
+  "generated_at": "2026-10-31T09:17:28Z",
+  "asof": "2026-10-31T09:17:09Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -44,9 +44,9 @@
       "key": "unrate_surprise",
       "label": "失业率预期差",
       "group": "宏观",
-      "value": null,
+      "value": 0.1,
       "unit": "pp",
-      "status": "missing",
+      "status": "ok",
       "source": "macro_forecast"
     },
     {
