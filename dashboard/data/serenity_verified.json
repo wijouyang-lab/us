@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "generated_at": "2026-10-31T02:02:12Z",
+  "generated_at": "2026-10-31T02:17:21Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
   "items": [
     {
       "ticker": "DHR",
-      "earnings_date": null,
+      "earnings_date": "2026-10-21",
       "filings": [
         {
           "form": "8-K",
@@ -27,14 +27,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "APP",
-      "earnings_date": null,
+      "earnings_date": "2026-11-04",
       "filings": [
         {
           "form": "10-Q",
@@ -54,14 +53,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "CME",
-      "earnings_date": null,
+      "earnings_date": "2026-10-21",
       "filings": [
         {
           "form": "10-Q",
@@ -81,14 +79,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "XYL",
-      "earnings_date": null,
+      "earnings_date": "2026-10-27",
       "filings": [
         {
           "form": "10-Q",
@@ -108,14 +105,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "JCI",
-      "earnings_date": null,
+      "earnings_date": "2026-10-27",
       "filings": [
         {
           "form": "8-K",
@@ -135,14 +131,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "AES",
-      "earnings_date": null,
+      "earnings_date": "2026-11-04",
       "filings": [
         {
           "form": "8-K",
@@ -162,7 +157,6 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
@@ -181,7 +175,7 @@
     },
     {
       "ticker": "EOG",
-      "earnings_date": null,
+      "earnings_date": "2026-11-05",
       "filings": [
         {
           "form": "8-K",
@@ -201,14 +195,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "APA",
-      "earnings_date": null,
+      "earnings_date": "2026-11-04",
       "filings": [
         {
           "form": "8-K",
@@ -228,14 +221,13 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
     },
     {
       "ticker": "CNP",
-      "earnings_date": null,
+      "earnings_date": "2026-10-27",
       "filings": [
         {
           "form": "8-K",
@@ -255,7 +247,6 @@
       ],
       "news": [],
       "missing": [
-        "财报日",
         "新闻"
       ],
       "status": "verified"
