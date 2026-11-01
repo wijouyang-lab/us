@@ -1,13 +1,13 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-01T00:32:23Z",
+  "generated_at": "2026-11-01T00:47:12Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
   "items": [
     {
       "ticker": "DHR",
-      "earnings_date": "2026-10-21",
+      "earnings_date": "2027-01-27",
       "filings": [
         {
           "form": "8-K",
