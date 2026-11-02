@@ -158,3 +158,4 @@ The core risk engine is implemented and produces a real daily ledger. It reduces
 drawdown from roughly 鈭?4% to 鈭?0%, but at 3.73% CAGR it is less attractive than
 SPY buyhold and equal-weight confirmed. The 15% target is **not met**, and this
 is not deployable alpha.
+No live trading or production ledger changes.
