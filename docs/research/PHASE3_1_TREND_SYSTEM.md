@@ -1,7 +1,7 @@
-# Phase 3.1 Unified Trend Strategy Core V1
+﻿# Phase 3.1 Unified Trend Strategy Core V1
 
-Date: 2026-11-02  
-Label: `EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED`  
+Date: 2026-11-02
+Label: `EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED`
 Research only. No production changes. Not deployable; not validated alpha.
 
 ## 1. Scope
@@ -11,7 +11,7 @@ Implemented:
 - unified ETF + stock ranking pond;
 - Long-only, no short/leverage/margin/options;
 - weekly decisions;
-- two-stage WATCH → CONFIRMED entry;
+- two-stage WATCH 鈫?CONFIRMED entry;
 - dynamic candidate count, no fixed 5/10/20 cap;
 - dynamic cash is left to Phase 3.2 risk engine;
 - configurable rules, deterministic ranking;
@@ -61,10 +61,10 @@ Four equally weighted groups:
 |---|---|
 | Trend | Mom20, Mom60, Mom120, Close/MA50, MA50/MA200 |
 | Relative strength | Rel20, Rel60, Rel120 vs SPY |
-| Stability | −Vol60, DD60 |
+| Stability | 鈭扸ol60, DD60 |
 | Risk efficiency | Mom20 / Vol60 |
 
-Cross-sectional percentile ranks are computed **only at each weekly snapshot**; no future parameters, no class bonus, no neutral fill. Missing required component → no score.
+Cross-sectional percentile ranks are computed **only at each weekly snapshot**; no future parameters, no class bonus, no neutral fill. Missing required component 鈫?no score.
 
 Ties sorted by ticker.
 
@@ -85,7 +85,7 @@ Actual sample: 460 weekly signal dates, 227,188 asset-date rows.
 |---|---:|---:|---|
 | ETF | 4 (GLD, IWM, QQQ, TLT) | 4,232 | 2010-01-04..2026-10-29 |
 | Stock | 503 | ~2,500 | 2016-09..2026-10-28 |
-| Benchmark | SPY | — | excluded from candidate pool |
+| Benchmark | SPY | 鈥?| excluded from candidate pool |
 
 SPY is used as benchmark only.
 
