@@ -42,7 +42,10 @@ def _load(path: Path, ticker: str) -> pd.DataFrame:
         "Open": pd.to_numeric(d[cols["open"]], errors="coerce"),
         "Close": pd.to_numeric(d[cols["close"]], errors="coerce"),
         "AdjClose": pd.to_numeric(d[cols["adj_close"]], errors="coerce"),
-    }).dropna(subset=["Date"]).drop_duplicates("Date").sort_values("Date")
+    }).dropna(subset=["Date"]).sort_values("Date")
+    if out["Date"].duplicated().any():
+        dup = out.loc[out["Date"].duplicated(), "Date"].iloc[0].date()
+        raise DataError(f"{ticker}: duplicate conflicting date {dup}")
     for c in ("Open", "Close", "AdjClose"):
         if not np.isfinite(out[c].to_numpy(dtype=float)).all() or (out[c] <= 0).any():
             raise DataError(f"{ticker}: invalid {c}")
@@ -92,6 +95,11 @@ def run(data_dir: Path, out_dir: Path, dashboard_path: Path | None = None):
     q0, b0, s0 = build(q0, b0, s0)
     cal = s0.index[(s0.index >= pd.Timestamp(START)) & (s0.index <= min(q0.index.max(), b0.index.max()))]
     q, b, s = q0.loc[cal], b0.loc[cal], s0.loc[cal]
+    for frame, name in ((q, "QQQ"), (b, "BIL"), (s, "SPY")):
+        bad = frame[["Open", "Close", "AdjClose"]].isna().any(axis=1)
+        if bad.any():
+            dt = frame.index[bad][0].date()
+            raise DataError(f"{name}: incomplete session {dt}")
     c = COST_BPS / 10000
     bil_units = SLEEVE * INITIAL_CAPITAL / float(b.AdjOpen.iloc[0])
     reserve_units = (1 - SLEEVE) * INITIAL_CAPITAL / float(b.AdjOpen.iloc[0])
@@ -109,10 +117,13 @@ def run(data_dir: Path, out_dir: Path, dashboard_path: Path | None = None):
             qpx = float(q.AdjOpen.loc[dt]); gross = q_units * qpx; fee = gross * c; net = gross - fee
             fills.append(Fill(dt.date().isoformat(), "SELL_QQQ", "QQQ", "SELL", q_units, qpx, qpx, gross, fee,
                               "SIMULATED", "HISTORICAL_REPLAY", f"T{trade_no}"))
-            bpx = float(b.AdjOpen.loc[dt]); bfee = net * c
-            bil_units = (net - bfee) / bpx
-            fills.append(Fill(dt.date().isoformat(), "BUY_BIL", "BIL", "BUY", net - bfee, bpx, bpx, net, bfee,
-                              "SIMULATED", "HISTORICAL_REPLAY", f"T{trade_no}"))
+            bpx = float(b.AdjOpen.loc[dt])
+            b_notional = net / (1.0 + c)
+            bought_bil = b_notional / bpx
+            bfee = b_notional * c
+            bil_units = bought_bil
+            fills.append(Fill(dt.date().isoformat(), "BUY_BIL", "BIL", "BUY", bought_bil, bpx, bpx,
+                              b_notional, bfee, "SIMULATED", "HISTORICAL_REPLAY", f"T{trade_no}"))
             q_units = 0.0
             exit_idx = None
             if active_signal_idx is not None:
@@ -120,13 +131,17 @@ def run(data_dir: Path, out_dir: Path, dashboard_path: Path | None = None):
                 active_signal_idx = None
         if pending == i and q_units == 0:
             qpx = float(q.AdjOpen.loc[dt]); bpx = float(b.AdjOpen.loc[dt])
-            value = bil_units * bpx; bil_units = 0.0
-            bfee = value * c; qfee = (value - bfee) * c
-            q_units = (value - bfee - qfee) / qpx
+            sold_bil = bil_units
+            value = sold_bil * bpx
+            bil_units = 0.0
+            bfee = value * c
+            q_notional = (value - bfee) / (1.0 + c)
+            q_units = q_notional / qpx
+            qfee = q_notional * c
             trade_no += 1
-            fills.append(Fill(dt.date().isoformat(), "SELL_BIL", "BIL", "SELL", value, bpx, bpx, value, bfee,
+            fills.append(Fill(dt.date().isoformat(), "SELL_BIL", "BIL", "SELL", sold_bil, bpx, bpx, value, bfee,
                               "SIMULATED", "HISTORICAL_REPLAY", f"T{trade_no}"))
-            fills.append(Fill(dt.date().isoformat(), "BUY_QQQ", "QQQ", "BUY", value - bfee, qpx, qpx, value - bfee, qfee,
+            fills.append(Fill(dt.date().isoformat(), "BUY_QQQ", "QQQ", "BUY", q_units, qpx, qpx, q_notional, qfee,
                               "SIMULATED", "HISTORICAL_REPLAY", f"T{trade_no}"))
             exit_idx = i + HOLD
             pending = None

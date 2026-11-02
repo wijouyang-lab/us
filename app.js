@@ -905,6 +905,47 @@ function renderQQQPaper(d) {
   var sigs = $('#qqqPaperSignals'); if (sigs) sigs.innerHTML = signalRows(d.recent_signals || []);
 }
 
+var QQQ_PROSPECTIVE_URL = 'dashboard/data/qqq_transition_paper_prospective.json';
+
+function loadQQQProspective() {
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+  if (!document.querySelector('#qqqProspectiveSec')) return;
+  fetch(QQQ_PROSPECTIVE_URL + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (d) renderQQQProspective(d); })
+    .catch(function () { /* optional panel */ });
+}
+
+function renderQQQProspective(d) {
+  var sec = $('#qqqProspectiveSec'); if (!sec) return;
+  sec.style.display = '';
+  var note = $('#qqqProspectiveNote');
+  if (note) {
+    note.innerHTML = '<b>' + (d.status === 'NOT_STARTED'
+      ? 'NOT STARTED. This forward-only account has no observation clock and no fills.'
+      : 'PROSPECTIVE SIMULATION. Forward-only; historical replay fills are never migrated here.') + '</b> ' +
+      'No IBKR connection, no orders. Each fill is SIMULATED and time-stamped when recorded.';
+  }
+  var cells = '';
+  cells += cell('Status', esc(d.status || NA));
+  cells += cell('Clock Started', d.prospective_clock_started ? 'YES' : 'NO');
+  cells += cell('Start Date', esc(d.start_date || '—'));
+  cells += cell('Observation Days', nv(d.observation_days, 0));
+  cells += cell('Signals', nv(d.signals, 0));
+  cells += cell('Skipped Overlaps', nv(d.skipped, 0));
+  cells += cell('Simulated NAV', '$' + nv(d.nav, 2));
+  cells += cell('Cumulative Return', pctTxt(d.return_pct, 2), pctCls(num(d.return_pct)));
+  cells += cell('QQQ Units', nv(d.qqq_units, 4));
+  cells += cell('BIL Units', nv(d.bil_units, 2));
+  cells += cell('Max Drawdown', pctTxt(d.max_drawdown, 2), pctCls(num(d.max_drawdown)));
+  cells += cell('Total Cost', '$' + nv(d.total_cost, 2));
+  cells += cell('Last Data Date', esc(d.last_data_date || '—'));
+  var sum = $('#qqqProspectiveSummary');
+  if (sum) sum.innerHTML = '<div class="mx-grid">' + cells + '</div>';
+  var f = $('#qqqProspectiveFills'); if (f) f.innerHTML = fillRows(d.recent_fills || []);
+  var s = $('#qqqProspectiveSignals'); if (s) s.innerHTML = signalRows(d.recent_signals || []);
+}
+
 function renderPortfolio() {
     var pf = DATA.portfolio;
     var sumEl = $('#pfSummary'), posEl = $('#pfPositions'),
@@ -3188,4 +3229,5 @@ function renderPortfolio() {
   /* ---------------- 启动 ---------------- */
   boot();
   loadQQQPaper();
+  loadQQQProspective();
 })();

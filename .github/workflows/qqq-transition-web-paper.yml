@@ -37,6 +37,9 @@ jobs:
       - name: Rebuild deterministic simulated ledger
         run: python scripts/qqq_transition_paper.py
 
+      - name: Update prospective account if explicitly started
+        run: python -m scripts.qqq_transition_prospective update-prospective
+
       - name: Show account summary
         run: |
           python - <<'PY'
@@ -49,7 +52,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add qqq_transition_paper dashboard/data/qqq_transition_paper.json
+          git add qqq_transition_paper dashboard/data/qqq_transition_paper.json dashboard/data/qqq_transition_paper_prospective.json
           if git diff --cached --quiet; then
             echo "No changes."
           else

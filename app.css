@@ -781,3 +781,6 @@ button{font-family:inherit}
 .sim-mini{font-size:9px;color:#6d28d9;background:rgba(124,58,237,.08);border-radius:3px;padding:1px 4px}
 .qqq-empty{font-size:11px;color:var(--text-3);padding:8px 0}
 @media(max-width:760px){.qqq-tables{grid-template-columns:1fr}}
+
+.qqq-prospective{border-left-color:#0f766e;background:linear-gradient(180deg,rgba(15,118,110,.04),transparent 160px)}
+.qqq-prospective .sim-badge{color:#0f766e;background:rgba(15,118,110,.08);border-color:rgba(15,118,110,.35)}

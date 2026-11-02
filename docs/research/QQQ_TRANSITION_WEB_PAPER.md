@@ -1,4 +1,4 @@
-# QQQ TRANSITION Web Paper Account
+﻿# QQQ TRANSITION Web Paper Account
 
 Date: 2026-11-02
 Status: SIMULATED historical replay; no broker connection; no prospective clock.
@@ -140,3 +140,64 @@ The implementation does not read or write:
 - independent panel and Portfolio-50000 isolation.
 
 Static dashboard tests remain green (runtime 19/19; data stability 34/34).
+
+## 9. P0 fill-unit repair
+
+All four legs now use ETF shares for `quantity` and require:
+
+```text
+notional = quantity * fill_price
+cost = separate USD amount
+```
+
+Before/after:
+
+| Metric | Before | After |
+|---|---:|---:|
+| NAV | $71,489.52 | **$71,490.95** |
+| Return | +42.9790% | **+42.9819%** |
+| Total cost | $1,901.21 | **$1,900.33** |
+| BIL units | 779.6022 | **779.6178** |
+| Trades / fills | 32 / 128 | 32 / 128 |
+
+The old files are preserved under `qqq_transition_paper/legacy_v1/`; comparison is
+in `qqq_transition_paper/unit_fix_comparison.json`. The difference is small but the
+old `quantity` fields for SELL_BIL, BUY_QQQ, and BUY_BIL were dollar amounts, not
+shares.
+
+## 10. Prospective simulation (NOT STARTED)
+
+Independent forward-only account:
+
+```text
+qqq_transition_paper/prospective/state.json
+qqq_transition_paper/prospective/events.jsonl (created on start/update)
+dashboard/data/qqq_transition_paper_prospective.json
+```
+
+Default committed state:
+
+```text
+status = NOT_STARTED
+prospective_clock_started = false
+start_date = null
+```
+
+The initialization command is implemented but **not executed**:
+
+```bash
+python -m scripts.qqq_transition_prospective start-prospective \
+  --start-date YYYY-MM-DD --code-sha <sha>
+```
+
+Starting locks initial $50,000, 25% sleeve, BIL positions, strategy fingerprint,
+data hashes, code SHA, and start date. Historical replay fills are never migrated.
+Missed entry/exit sessions are recorded as `MISSED_ENTRY`/`MISSED_EXIT`; a later Open
+is never substituted.
+
+The prospective panel is separate from the historical panel and displays status,
+clock, observation days, signals, skipped signals, holdings, NAV, return, drawdown,
+cost, and last data date.
+
+Tests: `tests/test_qqq_transition_paper.py` + `tests/test_qqq_transition_prospective.py`
+= **20 passed**.
