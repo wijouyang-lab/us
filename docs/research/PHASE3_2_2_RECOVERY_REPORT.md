@@ -1,7 +1,7 @@
-# Phase 3.2.2 Recovery and Execution Audit
+﻿# Phase 3.2.2 Recovery and Execution Audit
 
-Date: 2026-11-02  
-Base: `research/phase3-2-1-risk-engine-audit-fix` (PR #426)  
+Date: 2026-11-02
+Base: `research/phase3-2-1-risk-engine-audit-fix` (PR #426)
 Label: `EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED`
 
 ## 1. Audit fixes
@@ -18,7 +18,7 @@ Label: `EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED`
 ## 2. Recovery designs
 
 ### Sticky
-At drawdown ≥12%: 0% new risk forever; high-water mark not reset.
+At drawdown 鈮?2%: 0% new risk forever; high-water mark not reset.
 
 ### Market recovery
 After CASH_DEFENSE, require two consecutive weekly:
@@ -52,8 +52,8 @@ Selection rule: highest validation Sharpe, frozen before test reporting.
 | Design | Validation Sharpe |
 |---|---:|
 | Sticky | None (cash, zero variance) |
-| Market | **−0.013** |
-| Market+breadth | −0.057 |
+| Market | **鈭?.013** |
+| Market+breadth | 鈭?.057 |
 
 **Selected: Market recovery.** The test segment was not used for selection.
 
@@ -63,9 +63,9 @@ Selection rule: highest validation Sharpe, frozen before test reporting.
 
 | Design | CAGR | MaxDD | Sharpe | Transitions | Final mode |
 |---|---:|---:|---:|---:|---|
-| Sticky | −1.24% | −12.24% | −0.241 | 0 | CASH_DEFENSE |
-| **Market** | **−1.30%** | **−14.41%** | **−0.178** | 7 | RECOVERY |
-| Market+breadth | −1.23% | −13.09% | −0.192 | 9 | RECOVERY |
+| Sticky | 鈭?.24% | 鈭?2.24% | 鈭?.241 | 0 | CASH_DEFENSE |
+| **Market** | **鈭?.30%** | **鈭?4.41%** | **鈭?.178** | 7 | RECOVERY |
+| Market+breadth | 鈭?.23% | 鈭?3.09% | 鈭?.192 | 9 | RECOVERY |
 
 All are negative; to the extent recovery helps, it is marginal.
 
@@ -73,9 +73,9 @@ All are negative; to the extent recovery helps, it is marginal.
 
 | Design | Train CAGR | Validation CAGR | Test CAGR | Test MaxDD |
 |---|---:|---:|---:|---:|
-| Sticky | −3.61% | 0.00% | 0.00% | 0.00% |
-| Market | −2.89% | −0.15% | −0.66% | −11.61% |
-| Market+breadth | −2.87% | −0.32% | −0.30% | −4.74% |
+| Sticky | 鈭?.61% | 0.00% | 0.00% | 0.00% |
+| Market | 鈭?.89% | 鈭?.15% | 鈭?.66% | 鈭?1.61% |
+| Market+breadth | 鈭?.87% | 鈭?.32% | 鈭?.30% | 鈭?.74% |
 
 The selected market design fails the test period: negative CAGR, though drawdown
 is contained.
@@ -113,10 +113,10 @@ Recovery works mechanically, but the strategy does not recover economically.
 
 | Cost | CAGR | MaxDD |
 |---:|---:|---:|
-| 5 bps | −1.19% | −12.57% |
-| 10 bps | −1.30% | −14.41% |
-| 20 bps | −1.09% | −14.29% |
-| 50 bps | −2.74% | **−22.75%** |
+| 5 bps | 鈭?.19% | 鈭?2.57% |
+| 10 bps | 鈭?.30% | 鈭?4.41% |
+| 20 bps | 鈭?.09% | 鈭?4.29% |
+| 50 bps | 鈭?.74% | **鈭?2.75%** |
 
 At 50 bps the 15% drawdown objective is breached. Cost results are path-dependent
 because recovery/defence changes exposure.
@@ -125,12 +125,12 @@ because recovery/defence changes exposure.
 
 | Scheme | Old CAGR | New CAGR | Old MaxDD | New MaxDD |
 |---|---:|---:|---:|---:|
-| A SPY buyhold | 12.66% | 12.66% | −34.10% | −34.10% |
-| B SPY trend/cash | 12.63% | 8.46% | −34.04% | −18.05% |
-| C equal confirmed | 9.51% | 9.31% | −33.09% | −33.12% |
-| D sticky | 3.73% | −1.24% | −20.39% | −12.24% |
-| D market | — | −1.30% | — | −14.41% |
-| D market+breadth | — | −1.23% | — | −13.09% |
+| A SPY buyhold | 12.66% | 12.66% | 鈭?4.10% | 鈭?4.10% |
+| B SPY trend/cash | 12.63% | 8.46% | 鈭?4.04% | 鈭?8.05% |
+| C equal confirmed | 9.51% | 9.31% | 鈭?3.09% | 鈭?3.12% |
+| D sticky | 3.73% | 鈭?.24% | 鈭?0.39% | 鈭?2.24% |
+| D market | 鈥?| 鈭?.30% | 鈥?| 鈭?4.41% |
+| D market+breadth | 鈥?| 鈭?.23% | 鈥?| 鈭?3.09% |
 
 The corrected engine confirms that D is not attractive; the old +3.73% result was
 an artifact of the accounting/execution defects.
