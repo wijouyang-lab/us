@@ -1,0 +1,81 @@
+{
+  "50": {
+    "start": "2018-01-16",
+    "end": "2026-10-29",
+    "days": 2210,
+    "cagr": -0.012102787914388458,
+    "total_return": -0.10142723238928975,
+    "annualized_volatility": 0.032428471790152735,
+    "sharpe": -0.3598931935939197,
+    "sortino": -0.17115635261943885,
+    "max_drawdown": -0.1289978781729214,
+    "calmar": -0.09382160455511286,
+    "avg_stock_exposure": 0.09829377200294508,
+    "avg_cash": 0.9017062279970549,
+    "avg_expected_vol": 0.13787370096624463,
+    "avg_clusters": 111.05010893246187,
+    "avg_holdings": 42.98054298642534,
+    "max_single_weight": 0.021285094894230725,
+    "max_group_weight": 0.09346240259648214,
+    "total_cost": 0.07718335297332125,
+    "stale_holding_days": 0,
+    "total_buy": 7.738624434048754,
+    "total_sell": 7.6980461606154975,
+    "turnover": 7.861131876691808,
+    "hard_risk_breaches": 0,
+    "state_occupancy": {
+      "CASH_DEFENSE": 1681,
+      "DEFENSIVE_25": 295,
+      "DEFENSIVE_75": 114,
+      "NORMAL": 72,
+      "DEFENSIVE_50": 48
+    },
+    "annual": [
+      {
+        "year": 2018,
+        "return": -0.09058495861479732,
+        "days": 242
+      },
+      {
+        "year": 2019,
+        "return": 0.019661328436674452,
+        "days": 252
+      },
+      {
+        "year": 2020,
+        "return": -0.029840244581303632,
+        "days": 253
+      },
+      {
+        "year": 2021,
+        "return": 0.0,
+        "days": 252
+      },
+      {
+        "year": 2022,
+        "return": 0.0,
+        "days": 251
+      },
+      {
+        "year": 2023,
+        "return": 0.0,
+        "days": 250
+      },
+      {
+        "year": 2024,
+        "return": 0.0,
+        "days": 252
+      },
+      {
+        "year": 2025,
+        "return": 0.0,
+        "days": 250
+      },
+      {
+        "year": 2026,
+        "return": 0.0,
+        "days": 208
+      }
+    ]
+  }
+}
