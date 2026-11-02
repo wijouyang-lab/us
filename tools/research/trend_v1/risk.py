@@ -57,52 +57,49 @@ def _clusters(corr: np.ndarray, tickers: list[str], threshold: float) -> dict[st
     return out
 
 
-def allocate(candidates: pd.DataFrame, closes: pd.DataFrame, signal_date, drawdown: float,
+def allocate(candidates: pd.DataFrame, closes: pd.DataFrame, signal_date, drawdown_magnitude: float,
              cfg: RiskConfig = RiskConfig()) -> tuple[dict[str, float], dict]:
-    """candidates: ticker, Score. closes: date x ticker adjusted close, strictly <= signal_date."""
+    """candidates: ticker, Score. drawdown_magnitude is a positive loss fraction."""
     if candidates.empty:
         return {}, {"reason": "NO_CONFIRMED", "expected_vol": 0.0, "clusters": 0,
-                    "gross": 0.0, "defense": defense_state(drawdown)}
+                    "gross": 0.0, "defense": defense_state(drawdown_magnitude)}
     px = closes[closes.index <= pd.Timestamp(signal_date)].tail(cfg.lookback + 1)
     rets = px.pct_change().dropna(how="all")
     tickers = [t for t in candidates.ticker if t in rets.columns and rets[t].notna().sum() >= cfg.lookback - 5]
     if not tickers:
         return {}, {"reason": "INSUFFICIENT_VOL", "expected_vol": 0.0, "clusters": 0,
-                    "gross": 0.0, "defense": defense_state(drawdown)}
+                    "gross": 0.0, "defense": defense_state(drawdown_magnitude)}
     r = rets[tickers].dropna(axis=1, how="any")
     tickers = list(r.columns)
-    if len(tickers) < 2:
-        return {}, {"reason": "INSUFFICIENT_BREADTH", "expected_vol": 0.0, "clusters": 0,
-                    "gross": 0.0, "defense": defense_state(drawdown)}
     vol = r.std(ddof=1) * np.sqrt(252)
     vol = vol.replace(0, np.nan).dropna()
     tickers = [t for t in tickers if t in vol.index]
     if not tickers:
         return {}, {"reason": "ZERO_VOL", "expected_vol": 0.0, "clusters": 0,
-                    "gross": 0.0, "defense": defense_state(drawdown)}
-    raw = (1 / vol[tickers])
+                    "gross": 0.0, "defense": defense_state(drawdown_magnitude)}
+    # Ranking is a transparent weight multiplier: the best-scored asset gets
+    # 1.0x inverse-vol and the worst gets 0.5x. No fixed holding-count cap.
+    score = candidates.set_index("ticker").Score.reindex(tickers).astype(float)
+    rank_pct = score.rank(pct=True).fillna(0.0)
+    raw = (1 / vol[tickers]) * (0.5 + 0.5 * rank_pct)
     w = raw / raw.sum()
     w = w.clip(upper=cfg.max_weight)
     w = w / w.sum()
     corr = r[tickers].corr().to_numpy()
     groups = _clusters(corr, tickers, cfg.corr_threshold)
     for _ in range(3):
-        changed = False
         for gid in set(groups.values()):
             members = [t for t in tickers if groups[t] == gid]
             gs = float(w[members].sum())
             if gs > cfg.max_group_weight:
                 w[members] *= cfg.max_group_weight / gs
-                changed = True
-        if changed:
-            pass
     cov = r[tickers].cov().to_numpy() * 252
     exp_vol = float(np.sqrt(max(w.to_numpy() @ cov @ w.to_numpy(), 0.0)))
     scale = min(1.0, cfg.target_vol / exp_vol) if exp_vol > 0 else 0.0
-    w = w * scale * defense_cap(drawdown)
+    w = w * scale * defense_cap(drawdown_magnitude)
     w = w.clip(upper=cfg.max_weight)
     gross = float(w.sum())
     max_group = max((float(w[[t for t in tickers if groups[t] == gid]].sum()) for gid in set(groups.values())), default=0.0)
     return {t: float(w[t]) for t in tickers if w[t] > 1e-9}, {
         "reason": "OK", "expected_vol": exp_vol, "clusters": len(set(groups.values())),
-        "gross": gross, "max_group_weight": max_group, "defense": defense_state(drawdown)}
+        "gross": gross, "max_group_weight": max_group, "defense": defense_state(drawdown_magnitude)}

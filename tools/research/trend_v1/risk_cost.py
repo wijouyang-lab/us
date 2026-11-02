@@ -28,11 +28,12 @@ def main():
             ev[pd.Timestamp(dt)] = g[["ticker", "score"]].rename(columns={"score": "Score"}).copy()
     allp = pd.concat([panel, bench.assign(asset_class="ETF")], ignore_index=True).drop_duplicates(["Date", "Ticker"])
     opens = allp.pivot_table(index="Date", columns="Ticker", values="Open", aggfunc="last").sort_index()
-    closes = allp.pivot_table(index="Date", columns="Ticker", values="Close", aggfunc="last").sort_index().ffill()
+    raw_closes = allp.pivot_table(index="Date", columns="Ticker", values="Close", aggfunc="last").sort_index()
+    closes = raw_closes.ffill(limit=5)
     out = {}
     for c in tuple(int(x) for x in a.costs.split(",")):
         cfg = SimConfig(cost_bps=c)
-        daily, hard = simulate(opens, closes, ev, lambda x, y, z, cfg=cfg: risk_alloc(x, y, z, closes, cfg), cfg)
+        daily, hard = simulate(opens, closes, ev, lambda x, y, z, cfg=cfg: risk_alloc(x, y, z, closes, cfg), cfg, raw_closes=raw_closes)
         out[str(c)] = summarize(daily, hard, cfg)
     Path(a.output).write_text(json.dumps(out, indent=2), encoding="utf-8")
     print(json.dumps({k: {"cagr": v["cagr"], "max_drawdown": v["max_drawdown"]} for k, v in out.items()}, indent=2))

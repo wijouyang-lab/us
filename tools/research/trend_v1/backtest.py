@@ -24,7 +24,11 @@ def _price_matrix(panel, col):
     return panel.pivot_table(index="Date", columns="Ticker", values=col, aggfunc="last").sort_index()
 
 
-def simulate(opens, closes, events, alloc_fn, cfg: SimConfig):
+class StalePriceError(RuntimeError):
+    pass
+
+
+def simulate(opens, closes, events, alloc_fn, cfg: SimConfig, raw_closes=None, max_stale_days: int = 5):
     dates = [d for d in opens.index if d >= min(events)]
     cash = cfg.initial_cash
     shares = {}
@@ -32,18 +36,28 @@ def simulate(opens, closes, events, alloc_fn, cfg: SimConfig):
     rows = []
     hard_events = []
     hard_seen = False
+    stale_days = {}
     for dt in dates:
         if dt in events:
             nav_open = cash + sum(sh * opens.loc[dt, t] for t, sh in shares.items() if pd.notna(opens.loc[dt, t]))
             dd = nav_open / peak - 1
-            weights, diag = alloc_fn(events[dt], dt, dd)
-            budget = max(0.0, nav_open * (1 - 2 * cfg.cost_bps / 10000))
-            target = {t: w * budget for t, w in weights.items()}
-            sale = sum(max(0.0, (shares.get(t, 0) * opens.loc[dt, t]) - target.get(t, 0.0))
-                       for t in set(shares) | set(target) if pd.notna(opens.loc[dt, t]))
-            buy = sum(max(0.0, target.get(t, 0.0) - shares.get(t, 0) * opens.loc[dt, t])
-                      for t in set(shares) | set(target) if pd.notna(opens.loc[dt, t]))
-            cost = (sale + buy) * cfg.cost_bps / 10000
+            weights, diag = alloc_fn(events[dt], dt, max(0.0, -dd))
+            target = {t: w * nav_open for t, w in weights.items()}
+
+            def trade_cost(vals):
+                sale = sum(max(0.0, (shares.get(t, 0) * opens.loc[dt, t]) - vals.get(t, 0.0))
+                           for t in set(shares) | set(vals) if pd.notna(opens.loc[dt, t]))
+                buy = sum(max(0.0, vals.get(t, 0.0) - shares.get(t, 0) * opens.loc[dt, t])
+                          for t in set(shares) | set(vals) if pd.notna(opens.loc[dt, t]))
+                return sale, buy, (sale + buy) * cfg.cost_bps / 10000
+
+            sale, buy, cost = trade_cost(target)
+            # Charge actual cost once. If full investment would overdraw cash,
+            # scale the target by the actual cost, not an arbitrary 2x reserve.
+            if sum(target.values()) + cost > nav_open and sum(target.values()) > 0:
+                factor = max(0.0, (nav_open - cost) / sum(target.values()))
+                target = {t: v * factor for t, v in target.items()}
+                sale, buy, cost = trade_cost(target)
             new_shares = {}
             for t, val in target.items():
                 px = opens.loc[dt, t]
@@ -56,7 +70,7 @@ def simulate(opens, closes, events, alloc_fn, cfg: SimConfig):
             row = {"date": dt, "nav": None, "cash": cash, "cost": cost, "buy": buy, "sell": sale,
                    "target_weights": weights, "defense": diag.get("defense"),
                    "expected_vol": diag.get("expected_vol"), "clusters": diag.get("clusters"),
-                   "reason": diag.get("reason"), "n_holdings": len(weights),
+                   "reason": diag.get("reason"), "n_holdings": len(new_shares),
                    "max_weight": max(weights.values()) if weights else 0.0,
                    "max_group_weight": diag.get("max_group_weight")}
         else:
@@ -65,9 +79,22 @@ def simulate(opens, closes, events, alloc_fn, cfg: SimConfig):
                    "reason": None, "n_holdings": 0, "max_weight": 0.0, "max_group_weight": None}
         nav = cash + sum(sh * closes.loc[dt, t] for t, sh in shares.items() if pd.notna(closes.loc[dt, t]))
         peak = max(peak, nav)
+        vals = {t: sh * closes.loc[dt, t] for t, sh in shares.items() if pd.notna(closes.loc[dt, t])}
         row["nav"] = float(nav)
         row["stock"] = float(nav - cash)
         row["drawdown"] = float(nav / peak - 1)
+        row["risk_state"] = defense_state(max(0.0, -row["drawdown"]))
+        row["n_holdings"] = len([v for v in vals.values() if v > 0])
+        row["max_weight"] = float(max(vals.values()) / nav) if vals and nav > 0 else 0.0
+        if raw_closes is not None:
+            for t in shares:
+                if pd.isna(raw_closes.loc[dt, t]) if t in raw_closes.columns else True:
+                    stale_days[t] = stale_days.get(t, 0) + 1
+                else:
+                    stale_days[t] = 0
+                if stale_days.get(t, 0) > max_stale_days:
+                    raise StalePriceError(f"{t} stale for {stale_days[t]} days at {dt.date()}")
+        row["stale_holdings"] = sum(1 for t in shares if stale_days.get(t, 0) > 0)
         if row["drawdown"] <= -0.15 and not hard_seen:
             hard_events.append({"date": str(dt.date()), "drawdown": row["drawdown"]})
             hard_seen = True
@@ -101,9 +128,11 @@ def summarize(daily, hard_events, cfg):
     m["max_single_weight"] = float(daily.max_weight.max())
     m["max_group_weight"] = float(daily.max_group_weight.dropna().max()) if daily.max_group_weight.notna().any() else None
     m["total_cost"] = float(daily.cost.sum())
+    m["stale_holding_days"] = int(daily.stale_holdings.sum()) if "stale_holdings" in daily else 0
     m["total_buy"] = float(daily.buy.sum())
     m["total_sell"] = float(daily.sell.sum())
     m["turnover"] = float((daily.buy.sum() + daily.sell.sum()) / (2 * daily.nav.iloc[0])) if len(daily) else None
     m["hard_risk_breaches"] = len(hard_events)
+    m["state_occupancy"] = daily.risk_state.value_counts().to_dict() if "risk_state" in daily else {}
     m["annual"] = annual(daily)
     return m

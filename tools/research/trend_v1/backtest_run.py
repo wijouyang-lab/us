@@ -17,10 +17,12 @@ from .signals import generate_signals
 
 def _events_from_signals(sig):
     ev = {}
-    for dt, g in sig[sig.buy_candidate].groupby("next_trading_date"):
-        if pd.isna(dt):
+    for _, g in sig.groupby("signal_date"):
+        nxt = g.next_trading_date.dropna()
+        if nxt.empty:
             continue
-        ev[pd.Timestamp(dt)] = g[["ticker", "score"]].rename(columns={"score": "Score"}).copy()
+        cand = g[g.buy_candidate][["ticker", "score"]].rename(columns={"score": "Score"}).copy()
+        ev[pd.Timestamp(nxt.iloc[0])] = cand
     return ev
 
 
@@ -37,6 +39,8 @@ def _spy_trend_events(spy):
             continue
         if r.Close > r.MA200 and r.Slope > 0:
             ev[nxt] = pd.DataFrame({"ticker": ["SPY"], "Score": [1.0]})
+        else:
+            ev[nxt] = pd.DataFrame(columns=["ticker", "Score"])
     return ev
 
 
@@ -57,7 +61,8 @@ def main(argv=None):
     # include SPY only for execution/valuation; not a candidate
     allp = pd.concat([panel, bench.assign(asset_class="ETF")], ignore_index=True).drop_duplicates(["Date", "Ticker"])
     opens = allp.pivot_table(index="Date", columns="Ticker", values="Open", aggfunc="last").sort_index()
-    closes = allp.pivot_table(index="Date", columns="Ticker", values="Close", aggfunc="last").sort_index().ffill()
+    raw_closes = allp.pivot_table(index="Date", columns="Ticker", values="Close", aggfunc="last").sort_index()
+    closes = raw_closes.ffill(limit=5)
     events = _events_from_signals(sig)
     ev_equal = events
     ev_risk = events
@@ -74,20 +79,20 @@ def main(argv=None):
                             "n_holdings": 1, "max_weight": 1.0, "defense": None})
     out["four_way_10bps"]["A_spy_buyhold"] = metrics(daily_a)
     # B: SPY trend
-    daily_b, hb = simulate(opens, closes, spy_events, equal_alloc, SimConfig(cost_bps=10))
+    daily_b, hb = simulate(opens, closes, spy_events, equal_alloc, SimConfig(cost_bps=10), raw_closes=raw_closes)
     out["four_way_10bps"]["B_spy_trend"] = summarize(daily_b, hb, SimConfig(cost_bps=10))
     # C: equal-weight confirmed
-    daily_c, hc = simulate(opens, closes, ev_equal, equal_alloc, SimConfig(cost_bps=10))
+    daily_c, hc = simulate(opens, closes, ev_equal, equal_alloc, SimConfig(cost_bps=10), raw_closes=raw_closes)
     out["four_way_10bps"]["C_equal_confirmed"] = summarize(daily_c, hc, SimConfig(cost_bps=10))
     # D: risk engine
     cfg = SimConfig(cost_bps=10)
     daily_d, hd = simulate(opens, closes, ev_risk,
-                           lambda c, d, dd: risk_alloc(c, d, dd, closes, cfg), cfg)
+                           lambda c, d, dd: risk_alloc(c, d, dd, closes, cfg), cfg, raw_closes=raw_closes)
     out["four_way_10bps"]["D_risk"] = summarize(daily_d, hd, cfg)
     for c in (() if a.skip_sensitivity else (5, 20, 50)):
         cc = SimConfig(cost_bps=c)
         dd, hh = simulate(opens, closes, ev_risk,
-                          lambda x, y, z, cc=cc: risk_alloc(x, y, z, closes, cc), cc)
+                          lambda x, y, z, cc=cc: risk_alloc(x, y, z, closes, cc), cc, raw_closes=raw_closes)
         out["risk_cost_sensitivity"][str(c)] = summarize(dd, hh, cc)
     if a.daily_out:
         daily_d.to_csv(a.daily_out, index=False)
