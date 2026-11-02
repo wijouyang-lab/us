@@ -1,0 +1,26 @@
+{
+  "source": "yfinance",
+  "asof": "2026-10-30",
+  "fetched_at_utc": "2026-11-02T15:54:31Z",
+  "note": "Initial committed data; append-only vintages are created by future refreshes.",
+  "files": {
+    "QQQ": {
+      "rows": 5240,
+      "sha256": "af587cc594a8f4bd89166a9e6b1fe596469a35676d73d0dad2617f4cb1ad5cec",
+      "min_date": "2006-01-03",
+      "max_date": "2026-10-30"
+    },
+    "BIL": {
+      "rows": 4888,
+      "sha256": "ee75d1e52d425a9c2504dd26fb687d2dfd9e6cd0f723061923ad154e5d5867d4",
+      "min_date": "2007-05-30",
+      "max_date": "2026-10-30"
+    },
+    "SPY": {
+      "rows": 5240,
+      "sha256": "1c7a6595e6d290a51b08052db514db36d8deca76702bbf425e12f9ff6b4a42a7",
+      "min_date": "2006-01-03",
+      "max_date": "2026-10-30"
+    }
+  }
+}

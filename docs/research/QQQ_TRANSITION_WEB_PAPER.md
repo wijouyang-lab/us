@@ -1,4 +1,4 @@
-﻿# QQQ TRANSITION Web Paper Account
+# QQQ TRANSITION Web Paper Account
 
 Date: 2026-11-02
 Status: SIMULATED historical replay; no broker connection; no prospective clock.
@@ -200,4 +200,20 @@ clock, observation days, signals, skipped signals, holdings, NAV, return, drawdo
 cost, and last data date.
 
 Tests: `tests/test_qqq_transition_paper.py` + `tests/test_qqq_transition_prospective.py`
-= **20 passed**.
+= **24 passed**.
+
+### Future-session, freshness and audit rules
+
+- `start-prospective` requires a future NYSE session strictly after the current ET date.
+- Past and current-session starts are rejected.
+- Initial BIL is valued at the last completed close before start, never at the start Open.
+- `update-prospective` processes only the latest completed SPY session.
+- Data must match the expected latest completed NYSE session; delayed data fails closed.
+- A missed entry/exit appends `MISSED_ENTRY`/`MISSED_EXIT`; a later Open is never used.
+- Multiple new sessions in one delayed run are not replayed one by one.
+- JSONL records START, OBSERVATION, SIGNAL, ORDER_INTENT, FILL, MISSED_ENTRY,
+  MISSED_EXIT, MISSED_SESSIONS, DAILY_NAV. Each has a deterministic event ID and a
+  state snapshot; `rebuild_state_from_events()` reconstructs state.
+- `scripts/update_qqq_transition_data.py` refreshes yfinance data with conflict
+  preservation, per-session vintage hashes, and a manifest. Existing sessions are not
+  silently rewritten.

@@ -1,5 +1,5 @@
 {
-  "schema": "qqq-transition-prospective-v1",
+  "schema": "qqq-transition-prospective-v2",
   "status": "NOT_STARTED",
   "prospective_clock_started": false,
   "start_date": null,
@@ -13,6 +13,8 @@
     "bil_units": 0.0,
     "reserve_units": 0.0
   },
+  "initial_bil_price": null,
+  "initial_bil_session": null,
   "nav": 50000.0,
   "observation_days": 0,
   "signals": 0,
@@ -24,5 +26,6 @@
   "exit_date": null,
   "data_hashes": {},
   "code_sha": null,
-  "generated_at_utc": null
+  "generated_at_utc": null,
+  "last_data_date": null
 }
