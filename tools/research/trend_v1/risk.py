@@ -43,6 +43,22 @@ def defense_state(drawdown: float) -> str:
     return "NORMAL"
 
 
+def capped_weights(raw: pd.Series, cap: float) -> pd.Series:
+    """Water-fill to sum 1 subject to a hard per-name cap, without post-normalization."""
+    w = raw / raw.sum()
+    for _ in range(20):
+        over = w > cap + 1e-12
+        if not over.any():
+            break
+        w[over] = cap
+        remaining = 1.0 - float(w.sum())
+        free = (~over) & (w < cap)
+        if remaining <= 0 or not free.any():
+            break
+        w[free] += remaining * raw[free] / raw[free].sum()
+    return w.clip(upper=cap)
+
+
 def _clusters(corr: np.ndarray, tickers: list[str], threshold: float) -> dict[str, int]:
     from scipy.cluster.hierarchy import fcluster, linkage
     from scipy.spatial.distance import squareform
@@ -82,9 +98,7 @@ def allocate(candidates: pd.DataFrame, closes: pd.DataFrame, signal_date, drawdo
     score = candidates.set_index("ticker").Score.reindex(tickers).astype(float)
     rank_pct = score.rank(pct=True).fillna(0.0)
     raw = (1 / vol[tickers]) * (0.5 + 0.5 * rank_pct)
-    w = raw / raw.sum()
-    w = w.clip(upper=cfg.max_weight)
-    w = w / w.sum()
+    w = capped_weights(raw, cfg.max_weight)
     corr = r[tickers].corr().to_numpy()
     groups = _clusters(corr, tickers, cfg.corr_threshold)
     for _ in range(3):

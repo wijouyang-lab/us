@@ -28,6 +28,9 @@ def metrics(daily: pd.DataFrame) -> dict:
 def annual(daily: pd.DataFrame) -> list[dict]:
     d = daily.copy(); d["date"] = pd.to_datetime(d.date); d = d.set_index("date")
     out = []
+    prev = 1.0
     for y, g in d.groupby(d.index.year):
-        out.append({"year": int(y), "return": float(g.nav.iloc[-1] / g.nav.iloc[0] - 1), "days": len(g)})
+        end = float(g.nav.iloc[-1])
+        out.append({"year": int(y), "return": float(end / prev - 1), "days": len(g)})
+        prev = end
     return out

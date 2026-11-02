@@ -1,0 +1,244 @@
+{
+  "design": "market",
+  "cost_bps": 50,
+  "metrics": {
+    "start": "2018-01-08",
+    "end": "2026-10-29",
+    "days": 2215,
+    "cagr": -0.027369112706372767,
+    "total_return": -0.21678046891308667,
+    "annualized_volatility": 0.05021326628807292,
+    "sharpe": -0.5286366292059227,
+    "sortino": -0.5053456068714937,
+    "max_drawdown": -0.2274622693665006,
+    "calmar": -0.12032374768174867,
+    "avg_stock_exposure": 0.3025374486480282,
+    "avg_cash": 0.6974625513519719,
+    "avg_expected_vol": 0.13716795224382075,
+    "avg_clusters": 110.80869565217391,
+    "avg_holdings": 146.6428893905192,
+    "max_single_weight": 0.1019303208925464,
+    "max_group_weight": 0.13489182581034073,
+    "total_cost": 0.26005405439915663,
+    "stale_holding_days": 116,
+    "total_buy": 26.375386567628553,
+    "total_sell": 25.635424312202762,
+    "turnover": 26.005405439915656,
+    "hard_risk_breaches": 1,
+    "state_occupancy": {
+      "DEFENSIVE_25": 913,
+      "CASH_DEFENSE": 829,
+      "HARD_RISK_BREACH": 166,
+      "DEFENSIVE_50": 116,
+      "DEFENSIVE_75": 114,
+      "NORMAL": 77
+    },
+    "missing_execution_events": 0,
+    "cash_lockout_days": 502,
+    "recovery_days": 469,
+    "annual": [
+      {
+        "year": 2018,
+        "return": -0.1071043809022022,
+        "days": 247
+      },
+      {
+        "year": 2019,
+        "return": 0.017029322923632906,
+        "days": 252
+      },
+      {
+        "year": 2020,
+        "return": -0.017917223791462655,
+        "days": 253
+      },
+      {
+        "year": 2021,
+        "return": 0.014452693779492654,
+        "days": 252
+      },
+      {
+        "year": 2022,
+        "return": -0.01966516593815304,
+        "days": 251
+      },
+      {
+        "year": 2023,
+        "return": 0.004323550528386955,
+        "days": 250
+      },
+      {
+        "year": 2024,
+        "return": 0.010825750723984617,
+        "days": 252
+      },
+      {
+        "year": 2025,
+        "return": -0.034261852100818224,
+        "days": 250
+      },
+      {
+        "year": 2026,
+        "return": -0.09928855181305629,
+        "days": 208
+      }
+    ]
+  },
+  "splits": {
+    "train": {
+      "start": "2018-01-08",
+      "end": "2020-12-31",
+      "days": 752,
+      "cagr": -0.037702469580179754,
+      "total_return": -0.10816962239229544,
+      "annualized_volatility": 0.05826401410061466,
+      "sharpe": -0.6299623033272175,
+      "sortino": -0.5694933166515509,
+      "max_drawdown": -0.13207683966378791,
+      "calmar": -0.2854585987683714,
+      "avg_stock_exposure": 0.3240224333142215,
+      "avg_cash": 0.6759775666857786,
+      "avg_expected_vol": 0.14691305358694387,
+      "avg_clusters": 107.7948717948718,
+      "avg_holdings": 152.57978723404256,
+      "max_single_weight": 0.021285094894230725,
+      "max_group_weight": 0.09346240259648214,
+      "total_cost": 0.09539399233807389,
+      "stale_holding_days": 0,
+      "total_buy": 9.612775911711196,
+      "total_sell": 9.466022555903582,
+      "turnover": 9.539399233807389,
+      "hard_risk_breaches": 0,
+      "state_occupancy": {
+        "DEFENSIVE_25": 338,
+        "CASH_DEFENSE": 175,
+        "DEFENSIVE_75": 114,
+        "NORMAL": 77,
+        "DEFENSIVE_50": 48
+      },
+      "missing_execution_events": 0,
+      "cash_lockout_days": 96,
+      "recovery_days": 68,
+      "annual": [
+        {
+          "year": 2018,
+          "return": -0.1071043809022022,
+          "days": 247
+        },
+        {
+          "year": 2019,
+          "return": 0.017029322923632906,
+          "days": 252
+        },
+        {
+          "year": 2020,
+          "return": -0.017917223791462655,
+          "days": 253
+        }
+      ]
+    },
+    "validation": {
+      "start": "2021-01-04",
+      "end": "2023-12-29",
+      "days": 753,
+      "cagr": 0.00041043507159543857,
+      "total_return": 0.0012242178559085382,
+      "annualized_volatility": 0.026712665170555316,
+      "sharpe": 0.028692525116982847,
+      "sortino": 0.02885411795388656,
+      "max_drawdown": -0.05275906891271642,
+      "calmar": 0.00777942219326225,
+      "avg_stock_exposure": 0.146127978947934,
+      "avg_cash": 0.8538720210520659,
+      "avg_expected_vol": 0.145089334862434,
+      "avg_clusters": 102.18589743589743,
+      "avg_holdings": 121.24435590969456,
+      "max_single_weight": 0.017220266031808148,
+      "max_group_weight": 0.13489182581034073,
+      "total_cost": 0.04490749063808107,
+      "stale_holding_days": 0,
+      "total_buy": 4.555270129545057,
+      "total_sell": 4.426227998071157,
+      "turnover": 5.047635565222006,
+      "hard_risk_breaches": 0,
+      "state_occupancy": {
+        "CASH_DEFENSE": 432,
+        "DEFENSIVE_25": 319,
+        "DEFENSIVE_50": 2
+      },
+      "missing_execution_events": 0,
+      "cash_lockout_days": 333,
+      "recovery_days": 87,
+      "annual": [
+        {
+          "year": 2021,
+          "return": -0.09528027104148207,
+          "days": 252
+        },
+        {
+          "year": 2022,
+          "return": -0.01966516593815304,
+          "days": 251
+        },
+        {
+          "year": 2023,
+          "return": 0.004323550528386955,
+          "days": 250
+        }
+      ]
+    },
+    "test": {
+      "start": "2024-01-02",
+      "end": "2026-10-28",
+      "days": 709,
+      "cagr": -0.0425912394797473,
+      "total_return": -0.11550594444455509,
+      "annualized_volatility": 0.05928441457562087,
+      "sharpe": -0.7071861886342939,
+      "sortino": -0.8132751896470223,
+      "max_drawdown": -0.1560460428290158,
+      "calmar": -0.27294020859225354,
+      "avg_stock_exposure": 0.444881820529328,
+      "avg_cash": 0.555118179470672,
+      "avg_expected_vol": 0.11854652320307157,
+      "avg_clusters": 123.07432432432432,
+      "avg_holdings": 167.3638928067701,
+      "max_single_weight": 0.1019303208925464,
+      "max_group_weight": 0.1262966099817318,
+      "total_cost": 0.11975257142300164,
+      "stale_holding_days": 0,
+      "total_buy": 12.207340526372304,
+      "total_sell": 11.743173758228025,
+      "turnover": 13.523722705705854,
+      "hard_risk_breaches": 1,
+      "state_occupancy": {
+        "DEFENSIVE_25": 256,
+        "CASH_DEFENSE": 222,
+        "HARD_RISK_BREACH": 165,
+        "DEFENSIVE_50": 66
+      },
+      "missing_execution_events": 0,
+      "cash_lockout_days": 73,
+      "recovery_days": 313,
+      "annual": [
+        {
+          "year": 2024,
+          "return": -0.09959387787696994,
+          "days": 252
+        },
+        {
+          "year": 2025,
+          "return": -0.034261852100818224,
+          "days": 250
+        },
+        {
+          "year": 2026,
+          "return": -0.09928855181305629,
+          "days": 207
+        }
+      ]
+    }
+  },
+  "transitions": 17,
+  "final_mode": "RECOVERY"
+}
