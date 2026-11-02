@@ -560,3 +560,186 @@ def append_event(path: Path, event: dict) -> None:
                     raise PaperProtocolError(f"duplicate event_id: {event_id}")
     with path.open("a", encoding="utf-8") as handle:
         handle.write(json.dumps(event, sort_keys=True, separators=(",", ":")) + "\n")
+
+
+
+def load_event_log(path: Path) -> list[dict]:
+    """Load and validate an append-only JSONL event log."""
+    path = Path(path)
+    if not path.exists():
+        return []
+    events: list[dict] = []
+    seen: set[str] = set()
+    with path.open(encoding="utf-8") as handle:
+        for line_number, line in enumerate(handle, start=1):
+            if not line.strip():
+                continue
+            try:
+                event = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise PaperProtocolError(
+                    f"event log is corrupt at line {line_number}; refusing to continue"
+                ) from exc
+            if not isinstance(event, dict) or not event.get("event_id"):
+                raise PaperProtocolError(f"event log line {line_number} lacks an event_id")
+            event_id = event["event_id"]
+            if event_id in seen:
+                raise PaperProtocolError(f"duplicate event_id in log: {event_id}")
+            seen.add(event_id)
+            events.append(event)
+    return events
+
+
+def account_seed_event(
+    *, session_date: str, initial_capital: float = INITIAL_CAPITAL, bil_mark: float,
+) -> dict:
+    """Create a deterministic opening event for a virtual account initially held in BIL."""
+    session_date = _iso_date(session_date, "session_date")
+    capital = _positive(initial_capital, "initial_capital")
+    mark = _positive(bil_mark, "bil_mark")
+    event_id = hashlib.sha256(
+        f"paper-seed|{session_date}|{capital:.8f}|{mark:.8f}".encode()
+    ).hexdigest()
+    return {
+        "event_type": "PAPER_ACCOUNT_SEED",
+        "event_id": event_id,
+        "account_mode": "PAPER",
+        "session_date": session_date,
+        "currency": "USD",
+        "initial_capital": capital,
+        "initial_bil_mark": mark,
+        "initial_bil_units": capital / mark,
+        "qqq_units": 0.0,
+        "cash": 0.0,
+    }
+
+
+def replay_event_log(events: Iterable[dict]) -> dict:
+    """Reconstruct ledger state from one seed and all subsequent PAPER_FILL events."""
+    rows = list(events)
+    seeds = [i for i, event in enumerate(rows) if event.get("event_type") == "PAPER_ACCOUNT_SEED"]
+    if len(seeds) != 1:
+        raise PaperProtocolError("event log must contain exactly one PAPER_ACCOUNT_SEED")
+    seed_index = seeds[0]
+    seed = rows[seed_index]
+    if seed_index != 0:
+        raise PaperProtocolError("PAPER_ACCOUNT_SEED must be the first event in the log")
+    if seed.get("account_mode") != "PAPER" or seed.get("currency") != "USD":
+        raise PaperProtocolError("account seed must be PAPER USD")
+    state = initial_portfolio_state(
+        initial_capital=seed["initial_capital"],
+        bil_mark=seed["initial_bil_mark"],
+    )
+    if not math.isclose(
+        state["bil_units"], _positive(seed["initial_bil_units"], "initial_bil_units"),
+        rel_tol=1e-10, abs_tol=1e-8,
+    ):
+        raise PaperProtocolError("seed BIL units do not reconcile to initial capital and mark")
+    fills = []
+    for event in rows[seed_index + 1:]:
+        if event.get("event_type") == "PAPER_FILL":
+            fills.append(event)
+    return replay_paper_fills(state, fills)
+
+
+def append_order_intents(path: Path, intents: Iterable[dict]) -> list[dict]:
+    """Persist intents after checking their type and PAPER-only execution boundary."""
+    rows = list(intents)
+    for intent in rows:
+        if intent.get("event_type") != "ORDER_INTENT" or intent.get("account_mode") != "PAPER":
+            raise PaperProtocolError("only PAPER ORDER_INTENT events can be persisted")
+    for intent in rows:
+        append_event(path, intent)
+    return rows
+
+
+def import_fill_csv_to_event_log(path: Path, csv_path: Path) -> dict:
+    """Validate the entire normalized CSV against existing intents and ledger before appending."""
+    events = load_event_log(path)
+    current_state = replay_event_log(events)
+    intents = {
+        event["event_id"]: event
+        for event in events
+        if event.get("event_type") == "ORDER_INTENT"
+    }
+    parsed = read_fill_csv(csv_path, intents)
+    existing_execution_ids = {
+        event.get("broker_execution_id")
+        for event in events
+        if event.get("event_type") == "PAPER_FILL"
+    }
+    existing_execution_ids.discard(None)
+    for fill in parsed:
+        execution_id = fill["broker_execution_id"]
+        if execution_id in existing_execution_ids:
+            raise PaperProtocolError(f"execution already exists in event log: {execution_id}")
+        existing_execution_ids.add(execution_id)
+    # Apply all candidate fills in memory first. A bad row prevents any partial append.
+    trial_state = replay_paper_fills(current_state_seed(events), [
+        event for event in events if event.get("event_type") == "PAPER_FILL"
+    ])
+    for fill in sorted(parsed, key=lambda item: item["fill_time_utc"]):
+        trial_state = apply_paper_fill(trial_state, fill)
+    for fill in sorted(parsed, key=lambda item: item["fill_time_utc"]):
+        append_event(path, fill)
+    return {
+        "imported_executions": len(parsed),
+        "execution_ids": [fill["broker_execution_id"] for fill in parsed],
+        "cash": trial_state["cash"],
+        "qqq_units": trial_state["qqq_units"],
+        "bil_units": trial_state["bil_units"],
+        "cumulative_fees": trial_state["cumulative_fees"],
+        "cumulative_slippage_usd": trial_state.get("cumulative_slippage_usd", 0.0),
+    }
+
+
+def current_state_seed(events: Iterable[dict]) -> dict:
+    """Return the opening state reconstructed from the unique seed event."""
+    rows = list(events)
+    seeds = [event for event in rows if event.get("event_type") == "PAPER_ACCOUNT_SEED"]
+    if len(seeds) != 1:
+        raise PaperProtocolError("event log must contain exactly one PAPER_ACCOUNT_SEED")
+    seed = seeds[0]
+    if rows.index(seed) != 0:
+        raise PaperProtocolError("PAPER_ACCOUNT_SEED must be the first event in the log")
+    return initial_portfolio_state(
+        initial_capital=seed["initial_capital"],
+        bil_mark=seed["initial_bil_mark"],
+    )
+
+
+def seed_event_log(
+    path: Path, *, session_date: str, initial_capital: float = INITIAL_CAPITAL, bil_mark: float,
+) -> dict:
+    """Create the account seed only in an empty log; never reset an existing ledger."""
+    path = Path(path)
+    existing = load_event_log(path)
+    if existing:
+        raise PaperProtocolError("refusing to seed a non-empty event log")
+    seed = account_seed_event(
+        session_date=session_date, initial_capital=initial_capital, bil_mark=bil_mark,
+    )
+    append_event(path, seed)
+    return seed
+
+
+def create_nav_from_event_log(
+    path: Path,
+    *,
+    session_date: str,
+    qqq_mark: float,
+    bil_mark: float,
+    source_hashes: dict[str, str],
+) -> dict:
+    """Rebuild the current ledger and append one NAV mark for the requested session."""
+    events = load_event_log(path)
+    state = replay_event_log(events)
+    record = portfolio_nav_record(
+        session_date=session_date,
+        state=state,
+        qqq_mark=qqq_mark,
+        bil_mark=bil_mark,
+        source_hashes=source_hashes,
+    )
+    append_event(path, record)
+    return record
