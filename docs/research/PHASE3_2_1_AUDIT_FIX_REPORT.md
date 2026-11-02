@@ -131,3 +131,4 @@ implemented. It does **not** produce an attractive strategy:
   CAGR and no recovery mechanism.
 
 No deployment or Strategy Lab ranking is justified.
+Audit fix branch is research-only.
