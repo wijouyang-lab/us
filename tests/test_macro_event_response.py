@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """Tests for official macro event feasibility audit."""
 import json
 from pathlib import Path
@@ -7,19 +7,34 @@ import pandas as pd
 import pytest
 
 from tools.research.macro_event_response import (
-    START, align, audit, parse_bls, parse_fomc,
+    START, align, audit, load_offline, parse_bls, parse_embargo, parse_fomc,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "research" / "macro_event_response"
 
 
-def test_parse_bls_dates_and_scheduled_time():
+def test_parse_bls_dates_and_date_only_default():
     html = '<a href="../../news.release/archives/cpi_10132020.htm">Sep 2020</a>'
     e = parse_bls(html, "cpi")[0]
     assert e["event_id"] == "cpi_2020-10-13"
-    assert e["publication_time"] == "08:30:00"
-    assert e["time_type"] == "scheduled_standard"
+    assert e["publication_time"] is None
+    assert e["time_type"] == "date_only"
+
+
+def test_parse_embargo_2021_and_2026_edt():
+    a = parse_embargo("Transmission of material in this release is embargoed until 8:30 a.m. (ET) on Wednesday, January 13, 2021.")
+    b = parse_embargo("Transmission of material in this release is embargoed until 8:30 a.m. (ET) on Tuesday, January 13, 2026.")
+    assert a["embargo_until_utc"].startswith("2021-01-13T13:30")
+    assert b["embargo_until_utc"].startswith("2026-01-13T13:30")
+    assert a["time_type"] == "official_embargo_until"
+
+
+def test_parse_embargo_2021_employment_and_dst():
+    a = parse_embargo("embargoed until 8:30 a.m. (ET) on Friday, January 8, 2021.")
+    assert a["embargo_until_utc"].startswith("2021-01-08T13:30")
+    b = parse_embargo("embargoed until 8:30 a.m. (ET) on Friday, January 9, 2026.")
+    assert b["embargo_until_utc"].startswith("2026-01-09T13:30")
 
 
 def test_parse_fomc_old_and_new_links():
@@ -63,3 +78,18 @@ def test_committed_audit_is_blocked_and_has_no_study():
     assert {"event_id", "official_source", "official_source_url", "publication_time_utc"} <= set(ev.columns)
     assert len(ev) == 500
     assert ev.event_id.is_unique
+
+
+def test_offline_import_validates_domain_and_hash(tmp_path):
+    html = '<a href="../../news.release/archives/cpi_01132021.htm">CPI</a>'
+    (tmp_path / "cpi.html").write_text(html, encoding="utf-8")
+    manifest = {"files": [{"family": "cpi", "url": "https://www.bls.gov/bls/news-release/cpi.htm",
+                           "path": "cpi.html"}]}
+    (tmp_path / "manifest.json").write_text(__import__("json").dumps(manifest), encoding="utf-8")
+    events, sources = load_offline(tmp_path)
+    assert events[0]["event_id"] == "cpi_2021-01-13"
+    assert sources["offline"]["status"] == "OFFLINE_IMPORT"
+    bad = {"files": [{"family": "cpi", "url": "https://example.com/cpi", "path": "cpi.html"}]}
+    (tmp_path / "manifest.json").write_text(__import__("json").dumps(bad), encoding="utf-8")
+    with pytest.raises(ValueError):
+        load_offline(tmp_path)

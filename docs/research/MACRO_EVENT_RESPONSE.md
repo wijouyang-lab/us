@@ -1,64 +1,48 @@
-﻿# Macro Event Response Study
+# Macro Event Response Study
 
 Date: 2026-11-03
 Status: **DATA_BLOCKED / INCONCLUSIVE**
 Branch: `research/macro-event-response`
 
-## 1. Decision first
+## 1. Decision
 
-The fixed 2007-2026 three-family study **was not run**, because official BLS
-release timestamps for 2021-2026 could not be retrieved and the archived BLS
-pages cover only 2007-2020. Running the 15-test family on a truncated sample
-would violate the pre-specified window and the 2021-2026 stability requirement.
+The fixed 2007-2026 three-family study was **not executed**. The official BLS
+live archive returned HTTP 403 in this environment, and the available FDLP
+fallback ends in 2020. No 2021-2026 BLS events can be verified without browser
+export or an approved access path. Therefore no empirical significance claim,
+no NAV, and no “best event family” ranking is made.
 
-No empirical result is reported. **This is not a PASS and not a FAIL of the
-market hypothesis; it is a data-availability block.**
+This is a data-availability block, not evidence for or against the macro-event
+hypothesis.
 
-## 2. Scope and sources
+## 2. Sources and access
 
-Families:
-
-```text
-BLS Consumer Price Index
-BLS Employment Situation
-Federal Reserve FOMC Statement
-```
-
-Official sources:
-
-- BLS CPI archive: https://www.bls.gov/bls/news-release/cpi.htm
-- BLS Employment archive: https://www.bls.gov/bls/news-release/empsit.htm
-- Fed FOMC historical: https://www.federalreserve.gov/monetarypolicy/fomc_historical.htm
-- Fed FOMC calendar: https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm
-
-Access results:
-
-| Source | HTTP | Result |
+| Source | HTTP/status | Role |
 |---|---:|---|
-| BLS CPI archive, live | **403** | Akamai bot block |
-| BLS Employment archive, live | **403** | Akamai bot block |
-| BLS CPI GPO archive | 200 | coverage through 2020 |
-| BLS Employment GPO archive | 200 | coverage through 2020 |
-| Fed FOMC historical pages 2007-2020 | 200 | statements available |
-| Fed FOMC current calendar 2021-2026 | 200 | statements available |
+| `https://www.bls.gov/bls/news-release/cpi.htm` | **403** | primary official CPI index |
+| `https://www.bls.gov/bls/news-release/empsit.htm` | **403** | primary official Employment index |
+| `https://permanent.fdlp.gov/gpo146835/.../cpi.htm` | 200 | legacy fallback only, through 2020 |
+| `https://permanent.fdlp.gov/gpo146835/.../empsit.htm` | 200 | legacy fallback only, through 2020 |
+| Fed FOMC historical/current pages | 200 | 2007-2026 statements |
 
-The live BLS 403 is recorded in `audit.json`; it was not bypassed with Yahoo
-Finance headlines or unverified aggregators.
+The code tries the **live BLS official archive first**. FDLP is retained only
+as a clearly labelled `legacy_fallback_not_complete`. No Yahoo/FRED/news
+aggregator was used to fill BLS gaps.
 
-## 3. Event inventory and coverage
-
-The audit built **500 official events**:
+## 3. Event inventory
 
 ```text
-CPI       166
-Employment 166
-FOMC      168
+CPI            166  (2007-2020, date-only index links)
+Employment     166  (2007-2020, date-only index links)
+FOMC           168  (2007-2026, scheduled 14:00 ET)
+Total          500
 ```
 
-All 500 have a valid XNYS tradable session under the pre-specified alignment
-rule (`ALIGNED`).
+FOMC events have a precise scheduled policy-release time and XNYS alignment.
+BLS events from the legacy index have **no parsed per-release embargo time**;
+they are marked `date_only` and are excluded from precise-time tests.
 
-Coverage by year:
+Coverage:
 
 | Year | CPI | Employment | FOMC |
 |---:|---:|---:|---:|
@@ -83,132 +67,119 @@ Coverage by year:
 | 2025 | **0** | **0** | 9 |
 | 2026 | **0** | **0** | 7 |
 
-The GPO snapshot ends in October 2020, so 2020 also lacks the last two BLS
-releases. FOMC coverage is complete for 2007-2026.
+2025 October BLS release is genuinely absent; it was not synthesized.
+2026 coverage stops at 2026-10-30.
 
-## 4. Timestamp status
+## 4. Timestamp and revision status
 
-Every event has:
+Every record has:
 
 ```text
-event_id
-event_type
-official_source
-official_source_url
-publication_date
-publication_time
-timezone
-publication_time_utc
-reference_period
-source_retrieved_at_utc
-source_content_sha256
-timestamp_confidence
-verification_status
-time_type
-tradable_session
+event_id, event_type, official_source, official_source_url,
+publication_date, publication_time, timezone, publication_time_utc,
+reference_period, source_retrieved_at_utc, source_content_sha256,
+timestamp_confidence, verification_status, time_type,
+source_role, hash_scope, tradable_session, alignment_status
 ```
 
-Important limitation:
+Current state:
 
-- the archived BLS index gives the **release date** from the filename;
-- 08:30 ET is recorded as the **scheduled standard time**, not a verified
-  per-release actual timestamp;
-- FOMC 14:00 ET is recorded as the **scheduled policy-release time**, not a
-  verified actual second-level timestamp;
-- `time_type` therefore says `scheduled_standard` or
-  `scheduled_policy_release`, not `actual`;
-- for BLS, the source content hash is the **archive-index** hash, not the hash
-  of each individual news release; `hash_scope` records this.
+- FOMC: `time_type=scheduled_policy_release`, 14:00 ET, 168 records;
+- BLS: `time_type=date_only`, no time, 332 records;
+- BLS hashes are **archive-index** hashes, not individual release hashes;
+- no actual BLS first-publication second is claimed;
+- revision notice parsing is implemented but only applies to imported release
+  HTML, not to index-only records.
 
-These limitations are exactly why the study was not promoted to a precise
-intraday event study.
-
-## 5. Session alignment
-
-Rule:
-
-- BLS 08:30 ET is before the 09:30 open 鈫?same XNYS session;
-- FOMC 14:00 ET is after the open 鈫?**next** XNYS session;
-- weekend/holiday 鈫?next XNYS session;
-- `date_only` events are kept separate and are not used for precise-time tests.
-
-All available events aligned, but this alignment is **calendar-scheduled**, not
-verified against actual publication seconds.
-
-## 6. Why the empirical study was stopped
-
-Required for the pre-specified study:
-
-1. three families over 2007-2026;
-2. date and time completeness;
-3. official timestamps;
-4. 15-test family with 3D primary;
-5. three fixed periods including 2021-2026.
-
-Actual:
-
-- CPI: 0 events in 2021-2026;
-- Employment: 0 events in 2021-2026;
-- FOMC: full;
-- live BLS pages: 403;
-- no verified actual BLS times.
-
-Filling the BLS gap from FRED, Yahoo, or news headlines would violate the
-official-source and no-substitution rules. Therefore:
+The code can parse an explicit line such as:
 
 ```text
+Transmission of material in this release is embargoed until 8:30 a.m. (ET)
+```
+
+and convert it with `America/New_York`, correctly handling EST/EDT. This is
+tested for 2021 and 2026. No release body was available through the blocked
+BLS endpoint, so the current 332 BLS records remain `date_only`.
+
+## 5. Offline import mode
+
+The tool supports browser-saved official HTML:
+
+```bash
+python -m tools.research.macro_event_response \
+  --offline-dir data/research/macro_event_response/offline
+```
+
+`offline/manifest.json` must list `family`, official `url`, and local `path`.
+The loader:
+
+- accepts only `www.bls.gov` or `www.federalreserve.gov`;
+- computes a separate SHA-256 for each local file;
+- parses the saved archive/release HTML;
+- records `source_role=offline_manual_official`;
+- does not attempt proxy rotation, identity spoofing, or access-control bypass.
+
+## 6. Market data cutoff fix
+
+`audit.json` now records:
+
+```text
+end                    = 2026-10-30
+market_data_cutoff     = 2026-10-30
+market_data_asof       = 2026-10-30
+raw_market_max_date    = 2026-11-02
+```
+
+SPY/ETF sessions are filtered to `<= 2026-10-30`; 2026-11-02 is excluded from
+alignment and from every market response calculation. The raw maximum date is
+retained only for audit.
+
+## 7. Readiness
+
+| Requirement | Status |
+|---|---|
+| CPI full 2007-2026 | **No** |
+| Employment full 2007-2026 | **No** |
+| FOMC full 2007-2026 | Yes |
+| Every precise event has official release page | No (BLS blocked) |
+| Individual BLS release SHA-256 | No |
+| Duplicate events | 0 |
+| Missing months documented | Yes |
+| 2021-2026 BLS correctly non-zero | **No, still zero because access is blocked** |
+| Market data <= 2026-10-30 | Yes |
+| Session alignment | FOMC aligned; BLS date-only |
+
+Final status remains:
+
+```text
+DATA_BLOCKED
 study_status = NOT_RUN_DATA_BLOCKED
 ```
 
-No event-study CSV, no HAC/BH table, no NAV, no 鈥渨hich event matters鈥?ranking is
-reported. Reporting one from a truncated sample would be data dredging.
+## 8. Required answers
 
-## 7. Required questions
+1. **Data sufficient?** No. BLS 2021-2026 and per-release timestamps are missing.
+2. **Largest macro event effect?** Not determined; no study run.
+3. **Direction consistent?** Not determined.
+4. **Volatility rather than direction?** Not determined.
+5. **Out-of-sample opportunity?** No claim.
+6. **PASS/FAIL/INCONCLUSIVE?** **INCONCLUSIVE / DATA_BLOCKED.**
 
-1. **Is data sufficient?**
-   No. BLS CPI and Employment are missing 2021-2026, and actual BLS timestamps
-   are not verified.
+## 9. Deliverables
 
-2. **Which macro event has the largest effect?**
-   Not determined. The study was not run.
+```text
+data/research/macro_event_response/events.csv
+data/research/macro_event_response/session_alignment.csv
+data/research/macro_event_response/audit.json
+data/research/macro_event_response/manifest.json
+data/research/macro_event_response/coverage.svg
+docs/research/MACRO_EVENT_RESPONSE.md
+tools/research/macro_event_response.py
+tools/research/plot_macro_coverage.py
+tests/test_macro_event_response.py
+```
 
-3. **Is the direction consistent?**
-   Not determined.
-
-4. **Is the effect concentrated in volatility rather than direction?**
-   Not determined.
-
-5. **Is there an out-of-sample opportunity?**
-   No claim. There is no empirical result to validate.
-
-6. **PASS, FAIL or INCONCLUSIVE?**
-   **INCONCLUSIVE / DATA_BLOCKED.** This is not evidence for or against the
-   macro-event hypothesis.
-
-## 8. What would unblock the study
-
-One of:
-
-1. official BLS archived release pages for 2021-2026 with retrievable publication
-   timestamps;
-2. an approved BLS data-access path that returns release timestamps;
-3. a documented official historical release-time dataset;
-4. a revised pre-specified window ending in 2020, approved before looking at
-   results, with the 2021-2026 period explicitly out of scope.
-
-Only after that should the frozen 15-test family, matched non-event controls,
-HAC/BH, and daily NAV be run.
-
-## 9. Engineering and isolation
-
-- Code: `tools/research/macro_event_response.py`
-- Coverage chart: `tools/research/plot_macro_coverage.py`
-- Tests: `tests/test_macro_event_response.py` (6 passed)
-- Events: `data/research/macro_event_response/events.csv`
-- Alignment: `data/research/macro_event_response/session_alignment.csv`
-- Audit: `data/research/macro_event_response/audit.json`
-- Hash manifest: `data/research/macro_event_response/manifest.json`
-- Chart: `data/research/macro_event_response/coverage.svg`
+Tests: **9 passed**. Full CI is reported in the PR.
 
 No production Scan/Scoring/ATR/Stop changes. No Portfolio-50000 or generic paper
 changes. No IBKR connection or orders. PR #441 remains Draft/Open and its
