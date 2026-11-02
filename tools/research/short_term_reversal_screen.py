@@ -208,7 +208,8 @@ def build_event_rows(
             selected_ret = (exit_.loc[selected] / entry.loc[selected] - 1.0).astype(float)
             universe_ret = (exit_.loc[valid_names] / entry.loc[valid_names] - 1.0).astype(float)
             rows.append({
-                "signal_date": signal_date, "entry_date": entry_date, "exit_date": exit_date,
+                "signal_date": signal_date, "signal_session_index": int(i),
+                "entry_date": entry_date, "exit_date": exit_date,
                 "horizon": int(horizon), "regime": regime,
                 "eligible_names": int(len(eligible)), "selected_names": int(len(selected)),
                 "benchmark_names": int(len(valid_names)),
@@ -244,9 +245,13 @@ def summarize_cell(events: pd.DataFrame, cost_bps: int) -> dict:
         return {
             "n_events": 0, "status": "INSUFFICIENT_DATA",
             "mean_gross_return_pct": None, "median_gross_return_pct": None,
-            "mean_net_return_pct": None, "mean_equal_weight_return_pct": None,
-            "mean_spy_return_pct": None, "mean_net_excess_vs_equal_weight_pct": None,
-            "mean_net_excess_vs_spy_pct": None, "win_rate_pct": None,
+            "mean_net_return_pct": None, "median_net_return_pct": None,
+            "mean_equal_weight_return_pct": None, "mean_spy_return_pct": None,
+            "mean_net_excess_vs_equal_weight_pct": None,
+            "median_net_excess_vs_equal_weight_pct": None,
+            "mean_net_excess_vs_spy_pct": None,
+            "median_net_excess_vs_spy_pct": None, "win_rate_pct": None,
+            "n_non_overlapping_events": 0,
             "round_trip_cost_bps": int(2 * cost_bps),
             "hac_net_excess_vs_equal_weight": empty_hac,
             "hac_net_excess_vs_spy": empty_hac,
@@ -268,15 +273,28 @@ def summarize_cell(events: pd.DataFrame, cost_bps: int) -> dict:
             "ci95_low_pct": None if test["ci95_low"] is None else test["ci95_low"] * 100,
             "ci95_high_pct": None if test["ci95_high"] is None else test["ci95_high"] * 100,
         }
+    # Greedy, chronological, non-overlapping event count. Event windows are
+    # [entry Open, exit Open]; a new event may start on the prior exit Open.
+    ordered = events.sort_values("signal_session_index")
+    next_allowed = -10**12
+    non_overlap_count = 0
+    for session_index in ordered["signal_session_index"].astype(int):
+        if session_index >= next_allowed:
+            non_overlap_count += 1
+            next_allowed = session_index + horizon
     return {
         "n_events": int(len(events)),
+        "n_non_overlapping_events": int(non_overlap_count),
         "mean_gross_return_pct": float(np.mean(gross) * 100),
         "median_gross_return_pct": float(np.median(gross) * 100),
         "mean_net_return_pct": float(np.mean(net) * 100),
+        "median_net_return_pct": float(np.median(net) * 100),
         "mean_equal_weight_return_pct": float(np.mean(ew) * 100),
         "mean_spy_return_pct": float(np.mean(spy) * 100),
         "mean_net_excess_vs_equal_weight_pct": float(np.mean(excess_ew) * 100),
+        "median_net_excess_vs_equal_weight_pct": float(np.median(excess_ew) * 100),
         "mean_net_excess_vs_spy_pct": float(np.mean(excess_spy) * 100),
+        "median_net_excess_vs_spy_pct": float(np.median(excess_spy) * 100),
         "win_rate_pct": float(np.mean(net > 0) * 100),
         "hac_net_excess_vs_equal_weight": percent_test(ew_test),
         "hac_net_excess_vs_spy": percent_test(spy_test),
@@ -391,8 +409,8 @@ def render_report(result: dict) -> str:
         f"- Input sessions: {result['input_audit']['calendar_sessions']:,}; tickers: {result['input_audit']['tickers']:,}.",
         "",
         "## Later-period regime results (2024+, 10 bps per side)", "",
-        "| Horizon | Regime | Events | Net mean % | Net excess vs EW % | HAC t | HAC 95% CI of excess % | BH q |",
-        "|---:|---|---:|---:|---:|---:|---:|---:|",
+        "| Horizon | Regime | Events | Non-overlap | Net mean % | Median excess vs EW % | Mean excess vs EW % | HAC t | HAC 95% CI | BH q |",
+        "|---:|---|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     later = result["summary"]["later_period_2024_plus"]
     def fmt(value, digits=3):
@@ -402,8 +420,9 @@ def render_report(result: dict) -> str:
             cell = later[str(horizon)][regime]["costs"]["10"]
             hac = cell["hac_net_excess_vs_equal_weight"]
             lines.append(
-                f"| {horizon} | {regime} | {cell['n_events']} | "
+                f"| {horizon} | {regime} | {cell['n_events']} | {cell['n_non_overlapping_events']} | "
                 f"{fmt(cell.get('mean_net_return_pct'))} | "
+                f"{fmt(cell.get('median_net_excess_vs_equal_weight_pct'))} | "
                 f"{fmt(cell.get('mean_net_excess_vs_equal_weight_pct'))} | "
                 f"{fmt(hac.get('t_hac'), 2)} | "
                 f"[{fmt(hac.get('ci95_low_pct'))}, {fmt(hac.get('ci95_high_pct'))}] | "
