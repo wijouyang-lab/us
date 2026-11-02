@@ -1,7 +1,7 @@
 ﻿# Volume-Shock Reversal Study
 
-Date: 2026-11-03  
-Status: **FAILED (research only; no deployable alpha)**  
+Date: 2026-11-03
+Status: **FAILED (research only; no deployable alpha)**
 Branch: `research/volume-shock-reversal`
 
 ## 1. Hypothesis
@@ -177,35 +177,35 @@ turns positive recently. This is exactly the pattern that should not be promoted
 
 ## 7. Required questions
 
-1. **Does the event signal produce a rebound?**  
+1. **Does the event signal produce a rebound?**
    Only QQQ 3D shows a positive raw mean (+1.02%), but it does not survive BH
    correction and is not stable. No broad rebound effect.
 
-2. **Which ETF has a statistical effect?**  
+2. **Which ETF has a statistical effect?**
    None at q < 0.05. QQQ has a raw 3D p=0.034; GLD/TLT are flat; IWM is negative.
 
-3. **Does the effect survive real leg costs?**  
+3. **Does the effect survive real leg costs?**
    QQQ 3D remains +0.62% at 10 bps per event, but the daily portfolio does not:
    0.95% CAGR versus 4.00%/5.31% for risk-matched benchmarks. At 20/50 bps the
    portfolio is close to zero. No.
 
-4. **Is the 3-day holding period effective?**  
+4. **Is the 3-day holding period effective?**
    QQQ 3D is the best raw point, but after BH it is insignificant. 1D/5D do not
    provide independent confirmation. Not effective as a validated result.
 
-5. **Is every historical period stable?**  
+5. **Is every historical period stable?**
    No: 2007-2015 negative, 2016-2020 marginal, 2021-latest positive. The
    strategy depends on the recent period.
 
-6. **Does full daily NAV beat risk-matched benchmarks?**  
+6. **Does full daily NAV beat risk-matched benchmarks?**
    No. 0.95% CAGR vs 4.00% SPY25 and 5.31% QQQ25 at 10 bps. At 5 bps it is still
    1.18% vs benchmarks above 4.00%.
 
-7. **Is max drawdown within 15%?**  
+7. **Is max drawdown within 15%?**
    Yes: -6.44% at 10 bps; -14.50% at 50 bps. This is the only passing risk
    criterion, but it comes with near-zero return and low exposure.
 
-8. **Final verdict?**  
+8. **Final verdict?**
    **FAIL.** The event is not a validated rebound, does not survive multiple
    testing, does not beat risk-matched benchmarks, and is not stable across
    periods.
@@ -250,4 +250,3 @@ docs/research/volume_shock_reversal/event_3d.svg
 ```
 
 The SVG files are dependency-free charts generated from the committed CSVs.
-
