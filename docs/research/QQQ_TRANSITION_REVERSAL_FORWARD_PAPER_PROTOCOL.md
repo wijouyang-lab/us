@@ -84,6 +84,16 @@ The historical backtest's `Open` is a reference mark, not a promise of an IBKR f
 
 Records are append-only. Corrections must be new, linked records; never silently overwrite a previous signal, price snapshot, order intent, or fill.
 
+## 5. Historical cost-model interpretation
+
+PR #438's `cost_bps` input is a simplified proportional haircut applied to each actual trading leg in the backtest. With BIL idle capital and `all_legs`, a round trip incurs four modeled legs: BIL sell, QQQ buy, QQQ sell, and BIL buy. Therefore **10 bps means 10 bps per leg**, not 10 bps for the complete round trip.
+
+That scenario model is not an itemized IBKR Pro Tiered fee calculation. By itself it does not separately reproduce IBKR's per-share commission/minimum, exchange/clearing pass-through charges, regulatory fees, or the broker's actual execution prices. Do not describe the historical 5/10/20/50 bps table as the user's actual IBKR bill. During prospective observation, report separately:
+
+1. Broker-reported commission, exchange, clearing, and regulatory fees from the Paper account statement.
+2. Per-leg execution slippage relative to the same-session reference Open, with actual fill timestamp retained.
+3. A combined realized paper cost only after the two categories are reconciled and double-counting is ruled out.
+
 ## 5. IBKR Paper account interpretation and limitations
 
 IBKR states that PaperTrader executions are simulated and do not execute on an exchange or settle at a clearing house. Its simulator uses real market prices and sizes but fills are simulated from the top of the book, without deep-book access. IBKR also documents differences in the handling of market orders and some order types.
