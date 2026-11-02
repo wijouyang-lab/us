@@ -700,3 +700,96 @@ def test_order_status_import_rejects_live_mode_and_wrong_broker_order_id(tmp_pat
     }])
     with pytest.raises(PaperProtocolError, match="LIVE account mode"):
         import_order_status_csv_to_event_log(event_log, path)
+
+
+def test_order_status_submitted_presubmitted_inactive_and_overfill(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents, import_order_status_csv_to_event_log,
+        load_event_log, seed_event_log,
+    )
+
+    event_log = tmp_path / "state_status.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    _record_preflight(event_log, "2026-01-06")
+    intents = entry_intents(trade_id="states", signal_id="states", entry_session="2026-01-06")
+    append_order_intents(event_log, intents)
+    path = tmp_path / "states.csv"
+    _write_order_status_csv(path, [
+        {"intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+         "broker_order_id": "bil-submitted", "requested_quantity": "125",
+         "broker_status": "Submitted"},
+        {"intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+         "broker_order_id": "qqq-presubmitted", "requested_quantity": "24",
+         "broker_status": "PreSubmitted"},
+    ])
+    result = import_order_status_csv_to_event_log(event_log, path)
+    by = {x["intent_id"]: x for x in result["events"]}
+    assert by[intents[0]["event_id"]]["status"] == "UNFILLED"
+    assert by[intents[1]["event_id"]]["status"] == "UNFILLED"
+
+    inactive = tmp_path / "inactive.csv"
+    _write_order_status_csv(inactive, [{
+        "intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+        "broker_order_id": "bil-inactive", "requested_quantity": "125",
+        "broker_status": "Inactive",
+    }])
+    out = import_order_status_csv_to_event_log(event_log, inactive)
+    assert out["events"][0]["status"] == "INACTIVE"
+
+    overfill = tmp_path / "overfill.csv"
+    _write_order_status_csv(overfill, [{
+        "intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+        "broker_order_id": "qqq-presubmitted", "requested_quantity": "1",
+        "broker_status": "Filled",
+    }])
+    before = event_log.read_text()
+    with pytest.raises(PaperProtocolError):
+        import_order_status_csv_to_event_log(event_log, overfill)
+    assert event_log.read_text() == before
+
+
+def test_cli_end_to_end_status_reconciliation(tmp_path):
+    import subprocess
+    script = Path(__file__).resolve().parents[1] / "scripts" / "qqq_transition_reversal_paper_reconcile.py"
+    events = tmp_path / "cli_status.jsonl"
+
+    def run(*args):
+        return subprocess.run([sys.executable, str(script), *map(str, args)],
+                              check=False, capture_output=True, text=True)
+
+    assert run("seed", events, "--date", "2026-01-05", "--bil-mark", "100").returncode == 0
+    checklist = tmp_path / "preflight.json"
+    checklist.write_text(json.dumps(_manual_checklist("2026-01-06")), encoding="utf-8")
+    assert run("preflight", events, checklist).returncode == 0
+    entry = json.loads(run("entry-intents", events, "--trade-id", "cli-trade",
+                           "--signal-id", "cli-signal", "--entry-session", "2026-01-06").stdout)
+    intents = entry["events"] if isinstance(entry, dict) and "events" in entry else entry
+    fills = tmp_path / "fills.csv"
+    _write_fill_csv(fills, [
+        {"intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+         "broker_order_id": "order-bil-exec", "execution_id": "bil-exec",
+         "fill_time_utc": "2026-01-06T14:30:00Z", "fill_price": "100",
+         "reference_price": "100", "quantity": "125", "commission": "0.35", "other_fees": "0.02"},
+        {"intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+         "broker_order_id": "order-qqq-exec", "execution_id": "qqq-exec",
+         "fill_time_utc": "2026-01-06T14:30:01Z", "fill_price": "500",
+         "reference_price": "500", "quantity": "24", "commission": "0.35", "other_fees": "0.02"},
+    ])
+    assert run("import-fills", events, fills).returncode == 0
+    status_csv = tmp_path / "order_status.csv"
+    _write_order_status_csv(status_csv, [
+        {"intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+         "broker_order_id": "order-bil-exec", "requested_quantity": "125", "broker_status": "Filled"},
+        {"intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+         "broker_order_id": "order-qqq-exec", "requested_quantity": "24", "broker_status": "Cancelled"},
+    ])
+    first = run("reconcile-orders", events, status_csv)
+    assert first.returncode == 0, first.stderr
+    payload = json.loads(first.stdout)
+    assert payload["reconciled_orders"] == 2
+    second = run("reconcile-orders", events, status_csv)
+    assert second.returncode == 0
+    assert json.loads(second.stdout)["already_recorded"] == 2
+    report = run("status", events)
+    assert report.returncode == 0
+    assert json.loads(report.stdout)["execution_count"] == 2

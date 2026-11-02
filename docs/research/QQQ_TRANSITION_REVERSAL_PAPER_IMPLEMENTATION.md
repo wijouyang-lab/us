@@ -124,6 +124,31 @@ and the full rehearsal sequence. Keep original broker statements and any account
 identifiers outside the repository. The example commands are for local ledger
 operation, not broker commands.
 
+## Order-status reconciliation
+
+After importing executions, import one normalized status row per intent:
+
+    intent_id,account_mode,broker_order_id,requested_quantity,broker_status
+
+Run:
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py reconcile-orders paper/events.jsonl paper/order_status.csv
+
+Statuses:
+
+- `Filled`: imported quantity must equal requested quantity.
+- `Partially Filled`: actual filled and remaining quantity retained.
+- `Cancelled`: zero fills -> `CANCELLED`; partial -> `PARTIALLY_FILLED_CANCELLED`.
+- `Submitted` / `PreSubmitted`: partial -> `PARTIALLY_FILLED`; zero -> `UNFILLED`.
+- `Inactive`: zero -> `INACTIVE`; partial -> `PARTIALLY_FILLED_INACTIVE`.
+- `LIVE` is rejected.
+- A broker order ID that differs from imported fills is rejected.
+- An overfill is rejected.
+- Re-importing identical status rows is idempotent.
+
+The import appends `ORDER_RECONCILIATION` events only. It creates no fills, changes no
+cash, and transmits no orders. See the manual checklist for the TWS Paper sequence.
+
 ## Not implemented / remaining gates
 
 - No live or Paper IBKR API/TWS/Gateway connection and no automated order submission.
