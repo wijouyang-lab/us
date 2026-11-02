@@ -170,3 +170,4 @@ Total targeted: 39 passed.
 The trend V1 route does not achieve acceptable net return with reasonable
 drawdown risk on untouched test data. No further threshold tuning should be
 done. This is a negative research result, not a deployable strategy.
+Final report revision.
