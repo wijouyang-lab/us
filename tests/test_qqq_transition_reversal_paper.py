@@ -444,3 +444,32 @@ def test_persisting_order_intents_requires_a_seeded_paper_account(tmp_path):
     intents = entry_intents(trade_id="no-seed", signal_id="s1", entry_session="2026-01-06")
     with pytest.raises(PaperProtocolError, match="exactly one PAPER_ACCOUNT_SEED"):
         append_order_intents(tmp_path / "empty.jsonl", intents)
+
+
+
+def test_local_cli_can_seed_and_report_virtual_account(tmp_path):
+    import subprocess
+
+    script = Path(__file__).resolve().parents[1] / "scripts" / "qqq_transition_reversal_paper_reconcile.py"
+    event_log = tmp_path / "cli_events.jsonl"
+    seeded = subprocess.run(
+        [
+            sys.executable, str(script), "seed", str(event_log),
+            "--date", "2026-01-05", "--bil-mark", "100",
+        ],
+        check=False, capture_output=True, text=True,
+    )
+    assert seeded.returncode == 0, seeded.stderr
+    seed_result = json.loads(seeded.stdout)
+    assert seed_result["event_type"] == "PAPER_ACCOUNT_SEED"
+
+    status = subprocess.run(
+        [sys.executable, str(script), "status", str(event_log)],
+        check=False, capture_output=True, text=True,
+    )
+    assert status.returncode == 0, status.stderr
+    report = json.loads(status.stdout)
+    assert report["account_mode"] == "PAPER"
+    assert report["initial_capital"] == pytest.approx(50000)
+    assert report["bil_units"] == pytest.approx(500)
+    assert report["execution_count"] == 0
