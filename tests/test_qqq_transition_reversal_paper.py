@@ -324,3 +324,114 @@ def test_synthetic_full_round_trip_reconciles_four_legs_and_five_session_hold():
     assert final_nav["nav"] == pytest.approx(50475.72)
     assert final_nav["execution_count"] == 4
     assert final_nav["return_from_initial"] == pytest.approx(0.0095144)
+
+
+
+def _write_fill_csv(path, rows):
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=FILL_CSV_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def test_event_log_seed_intents_csv_import_and_nav_replay(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents,
+        create_nav_from_event_log,
+        import_fill_csv_to_event_log,
+        load_event_log,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "paper_events.jsonl"
+    seed = seed_event_log(
+        event_log, session_date="2026-01-05", initial_capital=50000, bil_mark=100,
+    )
+    assert seed["initial_bil_units"] == pytest.approx(500)
+    entry = entry_intents(trade_id="cli-trade", signal_id="signal-1", entry_session="2026-01-06")
+    append_order_intents(event_log, entry)
+    fills_csv = tmp_path / "entry_fills.csv"
+    _write_fill_csv(fills_csv, [
+        {
+            "intent_id": entry[0]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "entry-bil", "execution_id": "entry-bil-exec",
+            "fill_time_utc": "2026-01-06T14:30:00Z", "fill_price": "100",
+            "reference_price": "100", "quantity": "125", "commission": "0.35",
+            "other_fees": "0.02",
+        },
+        {
+            "intent_id": entry[1]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "entry-qqq", "execution_id": "entry-qqq-exec",
+            "fill_time_utc": "2026-01-06T14:30:01Z", "fill_price": "500",
+            "reference_price": "500", "quantity": "24", "commission": "0.35",
+            "other_fees": "0.02",
+        },
+    ])
+    imported = import_fill_csv_to_event_log(event_log, fills_csv)
+    assert imported["imported_executions"] == 2
+    assert imported["bil_units"] == pytest.approx(375)
+    assert imported["qqq_units"] == pytest.approx(24)
+    assert imported["cash"] == pytest.approx(499.26)
+
+    nav = create_nav_from_event_log(
+        event_log, session_date="2026-01-06", qqq_mark=500, bil_mark=100,
+        source_hashes={"QQQ": "qqq-sha", "BIL": "bil-sha"},
+    )
+    assert nav["nav"] == pytest.approx(499.26 + 24 * 500 + 375 * 100)
+    events = load_event_log(event_log)
+    from qqq_transition_reversal_paper import replay_event_log
+    assert replay_event_log(events)["execution_ids"] == ["entry-bil-exec", "entry-qqq-exec"]
+
+
+def test_import_fill_csv_is_atomic_when_one_fill_overdraws(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents,
+        import_fill_csv_to_event_log,
+        load_event_log,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "paper_events.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    entry = entry_intents(trade_id="atomic-trade", signal_id="signal-2", entry_session="2026-01-06")
+    append_order_intents(event_log, entry)
+    fills_csv = tmp_path / "bad_fills.csv"
+    _write_fill_csv(fills_csv, [
+        {
+            "intent_id": entry[0]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "sell-bil", "execution_id": "valid-sell",
+            "fill_time_utc": "2026-01-06T14:30:00Z", "fill_price": "100",
+            "reference_price": "100", "quantity": "125", "commission": "0.35",
+            "other_fees": "0.02",
+        },
+        {
+            "intent_id": entry[1]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "buy-qqq", "execution_id": "too-large-buy",
+            "fill_time_utc": "2026-01-06T14:30:01Z", "fill_price": "500",
+            "reference_price": "500", "quantity": "40", "commission": "0.35",
+            "other_fees": "0.02",
+        },
+    ])
+    before = event_log.read_text()
+    with pytest.raises(PaperProtocolError, match="insufficient virtual cash"):
+        import_fill_csv_to_event_log(event_log, fills_csv)
+    assert event_log.read_text() == before
+    assert all(event["event_type"] != "PAPER_FILL" for event in load_event_log(event_log))
+
+
+def test_event_log_refuses_second_seed_or_corrupt_duplicate_ids(tmp_path):
+    from qqq_transition_reversal_paper import (
+        load_event_log,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "paper_events.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    with pytest.raises(PaperProtocolError, match="non-empty"):
+        seed_event_log(event_log, session_date="2026-01-06", bil_mark=100)
+    event_log.write_text(
+        '{"event_id":"same","event_type":"A"}\n'
+        '{"event_id":"same","event_type":"B"}\n'
+    )
+    with pytest.raises(PaperProtocolError, match="duplicate event_id"):
+        load_event_log(event_log)
