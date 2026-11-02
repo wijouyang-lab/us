@@ -845,3 +845,135 @@ def record_manual_preflight(path: Path, checklist: dict) -> dict:
     }
     append_event(path, payload)
     return payload
+
+
+
+ORDER_STATUS_CSV_FIELDS = (
+    "intent_id", "account_mode", "broker_order_id", "requested_quantity", "broker_status",
+)
+
+
+def read_order_status_csv(path: Path, intents_by_id: dict[str, dict]) -> list[dict]:
+    """Read one terminal/current broker status row per known PAPER intent."""
+    path = Path(path)
+    if not path.exists():
+        raise PaperProtocolError(f"order status CSV does not exist: {path}")
+    rows: list[dict] = []
+    seen_intents: set[str] = set()
+    try:
+        with path.open("r", encoding="utf-8-sig", newline="") as handle:
+            reader = csv.DictReader(handle)
+            if reader.fieldnames is None or not set(ORDER_STATUS_CSV_FIELDS).issubset(reader.fieldnames):
+                raise PaperProtocolError(
+                    "order status CSV must contain: " + ", ".join(ORDER_STATUS_CSV_FIELDS)
+                )
+            for row_number, row in enumerate(reader, start=2):
+                if not any((value or "").strip() for value in row.values()):
+                    continue
+                intent_id = (row.get("intent_id") or "").strip()
+                intent = intents_by_id.get(intent_id)
+                if intent is None:
+                    raise PaperProtocolError(f"row {row_number}: unknown intent_id")
+                if intent_id in seen_intents:
+                    raise PaperProtocolError(f"row {row_number}: duplicate intent_id")
+                seen_intents.add(intent_id)
+                if (row.get("account_mode") or "").strip() != "PAPER":
+                    raise PaperProtocolError(f"row {row_number}: LIVE account mode is forbidden")
+                broker_order_id = (row.get("broker_order_id") or "").strip()
+                broker_status = (row.get("broker_status") or "").strip()
+                if not broker_order_id or not broker_status:
+                    raise PaperProtocolError(f"row {row_number}: broker_order_id and broker_status are required")
+                try:
+                    requested_quantity = _positive(float(row["requested_quantity"]), "requested_quantity")
+                except (KeyError, TypeError, ValueError) as exc:
+                    if isinstance(exc, PaperProtocolError):
+                        raise
+                    raise PaperProtocolError(f"row {row_number}: invalid requested_quantity") from exc
+                rows.append({
+                    "intent": intent,
+                    "intent_id": intent_id,
+                    "account_mode": "PAPER",
+                    "broker_order_id": broker_order_id,
+                    "requested_quantity": requested_quantity,
+                    "broker_status": broker_status,
+                })
+    except UnicodeDecodeError as exc:
+        raise PaperProtocolError("order status CSV must be UTF-8 encoded") from exc
+    return rows
+
+
+def import_order_status_csv_to_event_log(path: Path, csv_path: Path) -> dict:
+    """Append order-level reconciliation records from a normalized PAPER status CSV."""
+    events = load_event_log(path)
+    replay_event_log(events)
+    intents = {
+        event["event_id"]: event
+        for event in events
+        if event.get("event_type") == "ORDER_INTENT"
+    }
+    order_rows = read_order_status_csv(csv_path, intents)
+    fills_by_intent: dict[str, list[dict]] = {}
+    for event in events:
+        if event.get("event_type") == "PAPER_FILL":
+            fills_by_intent.setdefault(event["intent_id"], []).append(event)
+
+    existing_event_ids = {event.get("event_id") for event in events}
+    new_events: list[dict] = []
+    skipped_existing = 0
+    for row in order_rows:
+        intent_id = row["intent_id"]
+        fills = fills_by_intent.get(intent_id, [])
+        mismatched_order_ids = sorted({
+            fill.get("broker_order_id")
+            for fill in fills
+            if fill.get("broker_order_id") != row["broker_order_id"]
+        })
+        if mismatched_order_ids:
+            raise PaperProtocolError(
+                f"broker_order_id does not match imported fills for intent {intent_id}"
+            )
+        summary = order_fill_summary(
+            intent=row["intent"],
+            fills=fills,
+            requested_quantity=row["requested_quantity"],
+            broker_status=row["broker_status"],
+        )
+        fill_event_ids = [fill["event_id"] for fill in fills]
+        stable_payload = {
+            "event_type": "ORDER_RECONCILIATION",
+            "intent_id": intent_id,
+            "trade_id": row["intent"]["trade_id"],
+            "symbol": row["intent"]["symbol"],
+            "side": row["intent"]["side"],
+            "account_mode": "PAPER",
+            "broker_order_id": row["broker_order_id"],
+            "broker_status": row["broker_status"],
+            "status": summary["status"],
+            "requested_quantity": summary["requested_quantity"],
+            "filled_quantity": summary["filled_quantity"],
+            "remaining_quantity": summary["remaining_quantity"],
+            "fill_notional": summary["fill_notional"],
+            "total_fees": summary["total_fees"],
+            "execution_count": summary["execution_count"],
+            "fill_event_ids": fill_event_ids,
+        }
+        event_id = hashlib.sha256(
+            json.dumps(stable_payload, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        if event_id in existing_event_ids:
+            skipped_existing += 1
+            continue
+        payload = dict(stable_payload)
+        payload["event_id"] = event_id
+        payload["recorded_at_utc"] = datetime.now(timezone.utc).isoformat()
+        new_events.append(payload)
+        existing_event_ids.add(event_id)
+
+    # All CSV rows must validate before the first reconciliation event is appended.
+    for event in new_events:
+        append_event(path, event)
+    return {
+        "reconciled_orders": len(new_events),
+        "already_recorded": skipped_existing,
+        "events": new_events,
+    }
