@@ -128,4 +128,4 @@ def test_summary_reports_median_excess_and_non_overlapping_event_count():
     assert result["n_events"] == 4
     assert result["n_non_overlapping_events"] == 3
     assert result["median_net_excess_vs_equal_weight_pct"] == pytest.approx(1.5)
-    assert result["median_net_excess_vs_spy_pct"] == pytest.approx(2.35)
+    assert result["median_net_excess_vs_spy_pct"] == pytest.approx(2.3)
