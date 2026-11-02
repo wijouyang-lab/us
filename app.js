@@ -850,6 +850,7 @@
 var QQQ_PAPER_URL = 'dashboard/data/qqq_transition_paper.json';
 
 function loadQQQPaper() {
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
   if (!document.querySelector('#qqqPaperSec')) return;
   fetch(QQQ_PAPER_URL + '?t=' + Date.now(), { cache: 'no-store' })
     .then(function (r) { return r.ok ? r.json() : null; })
