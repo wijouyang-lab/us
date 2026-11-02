@@ -103,7 +103,7 @@ def test_missing_bil_reference_fails_closed():
 def test_benjamini_hochberg_returns_bounded_monotone_adjustments():
     adjusted = benjamini_hochberg({"a": 0.001, "b": 0.02, "c": 0.04, "d": None})
     assert adjusted["a"] == pytest.approx(0.003)
-    assert adjusted["b"] == pytest.approx(0.04)
+    assert adjusted["b"] == pytest.approx(0.03)
     assert adjusted["c"] == pytest.approx(0.04)
     assert adjusted["d"] is None
     assert 0 <= adjusted["a"] <= adjusted["b"] <= adjusted["c"] <= 1
