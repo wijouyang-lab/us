@@ -40,9 +40,9 @@ def normalize_history(frame: pd.DataFrame, ticker: str) -> pd.DataFrame:
         d[column] = pd.to_numeric(d[column], errors="coerce")
     d["Ticker"] = str(ticker).strip().upper()
     d = d[["Date", "Ticker", *REQUIRED, *ACTION_COLUMNS]]
-    d = d.dropna(subset=["Date", "Open", "High", "Low", "Close", "Adj Close"])
+    d = d.dropna(subset=["Date", "Open", "High", "Low", "Close", "Adj Close", "Volume"])
     d = d[(d["Open"] > 0) & (d["High"] > 0) & (d["Low"] > 0)
-          & (d["Close"] > 0) & (d["Adj Close"] > 0)]
+          & (d["Close"] > 0) & (d["Adj Close"] > 0) & (d["Volume"] >= 0)]
     if d.duplicated(["Date", "Ticker"]).any():
         raise ValueError(f"{ticker}: duplicate Date/Ticker rows")
     d = d.sort_values("Date").reset_index(drop=True)
