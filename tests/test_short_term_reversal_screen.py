@@ -15,6 +15,7 @@ from short_term_reversal_screen import (
     build_event_rows,
     classify_market_regime,
     hac_mean_test,
+    summarize_cell,
 )
 
 
@@ -112,3 +113,19 @@ def test_hac_returns_insufficient_evidence_for_small_sample():
     assert result["n"] == 3
     assert result["se_hac"] is None
     assert result["p_two_sided_normal"] is None
+
+
+
+def test_summary_reports_median_excess_and_non_overlapping_event_count():
+    events = pd.DataFrame({
+        "signal_session_index": [10, 11, 13, 16],
+        "horizon": [3, 3, 3, 3],
+        "gross_return": [0.04, -0.01, 0.03, 0.02],
+        "equal_weight_return": [0.01, 0.00, 0.01, 0.01],
+        "spy_return": [0.005, 0.002, 0.003, 0.001],
+    })
+    result = summarize_cell(events, cost_bps=0)
+    assert result["n_events"] == 4
+    assert result["n_non_overlapping_events"] == 3
+    assert result["median_net_excess_vs_equal_weight_pct"] == pytest.approx(1.5)
+    assert result["median_net_excess_vs_spy_pct"] == pytest.approx(2.35)
