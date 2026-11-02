@@ -352,6 +352,15 @@ def _write_fill_csv(path, rows):
         writer.writerows(rows)
 
 
+
+
+def _write_order_status_csv(path, rows):
+    from qqq_transition_reversal_paper import ORDER_STATUS_CSV_FIELDS
+    with path.open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=ORDER_STATUS_CSV_FIELDS)
+        writer.writeheader()
+        writer.writerows(rows)
+
 def test_event_log_seed_intents_csv_import_and_nav_replay(tmp_path):
     from qqq_transition_reversal_paper import (
         append_order_intents,
@@ -559,3 +568,135 @@ def test_order_intents_require_preflight_for_the_exact_planned_session(tmp_path)
     record_manual_preflight(event_log, _manual_checklist("2026-01-06"))
     appended = append_order_intents(event_log, entry)
     assert len(appended) == 2
+
+
+
+def test_order_status_import_reconciles_filled_and_partially_filled_cancelled(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents,
+        import_fill_csv_to_event_log,
+        import_order_status_csv_to_event_log,
+        load_event_log,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "status_events.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    _record_preflight(event_log, "2026-01-06")
+    intents = entry_intents(
+        trade_id="status-trade", signal_id="status-signal", entry_session="2026-01-06",
+    )
+    append_order_intents(event_log, intents)
+
+    fills_csv = tmp_path / "status_fills.csv"
+    _write_fill_csv(fills_csv, [
+        {
+            "intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "bil-entry-1", "execution_id": "bil-exec-1",
+            "fill_time_utc": "2026-01-06T14:30:00Z", "fill_price": "100",
+            "reference_price": "100", "quantity": "125", "commission": "0.35",
+            "other_fees": "0.02",
+        },
+        {
+            "intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "qqq-entry-1", "execution_id": "qqq-exec-1",
+            "fill_time_utc": "2026-01-06T14:30:01Z", "fill_price": "500",
+            "reference_price": "500", "quantity": "20", "commission": "0.35",
+            "other_fees": "0.02",
+        },
+    ])
+    import_fill_csv_to_event_log(event_log, fills_csv)
+
+    status_csv = tmp_path / "order_status.csv"
+    _write_order_status_csv(status_csv, [
+        {
+            "intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "bil-entry-1", "requested_quantity": "125",
+            "broker_status": "Filled",
+        },
+        {
+            "intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "qqq-entry-1", "requested_quantity": "24",
+            "broker_status": "Cancelled",
+        },
+    ])
+    imported = import_order_status_csv_to_event_log(event_log, status_csv)
+    assert imported["reconciled_orders"] == 2
+    by_intent = {row["intent_id"]: row for row in imported["events"]}
+    assert by_intent[intents[0]["event_id"]]["status"] == "FILLED"
+    partial = by_intent[intents[1]["event_id"]]
+    assert partial["status"] == "PARTIALLY_FILLED_CANCELLED"
+    assert partial["filled_quantity"] == pytest.approx(20)
+    assert partial["remaining_quantity"] == pytest.approx(4)
+
+    repeated = import_order_status_csv_to_event_log(event_log, status_csv)
+    assert repeated["reconciled_orders"] == 0
+    assert repeated["already_recorded"] == 2
+    records = [x for x in load_event_log(event_log) if x["event_type"] == "ORDER_RECONCILIATION"]
+    assert len(records) == 2
+
+
+def test_order_status_import_supports_zero_fill_cancel_and_rejects_false_filled(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents,
+        import_order_status_csv_to_event_log,
+        load_event_log,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "zero_fill_status.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    _record_preflight(event_log, "2026-01-06")
+    intents = entry_intents(
+        trade_id="zero-fill-trade", signal_id="zero-signal", entry_session="2026-01-06",
+    )
+    append_order_intents(event_log, intents)
+    status_csv = tmp_path / "zero_fill_status.csv"
+    _write_order_status_csv(status_csv, [
+        {
+            "intent_id": intents[0]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "bil-zero", "requested_quantity": "125",
+            "broker_status": "Cancelled",
+        },
+    ])
+    result = import_order_status_csv_to_event_log(event_log, status_csv)
+    assert result["events"][0]["status"] == "CANCELLED"
+    assert result["events"][0]["filled_quantity"] == 0
+
+    false_filled = tmp_path / "false_filled.csv"
+    _write_order_status_csv(false_filled, [
+        {
+            "intent_id": intents[1]["event_id"], "account_mode": "PAPER",
+            "broker_order_id": "qqq-no-fill", "requested_quantity": "24",
+            "broker_status": "Filled",
+        },
+    ])
+    before = event_log.read_text()
+    with pytest.raises(PaperProtocolError, match="broker says Filled"):
+        import_order_status_csv_to_event_log(event_log, false_filled)
+    assert event_log.read_text() == before
+    assert len([x for x in load_event_log(event_log) if x["event_type"] == "ORDER_RECONCILIATION"]) == 1
+
+
+def test_order_status_import_rejects_live_mode_and_wrong_broker_order_id(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents,
+        import_order_status_csv_to_event_log,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "bad_order_status.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    _record_preflight(event_log, "2026-01-06")
+    intents = entry_intents(
+        trade_id="bad-status-trade", signal_id="bad-status", entry_session="2026-01-06",
+    )
+    append_order_intents(event_log, intents)
+    path = tmp_path / "bad_status.csv"
+    _write_order_status_csv(path, [{
+        "intent_id": intents[0]["event_id"], "account_mode": "LIVE",
+        "broker_order_id": "bad", "requested_quantity": "125",
+        "broker_status": "Cancelled",
+    }])
+    with pytest.raises(PaperProtocolError, match="LIVE account mode"):
+        import_order_status_csv_to_event_log(event_log, path)
