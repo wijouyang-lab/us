@@ -21,7 +21,7 @@ HOLD_SESSIONS_AFTER_ENTRY = 5
 PROTOCOL_VERSION = "qqq-transition-reversal-paper-v1"
 FILL_CSV_FIELDS = (
     "intent_id", "account_mode", "broker_order_id", "execution_id",
-    "fill_time_utc", "fill_price", "quantity", "commission", "other_fees",
+    "fill_time_utc", "fill_price", "reference_price", "quantity", "commission", "other_fees",
 )
 
 
@@ -216,6 +216,7 @@ def fill_event(
     execution_id: str,
     fill_time_utc: str,
     fill_price: float,
+    reference_price: float,
     quantity: float,
     commission: float,
     other_fees: float = 0.0,
@@ -229,6 +230,7 @@ def fill_event(
     if intent.get("symbol") not in {"QQQ", "BIL"} or intent.get("side") not in {"BUY", "SELL"}:
         raise PaperProtocolError("unsupported intent symbol or side")
     price = _positive(fill_price, "fill_price")
+    reference = _positive(reference_price, "reference_price")
     qty = _positive(quantity, "quantity")
     fee = _non_negative(commission, "commission")
     other = _non_negative(other_fees, "other_fees")
@@ -238,6 +240,9 @@ def fill_event(
         raise PaperProtocolError("execution_id is required")
     fill_time = _utc_timestamp(fill_time_utc)
     notional = price * qty
+    slippage_per_unit = price - reference if intent["side"] == "BUY" else reference - price
+    slippage_bps = slippage_per_unit / reference * 10_000.0
+    slippage_cost = slippage_per_unit * qty
     return {
         "event_type": "PAPER_FILL",
         "event_id": hashlib.sha256(f"{execution_id}|{intent['event_id']}".encode()).hexdigest(),
@@ -252,6 +257,9 @@ def fill_event(
         "broker_execution_id": execution_id.strip(),
         "fill_time_utc": fill_time,
         "fill_price": price,
+        "reference_price": reference,
+        "slippage_bps": slippage_bps,
+        "slippage_cost_usd": slippage_cost,
         "quantity": qty,
         "fill_notional": notional,
         "commission": fee,
@@ -273,6 +281,7 @@ def initial_portfolio_state(
         "qqq_units": 0.0,
         "bil_units": capital / mark,
         "cumulative_fees": 0.0,
+        "cumulative_slippage_usd": 0.0,
         "execution_ids": [],
     }
 
@@ -294,8 +303,18 @@ def apply_paper_fill(state: dict, fill: dict) -> dict:
     if symbol not in {"QQQ", "BIL"} or side not in {"BUY", "SELL"}:
         raise PaperProtocolError("unsupported fill symbol or side")
     price = _positive(fill.get("fill_price"), "fill_price")
+    reference = _positive(fill.get("reference_price"), "reference_price")
     quantity = _positive(fill.get("quantity"), "quantity")
     notional = price * quantity
+    slippage_per_unit = price - reference if side == "BUY" else reference - price
+    expected_slippage_bps = slippage_per_unit / reference * 10_000.0
+    expected_slippage_cost = slippage_per_unit * quantity
+    reported_slippage_bps = _number(fill.get("slippage_bps"), "slippage_bps")
+    reported_slippage_cost = _number(fill.get("slippage_cost_usd"), "slippage_cost_usd")
+    if not math.isclose(expected_slippage_bps, reported_slippage_bps, rel_tol=1e-10, abs_tol=1e-7):
+        raise PaperProtocolError("slippage_bps does not match fill/reference prices")
+    if not math.isclose(expected_slippage_cost, reported_slippage_cost, rel_tol=1e-10, abs_tol=1e-7):
+        raise PaperProtocolError("slippage_cost_usd does not match fill/reference prices")
     reported_notional = _positive(fill.get("fill_notional"), "fill_notional")
     if not math.isclose(notional, reported_notional, rel_tol=1e-10, abs_tol=1e-7):
         raise PaperProtocolError("fill_notional does not equal fill_price * quantity")
@@ -341,6 +360,7 @@ def apply_paper_fill(state: dict, fill: dict) -> dict:
         "qqq_units": qqq_units,
         "bil_units": bil_units,
         "cumulative_fees": _non_negative(state.get("cumulative_fees", 0.0), "cumulative_fees") + fees,
+        "cumulative_slippage_usd": _number(state.get("cumulative_slippage_usd", 0.0), "cumulative_slippage_usd") + expected_slippage_cost,
         "execution_ids": seen + [execution_id],
     })
     return updated
@@ -435,6 +455,7 @@ def read_fill_csv(path: Path, intents_by_id: dict[str, dict]) -> list[dict]:
                         execution_id=execution_id,
                         fill_time_utc=(row.get("fill_time_utc") or "").strip(),
                         fill_price=float(row["fill_price"]),
+                        reference_price=float(row["reference_price"]),
                         quantity=float(row["quantity"]),
                         commission=float(row["commission"]),
                         other_fees=float(row["other_fees"]),
@@ -460,6 +481,7 @@ def nav_record(
     bil_mark: float,
     cumulative_fees: float,
     source_hashes: dict[str, str],
+    cumulative_slippage_usd: float = 0.0,
 ) -> dict:
     """Create one mark-to-market record; fees already reduce cash and are not deducted again."""
     session_date = _iso_date(session_date, "session_date")
@@ -483,6 +505,7 @@ def nav_record(
         "qqq_value": qvalue,
         "bil_value": bvalue,
         "cumulative_fees": cumulative_fees,
+        "cumulative_slippage_usd": _number(cumulative_slippage_usd, "cumulative_slippage_usd"),
         "nav": nav,
         "source_hashes": dict(sorted(source_hashes.items())),
     }
@@ -504,6 +527,7 @@ def portfolio_nav_record(
         bil_mark=bil_mark,
         cumulative_fees=state["cumulative_fees"],
         source_hashes=source_hashes,
+        cumulative_slippage_usd=state.get("cumulative_slippage_usd", 0.0),
     )
     record["initial_capital"] = _positive(state["initial_capital"], "initial_capital")
     record["return_from_initial"] = record["nav"] / record["initial_capital"] - 1.0
