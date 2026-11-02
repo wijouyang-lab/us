@@ -14,6 +14,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 import exchange_calendars as xcals
+import numpy as np
 import pandas as pd
 
 from scripts.qqq_transition_paper import (
@@ -83,6 +84,22 @@ def next_future_session(now_et: datetime | None = None):
     return cal.next_session(pd.Timestamp(now.date()))
 
 
+def add_sessions(date, count: int):
+    d = pd.Timestamp(date)
+    cal = _calendar()
+    for _ in range(count):
+        d = cal.next_session(d)
+    return d
+
+
+def _session_hash(q, b, s, dt) -> str:
+    payload = []
+    for frame, name in ((q, "QQQ"), (b, "BIL"), (s, "SPY")):
+        payload.append([name, str(dt.date()), float(frame.loc[dt, "Open"]),
+                        float(frame.loc[dt, "Close"]), float(frame.loc[dt, "AdjClose"])])
+    return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+
+
 def _state_path(out_dir: Path) -> Path:
     return out_dir / "state.json"
 
@@ -115,17 +132,51 @@ def append_event(out_dir: Path, kind: str, session: str | None, core: dict, stat
 
 
 def rebuild_state_from_events(out_dir: Path) -> dict:
+    """Rebuild from validated atomic state checkpoints, then reconcile counts.
+
+    Every event carries the post-event state snapshot. This function validates the
+    append-only sequence and checks that snapshots contain every FILL/OBSERVATION
+    event; an interrupted two-leg transaction therefore fails closed.
+    """
     path = out_dir / "events.jsonl"
     if not path.exists():
         raise ProspectiveError("no event log")
     state = None
+    ids = set()
+    fill_events = obs_events = signal_events = 0
     for line in path.read_text(encoding="utf-8").splitlines():
         if not line.strip():
             continue
-        rec = json.loads(line)
-        state = rec["state"]
+        try:
+            rec = json.loads(line)
+        except json.JSONDecodeError as exc:
+            raise ProspectiveError("corrupt JSONL event") from exc
+        eid = rec.get("event_id")
+        if not eid or eid in ids:
+            raise ProspectiveError("duplicate or missing event_id")
+        ids.add(eid)
+        kind = rec.get("event_type")
+        if kind == "FILL":
+            fill_events += 1
+        elif kind == "OBSERVATION":
+            obs_events += 1
+        elif kind == "SIGNAL":
+            signal_events += 1
+        state = rec.get("state")
+        if not isinstance(state, dict):
+            raise ProspectiveError("event missing state snapshot")
     if state is None:
         raise ProspectiveError("empty event log")
+    if len(state.get("fills", [])) != fill_events:
+        raise ProspectiveError("fill state/event mismatch (possible interrupted transaction)")
+    if len(state.get("observations", [])) != obs_events:
+        raise ProspectiveError("observation state/event mismatch")
+    if state.get("observation_days") != obs_events:
+        raise ProspectiveError("observation_days mismatch")
+    if len(state.get("signal_rows", [])) != signal_events:
+        raise ProspectiveError("signal state/event mismatch")
+    if not np.isfinite(state.get("nav", float("nan"))):
+        raise ProspectiveError("non-finite NAV in event state")
     return state
 
 
@@ -168,9 +219,15 @@ def _fresh_data(data_dir: Path, now_et: datetime, require_latest: bool = True):
     s = _load(data_dir / "SPY.csv", "SPY")
     q, b, s = build(q, b, s)
     expected = expected_completed_session(now_et)
-    latest = s.index[-1]
+    latest = min(q.index[-1], b.index[-1], s.index[-1])
     if require_latest and latest != expected:
-        raise ProspectiveError(f"stale market data: latest={latest.date()} expected={expected.date()}")
+        raise ProspectiveError(f"stale market data: common_latest={latest.date()} expected={expected.date()}")
+    if q.index[-1] != latest or b.index[-1] != latest or s.index[-1] != latest:
+        raise ProspectiveError("incomplete common latest session across QQQ/BIL/SPY")
+    for frame, name in ((q, "QQQ"), (b, "BIL"), (s, "SPY")):
+        vals = frame.loc[latest, ["Open", "Close", "AdjClose"]]
+        if not all(pd.notna(vals) & (vals > 0)):
+            raise ProspectiveError(f"{name}: missing/non-positive latest session {latest.date()}")
     return q, b, s
 
 
@@ -222,8 +279,13 @@ def start(data_dir: Path, out_dir: Path, start_date: str, code_sha: str,
 
 def update(data_dir: Path, out_dir: Path, now_et: datetime | None = None, dashboard_path: Path | None = None):
     state = ensure(out_dir, dashboard_path)
+    if state["status"] == "HALTED_MISSED_EXIT":
+        return state
     if state["status"] != "RUNNING":
         return state
+    if (out_dir / "events.jsonl").exists():
+        state = rebuild_state_from_events(out_dir)
+        _state_path(out_dir).write_text(json.dumps(state, indent=2), encoding="utf-8")
     now = _now_et(now_et)
     q, b, s = _fresh_data(data_dir, now)
     latest = s.index[-1]
@@ -244,8 +306,15 @@ def update(data_dir: Path, out_dir: Path, now_et: datetime | None = None, dashbo
         append_event(out_dir, "MISSED_ENTRY", latest_s, {"planned": state["pending_entry"]}, state)
         state["pending_entry"] = None
     if state["exit_date"] and state["exit_date"] < latest_s:
-        append_event(out_dir, "MISSED_EXIT", latest_s, {"planned": state["exit_date"]}, state)
-        state["exit_date"] = None
+        state["status"] = "HALTED_MISSED_EXIT"
+        state["manual_review_required"] = True
+        state["halt_reason"] = f"missed exit {state['exit_date']}"
+        append_event(out_dir, "MISSED_EXIT", latest_s, {"planned": state["exit_date"],
+                                                        "position_retained": True}, state)
+        state["generated_at_utc"] = datetime.now(ET).astimezone().isoformat()
+        _state_path(out_dir).write_text(json.dumps(state, indent=2), encoding="utf-8")
+        _write_dashboard(out_dir, state, dashboard_path)
+        return state
     if state["exit_date"] == latest_s and pos["qqq_units"] > 0:
         p = float(q.loc[latest, "AdjOpen"]); gross = pos["qqq_units"] * p; fee = gross * c; net = gross - fee
         bp = float(b.loc[latest, "AdjOpen"]); bn = net / (1 + c); units = bn / bp
@@ -270,8 +339,7 @@ def update(data_dir: Path, out_dir: Path, now_et: datetime | None = None, dashbo
         state["fills"] += [f1, f2]
         append_event(out_dir, "FILL", latest_s, f1, state); append_event(out_dir, "FILL", latest_s, f2, state)
         pos["bil_units"] = 0.0; pos["qqq_units"] = qu; state["pending_entry"] = None
-        idx = s.index.get_loc(latest)
-        state["exit_date"] = s.index[min(idx + HOLD, len(s) - 1)].date().isoformat()
+        state["exit_date"] = add_sessions(latest, HOLD).date().isoformat()
     sig = bool(q.Signal.loc[latest])
     if sig:
         state["signals"] += 1
@@ -280,15 +348,18 @@ def update(data_dir: Path, out_dir: Path, now_et: datetime | None = None, dashbo
         if state["exit_date"] or pos["qqq_units"] > 0:
             state["skipped"] += 1; row["status"] = "SKIPPED_OVERLAP"
         elif state["pending_entry"] is None:
-            nxt = s.index[s.index > latest]
-            if len(nxt):
-                state["pending_entry"] = nxt[0].date().isoformat(); row["planned_entry"] = state["pending_entry"]
-                append_event(out_dir, "ORDER_INTENT", latest_s, row, state)
+            nxt = _calendar().next_session(latest)
+            state["pending_entry"] = nxt.date().isoformat()
+            row["planned_entry"] = state["pending_entry"]
+            append_event(out_dir, "ORDER_INTENT", latest_s, row, state)
         state["signal_rows"].append(row)
         append_event(out_dir, "SIGNAL", latest_s, row, state)
     nav = pos["qqq_units"] * float(q.loc[latest, "AdjClose"]) + (pos["bil_units"] + pos["reserve_units"]) * float(b.loc[latest, "AdjClose"])
+    if not np.isfinite(nav):
+        raise ProspectiveError("non-finite NAV")
     state["nav"] = nav; state["observation_days"] += 1; state["last_data_date"] = latest_s
-    obs = {"date": latest_s, "nav": nav, "signal": sig, "regime": str(s.loc[latest, "Regime"])}
+    obs = {"date": latest_s, "nav": nav, "signal": sig, "regime": str(s.loc[latest, "Regime"]),
+           "source_hash": _session_hash(q, b, s, latest), "data_asof": latest_s}
     state["observations"].append(obs)
     append_event(out_dir, "OBSERVATION", latest_s, obs, state)
     append_event(out_dir, "DAILY_NAV", latest_s, {"nav": nav}, state)
@@ -297,6 +368,20 @@ def update(data_dir: Path, out_dir: Path, now_et: datetime | None = None, dashbo
     for name, rows in (("fills", state["fills"]), ("daily_nav", state["observations"]),
                        ("signals", state["signal_rows"])):
         pd.DataFrame(rows).to_csv(out_dir / f"{name}.csv", index=False)
+    _write_dashboard(out_dir, state, dashboard_path)
+    return state
+
+
+def review_halt(out_dir: Path, note: str, dashboard_path: Path | None = None):
+    state = ensure(out_dir, dashboard_path)
+    if state["status"] != "HALTED_MISSED_EXIT":
+        raise ProspectiveError("account is not halted")
+    if not note.strip():
+        raise ProspectiveError("review note is required")
+    state["halt_reviewed"] = True
+    state["halt_review_note"] = note.strip()
+    append_event(out_dir, "HALT_REVIEW", state.get("last_data_date"), {"note": note.strip()}, state)
+    _state_path(out_dir).write_text(json.dumps(state, indent=2), encoding="utf-8")
     _write_dashboard(out_dir, state, dashboard_path)
     return state
 
@@ -311,10 +396,14 @@ if __name__ == "__main__":
     u = sub.add_parser("update-prospective"); u.add_argument("--data-dir", type=Path, default=Path("data/research/qqq_transition_paper"))
     u.add_argument("--out-dir", type=Path, default=Path("qqq_transition_paper/prospective"))
     st = sub.add_parser("status"); st.add_argument("--out-dir", type=Path, default=Path("qqq_transition_paper/prospective"))
+    rv = sub.add_parser("review-halt"); rv.add_argument("--out-dir", type=Path, default=Path("qqq_transition_paper/prospective"))
+    rv.add_argument("--note", required=True)
     a = p.parse_args()
     if a.cmd == "start-prospective":
         print(json.dumps(start(a.data_dir, a.out_dir, a.start_date, a.code_sha), indent=2))
     elif a.cmd == "update-prospective":
         print(json.dumps(update(a.data_dir, a.out_dir), indent=2))
+    elif a.cmd == "review-halt":
+        print(json.dumps(review_halt(a.out_dir, a.note), indent=2))
     else:
         print(json.dumps(ensure(a.out_dir), indent=2))

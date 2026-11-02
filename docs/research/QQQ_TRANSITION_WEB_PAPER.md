@@ -217,3 +217,17 @@ Tests: `tests/test_qqq_transition_paper.py` + `tests/test_qqq_transition_prospec
 - `scripts/update_qqq_transition_data.py` refreshes yfinance data with conflict
   preservation, per-session vintage hashes, and a manifest. Existing sessions are not
   silently rewritten.
+
+## 11. Forward-session and pause semantics (latest fix)
+
+- Signal N -> planned entry is `XNYS.next_session(N)`; no future price is required.
+- Entry E -> exit is the fifth further XNYS session (`E + 5 sessions`), with holidays handled by exchange_calendars.
+- `update-prospective` handles only the latest complete common QQQ/BIL/SPY session.
+- If the planned exit was missed, the account enters `HALTED_MISSED_EXIT`, retains QQQ units and exit_date, records `MISSED_EXIT`, and refuses new entries.
+- `review-halt --note` is the manual review entry; it does not silently resume or synthesize an exit.
+- Missing latest QQQ/BIL/SPY Open/Close/AdjClose fails closed; no NAV is written.
+- Observations include per-session QQQ/BIL/SPY source hashes.
+- JSONL rebuild validates event IDs, counts, NAV and atomic state checkpoints; a one-leg interrupted transaction fails rebuild.
+- Data refresh records common complete as-of and preserves conflicting prior sessions.
+
+Tests: **33 passed** across the paper ledger, prospective account, holiday offsets, and mocked data updater.

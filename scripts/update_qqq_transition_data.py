@@ -12,6 +12,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 import yfinance as yf
 
 DIR = Path("data/research/qqq_transition_paper")
@@ -95,16 +96,28 @@ def main():
     if not records and (DIR / "manifest.json").exists():
         print(json.dumps(json.loads((DIR / "manifest.json").read_text()), indent=2))
         return
+    common_asof = min(x.Date.max() for x in fetched.values()).date().isoformat()
     manifest = {"source": "yfinance", "fetched_at_utc": datetime.now(timezone.utc).isoformat(),
-                "asof": max(x.Date.max() for x in fetched.values()).date().isoformat(),
+                "asof": common_asof,
                 "existing_session_conflicts_preserved": conflicts,
                 "files": {}}
+    valid_dates = {}
     for t in SPECS:
         p = DIR / f"{t}.csv"
         df = pd.read_csv(p)
+        dates = pd.to_datetime(df.Date, utc=True, errors="coerce").dt.tz_convert(None).dt.normalize()
+        ok = (dates.notna() & np.isfinite(pd.to_numeric(df["Open"], errors="coerce")) &
+              np.isfinite(pd.to_numeric(df["Close"], errors="coerce")) &
+              np.isfinite(pd.to_numeric(df["Adj Close"], errors="coerce")))
+        valid_dates[t] = set(dates[ok].dt.date)
         manifest["files"][t] = {"rows": len(df), "sha256": hashlib.sha256(p.read_bytes()).hexdigest(),
-                                "min_date": str(pd.to_datetime(df.Date).min().date()),
-                                "max_date": str(pd.to_datetime(df.Date).max().date())}
+                                "min_date": str(pd.to_datetime(df.Date, utc=True).min().date()),
+                                "max_date": str(pd.to_datetime(df.Date, utc=True).max().date())}
+    common = set.intersection(*valid_dates.values())
+    if not common:
+        raise RuntimeError("no common complete session across QQQ/BIL/SPY")
+    manifest["asof"] = max(common).isoformat()
+    manifest["common_complete_sessions"] = len(common)
     (DIR / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     print(json.dumps(manifest, indent=2))
 
