@@ -644,6 +644,8 @@ def replay_event_log(events: Iterable[dict]) -> dict:
 
 def append_order_intents(path: Path, intents: Iterable[dict]) -> list[dict]:
     """Persist intents after checking their type and PAPER-only execution boundary."""
+    existing_events = load_event_log(path)
+    replay_event_log(existing_events)
     rows = list(intents)
     for intent in rows:
         if intent.get("event_type") != "ORDER_INTENT" or intent.get("account_mode") != "PAPER":
