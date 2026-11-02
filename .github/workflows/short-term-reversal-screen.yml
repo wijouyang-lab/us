@@ -11,6 +11,8 @@ on:
       - "tests/test_etf_history_backfill.py"
       - "tools/research/etf_short_term_reversal_screen.py"
       - "tests/test_etf_short_term_reversal_screen.py"
+      - "tools/research/etf_regime_reversal_diagnostics.py"
+      - "tests/test_etf_regime_reversal_diagnostics.py"
       - "research_price_history_sp500_10y.csv"
       - "research_spy_sp500_10y.csv"
   workflow_dispatch:
@@ -74,7 +76,7 @@ jobs:
 
       - name: Test ETF history and event-study code
         run: |
-          python -m pytest tests/test_etf_history_backfill.py tests/test_etf_short_term_reversal_screen.py -q
+          python -m pytest tests/test_etf_history_backfill.py tests/test_etf_short_term_reversal_screen.py tests/test_etf_regime_reversal_diagnostics.py -q
 
       - name: Download reproducible ETF price and action histories
         run: |
@@ -90,6 +92,13 @@ jobs:
             --input-dir /tmp/etf-history/prices \
             --json-out /tmp/etf-history/results/etf_short_term_reversal.json \
             --markdown-out /tmp/etf-history/results/etf_short_term_reversal.md
+
+      - name: Run regime-conditioned ETF reversal diagnostics
+        run: |
+          python tools/research/etf_regime_reversal_diagnostics.py \
+            --input-dir /tmp/etf-history/prices \
+            --json-out /tmp/etf-history/results/etf_regime_reversal.json \
+            --markdown-out /tmp/etf-history/results/etf_regime_reversal.md
 
       - uses: actions/upload-artifact@v4
         with:
