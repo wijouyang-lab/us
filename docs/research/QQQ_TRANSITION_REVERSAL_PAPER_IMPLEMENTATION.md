@@ -77,8 +77,17 @@ Initialize a fresh virtual account (this must be an empty event log):
 
     python scripts/qqq_transition_reversal_paper_reconcile.py seed paper/events.jsonl --date YYYY-MM-DD --bil-mark <BIL-open-mark>
 
+Before any entry intent, copy
+docs/research/qqq_paper_manual_preflight.template.json to a local JSON file, set the
+session_date to the planned order session, and set every check to true only after the
+operator and independent reviewer have verified it. Do not add account IDs, account
+numbers, credentials, tokens, or free-text notes. Then record the preflight:
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py preflight paper/events.jsonl paper/preflight-YYYY-MM-DD.json
+
 After the signal/protocol operator has created a trade ID and signal ID, persist the
-entry intent pair:
+entry intent pair. The CLI refuses to append intents unless an approved preflight
+exists for the exact planned session:
 
     python scripts/qqq_transition_reversal_paper_reconcile.py entry-intents paper/events.jsonl --trade-id <trade-id> --signal-id <signal-id> --entry-session YYYY-MM-DD
 
@@ -93,9 +102,12 @@ Inspect the reconciled shares and cash:
 
     python scripts/qqq_transition_reversal_paper_reconcile.py status paper/events.jsonl
 
-At the scheduled exit session, persist exit intents using the actual QQQ share count
-and expected BIL notional, then manually execute and import the exit fill CSV:
+At the scheduled exit session, complete and record a second preflight with
+session_date equal to the planned exit session. The CLI requires a separate exact-date
+preflight before it will append the exit intents. Use the actual reconciled QQQ share
+count and expected BIL notional:
 
+    python scripts/qqq_transition_reversal_paper_reconcile.py preflight paper/events.jsonl paper/preflight-EXIT-DATE.json
     python scripts/qqq_transition_reversal_paper_reconcile.py exit-intents paper/events.jsonl --trade-id <trade-id> --signal-id <signal-id> --exit-session YYYY-MM-DD --qqq-quantity <actual-QQQ-shares> --estimated-proceeds <estimated-BIL-USD>
     python scripts/qqq_transition_reversal_paper_reconcile.py import-fills paper/events.jsonl paper/exit_fills.csv
 
@@ -104,16 +116,21 @@ source hashes:
 
     python scripts/qqq_transition_reversal_paper_reconcile.py nav paper/events.jsonl --date YYYY-MM-DD --qqq-mark <QQQ-close> --bil-mark <BIL-close> --qqq-source-hash <sha256> --bil-source-hash <sha256>
 
-A NAV event for a date is immutable and duplicate date appends are rejected. Keep
-original broker statements and any account identifiers outside the repository. The
-example commands are for local ledger operation, not broker commands.
+A NAV event for a date is immutable and duplicate date appends are rejected. The
+preflight command records human attestations only; it does not submit orders or start
+the prospective observation clock. See
+docs/research/QQQ_TRANSITION_REVERSAL_MANUAL_PAPER_CHECKLIST.md for stop conditions
+and the full rehearsal sequence. Keep original broker statements and any account
+identifiers outside the repository. The example commands are for local ledger
+operation, not broker commands.
 
 ## Not implemented / remaining gates
 
 - No live or Paper IBKR API/TWS/Gateway connection and no automated order submission.
 - No native IBKR Activity Statement/Flex Query parser; normalized CSV mapping is required.
 - No automatic market-data downloader or scheduled daily observer.
-- No operator-approved account-opening checklist or broker-side dry run.
+- No completed real-world Paper-account checklist or broker-side dry run; only the
+  privacy-safe checklist template and local preflight recording gate are implemented.
 - No prospective observation clock is started by running these helpers.
 
 Tests are run with:
