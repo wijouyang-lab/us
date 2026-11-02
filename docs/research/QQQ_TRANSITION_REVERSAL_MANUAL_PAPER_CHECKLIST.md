@@ -75,7 +75,7 @@ position; do not fabricate the requested quantity.
   fill cash flows already include them.
 - Reference-Open slippage is a diagnostic. For a buy, adverse slippage is
   (fill price / reference Open − 1) × 10,000 bps; for a sell it is
-  (reference Open / fill price − 1) × 10,000 bps under the fill-price-dollar model
+  (reference Open − fill price) / reference Open × 10,000 bps under the fill-price-dollar model
   retained in this implementation. Do not also subtract slippage as a second cash
   expense.
 
