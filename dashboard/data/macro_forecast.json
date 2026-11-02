@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-02T14:47:18Z",
+  "generated_at": "2026-11-02T15:02:28Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -63,12 +63,12 @@
       "key": "ism",
       "indicator": "ISM制造业PMI",
       "period": "2026年10月",
-      "forecast": 53.6,
+      "forecast": 54.0,
       "actual": 54.9,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 54.9% vs 预期 53.6%（+1.3）。"
+      "impact": "实际 54.9% vs 预期 54.0%（+0.9）。"
     },
     {
       "key": "adp",
