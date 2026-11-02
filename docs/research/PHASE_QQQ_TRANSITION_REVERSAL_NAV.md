@@ -146,3 +146,4 @@ This is a historical risk objective, not a guarantee.
 - docs/research/qqq_transition_reversal_nav/daily_nav.csv
 - docs/research/qqq_transition_reversal_nav/trade_ledger.csv
 - data/research/qqq_transition_reversal/{QQQ,BIL,SPY}.csv
+Research-only NAV validation; no production integration.
