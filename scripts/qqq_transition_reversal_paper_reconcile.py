@@ -21,6 +21,7 @@ from qqq_transition_reversal_paper import (  # noqa: E402
     import_fill_csv_to_event_log,
     load_event_log,
     replay_event_log,
+    record_manual_preflight,
     seed_event_log,
 )
 
@@ -58,6 +59,10 @@ def build_parser() -> argparse.ArgumentParser:
     importer = sub.add_parser("import-fills", help="validate a normalized PAPER execution CSV")
     importer.add_argument("events", type=Path)
     importer.add_argument("csv", type=Path)
+
+    preflight = sub.add_parser("preflight", help="validate and record a manual PAPER preflight checklist")
+    preflight.add_argument("events", type=Path)
+    preflight.add_argument("checklist", type=Path, help="privacy-safe checklist JSON; no account IDs or secrets")
 
     status = sub.add_parser("status", help="replay the event log and print reconciled holdings")
     status.add_argument("events", type=Path)
@@ -104,6 +109,9 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "import-fills":
             result = import_fill_csv_to_event_log(args.events, args.csv)
+        elif args.command == "preflight":
+            checklist = json.loads(args.checklist.read_text(encoding="utf-8"))
+            result = record_manual_preflight(args.events, checklist)
         elif args.command == "status":
             events = load_event_log(args.events)
             state = replay_event_log(events)
@@ -128,7 +136,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             raise PaperProtocolError(f"unsupported command: {args.command}")
-    except (PaperProtocolError, OSError) as exc:
+    except (PaperProtocolError, OSError, json.JSONDecodeError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
 
