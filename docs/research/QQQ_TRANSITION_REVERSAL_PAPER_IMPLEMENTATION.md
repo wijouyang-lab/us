@@ -18,7 +18,8 @@ not tune the signal or start a prospective observation clock.
 - Completed-close observation capture; stale or invalid source dates fail closed.
 - Deterministic signal/order IDs and overlap suppression.
 - Separate BIL sell / QQQ buy entry intents and QQQ sell / BIL buy exit intents.
-- Strict PAPER-only fill normalization, timezone-aware UTC timestamps, fees and fill IDs.
+- Strict PAPER-only fill normalization, timezone-aware UTC timestamps, per-fill reference Open, fees and fill IDs.
+- Side-aware realized slippage in bps and USD versus the reference Open; it is a diagnostic because actual fill prices already flow through cash accounting.
 - Import of a normalized execution CSV; it requires explicit PAPER mode and an intent ID
   for every execution. It deliberately does not ingest account numbers or credentials.
 - Multiple executions per order and reconciliation of Filled, Partially Filled,
@@ -37,7 +38,7 @@ not tune the signal or start a prospective observation clock.
 
 The importer expects these columns:
 
-    intent_id,account_mode,broker_order_id,execution_id,fill_time_utc,fill_price,quantity,commission,other_fees
+    intent_id,account_mode,broker_order_id,execution_id,fill_time_utc,fill_price,reference_price,quantity,commission,other_fees
 
 Every row must say PAPER. The intent_id must point to an existing order-intent event.
 The importer is an adapter for a normalized manual/Flex Query export; it is not a
@@ -57,9 +58,9 @@ must verify the account is PAPER in TWS, then execute and reconcile sequentially
    available proceeds.
 3. Import every partial execution separately. Do not replace partial fills with one
    blended estimate; reconcile remaining quantity and terminal broker status.
-4. Record actual fill prices and commissions/fees separately. Slippage is reflected in
-   the actual fill price versus the reference Open and must not be deducted again as a
-   separate cash fee.
+4. Record actual fill prices, reference Open prices, and commissions/fees separately.
+   The engine calculates side-aware slippage bps and USD. Slippage is already reflected
+   in the actual fill-price cash flow and must not be deducted again as a cash fee.
 
 The initial virtual account is seeded at the supplied BIL mark to represent idle-capital
 exposure. It is a virtual baseline, not evidence that a real Paper account already owns
