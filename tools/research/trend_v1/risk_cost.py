@@ -9,6 +9,7 @@ import pandas as pd
 
 from .backtest import SimConfig, risk_alloc, simulate, summarize
 from .data import add_features, load_benchmark, load_panel
+from .events import events_from_signals
 from .signals import generate_signals
 
 
@@ -22,10 +23,7 @@ def main():
     panel = load_panel(Path(a.stocks), Path(a.etf_dir))
     bench = load_benchmark(Path(a.spy))
     sig = generate_signals(add_features(panel, bench), start=a.start, min_assets=100)
-    ev = {}
-    for dt, g in sig[sig.buy_candidate].groupby("next_trading_date"):
-        if pd.notna(dt):
-            ev[pd.Timestamp(dt)] = g[["ticker", "score"]].rename(columns={"score": "Score"}).copy()
+    ev = events_from_signals(sig)
     allp = pd.concat([panel, bench.assign(asset_class="ETF")], ignore_index=True).drop_duplicates(["Date", "Ticker"])
     opens = allp.pivot_table(index="Date", columns="Ticker", values="Open", aggfunc="last").sort_index()
     raw_closes = allp.pivot_table(index="Date", columns="Ticker", values="Close", aggfunc="last").sort_index()

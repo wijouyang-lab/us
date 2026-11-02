@@ -28,7 +28,12 @@ class StalePriceError(RuntimeError):
     pass
 
 
-def simulate(opens, closes, events, alloc_fn, cfg: SimConfig, raw_closes=None, max_stale_days: int = 5):
+class MissingExecutionPriceError(RuntimeError):
+    pass
+
+
+def simulate(opens, closes, events, alloc_fn, cfg: SimConfig, raw_closes=None, max_stale_days: int = 5,
+             recovery=None, spy_ok_map=None, breadth_ok_map=None):
     dates = [d for d in opens.index if d >= min(events)]
     cash = cfg.initial_cash
     shares = {}
@@ -37,12 +42,26 @@ def simulate(opens, closes, events, alloc_fn, cfg: SimConfig, raw_closes=None, m
     hard_events = []
     hard_seen = False
     stale_days = {}
+    missing_exec = 0
     for dt in dates:
         if dt in events:
-            nav_open = cash + sum(sh * opens.loc[dt, t] for t, sh in shares.items() if pd.notna(opens.loc[dt, t]))
+            missing_held = [t for t in shares if t not in opens.columns or pd.isna(opens.loc[dt, t])]
+            if missing_held:
+                raise MissingExecutionPriceError(f"missing Open for held {missing_held} at {dt.date()}")
+            nav_open = cash + sum(sh * opens.loc[dt, t] for t, sh in shares.items())
             dd = nav_open / peak - 1
-            weights, diag = alloc_fn(events[dt], dt, max(0.0, -dd))
+            if recovery is not None:
+                recovery.update(max(0.0, -dd), bool(spy_ok_map.get(dt, False)) if spy_ok_map else False,
+                                bool(breadth_ok_map.get(dt, True)) if breadth_ok_map else True)
+            alloc_dd = 0.0 if (recovery is not None and recovery.cap > 0 and -dd >= 0.12) else max(0.0, -dd)
+            weights, diag = alloc_fn(events[dt], dt, alloc_dd)
+            if recovery is not None:
+                weights = {t: w * recovery.cap for t, w in weights.items()}
             target = {t: w * nav_open for t, w in weights.items()}
+            missing_new = [t for t in target if t not in opens.columns or pd.isna(opens.loc[dt, t])]
+            for t in missing_new:
+                target.pop(t, None)
+            missing_exec += len(missing_new)
 
             def trade_cost(vals):
                 sale = sum(max(0.0, (shares.get(t, 0) * opens.loc[dt, t]) - vals.get(t, 0.0))
@@ -72,11 +91,16 @@ def simulate(opens, closes, events, alloc_fn, cfg: SimConfig, raw_closes=None, m
                    "expected_vol": diag.get("expected_vol"), "clusters": diag.get("clusters"),
                    "reason": diag.get("reason"), "n_holdings": len(new_shares),
                    "max_weight": max(weights.values()) if weights else 0.0,
-                   "max_group_weight": diag.get("max_group_weight")}
+                   "max_group_weight": diag.get("max_group_weight"),
+                   "missing_execution": len(missing_new),
+                   "recovery_mode": recovery.mode if recovery else None,
+                   "recovery_cap": recovery.cap if recovery else None}
         else:
             row = {"date": dt, "nav": None, "cash": cash, "cost": 0.0, "buy": 0.0, "sell": 0.0,
                    "target_weights": {}, "defense": None, "expected_vol": None, "clusters": None,
-                   "reason": None, "n_holdings": 0, "max_weight": 0.0, "max_group_weight": None}
+                   "reason": None, "n_holdings": 0, "max_weight": 0.0, "max_group_weight": None,
+                   "missing_execution": 0, "recovery_mode": recovery.mode if recovery else None,
+                   "recovery_cap": recovery.cap if recovery else None}
         nav = cash + sum(sh * closes.loc[dt, t] for t, sh in shares.items() if pd.notna(closes.loc[dt, t]))
         peak = max(peak, nav)
         vals = {t: sh * closes.loc[dt, t] for t, sh in shares.items() if pd.notna(closes.loc[dt, t])}
@@ -134,5 +158,8 @@ def summarize(daily, hard_events, cfg):
     m["turnover"] = float((daily.buy.sum() + daily.sell.sum()) / (2 * daily.nav.iloc[0])) if len(daily) else None
     m["hard_risk_breaches"] = len(hard_events)
     m["state_occupancy"] = daily.risk_state.value_counts().to_dict() if "risk_state" in daily else {}
+    m["missing_execution_events"] = int(daily.missing_execution.sum()) if "missing_execution" in daily else 0
+    m["cash_lockout_days"] = int((daily.recovery_mode == "CASH_DEFENSE").sum()) if "recovery_mode" in daily else 0
+    m["recovery_days"] = int((daily.recovery_mode == "RECOVERY").sum()) if "recovery_mode" in daily else 0
     m["annual"] = annual(daily)
     return m
