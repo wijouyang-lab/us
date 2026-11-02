@@ -113,7 +113,7 @@ def test_fill_import_rejects_live_mode_invalid_prices_and_naive_time():
     intent = entry_intents(trade_id="t1", signal_id="s1", entry_session="2026-01-06")[1]
     args = dict(
         intent=intent, broker_order_id="o1", execution_id="e1",
-        fill_time_utc="2026-01-06T14:30:00Z", fill_price=100,
+        fill_time_utc="2026-01-06T14:30:00Z", fill_price=100, reference_price=100,
         quantity=10, commission=0.35,
     )
     with pytest.raises(PaperProtocolError):
