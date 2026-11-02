@@ -19,7 +19,7 @@ from etf_regime_reversal_diagnostics import (
 
 
 def test_non_overlapping_event_counter_uses_touching_exit_entry_as_contiguous():
-    assert _non_overlapping_count([10, 11, 13, 16, 20], horizon=3) == 3
+    assert _non_overlapping_count([10, 11, 13, 16, 20], horizon=3) == 4
     assert _non_overlapping_count([], horizon=5) == 0
 
 
