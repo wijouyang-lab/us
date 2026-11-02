@@ -69,6 +69,24 @@ def _fill(intent, execution_id, price, quantity, *, commission=0.35, other_fees=
     )
 
 
+def _manual_checklist(session_date):
+    from qqq_transition_reversal_paper import (
+        PREFLIGHT_CHECKLIST_VERSION,
+        PREFLIGHT_REQUIRED_CHECKS,
+    )
+    return {
+        "checklist_version": PREFLIGHT_CHECKLIST_VERSION,
+        "session_date": session_date,
+        "checks": {key: True for key in PREFLIGHT_REQUIRED_CHECKS},
+    }
+
+
+def _record_preflight(event_log, session_date):
+    from qqq_transition_reversal_paper import record_manual_preflight
+    return record_manual_preflight(event_log, _manual_checklist(session_date))
+
+
+
 def test_signal_only_after_completed_transition_session():
     obs = _obs()
     assert obs["signal"] is True
@@ -349,6 +367,7 @@ def test_event_log_seed_intents_csv_import_and_nav_replay(tmp_path):
     )
     assert seed["initial_bil_units"] == pytest.approx(500)
     entry = entry_intents(trade_id="cli-trade", signal_id="signal-1", entry_session="2026-01-06")
+    _record_preflight(event_log, "2026-01-06")
     append_order_intents(event_log, entry)
     fills_csv = tmp_path / "entry_fills.csv"
     _write_fill_csv(fills_csv, [
@@ -393,6 +412,7 @@ def test_import_fill_csv_is_atomic_when_one_fill_overdraws(tmp_path):
 
     event_log = tmp_path / "paper_events.jsonl"
     seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    _record_preflight(event_log, "2026-01-06")
     entry = entry_intents(trade_id="atomic-trade", signal_id="signal-2", entry_session="2026-01-06")
     append_order_intents(event_log, entry)
     fills_csv = tmp_path / "bad_fills.csv"
@@ -462,6 +482,14 @@ def test_local_cli_can_seed_and_report_virtual_account(tmp_path):
     assert seeded.returncode == 0, seeded.stderr
     seed_result = json.loads(seeded.stdout)
     assert seed_result["event_type"] == "PAPER_ACCOUNT_SEED"
+    checklist_path = tmp_path / "preflight.json"
+    checklist_path.write_text(json.dumps(_manual_checklist("2026-01-06")), encoding="utf-8")
+    preflight = subprocess.run(
+        [sys.executable, str(script), "preflight", str(event_log), str(checklist_path)],
+        check=False, capture_output=True, text=True,
+    )
+    assert preflight.returncode == 0, preflight.stderr
+    assert json.loads(preflight.stdout)["observation_clock_started"] is False
 
     status = subprocess.run(
         [sys.executable, str(script), "status", str(event_log)],
@@ -473,3 +501,61 @@ def test_local_cli_can_seed_and_report_virtual_account(tmp_path):
     assert report["initial_capital"] == pytest.approx(50000)
     assert report["bil_units"] == pytest.approx(500)
     assert report["execution_count"] == 0
+
+
+
+def test_manual_preflight_blocks_unchecked_items_and_unapproved_fields():
+    from qqq_transition_reversal_paper import validate_manual_preflight
+
+    checklist = _manual_checklist("2026-01-06")
+    checklist["checks"]["paper_account_mode_confirmed_in_tws"] = False
+    with pytest.raises(PaperProtocolError, match="manual PAPER preflight blocked"):
+        validate_manual_preflight(checklist)
+
+    checklist = _manual_checklist("2026-01-06")
+    checklist["account_id"] = "must-not-be-stored"
+    with pytest.raises(PaperProtocolError, match="do not include account IDs"):
+        validate_manual_preflight(checklist)
+
+
+def test_preflight_record_is_paper_only_and_never_starts_observation_clock(tmp_path):
+    from qqq_transition_reversal_paper import (
+        load_event_log,
+        record_manual_preflight,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "preflight.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    record = record_manual_preflight(event_log, _manual_checklist("2026-01-06"))
+    assert record["result"] == "APPROVED_FOR_MANUAL_PAPER_ONLY"
+    assert record["account_mode"] == "PAPER"
+    assert record["orders_transmitted"] is False
+    assert record["observation_clock_started"] is False
+    assert len(load_event_log(event_log)) == 2
+    with pytest.raises(PaperProtocolError, match="already recorded"):
+        record_manual_preflight(event_log, _manual_checklist("2026-01-06"))
+
+
+def test_order_intents_require_preflight_for_the_exact_planned_session(tmp_path):
+    from qqq_transition_reversal_paper import (
+        append_order_intents,
+        record_manual_preflight,
+        seed_event_log,
+    )
+
+    event_log = tmp_path / "intent_gate.jsonl"
+    seed_event_log(event_log, session_date="2026-01-05", bil_mark=100)
+    entry = entry_intents(
+        trade_id="gated-trade", signal_id="s1", entry_session="2026-01-06",
+    )
+    with pytest.raises(PaperProtocolError, match="approved manual PAPER preflight"):
+        append_order_intents(event_log, entry)
+
+    record_manual_preflight(event_log, _manual_checklist("2026-01-07"))
+    with pytest.raises(PaperProtocolError, match="2026-01-06"):
+        append_order_intents(event_log, entry)
+
+    record_manual_preflight(event_log, _manual_checklist("2026-01-06"))
+    appended = append_order_intents(event_log, entry)
+    assert len(appended) == 2
