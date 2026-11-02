@@ -1,7 +1,7 @@
-# Macro Event Response Study
+﻿# Macro Event Response Study
 
-Date: 2026-11-03  
-Status: **DATA_BLOCKED / INCONCLUSIVE**  
+Date: 2026-11-03
+Status: **DATA_BLOCKED / INCONCLUSIVE**
 Branch: `research/macro-event-response`
 
 ## 1. Decision first
@@ -127,9 +127,9 @@ intraday event study.
 
 Rule:
 
-- BLS 08:30 ET is before the 09:30 open → same XNYS session;
-- FOMC 14:00 ET is after the open → **next** XNYS session;
-- weekend/holiday → next XNYS session;
+- BLS 08:30 ET is before the 09:30 open 鈫?same XNYS session;
+- FOMC 14:00 ET is after the open 鈫?**next** XNYS session;
+- weekend/holiday 鈫?next XNYS session;
 - `date_only` events are kept separate and are not used for precise-time tests.
 
 All available events aligned, but this alignment is **calendar-scheduled**, not
@@ -160,28 +160,28 @@ official-source and no-substitution rules. Therefore:
 study_status = NOT_RUN_DATA_BLOCKED
 ```
 
-No event-study CSV, no HAC/BH table, no NAV, no “which event matters” ranking is
+No event-study CSV, no HAC/BH table, no NAV, no 鈥渨hich event matters鈥?ranking is
 reported. Reporting one from a truncated sample would be data dredging.
 
 ## 7. Required questions
 
-1. **Is data sufficient?**  
+1. **Is data sufficient?**
    No. BLS CPI and Employment are missing 2021-2026, and actual BLS timestamps
    are not verified.
 
-2. **Which macro event has the largest effect?**  
+2. **Which macro event has the largest effect?**
    Not determined. The study was not run.
 
-3. **Is the direction consistent?**  
+3. **Is the direction consistent?**
    Not determined.
 
-4. **Is the effect concentrated in volatility rather than direction?**  
+4. **Is the effect concentrated in volatility rather than direction?**
    Not determined.
 
-5. **Is there an out-of-sample opportunity?**  
+5. **Is there an out-of-sample opportunity?**
    No claim. There is no empirical result to validate.
 
-6. **PASS, FAIL or INCONCLUSIVE?**  
+6. **PASS, FAIL or INCONCLUSIVE?**
    **INCONCLUSIVE / DATA_BLOCKED.** This is not evidence for or against the
    macro-event hypothesis.
 
