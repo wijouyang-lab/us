@@ -435,3 +435,12 @@ def test_event_log_refuses_second_seed_or_corrupt_duplicate_ids(tmp_path):
     )
     with pytest.raises(PaperProtocolError, match="duplicate event_id"):
         load_event_log(event_log)
+
+
+
+def test_persisting_order_intents_requires_a_seeded_paper_account(tmp_path):
+    from qqq_transition_reversal_paper import append_order_intents
+
+    intents = entry_intents(trade_id="no-seed", signal_id="s1", entry_session="2026-01-06")
+    with pytest.raises(PaperProtocolError, match="exactly one PAPER_ACCOUNT_SEED"):
+        append_order_intents(tmp_path / "empty.jsonl", intents)
