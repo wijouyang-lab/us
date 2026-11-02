@@ -162,3 +162,4 @@ Historical objective only; not a future guarantee.
 ## 12. Grade
 
 **Research candidate only. Not independently validated. Not deployable.**
+Audited NAV run; research-only.
