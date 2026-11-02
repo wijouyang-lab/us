@@ -1,0 +1,28 @@
+{
+  "checklist_version": "qqq-paper-manual-preflight-v1",
+  "session_date": "2026-01-06",
+  "checks": {
+    "paper_account_mode_confirmed_in_tws": false,
+    "live_account_not_selected": false,
+    "usd_currency_confirmed": false,
+    "starting_paper_cash_and_positions_reconciled": false,
+    "virtual_initial_nav_reconciled": false,
+    "frozen_strategy_commit_verified": false,
+    "data_sources_and_hashes_recorded": false,
+    "data_asof_equals_signal_session": false,
+    "signal_calculated_after_completed_close": false,
+    "spy_calendar_and_session_dates_verified": false,
+    "entry_is_next_spy_session": false,
+    "exit_is_five_spy_sessions_after_entry": false,
+    "open_auction_order_type_and_tif_verified_in_tws": false,
+    "entry_sequence_bil_sell_then_qqq_buy_confirmed": false,
+    "exit_sequence_qqq_sell_then_bil_buy_confirmed": false,
+    "partial_fill_cancel_and_remainder_process_understood": false,
+    "broker_execution_ids_prices_timestamps_available": false,
+    "reference_open_commissions_and_other_fees_available": false,
+    "daily_nav_close_marks_and_source_hashes_available": false,
+    "stop_conditions_and_manual_escalation_known": false,
+    "operator_signoff": false,
+    "independent_reviewer_signoff": false
+  }
+}
