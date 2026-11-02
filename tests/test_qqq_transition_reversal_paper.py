@@ -60,10 +60,11 @@ def _obs(**overrides):
 
 
 def _fill(intent, execution_id, price, quantity, *, commission=0.35, other_fees=0.02,
-          fill_time_utc="2026-01-06T14:30:00Z"):
+          fill_time_utc="2026-01-06T14:30:00Z", reference_price=None):
     return fill_event(
         intent=intent, broker_order_id=f"order-{execution_id}", execution_id=execution_id,
-        fill_time_utc=fill_time_utc, fill_price=price, quantity=quantity,
+        fill_time_utc=fill_time_utc, fill_price=price,
+        reference_price=price if reference_price is None else reference_price, quantity=quantity,
         commission=commission, other_fees=other_fees,
     )
 
@@ -130,6 +131,18 @@ def test_fill_import_records_normalized_execution_and_fees():
     assert fill["fill_notional"] == 1002.0
     assert fill["total_fees"] == pytest.approx(0.37)
     assert fill["fill_time_utc"] == "2026-01-06T14:30:00Z"
+    assert fill["slippage_bps"] == pytest.approx(0)
+    assert fill["slippage_cost_usd"] == pytest.approx(0)
+
+
+def test_fill_slippage_is_open_referenced_and_side_aware():
+    intents = entry_intents(trade_id="t1", signal_id="s1", entry_session="2026-01-06")
+    buy = _fill(intents[1], "buy-slip", 100.3, 100, reference_price=100)
+    sell = _fill(intents[0], "sell-slip", 99.7, 100, reference_price=100)
+    assert buy["slippage_bps"] == pytest.approx(30)
+    assert sell["slippage_bps"] == pytest.approx(30)
+    assert buy["slippage_cost_usd"] == pytest.approx(30)
+    assert sell["slippage_cost_usd"] == pytest.approx(30)
 
 
 def test_initial_portfolio_is_seeded_in_bil_and_nav_equals_capital():
@@ -230,7 +243,7 @@ def test_normalized_fill_csv_import_requires_paper_and_known_intent(tmp_path):
             "intent_id": intent["event_id"], "account_mode": "PAPER",
             "broker_order_id": "o1", "execution_id": "e1",
             "fill_time_utc": "2026-01-06T14:30:00Z", "fill_price": "500",
-            "quantity": "2", "commission": "0.35", "other_fees": "0.02",
+            "reference_price": "499.9", "quantity": "2", "commission": "0.35", "other_fees": "0.02",
         })
     fills = read_fill_csv(path, {intent["event_id"]: intent})
     assert len(fills) == 1
@@ -302,6 +315,7 @@ def test_synthetic_full_round_trip_reconciles_four_legs_and_five_session_hold():
     assert state["bil_units"] == pytest.approx(497)
     assert state["cash"] == pytest.approx(477.52)
     assert state["cumulative_fees"] == pytest.approx(1.48)
+    assert state["cumulative_slippage_usd"] == pytest.approx(0)
 
     final_nav = portfolio_nav_record(
         session_date=plan["exit_session"], state=state, qqq_mark=510, bil_mark=100.6,
