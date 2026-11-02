@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-02T14:32:16Z",
+  "generated_at": "2026-11-02T14:47:14Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -80,7 +80,7 @@
     {
       "key": "ism",
       "name": "ISM制造业PMI",
-      "value": 54.0,
+      "value": 54.9,
       "unit": "",
       "date": null,
       "prev": null,
