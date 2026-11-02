@@ -19,6 +19,7 @@ from qqq_transition_reversal_paper import (  # noqa: E402
     entry_intents,
     exit_intents,
     import_fill_csv_to_event_log,
+    import_order_status_csv_to_event_log,
     load_event_log,
     replay_event_log,
     record_manual_preflight,
@@ -59,6 +60,9 @@ def build_parser() -> argparse.ArgumentParser:
     importer = sub.add_parser("import-fills", help="validate a normalized PAPER execution CSV")
     importer.add_argument("events", type=Path)
     importer.add_argument("csv", type=Path)
+    reconciliation = sub.add_parser("reconcile-orders", help="import current/terminal status for PAPER orders")
+    reconciliation.add_argument("events", type=Path)
+    reconciliation.add_argument("csv", type=Path, help="one row per intent: PAPER account mode, broker order ID, requested quantity, status")
 
     preflight = sub.add_parser("preflight", help="validate and record a manual PAPER preflight checklist")
     preflight.add_argument("events", type=Path)
@@ -109,6 +113,8 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "import-fills":
             result = import_fill_csv_to_event_log(args.events, args.csv)
+        elif args.command == "reconcile-orders":
+            result = import_order_status_csv_to_event_log(args.events, args.csv)
         elif args.command == "preflight":
             checklist = json.loads(args.checklist.read_text(encoding="utf-8"))
             result = record_manual_preflight(args.events, checklist)
