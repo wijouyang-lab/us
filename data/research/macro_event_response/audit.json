@@ -1,0 +1,232 @@
+{
+  "start": "2007-01-01",
+  "end": "2026-10-30",
+  "market_data_asof": "2026-11-02",
+  "sources": {
+    "cpi": {
+      "url": "https://permanent.fdlp.gov/gpo146835/gpo146835/www.bls.gov/bls/news-release/cpi.htm",
+      "status": 200,
+      "sha256": "8e3b0bb39726673f2d0d09e77242f98993c7bf3248e0bbebe5d2c1ce7557c377"
+    },
+    "empsit": {
+      "url": "https://permanent.fdlp.gov/gpo146835/gpo146835/www.bls.gov/bls/news-release/empsit.htm",
+      "status": 200,
+      "sha256": "aaca0d00dc66dc52e755b8261e976b1b0b428f4fdd9d4c0939e7474d7c9e63bd"
+    },
+    "fomc_2007": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2007.htm",
+      "status": 200,
+      "sha256": "e59bb57905a8b7fa8b05383e7b99935da6ebd8aa021350159ed85db107c3261b"
+    },
+    "fomc_2008": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2008.htm",
+      "status": 200,
+      "sha256": "e72e17a0ca9129fa99032a88f1298e2009a3075865d744ae96efd516c3941d3a"
+    },
+    "fomc_2009": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm",
+      "status": 200,
+      "sha256": "07eaaed9f22d0edd3e0e5b9026ee01126237e25aee52ebfa683df7eb4bd951e1"
+    },
+    "fomc_2010": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2010.htm",
+      "status": 200,
+      "sha256": "bee342b3346a67d5b6ea6323ef2dc0e57c3360cd4c9b700ce0e8606183f95aa7"
+    },
+    "fomc_2011": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2011.htm",
+      "status": 200,
+      "sha256": "7a183aa2dd0403244c1a77d20df4e09bcf7f79b87ddf38cdb787a27acf046825"
+    },
+    "fomc_2012": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2012.htm",
+      "status": 200,
+      "sha256": "0e841d7bd18160e895e8b50ea763de977e25d7efefc1648daf48fe086f5c4267"
+    },
+    "fomc_2013": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2013.htm",
+      "status": 200,
+      "sha256": "11aba2f91f8e41965d0c0a3118181d7a473eade9b4a11a7896c482c2f4e21579"
+    },
+    "fomc_2014": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2014.htm",
+      "status": 200,
+      "sha256": "ba2ea75257a89ec621aeaf74de8ff3a483dee02e9b0fc857510c110c0fd6814b"
+    },
+    "fomc_2015": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2015.htm",
+      "status": 200,
+      "sha256": "0ee3a76c06c3a10bb283638ac4021150c9ad82c4d542e7aed0162ce131e5d17b"
+    },
+    "fomc_2016": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2016.htm",
+      "status": 200,
+      "sha256": "c346b160a88953bfd462965f97b748ee233b01efa615a87a7d0855e39e319936"
+    },
+    "fomc_2017": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2017.htm",
+      "status": 200,
+      "sha256": "814592dff430732a908ce8015f35b6e4fe7baa896d24c8da905328bd22e12753"
+    },
+    "fomc_2018": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2018.htm",
+      "status": 200,
+      "sha256": "9b53d005af71c9cfd66cd508fa3f6756d0e751e75f13e87264c61ea5fe356ba7"
+    },
+    "fomc_2019": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2019.htm",
+      "status": 200,
+      "sha256": "fa45a4972408f956414652382048530071e8f2840165ea371f7def7a5c630c65"
+    },
+    "fomc_2020": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2020.htm",
+      "status": 200,
+      "sha256": "3e8ae5e24811c6a6d017931c3dc87cb5cc612fb90af86302e9a66c9984fcb38c"
+    },
+    "fomc_2021": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2021.htm",
+      "status": 404,
+      "sha256": "f22d661511a7398ef070ed9530f1d87ad94778f599cb2d0b08cea10f17b96af3"
+    },
+    "fomc_2022": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2022.htm",
+      "status": 404,
+      "sha256": "474f184e5620bd24e1da496c07da845d774593a95c939a9a283e95f93bb54227"
+    },
+    "fomc_2023": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2023.htm",
+      "status": 404,
+      "sha256": "542a5dcfe2dbc9b84a73d656de6840a6d75431446530719d0488abeb25c63eb0"
+    },
+    "fomc_2024": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2024.htm",
+      "status": 404,
+      "sha256": "84a3c39e212eaaf1a937975549a92f87dff826412049a5b19a20cb65f4a6a71a"
+    },
+    "fomc_2025": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2025.htm",
+      "status": 404,
+      "sha256": "d04506aa14b49e8bd78b1911adbee4f3bac3ae369171202512515f0dafa1f14e"
+    },
+    "fomc_2026": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2026.htm",
+      "status": 404,
+      "sha256": "a41aed0cd60de02d017f6cf478f03b366b3afde8ffac2d85ab5a12e82982f95a"
+    },
+    "fomc_recent": {
+      "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm",
+      "status": 200,
+      "sha256": "78fd5252cf3072c54e5fa8dabc2606a5373d8197e1b66c2a380eba2304f1bc07"
+    },
+    "cpi_live": {
+      "url": "https://www.bls.gov/bls/news-release/cpi.htm",
+      "status": 403,
+      "sha256": null
+    },
+    "empsit_live": {
+      "url": "https://www.bls.gov/bls/news-release/empsit.htm",
+      "status": 403,
+      "sha256": null
+    }
+  },
+  "audit": {
+    "coverage_by_year": {
+      "cpi": {
+        "2007": 12,
+        "2008": 12,
+        "2009": 12,
+        "2010": 12,
+        "2011": 12,
+        "2012": 12,
+        "2013": 12,
+        "2014": 12,
+        "2015": 12,
+        "2016": 12,
+        "2017": 12,
+        "2018": 12,
+        "2019": 12,
+        "2020": 10,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 0,
+        "2026": 0
+      },
+      "empsit": {
+        "2007": 12,
+        "2008": 12,
+        "2009": 12,
+        "2010": 12,
+        "2011": 12,
+        "2012": 12,
+        "2013": 12,
+        "2014": 12,
+        "2015": 12,
+        "2016": 12,
+        "2017": 12,
+        "2018": 12,
+        "2019": 12,
+        "2020": 10,
+        "2021": 0,
+        "2022": 0,
+        "2023": 0,
+        "2024": 0,
+        "2025": 0,
+        "2026": 0
+      },
+      "fomc": {
+        "2007": 9,
+        "2008": 9,
+        "2009": 8,
+        "2010": 9,
+        "2011": 8,
+        "2012": 8,
+        "2013": 8,
+        "2014": 8,
+        "2015": 8,
+        "2016": 8,
+        "2017": 8,
+        "2018": 8,
+        "2019": 9,
+        "2020": 12,
+        "2021": 8,
+        "2022": 8,
+        "2023": 8,
+        "2024": 8,
+        "2025": 9,
+        "2026": 7
+      }
+    },
+    "missing_years": {
+      "cpi": [
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "empsit": [
+        2021,
+        2022,
+        2023,
+        2024,
+        2025,
+        2026
+      ],
+      "fomc": []
+    },
+    "duplicate_event_ids": 0,
+    "data_sufficient": false,
+    "status": "DATA_BLOCKED"
+  },
+  "events": 500,
+  "event_counts": {
+    "cpi": 166,
+    "empsit": 166,
+    "fomc": 168
+  },
+  "study_status": "NOT_RUN_DATA_BLOCKED",
+  "note": "No empirical event study is run while status is DATA_BLOCKED."
+}
