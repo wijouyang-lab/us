@@ -153,6 +153,7 @@ def _non_overlapping_count(session_indices: list[int], horizon: int) -> int:
 
 
 def build_etf_screen(etf_frames: dict[str, pd.DataFrame], spy: pd.DataFrame) -> dict:
+    """Vectorized per-ETF event screen on the exact SPY trading-session calendar."""
     market = _market_frame(spy)
     calendar = pd.DatetimeIndex(market.index)
     if len(calendar) < 300:
@@ -162,6 +163,8 @@ def build_etf_screen(etf_frames: dict[str, pd.DataFrame], spy: pd.DataFrame) -> 
         raise ValueError("BIL is required as the short-Treasury comparison proxy")
     spy_series = _make_series(spy.assign(Ticker="SPY"), calendar)
     bil = series["BIL"]
+    spy_adj_open = spy_series["AdjOpen"].to_numpy(dtype=float)
+    regime_array = market["Regime"].astype(str).to_numpy()
     outputs: dict[str, dict] = {}
     all_p: dict[str, float | None] = {}
 
@@ -176,56 +179,35 @@ def build_etf_screen(etf_frames: dict[str, pd.DataFrame], spy: pd.DataFrame) -> 
             "dividend_event_rows": int(asset.get("Dividends", pd.Series(0, index=asset.index)).fillna(0).ne(0).sum()),
             "split_event_rows": int(asset.get("Stock Splits", pd.Series(0, index=asset.index)).fillna(0).ne(0).sum()),
         }
+
+        threshold_valid = asset["TailThreshold"].notna().to_numpy(dtype=bool)
+        event_flags = asset["Event"].fillna(False).to_numpy(dtype=bool)
+        raw_open = asset["Open"].to_numpy(dtype=float)
+        adjusted_open = asset["AdjOpen"].to_numpy(dtype=float)
+        bil_adjusted_open = bil["AdjOpen"].to_numpy(dtype=float)
+
         for horizon in HORIZONS:
-            daily_rows: list[dict] = []
-            event_rows: list[dict] = []
-            missing_execution_events = 0
-            for i, signal_date in enumerate(calendar):
-                if i + 1 + horizon >= len(calendar):
-                    continue
-                if pd.isna(asset.iloc[i]["TailThreshold"]):
-                    continue
-                entry_date, exit_date = calendar[i + 1], calendar[i + 1 + horizon]
-                target = asset.loc[[entry_date, exit_date]]
-                if target[["Open", "Close", "Adj Close", "AdjOpen"]].isna().any().any():
-                    if bool(asset.iloc[i]["Event"]):
-                        missing_execution_events += 1
-                    continue
-                entry_raw, exit_raw = float(target.iloc[0]["Open"]), float(target.iloc[1]["Open"])
-                entry_adj, exit_adj = float(target.iloc[0]["AdjOpen"]), float(target.iloc[1]["AdjOpen"])
-                if min(entry_raw, exit_raw, entry_adj, exit_adj) <= 0:
-                    if bool(asset.iloc[i]["Event"]):
-                        missing_execution_events += 1
-                    continue
-                spy_target = spy_series.loc[[entry_date, exit_date]]
-                if spy_target[["Open", "AdjOpen"]].isna().any().any():
-                    if bool(asset.iloc[i]["Event"]):
-                        missing_execution_events += 1
-                    continue
-                spy_ret = float(spy_target.iloc[1]["AdjOpen"] / spy_target.iloc[0]["AdjOpen"] - 1.0)
-                bil_ret = np.nan
-                bil_target = bil.loc[[entry_date, exit_date]]
-                if bil_target["AdjOpen"].notna().all():
-                    bil_ret = float(bil_target.iloc[1]["AdjOpen"] / bil_target.iloc[0]["AdjOpen"] - 1.0)
-                total_ret = exit_adj / entry_adj - 1.0
-                price_ret = exit_raw / entry_raw - 1.0
-                is_event = bool(asset.iloc[i]["Event"])
-                row = {
-                    "signal_date": signal_date,
-                    "session_index": int(i),
-                    "regime": str(market.loc[signal_date, "Regime"]),
-                    "is_event": is_event,
-                    "total_return": total_ret,
-                    "price_return": price_ret,
-                    "spy_return": spy_ret,
-                    "bil_return": bil_ret,
-                }
-                daily_rows.append(row)
-                if is_event:
-                    event_rows.append(row)
-            daily = pd.DataFrame(daily_rows)
-            events = pd.DataFrame(event_rows)
-            if daily.empty:
+            n = len(calendar)
+            signal_indices = np.arange(0, max(0, n - horizon - 1), dtype=int)
+            entry_indices = signal_indices + 1
+            exit_indices = signal_indices + 1 + horizon
+
+            valid = threshold_valid[signal_indices]
+            valid &= np.isfinite(raw_open[entry_indices]) & (raw_open[entry_indices] > 0)
+            valid &= np.isfinite(raw_open[exit_indices]) & (raw_open[exit_indices] > 0)
+            valid &= np.isfinite(adjusted_open[entry_indices]) & (adjusted_open[entry_indices] > 0)
+            valid &= np.isfinite(adjusted_open[exit_indices]) & (adjusted_open[exit_indices] > 0)
+            valid &= np.isfinite(spy_adj_open[entry_indices]) & (spy_adj_open[entry_indices] > 0)
+            valid &= np.isfinite(spy_adj_open[exit_indices]) & (spy_adj_open[exit_indices] > 0)
+
+            event_candidates = threshold_valid[signal_indices] & event_flags[signal_indices]
+            missing_execution_events = int(np.sum(event_candidates & ~valid))
+            selected_signals = signal_indices[valid]
+            entry_valid = entry_indices[valid]
+            exit_valid = exit_indices[valid]
+            is_event = event_flags[selected_signals]
+
+            if len(selected_signals) == 0:
                 outputs[ticker]["horizons"][str(horizon)] = {
                     "status": "NO_USABLE_DAILY_OBSERVATIONS", "n_daily_observations": 0,
                     "n_events": 0, "n_non_overlapping_events": 0,
@@ -234,24 +216,52 @@ def build_etf_screen(etf_frames: dict[str, pd.DataFrame], spy: pd.DataFrame) -> 
                 all_p[f"{ticker}:H{horizon}"] = None
                 continue
 
-            event_mask = daily["is_event"].to_numpy(bool)
-            effect = hac_dummy_effect(daily["total_return"].to_numpy(float), event_mask, HAC_LAG)
-            event_indices = events["session_index"].astype(int).tolist() if not events.empty else []
+            total_return = adjusted_open[exit_valid] / adjusted_open[entry_valid] - 1.0
+            price_return = raw_open[exit_valid] / raw_open[entry_valid] - 1.0
+            spy_return = spy_adj_open[exit_valid] / spy_adj_open[entry_valid] - 1.0
+            bil_entry, bil_exit = bil_adjusted_open[entry_valid], bil_adjusted_open[exit_valid]
+            bil_return = np.full(len(selected_signals), np.nan, dtype=float)
+            bil_valid = (
+                np.isfinite(bil_entry) & (bil_entry > 0)
+                & np.isfinite(bil_exit) & (bil_exit > 0)
+            )
+            bil_return[bil_valid] = bil_exit[bil_valid] / bil_entry[bil_valid] - 1.0
+
+            daily = pd.DataFrame({
+                "signal_date": calendar[selected_signals],
+                "session_index": selected_signals,
+                "regime": regime_array[selected_signals],
+                "is_event": is_event,
+                "total_return": total_return,
+                "price_return": price_return,
+                "spy_return": spy_return,
+                "bil_return": bil_return,
+            })
+            events = daily.loc[daily["is_event"]].copy()
+            effect = hac_dummy_effect(daily["total_return"].to_numpy(float), is_event, HAC_LAG)
+            event_indices = events["session_index"].astype(int).tolist()
+
+            event_total = events["total_return"].to_numpy(dtype=float)
+            event_price = events["price_return"].to_numpy(dtype=float)
+            event_spy = events["spy_return"].to_numpy(dtype=float)
+            event_bil = events["bil_return"].to_numpy(dtype=float)
+            bil_event_valid = np.isfinite(event_bil)
+
             cell = {
                 "status": "EVENT_STUDY_NOT_STRATEGY_VALIDATION",
                 "n_daily_observations": int(len(daily)),
                 "n_events": int(len(events)),
                 "n_non_overlapping_events": _non_overlapping_count(event_indices, horizon),
-                "missing_execution_events": int(missing_execution_events),
-                "mean_event_total_return_pct": float(events["total_return"].mean() * 100) if not events.empty else None,
-                "median_event_total_return_pct": float(events["total_return"].median() * 100) if not events.empty else None,
-                "mean_event_price_return_pct": float(events["price_return"].mean() * 100) if not events.empty else None,
-                "win_rate_total_return_pct": float((events["total_return"] > 0).mean() * 100) if not events.empty else None,
-                "mean_event_excess_vs_spy_pct": float((events["total_return"] - events["spy_return"]).mean() * 100) if not events.empty else None,
-                "median_event_excess_vs_spy_pct": float((events["total_return"] - events["spy_return"]).median() * 100) if not events.empty else None,
+                "missing_execution_events": missing_execution_events,
+                "mean_event_total_return_pct": float(np.mean(event_total) * 100) if len(event_total) else None,
+                "median_event_total_return_pct": float(np.median(event_total) * 100) if len(event_total) else None,
+                "mean_event_price_return_pct": float(np.mean(event_price) * 100) if len(event_price) else None,
+                "win_rate_total_return_pct": float(np.mean(event_total > 0) * 100) if len(event_total) else None,
+                "mean_event_excess_vs_spy_pct": float(np.mean(event_total - event_spy) * 100) if len(event_total) else None,
+                "median_event_excess_vs_spy_pct": float(np.median(event_total - event_spy) * 100) if len(event_total) else None,
                 "mean_event_excess_vs_bil_pct": (
-                    float((events["total_return"] - events["bil_return"]).dropna().mean() * 100)
-                    if not events.empty and events["bil_return"].notna().any() else None
+                    float(np.mean(event_total[bil_event_valid] - event_bil[bil_event_valid]) * 100)
+                    if np.any(bil_event_valid) else None
                 ),
                 "event_effect_vs_non_event_total_return": {
                     **effect,
@@ -262,35 +272,31 @@ def build_etf_screen(etf_frames: dict[str, pd.DataFrame], spy: pd.DataFrame) -> 
                     "hac_lag_sessions": HAC_LAG,
                 },
                 "regime_event_counts": {
-                    regime: int((events["regime"] == regime).sum()) if not events.empty else 0
-                    for regime in REGIMES
+                    regime: int((events["regime"] == regime).sum()) for regime in REGIMES
                 },
                 "regime_mean_total_return_pct": {
                     regime: (
                         float(events.loc[events["regime"] == regime, "total_return"].mean() * 100)
-                        if not events.empty and (events["regime"] == regime).any() else None
+                        if (events["regime"] == regime).any() else None
                     ) for regime in REGIMES
                 },
                 "cost_sensitivity": {},
             }
             for cost in COSTS_BPS_PER_SIDE:
-                net = events["total_return"] - 2.0 * cost / 10_000.0 if not events.empty else pd.Series(dtype=float)
-                if len(net):
-                    bil_mask = events["bil_return"].notna().to_numpy()
-                    bil_excess = net.to_numpy()[bil_mask] - events["bil_return"].to_numpy()[bil_mask]
-                    spy_excess = net.to_numpy() - events["spy_return"].to_numpy()
-                else:
-                    bil_excess, spy_excess = np.array([]), np.array([])
+                net = event_total - 2.0 * cost / 10_000.0
+                bil_excess = net[bil_event_valid] - event_bil[bil_event_valid]
+                spy_excess = net - event_spy
                 cell["cost_sensitivity"][str(cost)] = {
                     "cost_bps_per_side": cost,
-                    "mean_net_return_pct": float(net.mean() * 100) if len(net) else None,
-                    "median_net_return_pct": float(net.median() * 100) if len(net) else None,
-                    "mean_net_excess_vs_spy_pct": float(spy_excess.mean() * 100) if len(spy_excess) else None,
-                    "mean_net_excess_vs_bil_pct": float(bil_excess.mean() * 100) if len(bil_excess) else None,
+                    "mean_net_return_pct": float(np.mean(net) * 100) if len(net) else None,
+                    "median_net_return_pct": float(np.median(net) * 100) if len(net) else None,
+                    "mean_net_excess_vs_spy_pct": float(np.mean(spy_excess) * 100) if len(net) else None,
+                    "mean_net_excess_vs_bil_pct": float(np.mean(bil_excess) * 100) if len(bil_excess) else None,
                 }
+
             all_p[f"{ticker}:H{horizon}"] = (
                 effect["p_two_sided_normal"]
-                if not events.empty and effect["p_two_sided_normal"] is not None else None
+                if len(events) and effect["p_two_sided_normal"] is not None else None
             )
             outputs[ticker]["horizons"][str(horizon)] = cell
 
@@ -335,7 +341,6 @@ def build_etf_screen(etf_frames: dict[str, pd.DataFrame], spy: pd.DataFrame) -> 
         },
         "results": outputs,
     }
-
 
 def render_report(result: dict) -> str:
     lines = [
