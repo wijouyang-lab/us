@@ -32,7 +32,8 @@ def test_normalize_history_removes_timezone_and_preserves_actions():
     result = normalize_history(make_history(), "BIL")
     assert result.Ticker.nunique() == 1
     assert result.Ticker.iloc[0] == "BIL"
-    assert str(result.Date.dtype) == "datetime64[ns]"
+    assert pd.api.types.is_datetime64_any_dtype(result.Date.dtype)
+    assert result.Date.dt.tz is None
     assert result.Date.is_monotonic_increasing
     assert result.Dividends.sum() == pytest.approx(0.25)
     assert int(result.Dividends.ne(0).sum()) == 1
