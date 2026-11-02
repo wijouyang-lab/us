@@ -8,6 +8,8 @@ on:
       - "scripts/qqq_transition_reversal_paper.py"
       - "scripts/qqq_transition_reversal_paper_reconcile.py"
       - "tests/test_qqq_transition_reversal_paper.py"
+      - "docs/research/QQQ_TRANSITION_REVERSAL_MANUAL_PAPER_CHECKLIST.md"
+      - "docs/research/qqq_paper_manual_preflight.template.json"
       - ".github/workflows/qqq-transition-reversal-paper.yml"
   workflow_dispatch:
 
