@@ -250,4 +250,3 @@ docs/research/volume_shock_reversal/event_3d.svg
 ```
 
 The SVG files are dependency-free charts generated from the committed CSVs.
-
