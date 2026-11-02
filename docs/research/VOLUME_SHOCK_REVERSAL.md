@@ -119,7 +119,7 @@ Method:
 | TLT | 3 | 31 | 29 | +0.02% | +0.55% | 0.919 | 0.919 | -0.38% |
 | TLT | 5 | 31 | 29 | +0.34% | +0.80% | 0.522 | 0.830 | -0.06% |
 
-**No ETF/horizon has BH q < 0.05.** QQQ 3D has a raw p of 0.034, but it does
+3D HAC 95% CIs: QQQ +0.06% to +1.60% (median +0.80%, std 3.46%); IWM -1.48% to +0.43%; GLD -0.39% to +0.54%; TLT -0.52% to +0.47%. The QQQ interval excludes zero only marginally and overlaps economically small effects.\n\n**No ETF/horizon has BH q < 0.05.** QQQ 3D has a raw p of 0.034, but it does
 not survive multiple testing (q = 0.363). IWM is outright negative. GLD and TLT
 are statistically indistinguishable from zero.
 
@@ -250,3 +250,4 @@ docs/research/volume_shock_reversal/event_3d.svg
 ```
 
 The SVG files are dependency-free charts generated from the committed CSVs.
+
