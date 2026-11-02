@@ -643,13 +643,25 @@ def replay_event_log(events: Iterable[dict]) -> dict:
 
 
 def append_order_intents(path: Path, intents: Iterable[dict]) -> list[dict]:
-    """Persist intents after checking their type and PAPER-only execution boundary."""
+    """Persist intents only after a session-matched manual PAPER preflight is recorded."""
     existing_events = load_event_log(path)
     replay_event_log(existing_events)
     rows = list(intents)
+    approved_dates = {
+        event.get("session_date")
+        for event in existing_events
+        if event.get("event_type") == "PAPER_PREFLIGHT_REVIEW"
+        and event.get("result") == "APPROVED_FOR_MANUAL_PAPER_ONLY"
+    }
+    existing_ids = {event.get("event_id") for event in existing_events}
     for intent in rows:
         if intent.get("event_type") != "ORDER_INTENT" or intent.get("account_mode") != "PAPER":
             raise PaperProtocolError("only PAPER ORDER_INTENT events can be persisted")
+        planned_session = _iso_date(intent.get("planned_session"), "planned_session")
+        if planned_session not in approved_dates:
+            raise PaperProtocolError("approved manual PAPER preflight is required for planned session " + planned_session)
+        if intent.get("event_id") in existing_ids:
+            raise PaperProtocolError("order intent already exists in event log")
     for intent in rows:
         append_event(path, intent)
     return rows
@@ -745,3 +757,91 @@ def create_nav_from_event_log(
     )
     append_event(path, record)
     return record
+
+
+PREFLIGHT_CHECKLIST_VERSION = "qqq-paper-manual-preflight-v1"
+PREFLIGHT_REQUIRED_CHECKS = (
+    "paper_account_mode_confirmed_in_tws",
+    "live_account_not_selected",
+    "usd_currency_confirmed",
+    "starting_paper_cash_and_positions_reconciled",
+    "virtual_initial_nav_reconciled",
+    "frozen_strategy_commit_verified",
+    "data_sources_and_hashes_recorded",
+    "data_asof_equals_signal_session",
+    "signal_calculated_after_completed_close",
+    "spy_calendar_and_session_dates_verified",
+    "entry_is_next_spy_session",
+    "exit_is_five_spy_sessions_after_entry",
+    "open_auction_order_type_and_tif_verified_in_tws",
+    "entry_sequence_bil_sell_then_qqq_buy_confirmed",
+    "exit_sequence_qqq_sell_then_bil_buy_confirmed",
+    "partial_fill_cancel_and_remainder_process_understood",
+    "broker_execution_ids_prices_timestamps_available",
+    "reference_open_commissions_and_other_fees_available",
+    "daily_nav_close_marks_and_source_hashes_available",
+    "stop_conditions_and_manual_escalation_known",
+    "operator_signoff",
+    "independent_reviewer_signoff",
+)
+
+
+def validate_manual_preflight(checklist: dict) -> dict:
+    """Validate a privacy-safe preflight JSON; every required attestation must be true."""
+    if not isinstance(checklist, dict):
+        raise PaperProtocolError("preflight checklist must be a JSON object")
+    allowed_root = {"checklist_version", "session_date", "checks"}
+    unknown_root = sorted(set(checklist) - allowed_root)
+    missing_root = sorted(allowed_root - set(checklist))
+    if unknown_root:
+        raise PaperProtocolError("unsupported checklist fields (do not include account IDs, credentials, or free-text notes): " + ", ".join(unknown_root))
+    if missing_root:
+        raise PaperProtocolError("missing checklist fields: " + ", ".join(missing_root))
+    if checklist.get("checklist_version") != PREFLIGHT_CHECKLIST_VERSION:
+        raise PaperProtocolError("unsupported preflight checklist_version")
+    session_date = _iso_date(checklist.get("session_date"), "session_date")
+    checks = checklist.get("checks")
+    if not isinstance(checks, dict):
+        raise PaperProtocolError("checks must be a JSON object of boolean attestations")
+    unknown_checks = sorted(set(checks) - set(PREFLIGHT_REQUIRED_CHECKS))
+    missing_checks = sorted(set(PREFLIGHT_REQUIRED_CHECKS) - set(checks))
+    if unknown_checks:
+        raise PaperProtocolError("unsupported preflight checks (do not add identifiers or secrets): " + ", ".join(unknown_checks))
+    invalid = sorted(key for key in PREFLIGHT_REQUIRED_CHECKS if checks.get(key) is not True)
+    if missing_checks or invalid:
+        unresolved = sorted(set(missing_checks) | set(invalid))
+        raise PaperProtocolError("manual PAPER preflight blocked; required checks must all be true: " + ", ".join(unresolved))
+    return {
+        "checklist_version": PREFLIGHT_CHECKLIST_VERSION,
+        "session_date": session_date,
+        "checks": {key: True for key in PREFLIGHT_REQUIRED_CHECKS},
+    }
+
+
+def record_manual_preflight(path: Path, checklist: dict) -> dict:
+    """Append an approved checklist record; never starts the observation clock or submits orders."""
+    path = Path(path)
+    events = load_event_log(path)
+    replay_event_log(events)
+    normalized = validate_manual_preflight(checklist)
+    session_date = normalized["session_date"]
+    if any(
+        event.get("event_type") == "PAPER_PREFLIGHT_REVIEW"
+        and event.get("session_date") == session_date
+        for event in events
+    ):
+        raise PaperProtocolError(f"manual preflight already recorded for {session_date}")
+    payload = {
+        "event_type": "PAPER_PREFLIGHT_REVIEW",
+        "event_id": hashlib.sha256(json.dumps(normalized, sort_keys=True, separators=(",", ":")).encode()).hexdigest(),
+        "account_mode": "PAPER",
+        "session_date": session_date,
+        "checklist_version": normalized["checklist_version"],
+        "checks": normalized["checks"],
+        "result": "APPROVED_FOR_MANUAL_PAPER_ONLY",
+        "orders_transmitted": False,
+        "observation_clock_started": False,
+        "recorded_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    append_event(path, payload)
+    return payload
