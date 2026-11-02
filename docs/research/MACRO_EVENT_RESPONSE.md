@@ -1,4 +1,4 @@
-# Macro Event Response Study
+﻿# Macro Event Response Study
 
 Date: 2026-11-03
 Status: **DATA_BLOCKED / INCONCLUSIVE**
@@ -10,7 +10,7 @@ The fixed 2007-2026 three-family study was **not executed**. The official BLS
 live archive returned HTTP 403 in this environment, and the available FDLP
 fallback ends in 2020. No 2021-2026 BLS events can be verified without browser
 export or an approved access path. Therefore no empirical significance claim,
-no NAV, and no “best event family” ranking is made.
+no NAV, and no 鈥渂est event family鈥?ranking is made.
 
 This is a data-availability block, not evidence for or against the macro-event
 hypothesis.
@@ -84,7 +84,7 @@ source_role, hash_scope, tradable_session, alignment_status
 
 Current state:
 
-- FOMC: `time_type=scheduled_policy_release`, 14:00 ET, 168 records;
+- FOMC: `time_type=scheduled_policy_release`, 14:00 ET, 168 records; each statement page fetched separately with its own SHA-256 (`hash_scope=individual_statement`);
 - BLS: `time_type=date_only`, no time, 332 records;
 - BLS hashes are **archive-index** hashes, not individual release hashes;
 - no actual BLS first-publication second is claimed;

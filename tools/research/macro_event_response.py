@@ -10,6 +10,7 @@ import argparse
 import hashlib
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
@@ -210,6 +211,18 @@ def build(data_dir: Path, out_dir: Path, offline_dir: Path | None = None):
     sources["fomc_recent"] = {"url": FOMC_RECENT, "status": status, "sha256": sha}
     if status == 200:
         events += parse_fomc(text)
+    fomc_events = [e for e in events if e["event_type"] == "fomc"]
+    def check_statement(e):
+        url = ("https://www.federalreserve.gov/newsevents/pressreleases/"
+               f"monetary{pd.Timestamp(e['publication_date']).strftime('%Y%m%d')}a.htm")
+        status, text, sha = fetch(url)
+        e["_statement_url"] = url
+        e["_statement_status"] = status
+        e["_statement_sha"] = sha if status == 200 else None
+        return e
+    if fomc_events:
+        with ThreadPoolExecutor(max_workers=8) as pool:
+            list(pool.map(check_statement, fomc_events))
     if offline_dir is not None:
         oe, os_ = load_offline(offline_dir)
         events += oe
@@ -230,11 +243,12 @@ def build(data_dir: Path, out_dir: Path, offline_dir: Path | None = None):
             e["source_role"] = e.get("source_role", "unknown")
         else:
             e["official_source"] = "Federal Reserve Board"
-            e["official_source_url"] = ("https://www.federalreserve.gov/newsevents/pressreleases/"
-                                        f"monetary{pd.Timestamp(e['publication_date']).strftime('%Y%m%d')}a.htm")
+            e["official_source_url"] = e.get("_statement_url", ("https://www.federalreserve.gov/newsevents/pressreleases/"
+                                        f"monetary{pd.Timestamp(e['publication_date']).strftime('%Y%m%d')}a.htm"))
             e["reference_period"] = "FOMC statement"
-            e["source_content_sha256"] = sources.get("fomc_recent", {}).get("sha256")
-            e["hash_scope"] = "official_calendar_or_historical_page"
+            e["source_content_sha256"] = e.get("_statement_sha") or sources.get("fomc_recent", {}).get("sha256")
+            e["hash_scope"] = "individual_statement" if e.get("_statement_sha") else "official_calendar_or_historical_page"
+            e["statement_fetch_status"] = e.get("_statement_status")
             e["source_role"] = "official_calendar"
         e["source_retrieved_at_utc"] = retrieved
         if e.get("publication_time"):
