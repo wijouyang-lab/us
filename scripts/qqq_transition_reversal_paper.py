@@ -120,8 +120,13 @@ def evaluate_observation(
         if qqq_ret5 is None or threshold_5pct is None:
             valid = False
         else:
-            ret_value = _number(qqq_ret5, "qqq_ret5")
-            threshold_value = _number(threshold_5pct, "threshold_5pct")
+            try:
+                ret_value = _number(qqq_ret5, "qqq_ret5")
+                threshold_value = _number(threshold_5pct, "threshold_5pct")
+            except PaperProtocolError:
+                valid = False
+                ret_value = None
+                threshold_value = None
     signal_event = bool(
         valid and spy_regime == "TRANSITION" and ret_value <= threshold_value
     )
