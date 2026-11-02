@@ -1,7 +1,7 @@
-# Gap-Confirmed Continuation Study
+﻿# Gap-Confirmed Continuation Study
 
-Date: 2026-11-03  
-Status: **FAILED (research only; no deployable alpha)**  
+Date: 2026-11-03
+Status: **FAILED (research only; no deployable alpha)**
 Branch: `research/gap-confirmed-continuation`
 
 ## 1. Hypothesis
@@ -89,7 +89,7 @@ Bias disclosure:
 
 ## 4. Event study
 
-5 ETFs × 3 horizons = **15 tests**. Newey-West HAC lag = 20 on the full daily
+5 ETFs 脳 3 horizons = **15 tests**. Newey-West HAC lag = 20 on the full daily
 time axis. BH correction across all 15.
 
 | ETF | H | Events | Non-overlap | Mean | Median | Excess SPY | HAC t | HAC 95% CI | p | q |
@@ -173,8 +173,8 @@ Signal counts:
 SPY 300, QQQ 286, IWM 278, GLD 233, TLT 264
 ```
 
-Regime counts: above 200D 1,019; below 200D 274; warm-up 68.  
-Consecutive signals within 3 sessions: 169.  
+Regime counts: above 200D 1,019; below 200D 274; warm-up 68.
+Consecutive signals within 3 sessions: 169.
 Skipped signals while held/pending: 507.
 
 Per-ETF PnL at 10 bps:
@@ -196,29 +196,29 @@ and the signal is not a rare extreme tail event after the 1.0/0.5 thresholds.
 
 ## 8. Required questions
 
-1. **Does a gap plus intraday confirmation predict continuation?**  
+1. **Does a gap plus intraday confirmation predict continuation?**
    No. Mean 3-session returns are indistinguishable from zero or negative; no
    positive BH-significant result.
 
-2. **Which ETF is statistically significant?**  
+2. **Which ETF is statistically significant?**
    None positive. QQQ 1D is raw-negative p=0.027; no positive test.
 
-3. **Does BH correction preserve significance?**  
+3. **Does BH correction preserve significance?**
    No. Best q is 0.344; all 15 tests fail q<0.05.
 
-4. **Is it profitable after all four legs?**  
+4. **Is it profitable after all four legs?**
    Barely at 10 bps (0.08% CAGR), negative at 20/50 bps, and below cash. No.
 
-5. **Does it beat risk-matched benchmarks?**  
+5. **Does it beat risk-matched benchmarks?**
    No. 0.08% vs 4.00% SPY25 and 5.31% QQQ25.
 
-6. **Are the three periods stable?**  
+6. **Are the three periods stable?**
    No. 2007-2015 is -1.65% with -16.9% drawdown.
 
-7. **Is max drawdown below 15%?**  
+7. **Is max drawdown below 15%?**
    No. -18.42% at 10 bps; worse at higher costs.
 
-8. **Final verdict?**  
+8. **Final verdict?**
    **FAIL.**
 
 ## 9. Acceptance checklist
