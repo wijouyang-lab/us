@@ -68,6 +68,46 @@ those BIL shares. Before any prospective clock starts, the opening Paper account
 positions/cash must be reconciled to a declared starting NAV and a human must approve
 the operator checklist.
 
+## Local operator CLI
+
+The local CLI makes the event-ledger workflow executable without adding any broker
+connectivity. It writes only to the JSONL path supplied by the operator.
+
+Initialize a fresh virtual account (this must be an empty event log):
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py seed paper/events.jsonl --date YYYY-MM-DD --bil-mark <BIL-open-mark>
+
+After the signal/protocol operator has created a trade ID and signal ID, persist the
+entry intent pair:
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py entry-intents paper/events.jsonl --trade-id <trade-id> --signal-id <signal-id> --entry-session YYYY-MM-DD
+
+After the operator has manually verified PAPER mode in TWS and completed the two
+entry legs, map each execution into the normalized CSV schema above and import the
+whole file (the import validates all rows against the current ledger before appending
+any of them):
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py import-fills paper/events.jsonl paper/entry_fills.csv
+
+Inspect the reconciled shares and cash:
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py status paper/events.jsonl
+
+At the scheduled exit session, persist exit intents using the actual QQQ share count
+and expected BIL notional, then manually execute and import the exit fill CSV:
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py exit-intents paper/events.jsonl --trade-id <trade-id> --signal-id <signal-id> --exit-session YYYY-MM-DD --qqq-quantity <actual-QQQ-shares> --estimated-proceeds <estimated-BIL-USD>
+    python scripts/qqq_transition_reversal_paper_reconcile.py import-fills paper/events.jsonl paper/exit_fills.csv
+
+Append a mark only after supplying the completed-session QQQ/BIL marks and their
+source hashes:
+
+    python scripts/qqq_transition_reversal_paper_reconcile.py nav paper/events.jsonl --date YYYY-MM-DD --qqq-mark <QQQ-close> --bil-mark <BIL-close> --qqq-source-hash <sha256> --bil-source-hash <sha256>
+
+A NAV event for a date is immutable and duplicate date appends are rejected. Keep
+original broker statements and any account identifiers outside the repository. The
+example commands are for local ledger operation, not broker commands.
+
 ## Not implemented / remaining gates
 
 - No live or Paper IBKR API/TWS/Gateway connection and no automated order submission.
