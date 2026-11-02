@@ -193,3 +193,4 @@ reconciliation, and daily NAV events. Reconcile:
 
 A synthetic test is not broker execution evidence. Completing this checklist is not
 strategy validation or permission for Live trading.
+
