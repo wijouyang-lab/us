@@ -1,0 +1,37 @@
+name: QQQ Reversal Paper Protocol Tests
+
+on:
+  pull_request:
+    branches:
+      - research/qqq-transition-reversal-paper-protocol
+    paths:
+      - "scripts/qqq_transition_reversal_paper.py"
+      - "scripts/qqq_transition_reversal_paper_reconcile.py"
+      - "tests/test_qqq_transition_reversal_paper.py"
+      - "docs/research/QQQ_TRANSITION_REVERSAL_MANUAL_PAPER_CHECKLIST.md"
+      - "docs/research/qqq_paper_manual_preflight.template.json"
+      - ".github/workflows/qqq-transition-reversal-paper.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: qqq-reversal-paper-protocol-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  isolated-paper-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test runner
+        run: python -m pip install --upgrade pytest
+      - name: Compile isolated paper module
+        run: python -m py_compile scripts/qqq_transition_reversal_paper.py scripts/qqq_transition_reversal_paper_reconcile.py tests/test_qqq_transition_reversal_paper.py
+      - name: Run isolated paper protocol tests
+        run: python -m pytest tests/test_qqq_transition_reversal_paper.py -q
