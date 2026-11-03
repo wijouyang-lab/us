@@ -130,8 +130,15 @@ def bootstrap(nav, initial=50000.0, n=500, block=20, seed=42):
 
 
 def total_return(frame, cal):
-    c = frame.Close.loc[cal]; d = frame.Dividends.loc[cal]
-    return ((c + d) / c.shift(1) - 1).fillna(0)
+    shares = 50000.0 / float(frame.Open.loc[cal[0]])
+    cash = 0.0; vals = []
+    for dt in cal:
+        div = float(frame.Dividends.loc[dt])
+        if div > 0: cash += shares * div
+        vals.append(shares * float(frame.Close.loc[dt]) + cash)
+    nav = pd.Series(vals, index=cal); r = nav / 50000.0
+    out = r.pct_change(fill_method=None); out.iloc[0] = r.iloc[0] - 1
+    return out
 
 
 def run_case(frames, cal, signals, slip):

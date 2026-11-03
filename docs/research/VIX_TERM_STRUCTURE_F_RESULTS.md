@@ -57,8 +57,8 @@ exploratory sample.
 | Total cost | $1,620.58 |
 | Exposure | 92.4% |
 | Backwardation decisions | 10 |
-| Alpha vs BIL | +5.74%, p=0.029 |
-| Alpha vs SPY | -6.68%, p=0.008 |
+| Alpha vs BIL | +5.92%, p=0.025 |
+| Alpha vs SPY | -5.45%, p=0.016 |
 | Bootstrap CAGR 95% CI | +2.46% .. +12.90% |
 
 ### Exploratory: 2007-12-04 to 2026-10-30
@@ -74,8 +74,8 @@ exploratory sample.
 | Order legs | 632 |
 | Total cost | $2,921.61 |
 | Backwardation decisions | 21 |
-| Alpha vs BIL | +5.58%, p=0.011 |
-| Alpha vs SPY | -5.59%, p=0.025 |
+| Alpha vs BIL | +5.72%, p=0.009 |
+| Alpha vs SPY | -4.01%, p=0.074 |
 
 State duration (monthly decisions):
 
@@ -84,7 +84,7 @@ State duration (monthly decisions):
 | PIT | 10 | 143 | 153 |
 | Exploratory | 21 | 206 | 227 |
 
-Only one F rule was pre-registered, so there is no multi-rule BH family. HAC p-values are reported without a multiplicity discount. BIL/SPY benchmarks use total return with ex-date dividends, not price-only Close.
+Only one F rule was pre-registered, so there is no multi-rule BH family. HAC p-values are reported without a multiplicity discount. BIL/SPY benchmarks use an independent buy-and-hold account with cash ex-date dividends, not price-only Close and not dividend reinvestment.
 
 ## 4. Stage-local results
 
