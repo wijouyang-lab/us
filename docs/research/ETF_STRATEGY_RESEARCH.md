@@ -181,6 +181,12 @@ Open and are not directly comparable to PR #451's raw tradable Open. The remaini
 CAGR gap (2.02% vs 1.95%) is the four-leg (BIL+QQQ) cost model versus PR #438's
 QQQ-only cost model, plus price-convention and provider revisions.
 
+Signal dates are the prior SPY session, so the two signal-date differences map
+one-for-one to the two entry shifts. PR #438's `units` column is a fractional
+portfolio weight (about 0.006), while PR #451 records actual ETF shares. The
+quantities are therefore not directly comparable; trade count, signal/entry/exit
+dates, and gross returns are the comparison basis.
+
 ## 8. Stage stability
 
 | Strategy | 2007-2015 CAGR / DD | 2016-2020 CAGR / DD | 2021-2026 CAGR / DD |
