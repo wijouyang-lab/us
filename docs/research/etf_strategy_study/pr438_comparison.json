@@ -1,0 +1,17 @@
+{
+  "our_trades": 32,
+  "pr438_trades": 32,
+  "matched_trades": 30,
+  "date_matched_trades": 30,
+  "date_only_ours": [
+    "2011-08-11",
+    "2020-03-18"
+  ],
+  "date_only_pr438": [
+    "2011-08-10",
+    "2020-03-17"
+  ],
+  "max_abs_entry_price_diff": 9.75688694742837,
+  "max_abs_exit_price_diff": 9.962493773012682,
+  "max_abs_return_diff": 0.001080938760770589
+}
