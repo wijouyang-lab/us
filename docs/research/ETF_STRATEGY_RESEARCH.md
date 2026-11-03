@@ -1,7 +1,7 @@
-# Low-Frequency ETF Strategy Research
+﻿# Low-Frequency ETF Strategy Research
 
-Date: 2026-11-03  
-Branch: `research/low-frequency-etf-strategies`  
+Date: 2026-11-03
+Branch: `research/low-frequency-etf-strategies`
 Status: **NO-GO for all three candidates**
 
 This is research only. No broker connection, no orders, no deployment.
@@ -45,7 +45,7 @@ are evaluation windows, not a fitted train/validation/test exercise:
 Assumed **IBKR Pro Tiered**:
 
 - commission = max($0.35, min($0.0035/share, 1% of trade value));
-- SEC fee on sells = 0.0000278 × notional;
+- SEC fee on sells = 0.0000278 脳 notional;
 - FINRA TAF on sells = min($0.000166/share, $8.30);
 - exchange/clearing = $0.000003/share;
 - base slippage = **5 bps per leg**, with 1/3/10/20 bps sensitivity.
@@ -60,8 +60,8 @@ It is not presented as realized historical execution cost.
 | A Dual Momentum | $131,257.51 | 5.10% | 13.52% | 0.44 | 0.55 | 0.20 | **-25.81%** | 684 sessions | 1,323 | 89.7% |
 | B Trend/Vol | $130,855.98 | 5.08% | 8.63% | 0.62 | 0.80 | 0.31 | **-16.52%** | 636 sessions | 2,863 | 85.4% |
 | C QQQ Transition | $73,066.71 | 1.98% | 1.98% | 1.00 | 0.73 | 0.36 | **-5.46%** | 1,322 sessions | 108 | 0.69% |
-| BIL | $65,536.54 | 1.40% | 0.49% | 2.87 | — | — | -0.78% | — | — | 100% |
-| SPY | $351,505.57 | 10.56% | 19.66% | 0.61 | — | — | -55.19% | — | — | 100% |
+| BIL | $65,536.54 | 1.40% | 0.49% | 2.87 | 鈥?| 鈥?| -0.78% | 鈥?| 鈥?| 100% |
+| SPY | $351,505.57 | 10.56% | 19.66% | 0.61 | 鈥?| 鈥?| -55.19% | 鈥?| 鈥?| 100% |
 
 A and B both fail the 15% drawdown limit at the base cost. C passes drawdown but
 produces only a small excess return over BIL.
@@ -99,9 +99,9 @@ excess return; p-values BH-adjusted across A/B/C.
 | A | BIL | +4.50% | 1.64 | 0.101 | 0.101 | -0.88%..+9.88% |
 | B | BIL | +3.94% | 2.34 | 0.019 | 0.057 | +0.65%..+7.23% |
 | C | BIL | +0.58% | 1.86 | 0.063 | 0.095 | -0.03%..+1.20% |
-| A | SPY | -6.10% | -1.85 | 0.065 | — | -12.57%..+0.38% |
-| B | SPY | -6.65% | -2.10 | 0.036 | — | -12.88%..-0.43% |
-| C | SPY | -10.01% | -2.69 | 0.007 | — | -17.31%..-2.71% |
+| A | SPY | -6.10% | -1.85 | 0.065 | 鈥?| -12.57%..+0.38% |
+| B | SPY | -6.65% | -2.10 | 0.036 | 鈥?| -12.88%..-0.43% |
+| C | SPY | -10.01% | -2.69 | 0.007 | 鈥?| -17.31%..-2.71% |
 
 No strategy has BH q < 0.05 versus BIL. B is closest (q=0.057) but fails the
 drawdown criterion. C's alpha confidence interval includes zero.
