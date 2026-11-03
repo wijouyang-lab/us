@@ -17,5 +17,12 @@
     "ishares_only": 8
   },
   "corporate_actions_sample": 20,
-  "corporate_actions_independently_verified": 0
+  "corporate_actions_independently_verified": 0,
+  "official_announcements": 71,
+  "official_effective_dates_parsed": 37,
+  "official_effective_dates_exact_match_chinobing": 27,
+  "chinobing_changes_2019_2024": 116,
+  "nport_annual_snapshots": 6,
+  "fmp_license_status": "NO_WRITTEN_PERMISSION; terms fetch blocked 403",
+  "pit_status": "DATA_BLOCKED"
 }

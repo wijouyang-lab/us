@@ -363,3 +363,103 @@ data/research/pit_data/nport_spy_2019_2024.csv
 data/research/pit_data/corporate_action_samples_20.csv
 data/research/pit_data/coverage_audit_2026-11-04.json
 `
+
+
+---
+
+# Addendum 2: Official announcements, NPORT and FMP terms
+
+## A. S&P official announcements
+
+Actual search of press.spglobal.com for 2019-2024 with keyword S&P 500:
+
+`	ext
+71 S&P 500-related announcements collected
+37 effective dates parsed from announcement text
+27 of 37 effective dates match a chinobing change date exactly
+116 chinobing change dates in 2019-2024
+`
+
+Per-year announcement collection used the official site search and pagination.
+Announcement date comes from the URL (YYYY-MM-DD); effective date is parsed
+separately from the body text. No publication timestamp was present in the
+retrieved pages, so nnouncement_timestamp is blank, not assumed.
+
+Limitation:
+
+- 71 announcements is **not** proof of complete coverage of 116 changed dates;
+- 34 announcements had no parseable effective date;
+- 10 parsed effective dates do not exactly match chinobing;
+- added/removed company/ticker fields were not reliably extracted for every
+  article;
+- no official S&P daily membership file was obtained.
+
+Status: **PARTIAL_OFFICIAL_COVERAGE**, not complete six-year verification.
+
+## B. NPORT 2019-2024
+
+Using SEC EDGAR NPORT-P for SPY CIK 884394, XML primary documents, recover parser:
+
+| Report period | Holdings | Unique CUSIP | iShares CUSIP | Overlap |
+|---|---:|---:|---:|---:|
+| 2019-09-30 | 505 | 478 | 484 | 477 |
+| 2020-09-30 | 505 | 477 | 486 | 476 |
+| 2021-09-30 | 506 | 480 | 488 | 478 |
+| 2022-09-30 | 505 | 482 | 489 | 479 |
+| 2023-09-30 | 503 | 479 | not matched by date | n/a |
+| 2024-09-30 | 504 | 479 | 485 | 477 |
+
+Five annual Sep-30 snapshots match iShares with 476-479 common CUSIPs.
+2023 iShares snapshot date differed and was not matched exactly.
+
+NPORT is a fund-holdings disclosure, not an official index membership list.
+
+## C. Corporate actions
+
+20 samples still have **0 independently verified** events in this round.
+Reasons:
+
+- no issuer/SEC event document was downloaded for most samples;
+- FINSABER contains no split/dividend table;
+- AAPL 2020-08-31 adjusted factor jumps 0.2438 -> 0.9751 across a 4:1 split,
+  proving adjusted_close is not a reliable split-adjusted series by itself.
+
+MYL 2020-11-17 .855 -> .079 and ACS 2018-08-08 .095 remain unresolved
+ticker/security anomalies.
+
+Status: **CORPORATE_ACTIONS_UNVERIFIED**.
+
+## D. FMP terms
+
+- FINSABER code uses FMP for S&P 500 prices.
+- FMP Terms of Service fetch returned HTTP 403 from this environment.
+- No written permission was obtained for:
+  - storing historical OHLCV;
+  - personal research use;
+  - derived factors/backtests;
+  - private repository retention;
+  - public sample distribution;
+  - long-term research retention.
+- Apache-2.0 on the Hugging Face dataset does not establish FMP redistribution
+  rights.
+
+Status: **PROVENANCE_UNVERIFIED / LICENSE_BLOCKED**.
+
+The 20-ticker FINSABER subset already in PR #457 should be treated as a
+research sample with unresolved upstream redistribution rights until written
+permission is obtained.
+
+## E. Final gate
+
+| Gate | Result |
+|---|---|
+| Member-day coverage >=95% | month-end proxy 98.65%; daily not proven |
+| Ticker identity coverage >=98% | 94.9%, fail |
+| 10-year history | pass |
+| 3-year untouched holdout | fail, no 2025-2026 |
+| Corporate actions independently verified | 0/20, fail |
+| Official announcements | 71 partial, 37 effective parsed; not complete |
+| Upstream license | FMP permission missing; fail |
+| SHA-256 manifest | pass |
+
+**FINAL: DATA_BLOCKED / NO-GO.**

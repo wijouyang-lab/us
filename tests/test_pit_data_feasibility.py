@@ -82,3 +82,25 @@ def test_corporate_actions_are_unverified_and_split_factor_broken():
     assert (d.evidence_status == "UNVERIFIED").all()
     a = d[(d.ticker == "AAPL") & (d.event_type == "split")].iloc[0]
     assert a["prev_factor"] < 0.3 and a["factor"] > 0.9
+
+
+def test_official_announcements_are_partial_not_claimed_complete():
+    a = pd.read_csv(D / "sp500_official_announcements.csv")
+    assert len(a) == 71
+    assert a.effective_date.notna().sum() == 37
+    assert a.announcement_date.notna().all()
+
+
+def test_nport_snapshots_cover_six_periods():
+    n = pd.read_csv(D / "nport_spy_2019_2024.csv")
+    assert len(n) == 6
+    assert n.report_date.nunique() == 6
+    assert n[n.report_date == "2024-09-30"].iloc[0]["holdings"] == 504
+    assert n[n.report_date == "2019-09-30"].iloc[0]["holdings"] == 505
+
+
+def test_fmp_license_is_not_accepted():
+    import json
+    c = json.loads((D / "coverage_audit_2026-11-04.json").read_text())
+    assert c["fmp_license_status"].startswith("NO_WRITTEN_PERMISSION")
+    assert c["pit_status"] == "DATA_BLOCKED"

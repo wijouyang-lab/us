@@ -64,9 +64,8 @@
       "note": "normalized LF hash for cross-platform reproducibility"
     },
     "nport_spy_2019_2024.csv": {
-      "bytes": 164,
-      "sha256_normalized_lf": "a4dd7ec98bba127cdebb15c4472e5ba7042411882382399056ff3ad4c540454c",
-      "note": "normalized LF hash for cross-platform reproducibility"
+      "bytes": 729,
+      "sha256_normalized_lf": "f9b787820ddc720c8f2a65b903c936df13b38274d7e8b5c585ca25a9208e33c9"
     },
     "corporate_action_samples_20.csv": {
       "bytes": 2238,
@@ -74,9 +73,21 @@
       "note": "normalized LF hash for cross-platform reproducibility"
     },
     "coverage_audit_2026-11-04.json": {
-      "bytes": 631,
-      "sha256_normalized_lf": "e357a02c99787bd346459eb71856d20cfae3d7b510d46fa86fcb4cf0716526f8",
+      "bytes": 942,
+      "sha256_normalized_lf": "ff0f4d791615a9726a86d5bb3da6404535cb36a68b52b0b76550af7880c8451b",
       "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "sp500_press_links.json": {
+      "bytes": 31469,
+      "sha256_normalized_lf": "8819992a0c5c2d1272ef18da8f4bce2d4c0a55f709995b271a3c6c0b8c574eb4"
+    },
+    "sp500_press_announcements_raw.jsonl": {
+      "bytes": 829290,
+      "sha256_normalized_lf": "71edcd3cbf196b058b04c9a709b8a55f111a02afb02b775d0838525274eda0a6"
+    },
+    "sp500_official_announcements.csv": {
+      "bytes": 24228,
+      "sha256_normalized_lf": "bc4fe0ca51df868b1f793418ad4f2c8da29e6ff38d780654bab45944ff196a28"
     }
   }
 }
