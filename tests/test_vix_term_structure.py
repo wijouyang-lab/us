@@ -71,3 +71,19 @@ def test_cutoff_injection_does_not_change_results(tmp_path):
     b = run(d, tmp_path / "inject")
     assert a["results"]["pit_2014_2026|5"]["cagr"] == pytest.approx(b["results"]["pit_2014_2026|5"]["cagr"])
     assert a["results"]["pit_2014_2026|5"]["max_drawdown"] == pytest.approx(b["results"]["pit_2014_2026|5"]["max_drawdown"])
+
+
+def test_vxv_vintage_not_before_2014_04_17():
+    p = pd.read_csv(D / "pit_vix_vxv.csv")
+    assert len(p) == 150
+    assert (pd.to_datetime(p["vintage_date"]) >= pd.Timestamp("2014-04-17")).all()
+    assert p["vintage_date"].nunique() <= 150
+
+
+def test_hash_fields_declare_raw_response_object():
+    p = pd.read_csv(D / "pit_vix_vxv.csv")
+    assert set(p["hash_object"]) == {"raw ALFRED CSV response body"}
+    assert p["vix_response_sha256"].nunique() == 150
+    assert p["vxv_response_sha256"].nunique() == 150
+    assert (p["vix_response_sha256"].str.len() == 64).all()
+    assert (p["vxv_response_sha256"].str.len() == 64).all()

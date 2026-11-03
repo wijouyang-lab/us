@@ -35,7 +35,10 @@ moving average, no other threshold.
 | VXV pre-2014 | **exploratory only, not verified PIT** |
 | Raw responses | per-decision SHA-256 in `pit_vix_vxv.csv`; payload not redistributed |
 
-The first three 2014-01/02/03 rows are excluded: VXV ALFRED history begins 2014-04-17, so those rows are not PIT. The pair is never mixed across vintages. A missing or invalid pair holds BIL.
+The first three 2014-01/02/03 rows are excluded: VXV ALFRED history begins 2014-04-17, so those rows are not PIT. Hash audit: the three removed 2014-01/02/03 rows shared one VXV response hash, showing they were the same pre-vintage payload rather than three independent releases. After removal, all 150 formal PIT rows have unique VIX and VXV response hashes. hash_object is 
+aw ALFRED CSV response body.
+
+The pair is never mixed across vintages. A missing or invalid pair holds BIL.
 The PIT sample cannot be extended before 2014 because both ALFRED series lack
 common historical vintages; the 2007-12+ VXV observations are used only in the
 exploratory sample.
