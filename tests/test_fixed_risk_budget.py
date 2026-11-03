@@ -40,7 +40,7 @@ def test_benchmark_and_dividend_accounting():
 
 def test_cutoff_injection_does_not_change_results(tmp_path):
     d = tmp_path / "data"; d.mkdir()
-    for t in ("QQQ", "BIL"):
+    for t in ("QQQ", "SPY", "BIL"):
         pd.read_csv(D / f"{t}.csv").to_csv(d / f"{t}.csv", index=False)
     s = pd.read_csv(d / "QQQ.csv")
     fut = s.iloc[-1].copy(); fut["Date"] = str(fut["Date"]).replace("2026-10-30", "2026-11-02")

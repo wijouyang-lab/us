@@ -15,5 +15,11 @@ slippage, with 1/3/5/10/20 bps sensitivity.
 This is a fixed risk-budget implementation baseline, not a timing strategy and
 not alpha. Because a prior screen was seen, the historical run is explicitly
 **exploratory / implementation validation**, not a pristine confirmatory test.
+Pre-registered controls (no post-result addition):
+
+- G: 20% QQQ / 80% BIL, monthly restore;
+- G0: 20% QQQ / 80% BIL, buy-and-hold after initial build;
+- G-SPY: 20% SPY / 80% BIL, monthly restore.
+
 No weight search will be performed. MaxDD gate remains 15%. If it passes, the
 label is `RISK_BUDGET_BASELINE / RESEARCH_CANDIDATE`, not deployable alpha.

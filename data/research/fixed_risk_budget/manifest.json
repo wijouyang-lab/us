@@ -7,6 +7,11 @@
       "sha256": "ac8b6ff279fd5108094dd7bb96d3df14da70817ab9c49dfdc35b14ffa57930f6",
       "max": "2026-11-02"
     },
+    "SPY": {
+      "rows": 6747,
+      "sha256": "1f55b4fe21e29de6f818d9655c5d9e519c3101ee40d1d9594eb5aaacdac45756",
+      "max": "2026-10-29"
+    },
     "BIL": {
       "rows": 4889,
       "sha256": "29202235e822b806984af922104190cdf0a23a5b9a4552723ec51120af02b915",
@@ -16,8 +21,13 @@
   "cutoff_files": {
     "QQQ": {
       "rows": 6748,
-      "sha256": "67b0012f56cf4630885a972c49d42823ff05450b8387d6b6fbd068fd62003a06",
+      "sha256": "1221fecb67d2c7faf13f5b3c8f40339c730e636d0a3dd47647c08bbd632411f8",
       "max": "2026-10-30"
+    },
+    "SPY": {
+      "rows": 6747,
+      "sha256": "1f55b4fe21e29de6f818d9655c5d9e519c3101ee40d1d9594eb5aaacdac45756",
+      "max": "2026-10-29"
     },
     "BIL": {
       "rows": 4888,

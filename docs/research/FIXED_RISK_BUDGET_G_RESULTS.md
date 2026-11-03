@@ -1,126 +1,172 @@
-# G: Fixed 20% QQQ / 80% BIL Risk Budget
+# G: Passive 20% QQQ / 80% BIL Risk Budget
 
 Date: 2026-11-03
 Branch: `research/fixed-risk-budget-qqq-bil`
-Status: **RISK_BUDGET_BASELINE / RESEARCH_CANDIDATE**
+Status: **PASSIVE_RISK_BUDGET_BASELINE**
 
-Research only. This is **not** a timing strategy and not evidence of alpha.
-It is an exploratory / implementation-validation baseline because a prior
-historical screen was already seen.
+Research only, not alpha, not a timing strategy, not deployable.
 
-## 1. Rule
+G answers: *how much equity risk can be carried under a 15% historical drawdown
+constraint?* It does **not** test a forecast signal.
+
+Important caveat: the 20% weight was chosen after preliminary drawdown
+inspection. The fact that MaxDD <= 15% is therefore **not independent
+validation**.
+
+## 1. Rule and accounting
 
 ```text
 QQQ 20% / BIL 80%
 ```
 
-- $50,000 initial equity;
-- long-only, no leverage, no forecast signal;
+- $50,000; long-only; no leverage; no signal;
 - monthly restore at last common session, next session raw Open;
-- integer shares, residual cash retained;
-- initial build at raw Open;
-- dividends credited on ex-date to prior holdings, not reinvested;
-- all subsequent trades pay calibrated IBKR costs.
+- initial build raw Open;
+- integer shares, residual cash;
+- dividends paid on ex-date to shares held before ex-date, not reinvested;
+- calibrated IBKR Pro Tiered historical-backtest approximation + 5 bps/leg.
 
-No weight grid search or post-hoc optimization was performed.
+No weight search was performed.
 
-## 2. Calibrated IBKR cost model
+### Dividend / rebalance base
 
-Applied via `tools/research/ibkr_costs.py`:
+Dividends are credited to cash at line 136 (`a.credit_dividends(dt)`), then the
+next monthly rebalance computes `nav_open = a.nav(dt, True)` at line 138. Because
+`Account.nav()` includes cash, **accumulated cash dividends are included in the
+monthly 20/80 weight base**. They are not reinvested daily, but they are
+redeployed at the next monthly rebalance.
 
-| Component | Assumption |
+Measured effect over 2007-2026:
+
+| Item | Value |
+|---|---:|
+| Average uninvested cash / NAV | **0.187%** |
+| Average risky exposure | **19.967%** |
+| Deviation from 20% target | **-0.033 pp** |
+
+Known limitation: integer-share residual cash creates a tiny drag; no rule change
+was made.
+
+## 2. Sharpe definitions
+
+- `sharpe_rf0`: annualized mean daily return / annualized daily volatility, rf=0.
+- `sharpe_excess_bil`: annualized mean daily **excess over BIL total return**
+  (cash dividends) / annualized volatility of that excess series, same calendar.
+
+Both are reported for G, G0, G-SPY, QQQ, SPY and BIL.
+
+## 3. Pre-registered passive controls
+
+| ID | Rule |
 |---|---|
-| Commission | $0.0035/share, min $0.35, max 1% |
-| SEC | 0.0000206 × sell notional |
-| TAF | $0.000166/share sell, $8.30 cap; 2026-10-01..12-31 holiday = 0 |
-| CAT | $0.000003/share |
-| NSCC/DTC clearing | $0.00020/share, 0.5% notional cap assumption |
-| Exchange/pass-through | $0.00010/share base; range 0..$0.00030 |
-| Slippage | 1/3/5/10/20 bps per leg |
+| G | 20% QQQ / 80% BIL, monthly restore |
+| G0 | 20% QQQ / 80% BIL, initial buy-and-hold, no rebalance |
+| G-SPY | 20% SPY / 80% BIL, monthly restore, same costs |
 
-The exchange/pass-through amount is an assumption because historical IBKR
-SmartRouting venue fills cannot be reconstructed. It is not presented as an
-actual historical venue fee.
+G0/G-SPY were added to the pre-registration file before this run; no control was
+added or replaced after seeing results.
 
-## 3. Results at 5 bps/leg
+## 4. Results at 5 bps/leg
 
-| Metric | G |
-|---|---:|
-| Final NAV | $115,754.75 |
-| CAGR | 4.42% |
-| Volatility | 4.32% |
-| Sharpe | 1.02 |
-| **Max DD** | **-11.38%** |
-| Peak / trough / recovery | 2007-10-31 / 2009-03-09 / 2009-12-28 |
-| Longest underwater | 542 sessions |
-| Order legs | 424 |
-| Total cost | $300.56 |
-| Commission | $149.98 |
-| SEC / TAF / CAT | $2.31 / $0.17 / $0.01 |
-| Clearing / exchange | $0.62 / $0.31 |
-| Slippage | $147.16 |
-| Dividend cash | $20,729.34 |
-| Exposure | 20.0% |
-| Alpha vs BIL | +3.19%, p=0.0003 |
-| Alpha vs QQQ | -11.95%, p=0.0005 |
-| Bootstrap CAGR 95% CI | +2.82% .. +6.16% |
+| Variant | Final NAV | CAGR | Vol | Sharpe rf0 | Sharpe excess BIL | MaxDD | Order legs | Cost |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| G | $115,754.75 | 4.42% | 4.32% | 1.02 | 0.73 | **-11.38%** | 424 | $300.56 |
+| G0 | $205,030.16 | 7.54% | 9.84% | 0.79 | 0.66 | **-22.60%** | 2 | $27.44 |
+| G-SPY | $95,278.83 | 3.38% | 3.74% | 0.91 | 0.57 | -12.30% | 391 | $251.23 |
 
-### Benchmarks (cash dividends, no extra transaction costs)
+Benchmarks (cash dividends, no extra transaction costs):
 
-| Benchmark | CAGR | Vol | MaxDD |
-|---|---:|---:|---:|
-| BIL | 1.24% | 0.46% | -0.75% |
-| QQQ | 15.13% | 21.60% | -53.22% |
+| Benchmark | CAGR | Vol | Sharpe rf0 | Sharpe excess BIL | MaxDD |
+|---|---:|---:|---:|---:|---:|
+| BIL | 1.24% | 0.46% | 2.67 | 0.00 | -0.75% |
+| QQQ | 15.13% | 21.60% | 0.76 | — | -53.22% |
+| SPY | 10.56% | 19.66% | 0.61 | — | -55.19% |
 
-## 4. Stage-local
+G-SPY ends 2026-10-29 because the SPY snapshot lacks 2026-10-30; one session
+shorter, disclosed.
 
-| Stage | CAGR / MaxDD |
-|---|---:|
-| 2007-2015 | 2.89% / -11.38% |
-| 2016-2020 | 5.59% / -6.00% |
-| 2021-2026 | 5.79% / -7.27% |
+### Drawdown dates
 
-## 5. Slippage sensitivity
+| Variant | Peak | Trough | Recovery |
+|---|---|---|---|
+| G | 2007-10-31 | 2009-03-09 | 2009-12-28 |
+| G0 | 2007-10-31 | 2009-03-09 | 2010-12-10 |
+| G-SPY | 2007-10-31 | 2009-03-09 | 2010-06-24 |
+
+## 5. Direct answers
+
+**1. Did monthly rebalancing's ~$300 cost add value?**
+
+- G0 costs only **$27.44**, G costs **$300.56**; difference **$273**.
+- G0 CAGR is **7.54%**, G is **4.42%**; rebalancing reduced CAGR by **3.12 pp**.
+- But G0's risk drifted: average QQQ exposure **41.5%**, MaxDD **-22.60%** (fails 15%).
+- G holds **19.97%** average risk and MaxDD **-11.38%** (passes).
+- Conclusion: monthly rebalancing **did not add return**; it bought risk control.
+  The $273 cost is trivial relative to that de-risking, but the strategy is a
+  risk-budget implementation, not a return-enhancing strategy.
+
+**2. How much of G's return depends on choosing QQQ vs SPY?**
+
+- G CAGR 4.42% vs G-SPY 3.38%: **+1.04 pp**, about **24% of G's CAGR**.
+- G Sharpe excess BIL 0.73 vs G-SPY 0.57.
+- G MaxDD -11.38% vs G-SPY -12.30%.
+- Conclusion: QQQ selection added return, but it is an **ex-post asset choice**,
+  not a forecast. G-SPY remains a valid passive control with lower return.
+
+**3. Does G pass?**
+
+Yes, historical MaxDD -11.38% <= 15%, but because 20% was chosen after seeing
+drawdown, this is not independent confirmation. Label remains
+**PASSIVE_RISK_BUDGET_BASELINE**.
+
+## 6. Stage results
+
+| Variant | 2007-2015 | 2016-2020 | 2021-2026 |
+|---|---|---|---|
+| G | 2.89% / -11.38% | 5.59% / -6.00% | 5.79% / -7.27% |
+| G0 | 3.40% / -10.16% | 11.40% / -14.93% | 10.83% / -22.60% |
+| G-SPY | 1.67% / -12.30% | 3.93% / -7.03% | 5.18% / -4.74% |
+
+## 7. Slippage sensitivity (G)
 
 | 1 bps | 3 bps | 5 bps | 10 bps | 20 bps |
 |---|---:|---:|---:|---:|---:|
 | 4.43% / -11.36% | 4.43% / -11.37% | 4.42% / -11.38% | 4.41% / -11.41% | 4.38% / -11.43% |
 
-## 6. Decision
+## 8. Cost model
 
-| Gate | Result |
-|---|---|
-| Positive excess after costs | Yes |
-| Statistical support vs BIL | Yes |
-| Max DD <= 15% | **Yes (-11.38%)** |
-| Not one stage | Yes, all stages positive |
-| Enough trades/exposure | Yes for a 20% budget; 424 legs |
-| PIT / data | Daily QQQ/BIL, no macro PIT dependency |
-| Accounting reproducible | Yes |
+`tools/research/ibkr_costs.py`, `historical_backtest` layer:
 
-G passes the risk gate and is labeled **RISK_BUDGET_BASELINE / RESEARCH_CANDIDATE**.
+- commission $0.0035/share, min $0.35, max 1%;
+- SEC 0.0000206 sell;
+- TAF $0.000166/share sell, holiday 2026-10-01..12-31;
+- CAT $0.000003/share;
+- clearing $0.00020/share, 0.5% notional cap assumption;
+- exchange $0.00010/share base (0..0.00030 range);
+- 5 bps/leg base slippage.
 
-It is not a GO alpha claim: the 20% equity budget explains the return and risk,
-and the historical result is exploratory/implementation validation. A true
-confirmatory test needs frozen rules plus forward paper data.
+Historical fees are a **current-rate approximation**, not exact 2007-2026 IBKR
+venue fees. No exact historical SmartRouting venue data exists.
 
-## 7. Tests
+## 9. Tests
 
-`tests/test_fixed_risk_budget.py` covers initial equity, integer shares, initial
-cost, raw Open, dividend entitlement, cutoff injection, cost components, and the
-2026 TAF holiday.
+`tests/test_fixed_risk_budget.py`: **6 passed**, covering initial equity, integer
+shares, first cost, raw Open, dividends, cutoff injection, cost components, TAF
+holiday, NAV reconciliation.
 
-## 8. Artifacts
+## 10. Artifacts
 
 ```text
 docs/research/FIXED_RISK_BUDGET_G_PREREG.md
 docs/research/FIXED_RISK_BUDGET_G_RESULTS.md
 docs/research/fixed_risk_budget/results.json
 docs/research/fixed_risk_budget/nav_G.csv
+docs/research/fixed_risk_budget/nav_G0.csv
+docs/research/fixed_risk_budget/nav_G-SPY.csv
 docs/research/fixed_risk_budget/trades_G.csv
-data/research/fixed_risk_budget/QQQ.csv
-data/research/fixed_risk_budget/BIL.csv
-data/research/fixed_risk_budget/raw/{QQQ,BIL}.csv
+docs/research/fixed_risk_budget/trades_G0.csv
+docs/research/fixed_risk_budget/trades_G-SPY.csv
+data/research/fixed_risk_budget/{QQQ,SPY,BIL}.csv
 data/research/fixed_risk_budget/manifest.json
 tools/research/ibkr_costs.py
 tools/research/fixed_risk_budget.py
