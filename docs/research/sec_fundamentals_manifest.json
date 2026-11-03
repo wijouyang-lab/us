@@ -14,9 +14,9 @@
   ],
   "files": {
     "docs/research/sec_fundamentals_snapshot.json": {
-      "bytes": 2382811,
-      "sha256": "5777605a7784d362da1aeb31eb3b87360097b7a568b5a59862295beb7ca73cbf",
-      "sha256_normalized_lf": "6e0f9d8fe29fa60d0a3ff8195fc317d45aa822fbce3de10bfe5cb8db7f38212c"
+      "bytes": 2407343,
+      "sha256": "9af1681aa132155da360255a87362f4983045b8567aca80a807ed321a371b735",
+      "sha256_normalized_lf": "676c0a42efa9a5c0423b1ed1fa90608dc94cac7d10a7147340e0574a246be2c3"
     },
     "docs/research/sec_sample_facts.json": {
       "bytes": 146559,
@@ -24,9 +24,9 @@
       "sha256_normalized_lf": "c4fd4b0fc8011701e9fe27fd0781bd8f424609a549cc9249a6e84095974b1f04"
     },
     "docs/research/SEC_FUNDAMENTALS_COVERAGE_AUDIT.md": {
-      "bytes": 6130,
-      "sha256": "ac32d90df1c853ffa5ee6c6ede25f932bacdc80bf00b92c1b8556ce4e0f32b34",
-      "sha256_normalized_lf": "ac32d90df1c853ffa5ee6c6ede25f932bacdc80bf00b92c1b8556ce4e0f32b34"
+      "bytes": 7370,
+      "sha256": "37352d6b10b2fec23295abf93305d3c6377c103248042c612cb30912908add3a",
+      "sha256_normalized_lf": "4a22364cf441180ca8665320c4d05a0d75f6df0d0bc6f2ad40988d86ec6e6e68"
     }
   }
 }

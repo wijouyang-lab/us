@@ -47,24 +47,24 @@ Identity:
 | Revenue | 27 |
 | Net income | 27 |
 | Free cash flow | 21 |
-| Stockholders' equity | 26 |
-| Total debt | 26 |
+| Stockholders' equity | 24 |
+| Total debt | 22 |
 | Gross margin | 12 |
 | Operating margin | 21 |
 | Net margin | 27 |
 | ROE | 23 |
-| **ROIC** | **11** |
+| **ROIC** | **7** |
 | FCF conversion | 21 |
 | Debt/equity | 24 |
-| Net debt/EBITDA | 7 |
-| **Interest coverage** | **13** |
-| **Revenue stability** | **27** |
-| **Earnings stability** | **18** |
+| Net debt/EBITDA | 6 |
+| **Interest coverage** | **12** |
+| **Revenue stability** | **26** |
+| **Earnings stability** | **17** |
 | Revenue growth | 27 |
 | EPS growth | 24 |
 | FCF growth | 18 |
 | 3y revenue CAGR | 27 |
-| 5y revenue CAGR | 26 |
+| 5y revenue CAGR | 25 |
 | **Operating leverage ratio** | **15** |
 | **Operating margin expansion** | **15** |
 | PEG | 0 (blocked) |
@@ -96,8 +96,8 @@ Current OK-metric quality:
 
 | Quality | Count |
 |---|---:|
-| ACCEPTANCE_ESTIMATE | 615 |
-| FILED_DATE_ONLY | 55 |
+| ACCEPTANCE_ESTIMATE | 611 |
+| FILED_DATE_ONLY | 36 |
 | OBSERVED_FIRST_SEEN | 0 |
 | UNKNOWN | 0 |
 
@@ -183,7 +183,7 @@ Result: **0 OK metrics with missing provenance.**
 ```text
 tests/test_sec_client.py        3 passed
 tests/test_sec_fundamentals.py  9 passed
-tests/test_sec_p21.py           8 passed
+tests/test_sec_p21.py          15 passed
 ```
 
 P2.1 tests include same-day 16:00/20:00 acceptance, filed-only same-day
@@ -200,3 +200,22 @@ EV, ROIC/interest matching, and GARP leverage ratio.
 - exact intraday historical visibility;
 - 10-K/10-Q body parsing;
 - pages and order API.
+
+
+## 15. P2.2 addendum
+
+- ROIC now requires EBIT/tax/pretax exact period and period_type equality; beginning
+  and ending Debt+Cash+Equity are matched to one balance-sheet date.
+- Net Debt input_facts contain Total Debt components and Cash.
+- Net Debt/EBITDA input_facts contain Debt, Cash, EBIT and D&A.
+- EV is refused when Debt or Cash is missing; no zero substitution.
+- TTM/YTD selects one XBRL concept per series; no Revenue alias splicing.
+- Stability requires five consecutive fiscal years.
+- GARP zero revenue growth: margin expansion can be OK while leverage ratio is
+  NOT_APPLICABLE.
+- DCF is in `tools/investment_research/value/dcf.py`; 17/28 sample companies have
+  an OK scenario DCF, with discount/terminal/growth sensitivity tables.
+- SIC classification is live: Banking 2, Insurance 3, REIT 2, Energy 2, Utilities 2,
+  Healthcare 3, Retail 3, Software 4, Semiconductor 1, Technology Hardware 1,
+  Industrial 4, Unmapped 1.
+- XOM remains CIK 2115436 / insufficient history; no silent predecessor merge.

@@ -16,7 +16,8 @@ TAGS = {
     "gross_profit": ["GrossProfit"],
     "operating_income": ["OperatingIncomeLoss"],
     "pretax_income": ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItems",
-                       "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"],
+                       "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments",
+                       "IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest"],
     "tax_expense": ["IncomeTaxExpenseBenefit"],
     "net_income": ["NetIncomeLoss"],
     "eps_diluted": ["EarningsPerShareDiluted"],
@@ -87,6 +88,30 @@ def _instant_at(s: Snapshot, concepts: list[str], target_end: str, unit="USD") -
     cand = [f for f in s.available() if f.concept in concepts and f.unit == unit
             and not f.start and f.end <= target_end]
     return _latest_filed(cand)
+
+
+def _instant_exact(s: Snapshot, concepts: list[str], end: str, unit="USD") -> Fact | None:
+    cand = [f for f in s.available() if f.concept in concepts and f.unit == unit
+            and not f.start and f.end == end]
+    return _latest_filed(cand)
+
+
+def _balance_set(s: Snapshot, end: str, exact: bool = True) -> dict:
+    debt = _total_debt(s, end, exact=exact)
+    if debt.get("_dates"):
+        # For a beginning snapshot, anchor Cash/Equity to the debt balance date.
+        common = debt["_dates"][0]
+        cash = _instant_exact(s, TAGS["cash"], common)
+        eq = _instant_exact(s, TAGS["equity"], common)
+    else:
+        getter = _instant_exact if exact else _instant_at
+        cash = getter(s, TAGS["cash"], end)
+        eq = getter(s, TAGS["equity"], end)
+    dates = {d for d in [*debt.get("_dates", []), cash.end if cash else None, eq.end if eq else None] if d}
+    if not debt.get("_parts") or not cash or not eq or len(dates) != 1:
+        return {"status": "INSUFFICIENT_DATA", "missing_reason": "debt/cash/equity balance-sheet dates differ or are missing"}
+    return {"status": "OK", "date": dates.pop(), "debt": debt, "cash": cash, "equity": eq,
+            "facts": debt.get("_parts", []) + [cash, eq]}
 
 
 def _annual(s: Snapshot, key: str, unit="USD") -> list[Fact]:
@@ -204,19 +229,19 @@ def value_metrics(s: Snapshot, *, market_quote: dict | None = None, share_count:
     else:
         out["free_cash_flow"] = _unavailable(s.ticker, "free_cash_flow", missing="CFO and CapEx periods do not match or are missing")
         out["owner_earnings_proxy"] = _unavailable(s.ticker, "owner_earnings_proxy", missing="FCF unavailable")
-    eq = _instant_at(s, TAGS["equity"], (ni or rev or {"end": "0000"}).get("end", "0000"))
-    cash = _instant_at(s, TAGS["cash"], (ni or rev or {"end": "0000"}).get("end", "0000"))
-    debt = _total_debt(s, (ni or rev or {"end": "0000"}).get("end", "0000"))
+    bs_end = (ni or rev or op or cfo or {"end": "0000"}).get("end", "0000")
+    eq = _instant_exact(s, TAGS["equity"], bs_end)
+    cash = _instant_exact(s, TAGS["cash"], bs_end)
+    debt = _total_debt(s, bs_end, exact=True)
     out["stockholders_equity"] = _metric(s.ticker, "stockholders_equity", eq.value, "USD",
         period={"start": None, "end": eq.end, "period_type": "INSTANT", "facts": [eq]}) if eq else _unavailable(s.ticker, "stockholders_equity")
     out["cash_and_equivalents"] = _metric(s.ticker, "cash_and_equivalents", cash.value, "USD",
         period={"start": None, "end": cash.end, "period_type": "INSTANT", "facts": [cash]}) if cash else _unavailable(s.ticker, "cash_and_equivalents")
     out["total_debt"] = debt
-    if debt["status"] == "OK" and cash:
-        p = {"start": None, "end": cash.end, "period_type": "INSTANT",
-             "facts": debt["input_facts"] and []}
+    if debt["status"] == "OK" and cash and debt["_dates"] == [cash.end]:
         out["net_debt"] = _metric(s.ticker, "net_debt", debt["value"] - cash.value, "USD",
-            period={"start": None, "end": cash.end, "period_type": "INSTANT", "facts": [cash]},
+            period={"start": None, "end": cash.end, "period_type": "INSTANT",
+                    "facts": debt["_parts"] + [cash]},
             formula="total_debt - cash", extra={"debt_rule": debt.get("debt_rule")})
     else:
         out["net_debt"] = _unavailable(s.ticker, "net_debt", missing="debt or cash missing")
@@ -236,10 +261,11 @@ def value_metrics(s: Snapshot, *, market_quote: dict | None = None, share_count:
         out["pb"] = _metric(s.ticker, "pb", mcap / eq.value, "ratio", formula="market_cap / equity")
     if fcf is not None:
         out["fcf_yield"] = _metric(s.ticker, "fcf_yield", fcf / mcap, "ratio", formula="fcf / market_cap")
-    if debt["status"] == "OK" and cash:
+    if debt["status"] == "OK" and cash and debt["_dates"] == [cash.end]:
         out["enterprise_value"] = _metric(s.ticker, "enterprise_value", mcap + debt["value"] - cash.value,
                                           "USD", formula="market_cap + total_debt - cash",
-                                          extra={"debt_rule": debt.get("debt_rule")})
+                                          extra={"debt_rule": debt.get("debt_rule"),
+                                                 "input_market_data": market_quote, "input_share_data": share_count})
         if op and op["value"] > 0:
             out["ev_ebit"] = _metric(s.ticker, "ev_ebit", (mcap + debt["value"] - cash.value) / op["value"], "ratio", period=op, formula="EV / EBIT")
         dep = _flow(s, "depreciation")
@@ -256,12 +282,13 @@ def value_metrics(s: Snapshot, *, market_quote: dict | None = None, share_count:
     return out
 
 
-def _total_debt(s: Snapshot, end: str) -> dict:
+def _total_debt(s: Snapshot, end: str, exact: bool = True) -> dict:
     """Avoid double counting LongTermDebt (total) plus its current portion."""
-    total = _instant_at(s, TAGS["total_long_term_debt"], end)
-    noncurrent = _instant_at(s, TAGS["long_term_debt"], end)
-    current = _instant_at(s, TAGS["current_ltd"], end)
-    stb = _instant_at(s, TAGS["short_term_debt"], end)
+    getter = _instant_exact if exact else _instant_at
+    total = getter(s, TAGS["total_long_term_debt"], end)
+    noncurrent = getter(s, TAGS["long_term_debt"], end)
+    current = getter(s, TAGS["current_ltd"], end)
+    stb = getter(s, TAGS["short_term_debt"], end)
     if total:
         parts = [total] + ([stb] if stb and stb.concept == "ShortTermBorrowings" else [])
         rule = "LongTermDebt total + ShortTermBorrowings only; LongTermDebtCurrent not added"
@@ -275,9 +302,12 @@ def _total_debt(s: Snapshot, end: str) -> dict:
         parts = [stb]; rule = "short-term borrowings only"
     else:
         return _unavailable(s.ticker, "total_debt", missing="interest-bearing debt tags missing")
-    p = {"start": None, "end": max(f.end for f in parts), "period_type": "INSTANT", "facts": parts}
+    if len({f.end for f in parts}) != 1:
+        return _unavailable(s.ticker, "total_debt", missing="debt components have different balance-sheet dates")
+    p = {"start": None, "end": parts[0].end, "period_type": "INSTANT", "facts": parts}
     m = _metric(s.ticker, "total_debt", sum(f.value for f in parts), "USD", period=p,
-                formula="rule=" + rule, extra={"debt_rule": rule}); m["_parts"] = parts
+                formula="rule=" + rule, extra={"debt_rule": rule})
+    m["_parts"] = parts; m["_dates"] = sorted({f.end for f in parts})
     return m
 
 
@@ -347,7 +377,8 @@ def quality_metrics(s: Snapshot, *, sector: str | None = None) -> dict:
     if debt["status"] == "OK" and cash and op and dep and op["start"] == dep["start"] and op["end"] == dep["end"]:
         ebitda = op["value"] + dep["value"]
         out["net_debt_to_ebitda"] = _metric(s.ticker, "net_debt_to_ebitda", (debt["value"] - cash.value) / ebitda, "ratio",
-            period={"start": op["start"], "end": op["end"], "period_type": op["period_type"], "facts": op["facts"] + dep["facts"]},
+            period={"start": op["start"], "end": op["end"], "period_type": op["period_type"],
+                    "facts": op["facts"] + dep["facts"] + debt.get("_parts", []) + [cash]},
             formula="(total_debt - cash) / (operating_income + depreciation)") if ebitda > 0 else _unavailable(s.ticker, "net_debt_to_ebitda", "ratio", "NOT_APPLICABLE", "EBITDA <= 0")
     else:
         out["net_debt_to_ebitda"] = _unavailable(s.ticker, "net_debt_to_ebitda", "ratio", missing="EBITDA/debt/cash inputs incomplete")
@@ -362,27 +393,35 @@ def quality_metrics(s: Snapshot, *, sector: str | None = None) -> dict:
 
 
 def _roic(s, op, tax, pretax, eq, cash, debt, end, sector):
-    if sector and sector.lower() in ("financials", "banks", "insurance", "bank"):
+    if sector and sector.lower() in ("financials", "banks", "banking", "insurance", "bank"):
         return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", f"industrial ROIC not applicable to {sector}")
-    if not op or not tax or not pretax or not eq or not cash or debt["status"] != "OK":
-        return _unavailable(s.ticker, "roic", "ratio", missing="EBIT, tax, pretax, debt, equity, or cash missing")
-    if pretax["value"] <= 0: return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "pretax income <= 0")
+    if not op or not tax or not pretax:
+        return _unavailable(s.ticker, "roic", "ratio", missing="EBIT, tax, or pretax income missing")
+    if (op["start"], op["end"], op["period_type"]) != (tax["start"], tax["end"], tax["period_type"]) or \
+       (op["start"], op["end"], op["period_type"]) != (pretax["start"], pretax["end"], pretax["period_type"]):
+        return _unavailable(s.ticker, "roic", "ratio", missing="EBIT/tax/pretax periods or period types differ")
+    if pretax["value"] <= 0:
+        return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "pretax income <= 0")
     rate = tax["value"] / pretax["value"]
-    if rate < 0 or rate > 1: return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "effective tax rate outside 0..1")
-    begin_eq = _instant_at(s, TAGS["equity"], op["start"])
-    begin_cash = _instant_at(s, TAGS["cash"], op["start"])
-    begin_debt = _total_debt(s, op["start"])
-    if not begin_eq or not begin_cash or begin_debt["status"] != "OK":
-        return _unavailable(s.ticker, "roic", "ratio", missing="beginning invested-capital inputs missing")
-    end_ic = debt["value"] + eq.value - cash.value
-    begin_ic = begin_debt["value"] + begin_eq.value - begin_cash.value
+    if rate < 0 or rate > 1:
+        return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "effective tax rate outside 0..1")
+    begin = _balance_set(s, op["start"], exact=False)
+    finish = _balance_set(s, op["end"], exact=True)
+    if begin["status"] != "OK" or finish["status"] != "OK":
+        return _unavailable(s.ticker, "roic", "ratio", missing="beginning/ending Debt+Cash+Equity snapshot not matched")
+    begin_ic = begin["debt"]["value"] + begin["equity"].value - begin["cash"].value
+    end_ic = finish["debt"]["value"] + finish["equity"].value - finish["cash"].value
     avg = (begin_ic + end_ic) / 2
-    if avg <= 0: return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "average invested capital <= 0")
+    if avg <= 0:
+        return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "average invested capital <= 0")
     nopat = op["value"] * (1 - rate)
-    p = {"start": op["start"], "end": op["end"], "period_type": op["period_type"], "facts": op["facts"] + tax["facts"] + pretax["facts"] + [begin_eq, begin_cash, eq, cash]}
+    facts = op["facts"] + tax["facts"] + pretax["facts"] + begin["facts"] + finish["facts"]
+    p = {"start": op["start"], "end": op["end"], "period_type": op["period_type"], "facts": facts}
     return _metric(s.ticker, "roic", nopat / avg, "ratio", period=p,
                    formula="EBIT*(1-tax_rate) / average(debt+equity-cash)",
-                   extra={"nopat": nopat, "effective_tax_rate": rate, "average_invested_capital": avg})
+                   extra={"nopat": nopat, "effective_tax_rate": rate, "average_invested_capital": avg,
+                          "begin_invested_capital": begin_ic, "end_invested_capital": end_ic,
+                          "begin_balance_date": begin["date"], "end_balance_date": finish["date"]})
 
 
 def _interest_coverage(s, op, end, sector):
@@ -405,8 +444,9 @@ def _stability(s):
     for key, name, positive_label in (("revenue", "revenue_stability", "positive_growth_years"),
                                       ("operating_income", "earnings_stability", "positive_earnings_years")):
         series = _annual(s, key)[-5:]
-        if len(series) < 5:
-            out[name] = _unavailable(s.ticker, name, "ratio", missing="fewer than 5 annual periods")
+        years = [int(f.end[:4]) for f in series]
+        if len(series) < 5 or any(b - a != 1 for a, b in zip(years, years[1:])):
+            out[name] = _unavailable(s.ticker, name, "ratio", missing="fewer than 5 consecutive fiscal years")
             continue
         values = [f.value for f in series]
         growth = []
@@ -449,27 +489,36 @@ def garp_metrics(s: Snapshot) -> dict:
                             c.accepted_at, c.first_seen_at, c.source, c.fetched_at, c.sha256, c.availability_quality))
     growth("fcf_growth", fcf)
     for name, n in (("revenue_cagr_3y", 3), ("revenue_cagr_5y", 5)):
-        if len(rev) < n + 1:
-            out[name] = _unavailable(s.ticker, name, "ratio", missing=f"{n+1} annual periods required")
+        end_year = int(rev[-1].end[:4]) if rev else None
+        start_f = next((f for f in rev if end_year and int(f.end[:4]) == end_year - n), None)
+        if not start_f:
+            out[name] = _unavailable(s.ticker, name, "ratio", missing=f"no fiscal year exactly {n} years before latest")
         else:
-            a, b = rev[-(n+1)], rev[-1]
             out[name] = (_unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", "non-positive base")
-                         if a.value <= 0 else _metric(s.ticker, name, (b.value/a.value)**(1/n)-1, "ratio",
-                         period={"start": a.start, "end": b.end, "period_type": "FY", "facts": [a, b]},
+                         if start_f.value <= 0 else _metric(s.ticker, name, (rev[-1].value/start_f.value)**(1/n)-1, "ratio",
+                         period={"start": start_f.start, "end": rev[-1].end, "period_type": "FY", "facts": [start_f, rev[-1]]},
                          formula=f"{n}y CAGR"))
-    # Require both annual series to end on the same fiscal period.
     if len(rev) >= 2 and len(op) >= 2 and rev[-1].end == op[-1].end and rev[-2].end == op[-2].end:
-        rg = None if rev[-2].value <= 0 else (rev[-1].value-rev[-2].value)/abs(rev[-2].value)
-        og = None if op[-2].value <= 0 else (op[-1].value-op[-2].value)/abs(op[-2].value)
         p = {"start": rev[-2].start, "end": rev[-1].end, "period_type": "FY", "facts": rev[-2:] + op[-2:]}
-        if rg and og:
-            out["operating_leverage_ratio"] = _metric(s.ticker, "operating_leverage_ratio", og/rg, "ratio",
-                period=p, formula="operating_income_growth / revenue_growth")
-            out["operating_margin_expansion"] = _metric(s.ticker, "operating_margin_expansion", og-rg, "ratio",
-                period=p, formula="operating_income_growth - revenue_growth")
+        rg = (rev[-1].value - rev[-2].value) / abs(rev[-2].value) if rev[-2].value > 0 else None
+        if rg is None:
+            out["operating_leverage_ratio"] = _unavailable(s.ticker, "operating_leverage_ratio", "ratio", "NOT_APPLICABLE", "revenue base <= 0")
+            out["operating_margin_expansion"] = _unavailable(s.ticker, "operating_margin_expansion", "ratio", "NOT_APPLICABLE", "revenue base <= 0")
         else:
-            for name in ("operating_leverage_ratio", "operating_margin_expansion"):
-                out[name] = _unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", "zero/non-positive base")
+            if op[-2].value <= 0:
+                out["operating_margin_expansion"] = _unavailable(s.ticker, "operating_margin_expansion", "ratio", "NOT_APPLICABLE", "operating income base <= 0")
+            else:
+                og = (op[-1].value - op[-2].value) / abs(op[-2].value)
+                out["operating_margin_expansion"] = _metric(s.ticker, "operating_margin_expansion", og - rg, "ratio",
+                    period=p, formula="operating_income_growth - revenue_growth")
+            if rg == 0:
+                out["operating_leverage_ratio"] = _unavailable(s.ticker, "operating_leverage_ratio", "ratio", "NOT_APPLICABLE", "revenue growth is zero")
+            elif op[-2].value <= 0:
+                out["operating_leverage_ratio"] = _unavailable(s.ticker, "operating_leverage_ratio", "ratio", "NOT_APPLICABLE", "operating income base <= 0")
+            else:
+                og = (op[-1].value - op[-2].value) / abs(op[-2].value)
+                out["operating_leverage_ratio"] = _metric(s.ticker, "operating_leverage_ratio", og / rg, "ratio",
+                    period=p, formula="operating_income_growth / revenue_growth")
     else:
         for name in ("operating_leverage_ratio", "operating_margin_expansion"):
             out[name] = _unavailable(s.ticker, name, "ratio", missing="revenue/operating income periods do not match")
@@ -482,6 +531,26 @@ def analyze(ticker: str, cik: str, facts: list[Fact], *, as_of: str | None = Non
             market_quote: dict | None = None, share_count: dict | None = None,
             sector: str | None = None) -> dict:
     s = Snapshot(ticker, cik, facts, as_of)
-    return {"ticker": ticker, "cik": cik, "as_of": as_of, "sector": sector,
-            "value": value_metrics(s, market_quote=market_quote, share_count=share_count),
-            "quality": quality_metrics(s, sector=sector), "garp": garp_metrics(s)}
+    v = value_metrics(s, market_quote=market_quote, share_count=share_count)
+    q = quality_metrics(s, sector=sector); g = garp_metrics(s)
+    # Price-dependent outputs must disclose market/share inputs separately.
+    for name in ("market_cap", "enterprise_value", "pe_ttm", "pb", "earnings_yield", "fcf_yield",
+                 "ev_ebit", "ev_ebitda", "margin_of_safety"):
+        if name in v and v[name].get("status") == "OK":
+            v[name]["input_market_data"] = market_quote
+            v[name]["input_share_data"] = share_count
+            v[name]["source"] = "SEC CompanyFacts + market/share input"
+    out = {"ticker": ticker, "cik": cik, "as_of": as_of, "sector": sector,
+           "value": v, "quality": q, "garp": g}
+    if v.get("free_cash_flow", {}).get("status") == "OK":
+        try:
+            from tools.investment_research.value.dcf import DCFInputs, run as run_dcf
+            nd = v.get("net_debt", {}).get("value") if v.get("net_debt", {}).get("status") == "OK" else None
+            sh = share_count.get("shares") if _valid_shares(share_count) else None
+            out["dcf"] = run_dcf(DCFInputs(base_fcf=v["free_cash_flow"]["value"], net_debt=nd, shares=sh,
+                                           source="CFO-CapEx TTM/FY from SEC; assumptions are model inputs"))
+        except Exception as e:
+            out["dcf"] = {"status": "ERROR", "reason": str(e)}
+    else:
+        out["dcf"] = {"status": "INSUFFICIENT_DATA", "reason": "positive FCF required"}
+    return out

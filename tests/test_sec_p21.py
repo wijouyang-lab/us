@@ -115,3 +115,45 @@ def test_garp_zero_revenue_base_is_not_a_percentage():
         F("RevenueFromContractWithCustomerExcludingAssessedTax",100,"2025-01-01","2025-12-31",form="10-K")]
     a=analyze("X","1",fs,as_of="2026-01-01")
     assert a["garp"]["revenue_growth"]["status"]=="NOT_APPLICABLE"
+
+
+def test_roic_rejects_mismatched_tax_period():
+    fs=flows("RevenueFromContractWithCustomerExcludingAssessedTax",[100]*4)
+    fs+=flows("OperatingIncomeLoss",[20]*4)
+    # tax covers only 9 months, pretax 12 months
+    fs += [F("IncomeTaxExpenseBenefit",3,"2025-01-01","2025-09-30"),
+           F("IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItems",20,"2025-01-01","2025-12-31")]
+    a=analyze("X","1",fs,as_of="2026-01-01")
+    assert a["quality"]["roic"]["status"]=="INSUFFICIENT_DATA"
+
+
+def test_net_debt_and_ebitda_include_debt_cash_facts():
+    fs=flows("OperatingIncomeLoss",[20]*4)+flows("DepreciationDepletionAndAmortization",[5]*4)
+    fs += [F("StockholdersEquity",100,None,"2025-12-31"),F("CashAndCashEquivalentsAtCarryingValue",20,None,"2025-12-31"),
+           F("LongTermDebt",50,None,"2025-12-31")]
+    a=analyze("X","1",fs,as_of="2026-01-01")
+    nd=a["value"]["net_debt"]
+    assert nd["status"]=="OK"
+    assert {x["concept"] for x in nd["input_facts"]} >= {"LongTermDebt","CashAndCashEquivalentsAtCarryingValue"}
+    ne=a["quality"]["net_debt_to_ebitda"]
+    assert ne["status"]=="OK"
+    assert {x["concept"] for x in ne["input_facts"]} >= {"LongTermDebt","CashAndCashEquivalentsAtCarryingValue",
+                                                          "OperatingIncomeLoss","DepreciationDepletionAndAmortization"}
+
+
+def test_stability_rejects_gapped_fiscal_years():
+    fs=[]
+    for y in [2019,2020,2021,2022,2024]:
+        fs.append(F("RevenueFromContractWithCustomerExcludingAssessedTax",100,f"{y}-01-01",f"{y}-12-31",form="10-K"))
+    a=analyze("X","1",fs,as_of="2026-01-01")
+    assert a["quality"]["revenue_stability"]["status"]=="INSUFFICIENT_DATA"
+
+
+def test_zero_revenue_growth_blocks_ratio_not_margin_expansion():
+    fs=[F("RevenueFromContractWithCustomerExcludingAssessedTax",100,"2024-01-01","2024-12-31",form="10-K"),
+        F("RevenueFromContractWithCustomerExcludingAssessedTax",100,"2025-01-01","2025-12-31",form="10-K"),
+        F("OperatingIncomeLoss",10,"2024-01-01","2024-12-31",form="10-K"),
+        F("OperatingIncomeLoss",12,"2025-01-01","2025-12-31",form="10-K")]
+    a=analyze("X","1",fs,as_of="2026-01-01")
+    assert a["garp"]["operating_leverage_ratio"]["status"]=="NOT_APPLICABLE"
+    assert a["garp"]["operating_margin_expansion"]["status"]=="OK"

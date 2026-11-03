@@ -6,6 +6,7 @@ from pathlib import Path
 
 from tools.investment_research.sec.client import SECClient
 from tools.investment_research.sec.normalize import extract
+from tools.investment_research.sec.industry import industry_from_submissions
 from tools.investment_research.metrics import analyze
 
 
@@ -27,8 +28,12 @@ def fetch_company(client: SECClient, ticker: str, *, as_of: str | None = None,
     fetched = datetime.now(timezone.utc).isoformat()
     facts = extract(facts_json, cik=cik, fetched_at=fetched,
                     sha256=hashlib.sha256(payload).hexdigest(), accepted=accepted)
+    ind = industry_from_submissions(cik, sub, manual_sector=sector,
+                                    manual_reason="caller sector override" if sector else None)
+    ind["ticker"] = t
     analysis = analyze(t, cik, facts, as_of=as_of, market_quote=market_quote,
-                       share_count=share_count, sector=sector)
+                       share_count=share_count, sector=ind["normalized_industry"])
+    analysis["industry"] = ind
     analysis["company_name"] = mapping["company_name"]
     analysis["identity_source"] = "SEC company_tickers.json"
     analysis["companyfacts_sha256"] = hashlib.sha256(payload).hexdigest()

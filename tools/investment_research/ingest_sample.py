@@ -6,14 +6,14 @@ from tools.investment_research.sec.client import SECClient
 from tools.investment_research.sec.service import fetch_company
 
 SAMPLE = [
-    ("AAPL","Technology"),("MSFT","Technology"),("GOOGL","Technology"),("NVDA","Technology"),
-    ("CRM","Technology"),("ADBE","Technology"),("AMZN","Consumer Discretionary"),
-    ("HD","Consumer Discretionary"),("MCD","Consumer Discretionary"),("NKE","Consumer Discretionary"),
-    ("CAT","Industrials"),("HON","Industrials"),("UNP","Industrials"),
-    ("XOM","Energy"),("CVX","Energy"),("NEE","Utilities"),("DUK","Utilities"),
-    ("JNJ","Health Care"),("PFE","Health Care"),("UNH","Health Care"),("MRNA","Health Care"),
-    ("JPM","Financials"),("BAC","Financials"),("BRK.B","Financials"),("MET","Financials"),
-    ("PLD","Real Estate"),("O","Real Estate"),("RIVN","Consumer Discretionary")]
+    ("AAPL", None),("MSFT", None),("GOOGL", None),("NVDA", None),
+    ("CRM", None),("ADBE", None),("AMZN", None),
+    ("HD", None),("MCD", None),("NKE", None),
+    ("CAT", None),("HON", None),("UNP", None),
+    ("XOM", None),("CVX", None),("NEE", None),("DUK", None),
+    ("JNJ", None),("PFE", None),("UNH", None),("MRNA", None),
+    ("JPM", None),("BAC", None),("BRK.B", None),("MET", None),
+    ("PLD", None),("O", None),("RIVN", None)]
 
 
 def main():
