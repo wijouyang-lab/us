@@ -6,7 +6,7 @@
 覆盖五态：
   1) MACRO 缺失 / null → 显示「宏观板块尚未开启」
   2) 含经济数据 + 讲话 + AI 判断 → 正确渲染（indicator/value/prev/delta/sentiment/rationale）
-  3) economic/speakers 空数组 → 显示「暂无经济数据」「暂无重要讲话」
+  3) economic/speakers 空数组 → 显示「暂无经济数据」「暂无政策人物/宏观报道」
   4) macro.error 有值 → 显示「宏观数据暂不可用：...」
   5) 无 AI 判断（sentiment=null）→ 不渲染 🟢/🔴/⚪ 与 rationale，但板块头部正常
 """
@@ -102,7 +102,7 @@ def test_macro_missing_and_null():
     # 1b) MACRO 为空对象 {}（文件存在但无内容）→ 走空状态分支，不崩
     r2 = _run_node(exposed, _tail("{}"))
     assert "暂无经济数据" in (r2["body"] or ""), r2
-    assert "暂无重要讲话" in (r2["body"] or ""), r2
+    assert "暂无政策人物/宏观报道" in (r2["body"] or ""), r2
 
 
 def test_macro_render_with_ai():
@@ -116,7 +116,7 @@ def test_macro_render_with_ai():
 
     # 头部
     assert "📊 经济数据" in body, body
-    assert "🎙️ 重要人物讲话" in body, body
+    assert "📰 政策人物与宏观相关报道" in body, body
     # 更新时间
     assert "2026-10-11 13:00:00 UTC" in sub, sub
 
@@ -188,7 +188,7 @@ def test_macro_content_cn_priority():
 
 
 def test_macro_empty_arrays():
-    """economic/speakers 空数组 → 显示「暂无经济数据」「暂无重要讲话」。"""
+    """economic/speakers 空数组 → 显示「暂无经济数据」「暂无政策人物/宏观报道」。"""
     app_js = (REPO_ROOT / "app.js").read_text(encoding="utf-8")
     exposed = _expose(app_js)
 
@@ -197,7 +197,7 @@ def test_macro_empty_arrays():
     r = _run_node(exposed, _tail(json.dumps(macro)))
     body = r["body"] or ""
     assert "暂无经济数据" in body, body
-    assert "暂无重要讲话" in body, body
+    assert "暂无政策人物/宏观报道" in body, body
 
 
 def test_macro_error_shown():
@@ -228,7 +228,7 @@ def test_macro_no_ai_sentiment():
 
     # 头部正常
     assert "📊 经济数据" in body, body
-    assert "🎙️ 重要人物讲话" in body, body
+    assert "📰 政策人物与宏观相关报道" in body, body
     # 内容与 person 正常
     assert "CPI" in body and "3.20%" in body, body
     assert "Trump" in body, body

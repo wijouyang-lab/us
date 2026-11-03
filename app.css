@@ -767,3 +767,29 @@ button{font-family:inherit}
 .di-l{font-size:10px;color:var(--text-3)}
 .di-v{font-size:14px;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
 .di-note{margin-top:8px;font-size:10px;color:var(--text-3)}
+
+/* Data Health */
+.health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}
+.health-cell{border:1px solid var(--line,#2a3140);border-radius:8px;padding:8px 10px;background:rgba(255,255,255,.02)}
+.health-cell.missing{border-color:#b91c1c}
+.health-cell.stale{border-color:#b45309}
+.health-cell.fallback{border-color:#7c3aed}
+.health-h{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:12px}
+.health-b{font-size:10px;padding:1px 6px;border-radius:999px;background:#334155;color:#e2e8f0}
+.health-b.fresh{background:#065f46}.health-b.stale{background:#92400e}.health-b.fallback{background:#5b21b6}.health-b.missing{background:#991b1b}
+.health-t{font-family:ui-monospace,Consolas,monospace;font-size:11px;margin-top:4px;overflow-wrap:anywhere}
+.health-m,.health-n{font-size:10px;opacity:.75;margin-top:3px}
+
+.research-fold{margin-top:10px;border-top:1px solid var(--line,#2a3140);padding-top:8px}
+.research-fold>summary{cursor:pointer;font-size:13px;color:#94a3b8;user-select:none}
+.research-fold[open]>summary{color:#e2e8f0;margin-bottom:8px}
+
+/* Keep the Fear & Greed ring from being flex-shrunk on narrow screens. */
+.mi-fg>svg{flex:0 0 auto}
+.mi-fg{min-width:0}
+
+/* Mobile F&G: keep gauge/meta intact and let subindicator chips wrap below. */
+.mi-fg{flex-wrap:wrap}
+.mi-fg-meta{flex:0 0 auto}
+.mi-band{white-space:nowrap}
+.mi-sub{flex:1 1 100%}

@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
+<link rel="icon" href="data:,">
 <link rel="stylesheet" href="app.css?v=runtime38">
 </head>
 <body>
@@ -20,9 +21,9 @@
       </div>
     </div>
     <div class="brand-r">
-      <span class="tag" id="dataTag">加载中…</span>
-      <span class="tag" id="updatedTag">Data updated: —</span>
-      <span class="tag" id="sessionTag">—</span>
+      <span class="tag" id="dataTag">真实行情 + 模拟组合</span>
+      <span class="tag" id="updatedTag">Dashboard 生成: —</span>
+      <span class="tag" id="sessionTag">扫描时间未知</span>
     </div>
   </header>
 
@@ -69,7 +70,10 @@
       <h2>🧩 决策输入总览</h2>
       <span class="sec-sub" id="decisionInputsSub">只读快照 · 权重/规则由量化研究定义</span>
     </div>
-    <div id="decisionInputsBody"></div>
+    <details class="research-fold">
+      <summary>研究详情 · 决策输入（默认收起）</summary>
+      <div id="decisionInputsBody"></div>
+    </details>
   </section>
 
   <!-- 金融新闻板块（市场流 + 个股联动；数据来自 dashboard/data/news_data.json，独立低频刷新） -->
@@ -82,11 +86,11 @@
     <div id="newsTickers" class="news-block"></div>
   </section>
 
-  <!-- 🌍 Global Markets · 美股宏观（合并板块：全球市场 + 九项宏观指标 + 重要讲话） -->
+  <!-- 🌍 Global Markets · 美股宏观（全球市场 + 宏观指标 + 政策人物/媒体报道） -->
   <section class="card sec" id="macroCard">
     <div class="sec-h">
       <h2>🌍 Global Markets · 美股宏观</h2>
-      <span class="sec-sub" id="macroSub">全球市场 · 经济数据 · 重要人物讲话</span>
+      <span class="sec-sub" id="macroSub">全球市场 · 经济数据 · 政策人物与宏观相关报道</span>
     </div>
     <div class="news-sub" style="margin-bottom:6px">🌐 全球市场</div>
     <div id="macroGlobal"></div>
@@ -107,14 +111,23 @@
     <div class="boot-row"><span class="spinner"></span><span>Loading market data…</span></div>
   </div>
 
+  <!-- 1. Data Health / 数据健康 -->
+  <section class="card sec" id="dataHealthSec">
+    <div class="sec-h">
+      <h2>Data Health · 数据健康</h2>
+      <span class="sec-sub">每类数据独立时间/来源/状态；不以单一生成时间覆盖</span>
+    </div>
+    <div id="dataHealth"></div>
+  </section>
+
   <!-- 1. Global Market 状态栏 -->
   <section class="card gmbar" id="gmBar"></section>
 
-  <!-- 1.5 $50,000 Long-Term Portfolio -->
+  <!-- 1.5 $50,000 Long-Term Portfolio（Paper / Simulated） -->
   <section class="card sec" id="portfolioSec">
     <div class="sec-h">
-      <h2>$50,000 Long-Term Portfolio</h2>
-      <span class="sec-sub" id="pfSub">长期模拟账户 · 初始本金 $50,000</span>
+      <h2>$50,000 Long-Term Portfolio <span class="sim-badge">SIMULATED</span></h2>
+      <span class="sec-sub" id="pfSub">Paper / Simulated 模拟账户 · 初始本金 $50,000 · 不代表真实成交</span>
     </div>
     <div id="pfSummary"></div>
     <canvas id="pfCurve" style="height:180px;width:100%;margin:8px 0 12px"></canvas>
@@ -123,10 +136,10 @@
     <div id="pfTxns"></div>
   </section>
 
-  <!-- 1.55 已止损记录（近 30 天）：纯前端，只读 portfolio.transactions 的 SELL + Stop Loss -->
+  <!-- 1.55 止损线触发离场（近 30 天）：只读 portfolio.transactions 的 SELL -->
   <section class="card sec" id="stoppedCard">
     <div class="sec-h">
-      <h2>已止损记录（近 30 天）</h2>
+      <h2>止损线触发离场（近 30 天）</h2>
       <span class="sec-sub" id="stoppedSub">—</span>
     </div>
     <div id="stoppedBody"></div>
@@ -165,7 +178,10 @@
       <span class="sec-sub" id="quantSub">Quant Phase 1–7 · 研究状态（非生产）</span>
     </div>
     <div id="quantSummary"></div>
-    <div id="quantPhases"></div>
+    <details class="research-fold">
+      <summary>研究详情 · 量化阶段与 Walk Forward / PIT 状态（默认收起）</summary>
+      <div id="quantPhases"></div>
+    </details>
   </section>
 
   <!-- 4. Review + Options + History（Global Markets 已并入上方宏观板块） -->
@@ -207,7 +223,7 @@
     </section>
   </div>
 
-  <footer class="foot" id="footInfo">真实数据 · 数据源 dashboard_data.json</footer>
+  <footer class="foot" id="footInfo">真实行情 · $50,000 组合为 Paper / Simulated（模拟）</footer>
 </div>
 
 <!-- ==================== DETAIL ==================== -->
@@ -320,7 +336,7 @@
       </div>
     </div>
 
-    <div class="foot" id="dFoot">真实数据 · 数据源 dashboard_data.json</div>
+    <div class="foot" id="dFoot">真实行情 · $50,000 组合为 Paper / Simulated（模拟）</div>
   </div>
 </div>
 

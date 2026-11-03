@@ -38,6 +38,29 @@ PAGES = {
     "claims": ("初请失业金", "https://tradingeconomics.com/united-states/initial-jobless-claims"),
 }
 
+# Correct semantic units. The scraped page label is not a unit.
+UNIT_OVERRIDES = {
+    "umich": "index point",
+    "ism": "index point",
+    "adp": "K",
+    "claims": "K",
+    "nonfarm": "K",
+}
+
+def _unit_for(key, fallback="%"):
+    return UNIT_OVERRIDES.get(key, fallback or "%")
+
+def _fmt_num(v, unit):
+    if v is None:
+        return "—"
+    if unit == "K":
+        return f"{v:,.0f}K"
+    if unit == "index point":
+        return f"{v:,.1f} pts"
+    if unit == "%":
+        return f"{v:,.2f}%"
+    return f"{v:,.2f}"
+
 def _norm_unit(u):
     if not u:
         return "%"
@@ -234,7 +257,7 @@ def apply_manual(rows, manual):
         fc = it.get("forecast")
         if not key or fc is None:
             continue
-        unit = it.get("unit") or "%"
+        unit = _unit_for(key, it.get("unit") or "%")
         row = {
             "key": key,
             "indicator": it.get("indicator") or key,
@@ -277,6 +300,7 @@ def build():
             print(f"[WARN] {name} 解析不到预期/实际，跳过", file=sys.stderr)
             continue
         actual, forecast, unit, period = got
+        unit = _unit_for(key, unit)
         diff = round(actual - forecast, 2)
         rows.append({
             "key": key,
@@ -287,7 +311,7 @@ def build():
             "previous": None,
             "unit": unit,
             "released_at": None,
-            "impact": f"实际 {actual}{unit} vs 预期 {forecast}{unit}（{'+' if diff >= 0 else ''}{diff}）。",
+            "impact": f"实际 {_fmt_num(actual, unit)} vs 预期 {_fmt_num(forecast, unit)}（{'+' if diff >= 0 else ''}{diff}）。",
         })
     # 日历兜底：非农 / 初请（指标页没有 consensus 措辞）
     try:
@@ -306,7 +330,8 @@ def build():
         rows.append({
             "key": key, "indicator": names.get(key, key), "period": "最新",
             "forecast": fc, "actual": round(float(act), 2), "previous": None,
-            "unit": unit, "released_at": None, "impact": "",
+            "unit": _unit_for(key, unit), "released_at": None, "impact": "",
+            "source": "TradingEconomics calendar", "source_status": "fallback",
         })
 
     fh = fmp_nfp() or finnhub_nfp()
@@ -334,10 +359,18 @@ def build():
             if v is not None:
                 r["actual"] = round(float(v), 2)
                 diff = round(r["actual"] - r["forecast"], 2)
-                r["impact"] = (f"实际 {r['actual']}{r['unit']} vs 预期 {r['forecast']}{r['unit']}"
+                r["impact"] = (f"实际 {_fmt_num(r['actual'], r['unit'])} vs 预期 {_fmt_num(r['forecast'], r['unit'])}"
                                f"（{'+' if diff >= 0 else ''}{diff}）。")
     except Exception as exc:
         print(f"[WARN] 用宏观指标覆盖实际值失败：{exc}", file=sys.stderr)
+
+    fetched = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    for r in rows:
+        r.setdefault("source", "TradingEconomics")
+        r.setdefault("source_status", "unverified")
+        r.setdefault("fetched_at", fetched)
+        r.setdefault("released_at", None)
+        r.setdefault("period", None)
 
     return {
         "schema": 1,

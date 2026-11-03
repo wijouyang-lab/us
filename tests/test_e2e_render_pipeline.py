@@ -48,7 +48,11 @@ def test_export_readers_flow_into_rendered_sections(tmp_path):
         "schema": 1, "source": "自动", "items": [
             {"indicator": "CPI 同比", "period": "2026年9月", "forecast": 3.6,
              "actual": 3.7, "previous": 3.4, "unit": "%", "surprise": 0.1,
-             "impact": "高于预期"}],
+             "impact": "高于预期", "verification_status": "verified",
+             "verification_reason": "verified", "released_at": "2026-10-15",
+             "source": "test", "source_status": "verified",
+             "actual_period": "2026-09", "forecast_period": "2026-09",
+             "actual_indicator": "CPI", "forecast_indicator": "CPI"}],
     })
     _write(tmp_path, "dashboard/data/macro_cpi_ai.json", {
         "signature": "x", "model": "deepseek-flash",
@@ -99,7 +103,7 @@ def test_export_readers_flow_into_rendered_sections(tmp_path):
     macro = out["macro"] or ""
     assert "美国失业率" in macro and "4.20%" in macro
     assert "预期" in macro and "3.60%" in macro and "3.70%" in macro
-    assert "兜底源" in macro
+    assert "FALLBACK" in macro
     assert "CPI 高于预期" in macro
 
     ov = out["oversold"] or ""
