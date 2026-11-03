@@ -1,0 +1,29 @@
+{
+  "source_urls": {
+    "finsaber": "https://huggingface.co/datasets/finsaber-team/FINSABER-reproduce/resolve/main/data/price/all_sp500_prices_2000_2024_delisted_include.csv",
+    "membership": "https://raw.githubusercontent.com/fja05680/sp500/master/S%26P%20500%20Historical%20Components%20%26%20Changes.csv"
+  },
+  "downloaded_at_utc": "2026-11-04T00:30:00Z",
+  "files": {
+    "finsaber_20.csv": {
+      "bytes": 5995573,
+      "sha256": "d2ba955880ac19ae863f5cef61cd2fc54c3bab579823003f1aa68485199d50e2"
+    },
+    "sp500_membership_raw.csv": {
+      "bytes": 7791584,
+      "sha256": "bd2745939a709f316a74a550253d21f3fd5b72aa223e3a0137c790d2e54b7d5e"
+    },
+    "source_trials_20.json": {
+      "bytes": 4661,
+      "sha256": "8e22ff49c26ee1689638f3766b3314b38054d5d8124f4c1674481264c6ac5c3b"
+    },
+    "ticker_status_98_2026-11-04.csv": {
+      "bytes": 104368,
+      "sha256": "68a8209baa6b6f444e5176ca34e94ec1353ab3e73130cef3fd0af23a0ee5f547"
+    },
+    "missing_tickers_identity_2026-10-28.csv": {
+      "bytes": 100818,
+      "sha256": "abc6517634ecdd3ed836ccb11097428b63d15079e39188ee9b499ccbd5ee2861"
+    }
+  }
+}

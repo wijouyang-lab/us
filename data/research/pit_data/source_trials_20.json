@@ -1,0 +1,202 @@
+[
+  {
+    "ticker": "ABMD",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "AET",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "AGN",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "ALXN",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "ATVI",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "CELG",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "CERN",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "XLNX",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "DISCA",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "DWDP",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "ESRX",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "MYL",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "FB",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "ANTM",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "PARA",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": true
+  },
+  {
+    "ticker": "TWTR",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": false
+  },
+  {
+    "ticker": "AAPL",
+    "eodhd_status": 200,
+    "eodhd_rows": 6749,
+    "eodhd_ok": true,
+    "twelve_status": 200,
+    "twelve_ok": true,
+    "nasdaq_status": 200,
+    "nasdaq_ok": true
+  },
+  {
+    "ticker": "MSFT",
+    "eodhd_status": 200,
+    "eodhd_rows": 6749,
+    "eodhd_ok": true,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": true
+  },
+  {
+    "ticker": "JPM",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": true
+  },
+  {
+    "ticker": "XOM",
+    "eodhd_status": 403,
+    "eodhd_error": "HTTP Error 403: Forbidden",
+    "eodhd_ok": false,
+    "twelve_status": 401,
+    "twelve_ok": false,
+    "nasdaq_status": 200,
+    "nasdaq_ok": true
+  }
+]
