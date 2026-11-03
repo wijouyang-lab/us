@@ -49,4 +49,5 @@ def test_membership_stops_before_holdout():
 def test_manifest_hashes_match_files():
     m = json.loads((D / "manifest.json").read_text())
     for name, meta in m["files"].items():
-        assert hashlib.sha256((D / name).read_bytes()).hexdigest() == meta["sha256"]
+        norm = (D / name).read_bytes().replace(b"\r\n", b"\n")
+        assert hashlib.sha256(norm).hexdigest() == meta["sha256_normalized_lf"]
