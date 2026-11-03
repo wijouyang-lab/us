@@ -1,0 +1,69 @@
+{
+  "source": "FRED/ALFRED DFII10; prices from research snapshot",
+  "download_utc": "2026-11-03T19:20:00Z",
+  "research_cutoff": "2026-10-30",
+  "raw": {
+    "SPY": {
+      "rows": 6749,
+      "sha256": "4b7e28dc84cad58f3e270db0921a2d141fbbb5119c2042d07e7e320d895f4ec4",
+      "max": "2026-11-02"
+    },
+    "IEF": {
+      "rows": 6105,
+      "sha256": "be022b0a4a91322efaf7dbf7a61b52fc982cafdda1bb98b0e39369099dd4befe",
+      "max": "2026-11-02"
+    },
+    "TLT": {
+      "rows": 6105,
+      "sha256": "79a62092ea2edf3c275759d25d9dc48c0fa66e51109f071ec7f477e33c298ed0",
+      "max": "2026-11-02"
+    },
+    "BIL": {
+      "rows": 4889,
+      "sha256": "a067a43f566197929e702220d34c5212fd6c065c8f83dc6affc51fa789066415",
+      "max": "2026-11-02"
+    }
+  },
+  "cutoff": {
+    "SPY": {
+      "rows": 6748,
+      "sha256": "59f0b0c72f9571b0f7a40c0befe7c280a5a21d2aed0f0b19c8ddcd460331a099",
+      "max": "2026-10-30"
+    },
+    "IEF": {
+      "rows": 6104,
+      "sha256": "c742f8ed82f2e4523f9f8516dcfd530572ab44fa4a25a8a6714262c33d072d00",
+      "max": "2026-10-30"
+    },
+    "TLT": {
+      "rows": 6104,
+      "sha256": "d396bf01a4bbbec5b33d7f9153dd2bf627dee13f446216f9a79c78be267b3739",
+      "max": "2026-10-30"
+    },
+    "BIL": {
+      "rows": 4888,
+      "sha256": "145106b5ff32a5aef6d2ae384a4efd933a40b7444976d2b1f362a040f2769269",
+      "max": "2026-10-30"
+    }
+  },
+  "DFII10": {
+    "rows": 6217,
+    "sha256": "6854b61d7f351da4e0a58393c98ebed132fc83ecd2052a874fc81fab45cf57e2"
+  },
+  "DGS10": {
+    "rows": 16914,
+    "sha256": "548c7978740bf6c50df3026343d817121fce046e8685bfa1883769c606b443cf"
+  },
+  "T10YIE": {
+    "rows": 6218,
+    "sha256": "13c9e080ac58bf86fa4993eb98bec96102b6a2da518e7be90b4ae45ad753b47e"
+  },
+  "pit_DFII10.csv": {
+    "size": 31697,
+    "sha256": "a2e73022a83b13b74b7d995d54f2fe2e1c87871eaa208fb1ac2b96bbcd74089e"
+  },
+  "pit_DFII10_raw.jsonl.gz": {
+    "size": 3024149,
+    "sha256": "d8749f0ffbc325008fe082727b0c9dbfdb5331872feaf931adbfaf417b0f8656"
+  }
+}
