@@ -1,0 +1,1231 @@
+{
+  "label": "F_VIX_VXV_BACKWARDATION_FILTER",
+  "start_pit": "2014-01-02",
+  "start_exploratory": "2007-12-04",
+  "end": "2026-10-30",
+  "rules": {
+    "backwardation": {
+      "BIL": 1.0
+    },
+    "normal": {
+      "SPY": 0.7,
+      "IEF": 0.15,
+      "TLT": 0.15
+    }
+  },
+  "cost_model": {
+    "commission_min": 0.35,
+    "per_share": 0.0035,
+    "base_slip_bps": 5.0
+  },
+  "results": {
+    "pit_2014_2026|1": {
+      "start": "2014-01-02",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 124699.74607630823,
+      "total_return": 1.4939949215261645,
+      "cagr": 0.07386382130467717,
+      "volatility": 0.10130265616545753,
+      "sharpe_rf0": 0.7552411695250879,
+      "max_drawdown": -0.25713631210066157,
+      "max_drawdown_peak_date": "2021-12-27",
+      "max_drawdown_trough_date": "2022-11-03",
+      "max_drawdown_recovery_date": "2024-06-14",
+      "max_drawdown_peak_to_trough_sessions": 216,
+      "max_drawdown_trough_to_recovery_sessions": 404,
+      "longest_underwater_sessions": 619,
+      "annual": [
+        {
+          "year": 2014,
+          "return": 0.16183901065026163
+        },
+        {
+          "year": 2015,
+          "return": -0.04674817744453441
+        },
+        {
+          "year": 2016,
+          "return": 0.08879728640910156
+        },
+        {
+          "year": 2017,
+          "return": 0.16701844598079263
+        },
+        {
+          "year": 2018,
+          "return": -0.052031044027602724
+        },
+        {
+          "year": 2019,
+          "return": 0.17452806935823983
+        },
+        {
+          "year": 2020,
+          "return": 0.10515587923820635
+        },
+        {
+          "year": 2021,
+          "return": 0.18080356662877284
+        },
+        {
+          "year": 2022,
+          "return": -0.22724858556917205
+        },
+        {
+          "year": 2023,
+          "return": 0.18923998795408536
+        },
+        {
+          "year": 2024,
+          "return": 0.15395633173411327
+        },
+        {
+          "year": 2025,
+          "return": 0.14248485665787602
+        },
+        {
+          "year": 2026,
+          "return": 0.00672155193228452
+        }
+      ],
+      "slip_bps": 1,
+      "order_legs": 419,
+      "total_cost": 517.3067670755829,
+      "exposure": 0.924389393317401,
+      "backwardation_days": 10,
+      "missing_decisions": 0
+    },
+    "pit_2014_2026|3": {
+      "start": "2014-01-02",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 123754.76098969116,
+      "total_return": 1.4750952197938232,
+      "cagr": 0.07322702004420645,
+      "volatility": 0.1013188569400594,
+      "sharpe_rf0": 0.749272708556775,
+      "max_drawdown": -0.2581339377385371,
+      "max_drawdown_peak_date": "2021-12-27",
+      "max_drawdown_trough_date": "2022-11-03",
+      "max_drawdown_recovery_date": "2024-06-14",
+      "max_drawdown_peak_to_trough_sessions": 216,
+      "max_drawdown_trough_to_recovery_sessions": 404,
+      "longest_underwater_sessions": 619,
+      "annual": [
+        {
+          "year": 2014,
+          "return": 0.1610995965693618
+        },
+        {
+          "year": 2015,
+          "return": -0.047468928353770146
+        },
+        {
+          "year": 2016,
+          "return": 0.08895554689212593
+        },
+        {
+          "year": 2017,
+          "return": 0.1668535607378343
+        },
+        {
+          "year": 2018,
+          "return": -0.05328285892362572
+        },
+        {
+          "year": 2019,
+          "return": 0.17355774053862305
+        },
+        {
+          "year": 2020,
+          "return": 0.10334169685427774
+        },
+        {
+          "year": 2021,
+          "return": 0.18113775196932935
+        },
+        {
+          "year": 2022,
+          "return": -0.22833624261924002
+        },
+        {
+          "year": 2023,
+          "return": 0.1889709421428405
+        },
+        {
+          "year": 2024,
+          "return": 0.15385309597858465
+        },
+        {
+          "year": 2025,
+          "return": 0.1422816424951865
+        },
+        {
+          "year": 2026,
+          "return": 0.005908395582318482
+        }
+      ],
+      "slip_bps": 3,
+      "order_legs": 410,
+      "total_cost": 1069.528690423532,
+      "exposure": 0.9244318612585671,
+      "backwardation_days": 10,
+      "missing_decisions": 0
+    },
+    "pit_2014_2026|5": {
+      "start": "2014-01-02",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 122879.31909995171,
+      "total_return": 1.4575863819990342,
+      "cagr": 0.07263306880942233,
+      "volatility": 0.1012514069278574,
+      "sharpe_rf0": 0.7442276697226388,
+      "max_drawdown": -0.25843392332470905,
+      "max_drawdown_peak_date": "2021-12-27",
+      "max_drawdown_trough_date": "2022-11-03",
+      "max_drawdown_recovery_date": "2024-06-17",
+      "max_drawdown_peak_to_trough_sessions": 216,
+      "max_drawdown_trough_to_recovery_sessions": 405,
+      "longest_underwater_sessions": 620,
+      "annual": [
+        {
+          "year": 2014,
+          "return": 0.16035007631246367
+        },
+        {
+          "year": 2015,
+          "return": -0.048047964281708544
+        },
+        {
+          "year": 2016,
+          "return": 0.08883266590998606
+        },
+        {
+          "year": 2017,
+          "return": 0.16707959622474378
+        },
+        {
+          "year": 2018,
+          "return": -0.05477580106101976
+        },
+        {
+          "year": 2019,
+          "return": 0.17241137542118667
+        },
+        {
+          "year": 2020,
+          "return": 0.10161381732594665
+        },
+        {
+          "year": 2021,
+          "return": 0.18108786121365283
+        },
+        {
+          "year": 2022,
+          "return": -0.2287146419199506
+        },
+        {
+          "year": 2023,
+          "return": 0.1886946166396266
+        },
+        {
+          "year": 2024,
+          "return": 0.15380735228895115
+        },
+        {
+          "year": 2025,
+          "return": 0.1421482349418417
+        },
+        {
+          "year": 2026,
+          "return": 0.005021790880515686
+        }
+      ],
+      "slip_bps": 5,
+      "order_legs": 410,
+      "total_cost": 1620.5836338739487,
+      "exposure": 0.9242175427601583,
+      "backwardation_days": 10,
+      "missing_decisions": 0,
+      "bootstrap": {
+        "method": "circular_block_bootstrap",
+        "seed": 42,
+        "block_sessions": 20,
+        "samples": 500,
+        "low": 0.024593189789684465,
+        "high": 0.12902424515754715
+      },
+      "stages": {
+        "2007-2015": {
+          "start": "2014-01-02",
+          "end": "2015-12-31",
+          "initial_equity": 49973.09694175006,
+          "final_nav": 55229.88086457623,
+          "total_return": 0.10519227833635392,
+          "cagr": 0.05146181442990705,
+          "volatility": 0.0789157897522584,
+          "sharpe_rf0": 0.6732080826380659,
+          "max_drawdown": -0.09025698897887591,
+          "max_drawdown_peak_date": "2015-04-24",
+          "max_drawdown_trough_date": "2015-11-13",
+          "max_drawdown_recovery_date": null,
+          "max_drawdown_peak_to_trough_sessions": 142,
+          "max_drawdown_trough_to_recovery_sessions": null,
+          "longest_underwater_sessions": 174,
+          "annual": [
+            {
+              "year": 2014,
+              "return": 0.16097475173991893
+            },
+            {
+              "year": 2015,
+              "return": -0.048047964281708544
+            }
+          ]
+        },
+        "2016-2020": {
+          "start": "2016-01-04",
+          "end": "2020-12-31",
+          "initial_equity": 54794.00022808794,
+          "final_nav": 85680.09792440987,
+          "total_return": 0.5636766355395497,
+          "cagr": 0.09370101079063176,
+          "volatility": 0.08458363603017648,
+          "sharpe_rf0": 1.1004638695769078,
+          "max_drawdown": -0.14932515222376008,
+          "max_drawdown_peak_date": "2018-08-29",
+          "max_drawdown_trough_date": "2018-12-24",
+          "max_drawdown_recovery_date": "2019-10-30",
+          "max_drawdown_peak_to_trough_sessions": 80,
+          "max_drawdown_trough_to_recovery_sessions": 214,
+          "longest_underwater_sessions": 293,
+          "annual": [
+            {
+              "year": 2016,
+              "return": 0.09749421778556533
+            },
+            {
+              "year": 2017,
+              "return": 0.16707959622474378
+            },
+            {
+              "year": 2018,
+              "return": -0.05477580106101976
+            },
+            {
+              "year": 2019,
+              "return": 0.17241137542118667
+            },
+            {
+              "year": 2020,
+              "return": 0.10161381732594665
+            }
+          ]
+        },
+        "2021-2026": {
+          "start": "2021-01-04",
+          "end": "2026-10-30",
+          "initial_equity": 84856.87601690546,
+          "final_nav": 122879.31909995171,
+          "total_return": 0.44807733760398283,
+          "cagr": 0.06570564324118511,
+          "volatility": 0.11950935004006769,
+          "sharpe_rf0": 0.592976461936417,
+          "max_drawdown": -0.25843392332470905,
+          "max_drawdown_peak_date": "2021-12-27",
+          "max_drawdown_trough_date": "2022-11-03",
+          "max_drawdown_recovery_date": "2024-06-17",
+          "max_drawdown_peak_to_trough_sessions": 216,
+          "max_drawdown_trough_to_recovery_sessions": 405,
+          "longest_underwater_sessions": 620,
+          "annual": [
+            {
+              "year": 2021,
+              "return": 0.19254594743691777
+            },
+            {
+              "year": 2022,
+              "return": -0.2287146419199506
+            },
+            {
+              "year": 2023,
+              "return": 0.1886946166396266
+            },
+            {
+              "year": 2024,
+              "return": 0.15380735228895115
+            },
+            {
+              "year": 2025,
+              "return": 0.1421482349418417
+            },
+            {
+              "year": 2026,
+              "return": 0.005021790880515686
+            }
+          ]
+        }
+      },
+      "hac_bil": {
+        "alpha": 0.05742633489095341,
+        "t": 2.178274409168673,
+        "p": 0.029385613213219582,
+        "ci_low": 0.0057544170129735965,
+        "ci_high": 0.10909825276893323,
+        "n": 3227
+      },
+      "hac_spy": {
+        "alpha": -0.06678319350598536,
+        "t": -2.655385207797182,
+        "p": 0.007921789015922423,
+        "ci_low": -0.11607738211838535,
+        "ci_high": -0.017489004893585344,
+        "n": 3227
+      }
+    },
+    "pit_2014_2026|10": {
+      "start": "2014-01-02",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 120689.1099933846,
+      "total_return": 1.413782199867692,
+      "cagr": 0.07112983577905418,
+      "volatility": 0.10133845038918521,
+      "sharpe_rf0": 0.7298128895448821,
+      "max_drawdown": -0.26010008560382913,
+      "max_drawdown_peak_date": "2021-12-27",
+      "max_drawdown_trough_date": "2022-11-03",
+      "max_drawdown_recovery_date": "2024-06-17",
+      "max_drawdown_peak_to_trough_sessions": 216,
+      "max_drawdown_trough_to_recovery_sessions": 405,
+      "longest_underwater_sessions": 620,
+      "annual": [
+        {
+          "year": 2014,
+          "return": 0.15869411475821105
+        },
+        {
+          "year": 2015,
+          "return": -0.05021582918611833
+        },
+        {
+          "year": 2016,
+          "return": 0.0886103321298517
+        },
+        {
+          "year": 2017,
+          "return": 0.16679956502932347
+        },
+        {
+          "year": 2018,
+          "return": -0.058352869046990885
+        },
+        {
+          "year": 2019,
+          "return": 0.16995064742371868
+        },
+        {
+          "year": 2020,
+          "return": 0.09751206930470158
+        },
+        {
+          "year": 2021,
+          "return": 0.18109682003988015
+        },
+        {
+          "year": 2022,
+          "return": -0.23030588785242923
+        },
+        {
+          "year": 2023,
+          "return": 0.1888669643926868
+        },
+        {
+          "year": 2024,
+          "return": 0.1535679099467624
+        },
+        {
+          "year": 2025,
+          "return": 0.14205738387740618
+        },
+        {
+          "year": 2026,
+          "return": 0.0030038284210971433
+        }
+      ],
+      "slip_bps": 10,
+      "order_legs": 415,
+      "total_cost": 2980.8256671989107,
+      "exposure": 0.9244935864941087,
+      "backwardation_days": 10,
+      "missing_decisions": 0
+    },
+    "pit_2014_2026|20": {
+      "start": "2014-01-02",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 116315.20788450948,
+      "total_return": 1.3263041576901897,
+      "cagr": 0.06805102742835145,
+      "volatility": 0.10147278563797738,
+      "sharpe_rf0": 0.7005662074111209,
+      "max_drawdown": -0.2634415574842992,
+      "max_drawdown_peak_date": "2021-12-27",
+      "max_drawdown_trough_date": "2022-11-03",
+      "max_drawdown_recovery_date": "2024-06-18",
+      "max_drawdown_peak_to_trough_sessions": 216,
+      "max_drawdown_trough_to_recovery_sessions": 406,
+      "longest_underwater_sessions": 621,
+      "annual": [
+        {
+          "year": 2014,
+          "return": 0.1551098956301531
+        },
+        {
+          "year": 2015,
+          "return": -0.0543236947895247
+        },
+        {
+          "year": 2016,
+          "return": 0.08847726642412446
+        },
+        {
+          "year": 2017,
+          "return": 0.16696796260989943
+        },
+        {
+          "year": 2018,
+          "return": -0.06621967052177169
+        },
+        {
+          "year": 2019,
+          "return": 0.1651409971651978
+        },
+        {
+          "year": 2020,
+          "return": 0.08849111002905397
+        },
+        {
+          "year": 2021,
+          "return": 0.1807771798648623
+        },
+        {
+          "year": 2022,
+          "return": -0.23348687676194746
+        },
+        {
+          "year": 2023,
+          "return": 0.1885635219965318
+        },
+        {
+          "year": 2024,
+          "return": 0.15366165730774273
+        },
+        {
+          "year": 2025,
+          "return": 0.14195259291237505
+        },
+        {
+          "year": 2026,
+          "return": -0.0010636415498365137
+        }
+      ],
+      "slip_bps": 20,
+      "order_legs": 410,
+      "total_cost": 5616.879465710246,
+      "exposure": 0.9243880242556028,
+      "backwardation_days": 10,
+      "missing_decisions": 0
+    },
+    "exploratory_2007_2026|1": {
+      "start": "2007-12-04",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 170511.04111417945,
+      "total_return": 2.410220822283589,
+      "cagr": 0.06704394065315866,
+      "volatility": 0.10229303407171733,
+      "sharpe_rf0": 0.6865777540390398,
+      "max_drawdown": -0.2717410394244245,
+      "max_drawdown_peak_date": "2008-05-19",
+      "max_drawdown_trough_date": "2009-04-02",
+      "max_drawdown_recovery_date": "2011-01-13",
+      "max_drawdown_peak_to_trough_sessions": 220,
+      "max_drawdown_trough_to_recovery_sessions": 450,
+      "longest_underwater_sessions": 669,
+      "annual": [
+        {
+          "year": 2007,
+          "return": 0.002238141517757919
+        },
+        {
+          "year": 2008,
+          "return": -0.11433195465936086
+        },
+        {
+          "year": 2009,
+          "return": -0.010195770759655387
+        },
+        {
+          "year": 2010,
+          "return": 0.14146166531460458
+        },
+        {
+          "year": 2011,
+          "return": 0.08694211784961658
+        },
+        {
+          "year": 2012,
+          "return": 0.1235631911031112
+        },
+        {
+          "year": 2013,
+          "return": 0.1534901857432731
+        },
+        {
+          "year": 2014,
+          "return": 0.14823934840546849
+        },
+        {
+          "year": 2015,
+          "return": -0.0667953009270984
+        },
+        {
+          "year": 2016,
+          "return": 0.08881064413779716
+        },
+        {
+          "year": 2017,
+          "return": 0.16717368126859045
+        },
+        {
+          "year": 2018,
+          "return": -0.0517034160678973
+        },
+        {
+          "year": 2019,
+          "return": 0.1749030915227061
+        },
+        {
+          "year": 2020,
+          "return": 0.10531775985475855
+        },
+        {
+          "year": 2021,
+          "return": 0.1811840996572449
+        },
+        {
+          "year": 2022,
+          "return": -0.22771433447619283
+        },
+        {
+          "year": 2023,
+          "return": 0.1889266856715568
+        },
+        {
+          "year": 2024,
+          "return": 0.15394240628100553
+        },
+        {
+          "year": 2025,
+          "return": 0.1425274172934401
+        },
+        {
+          "year": 2026,
+          "return": 0.006653869420158998
+        }
+      ],
+      "slip_bps": 1,
+      "order_legs": 625,
+      "total_cost": 909.2215941335205,
+      "exposure": 0.8993394885289786,
+      "backwardation_days": 21,
+      "missing_decisions": 0
+    },
+    "exploratory_2007_2026|3": {
+      "start": "2007-12-04",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 168418.89547745752,
+      "total_return": 2.3683779095491504,
+      "cagr": 0.06634733893619682,
+      "volatility": 0.10232225478222869,
+      "sharpe_rf0": 0.6800177039140047,
+      "max_drawdown": -0.2726509276102008,
+      "max_drawdown_peak_date": "2008-05-19",
+      "max_drawdown_trough_date": "2009-04-02",
+      "max_drawdown_recovery_date": "2011-01-14",
+      "max_drawdown_peak_to_trough_sessions": 220,
+      "max_drawdown_trough_to_recovery_sessions": 451,
+      "longest_underwater_sessions": 670,
+      "annual": [
+        {
+          "year": 2007,
+          "return": 0.002038409911770289
+        },
+        {
+          "year": 2008,
+          "return": -0.11563906307355187
+        },
+        {
+          "year": 2009,
+          "return": -0.011635815289070983
+        },
+        {
+          "year": 2010,
+          "return": 0.14146727318463226
+        },
+        {
+          "year": 2011,
+          "return": 0.08592869150699611
+        },
+        {
+          "year": 2012,
+          "return": 0.12298075289484744
+        },
+        {
+          "year": 2013,
+          "return": 0.15271166204042763
+        },
+        {
+          "year": 2014,
+          "return": 0.148490568564412
+        },
+        {
+          "year": 2015,
+          "return": -0.06816235936527348
+        },
+        {
+          "year": 2016,
+          "return": 0.08881645932616289
+        },
+        {
+          "year": 2017,
+          "return": 0.16720350003709084
+        },
+        {
+          "year": 2018,
+          "return": -0.053301960076385324
+        },
+        {
+          "year": 2019,
+          "return": 0.17367452832567998
+        },
+        {
+          "year": 2020,
+          "return": 0.10336146139376345
+        },
+        {
+          "year": 2021,
+          "return": 0.18078050642651866
+        },
+        {
+          "year": 2022,
+          "return": -0.2281258039752695
+        },
+        {
+          "year": 2023,
+          "return": 0.18910841306219361
+        },
+        {
+          "year": 2024,
+          "return": 0.15402514585193794
+        },
+        {
+          "year": 2025,
+          "return": 0.14257522496908503
+        },
+        {
+          "year": 2026,
+          "return": 0.005886514207849913
+        }
+      ],
+      "slip_bps": 3,
+      "order_legs": 627,
+      "total_cost": 1923.76509810399,
+      "exposure": 0.8995152762643794,
+      "backwardation_days": 21,
+      "missing_decisions": 0
+    },
+    "exploratory_2007_2026|5": {
+      "start": "2007-12-04",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 166354.22606405968,
+      "total_return": 2.3270845212811935,
+      "cagr": 0.06565180391746495,
+      "volatility": 0.10232729711667891,
+      "sharpe_rf0": 0.6736017624151323,
+      "max_drawdown": -0.27359431741448137,
+      "max_drawdown_peak_date": "2008-05-19",
+      "max_drawdown_trough_date": "2009-04-02",
+      "max_drawdown_recovery_date": "2011-01-14",
+      "max_drawdown_peak_to_trough_sessions": 220,
+      "max_drawdown_trough_to_recovery_sessions": 451,
+      "longest_underwater_sessions": 670,
+      "annual": [
+        {
+          "year": 2007,
+          "return": 0.0018386783057828815
+        },
+        {
+          "year": 2008,
+          "return": -0.11699557433941166
+        },
+        {
+          "year": 2009,
+          "return": -0.012805533939382663
+        },
+        {
+          "year": 2010,
+          "return": 0.1412379546171818
+        },
+        {
+          "year": 2011,
+          "return": 0.08500401697991067
+        },
+        {
+          "year": 2012,
+          "return": 0.12302982884896996
+        },
+        {
+          "year": 2013,
+          "return": 0.15162577510793618
+        },
+        {
+          "year": 2014,
+          "return": 0.14812080486989387
+        },
+        {
+          "year": 2015,
+          "return": -0.0699135653708155
+        },
+        {
+          "year": 2016,
+          "return": 0.08894079274288136
+        },
+        {
+          "year": 2017,
+          "return": 0.1672110102863067
+        },
+        {
+          "year": 2018,
+          "return": -0.05487378616402372
+        },
+        {
+          "year": 2019,
+          "return": 0.1726909586335843
+        },
+        {
+          "year": 2020,
+          "return": 0.10202632423716862
+        },
+        {
+          "year": 2021,
+          "return": 0.1810625435542883
+        },
+        {
+          "year": 2022,
+          "return": -0.22881712908008323
+        },
+        {
+          "year": 2023,
+          "return": 0.18916380137104838
+        },
+        {
+          "year": 2024,
+          "return": 0.1537957314095817
+        },
+        {
+          "year": 2025,
+          "return": 0.14253421667911126
+        },
+        {
+          "year": 2026,
+          "return": 0.005055944951030122
+        }
+      ],
+      "slip_bps": 5,
+      "order_legs": 632,
+      "total_cost": 2921.612472134201,
+      "exposure": 0.899433206364714,
+      "backwardation_days": 21,
+      "missing_decisions": 0,
+      "bootstrap": {
+        "method": "circular_block_bootstrap",
+        "seed": 42,
+        "block_sessions": 20,
+        "samples": 500,
+        "low": 0.017708060313960067,
+        "high": 0.11043407455979334
+      },
+      "stages": {
+        "2007-2015": {
+          "start": "2007-12-04",
+          "end": "2015-12-31",
+          "initial_equity": 49973.12441425156,
+          "final_nav": 74671.43705078593,
+          "total_return": 0.49423190817124096,
+          "cagr": 0.05099980895562872,
+          "volatility": 0.09857234857997761,
+          "sharpe_rf0": 0.554187289383431,
+          "max_drawdown": -0.27359431741448137,
+          "max_drawdown_peak_date": "2008-05-19",
+          "max_drawdown_trough_date": "2009-04-02",
+          "max_drawdown_recovery_date": "2011-01-14",
+          "max_drawdown_peak_to_trough_sessions": 220,
+          "max_drawdown_trough_to_recovery_sessions": 451,
+          "longest_underwater_sessions": 670,
+          "annual": [
+            {
+              "year": 2007,
+              "return": 0.002377467937620059
+            },
+            {
+              "year": 2008,
+              "return": -0.11699557433941166
+            },
+            {
+              "year": 2009,
+              "return": -0.012805533939382663
+            },
+            {
+              "year": 2010,
+              "return": 0.1412379546171818
+            },
+            {
+              "year": 2011,
+              "return": 0.08500401697991067
+            },
+            {
+              "year": 2012,
+              "return": 0.12302982884896996
+            },
+            {
+              "year": 2013,
+              "return": 0.15162577510793618
+            },
+            {
+              "year": 2014,
+              "return": 0.14812080486989387
+            },
+            {
+              "year": 2015,
+              "return": -0.0699135653708155
+            }
+          ]
+        },
+        "2016-2020": {
+          "start": "2016-01-04",
+          "end": "2020-12-31",
+          "initial_equity": 74081.36061243086,
+          "final_nav": 115924.03958136805,
+          "total_return": 0.5648206056560465,
+          "cagr": 0.09386127734713612,
+          "volatility": 0.08468394796015495,
+          "sharpe_rf0": 1.1009904699313402,
+          "max_drawdown": -0.14944123977616197,
+          "max_drawdown_peak_date": "2018-08-29",
+          "max_drawdown_trough_date": "2018-12-24",
+          "max_drawdown_recovery_date": "2019-10-30",
+          "max_drawdown_peak_to_trough_sessions": 80,
+          "max_drawdown_trough_to_recovery_sessions": 214,
+          "longest_underwater_sessions": 293,
+          "annual": [
+            {
+              "year": 2016,
+              "return": 0.09761447663919798
+            },
+            {
+              "year": 2017,
+              "return": 0.1672110102863067
+            },
+            {
+              "year": 2018,
+              "return": -0.05487378616402372
+            },
+            {
+              "year": 2019,
+              "return": 0.1726909586335843
+            },
+            {
+              "year": 2020,
+              "return": 0.10202632423716862
+            }
+          ]
+        },
+        "2021-2026": {
+          "start": "2021-01-04",
+          "end": "2026-10-30",
+          "initial_equity": 114813.83159993275,
+          "final_nav": 166354.22606405968,
+          "total_return": 0.44890405403173683,
+          "cagr": 0.06581019485184547,
+          "volatility": 0.11974627370733858,
+          "sharpe_rf0": 0.5928586907543064,
+          "max_drawdown": -0.25865420269486195,
+          "max_drawdown_peak_date": "2021-12-27",
+          "max_drawdown_trough_date": "2022-11-03",
+          "max_drawdown_recovery_date": "2024-06-17",
+          "max_drawdown_peak_to_trough_sessions": 216,
+          "max_drawdown_trough_to_recovery_sessions": 405,
+          "longest_underwater_sessions": 620,
+          "annual": [
+            {
+              "year": 2021,
+              "return": 0.192482988671016
+            },
+            {
+              "year": 2022,
+              "return": -0.22881712908008323
+            },
+            {
+              "year": 2023,
+              "return": 0.18916380137104838
+            },
+            {
+              "year": 2024,
+              "return": 0.1537957314095817
+            },
+            {
+              "year": 2025,
+              "return": 0.14253421667911126
+            },
+            {
+              "year": 2026,
+              "return": 0.005055944951030122
+            }
+          ]
+        }
+      },
+      "hac_bil": {
+        "alpha": 0.055768410664354624,
+        "t": 2.534043375427854,
+        "p": 0.011275477371041221,
+        "ci_low": 0.012633361768958528,
+        "ci_high": 0.09890345955975072,
+        "n": 4757
+      },
+      "hac_spy": {
+        "alpha": -0.05586243677820459,
+        "t": -2.2418271317694463,
+        "p": 0.024972546980814955,
+        "ci_low": -0.10470223112883394,
+        "ci_high": -0.007022642427575244,
+        "n": 4757
+      }
+    },
+    "exploratory_2007_2026|10": {
+      "start": "2007-12-04",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 161198.17616908497,
+      "total_return": 2.2239635233816992,
+      "cagr": 0.06387850290010122,
+      "volatility": 0.10234090603792649,
+      "sharpe_rf0": 0.6572245745158642,
+      "max_drawdown": -0.27589597713363345,
+      "max_drawdown_peak_date": "2008-05-19",
+      "max_drawdown_trough_date": "2009-04-02",
+      "max_drawdown_recovery_date": "2011-02-01",
+      "max_drawdown_peak_to_trough_sessions": 220,
+      "max_drawdown_trough_to_recovery_sessions": 462,
+      "longest_underwater_sessions": 681,
+      "annual": [
+        {
+          "year": 2007,
+          "return": 0.0013393492908140292
+        },
+        {
+          "year": 2008,
+          "return": -0.12074204669807509
+        },
+        {
+          "year": 2009,
+          "return": -0.016001821889024326
+        },
+        {
+          "year": 2010,
+          "return": 0.1413898931993216
+        },
+        {
+          "year": 2011,
+          "return": 0.0827431113056365
+        },
+        {
+          "year": 2012,
+          "return": 0.1228875764282662
+        },
+        {
+          "year": 2013,
+          "return": 0.14920611265151784
+        },
+        {
+          "year": 2014,
+          "return": 0.14812716620375155
+        },
+        {
+          "year": 2015,
+          "return": -0.07365640336303014
+        },
+        {
+          "year": 2016,
+          "return": 0.08863387789510524
+        },
+        {
+          "year": 2017,
+          "return": 0.16724417959172988
+        },
+        {
+          "year": 2018,
+          "return": -0.05866260463780448
+        },
+        {
+          "year": 2019,
+          "return": 0.1703610107483169
+        },
+        {
+          "year": 2020,
+          "return": 0.09741724965926024
+        },
+        {
+          "year": 2021,
+          "return": 0.18071432907094143
+        },
+        {
+          "year": 2022,
+          "return": -0.23026666849510247
+        },
+        {
+          "year": 2023,
+          "return": 0.18895822146170382
+        },
+        {
+          "year": 2024,
+          "return": 0.15365144516378892
+        },
+        {
+          "year": 2025,
+          "return": 0.1422316302355
+        },
+        {
+          "year": 2026,
+          "return": 0.0029550380424792078
+        }
+      ],
+      "slip_bps": 10,
+      "order_legs": 624,
+      "total_cost": 5346.067033551724,
+      "exposure": 0.8992692907521496,
+      "backwardation_days": 21,
+      "missing_decisions": 0
+    },
+    "exploratory_2007_2026|20": {
+      "start": "2007-12-04",
+      "end": "2026-10-30",
+      "initial_equity": 50000.0,
+      "final_nav": 151449.73419964037,
+      "total_return": 2.0289946839928072,
+      "cagr": 0.06037378776404467,
+      "volatility": 0.10245996612052198,
+      "sharpe_rf0": 0.6243208677594696,
+      "max_drawdown": -0.2810000712812618,
+      "max_drawdown_peak_date": "2008-05-19",
+      "max_drawdown_trough_date": "2009-05-27",
+      "max_drawdown_recovery_date": "2011-02-11",
+      "max_drawdown_peak_to_trough_sessions": 257,
+      "max_drawdown_trough_to_recovery_sessions": 433,
+      "longest_underwater_sessions": 689,
+      "annual": [
+        {
+          "year": 2007,
+          "return": 0.0003406912608761026
+        },
+        {
+          "year": 2008,
+          "return": -0.12805267403678378
+        },
+        {
+          "year": 2009,
+          "return": -0.022179641480388312
+        },
+        {
+          "year": 2010,
+          "return": 0.14076572417680877
+        },
+        {
+          "year": 2011,
+          "return": 0.07830302234033071
+        },
+        {
+          "year": 2012,
+          "return": 0.12281668733711415
+        },
+        {
+          "year": 2013,
+          "return": 0.14439944438300878
+        },
+        {
+          "year": 2014,
+          "return": 0.14789806954903773
+        },
+        {
+          "year": 2015,
+          "return": -0.08127544979204582
+        },
+        {
+          "year": 2016,
+          "return": 0.08863021316178687
+        },
+        {
+          "year": 2017,
+          "return": 0.16698100549727224
+        },
+        {
+          "year": 2018,
+          "return": -0.06637541545056902
+        },
+        {
+          "year": 2019,
+          "return": 0.1654620860891789
+        },
+        {
+          "year": 2020,
+          "return": 0.08828445890434988
+        },
+        {
+          "year": 2021,
+          "return": 0.18075006385057435
+        },
+        {
+          "year": 2022,
+          "return": -0.23341512797436648
+        },
+        {
+          "year": 2023,
+          "return": 0.18876686775626106
+        },
+        {
+          "year": 2024,
+          "return": 0.1536722869930207
+        },
+        {
+          "year": 2025,
+          "return": 0.14197886446816277
+        },
+        {
+          "year": 2026,
+          "return": -0.0009750092489433371
+        }
+      ],
+      "slip_bps": 20,
+      "order_legs": 620,
+      "total_cost": 9930.797788152562,
+      "exposure": 0.8992241375184454,
+      "backwardation_days": 21,
+      "missing_decisions": 0
+    }
+  }
+}

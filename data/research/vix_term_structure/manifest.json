@@ -1,0 +1,59 @@
+{
+  "source": "FRED/ALFRED VIXCLS, VXVCLS; prices from research snapshot",
+  "downloaded_at_utc": "2026-11-03T19:47:00Z",
+  "research_cutoff": "2026-10-30",
+  "pit_start": "2014-01-31",
+  "exploratory_start": "2007-12-04",
+  "files": {
+    "BIL.csv": {
+      "rows": 4888,
+      "sha256": "214a996be840697e9a660704fb7c720d870cf1420a3e1b3aff3069da0e8e236c",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "IEF.csv": {
+      "rows": 6104,
+      "sha256": "f36dbabfebf629a011d76dd17b68b55a124f4f462b57596c544d809e8984d47b",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "pit_vix_vxv.csv": {
+      "rows": 153,
+      "sha256": "4b8360d140ea235e6af793a8ecb23826e1f85679905738a0a8ca2e54d9b110fa",
+      "max_date": "2026-09-30 00:00:00+00:00"
+    },
+    "SPY.csv": {
+      "rows": 6748,
+      "sha256": "3dc43888acf0337440053e1e71c284ca70e257181eb77801d85898db2cd1161b",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "TLT.csv": {
+      "rows": 6104,
+      "sha256": "e1b33966fe5f4e3bda9f7e1d5ef3935aa7fbeddb984420516823bc04e0a9b403",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "VIXCLS.csv": {
+      "rows": 9609,
+      "sha256": "38e4dee3d14a0ea17d6a3ef86380afb1a6f346a4bcbbe6a8a3a0155996fadd36",
+      "max_date": "2026-10-30 00:00:00+00:00"
+    },
+    "VXVCLS.csv": {
+      "rows": 4934,
+      "sha256": "077f4e45ddee0a890c647ad13b202d5b543c315b8a39381c13585a01e6727dcd",
+      "max_date": "2026-10-30 00:00:00+00:00"
+    }
+  },
+  "audit": {
+    "VIXCLS": {
+      "pit_start": "2014-01-31",
+      "pit_end": "2026-09-30",
+      "alred_coverage": "2014+"
+    },
+    "VXVCLS": {
+      "pit_start": "2014-01-31",
+      "pit_end": "2026-09-30",
+      "pre_2014": "exploratory only, not verified PIT"
+    },
+    "common_vintage": "VIXCLS and VXVCLS from same prior-SPY-session ALFRED vintage",
+    "raw_responses": "per-decision response SHA-256 stored in pit_vix_vxv.csv; raw payload not redistributed due provider terms",
+    "missing_policy": "BIL 100% on missing/invalid pair"
+  }
+}
