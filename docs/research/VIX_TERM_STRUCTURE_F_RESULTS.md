@@ -29,37 +29,37 @@ moving average, no other threshold.
 | VIXCLS | FRED/ALFRED |
 | VXVCLS | FRED/ALFRED |
 | Common vintage | both series from same prior-SPY-session vintage |
-| PIT decision dates | 153, 2014-01-31 to 2026-09-30 |
-| Missing PIT pairs | 0 / 153 |
+| PIT decision dates | 150, 2014-04-30 to 2026-09-30 |
+| Missing PIT pairs | 0 / 150 |
 | Backwardation decisions | 10 |
 | VXV pre-2014 | **exploratory only, not verified PIT** |
 | Raw responses | per-decision SHA-256 in `pit_vix_vxv.csv`; payload not redistributed |
 
-The pair is never mixed across vintages. A missing or invalid pair holds BIL.
+The first three 2014-01/02/03 rows are excluded: VXV ALFRED history begins 2014-04-17, so those rows are not PIT. The pair is never mixed across vintages. A missing or invalid pair holds BIL.
 The PIT sample cannot be extended before 2014 because both ALFRED series lack
 common historical vintages; the 2007-12+ VXV observations are used only in the
 exploratory sample.
 
 ## 3. Results at 5 bps/leg
 
-### PIT: 2014-01-02 to 2026-10-30
+### PIT: 2014-05-01 to 2026-10-30
 
 | Metric | Value |
 |---|---:|
 | Final NAV | $122,879.32 |
-| CAGR | 7.26% |
+| CAGR | 7.06% |
 | Volatility | 10.13% |
 | Sharpe | 0.74 |
-| Max drawdown | **-25.84%** |
+| Max drawdown | **-25.83%** |
 | Peak / trough / recovery | 2021-12-27 / 2022-11-03 / 2024-06-17 |
 | Longest underwater | 620 sessions |
-| Order legs | 410 |
+| Order legs | 402 |
 | Total cost | $1,620.58 |
 | Exposure | 92.4% |
 | Backwardation decisions | 10 |
-| Alpha vs BIL | +5.92%, p=0.025 |
-| Alpha vs SPY | -5.45%, p=0.016 |
-| Bootstrap CAGR 95% CI | +2.46% .. +12.90% |
+| Alpha vs BIL | +5.69%, p=0.035 |
+| Alpha vs SPY | -5.77%, p=0.013 |
+| Bootstrap CAGR 95% CI | +1.05% .. +13.09% |
 
 ### Exploratory: 2007-12-04 to 2026-10-30
 
@@ -81,7 +81,7 @@ State duration (monthly decisions):
 
 | Sample | Backwardation | Normal | Total |
 |---|---:|---:|---:|
-| PIT | 10 | 143 | 153 |
+| PIT | 10 | 140 | 150 |
 | Exploratory | 21 | 206 | 227 |
 
 Only one F rule was pre-registered, so there is no multi-rule BH family. HAC p-values are reported without a multiplicity discount. BIL/SPY benchmarks use an independent buy-and-hold account with cash ex-date dividends, not price-only Close and not dividend reinvestment.
@@ -92,9 +92,9 @@ Only one F rule was pre-registered, so there is no multi-rule BH family. HAC p-v
 
 | Stage | CAGR / DD |
 |---|---:|
-| 2007-2015 | 5.15% / -9.03% |
-| 2016-2020 | 9.37% / -14.93% |
-| 2021-2026 | 6.57% / **-25.84%** |
+| 2007-2015 | 3.03% / -9.01% |
+| 2016-2020 | 9.37% / -14.94% |
+| 2021-2026 | 6.58% / **-25.83%** |
 
 ### Exploratory
 
@@ -108,8 +108,8 @@ Only one F rule was pre-registered, so there is no multi-rule BH family. HAC p-v
 
 | Sample | 1 bps | 3 bps | 5 bps | 10 bps | 20 bps |
 |---|---:|---:|---:|---:|---:|
-| PIT CAGR | 7.39% | 7.32% | 7.26% | 7.11% | 6.81% |
-| PIT MaxDD | -25.71% | -25.81% | -25.84% | -26.01% | -26.34% |
+| PIT CAGR | 7.17% | 7.11% | 7.06% | 6.90% | 6.60% |
+| PIT MaxDD | -25.71% | -25.80% | -25.83% | -25.97% | -26.36% |
 | Exploratory CAGR | 6.70% | 6.63% | 6.57% | 6.39% | 6.04% |
 | Exploratory MaxDD | -27.17% | -27.27% | -27.36% | -27.59% | -28.10% |
 
@@ -119,7 +119,7 @@ Costs do not explain the failure.
 
 | Strategy | CAGR | Max DD |
 |---|---:|---:|
-| F PIT | 7.26% | -25.84% |
+| F PIT | 7.06% | -25.83% |
 | F exploratory | 6.57% | -27.36% |
 | E real-yield shock | 8.76% | -32.18% |
 | D curve/NFCI exploratory | 8.42% | -24.27% |
@@ -135,7 +135,7 @@ return or risk.
 |---|---|
 | Positive excess after costs | Yes |
 | Statistical support vs BIL | Yes (PIT p=0.029) |
-| Max DD <= 15% | **No (-25.84%)** |
+| Max DD <= 15% | **No (-25.83%)** |
 | Not one stage | No: 2021-2026 dominates the failure |
 | Enough exposure/trades | Yes |
 | PIT reliable | Yes for 2014+ common vintages |

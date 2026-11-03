@@ -19,8 +19,11 @@ def test_backwardation_state_and_missing_pair():
 
 def test_pit_pair_has_same_vintage_and_prior_observation():
     p = pd.read_csv(D / "pit_vix_vxv.csv")
-    assert len(p) == 153
+    assert len(p) == 150
     assert p["vintage_date"].notna().all()
+    assert (pd.to_datetime(p["vintage_date"]) >= pd.Timestamp("2014-04-17")).all()
+    assert p["vix_response_sha256"].str.len().eq(64).all()
+    assert p["vxv_response_sha256"].str.len().eq(64).all()
     assert (pd.to_datetime(p["vix_obs"]) <= pd.to_datetime(p["vintage_date"])).all()
     assert (pd.to_datetime(p["vxv_obs"]) <= pd.to_datetime(p["vintage_date"])).all()
     assert (pd.to_datetime(p["vintage_date"]) < pd.to_datetime(p["decision_date"])).all()
@@ -38,10 +41,10 @@ def test_initial_trade_and_raw_open(study=None):
     out = Path("docs/research/vix_term_structure")
     legs = pd.read_csv(out / "trades_pit_2014_2026.csv")
     first = legs.sort_values("date").iloc[0]
-    assert first["ticker"] == "BIL" and first["side"] == "BUY"
+    assert first["side"] == "BUY" and first["date"] == "2014-05-01"
     assert first["cost"] > 0
     nav = pd.read_csv(out / "nav_pit_2014_2026.csv", index_col=0, parse_dates=True)["nav"]
-    assert nav.index.min() == pd.Timestamp("2014-01-02")
+    assert nav.index.min() == pd.Timestamp("2014-05-01")
     assert (legs["notional"] - legs["shares"] * legs["price"]).abs().max() < 1e-8
 
 

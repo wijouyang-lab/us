@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 
 TICKERS = ("SPY", "IEF", "TLT", "BIL")
-START_PIT = "2014-01-02"
+START_PIT = "2014-05-01"
 START_EXPLORE = "2007-12-04"
 END = "2026-10-30"
 BASE_SLIP = 5.0
@@ -141,9 +141,15 @@ def total_return(frame, cal):
     return out
 
 
-def run_case(frames, cal, signals, slip):
+def run_case(frames, cal, signals, slip, initial_target=None):
     acct = Account(frames, slip)
-    acct.trade(cal[0], "BIL", "BUY", int(50000 / acct.px("BIL", cal[0])), acct.px("BIL", cal[0]))
+    if initial_target:
+        nav0 = 50000.0
+        for t, w in initial_target.items():
+            px = acct.px(t, cal[0]); q = int(max(0, nav0 * w) / px)
+            if q > 0: acct.trade(cal[0], t, "BUY", q, px)
+    else:
+        acct.trade(cal[0], "BIL", "BUY", int(50000 / acct.px("BIL", cal[0])), acct.px("BIL", cal[0]))
     me = {d for i, d in enumerate(cal[:-1]) if cal[i + 1].month != d.month}
     pending = None; events = []; durations = []
     for i, dt in enumerate(cal):
@@ -194,7 +200,10 @@ def run(data_dir: Path, out: Path):
                     sig[d] = (float(a.iloc[-1].value), float(b.iloc[-1].value))
         me_set = {cal[i] for i in range(len(cal) - 1) if cal[i + 1].month != cal[i].month}
         for slip in SLIPS:
-            nav, legs, events, expo = run_case(frames, cal, sig, slip)
+            init = None
+            if label.startswith("pit"):
+                init = allocation(*pit_sig[pd.Timestamp("2014-04-30")])
+            nav, legs, events, expo = run_case(frames, cal, sig, slip, init)
             m = metrics(nav); m.update({"slip_bps": slip, "order_legs": len(legs),
                                         "total_cost": sum(x["cost"] for x in legs),
                                         "exposure": expo,
