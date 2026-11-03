@@ -1,5 +1,5 @@
 {
-  "source": "PR438 transition NAV + PR455 QQQ/BIL",
+  "source": "PR438 NAV/ledger + PR455 QQQ/BIL",
   "cutoff": "2026-10-30",
   "files": {
     "BIL.csv": {
@@ -13,6 +13,10 @@
     "transition_daily_nav.csv": {
       "rows": 117312,
       "sha256": "051e66829a57cc81def425f24a8e847fd603b371c467b23455bc32312b889256"
+    },
+    "transition_trade_ledger.csv": {
+      "rows": 768,
+      "sha256": "230414b8fa37933a311019822d1ed86aea54860d3d18c89716afe91762f5f947"
     }
   }
 }
