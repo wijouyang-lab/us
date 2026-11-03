@@ -38,6 +38,8 @@ leverage. 5 bps/leg base; 1/3/5/10/20 bps sensitivity. No threshold/window searc
 | Cross-check | `DGS10` downloaded as a nominal-rate diagnostic, not substituted for PIT |
 | `T10YIE` | not used as the long PIT series |
 
+Benchmark convention: BIL/SPY HAC benchmarks now use total return with ex-date dividends; before this correction they used price-only Close. Alpha vs BIL changed 9.03% -> 7.64%; alpha vs SPY -1.13% -> -2.96%. Max drawdown and NO-GO are unchanged. Only one E rule was pre-registered, so no BH family correction is applied.
+
 No revised full-history value was backfilled into a decision date. A missing or
 invalid signal holds BIL. ALFRED publication dates are availability dates, not
 verified publication minutes; the strategy uses an extra full session lag.
@@ -61,8 +63,8 @@ Raw responses are retained gzip-compressed with SHA-256 in
 | Total cost | $3,871.97 |
 | Exposure | 90.3% |
 | Triggers / missing | 22 / 0 |
-| Alpha vs BIL | +9.03%, p<0.001 |
-| Alpha vs SPY | -1.13%, p=0.587 |
+| Alpha vs BIL | +7.64%, p=0.0009 |
+| Alpha vs SPY | -2.96%, p=0.151 |
 | CAGR bootstrap 95% CI | +4.43% .. +13.58% |
 
 ### Stage-local drawdown

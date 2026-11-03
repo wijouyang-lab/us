@@ -133,6 +133,11 @@ def allocation(change):
     return {"SPY": 0.70, "IEF": 0.15, "TLT": 0.15}
 
 
+def total_return(frame, cal):
+    c = frame.Close.loc[cal]; d = frame.Dividends.loc[cal]
+    return ((c + d) / c.shift(1) - 1).fillna(0)
+
+
 def signal_map(pit):
     return {pd.Timestamp(r.decision_date): float(r.change_63) for r in pit.itertuples()
             if pd.notna(r.change_63) and pd.Timestamp(r.decision_date) <= pd.Timestamp(END)}
@@ -204,8 +209,9 @@ def run(data_dir: Path, out: Path):
                 x = nav[(nav.index >= a) & (nav.index <= b)]
                 m["stages"][name] = metrics(x, float(x.iloc[0])) if len(x) > 3 else {"status": "INSUFFICIENT"}
             r = nav.pct_change(fill_method=None).fillna(0)
-            br = frames["BIL"].Close.loc[cal].pct_change(fill_method=None).fillna(0)
-            sr = frames["SPY"].Close.loc[cal].pct_change(fill_method=None).fillna(0)
+            r.iloc[0] = nav.iloc[0] / 50000.0 - 1
+            br = total_return(frames["BIL"], cal)
+            sr = total_return(frames["SPY"], cal)
             m["hac_bil"] = hac(r - br); m["hac_spy"] = hac(r - sr)
         results[f"E|{slip}"] = m
     # exposure: fraction of NAV in risky legs
