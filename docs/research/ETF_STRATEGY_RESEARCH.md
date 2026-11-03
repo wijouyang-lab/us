@@ -55,11 +55,11 @@ It is not presented as realized historical execution cost.
 
 ## 4. Headline results at 5 bps/leg
 
-| Strategy | Final NAV | CAGR | Vol | Sharpe | Sortino | Calmar | Max DD | Recovery | Trades | Exposure |
+| Strategy | Final NAV | CAGR | Vol | Sharpe | Sortino | Calmar | Max DD | Recovery | Order legs | Exposure |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
 | A Dual Momentum | $131,257.51 | 5.10% | 13.52% | 0.44 | 0.55 | 0.20 | **-25.81%** | 684 sessions | 1,323 | 89.7% |
 | B Trend/Vol | $130,855.98 | 5.08% | 8.63% | 0.62 | 0.80 | 0.31 | **-16.52%** | 636 sessions | 2,863 | 85.4% |
-| C QQQ Transition | $73,066.71 | 1.98% | 1.98% | 1.00 | 0.73 | 0.36 | **-5.46%** | 1,322 sessions | 108 | 0.69% |
+| C QQQ Transition | $73,066.71 | 1.98% | 1.98% | 1.00 | 0.73 | 0.36 | **-5.46%** | 1,322 sessions | 108 (27 round trips) | 0.69% |
 | BIL | $65,536.54 | 1.40% | 0.49% | 2.87 | 鈥?| 鈥?| -0.78% | 鈥?| 鈥?| 100% |
 | SPY | $351,505.57 | 10.56% | 19.66% | 0.61 | 鈥?| 鈥?| -55.19% | 鈥?| 鈥?| 100% |
 
