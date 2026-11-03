@@ -62,9 +62,9 @@ order reserves the same cash pool.
 State:
 
 ```text
-account_state.json   cash, positions, realized_pnl, fees, nav
-orders.json          proposals and terminal states
-ledger.jsonl         append-only fills, dividends, splits, fees
+paper.sqlite         authoritative account, orders, ledger, action events
+account_state.json   optional export, not authoritative
+orders.csv/json      optional export
 daily_nav.csv        date, cash, positions_value, nav
 ```
 

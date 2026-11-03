@@ -1,0 +1,32 @@
+{
+  "source": "SEC company_tickers.json; data.sec.gov submissions/companyfacts",
+  "fetched_at": "2026-11-04",
+  "tickers": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "AMZN",
+    "NVDA",
+    "BRK.B",
+    "JPM",
+    "PLD",
+    "RIVN"
+  ],
+  "files": {
+    "docs/research/sec_fundamentals_snapshot.json": {
+      "bytes": 313000,
+      "sha256": "c86202ea4769ac2d4226ffbb95ebbf437d7d3621dbf32e461d7925da3b80e0b1",
+      "sha256_normalized_lf": "cfd99536c321cf36dfa9630b0bacf6b619110c4872d8f319867a5e38f6ba296f"
+    },
+    "docs/research/sec_sample_facts.json": {
+      "bytes": 47172,
+      "sha256": "ecfc5cfa4ffaa2b30cb433845ffc3ce31a7168cb6330dc8b93d0888d5471677b",
+      "sha256_normalized_lf": "0396236e3bd0e1875cf611b6902b0bd5d7287e680e2cd75a3de82af5de956001"
+    },
+    "docs/research/SEC_FUNDAMENTALS_COVERAGE_AUDIT.md": {
+      "bytes": 5950,
+      "sha256": "fb32d5b61bd7a9d5d42c76812b295d689339a2dba60e5d7271a8239072d39f90",
+      "sha256_normalized_lf": "9879b9b437a94146b9785ce0de66ad30a7959cc9672dac0b7ddf90a60ad0481b"
+    }
+  }
+}

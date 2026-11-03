@@ -6,7 +6,8 @@ PAPER only. No IBKR connection, no real orders.
 - order: propose -> user confirmation -> fill
 - integer shares, long-only, no negative cash
 - fees: IBKR forward-estimate layer, separately from reference price
-- ledger: append-only JSONL
+- authoritative store: SQLite (WAL + BEGIN IMMEDIATE)
+- ledger: append-only table; JSON/CSV are exports only
 - NAV: explicit prices required; missing price fails closed
 
 ```bash
