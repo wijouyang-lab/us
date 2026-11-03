@@ -1,0 +1,227 @@
+{
+  "label": "TRANSITION_VS_RISK_MATCHED_PASSIVE",
+  "config": "w25_c10_all_legs",
+  "start": "2007-05-30",
+  "end": "2026-10-30",
+  "target_vol": 0.022661480533211834,
+  "matched_weight": 0.10533682247623799,
+  "vol_error": 6.229084828467124e-07,
+  "transition": {
+    "start": "2007-05-30",
+    "end": "2026-10-30",
+    "final_nav": 71489.48264626798,
+    "cagr": 0.01858118805194331,
+    "volatility": 0.022659168127248844,
+    "sharpe_rf0": 0.8248080990384755,
+    "sharpe_excess_bil": 0.2857848859028275,
+    "max_drawdown": -0.06374425980421206,
+    "max_drawdown_peak_date": "2020-03-04",
+    "max_drawdown_trough_date": "2020-03-16",
+    "max_drawdown_recovery_date": "2023-04-20",
+    "max_drawdown_peak_to_trough_sessions": 8,
+    "max_drawdown_trough_to_recovery_sessions": 780,
+    "longest_underwater_sessions": 1322,
+    "total_cost": 1901.213310377054,
+    "order_legs": 128,
+    "excess_vs_bil": {
+      "excess_annual": 0.006333786702928171,
+      "t": 1.75771881192001,
+      "p": 0.07879536537150009,
+      "ci_low": -0.0007289026496303199,
+      "ci_high": 0.013396476055486663,
+      "n": 4888
+    },
+    "bootstrap": {
+      "method": "circular_block_bootstrap",
+      "seed": 42,
+      "block_sessions": 20,
+      "samples": 500,
+      "low": -0.000703122003451148,
+      "high": 0.013602968697682953
+    },
+    "stages": {
+      "2007-2015": {
+        "cagr": 0.008607563152974063,
+        "max_drawdown": -0.036467583205264886
+      },
+      "2016-2020": {
+        "cagr": 0.021985920901174794,
+        "max_drawdown": -0.06374425980421206
+      },
+      "2021-2026": {
+        "cagr": 0.06338013368153694,
+        "max_drawdown": -0.019461841365799093
+      }
+    }
+  },
+  "risk_matched": {
+    "start": "2007-05-30",
+    "end": "2026-10-30",
+    "final_nav": 88184.62158707088,
+    "cagr": 0.029649480103137282,
+    "volatility": 0.022660248059769756,
+    "sharpe_rf0": 1.3023297124896986,
+    "sharpe_excess_bil": 0.7564404645666519,
+    "max_drawdown": -0.05548821816989691,
+    "max_drawdown_peak_date": "2008-08-14",
+    "max_drawdown_trough_date": "2009-03-09",
+    "max_drawdown_recovery_date": "2009-11-09",
+    "max_drawdown_peak_to_trough_sessions": 141,
+    "max_drawdown_trough_to_recovery_sessions": 171,
+    "longest_underwater_sessions": 339,
+    "order_legs": 397,
+    "total_cost": 320.1706375232528,
+    "dividend_cash": 18026.246,
+    "weight": 0.10533682247623799,
+    "target_vol": 0.022661480533211834,
+    "actual_vol": 0.02266210344169468,
+    "vol_error": 6.229084828467124e-07,
+    "avg_risky": 0.10454867424163342,
+    "excess_vs_bil": {
+      "excess_annual": 0.017116502093435005,
+      "t": 3.6871022201547237,
+      "p": 0.00022682226043873132,
+      "ci_low": 0.008017664551110288,
+      "ci_high": 0.02621533963575972,
+      "n": 4888
+    },
+    "bootstrap": {
+      "method": "circular_block_bootstrap",
+      "seed": 42,
+      "block_sessions": 20,
+      "samples": 500,
+      "low": 0.008188384032203844,
+      "high": 0.02588239331817312
+    },
+    "stages": {
+      "2007-2015": {
+        "cagr": 0.017419612199395473,
+        "max_drawdown": -0.05548821816989713
+      },
+      "2016-2020": {
+        "cagr": 0.06449505593920968,
+        "max_drawdown": -0.03023190312363533
+      },
+      "2021-2026": {
+        "cagr": 0.10244197257895693,
+        "max_drawdown": -0.03756756668121497
+      }
+    }
+  },
+  "G_10bps": {
+    "start": "2007-05-30",
+    "end": "2026-10-30",
+    "initial_equity": 50000.0,
+    "final_nav": 115525.16892916108,
+    "total_return": 1.3105033785832219,
+    "cagr": 0.04406819171688836,
+    "volatility": 0.04314968510479236,
+    "sharpe_rf0": 1.0222565892054292,
+    "sharpe_excess_bil": 0.7313603531850527,
+    "max_drawdown": -0.11412865489951818,
+    "max_drawdown_peak_date": "2007-10-31",
+    "max_drawdown_trough_date": "2009-03-09",
+    "max_drawdown_recovery_date": "2009-12-28",
+    "max_drawdown_peak_to_trough_sessions": 339,
+    "max_drawdown_trough_to_recovery_sessions": 204,
+    "longest_underwater_sessions": 542,
+    "annual": [
+      {
+        "year": 2007,
+        "return": 0.04035784076527227
+      },
+      {
+        "year": 2008,
+        "return": -0.08227769060522849
+      },
+      {
+        "year": 2009,
+        "return": 0.09762226410539943
+      },
+      {
+        "year": 2010,
+        "return": 0.04103944768626144
+      },
+      {
+        "year": 2011,
+        "return": 0.007740092186902636
+      },
+      {
+        "year": 2012,
+        "return": 0.035358827293413775
+      },
+      {
+        "year": 2013,
+        "return": 0.06430614193052442
+      },
+      {
+        "year": 2014,
+        "return": 0.03575566449652312
+      },
+      {
+        "year": 2015,
+        "return": 0.019128832987551858
+      },
+      {
+        "year": 2016,
+        "return": 0.015578931547841846
+      },
+      {
+        "year": 2017,
+        "return": 0.06453366880345657
+      },
+      {
+        "year": 2018,
+        "return": 0.016623889762574784
+      },
+      {
+        "year": 2019,
+        "return": 0.08823037556489721
+      },
+      {
+        "year": 2020,
+        "return": 0.09170407301543926
+      },
+      {
+        "year": 2021,
+        "return": 0.049676989258234494
+      },
+      {
+        "year": 2022,
+        "return": -0.05876091222444846
+      },
+      {
+        "year": 2023,
+        "return": 0.1364371044845154
+      },
+      {
+        "year": 2024,
+        "return": 0.09036013488419758
+      },
+      {
+        "year": 2025,
+        "return": 0.07451902565870272
+      },
+      {
+        "year": 2026,
+        "return": 0.05185481079968013
+      }
+    ],
+    "slip_bps": 10,
+    "order_legs": 430,
+    "total_cost": 449.2465553817863,
+    "commission": 152.0785,
+    "sec_fee": 2.306289681941986,
+    "taf_fee": 0.16932,
+    "cat_fee": 0.009285,
+    "clearing_fee": 0.619,
+    "exchange_fee": 0.3095,
+    "slippage": 293.75466069984435,
+    "dividend_cash": 20694.870000000006,
+    "avg_cash_ratio": 0.0019406633590277804,
+    "avg_risky_ratio": 0.19960902165702882,
+    "asset": "QQQ",
+    "rebalanced": true
+  },
+  "note": "Weight solved only from volatility; CAGR/MaxDD not used. Ex-post descriptive comparison, not OOS."
+}
