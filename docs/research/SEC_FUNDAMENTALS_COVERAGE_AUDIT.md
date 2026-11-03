@@ -184,6 +184,8 @@ Result: **0 OK metrics with missing provenance.**
 tests/test_sec_client.py        3 passed
 tests/test_sec_fundamentals.py  9 passed
 tests/test_sec_p21.py          15 passed
+tests/test_dcf.py               5 passed
+tests/test_sic_industry.py      4 passed
 ```
 
 P2.1 tests include same-day 16:00/20:00 acceptance, filed-only same-day
@@ -192,7 +194,6 @@ EV, ROIC/interest matching, and GARP leverage ratio.
 
 ## 14. Still missing
 
-- SIC-based industry classification;
 - full-market ingestion;
 - bank/insurer ROIC model;
 - complete interest-expense tag coverage;
