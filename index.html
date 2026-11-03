@@ -123,7 +123,33 @@
     <div id="pfTxns"></div>
   </section>
 
-  <!-- 1.55 已止损记录（近 30 天）：纯前端，只读 portfolio.transactions 的 SELL + Stop Loss -->
+  <!-- 1.52 QQQ TRANSITION independent SIMULATED account (not Portfolio-50000) -->
+  <section class="card sec qqq-paper" id="qqqPaperSec" style="display:none">
+    <div class="sec-h">
+      <h2>QQQ TRANSITION Simulated Account <span class="sim-badge">SIMULATED - HISTORICAL REPLAY</span></h2>
+      <span class="sec-sub" id="qqqPaperSub">Independent $50,000 virtual account - 25% QQQ sleeve - BIL idle - 10 bps/leg</span>
+    </div>
+    <div class="qqq-note" id="qqqPaperNote"></div>
+    <div id="qqqPaperSummary"></div>
+    <div class="qqq-tables">
+      <div><h3>Recent simulated fills</h3><div id="qqqPaperFills"></div></div>
+      <div><h3>Recent signals</h3><div id="qqqPaperSignals"></div></div>
+    </div>
+  </section>
+
+  <section class="card sec qqq-paper qqq-prospective" id="qqqProspectiveSec" style="display:none">
+    <div class="sec-h">
+      <h2>QQQ TRANSITION Prospective Simulation <span class="sim-badge">PROSPECTIVE SIMULATION - NOT STARTED</span></h2>
+      <span class="sec-sub" id="qqqProspectiveSub">Separate forward-only account; no historical fills migrated; no IBKR.</span>
+    </div>
+    <div class="qqq-note" id="qqqProspectiveNote"></div>
+    <div id="qqqProspectiveSummary"></div>
+    <div class="qqq-tables">
+      <div><h3>Recent prospective fills</h3><div id="qqqProspectiveFills"></div></div>
+      <div><h3>Recent prospective signals</h3><div id="qqqProspectiveSignals"></div></div>
+    </div>
+  </section>
+
   <section class="card sec" id="stoppedCard">
     <div class="sec-h">
       <h2>已止损记录（近 30 天）</h2>

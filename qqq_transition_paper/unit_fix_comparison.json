@@ -1,0 +1,31 @@
+{
+  "before_unit_fix": {
+    "nav": 71489.52066308315,
+    "return_pct": 0.429790413261663,
+    "max_drawdown": -0.06374440361084688,
+    "total_cost": 1901.2134923079404,
+    "bil_units": 779.6022142010937,
+    "qqq_units": 0.0,
+    "fill_count": 128,
+    "trade_count": 32,
+    "problem": "SELL_BIL/BUY_QQQ/BUY_BIL quantity fields stored USD notional instead of ETF shares"
+  },
+  "after_unit_fix": {
+    "nav": 71490.9502845579,
+    "return_pct": 0.42981900569115794,
+    "max_drawdown": -0.06374578242225337,
+    "total_cost": 1900.3285103100977,
+    "bil_units": 779.6178044030819,
+    "qqq_units": 0.0,
+    "fill_count": 128,
+    "trade_count": 32
+  },
+  "delta": {
+    "nav": 1.42962147474,
+    "return_pct": 0.000028592429,
+    "max_drawdown": -0.000001378811,
+    "total_cost": -0.88498199784,
+    "bil_units": 0.015590201988
+  },
+  "reconciliation": "Legacy v1 files retained under qqq_transition_paper/legacy_v1/. New fills enforce notional = quantity * fill_price."
+}
