@@ -1,0 +1,153 @@
+{
+  "downloaded_at_utc": "2026-11-03T17:14:00Z",
+  "research_cutoff": "2026-10-30",
+  "primary_pit_start": "2014-01-27",
+  "files": {
+    "BAMLH0A0HYM2.csv": {
+      "sha256": "dc51842be1fba9a654e5e4ccbc6c6b0701ac821fe69ef912a25b84f5294649fa",
+      "rows": 792,
+      "columns": [
+        "observation_date",
+        "BAMLH0A0HYM2"
+      ]
+    },
+    "BIL.csv": {
+      "sha256": "145106b5ff32a5aef6d2ae384a4efd933a40b7444976d2b1f362a040f2769269",
+      "rows": 4888,
+      "columns": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume",
+        "Dividends",
+        "Stock Splits",
+        "Capital Gains"
+      ]
+    },
+    "IEF.csv": {
+      "sha256": "c742f8ed82f2e4523f9f8516dcfd530572ab44fa4a25a8a6714262c33d072d00",
+      "rows": 6104,
+      "columns": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume",
+        "Dividends",
+        "Stock Splits",
+        "Capital Gains"
+      ]
+    },
+    "NFCI.csv": {
+      "sha256": "0f75976dbf279a1eec596df447f6478f27d94432ecc5dfc8558a7b34d45a39d7",
+      "rows": 2912,
+      "columns": [
+        "observation_date",
+        "NFCI"
+      ]
+    },
+    "NFCICREDIT.csv": {
+      "sha256": "ae7edf9f5b60aab626b2ebb1fa37489093b2245faef36892defd7e161bb568fc",
+      "rows": 2912,
+      "columns": [
+        "observation_date",
+        "NFCICREDIT"
+      ]
+    },
+    "pit_NFCI.csv": {
+      "sha256": "7da0d7170017b6eae4de575cd1c4a4422b33fcb634e0ccdfead9fffd69a5924e",
+      "rows": 153,
+      "columns": [
+        "vintage_date",
+        "observation_date",
+        "value"
+      ]
+    },
+    "pit_T10Y3M.csv": {
+      "sha256": "ae3ea1a68b320fa85b71c66047dc894f6a1dc90c87d3db12069b409e0588ae9a",
+      "rows": 153,
+      "columns": [
+        "vintage_date",
+        "observation_date",
+        "value"
+      ]
+    },
+    "SPY.csv": {
+      "sha256": "f9a0c42a83be9debb206f96a1e100fb19a90a59d2859fd7b7cf5b1d22c8cccd4",
+      "rows": 6748,
+      "columns": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume",
+        "Dividends",
+        "Stock Splits",
+        "Capital Gains"
+      ]
+    },
+    "T10Y3M.csv": {
+      "sha256": "bb9c6f58225adaeee53d1df2d1a06709cec091186e5415b6e7d5a088f9809997",
+      "rows": 11696,
+      "columns": [
+        "observation_date",
+        "T10Y3M"
+      ]
+    },
+    "TLT.csv": {
+      "sha256": "d396bf01a4bbbec5b33d7f9153dd2bf627dee13f446216f9a79c78be267b3739",
+      "rows": 6104,
+      "columns": [
+        "Date",
+        "Open",
+        "High",
+        "Low",
+        "Close",
+        "Adj Close",
+        "Volume",
+        "Dividends",
+        "Stock Splits",
+        "Capital Gains"
+      ]
+    }
+  },
+  "audit": {
+    "T10Y3M": {
+      "source": "FRED current + ALFRED vintages",
+      "pit_start": "2014-01-27",
+      "pit_end": "2026-09-28",
+      "release": "daily Treasury; one-session conservative lag",
+      "pre_2014_pit": false,
+      "pit_verified": false,
+      "pit_status": "PIT_UNVERIFIED"
+    },
+    "NFCI": {
+      "source": "FRED current + ALFRED vintages",
+      "pit_start": "2014-01-27",
+      "pit_end": "2026-09-28",
+      "release": "Wednesday 08:30 ET, data through prior Friday; holiday -> Thursday",
+      "pre_2014_pit": false,
+      "revisions": "handled by ALFRED vintage; no forward revision use",
+      "pit_verified": false,
+      "pit_status": "PIT_UNVERIFIED"
+    },
+    "NFCICREDIT": {
+      "used": false,
+      "reason": "not independently PIT-audited; diagnostic only"
+    },
+    "BAMLH0A0HYM2": {
+      "used": false,
+      "rows": 792,
+      "min": "2023-11-03",
+      "reason": "only ~3 years of current FRED history; cannot represent 2007 credit stress"
+    },
+    "note": "ALFRED vintage dates are conservative availability probes, not verified actual release timestamps. Primary PIT claims are withheld."
+  }
+}
