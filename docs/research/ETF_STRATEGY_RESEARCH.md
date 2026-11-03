@@ -1,4 +1,4 @@
-﻿# Low-Frequency ETF Strategy Research
+# Low-Frequency ETF Strategy Research
 
 Date: 2026-11-03
 Branch: `research/low-frequency-etf-strategies`
@@ -45,7 +45,7 @@ are evaluation windows, not a fitted train/validation/test exercise:
 Assumed **IBKR Pro Tiered**:
 
 - commission = max($0.35, min($0.0035/share, 1% of trade value));
-- SEC fee on sells = 0.0000278 脳 notional;
+- SEC fee on sells = 0.0000278 × notional;
 - FINRA TAF on sells = min($0.000166/share, $8.30);
 - exchange/clearing = $0.000003/share;
 - base slippage = **5 bps per leg**, with 1/3/10/20 bps sensitivity.
@@ -57,14 +57,15 @@ It is not presented as realized historical execution cost.
 
 | Strategy | Final NAV | CAGR | Vol | Sharpe | Sortino | Calmar | Max DD | Recovery | Order legs | Exposure |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| A Dual Momentum | $131,257.51 | 5.10% | 13.52% | 0.44 | 0.55 | 0.20 | **-25.81%** | 684 sessions | 1,323 | 89.7% |
-| B Trend/Vol | $130,855.98 | 5.08% | 8.63% | 0.62 | 0.80 | 0.31 | **-16.52%** | 636 sessions | 2,863 | 85.4% |
+| A Dual Momentum | $161,098.96 | 6.21% | 13.52% | 0.51 | 0.65 | 0.24 | **-25.60%** | 633 sessions | 738 | 89.6% |
+| B Trend/Vol | $160,857.37 | 6.20% | 8.63% | 0.74 | 0.96 | 0.41 | **-15.18%** | 588 sessions | 1,557 | 85.4% |
 | C QQQ Transition | $73,066.71 | 1.98% | 1.98% | 1.00 | 0.73 | 0.36 | **-5.46%** | 1,322 sessions | 108 (27 round trips) | 0.69% |
-| BIL | $65,536.54 | 1.40% | 0.49% | 2.87 | 鈥?| 鈥?| -0.78% | 鈥?| 鈥?| 100% |
-| SPY | $351,505.57 | 10.56% | 19.66% | 0.61 | 鈥?| 鈥?| -55.19% | 鈥?| 鈥?| 100% |
+| BIL | $65,536.54 | 1.40% | 0.49% | 2.87 | — | — | -0.78% | — | — | 100% |
+| SPY | $351,505.57 | 10.56% | 19.66% | 0.61 | — | — | -55.19% | — | — | 100% |
 
-A and B both fail the 15% drawdown limit at the base cost. C passes drawdown but
-produces only a small excess return over BIL.
+A and B both fail the 15% drawdown limit at the base cost. B misses by only
+0.18 percentage points; C passes drawdown but produces only a small excess over
+BIL.
 
 ## 5. Costs and cost sensitivity
 
@@ -72,22 +73,23 @@ produces only a small excess return over BIL.
 
 | Strategy | Commission | SEC | TAF | Exchange | Slippage | Total |
 |---|---:|---:|---:|---:|---:|---:|
-| A | $1,524.57 | $457.81 | $32.74 | $1.83 | $16,483.53 | **$18,502.77** |
-| B | $2,019.28 | $500.31 | $42.86 | $3.99 | $18,011.06 | **$20,575.41** |
-| C | $67.02 | $21.41 | $1.61 | $0.14 | $769.86 | **$859.82** |
+| A | $509.45 | $111.93 | $8.40 | $0.31 | $4,048.96 | **$4,679.05** |
+| B | $774.23 | $122.42 | $10.87 | $0.40 | $4,425.32 | **$5,333.24** |
+| C | $67.02 | $21.41 | $1.47 | $0.05 | $769.86 | **$859.82** |
 
-Monthly full rebalancing makes A/B costly; C's 25% sleeve has low turnover.
-
-### CAGR across slippage assumptions
+### CAGR and max DD across slippage assumptions
 
 | Strategy | 1 bps | 3 bps | 5 bps | 10 bps | 20 bps |
 |---|---:|---:|---:|---:|---:|
-| A | 6.12% | 5.61% | 5.10% | 3.85% | 1.40% |
-| B | 6.10% | 5.59% | 5.08% | 3.83% | 1.37% |
-| C | 2.03% | 2.00% | 1.98% | 1.90% | 1.76% |
+| A CAGR | 6.43% | 6.33% | 6.21% | 5.94% | 5.41% |
+| A MaxDD | -25.5% | -25.6% | -25.6% | -25.6% | -25.9% |
+| B CAGR | 6.41% | 6.31% | 6.20% | 5.94% | 5.39% |
+| B MaxDD | -14.9% | -15.0% | -15.2% | -15.7% | -16.5% |
+| C CAGR | 2.03% | 2.00% | 1.98% | 1.90% | 1.76% |
+| C MaxDD | -5.4% | -5.5% | -5.5% | -5.5% | -5.6% |
 
-A/B remain above BIL at 5 bps but fail risk. At 20 bps their CAGR is only ~1.4%,
-equal to BIL. C is not cost-fragile but has insufficient alpha.
+B is within 15% only at 1–3 bps slippage, not at the pre-registered 5 bps base.
+No lower-slippage assumption is substituted for the decision.
 
 ## 6. Statistical tests
 
@@ -96,60 +98,62 @@ excess return; p-values BH-adjusted across A/B/C.
 
 | Strategy | vs | Alpha | HAC t | raw p | BH q | 95% CI |
 |---|---|---:|---:|---:|---:|---:|
-| A | BIL | +4.50% | 1.64 | 0.101 | 0.101 | -0.88%..+9.88% |
-| B | BIL | +3.94% | 2.34 | 0.019 | 0.057 | +0.65%..+7.23% |
-| C | BIL | +0.58% | 1.86 | 0.063 | 0.095 | -0.03%..+1.20% |
-| A | SPY | -6.10% | -1.85 | 0.065 | 鈥?| -12.57%..+0.38% |
-| B | SPY | -6.65% | -2.10 | 0.036 | 鈥?| -12.88%..-0.43% |
-| C | SPY | -10.01% | -2.69 | 0.007 | 鈥?| -17.31%..-2.71% |
+| A | BIL | +5.55% | 2.02 | 0.043 | 0.063 | +0.17%..+10.94% |
+| B | BIL | +5.00% | 2.97 | 0.003 | **0.009** | +1.70%..+8.30% |
+| C | BIL | +0.58% | 1.86 | 0.063 | 0.063 | -0.03%..+1.20% |
+| A | SPY | -5.04% | -1.52 | 0.127 | — | -11.52%..+1.44% |
+| B | SPY | -5.59% | -1.76 | 0.078 | — | -11.81%..+0.63% |
+| C | SPY | -10.01% | -2.69 | 0.007 | — | -17.31%..-2.71% |
 
-No strategy has BH q < 0.05 versus BIL. B is closest (q=0.057) but fails the
-drawdown criterion. C's alpha confidence interval includes zero.
+B has a statistically supported excess over BIL at the 5% BH threshold. It still
+fails the 15% drawdown gate. A does not survive BH. C's alpha CI includes zero.
 
 Daily block bootstrap (20-session circular blocks, 500 samples) CAGR CI:
 
 | Strategy | 2.5% | 97.5% |
 |---|---:|---:|
-| A | -0.46% | 10.38% |
-| B | +1.84% | +8.56% |
+| A | +0.57% | +11.55% |
+| B | +2.90% | +9.77% |
 | C | +1.32% | +2.67% |
 
 ## 7. Stage stability
 
 | Strategy | 2007-2015 CAGR / DD | 2016-2020 CAGR / DD | 2021-2026 CAGR / DD |
 |---|---:|---:|---:|
-| A | 3.12% / -25.8% | 4.65% / -19.9% | 8.83% / -20.1% |
-| B | 3.37% / -11.4% | 6.55% / -12.7% | 6.58% / -16.5% |
+| A | 4.26% / -25.6% | 5.68% / -19.0% | 9.97% / -18.8% |
+| B | 4.52% / -10.9% | 7.66% / -12.0% | 7.68% / -15.2% |
 | C | 0.95% / -3.6% | 1.08% / -5.5% | 4.31% / -1.6% |
 
-A has a 25.8% drawdown in the first period. B breaches 15% in 2021-2026. C is
-the most stable by drawdown, but its recent 4.31% CAGR is not enough to prove a
-statistically reliable excess over BIL, and 2021+ is not a pristine holdout
-because QQQ reversal had been explored before.
+A has unacceptable drawdown in every period. B exceeds 15% only in 2021-2026
+(-15.18%) and is otherwise within the limit. C is stable by drawdown but its
+recent return is low, and 2021+ is not pristine for QQQ reversal.
 
 ## 8. Decision against the seven gates
 
 | Gate | A | B | C |
 |---|---|---|---|
 | Positive excess after IBKR costs + 5 bps slip | Yes | Yes | Yes, small |
-| Statistical support vs BIL | No (q=.101) | No (q=.057) | No (q=.095) |
-| Max DD <= 15% | **No (-25.8%)** | **No (-16.5%)** | Yes (-5.5%) |
+| Statistical support vs BIL | No (q=.063) | **Yes (q=.009)** | No (q=.063) |
+| Max DD <= 15% | **No (-25.6%)** | **No (-15.18%)** | Yes (-5.46%) |
 | Not one period | No | No (2021+ DD) | Mostly stable, but return low |
-| Not a few trades | No (monthly concentration) | No (few assets) | No (108 trades, low exposure) |
+| Not a few trades | No (monthly concentration) | No (few assets) | No (27 round trips, low exposure) |
 | Reproducible NAV/orders | Yes | Yes | Yes |
 | Failures documented | Yes | Yes | Yes |
 
-Final: **FAILED** for A/B, **FAILED** for C (statistical and return gates).
-There is no GO candidate and therefore no Paper validation plan yet.
+Final: **FAILED** for A and B; **FAILED** for C (statistical and return gates).
+No GO candidate and therefore no Paper validation plan yet.
+
+B is the strongest candidate: it has a significant excess over BIL and a CAGR of
+6.20%, but its 5 bps base-case drawdown is -15.18%, just outside the 15% target.
+It cannot be promoted by changing the slippage assumption or re-optimizing.
 
 ## 9. What this does and does not prove
 
-- A/B produce attractive long-run CAGR versus BIL, but with unacceptable
-  drawdowns and cost/turnover burdens.
-- B's HAC alpha is close to significance before BH (p=.019) but not after
-  (q=.057), and it still fails the 15% DD gate.
-- C is a low-risk, low-return sleeve; it does not yet demonstrate a reliable
-  excess over cash, and its recent period is not untouched data.
+- A/B produce attractive long-run CAGR versus BIL, but A has unacceptable
+  drawdown; B is just outside the drawdown gate.
+- B's HAC alpha survives BH (q=.009), but risk control fails at the base cost.
+- C is a low-risk, low-return sleeve; it does not demonstrate a reliable excess
+  over cash, and its recent period is not untouched data.
 - No result here is a deployable alpha. No parameter change was made to rescue
   any candidate.
 
@@ -170,6 +174,8 @@ These are proposals only. They are not results and must be frozen before testing
 data/research/etf_strategy_study/{SPY,QQQ,IWM,EFA,EEM,TLT,IEF,GLD,DBC,BIL}.csv
 data/research/etf_strategy_study/manifest.json
 docs/research/etf_strategy_study/results.json
+docs/research/etf_strategy_study/metrics_summary.csv
+docs/research/etf_strategy_study/stage_summary.csv
 docs/research/etf_strategy_study/trades_base5.csv
 docs/research/etf_strategy_study/nav_A.csv
 docs/research/etf_strategy_study/nav_B.csv

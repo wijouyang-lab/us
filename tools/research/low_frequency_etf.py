@@ -214,15 +214,22 @@ def run_A_B(frames, cal, kind, slip):
         if pending is not None:
             target = pending; pending = None
             nav_open = acct.nav(dt, True)
-            acct.liquidate(dt)
+            prices = {t: acct.px(t, dt) for t in set(list(acct.shares) + list(target))}
+            desired = {}
             for t, w in target.items():
-                if w <= 0:
-                    continue
-                cash = max(acct.cash, 0.0)
-                px = acct.px(t, dt)
-                qty = int(max(0, min(cash, nav_open * w)) / px)
-                if qty > 0:
-                    acct.trade(dt, t, "BUY", qty, px)
+                desired[t] = int(max(0.0, nav_open * w) / prices[t]) if w > 0 else 0
+            deltas = {t: desired.get(t, 0) - acct.shares.get(t, 0.0)
+                      for t in set(list(acct.shares) + list(desired))}
+            # sells first, then buys; no leverage
+            for t, d in deltas.items():
+                if d < -1e-9:
+                    acct.trade(dt, t, "SELL", -d, prices[t])
+            for t, d in deltas.items():
+                if d > 1e-9:
+                    px = prices[t]
+                    qty = min(d, int(max(acct.cash, 0.0) / px))
+                    if qty > 0:
+                        acct.trade(dt, t, "BUY", qty, px)
             # residual cash remains; no leverage
         nav_close = acct.nav(dt)
         risky = sum(sh * float(frames[t].AdjClose.loc[dt]) for t, sh in acct.shares.items() if t != BIL)
