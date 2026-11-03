@@ -46,6 +46,7 @@ def load(path, ticker):
         "Close": pd.to_numeric(d[cols["close"]], errors="coerce"),
         "Volume": pd.to_numeric(d[cols["volume"]], errors="coerce"),
         "AdjClose": pd.to_numeric(d[cols["adj_close"]], errors="coerce"),
+        "Dividends": pd.to_numeric(d[cols["dividends"]], errors="coerce").fillna(0.0),
     }).dropna(subset=["Date"]).sort_values("Date")
     if out.Date.duplicated().any():
         raise DataError(f"{ticker}: duplicate dates")
@@ -78,7 +79,8 @@ def metrics(nav):
     r = nav.pct_change().dropna()
     years = max((nav.index[-1] - nav.index[0]).days / 365.25, 1e-9)
     eq = nav / nav.iloc[0]
-    dd = eq / eq.cummax() - 1
+    cum = eq.cummax()
+    dd = eq / cum - 1
     vol = float(r.std(ddof=1) * np.sqrt(252))
     mean = float(r.mean() * 252)
     downside = r[r < 0]
@@ -86,12 +88,21 @@ def metrics(nav):
     mdd = float(dd.min())
     cagr = float(eq.iloc[-1] ** (1 / years) - 1)
     calmar = cagr / abs(mdd) if mdd < 0 else None
-    # recovery: longest peak-to-recovery in sessions
-    peak = eq.cummax(); under = eq < peak
+
+    trough_date = dd.idxmin()
+    trough_pos = nav.index.get_loc(trough_date)
+    peak_date = eq.iloc[:trough_pos + 1].idxmax()
+    peak_pos = nav.index.get_loc(peak_date)
+    after = eq.iloc[trough_pos:]
+    rec = after[after >= eq.loc[peak_date]]
+    recovery_date = rec.index[0] if len(rec) else None
+    recovery_pos = nav.index.get_loc(recovery_date) if recovery_date is not None else None
+    under = (eq < cum).to_numpy()
     longest = cur = 0
     for u in under:
         cur = cur + 1 if u else 0
         longest = max(longest, cur)
+
     annual = []; prev = float(nav.iloc[0])
     for y, g in nav.groupby(nav.index.year):
         annual.append({"year": int(y), "return": float(g.iloc[-1]) / prev - 1}); prev = float(g.iloc[-1])
@@ -99,7 +110,13 @@ def metrics(nav):
             "final_nav": float(nav.iloc[-1]), "total_return": float(eq.iloc[-1] - 1),
             "cagr": cagr, "volatility": vol, "sharpe_rf0": mean / vol if vol else None,
             "sortino": sortino, "calmar": calmar, "max_drawdown": mdd,
-            "max_drawdown_recovery_sessions": int(longest), "annual": annual}
+            "max_drawdown_peak_date": str(peak_date.date()),
+            "max_drawdown_trough_date": str(trough_date.date()),
+            "max_drawdown_recovery_date": str(recovery_date.date()) if recovery_date is not None else None,
+            "max_drawdown_peak_to_trough_sessions": int(trough_pos - peak_pos),
+            "max_drawdown_trough_to_recovery_sessions": (int(recovery_pos - trough_pos)
+                                                         if recovery_pos is not None else None),
+            "longest_underwater_sessions": int(longest), "annual": annual}
 
 
 def hac_alpha(excess):
@@ -133,10 +150,12 @@ class Account:
     def __init__(self, frames, cal, slip_bps):
         self.f = frames; self.cal = cal; self.slip = slip_bps
         self.cash = 50000.0; self.shares = {}; self.legs = []; self.navs = []
-        self.turnover = 0.0; self.risky_exposure = 0.0
+        self.turnover = 0.0; self.risky_exposure = 0.0; self.dividend_cash = 0.0
 
     def px(self, t, dt):
-        return float(self.f[t].AdjOpen.loc[dt])
+        # Raw Open is the tradable historical reference; adjusted prices are
+        # used only for total-return NAV marks.
+        return float(self.f[t].Open.loc[dt])
 
     def trade(self, dt, ticker, side, shares, price):
         shares = abs(float(shares))
@@ -154,10 +173,18 @@ class Account:
         self.legs.append({"date": dt.date().isoformat(), "ticker": ticker, "side": side,
                           "shares": shares, "price": price, "notional": notional, **c})
 
+    def credit_dividends(self, dt):
+        # Shares held at the prior close are entitled to an ex-date dividend.
+        for t, sh in self.shares.items():
+            div = float(self.f[t].Dividends.loc[dt]) if dt in self.f[t].index else 0.0
+            if sh > 0 and div > 0:
+                self.cash += sh * div
+                self.dividend_cash += sh * div
+
     def nav(self, dt, open_=False):
         v = self.cash
         for t, sh in self.shares.items():
-            p = float(self.f[t].AdjOpen.loc[dt] if open_ else self.f[t].AdjClose.loc[dt])
+            p = float(self.f[t].Open.loc[dt] if open_ else self.f[t].Close.loc[dt])
             v += sh * p
         return v
 
@@ -211,6 +238,7 @@ def run_A_B(frames, cal, kind, slip):
     bpx = acct.px(BIL, cal[0]); acct.trade(cal[0], BIL, "BUY", int(50000 / bpx), bpx)
     me = month_end_dates(cal); pending = None
     for i, dt in enumerate(cal):
+        acct.credit_dividends(dt)
         if pending is not None:
             target = pending; pending = None
             nav_open = acct.nav(dt, True)
@@ -263,8 +291,9 @@ def run_C(frames, cal, slip):
     acct.shares[BIL] = float(total_bil)
     q_units = 0.0; pending = None; exit_idx = None; entry_idx = None; sleeve_units = float(sleeve)
     for i, dt in enumerate(cal):
+        acct.credit_dividends(dt)
         if exit_idx == i and q_units > 0:
-            px = float(q.AdjOpen.loc[dt])
+            px = float(q.Open.loc[dt])
             acct.trade(dt, "QQQ", "SELL", q_units, px)
             net = acct.cash
             bpx2 = acct.px(BIL, dt)
@@ -312,13 +341,16 @@ def block_bootstrap_ci(nav, n=500, block=20):
 
 
 def run(data_dir: Path, out_dir: Path):
+    out_dir.mkdir(parents=True, exist_ok=True)
     frames = {t: load(data_dir / f"{t}.csv", t) for t in TICKERS + (BIL,)}
-    cal = frames["SPY"].index
-    cal = cal[(cal >= pd.Timestamp(START)) & (cal <= pd.Timestamp(END))]
-    frames = {t: f.loc[cal] for t, f in frames.items()}
+    full_cal = frames["SPY"].index
+    frames = {t: f.reindex(full_cal) for t, f in frames.items()}
+    cal = full_cal[(full_cal >= pd.Timestamp(START)) & (full_cal <= pd.Timestamp(END))]
     for t, f in frames.items():
-        if f[["Open", "Close", "AdjClose"]].isna().any().any():
-            raise DataError(f"{t}: incomplete session")
+        # Warm-up NaNs are allowed before the ETF's own listing; every portfolio
+        # session must be complete.
+        if f.loc[cal, ["Open", "Close", "AdjClose"]].isna().any().any():
+            raise DataError(f"{t}: incomplete portfolio session")
     results = {}; all_legs = []
     for kind in ("A", "B", "C"):
         for slip in SLIP_GRID:
@@ -338,7 +370,8 @@ def run(data_dir: Path, out_dir: Path):
     # benchmarks
     bench = {}
     for t in ("BIL", "SPY"):
-        nav = frames[t].AdjClose / frames[t].AdjClose.iloc[0] * 50000
+        series = frames[t].AdjClose.loc[cal]
+        nav = series / series.iloc[0] * 50000
         bench[t] = metrics(nav)
     # HAC alpha vs BIL and SPY, base cost
     tests = {}
