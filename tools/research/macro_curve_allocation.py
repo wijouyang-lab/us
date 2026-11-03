@@ -165,6 +165,11 @@ def month_ends(cal):
     return [d for i, d in enumerate(cal[:-1]) if cal[i + 1].month != d.month]
 
 
+def total_return(frame, cal):
+    c = frame.Close.loc[cal]; d = frame.Dividends.loc[cal]
+    return ((c + d) / c.shift(1) - 1).fillna(0)
+
+
 def run_case(frames, cal, curve_map, nfci_map, slip, label):
     acct = Account(frames, slip)
     bpx = acct.px("BIL", cal[0]); acct.trade(cal[0], "BIL", "BUY", int(50000 / bpx), bpx)
@@ -237,8 +242,9 @@ def run(data_dir: Path, out: Path):
                     x = nav[(nav.index >= a) & (nav.index <= b)]
                     m["stages"][name] = metrics(x, float(x.iloc[0])) if len(x) > 3 else {"status": "INSUFFICIENT"}
                 r = nav.pct_change(fill_method=None).fillna(0)
-                br = frames["BIL"].Close.loc[cal].pct_change(fill_method=None).fillna(0)
-                sr = frames["SPY"].Close.loc[cal].pct_change(fill_method=None).fillna(0)
+                r.iloc[0] = nav.iloc[0] / 50000.0 - 1
+                br = total_return(frames["BIL"], cal)
+                sr = total_return(frames["SPY"], cal)
                 m["hac_bil"] = hac(r - br); m["hac_spy"] = hac(r - sr)
             cases[key] = m
     return {"label": "D_MACRO_CURVE_FINANCIAL_CONDITIONS", "prereg": "docs/research/MACRO_CURVE_D_PREREG.md",

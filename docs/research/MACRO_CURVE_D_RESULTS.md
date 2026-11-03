@@ -54,6 +54,8 @@ PIT method:
 - `BAMLH0A0HYM2` is explicitly rejected for long-sample use because FRED current
   history starts 2023-11-03. No backfill was fabricated.
 
+Benchmark convention: BIL/SPY HAC benchmarks use total return with ex-date dividends included; before this correction they used price-only Close. PIT alpha changed 8.22% -> 6.43%; exploratory 8.53% -> 7.14%. Max drawdown and NO-GO are unchanged. Only one D rule was pre-registered, so no BH family correction is applied.
+
 Raw/current and PIT SHA-256 records: `data/research/macro_d/manifest.json`.
 
 ## 3. Results
@@ -70,8 +72,8 @@ Raw/current and PIT SHA-256 records: `data/research/macro_d/manifest.json`.
 | Peak / trough / recovery | 2021-12-27 / 2022-10-14 / 2026-05-06 |
 | Order legs | 447 |
 | Total cost | $1,141.32 |
-| Alpha vs BIL (HAC) | +8.22%, p=0.0025 |
-| Alpha vs SPY (HAC) | -4.78%, p=0.061 |
+| Alpha vs BIL (HAC) | +6.43%, p=0.0184 |
+| Alpha vs SPY (HAC) | -6.45%, p=0.0102 |
 | CAGR bootstrap 95% CI | +2.02% to +13.96% |
 
 ### Exploratory revised history: 2007-05-30 to 2026-10-30
@@ -86,8 +88,8 @@ Raw/current and PIT SHA-256 records: `data/research/macro_d/manifest.json`.
 | Peak / trough / recovery | 2021-12-27 / 2022-10-14 / 2026-01-12 |
 | Order legs | 686 |
 | Total cost | $1,776.13 |
-| Alpha vs BIL (HAC) | +8.53%, p<0.001 |
-| Alpha vs SPY (HAC) | -1.62%, p=0.589 |
+| Alpha vs BIL (HAC) | +7.14%, p=0.0002 |
+| Alpha vs SPY (HAC) | -3.45%, p=0.248 |
 
 The strategy has statistically strong BIL alpha in both samples, but the
 2022 drawdown is far outside the 15% limit in both. This is not a borderline
@@ -121,7 +123,7 @@ Costs do not explain the failure; drawdown is the blocker.
 | Gate | Result |
 |---|---|
 | Positive excess after costs | Yes |
-| Statistical support vs BIL | Yes (PIT p=0.0025) |
+| Statistical support vs BIL | Yes (PIT p=0.0184) |
 | Max DD <= 15% | **No (-24.24%)** |
 | Not one stage | No: 2022 dominates the risk failure |
 | Enough trades/exposure | Yes |
