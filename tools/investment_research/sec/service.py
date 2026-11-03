@@ -10,7 +10,7 @@ from tools.investment_research.metrics import analyze
 
 
 def fetch_company(client: SECClient, ticker: str, *, as_of: str | None = None,
-                  market_price: float | None = None, current_shares: float | None = None,
+                  market_quote: dict | None = None, share_count: dict | None = None,
                   sector: str | None = None) -> dict:
     t = ticker.upper()
     mp = client.ticker_map()
@@ -27,8 +27,8 @@ def fetch_company(client: SECClient, ticker: str, *, as_of: str | None = None,
     fetched = datetime.now(timezone.utc).isoformat()
     facts = extract(facts_json, cik=cik, fetched_at=fetched,
                     sha256=hashlib.sha256(payload).hexdigest(), accepted=accepted)
-    analysis = analyze(t, cik, facts, as_of=as_of, market_price=market_price,
-                       current_shares=current_shares, sector=sector)
+    analysis = analyze(t, cik, facts, as_of=as_of, market_quote=market_quote,
+                       share_count=share_count, sector=sector)
     analysis["company_name"] = mapping["company_name"]
     analysis["identity_source"] = "SEC company_tickers.json"
     analysis["companyfacts_sha256"] = hashlib.sha256(payload).hexdigest()
@@ -37,8 +37,8 @@ def fetch_company(client: SECClient, ticker: str, *, as_of: str | None = None,
 
 
 def get_fundamentals(ticker: str, *, as_of: str | None = None, cache_dir: str = "data/sec/cache",
-                     market_price: float | None = None, current_shares: float | None = None,
+                     market_quote: dict | None = None, share_count: dict | None = None,
                      sector: str | None = None) -> dict:
     """Fetch SEC facts and return Value/Quality/GARP metrics gated by as_of."""
-    return fetch_company(SECClient(cache_dir), ticker, as_of=as_of, market_price=market_price,
-                         current_shares=current_shares, sector=sector)
+    return fetch_company(SECClient(cache_dir), ticker, as_of=as_of, market_quote=market_quote,
+                         share_count=share_count, sector=sector)

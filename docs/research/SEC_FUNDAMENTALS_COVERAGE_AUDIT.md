@@ -1,152 +1,202 @@
-# SEC Fundamentals Coverage Audit — P2
+# SEC Fundamentals Coverage Audit — P2.1
 
 Date: 2026-11-04
-Sample: 9 companies, not full-market coverage.
+Sample: **28 companies**, not full-market coverage.
 
-## 1. Identity and download
+## 1. Decision summary
 
-| Ticker | CIK | CompanyFacts |
-|---|---|---:|
-| AAPL | 0000320193 | 25,598 facts |
-| MSFT | 0000789019 | 33,058 |
-| GOOGL | 0001652044 | 21,498 |
-| AMZN | 0001018724 | 30,289 |
-| NVDA | 0001045810 | 27,281 |
-| BRK.B | 0001067983 | 18,233 |
-| JPM | 0000019617 | 54,330 |
-| PLD | 0001045609 | 23,446 |
-| RIVN | 0001874178 | 6,554 |
+P2.1 fixes period/PIT/ROE/debt logic and adds ROIC, interest coverage, 5-year
+stability, operating leverage ratio and margin expansion.
 
-- ticker→CIK mapping: **9/9**
-- CompanyFacts download: **9/9**
-- Source: SEC `company_tickers.json` + `data.sec.gov` CompanyFacts.
-- Cache: `data/sec/cache/companyfacts_<cik>.json` with URL, fetched_at, SHA-256.
+Still intentionally blocked:
 
-## 2. Current metric coverage
+- all price-based valuation (no authorized quote);
+- PEG (no licensed forward EPS);
+- XOM historical identity (SEC current ticker maps to a new holding company).
 
-| Ticker | CIK | Revenue $B | Net income $B | FCF $B | Equity $B | Total debt $B | Gross margin | ROE | Rev growth | 3y Rev CAGR | PEG |
-|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|
-| AAPL | 0000320193 | 458.39 | 124.90 | 146.27 | 112.09 | 78.11 | 48.5% | 111.4% | 15.1% | 7.7% | DATA_BLOCKED |
-| MSFT | 0000789019 | 334.11 | 134.61 | 65.98 | 470.51 | 35.48 | 68.1% | 28.6% | 17.8% | 16.1% | DATA_BLOCKED |
-| GOOGL | 0001652044 | 459.62 | 236.22 | 63.12 | 677.55 | 126.12 | — | 34.9% | 15.1% | 12.5% | DATA_BLOCKED |
-| AMZN | 0001018724 | 764.24 | 134.77 | -61.40 | 613.60 | 173.50 | 0.6% | 22.0% | 12.4% | 11.7% | DATA_BLOCKED |
-| NVDA | 0001045810 | 281.58 | 176.34 | 92.41 | 228.98 | 33.37 | 74.2% | 77.0% | 65.5% | 100.0% | DATA_BLOCKED |
-| BRK.B | 0001067983 | 382.97 | 78.94 | 23.23 | 747.91 | — | — | 10.6% | -1.0% | 6.0% | DATA_BLOCKED |
-| JPM | 0000019617 | 94.81 | 67.03 | — | 374.60 | 342.36 | — | 17.9% | 2.8% | 12.3% | DATA_BLOCKED |
-| PLD | 0001045609 | 8.95 | 2.91 | — | 53.50 | — | — | 5.4% | 7.2% | 13.7% | DATA_BLOCKED |
-| RIVN | 0001874178 | 6.75 | -3.33 | -4.93 | 5.90 | 4.45 | 7.4% | -56.5% | 8.4% | 48.1% | DATA_BLOCKED |
+## 2. Sample
 
-Missing values are `—` / explicit status, never zero.
+28 tickers:
 
-## 3. Per-metric coverage
+```text
+AAPL MSFT GOOGL NVDA CRM ADBE
+AMZN HD MCD NKE
+CAT HON UNP
+XOM CVX NEE DUK
+JNJ PFE UNH MRNA
+JPM BAC BRK.B MET
+PLD O
+RIVN
+```
 
-| Field | OK / 9 |
+Sectors are currently supplied by the caller. SEC SIC extraction is **not yet
+implemented**; `sic`/`sicDescription` exist in Submissions and are next-step work.
+
+Identity:
+
+- SEC ticker map hits: **28/28**
+- usable CompanyFacts with revenue: **27/28**
+- XOM: SEC currently maps to `ExxonMobil Holdings Corp`, CIK 2115436, 555 facts,
+  no historical revenue. Predecessor CIK 34088 was not silently substituted.
+  XOM is `INSUFFICIENT_DATA`.
+
+## 3. Metric coverage (OK / 28)
+
+| Metric | Coverage |
 |---|---:|
-| Revenue | 9 |
-| Net income | 9 |
-| Free cash flow | 7 |
-| Stockholders' equity | 9 |
-| Total debt | 7 |
-| Gross margin | 5 |
-| Operating margin | 8 |
-| Net margin | 9 |
-| ROE | 9 |
-| FCF conversion | 7 |
-| Debt/equity | 6 |
-| Net debt/EBITDA | 4 |
-| ROIC | **0** (tax/invested-capital not implemented) |
-| Interest coverage | **0** (interest expense not implemented) |
-| Revenue growth | 9 |
-| EPS growth | 8 |
-| FCF growth | 7 |
-| 3y revenue CAGR | 9 |
-| 5y revenue CAGR | 8 |
-| Operating leverage | 8 |
-| PEG | **0** (forward estimates unlicensed) |
-| PE / PB / EV / yields | **0** (no authorized price) |
+| Revenue | 27 |
+| Net income | 27 |
+| Free cash flow | 21 |
+| Stockholders' equity | 26 |
+| Total debt | 26 |
+| Gross margin | 12 |
+| Operating margin | 21 |
+| Net margin | 27 |
+| ROE | 23 |
+| **ROIC** | **11** |
+| FCF conversion | 21 |
+| Debt/equity | 24 |
+| Net debt/EBITDA | 7 |
+| **Interest coverage** | **13** |
+| **Revenue stability** | **27** |
+| **Earnings stability** | **18** |
+| Revenue growth | 27 |
+| EPS growth | 24 |
+| FCF growth | 18 |
+| 3y revenue CAGR | 27 |
+| 5y revenue CAGR | 26 |
+| **Operating leverage ratio** | **15** |
+| **Operating margin expansion** | **15** |
+| PEG | 0 (blocked) |
+| PE/PB/EV/FCF yield | 0 (blocked) |
 
-## 4. Data gaps by company type
+## 4. Period handling
 
-- **JPM (bank)**: FCF and gross profit are not comparable; net debt/EBITDA is
-  `NOT_APPLICABLE`. Revenue/net income/ROE remain available.
-- **PLD (REIT)**: FCF/capex and debt tags are incomplete in CompanyFacts;
-  net-debt/EBITDA not computed.
-- **BRK.B**: total debt and gross profit are missing; `-` shown, not zero.
-- **RIVN (loss-making)**: net income/FCF negative; PE is `NOT_APPLICABLE`;
-  growth from a small base can be large and is not a profitability claim.
-- **GOOGL**: gross profit tag absent in the mapped set; gross margin `—`.
+Revenue period types: TTM 25, FY 2, missing 1 (XOM).
 
-## 4b. Request configuration
+Rules:
 
-SEC_USER_AGENT is required and must contain a real contact. This local smoke
-run used the placeholder contact
-esearch contact@example.com; production must
-replace it. No email was inferred from Git history. Requests use 0.25s minimum
-interval, timeout, retry/backoff, cache and SHA-256.
+- TTM requires four non-overlapping consecutive quarters spanning 350–380 days.
+- YTD differencing only within the same fiscal year, concept, unit and matching
+  start/end: Q2 = H1 − Q1, Q3 = 9M − H1, Q4 = FY − 9M.
+- FY fallback is explicitly labelled `FY`.
+- FCF requires identical CFO/CapEx start/end; otherwise `INSUFFICIENT_DATA`.
+- Every metric carries period_start/end/type, fiscal year/period and all inputs.
 
-## 5. XBRL and units
+## 5. PIT behavior
 
-- Accepted units: USD, USD/shares, shares.
-- EPS uses `USD/shares`; it is never mixed with USD totals.
-- Instant facts used for balance-sheet items; duration facts for flows.
-- TTM uses four distinct 70–100 day quarters when available; otherwise the
-  latest annual period, explicitly labelled `FY`.
-- 6-month/9-month YTD values are not treated as single quarters.
-- Amended filings remain separate facts; as-of selection uses the latest
-  `filed` date available at that as-of date.
-- Custom/unmapped tags are not guessed or merged into standard concepts.
+- timestamp as-of: OBSERVED_FIRST_SEEN uses first_seen; ACCEPTANCE_ESTIMATE uses
+  accepted_at; FILED_DATE_ONLY is excluded on the same calendar day and allowed
+  only on later days; UNKNOWN is excluded.
+- date-only as-of: filing must be strictly before the date.
+- no silent timestamp truncation.
+- amended filings are separate facts; historic as-of keeps the older version.
 
-## 6. PIT quality distribution
-
-For OK metrics in the sample:
+Current OK-metric quality:
 
 | Quality | Count |
 |---|---:|
-| `ACCEPTANCE_ESTIMATE` | 189 |
-| `FILED_DATE_ONLY` | 24 |
-| `OBSERVED_FIRST_SEEN` | 0 |
-| `UNKNOWN` | 0 |
+| ACCEPTANCE_ESTIMATE | 615 |
+| FILED_DATE_ONLY | 55 |
+| OBSERVED_FIRST_SEEN | 0 |
+| UNKNOWN | 0 |
 
-- `available_at` uses the SEC acceptance timestamp when present, else filing date.
-- `first_seen_at` is null because this is a historical backfill, not an observed
-  forward capture. It is **not** labelled `OBSERVED_FIRST_SEEN`.
-- `FILED_DATE_ONLY` facts are only suitable for conservative daily as-of work,
-  not intraday historical simulation.
-- The full CompanyFacts JSON downloaded today cannot reconstruct what was visible
-  intraday in the past.
+No OBSERVED_FIRST_SEEN is claimed; this is a historical backfill.
 
-## 7. What this establishes
+## 6. ROE before/after
 
-Established:
+| Company | Old (period-end equity) | New (average equity) |
+|---|---:|---:|
+| AAPL | 111.4% | 142.3% |
+| MSFT | 28.6% | 34.2% |
+| NVDA | 77.0% | 117.2% |
 
-- real SEC identity mapping;
-- real CompanyFacts ingestion and caching;
-- traceable facts with accession/form/filed/unit;
-- as-of gating by filing date;
-- Value flow metrics, Quality profitability/leverage metrics, and historical
-  GARP growth metrics;
-- explicit `DATA_BLOCKED`, `NOT_APPLICABLE`, `INSUFFICIENT_DATA` states.
+ROE uses TTM net income / average beginning-ending equity, with both equity facts
+in `input_facts`. Negative average equity → `NOT_APPLICABLE`.
 
-Not established:
+## 7. TTM / FCF before/after
 
-- licensed market prices, so PE/PB/EV/FCF yield/Margin of Safety are blocked;
-- ROIC and interest coverage;
-- forward EPS/PEG;
-- full-market coverage;
-- exact historical first-public-visibility timestamps;
-- long-horizon historical PIT backtest.
+- Old TTM took the latest four 70–100 day facts without continuity checks.
+- New TTM rejects overlaps/gaps and falls back to FY or insufficient.
+- AAPL revenue changed from 458.39B to 478.83B after period/version correction.
+- FCF requires identical CFO/CapEx periods; bank/REIT FCF often returns
+  `INSUFFICIENT_DATA` instead of mixing periods.
 
-## 8. Files
+## 8. Debt and EV
+
+Debt rule is stored in `debt_rule`:
+
+- if `LongTermDebt` total exists, add only `ShortTermBorrowings`; do not add
+  `LongTermDebtCurrent` again;
+- else `LongTermDebtNoncurrent + LongTermDebtCurrent + ShortTermBorrowings`;
+- missing debt → `INSUFFICIENT_DATA`, not zero.
 
 ```text
-docs/research/sec_fundamentals_snapshot.json
-docs/research/sec_sample_facts.json
-docs/research/SEC_FUNDAMENTALS_COVERAGE_AUDIT.md
-tools/investment_research/sec/client.py
-tools/investment_research/sec/normalize.py
-tools/investment_research/sec/service.py
-tools/investment_research/metrics.py
-tools/investment_research/ingest_sample.py
-tests/test_sec_client.py
-tests/test_sec_fundamentals.py
+EV = market cap + total debt - cash
 ```
+
+Only when market cap, debt and cash are valid. Missing debt/cash returns
+`INSUFFICIENT_DATA`. EV/EBITDA requires matching EBIT/D&A periods and positive
+EBITDA.
+
+## 9. ROIC
+
+```text
+NOPAT = EBIT × (1 - effective tax rate)
+Invested Capital = interest-bearing debt + equity - cash
+ROIC = NOPAT / average invested capital
+```
+
+- effective tax = tax expense / pretax income, same period;
+- missing tax, pretax <= 0, tax rate outside 0..1, average IC <= 0, missing
+  beginning/ending balances → explicit non-OK status;
+- banks/insurers → `NOT_APPLICABLE`;
+- all inputs retained, beginning and ending.
+
+## 10. Interest coverage
+
+EBIT / interest expense with matching periods. Interest-income concepts are not
+mapped. Missing/zero interest → `INSUFFICIENT_DATA`/`NOT_APPLICABLE`, never
+Infinity. Banks/insurers → `NOT_APPLICABLE`.
+
+## 11. Stability and GARP
+
+- Revenue stability: 5 annual observations, yearly growth, positive years, CAGR,
+  volatility.
+- Earnings stability: 5 annual operating-income observations, negative years and
+  sign changes retained.
+- Fewer than 5 years → `INSUFFICIENT_DATA`.
+- GARP separates:
+  - `operating_leverage_ratio = OI growth / revenue growth`;
+  - `operating_margin_expansion = OI growth - revenue growth`.
+- zero/non-positive bases → `NOT_APPLICABLE`; periods must match.
+
+## 12. Provenance audit
+
+All OK metrics checked for non-empty `input_facts`, period type, formula version,
+concept/unit/start/end/filed/accepted/accession/form.
+
+Result: **0 OK metrics with missing provenance.**
+
+## 13. Tests
+
+```text
+tests/test_sec_client.py        3 passed
+tests/test_sec_fundamentals.py  9 passed
+tests/test_sec_p21.py           8 passed
+```
+
+P2.1 tests include same-day 16:00/20:00 acceptance, filed-only same-day
+exclusion, observed first-seen, missing quarter, average-equity ROE, missing-cash
+EV, ROIC/interest matching, and GARP leverage ratio.
+
+## 14. Still missing
+
+- SIC-based industry classification;
+- full-market ingestion;
+- bank/insurer ROIC model;
+- complete interest-expense tag coverage;
+- authorized price/current shares;
+- exact intraday historical visibility;
+- 10-K/10-Q body parsing;
+- pages and order API.

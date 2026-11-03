@@ -1,8 +1,13 @@
-"""P2 Value / Quality / GARP metrics from normalized SEC facts."""
+"""P2.1 Value / Quality / GARP metrics with strict period and PIT rules.
+
+Every OK metric carries complete input facts, a formula version and an explicit
+period. FY values are never labelled TTM. Missing values are never zero-filled.
+"""
 from __future__ import annotations
 from dataclasses import dataclass
-from datetime import date
+from datetime import date, datetime, timedelta, timezone
 from typing import Iterable
+
 from tools.investment_research.sec.normalize import Fact, duration_days
 
 TAGS = {
@@ -10,309 +15,473 @@ TAGS = {
     "cost_of_revenue": ["CostOfRevenue", "CostOfGoodsAndServicesSold"],
     "gross_profit": ["GrossProfit"],
     "operating_income": ["OperatingIncomeLoss"],
+    "pretax_income": ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItems",
+                       "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"],
+    "tax_expense": ["IncomeTaxExpenseBenefit"],
     "net_income": ["NetIncomeLoss"],
     "eps_diluted": ["EarningsPerShareDiluted"],
     "eps_basic": ["EarningsPerShareBasic"],
     "cfo": ["NetCashProvidedByUsedInOperatingActivities"],
     "capex": ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
-    "cash": ["CashAndCashEquivalentsAtCarryingValue"],
+    "cash": ["CashAndCashEquivalentsAtCarryingValue", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"],
     "equity": ["StockholdersEquity"],
-    "assets": ["Assets"],
-    "current_assets": ["AssetsCurrent"],
-    "current_liabilities": ["LiabilitiesCurrent"],
-    "long_term_debt": ["LongTermDebtNoncurrent", "LongTermDebt"],
-    "short_term_debt": ["ShortTermBorrowings", "LongTermDebtCurrent", "DebtCurrent"],
+    "assets": ["Assets"], "current_assets": ["AssetsCurrent"], "current_liabilities": ["LiabilitiesCurrent"],
+    "long_term_debt": ["LongTermDebtNoncurrent"],
+    "total_long_term_debt": ["LongTermDebt"],
+    "current_ltd": ["LongTermDebtCurrent"],
+    "short_term_debt": ["ShortTermBorrowings", "DebtCurrent"],
     "shares_diluted": ["WeightedAverageNumberOfDilutedSharesOutstanding"],
     "shares_outstanding": ["CommonStockSharesOutstanding"],
     "dividends": ["PaymentsOfDividends", "PaymentsOfDividendsCommonStock"],
     "buybacks": ["PaymentsForRepurchaseOfCommonStock"],
     "depreciation": ["DepreciationDepletionAndAmortization", "DepreciationAmortizationAndAccretionNet"],
+    "interest_expense": ["InterestExpense", "InterestExpenseDebt", "InterestAndDebtExpense", "InterestExpenseNonoperating"],
 }
+
+SPECIAL_SECTORS = {"financials", "banks", "insurance", "bank", "reit", "real estate"}
+
+
+def _parse_as_of(as_of: str | None) -> tuple[datetime | None, bool]:
+    if not as_of: return None, False
+    if "T" not in as_of:
+        return datetime.fromisoformat(as_of).replace(tzinfo=timezone.utc), True
+    dt = datetime.fromisoformat(as_of.replace("Z", "+00:00"))
+    if dt.tzinfo is None: raise ValueError("as_of timestamp must include timezone")
+    return dt.astimezone(timezone.utc), False
 
 
 @dataclass
 class Snapshot:
     ticker: str; cik: str; facts: list[Fact]; as_of: str | None = None
-    def available(self): return [f for f in self.facts if not self.as_of or f.filed <= self.as_of[:10]]
+    def available(self) -> list[Fact]:
+        ts, date_only = _parse_as_of(self.as_of)
+        if ts is None: return list(self.facts)
+        out = []
+        for f in self.facts:
+            if date_only:
+                # Conservative date rule: a filing is usable only after its filed date.
+                if f.filed and date.fromisoformat(f.filed) < ts.date(): out.append(f)
+            elif f.availability_quality == "OBSERVED_FIRST_SEEN" and f.first_seen_at:
+                if datetime.fromisoformat(f.first_seen_at.replace("Z", "+00:00")) <= ts: out.append(f)
+            elif f.availability_quality == "ACCEPTANCE_ESTIMATE" and f.accepted_at:
+                if datetime.fromisoformat(f.accepted_at.replace("Z", "+00:00")) <= ts: out.append(f)
+            elif f.availability_quality == "FILED_DATE_ONLY" and f.filed:
+                # No exact time exists; same-day intraday is conservatively excluded.
+                if date.fromisoformat(f.filed) < ts.date(): out.append(f)
+        return out
 
 
-def _pick(facts, concepts, unit=None, instant=False, quarterly=False):
-    cand = [f for f in facts if f.concept in concepts and (unit is None or f.unit == unit)]
-    if instant: cand = [f for f in cand if not f.start]
-    else:
-        cand = [f for f in cand if f.start and duration_days(f.start, f.end) is not None]
-        if quarterly: cand = [f for f in cand if 70 <= duration_days(f.start, f.end) <= 100]
-    if not cand: return None
-    # latest public filing, then latest period
-    return sorted(cand, key=lambda f: (f.end, f.filed, f.accession))[-1]
-
-
-def _ttm(facts, concepts, unit, as_of):
-    q = [f for f in facts if f.concept in concepts and f.unit == unit and f.start
-         and 70 <= duration_days(f.start, f.end) <= 100]
-    latest = {}
-    for f in sorted(q, key=lambda x: (x.end, x.filed)):
-        latest[f.end] = f
-    qs = sorted(latest.values(), key=lambda x: x.end)[-4:]
-    if len(qs) == 4:
-        return {"value": sum(f.value for f in qs), "period": "TTM",
-                "start": qs[0].start, "end": qs[-1].end, "facts": qs}
-    annual = [f for f in facts if f.concept in concepts and f.unit == unit and f.start
-              and 330 <= duration_days(f.start, f.end) <= 400]
-    if annual:
-        f = sorted(annual, key=lambda x: (x.end, x.filed))[-1]
-        return {"value": f.value, "period": "FY", "start": f.start, "end": f.end, "facts": [f]}
-    return None
-
-
-def metric(ticker, name, value, unit, status="OK", formula="1.0", obs=None, avail=None,
-           quality="UNKNOWN", source="SEC CompanyFacts", accession=None, form=None,
-           inputs=None, missing=None):
-    return {"ticker": ticker, "metric": name, "value": value, "unit": unit,
-            "status": status, "formula_version": formula, "observation_date": obs,
-            "available_at": avail, "availability_quality": quality, "source": source,
-            "accession": accession, "form": form,
-            "input_facts": inputs or [], "missing_reason": missing}
-
-
-def _fact_ref(f):
+def _fact_ref(f: Fact) -> dict:
     return {"concept": f.concept, "value": f.value, "unit": f.unit, "start": f.start,
-            "end": f.end, "filed": f.filed, "form": f.form, "accession": f.accession}
+            "end": f.end, "filed": f.filed, "accepted_at": f.accepted_at,
+            "first_seen_at": f.first_seen_at, "availability_quality": f.availability_quality,
+            "accession": f.accession, "form": f.form, "taxonomy": f.taxonomy}
 
 
-def _base(name, ticker, unit="USD"):
-    return metric(ticker, name, None, unit, "INSUFFICIENT_DATA",
-                  missing="required source fact unavailable")
+def _latest_filed(facts: Iterable[Fact]) -> Fact | None:
+    x = list(facts)
+    return sorted(x, key=lambda f: (f.end, f.filed, f.accession))[-1] if x else None
 
 
-def _duration(s: Snapshot, key, unit="USD", ttm=True):
-    facts = s.available(); concepts = TAGS[key]
-    if ttm:
-        d = _ttm(facts, concepts, unit, s.as_of)
-        if d: return d
-    f = _pick(facts, concepts, unit, instant=False)
-    if not f: return None
-    return {"value": f.value, "period": "FY", "start": f.start, "end": f.end, "facts": [f]}
+def _instant_at(s: Snapshot, concepts: list[str], target_end: str, unit="USD") -> Fact | None:
+    cand = [f for f in s.available() if f.concept in concepts and f.unit == unit
+            and not f.start and f.end <= target_end]
+    return _latest_filed(cand)
 
 
-def _instant(s: Snapshot, key, unit="USD"):
-    f = _pick(s.available(), TAGS[key], unit, instant=True)
-    if not f: return None
-    return {"value": f.value, "fact": f, "end": f.end, "filed": f.filed,
-            "accession": f.accession, "form": f.form}
-
-
-def _ok(s, name, d, unit="USD", formula="1.0"):
-    f = d["facts"][-1] if d.get("facts") else d.get("fact")
-    return metric(s.ticker, name, d["value"], unit, "OK", formula,
-                  d.get("end"), (f.accepted_at or f.filed) if f else None,
-                  f.availability_quality if f else "UNKNOWN", accession=f.accession if f else None,
-                  form=f.form if f else None, inputs=[_fact_ref(f)] if f else [])
-
-
-def value_metrics(s: Snapshot, *, market_price: float | None = None,
-                  current_shares: float | None = None) -> dict:
-    out = {}
-    rev = _duration(s, "revenue"); op = _duration(s, "operating_income")
-    ni = _duration(s, "net_income"); cfo = _duration(s, "cfo")
-    cap = _duration(s, "capex"); eq = _instant(s, "equity")
-    cash = _instant(s, "cash"); ltd = _instant(s, "long_term_debt")
-    std = _instant(s, "short_term_debt"); sh = _instant(s, "shares_outstanding")
-    for name, d in [("revenue", rev), ("operating_income", op), ("net_income", ni),
-                    ("cash_from_operations", cfo), ("capital_expenditure", cap)]:
-        out[name] = _ok(s, name, d) if d else _base(name, s.ticker)
-    fcf = None
-    if cfo and cap:
-        fcf = cfo["value"] - abs(cap["value"])
-        out["free_cash_flow"] = metric(s.ticker, "free_cash_flow", fcf, "USD", "OK",
-            "CFO - abs(CapEx)", cfo["end"], cfo["facts"][-1].filed,
-            cfo["facts"][-1].availability_quality, accession=cfo["facts"][-1].accession,
-            form=cfo["facts"][-1].form, inputs=[_fact_ref(cfo["facts"][-1]), _fact_ref(cap["facts"][-1])])
-    else:
-        out["free_cash_flow"] = _base("free_cash_flow", s.ticker)
-    for name, d in [("stockholders_equity", eq), ("cash_and_equivalents", cash),
-                    ("long_term_debt", ltd), ("short_term_debt", std),
-                    ("shares_outstanding", sh)]:
-        out[name] = _ok(s, name, d, "shares" if name == "shares_outstanding" else "USD") if d else _base(name, s.ticker, "shares" if name == "shares_outstanding" else "USD")
-    if ltd and std:
-        debt = ltd["value"] + std["value"]
-        out["total_debt"] = metric(s.ticker, "total_debt", debt, "USD", "OK", "LTD + STD",
-            max(ltd["end"], std["end"]), max(ltd["filed"], std["filed"]),
-            "FILED_DATE_ONLY", accession=ltd["accession"], form=ltd["form"],
-            inputs=[_fact_ref(ltd["fact"]), _fact_ref(std["fact"])])
-        if cash: out["net_debt"] = metric(s.ticker, "net_debt", debt - cash["value"], "USD", "OK",
-            "total_debt - cash", cash["end"], cash["filed"], cash["fact"].availability_quality,
-            accession=cash["accession"], form=cash["form"],
-            inputs=[_fact_ref(ltd["fact"]), _fact_ref(std["fact"]), _fact_ref(cash["fact"])])
-    else:
-        out["total_debt"] = _base("total_debt", s.ticker); out["net_debt"] = _base("net_debt", s.ticker)
-    if fcf is not None:
-        out["owner_earnings_proxy"] = metric(s.ticker, "owner_earnings_proxy", fcf, "USD", "OK",
-            "FCF proxy = CFO - CapEx; maintenance capex unavailable", cfo["end"],
-            cfo["facts"][-1].filed, cfo["facts"][-1].availability_quality,
-            inputs=[_fact_ref(cfo["facts"][-1]), _fact_ref(cap["facts"][-1])])
-    else:
-        out["owner_earnings_proxy"] = _base("owner_earnings_proxy", s.ticker)
-    # Price-dependent metrics are blocked without an authorized price and current shares.
-    for name in ("pe_ttm", "pb", "ev_ebit", "ev_ebitda", "earnings_yield", "fcf_yield",
-                 "market_cap", "enterprise_value", "margin_of_safety"):
-        out[name] = metric(s.ticker, name, None, "ratio", "DATA_BLOCKED", "1.0",
-                           missing="authorized market price / current shares not supplied")
-    if market_price and current_shares and ni and ni["value"] != 0:
-        mcap = market_price * current_shares
-        out["market_cap"] = metric(s.ticker, "market_cap", mcap, "USD", "OK", "price * current shares")
-        out["pe_ttm"] = (metric(s.ticker, "pe_ttm", mcap / ni["value"], "ratio", "OK", "market_cap / net_income")
-                         if ni["value"] > 0 else metric(s.ticker, "pe_ttm", None, "ratio", "NOT_APPLICABLE",
-                         "market_cap / net_income", missing="negative or zero net income"))
-        out["earnings_yield"] = metric(s.ticker, "earnings_yield", ni["value"] / mcap, "ratio", "OK", "net_income / market_cap")
-        if eq and eq["value"] > 0:
-            out["pb"] = metric(s.ticker, "pb", mcap / eq["value"], "ratio", "OK", "market_cap / equity")
-        if fcf is not None:
-            out["fcf_yield"] = metric(s.ticker, "fcf_yield", fcf / mcap, "ratio", "OK", "fcf / market_cap")
-        ev = mcap + (out["total_debt"]["value"] if out["total_debt"]["status"] == "OK" else 0) - (cash["value"] if cash else 0)
-        out["enterprise_value"] = metric(s.ticker, "enterprise_value", ev, "USD", "OK", "market_cap + debt - cash")
-        if op and op["value"] > 0: out["ev_ebit"] = metric(s.ticker, "ev_ebit", ev / op["value"], "ratio", "OK", "EV / operating_income")
-    if fcf is not None and fcf > 0 and current_shares and current_shares > 0:
-        def dcf(g, disc=0.10, term=0.025, years=5):
-            pv = sum(fcf * ((1 + g) ** i) / ((1 + disc) ** i) for i in range(1, years + 1))
-            tv = fcf * ((1 + g) ** years) * (1 + term) / (disc - term)
-            return (pv + tv / ((1 + disc) ** years)) / current_shares
-        bear, base, bull = dcf(-0.02), dcf(0.03), dcf(0.08)
-        out["intrinsic_value"] = metric(s.ticker, "intrinsic_value", {"bear": bear, "base": base, "bull": bull},
-            "USD/share", "OK", "5y FCF DCF; discount=10%, terminal=2.5%",
-            obs=cfo["end"], avail=cfo["facts"][-1].accepted_at or cfo["facts"][-1].filed, quality=cfo["facts"][-1].availability_quality,
-            inputs=[_fact_ref(cfo["facts"][-1]), _fact_ref(cap["facts"][-1])])
-        out["dcf_assumptions"] = {"base_fcf": fcf, "years": 5, "discount_rate": 0.10,
-                                  "terminal_growth": 0.025, "growth": {"bear": -0.02, "base": 0.03, "bull": 0.08},
-                                  "shares": current_shares, "note": "current shares must be explicitly supplied; historical share count is not current"}
-        if market_price:
-            out["margin_of_safety"] = metric(s.ticker, "margin_of_safety", (base - market_price) / base,
-                "ratio", "OK", "(base intrinsic - price) / base intrinsic", inputs=[])
-    return out
-
-
-def _enhance(s, out, name, f):
-    if f and name in out and out[name].get("status") == "OK":
-        out[name].update({"observation_date": f.end, "available_at": f.accepted_at or f.filed,
-                          "availability_quality": f.availability_quality,
-                          "accession": f.accession, "form": f.form,
-                          "input_facts": [_fact_ref(f)]})
-
-
-def _annual_series(s: Snapshot, key, unit="USD"):
-    concepts = TAGS[key]; best = {}
+def _annual(s: Snapshot, key: str, unit="USD") -> list[Fact]:
+    best = {}
     for f in s.available():
-        if f.concept in concepts and f.unit == unit and f.start and 330 <= duration_days(f.start, f.end) <= 400:
+        if f.concept in TAGS[key] and f.unit == unit and f.start and 330 <= duration_days(f.start, f.end) <= 400:
             if f.end not in best or f.filed > best[f.end].filed: best[f.end] = f
     return [best[k] for k in sorted(best)]
 
 
+def _quarters(s: Snapshot, key: str, unit="USD") -> list[Fact]:
+    """Build singleton quarters, allowing validated YTD differences by fiscal year."""
+    facts = [f for f in s.available() if f.concept in TAGS[key] and f.unit == unit and f.start]
+    by_fy: dict[str, list[Fact]] = {}
+    for f in facts:
+        fy = str(f.fy or f.end[:4]); by_fy.setdefault(fy, []).append(f)
+    out: dict[str, Fact] = {}
+    def pick(cands):
+        return _latest_filed([f for f in cands if f in facts])
+    for fy, group in by_fy.items():
+        direct = [f for f in group if 70 <= duration_days(f.start, f.end) <= 100]
+        for f in direct:
+            if f.end not in out or f.filed > out[f.end].filed: out[f.end] = f
+        q1 = pick([f for f in group if 70 <= duration_days(f.start, f.end) <= 100 and f.fp == "Q1"])
+        h1 = pick([f for f in group if 160 <= duration_days(f.start, f.end) <= 200])
+        q9 = pick([f for f in group if 250 <= duration_days(f.start, f.end) <= 290])
+        fyf = pick([f for f in group if 330 <= duration_days(f.start, f.end) <= 400])
+        def add(start, end, value, src):
+            if not start or not end or end in out: return
+            out[end] = Fact(src.cik, src.taxonomy, src.concept, src.unit, value, start, end,
+                            src.filed, src.form, src.accession, src.fy, src.fp, src.frame,
+                            src.accepted_at, src.first_seen_at, src.source, src.fetched_at,
+                            src.sha256, src.availability_quality)
+        if q1 and h1 and h1.start == q1.start and h1.value != q1.value:
+            add(q1.end, h1.end, h1.value - q1.value, h1)
+        if h1 and q9 and q9.start == h1.start:
+            add(h1.end, q9.end, q9.value - h1.value, q9)
+        if q9 and fyf and fyf.start == q9.start:
+            add(q9.end, fyf.end, fyf.value - q9.value, fyf)
+    return [out[k] for k in sorted(out)]
+
+
+def _ttm_quarter_chain(s: Snapshot, key: str, unit="USD") -> list[Fact] | None:
+    qs = _quarters(s, key, unit)
+    if len(qs) < 4: return None
+    last = qs[-4:]
+    for a, b in zip(last, last[1:]):
+        gap = (date.fromisoformat(b.start) - date.fromisoformat(a.end)).days
+        if gap < 0 or gap > 3: return None
+    total = (date.fromisoformat(last[-1].end) - date.fromisoformat(last[0].start)).days
+    if not (350 <= total <= 380): return None
+    return last
+
+
+def _period_value(s: Snapshot, key: str, unit="USD") -> dict | None:
+    qs = _ttm_quarter_chain(s, key, unit)
+    if qs:
+        return {"value": sum(f.value for f in qs), "period_type": "TTM", "start": qs[0].start,
+                "end": qs[-1].end, "facts": qs, "fiscal_year": qs[-1].fy,
+                "fiscal_period": "TTM"}
+    annual = _annual(s, key, unit)
+    if annual:
+        f = annual[-1]
+        return {"value": f.value, "period_type": "FY", "start": f.start, "end": f.end,
+                "facts": [f], "fiscal_year": f.fy, "fiscal_period": f.fp or "FY"}
+    return None
+
+
+def _metric(ticker, name, value, unit, status="OK", formula="1.0", period=None,
+            inputs=None, missing=None, extra=None):
+    p = period or {}
+    d = {"ticker": ticker, "metric": name, "value": value, "unit": unit, "status": status,
+         "formula_version": formula, "period_start": p.get("start"), "period_end": p.get("end"),
+         "period_type": p.get("period_type"), "fiscal_year": p.get("fiscal_year"),
+         "fiscal_period": p.get("fiscal_period"),
+         "observation_date": p.get("end"),
+         "available_at": max((f.accepted_at or f.filed for f in p.get("facts", []) if (f.accepted_at or f.filed)), default=None),
+         "availability_quality": ("OBSERVED_FIRST_SEEN" if p.get("facts") and all(f.availability_quality == "OBSERVED_FIRST_SEEN" for f in p.get("facts", [])) else
+                                  "ACCEPTANCE_ESTIMATE" if p.get("facts") and all(f.availability_quality in ("OBSERVED_FIRST_SEEN", "ACCEPTANCE_ESTIMATE") for f in p.get("facts", [])) else
+                                  "FILED_DATE_ONLY" if p.get("facts") else "UNKNOWN"),
+         "source": "SEC CompanyFacts", "accession": (p.get("facts") or [None])[-1].accession if p.get("facts") else None,
+         "form": (p.get("facts") or [None])[-1].form if p.get("facts") else None,
+         "input_facts": [_fact_ref(f) for f in p.get("facts", [])], "missing_reason": missing}
+    if extra: d.update(extra)
+    return d
+
+
+def _unavailable(ticker, name, unit="USD", status="INSUFFICIENT_DATA", missing="required source fact unavailable", formula="1.0"):
+    return _metric(ticker, name, None, unit, status, formula, missing=missing)
+
+
+def _flow(s: Snapshot, key, unit="USD"):
+    d = _period_value(s, key, unit); return d
+
+
+def value_metrics(s: Snapshot, *, market_quote: dict | None = None, share_count: dict | None = None) -> dict:
+    out = {}
+    rev, op, ni = _flow(s, "revenue"), _flow(s, "operating_income"), _flow(s, "net_income")
+    cfo, cap = _flow(s, "cfo"), _flow(s, "capex")
+    for name, d, unit in [("revenue", rev, "USD"), ("operating_income", op, "USD"),
+                          ("net_income", ni, "USD"), ("cash_from_operations", cfo, "USD"),
+                          ("capital_expenditure", cap, "USD")]:
+        out[name] = _metric(s.ticker, name, d["value"], unit, period=d) if d else _unavailable(s.ticker, name, unit)
+    # FCF must use identical start/end; otherwise it is not a valid FCF.
+    fcf = None
+    if cfo and cap and cfo["start"] == cap["start"] and cfo["end"] == cap["end"]:
+        fcf = cfo["value"] - abs(cap["value"])
+        p = {"start": cfo["start"], "end": cfo["end"], "period_type": cfo["period_type"],
+             "fiscal_year": cfo["fiscal_year"], "fiscal_period": cfo["fiscal_period"],
+             "facts": cfo["facts"] + cap["facts"]}
+        out["free_cash_flow"] = _metric(s.ticker, "free_cash_flow", fcf, "USD", period=p,
+                                         formula="CFO - abs(CapEx)", extra={"formula_version": "2.0"})
+        out["owner_earnings_proxy"] = _metric(s.ticker, "owner_earnings_proxy", fcf, "USD", period=p,
+                                               formula="FCF proxy = CFO - CapEx", extra={"proxy_note": "maintenance capex unavailable"})
+    else:
+        out["free_cash_flow"] = _unavailable(s.ticker, "free_cash_flow", missing="CFO and CapEx periods do not match or are missing")
+        out["owner_earnings_proxy"] = _unavailable(s.ticker, "owner_earnings_proxy", missing="FCF unavailable")
+    eq = _instant_at(s, TAGS["equity"], (ni or rev or {"end": "0000"}).get("end", "0000"))
+    cash = _instant_at(s, TAGS["cash"], (ni or rev or {"end": "0000"}).get("end", "0000"))
+    debt = _total_debt(s, (ni or rev or {"end": "0000"}).get("end", "0000"))
+    out["stockholders_equity"] = _metric(s.ticker, "stockholders_equity", eq.value, "USD",
+        period={"start": None, "end": eq.end, "period_type": "INSTANT", "facts": [eq]}) if eq else _unavailable(s.ticker, "stockholders_equity")
+    out["cash_and_equivalents"] = _metric(s.ticker, "cash_and_equivalents", cash.value, "USD",
+        period={"start": None, "end": cash.end, "period_type": "INSTANT", "facts": [cash]}) if cash else _unavailable(s.ticker, "cash_and_equivalents")
+    out["total_debt"] = debt
+    if debt["status"] == "OK" and cash:
+        p = {"start": None, "end": cash.end, "period_type": "INSTANT",
+             "facts": debt["input_facts"] and []}
+        out["net_debt"] = _metric(s.ticker, "net_debt", debt["value"] - cash.value, "USD",
+            period={"start": None, "end": cash.end, "period_type": "INSTANT", "facts": [cash]},
+            formula="total_debt - cash", extra={"debt_rule": debt.get("debt_rule")})
+    else:
+        out["net_debt"] = _unavailable(s.ticker, "net_debt", missing="debt or cash missing")
+    # Price inputs are gated by an explicit quote/share provenance contract.
+    if not _valid_quote(market_quote) or not _valid_shares(share_count):
+        for name in ("pe_ttm", "pb", "ev_ebit", "ev_ebitda", "earnings_yield", "fcf_yield",
+                     "market_cap", "enterprise_value", "margin_of_safety"):
+            out[name] = _unavailable(s.ticker, name, "ratio" if name not in ("market_cap", "enterprise_value") else "USD",
+                                     "DATA_BLOCKED", "authorized market quote/current shares not supplied")
+        return out
+    mcap = market_quote["price"] * share_count["shares"]
+    out["market_cap"] = _metric(s.ticker, "market_cap", mcap, "USD", formula="price * current shares")
+    if ni and ni["value"] > 0:
+        out["pe_ttm"] = _metric(s.ticker, "pe_ttm", mcap / ni["value"], "ratio", period=ni, formula="market_cap / net_income")
+        out["earnings_yield"] = _metric(s.ticker, "earnings_yield", ni["value"] / mcap, "ratio", period=ni, formula="net_income / market_cap")
+    if eq and eq.value > 0:
+        out["pb"] = _metric(s.ticker, "pb", mcap / eq.value, "ratio", formula="market_cap / equity")
+    if fcf is not None:
+        out["fcf_yield"] = _metric(s.ticker, "fcf_yield", fcf / mcap, "ratio", formula="fcf / market_cap")
+    if debt["status"] == "OK" and cash:
+        out["enterprise_value"] = _metric(s.ticker, "enterprise_value", mcap + debt["value"] - cash.value,
+                                          "USD", formula="market_cap + total_debt - cash",
+                                          extra={"debt_rule": debt.get("debt_rule")})
+        if op and op["value"] > 0:
+            out["ev_ebit"] = _metric(s.ticker, "ev_ebit", (mcap + debt["value"] - cash.value) / op["value"], "ratio", period=op, formula="EV / EBIT")
+        dep = _flow(s, "depreciation")
+        if op and dep and op["start"] == dep["start"] and op["end"] == dep["end"]:
+            ebitda = op["value"] + dep["value"]
+            if ebitda > 0:
+                out["ev_ebitda"] = _metric(s.ticker, "ev_ebitda", (mcap + debt["value"] - cash.value) / ebitda,
+                                           "ratio", period=op, formula="EV / (EBIT + D&A)",
+                                           extra={"ebitda": ebitda})
+            else:
+                out["ev_ebitda"] = _unavailable(s.ticker, "ev_ebitda", "ratio", "NOT_APPLICABLE", "EBITDA <= 0")
+    else:
+        out["enterprise_value"] = _unavailable(s.ticker, "enterprise_value", "USD", missing="debt or cash missing; EV not zero-filled")
+    return out
+
+
+def _total_debt(s: Snapshot, end: str) -> dict:
+    """Avoid double counting LongTermDebt (total) plus its current portion."""
+    total = _instant_at(s, TAGS["total_long_term_debt"], end)
+    noncurrent = _instant_at(s, TAGS["long_term_debt"], end)
+    current = _instant_at(s, TAGS["current_ltd"], end)
+    stb = _instant_at(s, TAGS["short_term_debt"], end)
+    if total:
+        parts = [total] + ([stb] if stb and stb.concept == "ShortTermBorrowings" else [])
+        rule = "LongTermDebt total + ShortTermBorrowings only; LongTermDebtCurrent not added"
+    elif noncurrent and current:
+        parts = [noncurrent, current] + ([stb] if stb and stb.concept == "ShortTermBorrowings" else [])
+        rule = "LongTermDebtNoncurrent + LongTermDebtCurrent + ShortTermBorrowings"
+    elif noncurrent:
+        parts = [noncurrent] + ([stb] if stb else [])
+        rule = "LongTermDebtNoncurrent + short-term borrowings"
+    elif stb:
+        parts = [stb]; rule = "short-term borrowings only"
+    else:
+        return _unavailable(s.ticker, "total_debt", missing="interest-bearing debt tags missing")
+    p = {"start": None, "end": max(f.end for f in parts), "period_type": "INSTANT", "facts": parts}
+    m = _metric(s.ticker, "total_debt", sum(f.value for f in parts), "USD", period=p,
+                formula="rule=" + rule, extra={"debt_rule": rule}); m["_parts"] = parts
+    return m
+
+
+def _valid_quote(q: dict | None) -> bool:
+    return bool(q and q.get("price", 0) > 0 and q.get("source") and q.get("license_status") == "AUTHORIZED"
+                and q.get("timestamp") and q.get("price_type") and q.get("currency"))
+
+
+def _valid_shares(s: dict | None) -> bool:
+    return bool(s and s.get("shares", 0) > 0 and s.get("observation_date") and s.get("available_at") and s.get("source"))
+
+
+def _ratio(s, name, num: dict | None, den: dict | None, formula, *, percent=False):
+    if den and den.get("value") == 0:
+        return _unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", "zero denominator", formula)
+    if not num or not den:
+        return _unavailable(s.ticker, name, "ratio", missing="numerator or denominator unavailable", formula=formula)
+    p = {"start": num.get("start"), "end": num.get("end"), "period_type": num.get("period_type"),
+         "fiscal_year": num.get("fiscal_year"), "fiscal_period": num.get("fiscal_period"),
+         "facts": num.get("facts", []) + den.get("facts", [])}
+    return _metric(s.ticker, name, num["value"] / den["value"], "ratio", period=p, formula=formula)
+
+
+def _avg_equity(s, start: str, end: str):
+    begin = _instant_at(s, TAGS["equity"], start)
+    finish = _instant_at(s, TAGS["equity"], end)
+    if not begin or not finish: return None, None, None
+    if begin.end == finish.end: return None, begin, finish
+    return (begin.value + finish.value) / 2, begin, finish
+
+
 def quality_metrics(s: Snapshot, *, sector: str | None = None) -> dict:
-    out = {}; rev = _duration(s, "revenue"); gp = _duration(s, "gross_profit")
-    op = _duration(s, "operating_income"); ni = _duration(s, "net_income")
-    cfo = _duration(s, "cfo"); cap = _duration(s, "capex"); eq = _instant(s, "equity")
-    ltd = _instant(s, "long_term_debt"); std = _instant(s, "short_term_debt")
-    cash = _instant(s, "cash"); dep = _duration(s, "depreciation")
-    def ratio(name, num, den, formula):
-        if num is None or den is None or den == 0:
-            out[name] = metric(s.ticker, name, None, "ratio", "NOT_APPLICABLE" if den == 0 else "INSUFFICIENT_DATA",
-                               formula, missing="zero or missing denominator")
-        else:
-            out[name] = metric(s.ticker, name, num / den, "ratio", "OK", formula)
-    ratio("gross_margin", gp["value"] if gp else None, rev["value"] if rev else None, "gross_profit / revenue")
-    ratio("operating_margin", op["value"] if op else None, rev["value"] if rev else None, "operating_income / revenue")
-    ratio("net_margin", ni["value"] if ni else None, rev["value"] if rev else None, "net_income / revenue")
-    if eq and eq["value"] > 0:
-        ratio("roe", ni["value"] if ni else None, eq["value"], "net_income / equity")
+    out = {}; rev = _flow(s, "revenue"); gp = _flow(s, "gross_profit")
+    op = _flow(s, "operating_income"); ni = _flow(s, "net_income")
+    cfo, cap = _flow(s, "cfo"), _flow(s, "capex")
+    dep = _flow(s, "depreciation"); tax = _flow(s, "tax_expense"); pretax = _flow(s, "pretax_income")
+    end = (ni or rev or op or {"end": "0000"})["end"]
+    eq = _instant_at(s, TAGS["equity"], end); cash = _instant_at(s, TAGS["cash"], end)
+    debt = _total_debt(s, end)
+    out["gross_margin"] = _ratio(s, "gross_margin", gp, rev, "gross_profit / revenue")
+    out["operating_margin"] = _ratio(s, "operating_margin", op, rev, "operating_income / revenue")
+    out["net_margin"] = _ratio(s, "net_margin", ni, rev, "net_income / revenue")
+    # Average equity, matched to TTM/FY income period.
+    if ni:
+        avg, begin, finish = _avg_equity(s, ni["start"], ni["end"])
+    else: avg = begin = finish = None
+    if not avg or not ni:
+        out["roe"] = _unavailable(s.ticker, "roe", "ratio", missing="beginning/ending equity or TTM income missing")
+    elif avg <= 0:
+        out["roe"] = _unavailable(s.ticker, "roe", "ratio", "NOT_APPLICABLE", "average equity <= 0")
     else:
-        out["roe"] = metric(s.ticker, "roe", None, "ratio", "NOT_APPLICABLE",
-                            "net_income / equity", missing="equity is zero or negative")
-    fcf = (cfo["value"] - abs(cap["value"])) if cfo and cap else None
-    ratio("fcf_conversion", fcf, ni["value"] if ni else None, "free_cash_flow / net_income")
-    debt = (ltd["value"] + std["value"]) if ltd and std else None
-    if eq and eq["value"] > 0:
-        ratio("debt_to_equity", debt, eq["value"], "total_debt / equity")
+        p = {"start": ni["start"], "end": ni["end"], "period_type": ni["period_type"], "facts": ni["facts"] + [begin, finish]}
+        out["roe"] = _metric(s.ticker, "roe", ni["value"] / avg, "ratio", period=p,
+                             formula="net_income / average_equity")
+    fcf = cfo["value"] - abs(cap["value"]) if cfo and cap and cfo["start"] == cap["start"] and cfo["end"] == cap["end"] else None
+    out["fcf_conversion"] = _ratio(s, "fcf_conversion",
+        {"value": fcf, "start": cfo["start"], "end": cfo["end"], "period_type": cfo["period_type"], "facts": cfo["facts"] + cap["facts"]} if fcf is not None else None,
+        ni, "free_cash_flow / net_income")
+    if debt["status"] != "OK":
+        out["debt_to_equity"] = _unavailable(s.ticker, "debt_to_equity", "ratio", missing="interest-bearing debt missing")
+    elif not eq or eq.value <= 0:
+        out["debt_to_equity"] = _unavailable(s.ticker, "debt_to_equity", "ratio", "NOT_APPLICABLE", "equity <= 0")
     else:
-        out["debt_to_equity"] = metric(s.ticker, "debt_to_equity", None, "ratio", "NOT_APPLICABLE",
-                                       "total_debt / equity", missing="equity is zero or negative")
-    if dep and op and debt is not None:
+        out["debt_to_equity"] = _metric(s.ticker, "debt_to_equity", debt["value"] / eq.value, "ratio",
+            formula="total_debt / equity", period={"start": None, "end": eq.end, "period_type": "INSTANT",
+            "facts": debt.get("_parts", []) + [eq]}, extra={"debt_rule": debt.get("debt_rule")})
+    if debt["status"] == "OK" and cash and op and dep and op["start"] == dep["start"] and op["end"] == dep["end"]:
         ebitda = op["value"] + dep["value"]
-        ratio("net_debt_to_ebitda", debt - (cash["value"] if cash else 0), ebitda, "net_debt / (operating_income + depreciation)")
+        out["net_debt_to_ebitda"] = _metric(s.ticker, "net_debt_to_ebitda", (debt["value"] - cash.value) / ebitda, "ratio",
+            period={"start": op["start"], "end": op["end"], "period_type": op["period_type"], "facts": op["facts"] + dep["facts"]},
+            formula="(total_debt - cash) / (operating_income + depreciation)") if ebitda > 0 else _unavailable(s.ticker, "net_debt_to_ebitda", "ratio", "NOT_APPLICABLE", "EBITDA <= 0")
     else:
-        out["net_debt_to_ebitda"] = metric(s.ticker, "net_debt_to_ebitda", None, "ratio", "INSUFFICIENT_DATA",
-                                           missing="EBITDA inputs unavailable")
-    _enhance(s, out, "gross_margin", gp["facts"][-1] if gp else None)
-    _enhance(s, out, "operating_margin", op["facts"][-1] if op else None)
-    _enhance(s, out, "net_margin", ni["facts"][-1] if ni else None)
-    _enhance(s, out, "roe", eq["fact"] if eq else None)
-    _enhance(s, out, "fcf_conversion", cfo["facts"][-1] if cfo else None)
-    _enhance(s, out, "debt_to_equity", eq["fact"] if eq else None)
-    _enhance(s, out, "net_debt_to_ebitda", dep["facts"][-1] if dep else None)
-    # ROIC needs tax and invested capital; return explicit blocked rather than using ROE.
-    out["roic"] = metric(s.ticker, "roic", None, "ratio", "INSUFFICIENT_DATA",
-                         "NOPAT / invested capital", missing="tax rate / invested capital inputs not implemented")
-    for name in ("revenue_stability", "earnings_stability", "interest_coverage"):
-        out[name] = metric(s.ticker, name, None, "ratio", "INSUFFICIENT_DATA",
-                           missing="multi-period history / interest expense unavailable")
-    if sector and sector.lower() in ("financials", "banks", "insurance", "real estate"):
-        for name in ("net_debt_to_ebitda", "debt_to_equity"):
-            if name in out: out[name] = metric(s.ticker, name, None, "ratio", "NOT_APPLICABLE",
-                                               missing=f"not meaningful for {sector}")
+        out["net_debt_to_ebitda"] = _unavailable(s.ticker, "net_debt_to_ebitda", "ratio", missing="EBITDA/debt/cash inputs incomplete")
+    out["roic"] = _roic(s, op, tax, pretax, eq, cash, debt, end, sector)
+    out["interest_coverage"] = _interest_coverage(s, op, end, sector)
+    stability = _stability(s)
+    out.update(stability)
+    if sector and sector.lower() in SPECIAL_SECTORS:
+        for name in ("net_debt_to_ebitda", "roic", "interest_coverage"):
+            out[name] = _unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", f"not meaningful for {sector}")
+    return out
+
+
+def _roic(s, op, tax, pretax, eq, cash, debt, end, sector):
+    if sector and sector.lower() in ("financials", "banks", "insurance", "bank"):
+        return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", f"industrial ROIC not applicable to {sector}")
+    if not op or not tax or not pretax or not eq or not cash or debt["status"] != "OK":
+        return _unavailable(s.ticker, "roic", "ratio", missing="EBIT, tax, pretax, debt, equity, or cash missing")
+    if pretax["value"] <= 0: return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "pretax income <= 0")
+    rate = tax["value"] / pretax["value"]
+    if rate < 0 or rate > 1: return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "effective tax rate outside 0..1")
+    begin_eq = _instant_at(s, TAGS["equity"], op["start"])
+    begin_cash = _instant_at(s, TAGS["cash"], op["start"])
+    begin_debt = _total_debt(s, op["start"])
+    if not begin_eq or not begin_cash or begin_debt["status"] != "OK":
+        return _unavailable(s.ticker, "roic", "ratio", missing="beginning invested-capital inputs missing")
+    end_ic = debt["value"] + eq.value - cash.value
+    begin_ic = begin_debt["value"] + begin_eq.value - begin_cash.value
+    avg = (begin_ic + end_ic) / 2
+    if avg <= 0: return _unavailable(s.ticker, "roic", "ratio", "NOT_APPLICABLE", "average invested capital <= 0")
+    nopat = op["value"] * (1 - rate)
+    p = {"start": op["start"], "end": op["end"], "period_type": op["period_type"], "facts": op["facts"] + tax["facts"] + pretax["facts"] + [begin_eq, begin_cash, eq, cash]}
+    return _metric(s.ticker, "roic", nopat / avg, "ratio", period=p,
+                   formula="EBIT*(1-tax_rate) / average(debt+equity-cash)",
+                   extra={"nopat": nopat, "effective_tax_rate": rate, "average_invested_capital": avg})
+
+
+def _interest_coverage(s, op, end, sector):
+    if sector and sector.lower() in ("financials", "banks", "insurance", "bank"):
+        return _unavailable(s.ticker, "interest_coverage", "ratio", "NOT_APPLICABLE", f"not meaningful for {sector}")
+    interest = _flow(s, "interest_expense")
+    if not op or not interest:
+        return _unavailable(s.ticker, "interest_coverage", "ratio", missing="EBIT or interest expense missing")
+    if op["start"] != interest["start"] or op["end"] != interest["end"]:
+        return _unavailable(s.ticker, "interest_coverage", "ratio", missing="EBIT and interest expense periods differ")
+    if interest["value"] <= 0:
+        return _unavailable(s.ticker, "interest_coverage", "ratio", "NOT_APPLICABLE", "interest expense <= 0; ratio undefined")
+    p = {"start": op["start"], "end": op["end"], "period_type": op["period_type"], "facts": op["facts"] + interest["facts"]}
+    return _metric(s.ticker, "interest_coverage", op["value"] / interest["value"], "ratio", period=p,
+                   formula="EBIT / interest_expense")
+
+
+def _stability(s):
+    out = {}
+    for key, name, positive_label in (("revenue", "revenue_stability", "positive_growth_years"),
+                                      ("operating_income", "earnings_stability", "positive_earnings_years")):
+        series = _annual(s, key)[-5:]
+        if len(series) < 5:
+            out[name] = _unavailable(s.ticker, name, "ratio", missing="fewer than 5 annual periods")
+            continue
+        values = [f.value for f in series]
+        growth = []
+        for a, b in zip(series, series[1:]):
+            growth.append(None if a.value <= 0 else (b.value - a.value) / abs(a.value))
+        out[name] = _metric(s.ticker, name, {
+            "years": [f.end for f in series], "values": values, "growth": growth,
+            positive_label: sum(1 for x in growth if x is not None and x > 0),
+            "negative_years": sum(1 for x in values if x < 0),
+            "cagr": None if values[0] <= 0 else (values[-1] / values[0]) ** (1 / 4) - 1,
+            "volatility": None if len([x for x in growth if x is not None]) < 2 else __import__("statistics").pstdev([x for x in growth if x is not None]),
+        }, "ratio", period={"start": series[0].start, "end": series[-1].end, "period_type": "FY",
+                            "facts": series}, formula="5y annual dispersion")
     return out
 
 
 def garp_metrics(s: Snapshot) -> dict:
-    out = {}
-    rev = _annual_series(s, "revenue"); gp = _annual_series(s, "gross_profit")
-    op = _annual_series(s, "operating_income"); eps = _annual_series(s, "eps_diluted", "USD/shares")
-    cfo = _annual_series(s, "cfo"); cap = _annual_series(s, "capex")
+    out = {}; rev = _annual(s, "revenue"); gp = _annual(s, "gross_profit")
+    op = _annual(s, "operating_income"); eps = _annual(s, "eps_diluted", "USD/shares")
+    cfo, cap = _annual(s, "cfo"), _annual(s, "capex")
     def growth(name, series):
         if len(series) < 2:
-            out[name] = metric(s.ticker, name, None, "ratio", "INSUFFICIENT_DATA", missing="two annual periods required")
+            out[name] = _unavailable(s.ticker, name, "ratio", missing="two annual periods required")
             return
         a, b = series[-2], series[-1]
         if a.value <= 0:
-            out[name] = metric(s.ticker, name, None, "ratio", "NOT_APPLICABLE",
-                               missing="non-positive base; growth rate not meaningful")
+            out[name] = _unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", "non-positive base")
             return
-        v = (b.value - a.value) / abs(a.value)
-        out[name] = metric(s.ticker, name, v, "ratio", "OK", "(latest - prior) / abs(prior)",
-                           b.end, b.accepted_at or b.filed, b.availability_quality, accession=b.accession,
-                           form=b.form, inputs=[_fact_ref(a), _fact_ref(b)])
+        p = {"start": a.start, "end": b.end, "period_type": "FY", "facts": [a, b]}
+        out[name] = _metric(s.ticker, name, (b.value - a.value) / abs(a.value), "ratio", period=p,
+                            formula="(latest - prior) / abs(prior)")
     growth("revenue_growth", rev); growth("gross_profit_growth", gp)
     growth("operating_income_growth", op); growth("eps_growth", eps)
     fcf = []
-    by_end = {f.end: f for f in cfo}
+    cfo_by_end = {f.end: f for f in cfo}
     for c in cap:
-        if c.end in by_end: fcf.append(Fact(c.cik,"x","fcf",unit="USD",value=by_end[c.end].value-abs(c.value),start=c.start,end=c.end,filed=c.filed,form=c.form,accession=c.accession))
+        if c.end in cfo_by_end:
+            fcf.append(Fact(c.cik, "x", "fcf", "USD", cfo_by_end[c.end].value - abs(c.value),
+                            c.start, c.end, c.filed, c.form, c.accession, c.fy, c.fp, c.frame,
+                            c.accepted_at, c.first_seen_at, c.source, c.fetched_at, c.sha256, c.availability_quality))
     growth("fcf_growth", fcf)
     for name, n in (("revenue_cagr_3y", 3), ("revenue_cagr_5y", 5)):
         if len(rev) < n + 1:
-            out[name] = metric(s.ticker, name, None, "ratio", "INSUFFICIENT_DATA", missing=f"{n+1} annual periods required")
+            out[name] = _unavailable(s.ticker, name, "ratio", missing=f"{n+1} annual periods required")
         else:
             a, b = rev[-(n+1)], rev[-1]
-            if a.value <= 0: out[name] = metric(s.ticker, name, None, "ratio", "NOT_APPLICABLE", missing="non-positive base")
-            else: out[name] = metric(s.ticker, name, (b.value/a.value)**(1/n)-1, "ratio", "OK", f"{n}y CAGR",
-                                     b.end, b.accepted_at or b.filed, b.availability_quality, accession=b.accession, form=b.form,
-                                     inputs=[_fact_ref(a), _fact_ref(b)])
-    if len(rev) >= 2 and len(op) >= 2 and rev[-1].value != 0 and op[-1].value != 0:
-        rg = (rev[-1].value-rev[-2].value)/abs(rev[-2].value)
-        og = (op[-1].value-op[-2].value)/abs(op[-2].value)
-        out["operating_leverage"] = metric(s.ticker, "operating_leverage", og-rg, "ratio", "OK",
-                                           "operating_income_growth - revenue_growth", op[-1].end,
-                                           op[-1].filed, op[-1].availability_quality, accession=op[-1].accession,
-                                           form=op[-1].form, inputs=[_fact_ref(op[-2]), _fact_ref(op[-1])])
+            out[name] = (_unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", "non-positive base")
+                         if a.value <= 0 else _metric(s.ticker, name, (b.value/a.value)**(1/n)-1, "ratio",
+                         period={"start": a.start, "end": b.end, "period_type": "FY", "facts": [a, b]},
+                         formula=f"{n}y CAGR"))
+    # Require both annual series to end on the same fiscal period.
+    if len(rev) >= 2 and len(op) >= 2 and rev[-1].end == op[-1].end and rev[-2].end == op[-2].end:
+        rg = None if rev[-2].value <= 0 else (rev[-1].value-rev[-2].value)/abs(rev[-2].value)
+        og = None if op[-2].value <= 0 else (op[-1].value-op[-2].value)/abs(op[-2].value)
+        p = {"start": rev[-2].start, "end": rev[-1].end, "period_type": "FY", "facts": rev[-2:] + op[-2:]}
+        if rg and og:
+            out["operating_leverage_ratio"] = _metric(s.ticker, "operating_leverage_ratio", og/rg, "ratio",
+                period=p, formula="operating_income_growth / revenue_growth")
+            out["operating_margin_expansion"] = _metric(s.ticker, "operating_margin_expansion", og-rg, "ratio",
+                period=p, formula="operating_income_growth - revenue_growth")
+        else:
+            for name in ("operating_leverage_ratio", "operating_margin_expansion"):
+                out[name] = _unavailable(s.ticker, name, "ratio", "NOT_APPLICABLE", "zero/non-positive base")
     else:
-        out["operating_leverage"] = metric(s.ticker, "operating_leverage", None, "ratio", "INSUFFICIENT_DATA", missing="two annual periods required")
-    out["peg"] = metric(s.ticker, "peg", None, "ratio", "DATA_BLOCKED",
-                        missing="forward EPS estimates not licensed; historical EPS growth is not a substitute")
+        for name in ("operating_leverage_ratio", "operating_margin_expansion"):
+            out[name] = _unavailable(s.ticker, name, "ratio", missing="revenue/operating income periods do not match")
+    out["operating_leverage"] = out["operating_margin_expansion"]
+    out["peg"] = _unavailable(s.ticker, "peg", "ratio", "DATA_BLOCKED", "forward EPS estimates not licensed")
     return out
 
 
 def analyze(ticker: str, cik: str, facts: list[Fact], *, as_of: str | None = None,
-            market_price: float | None = None, current_shares: float | None = None,
+            market_quote: dict | None = None, share_count: dict | None = None,
             sector: str | None = None) -> dict:
     s = Snapshot(ticker, cik, facts, as_of)
     return {"ticker": ticker, "cik": cik, "as_of": as_of, "sector": sector,
-            "value": value_metrics(s, market_price=market_price, current_shares=current_shares),
+            "value": value_metrics(s, market_quote=market_quote, share_count=share_count),
             "quality": quality_metrics(s, sector=sector), "garp": garp_metrics(s)}

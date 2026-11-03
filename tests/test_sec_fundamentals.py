@@ -22,6 +22,8 @@ def base_facts():
                fact("NetCashProvidedByUsedInOperatingActivities", 20, s, e, "2025-05-05", acc=f"Q{i}"),
                fact("PaymentsToAcquirePropertyPlantAndEquipment", 5, s, e, "2025-05-05", acc=f"Q{i}")]
     fs += [fact("StockholdersEquity", 200, None, "2025-12-31", instant=True) if False else
+           Fact("0000000001", "us-gaap", "StockholdersEquity", "USD", 180, None, "2025-01-01",
+                "2025-05-05", "10-Q", "B0"),
            Fact("0000000001", "us-gaap", "StockholdersEquity", "USD", 200, None, "2025-12-31",
                 "2025-05-05", "10-Q", "B1"),
            Fact("0000000001", "us-gaap", "CashAndCashEquivalentsAtCarryingValue", "USD", 50, None,
@@ -36,7 +38,11 @@ def base_facts():
 
 
 def test_ttm_uses_four_quarters_and_fcf():
-    a = analyze("TEST", "0000000001", base_facts(), as_of="2026-01-01", market_price=100, current_shares=10)
+    a = analyze("TEST", "0000000001", base_facts(), as_of="2026-01-01",
+                market_quote={"ticker": "TEST", "price": 100.0, "currency": "USD", "price_type": "LAST",
+                              "timestamp": "2025-12-31T20:00:00Z", "source": "TEST", "license_status": "AUTHORIZED"},
+                share_count={"shares": 10.0, "observation_date": "2025-12-31", "available_at": "2025-12-31",
+                             "source": "TEST"})
     assert a["value"]["revenue"]["value"] == 400
     assert a["value"]["free_cash_flow"]["value"] == 60
     assert a["value"]["pe_ttm"]["value"] == pytest.approx(25)
@@ -62,6 +68,8 @@ def test_negative_equity_is_not_applicable():
     fs = base_facts()
     fs = [x for x in fs if x.concept != "StockholdersEquity"]
     fs.append(Fact("0000000001", "us-gaap", "StockholdersEquity", "USD", -10, None,
+                   "2025-01-01", "2025-05-05", "10-Q", "BN0"))
+    fs.append(Fact("0000000001", "us-gaap", "StockholdersEquity", "USD", -10, None,
                    "2025-12-31", "2025-05-05", "10-Q", "BN"))
     a = analyze("TEST", "0000000001", fs, as_of="2026-01-01")
     assert a["quality"]["roe"]["status"] == "NOT_APPLICABLE"
@@ -69,8 +77,12 @@ def test_negative_equity_is_not_applicable():
 
 
 def test_zero_revenue_margin_not_applicable():
-    fs = [x for x in base_facts() if x.concept != "RevenueFromContractWithCustomerExcludingAssessedTax"]
-    fs.append(fact("RevenueFromContractWithCustomerExcludingAssessedTax", 0, "2025-01-01", "2025-03-31"))
+    fs = [x for x in base_facts() if x.concept not in
+          ("RevenueFromContractWithCustomerExcludingAssessedTax", "GrossProfit")]
+    for s, e in [("2025-01-01", "2025-03-31"), ("2025-04-01", "2025-06-30"),
+                 ("2025-07-01", "2025-09-30"), ("2025-10-01", "2025-12-31")]:
+        fs.append(fact("RevenueFromContractWithCustomerExcludingAssessedTax", 0, s, e))
+        fs.append(fact("GrossProfit", 0, s, e))
     a = analyze("TEST", "0000000001", fs, as_of="2026-01-01")
     assert a["quality"]["gross_margin"]["status"] == "NOT_APPLICABLE"
 
@@ -89,9 +101,10 @@ def test_price_metrics_blocked_without_market_inputs():
 def test_live_sample_snapshot_is_complete_and_honest():
     import json
     d = json.loads(Path("docs/research/sec_fundamentals_snapshot.json").read_text())
-    assert len(d) == 9
+    assert len(d) == 28
     assert all("value" in a for a in d.values())
-    assert all(a["value"]["revenue"]["status"] == "OK" for a in d.values())
+    assert sum(1 for a in d.values() if a["value"]["revenue"]["status"] == "OK") >= 27
+    assert d["XOM"]["value"]["revenue"]["status"] == "INSUFFICIENT_DATA"
     assert all(a["value"]["pe_ttm"]["status"] == "DATA_BLOCKED" for a in d.values())
     assert all(a["garp"]["peg"]["status"] == "DATA_BLOCKED" for a in d.values())
     assert d["RIVN"]["value"]["net_income"]["value"] < 0
