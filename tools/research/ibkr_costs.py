@@ -21,7 +21,10 @@ EXCHANGE_RANGE = (0.0, 0.00030)
 TAF_HOLIDAY = (dt.date(2026, 10, 1), dt.date(2026, 12, 31))
 
 
-def fees(shares, price, side, date=None, exchange_per_share=None):
+def fees(shares, price, side, date=None, exchange_per_share=None,
+         layer="historical_backtest"):
+    if layer not in ("historical_backtest", "forward_estimate"):
+        raise ValueError("unknown cost layer")
     shares = abs(float(shares)); notional = shares * float(price)
     commission = max(COMMISSION_MIN, min(COMMISSION_PER_SHARE * shares,
                                           COMMISSION_MAX_PCT * notional))
@@ -40,7 +43,7 @@ def fees(shares, price, side, date=None, exchange_per_share=None):
     total = commission + sec + taf + cat + clearing + ex
     return {"commission": commission, "sec_fee": sec, "taf_fee": taf,
             "cat_fee": cat, "clearing_fee": clearing, "exchange_fee": ex,
-            "cost": total}
+            "model_layer": layer, "cost": total}
 
 
 def range_fees(shares, price, side, date=None):
