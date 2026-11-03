@@ -2,7 +2,21 @@
 
 Date: 2026-11-03
 Branch: `fix/dashboard-data-provenance-ux`
-PR HEAD audited: `3d3c4aff590fc80314339240a361fd2e49d72d80` plus local visual-audit fixes.
+
+## Provenance
+
+```text
+Audit worktree base HEAD: 3d3c4aff590fc80314339240a361fd2e49d72d80
+Final committed code:     73bb446c8e597f6dba545d0f4c8eb4172bfa587e
+```
+
+The screenshots were captured from a working tree based on
+`3d3c4aff590fc80314339240a361fd2e49d72d80`, with local visual-audit fixes
+applied during the audit. Those fixes were subsequently committed at
+`73bb446c8e597f6dba545d0f4c8eb4172bfa587e`; this document and `report.json`
+record that final SHA for traceability. No runtime code is changed by this
+documentation-only update.
+
 Server: `http://127.0.0.1:8765/`
 Browser: real Google Chrome via Playwright, headless.
 
