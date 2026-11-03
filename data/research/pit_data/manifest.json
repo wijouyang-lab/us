@@ -1,39 +1,82 @@
 {
   "source_urls": {
     "finsaber": "https://huggingface.co/datasets/finsaber-team/FINSABER-reproduce/resolve/main/data/price/all_sp500_prices_2000_2024_delisted_include.csv",
-    "membership": "https://raw.githubusercontent.com/fja05680/sp500/master/S%26P%20500%20Historical%20Components%20%26%20Changes.csv"
+    "membership": "https://raw.githubusercontent.com/fja05680/sp500/master/S%26P%20500%20Historical%20Components%20%26%20Changes.csv",
+    "chinobing": "https://github.com/chinobing/historical_sp500_constituents",
+    "ishares": "https://github.com/riazarbi/sp500-scraper",
+    "nport": "https://www.sec.gov/Archives/edgar/data/884394/"
   },
   "downloaded_at_utc": "2026-11-04T00:30:00Z",
   "files": {
     "finsaber_20.csv": {
       "bytes": 5995573,
-      "sha256": "d2ba955880ac19ae863f5cef61cd2fc54c3bab579823003f1aa68485199d50e2",
       "sha256_normalized_lf": "8962c16ee17eb596a6228d0f8fd0583b5f24149848b2dc7eca84f6b16352cd02",
-      "note": "normalized LF hash for cross-platform reproducibility; raw byte hash is checkout-dependent"
+      "note": "normalized LF hash for cross-platform reproducibility"
     },
     "sp500_membership_raw.csv": {
       "bytes": 7791584,
-      "sha256": "bd2745939a709f316a74a550253d21f3fd5b72aa223e3a0137c790d2e54b7d5e",
       "sha256_normalized_lf": "8d2ff2c66209a47cc4ebc9665a7b6041036d5eaffb8780d24d55fdc38877a889",
-      "note": "normalized LF hash for cross-platform reproducibility; raw byte hash is checkout-dependent"
+      "note": "normalized LF hash for cross-platform reproducibility"
     },
     "source_trials_20.json": {
       "bytes": 4661,
-      "sha256": "8e22ff49c26ee1689638f3766b3314b38054d5d8124f4c1674481264c6ac5c3b",
       "sha256_normalized_lf": "1e13334c02863832427e86d58d2a89727a7df2680b017b01043f09e46d98a536",
-      "note": "normalized LF hash for cross-platform reproducibility; raw byte hash is checkout-dependent"
+      "note": "normalized LF hash for cross-platform reproducibility"
     },
     "ticker_status_98_2026-11-04.csv": {
       "bytes": 104368,
-      "sha256": "68a8209baa6b6f444e5176ca34e94ec1353ab3e73130cef3fd0af23a0ee5f547",
       "sha256_normalized_lf": "662b021b93c0b3129f79e50e5dfd16059e932fb7700af6a09639567491317b35",
-      "note": "normalized LF hash for cross-platform reproducibility; raw byte hash is checkout-dependent"
+      "note": "normalized LF hash for cross-platform reproducibility"
     },
     "missing_tickers_identity_2026-10-28.csv": {
       "bytes": 100818,
-      "sha256": "abc6517634ecdd3ed836ccb11097428b63d15079e39188ee9b499ccbd5ee2861",
       "sha256_normalized_lf": "abc6517634ecdd3ed836ccb11097428b63d15079e39188ee9b499ccbd5ee2861",
-      "note": "normalized LF hash for cross-platform reproducibility; raw byte hash is checkout-dependent"
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "chinobing_sp500_changes_since_1996.csv": {
+      "bytes": 20294,
+      "sha256_normalized_lf": "795481cff62f81b058232f7c4f5bb88d1bfbf49054c3f05631a4c61a0e1d9a14",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "chinobing_sp_500_historical_components.csv": {
+      "bytes": 7729724,
+      "sha256_normalized_lf": "bbd525a4e23b4c86f679ba2b617936a40d7a95134d7a266ee7f5b5bccf4c8c9b",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "chinobing_sp500.py": {
+      "bytes": 4042,
+      "sha256_normalized_lf": "b4d5d13b688527d370b14050ffd81fbeaa9bdf74356f0aa24d83078662afcf60",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "ishares_monthly_2019_2024.csv": {
+      "bytes": 2287271,
+      "sha256_normalized_lf": "536f24d9a41462e173f78cf2d4ed6ccd0f14cb4ca2886e563c5bc7d9e635e3c8",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "membership_diff_ishares_chinobing.csv": {
+      "bytes": 4484,
+      "sha256_normalized_lf": "8483d92f43fd07fe7c4727bf9c979fac8ea35da24be5bdc659b521138e89b7b8",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "nport_spy_20241125.xml": {
+      "bytes": 453612,
+      "sha256_normalized_lf": "abdf627787ebf4d536b9166be4416a1d434a30ed38d630dba7f57c39f58bcbd5",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "nport_spy_2019_2024.csv": {
+      "bytes": 164,
+      "sha256_normalized_lf": "a4dd7ec98bba127cdebb15c4472e5ba7042411882382399056ff3ad4c540454c",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "corporate_action_samples_20.csv": {
+      "bytes": 2238,
+      "sha256_normalized_lf": "b89902f8b74cf3458e98baef57f0dd178c02f4ceaf3ba42ba6133a9285a4f4df",
+      "note": "normalized LF hash for cross-platform reproducibility"
+    },
+    "coverage_audit_2026-11-04.json": {
+      "bytes": 631,
+      "sha256_normalized_lf": "e357a02c99787bd346459eb71856d20cfae3d7b510d46fa86fcb4cf0716526f8",
+      "note": "normalized LF hash for cross-platform reproducibility"
     }
   }
 }

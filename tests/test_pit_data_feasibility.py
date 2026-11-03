@@ -51,3 +51,34 @@ def test_manifest_hashes_match_files():
     for name, meta in m["files"].items():
         norm = (D / name).read_bytes().replace(b"\r\n", b"\n")
         assert hashlib.sha256(norm).hexdigest() == meta["sha256_normalized_lf"]
+
+
+def test_ishares_chinobing_membership_agree():
+    d = pd.read_csv(D / "membership_diff_ishares_chinobing.csv")
+    assert len(d) == 70
+    assert d.jaccard.mean() > 0.99
+    assert d.jaccard.min() > 0.97
+
+
+def test_member_month_price_coverage_above_95():
+    import json
+    c = json.loads((D / "coverage_audit_2026-11-04.json").read_text())
+    assert c["member_month_coverage"] > 0.95
+    assert c["member_month_price_found"] == 34818
+
+
+def test_nport_snapshot_overlaps_ishares():
+    import json
+    c = json.loads((D / "coverage_audit_2026-11-04.json").read_text())
+    n = c["nport_2024_09_30"]
+    assert n["nport_unique_cusip"] == 479
+    assert n["overlap"] == 477
+    assert n["ishares_only"] == 8
+
+
+def test_corporate_actions_are_unverified_and_split_factor_broken():
+    d = pd.read_csv(D / "corporate_action_samples_20.csv")
+    assert len(d) == 20
+    assert (d.evidence_status == "UNVERIFIED").all()
+    a = d[(d.ticker == "AAPL") & (d.event_type == "split")].iloc[0]
+    assert a["prev_factor"] < 0.3 and a["factor"] > 0.9

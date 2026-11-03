@@ -1,0 +1,21 @@
+{
+  "member_month_rows": 35294,
+  "member_month_price_found": 34818,
+  "member_month_coverage": 0.986513288377628,
+  "membership_months_compared": 70,
+  "membership_mean_jaccard": 0.9919339850412827,
+  "membership_exact_months": 18,
+  "membership_min_jaccard": 0.9782608695652174,
+  "ticker_98_total": 98,
+  "ticker_98_found": 93,
+  "ticker_coverage": 0.9489795918367347,
+  "nport_2024_09_30": {
+    "nport_unique_cusip": 479,
+    "ishares_unique_cusip": 485,
+    "overlap": 477,
+    "nport_only": 2,
+    "ishares_only": 8
+  },
+  "corporate_actions_sample": 20,
+  "corporate_actions_independently_verified": 0
+}

@@ -230,3 +230,136 @@ data/research/pit_data/manifest.json
 tools/research/pit_data_feasibility.py
 tests/test_pit_data_feasibility.py
 ```
+
+
+---
+
+# Addendum: 2019-2024 membership and validation (2026-11-04)
+
+This addendum supersedes the earlier statement that 2019-2024 membership is
+entirely unavailable.
+
+## A. Membership source tests
+
+### chinobing
+
+- repo: chinobing/historical_sp500_constituents
+- sp_500_historical_components.csv: 3,933 daily/change snapshots, 1996-01-02..2026-11-03
+- sp500_changes_since_1996.csv: 703 change rows
+- generator sp500.py fetches **Wikipedia current constituents** and appends to
+  the stored historical CSV; it does not independently reconstruct 2019-2024
+  from official S&P announcements
+- verdict: useful for 2019-2024 sequence, but **Wikipedia-derived**, not
+  independent; announcement vs effective dates unavailable.
+
+### sp500-scraper / iShares
+
+- repo: 
+iazarbi/sp500-scraper
+- 1,211 daily iShares CSVs available
+- 70 month-end snapshots successfully fetched for 2019-2024
+- 35,294 equity constituent rows
+- fields: symbol, name, CUSIP, ISIN, asset_class
+- verdict: independent of Wikipedia; month-end snapshot only, not official daily
+  membership or announcement dates.
+
+### SEC N-PORT
+
+- SPY trust CIK 884394
+- 2024-09-30 NPORT-P fetched (filed 2024-11-25), 504 holdings
+- unique CUSIP: 479
+- iShares 2024-09-30: 485 CUSIP
+- overlap: **477**
+- NPORT-only: 2; iShares-only: 8
+- verdict: independent month-end cross-check, not daily membership; older
+  2019-2023 NPORT parsing was not completed (XML format issues).
+
+## B. Membership agreement
+
+70 month-end common snapshots:
+
+| Metric | Value |
+|---|---:|
+| Mean Jaccard | **99.19%** |
+| Exact months | 18 / 70 |
+| Worst Jaccard | 97.83% |
+
+This is strong agreement and supports the 2019-2024 edge sequence, but it does
+not provide official announcement dates or daily effective dates.
+
+## C. Price coverage recomputation
+
+Using iShares 2019-2024 equity member-months:
+
+`	ext
+member-month rows: 35,294
+found in FINSABER on same month-end date: 34,818
+member-month price coverage: 98.65%
+`
+
+This passes the 95% *month-end* coverage threshold.
+
+98-ticker failure set:
+
+`	ext
+raw ticker presence: 93/98 = 94.9%
+`
+
+The 98% ticker gate still fails. Five missing: DAY, TSO, UA.C, WYN, YHOO.
+MYL and ACS show severe last-price anomalies; raw presence is not valid identity
+coverage.
+
+## D. Corporate actions: 20 samples
+
+corporate_action_samples_20.csv covers splits, dividends, mergers, ticker
+changes, take-private and delisting.
+
+Result:
+
+- 20/20 events observed in FINSABER;
+- **0/20 independently verified** against SEC/issuer documents in this round;
+- FINSABER provides no split/dividend table, only raw and adjusted close;
+- AAPL 2020-08-31 shows adjusted factor jumping from 0.2438 to 0.9751 across a
+  4:1 split, which is not a stable split-adjusted factor. This must be treated
+  as a corporate-action consistency failure, not accepted silently.
+
+Therefore corporate-action coverage remains **UNVERIFIED** and the gate fails.
+
+## E. FINSABER provenance / license
+
+- Hugging Face dataset card says Apache-2.0.
+- FINSABER code contains an **FMP** SP500 price downloader
+  (llm_traders/finagent/configs/downloader/prices/fmp_day_prices_sp500.py).
+- No upstream FMP redistribution grant is documented on the dataset card.
+- Therefore: **PROVENANCE_UNVERIFIED**; Apache-2.0 on the aggregation does not
+  prove rights to redistribute the underlying FMP prices.
+
+## F. Revised gate result
+
+| Gate | Result |
+|---|---|
+| 10 years | yes (2000-2024) |
+| 3-year untouched holdout | **no** (2025-2026 absent) |
+| Member-day coverage >=95% | month-end proxy 98.65%; daily not proven |
+| Ticker coverage >=98% | **no, 94.9%** |
+| Delisted OHLCV | found 93/98, but anomalies |
+| Corporate actions verified | **no, 0/20 independent** |
+| Provenance | **PROVENANCE_UNVERIFIED (FMP upstream)** |
+| No future leakage at full-universe level | not proven |
+
+Final decision remains **DATA_BLOCKED / NO-GO**. Do not build the formal data
+layer.
+
+## G. New artifacts
+
+`	ext
+data/research/pit_data/chinobing_sp500_changes_since_1996.csv
+data/research/pit_data/chinobing_sp_500_historical_components.csv
+data/research/pit_data/chinobing_sp500.py
+data/research/pit_data/ishares_monthly_2019_2024.csv
+data/research/pit_data/membership_diff_ishares_chinobing.csv
+data/research/pit_data/nport_spy_20241125.xml
+data/research/pit_data/nport_spy_2019_2024.csv
+data/research/pit_data/corporate_action_samples_20.csv
+data/research/pit_data/coverage_audit_2026-11-04.json
+`
