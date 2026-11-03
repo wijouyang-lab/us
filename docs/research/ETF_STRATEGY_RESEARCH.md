@@ -218,6 +218,24 @@ B is the strongest candidate: significant alpha (q=.006), 6.59% CAGR, but a
 -15.20% baseline drawdown. It cannot be promoted by changing the cost assumption
 or re-optimizing.
 
+## 9b. Correction diff versus the previous run
+
+| Item | Before accounting fix | After fix |
+|---|---:|---:|
+| A final NAV | $160,948.43 | $160,960.99 |
+| A CAGR / MaxDD | 6.21% / -25.59% | 6.21% / -25.59% |
+| B final NAV | $172,469.83 | $172,469.83 |
+| C final NAV | $72,582.55 | $72,679.94 |
+| C CAGR / MaxDD | 1.95% / -5.53% | 1.94% / -5.52% |
+| C order legs | 128 | 129 (initial BIL buy) |
+| C total cost | $1,006.67 | $1,034.94 |
+
+The previous C path received initial BIL without a trade or fee. The corrected
+path pays the initial BIL commission/fees/slippage and keeps residual cash. The
+first close-to-close return is now measured from $50,000, not from the first
+close. Circular-block bootstrap replaced the earlier non-circular block sampler;
+A/B/C 95% CI changed but no decision changed.
+
 ## 10. What this does and does not prove
 
 - A/B produce attractive long-run CAGR versus BIL; A has unacceptable drawdown,
