@@ -2,7 +2,9 @@
 
 Date: 2026-11-03
 Branch: `research/fixed-risk-budget-qqq-bil`
-Status: **Transition does not beat the risk-matched passive portfolio**
+Status: **FROZEN — NO_EXTRA_STRATEGY_VALUE / NO-GO**
+
+The Transition research is frozen. Do not search parameters, windows, cost assumptions or risk targets. Archived evidence: PR438 adjusted/sleeve NAV reproduced to 0.00000165 max daily error; 10.5337% is an adjusted-NAV weight; raw/cash exact risk match is unfinished.
 
 Research only. No orders, no broker, no deployment.
 

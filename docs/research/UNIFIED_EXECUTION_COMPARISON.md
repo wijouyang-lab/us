@@ -2,7 +2,9 @@
 
 Date: 2026-11-03
 Branch: `research/fixed-risk-budget-qqq-bil`
-Status: **Transition still does not beat risk-matched passive**
+Status: **FROZEN — Transition still does not beat risk-matched passive / NO-GO**
+
+Raw/cash exact 3 bps risk match remains unfinished; do not substitute the 10.5337% adjusted-NAV weight as if it were raw/cash matched.
 
 ## 1. Scope
 

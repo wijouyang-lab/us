@@ -60,3 +60,14 @@ G (#455) uses the calibrated model end-to-end.
   0.0000206; net impact is small.
 - Venue/pass-through remains an assumption band, not a claim of actual historical
   SmartRouting fills.
+
+
+## 4. Decision-sensitivity conclusion
+
+The largest cost delta is E at -.91, 0.016% of the ,000 account over the
+full sample. MaxDD margins to the 15% gate are: A 10.59pp over, B 0.20pp over,
+C passes DD but fails alpha, D 9.24pp over, E 17.18pp over, F 10.83pp over.
+No cost delta can flip any gate. Full NAV/HAC/Bootstrap reruns are not justified
+for A-F; their reports retain the old cost layer and this audit records the
+difference. G and the Transition passive control use the calibrated model.
+F remains NO-GO.
