@@ -18,6 +18,8 @@ def main() -> None:
     p.add_argument("--shares", type=int, required=True); p.add_argument("--price", type=float, required=True)
     p.add_argument("--asof", required=True); p.add_argument("--strategy", required=True)
     p.add_argument("--slip-bps", type=float, default=3.0)
+    p.add_argument("--source", default="USER_PROVIDED")
+    p.add_argument("--price-type", default="LAST")
     c = sub.add_parser("confirm"); c.add_argument("--order-id", required=True); c.add_argument("--token", required=True)
     x = sub.add_parser("cancel"); x.add_argument("--order-id", required=True)
     n = sub.add_parser("nav"); n.add_argument("--prices", required=True, help="JSON ticker->price")
@@ -28,7 +30,8 @@ def main() -> None:
     elif a.cmd == "history": print(json.dumps(e.history(), indent=2))
     elif a.cmd == "propose": print(json.dumps(e.propose(client_order_id=a.client_id, ticker=a.ticker,
         side=a.side.upper(), shares=a.shares, reference_price=a.price, price_asof=a.asof,
-        strategy=a.strategy, slippage_bps=a.slip_bps), indent=2))
+        strategy=a.strategy, slippage_bps=a.slip_bps,
+        price_source=a.source, price_type=a.price_type), indent=2))
     elif a.cmd == "confirm": print(json.dumps(e.confirm(a.order_id, a.token), indent=2))
     elif a.cmd == "cancel": print(json.dumps(e.cancel(a.order_id), indent=2))
     elif a.cmd == "nav":

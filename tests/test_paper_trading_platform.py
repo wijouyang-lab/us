@@ -11,7 +11,7 @@ from tools.paper_trading.valuation import mark_to_market, metrics
 
 def buy(engine, cid="b1", shares=100, price=100.0, ticker="AAPL", strategy="VALUE"):
     p = engine.propose(client_order_id=cid, ticker=ticker, side="BUY", shares=shares,
-                       reference_price=price, price_asof="2026-11-03T20:00:00Z",
+                       reference_price=price, price_asof="2026-11-03T17:00:00Z",
                        strategy=strategy, slippage_bps=3)
     return engine.confirm(p["order_id"], p["confirm_token"])
 
@@ -43,25 +43,25 @@ def test_duplicate_and_insufficient_cash_rejected(tmp_path):
         buy(e)
     with pytest.raises(ValueError, match="insufficient"):
         e.propose(client_order_id="huge", ticker="MSFT", side="BUY", shares=100000,
-                  reference_price=100, price_asof="2026-11-03", strategy="VALUE")
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE")
 
 
 def test_partial_sell_realizes_pnl_and_blocks_short(tmp_path):
     e = PaperEngine(tmp_path); buy(e)
     p = e.propose(client_order_id="s1", ticker="AAPL", side="SELL", shares=40,
-                  reference_price=110, price_asof="2026-11-04", strategy="VALUE")
+                  reference_price=110, price_asof="2026-11-03T18:00:00Z", strategy="VALUE")
     s = e.confirm(p["order_id"], p["confirm_token"])
     assert s["fill"]["fill_price"] < 110
     assert position_shares(e.store.load(), "AAPL") == 60
     with pytest.raises(ValueError, match="insufficient"):
         e.propose(client_order_id="s2", ticker="AAPL", side="SELL", shares=61,
-                  reference_price=110, price_asof="2026-11-04", strategy="VALUE")
+                  reference_price=110, price_asof="2026-11-03T18:00:00Z", strategy="VALUE")
 
 
 def test_cancel_pending_and_cannot_confirm(tmp_path):
     e = PaperEngine(tmp_path)
     p = e.propose(client_order_id="c1", ticker="AAPL", side="BUY", shares=10,
-                  reference_price=100, price_asof="2026-11-03", strategy="VALUE")
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE")
     e.cancel(p["order_id"])
     with pytest.raises(ValueError, match="not pending"):
         e.confirm(p["order_id"], p["confirm_token"])
@@ -70,7 +70,7 @@ def test_cancel_pending_and_cannot_confirm(tmp_path):
 def test_expired_proposal_fails_closed(tmp_path):
     e = PaperEngine(tmp_path, max_proposal_age_seconds=0)
     p = e.propose(client_order_id="x", ticker="AAPL", side="BUY", shares=10,
-                  reference_price=100, price_asof="2026-11-03", strategy="VALUE")
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE")
     with pytest.raises(ValueError):
         e.confirm(p["order_id"], p["confirm_token"])
 
@@ -111,3 +111,41 @@ def test_ledger_is_append_only_and_order_ids_unique(tmp_path):
     assert len(h) == 2
     assert h[0]["order_id"] != h[1]["order_id"]
     assert all(x["type"] == "FILL" for x in h)
+
+
+def test_future_quote_rejected(tmp_path):
+    e = PaperEngine(tmp_path)
+    with pytest.raises(ValueError, match="future"):
+        e.propose(client_order_id="f", ticker="AAPL", side="BUY", shares=1,
+                  reference_price=100, price_asof="2026-11-04T20:00:00Z", strategy="VALUE")
+
+
+def test_stale_quote_rejected(tmp_path):
+    e = PaperEngine(tmp_path, max_price_age_seconds=1)
+    with pytest.raises(ValueError, match="stale"):
+        e.propose(client_order_id="s", ticker="AAPL", side="BUY", shares=1,
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE")
+
+
+def test_negative_slippage_rejected(tmp_path):
+    e = PaperEngine(tmp_path)
+    with pytest.raises(ValueError, match="slippage"):
+        e.propose(client_order_id="n", ticker="AAPL", side="BUY", shares=1,
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE",
+                  slippage_bps=-10)
+
+
+def test_pending_buys_reserve_slippage_and_fees(tmp_path):
+    e = PaperEngine(tmp_path)
+    for i in (1, 2):
+        e.propose(client_order_id=f"r{i}", ticker="AAPL", side="BUY", shares=240,
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE")
+    with pytest.raises(ValueError, match="insufficient unreserved cash"):
+        e.propose(client_order_id="r3", ticker="AAPL", side="BUY", shares=100,
+                  reference_price=100, price_asof="2026-11-03T17:00:00Z", strategy="VALUE")
+
+
+def test_confirmation_is_single_use(tmp_path):
+    e = PaperEngine(tmp_path); o = buy(e, shares=10, price=100)
+    with pytest.raises(ValueError, match="not pending"):
+        e.confirm(o["order_id"], "anything")
