@@ -91,3 +91,27 @@ def test_garp_operating_leverage_ratio_and_margin_expansion():
     assert a["garp"]["operating_leverage_ratio"]["status"]=="OK"
     assert a["garp"]["operating_margin_expansion"]["status"]=="OK"
     assert "operating_leverage" not in a["garp"] or a["garp"]["operating_leverage"]["metric"] == "operating_margin_expansion"
+
+
+def test_debt_total_does_not_double_count_current_portion():
+    from tools.investment_research.metrics import _total_debt
+    fs=[F("LongTermDebt",50,None,"2025-12-31"),F("LongTermDebtCurrent",10,None,"2025-12-31"),
+        F("ShortTermBorrowings",5,None,"2025-12-31")]
+    d=_total_debt(Snapshot("X","1",fs), "2025-12-31")
+    assert d["value"] == 55
+    assert "not added" in d["debt_rule"]
+
+
+def test_stability_requires_five_years():
+    fs=[]
+    for y in range(2021,2025):
+        fs.append(F("RevenueFromContractWithCustomerExcludingAssessedTax",100,f"{y}-01-01",f"{y}-12-31",form="10-K"))
+    a=analyze("X","1",fs,as_of="2026-01-01")
+    assert a["quality"]["revenue_stability"]["status"]=="INSUFFICIENT_DATA"
+
+
+def test_garp_zero_revenue_base_is_not_a_percentage():
+    fs=[F("RevenueFromContractWithCustomerExcludingAssessedTax",0,"2024-01-01","2024-12-31",form="10-K"),
+        F("RevenueFromContractWithCustomerExcludingAssessedTax",100,"2025-01-01","2025-12-31",form="10-K")]
+    a=analyze("X","1",fs,as_of="2026-01-01")
+    assert a["garp"]["revenue_growth"]["status"]=="NOT_APPLICABLE"
