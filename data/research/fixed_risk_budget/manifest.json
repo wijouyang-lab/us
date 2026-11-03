@@ -1,0 +1,28 @@
+{
+  "source": "research ETF snapshot",
+  "cutoff": "2026-10-30",
+  "raw": {
+    "QQQ": {
+      "rows": 6749,
+      "sha256": "ac8b6ff279fd5108094dd7bb96d3df14da70817ab9c49dfdc35b14ffa57930f6",
+      "max": "2026-11-02"
+    },
+    "BIL": {
+      "rows": 4889,
+      "sha256": "29202235e822b806984af922104190cdf0a23a5b9a4552723ec51120af02b915",
+      "max": "2026-11-02"
+    }
+  },
+  "cutoff_files": {
+    "QQQ": {
+      "rows": 6748,
+      "sha256": "67b0012f56cf4630885a972c49d42823ff05450b8387d6b6fbd068fd62003a06",
+      "max": "2026-10-30"
+    },
+    "BIL": {
+      "rows": 4888,
+      "sha256": "145106b5ff32a5aef6d2ae384a4efd933a40b7444976d2b1f362a040f2769269",
+      "max": "2026-10-30"
+    }
+  }
+}
