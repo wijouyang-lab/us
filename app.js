@@ -716,7 +716,7 @@
   /* 盘中机械止损横幅：扫描 pf.transactions 中 Reason="Intraday Stop Loss" 的 SELL，
      在持仓区下方展示"🔴 盘中止损"徽章 + 触发价 + 原因（AI 回填后原因会变）。
      只展示「最新交易日」触发的盘中止损：标题此前写"今日触发"却列出全部历史，
-     与事实不符；这里以流水最大日期为锚，历史止损请到「已止损记录」板块看。
+     与事实不符；这里以流水最大日期为锚，历史止损请到「止损线触发离场」板块看。
      注：dashboard_export.build_portfolio 只保留 Status=OPEN 的持仓，CLOSED 仓位不进 positions[]，
      故盘中止损经由交易流水展示，而非 positionCard。 */
   function renderIntradayStops(pf) {
@@ -755,7 +755,7 @@
     window.__intradayStopEl = banner;
   }
 
-  /* AI 目标持仓板块：读 DATA.portfolio.target（dashboard_export 在 ENABLE_TARGET_FILE=1 时注入）。
+  /* 待执行目标（未成交）板块：读 DATA.portfolio.target（dashboard_export 在 ENABLE_TARGET_FILE=1 时注入）。
      target 为 null/空 → 静默隐藏；否则渲染 Ticker + Action + 数量 + 参考价 + 理由（点击展开）。 */
   function renderTarget() {
     var el = $('#pfTarget');
@@ -831,8 +831,8 @@
         (reason ? '<div class="at-reason" onclick="this.classList.toggle(\'open\')">' + esc(reason) + '</div>' : '') +
       '</div>';
     }).join('');
-    var sub = (target[0] && target[0].scan_date) ? 'Scan ' + esc(target[0].scan_date) + ' · 点击理由展开' : '盘前目标 · 点击理由展开';
-    el.innerHTML = '<div class="sec-h sub"><h3>AI 目标持仓</h3><span class="sec-sub">' + sub + '</span></div>' +
+    var sub = (target[0] && target[0].scan_date) ? 'Scan ' + esc(target[0].scan_date) + ' · 点击理由展开' : '待执行计划（未成交）';
+    el.innerHTML = '<div class="sec-h sub"><h3>待执行目标（未成交）</h3><span class="sec-sub">' + sub + '</span></div>' +
       '<div class="at-list">' + rows + '</div>';
   }
 
@@ -867,9 +867,9 @@
     var ret = num(pf.return_pct) || 0;
     var cells = '';
     cells += cell('Initial Capital', '$' + nv(pf.initial_capital, 2));
-    cells += cell('Total Equity', '$' + nv(pf.total_equity, 2));
-    cells += cell('Total PnL', (tp > 0 ? '+' : '') + '$' + nv(tp, 2), pctCls(tp));
-    cells += cell('Return %', (ret > 0 ? '+' : '') + nv(ret, 2) + '%', pctCls(ret));
+    cells += cell('Simulated NAV（模拟净值）', '$' + nv(pf.total_equity, 2));
+    cells += cell('Simulated Total PnL', (tp > 0 ? '+' : '') + '$' + nv(tp, 2), pctCls(tp));
+    cells += cell('Simulated Return %', (ret > 0 ? '+' : '') + nv(ret, 2) + '%', pctCls(ret));
     cells += cell('Cash', '$' + nv(pf.cash, 2));
     cells += cell('Stock Value', '$' + nv(pf.stock_value, 2));
     cells += cell('Realized PnL', '$' + nv(pf.realized_pnl, 2), pctCls(num(pf.realized_pnl)));
@@ -895,6 +895,7 @@
     if (noStopN > 0) cells += cell('无止损持仓', noStopN + ' 只', 'down');
     cells += cell('Start Date', esc(pf.start_date || NA));
     sumEl.innerHTML = '<div class="matrix">' + cells + '</div>' +
+      '<div class="pf-note2">SIMULATED / Paper：净值与损益为模拟账本计算，未扣佣金、滑点、价差，未计股息；价格为收盘参考价/账本记录，不是券商成交回报。</div>' +
       txnFreshNote(pf);
 
     // --- 持仓（卡片网格：positions[] 主表，按 ticker join STOCKS[]）---
@@ -920,11 +921,11 @@
     } else {
       var missingTime = false;
       ts.forEach(function (t) { if (!t.time) missingTime = true; });
-      var th = '<div class="pf-hd">Recent Portfolio Transactions' +
-        '<span class="pf-note">美东时间 ET' +
+      var th = '<div class="pf-hd">Recent Paper Ledger Entries' +
+        '<span class="pf-note">账本记录时间（非券商成交回报）· Price 为收盘参考价' +
         (missingTime ? ' · 部分历史成交未记录时刻' : '') + '</span></div>' +
         '<div class="pf-wrap"><table class="pf-tbl"><thead><tr><th>Date</th><th>Action</th><th>Ticker</th>' +
-        '<th>Shares</th><th>Price</th><th>Amount</th><th>Realized PnL</th><th>Holding</th><th>Reason</th>' +
+        '<th>Shares</th><th>Ref Price</th><th>Amount</th><th>Realized PnL</th><th>Holding (ledger)</th><th>Reason</th>' +
         '</tr></thead><tbody>';
       ts.forEach(function (t) {
         var rp = num(t.realized_pnl);
@@ -1048,7 +1049,7 @@
       chips.join('') + '</div>';
   }
 
-  /* 已止损记录板块（近 30 天）：纯前端只读 portfolio.transactions，
+  /* 止损线触发离场板块（近 30 天）：纯前端只读 portfolio.transactions，
      筛选 Action=SELL 且 Reason 含 "Stop Loss" 的记录，按日期降序展示。
      兼容两种真实写法：`Stop_Loss_Hit`（账本，Review exit）与 `Stop Loss`（盘中止损）。
      注意：止盈离场 `Trailing_Profit_Take` 不含 stop-loss 语义，按设计排除在本板块外。
@@ -1069,7 +1070,7 @@
 
     if (!ts.length) {
       subEl.textContent = '—';
-      bodyEl.innerHTML = '<div class="mx"><div class="k">已止损记录</div>' +
+      bodyEl.innerHTML = '<div class="mx"><div class="k">止损线触发离场</div>' +
         '<div class="v na">暂无止损记录</div></div>';
       return;
     }
@@ -1099,7 +1100,7 @@
 
     if (!stops.length) {
       subEl.textContent = '—';
-      bodyEl.innerHTML = '<div class="mx"><div class="k">已止损记录</div>' +
+      bodyEl.innerHTML = '<div class="mx"><div class="k">止损线触发离场</div>' +
         '<div class="v na">暂无止损记录</div></div>' + monthSummaryHtml('stop', [], '按月');
       return;
     }
@@ -1166,7 +1167,7 @@
      后端的止盈是「移动止盈 + 保本线」：浮盈后只抬高止损线，触发离场时若
      卖出价 > 入场价记为 Trailing_Profit_Take（见 review._classify_exit_status）。
      筛选 Action=SELL 且 Reason 含 profit take / trailing_profit，按日期降序。
-     与「已止损记录」并列，避免止盈离场只藏在流水行里。 */
+     与「止损线触发离场」并列，避免止盈离场只藏在流水行里。 */
   function renderProfitTaken() {
     var subEl = $('#profitSub'), bodyEl = $('#profitBody');
     if (!subEl || !bodyEl) return;
@@ -1586,6 +1587,7 @@
     renderQuant();
     renderNews();
     renderMacro();
+    renderDataHealth();
     renderSkillSerenity();
     renderDecisionInputs();
     drawAllSparks();
@@ -1760,8 +1762,8 @@
           (mf.as_of ? ' · 截至 ' + esc(mf.as_of) : '') + '</div>' : '');
     }
 
-    var spkHtml = '<div class="news-sub" style="margin-top:10px">🎙️ 重要人物讲话</div>';
-    if (!spk.length) {      spkHtml += '<div class="na">暂无重要讲话</div>';
+    var spkHtml = '<div class="news-sub" style="margin-top:10px">📰 政策人物与宏观相关报道</div>';
+    if (!spk.length) {      spkHtml += '<div class="na">暂无政策人物/宏观报道</div>';
     } else {
       spkHtml += spk.map(macroSpeakerCard).join('');
     }
@@ -2005,28 +2007,68 @@
     body.innerHTML = html;
   }
 
+  function metricUnit(u) {
+    var s = String(u == null ? '' : u).trim().toLowerCase();
+    if (s === '%' || s === 'percent' || s === 'pct') return { kind: 'percent', suffix: '%', delta: 'pp', digits: 2 };
+    if (s === 'k' || s === 'thousand' || s === 'thousands') return { kind: 'count_k', suffix: 'K', delta: 'K', digits: 0 };
+    if (s === 'm' || s === 'million') return { kind: 'count_m', suffix: 'M', delta: 'M', digits: 2 };
+    if (s === 'index point' || s === 'index points' || s === 'points' || s === 'point') return { kind: 'points', suffix: ' pts', delta: ' pts', digits: 1 };
+    if (s === '千桶' || s === 'kbbl' || s === 'thousand barrels') return { kind: 'kbbl', suffix: ' 千桶', delta: ' 千桶', digits: 0 };
+    return { kind: 'unknown', suffix: '', delta: '', digits: 1 };
+  }
+  function metricValue(v, unit) {
+    if (num(v) === null) return NA;
+    var m = metricUnit(unit);
+    if (m.kind === 'unknown') return fmt(v, m.digits) + '（单位未核验）';
+    return fmt(v, m.digits) + m.suffix;
+  }
+  function metricDelta(v, unit) {
+    if (num(v) === null) return NA;
+    var m = metricUnit(unit);
+    if (m.kind === 'unknown') return fmt(v, 2) + '（单位未核验）';
+    return (v > 0 ? '+' : '') + fmt(v, m.digits) + m.delta;
+  }
+  function metricThreshold(unit) {
+    var m = metricUnit(unit);
+    if (m.kind === 'percent') return 0.05;
+    if (m.kind === 'points') return 0.5;
+    if (m.kind === 'count_k' || m.kind === 'count_m' || m.kind === 'kbbl') return 1;
+    return 0;
+  }
+
   function macroForecastRow(it) {
     if (!it) return '';
     var d = num(it.surprise);
-    var unit = it.unit || '%';
+    var unit = it.unit;
+    var m = metricUnit(unit);
+    var verified = String(it.verification_status || '').toLowerCase() === 'verified';
+    var d = verified ? d : null;
     var dir = '', cls = '';
-    if (d !== null) {
-      if (d > 0.05) { dir = '高于预期'; cls = 'up'; }
-      else if (d < -0.05) { dir = '低于预期'; cls = 'down'; }
+    if (d !== null && m.kind !== 'unknown') {
+      var th = metricThreshold(unit);
+      if (d > th) { dir = '高于预期'; cls = 'up'; }
+      else if (d < -th) { dir = '低于预期'; cls = 'down'; }
       else { dir = '符合预期'; cls = 'flat'; }
+    } else {
+      dir = '期间/发布时间未核验' + (it.verification_reason ? '：' + it.verification_reason : '');
     }
-    var nums = '<span>预期 <b>' + nv(it.forecast, 2) + unit + '</b></span>' +
-      '<span>实际 <b class="' + cls + '">' + nv(it.actual, 2) + unit + '</b></span>' +
-      '<span>差值 <b class="' + cls + '">' +
-        (d === null ? NA : (d > 0 ? '+' : '') + fmt(d, 2) + 'pp') + '</b></span>' +
+    var src = it.source_status === 'fallback' ? ' · FALLBACK' : '';
+    var impTxt = verified
+      ? (it.impact && (m.kind === 'percent' || !/%/.test(String(it.impact))) ? it.impact
+        : (it.impact ? '影响文案单位未核验' : ''))
+      : '影响文案已隐藏（期间/发布时间未核验）';
+    var nums = '<span>预期 <b>' + metricValue(it.forecast, unit) + '</b></span>' +
+      '<span>实际 <b class="' + cls + '">' + metricValue(it.actual, unit) + '</b></span>' +
+      '<span>差值 <b class="' + cls + '">' + (d === null ? NA : metricDelta(d, unit)) + '</b></span>' +
       '<span class="mf-dir ' + cls + '">' + dir + '</span>';
     return '<div class="mf-row">' +
       '<div class="mf-h"><b>' + esc(it.indicator || NA) + '</b>' +
         (it.period ? '<span class="mf-p">' + esc(it.period) + '</span>' : '') +
-        (it.released_at ? '<span class="mf-d">' + esc(it.released_at) + '</span>' : '') +
+        '<span class="mf-d">' + (it.released_at ? esc(it.released_at) : '发布时间未核验') + '</span>' +
       '</div>' +
       '<div class="mf-nums">' + nums + '</div>' +
-      (it.impact ? '<div class="mf-imp">' + esc(it.impact) + '</div>' : '') +
+      '<div class="mf-src">来源：' + esc(it.source || '来源未核验') + src + '</div>' +
+      (impTxt ? '<div class="mf-imp">' + esc(impTxt) + '</div>' : '') +
       '</div>';
   }
 
@@ -2046,37 +2088,33 @@
   function macroIndicatorCard(it) {
     if (!it) return '';
     var v = num(it.value);
-    var unit = it.unit || '';
-    var valTxt = v === null ? NA
-      : (unit === '%' ? fmt(v, 2) + '%'
-        : unit === 'K' ? fmt(v, 0) + 'K'
-          : unit === '千桶' ? fmt(v, 0)
-            : unit === 'M' ? fmt(v, 2) + 'M'
-              : fmt(v, 1));
+    var f0 = forecastFor(it.key);
+    var unit = it.unit || (f0 && f0.unit) || '';
+    var valTxt = v === null ? NA : metricValue(v, unit);
     var chg = num(it.change);
     var chgCls = chg === null ? '' : (chg > 0 ? 'up' : (chg < 0 ? 'down' : 'flat'));
-    var chgTxt = chg === null ? '' : ((chg > 0 ? '+' : '') + fmt(chg, unit === '%' ? 2 : 0) +
-      (unit === '%' ? 'pp' : (unit === 'K' ? 'K' : '')));
+    var chgTxt = chg === null ? '' : metricDelta(chg, unit);
     var meta = [];
-    if (it.prev != null) {
-      meta.push('前值 ' + (unit === 'K' ? fmt(it.prev, 0) + 'K'
-        : unit === '%' ? fmt(it.prev, 2) + '%' : fmt(it.prev, 1)));
-    }
-    if (it.source) meta.push(it.source);
+    if (it.prev != null) meta.push('前值 ' + metricValue(it.prev, unit));
+    if (it.source) meta.push(it.source + (it.source_status === 'fallback' ? '（FALLBACK）' : ''));
     if (it.date) meta.push('数据期 ' + String(it.date).slice(0, 7));
-    var f = forecastFor(it.key);
+    var f = f0 || forecastFor(it.key);
     var fHtml = '';
     if (f) {
-      /* 实际值以当前指标为准（不同页面可能修订），避免卡片数值与「实际」打架 */
       var act = v !== null ? v : num(f.actual);
-      var d = (act !== null && num(f.forecast) !== null) ? act - num(f.forecast) : null;
-      var cls = d === null ? 'flat' : (d > 0.05 ? 'up' : (d < -0.05 ? 'down' : 'flat'));
-      var dir = d === null ? '' : (d > 0.05 ? '高于预期' : (d < -0.05 ? '低于预期' : '符合预期'));
-      var u = it.unit === '%' ? '%' : '';
+      var verified = String(f.verification_status || '').toLowerCase() === 'verified';
+      var d = verified && act !== null && num(f.forecast) !== null ? act - num(f.forecast) : null;
+      var fcUnit = f.unit || unit;
+      var th = metricThreshold(fcUnit);
+      var cls = (d === null || metricUnit(fcUnit).kind === 'unknown') ? 'flat'
+        : (d > th ? 'up' : (d < -th ? 'down' : 'flat'));
+      var dir = d === null
+        ? '期间/发布时间未核验' + (f.verification_reason ? '：' + f.verification_reason : '')
+        : (d > th ? '高于预期' : (d < -th ? '低于预期' : '符合预期'));
       fHtml = '<div class="macro-fc">' +
-        '<span>预期 <b>' + fmt(f.forecast, 1) + u + '</b></span>' +
-        '<span>实际 <b>' + (act === null ? NA : fmt(act, 1) + u) + '</b></span>' +
-        '<span>差值 <b>' + (d === null ? NA : (d > 0 ? '+' : '') + fmt(d, 2) + 'pp') + '</b></span>' +
+        '<span>预期 <b>' + metricValue(f.forecast, fcUnit) + '</b></span>' +
+        '<span>实际 <b>' + metricValue(act, fcUnit) + '</b></span>' +
+        '<span>差值 <b>' + (d === null ? NA : metricDelta(d, fcUnit)) + '</b></span>' +
         '<span class="' + cls + '">' + dir + '</span></div>';
     } else {
       fHtml = '<div class="macro-fc na">一致预期：暂无</div>';
@@ -2084,12 +2122,13 @@
     return '<div class="macro-econ">' +
       '<div class="macro-econ-h">' + esc(it.name || '') +
         (it.value === null ? ' <span class="macro-kind">数据缺失</span>'
-          : (it.source_status === 'fallback' ? ' <span class="macro-kind">兜底源</span>' : '')) + '</div>' +
+          : (it.source_status === 'fallback' ? ' <span class="macro-kind">FALLBACK</span>' : '')) + '</div>' +
       '<div class="macro-econ-v">' + esc(valTxt) +
         (chgTxt ? ' <span class="macro-d ' + chgCls + '">' + (chg > 0 ? '▲' : (chg < 0 ? '▼' : '→')) + chgTxt.replace(/^[+-]/, '') + '</span>' : '') +
       '</div>' +
       (fHtml || '') +
-      ((DATA && DATA.macro_cpi_ai && DATA.macro_cpi_ai.analyses && DATA.macro_cpi_ai.analyses[it.key])
+      ((DATA && DATA.macro_cpi_ai && DATA.macro_cpi_ai.analyses && DATA.macro_cpi_ai.analyses[it.key] &&
+        f && String(f.verification_status || '').toLowerCase() === 'verified')
         ? '<div class="macro-ai-b">🤖 ' + esc(DATA.macro_cpi_ai.analyses[it.key]) + '</div>'
         : '') +
       (meta.length ? '<div class="macro-econ-m">' + esc(meta.join(' · ')) + '</div>' : '') +
@@ -2187,8 +2226,10 @@
     var meta = [s.time, s.source, s.age_tag].filter(Boolean).map(esc).join(' · ');
     var sSent = e_sentiment(s.sentiment);
     if (sSent === 'neutral' && !s.sentiment) sSent = newsSentiment(s);
+    var kind = (s.official || s.is_official) ? '官方原文' : '媒体报道';
     return '<div class="macro-spk sent-' + sSent + '">' +
       '<span class="sent-badge s-' + sSent + '">' + sentLabel(sSent) + '</span>' +
+      '<span class="macro-kind">' + kind + '</span>' +
       '<div class="macro-spk-h">' + person + sent + '</div>' +
       '<div class="macro-spk-c">' + esc(
         (s.content_cn) || (DATA && DATA.translations && DATA.translations[s.content]) ||
@@ -2295,24 +2336,24 @@
     var tag = $('#dataTag');
     if (tag) {
       tag.className = 'tag tag-real';
-      tag.textContent = 'REAL · dashboard_data.json';
-      tag.title = '数据源：' + (META.data_source || 'n/a');
+      tag.textContent = '真实行情 + 模拟组合';
+      tag.title = '行情/扫描/新闻为真实来源；$50,000 组合为 Paper / Simulated';
     }
     var up = $('#updatedTag');
     if (up) {
       var g = DATA.generated_at || '';
-      up.textContent = 'Data updated: ' + (g ? g.replace('T', ' ').replace('Z', ' UTC') : NA);
+      up.textContent = 'Dashboard 生成: ' + (g ? g.replace('T', ' ').replace('Z', ' UTC') : NA);
     }
     var se = $('#sessionTag');
-    if (se) se.textContent = META.pending_scan_date ? 'Scan ' + META.pending_scan_date : '—';
+    if (se) se.textContent = META.pending_scan_date ? 'Scan ' + META.pending_scan_date : '扫描时间未知';
     var fi = $('#footInfo');
     if (fi) {
-      fi.textContent = 'Data Source: dashboard_data.json' +
+      fi.textContent = '真实行情数据 · $50,000 组合为 Paper / Simulated（模拟）' +
         (META.pending_csv ? ' · 源 CSV ' + META.pending_csv : '') +
-        ' · 本页不含任何模拟数据';
+        ' · 模拟收益未扣佣金/滑点/价差，未计股息';
     }
     var df = $('#dFoot');
-    if (df) df.textContent = 'Data Source: dashboard_data.json · 本页不含任何模拟数据';
+    if (df) df.textContent = '真实行情数据 · $50,000 组合为 Paper / Simulated（模拟）';
 
     /* 陈旧告警：最新 AI 快照（stocks[].scan_date）距今超过 2 个交易日 -> 顶部横幅。
        复用现有 .notice.err 样式；数据缺失一律不显示，绝不猜测。 */
@@ -2471,7 +2512,7 @@
   }
 
   /* ---------------- 1. Global Market 状态栏 ---------------- */
-  var TOP_KEYS = ['S&P 500', 'Nasdaq', 'Dow Jones', 'VIX', 'US10Y', 'DXY', 'Gold', 'WTI'];
+  var TOP_KEYS = ['S&P 500', 'US10Y'];
   function assetByName(name) {
     var list = MARKET.assets || [], i;
     for (i = 0; i < list.length; i++) if (list[i].name === name) return list[i];
@@ -2495,32 +2536,37 @@
      2) 该字段为 null 时（meta.missing_fields 会标记 regime.market），用真实行情状态兜底：
         meta.network_status / market.live_quote_count / market.frozen_outside_session_count / market.total_count */
   function regimeTxt(rg) {
-    var src = (rg && rg.source) ? String(rg.source) : 'Market Regime 未提供';
+    var src = (rg && rg.source) ? String(rg.source) : 'Market Regime 来源缺失';
     if (rg && rg.market) {
       return { txt: String(rg.market), title: 'Market Regime · market.regime.market' };
     }
-    var live = num(MARKET.live_quote_count), total = num(MARKET.total_count),
-        frozen = num(MARKET.frozen_outside_session_count);
-    var net = META.network_status ? String(META.network_status) : '';
-    var txt = NA;
-    if (net && net.toLowerCase() !== 'ok') {
-      txt = '网络 ' + net;                                  /* 真实 network_status */
-    } else if (total !== null && total > 0 && (live !== null || frozen !== null)) {
-      txt = '实时 ' + (live === null ? NA : live) + '/' + total +
-        (frozen ? ' · 冻结 ' + frozen : '');                 /* 真实实时 / 冻结计数 */
-    }
-    return { txt: txt, title: 'Market Regime 为 null（' + src + '）· 此处显示真实行情状态' };
+    return { txt: '市场状态不可用（来源缺失）', title: 'Market Regime 缺失（' + src + '）· 不生成 Risk-on/Risk-off 判断' };
+  }
+
+  function quoteVix() {
+    var a = assetByName('^VIX') || assetByName('VIX');
+    if (!a || num(a.price) === null) return null;
+    return '<div class="regime-meta">行情 VIX <b>' + nv(a.price, 2) + '</b> · ' +
+      esc(a.source || '来源未知') + ' · ' + esc(a.updated_at || a.last_bar_date || '报价时间未知') +
+      '（行情报价，与市场状态不同源）</div>';
   }
 
   function renderGmBar() {
     var rg = MARKET.regime || {};
-    var date = META.pending_scan_date || (DATA && DATA.generated_at ? DATA.generated_at.slice(0, 10) : NA);
+    var scan = META.pending_scan_date ? String(META.pending_scan_date).slice(0, 10) : '';
+    var dash = DATA && DATA.generated_at ? String(DATA.generated_at).replace('T', ' ').replace('Z', ' UTC') : '';
+    var quote = META.market_updated_at ? String(META.market_updated_at).replace('T', ' ').replace('Z', ' UTC') : '';
+    var scanTxt = scan || '扫描时间未知/本次未提供';
     var rs = regimeTxt(rg);
 
     var html = '<div class="gm-grid"><div class="gm-cell hero">' +
-      '<div class="gm-date">' + date + ' <small>Scan 日期 · 真实数据（非模拟）</small></div>' +
+      '<div class="gm-date">' + esc(scanTxt) + ' <small>Scan 日期 · ' +
+        (scan ? '真实扫描' : '不伪造') + '</small></div>' +
+      '<div class="gm-date" style="font-size:11px">Dashboard 生成 ' + esc(dash || '—') +
+        ' · 行情更新 ' + esc(quote || '—') + '</div>' +
       '<span class="regime" title="' + esc(rs.title) + '"><i></i>' + esc(rs.txt) + '</span>' +
-      '<div class="regime-meta">VIX <b>' + nv(rg.vix, 2) + '</b> · Options <b>' + OPTIONS.length + '</b></div>' +
+      '<div class="regime-meta">Options <b>' + OPTIONS.length + '</b></div>' +
+      (quoteVix() || '<div class="regime-meta na">行情 VIX：来源/报价缺失</div>') +
       '</div>';
 
     TOP_KEYS.forEach(function (k) {
@@ -2573,6 +2619,8 @@
     if (!mount) return;
     /* 与宏观九项指标去重：同名（去掉空格/符号后）不再重复展示 */
     var dup = {};
+    TOP_KEYS.forEach(function (k) { dup[nmKey(k)] = 1; });
+    dup[nmKey('VIX')] = 1;
     if (DATA && DATA.macro_indicators && DATA.macro_indicators.items) {
       DATA.macro_indicators.items.forEach(function (i) {
         if (i && i.name) dup[nmKey(i.name)] = 1;
@@ -3126,6 +3174,78 @@
     rt = setTimeout(function () { drawDetailCharts(); drawAllSparks(); }, 120);
   });
 
+
+  function _healthStatus(ts, thresholdDays) {
+    if (ts == null || String(ts).trim() === '') {
+      return { status: 'MISSING', note: '时间戳缺失' };
+    }
+    var t = Date.parse(String(ts));
+    if (isNaN(t)) return { status: 'MISSING', note: '时间戳无效' };
+    var age = (Date.now() - t) / 86400000;
+    if (age < -1) return { status: 'MISSING', note: '时间戳在未来（异常）' };
+    if (age > thresholdDays) return { status: 'STALE', note: '超过 ' + thresholdDays + ' 天' };
+    return { status: 'FRESH', note: '' };
+  }
+  function _healthTime(ts) {
+    if (!ts) return '—';
+    return String(ts).replace('T', ' ').replace('Z', ' UTC');
+  }
+  function renderDataHealth() {
+    if (!DATA) return;
+    var mf = DATA && DATA.macro_forecast;
+    var pf = DATA && DATA.portfolio;
+    var rows = [];
+    function add(name, ts, source, st, threshold, extraNote) {
+      var note = [st.note, extraNote || ''].filter(Boolean).join('；');
+      rows.push({ name: name, ts: ts, source: source, status: st.status, threshold: threshold, note: note });
+    }
+    var scan = META.pending_scan_date ? String(META.pending_scan_date).slice(0, 10) : '';
+    var scanSt = scan ? _healthStatus(scan + 'T00:00:00Z', 3) : { status: 'MISSING', note: '扫描时间未知/本次未提供，不以 dashboard 生成时间代替' };
+    add('扫描 Scan', scan, 'pending CSV', scanSt, 3, '');
+    var mkt = META.market_updated_at || (DATA.market && DATA.market.updated_at);
+    add('市场行情', mkt, META.quote_provider || '行情源', _healthStatus(mkt, 1), 1, '');
+    var tech = META.technical_updated_at;
+    add('技术日线', tech, 'OHLCV', _healthStatus(tech, 2), 2, '');
+    var mac = mf && mf.generated_at;
+    var items = (mf && mf.items) || [];
+    var macTime = _healthStatus(mac, 45);
+    var badItems = items.filter(function (x) {
+      return String(x.verification_status || '').toLowerCase() !== 'verified' ||
+        x.source_status === 'fallback' || x.source_status === 'unverified';
+    });
+    var macStatus = !items.length ? { status: 'MISSING', note: '无宏观条目' } : macTime;
+    if (macStatus.status === 'FRESH' && badItems.length) {
+      macStatus = { status: 'FALLBACK', note: badItems.length + ' 条 FALLBACK/UNVERIFIED/期间未核验' };
+    } else if (macStatus.status === 'STALE' && badItems.length) {
+      macStatus = { status: 'STALE', note: macStatus.note + '；' + badItems.length + ' 条 FALLBACK/UNVERIFIED' };
+    }
+    add('宏观数据', mac, (mf && mf.source) || '—', macStatus, 45,
+        (mf && mf.as_of ? 'as_of ' + mf.as_of : 'as_of 未提供'));
+    var news = DATA && DATA.news;
+    var newsTs = news && (news.generated_at || news.updated_at);
+    add('新闻', newsTs, (news && news.source) || '新闻源',
+        !news ? { status: 'MISSING', note: '无新闻数据' } : _healthStatus(newsTs, 2), 2, '');
+    var ai = META.ai_generated_at;
+    add('AI 文本', ai, 'ai_snapshot.csv',
+        META.ai_status === 'pending' ? { status: 'MISSING', note: 'AI analysis pending' } : _healthStatus(ai, 3), 3, '');
+    var pfTs = pf && (pf.snapshot_asof || pf.asof);
+    add('模拟账本', pfTs, 'portfolio_50000 ledger',
+        !pf ? { status: 'MISSING', note: '无模拟账本' } : _healthStatus(pfTs, 3), 3,
+        'SIMULATED / Paper；时间为账本快照时间，不是券商成交回报');
+    var html = '<div class="health-grid">';
+    rows.forEach(function (r) {
+      var cls = r.status.toLowerCase();
+      html += '<div class="health-cell ' + cls + '">' +
+        '<div class="health-h"><b>' + esc(r.name) + '</b><span class="health-b ' + cls + '">' + r.status + '</span></div>' +
+        '<div class="health-t">' + esc(_healthTime(r.ts)) + '</div>' +
+        '<div class="health-m">来源：' + esc(r.source || '—') + ' · 阈值 ' + r.threshold + 'd</div>' +
+        (r.note ? '<div class="health-n">' + esc(r.note) + '</div>' : '') + '</div>';
+    });
+    html += '</div>';
+    var el = $('#dataHealth'); if (el) el.innerHTML = html;
+  }
+
   /* ---------------- 启动 ---------------- */
   boot();
+  renderDataHealth();
 })();

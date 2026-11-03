@@ -36,6 +36,8 @@ def test_valid_computes_surprise(tmp_path):
             "indicator": "核心PCE物价指数", "period": "2026 Q2 · 年化季率终值",
             "forecast": 3.6, "actual": 3.3, "previous": 3.6, "unit": "%",
             "released_at": "2026-09-30", "impact": "低于预期，利好久期",
+            "source_status": "verified", "source": "test", "period": "2026 Q2",
+            "actual_indicator": "core_pce", "forecast_indicator": "core_pce",
         }],
     })
     out = de._read_macro_forecast(tmp_path)
@@ -53,7 +55,9 @@ def test_rows_missing_forecast_or_actual_dropped(tmp_path):
         {"indicator": "A", "forecast": 1.0},                 # 缺 actual
         {"indicator": "B", "actual": 2.0},                   # 缺 forecast
         {"forecast": 1.0, "actual": 1.0},                    # 缺 indicator
-        {"indicator": "C", "forecast": 1.0, "actual": 1.2},  # 有效
+        {"indicator": "C", "forecast": 1.0, "actual": 1.2,
+         "period": "2026-09", "released_at": "2026-10-15", "source_status": "verified",
+         "source": "test", "actual_indicator": "C", "forecast_indicator": "C"},  # 有效
     ]})
     out = de._read_macro_forecast(tmp_path)
     assert out["count"] == 1

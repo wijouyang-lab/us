@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-03T07:17:12Z",
+  "generated_at": "2026-11-03T04:40:57Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -13,7 +13,10 @@
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 4.2% vs 预期 4.1%（+0.1）。"
+      "impact": "实际 4.20% vs 预期 4.10%（+0.1）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "cpi_yoy",
@@ -24,7 +27,10 @@
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 3.7% vs 预期 3.6%（+0.1）。"
+      "impact": "实际 3.70% vs 预期 3.60%（+0.1）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "core_cpi_yoy",
@@ -35,7 +41,10 @@
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 2.6% vs 预期 2.5%（+0.1）。"
+      "impact": "实际 2.60% vs 预期 2.50%（+0.1）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "cpi_mom",
@@ -46,7 +55,10 @@
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 0.6% vs 预期 0.2%（+0.4）。"
+      "impact": "实际 0.60% vs 预期 0.20%（+0.4）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "umich",
@@ -55,9 +67,12 @@
       "forecast": 47.6,
       "actual": 48.0,
       "previous": null,
-      "unit": "%",
+      "unit": "index point",
       "released_at": null,
-      "impact": "实际 48.0% vs 预期 47.6%（+0.4）。"
+      "impact": "实际 48.0 pts vs 预期 47.6 pts（+0.4）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "ism",
@@ -66,9 +81,12 @@
       "forecast": 54.0,
       "actual": 54.9,
       "previous": null,
-      "unit": "%",
+      "unit": "index point",
       "released_at": null,
-      "impact": "实际 54.9% vs 预期 54.0%（+0.9）。"
+      "impact": "实际 54.9 pts vs 预期 54.0 pts（+0.9）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "adp",
@@ -79,7 +97,10 @@
       "previous": null,
       "unit": "K",
       "released_at": null,
-      "impact": "实际 90.0K vs 预期 70.0K（+20.0）。"
+      "impact": "实际 90K vs 预期 70K（+20.0）。",
+      "source": "TradingEconomics",
+      "source_status": "unverified",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "claims",
@@ -90,7 +111,10 @@
       "previous": null,
       "unit": "K",
       "released_at": null,
-      "impact": "实际 194.0K vs 预期 195.0K（-1.0）。"
+      "impact": "实际 194K vs 预期 195K（-1.0）。",
+      "source": "TradingEconomics calendar",
+      "source_status": "fallback",
+      "fetched_at": "2026-11-03T04:40:57Z"
     },
     {
       "key": "nonfarm",
@@ -101,7 +125,10 @@
       "previous": null,
       "unit": "K",
       "released_at": null,
-      "impact": "实际 29.0K vs 预期 65.0K（-36.0）。"
+      "impact": "实际 29K vs 预期 65K（-36.0）。",
+      "source": "TradingEconomics calendar",
+      "source_status": "fallback",
+      "fetched_at": "2026-11-03T04:40:57Z"
     }
   ]
 }

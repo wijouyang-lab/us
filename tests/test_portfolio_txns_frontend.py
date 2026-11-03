@@ -82,7 +82,7 @@ def test_renders_time_columns_and_holding_span():
              exit_date="2026-10-16", exit_time="18:26",
              holding_days=9, holding_hours=212),
     ]}})
-    assert "<th>Holding</th>" in html, html
+    assert "<th>Holding (ledger)</th>" in html, html
     # 本笔时刻（Date 列副行）
     assert 'class="pf-time">21:44' in html, html
     assert 'class="pf-time">18:26' in html, html
@@ -90,7 +90,7 @@ def test_renders_time_columns_and_holding_span():
     assert "8 天 20 小时" in html, html
     # 买入 → 卖出 时刻轴
     assert "10-07 21:44 → 10-16 18:26" in html, html
-    assert "美东时间 ET" in html, html
+    assert "账本记录时间（非券商成交回报）" in html, html
     assert "undefined" not in html and "NaN" not in html, html
 
 

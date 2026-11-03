@@ -2850,6 +2850,92 @@ def _read_macro_indicators(data_dir: Path):
 _MACRO_FORECAST_MISSING = object()
 
 
+
+def _macro_month(value):
+    """Return YYYY-MM for a statistical period; None for 最新/latest/unparseable."""
+    import re as _re
+    t = clean_text(value) or ""
+    if not t or t.lower() in ("latest", "最新", "n/a", "na"):
+        return None
+    q = _re.search(r"(\d{4})\s*Q([1-4])", t, _re.I)
+    if q:
+        return f"{q.group(1)}-Q{q.group(2)}"
+    m = _re.search(r"(\d{4})[-/年](\d{1,2})", t)
+    if m:
+        try:
+            mm = int(m.group(2))
+            if 1 <= mm <= 12:
+                return f"{m.group(1)}-{mm:02d}"
+        except Exception:
+            return None
+    return None
+
+
+def _valid_release_date(value):
+    t = clean_text(value) or ""
+    if not t:
+        return False
+    # Date-only ISO: exactly YYYY-MM-DD.
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}", t):
+        try:
+            dt.date.fromisoformat(t)
+            return True
+        except ValueError:
+            return False
+    # Datetime ISO: date + time with seconds and mandatory timezone.
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})", t):
+        try:
+            dt.datetime.fromisoformat(t.replace("Z", "+00:00"))
+            return True
+        except ValueError:
+            return False
+    return False
+
+
+def _verify_macro_item(r, actual, forecast):
+    """Fail-closed verification for an actual-vs-forecast pair."""
+    reasons = []
+    if actual is None or forecast is None:
+        return False, "actual/forecast missing"
+    released = clean_text(r.get("released_at")) or ""
+    if not _valid_release_date(released):
+        reasons.append("released_at missing/invalid")
+    status = clean_text(r.get("source_status")) or "unverified"
+    if status.lower() != "verified":
+        reasons.append("source_status=" + status)
+    source = clean_text(r.get("source")) or ""
+    if not source:
+        reasons.append("source missing")
+
+    aid = clean_text(r.get("actual_indicator"))
+    fid = clean_text(r.get("forecast_indicator"))
+    shared = clean_text(r.get("indicator"))
+    if aid and fid:
+        if aid != fid:
+            reasons.append("indicator definition mismatch")
+    elif aid or fid:
+        reasons.append("indicator identity incomplete")
+    else:
+        contract = clean_text(r.get("indicator_contract")) or clean_text(r.get("definition_key"))
+        if not (shared and contract in ("same_series", "shared_indicator", "same_definition")):
+            reasons.append("indicator identity missing")
+
+    ap_raw = clean_text(r.get("actual_period"))
+    fp_raw = clean_text(r.get("forecast_period"))
+    if ap_raw and fp_raw:
+        ap, fp = _macro_month(ap_raw), _macro_month(fp_raw)
+    elif ap_raw or fp_raw:
+        ap, fp = None, None
+        reasons.append("actual/forecast period incomplete")
+    else:
+        ap = fp = _macro_month(r.get("period"))
+    if not ap or not fp:
+        reasons.append("period missing/unparseable/latest")
+    elif ap != fp:
+        reasons.append("period mismatch")
+    return (not reasons, "; ".join(reasons) or "verified")
+
+
 def _read_macro_forecast(data_dir: Path):
     """读「宏观数据预期 vs 实际」→ 注入 dashboard_data.json 的 `macro_forecast`。
 
@@ -2885,11 +2971,22 @@ def _read_macro_forecast(data_dir: Path):
             "forecast": round_num(forecast, 2),
             "actual": round_num(actual, 2),
             "previous": round_num(parse_num(r.get("previous")), 2),
-            "surprise": round_num(actual - forecast, 2),
-            "unit": clean_text(r.get("unit")) or "%",
+            "surprise": None,
+            "unit": clean_text(r.get("unit")) or None,
             "released_at": clean_text(r.get("released_at")) or None,
+            "period": clean_text(r.get("period")) or None,
+            "source": clean_text(r.get("source")) or None,
+            "source_status": clean_text(r.get("source_status")) or "unverified",
+            "fetched_at": clean_text(r.get("fetched_at")) or None,
             "impact": clean_text(r.get("impact")) or None,
         })
+        verified, reason = _verify_macro_item(r, actual, forecast)
+        items[-1]["verification_status"] = "verified" if verified else "unverified"
+        items[-1]["verification_reason"] = reason
+        if verified:
+            items[-1]["surprise"] = round_num(actual - forecast, 2)
+        else:
+            items[-1]["impact"] = "期间/发布时间未核验，影响文案已隐藏"
     return {
         "schema": int(parse_num(raw.get("schema")) or 1),
         "generated_at": clean_text(raw.get("generated_at")) or None,
@@ -3083,12 +3180,31 @@ def _build_trade_stats(txn_rows, open_positions):
             pct = (rp / cost * 100) if (cost is not None and cost > 0) else None
             uid = clean_text(r.get("Unit_ID")) or None
             hd = None
-            if uid and uid in entry_map and anchor_d is not None:
+            if uid and anchor_d is not None:
+                # Pair this SELL with the latest prior BUY of the same Unit_ID.
+                # This works after a position is closed, not only for open positions.
+                sell_d = None
                 try:
-                    ed = dt.date.fromisoformat(entry_map[uid])
-                    hd = max((anchor_d - ed).days, 0)
+                    sell_d = dt.date.fromisoformat(clean_text(r.get("Date")) or "")
                 except Exception:
-                    hd = None
+                    sell_d = None
+                candidates = []
+                for b in buys:
+                    if (clean_text(b.get("Unit_ID")) or None) != uid:
+                        continue
+                    try:
+                        bd = dt.date.fromisoformat(clean_text(b.get("Date")) or "")
+                    except Exception:
+                        continue
+                    if sell_d is None or bd <= sell_d:
+                        candidates.append(bd)
+                if candidates and sell_d is not None:
+                    hd = max((sell_d - max(candidates)).days, 0)
+                elif uid in entry_map:
+                    try:
+                        hd = max((anchor_d - dt.date.fromisoformat(entry_map[uid])).days, 0)
+                    except Exception:
+                        hd = None
             closed.append((rp, pct, hd))
 
         closed_count = len(closed)

@@ -448,6 +448,8 @@ def test_macro_forecast_block_rendered():
                                    "forecast": 3.6, "actual": 3.3, "surprise": -0.3,
                                    "unit": "%", "released_at": "2026-09-30",
                                    "impact": "低于预期：利好久期资产",
+                                   "verification_status": "verified", "verification_reason": "verified",
+                                   "source": "财经日历", "source_status": "verified",
                                }]}}
     r = _run(data)
     html = r["macro"] or ""
@@ -485,3 +487,20 @@ def test_oversold_ai_pending_without_block():
                 "ticker": "BBB", "score": 50, "rsi": 25}]}}
     html = _run(data)["oversold"] or ""
     assert "AI 三维分析 pending" in html, html
+
+
+def test_unverified_macro_impact_does_not_leak_difference():
+    data = {"portfolio": {"target": [], "transactions": [], "positions": []},
+            "macro": _macro([]),
+            "macro_forecast": {"as_of": None, "source": "日历", "count": 1, "items": [{
+                "indicator": "ADP就业人数", "period": "2026年9月",
+                "forecast": 70, "actual": 90, "surprise": 20,
+                "unit": "K", "released_at": None,
+                "impact": "实际 90K vs 预期 70K（+20）。",
+                "verification_status": "unverified",
+                "verification_reason": "released_at missing",
+            }]}}
+    html = _run(data)["macro"] or ""
+    assert "影响文案已隐藏" in html, html
+    assert "+20" not in html, html
+    assert "期间/发布时间未核验" in html, html
