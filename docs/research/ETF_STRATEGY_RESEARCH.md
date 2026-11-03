@@ -84,9 +84,9 @@ available.
 
 | Strategy | Final NAV | CAGR | Vol | Sharpe | Sortino | Calmar | Max DD | Peak鈫扵rough | Trough鈫扲ecovery | Longest UW | Order legs | Exposure |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| A Dual Momentum | $160,948.43 | 6.21% | 13.51% | 0.51 | 0.65 | 0.24 | **-25.59%** | 78 | 553 | 630 | 733 | 78.5% |
+| A Dual Momentum | $160,960.99 | 6.21% | 13.51% | 0.51 | 0.65 | 0.24 | **-25.59%** | 78 | 553 | 630 | 733 | 78.5% |
 | B Trend/Vol | $172,469.83 | 6.59% | 8.84% | 0.77 | 1.02 | 0.43 | **-15.20%** | 412 | 177 | 588 | 1,643 | 75.4% |
-| C QQQ Transition | $72,582.55 | 1.95% | 2.06% | 0.95 | 0.69 | 0.35 | **-5.53%** | 8 | 500 | 1,322 | 128 (32 round trips) | 0.78% |
+| C QQQ Transition | $72,679.94 | 1.94% | 2.06% | 0.95 | 0.69 | 0.35 | **-5.52%** | 8 | 500 | 1,322 | 129 (32 round trips) | 0.78% |
 | BIL | $65,536.54 | 1.40% | 0.49% | 2.87 | 鈥?| 鈥?| -0.78% | 鈥?| 鈥?| 鈥?| 鈥?| 100% |
 | SPY | $351,505.57 | 10.56% | 19.66% | 0.61 | 鈥?| 鈥?| -55.19% | 鈥?| 鈥?| 鈥?| 鈥?| 100% |
 
@@ -114,9 +114,9 @@ A 2.59x    B 2.87x    C 1.29x
 
 | Strategy | Commission | SEC | TAF | Exchange | Slippage | Total |
 |---|---:|---:|---:|---:|---:|---:|
-| A | $457.42 | $111.48 | $7.15 | $0.27 | $4,043.83 | **$4,620.15** |
+| A | $457.44 | $111.51 | $7.16 | $0.27 | $4,044.67 | **$4,621.04** |
 | B | $772.67 | $132.69 | $10.05 | $0.37 | $4,810.48 | **$5,726.25** |
-| C | $72.97 | $25.02 | $1.60 | $0.06 | $907.01 | **$1,006.67** |
+| C | $74.97 | $25.06 | $1.60 | $0.06 | $933.25 | **$1,034.94** |
 
 ### CAGR and max DD across slippage assumptions
 
@@ -126,8 +126,8 @@ A 2.59x    B 2.87x    C 1.29x
 | A MaxDD | -25.5% | -25.6% | -25.6% | -25.7% | -25.9% |
 | B CAGR | 6.82% | 6.70% | 6.59% | 6.30% | 5.76% |
 | B MaxDD | -14.85% | -15.03% | -15.20% | -15.65% | -16.45% |
-| C CAGR | 2.01% | 1.98% | 1.95% | 1.86% | 1.69% |
-| C MaxDD | -5.52% | -5.54% | -5.53% | -5.62% | -5.70% |
+| C CAGR | 2.02% | 1.98% | 1.94% | 1.86% | 1.68% |
+| C MaxDD | -5.51% | -5.53% | -5.52% | -5.56% | -5.70% |
 
 B is within 15% only at 1鈥? bps slippage, not at the pre-registered 5 bps base.
 No lower-slippage assumption is substituted for the decision.
@@ -153,9 +153,9 @@ Daily block bootstrap (20-session circular blocks, 500 samples) CAGR CI:
 
 | Strategy | 2.5% | 97.5% |
 |---|---:|---:|
-| A | +0.57% | +11.55% |
-| B | +3.15% | +10.34% |
-| C | +1.26% | +2.69% |
+| A | +0.88% | +11.91% |
+| B | +3.00% | +10.21% |
+| C | +1.23% | +2.74% |
 
 ## 7. PR #438 comparison for C
 
@@ -178,7 +178,7 @@ The two one-session shifts occur when the 252-day threshold is borderline and
 the vendor-adjusted history differs slightly. They are explained as data-provider
 revisions, not rule changes. PR #438's published entry/exit prices use adjusted
 Open and are not directly comparable to PR #451's raw tradable Open. The remaining
-CAGR gap (2.02% vs 1.95%) is the four-leg (BIL+QQQ) cost model versus PR #438's
+CAGR gap (2.02% vs 1.94%) is the four-leg (BIL+QQQ) cost model versus PR #438's
 QQQ-only cost model, plus price-convention and provider revisions.
 
 Signal dates are the prior SPY session, so the two signal-date differences map
@@ -193,7 +193,7 @@ dates, and gross returns are the comparison basis.
 |---|---:|---:|---:|
 | A | 4.26% / -25.6% | 5.66% / -18.9% | 9.97% / -18.8% |
 | B | 5.38% / -12.4% | 7.66% / -12.0% | 7.66% / -15.2% |
-| C | 0.87% / -3.6% | 1.09% / -5.5% | 4.30% / -1.7% |
+| C | 0.88% / -3.6% | 1.09% / -5.5% | 4.30% / -1.7% |
 
 A has unacceptable drawdown in every period. B exceeds 15% only in 2021-2026
 (-15.20%). C is stable by drawdown but its recent return is low, and 2021+ is
@@ -205,7 +205,7 @@ not pristine for QQQ reversal.
 |---|---|---|---|
 | Positive excess after IBKR costs + 5 bps slip | Yes | Yes | Yes, small |
 | Statistical support vs BIL | No (q=.065) | **Yes (q=.006)** | No (q=.090) |
-| Max DD <= 15% | **No (-25.59%)** | **No (-15.20%)** | Yes (-5.53%) |
+| Max DD <= 15% | **No (-25.59%)** | **No (-15.20%)** | Yes (-5.52%) |
 | Not one period | No | No (2021+ DD) | Mostly stable, but return low |
 | Not a few trades | No (monthly concentration) | No (few assets) | No (32 trades, low exposure) |
 | Reproducible NAV/orders | Yes | Yes | Yes |

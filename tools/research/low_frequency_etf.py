@@ -75,10 +75,12 @@ def leg_cost(shares, price, side, slip_bps):
             "cost": comm + sec + taf + exch + slip}
 
 
-def metrics(nav):
-    r = nav.pct_change().dropna()
+def metrics(nav, initial=50000.0):
+    r = nav.pct_change(fill_method=None)
+    r.iloc[0] = nav.iloc[0] / initial - 1
+    r = r.dropna()
     years = max((nav.index[-1] - nav.index[0]).days / 365.25, 1e-9)
-    eq = nav / nav.iloc[0]
+    eq = nav / initial
     cum = eq.cummax()
     dd = eq / cum - 1
     vol = float(r.std(ddof=1) * np.sqrt(252))
@@ -107,7 +109,7 @@ def metrics(nav):
     for y, g in nav.groupby(nav.index.year):
         annual.append({"year": int(y), "return": float(g.iloc[-1]) / prev - 1}); prev = float(g.iloc[-1])
     return {"start": str(nav.index[0].date()), "end": str(nav.index[-1].date()),
-            "final_nav": float(nav.iloc[-1]), "total_return": float(eq.iloc[-1] - 1),
+            "initial_equity": float(initial), "final_nav": float(nav.iloc[-1]), "total_return": float(eq.iloc[-1] - 1),
             "cagr": cagr, "volatility": vol, "sharpe_rf0": mean / vol if vol else None,
             "sortino": sortino, "calmar": calmar, "max_drawdown": mdd,
             "max_drawdown_peak_date": str(peak_date.date()),
@@ -214,7 +216,7 @@ def signal_A(frames, last):
 
 
 def signal_B(frames, last):
-    rets = pd.DataFrame({t: frames[t].AdjClose.pct_change() for t in TICKERS})
+    rets = pd.DataFrame({t: frames[t].AdjClose.pct_change(fill_method=None) for t in TICKERS})
     vol = rets.rolling(60, min_periods=60).std().loc[last] * np.sqrt(252)
     above = []
     for t in TICKERS:
@@ -283,13 +285,9 @@ def run_C(frames, cal, slip):
                             ["RISK_ON", "RISK_OFF"], default="TRANSITION")
     q["Signal"] = (q.Ret5 <= q.Threshold) & q.Threshold.notna() & s.Regime.eq("TRANSITION")
     acct = Account(frames, cal, slip)
-    bpx = acct.px(BIL, cal[0]); total_bil = int(50000 / bpx)
-    sleeve = int(total_bil * 0.25); reserve = total_bil - sleeve
-    acct.shares[BIL] = float(sleeve); acct.cash -= sleeve * bpx
-    # cash accounting: set cash 0 and reserve tracked as extra shares; easier: buy all BIL with cash
-    acct.cash = 0.0
-    acct.shares[BIL] = float(total_bil)
-    q_units = 0.0; pending = None; exit_idx = None; entry_idx = None; sleeve_units = float(sleeve)
+    bpx = acct.px(BIL, cal[0])
+    acct.trade(cal[0], BIL, "BUY", int(50000 / bpx), bpx)
+    q_units = 0.0; pending = None; exit_idx = None; entry_idx = None
     for i, dt in enumerate(cal):
         acct.credit_dividends(dt)
         if exit_idx == i and q_units > 0:
@@ -322,21 +320,20 @@ def run_C(frames, cal, slip):
     return nav, acct.legs, acct.risky_exposure / len(cal), acct.turnover
 
 
-def block_bootstrap_ci(nav, n=500, block=20):
-    r = nav.pct_change().dropna().to_numpy()
-    rng = np.random.default_rng(42)
+def block_bootstrap_ci(nav, n=500, block=20, initial=50000.0, seed=42):
+    r = nav.pct_change(fill_method=None)
+    r.iloc[0] = nav.iloc[0] / initial - 1
+    r = r.dropna().to_numpy(float)
+    rng = np.random.default_rng(seed)
     out = []
     for _ in range(n):
-        idx = rng.integers(0, len(r), size=len(r))
-        # circular block sample
-        vals = []
-        for s in idx:
-            vals.extend(r[s:s + block])
-            if len(vals) >= len(r):
-                break
-        vals = np.array(vals[:len(r)])
+        # Circular block bootstrap: blocks wrap from the end to the start.
+        starts = rng.integers(0, len(r), size=int(np.ceil(len(r) / block)))
+        idx = np.concatenate([(np.arange(s, s + block) % len(r)) for s in starts])[:len(r)]
+        vals = r[idx]
         out.append(np.prod(1 + vals) ** (252 / len(vals)) - 1)
-    return {"cagr_ci_low": float(np.quantile(out, 0.025)),
+    return {"method": "circular_block_bootstrap", "seed": seed, "block_sessions": block,
+            "samples": n, "cagr_ci_low": float(np.quantile(out, 0.025)),
             "cagr_ci_high": float(np.quantile(out, 0.975))}
 
 
@@ -357,7 +354,7 @@ def run(data_dir: Path, out_dir: Path):
             nav, legs, expo, turn = (run_A_B(frames, cal, kind, slip) if kind in ("A", "B")
                                      else run_C(frames, cal, slip))
             key = f"{kind}|{slip}"
-            m = metrics(nav)
+            m = metrics(nav, 50000.0)
             m.update({"strategy": kind, "slip_bps": slip, "exposure": expo,
                       "turnover_annual": turn / (m["final_nav"] * max((cal[-1] - cal[0]).days / 365.25, 1e-9)),
                       "trades": len(legs), "total_cost": sum(x["cost"] for x in legs)})
@@ -372,14 +369,14 @@ def run(data_dir: Path, out_dir: Path):
     for t in ("BIL", "SPY"):
         series = frames[t].AdjClose.loc[cal]
         nav = series / series.iloc[0] * 50000
-        bench[t] = metrics(nav)
+        bench[t] = metrics(nav, 50000.0)
     # HAC alpha vs BIL and SPY, base cost
     tests = {}
     for kind in ("A", "B", "C"):
         nav = pd.read_csv(out_dir / f"nav_{kind}.csv", index_col=0, parse_dates=True)["nav"]
-        r = nav.pct_change().fillna(0)
-        br = frames[BIL].AdjClose.pct_change().fillna(0)
-        sr = frames["SPY"].AdjClose.pct_change().fillna(0)
+        r = nav.pct_change(fill_method=None).fillna(0)
+        br = frames[BIL].AdjClose.pct_change(fill_method=None).fillna(0)
+        sr = frames["SPY"].AdjClose.pct_change(fill_method=None).fillna(0)
         tests[kind] = {"vs_BIL": hac_alpha(r - br), "vs_SPY": hac_alpha(r - sr)}
     qs = bh({k: v["vs_BIL"]["p"] for k, v in tests.items() if v["vs_BIL"]["p"] is not None})
     for k in tests:
@@ -393,10 +390,10 @@ def run(data_dir: Path, out_dir: Path):
                              "2016-2020": ("2016-01-01", "2020-12-31"),
                              "2021-2026": ("2021-01-01", "2099-12-31")}.items():
             x = nav[(nav.index >= a) & (nav.index <= b)]
-            stages[kind][name] = metrics(x) if len(x) > 3 else {"status": "INSUFFICIENT"}
+            stages[kind][name] = metrics(x, float(x.iloc[0])) if len(x) > 3 else {"status": "INSUFFICIENT"}
     for kind in ("A", "B", "C"):
         nav = pd.read_csv(out_dir / f"nav_{kind}.csv", index_col=0, parse_dates=True)["nav"]
-        results[f"{kind}|5"]["bootstrap"] = block_bootstrap_ci(nav)
+        results[f"{kind}|5"]["bootstrap"] = block_bootstrap_ci(nav, initial=50000.0)
     report = {"label": "ETF_STRATEGY_RESEARCH_SIMULATED_COSTS",
               "start": str(cal[0].date()), "end": str(cal[-1].date()),
               "params": {"A": "12m momentum top3, monthly, BIL fallback",

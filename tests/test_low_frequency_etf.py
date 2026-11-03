@@ -8,7 +8,8 @@ import pandas as pd
 import pytest
 
 from tools.research.low_frequency_etf import (
-    DataError, END, START, commission, leg_cost, load, metrics, run,
+    DataError, END, START, block_bootstrap_ci, commission, leg_cost, load,
+    metrics, run,
 )
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -48,7 +49,7 @@ def test_full_backtest_outputs_and_c_four_legs(study):
         assert (nav > 0).all()
     legs = pd.read_csv(out / "trades_base5.csv")
     c = legs[legs.strategy == "C"]
-    assert len(c) == 128
+    assert len(c) == 129  # initial BIL buy + 32 four-leg round trips
     assert set(c.side) == {"BUY", "SELL"}
     for _, r in c.iterrows():
         assert r["notional"] == pytest.approx(r["shares"] * r["price"])
@@ -73,7 +74,6 @@ def test_no_nav_or_trades_before_start(study):
 
 
 def test_c_matches_pr438_trade_count_and_dates():
-    from tests import test_low_frequency_etf  # noqa: F401
     comp = ROOT / "docs" / "research" / "etf_strategy_study" / "pr438_comparison.json"
     import json
     d = json.loads(comp.read_text(encoding="utf-8"))
@@ -130,3 +130,35 @@ def test_cutoff_data_is_not_used_after_research_end(study):
     for k in ("A", "B", "C"):
         nav = pd.read_csv(out / f"nav_{k}.csv", index_col=0, parse_dates=True)
         assert (nav.index <= pd.Timestamp(END)).all()
+
+
+def test_initial_equity_and_initial_trade_costs(study):
+    out, report = study
+    for k in ("A", "B", "C"):
+        assert report["results"][f"{k}|5"]["initial_equity"] == 50000.0
+        nav = pd.read_csv(out / f"nav_{k}.csv", index_col=0, parse_dates=True)["nav"]
+        assert nav.index.min() == pd.Timestamp(START)
+        legs = pd.read_csv(out / "trades_base5.csv")
+        first = legs[legs.strategy == k].sort_values("date").iloc[0]
+        assert first["date"] == START
+        assert first["ticker"] == "BIL" and first["side"] == "BUY"
+        assert first["cost"] > 0
+
+
+def test_first_day_return_uses_initial_equity():
+    idx = pd.date_range("2020-01-01", periods=2, freq="B")
+    nav = pd.Series([49_900.0, 50_100.0], index=idx)
+    m = metrics(nav, 50_000.0)
+    # first return is 49,900/50,000 - 1, not 50,100/49,900 - 1
+    assert m["total_return"] == pytest.approx(50_100 / 50_000 - 1)
+    assert m["initial_equity"] == 50_000.0
+
+
+def test_circular_block_bootstrap_metadata_and_ci():
+    idx = pd.date_range("2020-01-01", periods=300, freq="B")
+    rng = np.random.default_rng(1)
+    nav = pd.Series(50_000 * np.cumprod(1 + rng.normal(0.0002, 0.01, len(idx))), index=idx)
+    b = block_bootstrap_ci(nav, n=50, block=20, initial=50_000.0, seed=7)
+    assert b["method"] == "circular_block_bootstrap"
+    assert b["seed"] == 7 and b["block_sessions"] == 20 and b["samples"] == 50
+    assert b["cagr_ci_low"] < b["cagr_ci_high"]
