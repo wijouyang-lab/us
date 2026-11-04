@@ -43,6 +43,14 @@ assert.strictEqual(data.events.length, 2);
 assert.strictEqual(data.events.find(e => e.ticker === "BAC").previous_per_share, null);
 assert.strictEqual(data.exclusions[0].declared_per_share, 1.75);
 assert.ok(!JSON.stringify(data).includes("0.28"));
+const actualRoot = { innerHTML: "" };
+DQ.render(data, actualRoot);
+assert.match(actualRoot.innerHTML, /CAT/);
+assert.match(actualRoot.innerHTML, /BAC/);
+assert.match(actualRoot.innerHTML, /\$1\.63/);
+assert.match(actualRoot.innerHTML, /公告未披露/);
+assert.match(actualRoot.innerHTML, /PREFERRED_STOCK_EXCLUDED_FROM_COMMON_DIVIDEND/);
+assert.match(actualRoot.innerHTML, /并非完整覆盖/);
 
 const css = fs.readFileSync(path.join(__dirname, "..", "dashboard", "dividend_quality.css"), "utf8");
 assert.match(css, /@media\s*\(max-width:\s*760px\)/);
