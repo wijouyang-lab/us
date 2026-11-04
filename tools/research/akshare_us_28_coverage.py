@@ -98,13 +98,13 @@ def assess_history(frame: pd.DataFrame | None) -> dict[str, Any]:
     zero_volume = int((numeric[COL_VOLUME].fillna(0) == 0).sum())
     bad_rows = []
     for pos, (_, item) in enumerate(frame.iterrows()):
-        if pos >= 50: break
         vals = {k: _number(item.get(k)) for k in (COL_OPEN, COL_CLOSE, COL_HIGH, COL_LOW, COL_VOLUME)}
         is_nonpositive = any(v is not None and v <= 0 for k, v in vals.items() if k != COL_VOLUME)
         is_bad = bool(bad.iloc[pos])
         if is_nonpositive or is_bad:
             bad_rows.append({"date": str(item.get(COL_DATE)), **vals,
                              "nonpositive": is_nonpositive, "invalid_ohlc": is_bad})
+            if len(bad_rows) >= 50: break
     quality_pass = (len(valid_dates) == len(frame) and duplicate_dates == 0
                     and missing_close == 0 and missing_ohlc == 0
                     and nonpositive_ohlc == 0 and invalid_ohlc == 0)
