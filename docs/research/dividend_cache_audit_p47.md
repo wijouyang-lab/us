@@ -1,231 +1,234 @@
-# Legacy SEC Cache Audit — P4.7
+# Legacy SEC Cache Audit — P4.7.2
 
 Date: 2026-11-04
 Branch: `research/dividend-legacy-cache-audit-p47`
 Stacked target: `research/dividend-evidence-execution-p45`
 Status: **PRELIMINARY_ONLY / LEGACY_PLACEHOLDER_UA**
 
-If the local cache directory is absent (for example in CI), the audit reports
-LEGACY_CACHE_UNAVAILABLE and the cache-dependent tests skip; it does not
-re-download or fabricate a 110-file result.
+## 1. Final inventory
 
-## 1. Inventory
-
-Local cache:
-
-```text
-data/sec/filings_p43/
-```
-
-Actual audit:
+Local cache: `data/sec/filings_p43/`
 
 | Metric | Count |
 |---|---:|
 | accession directories | **131** |
-| local HTML documents | **221** |
-| primary documents | **128** |
-| exhibit-only accessions | **3** |
-| documents with SHA-256 | **221/221** |
-| ticker-mapped accessions | **131** |
+| discovered local HTML documents | **224** |
+| ticker/CIK mapped accessions | **131** |
 | unmapped accessions | **0** |
+| documents with SHA-256 | **224/224** |
 
-Status counts:
+The earlier 221 count was the index-listed count. P4.7.2 also discovers local
+HTML where the usable index was incomplete, giving 224 actual documents. This
+is not a claim of 581 filings.
+
+## 2. Document roles (SEC index metadata first)
+
+The cached `index.json` from SEC uses `text.gif` for every item, so it does not
+contain usable document types. Roles therefore fall back to filename inference
+and are marked as such. When an index item has a real type, that type wins.
+
+| Role | Count | Source |
+|---|---:|---|
+| PRIMARY | **129** | FILENAME_INFERENCE |
+| ANCILLARY | **87** | FILENAME_INFERENCE |
+| OTHER_EXHIBIT | **5** | FILENAME_INFERENCE |
+| EXHIBIT | **3** | FILENAME_INFERENCE |
+| UNKNOWN | **0** | — |
+
+Each document stores:
+
+```text
+index_document_type
+index_description
+document_role
+document_role_source
+document_role_confidence
+```
+
+`document_role_source` is `SEC_INDEX_TYPE`, `FILENAME_INFERENCE`, or `UNKNOWN`.
+No missing index was treated as “no file”; local HTML is discovered directly.
+
+## 3. Reference classification
 
 | Status | Count |
 |---|---:|
-| EXHIBIT_99_REFERENCED | 71 |
-| OTHER_EXHIBIT_REFERENCED | 32 |
-| NO_EXHIBIT_REFERENCE | 24 |
-| EXHIBIT_CACHED | 2 |
-| PRIMARY_CACHED | 1 |
-| ATTACHMENT_REFERENCE_UNSPECIFIED | 1 |
-| MISSING_LOCAL_FILE | 0 |
-| URL_ONLY_NOT_DOWNLOADED | 0 |
-| HASH_UNVERIFIED | 0 |
+| EXHIBIT_99_REFERENCED | **71** |
+| OTHER_EXHIBIT_REFERENCED | **25** |
+| NO_EXHIBIT_REFERENCE | **27** |
+| EXHIBIT_CACHED | **6** |
+| PRIMARY_CACHED | **1** |
+| ATTACHMENT_REFERENCE_UNSPECIFIED | **1** |
+| 合计 | **131** |
 
-The 131 is the number of local accession directories, not 581. P4.3 only
-downloaded a 5-per-company subset for the event scan.
+`EXHIBIT_99_REFERENCED` means the primary text refers to EX-99/99.1. It does
+**not** mean 71 exhibits were downloaded or 71 announcements were verified.
+Only 3 actual EXHIBIT documents and 5 OTHER_EXHIBIT documents are cached.
 
-## 2. Provenance gate
+## 4. Candidate events
 
-Every record carries:
+| Type | Count |
+|---|---:|
+| PRELIMINARY_8K_CANDIDATE | **1** |
+| HISTORICAL_DIVIDEND_CONTEXT | **10** |
+| FALSE_POSITIVE | **1** |
+| total | **12** |
+
+All are:
 
 ```text
 provenance_status = LEGACY_PLACEHOLDER_UA
 evidence_status = PRELIMINARY_ONLY
-```
-
-No audit result is:
-
-```text
-VERIFIED
-SPLIT_CONFIRMED
-OFFICIAL_EVIDENCE_CLOSED
-```
-
-No formal event or split status was changed.
-
-## 3. Document classification
-
-- `EXHIBIT_99_REFERENCED`: 71 accessions explicitly reference EX-99/99.1.
-- `OTHER_EXHIBIT_REFERENCED`: 32 reference another numbered exhibit.
-- `NO_EXHIBIT_REFERENCE`: 24 primary-only accessions with no exhibit wording.
-- `EXHIBIT_CACHED`: 2 exhibit-only accessions.
-- `PRIMARY_CACHED`: 1 primary with no exhibit classification.
-- `ATTACHMENT_REFERENCE_UNSPECIFIED`: 1 generic attachment reference.
-- 131/131 accessions are now mapped; no guessed mapping remains.
-
-## 4. Dividend candidate audit
-
-13 candidate records from local text:
-
-| Candidate type | Count |
-|---|---:|
-| PRELIMINARY_8K_CANDIDATE | **1** (BAC $0.32) |
-| HISTORICAL_DIVIDEND_CONTEXT | **11** |
-| FALSE_POSITIVE | **1** (NEE $67.75) |
-
-Only the BAC record has an 8-K-like announcement context and a per-share
-common amount. It is still:
-
-```text
-PRELIMINARY_ONLY
+verification_status = PRELIMINARY_ONLY
 is_event = false
 ```
-
-No candidate has `ex_date`; none is inferred.
-
-Historical-context records include NEE 0.35/0.425 and NVDA 0.01/0.024/0.04/0.12
-from 10-K/10-Q text; they are not new declarations.
-
-## 5. CAT / BAC / NEE special audit
-
-### CAT
-
-The accession:
-
-```text
-000110465926072929
-```
-
-has a cached primary document `tm2617177d1_8k.htm`, but **no EX-99.1**.
-It is classified:
-
-```text
-EXHIBIT_REQUIRED
-```
-
-The primary does not contain the $1.63/$1.51 announcement text. Therefore the
-CAT dividend cannot be verified from this cache.
 
 ### BAC
 
-The accession:
+The only 8-K candidate:
 
 ```text
-000007085826000364
+accession 000007085826000364
+source bac-20260723.htm
+amount $0.32
 ```
 
-also has a primary but no cached EX-99.1:
+Its official EX-99.1 is not cached:
 
 ```text
-EXHIBIT_REQUIRED
+EXHIBIT_99_REFERENCED
+EX-99.1 cached = NO
 ```
 
-A preliminary $0.32 candidate was found in a primary 8-K text, but the official
-press-release exhibit was not cached. It remains preliminary.
+### CAT
 
-The preferred $1.75 is not counted as a common dividend.
+```text
+accession 000110465926072929
+EXHIBIT_99_REFERENCED
+EX-99.1 cached = NO
+```
+
+No $1.63 event is verified.
 
 ### NEE
 
-The local `$67.75` record is:
-
 ```text
 FALSE_POSITIVE_NON_DIVIDEND_PRICE_TARGET
+$67.75
 is_event = false
 ```
 
-The primary document is cached, but the amount is a price target/valuation
-reference, not a dividend.
+## 5. Text locations
 
-## 6. Split mentions
-
-Local text search found split-related passages in **26** accessions:
+Every candidate and split mention carries:
 
 ```text
-ratio: some found
-effective date: not confirmed
-status: PARTIALLY_VERIFIED / PRELIMINARY_LEGACY_CACHE
-SPLIT_CONFIRMED: 0
+source_filename
+source_sha256
+source_document_role
+source_text_location
 ```
 
-XBRL fact period end and filing date were not used as effective dates.
-No split event was promoted.
-
-## 7. Files
+Location fields:
 
 ```text
-tools/investment_research/dividend/dividend_cache_audit_p47.py
-data/research/dividend_cache_audit_p47.json
-tests/test_dividend_cache_audit_p47.py
+start_char
+end_char
+matched_text
+context_before
+context_after
+text_normalization_version = normalized_text_v1
 ```
 
-The audit uses only local file reads. It does not import or call urllib,
-requests, httpx, Yahoo, AKShare, or Finnhub.
+Offsets are in normalized text, not raw HTML bytes.
 
-## 8. Remaining
+Candidate location result:
 
-1. 81 accessions need actual EX-99.1 downloads.
-2. CAT/BAC official exhibits are still not cached; their $1.63/$0.32 events are
-   not verified.
-3. 9 accessions remain unmapped to ticker/CIK.
-4. 131 local accessions ≠ 581 full 8-K inventory.
-5. Split effective dates still need explicit official sentences.
-6. Legacy cache is preliminary only and cannot enter the formal registry.
+| Result | Count |
+|---|---:|
+| OK (unique) | **6** |
+| LOCATION_AMBIGUOUS | **6** |
+| LOCATION_UNRESOLVED | **0** |
 
-No production/trade code changed.
-
-
-## 9. P4.7.1 identity and per-file fixes
-
-All nine previously unmapped accessions now resolve from local primary text and
-the 28-company registry:
+Split mentions:
 
 ```text
-000010088517000056 -> UNP
-000032018715000113 -> NKE
-000119312514084762 -> CRM
-000119312515023732 -> AAPL
-000132616014000003 -> DUK
-000165204416000022 -> GOOGL
-000165204423000016 -> GOOGL
-000165204423000045 -> GOOGL
-000168285219000009 -> MRNA
+22 mentions
+all LOCATION_AMBIGUOUS (the word "split" repeats)
+SPLIT_CONFIRMED = 0
 ```
 
-Each record now has `submitter_cik_hint`, `issuer_cik`, `mapping_method`,
-`mapping_confidence`, source filename and SHA-256. Mapped: **131/131**, unmapped:
-**0**.
+No line numbers or unique offsets were fabricated.
 
-Candidates and split mentions are parsed per HTML document; each has its own
-`source_filename`, `source_sha256`, `source_document_role` and
-`source_text_location`. Exhibit text cannot inherit the primary hash.
+## 6. Mapping
 
-Attachment classification changed from a broad 81 `EXHIBIT_REQUIRED` bucket to:
+All nine formerly unmapped accessions resolve from local primary text and the
+28-company registry:
 
 ```text
-EXHIBIT_99_REFERENCED 71
-OTHER_EXHIBIT_REFERENCED 32
-NO_EXHIBIT_REFERENCE 24
-EXHIBIT_CACHED 2
-PRIMARY_CACHED 1
-ATTACHMENT_REFERENCE_UNSPECIFIED 1
+UNP, NKE, CRM, AAPL, DUK, GOOGL, GOOGL, GOOGL, MRNA
 ```
 
-Generic "attached" no longer implies EX-99.1. Split mentions increased to 26
-because per-exhibit text is now scanned separately; no split is confirmed.
+Each mapping has:
 
-Six fixture tests in `tests/test_cache_audit_fixture_p47.py` run in CI without
-the gitignored cache and cover issuer vs submitter CIK, per-file hashes,
-UNMAPPED fallback, EX-99 classification and no-VERIFIED protection.
+```text
+submitter_cik_hint
+issuer_cik
+ticker
+mapping_method
+mapping_confidence
+mapping_source_filename
+mapping_source_sha256
+```
+
+The accession prefix is only a submitter hint. It is never accepted as the
+issuer CIK.
+
+## 7. Parameterized audit
+
+`audit(cache_dir=..., snapshot_path=..., mapping_registry=...)` now:
+
+- loads the supplied snapshot inside the function;
+- passes it to accession mapping and name inference;
+- does not use a module-import-time global snapshot;
+- accepts a temporary registry for fixture tests;
+- remains entirely offline.
+
+## 8. CI fixture tests
+
+`tests/test_cache_audit_fixture_p47.py`: **14 passed**, run in CI without the
+gitignored cache. They cover:
+
+- EX-99.1 index type without an `ex99` filename;
+- EX-10 as OTHER_EXHIBIT;
+- index type winning over a conflicting filename;
+- missing index discovering local HTML;
+- custom `snapshot_path`;
+- candidate offsets/context;
+- repeated amount → ambiguous;
+- split location and own SHA-256;
+- exhibit candidate own SHA-256;
+- no VERIFIED from a legacy cache.
+
+The 12 real-cache integration tests remain skipped in CI because the cache is
+gitignored and absent from checkout.
+
+## 9. Formal status unchanged
+
+```text
+VERIFIED dividend events = 0
+SPLIT_CONFIRMED = 0
+DPS share basis verified = 0/28
+FULL_SCAN = CONFIGURATION_BLOCKED
+```
+
+No network request, no EX-99.1 download, no other data provider, no production
+strategy change.
+
+## 10. Remaining
+
+1. 71 EX-99 references still need actual exhibit retrieval.
+2. CAT and BAC EX-99.1 are not cached.
+3. 6 candidate and 22 split locations are ambiguous; no fake unique offsets.
+4. 131 local accessions remain a subset of 581.
+5. Split effective dates remain unconfirmed.
+6. Formal re-fetch requires a real SEC user agent in a future phase.

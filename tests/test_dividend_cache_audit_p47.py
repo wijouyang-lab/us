@@ -9,9 +9,9 @@ pytestmark = pytest.mark.skipif((not CACHE.exists()) or D.get("status") == "LEGA
 
 def test_cache_inventory_actual():
     assert D["accession_count"] == 131
-    assert sum(len(x["documents"]) for x in D["accessions"]) == 221
-    assert D["status_counts"] == {"EXHIBIT_99_REFERENCED": 71, "OTHER_EXHIBIT_REFERENCED": 32,
-                                   "NO_EXHIBIT_REFERENCE": 24, "EXHIBIT_CACHED": 2,
+    assert sum(len(x["documents"]) for x in D["accessions"]) == 224
+    assert D["status_counts"] == {"EXHIBIT_99_REFERENCED": 71, "OTHER_EXHIBIT_REFERENCED": 25,
+                                   "NO_EXHIBIT_REFERENCE": 27, "EXHIBIT_CACHED": 6,
                                    "PRIMARY_CACHED": 1, "ATTACHMENT_REFERENCE_UNSPECIFIED": 1}
 
 
@@ -56,7 +56,7 @@ def test_no_verification_or_split_confirmed_claim():
     text = Path("data/research/dividend_cache_audit_p47.json").read_text()
     assert '"verification_status": "VERIFIED"' not in text
     assert '"SPLIT_CONFIRMED"' not in text
-    assert len(D["split_mentions"]) == 26
+    assert len(D["split_mentions"]) == 22
 
 
 def test_cache_is_gitignored():
