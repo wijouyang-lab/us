@@ -106,3 +106,10 @@ def test_exporter_requires_source_hash_for_same_ticker_and_accession():
     primary["sha256"] = "57b9d2645ce84f6dffed4f9396e88b3636d0c98bfcb42992667d45dad3d5acdf"
     with pytest.raises(ValueError, match="both audited EXHIBIT and PRIMARY sources are required"):
         build(events, _load(SRC_AUDIT), _load(SRC_EXCL))
+
+
+def test_exporter_rejects_preferred_exclusion_without_matching_amount_evidence():
+    exclusions = _load(SRC_EXCL)
+    exclusions["exclusions"][0]["raw_context"] = exclusions["exclusions"][0]["raw_context"].replace("$1.75", "$1.25")
+    with pytest.raises(ValueError, match="preferred exclusion does not match its filing evidence"):
+        build(_load(SRC_EVENTS), _load(SRC_AUDIT), exclusions)
