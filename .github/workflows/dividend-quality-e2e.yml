@@ -1,0 +1,61 @@
+name: Dividend Quality Browser E2E
+
+on:
+  push:
+    branches:
+      - feature/dividend-quality-dashboard-p45
+    paths:
+      - tests/dividend_quality_e2e.js
+      - tests/test_dividend_quality_frontend.js
+      - dashboard/dividend_quality.js
+      - dashboard/dividend_quality.css
+      - dashboard/data/dividend_quality.json
+      - index.html
+      - package.json
+      - package-lock.json
+      - .github/workflows/dividend-quality-e2e.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - tests/dividend_quality_e2e.js
+      - tests/test_dividend_quality_frontend.js
+      - dashboard/dividend_quality.js
+      - dashboard/dividend_quality.css
+      - dashboard/data/dividend_quality.json
+      - index.html
+      - package.json
+      - package-lock.json
+      - .github/workflows/dividend-quality-e2e.yml
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install pinned Playwright
+        run: npm ci
+
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run browser E2E
+        run: node tests/dividend_quality_e2e.js
+
+      - name: Upload browser screenshots and console log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dividend-quality-e2e
+          path: tests/artifacts/dividend-quality-e2e/
+          retention-days: 30
+          if-no-files-found: warn
