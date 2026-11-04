@@ -14,6 +14,19 @@ on:
       - package.json
       - package-lock.json
       - .github/workflows/dividend-quality-e2e.yml
+  pull_request:
+    branches:
+      - main
+    paths:
+      - tests/dividend_quality_e2e.js
+      - tests/test_dividend_quality_frontend.js
+      - dashboard/dividend_quality.js
+      - dashboard/dividend_quality.css
+      - dashboard/data/dividend_quality.json
+      - index.html
+      - package.json
+      - package-lock.json
+      - .github/workflows/dividend-quality-e2e.yml
 
 permissions:
   contents: read
