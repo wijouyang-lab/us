@@ -123,6 +123,6 @@ def test_exhibit_99_1_is_actually_downloaded(tmp_path, monkeypatch):
                     "bytes": len(raw), "path": str(dest), "url": url}
     f = Fake(tmp_path, "audit@example.org")
     out = f.fetch_filing("CAT", "18230", "0001104659-26-072929")
-    assert out["status_text"] == "FETCHED"
+    assert out["status_text"] == "FETCHED_COMPLETE"
     assert any(x["name"] == "cat_ex99-1.htm" for x in out["exhibits"])
     assert out["primary"]["name"] == "cat-8k.htm"

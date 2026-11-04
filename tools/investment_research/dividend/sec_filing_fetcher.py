@@ -7,6 +7,14 @@ from pathlib import Path
 BASE = "https://www.sec.gov/Archives/edgar/data"
 
 
+def config_status(user_agent: str | None = None) -> str:
+    ua = (user_agent or os.getenv("SEC_USER_AGENT", "")).strip()
+    if not ua: return "SEC_USER_AGENT_NOT_CONFIGURED"
+    if ("example.com" in ua or "your_" in ua or "@" not in ua or len(ua) < 12):
+        return "SEC_USER_AGENT_INVALID"
+    return "SEC_USER_AGENT_CONFIGURED"
+
+
 def archive_dir(cik: str, accession: str) -> str:
     return f"{BASE}/{int(cik)}/{accession.replace('-', '')}"
 
@@ -18,9 +26,8 @@ def index_url(cik: str, accession: str) -> str:
 class FilingFetcher:
     def __init__(self, cache: Path, user_agent: str | None = None, min_interval=0.25):
         ua = (user_agent or os.getenv("SEC_USER_AGENT", "")).strip()
-        allow_audit_placeholder = os.getenv("ALLOW_SEC_PLACEHOLDER", "") == "1"
-        if not ua or (("example.com" in ua or "your_" in ua) and not allow_audit_placeholder):
-            raise RuntimeError("SEC_USER_AGENT must be a real contact, not a placeholder")
+        if config_status(ua) != "SEC_USER_AGENT_CONFIGURED":
+            raise RuntimeError("CONFIGURATION_BLOCKED: " + config_status(ua))
         self.ua = ua; self.cache = Path(cache); self.cache.mkdir(parents=True, exist_ok=True)
         self.min_interval = max(0.25, min_interval); self.last = 0.0
 
@@ -77,8 +84,16 @@ class FilingFetcher:
                          "url": f"{archive_dir(cik, accession)}/{name}", **res})
         primary_doc = next((x for x in docs if x["role"] == "PRIMARY"), None)
         exhibits = [x for x in docs if x["role"] == "EXHIBIT"]
+        primary_ok = bool(primary_doc and primary_doc.get("status") == 200)
+        exhibit_fail = any(x.get("status") != 200 for x in exhibits)
+        if not primary_ok:
+            status = "FETCH_FAILED"
+        elif exhibit_fail:
+            status = "FETCHED_PARTIAL"
+        else:
+            status = "FETCHED_COMPLETE"
         return {"ticker": ticker, "cik": cik, "accession": accession,
-                "index_url": index_url(cik, accession), "status_text": "FETCHED",
+                "index_url": index_url(cik, accession), "status_text": status,
                 "documents": docs, "primary": primary_doc, "exhibits": exhibits,
                 "downloaded": sum(1 for x in docs if x.get("status") == 200),
                 "failed": sum(1 for x in docs if x.get("status") != 200)}
@@ -130,8 +145,14 @@ def process(evidence_path: str, cache: Path, ua: str):
 
 
 def main():
-    import os
-    rows = process("data/research/split_evidence_p42.json", Path("data/sec/filings_p43"),
+    import sys
+    if "--check-config" in sys.argv:
+        print(config_status())
+        return
+    if config_status() != "SEC_USER_AGENT_CONFIGURED":
+        print("CONFIGURATION_BLOCKED: " + config_status())
+        return
+    rows = process("data/research/split_evidence_p42.json", Path("data/sec/filings_p45"),
                    os.getenv("SEC_USER_AGENT", ""))
     print("processed", len(rows), "split records")
 
