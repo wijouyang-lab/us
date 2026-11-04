@@ -1,0 +1,1077 @@
+[
+  {
+    "ticker": "AAPL",
+    "cik": "0000320193",
+    "accession": "0001193125-15-023732",
+    "filing": {
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "accession": "0001193125-15-023732",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/320193/000119312515023732/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "d835617d8k.htm",
+          "status": 200,
+          "cached": true,
+          "sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b",
+          "bytes": 23437,
+          "path": "data\\sec\\filings_p43\\000119312515023732\\d835617d8k.htm"
+        }
+      ],
+      "primary": {
+        "name": "d835617d8k.htm",
+        "status": 200,
+        "cached": true,
+        "sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b",
+        "bytes": 23437,
+        "path": "data\\sec\\filings_p43\\000119312515023732\\d835617d8k.htm"
+      },
+      "exhibits": [
+        {
+          "name": "d835617dex991.htm",
+          "not_downloaded": true
+        },
+        {
+          "name": "d835617dex992.htm",
+          "not_downloaded": true
+        }
+      ],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": false,
+      "ratio": null,
+      "dates": [
+        "January 28, 2015",
+        "September 27, 2014",
+        "October 27, 2014",
+        "September 27, 2014",
+        "October 27, 2014"
+      ],
+      "text_excerpt": ""
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:54:58.006317+00:00"
+  },
+  {
+    "ticker": "AAPL",
+    "cik": "0000320193",
+    "accession": "0000320193-21-000065",
+    "filing": {
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "accession": "0000320193-21-000065",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/320193/000032019321000065/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "aapl-20210626.htm",
+          "status": 200,
+          "cached": true,
+          "sha256": "938440ca514dfb70d91450c688dc80eff94072ca08970d4e7679af1187f10c61",
+          "bytes": 1705908,
+          "path": "data\\sec\\filings_p43\\000032019321000065\\aapl-20210626.htm"
+        }
+      ],
+      "primary": {
+        "name": "aapl-20210626.htm",
+        "status": 200,
+        "cached": true,
+        "sha256": "938440ca514dfb70d91450c688dc80eff94072ca08970d4e7679af1187f10c61",
+        "bytes": 1705908,
+        "path": "data\\sec\\filings_p43\\000032019321000065\\aapl-20210626.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "June 26, 2021",
+        "June 27, 2020",
+        "June 26, 2021",
+        "June 27, 2020",
+        "June 26, 2021"
+      ],
+      "text_excerpt": " aapl-20210626 true true true true true true true true true true false 2021 Q3 0000320193 --09-25 P1Y 64 P1Y 26 P1Y 8 2 us-gaap:OtherAssetsNoncurrent us-gaap:OtherAssetsNoncurrent 0000320193 2020-09-27 2021-06-26 0000320193 us-gaap:CommonStockMember 2020-09-27 2021-06-26 0000320193 aapl:A1.000NotesDue2022Member 2020-09-27 2021-06-26 0000320193 aapl:A1.375NotesDue2024Member 2020-09-27 2021-06-26 0000320193 aapl:A0.000Notesdue2025Member 2020-09-27 2021-06-26 0000320193 aapl:A0.875NotesDue2025Membe"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:54:58.038557+00:00"
+  },
+  {
+    "ticker": "GOOGL",
+    "cik": "0001652044",
+    "accession": "0001652044-16-000022",
+    "filing": {
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "accession": "0001652044-16-000022",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204416000022/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "a8-kasu2016x09.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "c297fe022011012304257a7f5088efa4abb2c6491df0e5a862a3864339c4be44",
+          "bytes": 42264,
+          "path": "data\\sec\\filings_p43\\000165204416000022\\a8-kasu2016x09.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204416000022/a8-kasu2016x09.htm"
+        }
+      ],
+      "primary": {
+        "name": "a8-kasu2016x09.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "c297fe022011012304257a7f5088efa4abb2c6491df0e5a862a3864339c4be44",
+        "bytes": 42264,
+        "path": "data\\sec\\filings_p43\\000165204416000022\\a8-kasu2016x09.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204416000022/a8-kasu2016x09.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": false,
+      "ratio": null,
+      "dates": [
+        "December 31, 2015",
+        "February 11, 2016",
+        "March 31, 2016",
+        "December 31, 2015",
+        "February 11, 2016"
+      ],
+      "text_excerpt": ""
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:00.485533+00:00"
+  },
+  {
+    "ticker": "GOOGL",
+    "cik": "0001652044",
+    "accession": "0001652044-23-000016",
+    "filing": {
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "accession": "0001652044-23-000016",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000016/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "goog-20221231.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "50eb1197240c7e849207faad555ee0244bfad8b18b57feae190ab99ff1b87190",
+          "bytes": 3038528,
+          "path": "data\\sec\\filings_p43\\000165204423000016\\goog-20221231.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000016/goog-20221231.htm"
+        }
+      ],
+      "primary": {
+        "name": "goog-20221231.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "50eb1197240c7e849207faad555ee0244bfad8b18b57feae190ab99ff1b87190",
+        "bytes": 3038528,
+        "path": "data\\sec\\filings_p43\\000165204423000016\\goog-20221231.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000016/goog-20221231.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "June 30, 2022",
+        "June 30, 2022",
+        "December 31, 2022",
+        "December 31, 2022",
+        "October 2, 2015"
+      ],
+      "text_excerpt": " goog-20221231 FALSE 2022 FY 0001652044 P7Y P4Y P1Y 50 50 http://fasb.org/us-gaap/2022#RevenueFromContractWithCustomerExcludingAssessedTax http://fasb.org/us-gaap/2022#NonoperatingIncomeExpense http://fasb.org/us-gaap/2022#RevenueFromContractWithCustomerExcludingAssessedTax http://fasb.org/us-gaap/2022#NonoperatingIncomeExpense http://fasb.org/us-gaap/2022#RevenueFromContractWithCustomerExcludingAssessedTax http://fasb.org/us-gaap/2022#NonoperatingIncomeExpense http://fasb.org/us-gaap/2022#Other"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:04.065340+00:00"
+  },
+  {
+    "ticker": "GOOGL",
+    "cik": "0001652044",
+    "accession": "0001652044-23-000045",
+    "filing": {
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "accession": "0001652044-23-000045",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000045/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "goog-20230331.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "224583028da4bde7b98a5beb1ff971f2a824de7de30539075b7fe07da152b9ca",
+          "bytes": 2036086,
+          "path": "data\\sec\\filings_p43\\000165204423000045\\goog-20230331.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000045/goog-20230331.htm"
+        }
+      ],
+      "primary": {
+        "name": "goog-20230331.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "224583028da4bde7b98a5beb1ff971f2a824de7de30539075b7fe07da152b9ca",
+        "bytes": 2036086,
+        "path": "data\\sec\\filings_p43\\000165204423000045\\goog-20230331.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1652044/000165204423000045/goog-20230331.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "December 31, 2022",
+        "March 31, 2023",
+        "March 31, 2022",
+        "March 31, 2022",
+        "December 31, 2021"
+      ],
+      "text_excerpt": " goog-20230331 FALSE 2023 Q1 0001652044 --12-31 50 50 http://fasb.org/us-gaap/2022#OtherAssetsCurrent http://fasb.org/us-gaap/2022#OtherLiabilitiesNoncurrent http://fasb.org/us-gaap/2022#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2022#AccruedLiabilitiesCurrent Subsequent Event [ Placeholder ] 0001652044 2023-01-01 2023-03-31 0001652044 us-gaap:CommonClassAMember 2023-01-01 2023-03-31 0001652044 goog:CapitalClassCMember 2023-01-01 2023-03-31 0001652044 us-gaap:CommonClassAMember 2023-04-18"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:07.834914+00:00"
+  },
+  {
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "accession": "0001045810-21-000163",
+    "filing": {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "accession": "0001045810-21-000163",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581021000163/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nvda-20211031.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "bda689a64bdc0b8742a3255fda29d081555a0324eb73f1574a7dd9b2bb7d1e70",
+          "bytes": 1762732,
+          "path": "data\\sec\\filings_p43\\000104581021000163\\nvda-20211031.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581021000163/nvda-20211031.htm"
+        }
+      ],
+      "primary": {
+        "name": "nvda-20211031.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "bda689a64bdc0b8742a3255fda29d081555a0324eb73f1574a7dd9b2bb7d1e70",
+        "bytes": 1762732,
+        "path": "data\\sec\\filings_p43\\000104581021000163\\nvda-20211031.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581021000163/nvda-20211031.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "October 31, 2021",
+        "October 31, 2021",
+        "October 25, 2020",
+        "October 31, 2021",
+        "October 25, 2020"
+      ],
+      "text_excerpt": " nvda-20211031 0001045810 1/30 2022 Q3 FALSE 0001045810 2021-02-01 2021-10-31 xbrli:shares 0001045810 2021-11-12 iso4217:USD 0001045810 2021-08-02 2021-10-31 0001045810 2020-07-27 2020-10-25 0001045810 2020-01-27 2020-10-25 iso4217:USD xbrli:shares 0001045810 2021-10-31 0001045810 2021-01-31 0001045810 us-gaap:CommonStockMember 2021-08-01 0001045810 us-gaap:AdditionalPaidInCapitalMember 2021-08-01 0001045810 us-gaap:TreasuryStockMember 2021-08-01 0001045810 us-gaap:AccumulatedOtherComprehensiveI"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:11.163365+00:00"
+  },
+  {
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "accession": "0001045810-22-000079",
+    "filing": {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "accession": "0001045810-22-000079",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581022000079/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nvda-20220501.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "5f1a525289f463bd888e369b4438154923460f7626c231a487d3c1c62abac5a9",
+          "bytes": 1415480,
+          "path": "data\\sec\\filings_p43\\000104581022000079\\nvda-20220501.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581022000079/nvda-20220501.htm"
+        }
+      ],
+      "primary": {
+        "name": "nvda-20220501.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "5f1a525289f463bd888e369b4438154923460f7626c231a487d3c1c62abac5a9",
+        "bytes": 1415480,
+        "path": "data\\sec\\filings_p43\\000104581022000079\\nvda-20220501.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581022000079/nvda-20220501.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "May 1, 2022",
+        "May 1, 2022",
+        "May 2, 2021",
+        "May 1, 2022",
+        "May 2, 2021"
+      ],
+      "text_excerpt": " nvda-20220501 0001045810 1/29 2023 Q1 FALSE 0001045810 2022-01-31 2022-05-01 0001045810 2022-05-20 xbrli:shares iso4217:USD 0001045810 2021-02-01 2021-05-02 iso4217:USD xbrli:shares 0001045810 2022-05-01 0001045810 2022-01-30 0001045810 us-gaap:CommonStockMember 2022-01-30 0001045810 us-gaap:AdditionalPaidInCapitalMember 2022-01-30 0001045810 us-gaap:TreasuryStockMember 2022-01-30 0001045810 us-gaap:AccumulatedOtherComprehensiveIncomeMember 2022-01-30 0001045810 us-gaap:RetainedEarningsMember 2"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:14.199893+00:00"
+  },
+  {
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "accession": "0001045810-24-000316",
+    "filing": {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "accession": "0001045810-24-000316",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000316/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nvda-20241027.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "0d9b13ab5f14eba1f29e17ff2dcd9bba3a9eaf2e1625622709a6e51f198cf490",
+          "bytes": 1440347,
+          "path": "data\\sec\\filings_p43\\000104581024000316\\nvda-20241027.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000316/nvda-20241027.htm"
+        }
+      ],
+      "primary": {
+        "name": "nvda-20241027.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "0d9b13ab5f14eba1f29e17ff2dcd9bba3a9eaf2e1625622709a6e51f198cf490",
+        "bytes": 1440347,
+        "path": "data\\sec\\filings_p43\\000104581024000316\\nvda-20241027.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581024000316/nvda-20241027.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "October 27, 2024",
+        "October 29, 2023",
+        "October 27, 2024",
+        "October 29, 2023",
+        "October 27, 2024"
+      ],
+      "text_excerpt": " nvda-20241027 0001045810 1/26 2025 Q3 FALSE http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent 0 550 456 xbrli:shares iso4217:USD iso4217:USD xbrli:shares xbrli:pure nvda:segment 0001045810 2024-01-29 2024-10-27 0001045810 2024-11-15 0001045810 2024-07-29 2024-10-27 0001045810 2023-07-31 2023-10-29 0001045810 2023-01-30 2023-10-29 0001045810 2024-10-27 0001045810 2024-01-28 0001045810 us-gaap:CommonStockMember 2024-07-28 0001045810 us-g"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:17.290809+00:00"
+  },
+  {
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "accession": "0001045810-25-000116",
+    "filing": {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "accession": "0001045810-25-000116",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000116/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nvda-20250427.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "d36283644114ec31baf860587630230d44fcd6e950f3fd75833fdf587ac78e75",
+          "bytes": 1132304,
+          "path": "data\\sec\\filings_p43\\000104581025000116\\nvda-20250427.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000116/nvda-20250427.htm"
+        }
+      ],
+      "primary": {
+        "name": "nvda-20250427.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "d36283644114ec31baf860587630230d44fcd6e950f3fd75833fdf587ac78e75",
+        "bytes": 1132304,
+        "path": "data\\sec\\filings_p43\\000104581025000116\\nvda-20250427.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1045810/000104581025000116/nvda-20250427.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "April 27, 2025",
+        "April 28, 2024",
+        "April 27, 2025",
+        "April 28, 2024",
+        "April 27, 2025"
+      ],
+      "text_excerpt": " nvda-20250427 0001045810 1/25 2026 Q1 FALSE http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent 385 134 286 xbrli:shares iso4217:USD iso4217:USD xbrli:shares xbrli:pure nvda:segment 0001045810 2025-01-27 2025-04-27 0001045810 2025-05-23 0001045810 2024-01-29 2024-04-28 0001045810 2025-04-27 0001045810 2025-01-26 0001045810 us-gaap:CommonStockMember 2025-01-26 0001045810 us-gaap:AdditionalPaidInCapitalMember 2025-01-26 0001045810 us-gaap:"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:20.390553+00:00"
+  },
+  {
+    "ticker": "CRM",
+    "cik": "0001108524",
+    "accession": "0001193125-14-084762",
+    "filing": {
+      "ticker": "CRM",
+      "cik": "0001108524",
+      "accession": "0001193125-14-084762",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312514084762/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "d648028d10k.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "c161e392fda8bce857bcf0dfe0168cb64bbd2def2f45a5c847b4552b8a8ba64f",
+          "bytes": 1922643,
+          "path": "data\\sec\\filings_p43\\000119312514084762\\d648028d10k.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312514084762/d648028d10k.htm"
+        }
+      ],
+      "primary": {
+        "name": "d648028d10k.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "c161e392fda8bce857bcf0dfe0168cb64bbd2def2f45a5c847b4552b8a8ba64f",
+        "bytes": 1922643,
+        "path": "data\\sec\\filings_p43\\000119312514084762\\d648028d10k.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1108524/000119312514084762/d648028d10k.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "July 31, 2012",
+        "October 31, 2012",
+        "January 31, 2013",
+        "July 31, 2011",
+        "October 31, 2011"
+      ],
+      "text_excerpt": " 10-K 1 d648028d10k.htm 10-K Prepared by R.R. Donnelley Financial -- 10-K Table of Contents Index to Financial Statements &nbsp; &nbsp; UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 &nbsp; &nbsp; FORM 10-K &nbsp; &nbsp; (Mark One) &#120; Annual Report pursuant to Section&nbsp;13 or 15(d) of the Securities Exchange Act of 1934 For the fiscal year ended January&nbsp;31, 2014 OR &nbsp; &#168; Transition report pursuant to Section&nbsp;13 or 15(d) of the Securities Exchange"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:25.705115+00:00"
+  },
+  {
+    "ticker": "AMZN",
+    "cik": "0001018724",
+    "accession": "0001018724-25-000004",
+    "filing": {
+      "ticker": "AMZN",
+      "cik": "0001018724",
+      "accession": "0001018724-25-000004",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "amzn-20241231.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "78fbcad672682eb933b23ef6b3129ed5fb0b18c8fa03e5f2e466a5bd03467cb8",
+          "bytes": 1922470,
+          "path": "data\\sec\\filings_p43\\000101872425000004\\amzn-20241231.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/amzn-20241231.htm"
+        }
+      ],
+      "primary": {
+        "name": "amzn-20241231.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "78fbcad672682eb933b23ef6b3129ed5fb0b18c8fa03e5f2e466a5bd03467cb8",
+        "bytes": 1922470,
+        "path": "data\\sec\\filings_p43\\000101872425000004\\amzn-20241231.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1018724/000101872425000004/amzn-20241231.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "June 30, 2024",
+        "January 1, 2022",
+        "December 31, 2023",
+        "December 31, 2023",
+        "December 31, 2024"
+      ],
+      "text_excerpt": " amzn-20241231 false 2024 FY 0001018724 P3Y P1Y P1Y http://fasb.org/us-gaap/2024#PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization http://fasb.org/us-gaap/2024#PropertyPlantAndEquipmentAndFinanceLeaseRightOfUseAssetAfterAccumulatedDepreciationAndAmortization http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2024#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/202"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:32.283024+00:00"
+  },
+  {
+    "ticker": "NKE",
+    "cik": "0000320187",
+    "accession": "0000320187-15-000113",
+    "filing": {
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "accession": "0000320187-15-000113",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/320187/000032018715000113/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nke-5312015x10k.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "3920e6ff323f6e34a561e7427c0e2c7f7907dd572d6f439b911f18eb89192c6c",
+          "bytes": 3624821,
+          "path": "data\\sec\\filings_p43\\000032018715000113\\nke-5312015x10k.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018715000113/nke-5312015x10k.htm"
+        }
+      ],
+      "primary": {
+        "name": "nke-5312015x10k.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "3920e6ff323f6e34a561e7427c0e2c7f7907dd572d6f439b911f18eb89192c6c",
+        "bytes": 3624821,
+        "path": "data\\sec\\filings_p43\\000032018715000113\\nke-5312015x10k.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018715000113/nke-5312015x10k.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "February 1, 2013",
+        "November 30, 2012",
+        "May 31, 2019",
+        "June 30, 2015",
+        "June 30, 2015"
+      ],
+      "text_excerpt": " 10-K 1 nke-5312015x10k.htm 10-K NKE - 5.31.2015 - 10K Table of Contents &#32; UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM 10-K (Mark One) &#254; &#32;ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(D) OF THE SECURITIES EXCHANGE ACT OF 1934 FOR THE FISCAL YEAR ENDED May&#160;31, 2015 &#32; OR &#168; &#32;TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(D) OF THE SECURITIES EXCHANGE ACT OF 1934 FOR THE TRANSITION PERIOD FROM &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#16"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:36.006949+00:00"
+  },
+  {
+    "ticker": "NKE",
+    "cik": "0000320187",
+    "accession": "0000320187-18-000142",
+    "filing": {
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "accession": "0000320187-18-000142",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000142/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nke-5312018x10k.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "9a9de94ba6df83369c1d36334883e1183e439782ddce5c28969e4b66f2b20ab0",
+          "bytes": 3219690,
+          "path": "data\\sec\\filings_p43\\000032018718000142\\nke-5312018x10k.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000142/nke-5312018x10k.htm"
+        }
+      ],
+      "primary": {
+        "name": "nke-5312018x10k.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "9a9de94ba6df83369c1d36334883e1183e439782ddce5c28969e4b66f2b20ab0",
+        "bytes": 3219690,
+        "path": "data\\sec\\filings_p43\\000032018718000142\\nke-5312018x10k.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/320187/000032018718000142/nke-5312018x10k.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "May 31, 2019",
+        "May 25, 2018",
+        "December 22, 2017",
+        "December 31, 2017",
+        "June 30, 2018"
+      ],
+      "text_excerpt": " 10-K 1 nke-5312018x10k.htm 10-K Document Table of Contents UNITED STATES SECURITIES AND EXCHANGE COMMISSION Washington, D.C. 20549 FORM 10-K (Mark One) &#254; &#32;ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(D) OF THE SECURITIES EXCHANGE ACT OF 1934 FOR THE FISCAL YEAR ENDED May&#160;31, 2018 &#32; OR &#168; &#32;TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(D) OF THE SECURITIES EXCHANGE ACT OF 1934 FOR THE TRANSITION PERIOD FROM &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:39.481281+00:00"
+  },
+  {
+    "ticker": "HON",
+    "cik": "0000773840",
+    "accession": "0000773840-26-000124",
+    "filing": {
+      "ticker": "HON",
+      "cik": "0000773840",
+      "accession": "0000773840-26-000124",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000124/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "hon-20260630.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "bcc3ded7b87d1d21aba98c7cd1c6839faf78cb953c02d631033b9ea8d560c64c",
+          "bytes": 2754709,
+          "path": "data\\sec\\filings_p43\\000077384026000124\\hon-20260630.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000124/hon-20260630.htm"
+        }
+      ],
+      "primary": {
+        "name": "hon-20260630.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "bcc3ded7b87d1d21aba98c7cd1c6839faf78cb953c02d631033b9ea8d560c64c",
+        "bytes": 2754709,
+        "path": "data\\sec\\filings_p43\\000077384026000124\\hon-20260630.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000124/hon-20260630.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "June 30, 2026",
+        "June 30, 2026",
+        "June 30, 2026",
+        "June 30, 2026",
+        "June 30, 2026"
+      ],
+      "text_excerpt": " hon-20260630 2026 Q2 false 0000773840 12/31 Shares issued not disclosed 0.5 P1Y http://fasb.org/us-gaap/2026#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2026#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2026#OtherLiabilitiesNoncurrent http://fasb.org/us-gaap/2026#OtherLiabilitiesNoncurrent http://fasb.org/us-gaap/2026#LongTermDebtAndCapitalLeaseObligationsCurrent http://fasb.org/us-gaap/2026#LongTermDebtAndCapitalLeaseObligationsCurrent http://fasb.org/us-gaap/2026#LongTermDebtAndCap"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:43.449252+00:00"
+  },
+  {
+    "ticker": "HON",
+    "cik": "0000773840",
+    "accession": "0000773840-26-000143",
+    "filing": {
+      "ticker": "HON",
+      "cik": "0000773840",
+      "accession": "0000773840-26-000143",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000143/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "hon-20260930.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "449bab75fccf78201e24ec146c0459523d7e42cd469f672c1dbe77e460796c42",
+          "bytes": 2649002,
+          "path": "data\\sec\\filings_p43\\000077384026000143\\hon-20260930.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000143/hon-20260930.htm"
+        }
+      ],
+      "primary": {
+        "name": "hon-20260930.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "449bab75fccf78201e24ec146c0459523d7e42cd469f672c1dbe77e460796c42",
+        "bytes": 2649002,
+        "path": "data\\sec\\filings_p43\\000077384026000143\\hon-20260930.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/773840/000077384026000143/hon-20260930.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "September 30, 2026",
+        "September 30, 2026",
+        "September 30, 2026",
+        "September 30, 2026",
+        "September 30, 2026"
+      ],
+      "text_excerpt": " hon-20260930 2026 Q3 false 0000773840 12/31 0.5 P2Y P1Y 0.25 0.5 http://fasb.org/us-gaap/2026#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2026#AccruedLiabilitiesCurrent http://fasb.org/us-gaap/2026#OtherLiabilitiesNoncurrent http://fasb.org/us-gaap/2026#OtherLiabilitiesNoncurrent http://fasb.org/us-gaap/2026#LongTermDebtAndCapitalLeaseObligationsCurrent http://fasb.org/us-gaap/2026#LongTermDebtAndCapitalLeaseObligationsCurrent http://fasb.org/us-gaap/2026#LongTermDebtAndCapitalLeaseObliga"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:46.710082+00:00"
+  },
+  {
+    "ticker": "UNP",
+    "cik": "0000100885",
+    "accession": "0000100885-17-000056",
+    "filing": {
+      "ticker": "UNP",
+      "cik": "0000100885",
+      "accession": "0000100885-17-000056",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/100885/000010088517000056/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "unp-20161231x10k.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "6a57e4b52cb82c64928b212c689d512f177db9a74d11b3a63970545ab376ec82",
+          "bytes": 3599637,
+          "path": "data\\sec\\filings_p43\\000010088517000056\\unp-20161231x10k.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/100885/000010088517000056/unp-20161231x10k.htm"
+        }
+      ],
+      "primary": {
+        "name": "unp-20161231x10k.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "6a57e4b52cb82c64928b212c689d512f177db9a74d11b3a63970545ab376ec82",
+        "bytes": 3599637,
+        "path": "data\\sec\\filings_p43\\000010088517000056\\unp-20161231x10k.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/100885/000010088517000056/unp-20161231x10k.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "December 31, 2016",
+        "June 30, 2016",
+        "January 27, 2017",
+        "May 11, 2017",
+        "February 3, 2017"
+      ],
+      "text_excerpt": " 10-K 1 unp-20161231x10k.htm 10-K 20161231 10K &#xFEFF; &nbsp; &nbsp; &#xFEFF; &#xFEFF; &#xFEFF; UNITED STATES SECURITIES AND EXCHANGE COMMISSION WASHINGTON, D.C. 20549 FORM 10-K (Mark One) [X]&nbsp;&nbsp;&nbsp;&nbsp; ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934 For the fis cal year ended December 31, 2016 OR [&nbsp;&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934 For the transiti"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:50.187658+00:00"
+  },
+  {
+    "ticker": "NEE",
+    "cik": "0000753308",
+    "accession": "0000753308-23-000019",
+    "filing": {
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "accession": "0000753308-23-000019",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/753308/000075330823000019/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nee-20221231.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "74bb819a979ccfc74efdaca1a5d949a5fa440beccd100b9d2d04ccfe0c8a11c5",
+          "bytes": 5772613,
+          "path": "data\\sec\\filings_p43\\000075330823000019\\nee-20221231.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/753308/000075330823000019/nee-20221231.htm"
+        }
+      ],
+      "primary": {
+        "name": "nee-20221231.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "74bb819a979ccfc74efdaca1a5d949a5fa440beccd100b9d2d04ccfe0c8a11c5",
+        "bytes": 5772613,
+        "path": "data\\sec\\filings_p43\\000075330823000019\\nee-20221231.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/753308/000075330823000019/nee-20221231.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "December 31, 2022",
+        "January 1, 1944",
+        "January 1, 2021",
+        "January 1, 2022",
+        "August 16, 2022"
+      ],
+      "text_excerpt": " nee-20221231 NEXTERA ENERGY INC 0000753308 12/31 2022 FY FALSE FLORIDA POWER &amp; LIGHT CO 0000037634 12/31 false http://fasb.org/us-gaap/2022#OtherAssetsCurrent http://fasb.org/us-gaap/2022#OtherAssetsNoncurrent http://fasb.org/us-gaap/2022#OtherLiabilitiesCurrent http://fasb.org/us-gaap/2022#OtherLiabilitiesNoncurrent http://fasb.org/us-gaap/2022#OtherAssetsCurrent http://fasb.org/us-gaap/2022#OtherLiabilitiesCurrent http://fasb.org/us-gaap/2022#OtherLiabilitiesNoncurrent http://fasb.org/us-"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:55.326472+00:00"
+  },
+  {
+    "ticker": "NEE",
+    "cik": "0000753308",
+    "accession": "0000753308-21-000014",
+    "filing": {
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "accession": "0000753308-21-000014",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/753308/000075330821000014/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "nee-20201231.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "b773e4c39d798f8c35bc23046b76e478ff0f19fb94c44bf6e6b455a9cc4a7deb",
+          "bytes": 5833937,
+          "path": "data\\sec\\filings_p43\\000075330821000014\\nee-20201231.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/753308/000075330821000014/nee-20201231.htm"
+        }
+      ],
+      "primary": {
+        "name": "nee-20201231.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "b773e4c39d798f8c35bc23046b76e478ff0f19fb94c44bf6e6b455a9cc4a7deb",
+        "bytes": 5833937,
+        "path": "data\\sec\\filings_p43\\000075330821000014\\nee-20201231.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/753308/000075330821000014/nee-20201231.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "December 31, 2020",
+        "January 1, 2021",
+        "January 1, 1944",
+        "January 1, 2021",
+        "January 1, 2021"
+      ],
+      "text_excerpt": " nee-20201231 NEXTERA ENERGY INC 0000753308 12/31 2020 FY FALSE FLORIDA POWER &amp; LIGHT CO 0000037634 12/31 false 4 8 8 4 8 5 1 1 1 11 14 5 1 1 1 &#8212; &#8212; &#8212; 1 &#8212; 1 &#8212; &#8212; 15 19 &#8212; &#8212; 18,084 11,893 67 19 8,413 4,350 493 498 27 27 1,433 468 0.01 0.01 3,200 3,200 1,960 1,956 29 3 &#8212; &#8212; &#8212; &#8212; 1,000 1,000 1,000 1,000 1,000 1,000 P4Y us-gaap:OtherLiabilities us-gaap:OtherLiabilities 270 five years 1 1 76 76 74 3 13 10 4 1 1 2 24 37 P3Y &#8212;"
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:55:59.256336+00:00"
+  },
+  {
+    "ticker": "DUK",
+    "cik": "0001326160",
+    "accession": "0001326160-14-000003",
+    "filing": {
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "accession": "0001326160-14-000003",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1326160/000132616014000003/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "form10k.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "47bc9b4fcbf159248bb8720784be3046b6c208dd647259df3c2c6e36d631525c",
+          "bytes": 22373436,
+          "path": "data\\sec\\filings_p43\\000132616014000003\\form10k.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1326160/000132616014000003/form10k.htm"
+        }
+      ],
+      "primary": {
+        "name": "form10k.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "47bc9b4fcbf159248bb8720784be3046b6c208dd647259df3c2c6e36d631525c",
+        "bytes": 22373436,
+        "path": "data\\sec\\filings_p43\\000132616014000003\\form10k.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1326160/000132616014000003/form10k.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": true,
+      "ratio": null,
+      "dates": [
+        "December 31, 2013",
+        "January 15, 2073",
+        "December 31, 2013",
+        "December 31, 2013",
+        "December 31, 2013"
+      ],
+      "text_excerpt": " 10-K 1 form10k.htm FORM 10-K &nbsp; &nbsp; UNITED STATES SECURITIES AND EXCHANGE COMMISSION &nbsp; WASHINGTON, D.C. 20549 &nbsp; &nbsp; &nbsp; FORM 10-K &nbsp; (Mark One) &nbsp; &nbsp; x ANNUAL REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934 &nbsp; &nbsp; For the fiscal period ended December 31, 2013 or &nbsp; &nbsp; &nbsp; &nbsp; &#168; TRANSITION REPORT PURSUANT TO SECTION 13 OR 15(d) OF THE SECURITIES EXCHANGE ACT OF 1934 &nbsp; &nbsp; For the transition period "
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:56:03.830728+00:00"
+  },
+  {
+    "ticker": "MRNA",
+    "cik": "0001682852",
+    "accession": "0001682852-19-000009",
+    "filing": {
+      "ticker": "MRNA",
+      "cik": "0001682852",
+      "accession": "0001682852-19-000009",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1682852/000168285219000009/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "exhibit102312312018.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "c2f1bc86a2254db85f5152ced93421d750176799fb00e82cb9941102db9aba1c",
+          "bytes": 139325,
+          "path": "data\\sec\\filings_p43\\000168285219000009\\exhibit102312312018.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1682852/000168285219000009/exhibit102312312018.htm"
+        }
+      ],
+      "primary": {
+        "name": "exhibit102312312018.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "c2f1bc86a2254db85f5152ced93421d750176799fb00e82cb9941102db9aba1c",
+        "bytes": 139325,
+        "path": "data\\sec\\filings_p43\\000168285219000009\\exhibit102312312018.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1682852/000168285219000009/exhibit102312312018.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": false,
+      "ratio": null,
+      "dates": [
+        "January 17, 2019",
+        "February 1, 2019",
+        "March 15, 2019",
+        "February 28, 2018",
+        "January 17, 2019"
+      ],
+      "text_excerpt": ""
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:56:06.502529+00:00"
+  },
+  {
+    "ticker": "MRNA",
+    "cik": "0001682852",
+    "accession": "0001682852-19-000009",
+    "filing": {
+      "ticker": "MRNA",
+      "cik": "0001682852",
+      "accession": "0001682852-19-000009",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1682852/000168285219000009/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "exhibit102312312018.htm",
+          "status": 200,
+          "cached": true,
+          "sha256": "c2f1bc86a2254db85f5152ced93421d750176799fb00e82cb9941102db9aba1c",
+          "bytes": 139325,
+          "path": "data\\sec\\filings_p43\\000168285219000009\\exhibit102312312018.htm"
+        }
+      ],
+      "primary": {
+        "name": "exhibit102312312018.htm",
+        "status": 200,
+        "cached": true,
+        "sha256": "c2f1bc86a2254db85f5152ced93421d750176799fb00e82cb9941102db9aba1c",
+        "bytes": 139325,
+        "path": "data\\sec\\filings_p43\\000168285219000009\\exhibit102312312018.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": false,
+      "ratio": null,
+      "dates": [
+        "January 17, 2019",
+        "February 1, 2019",
+        "March 15, 2019",
+        "February 28, 2018",
+        "January 17, 2019"
+      ],
+      "text_excerpt": ""
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:56:06.516620+00:00"
+  },
+  {
+    "ticker": "RIVN",
+    "cik": "0001874178",
+    "accession": "0001874178-22-000008",
+    "filing": {
+      "ticker": "RIVN",
+      "cik": "0001874178",
+      "accession": "0001874178-22-000008",
+      "index_url": "https://www.sec.gov/Archives/edgar/data/1874178/000187417822000008/index.json",
+      "status_text": "FETCHED",
+      "documents": [
+        {
+          "name": "ex-211subsidiaries.htm",
+          "status": 200,
+          "cached": false,
+          "sha256": "49f4a589dd005f5066d3f68021bbcb737212b6b188380a9de4619b3d46ce4180",
+          "bytes": 14549,
+          "path": "data\\sec\\filings_p43\\000187417822000008\\ex-211subsidiaries.htm",
+          "url": "https://www.sec.gov/Archives/edgar/data/1874178/000187417822000008/ex-211subsidiaries.htm"
+        }
+      ],
+      "primary": {
+        "name": "ex-211subsidiaries.htm",
+        "status": 200,
+        "cached": false,
+        "sha256": "49f4a589dd005f5066d3f68021bbcb737212b6b188380a9de4619b3d46ce4180",
+        "bytes": 14549,
+        "path": "data\\sec\\filings_p43\\000187417822000008\\ex-211subsidiaries.htm",
+        "url": "https://www.sec.gov/Archives/edgar/data/1874178/000187417822000008/ex-211subsidiaries.htm"
+      },
+      "exhibits": [],
+      "downloaded": 1,
+      "failed": 0
+    },
+    "extraction": {
+      "mentions_split": false,
+      "ratio": null,
+      "dates": [],
+      "text_excerpt": ""
+    },
+    "status": "PARTIALLY_VERIFIED",
+    "retrieved_at": "2026-11-04T05:56:08.775484+00:00"
+  }
+]
