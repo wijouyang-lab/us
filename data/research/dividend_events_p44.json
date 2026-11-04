@@ -1,0 +1,11 @@
+{
+  "summary": {
+    "status": "CONFIGURATION_BLOCKED",
+    "reason": "real SEC_USER_AGENT absent; no new SEC request",
+    "companies": 22,
+    "verified": 0,
+    "partially_verified": 0,
+    "false_positives": 1
+  },
+  "events": []
+}

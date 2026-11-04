@@ -52,23 +52,34 @@ class FilingFetcher:
                     "documents": [], "status_text": "INDEX_FETCH_FAILED"}
         data = json.loads((d / "index.json").read_text())
         items = data.get("directory", {}).get("item", [])
-        names = [it.get("name", "") for it in items]
-        candidates = [n for n in names if n.lower().endswith((".htm", ".html"))
-                      and "index" not in n.lower() and "r" != n.lower()[:1]]
+        def is_doc(it):
+            n = it.get("name", "").lower()
+            return n.endswith((".htm", ".html")) and "index" not in n and n[:1] != "r"
+        candidates = [it for it in items if is_doc(it)]
         ticker_l = ticker.lower().replace(".", "")
-        primary_name = next((n for n in candidates if ticker_l in n.lower()), None)
-        if not primary_name:
-            primary_name = next((n for n in candidates if "8k" in n.lower() or "10k" in n.lower() or "10q" in n.lower()), None)
-        if not primary_name and candidates: primary_name = candidates[0]
+        primary = next((it for it in candidates if ticker_l in it.get("name", "").lower()), None)
+        if not primary:
+            primary = next((it for it in candidates if it.get("type", "").upper() in ("8-K", "10-K", "10-Q")), None)
+        if not primary and candidates: primary = candidates[0]
+        selected = []
+        if primary: selected.append(("PRIMARY", primary))
+        for it in candidates:
+            typ = (it.get("type") or "").upper(); desc = (it.get("description") or "").lower()
+            if it is primary: continue
+            if "EX-99" in typ or "EX-99" in (it.get("name","").upper()) or "press release" in desc or "dividend" in desc:
+                selected.append(("EXHIBIT", it))
         docs = []
-        if primary_name:
-            res = self._get(f"{archive_dir(cik, accession)}/{primary_name}", d / primary_name)
-            docs.append({"name": primary_name, **res})
-        primary = docs[0] if docs else None
-        exhibits = [{"name": n, "not_downloaded": True} for n in names if "ex99" in n.lower() or "ex-99" in n.lower()]
+        for role, it in selected:
+            name = it.get("name", "")
+            res = self._get(f"{archive_dir(cik, accession)}/{name}", d / name)
+            docs.append({"role": role, "name": name, "type": it.get("type"),
+                         "description": it.get("description"), "sequence": it.get("sequence"),
+                         "url": f"{archive_dir(cik, accession)}/{name}", **res})
+        primary_doc = next((x for x in docs if x["role"] == "PRIMARY"), None)
+        exhibits = [x for x in docs if x["role"] == "EXHIBIT"]
         return {"ticker": ticker, "cik": cik, "accession": accession,
                 "index_url": index_url(cik, accession), "status_text": "FETCHED",
-                "documents": docs, "primary": primary, "exhibits": exhibits,
+                "documents": docs, "primary": primary_doc, "exhibits": exhibits,
                 "downloaded": sum(1 for x in docs if x.get("status") == 200),
                 "failed": sum(1 for x in docs if x.get("status") != 200)}
 

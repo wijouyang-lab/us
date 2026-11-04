@@ -13,7 +13,7 @@ KEY = re.compile(r"(cash dividend|quarterly dividend|dividend.*per share|declare
 AMOUNT = re.compile(r"\$\s?([0-9]+\.[0-9]{2,4})\s*(?:per share|per common share)", re.I)
 
 
-def collect(months=24, per_company=5):
+def collect(months=24, per_company=None):
     client = SECClient("data/sec/cache")
     fetcher = FilingFetcher(Path("data/sec/filings_p43"), os.getenv("SEC_USER_AGENT",""))
     cutoff = date.today().replace(year=date.today().year - (1 if months <= 12 else 2))
@@ -32,7 +32,7 @@ def collect(months=24, per_company=5):
         picked = [(dt, acc) for form, dt, acc in zip(forms, dates, accs)
                   if form == "8-K" and dt and dt >= cutoff.isoformat()]
         summary["filings_seen"] += len(picked)
-        for dt, acc in picked[:per_company]:
+        for dt, acc in (picked if per_company is None else picked[:per_company]):
             f = fetcher.fetch_filing(t, cik, acc)
             if f.get("status_text") != "FETCHED":
                 summary["failed"] += 1; continue

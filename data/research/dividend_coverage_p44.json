@@ -1,0 +1,149 @@
+{
+  "summary": {
+    "status": "CONFIGURATION_BLOCKED",
+    "reason": "SEC_USER_AGENT real contact not configured; no new SEC request; p43 cache covers only 5 per company",
+    "companies": 22,
+    "filings_seen_p43": 581,
+    "primary_downloaded_p43": 110,
+    "candidate_events_p43": 3,
+    "verified_p43": 0,
+    "full_scan_completed": false,
+    "total_8k_24m_cached": 581,
+    "accessions_scanned_p43_limit": 110,
+    "excluded_by_limit": 471
+  },
+  "per_company": {
+    "AAPL": {
+      "cik": "0000320193",
+      "8k_24m": 17,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 12
+    },
+    "MSFT": {
+      "cik": "0000789019",
+      "8k_24m": 18,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 13
+    },
+    "GOOGL": {
+      "cik": "0001652044",
+      "8k_24m": 28,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 23
+    },
+    "NVDA": {
+      "cik": "0001045810",
+      "8k_24m": 23,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 18
+    },
+    "CRM": {
+      "cik": "0001108524",
+      "8k_24m": 27,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 22
+    },
+    "HD": {
+      "cik": "0000354950",
+      "8k_24m": 18,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 13
+    },
+    "MCD": {
+      "cik": "0000063908",
+      "8k_24m": 17,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 12
+    },
+    "NKE": {
+      "cik": "0000320187",
+      "8k_24m": 22,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 17
+    },
+    "CAT": {
+      "cik": "0000018230",
+      "8k_24m": 21,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 16
+    },
+    "HON": {
+      "cik": "0000773840",
+      "8k_24m": 40,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 35
+    },
+    "UNP": {
+      "cik": "0000100885",
+      "8k_24m": 22,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 17
+    },
+    "CVX": {
+      "cik": "0000093410",
+      "8k_24m": 28,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 23
+    },
+    "NEE": {
+      "cik": "0000753308",
+      "8k_24m": 44,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 39
+    },
+    "DUK": {
+      "cik": "0001326160",
+      "8k_24m": 34,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 29
+    },
+    "JNJ": {
+      "cik": "0000200406",
+      "8k_24m": 18,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 13
+    },
+    "PFE": {
+      "cik": "0000078003",
+      "8k_24m": 17,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 12
+    },
+    "UNH": {
+      "cik": "0000731766",
+      "8k_24m": 30,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 25
+    },
+    "JPM": {
+      "cik": "0000019617",
+      "8k_24m": 25,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 20
+    },
+    "BAC": {
+      "cik": "0000070858",
+      "8k_24m": 11,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 6
+    },
+    "MET": {
+      "cik": "0001099219",
+      "8k_24m": 44,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 39
+    },
+    "PLD": {
+      "cik": "0001045609",
+      "8k_24m": 31,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 26
+    },
+    "O": {
+      "cik": "0000726728",
+      "8k_24m": 46,
+      "accessions_scanned": 5,
+      "excluded_by_p43_limit": 41
+    }
+  }
+}
