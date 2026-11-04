@@ -73,3 +73,91 @@ def test_actual_28_industry_counts_and_no_network():
     assert d["summary"]["industry_counts"]=={"NON_FINANCIAL":21,"INSURANCE":3,"BANK":2,"REIT":2}
     assert d["summary"]["score_ready"]==10
     assert d["summary"]["industry_model_not_ready"]==7
+
+
+def rec(**kw):
+    x={"score_status":"SCORE_READY","score":80.0,"score_version":"p46-1.0",
+       "score_profile_id":"NON_FINANCIAL_DIVIDEND_V1",
+       "score_component_signature":"payout|fcf_coverage|continuity",
+       "score_weights":{"payout":1/3,"fcf_coverage":1/3,"continuity":1/3},
+       "score_denominator":3,
+       "available_components":{"payout":0.4,"fcf_coverage":2.0,"continuity":1.0},
+       "component_scores":{"payout":0.8,"fcf_coverage":1.0,"continuity":1.0},
+       "missing_components":[]}
+    x.update(kw); return x
+
+
+def test_comparable_empty_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    assert comparable({}, {}) is False
+
+
+def test_comparable_not_ready_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_status="NOT_READY", score=None)
+    assert comparable(a,a) is False
+
+
+def test_comparable_industry_model_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_status="INDUSTRY_MODEL_NOT_READY", score=None)
+    assert comparable(a,a) is False
+
+
+def test_comparable_none_nan_inf_bool_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    import math
+    for v in (None, float("nan"), float("inf"), True, False):
+        assert comparable(rec(score=v),rec(score=v)) is False
+
+
+def test_comparable_missing_component_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(available_components={"payout":0.4,"fcf_coverage":2.0})
+    assert comparable(a,rec()) is False
+
+
+def test_comparable_weights_keys_mismatch_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_weights={"payout":0.5,"fcf_coverage":0.5})
+    assert comparable(a,rec()) is False
+
+
+def test_comparable_weights_sum_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_weights={"payout":0.5,"fcf_coverage":0.4,"continuity":0.4})
+    assert comparable(a,rec()) is False
+
+
+def test_comparable_denominator_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    assert comparable(rec(score_denominator=2),rec()) is False
+
+
+def test_comparable_duplicate_signature_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_component_signature="payout|payout|continuity")
+    assert comparable(a,rec()) is False
+
+
+def test_comparable_valid_true():
+    from tools.investment_research.dividend.sector_governance import comparable
+    assert comparable(rec(),rec()) is True
+
+
+def test_comparable_profile_different_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    assert comparable(rec(),rec(score_profile_id="OTHER")) is False
+
+
+def test_comparable_signature_different_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_component_signature="payout|continuity|fcf_coverage",
+          score_weights={"payout":1/3,"continuity":1/3,"fcf_coverage":1/3})
+    assert comparable(a,rec()) is False
+
+
+def test_comparable_weights_different_false():
+    from tools.investment_research.dividend.sector_governance import comparable
+    a=rec(score_weights={"payout":0.4,"fcf_coverage":0.3,"continuity":0.3})
+    assert comparable(a,rec()) is False

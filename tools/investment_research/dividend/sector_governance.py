@@ -92,6 +92,31 @@ def evaluate(metrics: dict, classification: str, *, insurance_subtype: str | Non
             "reason":None}
 
 
+def _valid_score(rec: dict) -> bool:
+    import math
+    if not isinstance(rec, dict): return False
+    if rec.get("score_status") != "SCORE_READY": return False
+    score = rec.get("score")
+    if isinstance(score, bool) or not isinstance(score, (int, float)): return False
+    if not math.isfinite(score) or score < 0 or score > 100: return False
+    for k in ("score_version","score_profile_id","score_component_signature"):
+        if not isinstance(rec.get(k), str) or not rec[k]: return False
+    sig = rec["score_component_signature"].split("|")
+    if not sig or any(not x.strip() for x in sig) or len(set(sig)) != len(sig): return False
+    weights = rec.get("score_weights")
+    if not isinstance(weights, dict) or set(weights) != set(sig): return False
+    if any(isinstance(v, bool) or not isinstance(v, (int, float)) or not math.isfinite(v) or v < 0
+           for v in weights.values()): return False
+    if abs(sum(weights.values()) - 1.0) > 1e-9: return False
+    if rec.get("score_denominator") != len(sig): return False
+    avail = rec.get("available_components"); comps = rec.get("component_scores")
+    if not isinstance(avail, dict) or not set(sig).issubset(avail): return False
+    if not isinstance(comps, dict) or not set(sig).issubset(comps): return False
+    if rec.get("missing_components"): return False
+    return True
+
+
 def comparable(a: dict, b: dict) -> bool:
+    if not (_valid_score(a) and _valid_score(b)): return False
     keys=("score_version","score_profile_id","score_component_signature","score_weights","score_denominator")
     return all(a.get(k)==b.get(k) for k in keys)

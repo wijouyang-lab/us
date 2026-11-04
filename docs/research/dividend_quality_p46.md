@@ -192,3 +192,14 @@ Tests: `tests/test_sector_governance_p46.py`:
 - 28-company counts.
 
 No production scan/trade code changed. No Yahoo/AKShare/Finnhub.
+
+## 10. P4.6.1 comparator hardening
+
+\comparable(a,b)\ now returns False unless both records are \SCORE_READY\ with a finite numeric score 0-100, a complete valid profile, unique signature components, matching weight keys, non-negative weights summing to 1, denominator equal to component count, complete available/component scores, and no missing components.
+
+It still requires identical score_version, profile, signature, weights and denominator. Empty/NOT_READY/INDUSTRY_MODEL_NOT_READY records can no longer be compared.
+
+The 28-company recompute is unchanged: 21 NON_FINANCIAL / 2 BANK / 3 INSURANCE / 2 REIT; 10 SCORE_READY, 11 NOT_READY, 7 INDUSTRY_MODEL_NOT_READY. All ten numeric scores are unchanged.
+
+Tests: \	ests/test_sector_governance_p46.py\ 24 passed.
+
