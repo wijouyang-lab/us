@@ -1,0 +1,3796 @@
+{
+  "generated_at": "2026-11-04T07:16:49.379675+00:00",
+  "provenance_status": "LEGACY_PLACEHOLDER_UA",
+  "evidence_status": "PRELIMINARY_ONLY",
+  "cache_path": "data\\sec\\filings_p43",
+  "accession_count": 131,
+  "status_counts": {
+    "EXHIBIT_REQUIRED": 81,
+    "PRIMARY_CACHED": 47,
+    "EXHIBIT_CACHED": 3
+  },
+  "accessions": [
+    {
+      "accession": "000001823026000040",
+      "ticker": "CAT",
+      "cik": "0000018230",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "cat-20260804.htm",
+          "bytes": 35623,
+          "sha256": "1e504b523cc29b3997fb9c63d68df1c7fab40bf3df1c28b1ac1dd4aa1a6f35f6"
+        }
+      ],
+      "primary": "cat-20260804.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000001823026000052",
+      "ticker": "CAT",
+      "cik": "0000018230",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "cat-20261029.htm",
+          "bytes": 35636,
+          "sha256": "847ab9bb04640916d4a97a1acfc67b213371818b117d3291bc4b308aa1386ce1"
+        }
+      ],
+      "primary": "cat-20261029.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000001961726000288",
+      "ticker": "JPM",
+      "cik": "0000019617",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jpm-20260721.htm",
+          "bytes": 42597,
+          "sha256": "153a7b1863d9976bd2e6c0d87ef1cb766bcd8c09cbe21ccbeb0334d3b2eea3ba"
+        }
+      ],
+      "primary": "jpm-20260721.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000006390826000048",
+      "ticker": "MCD",
+      "cik": "0000063908",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "mcd-20260507.htm",
+          "bytes": 35402,
+          "sha256": "23b9be01c7ca0ab0c78fd6ebb1f1c4e82c4d1793dc498c9fa54754d2d3ad1909"
+        }
+      ],
+      "primary": "mcd-20260507.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000006390826000055",
+      "ticker": "MCD",
+      "cik": "0000063908",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "mcd-20260520.htm",
+          "bytes": 58203,
+          "sha256": "20654a1907d352629ce928e0b0a7100cd60653fb18060438b7bbc088f6a5f6b3"
+        }
+      ],
+      "primary": "mcd-20260520.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000006390826000067",
+      "ticker": "MCD",
+      "cik": "0000063908",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "mcd-20260804.htm",
+          "bytes": 34055,
+          "sha256": "383ff65e9477d2a1a36c457e496f991b405672c833e03761d6050600e574972f"
+        }
+      ],
+      "primary": "mcd-20260804.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000006390826000069",
+      "ticker": "MCD",
+      "cik": "0000063908",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "mcd-20260803.htm",
+          "bytes": 32058,
+          "sha256": "d838cfd89ca6804f283291c7c4d4a8fe6289683376c0501b588cb52e085a1b86"
+        }
+      ],
+      "primary": "mcd-20260803.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000006390826000076",
+      "ticker": "MCD",
+      "cik": "0000063908",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "mcd-20260923.htm",
+          "bytes": 32192,
+          "sha256": "0f9af8d8ed0d1d0bc7197881aeda790ca6fcc51173da83869d685ef134e8ef4f"
+        }
+      ],
+      "primary": "mcd-20260923.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007085826000353",
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_CACHED",
+      "documents": [
+        {
+          "name": "bac-06302026ex993.htm",
+          "bytes": 3270761,
+          "sha256": "d0065a0b1af78115030f3e1c89e3c91b2fb6765130d7da419d5793ba133ad1ef"
+        }
+      ],
+      "primary": null,
+      "exhibits": [
+        "bac-06302026ex993.htm"
+      ]
+    },
+    {
+      "accession": "000007085826000364",
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "bac-20260723.htm",
+          "bytes": 66090,
+          "sha256": "8e77f89d5b63214818b0f9eb9e1425957e0f1a600f80b7598116754f00966d4a"
+        }
+      ],
+      "primary": "bac-20260723.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007085826000481",
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_CACHED",
+      "documents": [
+        {
+          "name": "bac-09302026ex993.htm",
+          "bytes": 3280083,
+          "sha256": "fe94a8b3297863474eb7cbd420e711ed753217471313794eaef7ca7bc59bc4f3"
+        }
+      ],
+      "primary": null,
+      "exhibits": [
+        "bac-09302026ex993.htm"
+      ]
+    },
+    {
+      "accession": "000007085826000494",
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "bac-20261021.htm",
+          "bytes": 66175,
+          "sha256": "26a4304d54c526f75b486881a00439dc39b9d0a082b2de85a005abb03fb17287"
+        }
+      ],
+      "primary": "bac-20261021.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007800326000053",
+      "ticker": "PFE",
+      "cik": "0000078003",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "pfe-20260505.htm",
+          "bytes": 40610,
+          "sha256": "9876011961d77311fc6eeb1217e55a50f0fda9a8f8764661279934a242617449"
+        }
+      ],
+      "primary": "pfe-20260505.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007800326000085",
+      "ticker": "PFE",
+      "cik": "0000078003",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "pfe-20260618.htm",
+          "bytes": 40539,
+          "sha256": "cddf543350b8a79baf596fcd74cf0a4f30b0cae80d73c33694c9734eddbc2c58"
+        }
+      ],
+      "primary": "pfe-20260618.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007800326000087",
+      "ticker": "PFE",
+      "cik": "0000078003",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "pfe-20260618.htm",
+          "bytes": 60462,
+          "sha256": "1b82b244787188c820363a02af48259de5b27f62b41191bb2f5a711ad42ab826"
+        }
+      ],
+      "primary": "pfe-20260618.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007800326000094",
+      "ticker": "PFE",
+      "cik": "0000078003",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "pfe-20260804.htm",
+          "bytes": 37946,
+          "sha256": "27586c953900caeee2c2e8cf8c040d5b5f633bc056b8100d9db1eb54bd82f819"
+        }
+      ],
+      "primary": "pfe-20260804.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000007800326000125",
+      "ticker": "PFE",
+      "cik": "0000078003",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "pfe-20261103.htm",
+          "bytes": 37953,
+          "sha256": "0e7362b1a4c1a3b91bc88a2cead0dcf06385378d7f375ca27d9f4a154dd61d80"
+        }
+      ],
+      "primary": "pfe-20261103.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000009341026000125",
+      "ticker": "CVX",
+      "cik": "0000093410",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "cvx-20260527.htm",
+          "bytes": 65742,
+          "sha256": "0a0a90b22aca1c7e2e690d260243aafcf23d9204bb3011a496ade9226d4de784"
+        }
+      ],
+      "primary": "cvx-20260527.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000009341026000162",
+      "ticker": "CVX",
+      "cik": "0000093410",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "cvx-20260731.htm",
+          "bytes": 32229,
+          "sha256": "7dae41a4fb67a068e2d875bd9da35db367bddc00cac119112ad1fcf35b4ed7ee"
+        }
+      ],
+      "primary": "cvx-20260731.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000009341026000188",
+      "ticker": "CVX",
+      "cik": "0000093410",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "cvx-20260930.htm",
+          "bytes": 28744,
+          "sha256": "6c02f77485c416ca87ec1e0caf561b18da1f5c17f75a6ce0f23b3bd75b168501"
+        }
+      ],
+      "primary": "cvx-20260930.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000009341026000192",
+      "ticker": "CVX",
+      "cik": "0000093410",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "cvx-20261006.htm",
+          "bytes": 36550,
+          "sha256": "add4728f8f9621688206a2ff3b184f86ff56e92c0e26f55fea25f97f6cea7c10"
+        }
+      ],
+      "primary": "cvx-20261006.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000009341026000196",
+      "ticker": "CVX",
+      "cik": "0000093410",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "cvx-20261030.htm",
+          "bytes": 32617,
+          "sha256": "4d764c6939d25803050d9398411db21550dc60a161dd61d23d92ca42d367e780"
+        }
+      ],
+      "primary": "cvx-20261030.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000010088517000056",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "unp-20161231x10k.htm",
+          "bytes": 3599637,
+          "sha256": "6a57e4b52cb82c64928b212c689d512f177db9a74d11b3a63970545ab376ec82"
+        }
+      ],
+      "primary": "unp-20161231x10k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000010088526000154",
+      "ticker": "UNP",
+      "cik": "0000100885",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "unp-20260423.htm",
+          "bytes": 24347,
+          "sha256": "1240e9c3c74035d4c27abb5d1dc4c5af4b39faa53c3ec83072c008b75f44386a"
+        }
+      ],
+      "primary": "unp-20260423.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000010088526000174",
+      "ticker": "UNP",
+      "cik": "0000100885",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "unp-20260514.htm",
+          "bytes": 46333,
+          "sha256": "50bd59f32051520879f8352f2f9a83fb72805dd2ab56f42d41cd01e86ca1414f"
+        }
+      ],
+      "primary": "unp-20260514.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000010088526000249",
+      "ticker": "UNP",
+      "cik": "0000100885",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "unp-20260723.htm",
+          "bytes": 25168,
+          "sha256": "c13e972182454e4f6f1377436dc835541b86fbbf007ef610afae01f9e0a7ab31"
+        }
+      ],
+      "primary": "unp-20260723.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000010088526000305",
+      "ticker": "UNP",
+      "cik": "0000100885",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "unp-20261016.htm",
+          "bytes": 25411,
+          "sha256": "97b2b1e731d911a75d8cdb28c73db8fa35552f221b3eb90d91e9089b63152c01"
+        }
+      ],
+      "primary": "unp-20261016.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000010088526000319",
+      "ticker": "UNP",
+      "cik": "0000100885",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "unp-20261022.htm",
+          "bytes": 25193,
+          "sha256": "93c5594b4b89e3817dd7304bb8c7c71e144f600f884a6db175694d1f3979335c"
+        }
+      ],
+      "primary": "unp-20261022.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000020040626000146",
+      "ticker": "JNJ",
+      "cik": "0000200406",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jnj-20260715.htm",
+          "bytes": 46247,
+          "sha256": "5f816449b319c8e80b715f70e15c22148812332a64f716fd8e04d242d0fcf504"
+        }
+      ],
+      "primary": "jnj-20260715.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000020040626000155",
+      "ticker": "JNJ",
+      "cik": "0000200406",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jnj-20260727.htm",
+          "bytes": 44239,
+          "sha256": "037e3d5ded0d4b1bbea06a1bfeccfc99ce42b090552ef7d1f0266e176cad6063"
+        }
+      ],
+      "primary": "jnj-20260727.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000020040626000163",
+      "ticker": "JNJ",
+      "cik": "0000200406",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jnj-20260729.htm",
+          "bytes": 70549,
+          "sha256": "a080def04e52e56918e0235ee94f8864e9d5240c38cd5dedc032d8efe7446f55"
+        }
+      ],
+      "primary": "jnj-20260729.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000020040626000167",
+      "ticker": "JNJ",
+      "cik": "0000200406",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jnj-20260804.htm",
+          "bytes": 44034,
+          "sha256": "4f273d75d5b0185d27782edeb10d34a4e1689879a004122e512109f6f19e5780"
+        }
+      ],
+      "primary": "jnj-20260804.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000020040626000189",
+      "ticker": "JNJ",
+      "cik": "0000200406",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jnj-20261013.htm",
+          "bytes": 47410,
+          "sha256": "7853adfba73505d364a15c2ff3b21e8e55ff40e837a073388b30ee80845077ae"
+        }
+      ],
+      "primary": "jnj-20261013.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018715000113",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nke-5312015x10k.htm",
+          "bytes": 3624821,
+          "sha256": "3920e6ff323f6e34a561e7427c0e2c7f7907dd572d6f439b911f18eb89192c6c"
+        }
+      ],
+      "primary": "nke-5312015x10k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018718000142",
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "form": "10-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nke-5312018x10k.htm",
+          "bytes": 3219690,
+          "sha256": "9a9de94ba6df83369c1d36334883e1183e439782ddce5c28969e4b66f2b20ab0"
+        }
+      ],
+      "primary": "nke-5312018x10k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018726000076",
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nke-20260630.htm",
+          "bytes": 26251,
+          "sha256": "bdf2fa9d87aeb68f2341ad61b8f10d8504a1a45b41c31446d44a60dac53d15ba"
+        }
+      ],
+      "primary": "nke-20260630.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018726000112",
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nke-20260804.htm",
+          "bytes": 24373,
+          "sha256": "ef15ad4b9cf51d9bdbf952c89197b506ff0fb3358b494dbc6a0a1096915c3dc3"
+        }
+      ],
+      "primary": "nke-20260804.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018726000143",
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nke-20260908.htm",
+          "bytes": 60001,
+          "sha256": "cbc7fe60f2c2a3e09ea52b6b4127c74bddf5bb8a5b3cc8fe2c7539811f62e213"
+        }
+      ],
+      "primary": "nke-20260908.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018726000170",
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nke-20260915.htm",
+          "bytes": 29781,
+          "sha256": "1492dafca319f3786af50e7100bbcbc67d0227259e6cdb78d5dbfa691ef90037"
+        }
+      ],
+      "primary": "nke-20260915.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032018726000184",
+      "ticker": "NKE",
+      "cik": "0000320187",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nke-20261001.htm",
+          "bytes": 30621,
+          "sha256": "dd8acabf56a2421fa1ff7e475e51c6618e9f026798955ba2b0082a637eb873cf"
+        }
+      ],
+      "primary": "nke-20261001.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032019321000065",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "a10-qexhibit31106262021.htm",
+          "bytes": 10743,
+          "sha256": "5c7d136f8d667b6ee77ebccfbf15ca391314f9ae43477a51d838963ac1459dc5"
+        },
+        {
+          "name": "a10-qexhibit31206262021.htm",
+          "bytes": 10760,
+          "sha256": "0276de2580a00087a78d9aeea461bb87709479d445d52922a5ba8295cae51cc0"
+        },
+        {
+          "name": "a10-qexhibit32106262021.htm",
+          "bytes": 8553,
+          "sha256": "bf7cadc019838d5e221f306576cb95f8f1366a7cee177459412251b9cc922d44"
+        },
+        {
+          "name": "aapl-20210626.htm",
+          "bytes": 1705908,
+          "sha256": "938440ca514dfb70d91450c688dc80eff94072ca08970d4e7679af1187f10c61"
+        },
+        {
+          "name": "R1.htm",
+          "bytes": 81606,
+          "sha256": "f4877b0761efc09abe18756c19188ec67122ccaf6466c39211b539017a9b11d6"
+        },
+        {
+          "name": "R10.htm",
+          "bytes": 228494,
+          "sha256": "52af895e345db1447a08a7aa79bd9f6a95a94f16d16d132cb9dbada5d18674fa"
+        },
+        {
+          "name": "R11.htm",
+          "bytes": 31076,
+          "sha256": "b14b6f8a2240c3939851dfbd1738a6049f800cda704dd96c48551b0aeb9232e9"
+        },
+        {
+          "name": "R12.htm",
+          "bytes": 11180,
+          "sha256": "9f95dbbc880fe36dd3d53207a7a9adb39590cda2a6270fd3c93f9c7c835829b3"
+        },
+        {
+          "name": "R13.htm",
+          "bytes": 39180,
+          "sha256": "57e0d8f05b0d25c9c221bdc60c9b364481ec535d7cedafa114643e152dc18195"
+        },
+        {
+          "name": "R14.htm",
+          "bytes": 7334,
+          "sha256": "b32c30b6a000acf92e366a500b87c172439b56acab83013b6b610e6a613a150b"
+        },
+        {
+          "name": "R15.htm",
+          "bytes": 42140,
+          "sha256": "ffa15d5a3597861638069f2d5d0705c0043daf91cd5f2e4b75e400dbdbf28786"
+        }
+      ],
+      "primary": "a10-qexhibit31106262021.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032019326000011",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "aapl-20260430.htm",
+          "bytes": 37754,
+          "sha256": "da7632be47dff837e13303c076ae4faff80dedfc74c79a8aa745920789eb3bd4"
+        }
+      ],
+      "primary": "aapl-20260430.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032019326000018",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "aapl-20260730.htm",
+          "bytes": 38465,
+          "sha256": "7f04e2a0fe607c48697a0f51c8035fac15dda18f5caef156ef03c2db9be79bdf"
+        }
+      ],
+      "primary": "aapl-20260730.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000032019326000024",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "aapl-20261102.htm",
+          "bytes": 38329,
+          "sha256": "54247aec62f453c6457dae10f8122615d300a3dbe47be2a46d07967f4b2d4a9a"
+        }
+      ],
+      "primary": "aapl-20261102.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000035495026000101",
+      "ticker": "HD",
+      "cik": "0000354950",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hd-20260519.htm",
+          "bytes": 27256,
+          "sha256": "1e12d766eab031c8abd29be5ee4fc9cc9494ddb82937fd5f3ee1d889fc887075"
+        }
+      ],
+      "primary": "hd-20260519.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000035495026000105",
+      "ticker": "HD",
+      "cik": "0000354950",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "hd-20260521.htm",
+          "bytes": 87325,
+          "sha256": "29393ecabfc86c6787ebe5b0ecd869de4d73522cbdc8003996b2d9aef82a4cf6"
+        }
+      ],
+      "primary": "hd-20260521.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000035495026000141",
+      "ticker": "HD",
+      "cik": "0000354950",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hd-20260811.htm",
+          "bytes": 30537,
+          "sha256": "2379e22598b729243a532e3955c3923ef125d5333e9d8644275d59c8e486c13a"
+        }
+      ],
+      "primary": "hd-20260811.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000035495026000145",
+      "ticker": "HD",
+      "cik": "0000354950",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hd-20260818.htm",
+          "bytes": 27414,
+          "sha256": "752f30260b1f33286482c7dbc0090af273ef6f290a2527e9c20a63174ff01f95"
+        }
+      ],
+      "primary": "hd-20260818.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000035495026000148",
+      "ticker": "HD",
+      "cik": "0000354950",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "hd-20260820.htm",
+          "bytes": 25028,
+          "sha256": "08c612486090ec87dd2dcbffc4d152dfdbe849659c6bdda58df89acfe86acb57"
+        }
+      ],
+      "primary": "hd-20260820.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000072672826000056",
+      "ticker": "O",
+      "cik": "0000726728",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "o-20261102.htm",
+          "bytes": 46343,
+          "sha256": "0419da87da8761a016da65e81a2b0e28a40660b694f5360c3049f37285e8fe1e"
+        }
+      ],
+      "primary": "o-20261102.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000073176626000129",
+      "ticker": "UNH",
+      "cik": "0000731766",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "unh-20260511.htm",
+          "bytes": 29284,
+          "sha256": "4cf14db7ff09acf99e18eb88a3cbb93088e2410825632776843a52a131075874"
+        }
+      ],
+      "primary": "unh-20260511.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000073176626000138",
+      "ticker": "UNH",
+      "cik": "0000731766",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "unh-20260601.htm",
+          "bytes": 54444,
+          "sha256": "c7d8d07e88b8e345da4d8195899c386b328bc3a074e0ee83e364c2092b9d2d05"
+        }
+      ],
+      "primary": "unh-20260601.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000073176626000191",
+      "ticker": "UNH",
+      "cik": "0000731766",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "unh-20260716.htm",
+          "bytes": 32981,
+          "sha256": "cc1674940f6016304387b9b000ceba2a023df15ee283c70d7332f164d8cab190"
+        }
+      ],
+      "primary": "unh-20260716.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000073176626000205",
+      "ticker": "UNH",
+      "cik": "0000731766",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "unh-20260908.htm",
+          "bytes": 29667,
+          "sha256": "2d138d0749cde125e37d25052c42f61974e52e235c6f8ca67e9f16178e7ed1d9"
+        }
+      ],
+      "primary": "unh-20260908.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000073176626000255",
+      "ticker": "UNH",
+      "cik": "0000731766",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "earningsrelease3q26unh.htm",
+          "bytes": 53659,
+          "sha256": "f40c7ee28f8e8be3983574f61802db73914999c0ddfa91de742c9f0d5421c4b2"
+        }
+      ],
+      "primary": "earningsrelease3q26unh.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000075330821000014",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "10-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nee-20201231.htm",
+          "bytes": 5833937,
+          "sha256": "b773e4c39d798f8c35bc23046b76e478ff0f19fb94c44bf6e6b455a9cc4a7deb"
+        }
+      ],
+      "primary": "nee-20201231.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000075330823000019",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "10-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nee-20221231.htm",
+          "bytes": 5772613,
+          "sha256": "74bb819a979ccfc74efdaca1a5d949a5fa440beccd100b9d2d04ccfe0c8a11c5"
+        }
+      ],
+      "primary": "nee-20221231.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000075330826000071",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nee-20260903.htm",
+          "bytes": 41743,
+          "sha256": "b829c11ee70bdd7c918ce64b25ccf88b64cb6afd79ae2c756b3b93bbd25f1bf2"
+        }
+      ],
+      "primary": "nee-20260903.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000075330826000074",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "exhibit991toneedated9x22x2.htm",
+          "bytes": 67343,
+          "sha256": "b6892c52c8d7dc6caac96b28ef29dcccac07fa641120c0005616e7466d772800"
+        }
+      ],
+      "primary": "exhibit991toneedated9x22x2.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000075330826000077",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nee-20261021.htm",
+          "bytes": 38477,
+          "sha256": "924d8560e9af3b7dee4acf1b7cc2b02e0d17a8268d9075455f7d603b3d487c8c"
+        }
+      ],
+      "primary": "nee-20261021.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000080",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hon-20260615.htm",
+          "bytes": 47046,
+          "sha256": "dcb60edbcde507ccbab0331f73ee20d4192b9f91c18a351c4e2b18b96c4e1e0f"
+        }
+      ],
+      "primary": "hon-20260615.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000084",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hon-20260625.htm",
+          "bytes": 69657,
+          "sha256": "14efec5868a0f94b0dcffa575cfc8268603818b140e21532ef77e5a574f0a5da"
+        }
+      ],
+      "primary": "hon-20260625.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000120",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hon-20260723.htm",
+          "bytes": 35900,
+          "sha256": "51e63ea4232604fd9d79ee2676fababf347e5c0a1bae5d3f5ff08924ff4a465c"
+        }
+      ],
+      "primary": "hon-20260723.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000124",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "hon-20260630.htm",
+          "bytes": 2754709,
+          "sha256": "bcc3ded7b87d1d21aba98c7cd1c6839faf78cb953c02d631033b9ea8d560c64c"
+        }
+      ],
+      "primary": "hon-20260630.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000130",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hon-20260819.htm",
+          "bytes": 37133,
+          "sha256": "742e7b5074ec8f3f95b01390c1de84eb11e5a2e1064b87e08730f6d20140ab70"
+        }
+      ],
+      "primary": "hon-20260819.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000141",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "hon-20261022.htm",
+          "bytes": 33977,
+          "sha256": "849b27dbd0ecd6ad24b196724963e264db4260975f36bdf0c3c2773be7d03cda"
+        }
+      ],
+      "primary": "hon-20261022.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000077384026000143",
+      "ticker": "HON",
+      "cik": "0000773840",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "hon-20260930.htm",
+          "bytes": 2649002,
+          "sha256": "449bab75fccf78201e24ec146c0459523d7e42cd469f672c1dbe77e460796c42"
+        }
+      ],
+      "primary": "hon-20260930.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000101872425000004",
+      "ticker": "AMZN",
+      "cik": "0001018724",
+      "form": "10-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "amzn-20241231.htm",
+          "bytes": 1922470,
+          "sha256": "78fbcad672682eb933b23ef6b3129ed5fb0b18c8fa03e5f2e466a5bd03467cb8"
+        }
+      ],
+      "primary": "amzn-20241231.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581021000163",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20211031.htm",
+          "bytes": 1762732,
+          "sha256": "bda689a64bdc0b8742a3255fda29d081555a0324eb73f1574a7dd9b2bb7d1e70"
+        }
+      ],
+      "primary": "nvda-20211031.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581022000079",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20220501.htm",
+          "bytes": 1415480,
+          "sha256": "5f1a525289f463bd888e369b4438154923460f7626c231a487d3c1c62abac5a9"
+        }
+      ],
+      "primary": "nvda-20220501.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581024000316",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20241027.htm",
+          "bytes": 1440347,
+          "sha256": "0d9b13ab5f14eba1f29e17ff2dcd9bba3a9eaf2e1625622709a6e51f198cf490"
+        }
+      ],
+      "primary": "nvda-20241027.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581025000116",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "10-Q",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20250427.htm",
+          "bytes": 1132304,
+          "sha256": "d36283644114ec31baf860587630230d44fcd6e950f3fd75833fdf587ac78e75"
+        }
+      ],
+      "primary": "nvda-20250427.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581026000056",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20260624.htm",
+          "bytes": 61962,
+          "sha256": "0b328837798c6083e20019a6382aeb55be8a6b70c7da7aa671503c0e4ea366b6"
+        }
+      ],
+      "primary": "nvda-20260624.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581026000060",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20260628.htm",
+          "bytes": 22287,
+          "sha256": "d52c28a540c73bd91900c49fe16a28af11ca18c3a8475316e3890d2d670b90a5"
+        }
+      ],
+      "primary": "nvda-20260628.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581026000069",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nvda-20260817.htm",
+          "bytes": 31533,
+          "sha256": "ddc6a90da4eee756f971f204607c06a92178cbfb16bd57e93bc86cfe59de20a5"
+        }
+      ],
+      "primary": "nvda-20260817.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581026000073",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "nvda-20260826.htm",
+          "bytes": 26572,
+          "sha256": "50bceb13713f0d15f3f360a56ab3b5168d803e0c26ea63b3027cb62f5845e4be"
+        }
+      ],
+      "primary": "nvda-20260826.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000104581026000078",
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "nvda-20260902.htm",
+          "bytes": 29296,
+          "sha256": "67119751b3a174dd4be22595d0d5c0f7a40f4f4757486801658f442c7416e27c"
+        }
+      ],
+      "primary": "nvda-20260902.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000109921926000041",
+      "ticker": "MET",
+      "cik": "0001099219",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "met-20260616.htm",
+          "bytes": 49380,
+          "sha256": "48833d7cde2ab7e8228526fc69094dc4b20955972eb160f7b71076e56ae060c0"
+        }
+      ],
+      "primary": "met-20260616.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000109921926000045",
+      "ticker": "MET",
+      "cik": "0001099219",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "met-20260629.htm",
+          "bytes": 31611,
+          "sha256": "0fe239782cae43e9072907c2d74c8cd460894fc8c1962ea6c143886e69a5483c"
+        }
+      ],
+      "primary": "met-20260629.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000109921926000048",
+      "ticker": "MET",
+      "cik": "0001099219",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "met-20260805.htm",
+          "bytes": 38663,
+          "sha256": "38e93dc08b9f4991a33f524bb71acf011f947f98c7cf5d51ccd606a24508f5e8"
+        }
+      ],
+      "primary": "met-20260805.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000109921926000052",
+      "ticker": "MET",
+      "cik": "0001099219",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "met-20260817.htm",
+          "bytes": 33023,
+          "sha256": "a68bb28215d3bc11f567411c2a2e63b7fa41a1db5e91f412bb3bf3cfece87f6b"
+        }
+      ],
+      "primary": "met-20260817.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000109921926000055",
+      "ticker": "MET",
+      "cik": "0001099219",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "met-20260924.htm",
+          "bytes": 31797,
+          "sha256": "a9dae00b574c545d089be343dc10631f2e047dbec29b60a4d4c5e9ae44c1d44b"
+        }
+      ],
+      "primary": "met-20260924.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926072929",
+      "ticker": "CAT",
+      "cik": "0000018230",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2617177d1_8k.htm",
+          "bytes": 57878,
+          "sha256": "e2c9d0e05c203282acbbb7ec53dcee66307533b9989121a1c3dea5a43fc5d26f"
+        }
+      ],
+      "primary": "tm2617177d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926084653",
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2620766d1_8k.htm",
+          "bytes": 50662,
+          "sha256": "e9464f7a47882b24921493f5cf4ac7cbcf5e8c3b01e7573d92728c3e6b16727b"
+        }
+      ],
+      "primary": "tm2620766d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926089980",
+      "ticker": "PLD",
+      "cik": "0001045609",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2621154d2_8k.htm",
+          "bytes": 81882,
+          "sha256": "305fbfcc8c0f4bd32bca7cfb078040d652b70aa507be70bfb33776b2694d3af3"
+        }
+      ],
+      "primary": "tm2621154d2_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926090724",
+      "ticker": "PLD",
+      "cik": "0001045609",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2621155d5_8k.htm",
+          "bytes": 49642,
+          "sha256": "267f653946362a160f81c360f31050b5814f917ca613d91108551cd275102030"
+        }
+      ],
+      "primary": "tm2621155d5_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926091159",
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2622337d1_8k.htm",
+          "bytes": 43780,
+          "sha256": "3b133d70d6ece3174bb6dcba9b254c7ebedcc05c4bf6e00860dec773318a727c"
+        }
+      ],
+      "primary": "tm2622337d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926092072",
+      "ticker": "PLD",
+      "cik": "0001045609",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "tm2621154d3_8k.htm",
+          "bytes": 48912,
+          "sha256": "07631c854ac7d21ee85d61041854e3314ac216dfda28a5213ca89c0a112e58cc"
+        }
+      ],
+      "primary": "tm2621154d3_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926094098",
+      "ticker": "O",
+      "cik": "0000726728",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2622133d1_8k.htm",
+          "bytes": 63652,
+          "sha256": "b3a222d2b8c9e44e425381b1a65c9122c1ee5ddf149c49a68b3a4afb5281846b"
+        }
+      ],
+      "primary": "tm2622133d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926094314",
+      "ticker": "O",
+      "cik": "0000726728",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2622133d2_8k.htm",
+          "bytes": 61681,
+          "sha256": "db624de3584cec78d5728d899672ed68864374e3d92a094d8885b9663f0d3b07"
+        }
+      ],
+      "primary": "tm2622133d2_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926095903",
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2623082d1_8k.htm",
+          "bytes": 53444,
+          "sha256": "63981e10eefd3ed45a5ab98713b7f0b39cac2af0e216cfc4d50ae72a82eeb197"
+        }
+      ],
+      "primary": "tm2623082d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926097260",
+      "ticker": "O",
+      "cik": "0000726728",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2622133d3_8k.htm",
+          "bytes": 86279,
+          "sha256": "3041d6fb4cc74b0db1a02ee465f75650a208fab152496a2879f9de6776283225"
+        }
+      ],
+      "primary": "tm2622133d3_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926100476",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "tm2623831d1_8k.htm",
+          "bytes": 307967,
+          "sha256": "87ace660360488cda504fc3cd3643ff86c1d72ff8766bd54b0162e811a7f0a0d"
+        }
+      ],
+      "primary": "tm2623831d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926100789",
+      "ticker": "O",
+      "cik": "0000726728",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2623824d1_8k.htm",
+          "bytes": 57686,
+          "sha256": "3b8f37daaafd6063bfe15d75c69cde97901ea2459bc923417b26864af598df6b"
+        }
+      ],
+      "primary": "tm2623824d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926104197",
+      "ticker": "CAT",
+      "cik": "0000018230",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "tm2624321d1_8k.htm",
+          "bytes": 46464,
+          "sha256": "a8bdb076ffa88db74b5fbfc35355f0c98d8f9f68a45b23d38ae927a966dd493c"
+        }
+      ],
+      "primary": "tm2624321d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926107537",
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2625368d1_8k.htm",
+          "bytes": 36458,
+          "sha256": "ccf99f68e0921ed1c5e3a90ab167ad81b2c91716a8d341de96e1f946f0db0da1"
+        }
+      ],
+      "primary": "tm2625368d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926110588",
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2626114d1_8k.htm",
+          "bytes": 42268,
+          "sha256": "459421968d8b2803b5ebbcaf7a68681d99c4722cacc8a01f76e254c008da84eb"
+        }
+      ],
+      "primary": "tm2626114d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926116198",
+      "ticker": "CAT",
+      "cik": "0000018230",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "tm2627668d1_8k.htm",
+          "bytes": 32146,
+          "sha256": "6c9c74cff6a04c864b7f2637ac0b51bdd9cc1fae67c9b71d96a7c7e3f1f0e5f1"
+        }
+      ],
+      "primary": "tm2627668d1_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110465926120653",
+      "ticker": "PLD",
+      "cik": "0001045609",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "tm2621013d3_8k.htm",
+          "bytes": 51818,
+          "sha256": "14297d7a85df01e2f00774d3d35fa96184243aed1713336cb32378a4e412f284"
+        }
+      ],
+      "primary": "tm2621013d3_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110852426000160",
+      "ticker": "CRM",
+      "cik": "0001108524",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "crm-20260805.htm",
+          "bytes": 26929,
+          "sha256": "14c8fcb213c0dfc302f6abd467ad898e252cc3c8c223736a6888b0fb52295b91"
+        }
+      ],
+      "primary": "crm-20260805.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110852426000187",
+      "ticker": "CRM",
+      "cik": "0001108524",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "crm-20260826.htm",
+          "bytes": 29220,
+          "sha256": "3f1c77e3626e778e6f88bfbc0f746ef50c60195abe05104889d3768260907608"
+        }
+      ],
+      "primary": "crm-20260826.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110852426000197",
+      "ticker": "CRM",
+      "cik": "0001108524",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "crm-20260902.htm",
+          "bytes": 28146,
+          "sha256": "0fa714eef084a17867807c2fb4bb565628c469e2ee01f0ff68e1d6f0450ae7a3"
+        }
+      ],
+      "primary": "crm-20260902.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000110852426000210",
+      "ticker": "CRM",
+      "cik": "0001108524",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "crm-20260916.htm",
+          "bytes": 34813,
+          "sha256": "37c3f4e4718320340148b6d019e2f1de15f9a752796defe4428c9ab1591979f7"
+        }
+      ],
+      "primary": "crm-20260916.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000114036126006577",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "ef20060722_8k.htm",
+          "bytes": 73127,
+          "sha256": "9eeb82acd734f1932e9065fb3774bed6ab3ace78d92de701d605cd23b7dc0668"
+        }
+      ],
+      "primary": "ef20060722_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000114036126015711",
+      "ticker": "AAPL",
+      "cik": "0000320193",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "ef20071035_8k.htm",
+          "bytes": 38720,
+          "sha256": "0bca9e62d6c04b7f67c41320fc2969d5068e140e2610e908f04cb85f9d8dd0cc"
+        }
+      ],
+      "primary": "ef20071035_8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312514084762",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "d648028d10k.htm",
+          "bytes": 1922643,
+          "sha256": "c161e392fda8bce857bcf0dfe0168cb64bbd2def2f45a5c847b4552b8a8ba64f"
+        }
+      ],
+      "primary": "d648028d10k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312515023732",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_CACHED",
+      "documents": [
+        {
+          "name": "d835617d8k.htm",
+          "bytes": 23437,
+          "sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b"
+        },
+        {
+          "name": "d835617dex231.htm",
+          "bytes": 7004,
+          "sha256": "a6e95c7f05b6b7ac94636b7095a4020ccff943a3628bce21ca6aedd8631f6c17"
+        },
+        {
+          "name": "d835617dex991.htm",
+          "bytes": 228961,
+          "sha256": "c4835bca450d736c7309ec3d64942d572f91a97c48b476f7832d9827acf66cea"
+        },
+        {
+          "name": "d835617dex992.htm",
+          "bytes": 752329,
+          "sha256": "744c3c817531407b31362cb92a90bab09d2760b586554a75eb7f9268cdc99fc1"
+        },
+        {
+          "name": "R1.htm",
+          "bytes": 14959,
+          "sha256": "12a168a6c53ebddaf6dfd0139206fff18ffa37d82d7e3c77c2236df0d27504db"
+        },
+        {
+          "name": "R10.htm",
+          "bytes": 165146,
+          "sha256": "a657c04b09eacde92318451168aecbc5be98b759e466d7327af7eaaa7ffbd47c"
+        },
+        {
+          "name": "R11.htm",
+          "bytes": 36832,
+          "sha256": "acd3db4a8b13bcab62e7835553d0ac077d4e5fe1eaa0945f65fed2ce24ab5b6d"
+        },
+        {
+          "name": "R12.htm",
+          "bytes": 28257,
+          "sha256": "e0a9e34116d6b47b5f752d9b8156d0654360c8e473720d8eac793bd16c105dd2"
+        },
+        {
+          "name": "R13.htm",
+          "bytes": 70908,
+          "sha256": "c44481e0a7b30d41b64a820a08104f9861e5a9f3a7bff3362a5962258b692d20"
+        },
+        {
+          "name": "R14.htm",
+          "bytes": 46536,
+          "sha256": "71b7e981c4cef20a96d62eab4671a351a7e99ffb6701d0e2f0fbc0c6e186aaf4"
+        },
+        {
+          "name": "R15.htm",
+          "bytes": 52844,
+          "sha256": "5379c587f80e52f8ff20c2a1c610adf83a327a290d7e0a296f97a3b69fcb2e30"
+        },
+        {
+          "name": "R16.htm",
+          "bytes": 29733,
+          "sha256": "062dd36330e681d75bb7e038324f1313397c1e9e2b5e24e2cdad1ae8fba51574"
+        },
+        {
+          "name": "R17.htm",
+          "bytes": 40027,
+          "sha256": "d798a3ab36dd9f23ef92e85198a468512cb625a676a89931bc67f77adc7e9310"
+        },
+        {
+          "name": "R18.htm",
+          "bytes": 30593,
+          "sha256": "be3aa110a0eabfb03b45a14d053cc2172f0eb060e0c93033a9e9c2fb9218226c"
+        },
+        {
+          "name": "R19.htm",
+          "bytes": 65115,
+          "sha256": "3facad88a477272bf983aaa3f7b60d23129e03fe140bb513ce55f406f6e2f780"
+        },
+        {
+          "name": "R2.htm",
+          "bytes": 73638,
+          "sha256": "39ad45182a4d5e2dd4a01951422b9735ad39a65636fe1da57116300b77ebb833"
+        },
+        {
+          "name": "R20.htm",
+          "bytes": 27247,
+          "sha256": "9929f8ec758efe7e04d82d1bd49b3ac2837fe24e156267a92b1784c75c5445f5"
+        },
+        {
+          "name": "R21.htm",
+          "bytes": 114248,
+          "sha256": "6baa9867f5f7dff15bd6ce8bd4fda8b9eaeb9c7baf099cf3f4bf1f720c7d2cbb"
+        },
+        {
+          "name": "R22.htm",
+          "bytes": 15317,
+          "sha256": "d564a4b48b247364a5ceae332bf2ebb8c1ea2c2118aef2cf00204b3d67f7ab75"
+        },
+        {
+          "name": "R23.htm",
+          "bytes": 260195,
+          "sha256": "642f55233b5eb29eed032d2050d99ef3df9a11dda5a4847f08d00d1acf6bd82a"
+        },
+        {
+          "name": "R24.htm",
+          "bytes": 46907,
+          "sha256": "5708b054df71cbd0231d8baad33e566221d54c43c40286f1edf9420b94a656f9"
+        },
+        {
+          "name": "R25.htm",
+          "bytes": 40554,
+          "sha256": "6bae9475bc83d6b5abb5da953c06ed46acc3ae5905d6125ab1549642d4584b8d"
+        },
+        {
+          "name": "R26.htm",
+          "bytes": 72131,
+          "sha256": "b1381b3e989ef92b8cd857b01cbd4cd2242f59d4de1443ab25700f2f81cfaf9f"
+        },
+        {
+          "name": "R27.htm",
+          "bytes": 50508,
+          "sha256": "e1a4b4866373d3d71f07ab0f6077c045ec4efc1e9c87e672a13d5011191e46ae"
+        },
+        {
+          "name": "R28.htm",
+          "bytes": 49074,
+          "sha256": "569b2ef6e94b6f186aeaf08e3c265c8e949bb077441369d3ac323f65f0259fa3"
+        },
+        {
+          "name": "R29.htm",
+          "bytes": 28716,
+          "sha256": "3599a67e3b685300984ef16452e57a080596ca3623fb9c025c1175402990ddb4"
+        },
+        {
+          "name": "R3.htm",
+          "bytes": 53044,
+          "sha256": "e424ecc52902b6445809908cf149883cde22ed8ee255df58fbcd64dab8f5cad7"
+        },
+        {
+          "name": "R30.htm",
+          "bytes": 32836,
+          "sha256": "d5fa2370f2c93e2790fc7bdc7aad5441b5ba28a4525bffbad8a1667868d590b7"
+        },
+        {
+          "name": "R31.htm",
+          "bytes": 19957,
+          "sha256": "fc5979c8ec7e876a4ff41960962bd89c471e5ae9058ee48c93193904717f9678"
+        },
+        {
+          "name": "R32.htm",
+          "bytes": 72140,
+          "sha256": "9edea0893e5252197d82d26f12aa444ef05a1712b99c8d4cc232a5e10e7459a8"
+        },
+        {
+          "name": "R33.htm",
+          "bytes": 25858,
+          "sha256": "f1fcc12e9bf2d83925d24556a418558e368111fded8c5105415eade908613de3"
+        },
+        {
+          "name": "R34.htm",
+          "bytes": 70726,
+          "sha256": "4fcf8a56af198be23b1de2cb7aa42cee94fa8815a879bb5a0b9440221d1bc175"
+        },
+        {
+          "name": "R35.htm",
+          "bytes": 44562,
+          "sha256": "089fbd988b5f9b418637d44303c3e4a93174dedbab881d8f461de8e4b883aeb4"
+        },
+        {
+          "name": "R36.htm",
+          "bytes": 183266,
+          "sha256": "59d4ae3738158be9e12726279fccdb6fef7d5c86c50f1a9893980ffd32223a1b"
+        },
+        {
+          "name": "R37.htm",
+          "bytes": 63555,
+          "sha256": "ea413ce82e280c6072f19ba4b7b943cc307592d8592662e54995f7903d46d344"
+        },
+        {
+          "name": "R38.htm",
+          "bytes": 25425,
+          "sha256": "fd13667c4d0b3d2e52c5b93e8dfac9d2b28520f858fb9d87fa93d4cda7526b30"
+        },
+        {
+          "name": "R39.htm",
+          "bytes": 45833,
+          "sha256": "de03e779bda730139d45c96ff7ec4e0f0f2564b3decffe356b8d3cd4e9d53268"
+        },
+        {
+          "name": "R4.htm",
+          "bytes": 22382,
+          "sha256": "074b0a70d78eeeefbd1c094837ccdbc581fc5ad11cd288bba08c59112ec81b97"
+        },
+        {
+          "name": "R40.htm",
+          "bytes": 45937,
+          "sha256": "7d3172f2804eef991b56e82e802c2deea7cb6a9b7634a2c7b43a5abfb0176762"
+        },
+        {
+          "name": "R41.htm",
+          "bytes": 14244,
+          "sha256": "bcdd84439c07444c2f6a3e0e69a80894ebddfa1fc2e10acbe822b6c730087659"
+        },
+        {
+          "name": "R42.htm",
+          "bytes": 25026,
+          "sha256": "8bc0a5cc870035cab2be548584e507933574e5b312f161cf5e86c33f1815ab28"
+        },
+        {
+          "name": "R43.htm",
+          "bytes": 29087,
+          "sha256": "5422e0a8a21a28c47000fa96791bd238d0d7829e96b4874e9292aec4f1486acf"
+        },
+        {
+          "name": "R44.htm",
+          "bytes": 13664,
+          "sha256": "4485973eadaec427c8ee5a98db91a0636e3883a46ac94a32f78475d243cb477e"
+        },
+        {
+          "name": "R45.htm",
+          "bytes": 17983,
+          "sha256": "8be7c3c833bba66ebf45e8f0408a06ed6c85f12c5b5617ed219eae54c4eaa152"
+        },
+        {
+          "name": "R46.htm",
+          "bytes": 61620,
+          "sha256": "f5fd54437ae1900468353bf32ea8669c56c3c10323586d924bf6e166ad507a73"
+        },
+        {
+          "name": "R47.htm",
+          "bytes": 19217,
+          "sha256": "ba1369a88e47ef28995951cbd88d33d15747bf04b467d9f6d29286952cad8836"
+        },
+        {
+          "name": "R48.htm",
+          "bytes": 25020,
+          "sha256": "dd6b24038e66e7e966cd7c8c3fe90dc77737ca724bd17a9ec6884d37ffbd647a"
+        },
+        {
+          "name": "R5.htm",
+          "bytes": 122982,
+          "sha256": "2dfad746ac381b7e8d02fa6be60314d989bfceda7783a99f431a21055921e93e"
+        },
+        {
+          "name": "R50.htm",
+          "bytes": 52763,
+          "sha256": "8a438e90224e8eb448801e0aace2ff1d53cd6f3aef6ca9fcd7bf42f7bb4e4970"
+        },
+        {
+          "name": "R51.htm",
+          "bytes": 35397,
+          "sha256": "c424aa2bc2d1a2cb879c9edd912bc55a3b98f3b5dc26d0e1ac62fbf451c3dd1a"
+        },
+        {
+          "name": "R52.htm",
+          "bytes": 46116,
+          "sha256": "3b98d95884967b2ca3d7ea92e2c2980a9645afafe9b50b618c5da5a5e8ab0e1a"
+        },
+        {
+          "name": "R53.htm",
+          "bytes": 26133,
+          "sha256": "e4315e02bf997a434c322353a21b5d9a245cee0ad2574e7eede1f21d1dffcfe5"
+        },
+        {
+          "name": "R54.htm",
+          "bytes": 40976,
+          "sha256": "8a11404f5af0ab096eeb99df8b1095a0bd4fcb90d44f78532729a6ec798d2143"
+        },
+        {
+          "name": "R55.htm",
+          "bytes": 22416,
+          "sha256": "fdd197a1ba1971d661d5457044de967c0b158e9fd73de66fc98e9eff19145c1f"
+        },
+        {
+          "name": "R56.htm",
+          "bytes": 82548,
+          "sha256": "88dc943d5bdde2495698558e5366bb1cd83e6fec44549dcae410ca915600f193"
+        },
+        {
+          "name": "R57.htm",
+          "bytes": 52933,
+          "sha256": "191fcbdc506937c1070c0b25fdda04a827ff6fbd51216513131f4dbbf03db457"
+        },
+        {
+          "name": "R58.htm",
+          "bytes": 27947,
+          "sha256": "e5cd2dbecbfa9412c14c6c6815c7e65d7afb710c98153ca803941a3bb992d47b"
+        },
+        {
+          "name": "R59.htm",
+          "bytes": 27824,
+          "sha256": "4dd7404e0b161094e35fe21b815bdd2847d34c316c12563691479e4bedfbcb94"
+        },
+        {
+          "name": "R6.htm",
+          "bytes": 19984,
+          "sha256": "e47e4f2b2e1419a78725cdf94d237d124f3cf001d3c4ed87f9a3ea24ccdd4f96"
+        },
+        {
+          "name": "R60.htm",
+          "bytes": 15588,
+          "sha256": "57e4a1def8f037fd5363bdb7185629caf72af1155eaac07bb9c00ebab9e250f8"
+        },
+        {
+          "name": "R61.htm",
+          "bytes": 33212,
+          "sha256": "42ab6e9c940c5b8ab74aeec8e95084358a018560ee965b7fe45fe75dfef86380"
+        },
+        {
+          "name": "R62.htm",
+          "bytes": 6135,
+          "sha256": "8ce29466aa9c8950e1506fb7b7fca29a18e26b720ad71e7aa541d6097d3eb25f"
+        },
+        {
+          "name": "R63.htm",
+          "bytes": 25301,
+          "sha256": "cf6fc8fd09cdb4a120efa3af85666295ff81714f9e26f2da358dc114d95d6941"
+        },
+        {
+          "name": "R64.htm",
+          "bytes": 24062,
+          "sha256": "5564d61d91704a655b8e7b2161ed4b1d27847fed02aed0b06065455d89e925f7"
+        },
+        {
+          "name": "R65.htm",
+          "bytes": 45079,
+          "sha256": "5a6ef354780010d08fee70d3b78d056de073865af9ffe691c2dfb90dba289b35"
+        },
+        {
+          "name": "R66.htm",
+          "bytes": 104964,
+          "sha256": "c6342771ab67344847d127e14d07f4a46e2ae4fb0cd38572c7c45d7388c0cade"
+        },
+        {
+          "name": "R67.htm",
+          "bytes": 52361,
+          "sha256": "ea745b683e15d558bf22b3b49fd8927fe04bbae063bf2d14e5547295f5b12fc7"
+        },
+        {
+          "name": "R68.htm",
+          "bytes": 20228,
+          "sha256": "2ad2fad480f6560736aa5d89cb2a13445b815be038917d583bc99d738ee5b773"
+        },
+        {
+          "name": "R69.htm",
+          "bytes": 67404,
+          "sha256": "b218843425cbad77dc3ebeedb885d2b5c97d757f7aa38cf88211fd316f61f832"
+        },
+        {
+          "name": "R7.htm",
+          "bytes": 90045,
+          "sha256": "3e33fde6ab72d63389729a96420e4ab590066687b68446a6dfaab813761ba699"
+        },
+        {
+          "name": "R70.htm",
+          "bytes": 14857,
+          "sha256": "7a1f201cfe77af024fdd1f65bb5f9016fe2a096492a8dd31b2fd9ad80bb015a9"
+        },
+        {
+          "name": "R71.htm",
+          "bytes": 26660,
+          "sha256": "820100839df9a5fdfc45e0a8e860bbe187ed69a35457ec7f3d422c8106b8b167"
+        },
+        {
+          "name": "R72.htm",
+          "bytes": 46074,
+          "sha256": "2c2360d6a968e09fa48c1a5791f47175d73f2a1b7e220887ff1477d714dbc3c1"
+        },
+        {
+          "name": "R73.htm",
+          "bytes": 24535,
+          "sha256": "d9be5f5306eb3f49908751bf7fa15d72e14b9cf0975b1e3abdb207055de89004"
+        },
+        {
+          "name": "R74.htm",
+          "bytes": 9322,
+          "sha256": "04582bffc324ce2135b4a1ba2b3ee20ac2d59ba7740c7e2d920d5a11d8d47286"
+        },
+        {
+          "name": "R75.htm",
+          "bytes": 26412,
+          "sha256": "547679ca6ce4797cb9ca993d8fa4ac03229d481bb42eeca53cc52e7517b1cf84"
+        },
+        {
+          "name": "R76.htm",
+          "bytes": 17687,
+          "sha256": "c4517b7a6e72615bba0aa4703c1475510b3ea3bb29102374d52d8e0a6c38dd6b"
+        },
+        {
+          "name": "R77.htm",
+          "bytes": 38038,
+          "sha256": "de7c0d4d83b1e263d4e94b358cdab2e1c2c19e5e9a673c3553d3afaac05df25a"
+        },
+        {
+          "name": "R78.htm",
+          "bytes": 41363,
+          "sha256": "416a4400c6a2b328c5ed73c079be1cd86e8b8c276c5d454774be2098ad920b73"
+        },
+        {
+          "name": "R8.htm",
+          "bytes": 135247,
+          "sha256": "29c4dc1f4d5b98a83ad3f3f18855c249fe3fc4e450eff2222b3fd04089de9c1a"
+        },
+        {
+          "name": "R9.htm",
+          "bytes": 52024,
+          "sha256": "37716c4a3bbcae8cd0efaf054c7d3d664299a79b7864543a361265b820b43fa1"
+        }
+      ],
+      "primary": "d835617d8k.htm",
+      "exhibits": [
+        "d835617dex991.htm",
+        "d835617dex992.htm"
+      ]
+    },
+    {
+      "accession": "000119312526258667",
+      "ticker": "MSFT",
+      "cik": "0000789019",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "d26760d8k.htm",
+          "bytes": 26900,
+          "sha256": "b70d7f91a4361606e967f087215631d9c1d0bb5c2eadf5a8ddaa73c3f23aa85b"
+        }
+      ],
+      "primary": "d26760d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526259830",
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "d36818d8k.htm",
+          "bytes": 89079,
+          "sha256": "21e7e7d838da981c9cca5ebe60b09318b17493c44f1278081fb13e3f764eded2"
+        }
+      ],
+      "primary": "d36818d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526267578",
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "d57679d8k.htm",
+          "bytes": 119900,
+          "sha256": "184ee81eb7270e9ffb6dbd1cc074f94b0579788c211076f8b6b1746614d55a31"
+        }
+      ],
+      "primary": "d57679d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526314128",
+      "ticker": "JPM",
+      "cik": "0000019617",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "d103985d8k.htm",
+          "bytes": 46499,
+          "sha256": "740674275eedd1132ba7932cfc1ea2284cf4495a8306b296e44b84770fb237a7"
+        }
+      ],
+      "primary": "d103985d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526323632",
+      "ticker": "MSFT",
+      "cik": "0000789019",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "msft-20260729.htm",
+          "bytes": 63461,
+          "sha256": "a271a2e3b102f8acb0e595d3a00c73eaa9b2f77ddcb43cd20c3ff42a6f50c265"
+        }
+      ],
+      "primary": "msft-20260729.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526342390",
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "d171253d8k.htm",
+          "bytes": 76079,
+          "sha256": "67b55893eddcd1b86f1f4afab932faf4dbd288b09aeab865047aa46702821c34"
+        }
+      ],
+      "primary": "d171253d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526380280",
+      "ticker": "MSFT",
+      "cik": "0000789019",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "d291965d8k.htm",
+          "bytes": 28674,
+          "sha256": "d972fac0c20d85a4dd550f7211c0321e86aade5e4ccb9f933d0424b0c2c3811a"
+        }
+      ],
+      "primary": "d291965d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526422375",
+      "ticker": "PLD",
+      "cik": "0001045609",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "pld-20261015.htm",
+          "bytes": 80370,
+          "sha256": "69f49aebe2561046318cb2dae5a3a278d7ba98f22758843ae18d4a2de3d275b1"
+        }
+      ],
+      "primary": "pld-20261015.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526425881",
+      "ticker": "CRM",
+      "cik": "0001108524",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "d516983d8k.htm",
+          "bytes": 26060,
+          "sha256": "6ca53937c598789ac9c5d8dcd2e000b24f97c018cff055a73061b9be1ac49e2a"
+        }
+      ],
+      "primary": "d516983d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526426704",
+      "ticker": "JPM",
+      "cik": "0000019617",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "d351999d8k.htm",
+          "bytes": 46039,
+          "sha256": "2e2f1e8a3564051e3e647e371c0c19ccdc937e9c37098fd5e8b05e8b73dafd53"
+        }
+      ],
+      "primary": "d351999d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526430566",
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "d176604d8k.htm",
+          "bytes": 67073,
+          "sha256": "5305cd80937475a6520c6e5858a848585e010bba5304f5555e046e02ff90405c"
+        }
+      ],
+      "primary": "d176604d8k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526436122",
+      "ticker": "MSFT",
+      "cik": "0000789019",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "msft-20261028.htm",
+          "bytes": 63339,
+          "sha256": "54a8c2bd5a429e931680dce68c3b3718bd66e752b8a5db5bf4981097c04b0dab"
+        }
+      ],
+      "primary": "msft-20261028.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000119312526436149",
+      "ticker": "MSFT",
+      "cik": "0000789019",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "msft-20261028.htm",
+          "bytes": 271713,
+          "sha256": "86c8e0061a70eeed4a78759fbc49d4787ad1d0ed7b3d7dc574e6d1280feb455e"
+        }
+      ],
+      "primary": "msft-20261028.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000132616014000003",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "form10k.htm",
+          "bytes": 22373436,
+          "sha256": "47bc9b4fcbf159248bb8720784be3046b6c208dd647259df3c2c6e36d631525c"
+        }
+      ],
+      "primary": "form10k.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000132616026000037",
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "duk-20260804.htm",
+          "bytes": 35127,
+          "sha256": "9943e9a6242e3dbe60c26f26959cc3ac42427cacb4135ea8d0b0b28209bb976e"
+        }
+      ],
+      "primary": "duk-20260804.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000162828026065582",
+      "ticker": "JPM",
+      "cik": "0000019617",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jpm-20261013.htm",
+          "bytes": 45375,
+          "sha256": "01d7427eb7e5302158e2713ba5d757622ac27ba9a06bd7ece334c59f8de1cf2d"
+        }
+      ],
+      "primary": "jpm-20261013.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000162828026065616",
+      "ticker": "JPM",
+      "cik": "0000019617",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "jpm-20261013.htm",
+          "bytes": 45177,
+          "sha256": "b389c81c71d2ca2b28064654ab0f2b680ba8e884cca37ca2c8785c5684e24978"
+        }
+      ],
+      "primary": "jpm-20261013.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000165204416000022",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "a8-kasu2016x09.htm",
+          "bytes": 42264,
+          "sha256": "c297fe022011012304257a7f5088efa4abb2c6491df0e5a862a3864339c4be44"
+        }
+      ],
+      "primary": "a8-kasu2016x09.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000165204423000016",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "goog-20221231.htm",
+          "bytes": 3038528,
+          "sha256": "50eb1197240c7e849207faad555ee0244bfad8b18b57feae190ab99ff1b87190"
+        }
+      ],
+      "primary": "goog-20221231.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000165204423000045",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "goog-20230331.htm",
+          "bytes": 2036086,
+          "sha256": "224583028da4bde7b98a5beb1ff971f2a824de7de30539075b7fe07da152b9ca"
+        }
+      ],
+      "primary": "goog-20230331.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000165204426000066",
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "goog-20260722.htm",
+          "bytes": 65930,
+          "sha256": "089a244a2b10603c49611400de0347d1245d59b3a54afa03f5bc7650dea8a6a4"
+        }
+      ],
+      "primary": "goog-20260722.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000165204426000080",
+      "ticker": "GOOGL",
+      "cik": "0001652044",
+      "form": "8-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "goog-20261028.htm",
+          "bytes": 66315,
+          "sha256": "efbb1fbab5c84708fcd68d5262dccf31cf5275e020830d5ddc84d6f96bb737cb"
+        }
+      ],
+      "primary": "goog-20261028.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000168285219000009",
+      "ticker": null,
+      "cik": null,
+      "form": null,
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "EXHIBIT_REQUIRED",
+      "documents": [
+        {
+          "name": "exhibit102312312018.htm",
+          "bytes": 139325,
+          "sha256": "c2f1bc86a2254db85f5152ced93421d750176799fb00e82cb9941102db9aba1c"
+        }
+      ],
+      "primary": "exhibit102312312018.htm",
+      "exhibits": []
+    },
+    {
+      "accession": "000187417822000008",
+      "ticker": "RIVN",
+      "cik": "0001874178",
+      "form": "10-K",
+      "provenance_status": "LEGACY_PLACEHOLDER_UA",
+      "evidence_status": "PRELIMINARY_ONLY",
+      "status": "PRIMARY_CACHED",
+      "documents": [
+        {
+          "name": "ex-211subsidiaries.htm",
+          "bytes": 14549,
+          "sha256": "49f4a589dd005f5066d3f68021bbcb737212b6b188380a9de4619b3d46ce4180"
+        }
+      ],
+      "primary": "ex-211subsidiaries.htm",
+      "exhibits": []
+    }
+  ],
+  "candidates": [
+    {
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.32,
+      "currency": "USD",
+      "frequency": "QUARTERLY",
+      "announcement_date": "2026-07-24",
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000007085826000364",
+      "filed_date": null,
+      "evidence_sha256": "8e77f89d5b63214818b0f9eb9e1425957e0f1a600f80b7598116754f00966d4a",
+      "raw_context": "On July 24, 2026, Bank of America Corporation (the &#8220;Corporation&#8221;) issued a press release (&#8220;Press Release&#8221;) announcing that the Corporation&#8217;s Board of Directors declared a quarterly cash dividend on the Corporation&#8217;s common stock of $0.32 per share, up $0.04 per share from the prior quarter, an increase of 14%.",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "PRELIMINARY_8K_CANDIDATE",
+      "source_filename": "bac-20260723.htm"
+    },
+    {
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.35,
+      "currency": "USD",
+      "frequency": "QUARTERLY",
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": 0.35,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000075330821000014",
+      "filed_date": null,
+      "evidence_sha256": "b773e4c39d798f8c35bc23046b76e478ff0f19fb94c44bf6e6b455a9cc4a7deb",
+      "raw_context": "In February 2021, NEE announced that it would increase its quarterly dividend on its common stock from $0.35 per share to $0.385 per share.",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nee-20201231.htm"
+    },
+    {
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.425,
+      "currency": "USD",
+      "frequency": "QUARTERLY",
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": 0.425,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000075330823000019",
+      "filed_date": null,
+      "evidence_sha256": "74bb819a979ccfc74efdaca1a5d949a5fa440beccd100b9d2d04ccfe0c8a11c5",
+      "raw_context": "In February 2023, NEE announced that it would increase its quarterly dividend on its common stock from $0.425 per share to $0.4675 per share.",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nee-20221231.htm"
+    },
+    {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.04,
+      "currency": "USD",
+      "frequency": null,
+      "announcement_date": "2021-08-01",
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000104581021000163",
+      "filed_date": null,
+      "evidence_sha256": "bda689a64bdc0b8742a3255fda29d081555a0324eb73f1574a7dd9b2bb7d1e70",
+      "raw_context": "5 NVIDIA CORPORATION AND SUBSIDIARIES CONDENSED CONSOLIDATED STATEMENTS OF SHAREHOLDERS&#8217; EQUITY FOR THE THREE MONTHS ENDED OCTOBER&#160;31, 2021 AND OCTOBER&#160;25, 2020 (Unaudited) Common&#160;Stock Outstanding Additional Paid-in Capital Treasury Stock Accumulated Other Comprehensive Income Retained Earnings Total Shareholders' Equity (In millions, except per share data) Shares Amount Balances, August 1, 2021 2,496 &#160; $ 3 &#160; $ 9,745 &#160; $ ( 11,604 ) $ 8 &#160; $ 22,995 &#160; $ 21,147 &#160; Net income &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; 2,4",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nvda-20211031.htm"
+    },
+    {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.12,
+      "currency": "USD",
+      "frequency": null,
+      "announcement_date": "2021-01-31",
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000104581021000163",
+      "filed_date": null,
+      "evidence_sha256": "bda689a64bdc0b8742a3255fda29d081555a0324eb73f1574a7dd9b2bb7d1e70",
+      "raw_context": "6 NVIDIA CORPORATION AND SUBSIDIARIES CONDENSED CONSOLIDATED STATEMENTS OF SHAREHOLDERS&#8217; EQUITY FOR THE NINE MONTHS ENDED OCTOBER&#160;31, 2021 AND OCTOBER&#160;25, 2020 (Unaudited) Common&#160;Stock Outstanding Additional Paid-in Capital Treasury Stock Accumulated Other Comprehensive Income Retained Earnings Total Shareholders' Equity (In millions, except per share data) Shares Amount Balances, January 31, 2021 2,479 &#160; $ 3 &#160; $ 8,719 &#160; $ ( 10,756 ) $ 19 &#160; $ 18,908 &#160; $ 16,893 &#160; Net income &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; 6",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nvda-20211031.htm"
+    },
+    {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.04,
+      "currency": "USD",
+      "frequency": null,
+      "announcement_date": "2022-01-30",
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000104581022000079",
+      "filed_date": null,
+      "evidence_sha256": "5f1a525289f463bd888e369b4438154923460f7626c231a487d3c1c62abac5a9",
+      "raw_context": "5 NVIDIA CORPORATION AND SUBSIDIARIES CONDENSED CONSOLIDATED STATEMENTS OF SHAREHOLDERS&#8217; EQUITY FOR THE THREE MONTHS ENDED MAY&#160;1, 2022 AND MAY&#160;2, 2021 (Unaudited) Common&#160;Stock Outstanding Additional Paid-in Capital Treasury Stock Accumulated Other Comprehensive Income (Loss) Retained Earnings Total Shareholders' Equity (In millions, except per share data) Shares Amount Balances, January 30, 2022 2,506 &#160; $ 3 &#160; $ 10,385 &#160; $ &#8212; &#160; $ ( 11 ) $ 16,235 &#160; $ 26,612 &#160; Net income &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; 1",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nvda-20220501.htm"
+    },
+    {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.01,
+      "currency": "USD",
+      "frequency": null,
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000104581024000316",
+      "filed_date": null,
+      "evidence_sha256": "0d9b13ab5f14eba1f29e17ff2dcd9bba3a9eaf2e1625622709a6e51f198cf490",
+      "raw_context": "5 NVIDIA Corporation and Subsidiaries Condensed Consolidated Statements of Shareholders' Equity For the Three Months Ended October&#160;27, 2024 and October&#160;29, 2023 (Unaudited) Common&#160;Stock Outstanding Additional Paid-in Capital Accumulated Other Comprehensive Income (Loss) Retained Earnings Total Shareholders' Equity Shares Amount (In millions, except per share data) Balances, Jul&#160;28, 2024 24,562 &#160; $ 25 &#160; $ 12,115 &#160; $ 56 &#160; $ 45,961 &#160; $ 58,157 &#160; Net income &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; 19,309 &#160; 19,309 &#160; Other com",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nvda-20241027.htm"
+    },
+    {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.024,
+      "currency": "USD",
+      "frequency": null,
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000104581024000316",
+      "filed_date": null,
+      "evidence_sha256": "0d9b13ab5f14eba1f29e17ff2dcd9bba3a9eaf2e1625622709a6e51f198cf490",
+      "raw_context": "6 NVIDIA Corporation and Subsidiaries Condensed Consolidated Statements of Shareholders' Equity For the Nine Months Ended October&#160;27, 2024 and October&#160;29, 2023 (Unaudited) Common&#160;Stock Outstanding Additional Paid-in Capital Accumulated Other Comprehensive Income (Loss) Retained Earnings Total Shareholders' Equity Shares Amount (In millions, except per share data) Balances, Jan&#160;28, 2024 24,643 &#160; $ 25 &#160; $ 13,109 &#160; $ 27 &#160; $ 29,817 &#160; $ 42,978 &#160; Net income &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; 50,789 &#160; 50,789 &#160; Other comp",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nvda-20241027.htm"
+    },
+    {
+      "ticker": "NVDA",
+      "cik": "0001045810",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.01,
+      "currency": "USD",
+      "frequency": null,
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000104581025000116",
+      "filed_date": null,
+      "evidence_sha256": "d36283644114ec31baf860587630230d44fcd6e950f3fd75833fdf587ac78e75",
+      "raw_context": "5 NVIDIA Corporation and Subsidiaries Condensed Consolidated Statements of Shareholders' Equity (Unaudited) Common&#160;Stock Outstanding Additional Paid-in Capital Accumulated Other Comprehensive Income (Loss) Retained Earnings Total Shareholders' Equity Shares Amount (In millions, except per share data) Balances as of Jan&#160;26, 2025 24,477 &#160; $ 24 &#160; $ 11,237 &#160; $ 28 &#160; $ 68,038 &#160; $ 79,327 &#160; Net income &#8212;&#160; &#8212;&#160; &#8212;&#160; &#8212;&#160; 18,775 &#160; 18,775 &#160; Other comprehensive income &#8212;&#160; &#8212;&#160; &#8212;&#160; 158 &#160;",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "nvda-20250427.htm"
+    },
+    {
+      "ticker": "NEE",
+      "accession": "000110465926100476",
+      "is_event": false,
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "candidate_type": "FALSE_POSITIVE",
+      "reason": "FALSE_POSITIVE_NON_DIVIDEND_PRICE_TARGET",
+      "matched_amount": 67.75
+    },
+    {
+      "ticker": "UNKNOWN",
+      "cik": "",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.47,
+      "currency": "USD",
+      "frequency": "QUARTERLY",
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000119312515023732",
+      "filed_date": null,
+      "evidence_sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b",
+      "raw_context": "1 In April 2014, the Company increased its share repurchase authorization to $90 billion and the quarterly dividend was raised to $0.47 per common share, resulting in an overall increase in its capital return program from $100 billion to over $130 billion.",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "d835617d8k.htm"
+    },
+    {
+      "ticker": "UNKNOWN",
+      "cik": "",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.38,
+      "currency": "USD",
+      "frequency": "QUARTERLY",
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000119312515023732",
+      "filed_date": null,
+      "evidence_sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b",
+      "raw_context": "Dividends The Company declared and paid cash dividends per common share during the periods presented as follows: Dividends Per Share Amount (in millions) 2014: Fourth quarter $ 0.47 $ 2,807 Third quarter 0.47 2,830 Second quarter 0.44 2,655 First quarter 0.44 2,739 Total $ 1.82 $ 11,031 2013: Fourth quarter $ 0.44 $ 2,763 Third quarter 0.44 2,789 Second quarter 0.38 2,490 First quarter 0.38 2,486 Total $ 1.64 $ 10,528 The Company paid cash dividends of $0.38 per share, totaling $2.5 billion, during the fourth quarter of 2012.",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "d835617d8k.htm"
+    },
+    {
+      "ticker": "UNKNOWN",
+      "cik": "",
+      "event_type": "DECLARED",
+      "security_type": "COMMON",
+      "declared_per_share": 0.38,
+      "currency": "USD",
+      "frequency": "QUARTERLY",
+      "announcement_date": null,
+      "ex_date": null,
+      "ex_date_status": "EX_DATE_UNAVAILABLE",
+      "record_date": null,
+      "payment_date": null,
+      "previous_per_share": null,
+      "change_direction": null,
+      "source_url": "LOCAL_CACHE",
+      "source_type": "SEC Exhibit 99.1",
+      "accession_number": "000119312515023732",
+      "filed_date": null,
+      "evidence_sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b",
+      "raw_context": "Dividends The Company declared and paid cash dividends per common share during the periods presented as follows: &#xA0; &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0;&#xA0; &#xA0; &#xA0; Dividends Per Share &#xA0; &#xA0; Amount (in&#xA0;millions) &#xA0; 2014: &#xA0; &#xA0; Fourth quarter &#xA0; $ 0.47 &#xA0;&#xA0; &#xA0; $ 2,807 &#xA0;&#xA0; Third quarter &#xA0; &#xA0; 0.47 &#xA0;&#xA0; &#xA0; &#xA0; 2,830 &#xA0;&#xA0; Second quart",
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "verification_status": "PRELIMINARY_ONLY",
+      "is_event": false,
+      "candidate_type": "HISTORICAL_DIVIDEND_CONTEXT",
+      "source_filename": "d835617d8k.htm"
+    }
+  ],
+  "split_mentions": [
+    {
+      "ticker": null,
+      "accession": "000010088517000056",
+      "ratio": null,
+      "dates": [
+        "December 31, 2016",
+        "June 30, 2016",
+        "January 27, 2017",
+        "May 11, 2017",
+        "February 3, 2017"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "6a57e4b52cb82c64928b212c689d512f177db9a74d11b3a63970545ab376ec82",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": null,
+      "accession": "000032018715000113",
+      "ratio": 2.0,
+      "dates": [
+        "February 1, 2013",
+        "November 30, 2012",
+        "May 31, 2019",
+        "June 30, 2015",
+        "June 30, 2015"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "3920e6ff323f6e34a561e7427c0e2c7f7907dd572d6f439b911f18eb89192c6c",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NKE",
+      "accession": "000032018718000142",
+      "ratio": 2.0,
+      "dates": [
+        "May 31, 2019",
+        "May 25, 2018",
+        "December 22, 2017",
+        "December 31, 2017",
+        "June 30, 2018"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "9a9de94ba6df83369c1d36334883e1183e439782ddce5c28969e4b66f2b20ab0",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "AAPL",
+      "accession": "000032019321000065",
+      "ratio": null,
+      "dates": [
+        "June 26, 2021",
+        "June 27, 2020",
+        "June 26, 2021",
+        "June 27, 2020",
+        "June 26, 2021"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "5c7d136f8d667b6ee77ebccfbf15ca391314f9ae43477a51d838963ac1459dc5",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "HD",
+      "accession": "000035495026000105",
+      "ratio": null,
+      "dates": [
+        "May 21, 2026",
+        "May 21, 2026",
+        "April 7, 2026",
+        "May 21, 2026",
+        "January 31, 2027"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "29393ecabfc86c6787ebe5b0ecd869de4d73522cbdc8003996b2d9aef82a4cf6",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NEE",
+      "accession": "000075330821000014",
+      "ratio": 4.0,
+      "dates": [
+        "December 31, 2020",
+        "January 1, 2021",
+        "January 1, 1944",
+        "January 1, 2021",
+        "January 1, 2021"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "b773e4c39d798f8c35bc23046b76e478ff0f19fb94c44bf6e6b455a9cc4a7deb",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NEE",
+      "accession": "000075330823000019",
+      "ratio": 4.0,
+      "dates": [
+        "December 31, 2022",
+        "January 1, 1944",
+        "January 1, 2021",
+        "January 1, 2022",
+        "August 16, 2022"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "74bb819a979ccfc74efdaca1a5d949a5fa440beccd100b9d2d04ccfe0c8a11c5",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "HON",
+      "accession": "000077384026000084",
+      "ratio": null,
+      "dates": [
+        "June 25, 2026",
+        "June 25, 2026",
+        "June 29, 2026",
+        "June 29, 2026",
+        "June 15, 2026"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "14efec5868a0f94b0dcffa575cfc8268603818b140e21532ef77e5a574f0a5da",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "HON",
+      "accession": "000077384026000124",
+      "ratio": null,
+      "dates": [
+        "June 30, 2026",
+        "June 30, 2026",
+        "June 30, 2026",
+        "June 30, 2026",
+        "June 30, 2026"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "bcc3ded7b87d1d21aba98c7cd1c6839faf78cb953c02d631033b9ea8d560c64c",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "HON",
+      "accession": "000077384026000143",
+      "ratio": null,
+      "dates": [
+        "September 30, 2026",
+        "September 30, 2026",
+        "September 30, 2026",
+        "September 30, 2026",
+        "September 30, 2026"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "449bab75fccf78201e24ec146c0459523d7e42cd469f672c1dbe77e460796c42",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "AMZN",
+      "accession": "000101872425000004",
+      "ratio": null,
+      "dates": [
+        "June 30, 2024",
+        "January 1, 2022",
+        "December 31, 2023",
+        "December 31, 2023",
+        "December 31, 2024"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "78fbcad672682eb933b23ef6b3129ed5fb0b18c8fa03e5f2e466a5bd03467cb8",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NVDA",
+      "accession": "000104581021000163",
+      "ratio": null,
+      "dates": [
+        "October 31, 2021",
+        "October 31, 2021",
+        "October 25, 2020",
+        "October 31, 2021",
+        "October 25, 2020"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "bda689a64bdc0b8742a3255fda29d081555a0324eb73f1574a7dd9b2bb7d1e70",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NVDA",
+      "accession": "000104581022000079",
+      "ratio": null,
+      "dates": [
+        "May 1, 2022",
+        "May 1, 2022",
+        "May 2, 2021",
+        "May 1, 2022",
+        "May 2, 2021"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "5f1a525289f463bd888e369b4438154923460f7626c231a487d3c1c62abac5a9",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NVDA",
+      "accession": "000104581024000316",
+      "ratio": null,
+      "dates": [
+        "October 27, 2024",
+        "October 29, 2023",
+        "October 27, 2024",
+        "October 29, 2023",
+        "October 27, 2024"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "0d9b13ab5f14eba1f29e17ff2dcd9bba3a9eaf2e1625622709a6e51f198cf490",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "NVDA",
+      "accession": "000104581025000116",
+      "ratio": null,
+      "dates": [
+        "April 27, 2025",
+        "April 28, 2024",
+        "April 27, 2025",
+        "April 28, 2024",
+        "April 27, 2025"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "d36283644114ec31baf860587630230d44fcd6e950f3fd75833fdf587ac78e75",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": "PLD",
+      "accession": "000110465926089980",
+      "ratio": null,
+      "dates": [
+        "August 4, 2026"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "305fbfcc8c0f4bd32bca7cfb078040d652b70aa507be70bfb33776b2694d3af3",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": null,
+      "accession": "000119312514084762",
+      "ratio": 4.0,
+      "dates": [
+        "July 31, 2012",
+        "October 31, 2012",
+        "January 31, 2013",
+        "July 31, 2011",
+        "October 31, 2011"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "c161e392fda8bce857bcf0dfe0168cb64bbd2def2f45a5c847b4552b8a8ba64f",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": null,
+      "accession": "000119312515023732",
+      "ratio": 7.0,
+      "dates": [
+        "January 28, 2015",
+        "September 27, 2014",
+        "October 27, 2014",
+        "September 27, 2014",
+        "October 27, 2014"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "a359fe09c2de11cee59ce0a8c7d0e7a44cb4a39251085dfff5362a95bd2b645b",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": null,
+      "accession": "000132616014000003",
+      "ratio": null,
+      "dates": [
+        "December 31, 2013",
+        "January 15, 2073",
+        "December 31, 2013",
+        "December 31, 2013",
+        "December 31, 2013"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "47bc9b4fcbf159248bb8720784be3046b6c208dd647259df3c2c6e36d631525c",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": null,
+      "accession": "000165204423000016",
+      "ratio": 20.0,
+      "dates": [
+        "June 30, 2022",
+        "June 30, 2022",
+        "December 31, 2022",
+        "December 31, 2022",
+        "October 2, 2015"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "50eb1197240c7e849207faad555ee0244bfad8b18b57feae190ab99ff1b87190",
+      "status": "PARTIALLY_VERIFIED"
+    },
+    {
+      "ticker": null,
+      "accession": "000165204423000045",
+      "ratio": null,
+      "dates": [
+        "December 31, 2022",
+        "March 31, 2023",
+        "March 31, 2022",
+        "March 31, 2022",
+        "December 31, 2021"
+      ],
+      "evidence_status": "PRELIMINARY_LEGACY_CACHE",
+      "sha256": "224583028da4bde7b98a5beb1ff971f2a824de7de30539075b7fe07da152b9ca",
+      "status": "PARTIALLY_VERIFIED"
+    }
+  ],
+  "special": {
+    "CAT": [
+      {
+        "accession": "000001823026000040",
+        "ticker": "CAT",
+        "cik": "0000018230",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "cat-20260804.htm",
+            "bytes": 35623,
+            "sha256": "1e504b523cc29b3997fb9c63d68df1c7fab40bf3df1c28b1ac1dd4aa1a6f35f6"
+          }
+        ],
+        "primary": "cat-20260804.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000001823026000052",
+        "ticker": "CAT",
+        "cik": "0000018230",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "cat-20261029.htm",
+            "bytes": 35636,
+            "sha256": "847ab9bb04640916d4a97a1acfc67b213371818b117d3291bc4b308aa1386ce1"
+          }
+        ],
+        "primary": "cat-20261029.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000110465926072929",
+        "ticker": "CAT",
+        "cik": "0000018230",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "tm2617177d1_8k.htm",
+            "bytes": 57878,
+            "sha256": "e2c9d0e05c203282acbbb7ec53dcee66307533b9989121a1c3dea5a43fc5d26f"
+          }
+        ],
+        "primary": "tm2617177d1_8k.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000110465926104197",
+        "ticker": "CAT",
+        "cik": "0000018230",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "PRIMARY_CACHED",
+        "documents": [
+          {
+            "name": "tm2624321d1_8k.htm",
+            "bytes": 46464,
+            "sha256": "a8bdb076ffa88db74b5fbfc35355f0c98d8f9f68a45b23d38ae927a966dd493c"
+          }
+        ],
+        "primary": "tm2624321d1_8k.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000110465926116198",
+        "ticker": "CAT",
+        "cik": "0000018230",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "tm2627668d1_8k.htm",
+            "bytes": 32146,
+            "sha256": "6c9c74cff6a04c864b7f2637ac0b51bdd9cc1fae67c9b71d96a7c7e3f1f0e5f1"
+          }
+        ],
+        "primary": "tm2627668d1_8k.htm",
+        "exhibits": []
+      }
+    ],
+    "BAC": [
+      {
+        "accession": "000007085826000353",
+        "ticker": "BAC",
+        "cik": "0000070858",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_CACHED",
+        "documents": [
+          {
+            "name": "bac-06302026ex993.htm",
+            "bytes": 3270761,
+            "sha256": "d0065a0b1af78115030f3e1c89e3c91b2fb6765130d7da419d5793ba133ad1ef"
+          }
+        ],
+        "primary": null,
+        "exhibits": [
+          "bac-06302026ex993.htm"
+        ]
+      },
+      {
+        "accession": "000007085826000364",
+        "ticker": "BAC",
+        "cik": "0000070858",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "bac-20260723.htm",
+            "bytes": 66090,
+            "sha256": "8e77f89d5b63214818b0f9eb9e1425957e0f1a600f80b7598116754f00966d4a"
+          }
+        ],
+        "primary": "bac-20260723.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000007085826000481",
+        "ticker": "BAC",
+        "cik": "0000070858",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_CACHED",
+        "documents": [
+          {
+            "name": "bac-09302026ex993.htm",
+            "bytes": 3280083,
+            "sha256": "fe94a8b3297863474eb7cbd420e711ed753217471313794eaef7ca7bc59bc4f3"
+          }
+        ],
+        "primary": null,
+        "exhibits": [
+          "bac-09302026ex993.htm"
+        ]
+      },
+      {
+        "accession": "000007085826000494",
+        "ticker": "BAC",
+        "cik": "0000070858",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "bac-20261021.htm",
+            "bytes": 66175,
+            "sha256": "26a4304d54c526f75b486881a00439dc39b9d0a082b2de85a005abb03fb17287"
+          }
+        ],
+        "primary": "bac-20261021.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000119312526430566",
+        "ticker": "BAC",
+        "cik": "0000070858",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "d176604d8k.htm",
+            "bytes": 67073,
+            "sha256": "5305cd80937475a6520c6e5858a848585e010bba5304f5555e046e02ff90405c"
+          }
+        ],
+        "primary": "d176604d8k.htm",
+        "exhibits": []
+      }
+    ],
+    "NEE": [
+      {
+        "accession": "000075330821000014",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "10-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "nee-20201231.htm",
+            "bytes": 5833937,
+            "sha256": "b773e4c39d798f8c35bc23046b76e478ff0f19fb94c44bf6e6b455a9cc4a7deb"
+          }
+        ],
+        "primary": "nee-20201231.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000075330823000019",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "10-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "nee-20221231.htm",
+            "bytes": 5772613,
+            "sha256": "74bb819a979ccfc74efdaca1a5d949a5fa440beccd100b9d2d04ccfe0c8a11c5"
+          }
+        ],
+        "primary": "nee-20221231.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000075330826000071",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "PRIMARY_CACHED",
+        "documents": [
+          {
+            "name": "nee-20260903.htm",
+            "bytes": 41743,
+            "sha256": "b829c11ee70bdd7c918ce64b25ccf88b64cb6afd79ae2c756b3b93bbd25f1bf2"
+          }
+        ],
+        "primary": "nee-20260903.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000075330826000074",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "exhibit991toneedated9x22x2.htm",
+            "bytes": 67343,
+            "sha256": "b6892c52c8d7dc6caac96b28ef29dcccac07fa641120c0005616e7466d772800"
+          }
+        ],
+        "primary": "exhibit991toneedated9x22x2.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000075330826000077",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "nee-20261021.htm",
+            "bytes": 38477,
+            "sha256": "924d8560e9af3b7dee4acf1b7cc2b02e0d17a8268d9075455f7d603b3d487c8c"
+          }
+        ],
+        "primary": "nee-20261021.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000110465926100476",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "PRIMARY_CACHED",
+        "documents": [
+          {
+            "name": "tm2623831d1_8k.htm",
+            "bytes": 307967,
+            "sha256": "87ace660360488cda504fc3cd3643ff86c1d72ff8766bd54b0162e811a7f0a0d"
+          }
+        ],
+        "primary": "tm2623831d1_8k.htm",
+        "exhibits": []
+      },
+      {
+        "accession": "000110465926107537",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "form": "8-K",
+        "provenance_status": "LEGACY_PLACEHOLDER_UA",
+        "evidence_status": "PRELIMINARY_ONLY",
+        "status": "EXHIBIT_REQUIRED",
+        "documents": [
+          {
+            "name": "tm2625368d1_8k.htm",
+            "bytes": 36458,
+            "sha256": "ccf99f68e0921ed1c5e3a90ab167ad81b2c91716a8d341de96e1f946f0db0da1"
+          }
+        ],
+        "primary": "tm2625368d1_8k.htm",
+        "exhibits": []
+      }
+    ]
+  }
+}
