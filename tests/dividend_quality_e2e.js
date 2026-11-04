@@ -112,6 +112,15 @@ async function main() {
   }));
   assert.equal(mobileInfo.columns, 1, "mobile should use one column");
   assert.ok(mobileInfo.overflow <= 1, "mobile must not overflow horizontally");
+
+  const exclusionLayout = await mobile.page.locator(".dq-exclusion").evaluate(el => ({
+    scrollWidth: el.scrollWidth,
+    clientWidth: el.clientWidth,
+    overflowWrap: getComputedStyle(el).overflowWrap,
+  }));
+  assert.equal(exclusionLayout.overflowWrap, "anywhere", "long preferred exclusion status must wrap");
+  assert.ok(exclusionLayout.scrollWidth <= exclusionLayout.clientWidth + 1,
+    "preferred exclusion status must not be clipped on mobile");
   await mobile.page.screenshot({ path: path.join(OUT, "mobile.png"), fullPage: true });
   await mobile.page.locator("#dividendQualitySection").screenshot({ path: path.join(OUT, "mobile-section.png") });
   await mobile.ctx.close();
