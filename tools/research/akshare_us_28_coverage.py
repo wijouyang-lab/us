@@ -96,6 +96,15 @@ def assess_history(frame: pd.DataFrame | None) -> dict[str, Any]:
            | (numeric[COL_CLOSE] > numeric[COL_HIGH] + 1e-8))
     invalid_ohlc = int(bad.fillna(False).sum())
     zero_volume = int((numeric[COL_VOLUME].fillna(0) == 0).sum())
+    bad_rows = []
+    for pos, (_, item) in enumerate(frame.iterrows()):
+        if pos >= 50: break
+        vals = {k: _number(item.get(k)) for k in (COL_OPEN, COL_CLOSE, COL_HIGH, COL_LOW, COL_VOLUME)}
+        is_nonpositive = any(v is not None and v <= 0 for k, v in vals.items() if k != COL_VOLUME)
+        is_bad = bool(bad.iloc[pos])
+        if is_nonpositive or is_bad:
+            bad_rows.append({"date": str(item.get(COL_DATE)), **vals,
+                             "nonpositive": is_nonpositive, "invalid_ohlc": is_bad})
     quality_pass = (len(valid_dates) == len(frame) and duplicate_dates == 0
                     and missing_close == 0 and missing_ohlc == 0
                     and nonpositive_ohlc == 0 and invalid_ohlc == 0)
@@ -106,7 +115,8 @@ def assess_history(frame: pd.DataFrame | None) -> dict[str, Any]:
             "invalid_dates": int(dates.isna().sum()), "duplicates": duplicate_dates,
             "zero_volume": zero_volume, "invalid_ohlc": invalid_ohlc,
             "nonpositive_ohlc": nonpositive_ohlc, "quality_pass": bool(quality_pass),
-            "quality_status": "DATA_QUALITY_PASS" if quality_pass else "DATA_QUALITY_FAIL"}
+            "quality_status": "DATA_QUALITY_PASS" if quality_pass else "DATA_QUALITY_FAIL",
+            "anomaly_rows": bad_rows}
 
 
 def _compare_quote_to_close(quote: float | None, frame: pd.DataFrame | None):
@@ -122,7 +132,7 @@ def _shares_check(quote_price: float | None, raw_cap: float | None, shares_doc: 
     if not shares_doc or shares_doc.get("status") != "AVAILABLE":
         return {"value_input_ready": False, "status": "SHARES_DISCLOSURE_MISSING"}
     shares = _number(shares_doc.get("shares"))
-    period = shares_doc.get("period_end")
+    period = shares_doc.get("as_of") or shares_doc.get("period_end")
     if quote_price is None or quote_price <= 0 or shares is None or shares <= 0:
         return {"value_input_ready": False, "status": "PRICE_OR_SHARES_INVALID"}
     age_days = None
@@ -137,7 +147,7 @@ def _shares_check(quote_price: float | None, raw_cap: float | None, shares_doc: 
             unit_factor, ratio = factor, candidate
             break
     base = {"estimated_market_cap": estimated_cap, "akshare_market_cap_raw": raw_cap,
-            "shares": shares, "shares_period_end": period, "shares_age_days": age_days}
+            "shares": shares, "shares_as_of": period, "shares_age_days": age_days}
     if ratio is None:
         return {"value_input_ready": False, "status": "MARKET_CAP_UNIT_OR_VALUE_MISMATCH", **base}
     if age_days is not None and age_days > 183:
@@ -146,13 +156,17 @@ def _shares_check(quote_price: float | None, raw_cap: float | None, shares_doc: 
     return {"value_input_ready": True, "status": "VALUE_INPUT_READY",
             "market_cap_unit_factor": unit_factor, "market_cap_ratio": ratio,
             "currency": "USD", "currency_status": "US_BOARD_CONVENTION",
-            "shares_accession": shares_doc.get("accession"), "shares_form": shares_doc.get("form"), **base}
+            "shares_accession": shares_doc.get("accession"), "shares_form": shares_doc.get("form"),
+            "shares_source_url": shares_doc.get("source_url"),
+            "shares_basis": shares_doc.get("shares_basis"),
+            "report_period_end": shares_doc.get("period_end"), **base}
 
 
 def run_audit(output_path: Path, start_date: str = "20160101", end_date: str | None = None,
               adjust: str = "qfq", sleep_seconds: float = 0.8,
               shares_path: Path | None = Path("data/research/sec_shares_outstanding_28.json"),
-              raw_limit: int = 0) -> dict:
+              raw_limit: int = 0, tickers: tuple[str, ...] | None = None,
+              history_only: bool = False) -> dict:
     import akshare as ak
     end_date = end_date or date.today().strftime("%Y%m%d")
     shares_doc = {}
@@ -160,6 +174,44 @@ def run_audit(output_path: Path, start_date: str = "20160101", end_date: str | N
         shares_doc = json.loads(Path(shares_path).read_text(encoding="utf-8")).get("companies", {})
     try: version = importlib.metadata.version("akshare")
     except importlib.metadata.PackageNotFoundError: version = str(getattr(ak, "__version__", "unknown"))
+    selected = tuple(tickers or SAMPLE_TICKERS)
+    if history_only:
+        mapping = {"NVDA": "105.NVDA", "HD": "106.HD", "HON": "105.HON",
+                   "NEE": "106.NEE", "JPM": "106.JPM"}
+        report = {"metadata": {"generated_at_utc": datetime.now(timezone.utc).isoformat(),
+                    "akshare_version": version, "source": "AkShare stock_us_hist",
+                    "scope": "TARGETED_OHLC_PROBE", "tickers": list(selected),
+                    "history_period": "daily", "raw_comparison": True},
+                  "summary": {}, "companies": {}}
+        for t in selected:
+            row = {"ticker": t, "spot_status": "HISTORY_ONLY", "data_available": False,
+                   "data_quality_pass": False, "input_ready": False, "score_ready": False,
+                   "backtest_ready": False, "vendor_symbol": mapping.get(t)}
+            if not mapping.get(t):
+                row["history_status"] = "VENDOR_SYMBOL_UNKNOWN"; report["companies"][t] = row; continue
+            for key, adj in (("history_qfq", "qfq"), ("history_raw", "")):
+                try:
+                    frame = ak.stock_us_hist(symbol=mapping[t], period="daily",
+                                             start_date=start_date, end_date=end_date, adjust=adj)
+                    row[key] = assess_history(frame)
+                    row[key]["requested_adjust"] = adj or "unadjusted"
+                except Exception as exc:
+                    row[key] = {"quality_status": "HISTORY_FETCH_FAILED",
+                                "error": f"{type(exc).__name__}: {str(exc)[:400]}"}
+            row["history_status"] = row["history_qfq"].get("quality_status")
+            row["data_quality_pass"] = bool(row["history_qfq"].get("quality_pass"))
+            report["companies"][t] = row
+            if sleep_seconds > 0: time.sleep(sleep_seconds)
+        report["summary"] = {"sample_count": len(selected),
+                             "history_nonempty": sum(1 for r in report["companies"].values()
+                                                     if r.get("history_qfq", {}).get("rows", 0) > 0),
+                             "history_quality_pass": sum(1 for r in report["companies"].values()
+                                                         if r.get("history_qfq", {}).get("quality_pass")),
+                             "raw_quality_pass": sum(1 for r in report["companies"].values()
+                                                     if r.get("history_raw", {}).get("quality_pass"))}
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        output_path.write_text(json.dumps(report, indent=2, ensure_ascii=False), encoding="utf-8")
+        return report
     report = {"metadata": {"generated_at_utc": datetime.now(timezone.utc).isoformat(),
                 "akshare_version": version, "source": "AkShare stock_us_spot_em + stock_us_hist",
                 "sample_scope": "P5.1_FIXED_28_COMPANIES", "tickers": list(SAMPLE_TICKERS),
@@ -278,11 +330,15 @@ def main() -> int:
     parser.add_argument("--sleep-seconds", type=float, default=0.8)
     parser.add_argument("--shares", type=Path, default=Path("data/research/sec_shares_outstanding_28.json"))
     parser.add_argument("--raw-limit", type=int, default=0)
+    parser.add_argument("--tickers", default="")
+    parser.add_argument("--history-only", action="store_true")
     args = parser.parse_args()
     if args.sleep_seconds < 0: parser.error("--sleep-seconds must be >= 0")
     try:
+        selected = tuple(x.strip() for x in args.tickers.split(",") if x.strip())
         report = run_audit(args.output, args.start_date, args.end_date, args.adjust,
-                           args.sleep_seconds, args.shares, max(0, args.raw_limit))
+                           args.sleep_seconds, args.shares, max(0, args.raw_limit),
+                           selected or None, args.history_only)
     except ImportError as exc:
         print(f"AkShare dependency unavailable: {exc}"); return 2
     print(json.dumps(report["summary"], ensure_ascii=False, sort_keys=True))

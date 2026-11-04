@@ -31,3 +31,15 @@ def test_shares_check_missing_disclosure_is_blocked():
     r = _shares_check(10.0, 10_000.0, None)
     assert r["value_input_ready"] is False
     assert r["status"] == "SHARES_DISCLOSURE_MISSING"
+
+
+def test_share_registry_has_class_aware_overrides():
+    import json
+    d = json.load(open("data/research/sec_shares_outstanding_28.json", encoding="utf-8"))["companies"]
+    assert d["NKE"]["shares"] == 1485308829
+    assert "Class A + Class B" in d["NKE"]["shares_basis"]
+    assert d["NKE"]["accession"] == "0000320187-26-000193"
+    assert d["BRK.B"]["shares"] == 2140710161
+    assert "Class B equivalent" in d["BRK.B"]["shares_basis"]
+    assert d["BRK.B"]["accession"] == "0001193125-26-341032"
+    assert all(v.get("accession") for v in d.values() if v.get("status") == "AVAILABLE")
