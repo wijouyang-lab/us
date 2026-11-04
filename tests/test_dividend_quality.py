@@ -22,12 +22,12 @@ def base():
 
 
 def test_payer_metrics_and_score():
-    m=dividend_metrics(Snapshot("X","1",base()))
+    m=dividend_metrics(Snapshot("X","1",base()), split_basis_verified=True)
     assert m["classification"]["value"]=="DIVIDEND_PAYER"
     assert m["net_income_payout"]["status"]=="OK"
     assert m["fcf_dividend_coverage"]["status"]=="OK"
     assert m["dps_cagr_5y"] is not None
-    assert m["score_status"]=="OK"
+    assert m["score_status"]=="SCORE_READY"
 
 
 def test_non_payer_not_scored_as_bad_quality():
