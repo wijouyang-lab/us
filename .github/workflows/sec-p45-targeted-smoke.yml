@@ -1,0 +1,37 @@
+name: SEC P4.5 Targeted Smoke
+
+on:
+  push:
+    branches:
+      - research/dividend-evidence-execution-p45
+    paths:
+      - tools/investment_research/dividend/dividend_targeted_smoke_p45.py
+      - .github/workflows/sec-p45-targeted-smoke.yml
+
+permissions:
+  contents: read
+
+jobs:
+  targeted-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download only CAT and BAC primary + EX-99.1
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: python -m tools.investment_research.dividend.dividend_targeted_smoke_p45
+
+      - name: Upload smoke files and manifest
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sec-p45-targeted-smoke
+          path: data/sec/filings_p45_smoke/
+          retention-days: 30
+          if-no-files-found: warn
