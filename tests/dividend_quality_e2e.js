@@ -66,16 +66,36 @@ async function main() {
   assert.match(await bac.innerText(), /公告未披露/);
   assert.doesNotMatch(await section.innerText(), /\$0\.28/);
   assert.equal(await section.locator(".dq-event").count(), 2);
-  assert.equal(await section.locator(".dq-event", { hasText: "公告未披露" }).count(), 2);
+
+  const fieldText = async (card, label) =>
+    card.locator(".dq-grid div").filter({ hasText: label }).innerText();
+  assert.match(await fieldText(cat, "公告日"), /2026-06-10/);
+  assert.match(await fieldText(cat, "登记日"), /2026-07-20/);
+  assert.match(await fieldText(cat, "支付日"), /2026-08-19/);
+  assert.match(await fieldText(bac, "公告日"), /2026-07-24/);
+  assert.match(await fieldText(bac, "登记日"), /2026-09-04/);
+  assert.match(await fieldText(bac, "支付日"), /2026-09-25/);
+  assert.match(await fieldText(cat, "除息日"), /公告未披露/);
+  assert.match(await fieldText(bac, "除息日"), /公告未披露/);
+
   assert.match(await section.locator(".dq-excl-wrap").innerText(), /1\.75/);
   assert.match(await section.locator(".dq-excl-wrap").innerText(), /PREFERRED/);
 
-  const links = section.locator(".dq-source a");
-  assert.equal(await links.count(), 4);
-  for (let i = 0; i < 4; i++) {
-    const href = await links.nth(i).getAttribute("href");
-    assert.match(href, /^https:\/\/www\.sec\.gov\//);
+  const catLinks = cat.locator(".dq-source a");
+  const bacLinks = bac.locator(".dq-source a");
+  assert.equal(await catLinks.count(), 2, "CAT must expose EXHIBIT and PRIMARY");
+  assert.equal(await bacLinks.count(), 2, "BAC must expose EXHIBIT and PRIMARY");
+  for (const cardLinks of [catLinks, bacLinks]) {
+    const labels = [];
+    for (let i = 0; i < 2; i++) {
+      const href = await cardLinks.nth(i).getAttribute("href");
+      assert.match(href, /^https:\/\/www\.sec\.gov\//);
+      labels.push(await cardLinks.nth(i).innerText());
+    }
+    assert.ok(labels.some(x => /EXHIBIT/.test(x)), "each event must include Exhibit 99.1");
+    assert.ok(labels.some(x => /PRIMARY/.test(x)), "each event must include Form 8-K");
   }
+  assert.equal(await section.locator(".dq-source a").count(), 4);
   const columnsDesktop = await section.locator(".dq-events").evaluate(el =>
     getComputedStyle(el).gridTemplateColumns.split(" ").length);
   assert.ok(columnsDesktop >= 2, "desktop should use two columns");
@@ -121,6 +141,7 @@ async function main() {
   fs.writeFileSync(path.join(OUT, "console-errors.json"), JSON.stringify(errors, null, 2));
   const moduleErrors = errors.filter(e => /dividend_quality\.js/.test(e.stack || "") || /dividend_quality/.test(e.console || ""));
   assert.equal(moduleErrors.length, 0, "no Dividend Quality browser exception");
+  assert.equal(errors.length, 0, "no browser console errors or page errors");
   console.log(JSON.stringify({ ok: true, browser: await browser.version(), screenshots: OUT,
     consoleErrors: errors.length, moduleErrors: moduleErrors.length }, null, 2));
   await browser.close();
