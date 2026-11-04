@@ -10,7 +10,9 @@ pytestmark = pytest.mark.skipif((not CACHE.exists()) or D.get("status") == "LEGA
 def test_cache_inventory_actual():
     assert D["accession_count"] == 131
     assert sum(len(x["documents"]) for x in D["accessions"]) == 221
-    assert D["status_counts"] == {"EXHIBIT_REQUIRED": 81, "PRIMARY_CACHED": 47, "EXHIBIT_CACHED": 3}
+    assert D["status_counts"] == {"EXHIBIT_99_REFERENCED": 71, "OTHER_EXHIBIT_REFERENCED": 32,
+                                   "NO_EXHIBIT_REFERENCE": 24, "EXHIBIT_CACHED": 2,
+                                   "PRIMARY_CACHED": 1, "ATTACHMENT_REFERENCE_UNSPECIFIED": 1}
 
 
 def test_all_hashes_present_and_reproducible():
@@ -22,15 +24,15 @@ def test_all_hashes_present_and_reproducible():
 
 
 def test_mapping_success_and_unmapped():
-    assert sum(1 for x in D["accessions"] if x["ticker"]) == 122
-    assert any(not x["ticker"] for x in D["accessions"])
+    assert sum(1 for x in D["accessions"] if x["ticker"]) == 131
+    assert sum(1 for x in D["accessions"] if not x["ticker"]) == 0
 
 
 def test_cat_and_bac_require_exhibit():
     cat = next(x for x in D["accessions"] if x["accession"] == "000110465926072929")
     bac = next(x for x in D["accessions"] if x["accession"] == "000007085826000364")
-    assert cat["status"] == "EXHIBIT_REQUIRED" and not cat["exhibits"]
-    assert bac["status"] == "EXHIBIT_REQUIRED"
+    assert cat["status"] == "EXHIBIT_99_REFERENCED" and not cat["exhibits"]
+    assert bac["status"] == "EXHIBIT_99_REFERENCED"
 
 
 def test_nee_false_positive_cached():
@@ -54,7 +56,7 @@ def test_no_verification_or_split_confirmed_claim():
     text = Path("data/research/dividend_cache_audit_p47.json").read_text()
     assert '"verification_status": "VERIFIED"' not in text
     assert '"SPLIT_CONFIRMED"' not in text
-    assert len(D["split_mentions"]) == 21
+    assert len(D["split_mentions"]) == 26
 
 
 def test_cache_is_gitignored():

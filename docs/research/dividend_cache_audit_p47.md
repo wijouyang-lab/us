@@ -26,16 +26,19 @@ Actual audit:
 | primary documents | **128** |
 | exhibit-only accessions | **3** |
 | documents with SHA-256 | **221/221** |
-| ticker-mapped accessions | **122** |
-| unmapped accessions | **9** |
+| ticker-mapped accessions | **131** |
+| unmapped accessions | **0** |
 
 Status counts:
 
 | Status | Count |
 |---|---:|
-| PRIMARY_CACHED | 47 |
-| EXHIBIT_REQUIRED | 81 |
-| EXHIBIT_CACHED | 3 |
+| EXHIBIT_99_REFERENCED | 71 |
+| OTHER_EXHIBIT_REFERENCED | 32 |
+| NO_EXHIBIT_REFERENCE | 24 |
+| EXHIBIT_CACHED | 2 |
+| PRIMARY_CACHED | 1 |
+| ATTACHMENT_REFERENCE_UNSPECIFIED | 1 |
 | MISSING_LOCAL_FILE | 0 |
 | URL_ONLY_NOT_DOWNLOADED | 0 |
 | HASH_UNVERIFIED | 0 |
@@ -64,13 +67,13 @@ No formal event or split status was changed.
 
 ## 3. Document classification
 
-- `PRIMARY_CACHED`: 47 accessions with a usable primary document and no
-  identified exhibit requirement.
-- `EXHIBIT_REQUIRED`: 81 accessions whose primary text references an exhibit
-  (for example a press release) but no EX-99.1 is cached.
-- `EXHIBIT_CACHED`: 3 accessions with exhibit-only cache and no primary.
-- 9 accessions are not mapped to ticker/CIK via the available submissions map;
-  they are retained with `UNMAPPED_LOCAL_FILE`-class metadata, not guessed.
+- `EXHIBIT_99_REFERENCED`: 71 accessions explicitly reference EX-99/99.1.
+- `OTHER_EXHIBIT_REFERENCED`: 32 reference another numbered exhibit.
+- `NO_EXHIBIT_REFERENCE`: 24 primary-only accessions with no exhibit wording.
+- `EXHIBIT_CACHED`: 2 exhibit-only accessions.
+- `PRIMARY_CACHED`: 1 primary with no exhibit classification.
+- `ATTACHMENT_REFERENCE_UNSPECIFIED`: 1 generic attachment reference.
+- 131/131 accessions are now mapped; no guessed mapping remains.
 
 ## 4. Dividend candidate audit
 
@@ -148,7 +151,7 @@ reference, not a dividend.
 
 ## 6. Split mentions
 
-Local text search found split-related passages in **21** accessions:
+Local text search found split-related passages in **26** accessions:
 
 ```text
 ratio: some found
@@ -182,3 +185,47 @@ requests, httpx, Yahoo, AKShare, or Finnhub.
 6. Legacy cache is preliminary only and cannot enter the formal registry.
 
 No production/trade code changed.
+
+
+## 9. P4.7.1 identity and per-file fixes
+
+All nine previously unmapped accessions now resolve from local primary text and
+the 28-company registry:
+
+```text
+000010088517000056 -> UNP
+000032018715000113 -> NKE
+000119312514084762 -> CRM
+000119312515023732 -> AAPL
+000132616014000003 -> DUK
+000165204416000022 -> GOOGL
+000165204423000016 -> GOOGL
+000165204423000045 -> GOOGL
+000168285219000009 -> MRNA
+```
+
+Each record now has `submitter_cik_hint`, `issuer_cik`, `mapping_method`,
+`mapping_confidence`, source filename and SHA-256. Mapped: **131/131**, unmapped:
+**0**.
+
+Candidates and split mentions are parsed per HTML document; each has its own
+`source_filename`, `source_sha256`, `source_document_role` and
+`source_text_location`. Exhibit text cannot inherit the primary hash.
+
+Attachment classification changed from a broad 81 `EXHIBIT_REQUIRED` bucket to:
+
+```text
+EXHIBIT_99_REFERENCED 71
+OTHER_EXHIBIT_REFERENCED 32
+NO_EXHIBIT_REFERENCE 24
+EXHIBIT_CACHED 2
+PRIMARY_CACHED 1
+ATTACHMENT_REFERENCE_UNSPECIFIED 1
+```
+
+Generic "attached" no longer implies EX-99.1. Split mentions increased to 26
+because per-exhibit text is now scanned separately; no split is confirmed.
+
+Six fixture tests in `tests/test_cache_audit_fixture_p47.py` run in CI without
+the gitignored cache and cover issuer vs submitter CIK, per-file hashes,
+UNMAPPED fallback, EX-99 classification and no-VERIFIED protection.
