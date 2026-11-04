@@ -54,6 +54,20 @@ def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _manifest_has_file(manifest, ticker, accession, filename, sha256):
+    for item in manifest:
+        path = str(item.get("file") or "").replace("\\", "/")
+        parts = path.split("/")
+        if (
+            item.get("sha256") == sha256
+            and parts[-1] == filename
+            and ticker in parts
+            and accession in parts
+        ):
+            return True
+    return False
+
+
 def _audited_fields(event, audit_event):
     fields = audit_event.get("fields", {})
     values = {}
@@ -110,13 +124,8 @@ def _verified_sources(event, audit_hash_manifest, ticker, accession):
         url = source.get("url")
         sha = source.get("sha256")
         filename = str(source.get("filename") or "")
-        matching_manifest_file = any(
-            item.get("sha256") == sha
-            and str(item.get("file") or "").replace("\\", "/").split("/")[-1] == filename
-            and ticker in str(item.get("file") or "").replace("\\", "/").split("/")
-            and accession in str(item.get("file") or "").replace("\\", "/").split("/")
-            for item in audit_hash_manifest
-            if isinstance(item, dict)
+        matching_manifest_file = _manifest_has_file(
+            audit_hash_manifest, ticker, accession, filename, sha
         )
         if (
             not _safe_url(url)
@@ -143,7 +152,6 @@ def build(events_doc, audit_doc, excl_doc):
         item for item in audit_doc.get("hashes", [])
         if isinstance(item, dict) and item.get("sha256") and item.get("file")
     ]
-    audit_hashes = {item["sha256"] for item in audit_hash_manifest}
     audit_by_ticker = {
         item["ticker"]: item
         for item in audit_doc.get("events", [])
@@ -191,8 +199,23 @@ def build(events_doc, audit_doc, excl_doc):
     for item in excl_doc.get("exclusions", []):
         url = item.get("source_url")
         sha = item.get("evidence_sha256")
-        if not _safe_url(url) or sha not in audit_hashes:
-            raise ValueError(f"{item.get('ticker')}: preferred exclusion lacks audited SEC provenance")
+        ticker = str(item.get("ticker") or "")
+        accession = str(item.get("accession_number") or "")
+        raw_context = str(item.get("raw_context") or "")
+        declared = item.get("declared_per_share")
+        if not _safe_url(url):
+            raise ValueError(f"{ticker}: preferred exclusion has an unsafe SEC URL")
+        filename = urlsplit(url).path.rsplit("/", 1)[-1]
+        if not _manifest_has_file(audit_hash_manifest, ticker, accession, filename, sha):
+            raise ValueError(f"{ticker}: preferred exclusion hash does not match its SEC filing")
+        expected_text = "$" + format(declared, ".2f") + " per share" if isinstance(declared, (int, float)) and not isinstance(declared, bool) else ""
+        if (
+            item.get("security_type") != "PREFERRED"
+            or not expected_text
+            or expected_text.lower() not in raw_context.lower()
+            or "preferred stock" not in raw_context.lower()
+        ):
+            raise ValueError(f"{ticker}: preferred exclusion does not match its filing evidence")
         exclusions.append({
             "ticker": item.get("ticker"),
             "security_type": "PREFERRED",
