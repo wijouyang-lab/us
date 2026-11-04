@@ -151,13 +151,28 @@ def dividend_metrics(s: Snapshot, *, sector: str | None = None, split_basis_veri
         a, b = dps[i-1], dps[i]
         if int(b.end[:4]) - int(a.end[:4]) != 1 or a.value <= 0 or b.value <= a.value: break
         run += 1; window = [a.end, b.end]
-    out["consecutive_growth_years"] = run
-    out["consecutive_growth_window"] = window
-    out["total_positive_growth_years"] = sum(1 for a,b in zip(dps,dps[1:])
+    raw_consecutive = run; raw_total = sum(1 for a,b in zip(dps,dps[1:])
         if int(b.end[:4])-int(a.end[:4]) == 1 and a.value > 0 and b.value > a.value)
-    out["dividend_cuts"] = sum(1 for a,b in zip(dps,dps[1:])
+    raw_cuts = sum(1 for a,b in zip(dps,dps[1:])
         if int(b.end[:4])-int(a.end[:4]) == 1 and a.value > 0 and (b.value-a.value)/a.value < -0.05)
-    out["dps_volatility"] = pstdev([(b.value-a.value)/a.value for a,b in zip(dps,dps[1:]) if a.value>0 and int(b.end[:4])-int(a.end[:4])==1]) if len(dps)>2 else None
+    raw_vol = pstdev([(b.value-a.value)/a.value for a,b in zip(dps,dps[1:]) if a.value>0 and int(b.end[:4])-int(a.end[:4])==1]) if len(dps)>2 else None
+    out["raw_consecutive_growth_years"] = raw_consecutive
+    out["raw_total_positive_growth_years"] = raw_total
+    out["raw_dividend_cuts"] = raw_cuts
+    out["raw_dps_volatility"] = raw_vol
+    out["growth_status"] = "OK" if split_basis_verified else "DPS_SPLIT_BASIS_UNVERIFIED"
+    if split_basis_verified:
+        out["consecutive_growth_years"] = raw_consecutive
+        out["consecutive_growth_window"] = window
+        out["total_positive_growth_years"] = raw_total
+        out["dividend_cuts"] = raw_cuts
+        out["dps_volatility"] = raw_vol
+    else:
+        out["consecutive_growth_years"] = None
+        out["consecutive_growth_window"] = None
+        out["total_positive_growth_years"] = None
+        out["dividend_cuts"] = None
+        out["dps_volatility"] = None
     alloc = {"dividends": cash["value"] if cash else None, "buybacks": buy["value"] if buy else None,
              "debt_repayment": debt["value"] if debt else None,
              "cfo": cfo_series[-1].value if cfo_series else None, "fcf": fcf["value"] if fcf else None}
