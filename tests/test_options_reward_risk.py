@@ -225,7 +225,7 @@ calls = pd.DataFrame([{
     "strike": 225.0, "lastPrice": 6.0, "bid": 5.9, "ask": 6.1,
     "volume": 100, "openInterest": 500, "impliedVolatility": 0.30,
 }])
-expiry = dt.date(2026, 11, 20)
+expiry = dt.date.today() + dt.timedelta(days=30)
 
 orig_load = soe._load_chain
 soe._load_chain = lambda t: (None, expiry, calls, puts)
