@@ -56,7 +56,7 @@ def test_nee_price_target_is_false_positive():
 def test_missing_ex_date_not_inferred():
     e = parse(cat_text(), ticker="CAT", cik="18230", source_url="https://www.sec.gov/x",
               accession="A", evidence_sha256="a"*64)[0]
-    assert e["ex_date"] is None and e["ex_date_status"] == "EX_DATE_UNAVAILABLE"
+    assert e["ex_date"] is None and e["ex_date_status"] == "NOT_DISCLOSED_IN_FILING"
 
 
 def test_verified_requires_core_fields():
