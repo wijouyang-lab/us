@@ -1,0 +1,617 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-04T18:11:34.302336+00:00",
+    "scope": "CURRENT_LISTED_COMMON_EQUITY_AND_ADR",
+    "not_scope": "HISTORICAL_PIT_UNIVERSE; OTC/OTHER_UNVERIFIED_MARKETS",
+    "sources": {
+      "nasdaqlisted": {
+        "url": "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt",
+        "timestamp": {
+          "raw": "File Creation Time: 1104202612:11|||||||",
+          "parsed": "2026-11-04T12:11",
+          "timezone": "unknown (vendor footer)"
+        }
+      },
+      "otherlisted": {
+        "url": "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt",
+        "timestamp": {
+          "raw": "File Creation Time: 1104202612:11||||||",
+          "parsed": "2026-11-04T12:11",
+          "timezone": "unknown (vendor footer)"
+        }
+      },
+      "sec": {
+        "url": "https://www.sec.gov/files/company_tickers_exchange.json",
+        "mtime_utc": "2026-11-04T18:08:42.606429+00:00"
+      }
+    },
+    "exchange_scope": [
+      "NASDAQ",
+      "NYSE",
+      "NYSE American",
+      "NYSE Arca",
+      "Cboe BZX",
+      "IEX"
+    ]
+  },
+  "counts": {
+    "raw_records": 13275,
+    "raw_nasdaqlisted": 5609,
+    "raw_otherlisted": 7666,
+    "deduplicated_records": 13275,
+    "duplicate_exact_records": 0,
+    "current_records": 5615,
+    "common": 5187,
+    "adr": 315,
+    "unclassified": 113,
+    "excluded": 7660,
+    "sec_matched": 7144,
+    "sec_unmatched": 6131,
+    "sec_ambiguous": 0,
+    "sec_matched_current": 5593,
+    "sec_unmatched_current": 22,
+    "sec_ambiguous_current": 0,
+    "duplicate_ticker_groups": 0,
+    "same_ticker_distinct_names": 0,
+    "when_issued_included": 2,
+    "multi_class_named_records": 1089,
+    "sp500_total": 503,
+    "sp500_matched": 502,
+    "sp500_missing": 1,
+    "sample_28_total": 28,
+    "sample_28_missing": 0
+  },
+  "coverage": {
+    "sample_28_missing": [],
+    "sp500_missing": [
+      "KVUE"
+    ],
+    "sp500_missing_count": 1
+  },
+  "duplicate_tickers": {},
+  "same_ticker_distinct_name_count": 0,
+  "multi_class_examples": [
+    [
+      {
+        "ticker": "FOX",
+        "name": "Fox Corp"
+      },
+      {
+        "ticker": "FOXA",
+        "name": "Fox Corp"
+      },
+      {
+        "ticker": "GOOG",
+        "name": "Alphabet Inc."
+      },
+      {
+        "ticker": "GOOGL",
+        "name": "Alphabet Inc."
+      },
+      {
+        "ticker": "NWS",
+        "name": "NEWS CORP"
+      },
+      {
+        "ticker": "NWSA",
+        "name": "NEWS CORP"
+      }
+    ]
+  ],
+  "unclassified_records": [
+    {
+      "ticker": "GAIN",
+      "security_name": "Gladstone Investment Corporation - Business Development Company",
+      "exchange": "NASDAQ"
+    },
+    {
+      "ticker": "GOOD",
+      "security_name": "Gladstone Commercial Corporation - Real Estate Investment Trust",
+      "exchange": "NASDAQ"
+    },
+    {
+      "ticker": "AAP",
+      "security_name": "Advance Auto Parts Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "ACEL",
+      "security_name": "Accel Entertainment, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "AME",
+      "security_name": "AMETEK, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "AMN",
+      "security_name": "AMN Healthcare Services Inc",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "ARI",
+      "security_name": "Apollo Commercial Real Estate Finance, Inc",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "ARR",
+      "security_name": "ARMOUR Residential REIT, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "ASA",
+      "security_name": "ASA  Gold and Precious Metals Limited",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "AZZ",
+      "security_name": "AZZ Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BAC$E",
+      "security_name": "Bank of America Corporation Depositary Sh repstg 1/1000th Perp Pfd Ser E",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BAC$L",
+      "security_name": "Bank of America Corporation Non Cumulative Perpetual Conv Pfd Ser L",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BAK",
+      "security_name": "Braskem SA ADR",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BBWI",
+      "security_name": "Bath & Body Works, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BDJ",
+      "security_name": "Blackrock Enhanced Equity Dividend Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BGR",
+      "security_name": "BlackRock Energy and Resources Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BGT",
+      "security_name": "BlackRock Floating Rate Income Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BGY",
+      "security_name": "Blackrock Enhanced International Dividend Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BIPC",
+      "security_name": "Brookfield Infrastructure Corporation Brookfield Infrastructure Corporation",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BKT",
+      "security_name": "BlackRock Income Trust Inc. (The)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BLW",
+      "security_name": "Blackrock Limited Duration Income Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BME",
+      "security_name": "Blackrock Health Sciences Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BTT",
+      "security_name": "BlackRock Municipal 2030 Target Term Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BTZ",
+      "security_name": "BlackRock Credit Allocation Income Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BUD",
+      "security_name": "Anheuser-Busch Inbev SA Sponsored ADR (Belgium)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BUI",
+      "security_name": "BlackRock Utility, Infrastructure & Power Opportunities Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "BVN",
+      "security_name": "Buenaventura Mining Company Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "CCK",
+      "security_name": "Crown Holdings, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "CCZ",
+      "security_name": "Comcast Holdings ZONES",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "CHE",
+      "security_name": "Chemed Corp",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "CHT",
+      "security_name": "Chunghwa Telecom Co., Ltd.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "COHN",
+      "security_name": "Cohen & Company Inc.",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "CPF",
+      "security_name": "Central Pacific Financial Corp New",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "CX",
+      "security_name": "Cemex, S.A.B. de C.V. Sponsored ADR",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "DDT",
+      "security_name": "Dillard's Capital Trust I",
+      "exchange": "OTHER:F"
+    },
+    {
+      "ticker": "DHT",
+      "security_name": "DHT Holdings, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "EOT",
+      "security_name": "Eaton Vance Municipal Income Trust EATON VANCE NATIONAL MUNICIPAL OPPORTUNITIES TRUST",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "EPR$E",
+      "security_name": "EPR Properties Series E Cumulative Conv Pfd Shs Ser E",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "EQNR",
+      "security_name": "Equinor ASA",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "FITB$I",
+      "security_name": "Fifth Third Bancorp Depositary Share repstg 1/1000th Ownership Interest Perp Pfd Series I",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "FNV",
+      "security_name": "Franco-Nevada Corporation",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GAB$H",
+      "security_name": "Gabelli Equity Trust, Inc. (The) Pfd Ser H",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GAU",
+      "security_name": "Galiano Gold Inc.",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "GEO",
+      "security_name": "Geo Group Inc (The) REIT",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GGN",
+      "security_name": "GAMCO Global Gold, Natural Resources & Income Trust",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "GGN$B",
+      "security_name": "GAMCO Global Gold, Natural Reources & Income Trust 5.00% Series B Cumulative 25.00 Liquidation Preference",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "GJH",
+      "security_name": "Synthetic Fixed-Income Securities Inc 6.375% (STRATS) Cl A-1",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GJO",
+      "security_name": "Synthetic Fixed-Income Securities, Inc. on behalf of STRATS(SM) Trust for Wal-Mart Stores, Inc. Securities, Series 2004-5",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GJP",
+      "security_name": "Synthetic Fixed-Income Securities, Inc. on behalf of STRATS (SM) Trust for Dominion Resources, Inc. Securities, Series 2005-6, Floating Rate Structured Repackaged Asset-Backed Trust Securities (STRATS) Certificates",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GJR",
+      "security_name": "Synthetic Fixed-Income Securities, Inc. STRATS Trust for Procter&Gamble Securities, Series 2006-1",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GJS",
+      "security_name": "Goldman Sachs Group Securities STRATS Trust for Goldman Sachs Group Securities, Series 2006-2",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GJT",
+      "security_name": "Synthetic Fixed-Income Securities, Inc. Floating Rate Structured Repackaged Asset-Backed Trust Securities Certificates, Series 2006-3",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GNT",
+      "security_name": "GAMCO Natural Resources, Gold & Income Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GPK",
+      "security_name": "Graphic Packaging Holding Company",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "GS$D",
+      "security_name": "Goldman Sachs Group, Inc. (The) Dep Shs repstg 1/1000 Pfd Ser D Fltg",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "HMY",
+      "security_name": "Harmony Gold Mining Company Limited",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "HTH",
+      "security_name": "Hilltop Holdings Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "INUV",
+      "security_name": "Inuvo, Inc.",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "JBK",
+      "security_name": "Lehman ABS 3.50 3.50% Adjustable Corp Backed Tr Certs GS Cap I",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KB",
+      "security_name": "KB Financial Group Inc",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KMPR",
+      "security_name": "Kemper Corporation",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KMX",
+      "security_name": "CarMax Inc",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KNX",
+      "security_name": "Knight-Swift Transportation Holdings Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KODK",
+      "security_name": "Eastman Kodak Company Common New",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KTF",
+      "security_name": "DWS Municipal Income Trust",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "KTN",
+      "security_name": "Structured Products Corp 8.205% CorTS 8.205% Corporate Backed Trust Securities (CorTS)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "LCII",
+      "security_name": "LCI Industries",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "LND",
+      "security_name": "Brasilagro Brazilian Agric Real Estate Co Sponsored ADR (Brazil)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MFA",
+      "security_name": "MFA Financial, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MFG",
+      "security_name": "Mizuho Financial Group, Inc. Sponosred ADR (Japan)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MO",
+      "security_name": "Altria Group, Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MS$A",
+      "security_name": "Morgan Stanley Dep Shs repstg 1/1000 Pfd Ser A",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MS$F",
+      "security_name": "Morgan Stanley Dep Shs Rpstg 1/1000th Int Prd Ser F Fxd to Flag",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MT",
+      "security_name": "Arcelor Mittal NY Registry Shares NEW",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "MTRN",
+      "security_name": "Materion Corporation",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "NBR",
+      "security_name": "Nabors Industries Ltd.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "NEM",
+      "security_name": "Newmont Corporation",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "NG",
+      "security_name": "Novagold Resources Inc.",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "NLY$F",
+      "security_name": "Annaly Capital Management Inc 6.95% Series F",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "NRP",
+      "security_name": "Natural Resource Partners LP Limited Partnership",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "NXB",
+      "security_name": "NextBoat Inc. Common Stcok",
+      "exchange": "NYSE American"
+    },
+    {
+      "ticker": "ORN",
+      "security_name": "Orion Group Holdings, Inc. Common",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "OVV",
+      "security_name": "Ovintiv Inc. (DE)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "PAC",
+      "security_name": "Grupo Aeroportuario Del Pacifico, S.A. B. de C.V. Grupo Aeroportuario Del Pacifico, S.A. de C.V. (each representing 10 Series B shares)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "PAM",
+      "security_name": "Pampa Energia S.A.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "PHG",
+      "security_name": "Koninklijke Philips N.V. NY Registry Shares",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "PHI",
+      "security_name": "PLDT Inc. Sponsored ADR",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "PYT",
+      "security_name": "PPlus Tr GSC-2 Tr Ctf Fltg Rate",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "REX",
+      "security_name": "REX American Resources Corporation",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "RHP",
+      "security_name": "Ryman Hospitality Properties, Inc. (REIT)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SAN",
+      "security_name": "Banco Santander, S.A. Sponsored ADR (Spain)",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SAR",
+      "security_name": "Saratoga Investment Corp New",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SCE$L",
+      "security_name": "SCE TRUST VI",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SCE$M",
+      "security_name": "SCE Trust VII 7.50% Trust Preference Securities",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SCE$N",
+      "security_name": "SCE Trust VIII 6.95% Trust Preference Securities",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SFL",
+      "security_name": "SFL Corporation Ltd",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SOR",
+      "security_name": "Source Capital, Inc. Cmn Shs of BI",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "SRL",
+      "security_name": "Scully Royalty Ltd.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "STWD",
+      "security_name": "STARWOOD PROPERTY TRUST, INC. Starwood Property Trust Inc.",
+      "exchange": "NYSE"
+    },
+    {
+      "ticker": "T",
+      "security_name": "AT&T Inc.",
+      "exchange": "NYSE"
+    }
+  ],
+  "exclusion_reasons": {
+    "BOND": 16,
+    "DEBENTURE": 23,
+    "DEPOSITARY_SHARES": 16,
+    "ETF_OR_NEXTSHARES": 5775,
+    "ETN": 14,
+    "FUND": 266,
+    "NOTE": 149,
+    "PREFERRED": 445,
+    "RIGHT": 145,
+    "TEST_ISSUE": 37,
+    "UNIT": 317,
+    "WARRANT": 457
+  }
+}
