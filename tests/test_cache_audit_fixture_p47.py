@@ -129,3 +129,25 @@ def test_split_location_uses_own_hash(tmp_path):
     a=audit(cache_dir=tmp_path)
     assert a["split_mentions"] and a["split_mentions"][0]["source_filename"]=="p.htm"
     assert len(a["split_mentions"][0]["source_sha256"])==64
+
+
+def test_ambiguous_name_match_never_selects_issuer(tmp_path):
+    snap=tmp_path/"snap.json"
+    snap.write_text(json.dumps({
+        "FOO":{"cik":"0000000001","company_name":"Foo Corp"},
+        "BAR":{"cik":"0000000002","company_name":"Bar Corp"}}))
+    cache=tmp_path/"cache"
+    amb=cache/"000119312526000200"; amb.mkdir(parents=True)
+    (amb/"index.json").write_text(json.dumps({"directory":{"item":[{"name":"p.htm","type":"8-K"}]}}))
+    (amb/"p.htm").write_text("Foo Corp and Bar Corp announced a transaction.")
+    unique=cache/"000119312526000201"; unique.mkdir(parents=True)
+    (unique/"index.json").write_text(json.dumps({"directory":{"item":[{"name":"p.htm","type":"8-K"}]}}))
+    (unique/"p.htm").write_text("Foo Corp declared a dividend.")
+    a=audit(cache_dir=cache, snapshot_path=snap)
+    rows={r["accession"]:r for r in a["accessions"]}
+    amb_row=rows["000119312526000200"]
+    assert amb_row["mapping_method"]=="AMBIGUOUS_NAME_MATCH"
+    assert amb_row["ticker"] is None and amb_row["issuer_cik"] is None
+    assert amb_row["candidate_tickers"]==["BAR","FOO"]
+    assert amb_row["mapping_source_filename"]=="p.htm"
+    assert rows["000119312526000201"]["ticker"]=="FOO"

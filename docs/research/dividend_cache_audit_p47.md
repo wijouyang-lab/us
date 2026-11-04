@@ -232,3 +232,54 @@ strategy change.
 4. 131 local accessions remain a subset of 581.
 5. Split effective dates remain unconfirmed.
 6. Formal re-fetch requires a real SEC user agent in a future phase.
+
+
+## 11. Final ambiguity rule (P4.7 freeze)
+
+`infer_meta()` now returns `AMBIGUOUS_NAME_MATCH` when several company names
+tie at the longest match but map to different tickers:
+
+```text
+ticker = null
+issuer_cik = null
+candidate_tickers = [...]
+mapping_source_filename = ...
+mapping_source_sha256 = ...
+```
+
+It never picks one company, never uses the submitter CIK as issuer CIK, and does
+not raise. Unique matches are unaffected.
+
+The new fixture puts two registered company names in one primary and a unique
+name in a second accession; only the unique one acquires an issuer.
+
+All 224 document roles are **low-confidence filename inference** because the
+cached SEC `index.json` uses `text.gif` for every item. Index types take
+precedence when actually present (verified by fixture), but the real cache has
+no usable type.
+
+Final frozen counts:
+
+```text
+131 accessions
+224 documents
+224/224 SHA-256
+131/131 mapped
+0 unmapped
+
+129 PRIMARY
+87 ANCILLARY
+5 OTHER_EXHIBIT
+3 EXHIBIT
+
+71 EXHIBIT_99_REFERENCED
+25 OTHER_EXHIBIT_REFERENCED
+27 NO_EXHIBIT_REFERENCE
+6 EXHIBIT_CACHED
+1 PRIMARY_CACHED
+1 ATTACHMENT_REFERENCE_UNSPECIFIED
+```
+
+Twelve candidates and 22 split mentions are unchanged. Formal states remain
+zero VERIFIED events, zero SPLIT_CONFIRMED, 0/28 DPS share basis, and
+`FULL_SCAN = CONFIGURATION_BLOCKED`.

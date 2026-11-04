@@ -125,12 +125,16 @@ def infer_meta(accession, docs, snapshot):
     if matches:
         longest=max(len(n) for n,_ in matches)
         top={t for n,t in matches if len(n)==longest}
+        d=next((x for x in docs if any(n in x["text"].lower() for n,_ in matches)), docs[0] if docs else {})
         if len(top)==1:
             t=top.pop(); cik=snapshot[t].get("cik")
-        d=next((x for x in docs if (snapshot[t].get("company_name") or "").lower() in x["text"].lower()), docs[0])
-        return {"ticker":t,"cik":cik,"form":None,"submitter_cik_hint":prefix,"issuer_cik":cik,
-                "mapping_method":"local_primary_name","mapping_confidence":"high",
-                "mapping_source_filename":d["name"],"mapping_source_sha256":d["sha256"]}
+            return {"ticker":t,"cik":cik,"form":None,"submitter_cik_hint":prefix,"issuer_cik":cik,
+                    "mapping_method":"local_primary_name","mapping_confidence":"high",
+                    "mapping_source_filename":d.get("name"),"mapping_source_sha256":d.get("sha256")}
+        return {"ticker":None,"cik":None,"form":None,"submitter_cik_hint":prefix,"issuer_cik":None,
+                "mapping_method":"AMBIGUOUS_NAME_MATCH","mapping_confidence":"none",
+                "candidate_tickers":sorted(top),
+                "mapping_source_filename":d.get("name"),"mapping_source_sha256":d.get("sha256")}
     return {"ticker":None,"cik":None,"form":None,"submitter_cik_hint":prefix,"issuer_cik":None,
             "mapping_method":"UNMAPPED","mapping_confidence":"none",
             "mapping_source_filename":docs[0]["name"] if docs else None,
