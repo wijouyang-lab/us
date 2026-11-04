@@ -54,6 +54,19 @@ def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def _url_matches_filing(url, cik, accession):
+    try:
+        cik_num = int(cik)
+    except (TypeError, ValueError):
+        return False
+    parsed = urlsplit(str(url or ""))
+    return (
+        f"/{cik_num}/" in parsed.path
+        and accession.replace("-", "") in parsed.path
+        and parsed.path.startswith("/Archives/edgar/data/")
+    )
+
+
 def _manifest_has_file(manifest, ticker, accession, filename, sha256):
     for item in manifest:
         path = str(item.get("file") or "").replace("\\", "/")
@@ -129,6 +142,7 @@ def _verified_sources(event, audit_hash_manifest, ticker, accession):
         )
         if (
             not _safe_url(url)
+            or not _url_matches_filing(url, event.get("cik"), accession)
             or not matching_manifest_file
             or source.get("source_type") != expected_type
         ):
@@ -163,8 +177,10 @@ def build(events_doc, audit_doc, excl_doc):
         if event.get("verification_status") != "VERIFIED":
             continue
         audit_event = audit_by_ticker.get(ticker)
-        if not audit_event or audit_event.get("event_status") != "VERIFIED":
-            continue
+        if not audit_event:
+            raise ValueError(f"{ticker}: verified event has no field audit")
+        if audit_event.get("event_status") != "VERIFIED":
+            raise ValueError(f"{ticker}: verified event has non-verified field audit")
         if event.get("accession_number") != audit_event.get("accession"):
             raise ValueError(f"{ticker}: accession number does not match field audit")
 
@@ -205,6 +221,10 @@ def build(events_doc, audit_doc, excl_doc):
         declared = item.get("declared_per_share")
         if not _safe_url(url):
             raise ValueError(f"{ticker}: preferred exclusion has an unsafe SEC URL")
+        if not _url_matches_filing(url, item.get("cik"), accession):
+            raise ValueError(f"{ticker}: preferred exclusion URL does not match its filing")
+        if item.get("source_type") != "SEC Exhibit 99.1":
+            raise ValueError(f"{ticker}: preferred exclusion source type is not SEC Exhibit 99.1")
         filename = urlsplit(url).path.rsplit("/", 1)[-1]
         if not _manifest_has_file(audit_hash_manifest, ticker, accession, filename, sha):
             raise ValueError(f"{ticker}: preferred exclusion hash does not match its SEC filing")

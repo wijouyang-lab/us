@@ -113,3 +113,19 @@ def test_exporter_rejects_preferred_exclusion_without_matching_amount_evidence()
     exclusions["exclusions"][0]["raw_context"] = exclusions["exclusions"][0]["raw_context"].replace("$1.75", "$1.25")
     with pytest.raises(ValueError, match="preferred exclusion does not match its filing evidence"):
         build(_load(SRC_EVENTS), _load(SRC_AUDIT), exclusions)
+
+
+def test_exporter_rejects_source_url_for_other_filing():
+    events = _load(SRC_EVENTS)
+    cat = next(e for e in events["events"] if e["ticker"] == "CAT")
+    cat["sources"][0]["url"] = "https://www.sec.gov/Archives/edgar/data/1/000000000000000000/wrong.htm"
+    with pytest.raises(ValueError, match="both audited EXHIBIT and PRIMARY sources are required"):
+        build(events, _load(SRC_AUDIT), _load(SRC_EXCL))
+
+
+def test_exporter_rejects_verified_event_without_audit():
+    events = _load(SRC_EVENTS)
+    audit = _load(SRC_AUDIT)
+    audit["events"] = [e for e in audit["events"] if e["ticker"] != "CAT"]
+    with pytest.raises(ValueError, match="verified event has no field audit"):
+        build(events, audit, _load(SRC_EXCL))
