@@ -5,6 +5,10 @@ Branch: `research/dividend-legacy-cache-audit-p47`
 Stacked target: `research/dividend-evidence-execution-p45`
 Status: **PRELIMINARY_ONLY / LEGACY_PLACEHOLDER_UA**
 
+If the local cache directory is absent (for example in CI), the audit reports
+LEGACY_CACHE_UNAVAILABLE and the cache-dependent tests skip; it does not
+re-download or fabricate a 110-file result.
+
 ## 1. Inventory
 
 Local cache:

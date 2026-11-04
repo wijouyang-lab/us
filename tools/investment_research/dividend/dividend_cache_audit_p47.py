@@ -47,6 +47,11 @@ def read_docs(d: Path):
 
 
 def audit():
+    if not CACHE.exists():
+        return {"generated_at": None, "status": "LEGACY_CACHE_UNAVAILABLE",
+                "provenance_status": "LEGACY_PLACEHOLDER_UA", "evidence_status": "PRELIMINARY_ONLY",
+                "accession_count": 0, "status_counts": {}, "accessions": [],
+                "candidates": [], "split_mentions": [], "special": {}}
     amap = accession_map(); rows = []; counts = Counter(); candidates = []; splits = []
     for d in sorted(p for p in CACHE.iterdir() if p.is_dir()):
         acc = d.name
@@ -92,7 +97,7 @@ def audit():
                            "sha256": primary["sha256"] if primary else None,
                            "status": "PARTIALLY_VERIFIED"})
         rows.append(row)
-    return {"generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
+    return {"status": "LEGACY_CACHE_PRESENT", "generated_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
             "provenance_status": "LEGACY_PLACEHOLDER_UA", "evidence_status": "PRELIMINARY_ONLY",
             "cache_path": str(CACHE), "accession_count": len(rows),
             "status_counts": dict(counts), "accessions": rows,
