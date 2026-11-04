@@ -19,7 +19,7 @@
 .dq-excl-wrap { margin-top: 13px; border-top: 1px solid var(--line, #2a3140); padding-top: 10px; }
 .dq-excl-wrap h3 { font-size: 13px; margin: 0 0 6px; color: var(--text-2, #aab4c5); }
 .dq-excl-wrap ul { margin: 0; padding-left: 17px; color: var(--text-2, #aab4c5); font-size: 12px; }
-.dq-exclusion { margin: 4px 0; }
+.dq-exclusion { margin: 4px 0; overflow-wrap: anywhere; word-break: break-word; }
 .dq-error { border: 1px solid #8b3d3d; background: rgba(180,60,60,.12); color: #ffb4b4; border-radius: 9px; padding: 10px 12px; font-size: 13px; }
 @media (max-width: 760px) {
   .dq-events { grid-template-columns: 1fr; }
