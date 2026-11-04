@@ -165,8 +165,8 @@ data/research/dividend_quality_p4.json
 
 ## 12. Tests
 
-`	extntests/test_dividend_quality.py  5 passed
+`	extntests/test_dividend_quality.py  6 passed
 tests/test_dividend_events.py   4 passed
 `
 
-Total 9 passed for P4. Full CI result is reported with the PR.
+Total 10 passed for P4. Full CI result is reported with the PR.

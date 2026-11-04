@@ -60,3 +60,12 @@ def test_actual_28_company_report_is_honest():
     assert d["tickers"]["XOM"]["classification"]=="DIVIDEND_DATA_BLOCKED"
     assert d["tickers"]["ADBE"]["score"] is None
     assert "dividend_yield" not in d["tickers"]["AAPL"]["metrics"]
+
+
+def test_pit_asof_before_filing_hides_dividend_series():
+    from tools.investment_research.sec.normalize import Fact
+    fs=base()
+    # every base fact is filed 2025-05-05; a 2025-05-01 as-of must not use it
+    m=dividend_metrics(Snapshot("X","1",fs,as_of="2025-05-01"))
+    assert m["classification"]["status"] in ("NON_DIVIDEND_PAYER","DIVIDEND_DATA_BLOCKED")
+    assert m["dividend_quality_score"] is None
