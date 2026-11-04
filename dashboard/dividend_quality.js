@@ -58,7 +58,8 @@
       '<div><span>公告日</span><b>' + escapeHtml(displayOrMissing(event.announcement_date, "公告未披露")) + "</b></div>" +
       '<div><span>登记日</span><b>' + escapeHtml(displayOrMissing(event.record_date, "公告未披露")) + "</b></div>" +
       '<div><span>支付日</span><b>' + escapeHtml(displayOrMissing(event.payment_date, "公告未披露")) + "</b></div>" +
-      '<div><span>除息日</span><b>' + ex + '</b><small>' + escapeHtml(statusLabel(event.ex_date_status)) + "</small></div>" +
+      '<div><span>除息日</span><b>' + ex + '</b><small>' +
+      escapeHtml(event.ex_date ? statusLabel(event.ex_date_status) : "未推算") + "</small></div>" +
       "</div><ul class=\"dq-sources\">" + sources + "</ul></article>";
   }
 

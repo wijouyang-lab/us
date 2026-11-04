@@ -19,3 +19,5 @@ dashboard/data/news_translation_cache.json
 # （仅记录账本落账时刻，不含任何账户密钥，与 portfolio_50000_transactions.csv 同级数据）
 watchlist.dynamic.txt
 watchlist.dynamic.meta.txt
+node_modules/
+tests/artifacts/
