@@ -24,3 +24,21 @@ def split_status(ticker: str, evidence: list[SplitEvidence]) -> dict:
                 "cagr_allowed": False, "evidence_count": 0}
     return {"ticker": ticker.upper(), "status": "VERIFIED", "cagr_allowed": True,
             "events": [asdict(e) for e in rows]}
+
+
+def adjust_dps(value: float, observation_date: str, splits: list[dict],
+               source_share_basis: str) -> dict:
+    """Only adjust AS_DECLARED historical DPS for future verified splits."""
+    from datetime import date
+    if source_share_basis == "SPLIT_ADJUSTED":
+        return {"status": "ALREADY_ADJUSTED", "value": value, "applied_ratios": []}
+    if source_share_basis != "AS_DECLARED_AT_TIME":
+        return {"status": "DPS_SPLIT_BASIS_UNVERIFIED", "value": None, "applied_ratios": []}
+    ratios = []
+    for e in splits:
+        if e.get("verification_status") != "VERIFIED": continue
+        eff = e.get("effective_date")
+        if not eff or date.fromisoformat(eff) <= date.fromisoformat(observation_date): continue
+        ratios.append(float(e["split_ratio"]))
+    return {"status": "ADJUSTED", "value": value / (__import__("math").prod(ratios) if ratios else 1.0),
+            "applied_ratios": ratios}

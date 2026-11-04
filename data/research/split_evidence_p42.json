@@ -1,0 +1,628 @@
+[
+  {
+    "ticker": "AAPL",
+    "cik": "0000320193",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-cb74069b8c79809b7146",
+        "ticker": "AAPL",
+        "cik": "0000320193",
+        "split_ratio": 7,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2014-06-06",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001193125-15-023732",
+        "form": "8-K",
+        "filed": "2015-01-28",
+        "evidence_sha256": "9095f85ae665628922150898f98e2bbabd6449d5ef0753371f3f0f9d977495fe",
+        "retrieved_at": "2026-11-04T05:36:37.758776+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-b86a1c047f886430f146",
+        "ticker": "AAPL",
+        "cik": "0000320193",
+        "split_ratio": 4,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2020-08-28",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320193.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000320193-21-000065",
+        "form": "10-Q",
+        "filed": "2021-07-28",
+        "evidence_sha256": "efb1220285ec87f8bfb08dcc5722441f90501483fb9c595d5c28cc413a2ae67e",
+        "retrieved_at": "2026-11-04T05:36:37.758776+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "MSFT",
+    "cik": "0000789019",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "GOOGL",
+    "cik": "0001652044",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-d23c824e4f2631c425fd",
+        "ticker": "GOOGL",
+        "cik": "0001652044",
+        "split_ratio": 2,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2014-04-02",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001652044-16-000022",
+        "form": "8-K",
+        "filed": "2016-05-03",
+        "evidence_sha256": "0b90f8975011a627983cd1f7c652c66e78717abffd1486e3eac994ae1a4d2c9b",
+        "retrieved_at": "2026-11-04T05:36:37.821071+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-1fa3c49f1e88521157df",
+        "ticker": "GOOGL",
+        "cik": "0001652044",
+        "split_ratio": 20,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2022-02-01",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001652044-23-000016",
+        "form": "10-K",
+        "filed": "2023-02-03",
+        "evidence_sha256": "12710df57388e90b630f5fef1cea462a8a75aec9a055b05386f47cfa39a158dc",
+        "retrieved_at": "2026-11-04T05:36:37.822576+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-d1c02e1ee93043b9c1da",
+        "ticker": "GOOGL",
+        "cik": "0001652044",
+        "split_ratio": 20,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2022-07-15",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001652044.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001652044-23-000045",
+        "form": "10-Q",
+        "filed": "2023-04-26",
+        "evidence_sha256": "944d6a61f13682bc04a3cab3ab6d12777d5e7a8d232a51a92a297c73a7eb1b69",
+        "retrieved_at": "2026-11-04T05:36:37.822576+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "NVDA",
+    "cik": "0001045810",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-3710541023a8bd0b5c0d",
+        "ticker": "NVDA",
+        "cik": "0001045810",
+        "split_ratio": 4,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2021-06-03",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001045810-21-000163",
+        "form": "10-Q",
+        "filed": "2021-11-22",
+        "evidence_sha256": "dad0e11576e5d2306d8ecb41dcff3172974600b4dfe02a4847c30358af4f9fea",
+        "retrieved_at": "2026-11-04T05:36:37.853882+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-5e1f23c5ae6e9c368c08",
+        "ticker": "NVDA",
+        "cik": "0001045810",
+        "split_ratio": 4,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2021-07-19",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001045810-22-000079",
+        "form": "10-Q",
+        "filed": "2022-05-27",
+        "evidence_sha256": "b73dd23de1506f5506bd517a20297164ab130a7d4e5fd28e22c544fbdaf3636e",
+        "retrieved_at": "2026-11-04T05:36:37.853882+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-1b4adbbfb11f89ec4c68",
+        "ticker": "NVDA",
+        "cik": "0001045810",
+        "split_ratio": 10,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2024-05-31",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001045810-24-000316",
+        "form": "10-Q",
+        "filed": "2024-11-20",
+        "evidence_sha256": "9c6369ea3a3684f3f27de86474d17be21e1cfc9cea2536b7924a9e1ed07b81f4",
+        "retrieved_at": "2026-11-04T05:36:37.853882+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-b11b002f918316a0dab1",
+        "ticker": "NVDA",
+        "cik": "0001045810",
+        "split_ratio": 10,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2024-06-30",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001045810.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001045810-25-000116",
+        "form": "10-Q",
+        "filed": "2025-05-28",
+        "evidence_sha256": "47f2b72fecbb291ad11e2b5c79e37556f449c3c0266cc7c38bf55c16a0ccbfa8",
+        "retrieved_at": "2026-11-04T05:36:37.853882+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "CRM",
+    "cik": "0001108524",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-d370317ad40228fed834",
+        "ticker": "CRM",
+        "cik": "0001108524",
+        "split_ratio": 4,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2013-04-30",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001108524.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001193125-14-084762",
+        "form": "10-K",
+        "filed": "2014-03-05",
+        "evidence_sha256": "177cc04d0544ebbdae40954a8d59841610c8ff7206975c753eaae05fa23c4562",
+        "retrieved_at": "2026-11-04T05:36:37.888037+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "ADBE",
+    "cik": "0000796343",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "AMZN",
+    "cik": "0001018724",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-608bc31544411e16d512",
+        "ticker": "AMZN",
+        "cik": "0001018724",
+        "split_ratio": 20,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2022-05-27",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001018724.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001018724-25-000004",
+        "form": "10-K",
+        "filed": "2025-02-07",
+        "evidence_sha256": "06244f37c797804d1e3cdb50dfb963bb26594d65e6312ffccfff0c891486d53b",
+        "retrieved_at": "2026-11-04T05:36:37.949192+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "HD",
+    "cik": "0000354950",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "MCD",
+    "cik": "0000063908",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "NKE",
+    "cik": "0000320187",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-bee8e640f6f08b5d42a4",
+        "ticker": "NKE",
+        "cik": "0000320187",
+        "split_ratio": 2,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2012-11-15",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320187.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000320187-15-000113",
+        "form": "10-K",
+        "filed": "2015-07-23",
+        "evidence_sha256": "e6dbda83db77d0732db645868fd7642082816f6c13bb5ef30412d64890ba5e11",
+        "retrieved_at": "2026-11-04T05:36:38.022313+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-2c6c92598ffdf0b4b2c4",
+        "ticker": "NKE",
+        "cik": "0000320187",
+        "split_ratio": 2,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2015-11-19",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000320187.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000320187-18-000142",
+        "form": "10-K",
+        "filed": "2018-07-25",
+        "evidence_sha256": "bda94b38f5ff0b65bc4fc10e8022b3dc2b9b12778f40231a00430404edae7264",
+        "retrieved_at": "2026-11-04T05:36:38.022313+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "CAT",
+    "cik": "0000018230",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "HON",
+    "cik": "0000773840",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-faff2c08b0350b34ba7d",
+        "ticker": "HON",
+        "cik": "0000773840",
+        "split_ratio": 0.5,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2026-06-29",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000773840.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000773840-26-000124",
+        "form": "10-Q",
+        "filed": "2026-07-23",
+        "evidence_sha256": "e17dc28e30f2de20d47e2e07c3378d03fefa322709b652170a2182c5aeb65a19",
+        "retrieved_at": "2026-11-04T05:36:38.098332+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-6954b4579eb7aab3ea28",
+        "ticker": "HON",
+        "cik": "0000773840",
+        "split_ratio": 0.5,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2026-06-30",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000773840.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000773840-26-000143",
+        "form": "10-Q",
+        "filed": "2026-10-22",
+        "evidence_sha256": "0a0875fcd5a92851f70a4b3e575dfcade189582642f40c771e15947909763f3b",
+        "retrieved_at": "2026-11-04T05:36:38.098332+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "UNP",
+    "cik": "0000100885",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-b50430a1f7eb854b6ea2",
+        "ticker": "UNP",
+        "cik": "0000100885",
+        "split_ratio": 2,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2014-05-27",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000100885.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000100885-17-000056",
+        "form": "10-K",
+        "filed": "2017-02-03",
+        "evidence_sha256": "255915d8e9b5201a502481cbc2baf8bb557e8eaab52353a4e24f95ff165ca666",
+        "retrieved_at": "2026-11-04T05:36:38.122847+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "XOM",
+    "cik": "0002115436",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "CVX",
+    "cik": "0000093410",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "NEE",
+    "cik": "0000753308",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-432b7a6ae53415140caf",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "split_ratio": 4,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2020-09-14",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000753308.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000753308-23-000019",
+        "form": "10-K",
+        "filed": "2023-02-17",
+        "evidence_sha256": "39fddad8d4e9b3bd6d296538474e7c3919fb332d34f91cb81e0f5f399505ef9c",
+        "retrieved_at": "2026-11-04T05:36:38.177771+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-16df6e1c61374a54b290",
+        "ticker": "NEE",
+        "cik": "0000753308",
+        "split_ratio": 4,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2020-10-26",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0000753308.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0000753308-21-000014",
+        "form": "10-K",
+        "filed": "2021-02-12",
+        "evidence_sha256": "602ccf508c8048dd8f465a9ab66e7015baad5bf2f60692cf4062137e405d7d53",
+        "retrieved_at": "2026-11-04T05:36:38.177771+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "DUK",
+    "cik": "0001326160",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-691886466b52478be4cb",
+        "ticker": "DUK",
+        "cik": "0001326160",
+        "split_ratio": 0.3333,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2012-12-31",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001326160.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001326160-14-000003",
+        "form": "10-K",
+        "filed": "2014-02-28",
+        "evidence_sha256": "41d9d4ffc0974ad4e816437604622737fc7a4549e9a7db49e39e7a8f3242ef46",
+        "retrieved_at": "2026-11-04T05:36:38.211413+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "JNJ",
+    "cik": "0000200406",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "PFE",
+    "cik": "0000078003",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "UNH",
+    "cik": "0000731766",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "MRNA",
+    "cik": "0001682852",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-c76a72c4d033b0d8d209",
+        "ticker": "MRNA",
+        "cik": "0001682852",
+        "split_ratio": 10,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2016-08-10",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001682852.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001682852-19-000009",
+        "form": "10-K",
+        "filed": "2019-03-13",
+        "evidence_sha256": "be1751882466b1f58ae83a84bcdaec3ecc4fc319c1386ae5eb88fbae83a9b1da",
+        "retrieved_at": "2026-11-04T05:36:38.317148+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      },
+      {
+        "event_id": "SPL-d924408b60a95695b2c4",
+        "ticker": "MRNA",
+        "cik": "0001682852",
+        "split_ratio": 0.4587,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2018-11-27",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001682852.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001682852-19-000009",
+        "form": "10-K",
+        "filed": "2019-03-13",
+        "evidence_sha256": "18835bd7ab2c0edee231496de3f8ad30318162ebc22d59bd22596aa087d4c219",
+        "retrieved_at": "2026-11-04T05:36:38.317148+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  },
+  {
+    "ticker": "JPM",
+    "cik": "0000019617",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "BAC",
+    "cik": "0000070858",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "BRK.B",
+    "cik": "0001067983",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "MET",
+    "cik": "0001099219",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "PLD",
+    "cik": "0001045609",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "O",
+    "cik": "0000726728",
+    "status": "SPLIT_HISTORY_INCOMPLETE",
+    "source_share_basis": "UNKNOWN",
+    "events": []
+  },
+  {
+    "ticker": "RIVN",
+    "cik": "0001874178",
+    "status": "PARTIALLY_VERIFIED",
+    "source_share_basis": "UNKNOWN",
+    "events": [
+      {
+        "event_id": "SPL-be28a409b518e4a07d61",
+        "ticker": "RIVN",
+        "cik": "0001874178",
+        "split_ratio": 50,
+        "ratio_convention": "new_shares_per_old_share",
+        "announcement_date": null,
+        "effective_date": null,
+        "fact_period_end": "2019-12-31",
+        "source_url": "https://data.sec.gov/api/xbrl/companyfacts/CIK0001874178.json",
+        "source_type": "SEC CompanyFacts XBRL",
+        "accession_number": "0001874178-22-000008",
+        "form": "10-K",
+        "filed": "2022-03-31",
+        "evidence_sha256": "919e39a1415fde032c1b87ee7cbed210dc2d6367d609fbfd59227db034f418f3",
+        "retrieved_at": "2026-11-04T05:36:38.580268+00:00",
+        "verification_status": "PARTIALLY_VERIFIED",
+        "evidence_notes": "ratio is SEC XBRL; effective/announcement dates require filing/IR evidence"
+      }
+    ]
+  }
+]
