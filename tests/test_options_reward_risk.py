@@ -225,7 +225,9 @@ calls = pd.DataFrame([{
     "strike": 225.0, "lastPrice": 6.0, "bid": 5.9, "ask": 6.1,
     "volume": 100, "openInterest": 500, "impliedVolatility": 0.30,
 }])
-expiry = dt.date(2026, 11, 20)
+# Use the engine's supported 45-90 DTE window; a fixed calendar date
+# drifts into an invalid short-dated fixture as the suite is rerun.
+expiry = soe._us_today() + dt.timedelta(days=60)
 
 orig_load = soe._load_chain
 soe._load_chain = lambda t: (None, expiry, calls, puts)

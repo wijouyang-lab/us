@@ -40,3 +40,7 @@ jobs:
 
       - name: Run tests
         run: python -m pytest tests/ -v
+
+      - name: Run Dividend Quality frontend tests
+        if: always()
+        run: node tests/test_dividend_quality_frontend.js
