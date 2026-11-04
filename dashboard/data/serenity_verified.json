@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-04T14:05:13Z",
+  "generated_at": "2026-11-04T14:10:30Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
@@ -8,25 +8,10 @@
     {
       "ticker": "DHR",
       "earnings_date": "2027-01-27",
-      "filings": [
-        {
-          "form": "8-K",
-          "date": "2026-10-21",
-          "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000201/dhr-20261021.htm"
-        },
-        {
-          "form": "10-Q",
-          "date": "2026-10-21",
-          "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000199/dhr-20260925.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-10-13",
-          "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000193/dhr-20261009.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -34,25 +19,10 @@
     {
       "ticker": "APP",
       "earnings_date": "2026-11-04",
-      "filings": [
-        {
-          "form": "10-Q",
-          "date": "2026-08-05",
-          "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000059/app-20260630.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-08-05",
-          "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000057/app-20260805.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-06-05",
-          "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000050/app-20260603.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -60,25 +30,10 @@
     {
       "ticker": "CME",
       "earnings_date": "2026-10-21",
-      "filings": [
-        {
-          "form": "10-Q",
-          "date": "2026-10-23",
-          "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000068/cme-20260930.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-10-21",
-          "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000065/cme-20261021.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-09-25",
-          "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000060/cme-20260924.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -86,25 +41,10 @@
     {
       "ticker": "XYL",
       "earnings_date": "2026-10-27",
-      "filings": [
-        {
-          "form": "10-Q",
-          "date": "2026-10-27",
-          "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000148/xyl-20260930.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-10-27",
-          "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000146/xyl-20261027.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-09-29",
-          "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000134/xyl-20260929.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -112,25 +52,10 @@
     {
       "ticker": "JCI",
       "earnings_date": "2026-10-27",
-      "filings": [
-        {
-          "form": "8-K",
-          "date": "2026-10-27",
-          "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000101/jci-20261027.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-09-30",
-          "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000098/jci-20260925.htm"
-        },
-        {
-          "form": "10-Q",
-          "date": "2026-07-29",
-          "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000087/jci-20260630.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -138,25 +63,10 @@
     {
       "ticker": "AES",
       "earnings_date": "2026-11-04",
-      "filings": [
-        {
-          "form": "10-Q",
-          "date": "2026-11-03",
-          "url": "https://www.sec.gov/Archives/edgar/data/874761/000087476126000156/aes-20260930.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-10-28",
-          "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126041045/ef20084505_8k.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-10-19",
-          "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126040117/ef20083812_8k.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -176,25 +86,10 @@
     {
       "ticker": "EOG",
       "earnings_date": "2026-11-05",
-      "filings": [
-        {
-          "form": "8-K",
-          "date": "2026-10-08",
-          "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000202/eog-20261008.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-09-24",
-          "url": "https://www.sec.gov/Archives/edgar/data/821189/000119312526400333/d40889d8k.htm"
-        },
-        {
-          "form": "10-Q",
-          "date": "2026-08-04",
-          "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000149/eog-20260630.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -202,25 +97,10 @@
     {
       "ticker": "APA",
       "earnings_date": "2026-11-04",
-      "filings": [
-        {
-          "form": "8-K",
-          "date": "2026-10-07",
-          "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000058/apa8k-20261007.htm"
-        },
-        {
-          "form": "10-Q",
-          "date": "2026-08-06",
-          "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000053/apa-20260630.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-08-05",
-          "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000050/apa8k-20260805.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"
@@ -228,25 +108,10 @@
     {
       "ticker": "CNP",
       "earnings_date": "2026-10-27",
-      "filings": [
-        {
-          "form": "8-K",
-          "date": "2026-10-27",
-          "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926118963/tm2628051d1_8k.htm"
-        },
-        {
-          "form": "10-Q",
-          "date": "2026-10-27",
-          "url": "https://www.sec.gov/Archives/edgar/data/1130310/000113031026000048/cnp-20260930.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-10-20",
-          "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926117423/tm2627902d1_8k.htm"
-        }
-      ],
+      "filings": [],
       "news": [],
       "missing": [
+        "SEC 文件",
         "新闻"
       ],
       "status": "verified"

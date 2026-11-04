@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-04T14:06:50Z",
+  "generated_at": "2026-11-04T14:10:54Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -15,7 +15,7 @@
       "price": 14.95,
       "price_source": "realtime",
       "current_price": 14.95,
-      "current_price_updated_at": "2026-11-04T13:43:15Z",
+      "current_price_updated_at": "2026-11-04T13:53:23Z",
       "pending_price": 14.75,
       "pending_price_source": "Scan_Ref_Price",
       "prev_close": 14.75,
@@ -78,7 +78,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-11-03",
         "bars_source": "yfinance",
-        "computed_at": "2026-11-04T14:05:16Z",
+        "computed_at": "2026-11-04T14:10:32Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -102,7 +102,7 @@
         "change_1d": -0.3795,
         "change_5d": -1.1281,
         "change_20d": 0.5152,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -120,7 +120,7 @@
         "change_1d": 0.3649,
         "change_5d": -1.99,
         "change_20d": -3.1975,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -138,7 +138,7 @@
         "change_1d": 0.8254,
         "change_5d": -4.1763,
         "change_20d": -8.0717,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -152,16 +152,16 @@
         "name": "VIX",
         "group": "volatility",
         "unit": "index point",
-        "price": 18.18,
-        "change_1d": -12.722,
-        "change_5d": 3.7671,
-        "change_20d": 21.1193,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 18.04,
+        "change_1d": -13.3941,
+        "change_5d": 2.968,
+        "change_20d": 20.1865,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800200,
+        "quote_ts": 1793800500,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -170,16 +170,16 @@
         "name": "US10Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.923,
-        "change_1d": -0.5856,
-        "change_5d": -1.402,
-        "change_20d": -6.5667,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 4.925,
+        "change_1d": -0.5452,
+        "change_5d": -1.3619,
+        "change_20d": -6.5288,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800200,
+        "quote_ts": 1793800500,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -192,7 +192,7 @@
         "change_1d": -0.5236,
         "change_5d": 0.0,
         "change_20d": 2.2165,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -206,16 +206,16 @@
         "name": "US5Y",
         "group": "rate",
         "unit": "percent yield",
-        "price": 4.713,
-        "change_1d": -0.6325,
-        "change_5d": -2.624,
-        "change_20d": -6.2649,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 4.714,
+        "change_1d": -0.6114,
+        "change_5d": -2.6033,
+        "change_20d": -6.245,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800200,
+        "quote_ts": 1793800500,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -228,25 +228,7 @@
         "change_1d": -0.3569,
         "change_5d": 0.0,
         "change_20d": -5.9564,
-        "updated_at": "2026-11-04T14:05:16Z",
-        "available": true,
-        "source": "yfinance",
-        "price_kind": "live",
-        "error": null,
-        "quote_ts": 1793800200,
-        "last_bar_date": "2026-11-03"
-      },
-      {
-        "symbol": "DX-Y.NYB",
-        "symbol_used": "DX-Y.NYB",
-        "name": "DXY",
-        "group": "fx",
-        "unit": "index point",
-        "price": 101.342,
-        "change_1d": -0.5183,
-        "change_5d": -0.9558,
-        "change_20d": -0.4792,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -255,21 +237,39 @@
         "last_bar_date": "2026-11-03"
       },
       {
+        "symbol": "DX-Y.NYB",
+        "symbol_used": "DX-Y.NYB",
+        "name": "DXY",
+        "group": "fx",
+        "unit": "index point",
+        "price": 101.335,
+        "change_1d": -0.5252,
+        "change_5d": -0.9627,
+        "change_20d": -0.4861,
+        "updated_at": "2026-11-04T14:10:32Z",
+        "available": true,
+        "source": "yfinance",
+        "price_kind": "live",
+        "error": null,
+        "quote_ts": 1793800800,
+        "last_bar_date": "2026-11-03"
+      },
+      {
         "symbol": "XAUUSD=X",
         "symbol_used": "GC=F",
         "name": "Gold",
         "group": "commodity",
         "unit": "usd/oz",
-        "price": 4055.3999,
-        "change_1d": 2.9185,
-        "change_5d": -0.4712,
-        "change_20d": -3.1454,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 4057.0,
+        "change_1d": 2.9591,
+        "change_5d": -0.4319,
+        "change_20d": -3.1072,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800560,
+        "quote_ts": 1793800800,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -282,12 +282,12 @@
         "change_1d": 5.2695,
         "change_5d": -3.855,
         "change_20d": -14.6613,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800560,
+        "quote_ts": 1793800800,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -300,12 +300,12 @@
         "change_1d": 0.0784,
         "change_5d": -3.6016,
         "change_20d": -3.1996,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800560,
+        "quote_ts": 1793800800,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -314,16 +314,16 @@
         "name": "WTI",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 93.47,
-        "change_1d": -2.7266,
-        "change_5d": -6.4364,
-        "change_20d": 4.5058,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 93.24,
+        "change_1d": -2.966,
+        "change_5d": -6.6667,
+        "change_20d": 4.2487,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800560,
+        "quote_ts": 1793800800,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -332,16 +332,16 @@
         "name": "Brent",
         "group": "energy",
         "unit": "usd/bbl",
-        "price": 100.89,
-        "change_1d": -2.6158,
-        "change_5d": -11.4067,
-        "change_20d": 0.3082,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 100.63,
+        "change_1d": -2.8668,
+        "change_5d": -11.6351,
+        "change_20d": 0.0497,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800560,
+        "quote_ts": 1793800800,
         "last_bar_date": "2026-11-03"
       },
       {
@@ -350,16 +350,16 @@
         "name": "Natural Gas",
         "group": "energy",
         "unit": "usd/mmbtu",
-        "price": 2.928,
-        "change_1d": 1.1399,
-        "change_5d": 8.5651,
-        "change_20d": -5.973,
-        "updated_at": "2026-11-04T14:05:16Z",
+        "price": 2.903,
+        "change_1d": 0.2763,
+        "change_5d": 7.6381,
+        "change_20d": -6.7759,
+        "updated_at": "2026-11-04T14:10:32Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1793800560,
+        "quote_ts": 1793800800,
         "last_bar_date": "2026-11-03"
       }
     ],
@@ -372,12 +372,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-11-04T14:06:48Z"
+    "updated_at": "2026-11-04T14:10:51Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-11-04 09:06:50",
+    "as_of_us": "2026-11-04 09:10:54",
     "window_start": "2026-10-05",
     "core_closed_count": 0,
     "core_open_count": 12,
@@ -2584,8 +2584,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 246.035,
-        "pnl_pct": -0.88,
+        "cur_price": 245.85,
+        "pnl_pct": -0.95,
         "days_held": 43,
         "stop_loss": null,
         "score": "64.2",
@@ -7000,8 +7000,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 199.87,
-        "pnl_pct": -52.28,
+        "cur_price": 200.22,
+        "pnl_pct": -52.2,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -7851,8 +7851,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.7395,
-        "pnl_pct": -6.97,
+        "cur_price": 50.8448,
+        "pnl_pct": -6.78,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -8219,8 +8219,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 51.97,
-        "cur_price": 58.46,
-        "pnl_pct": 12.49,
+        "cur_price": 58.45,
+        "pnl_pct": 12.47,
         "days_held": 106,
         "stop_loss": null,
         "score": "0",
@@ -10774,11 +10774,11 @@
     "scan": {
       "latest": {
         "run_id": 41843315884,
-        "status": "in_progress",
-        "conclusion": null,
+        "status": "completed",
+        "conclusion": "success",
         "created_at": "2026-11-04T14:00:31Z",
         "started_at": "2026-11-04T14:00:31Z",
-        "updated_at": "2026-11-04T14:00:37Z",
+        "updated_at": "2026-11-04T14:07:25Z",
         "head_sha": "b5851fbb0ae4",
         "event": "workflow_dispatch",
         "run_number": 193,
@@ -10786,9 +10786,9 @@
         "html_url": "https://github.com/wijouyang-lab/us/actions/runs/41843315884"
       },
       "last_success": {
-        "run_id": 41649482563,
-        "completed_at": "2026-11-03T14:07:43Z",
-        "head_sha": "173412826c90"
+        "run_id": 41843315884,
+        "completed_at": "2026-11-04T14:07:25Z",
+        "head_sha": "b5851fbb0ae4"
       },
       "error": null
     },
@@ -11381,7 +11381,7 @@
         }
       ],
       "snapshot_file": "quant_factor_snapshot.csv",
-      "snapshot_rows": 5709
+      "snapshot_rows": 6008
     },
     "backtest": {
       "phase": 2,
@@ -11485,31 +11485,31 @@
   "news": null,
   "macro": {
     "schema_version": "macro.v1",
-    "generated_at": "2026-11-03T14:01:56Z",
+    "generated_at": "2026-11-04T14:02:08Z",
     "economic": [
       {
         "indicator": "10Y国债",
-        "value": "4.90%",
-        "prev": "4.89%",
-        "date": "2026-11-03",
+        "value": "4.92%",
+        "prev": "4.95%",
+        "date": "2026-11-04",
         "source": "Yahoo Finance",
         "sentiment": null,
         "rationale": null
       },
       {
         "indicator": "5Y国债",
-        "value": "4.69%",
-        "prev": "4.69%",
-        "date": "2026-11-03",
+        "value": "4.71%",
+        "prev": "4.74%",
+        "date": "2026-11-04",
         "source": "Yahoo Finance",
         "sentiment": null,
         "rationale": null
       },
       {
         "indicator": "13周国债",
-        "value": "4.02%",
-        "prev": "3.98%",
-        "date": "2026-11-03",
+        "value": "4.03%",
+        "prev": "4.03%",
+        "date": "2026-11-04",
         "source": "Yahoo Finance",
         "sentiment": null,
         "rationale": null
@@ -11552,9 +11552,9 @@
       },
       {
         "indicator": "Fear & Greed",
-        "value": "19 (extreme fear)",
-        "prev": "33",
-        "date": "2026-11-03",
+        "value": "22 (extreme fear)",
+        "prev": "34",
+        "date": "2026-11-04",
         "source": "CNN",
         "sentiment": null,
         "rationale": null
@@ -11567,7 +11567,18 @@
         "content": "Kevin Warsh is managing US debt costs not inflation as interest rates risk topping GDP growth soon - Fortune",
         "time": "11-01 18:07",
         "source": "Fortune",
-        "age_tag": "📄昨日-中等权重",
+        "age_tag": "📑前日-低权重",
+        "content_cn": null,
+        "sentiment": null,
+        "rationale": null
+      },
+      {
+        "person": "Warsh",
+        "title": null,
+        "content": "Kevin Warsh Offered a Warning on Inflation. Here's What History Says Is Coming Next. - The Motley Fool",
+        "time": "11-02 03:12",
+        "source": "The Motley Fool",
+        "age_tag": "📑前日-低权重",
         "content_cn": null,
         "sentiment": null,
         "rationale": null
@@ -11575,10 +11586,10 @@
       {
         "person": null,
         "title": null,
-        "content": "Opinion | The inflation election - The Washington Post",
-        "time": "11-03 01:55",
-        "source": "The Washington Post",
-        "age_tag": "📰今日-高权重",
+        "content": "Would prices have fallen without tariffs this past year? New York Fed research says yes for many consumer goods - Chase Bank",
+        "time": "11-02 21:50",
+        "source": "Chase Bank",
+        "age_tag": "📄昨日-中等权重",
         "content_cn": null,
         "sentiment": null,
         "rationale": null
@@ -11589,40 +11600,18 @@
         "content": "Week Ahead: US CPI, Fed Rates, Treasury Yields and Markets - Equiti Global",
         "time": "11-02 04:20",
         "source": "Equiti Global",
-        "age_tag": "📄昨日-中等权重",
-        "content_cn": null,
-        "sentiment": null,
-        "rationale": null
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "[This Week’s Key Economic and Crypto Events] US Midterm Elections and More - bloomingbit",
-        "time": "11-01 03:32",
-        "source": "bloomingbit",
         "age_tag": "📑前日-低权重",
         "content_cn": null,
         "sentiment": null,
         "rationale": null
       },
       {
-        "person": "Trump",
-        "title": null,
-        "content": "Krugman assesses four Trump policies before November 3 vote - Nation Thailand",
-        "time": "11-02 19:43",
-        "source": "Nation Thailand",
-        "age_tag": "📰今日-高权重",
-        "content_cn": null,
-        "sentiment": null,
-        "rationale": null
-      },
-      {
         "person": null,
         "title": null,
-        "content": "Economic frustration set to boil over in U.S. midterm elections - CBC",
-        "time": "11-02 18:13",
-        "source": "CBC",
-        "age_tag": "📰今日-高权重",
+        "content": "US Midterms, Jobs Data and Tech Earnings: 5 Events That Could Move Crypto This Week - Altcoin Buzz",
+        "time": "11-03 05:56",
+        "source": "Altcoin Buzz",
+        "age_tag": "📄昨日-中等权重",
         "content_cn": null,
         "sentiment": null,
         "rationale": null
@@ -11633,28 +11622,6 @@
         "content": "The Midterm Elections Could Reshape the US Economy. Here’s How - Investopedia",
         "time": "11-02 12:33",
         "source": "Investopedia",
-        "age_tag": "📰今日-高权重",
-        "content_cn": null,
-        "sentiment": null,
-        "rationale": null
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "US Voters in a Sour Economic Mood Heading Into Midterm Elections - U.S. News & World Report",
-        "time": "11-02 06:06",
-        "source": "U.S. News & World Report",
-        "age_tag": "📄昨日-中等权重",
-        "content_cn": null,
-        "sentiment": null,
-        "rationale": null
-      },
-      {
-        "person": null,
-        "title": null,
-        "content": "The Week Ahead: Fed September Minutes, PepsiCo and Delta Earnings in Focus - TradingKey",
-        "time": "11-01 16:25",
-        "source": "TradingKey",
         "age_tag": "📄昨日-中等权重",
         "content_cn": null,
         "sentiment": null,
@@ -11684,8 +11651,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-11-04T14:06:48Z",
-    "technical_updated_at": "2026-11-04T14:06:50Z",
+    "market_updated_at": "2026-11-04T14:10:51Z",
+    "technical_updated_at": "2026-11-04T14:10:54Z",
     "counts": {
       "core": 1,
       "observation": 0,
@@ -11787,11 +11754,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-11-04T14:05:15Z",
+    "generated_at": "2026-11-04T14:10:31Z",
     "fear_greed": {
-      "score": 22.14,
+      "score": 22.2,
       "rating": "extreme fear",
-      "timestamp": "2026-11-04T13:46:44+00:00",
+      "timestamp": "2026-11-04T13:51:46+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 14.2,
@@ -11806,7 +11773,7 @@
           "rating": "fear"
         },
         "put_call_options": {
-          "score": 4.2,
+          "score": 4.6,
           "rating": "extreme fear"
         },
         "market_volatility_vix": {
@@ -11825,12 +11792,12 @@
       "history_30d": [
         {
           "date": "2026-11-04",
-          "score": 22.14,
+          "score": 22.2,
           "rating": "extreme fear"
         },
         {
           "date": "2026-11-03",
-          "score": 22.14,
+          "score": 22.2,
           "rating": "extreme fear"
         },
         {
@@ -11999,7 +11966,7 @@
   },
   "macro_forecast": {
     "schema": 1,
-    "generated_at": "2026-11-04T14:05:08Z",
+    "generated_at": "2026-11-04T14:10:21Z",
     "as_of": null,
     "source": "TradingEconomics 指标页（自动解析）",
     "count": 9,
@@ -12116,7 +12083,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-11-04T14:05:07Z",
+    "generated_at": "2026-11-04T14:10:18Z",
     "count": 11,
     "ok": 11,
     "items": [
@@ -12255,8 +12222,8 @@
     ]
   },
   "decision_inputs": {
-    "generated_at": "2026-11-04T14:05:13Z",
-    "asof": "2026-11-04T14:05:07Z",
+    "generated_at": "2026-11-04T14:10:30Z",
+    "asof": "2026-11-04T14:10:18Z",
     "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
     "count": 15,
     "features": [
@@ -12318,7 +12285,7 @@
         "key": "fg_score",
         "label": "恐惧贪婪",
         "group": "情绪",
-        "value": 21.97,
+        "value": 22.14,
         "unit": "",
         "status": "ok",
         "source": "market_indicators"
@@ -12336,7 +12303,7 @@
         "key": "oversold_count",
         "label": "超跌候选数",
         "group": "超跌",
-        "value": 7.0,
+        "value": 9.0,
         "unit": "",
         "status": "ok",
         "source": "oversold"
@@ -12345,7 +12312,7 @@
         "key": "oversold_rsi",
         "label": "平均RSI",
         "group": "超跌",
-        "value": 24.9,
+        "value": 26.9,
         "unit": "",
         "status": "ok",
         "source": "oversold"
@@ -12496,7 +12463,7 @@
     "error": null
   },
   "serenity_verified": {
-    "generated_at": "2026-11-04T14:05:13Z",
+    "generated_at": "2026-11-04T14:10:30Z",
     "source": "SEC EDGAR + yfinance + news_data",
     "count": 10,
     "items": [
@@ -12504,156 +12471,66 @@
         "ticker": "DHR",
         "earnings_date": "2027-01-27",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "8-K",
-            "date": "2026-10-21",
-            "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000201/dhr-20261021.htm"
-          },
-          {
-            "form": "10-Q",
-            "date": "2026-10-21",
-            "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000199/dhr-20260925.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-10-13",
-            "url": "https://www.sec.gov/Archives/edgar/data/313616/000031361626000193/dhr-20261009.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "APP",
         "earnings_date": "2026-11-04",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "10-Q",
-            "date": "2026-08-05",
-            "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000059/app-20260630.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-08-05",
-            "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000057/app-20260805.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-06-05",
-            "url": "https://www.sec.gov/Archives/edgar/data/1751008/000175100826000050/app-20260603.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "CME",
         "earnings_date": "2026-10-21",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "10-Q",
-            "date": "2026-10-23",
-            "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000068/cme-20260930.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-10-21",
-            "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000065/cme-20261021.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-09-25",
-            "url": "https://www.sec.gov/Archives/edgar/data/1156375/000115637526000060/cme-20260924.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "XYL",
         "earnings_date": "2026-10-27",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "10-Q",
-            "date": "2026-10-27",
-            "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000148/xyl-20260930.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-10-27",
-            "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000146/xyl-20261027.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-09-29",
-            "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000134/xyl-20260929.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "JCI",
         "earnings_date": "2026-10-27",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "8-K",
-            "date": "2026-10-27",
-            "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000101/jci-20261027.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-09-30",
-            "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000098/jci-20260925.htm"
-          },
-          {
-            "form": "10-Q",
-            "date": "2026-07-29",
-            "url": "https://www.sec.gov/Archives/edgar/data/833444/000083344426000087/jci-20260630.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "AES",
         "earnings_date": "2026-11-04",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "10-Q",
-            "date": "2026-11-03",
-            "url": "https://www.sec.gov/Archives/edgar/data/874761/000087476126000156/aes-20260930.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-10-28",
-            "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126041045/ef20084505_8k.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-10-19",
-            "url": "https://www.sec.gov/Archives/edgar/data/874761/000114036126040117/ef20083812_8k.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
@@ -12672,78 +12549,33 @@
         "ticker": "EOG",
         "earnings_date": "2026-11-05",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "8-K",
-            "date": "2026-10-08",
-            "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000202/eog-20261008.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-09-24",
-            "url": "https://www.sec.gov/Archives/edgar/data/821189/000119312526400333/d40889d8k.htm"
-          },
-          {
-            "form": "10-Q",
-            "date": "2026-08-04",
-            "url": "https://www.sec.gov/Archives/edgar/data/821189/000082118926000149/eog-20260630.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "APA",
         "earnings_date": "2026-11-04",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "8-K",
-            "date": "2026-10-07",
-            "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000058/apa8k-20261007.htm"
-          },
-          {
-            "form": "10-Q",
-            "date": "2026-08-06",
-            "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000053/apa-20260630.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-08-05",
-            "url": "https://www.sec.gov/Archives/edgar/data/1841666/000184166626000050/apa8k-20260805.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       },
       {
         "ticker": "CNP",
         "earnings_date": "2026-10-27",
         "missing": [
+          "SEC 文件",
           "新闻"
         ],
         "status": "verified",
-        "filings": [
-          {
-            "form": "8-K",
-            "date": "2026-10-27",
-            "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926118963/tm2628051d1_8k.htm"
-          },
-          {
-            "form": "10-Q",
-            "date": "2026-10-27",
-            "url": "https://www.sec.gov/Archives/edgar/data/1130310/000113031026000048/cnp-20260930.htm"
-          },
-          {
-            "form": "8-K",
-            "date": "2026-10-20",
-            "url": "https://www.sec.gov/Archives/edgar/data/1130310/000110465926117423/tm2627902d1_8k.htm"
-          }
-        ],
+        "filings": [],
         "news": []
       }
     ]
@@ -12764,180 +12596,228 @@
   },
   "oversold": {
     "schema": 1,
-    "generated_at": "2026-11-03T14:09:03Z",
-    "asof": "2026-11-03",
+    "generated_at": "2026-11-04T14:08:55Z",
+    "asof": "2026-11-04",
     "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
     "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
     "ai_model": null,
-    "ai_count": 7,
-    "count": 7,
+    "ai_count": 9,
+    "count": 9,
     "candidates": [
       {
         "ticker": "FTNT",
         "name": "Fortinet",
         "sector": "Technology",
-        "score": 68.4,
+        "score": 58.8,
         "tag": "深度超跌",
-        "rsi": 23.6,
-        "bias_pct": -27.81,
-        "drawdown_pct": -31.46,
-        "ref_price": 126.21,
-        "stop_loss": 111.75,
-        "confirm": "RSI 回升过 35 且站回 MA20 $174.82",
-        "invalid": "跌破参考止损 $111.75 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 23.6 / Bias -27.8% / ZScore -3.25；ATR 7.6% · 20日量比 2.3879；板块 Technology。规则版筛选，未回测。",
+        "rsi": 25.4,
+        "bias_pct": -25.37,
+        "drawdown_pct": -33.02,
+        "ref_price": 128.11,
+        "stop_loss": 114.2,
+        "confirm": "RSI 回升过 35 且站回 MA20 $171.66",
+        "invalid": "跌破参考止损 $114.20 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 25.4 / Bias -25.4% / ZScore -2.40；ATR 7.2% · 20日量比 1.0982；板块 Technology。规则版筛选，未回测。",
+        "ai": {
+          "verdict": "谨慎",
+          "technical": "RSI 25.4超卖，但20日跌33%，偏离MA20 -25.4%，ATR 7.2%，高波动下跌趋势，未现企稳。",
+          "fundamental": "PE TTM 41.9、远期32.9、PB 41.9，估值偏高；营收增20.5%、净利率29.0%、盈利增38.7%，基本面仍强。",
+          "news": "公司财报超预期并上调指引后一周仍跌31%，市场反应负面；另有评级调整汇总及思科相关报道。",
+          "risk": "高Beta 1.7、20日跑输标普29.9个百分点，若跌势延续波动大；估值与情绪双压，需防继续下探。",
+          "summary": "技术面严重超卖但趋势极弱，基本面强却遭负面价格反应，暂列谨慎观察，等待企稳信号。"
+        }
+      },
+      {
+        "ticker": "ADM",
+        "name": "Archer Daniels Midland",
+        "sector": "Consumer Defensive",
+        "score": 54.2,
+        "tag": "超跌反弹",
+        "rsi": 23.4,
+        "bias_pct": -11.23,
+        "drawdown_pct": -14.12,
+        "ref_price": 70.6,
+        "stop_loss": 67.19,
+        "confirm": "RSI 回升过 35 且站回 MA20 $79.54",
+        "invalid": "跌破参考止损 $67.19 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 23.4 / Bias -11.2% / ZScore -4.03；ATR 3.2% · 20日量比 2.5944；板块 Other。规则版筛选，未回测。",
         "ai": {
           "verdict": "观察",
-          "technical": "RSI 23.6深度超卖，股价低于20日均线27.8%，20日跌31.5%，量比2.39显示放量，ATR 7.6%波动大，相对SPY弱28.5%，技术评分仅5分。",
-          "fundamental": "PE(TTM)41.2、前瞻32.4，PB 41.3偏高；净利率29.0%，营收增20.5%，盈利增38.7%，ROE 1.53，市值927亿美元。",
-          "news": "个股新闻与市场新闻均数据缺失，无法评估消息面影响。",
-          "risk": "放量急跌叠加beta 1.69，波动风险放大；高PB、高PE对情绪敏感，消息面空白使下跌原因不明。",
-          "summary": "技术面极度超卖且放量下跌，基本面增长稳健但估值偏高，消息面数据缺失，宜继续观察，不宜操作。"
-        }
-      },
-      {
-        "ticker": "NOW",
-        "name": "ServiceNow",
-        "sector": "Technology",
-        "score": 57.1,
-        "tag": "深度超跌",
-        "rsi": 27.7,
-        "bias_pct": -24.65,
-        "drawdown_pct": -22.1,
-        "ref_price": 106.01,
-        "stop_loss": 93.78,
-        "confirm": "RSI 回升过 35 且站回 MA20 $140.69",
-        "invalid": "跌破参考止损 $93.78 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 27.7 / Bias -24.6% / ZScore -2.58；ATR 7.7% · 20日量比 1.4223；板块 Technology。规则版筛选，未回测。",
-        "ai": {
-          "verdict": "谨慎",
-          "technical": "RSI27.7处超卖，价格低于MA20约24.7%，20日动量-22.1%且放量，20日跑输SPY约19%，技术评分仅5.0。",
-          "fundamental": "TTM市盈率76倍、远期22倍，营收增20.5%，盈利增-44.2%，ROE11.8%，净利率9.4%，市值约1100亿美元。",
-          "news": "数据缺失：个股新闻与市场新闻均为空，无法概括消息面。",
-          "risk": "趋势破位叠加7.7%高波动与1.59高beta，盈利负增长，超卖不代表见底，追入风险偏高。",
-          "summary": "技术面深度超卖但趋势明显偏弱，营收稳健而盈利下滑，估值依赖远期，暂列谨慎观察。"
-        }
-      },
-      {
-        "ticker": "GOOGL",
-        "name": "Alphabet Inc. (Class A)",
-        "sector": "Communication Services",
-        "score": 54.1,
-        "tag": "深度超跌",
-        "rsi": 21.2,
-        "bias_pct": -15.59,
-        "drawdown_pct": -19.48,
-        "ref_price": 278.99,
-        "stop_loss": 263.63,
-        "confirm": "RSI 回升过 35 且站回 MA20 $330.53",
-        "invalid": "跌破参考止损 $263.63 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 21.2 / Bias -15.6% / ZScore -2.56；ATR 3.7% · 20日量比 1.4649；板块 Communication。规则版筛选，未回测。",
-        "ai": {
-          "verdict": "谨慎",
-          "technical": "RSI 21.2超卖，低于MA20 15.6%，20日动量-19.5%，相对SPY -16.5%，量比1.46，技术分5/25，处弱势下行。",
-          "fundamental": "PE_TTM 14.6、PB 5.2、ROE 44.3%、净利率50%、营收增24.7%；但盈利增-25.3%，远期PE 18.1高于TTM。",
-          "news": "个股及市场新闻数据缺失，消息面无法评估（市场层面亦缺失）。",
-          "risk": "ATR 3.67%、Beta 1.39，波动偏高；盈利负增长且远期PE高于TTM；超卖但趋势弱，缺新闻催化。",
-          "summary": "估值与盈利质量有支撑，但技术面极弱、盈利负增长，消息数据缺失；列为谨慎观察，不预测价格。"
+          "technical": "RSI23.4超卖，较MA20低11.2%，20日动量-14.1%，量比2.59，相对SPY弱10.95点。",
+          "fundamental": "PE-TTM13.8、前瞻12.4，PB1.43，ROE10.6%，净利率2.95%，营收增9.6%，盈利增6.71。",
+          "news": "Q3业绩强劲并上调指引，EPS指引第三次上调；内罗毕设东非枢纽。",
+          "risk": "技术面深度回撤且跑输大盘，量比高或加剧波动；净利率仅2.95%，盈利弹性有限。",
+          "summary": "估值不贵且Q3指引偏正，但技术趋势极弱；列为观察，留意企稳信号。"
         }
       },
       {
         "ticker": "GOOG",
         "name": "Alphabet Inc. (Class C)",
         "sector": "Communication Services",
-        "score": 53.4,
-        "tag": "深度超跌",
-        "rsi": 21.0,
-        "bias_pct": -15.05,
-        "drawdown_pct": -19.13,
-        "ref_price": 278.04,
-        "stop_loss": 263.03,
-        "confirm": "RSI 回升过 35 且站回 MA20 $327.28",
-        "invalid": "跌破参考止损 $263.03 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 21.0 / Bias -15.1% / ZScore -2.52；ATR 3.6% · 20日量比 1.351；板块 Communication。规则版筛选，未回测。",
+        "score": 48.1,
+        "tag": "超跌反弹",
+        "rsi": 21.3,
+        "bias_pct": -14.11,
+        "drawdown_pct": -19.25,
+        "ref_price": 278.27,
+        "stop_loss": 263.41,
+        "confirm": "RSI 回升过 35 且站回 MA20 $323.97",
+        "invalid": "跌破参考止损 $263.41 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 21.3 / Bias -14.1% / ZScore -2.07；ATR 3.6% · 20日量比 1.0236；板块 Communication。规则版筛选，未回测。",
         "ai": {
-          "verdict": "谨慎",
-          "technical": "RSI 21超卖，20日偏离-15%，动量-19%，跑输SPY 16个百分点，量比1.35，技术评分5/25，弱势明显。",
-          "fundamental": "PE(TTM)14.5、前瞻18.0，PB5.18，ROE44.3%，净利率50%，营收增24.7%，但盈利增-25.3%。",
-          "news": "个股新闻与市场新闻均缺失，数据缺失，无法评估消息面。",
-          "risk": "高Beta1.35、ATR3.6%，跌势中波动大；盈利下滑与前瞻估值抬升需留意。",
-          "summary": "技术面超卖但趋势弱，基本面盈利下滑，消息缺失，暂列谨慎观察。"
+          "verdict": "观察",
+          "technical": "RSI 21.3深度超卖，股价低于20日均线14.11%，20日动量-19.25%、60日-21.8%，相对SPY超额-16.07%，下跌趋势明显，成交量未放大。",
+          "fundamental": "TTM市盈率14.53偏低，ROE 44.3%、净利率50%、营收增24.7%；但前瞻市盈率高于TTM，盈利增速-25.3%，显示盈利承压。",
+          "news": "无GOOG个股新闻，数据缺失。市场层面：民主党赢国会、数据中心类股下滑，政治与AI相关消息主导大盘情绪。",
+          "risk": "趋势性下跌叠加盈利负增长，高贝塔1.351放大波动，超卖不等于见底，事件面数据缺失，风险偏高。",
+          "summary": "估值不高且深度超卖，但盈利下滑与强下跌趋势并存，缺个股消息，暂列观察，等待趋势企稳信号。"
         }
       },
       {
-        "ticker": "COIN",
-        "name": "Coinbase",
-        "sector": "Financial Services",
-        "score": 51.6,
+        "ticker": "GOOGL",
+        "name": "Alphabet Inc. (Class A)",
+        "sector": "Communication Services",
+        "score": 47.2,
+        "tag": "超跌反弹",
+        "rsi": 22.2,
+        "bias_pct": -14.4,
+        "drawdown_pct": -19.46,
+        "ref_price": 280.03,
+        "stop_loss": 265.29,
+        "confirm": "RSI 回升过 35 且站回 MA20 $327.15",
+        "invalid": "跌破参考止损 $265.29 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 22.2 / Bias -14.4% / ZScore -2.06；ATR 3.5% · 20日量比 1.0178；板块 Communication。规则版筛选，未回测。",
+        "ai": {
+          "verdict": "观察",
+          "technical": "RSI14仅22.2，已深度超卖；收盘价低于20日均线14.4%，20日动量-19.5%、60日-21.7%；相对SPY落后16.3个百分点，ATR 3.5%、贝塔1.40，下跌趋势明确且波动大，技术分15/25。",
+          "fundamental": "市盈率TTM 14.6倍、市净率5.22倍，ROE 44.3%、净利率50.0%、营收增24.7%仍强；但每股收益增-25.3%，远期市盈率18.1倍高于TTM，暗示盈利预期下修，属质量高但盈利走弱。",
+          "news": "个股新闻中没有GOOGL专属消息，四条均为大盘或他股内容；市场层面提到数据中心类股票走弱、民主党赢下国会后美股有望高开。个股新闻数据缺失。",
+          "risk": "高贝塔叠加高波动，急跌中抄底风险大；盈利负增长与远期估值抬升形成基本面压力；参考止损265.29距现价约5.3%，若跌破或加速下行。",
+          "summary": "优质公司陷入深度超卖下跌，量能未放大；技术面弱、基本面盈利转弱，新闻缺乏个股支撑。列为观察，等企稳信号，不作价格预测。"
+        }
+      },
+      {
+        "ticker": "NOW",
+        "name": "ServiceNow",
+        "sector": "Technology",
+        "score": 44.2,
         "tag": "深度超跌",
-        "rsi": 29.7,
-        "bias_pct": -18.5,
-        "drawdown_pct": -26.77,
-        "ref_price": 137.83,
-        "stop_loss": 122.43,
-        "confirm": "RSI 回升过 35 且站回 MA20 $169.13",
-        "invalid": "跌破参考止损 $122.43 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 29.7 / Bias -18.5% / ZScore -3.10；ATR 7.5% · 20日量比 1.289；板块 Financials。规则版筛选，未回测。",
+        "rsi": 30.8,
+        "bias_pct": -21.61,
+        "drawdown_pct": -20.88,
+        "ref_price": 109.16,
+        "stop_loss": 97.21,
+        "confirm": "RSI 回升过 35 且站回 MA20 $139.25",
+        "invalid": "跌破参考止损 $97.21 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 30.8 / Bias -21.6% / ZScore -1.95；ATR 7.3% · 20日量比 0.7764；板块 Technology。规则版筛选，未回测。",
         "ai": {
           "verdict": "谨慎",
-          "technical": "RSI29.7超卖，但较MA20低18.5%，20日动量-26.8%，ATR7.45%且贝塔3.97，技术分5/25，弱势高波动。",
-          "fundamental": "TTM市盈率缺失；远期PE55.8、PB2.62；ROE-4.7%、净利率-12.9%、营收增长-34.2%；盈利增长67.4%。",
-          "news": "个股新闻与市场新闻均为空，消息面数据缺失，无法概括大盘或板块。",
-          "risk": "高贝塔与高ATR放大波动；营收下滑、盈利为负；新闻缺失；参考价距止损约11%，下行风险需关注。",
-          "summary": "技术面超卖但趋势弱、波动高，基本面收入收缩且盈利为负，消息缺失；列为谨慎观察，非投资建议。"
+          "technical": "RSI30.8近超卖，但较MA20低21.6%，20日动量-20.9%，相对SPY弱17.7%，量比0.78，ATR7.3%，技术分10，趋势仍弱。",
+          "fundamental": "TTM市盈率78.5、远期22.7；PB8.65；ROE11.8%；净利率9.4%；营收增20.5%，盈利增-44.2%；市值1133亿美元。",
+          "news": "个股新闻仅见支撑位讨论及行业AI竞争提及，无公司实质公告；market_news为空，数据缺失。",
+          "risk": "高估值、盈利下滑与高Beta叠加；ATR7.3%波动大；跌破均线且相对弱势，超卖不等于止跌。",
+          "summary": "技术面明显走弱、基本面增长与盈利背离，消息面无实质催化；暂列谨慎观察，等待企稳信号。"
+        }
+      },
+      {
+        "ticker": "SYY",
+        "name": "Sysco",
+        "sector": "Consumer Defensive",
+        "score": 39.5,
+        "tag": "超跌反弹",
+        "rsi": 30.8,
+        "bias_pct": -8.28,
+        "drawdown_pct": -4.31,
+        "ref_price": 74.11,
+        "stop_loss": 71.0,
+        "confirm": "RSI 回升过 35 且站回 MA20 $80.80",
+        "invalid": "跌破参考止损 $71.00 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 30.8 / Bias -8.3% / ZScore -3.28；ATR 2.8% · 20日量比 3.354；板块 Other。规则版筛选，未回测。",
+        "ai": {
+          "verdict": "谨慎",
+          "technical": "RSI30.8近超卖，但价格低于MA20约8.3%，20日动量-4.3%、60日-11.6%，量比3.35，技术评分5，弱势明显。",
+          "fundamental": "PE_TTM19.7、远期13.8，PB13.3偏高；ROE58.7%，但净利率仅2.1%，营收增2.8%、盈利增10.1%。",
+          "news": "公司Q1财报电话会提及本地销量增长与国际业务；个股具体指引数据缺失。大盘期货受工厂和货运数据提振（市场层面）。",
+          "risk": "技术面跌破均线且放量下跌，高PB与低净利率放大波动；负贝塔与相对SPY弱势，需防趋势延续。数据缺失具体财报细节。",
+          "summary": "技术弱势叠加放量，估值结构分化；基本面有盈利增长但利润率薄。消息面仅有财报会标题，暂列谨慎观察。"
         }
       },
       {
         "ticker": "CAT",
         "name": "Caterpillar Inc.",
         "sector": "Industrials",
-        "score": 49.0,
-        "tag": "深度超跌",
-        "rsi": 22.7,
-        "bias_pct": -16.21,
-        "drawdown_pct": -27.65,
-        "ref_price": 613.62,
-        "stop_loss": 568.98,
-        "confirm": "RSI 回升过 35 且站回 MA20 $732.32",
-        "invalid": "跌破参考止损 $568.98 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 22.7 / Bias -16.2% / ZScore -2.09；ATR 4.8% · 20日量比 1.3704；板块 Industrials。规则版筛选，未回测。",
+        "score": 37.8,
+        "tag": "超跌反弹",
+        "rsi": 26.2,
+        "bias_pct": -13.38,
+        "drawdown_pct": -27.74,
+        "ref_price": 623.94,
+        "stop_loss": 580.89,
+        "confirm": "RSI 回升过 35 且站回 MA20 $720.34",
+        "invalid": "跌破参考止损 $580.89 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 26.2 / Bias -13.4% / ZScore -1.70；ATR 4.6% · 20日量比 1.0262；板块 Industrials。规则版筛选，未回测。",
         "ai": {
           "verdict": "谨慎",
-          "technical": "RSI14为22.7超卖，低于MA20约16.2%，20日与60日动量均约-27%，相对SPY为-24.7%，技术分5/25。",
-          "fundamental": "PE(TTM)24.1、前瞻19.0，PB13.1；ROE56.1%、净利率15.2%，营收增17.3%、盈利增46.1%。",
-          "news": "个股新闻与市场新闻均数据缺失，无法评估消息面。",
-          "risk": "高Beta1.88、ATR4.85%，动量急跌且超卖，PB13.1偏高；新闻缺失。",
-          "summary": "技术面严重走弱，基本面强劲，消息面缺失；暂列谨慎观察。"
+          "technical": "RSI14仅26.2，20日动量-27.7%，较MA20低13.4%，相对SPY弱24.6%，β1.9高波动；短线超卖但趋势弱。",
+          "fundamental": "PE(TTM)24.5、前瞻19.3，PB13.3偏高；ROE56.1%、净利率15.2%，营收增17.3%、盈利增46.1%，基本面强。",
+          "news": "个股新闻多为ETF净卖出CAT及XLI调仓，未见公司经营增量；其余为行业或他股消息，非CAT直接利好。",
+          "risk": "高β与高ATR放大波动，动量与相对强弱显著落后；PB高，若需求或盈利预期转弱估值承压；新闻面偏资金流出。",
+          "summary": "技术面深度超卖但趋势与相对强弱弱，基本面强、估值不低，新闻偏ETF卖出；列为谨慎观察，非投资建议。"
+        }
+      },
+      {
+        "ticker": "FCX",
+        "name": "Freeport-McMoRan",
+        "sector": "Basic Materials",
+        "score": 30.3,
+        "tag": "超跌反弹",
+        "rsi": 30.0,
+        "bias_pct": -9.16,
+        "drawdown_pct": -14.87,
+        "ref_price": 61.77,
+        "stop_loss": 57.87,
+        "confirm": "RSI 回升过 35 且站回 MA20 $68.00",
+        "invalid": "跌破参考止损 $57.87 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 30.0 / Bias -9.2% / ZScore -1.96；ATR 4.2% · 20日量比 0.7512；板块 Materials。规则版筛选，未回测。",
+        "ai": {
+          "verdict": "观察",
+          "technical": "RSI 30接近超卖，但价格低于20日均线9.16%、20日动量-14.87%、跑输标普11.69%，均线空头排列、技术分仅5/25，未见止跌信号。",
+          "fundamental": "前瞻PE 14.4远低于TTM 25.95，盈利增速0.76、ROE 15.7%、利润率13%，营收增速8.2%偏温和；PB 4.12不算便宜。",
+          "news": "个股仅有摩根大通看好铜股、分析师评级与行业展望等中性偏正面标题，无具体业绩或产量数据；无公司层面实质消息。",
+          "risk": "Beta 1.71、ATR 4.21%波动大，铜价与宏观需求敏感；跌破参考价61.77下方57.87为参考止损位，需防继续下探。",
+          "summary": "技术面弱势超卖但尚未企稳，估值与盈利数据尚可，消息面平淡；列观察，待动量与均线改善再评估。"
         }
       },
       {
         "ticker": "HOOD",
         "name": "Robinhood Markets",
         "sector": "Financial Services",
-        "score": 41.2,
-        "tag": "深度超跌",
-        "rsi": 28.5,
-        "bias_pct": -15.69,
-        "drawdown_pct": -26.53,
-        "ref_price": 83.84,
-        "stop_loss": 75.7,
-        "confirm": "RSI 回升过 35 且站回 MA20 $99.44",
-        "invalid": "跌破参考止损 $75.70 或 RSI 继续下行",
-        "observe_until": "2026-11-13",
-        "reason": "RSI 28.5 / Bias -15.7% / ZScore -2.10；ATR 6.5% · 20日量比 0.9978；板块 Other。规则版筛选，未回测。",
+        "score": 29.5,
+        "tag": "超跌反弹",
+        "rsi": 31.8,
+        "bias_pct": -12.68,
+        "drawdown_pct": -23.5,
+        "ref_price": 85.68,
+        "stop_loss": 77.92,
+        "confirm": "RSI 回升过 35 且站回 MA20 $98.12",
+        "invalid": "跌破参考止损 $77.92 或 RSI 继续下行",
+        "observe_until": "2026-11-14",
+        "reason": "RSI 31.8 / Bias -12.7% / ZScore -1.64；ATR 6.0% · 20日量比 0.7012；板块 Other。规则版筛选，未回测。",
         "ai": {
           "verdict": "谨慎",
-          "technical": "RSI 28.5超卖，20日动量-26.5%，偏离MA20 -15.7%，相对SPY -23.6%，beta 4.29高波动；技术分5偏弱。",
-          "fundamental": "PE(TTM)38.6/前瞻24.8，PB7.55，ROE21.5%，净利率39.0%；营收增11.8%但盈利增-16.4%。",
-          "news": "个股新闻与市场新闻均缺失，无法评估消息面。",
-          "risk": "高beta与高估值叠加盈利负增长，20日大幅回撤；若跌破参考止损75.7需警惕波动。",
-          "summary": "技术面超卖但趋势弱，基本面盈利下滑，消息缺失；列为谨慎观察，非投资建议。"
+          "technical": "RSI31.8近超卖，但20日跌23.5%、偏离MA20 -12.7%，相对SPY弱20.3%；ATR6%、Beta4.3，波动极高。",
+          "fundamental": "PE(TTM)39.5、前瞻25.1、PB7.7；ROE21.5%、净利率39%，但营收增11.8%、盈利增-16.4%，估值不低。",
+          "news": "个股新闻：加密交易降温，Robinhood争夺Anthropic IPO份额；另有Coinbase及金融股相关报道。",
+          "risk": "高Beta放大回撤；20日大幅跑输且盈利负增长；加密交易降温或压制业务；估值偏高。具体指引数据缺失。",
+          "summary": "技术面超卖但趋势弱、波动高；基本面盈利强但增长分化、估值高；消息面偏空。整体宜谨慎观察，非投资建议。"
         }
       }
     ]
