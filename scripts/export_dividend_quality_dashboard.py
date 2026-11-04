@@ -89,7 +89,7 @@ def _audited_fields(event, audit_event):
     return values, statuses, fields
 
 
-def _verified_sources(event, audit_fields, audit_hashes):
+def _verified_sources(event, audit_hash_manifest, ticker, accession):
     role_specs = {
         "EXHIBIT": ("EXHIBIT", "SEC Exhibit 99.1"),
         "PRIMARY": ("PRIMARY", "SEC Form 8-K"),
@@ -109,21 +109,20 @@ def _verified_sources(event, audit_fields, audit_hashes):
         expected_doc_role, expected_type = role_specs[role]
         url = source.get("url")
         sha = source.get("sha256")
-        if (
-            not _safe_url(url)
-            or sha not in audit_hashes
-            or source.get("source_type") != expected_type
-        ):
-            continue
-        matching_audit_field = any(
-            item.get("evidence_sha256") == sha
-            and item.get("source_url") == url
-            and item.get("document_role") == expected_doc_role
-            and item.get("source_type") == expected_type
-            for item in audit_fields.values()
+        filename = str(source.get("filename") or "")
+        matching_manifest_file = any(
+            item.get("sha256") == sha
+            and str(item.get("file") or "").replace("\\", "/").split("/")[-1] == filename
+            and ticker in str(item.get("file") or "").replace("\\", "/").split("/")
+            and accession in str(item.get("file") or "").replace("\\", "/").split("/")
+            for item in audit_hash_manifest
             if isinstance(item, dict)
         )
-        if not matching_audit_field:
+        if (
+            not _safe_url(url)
+            or not matching_manifest_file
+            or source.get("source_type") != expected_type
+        ):
             continue
         seen_roles.add(role)
         result.append({
@@ -140,11 +139,11 @@ def _verified_sources(event, audit_fields, audit_hashes):
 
 
 def build(events_doc, audit_doc, excl_doc):
-    audit_hashes = {
-        item["sha256"]
-        for item in audit_doc.get("hashes", [])
-        if isinstance(item, dict) and item.get("sha256")
-    }
+    audit_hash_manifest = [
+        item for item in audit_doc.get("hashes", [])
+        if isinstance(item, dict) and item.get("sha256") and item.get("file")
+    ]
+    audit_hashes = {item["sha256"] for item in audit_hash_manifest}
     audit_by_ticker = {
         item["ticker"]: item
         for item in audit_doc.get("events", [])
@@ -162,7 +161,7 @@ def build(events_doc, audit_doc, excl_doc):
             raise ValueError(f"{ticker}: accession number does not match field audit")
 
         values, statuses, audit_fields = _audited_fields(event, audit_event)
-        sources = _verified_sources(event, audit_fields, audit_hashes)
+        sources = _verified_sources(event, audit_hash_manifest, ticker, audit_event["accession"])
         exhibit = next(source for source in sources if source["role"] == "EXHIBIT")
 
         events.append({
