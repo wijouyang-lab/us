@@ -1,11 +1,14 @@
 name: Research AkShare US 28 Coverage Once
 
 on:
+  workflow_dispatch:
   pull_request:
     branches: [main]
     paths:
       - "tools/research/akshare_us_28_coverage.py"
+      - "tools/research/build_sec_shares_28.py"
       - "tests/test_akshare_us_28_coverage.py"
+      - "data/research/sec_shares_outstanding_28.json"
       - ".github/workflows/research-akshare-us-28-once.yml"
       - "docs/research/AKSHARE_US_28_COVERAGE.md"
 
@@ -39,6 +42,7 @@ jobs:
             --output artifacts/akshare-us-28-coverage.json \
             --start-date 20160101 \
             --adjust qfq \
+            --shares data/research/sec_shares_outstanding_28.json \
             --sleep-seconds 0.8
 
       - name: Upload coverage report
