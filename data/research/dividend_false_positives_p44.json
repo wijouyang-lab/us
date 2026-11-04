@@ -1,0 +1,11 @@
+[
+  {
+    "ticker": "NEE",
+    "amount": 67.75,
+    "reason": "FALSE_POSITIVE_NON_DIVIDEND_PRICE_TARGET",
+    "source_url": "https://www.sec.gov/Archives/edgar/data/753308/000110465926100476/tm2623831d1_8k.htm",
+    "evidence_sha256": "e7348825022ac1040e7a188fca59f3ed7fe727361b4111ee9291c40d997efaf8",
+    "evidence_status": "URL_ONLY_NOT_DOWNLOADED",
+    "is_event": false
+  }
+]
