@@ -2,6 +2,7 @@
 from __future__ import annotations
 import hashlib, json, os, re, time, urllib.error, urllib.request
 from datetime import datetime, timezone
+from tools.investment_research.sec.rate_limiter import get_rate_limiter
 from pathlib import Path
 
 BASE = "https://www.sec.gov/Archives/edgar/data"
@@ -29,16 +30,14 @@ class FilingFetcher:
         if config_status(ua) != "SEC_USER_AGENT_CONFIGURED":
             raise RuntimeError("CONFIGURATION_BLOCKED: " + config_status(ua))
         self.ua = ua; self.cache = Path(cache); self.cache.mkdir(parents=True, exist_ok=True)
-        self.min_interval = max(0.25, min_interval); self.last = 0.0
+        self.min_interval = max(0.25, min_interval)
 
     def _get(self, url: str, dest: Path) -> dict:
         if dest.exists():
             raw = dest.read_bytes()
             return {"status": 200, "cached": True, "sha256": hashlib.sha256(raw).hexdigest(),
                     "bytes": len(raw), "path": str(dest)}
-        wait = self.min_interval - (time.monotonic() - self.last)
-        if wait > 0: time.sleep(wait)
-        self.last = time.monotonic()
+        get_rate_limiter().wait()
         try:
             req = urllib.request.Request(url, headers={"User-Agent": self.ua})
             with urllib.request.urlopen(req, timeout=25) as r:

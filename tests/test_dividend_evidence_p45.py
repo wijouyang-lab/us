@@ -56,9 +56,11 @@ def test_verifier_requires_manifest_hash():
 
 
 def test_manifest_resume_dedupe():
-    m={"accessions":{}}
-    f={"status_text":"FETCHED_COMPLETE","index_url":"u","documents":[],"downloaded":1,"failed":0}
-    upsert(m,"X","A",f); upsert(m,"X","A",f)
+    from tools.investment_research.dividend.sec_fetch_manifest import set_expected, mark_text_scanned
+    m={"expected_accessions":["A"],"accessions":{}}
+    f={"status_text":"FETCHED_COMPLETE","index_url":"u","downloaded":1,"failed":0,
+       "documents":[{"status":200,"sha256":"a","path":"x"}],"primary":{"status":200,"sha256":"a"},"exhibits":[]}
+    upsert(m,"X","A",f); upsert(m,"X","A",f); mark_text_scanned(m,"A")
     assert len(m["accessions"])==1 and complete(m)
 
 
