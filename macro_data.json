@@ -1,30 +1,30 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-11-03T14:01:56Z",
+  "generated_at": "2026-11-04T14:02:08Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "4.90%",
-      "prev": "4.89%",
-      "date": "2026-11-03",
+      "value": "4.92%",
+      "prev": "4.95%",
+      "date": "2026-11-04",
       "source": "Yahoo Finance",
       "sentiment": null,
       "rationale": null
     },
     {
       "indicator": "5Y国债",
-      "value": "4.69%",
-      "prev": "4.69%",
-      "date": "2026-11-03",
+      "value": "4.71%",
+      "prev": "4.74%",
+      "date": "2026-11-04",
       "source": "Yahoo Finance",
       "sentiment": null,
       "rationale": null
     },
     {
       "indicator": "13周国债",
-      "value": "4.02%",
-      "prev": "3.98%",
-      "date": "2026-11-03",
+      "value": "4.03%",
+      "prev": "4.03%",
+      "date": "2026-11-04",
       "source": "Yahoo Finance",
       "sentiment": null,
       "rationale": null
@@ -67,9 +67,9 @@
     },
     {
       "indicator": "Fear & Greed",
-      "value": "19 (extreme fear)",
-      "prev": "33",
-      "date": "2026-11-03",
+      "value": "22 (extreme fear)",
+      "prev": "34",
+      "date": "2026-11-04",
       "source": "CNN",
       "sentiment": null,
       "rationale": null
@@ -82,7 +82,18 @@
       "content": "Kevin Warsh is managing US debt costs not inflation as interest rates risk topping GDP growth soon - Fortune",
       "time": "11-01 18:07",
       "source": "Fortune",
-      "age_tag": "📄昨日-中等权重",
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Kevin Warsh Offered a Warning on Inflation. Here's What History Says Is Coming Next. - The Motley Fool",
+      "time": "11-02 03:12",
+      "source": "The Motley Fool",
+      "age_tag": "📑前日-低权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
@@ -90,10 +101,10 @@
     {
       "person": null,
       "title": null,
-      "content": "Opinion | The inflation election - The Washington Post",
-      "time": "11-03 01:55",
-      "source": "The Washington Post",
-      "age_tag": "📰今日-高权重",
+      "content": "Would prices have fallen without tariffs this past year? New York Fed research says yes for many consumer goods - Chase Bank",
+      "time": "11-02 21:50",
+      "source": "Chase Bank",
+      "age_tag": "📄昨日-中等权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
@@ -104,40 +115,18 @@
       "content": "Week Ahead: US CPI, Fed Rates, Treasury Yields and Markets - Equiti Global",
       "time": "11-02 04:20",
       "source": "Equiti Global",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": null,
-      "sentiment": null,
-      "rationale": null
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "[This Week’s Key Economic and Crypto Events] US Midterm Elections and More - bloomingbit",
-      "time": "11-01 03:32",
-      "source": "bloomingbit",
       "age_tag": "📑前日-低权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
     },
     {
-      "person": "Trump",
-      "title": null,
-      "content": "Krugman assesses four Trump policies before November 3 vote - Nation Thailand",
-      "time": "11-02 19:43",
-      "source": "Nation Thailand",
-      "age_tag": "📰今日-高权重",
-      "content_cn": null,
-      "sentiment": null,
-      "rationale": null
-    },
-    {
       "person": null,
       "title": null,
-      "content": "Economic frustration set to boil over in U.S. midterm elections - CBC",
-      "time": "11-02 18:13",
-      "source": "CBC",
-      "age_tag": "📰今日-高权重",
+      "content": "US Midterms, Jobs Data and Tech Earnings: 5 Events That Could Move Crypto This Week - Altcoin Buzz",
+      "time": "11-03 05:56",
+      "source": "Altcoin Buzz",
+      "age_tag": "📄昨日-中等权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
@@ -148,28 +137,6 @@
       "content": "The Midterm Elections Could Reshape the US Economy. Here’s How - Investopedia",
       "time": "11-02 12:33",
       "source": "Investopedia",
-      "age_tag": "📰今日-高权重",
-      "content_cn": null,
-      "sentiment": null,
-      "rationale": null
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US Voters in a Sour Economic Mood Heading Into Midterm Elections - U.S. News & World Report",
-      "time": "11-02 06:06",
-      "source": "U.S. News & World Report",
-      "age_tag": "📄昨日-中等权重",
-      "content_cn": null,
-      "sentiment": null,
-      "rationale": null
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "The Week Ahead: Fed September Minutes, PepsiCo and Delta Earnings in Focus - TradingKey",
-      "time": "11-01 16:25",
-      "source": "TradingKey",
       "age_tag": "📄昨日-中等权重",
       "content_cn": null,
       "sentiment": null,
