@@ -1,0 +1,28 @@
+.dq-wrap { display: block; }
+.dq-banner { border: 1px solid var(--line, #2a3140); background: var(--accent-soft, rgba(80,140,255,.12)); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; color: var(--text-2, #aab4c5); font-size: 13px; line-height: 1.5; }
+.dq-banner strong { color: var(--accent, #6ea8fe); }
+.dq-banner span { display: block; margin-top: 3px; }
+.dq-events { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.dq-event { border: 1px solid var(--line, #2a3140); border-radius: 11px; padding: 12px; background: var(--card-2, rgba(255,255,255,.025)); min-width: 0; }
+.dq-event-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin-bottom: 10px; }
+.dq-event-head strong { font-size: 18px; }
+.dq-status { font-size: 11px; color: #57d38c; border: 1px solid currentColor; border-radius: 999px; padding: 2px 7px; }
+.dq-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.dq-grid div { min-width: 0; }
+.dq-grid span { display: block; color: var(--text-3, #7c8799); font-size: 11px; }
+.dq-grid b { display: block; margin-top: 2px; font-size: 14px; overflow-wrap: anywhere; }
+.dq-grid small { color: var(--text-3, #7c8799); font-size: 10px; }
+.dq-sources { margin: 10px 0 0; padding: 0; list-style: none; }
+.dq-source { padding: 5px 0; border-top: 1px dashed var(--line, #2a3140); font-size: 11px; }
+.dq-source a { color: var(--accent, #6ea8fe); text-decoration: none; overflow-wrap: anywhere; }
+.dq-source code { display: block; color: var(--text-3, #7c8799); font-size: 10px; overflow-wrap: anywhere; }
+.dq-excl-wrap { margin-top: 13px; border-top: 1px solid var(--line, #2a3140); padding-top: 10px; }
+.dq-excl-wrap h3 { font-size: 13px; margin: 0 0 6px; color: var(--text-2, #aab4c5); }
+.dq-excl-wrap ul { margin: 0; padding-left: 17px; color: var(--text-2, #aab4c5); font-size: 12px; }
+.dq-exclusion { margin: 4px 0; }
+.dq-error { border: 1px solid #8b3d3d; background: rgba(180,60,60,.12); color: #ffb4b4; border-radius: 9px; padding: 10px 12px; font-size: 13px; }
+@media (max-width: 760px) {
+  .dq-events { grid-template-columns: 1fr; }
+  .dq-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dq-banner { font-size: 12px; }
+}

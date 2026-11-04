@@ -1,0 +1,12 @@
+{
+  "name": "us-dividend-quality-e2e",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Browser E2E checks for the Dividend Quality dashboard section",
+  "scripts": {
+    "test:e2e": "node tests/dividend_quality_e2e.js"
+  },
+  "devDependencies": {
+    "playwright": "1.64.1"
+  }
+}
