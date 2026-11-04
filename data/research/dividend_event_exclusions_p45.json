@@ -1,0 +1,18 @@
+{
+  "exclusions": [
+    {
+      "ticker": "BAC",
+      "event_type": "DECLARED",
+      "security_type": "PREFERRED",
+      "declared_per_share": 1.75,
+      "currency": "USD",
+      "status": "PREFERRED_STOCK_EXCLUDED_FROM_COMMON_DIVIDEND",
+      "source_type": "SEC Exhibit 99.1",
+      "raw_context": "ing price, regulatory requirements and general market conditions, and may be suspended or discontinued at any time. Such repurchases may be effected through open market purchases or privately negotiated transactions, including repurchase plans that satisfy the conditions of Rule 10b5-1 of the Securities Exchange Act of 1934, as amended. The Board also declared a regular quarterly cash dividend of  $1.75 per share  on the 7% Cumulative Redeemable Preferred Stock, Series B. The dividend is payable on October 23, 2026 to shareholders of record as of October 9, 2026. Forward-looking statements Certain statements contained in this news release may constitute \"forward-looking\" statements within th",
+      "accession_number": "0000070858-26-000364",
+      "cik": "0000070858",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/70858/000007085826000364/exhibit991.htm",
+      "evidence_sha256": "976df33fda6a179b39332f4da90aeae662bdc604e5106540833c9c335d316d21"
+    }
+  ]
+}
