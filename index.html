@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Invest Terminal · 美股与全球宏观 Dashboard</title>
 <link rel="stylesheet" href="app.css?v=runtime38">
-<link rel="stylesheet" href="dashboard/dividend_quality.css">
 </head>
 <body>
 
@@ -169,17 +168,6 @@
     <div id="quantPhases"></div>
   </section>
 
-  <!-- Dividend Quality: independent read-only SEC-targeted sample -->
-  <section class="card sec" id="dividendQualitySection">
-    <div class="sec-h">
-      <h2>Dividend Quality · 股息质量</h2>
-      <span class="sec-sub" id="dividendQualitySub">CAT/BAC 定向样本 · 只读 SEC 证据</span>
-    </div>
-    <div class="dq-wrap" id="dividendQualityRoot">
-      <div class="dq-banner">正在加载定向股息证据…</div>
-    </div>
-  </section>
-
   <!-- 4. Review + Options + History（Global Markets 已并入上方宏观板块） -->
   <div class="grid-bottom">
 
@@ -337,6 +325,5 @@
 </div>
 
 <script src="app.js?v=runtime38"></script>
-<script src="dashboard/dividend_quality.js"></script>
 </body>
 </html>
