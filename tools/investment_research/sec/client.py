@@ -4,6 +4,7 @@ import hashlib, json, os, time, urllib.error, urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Callable
+from tools.investment_research.sec.rate_limiter import get_rate_limiter
 
 SEC_UA_ENV = "SEC_USER_AGENT"
 TICKERS_URL = "https://www.sec.gov/files/company_tickers.json"
@@ -27,12 +28,9 @@ class SECClient:
             raise SECError("SEC_USER_AGENT must contain a contact email or URL")
         self.ua = ua; self.cache = Path(cache_dir); self.cache.mkdir(parents=True, exist_ok=True)
         self.min_interval = max(0.2, min_interval); self.timeout = timeout; self.sleep = sleep
-        self._last = 0.0
 
     def _wait(self):
-        dt = time.monotonic() - self._last
-        if dt < self.min_interval: self.sleep(self.min_interval - dt)
-        self._last = time.monotonic()
+        get_rate_limiter().wait()
 
     def get_json(self, url: str, *, cache_key: str, max_age: int = 86400) -> dict:
         p = self.cache / f"{cache_key}.json"; meta = self.cache / f"{cache_key}.meta.json"

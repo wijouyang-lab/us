@@ -1,0 +1,56 @@
+name: SEC P4.5 Targeted Field Verification
+
+on:
+  push:
+    branches:
+      - research/dividend-evidence-execution-p45
+    paths:
+      - tools/investment_research/dividend/dividend_targeted_verify_p45.py
+      - tools/investment_research/dividend/dividend_event_parser_p44.py
+      - tests/test_targeted_verify_p45.py
+      - .github/workflows/sec-p45-targeted-verify.yml
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify-fields:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download prior smoke artifact (no SEC request)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 41816975780 \
+            --repo wijouyang-lab/us \
+            --name sec-p45-targeted-smoke \
+            --dir data/sec/filings_p45_smoke
+
+      - name: Verify live-download field evidence
+        run: python -m tools.investment_research.dividend.dividend_targeted_verify_p45
+
+      - name: Install pytest
+        run: python -m pip install pytest
+
+      - name: Run fixture tests
+        run: python -m pytest tests/test_targeted_verify_p45.py -q
+
+      - name: Upload field audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sec-p45-targeted-field-audit
+          path: |
+            data/research/dividend_events_targeted_p45.json
+            data/research/dividend_event_field_audit_p45.json
+            data/research/dividend_event_exclusions_p45.json
+          retention-days: 30
+          if-no-files-found: warn

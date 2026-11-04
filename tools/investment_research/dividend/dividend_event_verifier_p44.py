@@ -6,7 +6,8 @@ CORE = ("ticker","event_type","security_type","declared_per_share","announcement
         "source_url","accession_number","evidence_sha256")
 
 
-def verify(events: list[dict], fetched_accessions: set[str] | None = None) -> list[dict]:
+def verify(events: list[dict], fetched_accessions: set[str] | None = None,
+           manifest: dict | None = None) -> list[dict]:
     out = []
     for e in events:
         x = dict(e)
@@ -15,6 +16,11 @@ def verify(events: list[dict], fetched_accessions: set[str] | None = None) -> li
             continue
         if fetched_accessions is not None and x.get("accession_number") not in fetched_accessions:
             x["verification_status"] = "SOURCE_FETCH_FAILED"; out.append(x); continue
+        if manifest is not None:
+            entry = manifest.get("accessions", {}).get(x.get("accession_number"), {})
+            docs = [d for d in entry.get("documents", []) if d.get("url") == x.get("source_url")]
+            if not docs or docs[0].get("status") != 200 or docs[0].get("sha256") != x.get("evidence_sha256"):
+                x["verification_status"] = "SOURCE_FETCH_FAILED"; out.append(x); continue
         if missing:
             x["verification_status"] = "PARTIALLY_VERIFIED"; x["missing_fields"] = missing
         else:
