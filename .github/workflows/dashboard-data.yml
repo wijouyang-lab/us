@@ -27,10 +27,6 @@ on:
       - dashboard_export.py
       - dashboard/fetch_runtimes.py
       - dashboard/summarize_run.py
-      - scripts/export_dividend_quality_dashboard.py
-      - data/research/dividend_events_targeted_p45.json
-      - data/research/dividend_event_field_audit_p45.json
-      - data/research/dividend_event_exclusions_p45.json
       - .github/workflows/dashboard-data.yml
   workflow_run:
     # Refresh the public dashboard as soon as the externally-triggered Scan
