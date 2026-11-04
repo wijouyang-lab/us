@@ -69,7 +69,7 @@ and no `SPLIT_CONFIRMED` is claimed.
 | NO_SPLIT_VERIFIED | **0** |
 | SPLIT_BASIS_UNVERIFIED | **28** overall DPS basis |
 
-A missing split announcement is **not** treated as proof of no split.  
+A missing split announcement is **not** treated as proof of no split.
 No ticker receives `NO_SPLIT_VERIFIED` merely because no fact was found.
 
 ## 4. Formal dividend events
@@ -87,7 +87,7 @@ No ticker receives `NO_SPLIT_VERIFIED` merely because no fact was found.
 It rejects events without source/date/hash and cannot mark `VERIFIED` without
 evidence notes.
 
-No official event records were supplied or automatically inferred.  
+No official event records were supplied or automatically inferred.
 Result:
 
 ```text
