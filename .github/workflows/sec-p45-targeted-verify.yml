@@ -37,6 +37,9 @@ jobs:
       - name: Verify live-download field evidence
         run: python -m tools.investment_research.dividend.dividend_targeted_verify_p45
 
+      - name: Install pytest
+        run: python -m pip install pytest
+
       - name: Run fixture tests
         run: python -m pytest tests/test_targeted_verify_p45.py -q
 
