@@ -43,6 +43,7 @@ jobs:
             --start-date 20160101 \
             --adjust qfq \
             --shares data/research/sec_shares_outstanding_28.json \
+            --raw-limit 5 \
             --sleep-seconds 0.8
 
       - name: Upload coverage report

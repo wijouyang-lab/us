@@ -151,7 +151,8 @@ def _shares_check(quote_price: float | None, raw_cap: float | None, shares_doc: 
 
 def run_audit(output_path: Path, start_date: str = "20160101", end_date: str | None = None,
               adjust: str = "qfq", sleep_seconds: float = 0.8,
-              shares_path: Path | None = Path("data/research/sec_shares_outstanding_28.json")) -> dict:
+              shares_path: Path | None = Path("data/research/sec_shares_outstanding_28.json"),
+              raw_limit: int = 0) -> dict:
     import akshare as ak
     end_date = end_date or date.today().strftime("%Y%m%d")
     shares_doc = {}
@@ -186,7 +187,8 @@ def run_audit(output_path: Path, start_date: str = "20160101", end_date: str | N
         return report
 
     matched = quote_ready = hist_nonempty = hist_quality = value_ready = trend_ready = 0
-    for ticker in SAMPLE_TICKERS:
+    raw_attempted = raw_quality = 0
+    for ticker_index, ticker in enumerate(SAMPLE_TICKERS):
         candidates = spot_index.get(normalize_ticker(ticker), [])
         row = {"ticker": ticker, "spot_match_count": len(candidates), "data_available": False,
                "data_quality_pass": False, "input_ready": False, "score_ready": False,
@@ -217,19 +219,27 @@ def run_audit(output_path: Path, start_date: str = "20160101", end_date: str | N
         except Exception as exc:
             row["history_qfq"] = {"quality_status": "HISTORY_FETCH_FAILED",
                                   "error": f"{type(exc).__name__}: {str(exc)[:400]}"}
-        try:
-            raw = ak.stock_us_hist(symbol=quote["vendor_symbol"], period="daily",
-                                   start_date=start_date, end_date=end_date, adjust="")
-            row["history_raw"] = assess_history(raw)
-            row["history_raw"]["requested_adjust"] = "unadjusted"
-            row["raw_vs_qfq_status"] = ("BOTH_HISTORY_AVAILABLE" if qfq is not None and raw is not None
-                                        else "PARTIAL_HISTORY")
-        except Exception as exc:
-            row["history_raw"] = {"quality_status": "HISTORY_FETCH_FAILED",
-                                  "error": f"{type(exc).__name__}: {str(exc)[:400]}"}
+        if raw_limit and ticker_index < raw_limit:
+            raw_attempted += 1
+            try:
+                raw = ak.stock_us_hist(symbol=quote["vendor_symbol"], period="daily",
+                                       start_date=start_date, end_date=end_date, adjust="")
+                row["history_raw"] = assess_history(raw)
+                row["history_raw"]["requested_adjust"] = "unadjusted"
+                row["raw_vs_qfq_status"] = ("BOTH_HISTORY_AVAILABLE" if qfq is not None and raw is not None
+                                            else "PARTIAL_HISTORY")
+                if row["history_raw"].get("quality_pass"): raw_quality += 1
+            except Exception as exc:
+                row["history_raw"] = {"quality_status": "HISTORY_FETCH_FAILED",
+                                      "error": f"{type(exc).__name__}: {str(exc)[:400]}"}
+        else:
+            row["history_raw"] = {"quality_status": "RAW_COMPARISON_NOT_ATTEMPTED",
+                                  "reason": "rate-limit-protection; qfq is primary; raw optional sample"}
+            row["raw_vs_qfq_status"] = "RAW_NOT_ATTEMPTED"
         qok = bool(row.get("history_qfq", {}).get("quality_pass"))
         rok = bool(row.get("history_raw", {}).get("quality_pass"))
-        row["data_quality_pass"] = bool(row["data_available"] and qok and rok)
+        row["data_quality_pass"] = bool(row["data_available"] and qok)
+        row["raw_quality_pass"] = rok
         trend_ready += 1 if row["data_quality_pass"] else 0
         row["trend"] = {"status": "DATA_QUALITY_PASS_NOT_PIT" if row["data_quality_pass"]
                         else "DATA_QUALITY_FAIL",
@@ -250,7 +260,8 @@ def run_audit(output_path: Path, start_date: str = "20160101", end_date: str | N
 
     report["summary"] = {"sample_count": len(SAMPLE_TICKERS), "spot_matched": matched,
         "quote_price_ready": quote_ready, "history_nonempty": hist_nonempty,
-        "history_quality_pass": hist_quality, "value_input_ready": value_ready,
+        "history_quality_pass": hist_quality, "history_raw_attempted": raw_attempted,
+        "history_raw_quality_pass": raw_quality, "value_input_ready": value_ready,
         "trend_quality_ready": trend_ready, "garp_forward_eps_ready": 0,
         "score_ready": 0, "backtest_ready": 0}
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -266,11 +277,12 @@ def main() -> int:
     parser.add_argument("--adjust", choices=("", "qfq", "hfq"), default="qfq")
     parser.add_argument("--sleep-seconds", type=float, default=0.8)
     parser.add_argument("--shares", type=Path, default=Path("data/research/sec_shares_outstanding_28.json"))
+    parser.add_argument("--raw-limit", type=int, default=0)
     args = parser.parse_args()
     if args.sleep_seconds < 0: parser.error("--sleep-seconds must be >= 0")
     try:
         report = run_audit(args.output, args.start_date, args.end_date, args.adjust,
-                           args.sleep_seconds, args.shares)
+                           args.sleep_seconds, args.shares, max(0, args.raw_limit))
     except ImportError as exc:
         print(f"AkShare dependency unavailable: {exc}"); return 2
     print(json.dumps(report["summary"], ensure_ascii=False, sort_keys=True))
