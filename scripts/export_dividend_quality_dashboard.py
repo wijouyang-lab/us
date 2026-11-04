@@ -1,12 +1,17 @@
 #!/usr/bin/env python3
-"""Export only verified P4.5 CAT/BAC dividends for the public dashboard.
+"""Export only field-audited P4.5 dividend events for the public dashboard.
 
 Reads existing research JSON. No SEC access, no SEC_USER_AGENT, no strategy code.
+The field-level audit is the authority for values; the aggregate event file must
+match it exactly or the exporter fails closed and preserves the existing snapshot.
 """
 from __future__ import annotations
-import argparse, json, re
+
+import argparse
+import json
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 SRC_EVENTS = Path("data/research/dividend_events_targeted_p45.json")
 SRC_AUDIT = Path("data/research/dividend_event_field_audit_p45.json")
@@ -14,96 +19,256 @@ SRC_EXCL = Path("data/research/dividend_event_exclusions_p45.json")
 OUT = Path("dashboard/data/dividend_quality.json")
 SOURCE_SHA = "6c131858bb2eef4ff9fd219caf3171813c217e6e"
 VERIFICATION_URL = "https://github.com/wijouyang-lab/us/actions/runs/41819727044"
-SEC_HTTPS = re.compile(r"^https://www\.sec\.gov/", re.I)
 
-REQUIRED = {"announcement":"VERIFIED","declared_per_share":"VERIFIED","security_type":"VERIFIED",
-            "frequency":"VERIFIED","record_date":"VERIFIED","payment_date":"VERIFIED"}
+NOT_DISCLOSED = "NOT_DISCLOSED_IN_FILING"
+AUDIT_FIELD_MAP = {
+    "announcement_date": ("announcement", {"VERIFIED"}),
+    "declared_per_share": ("declared_per_share", {"VERIFIED"}),
+    "security_type": ("security_type", {"VERIFIED"}),
+    "frequency": ("frequency", {"VERIFIED"}),
+    "record_date": ("record_date", {"VERIFIED"}),
+    "payment_date": ("payment_date", {"VERIFIED"}),
+    "increase_per_share": ("increase_per_share", {"VERIFIED"}),
+    "increase_pct": ("increase_pct", {"VERIFIED"}),
+    "previous_per_share": ("previous_per_share", {"VERIFIED", NOT_DISCLOSED}),
+    "ex_date": ("ex_date", {NOT_DISCLOSED}),
+}
 
 
 def _safe_url(url: str) -> bool:
-    return bool(url and SEC_HTTPS.match(url))
+    try:
+        parsed = urlsplit(str(url or ""))
+        return (
+            parsed.scheme.lower() == "https"
+            and parsed.hostname == "www.sec.gov"
+            and parsed.username is None
+            and parsed.password is None
+            and parsed.port in (None, 443)
+            and parsed.path.startswith("/Archives/edgar/data/")
+        )
+    except (TypeError, ValueError):
+        return False
 
 
 def _load(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def build(events_doc, audit_doc, excl_doc):
-    audit_hashes = {h["sha256"] for h in audit_doc.get("hashes", []) if h.get("sha256")}
-    audit_by_ticker = {e["ticker"]: e for e in audit_doc.get("events", [])}
-    events = []
-    for e in events_doc.get("events", []):
-        t = e.get("ticker")
-        if e.get("verification_status") != "VERIFIED": continue
-        a = audit_by_ticker.get(t)
-        if not a or a.get("event_status") != "VERIFIED": continue
-        fields = a.get("fields", {})
-        if any(fields.get(k, {}).get("status") != v for k, v in REQUIRED.items()): continue
-        if e.get("ex_date") is not None or e.get("ex_date_status") != "NOT_DISCLOSED_IN_FILING": continue
-        sources = []
-        for s in e.get("sources", []):
-            if s.get("sha256") not in audit_hashes or not _safe_url(s.get("url","")): continue
-            sources.append({"role":s.get("role"),"source_type":s.get("source_type"),
-                            "url":s.get("url"),"filename":s.get("filename"),"sha256":s.get("sha256")})
-        if len({x["role"] for x in sources}) < 2: continue
-        events.append({
-            "ticker":t,"event_type":e.get("event_type"),"security_type":e.get("security_type"),
-            "declared_per_share":e.get("declared_per_share"),
-            "previous_per_share":e.get("previous_per_share"),
-            "previous_per_share_status":e.get("previous_per_share_status"),
-            "increase_per_share":e.get("increase_per_share"),"increase_pct":e.get("increase_pct"),
-            "announcement_date":e.get("announcement_date"),"record_date":e.get("record_date"),
-            "payment_date":e.get("payment_date"),"ex_date":None,
-            "ex_date_status":e.get("ex_date_status"),
-            "verification_status":e.get("verification_status"),
-            "sources":sources,"source_url":e.get("source_url"),"source_type":e.get("source_type"),
-            "document_role":"EXHIBIT","accession_number":e.get("accession_number"),
-            "evidence_sha256":e.get("evidence_sha256"),
+def _audited_fields(event, audit_event):
+    fields = audit_event.get("fields", {})
+    values = {}
+    statuses = {}
+    for output_key, (audit_key, allowed_statuses) in AUDIT_FIELD_MAP.items():
+        field = fields.get(audit_key)
+        if not isinstance(field, dict):
+            raise ValueError(f"{event.get('ticker')}: missing field audit for {audit_key}")
+        status = field.get("status")
+        if status not in allowed_statuses:
+            raise ValueError(
+                f"{event.get('ticker')}: unacceptable audit status for {audit_key}: {status}"
+            )
+        normalized = field.get("normalized")
+        if status == NOT_DISCLOSED and normalized is not None:
+            raise ValueError(
+                f"{event.get('ticker')}: {audit_key} is NOT_DISCLOSED but normalized is not null"
+            )
+        if event.get(output_key) != normalized:
+            raise ValueError(
+                f"{event.get('ticker')}: {output_key} does not match field audit "
+                f"({event.get(output_key)!r} != {normalized!r})"
+            )
+        values[output_key] = normalized
+        statuses[output_key] = status
+
+    for output_key in ("previous_per_share", "ex_date"):
+        status_key = output_key + "_status"
+        if event.get(status_key) != statuses[output_key]:
+            raise ValueError(
+                f"{event.get('ticker')}: {status_key} does not match field audit"
+            )
+    return values, statuses, fields
+
+
+def _verified_sources(event, audit_fields, audit_hashes):
+    role_specs = {
+        "EXHIBIT": ("EXHIBIT", "SEC Exhibit 99.1"),
+        "PRIMARY": ("PRIMARY", "SEC Form 8-K"),
+    }
+    candidates = event.get("sources", [])
+    if not isinstance(candidates, list):
+        raise ValueError(f"{event.get('ticker')}: sources must be a list")
+
+    result = []
+    seen_roles = set()
+    for source in candidates:
+        if not isinstance(source, dict):
+            continue
+        role = source.get("role")
+        if role not in role_specs or role in seen_roles:
+            continue
+        expected_doc_role, expected_type = role_specs[role]
+        url = source.get("url")
+        sha = source.get("sha256")
+        if (
+            not _safe_url(url)
+            or sha not in audit_hashes
+            or source.get("source_type") != expected_type
+        ):
+            continue
+        matching_audit_field = any(
+            item.get("evidence_sha256") == sha
+            and item.get("source_url") == url
+            and item.get("document_role") == expected_doc_role
+            and item.get("source_type") == expected_type
+            for item in audit_fields.values()
+            if isinstance(item, dict)
+        )
+        if not matching_audit_field:
+            continue
+        seen_roles.add(role)
+        result.append({
+            "role": role,
+            "source_type": expected_type,
+            "url": url,
+            "filename": source.get("filename"),
+            "sha256": sha,
         })
+
+    if seen_roles != set(role_specs):
+        raise ValueError(f"{event.get('ticker')}: both audited EXHIBIT and PRIMARY sources are required")
+    return result
+
+
+def build(events_doc, audit_doc, excl_doc):
+    audit_hashes = {
+        item["sha256"]
+        for item in audit_doc.get("hashes", [])
+        if isinstance(item, dict) and item.get("sha256")
+    }
+    audit_by_ticker = {
+        item["ticker"]: item
+        for item in audit_doc.get("events", [])
+        if isinstance(item, dict) and item.get("ticker")
+    }
+    events = []
+    for event in events_doc.get("events", []):
+        ticker = event.get("ticker")
+        if event.get("verification_status") != "VERIFIED":
+            continue
+        audit_event = audit_by_ticker.get(ticker)
+        if not audit_event or audit_event.get("event_status") != "VERIFIED":
+            continue
+        if event.get("accession_number") != audit_event.get("accession"):
+            raise ValueError(f"{ticker}: accession number does not match field audit")
+
+        values, statuses, audit_fields = _audited_fields(event, audit_event)
+        sources = _verified_sources(event, audit_fields, audit_hashes)
+        exhibit = next(source for source in sources if source["role"] == "EXHIBIT")
+
+        events.append({
+            "ticker": ticker,
+            "event_type": event.get("event_type"),
+            "security_type": values["security_type"],
+            "declared_per_share": values["declared_per_share"],
+            "previous_per_share": values["previous_per_share"],
+            "previous_per_share_status": statuses["previous_per_share"],
+            "increase_per_share": values["increase_per_share"],
+            "increase_pct": values["increase_pct"],
+            "announcement_date": values["announcement_date"],
+            "record_date": values["record_date"],
+            "payment_date": values["payment_date"],
+            "ex_date": values["ex_date"],
+            "ex_date_status": statuses["ex_date"],
+            "verification_status": "VERIFIED",
+            "sources": sources,
+            "source_url": exhibit["url"],
+            "source_type": exhibit["source_type"],
+            "document_role": "EXHIBIT",
+            "accession_number": audit_event["accession"],
+            "evidence_sha256": exhibit["sha256"],
+        })
+
     exclusions = []
-    for x in excl_doc.get("exclusions", []):
-        exclusions.append({"ticker":x.get("ticker"),"security_type":"PREFERRED",
-            "declared_per_share":x.get("declared_per_share"),
-            "status":"PREFERRED_STOCK_EXCLUDED_FROM_COMMON_DIVIDEND",
-            "source_url":x.get("source_url"),"source_type":x.get("source_type"),
-            "accession_number":x.get("accession_number"),"evidence_sha256":x.get("evidence_sha256")})
+    for item in excl_doc.get("exclusions", []):
+        url = item.get("source_url")
+        sha = item.get("evidence_sha256")
+        if not _safe_url(url) or sha not in audit_hashes:
+            raise ValueError(f"{item.get('ticker')}: preferred exclusion lacks audited SEC provenance")
+        exclusions.append({
+            "ticker": item.get("ticker"),
+            "security_type": "PREFERRED",
+            "declared_per_share": item.get("declared_per_share"),
+            "status": "PREFERRED_STOCK_EXCLUDED_FROM_COMMON_DIVIDEND",
+            "source_url": url,
+            "source_type": item.get("source_type"),
+            "accession_number": item.get("accession_number"),
+            "evidence_sha256": sha,
+        })
+
     return {
-        "metadata":{"generated_at":datetime.now(timezone.utc).isoformat(),
-            "source_commit_sha":SOURCE_SHA,"verification_run_url":VERIFICATION_URL,
-            "scope":"TARGETED_SAMPLE","full_scan_status":"NOT_RUN",
-            "verified_event_count":len(events),
-            "coverage_note":"仅 CAT/BAC 两家定向验证，并非完整覆盖"},
-        "events":events,"exclusions":exclusions,
+        "metadata": {
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "source_commit_sha": SOURCE_SHA,
+            "verification_run_url": VERIFICATION_URL,
+            "scope": "TARGETED_SAMPLE",
+            "full_scan_status": "NOT_RUN",
+            "verified_event_count": len(events),
+            "coverage_note": "仅 CAT/BAC 两家定向验证，并非完整覆盖",
+        },
+        "events": events,
+        "exclusions": exclusions,
     }
 
 
 def main():
-    ap=argparse.ArgumentParser(); ap.add_argument("--out",default=str(OUT)); ap.add_argument("--events",default=str(SRC_EVENTS))
-    ap.add_argument("--audit",default=str(SRC_AUDIT)); ap.add_argument("--exclusions",default=str(SRC_EXCL))
-    a=ap.parse_args(); out=Path(a.out)
-    missing=[p for p in (a.events,a.audit,a.exclusions) if not Path(p).exists()]
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--out", default=str(OUT))
+    parser.add_argument("--events", default=str(SRC_EVENTS))
+    parser.add_argument("--audit", default=str(SRC_AUDIT))
+    parser.add_argument("--exclusions", default=str(SRC_EXCL))
+    args = parser.parse_args()
+    out = Path(args.out)
+
+    missing = [
+        path for path in (args.events, args.audit, args.exclusions)
+        if not Path(path).exists()
+    ]
     if missing:
         if out.exists():
             print(f"research sources unavailable ({len(missing)} missing); keeping existing snapshot")
             return 0
-        print("no research sources and no existing snapshot"); return 1
+        print("no research sources and no existing snapshot")
+        return 1
+
     try:
-        built=build(_load(Path(a.events)),_load(Path(a.audit)),_load(Path(a.exclusions)))
-    except Exception as e:
-        print(f"refusing to overwrite dashboard data: {e}"); return 1
+        built = build(
+            _load(Path(args.events)),
+            _load(Path(args.audit)),
+            _load(Path(args.exclusions)),
+        )
+    except Exception as exc:
+        print(f"refusing to overwrite dashboard data: {exc}")
+        return 1
+
     if not built["events"]:
         if out.exists():
-            print("no VERIFIED events; keeping existing snapshot"); return 0
-        print("no VERIFIED events and no existing snapshot"); return 1
+            print("no VERIFIED events; keeping existing snapshot")
+            return 0
+        print("no VERIFIED events and no existing snapshot")
+        return 1
+
     if out.exists():
         try:
-            old=json.loads(out.read_text(encoding="utf-8"))
-            if old.get("events")==built["events"] and old.get("exclusions")==built["exclusions"]:
-                built["metadata"]["generated_at"]=old.get("metadata",{}).get("generated_at",built["metadata"]["generated_at"])
+            old = json.loads(out.read_text(encoding="utf-8"))
+            if old.get("events") == built["events"] and old.get("exclusions") == built["exclusions"]:
+                built["metadata"]["generated_at"] = old.get("metadata", {}).get(
+                    "generated_at", built["metadata"]["generated_at"]
+                )
         except Exception:
             pass
-    out.parent.mkdir(parents=True,exist_ok=True)
-    out.write_text(json.dumps(built,indent=2,ensure_ascii=False)+"\n",encoding="utf-8")
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(built, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"wrote {out} events={len(built['events'])} exclusions={len(built['exclusions'])}")
     return 0
 
