@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json, subprocess, sys
+import pytest
 from pathlib import Path
 from scripts.export_dividend_quality_dashboard import build, _load, SRC_EVENTS, SRC_AUDIT, SRC_EXCL
 
@@ -72,3 +73,36 @@ def test_sample_is_not_full_scan():
     assert m["verified_event_count"] == 2
     assert "并非完整覆盖" in m["coverage_note"]
     assert m["source_commit_sha"] == "6c131858bb2eef4ff9fd219caf3171813c217e6e"
+
+
+def test_exporter_rejects_aggregate_values_not_matching_field_audit():
+    events = _load(SRC_EVENTS)
+    bac = next(e for e in events["events"] if e["ticker"] == "BAC")
+    bac["previous_per_share"] = 0.28
+    with pytest.raises(ValueError, match="previous_per_share does not match field audit"):
+        build(events, _load(SRC_AUDIT), _load(SRC_EXCL))
+
+
+def test_exporter_rejects_undisclosed_value_in_audit():
+    audit = _load(SRC_AUDIT)
+    bac = next(e for e in audit["events"] if e["ticker"] == "BAC")
+    bac["fields"]["previous_per_share"]["normalized"] = 0.28
+    with pytest.raises(ValueError, match="NOT_DISCLOSED but normalized is not null"):
+        build(_load(SRC_EVENTS), audit, _load(SRC_EXCL))
+
+
+def test_exporter_rejects_ex_date_conflict():
+    events = _load(SRC_EVENTS)
+    bac = next(e for e in events["events"] if e["ticker"] == "BAC")
+    bac["ex_date"] = "2026-09-03"
+    with pytest.raises(ValueError, match="ex_date does not match field audit"):
+        build(events, _load(SRC_AUDIT), _load(SRC_EXCL))
+
+
+def test_exporter_requires_source_hash_for_same_ticker_and_accession():
+    events = _load(SRC_EVENTS)
+    bac = next(e for e in events["events"] if e["ticker"] == "BAC")
+    primary = next(s for s in bac["sources"] if s["role"] == "PRIMARY")
+    primary["sha256"] = "57b9d2645ce84f6dffed4f9396e88b3636d0c98bfcb42992667d45dad3d5acdf"
+    with pytest.raises(ValueError, match="both audited EXHIBIT and PRIMARY sources are required"):
+        build(events, _load(SRC_AUDIT), _load(SRC_EXCL))
