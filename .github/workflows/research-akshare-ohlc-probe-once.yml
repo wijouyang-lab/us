@@ -2,6 +2,11 @@ name: Research AkShare OHLC Anomaly Probe Once
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/akshare_us_28_coverage.py"
+      - ".github/workflows/research-akshare-ohlc-probe-once.yml"
 
 permissions:
   contents: read
