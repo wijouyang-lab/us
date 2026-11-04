@@ -27,10 +27,10 @@ Rules are in `sector_governance.py`:
 | FINANCIAL_OTHER | 0 |
 | UNKNOWN_INDUSTRY | 0 |
 
-Banks: JPM, BAC.  
+Banks: JPM, BAC.
 Insurance: BRK.B, MET, UNH (UNH is SIC 6324 hospital/medical service plans,
-classified insurance, not healthcare).  
-REITs: PLD, O.  
+classified insurance, not healthcare).
+REITs: PLD, O.
 UNP has SIC 4011 and is NON_FINANCIAL, not unknown.
 
 ## 2. Fixed non-financial profile
@@ -90,7 +90,7 @@ Rules:
 
 ## 4. P4.1 → P4.6 score changes
 
-P4.1 numeric scores: 20.  
+P4.1 numeric scores: 20.
 P4.6 numeric scores: **10**.
 
 The 10 unchanged READY companies:
@@ -175,7 +175,7 @@ score_weights
 score_denominator
 ```
 
-Different profiles or component signatures cannot be ranked.  
+Different profiles or component signatures cannot be ranked.
 No cross-industry unified ranking is produced.
 
 ## 9. Data and tests
