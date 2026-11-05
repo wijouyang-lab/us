@@ -1,0 +1,42 @@
+name: Research US Market Quotes P6.2
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/audit_us_market_quotes_p62.py"
+      - "tests/test_us_market_quotes_p62.py"
+      - ".github/workflows/research-us-market-quotes-p62.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas akshare pytest
+      - name: Run offline tests
+        run: python -m pytest tests/test_us_market_quotes_p62.py -q
+      - name: Fetch one batch of current US quotes
+        run: python tools/research/audit_us_market_quotes_p62.py
+      - name: Upload quote coverage audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: us-market-quote-coverage-p62
+          path: |
+            data/universe/us_market_quote_coverage_p62.json
+            data/universe/us_market_quote_mapping_p62.csv
+            data/universe/us_market_quote_failures_p62.csv
+          retention-days: 30
+          if-no-files-found: warn
