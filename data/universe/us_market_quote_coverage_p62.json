@@ -1,0 +1,229 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T08:34:41.601715+00:00",
+    "source": "AkShare stock_us_spot_em",
+    "source_error": null,
+    "spot_delay_minutes": 15,
+    "scope": "CURRENT_LISTED_COMMON_AND_ADR",
+    "target_denominator": 5502,
+    "note": "15-minute delayed snapshot, not real-time; no per-symbol fallback attempted.",
+    "akshare_version": "1.20.29",
+    "verification_run_url": "https://github.com/wijouyang-lab/us/actions/runs/41995786145",
+    "artifact_id": 13400427265
+  },
+  "summary": {
+    "raw_spot_records": 13895,
+    "target_total": 5502,
+    "target_common": 5187,
+    "target_adr": 315,
+    "matched": 5488,
+    "not_found": 0,
+    "ambiguous": 4,
+    "invalid_quote": 10,
+    "source_error": 0,
+    "quote_coverage": 0.997455,
+    "price_field_coverage": 0.997455,
+    "market_cap_field_coverage": 0.988186,
+    "pe_field_coverage": 0.94711,
+    "unclassified_total": 113,
+    "unclassified_matched": 111,
+    "unclassified_not_found": 0,
+    "unclassified_ambiguous": 0,
+    "sample_28_matched": 28
+  },
+  "by_type": {
+    "COMMON": {
+      "total": 5187,
+      "matched": 5175,
+      "coverage": 0.997687
+    },
+    "ADR": {
+      "total": 315,
+      "matched": 313,
+      "coverage": 0.993651
+    }
+  },
+  "by_exchange": {
+    "Cboe BZX": {
+      "total": 1,
+      "matched": 1,
+      "coverage": 1.0
+    },
+    "NASDAQ": {
+      "total": 3397,
+      "matched": 3385,
+      "coverage": 0.996467
+    },
+    "NYSE": {
+      "total": 1861,
+      "matched": 1859,
+      "coverage": 0.998925
+    },
+    "NYSE American": {
+      "total": 237,
+      "matched": 237,
+      "coverage": 1.0
+    },
+    "NYSE Arca": {
+      "total": 1,
+      "matched": 1,
+      "coverage": 1.0
+    },
+    "OTHER:F": {
+      "total": 5,
+      "matched": 5,
+      "coverage": 1.0
+    }
+  },
+  "sample_28": [
+    {
+      "ticker": "AAPL",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 349.51
+    },
+    {
+      "ticker": "MSFT",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 555.8
+    },
+    {
+      "ticker": "GOOGL",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 288.93
+    },
+    {
+      "ticker": "NVDA",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 200.13
+    },
+    {
+      "ticker": "CRM",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 227.11
+    },
+    {
+      "ticker": "ADBE",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 248.48
+    },
+    {
+      "ticker": "AMZN",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 266.03
+    },
+    {
+      "ticker": "HD",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 355.44
+    },
+    {
+      "ticker": "MCD",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 280.22
+    },
+    {
+      "ticker": "NKE",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 40.49
+    },
+    {
+      "ticker": "CAT",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 591.3
+    },
+    {
+      "ticker": "HON",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 228.47
+    },
+    {
+      "ticker": "UNP",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 308.53
+    },
+    {
+      "ticker": "XOM",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 169.27
+    },
+    {
+      "ticker": "CVX",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 216.96
+    },
+    {
+      "ticker": "NEE",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 88.45
+    },
+    {
+      "ticker": "DUK",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 129.59
+    },
+    {
+      "ticker": "JNJ",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 276.32
+    },
+    {
+      "ticker": "PFE",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 30.79
+    },
+    {
+      "ticker": "UNH",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 409.38
+    },
+    {
+      "ticker": "MRNA",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 258.38
+    },
+    {
+      "ticker": "JPM",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 352.11
+    },
+    {
+      "ticker": "BAC",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 51.63
+    },
+    {
+      "ticker": "BRK.B",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 579.09
+    },
+    {
+      "ticker": "MET",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 102.89
+    },
+    {
+      "ticker": "PLD",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 131.36
+    },
+    {
+      "ticker": "O",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 59.22
+    },
+    {
+      "ticker": "RIVN",
+      "status": "QUOTE_MATCHED",
+      "quote_price": 14.06
+    }
+  ],
+  "unclassified": {
+    "total": 113,
+    "matched": 111,
+    "status_counts": {
+      "QUOTE_MATCHED": 111,
+      "INVALID_QUOTE": 2
+    }
+  },
+  "mapping_note": "mapping CSV includes target and unclassified cohorts; denominator excludes UNCLASSIFIED"
+}
