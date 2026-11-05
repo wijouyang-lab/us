@@ -1,0 +1,231 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T12:23:04.452157+00:00",
+    "snapshot_date": "2026-11-05",
+    "panel": "..\\fund_p63\\universe\\sec_fundamentals_panel_p63.csv.gz",
+    "market_cap_source": "P6.2 quote_market_cap_raw",
+    "note": "Market cap validated only when a single-ticker, non-ADR issuer's cap/price implied shares reconcile to SEC shares within 10%."
+  },
+  "pool": {
+    "target_records": 5502,
+    "target_unique_ciks": 5452,
+    "unclassified_records": 113
+  },
+  "market_cap": {
+    "present": 5437,
+    "validated": 3685,
+    "status_counts": {
+      "ADR_MARKET_CAP_UNVERIFIED": 314,
+      "SHARE_CLASS_MARKET_CAP_UNVERIFIED": 697,
+      "ISSUER_MARKET_CAP_VALIDATED": 3685,
+      "ISSUER_MARKET_CAP_CONFLICT": 741,
+      "MARKET_CAP_MISSING": 65
+    },
+    "multi_ticker_ciks": 45,
+    "multi_ticker_records": 86,
+    "same_cik_same_cap_records": 3,
+    "multi_ticker_same_cap_ciks": 1,
+    "share_class_unverified_records": 697,
+    "adr_unverified_records": 314,
+    "conflict_records": 741
+  },
+  "value_status_counts": {
+    "VALUE_V1_BLOCKED": 1653,
+    "VALUE_V1_DATA_READY": 2529,
+    "VALUE_SPECIAL_MODEL_REQUIRED": 1320
+  },
+  "by_type": {
+    "COMMON": {
+      "records": 5187,
+      "market_cap_present": 5123,
+      "market_cap_validated": 3685,
+      "value_data_ready": 2529
+    },
+    "ADR": {
+      "records": 315,
+      "market_cap_present": 314,
+      "market_cap_validated": 0,
+      "value_data_ready": 0
+    }
+  },
+  "by_exchange": {
+    "Cboe BZX": {
+      "records": 1,
+      "market_cap_validated": 1
+    },
+    "NASDAQ": {
+      "records": 3397,
+      "market_cap_validated": 2170
+    },
+    "NYSE": {
+      "records": 1861,
+      "market_cap_validated": 1349
+    },
+    "NYSE American": {
+      "records": 237,
+      "market_cap_validated": 161
+    },
+    "NYSE Arca": {
+      "records": 1,
+      "market_cap_validated": 0
+    },
+    "OTHER:F": {
+      "records": 5,
+      "market_cap_validated": 4
+    }
+  },
+  "by_accounting": {
+    "IFRS": {
+      "records": 455,
+      "value_data_ready": 99
+    },
+    "MIXED": {
+      "records": 96,
+      "value_data_ready": 0
+    },
+    "NONE": {
+      "records": 177,
+      "value_data_ready": 0
+    },
+    "US_GAAP": {
+      "records": 4774,
+      "value_data_ready": 2430
+    }
+  },
+  "by_family": {
+    "BANKS": {
+      "records": 329,
+      "market_cap_validated": 291,
+      "value_data_ready": 0
+    },
+    "COMMUNICATIONS": {
+      "records": 154,
+      "market_cap_validated": 66,
+      "value_data_ready": 60
+    },
+    "CONSUMER_DISCRETIONARY": {
+      "records": 358,
+      "market_cap_validated": 245,
+      "value_data_ready": 234
+    },
+    "CONSUMER_STAPLES": {
+      "records": 164,
+      "market_cap_validated": 103,
+      "value_data_ready": 96
+    },
+    "ENERGY": {
+      "records": 130,
+      "market_cap_validated": 103,
+      "value_data_ready": 0
+    },
+    "HEALTHCARE": {
+      "records": 963,
+      "market_cap_validated": 713,
+      "value_data_ready": 657
+    },
+    "INDUSTRIALS": {
+      "records": 585,
+      "market_cap_validated": 423,
+      "value_data_ready": 405
+    },
+    "INSURANCE": {
+      "records": 104,
+      "market_cap_validated": 90,
+      "value_data_ready": 0
+    },
+    "MATERIALS": {
+      "records": 329,
+      "market_cap_validated": 243,
+      "value_data_ready": 211
+    },
+    "OTHER_FINANCIALS": {
+      "records": 367,
+      "market_cap_validated": 214,
+      "value_data_ready": 0
+    },
+    "OTHER_SERVICES": {
+      "records": 806,
+      "market_cap_validated": 392,
+      "value_data_ready": 354
+    },
+    "REIT": {
+      "records": 164,
+      "market_cap_validated": 148,
+      "value_data_ready": 0
+    },
+    "TECHNOLOGY": {
+      "records": 823,
+      "market_cap_validated": 530,
+      "value_data_ready": 512
+    },
+    "UNCLASSIFIED": {
+      "records": 99,
+      "market_cap_validated": 27,
+      "value_data_ready": 0
+    },
+    "UTILITIES": {
+      "records": 127,
+      "market_cap_validated": 97,
+      "value_data_ready": 0
+    }
+  },
+  "metric_coverage": [
+    {
+      "metric": "PE",
+      "ticker_ready": 2035,
+      "ticker_coverage": 0.369866,
+      "cik_ready": 2035,
+      "cik_coverage": 0.373258
+    },
+    {
+      "metric": "PB",
+      "ticker_ready": 3280,
+      "ticker_coverage": 0.596147,
+      "cik_ready": 3280,
+      "cik_coverage": 0.601614
+    },
+    {
+      "metric": "PS",
+      "ticker_ready": 2963,
+      "ticker_coverage": 0.538531,
+      "cik_ready": 2963,
+      "cik_coverage": 0.54347
+    },
+    {
+      "metric": "EarningsYield",
+      "ticker_ready": 3466,
+      "ticker_coverage": 0.629953,
+      "cik_ready": 3466,
+      "cik_coverage": 0.63573
+    },
+    {
+      "metric": "FCFYield",
+      "ticker_ready": 2808,
+      "ticker_coverage": 0.51036,
+      "cik_ready": 2808,
+      "cik_coverage": 0.51504
+    },
+    {
+      "metric": "EV_EBITDA",
+      "ticker_ready": 0,
+      "ticker_coverage": 0.0,
+      "cik_ready": 0,
+      "cik_coverage": 0.0
+    }
+  ],
+  "pe_provider_mismatch_gt_20pct": 1108,
+  "pe_comparable": 2035,
+  "ev_ebitda_ready": 0,
+  "ev_ebitda_blocker": "DEPRECIATION_AMORTIZATION_NOT_IN_P63_METRIC_MAP",
+  "unclassified": {
+    "records": 113,
+    "validated": 58,
+    "value_data_ready": 34
+  },
+  "notes": [
+    "Market cap is not treated as issuer total for multi-ticker or ADR records.",
+    "Same CIK same market cap is evidence, not proof of issuer-total semantics.",
+    "EV/EBITDA remains unavailable because D&A is not in the P6.3 mapped panel.",
+    "No production Value score is produced."
+  ]
+}

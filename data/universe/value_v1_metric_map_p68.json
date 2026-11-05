@@ -1,0 +1,44 @@
+{
+  "metrics": {
+    "PE": "market cap / positive net income; provider PE reconciled",
+    "PB": "market cap / positive stockholders equity",
+    "PS": "market cap / positive annual revenue",
+    "EarningsYield": "net income / market cap, negative retained",
+    "FCFYield": "(operating cash flow - capex) / market cap; capex missing => blocked",
+    "EV_EBITDA": "EV = cap + debt - cash; EBITDA = operating income + D&A; D&A missing => blocked"
+  },
+  "applicability": {
+    "BANKS": [
+      "PB"
+    ],
+    "INSURANCE": [
+      "PB"
+    ],
+    "REIT": [
+      "PB",
+      "PS"
+    ],
+    "OTHER_FINANCIALS": [
+      "PB"
+    ],
+    "STANDARD": [
+      "PE",
+      "PB",
+      "PS",
+      "EarningsYield",
+      "FCFYield"
+    ]
+  },
+  "status_model": [
+    "MARKET_CAP_READY",
+    "PE_READY",
+    "PB_READY",
+    "PS_READY",
+    "EARNINGS_YIELD_READY",
+    "FCF_YIELD_READY",
+    "EV_EBITDA_READY",
+    "VALUE_V1_DATA_READY",
+    "VALUE_V1_BLOCKED",
+    "VALUE_SPECIAL_MODEL_REQUIRED"
+  ]
+}
