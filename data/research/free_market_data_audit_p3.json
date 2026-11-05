@@ -1,0 +1,1666 @@
+{
+  "audited_at": "2026-11-04T04:43:21.088081+00:00",
+  "tickers": [
+    "AAPL",
+    "MSFT",
+    "GOOGL",
+    "NVDA",
+    "CRM",
+    "ADBE",
+    "AMZN",
+    "HD",
+    "MCD",
+    "NKE",
+    "CAT",
+    "HON",
+    "UNP",
+    "XOM",
+    "CVX",
+    "NEE",
+    "DUK",
+    "JNJ",
+    "PFE",
+    "UNH",
+    "MRNA",
+    "JPM",
+    "BAC",
+    "BRK.B",
+    "MET",
+    "PLD",
+    "O",
+    "RIVN",
+    "QQQ",
+    "BIL",
+    "SPY"
+  ],
+  "sources": {
+    "yahoo": {
+      "technical": "TECHNICAL_PASS",
+      "license": "LICENSE_UNVERIFIED",
+      "note": "public terms restrict redistribution/commercial display"
+    },
+    "akshare": {
+      "technical": "TECHNICAL_PASS",
+      "license": "LICENSE_UNVERIFIED",
+      "provider": "Sina Finance staticdata",
+      "note": "open-source library does not grant data rights"
+    },
+    "finnhub": {
+      "status": "NOT_CONFIGURED",
+      "keys_present": {
+        "FINNHUB_API_KEY_A": false,
+        "FINNHUB_API_KEY_B": false,
+        "FINNHUB_API_KEY": false
+      },
+      "note": "No Finnhub key available; no request made. Plan/permissions NOT inferred."
+    }
+  },
+  "coverage": [
+    {
+      "symbol": "AAPL",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2513,
+      "first": "2016-11-03",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 1,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "83e8ee5b76aa7f00333a66722e70ace1ea5ec16fbce6c2539be24ab82f1128e8"
+    },
+    {
+      "symbol": "AAPL",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 10067,
+      "first": "1984-09-07",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 7,
+      "adjustment_type": "raw",
+      "raw_record_hash": "3ae53b1a98092b8dbebd72346dcdf7210b1511f67ecbf3bc44737e3b55aabdb3"
+    },
+    {
+      "symbol": "MSFT",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "32cdb78e4c7f0533a7403697723f255fdc200a85b27ccc0a87cd3fdb72d25a7e"
+    },
+    {
+      "symbol": "MSFT",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 9685,
+      "first": "1986-03-13",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 7,
+      "adjustment_type": "raw",
+      "raw_record_hash": "0184b495991ea4157d1ab56504b86b1e8c8128a522871f6ab0f4b1d8e1177f9a"
+    },
+    {
+      "symbol": "GOOGL",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "bda9d3248ea219d915577219adf2def7c0f2465d393ed0bdd826183e1d21b37e"
+    },
+    {
+      "symbol": "GOOGL",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 4939,
+      "first": "2007-03-19",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 2,
+      "adjustment_type": "raw",
+      "raw_record_hash": "456b1c3c1efcfbf0ebe9d14bd6b30efcfcaff6d97d549c98ee7e6ebfbe9aea07"
+    },
+    {
+      "symbol": "NVDA",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "b979c8896f10249e620dd0d8b34443f44f89348cb9078fcca28a2365484c0964"
+    },
+    {
+      "symbol": "NVDA",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 5799,
+      "first": "1999-01-22",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 7,
+      "adjustment_type": "raw",
+      "raw_record_hash": "9982a1edf5b277b1b80798e0eb71a90c2433229760279eef0ad29195a022956b"
+    },
+    {
+      "symbol": "CRM",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "3004b88d7f6a5d0f11633ae1dfb3ad79eda6adb521e8300b3b1e472f3fe799db"
+    },
+    {
+      "symbol": "CRM",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 4940,
+      "first": "2004-06-23",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 2,
+      "adjustment_type": "raw",
+      "raw_record_hash": "1433c016070461f8e522448b0bf2eb9e73a5d322cae5f9037579bd639aa6a6de"
+    },
+    {
+      "symbol": "ADBE",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "4cf30eff4070accdda868fb125a6d8fbe716a3b568aa3779bc04d212d1ca5388"
+    },
+    {
+      "symbol": "ADBE",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 9572,
+      "first": "1986-08-14",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 5,
+      "adjustment_type": "raw",
+      "raw_record_hash": "adaa74053e5062c4282e8849a5b000b7bf82b9fbd5f9812094f8ec8a22f547c1"
+    },
+    {
+      "symbol": "AMZN",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "59a2cf11d67ffb694baa44911b5953d756da94cb3ec7670e3e40343bcd8acf80"
+    },
+    {
+      "symbol": "AMZN",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 6851,
+      "first": "1997-05-16",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 4,
+      "adjustment_type": "raw",
+      "raw_record_hash": "105c86d353fda66449f928d5a87bfc1d9fe0832ead9cda0b87e5b4084e93ad27"
+    },
+    {
+      "symbol": "HD",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "477595681f9ed1a42653418e15490dd5b7372bc16fd70bd476e4ec34760dd9ad"
+    },
+    {
+      "symbol": "HD",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 10079,
+      "first": "1984-08-20",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 3,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "f0b5cfdca92a7ba88ca3112a3a5e1074ce278b5e7f23ce2152d0ad75e6f5bd2a"
+    },
+    {
+      "symbol": "MCD",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "5f04d31fb763e1a252854b8175cba84a21742c90e12bceaa4d8d036eb69590a1"
+    },
+    {
+      "symbol": "MCD",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 9694,
+      "first": "1986-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 5,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 5,
+      "adjustment_type": "raw",
+      "raw_record_hash": "1ee0e4022485e793bf5c5732dec47e227ce2615f094e538ff19f3b0df087502f"
+    },
+    {
+      "symbol": "NKE",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "6b9772f5b1e374827a174a9fcc72a7110770cf27ed15ef3970d9f95ada1228bd"
+    },
+    {
+      "symbol": "NKE",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 5943,
+      "first": "2001-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 2,
+      "adjustment_type": "raw",
+      "raw_record_hash": "69e6e3122322577c909df18f9fae375b3df99346741a43137ef6eea075e6b8b1"
+    },
+    {
+      "symbol": "CAT",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "f84c6f3af055ddddec07852593b122d6cb6dfb0c066c4b6dfc1f679808c16099"
+    },
+    {
+      "symbol": "CAT",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 11747,
+      "first": "1980-03-17",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 8,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 3,
+      "adjustment_type": "raw",
+      "raw_record_hash": "f528f9863d383fabee784d932e4602c960aa9cf9a62cf4bed76fbd7dbdce2d4d"
+    },
+    {
+      "symbol": "HON",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "89f1733dc5efa38d06d55dd37ee5324b62a576646aa458ac2f3b5967616b2fa7"
+    },
+    {
+      "symbol": "HON",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 1378,
+      "first": "2021-05-11",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 1378
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "71f192a477b0afd07e3063bfb03123cc72587f1f9ff75feff7bd4f4d95eaca65"
+    },
+    {
+      "symbol": "UNP",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "627105e3662d155bd896287db3ec0235004d91d5b38c2e51535f94f94bfdb9a3"
+    },
+    {
+      "symbol": "UNP",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 10616,
+      "first": "1980-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 5,
+      "adjustment_type": "raw",
+      "raw_record_hash": "4725ee05dcef95d674758d2315435d98aadb72fbab6f19c72de22e2a0ecdc6fb"
+    },
+    {
+      "symbol": "XOM",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "32dbe89dc9a77c229265a28113190bb30a0e1a82730c1e530504d9cc965476b4"
+    },
+    {
+      "symbol": "XOM",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 5943,
+      "first": "2001-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "9f03c70f590e149f9e790125c1eb0f24398b3dbb93f39b3c890f323390dcfee0"
+    },
+    {
+      "symbol": "CVX",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "1ab13a522683c963d8bfa76d6ae26c376c2e2ef4938577d4c63df387125e6334"
+    },
+    {
+      "symbol": "CVX",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 9734,
+      "first": "1986-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 2,
+      "adjustment_type": "raw",
+      "raw_record_hash": "bd99ac01f2587c38af4fd75763d72d6da050f1594fd121cc52a8faa77bed417e"
+    },
+    {
+      "symbol": "NEE",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "591d082ef2334a7a9e40c3fb62d32e580cd19d878d18b861fc15e47719e4d4bd"
+    },
+    {
+      "symbol": "NEE",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 4116,
+      "first": "2010-06-24",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 1,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "ff08e2be3b172f50e77d228441c166d0bcb7a37eac94f94d9026738573c4b288"
+    },
+    {
+      "symbol": "DUK",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "0affb14cb28e461b159b5469d118551f59bbac7e02630308a08a66935aef7c00"
+    },
+    {
+      "symbol": "DUK",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 10427,
+      "first": "1983-04-06",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 3,
+      "adjustment_type": "raw",
+      "raw_record_hash": "eed15148ed075ec12f837d5c73856e9d414a95406852eedb554f7959b06e4a40"
+    },
+    {
+      "symbol": "JNJ",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "268953bc6cbb13b8379d2d3d93015d5a0fbb14847a9ef2128707a8fd0d37f66e"
+    },
+    {
+      "symbol": "JNJ",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 9727,
+      "first": "1986-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 4,
+      "adjustment_type": "raw",
+      "raw_record_hash": "4b1a046e8a8c98373dc365b16d4209d1fa18e66c75946248b6d4415f136f4fa1"
+    },
+    {
+      "symbol": "PFE",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "e19bad4acb9642adab4685c6f29ae3b11588f5f1d9e4fdd84e8167de333618ee"
+    },
+    {
+      "symbol": "PFE",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 10744,
+      "first": "1982-01-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 5,
+      "adjustment_type": "raw",
+      "raw_record_hash": "cf5b44dbc082e40b51ad772ecdbc8e8407a545d5bfa775427166465cfe853583"
+    },
+    {
+      "symbol": "UNH",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "ddef449c8acd095e78303c7c3fced3b813322dd0426c743d68cdf8aa8026e054"
+    },
+    {
+      "symbol": "UNH",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 8665,
+      "first": "1990-03-26",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 1,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 4,
+      "adjustment_type": "raw",
+      "raw_record_hash": "f2c7ac4313b96a25a71f6161a3151292141bf0623f4558ece824f487fd11f048"
+    },
+    {
+      "symbol": "MRNA",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 1987,
+      "first": "2018-12-07",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 1987
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "b653f876217f0bb7fc28d87088f6c4ec206cc26aa404f4cd6cd6b829f1a0d4c1"
+    },
+    {
+      "symbol": "MRNA",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 1987,
+      "first": "2018-12-07",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 1987
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "5a223f229548ee1f7a4cbe32b3406a80f66af5ea17bb88a4a05877884d406a79"
+    },
+    {
+      "symbol": "JPM",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "cc4da32310e026f751524c63bde476c3b2792e26c14e52dfac0f5d03d8d299eb"
+    },
+    {
+      "symbol": "JPM",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 10240,
+      "first": "1983-12-30",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 3,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "0b55f32a90ed783eb5185c72b6404c77e7af846fa235598273e4a2b0bb3e5ffc"
+    },
+    {
+      "symbol": "BAC",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "efbd60009efe66a21da804bd7bceb13b9b4633fcfb5c8fdf8c0830cdc29b04d0"
+    },
+    {
+      "symbol": "BAC",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 9632,
+      "first": "1986-05-29",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 6,
+      "adjustment_type": "raw",
+      "raw_record_hash": "5046bd481772cd40f174a290fbc2dd8a080ac95ba9e39cdd2e80e01509a32a27"
+    },
+    {
+      "symbol": "BRK.B",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "35338be8d1ff681bd8c7404bce4c465f5392e63b516c10199e1a28d533919803"
+    },
+    {
+      "symbol": "BRK.B",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 7670,
+      "first": "1996-05-09",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 49,
+      "zero_volume_rows": 2,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "4547c49b0559eb7e350104bbcb7ae104502e4dfd1a38aff781940cc987de6e36"
+    },
+    {
+      "symbol": "MET",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2513,
+      "first": "2016-11-03",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 1,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "e7e1039114492aecd29666b70b2fc730dac84df72659fcdc6542d431a680d709"
+    },
+    {
+      "symbol": "MET",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 6073,
+      "first": "2000-06-23",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 2,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "ef017edf0d35efc5bf6066f2fa83d811c03f035e68d286c241a5b519f2e7da10"
+    },
+    {
+      "symbol": "PLD",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "d08420475c0bdc5b244ad8913d9daa814c16e0a519fdefcc4356908e0444f400"
+    },
+    {
+      "symbol": "PLD",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 6091,
+      "first": "1997-11-21",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 2,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 2,
+      "adjustment_type": "raw",
+      "raw_record_hash": "8564a95d8b6e7773f4e5070a40d60436c93d258bcb2e166ac8b3af9d400c29a6"
+    },
+    {
+      "symbol": "O",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "5170b7b50254b6be7d6d629064ff5acb1e4a8931b120c24dc055353414e8d844"
+    },
+    {
+      "symbol": "O",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 5810,
+      "first": "2001-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 1,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "3dddd323363e91c8e9808f71aae1c322dc770578525d04aae3a56bda0c31aa1a"
+    },
+    {
+      "symbol": "RIVN",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 1250,
+      "first": "2021-11-10",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1250,
+        "10y": 1250
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "3e42591062b3288c08af2210d42a68737fe5d2463139ab0c059fe737c5a9b728"
+    },
+    {
+      "symbol": "RIVN",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 1250,
+      "first": "2021-11-10",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1250,
+        "10y": 1250
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "44d6b573d30a791fbbf4302ba0bc601e29c028023d8fe8fb837e4e2beda78cd8"
+    },
+    {
+      "symbol": "QQQ",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "a09528004b36bdaed3f7e2d30dd438f66ad5b0caab9aed332ee1b94105b02898"
+    },
+    {
+      "symbol": "QQQ",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 4905,
+      "first": "2001-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "113f36ab70007fd51c78cd567195d0824c0d7d86c4544d917deacbd608267cbe"
+    },
+    {
+      "symbol": "BIL",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "3af509c6bf37f45e9f6bdc9e2de9abd8c6570541630f981c2c0b9d918b7b4aeb"
+    },
+    {
+      "symbol": "BIL",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 4889,
+      "first": "2007-05-30",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 1,
+      "adjustment_type": "raw",
+      "raw_record_hash": "07e9b6cefbab94e591f7b0e3b51baa361c83e2bf77b79b17325f372f62a7d5cf"
+    },
+    {
+      "symbol": "SPY",
+      "source": "Yahoo/yfinance",
+      "status": "OK",
+      "rows": 2512,
+      "first": "2016-11-04",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "d6664bc12727e91cc199d3c3a8fa6784add1cef9dfe628aba4a9aa9298ba808a"
+    },
+    {
+      "symbol": "SPY",
+      "source": "AKShare/Sina",
+      "status": "OK",
+      "rows": 6497,
+      "first": "2001-01-02",
+      "last": "2026-11-03",
+      "period_rows": {
+        "1y": 252,
+        "2y": 501,
+        "5y": 1254,
+        "10y": 2511
+      },
+      "duplicates": 0,
+      "missing_columns": [],
+      "bad_ohlcv_rows": 1,
+      "zero_volume_rows": 0,
+      "jumps_gt_35pct": 0,
+      "adjustment_type": "raw",
+      "raw_record_hash": "4851b4abbb3ade3e253cdd82176734a6c144e90796a58c37cf80fcccead758a0"
+    }
+  ],
+  "cross_check": [
+    {
+      "symbol": "AAPL",
+      "common_days": 2513,
+      "median_abs_diff": 6.713867179541921e-06,
+      "max_abs_diff": 379.5675009155273,
+      "days_gt_0_01": 961
+    },
+    {
+      "symbol": "MSFT",
+      "common_days": 2512,
+      "median_abs_diff": 3.662109378410605e-06,
+      "max_abs_diff": 0.1500134277343932,
+      "days_gt_0_01": 2
+    },
+    {
+      "symbol": "GOOGL",
+      "common_days": 2512,
+      "median_abs_diff": 906.3855017089843,
+      "max_abs_diff": 2846.9314990234375,
+      "days_gt_0_01": 1433
+    },
+    {
+      "symbol": "NVDA",
+      "common_days": 2512,
+      "median_abs_diff": 181.0867500114441,
+      "max_abs_diff": 1101.9599975585938,
+      "days_gt_0_01": 1911
+    },
+    {
+      "symbol": "CRM",
+      "common_days": 2512,
+      "median_abs_diff": 3.662109378410605e-06,
+      "max_abs_diff": 0.07999847412109773,
+      "days_gt_0_01": 11
+    },
+    {
+      "symbol": "ADBE",
+      "common_days": 2512,
+      "median_abs_diff": 6.1035156022626325e-06,
+      "max_abs_diff": 0.009996948242189774,
+      "days_gt_0_01": 0
+    },
+    {
+      "symbol": "AMZN",
+      "common_days": 2512,
+      "median_abs_diff": 911.5392500305177,
+      "max_abs_diff": 3544.8394043945314,
+      "days_gt_0_01": 1404
+    },
+    {
+      "symbol": "HD",
+      "common_days": 2512,
+      "median_abs_diff": 6.1035156022626325e-06,
+      "max_abs_diff": 0.07999816894530909,
+      "days_gt_0_01": 17
+    },
+    {
+      "symbol": "MCD",
+      "common_days": 2512,
+      "median_abs_diff": 4.8828125045474735e-06,
+      "max_abs_diff": 0.16999389648438523,
+      "days_gt_0_01": 11
+    },
+    {
+      "symbol": "NKE",
+      "common_days": 2512,
+      "median_abs_diff": 1.5258789076710855e-06,
+      "max_abs_diff": 0.029999847412106817,
+      "days_gt_0_01": 5
+    },
+    {
+      "symbol": "CAT",
+      "common_days": 2512,
+      "median_abs_diff": 3.662109378410605e-06,
+      "max_abs_diff": 4.1406249920328264e-05,
+      "days_gt_0_01": 0
+    },
+    {
+      "symbol": "HON",
+      "common_days": 1378,
+      "median_abs_diff": 2.3746887207031193,
+      "max_abs_diff": 12.096352539062508,
+      "days_gt_0_01": 1288
+    },
+    {
+      "symbol": "UNP",
+      "common_days": 2512,
+      "median_abs_diff": 3.662109378410605e-06,
+      "max_abs_diff": 0.1000033569335983,
+      "days_gt_0_01": 15
+    },
+    {
+      "symbol": "XOM",
+      "common_days": 2512,
+      "median_abs_diff": 1.6784667948854803e-06,
+      "max_abs_diff": 0.049997558593744884,
+      "days_gt_0_01": 14
+    },
+    {
+      "symbol": "CVX",
+      "common_days": 2512,
+      "median_abs_diff": 2.4414062522737368e-06,
+      "max_abs_diff": 0.12999725341796875,
+      "days_gt_0_01": 15
+    },
+    {
+      "symbol": "NEE",
+      "common_days": 2512,
+      "median_abs_diff": 3.051757815342171e-06,
+      "max_abs_diff": 229.25249664306642,
+      "days_gt_0_01": 1000
+    },
+    {
+      "symbol": "DUK",
+      "common_days": 2512,
+      "median_abs_diff": 1.8310546892053026e-06,
+      "max_abs_diff": 0.06999664306640341,
+      "days_gt_0_01": 13
+    },
+    {
+      "symbol": "JNJ",
+      "common_days": 2512,
+      "median_abs_diff": 3.662109378410605e-06,
+      "max_abs_diff": 0.10000549316407614,
+      "days_gt_0_01": 14
+    },
+    {
+      "symbol": "PFE",
+      "common_days": 2512,
+      "median_abs_diff": 1.2207031261368684e-06,
+      "max_abs_diff": 2.368519287109372,
+      "days_gt_0_01": 1015
+    },
+    {
+      "symbol": "UNH",
+      "common_days": 2512,
+      "median_abs_diff": 6.103515630684342e-06,
+      "max_abs_diff": 0.28999389648436136,
+      "days_gt_0_01": 14
+    },
+    {
+      "symbol": "MRNA",
+      "common_days": 1987,
+      "median_abs_diff": 1.2207031261368684e-06,
+      "max_abs_diff": 0.02999938964843807,
+      "days_gt_0_01": 3
+    },
+    {
+      "symbol": "JPM",
+      "common_days": 2512,
+      "median_abs_diff": 2.7465820267025265e-06,
+      "max_abs_diff": 0.13000152587891023,
+      "days_gt_0_01": 13
+    },
+    {
+      "symbol": "BAC",
+      "common_days": 2512,
+      "median_abs_diff": 6.103515630684342e-07,
+      "max_abs_diff": 0.020000915527344176,
+      "days_gt_0_01": 9
+    },
+    {
+      "symbol": "BRK.B",
+      "common_days": 2512,
+      "median_abs_diff": 5.493164053405053e-06,
+      "max_abs_diff": 0.02000732421873863,
+      "days_gt_0_01": 1
+    },
+    {
+      "symbol": "MET",
+      "common_days": 2513,
+      "median_abs_diff": 1.2207031261368684e-06,
+      "max_abs_diff": 6.240265502929688,
+      "days_gt_0_01": 190
+    },
+    {
+      "symbol": "PLD",
+      "common_days": 2512,
+      "median_abs_diff": 1.8310546892053026e-06,
+      "max_abs_diff": 0.050000762939454546,
+      "days_gt_0_01": 11
+    },
+    {
+      "symbol": "O",
+      "common_days": 2512,
+      "median_abs_diff": 1.491163101196289,
+      "max_abs_diff": 2.556279602050779,
+      "days_gt_0_01": 1265
+    },
+    {
+      "symbol": "RIVN",
+      "common_days": 1250,
+      "median_abs_diff": 3.051757815342171e-07,
+      "max_abs_diff": 0.005000190734863352,
+      "days_gt_0_01": 0
+    },
+    {
+      "symbol": "QQQ",
+      "common_days": 2512,
+      "median_abs_diff": 6.1035156022626325e-06,
+      "max_abs_diff": 0.020006103515612494,
+      "days_gt_0_01": 1
+    },
+    {
+      "symbol": "BIL",
+      "common_days": 2512,
+      "median_abs_diff": 2.1362304636340923e-06,
+      "max_abs_diff": 45.75,
+      "days_gt_0_01": 269
+    },
+    {
+      "symbol": "SPY",
+      "common_days": 2512,
+      "median_abs_diff": 8.54492185453637e-06,
+      "max_abs_diff": 0.11000122070311136,
+      "days_gt_0_01": 36
+    }
+  ],
+  "summary": {
+    "Yahoo/yfinance": {
+      "symbols": 31,
+      "ok": 31,
+      "rows_total": 76087,
+      "duplicates": 0,
+      "bad_ohlcv_rows": 0,
+      "zero_volume_rows": 2,
+      "jumps_gt_35pct": 1,
+      "period_coverage": {
+        "1y": 31,
+        "2y": 31,
+        "5y": 31,
+        "10y": 31
+      },
+      "min_first": "2016-11-03",
+      "max_last": "2026-11-03"
+    },
+    "AKShare/Sina": {
+      "symbols": 31,
+      "ok": 31,
+      "rows_total": 225710,
+      "duplicates": 0,
+      "bad_ohlcv_rows": 75,
+      "zero_volume_rows": 3,
+      "jumps_gt_35pct": 84,
+      "period_coverage": {
+        "1y": 31,
+        "2y": 31,
+        "5y": 31,
+        "10y": 31
+      },
+      "min_first": "1980-01-02",
+      "max_last": "2026-11-03"
+    }
+  },
+  "ratings": {
+    "yahoo": {
+      "technical": "TECHNICAL_PASS",
+      "license": "LICENSE_UNVERIFIED",
+      "overall": "DATA_BLOCKED",
+      "reason": "public terms restrict redistribution/public display; no written permission"
+    },
+    "akshare": {
+      "technical": "TECHNICAL_PASS",
+      "license": "LICENSE_UNVERIFIED",
+      "overall": "DATA_BLOCKED",
+      "reason": "Sina upstream terms not verified; 75 bad OHLC rows and split-induced jumps"
+    },
+    "finnhub": {
+      "technical": "NOT_CONFIGURED",
+      "license": "LICENSE_UNVERIFIED",
+      "overall": "DATA_BLOCKED",
+      "reason": "no API key present; no quote/candle/plan/quota test possible"
+    }
+  },
+  "usage_matrix": {
+    "yahoo": {
+      "private_research": "LICENSE_UNVERIFIED",
+      "local_backtest": "LICENSE_UNVERIFIED",
+      "long_term_storage": "LICENSE_UNVERIFIED",
+      "derived_factors": "LICENSE_UNVERIFIED",
+      "github_data": "LICENSE_UNVERIFIED",
+      "github_pages_display": "LICENSE_UNVERIFIED",
+      "public_results": "LICENSE_UNVERIFIED"
+    },
+    "akshare": {
+      "private_research": "LICENSE_UNVERIFIED",
+      "local_backtest": "LICENSE_UNVERIFIED",
+      "long_term_storage": "LICENSE_UNVERIFIED",
+      "derived_factors": "LICENSE_UNVERIFIED",
+      "github_data": "LICENSE_UNVERIFIED",
+      "github_pages_display": "LICENSE_UNVERIFIED",
+      "public_results": "LICENSE_UNVERIFIED"
+    },
+    "finnhub": {
+      "private_research": "LICENSE_UNVERIFIED",
+      "local_backtest": "LICENSE_UNVERIFIED",
+      "long_term_storage": "LICENSE_UNVERIFIED",
+      "derived_factors": "LICENSE_UNVERIFIED",
+      "github_data": "LICENSE_UNVERIFIED",
+      "github_pages_display": "LICENSE_UNVERIFIED",
+      "public_results": "LICENSE_UNVERIFIED"
+    }
+  }
+}
