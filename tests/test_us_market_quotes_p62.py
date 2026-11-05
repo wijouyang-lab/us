@@ -16,10 +16,11 @@ def spot(rows):
 
 
 def test_norm_handles_dots_hyphens_and_class_shares():
-    assert norm("BRK.B") == "BRKB"
-    assert norm("BRK-B") == "BRKB"
-    assert norm("BRK_B") == "BRKB"
+    assert norm("BRK.B") == "BRK.B"
+    assert norm("BRK-B") == "BRK.B"
+    assert norm("BRK_B") == "BRK.B"
     assert norm("GOOGL") != norm("GOOG")
+    assert norm("AGMH") != norm("AGM_H")
 
 
 def test_spot_index_and_brk_b_mapping():

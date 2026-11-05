@@ -31,7 +31,10 @@ COL_PE = "\u5e02\u76c8\u7387"
 
 
 def norm(v: Any) -> str:
-    return re.sub(r"[^A-Z0-9]", "", str(v or "").upper())
+    # Preserve class separators: AGMH and AGM_H are different securities;
+    # BRK.B, BRK-B and BRK_B are the same class notation.
+    x = re.sub(r"[^A-Z0-9]", ".", str(v or "").upper())
+    return re.sub(r"\.+", ".", x).strip(".")
 
 
 def number(v: Any) -> float | None:
