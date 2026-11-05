@@ -27,8 +27,8 @@ def main() -> int:
         rows = list(csv.DictReader(f))
     target = [r for r in rows if r["security_type"] in ("COMMON", "ADR")]
     unclassified = [r for r in rows if r["security_type"] == "UNCLASSIFIED"]
-    ciks = {r["CIK"].zfill(10) for r in target if r.get("CIK")}
-    ciks |= {r["CIK"].zfill(10) for r in unclassified if r.get("CIK")}
+    ciks = {(r["CIK"] or "").strip().zfill(10) for r in target if (r.get("CIK") or "").strip()}
+    ciks |= {(r["CIK"] or "").strip().zfill(10) for r in unclassified if (r.get("CIK") or "").strip()}
     today = date.today()
     stats = defaultdict(lambda: {"rows": 0, "std": False, "us": False, "ifrs": False,
                                  "latest": "", "metrics_any": set(), "metrics_recent": set(),
@@ -54,7 +54,7 @@ def main() -> int:
     # per-security coverage
     out_rows = []
     for r in target + unclassified:
-        cik = (r.get("CIK") or "").zfill(10)
+        cik = (r.get("CIK") or "").strip().zfill(10) if (r.get("CIK") or "").strip() else ""
         s = stats.get(cik)
         rec = {"ticker": r["ticker"], "security_name": r["security_name"], "exchange": r["exchange"],
                "security_type": r["security_type"], "CIK": cik,
