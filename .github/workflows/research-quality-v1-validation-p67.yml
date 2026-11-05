@@ -1,0 +1,70 @@
+name: Research Quality V1 Validation P6.7
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/quality-v1-history-p67]
+    paths:
+      - "tools/research/rebuild_quality_pit_history_p67.py"
+      - "tools/research/audit_quality_stability_p67.py"
+      - "tools/research/evaluate_quality_forward_returns_p67.py"
+      - "tests/test_quality_history_p67.py"
+      - ".github/workflows/research-quality-v1-validation-p67.yml"
+  pull_request:
+    branches: [main, research/quality-v1-p66]
+    paths:
+      - "tools/research/rebuild_quality_pit_history_p67.py"
+      - "tools/research/audit_quality_stability_p67.py"
+      - "tools/research/evaluate_quality_forward_returns_p67.py"
+      - "tests/test_quality_history_p67.py"
+      - ".github/workflows/research-quality-v1-validation-p67.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy scipy pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 --dir .p63_artifact
+      - name: Run offline tests
+        run: python -m pytest tests/test_quality_history_p67.py -q
+      - name: Rebuild historical PIT coverage and stability
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/rebuild_quality_pit_history_p67.py \
+            --panel "$PANEL" \
+            --price research_price_history_sp500_10y.csv
+      - name: Audit stability
+        run: python tools/research/audit_quality_stability_p67.py
+      - name: Evaluate forward-return gate
+        run: python tools/research/evaluate_quality_forward_returns_p67.py
+      - name: Upload historical panel and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-v1-history-p67
+          path: |
+            data/research/quality_pit_coverage_p67.json
+            data/research/quality_historical_stability_p67.json
+            data/research/quality_forward_return_tests_p67.json
+            data/research/quality_pit_scores_p67.csv.gz
+          retention-days: 90
+          if-no-files-found: warn
