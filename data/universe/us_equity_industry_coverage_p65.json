@@ -1,0 +1,1098 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T10:35:32.998373+00:00",
+    "source": "https://www.sec.gov/Archives/edgar/daily-index/bulkdata/submissions.zip",
+    "sic_map": "data/universe/sec_sic_model_family_map_p65.csv",
+    "sic_map_version": "P6.5v1",
+    "scope": "P6.1 current Common + ADR; UNCLASSIFIED separate",
+    "note": "SEC SIC is not GICS. No name-based industry inference.",
+    "verification_run_url": "https://github.com/wijouyang-lab/us/actions/runs/42011831175",
+    "artifact_id": 13407960895
+  },
+  "counts": {
+    "target_records": 5502,
+    "target_with_sic": 5403,
+    "target_missing_sic": 99,
+    "target_with_cik": 5494,
+    "target_missing_cik": 8,
+    "target_unique_ciks": 5452,
+    "unique_ciks_with_sic": 5361,
+    "unique_ciks_missing_sic": 91,
+    "sic_code_missing": 99,
+    "sic_description_missing": 6,
+    "unclassified_records": 113,
+    "unclassified_with_sic": 81,
+    "unclassified_unique_ciks": 99
+  },
+  "by_type": {
+    "COMMON": {
+      "records": 5187,
+      "with_sic": 5089,
+      "coverage": 0.981107
+    },
+    "ADR": {
+      "records": 315,
+      "with_sic": 314,
+      "coverage": 0.996825
+    }
+  },
+  "by_exchange": {
+    "Cboe BZX": {
+      "records": 1,
+      "with_sic": 1,
+      "coverage": 1.0
+    },
+    "NASDAQ": {
+      "records": 3397,
+      "with_sic": 3379,
+      "coverage": 0.994701
+    },
+    "NYSE": {
+      "records": 1861,
+      "with_sic": 1784,
+      "coverage": 0.958624
+    },
+    "NYSE American": {
+      "records": 237,
+      "with_sic": 233,
+      "coverage": 0.983122
+    },
+    "NYSE Arca": {
+      "records": 1,
+      "with_sic": 1,
+      "coverage": 1.0
+    },
+    "OTHER:F": {
+      "records": 5,
+      "with_sic": 5,
+      "coverage": 1.0
+    }
+  },
+  "model_family_counts": {
+    "OTHER_SERVICES": 806,
+    "INDUSTRIALS": 585,
+    "INSURANCE": 104,
+    "TECHNOLOGY": 823,
+    "HEALTHCARE": 963,
+    "MATERIALS": 329,
+    "CONSUMER_DISCRETIONARY": 358,
+    "OTHER_FINANCIALS": 367,
+    "ENERGY": 130,
+    "BANKS": 329,
+    "REIT": 164,
+    "COMMUNICATIONS": 154,
+    "UTILITIES": 127,
+    "CONSUMER_STAPLES": 164,
+    "UNCLASSIFIED": 99
+  },
+  "special_model_records": 1221,
+  "standard_model_records": 4182,
+  "other_financials": 367,
+  "unclassified": 99,
+  "sp500_consistency": {
+    "NO_SP500_SECTOR": 4908,
+    "CONSISTENT": 365,
+    "INCONSISTENT": 130,
+    "MISSING_SIC": 99
+  },
+  "sp500_inconsistent_examples": [
+    {
+      "ticker": "ABNB",
+      "sic": "7340",
+      "sic_description": "Services-To Dwellings & Other Buildings",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "ADP",
+      "sic": "7374",
+      "sic_description": "Services-Computer Processing & Data Preparation",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "AKAM",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Information Technology"
+    },
+    {
+      "ticker": "APP",
+      "sic": "7370",
+      "sic_description": "Services-Computer Programming, Data Processing, Etc.",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "BKNG",
+      "sic": "4700",
+      "sic_description": "Transportation Services",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "BKR",
+      "sic": "3533",
+      "sic_description": "Oil & Gas Field Machinery & Equipment",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Energy"
+    },
+    {
+      "ticker": "CASY",
+      "sic": "5500",
+      "sic_description": "Retail-Auto Dealers & Gasoline Stations",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Consumer Staples"
+    },
+    {
+      "ticker": "CDW",
+      "sic": "5961",
+      "sic_description": "Retail-Catalog & Mail-Order Houses",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Information Technology"
+    },
+    {
+      "ticker": "CHRW",
+      "sic": "4731",
+      "sic_description": "Arrangement of  Transportation of  Freight & Cargo",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "COST",
+      "sic": "5331",
+      "sic_description": "Retail-Variety Stores",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Consumer Staples"
+    },
+    {
+      "ticker": "CPRT",
+      "sic": "5500",
+      "sic_description": "Retail-Auto Dealers & Gasoline Stations",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "CSGP",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Real Estate"
+    },
+    {
+      "ticker": "CTAS",
+      "sic": "2320",
+      "sic_description": "Men's & Boys' Furnishgs, Work Clothg, & Allied Garments",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "DASH",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "DLTR",
+      "sic": "5331",
+      "sic_description": "Retail-Variety Stores",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Consumer Staples"
+    },
+    {
+      "ticker": "DPZ",
+      "sic": "5140",
+      "sic_description": "Wholesale-Groceries & Related Products",
+      "sec_family": "CONSUMER_STAPLES",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "EBAY",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "EXPE",
+      "sic": "4700",
+      "sic_description": "Transportation Services",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "FAST",
+      "sic": "5200",
+      "sic_description": "Retail-Building Materials, Hardware, Garden Supply",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "FISV",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Financials"
+    },
+    {
+      "ticker": "GOOG",
+      "sic": "7370",
+      "sic_description": "Services-Computer Programming, Data Processing, Etc.",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "GOOGL",
+      "sic": "7370",
+      "sic_description": "Services-Computer Programming, Data Processing, Etc.",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "HSIC",
+      "sic": "5047",
+      "sic_description": "Wholesale-Medical, Dental & Hospital Equipment & Supplies",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Health Care"
+    },
+    {
+      "ticker": "ILMN",
+      "sic": "3826",
+      "sic_description": "Laboratory Analytical Instruments",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Health Care"
+    },
+    {
+      "ticker": "INCY",
+      "sic": "8731",
+      "sic_description": "Services-Commercial Physical & Biological Research",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Health Care"
+    },
+    {
+      "ticker": "JKHY",
+      "sic": "7373",
+      "sic_description": "Services-Computer Integrated Systems Design",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Financials"
+    },
+    {
+      "ticker": "KMB",
+      "sic": "2670",
+      "sic_description": "Converted Paper & Paperboard Prods (No Contaners/Boxes)",
+      "sec_family": "MATERIALS",
+      "sp500_sector": "Consumer Staples"
+    },
+    {
+      "ticker": "LRCX",
+      "sic": "3559",
+      "sic_description": "Special Industry Machinery, NEC",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Information Technology"
+    },
+    {
+      "ticker": "META",
+      "sic": "7370",
+      "sic_description": "Services-Computer Programming, Data Processing, Etc.",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "NFLX",
+      "sic": "7841",
+      "sic_description": "Services-Video Tape Rental",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "NWS",
+      "sic": "2711",
+      "sic_description": "Newspapers: Publishing or  Publishing & Printing",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "NWSA",
+      "sic": "2711",
+      "sic_description": "Newspapers: Publishing or  Publishing & Printing",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "PAYX",
+      "sic": "8700",
+      "sic_description": "Services-Engineering, Accounting, Research, Management",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "PYPL",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Financials"
+    },
+    {
+      "ticker": "TSLA",
+      "sic": "3711",
+      "sic_description": "Motor Vehicles & Passenger Car Bodies",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "TTWO",
+      "sic": "7372",
+      "sic_description": "Services-Prepackaged Software",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Communication Services"
+    },
+    {
+      "ticker": "VRSK",
+      "sic": "7374",
+      "sic_description": "Services-Computer Processing & Data Preparation",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "WMT",
+      "sic": "5331",
+      "sic_description": "Retail-Variety Stores",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Consumer Staples"
+    },
+    {
+      "ticker": "ZBRA",
+      "sic": "3560",
+      "sic_description": "General Industrial Machinery & Equipment",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Information Technology"
+    },
+    {
+      "ticker": "A",
+      "sic": "3826",
+      "sic_description": "Laboratory Analytical Instruments",
+      "sec_family": "TECHNOLOGY",
+      "sp500_sector": "Health Care"
+    },
+    {
+      "ticker": "ACN",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Information Technology"
+    },
+    {
+      "ticker": "ALLE",
+      "sic": "7381",
+      "sic_description": "Services-Detective, Guard & Armored Car Services",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "AMCR",
+      "sic": "3990",
+      "sic_description": "Miscellaneous Manufacturing Industries",
+      "sec_family": "CONSUMER_DISCRETIONARY",
+      "sp500_sector": "Materials"
+    },
+    {
+      "ticker": "AOS",
+      "sic": "3630",
+      "sic_description": "Household Appliances",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "APTV",
+      "sic": "3714",
+      "sic_description": "Motor Vehicle Parts & Accessories",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Consumer Discretionary"
+    },
+    {
+      "ticker": "BALL",
+      "sic": "3411",
+      "sic_description": "Metal Cans",
+      "sec_family": "INDUSTRIALS",
+      "sp500_sector": "Materials"
+    },
+    {
+      "ticker": "BE",
+      "sic": "3620",
+      "sic_description": "Electrical Industrial Apparatus",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "BR",
+      "sic": "7389",
+      "sic_description": "Services-Business Services, NEC",
+      "sec_family": "OTHER_SERVICES",
+      "sp500_sector": "Industrials"
+    },
+    {
+      "ticker": "CAH",
+      "sic": "5122",
+      "sic_description": "Wholesale-Drugs, Proprietaries & Druggists' Sundries",
+      "sec_family": "CONSUMER_STAPLES",
+      "sp500_sector": "Health Care"
+    },
+    {
+      "ticker": "CBRE",
+      "sic": "6500",
+      "sic_description": "Real Estate",
+      "sec_family": "OTHER_FINANCIALS",
+      "sp500_sector": "Real Estate"
+    }
+  ],
+  "missing_sic_examples": [
+    {
+      "ticker": "BOT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "CCAP",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "CSWC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "FRBA",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "HIFS",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "HRZN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "ICMB",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "LIEN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "NBN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "NMFC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "OZK",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PFX",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PWRL",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "RCBC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "RWAY",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "SAEN",
+      "type": "ADR"
+    },
+    {
+      "ticker": "SSBI",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "TOWN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "ASBH",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BBDC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BCAT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BCSF",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BCX",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BIT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BMEZ",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BMN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BOE",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BST",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BSTZ",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "BTX",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "CEV",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "CION",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "DXYZ",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "ECAT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "ECC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "EFT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "EIC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "EQS",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "ETO",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "ETX",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "EVF",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "EVN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "FINS",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "FSCO",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "FSK",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "FT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "FTF",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GAB",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GAM",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GDV",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GGT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GGZ",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GLU",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GRX",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GSBD",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "GUT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "HQL",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "HTGC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "IGI",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "IIM",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "IQI",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "IVAI",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "KBDC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "MAIN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "MCI",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "MPV",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "NCDL",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "NXP",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "OBDC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "OIA",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "OTF",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PDCC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PFLT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PIM",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PMM",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PMO",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PNNT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PPT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PSBD",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "PSUS",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "RGT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "RMT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "RVT",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "SCM",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "SPMC",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "TPVG",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "TRIN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "TSLX",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "TY",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "TYG",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VCV",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VGM",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VKI",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VKQ",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VMO",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VPV",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VTN",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "VVR",
+      "type": "COMMON"
+    },
+    {
+      "ticker": "XFLT",
+      "type": "COMMON"
+    }
+  ],
+  "quality": {
+    "metadata": {
+      "generated_at": "2026-11-05T10:36:06.935448+00:00",
+      "scope": "P6.4 Quality rules with P6.5 SIC model families",
+      "panel": ".p63_artifact/universe/sec_fundamentals_panel_p63.csv.gz",
+      "sic_source": "data/universe/us_equity_industry_sic_p65.csv"
+    },
+    "counts": {
+      "target_records": 5502,
+      "unique_ciks": 5452,
+      "standard_model_data_available": 4225,
+      "standard_model_input_ready": 3342,
+      "special_model_required": 883,
+      "industry_missing": 99,
+      "accounting_standard_blocked": 273,
+      "unclassified_records": 113,
+      "unclassified_input_ready": 44
+    },
+    "by_type": {
+      "COMMON": {
+        "records": 5187,
+        "data_available": 3980,
+        "input_ready": 3141,
+        "special": 839,
+        "industry_missing": 98
+      },
+      "ADR": {
+        "records": 315,
+        "data_available": 245,
+        "input_ready": 201,
+        "special": 44,
+        "industry_missing": 1
+      }
+    },
+    "by_exchange": {
+      "Cboe BZX": {
+        "records": 1,
+        "input_ready": 0
+      },
+      "NASDAQ": {
+        "records": 3397,
+        "input_ready": 2163
+      },
+      "NYSE": {
+        "records": 1861,
+        "input_ready": 1036
+      },
+      "NYSE American": {
+        "records": 237,
+        "input_ready": 141
+      },
+      "NYSE Arca": {
+        "records": 1,
+        "input_ready": 0
+      },
+      "OTHER:F": {
+        "records": 5,
+        "input_ready": 2
+      }
+    },
+    "by_family": {
+      "BANKS": {
+        "records": 329,
+        "data_available": 131,
+        "input_ready": 0,
+        "special": true
+      },
+      "COMMUNICATIONS": {
+        "records": 154,
+        "data_available": 138,
+        "input_ready": 138,
+        "special": false
+      },
+      "CONSUMER_DISCRETIONARY": {
+        "records": 358,
+        "data_available": 339,
+        "input_ready": 339,
+        "special": false
+      },
+      "CONSUMER_STAPLES": {
+        "records": 164,
+        "data_available": 149,
+        "input_ready": 149,
+        "special": false
+      },
+      "ENERGY": {
+        "records": 130,
+        "data_available": 116,
+        "input_ready": 0,
+        "special": true
+      },
+      "HEALTHCARE": {
+        "records": 963,
+        "data_available": 716,
+        "input_ready": 716,
+        "special": false
+      },
+      "INDUSTRIALS": {
+        "records": 585,
+        "data_available": 520,
+        "input_ready": 520,
+        "special": false
+      },
+      "INSURANCE": {
+        "records": 104,
+        "data_available": 101,
+        "input_ready": 0,
+        "special": true
+      },
+      "MATERIALS": {
+        "records": 329,
+        "data_available": 249,
+        "input_ready": 249,
+        "special": false
+      },
+      "OTHER_FINANCIALS": {
+        "records": 367,
+        "data_available": 301,
+        "input_ready": 0,
+        "special": true
+      },
+      "OTHER_SERVICES": {
+        "records": 806,
+        "data_available": 481,
+        "input_ready": 481,
+        "special": false
+      },
+      "REIT": {
+        "records": 164,
+        "data_available": 127,
+        "input_ready": 0,
+        "special": true
+      },
+      "TECHNOLOGY": {
+        "records": 823,
+        "data_available": 750,
+        "input_ready": 750,
+        "special": false
+      },
+      "UNCLASSIFIED": {
+        "records": 99,
+        "data_available": 0,
+        "input_ready": 0,
+        "special": false
+      },
+      "UTILITIES": {
+        "records": 127,
+        "data_available": 107,
+        "input_ready": 0,
+        "special": true
+      }
+    },
+    "by_accounting": {
+      "IFRS": {
+        "records": 455,
+        "input_ready": 311
+      },
+      "MIXED": {
+        "records": 96,
+        "input_ready": 0
+      },
+      "NONE": {
+        "records": 177,
+        "input_ready": 0
+      },
+      "US_GAAP": {
+        "records": 4774,
+        "input_ready": 3031
+      }
+    },
+    "reproduction": {
+      "old_p64_input_ready": 322,
+      "new_input_ready": 3342,
+      "intersection": 317,
+      "lost_count": 5,
+      "gained_count": 3025,
+      "lost_examples": [
+        "CI",
+        "CNC",
+        "ELV",
+        "HUM",
+        "UNH"
+      ],
+      "gained_examples": [
+        "AA",
+        "AACG",
+        "AAL",
+        "AAOI",
+        "AAUC",
+        "ABAT",
+        "ABCL",
+        "ABEO",
+        "ABEV",
+        "ABG",
+        "ABLV",
+        "ABM",
+        "ABSI",
+        "ABUS",
+        "ABVC",
+        "ACAD",
+        "ACB",
+        "ACCL",
+        "ACCO",
+        "ACCS",
+        "ACFN",
+        "ACH",
+        "ACHC",
+        "ACHR",
+        "ACHV",
+        "ACI",
+        "ACIU",
+        "ACIW",
+        "ACLS",
+        "ACM",
+        "ACMR",
+        "ACNT",
+        "ACOG",
+        "ACON",
+        "ACRS",
+        "ACTG",
+        "AD",
+        "ADAG",
+        "ADEA",
+        "ADGM",
+        "ADMA",
+        "ADNT",
+        "ADPT",
+        "ADSE",
+        "ADT",
+        "ADTN",
+        "ADUR",
+        "ADUS",
+        "ADV",
+        "ADVB"
+      ]
+    },
+    "family_counts": {
+      "BANKS": 329,
+      "INSURANCE": 104,
+      "REIT": 164,
+      "BDC": 0,
+      "OTHER_FINANCIALS": 367,
+      "UNCLASSIFIED": 99
+    },
+    "notes": [
+      "SIC is not GICS.",
+      "Special families are not forced into the standard Quality model.",
+      "Input readiness still requires the P6.4 financial-history and accounting gates."
+    ]
+  }
+}

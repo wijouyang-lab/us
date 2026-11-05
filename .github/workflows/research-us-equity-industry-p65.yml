@@ -1,0 +1,78 @@
+name: Research US Equity Industry P6.5
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/us-equity-industry-p65]
+    paths:
+      - "tools/research/enrich_us_equity_industry_p65.py"
+      - "tools/research/audit_quality_industry_readiness_p65.py"
+      - "tests/test_us_equity_industry_p65.py"
+      - "data/universe/sec_sic_model_family_map_p65.csv"
+      - ".github/workflows/research-us-equity-industry-p65.yml"
+  pull_request:
+    branches: [main, research/us-market-six-styles-p64]
+    paths:
+      - "tools/research/enrich_us_equity_industry_p65.py"
+      - "tools/research/audit_quality_industry_readiness_p65.py"
+      - "tests/test_us_equity_industry_p65.py"
+      - "data/universe/sec_sic_model_family_map_p65.csv"
+      - ".github/workflows/research-us-equity-industry-p65.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  industry:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 --dir .p63_artifact
+      - name: Run offline tests
+        run: python -m pytest tests/test_us_equity_industry_p65.py -q
+      - name: Download SEC submissions bulk once
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          python tools/research/enrich_us_equity_industry_p65.py \
+            --download \
+            --zip data/sec/submissions_p65.zip \
+            --metadata data/sec/submissions_p65_meta.json
+      - name: Enrich SIC and map model families
+        run: |
+          python tools/research/enrich_us_equity_industry_p65.py \
+            --zip data/sec/submissions_p65.zip \
+            --metadata data/sec/submissions_p65_meta.json
+      - name: Re-audit Quality readiness
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/audit_quality_industry_readiness_p65.py --panel "$PANEL"
+      - name: Upload P6.5 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: us-equity-industry-p65
+          path: |
+            data/universe/us_equity_industry_sic_p65.csv
+            data/universe/sec_sic_model_family_map_p65.csv
+            data/universe/us_equity_industry_coverage_p65.json
+            data/universe/us_equity_quality_readiness_p65.csv
+            data/sec/submissions_p65_meta.json
+          retention-days: 30
+          if-no-files-found: warn
