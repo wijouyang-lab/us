@@ -1,0 +1,63 @@
+name: Research Six Styles Readiness P6.4
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/us-market-six-styles-p64]
+    paths:
+      - "tools/research/audit_six_styles_readiness_p64.py"
+      - "tests/test_six_styles_readiness_p64.py"
+      - ".github/workflows/research-six-styles-readiness-p64.yml"
+  pull_request:
+    branches: [main, research/us-market-fundamentals-p63]
+    paths:
+      - "tools/research/audit_six_styles_readiness_p64.py"
+      - "tests/test_six_styles_readiness_p64.py"
+      - ".github/workflows/research-six-styles-readiness-p64.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  readiness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 \
+            --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 \
+            --dir .p63_artifact
+          find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print
+      - name: Run offline tests
+        run: python -m pytest tests/test_six_styles_readiness_p64.py -q
+      - name: Audit six-style readiness from artifact
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/audit_six_styles_readiness_p64.py --panel "$PANEL"
+      - name: Upload readiness outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: six-styles-readiness-p64
+          path: |
+            data/universe/us_equity_style_readiness_p64.csv
+            data/universe/us_equity_style_coverage_p64.json
+            data/universe/us_equity_style_metric_coverage_p64.csv
+            data/universe/us_equity_industry_coverage_p64.csv
+          retention-days: 30
+          if-no-files-found: warn

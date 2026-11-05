@@ -1,0 +1,511 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T09:59:21.416731+00:00",
+    "scope": "P6.1 current Common+ADR; UNCLASSIFIED separate",
+    "panel": "..\\fund_p63\\universe\\sec_fundamentals_panel_p63.csv.gz",
+    "panel_required": true,
+    "pit_rule": "filed -> next weekday; no holiday adjustment; no acceptanceDateTime",
+    "note": "Statuses are data-readiness only; no scores or backtests.",
+    "verification_run_url": "https://github.com/wijouyang-lab/us/actions/runs/42007201595",
+    "artifact_id": 13404908331,
+    "artifact_name": "six-styles-readiness-p64"
+  },
+  "counts": {
+    "target_records": 5502,
+    "unclassified_records": 113,
+    "target_unique_ciks": 5452,
+    "target_unique_tickers": 5502,
+    "target_missing_cik": 8
+  },
+  "status_counts": {
+    "value": {
+      "DATA_AVAILABLE": 1037,
+      "DATA_QUALITY_PASS": 4290,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "quality": {
+      "DATA_AVAILABLE": 1002,
+      "DATA_QUALITY_PASS": 3903,
+      "INPUT_READY": 322,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "garp": {
+      "DATA_AVAILABLE": 973,
+      "DATA_QUALITY_PASS": 4071,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "trend": {
+      "DATA_AVAILABLE": 5465,
+      "DATA_QUALITY_PASS": 23,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "dividend": {
+      "DATA_AVAILABLE": 459,
+      "DATA_QUALITY_PASS": 1814,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "hedge": {
+      "DATA_AVAILABLE": 5465,
+      "DATA_QUALITY_PASS": 23,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    }
+  },
+  "unclassified_status_counts": {
+    "value": {
+      "DATA_AVAILABLE": 12,
+      "DATA_QUALITY_PASS": 61,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "quality": {
+      "DATA_AVAILABLE": 10,
+      "DATA_QUALITY_PASS": 62,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "garp": {
+      "DATA_AVAILABLE": 11,
+      "DATA_QUALITY_PASS": 61,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "trend": {
+      "DATA_AVAILABLE": 111,
+      "DATA_QUALITY_PASS": 0,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "dividend": {
+      "DATA_AVAILABLE": 18,
+      "DATA_QUALITY_PASS": 43,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    },
+    "hedge": {
+      "DATA_AVAILABLE": 111,
+      "DATA_QUALITY_PASS": 0,
+      "INPUT_READY": 0,
+      "SCORE_READY": 0,
+      "BACKTEST_READY": 0
+    }
+  },
+  "by_type": {
+    "COMMON": {
+      "records": 5187,
+      "value": 0,
+      "quality": 322,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "ADR": {
+      "records": 315,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    }
+  },
+  "by_exchange": {
+    "Cboe BZX": {
+      "records": 1,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "NASDAQ": {
+      "records": 3397,
+      "value": 0,
+      "quality": 121,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "NYSE": {
+      "records": 1861,
+      "value": 0,
+      "quality": 201,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "NYSE American": {
+      "records": 237,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "NYSE Arca": {
+      "records": 1,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "OTHER:F": {
+      "records": 5,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    }
+  },
+  "by_accounting": {
+    "IFRS": {
+      "records": 455,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "MIXED": {
+      "records": 96,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "NONE": {
+      "records": 177,
+      "value": 0,
+      "quality": 0,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    },
+    "US_GAAP": {
+      "records": 4774,
+      "value": 0,
+      "quality": 322,
+      "garp": 0,
+      "trend": 0,
+      "dividend": 0,
+      "hedge": 0
+    }
+  },
+  "top_blockers": [
+    [
+      "VALUE_SHARE_CLASS_OR_ADR_RATIO_UNVERIFIED",
+      5502
+    ],
+    [
+      "VALUE_EV_EBITDA_UNVERIFIED",
+      5502
+    ],
+    [
+      "GARP_FORWARD_EPS_MISSING",
+      5502
+    ],
+    [
+      "TREND_PIT_UNIVERSE_NOT_READY",
+      5502
+    ],
+    [
+      "TREND_HISTORY_NOT_MARKET_WIDE",
+      5502
+    ],
+    [
+      "OPTIONS_HISTORY_BORROW_FINANCING_MISSING",
+      5502
+    ],
+    [
+      "INDUSTRY_CLASSIFICATION_MISSING",
+      5007
+    ],
+    [
+      "QUALITY_INDUSTRY_MODEL_UNRESOLVED",
+      5007
+    ],
+    [
+      "DIVIDEND_DATA_MISSING_NOT_NON_PAYER",
+      3229
+    ],
+    [
+      "DIVIDEND_DPS_FREQUENCY_ANNOUNCEMENT_MISSING",
+      2273
+    ],
+    [
+      "GARP_HISTORICAL_GROWTH_INSUFFICIENT",
+      1431
+    ],
+    [
+      "VALUE_FIELDS_INCOMPLETE",
+      1212
+    ],
+    [
+      "ACCOUNTING_STANDARD_MISSING",
+      177
+    ],
+    [
+      "COMPANYFACTS_MISSING",
+      162
+    ],
+    [
+      "STANDARD_TAXONOMY_MISSING",
+      162
+    ],
+    [
+      "SPECIAL_INDUSTRY_MODEL_REQUIRED",
+      157
+    ],
+    [
+      "QUALITY_SPECIAL_INDUSTRY_MODEL_NOT_READY",
+      157
+    ],
+    [
+      "MIXED_ACCOUNTING_STANDARDS",
+      96
+    ],
+    [
+      "QUOTE_INVALID_QUOTE",
+      10
+    ],
+    [
+      "QUALITY_HISTORY_INSUFFICIENT",
+      10
+    ],
+    [
+      "QUALITY_FIELDS_INCOMPLETE",
+      6
+    ],
+    [
+      "QUOTE_AMBIGUOUS_MATCH",
+      4
+    ]
+  ],
+  "special_industry_records": 157,
+  "industry_classification_missing": 5007,
+  "metric_coverage": [
+    {
+      "metric": "Revenue",
+      "target_records": 5502,
+      "any": 4477,
+      "any_coverage": 0.813704,
+      "recent_12m": 3985,
+      "recent_coverage": 0.724282
+    },
+    {
+      "metric": "NetIncome",
+      "target_records": 5502,
+      "any": 5275,
+      "any_coverage": 0.958742,
+      "recent_12m": 5004,
+      "recent_coverage": 0.909487
+    },
+    {
+      "metric": "EPSBasic",
+      "target_records": 5502,
+      "any": 5026,
+      "any_coverage": 0.913486,
+      "recent_12m": 4699,
+      "recent_coverage": 0.854053
+    },
+    {
+      "metric": "TotalAssets",
+      "target_records": 5502,
+      "any": 5315,
+      "any_coverage": 0.966012,
+      "recent_12m": 5125,
+      "recent_coverage": 0.931479
+    },
+    {
+      "metric": "StockholdersEquity",
+      "target_records": 5502,
+      "any": 5309,
+      "any_coverage": 0.964922,
+      "recent_12m": 5113,
+      "recent_coverage": 0.929298
+    },
+    {
+      "metric": "OperatingCashFlow",
+      "target_records": 5502,
+      "any": 5298,
+      "any_coverage": 0.962923,
+      "recent_12m": 5061,
+      "recent_coverage": 0.919847
+    },
+    {
+      "metric": "CapitalExpenditure",
+      "target_records": 5502,
+      "any": 4208,
+      "any_coverage": 0.764813,
+      "recent_12m": 3603,
+      "recent_coverage": 0.654853
+    },
+    {
+      "metric": "CashAndCashEquivalents",
+      "target_records": 5502,
+      "any": 4990,
+      "any_coverage": 0.906943,
+      "recent_12m": 4405,
+      "recent_coverage": 0.800618
+    },
+    {
+      "metric": "LongTermDebt",
+      "target_records": 5502,
+      "any": 3464,
+      "any_coverage": 0.629589,
+      "recent_12m": 2600,
+      "recent_coverage": 0.472555
+    },
+    {
+      "metric": "CommonSharesOutstanding",
+      "target_records": 5502,
+      "any": 4716,
+      "any_coverage": 0.857143,
+      "recent_12m": 4385,
+      "recent_coverage": 0.796983
+    },
+    {
+      "metric": "DividendsPaid",
+      "target_records": 5502,
+      "any": 2273,
+      "any_coverage": 0.413123,
+      "recent_12m": 1821,
+      "recent_coverage": 0.330971
+    }
+  ],
+  "industry_coverage": [
+    {
+      "industry": "Communication Services",
+      "records": 21,
+      "quote_ready": 21,
+      "companyfacts_found": 21,
+      "quality_input_ready": 21,
+      "special_industry": 0
+    },
+    {
+      "industry": "Consumer Discretionary",
+      "records": 46,
+      "quote_ready": 46,
+      "companyfacts_found": 46,
+      "quality_input_ready": 45,
+      "special_industry": 0
+    },
+    {
+      "industry": "Consumer Staples",
+      "records": 32,
+      "quote_ready": 32,
+      "companyfacts_found": 31,
+      "quality_input_ready": 28,
+      "special_industry": 0
+    },
+    {
+      "industry": "Energy",
+      "records": 21,
+      "quote_ready": 21,
+      "companyfacts_found": 21,
+      "quality_input_ready": 0,
+      "special_industry": 21
+    },
+    {
+      "industry": "Financials",
+      "records": 75,
+      "quote_ready": 75,
+      "companyfacts_found": 75,
+      "quality_input_ready": 0,
+      "special_industry": 75
+    },
+    {
+      "industry": "Health Care",
+      "records": 60,
+      "quote_ready": 60,
+      "companyfacts_found": 60,
+      "quality_input_ready": 58,
+      "special_industry": 0
+    },
+    {
+      "industry": "INDUSTRY_CLASSIFICATION_MISSING",
+      "records": 5007,
+      "quote_ready": 4993,
+      "companyfacts_found": 4846,
+      "quality_input_ready": 0,
+      "special_industry": 0
+    },
+    {
+      "industry": "Industrials",
+      "records": 81,
+      "quote_ready": 81,
+      "companyfacts_found": 81,
+      "quality_input_ready": 77,
+      "special_industry": 0
+    },
+    {
+      "industry": "Information Technology",
+      "records": 75,
+      "quote_ready": 75,
+      "companyfacts_found": 75,
+      "quality_input_ready": 73,
+      "special_industry": 0
+    },
+    {
+      "industry": "Materials",
+      "records": 23,
+      "quote_ready": 23,
+      "companyfacts_found": 23,
+      "quality_input_ready": 20,
+      "special_industry": 0
+    },
+    {
+      "industry": "Real Estate",
+      "records": 30,
+      "quote_ready": 30,
+      "companyfacts_found": 30,
+      "quality_input_ready": 0,
+      "special_industry": 30
+    },
+    {
+      "industry": "Utilities",
+      "records": 31,
+      "quote_ready": 31,
+      "companyfacts_found": 31,
+      "quality_input_ready": 0,
+      "special_industry": 31
+    }
+  ],
+  "score_ready": 0,
+  "backtest_ready": 0,
+  "notes": [
+    "Value INPUT_READY is zero because market-wide share-class/ADR ratio and EV/EBITDA are unverified.",
+    "GARP forward growth is zero because no free forward EPS source is available.",
+    "Trend current quote is not historical PIT or backtest readiness.",
+    "Dividend missing is not a confirmed non-payer.",
+    "Hedge risk-control data is separate from historical options chains."
+  ]
+}
