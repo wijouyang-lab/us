@@ -33,7 +33,9 @@
       "DECLARATION_DATE_AVAILABLE": false,
       "RECORD_DATE_AVAILABLE": false,
       "ADR_DIVIDEND_READY": false,
-      "attribution": "https://smarterdividends.com/dividend-api"
+      "attribution": "https://smarterdividends.com/dividend-api",
+      "current_profile_count": 30,
+      "recent_event_count": 26
     },
     "YAHOO_FINANCE": {
       "attempted": 30,
@@ -5273,7 +5275,72 @@
         "raw_sha256": "91cd938ad43c7730fc9b87472916d13725ab89896888e4135ed7e0b1bb84976a",
         "history_length": 211,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1964-07-06",
+            "factor": 2.0
+          },
+          {
+            "date": "1976-07-26",
+            "factor": 1.5
+          },
+          {
+            "date": "1994-09-06",
+            "factor": 2.0
+          },
+          {
+            "date": "1997-07-14",
+            "factor": 2.0
+          },
+          {
+            "date": "2005-07-14",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1964-07-06",
+            "factor": 2.0,
+            "pre_dps": 0.016667,
+            "post_dps": 0.016667,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1976-07-26",
+            "factor": 1.5,
+            "pre_dps": 0.025,
+            "post_dps": 0.084375,
+            "pre_post_ratio": 0.2962962962962963,
+            "closer_to_adjusted": false
+          },
+          {
+            "split_date": "1994-09-06",
+            "factor": 2.0,
+            "pre_dps": 0.0375,
+            "post_dps": 0.0375,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-07-14",
+            "factor": 2.0,
+            "pre_dps": 0.1,
+            "post_dps": 0.125,
+            "pre_post_ratio": 0.8,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2005-07-14",
+            "factor": 2.0,
+            "pre_dps": 0.205,
+            "post_dps": 0.25,
+            "pre_post_ratio": 0.82,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "KO": {
@@ -11700,7 +11767,108 @@
         "raw_sha256": "41a99aa895a2731c721f42628b6ba155183e7df45aae4aec3a3eba3806917fa4",
         "history_length": 259,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1965-02-19",
+            "factor": 2.0
+          },
+          {
+            "date": "1968-06-03",
+            "factor": 2.0
+          },
+          {
+            "date": "1977-06-01",
+            "factor": 2.0
+          },
+          {
+            "date": "1986-07-01",
+            "factor": 3.0
+          },
+          {
+            "date": "1990-05-14",
+            "factor": 2.0
+          },
+          {
+            "date": "1992-05-12",
+            "factor": 2.0
+          },
+          {
+            "date": "1996-05-13",
+            "factor": 2.0
+          },
+          {
+            "date": "2012-08-13",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1965-02-19",
+            "factor": 2.0,
+            "pre_dps": 0.001953,
+            "post_dps": 0.002214,
+            "pre_post_ratio": 0.8821138211382115,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1968-06-03",
+            "factor": 2.0,
+            "pre_dps": 0.002734,
+            "post_dps": 0.003125,
+            "pre_post_ratio": 0.8748799999999999,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1977-06-01",
+            "factor": 2.0,
+            "pre_dps": 0.008021,
+            "post_dps": 0.008021,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1986-07-01",
+            "factor": 3.0,
+            "pre_dps": 0.01625,
+            "post_dps": 0.01625,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1990-05-14",
+            "factor": 2.0,
+            "pre_dps": 0.025,
+            "post_dps": 0.025,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1992-05-12",
+            "factor": 2.0,
+            "pre_dps": 0.035,
+            "post_dps": 0.035,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1996-05-13",
+            "factor": 2.0,
+            "pre_dps": 0.0625,
+            "post_dps": 0.0625,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2012-08-13",
+            "factor": 2.0,
+            "pre_dps": 0.255,
+            "post_dps": 0.255,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "PG": {
@@ -18138,7 +18306,84 @@
         "raw_sha256": "5d04ab2f359ffd2355935222dc80153d5f41cdef041e8f680a97ca64019cecc4",
         "history_length": 261,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1970-05-19",
+            "factor": 2.0
+          },
+          {
+            "date": "1983-02-22",
+            "factor": 2.0
+          },
+          {
+            "date": "1989-11-20",
+            "factor": 2.0
+          },
+          {
+            "date": "1992-06-15",
+            "factor": 2.0
+          },
+          {
+            "date": "1997-09-22",
+            "factor": 2.0
+          },
+          {
+            "date": "2004-06-21",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1970-05-19",
+            "factor": 2.0,
+            "pre_dps": 0.010938,
+            "post_dps": 0.010938,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1983-02-22",
+            "factor": 2.0,
+            "pre_dps": 0.01875,
+            "post_dps": 0.0375,
+            "pre_post_ratio": 0.5,
+            "closer_to_adjusted": false
+          },
+          {
+            "split_date": "1989-11-20",
+            "factor": 2.0,
+            "pre_dps": 0.05625,
+            "post_dps": 0.05625,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1992-06-15",
+            "factor": 2.0,
+            "pre_dps": 0.06875,
+            "post_dps": 0.06875,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-09-22",
+            "factor": 2.0,
+            "pre_dps": 0.12625,
+            "post_dps": 0.126,
+            "pre_post_ratio": 1.001984126984127,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2004-06-21",
+            "factor": 2.0,
+            "pre_dps": 0.25,
+            "post_dps": 0.25,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "XOM": {
@@ -24479,7 +24724,72 @@
         "raw_sha256": "1060e2a1a31976d449043d7c8324d3e87da8c98d5ebe5ab06f89e3b951604e09",
         "history_length": 258,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1976-07-26",
+            "factor": 2.0
+          },
+          {
+            "date": "1981-06-12",
+            "factor": 2.0
+          },
+          {
+            "date": "1987-09-15",
+            "factor": 2.0
+          },
+          {
+            "date": "1997-04-14",
+            "factor": 2.0
+          },
+          {
+            "date": "2001-07-19",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1976-07-26",
+            "factor": 2.0,
+            "pre_dps": 0.04375,
+            "post_dps": 0.04375,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1981-06-12",
+            "factor": 2.0,
+            "pre_dps": 0.09375,
+            "post_dps": 0.09375,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1987-09-15",
+            "factor": 2.0,
+            "pre_dps": 0.125,
+            "post_dps": 0.125,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-04-14",
+            "factor": 2.0,
+            "pre_dps": 0.1975,
+            "post_dps": 0.205,
+            "pre_post_ratio": 0.9634146341463415,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2001-07-19",
+            "factor": 2.0,
+            "pre_dps": 0.01,
+            "post_dps": 0.23,
+            "pre_post_ratio": 0.043478260869565216,
+            "closer_to_adjusted": false
+          }
+        ]
       }
     },
     "O": {
@@ -33984,7 +34294,36 @@
         "raw_sha256": "0dbf1ea8dc4df6ff2eff5cead511c0fc8960cd951b9d3b9043d08d9254326380",
         "history_length": 384,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "2005-01-03",
+            "factor": 2.0
+          },
+          {
+            "date": "2021-11-15",
+            "factor": 1.032
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "2005-01-03",
+            "factor": 2.0,
+            "pre_dps": 0.106589,
+            "post_dps": 0.106589,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2021-11-15",
+            "factor": 1.032,
+            "pre_dps": 0.228682,
+            "post_dps": 0.246,
+            "pre_post_ratio": 0.9296016260162602,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "NEE": {
@@ -38358,7 +38697,48 @@
         "raw_sha256": "5e78a2b0a9628dfc235163bf95d239666c78ed15c8a2ad2de019636fbffe797c",
         "history_length": 174,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1985-01-31",
+            "factor": 2.0
+          },
+          {
+            "date": "2005-03-16",
+            "factor": 2.0
+          },
+          {
+            "date": "2020-10-27",
+            "factor": 4.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1985-01-31",
+            "factor": 2.0,
+            "pre_dps": 0.05875,
+            "post_dps": 0.05875,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2005-03-16",
+            "factor": 2.0,
+            "pre_dps": 0.08875,
+            "post_dps": 0.08875,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2020-10-27",
+            "factor": 4.0,
+            "pre_dps": 0.35,
+            "post_dps": 0.35,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "VZ": {
@@ -42605,7 +42985,84 @@
         "raw_sha256": "387c48b6da8101c695e91497dcbaa40489e07a12791196578b943ce5aa5a6e56",
         "history_length": 170,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1986-04-18",
+            "factor": 2.0
+          },
+          {
+            "date": "1990-05-02",
+            "factor": 2.0
+          },
+          {
+            "date": "1998-06-30",
+            "factor": 2.0
+          },
+          {
+            "date": "2006-11-20",
+            "factor": 1.038055099964706
+          },
+          {
+            "date": "2008-04-01",
+            "factor": 1.0046515366145252
+          },
+          {
+            "date": "2010-07-02",
+            "factor": 1.0662242546825904
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1986-04-18",
+            "factor": 2.0,
+            "pre_dps": 0.202348,
+            "post_dps": 0.202348,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1990-05-02",
+            "factor": 2.0,
+            "pre_dps": 0.2653,
+            "post_dps": 0.2653,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1998-06-30",
+            "factor": 2.0,
+            "pre_dps": 0.346239,
+            "post_dps": 0.346239,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2006-11-20",
+            "factor": 1.038055099964706,
+            "pre_dps": 0.364226,
+            "post_dps": 0.378086,
+            "pre_post_ratio": 0.9633416735874907,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2008-04-01",
+            "factor": 1.0046515366145252,
+            "pre_dps": 0.401425,
+            "post_dps": 0.403292,
+            "pre_post_ratio": 0.9953705999623101,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2010-07-02",
+            "factor": 1.0662242546825904,
+            "pre_dps": 0.445497,
+            "post_dps": 0.475,
+            "pre_post_ratio": 0.9378884210526316,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "MCD": {
@@ -47157,7 +47614,120 @@
         "raw_sha256": "71dde32bc209808a01a7a01bb707803fd1a6cd629358b9a679b2452b95ef3c96",
         "history_length": 179,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1971-06-14",
+            "factor": 1.5
+          },
+          {
+            "date": "1972-06-06",
+            "factor": 2.0
+          },
+          {
+            "date": "1982-10-07",
+            "factor": 1.5
+          },
+          {
+            "date": "1984-09-25",
+            "factor": 1.5
+          },
+          {
+            "date": "1986-06-26",
+            "factor": 1.5
+          },
+          {
+            "date": "1987-06-23",
+            "factor": 1.5
+          },
+          {
+            "date": "1989-06-19",
+            "factor": 2.0
+          },
+          {
+            "date": "1994-06-27",
+            "factor": 2.0
+          },
+          {
+            "date": "1999-03-08",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1971-06-14",
+            "factor": 1.5,
+            "pre_dps": 0.001235,
+            "post_dps": 0.000617,
+            "pre_post_ratio": 2.0016207455429496,
+            "closer_to_adjusted": false
+          },
+          {
+            "split_date": "1972-06-06",
+            "factor": 2.0,
+            "pre_dps": 0.001235,
+            "post_dps": 0.000617,
+            "pre_post_ratio": 2.0016207455429496,
+            "closer_to_adjusted": false
+          },
+          {
+            "split_date": "1982-10-07",
+            "factor": 1.5,
+            "pre_dps": 0.007407,
+            "post_dps": 0.008148,
+            "pre_post_ratio": 0.9090574374079529,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1984-09-25",
+            "factor": 1.5,
+            "pre_dps": 0.010741,
+            "post_dps": 0.011389,
+            "pre_post_ratio": 0.9431029941171306,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1986-06-26",
+            "factor": 1.5,
+            "pre_dps": 0.009167,
+            "post_dps": 0.01375,
+            "pre_post_ratio": 0.6666909090909091,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1987-06-23",
+            "factor": 1.5,
+            "pre_dps": 0.015583,
+            "post_dps": 0.015625,
+            "pre_post_ratio": 0.997312,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1989-06-19",
+            "factor": 2.0,
+            "pre_dps": 0.019375,
+            "post_dps": 0.01925,
+            "pre_post_ratio": 1.0064935064935066,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1994-06-27",
+            "factor": 2.0,
+            "pre_dps": 0.03,
+            "post_dps": 0.03,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1999-03-08",
+            "factor": 2.0,
+            "pre_dps": 0.045,
+            "post_dps": 0.049,
+            "pre_post_ratio": 0.9183673469387754,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "HD": {
@@ -51091,7 +51661,128 @@
         "raw_sha256": "9647996a2d08243e48c6c1610f22c447edc0117e859c622090fae32953c18962",
         "history_length": 157,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1982-01-20",
+            "factor": 1.5
+          },
+          {
+            "date": "1982-05-11",
+            "factor": 1.25
+          },
+          {
+            "date": "1982-12-08",
+            "factor": 2.0
+          },
+          {
+            "date": "1983-06-09",
+            "factor": 2.0
+          },
+          {
+            "date": "1987-09-22",
+            "factor": 1.5
+          },
+          {
+            "date": "1989-07-03",
+            "factor": 1.5
+          },
+          {
+            "date": "1990-07-06",
+            "factor": 1.5
+          },
+          {
+            "date": "1991-06-26",
+            "factor": 1.5
+          },
+          {
+            "date": "1992-07-02",
+            "factor": 1.5
+          },
+          {
+            "date": "1993-04-14",
+            "factor": 1.3333333333333333
+          },
+          {
+            "date": "1997-07-07",
+            "factor": 1.5
+          },
+          {
+            "date": "1998-07-06",
+            "factor": 2.0
+          },
+          {
+            "date": "1999-12-31",
+            "factor": 1.5
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1989-07-03",
+            "factor": 1.5,
+            "pre_dps": 0.000988,
+            "post_dps": 0.001481,
+            "pre_post_ratio": 0.6671168129642134,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1990-07-06",
+            "factor": 1.5,
+            "pre_dps": 0.001481,
+            "post_dps": 0.002222,
+            "pre_post_ratio": 0.6665166516651665,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1991-06-26",
+            "factor": 1.5,
+            "pre_dps": 0.002222,
+            "post_dps": 0.003333,
+            "pre_post_ratio": 0.6666666666666666,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1992-07-02",
+            "factor": 1.5,
+            "pre_dps": 0.005,
+            "post_dps": 0.005,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1993-04-14",
+            "factor": 1.3333333333333333,
+            "pre_dps": 0.005,
+            "post_dps": 0.006667,
+            "pre_post_ratio": 0.7499625018749062,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-07-07",
+            "factor": 1.5,
+            "pre_dps": 0.016667,
+            "post_dps": 0.016667,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1998-07-06",
+            "factor": 2.0,
+            "pre_dps": 0.02,
+            "post_dps": 0.02,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1999-12-31",
+            "factor": 1.5,
+            "pre_dps": 0.04,
+            "post_dps": 0.04,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "IBM": {
@@ -57395,7 +58086,108 @@
         "raw_sha256": "b53da18df1181d06d7488e9dbb81e7a8a14ce1d3ca717d65690a1722944842b0",
         "history_length": 257,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1964-05-18",
+            "factor": 1.25
+          },
+          {
+            "date": "1966-05-18",
+            "factor": 1.5
+          },
+          {
+            "date": "1968-04-23",
+            "factor": 2.0
+          },
+          {
+            "date": "1973-05-29",
+            "factor": 1.25
+          },
+          {
+            "date": "1979-06-01",
+            "factor": 4.0
+          },
+          {
+            "date": "1997-05-28",
+            "factor": 2.0
+          },
+          {
+            "date": "1999-05-27",
+            "factor": 2.0
+          },
+          {
+            "date": "2021-11-04",
+            "factor": 1.046
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1964-05-18",
+            "factor": 1.25,
+            "pre_dps": 0.001593,
+            "post_dps": 0.001992,
+            "pre_post_ratio": 0.799698795180723,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1966-05-18",
+            "factor": 1.5,
+            "pre_dps": 0.00239,
+            "post_dps": 0.002629,
+            "pre_post_ratio": 0.9090909090909092,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1968-04-23",
+            "factor": 2.0,
+            "pre_dps": 0.031071,
+            "post_dps": 0.031071,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1973-05-29",
+            "factor": 1.25,
+            "pre_dps": 0.066922,
+            "post_dps": 0.066922,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1979-06-01",
+            "factor": 4.0,
+            "pre_dps": 0.205545,
+            "post_dps": 0.205545,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-05-28",
+            "factor": 2.0,
+            "pre_dps": 0.095602,
+            "post_dps": 0.095602,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1999-05-27",
+            "factor": 2.0,
+            "pre_dps": 0.114723,
+            "post_dps": 0.114723,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2021-11-04",
+            "factor": 1.046,
+            "pre_dps": 1.567878,
+            "post_dps": 1.64,
+            "pre_post_ratio": 0.9560231707317074,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "CSCO": {
@@ -58997,7 +59789,47 @@
         "raw_sha256": "e64be284cdd96c48c2ca7989890401a2aec20670a4878d961f5a84b1642c2e90",
         "history_length": 62,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1991-03-18",
+            "factor": 2.0
+          },
+          {
+            "date": "1992-03-23",
+            "factor": 2.0
+          },
+          {
+            "date": "1993-03-22",
+            "factor": 2.0
+          },
+          {
+            "date": "1994-03-21",
+            "factor": 2.0
+          },
+          {
+            "date": "1996-02-20",
+            "factor": 2.0
+          },
+          {
+            "date": "1997-12-17",
+            "factor": 1.5
+          },
+          {
+            "date": "1998-09-16",
+            "factor": 1.5
+          },
+          {
+            "date": "1999-06-22",
+            "factor": 2.0
+          },
+          {
+            "date": "2000-03-23",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_UNVERIFIED",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -64840,7 +65672,108 @@
         "raw_sha256": "bd87fd25e004ed748aa536674151562828e6e87cb12afe1c64c37b7dd33895c7",
         "history_length": 185,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1977-06-27",
+            "factor": 1.25
+          },
+          {
+            "date": "1983-12-02",
+            "factor": 1.5
+          },
+          {
+            "date": "1986-06-03",
+            "factor": 1.5
+          },
+          {
+            "date": "1988-01-13",
+            "factor": 2.0
+          },
+          {
+            "date": "1994-07-06",
+            "factor": 2.0
+          },
+          {
+            "date": "1998-04-08",
+            "factor": 1.505797319680771
+          },
+          {
+            "date": "2000-06-29",
+            "factor": 1.0409076714895389
+          },
+          {
+            "date": "2000-08-03",
+            "factor": 1.748175
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1977-06-27",
+            "factor": 1.25,
+            "pre_dps": 0.03244,
+            "post_dps": 0.03244,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1983-12-02",
+            "factor": 1.5,
+            "pre_dps": 0.018248,
+            "post_dps": 0.018248,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1986-06-03",
+            "factor": 1.5,
+            "pre_dps": 0.050181,
+            "post_dps": 0.050181,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1988-01-13",
+            "factor": 2.0,
+            "pre_dps": 0.091238,
+            "post_dps": 0.091238,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1994-07-06",
+            "factor": 2.0,
+            "pre_dps": 0.082114,
+            "post_dps": 0.082114,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1998-04-08",
+            "factor": 1.505797319680771,
+            "pre_dps": 0.15328,
+            "post_dps": 0.230809,
+            "pre_post_ratio": 0.6640988869584808,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2000-06-29",
+            "factor": 1.0409076714895389,
+            "pre_dps": 0.274772,
+            "post_dps": 0.286013,
+            "pre_post_ratio": 0.9606975906689557,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2000-08-03",
+            "factor": 1.748175,
+            "pre_dps": 0.286013,
+            "post_dps": 0.3,
+            "pre_post_ratio": 0.9533766666666668,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "PEP": {
@@ -70326,7 +71259,60 @@
         "raw_sha256": "89fc1e0983bc3a20123fc4e2ac92a5c405789d0b10c50e6ba9d7fb752fb0cb27",
         "history_length": 219,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1977-05-31",
+            "factor": 3.0
+          },
+          {
+            "date": "1986-05-29",
+            "factor": 3.0
+          },
+          {
+            "date": "1990-09-05",
+            "factor": 3.0
+          },
+          {
+            "date": "1996-05-29",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1977-05-31",
+            "factor": 3.0,
+            "pre_dps": 0.011111,
+            "post_dps": 0.011111,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1986-05-29",
+            "factor": 3.0,
+            "pre_dps": 0.024722,
+            "post_dps": 0.026667,
+            "pre_post_ratio": 0.9270634117073537,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1990-09-05",
+            "factor": 3.0,
+            "pre_dps": 0.05,
+            "post_dps": 0.05,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1996-05-29",
+            "factor": 2.0,
+            "pre_dps": 0.1,
+            "post_dps": 0.115,
+            "pre_post_ratio": 0.8695652173913043,
+            "closer_to_adjusted": true
+          }
+        ]
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -77693,7 +78679,132 @@
         "raw_sha256": "03b976aabea2bc76ca85c3b00856ac4a420fca5d9218b5f1f93892b3545d4aab",
         "history_length": 209,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1975-08-25",
+            "factor": 2.0
+          },
+          {
+            "date": "1980-12-17",
+            "factor": 2.0
+          },
+          {
+            "date": "1982-07-12",
+            "factor": 2.0
+          },
+          {
+            "date": "1983-07-11",
+            "factor": 2.0
+          },
+          {
+            "date": "1985-10-07",
+            "factor": 2.0
+          },
+          {
+            "date": "1987-07-13",
+            "factor": 2.0
+          },
+          {
+            "date": "1990-07-09",
+            "factor": 2.0
+          },
+          {
+            "date": "1993-02-26",
+            "factor": 2.0
+          },
+          {
+            "date": "1999-04-20",
+            "factor": 2.0
+          },
+          {
+            "date": "2024-02-26",
+            "factor": 3.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1975-08-25",
+            "factor": 2.0,
+            "pre_dps": 2e-05,
+            "post_dps": 2e-05,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1980-12-17",
+            "factor": 2.0,
+            "pre_dps": 0.00013,
+            "post_dps": 0.00026,
+            "pre_post_ratio": 0.5,
+            "closer_to_adjusted": false
+          },
+          {
+            "split_date": "1982-07-12",
+            "factor": 2.0,
+            "pre_dps": 0.000234,
+            "post_dps": 0.000234,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1983-07-11",
+            "factor": 2.0,
+            "pre_dps": 0.000365,
+            "post_dps": 0.000365,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1985-10-07",
+            "factor": 2.0,
+            "pre_dps": 0.000729,
+            "post_dps": 0.000729,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1987-07-13",
+            "factor": 2.0,
+            "pre_dps": 0.00125,
+            "post_dps": 0.00125,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1990-07-09",
+            "factor": 2.0,
+            "pre_dps": 0.002917,
+            "post_dps": 0.002917,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1993-02-26",
+            "factor": 2.0,
+            "pre_dps": 0.004333,
+            "post_dps": 0.005333,
+            "pre_post_ratio": 0.8124882805175323,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1999-04-20",
+            "factor": 2.0,
+            "pre_dps": 0.016667,
+            "post_dps": 0.016667,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2024-02-26",
+            "factor": 3.0,
+            "pre_dps": 0.19,
+            "post_dps": 0.208,
+            "pre_post_ratio": 0.9134615384615385,
+            "closer_to_adjusted": true
+          }
+        ]
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -84118,7 +85229,60 @@
         "raw_sha256": "6e8cca99516e5a32724c5d95a4a6943052b2409fde98c4d9960b105a0c948b80",
         "history_length": 170,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1987-05-26",
+            "factor": 3.0
+          },
+          {
+            "date": "1993-05-26",
+            "factor": 2.0
+          },
+          {
+            "date": "1998-03-20",
+            "factor": 2.0
+          },
+          {
+            "date": "2022-04-11",
+            "factor": 1.324
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1987-05-26",
+            "factor": 3.0,
+            "pre_dps": 0.145,
+            "post_dps": 0.145,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1993-05-26",
+            "factor": 2.0,
+            "pre_dps": 0.18875,
+            "post_dps": 0.1885,
+            "pre_post_ratio": 1.0013262599469497,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1998-03-20",
+            "factor": 2.0,
+            "pre_dps": 0.224,
+            "post_dps": 0.232,
+            "pre_post_ratio": 0.9655172413793103,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2022-04-11",
+            "factor": 1.324,
+            "pre_dps": 0.52,
+            "post_dps": 0.278,
+            "pre_post_ratio": 1.870503597122302,
+            "closer_to_adjusted": false
+          }
+        ]
       }
     },
     "LOW": {
@@ -88259,7 +89423,72 @@
         "raw_sha256": "59ac58b8a87148d3053a8d24a10055579104691a816fde982207623c21018d25",
         "history_length": 166,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1992-06-29",
+            "factor": 2.0
+          },
+          {
+            "date": "1994-04-04",
+            "factor": 2.0
+          },
+          {
+            "date": "1998-06-29",
+            "factor": 2.0
+          },
+          {
+            "date": "2001-07-02",
+            "factor": 2.0
+          },
+          {
+            "date": "2006-07-03",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1992-06-29",
+            "factor": 2.0,
+            "pre_dps": 0.004375,
+            "post_dps": 0.004375,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1994-04-04",
+            "factor": 2.0,
+            "pre_dps": 0.005,
+            "post_dps": 0.005,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1998-06-29",
+            "factor": 2.0,
+            "pre_dps": 0.006875,
+            "post_dps": 0.0625,
+            "pre_post_ratio": 0.11,
+            "closer_to_adjusted": false
+          },
+          {
+            "split_date": "2001-07-02",
+            "factor": 2.0,
+            "pre_dps": 0.00875,
+            "post_dps": 0.01,
+            "pre_post_ratio": 0.8750000000000001,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2006-07-03",
+            "factor": 2.0,
+            "pre_dps": 0.03,
+            "post_dps": 0.05,
+            "pre_post_ratio": 0.6,
+            "closer_to_adjusted": false
+          }
+        ]
       }
     },
     "INTC": {
@@ -91449,7 +92678,84 @@
         "raw_sha256": "40fb317bd5df8ab6fc3acbf025340ad9e9692c27b7e94259f6f93330d2086267",
         "history_length": 128,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1980-10-09",
+            "factor": 2.0
+          },
+          {
+            "date": "1983-07-01",
+            "factor": 2.0
+          },
+          {
+            "date": "1987-10-29",
+            "factor": 1.5
+          },
+          {
+            "date": "1993-06-07",
+            "factor": 2.0
+          },
+          {
+            "date": "1995-06-19",
+            "factor": 2.0
+          },
+          {
+            "date": "1997-07-14",
+            "factor": 2.0
+          },
+          {
+            "date": "1999-04-12",
+            "factor": 2.0
+          },
+          {
+            "date": "2000-07-31",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1993-06-07",
+            "factor": 2.0,
+            "pre_dps": 0.003125,
+            "post_dps": 0.003125,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1995-06-19",
+            "factor": 2.0,
+            "pre_dps": 0.00375,
+            "post_dps": 0.005,
+            "pre_post_ratio": 0.75,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-07-14",
+            "factor": 2.0,
+            "pre_dps": 0.00625,
+            "post_dps": 0.0075,
+            "pre_post_ratio": 0.8333333333333334,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1999-04-12",
+            "factor": 2.0,
+            "pre_dps": 0.015,
+            "post_dps": 0.015,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2000-07-31",
+            "factor": 2.0,
+            "pre_dps": 0.015,
+            "post_dps": 0.02,
+            "pre_post_ratio": 0.75,
+            "closer_to_adjusted": true
+          }
+        ]
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -96373,7 +97679,10 @@
         "raw_sha256": "94f7302c930e93893d91003e11313b8424ab69738f492220ea6f5e3ad7095d9b",
         "history_length": 115,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       }
     },
     "BAC": {
@@ -100415,7 +101724,48 @@
         "raw_sha256": "6613c0c72f543c1f08ad8158b1c2e987661f6fe3d3a4c2706317e2cb71400e6b",
         "history_length": 162,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1986-11-21",
+            "factor": 2.0
+          },
+          {
+            "date": "1997-02-28",
+            "factor": 2.0
+          },
+          {
+            "date": "2004-08-30",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1986-11-21",
+            "factor": 2.0,
+            "pre_dps": 0.0475,
+            "post_dps": 0.0525,
+            "pre_post_ratio": 0.9047619047619048,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1997-02-28",
+            "factor": 2.0,
+            "pre_dps": 0.165,
+            "post_dps": 0.165,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2004-08-30",
+            "factor": 2.0,
+            "pre_dps": 0.4,
+            "post_dps": 0.45,
+            "pre_post_ratio": 0.888888888888889,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "JNJ": {
@@ -106821,7 +108171,96 @@
         "raw_sha256": "3faf28ab8ca91b44616fa44d7302bd974b1c2c0dc071fb8e063325d06accbe41",
         "history_length": 259,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1967-06-19",
+            "factor": 3.0
+          },
+          {
+            "date": "1970-05-18",
+            "factor": 3.0
+          },
+          {
+            "date": "1981-05-19",
+            "factor": 3.0
+          },
+          {
+            "date": "1989-05-11",
+            "factor": 2.0
+          },
+          {
+            "date": "1992-06-10",
+            "factor": 2.0
+          },
+          {
+            "date": "1996-06-12",
+            "factor": 2.0
+          },
+          {
+            "date": "2001-06-13",
+            "factor": 2.0
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1967-06-19",
+            "factor": 3.0,
+            "pre_dps": 0.00081,
+            "post_dps": 0.001042,
+            "pre_post_ratio": 0.7773512476007678,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1970-05-18",
+            "factor": 3.0,
+            "pre_dps": 0.002083,
+            "post_dps": 0.001667,
+            "pre_post_ratio": 1.2495500899820036,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1981-05-19",
+            "factor": 3.0,
+            "pre_dps": 0.011979,
+            "post_dps": 0.01375,
+            "pre_post_ratio": 0.8712,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1989-05-11",
+            "factor": 2.0,
+            "pre_dps": 0.03125,
+            "post_dps": 0.03625,
+            "pre_post_ratio": 0.8620689655172414,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1992-06-10",
+            "factor": 2.0,
+            "pre_dps": 0.0575,
+            "post_dps": 0.0575,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "1996-06-12",
+            "factor": 2.0,
+            "pre_dps": 0.095,
+            "post_dps": 0.095,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2001-06-13",
+            "factor": 2.0,
+            "pre_dps": 0.18,
+            "post_dps": 0.18,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "DUK": {
@@ -111153,7 +112592,60 @@
         "raw_sha256": "dce046e3f60e4ee2f2bad4e909c30fabf9f56a42f4142c0c79dbff6556db2a1f",
         "history_length": 174,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1990-10-01",
+            "factor": 2.0
+          },
+          {
+            "date": "2001-01-29",
+            "factor": 2.0
+          },
+          {
+            "date": "2007-01-03",
+            "factor": 1.7208742040956806
+          },
+          {
+            "date": "2012-07-03",
+            "factor": 0.3333333333333333
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED",
+        "split_adjustment_details": [
+          {
+            "split_date": "1990-10-01",
+            "factor": 2.0,
+            "pre_dps": 0.357377,
+            "post_dps": 0.357377,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2001-01-29",
+            "factor": 2.0,
+            "pre_dps": 0.479408,
+            "post_dps": 0.479408,
+            "pre_post_ratio": 1.0,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2007-01-03",
+            "factor": 1.7208742040956806,
+            "pre_dps": 0.557856,
+            "post_dps": 0.63,
+            "pre_post_ratio": 0.8854857142857143,
+            "closer_to_adjusted": true
+          },
+          {
+            "split_date": "2012-07-03",
+            "factor": 0.3333333333333333,
+            "pre_dps": 0.75,
+            "post_dps": 0.765,
+            "pre_post_ratio": 0.9803921568627451,
+            "closer_to_adjusted": true
+          }
+        ]
       }
     },
     "AAL": {
@@ -111745,7 +113237,10 @@
         "raw_sha256": "e31e64df98971a9e94d0c002b79a3b7f439e4724d158e4116f4a9a959b568cd3",
         "history_length": 23,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -112315,7 +113810,15 @@
         "url": "https://finance.yahoo.com/quote/AURE/history?filter=div",
         "events": [],
         "error": null,
-        "raw_sha256": null
+        "raw_sha256": null,
+        "splits": [
+          {
+            "date": "2026-02-19",
+            "factor": 0.1
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_UNVERIFIED",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -113298,7 +114801,15 @@
         "raw_sha256": "9572bc6e9f24892371266779f2eb119b4b83d3ecddcfe2e958aedfb448ce28c1",
         "history_length": 39,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "2024-09-24",
+            "factor": 0.05
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_UNVERIFIED",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -113937,7 +115448,10 @@
         "url": "https://finance.yahoo.com/quote/ABNB/history?filter=div",
         "events": [],
         "error": null,
-        "raw_sha256": null
+        "raw_sha256": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -113977,7 +115491,10 @@
         "url": "https://finance.yahoo.com/quote/ACAD/history?filter=div",
         "events": [],
         "error": null,
-        "raw_sha256": null
+        "raw_sha256": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -114017,7 +115534,10 @@
         "url": "https://finance.yahoo.com/quote/AAOI/history?filter=div",
         "events": [],
         "error": null,
-        "raw_sha256": null
+        "raw_sha256": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -115159,7 +116679,27 @@
         "raw_sha256": "a2befcc2917acb2663d2f25cef4745e9642a01f04f9f57bd4e64ed9b293a655c",
         "history_length": 38,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [
+          {
+            "date": "1997-05-12",
+            "factor": 2.0
+          },
+          {
+            "date": "1998-05-08",
+            "factor": 2.0
+          },
+          {
+            "date": "2000-04-17",
+            "factor": 3.0
+          },
+          {
+            "date": "2007-10-01",
+            "factor": 0.8888888888888888
+          }
+        ],
+        "split_adjustment_status": "SPLIT_ADJUSTMENT_UNVERIFIED",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -116013,7 +117553,10 @@
         "raw_sha256": "98d5579f311c0fdc196daf73a12ae4c3428a1b707fa3fc758cc3a2b00122265b",
         "history_length": 3,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -116291,7 +117834,10 @@
         "raw_sha256": "863a338f06debd84190bc01f1d6d99e74187cf5992fe2a9f8d42e047c95dbc4c",
         "history_length": 5,
         "currency": "",
-        "error": null
+        "error": null,
+        "splits": [],
+        "split_adjustment_status": "NO_SPLIT_IN_HISTORY",
+        "split_adjustment_details": []
       },
       "NASDAQ_DIVIDEND_HISTORY": {
         "status": 200,
@@ -116418,5 +117964,25 @@
         "error": null
       }
     }
+  },
+  "corrections_p612": {
+    "yahoo_split_validation": {
+      "status_counts": {
+        "SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED": 19,
+        "SPLIT_ADJUSTMENT_UNVERIFIED": 4,
+        "NO_SPLIT_IN_HISTORY": 7
+      },
+      "tickers_with_splits": 23,
+      "method": "pre/post split DPS ratio compared with split factor; unadjusted if closer to factor"
+    },
+    "nasdaq_identity": {
+      "attempted": 13,
+      "counts": {
+        "MATCHED": 13,
+        "UNVERIFIED": 0
+      }
+    },
+    "smarter_current_profile_count": 30,
+    "smarter_recent_event_count": 26
   }
 }

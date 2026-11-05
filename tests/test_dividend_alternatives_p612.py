@@ -90,3 +90,18 @@ def test_no_preferred_common_mix_in_nasdaq_rows():
     rows = [r for r in csv.DictReader(open(OUT / "dividend_alternative_events_p612.csv", encoding="utf-8"))
             if r["source"] == "NASDAQ_DIVIDEND_HISTORY"]
     assert all(r["dividend_type"] in ("REGULAR_CASH","SPECIAL_CASH","OTHER") for r in rows)
+
+
+def test_yahoo_split_validation_has_verified_and_unverified_cases():
+    d = json.load(open(OUT / "dividend_alternative_source_results_p612.json", encoding="utf-8"))
+    counts = d["corrections_p612"]["yahoo_split_validation"]["status_counts"]
+    assert counts["SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED"] > 0
+    assert counts["SPLIT_ADJUSTMENT_UNVERIFIED"] > 0
+
+
+def test_nasdaq_identity_is_not_hardcoded_and_matches_current_security_type():
+    rows = [r for r in csv.DictReader(open(OUT / "dividend_source_comparison_p612.csv", encoding="utf-8"))
+            if r["source"] == "NASDAQ_DIVIDEND_HISTORY"]
+    assert len(rows) == 13
+    assert all(r["identity_status"] == "MATCHED" for r in rows)
+    assert all(r["security_type_verified"] in ("COMMON","ADR") for r in rows)

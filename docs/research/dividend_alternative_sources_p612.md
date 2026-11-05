@@ -203,3 +203,44 @@ event history or used as DPS.
 
 Raw responses and normalized outputs are uploaded as the GitHub Actions artifact.
 No paid CSV, Pro data, trial account or credit card was used.
+
+
+## 13. Post-audit corrections
+
+### Yahoo split adjustment
+
+For 23 sample tickers with split history:
+
+`	ext
+SPLIT_ADJUSTMENT_OBSERVED_ADJUSTED = 19
+SPLIT_ADJUSTMENT_UNVERIFIED = 4
+NO_SPLIT_IN_HISTORY = 7
+`
+
+The check compares the pre/post-split DPS ratio with the split factor. A series
+closer to ratio 1 than to the split factor is marked observed-adjusted; the
+remaining cases remain SPLIT_ADJUSTMENT_UNVERIFIED. Yahoo is not treated as
+uniformly verified.
+
+### Nasdaq identity
+
+Nasdaq rows now carry:
+
+`	ext
+identity_status
+security_type_verified
+issuer_cik
+`
+
+All 13 attempted Nasdaq-listed sample rows matched current ticker and
+Common/ADR identity; no Preferred row was mixed into common.
+
+### Smarter counts
+
+`	ext
+current dividend profile: 30
+recent last-payment event:  26
+`
+
+These are separate counts. The 30 profiles include current data with no
+last-payment event; 26 have a returned last payment.
