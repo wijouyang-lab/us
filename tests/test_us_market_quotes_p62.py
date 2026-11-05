@@ -70,3 +70,20 @@ def test_universe_denominator_and_cohorts():
     unclassified = [r for r in rows if r["security_type"] == "UNCLASSIFIED"]
     assert len(common) + len(adr) == 5502
     assert len(unclassified) == 113
+
+
+def test_actual_quote_output_counts():
+    d = json.load(open("data/universe/us_market_quote_coverage_p62.json", encoding="utf-8"))
+    assert d["summary"]["target_total"] == 5502
+    assert d["summary"]["matched"] == 5488
+    assert d["summary"]["ambiguous"] == 4
+    assert d["summary"]["invalid_quote"] == 10
+    assert d["summary"]["quote_coverage"] == 0.997455
+
+
+def test_actual_failure_file_has_ambiguity_and_invalid_rows():
+    import csv
+    rows = list(csv.DictReader(open("data/universe/us_market_quote_failures_p62.csv", encoding="utf-8")))
+    assert len(rows) == 16
+    assert {r["match_status"] for r in rows} == {"AMBIGUOUS_MATCH", "INVALID_QUOTE"}
+    assert all(r["ticker"] for r in rows)
