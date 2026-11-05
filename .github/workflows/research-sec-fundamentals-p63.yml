@@ -1,0 +1,70 @@
+name: Research SEC Fundamentals P6.3
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/us-market-fundamentals-p63]
+    paths:
+      - "tools/research/fetch_sec_fundamentals_p63.py"
+      - "tools/research/normalize_sec_companyfacts_p63.py"
+      - "tools/research/audit_sec_fundamentals_p63.py"
+      - "tests/test_sec_fundamentals_p63.py"
+      - ".github/workflows/research-sec-fundamentals-p63.yml"
+  pull_request:
+    branches: [main, research/us-market-quotes-p62]
+    paths:
+      - "tools/research/fetch_sec_fundamentals_p63.py"
+      - "tools/research/normalize_sec_companyfacts_p63.py"
+      - "tools/research/audit_sec_fundamentals_p63.py"
+      - "tests/test_sec_fundamentals_p63.py"
+      - ".github/workflows/research-sec-fundamentals-p63.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  fundamentals:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas pytest
+      - name: Run offline parser tests
+        run: python -m pytest tests/test_sec_fundamentals_p63.py -q
+      - name: Download SEC CompanyFacts bulk ZIP once
+        env:
+          SEC_USER_AGENT: ${{ secrets.SEC_USER_AGENT }}
+        run: |
+          python tools/research/fetch_sec_fundamentals_p63.py \
+            --out data/sec/companyfacts_p63.zip \
+            --metadata data/sec/companyfacts_p63_meta.json
+      - name: Normalize target CIKs
+        run: |
+          python tools/research/normalize_sec_companyfacts_p63.py \
+            --zip data/sec/companyfacts_p63.zip \
+            --meta data/universe/sec_fundamentals_panel_p63_meta.json
+      - name: Audit coverage
+        run: |
+          python tools/research/audit_sec_fundamentals_p63.py
+      - name: Show panel size/hash
+        run: |
+          sha256sum data/universe/sec_fundamentals_panel_p63.csv.gz || true
+          ls -lh data/universe/sec_fundamentals_panel_p63.csv.gz || true
+      - name: Upload panel and audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sec-fundamentals-p63
+          path: |
+            data/universe/sec_fundamentals_panel_p63.csv.gz
+            data/universe/sec_fundamentals_coverage_p63.csv
+            data/universe/sec_fundamentals_audit_p63.json
+            data/sec/companyfacts_p63_meta.json
+          retention-days: 90
+          if-no-files-found: warn
