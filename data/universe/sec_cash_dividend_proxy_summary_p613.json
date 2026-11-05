@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "generated_at": "2026-11-05T18:09:45.951507+00:00",
+    "generated_at": "2026-11-05T18:27:50.087213+00:00",
     "panel": "..\\fund_p63\\universe\\sec_fundamentals_panel_p63.csv.gz",
     "snapshot": "2026-11-06",
     "source": "P6.3 normalized panel + existing 28-CIK raw cache",
@@ -17,6 +17,30 @@
     "total_cash_ciks": 2300,
     "duplicate_facts": 5,
     "negative_raw_values": 263,
+    "zero_raw_values": 4629,
+    "negative_distribution": {
+      "us-gaap|PaymentsOfDividendsCommonStock|USD": 62,
+      "ifrs-full|DividendsPaid|CAD": 6,
+      "us-gaap|PaymentsOfDividends|USD": 69,
+      "ifrs-full|DividendsPaid|GBP": 1,
+      "ifrs-full|DividendsPaid|EUR": 13,
+      "ifrs-full|DividendsPaid|USD": 58,
+      "ifrs-full|DividendsPaid|KRW": 5,
+      "ifrs-full|DividendsPaid|CLP": 11,
+      "ifrs-full|DividendsPaid|BRL": 19,
+      "ifrs-full|DividendsPaid|INR": 3,
+      "ifrs-full|DividendsPaid|MXN": 5,
+      "ifrs-full|DividendsPaid|PEN": 2,
+      "ifrs-full|DividendsPaid|COP": 2,
+      "ifrs-full|DividendsPaid|ARS": 4,
+      "ifrs-full|DividendsPaid|CNY": 3
+    },
+    "duplicate_by_cik": {
+      "0001472072": 2,
+      "0001577552": 1,
+      "0001723935": 1,
+      "0001940941": 1
+    },
     "tags": {
       "PaymentsOfDividendsCommonStock": 77326,
       "PaymentsOfDividends": 53754,
@@ -50,10 +74,11 @@
   "coverage": {
     "has_cash_fact": 2300,
     "has_positive_evidence": 2248,
-    "no_positive_in_window": 52,
+    "no_positive_in_window": 49,
     "unknown": 3249,
-    "ttm_available": 6,
-    "ttm_unavailable": 5543,
+    "ttm_available": 10,
+    "ttm_unavailable": 5539,
+    "cash_proxy_ready": 10,
     "complete_filed": 2300,
     "ticker_allocable_common": 5100,
     "issuer_level_not_allocable": 141,

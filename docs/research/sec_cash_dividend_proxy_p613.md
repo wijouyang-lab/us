@@ -106,8 +106,9 @@ other currencies ...
 | Issuer-level, not ticker allocable | **141** |
 | ADR ratio unverified | **308** |
 | Multi-class issuers | **45** |
-| TTM available | **6** |
-| TTM unavailable | **5,543** |
+| TTM available | **10** |
+| TTM unavailable | **5,539** |
+| Cash-proxy ready (TTM + Common single ticker + filed) | **10** |
 
 `ISSUER_LEVEL_NOT_TICKER_ALLOCABLE` covers multi-ticker issuers and
 unclassified/unsupported securities. Company total cash dividends are not
@@ -127,7 +128,7 @@ event history. No-fact records remain unknown.
 
 ## 6. Can TTM be reconstructed?
 
-Only **6** CIKs have four contiguous, non-overlapping quarterly cash-dividend
+Only **10** CIKs have four contiguous, non-overlapping quarterly cash-dividend
 facts. Most have annual or YTD-only facts; **TTM_UNAVAILABLE**.
 
 No quarter/YTD amount is summed as a year. No future filing is used to fill a
@@ -156,7 +157,7 @@ It is not yet a cross-company yield or per-ticker dividend factor because:
 
 - no full-market per-share facts;
 - no ticker allocation for multi-class/ADR;
-- only 6 TTM reconstructions;
+- only 10 TTM reconstructions;
 - currency mix;
 - no event dates;
 - no confirmed non-payers.

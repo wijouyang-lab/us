@@ -9,8 +9,8 @@ OUT = Path("data/universe")
 
 def test_raw_and_normalized_are_split():
     n, s = normalize_cash(-123.0, "USD", "PaymentsOfDividendsCommonStock")
-    assert n == 123.0
-    assert s == "CASH_FACT_NORMALIZED"
+    assert n is None
+    assert s == "NEGATIVE_SIGN_REQUIRES_REVIEW"
 
 
 def test_sign_preserved_in_fact_output():
@@ -83,6 +83,20 @@ def test_actual_counts():
     d = json.load(open(OUT / "sec_cash_dividend_proxy_summary_p613.json", encoding="utf-8"))
     assert d["cash_facts"]["total_cash_ciks"] == 2300
     assert d["coverage"]["has_positive_evidence"] == 2248
-    assert d["coverage"]["ttm_available"] == 6
+    assert d["coverage"]["ttm_available"] == 10
     assert d["coverage"]["ticker_allocable_common"] == 5100
     assert d["coverage"]["adr_unverified"] == 308
+
+
+def test_actual_ttm_amount_is_computed_from_four_quarters():
+    from tools.research.normalize_sec_cash_dividend_proxy_p613 import compute_ttm
+    facts = []
+    dates = [("2025-01-01","2025-03-31"),("2025-04-01","2025-06-30"),
+             ("2025-07-01","2025-09-30"),("2025-10-01","2025-12-31")]
+    for i, (a, b) in enumerate(dates):
+        facts.append({"cik":"0000000001","taxonomy":"us-gaap","tag":"PaymentsOfDividendsCommonStock",
+            "unit":"USD","raw_value":str(10+i),"period_start":a,"period_end":b,
+            "filed_date":"2026-02-15","accession_number":f"A{i}","period_type":"QUARTER","fact_kind":"TOTAL_CASH"})
+    out = compute_ttm(facts)
+    assert out["0000000001"]["ttm_cash_dividend"] == 46
+    assert out["0000000001"]["verification_status"] == "TTM_AMOUNT_COMPUTED"
