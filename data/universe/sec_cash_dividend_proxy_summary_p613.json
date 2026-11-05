@@ -1,0 +1,81 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T18:05:52.475450+00:00",
+    "panel": "..\\fund_p63\\universe\\sec_fundamentals_panel_p63.csv.gz",
+    "snapshot": "2026-11-06",
+    "source": "P6.3 normalized panel + existing 28-CIK raw cache",
+    "no_sec_download": true
+  },
+  "universe": {
+    "target_records": 5615,
+    "unique_ciks": 5549,
+    "ciks_with_cash_fact": 2300
+  },
+  "cash_facts": {
+    "rows": 135281,
+    "per_share_rows": 5768,
+    "total_cash_ciks": 2300,
+    "duplicate_facts": 5,
+    "negative_raw_values": 263,
+    "tags": {
+      "PaymentsOfDividendsCommonStock": 77326,
+      "PaymentsOfDividends": 53754,
+      "DividendsPaid": 4201
+    },
+    "units": {
+      "USD": 131805,
+      "CAD": 807,
+      "JPY": 352,
+      "EUR": 483,
+      "GBP": 315,
+      "ZAR": 92,
+      "DKK": 40,
+      "SEK": 26,
+      "CNY": 422,
+      "MXN": 131,
+      "KRW": 90,
+      "CLP": 112,
+      "ARS": 119,
+      "BRL": 169,
+      "TWD": 48,
+      "INR": 89,
+      "TRY": 20,
+      "AUD": 12,
+      "PEN": 39,
+      "COP": 31,
+      "HKD": 50,
+      "SGD": 29
+    }
+  },
+  "coverage": {
+    "has_cash_fact": 2300,
+    "has_positive_evidence": 2248,
+    "no_positive_in_window": 52,
+    "unknown": 3249,
+    "ttm_available": 6,
+    "ttm_unavailable": 5543,
+    "complete_filed": 2300,
+    "ticker_allocable_common": 5100,
+    "issuer_level_not_allocable": 141,
+    "adr_unverified": 308,
+    "multi_class": 45
+  },
+  "per_share": {
+    "rows": 5768,
+    "tag_counts": {
+      "CommonStockDividendsPerShareDeclared": 2883,
+      "CommonStockDividendsPerShareCashPaid": 2885
+    },
+    "ciks": 23
+  },
+  "sample30": {
+    "note": "P6.11 sample has 24 cash-flow facts and 25 positive payer evidence; per-share 0 in P6.3 map"
+  },
+  "status": "CASH_DIVIDEND_PROXY_FEASIBLE_WITH_LIMITS",
+  "notes": [
+    "Cash amount is issuer-level and not DPS.",
+    "Multi-ticker and ADR records are not allocated to a ticker.",
+    "Only USD is directly comparable across issuers; other currencies retained but flagged by unit.",
+    "TTM only when four contiguous non-overlapping quarter facts exist."
+  ]
+}

@@ -1,0 +1,61 @@
+name: Research SEC Cash Dividend Proxy P6.13
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/sec-cash-dividend-proxy-p613]
+    paths:
+      - "tools/research/audit_sec_cash_dividend_proxy_p613.py"
+      - "tools/research/normalize_sec_cash_dividend_proxy_p613.py"
+      - "tests/test_sec_cash_dividend_proxy_p613.py"
+      - ".github/workflows/research-sec-cash-dividend-proxy-p613.yml"
+  pull_request:
+    branches: [main, research/us-dividend-alternative-sources-p612]
+    paths:
+      - "tools/research/audit_sec_cash_dividend_proxy_p613.py"
+      - "tools/research/normalize_sec_cash_dividend_proxy_p613.py"
+      - "tests/test_sec_cash_dividend_proxy_p613.py"
+      - ".github/workflows/research-sec-cash-dividend-proxy-p613.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 --dir .p63_artifact
+      - name: Build full-market cash-dividend facts
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/audit_sec_cash_dividend_proxy_p613.py --panel "$PANEL"
+      - name: Run offline tests
+        run: python -m pytest tests/test_sec_cash_dividend_proxy_p613.py -q
+      - name: Upload proxy facts and reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sec-cash-dividend-proxy-p613
+          path: |
+            data/universe/sec_cash_dividend_proxy_facts_p613.csv
+            data/universe/sec_cash_dividend_proxy_coverage_p613.csv
+            data/universe/sec_cash_dividend_proxy_summary_p613.json
+          retention-days: 90
+          if-no-files-found: warn
