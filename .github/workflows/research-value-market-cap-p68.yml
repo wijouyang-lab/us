@@ -1,0 +1,62 @@
+name: Research Value Market Cap P6.8
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/value-market-cap-p68]
+    paths:
+      - "tools/research/audit_value_market_cap_p68.py"
+      - "tools/research/build_value_metrics_p68.py"
+      - "tests/test_value_market_cap_p68.py"
+      - ".github/workflows/research-value-market-cap-p68.yml"
+  pull_request:
+    branches: [main, research/quality-v1-history-p67]
+    paths:
+      - "tools/research/audit_value_market_cap_p68.py"
+      - "tools/research/build_value_metrics_p68.py"
+      - "tests/test_value_market_cap_p68.py"
+      - ".github/workflows/research-value-market-cap-p68.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  value:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 --dir .p63_artifact
+      - name: Run offline tests
+        run: python -m pytest tests/test_value_market_cap_p68.py -q
+      - name: Build Value metrics and readiness
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/build_value_metrics_p68.py --panel "$PANEL"
+      - name: Upload Value outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: value-market-cap-p68
+          path: |
+            data/universe/value_market_cap_audit_p68.json
+            data/universe/value_metric_coverage_p68.csv
+            data/universe/value_v1_readiness_p68.csv
+            data/universe/value_v1_metric_map_p68.json
+          retention-days: 90
+          if-no-files-found: warn
