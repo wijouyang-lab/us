@@ -1,3 +1,6 @@
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 """Build Value V1 issuer market-cap and metric readiness (P6.8).
 
 The audit module contains the shared parser and status rules; this entry point is
