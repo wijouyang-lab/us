@@ -1,0 +1,64 @@
+name: Research Quality V1 P6.6
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/quality-v1-p66]
+    paths:
+      - "tools/research/score_quality_v1_p66.py"
+      - "tools/research/audit_quality_v1_p66.py"
+      - "tests/test_quality_v1_p66.py"
+      - ".github/workflows/research-quality-v1-p66.yml"
+  pull_request:
+    branches: [main, research/us-equity-industry-p65]
+    paths:
+      - "tools/research/score_quality_v1_p66.py"
+      - "tools/research/audit_quality_v1_p66.py"
+      - "tests/test_quality_v1_p66.py"
+      - ".github/workflows/research-quality-v1-p66.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 --dir .p63_artifact
+      - name: Run offline tests
+        run: python -m pytest tests/test_quality_v1_p66.py -q
+      - name: Score Quality V1
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/score_quality_v1_p66.py --panel "$PANEL"
+      - name: Verify score audit
+        run: python tools/research/audit_quality_v1_p66.py
+      - name: Upload Quality V1 outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quality-v1-p66
+          path: |
+            data/universe/quality_v1_model_spec_p66.json
+            data/universe/quality_v1_scores_p66.csv
+            data/universe/quality_v1_metric_coverage_p66.csv
+            data/universe/quality_v1_scoring_audit_p66.json
+          retention-days: 30
+          if-no-files-found: warn
