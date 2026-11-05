@@ -1,17 +1,17 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-05T18:32:28Z",
+  "generated_at": "2026-11-05T18:47:17Z",
   "fear_greed": {
-    "score": 20.41,
+    "score": 19.82,
     "rating": "extreme fear",
-    "timestamp": "2026-11-05T18:26:42+00:00",
+    "timestamp": "2026-11-05T18:41:07+00:00",
     "subindicators": {
       "market_momentum_sp500": {
-        "score": 8.4,
+        "score": 8,
         "rating": "extreme fear"
       },
       "stock_price_strength": {
-        "score": 42.4,
+        "score": 42.2,
         "rating": "fear"
       },
       "stock_price_breadth": {
@@ -19,7 +19,7 @@
         "rating": "neutral"
       },
       "put_call_options": {
-        "score": 10.4,
+        "score": 9.4,
         "rating": "extreme fear"
       },
       "market_volatility_vix": {
@@ -27,7 +27,7 @@
         "rating": "extreme fear"
       },
       "junk_bond_demand": {
-        "score": 32.4,
+        "score": 31.2,
         "rating": "fear"
       },
       "safe_haven_demand": {
@@ -38,7 +38,7 @@
     "history_30d": [
       {
         "date": "2026-11-05",
-        "score": 20.41,
+        "score": 19.82,
         "rating": "extreme fear"
       },
       {
