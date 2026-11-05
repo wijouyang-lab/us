@@ -1,0 +1,55 @@
+name: Research Earnings Yield P6.10
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/earnings-yield-p610]
+    paths:
+      - "tools/research/study_earnings_yield_p610.py"
+      - "tools/research/audit_earnings_yield_p610.py"
+      - "tests/test_earnings_yield_p610.py"
+      - ".github/workflows/research-earnings-yield-p610.yml"
+  pull_request:
+    branches: [main, research/value-metric-study-p69]
+    paths:
+      - "tools/research/study_earnings_yield_p610.py"
+      - "tools/research/audit_earnings_yield_p610.py"
+      - "tests/test_earnings_yield_p610.py"
+      - ".github/workflows/research-earnings-yield-p610.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  earnings_yield:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy scipy pytest
+      - name: Run offline tests
+        run: python -m pytest tests/test_earnings_yield_p610.py -q
+      - name: Study standalone Earnings Yield
+        run: python tools/research/study_earnings_yield_p610.py
+      - name: Audit Earnings Yield outputs
+        run: python tools/research/audit_earnings_yield_p610.py
+      - name: Upload Earnings Yield outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: earnings-yield-p610
+          path: |
+            data/universe/earnings_yield_v1_scores_p610.csv
+            data/universe/earnings_yield_coverage_p610.json
+            data/universe/earnings_yield_correlation_p610.json
+            data/universe/earnings_yield_robustness_p610.json
+            data/universe/earnings_yield_quality_quadrants_p610.csv
+          retention-days: 90
+          if-no-files-found: warn

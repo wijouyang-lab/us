@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T13:00:24.362326+00:00",
+    "snapshot_date": "2026-11-05",
+    "source": "data\\universe\\value_metric_rankings_p69.csv",
+    "formula": "Net Income / verified issuer market cap",
+    "pearson_note": "Pearson on raw; Spearman on ranks",
+    "category": [
+      "POSITIVE_EARNINGS",
+      "NEGATIVE_EARNINGS",
+      "ZERO_OR_NEAR_ZERO_EARNINGS",
+      "NET_INCOME_MISSING",
+      "FINANCIAL_PERIOD_INVALID"
+    ]
+  },
+  "pool": {
+    "target": 5502,
+    "candidates": 2529,
+    "unique_ciks": 2529,
+    "ey_valid": 2504,
+    "ey_ranked": 2449
+  },
+  "categories": {
+    "POSITIVE_EARNINGS": {
+      "n": 1272,
+      "distribution": {
+        "n": 1272,
+        "min": 0.0010291891410164615,
+        "median": 0.04011218516940962,
+        "max": 204.8970852242251
+      }
+    },
+    "NEGATIVE_EARNINGS": {
+      "n": 1151,
+      "distribution": {
+        "n": 1151,
+        "min": -6318354.456030245,
+        "median": -0.20160907013791002,
+        "max": -0.0010457404750551685
+      }
+    },
+    "ZERO_OR_NEAR_ZERO_EARNINGS": {
+      "n": 81,
+      "distribution": {
+        "n": 81,
+        "min": -0.0009773405523117516,
+        "median": 0.0,
+        "max": 0.0008572368208688634
+      }
+    },
+    "NET_INCOME_MISSING": {
+      "n": 23,
+      "distribution": {
+        "n": 23,
+        "min": null,
+        "median": null,
+        "max": null
+      }
+    },
+    "FINANCIAL_PERIOD_INVALID": {
+      "n": 2,
+      "distribution": {
+        "n": 2,
+        "min": 0.012290331845165883,
+        "median": 0.024220476346172436,
+        "max": 0.03615062084717899
+      }
+    }
+  },
+  "by_type": {
+    "COMMON": {
+      "candidates": 2529,
+      "valid": 2504
+    },
+    "ADR": {
+      "candidates": 0,
+      "valid": 0
+    }
+  },
+  "by_accounting": {
+    "IFRS": {
+      "candidates": 99,
+      "valid": 99,
+      "ranked": 44
+    },
+    "US_GAAP": {
+      "candidates": 2430,
+      "valid": 2405,
+      "ranked": 2405
+    }
+  },
+  "by_family": {
+    "COMMUNICATIONS": {
+      "candidates": 60,
+      "valid": 60
+    },
+    "CONSUMER_DISCRETIONARY": {
+      "candidates": 234,
+      "valid": 233
+    },
+    "CONSUMER_STAPLES": {
+      "candidates": 96,
+      "valid": 95
+    },
+    "HEALTHCARE": {
+      "candidates": 657,
+      "valid": 653
+    },
+    "INDUSTRIALS": {
+      "candidates": 405,
+      "valid": 396
+    },
+    "MATERIALS": {
+      "candidates": 211,
+      "valid": 209
+    },
+    "OTHER_SERVICES": {
+      "candidates": 354,
+      "valid": 350
+    },
+    "TECHNOLOGY": {
+      "candidates": 512,
+      "valid": 508
+    }
+  },
+  "peer_groups": {
+    "TECHNOLOGY|US_GAAP": {
+      "valid_issuers": 499,
+      "status": "RANK_AVAILABLE",
+      "low": -6.572808914106158,
+      "high": 0.6220986358633014
+    },
+    "INDUSTRIALS|US_GAAP": {
+      "valid_issuers": 381,
+      "status": "RANK_AVAILABLE",
+      "low": -15.785431278857567,
+      "high": 1.068584418628694
+    },
+    "HEALTHCARE|US_GAAP": {
+      "valid_issuers": 644,
+      "status": "RANK_AVAILABLE",
+      "low": -25.646884439142664,
+      "high": 2.0937742558394885
+    },
+    "MATERIALS|US_GAAP": {
+      "valid_issuers": 165,
+      "status": "RANK_AVAILABLE",
+      "low": -4.806955234276603,
+      "high": 0.19621251522751026
+    },
+    "OTHER_SERVICES|US_GAAP": {
+      "valid_issuers": 338,
+      "status": "RANK_AVAILABLE",
+      "low": -6.233891174388748,
+      "high": 0.40238549121312844
+    },
+    "COMMUNICATIONS|US_GAAP": {
+      "valid_issuers": 55,
+      "status": "RANK_AVAILABLE",
+      "low": -7.663377145942972,
+      "high": 13.112946796020761
+    },
+    "CONSUMER_STAPLES|US_GAAP": {
+      "valid_issuers": 93,
+      "status": "RANK_AVAILABLE",
+      "low": -25.31254739119163,
+      "high": 0.29174716153160385
+    },
+    "CONSUMER_DISCRETIONARY|US_GAAP": {
+      "valid_issuers": 230,
+      "status": "RANK_AVAILABLE",
+      "low": -4.631270744539111,
+      "high": 18.953251526030563
+    },
+    "COMMUNICATIONS|IFRS": {
+      "valid_issuers": 5,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    },
+    "TECHNOLOGY|IFRS": {
+      "valid_issuers": 9,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    },
+    "INDUSTRIALS|IFRS": {
+      "valid_issuers": 15,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    },
+    "MATERIALS|IFRS": {
+      "valid_issuers": 44,
+      "status": "RANK_AVAILABLE",
+      "low": -2.213302313882385,
+      "high": 1.2976417114271297
+    },
+    "OTHER_SERVICES|IFRS": {
+      "valid_issuers": 12,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    },
+    "HEALTHCARE|IFRS": {
+      "valid_issuers": 9,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    },
+    "CONSUMER_DISCRETIONARY|IFRS": {
+      "valid_issuers": 3,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    },
+    "CONSUMER_STAPLES|IFRS": {
+      "valid_issuers": 2,
+      "status": "INSUFFICIENT_PEER_GROUP",
+      "low": null,
+      "high": null
+    }
+  },
+  "quadrant_medians": {
+    "earnings_yield": 0.0010291891410164615,
+    "quality": 53.64298724954463
+  },
+  "historical_gate": {
+    "member_session_coverage": 0.795801,
+    "ticker_coverage": 0.697772,
+    "backtest_ready": false,
+    "validation_ready": false,
+    "inherits": "P6.7 gate failure; no forward return test run"
+  },
+  "verification": {
+    "verified_at": "2026-11-05T13:00:58.449199+00:00",
+    "checks": {
+      "candidates_2529": true,
+      "unique_cik_2529": true,
+      "ey_valid_2504": true,
+      "negative_ey_retained": true,
+      "missing_ey_not_zero": true,
+      "no_adr_candidates": true,
+      "invalid_period_not_ranked": true,
+      "pe_ey_minus_one": true,
+      "ey_fcf_positive": true,
+      "ey_quality_positive": true,
+      "winsor_rank_high": true,
+      "peer_insufficient_55": true,
+      "historical_gate_false": true,
+      "quadrant_total": true,
+      "no_composite_column": true
+    },
+    "all_checks_pass": true,
+    "candidates": 2529,
+    "ey_valid": 2504,
+    "ey_ranked": 2449,
+    "category_counts": {
+      "POSITIVE_EARNINGS": 1272,
+      "NEGATIVE_EARNINGS": 1151,
+      "ZERO_OR_NEAR_ZERO_EARNINGS": 81,
+      "NET_INCOME_MISSING": 23,
+      "FINANCIAL_PERIOD_INVALID": 2
+    },
+    "quadrants": {
+      "HIGH_EY_HIGH_Q": 733,
+      "HIGH_EY_LOW_Q": 131,
+      "LOW_EY_HIGH_Q": 132,
+      "LOW_EY_LOW_Q": 731
+    },
+    "historical_gate": {
+      "member_session_coverage": 0.795801,
+      "ticker_coverage": 0.697772,
+      "backtest_ready": false,
+      "validation_ready": false,
+      "inherits": "P6.7 gate failure; no forward return test run"
+    }
+  }
+}

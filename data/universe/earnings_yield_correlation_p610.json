@@ -1,0 +1,83 @@
+{
+  "pairs": {
+    "EY_FCF": {
+      "n": 2149,
+      "pearson": 0.029956701241022964,
+      "spearman": 0.6158376076493758
+    },
+    "EY_Quality": {
+      "n": 1725,
+      "pearson": 0.045401447029834695,
+      "spearman": 0.7798078936549686
+    },
+    "EY_PB": {
+      "n": 2252,
+      "pearson": 0.0019110128404310842,
+      "spearman": 0.20772648753578965
+    },
+    "EY_PS": {
+      "n": 2241,
+      "pearson": 0.002359263294465579,
+      "spearman": -0.07179885912964973
+    }
+  },
+  "by_accounting": {
+    "IFRS": {
+      "n": 99,
+      "EY_FCF": 0.6098104358022278,
+      "EY_Quality": 0.741644385026738
+    },
+    "US_GAAP": {
+      "n": 2430,
+      "EY_FCF": 0.61333834896192,
+      "EY_Quality": 0.7830748730172782
+    }
+  },
+  "by_family": {
+    "COMMUNICATIONS": {
+      "n": 60,
+      "EY_FCF": 0.2242016806722689,
+      "EY_Quality": 0.8277992277992278
+    },
+    "CONSUMER_DISCRETIONARY": {
+      "n": 234,
+      "EY_FCF": 0.5202524164326024,
+      "EY_Quality": 0.8036292695928362
+    },
+    "CONSUMER_STAPLES": {
+      "n": 96,
+      "EY_FCF": 0.49554314820256634,
+      "EY_Quality": 0.8453341013824884
+    },
+    "HEALTHCARE": {
+      "n": 657,
+      "EY_FCF": 0.7624000001145126,
+      "EY_Quality": 0.8007566728351724
+    },
+    "INDUSTRIALS": {
+      "n": 405,
+      "EY_FCF": 0.47970439848912,
+      "EY_Quality": 0.7595560773605083
+    },
+    "MATERIALS": {
+      "n": 211,
+      "EY_FCF": 0.5026850977077222,
+      "EY_Quality": 0.8070393952530928
+    },
+    "OTHER_SERVICES": {
+      "n": 354,
+      "EY_FCF": 0.5200548410474964,
+      "EY_Quality": 0.7755007631435339
+    },
+    "TECHNOLOGY": {
+      "n": 512,
+      "EY_FCF": 0.535815102240135,
+      "EY_Quality": 0.8614668882877351
+    }
+  },
+  "pe_ey": {
+    "n": 1314,
+    "spearman": -1.0,
+    "note": "mathematical reciprocal for positive earnings"
+  }
+}
