@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T11:23:47.405648+00:00",
+    "panel_artifact": "sec-fundamentals-p63 / 13402038887",
+    "price_source": "research_price_history_sp500_10y.csv",
+    "price_file": "research_price_history_sp500_10y.csv",
+    "scope": "S&P 500 historical members in price panel; current-survivor history is exploratory only",
+    "current_sic_is_proxy": true,
+    "pit_rule": "filed -> next weekday; holidays not adjusted",
+    "price_sha256": "2f9a31429ff2d3947dcd388d75c4d18cb1cc82346946b9a92f48f3a98748b355",
+    "panel_sha256": "5687b8644ceb5ccf3d94e055f98a0a204502e68edaebfda3a294899e98a99c31",
+    "p66_artifact_id": 13408671550
+  },
+  "universe": {
+    "current_target": 5502,
+    "current_candidates_p66": 3342,
+    "candidate_unique_ciks": 3307
+  },
+  "membership": {
+    "observations": 43,
+    "member_sessions": 22483,
+    "member_sessions_with_price": 17892,
+    "member_session_coverage": 0.795801,
+    "unique_members": 718,
+    "unique_members_with_price": 501,
+    "ticker_coverage": 0.697772
+  },
+  "financial": {
+    "candidates_with_annual": 3170,
+    "candidates_with_2_netincome": 3130,
+    "candidates_with_2_assets_equity": 3156,
+    "candidates_with_complete_four_metrics_any_quarter": 2536,
+    "historical_quarters": 43
+  },
+  "return_labels": {
+    "future_3m": 332,
+    "future_6m": 331,
+    "future_12m": 331
+  },
+  "gates": {
+    "member_session_95": false,
+    "ticker_98": false,
+    "backtest_ready": false,
+    "validation_ready": false
+  },
+  "status": "HISTORICAL_PIT_GATE_FAIL",
+  "notes": [
+    "Current SIC is a non-PIT proxy.",
+    "Price panel covers current S&P 500 survivors; delisted members are not fully present.",
+    "No forward-return test is claimed if the gate fails."
+  ],
+  "statuses": {
+    "HISTORICAL_FINANCIAL_READY": 2536,
+    "HISTORICAL_PRICE_READY": 501,
+    "HISTORICAL_PIT_MEMBER_READY": 718,
+    "HISTORICAL_RETURN_READY": 332
+  }
+}

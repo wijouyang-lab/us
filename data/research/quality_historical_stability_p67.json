@@ -1,0 +1,327 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T11:24:33.683372+00:00",
+    "scores_file": "data\\research\\quality_pit_scores_p67.csv.gz",
+    "coverage": "data\\research\\quality_pit_coverage_p67.json"
+  },
+  "period": {
+    "start": "2017-09-30",
+    "end": "2026-09-30",
+    "configured_quarters": 43,
+    "scored_quarters": 37,
+    "observations": 58396,
+    "unique_issuers": 2536
+  },
+  "annual": [
+    {
+      "year": "2017",
+      "observations": 101,
+      "issuers": 63,
+      "median_score": 50.0,
+      "q1": 30.263,
+      "q3": 71.579
+    },
+    {
+      "year": "2018",
+      "observations": 3267,
+      "issuers": 902,
+      "median_score": 51.271,
+      "q1": 33.21,
+      "q3": 67.488
+    },
+    {
+      "year": "2019",
+      "observations": 4841,
+      "issuers": 1257,
+      "median_score": 50.655,
+      "q1": 32.879,
+      "q3": 67.647
+    },
+    {
+      "year": "2020",
+      "observations": 5466,
+      "issuers": 1402,
+      "median_score": 50.897,
+      "q1": 32.838,
+      "q3": 68.717
+    },
+    {
+      "year": "2021",
+      "observations": 6159,
+      "issuers": 1583,
+      "median_score": 51.014,
+      "q1": 31.318,
+      "q3": 69.282
+    },
+    {
+      "year": "2022",
+      "observations": 7225,
+      "issuers": 1835,
+      "median_score": 50.261,
+      "q1": 32.533,
+      "q3": 67.899
+    },
+    {
+      "year": "2023",
+      "observations": 7765,
+      "issuers": 1975,
+      "median_score": 50.833,
+      "q1": 32.551,
+      "q3": 67.936
+    },
+    {
+      "year": "2024",
+      "observations": 8056,
+      "issuers": 2072,
+      "median_score": 50.605,
+      "q1": 32.137,
+      "q3": 68.808
+    },
+    {
+      "year": "2025",
+      "observations": 8656,
+      "issuers": 2221,
+      "median_score": 51.07,
+      "q1": 32.046,
+      "q3": 68.625
+    },
+    {
+      "year": "2026",
+      "observations": 6860,
+      "issuers": 2339,
+      "median_score": 51.243,
+      "q1": 32.441,
+      "q3": 68.16
+    }
+  ],
+  "adjacent_quarter_rank_persistence": [
+    {
+      "from": "2017-09-30",
+      "to": "2017-12-31",
+      "n": 38,
+      "spearman": 0.9301
+    },
+    {
+      "from": "2017-12-31",
+      "to": "2018-03-31",
+      "n": 63,
+      "spearman": 0.9402
+    },
+    {
+      "from": "2018-03-31",
+      "to": "2018-06-30",
+      "n": 690,
+      "spearman": 0.986
+    },
+    {
+      "from": "2018-06-30",
+      "to": "2018-09-30",
+      "n": 810,
+      "spearman": 0.9757
+    },
+    {
+      "from": "2018-09-30",
+      "to": "2018-12-31",
+      "n": 862,
+      "spearman": 0.9815
+    },
+    {
+      "from": "2018-12-31",
+      "to": "2019-03-31",
+      "n": 875,
+      "spearman": 0.8571
+    },
+    {
+      "from": "2019-03-31",
+      "to": "2019-06-30",
+      "n": 1148,
+      "spearman": 0.9605
+    },
+    {
+      "from": "2019-06-30",
+      "to": "2019-09-30",
+      "n": 1210,
+      "spearman": 0.9821
+    },
+    {
+      "from": "2019-09-30",
+      "to": "2019-12-31",
+      "n": 1224,
+      "spearman": 0.9834
+    },
+    {
+      "from": "2019-12-31",
+      "to": "2020-03-31",
+      "n": 1217,
+      "spearman": 0.8778
+    },
+    {
+      "from": "2020-03-31",
+      "to": "2020-06-30",
+      "n": 1337,
+      "spearman": 0.966
+    },
+    {
+      "from": "2020-06-30",
+      "to": "2020-09-30",
+      "n": 1354,
+      "spearman": 0.9743
+    },
+    {
+      "from": "2020-09-30",
+      "to": "2020-12-31",
+      "n": 1370,
+      "spearman": 0.9844
+    },
+    {
+      "from": "2020-12-31",
+      "to": "2021-03-31",
+      "n": 1366,
+      "spearman": 0.8088
+    },
+    {
+      "from": "2021-03-31",
+      "to": "2021-06-30",
+      "n": 1511,
+      "spearman": 0.9684
+    },
+    {
+      "from": "2021-06-30",
+      "to": "2021-09-30",
+      "n": 1529,
+      "spearman": 0.9768
+    },
+    {
+      "from": "2021-09-30",
+      "to": "2021-12-31",
+      "n": 1533,
+      "spearman": 0.9823
+    },
+    {
+      "from": "2021-12-31",
+      "to": "2022-03-31",
+      "n": 1523,
+      "spearman": 0.8109
+    },
+    {
+      "from": "2022-03-31",
+      "to": "2022-06-30",
+      "n": 1761,
+      "spearman": 0.9619
+    },
+    {
+      "from": "2022-06-30",
+      "to": "2022-09-30",
+      "n": 1806,
+      "spearman": 0.9795
+    },
+    {
+      "from": "2022-09-30",
+      "to": "2022-12-31",
+      "n": 1823,
+      "spearman": 0.9813
+    },
+    {
+      "from": "2022-12-31",
+      "to": "2023-03-31",
+      "n": 1799,
+      "spearman": 0.8518
+    },
+    {
+      "from": "2023-03-31",
+      "to": "2023-06-30",
+      "n": 1899,
+      "spearman": 0.9712
+    },
+    {
+      "from": "2023-06-30",
+      "to": "2023-09-30",
+      "n": 1943,
+      "spearman": 0.9861
+    },
+    {
+      "from": "2023-09-30",
+      "to": "2023-12-31",
+      "n": 1948,
+      "spearman": 0.9816
+    },
+    {
+      "from": "2023-12-31",
+      "to": "2024-03-31",
+      "n": 1906,
+      "spearman": 0.8645
+    },
+    {
+      "from": "2024-03-31",
+      "to": "2024-06-30",
+      "n": 1952,
+      "spearman": 0.9659
+    },
+    {
+      "from": "2024-06-30",
+      "to": "2024-09-30",
+      "n": 2003,
+      "spearman": 0.9787
+    },
+    {
+      "from": "2024-09-30",
+      "to": "2024-12-31",
+      "n": 2026,
+      "spearman": 0.9902
+    },
+    {
+      "from": "2024-12-31",
+      "to": "2025-03-31",
+      "n": 2005,
+      "spearman": 0.8734
+    },
+    {
+      "from": "2025-03-31",
+      "to": "2025-06-30",
+      "n": 2105,
+      "spearman": 0.9687
+    },
+    {
+      "from": "2025-06-30",
+      "to": "2025-09-30",
+      "n": 2158,
+      "spearman": 0.9796
+    },
+    {
+      "from": "2025-09-30",
+      "to": "2025-12-31",
+      "n": 2172,
+      "spearman": 0.9908
+    },
+    {
+      "from": "2025-12-31",
+      "to": "2026-03-31",
+      "n": 2143,
+      "spearman": 0.8627
+    },
+    {
+      "from": "2026-03-31",
+      "to": "2026-06-30",
+      "n": 2236,
+      "spearman": 0.9506
+    },
+    {
+      "from": "2026-06-30",
+      "to": "2026-09-30",
+      "n": 2284,
+      "spearman": 0.9724
+    }
+  ],
+  "long_horizon_first_last_year_spearman": 0.3338,
+  "gate": {
+    "member_session_95": false,
+    "ticker_98": false,
+    "backtest_ready": false,
+    "validation_ready": false
+  },
+  "note": "Historical panel is current-survivor based; current SIC is a non-PIT proxy. Not BACKTEST_READY.",
+  "sensitivity": {
+    "winsorization": "NOT_RUN_STRICT_PIT_GATE_FAILED",
+    "weight_variant": "NOT_RUN_STRICT_PIT_GATE_FAILED"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T11:24:33.942958+00:00",
+    "coverage_file": "data\\research\\quality_pit_coverage_p67.json",
+    "method": "Newey-West HAC; BH multiple testing",
+    "return_label": "3/6/12 month forward; overlapping labels, not independent"
+  },
+  "gate": {
+    "member_session_95": false,
+    "ticker_98": false,
+    "backtest_ready": false,
+    "validation_ready": false
+  },
+  "status": "BLOCKED_BY_HISTORICAL_PIT_GATE",
+  "tests": [],
+  "reason": "member-session coverage 0.7958 < 0.95 and/or ticker coverage 0.6978 < 0.98",
+  "not_run": [
+    "quintile returns",
+    "Q5-Q1",
+    "IC/RankIC",
+    "HAC significance",
+    "subgroup tests"
+  ],
+  "notes": [
+    "No full S&P 500 PIT backtest is claimed.",
+    "Current-survivor history is exploratory and survivorship-biased."
+  ]
+}
