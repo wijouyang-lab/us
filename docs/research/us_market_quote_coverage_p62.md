@@ -24,10 +24,10 @@ Status: **AUDIT ONLY — current quotes, no history/fundamentals/backtest**
 quote_coverage = 5,488 / 5,502 = 0.997455
 ```
 
-AkShare version: **1.20.28**  
-Source: `ak.stock_us_spot_em()`  
-Snapshot: `2026-11-05T08:16:00Z`  
-Delay: **15 minutes** (not real-time)  
+AkShare version: **1.20.28**
+Source: `ak.stock_us_spot_em()`
+Snapshot: `2026-11-05T08:16:00Z`
+Delay: **15 minutes** (not real-time)
 Only one batch request was made; no per-symbol quote loop.
 
 ## 2. Category coverage
