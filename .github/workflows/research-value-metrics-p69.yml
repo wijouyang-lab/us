@@ -1,0 +1,65 @@
+name: Research Value Metrics P6.9
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/value-metric-study-p69]
+    paths:
+      - "tools/research/study_value_metrics_p69.py"
+      - "tools/research/audit_value_metric_rankings_p69.py"
+      - "tests/test_value_metrics_p69.py"
+      - ".github/workflows/research-value-metrics-p69.yml"
+  pull_request:
+    branches: [main, research/value-market-cap-p68]
+    paths:
+      - "tools/research/study_value_metrics_p69.py"
+      - "tools/research/audit_value_metric_rankings_p69.py"
+      - "tests/test_value_metrics_p69.py"
+      - ".github/workflows/research-value-metrics-p69.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  value_metrics:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy scipy pytest
+      - name: Download P6.3 panel artifact only
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p .p63_artifact
+          gh run download 42001009069 --repo "$GITHUB_REPOSITORY" \
+            --name sec-fundamentals-p63 --dir .p63_artifact
+      - name: Run offline tests
+        run: python -m pytest tests/test_value_metrics_p69.py -q
+      - name: Study standalone Value metrics
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/study_value_metrics_p69.py --panel "$PANEL"
+      - name: Audit metric rankings
+        run: python tools/research/audit_value_metric_rankings_p69.py
+      - name: Upload Value metric study outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: value-metric-study-p69
+          path: |
+            data/universe/value_metric_rankings_p69.csv
+            data/universe/value_metric_coverage_p69.csv
+            data/universe/value_metric_peer_groups_p69.csv
+            data/universe/value_metric_correlations_p69.json
+            data/universe/value_metric_audit_p69.json
+          retention-days: 90
+          if-no-files-found: warn
