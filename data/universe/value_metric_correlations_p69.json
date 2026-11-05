@@ -1,0 +1,42 @@
+{
+  "pe_earnings_yield_spearman": -1.0,
+  "pearson_pe_ey": null,
+  "spearman_matrix": {
+    "pe": {
+      "pe": 1.0,
+      "pb": 0.373374,
+      "ps": 0.374747,
+      "earnings_yield": -1.0,
+      "fcf_yield": -0.276277
+    },
+    "pb": {
+      "pe": 0.373374,
+      "pb": 1.0,
+      "ps": 0.485449,
+      "earnings_yield": 0.207062,
+      "fcf_yield": 0.167073
+    },
+    "ps": {
+      "pe": 0.374747,
+      "pb": 0.485449,
+      "ps": 1.0,
+      "earnings_yield": -0.072,
+      "fcf_yield": -0.250943
+    },
+    "earnings_yield": {
+      "pe": -1.0,
+      "pb": 0.207062,
+      "ps": -0.072,
+      "earnings_yield": 1.0,
+      "fcf_yield": 0.615337
+    },
+    "fcf_yield": {
+      "pe": -0.276277,
+      "pb": 0.167073,
+      "ps": -0.250943,
+      "earnings_yield": 0.615337,
+      "fcf_yield": 1.0
+    }
+  },
+  "note": "PE/EY are reciprocal for positive earnings; not independent factors."
+}
