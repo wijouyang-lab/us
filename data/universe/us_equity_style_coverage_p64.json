@@ -5,7 +5,10 @@
     "panel": "..\\fund_p63\\universe\\sec_fundamentals_panel_p63.csv.gz",
     "panel_required": true,
     "pit_rule": "filed -> next weekday; no holiday adjustment; no acceptanceDateTime",
-    "note": "Statuses are data-readiness only; no scores or backtests."
+    "note": "Statuses are data-readiness only; no scores or backtests.",
+    "verification_run_url": "https://github.com/wijouyang-lab/us/actions/runs/42007201595",
+    "artifact_id": 13404908331,
+    "artifact_name": "six-styles-readiness-p64"
   },
   "counts": {
     "target_records": 5502,

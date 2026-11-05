@@ -6,6 +6,9 @@ Status: **READINESS AUDIT ONLY — no scores, no backtests**
 
 ## 1. Inputs and artifact
 
+- P6.4 workflow run: 42007201595
+- P6.4 artifact: six-styles-readiness-p64 (13404908331)
+
 - P6.1 current registry: `data/universe/us_equities_current.csv`
 - P6.2 quote mapping: `data/universe/us_market_quote_mapping_p62.csv`
 - P6.2 quote coverage: `data/universe/us_market_quote_coverage_p62.json`
