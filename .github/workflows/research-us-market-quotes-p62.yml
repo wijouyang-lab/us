@@ -2,8 +2,14 @@ name: Research US Market Quotes P6.2
 
 on:
   workflow_dispatch:
+  push:
+    branches: [research/us-market-quotes-p62]
+    paths:
+      - "tools/research/audit_us_market_quotes_p62.py"
+      - "tests/test_us_market_quotes_p62.py"
+      - ".github/workflows/research-us-market-quotes-p62.yml"
   pull_request:
-    branches: [main]
+    branches: [main, research/us-market-universe-p61]
     paths:
       - "tools/research/audit_us_market_quotes_p62.py"
       - "tests/test_us_market_quotes_p62.py"
