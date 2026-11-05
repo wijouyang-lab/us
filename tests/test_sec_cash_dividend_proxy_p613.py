@@ -14,7 +14,7 @@ def test_raw_and_normalized_are_split():
 
 
 def test_sign_preserved_in_fact_output():
-    rows = list(csv.DictReader(open(OUT / "sec_cash_dividend_proxy_facts_p613.csv", encoding="utf-8")))
+    rows = list(csv.DictReader(open(OUT / "sec_cash_dividend_proxy_facts_sample_p613.csv", encoding="utf-8")))
     neg = [r for r in rows if r["raw_value"] and float(r["raw_value"]) < 0]
     assert neg
     assert all(float(r["normalized_cash_dividend"]) >= 0 for r in neg if r["normalized_cash_dividend"])
@@ -66,13 +66,13 @@ def test_adr_blocked():
 
 
 def test_filed_gate_and_accession():
-    rows = list(csv.DictReader(open(OUT / "sec_cash_dividend_proxy_facts_p613.csv", encoding="utf-8")))
+    rows = list(csv.DictReader(open(OUT / "sec_cash_dividend_proxy_facts_sample_p613.csv", encoding="utf-8")))
     assert all(not r["filed_date"] or r["filed_date"] <= "2026-11-06" for r in rows)
     assert any(r["accession_number"] for r in rows)
 
 
 def test_per_share_tags_are_actual_and_separate():
-    rows = list(csv.DictReader(open(OUT / "sec_cash_dividend_proxy_facts_p613.csv", encoding="utf-8")))
+    rows = list(csv.DictReader(open(OUT / "sec_cash_dividend_per_share_facts_p613.csv", encoding="utf-8")))
     ps = [r for r in rows if r["fact_kind"] == "PER_SHARE"]
     assert ps
     assert all(r["normalized_cash_dividend"] == "" for r in ps)
