@@ -1,0 +1,24 @@
+{
+  "Revenue": {
+    "us-gaap": ["RevenueFromContractWithCustomerExcludingAssessedTax", "Revenues", "SalesRevenueNet"],
+    "ifrs-full": ["Revenue", "RevenueFromContractsWithCustomers"]
+  },
+  "GrossProfit": {"us-gaap": ["GrossProfit"], "ifrs-full": ["GrossProfit"]},
+  "OperatingIncome": {"us-gaap": ["OperatingIncomeLoss"], "ifrs-full": ["ProfitLossFromOperatingActivities"]},
+  "NetIncome": {"us-gaap": ["NetIncomeLoss"], "ifrs-full": ["ProfitLoss"]},
+  "EPSBasic": {"us-gaap": ["EarningsPerShareBasic"], "ifrs-full": ["BasicEarningsLossPerShare"]},
+  "EPSDiluted": {"us-gaap": ["EarningsPerShareDiluted"], "ifrs-full": ["DilutedEarningsLossPerShare"]},
+  "TotalAssets": {"us-gaap": ["Assets"], "ifrs-full": ["Assets"]},
+  "TotalLiabilities": {"us-gaap": ["Liabilities"], "ifrs-full": ["Liabilities"]},
+  "StockholdersEquity": {"us-gaap": ["StockholdersEquity", "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"], "ifrs-full": ["Equity"]},
+  "CashAndCashEquivalents": {"us-gaap": ["CashAndCashEquivalentsAtCarryingValue"], "ifrs-full": ["CashAndCashEquivalents"]},
+  "CurrentAssets": {"us-gaap": ["AssetsCurrent"], "ifrs-full": ["CurrentAssets"]},
+  "CurrentLiabilities": {"us-gaap": ["LiabilitiesCurrent"], "ifrs-full": ["CurrentLiabilities"]},
+  "LongTermDebt": {"us-gaap": ["LongTermDebtNoncurrent", "LongTermDebt"], "ifrs-full": ["LongtermBorrowings"]},
+  "OperatingCashFlow": {"us-gaap": ["NetCashProvidedByUsedInOperatingActivities"], "ifrs-full": ["CashFlowsFromUsedInOperatingActivities"]},
+  "CapitalExpenditure": {"us-gaap": ["PaymentsToAcquirePropertyPlantAndEquipment"], "ifrs-full": ["PurchaseOfPropertyPlantAndEquipmentClassifiedAsInvestingActivities"]},
+  "DividendsPaid": {"us-gaap": ["PaymentsOfDividends", "PaymentsOfDividendsCommonStock"], "ifrs-full": ["DividendsPaid"]},
+  "CommonSharesOutstanding": {"dei": ["EntityCommonStockSharesOutstanding"], "us-gaap": ["CommonStockSharesOutstanding"], "ifrs-full": ["NumberOfSharesOutstanding"]},
+  "WeightedAverageBasicShares": {"us-gaap": ["WeightedAverageNumberOfSharesOutstandingBasic"], "ifrs-full": ["WeightedAverageNumberOfOrdinarySharesOutstanding"]},
+  "WeightedAverageDilutedShares": {"us-gaap": ["WeightedAverageNumberOfDilutedSharesOutstanding"], "ifrs-full": ["WeightedAverageNumberOfDilutedSharesOutstanding"]}
+}
