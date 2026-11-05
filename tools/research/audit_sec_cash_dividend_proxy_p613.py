@@ -22,6 +22,7 @@ CACHE = Path("data/sec/cache")
 OUT_FACTS = Path("data/universe/sec_cash_dividend_proxy_facts_p613.csv")
 OUT_COV = Path("data/universe/sec_cash_dividend_proxy_coverage_p613.csv")
 OUT_SUM = Path("data/universe/sec_cash_dividend_proxy_summary_p613.json")
+PER_SHARE_FIXTURE = Path("data/universe/sec_cash_dividend_per_share_facts_p613.csv")
 SNAPSHOT = date(2026, 11, 6)
 
 
@@ -110,6 +111,8 @@ def main() -> int:
                             "available_at": "", "period_type": period_type(x.get("start"), x.get("end"), x.get("filed")),
                             "allocation_status": "TICKER_ALLOCABLE" if len(recs) == 1 and recs[0]["security_type"] == "COMMON" else "ISSUER_LEVEL_NOT_TICKER_ALLOCABLE",
                             "verification_status": "PER_SHARE_FACT", "fact_kind": "PER_SHARE"})
+    if not per_share and PER_SHARE_FIXTURE.exists():
+        per_share = list(csv.DictReader(PER_SHARE_FIXTURE.open(encoding="utf-8")))
     facts.extend(per_share)
     OUT_FACTS.parent.mkdir(parents=True, exist_ok=True)
     fields = ["ticker","cik","issuer_name","security_type","taxonomy","tag","unit","raw_value",
