@@ -10,6 +10,9 @@ def test_bank_insurance_reit_are_distinct():
     assert model_family("6022", "State commercial banks", rules)[0] == "BANKS"
     assert model_family("6311", "Life insurance", rules)[0] == "INSURANCE"
     assert model_family("6798", "Real estate investment trusts", rules)[0] == "REIT"
+    assert model_family("3571", "Electronic Computers", rules)[0] == "TECHNOLOGY"
+    assert model_family("2836", "Biological Products", rules)[0] == "HEALTHCARE"
+    assert model_family("4953", "Refuse Systems", rules)[0] == "INDUSTRIALS"
 
 
 def test_bdc_requires_explicit_description_not_name():

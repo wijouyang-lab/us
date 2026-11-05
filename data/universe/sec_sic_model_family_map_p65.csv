@@ -7,7 +7,7 @@ R_BDC,6726,6726,BDC,10,BUSINESS DEVELOPMENT,P6.5v1,Explicit BDC description requ
 R_OTHER_FIN_6726,6726,6726,OTHER_FINANCIALS,200,,P6.5v1,Investment offices not classified as BDC
 R_OTHER_FIN_6799,6799,6799,OTHER_FINANCIALS,200,,P6.5v1,Investors not elsewhere classified
 R_OTHER_FIN_6411,6411,6411,OTHER_FINANCIALS,200,,P6.5v1,Insurance agents and brokers
-R_UTILITIES,4900,4999,UTILITIES,300,,P6.5v1,Utilities and sanitary services
+R_UTILITIES,4900,4949,UTILITIES,300,,P6.5v1,Utilities and sanitary services
 R_ENERGY_OIL_GAS,1300,1399,ENERGY,310,,P6.5v1,Oil and gas extraction
 R_ENERGY_REFINING,2900,2999,ENERGY,310,,P6.5v1,Petroleum refining and related
 R_ENERGY_PIPELINE,4610,4619,ENERGY,310,,P6.5v1,Pipelines except natural gas
@@ -46,3 +46,5 @@ R_CONSUMER_STAPLES_DRUG_RETAIL,5912,5912,CONSUMER_STAPLES,910,,P6.5v1,Drug store
 R_OTHER_SERVICES,7200,8999,OTHER_SERVICES,990,,P6.5v1,Other services not elsewhere classified
 R_OTHER_FIN_BROKERS,6100,6299,OTHER_FINANCIALS,200,,P6.5v1,Security/commodity brokers and finance services
 R_REAL_ESTATE_OPERATORS,6500,6599,OTHER_FINANCIALS,200,,P6.5v1,Real estate operators/lessors requiring special model
+R_INDUSTRIALS_WASTE,4950,4959,INDUSTRIALS,300,,P6.5v1,"Waste/refuse systems are industrial services, not utilities"
+R_UTILITIES_OTHER,4960,4999,UTILITIES,300,,P6.5v1,Other utility services
