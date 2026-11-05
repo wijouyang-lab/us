@@ -152,8 +152,8 @@ data/universe/us_market_quote_failures_p62.csv
 Live run:
 
 ```text
-https://github.com/wijouyang-lab/us/actions/runs/41993795459
-artifact: 13400172203
+https://github.com/wijouyang-lab/us/actions/runs/41995786145
+artifact: 13400427265
 ```
 
 ## 11. Conclusion
