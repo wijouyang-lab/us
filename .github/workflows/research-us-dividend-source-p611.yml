@@ -1,0 +1,63 @@
+name: Research US Dividend Source P6.11
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/us-dividend-source-p611]
+    paths:
+      - "tools/research/audit_us_dividend_source_p611.py"
+      - "tools/research/normalize_us_dividend_events_p611.py"
+      - "tests/test_us_dividend_source_p611.py"
+      - ".github/workflows/research-us-dividend-source-p611.yml"
+  pull_request:
+    branches: [main, research/earnings-yield-p610]
+    paths:
+      - "tools/research/audit_us_dividend_source_p611.py"
+      - "tools/research/normalize_us_dividend_events_p611.py"
+      - "tests/test_us_dividend_source_p611.py"
+      - ".github/workflows/research-us-dividend-source-p611.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  dividend_source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install akshare==1.20.2 pandas pytest
+      - name: Run offline tests
+        run: python -m pytest tests/test_us_dividend_source_p611.py -q
+      - name: Audit source and build 30-name sample
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit 2>/dev/null || true)"
+          if [ -z "$PANEL" ]; then
+            mkdir -p .p63_artifact
+            GH_TOKEN="${{ github.token }}" gh run download 42001009069 --repo "$GITHUB_REPOSITORY" --name sec-fundamentals-p63 --dir .p63_artifact
+            PANEL="$(find .p63_artifact -name 'sec_fundamentals_panel_p63.csv.gz' -print -quit)"
+          fi
+          test -n "$PANEL" || { echo "P6.3 PANEL ARTIFACT MISSING"; exit 2; }
+          python tools/research/audit_us_dividend_source_p611.py --panel "$PANEL"
+      - name: Upload dividend source outputs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: us-dividend-source-p611
+          path: |
+            data/universe/us_dividend_source_sample_p611.json
+            data/universe/us_dividend_events_sample_p611.csv
+            data/universe/us_dividend_sec_reconciliation_p611.csv
+          retention-days: 30
+          if-no-files-found: warn
+        env:
+          GH_TOKEN: ${{ github.token }}

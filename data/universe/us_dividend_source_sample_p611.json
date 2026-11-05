@@ -1,0 +1,279 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T13:37:43.421237+00:00",
+    "sample_size": 30,
+    "max_sample": 30,
+    "request_count": 0,
+    "no_external_request": true,
+    "note": "No 30-request dividend pull was attempted because the pinned AkShare has no US dividend-event endpoint."
+  },
+  "source_audit": {
+    "akshare_version": "1.20.2",
+    "has_stock_us_dividend_payout": false,
+    "has_stock_us_financial_indicator": false,
+    "candidate_functions": [
+      "fund_announcement_dividend_em",
+      "fund_etf_dividend_sina",
+      "news_trade_notify_dividend_baidu",
+      "stock_dividend_cninfo",
+      "stock_history_dividend",
+      "stock_history_dividend_detail",
+      "stock_hk_dividend_payout_em"
+    ],
+    "alternative_us_indicator": true,
+    "source_status": "SOURCE_UNAVAILABLE",
+    "upstream": "Eastmoney / SECURITIES financial indicators for the alternative; no US dividend-event endpoint in pinned AkShare",
+    "contract": null,
+    "alternative_contract": "(symbol: str = 'TSLA', indicator: str = '年报') -> pandas.DataFrame",
+    "alternative_has_payout_ratio": true,
+    "alternative_has_dps_or_event_dates": false,
+    "alternative_upstream": "https://datacenter.eastmoney.com/securities/api/data/v1/get RPT_USF10_FN_GMAININDICATOR",
+    "sec_per_share_tags_in_map": []
+  },
+  "sample": [
+    {
+      "ticker": "CAT",
+      "cik": "0000018230",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "KO",
+      "cik": "0000021344",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "PG",
+      "cik": "0000080424",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "XOM",
+      "cik": "0002115436",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "O",
+      "cik": "0000726728",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "NEE",
+      "cik": "0000753308",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "VZ",
+      "cik": "0000732712",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "MCD",
+      "cik": "0000063908",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "HD",
+      "cik": "0000354950",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "IBM",
+      "cik": "0000051143",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "CSCO",
+      "cik": "0000858877",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "F",
+      "cik": "0000037996",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "PEP",
+      "cik": "0000077476",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "WMT",
+      "cik": "0000104169",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "T",
+      "cik": "0000732717",
+      "security_type": "UNCLASSIFIED",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "LOW",
+      "cik": "0000060667",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "INTC",
+      "cik": "0000050863",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "PLD",
+      "cik": "0001045609",
+      "security_type": "COMMON",
+      "group": "A",
+      "selection_reason": "recent_sec_cashflow_payer"
+    },
+    {
+      "ticker": "BAC",
+      "cik": "0000070858",
+      "security_type": "COMMON",
+      "group": "B",
+      "selection_reason": "historical_or_unclear_payer"
+    },
+    {
+      "ticker": "JNJ",
+      "cik": "0000200406",
+      "security_type": "COMMON",
+      "group": "B",
+      "selection_reason": "historical_or_unclear_payer"
+    },
+    {
+      "ticker": "DUK",
+      "cik": "0001326160",
+      "security_type": "COMMON",
+      "group": "B",
+      "selection_reason": "historical_or_unclear_payer"
+    },
+    {
+      "ticker": "AAL",
+      "cik": "0000006201",
+      "security_type": "COMMON",
+      "group": "B",
+      "selection_reason": "historical_or_unclear_payer"
+    },
+    {
+      "ticker": "AURE",
+      "cik": "0001765850",
+      "security_type": "COMMON",
+      "group": "B",
+      "selection_reason": "historical_or_unclear_payer"
+    },
+    {
+      "ticker": "BBGI",
+      "cik": "0001099160",
+      "security_type": "COMMON",
+      "group": "B",
+      "selection_reason": "historical_or_unclear_payer"
+    },
+    {
+      "ticker": "ABNB",
+      "cik": "0001559720",
+      "security_type": "COMMON",
+      "group": "C",
+      "selection_reason": "no_sec_dividend_fact"
+    },
+    {
+      "ticker": "ACAD",
+      "cik": "0001070494",
+      "security_type": "COMMON",
+      "group": "C",
+      "selection_reason": "no_sec_dividend_fact"
+    },
+    {
+      "ticker": "AAOI",
+      "cik": "0001158114",
+      "security_type": "COMMON",
+      "group": "C",
+      "selection_reason": "no_sec_dividend_fact"
+    },
+    {
+      "ticker": "ASML",
+      "cik": "0000937966",
+      "security_type": "ADR",
+      "group": "D",
+      "selection_reason": "ADR_ratio_unverified"
+    },
+    {
+      "ticker": "BZ",
+      "cik": "0001842827",
+      "security_type": "ADR",
+      "group": "D",
+      "selection_reason": "ADR_ratio_unverified"
+    },
+    {
+      "ticker": "ATAT",
+      "cik": "0001853717",
+      "security_type": "ADR",
+      "group": "D",
+      "selection_reason": "ADR_ratio_unverified"
+    }
+  ],
+  "groups": {
+    "A": 18,
+    "B": 6,
+    "C": 3,
+    "D": 3
+  },
+  "event_status_counts": {
+    "SOURCE_UNAVAILABLE": 30
+  },
+  "field_stats": {
+    "dps_present": 0,
+    "announcement_date_present": 0,
+    "ex_date_present": 0,
+    "record_date_present": 0,
+    "payment_date_present": 0,
+    "currency_present": 0,
+    "duplicate_events": 0
+  },
+  "sec_evidence": {
+    "cashflow_fact_present": 24,
+    "per_share_fact_present": 0,
+    "per_share_tag_in_map": [],
+    "payer_evidence": 25
+  },
+  "confirmed": {
+    "CONFIRMED_DIVIDEND_PAYER": 25,
+    "CONFIRMED_NON_PAYER": 0,
+    "DIVIDEND_STATUS_UNKNOWN": 30
+  },
+  "source_url": null,
+  "raw_response": null,
+  "status_counts": {
+    "SOURCE_UNAVAILABLE": 30
+  }
+}
