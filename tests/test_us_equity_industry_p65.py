@@ -80,3 +80,39 @@ def test_sp500_inconsistency_preserves_both_sources(tmp_path):
     assert all(r["sp500_sector"] for r in rows if r["ticker"] in ("AAA","CCC"))
     assert d["sp500_consistency"].get("INCONSISTENT", 0) >= 1
     assert "sp500_inconsistent_examples" in d
+
+
+def test_actual_sic_preserved_and_no_cik_unclassified():
+    import csv
+    rows = {r["ticker"]: r for r in csv.DictReader(open("data/universe/us_equity_industry_sic_p65.csv", encoding="utf-8"))}
+    assert rows["AAPL"]["sic"] == "3571"
+    assert rows["FRBA"]["sic"] == ""
+    assert rows["FRBA"]["model_family"] == "UNCLASSIFIED"
+    assert rows["FRBA"]["mapping_rule"] == "NO_CIK"
+
+
+def test_actual_quality_counts_and_old_322_reproduction():
+    import json
+    d = json.load(open("data/universe/us_equity_industry_coverage_p65.json", encoding="utf-8"))
+    assert d["counts"]["target_with_sic"] == 5403
+    assert d["counts"]["target_missing_sic"] == 99
+    assert d["quality"]["counts"]["standard_model_input_ready"] == 3342
+    r = d["quality"]["reproduction"]
+    assert r["old_p64_input_ready"] == 322
+    assert r["intersection"] == 317
+    assert r["lost_examples"] == ["CI", "CNC", "ELV", "HUM", "UNH"]
+
+
+def test_actual_quality_csv_requires_history_not_just_sic():
+    import csv
+    rows = list(csv.DictReader(open("data/universe/us_equity_quality_readiness_p65.csv", encoding="utf-8")))
+    assert rows
+    assert any(r["sic"] and r["quality_standard_model_input_ready"] == "False" for r in rows)
+    assert any(r["quality_standard_model_input_ready"] == "True" and r["annual_netincome_observations"] != "" for r in rows)
+
+
+def test_unclassified_does_not_enter_main_input_ready_count():
+    import json
+    d = json.load(open("data/universe/us_equity_industry_coverage_p65.json", encoding="utf-8"))
+    assert d["quality"]["counts"]["unclassified_input_ready"] > 0
+    assert d["quality"]["counts"]["standard_model_input_ready"] == 3342
