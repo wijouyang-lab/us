@@ -1,0 +1,52 @@
+name: Research Dividend Alternatives P6.12
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [research/us-dividend-alternative-sources-p612]
+    paths:
+      - "tools/research/audit_dividend_alternatives_p612.py"
+      - "tools/research/normalize_dividend_sources_p612.py"
+      - "tests/test_dividend_alternatives_p612.py"
+      - ".github/workflows/research-dividend-alternatives-p612.yml"
+  pull_request:
+    branches: [main, research/us-dividend-source-p611]
+    paths:
+      - "tools/research/audit_dividend_alternatives_p612.py"
+      - "tools/research/normalize_dividend_sources_p612.py"
+      - "tests/test_dividend_alternatives_p612.py"
+      - ".github/workflows/research-dividend-alternatives-p612.yml"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  alternatives:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install yfinance==1.7.0 requests pandas pytest
+      - name: Run offline tests
+        run: python -m pytest tests/test_dividend_alternatives_p612.py -q
+      - name: Validate 30-name free dividend sources
+        run: python tools/research/audit_dividend_alternatives_p612.py
+      - name: Upload source outputs and raw responses
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dividend-alternatives-p612
+          path: |
+            data/universe/dividend_alternative_source_results_p612.json
+            data/universe/dividend_alternative_events_p612.csv
+            data/universe/dividend_source_comparison_p612.csv
+            data/research/dividend_alt_raw_p612/
+          retention-days: 30
+          if-no-files-found: warn
