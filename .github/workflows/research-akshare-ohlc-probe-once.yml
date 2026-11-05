@@ -1,0 +1,42 @@
+name: Research AkShare OHLC Anomaly Probe Once
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/akshare_us_28_coverage.py"
+      - ".github/workflows/research-akshare-ohlc-probe-once.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas akshare
+      - name: Probe five known OHLC anomalies only
+        run: |
+          python tools/research/akshare_us_28_coverage.py \
+            --output artifacts/akshare-us-ohlc-anomalies.json \
+            --start-date 20160101 \
+            --tickers NVDA,HD,HON,NEE,JPM \
+            --history-only \
+            --sleep-seconds 1.0
+      - name: Upload anomaly evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: akshare-us-ohlc-anomalies
+          path: artifacts/akshare-us-ohlc-anomalies.json
+          if-no-files-found: warn
+          retention-days: 30
