@@ -1,0 +1,61 @@
+{
+  "source": "FRED/ALFRED VIXCLS, VXVCLS; prices from research snapshot",
+  "downloaded_at_utc": "2026-11-03T19:47:00Z",
+  "research_cutoff": "2026-10-30",
+  "pit_start": "2014-04-30",
+  "exploratory_start": "2007-12-04",
+  "files": {
+    "BIL.csv": {
+      "rows": 4888,
+      "sha256": "145106b5ff32a5aef6d2ae384a4efd933a40b7444976d2b1f362a040f2769269",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "IEF.csv": {
+      "rows": 6104,
+      "sha256": "c742f8ed82f2e4523f9f8516dcfd530572ab44fa4a25a8a6714262c33d072d00",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "pit_vix_vxv.csv": {
+      "rows": 150,
+      "sha256": "43c661aa4d9a026e7b5b7d57534dfaac779421d9bba6c1302547807257f5e212",
+      "max_date": "2026-09-30 00:00:00+00:00"
+    },
+    "SPY.csv": {
+      "rows": 6748,
+      "sha256": "51cf32860cc3e513289df62deb2b3c64cd2259682512a8a4f4ff089e4f190f46",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "TLT.csv": {
+      "rows": 6104,
+      "sha256": "d396bf01a4bbbec5b33d7f9153dd2bf627dee13f446216f9a79c78be267b3739",
+      "max_date": "2026-10-30 04:00:00+00:00"
+    },
+    "VIXCLS.csv": {
+      "rows": 9609,
+      "sha256": "d44ac5bdf3e2b177d9136603e41885024f54f6fefcbb44ab09196bf0555d608f",
+      "max_date": "2026-10-30 00:00:00+00:00"
+    },
+    "VXVCLS.csv": {
+      "rows": 4934,
+      "sha256": "b979a28a919e912b2ea09e0cb2c012a535e040d3a3e5b52870837e438728d41b",
+      "max_date": "2026-10-30 00:00:00+00:00"
+    }
+  },
+  "audit": {
+    "VIXCLS": {
+      "pit_start": "2014-04-30",
+      "pit_end": "2026-09-30",
+      "alred_coverage": "2014+"
+    },
+    "VXVCLS": {
+      "pit_start": "2014-04-30",
+      "pit_end": "2026-09-30",
+      "pre_2014": "exploratory only, not verified PIT",
+      "vintages_start": "2014-04-17"
+    },
+    "common_vintage": "VIXCLS and VXVCLS from same prior-SPY-session ALFRED vintage",
+    "raw_responses": "per-decision response SHA-256 stored in pit_vix_vxv.csv; raw payload not redistributed due provider terms",
+    "missing_policy": "BIL 100% on missing/invalid pair",
+    "first_three_excluded": "2014-01/02/03 VXV not PIT"
+  }
+}
