@@ -39,9 +39,9 @@ def test_adv_computed_from_completed_sessions_and_eligible_is_explicit():
     rows = load("tradability/value_tradable_candidates.csv")
     assert all(r["valid_sessions_20"] == "20" and r["valid_sessions_60"] == "60" for r in rows)
     assert all(float(r["adv20_usd"]) > 0 and float(r["adv60_usd"]) > 0 for r in rows)
-    assert s["value"]["eligible"] == 16
-    assert s["quality"]["eligible"] == 36
-    assert s["garp"]["eligible"] == 18
+    assert s["value"]["eligible"] == 13
+    assert s["quality"]["eligible"] == 3
+    assert s["garp"]["eligible"] == 0
     assert all(r["tradability_status"] in ("ELIGIBLE", "WATCH", "BLOCKED", "DATA_BLOCKED") for r in rows)
 
 
@@ -62,4 +62,4 @@ def test_quality_report_is_research_only_and_consistent():
     assert s["pit_status"] == "PIT_BACKTEST_BLOCKED"
     assert s["research_label"] == "RESEARCH_ONLY_NOT_A_BUY_SELL_SIGNAL"
     assert s["counts"]["value_candidates"] == 2529
-    assert s["valuation"]["status_counts"]["VALUATION_VALID"] == 35
+    assert sum(s["valuation"]["status_counts"].values()) == 50

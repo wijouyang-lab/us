@@ -1,27 +1,19 @@
 {
-  "generated_at": "2026-11-06T08:13:10.455547+00:00",
+  "generated_at": "2026-11-06T08:26:54.658380+00:00",
   "data_as_of": "2026-11-05",
   "top50": 50,
   "status_counts": {
-    "VALUATION_INPUT_SUSPECT": 15,
-    "VALUATION_VALID": 35
+    "VALUATION_INPUT_SUSPECT": 7,
+    "VALUATION_VALID": 43
   },
   "suspect_tickers": [
     "CRMT",
-    "WETH",
-    "SSTK",
     "CTRM",
-    "VISN",
-    "KROS",
     "BOSC",
-    "RGS",
-    "NATR",
     "JL",
     "DOX",
-    "LFVN",
     "INMD",
-    "GASS",
-    "HLLY"
+    "GASS"
   ],
   "extreme_tickers": [
     "CRMT",

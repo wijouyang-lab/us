@@ -72,8 +72,10 @@ def main():
                 status = "VALUATION_INPUT_SUSPECT"; reasons.append("EXTREME_PB_OR_PS")
             if mcap < 50_000_000:
                 reasons.append("MICROCAP_UNDER_50M")
-            if ext_diff is not None and abs(ext_diff) > 10:
-                status = "VALUATION_INPUT_SUSPECT"; reasons.append("EXTERNAL_PRICE_DIFF_GT_10PCT")
+            # P6.2 has no per-row quote timestamp. Do not treat a later yfinance
+            # close as proof that the P6.2 quote is wrong.
+            if ext_diff is not None:
+                reasons.append("PRICE_NOT_COMPARABLE_DIFFERENT_TIMESTAMP")
             pm = num(rd.get("pe_mismatch"))
             if pm is not None and pm > 0.20:
                 reasons.append("PROVIDER_PE_MISMATCH_GT_20PCT")
@@ -88,6 +90,8 @@ def main():
                      "revenue": rd.get("revenue"), "cfo": cfo, "capex": capex, "fcf_reported": fcf_reported,
                      "fcf_calc": fcf_calc, "external_close": ext_close,
                      "external_session": ext_session, "external_price_diff_pct": ext_diff,
+                     "quote_timestamp_status": "QUOTE_TIMESTAMP_UNKNOWN",
+                     "price_comparability": "PRICE_NOT_COMPARABLE",
                      "financial_period": r.get("financial_period", ""),
                      "filed": r.get("filed", ""), "valuation_status": status,
                      "valuation_reason": "|".join(dict.fromkeys(reasons))})

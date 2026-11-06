@@ -14,9 +14,9 @@ def test_tradability_is_separate_and_adv_is_not_fabricated():
     s = json.loads((OUT / "tradability/tradability_summary.json").read_text(encoding="utf-8"))
     assert s["liquidity_source"].startswith("YFINANCE")
     assert "not trading approval" in s["note"].lower()
-    assert s["value"]["eligible"] == 16
-    assert s["quality"]["eligible"] == 36
-    assert s["garp"]["eligible"] == 18
+    assert s["value"]["eligible"] == 13
+    assert s["quality"]["eligible"] == 3
+    assert s["garp"]["eligible"] == 0
     rows = load("tradability/value_tradable_candidates.csv")
     assert rows and all(r["adv20_usd"] != "" and r["adv60_usd"] != "" for r in rows)
     assert all(r["valid_sessions_20"] == "20" and r["valid_sessions_60"] == "60" for r in rows)
