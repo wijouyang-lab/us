@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-06T07:32:38.019609Z",
+  "generated_at": "2026-11-06T07:54:53.565976Z",
   "source": {
     "dashboard_generated_at": "2026-11-06T06:01:27Z",
     "dashboard_file": "dashboard\\data\\dashboard_data.json",
-    "paper_db": "C:\\Users\\ouyan\\AppData\\Local\\Temp\\sel-utf8b-ae655a87a26c41c7b9f6477ae86ad2b3\\paper.sqlite",
+    "paper_db": "C:\\Users\\ouyan\\AppData\\Local\\Temp\\p615-final-0492362588a040c2b3e06d5fa66cbc4b\\paper.sqlite",
     "paper_db_exists": false,
     "account_id": "PAPER-50000",
     "account_status": "LOCAL_PAPER_DB_NOT_PRESENT",
@@ -260,7 +260,7 @@
     }
   ],
   "selection": {
-    "generated_at": "2026-11-06T07:32:37.137774Z",
+    "generated_at": "2026-11-06T07:52:50.269966Z",
     "data_as_of": "2026-11-05",
     "status": "CURRENT_CROSS_SECTIONAL_RESEARCH",
     "pit_status": "PIT_BACKTEST_BLOCKED",
@@ -284,13 +284,13 @@
       },
       "garp_growth_metrics_p614.csv": {
         "path": "data\\universe\\selection_inputs\\garp_growth_metrics_p614.csv",
-        "sha256": "864fa1ae4ae1aea92a935a74857a3eea35f603c249a966bfa5187ef9276cb7a9",
+        "sha256": "d630aeef9df647e2c8bab2e6ea830b61cfe02e9ac6df7534ef00297307ded91c",
         "rows": 5453
       }
     },
     "value": {
       "candidate_issuers": 2529,
-      "all_four_ranked": 851,
+      "all_four_ranked": 850,
       "all_five_p69_intersection": 992,
       "top50": [
         {
@@ -1799,6 +1799,8 @@
     "quality": {
       "scored_issuers": 2313,
       "score_mismatches": 0,
+      "peer_percentile_mismatches": 0,
+      "peer_percentile_max_abs_diff": 0.0,
       "top50": [
         {
           "ticker": "TPL",
@@ -3254,1564 +3256,930 @@
       "formula": "0.30 ROE + 0.25 ROA + 0.25 CFO/assets + 0.20 inverse liabilities/assets; P6.6 peer percentiles"
     },
     "garp": {
-      "history_available": 4028,
-      "ranked_issuers": 3579,
+      "history_available": 3606,
+      "ranked_issuers": 3101,
       "top50": [
         {
-          "ticker": "QNST",
-          "cik": "0001117297",
-          "company_name": "QuinStreet, Inc. - Common Stock",
-          "model_family": "OTHER_SERVICES",
+          "ticker": "CDZI",
+          "cik": "0000727273",
+          "company_name": "Cadiz, Inc. - Common Stock",
+          "model_family": "UTILITIES",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-06-30",
-          "filed": "2026-09-16",
-          "accn": "0002077096-26-000254",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1117297/000207709626000254/",
-          "score": 91.768672,
-          "metrics": {
-            "revenue_growth_1y": "0.3843938815943295",
-            "revenue_cagr_3y": "0.8887264086834663",
-            "eps_growth_1y": "16.75",
-            "fcf_growth_1y": "0.5427275687802289",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.23868843281143393",
-            "operating_leverage": "4.335935522571664"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 88.106796,
-            "revenue_cagr_3y": 96.825397,
-            "eps_growth_1y": 97.890295,
-            "fcf_growth_1y": 82.325581,
-            "earnings_stability": null,
-            "operating_margin_expansion": 89.090909,
-            "operating_leverage": 96.373057
-          },
-          "missing_fields": [
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "TLIH",
-          "cik": "0001982012",
-          "company_name": "Ten-League International Holdings Limited - Ordinary Shares",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
           "financial_period": "2025-12-31",
-          "filed": "2026-04-30",
-          "accn": "0001493152-26-020406",
+          "filed": "2026-03-31",
+          "accn": "0001437749-26-010517",
           "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1982012/000149315226020406/",
-          "score": 90.712879,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/727273/000143774926010517/",
+          "score": 99.412775,
           "metrics": {
-            "revenue_growth_1y": "0.38358595884812097",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "1.9999999999999996",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.046569091376544886",
-            "operating_leverage": "1.3477281593736672"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 89.861751,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": 96.604938,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 83.084577,
-            "operating_leverage": 93.300248
-          },
-          "missing_fields": [
-            "revenue_cagr_3y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "DAVE",
-          "cik": "0001841408",
-          "company_name": "Dave Inc.  - Class A Common Stock",
-          "model_family": "OTHER_FINANCIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-02",
-          "accn": "0001193125-26-085370",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1841408/000119312526085370/",
-          "score": 89.312706,
-          "metrics": {
-            "revenue_growth_1y": "0.5967165692816558",
-            "revenue_cagr_3y": "0.39331003332594827",
-            "eps_growth_1y": "2.170995670995671",
-            "fcf_growth_1y": "1.3199679679679681",
-            "earnings_stability": "",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 84.274194,
-            "revenue_cagr_3y": 85.321101,
-            "eps_growth_1y": 96.644295,
-            "fcf_growth_1y": 91.011236,
-            "earnings_stability": null,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "earnings_stability",
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "SEI",
-          "cik": "0001697500",
-          "company_name": "Solaris Energy Infrastructure, Inc. Class A Common Stock",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-27",
-          "accn": "0001628280-26-012501",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1697500/000162828026012501/",
-          "score": 89.045453,
-          "metrics": {
-            "revenue_growth_1y": "0.9872976227358818",
-            "revenue_cagr_3y": "0.24806428082966292",
+            "revenue_growth_1y": "0.6978559533721898",
+            "revenue_cagr_3y": "1.2146525377495814",
+            "revenue_cagr_5y": "0.97655007644267",
             "eps_growth_1y": "",
             "fcf_growth_1y": "",
             "earnings_stability": "",
-            "operating_margin_expansion": "0.04889849608663008",
-            "operating_leverage": "0.5760543918051662"
+            "operating_margin_expansion": "0.8505764151259758",
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
-            "revenue_growth_1y": 95.62212,
-            "revenue_cagr_3y": 88.888889,
+            "revenue_growth_1y": 98.901099,
+            "revenue_cagr_3y": 100.0,
+            "revenue_cagr_5y": 98.75,
             "eps_growth_1y": null,
             "fcf_growth_1y": null,
             "earnings_stability": null,
-            "operating_margin_expansion": 83.333333,
-            "operating_leverage": 88.337469
+            "operating_margin_expansion": 100.0,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
             "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "ZJK",
-          "cik": "0001941506",
-          "company_name": "ZJK Industrial Co., Ltd. - Class A Ordinary Shares",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-04-29",
-          "accn": "0001731122-26-000625",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1941506/000173112226000625/",
-          "score": 88.802679,
-          "metrics": {
-            "revenue_growth_1y": "0.483857362171086",
-            "revenue_cagr_3y": "0.3128005103473599",
-            "eps_growth_1y": "1.666666666666667",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.7639066891002524",
-            "operating_margin_expansion": "0.125456111612695",
-            "operating_leverage": "4.305176155902396"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 92.396313,
-            "revenue_cagr_3y": 92.424242,
-            "eps_growth_1y": 96.296296,
-            "fcf_growth_1y": null,
-            "earnings_stability": 64.630225,
-            "operating_margin_expansion": 88.80597,
-            "operating_leverage": 98.263027
-          },
-          "missing_fields": [
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "ARXS",
-          "cik": "0002093536",
-          "company_name": "Arxis, Inc. - Class A Common Stock",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-10-13",
-          "accn": "0001193125-26-419718",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/2093536/000119312526419718/",
-          "score": 88.167399,
-          "metrics": {
-            "revenue_growth_1y": "1.141368951482654",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.03583413024251303",
-            "operating_leverage": "0.5557292345180675"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 96.313364,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 80.099502,
-            "operating_leverage": 88.08933
-          },
-          "missing_fields": [
-            "revenue_cagr_3y",
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "UDR",
-          "cik": "0000074208",
-          "company_name": "UDR, Inc. Common Stock",
-          "model_family": "REIT",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-17",
-          "accn": "0000074208-26-000013",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/74208/000007420826000013/",
-          "score": 88.104428,
-          "metrics": {
-            "revenue_growth_1y": "0.36599735481543827",
-            "revenue_cagr_3y": "0.31266224260158215",
-            "eps_growth_1y": "3.346153846153846",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.6057819535420471",
-            "operating_margin_expansion": "14.513290972407844",
-            "operating_leverage": "0.5794218580995314"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 95.16129,
-            "revenue_cagr_3y": 98.373984,
-            "eps_growth_1y": 95.192308,
-            "fcf_growth_1y": null,
-            "earnings_stability": 44.444444,
-            "operating_margin_expansion": 98.484848,
-            "operating_leverage": 96.969697
-          },
-          "missing_fields": [
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "CPT",
-          "cik": "0000906345",
-          "company_name": "Camden Property Trust Common Stock",
-          "model_family": "REIT",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-12",
-          "accn": "0001628280-26-007697",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/906345/000162828026007697/",
-          "score": 87.377983,
-          "metrics": {
-            "revenue_growth_1y": "0.8168698332632758",
-            "revenue_cagr_3y": "0.35700963672392416",
-            "eps_growth_1y": "1.3599999999999999",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.7065865947782675",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 98.387097,
-            "revenue_cagr_3y": 99.593496,
-            "eps_growth_1y": 91.346154,
-            "fcf_growth_1y": null,
-            "earnings_stability": 60.185185,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "fcf_growth_1y",
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "FOA",
-          "cik": "0001828937",
-          "company_name": "Finance of America Companies Inc. Class A Common Stock",
-          "model_family": "OTHER_FINANCIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-13",
-          "accn": "0001628280-26-017692",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1828937/000162828026017692/",
-          "score": 86.768817,
-          "metrics": {
-            "revenue_growth_1y": "0.26135245610654123",
-            "revenue_cagr_3y": "1.1121758286235974",
-            "eps_growth_1y": "2.006369426751592",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 70.967742,
-            "revenue_cagr_3y": 94.036697,
-            "eps_growth_1y": 95.302013,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
             "fcf_growth_1y",
             "earnings_stability",
-            "operating_margin_expansion",
-            "operating_leverage"
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         },
         {
-          "ticker": "FIGR",
-          "cik": "0002064124",
-          "company_name": "Figure Technology Solutions, Inc. - Class A Common Stock",
-          "model_family": "OTHER_FINANCIALS",
+          "ticker": "PROP",
+          "cik": "0001162896",
+          "company_name": "Prairie Operating Co. - Common Stock",
+          "model_family": "ENERGY",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
           "financial_period": "2025-12-31",
-          "filed": "2026-03-16",
-          "accn": "0002064124-26-000009",
+          "filed": "2026-03-31",
+          "accn": "0001140361-26-012036",
           "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/2064124/000206412426000009/",
-          "score": 86.612903,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1162896/000114036126012036/",
+          "score": 99.107143,
           "metrics": {
-            "revenue_growth_1y": "0.4869090749079601",
-            "revenue_cagr_3y": "",
+            "revenue_growth_1y": "29.438090439601964",
+            "revenue_cagr_3y": "6.754006081233409",
+            "revenue_cagr_5y": "2.5781990825213157",
             "eps_growth_1y": "",
             "fcf_growth_1y": "",
             "earnings_stability": "",
-            "operating_margin_expansion": "0.20477917136362736",
-            "operating_leverage": "11.239349723142933"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 79.83871,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 84.0,
-            "operating_leverage": 96.0
-          },
-          "missing_fields": [
-            "revenue_cagr_3y",
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "PKE",
-          "cik": "0000076267",
-          "company_name": "Park Aerospace Corp. Common Stock",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-03-01",
-          "filed": "2026-05-29",
-          "accn": "0001437749-18-009630",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/76267/000143774918009630/",
-          "score": 86.17585,
-          "metrics": {
-            "revenue_growth_1y": "",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "0.931034482758621",
-            "fcf_growth_1y": "1.4715256008359456",
-            "earnings_stability": "0.8134848387321619",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": null,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": 93.518519,
-            "fcf_growth_1y": 90.410959,
-            "earnings_stability": 74.598071,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "revenue_growth_1y",
-            "revenue_cagr_3y",
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "MSC",
-          "cik": "0001713334",
-          "company_name": "Studio City International Holdings Limited American depositary shares, each representing four  Class A ordinary shares",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-13",
-          "accn": "0001193125-26-105026",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1713334/000119312526105026/",
-          "score": 85.978976,
-          "metrics": {
-            "revenue_growth_1y": "0.08671115318120304",
-            "revenue_cagr_3y": "2.916820188879326",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.041151082731437284",
-            "operating_leverage": "0.7492435495555065"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 72.789116,
-            "revenue_cagr_3y": 99.646643,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 85.920578,
-            "operating_leverage": 85.559567
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "ANAB",
-          "cik": "0001370053",
-          "company_name": "AnaptysBio, Inc. - Common Stock",
-          "model_family": "HEALTHCARE",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-09-21",
-          "accn": "0001193125-26-396696",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1370053/000119312526396696/",
-          "score": 85.926125,
-          "metrics": {
-            "revenue_growth_1y": "1.5701468010517092",
-            "revenue_cagr_3y": "1.835165069360499",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.24245917067056844",
-            "operating_leverage": "0.8598628736368865"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 91.935484,
-            "revenue_cagr_3y": 96.926714,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 69.247312,
-            "operating_leverage": 85.59499
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "SE",
-          "cik": "0001703399",
-          "company_name": "Sea Limited American Depositary Shares, each representing one Class A Ordinary Share",
-          "model_family": "OTHER_SERVICES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-04-17",
-          "accn": "0001140361-26-015366",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1703399/000114036126015366/",
-          "score": 85.884094,
-          "metrics": {
-            "revenue_growth_1y": "0.33199333250665",
-            "revenue_cagr_3y": "0.16377403006772084",
-            "eps_growth_1y": "2.4415584415584415",
-            "fcf_growth_1y": "0.524267327010371",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.05622026854870916",
-            "operating_leverage": "1.6662699061455024"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 86.893204,
-            "revenue_cagr_3y": 82.275132,
-            "eps_growth_1y": 92.827004,
-            "fcf_growth_1y": 81.860465,
-            "earnings_stability": null,
-            "operating_margin_expansion": 79.220779,
-            "operating_leverage": 92.227979
-          },
-          "missing_fields": [
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "TGTX",
-          "cik": "0001001316",
-          "company_name": "TG Therapeutics, Inc. - Common Stock",
-          "model_family": "HEALTHCARE",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-27",
-          "accn": "0001437749-26-006133",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1001316/000143774926006133/",
-          "score": 85.733791,
-          "metrics": {
-            "revenue_growth_1y": "0.8731899916110442",
-            "revenue_cagr_3y": "5.046085797190421",
-            "eps_growth_1y": "18.375",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.07266584698645362",
-            "operating_leverage": "1.0680678490243156"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 86.491935,
-            "revenue_cagr_3y": 99.527187,
-            "eps_growth_1y": 99.673203,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 56.129032,
-            "operating_leverage": 86.847599
-          },
-          "missing_fields": [
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "FPS",
-          "cik": "0002080126",
-          "company_name": "Forgent Power Solutions, Inc. Class A Common Stock",
-          "model_family": "OTHER_SERVICES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-06-30",
-          "filed": "2026-09-15",
-          "accn": "0002080126-26-000035",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/2080126/000208012626000035/",
-          "score": 85.566545,
-          "metrics": {
-            "revenue_growth_1y": "0.8853978024078981",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.032599715186101885",
-            "operating_leverage": "0.6408560564179115"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 95.631068,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 72.467532,
-            "operating_leverage": 88.601036
-          },
-          "missing_fields": [
-            "revenue_cagr_3y",
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "GOLD",
-          "cik": "0001591588",
-          "company_name": "Gold.com, Inc. Common Stock",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-06-30",
-          "filed": "2026-09-10",
-          "accn": "0001193125-26-386799",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1591588/000119312526386799/",
-          "score": 85.561936,
-          "metrics": {
-            "revenue_growth_1y": "1.3239189391302033",
-            "revenue_cagr_3y": "0.4004614309431982",
-            "eps_growth_1y": "3.2602739726027394",
-            "fcf_growth_1y": "7.541572256456952",
-            "earnings_stability": "0.6432912527177607",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 97.235023,
-            "revenue_cagr_3y": 94.69697,
-            "eps_growth_1y": 98.45679,
-            "fcf_growth_1y": 94.977169,
-            "earnings_stability": 42.44373,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "FIVE",
-          "cik": "0001177609",
-          "company_name": "Five Below, Inc. - Common Stock",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-01-31",
-          "filed": "2026-03-19",
-          "accn": "0001177609-26-000010",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1177609/000117760926000010/",
-          "score": 85.368606,
-          "metrics": {
-            "revenue_growth_1y": "0.22897299567370477",
-            "revenue_cagr_3y": "0.15646155207399048",
-            "eps_growth_1y": "0.4121475054229933",
-            "fcf_growth_1y": "2.8600240028503383",
-            "earnings_stability": "0.8835068421925423",
-            "operating_margin_expansion": "0.012475822316130855",
-            "operating_leverage": "0.18355012695419926"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 92.176871,
-            "revenue_cagr_3y": 91.519435,
-            "eps_growth_1y": 83.333333,
-            "fcf_growth_1y": 95.977011,
-            "earnings_stability": 89.447236,
-            "operating_margin_expansion": 70.758123,
-            "operating_leverage": 74.368231
-          },
-          "missing_fields": [],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "TOST",
-          "cik": "0001650164",
-          "company_name": "Toast, Inc. Class A Common Stock",
-          "model_family": "TECHNOLOGY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-18",
-          "accn": "0001650164-26-000057",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1650164/000165016426000057/",
-          "score": 85.05719,
-          "metrics": {
-            "revenue_growth_1y": "0.24052419354838706",
-            "revenue_cagr_3y": "0.31087591094685885",
-            "eps_growth_1y": "18.666666666666668",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.044230718820612025",
-            "operating_leverage": "17.00947580645161"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 74.568289,
-            "revenue_cagr_3y": 89.482759,
-            "eps_growth_1y": 99.657534,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 62.700965,
-            "operating_leverage": 98.876404
-          },
-          "missing_fields": [
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "MU",
-          "cik": "0000723125",
-          "company_name": "Micron Technology, Inc. - Common Stock",
-          "model_family": "TECHNOLOGY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-09-03",
-          "filed": "2026-10-09",
-          "accn": "0000723125-26-000023",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/723125/000072312526000023/",
-          "score": 84.997408,
-          "metrics": {
-            "revenue_growth_1y": "2.563272513243084",
-            "revenue_cagr_3y": "1.0421375015091026",
-            "eps_growth_1y": "8.853594771241829",
-            "fcf_growth_1y": "34.34952038369305",
-            "earnings_stability": "0.3690275186903192",
-            "operating_margin_expansion": "0.4844792890171417",
-            "operating_leverage": "6.60458828511925"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 95.290424,
-            "revenue_cagr_3y": 97.413793,
-            "eps_growth_1y": 98.630137,
-            "fcf_growth_1y": 99.552239,
-            "earnings_stability": 19.202899,
-            "operating_margin_expansion": 87.942122,
-            "operating_leverage": 96.950241
-          },
-          "missing_fields": [],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "RSI",
-          "cik": "0001793659",
-          "company_name": "Rush Street Interactive, Inc. Class A Common Stock",
-          "model_family": "COMMUNICATIONS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-18",
-          "accn": "0001793659-26-000009",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1793659/000179365926000009/",
-          "score": 84.702927,
-          "metrics": {
-            "revenue_growth_1y": "0.2276256570026718",
-            "revenue_cagr_3y": "0.2418766084248487",
-            "eps_growth_1y": "10.666666666666666",
-            "fcf_growth_1y": "0.5563947538000833",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.04995859811587608",
-            "operating_leverage": "2.2626330462870117"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 83.838384,
-            "revenue_cagr_3y": 88.095238,
-            "eps_growth_1y": 97.435897,
-            "fcf_growth_1y": 78.431373,
-            "earnings_stability": null,
-            "operating_margin_expansion": 69.791667,
-            "operating_leverage": 90.625
-          },
-          "missing_fields": [
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "FTK",
-          "cik": "0000928054",
-          "company_name": "Flotek Industries, Inc. Common Stock",
-          "model_family": "MATERIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-16",
-          "accn": "0000928054-26-000020",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/928054/000092805426000020/",
-          "score": 84.512663,
-          "metrics": {
-            "revenue_growth_1y": "0.26861114824221355",
-            "revenue_cagr_3y": "0.20350207262822884",
-            "eps_growth_1y": "1.5",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.03275711422831286",
-            "operating_leverage": "0.6372596290618207"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 88.275862,
-            "revenue_cagr_3y": 85.915493,
-            "eps_growth_1y": 88.118812,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 72.65625,
-            "operating_leverage": 87.596899
-          },
-          "missing_fields": [
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "RECT",
-          "cik": "0001995116",
-          "company_name": "Rectitude Holdings Ltd - Ordinary Shares",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-03-31",
-          "filed": "2026-07-30",
-          "accn": "0001213900-26-083027",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1995116/000121390026083027/",
-          "score": 83.857809,
-          "metrics": {
-            "revenue_growth_1y": "0.21989511485404845",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "0.5833333333333335",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.8268874182333749",
-            "operating_margin_expansion": "0.032102627279939705",
-            "operating_leverage": "0.7666342270218196"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 82.718894,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": 89.506173,
-            "fcf_growth_1y": null,
-            "earnings_stability": 78.135048,
-            "operating_margin_expansion": 78.358209,
-            "operating_leverage": 90.57072
-          },
-          "missing_fields": [
-            "revenue_cagr_3y",
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "CVNA",
-          "cik": "0001690820",
-          "company_name": "Carvana Co. Class A Common Stock",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-18",
-          "accn": "0001690820-26-000009",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1690820/000169082026000009/",
-          "score": 83.771413,
-          "metrics": {
-            "revenue_growth_1y": "0.4862868426826592",
-            "revenue_cagr_3y": "0.1431064848997503",
-            "eps_growth_1y": "4.94186046511628",
-            "fcf_growth_1y": "0.07496977025392981",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.02015431678693866",
-            "operating_leverage": "0.4137131573173407"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 96.258503,
-            "revenue_cagr_3y": 90.106007,
-            "eps_growth_1y": 98.4375,
-            "fcf_growth_1y": 58.62069,
-            "earnings_stability": null,
-            "operating_margin_expansion": 77.617329,
-            "operating_leverage": 81.588448
-          },
-          "missing_fields": [
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "MLCO",
-          "cik": "0001381640",
-          "company_name": "Melco Resorts & Entertainment Limited - American Depositary Shares",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-13",
-          "accn": "0001193125-26-105023",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1381640/000119312526105023/",
-          "score": 83.751415,
-          "metrics": {
-            "revenue_growth_1y": "0.11320868619013402",
-            "revenue_cagr_3y": "0.5637092472435752",
-            "eps_growth_1y": "3.5588235294117645",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.011801566021594712",
-            "operating_leverage": "0.12573590418555702"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 81.972789,
-            "revenue_cagr_3y": 98.233216,
-            "eps_growth_1y": 97.395833,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 70.036101,
-            "operating_leverage": 71.119134
-          },
-          "missing_fields": [
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "BE",
-          "cik": "0001664703",
-          "company_name": "Bloom Energy Corporation Class A Common Stock",
-          "model_family": "OTHER_SERVICES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-09",
-          "accn": "0001628280-26-006516",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1664703/000162828026006516/",
-          "score": 83.735396,
-          "metrics": {
-            "revenue_growth_1y": "0.38866541695053547",
-            "revenue_cagr_3y": "0.20799547749676717",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "0.7253967296204671",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.020478006230512064",
-            "operating_leverage": "1.789212273040298"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 88.349515,
-            "revenue_cagr_3y": 86.243386,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": 87.44186,
-            "earnings_stability": null,
-            "operating_margin_expansion": 63.896104,
-            "operating_leverage": 92.746114
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "NUTX",
-          "cik": "0001479681",
-          "company_name": "Nutex Health Inc. - Common Stock",
-          "model_family": "OTHER_SERVICES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-05",
-          "accn": "0001628280-26-015168",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1479681/000162828026015168/",
-          "score": 83.504241,
-          "metrics": {
-            "revenue_growth_1y": "0.8236458457044393",
-            "revenue_cagr_3y": "0.586074956305918",
-            "eps_growth_1y": "0.08797653958944274",
-            "fcf_growth_1y": "10.779893520072905",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.04259107354539432",
-            "operating_leverage": "0.2852234560446312"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 94.902913,
-            "revenue_cagr_3y": 96.031746,
-            "eps_growth_1y": 55.696203,
-            "fcf_growth_1y": 99.534884,
-            "earnings_stability": null,
-            "operating_margin_expansion": 75.844156,
-            "operating_leverage": 79.015544
-          },
-          "missing_fields": [
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "ANIP",
-          "cik": "0001023024",
-          "company_name": "ANI Pharmaceuticals, Inc. - Common Stock",
-          "model_family": "HEALTHCARE",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-27",
-          "accn": "0001023024-26-000014",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1023024/000102302426000014/",
-          "score": 83.369287,
-          "metrics": {
-            "revenue_growth_1y": "0.43782634738336124",
-            "revenue_cagr_3y": "0.40801633308708807",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "2.5869906448169773",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.12481045162834897",
-            "operating_leverage": "188.78991337864406"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 78.427419,
-            "revenue_cagr_3y": 82.50591,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": 93.75,
-            "earnings_stability": null,
-            "operating_margin_expansion": 62.580645,
-            "operating_leverage": 99.582463
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "TPR",
-          "cik": "0001116132",
-          "company_name": "Tapestry, Inc. Common Stock",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-06-27",
-          "filed": "2026-08-13",
-          "accn": "0001116132-26-000018",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1116132/000111613226000018/",
-          "score": 83.264763,
-          "metrics": {
-            "revenue_growth_1y": "0.14171195458370778",
-            "revenue_cagr_3y": "0.06337472877829087",
-            "eps_growth_1y": "7.916666666666668",
-            "fcf_growth_1y": "0.6569156230002742",
-            "earnings_stability": "0.641449398802889",
-            "operating_margin_expansion": "0.17997920327425115",
-            "operating_leverage": "3.471300093609063"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 87.07483,
-            "revenue_cagr_3y": 71.024735,
-            "eps_growth_1y": 98.958333,
-            "fcf_growth_1y": 87.931034,
-            "earnings_stability": 44.723618,
-            "operating_margin_expansion": 97.833935,
-            "operating_leverage": 95.306859
-          },
-          "missing_fields": [],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "CRDO",
-          "cik": "0001807794",
-          "company_name": "Credo Technology Group Holding Ltd - Ordinary Shares",
-          "model_family": "TECHNOLOGY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-05-02",
-          "filed": "2026-06-15",
-          "accn": "0001628280-26-043303",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026043303/",
-          "score": 83.248266,
-          "metrics": {
-            "revenue_growth_1y": "2.0567592009615936",
-            "revenue_cagr_3y": "0.9315228934650133",
-            "eps_growth_1y": "7.548387096774194",
-            "fcf_growth_1y": "13.023706153952174",
-            "earnings_stability": "0.3054798302701521",
-            "operating_margin_expansion": "0.24831240987562261",
-            "operating_leverage": "8.930230347578435"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 94.819466,
-            "revenue_cagr_3y": 97.068966,
-            "eps_growth_1y": 97.260274,
-            "fcf_growth_1y": 98.507463,
-            "earnings_stability": 13.405797,
-            "operating_margin_expansion": 84.083601,
-            "operating_leverage": 97.592295
-          },
-          "missing_fields": [],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "HTLM",
-          "cik": "0002023153",
-          "company_name": "HomesToLife Ltd - Ordinary Shares",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-06-11",
-          "accn": "0001493152-26-028303",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/2023153/000149315226028303/",
-          "score": 82.861735,
-          "metrics": {
-            "revenue_growth_1y": "0.12778357087142966",
-            "revenue_cagr_3y": "2.983333648528847",
-            "eps_growth_1y": "1.0",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.717151596071083",
-            "operating_margin_expansion": "0.02287594694770811",
-            "operating_leverage": "0.9088089159016355"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 84.693878,
-            "revenue_cagr_3y": 99.646643,
-            "eps_growth_1y": 90.625,
-            "fcf_growth_1y": null,
-            "earnings_stability": 55.778894,
-            "operating_margin_expansion": 79.061372,
-            "operating_leverage": 87.364621
-          },
-          "missing_fields": [
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "PSTL",
-          "cik": "0001759774",
-          "company_name": "Postal Realty Trust, Inc. Class A Common Stock",
-          "model_family": "REIT",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-24",
-          "accn": "0001628280-26-011212",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1759774/000162828026011212/",
-          "score": 82.847185,
-          "metrics": {
-            "revenue_growth_1y": "0.25468758183627505",
-            "revenue_cagr_3y": "0.21566349655667483",
-            "eps_growth_1y": "1.2380952380952381",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.6083367330619148",
-            "operating_margin_expansion": "0.08106071694116451",
-            "operating_leverage": "0.36678854792714755"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 92.741935,
-            "revenue_cagr_3y": 92.682927,
-            "eps_growth_1y": 87.5,
-            "fcf_growth_1y": null,
-            "earnings_stability": 45.37037,
-            "operating_margin_expansion": 83.333333,
-            "operating_leverage": 95.454545
-          },
-          "missing_fields": [
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "RCMT",
-          "cik": "0000700841",
-          "company_name": "RCM Technologies, Inc. - Common Stock",
-          "model_family": "OTHER_SERVICES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-01-03",
-          "filed": "2026-04-03",
-          "accn": "0000700841-18-000006",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/700841/000070084118000006/",
-          "score": 82.553783,
-          "metrics": {
-            "revenue_growth_1y": "",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "0.2732558139534884",
-            "fcf_growth_1y": "3.827682045580878",
-            "earnings_stability": "0.8070821928691928",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": null,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": 72.995781,
-            "fcf_growth_1y": 97.674419,
-            "earnings_stability": 76.99115,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "revenue_growth_1y",
-            "revenue_cagr_3y",
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "PGY",
-          "cik": "0001883085",
-          "company_name": "Pagaya Technologies Ltd. - Class A Ordinary Shares",
-          "model_family": "OTHER_FINANCIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-06-01",
-          "accn": "0001883085-26-000036",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1883085/000188308526000036/",
-          "score": 82.331879,
-          "metrics": {
-            "revenue_growth_1y": "0.2556278930864566",
-            "revenue_cagr_3y": "0.2253863569797263",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "6.487106017191977",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.14262664230061597",
-            "operating_leverage": "2.691514536596368"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 70.564516,
-            "revenue_cagr_3y": 74.770642,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": 97.752809,
-            "earnings_stability": null,
-            "operating_margin_expansion": 81.714286,
-            "operating_leverage": 86.857143
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "WAL",
-          "cik": "0001212545",
-          "company_name": "Western Alliance Bancorporation Common Stock (DE)",
-          "model_family": "BANKS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-23",
-          "accn": "0001628280-26-010336",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1212545/000162828026010336/",
-          "score": 82.090912,
-          "metrics": {
-            "revenue_growth_1y": "0.9970588235294118",
-            "revenue_cagr_3y": "0.4547328763015599",
-            "eps_growth_1y": "0.23109243697478976",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.8750453975264205",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
+            "operating_margin_expansion": "3.6109675719441787",
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
             "revenue_growth_1y": 100.0,
-            "revenue_cagr_3y": 98.734177,
-            "eps_growth_1y": 62.21374,
-            "fcf_growth_1y": null,
-            "earnings_stability": 67.41573,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "fcf_growth_1y",
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "REBN",
-          "cik": "0001707910",
-          "company_name": "Reborn Coffee, Inc. - Common Stock",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-04-22",
-          "accn": "0001213900-26-046490",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1707910/000121390026046490/",
-          "score": 81.961839,
-          "metrics": {
-            "revenue_growth_1y": "0.3653677899743495",
-            "revenue_cagr_3y": "0.35674125965960535",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.06344112573238025",
-            "operating_leverage": "-0.11116510425588277"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 94.557823,
-            "revenue_cagr_3y": 96.466431,
+            "revenue_cagr_3y": 100.0,
+            "revenue_cagr_5y": 100.0,
             "eps_growth_1y": null,
             "fcf_growth_1y": null,
             "earnings_stability": null,
-            "operating_margin_expansion": 90.974729,
-            "operating_leverage": 45.848375
+            "operating_margin_expansion": 96.428571,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
             "eps_growth_1y",
             "fcf_growth_1y",
-            "earnings_stability"
+            "earnings_stability",
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         },
         {
-          "ticker": "ATRO",
-          "cik": "0000008063",
-          "company_name": "Astronics Corporation - Common Stock",
-          "model_family": "INDUSTRIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-05-13",
-          "accn": "0000008063-26-000025",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/8063/000000806326000025/",
-          "score": 81.959899,
-          "metrics": {
-            "revenue_growth_1y": "0.08385695212376754",
-            "revenue_cagr_3y": "0.17242637317548914",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.05535911361780659",
-            "operating_leverage": "1.8033190472716834"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 63.133641,
-            "revenue_cagr_3y": 84.59596,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 84.328358,
-            "operating_leverage": 95.781638
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "SNEX",
-          "cik": "0000913760",
-          "company_name": "StoneX Group Inc. - Common Stock",
-          "model_family": "OTHER_FINANCIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-09-30",
-          "filed": "2025-11-28",
-          "accn": "0000913760-25-000196",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/913760/000091376025000196/",
-          "score": 81.474113,
-          "metrics": {
-            "revenue_growth_1y": "0.32526895176387915",
-            "revenue_cagr_3y": "0.26082730608472704",
-            "eps_growth_1y": "0.13296903460837872",
-            "fcf_growth_1y": "8.786959474756623",
-            "earnings_stability": "0.9091786873094294",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 74.596774,
-            "revenue_cagr_3y": 77.981651,
-            "eps_growth_1y": 58.389262,
-            "fcf_growth_1y": 100.0,
-            "earnings_stability": 96.402878,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "PLMR",
-          "cik": "0001761312",
-          "company_name": "Palomar Holdings, Inc. - Common stock",
-          "model_family": "INSURANCE",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-24",
-          "accn": "0001193125-26-067364",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1761312/000119312526067364/",
-          "score": 81.087393,
-          "metrics": {
-            "revenue_growth_1y": "0.5815589775810985",
-            "revenue_cagr_3y": "0.3885965030691725",
-            "eps_growth_1y": "0.6052060737527114",
-            "fcf_growth_1y": "0.5675050016480525",
-            "earnings_stability": "0.6505845843233846",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 95.744681,
-            "revenue_cagr_3y": 90.217391,
-            "eps_growth_1y": 79.487179,
-            "fcf_growth_1y": 88.636364,
-            "earnings_stability": 51.351351,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "INCY",
-          "cik": "0000879169",
-          "company_name": "Incyte Corporation - Common Stock",
+          "ticker": "DVLT",
+          "cik": "0001682149",
+          "company_name": "Datavault AI Inc. - Common Stock",
           "model_family": "OTHER_SERVICES",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
           "financial_period": "2025-12-31",
-          "filed": "2026-02-10",
-          "accn": "0000879169-26-000010",
+          "filed": "2026-03-18",
+          "accn": "0001104659-26-031280",
           "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/879169/000087916926000010/",
-          "score": 81.032861,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1682149/000110465926031280/",
+          "score": 98.816158,
           "metrics": {
-            "revenue_growth_1y": "0.21220913714153267",
-            "revenue_cagr_3y": "0.1483597101173968",
-            "eps_growth_1y": "40.1875",
+            "revenue_growth_1y": "13.61817501869858",
+            "revenue_cagr_3y": "1.264342835221505",
+            "revenue_cagr_5y": "0.7468563083515982",
+            "eps_growth_1y": "",
             "fcf_growth_1y": "",
-            "earnings_stability": "0.5774725674422445",
-            "operating_margin_expansion": "0.2801794924436883",
-            "operating_leverage": "23.473431119678207"
+            "earnings_stability": "",
+            "operating_margin_expansion": "7.074214831416781",
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
-            "revenue_growth_1y": 80.339806,
-            "revenue_cagr_3y": 79.62963,
-            "eps_growth_1y": 99.578059,
+            "revenue_growth_1y": 99.54023,
+            "revenue_cagr_3y": 98.148148,
+            "revenue_cagr_5y": 99.537037,
+            "eps_growth_1y": null,
             "fcf_growth_1y": null,
-            "earnings_stability": 37.168142,
-            "operating_margin_expansion": 89.87013,
-            "operating_leverage": 99.611399
+            "earnings_stability": null,
+            "operating_margin_expansion": 98.039216,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
-            "fcf_growth_1y"
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         },
         {
-          "ticker": "CURB",
-          "cik": "0002027317",
-          "company_name": "Curbline Properties Corp. Common Stock",
-          "model_family": "OTHER_FINANCIALS",
+          "ticker": "QXO",
+          "cik": "0001236275",
+          "company_name": "QXO, Inc. Common Stock",
+          "model_family": "INDUSTRIALS",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
           "financial_period": "2025-12-31",
-          "filed": "2026-02-10",
-          "accn": "0001193125-26-043647",
+          "filed": "2026-02-27",
+          "accn": "0001628280-26-012601",
           "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/2027317/000119312526043647/",
-          "score": 80.906,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1236275/000162828026012601/",
+          "score": 98.733976,
           "metrics": {
-            "revenue_growth_1y": "0.5130003888121375",
-            "revenue_cagr_3y": "0.35724534253756635",
-            "eps_growth_1y": "2.6999999999999997",
+            "revenue_growth_1y": "119.24956063268893",
+            "revenue_cagr_3y": "4.335918765551649",
+            "revenue_cagr_5y": "1.7802092939856822",
+            "eps_growth_1y": "",
             "fcf_growth_1y": "",
-            "earnings_stability": "0.7200925689848056",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
+            "earnings_stability": "",
+            "operating_margin_expansion": "1.2119667365643967",
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
-            "revenue_growth_1y": 81.048387,
-            "revenue_cagr_3y": 83.486239,
-            "eps_growth_1y": 98.657718,
+            "revenue_growth_1y": 99.569892,
+            "revenue_cagr_3y": 99.50495,
+            "revenue_cagr_5y": 99.556213,
+            "eps_growth_1y": null,
             "fcf_growth_1y": null,
-            "earnings_stability": 60.431655,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
+            "earnings_stability": null,
+            "operating_margin_expansion": 96.30485,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
+            "eps_growth_1y",
             "fcf_growth_1y",
-            "operating_margin_expansion",
-            "operating_leverage"
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "GEVO",
+          "cik": "0001392380",
+          "company_name": "Gevo, Inc. - Common Stock",
+          "model_family": "MATERIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-05",
+          "accn": "0001392380-26-000006",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1392380/000139238026000006/",
+          "score": 98.641369,
+          "metrics": {
+            "revenue_growth_1y": "8.493349098433344",
+            "revenue_cagr_3y": "4.148991164237575",
+            "revenue_cagr_5y": "0.9612778376309468",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "5.2435666864871715",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 98.765432,
+            "revenue_cagr_3y": 99.659864,
+            "revenue_cagr_5y": 99.612403,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 96.527778,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "SMTK",
+          "cik": "0001817760",
+          "company_name": "SmartKem, Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-04-08",
+          "accn": "0001104659-26-040562",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1817760/000110465926040562/",
+          "score": 98.132004,
+          "metrics": {
+            "revenue_growth_1y": "7.5",
+            "revenue_cagr_3y": "1.5919695239353033",
+            "revenue_cagr_5y": "0.4929484434719511",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "109.1951219512195",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 98.082596,
+            "revenue_cagr_3y": 99.576271,
+            "revenue_cagr_5y": 95.321637,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 99.547511,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "NIXX",
+          "cik": "0001462223",
+          "company_name": "Nixxy, Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-04-15",
+          "accn": "0001683168-26-002951",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1462223/000168316826002951/",
+          "score": 98.125781,
+          "metrics": {
+            "revenue_growth_1y": "16316.666666666666",
+            "revenue_cagr_3y": "0.6637548748838407",
+            "revenue_cagr_5y": "0.6303377632579321",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "2169.879935856842",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 99.557522,
+            "revenue_cagr_3y": 95.932203,
+            "revenue_cagr_5y": 97.465887,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 99.547511,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "EOSE",
+          "cik": "0001805077",
+          "company_name": "Eos Energy Enterprises, Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-26",
+          "accn": "0001628280-26-011961",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1805077/000162828026011961/",
+          "score": 97.855249,
+          "metrics": {
+            "revenue_growth_1y": "6.317890554914777",
+            "revenue_cagr_3y": "0.8536157428024129",
+            "revenue_cagr_5y": "2.4955947911262317",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "8.956131689452238",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 97.787611,
+            "revenue_cagr_3y": 97.288136,
+            "revenue_cagr_5y": 99.512671,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 96.832579,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "WKHS",
+          "cik": "0001425287",
+          "company_name": "Workhorse Group, Inc. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-31",
+          "accn": "0001628280-26-022417",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1425287/000162828026022417/",
+          "score": 97.729512,
+          "metrics": {
+            "revenue_growth_1y": "2.011215218625781",
+            "revenue_cagr_3y": "0.6161550140339089",
+            "revenue_cagr_5y": "0.7241870922615339",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "3.6308295217483155",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 98.709677,
+            "revenue_cagr_3y": 97.772277,
+            "revenue_cagr_5y": 96.745562,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 97.690531,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "ONDS",
+          "cik": "0001646188",
+          "company_name": "Ondas Inc - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-30",
+          "accn": "0001213900-26-035981",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1646188/000121390026035981/",
+          "score": 97.621157,
+          "metrics": {
+            "revenue_growth_1y": "6.0528291394411236",
+            "revenue_cagr_3y": "1.8783554665305093",
+            "revenue_cagr_5y": "0.8795419728065126",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "3.660628879519777",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 97.640118,
+            "revenue_cagr_3y": 99.576271,
+            "revenue_cagr_5y": 98.245614,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 95.022624,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "SPRU",
+          "cik": "0001772720",
+          "company_name": "Spruce Power Holding Corporation Class A Common Stock",
+          "model_family": "UTILITIES",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-07-24",
+          "accn": "0001628280-26-049579",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1772720/000162828026049579/",
+          "score": 97.141833,
+          "metrics": {
+            "revenue_growth_1y": "0.36178401354330325",
+            "revenue_cagr_3y": "0.6890881477072306",
+            "revenue_cagr_5y": "0.40622981735589425",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.7741958089872973",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 93.406593,
+            "revenue_cagr_3y": 98.823529,
+            "revenue_cagr_5y": 97.5,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 98.837209,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "NTRP",
+          "cik": "0000788611",
+          "company_name": "NextTrip, Inc. - Common Stock",
+          "model_family": "OTHER_SERVICES",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2026-02-28",
+          "filed": "2026-05-29",
+          "accn": "0001493152-26-026334",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/788611/000149315226026334/",
+          "score": 97.072914,
+          "metrics": {
+            "revenue_growth_1y": "6.409967233254159",
+            "revenue_cagr_3y": "1.1326964965505772",
+            "revenue_cagr_5y": "0.3441410785921579",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "10.380245277671476",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 99.54023,
+            "revenue_cagr_3y": 97.883598,
+            "revenue_cagr_5y": 91.358025,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 99.509804,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "WKSP",
+          "cik": "0001096275",
+          "company_name": "Worksport, Ltd. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-26",
+          "accn": "0001493152-26-012945",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1096275/000149315226012945/",
+          "score": 97.003621,
+          "metrics": {
+            "revenue_growth_1y": "0.8978098455997781",
+            "revenue_cagr_3y": "4.168331609537143",
+            "revenue_cagr_5y": "1.1556033637489214",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.6544502236722396",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 94.83871,
+            "revenue_cagr_3y": 99.50495,
+            "revenue_cagr_5y": 98.52071,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 95.150115,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "IBRX",
+          "cik": "0001326110",
+          "company_name": "ImmunityBio, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-23",
+          "accn": "0001326110-26-000030",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1326110/000132611026000030/",
+          "score": 96.855288,
+          "metrics": {
+            "revenue_growth_1y": "6.683146829433706",
+            "revenue_cagr_3y": "6.782531903289541",
+            "revenue_cagr_5y": "1.8480521102967962",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "21.082319769509144",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 96.487985,
+            "revenue_cagr_3y": 99.54955,
+            "revenue_cagr_5y": 97.922078,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 93.461538,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "SPWR",
+          "cik": "0001838987",
+          "company_name": "SunPower Inc. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-28",
+          "filed": "2026-07-24",
+          "accn": "0001213900-26-081056",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1838987/000121390026081056/",
+          "score": 96.735741,
+          "metrics": {
+            "revenue_growth_1y": "1.7588236376009267",
+            "revenue_cagr_3y": "0.6546387144519732",
+            "revenue_cagr_5y": "0.5928673306638135",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.5402441619613396",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 98.064516,
+            "revenue_cagr_3y": 98.267327,
+            "revenue_cagr_5y": 96.153846,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 94.457275,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "TRAW",
+          "cik": "0001130598",
+          "company_name": "Traws Pharma, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-04-15",
+          "accn": "0001104659-26-043832",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1130598/000110465926043832/",
+          "score": 96.232243,
+          "metrics": {
+            "revenue_growth_1y": "11.345132743362832",
+            "revenue_cagr_3y": "1.310728551346454",
+            "revenue_cagr_5y": "0.6459933340207362",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "623.5666412915913",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 97.4122,
+            "revenue_cagr_3y": 95.27027,
+            "revenue_cagr_5y": 92.727273,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 99.519231,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "SPRO",
+          "cik": "0001701108",
+          "company_name": "Spero Therapeutics, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-26",
+          "accn": "0001193125-26-126192",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1701108/000119312526126192/",
+          "score": 95.854999,
+          "metrics": {
+            "revenue_growth_1y": "32.924528301886795",
+            "revenue_cagr_3y": "0.7129931525282283",
+            "revenue_cagr_5y": "1.176205145750893",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "198.24021299497196",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 98.890943,
+            "revenue_cagr_3y": 90.540541,
+            "revenue_cagr_5y": 96.103896,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 97.884615,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "AEVA",
+          "cik": "0001789029",
+          "company_name": "Aeva Technologies, Inc. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-20",
+          "accn": "0001193125-26-116518",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1789029/000119312526116518/",
+          "score": 95.774134,
+          "metrics": {
+            "revenue_growth_1y": "0.9943739658025372",
+            "revenue_cagr_3y": "0.6275566506562931",
+            "revenue_cagr_5y": "0.30145049053857087",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "10.412964971075802",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 95.698925,
+            "revenue_cagr_3y": 98.019802,
+            "revenue_cagr_5y": 90.532544,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 98.845266,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "ACTG",
+          "cik": "0000934549",
+          "company_name": "Acacia Research Corporation - Common Stock",
+          "model_family": "OTHER_SERVICES",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-12",
+          "accn": "0000934549-26-000010",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/934549/000093454926000010/",
+          "score": 95.707967,
+          "metrics": {
+            "revenue_growth_1y": "1.3320034011380733",
+            "revenue_cagr_3y": "0.6885634025100316",
+            "revenue_cagr_5y": "0.5713601901585428",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.2916662365578624",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 97.701149,
+            "revenue_cagr_3y": 96.296296,
+            "revenue_cagr_5y": 98.148148,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 90.686275,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "FDMT",
+          "cik": "0001650648",
+          "company_name": "4D Molecular Therapeutics, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-18",
+          "accn": "0001193125-26-114075",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1650648/000119312526114075/",
+          "score": 95.647047,
+          "metrics": {
+            "revenue_growth_1y": "2301.945945945946",
+            "revenue_cagr_3y": "2.007813148537106",
+            "revenue_cagr_5y": "0.4485661462030144",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "5074.911364203693",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 99.537893,
+            "revenue_cagr_3y": 97.297297,
+            "revenue_cagr_5y": 86.233766,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 99.519231,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "LCID",
+          "cik": "0001811210",
+          "company_name": "Lucid Group, Inc. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-24",
+          "accn": "0001628280-26-011053",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1811210/000162828026011053/",
+          "score": 95.479862,
+          "metrics": {
+            "revenue_growth_1y": "0.6758311133998158",
+            "revenue_cagr_3y": "0.305608777770249",
+            "revenue_cagr_5y": "2.2098912577577545",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "1.1527867276168617",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 94.193548,
+            "revenue_cagr_3y": 92.326733,
+            "revenue_cagr_5y": 99.556213,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 95.842956,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "OUST",
+          "cik": "0001816581",
+          "company_name": "Ouster, Inc. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-02",
+          "accn": "0001628280-26-013313",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1816581/000162828026013313/",
+          "score": 95.2356,
+          "metrics": {
+            "revenue_growth_1y": "0.5245947381211691",
+            "revenue_cagr_3y": "0.6040343479127346",
+            "revenue_cagr_5y": "0.5505644114092736",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.5008070776062026",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 93.333333,
+            "revenue_cagr_3y": 97.524752,
+            "revenue_cagr_5y": 95.857988,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 94.226328,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         },
@@ -4822,341 +4190,1171 @@
           "model_family": "CONSUMER_STAPLES",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
           "financial_period": "2025-12-31",
           "filed": "2026-03-27",
           "accn": "0001628280-26-021706",
           "data_as_of": "2026-11-05",
           "source_url": "https://www.sec.gov/Archives/edgar/data/1840780/000162828026021706/",
-          "score": 80.780547,
+          "score": 95.132054,
           "metrics": {
             "revenue_growth_1y": "0.2681577429335571",
             "revenue_cagr_3y": "0.35413501945121606",
+            "revenue_cagr_5y": "2.5827733609457204",
             "eps_growth_1y": "",
             "fcf_growth_1y": "",
             "earnings_stability": "",
             "operating_margin_expansion": "0.2512917561316239",
-            "operating_leverage": "-0.20610713921628676"
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
-            "revenue_growth_1y": 88.888889,
-            "revenue_cagr_3y": 97.196262,
+            "revenue_growth_1y": 88.617886,
+            "revenue_cagr_3y": 96.296296,
+            "revenue_cagr_5y": 100.0,
             "eps_growth_1y": null,
             "fcf_growth_1y": null,
             "earnings_stability": null,
-            "operating_margin_expansion": 96.296296,
-            "operating_leverage": 40.740741
+            "operating_margin_expansion": 95.614035,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
             "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "AMCR",
-          "cik": "0001748790",
-          "company_name": "Amcor plc Ordinary Shares",
-          "model_family": "CONSUMER_DISCRETIONARY",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-06-30",
-          "filed": "2026-08-14",
-          "accn": "0001748790-26-000022",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1748790/000174879026000022/",
-          "score": 80.322035,
-          "metrics": {
-            "revenue_growth_1y": "0.5661269904723831",
-            "revenue_cagr_3y": "0.1694923488530684",
-            "eps_growth_1y": "0.4937499999999999",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.7078361779848596",
-            "operating_margin_expansion": "0.013561553076379018",
-            "operating_leverage": "0.3159344565048221"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 96.938776,
-            "revenue_cagr_3y": 92.579505,
-            "eps_growth_1y": 85.9375,
-            "fcf_growth_1y": null,
-            "earnings_stability": 53.768844,
-            "operating_margin_expansion": 72.924188,
-            "operating_leverage": 79.783394
-          },
-          "missing_fields": [
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "CMC",
-          "cik": "0000022444",
-          "company_name": "Commercial Metals Company Common Stock",
-          "model_family": "MATERIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2026-08-31",
-          "filed": "2026-10-16",
-          "accn": "0000022444-26-000065",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/22444/000002244426000065/",
-          "score": 80.250428,
-          "metrics": {
-            "revenue_growth_1y": "",
-            "revenue_cagr_3y": "",
-            "eps_growth_1y": "6.8933333333333335",
-            "fcf_growth_1y": "0.5344132407149422",
-            "earnings_stability": "0.6443029075001335",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": null,
-            "revenue_cagr_3y": null,
-            "eps_growth_1y": 98.019802,
-            "fcf_growth_1y": 86.25,
-            "earnings_stability": 56.481481,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
-            "revenue_growth_1y",
-            "revenue_cagr_3y",
-            "operating_margin_expansion",
-            "operating_leverage"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "PAYS",
-          "cik": "0001496443",
-          "company_name": "Paysign, Inc. - Common Stock",
-          "model_family": "OTHER_SERVICES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-25",
-          "accn": "0001683168-26-002180",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1496443/000168316826002180/",
-          "score": 80.205339,
-          "metrics": {
-            "revenue_growth_1y": "0.4049636965613781",
-            "revenue_cagr_3y": "0.29193175123431336",
-            "eps_growth_1y": "1.0",
-            "fcf_growth_1y": "1.2761780613452633",
-            "earnings_stability": "0.4651424091021394",
-            "operating_margin_expansion": "0.07226367369491404",
-            "operating_leverage": "5.802849653896964"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 88.592233,
-            "revenue_cagr_3y": 90.47619,
-            "eps_growth_1y": 86.919831,
-            "fcf_growth_1y": 92.55814,
-            "earnings_stability": 25.221239,
-            "operating_margin_expansion": 80.519481,
-            "operating_leverage": 97.150259
-          },
-          "missing_fields": [],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "SNES",
-          "cik": "0001680378",
-          "company_name": "SenesTech, Inc. - Common Stock",
-          "model_family": "MATERIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-03-13",
-          "accn": "0001628280-26-017384",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1680378/000162828026017384/",
-          "score": 80.200203,
-          "metrics": {
-            "revenue_growth_1y": "0.1960150780829295",
-            "revenue_cagr_3y": "0.2964797272642328",
-            "eps_growth_1y": "",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "0.43624413459713063",
-            "operating_leverage": "-0.15504852343418563"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 84.137931,
-            "revenue_cagr_3y": 89.43662,
-            "eps_growth_1y": null,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": 92.1875,
-            "operating_leverage": 55.03876
-          },
-          "missing_fields": [
-            "eps_growth_1y",
-            "fcf_growth_1y",
-            "earnings_stability"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "HOOD",
-          "cik": "0001783879",
-          "company_name": "Robinhood Markets, Inc. - Class A Common Stock",
-          "model_family": "OTHER_FINANCIALS",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-20",
-          "accn": "0001783879-26-000029",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1783879/000178387926000029/",
-          "score": 80.050581,
-          "metrics": {
-            "revenue_growth_1y": "0.515757370382921",
-            "revenue_cagr_3y": "0.487739909278325",
-            "eps_growth_1y": "0.32499999999999996",
-            "fcf_growth_1y": "",
-            "earnings_stability": "",
-            "operating_margin_expansion": "",
-            "operating_leverage": ""
-          },
-          "percentiles": {
-            "revenue_growth_1y": 81.854839,
-            "revenue_cagr_3y": 87.155963,
-            "eps_growth_1y": 71.14094,
-            "fcf_growth_1y": null,
-            "earnings_stability": null,
-            "operating_margin_expansion": null,
-            "operating_leverage": null
-          },
-          "missing_fields": [
             "fcf_growth_1y",
             "earnings_stability",
-            "operating_margin_expansion",
-            "operating_leverage"
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         },
         {
-          "ticker": "VJET",
-          "cik": "0001716621",
-          "company_name": "Flyte Aviation, Inc. Common Stock",
+          "ticker": "LQDA",
+          "cik": "0001819576",
+          "company_name": "Liquidia Corporation - Common Stock",
           "model_family": "HEALTHCARE",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
           "financial_period": "2025-12-31",
-          "filed": "2026-03-31",
-          "accn": "0001437749-26-010549",
+          "filed": "2026-03-05",
+          "accn": "0001104659-26-023804",
           "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1716621/000143774926010549/",
-          "score": 80.048216,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1819576/000110465926023804/",
+          "score": 94.944636,
           "metrics": {
-            "revenue_growth_1y": "0.95",
-            "revenue_cagr_3y": "2.8807672028228932",
+            "revenue_growth_1y": "10.311803372392111",
+            "revenue_cagr_3y": "1.149407456734119",
+            "revenue_cagr_5y": "1.925285796212279",
             "eps_growth_1y": "",
             "fcf_growth_1y": "",
             "earnings_stability": "",
-            "operating_margin_expansion": "0.9534188034188027",
-            "operating_leverage": "-0.069452103531086"
+            "operating_margin_expansion": "8.341825911135226",
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
-            "revenue_growth_1y": 86.895161,
-            "revenue_cagr_3y": 98.58156,
+            "revenue_growth_1y": 97.227357,
+            "revenue_cagr_3y": 94.369369,
+            "revenue_cagr_5y": 98.181818,
             "eps_growth_1y": null,
             "fcf_growth_1y": null,
             "earnings_stability": null,
-            "operating_margin_expansion": 80.645161,
-            "operating_leverage": 54.070981
+            "operating_margin_expansion": 90.0,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
             "eps_growth_1y",
             "fcf_growth_1y",
-            "earnings_stability"
+            "earnings_stability",
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         },
         {
-          "ticker": "NWN",
-          "cik": "0001733998",
-          "company_name": "Northwest Natural Holding Company Common Stock",
-          "model_family": "UTILITIES",
-          "accounting_standard": "US_GAAP",
-          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-27",
-          "accn": "0001733998-26-000012",
-          "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1733998/000173399826000012/",
-          "score": 80.011114,
-          "metrics": {
-            "revenue_growth_1y": "0.11827381582211172",
-            "revenue_cagr_3y": "0.07516643367995446",
-            "eps_growth_1y": "0.3645320197044337",
-            "fcf_growth_1y": "",
-            "earnings_stability": "0.9097456169908678",
-            "operating_margin_expansion": "0.05207370329079544",
-            "operating_leverage": "0.35126715371885786"
-          },
-          "percentiles": {
-            "revenue_growth_1y": 63.095238,
-            "revenue_cagr_3y": 73.170732,
-            "eps_growth_1y": 82.051282,
-            "fcf_growth_1y": null,
-            "earnings_stability": 78.205128,
-            "operating_margin_expansion": 89.873418,
-            "operating_leverage": 93.670886
-          },
-          "missing_fields": [
-            "fcf_growth_1y"
-          ],
-          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
-        },
-        {
-          "ticker": "IONQ",
-          "cik": "0001824920",
-          "company_name": "IonQ, Inc. Common Stock",
+          "ticker": "LEDS",
+          "cik": "0001333822",
+          "company_name": "SemiLEDS Corporation - Common Stock",
           "model_family": "TECHNOLOGY",
           "accounting_standard": "US_GAAP",
           "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
-          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS",
-          "financial_period": "2025-12-31",
-          "filed": "2026-02-25",
-          "accn": "0001193125-26-071562",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-08-31",
+          "filed": "2026-07-14",
+          "accn": "0001193125-25-301379",
           "data_as_of": "2026-11-05",
-          "source_url": "https://www.sec.gov/Archives/edgar/data/1824920/000119312526071562/",
-          "score": 79.809036,
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1333822/000119312525301379/",
+          "score": 94.533152,
           "metrics": {
-            "revenue_growth_1y": "2.01850347085181",
-            "revenue_cagr_3y": "1.2685048343248502",
+            "revenue_growth_1y": "7.298089909318927",
+            "revenue_cagr_3y": "0.8268792086621937",
+            "revenue_cagr_5y": "0.4795377261635463",
             "eps_growth_1y": "",
             "fcf_growth_1y": "",
             "earnings_stability": "",
-            "operating_margin_expansion": "0.5226374009110986",
-            "operating_leverage": "-0.29231990844188127"
+            "operating_margin_expansion": "0.5223199966756932",
+            "operating_leverage_ratio": ""
           },
           "percentiles": {
-            "revenue_growth_1y": 94.505495,
-            "revenue_cagr_3y": 98.103448,
+            "revenue_growth_1y": 97.935103,
+            "revenue_cagr_3y": 97.118644,
+            "revenue_cagr_5y": 94.54191,
             "eps_growth_1y": null,
             "fcf_growth_1y": null,
             "earnings_stability": null,
-            "operating_margin_expansion": 88.745981,
-            "operating_leverage": 37.88122
+            "operating_margin_expansion": 88.536953,
+            "operating_leverage_ratio": null
           },
           "missing_fields": [
             "eps_growth_1y",
             "fcf_growth_1y",
-            "earnings_stability"
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "EVGO",
+          "cik": "0001821159",
+          "company_name": "EVgo Inc. - Common Stock",
+          "model_family": "OTHER_SERVICES",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-09",
+          "accn": "0001104659-26-024827",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1821159/000110465926024827/",
+          "score": 94.276759,
+          "metrics": {
+            "revenue_growth_1y": "0.49551640221941007",
+            "revenue_cagr_3y": "0.915928681099935",
+            "revenue_cagr_5y": "0.9670276725424776",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.22417399499072543",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 91.264368,
+            "revenue_cagr_3y": 97.089947,
+            "revenue_cagr_5y": 99.537037,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 89.215686,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "QBTS",
+          "cik": "0001907982",
+          "company_name": "D-Wave Quantum Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-26",
+          "accn": "0001907982-26-000026",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1907982/000190798226000026/",
+          "score": 94.132269,
+          "metrics": {
+            "revenue_growth_1y": "1.7854310637815791",
+            "revenue_cagr_3y": "0.5076281048937841",
+            "revenue_cagr_5y": "0.3665632413254569",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "4.666341686192088",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 94.690265,
+            "revenue_cagr_3y": 94.745763,
+            "revenue_cagr_5y": 91.617934,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 95.475113,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "CRMD",
+          "cik": "0001410098",
+          "company_name": "CorMedix Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-05",
+          "accn": "0001213900-26-023889",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1410098/000121390026023889/",
+          "score": 93.823292,
+          "metrics": {
+            "revenue_growth_1y": "6.1703395288921605",
+            "revenue_cagr_3y": "15.81743773435193",
+            "revenue_cagr_5y": "3.198282620394659",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.995932457862664",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 95.748614,
+            "revenue_cagr_3y": 99.54955,
+            "revenue_cagr_5y": 99.61039,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 80.384615,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "IDYA",
+          "cik": "0001676725",
+          "company_name": "IDEAYA Biosciences, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-17",
+          "accn": "0001193125-26-054533",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1676725/000119312526054533/",
+          "score": 93.74432,
+          "metrics": {
+            "revenue_growth_1y": "30.244285714285713",
+            "revenue_cagr_3y": "0.6252269855287407",
+            "revenue_cagr_5y": "0.6211620574865953",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "45.98229308869541",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 98.521257,
+            "revenue_cagr_3y": 88.738739,
+            "revenue_cagr_5y": 91.948052,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 95.769231,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "CLSK",
+          "cik": "0000827876",
+          "company_name": "CleanSpark, Inc. - Common Stock",
+          "model_family": "OTHER_FINANCIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-09-30",
+          "filed": "2025-11-25",
+          "accn": "0001193125-25-297510",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/827876/000119312525297510/",
+          "score": 93.342995,
+          "metrics": {
+            "revenue_growth_1y": "1.0221074074855925",
+            "revenue_cagr_3y": "0.7991800221770433",
+            "revenue_cagr_5y": "1.3805865773334371",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.8094983966544722",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 90.34749,
+            "revenue_cagr_3y": 92.825112,
+            "revenue_cagr_5y": 98.895028,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 91.304348,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "ARWR",
+          "cik": "0000879407",
+          "company_name": "Arrowhead Pharmaceuticals, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-09-30",
+          "filed": "2025-11-25",
+          "accn": "0000879407-25-000029",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/879407/000087940725000029/",
+          "score": 93.205994,
+          "metrics": {
+            "revenue_growth_1y": "232.5815263306111",
+            "revenue_cagr_3y": "0.5050452969338095",
+            "revenue_cagr_5y": "0.5663754755437986",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "169.3891960036117",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 99.537893,
+            "revenue_cagr_3y": 84.684685,
+            "revenue_cagr_5y": 90.909091,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 97.692308,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "CPOP",
+          "cik": "0001807389",
+          "company_name": "Pop Culture Group Co., Ltd - Class A Ordinary Shares",
+          "model_family": "COMMUNICATIONS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-06-30",
+          "filed": "2025-11-17",
+          "accn": "0001213900-25-111512",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1807389/000121390025111512/",
+          "score": 92.893314,
+          "metrics": {
+            "revenue_growth_1y": "1.271600085923073",
+            "revenue_cagr_3y": "0.4937926251320257",
+            "revenue_cagr_5y": "0.46993403397350453",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.22875480737559292",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 97.169811,
+            "revenue_cagr_3y": 96.511628,
+            "revenue_cagr_5y": 88.571429,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 89.320388,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "SENS",
+          "cik": "0001616543",
+          "company_name": "Senseonics Holdings, Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-02",
+          "accn": "0001104659-26-022298",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1616543/000110465926022298/",
+          "score": 92.180864,
+          "metrics": {
+            "revenue_growth_1y": "0.5689302242791028",
+            "revenue_cagr_3y": "0.2908397705503709",
+            "revenue_cagr_5y": "0.915448555682697",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "1.3922022816886468",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 88.495575,
+            "revenue_cagr_3y": 88.983051,
+            "revenue_cagr_5y": 98.635478,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 92.609351,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "ALAB",
+          "cik": "0001736297",
+          "company_name": "Astera Labs, Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-20",
+          "accn": "0001736297-26-000010",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1736297/000173629726000010/",
+          "score": 91.991224,
+          "metrics": {
+            "revenue_growth_1y": "1.151265487395594",
+            "revenue_cagr_3y": "1.2013680953062367",
+            "revenue_cagr_5y": "",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "1.750749284884459",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.4963042492127",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 93.067847,
+            "revenue_cagr_3y": 97.966102,
+            "revenue_cagr_5y": null,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": 88.695652,
+            "earnings_stability": null,
+            "operating_margin_expansion": 88.235294,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "revenue_cagr_5y",
+            "eps_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "EVLV",
+          "cik": "0001805385",
+          "company_name": "Evolv Technologies Holdings, Inc. - Class A Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-10",
+          "accn": "0001805385-26-000012",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1805385/000180538526000012/",
+          "score": 91.440804,
+          "metrics": {
+            "revenue_growth_1y": "0.4047561738795551",
+            "revenue_cagr_3y": "0.40389315165171435",
+            "revenue_cagr_5y": "0.9349987153384212",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.4602876282752788",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 85.39823,
+            "revenue_cagr_3y": 93.220339,
+            "revenue_cagr_5y": 99.512671,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 87.631976,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "RKLB",
+          "cik": "0001819994",
+          "company_name": "Rocket Lab Corporation - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-26",
+          "accn": "0001819994-26-000013",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1819994/000181999426000013/",
+          "score": 91.375071,
+          "metrics": {
+            "revenue_growth_1y": "0.3795957947246076",
+            "revenue_cagr_3y": "0.4180486722213492",
+            "revenue_cagr_5y": "0.7648763864768935",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.05485330057797583",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 89.032258,
+            "revenue_cagr_3y": 95.29703,
+            "revenue_cagr_5y": 97.337278,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 83.833718,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "RBRK",
+          "cik": "0001943896",
+          "company_name": "Rubrik, Inc. Class A Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2026-01-31",
+          "filed": "2026-03-19",
+          "accn": "0001943896-26-000013",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1943896/000194389626000013/",
+          "score": 91.363376,
+          "metrics": {
+            "revenue_growth_1y": "0.48463133245501644",
+            "revenue_cagr_3y": "0.2993922808043188",
+            "revenue_cagr_5y": "",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "7.080815493092556",
+            "earnings_stability": "",
+            "operating_margin_expansion": "1.0167243501943313",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 86.873156,
+            "revenue_cagr_3y": 89.322034,
+            "revenue_cagr_5y": null,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": 97.101449,
+            "earnings_stability": null,
+            "operating_margin_expansion": 92.156863,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "revenue_cagr_5y",
+            "eps_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "KRUS",
+          "cik": "0001772177",
+          "company_name": "Kura Sushi USA, Inc. - Class A Common Stock",
+          "model_family": "CONSUMER_DISCRETIONARY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-08-31",
+          "filed": "2025-11-06",
+          "accn": "0001193125-25-269773",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1772177/000119312525269773/",
+          "score": 91.255758,
+          "metrics": {
+            "revenue_growth_1y": "0.18877911376439926",
+            "revenue_cagr_3y": "0.26072447734489823",
+            "revenue_cagr_5y": "0.44324531524290656",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.03153136621078222",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 90.064103,
+            "revenue_cagr_3y": 94.863014,
+            "revenue_cagr_5y": 98.062016,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 82.033898,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "CUE",
+          "cik": "0001645460",
+          "company_name": "Cue Biopharma, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-16",
+          "accn": "0001193125-26-108287",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1645460/000119312526108287/",
+          "score": 91.157614,
+          "metrics": {
+            "revenue_growth_1y": "1.9574674275869497",
+            "revenue_cagr_3y": "1.8039689066868219",
+            "revenue_cagr_5y": "0.5417129905991998",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "3.501889545068754",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 92.606285,
+            "revenue_cagr_3y": 96.846847,
+            "revenue_cagr_5y": 88.831169,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 86.346154,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "RDDT",
+          "cik": "0001713445",
+          "company_name": "Reddit, Inc. Class A Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-06",
+          "accn": "0001713445-26-000022",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1713445/000171344526000022/",
+          "score": 91.098657,
+          "metrics": {
+            "revenue_growth_1y": "0.6939682588514888",
+            "revenue_cagr_3y": "0.4892097488924392",
+            "revenue_cagr_5y": "",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "2.1700908164210917",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.631811399799983",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 90.117994,
+            "revenue_cagr_3y": 94.237288,
+            "revenue_cagr_5y": null,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": 90.144928,
+            "earnings_stability": null,
+            "operating_margin_expansion": 89.894419,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "revenue_cagr_5y",
+            "eps_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "WLDS",
+          "cik": "0001887673",
+          "company_name": "Wearable Devices Ltd. - Ordinary Share",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-12",
+          "accn": "0001213900-26-026977",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1887673/000121390026026977/",
+          "score": 91.095235,
+          "metrics": {
+            "revenue_growth_1y": "0.23946360153256707",
+            "revenue_cagr_3y": "1.43113587272363",
+            "revenue_cagr_5y": "0.6256789191227323",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "2.1029449211509643",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 74.631268,
+            "revenue_cagr_3y": 98.813559,
+            "revenue_cagr_5y": 97.270955,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 93.665158,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "XTIA",
+          "cik": "0001529113",
+          "company_name": "XTI Aerospace, Inc. Common Stock  - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-04-15",
+          "accn": "0001213900-26-043785",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1529113/000121390026043785/",
+          "score": 90.872735,
+          "metrics": {
+            "revenue_growth_1y": "6.023735165521549",
+            "revenue_cagr_3y": "0.5439387714040227",
+            "revenue_cagr_5y": "0.1932730439154262",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "7.36114500469221",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 97.492625,
+            "revenue_cagr_3y": 94.915254,
+            "revenue_cagr_5y": 74.853801,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 96.229261,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "GWAV",
+          "cik": "0001589149",
+          "company_name": "Greenwave Technology Solutions, Inc. - Common Stock",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-09-18",
+          "accn": "0001493152-26-043414",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1589149/000149315226043414/",
+          "score": 90.390777,
+          "metrics": {
+            "revenue_growth_1y": "0.4005438070799856",
+            "revenue_cagr_3y": "0.1114869029960941",
+            "revenue_cagr_5y": "4.825357151689994",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.6036096640944466",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 90.107527,
+            "revenue_cagr_3y": 76.980198,
+            "revenue_cagr_5y": 99.556213,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 94.919169,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "RELY",
+          "cik": "0001782170",
+          "company_name": "Remitly Global, Inc. - Common stock",
+          "model_family": "OTHER_SERVICES",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-18",
+          "accn": "0001628280-26-009038",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1782170/000162828026009038/",
+          "score": 90.261528,
+          "metrics": {
+            "revenue_growth_1y": "0.2936668241079843",
+            "revenue_cagr_3y": "0.357459341204021",
+            "revenue_cagr_5y": "0.4479768378104354",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "1.799778404894032",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.07830015373974614",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 86.206897,
+            "revenue_cagr_3y": 92.063492,
+            "revenue_cagr_5y": 95.679012,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": 95.495495,
+            "earnings_stability": null,
+            "operating_margin_expansion": 81.862745,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "BBIO",
+          "cik": "0001743881",
+          "company_name": "BridgeBio Pharma, Inc. - Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-02-24",
+          "accn": "0001743881-26-000009",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1743881/000174388126000009/",
+          "score": 90.200266,
+          "metrics": {
+            "revenue_growth_1y": "1.262602410072915",
+            "revenue_cagr_3y": "0.8627365080955245",
+            "revenue_cagr_5y": "1.2746914315571662",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "1.6297356155406089",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 90.203327,
+            "revenue_cagr_3y": 91.666667,
+            "revenue_cagr_5y": 96.623377,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 82.307692,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "NIO",
+          "cik": "0001736541",
+          "company_name": "NIO Inc. American depositary shares, each  representing one Class A ordinary share",
+          "model_family": "INDUSTRIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-04-10",
+          "accn": "0001104659-26-041765",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1736541/000110465926041765/",
+          "score": 90.174653,
+          "metrics": {
+            "revenue_growth_1y": "0.3892601008729746",
+            "revenue_cagr_3y": "0.20533538379585803",
+            "revenue_cagr_5y": "0.3809485384539686",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.17228458263172455",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 89.677419,
+            "revenue_cagr_3y": 87.128713,
+            "revenue_cagr_5y": 92.899408,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 90.993072,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "DAVE",
+          "cik": "0001841408",
+          "company_name": "Dave Inc.  - Class A Common Stock",
+          "model_family": "OTHER_FINANCIALS",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-02",
+          "accn": "0001193125-26-085370",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1841408/000119312526085370/",
+          "score": 89.725731,
+          "metrics": {
+            "revenue_growth_1y": "0.5967165692816558",
+            "revenue_cagr_3y": "0.39331003332594827",
+            "revenue_cagr_5y": "",
+            "eps_growth_1y": "2.170995670995671",
+            "fcf_growth_1y": "1.3199679679679681",
+            "earnings_stability": "",
+            "operating_margin_expansion": "",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 84.555985,
+            "revenue_cagr_3y": 86.547085,
+            "revenue_cagr_5y": null,
+            "eps_growth_1y": 96.688742,
+            "fcf_growth_1y": 91.111111,
+            "earnings_stability": null,
+            "operating_margin_expansion": null,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "revenue_cagr_5y",
+            "earnings_stability",
+            "operating_margin_expansion",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "VNRX",
+          "cik": "0000093314",
+          "company_name": "VolitionRX Limited Common Stock",
+          "model_family": "HEALTHCARE",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-03-31",
+          "accn": "0001477932-26-001832",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/93314/000147793226001832/",
+          "score": 89.368526,
+          "metrics": {
+            "revenue_growth_1y": "0.4003798912210754",
+            "revenue_cagr_3y": "0.7795630525153163",
+            "revenue_cagr_5y": "1.6418060514473987",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "9.324304004698915",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 77.634011,
+            "revenue_cagr_3y": 91.216216,
+            "revenue_cagr_5y": 97.662338,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 90.961538,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "CIIT",
+          "cik": "0001557798",
+          "company_name": "Tianci International, Inc. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2026-07-31",
+          "filed": "2026-11-04",
+          "accn": "0001683168-26-008309",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1557798/000168316826008309/",
+          "score": 89.153232,
+          "metrics": {
+            "revenue_growth_1y": "0.5342686203604288",
+            "revenue_cagr_3y": "2.156740548370181",
+            "revenue_cagr_5y": "",
+            "eps_growth_1y": "2.3333333333333335",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.11936182284998942",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 87.905605,
+            "revenue_cagr_3y": 99.576271,
+            "revenue_cagr_5y": null,
+            "eps_growth_1y": 92.358804,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 76.772247,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "revenue_cagr_5y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
+          ],
+          "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
+        },
+        {
+          "ticker": "LASE",
+          "cik": "0001807887",
+          "company_name": "LASE Corp. - Common Stock",
+          "model_family": "TECHNOLOGY",
+          "accounting_standard": "US_GAAP",
+          "status": "GARP_EXPERIMENTAL_HISTORICAL_GROWTH",
+          "reason": "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4",
+          "financial_period": "2025-12-31",
+          "filed": "2026-04-20",
+          "accn": "0001493152-26-018110",
+          "data_as_of": "2026-11-05",
+          "source_url": "https://www.sec.gov/Archives/edgar/data/1807887/000149315226018110/",
+          "score": 89.108729,
+          "metrics": {
+            "revenue_growth_1y": "1.4426147137675263",
+            "revenue_cagr_3y": "0.2889406172832216",
+            "revenue_cagr_5y": "0.3109609375921858",
+            "eps_growth_1y": "",
+            "fcf_growth_1y": "",
+            "earnings_stability": "",
+            "operating_margin_expansion": "0.29913429859169915",
+            "operating_leverage_ratio": ""
+          },
+          "percentiles": {
+            "revenue_growth_1y": 93.657817,
+            "revenue_cagr_3y": 88.474576,
+            "revenue_cagr_5y": 89.083821,
+            "eps_growth_1y": null,
+            "fcf_growth_1y": null,
+            "earnings_stability": null,
+            "operating_margin_expansion": 85.218703,
+            "operating_leverage_ratio": null
+          },
+          "missing_fields": [
+            "eps_growth_1y",
+            "fcf_growth_1y",
+            "earnings_stability",
+            "operating_leverage_ratio"
           ],
           "valuation_support": "HISTORICAL_GROWTH_ONLY_NO_VALUATION"
         }
@@ -5165,9 +5363,15 @@
     },
     "intersections": {
       "value_quality": 3,
-      "value_garp": 0,
-      "quality_garp": 3,
+      "value_garp": 1,
+      "quality_garp": 2,
       "all_three": 0
+    },
+    "classification": {
+      "p65_rows": 5453,
+      "value_rows_matched": 5453,
+      "quality_rows_matched": 5453,
+      "garp_rows_matched": 5453
     }
   },
   "scanner": {

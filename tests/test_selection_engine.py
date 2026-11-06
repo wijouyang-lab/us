@@ -34,8 +34,8 @@ def test_value_candidates_and_positive_composite():
     assert len(top) == 50
     assert len({r["cik"] for r in top}) == 50
     # top Value names must not be selected on negative earnings/FCF
-    assert all(float(r["earnings_yield"]) >= 0 for r in top)
-    assert all(float(r["fcf_yield"]) >= 0 for r in top)
+    assert all(float(r["earnings_yield"]) > 0 for r in top)
+    assert all(float(r["fcf_yield"]) > 0 for r in top)
     assert all(float(r["pb"]) > 0 and float(r["ps"]) > 0 for r in top)
     assert all(r["value_composite_experimental"] for r in top)
 
@@ -88,10 +88,10 @@ def test_snapshot_counts_hashes_and_statuses():
     assert s["status"] == "CURRENT_CROSS_SECTIONAL_RESEARCH"
     assert s["pit_status"] == "PIT_BACKTEST_BLOCKED"
     assert s["value"]["candidate_issuers"] == 2529
-    assert s["value"]["all_four_ranked"] == 851
+    assert s["value"]["all_four_ranked"] == 850
     assert s["value"]["all_five_p69_intersection"] == 992
     assert s["quality"]["scored_issuers"] == 2313
-    assert s["garp"]["ranked_issuers"] == 3579
+    assert s["garp"]["ranked_issuers"] == 3101
     assert s["quality"]["score_mismatches"] == 0
     assert all(len(v["sha256"]) == 64 for v in s["inputs"].values())
     assert s["research_label"] == "RESEARCH_ONLY_NOT_A_BUY_SELL_SIGNAL"
@@ -99,10 +99,10 @@ def test_snapshot_counts_hashes_and_statuses():
 
 def test_data_quality_reports_missingness_not_zero():
     d = json.loads((OUT / "selection_data_quality.json").read_text(encoding="utf-8"))
-    assert d["value"]["all_four"] == 851
+    assert d["value"]["all_four"] == 850
     assert d["value"]["coverage"]["pb"] > 0
     assert d["quality"]["coverage"]["roe"] == 2313
-    assert d["garp"]["ranked"] == 3579
+    assert d["garp"]["ranked"] == 3101
     assert any("PIT_BACKTEST_BLOCKED" in x for x in d["limitations"])
 
 
@@ -114,3 +114,27 @@ def test_sensitivity_is_present_and_not_performance():
     assert 0 <= s["value"]["single_pb_top50_overlap"] <= 50
     assert 0 <= s["quality"]["equal_top50_overlap"] <= 50
     assert "backtest" in s["quality"]["weight_note"].lower()
+
+
+def test_garp_period_matching_and_leverage_fields():
+    top = rows("garp_top50.csv")
+    for r in top:
+        detail = json.loads(r["period_detail_json"])
+        rev = detail["Revenue"]
+        assert rev["prior"], "top GARP row lacks a matched prior revenue period"
+        assert rev["days_apart"] is not None
+        assert 330 <= abs(int(rev["days_apart"])) <= 400
+        assert "operating_leverage_ratio" in r
+        assert "operating_growth_spread" in r
+        for k in ("revenue_growth_1y", "revenue_cagr_3y", "revenue_cagr_5y",
+                  "eps_growth_1y", "fcf_growth_1y", "operating_leverage_ratio"):
+            if r.get(k) not in ("", None):
+                assert math.isfinite(float(r[k]))
+
+
+def test_garp_five_year_is_ranked_and_reports_coverage():
+    d = json.loads((OUT / "selection_data_quality.json").read_text(encoding="utf-8"))
+    assert "revenue_cagr_5y" in d["garp"]["coverage"]
+    assert d["garp"]["coverage"]["revenue_cagr_5y"] > 0
+    top = rows("garp_top50.csv")
+    assert any(r.get("revenue_cagr_5y") not in ("", None) for r in top)

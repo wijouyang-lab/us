@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-11-06T07:55:16.308816+00:00",
+  "special_models": {
+    "BANKS": {
+      "value_rows": 328,
+      "quality_rows": 333,
+      "garp_rows": 328
+    },
+    "INSURANCE": {
+      "value_rows": 102,
+      "quality_rows": 104,
+      "garp_rows": 102
+    },
+    "REIT": {
+      "value_rows": 164,
+      "quality_rows": 170,
+      "garp_rows": 164
+    },
+    "BDC": {
+      "value_rows": 0,
+      "quality_rows": 0,
+      "garp_rows": 0
+    },
+    "OTHER_FINANCIALS": {
+      "value_rows": 365,
+      "quality_rows": 376,
+      "garp_rows": 365
+    },
+    "UTILITIES": {
+      "value_rows": 126,
+      "quality_rows": 128,
+      "garp_rows": 126
+    },
+    "ENERGY": {
+      "value_rows": 130,
+      "quality_rows": 134,
+      "garp_rows": 130
+    },
+    "UNCLASSIFIED": {
+      "value_rows": 92,
+      "quality_rows": 110,
+      "garp_rows": 92
+    }
+  },
+  "implementable": {
+    "BANKS": "P/B + ROE possible; FFO/NAV not available",
+    "INSURANCE": "P/B + ROE possible; underwriting/capital not available",
+    "REIT": "P/FFO/NAV not available in current data",
+    "BDC": "NAV/credit not available",
+    "UTILITIES": "generic cash/asset metrics only; no specialized model",
+    "ENERGY": "generic cash/asset metrics only; no specialized model"
+  },
+  "status": "SPECIAL_MODEL_REQUIRED_NOT_IMPLEMENTED"
+}

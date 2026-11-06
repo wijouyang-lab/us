@@ -4,6 +4,9 @@ Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 Status: **CURRENT_CROSS_SECTIONAL_RESEARCH · RESEARCH_ONLY · PIT_BACKTEST_BLOCKED**
 
+> Superseded for method corrections and tradability by P6.15
+> (undamental_selection_v1_p615.md).
+
 This is a research ranking, not a buy/sell signal, not a production strategy and
 not evidence of Alpha.
 

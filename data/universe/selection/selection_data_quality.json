@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-11-06T07:32:37.137774Z",
+  "generated_at": "2026-11-06T07:52:50.269966Z",
   "data_as_of": "2026-11-05",
   "value": {
     "rows": 5453,
     "candidates": 2529,
-    "all_four": 851,
+    "all_four": 850,
     "all_five_p69": 992,
     "coverage": {
       "pb": 2222,
@@ -14,8 +14,8 @@
     },
     "status_counts": {
       "VALUE_DATA_BLOCKED": 2924,
-      "VALUE_PARTIAL": 1678,
-      "VALUE_EXPERIMENTAL_ALL_FOUR": 851
+      "VALUE_PARTIAL": 1679,
+      "VALUE_EXPERIMENTAL_ALL_FOUR": 850
     }
   },
   "quality": {
@@ -28,6 +28,8 @@
       "leverage": 2313
     },
     "score_mismatches": 0,
+    "peer_percentile_mismatches": 0,
+    "peer_percentile_max_abs_diff": 0.0,
     "status_counts": {
       "QUALITY_V1_SCORED": 2313,
       "QUALITY_V1_BLOCKED": 1929,
@@ -37,20 +39,78 @@
   },
   "garp": {
     "rows": 5453,
-    "ranked": 3579,
+    "ranked": 3101,
     "coverage": {
-      "revenue_growth_1y": 3406,
-      "revenue_cagr_3y": 3115,
-      "eps_growth_1y": 2176,
-      "fcf_growth_1y": 1633,
-      "earnings_stability": 2143,
-      "operating_margin_expansion": 2924,
-      "operating_leverage": 2942
+      "revenue_growth_1y": 3643,
+      "revenue_cagr_3y": 3188,
+      "revenue_cagr_5y": 2739,
+      "eps_growth_1y": 2214,
+      "fcf_growth_1y": 1664,
+      "earnings_stability": 2153,
+      "operating_margin_expansion": 3144,
+      "operating_leverage_ratio": 1727
+    },
+    "groups": {
+      "UNCLASSIFIED|NONE": 65,
+      "INDUSTRIALS|US_GAAP": 522,
+      "HEALTHCARE|US_GAAP": 835,
+      "TECHNOLOGY|US_GAAP": 740,
+      "MATERIALS|IFRS": 97,
+      "MATERIALS|US_GAAP": 197,
+      "REIT|US_GAAP": 164,
+      "OTHER_FINANCIALS|US_GAAP": 326,
+      "UTILITIES|US_GAAP": 107,
+      "OTHER_SERVICES|US_GAAP": 735,
+      "INSURANCE|US_GAAP": 96,
+      "CONSUMER_STAPLES|US_GAAP": 138,
+      "CONSUMER_DISCRETIONARY|US_GAAP": 330,
+      "BANKS|US_GAAP": 296,
+      "BANKS|IFRS": 25,
+      "ENERGY|US_GAAP": 109,
+      "UNCLASSIFIED|US_GAAP": 27,
+      "OTHER_SERVICES|NONE": 27,
+      "COMMUNICATIONS|US_GAAP": 114,
+      "ENERGY|IFRS": 18,
+      "OTHER_SERVICES|MIXED": 4,
+      "HEALTHCARE|IFRS": 80,
+      "INDUSTRIALS|IFRS": 44,
+      "TECHNOLOGY|IFRS": 51,
+      "COMMUNICATIONS|IFRS": 24,
+      "INSURANCE|IFRS": 4,
+      "MATERIALS|MIXED": 11,
+      "OTHER_SERVICES|IFRS": 34,
+      "CONSUMER_STAPLES|IFRS": 15,
+      "CONSUMER_DISCRETIONARY|IFRS": 20,
+      "UTILITIES|IFRS": 17,
+      "INDUSTRIALS|MIXED": 7,
+      "OTHER_FINANCIALS|IFRS": 22,
+      "ENERGY|MIXED": 3,
+      "BANKS|MIXED": 3,
+      "TECHNOLOGY|MIXED": 13,
+      "BANKS|NONE": 4,
+      "OTHER_FINANCIALS|MIXED": 13,
+      "HEALTHCARE|MIXED": 33,
+      "MATERIALS|NONE": 23,
+      "INDUSTRIALS|NONE": 6,
+      "CONSUMER_STAPLES|MIXED": 2,
+      "UTILITIES|MIXED": 1,
+      "COMMUNICATIONS|MIXED": 2,
+      "TECHNOLOGY|NONE": 16,
+      "CONSUMER_DISCRETIONARY|MIXED": 2,
+      "INSURANCE|MIXED": 2,
+      "HEALTHCARE|NONE": 15,
+      "OTHER_FINANCIALS|NONE": 4,
+      "CONSUMER_DISCRETIONARY|NONE": 2,
+      "COMMUNICATIONS|NONE": 4,
+      "UTILITIES|NONE": 1,
+      "CONSUMER_STAPLES|NONE": 3
     },
     "status_counts": {
-      "GARP_DATA_BLOCKED": 1425,
-      "GARP_EXPERIMENTAL_HISTORICAL_GROWTH": 3579,
-      "GARP_HISTORY_AVAILABLE": 449
+      "GARP_CLASSIFICATION_BLOCKED": 293,
+      "GARP_EXPERIMENTAL_HISTORICAL_GROWTH": 3101,
+      "GARP_DATA_BLOCKED": 1099,
+      "GARP_HISTORY_AVAILABLE": 505,
+      "GARP_INSUFFICIENT_METRICS": 455
     }
   },
   "limitations": [

@@ -21,12 +21,13 @@ VALUE_INPUT = Path("data/universe/selection_inputs/value_metric_rankings_p69.csv
 QUALITY_INPUT = Path("data/universe/selection_inputs/quality_v1_scores_p66.csv")
 IDENTITY_INPUT = Path("data/universe/selection_inputs/us_equities_current.csv")
 SIC_INPUT = Path("data/universe/selection_inputs/sec_sic_model_family_map_p65.csv")
+CLASS_INPUT = Path("data/universe/selection_inputs/issuer_classification_p615.csv")
 GARP_INPUT = Path("data/universe/selection_inputs/garp_growth_metrics_p614.csv")
 OUT = Path("data/universe/selection")
 VALUE_METRICS = ("pb", "ps", "earnings_yield", "fcf_yield")
-GARP_METRICS = ("revenue_growth_1y", "revenue_cagr_3y", "eps_growth_1y",
+GARP_METRICS = ("revenue_growth_1y", "revenue_cagr_3y", "revenue_cagr_5y", "eps_growth_1y",
                 "fcf_growth_1y", "earnings_stability",
-                "operating_margin_expansion", "operating_leverage")
+                "operating_margin_expansion", "operating_leverage_ratio")
 MIN_PEER = 30
 QUALITY_W = {"roe": .30, "roa": .25, "cfo": .25, "leverage": .20}
 
@@ -122,9 +123,8 @@ def value_build(value_rows, identity):
             raw = num(r.get(m)); status = "RANK_AVAILABLE"
             if not cand: status = "BLOCKED"
             elif raw is None: status = "MISSING"
-            elif m in ("pb", "ps") and raw <= 0: status = "NON_POSITIVE_NOT_CHEAP"
+            elif raw <= 0: status = "NON_POSITIVE_NOT_CHEAP"
             elif r.get("filed") and r["filed"] > AS_OF.isoformat(): status = "PIT_BLOCKED"
-            elif raw < 0: status = "NEGATIVE_VALUE_NOT_CHEAP"
             rec[m] = raw if raw is not None else ""
             rec[m + "_status"] = status
             rec[m + "_percentile"] = ""
@@ -134,7 +134,7 @@ def value_build(value_rows, identity):
     for m in VALUE_METRICS:
         groups = defaultdict(list)
         for rec in rows:
-            if rec[m + "_status"] not in ("RANK_AVAILABLE", "NEGATIVE_VALUE_NOT_CHEAP"): continue
+            if rec[m + "_status"] not in ("RANK_AVAILABLE", "NON_POSITIVE_NOT_CHEAP"): continue
             groups[(rec["model_family"], rec["accounting_standard"])].append((rec["cik"], rec[m]))
         for key, items in groups.items():
             ranked, _ = winsor_pct(items, higher=(m in ("earnings_yield", "fcf_yield")))
@@ -142,19 +142,19 @@ def value_build(value_rows, identity):
                 rec = next(r for r in rows if r["cik"] == cik)
                 rec[m + "_percentile"] = round(x["winsor_pct"], 6)
                 rec[m + "_winsorized"] = x["winsorized"]
-                if rec[m + "_status"] == "NEGATIVE_VALUE_NOT_CHEAP":
+                if rec[m + "_status"] == "NON_POSITIVE_NOT_CHEAP":
                     rec[m + "_status_ranked"] = "NEGATIVE_PERCENTILE_LOW"
     for rec in rows:
         vals = [rec[m + "_percentile"] for m in VALUE_METRICS]
         if (rec["value_status"] == "VALUE_PARTIAL" and all(v != "" for v in vals)
-                and all(rec[m + "_status"] != "NEGATIVE_VALUE_NOT_CHEAP" for m in VALUE_METRICS)):
+                and all(rec[m + "_status"] != "NON_POSITIVE_NOT_CHEAP" for m in VALUE_METRICS)):
             rec["value_metric_count"] = 4
             rec["value_composite_experimental"] = round(sum(float(v) for v in vals) / 4.0, 6)
             rec["value_status"] = "VALUE_EXPERIMENTAL_ALL_FOUR"
             rec["value_reason"] = "EQUAL_WEIGHT_4_FACTOR_EXPERIMENTAL"
         elif rec["value_status"] == "VALUE_PARTIAL":
             rec["value_metric_count"] = sum(1 for v in vals if v != "")
-            negative = [m for m in VALUE_METRICS if rec[m + "_status"] == "NEGATIVE_VALUE_NOT_CHEAP"]
+            negative = [m for m in VALUE_METRICS if rec[m + "_status"] == "NON_POSITIVE_NOT_CHEAP"]
             rec["value_reason"] = ("NEGATIVE_EARNINGS_OR_FCF_NOT_CHEAP:" + "|".join(negative)
                                    if negative else "MISSING_ONE_OR_MORE_VALUE_METRICS")
     ranked = sorted([r for r in rows if r["value_composite_experimental"] != ""],
@@ -202,29 +202,59 @@ def quality_build(qrows, identity):
                 rec["quality_status"] = "QUALITY_SCORE_MISMATCH"; mismatches += 1
                 rec["quality_reason"] = "PERCENTILE_INPUT_MISSING"
         rows.append(rec)
+    # Independent peer-percentile recalculation from raw metrics (not just score arithmetic).
+    qfields = {"roe": "roe", "roa": "roa", "cfo": "cfo_to_avg_assets", "leverage": "liabilities_to_assets"}
+    groups = defaultdict(list)
+    for r in rows:
+        if r["quality_status"] != "QUALITY_V1_SCORED": continue
+        for m, f in qfields.items():
+            v = num(r.get(f))
+            if v is not None: groups[(r["model_family"], r["accounting_standard"], m)].append((r["cik"], v))
+    peer_mismatch = 0; peer_max = 0.0
+    by_cik = {r["cik"]: r for r in rows}
+    for (model, acc, m), items in groups.items():
+        ranked_pct, _ = winsor_pct(items, higher=(m != "leverage"))
+        for cik, x in ranked_pct.items():
+            row = by_cik[cik]
+            try:
+                published = float(row[m + "_percentile"])
+                diff = abs(published - x["winsor_pct"])
+                row["quality_peer_pct_diff"] = round(diff, 6)
+                peer_max = max(peer_max, diff)
+                if diff > 0.51: peer_mismatch += 1
+            except (TypeError, ValueError):
+                peer_mismatch += 1
     ranked = sorted([r for r in rows if r["quality_status"] == "QUALITY_V1_SCORED"],
                     key=lambda r: (-float(r["quality_score_recomputed"]), r["ticker"], r["cik"]))
     for i, r in enumerate(ranked, 1):
         r["quality_rank"] = i; r["quality_selected_top50"] = i <= 50
-    return rows, ranked, mismatches
+    return rows, ranked, mismatches, peer_mismatch, round(peer_max, 6)
 
 
-def garp_build(grows, quality_by_cik, identity):
+def garp_build(grows, classification, identity):
     rows = []
     for r in grows:
         cik = (r.get("cik") or "").zfill(10)
-        q = quality_by_cik.get(cik, {})
+        q = classification.get(cik, {})
         rec = {"ticker": r.get("ticker", ""), "cik": cik,
                "company_name": identity.get(cik, {}).get("company_name") or r.get("company_name", ""),
                "security_type": r.get("security_type", ""),
-               "model_family": q.get("model_family", "UNCLASSIFIED"),
-               "accounting_standard": q.get("accounting_standard", "NONE"),
+               "model_family": r.get("model_family") or q.get("model_family") or "UNCLASSIFIED",
+               "accounting_standard": r.get("accounting_standard") or q.get("accounting_standard") or "NONE",
                "latest_period": r.get("latest_period", ""), "filed": r.get("filed", ""),
                "accn": r.get("accn", ""), "history_years": r.get("history_years", ""),
                "garp_status": r.get("status", "GARP_DATA_BLOCKED"),
+               "period_detail_json": r.get("period_detail_json", ""),
+               "eps_direction": r.get("eps_direction", ""),
+               "fcf_direction": r.get("fcf_direction", ""),
+               "operating_income_growth_1y": r.get("operating_income_growth_1y", ""),
+               "operating_growth_spread": r.get("operating_growth_spread", ""),
                "garp_reason": r.get("reason_codes", ""), "garp_score": "",
                "garp_metric_count": r.get("history_metric_count", 0), "garp_selected_top50": False}
         for m in GARP_METRICS: rec[m] = r.get(m, "")
+        if rec["model_family"] == "UNCLASSIFIED" or rec["accounting_standard"] not in ("US_GAAP", "IFRS"):
+            rec["garp_status"] = "GARP_CLASSIFICATION_BLOCKED"
+            rec["garp_reason"] = "UNCLASSIFIED_OR_UNSUPPORTED_ACCOUNTING"
         rows.append(rec)
     for m in GARP_METRICS:
         groups = defaultdict(list)
@@ -242,10 +272,13 @@ def garp_build(grows, quality_by_cik, identity):
         if r["garp_status"] != "GARP_HISTORY_AVAILABLE":
             continue
         vals = [r.get(m + "_percentile") for m in GARP_METRICS if r.get(m + "_percentile") not in (None, "")]
-        if len(vals) >= 3:
+        if len(vals) >= 4:
             r["garp_score"] = round(sum(float(v) for v in vals) / len(vals), 6)
             r["garp_status"] = "GARP_EXPERIMENTAL_HISTORICAL_GROWTH"
-            r["garp_reason"] = "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS"
+            r["garp_reason"] = "EQUAL_WEIGHT_AVAILABLE_HISTORICAL_METRICS_MIN4"
+        elif len(vals) == 3:
+            r["garp_status"] = "GARP_INSUFFICIENT_METRICS"
+            r["garp_reason"] = "ONLY_3_VALID_METRICS_WATCH"
     ranked = sorted([r for r in rows if r["garp_score"] != ""],
                     key=lambda r: (-float(r["garp_score"]), r["ticker"], r["cik"]))
     for i, r in enumerate(ranked, 1):
@@ -280,11 +313,25 @@ def main() -> int:
         and all(r.get(f) not in ("", None) for f in ("pe", "pb", "ps", "earnings_yield", "fcf_yield")))
 
     vrows, vtop = value_build(read_csv(a.value), identity)
-    qrows, qtop, qmis = quality_build(read_csv(a.quality), identity)
+    qrows, qtop, qmis, qpeer_mis, qpeer_max = quality_build(read_csv(a.quality), identity)
     grows = read_csv(a.garp)
-    qby = {r["cik"]: r for r in qrows}
-    gr, gtop = garp_build(grows, qby, identity)
+    classification = { (r.get("cik") or "").zfill(10): r for r in read_csv(CLASS_INPUT) } if CLASS_INPUT.exists() else {}
+    gr, gtop = garp_build(grows, classification, identity)
     all_out = a.out; all_out.mkdir(parents=True, exist_ok=True)
+    # P6.5 classification consistency, without changing the source ranking groups.
+    v_match = q_match = 0
+    for rec in vrows:
+        c = classification.get(rec["cik"], {})
+        rec["p65_model_family"] = c.get("model_family", "UNCLASSIFIED")
+        rec["p65_accounting_standard"] = c.get("accounting_standard", "NONE")
+        rec["classification_match"] = bool(c and c.get("model_family") == rec["model_family"] and c.get("accounting_standard") == rec["accounting_standard"])
+        v_match += int(rec["classification_match"])
+    for rec in qrows:
+        c = classification.get(rec["cik"], {})
+        rec["p65_model_family"] = c.get("model_family", "UNCLASSIFIED")
+        rec["p65_accounting_standard"] = c.get("accounting_standard", "NONE")
+        rec["classification_match"] = bool(c and c.get("model_family") == rec["model_family"] and c.get("accounting_standard") == rec["accounting_standard"])
+        q_match += int(rec["classification_match"])
     vf = list(vrows[0].keys()) if vrows else []
     qf = list(qrows[0].keys()) if qrows else []
     gf = list(gr[0].keys()) if gr else []
@@ -336,6 +383,7 @@ def main() -> int:
                   "top50": [brief(r, "value") for r in vtop[:50]],
                   "formula": "equal-weight experimental average of winsorized within-peer percentiles: PB (inverse), PS (inverse), Earnings Yield (higher), FCF Yield (higher)"},
         "quality": {"scored_issuers": len(qtop), "score_mismatches": qmis,
+                    "peer_percentile_mismatches": qpeer_mis, "peer_percentile_max_abs_diff": qpeer_max,
                     "top50": [brief(r, "quality") for r in qtop[:50]],
                     "formula": "0.30 ROE + 0.25 ROA + 0.25 CFO/assets + 0.20 inverse liabilities/assets; P6.6 peer percentiles"},
         "garp": {"history_available": sum(1 for r in gr if r["garp_status"] in ("GARP_EXPERIMENTAL_HISTORICAL_GROWTH", "GARP_HISTORY_AVAILABLE")),
@@ -344,6 +392,9 @@ def main() -> int:
                  "formula": "equal-weight available historical growth percentiles; no forward EPS/PEG"},
         "intersections": {"value_quality": len(vt & qt), "value_garp": len(vt & gt), "quality_garp": len(qt & gt),
                           "all_three": len(vt & qt & gt)},
+        "classification": {"p65_rows": len(classification), "value_rows_matched": v_match,
+                            "quality_rows_matched": q_match,
+                            "garp_rows_matched": sum(1 for r in gr if r["cik"] in classification)},
     }
     (all_out / "selection_snapshot.json").write_text(json.dumps(snap, indent=2, ensure_ascii=False), encoding="utf-8")
     # data quality report
@@ -355,8 +406,11 @@ def main() -> int:
                     "all_four": len(vtop), "all_five_p69": all_five_intersection, "coverage": vcov,
                     "status_counts": dict(Counter(r["value_status"] for r in vrows))},
           "quality": {"rows": len(qrows), "scored": len(qtop), "coverage": qcov,
-                      "score_mismatches": qmis, "status_counts": dict(Counter(r["quality_status"] for r in qrows))},
+                      "score_mismatches": qmis, "peer_percentile_mismatches": qpeer_mis,
+                      "peer_percentile_max_abs_diff": qpeer_max,
+                      "status_counts": dict(Counter(r["quality_status"] for r in qrows))},
           "garp": {"rows": len(gr), "ranked": len(gtop), "coverage": gcov,
+                   "groups": {f"{k[0]}|{k[1]}": v for k, v in Counter((r["model_family"], r["accounting_standard"]) for r in gr).items()},
                    "status_counts": dict(Counter(r["garp_status"] for r in gr))},
           "limitations": ["CURRENT_CROSS_SECTIONAL_RESEARCH only; PIT_BACKTEST_BLOCKED.",
                           "Value composite is experimental equal-weight; no approved weights.",
