@@ -75,3 +75,12 @@ frozen validation—not a code change that silently promotes research.
 - `US-50000-001` is not merged or reused.
 - New code does not import `scan.py`, `review.py`, `evolve.py` or broker paths.
 - Benchmarks are not styled as investment styles.
+
+
+## v1.1 security addendum
+
+- The optional paper API is now same-origin, loopback-only, session-authenticated
+  and CSRF-protected; no wildcard CORS.
+- Public snapshots are token-redacted; SQLite is no longer Git-tracked.
+- Dashboard refresh builds the terminal snapshot in the existing main-only
+  workflow, after success and before its [skip ci] commit.

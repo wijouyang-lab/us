@@ -1,52 +1,80 @@
-# Invest Terminal v1 — Acceptance Evidence
+# Invest Terminal v1.1 — Acceptance Evidence
 
 Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft)
-HEAD: `d1437717219829ef92d9a26dcf08e96148db978d`
-
-## Acceptance checklist
-
-| # | Requirement | Evidence | Result |
-|---|---|---|---|
-| 1 | Existing Dashboard remains functional | `index.html` only gains a link; full CI passes 1,417 tests | PASS |
-| 2 | Six styles with explicit rules and status | `tools/invest_terminal/strategy_registry.py`; all six `DATA_BLOCKED` with reasons | PASS (honest block) |
-| 3 | Benchmarks independent | SPY/QQQ/BIL/EQUAL_WEIGHT registry; not included in six styles; UI marks DATA_BLOCKED | PASS |
-| 4 | PAPER-50000 cash/positions/NAV/orders | `build_snapshot.py` reads `paper.sqlite`; current account 50,000 USD, 0 positions, 0 orders | PASS |
-| 5 | Manual confirmation | Local API test: propose PENDING, positions unchanged; confirm creates 1 share | PASS |
-| 6 | Cost traceability | Existing IBKR Pro Tiered `ibkr_costs.py`; paper engine records fees | PASS |
-| 7 | Risk/review real data | Risk derived from account cash/positions; no positions yields CASH_ONLY; no fake VaR | PASS (limited by empty portfolio) |
-| 8 | Mobile layout | `terminal.css` 900px/560px breakpoints + viewport meta | PASS |
-| 9 | No fabricated strategy performance | All styles DATA_BLOCKED; `nav_series=[]`; benchmark gaps explicit | PASS |
-| 10 | Tests | Full CI 1,417 passed, 1 skipped; integration 28 tests | PASS |
-| 11 | Production scan/review/evolve unaffected | New package does not import them; no production files changed except index link | PASS |
-
-## End-to-end paper API demonstration
-
-Run against a temporary SQLite account:
-
-```text
-propose PENDING True
-positions before confirm []
-confirmed 1 positions [{'ticker': 'AAPL', 'shares': 1, ...}]
-```
-
-This proves there is no auto-fill. The committed `data/paper_trading/paper.sqlite`
-was not mutated: account still has 0 orders and 0 ledger rows.
+HEAD: `ae938383ee9f9879fed532fa6e05b5eaf0f9b4cf`
 
 ## CI
 
-- Full Test: https://github.com/wijouyang-lab/us/actions/runs/42168541451
-- Terminal workflow: https://github.com/wijouyang-lab/us/actions/runs/42168541439
-- Artifact: `invest-terminal-snapshot` (`13479727536`)
+- Full Test: **1428 passed, 1 skipped**
+  https://github.com/wijouyang-lab/us/actions/runs/42171210606
+- Invest Terminal Integration: success
+  https://github.com/wijouyang-lab/us/actions/runs/42171210636
+- Artifact: `invest-terminal-snapshot` (`13481745457`)
 
-## Blocked, not hidden
+## v1.1 acceptance checklist
 
-- Full-market scanner: only one dashboard-tracked stock exists.
-- Benchmark quotes: no current SPY/QQQ/BIL in dashboard snapshot.
-- NAV history and strategy attribution: no ledger history.
-- PIT validation: P6.7 gate remains 79.58%/69.77%, below 95%/98%.
-- Dividend ticker DPS: only issuer-level cash proxy; 10 TTM CIKs.
-- Options/macro hedge: no chain/IV/financing data.
+| # | Requirement | Evidence | Result |
+|---|---|---|---|
+| 1 | API loopback only | `serve()` fixed to `127.0.0.1`; static test rejects `ThreadingHTTPServer(("0.0.0.0"` | PASS |
+| 2 | No wildcard CORS | server emits no `Access-Control-Allow-Origin`; `OPTIONS` returns 403 | PASS |
+| 3 | Session auth | missing/wrong cookie returns 401; local page sets HttpOnly SameSite=Strict session | PASS |
+| 4 | CSRF + Origin | no CSRF, bad Origin, cross-site `Sec-Fetch-Site` all return 403 | PASS |
+| 5 | URL API forgery | no `?api=` / URL-controlled base in JS or HTML | PASS |
+| 6 | Public snapshot token redaction | pending-order test asserts live `confirm_token` absent | PASS |
+| 7 | SQLite untracked, local preserved | `git rm --cached`; local DB still exists with 50,000 cash / 0 orders | PASS |
+| 8 | No fake Actions account | no-DB snapshot = `LOCAL_PAPER_DB_NOT_PRESENT`, NAV null | PASS |
+| 9 | Local paper E2E | page GET → session → propose PENDING → positions unchanged → confirm → cash lower, 1 AAPL share, 1 ledger row | PASS |
+| 10 | Dashboard → snapshot update | `dashboard-data.yml` builds snapshot before `[skip ci]` commit; YAML/command tested | PASS (main-only run not executed) |
+| 11 | Workflow path bug | separate `tests/test_paper_trading_platform.py` and `tests/test_invest_terminal_server.py` paths | PASS |
+| 12 | Frontend fallback | static snapshot first; local session only when available; no live-labeling | PASS |
+| 13 | No auto-confirm | API returns PENDING; confirm requires explicit token; double confirm 400 | PASS |
+| 14 | Full CI | 1428 passed, 1 skipped on final HEAD | PASS |
 
-These blocks are rendered as blocked states, not zeros or synthetic returns.
+## E2E local request result
+
+Automated HTTP test with a temporary SQLite account:
+
+```text
+GET /terminal.html                    200, HttpOnly session cookie
+GET /api/session                      authenticated + CSRF
+POST /api/paper/propose               PENDING
+account positions                     []
+POST /api/paper/confirm               200
+account cash                          < 50,000
+positions                             AAPL 1 share
+ledger                                1 fill
+second confirm                        400
+GET /api/account                      no confirm token
+```
+
+The committed local DB was not modified by tests.
+
+## Public snapshot states
+
+- Local export with DB: `LOCAL_DB_EXPORT`, current cash/nav exported read-only.
+- No persistent DB (CI/static build): `LOCAL_PAPER_DB_NOT_PRESENT`, NAV null.
+- Neither state contains a confirmation token.
+
+## Dashboard sync evidence
+
+The exact command was run locally and by the PR integration workflow:
+
+```bash
+python -m tools.invest_terminal.build_snapshot
+```
+
+The PR workflow artifact shows the no-DB state (`LOCAL_PAPER_DB_NOT_PRESENT`,
+NAV null). The main-only Dashboard commit path could not be run without merging
+the Draft PR; its command, allowlist entry and `[skip ci]` loop guard are covered
+by `tests/test_invest_terminal_snapshot_sync.py`.
+
+## Remaining gaps
+
+- Only one Dashboard-tracked stock; no full-market scanner surrogate.
+- SPY/QQQ/BIL current quotes absent; benchmark status remains `DATA_BLOCKED`.
+- No NAV history/closed trades, so no equity curve or attribution.
+- P6.7 PIT gates still fail.
+- Dividend remains issuer-level proxy only; options hedge remains blocked.
+- All six strategies remain `DATA_BLOCKED`, not PASS.

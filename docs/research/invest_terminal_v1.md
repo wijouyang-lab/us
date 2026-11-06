@@ -1,69 +1,71 @@
-# Invest Terminal v1 — Implementation Status
+# Invest Terminal v1.1 — Security and Closed-Loop Status
 
 Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
-Mode: research + paper only
+PR: #512 (Draft, not merged)
+HEAD: `ae938383ee9f9879fed532fa6e05b5eaf0f9b4cf`
 
-## Delivered in this branch
+## v1.1 fixes
 
-- Integrated `terminal.html` with six primary sections:
-  Daily Dashboard, Stock Research, Strategy Lab, Paper Portfolio, Risk Center,
-  Performance & Review.
-- Six frozen strategy definitions with explicit universe, selection, entry, exit,
-  rebalance, sizing, risk, cost and evidence.
-- Independent benchmark registry: SPY, QQQ, BIL, EQUAL_WEIGHT. They are not
-  treated as investment styles.
-- PAPER-50000 read model: account, cash, NAV, positions, orders, ledger.
-- Optional local API for manual proposal/confirmation using the existing paper
-  engine; no broker path and no auto-confirm.
-- Risk Center: cash/position concentration, missing prices, drawdown/volatility
-  when history exists, and current-exposure stress.
-- Performance: no NAV history means no fabricated curve; benchmark gaps are
-  explicit.
-- Reuse audit and safety invariants in `invest_terminal_v1_reuse_audit.md`.
+### Local API security
 
-## What is intentionally blocked
+- Server binds **127.0.0.1 only**; no host/0.0.0.0 option.
+- Serves `/terminal.html` and API from the **same origin**.
+- Session cookie: `HttpOnly; SameSite=Strict`.
+- Mutating requests require an `X-CSRF-Token` header.
+- Exact Origin/Host checks; no wildcard CORS; `OPTIONS` fails closed.
+- URL-controlled API base removed. The static page cannot be pointed at an
+  arbitrary external API.
+- Confirmation remains manual; proposals never auto-fill.
 
-All six strategies are `DATA_BLOCKED`. No strategy is `PASS`:
+### Token redaction
 
-- Value: share-class/ADR and PIT-validated returns incomplete.
-- Quality: P6.7 strict PIT gate failed.
-- GARP: no free forward EPS/consensus.
-- Trend: PIT price coverage below gate.
-- Dividend: no complete free full-market event source.
-- Macro/Hedge: no historical option chain/borrow/financing.
+- `build_snapshot()` removes `confirm_token`/`confirmation_token` and any
+  credential-like keys recursively.
+- Public orders are allowlisted fields only.
+- A PENDING order test proves its live confirmation token does not appear in
+  public JSON.
+- The authenticated local `/api/session` may return pending confirmation info;
+  it is never written to the public snapshot or artifact.
 
-This is a platform-quality result, not a failure to find a pretty backtest.
+### SQLite
 
-## Local use
+- `data/paper_trading/paper.sqlite` is no longer tracked.
+- `.gitignore` excludes `*.sqlite`, WAL and SHM.
+- Local DB was preserved (`git rm --cached` only).
+- GitHub Actions no longer presents a fresh empty DB as the user's account;
+  without a persistent DB the snapshot says `LOCAL_PAPER_DB_NOT_PRESENT`.
 
-Generate the read-only snapshot:
+### Dashboard-to-terminal update
+
+`dashboard-data.yml` now runs:
 
 ```bash
 python -m tools.invest_terminal.build_snapshot
 ```
 
-Open `terminal.html` from the repository root. For manual paper trading:
+after a successful Dashboard refresh, before its existing `[skip ci]` commit.
+The snapshot is included in the existing allowlist and commit.
+If Dashboard refresh fails, the previous committed snapshot is not overwritten.
+The existing `[skip ci]` commit prevents a self-trigger loop.
+
+The workflow is main-only. It was not executed against main in this Draft branch;
+the exact builder command and YAML guard are covered by tests, and the PR
+workflow builds/uploads the read-only artifact without writing main.
+
+## Local run
 
 ```bash
+python -m tools.invest_terminal.build_snapshot
 python -m tools.invest_terminal.server
-# open terminal.html?api=http://127.0.0.1:8765
+# open the printed http://127.0.0.1:8765/terminal.html
 ```
 
-The server binds only `127.0.0.1`, uses the existing `paper.sqlite`, and requires
-an explicit confirmation token. Static GitHub Pages remains read-only.
+The API is local paper only; static GitHub Pages remains read-only.
 
-## Safety checks
+## Still blocked
 
-- One PAPER-50000 account; no US-50000-001 merge.
-- No margin, shorting or negative cash.
-- Stale/future quote rejection in the existing engine.
-- IBKR Pro Tiered forward cost model reused.
-- New package does not import production scan/review/evolve or broker APIs.
-- `index.html` only gains a link; existing Dashboard code is untouched.
-
-## Next-stage gates
-
-A strategy can move to PASS only with a separately frozen, documented validation
-and a clean PIT dataset. Until then the UI must keep `DATA_BLOCKED` and must not
-show synthetic Sharpe, CAGR, drawdown or strategy attribution.
+All six style strategies remain `DATA_BLOCKED`; no PASS. P6.7 PIT gates still
+fail, full-market scanner coverage is still only the Dashboard snapshot, and
+current SPY/QQQ/BIL quotes are not in that snapshot. These are not represented as
+returns or zeros.

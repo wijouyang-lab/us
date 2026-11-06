@@ -11,7 +11,7 @@ Security model:
 The static GitHub Pages page remains read-only. It cannot reach this service.
 """
 from __future__ import annotations
-import argparse, json, mimetypes, re, secrets
+import argparse, json, secrets
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
