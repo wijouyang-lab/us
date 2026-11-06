@@ -96,33 +96,50 @@ def main():
         report["quality"][f"{name}_top50_overlap"] = len(qtop & top(sc))
     report["quality"]["scored_count"] = len(q)
     report["quality"]["weight_note"] = "Top-50 overlap is not a performance result; no backtest."
-    # GARP: count thresholds, 5Y inclusion, history length, global
-    gr = [r for r in load("garp_rankings.csv") if r.get("garp_score") not in ("", None)]
+    # GARP: rebuild 3/4/5-metric pools from every candidate, not only scored rows.
+    allg = [r for r in load("garp_rankings.csv")
+            if r.get("model_family") not in ("", "UNCLASSIFIED")
+            and r.get("accounting_standard") in ("US_GAAP", "IFRS")]
+    gr = [r for r in allg if r.get("garp_score") not in ("", None)]
     gtop = top({r["cik"]: val(r, "garp_score") for r in gr})
+    gcols = {}
+    for m in GM:
+        groups = defaultdict(list)
+        for r in allg:
+            v = val(r, m)
+            if v is not None: groups[(r["model_family"], r["accounting_standard"])].append((r["cik"], v))
+        gcols[m] = {}
+        for key, items in groups.items():
+            if len(items) >= 30:
+                gcols[m].update(rank(dict(items), higher=True))
+    pools = {}
     for need in (3, 4, 5):
         sc = {}
-        for r in gr:
-            vals = [val(r, m + "_percentile") for m in GM if val(r, m + "_percentile") is not None]
+        for r in allg:
+            vals = [gcols[m][r["cik"]] for m in GM if r["cik"] in gcols[m]]
             if len(vals) >= need: sc[r["cik"]] = sum(vals) / len(vals)
+        pools[need] = sc
+        report["garp"][f"min_{need}_pool_count"] = len(sc)
         report["garp"][f"min_{need}_top50_overlap"] = len(gtop & top(sc))
     sc = {}
-    for r in gr:
-        vals = [val(r, m + "_percentile") for m in GM if m != "revenue_cagr_5y" and val(r, m + "_percentile") is not None]
+    for r in allg:
+        vals = [gcols[m][r["cik"]] for m in GM if m != "revenue_cagr_5y" and r["cik"] in gcols[m]]
         if len(vals) >= 3: sc[r["cik"]] = sum(vals) / len(vals)
     report["garp"]["without_5y_top50_overlap"] = len(gtop & top(sc))
     for years in (3, 5, 7):
         sub = {r["cik"]: val(r, "garp_score") for r in gr if val(r, "history_years") is not None and float(r["history_years"]) >= years}
         report["garp"][f"history_ge_{years}y_top50_overlap"] = len(gtop & top(sub)) if len(sub) >= 50 else None
-    gcols = {}
+    gglobal = {}
     for m in GM:
-        vals = {r["cik"]: val(r, m) for r in gr if val(r, m) is not None}
-        gcols[m] = rank(vals, higher=True)
+        vals = {r["cik"]: val(r, m) for r in allg if val(r, m) is not None}
+        gglobal[m] = rank(vals, higher=True)
     gg = {}
-    for r in gr:
-        c = r["cik"]; vals = [gcols[m][c] for m in GM if c in gcols[m]]
+    for r in allg:
+        c = r["cik"]; vals = [gglobal[m][c] for m in GM if c in gglobal[m]]
         if len(vals) >= 3: gg[c] = sum(vals) / len(vals)
     report["garp"]["global_top50_overlap"] = len(gtop & top(gg))
-    report["garp"].update({"ranked_count": len(gr), "note": "global recomputed from raw historical metrics; 5Y included in current score"})
+    report["garp"].update({"ranked_count": len(gr), "all_candidate_count": len(allg),
+                           "note": "3/4/5 pools independently rebuilt from raw metrics; 5Y included in current score"})
     OUT.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
     return 0

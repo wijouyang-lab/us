@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T07:53:33.396443+00:00",
+  "generated_at": "2026-11-06T08:16:13.901351+00:00",
   "data_as_of": "2026-11-05",
   "status": "EXPERIMENTAL_SENSITIVITY_ONLY",
   "pit_status": "PIT_BACKTEST_BLOCKED",
@@ -27,15 +27,19 @@
     "weight_note": "Top-50 overlap is not a performance result; no backtest."
   },
   "garp": {
-    "min_3_top50_overlap": 50,
+    "min_3_pool_count": 3556,
+    "min_3_top50_overlap": 28,
+    "min_4_pool_count": 3101,
     "min_4_top50_overlap": 50,
+    "min_5_pool_count": 2322,
     "min_5_top50_overlap": 1,
-    "without_5y_top50_overlap": 37,
+    "without_5y_top50_overlap": 28,
     "history_ge_3y_top50_overlap": 50,
     "history_ge_5y_top50_overlap": 47,
     "history_ge_7y_top50_overlap": 38,
-    "global_top50_overlap": 40,
+    "global_top50_overlap": 25,
     "ranked_count": 3101,
-    "note": "global recomputed from raw historical metrics; 5Y included in current score"
+    "all_candidate_count": 5160,
+    "note": "3/4/5 pools independently rebuilt from raw metrics; 5Y included in current score"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T07:55:16.308816+00:00",
+  "generated_at": "2026-11-06T08:15:45.397625+00:00",
   "special_models": {
     "BANKS": {
       "value_rows": 328,
@@ -42,11 +42,67 @@
       "garp_rows": 92
     }
   },
+  "bdc_audit": {
+    "explicit_bdc_model_family_rows": 0,
+    "sic_6726_rows": 0,
+    "bdc_name_candidates": [
+      "BBDC",
+      "CCAP",
+      "GSBD",
+      "ICMB",
+      "KBDC",
+      "LIEN",
+      "PSBD",
+      "TPVG"
+    ],
+    "bdc_name_candidate_count": 8,
+    "bdc_candidate_classifications": [
+      [
+        "UNCLASSIFIED",
+        "US_GAAP"
+      ]
+    ],
+    "note": "0 explicit BDC rows does not mean no BDCs. Known BDC-name candidates are largely UNCLASSIFIED because SIC is missing; no BDC model was invented."
+  },
+  "classification_blocked": {
+    "garp_blocked": 293,
+    "unclassified_none": 65,
+    "unclassified_us_gaap": 27,
+    "unsupported_accounting": 266,
+    "composition": {
+      "UNCLASSIFIED|NONE": 65,
+      "UNCLASSIFIED|US_GAAP": 27,
+      "OTHER_SERVICES|NONE": 27,
+      "OTHER_SERVICES|MIXED": 4,
+      "MATERIALS|MIXED": 11,
+      "INDUSTRIALS|MIXED": 7,
+      "ENERGY|MIXED": 3,
+      "BANKS|MIXED": 3,
+      "TECHNOLOGY|MIXED": 13,
+      "BANKS|NONE": 4,
+      "OTHER_FINANCIALS|MIXED": 13,
+      "HEALTHCARE|MIXED": 33,
+      "MATERIALS|NONE": 23,
+      "INDUSTRIALS|NONE": 6,
+      "CONSUMER_STAPLES|MIXED": 2,
+      "UTILITIES|MIXED": 1,
+      "COMMUNICATIONS|MIXED": 2,
+      "TECHNOLOGY|NONE": 16,
+      "CONSUMER_DISCRETIONARY|MIXED": 2,
+      "INSURANCE|MIXED": 2,
+      "HEALTHCARE|NONE": 15,
+      "OTHER_FINANCIALS|NONE": 4,
+      "CONSUMER_DISCRETIONARY|NONE": 2,
+      "COMMUNICATIONS|NONE": 4,
+      "UTILITIES|NONE": 1,
+      "CONSUMER_STAPLES|NONE": 3
+    }
+  },
   "implementable": {
-    "BANKS": "P/B + ROE possible; FFO/NAV not available",
-    "INSURANCE": "P/B + ROE possible; underwriting/capital not available",
-    "REIT": "P/FFO/NAV not available in current data",
-    "BDC": "NAV/credit not available",
+    "BANKS": "P/B + ROE data exists; specialized capital quality not yet validated",
+    "INSURANCE": "P/B + ROE data exists; underwriting/capital fields missing",
+    "REIT": "P/FFO, AFFO and NAV not available; SPECIAL_MODEL_REQUIRED",
+    "BDC": "NAV/credit and explicit BDC identity unavailable; BLOCKED",
     "UTILITIES": "generic cash/asset metrics only; no specialized model",
     "ENERGY": "generic cash/asset metrics only; no specialized model"
   },

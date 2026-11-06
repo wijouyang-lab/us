@@ -15,6 +15,9 @@ INPUTS = Path("data/universe/selection_inputs")
 QUOTES = INPUTS / "us_market_quote_mapping_p62.csv"
 CURRENT = INPUTS / "us_equities_current.csv"
 CLASS = INPUTS / "issuer_classification_p615.csv"
+LIQUIDITY = INPUTS / "liquidity_ohlcv_p616.csv"
+FRESHNESS = {k: ROOT / f"{k}_freshness_adjusted.csv" for k in ("value", "quality", "garp")}
+VALUATION = ROOT / "valuation_integrity_audit.csv"
 OUT = ROOT / "tradability"
 PRICE_ASOF = "2026-11-05T08:16:00Z"
 SCENARIOS = {
@@ -45,10 +48,15 @@ def main():
     quotes = {r["ticker"]: r for r in read(QUOTES)}
     current = {r["ticker"]: r for r in read(CURRENT)}
     cls = {r["ticker"]: r for r in read(CLASS)}
+    liq = {r["ticker"]: r for r in read(LIQUIDITY)} if LIQUIDITY.exists() else {}
+    fresh_maps = {k: {r["ticker"]: r for r in read(v)} for k, v in FRESHNESS.items() if v.exists()}
+    valuation = {r["ticker"]: r for r in read(VALUATION)} if VALUATION.exists() else {}
     a.out.mkdir(parents=True, exist_ok=True)
     summary = {"generated_at": datetime.now(timezone.utc).isoformat(), "price_asof": PRICE_ASOF,
-               "price_source": "P6_2_AKSHARE_BATCH_15MIN_DELAY", "liquidity_source": "DATA_BLOCKED",
-               "scenarios": SCENARIOS, "research_only": True, "note": "No ADV20/ADV60 in the verified batch mapping; no ELIGIBLE result is inferred."}
+               "price_source": "P6_2_AKSHARE_BATCH_15MIN_DELAY",
+               "liquidity_source": "YFINANCE_1D_UNADJUSTED_CLOSE_RAW_VOLUME",
+               "scenarios": SCENARIOS, "research_only": True,
+               "note": "ADV from yfinance current 20/60 completed sessions; ELIGIBLE is a research screen, not trading approval."}
     for kind, file, topfile in (("value", "value_rankings.csv", "value_top50.csv"),
                                 ("quality", "quality_rankings.csv", "quality_top50.csv"),
                                 ("garp", "garp_rankings.csv", "garp_top50.csv")):
@@ -68,25 +76,50 @@ def main():
             if price is None: reasons.append("PRICE_INVALID_OR_MISSING")
             if mcap is None: reasons.append("MARKET_CAP_MISSING")
             if special: reasons.append("SPECIAL_MODEL_REVIEW")
+            lr = liq.get(t, {})
+            adv20 = num(lr.get("adv20_usd")); adv60 = num(lr.get("adv60_usd"))
+            if adv20 is None and adv60 is None: reasons.append("ADV20_60_UNAVAILABLE")
             statuses = {}
             for name, s in SCENARIOS.items():
                 rs = list(reasons)
                 if price is not None and price < s["min_price"]: rs.append("PRICE_BELOW_" + name.upper())
                 if mcap is not None and mcap < s["min_mcap"]: rs.append("MCAP_BELOW_" + name.upper())
-                # ADV is not available; never infer liquidity.
-                rs.append("ADV20_60_UNAVAILABLE")
+                if adv20 is None or adv60 is None:
+                    rs.append("ADV20_60_UNAVAILABLE")
+                else:
+                    if adv20 < s["min_adv"]: rs.append("ADV20_BELOW_" + name.upper())
+                    if adv60 < s["min_adv"]: rs.append("ADV60_BELOW_" + name.upper())
                 hard_block = any(x.startswith(("SECURITY_TYPE_", "NOT_ACTIVE")) for x in rs)
-                missing_data = any(x in ("QUOTE_NOT_MATCHED", "PRICE_INVALID_OR_MISSING", "MARKET_CAP_MISSING") for x in rs)
-                below = any(x.startswith(("PRICE_BELOW", "MCAP_BELOW")) for x in rs)
+                missing_data = any(x in ("QUOTE_NOT_MATCHED", "PRICE_INVALID_OR_MISSING", "MARKET_CAP_MISSING", "ADV20_60_UNAVAILABLE") for x in rs)
+                below = any(x.startswith(("PRICE_BELOW", "MCAP_BELOW", "ADV20_BELOW", "ADV60_BELOW")) for x in rs)
                 status = "DATA_BLOCKED" if missing_data else ("BLOCKED" if hard_block or below else ("WATCH" if rs else "ELIGIBLE"))
                 statuses[name] = status
+            fresh = fresh_maps.get(kind, {}).get(t, {})
+            fstatus = fresh.get("freshness_status", "FUNDAMENTALS_DATA_BLOCKED")
+            vstatus = valuation.get(t, {}).get("valuation_status", "VALUATION_NOT_APPLICABLE") if kind == "value" else "VALUATION_NOT_APPLICABLE"
+            reason = "|".join(dict.fromkeys(reasons))
+            if fstatus != "FUNDAMENTALS_FRESH": reason = "|".join([reason, "FRESHNESS_" + fstatus]).strip("|")
+            if kind == "value" and vstatus != "VALUATION_VALID": reason = "|".join([reason, "VALUATION_" + vstatus]).strip("|")
             base_status = statuses["balanced"]
-            reason = "|".join(dict.fromkeys(reasons + ["ADV20_60_UNAVAILABLE"]))
-            out_rows.append({**r, "tradability_status": base_status, "tradability_reason": reason,
+            final_status = ("ELIGIBLE" if base_status == "ELIGIBLE" and fstatus == "FUNDAMENTALS_FRESH"
+                            and (kind != "value" or vstatus == "VALUATION_VALID") else
+                            "DATA_BLOCKED" if fstatus in ("FUNDAMENTALS_DATA_BLOCKED", "FUNDAMENTALS_UPDATE_MISSING")
+                            else "WATCH" if base_status in ("ELIGIBLE", "WATCH") else "BLOCKED")
+            out_rows.append({**r, "tradability_status": final_status, "tradability_reason": reason,
+                             "raw_tradability_status": base_status, "freshness_status": fstatus,
+                             "valuation_status": vstatus,
                              "price_source": "P6_2_AKSHARE_BATCH_15MIN_DELAY", "price_asof": PRICE_ASOF,
-                             "market_cap": mcap if mcap is not None else "", "adv20_usd": "", "adv60_usd": "",
+                             "market_cap": mcap if mcap is not None else "",
+                             "adv20_usd": adv20 if adv20 is not None else "",
+                             "adv60_usd": adv60 if adv60 is not None else "",
+                             "volume_source": lr.get("volume_source", ""),
+                             "last_completed_session": lr.get("last_completed_session", ""),
+                             "valid_sessions_20": lr.get("valid_sessions_20", 0),
+                             "valid_sessions_60": lr.get("valid_sessions_60", 0),
+                             "liquidity_status": lr.get("liquidity_status", "DATA_BLOCKED"),
+                             "liquidity_data_quality": lr.get("liquidity_data_quality", "MISSING"),
                              "security_type": sec_type, "exchange": q.get("exchange") or c.get("exchange") or "",
-                             "is_active": active, "liquidity_coverage": "DATA_BLOCKED",
+                             "is_active": active, "liquidity_coverage": "OK" if adv20 is not None and adv60 is not None else "DATA_BLOCKED",
                              "special_model": special,
                              "tradability_conservative": statuses["conservative"],
                              "tradability_balanced": statuses["balanced"],
@@ -95,35 +128,24 @@ def main():
         fields = list(out_rows[0].keys()) if out_rows else []
         with (a.out / f"{kind}_tradable_candidates.csv").open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(out_rows)
-        passing = [r for r in out_rows if r["tradability_status"] in ("ELIGIBLE", "WATCH") and r["tradability_status"] != "BLOCKED"]
+        passing = [r for r in out_rows if r["tradability_status"] in ("ELIGIBLE", "WATCH")]
         with (a.out / f"{kind}_watchlist.csv").open("w", newline="", encoding="utf-8") as f:
             w = csv.DictWriter(f, fieldnames=fields); w.writeheader(); w.writerows(passing)
         summary[kind] = {"base_top50": len(base), "tradable_rows": len(out_rows),
+                         "raw_eligible": sum(1 for r in out_rows if r["raw_tradability_status"] == "ELIGIBLE"),
                          "eligible": sum(1 for r in out_rows if r["tradability_status"] == "ELIGIBLE"),
                          "watch": sum(1 for r in out_rows if r["tradability_status"] == "WATCH"),
                          "blocked": sum(1 for r in out_rows if r["tradability_status"] == "BLOCKED"),
                          "data_blocked": sum(1 for r in out_rows if r["tradability_status"] == "DATA_BLOCKED"),
                          "scenario_counts": {s: dict(Counter(r["tradability_" + s] for r in out_rows)) for s in SCENARIOS},
-                         "top50_overlap_with_eligible": 0,
-                         "liquidity_coverage": "DATA_BLOCKED"}
+                         "final_scenario_counts": {s: dict(Counter(
+                             ("ELIGIBLE" if r["tradability_" + s] == "ELIGIBLE" and r["freshness_status"] == "FUNDAMENTALS_FRESH"
+                              and (kind != "value" or r["valuation_status"] == "VALUATION_VALID") else
+                              "WATCH" if r["tradability_" + s] in ("ELIGIBLE", "WATCH") else "BLOCKED")
+                             for r in out_rows)) for s in SCENARIOS},
+                         "top50_overlap_with_eligible": sum(1 for r in out_rows if r["tradability_status"] == "ELIGIBLE"),
+                         "liquidity_coverage": "OK" if all(r["adv20_usd"] != "" for r in out_rows) else "PARTIAL"}
     (a.out / "tradability_summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
-    # Special-model coverage from classification + all ranking rows
-    special = {}
-    for fam in ("BANKS", "INSURANCE", "REIT", "BDC", "OTHER_FINANCIALS", "UTILITIES", "ENERGY", "UNCLASSIFIED"):
-        special[fam] = {"value_rows": 0, "quality_rows": 0, "garp_rows": 0}
-    for kind, file in (("value", "value_rankings.csv"), ("quality", "quality_rankings.csv"), ("garp", "garp_rankings.csv")):
-        for r in read(ROOT / file):
-            fam = r.get("model_family") or "UNCLASSIFIED"
-            if fam in special: special[fam][kind + "_rows"] += 1
-    coverage = {"generated_at": summary["generated_at"], "special_models": special,
-                "implementable": {"BANKS": "P/B + ROE possible; FFO/NAV not available",
-                                  "INSURANCE": "P/B + ROE possible; underwriting/capital not available",
-                                  "REIT": "P/FFO/NAV not available in current data",
-                                  "BDC": "NAV/credit not available",
-                                  "UTILITIES": "generic cash/asset metrics only; no specialized model",
-                                  "ENERGY": "generic cash/asset metrics only; no specialized model"},
-                "status": "SPECIAL_MODEL_REQUIRED_NOT_IMPLEMENTED"}
-    (ROOT / "special_model_coverage.json").write_text(json.dumps(coverage, indent=2), encoding="utf-8")
     print(json.dumps(summary, indent=2))
     return 0
 

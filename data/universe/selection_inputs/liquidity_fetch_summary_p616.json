@@ -1,0 +1,10 @@
+{
+  "requested": 144,
+  "ok": 144,
+  "partial": 0,
+  "blocked": 0,
+  "retrieved_at": "2026-11-06T08:10:23.493156+00:00",
+  "source": "yfinance",
+  "adjustment": "UNADJUSTED_CLOSE_RAW_VOLUME",
+  "out": "data\\universe\\selection_inputs\\liquidity_ohlcv_p616.csv"
+}
