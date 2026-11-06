@@ -4,11 +4,12 @@ Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft)
 Validated code HEAD: `72975b7f20c86a837dfb566bbae68d6da43b1803`
-Final PR HEAD: `769ae18a64ff5ba0d3e9c1b9b8fd39650f0d51a6`
+Final validated PR HEAD before this docs-only correction:
+`769ae18a64ff5ba0d3e9c1b9b8fd39650f0d51a6`
 
 The final HEAD differs from the validated code SHA only by subsequent
 documentation commits. No code changed after `72975b7f`. CI results below are
-from the final HEAD run, not from stale pre-documentation runs.
+from the validated final-HEAD run, not from stale pre-documentation runs.
 
 ## CI
 
