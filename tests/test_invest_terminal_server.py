@@ -1,4 +1,5 @@
 import json
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -11,6 +12,8 @@ from tools.paper_trading.engine import PaperEngine
 
 
 def _server(tmp_path):
+    Handler.sessions.clear()
+    Handler.session_ttl = 3600
     Handler.engine = PaperEngine(tmp_path)
     srv = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
@@ -44,11 +47,11 @@ def _post(opener, url, body, csrf=None, origin=None, extra=None):
 
 
 def _session(opener, base):
-    status, headers, body = _get(opener, base + "/terminal.html")
+    status, page_headers, body = _get(opener, base + "/terminal.html")
     assert status == 200
-    status, headers, body = _get(opener, base + "/api/session")
+    status, api_headers, body = _get(opener, base + "/api/session")
     assert status == 200
-    return json.loads(body), headers
+    return json.loads(body), page_headers
 
 
 def test_loopback_binding_guard():
@@ -144,3 +147,67 @@ def test_public_snapshot_has_no_token_even_with_pending_order(tmp_path):
     text = out.read_text(encoding="utf-8").lower()
     assert p["confirm_token"].lower() not in text
     assert "confirm_token" not in text and "confirmation_token" not in text
+
+
+def _session_cookie(opener):
+    for c in opener.handlers:
+        if hasattr(c, "cookiejar"):
+            for item in c.cookiejar:
+                if item.name == "dsh_paper_session":
+                    return item.value
+    raise AssertionError("session cookie missing")
+
+
+def test_session_ttl_expiry_removes_server_session_and_rejects_api(tmp_path):
+    srv, base = _server(tmp_path); opener = _opener()
+    try:
+        state, headers = _session(opener, base)
+        sid = _session_cookie(opener)
+        assert sid in Handler.sessions
+        assert "Max-Age=3600" in headers.get("Set-Cookie", "")
+        # force absolute expiry in the server-side store
+        Handler.sessions[sid]["expires_at"] = time.monotonic() - 1
+        status, _, _ = _get(opener, base + "/api/account")
+        assert status == 401
+        assert sid not in Handler.sessions
+        # old CSRF is now invalid
+        body = {"client_order_id": "EXPIRED-1", "ticker": "AAPL", "side": "BUY", "shares": 1,
+                "reference_price": 100, "price_asof": datetime.now(timezone.utc).isoformat(), "strategy": "VALUE"}
+        status, _, _ = _post(opener, base + "/api/paper/propose", body, csrf=state["csrf_token"], origin=base)
+        assert status in (401, 403)
+    finally:
+        srv.shutdown()
+
+
+def test_expired_session_requires_page_reentry(tmp_path):
+    srv, base = _server(tmp_path); opener = _opener()
+    try:
+        state, _ = _session(opener, base)
+        sid = _session_cookie(opener)
+        Handler.sessions[sid]["expires_at"] = time.monotonic() - 1
+        status, _, _ = _get(opener, base + "/api/session")
+        assert status == 401
+        # Re-enter the page to create a fresh session and fresh CSRF.
+        status, headers, _ = _get(opener, base + "/terminal.html")
+        assert status == 200
+        new_sid = _session_cookie(opener)
+        assert new_sid != sid and new_sid in Handler.sessions
+        status, _, raw = _get(opener, base + "/api/session")
+        assert status == 200
+        new_state = json.loads(raw)
+        assert new_state["csrf_token"] != state["csrf_token"]
+    finally:
+        srv.shutdown()
+
+
+def test_expired_sessions_are_purged_from_memory(tmp_path):
+    srv, base = _server(tmp_path); opener = _opener()
+    try:
+        _session(opener, base)
+        sid = _session_cookie(opener)
+        Handler.sessions[sid]["expires_at"] = time.monotonic() - 1
+        # Any new page/session creation purges expired records.
+        _get(_opener(), base + "/terminal.html")
+        assert sid not in Handler.sessions
+    finally:
+        srv.shutdown()

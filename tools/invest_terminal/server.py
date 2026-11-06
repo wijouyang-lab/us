@@ -11,7 +11,7 @@ Security model:
 The static GitHub Pages page remains read-only. It cannot reach this service.
 """
 from __future__ import annotations
-import argparse, json, secrets
+import argparse, json, secrets, time
 from http.cookies import SimpleCookie
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
@@ -53,7 +53,8 @@ def safe_public_state(engine: PaperEngine, include_pending_tokens: bool = False)
 
 class Handler(BaseHTTPRequestHandler):
     engine: PaperEngine
-    sessions: dict[str, str] = {}
+    sessions: dict[str, dict] = {}
+    session_ttl: int = SESSION_TTL
     server_version = "InvestTerminalPaper/1.1"
 
     # ---------- security helpers ----------
@@ -77,14 +78,31 @@ class Handler(BaseHTTPRequestHandler):
         m = c.get(SESSION_COOKIE)
         return m.value if m else None
 
+    def _purge_expired(self, now: float | None = None):
+        now = time.monotonic() if now is None else now
+        for sid, rec in list(self.sessions.items()):
+            if float(rec.get("expires_at", 0)) <= now:
+                self.sessions.pop(sid, None)
+
     def _session(self):
+        self._purge_expired()
         sid = self._cookie()
-        return sid if sid and sid in self.sessions else None
+        if not sid:
+            return None
+        rec = self.sessions.get(sid)
+        if rec is None:
+            return None
+        if float(rec.get("expires_at", 0)) <= time.monotonic():
+            self.sessions.pop(sid, None)
+            return None
+        return sid
 
     def _new_session(self):
+        self._purge_expired()
         sid = secrets.token_urlsafe(32)
-        self.sessions[sid] = secrets.token_urlsafe(32)
-        return sid, self.sessions[sid]
+        self.sessions[sid] = {"csrf": secrets.token_urlsafe(32),
+                              "expires_at": time.monotonic() + max(1, int(self.session_ttl))}
+        return sid, self.sessions[sid]["csrf"]
 
     def _send(self, code, body=b"", ctype="application/json; charset=utf-8", extra=None):
         self.send_response(code)
@@ -121,8 +139,9 @@ class Handler(BaseHTTPRequestHandler):
 
     def _require_csrf(self):
         token = self.headers.get("X-CSRF-Token") or ""
-        expected = self.sessions.get(self._session() or "", "")
-        return bool(token) and secrets.compare_digest(token, expected)
+        rec = self.sessions.get(self._session() or "")
+        expected = (rec or {}).get("csrf", "")
+        return bool(token) and bool(expected) and secrets.compare_digest(token, expected)
 
     def _read(self):
         try: n = int(self.headers.get("Content-Length") or 0)
@@ -147,7 +166,7 @@ class Handler(BaseHTTPRequestHandler):
             except FileNotFoundError:
                 return self._json(404, {"error": "terminal page missing"})
             return self._send(200, body, ctype, {
-                "Set-Cookie": f"{SESSION_COOKIE}={sid}; HttpOnly; SameSite=Strict; Path=/; Max-Age={SESSION_TTL}",
+                "Set-Cookie": f"{SESSION_COOKIE}={sid}; HttpOnly; SameSite=Strict; Path=/; Max-Age={max(1, int(self.session_ttl))}",
                 "Content-Security-Policy": "default-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'",
             })
         if path in STATIC_FILES:
@@ -159,7 +178,10 @@ class Handler(BaseHTTPRequestHandler):
             return self._send(200, body, ctype)
         if path == "/api/session":
             if not self._require_get(): return
-            csrf = self.sessions[self._session()]
+            rec = self.sessions.get(self._session() or "")
+            if not rec:
+                return self._json(401, {"error": "authentication required"})
+            csrf = rec["csrf"]
             state = safe_public_state(self.engine, include_pending_tokens=True)
             return self._json(200, {"authenticated": True, "csrf_token": csrf, **state})
         if path == "/api/account":
