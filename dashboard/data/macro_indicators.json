@@ -1,9 +1,9 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T16:00:58Z",
+  "generated_at": "2026-11-06T16:15:58Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
-  "ok": 11,
+  "ok": 10,
   "items": [
     {
       "key": "unrate",
@@ -80,14 +80,14 @@
     {
       "key": "ism",
       "name": "ISM制造业PMI",
-      "value": 54.9,
+      "value": null,
       "unit": "",
       "date": null,
       "prev": null,
       "change": null,
-      "source": "tradingeconomics.com",
+      "source": "ISM 官网（暂不可用）",
       "note": null,
-      "source_status": "primary"
+      "source_status": "missing"
     },
     {
       "key": "adp",
