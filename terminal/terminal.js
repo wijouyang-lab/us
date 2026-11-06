@@ -58,7 +58,7 @@
     const draw = (filter="") => {
       const f = filter.toLowerCase();
       $("#stockRows").innerHTML = stocks.filter(x => !f || `${x.ticker} ${x.name}`.toLowerCase().includes(f)).map(x =>
-        `<tr data-t="${esc(x.ticker)}"><td><strong>${esc(x.ticker)}</strong><div class="muted">${esc(x.name||"")}</div></td><td>${usd(x.current_price ?? x.price)}</td><td class="${Number(x.change_1d)>=0?"good-text":"bad-text"}">${chg(x.change_1d)}</td><td>${fmt(x.final_score,1)}</td><td>${fmt(x.rsi,1)}</td><td>${usd(x.stop_loss)}</td><td>${esc(x.status||"")}</td></tr>`).join("") || `<tr><td colspan="7"><div class="empty">无匹配股票</div></td></tr>`;
+        `<tr data-t="${esc(x.ticker)}"><td><strong>${esc(x.ticker)}</strong><div class="muted">${esc(x.name||"")}</div></td><td>${usd(x.current_price ?? x.price)}</td><td class="${Number(x.change_1d)>=0?"good-text":"bad-text"}">${chg(x.change_1d)}</td><td>${fmt(x.rsi,1)}</td><td>${esc(x.technical_date||x.scan_date||"N/A")}</td><td>${esc(x.status||"")}</td></tr>`).join("") || `<tr><td colspan="7"><div class="empty">无匹配股票</div></td></tr>`;
       $$("#stockRows tr").forEach(tr => tr.onclick = () => { const x = stocks.find(y => y.ticker === tr.dataset.t); if (x) renderDetail(x); });
     };
     draw();
@@ -71,8 +71,8 @@
     $("#stockDetail").innerHTML = `<div class="card-head"><h2>${esc(x.ticker)} · ${esc(x.name||"")}</h2><span class="pill">${esc(x.bucket||"")}</span></div>
       <div class="detail-grid">
         <div><span class="muted">Price</span><br><strong>${usd(x.current_price ?? x.price)}</strong></div>
-        <div><span class="muted">Final score</span><br><strong>${fmt(x.final_score,1)}</strong></div>
-        <div><span class="muted">Stop</span><br><strong>${usd(x.stop_loss)}</strong></div>
+        <div><span class="muted">Scan date</span><br><strong>${esc(x.scan_date||"N/A")}</strong></div>
+        <div><span class="muted">Technical date</span><br><strong>${esc(x.technical_date||"N/A")}</strong></div>
         <div><span class="muted">RSI / ATR%</span><br><strong>${fmt(x.rsi,1)} / ${fmt(x.atr_pct,2)}</strong></div>
         <div><span class="muted">MA20 / MA50</span><br><strong>${fmt(t.ma20)} / ${fmt(t.ma50)}</strong></div>
         <div><span class="muted">Last bar</span><br><strong>${esc(t.last_bar_date||"N/A")}</strong></div>
@@ -87,6 +87,48 @@
     const p = $("#orderTicker"); if (p) p.value = x.ticker;
     const price = x.current_price ?? x.price; if (price && $("#orderPrice")) $("#orderPrice").value = Number(price).toFixed(2);
     const asof = x.current_price_updated_at || snapshot.generated_at; if (asof && $("#orderAsof")) $("#orderAsof").value = asof;
+  }
+
+  let selectionKind = "value";
+  function renderSelection() {
+    const box = $("#selectionTable"); if (!box) return;
+    const sel = snapshot.selection || {};
+    const kinds = ["value", "quality", "garp"];
+    $$("#fundamentalSelection .selection-tabs button").forEach(b => {
+      b.classList.toggle("active", b.dataset.selection === selectionKind);
+      b.onclick = () => { selectionKind = b.dataset.selection; renderSelection(); };
+    });
+    if (!sel[kinds[0]]) {
+      box.innerHTML = `<div class="empty">Selection snapshot unavailable. No ranking is fabricated.</div>`;
+      return;
+    }
+    const data = sel[selectionKind] || {};
+    const rows = data.top50 || [];
+    const count = data.candidate_issuers ?? data.scored_issuers ?? data.ranked_issuers ?? rows.length;
+    if (!rows.length) { box.innerHTML = `<div class="empty">No candidates in this ranking.</div>`; return; }
+    box.innerHTML = `<div class="muted" style="margin-bottom:8px">data_as_of ${esc(sel.data_as_of||"N/A")} · top ${rows.length} · pool ${count} · ${esc(data.formula||"")}</div>
+      <table><thead><tr><th>#</th><th>Ticker / issuer</th><th>Peer</th><th>Score</th><th>Status</th></tr></thead><tbody>` +
+      rows.map((r,i)=>`<tr data-kind="${selectionKind}" data-i="${i}"><td>${i+1}</td><td><strong>${esc(r.ticker)}</strong><div class="muted">${esc(r.company_name||"")}</div></td><td>${esc(r.model_family)} / ${esc(r.accounting_standard)}</td><td class="selection-score">${fmt(r.score,2)}</td><td>${esc(r.status)}</td></tr>`).join("") +
+      `</tbody></table>`;
+    $$("#selectionTable tr[data-kind]").forEach(tr => tr.onclick = () => {
+      const r = rows[Number(tr.dataset.i)]; if (r) renderSelectionDetail(r, selectionKind);
+    });
+  }
+
+  function renderSelectionDetail(r, kind) {
+    const metrics = Object.entries(r.metrics||{}).map(([k,v]) => {
+      const p = (r.percentiles||{})[k];
+      return `<div class="list-row"><span>${esc(k)}</span><strong>${fmt(v,4)} <small>pct ${fmt(p,1)}</small></strong></div>`;
+    }).join("");
+    const missing = (r.missing_fields||[]).length ? r.missing_fields.map(esc).join(", ") : "none";
+    $("#selectionDetail").innerHTML = `<div class="card-head"><h3>${esc(r.ticker)} · ${esc(r.company_name||"")}</h3>${statusPill(r.status)}</div>
+      <div class="detail-grid"><div><span class="muted">Score</span><br><strong>${fmt(r.score,2)}</strong></div>
+      <div><span class="muted">Peer</span><br><strong>${esc(r.model_family)} / ${esc(r.accounting_standard)}</strong></div>
+      <div><span class="muted">Data as of</span><br><strong>${esc(r.data_as_of)}</strong></div>
+      <div><span class="muted">Financial period</span><br><strong>${esc(r.financial_period||"N/A")}</strong></div>
+      <div><span class="muted">Filed</span><br><strong>${esc(r.filed||"N/A")}</strong></div>
+      <div><span class="muted">Valuation support</span><br><strong>${esc(r.valuation_support||"N/A")}</strong></div></div>
+      <div class="grid two"><div><h3>Metrics / percentiles</h3>${metrics}</div><div><h3>Why selected</h3><p class="muted">${esc(r.reason||"no reason recorded")}</p><p><b>Missing:</b> ${missing}</p><p class="note">${kind === "garp" ? "Historical growth only. No forward EPS/PEG." : "Peer percentile score; not a buy/sell signal."}</p>${r.source_url?`<p><a href="${esc(r.source_url)}" target="_blank" rel="noopener">SEC source</a></p>`:""}</div></div>`;
   }
 
   function renderStrategies() {
@@ -147,7 +189,7 @@
       const r = await fetch("dashboard/data/invest_terminal_data.json", {cache:"no-store"});
       if (!r.ok) throw new Error("snapshot HTTP "+r.status);
       snapshot = await r.json();
-      nav(); renderDashboard(); renderScanner(); renderStrategies(); renderPortfolio(); renderRisk(); renderPerformance();
+      nav(); renderDashboard(); renderScanner(); renderSelection(); renderStrategies(); renderPortfolio(); renderRisk(); renderPerformance();
       const stocks = snapshot.scanner.stocks || [];
       if (stocks.length) renderDetail(stocks[0]);
       await connectLocal();

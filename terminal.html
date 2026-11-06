@@ -33,9 +33,17 @@
 
     <section id="scanner" class="panel">
       <div class="panel-head"><div><p class="eyebrow">MARKET SCANNER / RESEARCH</p><h1>股票筛选与个股详情</h1></div><span class="pill">dashboard snapshot</span></div>
+      <article class="card" id="fundamentalSelection">
+        <div class="card-head"><h2>Fundamental Selection V1</h2><span class="pill warn">RESEARCH_ONLY — NOT A BUY/SELL SIGNAL</span></div>
+        <p class="lead">Value / Quality / GARP 来自真实 SEC 基本面截面；三套排名分开，不合并成总榜。没有 PIT 回测，不构成交易建议。</p>
+        <div class="selection-tabs" role="tablist"><button data-selection="value" class="active">Value</button><button data-selection="quality">Quality</button><button data-selection="garp">GARP (historical)</button></div>
+        <div id="selectionTable" class="table-wrap"></div>
+        <div id="selectionDetail" class="empty">选择一只候选，查看因子、同行排名、缺失项与来源。</div>
+      </article>
+
       <article class="card">
         <div class="toolbar"><input id="stockSearch" placeholder="按 ticker 或名称筛选…" aria-label="搜索股票"><span class="muted" id="stockCount"></span></div>
-        <div class="table-wrap"><table><thead><tr><th>股票</th><th>价格</th><th>1D</th><th>评分</th><th>RSI</th><th>止损</th><th>状态</th></tr></thead><tbody id="stockRows"></tbody></table></div>
+        <div class="table-wrap"><table><thead><tr><th>股票</th><th>价格</th><th>1D</th><th>RSI</th><th>技术日期</th><th>状态</th></tr></thead><tbody id="stockRows"></tbody></table></div>
       </article>
       <article class="card" id="stockDetail"><div class="empty">选择一只股票查看基本面、技术面、催化剂与失效条件。</div></article>
       <p class="note">股票池只包含 Dashboard 已跟踪的股票；没有全市场回退、没有占位股票。行业链/个股新闻在缺少可核验数据时显示 N/A。</p>

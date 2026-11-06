@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-11-06T07:26:26.300110+00:00",
+  "data_as_of": "2026-11-05",
+  "value": {
+    "single_pb_top50_overlap": 29,
+    "single_ps_top50_overlap": 28,
+    "single_earnings_yield_top50_overlap": 21,
+    "single_fcf_yield_top50_overlap": 24,
+    "global_rank_top50_overlap": 50,
+    "raw_pct_top50_overlap": 50,
+    "candidate_count": 2529,
+    "all_four_positive": 851,
+    "partial_count": 1678
+  },
+  "quality": {
+    "published_top50_overlap": 50,
+    "equal_top50_overlap": 43,
+    "roe_heavy_top50_overlap": 46,
+    "cfo_heavy_top50_overlap": 45,
+    "global_no_peer_top50_overlap": 43,
+    "scored_count": 2313,
+    "weight_note": "Top-50 overlap is not a performance result; no backtest."
+  },
+  "status": "EXPERIMENTAL_SENSITIVITY_ONLY",
+  "pit_status": "PIT_BACKTEST_BLOCKED"
+}

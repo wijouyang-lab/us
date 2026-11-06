@@ -1,0 +1,65 @@
+{
+  "generated_at": "2026-11-06T07:26:25.661529Z",
+  "data_as_of": "2026-11-05",
+  "value": {
+    "rows": 5453,
+    "candidates": 2529,
+    "all_four": 851,
+    "all_five_p69": 992,
+    "coverage": {
+      "pb": 2222,
+      "ps": 2215,
+      "earnings_yield": 2451,
+      "fcf_yield": 2118
+    },
+    "status_counts": {
+      "VALUE_DATA_BLOCKED": 2924,
+      "VALUE_PARTIAL": 1678,
+      "VALUE_EXPERIMENTAL_ALL_FOUR": 851
+    }
+  },
+  "quality": {
+    "rows": 5549,
+    "scored": 2313,
+    "coverage": {
+      "roe": 2313,
+      "roa": 2313,
+      "cfo": 2313,
+      "leverage": 2313
+    },
+    "score_mismatches": 0,
+    "status_counts": {
+      "QUALITY_V1_SCORED": 2313,
+      "QUALITY_V1_BLOCKED": 1929,
+      "QUALITY_V1_SPECIAL_MODEL_REQUIRED": 1215,
+      "INSUFFICIENT_PEER_GROUP": 92
+    }
+  },
+  "garp": {
+    "rows": 5453,
+    "ranked": 3579,
+    "coverage": {
+      "revenue_growth_1y": 3406,
+      "revenue_cagr_3y": 3115,
+      "eps_growth_1y": 2176,
+      "fcf_growth_1y": 1633,
+      "earnings_stability": 2143,
+      "operating_margin_expansion": 2924,
+      "operating_leverage": 2942
+    },
+    "status_counts": {
+      "GARP_DATA_BLOCKED": 1425,
+      "GARP_EXPERIMENTAL_HISTORICAL_GROWTH": 3579,
+      "GARP_HISTORY_AVAILABLE": 449
+    }
+  },
+  "limitations": [
+    "CURRENT_CROSS_SECTIONAL_RESEARCH only; PIT_BACKTEST_BLOCKED.",
+    "Value composite is experimental equal-weight; no approved weights.",
+    "Quality peer percentiles are P6.6 current-sectional; no historical backtest.",
+    "GARP is historical growth only; no forward EPS, PEG or forecast.",
+    "Prices/market caps are P6.8-validated inputs; no new vendor quotes.",
+    "ADR and unclassified securities are excluded from Value/Quality standard rankings.",
+    "No production scan/review/evolve or PAPER-50000 state changed."
+  ]
+}

@@ -150,3 +150,21 @@ def test_no_url_controlled_api_or_wildcard_cors():
     assert "?api=" not in html
     assert "Access-Control-Allow-Origin" not in server
     assert 'ThreadingHTTPServer(("0.0.0.0"' not in server
+
+
+def test_stock_research_selection_is_labelled_research_only():
+    html = Path("terminal.html").read_text(encoding="utf-8")
+    js = Path("terminal/terminal.js").read_text(encoding="utf-8")
+    assert "Fundamental Selection V1" in html
+    assert "RESEARCH_ONLY" in html
+    assert "renderSelection" in js
+    assert 'value_composite_experimental' not in js
+
+
+def test_snapshot_carries_selection_counts():
+    import json
+    s = json.loads(Path("dashboard/data/invest_terminal_data.json").read_text(encoding="utf-8"))
+    assert s["selection"]["status"] == "CURRENT_CROSS_SECTIONAL_RESEARCH"
+    assert s["selection"]["value"]["candidate_issuers"] == 2529
+    assert len(s["selection"]["value"]["top50"]) == 50
+    assert s["selection"]["pit_status"] == "PIT_BACKTEST_BLOCKED"
