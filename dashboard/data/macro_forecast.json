@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T05:16:27Z",
+  "generated_at": "2026-11-06T05:17:40Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -20,22 +20,22 @@
       "indicator": "未季调CPI年率",
       "period": "2026年9月",
       "forecast": 3.6,
-      "actual": 3.7,
+      "actual": 3.74,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 3.7% vs 预期 3.6%（+0.1）。"
+      "impact": "实际 3.74% vs 预期 3.6%（+0.14）。"
     },
     {
       "key": "core_cpi_yoy",
       "indicator": "核心CPI年率",
       "period": "2026年9月",
       "forecast": 2.5,
-      "actual": 2.6,
+      "actual": 2.57,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 2.6% vs 预期 2.5%（+0.1）。"
+      "impact": "实际 2.57% vs 预期 2.5%（+0.07）。"
     },
     {
       "key": "cpi_mom",
