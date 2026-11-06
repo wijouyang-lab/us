@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T15:45:57Z",
+  "generated_at": "2026-11-06T16:01:00Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -9,11 +9,11 @@
       "indicator": "失业率",
       "period": "2026年10月",
       "forecast": 4.2,
-      "actual": 4.2,
+      "actual": 4.1,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 4.2% vs 预期 4.2%（+0.0）。"
+      "impact": "实际 4.1% vs 预期 4.2%（-0.1）。"
     },
     {
       "key": "cpi_yoy",
@@ -86,11 +86,11 @@
       "indicator": "季调后非农",
       "period": "最新",
       "forecast": 65.0,
-      "actual": 29.0,
+      "actual": 165.0,
       "previous": null,
       "unit": "K",
       "released_at": null,
-      "impact": "实际 29.0K vs 预期 65.0K（-36.0）。"
+      "impact": "实际 165.0K vs 预期 65.0K（+100.0）。"
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T15:46:03Z",
-  "asof": "2026-11-06T15:45:54Z",
+  "generated_at": "2026-11-06T16:01:12Z",
+  "asof": "2026-11-06T16:00:58Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -44,7 +44,7 @@
       "key": "unrate_surprise",
       "label": "失业率预期差",
       "group": "宏观",
-      "value": 0.0,
+      "value": -0.1,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
@@ -62,7 +62,7 @@
       "key": "fg_score",
       "label": "恐惧贪婪",
       "group": "情绪",
-      "value": 24.96,
+      "value": 24.63,
       "unit": "",
       "status": "ok",
       "source": "market_indicators"

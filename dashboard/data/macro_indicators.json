@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T15:45:54Z",
+  "generated_at": "2026-11-06T16:00:58Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -8,11 +8,11 @@
     {
       "key": "unrate",
       "name": "美国失业率",
-      "value": 4.2,
+      "value": 4.1,
       "unit": "%",
-      "date": "2026-09-01",
-      "prev": 4.1,
-      "change": 0.1,
+      "date": "2026-10-01",
+      "prev": 4.2,
+      "change": -0.1,
       "source": "FRED UNRATE",
       "note": null,
       "source_status": "primary"
@@ -20,11 +20,11 @@
     {
       "key": "nonfarm",
       "name": "季调后非农业就业人口",
-      "value": 29.0,
+      "value": 165.0,
       "unit": "K",
-      "date": "2026-09-01",
-      "prev": 133.0,
-      "change": 29.0,
+      "date": "2026-10-01",
+      "prev": 60.0,
+      "change": 165.0,
       "source": "FRED PAYEMS（月增）",
       "note": "单位：千人",
       "source_status": "primary"
