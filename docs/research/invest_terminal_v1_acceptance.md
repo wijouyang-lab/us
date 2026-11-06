@@ -3,15 +3,15 @@
 Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft)
-HEAD: `ae938383ee9f9879fed532fa6e05b5eaf0f9b4cf`
+HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
 
 ## CI
 
 - Full Test: **1428 passed, 1 skipped**
-  https://github.com/wijouyang-lab/us/actions/runs/42171210606
+  https://github.com/wijouyang-lab/us/actions/runs/42171669802
 - Invest Terminal Integration: success
-  https://github.com/wijouyang-lab/us/actions/runs/42171210636
-- Artifact: `invest-terminal-snapshot` (`13481745457`)
+  https://github.com/wijouyang-lab/us/actions/runs/42171669817
+- Artifact: `invest-terminal-snapshot` (`13481322594`)
 
 ## v1.1 acceptance checklist
 

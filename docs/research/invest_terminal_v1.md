@@ -3,7 +3,7 @@
 Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft, not merged)
-HEAD: `ae938383ee9f9879fed532fa6e05b5eaf0f9b4cf`
+HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
 
 ## v1.1 fixes
 
