@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T09:00:57.535992+00:00",
+  "generated_at": "2026-11-06T09:15:16.261752+00:00",
   "as_of": "2026-11-05",
   "research_only": true,
   "initial_capital": 50000.0,
@@ -53,13 +53,13 @@
         "EFOR",
         "KBH",
         "DXC",
-        "VTOL",
         "LEA",
+        "VTOL",
         "CTVA",
-        "SLVM",
         "SPB",
-        "INGM",
-        "WHR"
+        "SLVM",
+        "WHR",
+        "INGM"
       ]
     },
     "QUALITY_V1": {

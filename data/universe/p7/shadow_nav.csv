@@ -1,2 +1,2 @@
 date,shadow_id,nav,cash,positions_value,fees,turnover,status,spy_return,qqq_return,iwm_return,note
-2026-11-05,RESEARCH_SHADOW_P7,50000.0,50000.0,0.0,0.0,0.0,PENDING_NEXT_SESSION,,,,Initial funding only; no fill before next completed session.
+2026-11-05,RESEARCH_SHADOW_P7,50000.0,50000.0,0.0,0.0,0.0,PENDING_NEXT_SESSION,,,,No fill is fabricated before a complete next session.

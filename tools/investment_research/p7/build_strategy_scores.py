@@ -34,7 +34,10 @@ def load_map(name):
 
 
 def main():
-    value = load_map("value_top50.csv"); quality = load_map("quality_top50.csv"); garp = load_map("garp_top50.csv")
+    p71_value = Path("data/universe/p7/value_top50_p71.csv")
+    value = ({r["ticker"]: r for r in read(p71_value)} if p71_value.exists() else load_map("value_top50.csv"))
+    quality = load_map("quality_top50.csv"); garp = load_map("garp_top50.csv")
+    updated = {r["ticker"]: r for r in read(Path("data/universe/p7/updated_fundamentals.csv"))}
     fresh = {k: load_map(f"{k}_freshness_adjusted.csv") for k in ("value", "quality", "garp")}
     sec = {}
     for r in read(SEL / "filing_freshness_audit_p617.csv"):
@@ -60,6 +63,9 @@ def main():
             fr = fresh[{"VALUE_V1": "value", "QUALITY_V1": "quality", "GARP_V1": "garp"}[kind]].get(t, {})
             fstatus = fr.get("freshness_status", "FUNDAMENTALS_DATA_BLOCKED")
             sstatus = sec.get(({"VALUE_V1": "value", "QUALITY_V1": "quality", "GARP_V1": "garp"}[kind], t), "FILING_DATA_BLOCKED")
+            # A P7 refreshed fact row supersedes the old filing for this new score version.
+            if kind == "VALUE_V1" and updated.get(t, {}).get("refresh_status") == "UPDATED_FROM_SEC_COMPANYFACTS":
+                fstatus = "FUNDAMENTALS_FRESH"; sstatus = "FILING_HISTORY_CONFIRMED"
             tr = trade.get((kind, t), {})
             raw_status = tr.get("raw_tradability_status", "")
             final_status = tr.get("tradability_status", "DATA_BLOCKED")

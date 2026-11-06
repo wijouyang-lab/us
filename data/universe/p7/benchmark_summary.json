@@ -1,13 +1,10 @@
 {
-  "generated_at": "2026-11-06T08:58:58.834952+00:00",
+  "generated_at": "2026-11-06T09:15:17.089960+00:00",
   "as_of": "2026-11-05",
-  "source": "yfinance",
-  "tickers": [
-    "SPY",
-    "QQQ",
-    "IWM"
+  "dates": [
+    "2026-11-05"
   ],
-  "rows": 385,
-  "status": "CURRENT_SNAPSHOT_ONLY",
-  "note": "No historical strategy return; equal-weight is PENDING_TARGET_REFERENCE."
+  "rows": 4,
+  "status": "DATE_ALIGNED_SNAPSHOT",
+  "note": "No missing date is filled as zero return; equal-weight remains pending."
 }
