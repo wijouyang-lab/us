@@ -3,15 +3,16 @@
 Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft)
-HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
+Validated code HEAD: `72975b7f20c86a837dfb566bbae68d6da43b1803`
+Final docs-only commit follows this validated code HEAD.
 
 ## CI
 
-- Full Test: **1428 passed, 1 skipped**
-  https://github.com/wijouyang-lab/us/actions/runs/42171669802
+- Full Test: **1431 passed, 1 skipped**
+  https://github.com/wijouyang-lab/us/actions/runs/42173352664
 - Invest Terminal Integration: success
-  https://github.com/wijouyang-lab/us/actions/runs/42171669817
-- Artifact: `invest-terminal-snapshot` (`13481322594`)
+  https://github.com/wijouyang-lab/us/actions/runs/42173352611
+- Artifact: `invest-terminal-snapshot` (`13482425254`)
 
 ## v1.1 acceptance checklist
 
@@ -19,7 +20,8 @@ HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
 |---|---|---|---|
 | 1 | API loopback only | `serve()` fixed to `127.0.0.1`; static test rejects `ThreadingHTTPServer(("0.0.0.0"` | PASS |
 | 2 | No wildcard CORS | server emits no `Access-Control-Allow-Origin`; `OPTIONS` returns 403 | PASS |
-| 3 | Session auth | missing/wrong cookie returns 401; local page sets HttpOnly SameSite=Strict session | PASS |
+| 3 | Session auth | missing/wrong/expired cookie returns 401; local page sets HttpOnly SameSite=Strict session | PASS |
+| 3b | Session TTL | absolute server expiry, expired record removed, old CSRF invalid, page re-entry creates new session | PASS |
 | 4 | CSRF + Origin | no CSRF, bad Origin, cross-site `Sec-Fetch-Site` all return 403 | PASS |
 | 5 | URL API forgery | no `?api=` / URL-controlled base in JS or HTML | PASS |
 | 6 | Public snapshot token redaction | pending-order test asserts live `confirm_token` absent | PASS |
@@ -30,7 +32,7 @@ HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
 | 11 | Workflow path bug | separate `tests/test_paper_trading_platform.py` and `tests/test_invest_terminal_server.py` paths | PASS |
 | 12 | Frontend fallback | static snapshot first; local session only when available; no live-labeling | PASS |
 | 13 | No auto-confirm | API returns PENDING; confirm requires explicit token; double confirm 400 | PASS |
-| 14 | Full CI | 1428 passed, 1 skipped on final HEAD | PASS |
+| 14 | Full CI | 1431 passed, 1 skipped on validated code HEAD | PASS |
 
 ## E2E local request result
 
@@ -51,7 +53,36 @@ GET /api/account                      no confirm token
 
 The committed local DB was not modified by tests.
 
+## Session TTL tests
+
+The local service protects a **browser session and CSRF token**, not a
+username/password identity system.
+
+| Test | Result |
+|---|---|
+| normal session/API access | PASS |
+| expired server-side session | 401, record removed |
+| expired cookie | 401 |
+| old CSRF after expiry | rejected |
+| page re-entry | new session and new CSRF |
+| in-memory expired cleanup | PASS |
+
+`tests/test_invest_terminal_server.py`: **8 passed**.
+
 ## Public snapshot states
+
+The committed public snapshot was regenerated from the latest Dashboard data in
+a no-database test environment:
+
+```text
+generated_at:           2026-11-06T06:13:50.651804Z
+dashboard_generated_at: 2026-11-06T06:01:27Z
+stocks:                 1
+account_status:         LOCAL_PAPER_DB_NOT_PRESENT
+paper_db_exists:        false
+NAV:                    null
+confirmation token:     absent
+```
 
 - Local export with DB: `LOCAL_DB_EXPORT`, current cash/nav exported read-only.
 - No persistent DB (CI/static build): `LOCAL_PAPER_DB_NOT_PRESENT`, NAV null.
@@ -68,7 +99,8 @@ python -m tools.invest_terminal.build_snapshot
 The PR workflow artifact shows the no-DB state (`LOCAL_PAPER_DB_NOT_PRESENT`,
 NAV null). The main-only Dashboard commit path could not be run without merging
 the Draft PR; its command, allowlist entry and `[skip ci]` loop guard are covered
-by `tests/test_invest_terminal_snapshot_sync.py`.
+by `tests/test_invest_terminal_snapshot_sync.py`. This is not claimed as a
+production main workflow run.
 
 ## Remaining gaps
 

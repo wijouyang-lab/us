@@ -3,7 +3,7 @@
 Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft, not merged)
-HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
+Validated code HEAD: `72975b7f20c86a837dfb566bbae68d6da43b1803`
 
 ## v1.1 fixes
 
@@ -11,7 +11,8 @@ HEAD: `6a2afa26da45b1d8ef79387ee7ea4f0d768b82d2`
 
 - Server binds **127.0.0.1 only**; no host/0.0.0.0 option.
 - Serves `/terminal.html` and API from the **same origin**.
-- Session cookie: `HttpOnly; SameSite=Strict`.
+- Session cookie: `HttpOnly; SameSite=Strict`, with a server-side absolute expiry.
+- Expired sessions are removed and API access returns 401; old CSRF is invalid.
 - Mutating requests require an `X-CSRF-Token` header.
 - Exact Origin/Host checks; no wildcard CORS; `OPTIONS` fails closed.
 - URL-controlled API base removed. The static page cannot be pointed at an
@@ -45,7 +46,9 @@ python -m tools.invest_terminal.build_snapshot
 ```
 
 after a successful Dashboard refresh, before its existing `[skip ci]` commit.
-The snapshot is included in the existing allowlist and commit.
+The snapshot is included in the existing allowlist and commit. The committed
+no-DB snapshot has `LOCAL_PAPER_DB_NOT_PRESENT`, `NAV=null`, and no confirmation
+token. Session TTL is a browser-session guard, not username/password identity.
 If Dashboard refresh fails, the previous committed snapshot is not overwritten.
 The existing `[skip ci]` commit prevents a self-trigger loop.
 
