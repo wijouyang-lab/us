@@ -1,0 +1,54 @@
+name: Selection P6.17 external refresh
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy requests yfinance pytest
+      - name: Refresh current ADV/OHLCV
+        run: python -m tools.investment_research.selection.fetch_liquidity_p616
+      - name: Refresh SEC submissions
+        run: python -m tools.investment_research.selection.fetch_sec_submissions_p617
+      - name: Refresh P7 fundamentals and benchmarks
+        run: |
+          python -m tools.investment_research.p7.refresh_latest_fundamentals --fetch
+          python -m tools.investment_research.p7.benchmark
+      - name: Rebuild deterministic audits
+        run: |
+          python -m tools.investment_research.selection.tradability
+          python -m tools.investment_research.selection.recalculate_valuation_p617
+          python -m tools.investment_research.selection.build_p617_reports
+          python -m tools.investment_research.p7.build_strategy_scores
+          python -m tools.investment_research.p7.build_portfolios
+          python -m tools.investment_research.p7.shadow_portfolio
+      - name: Upload refreshed external snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: selection-p617-external-refresh
+          path: |
+            data/universe/selection_inputs/liquidity_ohlcv_p616.csv
+            data/universe/selection_inputs/liquidity_sessions_p617.csv
+            data/universe/selection_inputs/liquidity_fetch_summary_p616.json
+            data/universe/selection/sec_filing_history_p617.csv
+            data/universe/selection/filing_freshness_audit_p617.csv
+            data/universe/selection/filing_freshness_summary_p617.json
+            data/universe/selection/liquidity_quality_audit_p617.csv
+            data/universe/selection/tradability/
+            data/universe/selection/selection_quality_report_p617.json
+            data/universe/p7/
+          retention-days: 30
+          if-no-files-found: error

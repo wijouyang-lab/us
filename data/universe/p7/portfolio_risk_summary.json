@@ -1,0 +1,93 @@
+{
+  "generated_at": "2026-11-06T09:15:16.261752+00:00",
+  "as_of": "2026-11-05",
+  "research_only": true,
+  "initial_capital": 50000.0,
+  "cash_policy": 0.05,
+  "constraints": {
+    "long_only": true,
+    "leverage": 0,
+    "target_positions": [
+      10,
+      20
+    ],
+    "max_position": 0.1,
+    "max_sector": 0.25,
+    "cost_bps": 5.5,
+    "cost_model": "scripts/paper_trading.py 5bps slippage + 0.5bps commission"
+  },
+  "strategies": {
+    "VALUE_V1": {
+      "launchable": true,
+      "status": "LAUNCHABLE",
+      "candidate_count": 13,
+      "selected": 13,
+      "cash": 0.05,
+      "variants": {
+        "equal_weight": {
+          "cash": 0.050000000000000044,
+          "max_position": 0.1
+        },
+        "risk_adjusted": {
+          "cash": 0.050000000000000044,
+          "max_position": 0.1
+        }
+      },
+      "sector_weights": {
+        "CONSUMER_DISCRETIONARY": 0.2,
+        "CONSUMER_STAPLES": 0.08016393,
+        "INDUSTRIALS": 0.25,
+        "MATERIALS": 0.08088953,
+        "OTHER_SERVICES": 0.15343847,
+        "TECHNOLOGY": 0.18550806
+      },
+      "turnover": {
+        "initial_one_way": 1.0,
+        "expected_annual_one_way": 0.25
+      },
+      "estimated_initial_cost_usd": 26.12,
+      "selected_tickers": [
+        "ABG",
+        "GPI",
+        "CCS",
+        "EFOR",
+        "KBH",
+        "DXC",
+        "LEA",
+        "VTOL",
+        "CTVA",
+        "SPB",
+        "SLVM",
+        "WHR",
+        "INGM"
+      ]
+    },
+    "QUALITY_V1": {
+      "launchable": false,
+      "status": "NOT_LAUNCHABLE",
+      "candidate_count": 3,
+      "reason": "ONLY_3_ELIGIBLE_CANDIDATES_LT_10",
+      "selected": 0,
+      "cash": 1.0,
+      "variants": {}
+    },
+    "GARP_V1": {
+      "launchable": false,
+      "status": "NOT_LAUNCHABLE",
+      "candidate_count": 0,
+      "reason": "ONLY_0_ELIGIBLE_CANDIDATES_LT_10",
+      "selected": 0,
+      "cash": 1.0,
+      "variants": {}
+    },
+    "BLENDED_V1": {
+      "launchable": false,
+      "status": "NOT_LAUNCHABLE",
+      "candidate_count": 0,
+      "reason": "ONLY_0_ELIGIBLE_CANDIDATES_LT_10",
+      "selected": 0,
+      "cash": 1.0,
+      "variants": {}
+    }
+  }
+}
