@@ -1,30 +1,30 @@
 {
   "schema_version": "macro.v1",
-  "generated_at": "2026-11-05T14:02:07Z",
+  "generated_at": "2026-11-06T14:02:10Z",
   "economic": [
     {
       "indicator": "10Y国债",
-      "value": "4.90%",
-      "prev": "4.89%",
-      "date": "2026-11-05",
+      "value": "4.88%",
+      "prev": "4.84%",
+      "date": "2026-11-06",
       "source": "Yahoo Finance",
       "sentiment": null,
       "rationale": null
     },
     {
       "indicator": "5Y国债",
-      "value": "4.71%",
-      "prev": "4.69%",
-      "date": "2026-11-05",
+      "value": "4.66%",
+      "prev": "4.61%",
+      "date": "2026-11-06",
       "source": "Yahoo Finance",
       "sentiment": null,
       "rationale": null
     },
     {
       "indicator": "13周国债",
-      "value": "4.02%",
-      "prev": "4.03%",
-      "date": "2026-11-05",
+      "value": "4.00%",
+      "prev": "3.99%",
+      "date": "2026-11-06",
       "source": "Yahoo Finance",
       "sentiment": null,
       "rationale": null
@@ -49,9 +49,9 @@
     },
     {
       "indicator": "失业率",
-      "value": "4.20%",
-      "prev": "4.10%",
-      "date": "2026-09-01",
+      "value": "4.10%",
+      "prev": "4.20%",
+      "date": "2026-10-01",
       "source": "BLS API",
       "sentiment": null,
       "rationale": null
@@ -67,9 +67,9 @@
     },
     {
       "indicator": "Fear & Greed",
-      "value": "35 (fear)",
-      "prev": "31",
-      "date": "2026-11-05",
+      "value": "20 (extreme fear)",
+      "prev": "26",
+      "date": "2026-11-06",
       "source": "CNN",
       "sentiment": null,
       "rationale": null
@@ -77,12 +77,34 @@
   ],
   "speakers": [
     {
-      "person": "Trump",
+      "person": null,
       "title": null,
-      "content": "Inflation, tariffs and a voter revolt: The midterm verdict on Trump's economy - Naharnet",
-      "time": "11-05 02:31",
-      "source": "Naharnet",
+      "content": "Fed's Hammack, Barkin favor gradual rate-hike path to lower inflation - Reuters",
+      "time": "11-05 15:58",
+      "source": "Reuters",
       "age_tag": "📰今日-高权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Warsh",
+      "title": null,
+      "content": "Trump’s Trouncing Gives Warsh More Room for Maneuver on Rates - Bloomberg.com",
+      "time": "11-05 08:52",
+      "source": "Bloomberg.com",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "The Federal Reserve's Initial November Inflation Forecast Has Arrived, and Things Are Getting Downright Ugly for Wall Street - The Motley Fool",
+      "time": "11-05 04:06",
+      "source": "The Motley Fool",
+      "age_tag": "📄昨日-中等权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
@@ -93,7 +115,40 @@
       "content": "The Fed Needs a Better Way to Talk About Interest Rates - Bloomberg.com",
       "time": "11-05 06:00",
       "source": "Bloomberg.com",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Commercial Real Estate Lenders Adapt to Higher-Forever Rates - Commercial Observer",
+      "time": "11-03 10:00",
+      "source": "Commercial Observer",
+      "age_tag": "📑前日-低权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Democrat sweep gives markets a reason to rethink path of interest rates - CNBC",
+      "time": "11-06 05:22",
+      "source": "CNBC",
       "age_tag": "🔥今日最新-权重最高",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Inflation Matters, It Turns Out - National Review",
+      "time": "11-05 15:37",
+      "source": "National Review",
+      "age_tag": "📰今日-高权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
@@ -104,6 +159,17 @@
       "content": "Mortgage rate predictions for the next 5 years: When will they drop? - Yahoo Finance",
       "time": "11-04 12:05",
       "source": "Yahoo Finance",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Democrats Secure Congressional Majorities, Reshaping Fed Appointment Dynamics - Businesskorea",
+      "time": "11-05 19:40",
+      "source": "Businesskorea",
       "age_tag": "📰今日-高权重",
       "content_cn": null,
       "sentiment": null,
@@ -115,7 +181,7 @@
       "content": "What’s Likely to Change for the U.S. Economy After Democrats’ Resounding Victory in the Midterms? - Investopedia",
       "time": "11-04 15:33",
       "source": "Investopedia",
-      "age_tag": "📰今日-高权重",
+      "age_tag": "📄昨日-中等权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
@@ -126,6 +192,17 @@
       "content": "Election stiffens the Fed’s guardrails, but independence risks remain - WTAQ",
       "time": "11-04 11:59",
       "source": "WTAQ",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Gold weakens as oil rebounds - Investify",
+      "time": "11-06 00:54",
+      "source": "Investify",
       "age_tag": "📰今日-高权重",
       "content_cn": null,
       "sentiment": null,
@@ -134,9 +211,31 @@
     {
       "person": null,
       "title": null,
-      "content": "Fed Wins Protection With Democrats Taking Control of the Senate - Bloomberg.com",
-      "time": "11-04 09:11",
-      "source": "Bloomberg.com",
+      "content": "Election stiffens the Fed's guardrails, but independence risks remain - Reuters",
+      "time": "11-04 15:32",
+      "source": "Reuters",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": null,
+      "title": null,
+      "content": "Election stiffens the Fed’s guardrails, but independence risks remain - WSAU",
+      "time": "11-04 10:01",
+      "source": "WSAU",
+      "age_tag": "📄昨日-中等权重",
+      "content_cn": null,
+      "sentiment": null,
+      "rationale": null
+    },
+    {
+      "person": "Trump",
+      "title": null,
+      "content": "Analysis | Trump’s favorite economic policy was among Tuesday’s biggest losers - The Washington Post",
+      "time": "11-05 13:00",
+      "source": "The Washington Post",
       "age_tag": "📰今日-高权重",
       "content_cn": null,
       "sentiment": null,
@@ -145,32 +244,10 @@
     {
       "person": null,
       "title": null,
-      "content": "US Midterms, Jobs Data and Tech Earnings: 5 Events That Could Move Crypto This Week - Altcoin Buzz",
-      "time": "11-03 05:56",
-      "source": "Altcoin Buzz",
-      "age_tag": "📑前日-低权重",
-      "content_cn": null,
-      "sentiment": null,
-      "rationale": null
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "US Treasury Bonds Outlook After Midterm By OCBC - BusinessToday Malaysia",
-      "time": "11-05 03:32",
-      "source": "BusinessToday Malaysia",
-      "age_tag": "🔥今日最新-权重最高",
-      "content_cn": null,
-      "sentiment": null,
-      "rationale": null
-    },
-    {
-      "person": null,
-      "title": null,
-      "content": "Wall Street Sees U.S. Stocks Rising, with Divergence Across Sectors... Treasury Yields Uncertain [U.S. Blue Tsunami] - 아시아경제",
-      "time": "11-04 20:57",
-      "source": "아시아경제",
-      "age_tag": "📰今日-高权重",
+      "content": "10-year Treasury yield falls as traders exit tech stocks, look ahead to jobs data - CNBC",
+      "time": "11-05 04:38",
+      "source": "CNBC",
+      "age_tag": "📄昨日-中等权重",
       "content_cn": null,
       "sentiment": null,
       "rationale": null
