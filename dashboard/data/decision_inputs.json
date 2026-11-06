@@ -1,25 +1,25 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T16:18:57Z",
-  "asof": "2026-11-06T16:15:58Z",
+  "generated_at": "2026-11-06T16:20:16Z",
+  "asof": "2026-11-06T16:20:06Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
       "key": "macro_ok",
       "label": "宏观有值项",
       "group": "宏观",
-      "value": 10,
+      "value": 11,
       "unit": "/11",
-      "status": "partial",
+      "status": "ok",
       "source": "macro_indicators"
     },
     {
       "key": "macro_missing",
       "label": "缺失项",
       "group": "宏观",
-      "value": 1,
+      "value": 0,
       "unit": "",
-      "status": "partial",
+      "status": "ok",
       "source": "macro_indicators"
     },
     {
@@ -44,18 +44,18 @@
       "key": "unrate_surprise",
       "label": "失业率预期差",
       "group": "宏观",
-      "value": null,
+      "value": -0.1,
       "unit": "pp",
-      "status": "missing",
+      "status": "ok",
       "source": "macro_forecast"
     },
     {
       "key": "cpi_mom_surprise",
       "label": "CPI月率预期差",
       "group": "宏观",
-      "value": null,
+      "value": 0.45,
       "unit": "pp",
-      "status": "missing",
+      "status": "ok",
       "source": "macro_forecast"
     },
     {

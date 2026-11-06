@@ -1,9 +1,20 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-06T16:18:47Z",
+  "generated_at": "2026-11-06T16:20:10Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
+    {
+      "key": "unrate",
+      "indicator": "失业率",
+      "period": "2026年10月",
+      "forecast": 4.2,
+      "actual": 4.1,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 4.1% vs 预期 4.2%（-0.1）。"
+    },
     {
       "key": "cpi_yoy",
       "indicator": "未季调CPI年率",
@@ -25,6 +36,39 @@
       "unit": "%",
       "released_at": null,
       "impact": "实际 2.57% vs 预期 2.5%（+0.07）。"
+    },
+    {
+      "key": "cpi_mom",
+      "indicator": "季调后CPI月率",
+      "period": "2026年8月",
+      "forecast": 0.2,
+      "actual": 0.65,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 0.65% vs 预期 0.2%（+0.45）。"
+    },
+    {
+      "key": "ism",
+      "indicator": "ISM制造业PMI",
+      "period": "2026年10月",
+      "forecast": 54.0,
+      "actual": 54.9,
+      "previous": null,
+      "unit": "%",
+      "released_at": null,
+      "impact": "实际 54.9% vs 预期 54.0%（+0.9）。"
+    },
+    {
+      "key": "adp",
+      "indicator": "ADP就业人数",
+      "period": "2026年9月",
+      "forecast": 69.0,
+      "actual": 86.0,
+      "previous": null,
+      "unit": "K",
+      "released_at": null,
+      "impact": "实际 86.0K vs 预期 69.0K（+17.0）。"
     },
     {
       "key": "claims",
