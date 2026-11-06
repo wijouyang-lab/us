@@ -11,9 +11,9 @@ not evidence of Alpha.
 
 | File | Rows / size | SHA256 |
 |---|---:|---|
-| `value_metric_rankings_p69.csv` (P6.9) | 4,865,978 bytes | `ec39d952bae5b7995582836e3a2c0180b8418012af9530d595954134ccb5a14a` |
-| `quality_v1_scores_p66.csv` (P6.6) | 3,533,688 bytes | `41f81994cc657e08f12edd3ad557438f26448a978cfdaf3c610697819a832362` |
-| `us_equities_current.csv` (P6.1) | 3,145,614 bytes | `51ea915dad71906c21aea522c59591706b9f66b132f4217c91de7c6dc923c8cc` |
+| `value_metric_rankings_p69.csv` (P6.9) | 4,865,978 bytes | `646c83996698d9f03111569a4974b7093c39b0423ba69c45cd8c8c8caadc5cc5` |
+| `quality_v1_scores_p66.csv` (P6.6) | 3,533,688 bytes | `569359e7b7dd6b810a9716b1ad543ea4e3da48081befcc4d939821e4d50e147a` |
+| `us_equities_current.csv` (P6.1) | 3,145,614 bytes | `a36768832c0885a26048738948c268ee1e0b7884f47a43c10a63f1d24eef9795` |
 | `garp_growth_metrics_p614.csv` (new, derived from P6.3) | 1,542,213 bytes | `864fa1ae4ae1aea92a935a74857a3eea35f603c249a966bfa5187ef9276cb7a9` |
 | P6.3 SEC panel used to derive GARP | 67,433,497 bytes | `5687b8644ceb5ccf3d94e055f98a0a204502e68edaebfda3a294899e98a99c31` |
 

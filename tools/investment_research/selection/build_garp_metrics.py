@@ -88,7 +88,7 @@ def main():
             cik = (r.get("cik") or "").zfill(10)
             facts[cik][r["metric"]].append(r)
     # one primary target security per CIK
-    current = list(csv.DictReader(a.current.open(encoding="utf-16")))
+    current = list(csv.DictReader(a.current.open(encoding="utf-8")))
     by_cik = defaultdict(list)
     for r in current:
         cik = (r.get("CIK") or "").zfill(10)

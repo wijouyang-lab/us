@@ -20,7 +20,7 @@ def load(name):
 
 def load_raw_value():
     p = Path("data/universe/selection_inputs/value_metric_rankings_p69.csv")
-    with p.open(encoding="utf-16", newline="") as f:
+    with p.open(encoding="utf-8", newline="") as f:
         return {r["cik"].zfill(10): r for r in csv.DictReader(f)}
 
 

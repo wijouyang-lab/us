@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T07:26:25.661529Z",
+  "generated_at": "2026-11-06T07:32:37.137774Z",
   "data_as_of": "2026-11-05",
   "status": "CURRENT_CROSS_SECTIONAL_RESEARCH",
   "pit_status": "PIT_BACKTEST_BLOCKED",
@@ -8,17 +8,17 @@
   "inputs": {
     "value_metric_rankings_p69.csv": {
       "path": "data\\universe\\selection_inputs\\value_metric_rankings_p69.csv",
-      "sha256": "ec39d952bae5b7995582836e3a2c0180b8418012af9530d595954134ccb5a14a",
+      "sha256": "646c83996698d9f03111569a4974b7093c39b0423ba69c45cd8c8c8caadc5cc5",
       "rows": 5453
     },
     "quality_v1_scores_p66.csv": {
       "path": "data\\universe\\selection_inputs\\quality_v1_scores_p66.csv",
-      "sha256": "41f81994cc657e08f12edd3ad557438f26448a978cfdaf3c610697819a832362",
+      "sha256": "569359e7b7dd6b810a9716b1ad543ea4e3da48081befcc4d939821e4d50e147a",
       "rows": 5549
     },
     "us_equities_current.csv": {
       "path": "data\\universe\\selection_inputs\\us_equities_current.csv",
-      "sha256": "51ea915dad71906c21aea522c59591706b9f66b132f4217c91de7c6dc923c8cc",
+      "sha256": "a36768832c0885a26048738948c268ee1e0b7884f47a43c10a63f1d24eef9795",
       "rows": 5615
     },
     "garp_growth_metrics_p614.csv": {
