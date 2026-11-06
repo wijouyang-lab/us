@@ -9,7 +9,6 @@ import argparse, csv, json, math, tempfile
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-import yfinance as yf
 
 P7 = Path("data/universe/p7")
 STATE = P7 / "shadow_state.json"
@@ -83,6 +82,7 @@ def refresh(strategy="VALUE_V1"):
     tickers = [r["ticker"] for r in target]
     session = state.get("next_tradable_session", "2026-11-06")
     try:
+        import yfinance as yf
         yf.set_tz_cache_location(tempfile.mkdtemp(prefix="p7-shadow-"))
         data = yf.download(tickers, start=session, end="2026-11-07", interval="1d",
                            auto_adjust=False, actions=True, threads=False, progress=False, group_by="ticker")
