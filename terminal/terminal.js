@@ -81,7 +81,8 @@
       </div>
       <div class="grid two" style="margin-top:12px"><div><h3>Catalysts</h3><p class="muted">${esc(a.catalysts || "No verified catalyst in snapshot.")}</p></div><div><h3>Risks</h3><p class="muted">${esc(a.risks || "No verified risk field in snapshot.")}</p></div></div>
       <div class="grid two"><div><h3>Invalidation</h3><p class="muted">${esc(a.invalidation || "No verified invalidation in snapshot.")}</p></div><div><h3>Valuation / fundamentals</h3><p class="muted">PE forward: ${esc(x.pe_forward ?? "N/A")} · EPS TTM: ${esc(x.eps_ttm ?? "N/A")} · Profit margin: ${esc(x.profit_margin ?? "N/A")}</p></div></div>
-      <h3>Style signals</h3><div class="tags">${Object.entries(x.signals||{}).map(([k,v])=>`<span class="tag">${esc(k)}: ${esc(v.status)}</span>`).join("")}</div>`;
+      <h3>Style signals</h3><div class="tags">${Object.entries(x.signals||{}).map(([k,v])=>`<span class="tag">${esc(k)}: ${esc(v.status)}</span>`).join("")}</div>
+      <p class="note">Industry chain: N/A · per-stock news: N/A · no verified source in snapshot.</p>`;
     const p = $("#orderTicker"); if (p) p.value = x.ticker;
     const price = x.current_price ?? x.price; if (price && $("#orderPrice")) $("#orderPrice").value = Number(price).toFixed(2);
     const asof = x.current_price_updated_at || snapshot.generated_at; if (asof && $("#orderAsof")) $("#orderAsof").value = asof;
@@ -120,6 +121,7 @@
       {label:"Max drawdown", value:r.drawdown?.max_drawdown == null ? "N/A" : pct(r.drawdown.max_drawdown), sub:"requires NAV history"},
     ], "#riskKpis");
     $("#riskConcentration").innerHTML = (r.top_positions||[]).length ? r.top_positions.map(x=>`<div class="list-row"><span>${esc(x.ticker)}</span><strong>${pct(x.weight)}</strong></div>`).join("") : `<div class="empty">No positions; concentration N/A.</div>`;
+    $("#riskCorrelation").innerHTML = `<div class="empty">Correlation and sector concentration require a return history and sector map; marked NOT_AVAILABLE, not zero.</div>`;
     $("#riskWarnings").innerHTML = (r.warnings||[]).map(w=>`<div class="list-row"><span>${esc(w)}</span><span class="warn-text">warning</span></div>`).join("") || `<div class="empty">No warnings.</div>`;
     const invested = r.invested || 0;
     $("#stress").innerHTML = [-0.1,-0.2,-0.3].map(x=>`<div class="list-row"><span>Equity shock ${pct(x)}</span><strong>NAV ${usd(r.nav + invested*x)}</strong></div>`).join("") + `<p class="note">Only current invested exposure is stressed; cash is unchanged. Not a historical VaR.</p>`;

@@ -10,7 +10,7 @@ on:
       - "tools/paper_trading/**"
       - "dashboard/data/invest_terminal_data.json"
       - "tests/test_invest_terminal.py"
-      - "tests/test_paper_trading_platform.py"
+      - "tests/test_paper_trading_platform.py tests/test_invest_terminal_server.py"
       - ".github/workflows/research-invest-terminal.yml"
   push:
     branches: [main]
@@ -44,7 +44,7 @@ jobs:
         run: python -m tools.invest_terminal.build_snapshot
       - name: Run integration and paper safety tests
         run: |
-          python -m pytest -q tests/test_invest_terminal.py tests/test_paper_trading_platform.py
+          python -m pytest -q tests/test_invest_terminal.py tests/test_paper_trading_platform.py tests/test_invest_terminal_server.py
       - name: Verify no real-trading/production imports
         run: |
           test -f terminal.html
