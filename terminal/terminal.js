@@ -132,10 +132,35 @@
   }
 
   function renderStrategies() {
-    $("#strategyCards").innerHTML = snapshot.strategies.map(s => `<article class="card strategy"><h3>${esc(s.name)} ${statusPill(s.status)}</h3><div class="reason">${esc(s.status_reason)}</div>
+    const p7 = snapshot.p7 || {};
+    const ps = (p7.portfolio_risk || {}).strategies || {};
+    const p7Cards = ["VALUE_V1","QUALITY_V1","GARP_V1","BLENDED_V1"].map(id => {
+      const x = ps[id] || {status:"NOT_LAUNCHABLE"};
+      return `<article class="card strategy"><h3>${esc(id)} ${statusPill(x.status||"NOT_LAUNCHABLE")}</h3>
+        <div class="reason">${esc(x.launchable ? `${x.selected} holdings · cash ${fmt(100*(x.cash||0),1)}%` : (x.reason||"not launchable"))}</div>
+        <div class="tags"><span class="tag">P7 RESEARCH</span><span class="tag">${x.candidate_count||0} eligible</span></div>
+        <details><summary>Constraints and weights</summary>
+        <p><b>Cash:</b> ${fmt(100*(x.cash||0),1)}% · <b>Max position:</b> ${fmt(100*((x.variants||{}).risk_adjusted?.max_position||0),1)}%</p>
+        <p><b>Sectors:</b> ${esc(Object.entries(x.sector_weights||{}).map(([k,v])=>k+" "+fmt(100*v,1)+"%").join(", ")||"none")}</p>
+        <p><b>Initial cost:</b> ${usd(x.estimated_initial_cost_usd)} · <b>Turnover:</b> ${esc(JSON.stringify(x.turnover||{}))}</p>
+        <p><b>Selected:</b> ${esc((x.selected_tickers||[]).join(", ")||"none")}</p></details></article>`;
+    }).join("");
+    const cand = (p7.strategy_candidates || []).filter(x => x.candidate_status === "ELIGIBLE").slice(0,20);
+    const candRows = cand.map(x => `<tr><td>${esc(x.strategy)}</td><td><strong>${esc(x.ticker)}</strong></td><td>${fmt(x.score,2)}</td><td>${esc(x.factors_present||"")}</td></tr>`).join("");
+    const tw = (p7.target_weights || []).map(x => `<tr><td>${esc(x.ticker)}</td><td>${fmt(100*Number(x.weight||0),2)}%</td><td>${usd(x.target_notional_usd)}</td><td>${esc(x.model_family||"")}</td></tr>`).join("");
+    const sh = p7.shadow || {};
+    const nav = p7.shadow_nav || {};
+    const p7Panel = `<article class="card"><div class="card-head"><h2>P7 Strategy Assembly</h2><span class="pill warn">RESEARCH_ONLY</span></div>
+      <p class="muted">Independent research shadow: ${esc(sh.shadow_id||"RESEARCH_SHADOW_P7")} · ${esc(sh.execution_status||"PENDING")} · PAPER-50000 untouched.</p>
+      <div class="grid strategies">${p7Cards}</div>
+      <h3>Eligible candidates</h3><table class="table"><thead><tr><th>Strategy</th><th>Ticker</th><th>Score</th><th>Factors present</th></tr></thead><tbody>${candRows||'<tr><td colspan="4">No eligible candidates.</td></tr>'}</tbody></table>
+      <h3>Target weights</h3><table class="table"><thead><tr><th>Ticker</th><th>Weight</th><th>Notional</th><th>Industry</th></tr></thead><tbody>${tw||'<tr><td colspan="4">No launchable weights.</td></tr>'}</tbody></table>
+      <p class="note">Shadow NAV ${usd(nav.nav || sh.initial_capital || 50000)} · cash ${usd(nav.cash)} · status ${esc(nav.status||"PENDING")}. No fill before the next completed session.</p></article>`;
+    $("#strategyCards").innerHTML = p7Panel + snapshot.strategies.map(s => `<article class="card strategy"><h3>${esc(s.name)} ${statusPill(s.status)}</h3><div class="reason">${esc(s.status_reason)}</div>
       <div class="tags"><span class="tag">${esc(s.version)}</span><span class="tag">${esc(s.rebalance)}</span></div>
-      <details><summary>规则、成本与证据</summary><p><b>股票池：</b>${esc(s.universe)}</p><p><b>选择：</b>${esc(s.selection)}</p><p><b>买入/卖出：</b>${esc(s.entry)} / ${esc(s.exit)}</p><p><b>调仓/仓位：</b>${esc(s.rebalance)} / ${esc(s.position)}</p><p><b>风险：</b>${esc(s.risk)}</p><p><b>成本：</b>${esc(s.costs)}</p><ul>${s.evidence.map(e=>`<li>${esc(e)}</li>`).join("")}</ul><p class="note">${s.not_claimed.map(esc).join(" · ")}</p></details></article>`).join("");
-    $("#benchmarks").innerHTML = snapshot.benchmarks.map(b => `<div class="benchmark"><div><strong>${esc(b.id)}</strong> ${esc(b.name)}<div class="muted">${esc(b.reason||"")}</div></div><span class="status">${esc(b.status)}</span></div>`).join("");
+      <details><summary>Rules, costs and evidence</summary><p><b>Universe:</b> ${esc(s.universe)}</p><p><b>Selection:</b> ${esc(s.selection)}</p><p><b>Entry / exit:</b> ${esc(s.entry)} / ${esc(s.exit)}</p><p><b>Rebalance / position:</b> ${esc(s.rebalance)} / ${esc(s.position)}</p><p><b>Risk:</b> ${esc(s.risk)}</p><p><b>Costs:</b> ${esc(s.costs)}</p><ul>${s.evidence.map(e=>`<li>${esc(e)}</li>`).join("")}</ul><p class="note">${s.not_claimed.map(esc).join(" · ")}</p></details></article>`).join("");
+    $("#benchmarks").innerHTML = snapshot.benchmarks.map(b => `<div class="benchmark"><div><strong>${esc(b.id)}</strong> ${esc(b.name)}<div class="muted">${esc(b.reason||"")}</div></div><span class="status">${esc(b.status)}</span></div>`).join("") +
+      `<div class="benchmark"><div><strong>P7</strong> SPY / QQQ / IWM snapshot<div class="muted">${esc((p7.benchmarks||{}).note||"")}</div></div><span class="status">CURRENT_SNAPSHOT_ONLY</span></div>`;
   }
 
   function renderPortfolio() {

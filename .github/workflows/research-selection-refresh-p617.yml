@@ -23,11 +23,18 @@ jobs:
         run: python -m tools.investment_research.selection.fetch_liquidity_p616
       - name: Refresh SEC submissions
         run: python -m tools.investment_research.selection.fetch_sec_submissions_p617
+      - name: Refresh P7 fundamentals and benchmarks
+        run: |
+          python -m tools.investment_research.p7.refresh_latest_fundamentals --fetch
+          python -m tools.investment_research.p7.benchmark
       - name: Rebuild deterministic audits
         run: |
           python -m tools.investment_research.selection.tradability
           python -m tools.investment_research.selection.recalculate_valuation_p617
           python -m tools.investment_research.selection.build_p617_reports
+          python -m tools.investment_research.p7.build_strategy_scores
+          python -m tools.investment_research.p7.build_portfolios
+          python -m tools.investment_research.p7.shadow_portfolio
       - name: Upload refreshed external snapshot
         uses: actions/upload-artifact@v4
         with:
@@ -42,5 +49,6 @@ jobs:
             data/universe/selection/liquidity_quality_audit_p617.csv
             data/universe/selection/tradability/
             data/universe/selection/selection_quality_report_p617.json
+            data/universe/p7/
           retention-days: 30
           if-no-files-found: error

@@ -19,6 +19,7 @@ from tools.paper_trading.engine import PaperEngine
 DEFAULT_DASHBOARD = Path("dashboard/data/dashboard_data.json")
 DEFAULT_OUT = Path("dashboard/data/invest_terminal_data.json")
 SELECTION = Path("data/universe/selection/selection_snapshot.json")
+P7_STATUS = Path("data/universe/p7/p7_status.json")
 
 
 def unavailable_account():
@@ -79,6 +80,7 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
             selection = {"status": "SELECTION_SNAPSHOT_INVALID"}
     else:
         selection = {"status": "SELECTION_SNAPSHOT_MISSING"}
+    p7 = json.loads(P7_STATUS.read_text(encoding="utf-8")) if P7_STATUS.exists() else {"status": "P7_STATUS_MISSING", "research_only": True}
     snapshot = {
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source": {
@@ -98,6 +100,7 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
         "strategies": STRATEGIES,
         "benchmarks": BENCHMARKS,
         "selection": selection,
+        "p7": p7,
         "scanner": {"count": len(stocks), "stocks": stocks,
                      "source": d.get("meta", {}).get("stocks_source"),
                      "universe_note": "Only dashboard active/observation stocks are exposed; no full-market fallback is implied."},
