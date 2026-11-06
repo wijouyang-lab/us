@@ -4,15 +4,19 @@ Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft)
 Validated code HEAD: `72975b7f20c86a837dfb566bbae68d6da43b1803`
-Final docs-only commit follows this validated code HEAD.
+Final PR HEAD: `769ae18a64ff5ba0d3e9c1b9b8fd39650f0d51a6`
+
+The final HEAD differs from the validated code SHA only by subsequent
+documentation commits. No code changed after `72975b7f`. CI results below are
+from the final HEAD run, not from stale pre-documentation runs.
 
 ## CI
 
 - Full Test: **1431 passed, 1 skipped**
-  https://github.com/wijouyang-lab/us/actions/runs/42173352664
+  https://github.com/wijouyang-lab/us/actions/runs/42173837770
 - Invest Terminal Integration: success
-  https://github.com/wijouyang-lab/us/actions/runs/42173352611
-- Artifact: `invest-terminal-snapshot` (`13482425254`)
+  https://github.com/wijouyang-lab/us/actions/runs/42173837685
+- Artifact: `invest-terminal-snapshot` (`13481519371`)
 
 ## v1.1 acceptance checklist
 
