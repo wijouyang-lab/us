@@ -4,20 +4,20 @@ Date: 2026-11-06
 Branch: `research/invest-terminal-v1`
 PR: #512 (Draft)
 Validated code HEAD: `72975b7f20c86a837dfb566bbae68d6da43b1803`
-Final validated PR HEAD before this docs-only correction:
-`769ae18a64ff5ba0d3e9c1b9b8fd39650f0d51a6`
+Prior PR HEAD: `769ae18a64ff5ba0d3e9c1b9b8fd39650f0d51a6`
+Current validated PR HEAD: `6dc9a806aef1008fb8620d6ac6b89aaf59a21213`
 
-The final HEAD differs from the validated code SHA only by subsequent
-documentation commits. No code changed after `72975b7f`. CI results below are
-from the validated final-HEAD run, not from stale pre-documentation runs.
+`6dc9a806` differs from the validated code SHA only by later documentation
+commits. No code changed after `72975b7f`. CI results below are from the
+`6dc9a806` run, not from stale pre-documentation runs.
 
 ## CI
 
 - Full Test: **1431 passed, 1 skipped**
-  https://github.com/wijouyang-lab/us/actions/runs/42173837770
+  https://github.com/wijouyang-lab/us/actions/runs/42175119264
 - Invest Terminal Integration: success
-  https://github.com/wijouyang-lab/us/actions/runs/42173837685
-- Artifact: `invest-terminal-snapshot` (`13481519371`)
+  https://github.com/wijouyang-lab/us/actions/runs/42175119313
+- Artifact: `invest-terminal-snapshot` (`13483057122`)
 
 ## v1.1 acceptance checklist
 
@@ -37,7 +37,7 @@ from the validated final-HEAD run, not from stale pre-documentation runs.
 | 11 | Workflow path bug | separate `tests/test_paper_trading_platform.py` and `tests/test_invest_terminal_server.py` paths | PASS |
 | 12 | Frontend fallback | static snapshot first; local session only when available; no live-labeling | PASS |
 | 13 | No auto-confirm | API returns PENDING; confirm requires explicit token; double confirm 400 | PASS |
-| 14 | Full CI | 1431 passed, 1 skipped on validated code HEAD | PASS |
+| 14 | Full CI | 1431 passed, 1 skipped on current validated PR HEAD `6dc9a806` | PASS |
 
 ## E2E local request result
 
