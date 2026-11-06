@@ -64,7 +64,7 @@
             <div class="ticket-actions"><button type="submit" class="primary">生成待确认订单</button><span id="apiStatus" class="muted"></span></div>
           </form>
           <div id="confirmBox" class="confirm-box" hidden><p>订单已生成。请核对后手动确认，不会自动成交。</p><code id="confirmToken"></code><button id="confirmBtn" class="primary">人工确认成交</button><button id="cancelBtn" class="ghost">取消</button></div>
-          <p class="note">静态 GitHub Pages 只读；成本使用现有 IBKR Pro Tiered forward model。若需提议/确认，请在本机启动 <code>python -m tools.invest_terminal.server</code>，并在 URL 加 <code>?api=http://127.0.0.1:8765</code>。</p>
+          <p class="note">静态 GitHub Pages 只读；成本使用现有 IBKR Pro Tiered forward model。若需提议/确认，请在本机运行 <code>python -m tools.invest_terminal.server</code>，然后打开它输出的 <code>http://127.0.0.1:8765/terminal.html</code>（同源、本地认证、手动确认）。</p>
         </article>
       </div>
       <div class="grid two">

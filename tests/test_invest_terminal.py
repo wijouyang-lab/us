@@ -26,6 +26,7 @@ def test_no_strategy_is_claimed_pass_without_validation():
 
 def test_snapshot_uses_paper_account_and_does_not_fabricate_history(tmp_path):
     out = tmp_path / "terminal.json"
+    PaperEngine(tmp_path / "paper")
     s = build(Path("dashboard/data/dashboard_data.json"), tmp_path / "paper", out)
     assert s["account"]["account_id"] == "PAPER-50000"
     assert s["account"]["initial_cash"] == 50000.0
@@ -112,3 +113,40 @@ def test_signal_value_research_only_when_metrics_exist():
     r = value({"pe_ttm": 10.0, "pb": 2.0})
     assert r["status"] == "RESEARCH_ONLY"
     assert r["score"] is not None
+
+
+def test_public_snapshot_never_contains_pending_confirmation_token(tmp_path):
+    import json
+    from datetime import datetime, timezone
+    p = tmp_path / "paper"; e = PaperEngine(p)
+    pending = e.propose(client_order_id="SECRET-1", ticker="AAPL", side="BUY", shares=1,
+                        reference_price=100, price_asof=datetime.now(timezone.utc).isoformat(),
+                        strategy="VALUE")
+    assert pending["confirm_token"]
+    out = tmp_path / "terminal.json"
+    s = build(Path("dashboard/data/dashboard_data.json"), p, out)
+    text = out.read_text(encoding="utf-8").lower()
+    assert "confirm_token" not in text
+    assert "confirmation_token" not in text
+    assert pending["confirm_token"].lower() not in text
+    assert s["account"]["pending_order_count"] == 1
+    assert "confirm_token" not in json.dumps(s).lower()
+
+
+def test_snapshot_without_persistent_db_is_explicitly_unavailable(tmp_path):
+    out = tmp_path / "terminal.json"
+    s = build(Path("dashboard/data/dashboard_data.json"), tmp_path / "missing-paper", out)
+    assert s["account"]["account_status"] == "LOCAL_PAPER_DB_NOT_PRESENT"
+    assert s["portfolio"]["nav"] is None
+    assert s["source"]["paper_db_exists"] is False
+    assert not (tmp_path / "missing-paper" / "paper.sqlite").exists()
+
+
+def test_no_url_controlled_api_or_wildcard_cors():
+    js = Path("terminal/terminal.js").read_text(encoding="utf-8")
+    html = Path("terminal.html").read_text(encoding="utf-8")
+    server = Path("tools/invest_terminal/server.py").read_text(encoding="utf-8")
+    assert "URLSearchParams(location.search)" not in js
+    assert "?api=" not in html
+    assert "Access-Control-Allow-Origin" not in server
+    assert 'ThreadingHTTPServer(("0.0.0.0"' not in server

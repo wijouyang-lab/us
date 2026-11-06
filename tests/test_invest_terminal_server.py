@@ -1,30 +1,146 @@
-import json, threading, urllib.request
+import json
+import urllib.error
+import urllib.request
 from datetime import datetime, timezone
+from http.cookiejar import CookieJar
 from http.server import ThreadingHTTPServer
-from tools.invest_terminal.server import Handler
+import threading
+
+from tools.invest_terminal.server import Handler, loopback_only
 from tools.paper_trading.engine import PaperEngine
 
 
-def _post(base, path, body):
-    req = urllib.request.Request(base + path, data=json.dumps(body).encode(),
-                                 headers={"Content-Type": "application/json"})
-    return json.loads(urllib.request.urlopen(req, timeout=5).read())
-
-
-def test_local_api_requires_manual_confirmation(tmp_path):
+def _server(tmp_path):
     Handler.engine = PaperEngine(tmp_path)
     srv = ThreadingHTTPServer(("127.0.0.1", 0), Handler)
-    thread = threading.Thread(target=srv.serve_forever, daemon=True); thread.start()
-    base = f"http://127.0.0.1:{srv.server_port}"
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, f"http://127.0.0.1:{srv.server_port}"
+
+
+def _opener():
+    return urllib.request.build_opener(urllib.request.HTTPCookieProcessor(CookieJar()))
+
+
+def _get(opener, url, headers=None):
+    req = urllib.request.Request(url, headers=headers or {})
     try:
-        p = _post(base, "/api/paper/propose", {
-            "client_order_id": "API-1", "ticker": "AAPL", "side": "BUY", "shares": 1,
-            "reference_price": 100, "price_asof": datetime.now(timezone.utc).isoformat(),
-            "strategy": "VALUE"})
-        assert p["status"] == "PENDING" and p["confirm_token"]
-        assert Handler.engine.account()["positions"] == []
-        f = _post(base, "/api/paper/confirm", {"order_id": p["order_id"], "token": p["confirm_token"]})
-        assert f["fill"]["shares"] == 1
-        assert Handler.engine.account()["positions"][0]["ticker"] == "AAPL"
+        r = opener.open(req, timeout=5)
+        return r.status, dict(r.headers), r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, dict(e.headers), e.read()
+
+
+def _post(opener, url, body, csrf=None, origin=None, extra=None):
+    headers = {"Content-Type": "application/json"}
+    if csrf: headers["X-CSRF-Token"] = csrf
+    if origin: headers["Origin"] = origin
+    headers.update(extra or {})
+    req = urllib.request.Request(url, data=json.dumps(body).encode(), headers=headers)
+    try:
+        r = opener.open(req, timeout=5)
+        return r.status, dict(r.headers), r.read()
+    except urllib.error.HTTPError as e:
+        return e.code, dict(e.headers), e.read()
+
+
+def _session(opener, base):
+    status, headers, body = _get(opener, base + "/terminal.html")
+    assert status == 200
+    status, headers, body = _get(opener, base + "/api/session")
+    assert status == 200
+    return json.loads(body), headers
+
+
+def test_loopback_binding_guard():
+    assert loopback_only("127.0.0.1")
+    assert loopback_only("localhost")
+    assert not loopback_only("0.0.0.0")
+    assert not loopback_only("192.168.1.10")
+
+
+def test_page_session_and_missing_or_wrong_auth(tmp_path):
+    srv, base = _server(tmp_path); opener = _opener()
+    try:
+        status, headers, _ = _get(opener, base + "/terminal.html")
+        assert status == 200
+        assert "HttpOnly" in headers.get("Set-Cookie", "")
+        assert "dsh_paper_session" in headers.get("Set-Cookie", "")
+        assert "Access-Control-Allow-Origin" not in headers
+        status, _, _ = _get(_opener(), base + "/api/account")
+        assert status == 401
+        good, _ = _session(opener, base); assert good["authenticated"] is True
+        # wrong cookie has no session
+        status, _, _ = _get(_opener(), base + "/api/account", {"Cookie": "dsh_paper_session=wrong"})
+        assert status == 401
     finally:
         srv.shutdown()
+
+
+def test_origin_csrf_and_cross_site_post_fail_closed(tmp_path):
+    srv, base = _server(tmp_path); opener = _opener()
+    try:
+        state, _ = _session(opener, base); csrf = state["csrf_token"]
+        body = {"client_order_id": "SEC-1", "ticker": "AAPL", "side": "BUY", "shares": 1,
+                "reference_price": 100, "price_asof": datetime.now(timezone.utc).isoformat(), "strategy": "VALUE"}
+        # no CSRF
+        status, _, _ = _post(opener, base + "/api/paper/propose", body, origin=base)
+        assert status == 403
+        # bad origin
+        status, _, _ = _post(opener, base + "/api/paper/propose", body, csrf=csrf, origin="https://evil.example")
+        assert status == 403
+        # cross-site fetch metadata
+        status, _, _ = _post(opener, base + "/api/paper/propose", body, csrf=csrf, origin=base,
+                             extra={"Sec-Fetch-Site": "cross-site"})
+        assert status == 403
+        # valid same-origin proposal
+        status, _, raw = _post(opener, base + "/api/paper/propose", body, csrf=csrf, origin=base)
+        assert status == 200
+        p = json.loads(raw); assert p["status"] == "PENDING" and p["confirm_token"]
+    finally:
+        srv.shutdown()
+
+
+def test_manual_confirmation_and_duplicate_rejection(tmp_path):
+    srv, base = _server(tmp_path); opener = _opener()
+    try:
+        state, _ = _session(opener, base); csrf = state["csrf_token"]
+        body = {"client_order_id": "E2E-1", "ticker": "AAPL", "side": "BUY", "shares": 1,
+                "reference_price": 100, "price_asof": datetime.now(timezone.utc).isoformat(), "strategy": "VALUE"}
+        status, _, raw = _post(opener, base + "/api/paper/propose", body, csrf=csrf, origin=base)
+        assert status == 200 and json.loads(raw)["status"] == "PENDING"
+        assert Handler.engine.account()["positions"] == []
+        # duplicate id
+        status, _, _ = _post(opener, base + "/api/paper/propose", body, csrf=csrf, origin=base)
+        assert status == 400
+        p = json.loads(raw)
+        status, _, raw = _post(opener, base + "/api/paper/confirm",
+                               {"order_id": p["order_id"], "token": p["confirm_token"]}, csrf=csrf, origin=base)
+        assert status == 200
+        acct = Handler.engine.account()
+        assert acct["positions"] and acct["positions"][0]["ticker"] == "AAPL"
+        assert acct["cash"] < 50000.0
+        assert len(Handler.engine.history()) == 1
+        status, _, raw_acct = _get(opener, base + "/api/account")
+        assert status == 200
+        safe = json.loads(raw_acct)
+        assert safe["account"]["cash"] < 50000.0
+        assert "confirm_token" not in json.dumps(safe).lower()
+        # confirmation single use
+        status, _, _ = _post(opener, base + "/api/paper/confirm",
+                             {"order_id": p["order_id"], "token": p["confirm_token"]}, csrf=csrf, origin=base)
+        assert status == 400
+    finally:
+        srv.shutdown()
+
+
+def test_public_snapshot_has_no_token_even_with_pending_order(tmp_path):
+    from tools.invest_terminal.build_snapshot import build
+    from pathlib import Path
+    e = PaperEngine(tmp_path / "paper")
+    p = e.propose(client_order_id="TOKEN-1", ticker="AAPL", side="BUY", shares=1,
+                  reference_price=100, price_asof=datetime.now(timezone.utc).isoformat(), strategy="VALUE")
+    out = tmp_path / "snap.json"
+    build(Path("dashboard/data/dashboard_data.json"), tmp_path / "paper", out)
+    text = out.read_text(encoding="utf-8").lower()
+    assert p["confirm_token"].lower() not in text
+    assert "confirm_token" not in text and "confirmation_token" not in text

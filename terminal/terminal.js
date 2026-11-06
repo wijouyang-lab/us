@@ -6,10 +6,11 @@
   const chg = v => v === null || v === undefined || v === "" || Number.isNaN(Number(v)) ? "N/A" : pct(Number(v)/100);
   const pct = v => v === null || v === undefined || v === "" || Number.isNaN(Number(v)) ? "N/A" : (Number(v)*100).toFixed(2)+"%";
   const usd = v => v === null || v === undefined || v === "" || Number.isNaN(Number(v)) ? "N/A" : "$"+Number(v).toLocaleString(undefined,{maximumFractionDigits:2});
-  const apiBase = new URLSearchParams(location.search).get("api") || window.INVEST_TERMINAL_API || "";
   let snapshot = null;
   let selected = null;
   let pending = null;
+  let apiOnline = false;
+  let csrfToken = "";
 
   const renderKpis = (items, el) => { $(el).innerHTML = items.map(x => `<div class="kpi"><div class="label">${esc(x.label)}</div><div class="value ${x.cls||""}">${x.html ?? esc(x.value)}</div>${x.sub?`<div class="muted">${esc(x.sub)}</div>`:""}</div>`).join(""); };
   const statusPill = s => `<span class="pill ${s==="PASS"?"good":s==="FAIL"?"warn":""}">${esc(s)}</span>`;
@@ -108,7 +109,7 @@
     $("#orders").innerHTML = orders.length ? orders.map(o=>`<div class="list-row"><span>${esc(o.ticker)} ${esc(o.side)} ${o.shares}<div class="muted">${esc(o.strategy)} · ${esc(o.status)}</div></span><code>${esc(o.order_id)}</code></div>`).join("") : `<div class="empty">No orders.</div>`;
     const h = a.history || [];
     $("#ledger").innerHTML = h.length ? h.map(x=>`<div class="list-row"><span>${esc(x.type||"FILL")} ${esc(x.ticker||"")}</span><span>${usd(x.amount ?? x.net_amount ?? x.cash_delta)}</span></div>`).join("") : `<div class="empty">Append-only ledger is empty.</div>`;
-    $("#apiStatus").textContent = apiBase ? "Local API connected: " + apiBase : "Read-only static snapshot; no trading API configured.";
+    $("#apiStatus").textContent = apiOnline ? "Local authenticated PAPER API · same-origin" : "Read-only static snapshot · local PAPER API unavailable";
   }
 
   function renderRisk() {
@@ -149,12 +150,66 @@
       nav(); renderDashboard(); renderScanner(); renderStrategies(); renderPortfolio(); renderRisk(); renderPerformance();
       const stocks = snapshot.scanner.stocks || [];
       if (stocks.length) renderDetail(stocks[0]);
+      await connectLocal();
       if (snapshot.account.orders?.length) {
         const p = snapshot.account.orders.find(o=>o.status==="PENDING");
         if (p) showConfirm(p);
       }
     } catch (e) {
       document.querySelector("main").innerHTML = `<div class="card"><h2>Snapshot unavailable</h2><p class="muted">${esc(e.message)}. No fake data is rendered.</p></div>`;
+    }
+  }
+
+  async function connectLocal() {
+    try {
+      const r = await fetch("/api/session", {credentials:"same-origin", cache:"no-store"});
+      if (!r.ok) throw new Error("read-only");
+      const j = await r.json();
+      if (!j.authenticated || !j.csrf_token) throw new Error("read-only");
+      apiOnline = true; csrfToken = j.csrf_token;
+      applyLocalState(j);
+    } catch (e) {
+      apiOnline = false; csrfToken = "";
+      const el = $("#apiStatus"); if (el) el.textContent = "Read-only static snapshot · local PAPER API unavailable";
+    }
+  }
+
+  function calcNav(a) {
+    const invested = (a.positions||[]).reduce((n,p)=>n + Number(p.shares||0)*Number(p.avg_cost||0), 0);
+    return Number(a.cash||0) + invested;
+  }
+
+  function applyLocalState(j) {
+    const a = {...snapshot.account, ...j.account};
+    a.orders = j.orders || []; a.history = j.history || [];
+    const tokens = new Map((j.pending_confirmations||[]).map(x=>[x.order_id, x.confirm_token]));
+    a.orders = a.orders.map(o => tokens.has(o.order_id) ? {...o, confirm_token:tokens.get(o.order_id)} : o);
+    a.pending_order_count = a.orders.filter(o=>o.status==="PENDING").length;
+    a.nav = calcNav(a);
+    a.account_status = a.account_status || "LOCAL_DB_AVAILABLE";
+    snapshot.account = a;
+    const positions = a.positions || [];
+    const invested = positions.reduce((n,p)=>n + Number(p.shares||0)*Number(p.avg_cost||0), 0);
+    snapshot.portfolio.nav = a.nav; snapshot.portfolio.cash = a.cash; snapshot.portfolio.positions = positions;
+    snapshot.portfolio.performance = {...(snapshot.portfolio.performance||{}), nav:a.nav, cash:a.cash,
+      status: a.history?.length ? "AVAILABLE" : "NO_HISTORY", realized_pnl:a.realized_pnl, total_fees:a.total_fees};
+    snapshot.risk = {...(snapshot.risk||{}), cash:a.cash, invested, nav:a.nav,
+      cash_weight: a.nav ? Number(a.cash)/a.nav : null,
+      max_position_weight: positions.length && a.nav ? Math.max(...positions.map(p=>Number(p.shares)*Number(p.avg_cost)/a.nav)) : null,
+      positions: positions.map(p=>({ticker:p.ticker,value:Number(p.shares)*Number(p.avg_cost),weight:a.nav?Number(p.shares)*Number(p.avg_cost)/a.nav:null})),
+      top_positions: positions.map(p=>({ticker:p.ticker,value:Number(p.shares)*Number(p.avg_cost),weight:a.nav?Number(p.shares)*Number(p.avg_cost)/a.nav:null})),
+      status: positions.length ? "AVAILABLE" : "CASH_ONLY", warnings: positions.length ? [] : ["NO_POSITIONS"]};
+    renderDashboard(); renderPortfolio(); renderRisk(); renderPerformance();
+  }
+
+  async function refreshLocal() {
+    try {
+      const r = await fetch("/api/account", {credentials:"same-origin", cache:"no-store"});
+      if (!r.ok) throw new Error("read-only");
+      applyLocalState(await r.json());
+    } catch (e) {
+      apiOnline = false;
+      const el = $("#apiStatus"); if (el) el.textContent = "Read-only static snapshot · local PAPER API unavailable";
     }
   }
 
@@ -167,16 +222,18 @@
     $("#cancelBtn").onclick = () => cancelOrder(order);
   }
   async function post(path, body) {
-    if (!apiBase) throw new Error("No local API configured. Start tools.invest_terminal.server and open ?api=http://127.0.0.1:8765");
-    const r = await fetch(apiBase.replace(/\/$/,"")+path, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});
+    if (!apiOnline || !csrfToken) throw new Error("Read-only mode: local authenticated API is unavailable");
+    const r = await fetch(path, {method:"POST", credentials:"same-origin",
+      headers:{"Content-Type":"application/json","X-CSRF-Token":csrfToken}, body:JSON.stringify(body)});
     const j = await r.json(); if (!r.ok) throw new Error(j.error || "request failed"); return j;
   }
   async function confirmOrder(order) {
-    try { await post("/api/paper/confirm", {order_id:order.order_id, token:order.confirm_token || order.confirmation_token}); location.reload(); }
+    try { await post("/api/paper/confirm", {order_id:order.order_id, token:order.confirm_token || order.confirmation_token});
+      $("#confirmBox").hidden = true; await refreshLocal(); }
     catch(e){ alert(e.message); }
   }
   async function cancelOrder(order) {
-    try { await post("/api/paper/cancel", {order_id:order.order_id}); location.reload(); }
+    try { await post("/api/paper/cancel", {order_id:order.order_id}); $("#confirmBox").hidden = true; await refreshLocal(); }
     catch(e){ alert(e.message); }
   }
   $("#orderForm").onsubmit = async e => {
