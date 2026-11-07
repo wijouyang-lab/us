@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-11-07T04:47:27Z",
-  "market_updated_at": "2026-11-07T04:47:26Z",
-  "technical_updated_at": "2026-11-07T04:47:27Z",
+  "generated_at": "2026-11-07T05:02:37Z",
+  "market_updated_at": "2026-11-07T05:02:35Z",
+  "technical_updated_at": "2026-11-07T05:02:37Z",
   "network_status": "ok",
   "quote_backends": [
     "yfinance",
@@ -23,14 +23,14 @@
     "kline_ok": 0,
     "technical_ok": 1,
     "price_source_breakdown": {
-      "realtime": 1
+      "last_close": 1
     }
   },
   "review": {
     "core_closed": 0,
-    "core_open": 12,
+    "core_open": 8,
     "observation_closed": 0,
-    "observation_open": 12,
+    "observation_open": 6,
     "actual_active": 0,
     "unresolved_pnl_events": 0,
     "price_refreshed_count": 11,
