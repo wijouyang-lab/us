@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-06T23:52:24Z",
+  "generated_at": "2026-11-07T00:02:57Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -78,7 +78,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-11-06",
         "bars_source": "yfinance",
-        "computed_at": "2026-11-06T23:52:11Z",
+        "computed_at": "2026-11-07T00:02:40Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -102,7 +102,7 @@
         "change_1d": -0.4606,
         "change_5d": -0.936,
         "change_20d": -0.7148,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -120,7 +120,7 @@
         "change_1d": 0.3145,
         "change_5d": -2.6808,
         "change_20d": -5.5646,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -138,7 +138,7 @@
         "change_1d": 1.0875,
         "change_5d": -3.3714,
         "change_20d": -10.1832,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -156,7 +156,7 @@
         "change_1d": 0.0,
         "change_5d": 32.0288,
         "change_20d": 72.7763,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -174,7 +174,7 @@
         "change_1d": 0.0,
         "change_5d": -1.4202,
         "change_20d": -7.3417,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -192,7 +192,7 @@
         "change_1d": -0.5236,
         "change_5d": 0.0,
         "change_20d": 2.2165,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -210,7 +210,7 @@
         "change_1d": 0.0,
         "change_5d": -1.5463,
         "change_20d": -7.4288,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -228,7 +228,7 @@
         "change_1d": 0.0,
         "change_5d": -0.923,
         "change_20d": -6.0714,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -246,7 +246,7 @@
         "change_1d": 0.0,
         "change_5d": 0.3916,
         "change_20d": 0.0675,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -264,7 +264,7 @@
         "change_1d": 0.0,
         "change_5d": 4.6321,
         "change_20d": -3.2445,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -282,7 +282,7 @@
         "change_1d": 0.0,
         "change_5d": 5.8415,
         "change_20d": -14.3481,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -300,7 +300,7 @@
         "change_1d": 0.0,
         "change_5d": -3.0735,
         "change_20d": -5.7584,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -318,7 +318,7 @@
         "change_1d": 0.0,
         "change_5d": -13.2347,
         "change_20d": -1.644,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -336,7 +336,7 @@
         "change_1d": 0.0,
         "change_5d": -16.899,
         "change_20d": -6.6463,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -354,7 +354,7 @@
         "change_1d": 0.0,
         "change_5d": 3.6232,
         "change_20d": -6.7391,
-        "updated_at": "2026-11-06T23:52:11Z",
+        "updated_at": "2026-11-07T00:02:40Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -372,12 +372,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-11-06T23:52:22Z"
+    "updated_at": "2026-11-07T00:02:54Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-11-06 18:52:24",
+    "as_of_us": "2026-11-06 19:02:57",
     "window_start": "2026-10-07",
     "core_closed_count": 0,
     "core_open_count": 12,
@@ -2584,8 +2584,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 217.51,
-        "pnl_pct": -12.37,
+        "cur_price": 217.8,
+        "pnl_pct": -12.25,
         "days_held": 45,
         "stop_loss": null,
         "score": "64.2",
@@ -11779,8 +11779,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-11-06T23:52:22Z",
-    "technical_updated_at": "2026-11-06T23:52:24Z",
+    "market_updated_at": "2026-11-07T00:02:54Z",
+    "technical_updated_at": "2026-11-07T00:02:57Z",
     "counts": {
       "core": 1,
       "observation": 0,
@@ -11882,11 +11882,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-11-06T23:52:10Z",
+    "generated_at": "2026-11-07T00:02:38Z",
     "fear_greed": {
       "score": 22.08,
       "rating": "extreme fear",
-      "timestamp": "2026-11-06T23:34:42+00:00",
+      "timestamp": "2026-11-06T23:44:47+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 8,
@@ -12022,11 +12022,6 @@
           "date": "2026-10-09",
           "score": 43.51,
           "rating": "fear"
-        },
-        {
-          "date": "2026-10-08",
-          "score": 39.17,
-          "rating": "fear"
         }
       ]
     },
@@ -12094,7 +12089,7 @@
   },
   "macro_forecast": {
     "schema": 1,
-    "generated_at": "2026-11-06T23:52:03Z",
+    "generated_at": "2026-11-07T00:02:21Z",
     "as_of": null,
     "source": "TradingEconomics 指标页（自动解析）",
     "count": 8,
@@ -12172,18 +12167,6 @@
         "impact": "实际 86.0K vs 预期 69.0K（+17.0）。"
       },
       {
-        "key": "claims",
-        "indicator": "初请失业金",
-        "period": "最新",
-        "forecast": 196.0,
-        "actual": 189.0,
-        "previous": null,
-        "surprise": -7.0,
-        "unit": "K",
-        "released_at": null,
-        "impact": "实际 189.0K vs 预期 196.0K（-7.0）。"
-      },
-      {
         "key": "nonfarm",
         "indicator": "季调后非农",
         "period": "最新",
@@ -12194,12 +12177,24 @@
         "unit": "K",
         "released_at": null,
         "impact": "实际 165.0K vs 预期 65.0K（+100.0）。"
+      },
+      {
+        "key": "claims",
+        "indicator": "初请失业金",
+        "period": "最新",
+        "forecast": 195.0,
+        "actual": 189.0,
+        "previous": null,
+        "surprise": -6.0,
+        "unit": "K",
+        "released_at": null,
+        "impact": "实际 189.0K vs 预期 195.0K（-6.0）。"
       }
     ]
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-11-06T23:52:02Z",
+    "generated_at": "2026-11-07T00:02:18Z",
     "count": 11,
     "ok": 11,
     "items": [
@@ -12338,8 +12333,8 @@
     ]
   },
   "decision_inputs": {
-    "generated_at": "2026-11-06T23:52:09Z",
-    "asof": "2026-11-06T23:52:02Z",
+    "generated_at": "2026-11-07T00:02:34Z",
+    "asof": "2026-11-07T00:02:18Z",
     "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
     "count": 15,
     "features": [
@@ -12481,19 +12476,19 @@
     ]
   },
   "macro_cpi_ai": {
-    "signature": "f022c82fb7cd760c",
-    "generated_at": "2026-11-06T17:35:03Z",
+    "signature": "c0289618022e616f",
+    "generated_at": "2026-11-07T00:02:21Z",
     "model": "default",
-    "analysis": "CPI年率实际3.7%高于预期3.6%，通胀回落不及预期，利率预期偏向上行，市场对紧缩路径更敏感。",
+    "analysis": "CPI年率实际高于预期，通胀上行意外偏鹰，可能推升利率预期并增加市场波动；需关注是否影响后续降息路径定价。",
     "analyses": {
-      "unrate": "失业率实际4.1%低于预期4.2%，显示劳动力市场比预期更紧，利率预期偏向上行，市场波动可能加大。",
-      "cpi_yoy": "CPI年率实际3.7%高于预期3.6%，通胀回落不及预期，利率预期偏向上行，市场对紧缩路径更敏感。",
-      "core_cpi_yoy": "核心CPI年率实际2.6%高于预期2.5%，核心通胀压力强于预期，利率预期偏向上行，波动风险上升。",
-      "cpi_mom": "CPI月率实际0.6%明显高于预期0.2%，短期通胀压力显著强于预期，利率预期偏向上行，市场波动可能放大。",
-      "ism": "ISM制造业PMI实际54.9%高于预期54.0%，经济扩张强于预期，利率预期偏向上行但影响相对温和。",
-      "adp": "ADP就业实际86.0K高于预期69.0K，就业强于预期，利率预期偏向上行，市场波动可能增加。",
-      "claims": "初请失业金实际189.0K低于预期196.0K，申请人数更少显示劳动力市场偏紧，利率预期偏向上行。",
-      "nonfarm": "非农实际165.0K大幅高于预期65.0K，就业增长显著强于预期，利率预期偏向上行，市场波动可能明显加大。"
+      "unrate": "失业率实际低于预期，显示劳动力市场比预期更紧，可能强化利率维持偏高的预期并压低降息押注；数据公布后利率敏感资产波动可能加大。",
+      "cpi_yoy": "CPI年率实际高于预期，通胀上行意外偏鹰，可能推升利率预期并增加市场波动；需关注是否影响后续降息路径定价。",
+      "core_cpi_yoy": "核心CPI年率高于预期，核心通胀黏性强于预期，对利率预期偏鹰，可能加大债市和成长股波动。",
+      "cpi_mom": "CPI月率大幅高于预期，短期通胀压力明显上行，利率预期可能向偏鹰方向调整，市场波动风险上升。",
+      "ism": "ISM制造业PMI高于预期且处于扩张区间，显示制造业景气强于预期，可能支持利率偏高预期并降低衰退担忧。",
+      "adp": "ADP就业人数高于预期，民间就业强于预期，劳动力市场韧性可能削弱降息预期，对利率预期偏鹰。",
+      "nonfarm": "非农就业大幅高于预期，就业增长明显强于预期，可能显著推升利率预期并引发市场重新定价，波动风险加大。",
+      "claims": "初请失业金低于预期，显示裁员水平低于预期、劳动力市场偏紧，对利率预期偏鹰并可能加大市场波动。"
     }
   },
   "skill_serenity": {
@@ -12578,7 +12573,7 @@
     "error": null
   },
   "serenity_verified": {
-    "generated_at": "2026-11-06T23:52:08Z",
+    "generated_at": "2026-11-07T00:02:34Z",
     "source": "SEC EDGAR + yfinance + news_data",
     "count": 10,
     "items": [
