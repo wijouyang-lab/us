@@ -150,13 +150,19 @@
     const tw = (p7.target_weights || []).map(x => `<tr><td>${esc(x.ticker)}</td><td>${fmt(100*Number(x.weight||0),2)}%</td><td>${usd(x.target_notional_usd)}</td><td>${esc(x.model_family||"")}</td></tr>`).join("");
     const sh = p7.shadow || {};
     const nav = p7.shadow_nav || {};
+    const p8 = snapshot.p8 || {};
+    const p8Rows = (p8.strategy_gate || []).map(x => `<tr><td>${esc(x.strategy)}</td><td>${esc(x.status)}</td><td>${fmt(100*Number(x.cagr||0),1)}%</td><td>${fmt(100*Number(x.oos_cagr||0),1)}%</td><td>${esc(x.bh_q_all ?? "")}</td></tr>`).join("");
+    const p8Panel = `<article class="card"><div class="card-head"><h2>P8 First-Round Research</h2><span class="pill warn">RESEARCH_ONLY</span></div>
+      <p class="muted">${esc(p8.status||"P8_STATUS_MISSING")} · GO ${p8.go_count||0} · S&P PIT coverage ${fmt(100*Number(p8.pit_coverage_mean||0),1)}% · NDX/DJI DATA_BLOCKED</p>
+      <table class="table"><thead><tr><th>Strategy</th><th>Gate</th><th>CAGR</th><th>OOS CAGR</th><th>BH q</th></tr></thead><tbody>${p8Rows||"<tr><td colspan=5>No P8 results.</td></tr>"}</tbody></table>
+      <p class="note">PIT S&P 500 only; no current-index substitution. No Alpha or historical return is claimed.</p></article>`;
     const p7Panel = `<article class="card"><div class="card-head"><h2>P7 Strategy Assembly</h2><span class="pill warn">RESEARCH_ONLY</span></div>
       <p class="muted">Independent research shadow: ${esc(sh.shadow_id||"RESEARCH_SHADOW_P7")} · ${esc(sh.execution_status||"PENDING")} · PAPER-50000 untouched.</p>
       <div class="grid strategies">${p7Cards}</div>
       <h3>Eligible candidates</h3><table class="table"><thead><tr><th>Strategy</th><th>Ticker</th><th>Score</th><th>Factors present</th></tr></thead><tbody>${candRows||'<tr><td colspan="4">No eligible candidates.</td></tr>'}</tbody></table>
       <h3>Target weights</h3><table class="table"><thead><tr><th>Ticker</th><th>Weight</th><th>Notional</th><th>Industry</th></tr></thead><tbody>${tw||'<tr><td colspan="4">No launchable weights.</td></tr>'}</tbody></table>
       <p class="note">Shadow NAV ${usd(nav.nav || sh.initial_capital || 50000)} · cash ${usd(nav.cash)} · status ${esc(nav.status||"PENDING")}. No fill before the next completed session.</p></article>`;
-    $("#strategyCards").innerHTML = p7Panel + snapshot.strategies.map(s => `<article class="card strategy"><h3>${esc(s.name)} ${statusPill(s.status)}</h3><div class="reason">${esc(s.status_reason)}</div>
+    $("#strategyCards").innerHTML = p8Panel + p7Panel + snapshot.strategies.map(s => `<article class="card strategy"><h3>${esc(s.name)} ${statusPill(s.status)}</h3><div class="reason">${esc(s.status_reason)}</div>
       <div class="tags"><span class="tag">${esc(s.version)}</span><span class="tag">${esc(s.rebalance)}</span></div>
       <details><summary>Rules, costs and evidence</summary><p><b>Universe:</b> ${esc(s.universe)}</p><p><b>Selection:</b> ${esc(s.selection)}</p><p><b>Entry / exit:</b> ${esc(s.entry)} / ${esc(s.exit)}</p><p><b>Rebalance / position:</b> ${esc(s.rebalance)} / ${esc(s.position)}</p><p><b>Risk:</b> ${esc(s.risk)}</p><p><b>Costs:</b> ${esc(s.costs)}</p><ul>${s.evidence.map(e=>`<li>${esc(e)}</li>`).join("")}</ul><p class="note">${s.not_claimed.map(esc).join(" · ")}</p></details></article>`).join("");
     $("#benchmarks").innerHTML = snapshot.benchmarks.map(b => `<div class="benchmark"><div><strong>${esc(b.id)}</strong> ${esc(b.name)}<div class="muted">${esc(b.reason||"")}</div></div><span class="status">${esc(b.status)}</span></div>`).join("") +

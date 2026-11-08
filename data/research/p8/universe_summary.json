@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-11-08T14:19:08.738633+00:00",
+  "sp500_last_snapshot": "2026-08-18",
+  "sp500_current_rows": 503,
+  "sp500_historical": "EFFECTIVE_DATED_INTERVALS_AVAILABLE",
+  "nasdaq100": "DATA_BLOCKED_NO_INTERVAL_FILE",
+  "dow30": "DATA_BLOCKED_NO_INTERVAL_FILE",
+  "price_panel_end": "2024-12-31",
+  "pit_tiers": {
+    "current_decision": "last available S&P snapshot + current yfinance; not used for historical return",
+    "historical_backtest": "effective-dated S&P membership + 2000-2024 price panel"
+  },
+  "note": "NDX/DJI are not silently replaced by current lists."
+}

@@ -20,6 +20,7 @@ DEFAULT_DASHBOARD = Path("dashboard/data/dashboard_data.json")
 DEFAULT_OUT = Path("dashboard/data/invest_terminal_data.json")
 SELECTION = Path("data/universe/selection/selection_snapshot.json")
 P7_STATUS = Path("data/universe/p7/p7_status.json")
+P8_STATUS = Path("data/research/p8/p8_status.json")
 
 
 def unavailable_account():
@@ -81,6 +82,7 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
     else:
         selection = {"status": "SELECTION_SNAPSHOT_MISSING"}
     p7 = json.loads(P7_STATUS.read_text(encoding="utf-8")) if P7_STATUS.exists() else {"status": "P7_STATUS_MISSING", "research_only": True}
+    p8 = json.loads(P8_STATUS.read_text(encoding="utf-8")) if P8_STATUS.exists() else {"status": "P8_STATUS_MISSING", "research_only": True}
     snapshot = {
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source": {
@@ -101,6 +103,7 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
         "benchmarks": BENCHMARKS,
         "selection": selection,
         "p7": p7,
+        "p8": p8,
         "scanner": {"count": len(stocks), "stocks": stocks,
                      "source": d.get("meta", {}).get("stocks_source"),
                      "universe_note": "Only dashboard active/observation stocks are exposed; no full-market fallback is implied."},

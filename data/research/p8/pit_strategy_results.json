@@ -1,0 +1,163 @@
+{
+  "generated_at": "2026-11-08T14:17:58.506698+00:00",
+  "as_of": "2024-12-31",
+  "universe": "S&P 500 effective-dated membership",
+  "membership_source": "data\\research\\historical_universe\\sp500_daily.csv",
+  "price_source": "data\\research\\pit_data\\finsaber_prices_raw.csv",
+  "price_range": [
+    "2000-01-03",
+    "2024-12-31"
+  ],
+  "method": "month-end signal; next-session open entry; next month next-session open exit; top20 equal weight; 10bps per side",
+  "coverage_mean": 0.9244657831826412,
+  "benchmark_equal_weight": {
+    "months": 298,
+    "cagr_net": 0.24182869245153027,
+    "vol": 0.28214283175182603,
+    "sharpe": 0.8963469183769717,
+    "max_drawdown": -0.5265864119247248,
+    "oos_months": 118,
+    "oos_cagr_net": 0.11616315814795652,
+    "oos_sharpe": 0.7061674297004431,
+    "dates": [
+      "2000-01-31",
+      "2024-10-31"
+    ]
+  },
+  "strategies": {
+    "MOMENTUM_20": {
+      "months": 297,
+      "cagr_net": 0.4921806062634062,
+      "vol": 2.568486460086699,
+      "sharpe": 0.42940499523884723,
+      "max_drawdown": -0.6910809604373475,
+      "oos_months": 118,
+      "oos_cagr_net": 0.030867272603870566,
+      "oos_sharpe": 0.25881780450339414,
+      "excess_mean_monthly": 0.07065950749223301,
+      "hac_t": 1.6505750262313819,
+      "p_value": 0.09882538182158473,
+      "avg_coverage": 0.9244657831826412,
+      "dates": [
+        "2000-02-29",
+        "2024-10-31"
+      ],
+      "bh_q": 0.19765076364316947,
+      "gate": "NO-GO"
+    },
+    "MOMENTUM_60": {
+      "months": 296,
+      "cagr_net": 0.4114851698766364,
+      "vol": 2.146052304025204,
+      "sharpe": 0.40740097827498784,
+      "max_drawdown": -0.621349420641318,
+      "oos_months": 118,
+      "oos_cagr_net": 0.060865720031296755,
+      "oos_sharpe": 0.4041427288048536,
+      "excess_mean_monthly": 0.05188432630576332,
+      "hac_t": 1.3674205601145302,
+      "p_value": 0.17149352152474218,
+      "avg_coverage": 0.9244657831826412,
+      "dates": [
+        "2000-03-31",
+        "2024-10-31"
+      ],
+      "bh_q": 0.17149352152474218,
+      "gate": "NO-GO"
+    },
+    "MOMENTUM_120": {
+      "months": 293,
+      "cagr_net": 0.5117741081631988,
+      "vol": 2.0703221190578223,
+      "sharpe": 0.4518092119390878,
+      "max_drawdown": -0.6575268617506255,
+      "oos_months": 118,
+      "oos_cagr_net": 0.10120832051094353,
+      "oos_sharpe": 0.585508340383229,
+      "excess_mean_monthly": 0.056780426406795245,
+      "hac_t": 1.7663380516847502,
+      "p_value": 0.07733915132097668,
+      "avg_coverage": 0.9244657831826412,
+      "dates": [
+        "2000-06-30",
+        "2024-10-31"
+      ],
+      "bh_q": 0.23201745396293005,
+      "gate": "NO-GO"
+    },
+    "TREND_MA200": {
+      "months": 289,
+      "cagr_net": 0.4999141183020053,
+      "vol": 2.178326758086586,
+      "sharpe": 0.4378627974547031,
+      "max_drawdown": -0.6365696312212097,
+      "oos_months": 118,
+      "oos_cagr_net": 0.06843199792531207,
+      "oos_sharpe": 0.44625668264513096,
+      "excess_mean_monthly": 0.05827356993012997,
+      "hac_t": 1.4722547085653717,
+      "p_value": 0.1409521088422765,
+      "avg_coverage": 0.9244657831826412,
+      "dates": [
+        "2000-10-31",
+        "2024-10-31"
+      ],
+      "bh_q": 0.21142816326341474,
+      "gate": "NO-GO"
+    },
+    "LOW_VOL_60": {
+      "months": 296,
+      "cagr_net": 0.11019321199185916,
+      "vol": 0.12650218553899553,
+      "sharpe": 0.8921485559843143,
+      "max_drawdown": -0.35229865555500706,
+      "oos_months": 118,
+      "oos_cagr_net": 0.10370158033823862,
+      "oos_sharpe": 0.8435685161216309,
+      "excess_mean_monthly": -0.011569429188543761,
+      "hac_t": -2.413018092517903,
+      "p_value": 0.015821034199717365,
+      "avg_coverage": 0.9244657831826412,
+      "dates": [
+        "2000-03-31",
+        "2024-10-31"
+      ],
+      "bh_q": 0.09492620519830419,
+      "gate": "NO-GO"
+    },
+    "REVERSAL_5": {
+      "months": 298,
+      "cagr_net": 0.38135840050645475,
+      "vol": 1.2635163463225054,
+      "sharpe": 0.47746220371491044,
+      "max_drawdown": -0.6495118835724918,
+      "oos_months": 118,
+      "oos_cagr_net": 0.06223640045889134,
+      "oos_sharpe": 0.36787022622211724,
+      "excess_mean_monthly": 0.029198620113504485,
+      "hac_t": 1.3934790599897626,
+      "p_value": 0.16347497289663648,
+      "avg_coverage": 0.9244657831826412,
+      "dates": [
+        "2000-01-31",
+        "2024-10-31"
+      ],
+      "bh_q": 0.19616996747596377,
+      "gate": "NO-GO"
+    }
+  },
+  "multiple_testing": {
+    "method": "Benjamini-Hochberg",
+    "hypotheses": 6,
+    "q_values": {
+      "LOW_VOL_60": 0.09492620519830419,
+      "MOMENTUM_120": 0.23201745396293005,
+      "MOMENTUM_20": 0.19765076364316947,
+      "TREND_MA200": 0.21142816326341474,
+      "REVERSAL_5": 0.19616996747596377,
+      "MOMENTUM_60": 0.17149352152474218
+    }
+  },
+  "status": "PIT_PRELIMINARY_RESEARCH",
+  "note": "No current Nasdaq-100/Dow membership source; not substituted. Historical PIT uses S&P only."
+}
