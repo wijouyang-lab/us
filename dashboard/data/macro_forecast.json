@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-07T23:46:58Z",
+  "generated_at": "2026-11-08T00:02:03Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -69,17 +69,6 @@
       "unit": "K",
       "released_at": null,
       "impact": "实际 86.0K vs 预期 69.0K（+17.0）。"
-    },
-    {
-      "key": "nonfarm",
-      "indicator": "季调后非农",
-      "period": "最新",
-      "forecast": 65.0,
-      "actual": 165.0,
-      "previous": null,
-      "unit": "K",
-      "released_at": null,
-      "impact": "实际 165.0K vs 预期 65.0K（+100.0）。"
     },
     {
       "key": "claims",
