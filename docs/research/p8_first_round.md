@@ -3,6 +3,9 @@
 Date: 2026-11-08
 Status: **P8_FIRST_ROUND_NO_GO · RESEARCH_ONLY · PIT_PARTIAL**
 
+> P8.1 audit supersedes the original full-period CAGRs; see p8_1_audit.md.
+> The 41-51% CAGRs were caused by contaminated price symbols.
+
 This is the first round of the 10-day plan, not a completed 10-day project. It
 uses existing infrastructure and reports actual results, including negative
 results.

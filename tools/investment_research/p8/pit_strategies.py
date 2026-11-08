@@ -76,6 +76,13 @@ def main():
     open_ = px.pivot_table(index="date", columns="symbol", values="adj_open", aggfunc="last")
     volume = px.pivot_table(index="date", columns="symbol", values="volume", aggfunc="last") if "volume" in px else None
     close = close.sort_index(); open_ = open_.reindex(close.index)
+    # Data-integrity screen: the free panel contains reused/contaminated symbols
+    # with >100% one-day jumps (e.g. CBE and ACS around corporate actions).
+    # Exclude the affected ticker entirely; do not repair its prices.
+    raw_rets = close.pct_change(fill_method=None)
+    bad = raw_rets.abs().gt(1.0).any(axis=0)
+    bad_tickers = sorted(close.columns[bad].tolist())
+    close = close.loc[:, ~bad]; open_ = open_.loc[:, ~bad]
     # factors use close only, current/past
     mom20 = close / close.shift(20) - 1
     mom60 = close / close.shift(60) - 1
@@ -89,7 +96,7 @@ def main():
     mdates = list(m.date); mstrings = list(m.tickers)
     all_dates = list(close.index.date); date_index = {d: i for i, d in enumerate(all_dates)}
     month_ends = [d for d in monthly_dates(all_dates) if date.fromisoformat(str(d)) <= AS_OF]
-    returns = {k: [] for k in factors}; ew = []; dates = []; cover = []
+    returns = {k: [] for k in factors}; ew = []; dates = []; cover = []; monthly = []
     prev_hold = {k: set() for k in factors}
     for mi, md in enumerate(month_ends[:-1]):
         # membership effective on the formation date
@@ -120,6 +127,8 @@ def main():
             turn = len(hold ^ prev_hold[name]) / max(len(hold), 1)
             net = gross - COST_BPS / 10000.0 * turn * 2.0
             returns[name].append(net)
+            monthly.append({"strategy": name, "formation": str(md), "entry": str(entry_date),
+                            "exit": str(exit_date), "gross": gross, "net": net, "turnover": turn, "n": len(hold)})
             prev_hold[name] = hold
     # Equal weight benchmark aligned to exactly the same months.
     ew = [x for x in ew if x is not None]
@@ -146,6 +155,8 @@ def main():
                          "excess_mean_monthly": float(ex.mean()) if len(ex) else None,
                          "hac_t": t, "p_value": p, "avg_coverage": float(np.mean(cover)) if cover else None,
                          "dates": [ds[0], ds[-1]]}
+    import pandas as _pd
+    _pd.DataFrame(monthly).to_csv(OUT / "pit_monthly_corrected.csv", index=False)
     # EW full metrics and OOS
     r = np.array(ew)
     eq = np.cumprod(1 + r); years = len(r) / 12
@@ -165,6 +176,8 @@ def main():
         v["bh_q"] = q
         v["gate"] = "GO" if (v["hac_t"] or 0) >= 1.64 and (q or 1) <= 0.10 and (v["oos_cagr_net"] or -1) > ew_res["oos_cagr_net"] and (v["max_drawdown"] or -1) >= -0.35 else "NO-GO"
     report = {"generated_at": datetime.now(timezone.utc).isoformat(), "as_of": AS_OF.isoformat(),
+              "data_issue": {"reason": "one-day adjusted-close jump >100%; likely split/symbol-reuse contamination",
+                             "excluded_tickers": bad_tickers, "excluded_count": len(bad_tickers)},
               "universe": "S&P 500 effective-dated membership", "membership_source": str(MEMBERSHIP),
               "price_source": str(PRICES), "price_range": [a.start, a.end],
               "method": "month-end signal; next-session open entry; next month next-session open exit; top20 equal weight; 10bps per side",

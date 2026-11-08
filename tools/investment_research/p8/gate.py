@@ -61,6 +61,8 @@ def main():
         if r["status"] == "GO" and (r["bh_q_all"] or 1) > 0.10: r["status"] = "NO-GO"
     with (P8 / "strategy_gate_results.csv").open("w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=list(dict.fromkeys([k for row in rows for k in row]))); w.writeheader(); w.writerows(rows)
+    wf = json.loads((P8 / "walk_forward_results.json").read_text(encoding="utf-8")) if (P8 / "walk_forward_results.json").exists() else {}
+    audit = json.loads((P8 / "p8_audit.json").read_text(encoding="utf-8")) if (P8 / "p8_audit.json").exists() else {}
     status = {"generated_at": datetime.now(timezone.utc).isoformat(), "status": "P8_FIRST_ROUND_NO_GO",
               "research_only": True, "as_of": "2024-12-31",
               "universe": {"sp500_pit": True, "nasdaq100": False, "dow30": False,
@@ -69,6 +71,11 @@ def main():
               "inventory_modules": len(inv["modules"]),
               "strategy_gate": rows, "go_count": sum(1 for r in rows if r["status"] == "GO"),
               "data_blocked": ["NASDAQ100", "DOW30", "Qlib adapter"],
+              "audit": {"status": audit.get("status"), "data_issue": pit.get("data_issue", {}),
+                        "extreme_months": audit.get("extreme_months", [])},
+              "walk_forward": {"status": wf.get("status"), "windows": len(wf.get("windows", [])),
+                               "selected": wf.get("selected_strategy", {}),
+                               "gate": "NO-GO" if (wf.get("selected_strategy", {}).get("max_drawdown") or -1) < -0.35 else "REVIEW"},
               "limits": ["No 2025-2026 historical price panel", "No options/short/leverage",
                          "PIT coverage below 95%", "ETF uses free adjusted-close proxy"]}
     (P8 / "p8_status.json").write_text(json.dumps(status, indent=2), encoding="utf-8")

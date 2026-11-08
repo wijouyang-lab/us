@@ -56,3 +56,22 @@ def test_snapshot_p8_and_paper_separation():
     assert s["p8"]["status"] == "P8_FIRST_ROUND_NO_GO"
     assert s["account"]["account_id"] == "PAPER-50000"
     assert "PAPER-50000" not in json.dumps(s["p8"])
+
+
+def test_p8_audit_identifies_price_contamination():
+    a = json.loads((P8 / "p8_audit.json").read_text(encoding="utf-8"))
+    assert a["status"] == "AUDIT_COMPLETE_DATA_ISSUE_IDENTIFIED"
+    assert a["data_issue"]["excluded_count"] == 109
+    assert "CBE" in a["data_issue"]["excluded_tickers"]
+    assert "ACS" in a["data_issue"]["excluded_tickers"]
+    assert a["original_vs_corrected"]["MOMENTUM_120"]["corrected_cagr"] < a["original_vs_corrected"]["MOMENTUM_120"]["original_cagr"]
+
+
+def test_walk_forward_is_complete_and_no_go():
+    w = json.loads((P8 / "walk_forward_results.json").read_text(encoding="utf-8"))
+    assert w["status"] == "WALK_FORWARD_COMPLETE"
+    assert len(w["windows"]) == 19
+    assert w["selected_strategy"]["max_drawdown"] < -0.35
+    s = json.loads((P8 / "p8_status.json").read_text(encoding="utf-8"))
+    assert s["walk_forward"]["gate"] == "NO-GO"
+    assert s["audit"]["data_issue"]["excluded_count"] == 109
