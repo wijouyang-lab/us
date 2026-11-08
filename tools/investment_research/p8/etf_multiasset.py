@@ -47,7 +47,7 @@ def main():
     mom12 = monthly / monthly.shift(12) - 1
     vol6 = rets.rolling(6).std() * math.sqrt(12)
     ma10 = monthly.rolling(10).mean()
-    rows = []
+    rows = []; prevw = {}
     for i in range(13, len(monthly) - 1):
         d = monthly.index[i]
         # signal at month end; next month return column i+1
@@ -56,15 +56,21 @@ def main():
         if not picks: picks = ["BIL"]
         w = {a: 1 / len(picks) for a in picks}
         gross = sum(w[a] * rets.iloc[i + 1][a] for a in picks)
-        rows.append((d.date().isoformat(), "TREND_RISK", gross - COST_BPS / 10000 * 2, picks))
+        turn = sum(abs(w.get(a, 0) - prevw.get("TREND_RISK", {}).get(a, 0)) for a in set(w) | set(prevw.get("TREND_RISK", {})))
+        cost = COST_BPS / 10000 * turn
+        rows.append((d.date().isoformat(), "TREND_RISK", gross - cost, picks, turn, cost))
+        prevw["TREND_RISK"] = w
         # inverse-vol risk parity over all risk assets with positive 12m momentum
         rp = [a for a in assets if mom12.loc[d, a] > 0]
         if not rp: rp = ["BIL"]
         inv = {a: 1 / max(vol6.loc[d, a], 1e-9) for a in rp}
         w2 = {a: inv[a] / sum(inv.values()) for a in rp}
         gross2 = sum(w2[a] * rets.iloc[i + 1][a] for a in rp)
-        rows.append((d.date().isoformat(), "RISK_PARITY", gross2 - COST_BPS / 10000 * 2, rp))
-    df = pd.DataFrame(rows, columns=["date", "strategy", "ret", "assets"])
+        turn2 = sum(abs(w2.get(a, 0) - prevw.get("RISK_PARITY", {}).get(a, 0)) for a in set(w2) | set(prevw.get("RISK_PARITY", {})))
+        cost2 = COST_BPS / 10000 * turn2
+        rows.append((d.date().isoformat(), "RISK_PARITY", gross2 - cost2, rp, turn2, cost2))
+        prevw["RISK_PARITY"] = w2
+    df = pd.DataFrame(rows, columns=["date", "strategy", "ret", "assets", "turnover_two_sided", "cost"])
     df.to_csv(OUT / "etf_strategy_returns.csv", index=False)
     out = {}
     for s in ("TREND_RISK", "RISK_PARITY"):
@@ -86,7 +92,8 @@ def main():
     report = {"generated_at": datetime.now(timezone.utc).isoformat(), "source": "yfinance auto_adjust=True",
               "tickers": TICKERS, "period": [START, END], "cost_bps_per_side": COST_BPS,
               "strategies": out, "benchmarks": bench,
-              "status": "ETF_MULTIASSET_PRELIMINARY", "note": "Adjusted-close total-return proxy; no options, no leverage."}
+              "status": "ETF_MULTIASSET_PRELIMINARY", "note": "Adjusted-close total-return proxy; no options, no leverage.",
+              "cost_method": "10bps per side; cost = 10bps * L1 target-weight change; no unconditional monthly fee."}
     (OUT / "etf_multiasset_results.json").write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
 
