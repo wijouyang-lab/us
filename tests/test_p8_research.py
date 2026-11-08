@@ -53,7 +53,7 @@ def test_no_nasdaq_or_dow_substitution():
 
 def test_snapshot_p8_and_paper_separation():
     s = json.loads((ROOT / "dashboard/data/invest_terminal_data.json").read_text(encoding="utf-8"))
-    assert s["p8"]["status"] == "P8_2_FORMAL_METHOD_NO_GO"
+    assert s["p8"]["status"] == "P8_2_1_EVENT_TIME_NO_GO"
     assert s["p8_1"]["status"] == "P8_FIRST_ROUND_NO_GO"
     assert s["account"]["account_id"] == "PAPER-50000"
     assert "PAPER-50000" not in json.dumps(s["p8"])

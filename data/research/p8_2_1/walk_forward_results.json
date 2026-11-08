@@ -1,0 +1,478 @@
+{
+  "generated_at": "2026-11-08T15:09:06.406440+00:00",
+  "method": "60m train/1m purge/12m test; actual target-weight L1 switch cost; 10bps per side",
+  "windows": [
+    {
+      "test_start": "2005-02-28",
+      "test_end": "2006-01-31",
+      "train_start": "2000-01-31",
+      "train_end": "2004-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "REVERSAL_5",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.680133,
+        "MOMENTUM_120": 0.571873,
+        "MOMENTUM_20": 0.238571,
+        "MOMENTUM_60": -0.03392,
+        "REVERSAL_5": 0.869092,
+        "TREND_MA200": 0.745151
+      },
+      "test_return": 0.09171421709947647
+    },
+    {
+      "test_start": "2006-02-28",
+      "test_end": "2007-01-31",
+      "train_start": "2001-01-31",
+      "train_end": "2005-12-30",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "TREND_MA200",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.696529,
+        "MOMENTUM_120": 1.001492,
+        "MOMENTUM_20": 0.334741,
+        "MOMENTUM_60": 0.20814,
+        "REVERSAL_5": 0.990638,
+        "TREND_MA200": 1.115101
+      },
+      "test_return": 0.4273156366298523
+    },
+    {
+      "test_start": "2007-02-28",
+      "test_end": "2008-01-31",
+      "train_start": "2002-01-31",
+      "train_end": "2006-12-29",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "REVERSAL_5",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.033352,
+        "MOMENTUM_120": 1.148508,
+        "MOMENTUM_20": 0.79685,
+        "MOMENTUM_60": 0.658076,
+        "REVERSAL_5": 1.260221,
+        "TREND_MA200": 1.18542
+      },
+      "test_return": -0.15637038854847685
+    },
+    {
+      "test_start": "2008-02-29",
+      "test_end": "2009-01-30",
+      "train_start": "2003-01-31",
+      "train_end": "2007-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "MOMENTUM_120",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.001356,
+        "MOMENTUM_120": 1.522967,
+        "MOMENTUM_20": 1.126203,
+        "MOMENTUM_60": 1.138025,
+        "REVERSAL_5": 1.277698,
+        "TREND_MA200": 1.45403
+      },
+      "test_return": -0.5638624137704726
+    },
+    {
+      "test_start": "2009-02-27",
+      "test_end": "2010-01-29",
+      "train_start": "2004-01-30",
+      "train_end": "2008-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "MOMENTUM_120",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.046189,
+        "MOMENTUM_120": 0.522062,
+        "MOMENTUM_20": 0.149746,
+        "MOMENTUM_60": -0.131666,
+        "REVERSAL_5": 0.250112,
+        "TREND_MA200": 0.426846
+      },
+      "test_return": 0.5104006531372991
+    },
+    {
+      "test_start": "2010-02-26",
+      "test_end": "2011-01-31",
+      "train_start": "2005-01-31",
+      "train_end": "2009-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "MOMENTUM_120",
+      "train_sharpes": {
+        "LOW_VOL_60": -0.053318,
+        "MOMENTUM_120": 0.39331,
+        "MOMENTUM_20": 0.270189,
+        "MOMENTUM_60": 0.180569,
+        "REVERSAL_5": -0.015462,
+        "TREND_MA200": 0.390421
+      },
+      "test_return": 0.20936959558954005
+    },
+    {
+      "test_start": "2011-02-28",
+      "test_end": "2012-01-31",
+      "train_start": "2006-01-31",
+      "train_end": "2010-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "MOMENTUM_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.179239,
+        "MOMENTUM_120": 0.21041,
+        "MOMENTUM_20": 0.345207,
+        "MOMENTUM_60": 0.355802,
+        "REVERSAL_5": 0.21711,
+        "TREND_MA200": 0.208774
+      },
+      "test_return": -0.08130397466225092
+    },
+    {
+      "test_start": "2012-02-29",
+      "test_end": "2013-01-31",
+      "train_start": "2007-01-31",
+      "train_end": "2011-12-30",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "REVERSAL_5",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.209609,
+        "MOMENTUM_120": -0.13575,
+        "MOMENTUM_20": 0.170104,
+        "MOMENTUM_60": 0.204689,
+        "REVERSAL_5": 0.276214,
+        "TREND_MA200": -0.218186
+      },
+      "test_return": 0.05501495941053358
+    },
+    {
+      "test_start": "2013-02-28",
+      "test_end": "2014-01-31",
+      "train_start": "2008-01-31",
+      "train_end": "2012-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.523121,
+        "MOMENTUM_120": -0.022544,
+        "MOMENTUM_20": 0.310936,
+        "MOMENTUM_60": 0.354127,
+        "REVERSAL_5": 0.480763,
+        "TREND_MA200": -0.018308
+      },
+      "test_return": 0.15314829073744662
+    },
+    {
+      "test_start": "2014-02-28",
+      "test_end": "2015-01-30",
+      "train_start": "2009-01-30",
+      "train_end": "2013-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.205304,
+        "MOMENTUM_120": 0.915733,
+        "MOMENTUM_20": 1.011625,
+        "MOMENTUM_60": 1.097209,
+        "REVERSAL_5": 1.03312,
+        "TREND_MA200": 0.9039
+      },
+      "test_return": 0.15885140330646585
+    },
+    {
+      "test_start": "2015-02-27",
+      "test_end": "2016-01-29",
+      "train_start": "2010-01-29",
+      "train_end": "2014-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.793148,
+        "MOMENTUM_120": 1.010922,
+        "MOMENTUM_20": 1.144588,
+        "MOMENTUM_60": 1.045894,
+        "REVERSAL_5": 1.057628,
+        "TREND_MA200": 1.049895
+      },
+      "test_return": 0.03959271140972098
+    },
+    {
+      "test_start": "2016-02-29",
+      "test_end": "2017-01-31",
+      "train_start": "2011-01-31",
+      "train_end": "2015-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.517464,
+        "MOMENTUM_120": 0.890265,
+        "MOMENTUM_20": 0.606745,
+        "MOMENTUM_60": 0.564308,
+        "REVERSAL_5": 0.301859,
+        "TREND_MA200": 0.908927
+      },
+      "test_return": 0.2026650149624829
+    },
+    {
+      "test_start": "2017-02-28",
+      "test_end": "2018-01-31",
+      "train_start": "2012-01-31",
+      "train_end": "2016-12-30",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.513063,
+        "MOMENTUM_120": 1.384223,
+        "MOMENTUM_20": 0.749251,
+        "MOMENTUM_60": 1.033188,
+        "REVERSAL_5": 0.645701,
+        "TREND_MA200": 1.255632
+      },
+      "test_return": 0.042611861141187646
+    },
+    {
+      "test_start": "2018-02-28",
+      "test_end": "2019-01-31",
+      "train_start": "2013-01-31",
+      "train_end": "2017-12-29",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "MOMENTUM_120",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.461313,
+        "MOMENTUM_120": 1.504663,
+        "MOMENTUM_20": 0.755526,
+        "MOMENTUM_60": 1.302682,
+        "REVERSAL_5": 0.782051,
+        "TREND_MA200": 1.235723
+      },
+      "test_return": -0.05040972886749273
+    },
+    {
+      "test_start": "2019-02-28",
+      "test_end": "2020-01-31",
+      "train_start": "2014-01-31",
+      "train_end": "2018-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.096487,
+        "MOMENTUM_120": 0.753224,
+        "MOMENTUM_20": 0.019438,
+        "MOMENTUM_60": 0.552112,
+        "REVERSAL_5": 0.552091,
+        "TREND_MA200": 0.437547
+      },
+      "test_return": 0.07123498828735464
+    },
+    {
+      "test_start": "2020-02-28",
+      "test_end": "2021-01-29",
+      "train_start": "2015-01-30",
+      "train_end": "2019-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 1.17056,
+        "MOMENTUM_120": 0.483276,
+        "MOMENTUM_20": -0.15853,
+        "MOMENTUM_60": 0.442804,
+        "REVERSAL_5": 0.460553,
+        "TREND_MA200": 0.297972
+      },
+      "test_return": 0.11872895100704506
+    },
+    {
+      "test_start": "2021-02-26",
+      "test_end": "2022-01-31",
+      "train_start": "2016-01-29",
+      "train_end": "2020-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.842022,
+        "MOMENTUM_120": 0.658281,
+        "MOMENTUM_20": 0.480373,
+        "MOMENTUM_60": 0.806657,
+        "REVERSAL_5": 0.526546,
+        "TREND_MA200": 0.547318
+      },
+      "test_return": 0.20329508404842556
+    },
+    {
+      "test_start": "2022-02-28",
+      "test_end": "2023-01-31",
+      "train_start": "2017-01-31",
+      "train_end": "2021-12-31",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.833982,
+        "MOMENTUM_120": 0.510253,
+        "MOMENTUM_20": 0.589969,
+        "MOMENTUM_60": 0.538089,
+        "REVERSAL_5": 0.40718,
+        "TREND_MA200": 0.468963
+      },
+      "test_return": 0.0661704209188465
+    },
+    {
+      "test_start": "2023-02-28",
+      "test_end": "2024-01-31",
+      "train_start": "2018-01-31",
+      "train_end": "2022-12-30",
+      "train_n": 60,
+      "test_n": 12,
+      "selected": "LOW_VOL_60",
+      "train_sharpes": {
+        "LOW_VOL_60": 0.698161,
+        "MOMENTUM_120": 0.440753,
+        "MOMENTUM_20": 0.288103,
+        "MOMENTUM_60": 0.25044,
+        "REVERSAL_5": 0.317246,
+        "TREND_MA200": 0.418014
+      },
+      "test_return": 0.1632069966732257
+    }
+  ],
+  "switches": [
+    {
+      "date": "2006-02-28",
+      "from": "REVERSAL_5",
+      "to": "TREND_MA200",
+      "L1_weight_change": 1.0,
+      "switch_cost_usd_bps": 10.0
+    },
+    {
+      "date": "2007-02-28",
+      "from": "TREND_MA200",
+      "to": "REVERSAL_5",
+      "L1_weight_change": 1.7000000000000002,
+      "switch_cost_usd_bps": 17.0
+    },
+    {
+      "date": "2008-02-29",
+      "from": "REVERSAL_5",
+      "to": "MOMENTUM_120",
+      "L1_weight_change": 1.9000000000000001,
+      "switch_cost_usd_bps": 19.0
+    },
+    {
+      "date": "2011-02-28",
+      "from": "MOMENTUM_120",
+      "to": "MOMENTUM_60",
+      "L1_weight_change": 1.8,
+      "switch_cost_usd_bps": 18.0
+    },
+    {
+      "date": "2012-02-29",
+      "from": "MOMENTUM_60",
+      "to": "REVERSAL_5",
+      "L1_weight_change": 1.7000000000000002,
+      "switch_cost_usd_bps": 17.0
+    },
+    {
+      "date": "2013-02-28",
+      "from": "REVERSAL_5",
+      "to": "LOW_VOL_60",
+      "L1_weight_change": 1.9000000000000001,
+      "switch_cost_usd_bps": 19.0
+    },
+    {
+      "date": "2018-02-28",
+      "from": "LOW_VOL_60",
+      "to": "MOMENTUM_120",
+      "L1_weight_change": 2.0,
+      "switch_cost_usd_bps": 20.0
+    },
+    {
+      "date": "2019-02-28",
+      "from": "MOMENTUM_120",
+      "to": "LOW_VOL_60",
+      "L1_weight_change": 2.0,
+      "switch_cost_usd_bps": 20.0
+    }
+  ],
+  "switch_cost_bps_total": 0.014,
+  "selected": {
+    "months": 223,
+    "cagr": 0.06095445803384636,
+    "sharpe": 0.3984636387002657,
+    "max_drawdown": -0.6496364930312619,
+    "hac_active_t": -2.554256983883317,
+    "p_value": 0.010641468410215404
+  },
+  "fixed": {
+    "LOW_VOL_60": {
+      "months": 228,
+      "cagr": NaN,
+      "sharpe": null,
+      "max_drawdown": NaN,
+      "hac_active_t": -1.8445789454375596,
+      "p_value": 0.0650988120840319
+    },
+    "MOMENTUM_120": {
+      "months": 228,
+      "cagr": 0.10725480437467083,
+      "sharpe": 0.570113528971194,
+      "max_drawdown": -0.6318229956674151,
+      "hac_active_t": -1.8613016162594602,
+      "p_value": 0.0627015950595946
+    },
+    "MOMENTUM_20": {
+      "months": 228,
+      "cagr": 0.06970672250371512,
+      "sharpe": 0.40089846951620783,
+      "max_drawdown": -0.5999548008797564,
+      "hac_active_t": -2.160159316417222,
+      "p_value": 0.03076033841445769
+    },
+    "MOMENTUM_60": {
+      "months": 228,
+      "cagr": 0.07964403489570215,
+      "sharpe": 0.4765661940108328,
+      "max_drawdown": -0.5809611131730825,
+      "hac_active_t": -2.291641953866094,
+      "p_value": 0.02192631246377097
+    },
+    "REVERSAL_5": {
+      "months": 228,
+      "cagr": NaN,
+      "sharpe": null,
+      "max_drawdown": NaN,
+      "hac_active_t": -1.7852418243935113,
+      "p_value": 0.07422210059477763
+    },
+    "TREND_MA200": {
+      "months": 228,
+      "cagr": 0.09508379184908766,
+      "sharpe": 0.5354539699060133,
+      "max_drawdown": -0.5800903975131908,
+      "hac_active_t": -2.027180470853861,
+      "p_value": 0.042643959609405035
+    }
+  },
+  "untested_tail_months": [
+    "2024-02-29",
+    "2024-03-28",
+    "2024-04-30",
+    "2024-05-31",
+    "2024-06-28",
+    "2024-07-31",
+    "2024-08-30",
+    "2024-09-30",
+    "2024-10-31"
+  ],
+  "status": "WALK_FORWARD_COMPLETE",
+  "note": "selected uses equal-weight target holdings from event-time method D; no future anomaly used for selection."
+}
