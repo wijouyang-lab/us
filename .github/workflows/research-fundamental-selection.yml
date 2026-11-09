@@ -14,6 +14,7 @@ on:
       - "tests/test_p8_research.py"
       - "tests/test_p8_2_data_quality.py"
       - "tests/test_p8_2_1_event_time.py"
+      - "tests/test_p8_2_2_audit.py"
       - "data/universe/selection_inputs/**"
       - "data/universe/selection/**"
       - "terminal.html"
@@ -62,7 +63,7 @@ jobs:
       - name: Rebuild terminal snapshot with selection and P7
         run: python -m tools.invest_terminal.build_snapshot
       - name: Run selection and integration tests
-        run: python -m pytest -q tests/test_selection_engine.py tests/test_tradability_p615.py tests/test_selection_p616.py tests/test_selection_p617.py tests/test_p7_strategy.py tests/test_p7_1_shadow.py tests/test_p8_research.py tests/test_p8_2_data_quality.py tests/test_p8_2_1_event_time.py tests/test_invest_terminal.py
+        run: python -m pytest -q tests/test_selection_engine.py tests/test_tradability_p615.py tests/test_selection_p616.py tests/test_selection_p617.py tests/test_p7_strategy.py tests/test_p7_1_shadow.py tests/test_p8_research.py tests/test_p8_2_data_quality.py tests/test_p8_2_1_event_time.py tests/test_p8_2_2_audit.py tests/test_invest_terminal.py
       - name: Verify research-only status and no forward GARP fields
         run: |
           python - <<'PY'

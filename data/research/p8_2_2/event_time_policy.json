@@ -1,0 +1,9 @@
+{
+  "generated_at": "2026-11-09T04:32:50.796303+00:00",
+  "rule_threshold_abs_daily_return": 5.0,
+  "rows": 2182,
+  "policy": "formal E uses only event-date price rule; today's VERIFIED_* classification is never used as a historical filter",
+  "post_hoc_classification_timestamp": "2026-11-09 (audit run), not historical",
+  "unverified_timestamp_count": 2182,
+  "time_travel_test": "available_on(event_date, decision_date, detected_at later than decision) returns False"
+}
