@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-11-09T09:12:00+00:00",
+  "status": "P10_5_2_DATA_BLOCKED",
+  "p10_6_allowed": false,
+  "preserved": {
+    "p10_3_aapl_inline": 23,
+    "p10_3_aapl_separate": 40,
+    "p10_3_aapl_no_xbrl": 3,
+    "p10_5_parser_validation_companies": 30,
+    "p10_5_parser_validation_accessions": 120
+  },
+  "not_completed": [
+    "AAPL 64 required quarters: only 2024q1 downloaded",
+    "30-company compliant historical sample: not built",
+    "verified delisted companies: 0",
+    "real amendment/restatement lineage: not built",
+    "real as-of query tests: not built",
+    "real QTD/YTD/FY derivation: not built",
+    "Notes data sets: not ingested"
+  ],
+  "blockers": [
+    "No verified delisted-inclusive historical CIK mapping in repository",
+    "No 63-quarter cache for AAPL SEC data sets",
+    "No real restatement pair with numeric change identified",
+    "No real period derivation layer",
+    "Acceptance proxy remains, not publication verified"
+  ],
+  "no_shadow": true
+}
