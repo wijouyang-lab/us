@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-09T15:30:00+00:00",
+  "status": "P10_5_12_PARTIAL",
+  "panel_cells": 72,
+  "cashflow_cells": 24,
+  "cashflow_max_abs_diff": 0.0,
+  "bad_accession_cells": 0,
+  "unit_status": "PASS",
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true,
+  "unresolved_cells": 11
+}
