@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-09T04:34:14.009371Z",
+  "generated_at": "2026-11-09T04:51:07.807169Z",
   "source": {
     "dashboard_generated_at": "2026-11-06T06:01:27Z",
     "dashboard_file": "dashboard\\data\\dashboard_data.json",
-    "paper_db": "C:\\Users\\ouyan\\AppData\\Local\\Temp\\p822final\\paper.sqlite",
+    "paper_db": "C:\\Users\\ouyan\\AppData\\Local\\Temp\\p83\\paper.sqlite",
     "paper_db_exists": false,
     "account_id": "PAPER-50000",
     "account_status": "LOCAL_PAPER_DB_NOT_PRESENT",
@@ -8463,6 +8463,29 @@
       "D has 48 strategy-month DATA_INVALID observations; reported, not zero-filled",
       "No P8 shadow"
     ]
+  },
+  "p8_3": {
+    "generated_at": "2026-11-09T04:50:29.842586+00:00",
+    "status": "P8_3_NO_GO",
+    "as_of": "2024-12-31",
+    "factors": 33,
+    "horizons": [
+      5,
+      10,
+      20
+    ],
+    "ic_rows": 99,
+    "candidate_rows": 0,
+    "go_count": 0,
+    "candidates": [],
+    "data_blocked": [
+      "Nasdaq-100 membership",
+      "Dow 30 membership",
+      "historical fundamental PIT",
+      "2025-2026 history"
+    ],
+    "label_policy": "forward labels missing => NaN/CENSORED; never zero; signal eligibility uses formation-time base_valid and prior 60d shock rule",
+    "note": "Research only; no P8 shadow. No post-hoc P8.2.2 classification used for historical signals."
   },
   "scanner": {
     "count": 1,

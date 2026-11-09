@@ -1,0 +1,34 @@
+factor,window,direction,meaning,registered
+MOM_5,5,1,short reversal / momentum,True
+MOM_20,20,1,one-month momentum,True
+MOM_60,60,1,quarterly momentum,True
+MOM_120,120,1,six-month momentum,True
+MOM_ACCEL_20_120,120,1,short-minus-long momentum acceleration,True
+MOM_ACCEL_5_20,20,1,very short acceleration,True
+MOM_VOL_20,20,1,momentum per unit total volatility,True
+MOM_VOL_60,60,1,quarterly risk-adjusted momentum,True
+MOM_UPSIDE_20,20,1,momentum divided by upside volatility,True
+MOM_DOWNSIDE_20,20,1,momentum divided by downside volatility,True
+MOM_PERSIST_20,20,1,sign persistence of daily returns,True
+MOM_HIT_60,60,1,fraction of positive days,True
+VOL_20,60,-1,short realized volatility,True
+VOL_60,60,-1,long realized volatility,True
+VOL_RATIO_5_60,60,-1,short/long volatility ratio,True
+VOL_CHANGE_20,60,-1,volatility change,True
+VOL_OF_VOL_20,60,-1,volatility-of-volatility,True
+DOWNSIDE_VOL_20,60,-1,downside semideviation,True
+UP_DOWN_RATIO_20,60,1,upside/downside volatility,True
+MAX_DD_60,60,-1,rolling drawdown,True
+PRICE_EFF_20,20,1,net move / path length,True
+PRICE_EFF_60,60,1,quarterly price efficiency,True
+RANGE_POS_20,20,1,close position in 20d range,True
+GAP_5,5,1,average overnight gap,True
+BREAKOUT_60,60,1,distance from 60d high,True
+VOLUME_Z_20,20,1,volume surprise,True
+VOLUME_TREND_20,60,1,short/long volume trend,True
+PRICE_VOLUME_CORR_20,20,1,return-volume correlation,True
+UP_VOLUME_RATIO_20,20,1,volume on up days vs down,True
+VOLUME_PRICE_IMPACT,20,1,price move times volume surprise,True
+TREND_VOLUME,60,1,trend times volume trend,True
+REVERSAL_DOWNSIDE_5,20,1,short reversal times downside risk,True
+EFF_VOLUME,20,1,efficiency times volume surprise,True
