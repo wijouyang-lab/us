@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-11-09T08:06:36.947617+00:00",
+  "status": "P10_4_SEC_DATASET_PARTIAL",
+  "dataset_downloaded": "2024q1",
+  "aapl_matched": 1,
+  "aapl_unmatched_due_to_not_downloaded": 65,
+  "strategy_ready": false,
+  "data_blocked": [
+    "65 AAPL filing quarters not downloaded",
+    "30-company accession parsing not done",
+    "delisted-inclusive CIK map",
+    "QTD/restatement lineage",
+    "exact publication timestamps"
+  ],
+  "no_shadow": true,
+  "note": "SEC data set is ingested and accession-linked for the downloaded quarter only; no claim of full AAPL or S&P coverage."
+}

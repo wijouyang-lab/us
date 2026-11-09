@@ -1,0 +1,10 @@
+{
+  "downloaded_quarters": 1,
+  "aapl_total": 66,
+  "matched_accessions": 1,
+  "comparison_rows": 123,
+  "matched_values": 121,
+  "value_diffs": 0,
+  "missing": 2,
+  "note": "Only 2024q1 was downloaded; 65 AAPL filings are DATASET_NOT_DOWNLOADED, not silently treated as matched"
+}

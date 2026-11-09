@@ -1,0 +1,16 @@
+{
+  "dataset_quarters": 1,
+  "dataset_rows": {
+    "sub": 6028,
+    "num": 3428694,
+    "tag": 86529,
+    "pre": 726155
+  },
+  "aapl_total": 66,
+  "aapl_matched": 1,
+  "comparison_rows": 123,
+  "cross_section": 30,
+  "cross_section_parsed": 0,
+  "historical_map_confidence": "CURRENT_ONLY",
+  "strategy_ready": false
+}
