@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-11-09T05:06:18.765618+00:00",
+  "status": "P8_4_MARKET_NEUTRAL_RESEARCH",
+  "as_of": "2024-12-31",
+  "factors": 7,
+  "horizons": [
+    5,
+    10,
+    20
+  ],
+  "sample_dates": {
+    "5": 417,
+    "10": 196,
+    "20": 100
+  },
+  "beta_model": {
+    "window": 252,
+    "min_obs": 126,
+    "market": "SPY"
+  },
+  "prices": "finsaber_prices_raw.csv",
+  "membership": "sp500_daily.csv",
+  "note": "all factor inputs use data through formation date; post-hoc classification not used",
+  "audit": {
+    "generated_at": "2026-11-09T05:07:51.622557+00:00",
+    "label_rows": 67,
+    "thresholds": [
+      {
+        "threshold_x": 3.0,
+        "ticker_days": 2368,
+        "unique_tickers": 54,
+        "gme_days": 0,
+        "policy": "diagnostic sensitivity only; primary remains 5x"
+      },
+      {
+        "threshold_x": 5.0,
+        "ticker_days": 2171,
+        "unique_tickers": 43,
+        "gme_days": 0,
+        "policy": "diagnostic sensitivity only; primary remains 5x"
+      },
+      {
+        "threshold_x": 10.0,
+        "ticker_days": 1584,
+        "unique_tickers": 36,
+        "gme_days": 0,
+        "policy": "diagnostic sensitivity only; primary remains 5x"
+      }
+    ],
+    "panel_rows": 352036,
+    "label_missing_rows": 369,
+    "note": "Missing labels are NaN/CENSORED; 5x remains primary; 3x/10x are sensitivity."
+  },
+  "factor_definitions": "factor_definitions.json",
+  "bh_family": 78
+}

@@ -1,9 +1,9 @@
 {
-  "generated_at": "2026-11-09T04:51:07.807169Z",
+  "generated_at": "2026-11-09T05:10:30.807053Z",
   "source": {
     "dashboard_generated_at": "2026-11-06T06:01:27Z",
     "dashboard_file": "dashboard\\data\\dashboard_data.json",
-    "paper_db": "C:\\Users\\ouyan\\AppData\\Local\\Temp\\p83\\paper.sqlite",
+    "paper_db": "C:\\Users\\ouyan\\AppData\\Local\\Temp\\p84final3\\paper.sqlite",
     "paper_db_exists": false,
     "account_id": "PAPER-50000",
     "account_status": "LOCAL_PAPER_DB_NOT_PRESENT",
@@ -8486,6 +8486,29 @@
     ],
     "label_policy": "forward labels missing => NaN/CENSORED; never zero; signal eligibility uses formation-time base_valid and prior 60d shock rule",
     "note": "Research only; no P8 shadow. No post-hoc P8.2.2 classification used for historical signals."
+  },
+  "p8_4": {
+    "generated_at": "2026-11-09T05:09:54.510936+00:00",
+    "status": "P8_4_NO_GO",
+    "as_of": "2024-12-31",
+    "factors": 7,
+    "unconditional_tests": 21,
+    "regime_tests": 36,
+    "bh_family": 78,
+    "go_count": 0,
+    "candidates": [],
+    "data_blocked": [
+      "NDX/DJI history",
+      "historical fundamental PIT",
+      "event/macro PIT",
+      "2025-2026 panel"
+    ],
+    "limits": [
+      "2000-2024 has been observed before; results are not pristine independent confirmation",
+      "No P8 shadow",
+      "No short/leverage/options"
+    ],
+    "no_shadow": true
   },
   "scanner": {
     "count": 1,

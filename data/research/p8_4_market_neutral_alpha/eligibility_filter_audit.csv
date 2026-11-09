@@ -1,0 +1,4 @@
+threshold_x,ticker_days,unique_tickers,gme_days,policy
+3.0,2368,54,0,diagnostic sensitivity only; primary remains 5x
+5.0,2171,43,0,diagnostic sensitivity only; primary remains 5x
+10.0,1584,36,0,diagnostic sensitivity only; primary remains 5x

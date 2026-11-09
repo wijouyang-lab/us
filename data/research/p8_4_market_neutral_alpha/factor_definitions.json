@@ -1,0 +1,44 @@
+{
+  "RESID_MOM_252": {
+    "formula": "sum of residual returns over t-252..t-21, residual from rolling 252d market model with SPY; min 126 observations",
+    "window": 252,
+    "direction": 1,
+    "economic": "stock-specific momentum after removing market beta"
+  },
+  "RESID_REV_5": {
+    "formula": "-sum(residual return over last 5 sessions)",
+    "window": 5,
+    "direction": 1,
+    "economic": "short-horizon stock-specific reversal"
+  },
+  "RESID_REV_20": {
+    "formula": "-sum(residual return over last 20 sessions)",
+    "window": 20,
+    "direction": 1,
+    "economic": "one-month stock-specific reversal"
+  },
+  "IDIO_VOL_60": {
+    "formula": "-(60d standard deviation of residual returns * sqrt(252))",
+    "window": 60,
+    "direction": 1,
+    "economic": "low idiosyncratic volatility preference"
+  },
+  "DOWNSIDE_IDIO_60": {
+    "formula": "-(60d standard deviation of negative residual returns * sqrt(252))",
+    "window": 60,
+    "direction": 1,
+    "economic": "low downside idiosyncratic risk"
+  },
+  "RESID_TREND_PERSIST_60": {
+    "formula": "mean(sign(residual return)) over 60 sessions",
+    "window": 60,
+    "direction": 1,
+    "economic": "persistence of stock-specific direction"
+  },
+  "BETA_ADJ_MOM_60": {
+    "formula": "60d stock return - beta_252 * 60d SPY return",
+    "window": 252,
+    "direction": 1,
+    "economic": "market-beta-adjusted momentum"
+  }
+}

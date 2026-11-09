@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-11-09T05:09:54.510936+00:00",
+  "status": "P8_4_NO_GO",
+  "as_of": "2024-12-31",
+  "factors": 7,
+  "unconditional_tests": 21,
+  "regime_tests": 36,
+  "bh_family": 78,
+  "go_count": 0,
+  "candidates": [],
+  "data_blocked": [
+    "NDX/DJI history",
+    "historical fundamental PIT",
+    "event/macro PIT",
+    "2025-2026 panel"
+  ],
+  "limits": [
+    "2000-2024 has been observed before; results are not pristine independent confirmation",
+    "No P8 shadow",
+    "No short/leverage/options"
+  ],
+  "no_shadow": true
+}
