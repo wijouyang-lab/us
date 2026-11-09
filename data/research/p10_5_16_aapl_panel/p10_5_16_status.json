@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-11-10T01:30:00+00:00",
+  "status": "P10_5_16_PARTIAL",
+  "core_cells": 72,
+  "gross_margin_ratio_cells": 8,
+  "annual_eps_rows": 2,
+  "annual_eps_pass": 2,
+  "annual_eps_inputs": 10,
+  "cashflow_fact_rows": 16,
+  "cashflow_context_missing": 6,
+  "note12_status": "HTML_PARSE_ERROR",
+  "html_note_locators": 0,
+  "context_gaps": 43,
+  "fact_level_traceable": 29,
+  "pre_audit_done": 0,
+  "secondary_match": 40,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true
+}
