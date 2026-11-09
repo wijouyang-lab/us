@@ -1,0 +1,23 @@
+{
+  "manifest_capture_mode": "PRE_RUN",
+  "created_at": "2026-11-09T10:11:47.268547+00:00",
+  "git_commit_sha": "4956e05bccf9343bb279e518c27e2951cc6bf551",
+  "git_dirty_status": true,
+  "python_version": "3.12.14",
+  "data_sources": {
+    "facts": {
+      "path": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv",
+      "sha256": "8a0e4aa270f7f29d7c3d67d9cbcb07e905a703cc4fa1ca2a65ed3ed692e655c8"
+    },
+    "amendments": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_19_fact_differences_audit.csv",
+      "sha256": "fb9025d0dd6178657c28903006a074cab90a74815c9aada97bc975afeeafe04a"
+    },
+    "form25": {
+      "path": "data\\research\\p10_5_4_financial_history\\form25_filed_by_subject.csv",
+      "sha256": "397f222ff917d06fff44b7d7c9c3d98c1b64d87e8d27e0bfb366809240d9331d"
+    }
+  },
+  "command": "python -m tools.research.p10_5_5.normalize",
+  "parameters": {}
+}

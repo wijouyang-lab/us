@@ -1,0 +1,101 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "created_at": "2026-11-09T10:11:47.268547+00:00",
+    "git_commit_sha": "4956e05bccf9343bb279e518c27e2951cc6bf551",
+    "git_dirty_status": true,
+    "python_version": "3.12.14",
+    "data_sources": {
+      "facts": {
+        "path": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv",
+        "sha256": "8a0e4aa270f7f29d7c3d67d9cbcb07e905a703cc4fa1ca2a65ed3ed692e655c8"
+      },
+      "amendments": {
+        "path": "data\\research\\p10_5_4_financial_history\\aapl_19_fact_differences_audit.csv",
+        "sha256": "fb9025d0dd6178657c28903006a074cab90a74815c9aada97bc975afeeafe04a"
+      },
+      "form25": {
+        "path": "data\\research\\p10_5_4_financial_history\\form25_filed_by_subject.csv",
+        "sha256": "397f222ff917d06fff44b7d7c9c3d98c1b64d87e8d27e0bfb366809240d9331d"
+      }
+    },
+    "command": "python -m tools.research.p10_5_5.normalize",
+    "parameters": {}
+  },
+  "outputs": {
+    "aapl_field_mapping.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_field_mapping.csv",
+      "sha256": "a0e4fed56884d51517a6211410049b67d5f1b028607cfb573fc3d0ff18daa0e2"
+    },
+    "aapl_gross_profit_mapping_audit.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_gross_profit_mapping_audit.csv",
+      "sha256": "3de3f7726606d636088b3a9c7f3bbdbb3cbce3213ec2ec7878de05a69294e333"
+    },
+    "aapl_missingness_audit.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_missingness_audit.csv",
+      "sha256": "a72d9ffba5ddda8da99113d74170d68da154b42d8e283105797fff2926757ba2"
+    },
+    "aapl_normalized_facts.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_normalized_facts.csv",
+      "sha256": "1164b98022a066482d45dc9706e8a3aa4a7251fdd272199bdb81ef2506c228c9"
+    },
+    "aapl_normalized_quarterly_panel.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_normalized_quarterly_panel.csv",
+      "sha256": "5e51fd12cc12095bbb282c81ba5238b499eca924b3029a1ad26221ba320e688e"
+    },
+    "aapl_qtd_ytd_derivation.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_qtd_ytd_derivation.csv",
+      "sha256": "1cd1ee279527e21f3bdf43d5e592ee83d83af0a6a9bdde0fdc185912ae035f72"
+    },
+    "aapl_quarterly_reconciliation.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_quarterly_reconciliation.csv",
+      "sha256": "229effbbbe0d0f2bb346035bafef1d78e2a6b45e293b5ddb5cecce2e27081cf3"
+    },
+    "aapl_revenue_mapping_audit.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_revenue_mapping_audit.csv",
+      "sha256": "e9adc654dcdfa0b43627085c6ac7ce7273ddce0548a41bd0fb05f9eaf8470acf"
+    },
+    "amendment_comparison_final.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\amendment_comparison_final.csv",
+      "sha256": "ed02844b3a7479971d9a7b0c631d72f6d1a3df562fa2022fdd5bbc3d761eed84"
+    },
+    "amendment_flag_final.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\amendment_flag_final.csv",
+      "sha256": "68b9899249fabcfbcbb671e7ed64c8d32a921edf5271d80d8bfb193868d28f45"
+    },
+    "amendment_unit_normalization.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\amendment_unit_normalization.csv",
+      "sha256": "51bdbbbfa53ca60e61d9cf1033876ce134ce04968465601cf33b9d9b180a876b"
+    },
+    "duplicate_fact_audit.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\duplicate_fact_audit.csv",
+      "sha256": "fdd5dcb762c9f2697fe8c40446350cf72efa14e743f6f841aca1d651d9f68ea7"
+    },
+    "form25_nse_subject_audit.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\form25_nse_subject_audit.csv",
+      "sha256": "6de2c43015e30f8e16c8a033210ac268a539de7337712caf3da2f5adcde784d2"
+    },
+    "form25_security_type_audit.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\form25_security_type_audit.csv",
+      "sha256": "31970074557a241b68f55764647aaf232fd078ed3758fa024db0ec727e2744a2"
+    },
+    "historical_common_stock_exit_candidates.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\historical_common_stock_exit_candidates.csv",
+      "sha256": "8866b421704566ed2fe9e3276acbba6706fe91cd5242360643966f429b631cbf"
+    },
+    "historical_common_stock_exit_verified.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\historical_common_stock_exit_verified.csv",
+      "sha256": "9b23487d8284c3c73b12a9bc531134486b54420cc76702048663bdd036a44419"
+    },
+    "historical_member_exit_intersection.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\historical_member_exit_intersection.csv",
+      "sha256": "e4aa11fe7c8e8e6f3a7784139c35372f1030ed600ac316a8d13386028bcd817f"
+    },
+    "real_asof_query_tests.csv": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\real_asof_query_tests.csv",
+      "sha256": "c549fa737334876f966985189aebd87ae0f69dd923c1a3e4662f8689310087cb"
+    }
+  },
+  "status": "PARTIAL"
+}

@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-09T10:11:48.201984+00:00",
+  "status": "P10_5_5_PARTIAL",
+  "aapl_quarterly_rows": 472,
+  "fy_with_qtd": 11,
+  "q4_derivations": 12,
+  "amendment_rows": 30,
+  "true_numeric": 0,
+  "form25_rows": 45,
+  "ordinary_common_exits": 0,
+  "real_asof_tests": 4,
+  "p10_6_allowed": false,
+  "manifest": "PRE_RUN + POST_RUN",
+  "no_shadow": true
+}
