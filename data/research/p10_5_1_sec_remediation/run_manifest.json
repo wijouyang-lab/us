@@ -1,0 +1,99 @@
+{
+  "experiment_id": "P10_5_1_REMEDIATION",
+  "strategy_id": "PIT_COVERAGE_AUDIT",
+  "git_commit_sha": "339d61c26a6b7ed18f19082ce9c45dc8dc1528e4",
+  "git_dirty_status": true,
+  "source_diff_hash": "b618b83c4c1d6b81134ff281ab7afef552cbf0be03e601ec9682476a39abd3d4",
+  "python_version": "3.12.14",
+  "dependency_lock_hash": null,
+  "data_sources": {
+    "p10_5_aapl": {
+      "path": "data/research/p10_5_sec_multi_period/aapl_required_dataset_periods.csv",
+      "sha256": "e93038e35ba8ad7905e4f8bc6d52bd2191dc025dcc4ad47ba84e3a79c1a9062d"
+    },
+    "p10_5_accessions": {
+      "path": "data/research/p10_5_sec_multi_period/cross_section_30_accession_coverage.csv",
+      "sha256": "4caa1ae8fb9230ed83b212dfac1c858ae8979dcffa15f204b020490d4bfb3c4c"
+    },
+    "p10_3_pit": {
+      "path": "data/research/p10_3_sec_xbrl_coverage/pit_time_audit.csv",
+      "sha256": "30de742c2e0200f4a4f3f2b631a86059123dfc60ac7bb78f3e850fe813b3f021"
+    }
+  },
+  "cost_model_version": "N/A",
+  "parameters": {
+    "sample": "P10.5_30",
+    "aapl_cik": "0000320193"
+  },
+  "start_date": "2009-01-01",
+  "end_date": "2024-12-31",
+  "calendar": "SEC/NYSE",
+  "timezone": "America/New_York",
+  "execution_rule": "PIT acceptance proxy only",
+  "command": "python -m tools.research.p10_5_1.remediation",
+  "random_seed": 0,
+  "initial_capital": 0,
+  "outputs": {
+    "aapl_accession_fact_coverage.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\aapl_accession_fact_coverage.csv",
+      "sha256": "2503432d56af4c2ca7573d456a9b282a80f5dbfa3b74a43d265cf8305e62abfd"
+    },
+    "aapl_all_accession_final_match.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\aapl_all_accession_final_match.csv",
+      "sha256": "77734ee4b0f9f5b561062bf46af3d9efb34bfef092c8fbec9aa154ea12d3f889"
+    },
+    "aapl_dataset_reconciliation.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\aapl_dataset_reconciliation.csv",
+      "sha256": "e191ca20b83379a1414bfc85cc18f638eab2668b95d77c139bb94302e0bd5083"
+    },
+    "aapl_quarterly_dataset_manifest.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\aapl_quarterly_dataset_manifest.csv",
+      "sha256": "3dddae0d89f5d342302058286c6238dcc6ca5768b35bdccd37bdf895cbb4247f"
+    },
+    "asof_query_test_results.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\asof_query_test_results.csv",
+      "sha256": "db4d504c89b76056bd3853dbd1648512746029975b715adce546a1391a86d95c"
+    },
+    "delisted_company_evidence.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\delisted_company_evidence.csv",
+      "sha256": "4f05147ab2e3ae1d270587aa29ee04c2781ea0f0e57a3517f0900c17e3cf4293"
+    },
+    "field_missing_reasons.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\field_missing_reasons.csv",
+      "sha256": "1d05fe3b8bd2d5373683526472b00c0094417b806b515de5d48cf995e27dcddc"
+    },
+    "financial_period_derivation.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\financial_period_derivation.csv",
+      "sha256": "754e94aba4f4b80a02f190acb4ca877623d63da0258b8e2fae8077c36a217d4a"
+    },
+    "historical_cik_mapping_verified.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\historical_cik_mapping_verified.csv",
+      "sha256": "140238901b2154a0310569bfdcc4560f246c74ad2c9e796602e9796f085e75c2"
+    },
+    "historical_sample_selection.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\historical_sample_selection.csv",
+      "sha256": "d0a19add6db89b909a9b13f395fabd996e06198c053127f6cc935063b460f786"
+    },
+    "pit_availability_audit.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\pit_availability_audit.csv",
+      "sha256": "30de742c2e0200f4a4f3f2b631a86059123dfc60ac7bb78f3e850fe813b3f021"
+    },
+    "restatement_lineage.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\restatement_lineage.csv",
+      "sha256": "7a5f4057dbd18085b29561c264cd6cb225b82e081874c039ae5acbebebcde061"
+    },
+    "valid_sample_accessions.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\valid_sample_accessions.csv",
+      "sha256": "1366e40a06e55e774bc32029212d5190e510d8800a069c9039f824c5796f653c"
+    },
+    "valid_sample_parse_coverage.csv": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\valid_sample_parse_coverage.csv",
+      "sha256": "d920f3b7af7b9a47e6cac5667df9ba02300feed8937dfeed9de5aa23ae040320"
+    },
+    "p10_5_1_status.json": {
+      "path": "data\\research\\p10_5_1_sec_remediation\\p10_5_1_status.json",
+      "sha256": "b5081b3bb80fabbecba77887109e20057a50ff31133b236439a7a4bab1726ea0"
+    }
+  },
+  "status": "DATA_BLOCKED"
+}

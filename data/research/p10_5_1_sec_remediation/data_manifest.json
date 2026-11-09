@@ -1,0 +1,16 @@
+{
+  "sources": {
+    "p10_5_aapl": {
+      "path": "data/research/p10_5_sec_multi_period/aapl_required_dataset_periods.csv",
+      "sha256": "e93038e35ba8ad7905e4f8bc6d52bd2191dc025dcc4ad47ba84e3a79c1a9062d"
+    },
+    "p10_5_accessions": {
+      "path": "data/research/p10_5_sec_multi_period/cross_section_30_accession_coverage.csv",
+      "sha256": "4caa1ae8fb9230ed83b212dfac1c858ae8979dcffa15f204b020490d4bfb3c4c"
+    },
+    "p10_3_pit": {
+      "path": "data/research/p10_3_sec_xbrl_coverage/pit_time_audit.csv",
+      "sha256": "30de742c2e0200f4a4f3f2b631a86059123dfc60ac7bb78f3e850fe813b3f021"
+    }
+  }
+}
