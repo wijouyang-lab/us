@@ -1,0 +1,9 @@
+{
+  "manifest_capture_mode": "PRE_RUN",
+  "git_commit_sha": "WORKTREE",
+  "sources": {
+    "facts": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv",
+    "panel": "data\\research\\p10_5_5_financial_normalization\\aapl_normalized_quarterly_panel.csv"
+  },
+  "command": "python -m tools.research.p10_5_8.finalize"
+}
