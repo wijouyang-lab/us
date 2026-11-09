@@ -1,0 +1,6 @@
+source,sample,rows_checked,earliest,latest,coverage_status
+SEC submissions metadata,AAPL,1006,not_measured,2026-11-06,SAMPLE_ONLY
+SEC companyfacts,AAPL,25604,2009-07-22,2026-11-06,SAMPLE_ONLY_PARTIAL_PIT
+analyst estimates,none,0,,,DATA_BLOCKED
+news first publication,none,0,,,DATA_BLOCKED
+ALFRED vintages,CPIAUCSL,0,,,DATA_BLOCKED_TIMEOUT

@@ -1,0 +1,73 @@
+{
+  "generated_at": "2026-11-09T06:01:14.465047+00:00",
+  "sample": "AAPL CIK0000320193",
+  "sources": {
+    "sec_submissions": {
+      "http": 200,
+      "filing_rows": 1006,
+      "forms": {
+        "424B2": 44,
+        "FWP": 22,
+        "4": 602,
+        "10-K": 12,
+        "8-K": 101,
+        "144": 50,
+        "3": 11,
+        "8-K/A": 2,
+        "10-Q": 33,
+        "SD": 11,
+        "SCHEDULE 13G": 1,
+        "SCHEDULE 13G/A": 2,
+        "PX14A6G": 27,
+        "DEFA14A": 12,
+        "DEF 14A": 11,
+        "25-NSE": 4,
+        "144/A": 1,
+        "S-8": 4,
+        "S-3ASR": 4,
+        "5": 1,
+        "UPLOAD": 3,
+        "CORRESP": 3,
+        "SC 13G/A": 22,
+        "4/A": 1,
+        "S-8 POS": 3,
+        "PX14A6N": 1,
+        "IRANNOTICE": 2,
+        "CERT": 2,
+        "8-A12B": 3,
+        "3/A": 1,
+        "25": 1,
+        "SC 13G": 1,
+        "CERTNYS": 1,
+        "NO ACT": 7
+      },
+      "latest_filing": "2026-11-06",
+      "acceptance_example": "2026-11-06T21:30:47.000Z",
+      "has_acceptance_timestamp": true
+    },
+    "sec_companyfacts": {
+      "http": 200,
+      "facts": 25604,
+      "filed_min": "2009-07-22",
+      "filed_max": "2026-11-06",
+      "has_accession": true,
+      "note": "filed dates are available per fact; companyfacts is a current aggregate and may include amended/latest facts, not an as-filed point-in-time snapshot"
+    },
+    "analyst_estimates": {
+      "status": "DATA_BLOCKED",
+      "reason": "No free historical analyst-consensus snapshots with revision timestamps"
+    },
+    "news_first_publication": {
+      "status": "DATA_BLOCKED",
+      "reason": "No free archive verified to preserve first-publication timestamps; web pages are often updated"
+    },
+    "alfred_macro": {
+      "status": "DATA_BLOCKED",
+      "reason": "ALFRED vintage endpoint timed out in this environment; no verified vintage history or API key"
+    },
+    "repo_sec_cache": {
+      "status": "DATA_AVAILABLE_NOT_HISTORICAL",
+      "reason": "Repository SEC cache is current-period filings, not a 2000-2024 PIT panel"
+    }
+  }
+}
