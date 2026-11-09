@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-10T00:50:00+00:00",
+  "status": "P10_5_14_PARTIAL",
+  "revenue_corrections": 2,
+  "secondary_rows": 40,
+  "secondary_match": 40,
+  "secondary_mismatch": 0,
+  "context_empty_cells": 41,
+  "panel_rows": 80,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true
+}
