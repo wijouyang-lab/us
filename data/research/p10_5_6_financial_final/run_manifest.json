@@ -1,0 +1,57 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "git_commit_sha": "WORKTREE",
+    "data_sources": {
+      "facts": {
+        "path": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv",
+        "sha256": "8a0e4aa270f7f29d7c3d67d9cbcb07e905a703cc4fa1ca2a65ed3ed692e655c8"
+      },
+      "amendments": {
+        "path": "data\\research\\p10_5_5_financial_normalization\\amendment_comparison_final.csv",
+        "sha256": "ed02844b3a7479971d9a7b0c631d72f6d1a3df562fa2022fdd5bbc3d761eed84"
+      }
+    },
+    "command": "python -m tools.research.p10_5_6.finalize"
+  },
+  "outputs": {
+    "aapl_asof_full_accession_tests.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\aapl_asof_full_accession_tests.csv",
+      "sha256": "72c735d3fa0ba5b206f078a63dad4a8460299822d01a6e3d1ee9b82df46b7577"
+    },
+    "amendment_comparison_final_v2.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\amendment_comparison_final_v2.csv",
+      "sha256": "e76f56817c8523839ebc0fd25c787a31a9f6d594be17e7ade045260e4e279411"
+    },
+    "amendment_unit_normalization_final.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\amendment_unit_normalization_final.csv",
+      "sha256": "e76f56817c8523839ebc0fd25c787a31a9f6d594be17e7ade045260e4e279411"
+    },
+    "form25_accessions.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\form25_accessions.csv",
+      "sha256": "930af9afedf43027bf6dfe6364bc39f953fe38dc2c97bdcf86178eab4a536502"
+    },
+    "form25_issuer_evidence.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\form25_issuer_evidence.csv",
+      "sha256": "05757fc6c72f3334c88bb1f86dc90dabe254484bb803abe61784c88d8be793cc"
+    },
+    "form25_nse_45_final.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\form25_nse_45_final.csv",
+      "sha256": "b315b4ffccc0758eecb91e772b8dd2669442fd3ad474e29d8266028f4fdfd27c"
+    },
+    "form25_nse_unresolved_audit.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\form25_nse_unresolved_audit.csv",
+      "sha256": "c4e10064532b60abc78022ae1e63bc587cd53800d718fe7eb60dc62aebd0a0db"
+    },
+    "historical_common_stock_delisting_audit.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\historical_common_stock_delisting_audit.csv",
+      "sha256": "085d4511cfc6b13524c646b988139544c56cce2b86426ccf9f2369ccb139730e"
+    },
+    "real_asof_query_tests.csv": {
+      "path": "data\\research\\p10_5_6_financial_final\\real_asof_query_tests.csv",
+      "sha256": "72c735d3fa0ba5b206f078a63dad4a8460299822d01a6e3d1ee9b82df46b7577"
+    }
+  },
+  "status": "PARTIAL"
+}
