@@ -1,0 +1,66 @@
+{
+  "generated_at": "2026-11-09T00:00:00+00:00",
+  "status": "P9_2_BENCHMARK_CORRECTED_STRATEGY_NO_GO",
+  "research_only": true,
+  "as_of": "2024-12-31",
+  "findings": {
+    "p9_1_reported_benchmark_cagr": 0.02085,
+    "p9_1_reported_benchmark_maxdd": -0.03793,
+    "p9_1_formula": "0.2 * pct_change(0.2*QQQ_price + 0.8*BIL_price) + 0.8*BIL_pct; double-scaled to 4% QQQ / 96% BIL",
+    "correct_20qqq80bil_2007_2024": {
+      "start": "2007-05-30",
+      "end": "2024-12-31",
+      "cagr": 0.04276968880390797,
+      "max_drawdown": -0.11431554223438212,
+      "vol": 0.04443452783889308,
+      "days": 4429
+    },
+    "correct_20qqq80bil_2007_2026": {
+      "start": "2007-05-30",
+      "end": "2026-10-30",
+      "cagr": 0.04539178634323049,
+      "max_drawdown": -0.11431554223438212,
+      "vol": 0.04444836679310426,
+      "days": 4888
+    },
+    "g_reported": {
+      "reported_cagr": 0.0442,
+      "reported_maxdd": -0.1138,
+      "reported_end": "2026-10-30",
+      "reproduced_cagr": 0.04539178634323049,
+      "reproduced_maxdd": -0.11431554223438212,
+      "delta_cagr": 0.001191786343230486,
+      "status": "PARTIAL_EXACT_G_CODE_ABSENT"
+    },
+    "g_status": "PARTIAL: exact G code/data absent; current yfinance reconstruction is within ~12bp CAGR and ~0.05pp MaxDD of reported"
+  },
+  "strategy_impact": "P9.1 underperformance conclusion remains and worsens; P9.1 reported benchmark gap and benchmark MaxDD are invalid",
+  "event_rows": 24,
+  "event_table": "data/research/p9_2_benchmark_audit/event_stats_complete.csv",
+  "corporate_actions": {
+    "QQQ": {
+      "dividends": 83,
+      "splits": 1,
+      "first": "2000-03-20",
+      "last": "2026-09-21"
+    },
+    "SPY": {
+      "dividends": 129,
+      "splits": 0,
+      "first": "1993-03-19",
+      "last": "2026-09-18"
+    },
+    "BIL": {
+      "dividends": 107,
+      "splits": 1,
+      "first": "2007-07-02",
+      "last": "2026-10-01"
+    }
+  },
+  "dividend_accounting": "PARTIAL: yfinance auto_adjust includes dividends/splits for ETFs; P9.1 stock OHLC uses adjusted_close/raw_close; no independent dividend ledger",
+  "signal_pit_status": "PARTIAL: future-adjusted OHLC used for patterns; strict PIT signal data not verified",
+  "exposure_audit": "data/research/p9_2_benchmark_audit/strategy_exposure_audit.csv",
+  "risk_matched": "data/research/p9_2_benchmark_audit/risk_matched_benchmarks.csv",
+  "strategy_still_no_go": true,
+  "no_shadow": true
+}

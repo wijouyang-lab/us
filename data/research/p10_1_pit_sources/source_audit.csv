@@ -1,0 +1,9 @@
+Source,Free access,Historical coverage,PIT availability,Publication timestamp,Revision history,Universe coverage,Missingness,Reproducibility,License,Status
+SEC submissions / filing metadata,"yes, no token",long filing history (sample latest only checked),YES for filingDate/acceptanceDateTime,acceptanceDateTime,filing index is stable,SEC CIKs; ticker mapping separate,not measured for full universe,HTTP JSON,public domain,PIT_VERIFIED_SAMPLE
+SEC Company Facts / XBRL,"yes, no token",sample filed dates available; usually 2009+,PARTIAL,"filed date per fact, not exact acceptance time",current aggregate; amendments/restatements possible,SEC XBRL filers; history shorter,not measured,HTTP JSON,public domain,PARTIAL
+SEC 10-K/10-Q as-filed XBRL,yes,XBRL era only,PARTIAL; requires accession-level parser,submission acceptanceDateTime,accession-level possible,"US filers, not 2000-2008",unknown,medium,public domain,PARTIAL
+SEC 8-K events,yes,filing metadata long history,YES for filing timestamps; content extraction not done,acceptanceDateTime,index,US filers,unknown,HTTP,public domain,PARTIAL
+Analyst consensus / EPS surprise,no free PIT snapshot,not available,NO,unknown,none,unknown,unknown,no,restricted,DATA_BLOCKED
+News / corporate events first publication,no reliable free archive,not verified,NO,not reliable,web updates overwrite,unknown,unknown,no,restricted,DATA_BLOCKED
+Macro official releases / vintage,ALFRED unreachable here; FRED current data not a vintage,unknown,NO in this audit,unknown,vintage API unverified,macro only,unknown,no,public,DATA_BLOCKED
+ETF corporate actions / dividends,yfinance actions,QQQ/SPY/BIL actions checked,PARTIAL; vendor reported,ex-date not first-announcement,none,ETFs only,small,vendor-dependent,vendor terms,PARTIAL

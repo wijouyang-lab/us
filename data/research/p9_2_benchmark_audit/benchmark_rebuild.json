@@ -1,0 +1,141 @@
+{
+  "generated_at": "2026-11-09T05:56:35.671796+00:00",
+  "start": "2007-05-30",
+  "end_2024": "2026-10-30",
+  "variants": {
+    "2024-12-31": {
+      "D": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.04276968880390797,
+        "max_drawdown": -0.11431554223438212,
+        "vol": 0.04443452783889308,
+        "days": 4429
+      },
+      "M": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.041670010248965106,
+        "max_drawdown": -0.11457533370665507,
+        "vol": 0.04341844283995922,
+        "days": 4429
+      },
+      "Q": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.041670010248965106,
+        "max_drawdown": -0.11457533370665507,
+        "vol": 0.04341844283995922,
+        "days": 4429
+      },
+      "A": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.041670010248965106,
+        "max_drawdown": -0.11457533370665507,
+        "vol": 0.04341844283995922,
+        "days": 4429
+      },
+      "BH": {
+        "start": "2007-05-30",
+        "end": "2024-12-31",
+        "cagr": 0.04276968880390797,
+        "max_drawdown": -0.11431554223438212,
+        "vol": 0.04443452783889308,
+        "days": 4429
+      }
+    },
+    "2026-10-30": {
+      "D": {
+        "start": "2007-05-30",
+        "end": "2026-10-30",
+        "cagr": 0.04539178634323049,
+        "max_drawdown": -0.11431554223438212,
+        "vol": 0.04444836679310426,
+        "days": 4888
+      },
+      "M": {
+        "start": "2007-05-30",
+        "end": "2026-10-30",
+        "cagr": 0.04430771619811513,
+        "max_drawdown": -0.11457533370665507,
+        "vol": 0.04343972881324457,
+        "days": 4888
+      },
+      "Q": {
+        "start": "2007-05-30",
+        "end": "2026-10-30",
+        "cagr": 0.04430771619811513,
+        "max_drawdown": -0.11457533370665507,
+        "vol": 0.04343972881324457,
+        "days": 4888
+      },
+      "A": {
+        "start": "2007-05-30",
+        "end": "2026-10-30",
+        "cagr": 0.04430771619811513,
+        "max_drawdown": -0.11457533370665507,
+        "vol": 0.04343972881324457,
+        "days": 4888
+      },
+      "BH": {
+        "start": "2007-05-30",
+        "end": "2026-10-30",
+        "cagr": 0.04539178634323049,
+        "max_drawdown": -0.11431554223438212,
+        "vol": 0.04444836679310426,
+        "days": 4888
+      }
+    }
+  },
+  "p9_1_formula_result": {
+    "start": "2007-05-30 00:00:00",
+    "end": "2024-12-31 00:00:00",
+    "cagr": 0.020833714515092083,
+    "max_drawdown": -0.03793162499786218,
+    "vol": 0.015360046601094203,
+    "days": 4429
+  },
+  "price_weight_basket": {
+    "start": "2007-05-30 00:00:00",
+    "end": "2024-12-31 00:00:00",
+    "cagr": 0.05697448599159505,
+    "max_drawdown": -0.19433594698527856,
+    "vol": 0.07351920895046303,
+    "days": 4429
+  },
+  "g_comparison": {
+    "reported_cagr": 0.0442,
+    "reported_maxdd": -0.1138,
+    "reported_end": "2026-10-30",
+    "reproduced_cagr": 0.04539178634323049,
+    "reproduced_maxdd": -0.11431554223438212,
+    "delta_cagr": 0.001191786343230486,
+    "status": "PARTIAL_EXACT_G_CODE_ABSENT"
+  },
+  "corporate_actions": {
+    "QQQ": {
+      "dividends": 83,
+      "splits": 1,
+      "first": "2000-03-20",
+      "last": "2026-09-21"
+    },
+    "SPY": {
+      "dividends": 129,
+      "splits": 0,
+      "first": "1993-03-19",
+      "last": "2026-09-18"
+    },
+    "BIL": {
+      "dividends": 107,
+      "splits": 1,
+      "first": "2007-07-02",
+      "last": "2026-10-01"
+    }
+  },
+  "benchmark": {
+    "primary": "20QQQ_80BIL daily rebalanced, return-weighted, total-return yfinance adjusted close",
+    "p9_1_legacy_error": "0.2*QQQ_price + 0.8*BIL_price then pct_change; this is a drifting price-weighted basket, not a 20/80 return portfolio",
+    "correction": "P9.1 applied 0.2 to an already 20/80 price basket, producing 4% QQQ / 96% BIL; corrected return-weighted 20/80 daily benchmark is 4.28% CAGR, MaxDD -11.43% (2007-2024)"
+  }
+}
