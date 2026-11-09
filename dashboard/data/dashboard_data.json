@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-09T22:17:33Z",
+  "generated_at": "2026-11-09T22:32:34Z",
   "stocks": [
     {
       "ticker": "AES",
@@ -31,7 +31,7 @@
       "technical_score": null,
       "risk_liquidity_score": null,
       "rsi": 64.2,
-      "atr_pct": 0.35,
+      "atr_pct": 0.36,
       "stop_loss": 14.75,
       "stop_method": "MA20/MA50 + ATR + MACD/KDJ",
       "pe_ttm": null,
@@ -78,7 +78,7 @@
         "bars_used": 180,
         "last_bar_date": "2026-11-09",
         "bars_source": "yfinance",
-        "computed_at": "2026-11-09T22:17:21Z",
+        "computed_at": "2026-11-09T22:32:22Z",
         "status": "ok"
       },
       "ohlcv_status": "ok",
@@ -102,7 +102,7 @@
         "change_1d": 2.1527,
         "change_5d": 0.7806,
         "change_20d": 1.0399,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -120,7 +120,7 @@
         "change_1d": 2.3463,
         "change_5d": 0.1132,
         "change_20d": -3.2957,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -138,7 +138,7 @@
         "change_1d": 2.7409,
         "change_5d": 0.353,
         "change_20d": -7.314,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "daily_close_frozen",
@@ -156,7 +156,7 @@
         "change_1d": 0.0,
         "change_5d": -5.8156,
         "change_20d": 30.9665,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -174,7 +174,7 @@
         "change_1d": 0.0,
         "change_5d": -0.613,
         "change_20d": -7.1756,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -192,7 +192,7 @@
         "change_1d": -0.5236,
         "change_5d": 3.8705,
         "change_20d": 2.2165,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -210,7 +210,7 @@
         "change_1d": 0.0,
         "change_5d": -0.7245,
         "change_20d": -7.1727,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -228,7 +228,7 @@
         "change_1d": 0.0,
         "change_5d": -0.2467,
         "change_20d": -6.1093,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -242,16 +242,16 @@
         "name": "DXY",
         "group": "fx",
         "unit": "index point",
-        "price": 101.675,
+        "price": 101.683,
         "change_1d": 0.0,
-        "change_5d": -0.0737,
-        "change_20d": -0.8822,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "change_5d": -0.0658,
+        "change_20d": -0.8744,
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
         "error": null,
-        "quote_ts": 1794262020,
+        "quote_ts": 1794262920,
         "last_bar_date": "2026-11-09"
       },
       {
@@ -264,7 +264,7 @@
         "change_1d": 0.0,
         "change_5d": 4.5319,
         "change_20d": -0.9808,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -282,7 +282,7 @@
         "change_1d": 0.0,
         "change_5d": 5.3923,
         "change_20d": -11.1172,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -300,7 +300,7 @@
         "change_1d": 0.0,
         "change_5d": -2.4605,
         "change_20d": -4.7175,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -318,7 +318,7 @@
         "change_1d": 0.0,
         "change_5d": -10.4499,
         "change_20d": -7.8515,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -336,7 +336,7 @@
         "change_1d": 0.0,
         "change_5d": -12.0263,
         "change_20d": -13.5771,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -354,7 +354,7 @@
         "change_1d": 0.0,
         "change_5d": 12.2199,
         "change_20d": 1.1999,
-        "updated_at": "2026-11-09T22:17:21Z",
+        "updated_at": "2026-11-09T22:32:22Z",
         "available": true,
         "source": "yfinance",
         "price_kind": "live",
@@ -372,12 +372,12 @@
       "yfinance"
     ],
     "refresh_policy": "indices_frozen_outside_session; rates_cnbc_24h; commodities_forex_24h（禁止复用旧 JSON 宏观缓存）",
-    "updated_at": "2026-11-09T22:17:31Z"
+    "updated_at": "2026-11-09T22:32:33Z"
   },
   "options": [],
   "review": {
     "window_days": 30,
-    "as_of_us": "2026-11-09 17:17:33",
+    "as_of_us": "2026-11-09 17:32:34",
     "window_start": "2026-10-10",
     "core_closed_count": 0,
     "core_open_count": 4,
@@ -2584,8 +2584,8 @@
         "tag": "Observation",
         "status": "观察推荐",
         "rec_price": 248.21,
-        "cur_price": 229.57,
-        "pnl_pct": -7.51,
+        "cur_price": 229.46,
+        "pnl_pct": -7.55,
         "days_held": 48,
         "stop_loss": null,
         "score": "64.2",
@@ -6478,8 +6478,8 @@
         "score": "N/A",
         "source": "review_history",
         "ai_snapshot": null,
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 32.8077392578125,
+        "pnl_5d": -3.2,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -6539,7 +6539,7 @@
         "rec_date": "2026-06-25",
         "tag": "Core_Dragon",
         "status": "已超期归档",
-        "rec_price": 23.77,
+        "rec_price": 23.43,
         "cur_price": 24.32,
         "pnl_pct": 1.16,
         "days_held": 28,
@@ -6547,8 +6547,8 @@
         "score": "N/A",
         "source": "review_history",
         "ai_snapshot": null,
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 23.557893753051758,
+        "pnl_5d": 0.54,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -6570,8 +6570,8 @@
         "score": "N/A",
         "source": "review_history",
         "ai_snapshot": null,
-        "price_5d": null,
-        "pnl_5d": null,
+        "price_5d": 44.89704513549805,
+        "pnl_5d": -3.11,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -6815,7 +6815,7 @@
         "rec_date": "2026-06-23",
         "tag": "Core_Dragon",
         "status": "持仓中",
-        "rec_price": 24.56,
+        "rec_price": 24.21,
         "cur_price": 24.82,
         "pnl_pct": -1.04,
         "days_held": 29,
@@ -6824,7 +6824,7 @@
         "source": "review_history",
         "ai_snapshot": null,
         "price_5d": 23.66598892211914,
-        "pnl_5d": -3.64,
+        "pnl_5d": -2.23,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -6953,7 +6953,7 @@
         "rec_date": "2026-06-22",
         "tag": "Core_Dragon",
         "status": "已超期归档",
-        "rec_price": 24.79,
+        "rec_price": 24.43,
         "cur_price": 24.07,
         "pnl_pct": -4.52,
         "days_held": 29,
@@ -6962,7 +6962,7 @@
         "source": "review_history",
         "ai_snapshot": null,
         "price_5d": 23.951004028320312,
-        "pnl_5d": -3.37,
+        "pnl_5d": -1.96,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -7000,8 +7000,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 418.88,
-        "cur_price": 187.39,
-        "pnl_pct": -55.26,
+        "cur_price": 187.5049,
+        "pnl_pct": -55.24,
         "days_held": 96,
         "stop_loss": null,
         "score": "N/A",
@@ -7423,11 +7423,11 @@
         "ai_snapshot": null,
         "price_5d": 93.47000122070312,
         "pnl_5d": -2.57,
-        "price_10d": null,
-        "pnl_10d": null,
+        "price_10d": 112.7300033569336,
+        "pnl_10d": 17.51,
         "price_20d": null,
         "pnl_20d": null,
-        "review_stage": "5D"
+        "review_stage": "10D"
       },
       {
         "event_id": "HPE|2026-06-17|Core_Dragon",
@@ -7666,7 +7666,7 @@
         "rec_date": "2026-06-12",
         "tag": "Core_Dragon",
         "status": "已超期归档",
-        "rec_price": 28.59,
+        "rec_price": 28.45,
         "cur_price": 30.19,
         "pnl_pct": 7.36,
         "days_held": 12,
@@ -7675,7 +7675,7 @@
         "source": "review_history",
         "ai_snapshot": null,
         "price_5d": 30.032705307006836,
-        "pnl_5d": 5.05,
+        "pnl_5d": 5.58,
         "price_10d": null,
         "pnl_10d": null,
         "price_20d": null,
@@ -7851,8 +7851,8 @@
         "tag": "Observation",
         "status": "Observation_Closed",
         "rec_price": 54.54,
-        "cur_price": 50.569,
-        "pnl_pct": -7.28,
+        "cur_price": 50.54,
+        "pnl_pct": -7.33,
         "days_held": 104,
         "stop_loss": null,
         "score": "0",
@@ -9265,9 +9265,9 @@
         "pnl_5d": -16.46,
         "price_10d": 1.1440000534057617,
         "pnl_10d": -9.49,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 0.9520000219345093,
+        "pnl_20d": -24.68,
+        "review_stage": "20D"
       },
       {
         "event_id": "CIFR|2026-06-03|Observation",
@@ -9288,9 +9288,9 @@
         "pnl_5d": -22.63,
         "price_10d": 26.350000381469727,
         "pnl_10d": -3.01,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 20.040000915527344,
+        "pnl_20d": -26.24,
+        "review_stage": "20D"
       },
       {
         "event_id": "FXI|2026-06-03|Core_Dragon",
@@ -9311,9 +9311,9 @@
         "pnl_5d": -2.85,
         "price_10d": 33.650001525878906,
         "pnl_10d": -5.22,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 31.90999984741211,
+        "pnl_20d": -10.12,
+        "review_stage": "20D"
       },
       {
         "event_id": "FXI|2026-06-03|Observation",
@@ -9334,9 +9334,9 @@
         "pnl_5d": -2.85,
         "price_10d": 33.650001525878906,
         "pnl_10d": -5.22,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 31.90999984741211,
+        "pnl_20d": -10.12,
+        "review_stage": "20D"
       },
       {
         "event_id": "GOVT|2026-06-03|Observation",
@@ -9345,7 +9345,7 @@
         "rec_date": "2026-06-03",
         "tag": "Observation",
         "status": null,
-        "rec_price": 22.44,
+        "rec_price": 22.37,
         "cur_price": 22.61,
         "pnl_pct": -0.4,
         "days_held": 5,
@@ -9354,12 +9354,12 @@
         "source": "review_history",
         "ai_snapshot": null,
         "price_5d": 22.320409774780273,
-        "pnl_5d": -0.54,
+        "pnl_5d": -0.22,
         "price_10d": 22.409259796142578,
-        "pnl_10d": -0.15,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "pnl_10d": 0.18,
+        "price_20d": 22.466449737548828,
+        "pnl_20d": 0.43,
+        "review_stage": "20D"
       },
       {
         "event_id": "GRAB|2026-06-03|Core_Dragon",
@@ -9426,9 +9426,9 @@
         "pnl_5d": -25.13,
         "price_10d": 58.11000061035156,
         "pnl_10d": -15.56,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 38.81999969482422,
+        "pnl_20d": -43.59,
+        "review_stage": "20D"
       },
       {
         "event_id": "MVIS|2026-06-03|Trap_Warning",
@@ -9449,9 +9449,9 @@
         "pnl_5d": -13.95,
         "price_10d": 5.550000190734863,
         "pnl_10d": -13.95,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 5.699999809265137,
+        "pnl_20d": -11.63,
+        "review_stage": "20D"
       },
       {
         "event_id": "NVDA|2026-06-03|Core_Dragon",
@@ -9518,9 +9518,9 @@
         "pnl_5d": -13.48,
         "price_10d": 16.260000228881836,
         "pnl_10d": -4.69,
-        "price_20d": null,
-        "pnl_20d": null,
-        "review_stage": "10D"
+        "price_20d": 18.6299991607666,
+        "pnl_20d": 9.2,
+        "review_stage": "20D"
       },
       {
         "event_id": "SRXH|2026-06-03|Observation",
@@ -9782,7 +9782,7 @@
         "rec_date": "2026-06-02",
         "tag": "Core_Dragon",
         "status": "已超期归档",
-        "rec_price": 84.82,
+        "rec_price": 84.48,
         "cur_price": 85.77,
         "pnl_pct": 0.35,
         "days_held": 22,
@@ -10794,22 +10794,22 @@
     },
     "review": {
       "latest": {
-        "run_id": 42327267236,
+        "run_id": 42711391705,
         "status": "completed",
         "conclusion": "success",
-        "created_at": "2026-11-07T02:03:23Z",
-        "started_at": "2026-11-07T02:03:23Z",
-        "updated_at": "2026-11-07T02:04:28Z",
-        "head_sha": "6598c817d218",
-        "event": "schedule",
-        "run_number": 174,
+        "created_at": "2026-11-09T22:23:07Z",
+        "started_at": "2026-11-09T22:23:07Z",
+        "updated_at": "2026-11-09T22:24:59Z",
+        "head_sha": "90a9f4531eb5",
+        "event": "workflow_dispatch",
+        "run_number": 175,
         "run_attempt": 1,
-        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/42327267236"
+        "html_url": "https://github.com/wijouyang-lab/us/actions/runs/42711391705"
       },
       "last_success": {
-        "run_id": 42327267236,
-        "completed_at": "2026-11-07T02:04:28Z",
-        "head_sha": "6598c817d218"
+        "run_id": 42711391705,
+        "completed_at": "2026-11-09T22:24:59Z",
+        "head_sha": "90a9f4531eb5"
       },
       "error": null
     },
@@ -10871,8 +10871,8 @@
     "start_date": "2026-10-06",
     "unit_dollars": 10000.0,
     "max_open_positions": 4,
-    "asof": "2026-11-06",
-    "snapshot_asof": "2026-11-06",
+    "asof": "2026-11-09",
+    "snapshot_asof": "2026-11-09",
     "rolled_txns": 0,
     "cash": 49824.92,
     "stock_value": 0.0,
@@ -11352,6 +11352,12 @@
         "total_equity": 49824.92,
         "cash": 49824.92,
         "stock_value": 0.0
+      },
+      {
+        "date": "2026-11-09",
+        "total_equity": 49824.92,
+        "cash": 49824.92,
+        "stock_value": 0.0
       }
     ]
   },
@@ -11658,8 +11664,8 @@
     ],
     "network_status": "ok",
     "kline_bars_target": 180,
-    "market_updated_at": "2026-11-09T22:17:31Z",
-    "technical_updated_at": "2026-11-09T22:17:33Z",
+    "market_updated_at": "2026-11-09T22:32:33Z",
+    "technical_updated_at": "2026-11-09T22:32:34Z",
     "counts": {
       "core": 1,
       "observation": 0,
@@ -11761,11 +11767,11 @@
   },
   "market_indicators": {
     "schema_version": "market_indicators.v1",
-    "generated_at": "2026-11-09T22:17:20Z",
+    "generated_at": "2026-11-09T22:32:21Z",
     "fear_greed": {
       "score": 31.71,
       "rating": "fear",
-      "timestamp": "2026-11-09T22:00:41+00:00",
+      "timestamp": "2026-11-09T22:15:38+00:00",
       "subindicators": {
         "market_momentum_sp500": {
           "score": 13.8,
@@ -11968,7 +11974,7 @@
   },
   "macro_forecast": {
     "schema": 1,
-    "generated_at": "2026-11-09T22:17:15Z",
+    "generated_at": "2026-11-09T22:32:15Z",
     "as_of": null,
     "source": "TradingEconomics 指标页（自动解析）",
     "count": 7,
@@ -12061,7 +12067,7 @@
   },
   "macro_indicators": {
     "schema": 1,
-    "generated_at": "2026-11-09T22:17:10Z",
+    "generated_at": "2026-11-09T22:32:13Z",
     "count": 11,
     "ok": 11,
     "items": [
@@ -12200,8 +12206,8 @@
     ]
   },
   "decision_inputs": {
-    "generated_at": "2026-11-09T22:17:19Z",
-    "asof": "2026-11-09T22:17:10Z",
+    "generated_at": "2026-11-09T22:32:19Z",
+    "asof": "2026-11-09T22:32:13Z",
     "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
     "count": 15,
     "features": [
@@ -12439,7 +12445,7 @@
     "error": null
   },
   "serenity_verified": {
-    "generated_at": "2026-11-09T22:17:19Z",
+    "generated_at": "2026-11-09T22:32:19Z",
     "source": "SEC EDGAR + yfinance + news_data",
     "count": 10,
     "items": [
