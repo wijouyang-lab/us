@@ -1,0 +1,118 @@
+{
+  "generated_at": "2026-11-09T08:01:22.773518+00:00",
+  "p9_1": {
+    "status": "P9_1_ORIGINAL_RESULT_NOT_REPRODUCIBLE",
+    "reported": "CAGR/MaxDD retained as historical reported values",
+    "reason": "P9.1 original price input was not committed with an immutable SHA-256; exact signal/data version cannot be proven; P9.2.2 replay order counts differ"
+  },
+  "p9_2_2": {
+    "independent_reconciliation": [
+      {
+        "strategy_id": "A_LEVEL_TOUCH",
+        "days": 4430,
+        "max_abs_nav_diff": 2.1827872842550278e-11,
+        "mean_abs_nav_diff": 5.345242843546071e-12,
+        "unmatched_sells": 0,
+        "end_cash": 21349.74260407341,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 1,
+        "open_shares": 10
+      },
+      {
+        "strategy_id": "B_PATTERN_ONLY",
+        "days": 4430,
+        "max_abs_nav_diff": 7.275957614183426e-12,
+        "mean_abs_nav_diff": 7.550522052454499e-13,
+        "unmatched_sells": 0,
+        "end_cash": 20606.561198784304,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 1,
+        "open_shares": 22
+      },
+      {
+        "strategy_id": "C_SUPPORT_PATTERN",
+        "days": 4430,
+        "max_abs_nav_diff": 1.4551915228366852e-11,
+        "mean_abs_nav_diff": 2.445916395426134e-12,
+        "unmatched_sells": 0,
+        "end_cash": 7031.605915597175,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 4,
+        "open_shares": 561
+      },
+      {
+        "strategy_id": "D_C_MACD",
+        "days": 4430,
+        "max_abs_nav_diff": 1.4551915228366852e-11,
+        "mean_abs_nav_diff": 2.3283987417415404e-12,
+        "unmatched_sells": 0,
+        "end_cash": 9340.416641648926,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 1,
+        "open_shares": 89
+      },
+      {
+        "strategy_id": "E_C_KDJ",
+        "days": 4430,
+        "max_abs_nav_diff": 2.1827872842550278e-11,
+        "mean_abs_nav_diff": 5.729734462659802e-12,
+        "unmatched_sells": 0,
+        "end_cash": 18307.82800780015,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 0,
+        "open_shares": 0
+      },
+      {
+        "strategy_id": "F_C_BOTH",
+        "days": 4430,
+        "max_abs_nav_diff": 2.1827872842550278e-11,
+        "mean_abs_nav_diff": 3.773509740297884e-12,
+        "unmatched_sells": 0,
+        "end_cash": 13226.124312774831,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 0,
+        "open_shares": 0
+      },
+      {
+        "strategy_id": "G_LEVEL_ALL_PATTERNS",
+        "days": 4430,
+        "max_abs_nav_diff": 1.4551915228366852e-11,
+        "mean_abs_nav_diff": 2.445916395426134e-12,
+        "unmatched_sells": 0,
+        "end_cash": 7031.605915597175,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 4,
+        "open_shares": 561
+      },
+      {
+        "strategy_id": "H_G_BOTH",
+        "days": 4430,
+        "max_abs_nav_diff": 2.1827872842550278e-11,
+        "mean_abs_nav_diff": 3.773509740297884e-12,
+        "unmatched_sells": 0,
+        "end_cash": 13226.124312774831,
+        "end_bil_units": 571.7472529222155,
+        "open_positions": 0,
+        "open_shares": 0
+      }
+    ],
+    "status": "INDEPENDENT_RECONCILIATION_PASS"
+  },
+  "framework": {
+    "manifest": "run_manifest_example.json",
+    "schema": "run_manifest.schema.json",
+    "required_outputs": [
+      "run_manifest.json",
+      "data_manifest.json",
+      "signal_log.csv",
+      "trade_ledger.csv",
+      "round_trip_trades.csv",
+      "open_positions.csv",
+      "daily_nav.csv",
+      "cost_reconciliation.csv",
+      "performance_metrics.json",
+      "run_status.json"
+    ]
+  },
+  "no_shadow": true
+}
