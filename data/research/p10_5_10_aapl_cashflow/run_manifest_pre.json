@@ -1,0 +1,8 @@
+{
+  "manifest_capture_mode": "PRE_RUN",
+  "inputs": {
+    "panel": "data\\research\\p10_5_9_aapl_panel\\aapl_quarterly_panel_v3.csv",
+    "facts": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv"
+  },
+  "command": "python -m tools.research.p10_5_10.finalize"
+}

@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-11-09T14:00:00+00:00",
+  "status": "P10_5_10_PARTIAL",
+  "fy": [
+    2018,
+    2019
+  ],
+  "quarters": 8,
+  "metrics": 9,
+  "cells": 72,
+  "core_complete": false,
+  "cashflow_rows": 8,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true,
+  "reason": "Q4 OperatingIncomeLoss derived from FY minus Q1-Q3 is inconsistent with source periods; not accepted as research-ready"
+}
