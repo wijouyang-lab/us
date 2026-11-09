@@ -1,0 +1,72 @@
+{
+  "experiment_id": "P9_2_2_A_LEVEL_TOUCH_REPLAY",
+  "strategy_id": "A_LEVEL_TOUCH",
+  "git_commit_sha": "253fe6edb9e48fc74d3fad0f1a94df7488768151",
+  "git_dirty_status": true,
+  "source_diff_hash": "aa07da2ea26e7bfac5cd619146da4706e4c4804c51b1764877d607f93c724894",
+  "python_version": "3.12.14",
+  "dependency_lock_hash": null,
+  "data_sources": {
+    "price": {
+      "path": "data/research/pit_data/finsaber_prices_raw.csv",
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
+    },
+    "membership": {
+      "path": "data/research/historical_universe/sp500_daily.csv",
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
+    },
+    "signals": {
+      "path": "data/research/p9_1_support_resistance/p9_1_signals.csv.gz",
+      "sha256": "58826e8a3c7e0c4b00b8069cd67066039680732d7e3dc2a299672d118b093e3c"
+    },
+    "cost_model": {
+      "path": "tools/paper_trading/ibkr_costs.py",
+      "sha256": "3b60c338728c45104d2c570303bb52e3f65d02cc7d79ebc9f89c5a5cfb104d7c"
+    },
+    "config": {
+      "path": "tools/research/p9_2_2/ledger_final.py",
+      "sha256": "4b13d58c5d2cac5736e2e7d4e18f43938344991d41f0f0e897ff786700395a0f"
+    }
+  },
+  "cost_model_version": "IBKR_PRO_TIERED_2026_11",
+  "start_date": "2007-05-30",
+  "end_date": "2024-12-31",
+  "parameters": {
+    "start": "2007-05-30",
+    "end": "2024-12-31",
+    "cash": 50000,
+    "equity_budget": 10000,
+    "max_positions": 5,
+    "hold_days": 20,
+    "slippage_bps_per_side": 5
+  },
+  "calendar": "NYSE sessions from price panel",
+  "timezone": "America/New_York",
+  "execution_rule": "signal at close t; fill at next open with 5bps adverse slippage",
+  "command": "python -m tools.research.p9_2_2.ledger_final",
+  "random_seed": 0,
+  "initial_capital": 50000.0,
+  "outputs": {
+    "trade_ledger_final.csv": {
+      "path": "data\\research\\p9_2_2_ledger\\trade_ledger_final.csv",
+      "sha256": "feb7c7bd52f1eb1a21440d92c0d975e83f8019913a61880cf103c5c80556a3ef"
+    },
+    "round_trip_trades_final.csv": {
+      "path": "data\\research\\p9_2_2_ledger\\round_trip_trades_final.csv",
+      "sha256": "5c5798a8a5f7a0cede4618ae3d0a0b52806eec6c2fd8e96e8bea79de837b8051"
+    },
+    "open_positions_final.csv": {
+      "path": "data\\research\\p9_2_2_ledger\\open_positions_final.csv",
+      "sha256": "75ef9cbcca20fe1901ca13284591ee879ba2362294f7d94ece80a20ae33e1be7"
+    },
+    "daily_nav_reconciliation.csv": {
+      "path": "data\\research\\p9_2_2_ledger\\daily_nav_reconciliation.csv",
+      "sha256": "96955a1139c2d3eac495f49658f8acc2da9fb60b6186d4a809e483ae2baf5669"
+    },
+    "all_in_cost_reconciliation.csv": {
+      "path": "data\\research\\p9_2_2_ledger\\all_in_cost_reconciliation.csv",
+      "sha256": "ed7c36e2859afb596ca9438b3f95a3759c7e622a208d266aacd120cccb223250"
+    }
+  },
+  "status": "REPRODUCIBLE_IF_INPUT_HASHES_MATCH"
+}

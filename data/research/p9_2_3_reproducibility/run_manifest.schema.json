@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "run_manifest.schema.json",
+  "title": "DSH research run manifest",
+  "type": "object",
+  "required": ["experiment_id","strategy_id","git_commit_sha","git_dirty_status","source_diff_hash","python_version","dependency_lock_hash","data_sources","cost_model_version","parameters","start_date","end_date","calendar","timezone","execution_rule","command","random_seed","initial_capital","outputs","status"],
+  "properties": {
+    "experiment_id": {"type": "string", "minLength": 1},
+    "strategy_id": {"type": "string", "minLength": 1},
+    "git_commit_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "git_dirty_status": {"type": "boolean"},
+    "source_diff_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "python_version": {"type": "string"},
+    "dependency_lock_hash": {"type": ["string","null"]},
+    "data_sources": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object", "required": ["path","sha256"]}},
+    "cost_model_version": {"type": "string"},
+    "parameters": {"type": "object"},
+    "start_date": {"type": "string"},
+    "end_date": {"type": "string"},
+    "calendar": {"type": "string"},
+    "timezone": {"type": "string"},
+    "execution_rule": {"type": "string"},
+    "command": {"type": "string"},
+    "random_seed": {"type": "integer"},
+    "initial_capital": {"type": "number", "exclusiveMinimum": 0},
+    "outputs": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "object", "required": ["path","sha256"]}},
+    "status": {"type": "string"}
+  },
+  "additionalProperties": true
+}
