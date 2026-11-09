@@ -25,6 +25,7 @@ P8_2_1_STATUS = Path("data/research/p8_2_1/p8_2_1_status.json")
 P8_2_STATUS = Path("data/research/p8_2/p8_2_status.json")
 P8_3_STATUS = Path("data/research/p8_3_valid_data_alpha/p8_3_status.json")
 P8_4_STATUS = Path("data/research/p8_4_market_neutral_alpha/p8_4_status.json")
+P9_1_STATUS = Path("data/research/p9_1_support_resistance/p9_1_status.json")
 P8_1_STATUS = Path("data/research/p8/p8_status.json")
 
 
@@ -93,6 +94,7 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
     p8_2_1 = json.loads(P8_2_1_STATUS.read_text(encoding="utf-8")) if P8_2_1_STATUS.exists() else {"status": "P8_2_1_STATUS_MISSING"}
     p8_3 = json.loads(P8_3_STATUS.read_text(encoding="utf-8")) if P8_3_STATUS.exists() else {"status": "P8_3_STATUS_MISSING"}
     p8_4 = json.loads(P8_4_STATUS.read_text(encoding="utf-8")) if P8_4_STATUS.exists() else {"status": "P8_4_STATUS_MISSING"}
+    p9_1 = json.loads(P9_1_STATUS.read_text(encoding="utf-8")) if P9_1_STATUS.exists() else {"status": "P9_1_STATUS_MISSING"}
     snapshot = {
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source": {
@@ -119,6 +121,7 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
         "p8_2_1": p8_2_1,
         "p8_3": p8_3,
         "p8_4": p8_4,
+        "p9_1": p9_1,
         "scanner": {"count": len(stocks), "stocks": stocks,
                      "source": d.get("meta", {}).get("stocks_source"),
                      "universe_note": "Only dashboard active/observation stocks are exposed; no full-market fallback is implied."},
