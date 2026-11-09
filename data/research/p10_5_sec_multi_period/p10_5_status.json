@@ -1,0 +1,23 @@
+{
+  "generated_at": "2026-11-09T08:29:26.451639+00:00",
+  "status": "P10_5_SEC_MULTI_PERIOD_PARTIAL",
+  "aapl_total": 66,
+  "aapl_dataset_matched": 1,
+  "aapl_quarter_count": 64,
+  "companies": 30,
+  "accessions_selected": 120,
+  "accessions_parsed": 120,
+  "historical_delisted_companies": 0,
+  "dataset_quarters_downloaded": [
+    "2024q1"
+  ],
+  "strategy_ready": false,
+  "data_blocked": [
+    "65 AAPL quarterly datasets not downloaded",
+    "30-company sample current-map biased",
+    "no delisted-inclusive CIK mapping",
+    "QTD/YTD and restatement lineage not implemented",
+    "Notes datasets not ingested"
+  ],
+  "no_shadow": true
+}

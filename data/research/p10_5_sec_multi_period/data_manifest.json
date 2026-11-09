@@ -1,0 +1,21 @@
+{
+  "sources": {
+    "aapl_index": {
+      "path": "data/research/p10_3_sec_xbrl_coverage/aapl_all_status.csv",
+      "sha256": "b6435fa4d34f61242615c08de05235435f56336458cf8e9c02b99d3254c44a29"
+    },
+    "p104_manifest": {
+      "path": "data/research/p10_4_sec_dataset_integration/sec_dataset_download_manifest.csv",
+      "sha256": "6d0d6476f1782b66c371336f474a7563db27111f0b6cd10b9c973514d3811798"
+    },
+    "membership": {
+      "path": "data/research/historical_universe/sp500_daily.csv",
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
+    },
+    "company_tickers": {
+      "path": "data/sec/cache/company_tickers.json",
+      "sha256": "3087398afcb236e5eef138bc383afe6292bb5bcc31644b8edae5222cd9305ce0"
+    }
+  },
+  "note": "large SEC ZIP/CSV caches excluded from Git; SHA in P10.4 download manifest"
+}
