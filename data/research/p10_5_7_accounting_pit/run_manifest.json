@@ -1,0 +1,53 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "git_commit_sha": "WORKTREE",
+    "data_sources": {
+      "amendments": {
+        "path": "data\\research\\p10_5_6_financial_final\\amendment_comparison_final_v2.csv",
+        "sha256": "e76f56817c8523839ebc0fd25c787a31a9f6d594be17e7ade045260e4e279411"
+      },
+      "panel": {
+        "path": "data\\research\\p10_5_5_financial_normalization\\aapl_normalized_quarterly_panel.csv",
+        "sha256": "5e51fd12cc12095bbb282c81ba5238b499eca924b3029a1ad26221ba320e688e"
+      }
+    },
+    "command": "python -m tools.research.p10_5_7.validation"
+  },
+  "outputs": {
+    "aapl_63_accession_no_lookahead.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\aapl_63_accession_no_lookahead.csv",
+      "sha256": "964738a6ece05fffe906cc320c563d5266a2db87f472505f2b22538353f97682"
+    },
+    "aapl_quarterly_panel_final.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\aapl_quarterly_panel_final.csv",
+      "sha256": "3917c99b626ffda5a978ffbc29c157de2dd6dc3943ade0e749c293a317c92470"
+    },
+    "apple_accounting_change_evidence.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\apple_accounting_change_evidence.csv",
+      "sha256": "f52bfe6bacdad35191e731d00995996ba9c87f4c9db8035960806a6ae55a2364"
+    },
+    "apple_policy_adoption_asof_tests.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\apple_policy_adoption_asof_tests.csv",
+      "sha256": "02b15ab70623b8ca32ca8977accfd31d58e49555170a1f20ed8fee49ffefd25b"
+    },
+    "apple_real_version_history.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\apple_real_version_history.csv",
+      "sha256": "02b15ab70623b8ca32ca8977accfd31d58e49555170a1f20ed8fee49ffefd25b"
+    },
+    "apple_retrospective_adjustment_reconciliation.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\apple_retrospective_adjustment_reconciliation.csv",
+      "sha256": "f52bfe6bacdad35191e731d00995996ba9c87f4c9db8035960806a6ae55a2364"
+    },
+    "form25_nse_45_final.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\form25_nse_45_final.csv",
+      "sha256": "b315b4ffccc0758eecb91e772b8dd2669442fd3ad474e29d8266028f4fdfd27c"
+    },
+    "form25_nse_unresolved_final.csv": {
+      "path": "data\\research\\p10_5_7_accounting_pit\\form25_nse_unresolved_final.csv",
+      "sha256": "abed5dc9827211c674ffd492553a56f7d9e860a8494f07a242f55ee3aac1d564"
+    }
+  },
+  "status": "PARTIAL"
+}
