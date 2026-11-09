@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-11-09T16:11:34.475575+00:00",
+  "status": "P10_5_13_PARTIAL",
+  "panel_cells": 72,
+  "traceable_cells": 72,
+  "unresolved_cells": 0,
+  "dimension_contaminated_cells": 0,
+  "unit_failures": 0,
+  "bad_accession_cells": 0,
+  "independently_verified_cells": 32,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true
+}
