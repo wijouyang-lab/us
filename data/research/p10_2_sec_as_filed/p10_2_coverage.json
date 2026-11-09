@@ -1,0 +1,161 @@
+{
+  "filings": 66,
+  "parsed": 23,
+  "failed": 43,
+  "acceptance_present": 66,
+  "trade_date_present": 66,
+  "forms": {
+    "10-Q": 48,
+    "10-K": 16,
+    "10-K/A": 1,
+    "10-Q/A": 1
+  },
+  "facts": 4467,
+  "core_fields": [
+    "Assets",
+    "CashAndCashEquivalentsAtCarryingValue",
+    "CommonStockSharesOutstanding",
+    "EarningsPerShareBasic",
+    "EarningsPerShareDiluted",
+    "GrossProfit",
+    "Liabilities",
+    "LongTermDebt",
+    "NetCashProvidedByUsedInOperatingActivities",
+    "NetIncomeLoss",
+    "OperatingIncomeLoss",
+    "PaymentsToAcquirePropertyPlantAndEquipment",
+    "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "Revenues",
+    "StockholdersEquity",
+    "WeightedAverageNumberOfDilutedSharesOutstanding",
+    "WeightedAverageNumberOfSharesOutstandingBasic"
+  ],
+  "cross_section": {
+    "tickers": 30,
+    "with_cik": 30,
+    "metadata_only": 30,
+    "note": "current SEC map, not a delisted-inclusive historical mapping"
+  },
+  "field_coverage": [
+    {
+      "field": "RevenueFromContractWithCustomerExcludingAssessedTax",
+      "filings_with_field": 23,
+      "facts": 1152,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "GrossProfit",
+      "filings_with_field": 23,
+      "facts": 92,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "OperatingIncomeLoss",
+      "filings_with_field": 23,
+      "facts": 608,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "NetIncomeLoss",
+      "filings_with_field": 23,
+      "facts": 372,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "EarningsPerShareBasic",
+      "filings_with_field": 23,
+      "facts": 168,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "EarningsPerShareDiluted",
+      "filings_with_field": 23,
+      "facts": 168,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "WeightedAverageNumberOfSharesOutstandingBasic",
+      "filings_with_field": 23,
+      "facts": 152,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "WeightedAverageNumberOfDilutedSharesOutstanding",
+      "filings_with_field": 23,
+      "facts": 152,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "CashAndCashEquivalentsAtCarryingValue",
+      "filings_with_field": 23,
+      "facts": 505,
+      "first_period": NaN,
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "Assets",
+      "filings_with_field": 23,
+      "facts": 46,
+      "first_period": NaN,
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "Liabilities",
+      "filings_with_field": 23,
+      "facts": 46,
+      "first_period": NaN,
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "CommonStockSharesOutstanding",
+      "filings_with_field": 23,
+      "facts": 82,
+      "first_period": NaN,
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "StockholdersEquity",
+      "filings_with_field": 23,
+      "facts": 766,
+      "first_period": NaN,
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "NetCashProvidedByUsedInOperatingActivities",
+      "filings_with_field": 23,
+      "facts": 52,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "PaymentsToAcquirePropertyPlantAndEquipment",
+      "filings_with_field": 23,
+      "facts": 52,
+      "first_period": "2016-09-25",
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "LongTermDebt",
+      "filings_with_field": 11,
+      "facts": 22,
+      "first_period": NaN,
+      "last_period": "2024-09-28"
+    },
+    {
+      "field": "Revenues",
+      "filings_with_field": 10,
+      "facts": 32,
+      "first_period": "2017-10-01",
+      "last_period": "2021-06-26"
+    }
+  ],
+  "8k_rows": 84
+}
