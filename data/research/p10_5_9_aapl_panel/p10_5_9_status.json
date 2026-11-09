@@ -1,0 +1,16 @@
+{
+  "generated_at": "2026-11-09T13:40:00+00:00",
+  "status": "P10_5_9_PARTIAL",
+  "panel_rows": 472,
+  "two_fy": [
+    2018,
+    2019
+  ],
+  "two_fy_rows": 62,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "form25_unresolved": 6,
+  "p10_6_allowed": false,
+  "no_shadow": true
+}
