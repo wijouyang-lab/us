@@ -1,0 +1,39 @@
+{
+  "filings": 66,
+  "status_counts": {
+    "SEPARATE_XBRL_PARSED": 40,
+    "INLINE_XBRL_PARSED": 23,
+    "ORIGINAL_FILE_NO_XBRL": 3
+  },
+  "separate_facts": 4860,
+  "separate_fields": [
+    "Assets",
+    "CashAndCashEquivalentsAtCarryingValue",
+    "CommonStockSharesOutstanding",
+    "EarningsPerShareBasic",
+    "EarningsPerShareDiluted",
+    "GrossProfit",
+    "Liabilities",
+    "LongTermDebt",
+    "NetCashProvidedByUsedInOperatingActivities",
+    "NetIncomeLoss",
+    "OperatingIncomeLoss",
+    "PaymentsToAcquirePropertyPlantAndEquipment",
+    "RevenueFromContractWithCustomerExcludingAssessedTax",
+    "Revenues",
+    "SalesRevenueNet",
+    "StockholdersEquity",
+    "WeightedAverageNumberOfDilutedSharesOutstanding",
+    "WeightedAverageNumberOfSharesOutstandingBasic"
+  ],
+  "cross_section": {
+    "METADATA_ONLY": 30
+  },
+  "dataset_probe": {
+    "http": 200,
+    "content_length": "124336804",
+    "used": false,
+    "status": "AVAILABLE_NOT_FETCHED"
+  },
+  "exact_publication_timestamp": false
+}
