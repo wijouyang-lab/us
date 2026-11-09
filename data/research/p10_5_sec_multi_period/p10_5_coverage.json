@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-11-09T08:29:26.450640+00:00",
+  "aapl": {
+    "filings": 66,
+    "dataset_matched": 1,
+    "dataset_not_downloaded": 65,
+    "quarters": 64
+  },
+  "cross_section": {
+    "companies": 30,
+    "accessions": 120,
+    "parsed": 120,
+    "usable_company_rows": 30,
+    "delisted_companies": 0,
+    "datasets_matched": 0
+  },
+  "field_rows": 27279,
+  "strategy_ready": false
+}
