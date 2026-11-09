@@ -1,0 +1,8 @@
+{
+  "attempted": true,
+  "url": "https://efts.sec.gov/LATEST/search-index?q=%22FORM%2025-NSE%22",
+  "status": 200,
+  "error": "",
+  "bytes": 60975,
+  "preview": "{\"took\":262,\"timed_out\":false,\"_shards\":{\"total\":50,\"successful\":50,\"skipped\":0,\"failed\":0},\"hits\":{\"total\":{\"value\":3663,\"relation\":\"eq\"},\"max_score\":16.998495,\"hits\":[{\"_index\":\"edgar_file\",\"_id\":\"0001019056-07-000453:aa_8k.txt\",\"_score\":16.998495,\"_source\":{\"ciks\":[\"0000818074\"],\"period_ending\":\""
+}

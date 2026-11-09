@@ -1,0 +1,56 @@
+[
+  {
+    "quarter": "2009q2",
+    "url": "https://www.sec.gov/files/dera/data/financial-statement-data-sets/2009q2.zip",
+    "status": 200,
+    "content_type": "application/octet-stream",
+    "content_length": "144894",
+    "bytes": 144894,
+    "seconds": 1.57,
+    "sha256": "09d38a3fdea044be2728488ecb000fef8b5220fda805c601d2337afd1da333a8",
+    "zip_ok": true,
+    "files": [
+      "sub.txt",
+      "pre.txt",
+      "num.txt",
+      "tag.txt",
+      "readme.htm"
+    ]
+  },
+  {
+    "quarter": "2019q4",
+    "url": "https://www.sec.gov/files/dera/data/financial-statement-data-sets/2019q4.zip",
+    "status": 200,
+    "content_type": "application/octet-stream",
+    "content_length": "98753299",
+    "bytes": 98753299,
+    "seconds": 6.52,
+    "sha256": "1f997c123b6d2fe892eeca0a5f12687e718ab5ae031f148b4a5d82f2689daec3",
+    "zip_ok": true,
+    "files": [
+      "sub.txt",
+      "pre.txt",
+      "num.txt",
+      "tag.txt",
+      "readme.htm"
+    ]
+  },
+  {
+    "quarter": "2024q1",
+    "url": "https://www.sec.gov/files/dera/data/financial-statement-data-sets/2024q1.zip",
+    "status": 200,
+    "content_type": "application/octet-stream",
+    "content_length": "124336804",
+    "bytes": 124336804,
+    "seconds": 7.92,
+    "sha256": "94c7894b00903f8ff7186c4250ba1c1daa1bde8b3a0b26fae68f72608b2ffc9b",
+    "zip_ok": true,
+    "files": [
+      "sub.txt",
+      "pre.txt",
+      "num.txt",
+      "tag.txt",
+      "readme.htm"
+    ]
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "generated_at": "2026-11-09T09:30:57.334236+00:00",
+  "status": "P10_5_3_PARTIAL",
+  "datasets_downloaded": 3,
+  "dataset_quarters": [
+    "2009q2",
+    "2019q4",
+    "2024q1"
+  ],
+  "aapl_facts": 9327,
+  "aapl_amendments": 2,
+  "amendment_rows": 30,
+  "real_numeric_restatements": 19,
+  "edgar_search": {
+    "attempted": true,
+    "url": "https://efts.sec.gov/LATEST/search-index?q=%22FORM%2025-NSE%22",
+    "status": 200,
+    "error": "",
+    "bytes": 60975,
+    "preview": "{\"took\":262,\"timed_out\":false,\"_shards\":{\"total\":50,\"successful\":50,\"skipped\":0,\"failed\":0},\"hits\":{\"total\":{\"value\":3663,\"relation\":\"eq\"},\"max_score\":16.998495,\"hits\":[{\"_index\":\"edgar_file\",\"_id\":\"0001019056-07-000453:aa_8k.txt\",\"_score\":16.998495,\"_source\":{\"ciks\":[\"0000818074\"],\"period_ending\":\""
+  },
+  "valid_sample_companies": 10,
+  "delisted_companies": 0,
+  "qtd_ytd": false,
+  "p10_6_allowed": false,
+  "data_blocked": [
+    "real delisted sample",
+    "numeric restatement case",
+    "real QTD/YTD derivation"
+  ],
+  "no_shadow": true
+}
