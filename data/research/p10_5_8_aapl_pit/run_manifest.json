@@ -1,0 +1,87 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "git_commit_sha": "WORKTREE",
+    "sources": {
+      "facts": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv",
+      "panel": "data\\research\\p10_5_5_financial_normalization\\aapl_normalized_quarterly_panel.csv"
+    },
+    "command": "python -m tools.research.p10_5_8.finalize"
+  },
+  "outputs": {
+    "aapl_63_accession_availability_final.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_63_accession_availability_final.csv",
+      "sha256": "93a48765aff03b0d5da313ba861c5cf7285976d7248fd3687e140a57c24ec608"
+    },
+    "aapl_63_accession_no_lookahead_final.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_63_accession_no_lookahead_final.csv",
+      "sha256": "c409d8e5cb80c5b84685243aca21085f7430280612d95480eb1cb946314358b2"
+    },
+    "aapl_canonical_mapping_final.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_canonical_mapping_final.csv",
+      "sha256": "a0e4fed56884d51517a6211410049b67d5f1b028607cfb573fc3d0ff18daa0e2"
+    },
+    "aapl_core_field_coverage.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_core_field_coverage.csv",
+      "sha256": "ec6cfdf866ba120be836d318b49a55b7713137bec11ab09b11bc50901383115b"
+    },
+    "aapl_gross_profit_final_audit.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_gross_profit_final_audit.csv",
+      "sha256": "3de3f7726606d636088b3a9c7f3bbdbb3cbce3213ec2ec7878de05a69294e333"
+    },
+    "aapl_panel_duplicate_audit.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_panel_duplicate_audit.csv",
+      "sha256": "f9cd8cb61a07a2740e9b89d270d6a9ed31adc4dcfecffb3da7bc8f4ed4748525"
+    },
+    "aapl_panel_grain_audit.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_panel_grain_audit.csv",
+      "sha256": "966669c1bb6a554a89828580751774ada5822404b6fcd3c97791b3d2361ddf6e"
+    },
+    "aapl_panel_version_audit.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_panel_version_audit.csv",
+      "sha256": "9183b211ed5560f9fdeb44433529cab4a737224c212ddbae36359f10bdd2405f"
+    },
+    "aapl_q4_derivation_final.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_q4_derivation_final.csv",
+      "sha256": "1cd1ee279527e21f3bdf43d5e592ee83d83af0a6a9bdde0fdc185912ae035f72"
+    },
+    "aapl_quarterly_annual_reconciliation.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_quarterly_annual_reconciliation.csv",
+      "sha256": "35802b2420f7e5b9eb4073c87954c48db5c7940d20951738cd67c36424a668cc"
+    },
+    "aapl_quarterly_panel_v2.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_quarterly_panel_v2.csv",
+      "sha256": "51982557f8644de16e4f493b255ae67b047ae29336c46b29386d975304036047"
+    },
+    "aapl_revenue_presentation_audit.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_revenue_presentation_audit.csv",
+      "sha256": "e9adc654dcdfa0b43627085c6ac7ce7273ddce0548a41bd0fb05f9eaf8470acf"
+    },
+    "aapl_timestamp_missingness_audit.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\aapl_timestamp_missingness_audit.csv",
+      "sha256": "702fd48b6ed8ee11fe6974249cf3aef5bddf37523bc0e819da2402cc02cbae4a"
+    },
+    "apple_accounting_versioned_facts.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\apple_accounting_versioned_facts.csv",
+      "sha256": "f52bfe6bacdad35191e731d00995996ba9c87f4c9db8035960806a6ae55a2364"
+    },
+    "apple_accounting_version_tests.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\apple_accounting_version_tests.csv",
+      "sha256": "f52bfe6bacdad35191e731d00995996ba9c87f4c9db8035960806a6ae55a2364"
+    },
+    "apple_policy_adoption_version_timeline.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\apple_policy_adoption_version_timeline.csv",
+      "sha256": "f52bfe6bacdad35191e731d00995996ba9c87f4c9db8035960806a6ae55a2364"
+    },
+    "form25_nse_45_final_v2.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\form25_nse_45_final_v2.csv",
+      "sha256": "b315b4ffccc0758eecb91e772b8dd2669442fd3ad474e29d8266028f4fdfd27c"
+    },
+    "form25_nse_unresolved_resolution.csv": {
+      "path": "data\\research\\p10_5_8_aapl_pit\\form25_nse_unresolved_resolution.csv",
+      "sha256": "16583c93c8fc06b319b40f9b4e7a8b7b89e5b35c62a4c7b38562b8fa7515a15b"
+    }
+  },
+  "status": "PARTIAL"
+}

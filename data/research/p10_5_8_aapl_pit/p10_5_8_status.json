@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-11-09T11:30:00+00:00",
+  "status": "P10_5_8_PARTIAL",
+  "accessions": 63,
+  "with_timestamp": 63,
+  "missing": 0,
+  "no_lookahead": 63,
+  "panel_rows": 472,
+  "fy2008_versions": 13,
+  "form25_unresolved": 6,
+  "p10_6_allowed": false,
+  "data_blocked": [
+    "full 2-FY core field panel",
+    "6 Form25 original docs"
+  ],
+  "no_shadow": true
+}
