@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-11-09T07:46:18.711278+00:00",
+  "status": "P10_3_SEC_XBRL_PARTIAL",
+  "aapl_status_counts": {
+    "SEPARATE_XBRL_PARSED": 40,
+    "INLINE_XBRL_PARSED": 23,
+    "ORIGINAL_FILE_NO_XBRL": 3
+  },
+  "separate_facts": 4860,
+  "strategy_ready": false,
+  "data_blocked": [
+    "exact first public visibility",
+    "30-company full as-filed parse",
+    "delisted-inclusive CIK mapping",
+    "QTD/YTD/restatement lineage",
+    "SEC dataset full ingestion"
+  ],
+  "note": "Old separate-XBRL instances recovered where present; acceptance is a PIT proxy, not a verified publication timestamp."
+}
