@@ -1,0 +1,22 @@
+{
+  "generated_at": "2026-11-09T08:51:34.878650+00:00",
+  "status": "P10_5_1_DATA_BLOCKED",
+  "aapl_quarters_required": 64,
+  "aapl_quarters_downloaded": 1,
+  "aapl_matched": 1,
+  "companies": 30,
+  "accessions_parsed": 120,
+  "valid_historical_sample": false,
+  "delisted_companies": 0,
+  "asof_real_history": false,
+  "qtd_ytd": false,
+  "p10_6_allowed": false,
+  "data_blocked": [
+    "64 AAPL quarters",
+    "verified delisted sample",
+    "historical CIK identity",
+    "real restatement lineage",
+    "real QTD/YTD facts"
+  ],
+  "no_shadow": true
+}
