@@ -1,0 +1,75 @@
+{
+  "experiment_id": "P10_5_4_FINANCIAL_HISTORY",
+  "strategy_id": "PIT_DATA_AUDIT",
+  "manifest_capture_mode": "POST_RUN_RECONSTRUCTED",
+  "git_commit_sha": "7f597074302b8f3cc7614bf7c048af7a6db9be2d",
+  "git_dirty_status": true,
+  "python_version": "3.12.14",
+  "dependency_lock_hash": null,
+  "data_sources": {
+    "facts": {
+      "path": "data/research/p10_5_3_execution_recovery/aapl_historical_financial_facts.csv",
+      "sha256": "8a0e4aa270f7f29d7c3d67d9cbcb07e905a703cc4fa1ca2a65ed3ed692e655c8"
+    }
+  },
+  "parameters": {},
+  "start_date": "2009-01-01",
+  "end_date": "2024-12-31",
+  "calendar": "fiscal/calendar",
+  "timezone": "America/New_York",
+  "execution_rule": "audit only",
+  "command": "python -m tools.research.p10_5_4.audit",
+  "random_seed": 0,
+  "initial_capital": 0,
+  "outputs": {
+    "aapl_19_fact_differences_audit.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_19_fact_differences_audit.csv",
+      "sha256": "fb9025d0dd6178657c28903006a074cab90a74815c9aada97bc975afeeafe04a"
+    },
+    "aapl_amendment_flag_audit.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_amendment_flag_audit.csv",
+      "sha256": "9761b950b40bff9991971247f62fcc581ce0d73cac6c08d6c2bc389c10fa8079"
+    },
+    "aapl_fact_version_history.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_fact_version_history.csv",
+      "sha256": "e1ab1a6eac38da37caabfadd670b2be1766438e0755a115b9c571c0d69d2dec4"
+    },
+    "aapl_period_validation.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_period_validation.csv",
+      "sha256": "61b50eecca4f16fdcbba0d9c58fb304cc562074762cfb9d9d0beed7a77dc8837"
+    },
+    "aapl_qtd_ytd_derivation.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_qtd_ytd_derivation.csv",
+      "sha256": "77e67c5d82ae376d6055e4aa4069371dc69753a87c1dd08feebf2535e49e65c8"
+    },
+    "aapl_quarterly_financials.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\aapl_quarterly_financials.csv",
+      "sha256": "18342d6be8413594fa9f38f853f3f4ec600de442111ab27dbf29c4b01cae8f66"
+    },
+    "delisting_evidence.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\delisting_evidence.csv",
+      "sha256": "2fea53a70d4084dd6b33b99ecbf24df8dcdee070fd4ccf698c23b5e0b3f5f3ac"
+    },
+    "form25_accessions_deduplicated.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\form25_accessions_deduplicated.csv",
+      "sha256": "656b639b5c5c4305b38d1cb6bc5fb1be65e8ac964b760c22a09bef23b648101d"
+    },
+    "form25_filed_by_subject.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\form25_filed_by_subject.csv",
+      "sha256": "397f222ff917d06fff44b7d7c9c3d98c1b64d87e8d27e0bfb366809240d9331d"
+    },
+    "form25_security_classification.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\form25_security_classification.csv",
+      "sha256": "424e0c4f290ba641ec6ff6b69d123213a721d71393df75372991de058ecf5300"
+    },
+    "historical_common_stock_exits.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\historical_common_stock_exits.csv",
+      "sha256": "2fea53a70d4084dd6b33b99ecbf24df8dcdee070fd4ccf698c23b5e0b3f5f3ac"
+    },
+    "real_asof_query_tests.csv": {
+      "path": "data\\research\\p10_5_4_financial_history\\real_asof_query_tests.csv",
+      "sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6"
+    }
+  },
+  "status": "PARTIAL"
+}
