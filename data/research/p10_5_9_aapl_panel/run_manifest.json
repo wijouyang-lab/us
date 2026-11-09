@@ -1,0 +1,67 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "git_commit_sha": "WORKTREE",
+    "inputs": {
+      "panel": "data\\research\\p10_5_8_aapl_pit\\aapl_quarterly_panel_v2.csv",
+      "facts": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv"
+    },
+    "command": "python -m tools.research.p10_5_9.finalize"
+  },
+  "outputs": {
+    "aapl_accounting_basis_audit.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_accounting_basis_audit.csv",
+      "sha256": "b6081993a5835cf009b61561914b850ed9a343e3c79d36752938f9a599fbdd0d"
+    },
+    "aapl_fact_availability_audit.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_fact_availability_audit.csv",
+      "sha256": "ccfd5c7a47975237ba50f5f63792e5d9185b6ff6555b3c4745c080e6cc1abf60"
+    },
+    "aapl_fact_level_asof_tests.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_fact_level_asof_tests.csv",
+      "sha256": "ccfd5c7a47975237ba50f5f63792e5d9185b6ff6555b3c4745c080e6cc1abf60"
+    },
+    "aapl_field_coverage_final.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_field_coverage_final.csv",
+      "sha256": "1594bac90be6f002a8bfd37fa5ea47f75b655eda59e0432e36bff3aa01ae778b"
+    },
+    "aapl_panel_duplicate_final.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_panel_duplicate_final.csv",
+      "sha256": "269ba625914d5be547234f36e6e7f55c112e9f2859a6091204388b3428ef4b6f"
+    },
+    "aapl_panel_grain_final.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_panel_grain_final.csv",
+      "sha256": "2ae890765e89e6cafba4a0a895ecc2213898b359ca2e77202d97a82700b22a26"
+    },
+    "aapl_panel_version_final.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_panel_version_final.csv",
+      "sha256": "5769cbf0b18cc749eafc8c63225c087e3802b35e7208ed001a27ec279dd30f7a"
+    },
+    "aapl_quarterly_panel_v3.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_quarterly_panel_v3.csv",
+      "sha256": "0e72c0b78c5ec2e20b309433151eb7384f0d8ce7aa89a25febd31bc3d98317ec"
+    },
+    "aapl_two_fy_field_coverage.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_two_fy_field_coverage.csv",
+      "sha256": "1594bac90be6f002a8bfd37fa5ea47f75b655eda59e0432e36bff3aa01ae778b"
+    },
+    "aapl_two_fy_panel_final.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_two_fy_panel_final.csv",
+      "sha256": "6234f42d1d5de60d88c22f1b0d0dfbf60b2df422be0afba123a37e10bd39e331"
+    },
+    "aapl_two_fy_quarterly_reconciliation.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\aapl_two_fy_quarterly_reconciliation.csv",
+      "sha256": "df945f3ffadbd0bd25d07f9d272a39bda4f95c7c1b0bafb4367e1eb967bea148"
+    },
+    "form25_nse_45_final_v3.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\form25_nse_45_final_v3.csv",
+      "sha256": "f78d076e7b8f46aa76e021aab4555893807a36d689a5d098d30be9c8feb1987a"
+    },
+    "form25_nse_unresolved_final.csv": {
+      "path": "data\\research\\p10_5_9_aapl_panel\\form25_nse_unresolved_final.csv",
+      "sha256": "ef13772ae9b0a72a74a128c9352d60eee96914f6ed1cafc1ada8d61264742b0b"
+    }
+  },
+  "status": "PARTIAL"
+}
