@@ -1,0 +1,19 @@
+{
+  "generated_at": "2026-11-10T01:45:00+00:00",
+  "status": "P10_5_17_PARTIAL",
+  "cashflow_inputs": 16,
+  "cashflow_period_matches": 10,
+  "cashflow_cells": 24,
+  "cashflow_exact": 8,
+  "html_cells": 40,
+  "html_locators": 40,
+  "context_gaps": 43,
+  "fact_level_traceable": 29,
+  "annual_eps_pass": 4,
+  "pre_audit_done": 0,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true
+}
