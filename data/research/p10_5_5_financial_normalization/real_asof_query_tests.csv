@@ -1,0 +1,5 @@
+canonical,query_date,expected_window,returned_accession,pass
+Revenue,2009-07-23,EARLY,0001193125-09-153165,True
+Revenue,2019-01-31,LATE,0000320193-19-000010,True
+NetIncomeLoss,2009-07-23,EARLY,0001193125-09-153165,True
+NetIncomeLoss,2019-01-31,LATE,0000320193-19-000010,True
