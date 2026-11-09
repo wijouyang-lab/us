@@ -1,0 +1,42 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "inputs": {
+      "facts": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv",
+      "panel10": "data\\research\\p10_5_10_aapl_cashflow\\aapl_two_fy_panel_complete.csv"
+    },
+    "command": "python -m tools.research.p10_5_11.finalize"
+  },
+  "outputs": {
+    "aapl_operating_income_check.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_operating_income_check.csv",
+      "sha256": "17dd1994ff600ea8fe95150975d6145de52f92779aabf6a612bf405bef7da126"
+    },
+    "aapl_operating_income_context_audit.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_operating_income_context_audit.csv",
+      "sha256": "062a183ce175dabc9efd9fec79030466f124e5ab9b8d64afe70e1cb2809420ff"
+    },
+    "aapl_operating_income_quarterly_final.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_operating_income_quarterly_final.csv",
+      "sha256": "062a183ce175dabc9efd9fec79030466f124e5ab9b8d64afe70e1cb2809420ff"
+    },
+    "aapl_two_fy_72_cell_validation.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_two_fy_72_cell_validation.csv",
+      "sha256": "6d03916775df11420afc32699ee323bf53533c6a394fa2f3f466c90f27c4827b"
+    },
+    "aapl_two_fy_annual_reconciliation.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_two_fy_annual_reconciliation.csv",
+      "sha256": "a0a5dafc9469840f7e0f5d0d4737869fbfe204935480bc2cddd5a1e1c744a85f"
+    },
+    "aapl_two_fy_panel_final.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_two_fy_panel_final.csv",
+      "sha256": "6d03916775df11420afc32699ee323bf53533c6a394fa2f3f466c90f27c4827b"
+    },
+    "aapl_unit_normalization_final.csv": {
+      "path": "data\\research\\p10_5_11_aapl_panel\\aapl_unit_normalization_final.csv",
+      "sha256": "1aa38c1dc7bf78716502caa665961a8961a3bb35ee66b4dfa61cdc565fd0d0a8"
+    }
+  },
+  "status": "P10_5_11_COMPLETE"
+}

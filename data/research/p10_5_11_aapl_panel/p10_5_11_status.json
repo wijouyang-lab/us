@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-09T14:40:00+00:00",
+  "status": "P10_5_11_PARTIAL",
+  "panel_cells": 72,
+  "operating_income_check": 8,
+  "AAPL_DATASET_READY": false,
+  "AAPL_FACT_PIT_READY": true,
+  "HISTORICAL_UNIVERSE_READY": false,
+  "p10_6_allowed": false,
+  "no_shadow": true,
+  "data_blocked": [
+    "OCF/Capex/FCF panel values are still in raw-dollar scale while other fields are USD millions",
+    "core Revenue/GrossProfit/NetIncome/EPS source accession is latest comparative 10-K, not period-specific filing"
+  ]
+}
