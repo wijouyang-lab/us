@@ -1,0 +1,14 @@
+{
+  "generated_at": "2026-11-09T06:33:26.764810+00:00",
+  "status": "P9_2_1_LEDGER_PARTIAL",
+  "finding": "P9.1 code charges BUY and SELL fees separately and applies 5bps slippage to both legs; no omission of sell commission found. But P9.1 JSON does not store signal_date, open positions, or per-leg fee columns, so a complete order ledger and full NAV reconciliation cannot be reconstructed from the published artifacts.",
+  "buy_and_sell_fees": "BOTH_CALCULATED",
+  "sell_fee_omission": false,
+  "p9_1_metrics_need_restatement": false,
+  "ledger_completeness": "PARTIAL",
+  "rows": 9866,
+  "experiments": 9,
+  "no_shadow": true,
+  "reported_cost_metric_needs_restatement": true,
+  "all_in_cost_vs_reported": "reported_total_costs are fees only; 5bps slippage is embedded in fill prices and is not included in the reported total_costs field"
+}
