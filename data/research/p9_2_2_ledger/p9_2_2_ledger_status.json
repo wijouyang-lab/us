@@ -1,0 +1,15 @@
+{
+  "generated_at": "2026-11-09T07:42:00.466405+00:00",
+  "status": "P9_2_2_LEDGER_PARTIAL",
+  "strategies": 8,
+  "orders": 9013,
+  "round_trips": 4500,
+  "open_positions": 13,
+  "daily_rows": 35440,
+  "nav_identity_max_abs": 0.0,
+  "no_shadow": true,
+  "reason": "The full replay produces different order counts than P9.1 JSON (A 856 vs 782, C 568 vs 553); original signal/data version cannot be proven identical, so exact P9.1 NAV reconciliation is DATA_BLOCKED. Ledger definitions and daily NAV identity are implemented, but not claimed as exact P9.1 reproduction.",
+  "p9_1_metric_restatement": false,
+  "trade_rows": 9013,
+  "daily_nav_identity_max_abs": 0.0
+}
