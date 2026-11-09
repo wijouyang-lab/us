@@ -1,0 +1,46 @@
+{
+  "manifest_capture_mode": "PRE_RUN_PLUS_POST_RUN",
+  "pre_run": {
+    "manifest_capture_mode": "PRE_RUN",
+    "inputs": {
+      "panel": "data\\research\\p10_5_9_aapl_panel\\aapl_quarterly_panel_v3.csv",
+      "facts": "data\\research\\p10_5_3_execution_recovery\\aapl_historical_financial_facts.csv"
+    },
+    "command": "python -m tools.research.p10_5_10.finalize"
+  },
+  "outputs": {
+    "aapl_accounting_basis_final.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_accounting_basis_final.csv",
+      "sha256": "58e8721c120a34d6863dec94b62ee2ce38eeb79aa0e81d6c0a444258860480b7"
+    },
+    "aapl_capex_sign_audit.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_capex_sign_audit.csv",
+      "sha256": "837bd196600867c9ab98d4c54d2954422f30e2cb671a7774d773a72931e1ad78"
+    },
+    "aapl_cashflow_quarterly_reconstruction.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_cashflow_quarterly_reconstruction.csv",
+      "sha256": "0925a6ac77523344881508687f3e5a2b8965f93eaaaad8fee73f74e998f8035a"
+    },
+    "aapl_cashflow_reconciliation.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_cashflow_reconciliation.csv",
+      "sha256": "552801b52d6c7844736c859aadb4e4d5a735c8c00f5e63bba4e177d05a5d5d03"
+    },
+    "aapl_two_fy_asof_tests.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_two_fy_asof_tests.csv",
+      "sha256": "ccfd5c7a47975237ba50f5f63792e5d9185b6ff6555b3c4745c080e6cc1abf60"
+    },
+    "aapl_two_fy_field_matrix.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_two_fy_field_matrix.csv",
+      "sha256": "564059e66718a23eeacbfdadd112e95baf9e359936c6327d2cdd8566c67cdb87"
+    },
+    "aapl_two_fy_metric_reconciliation.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_two_fy_metric_reconciliation.csv",
+      "sha256": "08a220daef343ecb6140606b8750888876188af2114c2af6ee28405db7c5f277"
+    },
+    "aapl_two_fy_panel_complete.csv": {
+      "path": "data\\research\\p10_5_10_aapl_cashflow\\aapl_two_fy_panel_complete.csv",
+      "sha256": "776e764f2f6f4331401e1a15c268954ac45317dab57aacc7a75ea893cadb8d2a"
+    }
+  },
+  "status": "P10_5_10_COMPLETE"
+}
