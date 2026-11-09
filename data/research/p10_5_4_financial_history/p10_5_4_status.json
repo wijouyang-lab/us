@@ -1,0 +1,20 @@
+{
+  "generated_at": "2026-11-09T09:59:19.148890+00:00",
+  "status": "P10_5_4_PARTIAL",
+  "aapl_quarter_rows": 9327,
+  "aapl_complete_fy": 11,
+  "q4_derivations": 2,
+  "amendment_rows": 30,
+  "true_numeric_candidates": 0,
+  "form25_search_total": 45,
+  "form25_rows": 45,
+  "verified_common_stock_exits": 0,
+  "p10_6_allowed": false,
+  "data_blocked": [
+    "Form25 security class/subject verification",
+    "true numeric restatement timestamps",
+    "complete 30-company sample"
+  ],
+  "no_shadow": true,
+  "run_manifest": "POST_RUN_RECONSTRUCTED"
+}
