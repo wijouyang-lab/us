@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-11-09T11:00:00+00:00",
+  "status": "P10_5_7_PARTIAL",
+  "accounting_event": "RETROSPECTIVE_ACCOUNTING_POLICY_ADOPTION",
+  "candidates": 13,
+  "asof_rows": 20,
+  "no_lookahead_rows": 40,
+  "panel_rows": 472,
+  "form25_unresolved": 6,
+  "p10_6_allowed": false,
+  "data_blocked": [
+    "two complete FY panel version separation",
+    "6 Form25-NSE original docs",
+    "ordinary Form25"
+  ],
+  "no_shadow": true
+}

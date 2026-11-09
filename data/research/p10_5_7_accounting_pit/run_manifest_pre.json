@@ -1,0 +1,15 @@
+{
+  "manifest_capture_mode": "PRE_RUN",
+  "git_commit_sha": "WORKTREE",
+  "data_sources": {
+    "amendments": {
+      "path": "data\\research\\p10_5_6_financial_final\\amendment_comparison_final_v2.csv",
+      "sha256": "e76f56817c8523839ebc0fd25c787a31a9f6d594be17e7ade045260e4e279411"
+    },
+    "panel": {
+      "path": "data\\research\\p10_5_5_financial_normalization\\aapl_normalized_quarterly_panel.csv",
+      "sha256": "5e51fd12cc12095bbb282c81ba5238b499eca924b3029a1ad26221ba320e688e"
+    }
+  },
+  "command": "python -m tools.research.p10_5_7.validation"
+}
