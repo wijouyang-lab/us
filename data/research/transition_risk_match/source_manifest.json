@@ -1,0 +1,42 @@
+{
+  "source_repository": "wijouyang-lab/us",
+  "source_pr": 438,
+  "source_pr_url": "https://github.com/wijouyang-lab/us/pull/438",
+  "source_head": "9b6effa6b76d860e583ba5b2edd9d79083997ffd",
+  "source_branch": "research/qqq-transition-reversal-nav",
+  "source_files": {
+    "daily_nav": {
+      "path": "docs/research/qqq_transition_reversal_nav/daily_nav.csv",
+      "git_blob_sha": "4ff7e4ab5c2d0ef40e8286a4b1eabdd4a6beba75"
+    },
+    "qqq": {
+      "path": "data/research/qqq_transition_reversal/QQQ.csv",
+      "git_blob_sha": "580c03bb45a0a70cc1481616658aee7616a0ef86"
+    },
+    "bil": {
+      "path": "data/research/qqq_transition_reversal/BIL.csv",
+      "git_blob_sha": "c03488a7945702da91a7073e1dd398f87d553e00"
+    },
+    "results": {
+      "path": "docs/research/qqq_transition_reversal_nav/results.json",
+      "git_blob_sha": "32d9089e9104b658a1cdc727c9622fdad2366a36"
+    }
+  },
+  "derived_input": {
+    "path": "data/research/transition_risk_match/transition_risk_match_input.csv",
+    "rows": 4888,
+    "start": "2007-05-30",
+    "end": "2026-10-30",
+    "columns": [
+      "date",
+      "transition_w25",
+      "transition_w50",
+      "transition_w100",
+      "qqq_adj_open",
+      "qqq_adj_close",
+      "bil_adj_open",
+      "bil_adj_close"
+    ]
+  },
+  "methodology": "QQQ/BIL adjusted prices copied from source PR; AdjOpen = raw Open * AdjClose / raw Close, matching source backtest execution proxy. Daily NAVs copied only for w25_c10_all_legs, w50_c10_all_legs, w100_c10_all_legs."
+}
