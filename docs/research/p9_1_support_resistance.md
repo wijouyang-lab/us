@@ -51,11 +51,11 @@ Strongest event cells:
 
 | Experiment | H | Events | Mean | HAC t | BH q | Non-overlap q |
 |---|---:|---:|---:|---:|---:|---:|
-| A_LEVEL_TOUCH | 20 | 110,786 | 0.97% | 16.2 | 0.000 | 0.000 |
-| B_PATTERN_ONLY | 20 | 74,781 | 0.72% | 14.0 | 0.000 | 0.000 |
-| C_SUPPORT_PATTERN | 20 | 6,074 | 0.68% | 3.19 | 0.004 | 1.6e-06 |
-| E_C_KDJ | 20 | 3,032 | 0.97% | 3.49 | 0.0016 | 9.2e-08 |
-| F_C_BOTH | 20 | 949 | 1.30% | 2.28 | 0.045 | 0.0035 |
+| A_LEVEL_TOUCH | 20 | 110,683 | 0.97% | 16.2 | 0.000 | 0.000 |
+| B_PATTERN_ONLY | 20 | 74,683 | 0.72% | 14.0 | 0.000 | 0.000 |
+| C_SUPPORT_PATTERN | 20 | 6,065 | 0.68% | 3.19 | 0.00318 | 1.20e-06 |
+| E_C_KDJ | 20 | 3,031 | 0.97% | 3.49 | 0.00124 | 6.88e-08 |
+| F_C_BOTH | 20 | 949 | 1.30% | 2.28 | 0.0370 | 2.88e-03 |
 
 The event screen shows direction, but overlapping events and large sample counts
 inflate naive t-statistics; non-overlap diagnostics reduce event counts. Event

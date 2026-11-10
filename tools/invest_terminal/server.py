@@ -25,10 +25,12 @@ SNAPSHOT = Path("dashboard/data/invest_terminal_data.json")
 PAGE_ROOT = Path(".")
 SESSION_COOKIE = "dsh_paper_session"
 SESSION_TTL = 3600
+# Jekyll excludes underscore-prefixed directories from GitHub Pages. The
+# terminal is local-only and must never be published as a public page.
 STATIC_FILES = {
-    "/terminal.html": ("terminal.html", "text/html; charset=utf-8"),
-    "/terminal/terminal.css": ("terminal/terminal.css", "text/css; charset=utf-8"),
-    "/terminal/terminal.js": ("terminal/terminal.js", "application/javascript; charset=utf-8"),
+    "/terminal.html": ("_local_terminal/terminal.html", "text/html; charset=utf-8"),
+    "/terminal/terminal.css": ("_local_terminal/terminal.css", "text/css; charset=utf-8"),
+    "/terminal/terminal.js": ("_local_terminal/terminal.js", "application/javascript; charset=utf-8"),
     "/dashboard/data/invest_terminal_data.json": ("dashboard/data/invest_terminal_data.json", "application/json; charset=utf-8"),
 }
 

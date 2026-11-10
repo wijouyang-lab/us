@@ -4,8 +4,8 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "terminal.html"
-      - "terminal/**"
+      - "_local_terminal/**"
+      - "_local_terminal/**"
       - "tools/invest_terminal/**"
       - "tools/paper_trading/**"
       - "dashboard/data/invest_terminal_data.json"
@@ -18,8 +18,8 @@ on:
   push:
     branches: [main]
     paths:
-      - "terminal.html"
-      - "terminal/**"
+      - "_local_terminal/**"
+      - "_local_terminal/**"
       - "tools/invest_terminal/**"
       - "tools/paper_trading/**"
       - "dashboard/data/invest_terminal_data.json"
@@ -50,7 +50,7 @@ jobs:
           python -m pytest -q tests/test_invest_terminal.py tests/test_paper_trading_platform.py tests/test_invest_terminal_server.py tests/test_invest_terminal_snapshot_sync.py
       - name: Verify no real-trading/production imports
         run: |
-          test -f terminal.html
+          test -f _local_terminal/terminal.html
           test -f dashboard/data/invest_terminal_data.json
           ! grep -R "ib_insync\|import scan\|import review\|import evolve" tools/invest_terminal
       - uses: actions/upload-artifact@v4
@@ -59,7 +59,6 @@ jobs:
           name: invest-terminal-snapshot
           path: |
             dashboard/data/invest_terminal_data.json
-            terminal.html
-            terminal/
+            _local_terminal/
           retention-days: 30
           if-no-files-found: warn

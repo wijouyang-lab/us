@@ -11,8 +11,10 @@ No merge or deployment.
 
 ```text
 WORKFLOW_SECURITY: PASS
-PRODUCTION_ISOLATION: FAIL (residual public terminal.html; Dashboard coupling removed)
+PRODUCTION_ISOLATION: PASS
+PAGES_EXPOSURE: BLOCKED
 P9_METRIC_CONSISTENCY: PASS
+P9_BH_FAMILY_CONSISTENCY: PASS
 P9_DATA_REPRODUCIBILITY: BLOCKED
 DATA_PROVENANCE: PARTIAL
 PAPER_ENGINE_SECURITY: PASS
@@ -21,8 +23,9 @@ PR512_READY_FOR_REVIEW: NO
 
 The P0 workflow and Dashboard coupling issues are fixed. P9.1 has a generation
 program in the PR, but its raw inputs are not in the branch, so full regeneration
-remains blocked. A direct public `terminal.html` URL also remains a residual
-Pages exposure.
+remains blocked. Terminal was moved to `_local_terminal/`; the local server still
+serves it. Actual Jekyll build verification is BLOCKED because Ruby/Jekyll is not
+installed in this environment.
 
 ---
 
@@ -31,14 +34,26 @@ Pages exposure.
 ```text
 .github/workflows/p7-shadow-daily.yml
 .github/workflows/dashboard-data.yml
+.github/workflows/research-invest-terminal.yml
 .gitignore
 index.html
-dashboard/data/invest_terminal_data.json   (untracked/removed from Git)
+dashboard/data/invest_terminal_data.json   (removed from Git)
+_local_terminal/terminal.html              (moved)
+_local_terminal/terminal.css               (moved)
+_local_terminal/terminal.js                (moved)
+data/research/p9_1_support_resistance/event_results.csv
+data/research/p9_1_support_resistance/event_hac.csv
+data/research/p9_1_support_resistance/event_bh.csv
 data/research/p9_1_support_resistance/p9_1_status.json
 docs/research/p9_1_support_resistance.md
+tests/conftest.py
+tests/test_invest_terminal.py
+tests/test_invest_terminal_server.py
 tests/test_invest_terminal_snapshot_sync.py
+tests/test_p9_1_support_resistance.py
 tests/test_pr512_remediation.py             (new)
 tools/invest_terminal/build_snapshot.py
+tools/invest_terminal/server.py
 tools/investment_research/p9_1/strategy.py
 tools/investment_research/p9_1/portfolio.py
 data/research/pr512_provenance_manifest.csv (new)
@@ -88,22 +103,40 @@ asserts no `contents: write`, no `git push`, no `inputs.branch`, and artifact us
 
 ### Preserved
 
-- `terminal.html`, `terminal/`, `tools/invest_terminal/`, `tools/paper_trading/`.
-- Local terminal server and PAPER engine.
+- Terminal moved to `_local_terminal/` (`terminal.html`, `terminal.css`,
+  `terminal.js`).
+- `tools/invest_terminal/`, `tools/paper_trading/`.
+- Local loopback server and PAPER engine.
 - `research-invest-terminal.yml` remains a separate read-only integration
   workflow and artifact producer.
 
-### Residual FAIL
+### Pages exposure
 
-`terminal.html` remains in the repository root. If GitHub Pages publishes the
-repository root, the page can still be reached by direct URL even without the
-Dashboard link. The snapshot is no longer committed, so it will show missing
-local paper state, but the page itself is public.
+GitHub Pages settings (API):
 
-To fully isolate it, move Terminal static assets to a non-Pages deployment path
-or publish only an explicitly approved read-only research page. This is not
-changed here because it would alter the local Terminal serving path and needs
-an explicit publication decision.
+```text
+enabled: true
+build_type: legacy
+source: main / (root)
+html_url: https://wijouyang-lab.github.io/us/
+```
+
+There is no `.nojekyll` and no `_config.yml` include. Jekyll excludes
+underscore-prefixed directories by default, so `_local_terminal/` is not copied
+to the Pages output. The Dashboard no longer links to it.
+
+Actual Jekyll build verification: **BLOCKED**. Ruby/Jekyll is not installed in
+this environment, so the build output could not be produced locally. Static
+layout and test checks confirm:
+
+- no root `terminal.html`;
+- no root `terminal/`;
+- no `.nojekyll`;
+- local server maps `/terminal.html` -> `_local_terminal/terminal.html`;
+- `tests/test_pr512_remediation.py` asserts the layout.
+
+Do not switch Pages to an Actions deployment without an explicit publication
+decision.
 
 ---
 
@@ -135,8 +168,27 @@ data/research/pit_data/finsaber_prices_raw.csv
 data/research/historical_universe/sp500_daily.csv
 ```
 
-Neither is present in the branch. Therefore `P9_DATA_REPRODUCIBILITY` remains
-**BLOCKED**, not FAIL: the code is present, inputs are missing.
+Neither is present in the branch. They were found in the local DSH workspace:
+
+```text
+finsaber_prices_raw.csv 265,180,873 bytes
+sha256 f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f
+sp500_daily.csv          5,533,628 bytes
+sha256 646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a
+```
+
+They were used for one local full rerun, but are **not committed** due size and
+unverified redistribution rights. The rerun reproduced:
+
+```text
+raw_signal_rows: 204180
+valid_5d_experiment_observations: 204030
+event_horizon_observations: 611790
+all 8 portfolios NO-GO
+```
+
+`P9_DATA_REPRODUCIBILITY` remains **BLOCKED for the PR** because these inputs
+are not in Git and an independent checkout cannot recreate the run.
 
 ---
 
@@ -157,12 +209,23 @@ Updated `p9_1_status.json` now records:
 
 ```text
 events: 204180
-valid_event_observations: 204030
-event_horizon_observations: 611790
+raw_signal_rows: 204180
+valid_5d_experiment_observations: 204030
+experiment_horizon_observations: 611790
 event_rows: 24
+bh_family_unique: 18
+duplicate_alias_cells: 6
 ```
 
+`204,030` is the sum of each experiment's widest valid count; it includes the
+duplicate G=C and H=F aliases. It is not a global unique ticker/date count.
+`611,790` is the sum of the 24 horizon cells.
+
 `strategy.py` now derives these fields instead of treating them as one number.
+
+BH correction: only A–F are canonical (6 experiments × 3 horizons = 18
+hypotheses). G and H copy C and F q-values respectively for both ordinary and
+non-overlap BH. Raw p-values and NAV are unchanged.
 
 ---
 
@@ -241,6 +304,16 @@ data/research/pr512_provenance_manifest.csv
 ```text
 relative_path, bytes, sha256, type, source, acquired_at, as_of,
 generated_by, parameters, license, rebuildable
+```
+
+Counts:
+
+```text
+source known:        85 / 198
+source UNKNOWN:     113 / 198
+acquired_at UNKNOWN:198 / 198
+license UNKNOWN:    198 / 198
+rebuildable UNKNOWN:198 / 198
 ```
 
 Many source/acquired/license fields are `UNKNOWN` because the branch does not

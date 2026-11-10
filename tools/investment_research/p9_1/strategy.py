@@ -146,16 +146,22 @@ def main():
             nt,npv=hac(non,max(1,hz//5)) if len(non)>=10 else (None,None)
             event_stats.append({"experiment":gname,"horizon":hz,"events":len(rr),"mean_return":float(np.mean(rr)),"positive_rate":float(np.mean(np.array(rr)>0)),"hac_t":t,"p_value":p,"excess_spy":float(np.mean(ex)) if ex else None,"excess_hac_t":t2,"p_excess":p2,"nonoverlap_events":len(non),"nonoverlap_mean":float(np.mean(non)) if non else None,"nonoverlap_hac_t":nt,"nonoverlap_p":npv})
     edf=pd.DataFrame(event_stats);edf.to_csv(O/"event_results_raw.csv",index=False)
-    psn=edf.dropna(subset=["nonoverlap_p"]).sort_values("nonoverlap_p");qsn=[]
-    for rank,pv in enumerate(psn.nonoverlap_p,1):qsn.append(min(1.0,float(pv)*len(psn)/rank))
-    psn["nonoverlap_bh_q"]=qsn;edf=edf.merge(psn[["experiment","horizon","nonoverlap_bh_q"]],on=["experiment","horizon"],how="left")
-    ps=edf.dropna(subset=["p_value"]).sort_values("p_value");qs=[]
-    for rank,p in enumerate(ps.p_value,1):qs.append(min(1.0,float(p)*len(ps)/rank))
-    ps["bh_q"]=qs;edf=edf.merge(ps[["experiment","horizon","bh_q"]],on=["experiment","horizon"],how="left")
+    def bh_adjust(frame,pcol,qcol):
+        s=frame.dropna(subset=[pcol]).sort_values(pcol).copy();m=len(s);q=[]
+        for rank,pv in enumerate(s[pcol],1):q.append(min(1.0,float(pv)*m/rank))
+        for i in range(m-2,-1,-1):q[i]=min(q[i],q[i+1])
+        s[qcol]=q
+        return {(r.experiment,int(r.horizon)):float(getattr(r,qcol)) for r in s.itertuples()}
+    canonical={"A_LEVEL_TOUCH","B_PATTERN_ONLY","C_SUPPORT_PATTERN","D_C_MACD","E_C_KDJ","F_C_BOTH"}
+    canon=edf[edf.experiment.isin(canonical)].copy()
+    q_norm=bh_adjust(canon,"p_value","bh_q");q_non=bh_adjust(canon,"nonoverlap_p","nonoverlap_bh_q")
+    alias={"G_LEVEL_ALL_PATTERNS":"C_SUPPORT_PATTERN","H_G_BOTH":"F_C_BOTH"}
+    edf["bh_q"]=[q_norm.get((alias.get(r.experiment,r.experiment),int(r.horizon))) for r in edf.itertuples()]
+    edf["nonoverlap_bh_q"]=[q_non.get((alias.get(r.experiment,r.experiment),int(r.horizon))) for r in edf.itertuples()]
     edf.to_csv(O/"event_results.csv",index=False);edf[["experiment","horizon","hac_t","p_value","bh_q"]].to_csv(O/"event_hac.csv",index=False);edf[["experiment","horizon","bh_q"]].to_csv(O/"event_bh.csv",index=False)
-    status={"generated_at":datetime.now(timezone.utc).isoformat(),"status":"P9_1_EVENT_RESEARCH","as_of":"2024-12-31","patterns":["bullish_engulfing","bearish_engulfing","morning_star","evening_star"],"experiments":list(groups),"events":len(events),"valid_event_observations":int(edf.groupby("experiment").events.max().sum()),"event_horizon_observations":int(edf.events.sum()),"event_rows":len(edf),"duplicate_experiments":{"G_LEVEL_ALL_PATTERNS":"C_SUPPORT_PATTERN","H_G_BOTH":"F_C_BOTH"},"data_blocked":["portfolio not run unless event evidence passes"],"note":"PIT support levels confirmed at pivot+5; no future pivot; entry next open."}
+    status={"generated_at":datetime.now(timezone.utc).isoformat(),"status":"P9_1_EVENT_RESEARCH","as_of":"2024-12-31","patterns":["bullish_engulfing","bearish_engulfing","morning_star","evening_star"],"experiments":list(groups),"events":len(events),"raw_signal_rows":len(events),"valid_5d_experiment_observations":int(edf.groupby("experiment").events.max().sum()),"experiment_horizon_observations":int(edf.events.sum()),"event_rows":len(edf),"bh_family_unique":18,"duplicate_alias_cells":6,"duplicate_experiments":{"G_LEVEL_ALL_PATTERNS":"C_SUPPORT_PATTERN","H_G_BOTH":"F_C_BOTH"},"data_blocked":["portfolio not run unless event evidence passes"],"note":"PIT support levels confirmed at pivot+5; no future pivot; entry next open."}
     (O/"p9_1_status.json").write_text(json.dumps(status,indent=2),encoding="utf-8")
-    print(json.dumps({"events":len(events),"event_rows":len(edf),"top":edf.sort_values("bh_q").head(10)[["experiment","horizon","events","mean_return","hac_t","bh_q"]].to_dict("records")},indent=2))
+    print(json.dumps({"events":len(events),"raw_signal_rows":len(events),"event_rows":len(edf),"top":edf.sort_values("bh_q").head(10)[["experiment","horizon","events","mean_return","hac_t","bh_q"]].to_dict("records")},indent=2))
 
 
 if __name__=="__main__":raise SystemExit(main())

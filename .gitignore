@@ -29,3 +29,7 @@ data/paper_trading/*.sqlite-shm
 data/paper_trading/*.sqlite
 
 dashboard/data/invest_terminal_data.json
+
+data/research/pit_data/
+data/research/historical_universe/
+data/research/p9_1_support_resistance/p9_1_signals.csv

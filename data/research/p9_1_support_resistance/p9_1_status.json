@@ -1,11 +1,38 @@
 {
-  "generated_at": "2026-11-09T00:00:00+00:00",
+  "generated_at": "2026-11-10T14:07:12.453597+00:00",
   "status": "P9_1_NO_GO",
-  "research_only": true,
   "as_of": "2024-12-31",
+  "patterns": [
+    "bullish_engulfing",
+    "bearish_engulfing",
+    "morning_star",
+    "evening_star"
+  ],
+  "experiments": [
+    "A_LEVEL_TOUCH",
+    "B_PATTERN_ONLY",
+    "C_SUPPORT_PATTERN",
+    "D_C_MACD",
+    "E_C_KDJ",
+    "F_C_BOTH",
+    "G_LEVEL_ALL_PATTERNS",
+    "H_G_BOTH"
+  ],
   "events": 204180,
+  "raw_signal_rows": 204180,
+  "valid_5d_experiment_observations": 204030,
+  "experiment_horizon_observations": 611790,
   "event_rows": 24,
-  "bh_family": 24,
+  "bh_family_unique": 18,
+  "duplicate_alias_cells": 6,
+  "duplicate_experiments": {
+    "G_LEVEL_ALL_PATTERNS": "C_SUPPORT_PATTERN",
+    "H_G_BOTH": "F_C_BOTH"
+  },
+  "data_blocked": [
+    "portfolio not run unless event evidence passes"
+  ],
+  "note": "PIT support levels confirmed at pivot+5; no future pivot; entry next open.",
   "portfolios": {
     "A_LEVEL_TOUCH": {
       "stats": {
@@ -120,19 +147,14 @@
       "avg_exposure": 0.05794954818957157
     }
   },
+  "bh_family": 18,
   "no_shadow": true,
   "limits": [
     "BIL begins 2007-05-30",
     "No dividends total-return; adjusted OHLC",
-    "Support level uses last confirmed pivot and 0.5 ATR band; full centroid clustering not separately implemented",
-    "Event overlap reported alongside non-overlap diagnostic",
-    "All portfolios below 20QQQ_80BIL; D maxDD -14.6"
-  ],
-  "valid_event_observations": 204030,
-  "event_horizon_observations": 611790,
-  "sharpe_method": "mean(daily NAV returns)/std(daily NAV returns,ddof=1)*sqrt(252); no separate risk-free subtraction",
-  "duplicate_experiments": {
-    "G_LEVEL_ALL_PATTERNS": "C_SUPPORT_PATTERN",
-    "H_G_BOTH": "F_C_BOTH"
-  }
+    "Support level uses last confirmed pivot and 0.5 ATR band",
+    "Overlapping and non-overlapping event diagnostics",
+    "All portfolios below 20QQQ_80BIL",
+    "G duplicates C; H duplicates F"
+  ]
 }
