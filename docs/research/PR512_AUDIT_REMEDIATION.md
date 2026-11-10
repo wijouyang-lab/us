@@ -466,22 +466,33 @@ pytest tests/test_p9_1_support_resistance.py
 The earlier `59 passed` was the six-file scope before the final status test was
 added; it is superseded by `60 passed`.
 
-Full CI on the pushed fix branch:
+Final Full CI on the pushed fix branch:
 
 ```text
 1524 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42845885053
+https://github.com/wijouyang-lab/us/actions/runs/42849147909
 ```
 
-Pages build audit, exact HEAD
-`7e4d6c8b85a2826d3e9c4a92126504d89684ddb4`:
+Final Pages build audit, exact HEAD
+`0ba23a5296ad90fb3913cd59e94763cccae96fc0`:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42845897184
+https://github.com/wijouyang-lab/us/actions/runs/42849158668
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
 no-deploy Jekyll build
+```
+
+Historical verification (superseded, retained for audit):
+
+```text
+Full CI: 1524 passed, 1 skipped
+https://github.com/wijouyang-lab/us/actions/runs/42845885053
+
+Pages: success
+https://github.com/wijouyang-lab/us/actions/runs/42845897184
+HEAD: 7e4d6c8b85a2826d3e9c4a92126504d89684ddb4
 ```
 
 `git diff --check`: clean. `git status`: only intended changes plus the new
