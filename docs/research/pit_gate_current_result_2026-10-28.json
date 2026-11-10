@@ -1,0 +1,124 @@
+{
+  "eligible_to_resume_full_history_pit_research": false,
+  "eligible_to_run_strategy_validation": false,
+  "note": "Data recovery is gated only by data quality. Strategy validation is a separate downstream gate. Passing any gate does not authorize production.",
+  "production_deployment_ready": false,
+  "schema_version": 2,
+  "stages": {
+    "data_research": {
+      "gates": {
+        "independent_ohlcv_source_verified": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        },
+        "matched_close_difference_le_0_5pct": {
+          "observed": null,
+          "passed": false,
+          "required_max_pct": 0.5
+        },
+        "member_session_coverage_ge_95pct": {
+          "observed": 0.9160849824595427,
+          "passed": false,
+          "required": 0.95
+        },
+        "missing_historical_tickers_verified_ge_98pct": {
+          "observed": 0.0,
+          "passed": false,
+          "required": 0.98
+        },
+        "no_unexplained_corporate_action_breaks": {
+          "observed": null,
+          "passed": false,
+          "required": 0
+        },
+        "pit_availability_audit_passed": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        },
+        "ticker_coverage_at_90pct_ge_98pct": {
+          "observed": 0.8423295454545454,
+          "passed": false,
+          "required": 0.98
+        },
+        "unverifiable_missing_member_sessions_le_2pct": {
+          "observed": 0.08391501754045723,
+          "passed": false,
+          "required_max": 0.02
+        }
+      },
+      "meaning": "May resume historical data recovery; no strategy evidence implied.",
+      "ready": false,
+      "summary": {
+        "member_session_coverage": 0.9160849824595427,
+        "ticker_coverage_at_90pct": 0.8423295454545454,
+        "unverifiable_member_session_fraction": 0.08391501754045723,
+        "verified_missing_ticker_fraction": 0.0
+      }
+    },
+    "production_deployment": {
+      "gates": {
+        "human_review_approved": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        },
+        "paper_trading_days_ge_40": {
+          "observed": 0.0,
+          "passed": false,
+          "required_min": 40
+        },
+        "production_regression_tests_passed": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        },
+        "risk_controls_verified": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        },
+        "strategy_validation_ready": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        }
+      },
+      "meaning": "May consider deployment only after strategy, risk, regression, paper, and review gates.",
+      "ready": false
+    },
+    "strategy_validation": {
+      "gates": {
+        "at_least_12_independent_oos_windows": {
+          "observed": 9.0,
+          "passed": false,
+          "required_min": 12
+        },
+        "benchmark_adjusted_net_alpha_ci_lower_gt_zero": {
+          "observed": null,
+          "passed": false,
+          "required_min_exclusive": 0
+        },
+        "data_research_ready": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        },
+        "max_drawdown_pct_le_20": {
+          "observed": null,
+          "passed": false,
+          "required_max": 20.0
+        },
+        "robustness_checks_passed": {
+          "observed": false,
+          "passed": false,
+          "required": true
+        }
+      },
+      "meaning": "May validate a strategy; requires data readiness and OOS/cost evidence.",
+      "ready": false
+    }
+  },
+  "strategy_validation_ready": false
+}
