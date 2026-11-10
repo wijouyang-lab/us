@@ -1,0 +1,28 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "f0e27910cdb9db0c361a346b0bedc82cac926513",
+    "inputs": {
+      "p4": "3bb2e8a613454cf4993708e6c73e42a6028084b4dbd745bb9f985a0613323eda"
+    },
+    "command": "python -m tools.research.p10_6_5.remediate",
+    "timestamp": "2026-11-10T06:47:10.480765+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "cf2d255a82499bbc2cd4836a35f247efe193ae0a95e85dad65bc5b99e929d5dc",
+    "git_commit": "f0e27910cdb9db0c361a346b0bedc82cac926513",
+    "outputs": {
+      "quality_context_resolution.csv": "d1f4b4d59c5e397f87b6a04eaee49b0d042559e0adbef2da5ed2a2918d89c670",
+      "quality_xbrl_lineage_v3.csv": "d1f4b4d59c5e397f87b6a04eaee49b0d042559e0adbef2da5ed2a2918d89c670",
+      "xlnx_acquisition_lifecycle.csv": "79e4cd349fbbbf05beff68e1f5efe33321a2ed19462be69327eb78d0d48d0e89",
+      "hpq_10k_original_vs_amended.csv": "64502bcbeb30e4495b581b45da5613b0b72d721ed0a5d748e96e9db4aa914f84",
+      "hpq_amendment_pit_timeline.csv": "f011f039b4622338979ec32b7abdb345046e8fd3c95980ef49aea6ce8e15ef5e",
+      "quality_repeatability_comparison.csv": "5698a0ceb38f1a24704d305187275d1471938333243477ad0093c029c6eac463",
+      "P10_6_5_REMEDIATION_REPORT.md": "bfb3bdb313f8f4ed68705e192659cbdfd3c3f8bb02f87c13fe47fd86c48f3873"
+    },
+    "status": "QUALITY_SLICE_PARTIAL",
+    "timestamp": "2026-11-10T06:47:13.746785+00:00"
+  }
+}
