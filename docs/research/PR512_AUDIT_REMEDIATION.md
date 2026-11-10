@@ -395,13 +395,22 @@ pytest tests/test_invest_terminal.py
        tests/test_pr512_remediation.py
 ```
 
-Result: **55 passed in 6.10s**.
+Result: **59 passed in 6.24s**.
 
 Full CI on the pushed fix branch:
 
 ```text
-1519 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42831358262
+1523 passed, 1 skipped
+https://github.com/wijouyang-lab/us/actions/runs/42835446111
+```
+
+Pages build audit on the same HEAD:
+
+```text
+success
+https://github.com/wijouyang-lab/us/actions/runs/42835455442
+PAGES_TERMINAL_EXPOSURE=PASS
+PAGES_SNAPSHOT_EXPOSURE=PASS
 ```
 
 `git diff --check`: clean. `git status`: only intended changes plus the new
