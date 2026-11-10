@@ -1,0 +1,12 @@
+{
+  "rows": 2542,
+  "tickers": 1,
+  "date_min": "2016-09-19",
+  "date_max": "2026-10-28",
+  "duplicates": 0,
+  "invalid_rows_removed": 0,
+  "adjusted_close_available": true,
+  "source": "yahoo_chart_yfinance",
+  "fetched_at_utc": "2026-10-29T02:37:42.732110Z",
+  "price_basis": "raw OHLCV plus provider Adj Close; not total-return unless explicitly used"
+}

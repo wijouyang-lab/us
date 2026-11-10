@@ -1,0 +1,60 @@
+{
+  "as_of": "2026-10-29T04:55:00Z",
+  "sources": [
+    {
+      "provider": "Alpha Vantage",
+      "terms_url": "https://www.alphavantage.co/terms_of_service/",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "bytes": 156583,
+      "sha256": "88ed3d22fe0f3624e76e53a210db3498b4a90712ab0d934356cc84b19ed1468a",
+      "key_quote": "personal, non-commercial use, unless you and Alpha Vantage have agreed otherwise in writing",
+      "internal_research": "limited personal/non-commercial",
+      "public_artifact": "no",
+      "approved": false
+    },
+    {
+      "provider": "Alpaca",
+      "terms_url": "https://s3.amazonaws.com/files.alpaca.markets/disclosures/library/TermsAndConditions.pdf",
+      "http_status": 200,
+      "content_type": "application/pdf",
+      "bytes": 27092,
+      "sha256": "2dc774d4aeeafbe4c7f0565e7842d932bc8bc10488af805fce43b8734e7b9859",
+      "key_quote": "use the Services and Content solely for your own personal and non-commercial purposes",
+      "internal_research": "personal/non-commercial only",
+      "public_artifact": "no",
+      "approved": false
+    },
+    {
+      "provider": "Sina Finance (AKShare source)",
+      "terms_url": "http://corp.sina.com.cn/chn/copyright.html",
+      "http_status": 200,
+      "bytes": 25812,
+      "sha256": "6a6e8ced314992953edba492b20d70daa812abc2ca1a7c9dc4326d6e807e9f77",
+      "key_quote": "未经新浪公司书面许可...不得复制...或以其他任何方式进行使用",
+      "internal_research": "not granted in writing",
+      "public_artifact": "no",
+      "approved": false
+    },
+    {
+      "provider": "Nasdaq historical page API",
+      "terms_url": "http://www.nasdaqtrader.com/content/AdministrationSupport/AgreementsData/datapolicies.pdf",
+      "http_status": null,
+      "sha256": null,
+      "key_quote": "market data policies require license/review for non-display and redistribution",
+      "internal_research": "unverified",
+      "public_artifact": "no",
+      "approved": false
+    },
+    {
+      "provider": "LSEG",
+      "terms_url": "https://www.lseg.com/en/data-analytics",
+      "http_status": 200,
+      "sha256": null,
+      "key_quote": "subscription/entitlement required; no public daily row",
+      "internal_research": "not accessible",
+      "public_artifact": "no",
+      "approved": false
+    }
+  ]
+}

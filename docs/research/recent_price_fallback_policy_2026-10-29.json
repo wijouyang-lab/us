@@ -1,0 +1,85 @@
+{
+  "as_of": "2026-10-29T03:31:37Z",
+  "status": "blocked_no_approved_fallback",
+  "panel": "503 recent raw OHLCV",
+  "primary_provider": "yahoo_chart_yfinance",
+  "approved_providers": [],
+  "requirements": {
+    "exact_trading_date": true,
+    "valid_raw_ohlcv": true,
+    "volume": true,
+    "adjusted_close": "required only for adjusted-basis consumers",
+    "provider_update_or_revision_metadata": true,
+    "documented_storage_and_use_rights": true,
+    "provenance_url_and_sha256": true,
+    "conflict_rule": "reject unless close matches an approved reference within $0.01",
+    "duplicate_rule": "reject if date already exists",
+    "fail_closed": true
+  },
+  "candidates": [
+    {
+      "provider": "Nasdaq historical page API",
+      "status": "rejected",
+      "raw_ohlc": "valid for HUBB 2026-10-28",
+      "adjusted_close": false,
+      "update_or_revision_metadata": false,
+      "rights_verified": false,
+      "independent_reference": true,
+      "notes": "Public page endpoint, not a documented data contract; market-data policies require review"
+    },
+    {
+      "provider": "Stooq",
+      "status": "unavailable",
+      "raw_ohlc": false,
+      "adjusted_close": false,
+      "rights_verified": false,
+      "notes": "proxy/SSL failure; no evidence"
+    },
+    {
+      "provider": "Hubbell IR",
+      "status": "unavailable",
+      "raw_ohlc": false,
+      "adjusted_close": false,
+      "rights_verified": false,
+      "notes": "no public daily OHLCV row found"
+    },
+    {
+      "provider": "LSEG",
+      "status": "not_accessible",
+      "raw_ohlc": false,
+      "adjusted_close": false,
+      "rights_verified": false,
+      "notes": "subscription required; no credentials"
+    },
+    {
+      "provider": "Alpha Vantage / Twelve Data / EODHD",
+      "status": "not_accessible",
+      "raw_ohlc": false,
+      "adjusted_close": false,
+      "rights_verified": false,
+      "notes": "no API key; free-tier limits and terms not reviewed"
+    },
+    {
+      "provider": "Alpaca Market Data",
+      "status": "not_approved_unverified",
+      "raw_ohlc": "not tested; no secure credentials",
+      "adjusted_close": "no explicit Adj_Close; adjustment parameter only",
+      "update_or_revision_metadata": false,
+      "rights_verified": false,
+      "independent_reference": false,
+      "notes": "Basic real-time IEX only; SIP/historical entitlement and storage rights unverified; no real request executed"
+    },
+    {
+      "provider": "AKShare / Sina Finance",
+      "status": "candidate_not_approved",
+      "raw_ohlc": "503/503 on 2026-10-28; HUBB 437.33",
+      "adjusted_close": "qfq available via factor table; no explicit Adj_Close field",
+      "update_or_revision_metadata": false,
+      "rights_verified": false,
+      "independent_reference": true,
+      "notes": "source independent of Yahoo/Nasdaq; no documented storage/redistribution rights or revision metadata"
+    }
+  ],
+  "decision": "HUBB 2026-10-28 remains missing; panel partial; acceptance fail",
+  "next": "Yahoo valid bar or a reviewed provider contract with rights, adjusted close where required, revision metadata, provenance and tests"
+}
