@@ -12,7 +12,12 @@ No merge or deployment.
 ```text
 WORKFLOW_SECURITY: PASS
 PRODUCTION_ISOLATION: PASS
-PAGES_EXPOSURE: BLOCKED
+PAGES_JEKYLL_BUILD: PASS
+PAGES_TERMINAL_EXPOSURE: PASS
+PAGES_SNAPSHOT_EXPOSURE: PASS
+PUBLIC_ARTIFACT_AUDIT: PASS
+LOCAL_PAPER_DB_EXCLUDED: PASS
+SNAPSHOT_REDACTION: PASS
 P9_METRIC_CONSISTENCY: PASS
 P9_BH_FAMILY_CONSISTENCY: PASS
 P9_DATA_REPRODUCIBILITY: BLOCKED
@@ -21,11 +26,10 @@ PAPER_ENGINE_SECURITY: PASS
 PR512_READY_FOR_REVIEW: NO
 ```
 
-The P0 workflow and Dashboard coupling issues are fixed. P9.1 has a generation
-program in the PR, but its raw inputs are not in the branch, so full regeneration
-remains blocked. Terminal was moved to `_local_terminal/`; the local server still
-serves it. Actual Jekyll build verification is BLOCKED because Ruby/Jekyll is not
-installed in this environment.
+The P0 workflow and Dashboard coupling issues are fixed. Terminal was moved to
+`_local_terminal/`; Jekyll built successfully on a GitHub hosted runner and the
+published output contains no Terminal or snapshot. P9.1 raw inputs remain
+missing from Git, so independent PR regeneration remains blocked.
 
 ---
 
@@ -125,18 +129,47 @@ There is no `.nojekyll` and no `_config.yml` include. Jekyll excludes
 underscore-prefixed directories by default, so `_local_terminal/` is not copied
 to the Pages output. The Dashboard no longer links to it.
 
-Actual Jekyll build verification: **BLOCKED**. Ruby/Jekyll is not installed in
-this environment, so the build output could not be produced locally. Static
-layout and test checks confirm:
+Actual Jekyll build verification on GitHub hosted runner:
 
-- no root `terminal.html`;
-- no root `terminal/`;
-- no `.nojekyll`;
-- local server maps `/terminal.html` -> `_local_terminal/terminal.html`;
-- `tests/test_pr512_remediation.py` asserts the layout.
+```text
+workflow: Pages Build Audit (no deploy)
+run:      42834839864
+result:   success
+PAGES_TERMINAL_EXPOSURE=PASS
+PAGES_SNAPSHOT_EXPOSURE=PASS
+```
+
+The workflow uses `actions/jekyll-build-pages@v1`, source `./`, destination
+`./_site`, and has no deploy step or `pages: write` / `id-token: write`.
+Assertions confirmed:
+
+- `_site/terminal.html` absent;
+- `_site/terminal/` absent;
+- `_site/_local_terminal/` absent;
+- `_site/dashboard/data/invest_terminal_data.json` absent;
+- no `terminal.css` / `terminal.js` / snapshot anywhere in `_site`;
+- `_site/index.html` contains neither Terminal href nor `investTerminalLink`.
 
 Do not switch Pages to an Actions deployment without an explicit publication
 decision.
+
+### Public Actions artifacts
+
+P7 artifact now contains only `data/universe/p7/`; it no longer builds or uploads
+`invest_terminal_data.json`.
+
+Terminal workflow artifact now contains only `_local_terminal/` assets. It no
+longer uploads the snapshot.
+
+```text
+PUBLIC_ARTIFACT_AUDIT: PASS
+LOCAL_PAPER_DB_EXCLUDED: PASS
+SNAPSHOT_REDACTION: PASS
+```
+
+Tests assert no `paper.sqlite`, WAL, SHM, confirmation token, CSRF or session
+secret is in the snapshot/artifact paths. A clean CI no-DB snapshot reports
+`LOCAL_PAPER_DB_NOT_PRESENT` and `paper_db_exists=false`.
 
 ---
 
@@ -189,6 +222,35 @@ all 8 portfolios NO-GO
 
 `P9_DATA_REPRODUCIBILITY` remains **BLOCKED for the PR** because these inputs
 are not in Git and an independent checkout cannot recreate the run.
+
+### Source findings
+
+`sp500_daily.csv`:
+
+```text
+LOCAL_FILE_FOUND: yes
+SOURCE_VERIFIED: yes
+source: https://raw.githubusercontent.com/fja05680/sp500/master/
+        S%26P%20500%20Historical%20Components%20%26%20Changes%20(Updated).csv
+license: MIT (fja05680/sp500 LICENSE)
+REDISTRIBUTION_ALLOWED: yes (MIT)
+INDEPENDENT_REBUILD_AVAILABLE: yes
+```
+
+`finsaber_prices_raw.csv`:
+
+```text
+LOCAL_FILE_FOUND: yes
+SOURCE_VERIFIED: no
+provider: inferred only from filename; no download script/URL/log found
+downloaded_at: UNKNOWN
+LICENSE_VERIFIED: no
+REDISTRIBUTION_ALLOWED: unknown
+INDEPENDENT_REBUILD_AVAILABLE: no
+```
+
+The price file is not committed; its provider/license cannot be proven from the
+workspace. Do not replace it with another free source to force P9 to pass.
 
 ---
 
@@ -352,9 +414,8 @@ manifest/test; no production scanner/ledger changes.
 1. P9.1 raw price and historical membership inputs are not in the branch.
 2. P9.1 cannot be regenerated from the PR alone; `P9_DATA_REPRODUCIBILITY` is
    BLOCKED.
-3. Pages exposure is statically isolated (`_local_terminal/`, no `.nojekyll`),
-   but the actual Jekyll build is BLOCKED because the runtime lacks a complete
-   Jekyll toolchain.
+3. Pages exposure is PASS via the hosted Jekyll build; Terminal assets are absent
+   from `_site`.
 4. Provenance manifest has UNKNOWN acquisition/source/license fields for many
    files.
 
