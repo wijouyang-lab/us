@@ -1,0 +1,21 @@
+ticker,cik,survival_status,industry,selection_reason
+AAPL,320193,CURRENT,Technology,current large-cap
+MSFT,789019,CURRENT,Technology,current large-cap
+JNJ,200406,CURRENT,Health Care,current large-cap
+XOM,2115436,CURRENT,Energy,current large-cap
+JPM,19617,CURRENT,Financials,current large-cap
+PG,80424,CURRENT,Consumer Staples,current large-cap
+KO,21344,CURRENT,Consumer Staples,current large-cap
+WMT,104169,CURRENT,Consumer Staples,current large-cap
+CVX,93410,CURRENT,Energy,current large-cap
+PFE,78003,CURRENT,Health Care,current large-cap
+VZ,732712,CURRENT,Communication Services,current large-cap
+INTC,50863,CURRENT,Technology,current large-cap
+CSCO,858877,CURRENT,Technology,current large-cap
+IBM,51143,CURRENT,Technology,current large-cap
+MMM,66740,CURRENT,Industrials,current large-cap
+MON,1110783,NON_SURVIVING_ACQUIRED,Materials,acquired by Bayer 2018
+CELG,816284,NON_SURVIVING_ACQUIRED,Health Care,acquired by Bristol-Myers 2019
+RTN,1047122,NON_SURVIVING_MERGED,Industrials,merged into Raytheon Technologies 2020
+ETFC,1015780,NON_SURVIVING_ACQUIRED,Financials,acquired by Morgan Stanley 2020
+XLNX,743988,NON_SURVIVING_ACQUIRED,Technology,acquired by AMD 2022

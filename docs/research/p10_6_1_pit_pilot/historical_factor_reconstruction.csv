@@ -1,0 +1,12 @@
+model,metric,reconstructable,reason
+Value,P/B,0,needs historical market cap/price at cutoff
+Value,P/S,0,needs historical market cap/price
+Value,Earnings Yield,0,needs historical market cap/price
+Value,FCF Yield,0,needs historical market cap/price
+Quality,ROE,1,NetIncome/Equity from as-of annual facts
+Quality,ROA,1,NetIncome/Assets
+Quality,CFO/Assets,1,OCF/Assets
+Quality,Liabilities/Assets,1,Liabilities/Assets
+GARP,Revenue growth,PARTIAL,requires multi-year as-of annual history
+GARP,EPS growth,PARTIAL,requires multi-year as-of annual history
+GARP,FCF growth,PARTIAL,requires multi-year OCF/Capex history

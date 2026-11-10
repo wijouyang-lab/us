@@ -1,0 +1,34 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "cf885d732ef6e8cebbf6aaa7010dd7d9e446124c",
+    "dirty": " M data/universe/p7/p7_status.json\n?? add_p102_workflow.py\n?? add_p103_workflow.py\n?? add_p104_workflow.py\n?? add_p1051_workflow.py\n?? add_p1052_workflow.py\n?? add_p1053_workflow.py\n?? add_p105_workflow.py\n?? add_p91_snapshot_tmp.py\n?? add_p91_workflow_tmp.py\n?? add_p921_workflow.py\n?? add_p922_workflow.py\n?? add_p923_workflow.py\n?? add_p92_p101_snapshot_tmp.py\n?? add_p92_p101_workflow_tmp.py\n?? audit-paper-nwot3cdv/\n?? audit-paper2-0pheyi8p/\n?? audit-paper3-tzegqp35/\n?? audit-paper4-enzbpaxl/\n?? data/research/dividend_alt_raw_p612/\n?? data/research/factor_snapshots/\n?? data/research/factor_validation/\n?? data/research/finsaber_prices.csv\n?? data/research/forward_return_labels/\n?? data/research/historical_universe/\n?? data/research/macro_d/\n?? data/research/p10_5_3_execution_recovery/cache/\n?? data/research/p9_1_support_resistance/p9_1_signals.csv\n?? data/research/pit_data/\n?? data/research/quality_pit_scores_p67.csv.gz\n?? data/sec/\n?? data/universe/sec_cash_dividend_proxy_facts_p613.c",
+    "sample_sha": "20ff984c1b1e9e049bc7ae493e42bf9d41f12ac2cadb3457d71a24c4b49bd1ed",
+    "command": "python -m tools.research.p10_6_1.audit",
+    "cutoffs": [
+      "2017-03-31",
+      "2020-03-31",
+      "2023-03-31",
+      "2026-03-31"
+    ],
+    "timestamp": "2026-11-10T05:12:40.846718+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "f9b94dd06c7820674868c80eb0ab0220aa8be0c964a46c46462500aa123c52f8",
+    "git_commit": "cf885d732ef6e8cebbf6aaa7010dd7d9e446124c",
+    "outputs": {
+      "coverage_reconciliation.csv": "3e7847c5aabde1baf3279fcfcf66440b6fdd208fcf45fd2f1936631f3e5baf7d",
+      "pit_reconstruction_results.csv": "4fb9221e483ecc259bf4b33b4d1d61c065a8efc6636c06ee44a379307a068f05",
+      "historical_factor_reconstruction.csv": "93211593ec5568057f967b378494f47141a701444535c83d5f1b5aa910d2a852",
+      "P10_6_1_PIT_PILOT_REPORT.md": "e3fc63d77767226cd882f9ad9d7337b1244171a7aebb2a27849bbd2ac5d0ad9d"
+    },
+    "sample": 20,
+    "success_companies": 80,
+    "rows": 1014,
+    "timestamp": "2026-11-10T05:13:18.824192+00:00",
+    "status": "PIT_PILOT_PARTIAL",
+    "repeat_run_identical": true
+  }
+}
