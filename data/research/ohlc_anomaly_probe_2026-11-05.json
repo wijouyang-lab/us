@@ -1,0 +1,531 @@
+{
+  "metadata": {
+    "generated_at_utc": "2026-11-04T17:45:28.232095+00:00",
+    "akshare_version": "1.20.27",
+    "source": "AkShare stock_us_hist",
+    "scope": "TARGETED_OHLC_PROBE",
+    "tickers": [
+      "NVDA",
+      "HD",
+      "HON",
+      "NEE",
+      "JPM"
+    ],
+    "history_period": "daily",
+    "raw_comparison": true,
+    "verification_run_url": "https://github.com/wijouyang-lab/us/actions/runs/41880105908",
+    "artifact_id": 13349520901
+  },
+  "summary": {
+    "sample_count": 5,
+    "history_nonempty": 5,
+    "history_quality_pass": 0,
+    "raw_quality_pass": 1
+  },
+  "companies": {
+    "NVDA": {
+      "ticker": "NVDA",
+      "spot_status": "HISTORY_ONLY",
+      "data_available": false,
+      "data_quality_pass": false,
+      "input_ready": false,
+      "score_ready": false,
+      "backtest_ready": false,
+      "vendor_symbol": "105.NVDA",
+      "history_qfq": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 0,
+        "nonpositive_ohlc": 20,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2016-01-14",
+            "开盘": 0.011,
+            "收盘": 0.011,
+            "最高": 0.019,
+            "最低": -0.01,
+            "成交量": 14981799.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-15",
+            "开盘": -0.018,
+            "收盘": -0.028,
+            "最高": -0.009,
+            "最低": -0.04,
+            "成交量": 20983048.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-19",
+            "开盘": -0.014,
+            "收盘": -0.022,
+            "最高": 0.006,
+            "最低": -0.025,
+            "成交量": 11265908.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-20",
+            "开盘": -0.035,
+            "收盘": -0.019,
+            "最高": -0.01,
+            "最低": -0.044,
+            "成交量": 12002108.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-21",
+            "开盘": -0.011,
+            "收盘": -0.011,
+            "最高": 0.0,
+            "最低": -0.025,
+            "成交量": 12036406.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-26",
+            "开盘": 0.006,
+            "收盘": 0.012,
+            "最高": 0.015,
+            "最低": -0.001,
+            "成交量": 5699182.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-27",
+            "开盘": 0.011,
+            "收盘": 0.003,
+            "最高": 0.013,
+            "最低": -0.01,
+            "成交量": 5791878.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-28",
+            "开盘": 0.009,
+            "收盘": -0.004,
+            "最高": 0.012,
+            "最低": -0.018,
+            "成交量": 6919451.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-01-29",
+            "开盘": 0.002,
+            "收盘": 0.027,
+            "最高": 0.028,
+            "最低": -0.001,
+            "成交量": 7761286.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-02",
+            "开盘": 0.019,
+            "收盘": -0.004,
+            "最高": 0.023,
+            "最低": -0.009,
+            "成交量": 8547710.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-03",
+            "开盘": 0.001,
+            "收盘": -0.001,
+            "最高": 0.006,
+            "最低": -0.017,
+            "成交量": 8169351.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-04",
+            "开盘": 0.0,
+            "收盘": 0.0,
+            "最高": 0.016,
+            "最低": -0.007,
+            "成交量": 8703432.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-05",
+            "开盘": -0.005,
+            "收盘": -0.045,
+            "最高": 0.003,
+            "最低": -0.047,
+            "成交量": 15009910.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-08",
+            "开盘": -0.055,
+            "收盘": -0.075,
+            "最高": -0.052,
+            "最低": -0.084,
+            "成交量": 15220491.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-09",
+            "开盘": -0.083,
+            "收盘": -0.068,
+            "最高": -0.042,
+            "最低": -0.086,
+            "成交量": 10633990.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-10",
+            "开盘": -0.064,
+            "收盘": -0.07,
+            "最高": -0.046,
+            "最低": -0.073,
+            "成交量": 8394980.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-11",
+            "开盘": -0.086,
+            "收盘": -0.073,
+            "最高": -0.067,
+            "最低": -0.086,
+            "成交量": 8503635.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-12",
+            "开盘": -0.063,
+            "收盘": -0.062,
+            "最高": -0.061,
+            "最低": -0.087,
+            "成交量": 8520367.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-16",
+            "开盘": -0.053,
+            "收盘": -0.031,
+            "最高": -0.03,
+            "最低": -0.055,
+            "成交量": 12122098.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          },
+          {
+            "date": "2016-02-17",
+            "开盘": -0.022,
+            "收盘": -0.014,
+            "最高": -0.008,
+            "最低": -0.025,
+            "成交量": 19213073.0,
+            "nonpositive": true,
+            "invalid_ohlc": false
+          }
+        ],
+        "requested_adjust": "qfq"
+      },
+      "history_raw": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 0,
+        "nonpositive_ohlc": 0,
+        "quality_pass": true,
+        "quality_status": "DATA_QUALITY_PASS",
+        "anomaly_rows": [],
+        "requested_adjust": "unadjusted"
+      },
+      "history_status": "DATA_QUALITY_FAIL"
+    },
+    "HD": {
+      "ticker": "HD",
+      "spot_status": "HISTORY_ONLY",
+      "data_available": false,
+      "data_quality_pass": false,
+      "input_ready": false,
+      "score_ready": false,
+      "backtest_ready": false,
+      "vendor_symbol": "106.HD",
+      "history_qfq": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-24",
+            "开盘": 81.66,
+            "收盘": 79.57,
+            "最高": 81.6,
+            "最低": 79.16,
+            "成交量": 3510597.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "qfq"
+      },
+      "history_raw": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-24",
+            "开盘": 146.75,
+            "收盘": 144.66,
+            "最高": 146.69,
+            "最低": 144.25,
+            "成交量": 3510597.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "unadjusted"
+      },
+      "history_status": "DATA_QUALITY_FAIL"
+    },
+    "HON": {
+      "ticker": "HON",
+      "spot_status": "HISTORY_ONLY",
+      "data_available": false,
+      "data_quality_pass": false,
+      "input_ready": false,
+      "score_ready": false,
+      "backtest_ready": false,
+      "vendor_symbol": "105.HON",
+      "history_qfq": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-24",
+            "开盘": 99.851,
+            "收盘": 100.908,
+            "最高": 101.036,
+            "最低": 99.881,
+            "成交量": 2200695.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "qfq"
+      },
+      "history_raw": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-24",
+            "开盘": 136.73,
+            "收盘": 137.8,
+            "最高": 137.93,
+            "最低": 136.76,
+            "成交量": 2200695.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "unadjusted"
+      },
+      "history_status": "DATA_QUALITY_FAIL"
+    },
+    "NEE": {
+      "ticker": "NEE",
+      "spot_status": "HISTORY_ONLY",
+      "data_available": false,
+      "data_quality_pass": false,
+      "input_ready": false,
+      "score_ready": false,
+      "backtest_ready": false,
+      "vendor_symbol": "106.NEE",
+      "history_qfq": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-14",
+            "开盘": 19.711,
+            "收盘": 19.851,
+            "最高": 19.976,
+            "最低": 19.773,
+            "成交量": 680845.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "qfq"
+      },
+      "history_raw": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-14",
+            "开盘": 141.07,
+            "收盘": 141.63,
+            "最高": 142.13,
+            "最低": 141.32,
+            "成交量": 680845.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "unadjusted"
+      },
+      "history_status": "DATA_QUALITY_FAIL"
+    },
+    "JPM": {
+      "ticker": "JPM",
+      "spot_status": "HISTORY_ONLY",
+      "data_available": false,
+      "data_quality_pass": false,
+      "input_ready": false,
+      "score_ready": false,
+      "backtest_ready": false,
+      "vendor_symbol": "106.JPM",
+      "history_qfq": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-11",
+            "开盘": 55.34,
+            "收盘": 54.81,
+            "最高": 55.26,
+            "最低": 54.3,
+            "成交量": 5709413.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "qfq"
+      },
+      "history_raw": {
+        "rows": 2726,
+        "date_min": "2016-01-04",
+        "date_max": "2026-11-04",
+        "missing_close": 0,
+        "missing_ohlc": 0,
+        "invalid_dates": 0,
+        "duplicates": 0,
+        "zero_volume": 0,
+        "invalid_ohlc": 1,
+        "nonpositive_ohlc": 0,
+        "quality_pass": false,
+        "quality_status": "DATA_QUALITY_FAIL",
+        "anomaly_rows": [
+          {
+            "date": "2017-07-11",
+            "开盘": 93.33,
+            "收盘": 92.8,
+            "最高": 93.25,
+            "最低": 92.29,
+            "成交量": 5709413.0,
+            "nonpositive": false,
+            "invalid_ohlc": true
+          }
+        ],
+        "requested_adjust": "unadjusted"
+      },
+      "history_status": "DATA_QUALITY_FAIL"
+    }
+  }
+}

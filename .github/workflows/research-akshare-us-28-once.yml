@@ -1,0 +1,49 @@
+name: Research AkShare US 28 Coverage Once
+
+on:
+  # One-off live audit: manual dispatch only. Avoid repeated Eastmoney requests
+  # and rate-limit failures on every documentation/result commit.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install audit dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas pytest akshare
+
+      - name: Run offline unit tests
+        run: python -m pytest tests/test_akshare_us_28_coverage.py -q
+
+      - name: Run read-only AkShare 28-company coverage audit
+        run: |
+          python tools/research/akshare_us_28_coverage.py \
+            --output artifacts/akshare-us-28-coverage.json \
+            --start-date 20160101 \
+            --adjust qfq \
+            --shares data/research/sec_shares_outstanding_28.json \
+            --raw-limit 5 \
+            --sleep-seconds 0.8
+
+      - name: Upload coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: akshare-us-28-coverage
+          path: artifacts/akshare-us-28-coverage.json
+          if-no-files-found: warn
+          retention-days: 30
