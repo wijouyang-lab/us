@@ -1,0 +1,42 @@
+name: Pages Build Audit (no deploy)
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact PR head
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+
+      - name: Build Jekyll site (no deploy)
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+
+      - name: Assert Terminal is not published
+        run: |
+          set -euo pipefail
+          test -d _site
+          test ! -e _site/terminal.html
+          test ! -d _site/terminal
+          test ! -d _site/_local_terminal
+          test ! -e _site/dashboard/data/invest_terminal_data.json
+          ! find _site -type f \( -name 'terminal.html' -o -name 'terminal.css' -o -name 'terminal.js' -o -name 'invest_terminal_data.json' \) | grep -q .
+          ! grep -q 'href="terminal.html"' _site/index.html
+          ! grep -q 'investTerminalLink' _site/index.html
+          echo "PAGES_TERMINAL_EXPOSURE=PASS"
+          echo "PAGES_SNAPSHOT_EXPOSURE=PASS"
+
+      - name: Show built tree evidence
+        run: |
+          find _site -maxdepth 2 -type f | sort | sed -n '1,80p'

@@ -29,14 +29,11 @@ jobs:
         run: |
           python -m tools.investment_research.p7.shadow_portfolio --refresh
           python -m tools.investment_research.p7.benchmark
-          python -m tools.invest_terminal.build_snapshot
       - name: Run P7 tests
         run: python -m pytest -q tests/test_p7_strategy.py tests/test_p7_1_shadow.py
       - uses: actions/upload-artifact@v4
         with:
           name: p7-shadow-daily
-          path: |
-            data/universe/p7/
-            dashboard/data/invest_terminal_data.json
+          path: data/universe/p7/
           retention-days: 30
           if-no-files-found: error
