@@ -1,0 +1,16 @@
+date,label,metric,value,version
+2023-09-08,before amendment,NetIncomeLoss,3203000000.0,ORIGINAL
+2023-09-08,before amendment,Equity,-2918000000.0,ORIGINAL
+2023-09-08,before amendment,Assets,38587000000.0,ORIGINAL
+2023-09-08,before amendment,OCF,4463000000.0,ORIGINAL
+2023-09-08,before amendment,Liabilities,,ORIGINAL
+2023-09-11,amendment filing date,NetIncomeLoss,3203000000.0,ORIGINAL_CONSERVATIVE
+2023-09-11,amendment filing date,Equity,-2918000000.0,ORIGINAL_CONSERVATIVE
+2023-09-11,amendment filing date,Assets,38587000000.0,ORIGINAL_CONSERVATIVE
+2023-09-11,amendment filing date,OCF,4463000000.0,ORIGINAL_CONSERVATIVE
+2023-09-11,amendment filing date,Liabilities,,ORIGINAL_CONSERVATIVE
+2023-09-12,next session,NetIncomeLoss,3132000000.0,AMENDED
+2023-09-12,next session,Equity,-3025000000.0,AMENDED
+2023-09-12,next session,Assets,38494000000.0,AMENDED
+2023-09-12,next session,OCF,4463000000.0,AMENDED
+2023-09-12,next session,Liabilities,,AMENDED
