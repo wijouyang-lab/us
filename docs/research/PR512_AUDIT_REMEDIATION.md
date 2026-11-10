@@ -21,6 +21,7 @@ SNAPSHOT_REDACTION: PASS
 P9_METRIC_CONSISTENCY: PASS
 P9_BH_FAMILY_CONSISTENCY: PASS
 P9_DATA_REPRODUCIBILITY: BLOCKED
+MARKET_WIDE_DATA_GATE: BLOCKED
 SP500_LOCAL_SOURCE_MATCH: PASS
 UPSTREAM_BYTES_RETRIEVAL_AVAILABLE: YES
 DATASET_LICENSE_SCOPE_VERIFIED: NO
@@ -454,14 +455,14 @@ Full CI on the pushed fix branch:
 
 ```text
 1524 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42842957859
+https://github.com/wijouyang-lab/us/actions/runs/42844578885
 ```
 
 Pages build audit on the same HEAD:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42842971399
+https://github.com/wijouyang-lab/us/actions/runs/42844590065
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
 ```
@@ -473,12 +474,15 @@ manifest/test; no production scanner/ledger changes.
 
 ## 11. Remaining blockers
 
-1. P9.1 raw price and historical membership inputs are not in the branch.
-2. P9.1 cannot be regenerated from the PR alone; `P9_DATA_REPRODUCIBILITY` is
-   BLOCKED.
-3. Pages exposure is PASS via the hosted Jekyll build; Terminal assets are absent
-   from `_site`.
-4. Provenance manifest has UNKNOWN acquisition/source/license fields for many
+1. Finsaber price data source and license are UNKNOWN; the file is not in Git.
+2. SP500 file-level origin matches a fixed upstream commit after CRLF
+   normalization, but third-party dataset redistribution rights remain UNKNOWN.
+3. Historical coverage is below the research gates:
+   - member-day 89.58% < 95%;
+   - ticker 91.55% < 98%.
+4. P9.1 cannot be independently regenerated from the PR alone;
+   `P9_DATA_REPRODUCIBILITY` and `MARKET_WIDE_DATA_GATE` are BLOCKED.
+5. Provenance manifest has UNKNOWN acquisition/source/license fields for many
    files.
 
 ---
@@ -491,7 +495,10 @@ Terminal is a local `127.0.0.1` service. The hosted Jekyll build contains no
 Terminal page, CSS, JS or snapshot. The local PAPER engine remains available and
 is not connected to a broker or real trading.
 
-The remaining independent blocker is P9.1 data provenance: `finsaber` source and
-license are unknown, and neither raw input is committed. Keep
-`P9_DATA_REPRODUCIBILITY: BLOCKED` until that is resolved by evidence, not by
-substituting a new provider.
+P9.1 still has multiple independent blockers: Finsaber source/license are
+UNKNOWN; SP500 third-party redistribution rights are UNKNOWN; member-day and
+ticker coverage are below the 95%/98% gates; and neither raw input is committed.
+Keep `P9_DATA_REPRODUCIBILITY` and `MARKET_WIDE_DATA_GATE` BLOCKED until these
+are resolved by evidence, not by substituting a new provider.
+
+All eight P9.1 portfolios remain NO-GO; no NAV, return or p-value was changed.
