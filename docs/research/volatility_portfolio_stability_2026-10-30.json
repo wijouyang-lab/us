@@ -1,0 +1,968 @@
+{
+  "annual": [
+    {
+      "factor": "ATR_Percent",
+      "year": 2018,
+      "periods": 5,
+      "gross_q5_q1": 0.1427690434108435,
+      "net10_q5_q1": 0.1439362231468162
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2019,
+      "periods": 4,
+      "gross_q5_q1": -0.09611896124269603,
+      "net10_q5_q1": -0.09579541951841253
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2020,
+      "periods": 4,
+      "gross_q5_q1": 0.5740012723880872,
+      "net10_q5_q1": 0.5751447374151442
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2021,
+      "periods": 4,
+      "gross_q5_q1": -0.07968504735271353,
+      "net10_q5_q1": -0.07937610849976307
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2022,
+      "periods": 4,
+      "gross_q5_q1": -0.018627967005950263,
+      "net10_q5_q1": -0.018029534055629237
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2023,
+      "periods": 4,
+      "gross_q5_q1": 0.277263218793653,
+      "net10_q5_q1": 0.2783572439522424
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2024,
+      "periods": 4,
+      "gross_q5_q1": 0.15532636899547803,
+      "net10_q5_q1": 0.15598512683211108
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2025,
+      "periods": 4,
+      "gross_q5_q1": 0.4580694764652826,
+      "net10_q5_q1": 0.4587606424110202
+    },
+    {
+      "factor": "ATR_Percent",
+      "year": 2026,
+      "periods": 3,
+      "gross_q5_q1": 0.5137594500968681,
+      "net10_q5_q1": 0.5137428646330693
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2018,
+      "periods": 5,
+      "gross_q5_q1": 0.07047925294943491,
+      "net10_q5_q1": 0.07198616482287368
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2019,
+      "periods": 4,
+      "gross_q5_q1": -0.11752572952635709,
+      "net10_q5_q1": -0.11728353013403081
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2020,
+      "periods": 4,
+      "gross_q5_q1": 0.3618920933418617,
+      "net10_q5_q1": 0.362550659234395
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2021,
+      "periods": 4,
+      "gross_q5_q1": -0.0767424429264204,
+      "net10_q5_q1": -0.07653466225962902
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2022,
+      "periods": 4,
+      "gross_q5_q1": -0.07471388992215022,
+      "net10_q5_q1": -0.0744979108344308
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2023,
+      "periods": 4,
+      "gross_q5_q1": 0.18121542724833928,
+      "net10_q5_q1": 0.18208012729934198
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2024,
+      "periods": 4,
+      "gross_q5_q1": 0.16687292970665246,
+      "net10_q5_q1": 0.16764866504827802
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2025,
+      "periods": 4,
+      "gross_q5_q1": 0.40812810567390834,
+      "net10_q5_q1": 0.4086636770138192
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "year": 2026,
+      "periods": 3,
+      "gross_q5_q1": 0.46808219970109866,
+      "net10_q5_q1": 0.4692712811112856
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2018,
+      "periods": 5,
+      "gross_q5_q1": 0.047892021514380545,
+      "net10_q5_q1": 0.04698831991211194
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2019,
+      "periods": 4,
+      "gross_q5_q1": -0.22069126001495232,
+      "net10_q5_q1": -0.22136275444448716
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2020,
+      "periods": 4,
+      "gross_q5_q1": 0.3429604796289871,
+      "net10_q5_q1": 0.3429679844715128
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2021,
+      "periods": 4,
+      "gross_q5_q1": -0.05891851137755355,
+      "net10_q5_q1": -0.05956194853315655
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2022,
+      "periods": 4,
+      "gross_q5_q1": -0.11940584143834632,
+      "net10_q5_q1": -0.11950339270885735
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2023,
+      "periods": 4,
+      "gross_q5_q1": 0.37376223539865006,
+      "net10_q5_q1": 0.3729494522543364
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2024,
+      "periods": 4,
+      "gross_q5_q1": 0.1941338653800324,
+      "net10_q5_q1": 0.19455028032631927
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2025,
+      "periods": 4,
+      "gross_q5_q1": 0.4614331326327257,
+      "net10_q5_q1": 0.46095915824697764
+    },
+    {
+      "factor": "Beta_60D",
+      "year": 2026,
+      "periods": 3,
+      "gross_q5_q1": 0.36368966145081716,
+      "net10_q5_q1": 0.36410690238164145
+    }
+  ],
+  "regime": [
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.04093435929790821
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.06264527739099832
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.011718413375770828
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.1117509577465922
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.15078912636145433
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.0755639766886464
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.019964587103292006
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.03973433284894284
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.040100670749231695
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.2789359181472456
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": -0.14411332217608333
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.1946475826816817
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.2045244140504631
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.11696115065818498
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.025109822623578113
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.15718657423465138
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.0758481238114973
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": -0.2309869862815764
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": 0.10549120316931859
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.019778142451356194
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": 0.17837918702738276
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.08422364247207512
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.27048103490626973
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.09766200124080207
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.21765814046523654
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.01118771579354022
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.05431214811361011
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.029045011081738473
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.11674020819990324
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.19978164428146095
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.418976610283321
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.14682925118403184
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.12021537707281708
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.03446810569788142
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.29271197635320617
+    },
+    {
+      "factor": "ATR_Percent",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.13196560633127963
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.011618124559746113
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.02971143945979482
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.006320957412538741
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.10216451835928529
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.13900009278581546
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.07904667197782467
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.013747617788632836
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.03259019858592306
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.05883115056301862
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.20037005386600099
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": -0.18144144964366588
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.16464732846111052
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.190675237467345
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.1151316861449202
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.005334276330269262
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.1131101229618193
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.05740166054457386
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": -0.19581631105507974
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": 0.07207828327268295
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.06106636511000435
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": 0.143301432645244
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.06817229040233368
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.22083573051705152
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.06871492825898465
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.1157616305443615
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.013054956911470635
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.054686660729583746
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.006040057264314405
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.09947876409570514
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.18895909223153148
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.4128484440585283
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.14263552120551246
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.0758736171267523
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.05186941986071975
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.27412474402540254
+    },
+    {
+      "factor": "Realized_Volatility_20D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.09629696153861597
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.016060202798424884
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.004105092911967083
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.04612477076012287
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.15610828068412952
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.16244660815590656
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.09178545329397178
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.007201201113764384
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.019776837545148678
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.16530974739594126
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.14292606111134493
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": -0.1623827918843907
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.1986897060331697
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.17029448142327763
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.10557939025496621
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.08828807885381823
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.11543518623446189
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.1338358930087912
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": -0.2820922788793029
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": 0.1324352053439977
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.09705739590265944
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "trend",
+      "net_10_q5_q1": 0.19945940819416821
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": -0.05668382723267875
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.26593360404525024
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.08528469393444899
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.2568990364005902
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.020567618028568872
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.04998058016492674
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.010265638030432775
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.14977570491224446
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.18801523446427848
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "high",
+      "regime": "range",
+      "net_10_q5_q1": 0.4330013020473657
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "range",
+      "net_10_q5_q1": 0.12617208804740596
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.11490753315583982
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.00804330229826608
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bear",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": 0.3793754320221041
+    },
+    {
+      "factor": "Beta_60D",
+      "trend": "bull",
+      "vol": "low",
+      "regime": "trend",
+      "net_10_q5_q1": -0.018959963237725024
+    }
+  ],
+  "correlation": {
+    "ATR_Percent": {
+      "ATR_Percent": 1.0,
+      "Realized_Volatility_20D": 0.9837852882567162,
+      "Beta_60D": 0.9404753048599861
+    },
+    "Realized_Volatility_20D": {
+      "ATR_Percent": 0.9837852882567162,
+      "Realized_Volatility_20D": 1.0,
+      "Beta_60D": 0.9460132022320149
+    },
+    "Beta_60D": {
+      "ATR_Percent": 0.9404753048599861,
+      "Realized_Volatility_20D": 0.946013202232015,
+      "Beta_60D": 1.0
+    }
+  }
+}
