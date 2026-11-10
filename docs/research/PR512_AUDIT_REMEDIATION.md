@@ -440,31 +440,48 @@ contain that evidence. This is intentionally not invented. Status is therefore
 
 ## 10. Tests
 
+Two focused commands with different scopes were used:
+
 ```text
+# 6 files, including test_invest_terminal.py
 pytest tests/test_invest_terminal.py
        tests/test_invest_terminal_server.py
        tests/test_invest_terminal_snapshot_sync.py
        tests/test_paper_trading_platform.py
        tests/test_p9_1_support_resistance.py
        tests/test_pr512_remediation.py
+# 60 passed in 6.19s
 ```
 
-Result: **59 passed in 6.24s**.
+```text
+# 5 files, excluding test_invest_terminal.py
+pytest tests/test_p9_1_support_resistance.py
+       tests/test_pr512_remediation.py
+       tests/test_invest_terminal_server.py
+       tests/test_invest_terminal_snapshot_sync.py
+       tests/test_paper_trading_platform.py
+# 43 passed in 5.78s
+```
+
+The earlier `59 passed` was the six-file scope before the final status test was
+added; it is superseded by `60 passed`.
 
 Full CI on the pushed fix branch:
 
 ```text
 1524 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42844578885
+https://github.com/wijouyang-lab/us/actions/runs/42845885053
 ```
 
-Pages build audit on the same HEAD:
+Pages build audit, exact HEAD
+`7e4d6c8b85a2826d3e9c4a92126504d89684ddb4`:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42844590065
+https://github.com/wijouyang-lab/us/actions/runs/42845897184
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
+no-deploy Jekyll build
 ```
 
 `git diff --check`: clean. `git status`: only intended changes plus the new
