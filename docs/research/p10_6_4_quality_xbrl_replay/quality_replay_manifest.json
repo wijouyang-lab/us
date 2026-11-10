@@ -1,0 +1,49 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "6a13d34613ea6acc91399a810bdb054aeecc4cf0",
+    "cohort_sha": "e1d9d0069b581058143498c8d31b56b64c82c741444a8565c523a47a5b5b244e",
+    "picks": [
+      [
+        "AAPL",
+        "320193"
+      ],
+      [
+        "IBM",
+        "51143"
+      ],
+      [
+        "INTC",
+        "50863"
+      ],
+      [
+        "XLNX",
+        "743988"
+      ],
+      [
+        "HPQ",
+        "47217"
+      ]
+    ],
+    "command": "python -m tools.research.p10_6_4.verify",
+    "timestamp": "2026-11-10T06:11:57.817066+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "11dd3293c43562d19563be640800913f8a6a320de8fc825a8bf8e988fc3ad4cf",
+    "git_commit": "6a13d34613ea6acc91399a810bdb054aeecc4cf0",
+    "outputs": {
+      "quality_xbrl_context_validation.csv": "3bb2e8a613454cf4993708e6c73e42a6028084b4dbd745bb9f985a0613323eda",
+      "quality_vertical_filings.csv": "d5ccc03ff46d85b0a9aef4261e02215436e54208b210a7dd5320fc1f3ca620da",
+      "quality_amendment_replay.csv": "7db2764c81f0187b03dc4fcfb1f260fa621367f750a40a2e96a769cc3c677cb0",
+      "quality_historical_lineage_v2.csv": "3bb2e8a613454cf4993708e6c73e42a6028084b4dbd745bb9f985a0613323eda",
+      "P10_6_4_XBRL_REPLAY_REPORT.md": "bc004aa6cf8aff6c4d5dfe3fc36000fb734d5e2c875bb08ae7dddafe74683112",
+      "quality_repeatability_comparison.csv": "9d23cbea5ab976c280b48dfef8411fe1259f0f044dd675b24ee51d11202fd5a6"
+    },
+    "rows": 92,
+    "verified": 50,
+    "status": "XBRL_VERTICAL_SLICE_PARTIAL",
+    "timestamp": "2026-11-10T06:13:19.138369+00:00"
+  }
+}
