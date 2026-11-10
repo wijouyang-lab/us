@@ -1,0 +1,31 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "3a22d0f8fd9cd86e1ecd4203bf6f3992423f44f0",
+    "fsnds_zip": "4bcf1c2dcfb58ae3d0c2b9f676ff7611600b5f2665a94e1f0bf43c6903bdf508",
+    "inputs": {
+      "p7": "182bab3a65aec15803dca0a431ccdd93937ef5380dc8d932423d08dee57280a1",
+      "p4": "3bb2e8a613454cf4993708e6c73e42a6028084b4dbd745bb9f985a0613323eda"
+    },
+    "command": "python -m tools.research.p10_6_8.pilot",
+    "timestamp": "2026-11-10T08:38:27.926730+00:00"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "36c65e4e786a4e496ac26d614b00133eb3b7d2d4ca2d837d4dbbf36831ceeb9d",
+    "git_commit": "3a22d0f8fd9cd86e1ecd4203bf6f3992423f44f0",
+    "zip_sha256": "4bcf1c2dcfb58ae3d0c2b9f676ff7611600b5f2665a94e1f0bf43c6903bdf508",
+    "outputs": {
+      "fsnds_positive_control_reconciliation.csv": "d119d06bc711033b4d3291c77723f392067daabf4816394c40809cea83ebbf21",
+      "fsnds_ambiguous_context_reconciliation.csv": "f0fb6b290c42119528f4b630671a087d3b80899966c30c1368d49c5fc11fc525",
+      "fsnds_ibm_intc_2017.csv": "1dc6565678a7230cfcfb807e957424cc5b28f6ab31dac4d6e2d1d55d6d012747",
+      "fsnds_hpq_liabilities_validation.csv": "6688af17f083bbd7378eb388855ab961a94c6c82c2ef55c87114eea4cd9c29e3",
+      "fsnds_hpq_amendment_timeline.csv": "f011f039b4622338979ec32b7abdb345046e8fd3c95980ef49aea6ce8e15ef5e",
+      "fsnds_quality_five_company_panel.csv": "95ad0b6a08c2310046cfd3a747bcd87db30940ba295e00cd94d67a8b01282216",
+      "fsnds_repeatability_comparison.csv": "0c0df8c68011e952a606b7f740ba66baa3431ddba8a1e04a8bd28a3d4ad123ab",
+      "P10_6_8_FSNDS_PILOT_REPORT.md": "74e7b1dddc3f6c064b4f73ddce1b61bcb7493999a0362bac16ca38927544a446"
+    },
+    "status": "FSNDS_PILOT_PARTIAL",
+    "timestamp": "2026-11-10T08:38:49.468235+00:00"
+  }
+}
