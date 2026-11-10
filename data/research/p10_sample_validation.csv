@@ -1,0 +1,91 @@
+sample_id,ticker,company,category,event_period,provider,status,evidence_url,checks,notes
+S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,PARTIAL,https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL,OHLCV;dates,Official test-key sample returned AAPL rows; not 10y/full-history validation.
+S002,AAPL,Apple,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S003,AAPL,Apple,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=2024-01-01&to=2024-01-10,OHLCV;dates,Demo token returned 7 AAPL bars; not full-history validation.
+S004,MSFT,Microsoft,large_cap,2020-01,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S005,MSFT,Microsoft,large_cap,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S006,MSFT,Microsoft,large_cap,2020-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S007,NVDA,NVIDIA,large_cap_split,2024-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S008,NVDA,NVIDIA,large_cap_split,2024-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S009,NVDA,NVIDIA,large_cap_split,2024-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S010,AMZN,Amazon,large_cap_split,2022-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S011,AMZN,Amazon,large_cap_split,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S012,AMZN,Amazon,large_cap_split,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S013,GOOGL,Alphabet,large_cap_split,2022-07,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S014,GOOGL,Alphabet,large_cap_split,2022-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S015,GOOGL,Alphabet,large_cap_split,2022-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S016,META,Meta Platforms,rename_FB,2022-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S017,META,Meta Platforms,rename_FB,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S018,META,Meta Platforms,rename_FB,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S019,TSLA,Tesla,large_cap_split,2020-08,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S020,TSLA,Tesla,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S021,TSLA,Tesla,large_cap_split,2020-08,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S022,BRK.B,Berkshire Hathaway,share_class,2020-01,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S023,BRK.B,Berkshire Hathaway,share_class,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S024,BRK.B,Berkshire Hathaway,share_class,2020-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S025,JPM,JPMorgan,large_cap,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S026,JPM,JPMorgan,large_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S027,JPM,JPMorgan,large_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S028,XOM,Exxon Mobil,large_cap,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S029,XOM,Exxon Mobil,large_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S030,XOM,Exxon Mobil,large_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S031,WMT,Walmart,large_cap_split,2024-02,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S032,WMT,Walmart,large_cap_split,2024-02,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S033,WMT,Walmart,large_cap_split,2024-02,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S034,COST,Costco,large_cap_split,2024-01,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S035,COST,Costco,large_cap_split,2024-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S036,COST,Costco,large_cap_split,2024-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S037,ANF,Abercrombie & Fitch,small_cap,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S038,ANF,Abercrombie & Fitch,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S039,ANF,Abercrombie & Fitch,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S040,SIG,Signet Jewelers,small_cap,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S041,SIG,Signet Jewelers,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S042,SIG,Signet Jewelers,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S043,MTH,Meritage Homes,small_cap,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S044,MTH,Meritage Homes,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S045,MTH,Meritage Homes,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S046,PRDO,Perdoceo Education,small_cap,2020-03,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S047,PRDO,Perdoceo Education,small_cap,2020-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S048,PRDO,Perdoceo Education,small_cap,2020-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S049,CROX,Crocs,small_cap,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S050,CROX,Crocs,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S051,CROX,Crocs,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S052,LEHMQ,Lehman Brothers,delisted,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S053,LEHMQ,Lehman Brothers,delisted,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S054,LEHMQ,Lehman Brothers,delisted,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S055,ENRNQ,Enron,delisted,2001-11,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S056,ENRNQ,Enron,delisted,2001-11,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S057,ENRNQ,Enron,delisted,2001-11,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S058,WCOMQ,WorldCom,delisted,2002-07,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S059,WCOMQ,WorldCom,delisted,2002-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S060,WCOMQ,WorldCom,delisted,2002-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S061,BSC,Bear Stearns,delisted,2008-03,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S062,BSC,Bear Stearns,delisted,2008-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S063,BSC,Bear Stearns,delisted,2008-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S064,EMC,EMC Corp,acquired,2016-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S065,EMC,EMC Corp,acquired,2016-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S066,EMC,EMC Corp,acquired,2016-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S067,YHOO,Yahoo,acquired,2017-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S068,YHOO,Yahoo,acquired,2017-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S069,YHOO,Yahoo,acquired,2017-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S070,ATVI,Activision Blizzard,acquired,2023-10,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S071,ATVI,Activision Blizzard,acquired,2023-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S072,ATVI,Activision Blizzard,acquired,2023-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S073,TWTR,Twitter,acquired,2022-10,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S074,TWTR,Twitter,acquired,2022-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S075,TWTR,Twitter,acquired,2022-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S076,ANTM,Anthem,rename_ELV,2022-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S077,ANTM,Anthem,rename_ELV,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S078,ANTM,Anthem,rename_ELV,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S079,DISCA,Discovery,rename_WBD,2022-04,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S080,DISCA,Discovery,rename_WBD,2022-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S081,DISCA,Discovery,rename_WBD,2022-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S082,GE,General Electric,spinoff,2024-04,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S083,GE,General Electric,spinoff,2024-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S084,GE,General Electric,spinoff,2024-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S085,MMM,3M,spinoff,2024-04,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S086,MMM,3M,spinoff,2024-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S087,MMM,3M,spinoff,2024-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S088,JNJ,Johnson & Johnson,spinoff,2023-08,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S089,JNJ,Johnson & Johnson,spinoff,2023-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S090,JNJ,Johnson & Johnson,spinoff,2023-08,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
