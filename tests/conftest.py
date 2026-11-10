@@ -29,3 +29,11 @@ SCRIPT_TESTS = [
 # 阻止 pytest 在 collection 阶段 import 这些脚本式文件（模块级 sys.exit
 # 会触发 SystemExit → INTERNALERROR）。它们改由 test_script_runner.py 以 subprocess 运行。
 collect_ignore = SCRIPT_TESTS
+
+
+def pytest_sessionstart(session):
+    """The Terminal snapshot is local/untracked; build it for read-only tests."""
+    target = os.path.join(REPO_ROOT, "dashboard", "data", "invest_terminal_data.json")
+    if not os.path.exists(target):
+        from tools.invest_terminal.build_snapshot import build
+        build()

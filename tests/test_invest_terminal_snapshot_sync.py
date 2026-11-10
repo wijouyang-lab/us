@@ -27,12 +27,19 @@ def test_local_db_is_labeled_export_not_live(tmp_path):
     assert s["account"]["cash"] == 50000.0
 
 
-def test_dashboard_workflow_builds_snapshot_and_guards_loop():
+def test_dashboard_workflow_does_not_build_or_publish_terminal():
     y = (ROOT / ".github/workflows/dashboard-data.yml").read_text(encoding="utf-8")
-    assert "python -m tools.invest_terminal.build_snapshot" in y
-    assert "dashboard/data/invest_terminal_data.json" in y
+    assert "python -m tools.invest_terminal.build_snapshot" not in y
+    assert "dashboard/data/invest_terminal_data.json" not in y
     assert "[skip ci]" in y
-    assert "git add dashboard/data/dashboard_data.json dashboard/data/invest_terminal_data.json" in y
+
+
+def test_snapshot_has_no_absolute_local_path(tmp_path):
+    dashboard = ROOT / "dashboard/data/dashboard_data.json"
+    s = build(dashboard, tmp_path / "paper", tmp_path / "snap.json")
+    assert s["source"]["dashboard_file"] == "dashboard/data/dashboard_data.json"
+    assert s["source"]["paper_db"] == "data/paper_trading/paper.sqlite"
+    assert ":" not in s["source"]["paper_db"]
 
 
 def test_terminal_workflow_paths_are_separate():

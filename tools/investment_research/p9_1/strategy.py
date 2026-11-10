@@ -1,6 +1,6 @@
 """P9.1 support/resistance + candlestick + MACD/KDJ event research."""
 from __future__ import annotations
-import csv,json,math
+import csv,gzip,json,math
 from collections import defaultdict
 from datetime import date,datetime,timezone
 from pathlib import Path
@@ -108,8 +108,11 @@ def main():
         for i,j in coords:
             # only use events after 210 sessions and with future open available
             events.append({"experiment":gname,"date":str(dates[i]),"ticker":cols[j],"support":bool(sup[i,j]),"resistance":bool(res[i,j]),"support_level":float(lev_low[i,j]) if np.isfinite(lev_low[i,j]) else "","resistance_level":float(lev_high[i,j]) if np.isfinite(lev_high[i,j]) else "","atr":float(atr[i,j]) if np.isfinite(atr[i,j]) else "","distance_atr":float((ln[i,j]-lev_low[i,j])/atr[i,j]) if np.isfinite(atr[i,j]) and np.isfinite(lev_low[i,j]) else "","support_touches":int(pl_count[i,j]) if np.isfinite(pl_count[i,j]) else 0,"resistance_touches":int(ph_count[i,j]) if np.isfinite(ph_count[i,j]) else 0,"pivot_low_date":str(dates[int(pivot_low_date[i,j])]) if np.isfinite(pivot_low_date[i,j]) else "","pivot_high_date":str(dates[int(pivot_high_date[i,j])]) if np.isfinite(pivot_high_date[i,j]) else "","bull_engulf":bool(bull_eng[i,j]),"morning_star":bool(bull_star[i,j]),"macd":bool(macd_bull[i,j]),"kdj":bool(kdj_bull[i,j])})
+    fields=list(events[0].keys())
     with (O/"p9_1_signals.csv").open("w",newline="",encoding="utf-8") as f:
-        w=csv.DictWriter(f,fieldnames=list(events[0].keys()));w.writeheader();w.writerows(events)
+        w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(events)
+    with gzip.open(O/"p9_1_signals.csv.gz","wt",newline="",encoding="utf-8") as f:
+        w=csv.DictWriter(f,fieldnames=fields);w.writeheader();w.writerows(events)
     # HAC + event stats; use unique event dates for benchmark alignment
     def hac(x,lags):
         x=np.asarray([x for x in x if np.isfinite(x)],float);n=len(x)
@@ -150,7 +153,7 @@ def main():
     for rank,p in enumerate(ps.p_value,1):qs.append(min(1.0,float(p)*len(ps)/rank))
     ps["bh_q"]=qs;edf=edf.merge(ps[["experiment","horizon","bh_q"]],on=["experiment","horizon"],how="left")
     edf.to_csv(O/"event_results.csv",index=False);edf[["experiment","horizon","hac_t","p_value","bh_q"]].to_csv(O/"event_hac.csv",index=False);edf[["experiment","horizon","bh_q"]].to_csv(O/"event_bh.csv",index=False)
-    status={"generated_at":datetime.now(timezone.utc).isoformat(),"status":"P9_1_EVENT_RESEARCH","as_of":"2024-12-31","patterns":["bullish_engulfing","bearish_engulfing","morning_star","evening_star"],"experiments":list(groups),"events":len(events),"event_rows":len(edf),"data_blocked":["portfolio not run unless event evidence passes"],"note":"PIT support levels confirmed at pivot+5; no future pivot; entry next open."}
+    status={"generated_at":datetime.now(timezone.utc).isoformat(),"status":"P9_1_EVENT_RESEARCH","as_of":"2024-12-31","patterns":["bullish_engulfing","bearish_engulfing","morning_star","evening_star"],"experiments":list(groups),"events":len(events),"valid_event_observations":int(edf.groupby("experiment").events.max().sum()),"event_horizon_observations":int(edf.events.sum()),"event_rows":len(edf),"duplicate_experiments":{"G_LEVEL_ALL_PATTERNS":"C_SUPPORT_PATTERN","H_G_BOTH":"F_C_BOTH"},"data_blocked":["portfolio not run unless event evidence passes"],"note":"PIT support levels confirmed at pivot+5; no future pivot; entry next open."}
     (O/"p9_1_status.json").write_text(json.dumps(status,indent=2),encoding="utf-8")
     print(json.dumps({"events":len(events),"event_rows":len(edf),"top":edf.sort_values("bh_q").head(10)[["experiment","horizon","events","mean_return","hac_t","bh_q"]].to_dict("records")},indent=2))
 

@@ -1,6 +1,6 @@
 """P9.1 long-only portfolio for the support + bullish pattern experiment."""
 from __future__ import annotations
-import argparse,csv,json,math
+import argparse,csv,gzip,json,math
 from datetime import date,datetime,timezone
 from pathlib import Path
 import numpy as np,pandas as pd
@@ -18,7 +18,13 @@ def main():
     dates=[d.date() for d in c.index];pos={d:i for i,d in enumerate(dates)};cols=list(c.columns)
     etf=pd.read_csv("data/research/p8/etf_prices.csv",parse_dates=["Date"]).set_index("Date");etf.index=[d.date() for d in etf.index]
     bil=etf["BIL"].reindex(dates).ffill();qqq=etf["QQQ"].reindex(dates).ffill();spy=etf["SPY"].reindex(dates).ffill()
-    signals=list(csv.DictReader((O/"p9_1_signals.csv").open(encoding="utf-8")))
+    sig_plain=O/"p9_1_signals.csv";sig_gz=O/"p9_1_signals.csv.gz"
+    if sig_plain.exists():
+        sf=sig_plain.open(encoding="utf-8")
+    else:
+        sf=gzip.open(sig_gz,"rt",encoding="utf-8")
+    with sf:
+        signals=list(csv.DictReader(sf))
     bydate={}
     for s in signals:
         if s["experiment"]!=exp:continue
