@@ -1,0 +1,35 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "6ae084a2461d4c47b8fa674dd835ff12b24e7677",
+    "dirty": " M data/universe/p7/p7_status.json\n?? add_p102_workflow.py\n?? add_p103_workflow.py\n?? add_p104_workflow.py\n?? add_p1051_workflow.py\n?? add_p1052_workflow.py\n?? add_p1053_workflow.py\n?? add_p105_workflow.py\n?? add_p91_snapshot_tmp.py\n?? add_p91_workflow_tmp.py\n?? add_p921_workflow.py\n?? add_p922_workflow.py\n?? add_p923_workflow.py\n?? add_p92_p101_snapshot_tmp.py\n?? add_p92_p101_workflow_tmp.py\n?? audit-paper-nwot3cdv/\n?? audit-paper2-0pheyi8p/\n?? audit-paper3-tzegqp35/\n?? audit-paper4-enzbpaxl/\n?? data/research/dividend_alt_raw_p612/\n?? data/research/factor_snapshots/\n?? data/research/factor_validation/\n?? data/research/finsaber_prices.csv\n?? data/research/forward_return_labels/\n?? data/research/historical_universe/\n?? data/research/macro_d/\n?? data/research/p10_5_3_execution_recovery/cache/\n?? data/research/p9_1_support_resistance/p9_1_signals.csv\n?? data/research/pit_data/\n?? data/research/quality_pit_scores_p67.csv.gz\n?? data/sec/\n?? data/universe/sec_cash_dividend_proxy_facts_p613.c",
+    "inputs": {
+      "value_rankings": "94d9081cb2a51a0ac712193a0a025dfa2d682c80f9899d413e7429de453ef919",
+      "quality_rankings": "2ba62075fd53c743c61e477db47f51cc7a7588d91fa3c9a7c8b2625f720698de",
+      "garp_rankings": "c2d1c1dc2f16bf3c0d525014c8b654338c5e8266dcbee7026e23dbe5bed4f6c3",
+      "pit_summary": "0dbb230f70ea5ae8f7ac43e6149e1fb62e405c3a72725ba3ee0e84936d69ae4e"
+    },
+    "command": "python -m tools.research.p10_6_preflight.audit",
+    "timestamp": "2026-11-10T05:01:34.495720+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "391206989cc5a1e355e32c62bef814ab036d8ca8f289142910a18942b4b77b3e",
+    "git_commit": "6ae084a2461d4c47b8fa674dd835ff12b24e7677",
+    "outputs": {
+      "fundamental_factor_readiness.csv": "acc00cad154cb550d6c3becc2033b4c2e95120aa70044f6f278d0fbcb6d390ad",
+      "historical_universe_readiness.csv": "5912d5818fc3177a1195c559dc76dae8c85a9644e48730597bb324f09b278796",
+      "historical_price_readiness.csv": "1455979365cfa1a6026181a87b7f4640cf182f33bc18db4716145eb16fe2bd03",
+      "P10_6_PREFLIGHT_REPORT.md": "23c55a59207ed8ff55054ce7e1cac1a9c25cbfed66970288dd1517e1b157ff07",
+      "backtest_design.md": "5f3e9dc9d496464d1e47ffc30db8aa3aa7977c7537ff48bb334123ee4570a0c4"
+    },
+    "status": "DATA_BLOCKED",
+    "model_status": {
+      "Value": "DATA_BLOCKED",
+      "Quality": "DATA_BLOCKED",
+      "GARP": "DATA_BLOCKED"
+    },
+    "timestamp": "2026-11-10T05:01:34.614720+00:00"
+  }
+}
