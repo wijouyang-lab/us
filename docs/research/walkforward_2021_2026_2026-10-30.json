@@ -1,0 +1,911 @@
+{
+  "label": "EXPLORATORY_CURRENT_UNIVERSE_SURVIVORSHIP_BIASED",
+  "test_years": "2021-2026",
+  "train_context": "2018-2020",
+  "cost_bps_per_side": [
+    5,
+    10,
+    20,
+    50
+  ],
+  "windows": [
+    {
+      "year": 2021,
+      "strategy": "Momentum20",
+      "months": 12,
+      "mean_turnover": 0.8090814719358533,
+      "trades": 940,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.18678137905099756,
+        "volatility": 0.12690497963196196,
+        "sharpe": 1.4718207243930348,
+        "max_drawdown": -0.05856698334803878
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.17602212664321892,
+        "volatility": 0.12708024138448493,
+        "sharpe": 1.3851258443132706,
+        "max_drawdown": -0.05939172561608008
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.1547707003686658,
+        "volatility": 0.1274344541050347,
+        "sharpe": 1.2145122090851495,
+        "max_drawdown": -0.06104121015216257
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.0931052537217314,
+        "volatility": 0.12852623679095787,
+        "sharpe": 0.7244065962435584,
+        "max_drawdown": -0.06598966376040993
+      },
+      "ew_cagr": 0.23951226011433113,
+      "excess_ew_10bps": -0.06349013347111221,
+      "spy_cagr": 0.29172914289305707,
+      "excess_spy_10bps": -0.11570701624983815
+    },
+    {
+      "year": 2021,
+      "strategy": "Momentum60",
+      "months": 12,
+      "mean_turnover": 0.49495274914089354,
+      "trades": 574,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.18790926306410127,
+        "volatility": 0.2058901757542701,
+        "sharpe": 0.9126674566948302,
+        "max_drawdown": -0.09579005235346028
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.18156206505093153,
+        "volatility": 0.2058105625988745,
+        "sharpe": 0.8821805001563336,
+        "max_drawdown": -0.09706590081584465
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.16896047927404334,
+        "volatility": 0.20565294736136727,
+        "sharpe": 0.8215806359300603,
+        "max_drawdown": -0.0996140099558468
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.13188840659129375,
+        "volatility": 0.20519303440622316,
+        "sharpe": 0.6427528447685639,
+        "max_drawdown": -0.10722967533497807
+      },
+      "ew_cagr": 0.23951226011433113,
+      "excess_ew_10bps": -0.0579501950633996,
+      "spy_cagr": 0.29172914289305707,
+      "excess_spy_10bps": -0.11016707784212554
+    },
+    {
+      "year": 2021,
+      "strategy": "Trend",
+      "months": 12,
+      "mean_turnover": 0.46585946449026344,
+      "trades": 539,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.2089439530237569,
+        "volatility": 0.1933099714321274,
+        "sharpe": 1.080875194775551,
+        "max_drawdown": -0.08929423102713752
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.2029219497283672,
+        "volatility": 0.19316533072268297,
+        "sharpe": 1.050509162121288,
+        "max_drawdown": -0.08966536504775613
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.19096015093658347,
+        "volatility": 0.19287700424880003,
+        "sharpe": 0.9900617840904252,
+        "max_drawdown": -0.09040763308899324
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.1557243020262069,
+        "volatility": 0.19201971586491776,
+        "sharpe": 0.8109807960332366,
+        "max_drawdown": -0.09263443721270448
+      },
+      "ew_cagr": 0.23951226011433113,
+      "excess_ew_10bps": -0.03659031038596394,
+      "spy_cagr": 0.29172914289305707,
+      "excess_spy_10bps": -0.08880719316468988
+    },
+    {
+      "year": 2022,
+      "strategy": "Momentum20",
+      "months": 12,
+      "mean_turnover": 0.8267760712532436,
+      "trades": 969,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": -0.11994660733736418,
+        "volatility": 0.22621206821633794,
+        "sharpe": -0.5302396476153218,
+        "max_drawdown": -0.2139138616999141
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": -0.1283175325767013,
+        "volatility": 0.2262722326384098,
+        "sharpe": -0.5670935893479992,
+        "max_drawdown": -0.21794135828428918
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": -0.1448413658331883,
+        "volatility": 0.2263947928802648,
+        "sharpe": -0.6397733975701098,
+        "max_drawdown": -0.22594485272597542
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": -0.19270965674713736,
+        "volatility": 0.22678028071545037,
+        "sharpe": -0.8497637278654634,
+        "max_drawdown": -0.24954754888367336
+      },
+      "ew_cagr": -0.04727709044576256,
+      "excess_ew_10bps": -0.08104044213093875,
+      "spy_cagr": -0.20154541882213817,
+      "excess_spy_10bps": 0.07322788624543686
+    },
+    {
+      "year": 2022,
+      "strategy": "Momentum60",
+      "months": 12,
+      "mean_turnover": 0.5326986464688969,
+      "trades": 623,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": -0.03752950573578684,
+        "volatility": 0.2152548552705169,
+        "sharpe": -0.17434917176954007,
+        "max_drawdown": -0.1700213921496987
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": -0.04321383683314506,
+        "volatility": 0.21525574810252174,
+        "sharpe": -0.2007557856831922,
+        "max_drawdown": -0.17255487520819857
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": -0.054490511387485174,
+        "volatility": 0.21525859226964625,
+        "sharpe": -0.2531397739479174,
+        "max_drawdown": -0.17760267805764984
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": -0.08759539069432043,
+        "volatility": 0.2152755921363529,
+        "sharpe": -0.40689884916836555,
+        "max_drawdown": -0.19259369900208834
+      },
+      "ew_cagr": -0.04727709044576256,
+      "excess_ew_10bps": 0.004063253612617501,
+      "spy_cagr": -0.20154541882213817,
+      "excess_spy_10bps": 0.1583315819889931
+    },
+    {
+      "year": 2022,
+      "strategy": "Trend",
+      "months": 12,
+      "mean_turnover": 0.48002138999929866,
+      "trades": 561,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": -0.025585298349698915,
+        "volatility": 0.203796854192174,
+        "sharpe": -0.12554314663548627,
+        "max_drawdown": -0.15568793653879376
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": -0.030719693903142553,
+        "volatility": 0.2038169848756986,
+        "sharpe": -0.15072195245100647,
+        "max_drawdown": -0.15804512482323319
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": -0.040914403895348395,
+        "volatility": 0.2038584728176307,
+        "sharpe": -0.20070004120922616,
+        "max_drawdown": -0.1627431554331651
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": -0.07091360616639408,
+        "volatility": 0.20399274004066734,
+        "sharpe": -0.34762808790281935,
+        "max_drawdown": -0.17670720022529085
+      },
+      "ew_cagr": -0.04727709044576256,
+      "excess_ew_10bps": 0.016557396542620006,
+      "spy_cagr": -0.20154541882213817,
+      "excess_spy_10bps": 0.17082572491899561
+    },
+    {
+      "year": 2023,
+      "strategy": "Momentum20",
+      "months": 12,
+      "mean_turnover": 0.7814625850340137,
+      "trades": 919,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.07579634777335276,
+        "volatility": 0.18260972138919523,
+        "sharpe": 0.41507290628743887,
+        "max_drawdown": -0.12425560247618561
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.06636462775820018,
+        "volatility": 0.18240398373510566,
+        "sharpe": 0.36383321460005796,
+        "max_drawdown": -0.12638429851922384
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.047727880686041946,
+        "volatility": 0.18199418303746454,
+        "sharpe": 0.2622494845135621,
+        "max_drawdown": -0.13063135195310072
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": -0.0064081541970743006,
+        "volatility": 0.18077831402392078,
+        "sharpe": -0.03544758248064182,
+        "max_drawdown": -0.14329000387477864
+      },
+      "ew_cagr": 0.07253064684848587,
+      "excess_ew_10bps": -0.00616601909028569,
+      "spy_cagr": 0.25216321964240707,
+      "excess_spy_10bps": -0.1857985918842069
+    },
+    {
+      "year": 2023,
+      "strategy": "Momentum60",
+      "months": 12,
+      "mean_turnover": 0.5292885195315239,
+      "trades": 621,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": -0.013588001787750215,
+        "volatility": 0.1449924643614723,
+        "sharpe": -0.09371522752985807,
+        "max_drawdown": -0.13531389581861641
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": -0.019348825484980736,
+        "volatility": 0.14494184372487445,
+        "sharpe": -0.13349371711945562,
+        "max_drawdown": -0.13657290759073348
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": -0.03077818330632809,
+        "volatility": 0.14484156155158018,
+        "sharpe": -0.21249552253251242,
+        "max_drawdown": -0.1390873124015941
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": -0.06433863613125235,
+        "volatility": 0.1445484115939263,
+        "sharpe": -0.44510095560230806,
+        "max_drawdown": -0.14660161806536587
+      },
+      "ew_cagr": 0.07253064684848587,
+      "excess_ew_10bps": -0.0918794723334666,
+      "spy_cagr": 0.25216321964240707,
+      "excess_spy_10bps": -0.2715120451273878
+    },
+    {
+      "year": 2023,
+      "strategy": "Trend",
+      "months": 12,
+      "mean_turnover": 0.49518725015779513,
+      "trades": 580,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.023588611581877306,
+        "volatility": 0.14655037204421428,
+        "sharpe": 0.16095906992826067,
+        "max_drawdown": -0.12768849395824666
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.018046774768952334,
+        "volatility": 0.14648556824600606,
+        "sharpe": 0.12319831219581169,
+        "max_drawdown": -0.12884310673264232
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.007045433339994744,
+        "volatility": 0.14635667229153188,
+        "sharpe": 0.048138791554106615,
+        "max_drawdown": -0.13114927851620406
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": -0.025308786681860318,
+        "volatility": 0.14597570008114058,
+        "sharpe": -0.17337671042366937,
+        "max_drawdown": -0.13804339603792648
+      },
+      "ew_cagr": 0.07253064684848587,
+      "excess_ew_10bps": -0.054483872079533535,
+      "spy_cagr": 0.25216321964240707,
+      "excess_spy_10bps": -0.23411644487345473
+    },
+    {
+      "year": 2024,
+      "strategy": "Momentum20",
+      "months": 12,
+      "mean_turnover": 0.7782158317872603,
+      "trades": 922,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.3486043128907723,
+        "volatility": 0.16712811602023916,
+        "sharpe": 2.0858507903514956,
+        "max_drawdown": -0.05483914483338059
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.3370112787548518,
+        "volatility": 0.16714249225789946,
+        "sharpe": 2.0163111977225174,
+        "max_drawdown": -0.05543510442934019
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.3140983563231652,
+        "volatility": 0.1671734120429732,
+        "sharpe": 1.8788774631364453,
+        "max_drawdown": -0.056627023621259376
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.2474983004445006,
+        "volatility": 0.16728349461245565,
+        "sharpe": 1.4795141685548714,
+        "max_drawdown": -0.06020278119701683
+      },
+      "ew_cagr": 0.19059373495883514,
+      "excess_ew_10bps": 0.14641754379601668,
+      "spy_cagr": 0.2409036396677735,
+      "excess_spy_10bps": 0.09610763908707831
+    },
+    {
+      "year": 2024,
+      "strategy": "Momentum60",
+      "months": 12,
+      "mean_turnover": 0.5115611901326188,
+      "trades": 605,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.33325169525875187,
+        "volatility": 0.18834093626404164,
+        "sharpe": 1.7694065977858093,
+        "max_drawdown": -0.051664634686723
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.3259864685431302,
+        "volatility": 0.18803316050017121,
+        "sharpe": 1.733664783786014,
+        "max_drawdown": -0.05195756397965223
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.31156440861608425,
+        "volatility": 0.18741855287382006,
+        "sharpe": 1.6623989665838774,
+        "max_drawdown": -0.05254342256551092
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.2691536980678755,
+        "volatility": 0.18558239359758913,
+        "sharpe": 1.4503191431591278,
+        "max_drawdown": -0.05430099832308666
+      },
+      "ew_cagr": 0.19059373495883514,
+      "excess_ew_10bps": 0.13539273358429504,
+      "spy_cagr": 0.2409036396677735,
+      "excess_spy_10bps": 0.08508282887535668
+    },
+    {
+      "year": 2024,
+      "strategy": "Trend",
+      "months": 12,
+      "mean_turnover": 0.47900776472205037,
+      "trades": 566,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.3526415684326383,
+        "volatility": 0.17352588603702954,
+        "sharpe": 2.032213040291789,
+        "max_drawdown": -0.04492192152369856
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.3457518542085414,
+        "volatility": 0.17341404158238757,
+        "sharpe": 1.9937938765141896,
+        "max_drawdown": -0.045285557887334904
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.3320685194721178,
+        "volatility": 0.17319187161346125,
+        "sharpe": 1.917344713574352,
+        "max_drawdown": -0.04601283061460759
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.29177758242981144,
+        "volatility": 0.1725375832401023,
+        "sharpe": 1.691095800407587,
+        "max_drawdown": -0.04819464879642599
+      },
+      "ew_cagr": 0.19059373495883514,
+      "excess_ew_10bps": 0.15515811924970624,
+      "spy_cagr": 0.2409036396677735,
+      "excess_spy_10bps": 0.10484821454076787
+    },
+    {
+      "year": 2025,
+      "strategy": "Momentum20",
+      "months": 12,
+      "mean_turnover": 0.748712121212121,
+      "trades": 891,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.3922283301842522,
+        "volatility": 0.1544804798109927,
+        "sharpe": 2.539015483795394,
+        "max_drawdown": -0.055557833736344375
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.3807772247283412,
+        "volatility": 0.15444893490786965,
+        "sharpe": 2.465392363861095,
+        "max_drawdown": -0.057166880734537795
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.3581329057979128,
+        "volatility": 0.15438945399458195,
+        "sharpe": 2.3196720794833623,
+        "max_drawdown": -0.06038087372082368
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.2922211919487354,
+        "volatility": 0.1542399299674351,
+        "sharpe": 1.8945884636386472,
+        "max_drawdown": -0.06999004459887304
+      },
+      "ew_cagr": 0.15467680505067216,
+      "excess_ew_10bps": 0.22610041967766903,
+      "spy_cagr": 0.16750623446073853,
+      "excess_spy_10bps": 0.21327099026760266
+    },
+    {
+      "year": 2025,
+      "strategy": "Momentum60",
+      "months": 12,
+      "mean_turnover": 0.4966329966329967,
+      "trades": 590,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.24968630538751602,
+        "volatility": 0.17183376931280167,
+        "sharpe": 1.453068895514907,
+        "max_drawdown": -0.08555253125196072
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.24298066407775942,
+        "volatility": 0.1719155359914062,
+        "sharpe": 1.413372344020762,
+        "max_drawdown": -0.0865601397076784
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.22966779623042033,
+        "volatility": 0.1720808665478996,
+        "sharpe": 1.3346503933747398,
+        "max_drawdown": -0.08857372331638935
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.1905060891051802,
+        "volatility": 0.17259117327284673,
+        "sharpe": 1.1037997221561966,
+        "max_drawdown": -0.09460140772072889
+      },
+      "ew_cagr": 0.15467680505067216,
+      "excess_ew_10bps": 0.08830385902708726,
+      "spy_cagr": 0.16750623446073853,
+      "excess_spy_10bps": 0.07547442961702089
+    },
+    {
+      "year": 2025,
+      "strategy": "Trend",
+      "months": 12,
+      "mean_turnover": 0.47222222222222215,
+      "trades": 561,
+      "net_5bps": {
+        "observations": 12,
+        "cagr": 0.301149589695316,
+        "volatility": 0.17442562779088672,
+        "sharpe": 1.7265214608047998,
+        "max_drawdown": -0.07920418122200101
+      },
+      "net_10bps": {
+        "observations": 12,
+        "cagr": 0.29455814538124514,
+        "volatility": 0.17452813981584395,
+        "sharpe": 1.6877401299988226,
+        "max_drawdown": -0.08020342693012039
+      },
+      "net_20bps": {
+        "observations": 12,
+        "cagr": 0.2814666454355623,
+        "volatility": 0.17473429355778478,
+        "sharpe": 1.6108265853518964,
+        "max_drawdown": -0.0822002960629189
+      },
+      "net_50bps": {
+        "observations": 12,
+        "cagr": 0.24291410554698034,
+        "volatility": 0.1753617442914788,
+        "sharpe": 1.3852172064576347,
+        "max_drawdown": -0.08817792519379064
+      },
+      "ew_cagr": 0.15467680505067216,
+      "excess_ew_10bps": 0.13988134033057298,
+      "spy_cagr": 0.16750623446073853,
+      "excess_spy_10bps": 0.1270519109205066
+    },
+    {
+      "year": 2026,
+      "strategy": "Momentum20",
+      "months": 8,
+      "mean_turnover": 0.7775,
+      "trades": 622,
+      "net_5bps": {
+        "observations": 8,
+        "cagr": 0.25203511421054436,
+        "volatility": 0.19584784627969123,
+        "sharpe": 1.286892447367595,
+        "max_drawdown": -0.048271985018716546
+      },
+      "net_10bps": {
+        "observations": 8,
+        "cagr": 0.24151917283091562,
+        "volatility": 0.19584482223833183,
+        "sharpe": 1.2332170443444288,
+        "max_drawdown": -0.048981985018716756
+      },
+      "net_20bps": {
+        "observations": 8,
+        "cagr": 0.2207291092157484,
+        "volatility": 0.19584200405112623,
+        "sharpe": 1.1270774637198115,
+        "max_drawdown": -0.05040198501871662
+      },
+      "net_50bps": {
+        "observations": 8,
+        "cagr": 0.1602533697655657,
+        "volatility": 0.19585938872877948,
+        "sharpe": 0.8182062182757041,
+        "max_drawdown": -0.06136353286270113
+      },
+      "ew_cagr": 0.06236414180576699,
+      "excess_ew_10bps": 0.17915503102514863,
+      "spy_cagr": 0.15498550480408646,
+      "excess_spy_10bps": 0.08653366802682916
+    },
+    {
+      "year": 2026,
+      "strategy": "Momentum60",
+      "months": 8,
+      "mean_turnover": 0.505,
+      "trades": 404,
+      "net_5bps": {
+        "observations": 8,
+        "cagr": 0.08084850986644554,
+        "volatility": 0.20582464178905527,
+        "sharpe": 0.39280286929543273,
+        "max_drawdown": -0.09228367572301754
+      },
+      "net_10bps": {
+        "observations": 8,
+        "cagr": 0.0751674522228436,
+        "volatility": 0.20575144711139515,
+        "sharpe": 0.3653313416655945,
+        "max_drawdown": -0.09356331885408564
+      },
+      "net_20bps": {
+        "observations": 8,
+        "cagr": 0.06388702667542767,
+        "volatility": 0.20560677428069793,
+        "sharpe": 0.3107243275370295,
+        "max_drawdown": -0.09611914060660998
+      },
+      "net_50bps": {
+        "observations": 8,
+        "cagr": 0.030690791096232628,
+        "volatility": 0.20518653112511004,
+        "sharpe": 0.14957507653131133,
+        "max_drawdown": -0.10375892499960016
+      },
+      "ew_cagr": 0.06236414180576699,
+      "excess_ew_10bps": 0.012803310417076608,
+      "spy_cagr": 0.15498550480408646,
+      "excess_spy_10bps": -0.07981805258124286
+    },
+    {
+      "year": 2026,
+      "strategy": "Trend",
+      "months": 8,
+      "mean_turnover": 0.47919191919191917,
+      "trades": 382,
+      "net_5bps": {
+        "observations": 8,
+        "cagr": 0.14336526460682952,
+        "volatility": 0.17812723660485122,
+        "sharpe": 0.8048475198931202,
+        "max_drawdown": -0.07608582525248708
+      },
+      "net_10bps": {
+        "observations": 8,
+        "cagr": 0.13773115021765214,
+        "volatility": 0.17805290650816405,
+        "sharpe": 0.7735405892480443,
+        "max_drawdown": -0.07734151603645156
+      },
+      "net_20bps": {
+        "observations": 8,
+        "cagr": 0.1265390793047454,
+        "volatility": 0.17790494898340803,
+        "sharpe": 0.7112735200893531,
+        "max_drawdown": -0.07984949763472038
+      },
+      "net_50bps": {
+        "observations": 8,
+        "cagr": 0.09356467873550822,
+        "volatility": 0.17746671876445796,
+        "sharpe": 0.527223805043083,
+        "max_drawdown": -0.08734627935552564
+      },
+      "ew_cagr": 0.06236414180576699,
+      "excess_ew_10bps": 0.07536700841188515,
+      "spy_cagr": 0.15498550480408646,
+      "excess_spy_10bps": -0.017254354586434317
+    }
+  ],
+  "regime_10bps": {
+    "Momentum20": {
+      "trend": {
+        "bear": {
+          "observations": 13,
+          "cagr": 0.18602496097987098,
+          "volatility": 0.21676869630338955,
+          "sharpe": 0.8581726243327605,
+          "max_drawdown": -0.15072825809532275,
+          "months": 13
+        },
+        "bull": {
+          "observations": 55,
+          "cagr": 0.15527358124051727,
+          "volatility": 0.16764006704812948,
+          "sharpe": 0.9262319204151727,
+          "max_drawdown": -0.2570259245647628,
+          "months": 55
+        }
+      },
+      "vol": {
+        "high_vol": {
+          "observations": 10,
+          "cagr": -0.0709614204468747,
+          "volatility": 0.24883159347489694,
+          "sharpe": -0.2851784994658789,
+          "max_drawdown": -0.19527670585965828,
+          "months": 10
+        },
+        "low_vol": {
+          "observations": 58,
+          "cagr": 0.20659405945884224,
+          "volatility": 0.16124568136872347,
+          "sharpe": 1.281237783890905,
+          "max_drawdown": -0.17623693286049003,
+          "months": 58
+        }
+      },
+      "regime": {
+        "range": {
+          "observations": 19,
+          "cagr": -0.0040978828200798345,
+          "volatility": 0.19837103880160784,
+          "sharpe": -0.02065766678863921,
+          "max_drawdown": -0.2952033310434615,
+          "months": 19
+        },
+        "trend": {
+          "observations": 49,
+          "cagr": 0.23228052342569105,
+          "volatility": 0.16610213400251547,
+          "sharpe": 1.3984198626982924,
+          "max_drawdown": -0.112588918020887,
+          "months": 49
+        }
+      }
+    },
+    "Momentum60": {
+      "trend": {
+        "bear": {
+          "observations": 13,
+          "cagr": 0.18051479655556313,
+          "volatility": 0.2094508473062228,
+          "sharpe": 0.8618480129213592,
+          "max_drawdown": -0.15409116666642997,
+          "months": 13
+        },
+        "bull": {
+          "observations": 55,
+          "cagr": 0.10830928937609974,
+          "volatility": 0.18122295104243458,
+          "sharpe": 0.5976576849294237,
+          "max_drawdown": -0.2763146328163887,
+          "months": 55
+        }
+      },
+      "vol": {
+        "high_vol": {
+          "observations": 10,
+          "cagr": -0.030147407729691822,
+          "volatility": 0.22641277103642338,
+          "sharpe": -0.13315241711715087,
+          "max_drawdown": -0.14704337999043948,
+          "months": 10
+        },
+        "low_vol": {
+          "observations": 58,
+          "cagr": 0.15026255074184425,
+          "volatility": 0.17886998956568817,
+          "sharpe": 0.8400657433183439,
+          "max_drawdown": -0.21985816691031668,
+          "months": 58
+        }
+      },
+      "regime": {
+        "range": {
+          "observations": 19,
+          "cagr": 0.006919538311678908,
+          "volatility": 0.18356878400866614,
+          "sharpe": 0.03769452605488873,
+          "max_drawdown": -0.2595808818144324,
+          "months": 19
+        },
+        "trend": {
+          "observations": 49,
+          "cagr": 0.16974021318771237,
+          "volatility": 0.1865967864552199,
+          "sharpe": 0.909663110561913,
+          "max_drawdown": -0.1476516932205162,
+          "months": 49
+        }
+      }
+    },
+    "Trend": {
+      "trend": {
+        "bear": {
+          "observations": 13,
+          "cagr": 0.17422692566566567,
+          "volatility": 0.19113027047347933,
+          "sharpe": 0.9115611317561594,
+          "max_drawdown": -0.14137485796139182,
+          "months": 13
+        },
+        "bull": {
+          "observations": 55,
+          "cagr": 0.1495019495900105,
+          "volatility": 0.17418194063764916,
+          "sharpe": 0.8583091280457114,
+          "max_drawdown": -0.24104443562698885,
+          "months": 55
+        }
+      },
+      "vol": {
+        "high_vol": {
+          "observations": 10,
+          "cagr": -6.964892678229528e-05,
+          "volatility": 0.21304531349151765,
+          "sharpe": -0.0003269207176672691,
+          "max_drawdown": -0.1343391795125125,
+          "months": 10
+        },
+        "low_vol": {
+          "observations": 58,
+          "cagr": 0.1830938358872194,
+          "volatility": 0.17013471490342214,
+          "sharpe": 1.0761697634204375,
+          "max_drawdown": -0.18696875955390768,
+          "months": 58
+        }
+      },
+      "regime": {
+        "range": {
+          "observations": 19,
+          "cagr": 0.041024927096485087,
+          "volatility": 0.17667373330288483,
+          "sharpe": 0.23220728021948245,
+          "max_drawdown": -0.23119910210375605,
+          "months": 19
+        },
+        "trend": {
+          "observations": 49,
+          "cagr": 0.20130715798809917,
+          "volatility": 0.17627460692495836,
+          "sharpe": 1.1420088321274622,
+          "max_drawdown": -0.13871751535708665,
+          "months": 49
+        }
+      }
+    }
+  },
+  "spy_buyhold_cagr_by_year": [
+    {
+      "year": 2021,
+      "return": 0.29172914289305707
+    },
+    {
+      "year": 2022,
+      "return": -0.20154541882213817
+    },
+    {
+      "year": 2023,
+      "return": 0.25216321964240707
+    },
+    {
+      "year": 2024,
+      "return": 0.2409036396677735
+    },
+    {
+      "year": 2025,
+      "return": 0.16750623446073853
+    },
+    {
+      "year": 2026,
+      "return": 0.15498550480408646
+    }
+  ]
+}

@@ -97,8 +97,8 @@ def run(panel_path, spy_path, output, start="2018-01-01", end=None):
     prev_bench = set()
     for dt in dates:
         day = d[d.Date.eq(dt)].copy()
-        elig = day[(day.Close >= MIN_PRICE) & (day.DV20 >= MIN_DV)].dropna(subset=["Fwd20"])
-        if len(elig) < MIN_NAMES:
+        elig = day[(day.Close >= MIN_PRICE) & (day.DV20 >= MIN_DV)]
+        if len(elig) < MIN_NAMES or elig.Fwd20.isna().any():
             continue
         b = elig.Fwd20.mean()
         bench.append(b)
@@ -116,9 +116,12 @@ def run(panel_path, spy_path, output, start="2018-01-01", end=None):
             if len(picked) != len(selected) or picked.Fwd20.isna().any():
                 continue
             turnover = 1.0 if not prev[name] else len(selected - prev[name]) / max(len(selected), 1)
+            # Cost is per side: first buy = 1x; replacement = buy + sell = 2x.
+            cost_units = 1.0 if not prev[name] else 2.0 * turnover
             gross = float(picked.Fwd20.mean())
             rows_by[name].append({"date": dt.date().isoformat(), "gross": gross,
-                                  "turnover": turnover, "excess_vs_ew": gross - b})
+                                  "turnover": turnover, "cost_units": cost_units,
+                                  "excess_vs_ew": gross - b})
             prev[name] = selected
     spy_returns = spy_monthly(spy_path, dates)
     n = min([len(v) for v in rows_by.values()] + [len(bench), len(spy_returns)])
@@ -130,7 +133,7 @@ def run(panel_path, spy_path, output, start="2018-01-01", end=None):
                                   "mean_turnover": float(np.mean([x["turnover"] for x in rows])) if rows else None,
                                   "excess_vs_ew_gross": stats([x["excess_vs_ew"] for x in rows])}
         for c in (5, 10, 20):
-            net = [x["gross"] - c / 10000 * x["turnover"] for x in rows]
+            net = [x["gross"] - c / 10000 * x["cost_units"] for x in rows]
             out["strategies"][name][f"net_{c}bps"] = stats(net)
     out["equal_weight"] = {"gross": stats(bench[:n])}
     out["spy_buyhold"] = {"gross": stats(spy_returns[:n])}
