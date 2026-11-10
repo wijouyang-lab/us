@@ -454,14 +454,14 @@ Full CI on the pushed fix branch:
 
 ```text
 1524 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42842173223
+https://github.com/wijouyang-lab/us/actions/runs/42842957859
 ```
 
 Pages build audit on the same HEAD:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42842183601
+https://github.com/wijouyang-lab/us/actions/runs/42842971399
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
 ```
