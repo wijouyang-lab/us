@@ -1,0 +1,108 @@
+name: Short-Term Reversal Research Screen
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/research/short_term_reversal_screen.py"
+      - "tests/test_short_term_reversal_screen.py"
+      - ".github/workflows/short-term-reversal-screen.yml"
+      - "tools/research/etf_history_backfill.py"
+      - "tests/test_etf_history_backfill.py"
+      - "tools/research/etf_short_term_reversal_screen.py"
+      - "tests/test_etf_short_term_reversal_screen.py"
+      - "tools/research/etf_regime_reversal_diagnostics.py"
+      - "tests/test_etf_regime_reversal_diagnostics.py"
+      - "research_price_history_sp500_10y.csv"
+      - "research_spy_sp500_10y.csv"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: short-term-reversal-screen
+  cancel-in-progress: false
+
+jobs:
+  screen:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install research dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "pandas>=3.0,<4" "numpy>=2.0,<3" pytest
+
+      - name: Test event-study implementation
+        run: python -m pytest tests/test_short_term_reversal_screen.py -q
+
+      - name: Run stock short-term reversal screen
+        run: |
+          mkdir -p /tmp/short-term-reversal
+          python tools/research/short_term_reversal_screen.py \
+            --stocks research_price_history_sp500_10y.csv \
+            --spy research_spy_sp500_10y.csv \
+            --json-out /tmp/short-term-reversal/short_term_reversal_10y.json \
+            --markdown-out /tmp/short-term-reversal/short_term_reversal_10y.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: short-term-reversal-stock-screen
+          path: /tmp/short-term-reversal/
+          if-no-files-found: error
+          retention-days: 30
+
+  etf-history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install ETF history dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install "pandas>=3.0,<4" "numpy>=2.0,<3" "yfinance>=1.0,<2" pytest
+
+      - name: Test ETF history and event-study code
+        run: |
+          python -m pytest tests/test_etf_history_backfill.py tests/test_etf_short_term_reversal_screen.py tests/test_etf_regime_reversal_diagnostics.py -q
+
+      - name: Download reproducible ETF price and action histories
+        run: |
+          python tools/research/etf_history_backfill.py \
+            --output-dir /tmp/etf-history/prices \
+            --manifest-out /tmp/etf-history/manifest.json \
+            --sleep-seconds 2 \
+            --retries 3
+
+      - name: Run per-ETF short-term reversal study
+        run: |
+          python tools/research/etf_short_term_reversal_screen.py \
+            --input-dir /tmp/etf-history/prices \
+            --json-out /tmp/etf-history/results/etf_short_term_reversal.json \
+            --markdown-out /tmp/etf-history/results/etf_short_term_reversal.md
+
+      - name: Run regime-conditioned ETF reversal diagnostics
+        run: |
+          python tools/research/etf_regime_reversal_diagnostics.py \
+            --input-dir /tmp/etf-history/prices \
+            --json-out /tmp/etf-history/results/etf_regime_reversal.json \
+            --markdown-out /tmp/etf-history/results/etf_regime_reversal.md
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: short-term-reversal-etf-history
+          path: /tmp/etf-history/
+          if-no-files-found: error
+          retention-days: 30
