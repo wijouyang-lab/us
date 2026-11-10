@@ -57,6 +57,7 @@ def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
     excluded_score = int(s["event_score"].isna().sum())
     eligible = s[(s["coverage_status"] == "available") & s["event_score"].notna()]
     date_rows = []
+    prev_long, prev_short = set(), set()
     for decision, day in eligible.groupby("decision_at", sort=True):
         candidates = []
         for row in day.itertuples(index=False):
@@ -77,14 +78,21 @@ def evaluate(signals_path: str, prices_path: str, *, horizon: int = 20,
             continue
         shorts, longs = cross[:n], cross[-n:]
         gross = float(np.mean([x[2] for x in longs]) - np.mean([x[2] for x in shorts]))
+        curr_long = {x[0] for x in longs}
+        curr_short = {x[0] for x in shorts}
+        cu_long = 1.0 if not prev_long else 2.0 * len(curr_long - prev_long) / max(len(curr_long), 1)
+        cu_short = 1.0 if not prev_short else 2.0 * len(curr_short - prev_short) / max(len(curr_short), 1)
+        cost = cost_bps_per_side / 10000 * (cu_long + cu_short)
         date_rows.append({
             "decision_at": decision.isoformat(), "eligible_names": len(cross),
             "long_names": n, "short_names": n,
             "long_short_gross_return": gross,
-            "long_short_net_return": gross - 4 * cost_bps_per_side / 10000,
-            "long_tickers": sorted(x[0] for x in longs),
-            "short_tickers": sorted(x[0] for x in shorts),
+            "long_short_net_return": gross - cost,
+            "long_tickers": sorted(curr_long),
+            "short_tickers": sorted(curr_short),
+            "long_cost_units": cu_long, "short_cost_units": cu_short, "cost_rate": cost,
         })
+        prev_long, prev_short = curr_long, curr_short
     if not date_rows:
         return {"status": "insufficient_data",
                 "reason": "No decision dates had enough covered scores and complete forward prices.",
