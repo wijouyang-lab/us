@@ -333,13 +333,13 @@ pytest tests/test_invest_terminal.py
        tests/test_pr512_remediation.py
 ```
 
-Result: **53 passed in 6.70s**.
+Result: **55 passed in 6.10s**.
 
 Full CI on the pushed fix branch:
 
 ```text
-1517 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42817009388
+1519 passed, 1 skipped
+https://github.com/wijouyang-lab/us/actions/runs/42831358262
 ```
 
 `git diff --check`: clean. `git status`: only intended changes plus the new
@@ -352,7 +352,9 @@ manifest/test; no production scanner/ledger changes.
 1. P9.1 raw price and historical membership inputs are not in the branch.
 2. P9.1 cannot be regenerated from the PR alone; `P9_DATA_REPRODUCIBILITY` is
    BLOCKED.
-3. Direct `terminal.html` can still be publicly reachable under GitHub Pages.
+3. Pages exposure is statically isolated (`_local_terminal/`, no `.nojekyll`),
+   but the actual Jekyll build is BLOCKED because the runtime lacks a complete
+   Jekyll toolchain.
 4. Provenance manifest has UNKNOWN acquisition/source/license fields for many
    files.
 
