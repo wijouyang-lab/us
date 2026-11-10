@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-11-09T04:31:39.104938+00:00",
+  "method": "E_EVENT_TIME_PIT_RULE",
+  "as_of": "2024-12-31",
+  "pit_rule": {
+    "threshold_abs_daily_return": 5.0,
+    "detected_at": "event date, after close",
+    "source_available_at": "price panel event date",
+    "classification_updated_at": "not used for historical decisions"
+  },
+  "results": {
+    "MOMENTUM_20": {
+      "valid_months": 294,
+      "invalid_months": 4,
+      "cagr": 0.07737848348114529,
+      "sharpe": 0.4000230188892028,
+      "max_drawdown": -0.6453399569529528,
+      "oos_months": 118,
+      "oos_cagr": 0.05539503193420714,
+      "oos_sharpe": 0.388391801262092,
+      "hac_active_t": -2.4786066557401645,
+      "p_value": 0.013189667087544876,
+      "nav_complete": false
+    },
+    "MOMENTUM_60": {
+      "valid_months": 292,
+      "invalid_months": 6,
+      "cagr": 0.06561798217439252,
+      "sharpe": 0.4079813186607223,
+      "max_drawdown": -0.598919174510876,
+      "oos_months": 118,
+      "oos_cagr": 0.07673847136689149,
+      "oos_sharpe": 0.4815870694655422,
+      "hac_active_t": -3.2274958979128447,
+      "p_value": 0.0012487883156722113,
+      "nav_complete": false
+    },
+    "MOMENTUM_120": {
+      "valid_months": 291,
+      "invalid_months": 7,
+      "cagr": 0.12591228355925987,
+      "sharpe": 0.6350546427136988,
+      "max_drawdown": -0.6377695261896483,
+      "oos_months": 118,
+      "oos_cagr": 0.10912359063724542,
+      "oos_sharpe": 0.6209659983356554,
+      "hac_active_t": -2.163068519250233,
+      "p_value": 0.0305359099618705,
+      "nav_complete": false
+    },
+    "TREND_MA200": {
+      "valid_months": 287,
+      "invalid_months": 11,
+      "cagr": 0.11856469869928432,
+      "sharpe": 0.6242529210245095,
+      "max_drawdown": -0.5975033701114704,
+      "oos_months": 118,
+      "oos_cagr": 0.08026628997392948,
+      "oos_sharpe": 0.504532211893462,
+      "hac_active_t": -2.1861436855972944,
+      "p_value": 0.02880509476082116,
+      "nav_complete": false
+    },
+    "LOW_VOL_60": {
+      "valid_months": 296,
+      "invalid_months": 2,
+      "cagr": 0.11980661011285254,
+      "sharpe": 0.9605686970116585,
+      "max_drawdown": -0.34656991063973397,
+      "oos_months": 118,
+      "oos_cagr": 0.11447095298850352,
+      "oos_sharpe": 0.9198706252796145,
+      "hac_active_t": -2.259473612135049,
+      "p_value": 0.023853939940894353,
+      "nav_complete": false
+    },
+    "REVERSAL_5": {
+      "valid_months": 286,
+      "invalid_months": 12,
+      "cagr": 0.16577836986164307,
+      "sharpe": 0.588395743596073,
+      "max_drawdown": -0.6862731473800697,
+      "oos_months": 118,
+      "oos_cagr": 0.08857005189389056,
+      "oos_sharpe": 0.4507060115206631,
+      "hac_active_t": -0.23784204285507118,
+      "p_value": 0.8120036086792863,
+      "nav_complete": false
+    }
+  },
+  "invalid_months": 4,
+  "nav_complete": false,
+  "status": "EVENT_TIME_COMPLETE_NAV_INCOMPLETE",
+  "note": "Today's VERIFIED_* classifications are post-hoc and are not used as historical filters. Invalid months remain on the calendar and are reported; metrics are valid-subset only, not full NAV."
+}

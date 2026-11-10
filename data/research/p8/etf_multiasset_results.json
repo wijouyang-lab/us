@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-11-08T14:18:27.232630+00:00",
+  "source": "yfinance auto_adjust=True",
+  "tickers": [
+    "SPY",
+    "QQQ",
+    "IWM",
+    "TLT",
+    "GLD",
+    "BIL"
+  ],
+  "period": [
+    "2007-01-01",
+    "2024-12-31"
+  ],
+  "cost_bps_per_side": 10.0,
+  "strategies": {
+    "TREND_RISK": {
+      "months": 202,
+      "cagr": 0.06628535856813,
+      "vol": 0.11522993919772402,
+      "sharpe": 0.615290864102389,
+      "max_drawdown": -0.22958445652189086,
+      "oos_months": 119,
+      "oos_cagr": 0.04573754550376541,
+      "oos_sharpe": 0.47282513289095907,
+      "start": "2008-02-29",
+      "end": "2024-11-30"
+    },
+    "RISK_PARITY": {
+      "months": 202,
+      "cagr": 0.07133429687218307,
+      "vol": 0.11459801276230525,
+      "sharpe": 0.6597974315610601,
+      "max_drawdown": -0.2385624094041231,
+      "oos_months": 119,
+      "oos_cagr": 0.04035189410870399,
+      "oos_sharpe": 0.41650029281428036,
+      "start": "2008-02-29",
+      "end": "2024-11-30"
+    }
+  },
+  "benchmarks": {
+    "SPY": {
+      "months": 215,
+      "cagr": 0.10235669996072838,
+      "sharpe": 0.7035926741554527,
+      "max_drawdown": -0.5078480479156542,
+      "oos_cagr": 0.12997845728396862,
+      "oos_sharpe": 0.8774525012121815
+    },
+    "QQQ": {
+      "months": 215,
+      "cagr": 0.15607209739709993,
+      "sharpe": 0.8741535910817189,
+      "max_drawdown": -0.49739803387059545,
+      "oos_cagr": 0.18259937047830999,
+      "oos_sharpe": 1.0026171684722596
+    },
+    "IWM": {
+      "months": 215,
+      "cagr": 0.07337053343806188,
+      "sharpe": 0.44681408387806126,
+      "max_drawdown": -0.5247284152135645,
+      "oos_cagr": 0.07751535243555607,
+      "oos_sharpe": 0.4647100888964172
+    }
+  },
+  "status": "ETF_MULTIASSET_PRELIMINARY",
+  "note": "Adjusted-close total-return proxy; no options, no leverage."
+}

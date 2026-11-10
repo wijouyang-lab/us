@@ -1,0 +1,90 @@
+name: Fundamental Selection V1
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - "tools/investment_research/selection/**"
+      - "tests/test_selection_engine.py"
+      - "tests/test_tradability_p615.py"
+      - "tests/test_selection_p616.py"
+      - "tests/test_selection_p617.py"
+      - "tests/test_p7_strategy.py"
+      - "tests/test_p7_1_shadow.py"
+      - "tests/test_p8_research.py"
+      - "tests/test_p8_2_data_quality.py"
+      - "tests/test_p8_2_1_event_time.py"
+      - "tests/test_p8_2_2_audit.py"
+      - "tests/test_p8_3_alpha.py"
+      - "tests/test_p8_4_market_neutral.py"
+      - "tests/test_p9_1_support_resistance.py"
+      - "data/universe/selection_inputs/**"
+      - "data/universe/selection/**"
+      - "terminal.html"
+      - "terminal/terminal.js"
+      - "tools/invest_terminal/build_snapshot.py"
+      - ".github/workflows/research-fundamental-selection.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selection:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pandas numpy pytest
+      - name: Build Value, Quality and GARP rankings
+        run: python -m tools.investment_research.selection.build_rankings
+      - name: Build sensitivity report
+        run: python -m tools.investment_research.selection.sensitivity
+      - name: Build tradability screen
+        run: python -m tools.investment_research.selection.tradability
+      - name: Audit valuation and fundamentals freshness
+        run: |
+          python -m tools.investment_research.selection.audit_valuation
+          python -m tools.investment_research.selection.freshness
+          python -m tools.investment_research.selection.audit_special_models
+          python -m tools.investment_research.selection.build_quality_report
+          python -m tools.investment_research.selection.recalculate_valuation_p617
+          python -m tools.investment_research.selection.build_p617_reports
+      - name: Build P7 scores and portfolios
+        run: |
+          python -m tools.investment_research.p7.refresh_scores_p71
+          python -m tools.investment_research.p7.build_strategy_scores
+          python -m tools.investment_research.p7.build_portfolios
+          python -m tools.investment_research.p7.shadow_portfolio
+          python -m tools.investment_research.p7.benchmark
+      - name: Rebuild terminal snapshot with selection and P7
+        run: python -m tools.invest_terminal.build_snapshot
+      - name: Run selection and integration tests
+        run: python -m pytest -q tests/test_selection_engine.py tests/test_tradability_p615.py tests/test_selection_p616.py tests/test_selection_p617.py tests/test_p7_strategy.py tests/test_p7_1_shadow.py tests/test_p8_research.py tests/test_p8_2_data_quality.py tests/test_p8_2_1_event_time.py tests/test_p8_2_2_audit.py tests/test_p8_3_alpha.py tests/test_p8_4_market_neutral.py tests/test_p9_1_support_resistance.py tests/test_invest_terminal.py
+      - name: Verify research-only status and no forward GARP fields
+        run: |
+          python - <<'PY'
+          import csv, json
+          d = json.load(open("data/universe/selection/selection_snapshot.json"))
+          assert d["status"] == "CURRENT_CROSS_SECTIONAL_RESEARCH"
+          assert d["pit_status"] == "PIT_BACKTEST_BLOCKED"
+          assert d["value"]["candidate_issuers"] == 2529
+          assert d["quality"]["scored_issuers"] == 2313
+          header = set(next(csv.reader(open("data/universe/selection/garp_rankings.csv"))))
+          assert "forward_eps" not in header and "peg" not in header
+          print("selection checks passed")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: fundamental-selection-v1
+          path: |
+            data/universe/selection/
+            dashboard/data/invest_terminal_data.json
+          retention-days: 30
+          if-no-files-found: error

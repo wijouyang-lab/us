@@ -1,0 +1,1509 @@
+{
+  "metadata": {
+    "generated_at": "2026-11-05T10:53:40.326480+00:00",
+    "snapshot_date": "2026-11-05",
+    "panel": "..\\fund_p63\\universe\\sec_fundamentals_panel_p63.csv.gz",
+    "research_label": "RESEARCH_ONLY_NOT_PRODUCTION_APPROVED_NOT_BACKTEST_VALIDATED",
+    "pit_rule": "P6.3 filed -> next weekday; no holiday/acceptanceDateTime adjustment"
+  },
+  "candidate_securities": 3342,
+  "candidate_unique_ciks": 3307,
+  "issuers_with_four_metrics": 2405,
+  "scored_securities": 2335,
+  "scored_issuers": 2313,
+  "status_counts": {
+    "QUALITY_V1_SCORED": 2335,
+    "QUALITY_V1_BLOCKED": 1854,
+    "QUALITY_V1_SPECIAL_MODEL_REQUIRED": 1221,
+    "INSUFFICIENT_PEER_GROUP": 92
+  },
+  "by_accounting": {
+    "US_GAAP": {
+      "records": 4774,
+      "scored": 2288
+    },
+    "IFRS": {
+      "records": 455,
+      "scored": 47
+    },
+    "MIXED": {
+      "records": 96,
+      "scored": 0
+    },
+    "NONE": {
+      "records": 177,
+      "scored": 0
+    }
+  },
+  "by_family": {
+    "BANKS": {
+      "records": 329,
+      "scored": 0
+    },
+    "COMMUNICATIONS": {
+      "records": 154,
+      "scored": 79
+    },
+    "CONSUMER_DISCRETIONARY": {
+      "records": 358,
+      "scored": 218
+    },
+    "CONSUMER_STAPLES": {
+      "records": 164,
+      "scored": 91
+    },
+    "ENERGY": {
+      "records": 130,
+      "scored": 0
+    },
+    "HEALTHCARE": {
+      "records": 963,
+      "scored": 539
+    },
+    "INDUSTRIALS": {
+      "records": 585,
+      "scored": 333
+    },
+    "INSURANCE": {
+      "records": 104,
+      "scored": 0
+    },
+    "MATERIALS": {
+      "records": 329,
+      "scored": 175
+    },
+    "OTHER_FINANCIALS": {
+      "records": 367,
+      "scored": 0
+    },
+    "OTHER_SERVICES": {
+      "records": 806,
+      "scored": 348
+    },
+    "REIT": {
+      "records": 164,
+      "scored": 0
+    },
+    "TECHNOLOGY": {
+      "records": 823,
+      "scored": 552
+    },
+    "UNCLASSIFIED": {
+      "records": 99,
+      "scored": 0
+    },
+    "UTILITIES": {
+      "records": 127,
+      "scored": 0
+    }
+  },
+  "group_status": {
+    "HEALTHCARE|US_GAAP": {
+      "issuers": 539,
+      "scored": 539,
+      "status": "SCORED"
+    },
+    "OTHER_SERVICES|US_GAAP": {
+      "issuers": 345,
+      "scored": 345,
+      "status": "SCORED"
+    },
+    "TECHNOLOGY|US_GAAP": {
+      "issuers": 549,
+      "scored": 549,
+      "status": "SCORED"
+    },
+    "INDUSTRIALS|US_GAAP": {
+      "issuers": 330,
+      "scored": 330,
+      "status": "SCORED"
+    },
+    "MATERIALS|US_GAAP": {
+      "issuers": 127,
+      "scored": 127,
+      "status": "SCORED"
+    },
+    "MATERIALS|IFRS": {
+      "issuers": 47,
+      "scored": 47,
+      "status": "SCORED"
+    },
+    "CONSUMER_DISCRETIONARY|US_GAAP": {
+      "issuers": 215,
+      "scored": 215,
+      "status": "SCORED"
+    },
+    "CONSUMER_STAPLES|US_GAAP": {
+      "issuers": 88,
+      "scored": 88,
+      "status": "SCORED"
+    },
+    "COMMUNICATIONS|US_GAAP": {
+      "issuers": 73,
+      "scored": 73,
+      "status": "SCORED"
+    },
+    "HEALTHCARE|IFRS": {
+      "issuers": 19,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    },
+    "OTHER_SERVICES|IFRS": {
+      "issuers": 17,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    },
+    "CONSUMER_DISCRETIONARY|IFRS": {
+      "issuers": 4,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    },
+    "TECHNOLOGY|IFRS": {
+      "issuers": 22,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    },
+    "INDUSTRIALS|IFRS": {
+      "issuers": 21,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    },
+    "CONSUMER_STAPLES|IFRS": {
+      "issuers": 4,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    },
+    "COMMUNICATIONS|IFRS": {
+      "issuers": 5,
+      "scored": 0,
+      "status": "INSUFFICIENT_PEER_GROUP"
+    }
+  },
+  "top10_by_group": {
+    "HEALTHCARE|US_GAAP": {
+      "group": {
+        "issuers": 539,
+        "scored": 539,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "INMD",
+          "cik": "0001742692",
+          "score": 94.81
+        },
+        {
+          "ticker": "BDTX",
+          "cik": "0001701541",
+          "score": 93.36
+        },
+        {
+          "ticker": "IRMD",
+          "cik": "0001325618",
+          "score": 92.72
+        },
+        {
+          "ticker": "KROS",
+          "cik": "0001664710",
+          "score": 92.47
+        },
+        {
+          "ticker": "RIGL",
+          "cik": "0001034842",
+          "score": 92.12
+        },
+        {
+          "ticker": "UTHR",
+          "cik": "0001082554",
+          "score": 91.9
+        },
+        {
+          "ticker": "KRYS",
+          "cik": "0001711279",
+          "score": 91.86
+        },
+        {
+          "ticker": "EXEL",
+          "cik": "0000939767",
+          "score": 90.53
+        },
+        {
+          "ticker": "ELMD",
+          "cik": "0001488917",
+          "score": 89.79
+        },
+        {
+          "ticker": "ISRG",
+          "cik": "0001035267",
+          "score": 89.57
+        }
+      ]
+    },
+    "OTHER_SERVICES|US_GAAP": {
+      "group": {
+        "issuers": 345,
+        "scored": 345,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "TPL",
+          "cik": "0001811074",
+          "score": 96.51
+        },
+        {
+          "ticker": "INCY",
+          "cik": "0000879169",
+          "score": 90.39
+        },
+        {
+          "ticker": "IDCC",
+          "cik": "0001405495",
+          "score": 88.13
+        },
+        {
+          "ticker": "ACFN",
+          "cik": "0000880984",
+          "score": 87.8
+        },
+        {
+          "ticker": "YELP",
+          "cik": "0001345016",
+          "score": 87.78
+        },
+        {
+          "ticker": "PXED",
+          "cik": "0001600222",
+          "score": 86.96
+        },
+        {
+          "ticker": "PDD",
+          "cik": "0001737806",
+          "score": 86.61
+        },
+        {
+          "ticker": "AOS",
+          "cik": "0000091142",
+          "score": 85.84
+        },
+        {
+          "ticker": "TREX",
+          "cik": "0001069878",
+          "score": 85.65
+        },
+        {
+          "ticker": "NFLX",
+          "cik": "0001065280",
+          "score": 85.17
+        }
+      ]
+    },
+    "TECHNOLOGY|US_GAAP": {
+      "group": {
+        "issuers": 549,
+        "scored": 549,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "CRDO",
+          "cik": "0001807794",
+          "score": 94.22
+        },
+        {
+          "ticker": "NVDA",
+          "cik": "0001045810",
+          "score": 94.0
+        },
+        {
+          "ticker": "NVEC",
+          "cik": "0000724910",
+          "score": 93.13
+        },
+        {
+          "ticker": "MU",
+          "cik": "0000723125",
+          "score": 92.06
+        },
+        {
+          "ticker": "SNDK",
+          "cik": "0002023554",
+          "score": 91.94
+        },
+        {
+          "ticker": "EVER",
+          "cik": "0001640428",
+          "score": 91.18
+        },
+        {
+          "ticker": "MSGM",
+          "cik": "0001821175",
+          "score": 90.81
+        },
+        {
+          "ticker": "UI",
+          "cik": "0001511737",
+          "score": 90.66
+        },
+        {
+          "ticker": "PLTR",
+          "cik": "0001321655",
+          "score": 90.59
+        },
+        {
+          "ticker": "RDDT",
+          "cik": "0001713445",
+          "score": 90.31
+        }
+      ]
+    },
+    "INDUSTRIALS|US_GAAP": {
+      "group": {
+        "issuers": 330,
+        "scored": 330,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "ESEA",
+          "cik": "0001341170",
+          "score": 90.3
+        },
+        {
+          "ticker": "NVR",
+          "cik": "0000906163",
+          "score": 89.58
+        },
+        {
+          "ticker": "LRCX",
+          "cik": "0000707549",
+          "score": 88.88
+        },
+        {
+          "ticker": "XPEL",
+          "cik": "0001767258",
+          "score": 88.62
+        },
+        {
+          "ticker": "GNTX",
+          "cik": "0000355811",
+          "score": 88.06
+        },
+        {
+          "ticker": "IESC",
+          "cik": "0001048268",
+          "score": 87.91
+        },
+        {
+          "ticker": "GSL",
+          "cik": "0001430725",
+          "score": 87.83
+        },
+        {
+          "ticker": "OFLX",
+          "cik": "0001317945",
+          "score": 87.48
+        },
+        {
+          "ticker": "EHLD",
+          "cik": "0002032779",
+          "score": 86.22
+        },
+        {
+          "ticker": "CRCT",
+          "cik": "0001828962",
+          "score": 84.36
+        }
+      ]
+    },
+    "MATERIALS|US_GAAP": {
+      "group": {
+        "issuers": 127,
+        "scored": 127,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "USLM",
+          "cik": "0000082020",
+          "score": 95.63
+        },
+        {
+          "ticker": "IDR",
+          "cik": "0001030192",
+          "score": 95.12
+        },
+        {
+          "ticker": "MLI",
+          "cik": "0000089439",
+          "score": 94.07
+        },
+        {
+          "ticker": "UG",
+          "cik": "0000101295",
+          "score": 89.13
+        },
+        {
+          "ticker": "WDFC",
+          "cik": "0000105132",
+          "score": 88.43
+        },
+        {
+          "ticker": "CRS",
+          "cik": "0000017843",
+          "score": 86.34
+        },
+        {
+          "ticker": "IPAR",
+          "cik": "0000822663",
+          "score": 85.67
+        },
+        {
+          "ticker": "HWM",
+          "cik": "0000004281",
+          "score": 85.04
+        },
+        {
+          "ticker": "HL",
+          "cik": "0000719413",
+          "score": 84.65
+        },
+        {
+          "ticker": "NEU",
+          "cik": "0001282637",
+          "score": 83.54
+        }
+      ]
+    },
+    "MATERIALS|IFRS": {
+      "group": {
+        "issuers": 47,
+        "scored": 47,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "KGC",
+          "cik": "0000701818",
+          "score": 90.43
+        },
+        {
+          "ticker": "AU",
+          "cik": "0001973832",
+          "score": 89.57
+        },
+        {
+          "ticker": "WPM",
+          "cik": "0001323404",
+          "score": 87.34
+        },
+        {
+          "ticker": "AEM",
+          "cik": "0000002809",
+          "score": 81.06
+        },
+        {
+          "ticker": "ERO",
+          "cik": "0001853860",
+          "score": 80.96
+        },
+        {
+          "ticker": "IAG",
+          "cik": "0001203464",
+          "score": 79.57
+        },
+        {
+          "ticker": "OR",
+          "cik": "0001627272",
+          "score": 78.19
+        },
+        {
+          "ticker": "B",
+          "cik": "0000756894",
+          "score": 76.7
+        },
+        {
+          "ticker": "AGI",
+          "cik": "0001178819",
+          "score": 76.6
+        },
+        {
+          "ticker": "GFI",
+          "cik": "0001172724",
+          "score": 75.96
+        }
+      ]
+    },
+    "CONSUMER_DISCRETIONARY|US_GAAP": {
+      "group": {
+        "issuers": 215,
+        "scored": 215,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "LULU",
+          "cik": "0001397187",
+          "score": 90.35
+        },
+        {
+          "ticker": "MCRI",
+          "cik": "0000907242",
+          "score": 90.07
+        },
+        {
+          "ticker": "BKE",
+          "cik": "0000885245",
+          "score": 89.07
+        },
+        {
+          "ticker": "JL",
+          "cik": "0001948436",
+          "score": 88.23
+        },
+        {
+          "ticker": "ODC",
+          "cik": "0000074046",
+          "score": 88.0
+        },
+        {
+          "ticker": "HERE",
+          "cik": "0001932770",
+          "score": 87.79
+        },
+        {
+          "ticker": "GRDN",
+          "cik": "0001802255",
+          "score": 87.65
+        },
+        {
+          "ticker": "WSM",
+          "cik": "0000719955",
+          "score": 87.63
+        },
+        {
+          "ticker": "CPRT",
+          "cik": "0000900075",
+          "score": 87.44
+        },
+        {
+          "ticker": "ATAT",
+          "cik": "0001853717",
+          "score": 87.19
+        }
+      ]
+    },
+    "CONSUMER_STAPLES|US_GAAP": {
+      "group": {
+        "issuers": 88,
+        "scored": 88,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "BUDA",
+          "cik": "0002079720",
+          "score": 96.48
+        },
+        {
+          "ticker": "FIZZ",
+          "cik": "0000069891",
+          "score": 94.15
+        },
+        {
+          "ticker": "RAVE",
+          "cik": "0000718332",
+          "score": 92.73
+        },
+        {
+          "ticker": "COCO",
+          "cik": "0001482981",
+          "score": 88.75
+        },
+        {
+          "ticker": "LWAY",
+          "cik": "0000814586",
+          "score": 86.31
+        },
+        {
+          "ticker": "CALM",
+          "cik": "0000016160",
+          "score": 84.2
+        },
+        {
+          "ticker": "JBSS",
+          "cik": "0000880117",
+          "score": 82.56
+        },
+        {
+          "ticker": "VITL",
+          "cik": "0001579733",
+          "score": 81.76
+        },
+        {
+          "ticker": "PPC",
+          "cik": "0000802481",
+          "score": 79.89
+        },
+        {
+          "ticker": "INGR",
+          "cik": "0001046257",
+          "score": 79.83
+        }
+      ]
+    },
+    "COMMUNICATIONS|US_GAAP": {
+      "group": {
+        "issuers": 73,
+        "scored": 73,
+        "status": "SCORED"
+      },
+      "top10": [
+        {
+          "ticker": "OSW",
+          "cik": "0001758488",
+          "score": 85.89
+        },
+        {
+          "ticker": "IDT",
+          "cik": "0001005731",
+          "score": 85.27
+        },
+        {
+          "ticker": "ADEA",
+          "cik": "0001803696",
+          "score": 84.59
+        },
+        {
+          "ticker": "CXDO",
+          "cik": "0001075736",
+          "score": 83.9
+        },
+        {
+          "ticker": "SPOK",
+          "cik": "0001289945",
+          "score": 83.7
+        },
+        {
+          "ticker": "RSI",
+          "cik": "0001793659",
+          "score": 82.19
+        },
+        {
+          "ticker": "AHMA",
+          "cik": "0002010959",
+          "score": 78.56
+        },
+        {
+          "ticker": "CALX",
+          "cik": "0001406666",
+          "score": 78.42
+        },
+        {
+          "ticker": "FABC",
+          "cik": "0001086745",
+          "score": 74.86
+        },
+        {
+          "ticker": "LTH",
+          "cik": "0001869198",
+          "score": 74.59
+        }
+      ]
+    },
+    "HEALTHCARE|IFRS": {
+      "group": {
+        "issuers": 19,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    },
+    "OTHER_SERVICES|IFRS": {
+      "group": {
+        "issuers": 17,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    },
+    "CONSUMER_DISCRETIONARY|IFRS": {
+      "group": {
+        "issuers": 4,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    },
+    "TECHNOLOGY|IFRS": {
+      "group": {
+        "issuers": 22,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    },
+    "INDUSTRIALS|IFRS": {
+      "group": {
+        "issuers": 21,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    },
+    "CONSUMER_STAPLES|IFRS": {
+      "group": {
+        "issuers": 4,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    },
+    "COMMUNICATIONS|IFRS": {
+      "group": {
+        "issuers": 5,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "top10": []
+    }
+  },
+  "metric_coverage": [
+    {
+      "metric": "roe",
+      "candidate_securities": 3342,
+      "candidate_issuers": 3307,
+      "valid_issuers": 2831,
+      "missing_issuers": 476,
+      "valid_rate": 0.856063
+    },
+    {
+      "metric": "roa",
+      "candidate_securities": 3342,
+      "candidate_issuers": 3307,
+      "valid_issuers": 3131,
+      "missing_issuers": 176,
+      "valid_rate": 0.94678
+    },
+    {
+      "metric": "cfo_to_avg_assets",
+      "candidate_securities": 3342,
+      "candidate_issuers": 3307,
+      "valid_issuers": 3055,
+      "missing_issuers": 252,
+      "valid_rate": 0.923798
+    },
+    {
+      "metric": "liabilities_to_assets",
+      "candidate_securities": 3342,
+      "candidate_issuers": 3307,
+      "valid_issuers": 2763,
+      "missing_issuers": 544,
+      "valid_rate": 0.8355
+    },
+    {
+      "metric": "operating_margin",
+      "candidate_securities": 3342,
+      "candidate_issuers": 3307,
+      "valid_issuers": 2629,
+      "missing_issuers": 678,
+      "valid_rate": 0.79498
+    }
+  ],
+  "restatement_versions_observed": 208800,
+  "blockers": [
+    [
+      "P6_5_SPECIAL_MODEL",
+      1221
+    ],
+    [
+      "NOT_P6_5_STANDARD_INPUT_READY",
+      939
+    ],
+    [
+      "FINANCIAL_METRICS_OR_PIT_INCOMPLETE",
+      915
+    ],
+    [
+      "INSUFFICIENT_PEER_GROUP",
+      92
+    ]
+  ],
+  "score_ready": false,
+  "backtest_ready": false,
+  "notes": [
+    "V1 formula is a research hypothesis, not validated alpha.",
+    "Four primary metrics must all be present; no weight reallocation.",
+    "Peer groups are model_family x accounting_standard; <30 issuers gets no percentile."
+  ],
+  "verification": {
+    "verified_at": "2026-11-05T10:54:34.382508+00:00",
+    "checks": {
+      "candidate_securities_3342": true,
+      "scored_securities_2335": true,
+      "all_scored_have_score": true,
+      "all_scored_have_rank": true,
+      "special_not_scored": true
+    },
+    "candidate_securities": 3342,
+    "scored_securities": 2335,
+    "status_counts": {
+      "QUALITY_V1_SCORED": 2335,
+      "QUALITY_V1_BLOCKED": 1854,
+      "QUALITY_V1_SPECIAL_MODEL_REQUIRED": 1221,
+      "INSUFFICIENT_PEER_GROUP": 92
+    },
+    "by_accounting": {
+      "IFRS": {
+        "records": 455,
+        "scored": 47
+      },
+      "MIXED": {
+        "records": 96,
+        "scored": 0
+      },
+      "NONE": {
+        "records": 177,
+        "scored": 0
+      },
+      "US_GAAP": {
+        "records": 4774,
+        "scored": 2288
+      }
+    },
+    "by_family": {
+      "BANKS": {
+        "records": 329,
+        "scored": 0
+      },
+      "COMMUNICATIONS": {
+        "records": 154,
+        "scored": 79
+      },
+      "CONSUMER_DISCRETIONARY": {
+        "records": 358,
+        "scored": 218
+      },
+      "CONSUMER_STAPLES": {
+        "records": 164,
+        "scored": 91
+      },
+      "ENERGY": {
+        "records": 130,
+        "scored": 0
+      },
+      "HEALTHCARE": {
+        "records": 963,
+        "scored": 539
+      },
+      "INDUSTRIALS": {
+        "records": 585,
+        "scored": 333
+      },
+      "INSURANCE": {
+        "records": 104,
+        "scored": 0
+      },
+      "MATERIALS": {
+        "records": 329,
+        "scored": 175
+      },
+      "OTHER_FINANCIALS": {
+        "records": 367,
+        "scored": 0
+      },
+      "OTHER_SERVICES": {
+        "records": 806,
+        "scored": 348
+      },
+      "REIT": {
+        "records": 164,
+        "scored": 0
+      },
+      "TECHNOLOGY": {
+        "records": 823,
+        "scored": 552
+      },
+      "UNCLASSIFIED": {
+        "records": 99,
+        "scored": 0
+      },
+      "UTILITIES": {
+        "records": 127,
+        "scored": 0
+      }
+    },
+    "group_verification": {
+      "COMMUNICATIONS|IFRS": {
+        "records": 20,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "COMMUNICATIONS|US_GAAP": {
+        "records": 118,
+        "scored": 79,
+        "status": "SCORED"
+      },
+      "CONSUMER_DISCRETIONARY|IFRS": {
+        "records": 17,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "CONSUMER_DISCRETIONARY|US_GAAP": {
+        "records": 322,
+        "scored": 218,
+        "status": "SCORED"
+      },
+      "CONSUMER_STAPLES|IFRS": {
+        "records": 16,
+        "scored": 0,
+        "status": "INSUFFICIENT_PEER_GROUP"
+      },
+      "CONSUMER_STAPLES|US_GAAP": {
+        "records": 133,
+        "scored": 91,
+        "status": "SCORED"
+      },
+      "HEALTHCARE|IFRS": {
+        "records": 62,
+        "scored": 0,
+        "status": "NO_COMPLETE"
+      },
+      "HEALTHCARE|US_GAAP": {
+        "records": 654,
+        "scored": 539,
+        "status": "SCORED"
+      },
+      "INDUSTRIALS|IFRS": {
+        "records": 43,
+        "scored": 0,
+        "status": "NO_COMPLETE"
+      },
+      "INDUSTRIALS|US_GAAP": {
+        "records": 477,
+        "scored": 333,
+        "status": "SCORED"
+      },
+      "MATERIALS|IFRS": {
+        "records": 75,
+        "scored": 47,
+        "status": "SCORED"
+      },
+      "MATERIALS|US_GAAP": {
+        "records": 174,
+        "scored": 128,
+        "status": "SCORED"
+      },
+      "OTHER_SERVICES|IFRS": {
+        "records": 30,
+        "scored": 0,
+        "status": "NO_COMPLETE"
+      },
+      "OTHER_SERVICES|US_GAAP": {
+        "records": 451,
+        "scored": 348,
+        "status": "SCORED"
+      },
+      "TECHNOLOGY|IFRS": {
+        "records": 48,
+        "scored": 0,
+        "status": "NO_COMPLETE"
+      },
+      "TECHNOLOGY|US_GAAP": {
+        "records": 702,
+        "scored": 552,
+        "status": "SCORED"
+      }
+    },
+    "top10_by_group": {
+      "COMMUNICATIONS|IFRS": [],
+      "COMMUNICATIONS|US_GAAP": [
+        {
+          "ticker": "OSW",
+          "cik": "0001758488",
+          "score": 85.89
+        },
+        {
+          "ticker": "IDT",
+          "cik": "0001005731",
+          "score": 85.27
+        },
+        {
+          "ticker": "ADEA",
+          "cik": "0001803696",
+          "score": 84.59
+        },
+        {
+          "ticker": "CXDO",
+          "cik": "0001075736",
+          "score": 83.9
+        },
+        {
+          "ticker": "SPOK",
+          "cik": "0001289945",
+          "score": 83.7
+        },
+        {
+          "ticker": "RSI",
+          "cik": "0001793659",
+          "score": 82.19
+        },
+        {
+          "ticker": "AHMA",
+          "cik": "0002010959",
+          "score": 78.56
+        },
+        {
+          "ticker": "CALX",
+          "cik": "0001406666",
+          "score": 78.42
+        },
+        {
+          "ticker": "FABC",
+          "cik": "0001086745",
+          "score": 74.86
+        },
+        {
+          "ticker": "LTH",
+          "cik": "0001869198",
+          "score": 74.59
+        }
+      ],
+      "CONSUMER_DISCRETIONARY|IFRS": [],
+      "CONSUMER_DISCRETIONARY|US_GAAP": [
+        {
+          "ticker": "LULU",
+          "cik": "0001397187",
+          "score": 90.35
+        },
+        {
+          "ticker": "MCRI",
+          "cik": "0000907242",
+          "score": 90.07
+        },
+        {
+          "ticker": "BKE",
+          "cik": "0000885245",
+          "score": 89.07
+        },
+        {
+          "ticker": "JL",
+          "cik": "0001948436",
+          "score": 88.23
+        },
+        {
+          "ticker": "ODC",
+          "cik": "0000074046",
+          "score": 88.0
+        },
+        {
+          "ticker": "HERE",
+          "cik": "0001932770",
+          "score": 87.79
+        },
+        {
+          "ticker": "GRDN",
+          "cik": "0001802255",
+          "score": 87.65
+        },
+        {
+          "ticker": "WSM",
+          "cik": "0000719955",
+          "score": 87.63
+        },
+        {
+          "ticker": "CPRT",
+          "cik": "0000900075",
+          "score": 87.44
+        },
+        {
+          "ticker": "ATAT",
+          "cik": "0001853717",
+          "score": 87.19
+        }
+      ],
+      "CONSUMER_STAPLES|IFRS": [],
+      "CONSUMER_STAPLES|US_GAAP": [
+        {
+          "ticker": "BUDA",
+          "cik": "0002079720",
+          "score": 96.48
+        },
+        {
+          "ticker": "FIZZ",
+          "cik": "0000069891",
+          "score": 94.15
+        },
+        {
+          "ticker": "RAVE",
+          "cik": "0000718332",
+          "score": 92.73
+        },
+        {
+          "ticker": "COCO",
+          "cik": "0001482981",
+          "score": 88.75
+        },
+        {
+          "ticker": "LWAY",
+          "cik": "0000814586",
+          "score": 86.31
+        },
+        {
+          "ticker": "CALM",
+          "cik": "0000016160",
+          "score": 84.2
+        },
+        {
+          "ticker": "JBSS",
+          "cik": "0000880117",
+          "score": 82.56
+        },
+        {
+          "ticker": "VITL",
+          "cik": "0001579733",
+          "score": 81.76
+        },
+        {
+          "ticker": "PPC",
+          "cik": "0000802481",
+          "score": 79.89
+        },
+        {
+          "ticker": "INGR",
+          "cik": "0001046257",
+          "score": 79.83
+        }
+      ],
+      "HEALTHCARE|IFRS": [],
+      "HEALTHCARE|US_GAAP": [
+        {
+          "ticker": "INMD",
+          "cik": "0001742692",
+          "score": 94.81
+        },
+        {
+          "ticker": "BDTX",
+          "cik": "0001701541",
+          "score": 93.36
+        },
+        {
+          "ticker": "IRMD",
+          "cik": "0001325618",
+          "score": 92.72
+        },
+        {
+          "ticker": "KROS",
+          "cik": "0001664710",
+          "score": 92.47
+        },
+        {
+          "ticker": "RIGL",
+          "cik": "0001034842",
+          "score": 92.12
+        },
+        {
+          "ticker": "UTHR",
+          "cik": "0001082554",
+          "score": 91.9
+        },
+        {
+          "ticker": "KRYS",
+          "cik": "0001711279",
+          "score": 91.86
+        },
+        {
+          "ticker": "EXEL",
+          "cik": "0000939767",
+          "score": 90.53
+        },
+        {
+          "ticker": "ELMD",
+          "cik": "0001488917",
+          "score": 89.79
+        },
+        {
+          "ticker": "ISRG",
+          "cik": "0001035267",
+          "score": 89.57
+        }
+      ],
+      "INDUSTRIALS|IFRS": [],
+      "INDUSTRIALS|US_GAAP": [
+        {
+          "ticker": "ESEA",
+          "cik": "0001341170",
+          "score": 90.3
+        },
+        {
+          "ticker": "NVR",
+          "cik": "0000906163",
+          "score": 89.58
+        },
+        {
+          "ticker": "LRCX",
+          "cik": "0000707549",
+          "score": 88.88
+        },
+        {
+          "ticker": "XPEL",
+          "cik": "0001767258",
+          "score": 88.62
+        },
+        {
+          "ticker": "GNTX",
+          "cik": "0000355811",
+          "score": 88.06
+        },
+        {
+          "ticker": "IESC",
+          "cik": "0001048268",
+          "score": 87.91
+        },
+        {
+          "ticker": "GSL",
+          "cik": "0001430725",
+          "score": 87.83
+        },
+        {
+          "ticker": "OFLX",
+          "cik": "0001317945",
+          "score": 87.48
+        },
+        {
+          "ticker": "EHLD",
+          "cik": "0002032779",
+          "score": 86.22
+        },
+        {
+          "ticker": "CRCT",
+          "cik": "0001828962",
+          "score": 84.36
+        }
+      ],
+      "MATERIALS|IFRS": [
+        {
+          "ticker": "KGC",
+          "cik": "0000701818",
+          "score": 90.43
+        },
+        {
+          "ticker": "AU",
+          "cik": "0001973832",
+          "score": 89.57
+        },
+        {
+          "ticker": "WPM",
+          "cik": "0001323404",
+          "score": 87.34
+        },
+        {
+          "ticker": "AEM",
+          "cik": "0000002809",
+          "score": 81.06
+        },
+        {
+          "ticker": "ERO",
+          "cik": "0001853860",
+          "score": 80.96
+        },
+        {
+          "ticker": "IAG",
+          "cik": "0001203464",
+          "score": 79.57
+        },
+        {
+          "ticker": "OR",
+          "cik": "0001627272",
+          "score": 78.19
+        },
+        {
+          "ticker": "B",
+          "cik": "0000756894",
+          "score": 76.7
+        },
+        {
+          "ticker": "AGI",
+          "cik": "0001178819",
+          "score": 76.6
+        },
+        {
+          "ticker": "GFI",
+          "cik": "0001172724",
+          "score": 75.96
+        }
+      ],
+      "MATERIALS|US_GAAP": [
+        {
+          "ticker": "USLM",
+          "cik": "0000082020",
+          "score": 95.63
+        },
+        {
+          "ticker": "IDR",
+          "cik": "0001030192",
+          "score": 95.12
+        },
+        {
+          "ticker": "MLI",
+          "cik": "0000089439",
+          "score": 94.07
+        },
+        {
+          "ticker": "UG",
+          "cik": "0000101295",
+          "score": 89.13
+        },
+        {
+          "ticker": "WDFC",
+          "cik": "0000105132",
+          "score": 88.43
+        },
+        {
+          "ticker": "CRS",
+          "cik": "0000017843",
+          "score": 86.34
+        },
+        {
+          "ticker": "IPAR",
+          "cik": "0000822663",
+          "score": 85.67
+        },
+        {
+          "ticker": "HWM",
+          "cik": "0000004281",
+          "score": 85.04
+        },
+        {
+          "ticker": "HL",
+          "cik": "0000719413",
+          "score": 84.65
+        },
+        {
+          "ticker": "NEU",
+          "cik": "0001282637",
+          "score": 83.54
+        }
+      ],
+      "OTHER_SERVICES|IFRS": [],
+      "OTHER_SERVICES|US_GAAP": [
+        {
+          "ticker": "TPL",
+          "cik": "0001811074",
+          "score": 96.51
+        },
+        {
+          "ticker": "INCY",
+          "cik": "0000879169",
+          "score": 90.39
+        },
+        {
+          "ticker": "IDCC",
+          "cik": "0001405495",
+          "score": 88.13
+        },
+        {
+          "ticker": "ACFN",
+          "cik": "0000880984",
+          "score": 87.8
+        },
+        {
+          "ticker": "YELP",
+          "cik": "0001345016",
+          "score": 87.78
+        },
+        {
+          "ticker": "PXED",
+          "cik": "0001600222",
+          "score": 86.96
+        },
+        {
+          "ticker": "PDD",
+          "cik": "0001737806",
+          "score": 86.61
+        },
+        {
+          "ticker": "AOS",
+          "cik": "0000091142",
+          "score": 85.84
+        },
+        {
+          "ticker": "TREX",
+          "cik": "0001069878",
+          "score": 85.65
+        },
+        {
+          "ticker": "NFLX",
+          "cik": "0001065280",
+          "score": 85.17
+        }
+      ],
+      "TECHNOLOGY|IFRS": [],
+      "TECHNOLOGY|US_GAAP": [
+        {
+          "ticker": "CRDO",
+          "cik": "0001807794",
+          "score": 94.22
+        },
+        {
+          "ticker": "NVDA",
+          "cik": "0001045810",
+          "score": 94.0
+        },
+        {
+          "ticker": "NVEC",
+          "cik": "0000724910",
+          "score": 93.13
+        },
+        {
+          "ticker": "MU",
+          "cik": "0000723125",
+          "score": 92.06
+        },
+        {
+          "ticker": "SNDK",
+          "cik": "0002023554",
+          "score": 91.94
+        },
+        {
+          "ticker": "EVER",
+          "cik": "0001640428",
+          "score": 91.18
+        },
+        {
+          "ticker": "MSGM",
+          "cik": "0001821175",
+          "score": 90.81
+        },
+        {
+          "ticker": "UI",
+          "cik": "0001511737",
+          "score": 90.66
+        },
+        {
+          "ticker": "PLTR",
+          "cik": "0001321655",
+          "score": 90.59
+        },
+        {
+          "ticker": "RDDT",
+          "cik": "0001713445",
+          "score": 90.31
+        }
+      ]
+    },
+    "all_checks_pass": true,
+    "score_distribution": {
+      "count": 2335,
+      "min": 0.6969696969696966,
+      "max": 96.5072463768116,
+      "median": 51.3013698630137
+    },
+    "extreme_values": {
+      "roe_gt_2_or_lt_minus_1": 355,
+      "roa_gt_1": 9,
+      "leverage_gt_2": 2,
+      "negative_avg_equity": 0
+    }
+  }
+}

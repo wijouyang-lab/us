@@ -1,0 +1,81 @@
+{
+  "generated_at": "2026-11-08T15:08:51.454357+00:00",
+  "as_of": "2024-12-31",
+  "method": "D_EVENT_TIME",
+  "policy": "formation uses only anomalies known at formation; anomalies during holding are DATA_INVALID, never used to change holdings",
+  "results": {
+    "MOMENTUM_20": {
+      "months": 293,
+      "cagr": 0.06735634878245755,
+      "sharpe": 0.3653137886683705,
+      "max_drawdown": -0.6997991205588008,
+      "oos_months": 113,
+      "oos_cagr": 0.06460449761426057,
+      "oos_sharpe": 0.43325810399136044,
+      "hac_active_t": -2.0615577002345717,
+      "p_value": 0.03924986472905223
+    },
+    "MOMENTUM_60": {
+      "months": 292,
+      "cagr": 0.06354763955053966,
+      "sharpe": 0.39974869357540166,
+      "max_drawdown": -0.5809611131730827,
+      "oos_months": 112,
+      "oos_cagr": 0.08061618799570813,
+      "oos_sharpe": 0.49499415744607367,
+      "hac_active_t": -2.304537931104829,
+      "p_value": 0.021192465639053637
+    },
+    "MOMENTUM_120": {
+      "months": 289,
+      "cagr": 0.11568367585905404,
+      "sharpe": 0.5987541610059476,
+      "max_drawdown": -0.6318229956674151,
+      "oos_months": 109,
+      "oos_cagr": 0.11392444799864099,
+      "oos_sharpe": 0.6334047241654465,
+      "hac_active_t": -1.7284786994609707,
+      "p_value": 0.0839024366457175
+    },
+    "TREND_MA200": {
+      "months": 285,
+      "cagr": 0.10344968370387986,
+      "sharpe": 0.5815370889707873,
+      "max_drawdown": -0.580090397513191,
+      "oos_months": 105,
+      "oos_cagr": 0.08920499973621121,
+      "oos_sharpe": 0.5387943813166919,
+      "hac_active_t": -1.822034636150088,
+      "p_value": 0.06844973037189495
+    },
+    "LOW_VOL_60": {
+      "months": 288,
+      "cagr": 0.0875495115583651,
+      "sharpe": 0.8059153432170759,
+      "max_drawdown": -0.34656991063973364,
+      "oos_months": 108,
+      "oos_cagr": 0.11950361659819508,
+      "oos_sharpe": 0.9427543204704021,
+      "hac_active_t": -2.4527403659053695,
+      "p_value": 0.014177262549460723
+    },
+    "REVERSAL_5": {
+      "months": 274,
+      "cagr": 0.1355819794754518,
+      "sharpe": 0.5297635716766704,
+      "max_drawdown": -0.6849181144580059,
+      "oos_months": 94,
+      "oos_cagr": 0.10052097713644481,
+      "oos_sharpe": 0.479652544987155,
+      "hac_active_t": -0.6952785562486803,
+      "p_value": 0.4868807501435104
+    }
+  },
+  "invalid_months": 48,
+  "invalid_exposure": 0.05104166666666667,
+  "cost": {
+    "bps_per_side": 10.0,
+    "formula": "10bps * |hold XOR prev|/n; initial once"
+  },
+  "status": "EVENT_TIME_COMPLETE"
+}

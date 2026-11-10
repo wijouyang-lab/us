@@ -1,0 +1,6 @@
+metric,candidate_securities,candidate_unique_ciks,valid_securities,valid_unique_ciks,coverage_securities,coverage_ciks,ranked_unique_ciks
+PE,2529,2529,1314,1314,0.519573,0.519573,1224
+PB,2529,2529,2272,2272,0.898379,0.898379,2222
+PS,2529,2529,2266,2266,0.896006,0.896006,2215
+EarningsYield,2529,2529,2506,2506,0.990905,0.990905,2451
+FCFYield,2529,2529,2170,2170,0.858047,0.858047,2118

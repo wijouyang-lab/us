@@ -1,0 +1,45 @@
+{
+  "generated_at": "2026-11-06T08:16:13.901351+00:00",
+  "data_as_of": "2026-11-05",
+  "status": "EXPERIMENTAL_SENSITIVITY_ONLY",
+  "pit_status": "PIT_BACKTEST_BLOCKED",
+  "value": {
+    "global_top50_overlap": 36,
+    "global_raw_top50_overlap": 36,
+    "winsor_5_95_top50_overlap": 36,
+    "winsor_10_90_top50_overlap": 36,
+    "single_pb_top50_overlap": 29,
+    "single_ps_top50_overlap": 28,
+    "single_earnings_yield_top50_overlap": 21,
+    "single_fcf_yield_top50_overlap": 24,
+    "candidate_count": 2529,
+    "all_four_positive": 850,
+    "partial_count": 1679,
+    "global_method": "raw values -> winsor -> global percentile -> average"
+  },
+  "quality": {
+    "global_top50_overlap": 37,
+    "published_top50_overlap": 50,
+    "equal_top50_overlap": 43,
+    "roe_heavy_top50_overlap": 46,
+    "cfo_heavy_top50_overlap": 45,
+    "scored_count": 2313,
+    "weight_note": "Top-50 overlap is not a performance result; no backtest."
+  },
+  "garp": {
+    "min_3_pool_count": 3556,
+    "min_3_top50_overlap": 28,
+    "min_4_pool_count": 3101,
+    "min_4_top50_overlap": 50,
+    "min_5_pool_count": 2322,
+    "min_5_top50_overlap": 1,
+    "without_5y_top50_overlap": 28,
+    "history_ge_3y_top50_overlap": 50,
+    "history_ge_5y_top50_overlap": 47,
+    "history_ge_7y_top50_overlap": 38,
+    "global_top50_overlap": 25,
+    "ranked_count": 3101,
+    "all_candidate_count": 5160,
+    "note": "3/4/5 pools independently rebuilt from raw metrics; 5Y included in current score"
+  }
+}

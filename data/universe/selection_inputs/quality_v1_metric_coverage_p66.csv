@@ -1,0 +1,6 @@
+metric,candidate_securities,candidate_issuers,valid_issuers,missing_issuers,valid_rate
+roe,3342,3307,2831,476,0.856063
+roa,3342,3307,3131,176,0.94678
+cfo_to_avg_assets,3342,3307,3055,252,0.923798
+liabilities_to_assets,3342,3307,2763,544,0.8355
+operating_margin,3342,3307,2629,678,0.79498

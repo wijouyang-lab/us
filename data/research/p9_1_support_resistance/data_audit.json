@@ -1,0 +1,15 @@
+{
+  "source": "S&P effective-dated membership + finsaber OHLCV",
+  "member_days": 1095490,
+  "valid_verified_tradable": 981362,
+  "unknown": 109132,
+  "corrupt": 117,
+  "zero_stale": 4845,
+  "unresolved": 34,
+  "bil_start": "2007-05-30",
+  "portfolio_range": "2007-05-30..2024-12-31",
+  "event_range": "2000-01-03..2024-12-31",
+  "price_adjustment": "adjusted OHLC via adjusted_close/raw_close; dividends not included independently",
+  "lookahead": "pivot confirmed only after 5 right bars; entry next open",
+  "post_hoc_classification_used": false
+}

@@ -1,0 +1,200 @@
+{
+  "MOM_5": {
+    "window": 5,
+    "direction": 1,
+    "meaning": "short reversal / momentum",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "one-month momentum",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_60": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "quarterly momentum",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_120": {
+    "window": 120,
+    "direction": 1,
+    "meaning": "six-month momentum",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_ACCEL_20_120": {
+    "window": 120,
+    "direction": 1,
+    "meaning": "short-minus-long momentum acceleration",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_ACCEL_5_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "very short acceleration",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_VOL_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "momentum per unit total volatility",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_VOL_60": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "quarterly risk-adjusted momentum",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_UPSIDE_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "momentum divided by upside volatility",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_DOWNSIDE_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "momentum divided by downside volatility",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_PERSIST_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "sign persistence of daily returns",
+    "formula_source": "factor_research.py"
+  },
+  "MOM_HIT_60": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "fraction of positive days",
+    "formula_source": "factor_research.py"
+  },
+  "VOL_20": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "short realized volatility",
+    "formula_source": "factor_research.py"
+  },
+  "VOL_60": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "long realized volatility",
+    "formula_source": "factor_research.py"
+  },
+  "VOL_RATIO_5_60": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "short/long volatility ratio",
+    "formula_source": "factor_research.py"
+  },
+  "VOL_CHANGE_20": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "volatility change",
+    "formula_source": "factor_research.py"
+  },
+  "VOL_OF_VOL_20": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "volatility-of-volatility",
+    "formula_source": "factor_research.py"
+  },
+  "DOWNSIDE_VOL_20": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "downside semideviation",
+    "formula_source": "factor_research.py"
+  },
+  "UP_DOWN_RATIO_20": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "upside/downside volatility",
+    "formula_source": "factor_research.py"
+  },
+  "MAX_DD_60": {
+    "window": 60,
+    "direction": -1,
+    "meaning": "rolling drawdown",
+    "formula_source": "factor_research.py"
+  },
+  "PRICE_EFF_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "net move / path length",
+    "formula_source": "factor_research.py"
+  },
+  "PRICE_EFF_60": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "quarterly price efficiency",
+    "formula_source": "factor_research.py"
+  },
+  "RANGE_POS_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "close position in 20d range",
+    "formula_source": "factor_research.py"
+  },
+  "GAP_5": {
+    "window": 5,
+    "direction": 1,
+    "meaning": "average overnight gap",
+    "formula_source": "factor_research.py"
+  },
+  "BREAKOUT_60": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "distance from 60d high",
+    "formula_source": "factor_research.py"
+  },
+  "VOLUME_Z_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "volume surprise",
+    "formula_source": "factor_research.py"
+  },
+  "VOLUME_TREND_20": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "short/long volume trend",
+    "formula_source": "factor_research.py"
+  },
+  "PRICE_VOLUME_CORR_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "return-volume correlation",
+    "formula_source": "factor_research.py"
+  },
+  "UP_VOLUME_RATIO_20": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "volume on up days vs down",
+    "formula_source": "factor_research.py"
+  },
+  "VOLUME_PRICE_IMPACT": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "price move times volume surprise",
+    "formula_source": "factor_research.py"
+  },
+  "TREND_VOLUME": {
+    "window": 60,
+    "direction": 1,
+    "meaning": "trend times volume trend",
+    "formula_source": "factor_research.py"
+  },
+  "REVERSAL_DOWNSIDE_5": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "short reversal times downside risk",
+    "formula_source": "factor_research.py"
+  },
+  "EFF_VOLUME": {
+    "window": 20,
+    "direction": 1,
+    "meaning": "efficiency times volume surprise",
+    "formula_source": "factor_research.py"
+  }
+}
