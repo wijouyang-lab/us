@@ -262,10 +262,15 @@ pytest tests/test_invest_terminal.py
 
 Result: **53 passed in 6.70s**.
 
+Full CI on the pushed fix branch:
+
+```text
+1517 passed, 1 skipped
+https://github.com/wijouyang-lab/us/actions/runs/42817009388
+```
+
 `git diff --check`: clean. `git status`: only intended changes plus the new
 manifest/test; no production scanner/ledger changes.
-
-Full CI remains to be run on the pushed branch.
 
 ---
 
@@ -277,7 +282,6 @@ Full CI remains to be run on the pushed branch.
 3. Direct `terminal.html` can still be publicly reachable under GitHub Pages.
 4. Provenance manifest has UNKNOWN acquisition/source/license fields for many
    files.
-5. Full CI not yet observed for this fix branch.
 
 ---
 
