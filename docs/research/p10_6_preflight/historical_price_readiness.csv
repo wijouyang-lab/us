@@ -1,0 +1,2 @@
+universe,price_coverage,delisting_return_verified,split_adjusted,dividend_total_return,missing_or_unverified_member_days,status,reason
+S&P 500 historical members,0.9002346,False,True,False,109132,DATA_BLOCKED,no verified delisting-return coverage; 9.96% member-days unknown; cannot compute usable post-selection returns for all names

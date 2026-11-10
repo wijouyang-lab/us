@@ -1,0 +1,2 @@
+universe,member_days,verified_member_days,unknown_member_days,coverage,threshold,missing_tickers_previously_identified,status,reason
+S&P 500 effective-dated member-days 2000-2024,1095490,986198,109132,0.9002346,0.95,98,DATA_BLOCKED,coverage 90.02% < 95%; historical delisted/common-stock universe not complete

@@ -1,0 +1,4 @@
+model,candidates,top50,metrics,metric_names,source,financial_period,pit_status,asof_snapshots,accession_present,lookahead_risk,status,blocking_reason
+Value,5453,50,4,P/B;P/S;Earnings Yield;FCF Yield,SEC CompanyFacts/XBRL + snapshot market data,2025-12-31,PIT_ACCEPTANCE_PROXY,1,True,HIGH,DATA_BLOCKED,single 2026-11-05 snapshot; no historical as-of panel; market cap tied to snapshot price
+Quality,5549,50,4,ROE;ROA;CFO/Assets;Liabilities/Assets,SEC CompanyFacts/XBRL + snapshot market data,2025-12-31,PIT_ACCEPTANCE_PROXY,1,True,HIGH,DATA_BLOCKED,single 2026-11-05 snapshot; no historical as-of panel; filed/accn exist but only one cross-section
+GARP,5453,50,6,Revenue growth;EPS growth;FCF growth;Earnings stability;Operating margin expansion;Operating leverage,SEC CompanyFacts/XBRL + snapshot market data,nan,PIT_ACCEPTANCE_PROXY,0,True,HIGH,DATA_BLOCKED,no data_as_of field; latest period only; no historical GARP snapshots
