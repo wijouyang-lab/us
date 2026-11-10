@@ -1,0 +1,61 @@
+ticker,cik,company_name,model_family,accounting_standard,cohort_role
+BKTI,2186,BK Technologies Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+AMD,2488,"Advanced Micro Devices, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+SWKS,4127,"Skyworks Solutions, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+ADI,6281,"Analog Devices, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+AMAT,6951,"Applied Materials, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+ADP,8670,"Automatic Data Processing, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+BMI,9092,"Badger Meter, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+BIO,12208,"Bio-Rad Laboratories, Inc. Class A Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+CACI,16058,"CACI International, Inc. Class A Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+COHU,21535,"Cohu, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+SUNE,22701,"SUNation Energy, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+CMTL,23197,Comtech Telecommunications Corp. - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+CTS,26058,CTS Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+DBD,28823,Diebold Nixdorf Incorporated Common stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+DIOD,29002,Diodes Incorporated - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+RVTY,31791,"Revvity, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+ESP,33533,Espey Mfg. & Electronics Corp. Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+FEIM,39020,"Frequency Electronics, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+ALNT,46129,Allient Inc. - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+HPQ,47217,HP Inc. Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+HUBB,48898,Hubbell Inc Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+TRAK,50471,"ReposiTrak, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+INTC,50863,Intel Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+IBM,51143,International Business Machines Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+KEQU,55529,Kewaunee Scientific Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+KLIC,56978,"Kulicke and Soffa Industries, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+LGL,61004,"LGL Group, Inc. (The) Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+MEI,65270,"Methode Electronics, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+MVIS,65770,"MicroVision, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+MSI,68505,"Motorola Solutions, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+NSSC,69633,"NAPCO Security Technologies, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+VYX,70866,NCR Voyix Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+AGYS,78749,"Agilysys, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+PBI,78814,Pitney Bowes Inc. Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+NEON,87050,Neonode Inc. - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+SMTC,88941,Semtech Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+TER,97210,"Teradyne, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+TXN,97476,Texas Instruments Incorporated - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+TMO,97745,Thermo Fisher Scientific Inc Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+TRNS,99302,"Transcat, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+VSH,103730,"Vishay Intertechnology, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+WDC,106040,Western Digital Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+SPB,109177,"Spectrum Brands Holdings, Inc. Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+PSN,275880,Parsons Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+DHR,313616,Danaher Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+HURC,315374,"Hurco Companies, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+KLAC,319201,KLA Corporation  - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+TLS,320121,Telos Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+AAPL,320193,Apple Inc. - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+DAIO,351998,Data I/O Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+CSPI,356037,CSP Inc. - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+ONTO,704532,Onto Innovation Inc. Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+PAR,708821,PAR Technology Corporation Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+QMCO,709283,Quantum Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+KTCC,719733,Key Tronic Corporation - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+NSYS,722313,Nortech Systems Incorporated - Common Stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+FKWL,722572,Franklin Wireless Corp. - common stock,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+MU,723125,"Micron Technology, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+MLAB,724004,"Mesa Laboratories, Inc. - Common Stock",TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
+XLNX,743988,XILINX INC,TECHNOLOGY,US_GAAP,TECH_US_GAAP_60
