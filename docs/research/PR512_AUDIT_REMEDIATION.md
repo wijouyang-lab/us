@@ -21,6 +21,10 @@ SNAPSHOT_REDACTION: PASS
 P9_METRIC_CONSISTENCY: PASS
 P9_BH_FAMILY_CONSISTENCY: PASS
 P9_DATA_REPRODUCIBILITY: BLOCKED
+SP500_LOCAL_SOURCE_MATCH: PASS
+SP500_DATA_LICENSE: UNKNOWN
+FINSABER_SOURCE: UNKNOWN
+FINSABER_LICENSE: UNKNOWN
 DATA_PROVENANCE: PARTIAL
 PAPER_ENGINE_SECURITY: PASS
 PR512_READY_FOR_REVIEW: NO
@@ -227,15 +231,59 @@ are not in Git and an independent checkout cannot recreate the run.
 
 `sp500_daily.csv`:
 
+Fixed upstream commit:
+
 ```text
-LOCAL_FILE_FOUND: yes
-SOURCE_VERIFIED: yes
-source: https://raw.githubusercontent.com/fja05680/sp500/master/
-        S%26P%20500%20Historical%20Components%20%26%20Changes%20(Updated).csv
-license: MIT (fja05680/sp500 LICENSE)
-REDISTRIBUTION_ALLOWED: yes (MIT)
-INDEPENDENT_REBUILD_AVAILABLE: yes
+a2430f2af0c79ddf0748e91de11bdeb1616ab5a7
 ```
+
+Upstream file:
+
+```text
+size:   5,530,907 bytes
+sha256: 36326709d46d6cd25834de5df457b16f5f96fad3a06b9beac28f7b88aa0b0d54
+blob:   656b033be9418db272f1903f4f8e79a2a8664e6a
+```
+
+Local file:
+
+```text
+size:   5,533,628 bytes
+sha256: 646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a
+git hash-object: 656b033be9418db272f1903f4f8e79a2a8664e6a
+```
+
+Comparison:
+
+```text
+size delta:          2,721 bytes
+CRLF count local:    2,721
+CRLF count upstream: 0
+LF count both:       2,721
+CRLF->LF normalized bytes equal: TRUE
+git blob hash equal: TRUE
+```
+
+The local file is the upstream CSV converted to CRLF; field content is
+unchanged. The conversion is consistent with `fetch_sp500_history.py`
+(`pandas.read_csv` -> `to_csv` on Windows).
+
+Source status:
+
+```text
+SP500_LOCAL_SOURCE_MATCH: PASS
+SOURCE_VERIFIED: yes (file-level match to fixed upstream commit)
+REPOSITORY_LICENSE_METADATA: MIT
+DATASET_LICENSE_SCOPE_VERIFIED: no
+THIRD_PARTY_DATA_RIGHTS_VERIFIED: no
+REDISTRIBUTION_ALLOWED: UNKNOWN
+INDEPENDENT_REBUILD_AVAILABLE: yes (fixed commit URL)
+```
+
+The README states the original list came from the *Trading Evolved* book download
+and later updates came from Wikipedia. The repository MIT license does not by
+itself establish redistribution rights for those third-party inputs. Therefore
+the file is not committed and the data license remains UNKNOWN.
 
 `finsaber_prices_raw.csv`:
 
@@ -401,14 +449,14 @@ Full CI on the pushed fix branch:
 
 ```text
 1523 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42835446111
+https://github.com/wijouyang-lab/us/actions/runs/42838618979
 ```
 
 Pages build audit on the same HEAD:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42835455442
+https://github.com/wijouyang-lab/us/actions/runs/42838629471
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
 ```
