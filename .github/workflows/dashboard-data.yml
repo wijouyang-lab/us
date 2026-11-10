@@ -276,20 +276,13 @@ jobs:
           print("JSON 校验通过")
           PY
 
-      - name: Build redacted Terminal snapshot
-        # Read-only public data only. If no persistent PAPER-50000 SQLite exists,
-        # build_snapshot emits LOCAL_PAPER_DB_NOT_PRESENT instead of pretending
-        # an ephemeral Actions database is the user's account. No token can be
-        # written to this file.
-        run: python -m tools.invest_terminal.build_snapshot
-
       - name: Commit and push if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           # 只提交正式 Dashboard 数据文件。绝不 git add . / git add -A，
           # 也不提交已停止维护的旧前端 us-market-terminal/（导出层默认已不再产生该副本）。
-          git add dashboard/data/dashboard_data.json dashboard/data/invest_terminal_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
+          git add dashboard/data/dashboard_data.json dashboard/data/last_run.json dashboard/data/last_run.log portfolio_50000_positions.csv
           if [ -f portfolio_50000_transactions.csv ]; then git add portfolio_50000_transactions.csv; fi
           # 盘中止损卖出后必须同步权益快照（Cash / Total_Equity / Open_Positions），
           # 否则下一次 checkout 回到旧 history，Dashboard 仍会显示假亏损。
@@ -319,7 +312,7 @@ jobs:
           STAGED="$(git diff --cached --name-only)"
           echo "待提交文件："
           echo "$STAGED"
-          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|invest_terminal_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_forecast\.json|macro_indicators\.json|macro_cpi_ai\.json|news_data\.json|news_translations\.json|serenity_verified\.json|decision_inputs\.json|intraday\.json|ohlcv\.json|dividend_quality\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
+          if echo "$STAGED" | grep -vE '^(dashboard/data/(dashboard_data\.json|last_run\.json|last_run\.log|market_indicators\.json|oversold_candidates\.json|macro_forecast\.json|macro_indicators\.json|macro_cpi_ai\.json|news_data\.json|news_translations\.json|serenity_verified\.json|decision_inputs\.json|intraday\.json|ohlcv\.json|dividend_quality\.json)|portfolio_50000_positions\.csv|portfolio_50000_transactions\.csv|portfolio_50000_txn_time\.csv|portfolio_50000_history\.csv)$'; then
             echo "::error::检测到非预期文件进入提交范围，已中止提交"
             exit 1
           fi
@@ -347,7 +340,7 @@ jobs:
               # 回退掉。这里只保留本轮数据文件，其它路径一律恢复成 origin/main 版本。
               for f in $(git diff --cached --name-only); do
                 case "$f" in
-                  dashboard/data/dashboard_data.json|dashboard/data/invest_terminal_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_forecast.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|dashboard/data/news_data.json|dashboard/data/news_translations.json|dashboard/data/serenity_verified.json|dashboard/data/decision_inputs.json|dashboard/data/intraday.json|dashboard/data/ohlcv.json|dashboard/data/dividend_quality.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
+                  dashboard/data/dashboard_data.json|dashboard/data/last_run.json|dashboard/data/last_run.log|dashboard/data/market_indicators.json|dashboard/data/oversold_candidates.json|dashboard/data/macro_forecast.json|dashboard/data/macro_indicators.json|dashboard/data/macro_cpi_ai.json|dashboard/data/news_data.json|dashboard/data/news_translations.json|dashboard/data/serenity_verified.json|dashboard/data/decision_inputs.json|dashboard/data/intraday.json|dashboard/data/ohlcv.json|dashboard/data/dividend_quality.json|portfolio_50000_positions.csv|portfolio_50000_transactions.csv|portfolio_50000_txn_time.csv|portfolio_50000_history.csv)
                     ;;
                   *)
                     git checkout origin/main -- "$f" 2>/dev/null || true

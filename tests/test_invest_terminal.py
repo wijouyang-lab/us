@@ -72,11 +72,11 @@ def test_order_requires_confirmation_and_cannot_auto_fill(tmp_path):
 
 
 def test_static_terminal_has_all_six_sections_and_mobile_viewport():
-    html = (ROOT / "terminal.html").read_text(encoding="utf-8")
+    html = (ROOT / "_local_terminal/terminal.html").read_text(encoding="utf-8")
     for panel in ("dashboard", "scanner", "strategies", "portfolio", "risk", "performance"):
         assert f'id="{panel}"' in html
     assert "width=device-width" in html
-    js = (ROOT / "terminal" / "terminal.js").read_text(encoding="utf-8")
+    js = (ROOT / "_local_terminal/terminal.js").read_text(encoding="utf-8")
     assert "invest_terminal_data.json" in js
     assert ("confirm_token" in js or "confirmation_token" in js)
 
@@ -143,8 +143,8 @@ def test_snapshot_without_persistent_db_is_explicitly_unavailable(tmp_path):
 
 
 def test_no_url_controlled_api_or_wildcard_cors():
-    js = Path("terminal/terminal.js").read_text(encoding="utf-8")
-    html = Path("terminal.html").read_text(encoding="utf-8")
+    js = Path("_local_terminal/terminal.js").read_text(encoding="utf-8")
+    html = Path("_local_terminal/terminal.html").read_text(encoding="utf-8")
     server = Path("tools/invest_terminal/server.py").read_text(encoding="utf-8")
     assert "URLSearchParams(location.search)" not in js
     assert "?api=" not in html
@@ -153,8 +153,8 @@ def test_no_url_controlled_api_or_wildcard_cors():
 
 
 def test_stock_research_selection_is_labelled_research_only():
-    html = Path("terminal.html").read_text(encoding="utf-8")
-    js = Path("terminal/terminal.js").read_text(encoding="utf-8")
+    html = Path("_local_terminal/terminal.html").read_text(encoding="utf-8")
+    js = Path("_local_terminal/terminal.js").read_text(encoding="utf-8")
     assert "Fundamental Selection V1" in html
     assert "RESEARCH_ONLY" in html
     assert "renderSelection" in js

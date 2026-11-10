@@ -4,11 +4,9 @@ on:
   pull_request:
     branches: [main]
     paths:
-      - "terminal.html"
-      - "terminal/**"
+      - "_local_terminal/**"
       - "tools/invest_terminal/**"
       - "tools/paper_trading/**"
-      - "dashboard/data/invest_terminal_data.json"
       - "dashboard/data/dashboard_data.json"
       - "tests/test_invest_terminal.py"
       - "tests/test_paper_trading_platform.py"
@@ -18,11 +16,9 @@ on:
   push:
     branches: [main]
     paths:
-      - "terminal.html"
-      - "terminal/**"
+      - "_local_terminal/**"
       - "tools/invest_terminal/**"
       - "tools/paper_trading/**"
-      - "dashboard/data/invest_terminal_data.json"
       - "tests/test_invest_terminal.py"
       - ".github/workflows/research-invest-terminal.yml"
   workflow_dispatch:
@@ -43,23 +39,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install pytest pandas
-      - name: Build terminal snapshot from existing dashboard/paper state
+      - name: Build terminal snapshot from public research data only
         run: python -m tools.invest_terminal.build_snapshot
       - name: Run integration and paper safety tests
         run: |
           python -m pytest -q tests/test_invest_terminal.py tests/test_paper_trading_platform.py tests/test_invest_terminal_server.py tests/test_invest_terminal_snapshot_sync.py
       - name: Verify no real-trading/production imports
         run: |
-          test -f terminal.html
-          test -f dashboard/data/invest_terminal_data.json
+          test -f _local_terminal/terminal.html
           ! grep -R "ib_insync\|import scan\|import review\|import evolve" tools/invest_terminal
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: invest-terminal-snapshot
-          path: |
-            dashboard/data/invest_terminal_data.json
-            terminal.html
-            terminal/
+          name: invest-terminal-local-assets
+          path: _local_terminal/
           retention-days: 30
           if-no-files-found: warn

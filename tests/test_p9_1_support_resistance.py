@@ -51,3 +51,25 @@ def test_no_shadow_and_empty_candidates():
     assert s["status"] == "P9_1_NO_GO"
     assert s["no_shadow"] is True
     assert list(csv.DictReader((P / "strategy_candidates.csv").open(encoding="utf-8"))) == []
+
+
+def test_bh_family_is_unique_and_aliases_match():
+    e = list(csv.DictReader((P / "event_results.csv").open(encoding="utf-8")))
+    st = load("p9_1_status.json")
+    assert st["bh_family"] == 18
+    assert st["duplicate_alias_cells"] == 6
+    m = {(r["experiment"], int(r["horizon"])): r for r in e}
+    for h in (5, 10, 20):
+        assert float(m[("G_LEVEL_ALL_PATTERNS", h)]["bh_q"]) == float(m[("C_SUPPORT_PATTERN", h)]["bh_q"])
+        assert float(m[("H_G_BOTH", h)]["bh_q"]) == float(m[("F_C_BOTH", h)]["bh_q"])
+        assert float(m[("G_LEVEL_ALL_PATTERNS", h)]["nonoverlap_bh_q"]) == float(m[("C_SUPPORT_PATTERN", h)]["nonoverlap_bh_q"])
+
+
+def test_status_matches_completed_diagnostics():
+    s = load("p9_1_status.json")
+    assert s["status"] == "P9_1_NO_GO"
+    assert s.get("event_research_completed") is True
+    assert s.get("portfolio_diagnostics_completed") is True
+    assert len(s.get("portfolios", {})) == 8
+    assert all(v.get("gate") == "NO-GO" for v in s["portfolios"].values())
+    assert not any("portfolio not run" in str(x).lower() for x in s.get("data_blocked", []))

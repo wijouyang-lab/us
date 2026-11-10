@@ -99,8 +99,8 @@ def build(dashboard_path: Path = DEFAULT_DASHBOARD, paper_root: Path = Path("dat
         "generated_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
         "source": {
             "dashboard_generated_at": d.get("generated_at"),
-            "dashboard_file": str(dashboard_path),
-            "paper_db": str(Path(paper_root) / "paper.sqlite"),
+            "dashboard_file": "dashboard/data/dashboard_data.json",
+            "paper_db": "data/paper_trading/paper.sqlite",
             "paper_db_exists": db_exists,
             "account_id": account["account_id"],
             "account_status": account["account_status"],

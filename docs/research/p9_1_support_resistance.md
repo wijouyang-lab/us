@@ -42,8 +42,10 @@ MACD 12/26/9; KDJ 9/3/3 with RSV and K/D initial 50. Confirmation only.
 
 ## 3. Event study
 
-204,180 events; 24 experiment/horizon cells; overlapping and non-overlapping
-reported. No future labels are zero-filled.
+204,180 raw signal rows across 8 experiments; 204,030 valid event observations
+after horizon labels; 611,790 experiment-horizon observations (same event counted
+at 5/10/20 days). The 24 cells report overlapping and non-overlapping results;
+no future labels are zero-filled. The three counts are not interchangeable.
 
 Strongest event cells:
 
@@ -51,9 +53,9 @@ Strongest event cells:
 |---|---:|---:|---:|---:|---:|---:|
 | A_LEVEL_TOUCH | 20 | 110,683 | 0.97% | 16.2 | 0.000 | 0.000 |
 | B_PATTERN_ONLY | 20 | 74,683 | 0.72% | 14.0 | 0.000 | 0.000 |
-| C_SUPPORT_PATTERN | 20 | 6,065 | 0.68% | 3.19 | 0.004 | 1.6e-06 |
-| E_C_KDJ | 20 | 3,031 | 0.97% | 3.49 | 0.0016 | 9.2e-08 |
-| F_C_BOTH | 20 | 949 | 1.30% | 2.28 | 0.045 | 0.0035 |
+| C_SUPPORT_PATTERN | 20 | 6,065 | 0.68% | 3.19 | 0.00318 | 1.20e-06 |
+| E_C_KDJ | 20 | 3,031 | 0.97% | 3.49 | 0.00124 | 6.88e-08 |
+| F_C_BOTH | 20 | 949 | 1.30% | 2.28 | 0.0370 | 2.88e-03 |
 
 The event screen shows direction, but overlapping events and large sample counts
 inflate naive t-statistics; non-overlap diagnostics reduce event counts. Event
@@ -76,11 +78,11 @@ Rules:
 | A_LEVEL_TOUCH | 1.98% | -13.59% | 0.40 | 782 | NO-GO |
 | B_PATTERN_ONLY | 1.96% | -11.09% | 0.42 | 731 | NO-GO |
 | C_SUPPORT_PATTERN | 1.04% | -9.86% | 0.32 | 553 | NO-GO |
-| D_C_MACD | 0.83% | -14.60% | 0.23 | 441 | NO-GO |
-| E_C_KDJ | 1.80% | -8.17% | 0.47 | 620 | NO-GO |
-| F_C_BOTH | 1.25% | -10.10% | 0.33 | 350 | NO-GO |
-| G_LEVEL_ALL_PATTERNS | 1.04% | -9.86% | 0.32 | 553 | NO-GO |
-| H_G_BOTH | 1.25% | -10.10% | 0.33 | 350 | NO-GO |
+| D_C_MACD | 0.83% | -14.60% | 0.2747 | 441 | NO-GO |
+| E_C_KDJ | 1.80% | -8.17% | 0.6232 | 620 | NO-GO |
+| F_C_BOTH | 1.25% | -10.10% | 0.5485 | 350 | NO-GO |
+| G_LEVEL_ALL_PATTERNS | 1.04% | -9.86% | 0.3188 | 553 | NO-GO |
+| H_G_BOTH | 1.25% | -10.10% | 0.5485 | 350 | NO-GO |
 
 Benchmark:
 
@@ -89,6 +91,11 @@ Benchmark:
 20% SPY + 80% BIL: CAGR 1.95%, Sharpe 1.30, MaxDD -3.32%
 BIL:               CAGR 1.15%, Sharpe 2.26, MaxDD -0.78%
 ```
+
+Sharpe definition: mean daily NAV return / sample standard deviation of daily
+returns × √252; no separate risk-free subtraction (BIL is the 80% cash leg).
+The JSON NAV series is the source of truth. The earlier 0.23/0.47/0.33 values
+were stale and are replaced by the reproducible values above.
 
 All 8 experiments fail the relative benchmark test. C has a positive event
 signal but only 1.04% CAGR vs 2.09% for 20QQQ/80BIL; no incremental economic
