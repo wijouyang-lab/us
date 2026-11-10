@@ -846,7 +846,107 @@
       '）之后，已按交易流水滚动计入现金与盈亏。</div>';
   }
 
-  function renderPortfolio() {
+  /* ---------------- QQQ TRANSITION independent SIMULATED account ---------------- */
+var QQQ_PAPER_URL = 'dashboard/data/qqq_transition_paper.json';
+
+function loadQQQPaper() {
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+  if (!document.querySelector('#qqqPaperSec')) return;
+  fetch(QQQ_PAPER_URL + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (d) renderQQQPaper(d); })
+    .catch(function () { /* optional panel; main dashboard remains usable */ });
+}
+
+function fillRows(list) {
+  if (!list || !list.length) return '<div class="qqq-empty">No simulated fills yet.</div>';
+  return '<table class="qqq-table"><thead><tr><th>Date</th><th>Leg</th><th>Qty</th><th>Price</th><th>Cost</th><th>Status</th></tr></thead><tbody>' +
+    list.map(function (f) {
+      return '<tr><td>' + esc(f.date || NA) + '</td><td>' + esc(f.leg || NA) + '</td><td>' +
+        nv(f.quantity, 4) + '</td><td>$' + nv(f.fill_price, 2) + '</td><td>$' + nv(f.cost, 2) +
+        '</td><td><span class="sim-mini">' + esc(f.status || 'SIMULATED') + '</span></td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+function signalRows(list) {
+  if (!list || !list.length) return '<div class="qqq-empty">No signals.</div>';
+  return '<table class="qqq-table"><thead><tr><th>Signal</th><th>Entry</th><th>Regime</th><th>Status</th></tr></thead><tbody>' +
+    list.map(function (s) {
+      return '<tr><td>' + esc(s.signal_date || NA) + '</td><td>' + esc(s.entry_session || s.planned_entry || '—') +
+        '</td><td>' + esc(s.regime || NA) + '</td><td>' + esc(s.status || NA) + '</td></tr>';
+    }).join('') + '</tbody></table>';
+}
+
+function renderQQQPaper(d) {
+  var sec = $('#qqqPaperSec'); if (!sec) return;
+  sec.style.display = '';
+  var note = $('#qqqPaperNote');
+  if (note) {
+    note.innerHTML = '<b>SIMULATED — HISTORICAL REPLAY.</b> Not an IBKR Paper fill and not a prospective observation clock. ' +
+      'Every fill is generated from completed historical QQQ/SPY/BIL data and marked SIMULATED. ' +
+      'This account is fully separate from Portfolio-50000 and portfolio_50000_*.csv.';
+  }
+  var cells = '';
+  cells += cell('Initial Capital', '$' + nv(d.initial_capital, 2));
+  cells += cell('Simulated NAV', '$' + nv(d.nav, 2));
+  cells += cell('Cumulative Return', pctTxt(d.return_pct, 2), pctCls(num(d.return_pct)));
+  cells += cell('Cash', '$' + nv(d.cash, 2));
+  cells += cell('QQQ Units', nv(d.qqq_units, 4) + ' ($' + nv(d.qqq_value, 2) + ')');
+  cells += cell('BIL Units', nv(d.bil_units, 2) + ' ($' + nv(d.bil_value, 2) + ')');
+  cells += cell('Strategy Weight', pctTxt(d.weight, 1));
+  cells += cell('Status', esc(d.status || NA));
+  cells += cell('Max Drawdown', pctTxt(d.max_drawdown, 2), pctCls(num(d.max_drawdown)));
+  cells += cell('Cumulative Cost', '$' + nv(d.total_cost, 2));
+  cells += cell('Cost / Leg', nv(d.cost_bps_per_leg, 0) + ' bps');
+  cells += cell('Data As Of', esc(d.data_asof || NA));
+  var sum = $('#qqqPaperSummary');
+  if (sum) sum.innerHTML = '<div class="mx-grid">' + cells + '</div>';
+  var fills = $('#qqqPaperFills'); if (fills) fills.innerHTML = fillRows(d.recent_fills || []);
+  var sigs = $('#qqqPaperSignals'); if (sigs) sigs.innerHTML = signalRows(d.recent_signals || []);
+}
+
+var QQQ_PROSPECTIVE_URL = 'dashboard/data/qqq_transition_paper_prospective.json';
+
+function loadQQQProspective() {
+  if (typeof document === 'undefined' || typeof document.querySelector !== 'function') return;
+  if (!document.querySelector('#qqqProspectiveSec')) return;
+  fetch(QQQ_PROSPECTIVE_URL + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .then(function (d) { if (d) renderQQQProspective(d); })
+    .catch(function () { /* optional panel */ });
+}
+
+function renderQQQProspective(d) {
+  var sec = $('#qqqProspectiveSec'); if (!sec) return;
+  sec.style.display = '';
+  var note = $('#qqqProspectiveNote');
+  if (note) {
+    note.innerHTML = '<b>' + (d.status === 'NOT_STARTED'
+      ? 'NOT STARTED. This forward-only account has no observation clock and no fills.'
+      : 'PROSPECTIVE SIMULATION. Forward-only; historical replay fills are never migrated here.') + '</b> ' +
+      'No IBKR connection, no orders. Each fill is SIMULATED and time-stamped when recorded.';
+  }
+  var cells = '';
+  cells += cell('Status', esc(d.status || NA));
+  cells += cell('Clock Started', d.prospective_clock_started ? 'YES' : 'NO');
+  cells += cell('Start Date', esc(d.start_date || '—'));
+  cells += cell('Observation Days', nv(d.observation_days, 0));
+  cells += cell('Signals', nv(d.signals, 0));
+  cells += cell('Skipped Overlaps', nv(d.skipped, 0));
+  cells += cell('Simulated NAV', '$' + nv(d.nav, 2));
+  cells += cell('Cumulative Return', pctTxt(d.return_pct, 2), pctCls(num(d.return_pct)));
+  cells += cell('QQQ Units', nv(d.qqq_units, 4));
+  cells += cell('BIL Units', nv(d.bil_units, 2));
+  cells += cell('Max Drawdown', pctTxt(d.max_drawdown, 2), pctCls(num(d.max_drawdown)));
+  cells += cell('Total Cost', '$' + nv(d.total_cost, 2));
+  cells += cell('Last Data Date', esc(d.last_data_date || '—'));
+  var sum = $('#qqqProspectiveSummary');
+  if (sum) sum.innerHTML = '<div class="mx-grid">' + cells + '</div>';
+  var f = $('#qqqProspectiveFills'); if (f) f.innerHTML = fillRows(d.recent_fills || []);
+  var s = $('#qqqProspectiveSignals'); if (s) s.innerHTML = signalRows(d.recent_signals || []);
+}
+
+function renderPortfolio() {
     var pf = DATA.portfolio;
     var sumEl = $('#pfSummary'), posEl = $('#pfPositions'),
         txEl = $('#pfTxns'), cv = $('#pfCurve');
@@ -3128,4 +3228,6 @@
 
   /* ---------------- 启动 ---------------- */
   boot();
+  loadQQQPaper();
+  loadQQQProspective();
 })();
