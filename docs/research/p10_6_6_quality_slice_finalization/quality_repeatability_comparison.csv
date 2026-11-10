@@ -1,0 +1,2 @@
+check,status,all_equal,note
+two_end_to_end_runs,PASS,True,two runs of remediation pipeline produced identical CSV hashes

@@ -1,0 +1,30 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "1241d49bcff7dad74fed980e907d742da0171876",
+    "inputs": {
+      "p4": "3bb2e8a613454cf4993708e6c73e42a6028084b4dbd745bb9f985a0613323eda",
+      "p5": "d1f4b4d59c5e397f87b6a04eaee49b0d042559e0adbef2da5ed2a2918d89c670"
+    },
+    "command": "python -m tools.research.p10_6_6.finalize",
+    "timestamp": "2026-11-10T07:09:58.910875+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "949ebd043773fab061b21b509aafed657929e54857990bc4c8404695f66d28d3",
+    "git_commit": "1241d49bcff7dad74fed980e907d742da0171876",
+    "outputs": {
+      "quality_row_status_reconciliation.csv": "098cc604af4f9437b1d61004ad41f234c94343c66de89c143c4dff63b8fed5f7",
+      "quality_context_diagnostics.csv": "dffe0144e36c8e7601fff0de372e562a179b84114537bc97949cd09c3d1abab8",
+      "quality_historical_lineage_final.csv": "d1f4b4d59c5e397f87b6a04eaee49b0d042559e0adbef2da5ed2a2918d89c670",
+      "ibm_intc_source_recovery.csv": "ae203534ac2e68a925bba8c35b2d5d7a5fb7f68cb1fcf0a1529e823ec1176b88",
+      "hpq_amendment_replay_final.csv": "085a0b5e1dd165402bf13e469f49c9999fa09ed5d7f8eafe64ea62a6523976b9",
+      "quality_repeatability_comparison.csv": "2a953383c389fa17715c42ad4bdb6296ddf4b0be22776924446c2385758cf210",
+      "P10_6_6_FINALIZATION_REPORT.md": "73273ef4629094ae21bc2d724f4e909d6f7eb43b65acb6d7ee4b2c1fed4a9d6d"
+    },
+    "status": "QUALITY_SLICE_PARTIAL",
+    "timestamp": "2026-11-10T07:10:05.726812+00:00",
+    "all_equal": true
+  }
+}
