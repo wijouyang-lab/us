@@ -1,0 +1,30 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "995fefa9ace9f4693e74f02654cd833841a2e251",
+    "inputs": {
+      "p6": "d1f4b4d59c5e397f87b6a04eaee49b0d042559e0adbef2da5ed2a2918d89c670",
+      "p1": "4fb9221e483ecc259bf4b33b4d1d61c065a8efc6636c06ee44a379307a068f05"
+    },
+    "command": "python -m tools.research.p10_6_7.integrate",
+    "timestamp": "2026-11-10T07:56:55.398893+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "e210ac2c17751885fb6f32de3b6740c4ae9fae56fd2191ef6d0a7c8858541fc7",
+    "git_commit": "995fefa9ace9f4693e74f02654cd833841a2e251",
+    "outputs": {
+      "ibm_intc_2017_quality_integration.csv": "1c5168cd4310bc2b613022c0eb7a2b78995ad27f554fbcd7eaac1d804197d62d",
+      "hpq_total_liabilities_final.csv": "edfd0bcfa69c809e1be07f8bc720bbf618555ffab3ed403ad69c645cd3f21eb3",
+      "quality_unresolved_final_classification.csv": "a69394c399d6ab3afceb6d309050f1874532a32fdea531d44bcf145e7e750f51",
+      "quality_five_company_panel_final.csv": "182bab3a65aec15803dca0a431ccdd93937ef5380dc8d932423d08dee57280a1",
+      "quality_repeatability_final.csv": "4be7e327c3b694d6af466f9b17543d236318dd7a77f9c791e706d7c8915ca119",
+      "P10_6_7_QUALITY_INTEGRATION_REPORT.md": "8039b2622c783666ed9497aee34ce061b005d61a40c493e479ed1aa421a10b12"
+    },
+    "status": "QUALITY_SLICE_PARTIAL",
+    "timestamp": "2026-11-10T07:57:02.292535+00:00",
+    "all_equal": true,
+    "sec_route_decision": "STOP_SEC_XBRL_ROUTE"
+  }
+}
