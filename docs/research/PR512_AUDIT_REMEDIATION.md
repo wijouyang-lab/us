@@ -470,15 +470,15 @@ Final Full CI on the pushed fix branch:
 
 ```text
 1524 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42849147909
+https://github.com/wijouyang-lab/us/actions/runs/42851108150
 ```
 
 Final Pages build audit, exact HEAD
-`0ba23a5296ad90fb3913cd59e94763cccae96fc0`:
+`84f740ed82d4c3bd94890fd100c40463724b35ee`:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42849158668
+https://github.com/wijouyang-lab/us/actions/runs/42851121247
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
 no-deploy Jekyll build
