@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-10T13:32:20Z",
-  "asof": "2026-11-10T13:32:06Z",
+  "generated_at": "2026-11-10T13:47:18Z",
+  "asof": "2026-11-10T13:47:04Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -26,7 +26,7 @@
       "key": "cpi_yoy_surprise",
       "label": "CPI预期差",
       "group": "宏观",
-      "value": 0.1,
+      "value": 3.4,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
@@ -35,7 +35,7 @@
       "key": "core_cpi_yoy_surprise",
       "label": "核心CPI预期差",
       "group": "宏观",
-      "value": 0.1,
+      "value": -0.2,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
@@ -62,7 +62,7 @@
       "key": "fg_score",
       "label": "恐惧贪婪",
       "group": "情绪",
-      "value": 32.4,
+      "value": 31.91,
       "unit": "",
       "status": "ok",
       "source": "market_indicators"
