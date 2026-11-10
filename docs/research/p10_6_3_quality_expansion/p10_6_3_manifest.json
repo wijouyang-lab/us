@@ -1,0 +1,64 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "99efba1afb4b3ca4abd0c0555890fa263ea90914",
+    "inputs": {
+      "quality_rankings": "2ba62075fd53c743c61e477db47f51cc7a7588d91fa3c9a7c8b2625f720698de"
+    },
+    "command": "python -m tools.research.p10_6_3.build",
+    "cutoffs": [
+      "2017-03-31",
+      "2020-03-31",
+      "2023-03-31",
+      "2026-03-31"
+    ],
+    "timestamp": "2026-11-10T05:55:50.234501+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "0b64ae311c5d0857317fabcbac731d472b4936708764cae7662416aef4b99d2f",
+    "git_commit": "99efba1afb4b3ca4abd0c0555890fa263ea90914",
+    "outputs": {
+      "quality_peer_cohort.csv": "e1d9d0069b581058143498c8d31b56b64c82c741444a8565c523a47a5b5b244e",
+      "quality_historical_panel.csv": "a3348ef6ce1367303ff0688cbe3a34f102ef687d0285ba778c98c922362fde89",
+      "quality_historical_scores.csv": "f6dd70f2a5887edb3bef40d3ea7450d83de377e91baad8ca64d6f064dbd8c3f8",
+      "quality_factor_lineage.csv": "5e750ff0069c85b12cf7b261fd8a54b9d4ef35ed33f4e2d5cc3d7af22431f434",
+      "quality_xbrl_context_validation.csv": "fe34b02f0e2e4bcefcd4eda60ba2496b126c47f2ee8e9be38af26ff97186f8ec",
+      "quality_amendment_replay.csv": "e70f9e6ea528345a753a1c15b92bb4b50b3620bc888b91cbc1b9ac683c8bec87",
+      "quality_peer_stats.csv": "df7a98e0bfb8f3f217362313a41eb78a0d8f683ec125b32398db70782fcfd2d7",
+      "quality_peer_group_spec.md": "be0786cc4dd05a9ccc38867b46adedba3baeb1f2a34d58bc6b244e2f6a80f287",
+      "P10_6_3_QUALITY_EXPANSION_REPORT.md": "89a2e8f0dd9096a5724496a059078006f0765c85ff5fe66e3eed101227335f38"
+    },
+    "cohort": 60,
+    "panel_rows": 240,
+    "status": "QUALITY_PILOT_RANKING_READY",
+    "stats": [
+      {
+        "cutoff": "2017-03-31",
+        "peer_count": 37,
+        "scored": 37,
+        "status": "PILOT_SAMPLE_RANKING"
+      },
+      {
+        "cutoff": "2020-03-31",
+        "peer_count": 45,
+        "scored": 45,
+        "status": "PILOT_SAMPLE_RANKING"
+      },
+      {
+        "cutoff": "2023-03-31",
+        "peer_count": 46,
+        "scored": 46,
+        "status": "PILOT_SAMPLE_RANKING"
+      },
+      {
+        "cutoff": "2026-03-31",
+        "peer_count": 48,
+        "scored": 48,
+        "status": "PILOT_SAMPLE_RANKING"
+      }
+    ],
+    "timestamp": "2026-11-10T05:57:43.393101+00:00"
+  }
+}
