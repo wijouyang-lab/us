@@ -1,0 +1,22 @@
+{
+  "source": "PR438 NAV/ledger + PR455 QQQ/BIL",
+  "cutoff": "2026-10-30",
+  "files": {
+    "BIL.csv": {
+      "rows": 4888,
+      "sha256": "214a996be840697e9a660704fb7c720d870cf1420a3e1b3aff3069da0e8e236c"
+    },
+    "QQQ.csv": {
+      "rows": 6748,
+      "sha256": "4c2c8f5e3bf2615c8a5f68ca676361407ef1c274174101fc0829fba694c4333e"
+    },
+    "transition_daily_nav.csv": {
+      "rows": 117312,
+      "sha256": "051e66829a57cc81def425f24a8e847fd603b371c467b23455bc32312b889256"
+    },
+    "transition_trade_ledger.csv": {
+      "rows": 768,
+      "sha256": "230414b8fa37933a311019822d1ed86aea54860d3d18c89716afe91762f5f947"
+    }
+  }
+}
