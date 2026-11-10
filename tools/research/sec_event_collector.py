@@ -1,4 +1,4 @@
-"""Free official SEC filing snapshot collector for research/paper observation.
+﻿"""Free official SEC filing snapshot collector for research/paper observation.
 
 This is deliberately separate from the production scanner. It uses the public SEC
 submissions and Archives endpoints, requires an identifiable User-Agent contact,
@@ -25,6 +25,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 
+from tools.research.contact_user_agent import has_contact_email, validate_user_agent
 from tools.research.pit_sec_edgar import parse_sec_submissions
 
 _ALLOWED_HOSTS = {"data.sec.gov", "www.sec.gov"}
@@ -118,8 +119,9 @@ class SecEventCollector:
         sleep: Callable[[float], None] | None = None,
         now: Callable[[], datetime] | None = None,
     ) -> None:
-        if not isinstance(user_agent, str) or "@" not in user_agent or not user_agent.strip():
-            raise ValueError("User-Agent must identify the research application and a contact email")
+        if not has_contact_email(user_agent):
+            raise ValueError("User-Agent must identify the research application and a real contact email")
+        user_agent = validate_user_agent(user_agent, require_email=True)
         if timeout_seconds <= 0:
             raise ValueError("timeout_seconds must be positive")
         if min_request_interval_seconds < 0.1:

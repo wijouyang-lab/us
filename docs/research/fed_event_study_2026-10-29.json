@@ -1,0 +1,24 @@
+{
+  "events_total": 114,
+  "events_with_windows": 114,
+  "unique_entry_dates": 84,
+  "cost_bps_one_way": 5.0,
+  "entry_rule": "event before open -> same open; at/after open -> next session open",
+  "horizon": "entry open -> close of entry+1 / entry+5 sessions",
+  "sample": {
+    "n": 84,
+    "mean_gross_1d": 0.00100690412236833,
+    "mean_net_1d": 6.904122368329328e-06,
+    "mean_gross_5d": 0.0021448192377042548,
+    "mean_net_5d": 0.0011448192377042537
+  },
+  "unconditional_spy": {
+    "n": 197,
+    "mean_gross_1d": 0.0007138373396680627,
+    "mean_net_1d": null,
+    "mean_gross_5d": 0.0028501127490056675,
+    "mean_net_5d": null
+  },
+  "observation_mode": "retrospective_counterfactual_not_pit",
+  "note": "SPY is a market proxy; no PIT first-seen evidence; overlapping event windows."
+}

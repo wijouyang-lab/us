@@ -1,0 +1,79 @@
+{
+  "status": "ok",
+  "files": [
+    "docs/research\\fomc_backfill_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_batch_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_current_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema2_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema3_2026-10-29.jsonl",
+    "docs/research\\fomc_live_capture_final_2026-10-29.jsonl"
+  ],
+  "empty_files": [],
+  "invalid_lines": 0,
+  "records_total": 14,
+  "unique_events": 3,
+  "real_first_seen_records": 1,
+  "simulated_records": 0,
+  "simulation_flag_missing": 2,
+  "unknown_source_records": 2,
+  "historical_backfill_flag_missing": 0,
+  "late_observations": 2,
+  "historical_backfills": 1,
+  "published_evidence_insufficient": 2,
+  "decision_evidence_insufficient": 3,
+  "pit_admitted": 0,
+  "rejection_reason_counts": {
+    "simulation_flag_missing": 2,
+    "historical_backfill": 1,
+    "parse_status_not_exact": 1,
+    "source_evidence_not_verified": 2,
+    "published_at_evidence_missing": 2,
+    "published_time_missing_or_naive": 1,
+    "first_seen_missing_or_naive": 1,
+    "research_ready_missing_or_naive": 2,
+    "decision_time_missing": 3,
+    "decision_evidence_missing": 3,
+    "late_observation": 2,
+    "observation_lag_exceeds_1h": 2
+  },
+  "events": {
+    "20100127": [
+      "simulation_flag_missing",
+      "historical_backfill",
+      "parse_status_not_exact",
+      "source_evidence_not_verified",
+      "published_at_evidence_missing",
+      "published_time_missing_or_naive",
+      "first_seen_missing_or_naive",
+      "research_ready_missing_or_naive",
+      "decision_time_missing",
+      "decision_evidence_missing"
+    ],
+    "20261028": [
+      "late_observation",
+      "observation_lag_exceeds_1h",
+      "decision_time_missing",
+      "decision_evidence_missing"
+    ],
+    "20250319": [
+      "simulation_flag_missing",
+      "late_observation",
+      "source_evidence_not_verified",
+      "published_at_evidence_missing",
+      "research_ready_missing_or_naive",
+      "observation_lag_exceeds_1h",
+      "decision_time_missing",
+      "decision_evidence_missing"
+    ]
+  },
+  "stores": [
+    "docs/research\\fomc_backfill_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_batch_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_current_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema2_2026-10-29.jsonl",
+    "docs/research\\fomc_forward_capture_schema3_2026-10-29.jsonl",
+    "docs/research\\fomc_live_capture_final_2026-10-29.jsonl"
+  ]
+}

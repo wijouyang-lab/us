@@ -1,0 +1,743 @@
+{
+  "as_of": "2026-10-29T13:35:00Z",
+  "count": 25,
+  "rows": [
+    {
+      "ticker": "CPRI",
+      "component_name": "Capri Holdings",
+      "component_removed": "2020-05-12",
+      "cik": "0001530721",
+      "sec_http": 200,
+      "sec_name": "Capri Holdings Ltd",
+      "tickers": [
+        "CPRI"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "Michael Kors Holdings Ltd",
+          "from": "2011-12-02T05:00:00.000Z",
+          "to": "2018-12-21T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "HOG",
+      "component_name": "Harley-Davidson",
+      "component_removed": "2020-06-22",
+      "cik": "0000793952",
+      "sec_http": 200,
+      "sec_name": "HARLEY-DAVIDSON, INC.",
+      "tickers": [
+        "HOG"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "HARLEY DAVIDSON INC",
+          "from": "1994-06-27T00:00:00.000Z",
+          "to": "2019-06-14T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "HP",
+      "component_name": "Helmerich & Payne",
+      "component_removed": "2020-05-22",
+      "cik": "0000046765",
+      "sec_http": 200,
+      "sec_name": "Helmerich & Payne, Inc.",
+      "tickers": [
+        "HP"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "HELMERICH & PAYNE INC",
+          "from": "1994-01-26T00:00:00.000Z",
+          "to": "2015-08-07T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "HRB",
+      "component_name": "H&R Block",
+      "component_removed": "2020-09-21",
+      "cik": "0000012659",
+      "sec_http": 200,
+      "sec_name": "H&R BLOCK INC",
+      "tickers": [
+        "HRB"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "JWN",
+      "component_name": "Nordstrom",
+      "component_removed": "2020-06-22",
+      "cik": "0000072333",
+      "sec_http": 200,
+      "sec_name": "NORDSTROM INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-06-02",
+          "accession": "0001104659-25-055448",
+          "doc": "tm2515470d13_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-05-21",
+          "accession": "0000876661-25-000371",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-05-21",
+          "accession": "0000876661-25-000369",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "KSS",
+      "component_name": "Kohl's Corp.",
+      "component_removed": "2020-09-21",
+      "cik": "0000885639",
+      "sec_http": 200,
+      "sec_name": "KOHLS Corp",
+      "tickers": [
+        "KSS"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "KOHLS CORPORATION",
+          "from": "1995-04-04T00:00:00.000Z",
+          "to": "2010-12-09T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "M",
+      "component_name": "Macy's Inc.",
+      "component_removed": "2020-04-06",
+      "cik": "0000794367",
+      "sec_http": 200,
+      "sec_name": "Macy's, Inc.",
+      "tickers": [
+        "M"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "FEDERATED DEPARTMENT STORES INC /DE/",
+          "from": "1995-05-31T00:00:00.000Z",
+          "to": "2007-05-31T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "FLS",
+      "component_name": "Flowserve Corporation",
+      "component_removed": "2021-03-22",
+      "cik": "0000030625",
+      "sec_http": 200,
+      "sec_name": "FLOWSERVE CORP",
+      "tickers": [
+        "FLS"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "DURCO INTERNATIONAL INC",
+          "from": "1997-07-23T04:00:00.000Z",
+          "to": "1997-05-15T04:00:00.000Z"
+        },
+        {
+          "name": "DURIRON CO INC",
+          "from": "1994-05-13T04:00:00.000Z",
+          "to": "1997-03-14T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2021-03-19",
+          "accession": "0001143362-21-000048",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "FTI",
+      "component_name": "TechnipFMC",
+      "component_removed": "2021-02-12",
+      "cik": "0001681459",
+      "sec_http": 200,
+      "sec_name": "TechnipFMC plc",
+      "tickers": [
+        "FTI"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "TechnipFMC Ltd",
+          "from": "2016-08-10T00:00:00.000Z",
+          "to": "2016-12-21T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "HBI",
+      "component_name": "Hanesbrands",
+      "component_removed": "2021-12-20",
+      "cik": "0001359841",
+      "sec_http": 200,
+      "sec_name": "Hanesbrands Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Hanesbrands Inc.",
+          "from": "2006-05-24T00:00:00.000Z",
+          "to": "2026-02-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-12-11",
+          "accession": "0001104659-25-120123",
+          "doc": "tm2533204d1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-12-01",
+          "accession": "0000876661-25-000928",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2015-11-12",
+          "accession": "0000876661-15-000564",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "LEG",
+      "component_name": "Leggett & Platt",
+      "component_removed": "2021-12-20",
+      "cik": "0000058492",
+      "sec_http": 200,
+      "sec_name": "LEGGETT & PLATT INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-09-08",
+          "accession": "0001193125-26-384400",
+          "doc": "d160246d1512g.htm"
+        },
+        {
+          "form": "15-12G",
+          "date": "2026-09-08",
+          "accession": "0001193125-26-384395",
+          "doc": "d112188d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-08-27",
+          "accession": "0000876661-26-000712",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "NOV",
+      "component_name": "Nov",
+      "component_removed": "2021-09-20",
+      "cik": "0001021860",
+      "sec_http": 200,
+      "sec_name": "NOV Inc.",
+      "tickers": [
+        "NOV"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "NATIONAL OILWELL VARCO INC",
+          "from": "2005-03-11T05:00:00.000Z",
+          "to": "2020-12-22T05:00:00.000Z"
+        },
+        {
+          "name": "NATIONAL OILWELL INC",
+          "from": "1996-10-04T04:00:00.000Z",
+          "to": "2005-03-08T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "PRGO",
+      "component_name": "Perrigo",
+      "component_removed": "2021-09-20",
+      "cik": "0001585364",
+      "sec_http": 200,
+      "sec_name": "PERRIGO Co plc",
+      "tickers": [
+        "PRGO"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "PERRIGO Co Ltd",
+          "from": "2013-08-28T00:00:00.000Z",
+          "to": "2013-11-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2024-12-16",
+          "accession": "0000876661-24-001171",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-10-02",
+          "accession": "0000876661-24-000904",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-05-20",
+          "accession": "0000876661-22-000431",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-07-06",
+          "accession": "0000876661-20-000552",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-07-06",
+          "accession": "0000876661-20-000550",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-05-09",
+          "accession": "0000876661-17-000255",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "SLG",
+      "component_name": "SL Green Realty",
+      "component_removed": "2021-03-22",
+      "cik": "0001040971",
+      "sec_http": 200,
+      "sec_name": "SL GREEN REALTY CORP",
+      "tickers": [
+        "SLG",
+        "SLG-PI"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2013-06-25",
+          "accession": "0000876661-13-000408",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "UNM",
+      "component_name": "Unum Group",
+      "component_removed": "2021-09-20",
+      "cik": "0000005513",
+      "sec_http": 200,
+      "sec_name": "Unum Group",
+      "tickers": [
+        "UNM",
+        "UNMA"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "UNUMPROVIDENT CORP",
+          "from": "1999-08-05T00:00:00.000Z",
+          "to": "2007-04-10T00:00:00.000Z"
+        },
+        {
+          "name": "PROVIDENT COMPANIES INC /DE/",
+          "from": "1996-12-13T00:00:00.000Z",
+          "to": "1999-07-01T00:00:00.000Z"
+        },
+        {
+          "name": "PROVIDENT COMPANIES INC /TN/",
+          "from": "1996-05-09T00:00:00.000Z",
+          "to": "1996-12-03T00:00:00.000Z"
+        },
+        {
+          "name": "PROVIDENT LIFE & ACCIDENT INSURANCE CO OF AMERICA",
+          "from": "1995-08-30T00:00:00.000Z",
+          "to": "1996-01-09T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "WU",
+      "component_name": "Western Union",
+      "component_removed": "2021-12-20",
+      "cik": "0001365135",
+      "sec_http": 200,
+      "sec_name": "Western Union CO",
+      "tickers": [
+        "WU"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "XRX",
+      "component_name": "Xerox",
+      "component_removed": "2021-03-22",
+      "cik": "0001770450",
+      "sec_http": 200,
+      "sec_name": "Xerox Holdings Corp",
+      "tickers": [
+        "XRX",
+        "XRXDW"
+      ],
+      "exchanges": [
+        "Nasdaq",
+        "Nasdaq"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2021-09-20",
+          "accession": "0001193125-21-277350",
+          "doc": "d189667d25.htm"
+        }
+      ]
+    },
+    {
+      "ticker": "GPS",
+      "component_name": "Gap",
+      "component_removed": "2022-02-03",
+      "cik": "0000039911",
+      "sec_http": 200,
+      "sec_name": "GAP INC",
+      "tickers": [
+        "GAP"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "PVH",
+      "component_name": "PVH",
+      "component_removed": "2022-09-19",
+      "cik": "0000078239",
+      "sec_http": 200,
+      "sec_name": "PVH CORP. /DE/",
+      "tickers": [
+        "PVH"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "PHILLIPS VAN HEUSEN CORP /DE/",
+          "from": "1994-06-17T04:00:00.000Z",
+          "to": "2011-06-23T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "UA",
+      "component_name": "Under Armour (Class C)",
+      "component_removed": "2022-06-21",
+      "cik": "0001336917",
+      "sec_http": 200,
+      "sec_name": "Under Armour, Inc.",
+      "tickers": [
+        "UAA",
+        "UA"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "UAA",
+      "component_name": "Under Armour (Class A)",
+      "component_removed": "2022-06-21",
+      "cik": "0001336917",
+      "sec_http": 200,
+      "sec_name": "Under Armour, Inc.",
+      "tickers": [
+        "UAA",
+        "UA"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "LNC",
+      "component_name": "Lincoln Financial",
+      "component_removed": "2023-09-18",
+      "cik": "0000059558",
+      "sec_http": 200,
+      "sec_name": "LINCOLN NATIONAL CORP",
+      "tickers": [
+        "LNC",
+        "LNC-PD"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "LINCOLN NATIONAL CORP ET AL",
+          "from": "1994-08-01T04:00:00.000Z",
+          "to": "1994-08-16T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2019-07-10",
+          "accession": "0000876661-19-000733",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "NWL",
+      "component_name": "Newell Brands",
+      "component_removed": "2023-09-18",
+      "cik": "0000814453",
+      "sec_http": 200,
+      "sec_name": "NEWELL BRANDS INC.",
+      "tickers": [
+        "NWL"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "NEWELL BRANDS, INC.",
+          "from": "2019-10-17T04:00:00.000Z",
+          "to": "2019-10-25T04:00:00.000Z"
+        },
+        {
+          "name": "NEWELL BRANDS INC",
+          "from": "2016-02-11T05:00:00.000Z",
+          "to": "2019-10-09T04:00:00.000Z"
+        },
+        {
+          "name": "NEWELL RUBBERMAID INC",
+          "from": "1999-09-29T04:00:00.000Z",
+          "to": "2016-04-15T04:00:00.000Z"
+        },
+        {
+          "name": "NEWELL CO",
+          "from": "1995-08-10T04:00:00.000Z",
+          "to": "1999-03-23T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2018-12-10",
+          "accession": "0001193125-18-346171",
+          "doc": "d651997d25.htm"
+        }
+      ]
+    },
+    {
+      "ticker": "SEE",
+      "component_name": "Sealed Air",
+      "component_removed": "2023-12-18",
+      "cik": "0001012100",
+      "sec_http": 200,
+      "sec_name": "SEALED AIR CORP/DE",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "WR GRACE & CO/DE",
+          "from": "1996-11-19T00:00:00.000Z",
+          "to": "1998-03-30T00:00:00.000Z"
+        },
+        {
+          "name": "GRACE HOLDING INC",
+          "from": "1996-08-09T00:00:00.000Z",
+          "to": "1996-10-07T00:00:00.000Z"
+        },
+        {
+          "name": "GRACE HOLDINGING INC",
+          "from": "1996-08-02T00:00:00.000Z",
+          "to": "1996-08-02T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-04-20",
+          "accession": "0001193125-26-162562",
+          "doc": "d131842d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-04-09",
+          "accession": "0000876661-26-000345",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "VNO",
+      "component_name": "Vornado Realty Trust",
+      "component_removed": "2023-01-05",
+      "cik": "0000899689",
+      "sec_http": 200,
+      "sec_name": "VORNADO REALTY TRUST",
+      "tickers": [
+        "VNO",
+        "VNORP",
+        "VNO-PL",
+        "VNO-PM",
+        "VNO-PN",
+        "VNO-PO"
+      ],
+      "exchanges": [
+        "NYSE",
+        "OTC",
+        "NYSE",
+        "NYSE",
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2021-10-13",
+          "accession": "0000876661-21-001483",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-01-16",
+          "accession": "0000876661-18-000039",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-01-04",
+          "accession": "0000876661-18-000016",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2016-09-01",
+          "accession": "0000876661-16-001242",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2013-12-20",
+          "accession": "0000876661-13-000891",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2013-03-22",
+          "accession": "0000876661-13-000133",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2013-03-22",
+          "accession": "0000876661-13-000131",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2012-08-20",
+          "accession": "0000876661-12-000551",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    }
+  ]
+}

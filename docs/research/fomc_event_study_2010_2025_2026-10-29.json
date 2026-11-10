@@ -1,0 +1,73 @@
+{
+  "event_type": "FOMC_statement",
+  "events_source": "docs\\research\\fomc_2010_2025_combined_2026-10-29.json",
+  "events_total": 132,
+  "events_used": 82,
+  "cost_bps_one_way": 5.0,
+  "round_trip_cost_bps": 10.0,
+  "entry_rule": "event before open -> same open; at/after open -> next session open",
+  "price": "raw open/close; no dividend/split adjustment for short window",
+  "observation_mode": "retrospective_counterfactual_not_pit",
+  "proxies": [
+    {
+      "proxy": "SPY",
+      "n": 82,
+      "unique_entry_dates": 82,
+      "mean_gross_1d": -0.0020744198887282786,
+      "mean_net_1d": -0.0030744198887282794,
+      "mean_gross_5d": 6.0662225534833305e-05,
+      "mean_net_5d": -0.0009393377744651676,
+      "baseline_n": 2484,
+      "baseline_gross_1d": 0.0008294232775726897,
+      "baseline_gross_5d": 0.003060412905893216
+    },
+    {
+      "proxy": "QQQ",
+      "n": 82,
+      "unique_entry_dates": 82,
+      "mean_gross_1d": -0.0018355005525077692,
+      "mean_net_1d": -0.0028355005525077704,
+      "mean_gross_5d": 0.0018052258032480017,
+      "mean_net_5d": 0.0008052258032480008,
+      "baseline_n": 2484,
+      "baseline_gross_1d": 0.0011600294549017414,
+      "baseline_gross_5d": 0.0043259055206733826
+    },
+    {
+      "proxy": "IWM",
+      "n": 82,
+      "unique_entry_dates": 82,
+      "mean_gross_1d": -0.0034869320699224726,
+      "mean_net_1d": -0.004486932069922473,
+      "mean_gross_5d": -0.00397854513975651,
+      "mean_net_5d": -0.004978545139756511,
+      "baseline_n": 2484,
+      "baseline_gross_1d": 0.0003909133194818917,
+      "baseline_gross_5d": 0.0022461540603982725
+    },
+    {
+      "proxy": "TLT",
+      "n": 82,
+      "unique_entry_dates": 82,
+      "mean_gross_1d": 0.0013988860377179037,
+      "mean_net_1d": 0.0003988860377179027,
+      "mean_gross_5d": -0.0008049341995966953,
+      "mean_net_5d": -0.0018049341995966962,
+      "baseline_n": 2484,
+      "baseline_gross_1d": 4.368186033114379e-06,
+      "baseline_gross_5d": -0.0004575009705588388
+    },
+    {
+      "proxy": "GLD",
+      "n": 82,
+      "unique_entry_dates": 82,
+      "mean_gross_1d": 0.0018745068961883763,
+      "mean_net_1d": 0.0008745068961883757,
+      "mean_gross_5d": 0.002068996715761663,
+      "mean_net_5d": 0.0010689967157616622,
+      "baseline_n": 2484,
+      "baseline_gross_1d": 0.000603851129325871,
+      "baseline_gross_5d": 0.0028746832850300138
+    }
+  ]
+}

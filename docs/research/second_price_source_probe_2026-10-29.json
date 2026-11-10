@@ -1,0 +1,59 @@
+{
+  "as_of": "2026-10-29T09:15:00Z",
+  "objective": "independent free OHLC source for TWTR/SIVB",
+  "results": [
+    {
+      "source": "Nasdaq public quote API",
+      "url": "https://api.nasdaq.com/api/quote/{ticker}/historical?assetclass=stocks&fromdate=2013-01-01&todate=2023-12-31&limit=9999",
+      "auth": "none",
+      "control": {
+        "ticker": "AAPL",
+        "http": 200,
+        "bytes": 204568,
+        "rows": 1804,
+        "status": "PASS_control"
+      },
+      "samples": [
+        {
+          "ticker": "TWTR",
+          "http": 200,
+          "bytes": 142,
+          "body": "rCode 400 Symbol not exists",
+          "status": "REJECTED_no_delisted_symbol"
+        },
+        {
+          "ticker": "SIVB",
+          "http": 200,
+          "bytes": 142,
+          "body": "rCode 400 Symbol not exists",
+          "status": "REJECTED_no_delisted_symbol"
+        }
+      ],
+      "conclusion": "API works for current AAPL but does not expose delisted TWTR/SIVB."
+    },
+    {
+      "source": "Stooq daily CSV",
+      "url": "https://stooq.com/q/d/l/?s={ticker}.us&i=d",
+      "auth": "none",
+      "samples": [
+        {
+          "ticker": "TWTR",
+          "http": 200,
+          "bytes": 796,
+          "body": "HTML noindex/noscript, not CSV",
+          "status": "UNVERIFIED_anti_bot"
+        },
+        {
+          "ticker": "SIVB",
+          "http": 200,
+          "bytes": 796,
+          "body": "HTML noindex/noscript, not CSV",
+          "status": "UNVERIFIED_anti_bot"
+        }
+      ],
+      "conclusion": "No OHLC returned; blocked by anti-bot page. Not evidence of no history."
+    }
+  ],
+  "independent_source_found": false,
+  "canonical_write": false
+}

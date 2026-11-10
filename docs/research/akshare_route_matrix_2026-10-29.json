@@ -1,0 +1,53 @@
+{
+  "as_of": "2026-10-29T09:05:00Z",
+  "akshare_version": "1.20.2",
+  "terms": {
+    "source": "Sina Finance User Agreement",
+    "url": "https://finance.sina.com.cn/roll/2021-05-12/doc-ikmxzfmm2033220.shtml",
+    "published": "2020-09-23",
+    "fetched": "2026-10-29",
+    "status": "UNRESOLVED",
+    "confirmed": {
+      "personal_noncommercial_use": "2.7 personal, non-transferable, non-exclusive, non-commercial licence",
+      "raw_copy_publication": "2.5/10.1 require prior written authorization for copy, dissemination, mirroring, download by robots/spiders"
+    },
+    "unresolved": [
+      "long-term storage of raw historical prices",
+      "publication of derived research and charts",
+      "bulk automated retrieval",
+      "whether the undocumented static-data endpoint is covered by the user agreement"
+    ],
+    "contact": "finance.app@staff.sina.com.cn (not contacted)"
+  },
+  "routes": [
+    {
+      "route": "sina",
+      "function": "stock_us_daily",
+      "status": "PARTIAL",
+      "samples": {
+        "ADCT": "REJECTED_ticker_reuse",
+        "TWTR": "PASS",
+        "SIVB": "PARTIAL_invalid_ohlc"
+      },
+      "import_status": "blocked_terms",
+      "rows_persisted": 0
+    },
+    {
+      "route": "eastmoney",
+      "function": "stock_us_hist",
+      "status": "UNVERIFIED",
+      "reason": "9 attempts all failed before HTTP: proxy RemoteDisconnected; direct no-proxy WinError 10061",
+      "attempts": 9,
+      "rows_persisted": 0
+    },
+    {
+      "route": "futu",
+      "function": "stock_us_hist_fu",
+      "status": "UNVERIFIED",
+      "reason": "function not present in AKShare 1.20.2; no public route to test",
+      "rows_persisted": 0
+    }
+  ],
+  "canonical_write": false,
+  "bulk_expansion": false
+}

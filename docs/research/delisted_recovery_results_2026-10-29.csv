@@ -1,0 +1,37 @@
+ticker,removed_year,provider,http,rows,first,last,status,reason
+ADCT,2007,Yahoo chart,200,1414.0,2020-05-18,2025-12-31,rejected_ticker_reuse,Yahoo series starts after removal year
+ALTR,2015,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+BRCM,2016,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+CA,2018,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+TWX,2018,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+ALXN,2021,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+XLNX,2021,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+NUAN,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+CTXS,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+TWTR,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+ATVI,2023,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+SIVB,2023,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+FRC,2023,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+PBCT,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+DISCA,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+CERN,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+INFO,2022,Yahoo chart,200,307.0,2024-10-10,2025-12-31,rejected_ticker_reuse,Yahoo series starts after removal year
+ABMD,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+WLTW,2022,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+ANSS,2025,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+MOT,2011,Yahoo chart,200,0.0,,,failed,empty
+WCOM,2002,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+LEHM,2008,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+BSC,2008,Yahoo chart,404,,,,failed,"http_404 {""chart"":{""result"":null,""error"":{""code"":""Not Found"",""description"":""No data found, symbol may be delisted""}}}"
+ADCT,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+ALTR,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+BRCM,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+CA,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+TWX,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+ALXN,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+XLNX,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+NUAN,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+CTXS,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+TWTR,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+ATVI,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0
+SIVB,,Wayback legacy Yahoo CSV,200,0.0,,,failed_no_snapshot,CDX snapshots=0

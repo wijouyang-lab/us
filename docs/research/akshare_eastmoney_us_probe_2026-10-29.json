@@ -1,0 +1,83 @@
+{
+  "as_of": "2026-10-29T08:55:00Z",
+  "results": [
+    {
+      "ticker": "ADCT",
+      "function": "stock_us_hist",
+      "secid": "105.ADCT",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=105.ADCT&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "ADCT",
+      "function": "stock_us_hist",
+      "secid": "106.ADCT",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=106.ADCT&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "ADCT",
+      "function": "stock_us_hist",
+      "secid": "107.ADCT",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=107.ADCT&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "TWTR",
+      "function": "stock_us_hist",
+      "secid": "105.TWTR",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=105.TWTR&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "TWTR",
+      "function": "stock_us_hist",
+      "secid": "106.TWTR",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=106.TWTR&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "TWTR",
+      "function": "stock_us_hist",
+      "secid": "107.TWTR",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=107.TWTR&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "SIVB",
+      "function": "stock_us_hist",
+      "secid": "105.SIVB",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=105.SIVB&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "SIVB",
+      "function": "stock_us_hist",
+      "secid": "106.SIVB",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=106.SIVB&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    },
+    {
+      "ticker": "SIVB",
+      "function": "stock_us_hist",
+      "secid": "107.SIVB",
+      "akshare_version": "1.20.2",
+      "status": "exception",
+      "error": "ProxyError: HTTPSConnectionPool(host='63.push2his.eastmoney.com', port=443): Max retries exceeded with url: /api/qt/stock/kline/get?secid=107.SIVB&fields1=f1%2Cf2%2Cf3%2Cf4%2Cf5%2Cf6&fields2=f51%2Cf52%2Cf53%2Cf54%2Cf55%2Cf56%2Cf57%2Cf58%2Cf59%2Cf60%2Cf61&klt=101&fqt=0&end=20500000&lmt=1000000 (Caused by ProxyError('Unable to connect to proxy', RemoteDisconnected('Remote end closed connection without response')))"
+    }
+  ],
+  "direct_no_proxy": {
+    "status": "connection_refused",
+    "error": "WinError 10061; no HTTP status",
+    "url": "https://63.push2his.eastmoney.com/api/qt/stock/kline/get",
+    "secid": "105.TWTR"
+  }
+}

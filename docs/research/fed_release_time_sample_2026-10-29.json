@@ -1,0 +1,66 @@
+{
+  "as_of": "2026-10-29T06:20:00Z",
+  "sample_count": 5,
+  "rows": [
+    {
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/bcreg20260930a.htm",
+      "published_at_utc": "2026-09-30T13:00:00Z",
+      "published_date": "2026-09-30",
+      "release_time_local": "09:00",
+      "timezone": "EDT",
+      "timestamp_precision": "minute",
+      "parse_status": "exact",
+      "parse_reason": null,
+      "http_status": 200,
+      "content_sha256": "da1e64821940177dff3e04cfa81f463a602b8cb180a499eca30e70a10dbfe1d7"
+    },
+    {
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/enforcement20261016a.htm",
+      "published_at_utc": "2026-10-16T15:00:00Z",
+      "published_date": "2026-10-16",
+      "release_time_local": "11:00",
+      "timezone": "EDT",
+      "timestamp_precision": "minute",
+      "parse_status": "exact",
+      "parse_reason": null,
+      "http_status": 200,
+      "content_sha256": "606605d238d273a958732f0f05fb26dc69ccd1be93be30be3a76cc1e20fa7ac2"
+    },
+    {
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20261013a.htm",
+      "published_at_utc": "2026-10-13T18:00:00Z",
+      "published_date": "2026-10-13",
+      "release_time_local": "14:00",
+      "timezone": "EDT",
+      "timestamp_precision": "minute",
+      "parse_status": "exact",
+      "parse_reason": null,
+      "http_status": 200,
+      "content_sha256": "6af89db1a460a5e55acaa3023076b45db4e40be7dec2b389ab898cc5520d76b1"
+    },
+    {
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/orders20260804a.htm",
+      "published_at_utc": "2026-08-04T20:30:00Z",
+      "published_date": "2026-08-04",
+      "release_time_local": "16:30",
+      "timezone": "EDT",
+      "timestamp_precision": "minute",
+      "parse_status": "exact",
+      "parse_reason": null,
+      "http_status": 200,
+      "content_sha256": "315e34d3b93e25221359ee38f2d7d7c082da439932e3756b560f15146d2c396a"
+    },
+    {
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/other20261009a.htm",
+      "published_at_utc": "2026-10-09T14:00:00Z",
+      "published_date": "2026-10-09",
+      "release_time_local": "10:00",
+      "timezone": "EDT",
+      "timestamp_precision": "minute",
+      "parse_status": "exact",
+      "parse_reason": null,
+      "http_status": 200,
+      "content_sha256": "81a497501d907c7c5d35801a01d289c46fc6a80595e8916655489aed4f3f33cc"
+    }
+  ]
+}

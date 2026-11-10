@@ -1,4 +1,4 @@
-import json
+﻿import json
 from datetime import datetime, timezone
 from urllib.parse import urlparse
 
@@ -86,7 +86,7 @@ def test_collector_fetches_official_headers_and_uses_verified_local_acceptance_t
 
     fixed_now = datetime(2026, 10, 23, 14, 0, tzinfo=timezone.utc)
     collector = SecEventCollector(
-        "Quant research test@example.com",
+        "Quant research tester@quantlab.dev",
         opener=opener,
         sleep=sleeps.append,
         now=lambda: fixed_now,
@@ -131,7 +131,7 @@ def test_collector_flags_recent_history_gap_and_does_not_infer_release_from_fili
         )
 
     collector = SecEventCollector(
-        "Quant research test@example.com",
+        "Quant research tester@quantlab.dev",
         opener=opener,
         sleep=lambda _: None,
         now=lambda: datetime(2026, 10, 23, 14, 0, tzinfo=timezone.utc),
@@ -156,7 +156,7 @@ def test_collector_marks_header_fetch_failures_instead_of_inventing_timestamps()
         raise HTTPError(request.full_url, 404, "not found", {}, None)
 
     collector = SecEventCollector(
-        "Quant research test@example.com",
+        "Quant research tester@quantlab.dev",
         opener=opener,
         sleep=lambda _: None,
         now=lambda: datetime(2026, 10, 23, 14, 0, tzinfo=timezone.utc),
@@ -177,7 +177,7 @@ def test_collector_requires_contact_user_agent_and_restricts_hosts():
     with pytest.raises(ValueError, match="contact email"):
         SecEventCollector("Quant research without contact")
     collector = SecEventCollector(
-        "Quant research test@example.com",
+        "Quant research tester@quantlab.dev",
         opener=lambda *args, **kwargs: pytest.fail("external host must not be called"),
         sleep=lambda _: None,
     )
@@ -192,7 +192,7 @@ def test_collector_marks_timestamp_unverified_as_partial_even_if_http_succeeded(
         return FakeResponse("<html>no accession or timestamp here</html>")
 
     collector = SecEventCollector(
-        "Quant research test@example.com",
+        "Quant research tester@quantlab.dev",
         opener=opener,
         sleep=lambda _: None,
         now=lambda: datetime(2026, 10, 23, 14, 0, tzinfo=timezone.utc),
@@ -222,7 +222,7 @@ def test_collector_cli_refuses_to_overwrite_existing_snapshot_without_flag(tmp_p
             "--start-date", "2026-10-22",
             "--end-date", "2026-10-23",
             "--output", str(output),
-            "--user-agent", "Quant research test@example.com",
+            "--user-agent", "Quant research tester@quantlab.dev",
         ])
     assert exc.value.code == 2
     assert "refusing to overwrite" in capsys.readouterr().err
@@ -243,7 +243,7 @@ def test_collector_cli_requires_distinct_event_and_metadata_outputs(tmp_path, ca
             "--end-date", "2026-10-23",
             "--output", str(output),
             "--metadata-output", str(output),
-            "--user-agent", "Quant research test@example.com",
+            "--user-agent", "Quant research tester@quantlab.dev",
         ])
     assert exc.value.code == 2
     assert "must be different files" in capsys.readouterr().err

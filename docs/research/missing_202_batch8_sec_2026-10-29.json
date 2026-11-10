@@ -1,0 +1,794 @@
+{
+  "as_of": "2026-10-29T14:10:00Z",
+  "count": 25,
+  "rows": [
+    {
+      "ticker": "CMA",
+      "component_name": "Comerica",
+      "component_removed": "2024-06-24",
+      "cik": "0000028412",
+      "sec_http": 200,
+      "sec_name": "COMERICA INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "COMERICA INC /NEW/",
+          "from": "1994-02-10T00:00:00.000Z",
+          "to": "2025-08-25T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-02-12",
+          "accession": "0001193125-26-047635",
+          "doc": "d246596d1512g.htm"
+        },
+        {
+          "form": "15-12G",
+          "date": "2026-02-12",
+          "accession": "0001193125-26-047629",
+          "doc": "d246596d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-02-02",
+          "accession": "0000876661-26-000079",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "15-12G",
+          "date": "2018-12-13",
+          "accession": "0000028412-18-000169",
+          "doc": "form15-12gsterlingwarrants.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-11-13",
+          "accession": "0000876661-18-001204",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "MRO",
+      "component_name": "Marathon Oil",
+      "component_removed": "2024-11-26",
+      "cik": "0000101778",
+      "sec_http": 200,
+      "sec_name": "MARATHON OIL CORP",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "USX CORP",
+          "from": "1994-08-29T00:00:00.000Z",
+          "to": "2002-01-09T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2024-12-02",
+          "accession": "0001104659-24-124605",
+          "doc": "tm2429862d1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-11-22",
+          "accession": "0000876661-24-001100",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "QRVO",
+      "component_name": "Qorvo",
+      "component_removed": "2024-12-23",
+      "cik": "0001604778",
+      "sec_http": 200,
+      "sec_name": "Qorvo, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Rocky Holding, Inc.",
+          "from": "2014-04-14T00:00:00.000Z",
+          "to": "2014-10-08T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-10-15",
+          "accession": "0001104659-26-116241",
+          "doc": "tm2627544d1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-10-05",
+          "accession": "0001354457-26-000942",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "RHI",
+      "component_name": "Robert Half",
+      "component_removed": "2024-06-24",
+      "cik": "0000315213",
+      "sec_http": 200,
+      "sec_name": "ROBERT HALF INC.",
+      "tickers": [
+        "RHI"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "ROBERT HALF INTERNATIONAL INC.",
+          "from": "2019-07-23T00:00:00.000Z",
+          "to": "2023-05-19T00:00:00.000Z"
+        },
+        {
+          "name": "HALF ROBERT INTERNATIONAL INC /DE/",
+          "from": "1994-05-09T00:00:00.000Z",
+          "to": "2019-05-29T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "VFC",
+      "component_name": "VF Corporation",
+      "component_removed": "2024-04-03",
+      "cik": "0000103379",
+      "sec_http": 200,
+      "sec_name": "V F CORP",
+      "tickers": [
+        "VFC"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "V F CORP/NC",
+          "from": "2002-03-20T05:00:00.000Z",
+          "to": "2002-02-15T05:00:00.000Z"
+        },
+        {
+          "name": "V F CORP /PA/",
+          "from": "1994-04-29T04:00:00.000Z",
+          "to": "2001-01-10T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2026-02-09",
+          "accession": "0000876661-26-000097",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2023-09-20",
+          "accession": "0000876661-23-000742",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "WHR",
+      "component_name": "Whirlpool Corporation",
+      "component_removed": "2024-03-18",
+      "cik": "0000106640",
+      "sec_http": 200,
+      "sec_name": "WHIRLPOOL CORP /DE/",
+      "tickers": [
+        "WHR",
+        "WHR-PA"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2020-03-12",
+          "accession": "0000876661-20-000204",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "WRK",
+      "component_name": "WestRock",
+      "component_removed": "2024-07-08*",
+      "cik": "0001732845",
+      "sec_http": 200,
+      "sec_name": "WestRock Co",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Whiskey Holdco, Inc.",
+          "from": "2018-03-28T00:00:00.000Z",
+          "to": "2018-08-01T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2024-07-18",
+          "accession": "0001104659-24-080840",
+          "doc": "tm2419498d4_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-07-08",
+          "accession": "0000876661-24-000561",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "15-12G",
+          "date": "2022-06-24",
+          "accession": "0001157523-22-000797",
+          "doc": "a52761507.htm"
+        }
+      ]
+    },
+    {
+      "ticker": "XRAY",
+      "component_name": "Dentsply Sirona",
+      "component_removed": "2024-04-03",
+      "cik": "0000818479",
+      "sec_http": 200,
+      "sec_name": "DENTSPLY SIRONA Inc.",
+      "tickers": [
+        "XRAY"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "DENTSPLY INTERNATIONAL INC /DE/",
+          "from": "1995-02-13T00:00:00.000Z",
+          "to": "2016-02-29T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "ZION",
+      "component_name": "Zions Bancorporation",
+      "component_removed": "2024-03-18",
+      "cik": "0000109380",
+      "sec_http": 200,
+      "sec_name": "ZIONS BANCORPORATION, NATIONAL ASSOCIATION /UT/",
+      "tickers": [
+        "ZION",
+        "ZIONP"
+      ],
+      "exchanges": [
+        "Nasdaq",
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "ZIONS BANCORPORATION /UT/",
+          "from": "1994-03-29T00:00:00.000Z",
+          "to": "2018-09-17T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2024-12-16",
+          "accession": "0001354457-24-000946",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-06-11",
+          "accession": "0001354457-21-000648",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "DFS",
+      "component_name": "Discover Financial",
+      "component_removed": "2025-05-19",
+      "cik": "0001393612",
+      "sec_http": 200,
+      "sec_name": "Discover Financial Services",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-05-29",
+          "accession": "0001193125-25-130640",
+          "doc": "d66529d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-05-19",
+          "accession": "0000876661-25-000350",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2017-12-01",
+          "accession": "0000876661-17-000722",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "EMN",
+      "component_name": "Eastman Chemical Company",
+      "component_removed": "2025-11-04",
+      "cik": "0000915389",
+      "sec_http": 200,
+      "sec_name": "EASTMAN CHEMICAL CO",
+      "tickers": [
+        "EMN"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2023-05-26",
+          "accession": "0000876661-23-000451",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "FMC",
+      "component_name": "FMC Corporation",
+      "component_removed": "2025-03-24",
+      "cik": "0000037785",
+      "sec_http": 200,
+      "sec_name": "FMC CORP",
+      "tickers": [
+        "FMC"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "HES",
+      "component_name": "Hess Corporation",
+      "component_removed": "2025-07-23",
+      "cik": "0000004447",
+      "sec_http": 200,
+      "sec_name": "HESS CORP",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "AMERADA HESS CORP",
+          "from": "1994-05-12T00:00:00.000Z",
+          "to": "2006-05-02T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-07-28",
+          "accession": "0000950142-25-002026",
+          "doc": "eh250647880_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-07-18",
+          "accession": "0000876661-25-000523",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2019-01-31",
+          "accession": "0000876661-19-000080",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "IPG",
+      "component_name": "Interpublic Group of Companies (The)",
+      "component_removed": "2025-11-28",
+      "cik": "0000051644",
+      "sec_http": 200,
+      "sec_name": "INTERPUBLIC GROUP OF COMPANIES, INC.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "INTERPUBLIC GROUP OF COMPANIES INC",
+          "from": "1994-02-09T00:00:00.000Z",
+          "to": "2004-05-20T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-12-08",
+          "accession": "0001193125-25-311425",
+          "doc": "d24061d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-11-28",
+          "accession": "0000876661-25-000918",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "K",
+      "component_name": "Kellanova",
+      "component_removed": "2025-12-11",
+      "cik": "0000055067",
+      "sec_http": 200,
+      "sec_name": "KELLANOVA",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "KELLOGG CO",
+          "from": "1994-04-29T00:00:00.000Z",
+          "to": "2023-09-28T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-12-22",
+          "accession": "0001193125-25-327851",
+          "doc": "d73797d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-12-11",
+          "accession": "0000876661-25-000958",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-03-10",
+          "accession": "0000876661-25-000167",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-05-17",
+          "accession": "0000876661-24-000358",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-11-17",
+          "accession": "0000876661-22-001000",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-05-24",
+          "accession": "0000876661-21-000780",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "KMX",
+      "component_name": "CarMax",
+      "component_removed": "2025-10-31",
+      "cik": "0001170010",
+      "sec_http": 200,
+      "sec_name": "CARMAX INC",
+      "tickers": [
+        "KMX"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "LKQ",
+      "component_name": "LKQ Corporation",
+      "component_removed": "2025-12-22",
+      "cik": "0001065696",
+      "sec_http": 200,
+      "sec_name": "LKQ CORP",
+      "tickers": [
+        "LKQ"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "LKQ CORP",
+          "from": "2003-07-28T00:00:00.000Z",
+          "to": "2026-10-29T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "MHK",
+      "component_name": "Mohawk Industries",
+      "component_removed": "2025-12-22",
+      "cik": "0000851968",
+      "sec_http": 200,
+      "sec_name": "MOHAWK INDUSTRIES INC",
+      "tickers": [
+        "MHK"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "MOHAWK INDUSTRIES INC.",
+          "from": "1995-02-08T05:00:00.000Z",
+          "to": "1995-02-08T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2021-10-20",
+          "accession": "0000876661-21-001514",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-09-07",
+          "accession": "0000876661-21-001286",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-05-18",
+          "accession": "0000876661-20-000413",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2019-09-13",
+          "accession": "0000876661-19-000947",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "WBA",
+      "component_name": "Walgreens Boots Alliance",
+      "component_removed": "2025-08-28",
+      "cik": "0001618921",
+      "sec_http": 200,
+      "sec_name": "Walgreens Boots Alliance, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-09-08",
+          "accession": "0001193125-25-198101",
+          "doc": "d59662d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-08-28",
+          "accession": "0001354457-25-000854",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-10-19",
+          "accession": "0001354457-20-000604",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2018-12-21",
+          "accession": "0000950103-18-014902",
+          "doc": "dp99561_25.htm"
+        }
+      ]
+    },
+    {
+      "ticker": "CAG",
+      "component_name": "Conagra Brands",
+      "component_removed": "2026-06-30",
+      "cik": "0000023217",
+      "sec_http": 200,
+      "sec_name": "CONAGRA BRANDS INC.",
+      "tickers": [
+        "CAG"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "CONAGRA FOODS INC /DE/",
+          "from": "2000-10-11T00:00:00.000Z",
+          "to": "2016-10-21T00:00:00.000Z"
+        },
+        {
+          "name": "CONAGRA INC /DE/",
+          "from": "1994-04-22T00:00:00.000Z",
+          "to": "2000-06-30T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "CPB",
+      "component_name": "Campbell's Company (The)",
+      "component_removed": "2026-06-22",
+      "cik": "0000016732",
+      "sec_http": 200,
+      "sec_name": "CAMPBELL'S Co",
+      "tickers": [
+        "CPB"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "CAMPBELL SOUP CO",
+          "from": "1994-12-14T00:00:00.000Z",
+          "to": "2024-11-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2024-08-16",
+          "accession": "0001193125-24-202140",
+          "doc": "d869921d25.htm"
+        }
+      ]
+    },
+    {
+      "ticker": "EA",
+      "component_name": "Electronic Arts",
+      "component_removed": "2026-08-05",
+      "cik": "0000712515",
+      "sec_http": 200,
+      "sec_name": "ELECTRONIC ARTS INC.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "ELECTRONIC ARTS INC",
+          "from": "1994-09-08T00:00:00.000Z",
+          "to": "2007-09-05T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-08-14",
+          "accession": "0001140361-26-032929",
+          "doc": "ef20079519_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-08-04",
+          "accession": "0001354457-26-000757",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "EQR",
+      "component_name": "Equity Residential",
+      "component_removed": "2026-08-18*",
+      "cik": "0000906107",
+      "sec_http": 200,
+      "sec_name": "VIVMARK RESIDENTIAL",
+      "tickers": [
+        "VMRK"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "EQUITY RESIDENTIAL",
+          "from": "2002-11-13T00:00:00.000Z",
+          "to": "2026-08-12T00:00:00.000Z"
+        },
+        {
+          "name": "EQUITY RESIDENTIAL PROPERTIES TRUST",
+          "from": "1994-02-10T00:00:00.000Z",
+          "to": "2002-10-30T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": []
+    },
+    {
+      "ticker": "HOLX",
+      "component_name": "Hologic",
+      "component_removed": "2026-04-09",
+      "cik": "0000859737",
+      "sec_http": 200,
+      "sec_name": "HOLOGIC INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "HOLOGIC INC",
+          "from": "1995-05-08T00:00:00.000Z",
+          "to": "2026-04-30T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-04-17",
+          "accession": "0001193125-26-160661",
+          "doc": "d124456d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-04-07",
+          "accession": "0001354457-26-000329",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    },
+    {
+      "ticker": "MMC",
+      "component_name": "Marsh McLennan",
+      "component_removed": "2026-01-14*",
+      "cik": "0000062709",
+      "sec_http": 200,
+      "sec_name": "MARSH & MCLENNAN COMPANIES, INC.",
+      "tickers": [
+        "MRSH"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "MARSH & MCLENNAN COMPANIES INC",
+          "from": "1994-05-13T04:00:00.000Z",
+          "to": "2005-01-31T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2026-09-21",
+          "accession": "0000876661-26-000777",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ]
+    }
+  ]
+}

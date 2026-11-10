@@ -1,0 +1,35 @@
+{
+  "repository": "https://github.com/Johnbrick123/sp500-data",
+  "reviewed_at": "2026-10-29T08:40:00Z",
+  "code_license": null,
+  "license_file": null,
+  "github_license_api": null,
+  "data_license": null,
+  "contains_restricted_source": true,
+  "restricted_sources": [
+    "CRSP",
+    "Tiingo",
+    "Yahoo",
+    "WIKI/Quandl",
+    "Internet Archive"
+  ],
+  "redistribution_allowed": false,
+  "storage_allowed": false,
+  "verification_claims": {
+    "README_rows": 12285625,
+    "README_tickers": 1895,
+    "release_verification_rows": 5676289,
+    "release_verification_tickers": 916,
+    "README_recycled": 17,
+    "release_recycled_csv": 14,
+    "release_check8_worst_coverage_1996": 0.439
+  },
+  "decision": "reject_for_import",
+  "reasons": [
+    "no code LICENSE",
+    "no data LICENSE or redistribution terms",
+    "CRSP-derived data cannot be redistributed",
+    "Tiingo/Yahoo/WIKI/IA rights not established",
+    "README and release verification counts disagree"
+  ]
+}

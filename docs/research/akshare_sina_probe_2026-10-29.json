@@ -1,0 +1,80 @@
+{
+  "as_of": "2026-10-29T09:00:00Z",
+  "source": "AKShare stock_us_daily -> Sina staticdata",
+  "terms": "terms_confirmation_required; no bulk storage or redistribution",
+  "canonical_write": false,
+  "results": [
+    {
+      "ticker": "ADCT",
+      "function": "stock_us_daily",
+      "akshare_version": "1.20.2",
+      "upstream": "https://finance.sina.com.cn/staticdata/us/ADCT",
+      "auth_required": false,
+      "status": "rejected",
+      "rows": 1622,
+      "first": "2020-05-15",
+      "last": "2026-10-28",
+      "last_close": 1.62,
+      "duplicate_dates": 0,
+      "weekend_rows": 0,
+      "ohlc_bad_rows": 0,
+      "validator": {
+        "accepted": false,
+        "reasons": [
+          "series_starts_after_delisting_ticker_reuse",
+          "series_extends_after_delisting_ticker_reuse"
+        ],
+        "first": "2020-05-15",
+        "last": "2026-10-28",
+        "rows": 1622
+      }
+    },
+    {
+      "ticker": "TWTR",
+      "function": "stock_us_daily",
+      "akshare_version": "1.20.2",
+      "upstream": "https://finance.sina.com.cn/staticdata/us/TWTR",
+      "auth_required": false,
+      "status": "accepted",
+      "rows": 2259,
+      "first": "2013-11-07",
+      "last": "2022-10-27",
+      "last_close": 53.7,
+      "duplicate_dates": 0,
+      "weekend_rows": 0,
+      "ohlc_bad_rows": 0,
+      "validator": {
+        "accepted": true,
+        "reasons": [],
+        "first": "2013-11-07",
+        "last": "2022-10-27",
+        "rows": 2259
+      }
+    },
+    {
+      "ticker": "SIVB",
+      "function": "stock_us_daily",
+      "akshare_version": "1.20.2",
+      "upstream": "https://finance.sina.com.cn/staticdata/us/SIVB",
+      "auth_required": false,
+      "status": "rejected",
+      "rows": 8777,
+      "first": "1987-10-26",
+      "last": "2023-03-09",
+      "last_close": 106.04,
+      "duplicate_dates": 0,
+      "weekend_rows": 0,
+      "ohlc_bad_rows": 3,
+      "validator": {
+        "accepted": false,
+        "reasons": [
+          "invalid_ohlc"
+        ],
+        "first": "1987-10-26",
+        "last": "2023-03-09",
+        "rows": 8777
+      }
+    }
+  ],
+  "auth_required": false
+}

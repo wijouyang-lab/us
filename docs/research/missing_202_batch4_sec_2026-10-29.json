@@ -1,0 +1,922 @@
+{
+  "as_of": "2026-10-29T12:50:00Z",
+  "count": 25,
+  "rows": [
+    {
+      "ticker": "COL",
+      "component_name": "Rockwell Collins",
+      "component_removed": "2018-12-03",
+      "cik": "0001137411",
+      "sec_http": 200,
+      "sec_name": "ROCKWELL COLLINS INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "NEW ROCKWELL COLLINS INC",
+          "from": "2001-06-15T00:00:00.000Z",
+          "to": "2001-06-15T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2018-11-27",
+          "accession": "0000876661-18-001267",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-11-27",
+          "accession": "0000876661-18-001259",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2018-11-27",
+        "accession": "0001193125-18-334170",
+        "doc": "d598640d8k.htm"
+      }
+    },
+    {
+      "ticker": "ESRX",
+      "component_name": "Express Scripts",
+      "component_removed": "2018-12-24",
+      "cik": "0001532063",
+      "sec_http": 200,
+      "sec_name": "Express Scripts Holding Co.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Aristotle Holding, Inc.",
+          "from": "2011-10-06T00:00:00.000Z",
+          "to": "2011-11-18T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2018-12-21",
+          "accession": "0001354457-18-000538",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2018-12-20",
+        "accession": "0001140361-18-045477",
+        "doc": "form8k.htm"
+      }
+    },
+    {
+      "ticker": "EVHC",
+      "component_name": "Envision Healthcare",
+      "component_removed": "2018-10-11",
+      "cik": "0000895930",
+      "sec_http": 200,
+      "sec_name": "AMSURG CORP",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2016-12-01",
+          "accession": "0001354457-16-000566",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2016-12-01",
+          "accession": "0001354457-16-000565",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2016-12-07",
+        "accession": "0000895930-16-000327",
+        "doc": "amsg8k20161207.htm"
+      }
+    },
+    {
+      "ticker": "TWX",
+      "component_name": "Time Warner Inc.",
+      "component_removed": "2018-06-20",
+      "cik": "0001105705",
+      "sec_http": 200,
+      "sec_name": "WARNER MEDIA, LLC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "TIME WARNER LLC",
+          "from": "2018-06-15T00:00:00.000Z",
+          "to": "2018-06-18T00:00:00.000Z"
+        },
+        {
+          "name": "TIME WARNER INC.",
+          "from": "2007-12-11T00:00:00.000Z",
+          "to": "2018-06-11T00:00:00.000Z"
+        },
+        {
+          "name": "TIME WARNER INC",
+          "from": "2003-10-01T00:00:00.000Z",
+          "to": "2007-11-09T00:00:00.000Z"
+        },
+        {
+          "name": "AOL TIME WARNER INC",
+          "from": "2000-04-25T00:00:00.000Z",
+          "to": "2003-10-14T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2018-06-25",
+          "accession": "0001193125-18-202546",
+          "doc": "d624836d25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-06-15",
+          "accession": "0000876661-18-000724",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2018-06-21",
+        "accession": "0001193125-18-199601",
+        "doc": "d601429d8k.htm"
+      }
+    },
+    {
+      "ticker": "CELG",
+      "component_name": "Celgene Corp.",
+      "component_removed": "2019-11-21",
+      "cik": "0000816284",
+      "sec_http": 200,
+      "sec_name": "CELGENE CORP /DE/",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2019-12-02",
+          "accession": "0001140361-19-021751",
+          "doc": "form25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2019-11-20",
+          "accession": "0001354457-19-000613",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2019-11-22",
+        "accession": "0001104659-19-066707",
+        "doc": "tm19236191_8k.htm"
+      }
+    },
+    {
+      "ticker": "RHT",
+      "component_name": "Red Hat Inc.",
+      "component_removed": "2019-07-15",
+      "cik": "0001087423",
+      "sec_http": 200,
+      "sec_name": "RED HAT INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2019-07-09",
+          "accession": "0000876661-19-000723",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2019-07-09",
+        "accession": "0000950142-19-001516",
+        "doc": "eh1900894_8k-rh.htm"
+      }
+    },
+    {
+      "ticker": "SYMC",
+      "component_name": "Symantec Corp.",
+      "component_removed": "2019-11-06*",
+      "cik": "0000849399",
+      "sec_http": 200,
+      "sec_name": "Gen Digital Inc.",
+      "tickers": [
+        "GEN",
+        "GENVR"
+      ],
+      "exchanges": [
+        "Nasdaq",
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "NortonLifeLock Inc.",
+          "from": "2019-11-04T05:00:00.000Z",
+          "to": "2022-10-12T04:00:00.000Z"
+        },
+        {
+          "name": "SYMANTEC CORP",
+          "from": "1995-05-09T04:00:00.000Z",
+          "to": "2019-10-24T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-28",
+        "accession": "0000849399-26-000081",
+        "doc": "gen-20261028.htm"
+      }
+    },
+    {
+      "ticker": "MYL",
+      "component_name": "Mylan N.V.",
+      "component_removed": "2020-11-18*",
+      "cik": "0001623613",
+      "sec_http": 200,
+      "sec_name": "Mylan II B.V.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Mylan N.V.",
+          "from": "2015-02-27T00:00:00.000Z",
+          "to": "2020-11-06T00:00:00.000Z"
+        },
+        {
+          "name": "New Moon B.V.",
+          "from": "2014-11-05T00:00:00.000Z",
+          "to": "2014-12-24T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2020-11-16",
+          "accession": "0001354457-20-000696",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2020-11-19",
+        "accession": "0001193125-20-298224",
+        "doc": "d91045d8k.htm"
+      }
+    },
+    {
+      "ticker": "RTN",
+      "component_name": "Raytheon Co.",
+      "component_removed": "2020-04-06",
+      "cik": "0001047122",
+      "sec_http": 200,
+      "sec_name": "RAYTHEON CO/",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "HE HOLDINGS INC",
+          "from": "1997-10-08T00:00:00.000Z",
+          "to": "1997-11-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2020-04-03",
+          "accession": "0000876661-20-000291",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2011-12-12",
+          "accession": "0000876661-11-000534",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2020-04-03",
+        "accession": "0001193125-20-097237",
+        "doc": "d827106d8k.htm"
+      }
+    },
+    {
+      "ticker": "UTX",
+      "component_name": "United Technologies",
+      "component_removed": "2020-04-03",
+      "cik": "0000101829",
+      "sec_http": 200,
+      "sec_name": "RTX Corp",
+      "tickers": [
+        "RTX"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "RAYTHEON TECHNOLOGIES CORP",
+          "from": "2020-04-07T00:00:00.000Z",
+          "to": "2023-06-29T00:00:00.000Z"
+        },
+        {
+          "name": "UNITED TECHNOLOGIES CORP /DE/",
+          "from": "1994-01-24T00:00:00.000Z",
+          "to": "2020-04-06T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2023-06-20",
+          "accession": "0001193125-23-170194",
+          "doc": "d520203d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-05-18",
+          "accession": "0000876661-20-000414",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-03-31",
+          "accession": "0000876661-20-000275",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-03-31",
+          "accession": "0000876661-20-000274",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-03-31",
+          "accession": "0000876661-20-000273",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2020-03-31",
+          "accession": "0000876661-20-000272",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2019-11-13",
+          "accession": "0000876661-19-001135",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2018-02-22",
+          "accession": "0000876661-18-000199",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-20",
+        "accession": "0000101829-26-000030",
+        "doc": "rtx-20261020.htm"
+      }
+    },
+    {
+      "ticker": "XEC",
+      "component_name": "Cimarex Energy",
+      "component_removed": "2020-03-02",
+      "cik": "0001168054",
+      "sec_http": 200,
+      "sec_name": "CIMAREX ENERGY CO",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "HELMERICH & PAYNE EXPLORATION & PRODUCTION CO",
+          "from": "2002-02-26T00:00:00.000Z",
+          "to": "2002-04-24T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2021-10-01",
+          "accession": "0000876661-21-001438",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2021-10-07",
+        "accession": "0001104659-21-124223",
+        "doc": "tm2129464d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "COG",
+      "component_name": "Cabot Oil & Gas",
+      "component_removed": "2021-10-03*",
+      "cik": "0000858470",
+      "sec_http": 200,
+      "sec_name": "Coterra Energy Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "CABOT OIL & GAS CORP",
+          "from": "1994-05-12T00:00:00.000Z",
+          "to": "2021-09-29T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-05-19",
+          "accession": "0001193125-26-231109",
+          "doc": "d140392d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-05-07",
+          "accession": "0000876661-26-000399",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-05-07",
+        "accession": "0001104659-26-057278",
+        "doc": "tm2613882d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "CXO",
+      "component_name": "Concho Resources",
+      "component_removed": "2021-01-21",
+      "cik": "0001358071",
+      "sec_http": 200,
+      "sec_name": "CONCHO RESOURCES INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "CONCO RESOURCES INC",
+          "from": "2006-03-14T00:00:00.000Z",
+          "to": "2006-03-14T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2021-01-19",
+          "accession": "0000876661-21-000081",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2021-01-15",
+        "accession": "0001104659-21-004795",
+        "doc": "tm213218d6_8k.htm"
+      }
+    },
+    {
+      "ticker": "FLIR",
+      "component_name": "FLIR Systems",
+      "component_removed": "2021-05-14",
+      "cik": "0000354908",
+      "sec_http": 200,
+      "sec_name": "Teledyne FLIR, LLC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "FLIR SYSTEMS INC",
+          "from": "1996-08-14T00:00:00.000Z",
+          "to": "2021-05-14T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2021-05-24",
+          "accession": "0001193125-21-170985",
+          "doc": "d162258d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-05-14",
+          "accession": "0001354457-21-000563",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "15-12G",
+          "date": "2009-09-21",
+          "accession": "0001193125-09-194978",
+          "doc": "d1512g.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2021-05-14",
+        "accession": "0001193125-21-161540",
+        "doc": "d127190d8k.htm"
+      }
+    },
+    {
+      "ticker": "KSU",
+      "component_name": "Kansas City Southern",
+      "component_removed": "2021-12-14",
+      "cik": "0000054480",
+      "sec_http": 200,
+      "sec_name": "KANSAS CITY SOUTHERN",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "KANSAS CITY SOUTHERN INDUSTRIES INC",
+          "from": "1994-11-14T00:00:00.000Z",
+          "to": "2002-05-02T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2023-04-24",
+          "accession": "0001193125-23-113043",
+          "doc": "d503510d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-12-14",
+          "accession": "0000876661-21-001750",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-12-14",
+          "accession": "0000876661-21-001748",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2023-04-20",
+        "accession": "0001193125-23-108341",
+        "doc": "d500765d8k.htm"
+      }
+    },
+    {
+      "ticker": "TIF",
+      "component_name": "Tiffany & Co.",
+      "component_removed": "2021-01-07",
+      "cik": "0000098246",
+      "sec_http": 200,
+      "sec_name": "TIFFANY & CO",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2021-01-07",
+          "accession": "0000876661-21-000016",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2021-01-07",
+        "accession": "0001193125-21-004213",
+        "doc": "d301758d8k.htm"
+      }
+    },
+    {
+      "ticker": "XLNX",
+      "component_name": "Xilinx",
+      "component_removed": "2022-02-15",
+      "cik": "0000743988",
+      "sec_http": 200,
+      "sec_name": "XILINX INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "XILINX, INCORPORATED",
+          "from": "1994-12-09T00:00:00.000Z",
+          "to": "1994-12-09T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2022-02-24",
+          "accession": "0001104659-22-026582",
+          "doc": "tm227300-1_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-02-14",
+          "accession": "0001354457-22-000131",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2022-02-14",
+        "accession": "0001104659-22-021762",
+        "doc": "tm226258d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "WLTW",
+      "component_name": "Willis Towers Watson",
+      "component_removed": "2022-01-10",
+      "cik": "0001140536",
+      "sec_http": 200,
+      "sec_name": "WILLIS TOWERS WATSON PLC",
+      "tickers": [
+        "WTW"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "WILLIS GROUP HOLDINGS PLC",
+          "from": "2010-01-19T00:00:00.000Z",
+          "to": "2016-01-05T00:00:00.000Z"
+        },
+        {
+          "name": "WILLIS GROUP HOLDINGS LTD",
+          "from": "2001-07-31T00:00:00.000Z",
+          "to": "2010-01-04T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-29",
+        "accession": "0001171843-26-006942",
+        "doc": "f8k_102826.htm"
+      }
+    },
+    {
+      "ticker": "CERN",
+      "component_name": "Cerner",
+      "component_removed": "2022-06-08",
+      "cik": "0000804753",
+      "sec_http": 200,
+      "sec_name": "CERNER Corp",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "CERNER CORP /MO/",
+          "from": "1994-02-14T00:00:00.000Z",
+          "to": "2019-07-17T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2022-06-23",
+          "accession": "0001193125-22-179832",
+          "doc": "d367642d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-06-08",
+          "accession": "0001354457-22-000333",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2022-06-08",
+        "accession": "0001193125-22-169841",
+        "doc": "d223229d8k.htm"
+      }
+    },
+    {
+      "ticker": "CTXS",
+      "component_name": "Citrix",
+      "component_removed": "2022-10-03",
+      "cik": "0000877890",
+      "sec_http": 200,
+      "sec_name": "CITRIX SYSTEMS INC",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2022-10-12",
+          "accession": "0001193125-22-261249",
+          "doc": "d594288d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-09-30",
+          "accession": "0001354457-22-000553",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2022-10-03",
+        "accession": "0001193125-22-256805",
+        "doc": "d393433d8k.htm"
+      }
+    },
+    {
+      "ticker": "PBCT",
+      "component_name": "People's United Financial",
+      "component_removed": "2022-04-04",
+      "cik": "0001378946",
+      "sec_http": 200,
+      "sec_name": "People's United Financial, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2022-04-04",
+          "accession": "0001354457-22-000218",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2022-04-04",
+        "accession": "0001193125-22-094315",
+        "doc": "d304251d8k.htm"
+      }
+    },
+    {
+      "ticker": "DISCA",
+      "component_name": "Discovery (Series A)",
+      "component_removed": "2022-04-11",
+      "cik": "0001437107",
+      "sec_http": 200,
+      "sec_name": "Warner Bros. Discovery, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Discovery, Inc.",
+          "from": "2018-03-06T00:00:00.000Z",
+          "to": "2022-04-08T00:00:00.000Z"
+        },
+        {
+          "name": "Discovery Communications, Inc.",
+          "from": "2008-06-11T00:00:00.000Z",
+          "to": "2018-03-05T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-10-16",
+          "accession": "0001193125-26-423513",
+          "doc": "d188095d1512g.htm"
+        },
+        {
+          "form": "25",
+          "date": "2026-10-06",
+          "accession": "0001193125-26-415091",
+          "doc": "d155700d25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-10-06",
+          "accession": "0001354457-26-000951",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-04-08",
+          "accession": "0001354457-22-000231",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-04-08",
+          "accession": "0001354457-22-000230",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-04-08",
+          "accession": "0001354457-22-000229",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-06",
+        "accession": "0001193125-26-415055",
+        "doc": "d200872d8k.htm"
+      }
+    },
+    {
+      "ticker": "FB",
+      "component_name": "Meta",
+      "component_removed": "2022-06-08*",
+      "cik": "0001326801",
+      "sec_http": 200,
+      "sec_name": "Meta Platforms, Inc.",
+      "tickers": [
+        "META"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "Facebook Inc",
+          "from": "2005-05-06T04:00:00.000Z",
+          "to": "2021-10-27T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-21",
+        "accession": "0001628280-26-066700",
+        "doc": "meta-20261019.htm"
+      }
+    },
+    {
+      "ticker": "PKI",
+      "component_name": "PerkinElmer",
+      "component_removed": "2023-05-17*",
+      "cik": "0000031791",
+      "sec_http": 200,
+      "sec_name": "REVVITY, INC.",
+      "tickers": [
+        "RVTY"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "PERKINELMER INC",
+          "from": "1999-11-05T00:00:00.000Z",
+          "to": "2023-04-14T00:00:00.000Z"
+        },
+        {
+          "name": "EG&G INC",
+          "from": "1994-03-17T00:00:00.000Z",
+          "to": "1999-07-26T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2026-07-20",
+          "accession": "0000876661-26-000629",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-04-09",
+          "accession": "0000876661-21-000520",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-08-04",
+        "accession": "0000031791-26-000022",
+        "doc": "pki-20260804.htm"
+      }
+    },
+    {
+      "ticker": "ETFC",
+      "component_name": "E*Trade",
+      "component_removed": "2020-10-07",
+      "cik": "0001015780",
+      "sec_http": 200,
+      "sec_name": "E TRADE FINANCIAL CORP",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "E TRADE GROUP INC",
+          "from": "1996-06-07T00:00:00.000Z",
+          "to": "2003-10-01T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2020-10-02",
+          "accession": "0001354457-20-000554",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2020-10-02",
+        "accession": "0001193125-20-262038",
+        "doc": "d75342d8k.htm"
+      }
+    }
+  ]
+}

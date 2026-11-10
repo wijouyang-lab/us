@@ -1,0 +1,4 @@
+date,field,value,low,high,type,source,adjust_raw,adjust_qfq,first_seen,status,evidence,action
+2008-03-19,close,44.56,44.57,46.24,close_below_low,Sina via ak.stock_us_daily,present,present,2026-10-29,OPEN,,do_not_modify
+2008-07-03,close,45.83,45.84,48.31,close_below_low,Sina via ak.stock_us_daily,present,present,2026-10-29,OPEN,,do_not_modify
+2009-09-14,close,40.83,39.62,40.82,close_above_high,Sina via ak.stock_us_daily,present,present,2026-10-29,OPEN,,do_not_modify

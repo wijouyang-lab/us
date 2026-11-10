@@ -9,6 +9,8 @@ from __future__ import annotations
 from datetime import datetime, timedelta, timezone
 from typing import Any, Mapping
 
+from tools.research.pit_admission import admit
+
 
 def _parse_aware_timestamp(value: Any) -> datetime | None:
     """Parse an ISO timestamp or datetime; return UTC, or None if invalid/naive."""
@@ -70,5 +72,13 @@ def event_eligibility(
             raise ValueError("max_age cannot be negative")
         if decision - published > max_age:
             return False, "stale_event"
+
+    strict = admit({
+        **dict(event),
+        "published_at": event.get("published_at_utc"),
+        "decision_at_utc": decision.isoformat().replace("+00:00", "Z"),
+    })
+    if not strict["admitted"]:
+        return False, "pit_admission:" + strict["reasons"][0]
 
     return True, "eligible"

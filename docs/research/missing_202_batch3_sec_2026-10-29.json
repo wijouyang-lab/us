@@ -1,0 +1,865 @@
+{
+  "as_of": "2026-10-29T12:40:00Z",
+  "count": 24,
+  "rows": [
+    {
+      "ticker": "BIO",
+      "component_name": "Bio-Rad Laboratories",
+      "component_removed": "2024-09-23",
+      "cik": "0000012208",
+      "sec_http": 200,
+      "sec_name": "BIO-RAD LABORATORIES, INC.",
+      "tickers": [
+        "BIO",
+        "BIO-B"
+      ],
+      "exchanges": [
+        "NYSE",
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "BIO RAD LABORATORIES INC",
+          "from": "1994-05-12T04:00:00.000Z",
+          "to": "2018-06-18T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-08-04",
+        "accession": "0000012208-26-000046",
+        "doc": "bio-20260731.htm"
+      }
+    },
+    {
+      "ticker": "CTLT",
+      "component_name": "Catalent",
+      "component_removed": "2024-12-23",
+      "cik": "0001596783",
+      "sec_http": 200,
+      "sec_name": "Catalent, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "PTS Holdings Corp.",
+          "from": "2014-01-24T00:00:00.000Z",
+          "to": "2014-01-24T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2024-12-30",
+          "accession": "0001193125-24-286216",
+          "doc": "d644126d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-12-18",
+          "accession": "0000876661-24-001185",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2024-12-18",
+        "accession": "0001193125-24-280922",
+        "doc": "d902883d8k.htm"
+      }
+    },
+    {
+      "ticker": "ETSY",
+      "component_name": "Etsy",
+      "component_removed": "2024-09-23",
+      "cik": "0001370637",
+      "sec_http": 200,
+      "sec_name": "ETSY INC",
+      "tickers": [
+        "ETSY"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2025-10-10",
+          "accession": "0001370637-25-000085",
+          "doc": "form25.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-28",
+        "accession": "0001370637-26-000090",
+        "doc": "etsy-20261023.htm"
+      }
+    },
+    {
+      "ticker": "LUMN",
+      "component_name": "Lumen Technologies",
+      "component_removed": "2023-03-20",
+      "cik": "0000018926",
+      "sec_http": 200,
+      "sec_name": "Lumen Technologies, Inc.",
+      "tickers": [
+        "LUMN"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "CENTURYLINK, INC",
+          "from": "2010-11-09T00:00:00.000Z",
+          "to": "2021-01-20T00:00:00.000Z"
+        },
+        {
+          "name": "CENTURYTEL INC",
+          "from": "1999-07-09T00:00:00.000Z",
+          "to": "2010-11-08T00:00:00.000Z"
+        },
+        {
+          "name": "CENTURY TELEPHONE ENTERPRISES INC",
+          "from": "1994-01-28T00:00:00.000Z",
+          "to": "1999-05-14T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2026-10-05",
+          "accession": "0000947871-26-000920",
+          "doc": "ss6901616_25.htm"
+        },
+        {
+          "form": "15-12G",
+          "date": "2020-03-06",
+          "accession": "0001193125-20-065078",
+          "doc": "d849499d1512g.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-23",
+        "accession": "0000018926-26-000065",
+        "doc": "lumn-20261022.htm"
+      }
+    },
+    {
+      "ticker": "PAYC",
+      "component_name": "Paycom",
+      "component_removed": "2026-03-23",
+      "cik": "0001590955",
+      "sec_http": 200,
+      "sec_name": "Paycom Software, Inc.",
+      "tickers": [
+        "PAYC"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-08-05",
+        "accession": "0001193125-26-335105",
+        "doc": "payc-20260805.htm"
+      }
+    },
+    {
+      "ticker": "POOL",
+      "component_name": "Pool Corporation",
+      "component_removed": "2026-06-22",
+      "cik": "0000945841",
+      "sec_http": 200,
+      "sec_name": "POOL CORP",
+      "tickers": [
+        "POOL"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "SCP POOL CORP",
+          "from": "1996-08-26T04:00:00.000Z",
+          "to": "2006-05-11T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-28",
+        "accession": "0001193125-26-436129",
+        "doc": "pool-20261028.htm"
+      }
+    },
+    {
+      "ticker": "VNT",
+      "component_name": "Vontier",
+      "component_removed": "2021-03-22",
+      "cik": "0001786842",
+      "sec_http": 200,
+      "sec_name": "Vontier Corp",
+      "tickers": [
+        "VNT"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "TTF Holdings Corp.",
+          "from": "2019-09-06T04:00:00.000Z",
+          "to": "2019-11-15T05:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-08",
+        "accession": "0001628280-26-065383",
+        "doc": "vnt-20261002.htm"
+      }
+    },
+    {
+      "ticker": "BBWI",
+      "component_name": "Bath & Body Works, Inc.",
+      "component_removed": "2024-10-01",
+      "cik": "0000701985",
+      "sec_http": 200,
+      "sec_name": "Bath & Body Works, Inc.",
+      "tickers": [
+        "BBWI"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "L Brands, Inc.",
+          "from": "2013-04-02T00:00:00.000Z",
+          "to": "2021-07-30T00:00:00.000Z"
+        },
+        {
+          "name": "LIMITED BRANDS INC",
+          "from": "2002-06-17T00:00:00.000Z",
+          "to": "2013-03-22T00:00:00.000Z"
+        },
+        {
+          "name": "LIMITED INC",
+          "from": "1994-06-13T00:00:00.000Z",
+          "to": "2002-06-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2024-08-07",
+          "accession": "0000950103-24-011863",
+          "doc": "dp216344_1512g.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-09-23",
+        "accession": "0001193125-26-399454",
+        "doc": "d130416d8k.htm"
+      }
+    },
+    {
+      "ticker": "CDAY",
+      "component_name": "Ceridian",
+      "component_removed": "2024-02-01",
+      "cik": "0001725057",
+      "sec_http": 200,
+      "sec_name": "Dayforce, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Ceridian HCM Holding Inc.",
+          "from": "2018-01-12T00:00:00.000Z",
+          "to": "2024-01-26T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-02-17",
+          "accession": "0001140361-26-005618",
+          "doc": "ef20065198_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-02-04",
+          "accession": "0000876661-26-000087",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-02-04",
+        "accession": "0001140361-26-003628",
+        "doc": "ef20064744_8k.htm"
+      }
+    },
+    {
+      "ticker": "CTRA",
+      "component_name": "Coterra",
+      "component_removed": "2026-05-07",
+      "cik": "0000858470",
+      "sec_http": 200,
+      "sec_name": "Coterra Energy Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "CABOT OIL & GAS CORP",
+          "from": "1994-05-12T00:00:00.000Z",
+          "to": "2021-09-29T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-05-19",
+          "accession": "0001193125-26-231109",
+          "doc": "d140392d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-05-07",
+          "accession": "0000876661-26-000399",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-05-07",
+        "accession": "0001104659-26-057278",
+        "doc": "tm2613882d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "CZR",
+      "component_name": "Caesars Entertainment",
+      "component_removed": "2025-09-22",
+      "cik": "0001590895",
+      "sec_http": 200,
+      "sec_name": "Caesars Entertainment, Inc.",
+      "tickers": [
+        "CZR"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "Eldorado Resorts, Inc.",
+          "from": "2014-09-19T04:00:00.000Z",
+          "to": "2020-07-17T04:00:00.000Z"
+        },
+        {
+          "name": "Eclair Holdings Co",
+          "from": "2013-11-04T05:00:00.000Z",
+          "to": "2014-09-19T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-27",
+        "accession": "0001590895-26-000032",
+        "doc": "czr-20261027.htm"
+      }
+    },
+    {
+      "ticker": "ENPH",
+      "component_name": "Enphase Energy",
+      "component_removed": "2025-09-22",
+      "cik": "0001463101",
+      "sec_http": 200,
+      "sec_name": "Enphase Energy, Inc.",
+      "tickers": [
+        "ENPH"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-27",
+        "accession": "0001463101-26-000101",
+        "doc": "enph-20261027.htm"
+      }
+    },
+    {
+      "ticker": "EPAM",
+      "component_name": "EPAM Systems",
+      "component_removed": "2026-06-02",
+      "cik": "0001352010",
+      "sec_http": 200,
+      "sec_name": "EPAM Systems, Inc.",
+      "tickers": [
+        "EPAM"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "EPAM SYSTEMS INC",
+          "from": "2006-01-31T00:00:00.000Z",
+          "to": "2007-12-12T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-08-06",
+        "accession": "0001352010-26-000043",
+        "doc": "epam-20260806.htm"
+      }
+    },
+    {
+      "ticker": "MTCH",
+      "component_name": "Match Group",
+      "component_removed": "2026-03-23",
+      "cik": "0000891103",
+      "sec_http": 200,
+      "sec_name": "Match Group, Inc.",
+      "tickers": [
+        "MTCH"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "IAC/INTERACTIVECORP",
+          "from": "2004-07-14T00:00:00.000Z",
+          "to": "2020-07-01T00:00:00.000Z"
+        },
+        {
+          "name": "INTERACTIVECORP",
+          "from": "2003-05-09T00:00:00.000Z",
+          "to": "2004-07-12T00:00:00.000Z"
+        },
+        {
+          "name": "USA INTERACTIVE",
+          "from": "2002-05-10T00:00:00.000Z",
+          "to": "2003-06-20T00:00:00.000Z"
+        },
+        {
+          "name": "USA NETWORKS INC",
+          "from": "1998-09-25T00:00:00.000Z",
+          "to": "2002-05-06T00:00:00.000Z"
+        },
+        {
+          "name": "HSN INC",
+          "from": "1997-07-28T00:00:00.000Z",
+          "to": "1998-02-04T00:00:00.000Z"
+        },
+        {
+          "name": "SILVER KING COMMUNICATIONS INC",
+          "from": "1995-12-08T00:00:00.000Z",
+          "to": "1996-12-24T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2020-06-30",
+          "accession": "0001354457-20-000290",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-08-04",
+        "accession": "0000891103-26-000128",
+        "doc": "mtch-20260804.htm"
+      }
+    },
+    {
+      "ticker": "OGN",
+      "component_name": "Organon & Co.",
+      "component_removed": "2023-10-18",
+      "cik": "0001821825",
+      "sec_http": 200,
+      "sec_name": "Organon & Co.",
+      "tickers": [
+        "OGN"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-07-31",
+        "accession": "0001104659-26-089008",
+        "doc": "tm2621744d1_8k.htm"
+      }
+    },
+    {
+      "ticker": "PENN",
+      "component_name": "Penn Entertainment",
+      "component_removed": "2022-09-19",
+      "cik": "0000921738",
+      "sec_http": 200,
+      "sec_name": "PENN Entertainment, Inc.",
+      "tickers": [
+        "PENN"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "PENN NATIONAL GAMING INC",
+          "from": "1996-06-24T00:00:00.000Z",
+          "to": "2022-06-15T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-08-06",
+        "accession": "0000921738-26-000019",
+        "doc": "penn-20260806.htm"
+      }
+    },
+    {
+      "ticker": "SEDG",
+      "component_name": "SolarEdge",
+      "component_removed": "2023-12-18",
+      "cik": "0001419612",
+      "sec_http": 200,
+      "sec_name": "SOLAREDGE TECHNOLOGIES, INC.",
+      "tickers": [
+        "SEDG"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [
+        {
+          "name": "SolarEdge Technologies Inc",
+          "from": "2007-11-21T00:00:00.000Z",
+          "to": "2019-08-08T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-05",
+        "accession": "0001178913-26-004710",
+        "doc": "zk2636192.htm"
+      }
+    },
+    {
+      "ticker": "MOH",
+      "component_name": "Molina Healthcare",
+      "component_removed": "2026-03-23",
+      "cik": "0001179929",
+      "sec_http": 200,
+      "sec_name": "MOLINA HEALTHCARE, INC.",
+      "tickers": [
+        "MOH"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "MOLINA HEALTHCARE INC",
+          "from": "2002-12-30T05:00:00.000Z",
+          "to": "2019-07-03T04:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [],
+      "latest_8k": {
+        "date": "2026-10-21",
+        "accession": "0001179929-26-000042",
+        "doc": "moh-20261021.htm"
+      }
+    },
+    {
+      "ticker": "PARA",
+      "component_name": "Paramount Global",
+      "component_removed": "2025-08-08*",
+      "cik": "0000813828",
+      "sec_http": 200,
+      "sec_name": "Paramount Global",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "ViacomCBS Inc.",
+          "from": "2019-12-04T00:00:00.000Z",
+          "to": "2022-02-15T00:00:00.000Z"
+        },
+        {
+          "name": "CBS CORP",
+          "from": "2006-01-09T00:00:00.000Z",
+          "to": "2019-12-04T00:00:00.000Z"
+        },
+        {
+          "name": "VIACOM INC",
+          "from": "1994-01-11T00:00:00.000Z",
+          "to": "2006-01-05T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2025-08-18",
+          "accession": "0001193125-25-182662",
+          "doc": "d53500d1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-08-07",
+          "accession": "0001354457-25-000781",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2024-03-28",
+          "accession": "0001354457-24-000211",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2019-12-04",
+          "accession": "0001193125-19-306213",
+          "doc": "d843053d25.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2025-08-07",
+        "accession": "0001193125-25-175027",
+        "doc": "d52142d8k.htm"
+      }
+    },
+    {
+      "ticker": "WBD",
+      "component_name": "Warner Bros. Discovery",
+      "component_removed": "2026-10-07*",
+      "cik": "0001437107",
+      "sec_http": 200,
+      "sec_name": "Warner Bros. Discovery, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Discovery, Inc.",
+          "from": "2018-03-06T00:00:00.000Z",
+          "to": "2022-04-08T00:00:00.000Z"
+        },
+        {
+          "name": "Discovery Communications, Inc.",
+          "from": "2008-06-11T00:00:00.000Z",
+          "to": "2018-03-05T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-10-16",
+          "accession": "0001193125-26-423513",
+          "doc": "d188095d1512g.htm"
+        },
+        {
+          "form": "25",
+          "date": "2026-10-06",
+          "accession": "0001193125-26-415091",
+          "doc": "d155700d25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-10-06",
+          "accession": "0001354457-26-000951",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-04-08",
+          "accession": "0001354457-22-000231",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-04-08",
+          "accession": "0001354457-22-000230",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2022-04-08",
+          "accession": "0001354457-22-000229",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-06",
+        "accession": "0001193125-26-415055",
+        "doc": "d200872d8k.htm"
+      }
+    },
+    {
+      "ticker": "BLDR",
+      "component_name": "Builders FirstSource",
+      "component_removed": "2026-09-20*",
+      "cik": "0001316835",
+      "sec_http": 200,
+      "sec_name": "Builders FirstSource, Inc.",
+      "tickers": [
+        "BLDR"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2021-07-16",
+          "accession": "0001193125-21-217383",
+          "doc": "d181828d25.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-29",
+        "accession": "0001193125-26-436795",
+        "doc": "bldr-20261029.htm"
+      }
+    },
+    {
+      "ticker": "FI",
+      "component_name": "Fiserv",
+      "component_removed": "2025-11-11*",
+      "cik": "0000798354",
+      "sec_http": 200,
+      "sec_name": "FISERV INC",
+      "tickers": [
+        "FISV"
+      ],
+      "exchanges": [
+        "Nasdaq"
+      ],
+      "former_names": [],
+      "delisting_forms": [
+        {
+          "form": "25",
+          "date": "2025-11-10",
+          "accession": "0001193125-25-274239",
+          "doc": "d887264d25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2025-07-01",
+          "accession": "0000876661-25-000481",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2023-07-17",
+          "accession": "0001193125-23-188094",
+          "doc": "d508382d25.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2023-06-30",
+          "accession": "0001354457-23-000445",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25",
+          "date": "2023-06-06",
+          "accession": "0001193125-23-161601",
+          "doc": "d506418d25.htm"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-10-23",
+        "accession": "0001193125-26-429481",
+        "doc": "d86517d8k.htm"
+      }
+    },
+    {
+      "ticker": "RVTY",
+      "component_name": "Revvity",
+      "component_removed": NaN,
+      "cik": "0000031791",
+      "sec_http": 200,
+      "sec_name": "REVVITY, INC.",
+      "tickers": [
+        "RVTY"
+      ],
+      "exchanges": [
+        "NYSE"
+      ],
+      "former_names": [
+        {
+          "name": "PERKINELMER INC",
+          "from": "1999-11-05T00:00:00.000Z",
+          "to": "2023-04-14T00:00:00.000Z"
+        },
+        {
+          "name": "EG&G INC",
+          "from": "1994-03-17T00:00:00.000Z",
+          "to": "1999-07-26T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "25-NSE",
+          "date": "2026-07-20",
+          "accession": "0000876661-26-000629",
+          "doc": "xslF25X02/primary_doc.xml"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2021-04-09",
+          "accession": "0000876661-21-000520",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-08-04",
+        "accession": "0000031791-26-000022",
+        "doc": "pki-20260804.htm"
+      }
+    },
+    {
+      "ticker": "DAY",
+      "component_name": "Dayforce",
+      "component_removed": "2026-02-09",
+      "cik": "0001725057",
+      "sec_http": 200,
+      "sec_name": "Dayforce, Inc.",
+      "tickers": [],
+      "exchanges": [],
+      "former_names": [
+        {
+          "name": "Ceridian HCM Holding Inc.",
+          "from": "2018-01-12T00:00:00.000Z",
+          "to": "2024-01-26T00:00:00.000Z"
+        }
+      ],
+      "delisting_forms": [
+        {
+          "form": "15-12G",
+          "date": "2026-02-17",
+          "accession": "0001140361-26-005618",
+          "doc": "ef20065198_1512g.htm"
+        },
+        {
+          "form": "25-NSE",
+          "date": "2026-02-04",
+          "accession": "0000876661-26-000087",
+          "doc": "xslF25X02/primary_doc.xml"
+        }
+      ],
+      "latest_8k": {
+        "date": "2026-02-04",
+        "accession": "0001140361-26-003628",
+        "doc": "ef20064744_8k.htm"
+      }
+    }
+  ]
+}

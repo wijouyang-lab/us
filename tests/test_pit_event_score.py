@@ -16,6 +16,15 @@ def event(event_id, event_type, direction, impact, published="2026-01-10T13:00:0
         "first_seen_at_utc": "2026-01-10T13:01:00Z",
         "direction_score": direction,
         "impact_score": impact,
+        "research_ready_at_utc": "2026-01-10T13:01:00Z",
+        "decision_at_utc": DECISION,
+        "parse_status": "exact",
+        "source_evidence": "official_fed_page",
+        "published_at_evidence": "official_release_time_in_page",
+        "decision_evidence": "strategy_log",
+        "is_simulated": False,
+        "is_historical_backfill": False,
+        "observation_kind": "live_forward_observation",
     }
 
 

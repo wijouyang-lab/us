@@ -1,0 +1,106 @@
+{
+  "count": 9,
+  "exact": 0,
+  "date_only": 9,
+  "events": [
+    {
+      "event_id": "20100127",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100127a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20100316",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100316a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20100428",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100428a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20100509",
+      "title": "Federal Reserve Board - FOMC statement: Federal Reserve, European Central Bank, Bank of Canada, Bank of England, and Swiss National Bank announce reestablishment of temporary U.S. dollar liquidity swap facilities",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100509a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20100623",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100623a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20100810",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100810a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20100921",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20100921a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20101103",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20101103a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    },
+    {
+      "event_id": "20101214",
+      "title": "Federal Reserve Board - FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/press/monetary/20101214a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": null,
+      "release_time_local": null,
+      "source_timezone": null,
+      "parse_status": "date_only"
+    }
+  ]
+}

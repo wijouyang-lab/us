@@ -1,0 +1,181 @@
+{
+  "count": 16,
+  "events": [
+    {
+      "event_id": "20210127",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20210127a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-01-27T19:00:00Z",
+      "release_time_local": "2:00 P.M. EST",
+      "source_timezone": "EST",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20210317",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20210317a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-03-17T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20210428",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20210428a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-04-28T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20210616",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20210616a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-06-16T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20210728",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20210728a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-07-28T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20210922",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20210922a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-09-22T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20211103",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20211103a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-11-03T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20211215",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20211215a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2021-12-15T19:00:00Z",
+      "release_time_local": "2:00 P.M. EST",
+      "source_timezone": "EST",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20220126",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20220126a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-01-26T19:00:00Z",
+      "release_time_local": "2:00 P.M. EST",
+      "source_timezone": "EST",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20220316",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20220316a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-03-16T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20220504",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20220504a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-05-04T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20220615",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20220615a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-06-15T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20220727",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20220727a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-07-27T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20220921",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20220921a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-09-21T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20221102",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20221102a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-11-02T18:00:00Z",
+      "release_time_local": "2:00 P.M. EDT",
+      "source_timezone": "EDT",
+      "parse_status": "exact"
+    },
+    {
+      "event_id": "20221214",
+      "title": "Federal Reserve Board - Federal Reserve issues FOMC statement",
+      "source_url": "https://www.federalreserve.gov/newsevents/pressreleases/monetary20221214a.htm",
+      "http": 200,
+      "event_type": "FOMC_statement",
+      "published_at_utc": "2022-12-14T19:00:00Z",
+      "release_time_local": "2:00 P.M. EST",
+      "source_timezone": "EST",
+      "parse_status": "exact"
+    }
+  ]
+}
