@@ -30,7 +30,9 @@
     "H_G_BOTH": "F_C_BOTH"
   },
   "data_blocked": [
-    "portfolio not run unless event evidence passes"
+    "member-day coverage 89.58% < 95%",
+    "ticker coverage 91.55% < 98%",
+    "finsaber_prices_raw.csv and sp500_daily.csv are not in Git; independent P9 reproduction blocked"
   ],
   "note": "PIT support levels confirmed at pivot+5; no future pivot; entry next open.",
   "portfolios": {
@@ -156,5 +158,9 @@
     "Overlapping and non-overlapping event diagnostics",
     "All portfolios below 20QQQ_80BIL",
     "G duplicates C; H duplicates F"
-  ]
+  ],
+  "event_research_completed": true,
+  "portfolio_diagnostics_completed": true,
+  "market_wide_data_gate": "BLOCKED",
+  "independent_reproducibility_gate": "BLOCKED"
 }

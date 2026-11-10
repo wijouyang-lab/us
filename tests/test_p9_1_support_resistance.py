@@ -63,3 +63,13 @@ def test_bh_family_is_unique_and_aliases_match():
         assert float(m[("G_LEVEL_ALL_PATTERNS", h)]["bh_q"]) == float(m[("C_SUPPORT_PATTERN", h)]["bh_q"])
         assert float(m[("H_G_BOTH", h)]["bh_q"]) == float(m[("F_C_BOTH", h)]["bh_q"])
         assert float(m[("G_LEVEL_ALL_PATTERNS", h)]["nonoverlap_bh_q"]) == float(m[("C_SUPPORT_PATTERN", h)]["nonoverlap_bh_q"])
+
+
+def test_status_matches_completed_diagnostics():
+    s = load("p9_1_status.json")
+    assert s["status"] == "P9_1_NO_GO"
+    assert s.get("event_research_completed") is True
+    assert s.get("portfolio_diagnostics_completed") is True
+    assert len(s.get("portfolios", {})) == 8
+    assert all(v.get("gate") == "NO-GO" for v in s["portfolios"].values())
+    assert not any("portfolio not run" in str(x).lower() for x in s.get("data_blocked", []))

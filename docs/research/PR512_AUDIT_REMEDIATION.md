@@ -22,6 +22,11 @@ P9_METRIC_CONSISTENCY: PASS
 P9_BH_FAMILY_CONSISTENCY: PASS
 P9_DATA_REPRODUCIBILITY: BLOCKED
 SP500_LOCAL_SOURCE_MATCH: PASS
+UPSTREAM_BYTES_RETRIEVAL_AVAILABLE: YES
+DATASET_LICENSE_SCOPE_VERIFIED: NO
+THIRD_PARTY_DATA_RIGHTS_VERIFIED: NO
+REDISTRIBUTION_ALLOWED: UNKNOWN
+LEGAL_INDEPENDENT_REBUILD_AVAILABLE: UNKNOWN
 SP500_DATA_LICENSE: UNKNOWN
 FINSABER_SOURCE: UNKNOWN
 FINSABER_LICENSE: UNKNOWN
@@ -272,12 +277,12 @@ Source status:
 
 ```text
 SP500_LOCAL_SOURCE_MATCH: PASS
-SOURCE_VERIFIED: yes (file-level match to fixed upstream commit)
+UPSTREAM_BYTES_RETRIEVAL_AVAILABLE: YES
 REPOSITORY_LICENSE_METADATA: MIT
-DATASET_LICENSE_SCOPE_VERIFIED: no
-THIRD_PARTY_DATA_RIGHTS_VERIFIED: no
+DATASET_LICENSE_SCOPE_VERIFIED: NO
+THIRD_PARTY_DATA_RIGHTS_VERIFIED: NO
 REDISTRIBUTION_ALLOWED: UNKNOWN
-INDEPENDENT_REBUILD_AVAILABLE: yes (fixed commit URL)
+LEGAL_INDEPENDENT_REBUILD_AVAILABLE: UNKNOWN
 ```
 
 The README states the original list came from the *Trading Evolved* book download
@@ -448,15 +453,15 @@ Result: **59 passed in 6.24s**.
 Full CI on the pushed fix branch:
 
 ```text
-1523 passed, 1 skipped
-https://github.com/wijouyang-lab/us/actions/runs/42838618979
+1524 passed, 1 skipped
+https://github.com/wijouyang-lab/us/actions/runs/42842173223
 ```
 
 Pages build audit on the same HEAD:
 
 ```text
 success
-https://github.com/wijouyang-lab/us/actions/runs/42838629471
+https://github.com/wijouyang-lab/us/actions/runs/42842183601
 PAGES_TERMINAL_EXPOSURE=PASS
 PAGES_SNAPSHOT_EXPOSURE=PASS
 ```
@@ -480,6 +485,13 @@ manifest/test; no production scanner/ledger changes.
 
 ## 12. Recommendation
 
-Do not merge PR #512 yet. Review this fix branch, then decide separately whether
-Terminal may be a public static page. If not, move it off the Pages root before
-any merge.
+Do not merge PR #512 or #554 yet.
+
+Terminal is a local `127.0.0.1` service. The hosted Jekyll build contains no
+Terminal page, CSS, JS or snapshot. The local PAPER engine remains available and
+is not connected to a broker or real trading.
+
+The remaining independent blocker is P9.1 data provenance: `finsaber` source and
+license are unknown, and neither raw input is committed. Keep
+`P9_DATA_REPRODUCIBILITY: BLOCKED` until that is resolved by evidence, not by
+substituting a new provider.
