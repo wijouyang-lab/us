@@ -1,0 +1,8 @@
+check,count,status
+facts_with_filed_date,934,PASS
+filed_after_cutoff,0,PASS
+PIT_DATE_PROXY,934,PASS
+PIT_EXACT_PUBLIC_TIME_VERIFIED,0,UNRESOLVED
+PIT_FACT_CONTEXT_VERIFIED,0,UNRESOLVED
+raw_xbrl_contextRef_verified,0,UNRESOLVED
+quality_score_valid,0,BLOCKED_PEER_GROUP_LT30

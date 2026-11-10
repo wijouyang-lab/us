@@ -1,0 +1,32 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "133be01dc52d8457c72dce62d77e1bc0de5aaf16",
+    "inputs": {
+      "pit_results": "4fb9221e483ecc259bf4b33b4d1d61c065a8efc6636c06ee44a379307a068f05",
+      "sample": "20ff984c1b1e9e049bc7ae493e42bf9d41f12ac2cadb3457d71a24c4b49bd1ed"
+    },
+    "command": "python -m tools.research.p10_6_2.build",
+    "timestamp": "2026-11-10T05:38:04.230334+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_run_sha256": "f6f0ab330f8472395aefedf5cf28753f477997172fab345ea3435f31ae077cbf",
+    "git_commit": "133be01dc52d8457c72dce62d77e1bc0de5aaf16",
+    "outputs": {
+      "quality_historical_panel.csv": "62e7862a61d9a14914cf26ead7c012e7fd9207dfe63e769c0c72b070d04e4b1b",
+      "quality_factor_scores.csv": "b06b604eade62da43f6b85cb91d284ab021a342d500d28d2c020550e3c2d2050",
+      "quality_factor_lineage.csv": "dc132d0a93f96a9fc3b9364d0819194aa0494fefaa43ec0755891310e1307faf",
+      "quality_pit_validation.csv": "436cc2ad0f51ffe048ba058c929a77ee851bd5920f7e1c9946d35faa695cef71",
+      "quality_sample_exit_classification.csv": "9c2cfbf600ead5feaee542eeb8c51f38568dacf5a586b41a8a54ef80826df55e",
+      "P10_6_2_QUALITY_REPORT.md": "f2cae41efced365a42cc941f154ac48dcf99ce74c30aa1cb866902798e3479d8"
+    },
+    "panel_rows": 80,
+    "companies": 20,
+    "valid_scores": 0,
+    "status": "QUALITY_PIT_PANEL_PARTIAL",
+    "timestamp": "2026-11-10T05:38:04.892907+00:00",
+    "repeat_run_identical": true
+  }
+}
