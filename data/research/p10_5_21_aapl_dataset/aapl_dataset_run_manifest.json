@@ -1,0 +1,57 @@
+{
+  "pre_run": {
+    "mode": "PRE_RUN",
+    "git_commit": "43c8342812456c23bc2e57b16246b356404b883a",
+    "dirty_status": " M data/universe/p7/p7_status.json\n?? add_p102_workflow.py\n?? add_p103_workflow.py\n?? add_p104_workflow.py\n?? add_p1051_workflow.py\n?? add_p1052_workflow.py\n?? add_p1053_workflow.py\n?? add_p105_workflow.py\n?? add_p91_snapshot_tmp.py\n?? add_p91_workflow_tmp.py\n?? add_p921_workflow.py\n?? add_p922_workflow.py\n?? add_p923_workflow.py\n?? add_p92_p101_snapshot_tmp.py\n?? add_p92_p101_workflow_tmp.py\n?? audit-paper-nwot3cdv/\n?? audit-paper2-0pheyi8p/\n?? audit-paper3-tzegqp35/\n?? audit-paper4-enzbpaxl/\n?? data/research/dividend_alt_raw_p612/\n?? data/research/factor_snapshots/\n?? data/research/factor_validation/\n?? data/research/finsaber_prices.csv\n?? data/research/forward_return_labels/\n?? data/research/historical_universe/\n?? data/research/macro_d/\n?? data/research/p10_5_21_aapl_dataset/\n?? data/research/p10_5_21_inputs/\n?? data/research/p10_5_3_execution_recovery/cache/\n?? data/research/p9_1_support_resistance/p9_1_signals.csv\n?? data/research/pit_data/\n?? data/research/quality_pit_scores_p67.csv.gz\n?? data/sec/\n?? data/universe/sec_cash_dividend_proxy_facts_p613.csv\n?? debug_p102_tmp.py\n?? docs/research/nonoverlap_portfolios_phase274_2026-10-30.json\n?? docs/research/trend_v1_daily_2026-11-02.csv\n?? docs/research/trend_v1_daily_fixed_2026-11-02.csv\n?? docs/research/trend_v1_daily_recovery_2026-11-02.csv\n?? docs/research/trend_v1_signals_2026-11-02.csv\n?? fix_p102_cik.py\n?? fix_p102_context.py\n?? fix_p102_ctxref.py\n?? fix_p102_parse.py\n?? fix_p102_parse2.py\n?? fix_p10510_op.py\n?? fix_p10511_q4.py\n?? fix_p1057_asof.py\n?? fix_p923_mini.py\n?? opt_rr_4_j1g6jh/\n?? opt_rr_e28exy9q/\n?? opt_rr_uw70rcdr/\n?? opt_rr_xzxez8md/\n?? p7-shadow-0jm3xogi/\n?? p8-etf-m3nhd6mo/\n?? p8-etf-rx920164/\n?? pytest-of-ouyan/\n?? qr_runner_1ji2k84f/\n?? qr_runner_2pmzwnmn/\n?? qr_runner_2uh96xfd/\n?? qr_runner_3554p0dz/\n?? qr_runner_3ah1252i/\n?? qr_runner_40z8xnit/\n?? qr_runner_6pfrzs89/\n?? qr_runner_a91lyyzv/\n?? qr_runner_baqkse6y/\n?? qr_runner_bdj8rfdk/\n?? qr_runner_cu6rsjop/\n?? qr_runner_hk0eeaue/\n?? qr_",
+    "python": "3.12.14",
+    "inputs": {
+      "data\\research\\p10_5_21_inputs\\aapl_core_panel_v10.csv": "6dc80d2241a5463555ac9e22a4e2785f8a947bc2d9981fd60385289144c72570",
+      "data\\research\\p10_5_21_inputs\\aapl_context_audit_v5.csv": "77e5924bab7c1091f64eef174897ef31f6f661ec257247c81a4a415564b34f0e",
+      "data\\research\\p10_5_21_inputs\\aapl_gross_margin_pre_audit_v5.csv": "fd3fc608ac25894e0e4b2791904fd2a0eaeec73d1edafeea1377ce4cd4ceb608"
+    },
+    "command": "python -m tools.research.p10_5_21.finalize --offline",
+    "period": "FY2018-FY2019",
+    "timestamp": "2026-11-10T04:48:44.932553+00:00",
+    "timezone": "UTC"
+  },
+  "post_run": {
+    "mode": "POST_RUN",
+    "pre_manifest_sha256": "ec6bf54aea7bfcc8e71e231450f87a5aebeee9a7061c1e63e6db81501bd580f3",
+    "git_commit": "43c8342812456c23bc2e57b16246b356404b883a",
+    "outputs": {
+      "aapl_fundamentals_2018_2019.csv": "216c7355a0a1b6e93dea7bebcb3b3eb49a298b1b29ed965e07193f643a3a9ded",
+      "aapl_fundamentals_lineage.csv": "5bbd554bc8dd5f1e38f77975fbe630e63a0744a4052ac7f5995a21f019daeb37",
+      "aapl_legacy_lineage_crosswalk.csv": "bbfb3d107c75407c2eaa93ceb518e53bbe1e850f1af94eb151bb7b62efb679fd",
+      "aapl_gross_margin_audit.csv": "b1593549cd3217ce815c04912690afd1dc32ae1933c1cc05ea8742ca698a19f8"
+    },
+    "tests": "pytest tests/test_p10_5_21_dataset.py",
+    "temp_rerun": {
+      "aapl_fundamentals_2018_2019.csv": {
+        "committed": "216c7355a0a1b6e93dea7bebcb3b3eb49a298b1b29ed965e07193f643a3a9ded",
+        "temp": "216c7355a0a1b6e93dea7bebcb3b3eb49a298b1b29ed965e07193f643a3a9ded",
+        "equal": true
+      },
+      "aapl_fundamentals_lineage.csv": {
+        "committed": "5bbd554bc8dd5f1e38f77975fbe630e63a0744a4052ac7f5995a21f019daeb37",
+        "temp": "5bbd554bc8dd5f1e38f77975fbe630e63a0744a4052ac7f5995a21f019daeb37",
+        "equal": true
+      },
+      "aapl_legacy_lineage_crosswalk.csv": {
+        "committed": "bbfb3d107c75407c2eaa93ceb518e53bbe1e850f1af94eb151bb7b62efb679fd",
+        "temp": "bbfb3d107c75407c2eaa93ceb518e53bbe1e850f1af94eb151bb7b62efb679fd",
+        "equal": true
+      },
+      "aapl_gross_margin_audit.csv": {
+        "committed": "b1593549cd3217ce815c04912690afd1dc32ae1933c1cc05ea8742ca698a19f8",
+        "temp": "b1593549cd3217ce815c04912690afd1dc32ae1933c1cc05ea8742ca698a19f8",
+        "equal": true
+      }
+    },
+    "all_equal": true,
+    "records": 72,
+    "legacy_rows": 29,
+    "gross_margin_unresolved": 8,
+    "status": "CORE_DATASET_ACCEPTED",
+    "timestamp": "2026-11-10T04:48:45.587900+00:00"
+  }
+}
