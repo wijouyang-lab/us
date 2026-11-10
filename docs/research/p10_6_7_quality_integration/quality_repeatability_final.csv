@@ -1,0 +1,2 @@
+check,status,all_equal,note
+two_full_builds,PASS,True,identical CSV hashes across two runs
