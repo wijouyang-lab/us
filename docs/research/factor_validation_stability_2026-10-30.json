@@ -1,0 +1,6708 @@
+{
+  "rolling_12m": [
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "windows": 1965,
+      "positive_window_fraction": 0.5989821882951654,
+      "last": 0.0007685206115755964,
+      "min": -0.010393477984159391,
+      "max": 0.011225751749081383
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "windows": 1965,
+      "positive_window_fraction": 0.7292620865139949,
+      "last": 0.010214527322342478,
+      "min": -0.01928048679979401,
+      "max": 0.044601079675295405
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "windows": 1965,
+      "positive_window_fraction": 0.6595419847328244,
+      "last": 0.0035564564427416094,
+      "min": -0.030382893847019147,
+      "max": 0.045761947108870785
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "windows": 1965,
+      "positive_window_fraction": 0.15725190839694655,
+      "last": -0.010466363704211773,
+      "min": -0.0341726494694527,
+      "max": 0.019412071272638668
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "windows": 1965,
+      "positive_window_fraction": 0.17251908396946564,
+      "last": -0.0042936467026846855,
+      "min": -0.03324163020091898,
+      "max": 0.006960345062669872
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "windows": 1965,
+      "positive_window_fraction": 0.49923664122137407,
+      "last": -0.0012033430831356524,
+      "min": -0.011450692562757728,
+      "max": 0.020664177144130467
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "windows": 1965,
+      "positive_window_fraction": 0.4300254452926209,
+      "last": -0.004599202009718017,
+      "min": -0.012862320804367092,
+      "max": 0.019323244528934927
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "windows": 1965,
+      "positive_window_fraction": 0.46412213740458014,
+      "last": -0.006314063789068867,
+      "min": -0.021453002511206683,
+      "max": 0.01960396084288169
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "windows": 1965,
+      "positive_window_fraction": 0.49770992366412214,
+      "last": -0.0015749760611911787,
+      "min": -0.01078843162907784,
+      "max": 0.02043706475668915
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "windows": 1965,
+      "positive_window_fraction": 0.06972010178117048,
+      "last": -0.009153765801189264,
+      "min": -0.02824500300785962,
+      "max": 0.008423057101979178
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "windows": 1965,
+      "positive_window_fraction": 0.9251908396946565,
+      "last": 0.009053527351406616,
+      "min": -0.01087025415792609,
+      "max": 0.029433884939507115
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "windows": 1965,
+      "positive_window_fraction": 0.38625954198473283,
+      "last": -0.006626867869838335,
+      "min": -0.022281189923029583,
+      "max": 0.012622561979693503
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "windows": 1965,
+      "positive_window_fraction": 0.1633587786259542,
+      "last": -0.006139775245582753,
+      "min": -0.04312315516831724,
+      "max": 0.015778607860416825
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "windows": 1965,
+      "positive_window_fraction": 0.5424936386768447,
+      "last": -0.00031610723743008323,
+      "min": -0.014632152588144518,
+      "max": 0.028523920936807022
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "windows": 1965,
+      "positive_window_fraction": 0.3603053435114504,
+      "last": -0.009852936049333468,
+      "min": -0.02834498519495291,
+      "max": 0.020433787560841295
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "windows": 1965,
+      "positive_window_fraction": 0.7292620865139949,
+      "last": 0.008554783496809092,
+      "min": -0.018928227021877846,
+      "max": 0.04126810348150053
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "windows": 1965,
+      "positive_window_fraction": 0.38625954198473283,
+      "last": -0.006626867869838335,
+      "min": -0.022281189923029583,
+      "max": 0.012622561979693503
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "windows": 1965,
+      "positive_window_fraction": 0.7175572519083969,
+      "last": 0.009169398544041382,
+      "min": -0.01305704242621207,
+      "max": 0.024392539274311623
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "windows": 1965,
+      "positive_window_fraction": 0.6880407124681934,
+      "last": 0.004936488392124521,
+      "min": -0.010764953003243476,
+      "max": 0.022576618924659907
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "windows": 1965,
+      "positive_window_fraction": 0.26717557251908397,
+      "last": -0.010968978099598565,
+      "min": -0.031797300189717374,
+      "max": 0.012685295565529314
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "windows": 1961,
+      "positive_window_fraction": 0.6731259561448241,
+      "last": 0.011969880240392547,
+      "min": -0.02144469552837909,
+      "max": 0.03201742374329457
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "windows": 1961,
+      "positive_window_fraction": 0.7695053544110148,
+      "last": 0.025756673644114596,
+      "min": -0.04097512365176624,
+      "max": 0.09274804027329685
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "windows": 1961,
+      "positive_window_fraction": 0.6828148903620602,
+      "last": 0.003829432443058232,
+      "min": -0.050486813862591726,
+      "max": 0.09493180970848644
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "windows": 1961,
+      "positive_window_fraction": 0.13972463029066803,
+      "last": -0.011207068421865482,
+      "min": -0.04839014666953497,
+      "max": 0.016485210505206082
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "windows": 1961,
+      "positive_window_fraction": 0.25038245792962777,
+      "last": -0.010303693812956318,
+      "min": -0.05095913639272975,
+      "max": 0.020474018261680216
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "windows": 1961,
+      "positive_window_fraction": 0.34115247322794495,
+      "last": -0.0025488276081539604,
+      "min": -0.04182997372739717,
+      "max": 0.033754350915383514
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "windows": 1961,
+      "positive_window_fraction": 0.3227944926058134,
+      "last": -0.007031739348013641,
+      "min": -0.04307366601328728,
+      "max": 0.032531913660092095
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "windows": 1961,
+      "positive_window_fraction": 0.3640999490056094,
+      "last": -0.00952526365774881,
+      "min": -0.06108462961814318,
+      "max": 0.029246019448376813
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "windows": 1961,
+      "positive_window_fraction": 0.3447220805711372,
+      "last": -0.0027919889624177835,
+      "min": -0.040446622989777685,
+      "max": 0.03412261052854951
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "windows": 1961,
+      "positive_window_fraction": 0.20907700152983172,
+      "last": -0.01524127044067076,
+      "min": -0.05069594726795693,
+      "max": 0.03404834595723359
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "windows": 1961,
+      "positive_window_fraction": 0.5894951555328913,
+      "last": 0.01826752165627332,
+      "min": -0.0355204863596823,
+      "max": 0.04521728598279031
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "windows": 1961,
+      "positive_window_fraction": 0.268230494645589,
+      "last": -0.00994572365726598,
+      "min": -0.05531176693372899,
+      "max": 0.023977434132727227
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "windows": 1961,
+      "positive_window_fraction": 0.18103008669046405,
+      "last": -0.006464555974662826,
+      "min": -0.05536687652923904,
+      "max": 0.023108554659070395
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "windows": 1961,
+      "positive_window_fraction": 0.2514023457419684,
+      "last": -0.0004491025387302963,
+      "min": -0.03659513522577535,
+      "max": 0.04738366992375482
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "windows": 1961,
+      "positive_window_fraction": 0.28811830698623153,
+      "last": -0.010760507887759058,
+      "min": -0.044603962740121364,
+      "max": 0.026755755113774978
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "windows": 1961,
+      "positive_window_fraction": 0.7679755226925038,
+      "last": 0.020329258059230585,
+      "min": -0.04006527445095202,
+      "max": 0.08527977252371652
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "windows": 1961,
+      "positive_window_fraction": 0.268230494645589,
+      "last": -0.00994572365726598,
+      "min": -0.05531176693372899,
+      "max": 0.023977434132727227
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "windows": 1961,
+      "positive_window_fraction": 0.661907190209077,
+      "last": 0.010255939277116256,
+      "min": -0.02075397243792196,
+      "max": 0.018558020180433753
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "windows": 1961,
+      "positive_window_fraction": 0.61907190209077,
+      "last": 0.006956448486583411,
+      "min": -0.013185321568947573,
+      "max": 0.021532325933454086
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "windows": 1961,
+      "positive_window_fraction": 0.16726160122386538,
+      "last": -0.01292940302845778,
+      "min": -0.0519319138757313,
+      "max": 0.02342780418766308
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "windows": 1956,
+      "positive_window_fraction": 0.6625766871165644,
+      "last": 0.018647753427305465,
+      "min": -0.03210249081862621,
+      "max": 0.04299236649705031
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "windows": 1956,
+      "positive_window_fraction": 0.766359918200409,
+      "last": 0.042719350763130826,
+      "min": -0.06091117540337565,
+      "max": 0.12821599790375302
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "windows": 1956,
+      "positive_window_fraction": 0.6881390593047034,
+      "last": 0.01426249542098253,
+      "min": -0.07681104700377214,
+      "max": 0.1324302692220672
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "windows": 1956,
+      "positive_window_fraction": 0.24335378323108384,
+      "last": -0.016502520610037038,
+      "min": -0.0575582746775894,
+      "max": 0.02647566082295758
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "windows": 1956,
+      "positive_window_fraction": 0.29703476482617586,
+      "last": -0.01696956848153164,
+      "min": -0.0472082516496207,
+      "max": 0.03126703116398407
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "windows": 1956,
+      "positive_window_fraction": 0.2878323108384458,
+      "last": -0.003906504416133123,
+      "min": -0.06275764503822433,
+      "max": 0.03760437946535297
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "windows": 1956,
+      "positive_window_fraction": 0.30265848670756645,
+      "last": -0.009865389791396187,
+      "min": -0.06304324739958597,
+      "max": 0.03702320190019086
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "windows": 1956,
+      "positive_window_fraction": 0.43660531697341515,
+      "last": -0.011836192792258893,
+      "min": -0.08415558934740709,
+      "max": 0.04027774767015735
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "windows": 1956,
+      "positive_window_fraction": 0.3016359918200409,
+      "last": -0.004723264856678206,
+      "min": -0.060351096997726186,
+      "max": 0.03837784781986394
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "windows": 1956,
+      "positive_window_fraction": 0.25766871165644173,
+      "last": -0.026414323773312955,
+      "min": -0.04417081008136521,
+      "max": 0.04486544532782777
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "windows": 1956,
+      "positive_window_fraction": 0.5230061349693251,
+      "last": 0.023216348052312385,
+      "min": -0.05786043730763539,
+      "max": 0.05742223386613397
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "windows": 1956,
+      "positive_window_fraction": 0.38139059304703476,
+      "last": -0.012906635019533892,
+      "min": -0.08200708757093754,
+      "max": 0.0335271602304016
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "windows": 1956,
+      "positive_window_fraction": 0.2147239263803681,
+      "last": -0.012834622528749626,
+      "min": -0.05306200492073108,
+      "max": 0.022735230712221426
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "windows": 1956,
+      "positive_window_fraction": 0.21267893660531698,
+      "last": -0.005692883329121118,
+      "min": -0.053438883098205645,
+      "max": 0.058233118572544665
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "windows": 1956,
+      "positive_window_fraction": 0.3941717791411043,
+      "last": -0.01216750769233584,
+      "min": -0.05476749536322517,
+      "max": 0.03672146334667691
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "windows": 1956,
+      "positive_window_fraction": 0.7801635991820041,
+      "last": 0.03467536871381007,
+      "min": -0.05980602514043262,
+      "max": 0.11560362686891894
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "windows": 1956,
+      "positive_window_fraction": 0.38139059304703476,
+      "last": -0.012906635019533892,
+      "min": -0.08200708757093754,
+      "max": 0.0335271602304016
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "windows": 1956,
+      "positive_window_fraction": 0.6717791411042945,
+      "last": 0.00533636898850318,
+      "min": -0.01982710449761682,
+      "max": 0.013142425663419407
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "windows": 1956,
+      "positive_window_fraction": 0.7091002044989775,
+      "last": 0.004013361355852392,
+      "min": -0.01074481829874451,
+      "max": 0.015387634481526287
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "windows": 1956,
+      "positive_window_fraction": 0.30316973415132925,
+      "last": -0.01397898401515867,
+      "min": -0.048904034840032654,
+      "max": 0.03246124692169342
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "windows": 1946,
+      "positive_window_fraction": 0.5688591983556013,
+      "last": 0.016602323813529617,
+      "min": -0.048372260709486165,
+      "max": 0.06412509074570943
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "windows": 1946,
+      "positive_window_fraction": 0.7687564234326825,
+      "last": 0.07082339732936362,
+      "min": -0.08996794955703401,
+      "max": 0.17227606846247734
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "windows": 1946,
+      "positive_window_fraction": 0.6988694758478932,
+      "last": 0.04660502907967283,
+      "min": -0.11255874335670397,
+      "max": 0.17932996579520755
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "windows": 1946,
+      "positive_window_fraction": 0.4182939362795478,
+      "last": -0.009124382060980273,
+      "min": -0.08829374677252791,
+      "max": 0.04281169180004121
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "windows": 1946,
+      "positive_window_fraction": 0.33658787255909556,
+      "last": -0.015428728205803701,
+      "min": -0.055255149856454674,
+      "max": 0.03817932065829931
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "windows": 1946,
+      "positive_window_fraction": 0.24665981500513876,
+      "last": -0.003928568810987517,
+      "min": -0.09272184386455741,
+      "max": 0.04634357852602066
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "windows": 1946,
+      "positive_window_fraction": 0.27697841726618705,
+      "last": -0.011609470777346932,
+      "min": -0.09119947904723852,
+      "max": 0.04351924712023983
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "windows": 1946,
+      "positive_window_fraction": 0.48150051387461457,
+      "last": 0.013477296625174965,
+      "min": -0.09381117135759091,
+      "max": 0.058161594580552915
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "windows": 1946,
+      "positive_window_fraction": 0.26515930113052416,
+      "last": -0.00498255624974132,
+      "min": -0.0891812153324038,
+      "max": 0.04848456451839303
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "windows": 1946,
+      "positive_window_fraction": 0.4295991778006166,
+      "last": -0.026473768417219958,
+      "min": -0.06340345686198533,
+      "max": 0.0449024050765461
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "windows": 1946,
+      "positive_window_fraction": 0.49023638232271327,
+      "last": 0.021295035079839476,
+      "min": -0.07894278230545745,
+      "max": 0.060975997573404696
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "windows": 1946,
+      "positive_window_fraction": 0.4830421377183967,
+      "last": 0.005272601249122922,
+      "min": -0.09154471434961595,
+      "max": 0.05230901789111681
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "windows": 1946,
+      "positive_window_fraction": 0.28622816032887977,
+      "last": -0.012116504552330105,
+      "min": -0.05179041882380783,
+      "max": 0.02662266392324421
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "windows": 1946,
+      "positive_window_fraction": 0.29856115107913667,
+      "last": -0.008505732234731616,
+      "min": -0.07225566996291966,
+      "max": 0.06245286987801032
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "windows": 1946,
+      "positive_window_fraction": 0.434737923946557,
+      "last": -0.00342509401565951,
+      "min": -0.0751934159893169,
+      "max": 0.0479918608900052
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "windows": 1946,
+      "positive_window_fraction": 0.7672147995889003,
+      "last": 0.06208949477050304,
+      "min": -0.08058565445515323,
+      "max": 0.15356775569021058
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "windows": 1946,
+      "positive_window_fraction": 0.4830421377183967,
+      "last": 0.005272601249122922,
+      "min": -0.09154471434961595,
+      "max": 0.05230901789111681
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "windows": 1946,
+      "positive_window_fraction": 0.5184994861253854,
+      "last": -0.002842416421845051,
+      "min": -0.02361645723240601,
+      "max": 0.017280386602048486
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "windows": 1946,
+      "positive_window_fraction": 0.5339157245632066,
+      "last": 0.005014052989061593,
+      "min": -0.014595933842317417,
+      "max": 0.012061991134844132
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "windows": 1946,
+      "positive_window_fraction": 0.41212744090441933,
+      "last": -0.006736264751388917,
+      "min": -0.07011430074526366,
+      "max": 0.045001322039274524
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "windows": 1906,
+      "positive_window_fraction": 0.6091290661070304,
+      "last": -0.018277159969481677,
+      "min": -0.053633158582495406,
+      "max": 0.07288328742807447
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "windows": 1906,
+      "positive_window_fraction": 0.7151101783840503,
+      "last": 0.10712600018457681,
+      "min": -0.1147191168103059,
+      "max": 0.2536928731303488
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "windows": 1906,
+      "positive_window_fraction": 0.7046169989506821,
+      "last": 0.07864793615575767,
+      "min": -0.15588049346313226,
+      "max": 0.23033209566822022
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "windows": 1906,
+      "positive_window_fraction": 0.2124868835257083,
+      "last": 0.00296267229001806,
+      "min": -0.0769879394500194,
+      "max": 0.07338154977815033
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "windows": 1906,
+      "positive_window_fraction": 0.2586568730325289,
+      "last": 0.000494198412855497,
+      "min": -0.05535601253211434,
+      "max": 0.03737907445963671
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "windows": 1906,
+      "positive_window_fraction": 0.2932843651626443,
+      "last": -0.0461375061525138,
+      "min": -0.17237108254287903,
+      "max": 0.07894118216018277
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "windows": 1906,
+      "positive_window_fraction": 0.30535152151101785,
+      "last": -0.05694709899573616,
+      "min": -0.17061284347338035,
+      "max": 0.07369595883715788
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "windows": 1906,
+      "positive_window_fraction": 0.26810073452256034,
+      "last": 0.0023298784499962504,
+      "min": -0.08189157093284788,
+      "max": 0.0758519956535597
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "windows": 1906,
+      "positive_window_fraction": 0.30640083945435465,
+      "last": -0.047383826702181386,
+      "min": -0.17052555620660678,
+      "max": 0.07882734017724896
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "windows": 1906,
+      "positive_window_fraction": 0.3247639034627492,
+      "last": -0.0013267537718434756,
+      "min": -0.053087120756688144,
+      "max": 0.038967721506431255
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "windows": 1906,
+      "positive_window_fraction": 0.5152151101783841,
+      "last": 0.0422211865869437,
+      "min": -0.11162811142373609,
+      "max": 0.09820049360299873
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "windows": 1906,
+      "positive_window_fraction": 0.22507869884575027,
+      "last": 0.002188485659633504,
+      "min": -0.08124965924305942,
+      "max": 0.07511558813037343
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "windows": 1906,
+      "positive_window_fraction": 0.22088142707240294,
+      "last": 0.004565341686599846,
+      "min": -0.05159669424102608,
+      "max": 0.051917497751132025
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "windows": 1906,
+      "positive_window_fraction": 0.34207764952780695,
+      "last": 0.015864646391810705,
+      "min": -0.10020148095215374,
+      "max": 0.08073944976310116
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "windows": 1906,
+      "positive_window_fraction": 0.22455403987408185,
+      "last": -0.0016726268246079919,
+      "min": -0.08392018380900666,
+      "max": 0.06844014744497083
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "windows": 1906,
+      "positive_window_fraction": 0.7177334732423925,
+      "last": 0.08568849643996736,
+      "min": -0.11730371442606682,
+      "max": 0.22622385396519926
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "windows": 1906,
+      "positive_window_fraction": 0.22507869884575027,
+      "last": 0.002188485659633504,
+      "min": -0.08124965924305942,
+      "max": 0.07511558813037343
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "windows": 1906,
+      "positive_window_fraction": 0.2953830010493179,
+      "last": -0.003955641772632043,
+      "min": -0.019322761993997472,
+      "max": 0.02098625333720617
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "windows": 1906,
+      "positive_window_fraction": 0.35047219307450156,
+      "last": 0.0004338073656078553,
+      "min": -0.01113777892071058,
+      "max": 0.011491703887490367
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "windows": 1906,
+      "positive_window_fraction": 0.22193074501573976,
+      "last": -0.0007498029855026637,
+      "min": -0.0704636326376862,
+      "max": 0.05197073614385901
+    }
+  ],
+  "regime": [
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.0017165107545909736
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.0005706534400108067
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.0016639408200063493
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.0014848734894533106
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.00019617122835795484
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.0011373288854666698
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.025221741295100627
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.0040117937009096875
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.004732058306494632
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.00917423537363054
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.002707574430512746
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.011315423864756742
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.022600003943132402
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.002318175473052547
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 3.672329668429947e-05
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.008084724966850015
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.00015800862567625116
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.009819047921563778
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.016383196396424885
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": -0.004336582290851355
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.011636032475107054
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.005343212249893763
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.006804012029145829
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.0066687418370473504
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.012290914809052703
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": -0.005132250329480037
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.009600637363181466
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.0056939106745962816
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.010774214197061786
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.004154357738752012
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0007653568456840523
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.0019822717255922858
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0018621536220163515
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.0013209991204604827
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.004837218672586264
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.0004843528813060964
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0006354624270728142
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": -0.0003864442139401227
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.0005832351542330741
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.00039442525450035976
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.001534628026528246
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.0015510016994293675
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.009439940103588333
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.0023880473729745422
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.0021456858074996262
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.0006638374102810987
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0036260244433715134
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.001973986653967164
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -4.543690665898271e-05
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.001571550162049613
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0017467844282298534
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.001113666951353539
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.004551059926064224
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.0006156071927702248
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.009409904210165198
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": -0.008770975766111312
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.01663334611176265
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.006735446557797427
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.013008326671282027
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.006570080065371986
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.003291818251430973
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.012076938587579883
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.013715252661571193
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.007732562428631532
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.02059015918302908
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.002500539158292562
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.011126397062859469
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.00024021964826225568
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.008005913090721602
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.00032990152598897244
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0011361834990577452
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.003785395308598875
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.015450652728872237
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": -0.00722946253768301
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.012124559947284248
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.007940579256790333
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.010952403803171114
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.007666780806294256
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0163433302849792
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.006207729875209917
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0007504465499736723
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.0020298781311288037
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.004911520668703574
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -3.898445394290931e-05
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.014790655759239917
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 4.080219392969677e-05
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.004856923104323189
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.0023412298725448374
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0013549743025040046
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.003760018731755743
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.021687405590360115
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.002328142699717927
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0028248136438511636
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.007085052866658339
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.002413303484941324
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.0082724136234899
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.011126397062859469
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.00024021964826225568
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.008005913090721602
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.00032990152598897244
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0011361834990577452
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.003785395308598875
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.00011032017124787142
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.0035597606341608396
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.001977433691230286
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.004178990807786872
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0005491494448523722
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.004127961460922017
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.0004357719503858064
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": 0.00273992020983349
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0009737254408715197
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": 0.0026507870288516814
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.000768082724014828
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": 0.0031429059967611663
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.013467985665822692
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1778,
+      "mean_rank_ic": -0.004802520653087256
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.008905028726090608
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1732,
+      "mean_rank_ic": -0.005847474329902788
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.00803743897862423
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1415,
+      "mean_rank_ic": -0.005653618954728957
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.009557361758950077
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.0025488256467443636
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.002161510915107152
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.004433778856963411
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.004650435349905531
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": 0.00353135537382729
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.053964958509966535
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.011608861091272748
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.03189360678270016
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.016663348217856668
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.019520375119394695
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": 0.020265734183308324
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.04969121129265917
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.0059793230350750105
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.020950578729697793
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.012865734667380814
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.015245041483544164
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": 0.014288300058177822
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03946729668108598
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.005952045018653794
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03549597748449274
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.006172193696130211
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.018376261349772886
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.00930277708592446
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0329697269871085
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.006531550808093597
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.02871237208965562
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.007020210337105463
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.02313588983577171
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.0053124477643220576
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.004446189073834036
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.004865256479080036
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.00887984483456488
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.0036345780719316506
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 3.6745324418630165e-05
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.007517950966042959
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0017444980501715858
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.007054443504737279
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.008723509874845322
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.005241026703677054
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0040681387977328735
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.007101413002406134
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.031040630880692133
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.00015771032794344492
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.013211234169320756
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.004329477493960403
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.008620922772197859
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.0049399116279123575
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0021517445418980144
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.005215218427317492
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.008269233547776025
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.003583305880954263
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.00044603899127866793
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.007478057286624221
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.013845117115725707
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.012244266009491717
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.028538617214080332
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.008086110223328292
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.020961483447455253
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.007792587495474491
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.016328158773649584
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.0109901194932689
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.0021495588135550183
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.007746021356458992
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.029837615093319204
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.008189363041494098
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03131393672248347
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.002397427674415605
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.02556746849684579
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.003237202677307685
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.011756602086434538
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.006060597241408207
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.043430752978053586
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.0060701485122254565
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03488076619445406
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.00747038334893499
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.022404795294840952
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.008394664942528577
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.04731030780613464
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.0020634587975766963
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.029748017665926805
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.0015412606260864225
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.00527086096898376
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.009099489210510223
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.04095954294457798
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.0006877074554039397
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.02536757385601229
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.003982851324827429
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.014383544542084823
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.005413928885472572
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.047284723069197246
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.009462795956926544
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.026303015048905472
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.014332783245501066
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.020509610081795734
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": 0.014932325341160669
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03131393672248347
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.002397427674415605
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.02556746849684579
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.003237202677307685
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.011756602086434538
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.006060597241408207
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.0016429088849062696
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.0015339307515160497
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.0027907711348315314
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.0027728706446972693
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.00041184602848535877
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": 0.002672342957898788
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.0016118737863218145
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": 0.0013011054387750257
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0014485593775779865
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": 0.0013385758264167274
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0005810449262835646
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": 0.0024660373867817042
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03729442722321285
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1774,
+      "mean_rank_ic": -0.006490616720962412
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.032105201390057375
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1728,
+      "mean_rank_ic": -0.00712407159373077
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.023616232509870935
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1411,
+      "mean_rank_ic": -0.006330766085292648
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.01320214788013954
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.0031099562195724163
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.009935352560591427
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.003758179155309619
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.012014317958326692
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": 0.0011810701559779833
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.08400009189719408
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.013015481366397753
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.05789843557612665
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.018452457324018186
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.03627014050746387
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": 0.02188054355736136
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.07680274010723347
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.006271581674370955
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.04030201183860986
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.014641819163693153
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.028658224948527287
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": 0.015489893289587572
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.030538855006707565
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.005906972495116699
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03687790550509402
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.0034686863449412903
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.01903955952629974
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.006098695345827353
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.026618854245226198
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.0047726490252870835
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.025290952302504114
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.00456242215364477
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.021007407036971255
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.002329261200944489
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.011966674039801182
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.008381385507793548
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.01956983067788418
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.0061498990972859895
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.00503958674796651
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.011402108966997532
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.00615078861260454
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.011116778675442683
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.01728364555223784
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.008122079188564007
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.008897427154606875
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.010834130681606538
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03770257254753718
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.0018445468642543698
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.016101136929982506
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.0069551827652790076
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.01858986178094243
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.003475285129553611
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.008558674346874554
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.008784584531059342
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.017948713836157905
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.006152903019544171
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0037757916239701075
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.011567724259299415
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.004609740012978828
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.01435557256583602
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.017175145087862425
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.008742409472288904
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.018801606483407892
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.0059145483286411615
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.026733042689394648
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.010712549040634647
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.017421893430715072
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.009096705151128221
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.03096149107565372
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.012488426597916637
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.034270020331830284
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.0038476237764530565
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.024464858946688914
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.005789740937718914
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.01967827800967602
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.004306127084023207
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.029078303392639872
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.006262113399049545
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.030640556717868684
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.0052141300275371245
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.01928718581688855
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.005949459210218473
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.07122735290720189
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.0015365565563834882
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.04461591482405212
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.003996116802246556
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.012024948661110027
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.01340499868247718
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.04164196318237328
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.0013457549546773352
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.028828929644968915
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.0011058255431748909
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.016824809716413
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.0016940730982990613
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.07480966157093401
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.010880086833428546
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.051166013573491834
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.01581494765341506
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.03551899378065508
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": 0.01675874207546194
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.034270020331830284
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.0038476237764530565
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.024464858946688914
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.005789740937718914
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.01967827800967602
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.004306127084023207
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0006764015384712045
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.0017784237684286333
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.00489927448169478
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.0030301895656646184
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0011825462319295617
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": 0.0013531637558494205
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.00048769039734448207
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": 0.0022128818583322892
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0020106424676007663
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": 0.0015831855246861083
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 6.888822444979547e-05
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": 0.002593029975511132
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.02983308191960747
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1769,
+      "mean_rank_ic": -0.0055363655851961326
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.031038610075836536
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1723,
+      "mean_rank_ic": -0.004549061708819004
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0226007475574987
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1406,
+      "mean_rank_ic": -0.003383728170301261
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.017604107961781947
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.002797628722800432
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.011912271640454502
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.004008224598182415
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.011483800164169852
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": 0.00245924375298453
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.10771118049246445
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.019799165108935715
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.09325477443493062
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.021523010890724423
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.05424922518523881
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": 0.02761504234164833
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.09812725283557036
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.012276094508701122
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0674841320047129
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.0186287607078249
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.04158353259595809
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": 0.022396115597007653
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.029828957042617454
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.005145878823858833
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.04160748877441429
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.001155084336846244
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.018367791336365877
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.005303784509602479
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.01860601457618645
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.004179779539682034
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.02772909315085923
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0012147025742291248
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.015715165459805464
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.002087262937941393
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.01895918759466477
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.014904757458733221
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03437230918104024
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.010440977754087232
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.019555196084030745
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.013508510367525988
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.010204685755689866
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.01815891067580078
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.028902539078449255
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.013089519746501046
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.022350304161199996
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.013258296996135054
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.05206503319846448
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.0014773928098389317
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03585921793370703
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0016636830756021925
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.020362511151567512
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.0027903862149105847
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.013592894717900981
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.015525676067463863
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03065718552682185
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.010756143779409096
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.01774960029594662
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.013643210782275301
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.017928916335561807
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.015695957490245445
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.004071377273090832
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.010382823858838123
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.014047154491886494
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.006092086763871478
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03633383314164108
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.00855388163815576
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.033484396807929986
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.008954178015478872
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.023580484374636747
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.014151797348572233
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.045644512888089246
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.0013209045114768634
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03898845169745184
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0020113000928804457
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.019473055205201806
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.00481221379749588
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.02543532238317295
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.003682899011311812
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03537356997321138
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0002907663150571655
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.014741352542373362
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.004162655571838226
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.08781218192289017
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.005879475126267915
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.07288066107161403
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.004176591373929114
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.012623575606508999
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.012899896041767127
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0442407778009918
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.00235655478981428
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.04090813092119535
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.002666231502806457
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.016681423996896552
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.001339871189138214
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.09720171702623616
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": 0.01633796873964164
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.08055690515241674
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": 0.01886940862624132
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.05003053533520547
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": 0.022377063228525427
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.045644512888089246
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.0013209045114768634
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03898845169745184
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0020113000928804457
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.019473055205201806
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.00481221379749588
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.006785295761186983
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.003031353958192705
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.0011794628289483276
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0017110636767495963
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0019990574110376916
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.0028377056270073495
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.00017542668061411082
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.00018926921717930136
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.000735482931527029
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0003573037978800308
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0005860313475865643
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": 0.00015281048890216888
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.018408004484718205
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1759,
+      "mean_rank_ic": -0.005278835090401535
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.028804108527462277
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1713,
+      "mean_rank_ic": -0.0019889015534332376
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.017243808819144623
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1396,
+      "mean_rank_ic": -0.0025328696448338336
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.03343782414536382
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": 0.003689108557732381
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.02643729520497835
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": 0.004896409866827135
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.029237134752521616
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.0017932155976095087
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.16377643803936728
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": 0.03690790821170284
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.18639152005684465
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": 0.026877034291480712
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.11046918183063775
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": 0.03443433586343601
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.1761599775643334
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": 0.026733087502436918
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.1591278284747515
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": 0.027551929831492752
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.10134143109218552
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": 0.030927552570078544
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0537289678366273
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.007365227775296821
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.052274246667024744
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.006511284561469226
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.013216506211255233
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.018884729338467954
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.029231011569297635
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.00640538053509902
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.034949544448981996
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.004123402686120914
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0060180825774832315
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.014007041344117633
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03084715722371508
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.03514911460739018
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.07855005860634065
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.021466918415195494
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.033966988920846417
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.03445783536024554
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.023543670477681
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.039318527088307784
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.07118504392843969
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.025969584263395407
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.03833204866591919
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.03480582946358707
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.07485799491990827
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.0018517566680155753
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.057107221720567744
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.004979722758209093
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.018604756761539276
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.015537287110063155
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0243362181174471
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.035722709466434126
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.07375009293432203
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.02174032045907365
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.03266804783937583
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.03384918494756787
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.006136723599030615
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.008243561070949186
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.016486758014153
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.005307217895090859
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.009317924481632755
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.006928398899372584
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.04100656563219761
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": 0.01629137984290657
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03501484267056988
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": 0.016133407086437346
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.02768461238264299
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.008946436810798817
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.06963673447694997
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.00359996033436279
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.057666122794906356
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.0052473509162815615
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.017085082098808213
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.016964653948767217
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.034099755541842594
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.0057562681041157275
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.03212420464966368
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.005548477434467885
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0057107731353500165
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.014938339614223176
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.09654685149328014
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": 0.0030771687537528188
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.07649162182055212
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": 1.439156891310859e-05
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.012079670666982038
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.020149005650518432
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.06706181671303063
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.004900907186702684
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.06123494294623089
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.004877479251807278
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.00995918930876991
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.02199146352354324
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.14901572364219742
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": 0.030056779436609254
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.16713659882334325
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": 0.02154356065529926
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": 0.0972812069300245
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": 0.028771566412879174
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.06963673447694997
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.00359996033436279
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.057666122794906356
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.0052473509162815615
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.017085082098808213
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.016964653948767217
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": 0.005525853044145662
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.00421764093732614
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": 0.00037584616976709767
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.002995642967181775
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0019100788639747565
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.002433501451241929
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.0028658893159706506
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.0005750875155184407
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.0009923951972500593
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.0010541038159607387
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.0016327386706569277
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.0006902738085362422
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bear",
+      "dates": 438,
+      "mean_rank_ic": -0.03829225322049294
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "key": "trend",
+      "value": "bull",
+      "dates": 1719,
+      "mean_rank_ic": -0.008447775245370204
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "high",
+      "dates": 484,
+      "mean_rank_ic": -0.04347272266536026
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "key": "vol",
+      "value": "low",
+      "dates": 1673,
+      "mean_rank_ic": -0.006128472676230079
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "range",
+      "dates": 801,
+      "mean_rank_ic": -0.00871995464986802
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "key": "regime",
+      "value": "trend",
+      "dates": 1356,
+      "mean_rank_ic": -0.017927027199721977
+    }
+  ],
+  "quintiles": [
+    {
+      "Horizon": 1,
+      "Factor": "ADX14",
+      "Q1": 0.0005910355447218632,
+      "Q2": 0.0005469711794808153,
+      "Q3": 0.0006452286670655078,
+      "Q4": 0.0006117472462302424,
+      "Q5": 0.0006994481103453859,
+      "Q5_Q1": 0.00010841256562352289
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ATR_Percent",
+      "Q1": 0.0003132728434150431,
+      "Q2": 0.0003633879183315883,
+      "Q3": 0.0004857537398717352,
+      "Q4": 0.000698356572746467,
+      "Q5": 0.0012378676508970773,
+      "Q5_Q1": 0.0009245948074820341
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Beta_60D",
+      "Q1": 0.0004372683521694957,
+      "Q2": 0.00044478458240092413,
+      "Q3": 0.0005370671904615913,
+      "Q4": 0.0006161108092273285,
+      "Q5": 0.0010538082289792737,
+      "Q5_Q1": 0.0006165398768097781
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Bias20",
+      "Q1": 0.0009361068423846854,
+      "Q2": 0.0006536384527200403,
+      "Q3": 0.000485397299498225,
+      "Q4": 0.00048589013291873125,
+      "Q5": 0.0005375295558947034,
+      "Q5_Q1": -0.000398577286489982
+    },
+    {
+      "Horizon": 1,
+      "Factor": "KDJ_J",
+      "Q1": 0.000769797104516013,
+      "Q2": 0.0007223420474960793,
+      "Q3": 0.0006661137795506802,
+      "Q4": 0.0005088324181880326,
+      "Q5": 0.000429566035495982,
+      "Q5_Q1": -0.00034023106902003115
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20",
+      "Q1": 0.0008864490079628138,
+      "Q2": 0.0006591710294927615,
+      "Q3": 0.000564970885676451,
+      "Q4": 0.0005253327288599691,
+      "Q5": 0.0004628510635775583,
+      "Q5_Q1": -0.00042359794438525566
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA200",
+      "Q1": 0.0009043041304592675,
+      "Q2": 0.0006240891883934236,
+      "Q3": 0.0005484799659252108,
+      "Q4": 0.0005446939110494693,
+      "Q5": 0.00045005739856865347,
+      "Q5_Q1": -0.0004542467318906141
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA20_Slope_5D",
+      "Q1": 0.0008162220816336141,
+      "Q2": 0.0005223643580423268,
+      "Q3": 0.0005335016035649085,
+      "Q4": 0.0005461090387151018,
+      "Q5": 0.0006768533451442115,
+      "Q5_Q1": -0.0001393687364894027
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MA50",
+      "Q1": 0.0008886799507384135,
+      "Q2": 0.0006376179151828699,
+      "Q3": 0.0005690398125685604,
+      "Q4": 0.0005251559259448961,
+      "Q5": 0.0004666339638391313,
+      "Q5_Q1": -0.0004220459868992822
+    },
+    {
+      "Horizon": 1,
+      "Factor": "MACD_Hist",
+      "Q1": 0.0007774357688711443,
+      "Q2": 0.0007182358489134808,
+      "Q3": 0.0006469955956737953,
+      "Q4": 0.0005498964288129554,
+      "Q5": 0.00039981633913178905,
+      "Q5_Q1": -0.00037761942973935515
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_120D",
+      "Q1": 0.0007953772752955629,
+      "Q2": 0.0005322190130154308,
+      "Q3": 0.0005152091358215736,
+      "Q4": 0.0005358594871807112,
+      "Q5": 0.0007166110806648567,
+      "Q5_Q1": -7.876619463070608e-05
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_20D",
+      "Q1": 0.0008057283778846743,
+      "Q2": 0.0005961527741104463,
+      "Q3": 0.0005830538644968815,
+      "Q4": 0.0004931651994064475,
+      "Q5": 0.0006205685029301562,
+      "Q5_Q1": -0.00018515987495451816
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_5D",
+      "Q1": 0.0009777373154838235,
+      "Q2": 0.0006651096460973271,
+      "Q3": 0.0005306940803708572,
+      "Q4": 0.00048735285251903375,
+      "Q5": 0.0004340631388699969,
+      "Q5_Q1": -0.0005436741766138266
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Momentum_60D",
+      "Q1": 0.000909108554342327,
+      "Q2": 0.000560046378489089,
+      "Q3": 0.0005320512458066148,
+      "Q4": 0.0004425443465108511,
+      "Q5": 0.0006447973877724287,
+      "Q5_Q1": -0.0002643111665698983
+    },
+    {
+      "Horizon": 1,
+      "Factor": "RSI14",
+      "Q1": 0.0007904599487715223,
+      "Q2": 0.0006757774192301576,
+      "Q3": 0.0006177916144753005,
+      "Q4": 0.0005583562992387272,
+      "Q5": 0.00045820269917781184,
+      "Q5_Q1": -0.0003322572495937105
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Realized_Volatility_20D",
+      "Q1": 0.0003182935767027875,
+      "Q2": 0.0003904361614557532,
+      "Q3": 0.0005547897034482007,
+      "Q4": 0.0007161945497164995,
+      "Q5": 0.0011193199317653133,
+      "Q5_Q1": 0.0008010263550625259
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Q1": 0.0008057283778846743,
+      "Q2": 0.0005961527741104463,
+      "Q3": 0.0005830538644968815,
+      "Q4": 0.0004931651994064475,
+      "Q5": 0.0006205685029301562,
+      "Q5_Q1": -0.00018515987495451816
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_20D",
+      "Q1": 0.0006044695523117749,
+      "Q2": 0.0005609722252994595,
+      "Q3": 0.0005246172928491303,
+      "Q4": 0.0006519598468832078,
+      "Q5": 0.0007575057892595878,
+      "Q5_Q1": 0.00015303623694781296
+    },
+    {
+      "Horizon": 1,
+      "Factor": "Volume_Ratio_5D",
+      "Q1": 0.0006221986710476021,
+      "Q2": 0.0005609006533811129,
+      "Q3": 0.0005977826500508162,
+      "Q4": 0.0005473316948868906,
+      "Q5": 0.0007667138606989277,
+      "Q5_Q1": 0.00014451518965132558
+    },
+    {
+      "Horizon": 1,
+      "Factor": "ZScore20",
+      "Q1": 0.0007316327415025138,
+      "Q2": 0.0007260541466323875,
+      "Q3": 0.0006686336262708624,
+      "Q4": 0.0005676982647078794,
+      "Q5": 0.0004057516610022739,
+      "Q5_Q1": -0.0003258810805002397
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ADX14",
+      "Q1": 0.002751828135333491,
+      "Q2": 0.0027810369021399432,
+      "Q3": 0.003097898278285245,
+      "Q4": 0.003062696987647698,
+      "Q5": 0.0033744556666484714,
+      "Q5_Q1": 0.0006226275313149795
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ATR_Percent",
+      "Q1": 0.0015346020488176113,
+      "Q2": 0.0018310794593442187,
+      "Q3": 0.0024308508867668084,
+      "Q4": 0.003390681110282602,
+      "Q5": 0.005915813647648729,
+      "Q5_Q1": 0.004381211598831116
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Beta_60D",
+      "Q1": 0.0022471376295624046,
+      "Q2": 0.0021132820403161044,
+      "Q3": 0.0026378960814227607,
+      "Q4": 0.0028999348155570406,
+      "Q5": 0.005160749815792628,
+      "Q5_Q1": 0.0029136121862302234
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Bias20",
+      "Q1": 0.004039740268799697,
+      "Q2": 0.0030214683213209553,
+      "Q3": 0.002582475680718276,
+      "Q4": 0.0024303581161703204,
+      "Q5": 0.0030180842861529866,
+      "Q5_Q1": -0.00102165598264671
+    },
+    {
+      "Horizon": 5,
+      "Factor": "KDJ_J",
+      "Q1": 0.0036516031122074905,
+      "Q2": 0.00339436296655599,
+      "Q3": 0.0030538107537702794,
+      "Q4": 0.002688775261055276,
+      "Q5": 0.0022855038276260236,
+      "Q5_Q1": -0.001366099284581466
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20",
+      "Q1": 0.0044175200826900565,
+      "Q2": 0.003161488476267882,
+      "Q3": 0.0027580842840492937,
+      "Q4": 0.002539369870148765,
+      "Q5": 0.0022141443816389274,
+      "Q5_Q1": -0.002203375701051128
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA200",
+      "Q1": 0.004473586550409639,
+      "Q2": 0.0030356603513890116,
+      "Q3": 0.002659520488239207,
+      "Q4": 0.002662320797090435,
+      "Q5": 0.0021345796303306017,
+      "Q5_Q1": -0.002339006920079037
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA20_Slope_5D",
+      "Q1": 0.0037430524026413007,
+      "Q2": 0.0027128182472940833,
+      "Q3": 0.002609014861140166,
+      "Q4": 0.0025907753416225966,
+      "Q5": 0.0034141829716275523,
+      "Q5_Q1": -0.0003288694310137474
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MA50",
+      "Q1": 0.004396937873800713,
+      "Q2": 0.003157328979983732,
+      "Q3": 0.0026990103312960214,
+      "Q4": 0.0025694075835743678,
+      "Q5": 0.00221952641393742,
+      "Q5_Q1": -0.002177411459863293
+    },
+    {
+      "Horizon": 5,
+      "Factor": "MACD_Hist",
+      "Q1": 0.0034437203282423,
+      "Q2": 0.0033662039202497964,
+      "Q3": 0.003180592518216083,
+      "Q4": 0.0027920656327527567,
+      "Q5": 0.002285468590703361,
+      "Q5_Q1": -0.001158251737538939
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_120D",
+      "Q1": 0.0037695286458031513,
+      "Q2": 0.0025275973284941268,
+      "Q3": 0.002482489377258115,
+      "Q4": 0.002518443369692133,
+      "Q5": 0.003784714546555484,
+      "Q5_Q1": 1.5185900752332917e-05
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_20D",
+      "Q1": 0.0038706141032999234,
+      "Q2": 0.0027482630042616777,
+      "Q3": 0.0027083450644465996,
+      "Q4": 0.0025693755270389386,
+      "Q5": 0.0031908250135187096,
+      "Q5_Q1": -0.0006797890897812125
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_5D",
+      "Q1": 0.00438716852197854,
+      "Q2": 0.002888341819806053,
+      "Q3": 0.00256242162313929,
+      "Q4": 0.002425885710267329,
+      "Q5": 0.002809914238088935,
+      "Q5_Q1": -0.0015772542838896047
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Momentum_60D",
+      "Q1": 0.0043208144051385755,
+      "Q2": 0.0027832494133041355,
+      "Q3": 0.0024903382931609195,
+      "Q4": 0.0022395920511574384,
+      "Q5": 0.0032226961043690314,
+      "Q5_Q1": -0.0010981183007695435
+    },
+    {
+      "Horizon": 5,
+      "Factor": "RSI14",
+      "Q1": 0.00364452471796542,
+      "Q2": 0.00301134996986822,
+      "Q3": 0.00314502039483827,
+      "Q4": 0.002695793160706998,
+      "Q5": 0.002609858739938782,
+      "Q5_Q1": -0.0010346659780266381
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Realized_Volatility_20D",
+      "Q1": 0.0015729770798598574,
+      "Q2": 0.001924539757293081,
+      "Q3": 0.0026926136392424584,
+      "Q4": 0.0034654355874950437,
+      "Q5": 0.005432655651199288,
+      "Q5_Q1": 0.0038596785713394307
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Q1": 0.0038706141032999234,
+      "Q2": 0.0027482630042616777,
+      "Q3": 0.0027083450644465996,
+      "Q4": 0.0025693755270389386,
+      "Q5": 0.0031908250135187096,
+      "Q5_Q1": -0.0006797890897812125
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_20D",
+      "Q1": 0.0031494272373293933,
+      "Q2": 0.002848066799542908,
+      "Q3": 0.0028027191097637154,
+      "Q4": 0.0030275167237349557,
+      "Q5": 0.0032659542329664744,
+      "Q5_Q1": 0.00011652699563708068
+    },
+    {
+      "Horizon": 5,
+      "Factor": "Volume_Ratio_5D",
+      "Q1": 0.003046574013518688,
+      "Q2": 0.002941902269407723,
+      "Q3": 0.0028967205732683306,
+      "Q4": 0.002858425867778166,
+      "Q5": 0.0033402792783809904,
+      "Q5_Q1": 0.0002937052648623031
+    },
+    {
+      "Horizon": 5,
+      "Factor": "ZScore20",
+      "Q1": 0.003449577320771229,
+      "Q2": 0.0034354793411259742,
+      "Q3": 0.0032903997264385094,
+      "Q4": 0.0026982989271243,
+      "Q5": 0.0022217866396610827,
+      "Q5_Q1": -0.0012277906811101467
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ADX14",
+      "Q1": 0.005554485677664961,
+      "Q2": 0.00569455988391133,
+      "Q3": 0.005839815360927005,
+      "Q4": 0.006018121591069601,
+      "Q5": 0.006563862443688448,
+      "Q5_Q1": 0.0010093767660234866
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ATR_Percent",
+      "Q1": 0.0030952532079118076,
+      "Q2": 0.003613898609819472,
+      "Q3": 0.004790707823734105,
+      "Q4": 0.006540317034346978,
+      "Q5": 0.011696708003965956,
+      "Q5_Q1": 0.00860145479605415
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Beta_60D",
+      "Q1": 0.004474093736054652,
+      "Q2": 0.004055771101607408,
+      "Q3": 0.0052802645108784825,
+      "Q4": 0.005680245765537389,
+      "Q5": 0.010173914032596598,
+      "Q5_Q1": 0.005699820296541944
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Bias20",
+      "Q1": 0.007466351783300533,
+      "Q2": 0.005646667314577962,
+      "Q3": 0.005123115341642562,
+      "Q4": 0.004864313805406321,
+      "Q5": 0.006600774921253935,
+      "Q5_Q1": -0.0008655768620465996
+    },
+    {
+      "Horizon": 10,
+      "Factor": "KDJ_J",
+      "Q1": 0.006626410825656888,
+      "Q2": 0.006185173538579598,
+      "Q3": 0.00569792405767691,
+      "Q4": 0.005641919021877013,
+      "Q5": 0.0055252378528713834,
+      "Q5_Q1": -0.0011011729727855046
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20",
+      "Q1": 0.008778343216779064,
+      "Q2": 0.006182106265243964,
+      "Q3": 0.0053905502734671856,
+      "Q4": 0.0049940261998251785,
+      "Q5": 0.004354544514445859,
+      "Q5_Q1": -0.004423798702333205
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA200",
+      "Q1": 0.00888872624246794,
+      "Q2": 0.005928033815029823,
+      "Q3": 0.005263893236653556,
+      "Q4": 0.00522391004489281,
+      "Q5": 0.004161855622697536,
+      "Q5_Q1": -0.0047268706197704045
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA20_Slope_5D",
+      "Q1": 0.007199569947070016,
+      "Q2": 0.005543350420318574,
+      "Q3": 0.005355240072263413,
+      "Q4": 0.004963782316983684,
+      "Q5": 0.006606201108291588,
+      "Q5_Q1": -0.0005933688387784276
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MA50",
+      "Q1": 0.008706109794682521,
+      "Q2": 0.006247921317643509,
+      "Q3": 0.005267890396333844,
+      "Q4": 0.005080527909925854,
+      "Q5": 0.004321914482206351,
+      "Q5_Q1": -0.0043841953124761695
+    },
+    {
+      "Horizon": 10,
+      "Factor": "MACD_Hist",
+      "Q1": 0.006459985247670126,
+      "Q2": 0.00630251091285911,
+      "Q3": 0.006069390782989234,
+      "Q4": 0.005737077614875384,
+      "Q5": 0.0050804430059722015,
+      "Q5_Q1": -0.0013795422416979252
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_120D",
+      "Q1": 0.007103827816842276,
+      "Q2": 0.005135864057112855,
+      "Q3": 0.0049884060509235925,
+      "Q4": 0.004827055305526875,
+      "Q5": 0.0076499634102634275,
+      "Q5_Q1": 0.0005461355934211514
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_20D",
+      "Q1": 0.00723195879088031,
+      "Q2": 0.005632889543671831,
+      "Q3": 0.005374506217248544,
+      "Q4": 0.004874056087376633,
+      "Q5": 0.006579732819608096,
+      "Q5_Q1": -0.0006522259712722151
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_5D",
+      "Q1": 0.0076632918417089725,
+      "Q2": 0.005439922227608648,
+      "Q3": 0.005049913397940744,
+      "Q4": 0.0050729064663485755,
+      "Q5": 0.006476511581158923,
+      "Q5_Q1": -0.001186780260550049
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Momentum_60D",
+      "Q1": 0.008124388197124409,
+      "Q2": 0.005592139357103788,
+      "Q3": 0.0049087292450507745,
+      "Q4": 0.004603227432405229,
+      "Q5": 0.006433359917882493,
+      "Q5_Q1": -0.0016910282792419148
+    },
+    {
+      "Horizon": 10,
+      "Factor": "RSI14",
+      "Q1": 0.006669689867727579,
+      "Q2": 0.005994333892140437,
+      "Q3": 0.00586415249498236,
+      "Q4": 0.005579093951571939,
+      "Q5": 0.0056310446153012,
+      "Q5_Q1": -0.0010386452524263799
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Realized_Volatility_20D",
+      "Q1": 0.0031701511233000602,
+      "Q2": 0.0037873391480359943,
+      "Q3": 0.00527342988459897,
+      "Q4": 0.006657451319540039,
+      "Q5": 0.010805715328983131,
+      "Q5_Q1": 0.007635564205683068
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Q1": 0.00723195879088031,
+      "Q2": 0.005632889543671831,
+      "Q3": 0.005374506217248544,
+      "Q4": 0.004874056087376633,
+      "Q5": 0.006579732819608096,
+      "Q5_Q1": -0.0006522259712722151
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_20D",
+      "Q1": 0.006171070708363416,
+      "Q2": 0.0057621552997170035,
+      "Q3": 0.005659246719902895,
+      "Q4": 0.0058637065297740204,
+      "Q5": 0.006251765795654842,
+      "Q5_Q1": 8.069508729142353e-05
+    },
+    {
+      "Horizon": 10,
+      "Factor": "Volume_Ratio_5D",
+      "Q1": 0.005958925276431463,
+      "Q2": 0.005843167568541745,
+      "Q3": 0.005805045744029808,
+      "Q4": 0.005817554961591501,
+      "Q5": 0.006293887639697536,
+      "Q5_Q1": 0.00033496236326607354
+    },
+    {
+      "Horizon": 10,
+      "Factor": "ZScore20",
+      "Q1": 0.00647008503342194,
+      "Q2": 0.006408662420558125,
+      "Q3": 0.006101953443411838,
+      "Q4": 0.0054577803168395726,
+      "Q5": 0.005270448199881636,
+      "Q5_Q1": -0.0011996368335403028
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ADX14",
+      "Q1": 0.011318237531255639,
+      "Q2": 0.011431477825899641,
+      "Q3": 0.011361041955580827,
+      "Q4": 0.011619802818741445,
+      "Q5": 0.012847064242964563,
+      "Q5_Q1": 0.0015288267117089256
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ATR_Percent",
+      "Q1": 0.00612045493088659,
+      "Q2": 0.0070320679334634414,
+      "Q3": 0.009252176801135822,
+      "Q4": 0.012345600349367849,
+      "Q5": 0.023946973198661667,
+      "Q5_Q1": 0.017826518267775076
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Beta_60D",
+      "Q1": 0.008365312184839614,
+      "Q2": 0.008011774159908253,
+      "Q3": 0.010156091380844213,
+      "Q4": 0.011322005088224044,
+      "Q5": 0.02075328837338033,
+      "Q5_Q1": 0.012387976188540711
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Bias20",
+      "Q1": 0.014799745455427778,
+      "Q2": 0.011174881884431907,
+      "Q3": 0.010182890531427565,
+      "Q4": 0.009486947599718314,
+      "Q5": 0.012998299598533209,
+      "Q5_Q1": -0.0018014458568945703
+    },
+    {
+      "Horizon": 20,
+      "Factor": "KDJ_J",
+      "Q1": 0.012997441347298185,
+      "Q2": 0.012061503800805617,
+      "Q3": 0.011476637121968742,
+      "Q4": 0.011109061734879326,
+      "Q5": 0.010942972953562282,
+      "Q5_Q1": -0.002054468393735903
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20",
+      "Q1": 0.01760909549026282,
+      "Q2": 0.01226130458553233,
+      "Q3": 0.010475938741770276,
+      "Q4": 0.009783319681015635,
+      "Q5": 0.008511225611929444,
+      "Q5_Q1": -0.00909786987833338
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA200",
+      "Q1": 0.017874424568385266,
+      "Q2": 0.011500849555418169,
+      "Q3": 0.010492713018399,
+      "Q4": 0.010274225591198213,
+      "Q5": 0.00805679725291457,
+      "Q5_Q1": -0.009817627315470694
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA20_Slope_5D",
+      "Q1": 0.014562290622071466,
+      "Q2": 0.01085415225507233,
+      "Q3": 0.010096440870261346,
+      "Q4": 0.009791749795537659,
+      "Q5": 0.013271836725982176,
+      "Q5_Q1": -0.0012904538960892898
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MA50",
+      "Q1": 0.01750225441971173,
+      "Q2": 0.01233905308915156,
+      "Q3": 0.010166257595981417,
+      "Q4": 0.01008455139387221,
+      "Q5": 0.008467329729983826,
+      "Q5_Q1": -0.009034924689727903
+    },
+    {
+      "Horizon": 20,
+      "Factor": "MACD_Hist",
+      "Q1": 0.01248777986789699,
+      "Q2": 0.01212693875876698,
+      "Q3": 0.011737275344453334,
+      "Q4": 0.011696517979062718,
+      "Q5": 0.010494071565523552,
+      "Q5_Q1": -0.0019937083023734386
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_120D",
+      "Q1": 0.013911403073205828,
+      "Q2": 0.01028508823388253,
+      "Q3": 0.009887442830890153,
+      "Q4": 0.009600107459953777,
+      "Q5": 0.014972532212857754,
+      "Q5_Q1": 0.0010611291396519255
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_20D",
+      "Q1": 0.014705779258608387,
+      "Q2": 0.011009567927503669,
+      "Q3": 0.010212539193361979,
+      "Q4": 0.009613106046867688,
+      "Q5": 0.013090609796401139,
+      "Q5_Q1": -0.001615169462207247
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_5D",
+      "Q1": 0.01502689144972613,
+      "Q2": 0.01066456462729881,
+      "Q3": 0.010048899928059105,
+      "Q4": 0.00993596526242409,
+      "Q5": 0.013040778382496399,
+      "Q5_Q1": -0.0019861130672297334
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Momentum_60D",
+      "Q1": 0.015471467048581329,
+      "Q2": 0.010488527021154456,
+      "Q3": 0.009774450727221122,
+      "Q4": 0.009580160687395891,
+      "Q5": 0.013294140493316354,
+      "Q5_Q1": -0.002177326555264977
+    },
+    {
+      "Horizon": 20,
+      "Factor": "RSI14",
+      "Q1": 0.013183644169018044,
+      "Q2": 0.011848656999217668,
+      "Q3": 0.01135331553170075,
+      "Q4": 0.01072219715562611,
+      "Q5": 0.011595265589303825,
+      "Q5_Q1": -0.0015883785797142203
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Realized_Volatility_20D",
+      "Q1": 0.006581692840380504,
+      "Q2": 0.007193951826925557,
+      "Q3": 0.010036133489148275,
+      "Q4": 0.0128705429600448,
+      "Q5": 0.021946490758164808,
+      "Q5_Q1": 0.015364797917784301
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Q1": 0.014705779258608387,
+      "Q2": 0.011009567927503669,
+      "Q3": 0.010212539193361979,
+      "Q4": 0.009613106046867688,
+      "Q5": 0.013090609796401139,
+      "Q5_Q1": -0.001615169462207247
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_20D",
+      "Q1": 0.01274842126337324,
+      "Q2": 0.011354591612582322,
+      "Q3": 0.011193188875311788,
+      "Q4": 0.011128104209397149,
+      "Q5": 0.012231815787058325,
+      "Q5_Q1": -0.0005166054763149153
+    },
+    {
+      "Horizon": 20,
+      "Factor": "Volume_Ratio_5D",
+      "Q1": 0.012510780407658765,
+      "Q2": 0.011388663504215094,
+      "Q3": 0.01132463953805049,
+      "Q4": 0.011237432164681288,
+      "Q5": 0.012299084107806838,
+      "Q5_Q1": -0.00021169629985192832
+    },
+    {
+      "Horizon": 20,
+      "Factor": "ZScore20",
+      "Q1": 0.012664781961349543,
+      "Q2": 0.012148684102510646,
+      "Q3": 0.012019241289279189,
+      "Q4": 0.01091533923393265,
+      "Q5": 0.010910764678930656,
+      "Q5_Q1": -0.0017540172824188883
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ADX14",
+      "Q1": 0.035845261328854156,
+      "Q2": 0.03410532337268393,
+      "Q3": 0.03446213403768516,
+      "Q4": 0.034916924280426836,
+      "Q5": 0.04071732088860832,
+      "Q5_Q1": 0.00487205955975416
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ATR_Percent",
+      "Q1": 0.019161530011928635,
+      "Q2": 0.021891987751514467,
+      "Q3": 0.028807564288777135,
+      "Q4": 0.03652798442593346,
+      "Q5": 0.07373594029322558,
+      "Q5_Q1": 0.054574410281296955
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Beta_60D",
+      "Q1": 0.023948223434994552,
+      "Q2": 0.02412860408495415,
+      "Q3": 0.030553368211545712,
+      "Q4": 0.035593332810723306,
+      "Q5": 0.06585618110669016,
+      "Q5_Q1": 0.0419079576716956
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Bias20",
+      "Q1": 0.04502537334628393,
+      "Q2": 0.03304555508031227,
+      "Q3": 0.030533120255293984,
+      "Q4": 0.03050467415640405,
+      "Q5": 0.04096468408607003,
+      "Q5_Q1": -0.004060689260213921
+    },
+    {
+      "Horizon": 60,
+      "Factor": "KDJ_J",
+      "Q1": 0.038305043077257774,
+      "Q2": 0.037101552109412954,
+      "Q3": 0.03537507013426771,
+      "Q4": 0.03522960117332356,
+      "Q5": 0.0340602383289566,
+      "Q5_Q1": -0.00424480474830118
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20",
+      "Q1": 0.054746346805706,
+      "Q2": 0.03769359065860825,
+      "Q3": 0.031575402662720777,
+      "Q4": 0.030445827444361185,
+      "Q5": 0.025622790422985795,
+      "Q5_Q1": -0.029123556382720208
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA200",
+      "Q1": 0.055577854293501296,
+      "Q2": 0.03548342831250079,
+      "Q3": 0.03258632034655931,
+      "Q4": 0.030529651576334377,
+      "Q5": 0.02401670190928187,
+      "Q5_Q1": -0.031561152384219436
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA20_Slope_5D",
+      "Q1": 0.04472096679551816,
+      "Q2": 0.03265977048591623,
+      "Q3": 0.030791338322230504,
+      "Q4": 0.029973643468127774,
+      "Q5": 0.041864220770993665,
+      "Q5_Q1": -0.002856746024524494
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MA50",
+      "Q1": 0.054577113209948465,
+      "Q2": 0.03790247879314139,
+      "Q3": 0.031432413010884314,
+      "Q4": 0.03054853853345428,
+      "Q5": 0.025617700891135423,
+      "Q5_Q1": -0.028959412318813042
+    },
+    {
+      "Horizon": 60,
+      "Factor": "MACD_Hist",
+      "Q1": 0.03611192280716429,
+      "Q2": 0.03774832338091218,
+      "Q3": 0.0361614185701022,
+      "Q4": 0.03592626961579454,
+      "Q5": 0.03409880753582579,
+      "Q5_Q1": -0.002013115271338507
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_120D",
+      "Q1": 0.03774962673133607,
+      "Q2": 0.031731328549413886,
+      "Q3": 0.030693145353104516,
+      "Q4": 0.03143859828053637,
+      "Q5": 0.04783461461610308,
+      "Q5_Q1": 0.010084987884767012
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_20D",
+      "Q1": 0.044812076522247286,
+      "Q2": 0.03280293616056683,
+      "Q3": 0.03088592052275552,
+      "Q4": 0.02981296768044618,
+      "Q5": 0.04174288301381219,
+      "Q5_Q1": -0.003069193508435102
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_5D",
+      "Q1": 0.04424122887659473,
+      "Q2": 0.03292321073206008,
+      "Q3": 0.030315278683023326,
+      "Q4": 0.031727755873814927,
+      "Q5": 0.04094500703038351,
+      "Q5_Q1": -0.0032962218462112116
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Momentum_60D",
+      "Q1": 0.04362081062016435,
+      "Q2": 0.03315477677635045,
+      "Q3": 0.03020339054312923,
+      "Q4": 0.02956624915222125,
+      "Q5": 0.04358658299497397,
+      "Q5_Q1": -3.42276251903791e-05
+    },
+    {
+      "Horizon": 60,
+      "Factor": "RSI14",
+      "Q1": 0.0401914174837807,
+      "Q2": 0.036265970693554105,
+      "Q3": 0.035001595264802406,
+      "Q4": 0.03360002142653963,
+      "Q5": 0.03509427054538212,
+      "Q5_Q1": -0.005097146938398587
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Realized_Volatility_20D",
+      "Q1": 0.020786863047226392,
+      "Q2": 0.02321332806604662,
+      "Q3": 0.029617052144950376,
+      "Q4": 0.03837145482934546,
+      "Q5": 0.06807284526652414,
+      "Q5_Q1": 0.04728598221929775
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Stock_RS_20D_vs_SPY",
+      "Q1": 0.044812076522247286,
+      "Q2": 0.03280293616056683,
+      "Q3": 0.03088592052275552,
+      "Q4": 0.02981296768044618,
+      "Q5": 0.04174288301381219,
+      "Q5_Q1": -0.003069193508435102
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_20D",
+      "Q1": 0.039119294416148455,
+      "Q2": 0.03469639083113644,
+      "Q3": 0.034401317833268594,
+      "Q4": 0.03455010149395723,
+      "Q5": 0.037350098228079366,
+      "Q5_Q1": -0.0017691961880690811
+    },
+    {
+      "Horizon": 60,
+      "Factor": "Volume_Ratio_5D",
+      "Q1": 0.03885554149933949,
+      "Q2": 0.03465127659782469,
+      "Q3": 0.03442442007661106,
+      "Q4": 0.034521393879393666,
+      "Q5": 0.03779713014685063,
+      "Q5_Q1": -0.0010584113524888528
+    },
+    {
+      "Horizon": 60,
+      "Factor": "ZScore20",
+      "Q1": 0.03785589414143641,
+      "Q2": 0.03710552455807047,
+      "Q3": 0.0364466440370702,
+      "Q4": 0.03455627348506791,
+      "Q5": 0.03416372160319011,
+      "Q5_Q1": -0.003692172538246302
+    }
+  ]
+}
