@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-10T13:17:05Z",
+  "generated_at": "2026-11-10T13:32:10Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -42,11 +42,11 @@
       "indicator": "季调后CPI月率",
       "period": "2026年8月",
       "forecast": 0.2,
-      "actual": 0.6,
+      "actual": 0.4,
       "previous": null,
       "unit": "%",
       "released_at": null,
-      "impact": "实际 0.6% vs 预期 0.2%（+0.4）。"
+      "impact": "实际 0.4% vs 预期 0.2%（+0.2）。"
     },
     {
       "key": "ism",

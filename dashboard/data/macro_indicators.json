@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-10T13:17:02Z",
+  "generated_at": "2026-11-10T13:32:06Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -56,7 +56,7 @@
     {
       "key": "cpi_mom",
       "name": "季调后CPI月率",
-      "value": 0.6,
+      "value": 0.4,
       "unit": "%",
       "date": null,
       "prev": null,
