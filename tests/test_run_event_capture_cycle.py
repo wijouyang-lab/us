@@ -1,4 +1,4 @@
-import json
+﻿import json
 from datetime import timedelta
 from pathlib import Path
 
@@ -48,6 +48,7 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
         feed_user_agent="Quant research tester@example.com",
+        allow_pre_capture_decision=True,
         max_age_by_type={"macro_release": timedelta(days=1)},
     )
     assert result["event_count"] == 1
@@ -56,6 +57,9 @@ def test_one_command_capture_archive_and_audit_pipeline(tmp_path, monkeypatch):
     for key in ("events_path", "metadata_path", "archive_path", "audit_path"):
         assert Path(result[key]).exists()
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
+    metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
+    assert metadata["decision_mode"] == "retrospective_replay"
+    assert metadata["decision_is_pre_capture"] is True
     assert audit["coverage_audit"]["eligible_events"] == 1
     assert audit["macro_surprise"]["eligible_count"] == 1
     assert audit["research_only"] is True
@@ -98,6 +102,7 @@ def test_successful_empty_feed_is_visible_in_source_coverage(tmp_path, monkeypat
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
         feed_user_agent="Quant research tester@example.com",
+        allow_pre_capture_decision=True,
     )
     audit = json.loads(Path(result["audit_path"]).read_text(encoding="utf-8"))
     assert result["successful_source_count"] == 1
@@ -113,6 +118,7 @@ def test_repeated_capture_deduplicates_the_same_event_version(tmp_path, monkeypa
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
         feed_user_agent="Quant research tester@example.com",
+        allow_pre_capture_decision=True,
     )
     first = cycle.run_cycle(**args)
     second = cycle.run_cycle(**args)
@@ -133,6 +139,20 @@ def test_invalid_decision_time_fails_before_source_initialization(tmp_path, monk
         cycle.run_cycle(
             output_dir=tmp_path,
             decision_at="2026-10-23T13:00:00",
+            feed_keys=["bls_cpi"],
+        )
+
+
+def test_pre_capture_decision_requires_explicit_replay_flag(tmp_path, monkeypatch):
+    class MustNotRun:
+        def __init__(self, *args, **kwargs):
+            pytest.fail("source collector must not initialize for an unmarked past decision")
+
+    monkeypatch.setattr(cycle, "OfficialRssCollector", MustNotRun)
+    with pytest.raises(ValueError, match="allow-pre-capture-decision"):
+        cycle.run_cycle(
+            output_dir=tmp_path,
+            decision_at="2000-01-01T00:00:00Z",
             feed_keys=["bls_cpi"],
         )
 
@@ -160,6 +180,7 @@ def test_all_feed_failures_are_recorded_and_signaled(tmp_path, monkeypatch):
         decision_at="2026-10-23T13:00:00Z",
         feed_keys=["bls_cpi"],
         feed_user_agent="Quant research tester@example.com",
+        allow_pre_capture_decision=True,
     )
     assert result["all_sources_failed"]
     metadata = json.loads(Path(result["metadata_path"]).read_text(encoding="utf-8"))
