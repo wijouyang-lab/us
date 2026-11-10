@@ -1,0 +1,356 @@
+{
+  "AAPL": {
+    "cik": "0000320193",
+    "http": 200,
+    "tags": {
+      "Revenues": {
+        "count": 11,
+        "first_filed": "2018-11-05",
+        "last_filed": "2018-11-05",
+        "forms": [
+          "10-K"
+        ]
+      },
+      "RevenueFromContractWithCustomerExcludingAssessedTax": {
+        "count": 117,
+        "first_filed": "2019-01-30",
+        "last_filed": "2026-07-31",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "SalesRevenueNet": {
+        "count": 210,
+        "first_filed": "2009-07-22",
+        "last_filed": "2018-08-01",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "CostOfGoodsAndServicesSold": {
+        "count": 234,
+        "first_filed": "2009-07-22",
+        "last_filed": "2026-07-31",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "GrossProfit": {
+        "count": 338,
+        "first_filed": "2009-07-22",
+        "last_filed": "2026-07-31",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "Assets": {
+        "count": 146,
+        "first_filed": "2009-07-22",
+        "last_filed": "2026-07-31",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "StockholdersEquity": {
+        "count": 264,
+        "first_filed": "2009-07-22",
+        "last_filed": "2026-07-31",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q",
+          "8-K"
+        ]
+      }
+    },
+    "has_assets": true,
+    "has_revenue": true,
+    "has_cost": true,
+    "has_gross_profit": true
+  },
+  "MSFT": {
+    "cik": "0000789019",
+    "http": 200,
+    "tags": {
+      "Revenues": {
+        "count": 31,
+        "first_filed": "2009-10-23",
+        "last_filed": "2011-01-27",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "RevenueFromContractWithCustomerExcludingAssessedTax": {
+        "count": 136,
+        "first_filed": "2018-08-03",
+        "last_filed": "2026-10-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "SalesRevenueNet": {
+        "count": 173,
+        "first_filed": "2011-04-28",
+        "last_filed": "2018-04-26",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A",
+          "8-K"
+        ]
+      },
+      "CostOfRevenue": {
+        "count": 120,
+        "first_filed": "2009-10-23",
+        "last_filed": "2018-04-26",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A",
+          "8-K"
+        ]
+      },
+      "CostOfGoodsAndServicesSold": {
+        "count": 112,
+        "first_filed": "2018-08-03",
+        "last_filed": "2026-10-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "GrossProfit": {
+        "count": 308,
+        "first_filed": "2010-07-30",
+        "last_filed": "2026-10-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "8-K"
+        ]
+      },
+      "Assets": {
+        "count": 144,
+        "first_filed": "2009-10-23",
+        "last_filed": "2026-10-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A",
+          "8-K"
+        ]
+      },
+      "StockholdersEquity": {
+        "count": 216,
+        "first_filed": "2009-10-23",
+        "last_filed": "2026-10-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A",
+          "8-K"
+        ]
+      }
+    },
+    "has_assets": true,
+    "has_revenue": true,
+    "has_cost": true,
+    "has_gross_profit": true
+  },
+  "JNJ": {
+    "cik": "0000200406",
+    "http": 200,
+    "tags": {
+      "Revenues": {
+        "count": 18,
+        "first_filed": "2013-08-01",
+        "last_filed": "2014-10-30",
+        "forms": [
+          "10-Q"
+        ]
+      },
+      "RevenueFromContractWithCustomerExcludingAssessedTax": {
+        "count": 132,
+        "first_filed": "2018-10-31",
+        "last_filed": "2026-10-21",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "CostOfGoodsAndServicesSold": {
+        "count": 105,
+        "first_filed": "2018-10-31",
+        "last_filed": "2026-10-21",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "GrossProfit": {
+        "count": 317,
+        "first_filed": "2009-08-04",
+        "last_filed": "2026-10-21",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "Assets": {
+        "count": 145,
+        "first_filed": "2009-08-04",
+        "last_filed": "2026-10-21",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "StockholdersEquity": {
+        "count": 22,
+        "first_filed": "2023-07-31",
+        "last_filed": "2026-10-21",
+        "forms": [
+          "10-Q"
+        ]
+      }
+    },
+    "has_assets": true,
+    "has_revenue": true,
+    "has_cost": true,
+    "has_gross_profit": true
+  },
+  "XOM": {
+    "cik": "0000034088",
+    "http": 200,
+    "tags": {
+      "Revenues": {
+        "count": 127,
+        "first_filed": "2012-02-24",
+        "last_filed": "2026-05-04",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "RevenueFromContractWithCustomerExcludingAssessedTax": {
+        "count": 49,
+        "first_filed": "2019-11-06",
+        "last_filed": "2023-08-01",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "Assets": {
+        "count": 152,
+        "first_filed": "2009-08-05",
+        "last_filed": "2026-05-04",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q"
+        ]
+      },
+      "StockholdersEquity": {
+        "count": 139,
+        "first_filed": "2009-08-05",
+        "last_filed": "2026-05-04",
+        "forms": [
+          "10-K",
+          "10-K/A",
+          "10-Q"
+        ]
+      }
+    },
+    "has_assets": true,
+    "has_revenue": true,
+    "has_cost": false,
+    "has_gross_profit": false
+  },
+  "WMT": {
+    "cik": "0000104169",
+    "http": 200,
+    "tags": {
+      "Revenues": {
+        "count": 293,
+        "first_filed": "2009-09-09",
+        "last_filed": "2026-08-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A"
+        ]
+      },
+      "RevenueFromContractWithCustomerExcludingAssessedTax": {
+        "count": 120,
+        "first_filed": "2018-11-30",
+        "last_filed": "2026-08-28",
+        "forms": [
+          "10-K",
+          "10-Q"
+        ]
+      },
+      "SalesRevenueNet": {
+        "count": 189,
+        "first_filed": "2009-09-09",
+        "last_filed": "2018-09-06",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A"
+        ]
+      },
+      "CostOfRevenue": {
+        "count": 309,
+        "first_filed": "2009-09-09",
+        "last_filed": "2026-08-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A"
+        ]
+      },
+      "Assets": {
+        "count": 207,
+        "first_filed": "2009-09-09",
+        "last_filed": "2026-08-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A"
+        ]
+      },
+      "StockholdersEquity": {
+        "count": 193,
+        "first_filed": "2009-09-09",
+        "last_filed": "2026-08-28",
+        "forms": [
+          "10-K",
+          "10-Q",
+          "10-Q/A"
+        ]
+      }
+    },
+    "has_assets": true,
+    "has_revenue": true,
+    "has_cost": true,
+    "has_gross_profit": false
+  }
+}
