@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-11T19:32:19Z",
+  "generated_at": "2026-11-11T19:47:15Z",
   "as_of": null,
   "source": "TradingEconomics 指标页（自动解析）",
   "items": [
@@ -69,17 +69,6 @@
       "unit": "K",
       "released_at": null,
       "impact": "实际 86.0K vs 预期 69.0K（+17.0）。"
-    },
-    {
-      "key": "claims",
-      "indicator": "初请失业金",
-      "period": "最新",
-      "forecast": 195.0,
-      "actual": 189.0,
-      "previous": null,
-      "unit": "K",
-      "released_at": null,
-      "impact": "实际 189.0K vs 预期 195.0K（-6.0）。"
     }
   ]
 }
