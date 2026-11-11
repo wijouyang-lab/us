@@ -1,6 +1,6 @@
 {
   "schema_version": "market_indicators.v1",
-  "generated_at": "2026-11-11T08:04:49Z",
+  "generated_at": "2026-11-11T08:17:15Z",
   "fear_greed": {
     "score": 33.8,
     "rating": "fear",
@@ -43,7 +43,7 @@
       },
       {
         "date": "2026-11-10",
-        "score": 33.37,
+        "score": 33.86,
         "rating": "fear"
       },
       {
