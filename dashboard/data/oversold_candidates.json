@@ -1,50 +1,55 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-10T14:10:10Z",
-  "asof": "2026-11-10",
+  "generated_at": "2026-11-11T14:08:01Z",
+  "asof": "2026-11-11",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
   "ai_model": null,
-  "ai_count": 6,
+  "ai_count": 4,
   "candidates": [
     {
       "ticker": "AXON",
       "name": "Axon Enterprise",
-      "score": 71.2,
+      "score": 64.1,
       "tag": "深度超跌",
       "rsi": 22.7,
-      "bias_pct": -24.65,
-      "drawdown_pct": -26.84,
-      "zscore": -3.86,
-      "atr_pct": 8.23,
-      "momentum_60d_pct": -50.53,
-      "volume_ratio_20d": 2.71,
-      "beta": 1.282,
-      "rs_20d_vs_spy": -23.58,
+      "bias_pct": -23.76,
+      "drawdown_pct": -26.81,
+      "zscore": -2.79,
+      "atr_pct": 8.02,
+      "momentum_60d_pct": -49.94,
+      "volume_ratio_20d": 1.67,
+      "beta": 1.276,
+      "rs_20d_vs_spy": -23.2,
       "market_regime": "NORMAL",
-      "technical_score": 5.0,
+      "technical_score": 10.0,
       "event_score": 8.0,
-      "quant_score": 20.0,
+      "quant_score": 25.0,
       "snapshot_sector": "Other",
       "sector": "Industrials",
-      "ref_price": 303.18,
-      "stop_loss": 266.8,
-      "confirm": "RSI 回升过 35 且站回 MA20 $402.36",
-      "invalid": "跌破参考止损 $266.80 或 RSI 继续下行",
-      "observe_until": "2026-11-20",
-      "reason": "RSI 22.7 / Bias -24.6% / ZScore -3.86；ATR 8.2% · 20日量比 2.7065；板块 Other。规则版筛选，未回测。",
+      "ref_price": 302.54,
+      "stop_loss": 266.24,
+      "confirm": "RSI 回升过 35 且站回 MA20 $396.81",
+      "invalid": "跌破参考止损 $266.24 或 RSI 继续下行",
+      "observe_until": "2026-11-21",
+      "reason": "RSI 22.7 / Bias -23.8% / ZScore -2.79；ATR 8.0% · 20日量比 1.6714；板块 Other。规则版筛选，未回测。",
       "enrich": {
         "sector": "Industrials",
         "industry": "Aerospace & Defense",
-        "pe_ttm": 97.485535,
-        "pe_forward": 32.04192,
-        "pb": 6.5593557,
+        "pe_ttm": 97.27975,
+        "pe_forward": 32.033527,
+        "pb": 6.54551,
         "roe": 0.07613,
         "profit_margin": 0.07565,
         "revenue_growth": 0.279,
         "earnings_growth": null,
-        "market_cap": 24688769024.0,
+        "market_cap": 24636653568.0,
         "news": [
+          {
+            "title": "Axon Sinks 27% in a Week to a New 52-Week Low. Is the Selling Overdone?",
+            "publisher": "TIKR",
+            "time": "2026-11-10T23:28:51Z"
+          },
           {
             "title": "Axon Is Down 52% From Its August High. Northland Still Sees $540",
             "publisher": "TIKR",
@@ -59,228 +64,154 @@
             "title": "Axon's Connected Devices Unit Gains Momentum: Can It Sustain?",
             "publisher": "Zacks",
             "time": "2026-11-09T14:25:00Z"
-          },
-          {
-            "title": "US Stock Market Today: S&P 500 Futures Nudge Higher On Jobs Strength Fed Uncertainty",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-09T13:09:35Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI 22.7极度超卖，但股价低于20日均线24.65%，60日动量-50.5%，放量2.71倍下跌，相对SPY弱23.6%，属趋势性破位，勿急于抄底。",
-        "fundamental": "TTM市盈率97.5倍、前瞻32倍，市净率6.56，ROE仅7.6%、净利率7.6%，估值偏高；营收增速27.9%仍强，盈利增速数据缺失。",
-        "news": "个股消息：较高点回撤52%，Northland维持540美元目标价；连接设备业务动能改善。市场层面：就业数据与美联储不确定性扰动大盘。",
-        "risk": "高贝塔1.28、ATR 8.2%波动剧烈，估值消化与动量反转风险并存；参考止损266.8距现价约12%，易被波动触发。",
-        "summary": "基本面成长仍在但估值不便宜，技术面深度破位叠加高波动，属观察为主、控制风险的阶段，本文非投资建议。"
+        "technical": "RSI22.7、20日动量-26.8%、较MA20低23.8%，深度超卖但趋势弱；量比1.67，波动率8%。",
+        "fundamental": "PE(TTM)97.3、PB6.5，估值偏高；营收增27.9%，ROE7.6%、净利率7.6%，盈利增速数据缺失。",
+        "news": "个股新闻：一周跌27%创52周低，较8月高点跌52%；Northland目标价540美元；连接设备业务获进展。",
+        "risk": "高估值叠加高波动，ATR8%，20日相对SPY -23.2%；参考止损266.24，注意盈利增速缺失。",
+        "summary": "深度超卖与高估值并存，基本面增长强但盈利质量待验证；消息面偏空，暂宜谨慎观察，不预测价格。"
       }
     },
     {
-      "ticker": "DDOG",
-      "name": "Datadog",
-      "score": 51.1,
+      "ticker": "NVDA",
+      "name": "Nvidia",
+      "score": 57.5,
       "tag": "深度超跌",
-      "rsi": 28.6,
-      "bias_pct": -26.42,
-      "drawdown_pct": -37.48,
-      "zscore": -1.97,
-      "atr_pct": 8.87,
-      "momentum_60d_pct": -29.69,
-      "volume_ratio_20d": 0.98,
-      "beta": 1.717,
-      "rs_20d_vs_spy": -34.21,
+      "rsi": 23.9,
+      "bias_pct": -18.09,
+      "drawdown_pct": -26.09,
+      "zscore": -2.99,
+      "atr_pct": 5.15,
+      "momentum_60d_pct": -24.94,
+      "volume_ratio_20d": 3.11,
+      "beta": 1.531,
+      "rs_20d_vs_spy": -22.48,
       "market_regime": "NORMAL",
-      "technical_score": 10.0,
+      "technical_score": 5.0,
       "event_score": 8.0,
-      "quant_score": 22.0,
+      "quant_score": 20.0,
       "snapshot_sector": "Technology",
       "sector": "Technology",
-      "ref_price": 179.62,
-      "stop_loss": 158.07,
-      "confirm": "RSI 回升过 35 且站回 MA20 $244.12",
-      "invalid": "跌破参考止损 $158.07 或 RSI 继续下行",
-      "observe_until": "2026-11-20",
-      "reason": "RSI 28.6 / Bias -26.4% / ZScore -1.97；ATR 8.9% · 20日量比 0.9825；板块 Technology。规则版筛选，未回测。",
+      "ref_price": 168.89,
+      "stop_loss": 155.84,
+      "confirm": "RSI 回升过 35 且站回 MA20 $206.18",
+      "invalid": "跌破参考止损 $155.84 或 RSI 继续下行",
+      "observe_until": "2026-11-21",
+      "reason": "RSI 23.9 / Bias -18.1% / ZScore -2.99；ATR 5.2% · 20日量比 3.1071；板块 Technology。规则版筛选，未回测。",
       "enrich": {
         "sector": "Technology",
-        "industry": "Software - Application",
-        "pe_ttm": 249.4722,
-        "pe_forward": 56.57162,
-        "pb": 13.751339,
-        "roe": 0.06426,
-        "profit_margin": 0.061240003,
-        "revenue_growth": 0.352,
-        "earnings_growth": 2.316,
-        "market_cap": 64850464768.0,
+        "industry": "Semiconductors",
+        "pe_ttm": 21.351454,
+        "pe_forward": 10.6042385,
+        "pb": 17.809765,
+        "roe": 1.17211,
+        "profit_margin": 0.63663,
+        "revenue_growth": 1.059,
+        "earnings_growth": 1.278,
+        "market_cap": 4078186790912.0,
         "news": [
           {
-            "title": "Cloudflare Is Up 11% in a Week. Is Its “Even Higher Gear” Really That Good?",
-            "publisher": "TIKR",
-            "time": "2026-11-10T13:35:21Z"
+            "title": "Stock market today: Dow, S&P 500, Nasdaq futures rise as Nvidia stock recovers, 10-year yield nears 5%",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-11T12:34:45Z"
           },
           {
-            "title": "Datadog Sinks 17% in a Week Despite “Strong Adoption Across Our Platform”",
-            "publisher": "TIKR",
-            "time": "2026-11-09T17:22:05Z"
+            "title": "Nvidia stock rebounds, chip stocks surge as CoreWeave earnings boost AI trade",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-11T13:54:39Z"
           },
           {
-            "title": "These 3 Stocks Just Fell After Strong Earnings. Here’s the One I’d Buy Right Now",
-            "publisher": "Motley Fool",
-            "time": "2026-11-09T14:11:02Z"
+            "title": "'Icarus' rise and fall': Analyst downgrades Nvidia stock amid Jensen Huang woes, highlights risks",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-11T13:12:04Z"
           },
           {
-            "title": "Is Trending Stock Datadog, Inc. (DDOG) a Buy Now?",
-            "publisher": "Zacks",
-            "time": "2026-11-09T13:00:04Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI14仅28.6，价格较MA20低26.42%，20日动量-37.48%，ATR占比8.87%，高波动；量比0.98，未见放量止跌。",
-        "fundamental": "PE(TTM)249.5、前瞻56.6、PB13.75；ROE6.43%、净利率6.12%；营收增35.2%、盈利增231.6%，估值仍高。",
-        "news": "个股新闻：Datadog一周跌17%，公司称平台采用强劲；强劲财报后仍下跌，Zacks讨论是否买入。市场新闻缺失。",
-        "risk": "高估值叠加高Beta1.72与ATR8.87%，20日跑输SPY34.21%；财报后负反应，若情绪走弱波动大。资金流与指引细节数据缺失。",
-        "summary": "技术超卖但趋势极弱，基本面增长强而估值高，新闻面偏空。列为谨慎观察，等待波动收敛与基本面确认，不预测价格。"
-      }
-    },
-    {
-      "ticker": "FIS",
-      "name": "Fidelity National Information Services",
-      "score": 47.5,
-      "tag": "深度超跌",
-      "rsi": 29.4,
-      "bias_pct": -19.9,
-      "drawdown_pct": -17.28,
-      "zscore": -2.38,
-      "atr_pct": 6.12,
-      "momentum_60d_pct": -33.97,
-      "volume_ratio_20d": 1.65,
-      "beta": -0.916,
-      "rs_20d_vs_spy": -14.01,
-      "market_regime": "NORMAL",
-      "technical_score": 5.0,
-      "event_score": 8.0,
-      "quant_score": 23.0,
-      "snapshot_sector": "Other",
-      "sector": "Technology",
-      "ref_price": 28.34,
-      "stop_loss": 25.74,
-      "confirm": "RSI 回升过 35 且站回 MA20 $35.38",
-      "invalid": "跌破参考止损 $25.74 或 RSI 继续下行",
-      "observe_until": "2026-11-20",
-      "reason": "RSI 29.4 / Bias -19.9% / ZScore -2.38；ATR 6.1% · 20日量比 1.6471；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Technology",
-        "industry": "Information Technology Services",
-        "pe_ttm": 4.236173,
-        "pe_forward": 5.040758,
-        "pb": 0.90111285,
-        "roe": 0.23042,
-        "profit_margin": 0.26774,
-        "revenue_growth": 0.271,
-        "earnings_growth": 0.38,
-        "market_cap": 14608427008.0,
-        "news": [
-          {
-            "title": "The Dates That Matter Most For Visa Stock",
-            "publisher": "Trefis",
-            "time": "2026-11-10T13:11:30Z"
-          },
-          {
-            "title": "Analysts Just Sounded the Alarm on These 5 Overhyped Stocks",
-            "publisher": "Insider Monkey",
-            "time": "2026-11-07T14:19:04Z"
-          },
-          {
-            "title": "Fidelity National Information Services Q3 Earnings Call Highlights",
-            "publisher": "MarketBeat",
-            "time": "2026-11-07T10:16:46Z"
-          },
-          {
-            "title": "Fidelity National Information Services Inc (FIS) (Q3 2026) Earnings Call Highlights: Solid Q3 ...",
-            "publisher": "GuruFocus.com",
-            "time": "2026-11-06T15:06:22Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI 29.4超卖，但股价低于MA20约19.9%，20日动量-17.3%、60日-34.0%，相对SPY落后14.0%，量比1.65，技术分5/25，弱势明显。",
-        "fundamental": "PE(TTM)4.24、前瞻5.04、PB0.90，ROE23.0%、净利率26.7%，营收增27.1%、盈利增38%，估值低但需核实盈利质量。",
-        "news": "个股新闻聚焦Q3财报电话会，标题称Q3稳健；另有文章讨论5只被高估股票，未明确FIS是否在列，信息有限。",
-        "risk": "技术趋势严重下行且放量，若基本面预期修正或板块走弱，波动风险高；低估值可能反映市场担忧，需防价值陷阱。",
-        "summary": "技术面极弱、估值与盈利指标偏便宜，消息面仅Q3稳健线索；多空矛盾，暂列谨慎观察，等待趋势企稳与财报细节验证。"
-      }
-    },
-    {
-      "ticker": "DVN",
-      "name": "Devon Energy",
-      "score": 40.0,
-      "tag": "超跌反弹",
-      "rsi": 28.8,
-      "bias_pct": -13.22,
-      "drawdown_pct": -13.4,
-      "zscore": -2.35,
-      "atr_pct": 4.06,
-      "momentum_60d_pct": -7.52,
-      "volume_ratio_20d": 1.53,
-      "beta": -0.327,
-      "rs_20d_vs_spy": -10.13,
-      "market_regime": "NORMAL",
-      "technical_score": 5.0,
-      "event_score": 8.0,
-      "quant_score": 25.0,
-      "snapshot_sector": "Other",
-      "sector": "Energy",
-      "ref_price": 42.4,
-      "stop_loss": 39.82,
-      "confirm": "RSI 回升过 35 且站回 MA20 $48.86",
-      "invalid": "跌破参考止损 $39.82 或 RSI 继续下行",
-      "observe_until": "2026-11-20",
-      "reason": "RSI 28.8 / Bias -13.2% / ZScore -2.35；ATR 4.1% · 20日量比 1.5331；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Energy",
-        "industry": "Oil & Gas E&P",
-        "pe_ttm": 9.953052,
-        "pe_forward": 7.9481125,
-        "pb": 1.151423,
-        "roe": 0.12555,
-        "profit_margin": 0.16284999,
-        "revenue_growth": 0.74,
-        "earnings_growth": -0.193,
-        "market_cap": 48323887104.0,
-        "news": [
-          {
-            "title": "Devon Energy Corp (DVN) (Q3 2026) Earnings Call Highlights: Record Production, $2 Billion Free ...",
-            "publisher": "GuruFocus.com",
-            "time": "2026-11-09T17:04:03Z"
-          },
-          {
-            "title": "CEG Q3 Earnings Beat on Calpine, Strong Commercial Performance",
-            "publisher": "Zacks",
-            "time": "2026-11-09T14:31:00Z"
-          },
-          {
-            "title": "Devon Energy Corporation (DVN) Is a Trending Stock: Facts to Know Before Betting on It",
-            "publisher": "Zacks",
-            "time": "2026-11-09T13:00:04Z"
-          },
-          {
-            "title": "Missed Devon Energy's Run? Here's What Holders Saw",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-08T11:12:17Z"
+            "title": "Why open-source AI models aren't actually cheaper to run: Vinod Khosla",
+            "publisher": "Yahoo Finance Video",
+            "time": "2026-11-11T13:00:00Z"
           }
         ]
       },
       "ai": {
         "verdict": "观察",
-        "technical": "RSI14 28.8超卖，但价低于MA20 13.22%，20日动量-13.4%，相对SPY -10.13%，技术分5/25，量比1.53。",
-        "fundamental": "PE(TTM)9.95、前瞻7.95、PB1.15；ROE12.6%、净利率16.3%；营收增74%，盈利增-19.3%，估值低但盈利下滑。",
-        "news": "公司Q3财报标题称产量创纪录、自由现金流20亿美元；另见趋势股与错失涨势报道。市场层面新闻缺失。",
-        "risk": "ATR4.06%波动偏高；20日跑输SPY10.13%；盈利负增长；油气价格与财报风险；参考止损39.82。",
-        "summary": "技术面超卖但趋势弱，估值偏低而盈利下滑，消息面偏正面；列入观察，等待企稳信号。"
+        "technical": "RSI 23.9 已至超卖，股价低于20日均线18%，20日动量-26%，相对SPY落后22个百分点；量比3.11显示抛压集中，波动率5.15%、β1.53，技术面破位但跌势偏急。",
+        "fundamental": "前瞻市盈率10.6倍、TTM 21.4倍，PEG 与增速不匹配；营收增105.9%、盈利增127.8%，净利率63.7%，ROE 117%；但市净率17.8倍偏高，估值容错小。",
+        "news": "个股消息面分歧：股价随CoreWeave财报反弹、芯片股走强，同时有分析师以「伊卡洛斯式起落」为由下调评级；10年期收益率逼近5%压制估值。市场层面暂无其他数据。",
+        "risk": "高β叠加收益率上行，利率敏感度大；成交量放大显示分歧剧烈，超卖后仍可能继续下探；评级下调与AI交易情绪反复是主要扰动，参考止损155.84距现价约7.7%。",
+        "summary": "基本面增速与利润率仍强，前瞻估值不高，但技术面严重破位、量能异常且消息面分歧，属于高位急跌后的观察窗口，宜等待企稳信号而非追跌，本笔记不构成投资建议。"
+      }
+    },
+    {
+      "ticker": "DDOG",
+      "name": "Datadog",
+      "score": 49.6,
+      "tag": "深度超跌",
+      "rsi": 28.3,
+      "bias_pct": -25.32,
+      "drawdown_pct": -37.04,
+      "zscore": -1.75,
+      "atr_pct": 8.68,
+      "momentum_60d_pct": -27.87,
+      "volume_ratio_20d": 0.81,
+      "beta": 1.698,
+      "rs_20d_vs_spy": -33.43,
+      "market_regime": "NORMAL",
+      "technical_score": 10.0,
+      "event_score": 4.0,
+      "quant_score": 18.0,
+      "snapshot_sector": "Technology",
+      "sector": "Technology",
+      "ref_price": 178.4,
+      "stop_loss": 156.99,
+      "confirm": "RSI 回升过 35 且站回 MA20 $238.88",
+      "invalid": "跌破参考止损 $156.99 或 RSI 继续下行",
+      "observe_until": "2026-11-21",
+      "reason": "RSI 28.3 / Bias -25.3% / ZScore -1.75；ATR 8.7% · 20日量比 0.8095；板块 Technology。规则版筛选，未回测。",
+      "enrich": {
+        "sector": "Technology",
+        "industry": "Software - Application",
+        "pe_ttm": 247.77776,
+        "pe_forward": 56.049515,
+        "pb": 13.657938,
+        "roe": 0.06426,
+        "profit_margin": 0.061240003,
+        "revenue_growth": 0.352,
+        "earnings_growth": 2.316,
+        "market_cap": 64409989120.0,
+        "news": [
+          {
+            "title": "Should You Buy The Dip In Datadog Stock?",
+            "publisher": "Trefis",
+            "time": "2026-11-11T01:56:15Z"
+          },
+          {
+            "title": "“Missing Forest-for-the-Trees”: Datadog Sinks 17% in a Week as Its Biggest AI Customer Cuts Back",
+            "publisher": "TIKR",
+            "time": "2026-11-10T23:31:33Z"
+          },
+          {
+            "title": "What Are ServiceNow Stock Bears Missing?",
+            "publisher": "Trefis",
+            "time": "2026-11-10T22:13:48Z"
+          },
+          {
+            "title": "Datadog (DDOG) Stock Gets Fair Value Trim After Mixed Views On Q4 And AI Demand",
+            "publisher": "Simply Wall St.",
+            "time": "2026-11-10T21:08:31Z"
+          }
+        ]
+      },
+      "ai": {
+        "verdict": "谨慎",
+        "technical": "RSI 28.3超卖，但价格较MA20低25.3%，20日动量-37%，跑输标普33个百分点，趋势明显破位；ATR 8.7%波动大，缩量下跌未见承接。",
+        "fundamental": "营收增速35.2%、盈利增速2.3倍，但TTM市盈率约248倍、市销偏高，PB 13.7，ROE 6.4%、净利率6.1%，估值容错低。",
+        "news": "个股消息偏空：最大AI客户削减支出，一周跌约17%；机构下调合理价值，对Q4与AI需求看法分歧。",
+        "risk": "客户集中与AI需求放缓风险叠加高估值、高Beta 1.7，超卖后仍可能延续弱势；缺乏明确止跌信号。",
+        "summary": "基本面增长仍在但估值高，技术破位叠加AI客户砍单利空，属观察名单偏防守；需等量价企稳再评估。"
       }
     },
     {
@@ -288,38 +219,38 @@
       "name": "Archer Daniels Midland",
       "score": 38.7,
       "tag": "超跌反弹",
-      "rsi": 22.9,
-      "bias_pct": -9.75,
-      "drawdown_pct": -13.16,
-      "zscore": -1.83,
-      "atr_pct": 3.13,
-      "momentum_60d_pct": -13.19,
-      "volume_ratio_20d": 1.39,
-      "beta": -0.253,
-      "rs_20d_vs_spy": -9.89,
+      "rsi": 22.0,
+      "bias_pct": -9.64,
+      "drawdown_pct": -16.71,
+      "zscore": -1.71,
+      "atr_pct": 3.05,
+      "momentum_60d_pct": -14.75,
+      "volume_ratio_20d": 1.45,
+      "beta": -0.239,
+      "rs_20d_vs_spy": -13.1,
       "market_regime": "NORMAL",
-      "technical_score": 15.0,
+      "technical_score": 10.0,
       "event_score": 8.0,
-      "quant_score": 35.0,
+      "quant_score": 30.0,
       "snapshot_sector": "Other",
       "sector": "Consumer Defensive",
-      "ref_price": 69.84,
-      "stop_loss": 66.56,
-      "confirm": "RSI 回升过 35 且站回 MA20 $77.39",
-      "invalid": "跌破参考止损 $66.56 或 RSI 继续下行",
-      "observe_until": "2026-11-20",
-      "reason": "RSI 22.9 / Bias -9.8% / ZScore -1.83；ATR 3.1% · 20日量比 1.3855；板块 Other。规则版筛选，未回测。",
+      "ref_price": 69.3,
+      "stop_loss": 66.13,
+      "confirm": "RSI 回升过 35 且站回 MA20 $76.69",
+      "invalid": "跌破参考止损 $66.13 或 RSI 继续下行",
+      "observe_until": "2026-11-21",
+      "reason": "RSI 22.0 / Bias -9.6% / ZScore -1.71；ATR 3.0% · 20日量比 1.4505；板块 Other。规则版筛选，未回测。",
       "enrich": {
         "sector": "Consumer Defensive",
         "industry": "Farm Products",
-        "pe_ttm": 13.640625,
-        "pe_forward": 12.356053,
-        "pb": 1.3996832,
+        "pe_ttm": 13.535157,
+        "pe_forward": 12.260518,
+        "pb": 1.3888612,
         "roe": 0.10639,
         "profit_margin": 0.02954,
         "revenue_growth": 0.096,
         "earnings_growth": 6.71,
-        "market_cap": 33238194176.0,
+        "market_cap": 32981202944.0,
         "news": [
           {
             "title": "Should You Buy ADM Stock At This Price?",
@@ -344,81 +275,12 @@
         ]
       },
       "ai": {
-        "verdict": "观察",
-        "technical": "RSI14仅22.9深度超卖，价格低于MA20约9.75%，20日与60日动量均约-13%，跑输SPY 9.89个百分点，量比1.39为放量下跌，技术分15/25。",
-        "fundamental": "PE(TTM)13.6、前瞻12.4、PB1.4，ROE10.6%，净利率仅2.95%，营收增9.6%、盈利增6.71，估值不贵但利润薄。",
-        "news": "个股新闻有4条：Trefis讨论当前价位是否值得买入；Zacks称四周下跌12.9%后趋势或反转，另两篇将其列入主题组合，均为评论性内容。",
-        "risk": "农产品周期与压榨利润敏感，净利率不足3%；参考价69.84已高于止损位66.56不多，若继续放量下行风险偏大。",
-        "summary": "低估值叠加深度超卖，但趋势与相对强度明显走坏，缺少公司层面实质催化，归入观察名单，等待企稳信号。"
-      }
-    },
-    {
-      "ticker": "OXY",
-      "name": "Occidental Petroleum",
-      "score": 31.9,
-      "tag": "超跌反弹",
-      "rsi": 31.8,
-      "bias_pct": -8.95,
-      "drawdown_pct": -8.78,
-      "zscore": -2.44,
-      "atr_pct": 3.2,
-      "momentum_60d_pct": -4.46,
-      "volume_ratio_20d": 1.23,
-      "beta": -0.383,
-      "rs_20d_vs_spy": -5.52,
-      "market_regime": "NORMAL",
-      "technical_score": 5.0,
-      "event_score": 8.0,
-      "quant_score": 22.0,
-      "snapshot_sector": "Energy",
-      "sector": "Energy",
-      "ref_price": 55.76,
-      "stop_loss": 53.08,
-      "confirm": "RSI 回升过 35 且站回 MA20 $61.24",
-      "invalid": "跌破参考止损 $53.08 或 RSI 继续下行",
-      "observe_until": "2026-11-20",
-      "reason": "RSI 31.8 / Bias -8.9% / ZScore -2.44；ATR 3.2% · 20日量比 1.2272；板块 Energy。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Energy",
-        "industry": "Oil & Gas E&P",
-        "pe_ttm": 15.840909,
-        "pe_forward": 10.975297,
-        "pb": 1.598303,
-        "roe": 0.12843001,
-        "profit_margin": 0.33987,
-        "revenue_growth": 0.022,
-        "earnings_growth": 1.458,
-        "market_cap": 55739777024.0,
-        "news": [
-          {
-            "title": "Should You Buy Exxon Mobil Stock For Its Cash?",
-            "publisher": "Trefis",
-            "time": "2026-11-10T13:05:26Z"
-          },
-          {
-            "title": "Occidental Cuts Debt to $10 Billion as Q3 Cash Flow Hits $4.1 Billion",
-            "publisher": "Oilprice.com",
-            "time": "2026-11-10T02:50:00Z"
-          },
-          {
-            "title": "Dow Jones Soars 1,132 Points As Amazon, Tesla Rally, But Nvidia Dives; CPI Inflation Report Next",
-            "publisher": "Investor's Business Daily",
-            "time": "2026-11-10T02:31:48Z"
-          },
-          {
-            "title": "Occidental (OXY) Reports Q3 Earnings: What Key Metrics Have to Say",
-            "publisher": "Zacks",
-            "time": "2026-11-09T23:30:01Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "观察",
-        "technical": "RSI 31.8接近超卖，价格低于20日均线8.95%，20日z值-2.44，20日与60日动量均为负，量比1.23，相对SPY落后5.52%，技术评分仅5/25",
-        "fundamental": "PE(TTM)15.8、预期PE 11.0、PB 1.6、ROE 12.8%、净利率34%、营收增2.2%、盈利增145.8%，估值与盈利质量尚可",
-        "news": "公司Q3经营现金流41亿美元，债务降至100亿美元，财报已披露；另有大盘层面道指大涨、CPI待公布的消息",
-        "risk": "油价与行业周期波动；股价跌破均线且动量偏弱，若延续弱势，参考止损位53.08附近需留意",
-        "summary": "基本面与去杠杆进展尚可，但技术面短期明显走弱，属超卖观察区间，非投资建议"
+        "verdict": "谨慎",
+        "technical": "RSI14仅22属超卖，20日跌16.7%，较MA20低9.6%，相对SPY弱13.1%，量比1.45，趋势仍弱。",
+        "fundamental": "PE TTM13.5、前瞻12.3，PB1.39，ROE10.6%，净利率2.95%，营收增9.6%，盈利增长6.71。",
+        "news": "个股新闻4条：估值讨论、Zacks博客、农业科技组合、四周跌12.9%后或反转；市场新闻数据缺失。",
+        "risk": "趋势和相对强度弱，超卖可能持续；净利率偏低；反转说法仅为媒体猜测；市场层面数据缺失。",
+        "summary": "估值不高但技术面极弱，属超卖下跌，需等待企稳信号；这是观察笔记，非投资建议。"
       }
     }
   ]
