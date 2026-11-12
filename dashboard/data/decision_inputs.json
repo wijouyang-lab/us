@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-12T14:02:19Z",
-  "asof": "2026-11-12T14:02:12Z",
+  "generated_at": "2026-11-12T14:10:17Z",
+  "asof": "2026-11-12T14:09:51Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
@@ -80,7 +80,7 @@
       "key": "oversold_count",
       "label": "超跌候选数",
       "group": "超跌",
-      "value": 4,
+      "value": 2,
       "unit": "",
       "status": "ok",
       "source": "oversold"
@@ -89,7 +89,7 @@
       "key": "oversold_rsi",
       "label": "平均RSI",
       "group": "超跌",
-      "value": 24.2,
+      "value": 28.2,
       "unit": "",
       "status": "ok",
       "source": "oversold"
@@ -116,7 +116,7 @@
       "key": "news_bull",
       "label": "新闻利好",
       "group": "新闻",
-      "value": 8,
+      "value": 5,
       "unit": "/100",
       "status": "ok",
       "source": "news_data"
@@ -125,7 +125,7 @@
       "key": "news_bear",
       "label": "新闻利空",
       "group": "新闻",
-      "value": 8,
+      "value": 10,
       "unit": "/100",
       "status": "ok",
       "source": "news_data"

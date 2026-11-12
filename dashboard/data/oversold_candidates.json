@@ -1,286 +1,148 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-11T14:08:01Z",
-  "asof": "2026-11-11",
+  "generated_at": "2026-11-12T14:08:29Z",
+  "asof": "2026-11-12",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
   "ai_model": null,
-  "ai_count": 4,
+  "ai_count": 2,
   "candidates": [
     {
       "ticker": "AXON",
       "name": "Axon Enterprise",
-      "score": 64.1,
+      "score": 45.3,
       "tag": "深度超跌",
-      "rsi": 22.7,
-      "bias_pct": -23.76,
-      "drawdown_pct": -26.81,
-      "zscore": -2.79,
-      "atr_pct": 8.02,
-      "momentum_60d_pct": -49.94,
-      "volume_ratio_20d": 1.67,
-      "beta": 1.276,
-      "rs_20d_vs_spy": -23.2,
+      "rsi": 27.8,
+      "bias_pct": -19.57,
+      "drawdown_pct": -22.77,
+      "zscore": -1.94,
+      "atr_pct": 7.58,
+      "momentum_60d_pct": -49.11,
+      "volume_ratio_20d": 1.56,
+      "beta": 1.425,
+      "rs_20d_vs_spy": -21.5,
       "market_regime": "NORMAL",
       "technical_score": 10.0,
-      "event_score": 8.0,
-      "quant_score": 25.0,
+      "event_score": 11.0,
+      "quant_score": 31.0,
       "snapshot_sector": "Other",
       "sector": "Industrials",
-      "ref_price": 302.54,
-      "stop_loss": 266.24,
-      "confirm": "RSI 回升过 35 且站回 MA20 $396.81",
-      "invalid": "跌破参考止损 $266.24 或 RSI 继续下行",
-      "observe_until": "2026-11-21",
-      "reason": "RSI 22.7 / Bias -23.8% / ZScore -2.79；ATR 8.0% · 20日量比 1.6714；板块 Other。规则版筛选，未回测。",
+      "ref_price": 315.42,
+      "stop_loss": 279.56,
+      "confirm": "RSI 回升过 35 且站回 MA20 $392.16",
+      "invalid": "跌破参考止损 $279.56 或 RSI 继续下行",
+      "observe_until": "2026-11-22",
+      "reason": "RSI 27.8 / Bias -19.6% / ZScore -1.94；ATR 7.6% · 20日量比 1.5605；板块 Other。规则版筛选，未回测。",
       "enrich": {
         "sector": "Industrials",
         "industry": "Aerospace & Defense",
-        "pe_ttm": 97.27975,
-        "pe_forward": 32.033527,
-        "pb": 6.54551,
+        "pe_ttm": 101.42123,
+        "pe_forward": 33.39729,
+        "pb": 6.824171,
         "roe": 0.07613,
         "profit_margin": 0.07565,
         "revenue_growth": 0.279,
         "earnings_growth": null,
-        "market_cap": 24636653568.0,
+        "market_cap": 25685508096.0,
         "news": [
           {
-            "title": "Axon Sinks 27% in a Week to a New 52-Week Low. Is the Selling Overdone?",
-            "publisher": "TIKR",
-            "time": "2026-11-10T23:28:51Z"
+            "title": "New Chip Launch Might Change The Case For Investing In Nordic Semiconductor (OB:NOD)",
+            "publisher": "Simply Wall St.",
+            "time": "2026-11-12T10:08:10Z"
           },
           {
-            "title": "Axon Is Down 52% From Its August High. Northland Still Sees $540",
-            "publisher": "TIKR",
-            "time": "2026-11-10T11:21:53Z"
+            "title": "What Is The True Hidden Price Of Axon Stock?",
+            "publisher": "Trefis",
+            "time": "2026-11-11T23:26:28Z"
           },
           {
-            "title": "Axon Enterprise: 3 Key Takeaways for Long-Term Investors",
+            "title": "Axon Enterprise vs. Okta: Which Security Stock Is a Better Buy for 2027?",
             "publisher": "Motley Fool",
-            "time": "2026-11-10T00:50:35Z"
+            "time": "2026-11-11T22:20:03Z"
           },
           {
-            "title": "Axon's Connected Devices Unit Gains Momentum: Can It Sustain?",
-            "publisher": "Zacks",
-            "time": "2026-11-09T14:25:00Z"
+            "title": "Axon Enterprise (AXON): Solid Fundamentals Intact Following Short-Term Pullback",
+            "publisher": "Insider Monkey",
+            "time": "2026-11-11T16:08:27Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI22.7、20日动量-26.8%、较MA20低23.8%，深度超卖但趋势弱；量比1.67，波动率8%。",
-        "fundamental": "PE(TTM)97.3、PB6.5，估值偏高；营收增27.9%，ROE7.6%、净利率7.6%，盈利增速数据缺失。",
-        "news": "个股新闻：一周跌27%创52周低，较8月高点跌52%；Northland目标价540美元；连接设备业务获进展。",
-        "risk": "高估值叠加高波动，ATR8%，20日相对SPY -23.2%；参考止损266.24，注意盈利增速缺失。",
-        "summary": "深度超卖与高估值并存，基本面增长强但盈利质量待验证；消息面偏空，暂宜谨慎观察，不预测价格。"
+        "technical": "RSI14仅27.8属超卖，价格低于MA20约19.6%，20日与60日动量分别为-22.8%、-49.1%，量比1.56、相对SPY弱21.5%，高波动下下行趋势未改。",
+        "fundamental": "PE(TTM)约101倍、前瞻33倍、PB6.8，ROE与净利率均约7.6%，营收增27.9%，盈利增速数据缺失；成长强但估值偏高。",
+        "news": "个股新闻以估值讨论和对比为主，Insider Monkey称基本面稳健、回调属短期；另有一条与公司无关。无实质公司消息，市场层面数据缺失。",
+        "risk": "60日近半跌幅、ATR约7.6%、beta1.43，趋势尚未止跌，估值处高位，反弹或仅为超跌修复，波动风险大。",
+        "summary": "成长性强但估值高，技术面深度超卖且趋势破坏，消息面无实质催化，宜列入观察并保持谨慎，不作价格预测。"
       }
     },
     {
       "ticker": "NVDA",
       "name": "Nvidia",
-      "score": 57.5,
-      "tag": "深度超跌",
-      "rsi": 23.9,
-      "bias_pct": -18.09,
-      "drawdown_pct": -26.09,
-      "zscore": -2.99,
-      "atr_pct": 5.15,
-      "momentum_60d_pct": -24.94,
-      "volume_ratio_20d": 3.11,
-      "beta": 1.531,
-      "rs_20d_vs_spy": -22.48,
+      "score": 39.9,
+      "tag": "超跌反弹",
+      "rsi": 28.7,
+      "bias_pct": -14.76,
+      "drawdown_pct": -21.5,
+      "zscore": -2.11,
+      "atr_pct": 5.01,
+      "momentum_60d_pct": -20.94,
+      "volume_ratio_20d": 2.03,
+      "beta": 1.55,
+      "rs_20d_vs_spy": -20.22,
       "market_regime": "NORMAL",
-      "technical_score": 5.0,
+      "technical_score": 15.0,
       "event_score": 8.0,
-      "quant_score": 20.0,
+      "quant_score": 30.0,
       "snapshot_sector": "Technology",
       "sector": "Technology",
-      "ref_price": 168.89,
-      "stop_loss": 155.84,
-      "confirm": "RSI 回升过 35 且站回 MA20 $206.18",
-      "invalid": "跌破参考止损 $155.84 或 RSI 继续下行",
-      "observe_until": "2026-11-21",
-      "reason": "RSI 23.9 / Bias -18.1% / ZScore -2.99；ATR 5.2% · 20日量比 3.1071；板块 Technology。规则版筛选，未回测。",
+      "ref_price": 173.73,
+      "stop_loss": 160.67,
+      "confirm": "RSI 回升过 35 且站回 MA20 $203.80",
+      "invalid": "跌破参考止损 $160.67 或 RSI 继续下行",
+      "observe_until": "2026-11-22",
+      "reason": "RSI 28.7 / Bias -14.8% / ZScore -2.11；ATR 5.0% · 20日量比 2.0278；板块 Technology。规则版筛选，未回测。",
       "enrich": {
         "sector": "Technology",
         "industry": "Semiconductors",
-        "pe_ttm": 21.351454,
-        "pe_forward": 10.6042385,
-        "pb": 17.809765,
+        "pe_ttm": 21.963337,
+        "pe_forward": 10.907824,
+        "pb": 18.320152,
         "roe": 1.17211,
         "profit_margin": 0.63663,
         "revenue_growth": 1.059,
         "earnings_growth": 1.278,
-        "market_cap": 4078186790912.0,
+        "market_cap": 4195058188288.0,
         "news": [
           {
-            "title": "Stock market today: Dow, S&P 500, Nasdaq futures rise as Nvidia stock recovers, 10-year yield nears 5%",
+            "title": "Stock market today: Dow, S&P 500, Nasdaq futures sink as Nvidia CEO Jensen Huang resigns, stock tanks",
             "publisher": "Yahoo Finance",
-            "time": "2026-11-11T12:34:45Z"
+            "time": "2026-11-12T11:00:27Z"
           },
           {
-            "title": "Nvidia stock rebounds, chip stocks surge as CoreWeave earnings boost AI trade",
+            "title": "Nvidia CEO Huang resigns amid affair scandals, board names CFO Colette Kress interim CEO",
             "publisher": "Yahoo Finance",
-            "time": "2026-11-11T13:54:39Z"
+            "time": "2026-11-12T13:58:01Z"
           },
           {
-            "title": "'Icarus' rise and fall': Analyst downgrades Nvidia stock amid Jensen Huang woes, highlights risks",
+            "title": "Nvidia stock tumbles as CEO Jensen Huang steps down, dragging down other AI names",
             "publisher": "Yahoo Finance",
-            "time": "2026-11-11T13:12:04Z"
+            "time": "2026-11-12T13:39:10Z"
           },
           {
-            "title": "Why open-source AI models aren't actually cheaper to run: Vinod Khosla",
+            "title": "Can Jensen Huang stay on as Nvidia CEO amid second allegation?",
             "publisher": "Yahoo Finance Video",
-            "time": "2026-11-11T13:00:00Z"
+            "time": "2026-11-12T13:16:27Z"
           }
         ]
       },
       "ai": {
-        "verdict": "观察",
-        "technical": "RSI 23.9 已至超卖，股价低于20日均线18%，20日动量-26%，相对SPY落后22个百分点；量比3.11显示抛压集中，波动率5.15%、β1.53，技术面破位但跌势偏急。",
-        "fundamental": "前瞻市盈率10.6倍、TTM 21.4倍，PEG 与增速不匹配；营收增105.9%、盈利增127.8%，净利率63.7%，ROE 117%；但市净率17.8倍偏高，估值容错小。",
-        "news": "个股消息面分歧：股价随CoreWeave财报反弹、芯片股走强，同时有分析师以「伊卡洛斯式起落」为由下调评级；10年期收益率逼近5%压制估值。市场层面暂无其他数据。",
-        "risk": "高β叠加收益率上行，利率敏感度大；成交量放大显示分歧剧烈，超卖后仍可能继续下探；评级下调与AI交易情绪反复是主要扰动，参考止损155.84距现价约7.7%。",
-        "summary": "基本面增速与利润率仍强，前瞻估值不高，但技术面严重破位、量能异常且消息面分歧，属于高位急跌后的观察窗口，宜等待企稳信号而非追跌，本笔记不构成投资建议。"
-      }
-    },
-    {
-      "ticker": "DDOG",
-      "name": "Datadog",
-      "score": 49.6,
-      "tag": "深度超跌",
-      "rsi": 28.3,
-      "bias_pct": -25.32,
-      "drawdown_pct": -37.04,
-      "zscore": -1.75,
-      "atr_pct": 8.68,
-      "momentum_60d_pct": -27.87,
-      "volume_ratio_20d": 0.81,
-      "beta": 1.698,
-      "rs_20d_vs_spy": -33.43,
-      "market_regime": "NORMAL",
-      "technical_score": 10.0,
-      "event_score": 4.0,
-      "quant_score": 18.0,
-      "snapshot_sector": "Technology",
-      "sector": "Technology",
-      "ref_price": 178.4,
-      "stop_loss": 156.99,
-      "confirm": "RSI 回升过 35 且站回 MA20 $238.88",
-      "invalid": "跌破参考止损 $156.99 或 RSI 继续下行",
-      "observe_until": "2026-11-21",
-      "reason": "RSI 28.3 / Bias -25.3% / ZScore -1.75；ATR 8.7% · 20日量比 0.8095；板块 Technology。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Technology",
-        "industry": "Software - Application",
-        "pe_ttm": 247.77776,
-        "pe_forward": 56.049515,
-        "pb": 13.657938,
-        "roe": 0.06426,
-        "profit_margin": 0.061240003,
-        "revenue_growth": 0.352,
-        "earnings_growth": 2.316,
-        "market_cap": 64409989120.0,
-        "news": [
-          {
-            "title": "Should You Buy The Dip In Datadog Stock?",
-            "publisher": "Trefis",
-            "time": "2026-11-11T01:56:15Z"
-          },
-          {
-            "title": "“Missing Forest-for-the-Trees”: Datadog Sinks 17% in a Week as Its Biggest AI Customer Cuts Back",
-            "publisher": "TIKR",
-            "time": "2026-11-10T23:31:33Z"
-          },
-          {
-            "title": "What Are ServiceNow Stock Bears Missing?",
-            "publisher": "Trefis",
-            "time": "2026-11-10T22:13:48Z"
-          },
-          {
-            "title": "Datadog (DDOG) Stock Gets Fair Value Trim After Mixed Views On Q4 And AI Demand",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-10T21:08:31Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI 28.3超卖，但价格较MA20低25.3%，20日动量-37%，跑输标普33个百分点，趋势明显破位；ATR 8.7%波动大，缩量下跌未见承接。",
-        "fundamental": "营收增速35.2%、盈利增速2.3倍，但TTM市盈率约248倍、市销偏高，PB 13.7，ROE 6.4%、净利率6.1%，估值容错低。",
-        "news": "个股消息偏空：最大AI客户削减支出，一周跌约17%；机构下调合理价值，对Q4与AI需求看法分歧。",
-        "risk": "客户集中与AI需求放缓风险叠加高估值、高Beta 1.7，超卖后仍可能延续弱势；缺乏明确止跌信号。",
-        "summary": "基本面增长仍在但估值高，技术破位叠加AI客户砍单利空，属观察名单偏防守；需等量价企稳再评估。"
-      }
-    },
-    {
-      "ticker": "ADM",
-      "name": "Archer Daniels Midland",
-      "score": 38.7,
-      "tag": "超跌反弹",
-      "rsi": 22.0,
-      "bias_pct": -9.64,
-      "drawdown_pct": -16.71,
-      "zscore": -1.71,
-      "atr_pct": 3.05,
-      "momentum_60d_pct": -14.75,
-      "volume_ratio_20d": 1.45,
-      "beta": -0.239,
-      "rs_20d_vs_spy": -13.1,
-      "market_regime": "NORMAL",
-      "technical_score": 10.0,
-      "event_score": 8.0,
-      "quant_score": 30.0,
-      "snapshot_sector": "Other",
-      "sector": "Consumer Defensive",
-      "ref_price": 69.3,
-      "stop_loss": 66.13,
-      "confirm": "RSI 回升过 35 且站回 MA20 $76.69",
-      "invalid": "跌破参考止损 $66.13 或 RSI 继续下行",
-      "observe_until": "2026-11-21",
-      "reason": "RSI 22.0 / Bias -9.6% / ZScore -1.71；ATR 3.0% · 20日量比 1.4505；板块 Other。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Consumer Defensive",
-        "industry": "Farm Products",
-        "pe_ttm": 13.535157,
-        "pe_forward": 12.260518,
-        "pb": 1.3888612,
-        "roe": 0.10639,
-        "profit_margin": 0.02954,
-        "revenue_growth": 0.096,
-        "earnings_growth": 6.71,
-        "market_cap": 32981202944.0,
-        "news": [
-          {
-            "title": "Should You Buy ADM Stock At This Price?",
-            "publisher": "Trefis",
-            "time": "2026-11-06T14:36:24Z"
-          },
-          {
-            "title": "The Zacks Analyst Blog Highlights Archer-Daniels-Midland, Freeport-McMoRan, UnitedHealth, Casey's General Stores and Crane",
-            "publisher": "Zacks",
-            "time": "2026-11-06T13:23:00Z"
-          },
-          {
-            "title": "2 AgriTech and Food Innovation Stocks to Buy for a Stable Portfolio",
-            "publisher": "Zacks",
-            "time": "2026-11-06T11:50:00Z"
-          },
-          {
-            "title": "After Plunging 12.9% in 4 Weeks, Here's Why the Trend Might Reverse for ADM (ADM)",
-            "publisher": "Zacks",
-            "time": "2026-11-05T13:35:01Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "谨慎",
-        "technical": "RSI14仅22属超卖，20日跌16.7%，较MA20低9.6%，相对SPY弱13.1%，量比1.45，趋势仍弱。",
-        "fundamental": "PE TTM13.5、前瞻12.3，PB1.39，ROE10.6%，净利率2.95%，营收增9.6%，盈利增长6.71。",
-        "news": "个股新闻4条：估值讨论、Zacks博客、农业科技组合、四周跌12.9%后或反转；市场新闻数据缺失。",
-        "risk": "趋势和相对强度弱，超卖可能持续；净利率偏低；反转说法仅为媒体猜测；市场层面数据缺失。",
-        "summary": "估值不高但技术面极弱，属超卖下跌，需等待企稳信号；这是观察笔记，非投资建议。"
+        "verdict": "回避",
+        "technical": "RSI28.7超卖，较20日均线-14.8%，20日跌21.5%、60日跌20.9%，量比2.03放量下跌，相对标普20日-20.2%，ATR5%高波动。",
+        "fundamental": "PE(TTM)22.0、前瞻10.9，PB18.3偏高；ROE117%、净利率63.7%，营收增105.9%、盈利增127.8%，市值约4.2万亿美元。",
+        "news": "公司层面：黄仁勋因丑闻辞任CEO，董事会任命CFO Kress为临时CEO，股价下挫并拖累其他AI个股。",
+        "risk": "CEO更替与丑闻后续不明，治理风险高；放量破位、高波动；PB偏高；财务数据可能未反映事件影响。",
+        "summary": "治理冲击叠加技术破位，风险主导，暂以回避观察为主。"
       }
     }
   ]
