@@ -1,32 +1,32 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-12T15:33:12Z",
-  "asof": "2026-11-12T15:32:47Z",
+  "generated_at": "2026-11-12T15:35:52Z",
+  "asof": "2026-11-12T15:35:44Z",
   "note": "只读决策输入快照：权重/阈值/买卖规则由量化研究定义，本层不做判断。",
   "features": [
     {
       "key": "macro_ok",
       "label": "宏观有值项",
       "group": "宏观",
-      "value": 3,
+      "value": 11,
       "unit": "/11",
-      "status": "partial",
+      "status": "ok",
       "source": "macro_indicators"
     },
     {
       "key": "macro_missing",
       "label": "缺失项",
       "group": "宏观",
-      "value": 8,
+      "value": 0,
       "unit": "",
-      "status": "partial",
+      "status": "ok",
       "source": "macro_indicators"
     },
     {
       "key": "cpi_yoy_surprise",
       "label": "CPI预期差",
       "group": "宏观",
-      "value": 0.1,
+      "value": 3.4,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
@@ -53,7 +53,7 @@
       "key": "cpi_mom_surprise",
       "label": "CPI月率预期差",
       "group": "宏观",
-      "value": 0.1,
+      "value": 0.2,
       "unit": "pp",
       "status": "ok",
       "source": "macro_forecast"
