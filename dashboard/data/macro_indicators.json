@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-12T19:32:06Z",
+  "generated_at": "2026-11-12T19:47:12Z",
   "source": "FRED + ISM + EIA",
   "count": 11,
   "ok": 11,
@@ -104,11 +104,11 @@
     {
       "key": "eia_crude",
       "name": "每周EIA原油库存",
-      "value": 409760,
+      "value": 414417,
       "unit": "千桶",
-      "date": "2026-10-30",
-      "prev": 410625,
-      "change": -865,
+      "date": "2026-11-06",
+      "prev": 409760,
+      "change": 4657,
       "source": "EIA API",
       "note": null,
       "source_status": "primary"
@@ -116,9 +116,9 @@
     {
       "key": "eia_crude_chg",
       "name": "EIA原油库存变化",
-      "value": -0.86,
+      "value": 4.66,
       "unit": "M",
-      "date": "2026-10-30",
+      "date": "2026-11-06",
       "prev": null,
       "change": null,
       "source": "EIA API（环比）",
