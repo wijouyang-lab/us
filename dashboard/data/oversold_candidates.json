@@ -1,148 +1,79 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-12T14:08:29Z",
-  "asof": "2026-11-12",
+  "generated_at": "2026-11-13T14:08:15Z",
+  "asof": "2026-11-13",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
   "ai_model": null,
-  "ai_count": 2,
+  "ai_count": 1,
   "candidates": [
     {
-      "ticker": "AXON",
-      "name": "Axon Enterprise",
-      "score": 45.3,
+      "ticker": "NVDA",
+      "name": "Nvidia",
+      "score": 47.8,
       "tag": "深度超跌",
-      "rsi": 27.8,
-      "bias_pct": -19.57,
-      "drawdown_pct": -22.77,
-      "zscore": -1.94,
-      "atr_pct": 7.58,
-      "momentum_60d_pct": -49.11,
-      "volume_ratio_20d": 1.56,
-      "beta": 1.425,
-      "rs_20d_vs_spy": -21.5,
+      "rsi": 26.0,
+      "bias_pct": -17.42,
+      "drawdown_pct": -23.5,
+      "zscore": -2.27,
+      "atr_pct": 5.93,
+      "momentum_60d_pct": -23.61,
+      "volume_ratio_20d": 4.49,
+      "beta": 1.577,
+      "rs_20d_vs_spy": -21.6,
       "market_regime": "NORMAL",
-      "technical_score": 10.0,
-      "event_score": 11.0,
-      "quant_score": 31.0,
-      "snapshot_sector": "Other",
-      "sector": "Industrials",
-      "ref_price": 315.42,
-      "stop_loss": 279.56,
-      "confirm": "RSI 回升过 35 且站回 MA20 $392.16",
-      "invalid": "跌破参考止损 $279.56 或 RSI 继续下行",
-      "observe_until": "2026-11-22",
-      "reason": "RSI 27.8 / Bias -19.6% / ZScore -1.94；ATR 7.6% · 20日量比 1.5605；板块 Other。规则版筛选，未回测。",
+      "technical_score": 5.0,
+      "event_score": 8.0,
+      "quant_score": 20.0,
+      "snapshot_sector": "Technology",
+      "sector": "Technology",
+      "ref_price": 166.19,
+      "stop_loss": 151.41,
+      "confirm": "RSI 回升过 35 且站回 MA20 $201.25",
+      "invalid": "跌破参考止损 $151.41 或 RSI 继续下行",
+      "observe_until": "2026-11-23",
+      "reason": "RSI 26.0 / Bias -17.4% / ZScore -2.27；ATR 5.9% · 20日量比 4.4858；板块 Technology。规则版筛选，未回测。",
       "enrich": {
-        "sector": "Industrials",
-        "industry": "Aerospace & Defense",
-        "pe_ttm": 101.42123,
-        "pe_forward": 33.39729,
-        "pb": 6.824171,
-        "roe": 0.07613,
-        "profit_margin": 0.07565,
-        "revenue_growth": 0.279,
-        "earnings_growth": null,
-        "market_cap": 25685508096.0,
+        "sector": "Technology",
+        "industry": "Semiconductors",
+        "pe_ttm": 21.010115,
+        "pe_forward": 10.485418,
+        "pb": 17.525045,
+        "roe": 1.17211,
+        "profit_margin": 0.63663,
+        "revenue_growth": 1.059,
+        "earnings_growth": 1.278,
+        "market_cap": 4012989743104.0,
         "news": [
           {
-            "title": "New Chip Launch Might Change The Case For Investing In Nordic Semiconductor (OB:NOD)",
-            "publisher": "Simply Wall St.",
-            "time": "2026-11-12T10:08:10Z"
+            "title": "Here's what happened to Nvidia in 2 days",
+            "publisher": "Yahoo Finance Video",
+            "time": "2026-11-13T14:03:21Z"
           },
           {
-            "title": "What Is The True Hidden Price Of Axon Stock?",
-            "publisher": "Trefis",
-            "time": "2026-11-11T23:26:28Z"
+            "title": "Stock market today: Dow, S&P 500, Nasdaq futures edge higher as Nvidia tumult deepens",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-13T11:01:51Z"
           },
           {
-            "title": "Axon Enterprise vs. Okta: Which Security Stock Is a Better Buy for 2027?",
-            "publisher": "Motley Fool",
-            "time": "2026-11-11T22:20:03Z"
+            "title": "Jensen Huang scandal trail leads to Alibaba, the king of free Chinese AI: Chart of the Day",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-13T11:00:00Z"
           },
           {
-            "title": "Axon Enterprise (AXON): Solid Fundamentals Intact Following Short-Term Pullback",
-            "publisher": "Insider Monkey",
-            "time": "2026-11-11T16:08:27Z"
+            "title": "The Nvidia scandal has hidden upside potential for the AI trade",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-13T11:00:00Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI14仅27.8属超卖，价格低于MA20约19.6%，20日与60日动量分别为-22.8%、-49.1%，量比1.56、相对SPY弱21.5%，高波动下下行趋势未改。",
-        "fundamental": "PE(TTM)约101倍、前瞻33倍、PB6.8，ROE与净利率均约7.6%，营收增27.9%，盈利增速数据缺失；成长强但估值偏高。",
-        "news": "个股新闻以估值讨论和对比为主，Insider Monkey称基本面稳健、回调属短期；另有一条与公司无关。无实质公司消息，市场层面数据缺失。",
-        "risk": "60日近半跌幅、ATR约7.6%、beta1.43，趋势尚未止跌，估值处高位，反弹或仅为超跌修复，波动风险大。",
-        "summary": "成长性强但估值高，技术面深度超卖且趋势破坏，消息面无实质催化，宜列入观察并保持谨慎，不作价格预测。"
-      }
-    },
-    {
-      "ticker": "NVDA",
-      "name": "Nvidia",
-      "score": 39.9,
-      "tag": "超跌反弹",
-      "rsi": 28.7,
-      "bias_pct": -14.76,
-      "drawdown_pct": -21.5,
-      "zscore": -2.11,
-      "atr_pct": 5.01,
-      "momentum_60d_pct": -20.94,
-      "volume_ratio_20d": 2.03,
-      "beta": 1.55,
-      "rs_20d_vs_spy": -20.22,
-      "market_regime": "NORMAL",
-      "technical_score": 15.0,
-      "event_score": 8.0,
-      "quant_score": 30.0,
-      "snapshot_sector": "Technology",
-      "sector": "Technology",
-      "ref_price": 173.73,
-      "stop_loss": 160.67,
-      "confirm": "RSI 回升过 35 且站回 MA20 $203.80",
-      "invalid": "跌破参考止损 $160.67 或 RSI 继续下行",
-      "observe_until": "2026-11-22",
-      "reason": "RSI 28.7 / Bias -14.8% / ZScore -2.11；ATR 5.0% · 20日量比 2.0278；板块 Technology。规则版筛选，未回测。",
-      "enrich": {
-        "sector": "Technology",
-        "industry": "Semiconductors",
-        "pe_ttm": 21.963337,
-        "pe_forward": 10.907824,
-        "pb": 18.320152,
-        "roe": 1.17211,
-        "profit_margin": 0.63663,
-        "revenue_growth": 1.059,
-        "earnings_growth": 1.278,
-        "market_cap": 4195058188288.0,
-        "news": [
-          {
-            "title": "Stock market today: Dow, S&P 500, Nasdaq futures sink as Nvidia CEO Jensen Huang resigns, stock tanks",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-12T11:00:27Z"
-          },
-          {
-            "title": "Nvidia CEO Huang resigns amid affair scandals, board names CFO Colette Kress interim CEO",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-12T13:58:01Z"
-          },
-          {
-            "title": "Nvidia stock tumbles as CEO Jensen Huang steps down, dragging down other AI names",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-12T13:39:10Z"
-          },
-          {
-            "title": "Can Jensen Huang stay on as Nvidia CEO amid second allegation?",
-            "publisher": "Yahoo Finance Video",
-            "time": "2026-11-12T13:16:27Z"
-          }
-        ]
-      },
-      "ai": {
-        "verdict": "回避",
-        "technical": "RSI28.7超卖，较20日均线-14.8%，20日跌21.5%、60日跌20.9%，量比2.03放量下跌，相对标普20日-20.2%，ATR5%高波动。",
-        "fundamental": "PE(TTM)22.0、前瞻10.9，PB18.3偏高；ROE117%、净利率63.7%，营收增105.9%、盈利增127.8%，市值约4.2万亿美元。",
-        "news": "公司层面：黄仁勋因丑闻辞任CEO，董事会任命CFO Kress为临时CEO，股价下挫并拖累其他AI个股。",
-        "risk": "CEO更替与丑闻后续不明，治理风险高；放量破位、高波动；PB偏高；财务数据可能未反映事件影响。",
-        "summary": "治理冲击叠加技术破位，风险主导，暂以回避观察为主。"
+        "technical": "RSI14仅26，较MA20低17.42%，20日动量-23.5%，量比4.49，相对SPY弱21.6%，短线超卖但趋势弱。",
+        "fundamental": "PE(TTM)21.0、前瞻10.5，PB17.5偏高；ROE117%、净利率63.7%、营收增105.9%、盈利增127.8%，基本面强。",
+        "news": "个股新闻聚焦Nvidia动荡与“丑闻”，标题提及影响深化及AI交易潜在上行，情绪偏负面但含分歧。",
+        "risk": "高波动：ATR5.93%、Beta1.58；20日显著跑输且放量，新闻事件不确定，PB偏高。",
+        "summary": "技术面超卖但趋势与相对强度弱，基本面强、估值分化，事件面偏负面；列为谨慎观察，不构成投资建议。"
       }
     }
   ]
