@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-13T21:47:21Z",
+  "generated_at": "2026-11-13T22:02:13Z",
   "source": "SEC EDGAR + yfinance + news_data",
   "mode": "online_verification",
   "count": 10,
@@ -88,6 +88,11 @@
       "earnings_date": "2026-10-27",
       "filings": [
         {
+          "form": "8-K",
+          "date": "2026-11-13",
+          "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000152/xyl-20261113.htm"
+        },
+        {
           "form": "10-Q",
           "date": "2026-10-27",
           "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000148/xyl-20260930.htm"
@@ -96,11 +101,6 @@
           "form": "8-K",
           "date": "2026-10-27",
           "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000146/xyl-20261027.htm"
-        },
-        {
-          "form": "8-K",
-          "date": "2026-09-29",
-          "url": "https://www.sec.gov/Archives/edgar/data/1524472/000152447226000134/xyl-20260929.htm"
         }
       ],
       "news": [],
