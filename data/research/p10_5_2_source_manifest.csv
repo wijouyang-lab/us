@@ -1,0 +1,7 @@
+file,bytes,sha256,source_url_or_repo,version,license,date_range,rows,definition
+sp500_daily.csv,5533628,646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a,https://github.com/fja05680/sp500,a2430f2af0c79ddf0748e91de11bdeb1616ab5a7,MIT (repo metadata; third-party data rights unverified),1996-01-02..2026-08-18,2720,effective-dated S&P 500 membership snapshots
+spy.csv,189975,4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62,P9.1 repo,PR512 HEAD 9b07f588,unknown,1999-12-01..2024-12-31,6311,trading-day calendar
+finsaber_prices_raw.csv,265180873,f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f,https://huggingface.co/datasets/finsaber-team/FINSABER-reproduce,ba3a6907a29027b1f40da3381f3bc834e08e99a6,Apache-2.0 (dataset card; upstream rights not fully verified),2000-01-03..2024-12-31,4736109,OHLCV with adjusted_close
+data_audit.json,564,f43ac0aa5be52e1327576753f7f9797ec214288cc76cc4ec48f3e98806d33bbf,P9.1 repo,PR512 HEAD 9b07f588,unknown,2007-05-30..2024-12-31,1,P9 data audit summary
+pit_coverage_summary.json,499,0dbb230f70ea5ae8f7ac43e6149e1fb62e405c3a72725ba3ee0e84936d69ae4e,P8.2 repo,PR512 HEAD 9b07f588,unknown,2000-01-03..2024-12-31,1,P8.2 coverage summary
+pit_coverage_by_ticker.csv,36617,3d5ba3e2c5479b10d4abc96a4e6755729f65629190fa887054dd26b96705094e,P8.2 repo,PR512 HEAD 9b07f588,unknown,2000-01-03..2024-12-31,1062,P8.2 per-ticker coverage table
