@@ -1,0 +1,20 @@
+group,factor,data_status,coverage,can_backtest,notes
+A_price,momentum_5_10_20_60_120,READY_RESTRICTED,983 tickers 2000-2024,YES_RESTRICTED,S&P 500 price panel; no full market
+A_price,relative_strength_spy,READY_RESTRICTED,983 tickers,YES_RESTRICTED,needs SPY benchmark
+A_price,trend_slope,READY_RESTRICTED,983 tickers,YES_RESTRICTED,price-only
+A_price,volume_anomaly,READY_RESTRICTED,983 tickers,YES_RESTRICTED,raw volume; adjusted volume caveat
+A_price,volatility,READY_RESTRICTED,983 tickers,YES_RESTRICTED,price-only
+A_price,gap_drawdown,READY_RESTRICTED,983 tickers,YES_RESTRICTED,price-only
+B_fundamental,ROE_ROA_ROIC,CURRENT_ONLY,"2,313 quality scores; 613 overlap price",NO_PIT,current cross-section only
+B_fundamental,FCF_leverage_margin,CURRENT_ONLY,"2,313 quality scores",NO_PIT,current cross-section only
+B_fundamental,growth,CURRENT_ONLY,"3,101 GARP ranked; 600 overlap price",NO_PIT,historical growth fields but current snapshot
+B_fundamental,valuation,CURRENT_ONLY,"2,529 candidates; 600 overlap price",NO_PIT,current prices/shares
+B_fundamental,earnings_quality,CURRENT_ONLY,"2,313 quality scores",NO_PIT,no PIT panel
+C_events,earnings_dates,NO_DATA,0,NO,no historical earnings calendar
+C_events,8K_events,PARTIAL,"144 tickers, 9,426 filings",NO_PIT,filing dates only; no event text
+C_events,M&A_management_contracts,NO_DATA,0,NO,not systematically collected
+C_events,litigation_regulatory,NO_DATA,0,NO,not systematically collected
+D_news,news_sentiment,NO_DATA,0 historical,NO,no historical news panel
+D_news,industry_news,NO_DATA,0,NO,not available
+D_macro,rates_macro,NO_DATA,0 committed panel,NO,no historical macro panel
+D_macro,policy_speeches,NO_DATA,0,NO,not available
