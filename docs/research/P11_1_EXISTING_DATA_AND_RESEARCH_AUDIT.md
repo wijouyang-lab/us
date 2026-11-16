@@ -80,7 +80,7 @@ File: `data/research/p11_1_universe_inventory.csv`
 
 ```text
 source: finsaber S&P 500 price panel
-tickers with any price: 983
+tickers with any price: 1,017 (983 with 2007+ data)
 rows:               4,736,109
 range:              2000-01-03..2024-12-31
 fields:             date, symbol, OHLCV, adjusted_close
@@ -98,7 +98,7 @@ Known gaps:
 - 9 high-confidence ticker-reuse conflicts;
 - 62 identities unresolved.
 
-P9 pool itself is `NOT_REPRODUCIBLE` at 1,160. Do not treat 983 or 887 as full
+P9 pool itself is `NOT_REPRODUCIBLE` at 1,160. Do not treat 1,017, 983 or 887 as full
 market.
 
 ### Fundamentals
@@ -149,7 +149,7 @@ File: `data/research/p11_1_factor_readiness.csv`
 
 ### A. Price/technical — READY_RESTRICTED
 
-Can compute on 983 S&P names, 2000-2024:
+Can compute on 1,017 S&P names, 2000-2024:
 
 - 5/10/20/60/120-day momentum;
 - relative strength vs SPY;
@@ -163,7 +163,7 @@ Caveats:
 - survivorship bias: no full delisted/OTC universe;
 - 80 missing member tickers;
 - symbol/share-class issues;
-- no guarantee the 983 names represent all US stocks.
+- no guarantee the 1,017/983 names represent all US stocks.
 
 ### B. Fundamentals — CURRENT_ONLY / NO_GO for PIT backtest
 
@@ -198,7 +198,7 @@ Do not fabricate sentiment or proxies.
 
 | Question | Status |
 |---|---|
-| Predict 5/10/20-day individual returns with price factors | Can test on 983 S&P names, restricted |
+| Predict 5/10/20-day individual returns with price factors | Can test on 1,017 S&P names, restricted |
 | Factor complementarity (price factors) | Can test |
 | Year/industry/size stability | Industry/size coverage limited; can do year and price-based size proxy |
 | Top-group vs SPY/BIL | Can test with costs |
@@ -259,7 +259,7 @@ strategy and not a full-market claim.
 
 Design:
 
-- 983 price tickers, 2000-2024;
+- 1,017 price tickers, 2000-2024;
 - 5/10/20-day forward returns;
 - momentum, relative strength, trend slope, volume anomaly, volatility,
   gap/drawdown;

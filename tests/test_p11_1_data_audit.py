@@ -16,7 +16,7 @@ def test_universe_inventory_has_required_sources():
         "P6_quality_rankings", "P6_garp_rankings", "SEC_filing_history",
         "news_translations", "P10_6_SEC_pilot", "macro_panel", "IBKR_broker",
     }
-    assert rows["SP500_price_panel"]["tickers"] == "983"
+    assert rows["SP500_price_panel"]["tickers"] == "1017"
     assert rows["P6_value_rankings"]["tickers"] == "5453"
     assert rows["SEC_filing_history"]["tickers"] == "144"
     assert rows["P10_6_SEC_pilot"]["usable_for_p11"] == "NO_GO"

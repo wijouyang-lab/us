@@ -1,0 +1,49 @@
+{
+  "factors": [
+    "mom5",
+    "mom10",
+    "mom20",
+    "mom60",
+    "mom120",
+    "rs20",
+    "rs60",
+    "rs120",
+    "slope20",
+    "slope60",
+    "slope120",
+    "vol_anom20",
+    "volume_price_corr20",
+    "vol20",
+    "vol60",
+    "vol_change",
+    "risk_adj_mom20",
+    "dd20",
+    "dd60",
+    "dd120"
+  ],
+  "horizons": [
+    5,
+    10,
+    20
+  ],
+  "periods": {
+    "dev": [
+      "2000-01-03",
+      "2012-12-31"
+    ],
+    "val": [
+      "2013-01-01",
+      "2017-12-31"
+    ],
+    "oos": [
+      "2018-01-01",
+      "2024-12-31"
+    ]
+  },
+  "cost_bps_roundtrip": 20.0,
+  "membership": "PIT snapshot expansion",
+  "execution": "next adjusted open to adjusted close",
+  "benchmark": "SPY close-to-close",
+  "universe": "S&P 500 price panel / PIT filtered",
+  "synthetic": false
+}

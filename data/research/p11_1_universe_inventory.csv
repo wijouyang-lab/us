@@ -1,5 +1,5 @@
 dataset,category,tickers,rows,start,end,fields,pit_status,license,usable_for_p11,notes
-SP500_price_panel,price,983,4736109,2000-01-03,2024-12-31,"date,symbol,OHLCV,adjusted_close",NO_PIT_MEMBERSHIP_FULL,mixed; FINSABER Apache-2.0 card; upstream unverified,RESTRICTED,S&P 500 only; 80 missing zero-member-day tickers; not full market
+SP500_price_panel,price,1017,4736109,2000-01-03,2024-12-31,"date,symbol,OHLCV,adjusted_close",NO_PIT_MEMBERSHIP_FULL,mixed; FINSABER Apache-2.0 card; upstream unverified,RESTRICTED,"S&P 500 only; 1,017 price symbols 2000-2024, 983 with 2007+ data; 80 missing zero-member-day tickers; not full market"
 SP500_membership,membership,1062,2198,2000-01-03,2024-12-31,"date,tickers",PIT_SNAPSHOT,MIT repo metadata; third-party unverified,RESTRICTED,"1,160 original pool not reproducible"
 P6_value_rankings,fundamentals,5453,5453,current,2026-11-05,value fields,CURRENT_ONLY,SEC-derived; terms unknown,CURRENT_RESEARCH_ONLY,600 overlap with price panel
 P6_quality_rankings,fundamentals,5549,5549,current,2026-11-05,ROE/ROA/CFO/leverage,CURRENT_ONLY,SEC-derived; terms unknown,CURRENT_RESEARCH_ONLY,613 overlap with price panel
@@ -8,4 +8,4 @@ SEC_filing_history,events,144,9426,1995-02-14,2026-11-05,"form,filingDate,report
 news_translations,news,0,0,current,UNKNOWN,headlines/translation,NO_HISTORY,unknown,NO_GO,no historical news panel
 P10_6_SEC_pilot,fundamentals,20,0,PIT cutoffs,UNKNOWN,SEC XBRL,PARTIAL,SEC public,NO_GO,5/20 names; not READY
 macro_panel,macro,0,0,UNKNOWN,UNKNOWN,UNKNOWN,NO_HISTORY,UNKNOWN,NO_GO,no committed historical macro panel
-IBKR_broker,execution,0,0,N/A,N/A,N/A,NOT_CONNECTED,N/A,NO_GO,not connected; research only
+IBKR_broker,execution,0,0,,,,NOT_CONNECTED,,NO_GO,not connected; research only
