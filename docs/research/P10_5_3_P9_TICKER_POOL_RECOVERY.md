@@ -48,7 +48,8 @@ P9_TICKER_POOL_1160: NOT_REPRODUCIBLE
 SHA256_OF_1160_LIST: NOT_AVAILABLE
 ```
 
-Do not substitute `1,096` or `887` for the original. Do not change P9.1 results.
+Do not substitute `1,062` (or the earlier unverified `1,096`) or `887` for the
+original. Do not change P9.1 results.
 
 ### Proposed new baseline (not automatically adopted)
 
@@ -101,15 +102,25 @@ definition difference.
 
 ### Independent local replay
 
-	ools/research/p10/replay_p9_baseline.py verifies input SHA-256 and recomputes
-the same numbers. Local result is in p10_5_3_replay_result.json.
+`tools/research/p10/replay_p9_baseline.py` verifies all four input files,
+including `p8_2/pit_coverage_by_ticker.csv`, and recomputes the same numbers.
+Local result is in `p10_5_3_replay_result.json`.
 
-`	ext
+```text
+duplicate_date_audit_passed: true
+duplicate_dates: 0
+snapshot_replay_status: PASS
+daily_replay_status: PASS
 CI_REPLAY_NOT_EXECUTED
-`
+```
 
 The raw files are not in the public repository; CI cannot independently read
 them. Hash registration is not a CI replay.
+
+Earlier `1,096` was an unverified count. The fully audited, deduplicated
+2000-2024 snapshot union is `1,062`; no duplicate dates exist in the interval.
+The 34-ticker difference is recorded as a prior-count error, not silently
+overwritten.
 
 ---
 

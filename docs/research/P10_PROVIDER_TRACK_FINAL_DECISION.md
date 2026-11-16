@@ -28,8 +28,9 @@ PRODUCTION_DEPLOYMENT_READY: false
 ALL_P9_STRATEGIES: NO_GO
 ```
 
-Do not substitute 887, 921, 1,062 or 1,096 for the original 1,160 pool. The
-historical pool cannot be recovered from the current files.
+Do not substitute 887, 921, 1,062 or the earlier unverified 1,096 for the
+original 1,160 pool. The historical pool cannot be recovered from the current
+files.
 
 ---
 
@@ -163,7 +164,9 @@ Local replay script:
 
 `tools/research/p10/replay_p9_baseline.py`
 
-It verifies SHA-256 of local raw inputs and recomputes:
+It verifies SHA-256 of all four inputs, including
+`p8_2/pit_coverage_by_ticker.csv`, audits duplicate dates before
+deduplication, and recomputes:
 
 ```text
 snapshot_member_days: 1,095,490
@@ -175,8 +178,18 @@ daily_valid:          2,113,080
 Local result: `data/research/p10_5_3_replay_result.json`.
 
 ```text
+input_hashes_verified: true
+duplicate_date_audit_passed: true
+duplicate_dates: 0
+snapshot_replay_status: PASS
+daily_replay_status: PASS
+all_expected_matched: true
+ci_replay: false
 CI_REPLAY_NOT_EXECUTED
 ```
+
+The 981,362 verified-tradable figure is from the P8.2 policy and was **not**
+recomputed by this script.
 
 CI cannot read the raw files because they are not in the public repository. The
 input hashes are registered, but the CI process has not independently replayed

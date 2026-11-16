@@ -2,6 +2,10 @@ import csv
 import json
 from pathlib import Path
 
+import pandas as pd
+
+from tools.research.p10.replay_p9_baseline import audit_duplicate_dates
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data/research"
 
@@ -62,3 +66,30 @@ def test_reconsideration_conditions_are_explicit():
     assert "subscription ≤ one month" in doc
     assert "no VPS required" in doc
     assert "95% member-day and 98% ticker" in doc
+
+
+def test_replay_checks_all_four_inputs_and_duplicate_dates():
+    r = json.loads((DATA / "p10_5_3_replay_result.json").read_text(encoding="utf-8"))
+    assert len(r["input_files"]) == 4
+    assert all(x["status"] == "MATCH" for x in r["input_files"])
+    assert all(x["expected_sha256"] == x["actual_sha256"] for x in r["input_files"])
+    assert r["duplicate_date_audit_passed"] is True
+    assert r["duplicate_date_audit"]["duplicate_dates"] == 0
+    assert r["duplicate_date_audit"]["conflict_dates"] == []
+    assert r["snapshot_replay_status"] == "PASS"
+    assert r["daily_replay_status"] == "PASS"
+    assert r["ci_replay"] is False
+    assert r["ci_replay_status"] == "CI_REPLAY_NOT_EXECUTED"
+    assert r["verified_tradable_recomputed"] is False
+
+
+def test_duplicate_date_conflict_blocks_without_choosing_a_winner():
+    df = pd.DataFrame({
+        "date": pd.to_datetime(["2024-01-02", "2024-01-02"]),
+        "tickers": ["AAPL,MSFT", "AAPL,AMZN"],
+    })
+    audit = audit_duplicate_dates(df)
+    assert audit["passed"] is False
+    assert audit["conflict_dates"]
+    assert audit["conflict_dates"][0]["records"] == 2
+    assert audit["conflict_dates"][0]["same_ticker_set"] is False

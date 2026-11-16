@@ -80,9 +80,9 @@ CURRENT_SNAPSHOT_UNION: 1,062
 CURRENT_DAILY_UNION: 887
 ```
 
-Do not replace `1,160` with `1,062` (or the un-deduplicated `1,096`) and call it
-the original baseline. The difference must be recorded as a version/provenance
-gap.
+Do not replace `1,160` with `1,062` (or the earlier unverified `1,096`) and call
+it the original baseline. The difference must be recorded as a version/
+provenance gap.
 
 ---
 
