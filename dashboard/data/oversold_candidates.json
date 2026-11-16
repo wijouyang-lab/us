@@ -1,7 +1,7 @@
 {
   "schema": 1,
-  "generated_at": "2026-11-13T14:08:15Z",
-  "asof": "2026-11-13",
+  "generated_at": "2026-11-16T14:08:21Z",
+  "asof": "2026-11-16",
   "source": "规则筛选（RSI/Bias/ZScore + 流动性 + ATR）· 板块上限 2 · AI 三维分析 · 未回测",
   "note": "规则版观察信号 + AI 解读（技术面/基本面/消息面）；未做回测、不预测价格、不构成投资建议，不进入 $50k 账本。",
   "ai_model": null,
@@ -10,70 +10,70 @@
     {
       "ticker": "NVDA",
       "name": "Nvidia",
-      "score": 47.8,
+      "score": 48.6,
       "tag": "深度超跌",
-      "rsi": 26.0,
-      "bias_pct": -17.42,
-      "drawdown_pct": -23.5,
-      "zscore": -2.27,
-      "atr_pct": 5.93,
-      "momentum_60d_pct": -23.61,
-      "volume_ratio_20d": 4.49,
-      "beta": 1.577,
-      "rs_20d_vs_spy": -21.6,
+      "rsi": 24.9,
+      "bias_pct": -18.04,
+      "drawdown_pct": -23.95,
+      "zscore": -2.1,
+      "atr_pct": 6.13,
+      "momentum_60d_pct": -24.9,
+      "volume_ratio_20d": 1.85,
+      "beta": 1.606,
+      "rs_20d_vs_spy": -22.78,
       "market_regime": "NORMAL",
-      "technical_score": 5.0,
+      "technical_score": 10.0,
       "event_score": 8.0,
-      "quant_score": 20.0,
+      "quant_score": 25.0,
       "snapshot_sector": "Technology",
       "sector": "Technology",
-      "ref_price": 166.19,
-      "stop_loss": 151.41,
-      "confirm": "RSI 回升过 35 且站回 MA20 $201.25",
-      "invalid": "跌破参考止损 $151.41 或 RSI 继续下行",
-      "observe_until": "2026-11-23",
-      "reason": "RSI 26.0 / Bias -17.4% / ZScore -2.27；ATR 5.9% · 20日量比 4.4858；板块 Technology。规则版筛选，未回测。",
+      "ref_price": 162.85,
+      "stop_loss": 147.88,
+      "confirm": "RSI 回升过 35 且站回 MA20 $198.69",
+      "invalid": "跌破参考止损 $147.88 或 RSI 继续下行",
+      "observe_until": "2026-11-26",
+      "reason": "RSI 24.9 / Bias -18.0% / ZScore -2.10；ATR 6.1% · 20日量比 1.8504；板块 Technology。规则版筛选，未回测。",
       "enrich": {
         "sector": "Technology",
         "industry": "Semiconductors",
-        "pe_ttm": 21.010115,
-        "pe_forward": 10.485418,
-        "pb": 17.525045,
+        "pe_ttm": 20.587864,
+        "pe_forward": 10.28222,
+        "pb": 17.172836,
         "roe": 1.17211,
         "profit_margin": 0.63663,
         "revenue_growth": 1.059,
         "earnings_growth": 1.278,
-        "market_cap": 4012989743104.0,
+        "market_cap": 3932339044352.0,
         "news": [
           {
-            "title": "Here's what happened to Nvidia in 2 days",
+            "title": "Why neoclouds like CoreWeave probably want to see Jensen Huang return to Nvidia",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-16T13:32:23Z"
+          },
+          {
+            "title": "Tech investor: Here's how Nvidia founder Jensen Huang can rebuild his reputation",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-16T13:17:38Z"
+          },
+          {
+            "title": "Stock market today: Dow, S&P 500, Nasdaq futures slip ahead of pivotal week for AI",
+            "publisher": "Yahoo Finance",
+            "time": "2026-11-16T09:16:31Z"
+          },
+          {
+            "title": "Nobody can replace Jensen Huang. What that means for AI",
             "publisher": "Yahoo Finance Video",
-            "time": "2026-11-13T14:03:21Z"
-          },
-          {
-            "title": "Stock market today: Dow, S&P 500, Nasdaq futures edge higher as Nvidia tumult deepens",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-13T11:01:51Z"
-          },
-          {
-            "title": "Jensen Huang scandal trail leads to Alibaba, the king of free Chinese AI: Chart of the Day",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-13T11:00:00Z"
-          },
-          {
-            "title": "The Nvidia scandal has hidden upside potential for the AI trade",
-            "publisher": "Yahoo Finance",
-            "time": "2026-11-13T11:00:00Z"
+            "time": "2026-11-16T12:00:00Z"
           }
         ]
       },
       "ai": {
         "verdict": "谨慎",
-        "technical": "RSI14仅26，较MA20低17.42%，20日动量-23.5%，量比4.49，相对SPY弱21.6%，短线超卖但趋势弱。",
-        "fundamental": "PE(TTM)21.0、前瞻10.5，PB17.5偏高；ROE117%、净利率63.7%、营收增105.9%、盈利增127.8%，基本面强。",
-        "news": "个股新闻聚焦Nvidia动荡与“丑闻”，标题提及影响深化及AI交易潜在上行，情绪偏负面但含分歧。",
-        "risk": "高波动：ATR5.93%、Beta1.58；20日显著跑输且放量，新闻事件不确定，PB偏高。",
-        "summary": "技术面超卖但趋势与相对强度弱，基本面强、估值分化，事件面偏负面；列为谨慎观察，不构成投资建议。"
+        "technical": "RSI 24.9超卖，但较20日均线低18%，20日动量-23.95%、60日-24.9%，相对SPY落后22.78%，量比1.85，ATR 6.13%波动大，技术分10，属弱势下行未确认企稳。",
+        "fundamental": "PE(TTM)20.6、前瞻10.3，PB 17.2偏高；ROE 117%、净利率63.7%，营收增105.9%、盈利增127.8%，基本面数据强，但估值与增速匹配度需自行核验。",
+        "news": "个股新闻聚焦黄仁勋声誉与回归话题，无财报或订单数据；「市场层面」美股期指在AI关键周前走低，板块情绪偏谨慎。",
+        "risk": "高Beta 1.6放大回撤；参考价162.85距参考止损147.88约9%，波动中易触发；财报与指引数据缺失，勿据单日新闻推断。",
+        "summary": "基本面强劲但技术面深度走弱、超卖未止跌，消息面偏人物叙事且大盘谨慎；列为观察名单、控制风险，非投资建议。"
       }
     }
   ]
