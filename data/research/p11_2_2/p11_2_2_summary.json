@@ -1,0 +1,10 @@
+{
+  "rows": 60,
+  "raw_factors": 20,
+  "independent_factors": 17,
+  "horizons": 3,
+  "universe_tickers": 1017,
+  "status": "COMPUTED",
+  "benchmark_fair": false,
+  "cost_model": "SIMPLIFIED"
+}

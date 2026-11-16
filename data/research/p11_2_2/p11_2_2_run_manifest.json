@@ -1,0 +1,23 @@
+{
+  "command": "python -m tools.research.p11.factor_study_v22 --base ../pr512/data/research --out data/research/p11_2_2",
+  "inputs": [
+    {
+      "file": "historical_universe/sp500_daily.csv",
+      "bytes": 5533628,
+      "sha256": "646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a"
+    },
+    {
+      "file": "p9_1_support_resistance/spy.csv",
+      "bytes": 189975,
+      "sha256": "4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62"
+    },
+    {
+      "file": "pit_data/finsaber_prices_raw.csv",
+      "bytes": 265180873,
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
+    }
+  ],
+  "raw_data_committed": false,
+  "ci_raw_replay": false,
+  "notes": "Aggregate outputs only; raw files are local-only."
+}

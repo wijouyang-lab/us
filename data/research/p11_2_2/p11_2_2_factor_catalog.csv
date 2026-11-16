@@ -1,0 +1,21 @@
+factor,raw_factor,independent,duplicate_of,note
+mom5,True,True,,
+mom10,True,True,,
+mom20,True,True,,
+mom60,True,True,,
+mom120,True,True,,
+rs20,True,False,mom20,RS rank is identical to matching MOM; retained as diagnostic only
+rs60,True,False,mom60,RS rank is identical to matching MOM; retained as diagnostic only
+rs120,True,False,mom120,RS rank is identical to matching MOM; retained as diagnostic only
+slope20,True,True,,
+slope60,True,True,,
+slope120,True,True,,
+vol_anom20,True,True,,
+volume_price_corr20,True,True,,
+vol20,True,True,,
+vol60,True,True,,
+vol_change,True,True,,
+risk_adj_mom20,True,True,,
+dd20,True,True,,
+dd60,True,True,,
+dd120,True,True,,
