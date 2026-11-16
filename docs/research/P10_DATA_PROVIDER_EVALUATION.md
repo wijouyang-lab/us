@@ -1,4 +1,4 @@
-# P10.2: US Historical Data Provider Evaluation (License and PIT Audit)
+# P10.4: US Historical Data Provider Evaluation (Trial Scope and License Audit)
 
 Date: 2026-11-16
 Branch: `research/p10-data-provider-evaluation`
@@ -83,6 +83,12 @@ extract is measured.
 
 Pause further public Sharadar evaluation until written permission is obtained.
 Do not commit Sharadar raw data.
+
+The current HEAD neutralizes the public sample matrix, but older commits remain
+accessible in Git history and may contain prior evaluation text. History was not
+rewritten. Therefore the public-evaluation risk is **reduced but not fully
+cleared** until written permission is obtained and the historical material is
+reviewed.
 
 ---
 
@@ -336,12 +342,12 @@ remain `NOT_RUN`; no paid endpoint was used to fake a result.
 
 ### Sample matrix
 
-`data/research/p10_sample_validation.csv` has 30 tickers × 3 candidates = 90
+`data/research/p10_sample_validation.csv` has 34 tickers × 3 candidates = 102
 rows. Current status:
 
 ```text
 PARTIAL: 3   (AAPL/MSFT/TSLA EODHD)
-NOT_RUN: 87
+NOT_RUN: 99
 PASS:     0
 ```
 
@@ -358,13 +364,35 @@ Do not auto-register. A human must start the official three-week trial.
 The trial is Platinum-level but limited to two years. It can test:
 
 - AAPL, MSFT, NVDA, BRK.B;
-- delisted names LEHMQ, ENRNQ, WCOMQ, BSC;
+- recent delisted names whose delisting falls inside the trial window;
 - rename/split/M&A samples;
 - API/updater mechanics;
 - daily TRUE/FALSE S&P 500 membership for the **two-year window**;
 - effective dates within that window;
 - `assetid` continuity;
 - repeated download and rebuild consistency.
+
+The old names LEHMQ, ENRNQ, WCOMQ and BSC traded long before the two-year
+window. They are **NOT_RUN / OUTSIDE_TRIAL_HISTORY**, not executable trial
+samples.
+
+Recent delisting candidates confirmed by SEC Form 25:
+
+| Ticker | Company | Form 25 date | Trial scope |
+|---|---|---|---|
+| WBA | Walgreens Boots Alliance | 2025-08-28 | CANDIDATE_IN_WINDOW |
+| HES | Hess | 2025-07-18 | CANDIDATE_IN_WINDOW |
+| ANSS | Ansys | 2025-07-17 | CANDIDATE_IN_WINDOW |
+| JNPR | Juniper Networks | 2025-07-02 | CANDIDATE_IN_WINDOW |
+
+Sources: SEC EDGAR submissions for
+[WBA](https://data.sec.gov/submissions/CIK0001618921.json),
+[HES](https://data.sec.gov/submissions/CIK0000004447.json),
+[ANSS](https://data.sec.gov/submissions/CIK0001013462.json),
+[JNPR](https://data.sec.gov/submissions/CIK0001043604.json).
+
+These are candidates, not verified trial data. Availability must be checked in
+the actual trial before any status changes.
 
 It **cannot** test 2007-05-30 to 2024-12-31 or the full 95%/98% gates.
 
@@ -407,7 +435,7 @@ two-year delisted/PIT behavior. It cannot by itself approve Norgate for P9.1.
 | Provider | Personal research | Cloud processing | Redistribution | Retain raw after cancel |
 |---|---|---|---|---|
 | Sharadar | YES (individual) | UNKNOWN | NO | NO, delete raw |
-| EODHD | YES (private) | UNKNOWN | NO | YES |
+| EODHD | YES (private) | YES — PRIVATE LICENSEE ONLY | NO | YES |
 | Norgate | YES (personal) | YES, personal processing | NO | NO, delete raw/backups |
 | Alpha Vantage | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN |
 | CRSP | Institutional | Institutional | NO | Institutional terms |

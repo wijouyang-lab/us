@@ -22,7 +22,7 @@ def test_provider_comparison_has_official_evidence_and_unknowns():
 
 def test_sample_validation_has_30_tickers_and_no_unproven_pass():
     rows = list(csv.DictReader((DATA / "p10_sample_validation.csv").open(encoding="utf-8")))
-    assert len({r["ticker"] for r in rows}) == 30
+    assert len({r["ticker"] for r in rows}) == 34
     assert {r["provider"] for r in rows} == {"Sharadar", "Norgate", "EODHD"}
     assert not [r for r in rows if r["status"] == "PASS"]
     assert all(r["status"] in {"PARTIAL", "NOT_RUN", "NOT_VERIFIED"} for r in rows)
@@ -123,3 +123,23 @@ def test_historical_price_and_pit_dimensions_are_separate():
     for phrase in ("historical universe membership", "historical price data", "historical adjusted price vintage", "corporate actions"):
         assert phrase in doc
     assert "not versioned" in doc.lower()
+
+
+def test_norgate_trial_scope_excludes_old_delisted_names():
+    rows = list(csv.DictReader((DATA / "p10_sample_validation.csv").open(encoding="utf-8")))
+    old = [r for r in rows if r["provider"] == "Norgate" and r["ticker"] in {"LEHMQ", "ENRNQ", "WCOMQ", "BSC"}]
+    assert len(old) == 4
+    assert all(r["trial_scope"] == "OUTSIDE_TRIAL_HISTORY" for r in old)
+    recent = [r for r in rows if r["provider"] == "Norgate" and r["ticker"] in {"WBA", "HES", "ANSS", "JNPR"}]
+    assert len(recent) == 4
+    assert all(r["trial_scope"] == "CANDIDATE_IN_WINDOW" for r in recent)
+    assert all(r["event_period"] >= "2025-01-01" for r in recent)
+
+
+def test_eodhd_private_cloud_matches_csv_and_docs():
+    rows = list(csv.DictReader((DATA / "p10_provider_comparison.csv").open(encoding="utf-8")))
+    r = next(x for x in rows if x["provider"] == "EODHD" and x["product"] == "Historian")
+    assert "private" in r["cloud_processing"].lower()
+    doc = (ROOT / "docs/research/P10_DATA_PROVIDER_EVALUATION.md").read_text(encoding="utf-8")
+    assert "YES — PRIVATE LICENSEE ONLY" in doc
+    assert "public" in doc.lower()

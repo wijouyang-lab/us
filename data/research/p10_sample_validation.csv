@@ -1,91 +1,103 @@
-sample_id,ticker,company,category,event_period,provider,status,evidence_url,checks,notes
-S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S002,AAPL,Apple,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S003,AAPL,Apple,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history;actions,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=5.
-S004,MSFT,Microsoft,large_cap,2020-01,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S005,MSFT,Microsoft,large_cap,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S006,MSFT,Microsoft,large_cap,2020-01,EODHD,PARTIAL,https://eodhd.com/api/eod/MSFT.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=9.
-S007,NVDA,NVIDIA,large_cap_split,2024-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S008,NVDA,NVIDIA,large_cap_split,2024-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S009,NVDA,NVIDIA,large_cap_split,2024-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S010,AMZN,Amazon,large_cap_split,2022-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S011,AMZN,Amazon,large_cap_split,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S012,AMZN,Amazon,large_cap_split,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S013,GOOGL,Alphabet,large_cap_split,2022-07,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S014,GOOGL,Alphabet,large_cap_split,2022-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S015,GOOGL,Alphabet,large_cap_split,2022-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S016,META,Meta Platforms,rename_FB,2022-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S017,META,Meta Platforms,rename_FB,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S018,META,Meta Platforms,rename_FB,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S019,TSLA,Tesla,large_cap_split,2020-08,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S020,TSLA,Tesla,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S021,TSLA,Tesla,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/TSLA.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history,EODHD demo returned 4118 rows 2010-06-29..2026-11-10; repeat SHA256 match=True; splits=2.
-S022,BRK.B,Berkshire Hathaway,share_class,2020-01,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S023,BRK.B,Berkshire Hathaway,share_class,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S024,BRK.B,Berkshire Hathaway,share_class,2020-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S025,JPM,JPMorgan,large_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S026,JPM,JPMorgan,large_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S027,JPM,JPMorgan,large_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S028,XOM,Exxon Mobil,large_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S029,XOM,Exxon Mobil,large_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S030,XOM,Exxon Mobil,large_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S031,WMT,Walmart,large_cap_split,2024-02,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S032,WMT,Walmart,large_cap_split,2024-02,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S033,WMT,Walmart,large_cap_split,2024-02,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S034,COST,Costco,large_cap_split,2024-01,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S035,COST,Costco,large_cap_split,2024-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S036,COST,Costco,large_cap_split,2024-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S037,ANF,Abercrombie & Fitch,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S038,ANF,Abercrombie & Fitch,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S039,ANF,Abercrombie & Fitch,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S040,SIG,Signet Jewelers,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S041,SIG,Signet Jewelers,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S042,SIG,Signet Jewelers,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S043,MTH,Meritage Homes,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S044,MTH,Meritage Homes,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S045,MTH,Meritage Homes,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S046,PRDO,Perdoceo Education,small_cap,2020-03,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S047,PRDO,Perdoceo Education,small_cap,2020-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S048,PRDO,Perdoceo Education,small_cap,2020-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S049,CROX,Crocs,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S050,CROX,Crocs,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S051,CROX,Crocs,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S052,LEHMQ,Lehman Brothers,delisted,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S053,LEHMQ,Lehman Brothers,delisted,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S054,LEHMQ,Lehman Brothers,delisted,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
-S055,ENRNQ,Enron,delisted,2001-11,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S056,ENRNQ,Enron,delisted,2001-11,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S057,ENRNQ,Enron,delisted,2001-11,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
-S058,WCOMQ,WorldCom,delisted,2002-07,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S059,WCOMQ,WorldCom,delisted,2002-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S060,WCOMQ,WorldCom,delisted,2002-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
-S061,BSC,Bear Stearns,delisted,2008-03,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S062,BSC,Bear Stearns,delisted,2008-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S063,BSC,Bear Stearns,delisted,2008-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
-S064,EMC,EMC Corp,acquired,2016-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S065,EMC,EMC Corp,acquired,2016-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S066,EMC,EMC Corp,acquired,2016-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S067,YHOO,Yahoo,acquired,2017-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S068,YHOO,Yahoo,acquired,2017-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S069,YHOO,Yahoo,acquired,2017-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S070,ATVI,Activision Blizzard,acquired,2023-10,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S071,ATVI,Activision Blizzard,acquired,2023-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S072,ATVI,Activision Blizzard,acquired,2023-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S073,TWTR,Twitter,acquired,2022-10,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S074,TWTR,Twitter,acquired,2022-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S075,TWTR,Twitter,acquired,2022-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
-S076,ANTM,Anthem,rename_ELV,2022-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S077,ANTM,Anthem,rename_ELV,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S078,ANTM,Anthem,rename_ELV,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S079,DISCA,Discovery,rename_WBD,2022-04,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S080,DISCA,Discovery,rename_WBD,2022-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S081,DISCA,Discovery,rename_WBD,2022-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S082,GE,General Electric,spinoff,2024-04,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S083,GE,General Electric,spinoff,2024-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S084,GE,General Electric,spinoff,2024-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S085,MMM,3M,spinoff,2024-04,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S086,MMM,3M,spinoff,2024-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S087,MMM,3M,spinoff,2024-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S088,JNJ,Johnson & Johnson,spinoff,2023-08,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.
-S089,JNJ,Johnson & Johnson,spinoff,2023-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S090,JNJ,Johnson & Johnson,spinoff,2023-08,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+sample_id,ticker,company,category,event_period,provider,status,evidence_url,checks,notes,trial_scope
+S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S002,AAPL,Apple,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,IN_WINDOW_CORE
+S003,AAPL,Apple,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history;actions,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=5.,NOT_APPLICABLE
+S004,MSFT,Microsoft,large_cap,2020-01,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S005,MSFT,Microsoft,large_cap,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,IN_WINDOW_CORE
+S006,MSFT,Microsoft,large_cap,2020-01,EODHD,PARTIAL,https://eodhd.com/api/eod/MSFT.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=9.,NOT_APPLICABLE
+S007,NVDA,NVIDIA,large_cap_split,2024-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S008,NVDA,NVIDIA,large_cap_split,2024-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,IN_WINDOW_CORE
+S009,NVDA,NVIDIA,large_cap_split,2024-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S010,AMZN,Amazon,large_cap_split,2022-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S011,AMZN,Amazon,large_cap_split,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S012,AMZN,Amazon,large_cap_split,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S013,GOOGL,Alphabet,large_cap_split,2022-07,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S014,GOOGL,Alphabet,large_cap_split,2022-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S015,GOOGL,Alphabet,large_cap_split,2022-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S016,META,Meta Platforms,rename_FB,2022-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S017,META,Meta Platforms,rename_FB,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S018,META,Meta Platforms,rename_FB,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S019,TSLA,Tesla,large_cap_split,2020-08,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S020,TSLA,Tesla,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S021,TSLA,Tesla,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/TSLA.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history,EODHD demo returned 4118 rows 2010-06-29..2026-11-10; repeat SHA256 match=True; splits=2.,NOT_APPLICABLE
+S022,BRK.B,Berkshire Hathaway,share_class,2020-01,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S023,BRK.B,Berkshire Hathaway,share_class,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,IN_WINDOW_CORE
+S024,BRK.B,Berkshire Hathaway,share_class,2020-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S025,JPM,JPMorgan,large_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S026,JPM,JPMorgan,large_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S027,JPM,JPMorgan,large_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S028,XOM,Exxon Mobil,large_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S029,XOM,Exxon Mobil,large_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S030,XOM,Exxon Mobil,large_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S031,WMT,Walmart,large_cap_split,2024-02,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S032,WMT,Walmart,large_cap_split,2024-02,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S033,WMT,Walmart,large_cap_split,2024-02,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S034,COST,Costco,large_cap_split,2024-01,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S035,COST,Costco,large_cap_split,2024-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S036,COST,Costco,large_cap_split,2024-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S037,ANF,Abercrombie & Fitch,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S038,ANF,Abercrombie & Fitch,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S039,ANF,Abercrombie & Fitch,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S040,SIG,Signet Jewelers,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S041,SIG,Signet Jewelers,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S042,SIG,Signet Jewelers,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S043,MTH,Meritage Homes,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S044,MTH,Meritage Homes,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S045,MTH,Meritage Homes,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S046,PRDO,Perdoceo Education,small_cap,2020-03,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S047,PRDO,Perdoceo Education,small_cap,2020-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S048,PRDO,Perdoceo Education,small_cap,2020-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S049,CROX,Crocs,small_cap,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S050,CROX,Crocs,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S051,CROX,Crocs,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S052,LEHMQ,Lehman Brothers,delisted,2008-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S053,LEHMQ,Lehman Brothers,delisted,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,Original trading period predates Norgate 2-year trial window; NOT_RUN.,OUTSIDE_TRIAL_HISTORY
+S054,LEHMQ,Lehman Brothers,delisted,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.,NOT_APPLICABLE
+S055,ENRNQ,Enron,delisted,2001-11,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S056,ENRNQ,Enron,delisted,2001-11,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,Original trading period predates Norgate 2-year trial window; NOT_RUN.,OUTSIDE_TRIAL_HISTORY
+S057,ENRNQ,Enron,delisted,2001-11,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.,NOT_APPLICABLE
+S058,WCOMQ,WorldCom,delisted,2002-07,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S059,WCOMQ,WorldCom,delisted,2002-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,Original trading period predates Norgate 2-year trial window; NOT_RUN.,OUTSIDE_TRIAL_HISTORY
+S060,WCOMQ,WorldCom,delisted,2002-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.,NOT_APPLICABLE
+S061,BSC,Bear Stearns,delisted,2008-03,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S062,BSC,Bear Stearns,delisted,2008-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,Original trading period predates Norgate 2-year trial window; NOT_RUN.,OUTSIDE_TRIAL_HISTORY
+S063,BSC,Bear Stearns,delisted,2008-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.,NOT_APPLICABLE
+S064,EMC,EMC Corp,acquired,2016-09,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S065,EMC,EMC Corp,acquired,2016-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S066,EMC,EMC Corp,acquired,2016-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S067,YHOO,Yahoo,acquired,2017-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S068,YHOO,Yahoo,acquired,2017-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S069,YHOO,Yahoo,acquired,2017-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S070,ATVI,Activision Blizzard,acquired,2023-10,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S071,ATVI,Activision Blizzard,acquired,2023-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S072,ATVI,Activision Blizzard,acquired,2023-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S073,TWTR,Twitter,acquired,2022-10,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S074,TWTR,Twitter,acquired,2022-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S075,TWTR,Twitter,acquired,2022-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.,NOT_APPLICABLE
+S076,ANTM,Anthem,rename_ELV,2022-06,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S077,ANTM,Anthem,rename_ELV,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S078,ANTM,Anthem,rename_ELV,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S079,DISCA,Discovery,rename_WBD,2022-04,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S080,DISCA,Discovery,rename_WBD,2022-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S081,DISCA,Discovery,rename_WBD,2022-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S082,GE,General Electric,spinoff,2024-04,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S083,GE,General Electric,spinoff,2024-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S084,GE,General Electric,spinoff,2024-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S085,MMM,3M,spinoff,2024-04,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S086,MMM,3M,spinoff,2024-04,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S087,MMM,3M,spinoff,2024-04,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S088,JNJ,Johnson & Johnson,spinoff,2023-08,Sharadar,NOT_RUN,,not evaluated for public release,Sharadar personal license section 8: written approval required before public evaluation.,NOT_APPLICABLE
+S089,JNJ,Johnson & Johnson,spinoff,2023-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S090,JNJ,Johnson & Johnson,spinoff,2023-08,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.,NOT_APPLICABLE
+S091,WBA,Walgreens Boots Alliance,delisted_recent,2025-08-28,Sharadar,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S092,WBA,Walgreens Boots Alliance,delisted_recent,2025-08-28,Norgate,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,CANDIDATE_IN_WINDOW
+S093,WBA,Walgreens Boots Alliance,delisted_recent,2025-08-28,EODHD,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S094,HES,Hess,delisted_recent,2025-07-18,Sharadar,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S095,HES,Hess,delisted_recent,2025-07-18,Norgate,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,CANDIDATE_IN_WINDOW
+S096,HES,Hess,delisted_recent,2025-07-18,EODHD,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S097,ANSS,Ansys,delisted_recent,2025-07-17,Sharadar,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S098,ANSS,Ansys,delisted_recent,2025-07-17,Norgate,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,CANDIDATE_IN_WINDOW
+S099,ANSS,Ansys,delisted_recent,2025-07-17,EODHD,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S100,JNPR,Juniper Networks,delisted_recent,2025-07-02,Sharadar,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
+S101,JNPR,Juniper Networks,delisted_recent,2025-07-02,Norgate,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,CANDIDATE_IN_WINDOW
+S102,JNPR,Juniper Networks,delisted_recent,2025-07-02,EODHD,NOT_RUN,,OHLCV;dates;delisted;repeatability,Recent delisting confirmed by SEC Form 25; trial availability not yet verified.,NOT_APPLICABLE
