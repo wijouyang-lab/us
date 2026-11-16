@@ -26,7 +26,8 @@ REQUIRED_PROVIDER = {
 }
 REQUIRED_SAMPLE = {
     "sample_id", "ticker", "company", "category", "event_period", "provider",
-    "status", "evidence_url", "checks", "notes", "trial_scope",
+    "status", "evidence_url", "checks", "notes", "trial_scope", "form25_filing_date", "last_trading_date",
+    "suspension_effective_date", "event_date_source", "trial_window_start", "candidate_as_of", "last_trading_date_status",
 }
 VALID_STATUS = {"PASS", "PARTIAL", "NOT_RUN", "NOT_VERIFIED"}
 

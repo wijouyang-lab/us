@@ -376,23 +376,35 @@ The old names LEHMQ, ENRNQ, WCOMQ and BSC traded long before the two-year
 window. They are **NOT_RUN / OUTSIDE_TRIAL_HISTORY**, not executable trial
 samples.
 
-Recent delisting candidates confirmed by SEC Form 25:
+Recent delisting candidates confirmed by SEC Form 25 / 8-K:
 
-| Ticker | Company | Form 25 date | Trial scope |
-|---|---|---|---|
-| WBA | Walgreens Boots Alliance | 2025-08-28 | CANDIDATE_IN_WINDOW |
-| HES | Hess | 2025-07-18 | CANDIDATE_IN_WINDOW |
-| ANSS | Ansys | 2025-07-17 | CANDIDATE_IN_WINDOW |
-| JNPR | Juniper Networks | 2025-07-02 | CANDIDATE_IN_WINDOW |
+| Ticker | Form 25 filing | Last trading date | Suspension effective | Trial scope |
+|---|---|---|---|---|
+| WBA | 2025-08-28 | 2025-08-27 (NOT_VERIFIED exact last sale) | 2025-08-28 | TRIAL_NOT_STARTED |
+| HES | 2025-07-18 | 2025-07-17 (NOT_VERIFIED exact last sale) | 2025-07-18 | TRIAL_NOT_STARTED |
+| ANSS | 2025-07-17 | 2025-07-16 (NOT_VERIFIED exact last sale) | 2025-07-17 | TRIAL_NOT_STARTED |
+| JNPR | 2025-07-02 | 2025-07-01 (NOT_VERIFIED exact last sale) | 2025-07-02 | TRIAL_NOT_STARTED |
 
-Sources: SEC EDGAR submissions for
+`last_trading_date` is derived from the official statement that trading was
+suspended before the opening on the closing date. The exact last-sale record is
+not directly stated in the filing, so its status is `NOT_VERIFIED`; it is not
+the same as the Form 25 filing date.
+
+Sources: SEC EDGAR submissions and 8-K filings for
 [WBA](https://data.sec.gov/submissions/CIK0001618921.json),
 [HES](https://data.sec.gov/submissions/CIK0000004447.json),
 [ANSS](https://data.sec.gov/submissions/CIK0001013462.json),
 [JNPR](https://data.sec.gov/submissions/CIK0001043604.json).
 
-These are candidates, not verified trial data. Availability must be checked in
-the actual trial before any status changes.
+These are candidates, not verified trial data. `TRIAL_NOT_STARTED` is intentional;
+it never means Norgate validated the ticker. When a real trial start date is
+provided, scope is recomputed:
+
+```text
+last_trading_date >= trial_start_date - 2 years
+```
+
+Availability must be checked in the actual trial before any status changes.
 
 It **cannot** test 2007-05-30 to 2024-12-31 or the full 95%/98% gates.
 

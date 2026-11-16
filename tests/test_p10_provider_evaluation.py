@@ -2,6 +2,7 @@ import csv
 from pathlib import Path
 
 from tools.research.p10.validate_provider_evaluation import main, validate
+from tools.research.p10.trial_window import compute_trial_scope, two_year_cutoff
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data/research"
@@ -132,7 +133,7 @@ def test_norgate_trial_scope_excludes_old_delisted_names():
     assert all(r["trial_scope"] == "OUTSIDE_TRIAL_HISTORY" for r in old)
     recent = [r for r in rows if r["provider"] == "Norgate" and r["ticker"] in {"WBA", "HES", "ANSS", "JNPR"}]
     assert len(recent) == 4
-    assert all(r["trial_scope"] == "CANDIDATE_IN_WINDOW" for r in recent)
+    assert all(r["trial_scope"] == "TRIAL_NOT_STARTED" for r in recent)
     assert all(r["event_period"] >= "2025-01-01" for r in recent)
 
 
@@ -143,3 +144,31 @@ def test_eodhd_private_cloud_matches_csv_and_docs():
     doc = (ROOT / "docs/research/P10_DATA_PROVIDER_EVALUATION.md").read_text(encoding="utf-8")
     assert "YES — PRIVATE LICENSEE ONLY" in doc
     assert "public" in doc.lower()
+
+
+def test_form25_and_last_trading_dates_are_separate_for_recent_candidates():
+    rows = list(csv.DictReader((DATA / "p10_sample_validation.csv").open(encoding="utf-8")))
+    recent = {r["ticker"]: r for r in rows if r["provider"] == "Norgate" and r["ticker"] in {"WBA", "HES", "ANSS", "JNPR"}}
+    assert set(recent) == {"WBA", "HES", "ANSS", "JNPR"}
+    for r in recent.values():
+        assert r["form25_filing_date"] and r["last_trading_date"]
+        assert r["form25_filing_date"] != r["last_trading_date"]
+        assert r["suspension_effective_date"] and r["event_date_source"]
+        assert r["status"] == "NOT_RUN"
+        assert r["trial_scope"] == "TRIAL_NOT_STARTED"
+        assert "NOT_VERIFIED" in r["last_trading_date_status"]
+
+
+def test_dynamic_two_year_trial_window():
+    assert two_year_cutoff("2026-11-16").isoformat() == "2024-11-16"
+    assert compute_trial_scope("2025-08-27", None) == "TRIAL_NOT_STARTED"
+    assert compute_trial_scope("2025-08-27", "2026-11-16") == "CANDIDATE_IN_WINDOW"
+    assert compute_trial_scope("2025-08-27", "2027-09-01") == "OUTSIDE_TRIAL_HISTORY"
+    assert compute_trial_scope("NOT_VERIFIED", "2026-11-16") == "LAST_TRADING_DATE_UNKNOWN"
+
+
+def test_old_delisted_candidates_are_not_trial_samples():
+    rows = list(csv.DictReader((DATA / "p10_sample_validation.csv").open(encoding="utf-8")))
+    old = [r for r in rows if r["provider"] == "Norgate" and r["ticker"] in {"LEHMQ", "ENRNQ", "WCOMQ", "BSC"}]
+    assert all(r["trial_scope"] == "OUTSIDE_TRIAL_HISTORY" for r in old)
+    assert all(r["status"] == "NOT_RUN" for r in old)
