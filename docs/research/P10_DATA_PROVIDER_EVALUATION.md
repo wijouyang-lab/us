@@ -1,263 +1,301 @@
-# P10: US Historical Data Provider Evaluation
+# P10.1: US Historical Data Provider Evaluation (Corrected)
 
-Date: 2026-11-10  
-Branch: `research/p10-data-provider-evaluation`  
-Status: **EVALUATION ONLY — NO PURCHASE, NO DATA COMMITTED**
+Date: 2026-11-16
+Branch: `research/p10-data-provider-evaluation`
+Status: **EVALUATION ONLY — NO PURCHASE, NO SUBSCRIPTION**
 
 ---
 
-## 1. Question
+## 1. Correction summary
 
-Can a US historical data service close the P9.1 gaps without repeating failed
-free-source searches?
+The first P10 draft understated Sharadar's tiering and used the wrong currency for
+EODHD. This revision separates subscription history tiers and does not treat
+"table exists" as PIT coverage.
 
-Required:
+Key corrections:
 
-- at least 10 years of daily OHLCV;
-- NYSE / NASDAQ / NYSE American coverage;
-- delisted securities;
-- historical ticker / symbol mapping;
-- corporate actions (splits, dividends, spinoffs, ticker changes);
-- historical index membership or PIT constituents;
-- explicit research-use license and reproducible access;
-- a real sample/trial before any claim is accepted.
+- Sharadar Prices starts at **$9/mo for 5 years**, not a full-history product.
+- Sharadar Bundle **$29/mo is 5 years**, not full history.
+- P9.1 needs 2007-05-30 to 2024-12-31; only the **Full History** tiers can span it.
+- EODHD Historian is recorded as **$19.99/mo / $199/yr**, not EUR 19.99.
+- EODHD plan includes delisted tickers, splits/dividends and Bulk EOD; S&P 500
+  historical constituents remain **UNKNOWN**.
+- Norgate Platinum is **$346.50/6 months or $630/year**, with deletion obligations
+  on expiry.
+- No provider has passed the 95% member-day / 98% ticker gates.
 
-P9.1 currently has:
+---
+
+## 2. Sharadar official tiers
+
+Official page: https://sharadar.com/subscribe
+
+### Prices
+
+| History tier | Monthly | Annual |
+|---|---:|---:|
+| 5 Years | $9 | $99 |
+| 10 Years | $19 | $199 |
+| Full History | $39 | $299 |
+
+Prices includes `stocks`, `funds`, `metrics`, `actions`, and `sp500` tables. It
+does **not** include the `fundamentals` table.
+
+### Bundle
+
+| History tier | Monthly | Annual |
+|---|---:|---:|
+| 5 Years | $29 | $299 |
+| 10 Years | $49 | $399 |
+| Full History | $69 | $499 |
+
+Bundle includes prices, fundamentals, corporate actions/events and the S&P 500
+table.
+
+### What is not proven
+
+- Earliest actual date in the `sp500` table.
+- Whether the table is complete point-in-time membership or only a partial list.
+- Whether full-history prices cover every delisted ticker needed by P9.1.
+- Whether each ticker has the 2007-05-30 to 2024-12-31 range.
+
+The table name is **not** evidence of PIT coverage.
+
+---
+
+## 3. EODHD correction
+
+Official pages:
+
+- https://eodhd.com/pricing/
+- https://eodhd.com/help/plans
+- https://eodhd.com/help/personal-use
+- https://eodhd.com/help/storage
+
+### Plan
 
 ```text
-member-day coverage: 89.58% (< 95%)
-ticker coverage:     91.55% (< 98%)
-Finsaber source/license: UNKNOWN
-SP500 local match: PASS
-SP500 third-party redistribution: UNKNOWN
-P9_DATA_REPRODUCIBILITY: BLOCKED
+Personal Historian: $19.99/month or $199/year
+EOD Historical Data — All World
 ```
 
-This evaluation does not change P9.1 results. All eight portfolios remain
-`NO-GO`.
+Official plan description includes:
+
+- full end-of-day history;
+- delisted tickers;
+- splits and dividends;
+- Bulk EOD API, splits and dividends.
+
+### Unknown
+
+- S&P 500 historical constituents are **UNKNOWN** in this plan.
+- Per-ticker history completeness is not guaranteed by the plan.
+- A listed maximum history depth does not guarantee every ticker/date.
+
+### License
+
+- Personal, non-professional use only.
+- Private research, backtesting and paper trading are allowed.
+- Raw data may be stored and retained after cancellation.
+- No sharing, public display, redistribution or use for others.
+- Cloud processing is not clearly granted for arbitrary shared infrastructure;
+  record as **UNKNOWN** unless separately confirmed.
+- Cancellation stops updates; existing downloads remain usable privately.
 
 ---
 
-## 2. Bottom line
+## 4. Norgate correction
 
-Three candidates merit a later trial:
+Official pages:
 
-1. **Sharadar Bundle — $29/month**  
-   Best low/mid-cost candidate: active + delisted prices, corporate actions,
-   fundamentals, S&P 500 constituents table, API/CSV, official sample endpoint.
-   Over the ~$20 budget; personal-use license only.
+- https://norgatedata.com/stockmarketpackages.php
+- https://norgatedata.com/subscribe/eula.php
 
-2. **Norgate Data Platinum — $630/year ($52.50/month equivalent)**  
-   Strongest survivorship-bias control: delisted securities back to 1990,
-   historical index constituents, Python/Updater access, free trial.
-   Over budget.
-
-3. **EODHD Historian — EUR 19.99/month**  
-   Close to the $20 budget and has an API, delisted ticker API and symbol-rename
-   API. Whether delisted history and historical constituents are included in
-   this specific plan is **UNKNOWN**.
-
-No candidate is approved for purchase. No subscription or payment was made.
-
-### Minimum feasible plan
-
-For P9.1's requirements, the minimum candidate is **Sharadar Bundle at $29/month**,
-because it is the only low-cost plan whose official page lists both delisted
-prices/actions and an S&P 500 constituents table. It is still **above the ~$20
-budget**, and the actual historical S&P 500 table coverage has not been verified.
-
-At strict ≤$20:
-
-- **Sharadar Prices at $9/month** covers prices, delisted securities and actions,
-  but PIT index membership in this tier is **UNKNOWN**.
-- **EODHD Historian at EUR 19.99** is at the budget edge; delisted/historical
-  constituents inclusion is **UNKNOWN**.
-- **Alpha Vantage free** is not sufficient: no delisted coverage claim and no PIT
-  membership.
-
-Therefore: **there is no verified, license-safe PIT solution at ≤$20/month in this
-review.**
-
----
-
-## 3. Provider comparison
-
-Full machine-readable table:
-
-`data/research/p10_provider_comparison.csv`
-
-Prices are from official pricing pages as of **2026-11-10**. `UNKNOWN` means the
-official page did not provide a usable numeric price or coverage statement.
-
-### Low-price options
-
-| Provider / product | Official price | History | Delisted | PIT constituents | Access | License | Trial |
-|---|---:|---:|---|---|---|---|---|
-| Sharadar Prices | **$9/mo** | 1997-12 | YES | UNKNOWN | API/CSV | Personal, no redistribution | Sample key |
-| EODHD Historian | **EUR 19.99/mo** | UNKNOWN | UNKNOWN in plan | UNKNOWN | API/CSV | Personal | Sandbox/demo |
-| Alpha Vantage free | $0 | 20+ years claim | NO | NO | API/CSV | UNKNOWN | Free key |
-| Sharadar Bundle | **$29/mo** | 1998-01 | YES | YES (S&P 500 table) | API/CSV | Personal, no redistribution | Sample key |
-
-### Complete / higher-cost options
-
-| Provider / product | Official price | History | Delisted | PIT constituents | Access | License | Trial |
-|---|---:|---:|---|---|---|---|---|
-| Norgate Platinum | **$630/yr = $52.50/mo** | 1990 | YES | YES (historical index) | Updater/Python/CSV | Personal non-commercial | Free trial |
-| Norgate Diamond | **$787.50/yr = $65.63/mo** | 1950 | YES | YES | Updater/Python/CSV | Personal non-commercial | Free trial |
-| EODHD All-In-One | **EUR 99.99/mo** | UNKNOWN | UNKNOWN in plan | UNKNOWN | API/CSV | Personal | Sandbox |
-| CRSP via WRDS | Institutional quote | 1925 | YES | YES | WRDS/API | Institutional | NO |
-
-Other assessed products:
-
-- **Massive (formerly Polygon) Stocks Starter** — official price not captured from
-  the JS-rendered pricing page; coverage/license **UNKNOWN**.
-- **Tiingo EOD** — official numeric price not captured; no sample validated.
-- **SEC EDGAR CompanyFacts** — PIT fundamentals, $0, public domain; no prices.
-- **FRED** — macro only, $0, public; no prices/membership.
-- **GDELT** — news/events only, $0; no prices.
-
-### Important qualification
-
-The table records what the vendor's official page claims. It is **not** a
-verification of:
-
-- actual delisted ticker counts;
-- whether the S&P 500 table is point-in-time and complete;
-- corporate-action correctness;
-- exchange coverage at the required 98% ticker gate;
-- redistribution rights for a public GitHub repo.
-
----
-
-## 4. Sample validation
-
-Design file:
-
-`data/research/p10_sample_validation.csv`
-
-30 representative tickers × 3 leading candidates = 90 rows:
-
-- current mega caps: AAPL, MSFT, NVDA, AMZN, GOOGL, META, TSLA, BRK.B;
-- financials/energy/retail: JPM, XOM, WMT, COST;
-- small caps: ANF, SIG, MTH, PRDO, CROX;
-- delisted: LEHMQ, ENRNQ, WCOMQ, BSC;
-- acquired: EMC, YHOO, ATVI, TWTR;
-- renamed: ANTM→ELV, DISCA→WBD;
-- special actions/spinoffs: GE, MMM, JNJ;
-- multiple periods: 2001, 2002, 2008, 2016, 2020, 2022, 2023, 2024.
-
-### Actual result
+Platinum:
 
 ```text
-PASS:        0
-PARTIAL:     2   (AAPL only: Sharadar test-key sample; EODHD demo)
-NOT_RUN:    88   (no paid subscription / no trial executed)
+6 months: $346.50
+12 months: $630
+History: back to 1990
+Delisted: yes
+Historical index constituents: yes
 ```
 
-The two AAPL checks only confirm that a small OHLCV response is retrievable.
-They do **not** validate 10 years, delisted names, historical membership,
-corporate actions, repeatability or license.
+License/EULA:
 
-No metric is marked PASS without a real provider sample.
-
----
-
-## 5. Fundamentals, SEC, news, macro
-
-These are separate sources, not assumed to come from the price vendor.
-
-| Need | Candidate | Cost | License | PIT status |
-|---|---|---:|---|---|
-| SEC fundamentals / filings | SEC EDGAR CompanyFacts/Submissions | $0 | US public domain | Filing-date based; available |
-| Macro | FRED | $0 | Public | Release-date series available |
-| News/events | GDELT 2.0 | $0 | Open | Event stream; no price data |
-| Fundamentals PIT | Sharadar Bundle | $29/mo | Personal | As-reported/AR dimensions claimed |
-| News + fundamentals bundle | EODHD All-In-One | EUR 99.99/mo | Personal | UNKNOWN |
-
-SEC/FRED/GDELT can support research, but do not substitute for delisted price
-history or PIT index membership.
+- Personal, non-commercial use only.
+- Cloud/processing environments allowed only for the licensee's personal use.
+- No redistribution, shared database or public display.
+- On subscription expiry: delete Content, exports, extracts and backups.
+- Derived Data (backtests, statistics, models) may be retained.
 
 ---
 
-## 6. Economics
+## 5. P9.1 interval: 2007-05-30 to 2024-12-31
 
-### Strict ~$20 budget
+| Option | Monthly cost | Covers 2007-2024? | Delisted | S&P 500 PIT | Personal cloud research | Keep raw after cancel |
+|---|---:|---|---|---|---|---|
+| A. EODHD Historian | **$19.99** | Likely full EOD, per-ticker **UNVERIFIED** | YES (plan claim) | **UNKNOWN** | YES (private) | YES |
+| B. Sharadar Prices 10Y | **$19** | **NO** (trailing 10 years) | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
+| C. Sharadar Prices Full | **$39** | Prices back to 1997-12; **needs extract** | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
+| D. Sharadar Bundle Full | **$69** | Prices + fundamentals; **needs extract** | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
+| E. Norgate Platinum | **$630/yr ≈ $52.50** | Back to 1990; **needs extract** | YES | YES (claim) | YES (personal) | NO (delete) |
 
-Possible:
+### Direct answers
 
-- Sharadar Prices at $9/month — prices/delisted/actions, but PIT membership
-  UNKNOWN and no fundamentals.
-- EODHD Historian at EUR 19.99 — near budget, but delisted/PIT inclusion
-  UNKNOWN.
-- Alpha Vantage free — not sufficient for survivorship-free PIT.
-
-Not possible with verified coverage:
-
-- Norgate Platinum/Diamond;
-- CRSP;
-- EODHD All-In-One;
-- Sharadar Bundle at $29.
-
-### Recommended later trial
-
-If a small overage is acceptable, trial **Sharadar Bundle** first. It is the
-lowest-cost candidate that officially combines delisted prices, corporate
-actions, fundamentals and S&P 500 constituents. Validate 30 samples plus the P9.1
-coverage gates before purchase.
-
-If the S&P 500 PIT table is present and complete, it can restore **S&P 500 PIT**
-research. It does **not** automatically restore full all-listed/retired-market
-PIT research; that needs Norgate Platinum/Diamond or CRSP-like coverage.
+- **Long enough price history:** C, D, E can cover 2007. B cannot. A likely can but
+  per-ticker completeness is not guaranteed.
+- **S&P 500 historical constituents:** D and E claim it; C has the table but
+  earliest date/completeness is UNKNOWN; A is UNKNOWN; B is UNKNOWN.
+- **Delisted stocks:** A, C, D, E claim support. Not yet sample-verified.
+- **Personal DSH cloud research:** EODHD permits private research; Norgate permits
+  personal processing environments; Sharadar's cloud position is UNKNOWN.
+- **Retain raw data after cancellation:** EODHD YES; Sharadar NO; Norgate NO.
+- **95% member-day / 98% ticker:** **not verified for any option.** No PASS.
 
 ---
 
-## 7. Can full-market PIT research be restored?
+## 6. Minimum feasible plan
 
-Conditionally:
+### Price-only research
+
+**Sharadar Prices Full History — $39/month ($299/year)**
+
+Why:
+
+- covers 1997-12 onward;
+- includes delisted prices and corporate actions;
+- includes `sp500` table;
+- does not include fundamentals.
+
+But PIT table completeness and the 2007-2024 delisted coverage still need a
+download audit.
+
+### Price + fundamentals
+
+**Sharadar Bundle Full History — $69/month ($499/year)**
+
+Only needed if PIT fundamentals/events are required. It is not the first choice
+for price-only P9.1 revalidation.
+
+### Cheapest candidate
+
+**EODHD Historian — $19.99/month ($199/year)**
+
+It is the only candidate at the ~$20 line that officially includes delisted
+tickers and Bulk EOD. Its S&P 500 historical constituents coverage is UNKNOWN, so
+it cannot yet be called a complete P9.1 replacement.
+
+### Full coverage
+
+**Norgate Platinum — $630/year** or **CRSP** institutional. Strongest PIT and
+delisted coverage claims, but far above budget.
+
+---
+
+## 7. Free sample evidence
+
+No paid plan or trial was executed.
+
+### EODHD demo key
+
+The official demo key covers AAPL.US, MSFT.US and TSLA.US full history.
+
+| Ticker | Rows | First | Last | Repeat SHA256 |
+|---|---:|---|---|---|
+| AAPL | 9,283 | 1990-01-02 | 2026-11-10 | MATCH |
+| MSFT | 9,283 | 1990-01-02 | 2026-11-10 | MATCH |
+| TSLA | 4,118 | 2010-06-29 | 2026-11-10 | MATCH |
+
+AAPL splits returned 5 records (1987-06-16 through 2020-08-31).
+
+This validates basic OHLCV availability and repeatability for three large,
+currently listed tickers. It does **not** validate delisted names, 2007-2024
+survivorship, S&P 500 PIT membership, or the 98% ticker gate.
+
+### Sharadar official test key
 
 ```text
-S&P 500 PIT:        CONDITIONAL on Sharadar Bundle sp500 coverage verification
-Full US market PIT: CONDITIONAL on Norgate Platinum/Diamond or CRSP
-Current status:     NOT VERIFIED / NO PURCHASE
+AAPL: 1,254 rows, 2021-11-16 .. 2026-11-13
 ```
 
-No claim is made that any candidate meets the 95% member-day or 98% ticker gates
-until the actual extract is measured.
+The free key returns a recent sample only, not the full-history product.
+
+### Sample matrix
+
+`data/research/p10_sample_validation.csv` has 30 tickers × 3 candidates = 90
+rows. Current status:
+
+```text
+PARTIAL: 4   (AAPL/MSFT/TSLA EODHD; AAPL Sharadar)
+NOT_RUN: 86
+PASS:     0
+```
+
+No unverified metric is marked PASS.
 
 ---
 
-## 8. Decision
+## 8. License comparison
+
+| Provider | Personal research | Cloud processing | Redistribution | Retain raw after cancel |
+|---|---|---|---|---|
+| Sharadar | YES (individual) | UNKNOWN | NO | NO, delete raw |
+| EODHD | YES (private) | UNKNOWN | NO | YES |
+| Norgate | YES (personal) | YES, personal processing | NO | NO, delete raw/backups |
+| Alpha Vantage | UNKNOWN | UNKNOWN | UNKNOWN | UNKNOWN |
+| CRSP | Institutional | Institutional | NO | Institutional terms |
+
+No provider permits publishing the raw dataset in this public repository.
+
+---
+
+## 9. Decision
 
 ```text
 P10_PROVIDER_EVALUATION: COMPLETE
 P10_PURCHASE_DECISION: NONE
-P10_RECOMMENDED_TRIAL: Sharadar Bundle
+P10_RECOMMENDED_PRICE_ONLY_TRIAL: Sharadar Prices Full History ($39/mo)
+P10_RECOMMENDED_BUNDLE_TRIAL: Sharadar Bundle Full History ($69/mo)
+P10_CHEAPEST_UNVERIFIED_OPTION: EODHD Historian ($19.99/mo)
 P10_BUDGET_COMPATIBLE_WITH_VERIFIED_PIT: NO
-P9_DATA_REPRODUCIBILITY: BLOCKED (unchanged)
+P9_DATA_REPRODUCIBILITY: BLOCKED
 P9_RESULTS: unchanged; all 8 NO-GO
 ```
 
-Do not purchase or connect a vendor yet. The next step is a manual approval to
-run a time-boxed Sharadar Bundle trial against the 30-sample validation and the
-P9.1 coverage gates.
+No purchase, payment details, subscription, or vendor connection was made.
+
+### Next manual approval
+
+Approve a time-boxed **Sharadar Prices Full History $39/month** trial first, and
+only if fundamentals are required, compare against Bundle Full History $69/month.
+The acceptance test must be:
+
+1. download 30 sample tickers;
+2. confirm delisted and renamed names;
+3. compute member-day coverage ≥95%;
+4. compute ticker coverage ≥98%;
+5. inspect `sp500` earliest date and PIT behavior;
+6. confirm license permits the intended private DSH cloud workflow;
+7. do not commit raw vendor data.
+
+EODHD Historian can be tried separately at $19.99/month if the S&P 500 PIT table
+is not required; that limitation must be accepted explicitly.
 
 ---
 
-## 9. Official sources
+## 10. Official sources
 
-- Norgate packages/pricing: https://norgatedata.com/stockmarketpackages.php
-- Norgate EULA: https://norgatedata.com/subscribe/eula.php
+- Sharadar subscribe/prices: https://sharadar.com/subscribe
 - Sharadar prices: https://sharadar.com/prices
 - Sharadar bundle: https://sharadar.com/bundle
-- Sharadar subscription prices: https://sharadar.com/subscribe
-- Sharadar personal license: https://sharadar.com/terms
-- EODHD pricing: https://eodhd.com/pricing
-- EODHD EOD API: https://eodhd.com/financial-apis/api-for-historical-data-and-volumes
-- EODHD terms: https://eodhd.com/financial-apis/terms-conditions
-- Massive pricing: https://massive.com/pricing
-- Tiingo pricing: https://www.tiingo.com/about/pricing
-- Alpha Vantage premium: https://www.alphavantage.co/premium/
-- CRSP: https://www.crsp.org/products/research-products/crsp-us-stock-database
+- Sharadar license: https://sharadar.com/terms
+- EODHD pricing: https://eodhd.com/pricing/
+- EODHD plans: https://eodhd.com/help/plans
+- EODHD personal use: https://eodhd.com/help/personal-use
+- EODHD storage/cancellation: https://eodhd.com/help/storage
+- Norgate packages: https://norgatedata.com/stockmarketpackages.php
+- Norgate EULA: https://norgatedata.com/subscribe/eula.php
 - SEC EDGAR API: https://www.sec.gov/edgar/sec-api-documentation
 - FRED: https://fred.stlouisfed.org/
 - GDELT: https://www.gdeltproject.org/

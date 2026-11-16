@@ -1,10 +1,10 @@
 sample_id,ticker,company,category,event_period,provider,status,evidence_url,checks,notes
-S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,PARTIAL,https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL,OHLCV;dates,Official test-key sample returned AAPL rows; not 10y/full-history validation.
+S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,PARTIAL,https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL,OHLCV;dates,Sharadar test key returned 1254 rows 2021-11-16..2026-11-13; recent sample only.
 S002,AAPL,Apple,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S003,AAPL,Apple,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=2024-01-01&to=2024-01-10,OHLCV;dates,Demo token returned 7 AAPL bars; not full-history validation.
+S003,AAPL,Apple,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history;actions,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=5.
 S004,MSFT,Microsoft,large_cap,2020-01,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S005,MSFT,Microsoft,large_cap,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S006,MSFT,Microsoft,large_cap,2020-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S006,MSFT,Microsoft,large_cap,2020-01,EODHD,PARTIAL,https://eodhd.com/api/eod/MSFT.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=9.
 S007,NVDA,NVIDIA,large_cap_split,2024-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S008,NVDA,NVIDIA,large_cap_split,2024-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S009,NVDA,NVIDIA,large_cap_split,2024-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
@@ -19,7 +19,7 @@ S017,META,Meta Platforms,rename_FB,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted
 S018,META,Meta Platforms,rename_FB,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S019,TSLA,Tesla,large_cap_split,2020-08,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S020,TSLA,Tesla,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S021,TSLA,Tesla,large_cap_split,2020-08,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S021,TSLA,Tesla,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/TSLA.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history,EODHD demo returned 4118 rows 2010-06-29..2026-11-10; repeat SHA256 match=True; splits=2.
 S022,BRK.B,Berkshire Hathaway,share_class,2020-01,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S023,BRK.B,Berkshire Hathaway,share_class,2020-01,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S024,BRK.B,Berkshire Hathaway,share_class,2020-01,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.

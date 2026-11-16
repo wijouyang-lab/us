@@ -16,10 +16,12 @@ PROVIDERS = DATA / "p10_provider_comparison.csv"
 SAMPLES = DATA / "p10_sample_validation.csv"
 REQUIRED_PROVIDER = {
     "provider", "product", "category", "official_url", "pricing_url",
-    "price_display", "price_monthly_usd", "price_as_of", "history_start",
+    "price_display", "price_monthly_usd", "annual_price_usd", "price_as_of",
+    "history_tier", "history_start",
     "exchanges", "delisted_support", "symbol_history",
     "historical_constituents_pit", "corporate_actions", "access_method",
-    "trial", "license_research", "license_redistribution", "price_verified",
+    "trial", "license_research", "license_redistribution", "license_after_cancel",
+    "cloud_processing", "price_verified",
     "coverage_verified", "notes",
 }
 REQUIRED_SAMPLE = {

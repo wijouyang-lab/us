@@ -1,0 +1,49 @@
+{
+  "eodhd_demo_AAPL": {
+    "url": "https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10",
+    "status": 200,
+    "rows": 9283,
+    "first": "1990-01-02",
+    "last": "2026-11-10",
+    "sha256": "822a51ff8ecfdc973c08dc620022dd47c3987fdcabb8fe78f789886e03349d35",
+    "repeat_sha256_match": true,
+    "splits_status": 200,
+    "splits_rows": 5,
+    "splits_first": "1987-06-16",
+    "splits_last": "2020-08-31"
+  },
+  "eodhd_demo_MSFT": {
+    "url": "https://eodhd.com/api/eod/MSFT.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10",
+    "status": 200,
+    "rows": 9283,
+    "first": "1990-01-02",
+    "last": "2026-11-10",
+    "sha256": "e697dbd87334ea8e9669dc669d8de016d2d8ba4926301f022cd7451ea25968c5",
+    "repeat_sha256_match": true,
+    "splits_status": 200,
+    "splits_rows": 9,
+    "splits_first": "1987-09-21",
+    "splits_last": "2003-02-18"
+  },
+  "eodhd_demo_TSLA": {
+    "url": "https://eodhd.com/api/eod/TSLA.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10",
+    "status": 200,
+    "rows": 4118,
+    "first": "2010-06-29",
+    "last": "2026-11-10",
+    "sha256": "79f66fbd4f5feae9c7de5eede514c79414e0377c9bb2b7e2a032db594e573418",
+    "repeat_sha256_match": true,
+    "splits_status": 200,
+    "splits_rows": 2,
+    "splits_first": "2020-08-31",
+    "splits_last": "2022-08-25"
+  },
+  "sharadar_sample_AAPL": {
+    "url": "https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL",
+    "status": 200,
+    "rows": 1254,
+    "first": "2021-11-16",
+    "last": "2026-11-13",
+    "sha256": "464668fdaa797fb034bc6e338deadbe09fd9f798ad6c86c14479cde19fc7e5a8"
+  }
+}
