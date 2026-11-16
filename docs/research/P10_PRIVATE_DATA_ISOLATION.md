@@ -95,15 +95,24 @@ No implementation is added here; this is a design requirement.
 `data_updated_at` alone is insufficient. A fresh upload can still contain stale
 prices.
 
-Required fields:
+Required checks are derived from actual rows, not metadata:
 
 ```text
-data_updated_at
-expected_last_us_session
-latest_price_date
-per_ticker_latest_price_date
-membership_latest_date
+data_updated_at                 (timezone required)
+actual overall latest OHLCV date
+actual per-ticker latest dates
+actual membership latest date
+expected_last_us_session        (XNYS calendar)
 ```
+
+The following metadata is retained only to detect inconsistencies:
+
+```text
+reported_latest_price_date
+reported_membership_latest_date
+```
+
+It is never trusted as the source of truth.
 
 `expected_last_us_session` is computed with `exchange_calendars` XNYS, not
 natural days. It handles weekends, US holidays and early closes.
@@ -120,46 +129,66 @@ Any of these must block:
 
 ```text
 LATEST_PRICE_DATE_LAG
-PER_TICKER_LATEST_MISSING
+REPORTED_LATEST_MISMATCH
+PER_TICKER_LATEST_LAG
+CORE_TICKER_MISSING
 MEMBERSHIP_LATEST_LAG
-EXPECTED_SESSION_MISMATCH
+REPORTED_MEMBERSHIP_MISMATCH
+MEMBERSHIP_RECORD_MISSING
+MEMBERSHIP_DAY_INCOMPLETE
 CALENDAR_UNAVAILABLE
 STALE_DATA
 FUTURE_DATA_UPDATED_AT
+TIMESTAMP_WITHOUT_TIMEZONE
 ```
 
-A fresh `data_updated_at` cannot override a lagging price date.
+A fresh `data_updated_at` cannot override a lagging actual price/membership date.
 
 ---
 
 ## 5. Coverage gate
 
-Interface supports:
+Membership semantics are explicit:
 
-- expected ticker set;
-- actual ticker set;
-- member-day expected/actual;
-- per-day membership completeness;
-- assetid/ticker mapping;
+- `is_member=True`: constituent on that date;
+- `is_member=False`: valid non-constituent record, not missing;
+- no row for expected ticker/date: missing data.
+
+Member-day denominator uses an **independent expected membership baseline**, not
+the supplier's own rows. If that baseline is absent, status is
+`EXPECTED_MEMBERSHIP_NOT_VERIFIABLE` and the gate cannot PASS.
+
+Interface checks:
+
+- expected vs actual ticker set;
+- core ticker set (hard block);
+- member-day expected/actual from the independent baseline;
+- per-day True/False record completeness;
+- assetid/ticker consistency;
 - duplicate ticker/date;
-- OHLCV positivity and high/low/close range.
+- finite/positive volume;
+- OHLC finite, positive, high >= open/close, low <= open/close.
 
-Gates remain:
-
-```text
-member-day >= 95%
-ticker >= 98%
-```
-
-Two scopes are separate:
+Coverage rules:
 
 ```text
-A. TRIAL_MECHANICS: 2-year window only
-B. P9_FULL_HISTORY: 2007-05-30 .. 2024-12-31
+core ticker missing          -> BLOCK regardless of overall percentage
+overall ticker coverage <98% -> BLOCK
+member-day coverage <95%     -> BLOCK
+missing non-core ticker at 98% -> allowed
 ```
 
-A trial result must never be reported as full-history coverage. The full-history
-scope uses the same gates and the full interval.
+Two fixed scopes:
+
+```text
+A. TRIAL_MECHANICS: max 2 years from actual trial_start_date
+B. P9_FULL_HISTORY: 2007-05-30 .. 2024-12-31 exactly
+```
+
+P9_FULL_HISTORY checks actual first/last OHLCV dates and membership end; editing
+`membership_start_date` metadata cannot change the acceptance interval.
+
+A trial result must never be reported as full-history coverage.
 
 ---
 
@@ -180,19 +209,25 @@ Design:
 - equal version -> `DUPLICATE_VERSION`;
 - source/schema mismatch -> block.
 
+`commit_bundle()` implements the closed loop:
+
+1. validate signature/data;
+2. read last accepted version;
+3. reject lower/equal;
+4. write a temp state file;
+5. `fsync` then atomic `os.replace`;
+6. only then return `committed=True`.
+
+A state-write failure returns `STATE_WRITE_FAILED` and does not start a scan.
+The local JSON state is synthetic-only; production must use a durable trusted
+store (database/object-store conditional write/KMS), not a mutable local file.
+
 For production, replace the synthetic HMAC with Ed25519/minisign or a KMS-backed
 signature. The private key never enters Git or CI logs.
 
-Tests cover:
-
-- modified data;
-- modified data + updated SHA (HMAC still fails);
-- modified manifest;
-- missing signature;
-- wrong key;
-- duplicate version;
-- rollback;
-- schema/source mismatch.
+Tests cover modified data, data+SHA modified together, modified manifest, missing
+signature, wrong key, duplicate/rollback, state-write failure and schema/source
+mismatch.
 
 ---
 
@@ -206,24 +241,28 @@ Files:
 Result:
 
 ```text
-10 passed
+15 passed
 ```
 
 Cases:
 
 ```text
-valid same-session bundle                  PASS
-stale latest price with fresh updated_at  BLOCK
-one ticker latest date missing            BLOCK
-one membership day missing                BLOCK
-ticker coverage below 98%                 BLOCK
-member-day coverage below 95%             BLOCK
-data tampered + SHA updated               HMAC_MISMATCH
-missing signature                         BLOCK
-wrong key                                 HMAC_MISMATCH
-rollback/duplicate version                BLOCK
-schema/source/scope mismatch              BLOCK
-US holiday and early close calendar       PASS
+valid synthetic bundle                         PASS
+actual AAPL latest lag vs metadata             BLOCK
+overall metadata claims newer than rows        BLOCK
+membership metadata claims newer than rows     BLOCK
+valid is_member=False record                    PASS
+missing membership row                          BLOCK
+missing independent baseline                    NOT_VERIFIABLE
+non-core missing at 98%                         PASS
+core ticker missing at 98%                      BLOCK
+commit success updates durable state            PASS
+rollback / duplicate version                    BLOCK
+state-write failure                             BLOCK, no state
+P9 start/end boundaries                         PASS/BLOCK
+trial claimed as P9 full history                BLOCK
+bad OHLCV / naive timestamp                     BLOCK
+US holiday and early close calendar             PASS
 ```
 
 All fixtures are explicitly `synthetic: true`.
