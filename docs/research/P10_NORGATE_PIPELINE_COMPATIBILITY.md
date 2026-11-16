@@ -4,6 +4,9 @@ Date: 2026-11-16
 Branch: `research/p10-data-provider-evaluation`
 Status: **INVESTIGATION + SYNTHETIC TEST ONLY — NO TRIAL, NO PURCHASE**
 
+See the stronger private-isolation and production-gate design in
+docs/research/P10_PRIVATE_DATA_ISOLATION.md.
+
 ---
 
 ## 1. Question
