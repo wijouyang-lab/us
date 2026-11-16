@@ -1,0 +1,24 @@
+{
+  "snapshot_member_days": 1095490,
+  "snapshot_valid": 986358,
+  "daily_member_days": 2220522,
+  "daily_valid": 2113080,
+  "snapshot_union": 1062,
+  "daily_union": 887,
+  "p8_table_rows": 1062,
+  "p8_valid_tickers": 918,
+  "input_hashes_verified": true,
+  "matches_expected": {
+    "snapshot_member_days": true,
+    "snapshot_valid": true,
+    "daily_member_days": true,
+    "daily_valid": true,
+    "snapshot_union": true,
+    "daily_union": true,
+    "p8_table_rows": true,
+    "p8_valid_tickers": true
+  },
+  "all_expected_matched": true,
+  "ci_replay": false,
+  "note": "Raw inputs are local-only; CI_REPLAY_NOT_EXECUTED."
+}

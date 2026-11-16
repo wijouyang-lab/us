@@ -32,7 +32,7 @@ expected pool was found.
 Current reproducible pools:
 
 ```text
-2000-2024 snapshot union: 1,096
+2000-2024 snapshot union (deduplicated): 1,062
 2007-2024 snapshot union:   921
 2007-2024 daily union:      887
 P8.2 table rows:           1,062
@@ -98,6 +98,18 @@ Exact daily reconstruction:
 
 The denominator difference is not a data improvement; it is a date-grid
 definition difference.
+
+### Independent local replay
+
+	ools/research/p10/replay_p9_baseline.py verifies input SHA-256 and recomputes
+the same numbers. Local result is in p10_5_3_replay_result.json.
+
+`	ext
+CI_REPLAY_NOT_EXECUTED
+`
+
+The raw files are not in the public repository; CI cannot independently read
+them. Hash registration is not a CI replay.
 
 ---
 

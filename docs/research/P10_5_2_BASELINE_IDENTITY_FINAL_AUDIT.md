@@ -62,7 +62,7 @@ trading days, not by a superior data source.
 ### Ticker pool
 
 ```text
-2000-2024 snapshot union: 1,096
+2000-2024 snapshot union (deduplicated): 1,062
 2007-2024 snapshot union:   921
 2007-2024 daily union:      887
 ```
@@ -76,12 +76,13 @@ valid price. It is not a valid-ticker coverage numerator.
 P9_TICKER_POOL: 1,160 / NOT_REPRODUCIBLE
 P8_TABLE_ROWS: 1,062
 P8_VALID_TICKER_ROWS: 918
-CURRENT_SNAPSHOT_UNION: 1,096
+CURRENT_SNAPSHOT_UNION: 1,062
 CURRENT_DAILY_UNION: 887
 ```
 
-Do not replace `1,160` with `1,096` and call it the original baseline. The
-difference must be recorded as a version/provenance gap.
+Do not replace `1,160` with `1,062` (or the un-deduplicated `1,096`) and call it
+the original baseline. The difference must be recorded as a version/provenance
+gap.
 
 ---
 
