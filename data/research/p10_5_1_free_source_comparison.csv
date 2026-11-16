@@ -1,0 +1,4 @@
+source,local_file,sha256,bytes,license,price_tickers,member_days,member_day_coverage,ticker_coverage,claim
+FINSABER-reproduce,finsaber_prices_raw.csv,f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f,265180873,Apache-2.0 (dataset card),983,2113080,0.9516,0.9098,BASELINE_EXACT_MATCH
+FINSABER-V2-Data,price_daily/year=*/part-000.parquet (2007-2024),NOT_APPLICABLE (18 files),NOT_COMMITTED,other (dataset card; NOT Apache-2.0),982,2102384,0.9468,0.9109,FREE_SUPPLEMENT
+UNION_LOCAL_V2,local + V2 canonical symbols,N/A,N/A,mixed/unknown for V2; do not redistribute,1023,2124882,0.9569,0.9369,FREE_UNION_NOT_LICENSE_CLEARED

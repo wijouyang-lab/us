@@ -1,0 +1,81 @@
+ticker,expected_member_days,local_observed_member_days,local_price_rows,has_local_price,v2_observed_member_days,local_first_price_date,local_last_price_date,v2_cik_count,v2_ciks,identity_status,category,confidence,evidence,v2_cik_name,sec_name_match
+ABI,377,0,671,True,0,2009-05-11,2014-05-06,1,77551.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,APPLIED BIOSYSTEMS INC.,NOT_CHECKED
+ABKFQ,261,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+ADCT,23,0,1165,True,0,2020-05-15,2024-12-31,1,1771910.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,ADC Therapeutics SA,NOT_CHECKED
+ADT,899,0,1749,True,0,2018-01-19,2024-12-31,1,1703056.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,ADT Inc.,NOT_CHECKED
+ALTR,2161,0,1802,True,0,2017-11-01,2024-12-31,1,1701732.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Altair Engineering Inc.,NOT_CHECKED
+AMTM,59,0,0,False,59,,,1,2011286.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Amentum Holdings, Inc.",NOT_CHECKED
+ANRZQ,337,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+APO,6,0,0,False,6,,,1,1858681.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Apollo Global Management, Inc.",NOT_CHECKED
+AT,121,0,2722,True,0,2010-07-23,2021-05-14,1,5907.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,AT&T CORP,NOT_CHECKED
+AV,105,0,1808,True,0,2009-10-20,2016-12-22,1,1116521.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,AVAYA INC,NOT_CHECKED
+BEAM,1743,0,1234,True,0,2020-02-06,2024-12-31,1,1745999.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Beam Therapeutics Inc.,NOT_CHECKED
+BF.B,4429,0,0,False,4429,,,1,14693.0,UNRESOLVED,C_SHARE_CLASS_MAPPING,LOW,ticker/date join only; no legal-entity/CIK confirmation,BROWN FORMAN CORP,NOT_CHECKED
+BRK.B,3745,0,0,False,3745,,,1,1067983.0,UNRESOLVED,C_SHARE_CLASS_MAPPING,LOW,ticker/date join only; no legal-entity/CIK confirmation,BERKSHIRE HATHAWAY INC,NOT_CHECKED
+BUD,373,0,3900,True,0,2009-07-01,2024-12-31,1,1668717.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Anheuser-Busch InBev SA/NV,NOT_CHECKED
+CA,2882,0,263,True,0,2023-12-14,2024-12-31,1,356028.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"CA, INC.",NOT_CHECKED
+CBH,210,0,1806,True,0,2017-06-28,2024-08-30,1,1701809.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Virtus Convertible & Income 2024 Target Term Fund,NOT_CHECKED
+CCEP,102,0,0,False,102,,,1,1650107.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,COCA-COLA EUROPACIFIC PARTNERS plc,NOT_CHECKED
+CDAY,595,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+CHK,2720,0,916,True,0,2021-02-10,2024-10-01,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+CMCSK,59,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+CPAY,195,0,0,False,195,,,1,1175454.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"CORPAY, INC.",NOT_CHECKED
+CRWD,133,0,0,False,133,,,1,1535527.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"CrowdStrike Holdings, Inc.",NOT_CHECKED
+DAY,231,0,0,False,231,,,1,1725057.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Dayforce, Inc.",NOT_CHECKED
+DECK,200,0,0,False,200,,,1,910521.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,DECKERS OUTDOOR CORP,NOT_CHECKED
+DNB,2099,0,1133,True,0,2020-07-01,2024-12-31,1,1799208.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Dun & Bradstreet Holdings, Inc.",NOT_CHECKED
+DO,1914,0,611,True,0,2022-03-30,2024-09-04,1,949039.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"DIAMOND OFFSHORE DRILLING, INC.",NOT_CHECKED
+DOC,210,0,0,False,210,,,1,765880.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"HEALTHPEAK PROPERTIES, INC.",NOT_CHECKED
+DTV,2054,0,747,True,0,2016-10-11,2019-09-30,1,1465112.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,DIRECTV,NOT_CHECKED
+DYN,647,0,1079,True,0,2020-09-17,2024-12-31,1,1818794.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Dyne Therapeutics, Inc.",NOT_CHECKED
+EMC,2336,0,411,True,0,2023-05-15,2024-12-31,1,790070.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,EMC CORP,NOT_CHECKED
+EQ,527,0,1564,True,0,2018-10-12,2024-12-31,1,1746466.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Equillium, Inc.",NOT_CHECKED
+ERIE,70,0,0,False,70,,,1,922621.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,ERIE INDEMNITY CO,NOT_CHECKED
+FCPT,5,0,0,False,5,,,1,1650132.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Four Corners Property Trust, Inc.",NOT_CHECKED
+FDC,82,0,952,True,0,2015-10-14,2019-07-26,1,883980.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,FIRST DATA CORP,NOT_CHECKED
+GDDY,133,0,0,False,133,,,1,1609711.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,GoDaddy Inc.,NOT_CHECKED
+GEV,190,0,0,False,190,,,1,1996810.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,GE Vernova Inc.,NOT_CHECKED
+HCP,2922,0,769,True,0,2021-12-09,2024-12-31,1,1720671.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"HashiCorp, Inc.",NOT_CHECKED
+HCR,115,0,2055,True,0,2012-08-16,2020-10-15,1,878736.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,MANOR CARE INC,NOT_CHECKED
+HSH,1283,0,1258,True,0,2012-06-29,2020-07-21,1,23666.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Hillshire Brands Co,NOT_CHECKED
+INFO,1195,0,57,True,0,2024-10-10,2024-12-31,1,1598014.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,IHS Markit Ltd.,NOT_CHECKED
+KG,898,0,2443,True,662,2012-06-18,2022-03-02,1,2055116.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Kestrel Group Ltd,NOT_CHECKED
+KKR,133,0,0,False,133,,,1,1404912.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,KKR & Co. Inc.,NOT_CHECKED
+LB,3570,0,129,True,0,2024-06-28,2024-12-31,1,1995807.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,LandBridge Corp,NOT_CHECKED
+LEHMQ,329,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+LIFE,1299,0,2288,True,0,2015-05-07,2024-06-07,1,1339970.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,aTYR PHARMA INC,NOT_CHECKED
+LII,6,0,0,False,6,,,1,1069202.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,LENNOX INTERNATIONAL INC,NOT_CHECKED
+LLL,3043,0,249,True,0,2021-10-13,2022-10-07,1,1546383.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,JX Luxventure Group Inc.,NOT_CHECKED
+MEDI,2,0,532,True,0,2022-11-17,2024-12-31,1,873591.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,MEDIMMUNE INC /DE,NOT_CHECKED
+MI,1034,0,2138,True,0,2015-11-25,2024-12-31,1,1958713.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,NFT Ltd,NOT_CHECKED
+MMI,348,0,2810,True,0,2013-10-31,2024-12-31,1,1578732.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Marcus & Millichap, Inc.",NOT_CHECKED
+MNK,739,0,726,True,0,2020-10-08,2023-08-28,1,1567892.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Keenova Therapeutics plc,NOT_CHECKED
+MTLQQ,507,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+NE,1593,0,897,True,0,2021-06-09,2024-12-31,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+NSM,1091,0,1609,True,0,2012-03-08,2018-07-30,1,70530.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,NATIONAL SEMICONDUCTOR CORP,NOT_CHECKED
+PEAK,1087,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+PGN,1284,0,358,True,0,2014-07-21,2015-12-17,1,1094093.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,PROGRESS ENERGY INC,NOT_CHECKED
+PLL,2079,0,1730,True,0,2017-11-07,2024-12-31,1,1728205.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Piedmont Lithium Inc.,NOT_CHECKED
+PLTR,70,0,0,False,70,,,1,1321655.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Palantir Technologies Inc.,NOT_CHECKED
+RE,1523,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+RSHCQ,1032,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+S,1538,0,882,True,0,2021-06-30,2024-12-31,1,1583708.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"SentinelOne, Inc.",NOT_CHECKED
+SAF,333,0,756,True,0,2018-08-29,2021-08-30,1,86104.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,SAFECO CORP,NOT_CHECKED
+SE,2454,0,1810,True,0,2017-10-20,2024-12-31,1,1703399.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Sea Ltd,NOT_CHECKED
+SGP,615,0,1986,True,0,2009-11-20,2019-06-07,1,310158.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Merck & Co., Inc.",NOT_CHECKED
+SHLD,1329,0,328,True,0,2023-09-13,2024-12-31,1,1310067.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,SEARS HOLDINGS CORP,NOT_CHECKED
+SMCI,200,0,0,False,200,,,1,1375365.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Super Micro Computer, Inc.",NOT_CHECKED
+SNDK,2255,0,0,False,0,,,0,,UNRESOLVED,UNRESOLVED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UNKNOWN,NOT_CHECKED
+SOLV,191,0,0,False,191,,,1,1964738.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Solventum Corp,NOT_CHECKED
+STI,3155,0,671,True,0,2022-05-02,2024-12-31,1,1881551.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Solidion Technology Inc.,NOT_CHECKED
+STR,779,0,1728,True,0,2017-09-08,2024-12-31,1,751652.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,DOMINION QUESTAR CORP,NOT_CHECKED
+SUNEQ,1149,0,503,True,0,2016-01-04,2017-12-29,1,945436.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"SUNEDISON, INC.",NOT_CHECKED
+SW,124,0,0,False,124,,,1,2005951.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Smurfit Westrock plc,NOT_CHECKED
+TE,2290,0,1252,True,0,2020-01-10,2024-12-31,1,1992243.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,T1 Energy Inc.,NOT_CHECKED
+TEK,120,0,49,True,0,2024-10-22,2024-12-31,1,96879.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,TEKTRONIX INC,NOT_CHECKED
+TPL,24,0,0,False,24,,,1,1811074.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Texas Pacific Land Corp,NOT_CHECKED
+UST,405,0,3730,True,0,2010-01-22,2024-12-31,1,811669.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,UST INC,NOT_CHECKED
+VST,164,0,0,False,164,,,1,1692819.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Vistra Corp.,NOT_CHECKED
+WB,403,0,2695,True,0,2014-04-17,2024-12-31,1,1595761.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,WEIBO Corp,NOT_CHECKED
+WDAY,6,0,0,False,6,,,1,1327811.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,"Workday, Inc.",NOT_CHECKED
+WYND,2771,0,682,True,0,2018-06-01,2021-02-16,1,1361658.0,UNRESOLVED,C_OR_A_REVIEW_REQUIRED,LOW,ticker/date join only; no legal-entity/CIK confirmation,Travel & Leisure Co.,NOT_CHECKED
