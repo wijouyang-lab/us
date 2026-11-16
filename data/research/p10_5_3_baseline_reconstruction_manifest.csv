@@ -1,0 +1,10 @@
+artifact,file,sha256,bytes,rows,date_range,version,definition,algorithm,reconstruction_status
+sp500_daily.csv,sp500_daily.csv,646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a,5533628,2720,1996-01-02..2026-08-18,a2430f2af0c79ddf0748e91de11bdeb1616ab5a7,effective-dated S&P 500 membership snapshots,see P10_5_3 report,REPRODUCIBLE_INPUT
+spy.csv,spy.csv,4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62,189975,6311,1999-12-01..2024-12-31,PR512 HEAD 9b07f588,trading-day calendar,see P10_5_3 report,REPRODUCIBLE
+finsaber_prices_raw.csv,finsaber_prices_raw.csv,f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f,265180873,4736109,2000-01-03..2024-12-31,ba3a6907a29027b1f40da3381f3bc834e08e99a6,OHLCV with adjusted_close,see P10_5_3 report,REPRODUCIBLE
+data_audit.json,data_audit.json,f43ac0aa5be52e1327576753f7f9797ec214288cc76cc4ec48f3e98806d33bbf,564,1,2007-05-30..2024-12-31,PR512 HEAD 9b07f588,P9 data audit summary,see P10_5_3 report,REPRODUCIBLE
+pit_coverage_summary.json,pit_coverage_summary.json,0dbb230f70ea5ae8f7ac43e6149e1fb62e405c3a72725ba3ee0e84936d69ae4e,499,1,2000-01-03..2024-12-31,PR512 HEAD 9b07f588,P8.2 coverage summary,see P10_5_3 report,REPRODUCIBLE
+pit_coverage_by_ticker.csv,pit_coverage_by_ticker.csv,3d5ba3e2c5479b10d4abc96a4e6755729f65629190fa887054dd26b96705094e,36617,1062,2000-01-03..2024-12-31,PR512 HEAD 9b07f588,P8.2 per-ticker coverage table,see P10_5_3 report,REPRODUCIBLE
+P9_SNAPSHOT_DENOMINATOR,sp500_daily.csv,646b2e47284abfb675abebacd4a4035ba22a79ea1ccdeccce7fbe5f0e27bab3a,5533628,2198,2000-01-03..2024-12-31,a2430f2...,sum tickers over snapshot rows,drop_duplicates(date); iterate rows; member set split comma,REPRODUCIBLE
+P9_DAILY_DENOMINATOR,sp500_daily.csv + spy.csv,,,4429,2007-05-30..2024-12-31,current files,sum members over SPY trading days,latest snapshot <= each SPY session,REPRODUCIBLE
+P9_TICKER_POOL_1160,UNKNOWN,UNKNOWN,UNKNOWN,1160,UNKNOWN,UNKNOWN,P9 recorded expected tickers,not found,NOT_REPRODUCIBLE
