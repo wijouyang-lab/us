@@ -137,29 +137,85 @@ cannot be assumed to reconstruct every trading day in 2007-2024.
 
 - Personal, non-professional use only.
 - Private research, backtesting and paper trading are allowed.
+- Private VPS/cloud server allowed if access to data and app is restricted to
+  the licensee; public/shared access is not allowed.
 - Raw data may be stored and retained after cancellation.
 - No sharing, public display, redistribution or use for others.
-- Cloud processing is not clearly granted for arbitrary shared infrastructure;
-  record as **UNKNOWN** unless separately confirmed.
+- Publishing source code is allowed only without API keys, raw data, caches or
+  outputs containing the data.
 - Cancellation stops updates; existing downloads remain usable privately.
+
+### Price data is not versioned
+
+EODHD's methodology page states:
+
+- OHLC are raw regular-session prices; `adjusted_close` is split/dividend
+  adjusted.
+- Historical corrections overwrite existing records; no change timestamps.
+- No point-in-time vintage of past downloads is available.
+- `adjusted_close` is recalculated across history after new splits/dividends.
+
+Therefore separate PIT dimensions:
+
+```text
+historical universe membership:       UNKNOWN in Historian
+historical price data:                current version only, not vintage
+historical adjusted price vintage:    NOT AVAILABLE
+corporate actions:                    available, but not as a full event history
+```
+
+Do not describe EODHD as a historical as-known-on-date data source.
 
 ---
 
-## 4. Norgate correction
+## 4. Norgate PIT capability
 
 Official pages:
 
-- https://norgatedata.com/stockmarketpackages.php
+- https://norgatedata.com/data-package-faq.php
+- https://norgatedata.com/data-content-tables.php
 - https://norgatedata.com/subscribe/eula.php
+- https://norgatedata.com/freetrial.php
 
 Platinum:
 
 ```text
 6 months: $346.50
 12 months: $630
-History: back to 1990
-Delisted: yes
-Historical index constituents: yes
+Price history: essentially complete US listed/delisted coverage from late 1992
+S&P 500 historical constituents: from March 1957
+Historical constituents: daily TRUE/FALSE membership
+Historical constituents access: Platinum or above
+```
+
+Vendor-documented details:
+
+- US listed and delisted coverage is considered essentially complete from late
+  1992; earlier coverage is progressively less complete.
+- Historical index constituents are daily TRUE/FALSE observations, not month-end
+  snapshots.
+- The membership series shows the exact effective trading day; an addition
+  effective before the open shows 1 on that date; a removal effective before the
+  open shows 0 on that date.
+- Announcement dates are not provided.
+- Historical index constituent access is only at Platinum or Diamond.
+- Norgate provides a stable `assetid`, but **does not provide prior tickers or
+  prior company names**; price history is moved onto the current symbol.
+- Corporate-action details are not provided as event records; they are embedded
+  in adjusted price series.
+
+### Critical trial limitation
+
+The official three-week trial gives **Platinum-level access**, including delisted
+securities and historical index constituents, but is deliberately limited to
+**two years of historical data**. It cannot validate 2007-2024 or the 2007 start.
+
+Therefore:
+
+```text
+NORGATE_PIT_CLAIM: VENDOR_DOCUMENTED / SAMPLE_NOT_VERIFIED
+NORGATE_TRIAL_CAN_VALIDATE_2007_2024: NO
+NORGATE_TRIAL_CAN_VALIDATE_2Y_SAMPLE: YES, if account/trial is manually started
 ```
 
 License/EULA:
@@ -180,7 +236,7 @@ License/EULA:
 | B. Sharadar Prices 10Y | **$19** | **NO** (trailing 10 years) | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
 | C. Sharadar Prices Full | **$39** | Prices back to 1997-12; **needs extract** | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
 | D. Sharadar Bundle Full | **$69** | Prices + fundamentals; **needs extract** | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
-| E. Norgate Platinum | **$630/yr ≈ $52.50** | Back to 1990; **needs extract** | YES | YES (claim) | YES (personal) | NO (delete) |
+| E. Norgate Platinum | **$630/yr ≈ $52.50** | Prices 1992-late; S&P 500 constituents 1957-03; **needs extract** | YES | YES (daily TRUE/FALSE claim) | YES (personal) | NO (delete; trial only 2 years) |
 
 A plus the Historical Constituents add-on is **≈$49.98/month**, still without a
 verified daily 2007 PIT series.
@@ -196,6 +252,8 @@ verified daily 2007 PIT series.
 - **Personal DSH cloud research:** EODHD permits private research; Norgate permits
   personal processing environments; Sharadar's cloud position is UNKNOWN.
 - **Retain raw data after cancellation:** EODHD YES; Sharadar NO; Norgate NO.
+- **Norgate trial:** three weeks, Platinum level, but only **two years** of
+  history; it cannot validate the 2007 start or 2007-2024.
 - **95% member-day / 98% ticker:** **not verified for any option.** No PASS.
 
 ---
@@ -282,8 +340,8 @@ remain `NOT_RUN`; no paid endpoint was used to fake a result.
 rows. Current status:
 
 ```text
-PARTIAL: 4   (AAPL/MSFT/TSLA EODHD; AAPL Sharadar)
-NOT_RUN: 86
+PARTIAL: 3   (AAPL/MSFT/TSLA EODHD)
+NOT_RUN: 87
 PASS:     0
 ```
 
@@ -291,7 +349,60 @@ No unverified metric is marked PASS.
 
 ---
 
-## 8. License comparison
+## 8. Norgate trial acceptance plan
+
+Do not auto-register. A human must start the official three-week trial.
+
+### What the trial can test
+
+The trial is Platinum-level but limited to two years. It can test:
+
+- AAPL, MSFT, NVDA, BRK.B;
+- delisted names LEHMQ, ENRNQ, WCOMQ, BSC;
+- rename/split/M&A samples;
+- API/updater mechanics;
+- daily TRUE/FALSE S&P 500 membership for the **two-year window**;
+- effective dates within that window;
+- `assetid` continuity;
+- repeated download and rebuild consistency.
+
+It **cannot** test 2007-05-30 to 2024-12-31 or the full 95%/98% gates.
+
+### Required checks
+
+```text
+TRIAL_SCOPE: 2 years only
+TRIAL_STARTED: NO
+TRIAL_DATA_DOWNLOADED: NO
+```
+
+1. Price first/last date for each sample.
+2. Delisted history presence and final trading date.
+3. Daily TRUE/FALSE membership for each sample/date.
+4. Effective-date check around additions/removals.
+5. Current-symbol/assetid mapping; prior ticker strings are unavailable.
+6. Member-day coverage and ticker coverage, two-year version only.
+7. Repeat download and rebuild determinism.
+8. Record SHA256 of derived extracts; do not commit raw data.
+
+### Post-trial (requires paid subscription)
+
+Only after purchase can the 2007-2024 window be measured. Then apply the original
+unaltered gates:
+
+```text
+member-day >= 95%
+ticker >= 98%
+```
+
+If the trial output is treated as full-history evidence, the test is invalid.
+
+**Recommendation:** the trial is worth starting only to verify API/mechanics and
+two-year delisted/PIT behavior. It cannot by itself approve Norgate for P9.1.
+
+---
+
+## 9. License comparison
 
 | Provider | Personal research | Cloud processing | Redistribution | Retain raw after cancel |
 |---|---|---|---|---|
@@ -305,7 +416,7 @@ No provider permits publishing the raw dataset in this public repository.
 
 ---
 
-## 9. Public exposure audit
+## 10. Public exposure audit
 
 Checked:
 
@@ -334,7 +445,7 @@ If that isolation cannot be guaranteed, a commercial licence is a prerequisite.
 
 ---
 
-## 10. Decision
+## 11. Decision
 
 ```text
 P10_PROVIDER_EVALUATION: COMPLETE
@@ -344,6 +455,9 @@ P10_RECOMMENDED_BUNDLE_TRIAL: Sharadar Bundle Full History ($69/mo)
 P10_CHEAPEST_UNVERIFIED_OPTION: EODHD Historian ($19.99/mo)
 P10_EODHD_WITH_CONSTITUENTS: ≈ $49.98/mo
 SHARADAR_PUBLIC_EVALUATION: WRITTEN_APPROVAL_REQUIRED
+NORGATE_PIT_CLAIM: VENDOR_DOCUMENTED / SAMPLE_NOT_VERIFIED
+NORGATE_TRIAL_CAN_VALIDATE_2007_2024: NO
+NORGATE_TRIAL_WORTH_STARTING: LIMITED (2-year mechanics only)
 P10_BUDGET_COMPATIBLE_WITH_VERIFIED_PIT: NO
 P9_DATA_REPRODUCIBILITY: BLOCKED
 P9_RESULTS: unchanged; all 8 NO-GO
@@ -353,24 +467,28 @@ No purchase, payment details, subscription, or vendor connection was made.
 
 ### Next manual approval
 
-Approve a time-boxed **Sharadar Prices Full History $39/month** trial first, and
-only if fundamentals are required, compare against Bundle Full History $69/month.
-The acceptance test must be:
+1. **Norgate three-week trial:** worth starting only for two-year API,
+   delisted-ticker, daily membership, effective-date and repeatability checks.
+   It cannot approve the 2007-2024 P9.1 interval.
+2. **Sharadar:** do not publish further evaluation until written approval; if
+   approved, trial **Prices Full History $39/month** first. Use Bundle Full
+   History $69/month only if fundamentals are required.
+3. **EODHD:** $19.99/month is the cheapest private-use option with retention, but
+   it lacks a validated 2007-2024 daily PIT series.
 
-1. download 30 sample tickers;
-2. confirm delisted and renamed names;
-3. compute member-day coverage ≥95%;
-4. compute ticker coverage ≥98%;
-5. inspect `sp500` earliest date and PIT behavior;
-6. confirm license permits the intended private DSH cloud workflow;
-7. do not commit raw vendor data.
+All post-trial coverage tests must use the original unaltered gates:
 
-EODHD Historian can be tried separately at $19.99/month if the S&P 500 PIT table
-is not required; that limitation must be accepted explicitly.
+```text
+member-day >= 95%
+ticker >= 98%
+interval 2007-05-30 .. 2024-12-31
+```
+
+Do not commit raw vendor data; use the private pipeline described above.
 
 ---
 
-## 11. Official sources
+## 12. Official sources
 
 - Sharadar subscribe/prices: https://sharadar.com/subscribe
 - Sharadar prices: https://sharadar.com/prices

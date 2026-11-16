@@ -98,3 +98,28 @@ def test_no_sharadar_evaluation_detail_in_public_json():
     d = json.loads((DATA / "p10_free_sample_results.json").read_text(encoding="utf-8"))
     assert "sharadar_sample_AAPL" not in d
     assert d["policy"]["sharadar_public_evaluation"] == "WRITTEN_APPROVAL_REQUIRED"
+
+
+def test_no_sharadar_sample_evaluation_in_public_matrix():
+    rows = list(csv.DictReader((DATA / "p10_sample_validation.csv").open(encoding="utf-8")))
+    bad = [r for r in rows if r["provider"] == "Sharadar" and r["status"] in {"PASS", "PARTIAL"}]
+    assert not bad
+    assert all(not r["evidence_url"] for r in rows if r["provider"] == "Sharadar")
+
+
+def test_norgate_trial_limit_and_pit_evidence_are_explicit():
+    rows = list(csv.DictReader((DATA / "p10_provider_comparison.csv").open(encoding="utf-8")))
+    r = next(x for x in rows if x["provider"] == "Norgate Data" and x["product"] == "Platinum")
+    assert "2-year" in r["trial"]
+    assert "ASSETID only" in r["symbol_history"]
+    assert r["coverage_verified"] == "VENDOR_DOCUMENTED"
+    doc = (ROOT / "docs/research/P10_DATA_PROVIDER_EVALUATION.md").read_text(encoding="utf-8")
+    assert "NORGATE_PIT_CLAIM: VENDOR_DOCUMENTED / SAMPLE_NOT_VERIFIED" in doc
+    assert "two years" in doc.lower()
+
+
+def test_historical_price_and_pit_dimensions_are_separate():
+    doc = (ROOT / "docs/research/P10_DATA_PROVIDER_EVALUATION.md").read_text(encoding="utf-8")
+    for phrase in ("historical universe membership", "historical price data", "historical adjusted price vintage", "corporate actions"):
+        assert phrase in doc
+    assert "not versioned" in doc.lower()
