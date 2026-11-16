@@ -72,4 +72,29 @@ def test_free_sample_results_are_real_and_reproducible():
         assert x["first"] <= "1990-01-03" if t != "TSLA" else x["first"] == "2010-06-29"
         assert x["repeat_sha256_match"] is True
     assert d["eodhd_demo_AAPL"]["splits_rows"] >= 4
-    assert d["sharadar_sample_AAPL"]["rows"] > 1000
+    assert d["policy"]["sharadar_public_evaluation"] == "WRITTEN_APPROVAL_REQUIRED"
+    assert "sharadar_sample_AAPL" not in d
+
+
+def test_eodhd_constituents_addon_price_and_snapshot_limit():
+    rows = list(csv.DictReader((DATA / "p10_provider_comparison.csv").open(encoding="utf-8")))
+    r = next(x for x in rows if x["provider"] == "EODHD" and "Constituents" in x["product"])
+    assert r["price_monthly_usd"] == "29.99"
+    assert "2022-11-22" in r["history_start"]
+    assert "1957" in r["history_start"]
+
+
+def test_public_evaluation_and_thresholds_are_not_relaxed():
+    rows = list(csv.DictReader((DATA / "p10_provider_comparison.csv").open(encoding="utf-8")))
+    assert not [r for r in rows if r["coverage_verified"] == "YES"]
+    doc = (ROOT / "docs/research/P10_DATA_PROVIDER_EVALUATION.md").read_text(encoding="utf-8")
+    assert "WRITTEN_APPROVAL_REQUIRED" in doc
+    assert "95%" in doc and "98%" in doc
+    assert "2007-05-30" in doc and "2024-12-31" in doc
+
+
+def test_no_sharadar_evaluation_detail_in_public_json():
+    import json
+    d = json.loads((DATA / "p10_free_sample_results.json").read_text(encoding="utf-8"))
+    assert "sharadar_sample_AAPL" not in d
+    assert d["policy"]["sharadar_public_evaluation"] == "WRITTEN_APPROVAL_REQUIRED"

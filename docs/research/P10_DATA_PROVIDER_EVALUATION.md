@@ -1,4 +1,4 @@
-# P10.1: US Historical Data Provider Evaluation (Corrected)
+# P10.2: US Historical Data Provider Evaluation (License and PIT Audit)
 
 Date: 2026-11-16
 Branch: `research/p10-data-provider-evaluation`
@@ -22,6 +22,10 @@ Key corrections:
   historical constituents remain **UNKNOWN**.
 - Norgate Platinum is **$346.50/6 months or $630/year**, with deletion obligations
   on expiry.
+- EODHD Historical Constituents is a **$29.99/month add-on**; with Historian the
+  total is **≈$49.98/month**. Daily snapshots start only in 2022-11-22; older
+  change history is not a daily 2007 PIT series.
+- Sharadar public evaluation is paused: **WRITTEN_APPROVAL_REQUIRED**.
 - No provider has passed the 95% member-day / 98% ticker gates.
 
 ---
@@ -61,6 +65,25 @@ table.
 
 The table name is **not** evidence of PIT coverage.
 
+### Public evaluation restriction
+
+Sharadar's Personal Use License section 8 restricts publishing evaluations of the
+service/data without prior written approval. The earlier P10 files already contain
+public Sharadar sample-evaluation statements; those are not expanded here.
+
+```text
+SHARADAR_PUBLIC_EVALUATION: WRITTEN_APPROVAL_REQUIRED
+SHARADAR_TEST_KEY_PIT_STATUS: NOT_RUN / NOT_SUFFICIENT
+```
+
+A free test-key probe was executed locally. Its row-level results are not
+published in this repository. It did not establish a 2007-2024 daily PIT history;
+no claim is made that the `sp500` table covers that interval until a licensed
+extract is measured.
+
+Pause further public Sharadar evaluation until written permission is obtained.
+Do not commit Sharadar raw data.
+
 ---
 
 ## 3. EODHD correction
@@ -91,6 +114,24 @@ Official plan description includes:
 - S&P 500 historical constituents are **UNKNOWN** in this plan.
 - Per-ticker history completeness is not guaranteed by the plan.
 - A listed maximum history depth does not guarantee every ticker/date.
+
+### Historical Constituents add-on
+
+```text
+$29.99/month add-on
+Historian + add-on ≈ $49.98/month
+```
+
+Official add-on page notes:
+
+- S&P 500 change history is listed from 1957.
+- Daily component snapshots are available only since 2022-11-22.
+- Broad S&P index change histories are generally since 2012.
+- The page's current offer displays EUR 29.99; the budget record uses the
+  requested USD 29.99 and does not claim an FX conversion.
+
+Therefore the change-event history is not the same as daily PIT snapshots. It
+cannot be assumed to reconstruct every trading day in 2007-2024.
 
 ### License
 
@@ -141,12 +182,16 @@ License/EULA:
 | D. Sharadar Bundle Full | **$69** | Prices + fundamentals; **needs extract** | YES | Table present, **UNVERIFIED** | **UNKNOWN** | NO (delete) |
 | E. Norgate Platinum | **$630/yr ≈ $52.50** | Back to 1990; **needs extract** | YES | YES (claim) | YES (personal) | NO (delete) |
 
+A plus the Historical Constituents add-on is **≈$49.98/month**, still without a
+verified daily 2007 PIT series.
+
 ### Direct answers
 
 - **Long enough price history:** C, D, E can cover 2007. B cannot. A likely can but
   per-ticker completeness is not guaranteed.
 - **S&P 500 historical constituents:** D and E claim it; C has the table but
-  earliest date/completeness is UNKNOWN; A is UNKNOWN; B is UNKNOWN.
+  earliest date/completeness is UNKNOWN; A alone is UNKNOWN, and A+add-on has
+  daily snapshots only since 2022-11-22 plus older change events; B is UNKNOWN.
 - **Delisted stocks:** A, C, D, E claim support. Not yet sample-verified.
 - **Personal DSH cloud research:** EODHD permits private research; Norgate permits
   personal processing environments; Sharadar's cloud position is UNKNOWN.
@@ -215,11 +260,21 @@ survivorship, S&P 500 PIT membership, or the 98% ticker gate.
 
 ### Sharadar official test key
 
+Public evaluation is paused under Sharadar license §8.
+
 ```text
-AAPL: 1,254 rows, 2021-11-16 .. 2026-11-13
+SHARADAR_PUBLIC_EVALUATION: WRITTEN_APPROVAL_REQUIRED
+SHARADAR_TEST_KEY_PIT_STATUS: NOT_RUN / NOT_SUFFICIENT
 ```
 
-The free key returns a recent sample only, not the full-history product.
+A local test-key probe was attempted. Row-level dates/counts are not published.
+The free key does not establish the 2007-2024 licensed `sp500` history, so it is
+not marked PASS.
+
+### EODHD delisted demo probes
+
+The demo key returned HTTP 403 for TWTR, LEHMQ, ENRNQ, WCOMQ and BSC. These
+remain `NOT_RUN`; no paid endpoint was used to fake a result.
 
 ### Sample matrix
 
@@ -250,7 +305,36 @@ No provider permits publishing the raw dataset in this public repository.
 
 ---
 
-## 9. Decision
+## 9. Public exposure audit
+
+Checked:
+
+- **GitHub Pages** — source is `main`, not this research branch. No vendor data
+  is in the public build.
+- **Public Dashboard** — no vendor price/PIT files; P10 files are under
+  `data/research`, not served by the dashboard.
+- **GitHub Actions artifacts** — P10 adds no artifact. Existing P7/Terminal
+  artifacts contain no vendor data.
+- **Public CSV/JSON** — only provider metadata, sample status and aggregate
+  hashes/counts; no raw vendor OHLCV, PIT membership or fundamentals.
+- **Auto-committed scans** — no P10 data is wired into production scanners.
+
+Risk if a subscription data file is later placed in `data/research` and committed:
+it would be public. That is prohibited by Sharadar/EODHD/Norgate personal terms.
+
+Required private pipeline if procured:
+
+```text
+private DB/object store (not Pages, not public repo, not public artifact)
+  -> private analysis environment
+  -> only derived, non-reconstructable aggregate outputs may be published
+```
+
+If that isolation cannot be guaranteed, a commercial licence is a prerequisite.
+
+---
+
+## 10. Decision
 
 ```text
 P10_PROVIDER_EVALUATION: COMPLETE
@@ -258,6 +342,8 @@ P10_PURCHASE_DECISION: NONE
 P10_RECOMMENDED_PRICE_ONLY_TRIAL: Sharadar Prices Full History ($39/mo)
 P10_RECOMMENDED_BUNDLE_TRIAL: Sharadar Bundle Full History ($69/mo)
 P10_CHEAPEST_UNVERIFIED_OPTION: EODHD Historian ($19.99/mo)
+P10_EODHD_WITH_CONSTITUENTS: ≈ $49.98/mo
+SHARADAR_PUBLIC_EVALUATION: WRITTEN_APPROVAL_REQUIRED
 P10_BUDGET_COMPATIBLE_WITH_VERIFIED_PIT: NO
 P9_DATA_REPRODUCIBILITY: BLOCKED
 P9_RESULTS: unchanged; all 8 NO-GO
@@ -284,7 +370,7 @@ is not required; that limitation must be accepted explicitly.
 
 ---
 
-## 10. Official sources
+## 11. Official sources
 
 - Sharadar subscribe/prices: https://sharadar.com/subscribe
 - Sharadar prices: https://sharadar.com/prices
@@ -292,8 +378,11 @@ is not required; that limitation must be accepted explicitly.
 - Sharadar license: https://sharadar.com/terms
 - EODHD pricing: https://eodhd.com/pricing/
 - EODHD plans: https://eodhd.com/help/plans
+- EODHD methodology: https://eodhd.com/help/methodology
+- EODHD AI/cloud tools: https://eodhd.com/help/ai-tools
 - EODHD personal use: https://eodhd.com/help/personal-use
 - EODHD storage/cancellation: https://eodhd.com/help/storage
+- EODHD S&P Global add-on: https://eodhd.com/lp/spglobal
 - Norgate packages: https://norgatedata.com/stockmarketpackages.php
 - Norgate EULA: https://norgatedata.com/subscribe/eula.php
 - SEC EDGAR API: https://www.sec.gov/edgar/sec-api-documentation

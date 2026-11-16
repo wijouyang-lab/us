@@ -38,12 +38,8 @@
     "splits_first": "2020-08-31",
     "splits_last": "2022-08-25"
   },
-  "sharadar_sample_AAPL": {
-    "url": "https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL",
-    "status": 200,
-    "rows": 1254,
-    "first": "2021-11-16",
-    "last": "2026-11-13",
-    "sha256": "464668fdaa797fb034bc6e338deadbe09fd9f798ad6c86c14479cde19fc7e5a8"
+  "policy": {
+    "sharadar_public_evaluation": "WRITTEN_APPROVAL_REQUIRED",
+    "sharadar_details": "withheld"
   }
 }

@@ -1,5 +1,5 @@
 sample_id,ticker,company,category,event_period,provider,status,evidence_url,checks,notes
-S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,PARTIAL,https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL,OHLCV;dates,Sharadar test key returned 1254 rows 2021-11-16..2026-11-13; recent sample only.
+S001,AAPL,Apple,large_cap_split,2020-08,Sharadar,PARTIAL,https://api.sharadar.com/v1.0/data/stocks?api_key=test-api-key&format=csv&ticker=AAPL,OHLCV;dates,Evaluation details withheld; Sharadar license section 8 requires written approval before public evaluation.
 S002,AAPL,Apple,large_cap_split,2020-08,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S003,AAPL,Apple,large_cap_split,2020-08,EODHD,PARTIAL,https://eodhd.com/api/eod/AAPL.US?api_token=demo&fmt=json&from=1990-01-01&to=2026-11-10,OHLCV;dates;repeatability;history;actions,EODHD demo returned 9283 rows 1990-01-02..2026-11-10; repeat SHA256 match=True; splits=5.
 S004,MSFT,Microsoft,large_cap,2020-01,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
@@ -52,16 +52,16 @@ S050,CROX,Crocs,small_cap,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;
 S051,CROX,Crocs,small_cap,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S052,LEHMQ,Lehman Brothers,delisted,2008-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S053,LEHMQ,Lehman Brothers,delisted,2008-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S054,LEHMQ,Lehman Brothers,delisted,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S054,LEHMQ,Lehman Brothers,delisted,2008-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
 S055,ENRNQ,Enron,delisted,2001-11,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S056,ENRNQ,Enron,delisted,2001-11,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S057,ENRNQ,Enron,delisted,2001-11,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S057,ENRNQ,Enron,delisted,2001-11,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
 S058,WCOMQ,WorldCom,delisted,2002-07,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S059,WCOMQ,WorldCom,delisted,2002-07,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S060,WCOMQ,WorldCom,delisted,2002-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S060,WCOMQ,WorldCom,delisted,2002-07,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
 S061,BSC,Bear Stearns,delisted,2008-03,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S062,BSC,Bear Stearns,delisted,2008-03,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S063,BSC,Bear Stearns,delisted,2008-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S063,BSC,Bear Stearns,delisted,2008-03,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
 S064,EMC,EMC Corp,acquired,2016-09,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S065,EMC,EMC Corp,acquired,2016-09,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S066,EMC,EMC Corp,acquired,2016-09,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
@@ -73,7 +73,7 @@ S071,ATVI,Activision Blizzard,acquired,2023-10,Norgate,NOT_RUN,,OHLCV;dates;deli
 S072,ATVI,Activision Blizzard,acquired,2023-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S073,TWTR,Twitter,acquired,2022-10,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S074,TWTR,Twitter,acquired,2022-10,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
-S075,TWTR,Twitter,acquired,2022-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
+S075,TWTR,Twitter,acquired,2022-10,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,EODHD demo returned HTTP 403; no paid endpoint used; NOT_RUN.
 S076,ANTM,Anthem,rename_ELV,2022-06,Sharadar,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S077,ANTM,Anthem,rename_ELV,2022-06,Norgate,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
 S078,ANTM,Anthem,rename_ELV,2022-06,EODHD,NOT_RUN,,OHLCV;dates;delisted;actions;repeatability;license,No paid subscription; sample/trial not executed.
