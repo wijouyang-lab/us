@@ -1,0 +1,53 @@
+{
+  "provider": "EODHD",
+  "plan": "Historian",
+  "price_usd_per_month": 19.99,
+  "billing": "monthly",
+  "max_subscription_months": 1,
+  "vps_required": false,
+  "scope": "US equities, 2007-05-30..2024-12-31",
+  "tickers_to_download": 887,
+  "ticker_scope_note": "Tickers with at least one expected S&P 500 member-day in the interval.",
+  "calls": {
+    "eod_per_ticker": 1,
+    "splits_per_ticker": 1,
+    "dividends_per_ticker": 1,
+    "delisted_list": 1,
+    "total": 2662,
+    "daily_limit": 100000,
+    "minute_limit": 1000,
+    "estimated_minutes": 5
+  },
+  "files": {
+    "ohlcv_csv": 887,
+    "splits_csv": 887,
+    "dividends_csv": 887,
+    "manifest_json": 1,
+    "total": 2662
+  },
+  "storage": {
+    "raw_price_csv_mb_estimate": "600-1200",
+    "metadata_mb_estimate": "10-50",
+    "backup_copy": "same again",
+    "note": "Estimate only; EODHD response/CSV size not measured."
+  },
+  "time": {
+    "download_days": 1,
+    "download_notes": "3,000+ one-call ticker requests are far below 100,000/day; no VPS required.",
+    "validation_days": "3-10"
+  },
+  "license": {
+    "personal_use": true,
+    "retain_after_cancel": true,
+    "redistribution": false,
+    "public_github": false
+  },
+  "unknowns": [
+    "actual delisted ticker coverage",
+    "actual per-ticker gaps",
+    "historical S&P 500 membership not included",
+    "price vintage not versioned",
+    "symbol rename completeness"
+  ],
+  "claim_status": "PLANNING_ESTIMATE_ONLY"
+}

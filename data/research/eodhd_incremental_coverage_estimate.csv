@@ -1,0 +1,6 @@
+scenario,basis,expected_tickers,actual_tickers,missing_tickers,ticker_coverage,expected_member_days,observed_member_days,member_day_coverage,claim_status,notes
+FREE_INDEPENDENT_AUDIT,"sp500_daily + finsaber raw, 2007-05-30..2024-12-31",887,807,80,0.9098,2220522,2113080,0.9516,MEASURED,"Any positive close; not a P9 valid/tradable verdict. 80 missing (60 removed/delisted, 20 current)."
+P9_PROJECT_RECORD,P9.1 data_audit.json,1160,1062,98,0.9155,1095490,981362,0.8958,PROJECT_RECORD,Recorded P9.1 audit; differs from independent rebuild; definition conflict unresolved.
+EODHD_RECOVER_HALF_GAP,assume 40 of 80 missing tickers recovered,887,847,40,0.9549,2220522,UNKNOWN,UNKNOWN,ESTIMATE_ONLY,No paid EODHD data. Not a coverage promise.
+EODHD_RECOVER_ALL_GAP,upper bound: all 80 missing tickers recovered,887,887,0,1.0,2220522,2220522,1.0,UPPER_BOUND_NOT_VERIFIED,Never verified; EODHD demo 403 for delisted samples. Not a PASS.
+P9_GATE,unchanged acceptance gate,N/A,N/A,N/A,0.98,N/A,N/A,0.95,GATE,Must be met for P9_FULL_HISTORY only; trial scope separate.
