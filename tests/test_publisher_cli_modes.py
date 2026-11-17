@@ -113,3 +113,29 @@ def test_pr_create_failure_retry(tmp_path):
     assert json.loads((repo / "automation/state/tasks.json").read_text())["tasks"]["t"]["status"] == "PUBLISHING"
     assert run_publisher(repo, art, bindir, log, "no-pr").returncode == 0
     assert json.loads((repo / "automation/state/tasks.json").read_text())["tasks"]["t"]["status"] == "REVIEW_PENDING"
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX fresh-clone integration")
+def test_business_push_rejected_then_fresh_clone_retry(tmp_path):
+    repo, art, bindir, log = setup(tmp_path)
+    bare = tmp_path / "remote.git"
+    hook = bare / "hooks/pre-receive"
+    hook.write_text("#!/bin/sh\nn=$(cat .push-count 2>/dev/null || echo 0)\nn=$((n+1))\necho $n > .push-count\nif [ $n -eq 1 ]; then exit 0; fi\nexit 1\n", encoding="utf-8")
+    hook.chmod(0o755)
+    assert run_publisher(repo, art, bindir, log, "no-pr").returncode == 1
+    hook.unlink()
+    remote_head = subprocess.check_output(["git", "rev-parse", "fix/t"], cwd=bare, text=True).strip()
+    fresh = tmp_path / "fresh"
+    subprocess.run(["git", "clone", str(bare), str(fresh)], check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@example.com"], cwd=fresh, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=fresh, check=True)
+    subprocess.run(["git", "switch", "-c", "fix/t", "origin/fix/t"], cwd=fresh, check=True)
+    initial = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=fresh, text=True).strip()
+    assert initial == remote_head
+    r2 = run_publisher(fresh, art, bindir, log, "no-pr")
+    assert r2.returncode == 0, r2.stdout + r2.stderr
+    subjects = subprocess.check_output(["git", "log", "origin/fix/t", "--format=%s"], cwd=fresh, text=True).splitlines()
+    assert len([x for x in subjects if x.startswith("automation: DSH task")]) == 1
+    assert len([x for x in log.read_text().splitlines() if x == "pr create"]) == 1
+    state = json.loads((fresh / "automation/state/tasks.json").read_text())
+    assert state["tasks"]["t"]["status"] == "REVIEW_PENDING"
