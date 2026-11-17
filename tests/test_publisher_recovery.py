@@ -64,3 +64,23 @@ def test_recovery_rejects_unexpected_merge_commit(tmp_path):
     g(r, "merge", "--no-ff", "side", "-m", "automation: persist task state [skip ci]")
     head = g(r, "rev-parse", "HEAD")
     assert recovery_range_ok(r, code, head) is False
+
+
+def test_recovery_rejects_transient_forbidden_file(tmp_path):
+    r = repo(tmp_path)
+    code = commit(r, "docs/research/x.md", "x", "automation: DSH task t artifact abc")
+    commit(r, "docs/research/bad.md", "bad", "add then delete")
+    g(r, "rm", "docs/research/bad.md")
+    g(r, "commit", "-m", "automation: persist task state [skip ci]")
+    head = g(r, "rev-parse", "HEAD")
+    assert recovery_range_ok(r, code, head) is False
+
+
+def test_state_only_rejects_non_state_commit_even_if_net_empty(tmp_path):
+    r = repo(tmp_path)
+    source = g(r, "rev-parse", "HEAD")
+    commit(r, "docs/research/bad.md", "bad", "human add")
+    g(r, "rm", "docs/research/bad.md")
+    g(r, "commit", "-m", "human delete")
+    head = g(r, "rev-parse", "HEAD")
+    assert state_only_ok(r, source, head) is False

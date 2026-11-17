@@ -222,3 +222,11 @@ def test_three_job_isolation_permissions():
     assert "persist-credentials: false" in text
     assert "CODEX_CMD" not in text
     assert "gh pr merge" not in text
+
+
+def test_dry_run_gate_and_no_max_attempts():
+    wf = yaml.safe_load((ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8"))
+    text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert wf["jobs"]["publisher"]["if"] == "inputs.dry_run == false"
+    assert "DRY_RUN_COMPLETE" in text
+    assert "max_attempts" not in text
