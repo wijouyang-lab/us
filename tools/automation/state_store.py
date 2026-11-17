@@ -74,6 +74,20 @@ class TaskStore:
         self.save(data)
         return task
 
+    def resume_protection_blocked(self, task_id: str) -> bool:
+        data = self.load()
+        task = data["tasks"].get(task_id)
+        if not task or task.get("status") != "BLOCKED":
+            return False
+        reason = (task.get("last_review") or {}).get("reason")
+        if reason != "MAIN_PROTECTION_UNVERIFIED":
+            return False
+        task["status"] = "QUEUED"
+        task["updated_at"] = now()
+        task["history"].append({"at": now(), "event": "resume_protection_blocked", "status": "QUEUED"})
+        self.save(data)
+        return True
+
     def recover_stale(self) -> list[str]:
         """Recover RUNNING tasks left by a crashed workflow."""
         data = self.load()

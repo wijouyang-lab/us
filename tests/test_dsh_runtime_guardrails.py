@@ -111,3 +111,56 @@ def test_staged_rename_keeps_both_paths(tmp_path):
     paths = changed_paths(repo)
     assert "docs/research/renamed.md" in paths and "docs/research/in_allowed.md" in paths
     validate_paths(paths)
+
+
+def test_main_protection_api_three_states(monkeypatch, tmp_path):
+    import subprocess
+    import tools.automation.orchestrator as mod
+    from tools.automation.orchestrator import Orchestrator
+    from tools.automation.state_store import TaskStore
+
+    o = Orchestrator(TaskStore(tmp_path / "tasks.json"), object(), repo=tmp_path, dry_run=True, require_protection=True)
+    def fake(cmd, cwd=None, check=True):
+        if cmd[:3] == ["gh", "repo", "view"]:
+            return subprocess.CompletedProcess(cmd, 0, "o/r\n", "")
+        if cmd[:2] == ["gh", "api"]:
+            return subprocess.CompletedProcess(cmd, 0, {"true": "true\n", "false": "false\n"}.get(o._state, ""), "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+    monkeypatch.setattr(mod, "run", fake)
+    o._state = "true"; assert o.main_protected() is True
+    o._state = "false"; assert o.main_protected() is False
+    monkeypatch.setattr(mod, "run", lambda cmd, cwd=None, check=True: subprocess.CompletedProcess(cmd, 1, "", "denied"))
+    assert o.main_protected() is False
+
+
+def test_protection_blocked_task_resumes(tmp_path):
+    from tools.automation.orchestrator import Orchestrator
+    from tools.automation.state_store import TaskStore
+
+    class FakeRunner:
+        def run(self, prompt, log):
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text('{"type":"final","text":"ok"}\n', encoding="utf-8")
+            return {"returncode": 0, "final": "ok", "timed_out": False}
+
+    store = TaskStore(tmp_path / "tasks.json")
+    store.enqueue("t-resume", "p", "fix/t-resume")
+    store.update("t-resume", status="BLOCKED", last_review={"reason": "MAIN_PROTECTION_UNVERIFIED"})
+    o = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=True, require_protection=True)
+    o.main_protected = lambda: True
+    task = o.run_task("t-resume", "p", "fix/t-resume", "main")
+    assert task["status"] == "REVIEW_PENDING"
+    assert task["attempts"] == 1
+    assert any(h["event"] == "resume_protection_blocked" for h in task["history"])
+
+
+def test_non_protection_blocked_does_not_resume(tmp_path):
+    from tools.automation.orchestrator import Orchestrator
+    from tools.automation.state_store import TaskStore
+
+    store = TaskStore(tmp_path / "tasks.json")
+    store.enqueue("t-blocked", "p", "fix/t-blocked")
+    store.update("t-blocked", status="BLOCKED", last_review={"reason": "PR_CREATE_FAILED"})
+    o = Orchestrator(store, object(), repo=tmp_path, dry_run=True, require_protection=False)
+    task = o.run_task("t-blocked", "p", "fix/t-blocked", "main")
+    assert task["status"] == "BLOCKED"
