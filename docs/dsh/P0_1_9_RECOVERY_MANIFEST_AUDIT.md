@@ -1,5 +1,8 @@
 # P0.1.9: Publisher Crash Recovery, Manifest Trust and Idempotency Audit
 
+> Historical audit. Superseded by P0.1.10; the HEAD and CI in this file are not
+> the current deployment HEAD.
+
 Date: 2026-11-17
 Branch: `deploy/dsh-automation-p0`
 HEAD: `d31a6ec12f84a6664d5db4b62544176dec3b3a81`
