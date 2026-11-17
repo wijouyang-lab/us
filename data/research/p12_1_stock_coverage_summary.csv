@@ -1,0 +1,7 @@
+dataset,tickers,rows,start,end,definition,status
+SP500_price_panel,1017,4736109,2000-01-03,2024-12-31,price symbols with OHLCV,READY_RESTRICTED
+SEC_filing_history_sample,144,9426,1995-02-14,2026-11-05,filing dates/forms for 144 tickers,READY_RESTRICTED
+P6_current_fundamentals,5453,5453,current,2026-11-05,"5,453 current rows; 2,529 value candidates",DATA_BLOCKED
+P10_6_SEC_pilot,20,,2017,2026,20 fixed names; 19 usable; partial,DATA_BLOCKED
+FINSABER_V2_news,,2908022,2009,2025,2.9M news rows (dataset card),DATA_BLOCKED
+FINSABER_V2_filings,,71084,2000,2025,"17,707 10-K + 53,377 10-Q (dataset card)",DATA_BLOCKED
