@@ -57,10 +57,9 @@ def test_headless_no_final_event(tmp_path):
     assert out["final"] is None
 
 
-def test_reviewer_unavailable_is_blocked_not_pass():
+def test_no_reviewer_is_not_pass():
     r = run_review("diff", "task", cmd=None)
-    assert r["status"] == "BLOCKED"
-    assert r["reason"] == "REVIEWER_UNAVAILABLE"
+    assert r["status"] != "PASS"
 
 
 def test_workflow_does_not_interpolate_inputs_in_shell():
@@ -69,6 +68,7 @@ def test_workflow_does_not_interpolate_inputs_in_shell():
     assert "--task-id \"${{ inputs.task_id }}\"" not in text
     assert "TASK_PROMPT: ${{ inputs.prompt }}" in text
     assert "TASK_BRANCH: ${{ inputs.branch }}" in text
+    assert "CODEX_CMD" not in text
     assert "git add automation/logs" not in text
     assert "gh pr merge" not in text
     wf = yaml.safe_load(text)
@@ -127,3 +127,34 @@ def test_task_timeout_persisted_not_running(tmp_path):
     task = Orchestrator(store, TimeoutRunner(), repo=tmp_path, dry_run=True, require_protection=False).run_task("t-timeout", "p", "fix/t-timeout", "main")
     assert task["status"] in {"NEEDS_REVISION", "FAIL"}
     assert store.load()["tasks"]["t-timeout"]["status"] != "RUNNING"
+
+
+def test_dsh_pr_flow_ends_review_pending_without_codex(tmp_path, monkeypatch):
+    import tools.automation.orchestrator as mod
+    from tools.automation.orchestrator import Orchestrator
+    from tools.automation.state_store import TaskStore
+
+    class FakeRunner:
+        def run(self, prompt, log):
+            log.parent.mkdir(parents=True, exist_ok=True)
+            log.write_text('{"type":"final","text":"ok"}\n', encoding="utf-8")
+            return {"returncode": 0, "final": "ok", "timed_out": False}
+
+    def fake_run(cmd, cwd=None, check=True):
+        if cmd[:2] == ["git", "rev-parse"]:
+            return subprocess.CompletedProcess(cmd, 0, "fix/t-pending", "")
+        if cmd[:2] == ["git", "diff"]:
+            return subprocess.CompletedProcess(cmd, 0, "diff", "")
+        if cmd[:2] == ["gh", "pr"]:
+            return subprocess.CompletedProcess(cmd, 0, "https://github.com/x/y/pull/1", "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(mod, "run", fake_run)
+    monkeypatch.setattr(mod, "changed_paths", lambda repo: ["docs/research/new.md"])
+    monkeypatch.setattr(mod, "stage_allowed", lambda repo, paths: "diff")
+    monkeypatch.setattr(mod, "commit_diff", lambda repo: "diff")
+    store = TaskStore(tmp_path / "tasks.json")
+    task = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=False, require_protection=False).run_task("t-pending", "p", "fix/t-pending", "main")
+    assert task["status"] == "REVIEW_PENDING"
+    assert task["pr_url"].endswith("/pull/1")
+    assert task["last_review"]["reviewer"] == "chatgpt"

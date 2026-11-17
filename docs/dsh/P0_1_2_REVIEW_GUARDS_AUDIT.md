@@ -1,5 +1,8 @@
 # P0.1.2: Rename Guard and Reviewer Timeout Audit
 
+> Superseded by P0.1.3 single-agent mode: Codex CLI is no longer required; the
+> terminal automation state after a Draft PR is REVIEW_PENDING.
+
 Date: 2026-11-17
 Base: `fix/dsh-p0-1-1-guardrails` @ `16e731aa0bd01d99aa318f87c70e3739b11195da`
 Branch: `fix/dsh-p0-1-2-review-guards`
