@@ -1,5 +1,7 @@
 # P0.1.14: Publisher Retry State Machine and Fault Injection
 
+> Historical audit; superseded by P0.1.15. HEAD/CI here are not current.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `6bd0a5c2843050d54ac1a6e318f7d2046b5ad8f1`
