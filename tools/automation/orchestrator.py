@@ -48,8 +48,10 @@ class Orchestrator:
         slug = run(["gh", "repo", "view", "--json", "nameWithOwner", "-q", ".nameWithOwner"], self.repo, check=False)
         if slug.returncode != 0 or not slug.stdout.strip():
             return False
-        r = run(["gh", "api", f"repos/{slug.stdout.strip()}/branches/main/protection"], self.repo, check=False)
-        return r.returncode == 0
+        r = run(["gh", "api", f"repos/{slug.stdout.strip()}/branches/main", "--jq", ".protected"], self.repo, check=False)
+        if r.returncode != 0 or not r.stdout.strip():
+            return False
+        return r.stdout.strip().lower() == "true"
 
     def _status(self, task_id: str, status: str, **fields) -> dict:
         return self.store.update(task_id, status=status, **fields)
@@ -73,6 +75,13 @@ class Orchestrator:
             return {"status": "BLOCKED", "reason": str(e)}
         self.store.recover_stale()
         task = self.store.enqueue(task_id, prompt, branch)
+        if task["status"] == "BLOCKED":
+            if (task.get("last_review") or {}).get("reason") != "MAIN_PROTECTION_UNVERIFIED":
+                return task
+            if self.require_protection and not self.dry_run and not self.main_protected():
+                return task
+            self.store.resume_protection_blocked(task_id)
+            task = self.store.load()["tasks"][task_id]
         if task["attempts"] >= task["max_attempts"]:
             return self._status(task_id, "FAIL", last_log="MAX_ATTEMPTS")
         if not self.dry_run and self.require_protection and not self.main_protected():

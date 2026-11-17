@@ -158,3 +158,12 @@ def test_dsh_pr_flow_ends_review_pending_without_codex(tmp_path, monkeypatch):
     assert task["status"] == "REVIEW_PENDING"
     assert task["pr_url"].endswith("/pull/1")
     assert task["last_review"]["reviewer"] == "chatgpt"
+
+
+def test_deployment_plan_targets_main_and_dispatch():
+    doc = (ROOT / "docs/dsh/P0_1_4_DEPLOYMENT_BLOCKERS_AUDIT.md").read_text(encoding="utf-8")
+    assert "DEPLOYMENT_PR_BASE: main" in doc
+    assert "workflow_dispatch" in doc
+    wf = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert "workflow_dispatch" in wf
+    assert "gh pr merge" not in wf
