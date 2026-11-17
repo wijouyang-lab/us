@@ -21,3 +21,7 @@ watchlist.dynamic.txt
 watchlist.dynamic.meta.txt
 node_modules/
 tests/artifacts/
+
+# DSH automation logs (artifacts only)
+automation/logs/*.ndjson
+automation/logs/*.log

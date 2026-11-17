@@ -9,7 +9,7 @@ import json
 import shlex
 import subprocess
 
-VALID = {"PASS", "FAIL", "NEEDS_REVISION"}
+VALID = {"PASS", "FAIL", "NEEDS_REVISION", "BLOCKED"}
 
 
 def run_review(diff: str, task: str, author: str = "dsh", reviewer: str = "codex", cmd: str | None = None) -> dict:
@@ -19,7 +19,7 @@ def run_review(diff: str, task: str, author: str = "dsh", reviewer: str = "codex
         return {"status": "NEEDS_REVISION", "reason": "EMPTY_DIFF", "reviewer": reviewer}
     cmd = cmd or __import__("os").environ.get("CODEX_CMD", "")
     if not cmd:
-        return {"status": "NEEDS_REVISION", "reason": "REVIEWER_UNAVAILABLE", "reviewer": reviewer}
+        return {"status": "BLOCKED", "reason": "REVIEWER_UNAVAILABLE", "reviewer": reviewer}
     payload = json.dumps({"task": task, "diff": diff})
     argv = cmd if isinstance(cmd, list) else shlex.split(cmd)
     proc = subprocess.run(argv, input=payload, text=True, capture_output=True, timeout=900)
