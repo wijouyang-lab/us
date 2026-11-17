@@ -2,8 +2,8 @@
 
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
-HEAD: `792f32e6451e09e4f2516f81525ef11c3d29ee92`
-Base main: `b558f88337f91377472129ebfb5434acd4d70be0`
+HEAD: `c81ea0958914bb54705b636ebd244ebeaa3fd8dc`
+Base main: `a1f312426ef0f448f94cf6b37f52ade54f896a82`
 Status: **PARTIAL — one fresh-clone scenario verified**
 
 ## 1. Fresh clone recovery
@@ -66,7 +66,7 @@ not a fresh clone. They are not claimed as cross-run verified.
 Fetched current `origin/main`:
 
 ```text
-b558f88337f91377472129ebfb5434acd4d70be0
+a1f312426ef0f448f94cf6b37f52ade54f896a82
 ```
 
 Normal merge; no force-push, no main change.
@@ -81,4 +81,4 @@ test: success
 dsh-install-verify: success
 ```
 
-CI: https://github.com/wijouyang-lab/us/actions/runs/44134588487
+CI: https://github.com/wijouyang-lab/us/actions/runs/44136347681
