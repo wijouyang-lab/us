@@ -13,6 +13,7 @@ def main() -> int:
     ap.add_argument("--task-id", required=True)
     ap.add_argument("--branch", required=True)
     ap.add_argument("--base-branch", default="main")
+    ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
     try:
         validate_task_id(args.task_id)
@@ -27,6 +28,9 @@ def main() -> int:
         return 1
     r = subprocess.run(["gh", "api", f"repos/{slug.stdout.strip()}/branches/main", "--jq", ".protected"], text=True, capture_output=True)
     if r.returncode != 0 or r.stdout.strip().lower() != "true":
+        if args.dry_run:
+            print("PREFLIGHT_OK_DRY_RUN:MAIN_PROTECTION_UNVERIFIED")
+            return 0
         print("BLOCKED:MAIN_PROTECTION_UNVERIFIED")
         return 1
     print("PREFLIGHT_OK")

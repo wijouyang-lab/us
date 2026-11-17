@@ -54,25 +54,37 @@ def apply_file(root: Path, src: Path, rel: str):
             os.unlink(tmp)
 
 
+def _one_commit_state_only(root: Path, sha: str) -> bool:
+    parents = cmd(["git", "rev-list", "--parents", "-n", "1", sha], root).stdout.split()
+    if len(parents) != 2:
+        return False
+    subject = cmd(["git", "show", "-s", "--format=%s", sha], root).stdout.strip()
+    if not subject.startswith("automation: persist task state"):
+        return False
+    parent = parents[1]
+    raw = cmd(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "-M", "-C", parent, sha], root).stdout.splitlines()
+    for line in raw:
+        parts = line.split("\t")
+        if len(parts) < 2 or parts[0][0] in {"R", "C"}:
+            return False
+        if not all(p.startswith("automation/state/") for p in parts[1:]):
+            return False
+    return True
+
+
 def recovery_range_ok(root: Path, code: str, head: str) -> bool:
     """Only expected state commits may follow the artifact business commit."""
     if code == head:
         return True
     shas = cmd(["git", "rev-list", "--reverse", f"{code}..{head}"], root).stdout.splitlines()
-    for sha in shas:
-        parents = cmd(["git", "rev-list", "--parents", "-n", "1", sha], root).stdout.split()
-        subject = cmd(["git", "show", "-s", "--format=%s", sha], root).stdout.strip()
-        if len(parents) > 2 or not subject.startswith("automation: persist task state"):
-            return False
-    changed = cmd(["git", "diff", "--name-only", code, head], root).stdout.splitlines()
-    return all(p.startswith("automation/state/") for p in changed)
+    return all(_one_commit_state_only(root, sha) for sha in shas)
 
 
 def state_only_ok(root: Path, source: str, head: str) -> bool:
     if source == head:
         return True
-    changed = cmd(["git", "diff", "--name-only", source, head], root).stdout.splitlines()
-    return all(p.startswith("automation/state/") for p in changed)
+    shas = cmd(["git", "rev-list", "--reverse", f"{source}..{head}"], root).stdout.splitlines()
+    return all(_one_commit_state_only(root, sha) for sha in shas)
 
 
 def main() -> int:
