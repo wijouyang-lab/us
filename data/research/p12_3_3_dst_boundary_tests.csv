@@ -1,0 +1,9 @@
+case,eastern_date,expected_utc,actual_utc,status
+spring_dst,2025-03-09,2025-03-10T03:59:59Z,2025-03-10 03:59:59+00:00,PASS
+fall_dst,2025-11-02,2025-11-03T04:59:59Z,2025-11-03 04:59:59+00:00,PASS
+normal_edt,2025-07-01,2025-07-02T03:59:59Z,2025-07-02 03:59:59+00:00,PASS
+normal_est,2025-12-02,2025-12-03T04:59:59Z,2025-12-03 04:59:59+00:00,PASS
+visibility_2025-03-10T03:59:58Z,,False,False,PASS
+visibility_2025-03-10T03:59:59Z,,True,True,PASS
+visibility_2025-11-03T04:59:58Z,,False,False,PASS
+visibility_2025-11-03T04:59:59Z,,True,True,PASS

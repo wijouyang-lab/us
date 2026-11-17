@@ -12,8 +12,13 @@ ET = "America/New_York"
 
 
 def _et_end_of_day(day: str) -> pd.Timestamp:
-    """End of the US/Eastern calendar day, returned in UTC."""
-    local = pd.Timestamp(day).tz_localize(ET) + pd.Timedelta(days=1) - pd.Timedelta(seconds=1)
+    """End of the US/Eastern calendar day, returned in UTC.
+
+    Build the next local calendar midnight before localizing, so DST transition
+    days use the correct 23/25-hour day length rather than a fixed 24 hours.
+    """
+    next_midnight = pd.Timestamp(day).normalize() + pd.Timedelta(days=1)
+    local = next_midnight.tz_localize(ET) - pd.Timedelta(seconds=1)
     return local.tz_convert("UTC")
 
 
