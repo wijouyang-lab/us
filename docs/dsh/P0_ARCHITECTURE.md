@@ -90,3 +90,15 @@ dsh --profile headless --json "Reply with exactly HEADLESS_READY"
 ```
 
 Actual local proof is in `P0_HEADLESS_RUN_PROOF.md`.
+
+
+## P0.1.7 three-job trust boundary
+
+```text
+Preflight (read) -> Agent (contents: read only, no GH token) -> Publisher (write, fresh runner)
+```
+
+Agent emits only a regular-file artifact with source/base commit SHAs. Publisher
+revalidates all paths/hashes/symlinks, checks the source SHA, applies atomically,
+reuses an existing Draft PR, and persists state with a temporary credential
+helper.

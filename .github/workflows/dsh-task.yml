@@ -62,8 +62,24 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python -m tools.automation.preflight --task-id "$TASK_ID" --branch "$TASK_BRANCH" --base-branch "$BASE_BRANCH"
 
+  dsh-install-verify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install and verify pinned DSH without secrets
+        run: |
+          npm install --prefix .dsh-runtime --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.0-rc.2
+          .dsh-runtime/node_modules/.bin/dsh --version
+          .dsh-runtime/node_modules/.bin/dsh --profile headless --help >/dev/null
+          test -f .dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+          grep -q "SENSITIVE_ENV_PATTERN" .dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+
   agent:
-    needs: preflight
+    needs: [preflight, dsh-install-verify]
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -79,6 +95,18 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Select explicit source branch and commit
+        env:
+          TASK_BRANCH: ${{ inputs.branch }}
+          BASE_BRANCH: ${{ inputs.base_branch }}
+        run: |
+          git fetch origin "$BASE_BRANCH" "$TASK_BRANCH" 2>/dev/null || git fetch origin "$BASE_BRANCH"
+          if git rev-parse --verify "origin/$TASK_BRANCH" >/dev/null 2>&1; then
+            git switch -C "$TASK_BRANCH" "origin/$TASK_BRANCH"
+          else
+            git switch -C "$TASK_BRANCH" "origin/$BASE_BRANCH"
+          fi
+          git rev-parse HEAD
       - name: Install pinned DSH and verify
         run: |
           npm install --prefix .dsh-runtime --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.0-rc.2
@@ -138,8 +166,12 @@ jobs:
         run: |
           git config user.name "dsh-publisher[bot]"
           git config user.email "dsh-publisher[bot]@users.noreply.github.com"
-          git fetch origin "$BASE_BRANCH" "$TASK_BRANCH" || true
-          git switch "$TASK_BRANCH" 2>/dev/null || git switch -c "$TASK_BRANCH" "origin/$BASE_BRANCH"
+          git fetch origin "$BASE_BRANCH" "$TASK_BRANCH" 2>/dev/null || git fetch origin "$BASE_BRANCH"
+          if git rev-parse --verify "origin/$TASK_BRANCH" >/dev/null 2>&1; then
+            git switch -C "$TASK_BRANCH" "origin/$TASK_BRANCH"
+          else
+            git switch -c "$TASK_BRANCH" "origin/$BASE_BRANCH"
+          fi
       - name: Publish validated artifact and Draft PR
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 STATUSES = {
-    "QUEUED", "RUNNING", "REVIEW_PENDING", "NEEDS_REVISION",
+    "QUEUED", "RUNNING", "PUBLISHING", "REVIEW_PENDING", "NEEDS_REVISION",
     "PASS", "FAIL", "BLOCKED",
 }
 

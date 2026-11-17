@@ -8,6 +8,8 @@ from pathlib import Path
 
 from tools.automation.changes import ALLOWED
 
+MANIFEST_KEYS = {"task_id", "branch", "base_branch", "source_commit_sha", "base_commit_sha", "status", "files", "deletes"}
+
 
 def _safe_path(path: str) -> None:
     p = Path(path)
@@ -15,23 +17,37 @@ def _safe_path(path: str) -> None:
         raise ValueError(f"UNAUTHORIZED_PATH:{path}")
 
 
+def _check_parents(root: Path, rel: str) -> Path:
+    _safe_path(rel)
+    cur = root
+    for part in Path(rel).parts[:-1]:
+        cur = cur / part
+        if cur.is_symlink():
+            raise ValueError(f"PARENT_SYMLINK:{rel}")
+        if cur.exists() and not cur.is_dir():
+            raise ValueError(f"PARENT_NOT_DIR:{rel}")
+    target = root / rel
+    if target.is_symlink():
+        raise ValueError(f"TARGET_SYMLINK:{rel}")
+    return target
+
+
 def build_artifact(repo: Path, out: Path, manifest: dict, paths: list[str]) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     workspace = out / "workspace"
-    files = []
-    deletes = []
+    workspace.mkdir(parents=True, exist_ok=True)
+    files, deletes = [], []
     for rel in paths:
-        _safe_path(rel)
-        src = repo / rel
-        if not src.exists():
+        target = _check_parents(repo, rel)
+        if target.is_symlink():
+            raise ValueError(f"SYMLINK_REJECTED:{rel}")
+        if not target.exists():
             deletes.append(rel)
             continue
-        if src.is_symlink():
-            raise ValueError(f"SYMLINK_REJECTED:{rel}")
-        target = workspace / rel
-        target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, target)
-        files.append({"path": rel, "sha256": hashlib.sha256(src.read_bytes()).hexdigest(), "bytes": src.stat().st_size})
+        target_out = _check_parents(workspace, rel)
+        target_out.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(target, target_out)
+        files.append({"path": rel, "sha256": hashlib.sha256(target.read_bytes()).hexdigest(), "bytes": target.stat().st_size})
     manifest = dict(manifest)
     manifest["files"] = files
     manifest["deletes"] = deletes
@@ -40,16 +56,37 @@ def build_artifact(repo: Path, out: Path, manifest: dict, paths: list[str]) -> d
 
 
 def read_manifest(out: Path) -> dict:
-    m = json.loads((out / "manifest.json").read_text(encoding="utf-8"))
+    mf = out / "manifest.json"
+    if mf.is_symlink() or not mf.is_file():
+        raise ValueError("MANIFEST_NOT_REGULAR_FILE")
+    m = json.loads(mf.read_text(encoding="utf-8"))
+    if not isinstance(m, dict) or set(m) < MANIFEST_KEYS:
+        raise ValueError("MANIFEST_SCHEMA_INVALID")
     if m.get("status") != "AGENT_COMPLETE":
         raise ValueError(f"AGENT_NOT_COMPLETE:{m.get('status')}")
-    for rel in [x["path"] for x in m.get("files", [])] + list(m.get("deletes", [])):
+    if not m.get("source_commit_sha") or not m.get("base_commit_sha"):
+        raise ValueError("SOURCE_COMMIT_MISSING")
+    files = m.get("files", [])
+    deletes = m.get("deletes", [])
+    if not isinstance(files, list) or not isinstance(deletes, list):
+        raise ValueError("MANIFEST_SCHEMA_INVALID")
+    seen = set()
+    for f in files:
+        if not isinstance(f, dict) or set(f) != {"path", "sha256", "bytes"}:
+            raise ValueError("FILE_ENTRY_SCHEMA_INVALID")
+        rel = f["path"]
+        _check_parents(out / "workspace", rel)
+        if rel in seen:
+            raise ValueError(f"DUPLICATE_PATH:{rel}")
+        seen.add(rel)
+        src = _check_parents(out / "workspace", rel)
+        if not src.is_file():
+            raise ValueError(f"ARTIFACT_FILE_MISSING:{rel}")
+        if src.stat().st_size != f["bytes"] or hashlib.sha256(src.read_bytes()).hexdigest() != f["sha256"]:
+            raise ValueError(f"ARTIFACT_HASH_MISMATCH:{rel}")
+    for rel in deletes:
+        if rel in seen:
+            raise ValueError(f"FILE_AND_DELETE_CONFLICT:{rel}")
         _safe_path(rel)
-        if rel.startswith(".git") or "token" in rel.lower() or "credentials" in rel.lower():
-            raise ValueError(f"SENSITIVE_PATH:{rel}")
-        src = out / "workspace" / rel
-        if src.is_symlink():
-            raise ValueError(f"SYMLINK_REJECTED:{rel}")
-        if src.exists() and out.resolve() not in src.resolve().parents:
-            raise ValueError(f"PATH_ESCAPE:{rel}")
+        seen.add(rel)
     return m

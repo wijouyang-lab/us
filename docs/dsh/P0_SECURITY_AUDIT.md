@@ -60,3 +60,13 @@ No `id-token: write`, no `packages`, no `issues`.
   CI checks and required human review still need separate verification.
 - GitHub Actions is not a trusted execution boundary for secrets; use a
   short-lived token and rotate `DEEPSEEK_API_KEY`.
+
+
+## P0.1.7 Publisher filesystem
+
+- no symlink anywhere in a target's parent chain;
+- target and broken-symlink targets rejected;
+- artifact manifest must be a regular file and match schema/hash/size;
+- files/deletes cannot overlap or duplicate;
+- Publisher validates all paths before any write and uses atomic replace;
+- state push uses the same per-command credential helper.

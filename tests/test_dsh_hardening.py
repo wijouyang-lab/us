@@ -213,8 +213,8 @@ def test_failed_dsh_does_not_publish(tmp_path):
 def test_three_job_isolation_permissions():
     wf = yaml.safe_load((ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8"))
     jobs = wf["jobs"]
-    assert set(jobs) == {"preflight", "agent", "publisher"}
-    assert jobs["agent"]["needs"] == "preflight"
+    assert set(jobs) == {"preflight", "dsh-install-verify", "agent", "publisher"}
+    assert jobs["agent"]["needs"] == ["preflight", "dsh-install-verify"]
     assert jobs["publisher"]["needs"] == "agent"
     assert jobs["agent"]["permissions"] == {"contents": "read"}
     assert jobs["publisher"]["permissions"] == {"contents": "write", "pull-requests": "write"}

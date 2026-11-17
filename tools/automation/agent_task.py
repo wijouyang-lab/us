@@ -29,8 +29,10 @@ def main() -> int:
         print(f"INVALID_INPUT:{e}")
         return 2
     out = Path(args.out)
+    source = subprocess.run(["git", "rev-parse", "HEAD"], text=True, capture_output=True).stdout.strip()
+    base = subprocess.run(["git", "rev-parse", f"origin/{args.base_branch}"], text=True, capture_output=True).stdout.strip()
     result = HeadlessRunner().run(args.prompt, Path(args.log))
-    manifest = {"task_id": task_id, "branch": args.branch, "base_branch": args.base_branch, "status": "AGENT_FAILED", "final": result.get("final"), "timed_out": result.get("timed_out", False)}
+    manifest = {"task_id": task_id, "branch": args.branch, "base_branch": args.base_branch, "source_commit_sha": source, "base_commit_sha": base, "status": "AGENT_FAILED", "final": result.get("final"), "timed_out": result.get("timed_out", False)}
     if result["returncode"] != 0 or not result.get("final"):
         build_artifact(Path("."), out, manifest, [])
         return 1
