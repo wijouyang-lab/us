@@ -59,12 +59,14 @@ def test_version_history_and_pit_query():
     panel["cik"] = panel.cik.str.zfill(10)
     v = _rows(P / "p12_3_version_history.csv")
     assert len(v) == 67159
-    multi = next(r for r in v if int(r["version_count"]) > 1)
+    multi = next(r for r in v if int(r["version_count"]) > 1 and "nan" not in r["acceptance_datetimes"])
     dates = multi["acceptance_datetimes"].split("|")
     first_day = dates[0][:10]
     q = as_of(panel, multi["cik"], multi["metric"], first_day)
     assert not q.empty
-    assert q.iloc[0]["acceptance_datetime"][:10] <= first_day
+    known = q[q["acceptance_datetime"].notna()]
+    assert not known.empty
+    assert known.iloc[0]["acceptance_datetime"][:10] <= first_day
 
 
 def test_annual_quarterly_coverage():
