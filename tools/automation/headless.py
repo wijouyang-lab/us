@@ -2,7 +2,9 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
+import signal
 import subprocess
 from pathlib import Path
 
@@ -18,14 +20,28 @@ class HeadlessRunner:
     def run(self, prompt: str, log_path: Path) -> dict:
         log_path.parent.mkdir(parents=True, exist_ok=True)
         cmd = self.dsh_cmd + [prompt]
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, encoding="utf-8", errors="replace")
+        kwargs = {"start_new_session": True} if os.name != "nt" else {}
+        proc = subprocess.Popen(
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, encoding="utf-8", errors="replace", **kwargs,
+        )
         timed_out = False
         try:
             output, _ = proc.communicate(timeout=self.timeout)
         except subprocess.TimeoutExpired:
             timed_out = True
-            proc.kill()
-            output, _ = proc.communicate()
+            if os.name != "nt":
+                try:
+                    os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+                except ProcessLookupError:
+                    pass
+            else:
+                proc.kill()
+            try:
+                output, _ = proc.communicate(timeout=5)
+            except subprocess.TimeoutExpired:
+                proc.kill()
+                output, _ = proc.communicate()
         log_path.write_text(output or "", encoding="utf-8")
         final = None
         session_id = None

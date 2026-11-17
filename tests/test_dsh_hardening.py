@@ -96,7 +96,10 @@ def test_pr_create_failure_is_terminal_fail(tmp_path, monkeypatch):
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
     monkeypatch.setattr(mod, "run", fake_run)
+    monkeypatch.setattr(mod, "changed_paths", lambda repo: ["docs/research/new.md"])
+    monkeypatch.setattr(mod, "stage_allowed", lambda repo, paths: "diff")
+    monkeypatch.setattr(mod, "commit_diff", lambda repo: "diff")
     store = TaskStore(tmp_path / "tasks.json")
-    task = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=False).run_task("t4", "p", "fix/test", "feature/base")
+    task = Orchestrator(store, FakeRunner(), repo=tmp_path, dry_run=False, require_protection=False).run_task("t4", "p", "fix/test", "feature/base")
     assert task["status"] == "FAIL"
     assert task["last_review"]["reason"] == "PR_CREATE_FAILED"
