@@ -34,7 +34,7 @@ def mark(store, task_id, status, reason, root, branch, **extra):
     store.update(task_id, status=status, last_review={"reason": reason, **extra})
     ok = push_state(store, root, branch)
     if not ok:
-        store.update(task_id, last_review={"reason": "STATE_PERSIST_FAILED", "original": reason, **extra})
+        store.update(task_id, last_review={"reason": reason, **extra, "state_persist_failed": True})
         store.save(store.load())
         print("STATE_PERSIST_FAILED:REMOTE_NOT_SAVED")
     return ok
@@ -200,7 +200,10 @@ def main() -> int:
         print(f"RECOVERABLE:BUSINESS_PUSH_FAILED:{e}")
         return 1
     try:
-        prs_raw = cmd(["gh", "pr", "list", "--head", branch, "--base", base_branch, "--state", "open", "--json", "url,isDraft,headRefName,baseRefName"], root).stdout
+        try:
+            prs_raw = cmd(["gh", "pr", "list", "--head", branch, "--base", base_branch, "--state", "open", "--json", "url,isDraft,headRefName,baseRefName"], root).stdout
+        except Exception as e:
+            raise RuntimeError(f"PR_QUERY_FAILED:{e}")
         prs = json.loads(prs_raw or "[]")
         if len(prs) > 1:
             raise RuntimeError("MULTIPLE_OPEN_PRS")
