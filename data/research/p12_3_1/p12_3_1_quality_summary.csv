@@ -1,0 +1,18 @@
+metric,value,status,notes
+event_status_OK_COMPLETE,10941,OK,mutually exclusive primary status
+event_status_FOREIGN_PRICE_MISSING,2056,PARTIAL,mutually exclusive primary status
+event_status_US_SYMBOL_NOT_FOUND,619,PARTIAL,mutually exclusive primary status
+event_status_NO_PREVIOUS_CLOSE,46,PARTIAL,mutually exclusive primary status
+event_status_D5_MISSING,3,PARTIAL,mutually exclusive primary status
+event_status_NO_EVENT_CLOSE,2,PARTIAL,mutually exclusive primary status
+event_status_D1_MISSING,1,PARTIAL,mutually exclusive primary status
+events_total,13668,OK,sum of primary statuses equals total
+d0_complete,10945,PARTIAL,D0 available
+d1_complete,10944,PARTIAL,D1 available
+d5_complete,10941,PARTIAL,D5 available
+asof_tests_passed,6,OK,full-period before/after and same-day tests
+raw_10k_checks_match,59,OK,"P12.3 preserved: 59/60, one panel missing"
+raw_10q_checks_match,10,PARTIAL,"10-Q/10-Q/A spot checks: 10 match, 6 period aggregation differences"
+raw_10q_period_mismatch,6,PARTIAL,quarterly vs YTD context; not silent conflict
+version_groups,67159,OK,P12.3 preserved
+market_wide_claim,0,DATA_BLOCKED,140-issuer pilot only

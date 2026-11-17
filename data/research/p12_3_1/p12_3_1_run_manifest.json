@@ -1,0 +1,8 @@
+{
+  "base_commit": "41c9c57a8f389aacc0417bc3cdc6d826fcddfdc3",
+  "command": "python -m tools.research.p12.add_event_windows_v31; python -m tools.research.p12.asof_evidence; python -m tools.research.p12.validate_versions",
+  "events": 13668,
+  "asof_tests": 6,
+  "raw_data_committed": false,
+  "notes": "P12.3 files preserved; P12.3.1 adds corrected query and event windows."
+}
