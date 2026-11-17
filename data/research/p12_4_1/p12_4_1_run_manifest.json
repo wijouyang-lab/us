@@ -1,0 +1,21 @@
+{
+  "protocol": "docs/research/P12_4_1_PRE_REGISTERED_STUDY_PROTOCOL.md",
+  "sample": "data/research/p12_3_expanded_universe.csv",
+  "commands": [
+    "python -m tools.research.p12.p12_4_1_study",
+    "python -m tools.research.p12.p12_4_1_stats"
+  ],
+  "fundamental_accessions": 2624,
+  "8k_accessions": 11612,
+  "raw_data_committed": false,
+  "price_inputs": [
+    {
+      "file": "pit_data/finsaber_prices_raw.csv",
+      "sha256": "f67e3972dceefbbdf6c17b84b30957a7b83518401955fff8ae0bc4ae206fa83f"
+    },
+    {
+      "file": "p9_1_support_resistance/spy.csv",
+      "sha256": "4d0bdcb37f02f99a05d1be63722459ef6ec8ae740f512fdd9f85e488a86fbe62"
+    }
+  ]
+}
