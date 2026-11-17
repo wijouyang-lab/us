@@ -1,0 +1,5 @@
+et_disclosure_date,expected_period,actual_period,status
+2018-12-31,explore,explore,PASS
+2019-01-01,validate,validate,PASS
+2024-12-31,validate,validate,PASS
+2018-12-31,explore,explore,PASS
