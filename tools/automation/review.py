@@ -12,7 +12,7 @@ import subprocess
 VALID = {"PASS", "FAIL", "NEEDS_REVISION", "BLOCKED"}
 
 
-def run_review(diff: str, task: str, author: str = "dsh", reviewer: str = "codex", cmd: str | None = None) -> dict:
+def run_review(diff: str, task: str, author: str = "dsh", reviewer: str = "codex", cmd: str | None = None, timeout: float = 900) -> dict:
     if author == reviewer:
         return {"status": "NEEDS_REVISION", "reason": "SELF_REVIEW_FORBIDDEN", "reviewer": reviewer}
     if not diff.strip():
@@ -22,7 +22,10 @@ def run_review(diff: str, task: str, author: str = "dsh", reviewer: str = "codex
         return {"status": "BLOCKED", "reason": "REVIEWER_UNAVAILABLE", "reviewer": reviewer}
     payload = json.dumps({"task": task, "diff": diff})
     argv = cmd if isinstance(cmd, list) else shlex.split(cmd)
-    proc = subprocess.run(argv, input=payload, text=True, capture_output=True, timeout=900)
+    try:
+        proc = subprocess.run(argv, input=payload, text=True, capture_output=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {"status": "BLOCKED", "reason": "REVIEWER_TIMEOUT", "reviewer": reviewer, "timeout_seconds": timeout}
     if proc.returncode != 0:
         return {"status": "NEEDS_REVISION", "reason": "REVIEWER_ERROR", "reviewer": reviewer, "output": proc.stdout[-2000:] + proc.stderr[-2000:]}
     try:
