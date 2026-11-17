@@ -25,3 +25,8 @@ tests/artifacts/
 # DSH automation logs (artifacts only)
 automation/logs/*.ndjson
 automation/logs/*.log
+
+# DSH agent runtime/artifacts
+.dsh-runtime/
+agent-artifact/
+tmp-dsh-*/

@@ -208,3 +208,17 @@ def test_failed_dsh_does_not_publish(tmp_path):
     task = Orchestrator(store, FailRunner(), repo=tmp_path, dry_run=True, require_protection=False).run_task("t-fail", "p", "fix/t-fail", "main")
     assert task["status"] in {"NEEDS_REVISION", "FAIL"}
     assert task["pr_url"] == ""
+
+
+def test_three_job_isolation_permissions():
+    wf = yaml.safe_load((ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8"))
+    jobs = wf["jobs"]
+    assert set(jobs) == {"preflight", "agent", "publisher"}
+    assert jobs["agent"]["needs"] == "preflight"
+    assert jobs["publisher"]["needs"] == "agent"
+    assert jobs["agent"]["permissions"] == {"contents": "read"}
+    assert jobs["publisher"]["permissions"] == {"contents": "write", "pull-requests": "write"}
+    text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
+    assert "persist-credentials: false" in text
+    assert "CODEX_CMD" not in text
+    assert "gh pr merge" not in text
