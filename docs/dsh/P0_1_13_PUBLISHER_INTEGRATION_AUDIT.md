@@ -1,5 +1,7 @@
 # P0.1.13: Publisher CLI Integration and Strict Recovery Tests
 
+> Historical audit; superseded by P0.1.14.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `02acc3cb28d3d7547ff144edcc96070531983c82`
