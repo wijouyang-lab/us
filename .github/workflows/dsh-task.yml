@@ -21,7 +21,7 @@ on:
         default: "main"
         type: string
       dry_run:
-        description: "Run DSH but do not commit/push/PR"
+        description: "Run DSH and generate artifacts without publishing (still makes model calls)"
         required: true
         default: true
         type: boolean

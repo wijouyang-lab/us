@@ -54,15 +54,20 @@ def apply_file(root: Path, src: Path, rel: str):
             os.unlink(tmp)
 
 
+STATE_COMMIT_SUBJECT = "automation: persist task state [skip ci]"
+
+
 def _one_commit_state_only(root: Path, sha: str) -> bool:
     parents = cmd(["git", "rev-list", "--parents", "-n", "1", sha], root).stdout.split()
     if len(parents) != 2:
         return False
     subject = cmd(["git", "show", "-s", "--format=%s", sha], root).stdout.strip()
-    if not subject.startswith("automation: persist task state"):
+    if subject != STATE_COMMIT_SUBJECT:
         return False
     parent = parents[1]
-    raw = cmd(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "-M", "-C", parent, sha], root).stdout.splitlines()
+    raw = cmd(["git", "diff-tree", "--no-commit-id", "--name-status", "-r", "-M", "-C", "--find-copies-harder", parent, sha], root).stdout.splitlines()
+    if not raw:
+        return False
     for line in raw:
         parts = line.split("\t")
         if len(parts) < 2 or parts[0][0] in {"R", "C"}:

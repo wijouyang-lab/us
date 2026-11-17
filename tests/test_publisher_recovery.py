@@ -69,7 +69,7 @@ def test_recovery_rejects_unexpected_merge_commit(tmp_path):
 def test_recovery_rejects_transient_forbidden_file(tmp_path):
     r = repo(tmp_path)
     code = commit(r, "docs/research/x.md", "x", "automation: DSH task t artifact abc")
-    commit(r, "docs/research/bad.md", "bad", "add then delete")
+    commit(r, "docs/research/bad.md", "bad", "automation: persist task state [skip ci]")
     g(r, "rm", "docs/research/bad.md")
     g(r, "commit", "-m", "automation: persist task state [skip ci]")
     head = g(r, "rev-parse", "HEAD")
@@ -79,8 +79,47 @@ def test_recovery_rejects_transient_forbidden_file(tmp_path):
 def test_state_only_rejects_non_state_commit_even_if_net_empty(tmp_path):
     r = repo(tmp_path)
     source = g(r, "rev-parse", "HEAD")
-    commit(r, "docs/research/bad.md", "bad", "human add")
+    commit(r, "docs/research/bad.md", "bad", "automation: persist task state [skip ci]")
     g(r, "rm", "docs/research/bad.md")
-    g(r, "commit", "-m", "human delete")
+    g(r, "commit", "-m", "automation: persist task state [skip ci]")
+    head = g(r, "rev-parse", "HEAD")
+    assert state_only_ok(r, source, head) is False
+
+
+def test_recovery_rejects_empty_state_commit(tmp_path):
+    r = repo(tmp_path)
+    source = g(r, "rev-parse", "HEAD")
+    g(r, "commit", "--allow-empty", "-m", "automation: persist task state [skip ci]")
+    head = g(r, "rev-parse", "HEAD")
+    assert recovery_range_ok(r, source, head) is False
+    assert state_only_ok(r, source, head) is False
+
+
+def test_recovery_rejects_invalid_state_subject(tmp_path):
+    r = repo(tmp_path)
+    source = g(r, "rev-parse", "HEAD")
+    commit(r, "automation/state/tasks.json", "{}", "automation: persist task state")
+    head = g(r, "rev-parse", "HEAD")
+    assert state_only_ok(r, source, head) is False
+
+
+def test_recovery_rejects_rename_paths(tmp_path):
+    r = repo(tmp_path)
+    commit(r, "automation/state/a.json", "{}", "automation: persist task state [skip ci]")
+    source = g(r, "rev-parse", "HEAD")
+    g(r, "mv", "automation/state/a.json", "automation/state/b.json")
+    g(r, "commit", "-m", "automation: persist task state [skip ci]")
+    head = g(r, "rev-parse", "HEAD")
+    assert state_only_ok(r, source, head) is False
+
+
+def test_recovery_rejects_copy_paths(tmp_path):
+    import shutil
+    r = repo(tmp_path)
+    commit(r, "automation/state/a.json", "{}", "automation: persist task state [skip ci]")
+    source = g(r, "rev-parse", "HEAD")
+    shutil.copy2(r / "automation/state/a.json", r / "automation/state/b.json")
+    g(r, "add", ".")
+    g(r, "commit", "-m", "automation: persist task state [skip ci]")
     head = g(r, "rev-parse", "HEAD")
     assert state_only_ok(r, source, head) is False

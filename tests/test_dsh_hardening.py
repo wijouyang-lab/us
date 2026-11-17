@@ -228,5 +228,11 @@ def test_dry_run_gate_and_no_max_attempts():
     wf = yaml.safe_load((ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8"))
     text = (ROOT / ".github/workflows/dsh-task.yml").read_text(encoding="utf-8")
     assert wf["jobs"]["publisher"]["if"] == "inputs.dry_run == false"
+    assert wf["jobs"]["publisher"]["needs"] == "agent"
+    assert wf["jobs"]["agent"]["permissions"] == {"contents": "read"}
     assert "DRY_RUN_COMPLETE" in text
     assert "max_attempts" not in text
+    assert "Run DSH and generate artifacts without publishing" in text
+    for name, job in wf["jobs"].items():
+        if name != "publisher":
+            assert job.get("permissions", {}).get("contents") != "write"

@@ -1,0 +1,75 @@
+import json
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def setup(tmp_path):
+    from tools.automation.artifact import build_artifact
+    bare = tmp_path / "remote.git"
+    subprocess.run(["git", "init", "--bare", str(bare)], check=True, capture_output=True)
+    repo = tmp_path / "repo"
+    subprocess.run(["git", "clone", str(bare), str(repo)], check=True, capture_output=True)
+    subprocess.run(["git", "config", "user.email", "t@example.com"], cwd=repo, check=True)
+    subprocess.run(["git", "config", "user.name", "t"], cwd=repo, check=True)
+    (repo / "docs/research").mkdir(parents=True)
+    (repo / "docs/research/base.md").write_text("base", encoding="utf-8")
+    subprocess.run(["git", "add", "."], cwd=repo, check=True)
+    subprocess.run(["git", "commit", "-m", "base"], cwd=repo, check=True)
+    subprocess.run(["git", "branch", "-M", "main"], cwd=repo, check=True)
+    subprocess.run(["git", "push", "-u", "origin", "main"], cwd=repo, check=True)
+    subprocess.run(["git", "switch", "-c", "fix/t"], cwd=repo, check=True)
+    source = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=repo, text=True).strip()
+    (repo / "docs/research/new.md").write_text("new", encoding="utf-8")
+    art = tmp_path / "agent-artifact"
+    build_artifact(repo, art, {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": source, "base_commit_sha": source, "status": "AGENT_COMPLETE", "timed_out": False, "tests_returncode": 0}, ["docs/research/new.md"])
+    bindir = tmp_path / "bin"
+    bindir.mkdir()
+    log = tmp_path / "gh.log"
+    gh = bindir / "gh"
+    gh.write_text("""#!/bin/sh
+echo "$1 $2" >> "$GH_LOG"
+if [ "$1 $2" = "pr list" ]; then
+  case "$GH_MODE" in
+    existing) echo '[{"url":"https://example/pr/1","isDraft":true,"headRefName":"fix/t","baseRefName":"main"}]' ;;
+    ready) echo '[{"url":"https://example/pr/1","isDraft":false,"headRefName":"fix/t","baseRefName":"main"}]' ;;
+    multiple) echo '[{"url":"https://example/pr/1","isDraft":true,"headRefName":"fix/t","baseRefName":"main"},{"url":"https://example/pr/2","isDraft":true,"headRefName":"fix/t","baseRefName":"main"}]' ;;
+    queryfail) exit 7 ;;
+    *) echo '[]' ;;
+  esac
+  exit 0
+fi
+if [ "$1 $2" = "pr create" ]; then
+  if [ "$GH_MODE" = "createfail" ]; then exit 9; fi
+  echo 'https://example/pr/1'; exit 0
+fi
+if [ "$1 $2" = "pr view" ]; then
+  echo '{"url":"https://example/pr/1","isDraft":true,"headRefName":"fix/t","baseRefName":"main"}'; exit 0
+fi
+exit 1
+""", encoding="utf-8")
+    gh.chmod(0o755)
+    return repo, art, bindir, log
+
+
+def run_publisher(repo, art, bindir, log, mode):
+    env = dict(os.environ, PATH=f"{bindir}:{os.environ.get('PATH','')}", PYTHONPATH=str(ROOT), GH_MODE=mode, GH_LOG=str(log))
+    cmd = [sys.executable, "-m", "tools.automation.publisher", "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"]
+    return subprocess.run(cmd, cwd=repo, env=env, text=True, capture_output=True)
+
+
+@pytest.mark.skipif(os.name == "nt", reason="POSIX mock gh integration")
+@pytest.mark.parametrize("mode,expected,status", [("existing", 0, "REVIEW_PENDING"), ("ready", 1, "BLOCKED"), ("multiple", 1, "BLOCKED"), ("queryfail", 1, "BLOCKED"), ("createfail", 1, "FAIL")])
+def test_draft_pr_modes(tmp_path, mode, expected, status):
+    repo, art, bindir, log = setup(tmp_path)
+    r = run_publisher(repo, art, bindir, log, mode)
+    assert r.returncode == expected, r.stdout + r.stderr
+    state = json.loads((repo / "automation/state/tasks.json").read_text())
+    assert state["tasks"]["t"]["status"] == status
+    creates = [line for line in log.read_text().splitlines() if line == "pr create"]
+    assert len(creates) == (1 if mode in {"createfail"} else 0)
