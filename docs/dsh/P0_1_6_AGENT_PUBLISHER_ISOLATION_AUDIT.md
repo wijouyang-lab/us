@@ -37,7 +37,8 @@ scrubbedParentEnv()
 Clean `--profile headless --help` exited 0. No real model task was run and no
 real key was configured.
 
-`DSH_INSTALL_VERIFIED: true`
+`DSH_INSTALL_VERIFIED: LOCAL_CLEAN_ENV
+DSH_INSTALL_CI_VERIFIED: NO`
 
 ## 2. Three-job workflow
 
