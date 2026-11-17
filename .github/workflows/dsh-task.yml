@@ -176,6 +176,8 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TASK_ID: ${{ inputs.task_id }}
-        run: python -m tools.automation.publisher --artifact agent-artifact
+          TASK_BRANCH: ${{ inputs.branch }}
+          BASE_BRANCH: ${{ inputs.base_branch }}
+        run: python -m tools.automation.publisher --artifact agent-artifact --task-id "$TASK_ID" --branch "$TASK_BRANCH" --base-branch "$BASE_BRANCH"
       - name: Draft PR only - no auto-merge
         run: echo "PR is draft-only; merging is intentionally disabled; human authorization is required."

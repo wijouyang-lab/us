@@ -32,10 +32,10 @@ def test_publisher_temp_remote_and_idempotent_pr(tmp_path):
     build_artifact(repo, art, {"task_id": "t", "branch": "fix/t", "base_branch": "main", "source_commit_sha": source, "base_commit_sha": source, "status": "AGENT_COMPLETE"}, ["docs/research/new.md"])
     bindir = tmp_path / "bin"; bindir.mkdir()
     gh = bindir / "gh"
-    gh.write_text("#!/bin/sh\nif [ \"$1 $2\" = \"pr list\" ]; then echo '[]'; exit 0; fi\nif [ \"$1 $2\" = \"pr create\" ]; then echo 'https://example/pr/1'; exit 0; fi\nif [ \"$1 $2\" = \"pr view\" ]; then echo '{\"url\":\"https://example/pr/1\",\"isDraft\":true}'; exit 0; fi\nexit 1\n", encoding="utf-8")
+    gh.write_text("#!/bin/sh\nif [ \"$1 $2\" = \"pr list\" ]; then echo '[]'; exit 0; fi\nif [ \"$1 $2\" = \"pr create\" ]; then echo 'https://example/pr/1'; exit 0; fi\nif [ \"$1 $2\" = \"pr view\" ]; then echo '{\"url\":\"https://example/pr/1\",\"isDraft\":true,\"headRefName\":\"fix/t\",\"baseRefName\":\"main\"}'; exit 0; fi\nexit 1\n", encoding="utf-8")
     gh.chmod(0o755)
     env = dict(os.environ, PATH=f"{bindir}:{os.environ.get('PATH','')}", PYTHONPATH=str(ROOT))
-    cmd = [sys.executable, "-m", "tools.automation.publisher", "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json"]
+    cmd = [sys.executable, "-m", "tools.automation.publisher", "--repo", str(repo), "--artifact", str(art), "--state", "automation/state/tasks.json", "--task-id", "t", "--branch", "fix/t", "--base-branch", "main"]
     r = subprocess.run(cmd, cwd=repo, env=env, text=True, capture_output=True)
     assert r.returncode == 0, r.stdout + r.stderr
     assert subprocess.run(["git", "rev-parse", "origin/fix/t"], cwd=repo, text=True, capture_output=True).returncode == 0

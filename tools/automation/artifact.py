@@ -17,9 +17,15 @@ HEX64 = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _root(path: Path) -> Path:
-    if path.is_symlink() or not path.is_dir():
+    cur = path.absolute()
+    for anc in [cur] + list(cur.parents):
+        if anc == anc.parent:
+            break
+        if anc.is_symlink():
+            raise ValueError(f"ROOT_ANCESTOR_SYMLINK:{anc}")
+    if cur.is_symlink() or not cur.is_dir():
         raise ValueError(f"ROOT_NOT_REGULAR_DIR:{path}")
-    return path.resolve()
+    return cur.resolve()
 
 
 def _safe_path(path: str) -> None:
@@ -57,6 +63,12 @@ def _check_workspace(out: Path) -> Path:
 
 
 def build_artifact(repo: Path, out: Path, manifest: dict, paths: list[str]) -> dict:
+    # Validate ancestors before creating anything.
+    for anc in [out.absolute()] + list(out.absolute().parents):
+        if anc == anc.parent:
+            break
+        if anc.is_symlink():
+            raise ValueError(f"ROOT_ANCESTOR_SYMLINK:{anc}")
     out.mkdir(parents=True, exist_ok=True)
     _root(out)
     (out / "workspace").mkdir(parents=True, exist_ok=True)
@@ -130,3 +142,8 @@ def read_manifest(out: Path) -> dict:
         _safe_path(rel)
         seen.add(rel)
     return m
+
+
+def artifact_digest(out: Path) -> str:
+    root = _root(out)
+    return hashlib.sha256((root / "manifest.json").read_bytes()).hexdigest()
