@@ -44,3 +44,20 @@ jobs:
       - name: Run Dividend Quality frontend tests
         if: always()
         run: node tests/test_dividend_quality_frontend.js
+
+  dsh-install-verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install and verify pinned DSH (no secrets)
+        run: |
+          npm install --prefix .dsh-runtime --ignore-scripts --no-audit --no-fund @deepseek-ai/dsh@0.2.0-rc.2
+          .dsh-runtime/node_modules/.bin/dsh --version
+          .dsh-runtime/node_modules/.bin/dsh --profile headless --help >/dev/null
+          test -f .dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
+          grep -q "SENSITIVE_ENV_PATTERN" .dsh-runtime/node_modules/@deepseek-ai/dsh-subprocess/lib/index.js
