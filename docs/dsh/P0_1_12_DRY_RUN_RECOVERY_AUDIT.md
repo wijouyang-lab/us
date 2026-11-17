@@ -1,5 +1,7 @@
 # P0.1.12: Dry-run Gate and Per-Commit Recovery Audit
 
+> Historical audit; superseded by P0.1.13.
+
 Date: 2026-11-18
 Branch: `deploy/dsh-automation-p0`
 HEAD: `2ac54babcb3597ac9a8d02131f3acc1bf2a0719f`
